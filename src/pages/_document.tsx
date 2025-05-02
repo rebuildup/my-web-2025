@@ -24,7 +24,7 @@ class MyDocument extends Document {
               __html: `
               (function(d) {
                 var config = {
-                  kitId: 'YOUR_TYPEKIT_KIT_ID',
+                  kitId: 'buj1qdh',
                   scriptTimeout: 3000,
                   async: true
                 },

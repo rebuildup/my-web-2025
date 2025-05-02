@@ -1,0 +1,10 @@
+# robots.txt for static Next.js site
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Don't index these paths
+Disallow: /api/
+Disallow: /_next/
