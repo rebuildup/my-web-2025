@@ -1,0 +1,213 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "adobe-clean", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-gray-800;
+  }
+
+  /* Heading Typography */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-sans font-bold;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h4 {
+    @apply text-xl md:text-2xl;
+  }
+
+  /* Thin scrollbar style */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-400;
+  }
+
+  /* Firefox scrollbar styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.gray.300") theme("colors.gray.100");
+  }
+
+  /* Focus styles for accessibility */
+  a:focus,
+  button:focus,
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply outline-none ring-2 ring-primary-500 ring-opacity-50;
+  }
+
+  /* Link styles */
+  a {
+    @apply text-primary-500 hover:text-primary-600 transition-colors duration-300;
+  }
+}
+
+@layer components {
+  /* Container utilities */
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Button styles */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 border border-transparent 
+           rounded-md shadow-sm font-medium text-white bg-primary-500 hover:bg-primary-600 
+           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 
+           transition-colors duration-300;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-800 hover:bg-gray-900 focus:ring-gray-500;
+  }
+
+  .btn-outline {
+    @apply bg-transparent border-2 border-primary-500 text-primary-500 hover:bg-primary-50;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-white rounded-lg shadow-smooth p-6 transition-shadow duration-300 hover:shadow-hover;
+  }
+
+  /* Section styles */
+  .section {
+    @apply py-12 md:py-16;
+  }
+
+  /* Form element styles */
+  .form-input {
+    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
+           focus:outline-none focus:ring-primary-500 focus:border-primary-500;
+  }
+
+  .form-select {
+    @apply block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md shadow-sm 
+           focus:outline-none focus:ring-primary-500 focus:border-primary-500;
+  }
+
+  .form-checkbox {
+    @apply rounded border-gray-300 text-primary-500 
+           focus:outline-none focus:ring-primary-500;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+}
+
+@layer utilities {
+  /* Animation delay utilities */
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  /* Text shadow utilities */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-md {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Gradient text utilities */
+  .text-gradient-primary {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-primary-700;
+  }
+
+  /* Transition utilities */
+  .transition-fast {
+    @apply transition-all duration-150 ease-in-out;
+  }
+
+  .transition-medium {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .transition-slow {
+    @apply transition-all duration-500 ease-in-out;
+  }
+}
+
+/* Animation classes */
+.animate-fade-in {
+  opacity: 0;
+}
+
+.animate-fade-in-left {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.animate-fade-in-right {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.animate-fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.animate-fade-in-down {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* GSAP animation hooks */
+.gsap-reveal-hidden {
+  visibility: hidden;
+}

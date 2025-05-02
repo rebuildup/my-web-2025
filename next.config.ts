@@ -1,7 +1,13 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  output: "export",
+  images: {
+    unoptimized: true,
+  },
+  // Add trailing slash to all routes for better compatibility with Apache
+  trailingSlash: true,
 };
 
-export default nextConfig;
+module.exports = nextConfig;

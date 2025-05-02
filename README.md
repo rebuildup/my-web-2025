@@ -1,36 +1,159 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Static Next.js Website
 
-## Getting Started
+A static website built with Next.js, React, and TypeScript. The site features GSAP animations and Tailwind CSS for styling, with a focus on clean design and subtle animations.
 
-First, run the development server:
+## Project Purpose
+
+This project serves as a personal/portfolio website with four main categories:
+
+- About: Information about the site owner
+- Portfolio: Showcase of work and projects
+- Workshop: Interactive demonstrations and experiments
+- Tools: Utilities and resources offered to visitors
+
+The site is designed to be deployed as static HTML/CSS/JS files on an Apache server, allowing for easy hosting and maintenance.
+
+## Technology Stack
+
+- **Frontend Framework**: Next.js 15.3.1
+- **UI Library**: React 19.0.0
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Animations**: GSAP (GreenSock Animation Platform)
+- **Font**: Adobe Fonts
+- **Build System**: SWC (Speedy Web Compiler)
+- **Deployment**: Static export for Apache hosting
+
+## Directory Structure
+
+```
+├── public/              # Static assets
+│   ├── fonts/           # Adobe fonts
+│   └── images/          # Site images
+├── src/
+│   ├── components/      # Reusable React components
+│   │   ├── common/      # Shared components (header, footer, etc.)
+│   │   ├── about/       # About-specific components
+│   │   ├── portfolio/   # Portfolio-specific components
+│   │   ├── workshop/    # Workshop-specific components
+│   │   └── tools/       # Tools-specific components
+│   ├── lib/             # Utility functions, hooks, etc.
+│   │   └── animations/  # GSAP animation configurations
+│   ├── pages/           # Next.js pages
+│   │   ├── about/       # About pages
+│   │   │   ├── index.tsx        # Main about page
+│   │   │   ├── real-name.tsx    # Subpage example
+│   │   │   └── ...              # Other about subpages
+│   │   ├── portfolio/   # Portfolio pages
+│   │   │   ├── index.tsx        # Main portfolio page
+│   │   │   ├── video.tsx        # Subpage example
+│   │   │   └── ...              # Other portfolio subpages
+│   │   ├── workshop/    # Workshop pages
+│   │   │   ├── index.tsx        # Main workshop page
+│   │   │   └── ...              # Workshop subpages
+│   │   ├── tools/       # Tools pages
+│   │   │   ├── index.tsx        # Main tools page
+│   │   │   └── ...              # Tools subpages
+│   │   ├── 404.tsx      # Custom 404 error page
+│   │   ├── _app.tsx     # Custom app component
+│   │   ├── _document.tsx # Custom document component
+│   │   ├── index.tsx    # Homepage with sitemap
+│   │   ├── privacy-policy.tsx  # Privacy policy page
+│   │   └── search.tsx   # Site search page
+│   └── styles/          # Global styles
+│       └── globals.css  # Global CSS including Tailwind directives
+├── tailwind.config.js   # Tailwind CSS configuration
+├── next.config.js       # Next.js configuration
+├── package.json         # Project dependencies and scripts
+├── tsconfig.json        # TypeScript configuration
+└── README.md            # Project documentation
+```
+
+## Build Instructions
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+2. Configure environment variables (if needed):
+
+   - Create a `.env.local` file in the root directory
+   - Add any necessary environment variables
+
+3. Build the project for production:
+
+   ```bash
+   npm run build
+   # or
+   yarn build
+   ```
+
+4. Export as static site:
+   ```bash
+   npm run export
+   # or
+   yarn export
+   ```
+   This will generate a `out` directory containing the static site files.
+
+## Run Instructions
+
+### Development Mode
+
+To run the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Production Preview
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To preview the production build locally:
 
-## Learn More
+```bash
+npm run build
+npm run start
+# or
+yarn build
+yarn start
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+To deploy the static site to an Apache server:
 
-## Deploy on Vercel
+1. Build and export the site as described in the Build Instructions
+2. Copy all files from the `out` directory to your Apache server's web root (or desired subdirectory)
+3. Ensure that the server is configured to serve `index.html` as the default file for directories
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Modifying Pages
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Each page operates independently within its respective folder. To modify a page:
+
+1. Navigate to the appropriate file in the `src/pages` directory
+2. Make your changes
+3. If in development mode, changes will be reflected automatically
+4. For production, rebuild and re-export the site
+
+## Browser Support
+
+This website supports modern browsers including:
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## License
+
+[MIT](LICENSE)
