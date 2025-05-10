@@ -1,6 +1,139 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Custom theme configuration for v4 */
+@theme {
+  /* Primary blue color variations */
+  --color-primary-50: #e6f1ff;
+  --color-primary-100: #cce3ff;
+  --color-primary-200: #99c8ff;
+  --color-primary-300: #66acff;
+  --color-primary-400: #3391ff;
+  --color-primary-500: #0075ff; /* Main primary blue */
+  --color-primary-600: #005ecc;
+  --color-primary-700: #004699;
+  --color-primary-800: #002f66;
+  --color-primary-900: #001733;
+
+  /* Dark theme colors */
+  --color-dark-100: #383838;
+  --color-dark-200: #303030;
+  --color-dark-300: #282828;
+  --color-dark-400: #232323;
+  --color-dark-500: #1f1f1f; /* Main dark background */
+  --color-dark-600: #1a1a1a;
+  --color-dark-700: #171717;
+  --color-dark-800: #121212;
+  --color-dark-900: #0a0a0a;
+
+  /* Light neutral colors for dark theme */
+  --color-light-100: #ffffff;
+  --color-light-200: #f7f7f7;
+  --color-light-300: #f0f0f0;
+  --color-light-400: #e0e0e0;
+  --color-light-500: #c2c2c2;
+  --color-light-600: #a0a0a0;
+  --color-light-700: #787878;
+  --color-light-800: #4f4f4f;
+  --color-light-900: #2c2c2c;
+
+  /* Custom shadows */
+  --shadow-smooth: 0 4px 14px 0 rgba(0, 0, 0, 0.2);
+  --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 10px 15px rgba(0, 0, 0, 0.4);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+  --shadow-focus: 0 0 0 3px rgba(0, 117, 255, 0.5);
+  --shadow-blue: 0 0 15px rgba(0, 117, 255, 0.5);
+  --shadow-glow: 0 0 10px rgba(0, 117, 255, 0.5);
+
+  /* Custom animations - converted to CSS custom properties */
+  --animate-fade-in: fadeIn 0.5s ease-out;
+  --animate-slide-up: slideUp 0.5s ease-out;
+  --animate-slide-down: slideDown 0.5s ease-out;
+  --animate-slide-left: slideLeft 0.5s ease-out;
+  --animate-slide-right: slideRight 0.5s ease-out;
+  --animate-bounce-sm: bounceSm 2s infinite;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-ping-slow: ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-spin-slow: spin 3s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+}
+
+/* Keyframes for custom animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideLeft {
+  0% {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  0% {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceSm {
+  0%,
+  100% {
+    transform: translateY(-5px);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
 
 @layer base {
   html {
@@ -27,23 +160,18 @@
   h1 {
     @apply text-4xl md:text-5xl;
   }
-
   h2 {
     @apply text-3xl md:text-4xl;
   }
-
   h3 {
     @apply text-2xl md:text-3xl;
   }
-
   h4 {
     @apply text-xl md:text-2xl;
   }
-
   h5 {
     @apply text-lg md:text-xl;
   }
-
   h6 {
     @apply text-base md:text-lg;
   }
@@ -62,7 +190,6 @@
   ul {
     @apply list-disc;
   }
-
   ol {
     @apply list-decimal;
   }

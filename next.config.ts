@@ -5,7 +5,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Removed swcMinify option as it's not recognized
   // Add trailing slash to all routes for better compatibility with Apache
   trailingSlash: true,
 };
