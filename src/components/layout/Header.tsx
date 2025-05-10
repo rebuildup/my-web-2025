@@ -55,12 +55,15 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header ref={headerRef} className="bg-white shadow-md sticky top-0 z-50">
+    <header ref={headerRef} className="bg-dark-600 shadow-md sticky top-0 z-50">
       <nav className="container-custom mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <Link href="/" className="text-xl font-bold text-primary-500">
+              <Link
+                href="/"
+                className="text-xl font-bold text-primary-400 no-underline"
+              >
                 My Site
               </Link>
             </div>
@@ -73,10 +76,10 @@ const Header: React.FC = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors no-underline ${
                     isActive(item.href)
-                      ? "text-primary-500 bg-primary-50"
-                      : "text-gray-700 hover:text-primary-500 hover:bg-gray-50"
+                      ? "text-primary-400 bg-dark-500"
+                      : "text-light-400 hover:text-primary-300 hover:bg-dark-500"
                   }`}
                   aria-current={isActive(item.href) ? "page" : undefined}
                 >
@@ -90,7 +93,7 @@ const Header: React.FC = () => {
           <div className="flex items-center sm:hidden">
             <button
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-primary-500 hover:bg-gray-50 focus:outline-none"
+              className="inline-flex items-center justify-center p-2 rounded-md text-light-300 hover:text-primary-400 hover:bg-dark-500 focus:outline-none"
               aria-controls="mobile-menu"
               aria-expanded={mobileMenuOpen}
               onClick={toggleMobileMenu}
@@ -136,16 +139,16 @@ const Header: React.FC = () => {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="sm:hidden" id="mobile-menu">
+        <div className="sm:hidden bg-dark-600" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`block px-3 py-2 rounded-md text-base font-medium ${
+                className={`block px-3 py-2 rounded-md text-base font-medium no-underline ${
                   isActive(item.href)
-                    ? "text-primary-500 bg-primary-50"
-                    : "text-gray-700 hover:text-primary-500 hover:bg-gray-50"
+                    ? "text-primary-400 bg-dark-500"
+                    : "text-light-300 hover:text-primary-300 hover:bg-dark-500"
                 }`}
                 aria-current={isActive(item.href) ? "page" : undefined}
               >

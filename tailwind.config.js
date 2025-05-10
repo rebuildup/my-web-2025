@@ -3,96 +3,60 @@ module.exports = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
+    "./src/lib/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       colors: {
+        // Primary blue color with variations
         primary: {
           50: "#e6f1ff",
           100: "#cce3ff",
           200: "#99c8ff",
           300: "#66acff",
           400: "#3391ff",
-          500: "#0075ff", // Primary blue
+          500: "#0075ff", // Main primary blue (原色の青)
           600: "#005ecc",
           700: "#004699",
           800: "#002f66",
           900: "#001733",
         },
-        gray: {
-          50: "#f9fafb",
-          100: "#f3f4f6",
-          200: "#e5e7eb",
-          300: "#d1d5db",
-          400: "#9ca3af",
-          500: "#6b7280",
-          600: "#4b5563",
-          700: "#374151",
-          800: "#1f2937", // Dark gray
-          900: "#111827",
+        // Dark theme colors
+        dark: {
+          100: "#383838",
+          200: "#303030",
+          300: "#282828",
+          400: "#232323",
+          500: "#1f1f1f", // Main dark background
+          600: "#1a1a1a",
+          700: "#171717",
+          800: "#121212",
+          900: "#0a0a0a",
         },
-        success: {
-          50: "#f0fdf4",
-          100: "#dcfce7",
-          500: "#22c55e",
-          700: "#15803d",
+        // Light neutral colors for dark theme
+        light: {
+          100: "#ffffff",
+          200: "#f7f7f7",
+          300: "#f0f0f0",
+          400: "#e0e0e0",
+          500: "#c2c2c2",
+          600: "#a0a0a0",
+          700: "#787878",
+          800: "#4f4f4f",
+          900: "#2c2c2c",
         },
-        warning: {
-          50: "#fffbeb",
-          100: "#fef3c7",
-          500: "#f59e0b",
-          700: "#b45309",
-        },
-        error: {
-          50: "#fef2f2",
-          100: "#fee2e2",
-          500: "#ef4444",
-          700: "#b91c1c",
-        },
-      },
-      fontFamily: {
-        sans: [
-          '"adobe-clean"',
-          "ui-sans-serif",
-          "system-ui",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          '"Segoe UI"',
-          "Roboto",
-          '"Helvetica Neue"',
-          "Arial",
-          "sans-serif",
-        ],
-        serif: [
-          '"adobe-caslon-pro"',
-          "ui-serif",
-          "Georgia",
-          "Cambria",
-          '"Times New Roman"',
-          "Times",
-          "serif",
-        ],
-        mono: [
-          '"source-code-pro"',
-          "ui-monospace",
-          "SFMono-Regular",
-          "Menlo",
-          "Monaco",
-          "Consolas",
-          '"Liberation Mono"',
-          '"Courier New"',
-          "monospace",
-        ],
       },
       boxShadow: {
-        smooth: "0 4px 14px 0 rgba(0, 0, 0, 0.05)",
-        hover: "0 10px 25px rgba(0, 0, 0, 0.1)",
-        card: "0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1)",
-        "card-hover":
-          "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-        inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+        smooth: "0 4px 14px 0 rgba(0, 0, 0, 0.2)",
+        hover: "0 10px 25px rgba(0, 0, 0, 0.3)",
+        card: "0 4px 6px rgba(0, 0, 0, 0.3)",
+        "card-hover": "0 10px 15px rgba(0, 0, 0, 0.4)",
+        inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.25)",
         focus: "0 0 0 3px rgba(0, 117, 255, 0.5)",
+        blue: "0 0 15px rgba(0, 117, 255, 0.5)",
+        glow: "0 0 10px rgba(0, 117, 255, 0.5)",
       },
+      // Animation definitions for subtle interactions
       transitionProperty: {
         height: "height",
         spacing: "margin, padding",
@@ -108,6 +72,8 @@ module.exports = {
         "bounce-sm": "bounceSm 2s infinite",
         "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "ping-slow": "ping 3s cubic-bezier(0, 0, 0.2, 1) infinite",
+        "spin-slow": "spin 3s linear infinite",
+        float: "float 6s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
@@ -140,22 +106,16 @@ module.exports = {
             animationTimingFunction: "cubic-bezier(0, 0, 0.2, 1)",
           },
         },
+        float: {
+          "0%, 100%": {
+            transform: "translateY(0)",
+          },
+          "50%": {
+            transform: "translateY(-10px)",
+          },
+        },
       },
-      // Custom utilities
-      spacing: {
-        72: "18rem",
-        84: "21rem",
-        96: "24rem",
-        128: "32rem",
-      },
-      maxWidth: {
-        "8xl": "88rem",
-        "9xl": "96rem",
-      },
-      minHeight: {
-        "screen-75": "75vh",
-        "screen-50": "50vh",
-      },
+      // Z-index stack management
       zIndex: {
         60: 60,
         70: 70,
@@ -163,43 +123,6 @@ module.exports = {
         90: 90,
         100: 100,
       },
-      // Typography enhancements
-      typography: (theme) => ({
-        DEFAULT: {
-          css: {
-            color: theme("colors.gray.700"),
-            h1: {
-              fontWeight: "700",
-              color: theme("colors.gray.800"),
-            },
-            h2: {
-              fontWeight: "700",
-              color: theme("colors.gray.800"),
-            },
-            h3: {
-              fontWeight: "600",
-              color: theme("colors.gray.800"),
-            },
-            a: {
-              color: theme("colors.primary.500"),
-              "&:hover": {
-                color: theme("colors.primary.600"),
-              },
-            },
-            strong: {
-              color: theme("colors.gray.800"),
-            },
-            pre: {
-              backgroundColor: theme("colors.gray.100"),
-              color: theme("colors.gray.800"),
-            },
-            code: {
-              color: theme("colors.gray.800"),
-              fontWeight: "600",
-            },
-          },
-        },
-      }),
     },
   },
   plugins: [],

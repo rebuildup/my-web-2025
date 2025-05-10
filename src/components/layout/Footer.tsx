@@ -45,25 +45,27 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer ref={footerRef} className="bg-gray-800 text-white mt-12">
+    <footer ref={footerRef} className="bg-dark-700 text-light-200 mt-12">
       <div className="container-custom mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h2 className="text-xl font-bold mb-4">My Site</h2>
-            <p className="text-gray-300 max-w-md">
+            <h2 className="text-xl font-bold mb-4 text-light-100">My Site</h2>
+            <p className="text-light-400 max-w-md">
               A personal website showcasing my work, projects, and tools. Built
               with Next.js, React, and TypeScript.
             </p>
           </div>
           <div className="grid grid-cols-2">
             <div>
-              <h3 className="text-lg font-semibold mb-3">Navigation</h3>
+              <h3 className="text-lg font-semibold mb-3 text-light-100">
+                Navigation
+              </h3>
               <ul className="space-y-2">
                 {navigation.main.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-gray-300 hover:text-white transition-colors"
+                      className="text-light-400 hover:text-primary-400 transition-colors no-underline"
                     >
                       {item.name}
                     </Link>
@@ -72,13 +74,15 @@ const Footer: React.FC = () => {
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-3">Legal</h3>
+              <h3 className="text-lg font-semibold mb-3 text-light-100">
+                Legal
+              </h3>
               <ul className="space-y-2">
                 {navigation.legal.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-gray-300 hover:text-white transition-colors"
+                      className="text-light-400 hover:text-primary-400 transition-colors no-underline"
                     >
                       {item.name}
                     </Link>
@@ -88,14 +92,14 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <div className="text-gray-300 mb-4 md:mb-0">
+        <div className="border-t border-dark-500 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="text-light-500 mb-4 md:mb-0">
             &copy; {currentYear} My Site. All rights reserved.
           </div>
           <div className="flex space-x-6">
             <a
               href="#"
-              className="text-gray-300 hover:text-white transition-colors"
+              className="text-light-500 hover:text-primary-400 transition-colors"
               aria-label="Twitter"
             >
               <svg
@@ -109,7 +113,7 @@ const Footer: React.FC = () => {
             </a>
             <a
               href="#"
-              className="text-gray-300 hover:text-white transition-colors"
+              className="text-light-500 hover:text-primary-400 transition-colors"
               aria-label="GitHub"
             >
               <svg
@@ -127,7 +131,7 @@ const Footer: React.FC = () => {
             </a>
             <a
               href="#"
-              className="text-gray-300 hover:text-white transition-colors"
+              className="text-light-500 hover:text-primary-400 transition-colors"
               aria-label="LinkedIn"
             >
               <svg
@@ -138,11 +142,7 @@ const Footer: React.FC = () => {
               >
                 <path
                   fillRule="evenodd"
-                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0
-                 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966
-                 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783
-                 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586
-                 7-2.777 7 2.476v6.759z"
+                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
                   clipRule="evenodd"
                 />
               </svg>
