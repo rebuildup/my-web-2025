@@ -1,14 +1,16 @@
-@import "tailwindcss";
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
-/* Custom theme configuration for v4 */
-@theme {
+/* Custom theme configuration */
+:root {
   /* Primary blue color variations */
   --color-primary-50: #e6f1ff;
   --color-primary-100: #cce3ff;
   --color-primary-200: #99c8ff;
   --color-primary-300: #66acff;
   --color-primary-400: #3391ff;
-  --color-primary-500: #0075ff; /* Main primary blue */
+  --color-primary-500: #0075ff;
   --color-primary-600: #005ecc;
   --color-primary-700: #004699;
   --color-primary-800: #002f66;
@@ -19,13 +21,13 @@
   --color-dark-200: #303030;
   --color-dark-300: #282828;
   --color-dark-400: #232323;
-  --color-dark-500: #1f1f1f; /* Main dark background */
+  --color-dark-500: #1f1f1f;
   --color-dark-600: #1a1a1a;
   --color-dark-700: #171717;
   --color-dark-800: #121212;
   --color-dark-900: #0a0a0a;
 
-  /* Light neutral colors for dark theme */
+  /* Light neutral colors */
   --color-light-100: #ffffff;
   --color-light-200: #f7f7f7;
   --color-light-300: #f0f0f0;
@@ -35,93 +37,26 @@
   --color-light-700: #787878;
   --color-light-800: #4f4f4f;
   --color-light-900: #2c2c2c;
-
-  /* Custom shadows */
-  --shadow-smooth: 0 4px 14px 0 rgba(0, 0, 0, 0.2);
-  --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.3);
-  --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3);
-  --shadow-card-hover: 0 10px 15px rgba(0, 0, 0, 0.4);
-  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.25);
-  --shadow-focus: 0 0 0 3px rgba(0, 117, 255, 0.5);
-  --shadow-blue: 0 0 15px rgba(0, 117, 255, 0.5);
-  --shadow-glow: 0 0 10px rgba(0, 117, 255, 0.5);
-
-  /* Custom animations - converted to CSS custom properties */
-  --animate-fade-in: fadeIn 0.5s ease-out;
-  --animate-slide-up: slideUp 0.5s ease-out;
-  --animate-slide-down: slideDown 0.5s ease-out;
-  --animate-slide-left: slideLeft 0.5s ease-out;
-  --animate-slide-right: slideRight 0.5s ease-out;
-  --animate-bounce-sm: bounceSm 2s infinite;
-  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  --animate-ping-slow: ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
-  --animate-spin-slow: spin 3s linear infinite;
-  --animate-float: float 6s ease-in-out infinite;
 }
 
-/* Keyframes for custom animations */
+/* Custom keyframes */
 @keyframes fadeIn {
-  0% {
+  from {
     opacity: 0;
   }
-  100% {
+  to {
     opacity: 1;
   }
 }
 
 @keyframes slideUp {
-  0% {
+  from {
     transform: translateY(20px);
     opacity: 0;
   }
-  100% {
+  to {
     transform: translateY(0);
     opacity: 1;
-  }
-}
-
-@keyframes slideDown {
-  0% {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideLeft {
-  0% {
-    transform: translateX(-20px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideRight {
-  0% {
-    transform: translateX(20px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes bounceSm {
-  0%,
-  100% {
-    transform: translateY(-5px);
-    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-  }
-  50% {
-    transform: translateY(0);
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
 }
 
@@ -135,255 +70,79 @@
   }
 }
 
-@layer base {
-  html {
-    font-family: "adobe-clean", system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    scroll-behavior: smooth;
-  }
-
-  body {
-    @apply bg-dark-500 text-light-100;
-  }
-
-  /* Heading Typography */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-sans font-bold text-light-100;
-  }
-
-  h1 {
-    @apply text-4xl md:text-5xl;
-  }
-  h2 {
-    @apply text-3xl md:text-4xl;
-  }
-  h3 {
-    @apply text-2xl md:text-3xl;
-  }
-  h4 {
-    @apply text-xl md:text-2xl;
-  }
-  h5 {
-    @apply text-lg md:text-xl;
-  }
-  h6 {
-    @apply text-base md:text-lg;
-  }
-
-  /* Paragraph styles */
-  p {
-    @apply mb-4 leading-relaxed text-light-200;
-  }
-
-  /* Lists */
-  ul,
-  ol {
-    @apply pl-5 mb-4 text-light-200;
-  }
-
-  ul {
-    @apply list-disc;
-  }
-  ol {
-    @apply list-decimal;
-  }
-
-  /* Enhanced thin scrollbar style */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-dark-300;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-dark-100 rounded-full hover:bg-primary-700 transition-colors duration-300;
-  }
-
-  /* Firefox scrollbar styling */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: #383838 #282828;
-  }
-
-  /* Improved focus styles for accessibility */
-  a:focus,
-  button:focus,
-  input:focus,
-  textarea:focus,
-  select:focus {
-    @apply outline-none ring-2 ring-primary-500 ring-opacity-50;
-  }
-
-  /* Link styles */
-  a {
-    @apply text-primary-400 hover:text-primary-300 transition-colors duration-300 underline;
-  }
-
-  /* Form elements */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="number"],
-  input[type="search"],
-  input[type="tel"],
-  input[type="url"],
-  textarea,
-  select {
-    @apply block w-full px-3 py-2 bg-dark-400 border border-dark-200 text-light-100
-           rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 
-           focus:border-primary-500 transition-colors duration-300;
-  }
-
-  /* Disabled form elements */
-  input:disabled,
-  textarea:disabled,
-  select:disabled {
-    @apply bg-dark-600 cursor-not-allowed opacity-60;
-  }
-
-  /* Checkbox and radio */
-  input[type="checkbox"],
-  input[type="radio"] {
-    @apply h-4 w-4 text-primary-500 focus:ring-primary-500 border-dark-200 
-           rounded transition-colors duration-300;
-  }
-
-  /* Selection color */
-  ::selection {
-    @apply bg-primary-900 text-light-100;
-  }
+/* Base styles */
+html {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
-@layer components {
-  /* Container utilities */
+body {
+  background-color: var(--color-dark-500);
+  color: var(--color-light-100);
+}
+
+/* Enhanced scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--color-dark-300);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-dark-100);
+  border-radius: 9999px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-primary-700);
+}
+
+/* Links */
+a {
+  color: var(--color-primary-400);
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-primary-300);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-primary-900);
+  color: var(--color-light-100);
+}
+
+/* Custom utility classes */
+.container-custom {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
   .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  /* Enhanced button styles */
-  .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 border border-transparent 
-           rounded-md shadow-sm font-medium text-light-100 bg-primary-600 hover:bg-primary-500 
-           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 
-           transition-all duration-300 no-underline transform hover:-translate-y-0.5;
-  }
-
-  .btn-secondary {
-    @apply bg-dark-200 hover:bg-dark-100 focus:ring-dark-300 text-light-100;
-  }
-
-  .btn-outline {
-    @apply bg-transparent border-2 border-primary-500 text-primary-400 hover:bg-primary-900 hover:bg-opacity-50;
-  }
-
-  .btn-light {
-    @apply bg-light-800 text-light-100 hover:bg-light-700 border border-light-700;
-  }
-
-  /* Enhanced card styles */
-  .card {
-    @apply bg-dark-400 rounded-lg shadow-card p-6 transition-all duration-300 hover:shadow-card-hover;
-  }
-
-  .card-outline {
-    @apply bg-dark-500 rounded-lg border-2 border-dark-300 p-6 transition-all duration-300 hover:border-primary-800;
-  }
-
-  .card-hover {
-    @apply transform transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
-  }
-
-  /* Section styles */
-  .section {
-    @apply py-12 md:py-16;
-  }
-
-  .section-sm {
-    @apply py-6 md:py-8;
-  }
-
-  .section-lg {
-    @apply py-16 md:py-24;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
 
-@layer utilities {
-  /* Animation utilities */
-  .animate-on-scroll {
-    @apply opacity-0 translate-y-4 transition-all duration-500;
-  }
-
-  .animate-on-scroll.animated {
-    @apply opacity-100 translate-y-0;
-  }
-
-  /* Text shadow utilities */
-  .text-shadow {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  }
-
-  .text-shadow-md {
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.4);
-  }
-
-  /* Text gradient utilities */
-  .text-gradient-primary {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600;
-  }
-
-  .text-gradient-blue-purple {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-purple-500;
-  }
-
-  /* Transition utilities */
-  .transition-fast {
-    @apply transition-all duration-150 ease-in-out;
-  }
-
-  .transition-medium {
-    @apply transition-all duration-300 ease-in-out;
-  }
-
-  .transition-slow {
-    @apply transition-all duration-500 ease-in-out;
-  }
-
-  /* Interactive hover effects */
-  .hover-lift {
-    @apply transition-all duration-300 ease-out;
-  }
-
-  .hover-lift:hover {
-    @apply -translate-y-1 shadow-lg;
-  }
-
-  .hover-scale {
-    @apply transition-transform duration-300 ease-out;
-  }
-
-  .hover-scale:hover {
-    @apply scale-105;
-  }
-
-  .hover-glow {
-    @apply transition-all duration-300;
-  }
-
-  .hover-glow:hover {
-    @apply shadow-blue;
+@media (min-width: 1024px) {
+  .container-custom {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 
-/* Animation classes */
+/* GSAP animation hooks */
 .animate-fade-in {
   opacity: 0;
 }
@@ -408,7 +167,6 @@
   transform: translateY(-20px);
 }
 
-/* GSAP animation hooks */
 .gsap-reveal {
   visibility: hidden;
 }
