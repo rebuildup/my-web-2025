@@ -157,7 +157,7 @@ const SearchPage = () => {
   // Get all search results
   const getAllResults = useCallback((): SearchResult[] => {
     return Object.values(searchIndex).flat();
-  }, []);
+  }, [searchIndex]);
 
   // Client-side search implementation
   const handleSearch = useCallback(

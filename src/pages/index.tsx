@@ -56,11 +56,6 @@ const HomePage = () => {
       title="Home | Site Map"
       description="Explore the sections of my website"
     >
-      {/* Debug: Add obvious styles to test if Tailwind is working */}
-      <div className="bg-red-500 text-white p-4 mb-4 rounded">
-        🚨 DEBUG: If you see this with red background, Tailwind is working!
-      </div>
-
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">
           Welcome to My Site
@@ -76,13 +71,13 @@ const HomePage = () => {
       >
         {sections.map((section, index) => (
           <Link href={section.path} key={index} className="no-underline">
-            <div className="section-card bg-white rounded-lg shadow-lg p-6 border-2 border-transparent hover:border-blue-500 transition-all duration-300 h-full flex flex-col">
+            <div className="section-card bg-white rounded-lg shadow-lg p-6 border-2 border-transparent hover:border-primary-500 transition-all duration-300 h-full flex flex-col">
               <div className="text-4xl mb-4">{section.icon}</div>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">
                 {section.title}
               </h2>
               <p className="text-gray-600 flex-grow">{section.description}</p>
-              <div className="mt-4 text-blue-500 font-medium flex items-center">
+              <div className="mt-4 text-primary-500 font-medium flex items-center">
                 Explore {section.title}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -107,13 +102,13 @@ const HomePage = () => {
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href="/privacy-policy"
-            className="text-blue-500 hover:text-blue-700 transition-colors"
+            className="text-primary-500 hover:text-primary-700 transition-colors"
           >
             Privacy Policy
           </Link>
           <Link
             href="/search"
-            className="text-blue-500 hover:text-blue-700 transition-colors"
+            className="text-primary-500 hover:text-primary-700 transition-colors"
           >
             Site Search
           </Link>
