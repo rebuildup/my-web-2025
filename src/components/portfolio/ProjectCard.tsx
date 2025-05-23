@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
-import Card from "@/components/ui/Card";
 
 interface ProjectCardProps {
   title: string;
@@ -26,38 +25,37 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (cardRef.current) {
-      cardRef.current.addEventListener("mouseenter", handleMouseEnter);
-      cardRef.current.addEventListener("mouseleave", handleMouseLeave);
-    }
+    const card = cardRef.current;
+    if (!card) return;
+
+    const handleMouseEnter = () => {
+      gsap.to(card, {
+        y: -10,
+        boxShadow:
+          "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    };
+
+    const handleMouseLeave = () => {
+      gsap.to(card, {
+        y: 0,
+        boxShadow:
+          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    };
+
+    card.addEventListener("mouseenter", handleMouseEnter);
+    card.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
-      if (cardRef.current) {
-        cardRef.current.removeEventListener("mouseenter", handleMouseEnter);
-        cardRef.current.removeEventListener("mouseleave", handleMouseLeave);
-      }
+      card.removeEventListener("mouseenter", handleMouseEnter);
+      card.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
-
-  const handleMouseEnter = () => {
-    gsap.to(cardRef.current, {
-      y: -10,
-      boxShadow:
-        "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  };
-
-  const handleMouseLeave = () => {
-    gsap.to(cardRef.current, {
-      y: 0,
-      boxShadow:
-        "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  };
 
   const getDestination = () => {
     if (slug) {

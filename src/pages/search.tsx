@@ -1,5 +1,5 @@
 // src/pages/search.tsx
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Layout from "@/components/layout/Layout";
@@ -29,20 +29,6 @@ const SearchPage = () => {
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-
-  // Get search term from URL query parameters
-  useEffect(() => {
-    if (router.query.q) {
-      const query = Array.isArray(router.query.q)
-        ? router.query.q[0]
-        : router.query.q;
-
-      setSearchTerm(query);
-      if (query.trim() !== "") {
-        handleSearch(query);
-      }
-    }
-  }, [router.query.q]);
 
   // Simulated search index - in a real application, this would be loaded from a JSON file
   // generated during the build process or fetched from an API
@@ -169,48 +155,65 @@ const SearchPage = () => {
   };
 
   // Get all search results
-  const getAllResults = (): SearchResult[] => {
+  const getAllResults = useCallback((): SearchResult[] => {
     return Object.values(searchIndex).flat();
-  };
+  }, []);
 
   // Client-side search implementation
-  const handleSearch = (query: string = searchTerm) => {
-    setIsSearching(true);
-    setHasSearched(true);
+  const handleSearch = useCallback(
+    (query: string = searchTerm) => {
+      setIsSearching(true);
+      setHasSearched(true);
 
-    // Update URL with search term for bookmarking/sharing
-    router.replace(
-      {
-        pathname: router.pathname,
-        query: { q: query },
-      },
-      undefined,
-      { shallow: true }
-    );
+      // Update URL with search term for bookmarking/sharing
+      router.replace(
+        {
+          pathname: router.pathname,
+          query: { q: query },
+        },
+        undefined,
+        { shallow: true }
+      );
 
-    // Simulate network delay for a more realistic search experience
-    setTimeout(() => {
-      if (query.trim() === "") {
-        setSearchResults([]);
+      // Simulate network delay for a more realistic search experience
+      setTimeout(() => {
+        if (query.trim() === "") {
+          setSearchResults([]);
+          setIsSearching(false);
+          return;
+        }
+
+        const allResults = getAllResults();
+        const normalizedQuery = query.toLowerCase();
+
+        // Search logic - checking title and excerpt for matches
+        const results = allResults.filter((result) => {
+          return (
+            result.title.toLowerCase().includes(normalizedQuery) ||
+            result.excerpt.toLowerCase().includes(normalizedQuery)
+          );
+        });
+
+        setSearchResults(results);
         setIsSearching(false);
-        return;
+      }, 500);
+    },
+    [searchTerm, router, getAllResults]
+  );
+
+  // Get search term from URL query parameters
+  useEffect(() => {
+    if (router.query.q) {
+      const query = Array.isArray(router.query.q)
+        ? router.query.q[0]
+        : router.query.q;
+
+      setSearchTerm(query);
+      if (query.trim() !== "") {
+        handleSearch(query);
       }
-
-      const allResults = getAllResults();
-      const normalizedQuery = query.toLowerCase();
-
-      // Search logic - checking title and excerpt for matches
-      const results = allResults.filter((result) => {
-        return (
-          result.title.toLowerCase().includes(normalizedQuery) ||
-          result.excerpt.toLowerCase().includes(normalizedQuery)
-        );
-      });
-
-      setSearchResults(results);
-      setIsSearching(false);
-    }, 500);
-  };
+    }
+  }, [router.query.q, handleSearch]);
 
   // Form submission handler
   const handleSubmit = (e: React.FormEvent) => {
@@ -278,8 +281,8 @@ const SearchPage = () => {
               Site Search
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Search through the website content to find what you're looking
-              for.
+              Search through the website content to find what you&apos;re
+              looking for.
             </p>
           </AnimatedSection>
 
@@ -325,7 +328,8 @@ const SearchPage = () => {
               <div className="text-sm text-gray-500">
                 <p>
                   Search for content across the site. Try searching for terms
-                  like "portfolio", "about", "tools", etc.
+                  like &ldquo;portfolio&rdquo;, &ldquo;about&rdquo;,
+                  &ldquo;tools&rdquo;, etc.
                 </p>
               </div>
             </Card>
@@ -344,7 +348,8 @@ const SearchPage = () => {
                     <h2 className="text-2xl font-bold text-gray-800">
                       Search Results{" "}
                       <span className="text-lg font-normal text-gray-500">
-                        ({searchResults.length} results for "{searchTerm}")
+                        ({searchResults.length} results for &ldquo;{searchTerm}
+                        &rdquo;)
                       </span>
                     </h2>
 
@@ -422,7 +427,8 @@ const SearchPage = () => {
                     No results found
                   </h3>
                   <p className="text-gray-500 mb-4">
-                    We couldn't find any matches for "{searchTerm}".
+                    We couldn&apos;t find any matches for &ldquo;{searchTerm}
+                    &rdquo;.
                   </p>
                   <div className="max-w-md mx-auto">
                     <h4 className="font-medium text-gray-700 mb-2">

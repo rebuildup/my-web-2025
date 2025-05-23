@@ -24,6 +24,11 @@ interface UseScrollAnimationOptions {
   childrenSelector?: string;
 }
 
+interface AnimationProperties {
+  from: Record<string, number>;
+  to: Record<string, number>;
+}
+
 export const useScrollAnimation = <T extends HTMLElement>(
   options: UseScrollAnimationOptions = {}
 ) => {
@@ -40,19 +45,22 @@ export const useScrollAnimation = <T extends HTMLElement>(
   const ref = useRef<T>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
+    const element = ref.current;
+    if (!element) return;
 
     let elements: HTMLElement[];
 
     if (childrenSelector) {
       elements = Array.from(
-        ref.current.querySelectorAll(childrenSelector)
+        element.querySelectorAll(childrenSelector)
       ) as HTMLElement[];
     } else {
-      elements = [ref.current];
+      elements = [element];
     }
 
-    const getAnimationProperties = (type: AnimationType) => {
+    const getAnimationProperties = (
+      type: AnimationType
+    ): AnimationProperties => {
       switch (type) {
         case "fadeInLeft":
           return {
@@ -90,7 +98,7 @@ export const useScrollAnimation = <T extends HTMLElement>(
 
     // Create ScrollTrigger for animation
     ScrollTrigger.create({
-      trigger: ref.current,
+      trigger: element,
       start,
       onEnter: () => {
         gsap.to(elements, {
@@ -138,7 +146,7 @@ export const useScrollAnimation = <T extends HTMLElement>(
     return () => {
       // Cleanup
       ScrollTrigger.getAll()
-        .filter((trigger) => trigger.vars.trigger === ref.current)
+        .filter((trigger) => trigger.vars.trigger === element)
         .forEach((trigger) => trigger.kill());
     };
   }, [type, duration, delay, once, start, stagger, childrenSelector]);

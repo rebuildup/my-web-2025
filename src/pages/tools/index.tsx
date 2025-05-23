@@ -47,7 +47,7 @@ const ToolsPage = () => {
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <p className="text-gray-700 mb-4">
-            Welcome to the tools section. Here you'll find a collection of
+            Welcome to the tools section. Here you&apos;ll find a collection of
             useful tools and resources that you can use for various purposes.
           </p>
           <p className="text-gray-700">Select a tool below to get started.</p>

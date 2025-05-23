@@ -51,7 +51,7 @@ const PortfolioPage = () => {
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <p className="text-gray-700 mb-4">
             Welcome to my portfolio section. Here you can explore the various
-            projects I've worked on, organized by category.
+            projects I&apos;ve worked on, organized by category.
           </p>
           <p className="text-gray-700">
             Select a category below to view specific projects.

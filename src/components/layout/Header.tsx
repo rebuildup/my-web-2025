@@ -55,7 +55,10 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header ref={headerRef} className="bg-dark-600 shadow-md sticky top-0 z-50">
+    <header
+      ref={headerRef}
+      className="bg-slate-800 shadow-md sticky top-0 z-50"
+    >
       <nav className="container-custom mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
@@ -78,8 +81,8 @@ const Header: React.FC = () => {
                   href={item.href}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors no-underline ${
                     isActive(item.href)
-                      ? "text-primary-400 bg-dark-500"
-                      : "text-light-400 hover:text-primary-300 hover:bg-dark-500"
+                      ? "text-primary-400 bg-slate-700"
+                      : "text-slate-300 hover:text-primary-300 hover:bg-slate-700"
                   }`}
                   aria-current={isActive(item.href) ? "page" : undefined}
                 >
@@ -93,7 +96,7 @@ const Header: React.FC = () => {
           <div className="flex items-center sm:hidden">
             <button
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-light-300 hover:text-primary-400 hover:bg-dark-500 focus:outline-none"
+              className="inline-flex items-center justify-center p-2 rounded-md text-slate-300 hover:text-primary-400 hover:bg-slate-700 focus:outline-none"
               aria-controls="mobile-menu"
               aria-expanded={mobileMenuOpen}
               onClick={toggleMobileMenu}
@@ -139,7 +142,7 @@ const Header: React.FC = () => {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="sm:hidden bg-dark-600" id="mobile-menu">
+        <div className="sm:hidden bg-slate-800" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navigation.map((item) => (
               <Link
@@ -147,8 +150,8 @@ const Header: React.FC = () => {
                 href={item.href}
                 className={`block px-3 py-2 rounded-md text-base font-medium no-underline ${
                   isActive(item.href)
-                    ? "text-primary-400 bg-dark-500"
-                    : "text-light-300 hover:text-primary-300 hover:bg-dark-500"
+                    ? "text-primary-400 bg-slate-700"
+                    : "text-slate-300 hover:text-primary-300 hover:bg-slate-700"
                 }`}
                 aria-current={isActive(item.href) ? "page" : undefined}
               >

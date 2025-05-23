@@ -45,19 +45,19 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer ref={footerRef} className="bg-dark-700 text-light-200 mt-12">
+    <footer ref={footerRef} className="bg-slate-800 text-slate-200 mt-12">
       <div className="container-custom mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h2 className="text-xl font-bold mb-4 text-light-100">My Site</h2>
-            <p className="text-light-400 max-w-md">
+            <h2 className="text-xl font-bold mb-4 text-slate-100">My Site</h2>
+            <p className="text-slate-400 max-w-md">
               A personal website showcasing my work, projects, and tools. Built
               with Next.js, React, and TypeScript.
             </p>
           </div>
           <div className="grid grid-cols-2">
             <div>
-              <h3 className="text-lg font-semibold mb-3 text-light-100">
+              <h3 className="text-lg font-semibold mb-3 text-slate-100">
                 Navigation
               </h3>
               <ul className="space-y-2">
@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-light-400 hover:text-primary-400 transition-colors no-underline"
+                      className="text-slate-400 hover:text-primary-400 transition-colors no-underline"
                     >
                       {item.name}
                     </Link>
@@ -74,7 +74,7 @@ const Footer: React.FC = () => {
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-3 text-light-100">
+              <h3 className="text-lg font-semibold mb-3 text-slate-100">
                 Legal
               </h3>
               <ul className="space-y-2">
@@ -82,7 +82,7 @@ const Footer: React.FC = () => {
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="text-light-400 hover:text-primary-400 transition-colors no-underline"
+                      className="text-slate-400 hover:text-primary-400 transition-colors no-underline"
                     >
                       {item.name}
                     </Link>
@@ -92,14 +92,14 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="border-t border-dark-500 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <div className="text-light-500 mb-4 md:mb-0">
+        <div className="border-t border-slate-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="text-slate-500 mb-4 md:mb-0">
             &copy; {currentYear} My Site. All rights reserved.
           </div>
           <div className="flex space-x-6">
             <a
               href="#"
-              className="text-light-500 hover:text-primary-400 transition-colors"
+              className="text-slate-500 hover:text-primary-400 transition-colors"
               aria-label="Twitter"
             >
               <svg
@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
             </a>
             <a
               href="#"
-              className="text-light-500 hover:text-primary-400 transition-colors"
+              className="text-slate-500 hover:text-primary-400 transition-colors"
               aria-label="GitHub"
             >
               <svg
@@ -131,7 +131,7 @@ const Footer: React.FC = () => {
             </a>
             <a
               href="#"
-              className="text-light-500 hover:text-primary-400 transition-colors"
+              className="text-slate-500 hover:text-primary-400 transition-colors"
               aria-label="LinkedIn"
             >
               <svg

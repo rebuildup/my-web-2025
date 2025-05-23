@@ -66,7 +66,7 @@ const NotFoundPage = () => {
 
           <p className="text-xl text-gray-600 mb-8 max-w-md mx-auto">
             The page <span className="font-mono text-primary-500">{path}</span>{" "}
-            doesn't exist or has been moved to a new location.
+            doesn&apos;t exist or has been moved to a new location.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
@@ -144,7 +144,7 @@ const NotFoundPage = () => {
 
             <div className="mt-4 text-center">
               <p className="text-gray-600 mb-3">
-                Still can't find what you're looking for?
+                Still can&apos;t find what you&apos;re looking for?
               </p>
               <Link
                 href="/search"

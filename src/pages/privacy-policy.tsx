@@ -2,8 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Layout from "@/components/layout/Layout";
-import { gsap } from "gsap";
-import Button from "@/components/ui/Button";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import Card from "@/components/ui/Card";
 
@@ -144,7 +142,7 @@ const PrivacyPolicyPage = () => {
                       By using our website, you consent to the data practices
                       described in this policy. We may change this policy from
                       time to time, so please check this page occasionally to
-                      ensure that you're happy with any changes.
+                      ensure that you&apos;re happy with any changes.
                     </p>
                   </div>
                 </Card>
@@ -268,12 +266,12 @@ const PrivacyPolicyPage = () => {
                       You can choose to have your computer warn you each time a
                       cookie is being sent, or you can choose to turn off all
                       cookies via your browser settings. Since each browser is a
-                      little different, look at your browser's Help Menu to
+                      little different, look at your browser&apos;s Help Menu to
                       learn the correct way to modify your cookies.
                     </p>
                     <p>
                       If you disable cookies, some features will be disabled,
-                      but many of our site's features will still function
+                      but many of our site&apos;s features will still function
                       properly.
                     </p>
                   </div>
@@ -306,7 +304,7 @@ const PrivacyPolicyPage = () => {
               {/* Children's Privacy */}
               <section id="childrens-privacy" className="scroll-mt-24">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Children's Privacy
+                  Children&apos;s Privacy
                 </h2>
                 <Card>
                   <div className="prose max-w-none">

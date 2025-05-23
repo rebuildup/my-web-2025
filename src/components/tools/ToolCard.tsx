@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
-import Card from "@/components/ui/Card";
 
 interface ToolCardProps {
   title: string;
@@ -19,60 +18,59 @@ const ToolCard: React.FC<ToolCardProps> = ({
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (cardRef.current) {
-      cardRef.current.addEventListener("mouseenter", handleMouseEnter);
-      cardRef.current.addEventListener("mouseleave", handleMouseLeave);
-    }
+    const card = cardRef.current;
+    if (!card) return;
 
-    return () => {
-      if (cardRef.current) {
-        cardRef.current.removeEventListener("mouseenter", handleMouseEnter);
-        cardRef.current.removeEventListener("mouseleave", handleMouseLeave);
+    const handleMouseEnter = () => {
+      gsap.to(card, {
+        y: -5,
+        boxShadow:
+          "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+        duration: 0.3,
+        ease: "power2.out",
+      });
+
+      // Animate icon
+      const iconElement = card.querySelector(".tool-icon");
+      if (iconElement) {
+        gsap.to(iconElement, {
+          scale: 1.1,
+          color: "#0075ff", // primary-500
+          duration: 0.3,
+          ease: "power2.out",
+        });
       }
     };
+
+    const handleMouseLeave = () => {
+      gsap.to(card, {
+        y: 0,
+        boxShadow:
+          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        duration: 0.3,
+        ease: "power2.out",
+      });
+
+      // Reset icon animation
+      const iconElement = card.querySelector(".tool-icon");
+      if (iconElement) {
+        gsap.to(iconElement, {
+          scale: 1,
+          color: "#4b5563", // gray-600
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      }
+    };
+
+    card.addEventListener("mouseenter", handleMouseEnter);
+    card.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      card.removeEventListener("mouseenter", handleMouseEnter);
+      card.removeEventListener("mouseleave", handleMouseLeave);
+    };
   }, []);
-
-  const handleMouseEnter = () => {
-    gsap.to(cardRef.current, {
-      y: -5,
-      boxShadow:
-        "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-      duration: 0.3,
-      ease: "power2.out",
-    });
-
-    // Animate icon
-    const iconElement = cardRef.current!.querySelector(".tool-icon");
-    if (iconElement) {
-      gsap.to(iconElement, {
-        scale: 1.1,
-        color: "#0075ff", // primary-500
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    }
-  };
-
-  const handleMouseLeave = () => {
-    gsap.to(cardRef.current, {
-      y: 0,
-      boxShadow:
-        "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-      duration: 0.3,
-      ease: "power2.out",
-    });
-
-    // Reset icon animation
-    const iconElement = cardRef.current!.querySelector(".tool-icon");
-    if (iconElement) {
-      gsap.to(iconElement, {
-        scale: 1,
-        color: "#4b5563", // gray-600
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    }
-  };
 
   return (
     <Link href={href} className="block no-underline">

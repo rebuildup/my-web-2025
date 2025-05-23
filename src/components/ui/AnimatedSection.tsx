@@ -28,6 +28,11 @@ interface AnimatedSectionProps {
   id?: string;
 }
 
+interface AnimationProperties {
+  from: Record<string, number>;
+  to: Record<string, number>;
+}
+
 const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   children,
   className = "",
@@ -48,7 +53,7 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
     const section = sectionRef.current;
 
     // Properties for different animation types
-    const animationProps: { [key: string]: any } = {
+    const animationProps: Record<string, AnimationProperties> = {
       fadeIn: {
         from: { opacity: 0 },
         to: { opacity: 1 },
