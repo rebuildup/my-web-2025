@@ -2,7 +2,7 @@
 
 ## 📋 概要
 
-About カテゴリーは、木村友亮（samuido）の個人情報、スキル、経歴を体系的に紹介するセクションです。
+About カテゴリーは、samuido（木村友亮）の個人情報、スキル、経歴を体系的に紹介するセクションです。
 
 ## 🎯 主要機能
 
@@ -13,7 +13,7 @@ About カテゴリーは、木村友亮（samuido）の個人情報、スキル�
 ```typescript
 interface ProfileData {
   personalInfo: {
-    name: string; // 木村友亮
+    name: string; // samuido
     handleName: string; // samuido
     title: string; // フロントエンドエンジニア
     location: string; // 東京, 日本

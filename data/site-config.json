@@ -1,0 +1,77 @@
+{
+  "site": {
+    "name": "samuido",
+    "description": "samuidoの個人Webサイト。ポートフォリオ、創作活動、実用ツールを提供",
+    "url": "https://yusuke-kim.com",
+    "logo": "/logo.svg",
+    "favicon": "/favicon.ico"
+  },
+  "author": {
+    "name": "samuido",
+    "handle": "samuido",
+    "realName": "木村友亮",
+    "email": "rebuild.up.up@gmail.com",
+    "bio": "Web開発者・デザイナー。モダンな技術でユーザー体験を向上させることに情熱を注いでいます。",
+    "avatar": "/avatar.jpg",
+    "location": "Japan"
+  },
+  "social": {
+    "twitter": "@361do_sleep",
+    "github": "samuido",
+    "booth": "samuido"
+  },
+  "navigation": [
+    {
+      "id": "about",
+      "label": "About",
+      "href": "/about",
+      "icon": "user"
+    },
+    {
+      "id": "portfolio",
+      "label": "Portfolio",
+      "href": "/portfolio",
+      "icon": "briefcase"
+    },
+    {
+      "id": "workshop",
+      "label": "Workshop",
+      "href": "/workshop",
+      "icon": "wrench"
+    },
+    {
+      "id": "tools",
+      "label": "Tools",
+      "href": "/tools",
+      "icon": "tool"
+    }
+  ],
+  "theme": {
+    "primaryColor": "#2563eb",
+    "secondaryColor": "#7c3aed",
+    "accentColor": "#059669",
+    "darkMode": true
+  },
+  "features": {
+    "blog": true,
+    "portfolio": true,
+    "tools": true,
+    "shop": true,
+    "comments": false,
+    "analytics": true
+  },
+  "seo": {
+    "defaultTitle": "samuido",
+    "titleTemplate": "%s | samuido",
+    "defaultDescription": "samuidoの個人Webサイト。Web開発、デザイン、創作活動の情報を発信",
+    "defaultKeywords": [
+      "samuido",
+      "Web開発",
+      "デザイン",
+      "ポートフォリオ",
+      "プラグイン",
+      "ツール"
+    ],
+    "defaultOgImage": "/og-image.jpg"
+  }
+}

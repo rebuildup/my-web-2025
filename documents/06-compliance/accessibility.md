@@ -184,7 +184,7 @@ const timingControls = {
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <title>木村友亮 - フロントエンドエンジニア</title>
+    <title>samuido - Web Developer & Designer</title>
   </head>
 
   <!-- ルビ（読み方）の提供 -->

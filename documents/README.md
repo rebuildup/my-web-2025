@@ -89,4 +89,4 @@
 ---
 
 **最終更新**: 2025-01-01  
-**ドキュメント責任者**: 木村友亮 (rebuild.up.up@gmail.com)
+**ドキュメント責任者**: samuido (rebuild.up.up@gmail.com)

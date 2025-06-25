@@ -6,7 +6,7 @@
 
 - **最終更新**: 2025-01-01
 - **適用開始**: サイト公開時
-- **管理者**: 木村友亮 (rebuild.up.up@gmail.com)
+- **管理者**: samuido (rebuild.up.up@gmail.com)
 
 ### 収集する情報
 
@@ -182,7 +182,7 @@ const rightsExercise = {
 ```typescript
 const siteDescription = {
   type: "個人ポートフォリオサイト",
-  owner: "木村友亮",
+  owner: "samuido",
   purposes: [
     "作品・プロジェクトの展示",
     "技術情報・知識の共有",
@@ -215,7 +215,7 @@ const disclaimers = {
 
 #### コンテンツの著作権
 
-- **著作権者**: 木村友亮
+- **著作権者**: samuido (木村友亮)
 - **対象**: サイト内の全オリジナルコンテンツ
 - **禁止行為**: 無断転載・複製・配布
 
@@ -224,7 +224,7 @@ const disclaimers = {
 ```typescript
 const intellectualProperty = {
   originalWorks: {
-    copyright: "木村友亮",
+    copyright: "samuido (木村友亮)",
     rights: "All Rights Reserved",
     permission: "contact required",
   },
@@ -236,7 +236,7 @@ const intellectualProperty = {
   },
 
   blogPosts: {
-    copyright: "木村友亮",
+    copyright: "samuido (木村友亮)",
     quotation: "出典明記で部分引用可",
     fullCopy: "禁止",
   },
