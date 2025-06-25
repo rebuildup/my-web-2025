@@ -4,58 +4,38 @@ import { useState, useMemo } from "react";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
 import portfolioData from "@/../data/portfolio.json";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Portfolio | samuido",
-  description:
-    "samuidoのポートフォリオ。Web開発、デザイン、ツール制作のプロジェクト事例を紹介。",
-  keywords: [
-    "samuido",
-    "ポートフォリオ",
-    "Web開発",
-    "プロジェクト",
-    "制作実績",
-  ],
-  openGraph: {
-    title: "Portfolio | samuido",
-    description:
-      "samuidoのポートフォリオ。Web開発、デザイン、ツール制作のプロジェクト事例を紹介。",
-    url: "https://yusuke-kim.com/portfolio",
-  },
-  twitter: {
-    title: "Portfolio | samuido",
-    description:
-      "samuidoのポートフォリオ。Web開発、デザイン、ツール制作のプロジェクト事例を紹介。",
-  },
-};
 
 export default function PortfolioPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedTag, setSelectedTag] = useState<string>("");
 
   const filteredProjects = useMemo(() => {
-    let filtered = portfolioData.items;
+    let filtered = portfolioData.projects;
 
     if (selectedCategory !== "all") {
-      filtered = filtered.filter((item) => item.category === selectedCategory);
+      filtered = filtered.filter(
+        (item: any) => item.category === selectedCategory
+      );
     }
 
     if (selectedTag) {
-      filtered = filtered.filter((item) => item.tags.includes(selectedTag));
+      filtered = filtered.filter((item: any) =>
+        item.tags.includes(selectedTag)
+      );
     }
 
     return filtered;
   }, [selectedCategory, selectedTag]);
 
-  const categoriesWithCount = portfolioData.categories.map((category) => ({
+  const categoriesWithCount = portfolioData.categories.map((category: any) => ({
     ...category,
-    count: portfolioData.items.filter((item) => item.category === category.id)
-      .length,
+    count: portfolioData.projects.filter(
+      (item: any) => item.category === category.id
+    ).length,
   }));
 
   const allTags = Array.from(
-    new Set(portfolioData.items.flatMap((item) => item.tags))
+    new Set(portfolioData.projects.flatMap((item: any) => item.tags))
   ).sort();
 
   const getCategoryColor = (categoryId: string) => {
@@ -115,7 +95,7 @@ export default function PortfolioPage() {
                   {getCategoryIcon(category.id)}
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  {category.name}
+                  {category.label}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
                   {category.description}
@@ -133,7 +113,7 @@ export default function PortfolioPage() {
               onClick={() => setSelectedCategory("all")}
               className="mr-4"
             >
-              すべて表示 ({portfolioData.items.length})
+              すべて表示 ({portfolioData.projects.length})
             </Button>
           </div>
         </div>
@@ -154,7 +134,7 @@ export default function PortfolioPage() {
             >
               すべて
             </button>
-            {allTags.map((tag) => (
+            {allTags.map((tag: string) => (
               <button
                 key={tag}
                 onClick={() => setSelectedTag(selectedTag === tag ? "" : tag)}
@@ -172,7 +152,7 @@ export default function PortfolioPage() {
 
         {/* Projects Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {filteredProjects.map((project) => (
+          {filteredProjects.map((project: any) => (
             <Card key={project.id} className="group cursor-pointer h-full">
               <div className="flex flex-col h-full">
                 {/* Project Image Placeholder */}
@@ -184,8 +164,8 @@ export default function PortfolioPage() {
                     <span className="px-2 py-1 bg-white/80 dark:bg-gray-800/80 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300">
                       {
                         categoriesWithCount.find(
-                          (cat) => cat.id === project.category
-                        )?.name
+                          (cat: any) => cat.id === project.category
+                        )?.label
                       }
                     </span>
                   </div>
@@ -202,7 +182,7 @@ export default function PortfolioPage() {
 
                   {/* Technologies */}
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tags.slice(0, 3).map((tag) => (
+                    {project.tags.slice(0, 3).map((tag: string) => (
                       <span
                         key={tag}
                         className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded"
@@ -218,16 +198,14 @@ export default function PortfolioPage() {
                   </div>
 
                   {/* Metadata */}
-                  {project.metadata && (
-                    <div className="text-sm text-gray-500 dark:text-gray-400 space-y-1">
-                      {project.metadata.duration && (
-                        <div>期間: {project.metadata.duration}</div>
-                      )}
-                      {project.metadata.client && (
-                        <div>クライアント: {project.metadata.client}</div>
-                      )}
-                    </div>
-                  )}
+                  <div className="text-sm text-gray-500 dark:text-gray-400 space-y-1">
+                    {project.projectPeriod && (
+                      <div>期間: {project.projectPeriod}</div>
+                    )}
+                    {project.client && (
+                      <div>クライアント: {project.client}</div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Actions */}
@@ -236,9 +214,9 @@ export default function PortfolioPage() {
                     <Button size="sm" className="flex-1">
                       詳細を見る
                     </Button>
-                    {project.metadata?.url && (
+                    {project.links?.demo && (
                       <Button
-                        href={project.metadata.url}
+                        href={project.links.demo}
                         external
                         variant="outline"
                         size="sm"

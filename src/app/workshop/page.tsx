@@ -4,44 +4,20 @@ import { useState } from "react";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
 import blogData from "@/../data/blog.json";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Workshop | samuido",
-  description:
-    "samuidoのワークショップ・ブログ。Web開発の技術情報、チュートリアル、学習リソースを提供。",
-  keywords: [
-    "samuido",
-    "ワークショップ",
-    "ブログ",
-    "Web開発",
-    "チュートリアル",
-    "技術情報",
-  ],
-  openGraph: {
-    title: "Workshop | samuido",
-    description:
-      "samuidoのワークショップ・ブログ。Web開発の技術情報、チュートリアル、学習リソースを提供。",
-    url: "https://yusuke-kim.com/workshop",
-  },
-  twitter: {
-    title: "Workshop | samuido",
-    description:
-      "samuidoのワークショップ・ブログ。Web開発の技術情報、チュートリアル、学習リソースを提供。",
-  },
-};
 
 export default function WorkshopPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const categoriesWithCount = blogData.categories.map((category) => ({
     ...category,
-    count: blogData.items.filter((item) => item.category === category.id).length,
+    count: blogData.items.filter((item) => item.category === category.id)
+      .length,
   }));
 
-  const filteredPosts = selectedCategory === "all" 
-    ? blogData.items 
-    : blogData.items.filter((item) => item.category === selectedCategory);
+  const filteredPosts =
+    selectedCategory === "all"
+      ? blogData.items
+      : blogData.items.filter((item) => item.category === selectedCategory);
 
   const getCategoryIcon = (categoryId: string) => {
     const icons: Record<string, string> = {
@@ -54,10 +30,10 @@ export default function WorkshopPage() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ja-JP', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("ja-JP", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -132,7 +108,11 @@ export default function WorkshopPage() {
                   </div>
                   <div className="absolute top-3 right-3">
                     <span className="px-2 py-1 bg-white/80 dark:bg-gray-800/80 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300">
-                      {categoriesWithCount.find((cat) => cat.id === post.category)?.name}
+                      {
+                        categoriesWithCount.find(
+                          (cat) => cat.id === post.category
+                        )?.name
+                      }
                     </span>
                   </div>
                 </div>
@@ -218,8 +198,8 @@ export default function WorkshopPage() {
                   BOOTHで販売しています。作業効率化にお役立てください。
                 </p>
                 <div className="flex gap-4">
-                  <Button 
-                    href="https://samuido.booth.pm" 
+                  <Button
+                    href="https://samuido.booth.pm"
                     external
                     variant="primary"
                   >
@@ -251,15 +231,15 @@ export default function WorkshopPage() {
               GitHubやTwitterでお知らせしています。
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                href="https://github.com/samuido" 
+              <Button
+                href="https://github.com/samuido"
                 external
                 variant="outline"
               >
                 GitHub フォロー
               </Button>
-              <Button 
-                href="https://twitter.com/361do_sleep" 
+              <Button
+                href="https://twitter.com/361do_sleep"
                 external
                 variant="outline"
               >

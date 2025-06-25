@@ -11,7 +11,7 @@
       "featuredImage": "/images/blog/nextjs-tailwind-thumb.jpg",
       "status": "published",
       "createdAt": "2025-01-01T00:00:00Z",
-      "updatedAt": "2025-01-01T00:00:00Z", 
+      "updatedAt": "2025-01-01T00:00:00Z",
       "publishedAt": "2025-01-01T00:00:00Z",
       "content": "# Next.js + TailwindCSS v4でモダンなWebサイトを構築する方法\n\n最新のNext.js 15とTailwindCSS v4を組み合わせることで、効率的で保守性の高いWebサイトを構築できます。\n\n## 環境構築\n\n```bash\nnpx create-next-app@latest my-website --typescript --tailwind --eslint\ncd my-website\n```\n\n## TailwindCSS v4の設定\n\nTailwindCSS v4では、新しいエンジンにより大幅なパフォーマンス向上が期待できます...",
       "excerpt": "最新のNext.js 15とTailwindCSS v4を使った効率的な開発手法",
@@ -28,7 +28,7 @@
     },
     {
       "id": "typescript-best-practices",
-      "type": "blog", 
+      "type": "blog",
       "title": "TypeScript型定義のベストプラクティス",
       "description": "保守性の高いTypeScriptコードを書くための型設計のコツと、実践的なパターンを紹介します。",
       "slug": "typescript-best-practices",
@@ -58,7 +58,7 @@
       "title": "Reactコンポーネント設計パターン集",
       "description": "再利用可能で保守性の高いReactコンポーネントを作るための設計パターンと実装例を解説します。",
       "slug": "react-component-design-patterns",
-      "category": "tutorials", 
+      "category": "tutorials",
       "tags": ["React", "コンポーネント設計", "設計パターン", "フロントエンド"],
       "featuredImage": "/images/blog/react-patterns-thumb.jpg",
       "status": "published",
@@ -75,7 +75,12 @@
       "seo": {
         "title": "Reactコンポーネント設計パターン集",
         "description": "再利用可能で保守性の高いReactコンポーネントを作るための設計パターンと実装例を解説。",
-        "keywords": ["React", "コンポーネント設計", "設計パターン", "フロントエンド"]
+        "keywords": [
+          "React",
+          "コンポーネント設計",
+          "設計パターン",
+          "フロントエンド"
+        ]
       }
     }
   ],
@@ -86,7 +91,7 @@
       "description": "技術記事、開発日記、知見の共有"
     },
     {
-      "id": "tutorials", 
+      "id": "tutorials",
       "name": "チュートリアル",
       "description": "実践的な技術解説・ハンズオン"
     },
@@ -95,5 +100,87 @@
       "name": "リソース・Tips",
       "description": "便利なツール、コード片、設定方法"
     }
+  ],
+  "posts": [
+    {
+      "id": "next-js-15-features",
+      "title": "Next.js 15の新機能とApp Routerのベストプラクティス",
+      "slug": "next-js-15-features",
+      "excerpt": "Next.js 15の新機能と、App Routerを使った効率的な開発手法について詳しく解説します。",
+      "content": "",
+      "publishedAt": "2025-01-01T10:00:00Z",
+      "updatedAt": "2025-01-01T10:00:00Z",
+      "status": "published",
+      "category": "development",
+      "tags": ["Next.js", "React", "App Router", "TypeScript"],
+      "seo": {
+        "title": "Next.js 15の新機能とApp Routerのベストプラクティス",
+        "description": "Next.js 15の新機能と、App Routerを使った効率的な開発手法について詳しく解説",
+        "keywords": [
+          "Next.js",
+          "App Router",
+          "React",
+          "開発",
+          "ベストプラクティス"
+        ]
+      },
+      "featuredImage": "/blog/nextjs-15-features.jpg",
+      "imageAlt": "Next.js 15のロゴとコード例",
+      "readTime": 8,
+      "viewCount": 0,
+      "likeCount": 0,
+      "relatedPosts": ["tailwindcss-v4-guide", "typescript-tips-2025"]
+    },
+    {
+      "id": "tailwindcss-v4-guide",
+      "title": "TailwindCSS v4で変わるスタイリング手法",
+      "slug": "tailwindcss-v4-guide",
+      "excerpt": "TailwindCSS v4の新機能と、効率的なスタイリング手法について実例とともに紹介します。",
+      "content": "",
+      "publishedAt": "2024-12-28T15:00:00Z",
+      "updatedAt": "2024-12-28T15:00:00Z",
+      "status": "published",
+      "category": "development",
+      "tags": ["TailwindCSS", "CSS", "デザイン", "フロントエンド"],
+      "seo": {
+        "title": "TailwindCSS v4で変わるスタイリング手法",
+        "description": "TailwindCSS v4の新機能と効率的なスタイリング手法を実例とともに紹介",
+        "keywords": ["TailwindCSS", "CSS", "スタイリング", "v4", "新機能"]
+      },
+      "featuredImage": "/blog/tailwindcss-v4.jpg",
+      "imageAlt": "TailwindCSS v4のロゴとコード例",
+      "readTime": 6,
+      "viewCount": 0,
+      "likeCount": 0,
+      "relatedPosts": ["next-js-15-features", "design-system-building"]
+    },
+    {
+      "id": "typescript-tips-2025",
+      "title": "TypeScript開発者のための2025年実用テクニック",
+      "slug": "typescript-tips-2025",
+      "excerpt": "型安全性を高め、開発効率を向上させるTypeScriptの実用的なテクニックを紹介します。",
+      "content": "",
+      "publishedAt": "2024-12-25T12:00:00Z",
+      "updatedAt": "2024-12-25T12:00:00Z",
+      "status": "published",
+      "category": "tech-tips",
+      "tags": ["TypeScript", "開発効率", "型安全性", "ベストプラクティス"],
+      "seo": {
+        "title": "TypeScript開発者のための2025年実用テクニック",
+        "description": "型安全性を高め、開発効率を向上させるTypeScriptの実用的なテクニック",
+        "keywords": ["TypeScript", "テクニック", "型安全性", "開発効率", "2025"]
+      },
+      "featuredImage": "/blog/typescript-tips-2025.jpg",
+      "imageAlt": "TypeScriptのロゴとコード例",
+      "readTime": 10,
+      "viewCount": 0,
+      "likeCount": 0,
+      "relatedPosts": ["next-js-15-features", "code-quality-tools"]
+    }
+  ],
+  "featuredPosts": [
+    "next-js-15-features",
+    "tailwindcss-v4-guide",
+    "typescript-tips-2025"
   ]
 }

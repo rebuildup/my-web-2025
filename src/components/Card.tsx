@@ -5,6 +5,7 @@ interface CardProps {
   className?: string;
   hover?: boolean;
   padding?: "sm" | "md" | "lg";
+  onClick?: () => void;
 }
 
 export default function Card({
@@ -12,6 +13,7 @@ export default function Card({
   className = "",
   hover = true,
   padding = "md",
+  onClick,
 }: CardProps) {
   const paddingClasses = {
     sm: "p-4",
@@ -29,5 +31,13 @@ export default function Card({
     ${className}
   `;
 
-  return <div className={baseClasses.trim()}>{children}</div>;
+  return (
+    <div
+      className={baseClasses.trim()}
+      onClick={onClick}
+      style={onClick ? { cursor: "pointer" } : undefined}
+    >
+      {children}
+    </div>
+  );
 }

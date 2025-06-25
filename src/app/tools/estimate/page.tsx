@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
-import type { Metadata } from "next";
 
 interface EstimateData {
   projectType: string;
@@ -13,24 +12,6 @@ interface EstimateData {
   deadline: "normal" | "urgent";
   maintenance: boolean;
 }
-
-export const metadata: Metadata = {
-  title: "見積り計算機 | Tools | samuido",
-  description:
-    "samuidoのWeb制作見積り計算機。プロジェクトの規模と要件に基づいて自動的に見積りを算出。",
-  keywords: ["samuido", "見積り計算機", "Web制作", "見積り", "料金計算"],
-  openGraph: {
-    title: "見積り計算機 | Tools | samuido",
-    description:
-      "samuidoのWeb制作見積り計算機。プロジェクトの規模と要件に基づいて自動的に見積りを算出。",
-    url: "https://yusuke-kim.com/tools/estimate",
-  },
-  twitter: {
-    title: "見積り計算機 | Tools | samuido",
-    description:
-      "samuidoのWeb制作見積り計算機。プロジェクトの規模と要件に基づいて自動的に見積りを算出。",
-  },
-};
 
 export default function EstimatePage() {
   const [estimate, setEstimate] = useState<EstimateData>({
@@ -196,7 +177,11 @@ export default function EstimatePage() {
                 </label>
                 <div className="grid grid-cols-3 gap-3">
                   {[
-                    { id: "simple", name: "シンプル", desc: "基本的な機能のみ" },
+                    {
+                      id: "simple",
+                      name: "シンプル",
+                      desc: "基本的な機能のみ",
+                    },
                     { id: "medium", name: "標準", desc: "一般的な機能" },
                     { id: "complex", name: "複雑", desc: "高度な機能" },
                   ].map((complexity) => (
@@ -368,7 +353,9 @@ export default function EstimatePage() {
                       let baseAmount = selectedProject.basePrice;
                       if (estimate.pages > 1) {
                         baseAmount +=
-                          selectedProject.basePrice * 0.1 * (estimate.pages - 1);
+                          selectedProject.basePrice *
+                          0.1 *
+                          (estimate.pages - 1);
                       }
                       const complexityAmount =
                         baseAmount * complexityMultiplier[estimate.complexity] -
@@ -384,9 +371,7 @@ export default function EstimatePage() {
                       );
                       const urgentAmount =
                         estimate.deadline === "urgent"
-                          ? (baseAmount +
-                              complexityAmount +
-                              featureAmount) *
+                          ? (baseAmount + complexityAmount + featureAmount) *
                             0.3
                           : 0;
                       const maintenanceAmount = estimate.maintenance
@@ -435,7 +420,9 @@ export default function EstimatePage() {
                     </h4>
                     <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                       <li>• こちらは概算見積りです</li>
-                      <li>• 実際の見積りは要件詳細により変動する場合があります</li>
+                      <li>
+                        • 実際の見積りは要件詳細により変動する場合があります
+                      </li>
                       <li>• 正式なお見積りは別途ご相談ください</li>
                     </ul>
                   </div>

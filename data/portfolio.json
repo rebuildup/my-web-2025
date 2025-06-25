@@ -1,173 +1,150 @@
 {
-  "items": [
+  "projects": [
     {
-      "id": "my-web-2025",
-      "type": "portfolio",
-      "title": "samuido個人サイト",
-      "description": "Next.js 15 + TailwindCSS v4で構築されたモダンな個人ポートフォリオサイト。レスポンシブデザイン、ダークモード対応、アクセシビリティに配慮した設計。",
-      "slug": "my-web-2025",
+      "id": "web-portfolio-2025",
+      "title": "Personal Portfolio Website 2025",
+      "description": "Next.js 15とTailwindCSS v4を使用したモダンな個人ポートフォリオサイト。レスポンシブデザインとパフォーマンス最適化を重視。",
       "category": "web-development",
-      "tags": ["Next.js", "TypeScript", "TailwindCSS", "React"],
-      "featuredImage": "/images/portfolio/my-web-2025-thumb.jpg",
+      "tags": ["Next.js", "TypeScript", "TailwindCSS", "Vercel"],
+      "featuredImage": "/projects/portfolio-2025.jpg",
       "images": [
-        "/images/portfolio/my-web-2025-1.jpg",
-        "/images/portfolio/my-web-2025-2.jpg"
+        "/projects/portfolio-2025-hero.jpg",
+        "/projects/portfolio-2025-about.jpg",
+        "/projects/portfolio-2025-portfolio.jpg"
       ],
+      "client": "Personal",
+      "projectPeriod": "2025年1月",
+      "technologies": ["Next.js 15", "TypeScript", "TailwindCSS v4", "Vercel"],
+      "challenges": "モダンな技術スタックでの高性能Webサイトの構築と、ブランドアイデンティティの統一",
+      "solutions": "App Routerの活用、TailwindCSS v4の最新機能、型安全性の確保、SEO最適化",
+      "results": "Core Web Vitalsで高スコア達成、完全レスポンシブ対応",
+      "liveUrl": "https://yusuke-kim.com",
+      "sourceUrl": "https://github.com/samuido/my-web-2025",
+      "featured": true,
       "status": "published",
       "createdAt": "2025-01-01T00:00:00Z",
-      "updatedAt": "2025-01-01T00:00:00Z",
-      "publishedAt": "2025-01-01T00:00:00Z",
-      "metadata": {
-        "technologies": ["Next.js 15", "TailwindCSS v4", "TypeScript", "React 19"],
-        "duration": "2週間",
-        "client": "個人プロジェクト",
-        "url": "https://yusuke-kim.com",
-        "repository": "https://github.com/samuido/my-web-2025"
-      },
-      "excerpt": "モダンな技術スタックで構築されたポートフォリオサイト",
-      "seo": {
-        "title": "samuido個人サイト - Portfolio",
-        "description": "Next.js 15 + TailwindCSS v4で構築されたモダンな個人ポートフォリオサイト。"
-      }
+      "updatedAt": "2025-01-01T00:00:00Z"
     },
     {
-      "id": "estimate-calculator",
-      "type": "portfolio",
-      "title": "Web制作見積り計算機",
-      "description": "プロジェクトの要件に基づいて自動的に見積りを算出する実用的なWebツール。複雑度、機能、納期を考慮した柔軟な計算ロジック。",
-      "slug": "estimate-calculator",
-      "category": "tools",
-      "tags": ["React", "TypeScript", "Calculator", "Web Tool"],
-      "featuredImage": "/images/portfolio/estimate-calculator-thumb.jpg",
-      "images": ["/images/portfolio/estimate-calculator-1.jpg"],
+      "id": "cost-estimation-tool",
+      "title": "Web開発費用計算ツール",
+      "description": "プロジェクト要件から開発費用と工数を自動計算するWebアプリケーション。見積書のPDF生成機能付き。",
+      "category": "automation-tool",
+      "tags": ["React", "TypeScript", "PDF Generation", "Business Tool"],
+      "featuredImage": "/projects/cost-estimator.jpg",
+      "images": [
+        "/projects/cost-estimator-form.jpg",
+        "/projects/cost-estimator-result.jpg"
+      ],
+      "client": "Business Tool",
+      "projectPeriod": "2024年12月",
+      "technologies": ["React", "TypeScript", "jsPDF", "React Hook Form"],
+      "challenges": "複雑な料金体系の計算ロジックとユーザビリティの両立",
+      "solutions": "段階的フォーム設計、リアルタイム計算、直感的なUI",
+      "results": "業務効率50%向上、見積時間の大幅短縮",
+      "liveUrl": "https://yusuke-kim.com/tools/estimate",
+      "featured": true,
       "status": "published",
-      "createdAt": "2025-01-01T00:00:00Z",
-      "updatedAt": "2025-01-01T00:00:00Z",
-      "publishedAt": "2025-01-01T00:00:00Z",
-      "metadata": {
-        "technologies": ["React", "TypeScript", "Next.js"],
-        "duration": "1週間",
-        "client": "実用ツール",
-        "url": "https://yusuke-kim.com/tools/estimate"
-      },
-      "excerpt": "プロジェクト見積りを自動計算する実用ツール",
-      "seo": {
-        "title": "Web制作見積り計算機 - Portfolio",
-        "description": "プロジェクトの要件に基づいて自動的に見積りを算出する実用的なWebツール。"
-      }
+      "createdAt": "2024-12-15T00:00:00Z",
+      "updatedAt": "2024-12-15T00:00:00Z"
     },
     {
-      "id": "component-library",
-      "type": "portfolio", 
-      "title": "React UIコンポーネントライブラリ",
-      "description": "再利用可能でアクセシブルなUIコンポーネント集。Button、Card、Form要素など、モダンなデザインシステムに基づいた実装。",
-      "slug": "component-library",
+      "id": "ui-component-library",
+      "title": "再利用可能UIコンポーネントライブラリ",
+      "description": "TypeScriptとTailwindCSSで構築した高品質なUIコンポーネントライブラリ。アクセシビリティ対応済み。",
       "category": "ui-design",
-      "tags": ["React", "Component Library", "Design System", "Accessibility"],
-      "featuredImage": "/images/portfolio/component-library-thumb.jpg",
-      "images": [
-        "/images/portfolio/component-library-1.jpg",
-        "/images/portfolio/component-library-2.jpg"
+      "tags": [
+        "TypeScript",
+        "TailwindCSS",
+        "Component Library",
+        "Accessibility"
       ],
-      "status": "published",
-      "createdAt": "2024-12-01T00:00:00Z",
-      "updatedAt": "2025-01-01T00:00:00Z",
-      "publishedAt": "2024-12-15T00:00:00Z",
-      "metadata": {
-        "technologies": ["React", "TypeScript", "TailwindCSS", "Storybook"],
-        "duration": "3週間",
-        "client": "オープンソース"
-      },
-      "excerpt": "再利用可能でアクセシブルなUIコンポーネント集",
-      "seo": {
-        "title": "React UIコンポーネントライブラリ - Portfolio",
-        "description": "再利用可能でアクセシブルなUIコンポーネント集。モダンなデザインシステムに基づいた実装。"
-      }
-    },
-    {
-      "id": "automation-plugin",
-      "type": "portfolio",
-      "title": "作業自動化プラグイン",
-      "description": "繰り返し作業を効率化するAfter Effectsプラグイン。レンダリング設定の自動化、ファイル管理、バッチ処理機能を提供。",
-      "slug": "automation-plugin",
-      "category": "plugins",
-      "tags": ["After Effects", "Plugin Development", "ExtendScript", "Automation"],
-      "featuredImage": "/images/portfolio/automation-plugin-thumb.jpg",
-      "images": ["/images/portfolio/automation-plugin-1.jpg"],
+      "featuredImage": "/projects/ui-library.jpg",
+      "images": [
+        "/projects/ui-library-buttons.jpg",
+        "/projects/ui-library-forms.jpg",
+        "/projects/ui-library-cards.jpg"
+      ],
+      "client": "Open Source",
+      "projectPeriod": "2024年11月",
+      "technologies": ["TypeScript", "TailwindCSS", "Storybook", "Jest"],
+      "challenges": "一貫性のあるデザインシステムの構築とアクセシビリティの確保",
+      "solutions": "デザイントークンの活用、ARIA属性の適切な実装、comprehensive testing",
+      "results": "WCAG 2.1 AA準拠、10以上のプロジェクトで再利用",
+      "sourceUrl": "https://github.com/samuido/ui-components",
+      "featured": false,
       "status": "published",
       "createdAt": "2024-11-01T00:00:00Z",
-      "updatedAt": "2024-12-01T00:00:00Z",
-      "publishedAt": "2024-11-15T00:00:00Z",
-      "metadata": {
-        "technologies": ["ExtendScript", "After Effects API", "JavaScript"],
-        "duration": "4週間",
-        "client": "BOOTH販売",
-        "price": "¥1,000",
-        "downloadUrl": "https://samuido.booth.pm"
-      },
-      "excerpt": "After Effects用の作業効率化プラグイン",
-      "seo": {
-        "title": "作業自動化プラグイン - Portfolio",
-        "description": "繰り返し作業を効率化するAfter Effectsプラグイン。レンダリング設定の自動化機能。"
-      }
-    },
-    {
-      "id": "responsive-redesign",
-      "type": "portfolio",
-      "title": "企業サイトレスポンシブリニューアル",
-      "description": "既存の企業サイトをモバイルファーストでリニューアル。ユーザビリティとアクセシビリティを大幅に向上させた事例。",
-      "slug": "responsive-redesign", 
-      "category": "web-development",
-      "tags": ["Responsive Design", "Redesign", "UX Improvement", "Accessibility"],
-      "featuredImage": "/images/portfolio/responsive-redesign-thumb.jpg",
-      "images": [
-        "/images/portfolio/responsive-redesign-1.jpg",
-        "/images/portfolio/responsive-redesign-2.jpg",
-        "/images/portfolio/responsive-redesign-3.jpg"
-      ],
-      "status": "published",
-      "createdAt": "2024-10-01T00:00:00Z",
-      "updatedAt": "2024-11-01T00:00:00Z",
-      "publishedAt": "2024-10-20T00:00:00Z",
-      "metadata": {
-        "technologies": ["HTML5", "CSS3", "JavaScript", "PHP"],
-        "duration": "6週間",
-        "client": "中小企業",
-        "improvements": ["モバイル対応", "読み込み速度50%向上", "CVR 30%向上"]
-      },
-      "excerpt": "企業サイトのモバイルファーストリニューアル",
-      "seo": {
-        "title": "企業サイトレスポンシブリニューアル - Portfolio",
-        "description": "既存の企業サイトをモバイルファーストでリニューアル。ユーザビリティを大幅に向上。"
-      }
+      "updatedAt": "2024-11-01T00:00:00Z"
     }
   ],
   "categories": [
     {
       "id": "web-development",
-      "name": "Web Development",
-      "description": "Webサイト・Webアプリケーションの開発"
+      "label": "Web Development",
+      "description": "WebサイトやWebアプリケーションの開発プロジェクト",
+      "color": "#2563eb",
+      "icon": "code"
     },
     {
-      "id": "ui-design", 
-      "name": "UI/UX Design",
-      "description": "ユーザーインターフェース・ユーザー体験の設計"
+      "id": "ui-design",
+      "label": "UI Design",
+      "description": "ユーザーインターフェースデザインとUX設計",
+      "color": "#7c3aed",
+      "icon": "palette"
     },
     {
-      "id": "plugins",
-      "name": "Plugins & Extensions", 
-      "description": "プラグイン・拡張機能の開発"
+      "id": "plugin-development",
+      "label": "Plugin Development",
+      "description": "各種プラットフォーム向けプラグインの開発",
+      "color": "#059669",
+      "icon": "puzzle"
     },
     {
-      "id": "tools",
-      "name": "Tools & Utilities",
-      "description": "実用的なツール・ユーティリティの開発"
+      "id": "automation-tool",
+      "label": "Automation Tool",
+      "description": "業務効率化のためのツール開発",
+      "color": "#dc2626",
+      "icon": "cog"
+    },
+    {
+      "id": "personal-project",
+      "label": "Personal Project",
+      "description": "個人的な学習・実験プロジェクト",
+      "color": "#d97706",
+      "icon": "star"
     }
   ],
-  "tags": [
-    "Next.js", "React", "TypeScript", "TailwindCSS", "JavaScript",
-    "HTML5", "CSS3", "PHP", "Node.js", "After Effects", "Plugin Development",
-    "ExtendScript", "Responsive Design", "UI/UX", "Accessibility", "Design System",
-    "Component Library", "Web Tool", "Calculator", "Automation"
+  "technologies": [
+    {
+      "name": "Next.js",
+      "category": "frontend",
+      "color": "#000000"
+    },
+    {
+      "name": "React",
+      "category": "frontend",
+      "color": "#61dafb"
+    },
+    {
+      "name": "TypeScript",
+      "category": "frontend",
+      "color": "#3178c6"
+    },
+    {
+      "name": "TailwindCSS",
+      "category": "frontend",
+      "color": "#38bdf8"
+    },
+    {
+      "name": "Node.js",
+      "category": "backend",
+      "color": "#339933"
+    },
+    {
+      "name": "Vercel",
+      "category": "tools",
+      "color": "#000000"
+    }
   ]
 }
