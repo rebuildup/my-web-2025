@@ -2,6 +2,42 @@
 
 ## WCAG 2.1 AA 準拠
 
+```typescript
+// lib/accessibility/index.ts
+export const accessibilityConfig = {
+  // WCAG 2.1 AA準拠
+  wcagCompliance: {
+    level: "AA",
+    version: "2.1",
+
+    // 知覚可能性
+    perceivable: {
+      // 代替テキスト
+      altText: {
+        images: "required", // 画像の代替テキスト必須
+        decorative: "empty", // 装飾画像は空文字
+        complex: "detailed", // 複雑な画像は詳細説明
+      },
+
+      // 色とコントラスト
+      colorContrast: {
+        normalText: 4.5, // 通常テキストのコントラスト比
+        largeText: 3.0, // 大文字テキストのコントラスト比
+        nonTextContent: 3.0, // 非テキストコンテンツ
+        colorOnly: false, // 色のみでの情報伝達禁止
+      },
+
+      // メディア
+      multimedia: {
+        captions: "provided", // 動画にキャプション提供
+        audioDescription: "available", // 音声解説利用可能
+        autoplay: false, // 自動再生無効
+      },
+    },
+  },
+};
+```
+
 ### 基本方針
 
 本サイトは **WCAG 2.1 レベル AA** に準拠したアクセシビリティを実現し、すべてのユーザーにとって利用しやすい Web サイトを目指します。

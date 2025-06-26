@@ -8,52 +8,57 @@
 
 ### データバックアップ
 
-#### 基本設定
+````typescript
+// lib/disaster-recovery/index.ts
+export const disasterRecoveryPlan = {
+  // バックアップ戦略
+  backup: {
+    // データバックアップ
+    data: {
+      frequency: 'daily',           // 日次バックアップ
+      retention: 30,               // 30日間保持
+      locations: [
+        'local',                   // ローカルバックアップ
+        'cloud',                   // クラウドストレージ
+        'external',                // 外部ドライブ
+      ],
 
-- **頻度**: 日次バックアップ
-- **保持期間**: 30 日間
-- **自動化**: 毎日 2 時実行（`0 2 * * *`）
+      // バックアップ対象
+      targets: [
+        '/var/www/html',           // Webサイトファイル
+        '/var/www/data',           // データベース・JSONファイル
+        '/etc/apache2',            // Apache設定
+        '/etc/letsencrypt',        // SSL証明書
+        '/var/log',                // ログファイル
+      ],
 
-#### バックアップ対象
+      // 自動化
+      automation: {
+        script: '/scripts/backup.sh',
+        cron: '0 2 * * *',         // 毎日2時実行
+        notification: true,        // 完了通知
+        verification: true,        // バックアップ検証
+      },
+    },
 
-```bash
-# 主要バックアップディレクトリ
-BACKUP_TARGETS=(
-  "/var/www/html"      # Webサイトファイル
-  "/var/www/data"      # データベース・JSONファイル
-  "/etc/apache2"       # Apache設定
-  "/etc/letsencrypt"   # SSL証明書
-  "/var/log"           # ログファイル
-)
-```
+    // コードバックアップ
+    code: {
+      primary: 'GitHub',           // メインリポジトリ
+      mirrors: [
+        'GitLab',                  // ミラーリポジトリ
+        'Bitbucket',               // セカンダリミラー
+        'local-git',               // ローカルGit
+      ],
 
-#### 保存場所
-
-1. **ローカルバックアップ**: `/backup/local/`
-2. **クラウドストレージ**: Google Cloud Storage
-3. **外部ドライブ**: 週次で物理メディアに保存
-
-### コードバックアップ
-
-#### Git リポジトリ管理
-
-- **メインリポジトリ**: GitHub
-- **ミラーリポジトリ**:
-  - GitLab（セカンダリ）
-  - Bitbucket（バックアップ）
-  - ローカル Git サーバー
-
-#### 自動同期
-
-```typescript
-// GitHub Actions での自動同期設定
-const syncConfig = {
-  trigger: "on-push", // プッシュ時自動同期
-  verification: true, // 同期検証
-  conflictResolution: "manual", // 競合は手動解決
-  destinations: ["gitlab", "bitbucket", "local"],
+      // 自動同期
+      sync: {
+        frequency: 'on-push',      // プッシュ時自動同期
+        verification: true,        // 同期検証
+        conflictResolution: 'manual', // 競合は手動解決
+      },
+    },
+  },
 };
-```
 
 ## 復旧手順
 
@@ -74,7 +79,7 @@ const syncConfig = {
    git push origin gh-pages
    # DNS切り替え（緊急時）
    # yusuke-kim.com → rebuildup.github.io/my-web-2025
-   ```
+````
 
 3. **DNS の切り替え**
 
