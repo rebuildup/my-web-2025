@@ -1,7 +1,5 @@
 # 共通データ構造まとめ (Global)
 
-> 出典: `documents/99-original-document/original-document.md`
-
 サイト全体で使用する JSON / TypeScript 型定義の要点を集約しています。フル定義は `src/types/` を参照してください。
 
 ## 1. ContentItem — すべてのコンテンツの基盤

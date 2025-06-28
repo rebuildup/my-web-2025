@@ -3,6 +3,12 @@
 - `\documents\`から要件を確認すること
 - ドキュメントを参照する際は **まず `documents/readme.md` を読むこと**
 
+## 最重要要件
+
+- ページごとに独立したサイトとして動作すること
+- ページ単位でのサイトの拡張が容易な構造であること
+- 開発者の創造性を尊重すること
+
 # 完了条件
 
 - lint,prettier,typecheck,test,build,playwright が通ること

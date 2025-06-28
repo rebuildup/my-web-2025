@@ -1,7 +1,5 @@
 # 法務・コンプライアンス (Rules)
 
-> **出典**: `original-document.md` の _legalContent_ / _complianceChecker_ セクション
-
 ## 1. プライバシーポリシー (抜粋)
 
 - 最終更新日: **2025-06-25**
