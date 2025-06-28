@@ -1,0 +1,110 @@
+{
+  "tools": [
+    {
+      "id": "estimate",
+      "name": "見積り計算機",
+      "description": "Web制作プロジェクトの費用と工数を自動計算するツール。プロジェクト規模、複雑度、納期から適正価格を算出します。",
+      "shortDescription": "制作費用を自動計算",
+      "category": "business",
+      "icon": "calculator",
+      "url": "/tools/estimate",
+      "features": [
+        "プロジェクト規模の自動判定",
+        "複雑度による価格調整",
+        "納期による緊急度計算",
+        "見積書PDF生成",
+        "過去の実績データベース参照"
+      ],
+      "status": "active",
+      "version": "1.2.0",
+      "lastUpdated": "2024-12-15T00:00:00Z"
+    },
+    {
+      "id": "qr-generator",
+      "name": "QRコード生成器",
+      "description": "URLやテキストを高品質なQRコードに変換するツール。カスタマイズオプション付きで、様々な用途に対応できます。",
+      "shortDescription": "QRコードを簡単生成",
+      "category": "utility",
+      "icon": "qr-code",
+      "url": "/tools/qr-generator",
+      "features": [
+        "URL・テキストの QR コード化",
+        "サイズ・色のカスタマイズ",
+        "エラー訂正レベル調整",
+        "PNG・SVG形式でダウンロード",
+        "バッチ処理対応"
+      ],
+      "status": "active",
+      "version": "1.1.0",
+      "lastUpdated": "2024-11-20T00:00:00Z"
+    },
+    {
+      "id": "color-palette",
+      "name": "カラーパレット生成器",
+      "description": "基準色から調和の取れた配色を自動生成するツール。アクセシビリティチェック機能付きで、実用的な配色を簡単に作成できます。",
+      "shortDescription": "美しい配色を自動生成",
+      "category": "design",
+      "icon": "palette",
+      "url": "/tools/color-palette",
+      "features": [
+        "基準色からの自動配色生成",
+        "カラーハーモニー理論適用",
+        "アクセシビリティチェック",
+        "CSS・JSON・Adobe Swatch出力",
+        "配色パターンのプリセット"
+      ],
+      "status": "active",
+      "version": "1.0.5",
+      "lastUpdated": "2024-10-10T00:00:00Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "business",
+      "name": "ビジネス",
+      "description": "業務効率化・見積もり関連ツール",
+      "color": "#2563eb",
+      "icon": "briefcase"
+    },
+    {
+      "id": "design",
+      "name": "デザイン",
+      "description": "デザイン制作支援ツール",
+      "color": "#7c3aed",
+      "icon": "palette"
+    },
+    {
+      "id": "utility",
+      "name": "ユーティリティ",
+      "description": "汎用的な実用ツール",
+      "color": "#059669",
+      "icon": "tool"
+    },
+    {
+      "id": "development",
+      "name": "開発",
+      "description": "プログラミング・開発支援ツール",
+      "color": "#dc2626",
+      "icon": "code"
+    }
+  ],
+  "pricing": {
+    "baseRates": {
+      "simple": 50000,
+      "medium": 150000,
+      "complex": 300000
+    },
+    "multipliers": {
+      "urgent": 1.5,
+      "normal": 1.0
+    },
+    "additionalFeatures": {
+      "responsive": 30000,
+      "cms": 80000,
+      "ecommerce": 200000,
+      "multilingual": 100000,
+      "seo": 50000,
+      "analytics": 30000
+    }
+  }
+}
