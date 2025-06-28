@@ -11,7 +11,7 @@ export function AdobeFontsLoader() {
   return (
     <Script
       strategy="lazyOnload"
-      src="https://use.typekit.net/[YOUR-KIT-ID].js"
+      src="https://use.typekit.net/nhz3edk.js"
       onLoad={() => {
         try {
           // `Typekit` is injected by the external script.

@@ -1,24 +1,38 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @theme {
-  --font-family-sans: "your-adobe-font-name", "sans-serif";
+  --color-background: #111;
+  --color-foreground: #fff;
+  --color-accent: #fff;
+
+  --font-family-display: "neue-haas-grotesk-display", "sans-serif";
+  --font-family-sans: "neue-haas-grotesk-display", "sans-serif";
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 4rem;
+  --font-size-7xl: 5rem;
 }
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+  * {
+    @apply border-border;
   }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 0 0% 100%;
+  html {
+    @apply scroll-smooth;
   }
-}
-
-body {
-  color: rgb(var(--foreground));
-  background: rgb(var(--background));
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 /* カラーシステム */

@@ -8,6 +8,7 @@ export const metadata = {
   title: siteConfig.seo.defaultTitle,
   description: siteConfig.seo.defaultDescription,
   keywords: siteConfig.seo.defaultKeywords,
+  metadataBase: new URL(siteConfig.site.url),
   icons: {
     icon: [
       { url: "/favicons/favicon.ico", sizes: "any" },
@@ -43,7 +44,7 @@ export default function RootLayout({
         {/* Adobe Fonts の設定 */}
         <AdobeFontsLoader />
       </head>
-      <body className="min-h-screen bg-gray-900 text-white font-sans antialiased flex flex-col">
+      <body className="min-h-screen font-sans antialiased flex flex-col">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
