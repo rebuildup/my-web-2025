@@ -1,5 +1,6 @@
 import blogData from "@/../data/blog.json";
 import type { Metadata } from "next";
+import { BlogPost } from "@/types/content";
 
 export const metadata: Metadata = {
   title: "Workshop | samuido",
@@ -42,7 +43,7 @@ export default function WorkshopPage() {
             gap: "2rem",
           }}
         >
-          {blogData.items.map((post: any) => (
+          {blogData.items.map((post: BlogPost) => (
             <article
               key={post.id}
               style={{
@@ -68,7 +69,7 @@ export default function WorkshopPage() {
                   opacity: 0.9,
                 }}
               >
-                {post.description}
+                {post.excerpt}
               </p>
               <div
                 style={{

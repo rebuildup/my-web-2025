@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "リンクマップ | samuido",
@@ -170,13 +171,13 @@ export default function LinksPage() {
                   <span className="mr-2">📧</span>
                   Email
                 </a>
-                <a
+                <Link
                   href="/"
                   className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 text-white rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
                 >
                   <span className="mr-2">🌐</span>
                   Website
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -196,22 +197,18 @@ export default function LinksPage() {
                 </div>
 
                 <div className="space-y-3">
-                  {category.links.map((link) => (
-                    <a
-                      key={link.name}
-                      href={link.url}
-                      target={link.url.startsWith("http") ? "_blank" : "_self"}
-                      rel={
-                        link.url.startsWith("http") ? "noopener noreferrer" : ""
-                      }
-                      className={`block p-4 rounded-xl bg-gradient-to-r ${getColorClasses(
-                        category.color
-                      )} text-white transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-1 ${
-                        link.isPrimary
-                          ? "ring-2 ring-white ring-opacity-50"
-                          : ""
-                      }`}
-                    >
+                  {category.links.map((link) => {
+                    const isExternal =
+                      link.url.startsWith("http") || link.url.startsWith("#");
+                    const className = `block p-4 rounded-xl bg-gradient-to-r ${getColorClasses(
+                      category.color
+                    )} text-white transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-1 ${
+                      link.isPrimary
+                        ? "ring-2 ring-white ring-opacity-50"
+                        : ""
+                    }`;
+
+                    const content = (
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <span className="text-2xl mr-3">{link.icon}</span>
@@ -243,8 +240,37 @@ export default function LinksPage() {
                           />
                         </svg>
                       </div>
-                    </a>
-                  ))}
+                    );
+
+                    if (isExternal) {
+                      return (
+                        <a
+                          key={link.name}
+                          href={link.url}
+                          target={
+                            link.url.startsWith("http") ? "_blank" : "_self"
+                          }
+                          rel={
+                            link.url.startsWith("http")
+                              ? "noopener noreferrer"
+                              : ""
+                          }
+                          className={className}
+                        >
+                          {content}
+                        </a>
+                      );
+                    }
+                    return (
+                      <Link
+                        key={link.name}
+                        href={link.url}
+                        className={className}
+                      >
+                        {content}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             ))}

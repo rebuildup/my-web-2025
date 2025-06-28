@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import profileData from "@/../data/profile.json";
-import socialLinks from "@/../data/social-links.json";
+
 
 export const metadata: Metadata = {
   title: "About | samuido（木村友亮）",

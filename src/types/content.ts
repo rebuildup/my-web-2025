@@ -27,7 +27,7 @@ export interface ContentItem {
   excerpt?: string; // 抜粋
 
   // 拡張フィールド
-  metadata?: Record<string, any>; // 動的メタデータ
+  metadata?: Record<string, unknown>; // 動的メタデータ
 
   // SEO
   seo?: SEOData;
@@ -243,7 +243,7 @@ export interface FormField {
   label: string;
   placeholder?: string;
   required?: boolean;
-  defaultValue?: any;
+  defaultValue?: string | number | boolean | string[] | null;
   options?: FieldOption[];
   validation?: FieldValidation[];
   conditional?: ConditionalLogic;
@@ -286,7 +286,7 @@ export interface FieldOption {
 
 export interface FieldValidation {
   type: "required" | "minLength" | "maxLength" | "pattern" | "custom";
-  value?: any;
+  value?: string | number | RegExp;
   message: string;
 }
 
@@ -298,7 +298,7 @@ export interface ConditionalLogic {
     | "contains"
     | "greater_than"
     | "less_than";
-  value: any;
+  value: string | number | boolean;
 }
 
 export interface ValidationRule {

@@ -1,13 +1,34 @@
-:root {
-  /* カラーシステム */
-  --background-color: #222222;
-  --text-color: #ffffff;
-  --accent-color: #0000ff;
+@import 'tailwindcss';
 
-  /* フォントファミリー */
-  --font-sans: "Noto Sans JP", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "Consolas", "Monaco", "Courier New", monospace;
+@theme {
+  --font-family-sans: "your-adobe-font-name", "sans-serif";
 }
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 0 0% 100%;
+  }
+}
+
+body {
+  color: rgb(var(--foreground));
+  background: rgb(var(--background));
+}
+
+/* カラーシステム */
+--background-color: #222222;
+--text-color: #ffffff;
+--accent-color: #0000ff;
+
+/* フォントファミリー */
+--font-sans: "Noto Sans JP", "Helvetica Neue", Arial, sans-serif;
+--font-mono: "Consolas", "Monaco", "Courier New", monospace;
 
 /* 強制的なリセットスタイル */
 * {

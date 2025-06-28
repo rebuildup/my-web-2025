@@ -79,15 +79,6 @@ export default function EstimatePage() {
     setResult(Math.round(total));
   };
 
-  const handleFeatureToggle = (featureId: string) => {
-    setEstimate((prev) => ({
-      ...prev,
-      features: prev.features.includes(featureId)
-        ? prev.features.filter((id) => id !== featureId)
-        : [...prev.features, featureId],
-    }));
-  };
-
   return (
     <div
       style={{
@@ -211,7 +202,7 @@ export default function EstimatePage() {
               onChange={(e) =>
                 setEstimate((prev) => ({
                   ...prev,
-                  complexity: e.target.value as any,
+                  complexity: e.target.value as "simple" | "medium" | "complex",
                 }))
               }
               style={{

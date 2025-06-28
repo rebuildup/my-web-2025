@@ -25,7 +25,7 @@ export interface ContentItem {
   excerpt?: string;
 
   // 拡張フィールド
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 
   // SEO
   seo?: SEOData;
