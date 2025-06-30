@@ -2,37 +2,43 @@
 
 > `package.json` と設計書から抜粋した主要依存の概要
 
-| パッケージ        | バージョン例 | 用途                                         |
-| ----------------- | ------------ | -------------------------------------------- |
-| next              | ^14.x        | React ベースのフレームワーク                 |
-| react / react-dom | ^18.x        | UI ライブラリ                                |
-| typescript        | ^5.x         | 型システム                                   |
-| tailwindcss       | ^4.x         | CSS Utility Framework                        |
-| @tailwindcss/\*   | latest       | forms / typography / aspect-ratio プラグイン |
-| lucide-react      | ^0.28        | アイコンセット                               |
-| framer-motion     | ^11          | アニメーション                               |
-| three             | ^0.164       | WebGL ライブラリ (playground 用)             |
-| pixi.js           | ^8           | 2D Canvas                                    |
-| axios             | ^1.x         | HTTP クライアント                            |
-| date-fns          | ^3           | 日付ユーティリティ                           |
-| eslint / prettier | latest       | Lint & Format                                |
-| jest              | ^29          | Unit Test                                    |
-| @playwright/test  | ^1.42        | E2E Test                                     |
-| lhci/cli          | ^0.13        | Lighthouse CI                                |
+| パッケージ                      | バージョン例 | 用途                             |
+| ------------------------------- | ------------ | -------------------------------- |
+| next                            | 15.3.4       | React ベースのフレームワーク     |
+| react / react-dom               | ^19.0.0      | UI ライブラリ                    |
+| typescript                      | ^5           | 型システム                       |
+| tailwindcss                     | ^4           | CSS Utility Framework            |
+| @tailwindcss/postcss            | ^4           | Tailwind PostCSS プラグイン      |
+| lucide-react                    | latest       | アイコンセット                   |
+| framer-motion                   | latest       | アニメーション                   |
+| three                           | latest       | WebGL ライブラリ (playground 用) |
+| pixi.js                         | latest       | 2D Canvas                        |
+| axios                           | latest       | HTTP クライアント                |
+| date-fns                        | latest       | 日付ユーティリティ               |
+| eslint                          | ^9           | Lint                             |
+| prettier                        | latest       | Format                           |
+| jest                            | latest       | Unit Test                        |
+| @playwright/test                | latest       | E2E Test                         |
+| lhci                            | latest       | Lighthouse CI                    |
+| @eslint/eslintrc                | ^3           | ESLint 設定                      |
+| textlint                        | ^15.1.0      | Markdown Lint                    |
+| textlint-rule-preset-ai-writing | ^1.1.0       | AI Writing Lint                  |
+| @types/node                     | ^20          | Node.js 型定義                   |
+| @types/react                    | ^19          | React 型定義                     |
+| @types/react-dom                | ^19          | ReactDOM 型定義                  |
+| eslint-config-next              | 15.3.4       | Next.js ESLint 設定              |
+
+> **注記**: Lighthouse CI は `lhci/cli` ではなく `lhci` パッケージをインストールしています。
 
 ## Scripts (抜粋)
 
 ```jsonc
 "scripts": {
-  "dev": "next dev",
+  "dev": "next dev --turbopack",
   "build": "next build",
   "start": "next start",
-  "lint": "eslint . --ext .ts,.tsx",
-  "type-check": "tsc --noEmit",
-  "test": "jest",
-  "e2e": "playwright test",
-  "optimize-images": "node scripts/optimize-images.js",
-  "generate-favicons": "node scripts/generate-favicons.js"
+  "lint": "next lint",
+  "lint:md": "textlint \"documents/**/*.md\""
 }
 ```
 
