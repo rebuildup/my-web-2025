@@ -1,6 +1,6 @@
 # 個人 Web サイト (my-web-2025)
 
-samuido（木村友亮）の個人サイト [yusuke-kim.com](yusuke-kim.com)
+samuidoの個人サイト [yusuke-kim.com](yusuke-kim.com)
 
 詳細な仕様・ページ内容・フォルダ構成は **`documents/readme.md`** を参照してください。
 \
@@ -41,4 +41,4 @@ npm run typecheck # TypeScript
 
 ## ライセンス
 
-All Rights Reserved © 2025 samuido (木村友亮)
+All Rights Reserved © 2025 361do_sleep
