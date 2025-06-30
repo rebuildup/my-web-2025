@@ -38,10 +38,10 @@
 
 ## バージョン管理
 
-- **Git**: trunk-based + feature branch
-- **Commit lint**: Conventional Commits (`feat:`, `fix:`, etc.)
-- **Release**: `npm version` → Tag → GitHub Actions → Deploy
+- Git：trunk-based + feature branch
+- Commit lint：Conventional Commits (`feat:`, `fix:`, etc.)
+- Release：`npm version` → Tag → GitHub Actions → Deploy
 
 ---
 
-> **アップグレード指針**: Next/Tailwind のメジャーアップは `next lint` と E2E テスト通過を確認してからマージすること。
+> アップグレード指針：Next/Tailwind のメジャーアップは `next lint` と E2E テスト通過を確認してからマージすること。

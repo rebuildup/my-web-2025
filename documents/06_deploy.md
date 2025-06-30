@@ -4,11 +4,11 @@
 
 ## 0. 開発プロセス
 
-1. **ブランチ戦略**: `main` = production、 `feat/*` = 1 PR / 1 機能、`hotfix/*` = 緊急修正。
-2. **コードレビュー**: 1 Approve + CI Green でマージ可。
-3. **CI**: Push 時に Unit/Integration、PR 時に Lighthouse & Security Scan を実行。
-4. **リリース**: `main` にマージで Git Tag → GitHub Actions `build-and-deploy`。
-5. **監視**: デプロイ後 `/health` & Sentry で自動チェック。
+1. ブランチ戦略：`main` = production、 `feat/*` = 1 PR / 1 機能、`hotfix/*` = 緊急修正。
+2. コードレビュー：1 Approve + CI Green でマージ可。
+3. CI：Push 時に Unit/Integration、PR 時に Lighthouse & Security Scan を実行。
+4. リリース：`main` にマージで Git Tag → GitHub Actions `build-and-deploy`。
+5. 監視：デプロイ後 `/health` & Sentry で自動チェック。
 
 ## 1. フロー
 
@@ -18,9 +18,9 @@ Git push → GitHub Actions → build & test → rsync to GCP VM → Apache relo
 
 ## 2. GitHub Actions ワークフロー
 
-- `test` ジョブ: Lint / Type-check / Jest / Build
-- `lighthouse` ジョブ: PR 時に LHCI でパフォーマンス計測
-- `build-and-deploy` ジョブ (main ブランチ):
+- test ジョブ：Lint / Type-check / Jest / Build
+- lighthouse ジョブ：PR 時に LHCI でパフォーマンス計測
+- build-and-deploy ジョブ (main ブランチ)：
   1. Next.js `npm run build`
   2. 画像最適化 & favicon 生成
   3. `rsync` で `/tmp/website-deploy` へ転送
@@ -28,7 +28,7 @@ Git push → GitHub Actions → build & test → rsync to GCP VM → Apache relo
   5. Apache `systemctl reload`
   6. `certbot renew --dry-run`
   7. `/health` エンドポイントでヘルスチェック
-- `security-scan` ジョブ: 本番に対してヘッダー & SSL チェック
+- security-scan ジョブ：本番に対してヘッダー & SSL チェック
 
 ## 3. GCP VM 設定
 
@@ -69,7 +69,7 @@ Git push → GitHub Actions → build & test → rsync to GCP VM → Apache relo
 
 ---
 
-> **ロールバック手順**: GitHub Actions の最後にある `Rollback on failure` ステップ、または GCP VM で最新バックアップを手動リストア。
+> ロールバック手順：GitHub Actions の最後にある `Rollback on failure` ステップ、または GCP VM で最新バックアップを手動リストア。
 
 ## 6. 監視 & ログ
 
@@ -95,11 +95,11 @@ export const monitoringConfig = {
 
 ## 7. セキュリティ
 
-- **CSP**: `default-src 'self'`; `img-src` `data:` `blob:` `https:`
-- **HSTS**: `max-age=31536000; includeSubDomains`
-- **Rate Limit**: API 60/m, Contact 3/15m, Download 10/h
-- **XSS 対策**: `DOMPurify.sanitize()` + `sanitizeInput()` util
-- **File Upload**: 画像 10MB, 動画 100MB, mime-type whitelist, ClamAV スキャン
+- CSP：`default-src 'self'`; `img-src` `data:` `blob:` `https:`
+- HSTS：`max-age=31536000; includeSubDomains`
+- Rate Limit：API 60/m, Contact 3/15m, Download 10/h
+- XSS 対策：`DOMPurify.sanitize()` + `sanitizeInput()` util
+- File Upload：画像 10MB, 動画 100MB, mime-type whitelist, ClamAV スキャン
 
 ## 8. Apache 設定 (完全版)
 

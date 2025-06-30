@@ -2,13 +2,13 @@
 
 ## デザインテーマ
 
-- **メインカラー**: 原色の青 (#0000ff)
-- **ベースカラー**: ダークグレー (#222222)
-- **背景**:単色 ベースカラー
-- **1:1.618 比率** : 基本的な比率
-- **装飾**:機能のみ強調。影、角丸、グラデーション完全廃止
-- **ファビコン**: 青い円形 SVG アイコン
-- **フォント**: Adobe Fonts, Google Fonts
+- メインカラー：原色の青 (#0000ff)
+- ベースカラー：ダークグレー (#222222)
+- 背景：単色 ベースカラー
+- 1:1.618 比率：基本的な比率
+- 装飾：機能のみ強調。影、角丸、グラデーション完全廃止
+- ファビコン：青い円形 SVG アイコン
+- フォント：Adobe Fonts, Google Fonts
 
 ## フォント
 
@@ -27,7 +27,7 @@
 </script>
 ```
 
-- **Neue Haas Grotesk Display**: 本サイトのテーマフォントとして使用 見出しなどは基本的に太字イタリックのこのフォント
+- Neue Haas Grotesk Display：本サイトのテーマフォントとして使用 見出しなどは基本的に太字イタリックのこのフォント
 
 ```css
 .neue-haas-grotesk-display {
@@ -37,7 +37,7 @@
 }
 ```
 
-- **Zen Kaku Gothic New**: アクセントとして稀に使用する 日本語見出し用
+- Zen Kaku Gothic New：アクセントとして稀に使用する 日本語見出し用
 
 ```css
 .zen-kaku-gothic-new {
@@ -58,7 +58,7 @@
 />
 ```
 
-- **Noto Sans JP**: テキスト用の基本フォントとして使用 Italic と細字で使用
+- Noto Sans JP：テキスト用の基本フォントとして使用 Italic と細字で使用
 
 ```css
 // <weight>: Use a value from 100 to 900
@@ -71,7 +71,7 @@
 }
 ```
 
-- **Shippori Antique**:日本語を強調したい部分に使用
+- Shippori Antique：日本語を強調したい部分に使用
 
 ```css
 .shippori-antique-b1-regular {
