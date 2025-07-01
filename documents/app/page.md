@@ -4,12 +4,23 @@
 
 サイト全体のシンプルなインデックスとしてカテゴリへのリンクを提供する。
 
+## 概要
+
+ウェブサイトのルート(yusuke-kim.com)にアクセスしたときのページ。すべてのページへの導線を繋ぐ
+
 ## 主なリンク
+
+カテゴリー
 
 - About
 - Portfolio
 - Workshop
 - Tools
+
+ルート機能
+
+- privacy-policy
+- Search
 - Contact
 
 ## 機能
@@ -21,16 +32,16 @@
 
 ### SEO
 
-- **title**: "samuido - 木村友亮のポートフォリオサイト"
-- **description**: "Webデザイナー・開発者の木村友亮のポートフォリオサイト。作品ギャラリー、開発ツール、プラグイン配布、ブログ記事を提供。"
+- **title**: "samuidoのサイトルート"
+- **description**: "フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました"
 - **keywords**: "ポートフォリオ, Webデザイン, フロントエンド開発, ツール, プラグイン, ブログ"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/"
 
 ### Open Graph
 
-- **og:title**: "samuido - 木村友亮のポートフォリオサイト"
-- **og:description**: "Webデザイナー・開発者の木村友亮のポートフォリオサイト。作品ギャラリー、開発ツール、プラグイン配布、ブログ記事を提供。"
+- **og:title**: "samuidoのサイトルート"
+- **og:description**: "フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/"
 - **og:image**: "https://yusuke-kim.com/og-image.jpg"
@@ -40,8 +51,8 @@
 ### Twitter Card
 
 - **twitter:card**: "summary_large_image"
-- **twitter:title**: "samuido - 木村友亮のポートフォリオサイト"
-- **twitter:description**: "Webデザイナー・開発者の木村友亮のポートフォリオサイト。作品ギャラリー、開発ツール、プラグイン配布、ブログ記事を提供。"
+- **twitter:title**: "samuidoのサイトルート"
+- **twitter:description**: "フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました"
 - **twitter:image**: "https://yusuke-kim.com/twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 
@@ -52,7 +63,7 @@
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "samuido",
-  "description": "Webデザイナー・開発者の木村友亮のポートフォリオサイト",
+  "description": "フロントエンドエンジニアsamuidoの個人サイト",
   "url": "https://yusuke-kim.com/",
   "author": {
     "@type": "Person",
@@ -73,6 +84,4 @@
 }
 ```
 
----
-
-> 詳細仕様は追って記述します。
+詳細
