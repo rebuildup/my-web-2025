@@ -1,63 +1,26 @@
-# コンポーネントカタログ (Components)
+# コンポーネント方針 (Components)
 
-> UI/レイアウト/ビジネスロジック別に主要コンポーネントを一覧化
+## アーキテクチャ方針
 
-## 1. 共通 UI (`src/components/ui`)
+このプロジェクトは **ページごとに独立したサイト** として動作する構造を採用しています。
 
-| コンポーネント | 主な Props        | 用途                                       |
-| -------------- | ----------------- | ------------------------------------------ |
-| `Button`       | `variant` `size`  | 基本ボタン (`primary` `secondary` `ghost`) |
-| `Card`         | `title` `image`   | 汎用カードレイアウト                       |
-| `Modal`        | `open` `onClose`  | ポップアップダイアログ                     |
-| `Input`        | `label` `error`   | テキスト入力                               |
-| `Select`       | `options` `value` | セレクトボックス                           |
-| `Toast`        | `type` `message`  | 通知トースト                               |
+### 基本方針
 
-## 2. レイアウト (`src/components/layout`)
+- **ページ単位での独立性**: 各ページは独立したサイトとして機能し、他のページへの依存を最小限に抑えます
+- **共通コンポーネントの最小化**: サイト全体では基本的に共通したコンポーネントを使用しません
+- **ページ固有の実装**: 各ページに必要な機能やUIは、そのページ専用として実装します
+- **拡張性の確保**: ページ単位でのサイト拡張が容易な構造を維持します
 
-| 名称         | 概要                            |
-| ------------ | ------------------------------- |
-| `Header`     | グローバルナビゲーション + ロゴ |
-| `Footer`     | サイト情報 & SNS リンク         |
-| `Navigation` | サイドバー / ドロワー切替対応   |
-| `Sidebar`    | Admin/Docs 用の縦型メニュー     |
+### 共通コンポーネントについて
 
-## 3. 専用コンポーネント
+現在、このプロジェクトでは共通コンポーネントは使用していませんが、将来的に必要となった場合に備えて、このファイルは保持しています。
 
-### Portfolio
+共通コンポーネントが必要になった際は、以下の原則に従って実装してください：
 
-- `GalleryCard`, `GalleryGrid`, `DetailView`, `FilterBar`, `SortDropdown`
-
-### Tools
-
-- `ColorPalette`, `SVGConverter`, `PomodoroTimer`, `PiGame`, `AEExpressionBuilder`, `BusinessMailBuilder`
-
-### Admin
-
-- `ContentEditor`, `MarkdownEditor`, `FileUploader`, `ContentPreview`
-
-### Shared
-
-- `SEOHead`, `SocialShare`, `Timeline`, `QRCode`, `LoadingSpinner`
-
-## 4. 動的インポートガイド
-
-```ts
-import dynamic from "next/dynamic";
-const ColorPalette = dynamic(() => import("@/components/tools/ColorPalette"), {
-  ssr: false,
-});
-```
-
-- 重い 3D/Canvas 系 (`ThreeJSPlayground`) は必ず `ssr:false`
-
-## 5. ストーリーブック (予定)
-
-- `npm run storybook` でコンポーネント単体確認
+1. **最小限の依存**: 他のページへの影響を最小限に抑える
+2. **独立性の維持**: 共通化によってページの独立性を損なわない
+3. **明確な責任範囲**: コンポーネントの役割と使用箇所を明確に定義する
 
 ---
 
-> **開発ルール**: 新規コンポーネントは `/\*\*
-
-- @docs description
-  \*/`コメントを付与し`index.ts` に必ずエクスポートを追加してください。
+> **重要**: このファイルは将来の拡張に備えて保持されています。現在は共通コンポーネントを使用しない方針のため、内容は空です。
