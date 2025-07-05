@@ -23,6 +23,13 @@
 - **JSON出力**: データ構造化、public保存、バックアップ機能
 - **画像変換**: ffmpeg.wasmを使用した画像変換
 
+### OGP画像・ファビコン管理
+
+- **OGP画像**: 各ページごとにdata-managerから個別に画像を設定・管理可能
+- **保存場所**: `public/images/og-images/` に保存
+- **ファビコン**: `public/favicons/` 内の `favicon.ico`, `favicon.png`, `favicon.svg` を適切に運用
+- **data-manager UI**: OGP画像のアップロード・差し替え・削除機能を提供
+
 ### 開発環境限定機能
 
 - **環境判定**: 開発サーバーでのみ動作
@@ -39,9 +46,24 @@
 
 ### ファイル処理
 
-- **ffmpeg.wasm連携**: 画像変換のためのffmpeg.wasm統合
-- **ファイル保存**: publicディレクトリへの適切な保存
-- **Markdown生成**: 詳細ページ用Markdownの自動生成
+- **ファイル選択**: ローカルファイル選択ダイアログ
+- **ファイルコピー**: 選択されたファイルをpublicディレクトリの適切な場所にコピー
+- **ファイル構成**:
+  ```
+  public/
+  ├── images/
+  │   ├── portfolio/    # ポートフォリオ画像
+  │   ├── thumbnails/   # サムネイル画像
+  │   ├── og-images/    # OG画像
+  │   └── profile/      # プロフィール画像
+  ├── videos/           # 動画ファイル
+  ├── downloads/        # ダウンロード用ファイル
+  └── data/            # JSONデータファイル
+  ```
+- **ffmpeg.wasm連携**: 画像変換・リサイズ・最適化
+- **自動リサイズ**: サムネイル、OG画像の自動生成
+- **Markdown生成**: 詳細ページ用Markdownファイルの自動生成
+- **JSON更新**: ContentItemデータの自動更新
 
 ### パフォーマンス
 

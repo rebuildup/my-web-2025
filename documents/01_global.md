@@ -87,7 +87,94 @@ interface SiteConfig {
 
 ---
 
-> **メンテナンス指針**: 新しいコンテンツタイプやフィールドを追加する際は `ContentItem.customFields` を優先し、型が安定したら正式フィールド化してください。
+## 7. データ管理とAPI設計
+
+### データ保存形式
+
+```
+public/data/
+├── content/
+│   ├── portfolio.json      # ポートフォリオデータ
+│   ├── blog.json          # ブログ記事データ
+│   ├── plugin.json        # プラグインデータ
+│   ├── download.json      # ダウンロードデータ
+│   ├── tool.json          # ツールデータ
+│   └── profile.json       # プロフィールデータ
+├── stats/
+│   ├── download-stats.json # ダウンロード統計
+│   ├── view-stats.json     # 閲覧統計
+│   └── search-stats.json   # 検索統計
+└── cache/
+    ├── search-index.json   # 検索インデックス
+    └── site-map.json       # サイトマップ
+```
+
+### API Routes 設計
+
+```
+src/app/api/
+├── content/
+│   ├── [type]/route.ts     # GET /api/content/[type] - コンテンツ取得
+│   └── search/route.ts     # POST /api/content/search - 検索機能
+├── stats/
+│   ├── download/route.ts   # POST /api/stats/download - ダウンロード統計更新
+│   └── view/route.ts       # POST /api/stats/view - 閲覧統計更新
+├── contact/route.ts        # POST /api/contact - お問い合わせ送信
+└── admin/
+    ├── content/route.ts    # POST /api/admin/content - コンテンツ管理
+    └── upload/route.ts     # POST /api/admin/upload - ファイルアップロード
+```
+
+### 検索機能実装
+
+```ts
+// lib/search/index.ts
+export interface SearchIndex {
+  id: string;
+  type: ContentType;
+  title: string;
+  description: string;
+  content: string;
+  tags: string[];
+  category: string;
+  searchableContent: string; // title + description + content + tags
+}
+
+export const searchContent = async (
+  query: string,
+  options: {
+    type?: ContentType;
+    category?: string;
+    limit?: number;
+    includeContent?: boolean; // markdownファイルの内容も検索対象に含める
+  } = {}
+): Promise<SearchResult[]> => {
+  // 検索インデックスから検索実行
+  // 簡易モード: title, description, tags のみ
+  // 詳細モード: markdownファイルの内容も含める
+};
+```
+
+### 統計データ管理
+
+```ts
+// lib/stats/index.ts
+export interface StatData {
+  downloads: Record<string, number>;
+  views: Record<string, number>;
+  searches: Record<string, number>;
+  lastUpdated: string;
+}
+
+export const updateStats = async (type: "download" | "view", id: string) => {
+  // 統計データの更新
+  // ローカルファイルへの書き込み
+};
+```
+
+---
+
+> **メンテナンス指針**: 新しいコンテンツタイプやフィールドを追加する際は `ContentItem.customFields` を優先し、型が安定したら正式フィールド化してください。データ管理は静的JSON形式で行い、Admin機能でのみ更新を行います。
 
 ## 6. パフォーマンス最適化ユーティリティ (実装例)
 
@@ -148,3 +235,23 @@ export const memoryOptimization = {
 3. プレイグラウンドページ `unmount` 時に `memoryOptimization.disposeThreeObjects(scene)` を呼び出す。
 
 ---
+
+## 8. カテゴリ・タグ設計
+
+### 作品カテゴリ例
+
+- 依頼
+- 個人制作
+- 映像
+- デザイン
+- プログラミング
+- 3DCG
+- DTM
+
+### タグ設計例
+
+- 使用ツール: AfterEffects, Blender, Photoshop, Unity, etc.
+- 技術スタック: React, Next.js, TypeScript, Tailwind CSS, etc.
+- 細分類: ショート動画, MV, UI/UX, ゲーム, etc.
+
+> **管理方法**: これらのカテゴリ・タグはdata-managerから自由に追加・編集・削除可能です。

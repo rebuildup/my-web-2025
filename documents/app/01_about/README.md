@@ -36,9 +36,9 @@
 
 ### 依頼関連
 
-- **連絡方法**: メール(361do.sleep@gmail.com)またはXのDM
-  - 開発依頼: @361do_sleep
-  - 映像・デザイン依頼: @361do_design
+- **連絡方法**: メールまたはXのDM
+  - 開発・技術依頼: rebuild.up.up@gmail.com または @361do_sleep
+  - 映像・デザイン依頼: 361do.sleep@gmail.com または @361do_design
 - **料金体系**: 各依頼ページで公開
 
 > サブページごとの詳細仕様はそれぞれの `page.md` を参照してください。

@@ -46,21 +46,21 @@
 - [ ] ファビコン (青い円形SVGアイコン)
 - [ ] TailwindCSS v4設定
 
-### 4.3 共通UIコンポーネント (`src/components/ui/`)
+### 4.3 ページ固有コンポーネント設計
 
-- [ ] Button (primary, secondary, ghost variants)
-- [ ] Card (title, image props)
-- [ ] Modal (open, onClose)
-- [ ] Input (label, error)
-- [ ] Select (options, value)
-- [ ] Toast (type, message)
+- [ ] 各ページディレクトリ内でのコンポーネント実装
+- [ ] `src/app/[page]/components/` 構造の確立
+- [ ] ページ間での独立性の確保
+- [ ] コードの重複を許容した実装
 
-### 4.4 レイアウトコンポーネント (`src/components/layout/`)
+### 4.4 共通ユーティリティ (`src/lib/utils/`)
 
-- [ ] Header (グローバルナビ + ロゴ)
-- [ ] Footer (サイト情報 + SNSリンク)
-- [ ] Navigation (サイドバー/ドロワー切替)
-- [ ] Sidebar (Admin/Docs用)
+- [ ] 日付処理ユーティリティ (date-fns連携)
+- [ ] 文字列処理ユーティリティ
+- [ ] 画像最適化ユーティリティ
+- [ ] 検索機能ユーティリティ
+- [ ] 統計データ処理ユーティリティ
+- [ ] パフォーマンス最適化ユーティリティ
 
 ### 4.5 ページ実装
 
@@ -71,12 +71,14 @@
 - [ ] Workshop (`/workshop`) - プラグイン・ダウンロード・ブログ
 - [ ] Contact (`/contact`) - フォーム・reCAPTCHA
 
-### 4.6 専用コンポーネント
+### 4.6 ページ固有コンポーネント
 
-- [ ] Portfolio: GalleryCard, GalleryGrid, DetailView, FilterBar, SortDropdown
-- [ ] Tools: ColorPalette, QRGenerator, EstimateCalculator
-- [ ] Admin: ContentEditor, MarkdownEditor, FileUploader, ContentPreview
-- [ ] Shared: SEOHead, SocialShare, Timeline, QRCode, LoadingSpinner
+- [ ] Portfolio: `src/app/portfolio/components/` 内でのギャラリー機能実装
+- [ ] Tools: `src/app/tools/components/` 内でのツール機能実装
+- [ ] Workshop: `src/app/workshop/components/` 内でのブログ・プラグイン機能実装
+- [ ] About: `src/app/about/components/` 内でのプロフィール機能実装
+- [ ] Admin: `src/app/admin/components/` 内でのコンテンツ管理機能実装
+- [ ] Contact: `src/app/contact/components/` 内でのフォーム機能実装
 
 ### 4.7 機能要件
 

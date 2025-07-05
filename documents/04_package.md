@@ -38,9 +38,33 @@
   "build": "next build",
   "start": "next start",
   "lint": "next lint",
-  "lint:md": "textlint \"documents/**/*.md\""
+  "lint:md": "textlint \"documents/**/*.md\"",
+  "type-check": "tsc --noEmit",
+  "test": "jest",
+  "test:watch": "jest --watch",
+  "test:e2e": "playwright test",
+  "lighthouse": "lhci autorun"
 }
 ```
+
+## メール送信方法
+
+- Gmail SMTPの代替として [Resend](https://resend.com/) を利用
+- `RESEND_API_KEY` を環境変数で管理
+- nodemailerは不要
+
+## 追加パッケージ (開発・実装用)
+
+| パッケージ             | 用途                      |
+| ---------------------- | ------------------------- |
+| resend                 | メール送信API             |
+| sharp                  | 画像処理・最適化          |
+| fuse.js                | 全文検索エンジン          |
+| @ffmpeg/ffmpeg         | 動画・画像変換            |
+| react-google-recaptcha | reCAPTCHA                 |
+| marked                 | Markdown → HTML変換       |
+| dompurify              | HTML サニタイゼーション   |
+| isomorphic-dompurify   | SSR対応サニタイゼーション |
 
 ## バージョン管理
 

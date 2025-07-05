@@ -59,8 +59,74 @@ Git push → GitHub Actions → build & test → rsync to GCP VM → Apache relo
 
 ## 4. 環境変数
 
-- `.env.example` をコピーして `.env.local` を編集
-- GitHub Secrets (`GCP_SSH_KEY`, `GCP_HOST`, `GCP_USER`, etc.)
+### 開発環境 (.env.local)
+
+```bash
+# 基本設定
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_NAME=samuido
+NODE_ENV=development
+
+# Google Analytics
+NEXT_PUBLIC_GA_ID=G-RHP8NQ10X2
+
+# Adobe Fonts
+NEXT_PUBLIC_ADOBE_FONTS_KIT_ID=blm5pmr
+
+# メール送信設定 (Resend使用)
+RESEND_API_KEY=your-resend-api-key
+CONTACT_EMAIL_TO=rebuild.up.up@gmail.com
+DESIGN_EMAIL_TO=361do.sleep@gmail.com
+
+# reCAPTCHA (Contact Form)
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LdZ3XgrAAAAAJhdhTA25XgqZBebMW_reZiIPreG
+RECAPTCHA_SECRET_KEY=6LdZ3XgrAAAAAPXuBvy0XUwmALmDA5clWyRfsd5h
+
+# Admin機能
+NEXT_PUBLIC_ADMIN_ENABLED=true
+ADMIN_SECRET=your-admin-secret
+```
+
+### 本番環境
+
+```bash
+# 基本設定
+NEXT_PUBLIC_SITE_URL=https://yusuke-kim.com
+NEXT_PUBLIC_SITE_NAME=samuido
+NODE_ENV=production
+
+# Google Analytics
+NEXT_PUBLIC_GA_ID=G-RHP8NQ10X2
+
+# Adobe Fonts
+NEXT_PUBLIC_ADOBE_FONTS_KIT_ID=blm5pmr
+
+# メール送信設定 (Resend使用)
+RESEND_API_KEY=your-resend-api-key
+CONTACT_EMAIL_TO=rebuild.up.up@gmail.com
+DESIGN_EMAIL_TO=361do.sleep@gmail.com
+
+# reCAPTCHA (Contact Form)
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LdZ3XgrAAAAAJhdhTA25XgqZBebMW_reZiIPreG
+RECAPTCHA_SECRET_KEY=6LdZ3XgrAAAAAPXuBvy0XUwmALmDA5clWyRfsd5h
+
+# Admin機能 (本番では無効化)
+NEXT_PUBLIC_ADMIN_ENABLED=false
+```
+
+### GitHub Secrets
+
+```bash
+# デプロイ関連
+GCP_SSH_KEY=your-private-key
+GCP_HOST=your-server-ip
+GCP_USER=your-username
+
+# セキュリティ関連
+ADMIN_SECRET=your-admin-secret
+RECAPTCHA_SECRET_KEY=your-secret-key
+SMTP_PASSWORD=your-app-password
+```
 
 ## 5. バックアップ
 
