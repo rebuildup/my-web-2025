@@ -1,26 +1,273 @@
 @import "tailwindcss";
 
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Shippori+Antique+B1&display=swap');
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Design System Colors */
+  --primary-blue: #0000ff;
+  --base-gray: #222222;
+  --background: var(--base-gray);
+  --foreground: #ffffff;
+  --accent: var(--primary-blue);
+
+  /* Typography */
+  --font-heading: neue-haas-grotesk-display, sans-serif;
+  --font-body: "Noto Sans JP", sans-serif;
+  --font-accent: zen-kaku-gothic-new, sans-serif;
+  --font-japanese-accent: "Shippori Antique B1", sans-serif;
+
+  /* Spacing (Golden Ratio: 1:1.618) */
+  --spacing-xs: 0.618rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.618rem;
+  --spacing-lg: 2.618rem;
+  --spacing-xl: 4.236rem;
+
+  /* Border Radius (Minimal design) */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+
+  /* Shadows (Minimal design) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 @theme inline {
+  --color-primary: var(--primary-blue);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent: var(--accent);
+  --color-gray: var(--base-gray);
+  
+  --font-sans: var(--font-body);
+  --font-display: var(--font-heading);
+  --font-accent: var(--font-accent);
+  --font-japanese: var(--font-japanese-accent);
+
+  --spacing-1: var(--spacing-xs);
+  --spacing-2: var(--spacing-sm);
+  --spacing-3: var(--spacing-md);
+  --spacing-4: var(--spacing-lg);
+  --spacing-5: var(--spacing-xl);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Adobe Fonts Classes */
+.neue-haas-grotesk-display {
+  font-family: neue-haas-grotesk-display, sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.zen-kaku-gothic-new {
+  font-family: zen-kaku-gothic-new, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Google Fonts Classes */
+.noto-sans-jp {
+  font-family: "Noto Sans JP", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.shippori-antique-b1-regular {
+  font-family: "Shippori Antique B1", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  line-height: 1.618; /* Golden ratio */
+  font-weight: 300;
+  font-style: italic;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-sm);
+}
+
+h1 { font-size: 2.618rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.618rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.875rem; }
+
+p {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.618;
+}
+
+a {
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Focus styles for accessibility */
+:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+/* Grid Layout System */
+.grid-container {
+  display: grid;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+}
+
+.grid-1 { grid-template-columns: 1fr; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Utility Classes */
+.text-primary { color: var(--primary-blue); }
+.text-accent { color: var(--accent); }
+.bg-primary { background-color: var(--primary-blue); }
+.bg-gray { background-color: var(--base-gray); }
+
+/* Loading States */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--primary-blue);
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error States */
+.error {
+  color: #ff4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.success {
+  color: #00aa00;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Form Styles */
+input, textarea, select {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid #444;
+  border-radius: var(--radius-sm);
+  background: var(--base-gray);
+  color: var(--foreground);
+  transition: border-color 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--primary-blue);
+  outline: none;
+}
+
+button {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: 2px solid var(--primary-blue);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--primary-blue);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: var(--primary-blue);
+  color: var(--foreground);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Image Optimization */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  :root {
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 0.8rem;
+    --spacing-md: 1.3rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --spacing-xs: 0.4rem;
+    --spacing-sm: 0.6rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.6rem;
+    --spacing-xl: 2.6rem;
+  }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.6rem; }
+  h3 { font-size: 1.3rem; }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
 }

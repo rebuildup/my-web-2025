@@ -1,0 +1,146 @@
+[
+  {
+    "id": "tool-1",
+    "type": "tool",
+    "title": "Color Palette Generator",
+    "description": "Interactive tool to generate harmonious color palettes based on color theory principles.",
+    "category": "design",
+    "tags": ["Color", "Design", "Palette", "Interactive"],
+    "status": "published",
+    "priority": 95,
+    "createdAt": "2024-12-01T08:00:00.000Z",
+    "updatedAt": "2024-12-01T08:00:00.000Z",
+    "publishedAt": "2024-12-01T08:00:00.000Z",
+    "thumbnail": "/images/tools/color-palette-thumb.jpg",
+    "customFields": {
+      "toolType": "interactive",
+      "difficulty": "beginner",
+      "estimatedTime": "5-10 minutes",
+      "toolConfig": {
+        "features": ["Color harmony", "Export options", "Accessibility check"],
+        "technologies": ["React", "Canvas API", "Color theory algorithms"]
+      }
+    },
+    "content": "# Color Palette Generator\n\nCreate beautiful, harmonious color palettes for your design projects. This interactive tool uses color theory principles to generate complementary, analogous, triadic, and other color schemes.\n\n## How to Use\n\n1. **Start with a base color**: Click on the color picker or enter a hex value\n2. **Choose harmony type**: Select from complementary, analogous, triadic, or split-complementary\n3. **Adjust parameters**: Fine-tune saturation, brightness, and hue\n4. **Export your palette**: Download as CSS, JSON, or Adobe Swatch file\n\n## Features\n\n- Real-time color preview\n- Multiple harmony algorithms\n- Accessibility compliance checking\n- Export in various formats\n- Save and load palettes\n- Color blindness simulation",
+    "stats": {
+      "views": 3421,
+      "likes": 187,
+      "shares": 92,
+      "lastViewed": "2024-12-20T16:45:00.000Z"
+    },
+    "seo": {
+      "title": "Color Palette Generator - Free Online Design Tool",
+      "description": "Generate beautiful color palettes with this free online tool. Perfect for web design, branding, and digital art projects.",
+      "keywords": ["Color Palette", "Generator", "Design Tool", "Color Theory", "Web Design"],
+      "ogImage": "/images/tools/color-palette-og.jpg"
+    }
+  },
+  {
+    "id": "tool-2",
+    "type": "tool",
+    "title": "QR Code Generator",
+    "description": "Generate custom QR codes with logo embedding, color customization, and multiple export formats.",
+    "category": "utility",
+    "tags": ["QR Code", "Generator", "Utility", "Marketing"],
+    "status": "published",
+    "priority": 88,
+    "createdAt": "2024-11-20T10:30:00.000Z",
+    "updatedAt": "2024-11-20T10:30:00.000Z",
+    "publishedAt": "2024-11-20T10:30:00.000Z",
+    "thumbnail": "/images/tools/qr-generator-thumb.jpg",
+    "customFields": {
+      "toolType": "generator",
+      "difficulty": "beginner",
+      "estimatedTime": "2-5 minutes",
+      "toolConfig": {
+        "features": ["Logo embedding", "Color customization", "Multiple formats"],
+        "technologies": ["React", "QR code library", "Canvas API"]
+      }
+    },
+    "content": "# QR Code Generator\n\nCreate custom QR codes for your business, events, or personal use. Add logos, customize colors, and download in multiple formats.\n\n## Features\n\n### Basic QR Generation\n- **Text/URL**: Convert any text or URL to QR code\n- **Contact Info**: Generate vCard QR codes\n- **WiFi**: Create WiFi connection QR codes\n- **Email**: Generate mailto QR codes\n\n### Customization Options\n- **Colors**: Custom foreground and background colors\n- **Logo Embedding**: Add your logo to the center\n- **Size Options**: Various resolution settings\n- **Error Correction**: Multiple levels for reliability\n\n### Export Formats\n- PNG (transparent background support)\n- JPG (for print applications)\n- SVG (vector format for scaling)\n- PDF (print-ready format)\n\n## Use Cases\n\n- Business cards and marketing materials\n- Event tickets and invitations\n- Restaurant menus and contact info\n- Social media and website links\n- Product packaging and labels",
+    "stats": {
+      "views": 2187,
+      "likes": 134,
+      "shares": 58,
+      "lastViewed": "2024-12-20T14:20:00.000Z"
+    },
+    "seo": {
+      "title": "QR Code Generator - Custom QR Codes with Logo",
+      "description": "Generate custom QR codes with logo embedding and color customization. Free online tool for business and personal use.",
+      "keywords": ["QR Code", "Generator", "Custom QR", "Logo", "Marketing Tool"],
+      "ogImage": "/images/tools/qr-generator-og.jpg"
+    }
+  },
+  {
+    "id": "tool-3",
+    "type": "tool",
+    "title": "Text Counter & Analyzer",
+    "description": "Comprehensive text analysis tool for character count, word count, reading time, and SEO optimization.",
+    "category": "writing",
+    "tags": ["Text", "Counter", "Analysis", "SEO", "Writing"],
+    "status": "published",
+    "priority": 82,
+    "createdAt": "2024-10-15T14:00:00.000Z",
+    "updatedAt": "2024-10-15T14:00:00.000Z",
+    "publishedAt": "2024-10-15T14:00:00.000Z",
+    "thumbnail": "/images/tools/text-counter-thumb.jpg",
+    "customFields": {
+      "toolType": "analyzer",
+      "difficulty": "beginner",
+      "estimatedTime": "1-3 minutes",
+      "toolConfig": {
+        "features": ["Character count", "Word count", "Reading time", "SEO analysis"],
+        "technologies": ["React", "Text processing", "SEO algorithms"]
+      }
+    },
+    "content": "# Text Counter & Analyzer\n\nComprehensive text analysis tool for writers, bloggers, and content creators. Get detailed statistics about your text including character count, word count, reading time, and SEO insights.\n\n## Analysis Features\n\n### Basic Counting\n- **Characters**: Total characters with and without spaces\n- **Words**: Word count with smart detection\n- **Sentences**: Sentence count and average length\n- **Paragraphs**: Paragraph count and structure analysis\n\n### Reading Metrics\n- **Reading Time**: Estimated reading time for average readers\n- **Speaking Time**: Time needed to speak the text aloud\n- **Complexity Score**: Text complexity analysis\n- **Grade Level**: Reading level assessment\n\n### SEO Analysis\n- **Keyword Density**: Most frequent words and phrases\n- **Title Suggestions**: SEO-optimized title recommendations\n- **Meta Description**: Character count for meta descriptions\n- **Social Media**: Character limits for various platforms\n\n### Language Features\n- **Multiple Languages**: Support for various languages\n- **Encoding Detection**: Automatic character encoding detection\n- **Unicode Support**: Full Unicode character support\n- **Export Options**: Save analysis as CSV or PDF\n\n## Perfect For\n\n- Content writers and bloggers\n- SEO professionals\n- Students and academics\n- Social media managers\n- Email marketers",
+    "stats": {
+      "views": 1543,
+      "likes": 89,
+      "shares": 34,
+      "lastViewed": "2024-12-20T11:30:00.000Z"
+    },
+    "seo": {
+      "title": "Text Counter & Analyzer - Free Writing Tool",
+      "description": "Comprehensive text analysis tool with character count, word count, reading time, and SEO optimization features.",
+      "keywords": ["Text Counter", "Word Count", "Text Analysis", "SEO Tool", "Writing Tool"],
+      "ogImage": "/images/tools/text-counter-og.jpg"
+    }
+  },
+  {
+    "id": "tool-4",
+    "type": "tool",
+    "title": "Pomodoro Timer",
+    "description": "Productivity timer based on the Pomodoro Technique with customizable intervals and task tracking.",
+    "category": "productivity",
+    "tags": ["Pomodoro", "Timer", "Productivity", "Focus", "Time Management"],
+    "status": "published",
+    "priority": 85,
+    "createdAt": "2024-09-10T16:20:00.000Z",
+    "updatedAt": "2024-09-10T16:20:00.000Z",
+    "publishedAt": "2024-09-10T16:20:00.000Z",
+    "thumbnail": "/images/tools/pomodoro-thumb.jpg",
+    "customFields": {
+      "toolType": "timer",
+      "difficulty": "beginner",
+      "estimatedTime": "25 minutes per session",
+      "toolConfig": {
+        "features": ["Custom intervals", "Task tracking", "Statistics", "Notifications"],
+        "technologies": ["React", "Web Audio API", "Local Storage", "Notifications API"]
+      }
+    },
+    "content": "# Pomodoro Timer\n\nBoost your productivity with this customizable Pomodoro Timer. Based on the proven Pomodoro Technique, this tool helps you focus on tasks in manageable intervals.\n\n## How It Works\n\nThe Pomodoro Technique breaks work into focused 25-minute intervals followed by short breaks:\n\n1. **Work Period**: Focus on a single task for 25 minutes\n2. **Short Break**: Take a 5-minute break\n3. **Repeat**: Complete 4 work periods\n4. **Long Break**: Take a 15-30 minute break\n\n## Features\n\n### Customizable Settings\n- **Work Duration**: Adjust work period length (15-60 minutes)\n- **Break Duration**: Customize short and long break times\n- **Session Count**: Set number of sessions before long break\n- **Auto-start**: Automatically start next period\n\n### Task Management\n- **Task List**: Add and manage your tasks\n- **Task Timer**: Track time spent on each task\n- **Progress Tracking**: Monitor completed pomodoros per task\n- **Estimated Pomodoros**: Plan how many sessions each task needs\n\n### Statistics & Insights\n- **Daily Stats**: Track daily productivity metrics\n- **Weekly Reports**: View weekly productivity trends\n- **Task Analytics**: Analyze time spent on different tasks\n- **Focus Score**: Measure your focus consistency\n\n### Notifications & Alerts\n- **Sound Alerts**: Customizable notification sounds\n- **Visual Cues**: Screen flash and color changes\n- **Browser Notifications**: Desktop notifications\n- **Motivational Messages**: Encouraging messages between sessions\n\n## Benefits\n\n- Improved focus and concentration\n- Better time management\n- Reduced procrastination\n- Enhanced productivity\n- Stress reduction through regular breaks",
+    "stats": {
+      "views": 2891,
+      "likes": 156,
+      "shares": 73,
+      "lastViewed": "2024-12-20T09:45:00.000Z"
+    },
+    "seo": {
+      "title": "Pomodoro Timer - Free Productivity Tool",
+      "description": "Boost productivity with this customizable Pomodoro Timer. Task tracking, statistics, and notifications included.",
+      "keywords": ["Pomodoro Timer", "Productivity", "Time Management", "Focus Tool", "Task Tracking"],
+      "ogImage": "/images/tools/pomodoro-og.jpg"
+    }
+  }
+]

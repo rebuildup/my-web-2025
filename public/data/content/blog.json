@@ -1,0 +1,86 @@
+[
+  {
+    "id": "blog-1",
+    "type": "blog",
+    "title": "Getting Started with Next.js 15 and React 19",
+    "description": "A comprehensive guide to building modern web applications with the latest versions of Next.js and React.",
+    "category": "programming",
+    "tags": ["Next.js", "React", "Web Development", "Tutorial"],
+    "status": "published",
+    "priority": 95,
+    "createdAt": "2024-12-10T09:00:00.000Z",
+    "updatedAt": "2024-12-10T09:00:00.000Z",
+    "publishedAt": "2024-12-10T09:00:00.000Z",
+    "thumbnail": "/images/blog/nextjs-15-thumb.jpg",
+    "contentPath": "/content/blog/nextjs-15-react-19.md",
+    "content": "# Getting Started with Next.js 15 and React 19\n\nThe latest versions of Next.js and React bring exciting new features and improvements that make building web applications even more powerful and efficient.\n\n## What's New in Next.js 15\n\n- Improved performance with Turbopack\n- Enhanced TypeScript support\n- Better error handling\n- Streamlined API routes\n\n## React 19 Features\n\n- New hooks and APIs\n- Improved concurrent features\n- Better developer experience\n- Performance optimizations\n\n## Getting Started\n\n```bash\nnpx create-next-app@latest my-app\ncd my-app\nnpm run dev\n```\n\nThis will create a new Next.js 15 application with React 19 support out of the box.",
+    "stats": {
+      "views": 1243,
+      "likes": 89,
+      "shares": 34,
+      "lastViewed": "2024-12-20T16:30:00.000Z"
+    },
+    "seo": {
+      "title": "Next.js 15 and React 19 Tutorial - Complete Guide",
+      "description": "Learn how to build modern web applications with Next.js 15 and React 19. Complete guide with examples and best practices.",
+      "keywords": ["Next.js 15", "React 19", "Web Development", "Tutorial", "JavaScript"],
+      "ogImage": "/images/blog/nextjs-15-og.jpg"
+    }
+  },
+  {
+    "id": "blog-2",
+    "type": "blog",
+    "title": "Creating Engaging Motion Graphics with After Effects",
+    "description": "Tips and techniques for creating compelling motion graphics and animations using Adobe After Effects.",
+    "category": "video",
+    "tags": ["After Effects", "Motion Graphics", "Animation", "Video Production"],
+    "status": "published",
+    "priority": 88,
+    "createdAt": "2024-11-25T14:00:00.000Z",
+    "updatedAt": "2024-11-25T14:00:00.000Z",
+    "publishedAt": "2024-11-25T14:00:00.000Z",
+    "thumbnail": "/images/blog/motion-graphics-thumb.jpg",
+    "contentPath": "/content/blog/motion-graphics-after-effects.md",
+    "content": "# Creating Engaging Motion Graphics with After Effects\n\nMotion graphics are a powerful way to communicate ideas and engage audiences. Adobe After Effects provides the tools needed to create stunning animations.\n\n## Essential Techniques\n\n### 1. Keyframe Animation\nThe foundation of motion graphics is keyframe animation. Learn to create smooth transitions between different states.\n\n### 2. Shape Layers\nUse shape layers for vector-based graphics that scale perfectly and render quickly.\n\n### 3. Text Animation\nAnimate text with presets and custom animations to create dynamic typography.\n\n### 4. Expressions\nUse expressions to create complex animations with mathematical precision.\n\n## Best Practices\n\n- Plan your animation before starting\n- Use the graph editor for smooth curves\n- Keep compositions organized\n- Optimize for performance\n- Export in appropriate formats",
+    "stats": {
+      "views": 756,
+      "likes": 52,
+      "shares": 18,
+      "lastViewed": "2024-12-20T11:15:00.000Z"
+    },
+    "seo": {
+      "title": "Motion Graphics Tutorial - After Effects Animation Guide",
+      "description": "Learn to create engaging motion graphics and animations with Adobe After Effects. Tips, techniques, and best practices.",
+      "keywords": ["Motion Graphics", "After Effects", "Animation", "Video Production", "Tutorial"],
+      "ogImage": "/images/blog/motion-graphics-og.jpg"
+    }
+  },
+  {
+    "id": "blog-3",
+    "type": "blog",
+    "title": "Color Theory in Digital Design",
+    "description": "Understanding color theory and how to apply it effectively in digital design projects for maximum impact.",
+    "category": "design",
+    "tags": ["Color Theory", "Design", "UI/UX", "Visual Design"],
+    "status": "published",
+    "priority": 82,
+    "createdAt": "2024-11-05T10:30:00.000Z",
+    "updatedAt": "2024-11-05T10:30:00.000Z",
+    "publishedAt": "2024-11-05T10:30:00.000Z",
+    "thumbnail": "/images/blog/color-theory-thumb.jpg",
+    "contentPath": "/content/blog/color-theory-digital-design.md",
+    "content": "# Color Theory in Digital Design\n\nColor is one of the most powerful tools in a designer's arsenal. Understanding color theory helps create designs that are both aesthetically pleasing and functionally effective.\n\n## The Color Wheel\n\nThe color wheel is the foundation of color theory, showing relationships between:\n\n- **Primary colors**: Red, blue, yellow\n- **Secondary colors**: Green, orange, purple\n- **Tertiary colors**: Combinations of primary and secondary\n\n## Color Harmonies\n\n### Complementary\nColors opposite each other on the color wheel create high contrast and vibrant designs.\n\n### Analogous\nColors next to each other create harmonious, calming designs.\n\n### Triadic\nThree colors equally spaced create vibrant yet balanced designs.\n\n## Digital Considerations\n\n- **RGB vs CMYK**: Understand the difference for screen vs print\n- **Accessibility**: Ensure sufficient contrast for readability\n- **Cultural context**: Colors have different meanings across cultures\n- **Emotional impact**: Colors evoke specific emotions and responses",
+    "stats": {
+      "views": 432,
+      "likes": 31,
+      "shares": 12,
+      "lastViewed": "2024-12-19T13:20:00.000Z"
+    },
+    "seo": {
+      "title": "Color Theory for Digital Design - Complete Guide",
+      "description": "Master color theory in digital design. Learn about color harmonies, accessibility, and practical application in UI/UX design.",
+      "keywords": ["Color Theory", "Digital Design", "UI/UX", "Visual Design", "Design Principles"],
+      "ogImage": "/images/blog/color-theory-og.jpg"
+    }
+  }
+]
