@@ -4,17 +4,17 @@
 
 ## 1. ContentItem — すべてのコンテンツの基盤
 
-```
+```typescript
 interface ContentItem {
   id: string;
-  type: ContentType;            // portfolio | plugin | blog | profile | page | tool | asset
+  type: ContentType; // portfolio | plugin | blog | profile | page | tool | asset
   title: string;
   description: string;
   category: string;
   tags: string[];
   status: "published" | "draft" | "archived" | "scheduled";
-  priority: number;             // 0-100
-  createdAt: string;            // ISO 8601
+  priority: number; // 0-100
+  createdAt: string; // ISO 8601
   updatedAt?: string;
   publishedAt?: string;
 
@@ -23,11 +23,68 @@ interface ContentItem {
   videos?: MediaEmbed[];
   externalLinks?: ExternalLink[];
   downloadInfo?: DownloadInfo;
-  content?: string;             // Markdown or HTML
-  contentPath?: string;         // Markdown path
+  content?: string; // Markdown or HTML
+  contentPath?: string; // Markdown path
   stats?: ContentStats;
   seo?: SEOData;
   customFields?: Record<string, any>;
+}
+
+type ContentType =
+  | "portfolio"
+  | "plugin"
+  | "blog"
+  | "profile"
+  | "page"
+  | "tool"
+  | "asset"
+  | "download";
+
+interface MediaEmbed {
+  type: "youtube" | "vimeo" | "code" | "social" | "iframe";
+  url: string;
+  title?: string;
+  description?: string;
+  thumbnail?: string;
+  duration?: number;
+  width?: number;
+  height?: number;
+}
+
+interface ExternalLink {
+  type: "github" | "demo" | "booth" | "website" | "other";
+  url: string;
+  title: string;
+  description?: string;
+}
+
+interface DownloadInfo {
+  fileName: string;
+  fileSize: number;
+  fileType: string;
+  price?: number;
+  version?: string;
+  downloadCount: number;
+  lastDownloaded?: string;
+}
+
+interface ContentStats {
+  views: number;
+  downloads?: number;
+  likes?: number;
+  shares?: number;
+  lastViewed?: string;
+}
+
+interface SEOData {
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  ogImage?: string;
+  twitterImage?: string;
+  canonical?: string;
+  noindex?: boolean;
+  nofollow?: boolean;
 }
 ```
 
@@ -39,7 +96,7 @@ interface ContentItem {
 
 ## 2. SiteConfig — サイト設定
 
-```
+```typescript
 interface SiteConfig {
   name: string;
   description: string;
@@ -51,6 +108,80 @@ interface SiteConfig {
   integrations: IntegrationConfig;
   seo: GlobalSEOConfig;
 }
+
+interface AuthorInfo {
+  name: string;
+  alternateName: string;
+  email: string;
+  jobTitle: string;
+  description: string;
+  socialLinks: SocialLink[];
+}
+
+interface SocialLink {
+  platform: "twitter" | "github" | "linkedin" | "instagram";
+  url: string;
+  username: string;
+}
+
+interface ThemeConfig {
+  colors: {
+    primary: string;
+    secondary: string;
+    background: string;
+    text: string;
+    accent: string;
+  };
+  fonts: {
+    heading: string;
+    body: string;
+    accent: string;
+  };
+  spacing: {
+    xs: string;
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
+  };
+}
+
+interface FeatureConfig {
+  search: boolean;
+  comments: boolean;
+  rss: boolean;
+  analytics: boolean;
+  admin: boolean;
+}
+
+interface IntegrationConfig {
+  googleAnalytics: {
+    enabled: boolean;
+    measurementId: string;
+  };
+  adobeFonts: {
+    enabled: boolean;
+    kitId: string;
+  };
+  recaptcha: {
+    enabled: boolean;
+    siteKey: string;
+  };
+  resend: {
+    enabled: boolean;
+    apiKey: string;
+  };
+}
+
+interface GlobalSEOConfig {
+  defaultTitle: string;
+  defaultDescription: string;
+  defaultKeywords: string[];
+  defaultOgImage: string;
+  defaultTwitterImage: string;
+  siteName: string;
+  locale: string;
+}
 ```
 
 キーポイント:
@@ -60,15 +191,122 @@ interface SiteConfig {
 
 ## 3. FormConfig — フォーム宣言
 
+```typescript
+interface FormConfig {
+  id: string;
+  name: string;
+  description?: string;
+  fields: FormField[];
+  validation: ValidationRule[];
+  submitConfig: SubmitConfig;
+  successMessage?: string;
+  errorMessage?: string;
+}
+
+interface FormField {
+  id: string;
+  type: FormFieldType;
+  label: string;
+  placeholder?: string;
+  required: boolean;
+  validation?: FieldValidation[];
+  options?: FormFieldOption[];
+  defaultValue?: any;
+}
+
+type FormFieldType =
+  | "text"
+  | "email"
+  | "textarea"
+  | "select"
+  | "checkbox"
+  | "radio"
+  | "file"
+  | "calculator";
+
+interface FormFieldOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
+
+interface FieldValidation {
+  type: "required" | "email" | "minLength" | "maxLength" | "pattern" | "custom";
+  value?: any;
+  message: string;
+}
+
+interface ValidationRule {
+  fieldId: string;
+  rules: FieldValidation[];
+}
+
+interface SubmitConfig {
+  method: "POST";
+  action: string;
+  headers?: Record<string, string>;
+  body?: Record<string, any>;
+}
+```
+
 - JSON でフォーム UI・バリデーション・送信先を一元管理
 - `fields[]` に多様な `FormFieldType` (text / email / calculator …)
 
 ## 4. NavigationItem — 階層ナビ
 
+```typescript
+interface NavigationItem {
+  id: string;
+  title: string;
+  url: string;
+  icon?: string;
+  children?: NavigationItem[];
+  external?: boolean;
+  disabled?: boolean;
+  priority: number;
+}
+```
+
 - 再帰的 `children` によりツリーメニューを実現
 - 役割: メイン/フッター/サイドバー共通で利用
 
 ## 5. PageConfig — ページ設定
+
+```typescript
+interface PageConfig {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  content: {
+    source: "static" | "dynamic" | "api";
+    data?: any;
+    apiEndpoint?: string;
+  };
+  layout: {
+    type: "default" | "custom";
+    grid?: GridConfig;
+    components?: string[];
+  };
+  seo: SEOData;
+  features: {
+    search: boolean;
+    comments: boolean;
+    share: boolean;
+  };
+}
+
+interface GridConfig {
+  columns: {
+    sm: number;
+    md: number;
+    lg: number;
+    xl: number;
+  };
+  gap: string;
+  padding: string;
+}
+```
 
 - `content.source` に static / dynamic / api を指定し SSR/ISR/SSG を切替
 - `layout.grid` でレスポンシブ列数を JSON で宣言
@@ -111,23 +349,218 @@ public/data/
 
 ### API Routes 設計
 
-```
-src/app/api/
-├── content/
-│   ├── [type]/route.ts     # GET /api/content/[type] - コンテンツ取得
-│   └── search/route.ts     # POST /api/content/search - 検索機能
-├── stats/
-│   ├── download/route.ts   # POST /api/stats/download - ダウンロード統計更新
-│   └── view/route.ts       # POST /api/stats/view - 閲覧統計更新
-├── contact/route.ts        # POST /api/contact - お問い合わせ送信
-└── admin/
-    ├── content/route.ts    # POST /api/admin/content - コンテンツ管理
-    └── upload/route.ts     # POST /api/admin/upload - ファイルアップロード
+```typescript
+// src/app/api/content/[type]/route.ts
+export async function GET(
+  request: Request,
+  { params }: { params: { type: string } }
+): Promise<Response> {
+  try {
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get("category");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const offset = parseInt(searchParams.get("offset") || "0");
+
+    const data = await getContentByType(params.type, {
+      category,
+      limit,
+      offset,
+    });
+
+    return Response.json({
+      success: true,
+      data,
+      pagination: {
+        limit,
+        offset,
+        total: data.length,
+      },
+    });
+  } catch (error) {
+    return Response.json(
+      { success: false, error: "Failed to fetch content" },
+      { status: 500 }
+    );
+  }
+}
+
+// src/app/api/content/search/route.ts
+export async function POST(request: Request): Promise<Response> {
+  try {
+    const { query, type, category, limit = 10 } = await request.json();
+
+    const results = await searchContent(query, { type, category, limit });
+
+    return Response.json({
+      success: true,
+      data: results,
+      query,
+      filters: { type, category },
+    });
+  } catch (error) {
+    return Response.json(
+      { success: false, error: "Search failed" },
+      { status: 500 }
+    );
+  }
+}
+
+// src/app/api/stats/download/route.ts
+export async function POST(request: Request): Promise<Response> {
+  try {
+    const { id } = await request.json();
+
+    await updateDownloadStats(id);
+
+    return Response.json({ success: true });
+  } catch (error) {
+    return Response.json(
+      { success: false, error: "Failed to update stats" },
+      { status: 500 }
+    );
+  }
+}
+
+// src/app/api/stats/view/route.ts
+export async function POST(request: Request): Promise<Response> {
+  try {
+    const { id } = await request.json();
+
+    await updateViewStats(id);
+
+    return Response.json({ success: true });
+  } catch (error) {
+    return Response.json(
+      { success: false, error: "Failed to update stats" },
+      { status: 500 }
+    );
+  }
+}
+
+// src/app/api/contact/route.ts
+export async function POST(request: Request): Promise<Response> {
+  try {
+    const formData = await request.json();
+
+    // バリデーション
+    const validation = validateContactForm(formData);
+    if (!validation.isValid) {
+      return Response.json(
+        { success: false, errors: validation.errors },
+        { status: 400 }
+      );
+    }
+
+    // reCAPTCHA検証
+    const recaptchaValid = await verifyRecaptcha(formData.recaptchaToken);
+    if (!recaptchaValid) {
+      return Response.json(
+        { success: false, error: "reCAPTCHA verification failed" },
+        { status: 400 }
+      );
+    }
+
+    // メール送信
+    await sendContactEmail(formData);
+
+    return Response.json({ success: true });
+  } catch (error) {
+    return Response.json(
+      { success: false, error: "Failed to send contact form" },
+      { status: 500 }
+    );
+  }
+}
+
+// src/app/api/admin/content/route.ts
+export async function POST(request: Request): Promise<Response> {
+  try {
+    // 開発環境チェック
+    if (process.env.NODE_ENV !== "development") {
+      return Response.json(
+        { success: false, error: "Admin access denied in production" },
+        { status: 403 }
+      );
+    }
+
+    const { action, data } = await request.json();
+
+    switch (action) {
+      case "create":
+        await createContent(data);
+        break;
+      case "update":
+        await updateContent(data);
+        break;
+      case "delete":
+        await deleteContent(data.id);
+        break;
+      default:
+        return Response.json(
+          { success: false, error: "Invalid action" },
+          { status: 400 }
+        );
+    }
+
+    return Response.json({ success: true });
+  } catch (error) {
+    return Response.json(
+      { success: false, error: "Admin operation failed" },
+      { status: 500 }
+    );
+  }
+}
+
+// src/app/api/admin/upload/route.ts
+export async function POST(request: Request): Promise<Response> {
+  try {
+    // 開発環境チェック
+    if (process.env.NODE_ENV !== "development") {
+      return Response.json(
+        { success: false, error: "Admin access denied in production" },
+        { status: 403 }
+      );
+    }
+
+    const formData = await request.formData();
+    const file = formData.get("file") as File;
+    const type = formData.get("type") as string;
+
+    if (!file) {
+      return Response.json(
+        { success: false, error: "No file provided" },
+        { status: 400 }
+      );
+    }
+
+    // ファイル検証
+    const validation = validateUploadedFile(file, type);
+    if (!validation.isValid) {
+      return Response.json(
+        { success: false, error: validation.error },
+        { status: 400 }
+      );
+    }
+
+    // ファイル保存
+    const filePath = await saveUploadedFile(file, type);
+
+    return Response.json({
+      success: true,
+      data: { filePath, fileName: file.name },
+    });
+  } catch (error) {
+    return Response.json(
+      { success: false, error: "File upload failed" },
+      { status: 500 }
+    );
+  }
+}
 ```
 
 ### 検索機能実装
 
-```ts
+```typescript
 // lib/search/index.ts
 export interface SearchIndex {
   id: string;
@@ -140,6 +573,16 @@ export interface SearchIndex {
   searchableContent: string; // title + description + content + tags
 }
 
+export interface SearchResult {
+  id: string;
+  type: ContentType;
+  title: string;
+  description: string;
+  url: string;
+  score: number;
+  highlights: string[];
+}
+
 export const searchContent = async (
   query: string,
   options: {
@@ -149,15 +592,57 @@ export const searchContent = async (
     includeContent?: boolean; // markdownファイルの内容も検索対象に含める
   } = {}
 ): Promise<SearchResult[]> => {
-  // 検索インデックスから検索実行
-  // 簡易モード: title, description, tags のみ
-  // 詳細モード: markdownファイルの内容も含める
+  const { type, category, limit = 10, includeContent = false } = options;
+
+  try {
+    // 検索インデックス読み込み
+    const searchIndex = await loadSearchIndex();
+
+    // フィルタリング
+    let filteredIndex = searchIndex;
+    if (type) {
+      filteredIndex = filteredIndex.filter((item) => item.type === type);
+    }
+    if (category) {
+      filteredIndex = filteredIndex.filter(
+        (item) => item.category === category
+      );
+    }
+
+    // Fuse.jsを使用したファジー検索
+    const fuse = new Fuse(filteredIndex, {
+      keys: ["title", "description", "tags"],
+      threshold: 0.3,
+      includeScore: true,
+      includeMatches: true,
+    });
+
+    const results = fuse.search(query);
+
+    // 結果の整形
+    const searchResults: SearchResult[] = results
+      .slice(0, limit)
+      .map((result) => ({
+        id: result.item.id,
+        type: result.item.type,
+        title: result.item.title,
+        description: result.item.description,
+        url: generateContentUrl(result.item),
+        score: result.score || 0,
+        highlights: result.matches?.map((match) => match.value) || [],
+      }));
+
+    return searchResults;
+  } catch (error) {
+    console.error("Search failed:", error);
+    return [];
+  }
 };
 ```
 
 ### 統計データ管理
 
-```ts
+```typescript
 // lib/stats/index.ts
 export interface StatData {
   downloads: Record<string, number>;
@@ -167,8 +652,40 @@ export interface StatData {
 }
 
 export const updateStats = async (type: "download" | "view", id: string) => {
-  // 統計データの更新
-  // ローカルファイルへの書き込み
+  try {
+    const statsPath = `public/data/stats/${type}-stats.json`;
+    const stats = await loadStats(statsPath);
+
+    // 統計更新
+    if (!stats[id]) {
+      stats[id] = 0;
+    }
+    stats[id]++;
+
+    // ファイル保存
+    await saveStats(statsPath, stats);
+
+    return true;
+  } catch (error) {
+    console.error(`Failed to update ${type} stats:`, error);
+    return false;
+  }
+};
+
+export const getStats = async (type: "download" | "view", id?: string) => {
+  try {
+    const statsPath = `public/data/stats/${type}-stats.json`;
+    const stats = await loadStats(statsPath);
+
+    if (id) {
+      return stats[id] || 0;
+    }
+
+    return stats;
+  } catch (error) {
+    console.error(`Failed to get ${type} stats:`, error);
+    return id ? 0 : {};
+  }
 };
 ```
 
@@ -178,7 +695,7 @@ export const updateStats = async (type: "download" | "view", id: string) => {
 
 ## 6. パフォーマンス最適化ユーティリティ (実装例)
 
-```ts
+```typescript
 // lib/utils/performance.ts
 import { lazy } from "react";
 
@@ -187,6 +704,10 @@ export const LazyComponents = {
   ColorPalette: lazy(() => import("@/components/tools/ColorPalette")),
   ThreeJSPlayground: lazy(
     () => import("@/components/playground/ThreeJSPlayground")
+  ),
+  ProtoType: lazy(() => import("@/components/tools/ProtoType")),
+  SequentialPngPreview: lazy(
+    () => import("@/components/tools/SequentialPngPreview")
   ),
 };
 
@@ -225,6 +746,56 @@ export const memoryOptimization = {
       }
     });
   },
+
+  disposePixiObjects: (app: any) => {
+    if (app.stage) {
+      app.stage.destroy({ children: true });
+    }
+    if (app.renderer) {
+      app.renderer.destroy();
+    }
+  },
+};
+
+// キャッシュ管理
+export const cacheManager = {
+  setCache: (key: string, data: any, ttl: number = 3600) => {
+    const item = {
+      data,
+      timestamp: Date.now(),
+      ttl,
+    };
+    localStorage.setItem(key, JSON.stringify(item));
+  },
+
+  getCache: (key: string) => {
+    try {
+      const item = localStorage.getItem(key);
+      if (!item) return null;
+
+      const { data, timestamp, ttl } = JSON.parse(item);
+      const now = Date.now();
+
+      if (now - timestamp > ttl * 1000) {
+        localStorage.removeItem(key);
+        return null;
+      }
+
+      return data;
+    } catch {
+      return null;
+    }
+  },
+
+  clearCache: (pattern?: string) => {
+    if (pattern) {
+      Object.keys(localStorage)
+        .filter((key) => key.includes(pattern))
+        .forEach((key) => localStorage.removeItem(key));
+    } else {
+      localStorage.clear();
+    }
+  },
 };
 ```
 
@@ -255,3 +826,92 @@ export const memoryOptimization = {
 - 細分類: ショート動画, MV, UI/UX, ゲーム, etc.
 
 > **管理方法**: これらのカテゴリ・タグはdata-managerから自由に追加・編集・削除可能です。
+
+## 9. エラーハンドリング設計
+
+```typescript
+// lib/utils/error-handling.ts
+export interface AppError {
+  code: string;
+  message: string;
+  details?: any;
+  timestamp: string;
+}
+
+export class ContentError extends Error {
+  constructor(
+    message: string,
+    public code: string,
+    public details?: any
+  ) {
+    super(message);
+    this.name = "ContentError";
+  }
+}
+
+export const errorHandler = {
+  handleApiError: (error: any): AppError => {
+    if (error instanceof ContentError) {
+      return {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    return {
+      code: "UNKNOWN_ERROR",
+      message: "An unexpected error occurred",
+      details: error.message,
+      timestamp: new Date().toISOString(),
+    };
+  },
+
+  logError: (error: AppError) => {
+    console.error("Application Error:", error);
+    // 本番環境ではSentry等に送信
+  },
+};
+```
+
+## 10. バリデーション設計
+
+```typescript
+// lib/utils/validation.ts
+export const validators = {
+  email: (value: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value);
+  },
+
+  required: (value: any): boolean => {
+    return value !== null && value !== undefined && value !== "";
+  },
+
+  minLength: (value: string, min: number): boolean => {
+    return value.length >= min;
+  },
+
+  maxLength: (value: string, max: number): boolean => {
+    return value.length <= max;
+  },
+
+  url: (value: string): boolean => {
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  fileType: (file: File, allowedTypes: string[]): boolean => {
+    return allowedTypes.includes(file.type);
+  },
+
+  fileSize: (file: File, maxSize: number): boolean => {
+    return file.size <= maxSize;
+  },
+};
+```

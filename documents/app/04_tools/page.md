@@ -29,9 +29,264 @@
 
 ### 料金計算機
 
-- **開発依頼**: 5万円以上が基本、1ヶ月超ごとに1〜3万円上乗せ、維持管理は非対応
-- **映像依頼**: 1分以下5000円、1分超2分未満1万円、2分超4分未満2万円、4分超は1分ごとに1万円加算
-- **イラスト追加料金**: なし+2000円、全身背景なし+5000円、全身背景あり+4000円、体一部背景なし+6000円、体一部背景あり+5000円、イラスト発注込+20000円、4K解像度+10000円
+#### 基本料金体系
+
+**開発依頼**
+
+- 基本料金: 50,000円
+- 期間延長: 1ヶ月超ごとに10,000円〜30,000円上乗せ
+- 維持管理: 非対応
+
+**映像制作**
+
+- 1分以下: 5,000円
+- 1分超2分未満: 10,000円
+- 2分超4分未満: 20,000円
+- 4分超: 1分ごとに10,000円加算
+
+**イラスト追加料金**
+
+- なし: +0円
+- 半身背景なし: +2,000円
+- 半身背景あり: +4,000円
+- 全身背景なし: +5,000円
+- 全身背景あり: +4,000円
+- 体一部背景なし: +6,000円
+- 体一部背景あり: +5,000円
+- イラスト発注込: +20,000円
+- 4K解像度: +10,000円
+
+#### 計算ロジック
+
+```typescript
+// lib/utils/price-calculator.ts
+export interface PriceCalculation {
+  basePrice: number;
+  durationPrice: number;
+  illustrationPrice: number;
+  resolutionPrice: number;
+  totalPrice: number;
+  breakdown: string[];
+}
+
+export const calculatePrice = (options: {
+  type: "development" | "video";
+  duration?: number; // 分単位
+  illustration?:
+    | "none"
+    | "half_no_bg"
+    | "half_with_bg"
+    | "full_no_bg"
+    | "full_with_bg"
+    | "partial_no_bg"
+    | "partial_with_bg"
+    | "outsourced";
+  resolution?: "hd" | "4k";
+  months?: number; // 開発期間（月）
+}): PriceCalculation => {
+  let basePrice = 0;
+  let durationPrice = 0;
+  let illustrationPrice = 0;
+  let resolutionPrice = 0;
+  const breakdown: string[] = [];
+
+  if (options.type === "development") {
+    basePrice = 50000;
+    breakdown.push("開発基本料金: 50,000円");
+
+    if (options.months && options.months > 1) {
+      const extraMonths = options.months - 1;
+      const extraPrice = extraMonths * 20000; // 平均20,000円
+      durationPrice = extraPrice;
+      breakdown.push(
+        `期間延長料金 (${extraMonths}ヶ月): ${extraPrice.toLocaleString()}円`
+      );
+    }
+  } else if (options.type === "video") {
+    if (!options.duration) {
+      throw new Error("動画の長さを指定してください");
+    }
+
+    if (options.duration <= 1) {
+      basePrice = 5000;
+      breakdown.push("動画制作料金 (1分以下): 5,000円");
+    } else if (options.duration <= 2) {
+      basePrice = 10000;
+      breakdown.push("動画制作料金 (1-2分): 10,000円");
+    } else if (options.duration <= 4) {
+      basePrice = 20000;
+      breakdown.push("動画制作料金 (2-4分): 20,000円");
+    } else {
+      basePrice = 20000;
+      const extraMinutes = options.duration - 4;
+      const extraPrice = extraMinutes * 10000;
+      durationPrice = extraPrice;
+      breakdown.push(
+        `動画制作料金 (4分超): 20,000円 + ${extraMinutes}分 × 10,000円 = ${extraPrice.toLocaleString()}円`
+      );
+    }
+  }
+
+  // イラスト追加料金
+  if (options.illustration && options.illustration !== "none") {
+    const illustrationPrices = {
+      half_no_bg: 2000,
+      half_with_bg: 4000,
+      full_no_bg: 5000,
+      full_with_bg: 4000,
+      partial_no_bg: 6000,
+      partial_with_bg: 5000,
+      outsourced: 20000,
+    };
+    illustrationPrice = illustrationPrices[options.illustration];
+    breakdown.push(`イラスト追加料金: ${illustrationPrice.toLocaleString()}円`);
+  }
+
+  // 4K解像度追加料金
+  if (options.resolution === "4k") {
+    resolutionPrice = 10000;
+    breakdown.push("4K解像度追加料金: 10,000円");
+  }
+
+  const totalPrice =
+    basePrice + durationPrice + illustrationPrice + resolutionPrice;
+
+  return {
+    basePrice,
+    durationPrice,
+    illustrationPrice,
+    resolutionPrice,
+    totalPrice,
+    breakdown,
+  };
+};
+```
+
+#### UI仕様
+
+```typescript
+// src/app/tools/components/PriceCalculator.tsx
+'use client';
+
+import { useState } from 'react';
+import { calculatePrice, PriceCalculation } from '@/lib/utils/price-calculator';
+
+export default function PriceCalculator() {
+  const [type, setType] = useState<'development' | 'video'>('development');
+  const [duration, setDuration] = useState<number>(1);
+  const [illustration, setIllustration] = useState<'none' | 'half_no_bg' | 'half_with_bg' | 'full_no_bg' | 'full_with_bg' | 'partial_no_bg' | 'partial_with_bg' | 'outsourced'>('none');
+  const [resolution, setResolution] = useState<'hd' | '4k'>('hd');
+  const [months, setMonths] = useState<number>(1);
+  const [calculation, setCalculation] = useState<PriceCalculation | null>(null);
+
+  const handleCalculate = () => {
+    try {
+      const result = calculatePrice({
+        type,
+        duration: type === 'video' ? duration : undefined,
+        illustration: type === 'video' ? illustration : undefined,
+        resolution: type === 'video' ? resolution : undefined,
+        months: type === 'development' ? months : undefined
+      });
+      setCalculation(result);
+    } catch (error) {
+      console.error('Calculation error:', error);
+    }
+  };
+
+  return (
+    <div className="price-calculator">
+      <h2>料金計算機</h2>
+
+      <div className="calculator-form">
+        <div className="form-group">
+          <label>依頼タイプ</label>
+          <select value={type} onChange={(e) => setType(e.target.value as 'development' | 'video')}>
+            <option value="development">開発依頼</option>
+            <option value="video">映像制作</option>
+          </select>
+        </div>
+
+        {type === 'development' && (
+          <div className="form-group">
+            <label>開発期間 (月)</label>
+            <input
+              type="number"
+              min="1"
+              max="12"
+              value={months}
+              onChange={(e) => setMonths(parseInt(e.target.value))}
+            />
+          </div>
+        )}
+
+        {type === 'video' && (
+          <>
+            <div className="form-group">
+              <label>動画の長さ (分)</label>
+              <input
+                type="number"
+                min="0.1"
+                step="0.1"
+                value={duration}
+                onChange={(e) => setDuration(parseFloat(e.target.value))}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>イラスト追加</label>
+              <select value={illustration} onChange={(e) => setIllustration(e.target.value as any)}>
+                <option value="none">なし</option>
+                <option value="half_no_bg">半身背景なし</option>
+                <option value="half_with_bg">半身背景あり</option>
+                <option value="full_no_bg">全身背景なし</option>
+                <option value="full_with_bg">全身背景あり</option>
+                <option value="partial_no_bg">体一部背景なし</option>
+                <option value="partial_with_bg">体一部背景あり</option>
+                <option value="outsourced">イラスト発注込</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>解像度</label>
+              <select value={resolution} onChange={(e) => setResolution(e.target.value as 'hd' | '4k')}>
+                <option value="hd">HD (1920x1080)</option>
+                <option value="4k">4K (3840x2160)</option>
+              </select>
+            </div>
+          </>
+        )}
+
+        <button onClick={handleCalculate} className="calculate-btn">
+          料金を計算
+        </button>
+      </div>
+
+      {calculation && (
+        <div className="calculation-result">
+          <h3>見積もり結果</h3>
+          <div className="total-price">
+            合計: ¥{calculation.totalPrice.toLocaleString()}
+          </div>
+          <div className="breakdown">
+            <h4>内訳</h4>
+            <ul>
+              {calculation.breakdown.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="disclaimer">
+            <p>※ これは目安の料金です。詳細な要件によって変動する場合があります。</p>
+            <p>※ お問い合わせフォームから詳細なご相談を承ります。</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
 - **拡張性**: 料金体系はdata-managerから編集可能
 - **UI**: 必要項目を選択・入力するだけで自動計算
 
