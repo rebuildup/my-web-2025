@@ -1,71 +1,88 @@
-# AfterEffectsエクスプレッションツールページ (/tools/ae-expression)
+# AfterEffects エクスプレッションツール (/tools/ae-expression)
 
 ## 目的
 
-AfterEffectsのエクスプレッションをScratchのブロック風の見た目で一覧表示し、設定できる引数をわかりやすく表示する。
+AfterEffectsのエクスプレッションをScratchのブロック風UIで一覧表示し、引数設定をわかりやすく行えるツール。
 
 ## 主な要素
 
 - エクスプレッション一覧
-- Scratch風ブロック表示
-- 引数設定機能
-- 検索機能
+- Scratch風ブロックUI
+- 引数設定パネル
+- プレビュー機能
 
 ## 機能
 
 ### エクスプレッション一覧
 
-- **カテゴリ別表示**: アニメーション、エフェクト、変形、その他
-- **Scratch風ブロック**: ブロック風の見た目でエクスプレッションを表示
-- **引数表示**: 設定できる引数をわかりやすく表示
-- **説明文**: エクスプレッションの説明
+- **カテゴリ別表示**: アニメーション、エフェクト、変形などのカテゴリ
+- **検索機能**: エクスプレッション名や説明からの検索
+- **フィルター機能**: カテゴリ、難易度、使用頻度による絞り込み
+- **お気に入り機能**: よく使うエクスプレッションを保存
 
-### Scratch風ブロック表示
+### Scratch風ブロックUI
 
-- **ブロックデザイン**: Scratchのようなブロック風デザイン
-- **カラーコーディング**: カテゴリ別の色分け
-- **ドラッグ&ドロップ**: ブロックのドラッグ&ドロップ操作
-- **組み合わせ**: ブロックの組み合わせ機能
+- **ブロック形式**: 視覚的にわかりやすいブロック表示
+- **ドラッグ&ドロップ**: 引数の設定をドラッグ&ドロップで操作
+- **色分け**: カテゴリ別の色分け表示
+- **階層表示**: ネストしたエクスプレッションの階層表示
 
-### 引数設定機能
+### 引数設定パネル
 
-- **引数入力**: 数値、テキスト、ブール値の入力
-- **リアルタイムプレビュー**: 設定変更のリアルタイムプレビュー
-- **デフォルト値**: 引数のデフォルト値表示
-- **バリデーション**: 入力値の検証
+- **数値入力**: スライダーやテキスト入力での数値設定
+- **選択肢**: ドロップダウンでの選択肢設定
+- **ブール値**: チェックボックスでの真偽値設定
+- **文字列**: テキストエリアでの文字列設定
 
-### 検索機能
+### プレビュー機能
 
-- **名前検索**: エクスプレッション名での検索
-- **カテゴリ検索**: カテゴリ別での検索
-- **引数検索**: 引数名での検索
-- **リアルタイム検索**: 入力に応じたリアルタイム検索
+- **リアルタイムプレビュー**: 設定変更時の即座なプレビュー
+- **アニメーション表示**: エクスプレッションの動作をアニメーション表示
+- **コード表示**: 生成されたエクスプレッションコードの表示
+- **コピー機能**: 生成されたコードをクリップボードにコピー
 
-### エクスポート機能
+## エクスプレッション例
 
-- **コピー**: エクスプレッションコードのコピー
-- **ダウンロード**: エクスプレッションコードのダウンロード
-- **AfterEffects連携**: AfterEffectsへの直接連携
+### アニメーション系
+
+- **wiggle**: ランダムな動きを生成
+- **loopOut**: アニメーションをループ
+- **time**: 時間に基づくアニメーション
+- **random**: ランダムな値を生成
+
+### エフェクト系
+
+- **blur**: ぼかし効果
+- **glow**: グロー効果
+- **wave**: 波効果
+- **ripple**: 波紋効果
+
+### 変形系
+
+- **scale**: スケール変更
+- **rotation**: 回転
+- **position**: 位置変更
+- **opacity**: 透明度変更
 
 ## データ
 
 - `ContentItem` type: `tool`
-- `customFields`: `title`, `description`, `category`, `parameters`, `code`, `examples`, `difficulty`
+- `customFields`: `expressions`, `categories`, `difficulty`, `usage-count`
 
 ## Meta情報
 
 ### SEO
 
-- **title**: "AfterEffects Expressions - samuido | エクスプレッションツール"
-- **description**: "AfterEffectsのエクスプレッションをScratch風ブロックでわかりやすく表示。設定できる引数とリアルタイムプレビューで簡単にエクスプレッションを作成できます。"
-- **keywords**: "AfterEffects, エクスプレッション, Scratch, ブロック, アニメーション, エフェクト"
+- **title**: "AE Expression Tool - samuido | AfterEffects エクスプレッション"
+- **description**: "AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。"
+- **keywords**: "AfterEffects, エクスプレッション, アニメーション, エフェクト, Scratch, ブロックUI"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/tools/ae-expression"
 
 ### Open Graph
 
-- **og:title**: "AfterEffects Expressions - samuido | エクスプレッションツール"
-- **og:description**: "AfterEffectsのエクスプレッションをScratch風ブロックでわかりやすく表示。設定できる引数とリアルタイムプレビューで簡単にエクスプレッションを作成できます。"
+- **og:title**: "AE Expression Tool - samuido | AfterEffects エクスプレッション"
+- **og:description**: "AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/ae-expression"
 - **og:image**: "https://yusuke-kim.com/tools/ae-expression-og-image.jpg"
@@ -75,10 +92,10 @@ AfterEffectsのエクスプレッションをScratchのブロック風の見た�
 ### Twitter Card
 
 - **twitter:card**: "summary_large_image"
-- **twitter:title**: "AfterEffects Expressions - samuido | エクスプレッションツール"
-- **twitter:description**: "AfterEffectsのエクスプレッションをScratch風ブロックでわかりやすく表示。設定できる引数とリアルタイムプレビューで簡単にエクスプレッションを作成できます。"
+- **twitter:title**: "AE Expression Tool - samuido | AfterEffects エクスプレッション"
+- **twitter:description**: "AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。"
 - **twitter:image**: "https://yusuke-kim.com/tools/ae-expression-twitter-image.jpg"
-- **twitter:creator**: "@361do_design"
+- **twitter:creator**: "@361do_sleep"
 
 ### 構造化データ (JSON-LD)
 
@@ -86,40 +103,40 @@ AfterEffectsのエクスプレッションをScratchのブロック風の見た�
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "AfterEffects Expressions Tool",
-  "description": "AfterEffectsのエクスプレッションをScratch風ブロックで表示するツール",
+  "name": "AE Expression Tool",
+  "description": "AfterEffectsのエクスプレッションをScratch風ブロックUIで設定",
   "url": "https://yusuke-kim.com/tools/ae-expression",
-  "applicationCategory": "MultimediaApplication",
+  "applicationCategory": "DesignApplication",
   "operatingSystem": "Web Browser",
   "author": {
     "@type": "Person",
     "name": "木村友亮",
     "alternateName": "samuido"
   },
-  "creator": {
-    "@type": "Person",
-    "name": "木村友亮",
-    "alternateName": "samuido"
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY"
   }
 }
 ```
 
 ## 技術要件
 
-### レスポンシブ対応
+### UI/UX
 
-- **ブロック表示**: デバイスに応じたブロックサイズ調整
-- **タッチ操作**: モバイルでのタッチ操作
-- **レイアウト**: デバイスに応じたレイアウト調整
+- **レスポンシブ対応**: 各デバイスでの使いやすさ
+- **アクセシビリティ**: キーボード操作、スクリーンリーダー対応
+- **パフォーマンス**: スムーズなアニメーションとレスポンス
 
-### パフォーマンス
+### 機能要件
 
-- **リアルタイム処理**: 引数変更のリアルタイム処理
-- **メモリ管理**: 適切なメモリ使用
-- **キャッシュ**: 適切なキャッシュ設定
+- **ローカル処理**: すべてローカルで完結
+- **オフライン対応**: インターネット接続不要
+- **データ保存**: お気に入りや設定の保存
 
-### アクセシビリティ
+### エクスプレッション管理
 
-- **キーボード操作**: キーボードでのナビゲーション
-- **スクリーンリーダー**: 適切なaria属性設定
-- **代替操作**: タッチデバイスでの代替操作
+- **データベース**: エクスプレッション情報の管理
+- **カテゴリ分類**: 適切なカテゴリ分類
+- **検索機能**: 高速な検索機能

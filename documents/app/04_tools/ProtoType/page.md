@@ -1,72 +1,104 @@
-# ProtoTypeツールページ (/tools/ProtoType)
+# ProtoType タイピングゲーム (/tools/ProtoType)
 
 ## 目的
 
-前に作ったPIXIjsのタイピングゲームを提供し、https://github.com/rebuildup/ProtoType のリポジトリを使用する。
+PIXIjsを使用したタイピングゲームを提供し、タイピングスキルの向上を支援する。
 
 ## 主な要素
 
-- タイピングゲーム
-- PIXIjs表示
-- ゲーム進行管理
-- スコア表示
+- タイピングゲーム画面
+- スコア記録機能
+- GitHubリポジトリ連携
+- 設定機能
 
 ## 機能
 
-### タイピングゲーム
+### タイピングゲーム画面
 
-- **テキスト表示**: タイピング対象のテキスト表示
-- **入力判定**: キー入力の正解判定
-- **進捗表示**: タイピングの進捗表示
-- **速度測定**: タイピング速度の測定
+- **テキスト表示**: タイプすべきテキストの表示
+- **入力フィールド**: ユーザーの入力を受け付ける
+- **リアルタイム判定**: 入力文字のリアルタイム判定
+- **視覚的フィードバック**: 正解・不正解の視覚的フィードバック
 
-### PIXIjs表示
+### スコア記録機能
 
-- **WebGL描画**: PIXIjsによるWebGL描画
-- **アニメーション**: スムーズなアニメーション
-- **視覚効果**: タイピングに応じた視覚効果
-- **パフォーマンス**: 高パフォーマンスな描画
+- **WPM記録**: Words Per Minute（1分間の単語数）
+- **正確性記録**: タイピングの正確性
+- **ハイスコア**: 最高記録の保存
+- **統計表示**: 詳細な統計データ
 
-### ゲーム進行管理
+### GitHubリポジトリ連携
 
-- **レベル管理**: 難易度レベルの管理
-- **ステージ進行**: ステージの進行管理
-- **リセット機能**: ゲームのリセット機能
-- **一時停止**: ゲームの一時停止機能
-
-### スコア表示
-
-- **タイピング速度**: WPM（Words Per Minute）表示
-- **正確性**: タイピングの正確性表示
-- **最高記録**: 最高スコアの記録
-- **統計表示**: 詳細な統計表示
+- **リポジトリ**: https://github.com/rebuildup/ProtoType
+- **自動更新**: リポジトリの更新を自動反映
+- **バージョン管理**: ゲームのバージョン管理
+- **貢献機能**: コミュニティからの貢献受付
 
 ### 設定機能
 
-- **難易度設定**: ゲーム難易度の調整
-- **テーマ設定**: 視覚テーマの変更
-- **音效設定**: 効果音のON/OFF
-- **キー設定**: キー配置の変更
+- **難易度設定**: タイピングの難易度調整
+- **テキスト選択**: タイプするテキストの選択
+- **表示設定**: 画面表示のカスタマイズ
+- **音声設定**: 効果音の設定
+
+## ゲームモード
+
+### 練習モード
+
+- **基本練習**: 基本的なタイピング練習
+- **単語練習**: 単語単位での練習
+- **文章練習**: 文章単位での練習
+- **カスタム練習**: ユーザー定義の練習
+
+### チャレンジモード
+
+- **時間制限**: 制限時間内でのタイピング
+- **文字数制限**: 指定文字数のタイピング
+- **正確性重視**: 正確性を重視したモード
+- **速度重視**: 速度を重視したモード
+
+### 競争モード
+
+- **ランキング**: 他のプレイヤーとの競争
+- **リアルタイム対戦**: リアルタイムでの対戦
+- **トーナメント**: トーナメント形式の競争
+- **チーム戦**: チームでの競争
+
+## 技術仕様
+
+### PIXIjs使用
+
+- **2Dレンダリング**: PIXIjsによる2Dグラフィックス
+- **パフォーマンス**: 高速なレンダリング
+- **アニメーション**: スムーズなアニメーション
+- **レスポンシブ**: 各デバイスでの対応
+
+### データ管理
+
+- **ローカルストレージ**: スコアや設定の保存
+- **GitHub連携**: リポジトリとの連携
+- **統計データ**: 詳細な統計データ管理
+- **バックアップ**: データのバックアップ
 
 ## データ
 
 - `ContentItem` type: `tool`
-- `customFields`: `title`, `description`, `category`, `game-settings`, `score-system`, `repository-url`
+- `customFields`: `game-modes`, `scores`, `github-repo`, `usage-count`
 
 ## Meta情報
 
 ### SEO
 
-- **title**: "ProtoType - samuido | PIXIjsタイピングゲーム"
-- **description**: "PIXIjsで作ったタイピングゲーム。高パフォーマンスなWebGL描画で楽しいタイピング体験を提供します。"
-- **keywords**: "ProtoType, PIXIjs, タイピングゲーム, WebGL, タイピング, ゲーム"
+- **title**: "ProtoType Typing Game - samuido | PIXIjs タイピングゲーム"
+- **description**: "PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。"
+- **keywords**: "タイピングゲーム, PIXIjs, WPM, 正確性, スコア記録, 練習"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/tools/ProtoType"
 
 ### Open Graph
 
-- **og:title**: "ProtoType - samuido | PIXIjsタイピングゲーム"
-- **og:description**: "PIXIjsで作ったタイピングゲーム。高パフォーマンスなWebGL描画で楽しいタイピング体験を提供します。"
+- **og:title**: "ProtoType Typing Game - samuido | PIXIjs タイピングゲーム"
+- **og:description**: "PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/ProtoType"
 - **og:image**: "https://yusuke-kim.com/tools/ProtoType-og-image.jpg"
@@ -76,8 +108,8 @@
 ### Twitter Card
 
 - **twitter:card**: "summary_large_image"
-- **twitter:title**: "ProtoType - samuido | PIXIjsタイピングゲーム"
-- **twitter:description**: "PIXIjsで作ったタイピングゲーム。高パフォーマンスなWebGL描画で楽しいタイピング体験を提供します。"
+- **twitter:title**: "ProtoType Typing Game - samuido | PIXIjs タイピングゲーム"
+- **twitter:description**: "PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。"
 - **twitter:image**: "https://yusuke-kim.com/tools/ProtoType-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 
@@ -87,20 +119,20 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "ProtoType",
-  "description": "PIXIjsで作ったタイピングゲーム",
+  "name": "ProtoType Typing Game",
+  "description": "PIXIjsを使用したタイピングゲーム",
   "url": "https://yusuke-kim.com/tools/ProtoType",
-  "applicationCategory": "Game",
+  "applicationCategory": "GameApplication",
   "operatingSystem": "Web Browser",
   "author": {
     "@type": "Person",
     "name": "木村友亮",
     "alternateName": "samuido"
   },
-  "creator": {
-    "@type": "Person",
-    "name": "木村友亮",
-    "alternateName": "samuido"
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY"
   },
   "codeRepository": "https://github.com/rebuildup/ProtoType"
 }
@@ -108,20 +140,20 @@
 
 ## 技術要件
 
-### レスポンシブ対応
+### UI/UX
 
-- **ゲーム表示**: デバイスに応じたゲームサイズ調整
-- **タッチ操作**: モバイルでのタッチ操作
-- **レイアウト**: デバイスに応じたレイアウト調整
+- **レスポンシブ対応**: 各デバイスでの使いやすさ
+- **アクセシビリティ**: キーボード操作、スクリーンリーダー対応
+- **視覚的フィードバック**: 明確な操作フィードバック
 
-### パフォーマンス
+### 機能要件
 
-- **WebGL描画**: 高パフォーマンスなWebGL描画
-- **メモリ管理**: 適切なメモリ使用
-- **キャッシュ**: 適切なキャッシュ設定
+- **ローカル処理**: すべてローカルで完結
+- **オフライン対応**: インターネット接続不要
+- **データ保存**: スコアや設定の保存
 
-### アクセシビリティ
+### ゲーム機能
 
-- **キーボード操作**: キーボードでのナビゲーション
-- **スクリーンリーダー**: 適切なaria属性設定
-- **代替操作**: タッチデバイスでの代替操作
+- **正確性**: 正確なタイピング判定
+- **パフォーマンス**: スムーズなゲーム進行
+- **統計機能**: 詳細な統計データ
