@@ -36,10 +36,10 @@ function getStatsFilePath(type: StatType): string {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { type: string } }
+  { params }: { params: Promise<{ type: string }> }
 ): Promise<Response> {
   try {
-    const { type } = params;
+    const { type } = await params;
 
     // Validate stat type
     if (!VALID_STAT_TYPES.includes(type as StatType)) {
@@ -80,7 +80,7 @@ export async function GET(
     }
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
-    AppErrorHandler.logError(appError, `Stats GET API - ${params.type}`);
+    AppErrorHandler.logError(appError, `Stats GET API - ${(await params).type}`);
 
     return Response.json(
       {
@@ -95,10 +95,10 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { type: string } }
+  { params }: { params: Promise<{ type: string }> }
 ): Promise<Response> {
   try {
-    const { type } = params;
+    const { type } = await params;
 
     // Validate stat type
     if (!VALID_STAT_TYPES.includes(type as StatType)) {
@@ -145,7 +145,7 @@ export async function POST(
     });
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
-    AppErrorHandler.logError(appError, `Stats POST API - ${params.type}`);
+    AppErrorHandler.logError(appError, `Stats POST API - ${(await params).type}`);
 
     return Response.json(
       {
@@ -160,7 +160,7 @@ export async function POST(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { type: string } }
+  { params }: { params: Promise<{ type: string }> }
 ): Promise<Response> {
   // Only allow deletion in development
   if (process.env.NODE_ENV !== 'development') {
@@ -171,7 +171,7 @@ export async function DELETE(
   }
 
   try {
-    const { type } = params;
+    const { type } = await params;
 
     if (!VALID_STAT_TYPES.includes(type as StatType)) {
       return Response.json(
@@ -213,7 +213,7 @@ export async function DELETE(
     }
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
-    AppErrorHandler.logError(appError, `Stats DELETE API - ${params.type}`);
+    AppErrorHandler.logError(appError, `Stats DELETE API - ${(await params).type}`);
 
     return Response.json(
       {

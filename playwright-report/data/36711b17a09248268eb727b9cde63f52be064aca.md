@@ -1,0 +1,69 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - heading "My Web 2025" [level=1]
+  - paragraph: クリエイティブツール・ポートフォリオ・ワークショップコンテンツ
+- main:
+  - link "Portfolio 作品集・プロジェクト・制作実績 詳細を見る →":
+    - /url: /portfolio
+    - img
+    - heading "Portfolio" [level=2]
+    - paragraph: 作品集・プロジェクト・制作実績
+    - text: 詳細を見る →
+  - link "Tools 便利ツール・ジェネレーター・計算機 詳細を見る →":
+    - /url: /tools
+    - img
+    - heading "Tools" [level=2]
+    - paragraph: 便利ツール・ジェネレーター・計算機
+    - text: 詳細を見る →
+  - link "Workshop ブログ・プラグイン・ダウンロード 詳細を見る →":
+    - /url: /workshop
+    - img
+    - heading "Workshop" [level=2]
+    - paragraph: ブログ・プラグイン・ダウンロード
+    - text: 詳細を見る →
+  - link "About プロフィール・経歴・スキル・連絡先 詳細を見る →":
+    - /url: /about
+    - img
+    - heading "About" [level=2]
+    - paragraph: プロフィール・経歴・スキル・連絡先
+    - text: 詳細を見る →
+  - link "Contact お問い合わせ・依頼・相談 詳細を見る →":
+    - /url: /contact
+    - img
+    - heading "Contact" [level=2]
+    - paragraph: お問い合わせ・依頼・相談
+    - text: 詳細を見る →
+  - link "Admin 管理画面・データ管理（開発用） 詳細を見る →":
+    - /url: /admin
+    - img
+    - heading "Admin" [level=2]
+    - paragraph: 管理画面・データ管理（開発用）
+    - text: 詳細を見る →
+  - heading "サイト内検索" [level=2]
+  - textbox "キーワードで検索..."
+  - button "検索"
+  - heading "最新の更新" [level=2]
+  - heading "Portfolio" [level=3]
+  - paragraph: React Portfolio Website - モダンなポートフォリオサイトを追加
+  - paragraph: 2024.12.01
+  - heading "Tools" [level=3]
+  - paragraph: Color Palette Generator - カラーパレット生成ツールを公開
+  - paragraph: 2024.12.01
+  - heading "Workshop" [level=3]
+  - paragraph: Next.js 15 & React 19 - 最新技術の解説記事を投稿
+  - paragraph: 2024.12.10
+- contentinfo:
+  - paragraph: © 2025 My Web 2025. All rights reserved.
+  - link "Privacy Policy":
+    - /url: /privacy-policy
+  - link "Contact":
+    - /url: /contact
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+- button "Open issues overlay": 1 Issue
+- button "Collapse issues badge":
+  - img
+```

@@ -39,8 +39,8 @@ export const getStats = async (
 
     const response = await fetch(url);
 
-    if (!response.ok) {
-      throw new Error(`Failed to get ${type} stats: ${response.status}`);
+    if (!response || !response.ok) {
+      throw new Error(`Failed to get ${type} stats: ${response?.status || 'No response'}`);
     }
 
     const data = await response.json();
@@ -292,9 +292,9 @@ export const subscribeToStatsUpdates = (
   const interval = setInterval(async () => {
     try {
       const response = await fetch('/api/stats/updates');
-      if (response.ok) {
+      if (response && response.ok) {
         const updates = await response.json();
-        updates.forEach(callback);
+        updates.forEach((update: { type: string; id: string; count: number }) => callback(update));
       }
     } catch (error) {
       console.error('Failed to fetch stats updates:', error);

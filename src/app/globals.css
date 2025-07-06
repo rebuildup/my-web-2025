@@ -1,9 +1,9 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Shippori+Antique+B1&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Shippori+Antique+B1&display=swap');
 
 :root {
   /* Design System Colors */
@@ -15,9 +15,9 @@
 
   /* Typography */
   --font-heading: neue-haas-grotesk-display, sans-serif;
-  --font-body: "Noto Sans JP", sans-serif;
+  --font-body: 'Noto Sans JP', sans-serif;
   --font-accent: zen-kaku-gothic-new, sans-serif;
-  --font-japanese-accent: "Shippori Antique B1", sans-serif;
+  --font-japanese-accent: 'Shippori Antique B1', sans-serif;
 
   /* Spacing (Golden Ratio: 1:1.618) */
   --spacing-xs: 0.618rem;
@@ -33,14 +33,14 @@
   /* Shadows (Minimal design) */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
+
   /* Tailwind custom properties */
   --color-primary: var(--primary-blue);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
   --color-gray: var(--base-gray);
-  
+
   --font-sans: var(--font-body);
   --font-display: var(--font-heading);
   --font-accent: var(--font-accent);
@@ -68,13 +68,13 @@
 
 /* Google Fonts Classes */
 .noto-sans-jp {
-  font-family: "Noto Sans JP", sans-serif;
+  font-family: 'Noto Sans JP', sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
 }
 
 .shippori-antique-b1-regular {
-  font-family: "Shippori Antique B1", sans-serif;
+  font-family: 'Shippori Antique B1', sans-serif;
   font-weight: 400;
   font-style: normal;
 }
@@ -102,7 +102,12 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 700;
   font-style: italic;
@@ -110,12 +115,24 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: var(--spacing-sm);
 }
 
-h1 { font-size: 2.618rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.618rem; }
-h4 { font-size: 1.25rem; }
-h5 { font-size: 1rem; }
-h6 { font-size: 0.875rem; }
+h1 {
+  font-size: 2.618rem;
+}
+h2 {
+  font-size: 2rem;
+}
+h3 {
+  font-size: 1.618rem;
+}
+h4 {
+  font-size: 1.25rem;
+}
+h5 {
+  font-size: 1rem;
+}
+h6 {
+  font-size: 0.875rem;
+}
 
 p {
   margin-bottom: var(--spacing-sm);
@@ -145,22 +162,40 @@ a:hover {
   padding: var(--spacing-md);
 }
 
-.grid-1 { grid-template-columns: 1fr; }
-.grid-2 { grid-template-columns: repeat(2, 1fr); }
-.grid-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-1 {
+  grid-template-columns: 1fr;
+}
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
 
 @media (max-width: 768px) {
-  .grid-2, .grid-3, .grid-4 {
+  .grid-2,
+  .grid-3,
+  .grid-4 {
     grid-template-columns: 1fr;
   }
 }
 
 /* Utility Classes */
-.text-primary { color: var(--primary-blue); }
-.text-accent { color: var(--accent); }
-.bg-primary { background-color: var(--primary-blue); }
-.bg-gray { background-color: var(--base-gray); }
+.text-primary {
+  color: var(--primary-blue);
+}
+.text-accent {
+  color: var(--accent);
+}
+.bg-primary {
+  background-color: var(--primary-blue);
+}
+.bg-gray {
+  background-color: var(--base-gray);
+}
 
 /* Loading States */
 .loading {
@@ -174,7 +209,9 @@ a:hover {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Error States */
@@ -191,7 +228,9 @@ a:hover {
 }
 
 /* Form Styles */
-input, textarea, select {
+input,
+textarea,
+select {
   font-family: var(--font-body);
   font-size: 1rem;
   padding: var(--spacing-xs) var(--spacing-sm);
@@ -202,7 +241,9 @@ input, textarea, select {
   transition: border-color 0.2s ease;
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   border-color: var(--primary-blue);
   outline: none;
 }
@@ -256,9 +297,15 @@ img {
     --spacing-xl: 2.6rem;
   }
 
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.6rem; }
-  h3 { font-size: 1.3rem; }
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.6rem;
+  }
+  h3 {
+    font-size: 1.3rem;
+  }
 }
 
 /* Print Styles */
@@ -267,7 +314,7 @@ img {
     background: white !important;
     color: black !important;
   }
-  
+
   .no-print {
     display: none !important;
   }

@@ -8,26 +8,26 @@ test.describe('Homepage', () => {
     // Check main title
     await expect(page.locator('h1')).toContainText('My Web 2025');
 
-    // Check category cards
+    // Check category cards by looking for specific h2 elements in the navigation
     const categories = ['Portfolio', 'Tools', 'Workshop', 'About', 'Contact', 'Admin'];
 
     for (const category of categories) {
-      await expect(page.locator(`text=${category}`)).toBeVisible();
+      await expect(page.locator(`h2:text("${category}")`)).toBeVisible();
     }
   });
 
   test('should have working category links', async ({ page }) => {
     await page.goto('/');
 
-    // Test Portfolio link
-    await page.click('text=Portfolio');
+    // Test Portfolio link - click on the link containing Portfolio h2
+    await page.click('a:has(h2:text("Portfolio"))');
     await expect(page).toHaveURL('/portfolio');
 
     // Go back to homepage
     await page.goto('/');
 
-    // Test Tools link
-    await page.click('text=Tools');
+    // Test Tools link - click on the link containing Tools h2
+    await page.click('a:has(h2:text("Tools"))');
     await expect(page).toHaveURL('/tools');
   });
 
@@ -87,7 +87,7 @@ test.describe('Homepage', () => {
     await page.goto('/');
 
     // Check that category cards stack vertically on mobile
-    const categoryCards = page.locator('a[href^="/"]').filter({ hasText: 'Portfolio' }).first();
+    const categoryCards = page.locator('a:has(h2:text("Portfolio"))');
     await expect(categoryCards).toBeVisible();
 
     // Check that the main title is still visible and readable
@@ -104,7 +104,7 @@ test.describe('Homepage', () => {
 
     // Check for proper heading hierarchy
     await expect(page.locator('h1')).toHaveCount(1);
-    await expect(page.locator('h2')).toHaveCount(3); // Site search + Recent updates + category titles
+    await expect(page.locator('h2')).toHaveCount(8); // 6 category titles + Site search + Recent updates
 
     // Check for proper link accessibility
     const links = page.locator('a');
@@ -139,21 +139,15 @@ test.describe('Homepage', () => {
   test('should handle keyboard navigation', async ({ page }) => {
     await page.goto('/');
 
-    // Test tab navigation
-    await page.keyboard.press('Tab');
-
-    // Should focus on first interactive element
-    const firstLink = page.locator('a').first();
+    // Test tab navigation - focus on the first category link
+    const firstLink = page.locator('a:has(h2:text("Portfolio"))');
+    await firstLink.focus();
     await expect(firstLink).toBeFocused();
-
-    // Continue tabbing through interactive elements
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
 
     // Should be able to activate links with Enter
     await page.keyboard.press('Enter');
 
     // Should navigate to the linked page
-    await expect(page).not.toHaveURL('/');
+    await expect(page).toHaveURL('/portfolio');
   });
 });

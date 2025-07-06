@@ -2,6 +2,9 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { User, Badge, ExternalLink, MapPin, Award } from 'lucide-react';
 
+// Disable prerendering for this page
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'About - samuido | 木村友亮について',
   description:

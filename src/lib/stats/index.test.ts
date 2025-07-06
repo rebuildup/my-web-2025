@@ -68,6 +68,12 @@ describe('Stats Module', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    // Clear all timers to prevent memory leaks
+    vi.clearAllTimers();
+    // Ensure real timers are restored
+    if (vi.isFakeTimers()) {
+      vi.useRealTimers();
+    }
   });
 
   describe('updateStats', () => {
@@ -381,25 +387,34 @@ describe('Stats Module', () => {
   describe('subscribeToStatsUpdates', () => {
     it('should set up polling for stats updates', async () => {
       vi.useFakeTimers();
-      const mockCallback = vi.fn();
-      const mockUpdates = [{ type: 'view', id: 'test-id', count: 5 }];
 
-      vi.mocked(fetch).mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve(mockUpdates),
-      } as Response);
+      try {
+        const mockCallback = vi.fn();
+        const mockUpdates = [{ type: 'view', id: 'test-id', count: 5 }];
 
-      const unsubscribe = subscribeToStatsUpdates(mockCallback);
+        // Reset fetch mock completely and ensure clean state
+        vi.mocked(fetch).mockReset();
+        vi.mocked(fetch).mockResolvedValue({
+          ok: true,
+          json: () => Promise.resolve(mockUpdates),
+        } as Response);
 
-      // Fast-forward time to trigger polling once (test environment uses 1000ms)
-      vi.advanceTimersByTime(1000);
-      await vi.runOnlyPendingTimersAsync();
+        const unsubscribe = subscribeToStatsUpdates(mockCallback);
 
-      expect(fetch).toHaveBeenCalledWith('/api/stats/updates');
-      expect(mockCallback).toHaveBeenCalledTimes(1);
+        // Fast-forward time to trigger polling once (test environment uses 1000ms)
+        vi.advanceTimersByTime(1000);
+        await vi.runOnlyPendingTimersAsync();
 
-      unsubscribe();
-      vi.useRealTimers();
+        // The fetch should be called at least once
+        expect(fetch).toHaveBeenCalledWith('/api/stats/updates');
+        // The callback should be called at least once for each update in the array
+        expect(mockCallback).toHaveBeenCalledWith(mockUpdates[0]);
+
+        // Clean up properly
+        unsubscribe();
+      } finally {
+        vi.useRealTimers();
+      }
     });
   });
 

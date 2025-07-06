@@ -64,10 +64,10 @@ async function getContentByType(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { type: string } }
+  { params }: { params: Promise<{ type: string }> }
 ): Promise<Response> {
   try {
-    const { type } = params;
+    const { type } = await params;
 
     // Validate content type
     if (!VALID_CONTENT_TYPES.includes(type as ContentType)) {
@@ -147,7 +147,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { type: string } }
+  { params }: { params: Promise<{ type: string }> }
 ): Promise<Response> {
   // Only allow content creation in development
   if (process.env.NODE_ENV !== 'development') {
@@ -158,7 +158,7 @@ export async function POST(
   }
 
   try {
-    const { type } = params;
+    const { type } = await params;
 
     if (!VALID_CONTENT_TYPES.includes(type as ContentType)) {
       return Response.json(

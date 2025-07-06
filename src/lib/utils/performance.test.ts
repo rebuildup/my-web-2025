@@ -67,6 +67,12 @@ describe('Performance Utilities', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    // Clear all timers to prevent memory leaks
+    vi.clearAllTimers();
+    // Ensure real timers are restored
+    if (vi.isFakeTimers()) {
+      vi.useRealTimers();
+    }
   });
 
   describe('optimizeImage', () => {
@@ -201,18 +207,23 @@ describe('Performance Utilities', () => {
     });
 
     it('should measure performance of async function', async () => {
+      vi.useFakeTimers();
       const testFn = async () => {
         await new Promise(resolve => setTimeout(resolve, 5));
         return 'async-result';
       };
 
-      const { result, duration } = await performanceMonitor.measurePerformance(
-        testFn,
-        'test-async'
-      );
+      const performancePromise = performanceMonitor.measurePerformance(testFn, 'test-async');
+
+      // Advance timers to resolve the setTimeout
+      vi.advanceTimersByTime(10);
+
+      const { result, duration } = await performancePromise;
 
       expect(result).toBe('async-result');
       expect(duration).toBeGreaterThanOrEqual(0);
+
+      vi.useRealTimers();
     });
 
     it('should track memory usage', () => {
@@ -237,6 +248,7 @@ describe('Performance Utilities', () => {
 
   describe('debounce', () => {
     it('should debounce function calls', async () => {
+      vi.useFakeTimers();
       const mockFn = vi.fn();
       const debouncedFn = debounce(mockFn, 10);
 
@@ -246,15 +258,18 @@ describe('Performance Utilities', () => {
 
       expect(mockFn).not.toHaveBeenCalled();
 
-      await new Promise(resolve => setTimeout(resolve, 15));
+      vi.advanceTimersByTime(15);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenCalledWith('arg3');
+
+      vi.useRealTimers();
     });
   });
 
   describe('throttle', () => {
     it('should throttle function calls', async () => {
+      vi.useFakeTimers();
       const mockFn = vi.fn();
       const throttledFn = throttle(mockFn, 10);
 
@@ -264,6 +279,8 @@ describe('Performance Utilities', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenCalledWith('arg1');
+
+      vi.useRealTimers();
     });
   });
 
@@ -336,23 +353,30 @@ describe('Performance Utilities', () => {
 
   describe('preloadImages', () => {
     it('should preload multiple images', async () => {
-      const mockImage = {
-        onload: null,
-        onerror: null,
-        src: '',
-      };
+      const mockImages: Array<{
+        onload: (() => void) | null;
+        onerror: (() => void) | null;
+        src: string;
+      }> = [];
 
-      global.Image = vi.fn().mockImplementation(() => mockImage);
+      global.Image = vi.fn().mockImplementation(() => {
+        const mockImage = {
+          onload: null as (() => void) | null,
+          onerror: null as (() => void) | null,
+          src: '',
+        };
+        mockImages.push(mockImage);
+        return mockImage;
+      });
 
       const promise = preloadImages(['/img1.jpg', '/img2.jpg']);
 
-      // Simulate successful loads
-      if (mockImage.onload) {
-        setTimeout(
-          () => (mockImage.onload as ((event: Event) => void) | null)?.(new Event('load')),
-          0
-        );
-      }
+      // Simulate successful loads for all images
+      mockImages.forEach(img => {
+        if (img.onload) {
+          img.onload();
+        }
+      });
 
       await expect(promise).resolves.toBeUndefined();
     });

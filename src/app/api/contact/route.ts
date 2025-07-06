@@ -4,7 +4,8 @@ import { Resend } from 'resend';
 import { validateContactForm } from '@/lib/utils/validation';
 import { AppErrorHandler } from '@/lib/utils/error-handling';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend only if API key is available
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 interface ContactFormData {
   name: string;
@@ -42,8 +43,16 @@ async function verifyRecaptcha(token: string): Promise<boolean> {
 }
 
 async function sendContactEmail(formData: ContactFormData): Promise<void> {
-  if (!process.env.RESEND_API_KEY) {
-    throw new Error('Email service not configured');
+  if (!process.env.RESEND_API_KEY || !resend) {
+    console.log('Email service not configured, logging message instead:');
+    console.log({
+      name: formData.name,
+      email: formData.email,
+      subject: formData.subject,
+      content: formData.content,
+      timestamp: new Date().toISOString(),
+    });
+    return; // Skip email sending in development
   }
 
   const recipientEmail = process.env.CONTACT_EMAIL || 'contact@example.com';

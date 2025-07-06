@@ -1,2 +1,230 @@
-<testsuites id="" name="" tests="0" failures="0" skipped="0" errors="0" time="60.538855">
+<testsuites id="" name="" tests="50" failures="3" skipped="0" errors="0" time="51.716274">
+<testsuite name="homepage.spec.ts" timestamp="2025-07-06T09:21:55.490Z" hostname="chromium" tests="10" failures="1" skipped="0" time="48.168" errors="0">
+<testcase name="Homepage › should display the main site navigation" classname="homepage.spec.ts" time="3.973">
+</testcase>
+<testcase name="Homepage › should have working category links" classname="homepage.spec.ts" time="9.128">
+</testcase>
+<testcase name="Homepage › should have functional search" classname="homepage.spec.ts" time="6.792">
+</testcase>
+<testcase name="Homepage › should display recent updates section" classname="homepage.spec.ts" time="3.468">
+</testcase>
+<testcase name="Homepage › should have proper footer" classname="homepage.spec.ts" time="3.477">
+</testcase>
+<testcase name="Homepage › should have proper meta tags and SEO" classname="homepage.spec.ts" time="3.484">
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="3.635">
+</testcase>
+<testcase name="Homepage › should have proper contrast and accessibility" classname="homepage.spec.ts" time="3.568">
+</testcase>
+<testcase name="Homepage › should load within performance thresholds" classname="homepage.spec.ts" time="4.386">
+<failure message="homepage.spec.ts:125:7 should load within performance thresholds" type="FAILURE">
+<![CDATA[  [chromium] › homepage.spec.ts:125:7 › Homepage › should load within performance thresholds ───────
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 3000
+    Received:   3688
+
+      130 |     // Check that page loads within 3 seconds
+      131 |     const loadTime = Date.now() - startTime;
+    > 132 |     expect(loadTime).toBeLessThan(3000);
+          |                      ^
+      133 |
+      134 |     // Check that main content is visible
+      135 |     await expect(page.locator('h1')).toBeVisible();
+        at C:\Users\rebui\Downloads\my-web-2025\tests\homepage.spec.ts:132:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\homepage-Homepage-should-load-within-performance-thresholds-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\homepage-Homepage-should-load-within-performance-thresholds-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\homepage-Homepage-should-load-within-performance-thresholds-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\homepage-Homepage-should-load-within-performance-thresholds-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\homepage-Homepage-should-load-within-performance-thresholds-chromium\video.webm]]
+
+[[ATTACHMENT|..\test-results\homepage-Homepage-should-load-within-performance-thresholds-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Homepage › should handle keyboard navigation" classname="homepage.spec.ts" time="6.257">
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-07-06T09:21:55.490Z" hostname="firefox" tests="10" failures="1" skipped="0" time="62.489" errors="0">
+<testcase name="Homepage › should display the main site navigation" classname="homepage.spec.ts" time="5.644">
+</testcase>
+<testcase name="Homepage › should have working category links" classname="homepage.spec.ts" time="12.177">
+</testcase>
+<testcase name="Homepage › should have functional search" classname="homepage.spec.ts" time="8.045">
+</testcase>
+<testcase name="Homepage › should display recent updates section" classname="homepage.spec.ts" time="3.466">
+</testcase>
+<testcase name="Homepage › should have proper footer" classname="homepage.spec.ts" time="4.977">
+</testcase>
+<testcase name="Homepage › should have proper meta tags and SEO" classname="homepage.spec.ts" time="3.67">
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="3.548">
+</testcase>
+<testcase name="Homepage › should have proper contrast and accessibility" classname="homepage.spec.ts" time="4.623">
+</testcase>
+<testcase name="Homepage › should load within performance thresholds" classname="homepage.spec.ts" time="7.678">
+<failure message="homepage.spec.ts:125:7 should load within performance thresholds" type="FAILURE">
+<![CDATA[  [firefox] › homepage.spec.ts:125:7 › Homepage › should load within performance thresholds ────────
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 3000
+    Received:   4032
+
+      130 |     // Check that page loads within 3 seconds
+      131 |     const loadTime = Date.now() - startTime;
+    > 132 |     expect(loadTime).toBeLessThan(3000);
+          |                      ^
+      133 |
+      134 |     // Check that main content is visible
+      135 |     await expect(page.locator('h1')).toBeVisible();
+        at C:\Users\rebui\Downloads\my-web-2025\tests\homepage.spec.ts:132:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\homepage-Homepage-should-load-within-performance-thresholds-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\homepage-Homepage-should-load-within-performance-thresholds-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\homepage-Homepage-should-load-within-performance-thresholds-firefox\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\homepage-Homepage-should-load-within-performance-thresholds-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\homepage-Homepage-should-load-within-performance-thresholds-firefox\video.webm]]
+
+[[ATTACHMENT|..\test-results\homepage-Homepage-should-load-within-performance-thresholds-firefox\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Homepage › should handle keyboard navigation" classname="homepage.spec.ts" time="8.661">
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-07-06T09:21:55.490Z" hostname="webkit" tests="10" failures="1" skipped="0" time="56.127" errors="0">
+<testcase name="Homepage › should display the main site navigation" classname="homepage.spec.ts" time="5.026">
+</testcase>
+<testcase name="Homepage › should have working category links" classname="homepage.spec.ts" time="13.368">
+</testcase>
+<testcase name="Homepage › should have functional search" classname="homepage.spec.ts" time="6.506">
+</testcase>
+<testcase name="Homepage › should display recent updates section" classname="homepage.spec.ts" time="4.062">
+</testcase>
+<testcase name="Homepage › should have proper footer" classname="homepage.spec.ts" time="4.516">
+</testcase>
+<testcase name="Homepage › should have proper meta tags and SEO" classname="homepage.spec.ts" time="3.069">
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="4.331">
+</testcase>
+<testcase name="Homepage › should have proper contrast and accessibility" classname="homepage.spec.ts" time="2.924">
+</testcase>
+<testcase name="Homepage › should load within performance thresholds" classname="homepage.spec.ts" time="3.27">
+</testcase>
+<testcase name="Homepage › should handle keyboard navigation" classname="homepage.spec.ts" time="9.055">
+<failure message="homepage.spec.ts:139:7 should handle keyboard navigation" type="FAILURE">
+<![CDATA[  [webkit] › homepage.spec.ts:139:7 › Homepage › should handle keyboard navigation ─────────────────
+
+    Error: Timed out 5000ms waiting for expect(locator).toHaveURL(expected)
+
+    Locator: locator(':root')
+    Expected string: "http://localhost:3000/portfolio"
+    Received string: "http://localhost:3000/"
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+      - waiting for locator(':root')
+        8 × locator resolved to <html lang="ja" class="scroll-smooth wf-neue-haas-grotesk-display-n7-active wf-neue-haas-grotesk-display-i7-active wf-zen-kaku-gothic-new-n9-active wf-zen-kaku-gothic-new-n7-active wf-active">…</html>
+          - unexpected value "http://localhost:3000/"
+
+
+      149 |
+      150 |     // Should navigate to the linked page
+    > 151 |     await expect(page).toHaveURL('/portfolio');
+          |                        ^
+      152 |   });
+      153 | });
+      154 |
+        at C:\Users\rebui\Downloads\my-web-2025\tests\homepage.spec.ts:151:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\homepage-Homepage-should-handle-keyboard-navigation-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\homepage-Homepage-should-handle-keyboard-navigation-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\homepage-Homepage-should-handle-keyboard-navigation-webkit\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\homepage-Homepage-should-handle-keyboard-navigation-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|..\test-results\homepage-Homepage-should-handle-keyboard-navigation-webkit\video.webm]]
+
+[[ATTACHMENT|..\test-results\homepage-Homepage-should-handle-keyboard-navigation-webkit\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-07-06T09:21:55.490Z" hostname="Mobile Chrome" tests="10" failures="0" skipped="0" time="32.292" errors="0">
+<testcase name="Homepage › should display the main site navigation" classname="homepage.spec.ts" time="2.635">
+</testcase>
+<testcase name="Homepage › should have working category links" classname="homepage.spec.ts" time="6.82">
+</testcase>
+<testcase name="Homepage › should have functional search" classname="homepage.spec.ts" time="4.046">
+</testcase>
+<testcase name="Homepage › should display recent updates section" classname="homepage.spec.ts" time="2.843">
+</testcase>
+<testcase name="Homepage › should have proper footer" classname="homepage.spec.ts" time="2.862">
+</testcase>
+<testcase name="Homepage › should have proper meta tags and SEO" classname="homepage.spec.ts" time="2.9">
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="2.571">
+</testcase>
+<testcase name="Homepage › should have proper contrast and accessibility" classname="homepage.spec.ts" time="2.546">
+</testcase>
+<testcase name="Homepage › should load within performance thresholds" classname="homepage.spec.ts" time="2.064">
+</testcase>
+<testcase name="Homepage › should handle keyboard navigation" classname="homepage.spec.ts" time="3.005">
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-07-06T09:21:55.490Z" hostname="Mobile Safari" tests="10" failures="0" skipped="0" time="31.613" errors="0">
+<testcase name="Homepage › should display the main site navigation" classname="homepage.spec.ts" time="2.7">
+</testcase>
+<testcase name="Homepage › should have working category links" classname="homepage.spec.ts" time="6.873">
+</testcase>
+<testcase name="Homepage › should have functional search" classname="homepage.spec.ts" time="4.111">
+</testcase>
+<testcase name="Homepage › should display recent updates section" classname="homepage.spec.ts" time="2.846">
+</testcase>
+<testcase name="Homepage › should have proper footer" classname="homepage.spec.ts" time="2.517">
+</testcase>
+<testcase name="Homepage › should have proper meta tags and SEO" classname="homepage.spec.ts" time="2.627">
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="2.772">
+</testcase>
+<testcase name="Homepage › should have proper contrast and accessibility" classname="homepage.spec.ts" time="2.511">
+</testcase>
+<testcase name="Homepage › should load within performance thresholds" classname="homepage.spec.ts" time="2.42">
+</testcase>
+<testcase name="Homepage › should handle keyboard navigation" classname="homepage.spec.ts" time="2.236">
+</testcase>
+</testsuite>
 </testsuites>
