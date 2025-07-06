@@ -97,28 +97,28 @@ export const GridItem: React.FC<GridItemProps> = ({
 export const GridSystemDemo: React.FC = () => {
   return (
     <div className="p-8 bg-gray text-white">
-      <h2 className="text-golden-xl mb-8 text-center">12-Column Grid System Demo</h2>
+      <h2 className="text-foreground mb-8 text-xl">12-Column Grid System Demo</h2>
       
       {/* Basic Grid Example */}
       <section className="mb-12">
-        <h3 className="text-golden-lg mb-4">Basic Grid Layout</h3>
+        <h3 className="text-foreground mb-4 text-lg">Basic Grid Layout</h3>
         <GridContainer className="gap-4">
-          <GridItem span={12} className="bg-primary bg-opacity-20 p-4 text-center">
+          <GridItem span={12} className="bg-primary bg-opacity-20 p-4">
             12 Columns
           </GridItem>
-          <GridItem span={6} className="bg-primary bg-opacity-20 p-4 text-center">
+          <GridItem span={6} className="bg-primary bg-opacity-20 p-4">
             6 Columns
           </GridItem>
-          <GridItem span={6} className="bg-primary bg-opacity-20 p-4 text-center">
+          <GridItem span={6} className="bg-primary bg-opacity-20 p-4">
             6 Columns
           </GridItem>
-          <GridItem span={4} className="bg-primary bg-opacity-20 p-4 text-center">
+          <GridItem span={4} className="bg-primary bg-opacity-20 p-4">
             4 Columns
           </GridItem>
-          <GridItem span={4} className="bg-primary bg-opacity-20 p-4 text-center">
+          <GridItem span={4} className="bg-primary bg-opacity-20 p-4">
             4 Columns
           </GridItem>
-          <GridItem span={4} className="bg-primary bg-opacity-20 p-4 text-center">
+          <GridItem span={4} className="bg-primary bg-opacity-20 p-4">
             4 Columns
           </GridItem>
         </GridContainer>
@@ -126,13 +126,13 @@ export const GridSystemDemo: React.FC = () => {
 
       {/* Responsive Grid Example */}
       <section className="mb-12">
-        <h3 className="text-golden-lg mb-4">Responsive Grid Layout</h3>
+        <h3 className="text-foreground mb-4 text-lg">Responsive Grid Layout</h3>
         <GridContainer className="gap-4">
           <GridItem 
             span={12} 
             mdSpan={6} 
             lgSpan={4} 
-            className="bg-primary bg-opacity-20 p-4 text-center"
+            className="bg-primary bg-opacity-20 p-4"
           >
             Responsive: 12 → 6 → 4
           </GridItem>
@@ -140,7 +140,7 @@ export const GridSystemDemo: React.FC = () => {
             span={12} 
             mdSpan={6} 
             lgSpan={4} 
-            className="bg-primary bg-opacity-20 p-4 text-center"
+            className="bg-primary bg-opacity-20 p-4"
           >
             Responsive: 12 → 6 → 4
           </GridItem>
@@ -148,7 +148,7 @@ export const GridSystemDemo: React.FC = () => {
             span={12} 
             mdSpan={12} 
             lgSpan={4} 
-            className="bg-primary bg-opacity-20 p-4 text-center"
+            className="bg-primary bg-opacity-20 p-4"
           >
             Responsive: 12 → 12 → 4
           </GridItem>
@@ -157,26 +157,26 @@ export const GridSystemDemo: React.FC = () => {
 
       {/* Order Control Example */}
       <section className="mb-12">
-        <h3 className="text-golden-lg mb-4">Order Control</h3>
+        <h3 className="text-foreground mb-4 text-lg">Order Control</h3>
         <GridContainer className="gap-4">
           <GridItem 
             span={4} 
             order={3} 
-            className="bg-primary bg-opacity-20 p-4 text-center"
+            className="bg-primary bg-opacity-20 p-4"
           >
             First (Order 3)
           </GridItem>
           <GridItem 
             span={4} 
             order={1} 
-            className="bg-primary bg-opacity-20 p-4 text-center"
+            className="bg-primary bg-opacity-20 p-4"
           >
             Second (Order 1)
           </GridItem>
           <GridItem 
             span={4} 
             order={2} 
-            className="bg-primary bg-opacity-20 p-4 text-center"
+            className="bg-primary bg-opacity-20 p-4"
           >
             Third (Order 2)
           </GridItem>
@@ -185,26 +185,26 @@ export const GridSystemDemo: React.FC = () => {
 
       {/* Complex Layout Example */}
       <section>
-        <h3 className="text-golden-lg mb-4">Complex Layout Example</h3>
+        <h3 className="text-foreground mb-4 text-lg">Complex Layout Example</h3>
         <GridContainer className="gap-4">
-          <GridItem span={12} className="bg-primary bg-opacity-20 p-4 text-center">
+          <GridItem span={12} className="bg-primary bg-opacity-20 p-4">
             Header (12 columns)
           </GridItem>
           <GridItem 
             span={12} 
             mdSpan={8} 
-            className="bg-primary bg-opacity-20 p-4 text-center"
+            className="bg-primary bg-opacity-20 p-4"
           >
             Main Content (12 → 8)
           </GridItem>
           <GridItem 
             span={12} 
             mdSpan={4} 
-            className="bg-primary bg-opacity-20 p-4 text-center"
+            className="bg-primary bg-opacity-20 p-4"
           >
             Sidebar (12 → 4)
           </GridItem>
-          <GridItem span={12} className="bg-primary bg-opacity-20 p-4 text-center">
+          <GridItem span={12} className="bg-primary bg-opacity-20 p-4">
             Footer (12 columns)
           </GridItem>
         </GridContainer>

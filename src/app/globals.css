@@ -142,11 +142,6 @@ p {
 a {
   color: var(--foreground);
   text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-a:hover {
-  opacity: 0.8;
 }
 
 /* Focus styles for accessibility */
@@ -161,6 +156,24 @@ a:hover {
   grid-template-columns: repeat(12, 1fr);
   gap: var(--spacing-md);
   padding: var(--spacing-md);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Desktop large margins */
+@media (min-width: 1400px) {
+  .grid-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1600px) {
+  .grid-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 }
 
 /* Column spans */
@@ -498,7 +511,6 @@ select {
   border-radius: var(--radius-sm);
   background: var(--base-gray);
   color: var(--foreground);
-  transition: border-color 0.2s ease;
 }
 
 input:focus,
@@ -517,7 +529,6 @@ button {
   background: transparent;
   color: var(--foreground);
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 button:hover {
