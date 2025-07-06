@@ -1,0 +1,124 @@
+[
+  {
+    "id": "download-1",
+    "type": "download",
+    "title": "Motion Graphics Template Pack",
+    "description": "Professional motion graphics templates for After Effects. Includes titles, transitions, and lower thirds.",
+    "category": "templates",
+    "tags": ["Motion Graphics", "Templates", "After Effects", "Titles", "Transitions"],
+    "status": "published",
+    "priority": 95,
+    "createdAt": "2024-12-01T10:00:00.000Z",
+    "updatedAt": "2024-12-10T15:30:00.000Z",
+    "publishedAt": "2024-12-01T10:00:00.000Z",
+    "thumbnail": "/images/downloads/motion-graphics-pack-thumb.jpg",
+    "images": [
+      "/images/downloads/motion-graphics-pack-1.jpg",
+      "/images/downloads/motion-graphics-pack-2.jpg",
+      "/images/downloads/motion-graphics-pack-3.jpg"
+    ],
+    "downloadInfo": {
+      "fileName": "motion-graphics-template-pack-v2.0.zip",
+      "fileSize": 45678901,
+      "fileType": "application/zip",
+      "version": "2.0.0",
+      "downloadCount": 892,
+      "lastDownloaded": "2024-12-20T16:22:00.000Z"
+    },
+    "content": "# Motion Graphics Template Pack\n\nA comprehensive collection of professional motion graphics templates designed for After Effects. Perfect for content creators, video editors, and motion graphics artists.\n\n## What's Included\n\n### Title Templates (15 items)\n- **Cinematic Titles**: Epic movie-style title sequences\n- **Minimal Titles**: Clean, modern typography animations\n- **Glitch Titles**: Distorted, digital-style effects\n- **3D Titles**: Dimensional text with lighting effects\n- **Handwritten Titles**: Organic, hand-drawn style animations\n\n### Transition Templates (20 items)\n- **Smooth Wipes**: Elegant transition effects\n- **Geometric Transitions**: Abstract shape-based transitions\n- **Light Leaks**: Organic light-based transitions\n- **Zoom Transitions**: Dynamic scaling effects\n- **Slide Transitions**: Directional movement effects\n\n### Lower Thirds (12 items)\n- **Broadcast Style**: Professional news-style graphics\n- **Corporate**: Clean business presentation graphics\n- **Social Media**: Optimized for social platforms\n- **Event Graphics**: Conference and event overlays\n\n### Bonus Elements\n- **Animated Icons**: 50+ vector-based animated icons\n- **Particle Systems**: 10 customizable particle effects\n- **Backgrounds**: 8 animated background loops\n- **Sound Effects**: 25 audio files for motion graphics\n\n## Technical Specifications\n\n- **Resolution**: 1920x1080 (Full HD)\n- **Frame Rate**: 29.97 fps\n- **Duration**: Various (2-15 seconds each)\n- **After Effects Version**: CC 2019 or later\n- **Plugins Required**: None (uses built-in effects only)\n\n## License\n\n**Commercial Use Allowed**: Use in client projects, YouTube videos, social media content, and commercial productions.\n\n**Attribution**: Not required but appreciated.\n\n**Redistribution**: Not allowed - do not resell or redistribute templates.\n\n## Installation\n\n1. Download the ZIP file\n2. Extract all files to your desired location\n3. Open After Effects\n4. Open the template project files (.aep)\n5. Customize text, colors, and timing as needed\n6. Render your final composition\n\n## Customization Guide\n\n### Text Replacement\n- Double-click text layers to edit\n- Use the Character panel for font changes\n- Adjust text size and position as needed\n\n### Color Customization\n- Use the Essential Graphics panel for quick color changes\n- Modify solid layers for background colors\n- Adjust effects parameters for accent colors\n\n### Timing Adjustments\n- Extend or shorten compositions as needed\n- Adjust keyframe timing for faster/slower animations\n- Use time-remapping for speed variations\n\n## Support\n\nFor questions or issues:\n- Email: support@samuido.com\n- Documentation: Included PDF guide\n- Video tutorials: Available on YouTube channel",
+    "stats": {
+      "views": 2341,
+      "downloads": 892,
+      "likes": 156,
+      "shares": 78,
+      "lastViewed": "2024-12-20T16:22:00.000Z"
+    },
+    "seo": {
+      "title": "Motion Graphics Template Pack - After Effects Templates",
+      "description": "Professional motion graphics templates for After Effects. Titles, transitions, lower thirds, and more. Commercial use allowed.",
+      "keywords": ["Motion Graphics", "After Effects", "Templates", "Titles", "Transitions", "Lower Thirds"],
+      "ogImage": "/images/downloads/motion-graphics-pack-og.jpg"
+    }
+  },
+  {
+    "id": "download-2",
+    "type": "download",
+    "title": "UI Design Kit for Figma",
+    "description": "Complete UI design system with components, icons, and design tokens for modern web and mobile applications.",
+    "category": "design-kits",
+    "tags": ["UI Design", "Figma", "Design System", "Components", "Icons"],
+    "status": "published",
+    "priority": 88,
+    "createdAt": "2024-11-15T09:00:00.000Z",
+    "updatedAt": "2024-12-05T14:20:00.000Z",
+    "publishedAt": "2024-11-15T09:00:00.000Z",
+    "thumbnail": "/images/downloads/ui-design-kit-thumb.jpg",
+    "images": [
+      "/images/downloads/ui-design-kit-1.jpg",
+      "/images/downloads/ui-design-kit-2.jpg",
+      "/images/downloads/ui-design-kit-3.jpg"
+    ],
+    "downloadInfo": {
+      "fileName": "ui-design-kit-figma-v1.3.zip",
+      "fileSize": 23456789,
+      "fileType": "application/zip",
+      "version": "1.3.0",
+      "downloadCount": 567,
+      "lastDownloaded": "2024-12-20T11:15:00.000Z"
+    },
+    "content": "# UI Design Kit for Figma\n\nA comprehensive UI design system built for Figma, featuring modern components, icons, and design tokens for creating consistent and beautiful user interfaces.\n\n## What's Included\n\n### Component Library\n- **Buttons**: 25+ button variations (primary, secondary, ghost, etc.)\n- **Forms**: Input fields, checkboxes, radio buttons, select dropdowns\n- **Navigation**: Headers, footers, breadcrumbs, pagination\n- **Cards**: Content cards, profile cards, product cards\n- **Modals**: Dialog boxes, overlays, notifications\n- **Tables**: Data tables with sorting, filtering, and pagination\n\n### Icon Collection\n- **500+ Icons**: Outlined and filled variations\n- **Categories**: Interface, communication, media, business, etc.\n- **Formats**: SVG, PNG, Figma components\n- **Sizes**: 16px, 24px, 32px, 48px variants\n\n### Design Tokens\n- **Colors**: Primary, secondary, neutral, semantic colors\n- **Typography**: Font scales, line heights, font weights\n- **Spacing**: Consistent spacing system (4px grid)\n- **Shadows**: Box shadows for depth and layering\n- **Borders**: Border radius, border widths\n\n### Layout Systems\n- **Grid System**: 12-column responsive grid\n- **Breakpoints**: Mobile, tablet, desktop specifications\n- **Containers**: Max-width containers and fluid layouts\n- **Spacing**: Margin and padding utilities\n\n## Design System Features\n\n### Accessibility First\n- **WCAG 2.1 AA Compliant**: All components meet accessibility standards\n- **Color Contrast**: Proper contrast ratios for readability\n- **Focus States**: Clear focus indicators for keyboard navigation\n- **Screen Reader Support**: Semantic markup and ARIA labels\n\n### Responsive Design\n- **Mobile First**: Components designed for mobile-first approach\n- **Breakpoint System**: Consistent responsive breakpoints\n- **Flexible Components**: Adaptable to different screen sizes\n- **Touch Friendly**: Optimized for touch interactions\n\n### Customization\n- **Theme System**: Light and dark theme support\n- **Brand Customization**: Easy brand color and font integration\n- **Component Variants**: Multiple states and variations\n- **Figma Variables**: Uses Figma's variable system for consistency\n\n## File Structure\n\n```\nUI-Design-Kit/\n├── 📁 Components/\n│   ├── Buttons.fig\n│   ├── Forms.fig\n│   ├── Navigation.fig\n│   └── Cards.fig\n├── 📁 Icons/\n│   ├── Interface-Icons.fig\n│   ├── Communication-Icons.fig\n│   └── Media-Icons.fig\n├── 📁 Foundations/\n│   ├── Colors.fig\n│   ├── Typography.fig\n│   └── Spacing.fig\n├── 📁 Templates/\n│   ├── Landing-Page.fig\n│   ├── Dashboard.fig\n│   └── Mobile-App.fig\n└── 📄 Documentation.pdf\n```\n\n## Usage Instructions\n\n### Getting Started\n1. Download and extract the ZIP file\n2. Open Figma and import the design system file\n3. Enable the component library in your team\n4. Start using components in your designs\n\n### Best Practices\n- **Use Components**: Always use components instead of creating from scratch\n- **Maintain Consistency**: Follow the established design patterns\n- **Document Changes**: Keep track of any customizations made\n- **Update Regularly**: Check for updates to the design system\n\n### Customization Guide\n- **Colors**: Update the color tokens to match your brand\n- **Typography**: Replace fonts with your brand typography\n- **Components**: Modify component variants as needed\n- **Templates**: Use provided templates as starting points\n\n## License\n\n**Commercial Use**: Allowed for unlimited projects\n**Team Sharing**: Can be shared within your organization\n**Modification**: Full customization rights\n**Redistribution**: Not allowed as standalone product\n\n## Support & Updates\n\n- **Regular Updates**: New components and improvements\n- **Community**: Join our Discord for tips and feedback\n- **Documentation**: Comprehensive usage guides included\n- **Email Support**: Technical support via email",
+    "stats": {
+      "views": 1456,
+      "downloads": 567,
+      "likes": 89,
+      "shares": 34,
+      "lastViewed": "2024-12-20T11:15:00.000Z"
+    },
+    "seo": {
+      "title": "UI Design Kit for Figma - Complete Design System",
+      "description": "Professional UI design system for Figma with components, icons, and design tokens. Perfect for web and mobile app design.",
+      "keywords": ["UI Design", "Figma", "Design System", "Components", "Design Kit", "Icons"],
+      "ogImage": "/images/downloads/ui-design-kit-og.jpg"
+    }
+  },
+  {
+    "id": "download-3",
+    "type": "download",
+    "title": "Color Palette Collection",
+    "description": "Curated collection of 100+ color palettes for designers, developers, and digital artists. Includes trending and timeless combinations.",
+    "category": "color-palettes",
+    "tags": ["Color Palettes", "Design", "Colors", "Inspiration", "Swatches"],
+    "status": "published",
+    "priority": 82,
+    "createdAt": "2024-10-20T13:30:00.000Z",
+    "updatedAt": "2024-11-25T10:45:00.000Z",
+    "publishedAt": "2024-10-20T13:30:00.000Z",
+    "thumbnail": "/images/downloads/color-palette-collection-thumb.jpg",
+    "images": [
+      "/images/downloads/color-palette-collection-1.jpg",
+      "/images/downloads/color-palette-collection-2.jpg"
+    ],
+    "downloadInfo": {
+      "fileName": "color-palette-collection-v1.0.zip",
+      "fileSize": 12345678,
+      "fileType": "application/zip",
+      "version": "1.0.0",
+      "downloadCount": 234,
+      "lastDownloaded": "2024-12-19T14:30:00.000Z"
+    },
+    "content": "# Color Palette Collection\n\nA carefully curated collection of over 100 color palettes designed for modern digital projects. Perfect for designers, developers, and anyone looking for color inspiration.\n\n## Collection Overview\n\n### Palette Categories\n\n#### Trending Palettes (25 palettes)\n- **2024 Color Trends**: Contemporary color combinations\n- **Social Media**: Optimized for Instagram, TikTok, Twitter\n- **Tech Brands**: Inspired by leading technology companies\n- **Minimalist**: Clean, modern, understated palettes\n\n#### Timeless Palettes (30 palettes)\n- **Classic Combinations**: Proven color harmonies\n- **Monochromatic**: Single-hue variations\n- **Analogous**: Adjacent color wheel combinations\n- **Complementary**: High-contrast pairings\n\n#### Themed Palettes (25 palettes)\n- **Nature**: Earth tones, sky blues, forest greens\n- **Sunset**: Warm oranges, pinks, and purples\n- **Ocean**: Blues, teals, and aqua tones\n- **Autumn**: Rich browns, oranges, and golds\n\n#### Industry-Specific (20 palettes)\n- **Healthcare**: Calming blues and greens\n- **Finance**: Professional blues and grays\n- **Food & Beverage**: Appetizing reds and oranges\n- **Education**: Friendly and approachable colors\n\n## File Formats Included\n\n### Adobe Creative Suite\n- **Photoshop (.aco)**: Adobe Color Swatches\n- **Illustrator (.ase)**: Adobe Swatch Exchange\n- **InDesign**: Compatible with Adobe swatch format\n\n### Design Tools\n- **Figma**: Figma color styles file\n- **Sketch**: Sketch color palette file\n- **Adobe XD**: XD color library\n\n### Web Development\n- **CSS**: Custom properties (CSS variables)\n- **SCSS**: Sass color variables\n- **JSON**: Color data for JavaScript applications\n- **Tailwind**: Tailwind CSS color configuration\n\n### Print Design\n- **CMYK Values**: Print-ready color specifications\n- **Pantone**: Closest Pantone color matches\n- **HEX Codes**: Web-safe color codes\n- **RGB Values**: Screen display specifications\n\n## Usage Examples\n\n### Web Design\n```css\n:root {\n  --primary: #3B82F6;\n  --secondary: #10B981;\n  --accent: #F59E0B;\n  --neutral: #6B7280;\n  --background: #F9FAFB;\n}\n```\n\n### React/JavaScript\n```javascript\nconst colorPalette = {\n  primary: '#3B82F6',\n  secondary: '#10B981',\n  accent: '#F59E0B',\n  neutral: '#6B7280',\n  background: '#F9FAFB'\n};\n```\n\n### Tailwind CSS\n```javascript\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: {\n        'brand-blue': '#3B82F6',\n        'brand-green': '#10B981',\n        'brand-yellow': '#F59E0B'\n      }\n    }\n  }\n};\n```\n\n## Color Psychology Guide\n\n### Color Meanings\n- **Red**: Energy, passion, urgency, action\n- **Blue**: Trust, stability, professionalism, calm\n- **Green**: Growth, nature, harmony, freshness\n- **Yellow**: Optimism, creativity, attention, warmth\n- **Purple**: Luxury, creativity, wisdom, mystery\n- **Orange**: Enthusiasm, friendliness, confidence\n- **Pink**: Compassion, nurturing, love, femininity\n- **Gray**: Neutrality, sophistication, balance\n\n### Application Guidelines\n- **Primary Colors**: Main brand colors (60% of design)\n- **Secondary Colors**: Supporting colors (30% of design)\n- **Accent Colors**: Highlight colors (10% of design)\n- **Neutral Colors**: Text, backgrounds, borders\n\n## Accessibility Information\n\n### Contrast Ratios\n- **AA Standard**: 4.5:1 for normal text\n- **AAA Standard**: 7:1 for normal text\n- **Large Text**: 3:1 minimum ratio\n- **UI Components**: 3:1 for interactive elements\n\n### Color Blindness Considerations\n- **Deuteranopia**: Most common form (red-green)\n- **Protanopia**: Red-blind color vision\n- **Tritanopia**: Blue-yellow color blindness\n- **Testing**: Each palette tested for accessibility\n\n## License\n\n**Commercial Use**: Unlimited commercial projects\n**Personal Use**: Free for personal projects\n**Attribution**: Not required but appreciated\n**Redistribution**: Not allowed as standalone product\n\n## Bonus Content\n\n- **Color Theory Guide**: PDF explaining color relationships\n- **Trend Report**: Analysis of color trends for 2024\n- **Brand Examples**: Real-world palette applications\n- **Tool Recommendations**: Software and resources for color work",
+    "stats": {
+      "views": 678,
+      "downloads": 234,
+      "likes": 45,
+      "shares": 18,
+      "lastViewed": "2024-12-19T14:30:00.000Z"
+    },
+    "seo": {
+      "title": "Color Palette Collection - 100+ Curated Color Schemes",
+      "description": "Professional color palette collection with 100+ curated schemes. Includes Adobe swatches, CSS variables, and accessibility guidelines.",
+      "keywords": ["Color Palettes", "Design", "Color Schemes", "Adobe Swatches", "CSS Colors", "Design Resources"],
+      "ogImage": "/images/downloads/color-palette-collection-og.jpg"
+    }
+  }
+]
