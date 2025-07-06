@@ -1,7 +1,6 @@
 'use client';
 
 import Link from "next/link";
-import type { Metadata } from "next";
 import { useState } from "react";
 import { Mail, Phone, MessageCircle, CheckCircle, AlertCircle, Send } from "lucide-react";
 import { validateContactForm } from "@/lib/utils/validation";

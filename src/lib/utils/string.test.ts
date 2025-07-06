@@ -1,25 +1,38 @@
 import { describe, it, expect } from 'vitest';
+import {
+  slugify,
+  truncateText,
+  capitalizeFirst,
+  capitalizeWords,
+  removeHtmlTags,
+  countWords,
+  countCharacters,
+  sanitizeFilename,
+  formatFileSize,
+  generateRandomString,
+  generateId,
+  parseHashtags,
+  parseMentions,
+  highlightSearchTerms,
+  fuzzySearch,
+  levenshteinDistance,
+  similarity,
+  formatPrice,
+  parsePrice,
+  extractTextFromMarkdown,
+  generateExcerpt
+} from './string';
 
-// String utility functions
+// Additional helper functions for comprehensive testing
 const stringUtils = {
-  slugify: (text: string): string => {
-    return text
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/[\s_-]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-  },
+  // Re-export existing functions with consistent names
+  slugify,
+  truncate: truncateText,
+  capitalize: capitalizeFirst,
+  removeHtml: removeHtmlTags,
+  wordCount: countWords,
 
-  truncate: (text: string, length: number, suffix = '...'): string => {
-    if (text.length <= length) return text;
-    return text.substring(0, length - suffix.length) + suffix;
-  },
-
-  capitalize: (text: string): string => {
-    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-  },
-
+  // Additional utility functions for tests
   camelCase: (text: string): string => {
     return text
       .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => {
@@ -35,10 +48,6 @@ const stringUtils = {
       .toLowerCase();
   },
 
-  removeHtml: (text: string): string => {
-    return text.replace(/<[^>]*>/g, '');
-  },
-
   escapeHtml: (text: string): string => {
     const map: Record<string, string> = {
       '&': '&amp;',
@@ -50,12 +59,8 @@ const stringUtils = {
     return text.replace(/[&<>"']/g, (m) => map[m]);
   },
 
-  wordCount: (text: string): number => {
-    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
-  },
-
   readingTime: (text: string, wordsPerMinute = 200): number => {
-    const words = stringUtils.wordCount(text);
+    const words = countWords(text);
     return Math.ceil(words / wordsPerMinute);
   },
 

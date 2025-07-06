@@ -1,7 +1,6 @@
 'use client';
 
 import Link from "next/link";
-import type { Metadata } from "next";
 import { useState, useEffect } from "react";
 import { 
   Palette, 
