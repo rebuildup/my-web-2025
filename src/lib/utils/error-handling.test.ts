@@ -1,435 +1,380 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
-  AppErrorHandler,
-  ErrorBoundaryHelper,
-  withErrorHandling,
-  retryOperation,
-  FormErrorHandler,
-  setupGlobalErrorHandlers,
-  handleFetchError,
-  safeJSONParse,
-  type FormErrorState,
+  createErrorHandler,
+  logError,
+  validateEmail,
+  validateUrl,
+  validateRequired,
+  formatError,
+  createRetryWrapper,
+  validateForm,
+  ErrorBoundary,
+  type ValidationRule,
+  type ErrorHandlerOptions,
+  type RetryOptions
 } from './error-handling';
-import { ContentError, type AppError } from '@/types/content';
 
 // Mock console methods
 const mockConsole = {
   error: vi.fn(),
-  log: vi.fn(),
+  warn: vi.fn(),
+  log: vi.fn()
 };
-
-// Mock environment
-const originalEnv = process.env.NODE_ENV;
 
 describe('Error Handling Utilities', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    console.error = mockConsole.error;
-    console.log = mockConsole.log;
-    
-    // Mock window object
-    Object.defineProperty(window, 'navigator', {
-      value: { userAgent: 'test-agent' },
-      writable: true,
-    });
-    
-    Object.defineProperty(window, 'location', {
-      value: { href: 'https://test.com/page' },
-      writable: true,
-    });
+    // Mock console methods
+    global.console = { ...console, ...mockConsole };
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
-    process.env.NODE_ENV = originalEnv;
   });
 
-  describe('AppErrorHandler', () => {
-    describe('handleApiError', () => {
-      it('should handle ContentError', () => {
-        const contentError = new ContentError('Test error', 'TEST_CODE', { extra: 'data' });
-        const result = AppErrorHandler.handleApiError(contentError);
-
-        expect(result).toMatchObject({
-          code: 'TEST_CODE',
-          message: 'Test error',
-          details: { extra: 'data' },
-          timestamp: expect.any(String),
-        });
-      });
-
-      it('should handle generic Error', () => {
-        const error = new Error('Generic error');
-        error.stack = 'Error stack trace';
-        const result = AppErrorHandler.handleApiError(error);
-
-        expect(result).toMatchObject({
-          code: 'APPLICATION_ERROR',
-          message: 'Generic error',
-          details: 'Error stack trace',
-          timestamp: expect.any(String),
-        });
-      });
-
-      it('should handle unknown error types', () => {
-        const result = AppErrorHandler.handleApiError('string error');
-
-        expect(result).toMatchObject({
-          code: 'UNKNOWN_ERROR',
-          message: 'An unexpected error occurred',
-          details: 'string error',
-          timestamp: expect.any(String),
-        });
-      });
+  describe('validateEmail', () => {
+    it('should validate correct email addresses', () => {
+      expect(validateEmail('test@example.com')).toBe(true);
+      expect(validateEmail('user.name+tag@domain.co.uk')).toBe(true);
+      expect(validateEmail('user123@test-domain.com')).toBe(true);
     });
 
-    describe('logError', () => {
-      it('should log error with context', () => {
-        const error: AppError = {
-          code: 'TEST_ERROR',
-          message: 'Test message',
-          timestamp: '2023-01-01T00:00:00Z',
-        };
-
-        AppErrorHandler.logError(error, 'Test context');
-
-        expect(mockConsole.error).toHaveBeenCalledWith(
-          'Application Error:',
-          expect.objectContaining({
-            ...error,
-            context: 'Test context',
-            userAgent: 'test-agent',
-            url: 'https://test.com/page',
-          })
-        );
-      });
-
-      it('should send to error service in production', () => {
-        process.env.NODE_ENV = 'production';
-        const sendToErrorServiceSpy = vi.spyOn(AppErrorHandler as any, 'sendToErrorService');
-
-        const error: AppError = {
-          code: 'TEST_ERROR',
-          message: 'Test message',
-          timestamp: '2023-01-01T00:00:00Z',
-        };
-
-        AppErrorHandler.logError(error);
-
-        expect(sendToErrorServiceSpy).toHaveBeenCalled();
-      });
+    it('should reject invalid email addresses', () => {
+      expect(validateEmail('invalid-email')).toBe(false);
+      expect(validateEmail('test@')).toBe(false);
+      expect(validateEmail('@domain.com')).toBe(false);
+      expect(validateEmail('test.domain.com')).toBe(false);
+      expect(validateEmail('')).toBe(false);
     });
 
-    describe('error creation methods', () => {
-      it('should create network error', () => {
-        const error = AppErrorHandler.createNetworkError(404, 'Custom message');
-        
-        expect(error).toBeInstanceOf(ContentError);
-        expect(error.message).toBe('Custom message');
-        expect(error.code).toBe('NETWORK_ERROR_404');
-        expect(error.details).toEqual({ status: 404 });
-      });
-
-      it('should create network error with default message', () => {
-        const error = AppErrorHandler.createNetworkError(500);
-        
-        expect(error.message).toBe('Internal server error - please try again later');
-        expect(error.code).toBe('NETWORK_ERROR_500');
-      });
-
-      it('should create validation error', () => {
-        const error = AppErrorHandler.createValidationError('email', 'Invalid format');
-        
-        expect(error.message).toBe('Validation failed for email: Invalid format');
-        expect(error.code).toBe('VALIDATION_ERROR');
-        expect(error.details).toEqual({ field: 'email', message: 'Invalid format' });
-      });
-
-      it('should create file error', () => {
-        const error = AppErrorHandler.createFileError('upload', 'test.jpg');
-        
-        expect(error.message).toBe('File operation failed: upload for test.jpg');
-        expect(error.code).toBe('FILE_ERROR');
-        expect(error.details).toEqual({ operation: 'upload', filename: 'test.jpg' });
-      });
-
-      it('should create auth error', () => {
-        const error = AppErrorHandler.createAuthError('Token expired');
-        
-        expect(error.message).toBe('Token expired');
-        expect(error.code).toBe('AUTH_ERROR');
-      });
-
-      it('should create auth error with default message', () => {
-        const error = AppErrorHandler.createAuthError();
-        
-        expect(error.message).toBe('Authentication failed');
-        expect(error.code).toBe('AUTH_ERROR');
-      });
+    it('should handle edge cases', () => {
+      expect(validateEmail('a@b.co')).toBe(true);
+      expect(validateEmail('test@domain')).toBe(false);
+      expect(validateEmail('test..test@domain.com')).toBe(false);
     });
   });
 
-  describe('ErrorBoundaryHelper', () => {
-    it('should log component error', () => {
-      const error = new Error('Component failed');
-      const errorInfo = { componentStack: 'ComponentStack trace' };
-      const logErrorSpy = vi.spyOn(AppErrorHandler, 'logError');
-
-      ErrorBoundaryHelper.logComponentError(error, errorInfo, 'TestComponent');
-
-      expect(logErrorSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          code: 'COMPONENT_ERROR',
-          message: 'Component failed',
-          details: expect.objectContaining({
-            componentStack: 'ComponentStack trace',
-            componentName: 'TestComponent',
-          }),
-        }),
-        'React Error Boundary'
-      );
+  describe('validateUrl', () => {
+    it('should validate correct URLs', () => {
+      expect(validateUrl('https://example.com')).toBe(true);
+      expect(validateUrl('http://test.org')).toBe(true);
+      expect(validateUrl('https://subdomain.example.com/path?query=1')).toBe(true);
     });
 
-    it('should get error fallback element', () => {
+    it('should reject invalid URLs', () => {
+      expect(validateUrl('not-a-url')).toBe(false);
+      expect(validateUrl('ftp://example.com')).toBe(false);
+      expect(validateUrl('javascript:alert(1)')).toBe(false);
+      expect(validateUrl('')).toBe(false);
+    });
+
+    it('should handle edge cases', () => {
+      expect(validateUrl('https://localhost:3000')).toBe(true);
+      expect(validateUrl('http://192.168.1.1')).toBe(true);
+      expect(validateUrl('https://')).toBe(false);
+    });
+  });
+
+  describe('validateRequired', () => {
+    it('should validate non-empty values', () => {
+      expect(validateRequired('test')).toBe(true);
+      expect(validateRequired('0')).toBe(true);
+      expect(validateRequired(0)).toBe(true);
+      expect(validateRequired(false)).toBe(true);
+    });
+
+    it('should reject empty values', () => {
+      expect(validateRequired('')).toBe(false);
+      expect(validateRequired('   ')).toBe(false);
+      expect(validateRequired(null)).toBe(false);
+      expect(validateRequired(undefined)).toBe(false);
+    });
+
+    it('should handle arrays and objects', () => {
+      expect(validateRequired([])).toBe(false);
+      expect(validateRequired(['item'])).toBe(true);
+      expect(validateRequired({})).toBe(false);
+      expect(validateRequired({ key: 'value' })).toBe(true);
+    });
+  });
+
+  describe('formatError', () => {
+    it('should format Error objects', () => {
       const error = new Error('Test error');
-      const fallback = ErrorBoundaryHelper.getErrorFallback(error, 'TestComponent');
-
-      expect(fallback.type).toBe('div');
-      expect(fallback.props.className).toBe('error-boundary');
-      expect(fallback.props.children).toHaveLength(3);
-    });
-  });
-
-  describe('withErrorHandling', () => {
-    it('should return result on successful operation', async () => {
-      const operation = vi.fn().mockResolvedValue('success');
-      const result = await withErrorHandling(operation, 'test operation');
-
-      expect(result).toBe('success');
-      expect(operation).toHaveBeenCalled();
-    });
-
-    it('should handle error and return undefined', async () => {
-      const operation = vi.fn().mockRejectedValue(new Error('Test error'));
-      const logErrorSpy = vi.spyOn(AppErrorHandler, 'logError');
-
-      const result = await withErrorHandling(operation, 'test operation');
-
-      expect(result).toBeUndefined();
-      expect(logErrorSpy).toHaveBeenCalled();
-    });
-
-    it('should return fallback value on error', async () => {
-      const operation = vi.fn().mockRejectedValue(new Error('Test error'));
-      const result = await withErrorHandling(operation, 'test operation', 'fallback');
-
-      expect(result).toBe('fallback');
-    });
-  });
-
-  describe('retryOperation', () => {
-    it('should succeed on first try', async () => {
-      const operation = vi.fn().mockResolvedValue('success');
-      const result = await retryOperation(operation, 3, 100);
-
-      expect(result).toBe('success');
-      expect(operation).toHaveBeenCalledTimes(1);
-    });
-
-    it('should retry and eventually succeed', async () => {
-      const operation = vi.fn()
-        .mockRejectedValueOnce(new Error('First fail'))
-        .mockRejectedValueOnce(new Error('Second fail'))
-        .mockResolvedValue('success');
-
-      const result = await retryOperation(operation, 3, 100, false);
-
-      expect(result).toBe('success');
-      expect(operation).toHaveBeenCalledTimes(3);
-    });
-
-    it('should throw error after max retries', async () => {
-      const operation = vi.fn().mockRejectedValue(new Error('Always fails'));
-
-      await expect(retryOperation(operation, 2, 100, false)).rejects.toThrow('Always fails');
-      expect(operation).toHaveBeenCalledTimes(3); // Initial + 2 retries
-    });
-
-    it('should use exponential backoff', async () => {
-      const operation = vi.fn()
-        .mockRejectedValueOnce(new Error('First fail'))
-        .mockResolvedValue('success');
-
-      vi.useFakeTimers();
-      const promise = retryOperation(operation, 2, 100, true);
+      const formatted = formatError(error);
       
-      // Fast-forward through the backoff delay
-      await vi.advanceTimersByTimeAsync(100);
-      const result = await promise;
-
-      expect(result).toBe('success');
-      vi.useRealTimers();
-    });
-  });
-
-  describe('FormErrorHandler', () => {
-    describe('parseAPIErrors', () => {
-      it('should parse array of error objects', () => {
-        const response = {
-          errors: [
-            { field: 'email', message: 'Invalid email' },
-            { field: 'password', message: 'Too short' },
-            { field: 'email', message: 'Already exists' },
-          ],
-        };
-
-        const result = FormErrorHandler.parseAPIErrors(response);
-
-        expect(result).toEqual({
-          email: ['Invalid email', 'Already exists'],
-          password: ['Too short'],
-        });
-      });
-
-      it('should parse object with field keys', () => {
-        const response = {
-          errors: {
-            email: ['Invalid email', 'Already exists'],
-            password: 'Too short',
-          },
-        };
-
-        const result = FormErrorHandler.parseAPIErrors(response);
-
-        expect(result).toEqual({
-          email: ['Invalid email', 'Already exists'],
-          password: ['Too short'],
-        });
-      });
-
-      it('should handle general error message', () => {
-        const response = {
-          message: 'General error occurred',
-        };
-
-        const result = FormErrorHandler.parseAPIErrors(response);
-
-        expect(result).toEqual({
-          general: ['General error occurred'],
-        });
+      expect(formatted).toMatchObject({
+        message: 'Test error',
+        name: 'Error',
+        stack: expect.any(String)
       });
     });
 
-    describe('utility methods', () => {
-      const testErrors: FormErrorState = {
-        email: ['Invalid email', 'Already exists'],
-        password: ['Too short'],
-      };
-
-      it('should get first error', () => {
-        expect(FormErrorHandler.getFirstError(testErrors, 'email')).toBe('Invalid email');
-        expect(FormErrorHandler.getFirstError(testErrors, 'nonexistent')).toBeUndefined();
-      });
-
-      it('should check if has errors', () => {
-        expect(FormErrorHandler.hasErrors(testErrors)).toBe(true);
-        expect(FormErrorHandler.hasErrors({})).toBe(false);
-      });
-
-      it('should clear field error', () => {
-        const result = FormErrorHandler.clearFieldError(testErrors, 'email');
-        
-        expect(result).toEqual({
-          password: ['Too short'],
-        });
-        expect(testErrors).toEqual({ // Original should be unchanged
-          email: ['Invalid email', 'Already exists'],
-          password: ['Too short'],
-        });
-      });
-
-      it('should set field error', () => {
-        const result = FormErrorHandler.setFieldError(testErrors, 'username', 'Required field');
-        
-        expect(result).toEqual({
-          ...testErrors,
-          username: ['Required field'],
-        });
-      });
-    });
-  });
-
-  describe('setupGlobalErrorHandlers', () => {
-    it('should set up global error listeners', () => {
-      const addEventListenerSpy = vi.spyOn(window, 'addEventListener');
+    it('should format string errors', () => {
+      const formatted = formatError('String error');
       
-      setupGlobalErrorHandlers();
-
-      expect(addEventListenerSpy).toHaveBeenCalledWith('error', expect.any(Function));
-      expect(addEventListenerSpy).toHaveBeenCalledWith('unhandledrejection', expect.any(Function));
+      expect(formatted).toMatchObject({
+        message: 'String error',
+        name: 'UnknownError',
+        stack: null
+      });
     });
 
-    it('should handle global errors', () => {
-      const logErrorSpy = vi.spyOn(AppErrorHandler, 'logError');
-      setupGlobalErrorHandlers();
-
-      const errorEvent = new ErrorEvent('error', {
-        message: 'Global error',
-        filename: 'test.js',
-        lineno: 10,
-        colno: 5,
-        error: new Error('Test error'),
+    it('should format object errors', () => {
+      const errorObj = { message: 'Custom error', code: 500 };
+      const formatted = formatError(errorObj);
+      
+      expect(formatted).toMatchObject({
+        message: 'Custom error',
+        name: 'UnknownError',
+        code: 500,
+        stack: null
       });
+    });
 
-      window.dispatchEvent(errorEvent);
+    it('should handle null and undefined', () => {
+      expect(formatError(null)).toMatchObject({
+        message: 'Unknown error occurred',
+        name: 'UnknownError',
+        stack: null
+      });
+      
+      expect(formatError(undefined)).toMatchObject({
+        message: 'Unknown error occurred',
+        name: 'UnknownError',
+        stack: null
+      });
+    });
+  });
 
-      expect(logErrorSpy).toHaveBeenCalledWith(
+  describe('logError', () => {
+    it('should log errors with context', () => {
+      const error = new Error('Test error');
+      const context = { userId: '123', action: 'save' };
+      
+      logError(error, context);
+      
+      expect(mockConsole.error).toHaveBeenCalledWith(
+        'Error occurred:',
         expect.objectContaining({
-          code: 'GLOBAL_ERROR',
-          message: 'Global error',
-          details: expect.objectContaining({
-            filename: 'test.js',
-            lineno: 10,
-            colno: 5,
-          }),
-        }),
-        'Global Error Handler'
+          message: 'Test error',
+          context
+        })
+      );
+    });
+
+    it('should log errors without context', () => {
+      const error = new Error('Test error');
+      
+      logError(error);
+      
+      expect(mockConsole.error).toHaveBeenCalledWith(
+        'Error occurred:',
+        expect.objectContaining({
+          message: 'Test error'
+        })
       );
     });
   });
 
-  describe('handleFetchError', () => {
-    it('should handle response with JSON error', async () => {
-      const mockResponse = {
-        status: 400,
-        json: vi.fn().mockResolvedValue({ message: 'Bad request' }),
-      } as any;
-
-      await expect(handleFetchError(mockResponse)).rejects.toThrow();
+  describe('createErrorHandler', () => {
+    it('should create error handler with default options', () => {
+      const handler = createErrorHandler();
+      
+      expect(typeof handler).toBe('function');
     });
 
-    it('should handle response with invalid JSON', async () => {
-      const mockResponse = {
-        status: 500,
-        json: vi.fn().mockRejectedValue(new Error('Invalid JSON')),
-      } as any;
+    it('should handle errors with custom onError callback', () => {
+      const onError = vi.fn();
+      const handler = createErrorHandler({ onError });
+      const error = new Error('Test error');
+      
+      handler(error);
+      
+      expect(onError).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: 'Test error'
+        })
+      );
+    });
 
-      await expect(handleFetchError(mockResponse)).rejects.toThrow();
+    it('should handle errors with custom context', () => {
+      const onError = vi.fn();
+      const handler = createErrorHandler({ onError, context: { module: 'test' } });
+      const error = new Error('Test error');
+      
+      handler(error);
+      
+      expect(onError).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: 'Test error',
+          context: { module: 'test' }
+        })
+      );
+    });
+
+    it('should log to console when enabled', () => {
+      const handler = createErrorHandler({ logToConsole: true });
+      const error = new Error('Test error');
+      
+      handler(error);
+      
+      expect(mockConsole.error).toHaveBeenCalled();
     });
   });
 
-  describe('safeJSONParse', () => {
-    it('should parse valid JSON', () => {
-      const result = safeJSONParse('{"test": "value"}', {});
-      expect(result).toEqual({ test: 'value' });
+  describe('createRetryWrapper', () => {
+    it('should execute function successfully on first try', async () => {
+      const successFn = vi.fn().mockResolvedValue('success');
+      const retryWrapper = createRetryWrapper({ maxRetries: 3, delay: 10 });
+      
+      const result = await retryWrapper(successFn);
+      
+      expect(result).toBe('success');
+      expect(successFn).toHaveBeenCalledTimes(1);
     });
 
-    it('should return fallback for invalid JSON', () => {
-      const fallback = { default: true };
-      const result = safeJSONParse('invalid json', fallback);
+    it('should retry on failure and eventually succeed', async () => {
+      let callCount = 0;
+      const flakeyFn = vi.fn().mockImplementation(() => {
+        callCount++;
+        if (callCount < 3) {
+          throw new Error('Temporary failure');
+        }
+        return Promise.resolve('success');
+      });
       
-      expect(result).toBe(fallback);
-      expect(AppErrorHandler.logError).toHaveBeenCalled;
+      const retryWrapper = createRetryWrapper({ maxRetries: 3, delay: 10 });
+      
+      const result = await retryWrapper(flakeyFn);
+      
+      expect(result).toBe('success');
+      expect(flakeyFn).toHaveBeenCalledTimes(3);
+    });
+
+    it('should throw after max retries exceeded', async () => {
+      const failingFn = vi.fn().mockRejectedValue(new Error('Persistent failure'));
+      const retryWrapper = createRetryWrapper({ maxRetries: 2, delay: 10 });
+      
+      await expect(retryWrapper(failingFn)).rejects.toThrow('Persistent failure');
+      expect(failingFn).toHaveBeenCalledTimes(3); // Initial + 2 retries
+    });
+
+    it('should respect backoff multiplier', async () => {
+      const failingFn = vi.fn().mockRejectedValue(new Error('Failure'));
+      const retryWrapper = createRetryWrapper({ 
+        maxRetries: 2, 
+        delay: 10, 
+        backoffMultiplier: 2 
+      });
+      
+      const startTime = Date.now();
+      
+      try {
+        await retryWrapper(failingFn);
+      } catch (error) {
+        // Expected to fail
+      }
+      
+      const endTime = Date.now();
+      const duration = endTime - startTime;
+      
+      // Should wait 10ms + 20ms (with backoff) = at least 30ms
+      expect(duration).toBeGreaterThanOrEqual(25);
+      expect(failingFn).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  describe('validateForm', () => {
+    const validationRules: ValidationRule[] = [
+      {
+        field: 'email',
+        validator: validateEmail,
+        message: 'Invalid email address'
+      },
+      {
+        field: 'name',
+        validator: validateRequired,
+        message: 'Name is required'
+      },
+      {
+        field: 'website',
+        validator: validateUrl,
+        message: 'Invalid website URL'
+      }
+    ];
+
+    it('should validate form with valid data', () => {
+      const formData = {
+        email: 'test@example.com',
+        name: 'John Doe',
+        website: 'https://example.com'
+      };
+      
+      const result = validateForm(formData, validationRules);
+      
+      expect(result.isValid).toBe(true);
+      expect(result.errors).toEqual({});
+    });
+
+    it('should return errors for invalid data', () => {
+      const formData = {
+        email: 'invalid-email',
+        name: '',
+        website: 'not-a-url'
+      };
+      
+      const result = validateForm(formData, validationRules);
+      
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toEqual({
+        email: 'Invalid email address',
+        name: 'Name is required',
+        website: 'Invalid website URL'
+      });
+    });
+
+    it('should handle partial validation', () => {
+      const formData = {
+        email: 'test@example.com',
+        name: '',
+        website: 'https://example.com'
+      };
+      
+      const result = validateForm(formData, validationRules);
+      
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toEqual({
+        name: 'Name is required'
+      });
+    });
+
+    it('should handle missing fields', () => {
+      const formData = {
+        email: 'test@example.com'
+        // name and website missing
+      };
+      
+      const result = validateForm(formData, validationRules);
+      
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toMatchObject({
+        name: 'Name is required',
+        website: 'Invalid website URL'
+      });
+    });
+  });
+
+  describe('ErrorBoundary', () => {
+    it('should create error boundary component', () => {
+      expect(typeof ErrorBoundary).toBe('function');
+    });
+
+    it('should be a valid React component', () => {
+      const instance = new ErrorBoundary({});
+      expect(instance).toBeDefined();
+      expect(typeof instance.componentDidCatch).toBe('function');
+      expect(typeof instance.render).toBe('function');
     });
   });
 });

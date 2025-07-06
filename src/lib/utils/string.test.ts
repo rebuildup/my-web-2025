@@ -23,229 +23,311 @@ import {
   generateExcerpt
 } from './string';
 
-// Additional helper functions for comprehensive testing
-const stringUtils = {
-  // Re-export existing functions with consistent names
-  slugify,
-  truncate: truncateText,
-  capitalize: capitalizeFirst,
-  removeHtml: removeHtmlTags,
-  wordCount: countWords,
-
-  // Additional utility functions for tests
-  camelCase: (text: string): string => {
-    return text
-      .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => {
-        return index === 0 ? word.toLowerCase() : word.toUpperCase();
-      })
-      .replace(/\s+/g, '');
-  },
-
-  kebabCase: (text: string): string => {
-    return text
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .replace(/[\s_]+/g, '-')
-      .toLowerCase();
-  },
-
-  escapeHtml: (text: string): string => {
-    const map: Record<string, string> = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;',
-    };
-    return text.replace(/[&<>"']/g, (m) => map[m]);
-  },
-
-  readingTime: (text: string, wordsPerMinute = 200): number => {
-    const words = countWords(text);
-    return Math.ceil(words / wordsPerMinute);
-  },
-
-  extractEmails: (text: string): string[] => {
-    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
-    return text.match(emailRegex) || [];
-  },
-
-  extractUrls: (text: string): string[] => {
-    const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
-    return text.match(urlRegex) || [];
-  },
-
-  isJapanese: (text: string): boolean => {
-    const japaneseRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/;
-    return japaneseRegex.test(text);
-  },
-
-  highlightText: (text: string, query: string, className = 'highlight'): string => {
-    if (!query) return text;
-    const regex = new RegExp(`(${query})`, 'gi');
-    return text.replace(regex, `<span class="${className}">$1</span>`);
-  },
-};
-
 describe('String Utilities', () => {
   describe('slugify', () => {
     it('should convert text to URL-friendly slug', () => {
-      expect(stringUtils.slugify('Hello World')).toBe('hello-world');
-      expect(stringUtils.slugify('Hello, World!')).toBe('hello-world');
-      expect(stringUtils.slugify('  Hello   World  ')).toBe('hello-world');
+      expect(slugify('Hello World')).toBe('hello-world');
+      expect(slugify('Hello, World!')).toBe('hello-world');
+      expect(slugify('  Hello   World  ')).toBe('hello-world');
     });
 
     it('should handle special characters', () => {
-      expect(stringUtils.slugify('Hello@World#2023')).toBe('helloworld2023');
-      expect(stringUtils.slugify('Test_Case-Example')).toBe('test-case-example');
+      expect(slugify('Hello@World#2023')).toBe('helloworld2023');
+      expect(slugify('Test_Case-Example')).toBe('test-case-example');
     });
 
     it('should handle empty string', () => {
-      expect(stringUtils.slugify('')).toBe('');
-      expect(stringUtils.slugify('   ')).toBe('');
+      expect(slugify('')).toBe('');
+      expect(slugify('   ')).toBe('');
     });
   });
 
-  describe('truncate', () => {
+  describe('truncateText', () => {
     it('should truncate text when longer than limit', () => {
-      expect(stringUtils.truncate('Hello World', 5)).toBe('He...');
-      expect(stringUtils.truncate('Hello World', 8)).toBe('Hello...');
+      expect(truncateText('Hello World', 5)).toBe('He...');
+      expect(truncateText('Hello World', 8)).toBe('Hello...');
     });
 
     it('should not truncate when text is shorter than limit', () => {
-      expect(stringUtils.truncate('Hello', 10)).toBe('Hello');
+      expect(truncateText('Hello', 10)).toBe('Hello');
     });
 
     it('should use custom suffix', () => {
-      expect(stringUtils.truncate('Hello World', 5, '---')).toBe('He---');
+      expect(truncateText('Hello World', 5, '---')).toBe('He---');
+    });
+
+    it('should handle exact length', () => {
+      expect(truncateText('Hello', 5)).toBe('Hello');
     });
   });
 
-  describe('capitalize', () => {
+  describe('capitalizeFirst', () => {
     it('should capitalize first letter', () => {
-      expect(stringUtils.capitalize('hello')).toBe('Hello');
-      expect(stringUtils.capitalize('HELLO')).toBe('Hello');
-      expect(stringUtils.capitalize('hELLO')).toBe('Hello');
+      expect(capitalizeFirst('hello')).toBe('Hello');
+      expect(capitalizeFirst('HELLO')).toBe('Hello');
+      expect(capitalizeFirst('hELLO')).toBe('Hello');
     });
 
     it('should handle empty string', () => {
-      expect(stringUtils.capitalize('')).toBe('');
+      expect(capitalizeFirst('')).toBe('');
+    });
+
+    it('should handle single character', () => {
+      expect(capitalizeFirst('h')).toBe('H');
     });
   });
 
-  describe('camelCase', () => {
-    it('should convert to camelCase', () => {
-      expect(stringUtils.camelCase('hello world')).toBe('helloWorld');
-      expect(stringUtils.camelCase('Hello World')).toBe('helloWorld');
-      expect(stringUtils.camelCase('HELLO WORLD')).toBe('helloWorld');
+  describe('capitalizeWords', () => {
+    it('should capitalize each word', () => {
+      expect(capitalizeWords('hello world')).toBe('Hello World');
+      expect(capitalizeWords('HELLO WORLD')).toBe('Hello World');
+      expect(capitalizeWords('hello-world')).toBe('Hello-World');
     });
 
-    it('should handle multiple spaces', () => {
-      expect(stringUtils.camelCase('hello   world   test')).toBe('helloWorldTest');
-    });
-  });
-
-  describe('kebabCase', () => {
-    it('should convert to kebab-case', () => {
-      expect(stringUtils.kebabCase('HelloWorld')).toBe('hello-world');
-      expect(stringUtils.kebabCase('hello world')).toBe('hello-world');
-      expect(stringUtils.kebabCase('hello_world')).toBe('hello-world');
+    it('should handle empty string', () => {
+      expect(capitalizeWords('')).toBe('');
     });
   });
 
-  describe('removeHtml', () => {
+  describe('removeHtmlTags', () => {
     it('should remove HTML tags', () => {
-      expect(stringUtils.removeHtml('<p>Hello <strong>World</strong></p>')).toBe('Hello World');
-      expect(stringUtils.removeHtml('<div><span>Test</span></div>')).toBe('Test');
+      expect(removeHtmlTags('<p>Hello <strong>World</strong></p>')).toBe('Hello World');
+      expect(removeHtmlTags('<div><span>Test</span></div>')).toBe('Test');
     });
 
     it('should handle text without HTML', () => {
-      expect(stringUtils.removeHtml('Plain text')).toBe('Plain text');
+      expect(removeHtmlTags('Plain text')).toBe('Plain text');
+    });
+
+    it('should handle empty string', () => {
+      expect(removeHtmlTags('')).toBe('');
     });
   });
 
-  describe('escapeHtml', () => {
-    it('should escape HTML special characters', () => {
-      expect(stringUtils.escapeHtml('<script>alert("test")</script>')).toBe('&lt;script&gt;alert(&quot;test&quot;)&lt;/script&gt;');
-      expect(stringUtils.escapeHtml('Tom & Jerry')).toBe('Tom &amp; Jerry');
+  describe('extractTextFromMarkdown', () => {
+    it('should remove markdown formatting', () => {
+      expect(extractTextFromMarkdown('# Header')).toBe('Header');
+      expect(extractTextFromMarkdown('**Bold** text')).toBe('Bold text');
+      expect(extractTextFromMarkdown('*Italic* text')).toBe('Italic text');
+    });
+
+    it('should handle links', () => {
+      expect(extractTextFromMarkdown('[Link text](http://example.com)')).toBe('Link text');
+    });
+
+    it('should handle inline code', () => {
+      expect(extractTextFromMarkdown('This is `code` inline')).toBe('This is code inline');
     });
   });
 
-  describe('wordCount', () => {
+  describe('generateExcerpt', () => {
+    it('should generate excerpt from markdown', () => {
+      const content = '# Title\n\nThis is **bold** content with many words that should be truncated at some point.';
+      const excerpt = generateExcerpt(content, 10);
+      expect(excerpt.split(' ').length).toBeLessThanOrEqual(11); // 10 words + '...'
+    });
+
+    it('should not add ellipsis for short content', () => {
+      const content = 'Short content';
+      const excerpt = generateExcerpt(content, 50);
+      expect(excerpt).toBe('Short content');
+    });
+  });
+
+  describe('countWords', () => {
     it('should count words correctly', () => {
-      expect(stringUtils.wordCount('Hello world')).toBe(2);
-      expect(stringUtils.wordCount('Hello    world   test')).toBe(3);
-      expect(stringUtils.wordCount('')).toBe(0);
-      expect(stringUtils.wordCount('   ')).toBe(0);
+      expect(countWords('Hello world')).toBe(2);
+      expect(countWords('Hello    world   test')).toBe(3);
+      expect(countWords('')).toBe(0);
+      expect(countWords('   ')).toBe(0);
+    });
+
+    it('should handle single word', () => {
+      expect(countWords('Hello')).toBe(1);
     });
   });
 
-  describe('readingTime', () => {
-    it('should calculate reading time', () => {
-      const text = 'This is a test text with some words to calculate reading time.';
-      expect(stringUtils.readingTime(text, 200)).toBe(1); // Should be 1 minute for short text
+  describe('countCharacters', () => {
+    it('should count characters with spaces', () => {
+      expect(countCharacters('Hello world', true)).toBe(11);
     });
 
-    it('should handle custom words per minute', () => {
-      const text = Array(300).fill('word').join(' '); // 300 words
-      expect(stringUtils.readingTime(text, 100)).toBe(3); // 300 words / 100 wpm = 3 minutes
-    });
-  });
-
-  describe('extractEmails', () => {
-    it('should extract email addresses', () => {
-      const text = 'Contact us at test@example.com or admin@site.org for help.';
-      const emails = stringUtils.extractEmails(text);
-      expect(emails).toEqual(['test@example.com', 'admin@site.org']);
+    it('should count characters without spaces', () => {
+      expect(countCharacters('Hello world', false)).toBe(10);
     });
 
-    it('should return empty array when no emails found', () => {
-      expect(stringUtils.extractEmails('No emails here')).toEqual([]);
+    it('should handle empty string', () => {
+      expect(countCharacters('', true)).toBe(0);
+      expect(countCharacters('', false)).toBe(0);
     });
   });
 
-  describe('extractUrls', () => {
-    it('should extract URLs', () => {
-      const text = 'Visit https://example.com or http://test.org for more info.';
-      const urls = stringUtils.extractUrls(text);
-      expect(urls).toEqual(['https://example.com', 'http://test.org']);
+  describe('sanitizeFilename', () => {
+    it('should sanitize filename', () => {
+      expect(sanitizeFilename('Hello World.txt')).toBe('Hello_World.txt');
+      expect(sanitizeFilename('file@name#2023.doc')).toBe('file_name_2023.doc');
     });
 
-    it('should return empty array when no URLs found', () => {
-      expect(stringUtils.extractUrls('No URLs here')).toEqual([]);
-    });
-  });
-
-  describe('isJapanese', () => {
-    it('should detect Japanese text', () => {
-      expect(stringUtils.isJapanese('こんにちは')).toBe(true);
-      expect(stringUtils.isJapanese('カタカナ')).toBe(true);
-      expect(stringUtils.isJapanese('漢字')).toBe(true);
-      expect(stringUtils.isJapanese('Hello World')).toBe(false);
-    });
-
-    it('should detect mixed text', () => {
-      expect(stringUtils.isJapanese('Hello こんにちは')).toBe(true);
+    it('should handle consecutive special chars', () => {
+      expect(sanitizeFilename('file@@##name')).toBe('file_name');
     });
   });
 
-  describe('highlightText', () => {
-    it('should highlight matching text', () => {
-      const result = stringUtils.highlightText('Hello World', 'World');
-      expect(result).toBe('Hello <span class="highlight">World</span>');
+  describe('formatFileSize', () => {
+    it('should format bytes correctly', () => {
+      expect(formatFileSize(0)).toBe('0 Bytes');
+      expect(formatFileSize(1024)).toBe('1 KB');
+      expect(formatFileSize(1024 * 1024)).toBe('1 MB');
+    });
+
+    it('should handle decimal places', () => {
+      expect(formatFileSize(1536)).toBe('1.5 KB');
+    });
+  });
+
+  describe('generateRandomString', () => {
+    it('should generate string of correct length', () => {
+      expect(generateRandomString(8).length).toBe(8);
+      expect(generateRandomString(16).length).toBe(16);
+    });
+
+    it('should include numbers when specified', () => {
+      const str = generateRandomString(100, true, false);
+      expect(/[0-9]/.test(str)).toBe(true);
+    });
+
+    it('should include symbols when specified', () => {
+      const str = generateRandomString(100, true, true);
+      expect(/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(str)).toBe(true);
+    });
+  });
+
+  describe('generateId', () => {
+    it('should generate ID with prefix', () => {
+      const id = generateId('test', 8);
+      expect(id).toMatch(/^test_[A-Za-z0-9]{8}$/);
+    });
+
+    it('should generate ID without prefix', () => {
+      const id = generateId('', 8);
+      expect(id).toMatch(/^[A-Za-z0-9]{8}$/);
+    });
+  });
+
+  describe('parseHashtags', () => {
+    it('should extract hashtags', () => {
+      const text = 'This is #awesome and #cool #test';
+      const hashtags = parseHashtags(text);
+      expect(hashtags).toEqual(['awesome', 'cool', 'test']);
+    });
+
+    it('should handle Japanese hashtags', () => {
+      const text = 'これは #テスト です';
+      const hashtags = parseHashtags(text);
+      expect(hashtags).toEqual(['テスト']);
+    });
+
+    it('should return empty array when no hashtags', () => {
+      expect(parseHashtags('No hashtags here')).toEqual([]);
+    });
+  });
+
+  describe('parseMentions', () => {
+    it('should extract mentions', () => {
+      const text = 'Hello @john and @jane_doe';
+      const mentions = parseMentions(text);
+      expect(mentions).toEqual(['john', 'jane_doe']);
+    });
+
+    it('should return empty array when no mentions', () => {
+      expect(parseMentions('No mentions here')).toEqual([]);
+    });
+  });
+
+  describe('highlightSearchTerms', () => {
+    it('should highlight search terms', () => {
+      const result = highlightSearchTerms('Hello World', ['World']);
+      expect(result).toBe('Hello <mark>World</mark>');
+    });
+
+    it('should highlight multiple terms', () => {
+      const result = highlightSearchTerms('Hello beautiful World', ['Hello', 'World']);
+      expect(result).toBe('<mark>Hello</mark> beautiful <mark>World</mark>');
     });
 
     it('should be case insensitive', () => {
-      const result = stringUtils.highlightText('Hello World', 'world');
-      expect(result).toBe('Hello <span class="highlight">World</span>');
+      const result = highlightSearchTerms('Hello World', ['world']);
+      expect(result).toBe('Hello <mark>World</mark>');
+    });
+  });
+
+  describe('fuzzySearch', () => {
+    it('should match fuzzy patterns', () => {
+      expect(fuzzySearch('hll', 'hello')).toBe(true);
+      expect(fuzzySearch('wrld', 'world')).toBe(true);
+      expect(fuzzySearch('hello', 'hello')).toBe(true);
     });
 
-    it('should use custom class name', () => {
-      const result = stringUtils.highlightText('Hello World', 'World', 'custom');
-      expect(result).toBe('Hello <span class="custom">World</span>');
+    it('should not match non-fuzzy patterns', () => {
+      expect(fuzzySearch('xyz', 'hello')).toBe(false);
+      expect(fuzzySearch('olleh', 'hello')).toBe(false);
     });
 
-    it('should handle empty query', () => {
-      expect(stringUtils.highlightText('Hello World', '')).toBe('Hello World');
+    it('should be case insensitive', () => {
+      expect(fuzzySearch('HLL', 'hello')).toBe(true);
+    });
+  });
+
+  describe('levenshteinDistance', () => {
+    it('should calculate correct distance', () => {
+      expect(levenshteinDistance('hello', 'hello')).toBe(0);
+      expect(levenshteinDistance('hello', 'hallo')).toBe(1);
+      expect(levenshteinDistance('hello', 'world')).toBe(4);
+    });
+
+    it('should handle empty strings', () => {
+      expect(levenshteinDistance('', '')).toBe(0);
+      expect(levenshteinDistance('hello', '')).toBe(5);
+      expect(levenshteinDistance('', 'world')).toBe(5);
+    });
+  });
+
+  describe('similarity', () => {
+    it('should calculate similarity correctly', () => {
+      expect(similarity('hello', 'hello')).toBe(1);
+      expect(similarity('', '')).toBe(1);
+      expect(similarity('hello', 'hallo')).toBeCloseTo(0.8);
+    });
+
+    it('should handle different lengths', () => {
+      const sim = similarity('hello', 'hello world');
+      expect(sim).toBeLessThan(1);
+      expect(sim).toBeGreaterThan(0);
+    });
+  });
+
+  describe('formatPrice', () => {
+    it('should format price with default currency', () => {
+      expect(formatPrice(1000)).toBe('¥1,000');
+      expect(formatPrice(1234567)).toBe('¥1,234,567');
+    });
+
+    it('should format price with custom currency', () => {
+      expect(formatPrice(1000, '$')).toBe('$1,000');
+      expect(formatPrice(1000, 'USD ')).toBe('USD 1,000');
+    });
+  });
+
+  describe('parsePrice', () => {
+    it('should parse price from string', () => {
+      expect(parsePrice('¥1,000')).toBe(1000);
+      expect(parsePrice('$1,234,567')).toBe(1234567);
+      expect(parsePrice('USD 500')).toBe(500);
+    });
+
+    it('should handle invalid input', () => {
+      expect(parsePrice('not a price')).toBe(0);
+      expect(parsePrice('')).toBe(0);
     });
   });
 });
