@@ -1,0 +1,32 @@
+{
+  "name": "My Web 2025 - Portfolio & Tools",
+  "short_name": "My Web 2025",
+  "description": "Professional portfolio, creative tools, and workshop content. Featuring video production, web development, and interactive tools.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0000ff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicons/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicons/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicons/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "productivity", "utilities"],
+  "lang": "ja",
+  "dir": "ltr"
+} 

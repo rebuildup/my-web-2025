@@ -50,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className="scroll-smooth">
+    <html lang="ja" className="scroll-smooth" suppressHydrationWarning>
       <head>
         {/* Adobe Fonts */}
         <Script
@@ -84,7 +84,7 @@ export default function RootLayout({
         {/* Security headers */}
         <meta
           httpEquiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self' 'unsafe-inline' https://use.typekit.net https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://use.typekit.net https://fonts.googleapis.com; font-src 'self' https://use.typekit.net https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.resend.com;"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' https://use.typekit.net https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://use.typekit.net https://fonts.googleapis.com; font-src 'self' https://use.typekit.net https://fonts.gstatic.com; img-src 'self' data: https: https://p.typekit.net; connect-src 'self' https://api.resend.com https://p.typekit.net https://use.typekit.net;"
         />
       </head>
       <body className="noto-sans-jp">

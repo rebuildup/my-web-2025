@@ -21,6 +21,17 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+  // Fix for Fast Refresh NaN timing issue on Windows
+  experimental: {
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
+  },
 };
 
 export default nextConfig;
