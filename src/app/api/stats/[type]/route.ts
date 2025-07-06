@@ -5,13 +5,13 @@ import fs from 'fs/promises';
 import path from 'path';
 
 const VALID_STAT_TYPES = ['download', 'view', 'search'] as const;
-type StatType = typeof VALID_STAT_TYPES[number];
+type StatType = (typeof VALID_STAT_TYPES)[number];
 
 async function loadStats(filePath: string): Promise<Record<string, number>> {
   try {
     const fileContent = await fs.readFile(filePath, 'utf-8');
     return JSON.parse(fileContent);
-  } catch (error) {
+  } catch {
     // File doesn't exist or is invalid, return empty stats
     return {};
   }
@@ -22,7 +22,7 @@ async function saveStats(filePath: string, stats: Record<string, number>): Promi
     // Ensure directory exists
     const dir = path.dirname(filePath);
     await fs.mkdir(dir, { recursive: true });
-    
+
     // Save stats with pretty formatting
     await fs.writeFile(filePath, JSON.stringify(stats, null, 2));
   } catch (error) {
@@ -44,10 +44,10 @@ export async function GET(
     // Validate stat type
     if (!VALID_STAT_TYPES.includes(type as StatType)) {
       return Response.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: `Invalid stat type: ${type}`,
-          validTypes: VALID_STAT_TYPES
+          validTypes: VALID_STAT_TYPES,
         },
         { status: 400 }
       );
@@ -78,16 +78,15 @@ export async function GET(
         itemCount: Object.keys(stats).length,
       });
     }
-
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
     AppErrorHandler.logError(appError, `Stats GET API - ${params.type}`);
-    
+
     return Response.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to get statistics',
-        code: appError.code
+        code: appError.code,
       },
       { status: 500 }
     );
@@ -104,10 +103,10 @@ export async function POST(
     // Validate stat type
     if (!VALID_STAT_TYPES.includes(type as StatType)) {
       return Response.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: `Invalid stat type: ${type}`,
-          validTypes: VALID_STAT_TYPES
+          validTypes: VALID_STAT_TYPES,
         },
         { status: 400 }
       );
@@ -125,13 +124,13 @@ export async function POST(
 
     const cleanId = id.trim();
     const statsPath = getStatsFilePath(type as StatType);
-    
+
     // Load current stats
     const stats = await loadStats(statsPath);
-    
+
     // Increment count
     stats[cleanId] = (stats[cleanId] || 0) + 1;
-    
+
     // Save updated stats
     await saveStats(statsPath, stats);
 
@@ -144,16 +143,15 @@ export async function POST(
       },
       message: `${type} stat updated successfully`,
     });
-
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
     AppErrorHandler.logError(appError, `Stats POST API - ${params.type}`);
-    
+
     return Response.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to update statistics',
-        code: appError.code
+        code: appError.code,
       },
       { status: 500 }
     );
@@ -193,7 +191,7 @@ export async function DELETE(
       if (stats[id]) {
         delete stats[id];
         await saveStats(statsPath, stats);
-        
+
         return Response.json({
           success: true,
           message: `Stat for ${id} deleted successfully`,
@@ -207,22 +205,21 @@ export async function DELETE(
     } else {
       // Clear all stats
       await saveStats(statsPath, {});
-      
+
       return Response.json({
         success: true,
         message: `All ${type} stats cleared successfully`,
       });
     }
-
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
     AppErrorHandler.logError(appError, `Stats DELETE API - ${params.type}`);
-    
+
     return Response.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to delete statistics',
-        code: appError.code
+        code: appError.code,
       },
       { status: 500 }
     );

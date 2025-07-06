@@ -7,15 +7,15 @@ import { AppErrorHandler } from '@/lib/utils/error-handling';
 export async function POST(request: NextRequest): Promise<Response> {
   try {
     const body = await request.json();
-    const { 
-      query, 
-      type, 
-      category, 
+    const {
+      query,
+      type,
+      category,
       tags,
-      limit = 10, 
+      limit = 10,
       threshold = 0.3,
       includeContent = false,
-      advanced = false
+      advanced = false,
     } = body;
 
     // Validate required fields
@@ -84,16 +84,15 @@ export async function POST(request: NextRequest): Promise<Response> {
       },
       timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
     AppErrorHandler.logError(appError, 'Search API');
-    
+
     return Response.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Search operation failed',
-        code: appError.code
+        code: appError.code,
       },
       { status: 500 }
     );
@@ -139,16 +138,15 @@ export async function GET(request: NextRequest): Promise<Response> {
       },
       timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
     AppErrorHandler.logError(appError, 'Search API GET');
-    
+
     return Response.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Search operation failed',
-        code: appError.code
+        code: appError.code,
       },
       { status: 500 }
     );

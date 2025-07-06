@@ -6,7 +6,7 @@ export interface ContentItem {
   description: string;
   category: string;
   tags: string[];
-  status: "published" | "draft" | "archived" | "scheduled";
+  status: 'published' | 'draft' | 'archived' | 'scheduled';
   priority: number; // 0-100
   createdAt: string; // ISO 8601
   updatedAt?: string;
@@ -21,21 +21,21 @@ export interface ContentItem {
   contentPath?: string; // Markdown path
   stats?: ContentStats;
   seo?: SEOData;
-  customFields?: Record<string, any>;
+  customFields?: Record<string, unknown>;
 }
 
 export type ContentType =
-  | "portfolio"
-  | "plugin"
-  | "blog"
-  | "profile"
-  | "page"
-  | "tool"
-  | "asset"
-  | "download";
+  | 'portfolio'
+  | 'plugin'
+  | 'blog'
+  | 'profile'
+  | 'page'
+  | 'tool'
+  | 'asset'
+  | 'download';
 
 export interface MediaEmbed {
-  type: "youtube" | "vimeo" | "code" | "social" | "iframe";
+  type: 'youtube' | 'vimeo' | 'code' | 'social' | 'iframe';
   url: string;
   title?: string;
   description?: string;
@@ -46,7 +46,7 @@ export interface MediaEmbed {
 }
 
 export interface ExternalLink {
-  type: "github" | "demo" | "booth" | "website" | "other";
+  type: 'github' | 'demo' | 'booth' | 'website' | 'other';
   url: string;
   title: string;
   description?: string;
@@ -103,7 +103,7 @@ export interface AuthorInfo {
 }
 
 export interface SocialLink {
-  platform: "twitter" | "github" | "linkedin" | "instagram";
+  platform: 'twitter' | 'github' | 'linkedin' | 'instagram';
   url: string;
   username: string;
 }
@@ -186,18 +186,18 @@ export interface FormField {
   required: boolean;
   validation?: FieldValidation[];
   options?: FormFieldOption[];
-  defaultValue?: any;
+  defaultValue?: unknown;
 }
 
 export type FormFieldType =
-  | "text"
-  | "email"
-  | "textarea"
-  | "select"
-  | "checkbox"
-  | "radio"
-  | "file"
-  | "calculator";
+  | 'text'
+  | 'email'
+  | 'textarea'
+  | 'select'
+  | 'checkbox'
+  | 'radio'
+  | 'file'
+  | 'calculator';
 
 export interface FormFieldOption {
   value: string;
@@ -206,8 +206,8 @@ export interface FormFieldOption {
 }
 
 export interface FieldValidation {
-  type: "required" | "email" | "minLength" | "maxLength" | "pattern" | "custom";
-  value?: any;
+  type: 'required' | 'email' | 'minLength' | 'maxLength' | 'pattern' | 'custom';
+  value?: unknown;
   message: string;
 }
 
@@ -217,10 +217,10 @@ export interface ValidationRule {
 }
 
 export interface SubmitConfig {
-  method: "POST";
+  method: 'POST';
   action: string;
   headers?: Record<string, string>;
-  body?: Record<string, any>;
+  body?: Record<string, unknown>;
 }
 
 export interface NavigationItem {
@@ -240,12 +240,12 @@ export interface PageConfig {
   description: string;
   url: string;
   content: {
-    source: "static" | "dynamic" | "api";
-    data?: any;
+    source: 'static' | 'dynamic' | 'api';
+    data?: unknown;
     apiEndpoint?: string;
   };
   layout: {
-    type: "default" | "custom";
+    type: 'default' | 'custom';
     grid?: GridConfig;
     components?: string[];
   };
@@ -287,6 +287,7 @@ export interface SearchResult {
   url: string;
   score: number;
   highlights: string[];
+  category?: string;
 }
 
 export interface StatData {
@@ -299,7 +300,7 @@ export interface StatData {
 export interface AppError {
   code: string;
   message: string;
-  details?: any;
+  details?: unknown;
   timestamp: string;
 }
 
@@ -307,9 +308,9 @@ export class ContentError extends Error {
   constructor(
     message: string,
     public code: string,
-    public details?: any
+    public details?: unknown
   ) {
     super(message);
-    this.name = "ContentError";
+    this.name = 'ContentError';
   }
 }

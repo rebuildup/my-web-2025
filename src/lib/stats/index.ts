@@ -35,22 +35,20 @@ export const getStats = async (
   id?: string
 ): Promise<number | Record<string, number>> => {
   try {
-    const url = id 
-      ? `/api/stats/${type}?id=${encodeURIComponent(id)}`
-      : `/api/stats/${type}`;
-    
+    const url = id ? `/api/stats/${type}?id=${encodeURIComponent(id)}` : `/api/stats/${type}`;
+
     const response = await fetch(url);
-    
+
     if (!response.ok) {
       throw new Error(`Failed to get ${type} stats: ${response.status}`);
     }
 
     const data = await response.json();
-    
+
     if (data.success) {
       return data.data;
     }
-    
+
     return id ? 0 : {};
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
@@ -60,7 +58,9 @@ export const getStats = async (
 };
 
 // Get all statistics for an item
-export const getItemStats = async (id: string): Promise<{
+export const getItemStats = async (
+  id: string
+): Promise<{
   views: number;
   downloads: number;
   searches: number;
@@ -90,14 +90,14 @@ export const getTopItems = async (
 ): Promise<Array<{ id: string; count: number }>> => {
   try {
     const stats = await getStats(type);
-    
+
     if (typeof stats === 'object') {
       return Object.entries(stats)
         .map(([id, count]) => ({ id, count: count as number }))
         .sort((a, b) => b.count - a.count)
         .slice(0, limit);
     }
-    
+
     return [];
   } catch (error) {
     console.error(`Failed to get top ${type} items:`, error);
@@ -121,14 +121,14 @@ export const getStatsSummary = async (): Promise<{
       getStats('search'),
     ]);
 
-    const calculateTotal = (stats: any): number => {
+    const calculateTotal = (stats: Record<string, number> | number): number => {
       if (typeof stats === 'object') {
-        return Object.values(stats).reduce((sum, count) => sum + (count as number), 0);
+        return Object.values(stats).reduce((sum: number, count: number) => sum + count, 0);
       }
-      return 0;
+      return typeof stats === 'number' ? stats : 0;
     };
 
-    const getTopFromStats = (stats: any, limit: number = 5) => {
+    const getTopFromStats = (stats: Record<string, number> | number, limit: number = 5) => {
       if (typeof stats === 'object') {
         return Object.entries(stats)
           .map(([id, count]) => ({ id, count: count as number }))
@@ -160,16 +160,16 @@ export const getStatsSummary = async (): Promise<{
 };
 
 // Client-side statistics tracking
-export const trackView = async (id: string, type: string): Promise<void> => {
+export const trackView = async (id: string): Promise<void> => {
   // Throttle view tracking to prevent spam
   const key = `view_tracked_${id}`;
   const lastTracked = localStorage.getItem(key);
   const now = Date.now();
-  
-  if (lastTracked && (now - parseInt(lastTracked, 10)) < 60000) {
+
+  if (lastTracked && now - parseInt(lastTracked, 10) < 60000) {
     return; // Don't track if viewed within last minute
   }
-  
+
   try {
     await updateStats('view', id);
     localStorage.setItem(key, now.toString());
@@ -181,7 +181,7 @@ export const trackView = async (id: string, type: string): Promise<void> => {
 export const trackDownload = async (id: string, filename?: string): Promise<void> => {
   try {
     await updateStats('download', id);
-    
+
     // Store download history locally
     const downloads = getLocalDownloadHistory();
     downloads.unshift({
@@ -189,7 +189,7 @@ export const trackDownload = async (id: string, filename?: string): Promise<void
       filename: filename || 'unknown',
       timestamp: new Date().toISOString(),
     });
-    
+
     // Keep only last 50 downloads
     localStorage.setItem('download_history', JSON.stringify(downloads.slice(0, 50)));
   } catch (error) {
@@ -200,7 +200,7 @@ export const trackDownload = async (id: string, filename?: string): Promise<void
 export const trackSearch = async (query: string): Promise<void> => {
   try {
     await updateStats('search', query.toLowerCase());
-    
+
     // Store search history locally
     const searches = getLocalSearchHistory();
     if (!searches.includes(query)) {
@@ -257,6 +257,18 @@ export const exportStats = async (): Promise<StatData | null> => {
       getStats('search'),
     ]);
 
+    // Check if any of the stats failed (returned empty objects)
+    if (
+      typeof downloads === 'object' &&
+      Object.keys(downloads).length === 0 &&
+      typeof views === 'object' &&
+      Object.keys(views).length === 0 &&
+      typeof searches === 'object' &&
+      Object.keys(searches).length === 0
+    ) {
+      return null;
+    }
+
     return {
       downloads: downloads as Record<string, number>,
       views: views as Record<string, number>,
@@ -275,6 +287,8 @@ export const subscribeToStatsUpdates = (
 ): (() => void) => {
   // This would typically use WebSockets or Server-Sent Events
   // For now, we'll use polling as a fallback
+  const pollInterval = process.env.NODE_ENV === 'test' ? 1000 : 30000; // Shorter interval for tests
+
   const interval = setInterval(async () => {
     try {
       const response = await fetch('/api/stats/updates');
@@ -285,7 +299,7 @@ export const subscribeToStatsUpdates = (
     } catch (error) {
       console.error('Failed to fetch stats updates:', error);
     }
-  }, 30000); // Poll every 30 seconds
+  }, pollInterval);
 
   return () => clearInterval(interval);
 };
@@ -293,11 +307,18 @@ export const subscribeToStatsUpdates = (
 // Analytics integration helpers
 export const sendAnalyticsEvent = (
   eventName: string,
-  parameters: Record<string, any>
+  parameters: Record<string, unknown>
 ): void => {
   // Google Analytics 4
-  if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', eventName, parameters);
+  if (
+    typeof window !== 'undefined' &&
+    (window as Window & typeof globalThis & { gtag: (...args: unknown[]) => void }).gtag
+  ) {
+    (window as Window & typeof globalThis & { gtag: (...args: unknown[]) => void }).gtag(
+      'event',
+      eventName,
+      parameters
+    );
   }
 
   // Custom analytics

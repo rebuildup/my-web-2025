@@ -12,6 +12,7 @@ interface ContactFormData {
   subject: string;
   content: string;
   recaptchaToken?: string;
+  [key: string]: string | undefined; // Add index signature
 }
 
 async function verifyRecaptcha(token: string): Promise<boolean> {
@@ -117,20 +118,19 @@ export async function POST(request: NextRequest): Promise<Response> {
     const validation = validateContactForm(formData);
     if (!validation.isValid) {
       return Response.json(
-        { 
-          success: false, 
+        {
+          success: false,
           errors: validation.errors,
-          message: 'Form validation failed'
+          message: 'Form validation failed',
         },
         { status: 400 }
       );
     }
 
     // Rate limiting check (simple implementation)
-    const clientIP = request.headers.get('x-forwarded-for') || 
-                    request.headers.get('x-real-ip') || 
-                    'unknown';
-    
+    const clientIP =
+      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+
     // In a production environment, you'd use a proper rate limiting service
     // For now, we'll just log the IP
     console.log(`Contact form submission from IP: ${clientIP}`);
@@ -140,10 +140,10 @@ export async function POST(request: NextRequest): Promise<Response> {
       const recaptchaValid = await verifyRecaptcha(formData.recaptchaToken);
       if (!recaptchaValid) {
         return Response.json(
-          { 
-            success: false, 
+          {
+            success: false,
             error: 'reCAPTCHA verification failed',
-            code: 'RECAPTCHA_FAILED'
+            code: 'RECAPTCHA_FAILED',
           },
           { status: 400 }
         );
@@ -158,7 +158,6 @@ export async function POST(request: NextRequest): Promise<Response> {
       message: 'Your message has been sent successfully. We will get back to you soon!',
       timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
     AppErrorHandler.logError(appError, 'Contact Form API');
@@ -166,20 +165,20 @@ export async function POST(request: NextRequest): Promise<Response> {
     // Don't expose internal errors to users
     if (appError.code === 'VALIDATION_ERROR') {
       return Response.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: appError.message,
-          code: appError.code
+          code: appError.code,
         },
         { status: 400 }
       );
     }
 
     return Response.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to send message. Please try again later.',
-        code: 'INTERNAL_ERROR'
+        code: 'INTERNAL_ERROR',
       },
       { status: 500 }
     );

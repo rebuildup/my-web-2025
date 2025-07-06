@@ -12,7 +12,7 @@ interface ContentItem {
   description: string;
   category: string;
   tags: string[];
-  status: "published" | "draft" | "archived" | "scheduled";
+  status: 'published' | 'draft' | 'archived' | 'scheduled';
   priority: number; // 0-100
   createdAt: string; // ISO 8601
   updatedAt?: string;
@@ -31,17 +31,17 @@ interface ContentItem {
 }
 
 type ContentType =
-  | "portfolio"
-  | "plugin"
-  | "blog"
-  | "profile"
-  | "page"
-  | "tool"
-  | "asset"
-  | "download";
+  | 'portfolio'
+  | 'plugin'
+  | 'blog'
+  | 'profile'
+  | 'page'
+  | 'tool'
+  | 'asset'
+  | 'download';
 
 interface MediaEmbed {
-  type: "youtube" | "vimeo" | "code" | "social" | "iframe";
+  type: 'youtube' | 'vimeo' | 'code' | 'social' | 'iframe';
   url: string;
   title?: string;
   description?: string;
@@ -52,7 +52,7 @@ interface MediaEmbed {
 }
 
 interface ExternalLink {
-  type: "github" | "demo" | "booth" | "website" | "other";
+  type: 'github' | 'demo' | 'booth' | 'website' | 'other';
   url: string;
   title: string;
   description?: string;
@@ -119,7 +119,7 @@ interface AuthorInfo {
 }
 
 interface SocialLink {
-  platform: "twitter" | "github" | "linkedin" | "instagram";
+  platform: 'twitter' | 'github' | 'linkedin' | 'instagram';
   url: string;
   username: string;
 }
@@ -215,14 +215,14 @@ interface FormField {
 }
 
 type FormFieldType =
-  | "text"
-  | "email"
-  | "textarea"
-  | "select"
-  | "checkbox"
-  | "radio"
-  | "file"
-  | "calculator";
+  | 'text'
+  | 'email'
+  | 'textarea'
+  | 'select'
+  | 'checkbox'
+  | 'radio'
+  | 'file'
+  | 'calculator';
 
 interface FormFieldOption {
   value: string;
@@ -231,7 +231,7 @@ interface FormFieldOption {
 }
 
 interface FieldValidation {
-  type: "required" | "email" | "minLength" | "maxLength" | "pattern" | "custom";
+  type: 'required' | 'email' | 'minLength' | 'maxLength' | 'pattern' | 'custom';
   value?: any;
   message: string;
 }
@@ -242,7 +242,7 @@ interface ValidationRule {
 }
 
 interface SubmitConfig {
-  method: "POST";
+  method: 'POST';
   action: string;
   headers?: Record<string, string>;
   body?: Record<string, any>;
@@ -279,12 +279,12 @@ interface PageConfig {
   description: string;
   url: string;
   content: {
-    source: "static" | "dynamic" | "api";
+    source: 'static' | 'dynamic' | 'api';
     data?: any;
     apiEndpoint?: string;
   };
   layout: {
-    type: "default" | "custom";
+    type: 'default' | 'custom';
     grid?: GridConfig;
     components?: string[];
   };
@@ -357,9 +357,9 @@ export async function GET(
 ): Promise<Response> {
   try {
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get("category");
-    const limit = parseInt(searchParams.get("limit") || "10");
-    const offset = parseInt(searchParams.get("offset") || "0");
+    const category = searchParams.get('category');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    const offset = parseInt(searchParams.get('offset') || '0');
 
     const data = await getContentByType(params.type, {
       category,
@@ -377,10 +377,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    return Response.json(
-      { success: false, error: "Failed to fetch content" },
-      { status: 500 }
-    );
+    return Response.json({ success: false, error: 'Failed to fetch content' }, { status: 500 });
   }
 }
 
@@ -398,10 +395,7 @@ export async function POST(request: Request): Promise<Response> {
       filters: { type, category },
     });
   } catch (error) {
-    return Response.json(
-      { success: false, error: "Search failed" },
-      { status: 500 }
-    );
+    return Response.json({ success: false, error: 'Search failed' }, { status: 500 });
   }
 }
 
@@ -414,10 +408,7 @@ export async function POST(request: Request): Promise<Response> {
 
     return Response.json({ success: true });
   } catch (error) {
-    return Response.json(
-      { success: false, error: "Failed to update stats" },
-      { status: 500 }
-    );
+    return Response.json({ success: false, error: 'Failed to update stats' }, { status: 500 });
   }
 }
 
@@ -430,10 +421,7 @@ export async function POST(request: Request): Promise<Response> {
 
     return Response.json({ success: true });
   } catch (error) {
-    return Response.json(
-      { success: false, error: "Failed to update stats" },
-      { status: 500 }
-    );
+    return Response.json({ success: false, error: 'Failed to update stats' }, { status: 500 });
   }
 }
 
@@ -445,17 +433,14 @@ export async function POST(request: Request): Promise<Response> {
     // バリデーション
     const validation = validateContactForm(formData);
     if (!validation.isValid) {
-      return Response.json(
-        { success: false, errors: validation.errors },
-        { status: 400 }
-      );
+      return Response.json({ success: false, errors: validation.errors }, { status: 400 });
     }
 
     // reCAPTCHA検証
     const recaptchaValid = await verifyRecaptcha(formData.recaptchaToken);
     if (!recaptchaValid) {
       return Response.json(
-        { success: false, error: "reCAPTCHA verification failed" },
+        { success: false, error: 'reCAPTCHA verification failed' },
         { status: 400 }
       );
     }
@@ -465,10 +450,7 @@ export async function POST(request: Request): Promise<Response> {
 
     return Response.json({ success: true });
   } catch (error) {
-    return Response.json(
-      { success: false, error: "Failed to send contact form" },
-      { status: 500 }
-    );
+    return Response.json({ success: false, error: 'Failed to send contact form' }, { status: 500 });
   }
 }
 
@@ -476,9 +458,9 @@ export async function POST(request: Request): Promise<Response> {
 export async function POST(request: Request): Promise<Response> {
   try {
     // 開発環境チェック
-    if (process.env.NODE_ENV !== "development") {
+    if (process.env.NODE_ENV !== 'development') {
       return Response.json(
-        { success: false, error: "Admin access denied in production" },
+        { success: false, error: 'Admin access denied in production' },
         { status: 403 }
       );
     }
@@ -486,28 +468,22 @@ export async function POST(request: Request): Promise<Response> {
     const { action, data } = await request.json();
 
     switch (action) {
-      case "create":
+      case 'create':
         await createContent(data);
         break;
-      case "update":
+      case 'update':
         await updateContent(data);
         break;
-      case "delete":
+      case 'delete':
         await deleteContent(data.id);
         break;
       default:
-        return Response.json(
-          { success: false, error: "Invalid action" },
-          { status: 400 }
-        );
+        return Response.json({ success: false, error: 'Invalid action' }, { status: 400 });
     }
 
     return Response.json({ success: true });
   } catch (error) {
-    return Response.json(
-      { success: false, error: "Admin operation failed" },
-      { status: 500 }
-    );
+    return Response.json({ success: false, error: 'Admin operation failed' }, { status: 500 });
   }
 }
 
@@ -515,31 +491,25 @@ export async function POST(request: Request): Promise<Response> {
 export async function POST(request: Request): Promise<Response> {
   try {
     // 開発環境チェック
-    if (process.env.NODE_ENV !== "development") {
+    if (process.env.NODE_ENV !== 'development') {
       return Response.json(
-        { success: false, error: "Admin access denied in production" },
+        { success: false, error: 'Admin access denied in production' },
         { status: 403 }
       );
     }
 
     const formData = await request.formData();
-    const file = formData.get("file") as File;
-    const type = formData.get("type") as string;
+    const file = formData.get('file') as File;
+    const type = formData.get('type') as string;
 
     if (!file) {
-      return Response.json(
-        { success: false, error: "No file provided" },
-        { status: 400 }
-      );
+      return Response.json({ success: false, error: 'No file provided' }, { status: 400 });
     }
 
     // ファイル検証
     const validation = validateUploadedFile(file, type);
     if (!validation.isValid) {
-      return Response.json(
-        { success: false, error: validation.error },
-        { status: 400 }
-      );
+      return Response.json({ success: false, error: validation.error }, { status: 400 });
     }
 
     // ファイル保存
@@ -550,10 +520,7 @@ export async function POST(request: Request): Promise<Response> {
       data: { filePath, fileName: file.name },
     });
   } catch (error) {
-    return Response.json(
-      { success: false, error: "File upload failed" },
-      { status: 500 }
-    );
+    return Response.json({ success: false, error: 'File upload failed' }, { status: 500 });
   }
 }
 ```
@@ -601,17 +568,15 @@ export const searchContent = async (
     // フィルタリング
     let filteredIndex = searchIndex;
     if (type) {
-      filteredIndex = filteredIndex.filter((item) => item.type === type);
+      filteredIndex = filteredIndex.filter(item => item.type === type);
     }
     if (category) {
-      filteredIndex = filteredIndex.filter(
-        (item) => item.category === category
-      );
+      filteredIndex = filteredIndex.filter(item => item.category === category);
     }
 
     // Fuse.jsを使用したファジー検索
     const fuse = new Fuse(filteredIndex, {
-      keys: ["title", "description", "tags"],
+      keys: ['title', 'description', 'tags'],
       threshold: 0.3,
       includeScore: true,
       includeMatches: true,
@@ -620,21 +585,19 @@ export const searchContent = async (
     const results = fuse.search(query);
 
     // 結果の整形
-    const searchResults: SearchResult[] = results
-      .slice(0, limit)
-      .map((result) => ({
-        id: result.item.id,
-        type: result.item.type,
-        title: result.item.title,
-        description: result.item.description,
-        url: generateContentUrl(result.item),
-        score: result.score || 0,
-        highlights: result.matches?.map((match) => match.value) || [],
-      }));
+    const searchResults: SearchResult[] = results.slice(0, limit).map(result => ({
+      id: result.item.id,
+      type: result.item.type,
+      title: result.item.title,
+      description: result.item.description,
+      url: generateContentUrl(result.item),
+      score: result.score || 0,
+      highlights: result.matches?.map(match => match.value) || [],
+    }));
 
     return searchResults;
   } catch (error) {
-    console.error("Search failed:", error);
+    console.error('Search failed:', error);
     return [];
   }
 };
@@ -651,7 +614,7 @@ export interface StatData {
   lastUpdated: string;
 }
 
-export const updateStats = async (type: "download" | "view", id: string) => {
+export const updateStats = async (type: 'download' | 'view', id: string) => {
   try {
     const statsPath = `public/data/stats/${type}-stats.json`;
     const stats = await loadStats(statsPath);
@@ -672,7 +635,7 @@ export const updateStats = async (type: "download" | "view", id: string) => {
   }
 };
 
-export const getStats = async (type: "download" | "view", id?: string) => {
+export const getStats = async (type: 'download' | 'view', id?: string) => {
   try {
     const statsPath = `public/data/stats/${type}-stats.json`;
     const stats = await loadStats(statsPath);
@@ -697,18 +660,14 @@ export const getStats = async (type: "download" | "view", id?: string) => {
 
 ```typescript
 // lib/utils/performance.ts
-import { lazy } from "react";
+import { lazy } from 'react';
 
 // 動的インポート (Chunk Split)
 export const LazyComponents = {
-  ColorPalette: lazy(() => import("@/components/tools/ColorPalette")),
-  ThreeJSPlayground: lazy(
-    () => import("@/components/playground/ThreeJSPlayground")
-  ),
-  ProtoType: lazy(() => import("@/components/tools/ProtoType")),
-  SequentialPngPreview: lazy(
-    () => import("@/components/tools/SequentialPngPreview")
-  ),
+  ColorPalette: lazy(() => import('@/components/tools/ColorPalette')),
+  ThreeJSPlayground: lazy(() => import('@/components/playground/ThreeJSPlayground')),
+  ProtoType: lazy(() => import('@/components/tools/ProtoType')),
+  SequentialPngPreview: lazy(() => import('@/components/tools/SequentialPngPreview')),
 };
 
 // 画像最適化 Wrapper
@@ -718,12 +677,12 @@ export const optimizeImage = (
     width,
     height,
     quality = 85,
-    format = "webp",
+    format = 'webp',
   }: {
     width?: number;
     height?: number;
     quality?: number;
-    format?: "webp" | "png" | "jpg";
+    format?: 'webp' | 'png' | 'jpg';
   } = {}
 ) => ({
   src,
@@ -731,7 +690,7 @@ export const optimizeImage = (
   height,
   quality,
   format,
-  placeholder: "blur" as const,
+  placeholder: 'blur' as const,
   blurDataURL: generateBlurDataURL(),
 });
 
@@ -790,8 +749,8 @@ export const cacheManager = {
   clearCache: (pattern?: string) => {
     if (pattern) {
       Object.keys(localStorage)
-        .filter((key) => key.includes(pattern))
-        .forEach((key) => localStorage.removeItem(key));
+        .filter(key => key.includes(pattern))
+        .forEach(key => localStorage.removeItem(key));
     } else {
       localStorage.clear();
     }
@@ -845,7 +804,7 @@ export class ContentError extends Error {
     public details?: any
   ) {
     super(message);
-    this.name = "ContentError";
+    this.name = 'ContentError';
   }
 }
 
@@ -861,15 +820,15 @@ export const errorHandler = {
     }
 
     return {
-      code: "UNKNOWN_ERROR",
-      message: "An unexpected error occurred",
+      code: 'UNKNOWN_ERROR',
+      message: 'An unexpected error occurred',
       details: error.message,
       timestamp: new Date().toISOString(),
     };
   },
 
   logError: (error: AppError) => {
-    console.error("Application Error:", error);
+    console.error('Application Error:', error);
     // 本番環境ではSentry等に送信
   },
 };
@@ -886,7 +845,7 @@ export const validators = {
   },
 
   required: (value: any): boolean => {
-    return value !== null && value !== undefined && value !== "";
+    return value !== null && value !== undefined && value !== '';
   },
 
   minLength: (value: string, min: number): boolean => {

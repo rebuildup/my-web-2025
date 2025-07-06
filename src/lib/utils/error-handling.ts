@@ -2,7 +2,7 @@
 import { AppError, ContentError } from '@/types/content';
 
 export class AppErrorHandler {
-  static handleApiError(error: any): AppError {
+  static handleApiError(error: unknown): AppError {
     if (error instanceof ContentError) {
       return {
         code: error.code,
@@ -46,7 +46,7 @@ export class AppErrorHandler {
     }
   }
 
-  private static sendToErrorService(error: any): void {
+  private static sendToErrorService(error: AppError): void {
     // Placeholder for error service integration
     // Example: Sentry.captureException(error);
     console.log('Would send to error service:', error);
@@ -58,11 +58,10 @@ export class AppErrorHandler {
   }
 
   static createValidationError(field: string, message: string): ContentError {
-    return new ContentError(
-      `Validation failed for ${field}: ${message}`,
-      'VALIDATION_ERROR',
-      { field, message }
-    );
+    return new ContentError(`Validation failed for ${field}: ${message}`, 'VALIDATION_ERROR', {
+      field,
+      message,
+    });
   }
 
   static createFileError(operation: string, filename?: string): ContentError {
@@ -140,8 +139,8 @@ export class ErrorBoundaryHelper {
           {
             type: 'p',
             props: {
-              children: componentName 
-                ? `Error in ${componentName} component` 
+              children: componentName
+                ? `Error in ${componentName} component`
                 : 'An error occurred while rendering this component',
               className: 'error-message',
             },
@@ -156,7 +155,7 @@ export class ErrorBoundaryHelper {
           },
         ],
       },
-    } as any;
+    } as React.ReactElement;
   }
 }
 
@@ -171,11 +170,11 @@ export const withErrorHandling = async <T>(
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
     AppErrorHandler.logError(appError, context);
-    
+
     if (fallbackValue !== undefined) {
       return fallbackValue;
     }
-    
+
     return undefined;
   }
 };
@@ -187,23 +186,23 @@ export const retryOperation = async <T>(
   delay: number = 1000,
   backoff: boolean = true
 ): Promise<T> => {
-  let lastError: Error;
-  
+  let lastError: unknown;
+
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       return await operation();
     } catch (error) {
-      lastError = error as Error;
-      
+      lastError = error;
+
       if (attempt === maxRetries) {
         break;
       }
-      
+
       const waitTime = backoff ? delay * Math.pow(2, attempt) : delay;
       await new Promise(resolve => setTimeout(resolve, waitTime));
     }
   }
-  
+
   throw lastError!;
 };
 
@@ -213,13 +212,13 @@ export interface FormErrorState {
 }
 
 export class FormErrorHandler {
-  static parseAPIErrors(response: any): FormErrorState {
+  static parseAPIErrors(response: Record<string, unknown>): FormErrorState {
     const errors: FormErrorState = {};
-    
+
     if (response.errors) {
       if (Array.isArray(response.errors)) {
         // Handle array of error objects
-        response.errors.forEach((error: any) => {
+        response.errors.forEach((error: { field: string; message: string }) => {
           if (error.field && error.message) {
             if (!errors[error.field]) {
               errors[error.field] = [];
@@ -233,11 +232,11 @@ export class FormErrorHandler {
           errors[field] = Array.isArray(messages) ? messages : [messages as string];
         });
       }
-    } else if (response.message) {
+    } else if (typeof response.message === 'string') {
       // Handle general error message
       errors.general = [response.message];
     }
-    
+
     return errors;
   }
 
@@ -267,7 +266,7 @@ export class FormErrorHandler {
 export const setupGlobalErrorHandlers = (): void => {
   if (typeof window === 'undefined') return;
 
-  window.addEventListener('error', (event) => {
+  window.addEventListener('error', event => {
     const appError: AppError = {
       code: 'GLOBAL_ERROR',
       message: event.message,
@@ -283,7 +282,7 @@ export const setupGlobalErrorHandlers = (): void => {
     AppErrorHandler.logError(appError, 'Global Error Handler');
   });
 
-  window.addEventListener('unhandledrejection', (event) => {
+  window.addEventListener('unhandledrejection', event => {
     const appError: AppError = {
       code: 'UNHANDLED_PROMISE_REJECTION',
       message: String(event.reason),
@@ -300,18 +299,15 @@ export const setupGlobalErrorHandlers = (): void => {
 
 // HTTP client error handling
 export const handleFetchError = async (response: Response): Promise<never> => {
-  let errorData: any;
-  
+  let errorData: { message?: string; error?: string };
+
   try {
     errorData = await response.json();
   } catch {
     errorData = { message: 'Failed to parse error response' };
   }
-  
-  throw AppErrorHandler.createNetworkError(
-    response.status,
-    errorData.message || errorData.error
-  );
+
+  throw AppErrorHandler.createNetworkError(response.status, errorData.message || errorData.error);
 };
 
 // Safe JSON parsing
@@ -319,10 +315,7 @@ export const safeJSONParse = <T>(json: string, fallback: T): T => {
   try {
     return JSON.parse(json);
   } catch (error) {
-    AppErrorHandler.logError(
-      AppErrorHandler.handleApiError(error),
-      'JSON Parse Error'
-    );
+    AppErrorHandler.logError(AppErrorHandler.handleApiError(error), 'JSON Parse Error');
     return fallback;
   }
 };

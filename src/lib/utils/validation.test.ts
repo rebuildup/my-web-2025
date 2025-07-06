@@ -83,14 +83,14 @@ describe('validators', () => {
     it('should validate correct file types', () => {
       const pngFile = new File([''], 'test.png', { type: 'image/png' });
       const jpgFile = new File([''], 'test.jpg', { type: 'image/jpeg' });
-      
+
       expect(validators.fileType(pngFile, ['image/png', 'image/jpeg'])).toBe(true);
       expect(validators.fileType(jpgFile, ['image/png', 'image/jpeg'])).toBe(true);
     });
 
     it('should reject incorrect file types', () => {
       const txtFile = new File([''], 'test.txt', { type: 'text/plain' });
-      
+
       expect(validators.fileType(txtFile, ['image/png', 'image/jpeg'])).toBe(false);
     });
   });
@@ -98,7 +98,7 @@ describe('validators', () => {
   describe('fileSize', () => {
     it('should validate correct file sizes', () => {
       const smallFile = new File(['hello'], 'small.txt', { type: 'text/plain' });
-      
+
       expect(validators.fileSize(smallFile, 1024)).toBe(true);
       expect(validators.fileSize(smallFile, 5)).toBe(true);
     });
@@ -106,7 +106,7 @@ describe('validators', () => {
     it('should reject files that are too large', () => {
       const largeContent = 'x'.repeat(1000);
       const largeFile = new File([largeContent], 'large.txt', { type: 'text/plain' });
-      
+
       expect(validators.fileSize(largeFile, 100)).toBe(false);
     });
   });
@@ -181,7 +181,7 @@ describe('validateField', () => {
       {
         type: 'custom',
         message: 'Must contain numbers',
-        validator: (value) => /\d/.test(value),
+        validator: (value: unknown) => /\d/.test(value as string),
       },
     ]);
 

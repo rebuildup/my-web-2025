@@ -10,7 +10,7 @@ test.describe('Homepage', () => {
 
     // Check category cards
     const categories = ['Portfolio', 'Tools', 'Workshop', 'About', 'Contact', 'Admin'];
-    
+
     for (const category of categories) {
       await expect(page.locator(`text=${category}`)).toBeVisible();
     }
@@ -22,10 +22,10 @@ test.describe('Homepage', () => {
     // Test Portfolio link
     await page.click('text=Portfolio');
     await expect(page).toHaveURL('/portfolio');
-    
+
     // Go back to homepage
     await page.goto('/');
-    
+
     // Test Tools link
     await page.click('text=Tools');
     await expect(page).toHaveURL('/tools');
@@ -41,7 +41,7 @@ test.describe('Homepage', () => {
     // Test search functionality
     await searchInput.fill('React');
     await searchInput.press('Enter');
-    
+
     await expect(page).toHaveURL(/\/search\?q=React/);
   });
 
@@ -50,7 +50,7 @@ test.describe('Homepage', () => {
 
     // Check recent updates section
     await expect(page.locator('text=最新の更新')).toBeVisible();
-    
+
     // Check for update items
     await expect(page.locator('text=React Portfolio Website')).toBeVisible();
     await expect(page.locator('text=Color Palette Generator')).toBeVisible();
@@ -92,7 +92,7 @@ test.describe('Homepage', () => {
 
     // Check that the main title is still visible and readable
     await expect(page.locator('h1')).toBeVisible();
-    
+
     // Check that search input is still functional
     const searchInput = page.locator('input[type="text"]');
     await expect(searchInput).toBeVisible();
@@ -124,9 +124,9 @@ test.describe('Homepage', () => {
 
   test('should load within performance thresholds', async ({ page }) => {
     const startTime = Date.now();
-    
+
     await page.goto('/');
-    
+
     // Check that page loads within 3 seconds
     const loadTime = Date.now() - startTime;
     expect(loadTime).toBeLessThan(3000);
@@ -141,7 +141,7 @@ test.describe('Homepage', () => {
 
     // Test tab navigation
     await page.keyboard.press('Tab');
-    
+
     // Should focus on first interactive element
     const firstLink = page.locator('a').first();
     await expect(firstLink).toBeFocused();
@@ -149,10 +149,10 @@ test.describe('Homepage', () => {
     // Continue tabbing through interactive elements
     await page.keyboard.press('Tab');
     await page.keyboard.press('Tab');
-    
+
     // Should be able to activate links with Enter
     await page.keyboard.press('Enter');
-    
+
     // Should navigate to the linked page
     await expect(page).not.toHaveURL('/');
   });

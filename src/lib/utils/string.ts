@@ -12,9 +12,7 @@ export const capitalizeFirst = (text: string): string => {
 };
 
 export const capitalizeWords = (text: string): string => {
-  return text.replace(/\w\S*/g, (txt) => 
-    txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-  );
+  return text.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 };
 
 export const slugify = (text: string): string => {
@@ -46,16 +44,19 @@ export const extractTextFromMarkdown = (markdown: string): string => {
 export const generateExcerpt = (content: string, maxWords: number = 50): string => {
   const cleanText = extractTextFromMarkdown(content);
   const words = cleanText.split(/\s+/);
-  
+
   if (words.length <= maxWords) {
     return cleanText;
   }
-  
+
   return words.slice(0, maxWords).join(' ') + '...';
 };
 
 export const countWords = (text: string): number => {
-  return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+  return text
+    .trim()
+    .split(/\s+/)
+    .filter(word => word.length > 0).length;
 };
 
 export const countCharacters = (text: string, includeSpaces: boolean = true): number => {
@@ -71,30 +72,34 @@ export const sanitizeFilename = (filename: string): string => {
 
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
-  
+
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
+
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
-export const generateRandomString = (length: number = 8, includeNumbers: boolean = true, includeSymbols: boolean = false): string => {
+export const generateRandomString = (
+  length: number = 8,
+  includeNumbers: boolean = true,
+  includeSymbols: boolean = false
+): string => {
   let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  
+
   if (includeNumbers) {
     chars += '0123456789';
   }
-  
+
   if (includeSymbols) {
     chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
   }
-  
+
   let result = '';
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  
+
   return result;
 };
 
@@ -115,41 +120,43 @@ export const parseMentions = (text: string): string[] => {
 
 export const highlightSearchTerms = (text: string, searchTerms: string[]): string => {
   let highlightedText = text;
-  
+
   searchTerms.forEach(term => {
     const regex = new RegExp(`(${term})`, 'gi');
     highlightedText = highlightedText.replace(regex, '<mark>$1</mark>');
   });
-  
+
   return highlightedText;
 };
 
 export const fuzzySearch = (needle: string, haystack: string): boolean => {
   const needleLower = needle.toLowerCase();
   const haystackLower = haystack.toLowerCase();
-  
+
   let needleIndex = 0;
-  
+
   for (let i = 0; i < haystackLower.length && needleIndex < needleLower.length; i++) {
     if (haystackLower[i] === needleLower[needleIndex]) {
       needleIndex++;
     }
   }
-  
+
   return needleIndex === needleLower.length;
 };
 
 export const levenshteinDistance = (str1: string, str2: string): number => {
-  const matrix = Array(str2.length + 1).fill(null).map(() => Array(str1.length + 1).fill(null));
-  
+  const matrix = Array(str2.length + 1)
+    .fill(null)
+    .map(() => Array(str1.length + 1).fill(null));
+
   for (let i = 0; i <= str1.length; i++) {
     matrix[0][i] = i;
   }
-  
+
   for (let j = 0; j <= str2.length; j++) {
     matrix[j][0] = j;
   }
-  
+
   for (let j = 1; j <= str2.length; j++) {
     for (let i = 1; i <= str1.length; i++) {
       const indicator = str1[i - 1] === str2[j - 1] ? 0 : 1;
@@ -160,16 +167,16 @@ export const levenshteinDistance = (str1: string, str2: string): number => {
       );
     }
   }
-  
+
   return matrix[str2.length][str1.length];
 };
 
 export const similarity = (str1: string, str2: string): number => {
   const longer = str1.length > str2.length ? str1 : str2;
   const shorter = str1.length > str2.length ? str2 : str1;
-  
+
   if (longer.length === 0) return 1.0;
-  
+
   const distance = levenshteinDistance(longer, shorter);
   return (longer.length - distance) / longer.length;
 };
@@ -180,4 +187,16 @@ export const formatPrice = (price: number, currency: string = '¥'): string => {
 
 export const parsePrice = (priceStr: string): number => {
   return parseInt(priceStr.replace(/[^0-9]/g, ''), 10) || 0;
+};
+
+export const camelCase = (text: string): string => {
+  const words = text.split(/\s+/).filter(word => word.length > 0);
+  if (words.length === 0) return '';
+  return words
+    .map((word, index) => {
+      const lower = word.toLowerCase();
+      if (index === 0) return lower;
+      return lower.charAt(0).toUpperCase() + lower.slice(1).toLowerCase();
+    })
+    .join('');
 };

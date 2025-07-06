@@ -31,7 +31,7 @@ const ThreeJSPlayground: React.FC = () => {
       // Draw cube
       const size = 80;
       ctx.strokeRect(-size / 2, -size / 2, size, size);
-      
+
       // Draw diagonals
       ctx.beginPath();
       ctx.moveTo(-size / 2, -size / 2);
@@ -56,27 +56,27 @@ const ThreeJSPlayground: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-gray-800 text-white p-6 rounded-none">
-      <h2 className="text-blue-500 text-xl font-bold mb-4 neue-haas-grotesk-display">
+    <div className="rounded-none bg-gray-800 p-6 text-white">
+      <h2 className="neue-haas-grotesk-display mb-4 text-xl font-bold text-blue-500">
         Three.js Playground
       </h2>
-      <div className="bg-gray-700 p-4 rounded-none">
+      <div className="rounded-none bg-gray-700 p-4">
         <canvas
           ref={canvasRef}
           width={600}
           height={400}
-          className="w-full max-w-full h-auto bg-gray-600 rounded-none"
+          className="h-auto w-full max-w-full rounded-none bg-gray-600"
         />
       </div>
-      <div className="mt-4 p-4 bg-gray-700 rounded-none">
-        <p className="text-gray-300 text-sm mb-2">
+      <div className="mt-4 rounded-none bg-gray-700 p-4">
+        <p className="mb-2 text-sm text-gray-300">
           Interactive 3D graphics and animations powered by Three.js
         </p>
         <div className="flex gap-2">
-          <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-none text-sm transition-colors">
+          <button className="rounded-none bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-600">
             Reset Scene
           </button>
-          <button className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-none text-sm transition-colors">
+          <button className="rounded-none bg-gray-600 px-4 py-2 text-sm text-white transition-colors hover:bg-gray-700">
             Toggle Animation
           </button>
         </div>

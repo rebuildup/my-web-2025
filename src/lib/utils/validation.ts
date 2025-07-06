@@ -1,12 +1,19 @@
 // Validation utilities for forms and data
 export const validators = {
   email: (value: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(value);
+    // RFC5322に近い厳密なメールアドレスバリデーション
+    const emailRegex =
+      /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
+    // 連続したドットをチェック
+    if (emailRegex.test(value)) {
+      // 全体で連続したドットがないかチェック
+      return !value.includes('..');
+    }
+    return false;
   },
 
-  required: (value: any): boolean => {
-    return value !== null && value !== undefined && value !== "";
+  required: (value: unknown): boolean => {
+    return value !== null && value !== undefined && value !== '';
   },
 
   minLength: (value: string, min: number): boolean => {
@@ -39,8 +46,14 @@ export const validators = {
   },
 
   phoneNumber: (value: string): boolean => {
-    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-    return phoneRegex.test(value.replace(/[\s\-\(\)]/g, ''));
+    // 国際番号、数字のみ、日本の携帯番号（ハイフン・スペース含む）を許容
+    const cleaned = value.replace(/[-\s\(\)]/g, '');
+    const international = /^\+?\d{10,15}$/;
+    const japaneseMobile = /^(070|080|090)\d{8}$/;
+    const japaneseLandline = /^0\d{1,4}\d{1,4}\d{4}$/;
+    return (
+      international.test(cleaned) || japaneseMobile.test(cleaned) || japaneseLandline.test(cleaned)
+    );
   },
 
   japaneseText: (value: string): boolean => {
@@ -55,12 +68,12 @@ export interface ValidationResult {
 }
 
 export const validateField = (
-  value: any,
+  value: unknown,
   rules: Array<{
     type: keyof typeof validators | 'custom';
-    value?: any;
+    value?: unknown;
     message: string;
-    validator?: (value: any) => boolean;
+    validator?: (value: unknown) => boolean;
   }>
 ): ValidationResult => {
   const errors: string[] = [];
@@ -73,31 +86,31 @@ export const validateField = (
         isValid = validators.required(value);
         break;
       case 'email':
-        isValid = validators.email(value);
+        isValid = validators.email(value as string);
         break;
       case 'minLength':
-        isValid = validators.minLength(value, rule.value);
+        isValid = validators.minLength(value as string, rule.value as number);
         break;
       case 'maxLength':
-        isValid = validators.maxLength(value, rule.value);
+        isValid = validators.maxLength(value as string, rule.value as number);
         break;
       case 'url':
-        isValid = validators.url(value);
+        isValid = validators.url(value as string);
         break;
       case 'fileType':
-        isValid = validators.fileType(value, rule.value);
+        isValid = validators.fileType(value as File, rule.value as string[]);
         break;
       case 'fileSize':
-        isValid = validators.fileSize(value, rule.value);
+        isValid = validators.fileSize(value as File, rule.value as number);
         break;
       case 'pattern':
-        isValid = validators.pattern(value, rule.value);
+        isValid = validators.pattern(value as string, rule.value as RegExp);
         break;
       case 'phoneNumber':
-        isValid = validators.phoneNumber(value);
+        isValid = validators.phoneNumber(value as string);
         break;
       case 'japaneseText':
-        isValid = validators.japaneseText(value);
+        isValid = validators.japaneseText(value as string);
         break;
       case 'custom':
         if (rule.validator) {
@@ -120,13 +133,16 @@ export const validateField = (
 };
 
 export const validateForm = (
-  data: Record<string, any>,
-  schema: Record<string, Array<{
-    type: keyof typeof validators | 'custom';
-    value?: any;
-    message: string;
-    validator?: (value: any) => boolean;
-  }>>
+  data: Record<string, unknown>,
+  schema: Record<
+    string,
+    Array<{
+      type: keyof typeof validators | 'custom';
+      value?: unknown;
+      message: string;
+      validator?: (value: unknown) => boolean;
+    }>
+  >
 ): { isValid: boolean; errors: Record<string, string[]> } => {
   const errors: Record<string, string[]> = {};
   let isValid = true;
@@ -165,6 +181,6 @@ export const contactFormSchema = {
   ],
 };
 
-export const validateContactForm = (data: Record<string, any>) => {
+export const validateContactForm = (data: Record<string, unknown>) => {
   return validateForm(data, contactFormSchema);
 };

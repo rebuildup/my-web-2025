@@ -88,16 +88,8 @@
   "description": "グラフィックデザイン、映像制作、個人開発など幅広く活動",
   "url": "https://yusuke-kim.com/about/card/real",
   "email": "361do.sleep@gmail.com",
-  "sameAs": [
-    "https://twitter.com/361do_sleep",
-    "https://twitter.com/361do_design"
-  ],
-  "knowsAbout": [
-    "Web Design",
-    "Frontend Development",
-    "Video Production",
-    "Graphic Design"
-  ]
+  "sameAs": ["https://twitter.com/361do_sleep", "https://twitter.com/361do_design"],
+  "knowsAbout": ["Web Design", "Frontend Development", "Video Production", "Graphic Design"]
 }
 ```
 

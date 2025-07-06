@@ -147,21 +147,18 @@ export default async function handler(req, res) {
   // ユーザー認証チェック
   const session = await getSession(req);
   if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
   // Dify APIへのプロキシ
-  const response = await fetch(
-    `${process.env.DIFY_API_URL}${req.query.endpoint}`,
-    {
-      method: req.method,
-      headers: {
-        Authorization: `Bearer ${process.env.DIFY_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: req.method !== "GET" ? JSON.stringify(req.body) : undefined,
-    }
-  );
+  const response = await fetch(`${process.env.DIFY_API_URL}${req.query.endpoint}`, {
+    method: req.method,
+    headers: {
+      Authorization: `Bearer ${process.env.DIFY_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: req.method !== 'GET' ? JSON.stringify(req.body) : undefined,
+  });
 
   const data = await response.json();
   res.status(response.status).json(data);

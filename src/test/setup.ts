@@ -2,7 +2,7 @@
 import '@testing-library/jest-dom';
 
 // Mock Next.js router
-import { vi } from 'vitest';
+import { vi, beforeAll, afterAll, afterEach } from 'vitest';
 
 vi.mock('next/router', () => ({
   useRouter: () => ({
@@ -72,8 +72,13 @@ const localStorageMock = {
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
+  length: 0,
+  key: vi.fn(),
 };
-global.localStorage = localStorageMock;
+Object.defineProperty(global, 'localStorage', {
+  value: localStorageMock,
+  writable: true,
+});
 
 // Mock sessionStorage
 const sessionStorageMock = {
@@ -81,8 +86,13 @@ const sessionStorageMock = {
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
+  length: 0,
+  key: vi.fn(),
 };
-global.sessionStorage = sessionStorageMock;
+Object.defineProperty(global, 'sessionStorage', {
+  value: sessionStorageMock,
+  writable: true,
+});
 
 // Mock fetch
 global.fetch = vi.fn();
@@ -90,7 +100,7 @@ global.fetch = vi.fn();
 // Setup console warnings suppression for tests
 const originalConsoleError = console.error;
 beforeAll(() => {
-  console.error = (...args: any[]) => {
+  console.error = (...args: unknown[]) => {
     if (
       typeof args[0] === 'string' &&
       (args[0].includes('Warning: ReactDOM.render is no longer supported') ||
@@ -112,3 +122,21 @@ afterEach(() => {
   localStorageMock.clear();
   sessionStorageMock.clear();
 });
+
+import { createCanvas } from 'canvas';
+
+// Patch HTMLCanvasElement for jsdom (for tests that use canvas)
+if (typeof window !== 'undefined' && window.HTMLCanvasElement) {
+  // @ts-expect-error: Patching HTMLCanvasElement for jsdom environment
+  window.HTMLCanvasElement.prototype.getContext = function (contextType: string) {
+    const canvas = createCanvas(this.width, this.height);
+    if (contextType === '2d') {
+      return canvas.getContext('2d');
+    }
+    return null;
+  };
+  window.HTMLCanvasElement.prototype.toDataURL = function toDataURL() {
+    const canvas = createCanvas(this.width, this.height);
+    return canvas.toDataURL();
+  };
+}

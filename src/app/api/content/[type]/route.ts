@@ -7,17 +7,17 @@ import path from 'path';
 
 const VALID_CONTENT_TYPES: ContentType[] = [
   'portfolio',
-  'blog', 
+  'blog',
   'plugin',
   'tool',
   'profile',
   'page',
   'asset',
-  'download'
+  'download',
 ];
 
 async function getContentByType(
-  type: string, 
+  type: string,
   options: {
     category?: string;
     limit?: number;
@@ -45,7 +45,7 @@ async function getContentByType(
     items.sort((a, b) => {
       const priorityDiff = (b.priority || 0) - (a.priority || 0);
       if (priorityDiff !== 0) return priorityDiff;
-      
+
       const dateA = new Date(a.publishedAt || a.createdAt);
       const dateB = new Date(b.publishedAt || b.createdAt);
       return dateB.getTime() - dateA.getTime();
@@ -54,7 +54,7 @@ async function getContentByType(
     // Apply pagination
     const offset = options.offset || 0;
     const limit = options.limit || items.length;
-    
+
     return items.slice(offset, offset + limit);
   } catch (error) {
     console.error(`Failed to load ${type} content:`, error);
@@ -72,10 +72,10 @@ export async function GET(
     // Validate content type
     if (!VALID_CONTENT_TYPES.includes(type as ContentType)) {
       return Response.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: `Invalid content type: ${type}`,
-          validTypes: VALID_CONTENT_TYPES
+          validTypes: VALID_CONTENT_TYPES,
         },
         { status: 400 }
       );
@@ -130,16 +130,15 @@ export async function GET(
         status,
       },
     });
-
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
     AppErrorHandler.logError(appError, 'Content API');
-    
+
     return Response.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to fetch content',
-        code: appError.code
+        code: appError.code,
       },
       { status: 500 }
     );
@@ -198,11 +197,11 @@ export async function POST(
     // Load existing content
     const contentPath = path.join(process.cwd(), 'public', 'data', 'content', `${type}.json`);
     let existingItems: ContentItem[] = [];
-    
+
     try {
       const fileContent = await fs.readFile(contentPath, 'utf-8');
       existingItems = JSON.parse(fileContent);
-    } catch (error) {
+    } catch {
       // File doesn't exist, start with empty array
     }
 
@@ -225,16 +224,15 @@ export async function POST(
       data: newItem,
       message: 'Content created successfully',
     });
-
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
     AppErrorHandler.logError(appError, 'Content Creation API');
-    
+
     return Response.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to create content',
-        code: appError.code
+        code: appError.code,
       },
       { status: 500 }
     );

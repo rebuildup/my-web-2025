@@ -20,55 +20,55 @@
 
 ```typescript
 // __tests__/lib/utils/validation.test.ts
-import { validators } from "@/lib/utils/validation";
+import { validators } from '@/lib/utils/validation';
 
-describe("validators", () => {
-  describe("email", () => {
-    it("should validate correct email addresses", () => {
-      expect(validators.email("test@example.com")).toBe(true);
-      expect(validators.email("user.name@domain.co.jp")).toBe(true);
+describe('validators', () => {
+  describe('email', () => {
+    it('should validate correct email addresses', () => {
+      expect(validators.email('test@example.com')).toBe(true);
+      expect(validators.email('user.name@domain.co.jp')).toBe(true);
     });
 
-    it("should reject invalid email addresses", () => {
-      expect(validators.email("invalid-email")).toBe(false);
-      expect(validators.email("test@")).toBe(false);
-      expect(validators.email("@example.com")).toBe(false);
+    it('should reject invalid email addresses', () => {
+      expect(validators.email('invalid-email')).toBe(false);
+      expect(validators.email('test@')).toBe(false);
+      expect(validators.email('@example.com')).toBe(false);
     });
   });
 
-  describe("required", () => {
-    it("should validate required fields", () => {
-      expect(validators.required("test")).toBe(true);
+  describe('required', () => {
+    it('should validate required fields', () => {
+      expect(validators.required('test')).toBe(true);
       expect(validators.required(0)).toBe(true);
       expect(validators.required(false)).toBe(true);
     });
 
-    it("should reject empty values", () => {
-      expect(validators.required("")).toBe(false);
+    it('should reject empty values', () => {
+      expect(validators.required('')).toBe(false);
       expect(validators.required(null)).toBe(false);
       expect(validators.required(undefined)).toBe(false);
     });
   });
 
-  describe("minLength", () => {
-    it("should validate minimum length", () => {
-      expect(validators.minLength("test", 3)).toBe(true);
-      expect(validators.minLength("test", 4)).toBe(true);
+  describe('minLength', () => {
+    it('should validate minimum length', () => {
+      expect(validators.minLength('test', 3)).toBe(true);
+      expect(validators.minLength('test', 4)).toBe(true);
     });
 
-    it("should reject strings shorter than minimum", () => {
-      expect(validators.minLength("te", 3)).toBe(false);
+    it('should reject strings shorter than minimum', () => {
+      expect(validators.minLength('te', 3)).toBe(false);
     });
   });
 
-  describe("maxLength", () => {
-    it("should validate maximum length", () => {
-      expect(validators.maxLength("test", 5)).toBe(true);
-      expect(validators.maxLength("test", 4)).toBe(true);
+  describe('maxLength', () => {
+    it('should validate maximum length', () => {
+      expect(validators.maxLength('test', 5)).toBe(true);
+      expect(validators.maxLength('test', 4)).toBe(true);
     });
 
-    it("should reject strings longer than maximum", () => {
-      expect(validators.maxLength("testing", 5)).toBe(false);
+    it('should reject strings longer than maximum', () => {
+      expect(validators.maxLength('testing', 5)).toBe(false);
     });
   });
 });
@@ -78,86 +78,86 @@ describe("validators", () => {
 
 ```typescript
 // __tests__/lib/search/index.test.ts
-import { searchContent, SearchResult } from "@/lib/search";
+import { searchContent, SearchResult } from '@/lib/search';
 
 // Mock data
 const mockSearchIndex = [
   {
-    id: "1",
-    type: "portfolio",
-    title: "React Portfolio",
-    description: "A React-based portfolio",
-    content: "This is a portfolio built with React",
-    tags: ["react", "typescript"],
-    category: "programming",
+    id: '1',
+    type: 'portfolio',
+    title: 'React Portfolio',
+    description: 'A React-based portfolio',
+    content: 'This is a portfolio built with React',
+    tags: ['react', 'typescript'],
+    category: 'programming',
     searchableContent:
-      "React Portfolio A React-based portfolio This is a portfolio built with React react typescript",
+      'React Portfolio A React-based portfolio This is a portfolio built with React react typescript',
   },
   {
-    id: "2",
-    type: "tool",
-    title: "Color Palette Generator",
-    description: "Generate color palettes",
-    content: "A tool for generating color palettes",
-    tags: ["design", "colors"],
-    category: "tools",
+    id: '2',
+    type: 'tool',
+    title: 'Color Palette Generator',
+    description: 'Generate color palettes',
+    content: 'A tool for generating color palettes',
+    tags: ['design', 'colors'],
+    category: 'tools',
     searchableContent:
-      "Color Palette Generator Generate color palettes A tool for generating color palettes design colors",
+      'Color Palette Generator Generate color palettes A tool for generating color palettes design colors',
   },
 ];
 
 // Mock functions
-jest.mock("@/lib/search", () => ({
+jest.mock('@/lib/search', () => ({
   loadSearchIndex: jest.fn(() => Promise.resolve(mockSearchIndex)),
-  generateContentUrl: jest.fn((item) => `/${item.type}/${item.id}`),
+  generateContentUrl: jest.fn(item => `/${item.type}/${item.id}`),
 }));
 
-describe("searchContent", () => {
+describe('searchContent', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should return search results for valid query", async () => {
-    const results = await searchContent("React");
+  it('should return search results for valid query', async () => {
+    const results = await searchContent('React');
 
     expect(results).toHaveLength(1);
-    expect(results[0].title).toBe("React Portfolio");
+    expect(results[0].title).toBe('React Portfolio');
     expect(results[0].score).toBeLessThan(0.5); // Fuse.js score
   });
 
-  it("should filter by type", async () => {
-    const results = await searchContent("color", { type: "tool" });
+  it('should filter by type', async () => {
+    const results = await searchContent('color', { type: 'tool' });
 
     expect(results).toHaveLength(1);
-    expect(results[0].type).toBe("tool");
+    expect(results[0].type).toBe('tool');
   });
 
-  it("should filter by category", async () => {
-    const results = await searchContent("portfolio", {
-      category: "programming",
+  it('should filter by category', async () => {
+    const results = await searchContent('portfolio', {
+      category: 'programming',
     });
 
     expect(results).toHaveLength(1);
-    expect(results[0].category).toBe("programming");
+    expect(results[0].category).toBe('programming');
   });
 
-  it("should respect limit parameter", async () => {
-    const results = await searchContent("a", { limit: 1 });
+  it('should respect limit parameter', async () => {
+    const results = await searchContent('a', { limit: 1 });
 
     expect(results).toHaveLength(1);
   });
 
-  it("should return empty array for no matches", async () => {
-    const results = await searchContent("nonexistent");
+  it('should return empty array for no matches', async () => {
+    const results = await searchContent('nonexistent');
 
     expect(results).toHaveLength(0);
   });
 
-  it("should handle search errors gracefully", async () => {
+  it('should handle search errors gracefully', async () => {
     // Mock error
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    const results = await searchContent("test");
+    const results = await searchContent('test');
 
     expect(results).toEqual([]);
     expect(console.error).toHaveBeenCalled();
@@ -169,85 +169,85 @@ describe("searchContent", () => {
 
 ```typescript
 // __tests__/lib/stats/index.test.ts
-import { updateStats, getStats } from "@/lib/stats";
+import { updateStats, getStats } from '@/lib/stats';
 
 // Mock file system
-jest.mock("fs/promises", () => ({
+jest.mock('fs/promises', () => ({
   readFile: jest.fn(),
   writeFile: jest.fn(),
 }));
 
-describe("stats", () => {
+describe('stats', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe("updateStats", () => {
-    it("should update download stats", async () => {
-      const mockReadFile = require("fs/promises").readFile;
-      const mockWriteFile = require("fs/promises").writeFile;
+  describe('updateStats', () => {
+    it('should update download stats', async () => {
+      const mockReadFile = require('fs/promises').readFile;
+      const mockWriteFile = require('fs/promises').writeFile;
 
-      mockReadFile.mockResolvedValue(JSON.stringify({ "test-id": 5 }));
+      mockReadFile.mockResolvedValue(JSON.stringify({ 'test-id': 5 }));
 
-      const result = await updateStats("download", "test-id");
+      const result = await updateStats('download', 'test-id');
 
       expect(result).toBe(true);
       expect(mockWriteFile).toHaveBeenCalledWith(
-        "public/data/stats/download-stats.json",
-        JSON.stringify({ "test-id": 6 })
+        'public/data/stats/download-stats.json',
+        JSON.stringify({ 'test-id': 6 })
       );
     });
 
-    it("should handle new entries", async () => {
-      const mockReadFile = require("fs/promises").readFile;
-      const mockWriteFile = require("fs/promises").writeFile;
+    it('should handle new entries', async () => {
+      const mockReadFile = require('fs/promises').readFile;
+      const mockWriteFile = require('fs/promises').writeFile;
 
       mockReadFile.mockResolvedValue(JSON.stringify({}));
 
-      const result = await updateStats("view", "new-id");
+      const result = await updateStats('view', 'new-id');
 
       expect(result).toBe(true);
       expect(mockWriteFile).toHaveBeenCalledWith(
-        "public/data/stats/view-stats.json",
-        JSON.stringify({ "new-id": 1 })
+        'public/data/stats/view-stats.json',
+        JSON.stringify({ 'new-id': 1 })
       );
     });
 
-    it("should handle errors gracefully", async () => {
-      const mockReadFile = require("fs/promises").readFile;
-      mockReadFile.mockRejectedValue(new Error("File not found"));
+    it('should handle errors gracefully', async () => {
+      const mockReadFile = require('fs/promises').readFile;
+      mockReadFile.mockRejectedValue(new Error('File not found'));
 
-      const result = await updateStats("download", "test-id");
+      const result = await updateStats('download', 'test-id');
 
       expect(result).toBe(false);
     });
   });
 
-  describe("getStats", () => {
-    it("should return stats for specific ID", async () => {
-      const mockReadFile = require("fs/promises").readFile;
-      mockReadFile.mockResolvedValue(JSON.stringify({ "test-id": 10 }));
+  describe('getStats', () => {
+    it('should return stats for specific ID', async () => {
+      const mockReadFile = require('fs/promises').readFile;
+      mockReadFile.mockResolvedValue(JSON.stringify({ 'test-id': 10 }));
 
-      const result = await getStats("view", "test-id");
+      const result = await getStats('view', 'test-id');
 
       expect(result).toBe(10);
     });
 
-    it("should return all stats when no ID provided", async () => {
-      const mockReadFile = require("fs/promises").readFile;
+    it('should return all stats when no ID provided', async () => {
+      const mockReadFile = require('fs/promises').readFile;
       const mockStats = { id1: 5, id2: 10 };
       mockReadFile.mockResolvedValue(JSON.stringify(mockStats));
 
-      const result = await getStats("download");
+      const result = await getStats('download');
 
       expect(result).toEqual(mockStats);
     });
 
-    it("should return 0 for non-existent ID", async () => {
-      const mockReadFile = require("fs/promises").readFile;
+    it('should return 0 for non-existent ID', async () => {
+      const mockReadFile = require('fs/promises').readFile;
       mockReadFile.mockResolvedValue(JSON.stringify({}));
 
-      const result = await getStats("view", "non-existent");
+      const result = await getStats('view', 'non-existent');
 
       expect(result).toBe(0);
     });
@@ -261,11 +261,11 @@ describe("stats", () => {
 
 ```typescript
 // tests/api/content.test.ts
-import { test, expect } from "@playwright/test";
+import { test, expect } from '@playwright/test';
 
-test.describe("Content API", () => {
-  test("should return portfolio content", async ({ request }) => {
-    const response = await request.get("/api/content/portfolio");
+test.describe('Content API', () => {
+  test('should return portfolio content', async ({ request }) => {
+    const response = await request.get('/api/content/portfolio');
     const data = await response.json();
 
     expect(response.ok()).toBeTruthy();
@@ -273,22 +273,22 @@ test.describe("Content API", () => {
     expect(Array.isArray(data.data)).toBe(true);
   });
 
-  test("should filter content by category", async ({ request }) => {
-    const response = await request.get("/api/content/portfolio?category=video");
+  test('should filter content by category', async ({ request }) => {
+    const response = await request.get('/api/content/portfolio?category=video');
     const data = await response.json();
 
     expect(response.ok()).toBeTruthy();
     expect(data.success).toBe(true);
     data.data.forEach((item: any) => {
-      expect(item.category).toBe("video");
+      expect(item.category).toBe('video');
     });
   });
 
-  test("should handle search requests", async ({ request }) => {
-    const response = await request.post("/api/content/search", {
+  test('should handle search requests', async ({ request }) => {
+    const response = await request.post('/api/content/search', {
       data: {
-        query: "React",
-        type: "portfolio",
+        query: 'React',
+        type: 'portfolio',
         limit: 5,
       },
     });
@@ -299,9 +299,9 @@ test.describe("Content API", () => {
     expect(Array.isArray(data.data)).toBe(true);
   });
 
-  test("should update download stats", async ({ request }) => {
-    const response = await request.post("/api/stats/download", {
-      data: { id: "test-id" },
+  test('should update download stats', async ({ request }) => {
+    const response = await request.post('/api/stats/download', {
+      data: { id: 'test-id' },
     });
     const data = await response.json();
 
@@ -309,9 +309,9 @@ test.describe("Content API", () => {
     expect(data.success).toBe(true);
   });
 
-  test("should update view stats", async ({ request }) => {
-    const response = await request.post("/api/stats/view", {
-      data: { id: "test-id" },
+  test('should update view stats', async ({ request }) => {
+    const response = await request.post('/api/stats/view', {
+      data: { id: 'test-id' },
     });
     const data = await response.json();
 
@@ -325,73 +325,70 @@ test.describe("Content API", () => {
 
 ```typescript
 // tests/forms/contact.test.ts
-import { test, expect } from "@playwright/test";
+import { test, expect } from '@playwright/test';
 
-test.describe("Contact Form", () => {
-  test("should submit valid contact form", async ({ page }) => {
-    await page.goto("/contact");
+test.describe('Contact Form', () => {
+  test('should submit valid contact form', async ({ page }) => {
+    await page.goto('/contact');
 
     // Fill form
-    await page.fill('[name="name"]', "Test User");
-    await page.fill('[name="email"]', "test@example.com");
-    await page.fill('[name="subject"]', "Test Subject");
-    await page.fill(
-      '[name="content"]',
-      "This is a test message with sufficient content."
-    );
+    await page.fill('[name="name"]', 'Test User');
+    await page.fill('[name="email"]', 'test@example.com');
+    await page.fill('[name="subject"]', 'Test Subject');
+    await page.fill('[name="content"]', 'This is a test message with sufficient content.');
 
     // Submit form
     await page.click('button[type="submit"]');
 
     // Check success message
-    await expect(page.locator(".success-message")).toBeVisible();
+    await expect(page.locator('.success-message')).toBeVisible();
   });
 
-  test("should show validation errors for invalid form", async ({ page }) => {
-    await page.goto("/contact");
+  test('should show validation errors for invalid form', async ({ page }) => {
+    await page.goto('/contact');
 
     // Submit empty form
     await page.click('button[type="submit"]');
 
     // Check validation errors
-    await expect(page.locator(".error-message")).toBeVisible();
+    await expect(page.locator('.error-message')).toBeVisible();
     await expect(page.locator('[data-field="name"] .error')).toBeVisible();
     await expect(page.locator('[data-field="email"] .error')).toBeVisible();
   });
 
-  test("should validate email format", async ({ page }) => {
-    await page.goto("/contact");
+  test('should validate email format', async ({ page }) => {
+    await page.goto('/contact');
 
-    await page.fill('[name="name"]', "Test User");
-    await page.fill('[name="email"]', "invalid-email");
-    await page.fill('[name="subject"]', "Test Subject");
-    await page.fill('[name="content"]', "Test content");
+    await page.fill('[name="name"]', 'Test User');
+    await page.fill('[name="email"]', 'invalid-email');
+    await page.fill('[name="subject"]', 'Test Subject');
+    await page.fill('[name="content"]', 'Test content');
 
     await page.click('button[type="submit"]');
 
     await expect(page.locator('[data-field="email"] .error')).toBeVisible();
   });
 
-  test("should handle reCAPTCHA", async ({ page }) => {
-    await page.goto("/contact");
+  test('should handle reCAPTCHA', async ({ page }) => {
+    await page.goto('/contact');
 
     // Fill form
-    await page.fill('[name="name"]', "Test User");
-    await page.fill('[name="email"]', "test@example.com");
-    await page.fill('[name="subject"]', "Test Subject");
-    await page.fill('[name="content"]', "Test content");
+    await page.fill('[name="name"]', 'Test User');
+    await page.fill('[name="email"]', 'test@example.com');
+    await page.fill('[name="subject"]', 'Test Subject');
+    await page.fill('[name="content"]', 'Test content');
 
     // Mock reCAPTCHA
     await page.evaluate(() => {
       window.grecaptcha = {
         ready: (callback: () => void) => callback(),
-        execute: () => Promise.resolve("mock-token"),
+        execute: () => Promise.resolve('mock-token'),
       };
     });
 
     await page.click('button[type="submit"]');
 
-    await expect(page.locator(".success-message")).toBeVisible();
+    await expect(page.locator('.success-message')).toBeVisible();
   });
 });
 ```
@@ -402,11 +399,11 @@ test.describe("Contact Form", () => {
 
 ```typescript
 // tests/e2e/user-flows.test.ts
-import { test, expect } from "@playwright/test";
+import { test, expect } from '@playwright/test';
 
-test.describe("User Flows", () => {
-  test("should navigate through portfolio gallery", async ({ page }) => {
-    await page.goto("/portfolio");
+test.describe('User Flows', () => {
+  test('should navigate through portfolio gallery', async ({ page }) => {
+    await page.goto('/portfolio');
 
     // Check gallery categories
     await expect(page.locator('[data-category="all"]')).toBeVisible();
@@ -418,82 +415,82 @@ test.describe("User Flows", () => {
     await page.click('[data-category="develop"]');
 
     // Check if items are filtered
-    const items = page.locator(".portfolio-item");
+    const items = page.locator('.portfolio-item');
     await expect(items).toHaveCount(await items.count());
 
     // Click on first item
-    await page.click(".portfolio-item:first-child");
+    await page.click('.portfolio-item:first-child');
 
     // Check detail page
-    await expect(page.locator(".portfolio-detail")).toBeVisible();
+    await expect(page.locator('.portfolio-detail')).toBeVisible();
   });
 
-  test("should use color palette tool", async ({ page }) => {
-    await page.goto("/tools/color-palette");
+  test('should use color palette tool', async ({ page }) => {
+    await page.goto('/tools/color-palette');
 
     // Check tool interface
-    await expect(page.locator(".color-palette")).toBeVisible();
-    await expect(page.locator(".color-controls")).toBeVisible();
+    await expect(page.locator('.color-palette')).toBeVisible();
+    await expect(page.locator('.color-controls')).toBeVisible();
 
     // Generate colors
     await page.click('[data-action="generate"]');
 
     // Check if colors are generated
-    const colorSwatches = page.locator(".color-swatch");
+    const colorSwatches = page.locator('.color-swatch');
     await expect(colorSwatches).toHaveCount(5);
 
     // Save palette
     await page.click('[data-action="save"]');
 
     // Check saved palette
-    await expect(page.locator(".saved-palette")).toBeVisible();
+    await expect(page.locator('.saved-palette')).toBeVisible();
   });
 
-  test("should search for content", async ({ page }) => {
-    await page.goto("/search");
+  test('should search for content', async ({ page }) => {
+    await page.goto('/search');
 
     // Enter search query
-    await page.fill('[name="search"]', "React");
+    await page.fill('[name="search"]', 'React');
 
     // Check search results
-    await expect(page.locator(".search-results")).toBeVisible();
+    await expect(page.locator('.search-results')).toBeVisible();
 
     // Filter by type
-    await page.selectOption('[name="type"]', "portfolio");
+    await page.selectOption('[name="type"]', 'portfolio');
 
     // Check filtered results
-    const results = page.locator(".search-result");
+    const results = page.locator('.search-result');
     await expect(results).toHaveCount(await results.count());
   });
 
-  test("should download plugin", async ({ page }) => {
-    await page.goto("/workshop/plugins");
+  test('should download plugin', async ({ page }) => {
+    await page.goto('/workshop/plugins');
 
     // Find a plugin
-    await page.click(".plugin-item:first-child");
+    await page.click('.plugin-item:first-child');
 
     // Check plugin details
-    await expect(page.locator(".plugin-detail")).toBeVisible();
+    await expect(page.locator('.plugin-detail')).toBeVisible();
 
     // Click download
     await page.click('[data-action="download"]');
 
     // Check download confirmation
-    await expect(page.locator(".download-confirmation")).toBeVisible();
+    await expect(page.locator('.download-confirmation')).toBeVisible();
   });
 
-  test("should read blog post", async ({ page }) => {
-    await page.goto("/workshop/blog");
+  test('should read blog post', async ({ page }) => {
+    await page.goto('/workshop/blog');
 
     // Click on blog post
-    await page.click(".blog-item:first-child");
+    await page.click('.blog-item:first-child');
 
     // Check blog content
-    await expect(page.locator(".blog-content")).toBeVisible();
-    await expect(page.locator(".blog-meta")).toBeVisible();
+    await expect(page.locator('.blog-content')).toBeVisible();
+    await expect(page.locator('.blog-meta')).toBeVisible();
 
     // Check markdown rendering
-    await expect(page.locator("h1, h2, h3")).toBeVisible();
+    await expect(page.locator('h1, h2, h3')).toBeVisible();
   });
 });
 ```
@@ -502,43 +499,43 @@ test.describe("User Flows", () => {
 
 ```typescript
 // tests/visual/regression.test.ts
-import { test, expect } from "@playwright/test";
+import { test, expect } from '@playwright/test';
 
-test.describe("Visual Regression", () => {
-  test("should match homepage screenshot", async ({ page }) => {
-    await page.goto("/");
-    await expect(page).toHaveScreenshot("homepage.png");
+test.describe('Visual Regression', () => {
+  test('should match homepage screenshot', async ({ page }) => {
+    await page.goto('/');
+    await expect(page).toHaveScreenshot('homepage.png');
   });
 
-  test("should match portfolio page screenshot", async ({ page }) => {
-    await page.goto("/portfolio");
-    await expect(page).toHaveScreenshot("portfolio.png");
+  test('should match portfolio page screenshot', async ({ page }) => {
+    await page.goto('/portfolio');
+    await expect(page).toHaveScreenshot('portfolio.png');
   });
 
-  test("should match tools page screenshot", async ({ page }) => {
-    await page.goto("/tools");
-    await expect(page).toHaveScreenshot("tools.png");
+  test('should match tools page screenshot', async ({ page }) => {
+    await page.goto('/tools');
+    await expect(page).toHaveScreenshot('tools.png');
   });
 
-  test("should match contact form screenshot", async ({ page }) => {
-    await page.goto("/contact");
-    await expect(page).toHaveScreenshot("contact.png");
+  test('should match contact form screenshot', async ({ page }) => {
+    await page.goto('/contact');
+    await expect(page).toHaveScreenshot('contact.png');
   });
 
-  test("should match responsive design", async ({ page }) => {
-    await page.goto("/");
+  test('should match responsive design', async ({ page }) => {
+    await page.goto('/');
 
     // Desktop
     await page.setViewportSize({ width: 1920, height: 1080 });
-    await expect(page).toHaveScreenshot("homepage-desktop.png");
+    await expect(page).toHaveScreenshot('homepage-desktop.png');
 
     // Tablet
     await page.setViewportSize({ width: 768, height: 1024 });
-    await expect(page).toHaveScreenshot("homepage-tablet.png");
+    await expect(page).toHaveScreenshot('homepage-tablet.png');
 
     // Mobile
     await page.setViewportSize({ width: 375, height: 667 });
-    await expect(page).toHaveScreenshot("homepage-mobile.png");
+    await expect(page).toHaveScreenshot('homepage-mobile.png');
   });
 });
 ```
@@ -547,33 +544,28 @@ test.describe("Visual Regression", () => {
 
 ```typescript
 // tests/performance/lighthouse.test.ts
-import { test, expect } from "@playwright/test";
+import { test, expect } from '@playwright/test';
 
-test.describe("Performance", () => {
-  test("should meet Lighthouse performance standards", async ({ page }) => {
-    const response = await page.goto("/");
+test.describe('Performance', () => {
+  test('should meet Lighthouse performance standards', async ({ page }) => {
+    const response = await page.goto('/');
 
     // Measure Core Web Vitals
     const metrics = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        new PerformanceObserver((list) => {
+      return new Promise(resolve => {
+        new PerformanceObserver(list => {
           const entries = list.getEntries();
           const metrics: any = {};
 
           entries.forEach((entry: any) => {
-            if (entry.name === "LCP") metrics.lcp = entry.startTime;
-            if (entry.name === "FID")
-              metrics.fid = entry.processingStart - entry.startTime;
-            if (entry.name === "CLS") metrics.cls = entry.value;
+            if (entry.name === 'LCP') metrics.lcp = entry.startTime;
+            if (entry.name === 'FID') metrics.fid = entry.processingStart - entry.startTime;
+            if (entry.name === 'CLS') metrics.cls = entry.value;
           });
 
           resolve(metrics);
         }).observe({
-          entryTypes: [
-            "largest-contentful-paint",
-            "first-input",
-            "layout-shift",
-          ],
+          entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'],
         });
       });
     });
@@ -584,11 +576,11 @@ test.describe("Performance", () => {
     expect(metrics.cls).toBeLessThan(0.1);
   });
 
-  test("should load images efficiently", async ({ page }) => {
-    await page.goto("/portfolio");
+  test('should load images efficiently', async ({ page }) => {
+    await page.goto('/portfolio');
 
     // Check image loading
-    const images = page.locator("img");
+    const images = page.locator('img');
     await expect(images).toHaveCount(await images.count());
 
     // Check for lazy loading

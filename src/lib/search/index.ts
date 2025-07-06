@@ -1,5 +1,5 @@
 // Search functionality using Fuse.js
-import Fuse from 'fuse.js';
+import Fuse, { IFuseOptions } from 'fuse.js';
 import { ContentItem, ContentType, SearchIndex, SearchResult } from '@/types/content';
 import { AppErrorHandler } from '@/lib/utils/error-handling';
 
@@ -10,7 +10,7 @@ export const loadSearchIndex = async (): Promise<SearchIndex[]> => {
     if (!response.ok) {
       throw new Error(`Failed to load search index: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data.index || [];
   } catch (error) {
@@ -53,7 +53,7 @@ export const buildSearchIndex = async (): Promise<SearchIndex[]> => {
         const data = await response.json();
         const items: ContentItem[] = Array.isArray(data) ? data : data.items || [];
 
-        items.forEach((item) => {
+        items.forEach(item => {
           if (item.status === 'published') {
             const searchableContent = [
               item.title,
@@ -61,7 +61,9 @@ export const buildSearchIndex = async (): Promise<SearchIndex[]> => {
               item.content || '',
               ...(item.tags || []),
               item.category || '',
-            ].join(' ').toLowerCase();
+            ]
+              .join(' ')
+              .toLowerCase();
 
             searchIndex.push({
               id: item.id,
@@ -98,13 +100,7 @@ export const searchContent = async (
     includeContent?: boolean;
   } = {}
 ): Promise<SearchResult[]> => {
-  const {
-    type,
-    category,
-    limit = 10,
-    threshold = 0.3,
-    includeContent = false,
-  } = options;
+  const { type, category, limit = 10, threshold = 0.3, includeContent = false } = options;
 
   if (!query.trim()) {
     return [];
@@ -119,17 +115,17 @@ export const searchContent = async (
 
     // Filter by type and category
     let filteredIndex = searchIndex;
-    
+
     if (type) {
-      filteredIndex = filteredIndex.filter((item) => item.type === type);
+      filteredIndex = filteredIndex.filter(item => item.type === type);
     }
-    
+
     if (category) {
-      filteredIndex = filteredIndex.filter((item) => item.category === category);
+      filteredIndex = filteredIndex.filter(item => item.category === category);
     }
 
     // Configure Fuse.js search options
-    const fuseOptions: Fuse.IFuseOptions<SearchIndex> = {
+    const fuseOptions: IFuseOptions<SearchIndex> = {
       keys: [
         { name: 'title', weight: 0.4 },
         { name: 'description', weight: 0.3 },
@@ -153,17 +149,16 @@ export const searchContent = async (
     const results = fuse.search(query);
 
     // Transform results
-    const searchResults: SearchResult[] = results
-      .slice(0, limit)
-      .map((result) => ({
-        id: result.item.id,
-        type: result.item.type,
-        title: result.item.title,
-        description: result.item.description,
-        url: generateContentUrl(result.item),
-        score: result.score || 0,
-        highlights: result.matches?.map((match) => match.value || '') || [],
-      }));
+    const searchResults: SearchResult[] = results.slice(0, limit).map(result => ({
+      id: result.item.id,
+      type: result.item.type,
+      title: result.item.title,
+      description: result.item.description,
+      url: generateContentUrl(result.item),
+      score: result.score || 0,
+      highlights: result.matches?.map(match => match.value || '') || [],
+      category: result.item.category,
+    }));
 
     return searchResults;
   } catch (error) {
@@ -174,55 +169,48 @@ export const searchContent = async (
 };
 
 // Advanced search with multiple criteria
-export const advancedSearch = async (
-  criteria: {
-    query?: string;
-    type?: ContentType[];
-    category?: string[];
-    tags?: string[];
-    dateFrom?: string;
-    dateTo?: string;
-    limit?: number;
-  }
-): Promise<SearchResult[]> => {
+export const advancedSearch = async (criteria: {
+  query?: string;
+  type?: ContentType[];
+  category?: string[];
+  tags?: string[];
+  dateFrom?: string;
+  dateTo?: string;
+  limit?: number;
+}): Promise<SearchResult[]> => {
   try {
     const searchIndex = await loadSearchIndex();
     let filteredIndex = searchIndex;
 
     // Filter by multiple types
     if (criteria.type && criteria.type.length > 0) {
-      filteredIndex = filteredIndex.filter((item) =>
-        criteria.type!.includes(item.type)
-      );
+      filteredIndex = filteredIndex.filter(item => criteria.type!.includes(item.type));
     }
 
     // Filter by multiple categories
     if (criteria.category && criteria.category.length > 0) {
-      filteredIndex = filteredIndex.filter((item) =>
-        criteria.category!.includes(item.category)
-      );
+      filteredIndex = filteredIndex.filter(item => criteria.category!.includes(item.category));
     }
 
     // Filter by tags
     if (criteria.tags && criteria.tags.length > 0) {
-      filteredIndex = filteredIndex.filter((item) =>
-        criteria.tags!.some((tag) => item.tags.includes(tag))
+      filteredIndex = filteredIndex.filter(item =>
+        criteria.tags!.some(tag => item.tags.includes(tag))
       );
     }
 
     // If no query, return filtered results
     if (!criteria.query) {
-      return filteredIndex
-        .slice(0, criteria.limit || 10)
-        .map((item) => ({
-          id: item.id,
-          type: item.type,
-          title: item.title,
-          description: item.description,
-          url: generateContentUrl(item),
-          score: 0,
-          highlights: [],
-        }));
+      return filteredIndex.slice(0, criteria.limit || 10).map(item => ({
+        id: item.id,
+        type: item.type,
+        title: item.title,
+        description: item.description,
+        url: generateContentUrl(item),
+        score: 0,
+        highlights: [],
+        category: item.category,
+      }));
     }
 
     // Perform text search on filtered results
@@ -235,17 +223,16 @@ export const advancedSearch = async (
 
     const results = fuse.search(criteria.query);
 
-    return results
-      .slice(0, criteria.limit || 10)
-      .map((result) => ({
-        id: result.item.id,
-        type: result.item.type,
-        title: result.item.title,
-        description: result.item.description,
-        url: generateContentUrl(result.item),
-        score: result.score || 0,
-        highlights: result.matches?.map((match) => match.value || '') || [],
-      }));
+    return results.slice(0, criteria.limit || 10).map(result => ({
+      id: result.item.id,
+      type: result.item.type,
+      title: result.item.title,
+      description: result.item.description,
+      url: generateContentUrl(result.item),
+      score: result.score || 0,
+      highlights: result.matches?.map(match => match.value || '') || [],
+      category: result.item.category,
+    }));
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
     AppErrorHandler.logError(appError, 'Advanced Search');
@@ -254,10 +241,7 @@ export const advancedSearch = async (
 };
 
 // Get search suggestions
-export const getSearchSuggestions = async (
-  query: string,
-  limit: number = 5
-): Promise<string[]> => {
+export const getSearchSuggestions = async (query: string, limit: number = 5): Promise<string[]> => {
   if (!query.trim() || query.length < 2) {
     return [];
   }
@@ -267,16 +251,16 @@ export const getSearchSuggestions = async (
     const suggestions = new Set<string>();
 
     // Extract title words
-    searchIndex.forEach((item) => {
+    searchIndex.forEach(item => {
       const words = item.title.toLowerCase().split(/\s+/);
-      words.forEach((word) => {
+      words.forEach(word => {
         if (word.includes(query.toLowerCase()) && word.length > 2) {
           suggestions.add(word);
         }
       });
 
       // Add tags that match
-      item.tags.forEach((tag) => {
+      item.tags.forEach(tag => {
         if (tag.toLowerCase().includes(query.toLowerCase())) {
           suggestions.add(tag);
         }
@@ -337,11 +321,16 @@ export const clearSearchCache = (): void => {
 };
 
 // Export search cache
-export const exportSearchData = async (): Promise<{ index: SearchIndex[], stats: any }> => {
+export const exportSearchData = async (): Promise<{
+  index: SearchIndex[];
+  stats: Record<string, number>;
+}> => {
   try {
     const [index, statsResponse] = await Promise.all([
       loadSearchIndex(),
-      fetch('/data/stats/search-stats.json').then(r => r.json()).catch(() => ({}))
+      fetch('/data/stats/search-stats.json')
+        .then(r => r.json())
+        .catch(() => ({})),
     ]);
 
     return { index, stats: statsResponse };

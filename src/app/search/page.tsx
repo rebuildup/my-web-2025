@@ -1,11 +1,11 @@
 'use client';
 
-import Link from "next/link";
-import { useState, useEffect, useCallback } from "react";
-import { useSearchParams } from "next/navigation";
-import { Search, Filter, X, ExternalLink } from "lucide-react";
-import { searchContent, advancedSearch } from "@/lib/search";
-import { SearchResult, ContentType } from "@/types/content";
+import Link from 'next/link';
+import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Search, Filter, X, ExternalLink } from 'lucide-react';
+import { searchContent } from '@/lib/search';
+import { SearchResult, ContentType } from '@/types/content';
 
 const contentTypes: { value: ContentType | ''; label: string }[] = [
   { value: '', label: '全て' },
@@ -72,7 +72,7 @@ export default function SearchPage() {
       const newHistory = [query, ...searchHistory.filter(h => h !== query)].slice(0, 10);
       setSearchHistory(newHistory);
       localStorage.setItem('search_history', JSON.stringify(newHistory));
-      
+
       // Track search analytics (would integrate with actual analytics)
       console.log('Search performed:', { query, type: selectedType, category: selectedCategory });
     } catch (error) {
@@ -96,7 +96,7 @@ export default function SearchPage() {
     if (searchParams.get('q')) {
       performSearch();
     }
-  }, []);
+  }, [performSearch, searchParams]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,13 +143,13 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray">
+    <div className="bg-gray min-h-screen">
       {/* Navigation */}
-      <nav className="border-b border-foreground/20 p-4">
-        <div className="max-w-7xl mx-auto">
-          <Link 
-            href="/" 
-            className="neue-haas-grotesk-display text-2xl text-primary hover:text-primary/80"
+      <nav className="border-foreground/20 border-b p-4">
+        <div className="mx-auto max-w-7xl">
+          <Link
+            href="/"
+            className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
           >
             ← Home
           </Link>
@@ -157,39 +157,41 @@ export default function SearchPage() {
       </nav>
 
       {/* Hero Header */}
-      <header className="text-center py-16 px-4">
-        <h1 className="neue-haas-grotesk-display text-6xl md:text-8xl text-primary mb-6">
-          Search
-        </h1>
-        <div className="max-w-4xl mx-auto">
-          <p className="noto-sans-jp text-xl md:text-2xl text-foreground/80 leading-relaxed mb-8">
-            サイト内のコンテンツを検索<br />
+      <header className="px-4 py-16 text-center">
+        <h1 className="neue-haas-grotesk-display text-primary mb-6 text-6xl md:text-8xl">Search</h1>
+        <div className="mx-auto max-w-4xl">
+          <p className="noto-sans-jp text-foreground/80 mb-8 text-xl leading-relaxed md:text-2xl">
+            サイト内のコンテンツを検索
+            <br />
             キーワード、タグ、カテゴリで絞り込み可能
           </p>
         </div>
-        <div className="mt-8 h-1 w-32 bg-primary mx-auto"></div>
+        <div className="bg-primary mx-auto mt-8 h-1 w-32"></div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 pb-16">
+      <main className="mx-auto max-w-4xl px-4 pb-16">
         {/* Search Form */}
         <section className="mb-8">
           <form onSubmit={handleSearch} className="space-y-4">
             {/* Main Search Input */}
             <div className="relative">
-              <Search size={20} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-foreground/50" />
+              <Search
+                size={20}
+                className="text-foreground/50 absolute top-1/2 left-4 -translate-y-1/2 transform"
+              />
               <input
                 type="text"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={e => setQuery(e.target.value)}
                 placeholder="キーワードを入力して検索..."
-                className="w-full pl-12 pr-12 py-4 text-lg border-2 border-foreground/20 bg-gray text-foreground focus:border-primary focus:outline-none"
+                className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border-2 py-4 pr-12 pl-12 text-lg focus:outline-none"
               />
               {query && (
                 <button
                   type="button"
                   onClick={clearSearch}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-foreground/50 hover:text-foreground"
+                  className="text-foreground/50 hover:text-foreground absolute top-1/2 right-4 -translate-y-1/2 transform"
                 >
                   <X size={20} />
                 </button>
@@ -199,13 +201,13 @@ export default function SearchPage() {
             {/* Quick Filters */}
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center space-x-2">
-                <label className="text-sm text-foreground/70">タイプ:</label>
+                <label className="text-foreground/70 text-sm">タイプ:</label>
                 <select
                   value={selectedType}
-                  onChange={(e) => setSelectedType(e.target.value as ContentType | '')}
-                  className="px-3 py-2 border border-foreground/20 bg-gray text-foreground focus:border-primary focus:outline-none text-sm"
+                  onChange={e => setSelectedType(e.target.value as ContentType | '')}
+                  className="border-foreground/20 bg-gray text-foreground focus:border-primary border px-3 py-2 text-sm focus:outline-none"
                 >
-                  {contentTypes.map((type) => (
+                  {contentTypes.map(type => (
                     <option key={type.value} value={type.value}>
                       {type.label}
                     </option>
@@ -214,13 +216,13 @@ export default function SearchPage() {
               </div>
 
               <div className="flex items-center space-x-2">
-                <label className="text-sm text-foreground/70">カテゴリ:</label>
+                <label className="text-foreground/70 text-sm">カテゴリ:</label>
                 <select
                   value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-3 py-2 border border-foreground/20 bg-gray text-foreground focus:border-primary focus:outline-none text-sm"
+                  onChange={e => setSelectedCategory(e.target.value)}
+                  className="border-foreground/20 bg-gray text-foreground focus:border-primary border px-3 py-2 text-sm focus:outline-none"
                 >
-                  {categories.map((category) => (
+                  {categories.map(category => (
                     <option key={category.value} value={category.value}>
                       {category.label}
                     </option>
@@ -231,7 +233,7 @@ export default function SearchPage() {
               <button
                 type="button"
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="flex items-center space-x-1 px-3 py-2 border border-foreground/20 text-foreground/70 hover:border-primary hover:text-primary transition-colors text-sm"
+                className="border-foreground/20 text-foreground/70 hover:border-primary hover:text-primary flex items-center space-x-1 border px-3 py-2 text-sm transition-colors"
               >
                 <Filter size={16} />
                 <span>詳細検索</span>
@@ -240,16 +242,18 @@ export default function SearchPage() {
 
             {/* Advanced Search Options */}
             {showAdvanced && (
-              <div className="p-4 border border-foreground/20 bg-gray/50">
-                <h3 className="text-lg font-medium text-foreground mb-3">詳細検索オプション</h3>
+              <div className="border-foreground/20 bg-gray/50 border p-4">
+                <h3 className="text-foreground mb-3 text-lg font-medium">詳細検索オプション</h3>
                 <div className="space-y-3">
                   <label className="flex items-center space-x-2">
                     <input type="checkbox" className="rounded" />
-                    <span className="text-sm text-foreground/70">コンテンツ内容も検索対象に含める</span>
+                    <span className="text-foreground/70 text-sm">
+                      コンテンツ内容も検索対象に含める
+                    </span>
                   </label>
                   <label className="flex items-center space-x-2">
                     <input type="checkbox" className="rounded" />
-                    <span className="text-sm text-foreground/70">完全一致のみ</span>
+                    <span className="text-foreground/70 text-sm">完全一致のみ</span>
                   </label>
                 </div>
               </div>
@@ -260,13 +264,13 @@ export default function SearchPage() {
         {/* Search History */}
         {searchHistory.length > 0 && !query && (
           <section className="mb-8">
-            <h2 className="text-lg font-medium text-foreground mb-3">検索履歴</h2>
+            <h2 className="text-foreground mb-3 text-lg font-medium">検索履歴</h2>
             <div className="flex flex-wrap gap-2">
               {searchHistory.map((historyQuery, index) => (
                 <button
                   key={index}
                   onClick={() => selectHistoryItem(historyQuery)}
-                  className="px-3 py-1 bg-foreground/10 text-foreground/70 hover:bg-foreground/20 transition-colors text-sm rounded"
+                  className="bg-foreground/10 text-foreground/70 hover:bg-foreground/20 rounded px-3 py-1 text-sm transition-colors"
                 >
                   {historyQuery}
                 </button>
@@ -278,71 +282,70 @@ export default function SearchPage() {
         {/* Search Results */}
         <section>
           {query && (
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-medium text-foreground">
-                "{query}" の検索結果
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-foreground text-lg font-medium">
+                &ldquo;{query}&rdquo; の検索結果
               </h2>
-              <div className="text-sm text-foreground/60">
+              <div className="text-foreground/60 text-sm">
                 {isLoading ? '検索中...' : `${results.length} 件`}
               </div>
             </div>
           )}
 
           {isLoading && (
-            <div className="text-center py-12">
+            <div className="py-12 text-center">
               <div className="loading mx-auto"></div>
-              <p className="mt-4 text-foreground/60">検索中...</p>
+              <p className="text-foreground/60 mt-4">検索中...</p>
             </div>
           )}
 
           {!isLoading && query && results.length === 0 && (
-            <div className="text-center py-12">
+            <div className="py-12 text-center">
               <p className="text-foreground/60 mb-4">検索結果が見つかりませんでした</p>
-              <p className="text-sm text-foreground/50">
-                • キーワードを変更して再度検索してください<br />
-                • より一般的な用語を使用してください<br />
-                • フィルターを解除してください
+              <p className="text-foreground/50 text-sm">
+                • キーワードを変更して再度検索してください
+                <br />
+                • より一般的な用語を使用してください
+                <br />• フィルターを解除してください
               </p>
             </div>
           )}
 
           {!isLoading && results.length > 0 && (
             <div className="space-y-6">
-              {results.map((result) => (
+              {results.map(result => (
                 <div
                   key={result.id}
-                  className="border border-foreground/20 bg-gray/50 p-6 hover:shadow-md transition-shadow"
+                  className="border-foreground/20 bg-gray/50 border p-6 transition-shadow hover:shadow-md"
                 >
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="mb-3 flex items-start justify-between">
                     <div className="flex items-center space-x-3">
                       <span className={`text-sm font-medium ${getTypeColor(result.type)}`}>
                         {getTypeLabel(result.type)}
                       </span>
-                      <span className="text-sm text-foreground/50">
+                      <span className="text-foreground/50 text-sm">
                         スコア: {(1 - result.score).toFixed(2)}
                       </span>
                     </div>
                     <Link
                       href={result.url}
-                      className="flex items-center space-x-1 text-primary hover:underline text-sm"
+                      className="text-primary flex items-center space-x-1 text-sm hover:underline"
                     >
                       <span>開く</span>
                       <ExternalLink size={14} />
                     </Link>
                   </div>
 
-                  <h3 className="text-xl font-medium text-foreground mb-2">
+                  <h3 className="text-foreground mb-2 text-xl font-medium">
                     <Link href={result.url} className="hover:text-primary transition-colors">
                       {result.title}
                     </Link>
                   </h3>
 
-                  <p className="text-foreground/70 mb-3 line-clamp-3">
-                    {result.description}
-                  </p>
+                  <p className="text-foreground/70 mb-3 line-clamp-3">{result.description}</p>
 
                   {result.highlights.length > 0 && (
-                    <div className="text-sm text-foreground/60">
+                    <div className="text-foreground/60 text-sm">
                       <strong>一致箇所:</strong> {result.highlights.slice(0, 3).join(', ')}
                     </div>
                   )}
@@ -354,7 +357,7 @@ export default function SearchPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-foreground/20 py-8 text-center">
+      <footer className="border-foreground/20 border-t py-8 text-center">
         <p className="noto-sans-jp text-foreground/60 text-sm">
           © 2025 samuido (木村友亮). All rights reserved.
         </p>

@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
@@ -16,7 +16,7 @@ const config: Config = {
         background: '#222222', // For background utility
         foreground: '#ffffff', // For text utility
         accent: '#0000ff', // For accent utility
-        
+
         // Additional utility colors to match CSS classes
         gray: {
           DEFAULT: '#222222',
@@ -38,7 +38,7 @@ const config: Config = {
         'zen-kaku': ['zen-kaku-gothic-new', 'sans-serif'],
         // Google Fonts
         'noto-sans': ['Noto Sans JP', 'sans-serif'],
-        'shippori': ['Shippori Antique B1', 'sans-serif'],
+        shippori: ['Shippori Antique B1', 'sans-serif'],
         // Default overrides
         sans: ['Noto Sans JP', 'sans-serif'],
         display: ['neue-haas-grotesk-display', 'sans-serif'],
@@ -52,11 +52,11 @@ const config: Config = {
         'golden-5': '6.854rem',
         'golden-6': '11.09rem',
         // Additional spacing for CSS variables
-        'xs': '0.618rem',
-        'sm': '1rem',
-        'md': '1.618rem',
-        'lg': '2.618rem',
-        'xl': '4.236rem',
+        xs: '0.618rem',
+        sm: '1rem',
+        md: '1.618rem',
+        lg: '2.618rem',
+        xl: '4.236rem',
       },
       fontSize: {
         // Font sizes using golden ratio
@@ -68,7 +68,7 @@ const config: Config = {
         'golden-2xl': ['4.236rem', { lineHeight: '1.2' }],
       },
       aspectRatio: {
-        'golden': '1.618',
+        golden: '1.618',
       },
       gridTemplateColumns: {
         // Grid system for layout
@@ -79,13 +79,13 @@ const config: Config = {
       },
       borderRadius: {
         // Minimal design - very small radius only
-        'sm': '2px',
-        'md': '4px',
+        sm: '2px',
+        md: '4px',
         DEFAULT: '2px',
       },
     },
   },
   plugins: [],
-}
+};
 
-export default config
+export default config;

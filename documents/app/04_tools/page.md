@@ -70,18 +70,18 @@ export interface PriceCalculation {
 }
 
 export const calculatePrice = (options: {
-  type: "development" | "video";
+  type: 'development' | 'video';
   duration?: number; // 分単位
   illustration?:
-    | "none"
-    | "half_no_bg"
-    | "half_with_bg"
-    | "full_no_bg"
-    | "full_with_bg"
-    | "partial_no_bg"
-    | "partial_with_bg"
-    | "outsourced";
-  resolution?: "hd" | "4k";
+    | 'none'
+    | 'half_no_bg'
+    | 'half_with_bg'
+    | 'full_no_bg'
+    | 'full_with_bg'
+    | 'partial_no_bg'
+    | 'partial_with_bg'
+    | 'outsourced';
+  resolution?: 'hd' | '4k';
   months?: number; // 開発期間（月）
 }): PriceCalculation => {
   let basePrice = 0;
@@ -90,32 +90,30 @@ export const calculatePrice = (options: {
   let resolutionPrice = 0;
   const breakdown: string[] = [];
 
-  if (options.type === "development") {
+  if (options.type === 'development') {
     basePrice = 50000;
-    breakdown.push("開発基本料金: 50,000円");
+    breakdown.push('開発基本料金: 50,000円');
 
     if (options.months && options.months > 1) {
       const extraMonths = options.months - 1;
       const extraPrice = extraMonths * 20000; // 平均20,000円
       durationPrice = extraPrice;
-      breakdown.push(
-        `期間延長料金 (${extraMonths}ヶ月): ${extraPrice.toLocaleString()}円`
-      );
+      breakdown.push(`期間延長料金 (${extraMonths}ヶ月): ${extraPrice.toLocaleString()}円`);
     }
-  } else if (options.type === "video") {
+  } else if (options.type === 'video') {
     if (!options.duration) {
-      throw new Error("動画の長さを指定してください");
+      throw new Error('動画の長さを指定してください');
     }
 
     if (options.duration <= 1) {
       basePrice = 5000;
-      breakdown.push("動画制作料金 (1分以下): 5,000円");
+      breakdown.push('動画制作料金 (1分以下): 5,000円');
     } else if (options.duration <= 2) {
       basePrice = 10000;
-      breakdown.push("動画制作料金 (1-2分): 10,000円");
+      breakdown.push('動画制作料金 (1-2分): 10,000円');
     } else if (options.duration <= 4) {
       basePrice = 20000;
-      breakdown.push("動画制作料金 (2-4分): 20,000円");
+      breakdown.push('動画制作料金 (2-4分): 20,000円');
     } else {
       basePrice = 20000;
       const extraMinutes = options.duration - 4;
@@ -128,7 +126,7 @@ export const calculatePrice = (options: {
   }
 
   // イラスト追加料金
-  if (options.illustration && options.illustration !== "none") {
+  if (options.illustration && options.illustration !== 'none') {
     const illustrationPrices = {
       half_no_bg: 2000,
       half_with_bg: 4000,
@@ -143,13 +141,12 @@ export const calculatePrice = (options: {
   }
 
   // 4K解像度追加料金
-  if (options.resolution === "4k") {
+  if (options.resolution === '4k') {
     resolutionPrice = 10000;
-    breakdown.push("4K解像度追加料金: 10,000円");
+    breakdown.push('4K解像度追加料金: 10,000円');
   }
 
-  const totalPrice =
-    basePrice + durationPrice + illustrationPrice + resolutionPrice;
+  const totalPrice = basePrice + durationPrice + illustrationPrice + resolutionPrice;
 
   return {
     basePrice,

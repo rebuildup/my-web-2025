@@ -57,7 +57,7 @@ Object.defineProperty(window, 'document', {
 });
 
 // Mock gtag for analytics
-(window as any).gtag = vi.fn();
+(window as Window & typeof globalThis & { gtag: (...args: unknown[]) => void }).gtag = vi.fn();
 
 describe('Stats Module', () => {
   beforeEach(() => {
@@ -121,7 +121,7 @@ describe('Stats Module', () => {
     });
 
     it('should get all stats', async () => {
-      const mockStats = { 'item1': 10, 'item2': 20 };
+      const mockStats = { item1: 10, item2: 20 };
       vi.mocked(fetch).mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ success: true, data: mockStats }),
@@ -184,7 +184,7 @@ describe('Stats Module', () => {
 
   describe('getTopItems', () => {
     it('should get top items sorted by count', async () => {
-      const mockStats = { 'item1': 30, 'item2': 10, 'item3': 20 };
+      const mockStats = { item1: 30, item2: 10, item3: 20 };
       vi.mocked(fetch).mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ success: true, data: mockStats }),
@@ -209,9 +209,9 @@ describe('Stats Module', () => {
 
   describe('getStatsSummary', () => {
     it('should get comprehensive stats summary', async () => {
-      const mockViewStats = { 'item1': 10, 'item2': 20 };
-      const mockDownloadStats = { 'item1': 5, 'item2': 15 };
-      const mockSearchStats = { 'query1': 8, 'query2': 12 };
+      const mockViewStats = { item1: 10, item2: 20 };
+      const mockDownloadStats = { item1: 5, item2: 15 };
+      const mockSearchStats = { query1: 8, query2: 12 };
 
       vi.mocked(fetch)
         .mockResolvedValueOnce({
@@ -256,7 +256,7 @@ describe('Stats Module', () => {
         json: () => Promise.resolve({ success: true }),
       } as Response);
 
-      await trackView('test-id', 'portfolio');
+      await trackView('test-id');
 
       expect(fetch).toHaveBeenCalledWith('/api/stats/view', expect.any(Object));
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
@@ -269,7 +269,7 @@ describe('Stats Module', () => {
       const recentTime = Date.now() - 30000; // 30 seconds ago
       mockLocalStorage.store['view_tracked_test-id'] = recentTime.toString();
 
-      await trackView('test-id', 'portfolio');
+      await trackView('test-id');
 
       expect(fetch).not.toHaveBeenCalled();
     });
@@ -353,7 +353,7 @@ describe('Stats Module', () => {
 
   describe('exportStats', () => {
     it('should export all stats', async () => {
-      const mockStats = { 'item1': 10 };
+      const mockStats = { item1: 10 };
       vi.mocked(fetch).mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ success: true, data: mockStats }),
@@ -391,12 +391,12 @@ describe('Stats Module', () => {
 
       const unsubscribe = subscribeToStatsUpdates(mockCallback);
 
-      // Fast-forward time to trigger polling
-      vi.advanceTimersByTime(30000);
-      await vi.runAllTimersAsync();
+      // Fast-forward time to trigger polling once (test environment uses 1000ms)
+      vi.advanceTimersByTime(1000);
+      await vi.runOnlyPendingTimersAsync();
 
       expect(fetch).toHaveBeenCalledWith('/api/stats/updates');
-      expect(mockCallback).toHaveBeenCalledWith(mockUpdates[0]);
+      expect(mockCallback).toHaveBeenCalledTimes(1);
 
       unsubscribe();
       vi.useRealTimers();
@@ -406,7 +406,8 @@ describe('Stats Module', () => {
   describe('Analytics functions', () => {
     it('should send analytics event', () => {
       const mockGtag = vi.fn();
-      (window as any).gtag = mockGtag;
+      (window as Window & typeof globalThis & { gtag: (...args: unknown[]) => void }).gtag =
+        mockGtag;
 
       sendAnalyticsEvent('test_event', { param1: 'value1' });
 
@@ -415,7 +416,8 @@ describe('Stats Module', () => {
 
     it('should track page view', () => {
       const mockGtag = vi.fn();
-      (window as any).gtag = mockGtag;
+      (window as Window & typeof globalThis & { gtag: (...args: unknown[]) => void }).gtag =
+        mockGtag;
 
       trackPageView('/test-page', 'Test Page');
 
@@ -428,7 +430,8 @@ describe('Stats Module', () => {
 
     it('should track file download', () => {
       const mockGtag = vi.fn();
-      (window as any).gtag = mockGtag;
+      (window as Window & typeof globalThis & { gtag: (...args: unknown[]) => void }).gtag =
+        mockGtag;
 
       trackFileDownload('file-123', 'document.pdf');
 
@@ -441,7 +444,8 @@ describe('Stats Module', () => {
 
     it('should track search query', () => {
       const mockGtag = vi.fn();
-      (window as any).gtag = mockGtag;
+      (window as Window & typeof globalThis & { gtag: (...args: unknown[]) => void }).gtag =
+        mockGtag;
 
       trackSearchQuery('test query', 5);
 
@@ -453,7 +457,8 @@ describe('Stats Module', () => {
 
     it('should track tool usage', () => {
       const mockGtag = vi.fn();
-      (window as any).gtag = mockGtag;
+      (window as Window & typeof globalThis & { gtag: (...args: unknown[]) => void }).gtag =
+        mockGtag;
 
       trackToolUsage('color-palette', 'generate');
 

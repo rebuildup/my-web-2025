@@ -15,7 +15,8 @@ const mockSearchIndex: SearchIndex[] = [
     content: 'This is a portfolio built with React',
     tags: ['react', 'typescript'],
     category: 'develop',
-    searchableContent: 'React Portfolio Website A React-based portfolio This is a portfolio built with React react typescript develop',
+    searchableContent:
+      'React Portfolio Website A React-based portfolio This is a portfolio built with React react typescript develop',
   },
   {
     id: 'tool-1',
@@ -25,7 +26,8 @@ const mockSearchIndex: SearchIndex[] = [
     content: 'A tool for generating color palettes',
     tags: ['design', 'colors'],
     category: 'design',
-    searchableContent: 'Color Palette Generator Generate color palettes A tool for generating color palettes design colors design',
+    searchableContent:
+      'Color Palette Generator Generate color palettes A tool for generating color palettes design colors design',
   },
   {
     id: 'blog-1',
@@ -35,7 +37,8 @@ const mockSearchIndex: SearchIndex[] = [
     content: 'Complete guide to Next.js',
     tags: ['nextjs', 'tutorial'],
     category: 'programming',
-    searchableContent: 'Next.js Tutorial Learn Next.js framework Complete guide to Next.js nextjs tutorial programming',
+    searchableContent:
+      'Next.js Tutorial Learn Next.js framework Complete guide to Next.js nextjs tutorial programming',
   },
 ];
 
@@ -73,23 +76,34 @@ describe('Search Functionality', () => {
 
   describe('generateContentUrl', () => {
     it('should generate correct URLs for different content types', () => {
-      expect(generateContentUrl({ id: 'test', type: 'portfolio' } as SearchIndex)).toBe('/portfolio/detail/test');
+      expect(generateContentUrl({ id: 'test', type: 'portfolio' } as SearchIndex)).toBe(
+        '/portfolio/detail/test'
+      );
       expect(generateContentUrl({ id: 'test', type: 'tool' } as SearchIndex)).toBe('/tools/test');
-      expect(generateContentUrl({ id: 'test', type: 'blog' } as SearchIndex)).toBe('/workshop/blog/test');
-      expect(generateContentUrl({ id: 'test', type: 'plugin' } as SearchIndex)).toBe('/workshop/plugins/test');
-      expect(generateContentUrl({ id: 'test', type: 'profile' } as SearchIndex)).toBe('/about/profile/test');
+      expect(generateContentUrl({ id: 'test', type: 'blog' } as SearchIndex)).toBe(
+        '/workshop/blog/test'
+      );
+      expect(generateContentUrl({ id: 'test', type: 'plugin' } as SearchIndex)).toBe(
+        '/workshop/plugins/test'
+      );
+      expect(generateContentUrl({ id: 'test', type: 'profile' } as SearchIndex)).toBe(
+        '/about/profile/test'
+      );
       expect(generateContentUrl({ id: 'test', type: 'page' } as SearchIndex)).toBe('/test');
     });
 
     it('should handle unknown content types', () => {
-      expect(generateContentUrl({ id: 'test', type: 'unknown' as any } as SearchIndex)).toBe('/unknown/test');
+      // @ts-expect-error: Intentionally testing unknown content type
+      expect(generateContentUrl({ id: 'test', type: 'unknown' } as SearchIndex)).toBe(
+        '/unknown/test'
+      );
     });
   });
 
   describe('buildSearchIndex', () => {
     it('should build search index from content data', async () => {
       const mockFetch = vi.mocked(fetch);
-      
+
       // Mock successful response for portfolio content
       mockFetch
         .mockResolvedValueOnce({
@@ -150,7 +164,7 @@ describe('Search Functionality', () => {
       } as Response);
 
       const searchIndex = await buildSearchIndex();
-      
+
       // Should not include draft content
       expect(searchIndex.find(item => item.id === 'draft-1')).toBeUndefined();
     });
@@ -177,7 +191,7 @@ describe('Search Functionality', () => {
 
     it('should search and return relevant results', async () => {
       const results = await searchContent('React');
-      
+
       expect(results).toHaveLength(1);
       expect(results[0].id).toBe('portfolio-1');
       expect(results[0].title).toBe('React Portfolio Website');
@@ -186,7 +200,7 @@ describe('Search Functionality', () => {
 
     it('should filter by content type', async () => {
       const results = await searchContent('generator', { type: 'tool' });
-      
+
       expect(results).toHaveLength(1);
       expect(results[0].type).toBe('tool');
       expect(results[0].title).toBe('Color Palette Generator');
@@ -194,33 +208,33 @@ describe('Search Functionality', () => {
 
     it('should filter by category', async () => {
       const results = await searchContent('palette', { category: 'design' });
-      
+
       expect(results).toHaveLength(1);
       expect(results[0].category).toBe('design');
     });
 
     it('should respect limit parameter', async () => {
       const results = await searchContent('a', { limit: 1 });
-      
+
       expect(results.length).toBeLessThanOrEqual(1);
     });
 
     it('should handle search with no matches', async () => {
       const results = await searchContent('nonexistent');
-      
+
       expect(results).toEqual([]);
     });
 
     it('should handle custom threshold', async () => {
       const results = await searchContent('React', { threshold: 0.1 });
-      
+
       expect(results).toHaveLength(1);
       expect(results[0].score).toBeLessThan(0.1);
     });
 
     it('should include content in search when specified', async () => {
       const results = await searchContent('built', { includeContent: true });
-      
+
       expect(results).toHaveLength(1);
       expect(results[0].id).toBe('portfolio-1');
     });
@@ -267,7 +281,7 @@ describe('Search Functionality', () => {
 
       const results = await searchContent('test');
       expect(results).toEqual([]);
-      
+
       consoleSpy.mockRestore();
     });
   });
@@ -292,7 +306,7 @@ describe('Search Functionality', () => {
           // missing required fields
         },
       ];
-      
+
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ index: incompleteIndex }),
@@ -306,11 +320,11 @@ describe('Search Functionality', () => {
   describe('Performance', () => {
     it('should handle large search queries efficiently', async () => {
       const largeQuery = 'a'.repeat(1000);
-      
+
       const startTime = Date.now();
       const results = await searchContent(largeQuery);
       const endTime = Date.now();
-      
+
       // Should complete in reasonable time (less than 1 second)
       expect(endTime - startTime).toBeLessThan(1000);
       expect(Array.isArray(results)).toBe(true);
@@ -337,7 +351,7 @@ describe('Search Functionality', () => {
       const startTime = Date.now();
       const results = await searchContent('Item');
       const endTime = Date.now();
-      
+
       // Should complete in reasonable time
       expect(endTime - startTime).toBeLessThan(2000);
       expect(results.length).toBeGreaterThan(0);

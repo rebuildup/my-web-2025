@@ -3,24 +3,9 @@ import {
   slugify,
   truncateText,
   capitalizeFirst,
-  capitalizeWords,
   removeHtmlTags,
   countWords,
-  countCharacters,
-  sanitizeFilename,
-  formatFileSize,
-  generateRandomString,
-  generateId,
-  parseHashtags,
-  parseMentions,
-  highlightSearchTerms,
-  fuzzySearch,
-  levenshteinDistance,
-  similarity,
-  formatPrice,
-  parsePrice,
-  extractTextFromMarkdown,
-  generateExcerpt
+  camelCase,
 } from './string';
 
 // Additional helper functions for comprehensive testing
@@ -33,13 +18,7 @@ const stringUtils = {
   wordCount: countWords,
 
   // Additional utility functions for tests
-  camelCase: (text: string): string => {
-    return text
-      .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => {
-        return index === 0 ? word.toLowerCase() : word.toUpperCase();
-      })
-      .replace(/\s+/g, '');
-  },
+  camelCase: camelCase,
 
   kebabCase: (text: string): string => {
     return text
@@ -56,7 +35,7 @@ const stringUtils = {
       '"': '&quot;',
       "'": '&#39;',
     };
-    return text.replace(/[&<>"']/g, (m) => map[m]);
+    return text.replace(/[&<>"']/g, m => map[m]);
   },
 
   readingTime: (text: string, wordsPerMinute = 200): number => {
@@ -70,7 +49,8 @@ const stringUtils = {
   },
 
   extractUrls: (text: string): string[] => {
-    const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+    const urlRegex =
+      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
     return text.match(urlRegex) || [];
   },
 
@@ -165,7 +145,9 @@ describe('String Utilities', () => {
 
   describe('escapeHtml', () => {
     it('should escape HTML special characters', () => {
-      expect(stringUtils.escapeHtml('<script>alert("test")</script>')).toBe('&lt;script&gt;alert(&quot;test&quot;)&lt;/script&gt;');
+      expect(stringUtils.escapeHtml('<script>alert("test")</script>')).toBe(
+        '&lt;script&gt;alert(&quot;test&quot;)&lt;/script&gt;'
+      );
       expect(stringUtils.escapeHtml('Tom & Jerry')).toBe('Tom &amp; Jerry');
     });
   });

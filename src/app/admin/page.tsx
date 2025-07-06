@@ -1,18 +1,18 @@
 'use client';
 
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import { 
-  Database, 
-  FileText, 
-  Users, 
-  BarChart3, 
-  Settings, 
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import {
+  Database,
+  FileText,
+  Users,
+  BarChart3,
+  Settings,
   Shield,
   Cpu,
   HardDrive,
-  Activity
-} from "lucide-react";
+  Activity,
+} from 'lucide-react';
 
 export default function AdminPage() {
   const [isDevMode, setIsDevMode] = useState(false);
@@ -26,7 +26,7 @@ export default function AdminPage() {
   useEffect(() => {
     // Check if running in development mode
     setIsDevMode(process.env.NODE_ENV === 'development');
-    
+
     // Load basic stats (mock data for demonstration)
     setStats({
       totalContent: 25,
@@ -38,18 +38,16 @@ export default function AdminPage() {
 
   if (!isDevMode) {
     return (
-      <div className="min-h-screen bg-gray flex items-center justify-center">
+      <div className="bg-gray flex min-h-screen items-center justify-center">
         <div className="text-center">
           <Shield size={64} className="text-primary mx-auto mb-6" />
-          <h1 className="neue-haas-grotesk-display text-4xl text-primary mb-4">
-            Access Denied
-          </h1>
+          <h1 className="neue-haas-grotesk-display text-primary mb-4 text-4xl">Access Denied</h1>
           <p className="noto-sans-jp text-foreground/70 mb-6">
             Admin access is only available in development mode.
           </p>
-          <Link 
+          <Link
             href="/"
-            className="inline-block px-6 py-3 bg-primary text-white hover:bg-primary/90 transition-colors"
+            className="bg-primary hover:bg-primary/90 inline-block px-6 py-3 text-white transition-colors"
           >
             Back to Home
           </Link>
@@ -59,169 +57,163 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray">
+    <div className="bg-gray min-h-screen">
       {/* Navigation */}
-      <nav className="border-b border-foreground/20 p-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link 
-            href="/" 
-            className="neue-haas-grotesk-display text-2xl text-primary hover:text-primary/80"
+      <nav className="border-foreground/20 border-b p-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
+          <Link
+            href="/"
+            className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
           >
             ← Home
           </Link>
-          <div className="text-sm text-foreground/60">
-            Development Mode Only
-          </div>
+          <div className="text-foreground/60 text-sm">Development Mode Only</div>
         </div>
       </nav>
 
       {/* Header */}
-      <header className="text-center py-12 px-4">
-        <h1 className="neue-haas-grotesk-display text-4xl md:text-6xl text-primary mb-4">
+      <header className="px-4 py-12 text-center">
+        <h1 className="neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl">
           Admin Dashboard
         </h1>
-        <p className="noto-sans-jp text-lg text-foreground/80">
-          Content Management & Analytics
-        </p>
-        <div className="mt-6 h-1 w-24 bg-primary mx-auto"></div>
+        <p className="noto-sans-jp text-foreground/80 text-lg">Content Management & Analytics</p>
+        <div className="bg-primary mx-auto mt-6 h-1 w-24"></div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 pb-16">
+      <main className="mx-auto max-w-7xl px-4 pb-16">
         {/* Quick Stats */}
         <section className="mb-12">
-          <h2 className="neue-haas-grotesk-display text-2xl text-foreground mb-6">
-            Overview
-          </h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="p-6 border border-foreground/20 bg-gray/50">
-              <div className="flex items-center justify-between mb-2">
+          <h2 className="neue-haas-grotesk-display text-foreground mb-6 text-2xl">Overview</h2>
+
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+            <div className="border-foreground/20 bg-gray/50 border p-6">
+              <div className="mb-2 flex items-center justify-between">
                 <FileText size={24} className="text-primary" />
-                <span className="text-xs text-foreground/50">CONTENT</span>
+                <span className="text-foreground/50 text-xs">CONTENT</span>
               </div>
-              <div className="neue-haas-grotesk-display text-2xl text-foreground">
+              <div className="neue-haas-grotesk-display text-foreground text-2xl">
                 {stats.totalContent}
               </div>
-              <div className="text-sm text-foreground/70">Total Items</div>
+              <div className="text-foreground/70 text-sm">Total Items</div>
             </div>
-            
-            <div className="p-6 border border-foreground/20 bg-gray/50">
-              <div className="flex items-center justify-between mb-2">
+
+            <div className="border-foreground/20 bg-gray/50 border p-6">
+              <div className="mb-2 flex items-center justify-between">
                 <Activity size={24} className="text-primary" />
-                <span className="text-xs text-foreground/50">VIEWS</span>
+                <span className="text-foreground/50 text-xs">VIEWS</span>
               </div>
-              <div className="neue-haas-grotesk-display text-2xl text-foreground">
+              <div className="neue-haas-grotesk-display text-foreground text-2xl">
                 {stats.totalViews.toLocaleString()}
               </div>
-              <div className="text-sm text-foreground/70">Page Views</div>
+              <div className="text-foreground/70 text-sm">Page Views</div>
             </div>
-            
-            <div className="p-6 border border-foreground/20 bg-gray/50">
-              <div className="flex items-center justify-between mb-2">
+
+            <div className="border-foreground/20 bg-gray/50 border p-6">
+              <div className="mb-2 flex items-center justify-between">
                 <HardDrive size={24} className="text-primary" />
-                <span className="text-xs text-foreground/50">DOWNLOADS</span>
+                <span className="text-foreground/50 text-xs">DOWNLOADS</span>
               </div>
-              <div className="neue-haas-grotesk-display text-2xl text-foreground">
+              <div className="neue-haas-grotesk-display text-foreground text-2xl">
                 {stats.totalDownloads.toLocaleString()}
               </div>
-              <div className="text-sm text-foreground/70">Total Downloads</div>
+              <div className="text-foreground/70 text-sm">Total Downloads</div>
             </div>
-            
-            <div className="p-6 border border-foreground/20 bg-gray/50">
-              <div className="flex items-center justify-between mb-2">
+
+            <div className="border-foreground/20 bg-gray/50 border p-6">
+              <div className="mb-2 flex items-center justify-between">
                 <BarChart3 size={24} className="text-primary" />
-                <span className="text-xs text-foreground/50">SEARCHES</span>
+                <span className="text-foreground/50 text-xs">SEARCHES</span>
               </div>
-              <div className="neue-haas-grotesk-display text-2xl text-foreground">
+              <div className="neue-haas-grotesk-display text-foreground text-2xl">
                 {stats.totalSearches.toLocaleString()}
               </div>
-              <div className="text-sm text-foreground/70">Search Queries</div>
+              <div className="text-foreground/70 text-sm">Search Queries</div>
             </div>
           </div>
         </section>
 
         {/* Admin Tools */}
         <section className="mb-12">
-          <h2 className="neue-haas-grotesk-display text-2xl text-foreground mb-6">
+          <h2 className="neue-haas-grotesk-display text-foreground mb-6 text-2xl">
             Management Tools
           </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Link
               href="/admin/content"
-              className="group p-6 border border-foreground/20 bg-gray/50 hover:border-primary transition-colors"
+              className="group border-foreground/20 bg-gray/50 hover:border-primary border p-6 transition-colors"
             >
               <Database size={32} className="text-primary mb-4" />
-              <h3 className="neue-haas-grotesk-display text-lg text-foreground mb-2 group-hover:text-primary">
+              <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg">
                 Content Manager
               </h3>
-              <p className="noto-sans-jp text-sm text-foreground/70">
+              <p className="noto-sans-jp text-foreground/70 text-sm">
                 Create, edit, and manage portfolio items, tools, and blog posts
               </p>
             </Link>
-            
+
             <Link
               href="/admin/analytics"
-              className="group p-6 border border-foreground/20 bg-gray/50 hover:border-primary transition-colors"
+              className="group border-foreground/20 bg-gray/50 hover:border-primary border p-6 transition-colors"
             >
               <BarChart3 size={32} className="text-primary mb-4" />
-              <h3 className="neue-haas-grotesk-display text-lg text-foreground mb-2 group-hover:text-primary">
+              <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg">
                 Analytics
               </h3>
-              <p className="noto-sans-jp text-sm text-foreground/70">
+              <p className="noto-sans-jp text-foreground/70 text-sm">
                 View detailed statistics and user behavior analytics
               </p>
             </Link>
-            
+
             <Link
               href="/admin/users"
-              className="group p-6 border border-foreground/20 bg-gray/50 hover:border-primary transition-colors"
+              className="group border-foreground/20 bg-gray/50 hover:border-primary border p-6 transition-colors"
             >
               <Users size={32} className="text-primary mb-4" />
-              <h3 className="neue-haas-grotesk-display text-lg text-foreground mb-2 group-hover:text-primary">
+              <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg">
                 User Management
               </h3>
-              <p className="noto-sans-jp text-sm text-foreground/70">
+              <p className="noto-sans-jp text-foreground/70 text-sm">
                 Manage user accounts and permissions (if applicable)
               </p>
             </Link>
-            
+
             <Link
               href="/admin/settings"
-              className="group p-6 border border-foreground/20 bg-gray/50 hover:border-primary transition-colors"
+              className="group border-foreground/20 bg-gray/50 hover:border-primary border p-6 transition-colors"
             >
               <Settings size={32} className="text-primary mb-4" />
-              <h3 className="neue-haas-grotesk-display text-lg text-foreground mb-2 group-hover:text-primary">
+              <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg">
                 Site Settings
               </h3>
-              <p className="noto-sans-jp text-sm text-foreground/70">
+              <p className="noto-sans-jp text-foreground/70 text-sm">
                 Configure site settings, SEO, and integrations
               </p>
             </Link>
-            
+
             <Link
               href="/admin/performance"
-              className="group p-6 border border-foreground/20 bg-gray/50 hover:border-primary transition-colors"
+              className="group border-foreground/20 bg-gray/50 hover:border-primary border p-6 transition-colors"
             >
               <Cpu size={32} className="text-primary mb-4" />
-              <h3 className="neue-haas-grotesk-display text-lg text-foreground mb-2 group-hover:text-primary">
+              <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg">
                 Performance Monitor
               </h3>
-              <p className="noto-sans-jp text-sm text-foreground/70">
+              <p className="noto-sans-jp text-foreground/70 text-sm">
                 Monitor site performance and optimization metrics
               </p>
             </Link>
-            
+
             <Link
               href="/admin/security"
-              className="group p-6 border border-foreground/20 bg-gray/50 hover:border-primary transition-colors"
+              className="group border-foreground/20 bg-gray/50 hover:border-primary border p-6 transition-colors"
             >
               <Shield size={32} className="text-primary mb-4" />
-              <h3 className="neue-haas-grotesk-display text-lg text-foreground mb-2 group-hover:text-primary">
+              <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg">
                 Security
               </h3>
-              <p className="noto-sans-jp text-sm text-foreground/70">
+              <p className="noto-sans-jp text-foreground/70 text-sm">
                 Security settings, audit logs, and access control
               </p>
             </Link>
@@ -230,13 +222,11 @@ export default function AdminPage() {
 
         {/* Quick Actions */}
         <section>
-          <h2 className="neue-haas-grotesk-display text-2xl text-foreground mb-6">
-            Quick Actions
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-6 border border-foreground/20 bg-gray/50">
-              <h3 className="neue-haas-grotesk-display text-lg text-foreground mb-4">
+          <h2 className="neue-haas-grotesk-display text-foreground mb-6 text-2xl">Quick Actions</h2>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="border-foreground/20 bg-gray/50 border p-6">
+              <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-lg">
                 Recent Activity
               </h3>
               <div className="space-y-3">
@@ -254,9 +244,9 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
-            
-            <div className="p-6 border border-foreground/20 bg-gray/50">
-              <h3 className="neue-haas-grotesk-display text-lg text-foreground mb-4">
+
+            <div className="border-foreground/20 bg-gray/50 border p-6">
+              <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-lg">
                 System Status
               </h3>
               <div className="space-y-3">
@@ -279,7 +269,7 @@ export default function AdminPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-foreground/20 py-8 text-center">
+      <footer className="border-foreground/20 border-t py-8 text-center">
         <p className="noto-sans-jp text-foreground/60 text-sm">
           Admin Dashboard - Development Mode Only
         </p>

@@ -26,13 +26,13 @@ describe('Error Handling Utilities', () => {
     vi.clearAllMocks();
     console.error = mockConsole.error;
     console.log = mockConsole.log;
-    
+
     // Mock window object
     Object.defineProperty(window, 'navigator', {
       value: { userAgent: 'test-agent' },
       writable: true,
     });
-    
+
     Object.defineProperty(window, 'location', {
       value: { href: 'https://test.com/page' },
       writable: true,
@@ -41,7 +41,7 @@ describe('Error Handling Utilities', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
-    process.env.NODE_ENV = originalEnv;
+    Object.defineProperty(process, 'env', { value: { ...process.env, NODE_ENV: originalEnv } });
   });
 
   describe('AppErrorHandler', () => {
@@ -105,8 +105,13 @@ describe('Error Handling Utilities', () => {
       });
 
       it('should send to error service in production', () => {
-        process.env.NODE_ENV = 'production';
-        const sendToErrorServiceSpy = vi.spyOn(AppErrorHandler as any, 'sendToErrorService');
+        Object.defineProperty(process, 'env', {
+          value: { ...process.env, NODE_ENV: 'production' },
+        });
+        const sendToErrorServiceSpy = vi.spyOn(
+          AppErrorHandler as unknown as { sendToErrorService: () => void },
+          'sendToErrorService'
+        );
 
         const error: AppError = {
           code: 'TEST_ERROR',
@@ -123,7 +128,7 @@ describe('Error Handling Utilities', () => {
     describe('error creation methods', () => {
       it('should create network error', () => {
         const error = AppErrorHandler.createNetworkError(404, 'Custom message');
-        
+
         expect(error).toBeInstanceOf(ContentError);
         expect(error.message).toBe('Custom message');
         expect(error.code).toBe('NETWORK_ERROR_404');
@@ -132,14 +137,14 @@ describe('Error Handling Utilities', () => {
 
       it('should create network error with default message', () => {
         const error = AppErrorHandler.createNetworkError(500);
-        
+
         expect(error.message).toBe('Internal server error - please try again later');
         expect(error.code).toBe('NETWORK_ERROR_500');
       });
 
       it('should create validation error', () => {
         const error = AppErrorHandler.createValidationError('email', 'Invalid format');
-        
+
         expect(error.message).toBe('Validation failed for email: Invalid format');
         expect(error.code).toBe('VALIDATION_ERROR');
         expect(error.details).toEqual({ field: 'email', message: 'Invalid format' });
@@ -147,7 +152,7 @@ describe('Error Handling Utilities', () => {
 
       it('should create file error', () => {
         const error = AppErrorHandler.createFileError('upload', 'test.jpg');
-        
+
         expect(error.message).toBe('File operation failed: upload for test.jpg');
         expect(error.code).toBe('FILE_ERROR');
         expect(error.details).toEqual({ operation: 'upload', filename: 'test.jpg' });
@@ -155,14 +160,14 @@ describe('Error Handling Utilities', () => {
 
       it('should create auth error', () => {
         const error = AppErrorHandler.createAuthError('Token expired');
-        
+
         expect(error.message).toBe('Token expired');
         expect(error.code).toBe('AUTH_ERROR');
       });
 
       it('should create auth error with default message', () => {
         const error = AppErrorHandler.createAuthError();
-        
+
         expect(error.message).toBe('Authentication failed');
         expect(error.code).toBe('AUTH_ERROR');
       });
@@ -195,8 +200,12 @@ describe('Error Handling Utilities', () => {
       const fallback = ErrorBoundaryHelper.getErrorFallback(error, 'TestComponent');
 
       expect(fallback.type).toBe('div');
-      expect(fallback.props.className).toBe('error-boundary');
-      expect(fallback.props.children).toHaveLength(3);
+      expect((fallback.props as { className: string; children: React.ReactNode[] }).className).toBe(
+        'error-boundary'
+      );
+      expect(
+        (fallback.props as { className: string; children: React.ReactNode[] }).children
+      ).toHaveLength(3);
     });
   });
 
@@ -237,12 +246,13 @@ describe('Error Handling Utilities', () => {
     });
 
     it('should retry and eventually succeed', async () => {
-      const operation = vi.fn()
+      const operation = vi
+        .fn()
         .mockRejectedValueOnce(new Error('First fail'))
         .mockRejectedValueOnce(new Error('Second fail'))
         .mockResolvedValue('success');
 
-      const result = await retryOperation(operation, 3, 100, false);
+      const result = await retryOperation(operation, 3, 10, false);
 
       expect(result).toBe('success');
       expect(operation).toHaveBeenCalledTimes(3);
@@ -251,20 +261,21 @@ describe('Error Handling Utilities', () => {
     it('should throw error after max retries', async () => {
       const operation = vi.fn().mockRejectedValue(new Error('Always fails'));
 
-      await expect(retryOperation(operation, 2, 100, false)).rejects.toThrow('Always fails');
+      await expect(retryOperation(operation, 2, 10, false)).rejects.toThrow('Always fails');
       expect(operation).toHaveBeenCalledTimes(3); // Initial + 2 retries
     });
 
     it('should use exponential backoff', async () => {
-      const operation = vi.fn()
+      const operation = vi
+        .fn()
         .mockRejectedValueOnce(new Error('First fail'))
         .mockResolvedValue('success');
 
       vi.useFakeTimers();
-      const promise = retryOperation(operation, 2, 100, true);
-      
+      const promise = retryOperation(operation, 2, 10, true);
+
       // Fast-forward through the backoff delay
-      await vi.advanceTimersByTimeAsync(100);
+      await vi.advanceTimersByTimeAsync(10);
       const result = await promise;
 
       expect(result).toBe('success');
@@ -338,11 +349,12 @@ describe('Error Handling Utilities', () => {
 
       it('should clear field error', () => {
         const result = FormErrorHandler.clearFieldError(testErrors, 'email');
-        
+
         expect(result).toEqual({
           password: ['Too short'],
         });
-        expect(testErrors).toEqual({ // Original should be unchanged
+        expect(testErrors).toEqual({
+          // Original should be unchanged
           email: ['Invalid email', 'Already exists'],
           password: ['Too short'],
         });
@@ -350,7 +362,7 @@ describe('Error Handling Utilities', () => {
 
       it('should set field error', () => {
         const result = FormErrorHandler.setFieldError(testErrors, 'username', 'Required field');
-        
+
         expect(result).toEqual({
           ...testErrors,
           username: ['Required field'],
@@ -362,7 +374,7 @@ describe('Error Handling Utilities', () => {
   describe('setupGlobalErrorHandlers', () => {
     it('should set up global error listeners', () => {
       const addEventListenerSpy = vi.spyOn(window, 'addEventListener');
-      
+
       setupGlobalErrorHandlers();
 
       expect(addEventListenerSpy).toHaveBeenCalledWith('error', expect.any(Function));
@@ -403,7 +415,7 @@ describe('Error Handling Utilities', () => {
       const mockResponse = {
         status: 400,
         json: vi.fn().mockResolvedValue({ message: 'Bad request' }),
-      } as any;
+      } as unknown as Response;
 
       await expect(handleFetchError(mockResponse)).rejects.toThrow();
     });
@@ -412,7 +424,7 @@ describe('Error Handling Utilities', () => {
       const mockResponse = {
         status: 500,
         json: vi.fn().mockRejectedValue(new Error('Invalid JSON')),
-      } as any;
+      } as unknown as Response;
 
       await expect(handleFetchError(mockResponse)).rejects.toThrow();
     });
@@ -425,11 +437,12 @@ describe('Error Handling Utilities', () => {
     });
 
     it('should return fallback for invalid JSON', () => {
+      const logErrorSpy = vi.spyOn(AppErrorHandler, 'logError');
       const fallback = { default: true };
       const result = safeJSONParse('invalid json', fallback);
-      
+
       expect(result).toBe(fallback);
-      expect(AppErrorHandler.logError).toHaveBeenCalled;
+      expect(logErrorSpy).toHaveBeenCalled();
     });
   });
 });
