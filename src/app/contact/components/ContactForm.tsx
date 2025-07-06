@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { Shield, AlertTriangle, CheckCircle } from 'lucide-react';
 
 interface FormData {
   name: string;
@@ -12,6 +14,7 @@ interface FormErrors {
   email?: string;
   subject?: string;
   message?: string;
+  recaptcha?: string;
 }
 
 const ContactForm: React.FC = () => {
@@ -24,6 +27,24 @@ const ContactForm: React.FC = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [securityScore, setSecurityScore] = useState(0);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // Simulate security score calculation
+  useEffect(() => {
+    const calculateSecurityScore = () => {
+      let score = 0;
+      if (formData.name.length > 2) score += 20;
+      if (formData.email.includes('@') && formData.email.includes('.')) score += 20;
+      if (formData.subject.length > 5) score += 20;
+      if (formData.message.length > 10) score += 20;
+      if (recaptchaToken) score += 20;
+      setSecurityScore(score);
+    };
+
+    calculateSecurityScore();
+  }, [formData, recaptchaToken]);
 
   const validateForm = (): FormErrors => {
     const newErrors: FormErrors = {};
@@ -48,6 +69,10 @@ const ContactForm: React.FC = () => {
       newErrors.message = 'Message must be at least 10 characters long';
     }
 
+    if (!recaptchaToken) {
+      newErrors.recaptcha = 'Please complete the reCAPTCHA verification';
+    }
+
     return newErrors;
   };
 
@@ -64,12 +89,29 @@ const ContactForm: React.FC = () => {
     setErrors({});
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setSubmitted(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      // Submit form with reCAPTCHA token
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          recaptchaToken,
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setRecaptchaToken(null);
+        recaptchaRef.current?.reset();
+      } else {
+        throw new Error('Failed to submit form');
+      }
     } catch (error) {
       console.error('Failed to submit form:', error);
+      setErrors({ recaptcha: 'Failed to submit form. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -85,16 +127,41 @@ const ContactForm: React.FC = () => {
     }
   };
 
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+    if (token && errors.recaptcha) {
+      setErrors(prev => ({ ...prev, recaptcha: undefined }));
+    }
+  };
+
+  const handleRecaptchaError = () => {
+    setRecaptchaToken(null);
+    setErrors(prev => ({ ...prev, recaptcha: 'reCAPTCHA error. Please try again.' }));
+  };
+
+  const handleRecaptchaExpired = () => {
+    setRecaptchaToken(null);
+    setErrors(prev => ({ ...prev, recaptcha: 'reCAPTCHA expired. Please verify again.' }));
+  };
+
   if (submitted) {
     return (
       <div className="rounded-none bg-gray-800 p-6 text-white">
         <div className="rounded-none border border-green-700 bg-green-900 p-6 text-center">
-          <h3 className="mb-2 text-xl font-bold text-green-400">Thank You!</h3>
-          <p className="text-green-300">
-            Your message has been sent successfully. We&apos;ll get back to you soon.
+          <CheckCircle size={48} className="mx-auto mb-4 text-green-400" />
+          <h3 className="mb-2 text-xl font-bold text-green-400">Message Sent Successfully!</h3>
+          <p className="text-green-300 mb-4">
+            Thank you for your message. Your form was securely submitted and we&apos;ll get back to you soon.
           </p>
+          <div className="mb-4 flex items-center justify-center gap-2 text-sm text-green-300">
+            <Shield size={16} />
+            <span>Verified with reCAPTCHA</span>
+          </div>
           <button
-            onClick={() => setSubmitted(false)}
+            onClick={() => {
+              setSubmitted(false);
+              setSecurityScore(0);
+            }}
             className="mt-4 rounded-none bg-blue-500 px-4 py-2 text-white transition-colors hover:bg-blue-600"
           >
             Send Another Message
@@ -109,6 +176,41 @@ const ContactForm: React.FC = () => {
       <h2 className="neue-haas-grotesk-display mb-4 text-xl font-bold text-blue-500">
         Contact Form
       </h2>
+
+      {/* Security Score Display */}
+      <div className="mb-6 rounded-none border border-gray-600 bg-gray-700 p-4">
+        <div className="mb-2 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Shield size={16} className="text-blue-400" />
+            <span className="text-sm font-medium text-gray-300">Security Score</span>
+          </div>
+          <span className={`font-bold ${
+            securityScore >= 80 ? 'text-green-400' : 
+            securityScore >= 60 ? 'text-yellow-400' : 'text-red-400'
+          }`}>
+            {securityScore}%
+          </span>
+        </div>
+        <div className="w-full bg-gray-600 h-2 rounded-none">
+          <div 
+            className={`h-full rounded-none transition-all duration-500 ${
+              securityScore >= 80 ? 'bg-green-500' : 
+              securityScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+            }`}
+            style={{ width: `${securityScore}%` }}
+          />
+        </div>
+        <div className="mt-2 flex items-center gap-2">
+          {securityScore >= 80 && <CheckCircle size={14} className="text-green-400" />}
+          {securityScore < 80 && securityScore >= 60 && <AlertTriangle size={14} className="text-yellow-400" />}
+          {securityScore < 60 && <AlertTriangle size={14} className="text-red-400" />}
+          <span className="text-xs text-gray-400">
+            {securityScore >= 80 && 'High security - Ready to submit'}
+            {securityScore < 80 && securityScore >= 60 && 'Medium security - Complete all fields'}
+            {securityScore < 60 && 'Low security - Please fill out the form and verify reCAPTCHA'}
+          </span>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -185,6 +287,29 @@ const ContactForm: React.FC = () => {
           {errors.message && <p className="mt-1 text-sm text-red-400">{errors.message}</p>}
         </div>
 
+        {/* reCAPTCHA */}
+        <div>
+          <label className="mb-2 block text-sm font-medium text-gray-300">
+            Security Verification *
+          </label>
+          <div className="flex flex-col items-start gap-2">
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'}
+              onChange={handleRecaptchaChange}
+              onError={handleRecaptchaError}
+              onExpired={handleRecaptchaExpired}
+              theme="dark"
+              size="normal"
+            />
+            {errors.recaptcha && <p className="text-sm text-red-400">{errors.recaptcha}</p>}
+          </div>
+          <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
+            <Shield size={12} />
+            <span>This form is protected by reCAPTCHA and subject to Google's Privacy Policy and Terms of Service.</span>
+          </div>
+        </div>
+
         <div className="flex gap-4">
           <button
             type="submit"
@@ -202,6 +327,8 @@ const ContactForm: React.FC = () => {
             onClick={() => {
               setFormData({ name: '', email: '', subject: '', message: '' });
               setErrors({});
+              setRecaptchaToken(null);
+              recaptchaRef.current?.reset();
             }}
             className="rounded-none bg-gray-600 px-6 py-2 font-medium text-white transition-colors hover:bg-gray-700"
           >

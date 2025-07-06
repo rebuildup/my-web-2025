@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - My Web 2025</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+
+    .message {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 30px;
+      opacity: 0.8;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: #0066ff;
+      border-color: #0066ff;
+    }
+
+    .btn-primary:hover {
+      background: #0056e0;
+    }
+
+    .features {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .features h3 {
+      font-size: 16px;
+      margin-bottom: 15px;
+      opacity: 0.9;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 10px;
+      text-align: left;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .feature-icon {
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .status {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .status-online {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .status-offline {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .subtitle {
+        font-size: 16px;
+      }
+      
+      .buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn {
+        width: 100%;
+        max-width: 200px;
+      }
+    }
+
+    /* Animation */
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.7;
+      }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon pulse">
+      📱
+    </div>
+    
+    <h1>You're Offline</h1>
+    <p class="subtitle">No Internet Connection</p>
+    
+    <p class="message">
+      Don't worry! Many features of My Web 2025 work offline. 
+      You can still access cached content and use some interactive tools.
+    </p>
+
+    <div class="buttons">
+      <button class="btn btn-primary" onclick="location.reload()">
+        🔄 Try Again
+      </button>
+      <a href="/" class="btn">
+        🏠 Go Home
+      </a>
+      <a href="/tools" class="btn">
+        🛠️ Tools
+      </a>
+    </div>
+
+    <div class="features">
+      <h3>Available Offline:</h3>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">📝</div>
+          <span>Interactive Tools (limited functionality)</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🎨</div>
+          <span>Color Palette Generator</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">⏱️</div>
+          <span>Pomodoro Timer</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔢</div>
+          <span>Text Counter</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📖</div>
+          <span>Cached Portfolio Items</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="status" id="connection-status">
+      <div class="status-offline">
+        ❌ No Internet Connection
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Monitor network status
+    function updateConnectionStatus() {
+      const statusEl = document.getElementById('connection-status');
+      
+      if (navigator.onLine) {
+        statusEl.innerHTML = '<div class="status-online">✅ Connection Restored</div>';
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
+      } else {
+        statusEl.innerHTML = '<div class="status-offline">❌ No Internet Connection</div>';
+      }
+    }
+
+    // Listen for online/offline events
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+
+    // Initial status check
+    updateConnectionStatus();
+
+    // Periodic connectivity check
+    setInterval(() => {
+      // Try to fetch a small resource to test connectivity
+      fetch('/', { method: 'HEAD', cache: 'no-cache' })
+        .then(() => {
+          if (!navigator.onLine) {
+            // Force online status update
+            window.dispatchEvent(new Event('online'));
+          }
+        })
+        .catch(() => {
+          if (navigator.onLine) {
+            // Force offline status update
+            window.dispatchEvent(new Event('offline'));
+          }
+        });
+    }, 5000);
+
+    // Service Worker registration check
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then((registration) => {
+        console.log('Service Worker is ready');
+      });
+    }
+  </script>
+</body>
+</html>
