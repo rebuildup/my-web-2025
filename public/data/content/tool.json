@@ -142,5 +142,257 @@
       "keywords": ["Pomodoro Timer", "Productivity", "Time Management", "Focus Tool", "Task Tracking"],
       "ogImage": "/images/tools/pomodoro-og.jpg"
     }
+  },
+  {
+    "id": "tool-5",
+    "type": "tool",
+    "title": "Business Mail Block",
+    "description": "Generate professional email signatures and templates with customizable layouts, social links, and corporate branding elements.",
+    "category": "communication",
+    "tags": ["Email", "Signature", "Business", "Template", "Branding"],
+    "status": "published",
+    "priority": 75,
+    "createdAt": "2024-08-15T10:30:00.000Z",
+    "updatedAt": "2024-08-15T10:30:00.000Z",
+    "publishedAt": "2024-08-15T10:30:00.000Z",
+    "thumbnail": "/images/tools/mail-block-thumb.jpg",
+    "customFields": {
+      "toolType": "generator",
+      "difficulty": "beginner",
+      "estimatedTime": "5-10 minutes",
+      "toolConfig": {
+        "features": ["Multiple layouts", "Social media links", "HTML export", "Mobile responsive"],
+        "technologies": ["React", "HTML/CSS Generator", "Template Engine"]
+      }
+    },
+    "content": "# Business Mail Block\n\nCreate professional email signatures and templates with ease. Perfect for businesses, freelancers, and professionals who want to make a great impression.\n\n## Features\n\n### Signature Templates\n- **Executive Style**: Professional layouts for C-level executives\n- **Standard Employee**: Clean designs for general staff\n- **Creative Professional**: Artistic layouts for designers and creatives\n- **Freelancer**: Personal branding focused templates\n- **Minimalist**: Clean and simple designs\n\n### Customization Options\n- **Personal Information**: Name, title, company, contact details\n- **Social Media Links**: LinkedIn, Twitter, Instagram, Facebook\n- **Logo Integration**: Company logo and personal branding\n- **Color Schemes**: Brand colors and custom palettes\n- **Typography**: Font selection and sizing\n\n### Export Formats\n- **HTML**: Rich HTML for modern email clients\n- **Plain Text**: Fallback for text-only clients\n- **Outlook Compatible**: Optimized for Microsoft Outlook\n- **Gmail Ready**: Tested with Gmail's formatting\n- **Mobile Responsive**: Looks great on all devices\n\n## Use Cases\n\n- Corporate email signatures\n- Freelancer branding\n- Marketing campaigns\n- Event promotions\n- Professional networking",
+    "stats": {
+      "views": 1247,
+      "likes": 78,
+      "shares": 23,
+      "lastViewed": "2024-12-19T15:20:00.000Z"
+    },
+    "seo": {
+      "title": "Business Mail Block - Professional Email Signature Generator",
+      "description": "Create professional email signatures with custom layouts, social links, and branding. Free online tool for business use.",
+      "keywords": ["Email Signature", "Business Email", "Professional Template", "Email Marketing", "Corporate Branding"],
+      "ogImage": "/images/tools/mail-block-og.jpg"
+    }
+  },
+  {
+    "id": "tool-6",
+    "type": "tool",
+    "title": "AE Expression Helper",
+    "description": "After Effects expression generator and reference tool with common expressions, custom property controls, and animation presets.",
+    "category": "development",
+    "tags": ["After Effects", "Expression", "Animation", "JavaScript", "Motion Graphics"],
+    "status": "published",
+    "priority": 70,
+    "createdAt": "2024-07-20T14:15:00.000Z",
+    "updatedAt": "2024-07-20T14:15:00.000Z",
+    "publishedAt": "2024-07-20T14:15:00.000Z",
+    "thumbnail": "/images/tools/ae-expression-thumb.jpg",
+    "customFields": {
+      "toolType": "reference",
+      "difficulty": "intermediate",
+      "estimatedTime": "5-30 minutes",
+      "toolConfig": {
+        "features": ["Expression library", "Code generator", "Property controls", "Animation presets"],
+        "technologies": ["JavaScript", "After Effects API", "Code Editor", "Syntax Highlighting"]
+      }
+    },
+    "content": "# AE Expression Helper\n\nStreamline your After Effects workflow with this comprehensive expression library and generator. Perfect for motion graphics artists and animators.\n\n## Expression Categories\n\n### Transform Animations\n- **Position**: Bounce, swing, follow path animations\n- **Rotation**: Continuous rotation, oscillation, spring physics\n- **Scale**: Elastic scaling, breathing effects, random variations\n- **Opacity**: Fade in/out, flickering, pulse effects\n\n### Text Animations\n- **Typewriter Effect**: Character-by-character reveal\n- **Text Tracking**: Dynamic letter spacing\n- **Text Scramble**: Random character replacement\n- **Source Text Animation**: Animated text content changes\n\n### Advanced Controls\n- **Camera Controls**: Auto-focus, shake, orbit animations\n- **Shape Layers**: Dynamic path creation and morphing\n- **Time Controls**: Speed ramping, time remapping\n- **Random Functions**: Noise-based animations, random selection\n\n## Features\n\n### Code Generator\n- **Interactive Builder**: Visual interface for expression creation\n- **Parameter Controls**: Slider controls for easy adjustment\n- **Copy-Paste Ready**: One-click copying to clipboard\n- **Syntax Highlighting**: Color-coded expression syntax\n\n### Learning Resources\n- **Expression Breakdown**: Detailed explanations of each line\n- **Video Tutorials**: Embedded tutorial videos\n- **Best Practices**: Performance optimization tips\n- **Troubleshooting**: Common error solutions\n\n## Perfect For\n\n- Motion graphics artists\n- Video editors\n- Animation students\n- Creative professionals\n- After Effects beginners learning expressions",
+    "stats": {
+      "views": 1891,
+      "likes": 124,
+      "shares": 56,
+      "lastViewed": "2024-12-18T11:45:00.000Z"
+    },
+    "seo": {
+      "title": "AE Expression Helper - After Effects Animation Tool",
+      "description": "Comprehensive After Effects expression library and generator. Create complex animations with ready-to-use expressions.",
+      "keywords": ["After Effects", "Expression", "Animation", "Motion Graphics", "JavaScript", "AE Tool"],
+      "ogImage": "/images/tools/ae-expression-og.jpg"
+    }
+  },
+  {
+    "id": "tool-7",
+    "type": "tool",
+    "title": "ProtoType Game",
+    "description": "Interactive typing game to improve your typing speed and accuracy with customizable difficulty levels and detailed performance statistics.",
+    "category": "game",
+    "tags": ["Typing", "Game", "Speed", "Accuracy", "Practice"],
+    "status": "published",
+    "priority": 65,
+    "createdAt": "2024-06-10T16:00:00.000Z",
+    "updatedAt": "2024-06-10T16:00:00.000Z",
+    "publishedAt": "2024-06-10T16:00:00.000Z",
+    "thumbnail": "/images/tools/prototype-thumb.jpg",
+    "customFields": {
+      "toolType": "game",
+      "difficulty": "beginner",
+      "estimatedTime": "10-30 minutes",
+      "toolConfig": {
+        "features": ["Multiple game modes", "Progress tracking", "Custom texts", "Leaderboards"],
+        "technologies": ["React", "Game Engine", "Statistics API", "Local Storage"]
+      }
+    },
+    "content": "# ProtoType Game\n\nImprove your typing skills with this engaging and educational typing game. Perfect for students, professionals, and anyone looking to enhance their keyboard proficiency.\n\n## Game Modes\n\n### Speed Challenges\n- **Words Per Minute**: Classic WPM tests with common words\n- **Quote Racing**: Type famous quotes and literature excerpts\n- **News Articles**: Practice with current news content\n- **Technical Text**: Programming code and technical documentation\n\n### Accuracy Focus\n- **Perfect Mode**: Zero-mistake challenges\n- **Error Correction**: Learn from common typing mistakes\n- **Slow and Steady**: Focus on precision over speed\n- **Punctuation Practice**: Master special characters and symbols\n\n### Custom Practice\n- **Personal Text**: Upload your own practice material\n- **Language Support**: Multiple language keyboards\n- **Programming Languages**: Code-specific practice sessions\n- **Custom Word Lists**: Create targeted vocabulary practice\n\n## Features\n\n### Performance Tracking\n- **Real-time Metrics**: Live WPM and accuracy feedback\n- **Progress Graphs**: Visual progress tracking over time\n- **Mistake Analysis**: Identify and improve weak areas\n- **Achievement System**: Unlock badges and milestones\n\n### Competitive Elements\n- **Daily Challenges**: New challenges every day\n- **Global Leaderboards**: Compete with players worldwide\n- **Friend Challenges**: Private competitions with friends\n- **Typing Races**: Real-time multiplayer races\n\n### Learning Tools\n- **Finger Position Guide**: Visual keyboard layout guide\n- **Touch Typing Lessons**: Structured learning progression\n- **Common Mistakes**: Personalized improvement suggestions\n- **Practice Recommendations**: AI-powered practice suggestions\n\n## Benefits\n\n- Increased typing speed and accuracy\n- Better keyboard familiarity\n- Improved productivity for work and study\n- Enhanced muscle memory development\n- Fun and engaging skill building",
+    "stats": {
+      "views": 2156,
+      "likes": 143,
+      "shares": 67,
+      "lastViewed": "2024-12-17T13:30:00.000Z"
+    },
+    "seo": {
+      "title": "ProtoType Game - Typing Speed and Accuracy Trainer",
+      "description": "Improve typing skills with this interactive game. Multiple modes, progress tracking, and competitive features included.",
+      "keywords": ["Typing Game", "Typing Speed", "Keyboard Practice", "WPM Test", "Typing Trainer"],
+      "ogImage": "/images/tools/prototype-og.jpg"
+    }
+  },
+  {
+    "id": "tool-8",
+    "type": "tool",
+    "title": "Sequential PNG Preview",
+    "description": "Preview and analyze PNG sequences with frame-by-frame navigation, timing controls, and export options for animation workflows.",
+    "category": "utility",
+    "tags": ["PNG", "Sequence", "Animation", "Preview", "Frame Analysis"],
+    "status": "published",
+    "priority": 60,
+    "createdAt": "2024-05-15T09:30:00.000Z",
+    "updatedAt": "2024-05-15T09:30:00.000Z",
+    "publishedAt": "2024-05-15T09:30:00.000Z",
+    "thumbnail": "/images/tools/png-preview-thumb.jpg",
+    "customFields": {
+      "toolType": "analyzer",
+      "difficulty": "intermediate",
+      "estimatedTime": "5-15 minutes",
+      "toolConfig": {
+        "features": ["Frame navigation", "Timing controls", "Export options", "Batch processing"],
+        "technologies": ["React", "Canvas API", "File API", "Image Processing"]
+      }
+    },
+    "content": "# Sequential PNG Preview\n\nAnalyze and preview PNG image sequences for animation and VFX work. Essential tool for animators, VFX artists, and game developers.\n\n## Core Features\n\n### Sequence Loading\n- **Drag & Drop**: Easy sequence loading interface\n- **Batch Upload**: Load multiple sequences simultaneously\n- **Auto-Detection**: Automatic frame order detection\n- **File Validation**: PNG format and resolution checking\n\n### Playback Controls\n- **Frame Navigation**: Step through frames manually\n- **Playback Speed**: Adjustable FPS from 1-60\n- **Loop Options**: Loop, bounce, or single playthrough\n- **Scrub Timeline**: Scrub through frames with precision\n\n### Analysis Tools\n- **Frame Information**: Resolution, file size, color depth\n- **Sequence Stats**: Total frames, duration, file sizes\n- **Quality Assessment**: Compression analysis and artifacts detection\n- **Comparison Mode**: Side-by-side frame comparison\n\n## Export Options\n\n### Video Formats\n- **MP4**: High-quality video export\n- **WebM**: Web-optimized format\n- **GIF**: Animated GIF creation\n- **MOV**: Professional video format\n\n### Image Formats\n- **Contact Sheet**: Grid layout of all frames\n- **Individual Frames**: Export specific frames\n- **Optimized PNG**: Compressed PNG sequences\n- **Sprite Sheet**: Game development sprite sheets\n\n## Professional Applications\n\n### Animation Workflows\n- **Preview Renders**: Quick animation preview\n- **Client Reviews**: Share animation progress\n- **Quality Control**: Frame-by-frame inspection\n- **Timing Adjustments**: Test different frame rates\n\n### VFX and Compositing\n- **Render Verification**: Check render sequences\n- **Element Integration**: Preview compositing elements\n- **Color Consistency**: Analyze color across frames\n- **Motion Analysis**: Study movement patterns\n\n### Game Development\n- **Sprite Animation**: Preview character animations\n- **UI Animation**: Test interface animations\n- **Effect Sequences**: Particle and effect previews\n- **Asset Validation**: Ensure proper animation loops\n\n## Technical Specifications\n\n- Supports PNG sequences up to 4K resolution\n- Maximum 1000 frames per sequence\n- Batch processing up to 10 sequences\n- Real-time playback up to 60 FPS\n- Export formats: MP4, WebM, GIF, MOV",
+    "stats": {
+      "views": 892,
+      "likes": 67,
+      "shares": 23,
+      "lastViewed": "2024-12-16T10:15:00.000Z"
+    },
+    "seo": {
+      "title": "Sequential PNG Preview - Animation Sequence Analyzer",
+      "description": "Preview and analyze PNG image sequences for animation workflows. Frame navigation, timing controls, and export options.",
+      "keywords": ["PNG Sequence", "Animation Preview", "Frame Analysis", "VFX Tool", "Animation Workflow"],
+      "ogImage": "/images/tools/png-preview-og.jpg"
+    }
+  },
+  {
+    "id": "tool-9",
+    "type": "tool",
+    "title": "SVG to TSX Converter",
+    "description": "Convert SVG files to TypeScript React components with customizable props, styling options, and optimization features.",
+    "category": "development",
+    "tags": ["SVG", "React", "TypeScript", "Component", "Converter"],
+    "status": "published",
+    "priority": 65,
+    "createdAt": "2024-04-20T12:45:00.000Z",
+    "updatedAt": "2024-04-20T12:45:00.000Z",
+    "publishedAt": "2024-04-20T12:45:00.000Z",
+    "thumbnail": "/images/tools/svg2tsx-thumb.jpg",
+    "customFields": {
+      "toolType": "converter",
+      "difficulty": "intermediate",
+      "estimatedTime": "2-10 minutes",
+      "toolConfig": {
+        "features": ["Batch conversion", "TypeScript generation", "Component optimization", "Custom props"],
+        "technologies": ["React", "TypeScript", "SVG Parser", "Code Generator"]
+      }
+    },
+    "content": "# SVG to TSX Converter\n\nTransform SVG icons and graphics into reusable React TypeScript components. Essential tool for React developers and design systems.\n\n## Conversion Features\n\n### Input Options\n- **Single SVG**: Convert individual SVG files\n- **Batch Processing**: Convert multiple SVGs simultaneously\n- **Direct Paste**: Paste SVG code directly\n- **URL Import**: Import SVGs from URLs\n\n### Component Generation\n- **TypeScript Components**: Full TypeScript support with proper typing\n- **Customizable Props**: Size, color, className, and custom props\n- **Component Names**: Auto-generated or custom component names\n- **Export Formats**: Named exports, default exports, or both\n\n### Optimization\n- **SVG Optimization**: Remove unnecessary attributes and whitespace\n- **Path Simplification**: Optimize SVG paths for smaller file sizes\n- **Accessibility**: Add proper ARIA labels and roles\n- **Performance**: Optimize for React rendering performance\n\n## Output Customization\n\n### Component Structure\n- **Functional Components**: Modern React functional component syntax\n- **Props Interface**: TypeScript interfaces for component props\n- **Default Props**: Configurable default values\n- **Forward Ref**: Ref forwarding support for DOM access\n\n### Styling Options\n- **CSS-in-JS**: Styled-components or emotion integration\n- **CSS Modules**: CSS module class support\n- **Inline Styles**: React inline style objects\n- **Tailwind CSS**: Tailwind class integration\n\n### Advanced Features\n- **Size Props**: Dynamic width and height props\n- **Color Props**: Dynamic fill and stroke color props\n- **Theme Integration**: Support for theme-based styling\n- **Icon Libraries**: Generate complete icon library exports\n\n## Development Workflow\n\n### Design System Integration\n- **Consistent Naming**: Standardized component naming conventions\n- **Type Safety**: Full TypeScript integration\n- **Documentation**: Auto-generated prop documentation\n- **Storybook**: Optional Storybook stories generation\n\n### Code Quality\n- **ESLint Ready**: Generated code follows ESLint rules\n- **Prettier Formatted**: Properly formatted output code\n- **Tree Shaking**: Optimized for tree shaking\n- **Bundle Size**: Minimal impact on bundle size\n\n## Export Formats\n\n### Individual Components\n```tsx\n// IconName.tsx\nexport interface IconNameProps {\n  size?: number;\n  color?: string;\n  className?: string;\n}\n\nexport const IconName: React.FC<IconNameProps> = ({ size = 24, color = 'currentColor', className }) => {\n  // SVG component code\n};\n```\n\n### Icon Library\n```tsx\n// icons/index.ts\nexport { IconName } from './IconName';\nexport { AnotherIcon } from './AnotherIcon';\n\n// Complete icon library export\nexport * as Icons from './icons';\n```\n\n## Use Cases\n\n- React component libraries\n- Design system development\n- Icon library creation\n- SVG asset optimization\n- TypeScript migration projects",
+    "stats": {
+      "views": 1567,
+      "likes": 98,
+      "shares": 45,
+      "lastViewed": "2024-12-15T14:20:00.000Z"
+    },
+    "seo": {
+      "title": "SVG to TSX Converter - React TypeScript Component Generator",
+      "description": "Convert SVG files to TypeScript React components with optimization and customization options. Perfect for design systems.",
+      "keywords": ["SVG Converter", "React Component", "TypeScript", "SVG to React", "Icon Generator"],
+      "ogImage": "/images/tools/svg2tsx-og.jpg"
+    }
+  },
+  {
+    "id": "tool-10",
+    "type": "tool",
+    "title": "Pi Memory Game",
+    "description": "Challenge your memory by reciting digits of Pi with progressive difficulty levels, achievements, and educational information about the mathematical constant.",
+    "category": "game",
+    "tags": ["Pi", "Memory", "Mathematics", "Education", "Challenge"],
+    "status": "published",
+    "priority": 55,
+    "createdAt": "2024-03-15T11:00:00.000Z",
+    "updatedAt": "2024-03-15T11:00:00.000Z",
+    "publishedAt": "2024-03-15T11:00:00.000Z",
+    "thumbnail": "/images/tools/pi-game-thumb.jpg",
+    "customFields": {
+      "toolType": "game",
+      "difficulty": "beginner",
+      "estimatedTime": "5-20 minutes",
+      "toolConfig": {
+        "features": ["Progressive difficulty", "Achievement system", "Educational content", "Leaderboards"],
+        "technologies": ["React", "Game Logic", "Mathematics API", "Achievement System"]
+      }
+    },
+    "content": "# Pi Memory Game\n\nTest and improve your memory with the infinite digits of Pi. Educational and entertaining game for mathematics enthusiasts and memory training.\n\n## Game Modes\n\n### Classic Mode\n- **Progressive Challenge**: Start with 3.14 and keep going\n- **Time Pressure**: Optional time limits for added challenge\n- **Mistake Tolerance**: Choose between strict or forgiving modes\n- **Hint System**: Get hints when you're stuck\n\n### Learning Mode\n- **Guided Practice**: Step-by-step digit learning\n- **Memory Techniques**: Learn mnemonics and memory aids\n- **Chunk Training**: Practice with digit groups\n- **Pattern Recognition**: Identify patterns in Pi's digits\n\n### Challenge Modes\n- **Speed Round**: How fast can you recite 100 digits?\n- **Endurance Test**: How far can you go without mistakes?\n- **Daily Challenge**: New daily targets and goals\n- **Competition Mode**: Multiplayer challenges\n\n## Educational Features\n\n### Pi Facts and History\n- **Mathematical Significance**: Why Pi is important\n- **Historical Timeline**: Pi discoveries through history\n- **Calculation Methods**: How Pi has been calculated\n- **Real-world Applications**: Where Pi appears in nature and science\n\n### Memory Training\n- **Mnemonic Techniques**: Word and phrase memory aids\n- **Visualization**: Visual memory techniques\n- **Chunking Strategies**: Group digits for easier memorization\n- **Practice Schedules**: Optimal learning and review timing\n\n### Progress Tracking\n- **Personal Records**: Track your best performances\n- **Learning Analytics**: Analyze your memorization patterns\n- **Difficulty Progression**: Gradually increase challenge level\n- **Achievement Unlocking**: Unlock badges and milestones\n\n## Features\n\n### Game Mechanics\n- **Digit Input**: Type or click digit interface\n- **Visual Feedback**: Immediate right/wrong feedback\n- **Error Analysis**: Learn from mistakes with explanations\n- **Resume Feature**: Continue from where you left off\n\n### Customization\n- **Difficulty Settings**: Adjust challenge level\n- **Interface Themes**: Choose from multiple visual themes\n- **Sound Effects**: Optional audio feedback\n- **Input Methods**: Keyboard, mouse, or touch input\n\n### Social Features\n- **Leaderboards**: Global and friend rankings\n- **Share Achievements**: Social media integration\n- **Challenge Friends**: Send challenges to friends\n- **Community**: Join the Pi memorization community\n\n## Educational Value\n\n### Mathematics Learning\n- **Number Theory**: Understanding irrational numbers\n- **Geometry Connections**: Pi's role in circles and spheres\n- **Calculus Applications**: Pi in advanced mathematics\n- **Mathematical Beauty**: Appreciate mathematical elegance\n\n### Memory Skills\n- **Working Memory**: Improve short-term memory capacity\n- **Long-term Retention**: Build lasting memory skills\n- **Concentration**: Enhance focus and attention span\n- **Mental Agility**: Develop quick recall abilities\n\n## Achievements System\n\n- **First Steps**: Recite first 10 digits\n- **Getting Started**: Reach 50 digits\n- **Serious Student**: Memorize 100 digits\n- **Pi Enthusiast**: Achieve 200 digits\n- **Memory Master**: Recite 500+ digits\n- **Pi Legend**: Join the 1000+ digits club",
+    "stats": {
+      "views": 743,
+      "likes": 52,
+      "shares": 18,
+      "lastViewed": "2024-12-14T16:45:00.000Z"
+    },
+    "seo": {
+      "title": "Pi Memory Game - Mathematical Memory Training",
+      "description": "Challenge your memory with Pi digits. Educational game with progressive difficulty and achievement system.",
+      "keywords": ["Pi Game", "Memory Training", "Mathematics", "Educational Game", "Number Memory"],
+      "ogImage": "/images/tools/pi-game-og.jpg"
+    }
+  },
+  {
+    "id": "tool-11",
+    "type": "tool",
+    "title": "Commission Price Calculator",
+    "description": "Calculate project pricing for freelance work with customizable rates, project complexity factors, and client management features.",
+    "category": "utility",
+    "tags": ["Pricing", "Calculator", "Freelance", "Commission", "Project Management"],
+    "status": "published",
+    "priority": 70,
+    "createdAt": "2024-02-10T08:15:00.000Z",
+    "updatedAt": "2024-02-10T08:15:00.000Z",
+    "publishedAt": "2024-02-10T08:15:00.000Z",
+    "thumbnail": "/images/tools/price-calc-thumb.jpg",
+    "customFields": {
+      "toolType": "calculator",
+      "difficulty": "intermediate",
+      "estimatedTime": "10-30 minutes",
+      "toolConfig": {
+        "features": ["Multiple pricing models", "Project templates", "Quote generation", "Cost tracking"],
+        "technologies": ["React", "Calculator Engine", "PDF Generation", "Data Persistence"]
+      }
+    },
+    "content": "# Commission Price Calculator\n\nCalculate fair and profitable pricing for your creative projects. Essential tool for freelancers, agencies, and creative professionals.\n\n## Pricing Models\n\n### Hourly Rate Calculation\n- **Base Hourly Rate**: Set your standard hourly rate\n- **Time Estimation**: Project duration estimation tools\n- **Complexity Multipliers**: Adjust rates based on project difficulty\n- **Rush Job Premiums**: Additional charges for urgent projects\n\n### Fixed Price Projects\n- **Scope-based Pricing**: Price based on project deliverables\n- **Value-based Pricing**: Price based on client value received\n- **Package Pricing**: Pre-defined service packages\n- **Milestone Payments**: Break projects into payment phases\n\n### Hybrid Models\n- **Retainer + Hourly**: Combine retainer with hourly billing\n- **Cap and Collar**: Set minimum and maximum project costs\n- **Performance Bonuses**: Success-based pricing additions\n- **Equity Arrangements**: Partial equity compensation\n\n## Cost Factors\n\n### Direct Costs\n- **Labor Hours**: Your time and team time\n- **Software Licenses**: Required software and tools\n- **Stock Assets**: Photos, fonts, music, graphics\n- **Third-party Services**: Contractors, specialists, vendors\n\n### Indirect Costs\n- **Business Overhead**: Office, utilities, insurance\n- **Marketing Costs**: Client acquisition expenses\n- **Administrative Time**: Project management, communication\n- **Professional Development**: Skills training and education\n\n### Risk Factors\n- **Client Risk Assessment**: Payment history, project clarity\n- **Project Complexity**: Technical difficulty, creative challenge\n- **Timeline Constraints**: Tight deadlines, dependency risks\n- **Scope Creep Potential**: Likelihood of additional work\n\n## Features\n\n### Project Templates\n- **Web Design**: Website design and development projects\n- **Logo Design**: Brand identity and logo creation\n- **Video Production**: Video editing and motion graphics\n- **Marketing Materials**: Brochures, flyers, advertising\n- **Custom Templates**: Create your own project types\n\n### Quote Generation\n- **Professional Proposals**: Branded PDF proposals\n- **Itemized Quotes**: Detailed cost breakdowns\n- **Terms and Conditions**: Standard contract terms\n- **Multiple Options**: Present different pricing tiers\n\n### Client Management\n- **Client Database**: Store client information and history\n- **Project History**: Track past projects and rates\n- **Payment Terms**: Flexible payment schedule options\n- **Follow-up Reminders**: Automatic quote follow-ups\n\n## Advanced Features\n\n### Profitability Analysis\n- **Margin Calculation**: Ensure healthy profit margins\n- **Breakeven Analysis**: Minimum pricing requirements\n- **ROI Tracking**: Return on investment analysis\n- **Competitive Benchmarking**: Compare with market rates\n\n### Reporting and Analytics\n- **Revenue Tracking**: Monthly and yearly revenue reports\n- **Project Performance**: Analyze project profitability\n- **Time Tracking Integration**: Connect with time tracking tools\n- **Tax Preparation**: Export data for tax purposes\n\n### Collaboration Tools\n- **Team Rates**: Different rates for team members\n- **Shared Templates**: Team-wide pricing templates\n- **Approval Workflows**: Multi-stage quote approval\n- **Client Collaboration**: Share quotes and get feedback\n\n## Industry Applications\n\n### Creative Services\n- Graphic design and branding\n- Web design and development\n- Photography and videography\n- Content creation and copywriting\n\n### Consulting Services\n- Business consulting\n- Technical consulting\n- Marketing strategy\n- Training and workshops\n\n### Technical Services\n- Software development\n- IT support and maintenance\n- Data analysis and reporting\n- System integration\n\n## Benefits\n\n- Accurate project pricing\n- Professional quote presentation\n- Improved profit margins\n- Streamlined client communication\n- Better project tracking\n- Data-driven pricing decisions",
+    "stats": {
+      "views": 1234,
+      "likes": 87,
+      "shares": 34,
+      "lastViewed": "2024-12-13T12:30:00.000Z"
+    },
+    "seo": {
+      "title": "Commission Price Calculator - Freelance Pricing Tool",
+      "description": "Calculate fair pricing for creative and freelance projects. Multiple pricing models, templates, and quote generation included.",
+      "keywords": ["Freelance Pricing", "Commission Calculator", "Project Pricing", "Quote Generator", "Freelance Tool"],
+      "ogImage": "/images/tools/price-calc-og.jpg"
+    }
   }
 ]
