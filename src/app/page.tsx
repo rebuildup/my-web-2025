@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Briefcase, Wrench, BookOpen, User, Mail, Settings } from "lucide-react";
 

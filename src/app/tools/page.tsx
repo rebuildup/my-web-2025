@@ -7,7 +7,7 @@ import {
   Palette, 
   QrCode, 
   Timer, 
-  GameController2, 
+  Gamepad2, 
   FileCode, 
   Image as ImageIcon,
   Type,
@@ -31,7 +31,7 @@ const toolCategories = [
   { id: 'design', name: 'デザイン', icon: <Palette size={20} /> },
   { id: 'utility', name: 'ユーティリティ', icon: <QrCode size={20} /> },
   { id: 'productivity', name: '生産性', icon: <Timer size={20} /> },
-  { id: 'game', name: 'ゲーム', icon: <GameController2 size={20} /> },
+  { id: 'game', name: 'ゲーム', icon: <Gamepad2 size={20} /> },
   { id: 'development', name: '開発', icon: <FileCode size={20} /> },
   { id: 'writing', name: 'ライティング', icon: <Type size={20} /> },
   { id: 'communication', name: 'コミュニケーション', icon: <Mail size={20} /> },
@@ -367,11 +367,11 @@ function getToolIcon(title: string) {
     'Pomodoro Timer': <Timer size={48} className="text-primary/60" />,
     'Business Mail Block': <Mail size={48} className="text-primary/60" />,
     'AE Expression': <Code2 size={48} className="text-primary/60" />,
-    'ProtoType': <GameController2 size={48} className="text-primary/60" />,
+    'ProtoType': <Gamepad2 size={48} className="text-primary/60" />,
     'Sequential PNG Preview': <ImageIcon size={48} className="text-primary/60" />,
     'SVG2TSX': <FileCode size={48} className="text-primary/60" />,
     'Price Calculator': <Calculator size={48} className="text-primary/60" />,
-    'Pi Game': <GameController2 size={48} className="text-primary/60" />,
+    'Pi Game': <Gamepad2 size={48} className="text-primary/60" />,
   };
   
   return iconMap[title] || <Code2 size={48} className="text-primary/60" />;
