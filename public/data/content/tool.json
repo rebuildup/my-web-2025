@@ -142,5 +142,257 @@
       "keywords": ["Pomodoro Timer", "Productivity", "Time Management", "Focus Tool", "Task Tracking"],
       "ogImage": "/images/tools/pomodoro-og.jpg"
     }
+  },
+  {
+    "id": "tool-5",
+    "type": "tool",
+    "title": "Business Mail Block",
+    "description": "Visual email template composer with drag-and-drop blocks for professional business communication.",
+    "category": "communication",
+    "tags": ["Email", "Template", "Business", "Communication", "Block-based"],
+    "status": "published",
+    "priority": 75,
+    "createdAt": "2024-08-15T09:00:00.000Z",
+    "updatedAt": "2024-08-15T09:00:00.000Z",
+    "publishedAt": "2024-08-15T09:00:00.000Z",
+    "thumbnail": "/images/tools/business-mail-thumb.jpg",
+    "customFields": {
+      "toolType": "composer",
+      "difficulty": "intermediate",
+      "estimatedTime": "10-15 minutes",
+      "toolConfig": {
+        "features": ["Drag-and-drop blocks", "Professional templates", "Email preview", "Export options"],
+        "technologies": ["React", "Drag-and-drop API", "Email rendering", "Template engine"]
+      }
+    },
+    "content": "# Business Mail Block\n\nCreate professional business emails with ease using our visual block-based composer. Build emails like building blocks with drag-and-drop functionality.\n\n## Features\n\n### Block-Based Composition\n- **Header Blocks**: Professional email headers\n- **Content Blocks**: Various content types (text, images, lists)\n- **Footer Blocks**: Contact info, signatures, disclaimers\n- **CTA Blocks**: Call-to-action buttons and links\n\n### Professional Templates\n- **Meeting Requests**: Schedule meetings professionally\n- **Follow-ups**: Customer and client follow-ups\n- **Proposals**: Business proposal templates\n- **Newsletters**: Company newsletter formats\n\n### Export Options\n- **HTML**: Clean HTML email code\n- **Plain Text**: Fallback text version\n- **PDF**: Print-ready documents\n- **Integration**: Export to popular email platforms\n\n## Use Cases\n\n- Professional business correspondence\n- Marketing email campaigns\n- Customer communication templates\n- Internal company communications\n- Sales outreach templates",
+    "stats": {
+      "views": 1876,
+      "likes": 92,
+      "shares": 45,
+      "lastViewed": "2024-12-20T13:10:00.000Z"
+    },
+    "seo": {
+      "title": "Business Mail Block - Professional Email Template Builder",
+      "description": "Create professional business emails with drag-and-drop blocks. Perfect for marketing campaigns and business communication.",
+      "keywords": ["Business Email", "Template Builder", "Professional Communication", "Email Marketing"],
+      "ogImage": "/images/tools/business-mail-og.jpg"
+    }
+  },
+  {
+    "id": "tool-6",
+    "type": "tool",
+    "title": "AE Expression",
+    "description": "After Effects expression generator with visual block-based interface for creating complex animations.",
+    "category": "development",
+    "tags": ["After Effects", "Expression", "Animation", "Motion Graphics", "Block-based"],
+    "status": "published",
+    "priority": 70,
+    "createdAt": "2024-07-20T11:30:00.000Z",
+    "updatedAt": "2024-07-20T11:30:00.000Z",
+    "publishedAt": "2024-07-20T11:30:00.000Z",
+    "thumbnail": "/images/tools/ae-expression-thumb.jpg",
+    "customFields": {
+      "toolType": "generator",
+      "difficulty": "advanced",
+      "estimatedTime": "5-20 minutes",
+      "toolConfig": {
+        "features": ["Visual expression builder", "Expression library", "Parameter customization", "Code export"],
+        "technologies": ["React", "Expression parser", "Visual programming", "After Effects API"]
+      }
+    },
+    "content": "# AE Expression\n\nGenerate After Effects expressions visually without coding. Perfect for motion graphics artists and animators who want to create complex animations without writing code.\n\n## Features\n\n### Visual Expression Builder\n- **Block-based Interface**: Drag and drop expression components\n- **Parameter Blocks**: Common animation parameters\n- **Math Operations**: Mathematical functions and operators\n- **Conditional Logic**: If/then/else statements\n\n### Expression Library\n- **Wiggle Effects**: Various wiggle and noise expressions\n- **Bounce & Elastic**: Spring and bounce animations\n- **Looping**: Seamless animation loops\n- **Time-based**: Time-driven animations\n\n### Advanced Features\n- **Custom Variables**: Define and use custom variables\n- **Layer References**: Reference other layers and properties\n- **Expression Validation**: Real-time syntax checking\n- **Export Options**: Copy expression code or save as presets\n\n## Use Cases\n\n- Motion graphics animations\n- UI/UX animation prototypes\n- Complex animation sequences\n- Procedural animation systems\n- Educational expression learning",
+    "stats": {
+      "views": 1234,
+      "likes": 78,
+      "shares": 34,
+      "lastViewed": "2024-12-20T10:25:00.000Z"
+    },
+    "seo": {
+      "title": "AE Expression - After Effects Expression Generator",
+      "description": "Generate After Effects expressions visually with drag-and-drop blocks. Perfect for motion graphics and animation.",
+      "keywords": ["After Effects", "Expression Generator", "Motion Graphics", "Animation Tool"],
+      "ogImage": "/images/tools/ae-expression-og.jpg"
+    }
+  },
+  {
+    "id": "tool-7",
+    "type": "tool",
+    "title": "Pi Game",
+    "description": "Memory challenge game to test how many digits of Pi you can remember in sequence.",
+    "category": "game",
+    "tags": ["Pi", "Memory", "Math", "Game", "Challenge"],
+    "status": "published",
+    "priority": 65,
+    "createdAt": "2024-06-10T14:45:00.000Z",
+    "updatedAt": "2024-06-10T14:45:00.000Z",
+    "publishedAt": "2024-06-10T14:45:00.000Z",
+    "thumbnail": "/images/tools/pi-game-thumb.jpg",
+    "customFields": {
+      "toolType": "game",
+      "difficulty": "beginner",
+      "estimatedTime": "5-30 minutes",
+      "toolConfig": {
+        "features": ["Number pad interface", "Progressive difficulty", "High score tracking", "Pi facts"],
+        "technologies": ["React", "Game logic", "Local Storage", "Pi algorithms"]
+      }
+    },
+    "content": "# Pi Game\n\nTest your memory and mathematical knowledge with this engaging Pi sequence challenge. How many digits of π can you remember?\n\n## Game Features\n\n### Progressive Challenge\n- **Start Easy**: Begin with just 3.14\n- **Increase Difficulty**: Add more digits as you progress\n- **Mistake Tolerance**: Different difficulty levels\n- **Speed Challenges**: Timed rounds for advanced players\n\n### Learning Mode\n- **Pi Facts**: Learn interesting facts about Pi\n- **Digit Patterns**: Understand patterns in Pi's digits\n- **Memory Techniques**: Tips for remembering long sequences\n- **Historical Context**: The story behind Pi\n\n### Scoring System\n- **Personal Best**: Track your longest sequence\n- **Accuracy Score**: Percentage of correct inputs\n- **Speed Bonus**: Faster input = higher scores\n- **Achievements**: Unlock badges for milestones\n\n## Educational Benefits\n\n- Improve number memory\n- Learn mathematical concepts\n- Develop pattern recognition\n- Enhance concentration skills\n- Fun way to learn about Pi",
+    "stats": {
+      "views": 987,
+      "likes": 56,
+      "shares": 23,
+      "lastViewed": "2024-12-20T08:15:00.000Z"
+    },
+    "seo": {
+      "title": "Pi Game - Memory Challenge with Pi Digits",
+      "description": "Test your memory with this Pi sequence challenge game. Learn digits of Pi while having fun!",
+      "keywords": ["Pi Game", "Memory Game", "Math Challenge", "Educational Game"],
+      "ogImage": "/images/tools/pi-game-og.jpg"
+    }
+  },
+  {
+    "id": "tool-8",
+    "type": "tool",
+    "title": "ProtoType",
+    "description": "PIXIjs-powered typing game with GitHub repository integration for coding practice.",
+    "category": "game",
+    "tags": ["Typing", "Game", "PIXIjs", "GitHub", "Coding"],
+    "status": "published",
+    "priority": 60,
+    "createdAt": "2024-05-15T16:00:00.000Z",
+    "updatedAt": "2024-05-15T16:00:00.000Z",
+    "publishedAt": "2024-05-15T16:00:00.000Z",
+    "thumbnail": "/images/tools/prototype-thumb.jpg",
+    "customFields": {
+      "toolType": "game",
+      "difficulty": "intermediate",
+      "estimatedTime": "10-60 minutes",
+      "toolConfig": {
+        "features": ["PIXIjs graphics", "GitHub integration", "Typing challenges", "Code snippets"],
+        "technologies": ["React", "PIXIjs", "GitHub API", "Typing algorithms"]
+      }
+    },
+    "content": "# ProtoType\n\nImprove your typing skills with this interactive PIXIjs-powered typing game. Practice with real code from GitHub repositories.\n\n## Game Features\n\n### PIXIjs Graphics\n- **Smooth Animations**: Fluid typing animations\n- **Visual Effects**: Particle effects and transitions\n- **Responsive Design**: Adapts to different screen sizes\n- **Customizable Themes**: Various visual themes\n\n### GitHub Integration\n- **Repository Loading**: Load code from any public GitHub repo\n- **Language Support**: Multiple programming languages\n- **File Selection**: Choose specific files to type\n- **Syntax Highlighting**: Code highlighting during typing\n\n### Typing Challenges\n- **Speed Tests**: Measure words per minute\n- **Accuracy Tracking**: Monitor typing accuracy\n- **Code Challenges**: Type real code snippets\n- **Progressive Difficulty**: Adaptive challenge levels\n\n### Statistics & Progress\n- **Performance Metrics**: Detailed typing statistics\n- **Progress Tracking**: Long-term improvement tracking\n- **Leaderboards**: Compare with other users\n- **Achievement System**: Unlock coding achievements\n\n## Benefits\n\n- Improve typing speed and accuracy\n- Practice with real code\n- Learn new programming languages\n- Develop muscle memory for coding\n- Fun way to practice programming syntax",
+    "stats": {
+      "views": 1567,
+      "likes": 89,
+      "shares": 41,
+      "lastViewed": "2024-12-20T12:30:00.000Z"
+    },
+    "seo": {
+      "title": "ProtoType - PIXIjs Typing Game with GitHub Integration",
+      "description": "Improve your typing skills with this PIXIjs-powered game. Practice with real code from GitHub repositories.",
+      "keywords": ["Typing Game", "PIXIjs", "GitHub", "Coding Practice", "Programming"],
+      "ogImage": "/images/tools/prototype-og.jpg"
+    }
+  },
+  {
+    "id": "tool-9",
+    "type": "tool",
+    "title": "Sequential PNG Preview",
+    "description": "Preview sequential PNG files as animations directly in your browser without uploading.",
+    "category": "utility",
+    "tags": ["PNG", "Animation", "Preview", "Local", "File Processing"],
+    "status": "published",
+    "priority": 68,
+    "createdAt": "2024-04-20T10:15:00.000Z",
+    "updatedAt": "2024-04-20T10:15:00.000Z",
+    "publishedAt": "2024-04-20T10:15:00.000Z",
+    "thumbnail": "/images/tools/sequential-png-thumb.jpg",
+    "customFields": {
+      "toolType": "utility",
+      "difficulty": "beginner",
+      "estimatedTime": "2-5 minutes",
+      "toolConfig": {
+        "features": ["Local file processing", "Animation preview", "Frame rate control", "Export options"],
+        "technologies": ["React", "File API", "Canvas API", "Animation controls"]
+      }
+    },
+    "content": "# Sequential PNG Preview\n\nPreview sequential PNG files as smooth animations directly in your browser. Perfect for animators and designers working with frame sequences.\n\n## Features\n\n### Local File Processing\n- **No Upload Required**: All processing happens locally\n- **Multiple File Support**: Select multiple PNG files at once\n- **Folder Support**: Load entire folders of sequential images\n- **ZIP File Support**: Extract and preview from ZIP archives\n\n### Animation Controls\n- **Frame Rate Control**: Adjust playback speed (1-60 FPS)\n- **Play/Pause**: Standard playback controls\n- **Frame Navigation**: Jump to specific frames\n- **Loop Settings**: Continuous or single-play modes\n\n### Preview Options\n- **Full Screen**: View animations in full screen\n- **Zoom Controls**: Zoom in/out for detailed viewing\n- **Grid View**: See all frames as thumbnails\n- **Onion Skinning**: Overlay previous/next frames\n\n### Export Features\n- **GIF Export**: Convert sequence to animated GIF\n- **MP4 Export**: Create video files from sequences\n- **Frame Export**: Save individual frames\n- **Settings Export**: Save timing and playback settings\n\n## Use Cases\n\n- Animation preview and review\n- Frame sequence validation\n- Client presentation preparation\n- Animation timing adjustment\n- Quick animation creation",
+    "stats": {
+      "views": 1345,
+      "likes": 67,
+      "shares": 29,
+      "lastViewed": "2024-12-20T15:45:00.000Z"
+    },
+    "seo": {
+      "title": "Sequential PNG Preview - Animation Preview Tool",
+      "description": "Preview sequential PNG files as animations in your browser. Local processing, no upload required.",
+      "keywords": ["PNG Animation", "Preview Tool", "Sequential Images", "Animation Review"],
+      "ogImage": "/images/tools/sequential-png-og.jpg"
+    }
+  },
+  {
+    "id": "tool-10",
+    "type": "tool",
+    "title": "SVG2TSX",
+    "description": "Convert SVG files to optimized React TSX components with customizable options.",
+    "category": "development",
+    "tags": ["SVG", "React", "TSX", "Converter", "Component"],
+    "status": "published",
+    "priority": 72,
+    "createdAt": "2024-03-10T13:20:00.000Z",
+    "updatedAt": "2024-03-10T13:20:00.000Z",
+    "publishedAt": "2024-03-10T13:20:00.000Z",
+    "thumbnail": "/images/tools/svg2tsx-thumb.jpg",
+    "customFields": {
+      "toolType": "converter",
+      "difficulty": "beginner",
+      "estimatedTime": "1-3 minutes",
+      "toolConfig": {
+        "features": ["SVG to TSX conversion", "Component customization", "TypeScript support", "Export options"],
+        "technologies": ["React", "SVG processing", "TypeScript", "Component generation"]
+      }
+    },
+    "content": "# SVG2TSX\n\nConvert SVG files to optimized React TSX components instantly. Perfect for developers who need to use SVG icons and graphics in React applications.\n\n## Features\n\n### SVG Processing\n- **File Upload**: Upload SVG files directly\n- **Code Input**: Paste SVG code directly\n- **Batch Processing**: Convert multiple SVGs at once\n- **Optimization**: Automatic SVG optimization\n\n### Component Customization\n- **Component Name**: Customize component names\n- **Props Interface**: Generate TypeScript interfaces\n- **Default Props**: Set default prop values\n- **Styling Options**: Choose styling approach (CSS, styled-components, etc.)\n\n### TypeScript Support\n- **Full TypeScript**: Generate .tsx files with proper typing\n- **Props Typing**: Automatic prop type generation\n- **Interface Export**: Export TypeScript interfaces\n- **JSDoc Comments**: Add documentation comments\n\n### Export Options\n- **Component File**: Download individual .tsx files\n- **Batch Export**: Download all components as ZIP\n- **Copy to Clipboard**: Quick copy for immediate use\n- **Preview**: Live preview of generated components\n\n## Use Cases\n\n- React icon libraries\n- SVG graphics in React apps\n- Component library development\n- Design system implementation\n- Icon set conversion",
+    "stats": {
+      "views": 1789,
+      "likes": 94,
+      "shares": 52,
+      "lastViewed": "2024-12-20T11:55:00.000Z"
+    },
+    "seo": {
+      "title": "SVG2TSX - Convert SVG to React TSX Components",
+      "description": "Convert SVG files to optimized React TSX components with TypeScript support. Perfect for React developers.",
+      "keywords": ["SVG to React", "TSX Converter", "React Components", "TypeScript", "SVG Tools"],
+      "ogImage": "/images/tools/svg2tsx-og.jpg"
+    }
+  },
+  {
+    "id": "tool-11",
+    "type": "tool",
+    "title": "Price Calculator",
+    "description": "Professional project estimation tool for freelancers and agencies with customizable pricing models.",
+    "category": "utility",
+    "tags": ["Pricing", "Calculator", "Estimation", "Freelance", "Project"],
+    "status": "published",
+    "priority": 78,
+    "createdAt": "2024-02-15T09:30:00.000Z",
+    "updatedAt": "2024-02-15T09:30:00.000Z",
+    "publishedAt": "2024-02-15T09:30:00.000Z",
+    "thumbnail": "/images/tools/price-calculator-thumb.jpg",
+    "customFields": {
+      "toolType": "calculator",
+      "difficulty": "intermediate",
+      "estimatedTime": "10-30 minutes",
+      "toolConfig": {
+        "features": ["Project templates", "Hourly/fixed pricing", "Tax calculations", "Professional quotes"],
+        "technologies": ["React", "Calculation engine", "PDF generation", "Template system"]
+      }
+    },
+    "content": "# Price Calculator\n\nProfessional project estimation tool designed for freelancers, agencies, and consultants. Create accurate quotes with customizable pricing models.\n\n## Features\n\n### Project Templates\n- **Web Development**: Website and app development pricing\n- **Design Services**: Graphic design and branding projects\n- **Consulting**: Hourly consulting and advisory services\n- **Marketing**: Digital marketing campaign pricing\n\n### Pricing Models\n- **Hourly Rates**: Time-based pricing with different skill levels\n- **Fixed Pricing**: Project-based fixed quotes\n- **Retainer Models**: Monthly retainer calculations\n- **Value-Based**: ROI-based pricing models\n\n### Advanced Calculations\n- **Tax Integration**: Automatic tax calculations\n- **Discount Options**: Percentage and fixed discounts\n- **Payment Terms**: Multiple payment schedule options\n- **Currency Support**: Multi-currency calculations\n\n### Professional Output\n- **PDF Quotes**: Generate professional PDF quotes\n- **Email Templates**: Send quotes via email\n- **Client Portal**: Share quotes with clients\n- **Revision Tracking**: Track quote versions and changes\n\n## Use Cases\n\n- Freelance project estimation\n- Agency proposal creation\n- Consulting service pricing\n- Product pricing analysis\n- Budget planning and forecasting",
+    "stats": {
+      "views": 2156,
+      "likes": 123,
+      "shares": 67,
+      "lastViewed": "2024-12-20T14:40:00.000Z"
+    },
+    "seo": {
+      "title": "Price Calculator - Professional Project Estimation Tool",
+      "description": "Calculate project prices with this professional estimation tool. Perfect for freelancers and agencies.",
+      "keywords": ["Price Calculator", "Project Estimation", "Freelance Pricing", "Quote Generator"],
+      "ogImage": "/images/tools/price-calculator-og.jpg"
+    }
   }
 ]
