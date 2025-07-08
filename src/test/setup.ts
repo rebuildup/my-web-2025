@@ -1,5 +1,6 @@
 // Test setup file for vitest
 import '@testing-library/jest-dom';
+import { cleanup } from '@testing-library/react';
 
 // Mock Next.js router
 import { vi, beforeAll, afterAll, afterEach } from 'vitest';
@@ -118,6 +119,7 @@ afterAll(() => {
 
 // Clean up after each test
 afterEach(() => {
+  cleanup();
   vi.clearAllMocks();
   localStorageMock.clear();
   sessionStorageMock.clear();

@@ -32,13 +32,13 @@ describe('NotFound', () => {
   it('should render not found message', () => {
     render(<NotFound />);
 
-    expect(screen.getByText('Page Not Found')).toBeInTheDocument();
+    expect(screen.getByText('ページが見つかりません / Page Not Found')).toBeInTheDocument();
   });
 
   it('should render home link', () => {
     render(<NotFound />);
 
-    const homeLink = screen.getByText('Go Home');
+    const homeLink = screen.getByText('ホーム / Home');
     expect(homeLink).toBeInTheDocument();
     expect(homeLink.closest('a')).toHaveAttribute('href', '/');
   });
@@ -46,7 +46,7 @@ describe('NotFound', () => {
   it('should render search suggestion', () => {
     render(<NotFound />);
 
-    expect(screen.getByText('Try searching for what you need')).toBeInTheDocument();
+    expect(screen.getByText('お探しのコンテンツを検索してみてください')).toBeInTheDocument();
   });
 
   it('should have proper accessibility structure', () => {

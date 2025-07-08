@@ -1,18 +1,22 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { GET, POST } from './route';
 import { NextRequest } from 'next/server';
 
 // Mock fs/promises
 vi.mock('fs/promises', () => ({
-  readFile: vi.fn(),
-  writeFile: vi.fn(),
-  mkdir: vi.fn(),
+  default: {
+    readFile: vi.fn(),
+    writeFile: vi.fn(),
+    mkdir: vi.fn(),
+  },
 }));
 
-// Mock path module
+// Mock path module - Note: path uses default export
 vi.mock('path', () => ({
-  join: vi.fn(),
-  dirname: vi.fn(),
+  default: {
+    join: vi.fn(),
+    dirname: vi.fn(),
+  },
 }));
 
 // Mock error handling
@@ -25,7 +29,7 @@ vi.mock('@/lib/utils/error-handling', () => ({
 
 // Mock process.cwd
 vi.stubGlobal('process', {
-  cwd: vi.fn(),
+  cwd: vi.fn(() => '/test'),
   env: { NODE_ENV: 'test' },
 });
 
@@ -38,24 +42,26 @@ describe('Stats API Route', () => {
     const path = await import('path');
     const { AppErrorHandler } = await import('@/lib/utils/error-handling');
 
-    vi.mocked(process.cwd).mockReturnValue('/test/path');
-    vi.mocked(path.join).mockImplementation((...args) => args.join('/'));
-    vi.mocked(path.dirname).mockImplementation(path => path.split('/').slice(0, -1).join('/'));
-    vi.mocked(fs.mkdir).mockResolvedValue(undefined);
-    vi.mocked(fs.writeFile).mockResolvedValue(undefined);
-    vi.mocked(AppErrorHandler.handleApiError).mockReturnValue({
+    (path.default.join as Mock).mockImplementation((...args: string[]) => args.join('/'));
+    (path.default.dirname as Mock).mockImplementation((p: string) =>
+      p.split('/').slice(0, -1).join('/')
+    );
+    (fs.default.mkdir as Mock).mockResolvedValue(undefined);
+    (fs.default.writeFile as Mock).mockResolvedValue(undefined);
+    (fs.default.readFile as Mock).mockResolvedValue('{}');
+    (AppErrorHandler.handleApiError as Mock).mockReturnValue({
       code: 'TEST_ERROR',
       message: 'Test error',
       timestamp: new Date().toISOString(),
     });
-    vi.mocked(AppErrorHandler.logError).mockReturnValue(undefined);
+    (AppErrorHandler.logError as Mock).mockReturnValue(undefined);
   });
 
   describe('GET - Get Stats', () => {
     it('should return stats for valid type', async () => {
       const mockStats = { item1: 10, item2: 20 };
       const fs = await import('fs/promises');
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockStats));
+      (fs.default.readFile as Mock).mockResolvedValue(JSON.stringify(mockStats));
 
       const request = new NextRequest('http://localhost/api/stats/view');
       const params = Promise.resolve({ type: 'view' });
@@ -71,7 +77,7 @@ describe('Stats API Route', () => {
     it('should return item stats when id parameter is provided', async () => {
       const mockStats = { item1: 50, item2: 30 };
       const fs = await import('fs/promises');
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockStats));
+      (fs.default.readFile as Mock).mockResolvedValue(JSON.stringify(mockStats));
 
       const request = new NextRequest('http://localhost/api/stats/view?id=item1');
       const params = Promise.resolve({ type: 'view' });
@@ -87,7 +93,7 @@ describe('Stats API Route', () => {
     it('should return all stats when no parameters are provided', async () => {
       const mockStats = { item1: 25, item2: 35 };
       const fs = await import('fs/promises');
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockStats));
+      (fs.default.readFile as Mock).mockResolvedValue(JSON.stringify(mockStats));
 
       const request = new NextRequest('http://localhost/api/stats/view');
       const params = Promise.resolve({ type: 'view' });
@@ -103,7 +109,7 @@ describe('Stats API Route', () => {
     it('should return zero for non-existent item', async () => {
       const mockStats = { item1: 10 };
       const fs = await import('fs/promises');
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockStats));
+      (fs.default.readFile as Mock).mockResolvedValue(JSON.stringify(mockStats));
 
       const request = new NextRequest('http://localhost/api/stats/view?id=nonexistent');
       const params = Promise.resolve({ type: 'view' });
@@ -119,7 +125,7 @@ describe('Stats API Route', () => {
     it('should handle stats error gracefully', async () => {
       // Mock file read failure - should return empty stats
       const fs = await import('fs/promises');
-      vi.mocked(fs.readFile).mockRejectedValue(new Error('File not found'));
+      (fs.default.readFile as Mock).mockRejectedValue(new Error('File not found'));
 
       const request = new NextRequest('http://localhost/api/stats/view');
       const params = Promise.resolve({ type: 'view' });
@@ -149,7 +155,7 @@ describe('Stats API Route', () => {
     it('should update stats for valid request', async () => {
       const mockStats = { 'test-item': 5 };
       const fs = await import('fs/promises');
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockStats));
+      (fs.default.readFile as Mock).mockResolvedValue(JSON.stringify(mockStats));
 
       const request = new NextRequest('http://localhost/api/stats/view', {
         method: 'POST',
@@ -169,7 +175,7 @@ describe('Stats API Route', () => {
     it('should handle new item creation', async () => {
       const mockStats = {};
       const fs = await import('fs/promises');
-      vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify(mockStats));
+      (fs.default.readFile as Mock).mockResolvedValue(JSON.stringify(mockStats));
 
       const request = new NextRequest('http://localhost/api/stats/view', {
         method: 'POST',
@@ -235,8 +241,9 @@ describe('Stats API Route', () => {
       const fs = await import('fs/promises');
       const { AppErrorHandler } = await import('@/lib/utils/error-handling');
 
-      vi.mocked(fs.readFile).mockRejectedValue(new Error('File system error'));
-      vi.mocked(AppErrorHandler.handleApiError).mockReturnValue({
+      (fs.default.readFile as Mock).mockRejectedValue(new Error('File system error'));
+      (fs.default.writeFile as Mock).mockRejectedValue(new Error('Write failed'));
+      (AppErrorHandler.handleApiError as Mock).mockReturnValue({
         code: 'FILE_ERROR',
         message: 'File system error',
         timestamp: new Date().toISOString(),

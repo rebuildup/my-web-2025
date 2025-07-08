@@ -73,9 +73,7 @@ describe('ColorPalette', () => {
   it('should have proper heading structure', () => {
     render(<ColorPalette />);
 
-    const headings = screen.getAllByRole('heading');
-    expect(headings.length).toBeGreaterThan(0);
-    expect(headings[0]).toHaveTextContent('Color Palette Generator');
+    expect(screen.getByRole('heading', { name: 'Color Palette Generator' })).toBeInTheDocument();
   });
 
   it('should render without crashing', () => {

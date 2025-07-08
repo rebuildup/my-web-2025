@@ -1,7 +1,5 @@
 // API route for content search
-import { NextRequest } from 'next/server';
 import { ContentType, SearchResult } from '@/types/content';
-import { AppErrorHandler } from '@/lib/utils/error-handling';
 
 export async function POST(request: Request): Promise<Response> {
   try {

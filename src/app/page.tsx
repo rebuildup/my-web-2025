@@ -4,58 +4,7 @@ import Link from 'next/link';
 import { Briefcase, Wrench, BookOpen, User, Mail, Settings } from 'lucide-react';
 import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
-interface CategoryCard {
-  title: string;
-  description: string;
-  href: string;
-  icon: () => React.ReactNode;
-  color: string;
-}
 
-const categories: CategoryCard[] = [
-  {
-    title: 'Portfolio',
-    description: '作品集・プロジェクト・制作実績',
-    href: '/portfolio',
-    icon: () => <Briefcase size={32} />,
-    color: 'border-blue-500',
-  },
-  {
-    title: 'Tools',
-    description: '便利ツール・ジェネレーター・計算機',
-    href: '/tools',
-    icon: () => <Wrench size={32} />,
-    color: 'border-green-500',
-  },
-  {
-    title: 'Workshop',
-    description: 'ブログ・プラグイン・ダウンロード',
-    href: '/workshop',
-    icon: () => <BookOpen size={32} />,
-    color: 'border-purple-500',
-  },
-  {
-    title: 'About',
-    description: 'プロフィール・経歴・スキル・連絡先',
-    href: '/about',
-    icon: () => <User size={32} />,
-    color: 'border-yellow-500',
-  },
-  {
-    title: 'Contact',
-    description: 'お問い合わせ・依頼・相談',
-    href: '/contact',
-    icon: () => <Mail size={32} />,
-    color: 'border-red-500',
-  },
-  {
-    title: 'Admin',
-    description: '管理画面・データ管理（開発用）',
-    href: '/admin',
-    icon: () => <Settings size={32} />,
-    color: 'border-gray-500',
-  },
-];
 
 export default function Home() {
   return (

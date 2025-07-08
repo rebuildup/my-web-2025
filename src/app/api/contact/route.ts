@@ -131,7 +131,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     try {
       formData = await request.json();
-    } catch (error) {
+    } catch {
       return Response.json(
         {
           success: false,
@@ -211,8 +211,8 @@ export async function POST(request: NextRequest): Promise<Response> {
       message: 'Message sent successfully',
       timestamp: new Date().toISOString(),
     });
-  } catch (error) {
-    const appError = AppErrorHandler.handleApiError(error);
+  } catch (_error: unknown) {
+    const appError = AppErrorHandler.handleApiError(_error);
     AppErrorHandler.logError(appError, 'Contact Form API');
 
     // Don't expose internal errors to users

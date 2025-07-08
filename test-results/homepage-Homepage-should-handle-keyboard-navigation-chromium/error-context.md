@@ -1,0 +1,99 @@
+# Page snapshot
+
+```yaml
+- alert: Portfolio - samuido | 作品ギャラリー
+- button "Open Next.js Dev Tools":
+  - img
+- button "Open issues overlay": 1 Issue
+- button "Collapse issues badge":
+  - img
+- navigation:
+  - link "← Home":
+    - /url: /
+- banner:
+  - heading "Portfolio" [level=1]
+  - paragraph: Webデザイン、開発、映像制作における作品ギャラリー カテゴリ別に整理された制作実績をご覧ください
+- main:
+  - text: 12 総作品数 5 開発作品 4 映像作品 3 デザイン作品
+  - heading "ギャラリーカテゴリ" [level=2]
+  - link "All Works 12作品 全作品一覧 バラエティを重視した全作品の一覧。時系列ソート、カテゴリフィルター、検索機能を備えたギャラリー 主な機能： 時系列ソート カテゴリフィルター タグフィルター 検索機能 ギャラリーを見る →":
+    - /url: /portfolio/gallery/all
+    - img
+    - heading "All Works" [level=3]
+    - text: 12作品
+    - paragraph: 全作品一覧
+    - paragraph: バラエティを重視した全作品の一覧。時系列ソート、カテゴリフィルター、検索機能を備えたギャラリー
+    - heading "主な機能：" [level=4]
+    - text: 時系列ソート カテゴリフィルター タグフィルター 検索機能 ギャラリーを見る →
+  - link "Development 5作品 開発系作品 プログラミング関連の制作物。プラグイン開発、ゲーム制作、Webアプリケーション、技術詳細を重視した表示 主な機能： 2列交互表示 プレビュー動画 技術タグフィルター リポジトリリンク ギャラリーを見る →":
+    - /url: /portfolio/gallery/develop
+    - img
+    - heading "Development" [level=3]
+    - text: 5作品
+    - paragraph: 開発系作品
+    - paragraph: プログラミング関連の制作物。プラグイン開発、ゲーム制作、Webアプリケーション、技術詳細を重視した表示
+    - heading "主な機能：" [level=4]
+    - text: 2列交互表示 プレビュー動画 技術タグフィルター リポジトリリンク ギャラリーを見る →
+  - link "Video Production 4作品 映像作品 映像制作のみ。依頼映像、個人制作映像をforiioライクなギャラリー表示で紹介 主な機能： foriioライク表示 埋め込み動画 軽量プレビュー 制作過程重視 ギャラリーを見る →":
+    - /url: /portfolio/gallery/video
+    - img
+    - heading "Video Production" [level=3]
+    - text: 4作品
+    - paragraph: 映像作品
+    - paragraph: 映像制作のみ。依頼映像、個人制作映像をforiioライクなギャラリー表示で紹介
+    - heading "主な機能：" [level=4]
+    - text: foriioライク表示 埋め込み動画 軽量プレビュー 制作過程重視 ギャラリーを見る →
+  - link "Video & Design 3作品 映像・デザイン作品 映像に加えて画像デザイン、Webデザインなど。デザインスキルを強調したクリエイティブギャラリー 主な機能： 縦3列表示 動的サイズ ホバー表示 デザインコンセプト重視 ギャラリーを見る →":
+    - /url: /portfolio/gallery/video&design
+    - img
+    - heading "Video & Design" [level=3]
+    - text: 3作品
+    - paragraph: 映像・デザイン作品
+    - paragraph: 映像に加えて画像デザイン、Webデザインなど。デザインスキルを強調したクリエイティブギャラリー
+    - heading "主な機能：" [level=4]
+    - text: 縦3列表示 動的サイズ ホバー表示 デザインコンセプト重視 ギャラリーを見る →
+  - heading "クイックアクション" [level=2]
+  - link "最新作品 新着順で並んだ全作品を表示 表示 →":
+    - /url: /portfolio/gallery/all?sort=newest
+    - img
+    - heading "最新作品" [level=3]
+    - paragraph: 新着順で並んだ全作品を表示
+    - text: 表示 →
+  - link "作品検索 キーワードやタグで作品を検索 検索 →":
+    - /url: /search?type=portfolio
+    - img
+    - heading "作品検索" [level=3]
+    - paragraph: キーワードやタグで作品を検索
+    - text: 検索 →
+  - link "詳細フィルター 技術タグやカテゴリで絞り込み フィルター →":
+    - /url: /portfolio/gallery/all?view=filter
+    - img
+    - heading "詳細フィルター" [level=3]
+    - paragraph: 技術タグやカテゴリで絞り込み
+    - text: フィルター →
+  - heading "注目の作品" [level=2]
+  - link "React Portfolio Website Modern portfolio website built with React and Next.js featuring responsive design and interactive animations. React Next.js TypeScript 詳細を見る →":
+    - /url: /portfolio/detail/portfolio-1
+    - img
+    - heading "React Portfolio Website" [level=3]
+    - paragraph: Modern portfolio website built with React and Next.js featuring responsive design and interactive animations.
+    - text: React Next.js TypeScript 詳細を見る →
+  - link "Music Video Production Creative music video production featuring advanced visual effects and cinematography for emerging artist. After Effects Premiere Pro 詳細を見る →":
+    - /url: /portfolio/detail/portfolio-2
+    - img
+    - heading "Music Video Production" [level=3]
+    - paragraph: Creative music video production featuring advanced visual effects and cinematography for emerging artist.
+    - text: After Effects Premiere Pro 詳細を見る →
+  - link "Brand Identity Design Complete brand identity design including logo, color palette, typography, and brand guidelines for tech startup. Brand Design Logo Design 詳細を見る →":
+    - /url: /portfolio/detail/portfolio-3
+    - img
+    - heading "Brand Identity Design" [level=3]
+    - paragraph: Complete brand identity design including logo, color palette, typography, and brand guidelines for tech startup.
+    - text: Brand Design Logo Design 詳細を見る →
+- contentinfo:
+  - paragraph: © 2025 samuido (木村友亮). All rights reserved.
+  - link "Contact":
+    - /url: /contact
+  - link "About":
+    - /url: /about
+```
