@@ -1,19 +1,8 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as THREE from 'three';
-import { 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  Settings, 
-  Palette, 
-  Zap, 
-  Box,
-  Sphere,
-  Triangle,
-  Maximize2
-} from 'lucide-react';
+import { Play, Pause, RotateCcw, Palette, Zap, Box, Maximize2 } from 'lucide-react';
 import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 interface SceneSettings {
@@ -38,8 +27,7 @@ export default function WebGLPlaygroundPage() {
 
   const [isPlaying, setIsPlaying] = useState(true);
   const [fps, setFps] = useState(60);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  
+
   const [settings, setSettings] = useState<SceneSettings>({
     animationSpeed: 1,
     wireframe: false,
@@ -48,14 +36,14 @@ export default function WebGLPlaygroundPage() {
     materialType: 'standard',
     lightingEnabled: true,
     autoRotate: true,
-    particleSystem: false
+    particleSystem: false,
   });
 
   const [stats, setStats] = useState({
     triangles: 0,
     vertices: 0,
     drawCalls: 0,
-    memoryUsage: 0
+    memoryUsage: 0,
   });
 
   useEffect(() => {
@@ -63,58 +51,15 @@ export default function WebGLPlaygroundPage() {
     return () => {
       cleanup();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     updateScene();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings]);
 
-  const initializeThreeJS = () => {
-    if (!mountRef.current) return;
-
-    // Scene setup
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(settings.backgroundColor);
-    sceneRef.current = scene;
-
-    // Camera setup
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      800 / 600,
-      0.1,
-      1000
-    );
-    camera.position.z = 5;
-    cameraRef.current = camera;
-
-    // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ 
-      antialias: true,
-      alpha: true,
-      powerPreference: 'high-performance'
-    });
-    renderer.setSize(800, 600);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1;
-    
-    rendererRef.current = renderer;
-    mountRef.current.appendChild(renderer.domElement);
-
-    // Add lighting
-    setupLighting();
-
-    // Create initial object
-    createObject();
-
-    // Start animation loop
-    animate();
-  };
-
-  const setupLighting = () => {
+  const setupLighting = useCallback(() => {
     if (!sceneRef.current) return;
 
     // Clear existing lights
@@ -143,9 +88,9 @@ export default function WebGLPlaygroundPage() {
       const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.3);
       sceneRef.current.add(hemisphereLight);
     }
-  };
+  }, [settings.lightingEnabled]);
 
-  const createObject = () => {
+  const createObject = useCallback(() => {
     if (!sceneRef.current) return;
 
     // Remove existing mesh
@@ -159,7 +104,7 @@ export default function WebGLPlaygroundPage() {
 
     // Create geometry based on type
     let geometry: THREE.BufferGeometry;
-    
+
     switch (settings.objectType) {
       case 'cube':
         geometry = new THREE.BoxGeometry(2, 2, 2, 2, 2, 2);
@@ -217,7 +162,7 @@ export default function WebGLPlaygroundPage() {
 
     // Update stats
     updateStats(geometry);
-  };
+  }, [settings.objectType, settings.materialType, settings.wireframe]);
 
   const createParticleSystem = () => {
     if (!sceneRef.current) return;
@@ -262,7 +207,7 @@ export default function WebGLPlaygroundPage() {
     if (sceneRef.current) {
       sceneRef.current.background = new THREE.Color(settings.backgroundColor);
     }
-    
+
     setupLighting();
     createObject();
     createParticleSystem();
@@ -273,7 +218,7 @@ export default function WebGLPlaygroundPage() {
 
     const positionAttribute = geometry.getAttribute('position');
     const indexAttribute = geometry.getIndex();
-    
+
     const vertices = positionAttribute ? positionAttribute.count : 0;
     const triangles = indexAttribute ? indexAttribute.count / 3 : vertices / 3;
 
@@ -281,11 +226,12 @@ export default function WebGLPlaygroundPage() {
       ...prev,
       triangles: Math.floor(triangles),
       vertices,
-      memoryUsage: rendererRef.current!.info.memory.geometries + rendererRef.current!.info.memory.textures
+      memoryUsage:
+        rendererRef.current!.info.memory.geometries + rendererRef.current!.info.memory.textures,
     }));
   };
 
-  const animate = () => {
+  const animate = useCallback(() => {
     if (!isPlaying) return;
 
     const frameStart = performance.now();
@@ -303,11 +249,11 @@ export default function WebGLPlaygroundPage() {
     // Render
     if (rendererRef.current && sceneRef.current && cameraRef.current) {
       rendererRef.current.render(sceneRef.current, cameraRef.current);
-      
+
       // Update draw calls
       setStats(prev => ({
         ...prev,
-        drawCalls: rendererRef.current!.info.render.calls
+        drawCalls: rendererRef.current!.info.render.calls,
       }));
     }
 
@@ -316,7 +262,47 @@ export default function WebGLPlaygroundPage() {
     setFps(Math.round(frameFps));
 
     animationIdRef.current = requestAnimationFrame(animate);
-  };
+  }, [isPlaying, settings.autoRotate, settings.animationSpeed]);
+
+  const initializeThreeJS = useCallback(() => {
+    if (!mountRef.current) return;
+
+    // Scene setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(settings.backgroundColor);
+    sceneRef.current = scene;
+
+    // Camera setup
+    const camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 1000);
+    camera.position.z = 5;
+    cameraRef.current = camera;
+
+    // Renderer setup
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: 'high-performance',
+    });
+    renderer.setSize(800, 600);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1;
+
+    rendererRef.current = renderer;
+    mountRef.current.appendChild(renderer.domElement);
+
+    // Add lighting
+    setupLighting();
+
+    // Create initial object
+    createObject();
+
+    // Start animation loop
+    animate();
+  }, [settings.backgroundColor, setupLighting, createObject, animate]);
 
   const toggleAnimation = () => {
     setIsPlaying(!isPlaying);
@@ -340,10 +326,8 @@ export default function WebGLPlaygroundPage() {
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       mountRef.current?.requestFullscreen();
-      setIsFullscreen(true);
     } else {
       document.exitFullscreen();
-      setIsFullscreen(false);
     }
   };
 
@@ -351,7 +335,7 @@ export default function WebGLPlaygroundPage() {
     if (animationIdRef.current) {
       cancelAnimationFrame(animationIdRef.current);
     }
-    
+
     if (rendererRef.current) {
       rendererRef.current.dispose();
     }
@@ -388,243 +372,272 @@ export default function WebGLPlaygroundPage() {
 
       {/* Header */}
       <GridSection spacing="md">
-          <h1 className="neue-haas-grotesk-display text-primary mb-4 text-3xl md:text-4xl">
-            WebGL Playground
-          </h1>
-          <p className="noto-sans-jp text-foreground/80">
-            Interactive 3D graphics experiments powered by Three.js
-          </p>
+        <h1 className="neue-haas-grotesk-display text-primary mb-4 text-3xl md:text-4xl">
+          WebGL Playground
+        </h1>
+        <p className="noto-sans-jp text-foreground/80">
+          Interactive 3D graphics experiments powered by Three.js
+        </p>
       </GridSection>
 
       {/* Main Content */}
       <main>
         <GridContainer className="pb-16">
           <GridContent cols={{ xs: 1, md: 1, xl: 4, '2xl': 4 }} className="gap-8">
-          {/* Controls */}
-          <div className="space-y-6">
-            {/* Animation Controls */}
-            <div className="border-foreground/20 bg-gray/50 border p-4">
-              <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-lg">Animation</h3>
-              <div className="space-y-3">
-                <button
-                  onClick={toggleAnimation}
-                  className={`flex w-full items-center justify-center gap-2 py-3 text-white transition-colors ${
-                    isPlaying 
-                      ? 'bg-yellow-500 hover:bg-yellow-600' 
-                      : 'bg-primary hover:bg-primary/90'
-                  }`}
-                >
-                  {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-                  {isPlaying ? 'Pause' : 'Play'}
-                </button>
-                
-                <button
-                  onClick={resetScene}
-                  className="border-foreground/20 text-foreground hover:bg-foreground/5 flex w-full items-center justify-center gap-2 border py-3 transition-colors"
-                >
-                  <RotateCcw size={20} />
-                  Reset Scene
-                </button>
-
-                <div>
-                  <label className="text-foreground/70 mb-2 block text-sm">
-                    Speed: {settings.animationSpeed}x
-                  </label>
-                  <input
-                    type="range"
-                    min="0.1"
-                    max="3"
-                    step="0.1"
-                    value={settings.animationSpeed}
-                    onChange={(e) => setSettings({...settings, animationSpeed: parseFloat(e.target.value)})}
-                    className="w-full"
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-foreground/70 text-sm">Auto Rotate</span>
-                  <button
-                    onClick={() => setSettings({...settings, autoRotate: !settings.autoRotate})}
-                    className={`px-3 py-1 text-xs transition-colors ${
-                      settings.autoRotate 
-                        ? 'bg-primary text-white' 
-                        : 'border-foreground/20 text-foreground border'
-                    }`}
-                  >
-                    {settings.autoRotate ? 'ON' : 'OFF'}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Object Settings */}
-            <div className="border-foreground/20 bg-gray/50 border p-4">
-              <h3 className="neue-haas-grotesk-display text-foreground mb-4 flex items-center gap-2 text-lg">
-                <Box size={20} />
-                Object
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-foreground/70 mb-1 block text-sm">Type</label>
-                  <select
-                    value={settings.objectType}
-                    onChange={(e) => setSettings({...settings, objectType: e.target.value as SceneSettings['objectType']})}
-                    className="border-foreground/20 bg-gray text-foreground w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                  >
-                    <option value="cube">Cube</option>
-                    <option value="sphere">Sphere</option>
-                    <option value="torus">Torus</option>
-                    <option value="plane">Plane</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-foreground/70 mb-1 block text-sm">Material</label>
-                  <select
-                    value={settings.materialType}
-                    onChange={(e) => setSettings({...settings, materialType: e.target.value as SceneSettings['materialType']})}
-                    className="border-foreground/20 bg-gray text-foreground w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                  >
-                    <option value="basic">Basic</option>
-                    <option value="standard">Standard</option>
-                    <option value="phong">Phong</option>
-                    <option value="lambert">Lambert</option>
-                  </select>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-foreground/70 text-sm">Wireframe</span>
-                  <button
-                    onClick={() => setSettings({...settings, wireframe: !settings.wireframe})}
-                    className={`px-3 py-1 text-xs transition-colors ${
-                      settings.wireframe 
-                        ? 'bg-primary text-white' 
-                        : 'border-foreground/20 text-foreground border'
-                    }`}
-                  >
-                    {settings.wireframe ? 'ON' : 'OFF'}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Lighting */}
-            <div className="border-foreground/20 bg-gray/50 border p-4">
-              <h3 className="neue-haas-grotesk-display text-foreground mb-4 flex items-center gap-2 text-lg">
-                <Zap size={20} />
-                Lighting
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-foreground/70 text-sm">Enabled</span>
-                  <button
-                    onClick={() => setSettings({...settings, lightingEnabled: !settings.lightingEnabled})}
-                    className={`px-3 py-1 text-xs transition-colors ${
-                      settings.lightingEnabled 
-                        ? 'bg-primary text-white' 
-                        : 'border-foreground/20 text-foreground border'
-                    }`}
-                  >
-                    {settings.lightingEnabled ? 'ON' : 'OFF'}
-                  </button>
-                </div>
-
-                <div>
-                  <label className="text-foreground/70 mb-2 block text-sm">Background</label>
-                  <input
-                    type="color"
-                    value={settings.backgroundColor}
-                    onChange={(e) => setSettings({...settings, backgroundColor: e.target.value})}
-                    className="w-full h-10 border border-foreground/20"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Effects */}
-            <div className="border-foreground/20 bg-gray/50 border p-4">
-              <h3 className="neue-haas-grotesk-display text-foreground mb-4 flex items-center gap-2 text-lg">
-                <Palette size={20} />
-                Effects
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-foreground/70 text-sm">Particle System</span>
-                  <button
-                    onClick={() => setSettings({...settings, particleSystem: !settings.particleSystem})}
-                    className={`px-3 py-1 text-xs transition-colors ${
-                      settings.particleSystem 
-                        ? 'bg-primary text-white' 
-                        : 'border-foreground/20 text-foreground border'
-                    }`}
-                  >
-                    {settings.particleSystem ? 'ON' : 'OFF'}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Performance Stats */}
-            <div className="border-foreground/20 bg-gray/50 border p-4">
-              <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-lg">Performance</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-foreground/70">FPS</span>
-                  <span className="neue-haas-grotesk-display text-foreground font-bold">{fps}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-foreground/70">Triangles</span>
-                  <span className="neue-haas-grotesk-display text-foreground font-bold">{stats.triangles.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-foreground/70">Vertices</span>
-                  <span className="neue-haas-grotesk-display text-foreground font-bold">{stats.vertices.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-foreground/70">Draw Calls</span>
-                  <span className="neue-haas-grotesk-display text-foreground font-bold">{stats.drawCalls}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 3D Canvas */}
-          <div className="lg:col-span-3">
-            <div className="border-foreground/20 bg-gray/50 border p-6">
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="neue-haas-grotesk-display text-foreground text-xl">
-                  3D Scene
+            {/* Controls */}
+            <div className="space-y-6">
+              {/* Animation Controls */}
+              <div className="border-foreground/20 bg-gray/50 border p-4">
+                <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-lg">
+                  Animation
                 </h3>
-                <div className="flex items-center gap-2">
-                  <div className={`px-3 py-1 text-sm ${
-                    isPlaying 
-                      ? 'bg-green-500 text-white' 
-                      : 'bg-red-500 text-white'
-                  }`}>
-                    {isPlaying ? 'RENDERING' : 'PAUSED'}
-                  </div>
+                <div className="space-y-3">
                   <button
-                    onClick={toggleFullscreen}
-                    className="text-foreground/60 hover:text-foreground p-2"
+                    onClick={toggleAnimation}
+                    className={`flex w-full items-center justify-center gap-2 py-3 text-white transition-colors ${
+                      isPlaying
+                        ? 'bg-yellow-500 hover:bg-yellow-600'
+                        : 'bg-primary hover:bg-primary/90'
+                    }`}
                   >
-                    <Maximize2 size={20} />
+                    {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+                    {isPlaying ? 'Pause' : 'Play'}
                   </button>
+
+                  <button
+                    onClick={resetScene}
+                    className="border-foreground/20 text-foreground hover:bg-foreground/5 flex w-full items-center justify-center gap-2 border py-3 transition-colors"
+                  >
+                    <RotateCcw size={20} />
+                    Reset Scene
+                  </button>
+
+                  <div>
+                    <label className="text-foreground/70 mb-2 block text-sm">
+                      Speed: {settings.animationSpeed}x
+                    </label>
+                    <input
+                      type="range"
+                      min="0.1"
+                      max="3"
+                      step="0.1"
+                      value={settings.animationSpeed}
+                      onChange={e =>
+                        setSettings({ ...settings, animationSpeed: parseFloat(e.target.value) })
+                      }
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-foreground/70 text-sm">Auto Rotate</span>
+                    <button
+                      onClick={() => setSettings({ ...settings, autoRotate: !settings.autoRotate })}
+                      className={`px-3 py-1 text-xs transition-colors ${
+                        settings.autoRotate
+                          ? 'bg-primary text-white'
+                          : 'border-foreground/20 text-foreground border'
+                      }`}
+                    >
+                      {settings.autoRotate ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
                 </div>
               </div>
-              
-              <div 
-                ref={mountRef}
-                className="relative border border-foreground/20 overflow-hidden"
-                style={{ width: '800px', height: '600px', maxWidth: '100%' }}
-              >
-                {/* Canvas will be mounted here */}
+
+              {/* Object Settings */}
+              <div className="border-foreground/20 bg-gray/50 border p-4">
+                <h3 className="neue-haas-grotesk-display text-foreground mb-4 flex items-center gap-2 text-lg">
+                  <Box size={20} />
+                  Object
+                </h3>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-foreground/70 mb-1 block text-sm">Type</label>
+                    <select
+                      value={settings.objectType}
+                      onChange={e =>
+                        setSettings({
+                          ...settings,
+                          objectType: e.target.value as SceneSettings['objectType'],
+                        })
+                      }
+                      className="border-foreground/20 bg-gray text-foreground focus:ring-primary w-full border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+                    >
+                      <option value="cube">Cube</option>
+                      <option value="sphere">Sphere</option>
+                      <option value="torus">Torus</option>
+                      <option value="plane">Plane</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-foreground/70 mb-1 block text-sm">Material</label>
+                    <select
+                      value={settings.materialType}
+                      onChange={e =>
+                        setSettings({
+                          ...settings,
+                          materialType: e.target.value as SceneSettings['materialType'],
+                        })
+                      }
+                      className="border-foreground/20 bg-gray text-foreground focus:ring-primary w-full border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+                    >
+                      <option value="basic">Basic</option>
+                      <option value="standard">Standard</option>
+                      <option value="phong">Phong</option>
+                      <option value="lambert">Lambert</option>
+                    </select>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-foreground/70 text-sm">Wireframe</span>
+                    <button
+                      onClick={() => setSettings({ ...settings, wireframe: !settings.wireframe })}
+                      className={`px-3 py-1 text-xs transition-colors ${
+                        settings.wireframe
+                          ? 'bg-primary text-white'
+                          : 'border-foreground/20 text-foreground border'
+                      }`}
+                    >
+                      {settings.wireframe ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-4 text-sm text-foreground/70">
-                <p>Use mouse to interact with the 3D scene. Experiment with different objects, materials, and lighting settings.</p>
+              {/* Lighting */}
+              <div className="border-foreground/20 bg-gray/50 border p-4">
+                <h3 className="neue-haas-grotesk-display text-foreground mb-4 flex items-center gap-2 text-lg">
+                  <Zap size={20} />
+                  Lighting
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-foreground/70 text-sm">Enabled</span>
+                    <button
+                      onClick={() =>
+                        setSettings({ ...settings, lightingEnabled: !settings.lightingEnabled })
+                      }
+                      className={`px-3 py-1 text-xs transition-colors ${
+                        settings.lightingEnabled
+                          ? 'bg-primary text-white'
+                          : 'border-foreground/20 text-foreground border'
+                      }`}
+                    >
+                      {settings.lightingEnabled ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
+
+                  <div>
+                    <label className="text-foreground/70 mb-2 block text-sm">Background</label>
+                    <input
+                      type="color"
+                      value={settings.backgroundColor}
+                      onChange={e => setSettings({ ...settings, backgroundColor: e.target.value })}
+                      className="border-foreground/20 h-10 w-full border"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Effects */}
+              <div className="border-foreground/20 bg-gray/50 border p-4">
+                <h3 className="neue-haas-grotesk-display text-foreground mb-4 flex items-center gap-2 text-lg">
+                  <Palette size={20} />
+                  Effects
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-foreground/70 text-sm">Particle System</span>
+                    <button
+                      onClick={() =>
+                        setSettings({ ...settings, particleSystem: !settings.particleSystem })
+                      }
+                      className={`px-3 py-1 text-xs transition-colors ${
+                        settings.particleSystem
+                          ? 'bg-primary text-white'
+                          : 'border-foreground/20 text-foreground border'
+                      }`}
+                    >
+                      {settings.particleSystem ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Performance Stats */}
+              <div className="border-foreground/20 bg-gray/50 border p-4">
+                <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-lg">
+                  Performance
+                </h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-foreground/70">FPS</span>
+                    <span className="neue-haas-grotesk-display text-foreground font-bold">
+                      {fps}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-foreground/70">Triangles</span>
+                    <span className="neue-haas-grotesk-display text-foreground font-bold">
+                      {stats.triangles.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-foreground/70">Vertices</span>
+                    <span className="neue-haas-grotesk-display text-foreground font-bold">
+                      {stats.vertices.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-foreground/70">Draw Calls</span>
+                    <span className="neue-haas-grotesk-display text-foreground font-bold">
+                      {stats.drawCalls}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+
+            {/* 3D Canvas */}
+            <div className="lg:col-span-3">
+              <div className="border-foreground/20 bg-gray/50 border p-6">
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="neue-haas-grotesk-display text-foreground text-xl">3D Scene</h3>
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={`px-3 py-1 text-sm ${
+                        isPlaying ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                      }`}
+                    >
+                      {isPlaying ? 'RENDERING' : 'PAUSED'}
+                    </div>
+                    <button
+                      onClick={toggleFullscreen}
+                      className="text-foreground/60 hover:text-foreground p-2"
+                    >
+                      <Maximize2 size={20} />
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  ref={mountRef}
+                  className="border-foreground/20 relative overflow-hidden border"
+                  style={{ width: '800px', height: '600px', maxWidth: '100%' }}
+                >
+                  {/* Canvas will be mounted here */}
+                </div>
+
+                <div className="text-foreground/70 mt-4 text-sm">
+                  <p>
+                    Use mouse to interact with the 3D scene. Experiment with different objects,
+                    materials, and lighting settings.
+                  </p>
+                </div>
+              </div>
+            </div>
           </GridContent>
         </GridContainer>
       </main>

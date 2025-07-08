@@ -18,7 +18,7 @@ import {
   Search,
 } from 'lucide-react';
 import { ContentItem } from '@/types/content';
-import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
+import { GridLayout, GridContainer, GridContent } from '@/components/GridSystem';
 
 interface ToolCard extends ContentItem {
   category:
@@ -147,201 +147,201 @@ export default function ToolsPage() {
         {/* Main Content */}
         <main className="pb-16">
           <GridContainer>
-          {/* Statistics */}
-          <section className="mb-12">
-            <GridContent cols={{ xs: 2, md: 4, xl: 4, '2xl': 4 }} className="mx-auto max-w-2xl">
-              <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">
-                  {tools.length}
-                </div>
-                <div className="noto-sans-jp text-foreground/70 text-sm">総ツール数</div>
-              </div>
-
-              <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">
-                  {tools.reduce((acc, tool) => acc + (tool.usage || 0), 0).toLocaleString()}
-                </div>
-                <div className="noto-sans-jp text-foreground/70 text-sm">総利用回数</div>
-              </div>
-
-              <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">
-                  {toolCategories.length - 1}
-                </div>
-                <div className="noto-sans-jp text-foreground/70 text-sm">カテゴリ数</div>
-              </div>
-
-              <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">100%</div>
-                <div className="noto-sans-jp text-foreground/70 text-sm">無償利用</div>
-              </div>
-            </GridContent>
-          </section>
-
-          {/* Popular Tools */}
-          <section className="mb-12">
-            <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
-              人気ツール
-            </h2>
-
-            <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
-              {popularTools.map((tool, index) => (
-                <Link
-                  key={tool.id}
-                  href={`/tools/${tool.id}`}
-                  className="group border-primary/30 bg-gray/50 hover:border-primary border p-6 transition-all duration-300 hover:shadow-lg"
-                >
-                  <div className="mb-3 flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Star size={16} className="fill-current text-yellow-500" />
-                      <span className="text-foreground/60 text-sm">#{index + 1} 人気</span>
-                    </div>
-                    <TrendingUp size={16} className="text-primary" />
+            {/* Statistics */}
+            <section className="mb-12">
+              <GridContent cols={{ xs: 2, md: 4, xl: 4, '2xl': 4 }} className="mx-auto max-w-2xl">
+                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
+                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">
+                    {tools.length}
                   </div>
-
-                  <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg transition-colors">
-                    {tool.title}
-                  </h3>
-
-                  <p className="noto-sans-jp text-foreground/70 mb-3 line-clamp-2 text-sm">
-                    {tool.description}
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-wrap gap-1">
-                      {tool.tags.slice(0, 2).map(tag => (
-                        <span
-                          key={tag}
-                          className="bg-primary/20 text-primary rounded px-2 py-1 text-xs"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="text-foreground/50 text-xs">
-                      {tool.usage?.toLocaleString()} 回利用
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </GridContent>
-          </section>
-
-          {/* Search and Filter */}
-          <section className="mb-8">
-            <div className="mx-auto max-w-4xl">
-              {/* Search */}
-              <div className="mb-6">
-                <div className="relative mx-auto max-w-md">
-                  <Search
-                    size={20}
-                    className="text-foreground/50 absolute top-1/2 left-3 -translate-y-1/2 transform"
-                  />
-                  <input
-                    type="text"
-                    placeholder="ツールを検索..."
-                    className="border-foreground/20 bg-gray text-foreground focus:border-primary noto-sans-jp w-full rounded-none border py-3 pr-4 pl-10 focus:outline-none"
-                    value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
-                  />
+                  <div className="noto-sans-jp text-foreground/70 text-sm">総ツール数</div>
                 </div>
-              </div>
 
-              {/* Category Filter */}
-              <div className="flex flex-wrap justify-center gap-2">
-                {toolCategories.map(category => (
-                  <button
-                    key={category.id}
-                    onClick={() => setSelectedCategory(category.id)}
-                    className={`flex items-center space-x-2 border px-4 py-2 transition-colors ${
-                      selectedCategory === category.id
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-foreground/20 text-foreground/70 hover:border-primary/50'
-                    }`}
-                  >
-                    {category.icon}
-                    <span className="noto-sans-jp text-sm">{category.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
+                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
+                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">
+                    {tools.reduce((acc, tool) => acc + (tool.usage || 0), 0).toLocaleString()}
+                  </div>
+                  <div className="noto-sans-jp text-foreground/70 text-sm">総利用回数</div>
+                </div>
 
-          {/* Tools Grid */}
-          <section>
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="neue-haas-grotesk-display text-foreground text-2xl">
-                {selectedCategory === 'all'
-                  ? '全ツール'
-                  : toolCategories.find(cat => cat.id === selectedCategory)?.name + 'ツール'}
+                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
+                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">
+                    {toolCategories.length - 1}
+                  </div>
+                  <div className="noto-sans-jp text-foreground/70 text-sm">カテゴリ数</div>
+                </div>
+
+                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
+                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">100%</div>
+                  <div className="noto-sans-jp text-foreground/70 text-sm">無償利用</div>
+                </div>
+              </GridContent>
+            </section>
+
+            {/* Popular Tools */}
+            <section className="mb-12">
+              <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
+                人気ツール
               </h2>
-              <div className="text-foreground/60 text-sm">{filteredTools.length} 件</div>
-            </div>
 
-            {isLoading ? (
-              <div className="py-12 text-center">
-                <div className="loading mx-auto"></div>
-                <p className="text-foreground/60 mt-4">ツールを読み込み中...</p>
-              </div>
-            ) : filteredTools.length === 0 ? (
-              <div className="py-12 text-center">
-                <p className="text-foreground/60 noto-sans-jp">
-                  {searchQuery
-                    ? '検索結果が見つかりませんでした'
-                    : 'このカテゴリにはツールがありません'}
-                </p>
-              </div>
-            ) : (
-              <GridContent cols={{ xs: 1, md: 2, xl: 3, '2xl': 3 }}>
-                {filteredTools.map(tool => (
+              <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
+                {popularTools.map((tool, index) => (
                   <Link
                     key={tool.id}
                     href={`/tools/${tool.id}`}
-                    className="group border-foreground/20 bg-gray/50 hover:border-primary overflow-hidden border transition-all duration-300 hover:shadow-lg"
+                    className="group border-primary/30 bg-gray/50 hover:border-primary border p-6 transition-all duration-300 hover:shadow-lg"
                   >
-                    <div className="from-primary/10 to-primary/5 flex aspect-video items-center justify-center bg-gradient-to-br">
-                      {getToolIcon(tool.title)}
+                    <div className="mb-3 flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Star size={16} className="fill-current text-yellow-500" />
+                        <span className="text-foreground/60 text-sm">#{index + 1} 人気</span>
+                      </div>
+                      <TrendingUp size={16} className="text-primary" />
                     </div>
 
-                    <div className="p-6">
-                      <div className="mb-2 flex items-start justify-between">
-                        <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary text-lg transition-colors">
-                          {tool.title}
-                        </h3>
-                        <div className="text-primary bg-primary/10 rounded px-2 py-1 text-xs">
-                          {tool.category}
-                        </div>
-                      </div>
+                    <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg transition-colors">
+                      {tool.title}
+                    </h3>
 
-                      <p className="noto-sans-jp text-foreground/70 mb-4 line-clamp-3 text-sm">
-                        {tool.description}
-                      </p>
+                    <p className="noto-sans-jp text-foreground/70 mb-3 line-clamp-2 text-sm">
+                      {tool.description}
+                    </p>
 
-                      <div className="mb-4 flex flex-wrap gap-1">
-                        {tool.tags.slice(0, 3).map(tag => (
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-wrap gap-1">
+                        {tool.tags.slice(0, 2).map(tag => (
                           <span
                             key={tag}
-                            className="bg-foreground/10 text-foreground/70 rounded px-2 py-1 text-xs"
+                            className="bg-primary/20 text-primary rounded px-2 py-1 text-xs"
                           >
                             {tag}
                           </span>
                         ))}
                       </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="text-foreground/50 text-xs">
-                          {tool.usage?.toLocaleString()} 回利用
-                        </div>
-                        <div className="text-primary text-xs font-medium group-hover:underline">
-                          使用する →
-                        </div>
+                      <div className="text-foreground/50 text-xs">
+                        {tool.usage?.toLocaleString()} 回利用
                       </div>
                     </div>
                   </Link>
                 ))}
               </GridContent>
-            )}
-          </section>
+            </section>
+
+            {/* Search and Filter */}
+            <section className="mb-8">
+              <div className="mx-auto max-w-4xl">
+                {/* Search */}
+                <div className="mb-6">
+                  <div className="relative mx-auto max-w-md">
+                    <Search
+                      size={20}
+                      className="text-foreground/50 absolute top-1/2 left-3 -translate-y-1/2 transform"
+                    />
+                    <input
+                      type="text"
+                      placeholder="ツールを検索..."
+                      className="border-foreground/20 bg-gray text-foreground focus:border-primary noto-sans-jp w-full rounded-none border py-3 pr-4 pl-10 focus:outline-none"
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* Category Filter */}
+                <div className="flex flex-wrap justify-center gap-2">
+                  {toolCategories.map(category => (
+                    <button
+                      key={category.id}
+                      onClick={() => setSelectedCategory(category.id)}
+                      className={`flex items-center space-x-2 border px-4 py-2 transition-colors ${
+                        selectedCategory === category.id
+                          ? 'border-primary bg-primary/10 text-primary'
+                          : 'border-foreground/20 text-foreground/70 hover:border-primary/50'
+                      }`}
+                    >
+                      {category.icon}
+                      <span className="noto-sans-jp text-sm">{category.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Tools Grid */}
+            <section>
+              <div className="mb-6 flex items-center justify-between">
+                <h2 className="neue-haas-grotesk-display text-foreground text-2xl">
+                  {selectedCategory === 'all'
+                    ? '全ツール'
+                    : toolCategories.find(cat => cat.id === selectedCategory)?.name + 'ツール'}
+                </h2>
+                <div className="text-foreground/60 text-sm">{filteredTools.length} 件</div>
+              </div>
+
+              {isLoading ? (
+                <div className="py-12 text-center">
+                  <div className="loading mx-auto"></div>
+                  <p className="text-foreground/60 mt-4">ツールを読み込み中...</p>
+                </div>
+              ) : filteredTools.length === 0 ? (
+                <div className="py-12 text-center">
+                  <p className="text-foreground/60 noto-sans-jp">
+                    {searchQuery
+                      ? '検索結果が見つかりませんでした'
+                      : 'このカテゴリにはツールがありません'}
+                  </p>
+                </div>
+              ) : (
+                <GridContent cols={{ xs: 1, md: 2, xl: 3, '2xl': 3 }}>
+                  {filteredTools.map(tool => (
+                    <Link
+                      key={tool.id}
+                      href={`/tools/${tool.id}`}
+                      className="group border-foreground/20 bg-gray/50 hover:border-primary overflow-hidden border transition-all duration-300 hover:shadow-lg"
+                    >
+                      <div className="from-primary/10 to-primary/5 flex aspect-video items-center justify-center bg-gradient-to-br">
+                        {getToolIcon(tool.title)}
+                      </div>
+
+                      <div className="p-6">
+                        <div className="mb-2 flex items-start justify-between">
+                          <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary text-lg transition-colors">
+                            {tool.title}
+                          </h3>
+                          <div className="text-primary bg-primary/10 rounded px-2 py-1 text-xs">
+                            {tool.category}
+                          </div>
+                        </div>
+
+                        <p className="noto-sans-jp text-foreground/70 mb-4 line-clamp-3 text-sm">
+                          {tool.description}
+                        </p>
+
+                        <div className="mb-4 flex flex-wrap gap-1">
+                          {tool.tags.slice(0, 3).map(tag => (
+                            <span
+                              key={tag}
+                              className="bg-foreground/10 text-foreground/70 rounded px-2 py-1 text-xs"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div className="text-foreground/50 text-xs">
+                            {tool.usage?.toLocaleString()} 回利用
+                          </div>
+                          <div className="text-primary text-xs font-medium group-hover:underline">
+                            使用する →
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </GridContent>
+              )}
+            </section>
           </GridContainer>
         </main>
 

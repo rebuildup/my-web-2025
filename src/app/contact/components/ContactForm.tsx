@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+// 型定義がない場合の暫定対応
+// @ts-expect-error: No type definitions for react-google-recaptcha
 import ReCAPTCHA from 'react-google-recaptcha';
 import { Shield, AlertTriangle, CheckCircle } from 'lucide-react';
 
@@ -150,8 +152,9 @@ const ContactForm: React.FC = () => {
         <div className="rounded-none border border-green-700 bg-green-900 p-6 text-center">
           <CheckCircle size={48} className="mx-auto mb-4 text-green-400" />
           <h3 className="mb-2 text-xl font-bold text-green-400">Message Sent Successfully!</h3>
-          <p className="text-green-300 mb-4">
-            Thank you for your message. Your form was securely submitted and we&apos;ll get back to you soon.
+          <p className="mb-4 text-green-300">
+            Thank you for your message. Your form was securely submitted and we&apos;ll get back to
+            you soon.
           </p>
           <div className="mb-4 flex items-center justify-center gap-2 text-sm text-green-300">
             <Shield size={16} />
@@ -184,25 +187,35 @@ const ContactForm: React.FC = () => {
             <Shield size={16} className="text-blue-400" />
             <span className="text-sm font-medium text-gray-300">Security Score</span>
           </div>
-          <span className={`font-bold ${
-            securityScore >= 80 ? 'text-green-400' : 
-            securityScore >= 60 ? 'text-yellow-400' : 'text-red-400'
-          }`}>
+          <span
+            className={`font-bold ${
+              securityScore >= 80
+                ? 'text-green-400'
+                : securityScore >= 60
+                  ? 'text-yellow-400'
+                  : 'text-red-400'
+            }`}
+          >
             {securityScore}%
           </span>
         </div>
-        <div className="w-full bg-gray-600 h-2 rounded-none">
-          <div 
+        <div className="h-2 w-full rounded-none bg-gray-600">
+          <div
             className={`h-full rounded-none transition-all duration-500 ${
-              securityScore >= 80 ? 'bg-green-500' : 
-              securityScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+              securityScore >= 80
+                ? 'bg-green-500'
+                : securityScore >= 60
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
             }`}
             style={{ width: `${securityScore}%` }}
           />
         </div>
         <div className="mt-2 flex items-center gap-2">
           {securityScore >= 80 && <CheckCircle size={14} className="text-green-400" />}
-          {securityScore < 80 && securityScore >= 60 && <AlertTriangle size={14} className="text-yellow-400" />}
+          {securityScore < 80 && securityScore >= 60 && (
+            <AlertTriangle size={14} className="text-yellow-400" />
+          )}
           {securityScore < 60 && <AlertTriangle size={14} className="text-red-400" />}
           <span className="text-xs text-gray-400">
             {securityScore >= 80 && 'High security - Ready to submit'}
@@ -295,7 +308,10 @@ const ContactForm: React.FC = () => {
           <div className="flex flex-col items-start gap-2">
             <ReCAPTCHA
               ref={recaptchaRef}
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'}
+              sitekey={
+                process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
+                '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+              }
               onChange={handleRecaptchaChange}
               onError={handleRecaptchaError}
               onExpired={handleRecaptchaExpired}
@@ -306,7 +322,10 @@ const ContactForm: React.FC = () => {
           </div>
           <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
             <Shield size={12} />
-            <span>This form is protected by reCAPTCHA and subject to Google's Privacy Policy and Terms of Service.</span>
+            <span>
+              This form is protected by reCAPTCHA and subject to Google&apos;s Privacy Policy and
+              Terms of Service.
+            </span>
           </div>
         </div>
 

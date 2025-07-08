@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Search, Filter, X, ExternalLink } from 'lucide-react';
 import { searchContent } from '@/lib/search';
 import { SearchResult, ContentType } from '@/types/content';
-import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
+import { GridLayout, GridContainer } from '@/components/GridSystem';
 
 const contentTypes: { value: ContentType | ''; label: string }[] = [
   { value: '', label: '全て' },
@@ -173,189 +173,189 @@ function SearchPageContent() {
       {/* Main Content */}
       <main className="pb-16">
         <GridContainer>
-        {/* Search Form */}
-        <section className="mb-8">
-          <form onSubmit={handleSearch} className="space-y-4">
-            {/* Main Search Input */}
-            <div className="relative">
-              <Search
-                size={20}
-                className="text-foreground/50 absolute top-1/2 left-4 -translate-y-1/2 transform"
-              />
-              <input
-                type="text"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                placeholder="キーワードを入力して検索..."
-                className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border-2 py-4 pr-12 pl-12 text-lg focus:outline-none"
-              />
-              {query && (
+          {/* Search Form */}
+          <section className="mb-8">
+            <form onSubmit={handleSearch} className="space-y-4">
+              {/* Main Search Input */}
+              <div className="relative">
+                <Search
+                  size={20}
+                  className="text-foreground/50 absolute top-1/2 left-4 -translate-y-1/2 transform"
+                />
+                <input
+                  type="text"
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  placeholder="キーワードを入力して検索..."
+                  className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border-2 py-4 pr-12 pl-12 text-lg focus:outline-none"
+                />
+                {query && (
+                  <button
+                    type="button"
+                    onClick={clearSearch}
+                    className="text-foreground/50 hover:text-foreground absolute top-1/2 right-4 -translate-y-1/2 transform"
+                  >
+                    <X size={20} />
+                  </button>
+                )}
+              </div>
+
+              {/* Quick Filters */}
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center space-x-2">
+                  <label className="text-foreground/70 text-sm">タイプ:</label>
+                  <select
+                    value={selectedType}
+                    onChange={e => setSelectedType(e.target.value as ContentType | '')}
+                    className="border-foreground/20 bg-gray text-foreground focus:border-primary border px-3 py-2 text-sm focus:outline-none"
+                  >
+                    {contentTypes.map(type => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <label className="text-foreground/70 text-sm">カテゴリ:</label>
+                  <select
+                    value={selectedCategory}
+                    onChange={e => setSelectedCategory(e.target.value)}
+                    className="border-foreground/20 bg-gray text-foreground focus:border-primary border px-3 py-2 text-sm focus:outline-none"
+                  >
+                    {categories.map(category => (
+                      <option key={category.value} value={category.value}>
+                        {category.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 <button
                   type="button"
-                  onClick={clearSearch}
-                  className="text-foreground/50 hover:text-foreground absolute top-1/2 right-4 -translate-y-1/2 transform"
+                  onClick={() => setShowAdvanced(!showAdvanced)}
+                  className="border-foreground/20 text-foreground/70 hover:border-primary hover:text-primary flex items-center space-x-1 border px-3 py-2 text-sm transition-colors"
                 >
-                  <X size={20} />
+                  <Filter size={16} />
+                  <span>詳細検索</span>
                 </button>
+              </div>
+
+              {/* Advanced Search Options */}
+              {showAdvanced && (
+                <div className="border-foreground/20 bg-gray/50 border p-4">
+                  <h3 className="text-foreground mb-3 text-lg font-medium">詳細検索オプション</h3>
+                  <div className="space-y-3">
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="rounded" />
+                      <span className="text-foreground/70 text-sm">
+                        コンテンツ内容も検索対象に含める
+                      </span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="rounded" />
+                      <span className="text-foreground/70 text-sm">完全一致のみ</span>
+                    </label>
+                  </div>
+                </div>
               )}
-            </div>
+            </form>
+          </section>
 
-            {/* Quick Filters */}
-            <div className="flex flex-wrap gap-4">
-              <div className="flex items-center space-x-2">
-                <label className="text-foreground/70 text-sm">タイプ:</label>
-                <select
-                  value={selectedType}
-                  onChange={e => setSelectedType(e.target.value as ContentType | '')}
-                  className="border-foreground/20 bg-gray text-foreground focus:border-primary border px-3 py-2 text-sm focus:outline-none"
-                >
-                  {contentTypes.map(type => (
-                    <option key={type.value} value={type.value}>
-                      {type.label}
-                    </option>
-                  ))}
-                </select>
+          {/* Search History */}
+          {searchHistory.length > 0 && !query && (
+            <section className="mb-8">
+              <h2 className="text-foreground mb-3 text-lg font-medium">検索履歴</h2>
+              <div className="flex flex-wrap gap-2">
+                {searchHistory.map((historyQuery, index) => (
+                  <button
+                    key={index}
+                    onClick={() => selectHistoryItem(historyQuery)}
+                    className="bg-foreground/10 text-foreground/70 hover:bg-foreground/20 rounded px-3 py-1 text-sm transition-colors"
+                  >
+                    {historyQuery}
+                  </button>
+                ))}
               </div>
+            </section>
+          )}
 
-              <div className="flex items-center space-x-2">
-                <label className="text-foreground/70 text-sm">カテゴリ:</label>
-                <select
-                  value={selectedCategory}
-                  onChange={e => setSelectedCategory(e.target.value)}
-                  className="border-foreground/20 bg-gray text-foreground focus:border-primary border px-3 py-2 text-sm focus:outline-none"
-                >
-                  {categories.map(category => (
-                    <option key={category.value} value={category.value}>
-                      {category.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setShowAdvanced(!showAdvanced)}
-                className="border-foreground/20 text-foreground/70 hover:border-primary hover:text-primary flex items-center space-x-1 border px-3 py-2 text-sm transition-colors"
-              >
-                <Filter size={16} />
-                <span>詳細検索</span>
-              </button>
-            </div>
-
-            {/* Advanced Search Options */}
-            {showAdvanced && (
-              <div className="border-foreground/20 bg-gray/50 border p-4">
-                <h3 className="text-foreground mb-3 text-lg font-medium">詳細検索オプション</h3>
-                <div className="space-y-3">
-                  <label className="flex items-center space-x-2">
-                    <input type="checkbox" className="rounded" />
-                    <span className="text-foreground/70 text-sm">
-                      コンテンツ内容も検索対象に含める
-                    </span>
-                  </label>
-                  <label className="flex items-center space-x-2">
-                    <input type="checkbox" className="rounded" />
-                    <span className="text-foreground/70 text-sm">完全一致のみ</span>
-                  </label>
+          {/* Search Results */}
+          <section>
+            {query && (
+              <div className="mb-6 flex items-center justify-between">
+                <h2 className="text-foreground text-lg font-medium">
+                  &ldquo;{query}&rdquo; の検索結果
+                </h2>
+                <div className="text-foreground/60 text-sm">
+                  {isLoading ? '検索中...' : `${results.length} 件`}
                 </div>
               </div>
             )}
-          </form>
-        </section>
 
-        {/* Search History */}
-        {searchHistory.length > 0 && !query && (
-          <section className="mb-8">
-            <h2 className="text-foreground mb-3 text-lg font-medium">検索履歴</h2>
-            <div className="flex flex-wrap gap-2">
-              {searchHistory.map((historyQuery, index) => (
-                <button
-                  key={index}
-                  onClick={() => selectHistoryItem(historyQuery)}
-                  className="bg-foreground/10 text-foreground/70 hover:bg-foreground/20 rounded px-3 py-1 text-sm transition-colors"
-                >
-                  {historyQuery}
-                </button>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Search Results */}
-        <section>
-          {query && (
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-foreground text-lg font-medium">
-                &ldquo;{query}&rdquo; の検索結果
-              </h2>
-              <div className="text-foreground/60 text-sm">
-                {isLoading ? '検索中...' : `${results.length} 件`}
+            {isLoading && (
+              <div className="py-12 text-center">
+                <div className="loading mx-auto"></div>
+                <p className="text-foreground/60 mt-4">検索中...</p>
               </div>
-            </div>
-          )}
+            )}
 
-          {isLoading && (
-            <div className="py-12 text-center">
-              <div className="loading mx-auto"></div>
-              <p className="text-foreground/60 mt-4">検索中...</p>
-            </div>
-          )}
+            {!isLoading && query && results.length === 0 && (
+              <div className="py-12 text-center">
+                <p className="text-foreground/60 mb-4">検索結果が見つかりませんでした</p>
+                <p className="text-foreground/50 text-sm">
+                  • キーワードを変更して再度検索してください
+                  <br />
+                  • より一般的な用語を使用してください
+                  <br />• フィルターを解除してください
+                </p>
+              </div>
+            )}
 
-          {!isLoading && query && results.length === 0 && (
-            <div className="py-12 text-center">
-              <p className="text-foreground/60 mb-4">検索結果が見つかりませんでした</p>
-              <p className="text-foreground/50 text-sm">
-                • キーワードを変更して再度検索してください
-                <br />
-                • より一般的な用語を使用してください
-                <br />• フィルターを解除してください
-              </p>
-            </div>
-          )}
-
-          {!isLoading && results.length > 0 && (
-            <div className="space-y-6">
-              {results.map(result => (
-                <div
-                  key={result.id}
-                  className="border-foreground/20 bg-gray/50 border p-6 transition-shadow hover:shadow-md"
-                >
-                  <div className="mb-3 flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      <span className={`text-sm font-medium ${getTypeColor(result.type)}`}>
-                        {getTypeLabel(result.type)}
-                      </span>
-                      <span className="text-foreground/50 text-sm">
-                        スコア: {(1 - result.score).toFixed(2)}
-                      </span>
+            {!isLoading && results.length > 0 && (
+              <div className="space-y-6">
+                {results.map(result => (
+                  <div
+                    key={result.id}
+                    className="border-foreground/20 bg-gray/50 border p-6 transition-shadow hover:shadow-md"
+                  >
+                    <div className="mb-3 flex items-start justify-between">
+                      <div className="flex items-center space-x-3">
+                        <span className={`text-sm font-medium ${getTypeColor(result.type)}`}>
+                          {getTypeLabel(result.type)}
+                        </span>
+                        <span className="text-foreground/50 text-sm">
+                          スコア: {(1 - result.score).toFixed(2)}
+                        </span>
+                      </div>
+                      <Link
+                        href={result.url}
+                        className="text-primary flex items-center space-x-1 text-sm hover:underline"
+                      >
+                        <span>開く</span>
+                        <ExternalLink size={14} />
+                      </Link>
                     </div>
-                    <Link
-                      href={result.url}
-                      className="text-primary flex items-center space-x-1 text-sm hover:underline"
-                    >
-                      <span>開く</span>
-                      <ExternalLink size={14} />
-                    </Link>
+
+                    <h3 className="text-foreground mb-2 text-xl font-medium">
+                      <Link href={result.url} className="hover:text-primary transition-colors">
+                        {result.title}
+                      </Link>
+                    </h3>
+
+                    <p className="text-foreground/70 mb-3 line-clamp-3">{result.description}</p>
+
+                    {result.highlights.length > 0 && (
+                      <div className="text-foreground/60 text-sm">
+                        <strong>一致箇所:</strong> {result.highlights.slice(0, 3).join(', ')}
+                      </div>
+                    )}
                   </div>
-
-                  <h3 className="text-foreground mb-2 text-xl font-medium">
-                    <Link href={result.url} className="hover:text-primary transition-colors">
-                      {result.title}
-                    </Link>
-                  </h3>
-
-                  <p className="text-foreground/70 mb-3 line-clamp-3">{result.description}</p>
-
-                  {result.highlights.length > 0 && (
-                    <div className="text-foreground/60 text-sm">
-                      <strong>一致箇所:</strong> {result.highlights.slice(0, 3).join(', ')}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+                ))}
+              </div>
+            )}
+          </section>
         </GridContainer>
       </main>
 

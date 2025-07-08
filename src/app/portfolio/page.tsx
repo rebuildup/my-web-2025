@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Grid, Code, Video, Palette, Search, Filter, Calendar } from 'lucide-react';
-import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
+import { GridLayout, GridContainer, GridContent } from '@/components/GridSystem';
 
 export const metadata: Metadata = {
   title: 'Portfolio - samuido | 作品ギャラリー',
@@ -161,248 +161,250 @@ export default function PortfolioPage() {
         {/* Main Content */}
         <main className="pb-16">
           <GridContainer>
-          {/* Statistics Overview */}
-          <section className="mb-16">
-            <GridContent cols={{ xs: 2, md: 4, xl: 4, '2xl': 4 }} className="mx-auto max-w-2xl">
-              <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">12</div>
-                <div className="noto-sans-jp text-foreground/70 text-sm">総作品数</div>
-              </div>
+            {/* Statistics Overview */}
+            <section className="mb-16">
+              <GridContent cols={{ xs: 2, md: 4, xl: 4, '2xl': 4 }} className="mx-auto max-w-2xl">
+                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
+                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">12</div>
+                  <div className="noto-sans-jp text-foreground/70 text-sm">総作品数</div>
+                </div>
 
-              <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">5</div>
-                <div className="noto-sans-jp text-foreground/70 text-sm">開発作品</div>
-              </div>
+                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
+                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">5</div>
+                  <div className="noto-sans-jp text-foreground/70 text-sm">開発作品</div>
+                </div>
 
-              <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">4</div>
-                <div className="noto-sans-jp text-foreground/70 text-sm">映像作品</div>
-              </div>
+                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
+                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">4</div>
+                  <div className="noto-sans-jp text-foreground/70 text-sm">映像作品</div>
+                </div>
 
-              <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">3</div>
-                <div className="noto-sans-jp text-foreground/70 text-sm">デザイン作品</div>
-              </div>
-            </GridContent>
-          </section>
+                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
+                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">3</div>
+                  <div className="noto-sans-jp text-foreground/70 text-sm">デザイン作品</div>
+                </div>
+              </GridContent>
+            </section>
 
-          {/* Gallery Categories */}
-          <section className="mb-16">
-            <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
-              ギャラリーカテゴリ
-            </h2>
+            {/* Gallery Categories */}
+            <section className="mb-16">
+              <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
+                ギャラリーカテゴリ
+              </h2>
 
-            <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }} className="gap-8">
-              {galleryCategories.map(category => (
-                <Link
-                  key={category.id}
-                  href={category.href}
-                  className={`group block border-2 p-8 ${category.color} bg-gray transition-all duration-300 hover:scale-105 hover:shadow-lg`}
-                >
-                  <div className="flex items-start space-x-6">
-                    <div className="text-primary flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
-                      {category.icon}
-                    </div>
-
-                    <div className="flex-1">
-                      <div className="mb-2 flex items-center justify-between">
-                        <h3 className="neue-haas-grotesk-display text-foreground text-2xl">
-                          {category.title}
-                        </h3>
-                        <div className="text-primary text-sm font-medium">{category.count}作品</div>
+              <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }} className="gap-8">
+                {galleryCategories.map(category => (
+                  <Link
+                    key={category.id}
+                    href={category.href}
+                    className={`group block border-2 p-8 ${category.color} bg-gray transition-all duration-300 hover:scale-105 hover:shadow-lg`}
+                  >
+                    <div className="flex items-start space-x-6">
+                      <div className="text-primary flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
+                        {category.icon}
                       </div>
 
-                      <p className="zen-kaku-gothic-new text-primary mb-3 text-lg">
-                        {category.description}
-                      </p>
+                      <div className="flex-1">
+                        <div className="mb-2 flex items-center justify-between">
+                          <h3 className="neue-haas-grotesk-display text-foreground text-2xl">
+                            {category.title}
+                          </h3>
+                          <div className="text-primary text-sm font-medium">
+                            {category.count}作品
+                          </div>
+                        </div>
 
-                      <p className="noto-sans-jp text-foreground/70 mb-4 text-sm leading-relaxed">
-                        {category.detailedDescription}
-                      </p>
+                        <p className="zen-kaku-gothic-new text-primary mb-3 text-lg">
+                          {category.description}
+                        </p>
 
-                      <div className="mb-4 space-y-2">
-                        <h4 className="noto-sans-jp text-foreground/60 text-xs font-medium">
-                          主な機能：
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                          {category.features.map(feature => (
-                            <span
-                              key={feature}
-                              className="bg-foreground/10 text-foreground/70 rounded px-2 py-1 text-xs"
-                            >
-                              {feature}
-                            </span>
-                          ))}
+                        <p className="noto-sans-jp text-foreground/70 mb-4 text-sm leading-relaxed">
+                          {category.detailedDescription}
+                        </p>
+
+                        <div className="mb-4 space-y-2">
+                          <h4 className="noto-sans-jp text-foreground/60 text-xs font-medium">
+                            主な機能：
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {category.features.map(feature => (
+                              <span
+                                key={feature}
+                                className="bg-foreground/10 text-foreground/70 rounded px-2 py-1 text-xs"
+                              >
+                                {feature}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="text-primary text-sm font-medium group-hover:underline">
+                          ギャラリーを見る →
                         </div>
                       </div>
+                    </div>
+                  </Link>
+                ))}
+              </GridContent>
+            </section>
 
-                      <div className="text-primary text-sm font-medium group-hover:underline">
-                        ギャラリーを見る →
-                      </div>
+            {/* Quick Actions */}
+            <section className="mb-16">
+              <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
+                クイックアクション
+              </h2>
+
+              <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }} className="mx-auto max-w-4xl">
+                <Link
+                  href="/portfolio/gallery/all?sort=newest"
+                  className="group border-foreground/20 bg-gray/50 hover:bg-gray border p-6 transition-colors"
+                >
+                  <div className="mb-3 flex items-center space-x-3">
+                    <Calendar size={24} className="text-primary" />
+                    <h3 className="neue-haas-grotesk-display text-foreground text-lg">最新作品</h3>
+                  </div>
+                  <p className="noto-sans-jp text-foreground/70 text-sm">
+                    新着順で並んだ全作品を表示
+                  </p>
+                  <div className="text-primary mt-2 text-xs font-medium group-hover:underline">
+                    表示 →
+                  </div>
+                </Link>
+
+                <Link
+                  href="/search?type=portfolio"
+                  className="group border-foreground/20 bg-gray/50 hover:bg-gray border p-6 transition-colors"
+                >
+                  <div className="mb-3 flex items-center space-x-3">
+                    <Search size={24} className="text-primary" />
+                    <h3 className="neue-haas-grotesk-display text-foreground text-lg">作品検索</h3>
+                  </div>
+                  <p className="noto-sans-jp text-foreground/70 text-sm">
+                    キーワードやタグで作品を検索
+                  </p>
+                  <div className="text-primary mt-2 text-xs font-medium group-hover:underline">
+                    検索 →
+                  </div>
+                </Link>
+
+                <Link
+                  href="/portfolio/gallery/all?view=filter"
+                  className="group border-foreground/20 bg-gray/50 hover:bg-gray border p-6 transition-colors"
+                >
+                  <div className="mb-3 flex items-center space-x-3">
+                    <Filter size={24} className="text-primary" />
+                    <h3 className="neue-haas-grotesk-display text-foreground text-lg">
+                      詳細フィルター
+                    </h3>
+                  </div>
+                  <p className="noto-sans-jp text-foreground/70 text-sm">
+                    技術タグやカテゴリで絞り込み
+                  </p>
+                  <div className="text-primary mt-2 text-xs font-medium group-hover:underline">
+                    フィルター →
+                  </div>
+                </Link>
+              </GridContent>
+            </section>
+
+            {/* Featured Works */}
+            <section>
+              <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
+                注目の作品
+              </h2>
+
+              <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
+                <Link
+                  href="/portfolio/detail/portfolio-1"
+                  className="group border-foreground/20 bg-gray/50 overflow-hidden border transition-shadow hover:shadow-lg"
+                >
+                  <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20">
+                    <Code size={48} className="text-primary/60" />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg transition-colors">
+                      React Portfolio Website
+                    </h3>
+                    <p className="noto-sans-jp text-foreground/70 mb-3 text-sm">
+                      Modern portfolio website built with React and Next.js featuring responsive
+                      design and interactive animations.
+                    </p>
+                    <div className="mb-3 flex flex-wrap gap-1">
+                      <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
+                        React
+                      </span>
+                      <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
+                        Next.js
+                      </span>
+                      <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
+                        TypeScript
+                      </span>
+                    </div>
+                    <div className="text-primary text-xs font-medium group-hover:underline">
+                      詳細を見る →
                     </div>
                   </div>
                 </Link>
-              ))}
-            </GridContent>
-          </section>
 
-          {/* Quick Actions */}
-          <section className="mb-16">
-            <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
-              クイックアクション
-            </h2>
-
-            <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }} className="mx-auto max-w-4xl">
-              <Link
-                href="/portfolio/gallery/all?sort=newest"
-                className="group border-foreground/20 bg-gray/50 hover:bg-gray border p-6 transition-colors"
-              >
-                <div className="mb-3 flex items-center space-x-3">
-                  <Calendar size={24} className="text-primary" />
-                  <h3 className="neue-haas-grotesk-display text-foreground text-lg">最新作品</h3>
-                </div>
-                <p className="noto-sans-jp text-foreground/70 text-sm">
-                  新着順で並んだ全作品を表示
-                </p>
-                <div className="text-primary mt-2 text-xs font-medium group-hover:underline">
-                  表示 →
-                </div>
-              </Link>
-
-              <Link
-                href="/search?type=portfolio"
-                className="group border-foreground/20 bg-gray/50 hover:bg-gray border p-6 transition-colors"
-              >
-                <div className="mb-3 flex items-center space-x-3">
-                  <Search size={24} className="text-primary" />
-                  <h3 className="neue-haas-grotesk-display text-foreground text-lg">作品検索</h3>
-                </div>
-                <p className="noto-sans-jp text-foreground/70 text-sm">
-                  キーワードやタグで作品を検索
-                </p>
-                <div className="text-primary mt-2 text-xs font-medium group-hover:underline">
-                  検索 →
-                </div>
-              </Link>
-
-              <Link
-                href="/portfolio/gallery/all?view=filter"
-                className="group border-foreground/20 bg-gray/50 hover:bg-gray border p-6 transition-colors"
-              >
-                <div className="mb-3 flex items-center space-x-3">
-                  <Filter size={24} className="text-primary" />
-                  <h3 className="neue-haas-grotesk-display text-foreground text-lg">
-                    詳細フィルター
-                  </h3>
-                </div>
-                <p className="noto-sans-jp text-foreground/70 text-sm">
-                  技術タグやカテゴリで絞り込み
-                </p>
-                <div className="text-primary mt-2 text-xs font-medium group-hover:underline">
-                  フィルター →
-                </div>
-              </Link>
-            </GridContent>
-          </section>
-
-          {/* Featured Works */}
-          <section>
-            <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
-              注目の作品
-            </h2>
-
-            <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
-              <Link
-                href="/portfolio/detail/portfolio-1"
-                className="group border-foreground/20 bg-gray/50 overflow-hidden border transition-shadow hover:shadow-lg"
-              >
-                <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20">
-                  <Code size={48} className="text-primary/60" />
-                </div>
-                <div className="p-6">
-                  <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg transition-colors">
-                    React Portfolio Website
-                  </h3>
-                  <p className="noto-sans-jp text-foreground/70 mb-3 text-sm">
-                    Modern portfolio website built with React and Next.js featuring responsive
-                    design and interactive animations.
-                  </p>
-                  <div className="mb-3 flex flex-wrap gap-1">
-                    <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
-                      React
-                    </span>
-                    <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
-                      Next.js
-                    </span>
-                    <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
-                      TypeScript
-                    </span>
+                <Link
+                  href="/portfolio/detail/portfolio-2"
+                  className="group border-foreground/20 bg-gray/50 overflow-hidden border transition-shadow hover:shadow-lg"
+                >
+                  <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+                    <Video size={48} className="text-primary/60" />
                   </div>
-                  <div className="text-primary text-xs font-medium group-hover:underline">
-                    詳細を見る →
+                  <div className="p-6">
+                    <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg transition-colors">
+                      Music Video Production
+                    </h3>
+                    <p className="noto-sans-jp text-foreground/70 mb-3 text-sm">
+                      Creative music video production featuring advanced visual effects and
+                      cinematography for emerging artist.
+                    </p>
+                    <div className="mb-3 flex flex-wrap gap-1">
+                      <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
+                        After Effects
+                      </span>
+                      <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
+                        Premiere Pro
+                      </span>
+                    </div>
+                    <div className="text-primary text-xs font-medium group-hover:underline">
+                      詳細を見る →
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
 
-              <Link
-                href="/portfolio/detail/portfolio-2"
-                className="group border-foreground/20 bg-gray/50 overflow-hidden border transition-shadow hover:shadow-lg"
-              >
-                <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-purple-500/20 to-pink-500/20">
-                  <Video size={48} className="text-primary/60" />
-                </div>
-                <div className="p-6">
-                  <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg transition-colors">
-                    Music Video Production
-                  </h3>
-                  <p className="noto-sans-jp text-foreground/70 mb-3 text-sm">
-                    Creative music video production featuring advanced visual effects and
-                    cinematography for emerging artist.
-                  </p>
-                  <div className="mb-3 flex flex-wrap gap-1">
-                    <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
-                      After Effects
-                    </span>
-                    <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
-                      Premiere Pro
-                    </span>
+                <Link
+                  href="/portfolio/detail/portfolio-3"
+                  className="group border-foreground/20 bg-gray/50 overflow-hidden border transition-shadow hover:shadow-lg"
+                >
+                  <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-yellow-500/20 to-orange-500/20">
+                    <Palette size={48} className="text-primary/60" />
                   </div>
-                  <div className="text-primary text-xs font-medium group-hover:underline">
-                    詳細を見る →
+                  <div className="p-6">
+                    <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg transition-colors">
+                      Brand Identity Design
+                    </h3>
+                    <p className="noto-sans-jp text-foreground/70 mb-3 text-sm">
+                      Complete brand identity design including logo, color palette, typography, and
+                      brand guidelines for tech startup.
+                    </p>
+                    <div className="mb-3 flex flex-wrap gap-1">
+                      <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
+                        Brand Design
+                      </span>
+                      <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
+                        Logo Design
+                      </span>
+                    </div>
+                    <div className="text-primary text-xs font-medium group-hover:underline">
+                      詳細を見る →
+                    </div>
                   </div>
-                </div>
-              </Link>
-
-              <Link
-                href="/portfolio/detail/portfolio-3"
-                className="group border-foreground/20 bg-gray/50 overflow-hidden border transition-shadow hover:shadow-lg"
-              >
-                <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-yellow-500/20 to-orange-500/20">
-                  <Palette size={48} className="text-primary/60" />
-                </div>
-                <div className="p-6">
-                  <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg transition-colors">
-                    Brand Identity Design
-                  </h3>
-                  <p className="noto-sans-jp text-foreground/70 mb-3 text-sm">
-                    Complete brand identity design including logo, color palette, typography, and
-                    brand guidelines for tech startup.
-                  </p>
-                  <div className="mb-3 flex flex-wrap gap-1">
-                    <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
-                      Brand Design
-                    </span>
-                    <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs">
-                      Logo Design
-                    </span>
-                  </div>
-                  <div className="text-primary text-xs font-medium group-hover:underline">
-                    詳細を見る →
-                  </div>
-                </div>
-              </Link>
-            </GridContent>
-          </section>
+                </Link>
+              </GridContent>
+            </section>
           </GridContainer>
         </main>
 

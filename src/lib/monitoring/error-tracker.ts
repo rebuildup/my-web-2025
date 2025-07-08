@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as React from 'react';
+
 export interface ErrorEvent {
   id: string;
   timestamp: number;
@@ -9,12 +12,13 @@ export interface ErrorEvent {
   userAgent?: string;
   userId?: string;
   sessionId: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   context?: {
     page: string;
     component?: string;
     action?: string;
-    props?: Record<string, any>;
+    props?: Record<string, unknown>;
+    [key: string]: unknown;
   };
   breadcrumbs?: Breadcrumb[];
   fingerprint?: string;
@@ -23,7 +27,7 @@ export interface ErrorEvent {
 
 export interface Breadcrumb {
   timestamp: number;
-  type: 'navigation' | 'click' | 'api' | 'console' | 'error';
+  type: 'navigation' | 'click' | 'api' | 'console' | 'error' | 'system' | 'performance';
   message: string;
   data?: Record<string, any>;
 }
@@ -64,9 +68,9 @@ class ErrorTracker {
         /Script error/i,
         /Non-Error promise rejection captured/i,
         /ResizeObserver loop limit exceeded/i,
-        /cancelled/i
+        /cancelled/i,
       ],
-      ...config
+      ...config,
     };
 
     this.sessionId = this.generateSessionId();
@@ -96,7 +100,9 @@ class ErrorTracker {
 
   private generateFingerprint(error: Partial<ErrorEvent>): string {
     const key = `${error.type}_${error.message}_${error.url || 'unknown'}`;
-    return btoa(key).replace(/[^a-zA-Z0-9]/g, '').substr(0, 16);
+    return btoa(key)
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .substr(0, 16);
   }
 
   private shouldIgnoreError(message: string): boolean {
@@ -114,7 +120,7 @@ class ErrorTracker {
 
   private setupGlobalErrorHandlers(): void {
     // JavaScript errors
-    window.addEventListener('error', (event) => {
+    window.addEventListener('error', event => {
       this.captureError({
         type: 'javascript',
         severity: 'high',
@@ -124,13 +130,13 @@ class ErrorTracker {
         context: {
           page: window.location.pathname,
           line: event.lineno,
-          column: event.colno
-        }
+          column: event.colno,
+        },
       });
     });
 
     // Unhandled promise rejections
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener('unhandledrejection', event => {
       this.captureError({
         type: 'javascript',
         severity: 'high',
@@ -138,28 +144,32 @@ class ErrorTracker {
         stack: event.reason?.stack,
         context: {
           page: window.location.pathname,
-          reason: event.reason
-        }
+          reason: event.reason,
+        },
       });
     });
 
     // Resource loading errors
-    window.addEventListener('error', (event) => {
-      if (event.target !== window) {
-        const element = event.target as HTMLElement;
-        this.captureError({
-          type: 'network',
-          severity: 'medium',
-          message: `Failed to load resource: ${element.tagName}`,
-          url: (element as any).src || (element as any).href,
-          context: {
-            page: window.location.pathname,
-            element: element.tagName,
-            src: (element as any).src || (element as any).href
-          }
-        });
-      }
-    }, true);
+    window.addEventListener(
+      'error',
+      event => {
+        if (event.target !== window) {
+          const element = event.target as HTMLElement;
+          this.captureError({
+            type: 'network',
+            severity: 'medium',
+            message: `Failed to load resource: ${element.tagName}`,
+            url: (element as any).src || (element as any).href,
+            context: {
+              page: window.location.pathname,
+              element: element.tagName,
+              src: (element as any).src || (element as any).href,
+            },
+          });
+        }
+      },
+      true
+    );
   }
 
   private setupConsoleCapture(): void {
@@ -172,8 +182,8 @@ class ErrorTracker {
         message: args.map(arg => String(arg)).join(' '),
         context: {
           page: window.location.pathname,
-          args: args
-        }
+          args: args,
+        },
       });
     };
 
@@ -189,17 +199,17 @@ class ErrorTracker {
     const originalFetch = window.fetch;
     window.fetch = async (...args: Parameters<typeof fetch>) => {
       const [resource, config] = args;
-      const url = typeof resource === 'string' ? resource : resource.url;
+      const url = typeof resource === 'string' ? resource : (resource as Request).url;
       const method = config?.method || 'GET';
 
       try {
-        const startTime = performance.now();
+        const startTime = window.performance.now();
         const response = await originalFetch(...args);
-        const endTime = performance.now();
+        const endTime = window.performance.now();
 
         this.addBreadcrumb('api', `${method} ${url}`, {
           status: response.status,
-          duration: Math.round(endTime - startTime)
+          duration: Math.round(endTime - startTime),
         });
 
         if (!response.ok) {
@@ -212,8 +222,8 @@ class ErrorTracker {
               method,
               url,
               status: response.status,
-              statusText: response.statusText
-            }
+              statusText: response.statusText,
+            },
           });
         }
 
@@ -228,8 +238,8 @@ class ErrorTracker {
             page: window.location.pathname,
             method,
             url,
-            error: error instanceof Error ? error.message : String(error)
-          }
+            error: error instanceof Error ? error.message : String(error),
+          },
         });
         throw error;
       }
@@ -239,18 +249,24 @@ class ErrorTracker {
     const originalXHROpen = XMLHttpRequest.prototype.open;
     const originalXHRSend = XMLHttpRequest.prototype.send;
 
-    XMLHttpRequest.prototype.open = function(method: string, url: string | URL, ...args: any[]) {
+    XMLHttpRequest.prototype.open = function (
+      method: string,
+      url: string | URL,
+      async?: boolean,
+      user?: string,
+      password?: string
+    ) {
       (this as any).__method = method;
       (this as any).__url = url;
-      (this as any).__startTime = performance.now();
-      return originalXHROpen.call(this, method, url, ...args);
+      (this as any).__startTime = window.performance.now();
+      return originalXHROpen.call(this, method, url, async ?? true, user, password);
     };
 
-    XMLHttpRequest.prototype.send = function(...args: any[]) {
+    XMLHttpRequest.prototype.send = function (...args: any[]) {
       this.addEventListener('loadend', () => {
         const method = (this as any).__method;
         const url = (this as any).__url;
-        const duration = performance.now() - (this as any).__startTime;
+        const duration = window.performance.now() - (this as any).__startTime;
 
         if (this.status >= 400) {
           errorTracker.captureError({
@@ -263,13 +279,13 @@ class ErrorTracker {
               url,
               status: this.status,
               statusText: this.statusText,
-              duration: Math.round(duration)
-            }
+              duration: Math.round(duration),
+            },
           });
         } else {
           errorTracker.addBreadcrumb('api', `${method} ${url}`, {
             status: this.status,
-            duration: Math.round(duration)
+            duration: Math.round(duration),
           });
         }
       });
@@ -282,10 +298,10 @@ class ErrorTracker {
     // Monitor performance metrics
     if ('PerformanceObserver' in window) {
       // Core Web Vitals
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           const metric = entry as any;
-          
+
           if (metric.name === 'LCP' && metric.value > 2500) {
             this.captureError({
               type: 'performance',
@@ -295,11 +311,11 @@ class ErrorTracker {
                 page: window.location.pathname,
                 metric: 'LCP',
                 value: metric.value,
-                threshold: 2500
-              }
+                threshold: 2500,
+              },
             });
           }
-          
+
           if (metric.name === 'FID' && metric.value > 100) {
             this.captureError({
               type: 'performance',
@@ -309,11 +325,11 @@ class ErrorTracker {
                 page: window.location.pathname,
                 metric: 'FID',
                 value: metric.value,
-                threshold: 100
-              }
+                threshold: 100,
+              },
             });
           }
-          
+
           if (metric.name === 'CLS' && metric.value > 0.1) {
             this.captureError({
               type: 'performance',
@@ -323,27 +339,29 @@ class ErrorTracker {
                 page: window.location.pathname,
                 metric: 'CLS',
                 value: metric.value,
-                threshold: 0.1
-              }
+                threshold: 0.1,
+              },
             });
           }
         }
       });
 
       try {
-        observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
-      } catch (e) {
+        observer.observe({
+          entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'],
+        });
+      } catch {
         // Browser may not support all entry types
       }
     }
 
     // Monitor long tasks
     if ('PerformanceObserver' in window) {
-      const longTaskObserver = new PerformanceObserver((list) => {
+      const longTaskObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           this.addBreadcrumb('performance', `Long task detected: ${Math.round(entry.duration)}ms`, {
             duration: entry.duration,
-            startTime: entry.startTime
+            startTime: entry.startTime,
           });
 
           if (entry.duration > 100) {
@@ -354,8 +372,8 @@ class ErrorTracker {
               context: {
                 page: window.location.pathname,
                 duration: entry.duration,
-                startTime: entry.startTime
-              }
+                startTime: entry.startTime,
+              },
             });
           }
         }
@@ -363,20 +381,24 @@ class ErrorTracker {
 
       try {
         longTaskObserver.observe({ entryTypes: ['longtask'] });
-      } catch (e) {
+      } catch {
         // Browser may not support longtask
       }
     }
   }
 
-  public addBreadcrumb(type: Breadcrumb['type'], message: string, data?: Record<string, any>): void {
+  public addBreadcrumb(
+    type: Breadcrumb['type'],
+    message: string,
+    data?: Record<string, any>
+  ): void {
     if (!this.config.enabled) return;
 
     const breadcrumb: Breadcrumb = {
       timestamp: Date.now(),
       type,
       message,
-      data
+      data,
     };
 
     this.breadcrumbs.push(breadcrumb);
@@ -387,7 +409,9 @@ class ErrorTracker {
     }
   }
 
-  public captureError(error: Omit<ErrorEvent, 'id' | 'timestamp' | 'sessionId' | 'breadcrumbs' | 'fingerprint'>): void {
+  public captureError(
+    error: Omit<ErrorEvent, 'id' | 'timestamp' | 'sessionId' | 'breadcrumbs' | 'fingerprint'>
+  ): void {
     if (!this.config.enabled || !this.shouldSample()) return;
 
     if (this.shouldIgnoreError(error.message)) return;
@@ -399,7 +423,7 @@ class ErrorTracker {
       userAgent: navigator.userAgent,
       breadcrumbs: [...this.breadcrumbs],
       fingerprint: this.generateFingerprint(error),
-      ...error
+      ...error,
     };
 
     // Check for duplicate errors
@@ -436,7 +460,7 @@ class ErrorTracker {
     // Add breadcrumb for this error
     this.addBreadcrumb('error', `${error.type}: ${error.message}`, {
       severity: error.severity,
-      fingerprint: errorEvent.fingerprint
+      fingerprint: errorEvent.fingerprint,
     });
   }
 
@@ -449,11 +473,11 @@ class ErrorTracker {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(error)
+        body: JSON.stringify(error),
       });
-    } catch (e) {
+    } catch {
       // Silently fail to avoid infinite loops
-      console.warn('Failed to send error to API:', e);
+      console.warn('Failed to send error to API');
     }
   }
 
@@ -465,20 +489,24 @@ class ErrorTracker {
       stack: error.stack,
       context: {
         page: window.location.pathname,
-        ...context
-      }
+        ...context,
+      },
     });
   }
 
-  public captureMessage(message: string, severity: ErrorEvent['severity'] = 'low', context?: ErrorEvent['context']): void {
+  public captureMessage(
+    message: string,
+    severity: ErrorEvent['severity'] = 'low',
+    context?: ErrorEvent['context']
+  ): void {
     this.captureError({
       type: 'user',
       severity,
       message,
       context: {
         page: window.location.pathname,
-        ...context
-      }
+        ...context,
+      },
     });
   }
 
@@ -528,7 +556,7 @@ export const errorTracker = new ErrorTracker();
 
 // React error boundary helper
 export function createErrorBoundary(Component: React.ComponentType<any>) {
-  return class extends React.Component<any, { hasError: boolean }> {
+  return class ErrorBoundary extends React.Component<any, { hasError: boolean }> {
     constructor(props: any) {
       super(props);
       this.state = { hasError: false };
@@ -547,17 +575,20 @@ export function createErrorBoundary(Component: React.ComponentType<any>) {
         context: {
           page: window.location.pathname,
           component: Component.name,
-          errorInfo: errorInfo.componentStack
-        }
+          errorInfo: errorInfo.componentStack,
+        },
       });
     }
 
     render() {
       if (this.state.hasError) {
-        return React.createElement('div', {
-          className: 'error-boundary',
-          children: 'Something went wrong. Please refresh the page.'
-        });
+        return React.createElement(
+          'div',
+          {
+            className: 'error-boundary',
+          },
+          'Something went wrong. Please refresh the page.'
+        );
       }
 
       return React.createElement(Component, this.props);
@@ -579,7 +610,7 @@ export const performance = {
         window.performance.measure(name, startMark, endMark);
         const entries = window.performance.getEntriesByName(name);
         const entry = entries[entries.length - 1];
-        
+
         if (entry && entry.duration > 1000) {
           errorTracker.captureError({
             type: 'performance',
@@ -588,11 +619,11 @@ export const performance = {
             context: {
               page: window.location.pathname,
               operation: name,
-              duration: entry.duration
-            }
+              duration: entry.duration,
+            },
           });
         }
-      } catch (e) {
+      } catch {
         // Ignore measurement errors
       }
     }
@@ -603,7 +634,7 @@ export const performance = {
       const functionName = name || fn.name || 'anonymous';
       const markStart = `${functionName}-start`;
       const markEnd = `${functionName}-end`;
-      
+
       performance.mark(markStart);
       try {
         const result = fn(...args);
@@ -623,5 +654,5 @@ export const performance = {
         throw error;
       }
     }) as T;
-  }
+  },
 };

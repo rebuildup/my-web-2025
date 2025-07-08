@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ExternalLink, Star, TrendingUp, Clock, Users } from 'lucide-react';
+import { ArrowLeft, Star, TrendingUp, Clock, Users } from 'lucide-react';
 import { ContentItem } from '@/types/content';
 import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
@@ -20,10 +20,23 @@ import SequentialPngPreview from '../components/SequentialPngPreview';
 import Svg2tsx from '../components/Svg2tsx';
 import PriceCalculator from '../components/PriceCalculator';
 
+interface ToolConfig {
+  estimatedTime?: string;
+  features?: string[];
+  technologies?: string[];
+}
+
+interface CustomFields {
+  toolConfig?: ToolConfig;
+  difficulty?: string;
+}
+
 interface ToolData extends ContentItem {
   category: string;
   usage?: number;
   rating?: number;
+  customFields?: Record<string, unknown> & CustomFields;
+  content?: string;
 }
 
 const toolComponents: Record<string, React.ComponentType> = {
@@ -56,7 +69,7 @@ export default function ToolPage() {
         }
         const data = await response.json();
         const toolData = data.find((t: ToolData) => t.id === toolId);
-        
+
         if (!toolData) {
           throw new Error('Tool not found');
         }
@@ -108,7 +121,7 @@ export default function ToolPage() {
             </Link>
           </GridContainer>
         </nav>
-        
+
         <div className="flex h-96 items-center justify-center">
           <div className="text-center">
             <h1 className="neue-haas-grotesk-display text-foreground mb-4 text-3xl">
@@ -119,7 +132,7 @@ export default function ToolPage() {
             </p>
             <Link
               href="/tools"
-              className="bg-primary hover:bg-primary/80 text-white px-6 py-3 transition-colors"
+              className="bg-primary hover:bg-primary/80 px-6 py-3 text-white transition-colors"
             >
               ツール一覧に戻る
             </Link>
@@ -237,7 +250,9 @@ export default function ToolPage() {
                 <div className="flex items-center justify-center space-x-1">
                   <TrendingUp size={16} className="text-primary" />
                   <span className="neue-haas-grotesk-display text-foreground text-lg">
-                    {tool.customFields?.difficulty || 'beginner'}
+                    {typeof tool.customFields?.difficulty === 'string'
+                      ? tool.customFields.difficulty
+                      : 'beginner'}
                   </span>
                 </div>
                 <div className="noto-sans-jp text-foreground/70 text-xs">難易度</div>
@@ -249,80 +264,84 @@ export default function ToolPage() {
         {/* Tool Content */}
         <main>
           <GridContainer className="py-8">
-          {ToolComponent ? (
-            <ToolComponent />
-          ) : (
-            <div className="border-foreground/20 border p-8 text-center">
-              <h2 className="neue-haas-grotesk-display text-foreground mb-4 text-2xl">
-                ツールを開発中です
-              </h2>
-              <p className="noto-sans-jp text-foreground/70 mb-6">
-                このツールは現在開発中です。完成までしばらくお待ちください。
-              </p>
-              <div className="flex justify-center space-x-4">
-                <Link
-                  href="/tools"
-                  className="bg-primary hover:bg-primary/80 text-white px-6 py-3 transition-colors"
-                >
-                  他のツールを見る
-                </Link>
-                <Link
-                  href="/contact"
-                  className="border-primary text-primary hover:bg-primary/10 border px-6 py-3 transition-colors"
-                >
-                  開発状況を問い合わせる
-                </Link>
-              </div>
-            </div>
-          )}
-
-          {/* Tool Information */}
-          <div className="mt-12">
-            <GridContent cols={{ xs: 1, md: 1, xl: 2, '2xl': 2 }}>
-            {/* Features */}
-            <div className="border-foreground/20 border p-6">
-              <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-xl">
-                機能一覧
-              </h3>
-              <ul className="noto-sans-jp text-foreground/80 space-y-2">
-                {tool.customFields?.toolConfig?.features?.map((feature: string, index: number) => (
-                  <li key={index} className="flex items-start space-x-2">
-                    <span className="text-primary mt-1">•</span>
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Technologies */}
-            <div className="border-foreground/20 border p-6">
-              <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-xl">
-                使用技術
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {tool.customFields?.toolConfig?.technologies?.map((tech: string, index: number) => (
-                  <span
-                    key={index}
-                    className="bg-foreground/10 text-foreground/70 rounded px-3 py-1 text-sm"
+            {ToolComponent ? (
+              <ToolComponent />
+            ) : (
+              <div className="border-foreground/20 border p-8 text-center">
+                <h2 className="neue-haas-grotesk-display text-foreground mb-4 text-2xl">
+                  ツールを開発中です
+                </h2>
+                <p className="noto-sans-jp text-foreground/70 mb-6">
+                  このツールは現在開発中です。完成までしばらくお待ちください。
+                </p>
+                <div className="flex justify-center space-x-4">
+                  <Link
+                    href="/tools"
+                    className="bg-primary hover:bg-primary/80 px-6 py-3 text-white transition-colors"
                   >
-                    {tech}
-                  </span>
-                ))}
+                    他のツールを見る
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className="border-primary text-primary hover:bg-primary/10 border px-6 py-3 transition-colors"
+                  >
+                    開発状況を問い合わせる
+                  </Link>
+                </div>
               </div>
-            </div>
-            </GridContent>
-          </div>
+            )}
 
-          {/* Help Section */}
-          <div className="border-foreground/20 mt-12 border p-6">
-            <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-xl">
-              使い方・詳細情報
-            </h3>
-            <div 
-              className="noto-sans-jp text-foreground/80 prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: tool.content.replace(/\n/g, '<br/>') }}
-            />
-          </div>
+            {/* Tool Information */}
+            <div className="mt-12">
+              <GridContent cols={{ xs: 1, md: 1, xl: 2, '2xl': 2 }}>
+                {/* Features */}
+                <div className="border-foreground/20 border p-6">
+                  <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-xl">
+                    機能一覧
+                  </h3>
+                  <ul className="noto-sans-jp text-foreground/80 space-y-2">
+                    {tool.customFields?.toolConfig?.features?.map(
+                      (feature: string, index: number) => (
+                        <li key={index} className="flex items-start space-x-2">
+                          <span className="text-primary mt-1">•</span>
+                          <span>{feature}</span>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+
+                {/* Technologies */}
+                <div className="border-foreground/20 border p-6">
+                  <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-xl">
+                    使用技術
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {tool.customFields?.toolConfig?.technologies?.map(
+                      (tech: string, index: number) => (
+                        <span
+                          key={index}
+                          className="bg-foreground/10 text-foreground/70 rounded px-3 py-1 text-sm"
+                        >
+                          {tech}
+                        </span>
+                      )
+                    )}
+                  </div>
+                </div>
+              </GridContent>
+            </div>
+
+            {/* Help Section */}
+            <div className="border-foreground/20 mt-12 border p-6">
+              <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-xl">
+                使い方・詳細情報
+              </h3>
+              <div
+                className="noto-sans-jp text-foreground/80 prose prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: (tool.content || '').replace(/\n/g, '<br/>') }}
+              />
+            </div>
           </GridContainer>
         </main>
 

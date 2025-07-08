@@ -56,7 +56,7 @@ describe('Contact API Route', () => {
 
     expect(response.status).toBe(400);
     expect(data.success).toBe(false);
-    expect(data.error).toBe('Missing required fields');
+    expect(data.error).toBe('Invalid JSON format');
   });
 
   it('should handle invalid JSON in request body', async () => {
@@ -99,7 +99,7 @@ describe('Contact API Route', () => {
       body: JSON.stringify({
         name: 'Test User',
         email: 'invalid-email',
-        message: 'Test message',
+        message: 'This is a test message that is long enough to pass validation',
       }),
     });
 
@@ -120,7 +120,7 @@ describe('Contact API Route', () => {
       body: JSON.stringify({
         name: 'Test User',
         email: 'test@example.com',
-        message: 'Test message',
+        message: 'This is a test message that is long enough to pass validation',
         recaptchaToken: 'invalid-token',
       }),
     });
@@ -147,7 +147,7 @@ describe('Contact API Route', () => {
       body: JSON.stringify({
         name: 'Test User',
         email: 'test@example.com',
-        message: 'Test message',
+        message: 'This is a test message that is long enough to pass validation',
         recaptchaToken: 'test-token',
       }),
     });
@@ -170,7 +170,7 @@ describe('Contact API Route', () => {
       body: JSON.stringify({
         name: 'Test User',
         email: 'test@example.com',
-        message: 'Test message',
+        message: 'This is a test message that is long enough to pass validation',
       }),
     });
 
@@ -192,7 +192,7 @@ describe('Contact API Route', () => {
       body: JSON.stringify({
         name: 'Test User',
         email: 'test@example.com',
-        message: 'Test message',
+        message: 'This is a test message that is long enough to pass validation',
         subject: 'Test Subject',
         company: 'Test Company',
         phone: '123-456-7890',
@@ -214,7 +214,7 @@ describe('Contact API Route', () => {
       body: JSON.stringify({
         name: 'Test User',
         email: 'test@example.com',
-        message: 'Test message',
+        message: 'This is a test message that is long enough to pass validation',
         recaptchaToken: 'test-token',
       }),
     });
@@ -234,7 +234,7 @@ describe('Contact API Route', () => {
       body: JSON.stringify({
         name: 'Test User',
         email: 'test@example.com',
-        message: 'Test message',
+        message: 'This is a test message that is long enough to pass validation',
         recaptchaToken: 'valid-token',
       }),
     });

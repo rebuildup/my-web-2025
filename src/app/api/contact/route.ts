@@ -10,8 +10,9 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 interface ContactFormData {
   name: string;
   email: string;
-  subject: string;
-  content: string;
+  subject?: string;
+  content?: string;
+  message?: string;
   recaptchaToken?: string;
   [key: string]: string | undefined; // Add index signature
 }
@@ -43,13 +44,18 @@ async function verifyRecaptcha(token: string): Promise<boolean> {
 }
 
 async function sendContactEmail(formData: ContactFormData): Promise<void> {
+  // Normalize field names for backward compatibility
+  const subject =
+    formData.subject || formData.message || formData.content || 'Contact Form Submission';
+  const content = formData.content || formData.message || '';
+
   if (!process.env.RESEND_API_KEY || !resend) {
     console.log('Email service not configured, logging message instead:');
     console.log({
       name: formData.name,
       email: formData.email,
-      subject: formData.subject,
-      content: formData.content,
+      subject,
+      content,
       timestamp: new Date().toISOString(),
     });
     return; // Skip email sending in development
@@ -62,7 +68,7 @@ async function sendContactEmail(formData: ContactFormData): Promise<void> {
   await resend.emails.send({
     from: fromEmail,
     to: recipientEmail,
-    subject: `Contact Form: ${formData.subject}`,
+    subject: `Contact Form: ${subject}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #0000ff;">New Contact Form Submission</h2>
@@ -70,12 +76,12 @@ async function sendContactEmail(formData: ContactFormData): Promise<void> {
         <div style="background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 5px;">
           <p><strong>Name:</strong> ${formData.name}</p>
           <p><strong>Email:</strong> ${formData.email}</p>
-          <p><strong>Subject:</strong> ${formData.subject}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
         </div>
         
         <div style="background: #ffffff; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
           <h3>Message:</h3>
-          <p style="white-space: pre-line;">${formData.content}</p>
+          <p style="white-space: pre-line;">${content}</p>
         </div>
         
         <hr style="margin: 30px 0;" />
@@ -102,8 +108,8 @@ async function sendContactEmail(formData: ContactFormData): Promise<void> {
         
         <div style="background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 5px;">
           <h3>Your message:</h3>
-          <p><strong>Subject:</strong> ${formData.subject}</p>
-          <p style="white-space: pre-line;">${formData.content}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
+          <p style="white-space: pre-line;">${content}</p>
         </div>
         
         <p>We typically respond within 24-48 hours during business days.</p>
@@ -121,16 +127,54 @@ async function sendContactEmail(formData: ContactFormData): Promise<void> {
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    const formData: ContactFormData = await request.json();
+    let formData: ContactFormData;
 
-    // Validate form data
-    const validation = validateContactForm(formData);
-    if (!validation.isValid) {
+    try {
+      formData = await request.json();
+    } catch (error) {
       return Response.json(
         {
           success: false,
-          errors: validation.errors,
-          message: 'Form validation failed',
+          error: 'Invalid JSON format',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check for required fields (support both 'message' and 'content' for backward compatibility)
+    const requiredFields = ['name', 'email'];
+    const missingFields = requiredFields.filter(field => !formData[field]);
+
+    // Check for either 'subject' or 'message'/'content'
+    const hasSubject = formData.subject || formData.message || formData.content;
+    if (!hasSubject) {
+      missingFields.push('subject');
+    }
+
+    if (missingFields.length > 0) {
+      return Response.json(
+        {
+          success: false,
+          error: 'Missing required fields',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Validate form data with normalized fields
+    const normalizedFormData = {
+      ...formData,
+      subject: formData.subject || formData.message || formData.content || '',
+      content: formData.content || formData.message || '',
+    };
+
+    const validation = validateContactForm(normalizedFormData);
+    if (!validation.isValid) {
+      const firstError = Object.values(validation.errors)[0]?.[0] || 'Validation failed';
+      return Response.json(
+        {
+          success: false,
+          error: firstError,
         },
         { status: 400 }
       );
@@ -164,7 +208,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     return Response.json({
       success: true,
-      message: 'Your message has been sent successfully. We will get back to you soon!',
+      message: 'Message sent successfully',
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

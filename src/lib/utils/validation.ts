@@ -161,23 +161,23 @@ export const validateForm = (
 // Contact form validation schema
 export const contactFormSchema = {
   name: [
-    { type: 'required' as const, message: '名前は必須です' },
-    { type: 'minLength' as const, value: 2, message: '名前は2文字以上で入力してください' },
-    { type: 'maxLength' as const, value: 50, message: '名前は50文字以内で入力してください' },
+    { type: 'required' as const, message: 'Name is required' },
+    { type: 'minLength' as const, value: 2, message: 'Name must be at least 2 characters' },
+    { type: 'maxLength' as const, value: 50, message: 'Name must be 50 characters or less' },
   ],
   email: [
-    { type: 'required' as const, message: 'メールアドレスは必須です' },
-    { type: 'email' as const, message: '有効なメールアドレスを入力してください' },
+    { type: 'required' as const, message: 'Email is required' },
+    { type: 'email' as const, message: 'Invalid email format' },
   ],
   subject: [
-    { type: 'required' as const, message: '件名は必須です' },
-    { type: 'minLength' as const, value: 5, message: '件名は5文字以上で入力してください' },
-    { type: 'maxLength' as const, value: 100, message: '件名は100文字以内で入力してください' },
+    { type: 'required' as const, message: 'Subject is required' },
+    { type: 'minLength' as const, value: 5, message: 'Subject must be at least 5 characters' },
+    { type: 'maxLength' as const, value: 100, message: 'Subject must be 100 characters or less' },
   ],
   content: [
-    { type: 'required' as const, message: '内容は必須です' },
-    { type: 'minLength' as const, value: 20, message: '内容は20文字以上で入力してください' },
-    { type: 'maxLength' as const, value: 2000, message: '内容は2000文字以内で入力してください' },
+    { type: 'required' as const, message: 'Content is required' },
+    { type: 'minLength' as const, value: 10, message: 'Content must be at least 10 characters' },
+    { type: 'maxLength' as const, value: 2000, message: 'Content must be 2000 characters or less' },
   ],
 };
 

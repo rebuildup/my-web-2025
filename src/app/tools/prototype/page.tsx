@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useRef, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { Application, Container, Graphics, Text, TextStyle } from 'pixi.js';
 import { Play, Pause, RotateCcw, Settings, Trophy, Timer, Target } from 'lucide-react';
-import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 interface GameState {
   score: number;
@@ -21,7 +21,7 @@ export default function ProtoTypePage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const appRef = useRef<Application | null>(null);
   const gameContainerRef = useRef<Container | null>(null);
-  
+
   const [gameState, setGameState] = useState<GameState>({
     score: 0,
     level: 1,
@@ -31,14 +31,14 @@ export default function ProtoTypePage() {
     targetNumber: 0,
     currentSequence: [],
     playerInput: [],
-    gameMode: 'memory'
+    gameMode: 'memory',
   });
 
   const [settings, setSettings] = useState({
     difficulty: 'medium',
     soundEnabled: true,
     animationSpeed: 1,
-    theme: 'dark'
+    theme: 'dark',
   });
 
   useEffect(() => {
@@ -48,6 +48,7 @@ export default function ProtoTypePage() {
         appRef.current.destroy(true, { children: true, texture: true });
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export default function ProtoTypePage() {
       const timer = setInterval(() => {
         setGameState(prev => ({
           ...prev,
-          timeLeft: prev.timeLeft - 1
+          timeLeft: prev.timeLeft - 1,
         }));
       }, 1000);
 
@@ -76,11 +77,11 @@ export default function ProtoTypePage() {
       width: 800,
       height: 600,
       backgroundColor: settings.theme === 'dark' ? 0x1a1a1a : 0xf0f0f0,
-      antialias: true
+      antialias: true,
     });
 
     appRef.current = app;
-    
+
     // Create main game container
     const gameContainer = new Container();
     gameContainerRef.current = gameContainer;
@@ -99,7 +100,7 @@ export default function ProtoTypePage() {
     const grid = new Graphics();
     const cellSize = 50;
     const gridColor = settings.theme === 'dark' ? 0x333333 : 0xcccccc;
-    
+
     for (let i = 0; i <= 800; i += cellSize) {
       grid.moveTo(i, 0).lineTo(i, 600).stroke({ width: 1, color: gridColor });
     }
@@ -134,15 +135,15 @@ export default function ProtoTypePage() {
       const circle = new Graphics();
       const x = 150 + (i % 3) * 120;
       const y = 150 + Math.floor(i / 3) * 120;
-      
+
       circle.circle(x, y, 40);
       circle.fill(colors[i]);
       circle.alpha = 0.3;
       circle.eventMode = 'static';
       circle.cursor = 'pointer';
-      
+
       circle.on('pointerdown', () => handleMemoryClick(i));
-      
+
       // Add hover effect
       circle.on('pointerover', () => {
         circle.alpha = 0.7;
@@ -160,12 +161,12 @@ export default function ProtoTypePage() {
       fontFamily: 'Arial',
       fontSize: 24,
       fill: settings.theme === 'dark' ? 0xffffff : 0x000000,
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     });
 
     const scoreText = new Text({
       text: `Score: ${gameState.score}`,
-      style: scoreStyle
+      style: scoreStyle,
     });
     scoreText.x = 50;
     scoreText.y = 50;
@@ -173,7 +174,7 @@ export default function ProtoTypePage() {
 
     const levelText = new Text({
       text: `Level: ${gameState.level}`,
-      style: scoreStyle
+      style: scoreStyle,
     });
     levelText.x = 250;
     levelText.y = 50;
@@ -184,7 +185,7 @@ export default function ProtoTypePage() {
     if (!gameContainerRef.current) return;
 
     const container = gameContainerRef.current;
-    
+
     // Create number sequence display
     const numbers = [];
     for (let i = 0; i < 10; i++) {
@@ -194,14 +195,14 @@ export default function ProtoTypePage() {
           fontFamily: 'Arial',
           fontSize: 32,
           fill: 0x0066ff,
-          fontWeight: 'bold'
-        })
+          fontWeight: 'bold',
+        }),
       });
-      
+
       numberText.x = 100 + i * 60;
       numberText.y = 200;
       numberText.alpha = 0.5;
-      
+
       container.addChild(numberText);
       numbers.push(numberText);
     }
@@ -217,8 +218,8 @@ export default function ProtoTypePage() {
       style: new TextStyle({
         fontFamily: 'Arial',
         fontSize: 24,
-        fill: settings.theme === 'dark' ? 0xffffff : 0x000000
-      })
+        fill: settings.theme === 'dark' ? 0xffffff : 0x000000,
+      }),
     });
     inputText.x = 120;
     inputText.y = 370;
@@ -229,21 +230,21 @@ export default function ProtoTypePage() {
     if (!gameContainerRef.current) return;
 
     const container = gameContainerRef.current;
-    
+
     // Create reaction target
     const target = new Graphics();
     const x = Math.random() * 600 + 100;
     const y = Math.random() * 400 + 100;
-    
+
     target.circle(x, y, 30);
     target.fill(0xff4757);
     target.eventMode = 'static';
     target.cursor = 'pointer';
-    
+
     // Add pulsing animation
     let scale = 1;
     let growing = true;
-    
+
     const animate = () => {
       if (growing) {
         scale += 0.02;
@@ -256,9 +257,9 @@ export default function ProtoTypePage() {
     };
 
     appRef.current?.ticker.add(animate);
-    
+
     target.on('pointerdown', () => handleReactionClick());
-    
+
     container.addChild(target);
 
     // Add instructions
@@ -268,8 +269,8 @@ export default function ProtoTypePage() {
         fontFamily: 'Arial',
         fontSize: 20,
         fill: settings.theme === 'dark' ? 0xffffff : 0x000000,
-        align: 'center'
-      })
+        align: 'center',
+      }),
     });
     instructionText.x = 400;
     instructionText.y = 50;
@@ -282,15 +283,15 @@ export default function ProtoTypePage() {
 
     setGameState(prev => {
       const newPlayerInput = [...prev.playerInput, index];
-      
+
       // Check if input matches sequence so far
       const isCorrect = newPlayerInput.every((input, i) => input === prev.currentSequence[i]);
-      
+
       if (!isCorrect) {
         // Wrong input - end game
         return { ...prev, isPlaying: false };
       }
-      
+
       if (newPlayerInput.length === prev.currentSequence.length) {
         // Sequence completed - advance level
         const newSequence = [...prev.currentSequence, Math.floor(Math.random() * 6)];
@@ -299,10 +300,10 @@ export default function ProtoTypePage() {
           score: prev.score + prev.level * 10,
           level: prev.level + 1,
           currentSequence: newSequence,
-          playerInput: []
+          playerInput: [],
         };
       }
-      
+
       return { ...prev, playerInput: newPlayerInput };
     });
   };
@@ -313,7 +314,7 @@ export default function ProtoTypePage() {
     setGameState(prev => ({
       ...prev,
       score: prev.score + 10,
-      targetNumber: prev.targetNumber + 1
+      targetNumber: prev.targetNumber + 1,
     }));
 
     // Create new target
@@ -332,7 +333,7 @@ export default function ProtoTypePage() {
       timeLeft: 60,
       currentSequence: [Math.floor(Math.random() * 6)],
       playerInput: [],
-      targetNumber: 0
+      targetNumber: 0,
     }));
 
     createGameElements();
@@ -341,7 +342,7 @@ export default function ProtoTypePage() {
   const pauseGame = () => {
     setGameState(prev => ({
       ...prev,
-      isPaused: !prev.isPaused
+      isPaused: !prev.isPaused,
     }));
   };
 
@@ -355,7 +356,7 @@ export default function ProtoTypePage() {
       targetNumber: 0,
       currentSequence: [],
       playerInput: [],
-      gameMode: gameState.gameMode
+      gameMode: gameState.gameMode,
     });
 
     createGameElements();
@@ -365,7 +366,7 @@ export default function ProtoTypePage() {
     setGameState(prev => ({
       ...prev,
       isPlaying: false,
-      isPaused: false
+      isPaused: false,
     }));
   };
 
@@ -377,7 +378,7 @@ export default function ProtoTypePage() {
       isPaused: false,
       score: 0,
       level: 1,
-      timeLeft: 60
+      timeLeft: 60,
     }));
 
     setTimeout(() => {
@@ -390,12 +391,12 @@ export default function ProtoTypePage() {
       {/* Navigation */}
       <nav className="border-foreground/20 border-b p-4">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <a
+          <Link
             href="/tools"
             className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-xl"
           >
             ← Tools
-          </a>
+          </Link>
           <div className="text-foreground/60 text-sm">ProtoType Game Engine</div>
         </div>
       </nav>
@@ -407,7 +408,8 @@ export default function ProtoTypePage() {
             ProtoType Game
           </h1>
           <p className="noto-sans-jp text-foreground/80">
-            Interactive games powered by PIXI.js - Test your memory, reflexes, and pattern recognition
+            Interactive games powered by PIXI.js - Test your memory, reflexes, and pattern
+            recognition
           </p>
         </div>
       </header>
@@ -506,13 +508,13 @@ export default function ProtoTypePage() {
                 ) : (
                   <button
                     onClick={pauseGame}
-                    className="bg-yellow-500 hover:bg-yellow-600 flex w-full items-center justify-center gap-2 py-3 text-white transition-colors"
+                    className="flex w-full items-center justify-center gap-2 bg-yellow-500 py-3 text-white transition-colors hover:bg-yellow-600"
                   >
                     <Pause size={20} />
                     {gameState.isPaused ? 'Resume' : 'Pause'}
                   </button>
                 )}
-                
+
                 <button
                   onClick={resetGame}
                   className="border-foreground/20 text-foreground hover:bg-foreground/5 flex w-full items-center justify-center gap-2 border py-3 transition-colors"
@@ -534,8 +536,8 @@ export default function ProtoTypePage() {
                   <label className="text-foreground/70 mb-1 block text-sm">Difficulty</label>
                   <select
                     value={settings.difficulty}
-                    onChange={(e) => setSettings({...settings, difficulty: e.target.value})}
-                    className="border-foreground/20 bg-gray text-foreground w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                    onChange={e => setSettings({ ...settings, difficulty: e.target.value })}
+                    className="border-foreground/20 bg-gray text-foreground focus:ring-primary w-full border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
                   >
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
@@ -546,8 +548,8 @@ export default function ProtoTypePage() {
                   <label className="text-foreground/70 mb-1 block text-sm">Theme</label>
                   <select
                     value={settings.theme}
-                    onChange={(e) => setSettings({...settings, theme: e.target.value})}
-                    className="border-foreground/20 bg-gray text-foreground w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                    onChange={e => setSettings({ ...settings, theme: e.target.value })}
+                    className="border-foreground/20 bg-gray text-foreground focus:ring-primary w-full border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
                   >
                     <option value="dark">Dark</option>
                     <option value="light">Light</option>
@@ -556,10 +558,12 @@ export default function ProtoTypePage() {
                 <div className="flex items-center justify-between">
                   <span className="text-foreground/70 text-sm">Sound Effects</span>
                   <button
-                    onClick={() => setSettings({...settings, soundEnabled: !settings.soundEnabled})}
+                    onClick={() =>
+                      setSettings({ ...settings, soundEnabled: !settings.soundEnabled })
+                    }
                     className={`px-3 py-1 text-xs transition-colors ${
-                      settings.soundEnabled 
-                        ? 'bg-primary text-white' 
+                      settings.soundEnabled
+                        ? 'bg-primary text-white'
                         : 'border-foreground/20 text-foreground border'
                     }`}
                   >
@@ -580,24 +584,21 @@ export default function ProtoTypePage() {
                   {gameState.gameMode === 'reaction' && 'Reaction Test'}
                 </h3>
                 {gameState.isPlaying && (
-                  <div className={`px-3 py-1 text-sm ${
-                    gameState.isPaused 
-                      ? 'bg-yellow-500 text-white' 
-                      : 'bg-green-500 text-white'
-                  }`}>
+                  <div
+                    className={`px-3 py-1 text-sm ${
+                      gameState.isPaused ? 'bg-yellow-500 text-white' : 'bg-green-500 text-white'
+                    }`}
+                  >
                     {gameState.isPaused ? 'PAUSED' : 'PLAYING'}
                   </div>
                 )}
               </div>
-              
+
               <div className="relative">
-                <canvas
-                  ref={canvasRef}
-                  className="w-full max-w-full border border-foreground/20"
-                />
-                
+                <canvas ref={canvasRef} className="border-foreground/20 w-full max-w-full border" />
+
                 {!gameState.isPlaying && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-gray/80">
+                  <div className="bg-gray/80 absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
                       <Play size={64} className="text-primary mx-auto mb-4" />
                       <h4 className="neue-haas-grotesk-display text-foreground mb-2 text-2xl">
@@ -617,9 +618,9 @@ export default function ProtoTypePage() {
                 )}
 
                 {gameState.isPaused && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-gray/80">
+                  <div className="bg-gray/80 absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
-                      <Pause size={64} className="text-yellow-500 mx-auto mb-4" />
+                      <Pause size={64} className="mx-auto mb-4 text-yellow-500" />
                       <h4 className="neue-haas-grotesk-display text-foreground mb-2 text-2xl">
                         Game Paused
                       </h4>
@@ -635,15 +636,24 @@ export default function ProtoTypePage() {
               </div>
 
               {/* Game Instructions */}
-              <div className="mt-4 text-sm text-foreground/70">
+              <div className="text-foreground/70 mt-4 text-sm">
                 {gameState.gameMode === 'memory' && (
-                  <p>Watch the sequence of colored circles, then click them in the same order. Each level adds one more to remember!</p>
+                  <p>
+                    Watch the sequence of colored circles, then click them in the same order. Each
+                    level adds one more to remember!
+                  </p>
                 )}
                 {gameState.gameMode === 'sequence' && (
-                  <p>Memorize the number sequence shown, then input it correctly. Speed and accuracy matter!</p>
+                  <p>
+                    Memorize the number sequence shown, then input it correctly. Speed and accuracy
+                    matter!
+                  </p>
                 )}
                 {gameState.gameMode === 'reaction' && (
-                  <p>Click the red targets as quickly as possible. Your reaction time determines your score!</p>
+                  <p>
+                    Click the red targets as quickly as possible. Your reaction time determines your
+                    score!
+                  </p>
                 )}
               </div>
             </div>

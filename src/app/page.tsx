@@ -63,22 +63,19 @@ export default function Home() {
       {/* Header */}
       <GridSection spacing="lg">
         <div className="text-center">
-          <h1 className="font-display text-foreground mb-10 text-6xl xs:text-7xl md:text-8xl">
-            My Web 2025
+          <h1 className="font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl">
+            Welcome to My Digital Workspace
           </h1>
           <p className="text-foreground/80 mx-auto mb-10 max-w-2xl text-xl md:text-2xl">
-            クリエイティブツール・ポートフォリオ・ワークショップコンテンツ
+            Creative tools, portfolio, and workshop content
           </p>
-          
           {/* サイト内検索 */}
           <div className="mb-12">
-            <h2 className="font-display text-foreground mb-6 text-2xl">
-              サイト内検索
-            </h2>
+            <h2 className="font-display text-foreground mb-6 text-2xl">Site Search</h2>
             <div className="mx-auto max-w-md">
               <input
                 type="text"
-                placeholder="キーワードで検索..."
+                placeholder="Search by keyword..."
                 className="border-foreground/30 bg-background text-foreground focus:border-foreground mb-4 w-full rounded border-2 px-4 py-3 focus:outline-none"
                 onKeyDown={e => {
                   if (e.key === 'Enter') {
@@ -91,29 +88,118 @@ export default function Home() {
               />
             </div>
           </div>
-          
           <div className="bg-primary mx-auto h-1 w-32"></div>
         </div>
       </GridSection>
 
       {/* Main Content */}
       <GridSection spacing="lg">
-        <GridContent cols={{ xs: 1, md: 2, xl: 3, '2xl': 3 }}>
-          {categories.map(category => (
+        <main>
+          <GridContent cols={{ xs: 1, md: 2, xl: 3, '2xl': 3 }}>
+            {/* Portfolio */}
             <Link
-              key={category.title}
-              href={category.href}
-              className={`block border-2 p-6 xs:p-8 ${category.color} bg-background h-full rounded shadow transition-shadow hover:shadow-lg`}
+              href="/portfolio"
+              className="xs:p-8 bg-background block h-full rounded border-2 border-blue-500 p-6 shadow transition-shadow hover:shadow-lg"
             >
               <div className="flex h-full flex-col">
-                <div className="text-foreground mb-6">{category.icon()}</div>
-                <h2 className="font-display text-foreground mb-4 text-2xl">{category.title}</h2>
-                <p className="text-foreground/70 mb-6 leading-relaxed">{category.description}</p>
-                <div className="text-foreground mt-auto pt-4 text-sm font-medium">詳細を見る →</div>
+                <div className="text-foreground mb-6">
+                  <Briefcase size={32} />
+                </div>
+                <h2 className="font-display text-foreground mb-4 text-2xl">Portfolio</h2>
+                <p className="text-foreground/70 mb-6 leading-relaxed">Projects and works</p>
+                <button className="mt-auto font-bold text-blue-600">View Portfolio</button>
               </div>
             </Link>
-          ))}
-        </GridContent>
+            {/* Tools */}
+            <Link
+              href="/tools"
+              className="xs:p-8 bg-background block h-full rounded border-2 border-green-500 p-6 shadow transition-shadow hover:shadow-lg"
+            >
+              <div className="flex h-full flex-col">
+                <div className="text-foreground mb-6">
+                  <Wrench size={32} />
+                </div>
+                <h2 className="font-display text-foreground mb-4 text-2xl">Tools</h2>
+                <p className="text-foreground/70 mb-6 leading-relaxed">
+                  Generators and calculators
+                </p>
+                <button className="mt-auto font-bold text-green-600">Explore Tools</button>
+              </div>
+            </Link>
+            {/* Workshop */}
+            <Link
+              href="/workshop"
+              className="xs:p-8 bg-background block h-full rounded border-2 border-purple-500 p-6 shadow transition-shadow hover:shadow-lg"
+            >
+              <div className="flex h-full flex-col">
+                <div className="text-foreground mb-6">
+                  <BookOpen size={32} />
+                </div>
+                <h2 className="font-display text-foreground mb-4 text-2xl">Workshop</h2>
+                <p className="text-foreground/70 mb-6 leading-relaxed">Blog, plugins, downloads</p>
+              </div>
+            </Link>
+            {/* About */}
+            <Link
+              href="/about"
+              className="xs:p-8 bg-background block h-full rounded border-2 border-yellow-500 p-6 shadow transition-shadow hover:shadow-lg"
+            >
+              <div className="flex h-full flex-col">
+                <div className="text-foreground mb-6">
+                  <User size={32} />
+                </div>
+                <h2 className="font-display text-foreground mb-4 text-2xl">About</h2>
+                <p className="text-foreground/70 mb-6 leading-relaxed">Profile, skills, contact</p>
+              </div>
+            </Link>
+            {/* Contact */}
+            <Link
+              href="/contact"
+              className="xs:p-8 bg-background block h-full rounded border-2 border-red-500 p-6 shadow transition-shadow hover:shadow-lg"
+            >
+              <div className="flex h-full flex-col">
+                <div className="text-foreground mb-6">
+                  <Mail size={32} />
+                </div>
+                <h2 className="font-display text-foreground mb-4 text-2xl">Contact</h2>
+                <p className="text-foreground/70 mb-6 leading-relaxed">Contact and requests</p>
+              </div>
+            </Link>
+            {/* Admin */}
+            <Link
+              href="/admin"
+              className="xs:p-8 bg-background block h-full rounded border-2 border-gray-500 p-6 shadow transition-shadow hover:shadow-lg"
+            >
+              <div className="flex h-full flex-col">
+                <div className="text-foreground mb-6">
+                  <Settings size={32} />
+                </div>
+                <h2 className="font-display text-foreground mb-4 text-2xl">Admin</h2>
+                <p className="text-foreground/70 mb-6 leading-relaxed">
+                  Admin dashboard (dev only)
+                </p>
+              </div>
+            </Link>
+          </GridContent>
+        </main>
+      </GridSection>
+
+      {/* Feature Sections */}
+      <GridSection spacing="lg">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="text-center">
+            <h3 className="font-display text-foreground mb-4 text-xl">Creative Development</h3>
+            <p className="text-foreground/70">Web, design, and creative coding projects.</p>
+          </div>
+          <div className="text-center">
+            <h3 className="font-display text-foreground mb-4 text-xl">Digital Tools</h3>
+            <p className="text-foreground/70">Useful generators and calculators for creators.</p>
+          </div>
+          <div className="text-center">
+            <h3 className="font-display text-foreground mb-4 text-xl">Open Source</h3>
+            <p className="text-foreground/70">Plugins, libraries, and open resources.</p>
+          </div>
+        </div>
       </GridSection>
 
       {/* Footer */}

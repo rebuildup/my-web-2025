@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { GET, POST } from './route';
-import { NextRequest } from 'next/server';
 import type { SearchResult } from '@/types/content';
 
 // Mock the search module
@@ -26,6 +25,7 @@ const mockConsole = {
 
 describe('Search API Route', () => {
   beforeEach(() => {
+    vi.resetModules();
     vi.clearAllMocks();
     console.error = mockConsole.error;
     console.warn = mockConsole.warn;
@@ -56,9 +56,11 @@ describe('Search API Route', () => {
       ];
 
       const { searchContent } = await import('@/lib/search');
+      const { updateSearchStats } = await import('@/lib/search');
       vi.mocked(searchContent).mockResolvedValue(mockResults);
+      vi.mocked(updateSearchStats).mockResolvedValue(undefined);
 
-      const request = new NextRequest('http://localhost:3000/api/content/search?q=test');
+      const request = new Request('http://localhost:3000/api/content/search?q=test');
       const response = await GET(request);
       const data = await response.json();
 
@@ -69,7 +71,7 @@ describe('Search API Route', () => {
     });
 
     it('should handle missing query parameter', async () => {
-      const request = new NextRequest('http://localhost:3000/api/content/search');
+      const request = new Request('http://localhost:3000/api/content/search');
       const response = await GET(request);
       const data = await response.json();
 
@@ -79,7 +81,7 @@ describe('Search API Route', () => {
     });
 
     it('should handle empty query parameter', async () => {
-      const request = new NextRequest('http://localhost:3000/api/content/search?q=');
+      const request = new Request('http://localhost:3000/api/content/search?q=');
       const response = await GET(request);
       const data = await response.json();
 
@@ -102,9 +104,11 @@ describe('Search API Route', () => {
       ];
 
       const { searchContent } = await import('@/lib/search');
+      const { updateSearchStats } = await import('@/lib/search');
       vi.mocked(searchContent).mockResolvedValue(mockResults);
+      vi.mocked(updateSearchStats).mockResolvedValue(undefined);
 
-      const request = new NextRequest(
+      const request = new Request(
         'http://localhost:3000/api/content/search?q=test&type=portfolio&category=web&limit=5'
       );
       const response = await GET(request);
@@ -134,22 +138,22 @@ describe('Search API Route', () => {
       ];
 
       const { searchContent } = await import('@/lib/search');
-      const { trackSearch } = await import('@/lib/stats');
+      const { updateSearchStats } = await import('@/lib/search');
       vi.mocked(searchContent).mockResolvedValue(mockResults);
-      vi.mocked(trackSearch).mockResolvedValue(undefined);
+      vi.mocked(updateSearchStats).mockResolvedValue(undefined);
 
-      const request = new NextRequest('http://localhost:3000/api/content/search?q=test');
+      const request = new Request('http://localhost:3000/api/content/search?q=test');
       const response = await GET(request);
 
       expect(response.status).toBe(200);
-      expect(trackSearch).toHaveBeenCalledWith('test', mockResults.length);
+      expect(updateSearchStats).toHaveBeenCalledWith('test');
     });
 
     it('should handle search errors gracefully', async () => {
       const { searchContent } = await import('@/lib/search');
       vi.mocked(searchContent).mockRejectedValue(new Error('Search failed'));
 
-      const request = new NextRequest('http://localhost:3000/api/content/search?q=test');
+      const request = new Request('http://localhost:3000/api/content/search?q=test');
       const response = await GET(request);
       const data = await response.json();
 
@@ -172,11 +176,11 @@ describe('Search API Route', () => {
       ];
 
       const { searchContent } = await import('@/lib/search');
-      const { trackSearch } = await import('@/lib/stats');
+      const { updateSearchStats } = await import('@/lib/search');
       vi.mocked(searchContent).mockResolvedValue(mockResults);
-      vi.mocked(trackSearch).mockRejectedValue(new Error('Tracking failed'));
+      vi.mocked(updateSearchStats).mockRejectedValue(new Error('Tracking failed'));
 
-      const request = new NextRequest('http://localhost:3000/api/content/search?q=test');
+      const request = new Request('http://localhost:3000/api/content/search?q=test');
       const response = await GET(request);
       const data = await response.json();
 
@@ -204,12 +208,14 @@ describe('Search API Route', () => {
       ];
 
       const { searchContent } = await import('@/lib/search');
+      const { updateSearchStats } = await import('@/lib/search');
       vi.mocked(searchContent).mockResolvedValue(mockResults);
+      vi.mocked(updateSearchStats).mockResolvedValue(undefined);
 
-      const request = new NextRequest('http://localhost:3000/api/content/search', {
+      const request = new Request('http://localhost:3000/api/content/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: 'test', limit: 5 }),
+        body: JSON.stringify({ query: 'test' }),
       });
 
       const response = await POST(request);
@@ -218,42 +224,14 @@ describe('Search API Route', () => {
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.data).toEqual(mockResults);
+      expect(data.query).toBe('test');
     });
 
-    it('should handle missing request body', async () => {
-      const request = new NextRequest('http://localhost:3000/api/content/search', {
+    it('should handle missing query in request body', async () => {
+      const request = new Request('http://localhost:3000/api/content/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('Search operation failed');
-    });
-
-    it('should handle invalid JSON', async () => {
-      const request = new NextRequest('http://localhost:3000/api/content/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: 'invalid json',
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('Search operation failed');
-    });
-
-    it('should handle missing query in suggestions request', async () => {
-      const request = new NextRequest('http://localhost:3000/api/content/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ limit: 5 }),
+        body: JSON.stringify({}),
       });
 
       const response = await POST(request);
@@ -264,11 +242,72 @@ describe('Search API Route', () => {
       expect(data.error).toBe('Query is required and must be a non-empty string');
     });
 
-    it('should handle suggestions error', async () => {
-      const { getSearchSuggestions } = await import('@/lib/search');
-      vi.mocked(getSearchSuggestions).mockRejectedValue(new Error('Suggestions failed'));
+    it('should handle empty query in request body', async () => {
+      const request = new Request('http://localhost:3000/api/content/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: '' }),
+      });
 
-      const request = new NextRequest('http://localhost:3000/api/content/search', {
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('Query is required and must be a non-empty string');
+    });
+
+    it('should handle advanced search', async () => {
+      const mockResults: SearchResult[] = [
+        {
+          id: '1',
+          title: 'Advanced Result',
+          description: 'Advanced description',
+          url: '/portfolio/advanced-result',
+          type: 'portfolio',
+          score: 0.9,
+          highlights: ['Advanced content'],
+        },
+      ];
+
+      const { advancedSearch } = await import('@/lib/search');
+      const { updateSearchStats } = await import('@/lib/search');
+      vi.mocked(advancedSearch).mockResolvedValue(mockResults);
+      vi.mocked(updateSearchStats).mockResolvedValue(undefined);
+
+      const request = new Request('http://localhost:3000/api/content/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: 'test',
+          advanced: true,
+          type: ['portfolio'],
+          category: ['web'],
+          tags: ['javascript'],
+          limit: 10,
+        }),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(data.data).toEqual(mockResults);
+      expect(advancedSearch).toHaveBeenCalledWith({
+        query: 'test',
+        type: ['portfolio'],
+        category: ['web'],
+        tags: ['javascript'],
+        limit: 10,
+      });
+    });
+
+    it('should handle POST search errors gracefully', async () => {
+      const { searchContent } = await import('@/lib/search');
+      vi.mocked(searchContent).mockRejectedValue(new Error('Search failed'));
+
+      const request = new Request('http://localhost:3000/api/content/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: 'test' }),

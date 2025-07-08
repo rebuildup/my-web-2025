@@ -11,8 +11,9 @@ async function loadStats(filePath: string): Promise<Record<string, number>> {
   try {
     const fileContent = await fs.readFile(filePath, 'utf-8');
     return JSON.parse(fileContent);
-  } catch {
+  } catch (error) {
     // File doesn't exist or is invalid, return empty stats
+    console.warn(`Failed to load stats from ${filePath}:`, error);
     return {};
   }
 }

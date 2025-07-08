@@ -110,6 +110,7 @@ export const searchContent = async (
     // Load search index
     const searchIndex = await loadSearchIndex();
     if (searchIndex.length === 0) {
+      // Return empty results instead of throwing error
       return [];
     }
 
@@ -164,6 +165,7 @@ export const searchContent = async (
   } catch (error) {
     const appError = AppErrorHandler.handleApiError(error);
     AppErrorHandler.logError(appError, 'Search Content');
+    // Return empty array instead of throwing
     return [];
   }
 };
