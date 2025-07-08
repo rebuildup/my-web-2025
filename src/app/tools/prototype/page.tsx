@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Application, Container, Graphics, Text, TextStyle } from 'pixi.js';
 import { Play, Pause, RotateCcw, Settings, Trophy, Timer, Target } from 'lucide-react';
+import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 interface GameState {
   score: number;

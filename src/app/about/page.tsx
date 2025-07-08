@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { User, Badge, ExternalLink, MapPin, Award } from 'lucide-react';
+import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 // Disable prerendering for this page
 export const dynamic = 'force-dynamic';
@@ -116,46 +117,48 @@ export default function AboutPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="bg-gray min-h-screen">
+      <GridLayout background={false} className="bg-gray">
         {/* Navigation */}
         <nav className="border-foreground/20 border-b p-4">
-          <div className="mx-auto max-w-7xl">
+          <GridContainer>
             <Link
               href="/"
               className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
             >
               ← Home
             </Link>
-          </div>
+          </GridContainer>
         </nav>
 
         {/* Hero Header */}
-        <header className="px-4 py-16 text-center">
-          <h1 className="neue-haas-grotesk-display text-primary mb-4 text-6xl md:text-8xl">
-            About
-          </h1>
-          <div className="mx-auto max-w-4xl">
-            <h2 className="zen-kaku-gothic-new text-foreground mb-6 text-3xl md:text-4xl">
-              木村友亮 / samuido
-            </h2>
-            <p className="noto-sans-jp text-foreground/80 text-xl leading-relaxed md:text-2xl">
-              グラフィックデザイン、映像制作、個人開発など幅広く活動。
-              <br />
-              やる気になれば何でもできるのが強み
-            </p>
+        <GridSection spacing="lg">
+          <div className="text-center">
+            <h1 className="neue-haas-grotesk-display text-primary mb-4 text-6xl md:text-8xl">
+              About
+            </h1>
+            <div className="mx-auto max-w-4xl">
+              <h2 className="zen-kaku-gothic-new text-foreground mb-6 text-3xl md:text-4xl">
+                木村友亮 / samuido
+              </h2>
+              <p className="noto-sans-jp text-foreground/80 text-xl leading-relaxed md:text-2xl">
+                グラフィックデザイン、映像制作、個人開発など幅広く活動。
+                <br />
+                やる気になれば何でもできるのが強み
+              </p>
+            </div>
+            <div className="bg-primary mx-auto mt-8 h-1 w-32"></div>
           </div>
-          <div className="bg-primary mx-auto mt-8 h-1 w-32"></div>
-        </header>
+        </GridSection>
 
         {/* Main Content */}
-        <main className="mx-auto max-w-7xl px-4 pb-16">
+        <main>
           {/* Profile Selection */}
-          <section className="mb-16">
+          <GridSection>
             <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
               プロフィール選択
             </h2>
 
-            <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
+            <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }} className="mx-auto max-w-4xl">
               {profileCards.map(profile => (
                 <Link
                   key={profile.title}
@@ -183,16 +186,16 @@ export default function AboutPage() {
                   </div>
                 </Link>
               ))}
-            </div>
-          </section>
+            </GridContent>
+          </GridSection>
 
           {/* Navigation Cards */}
-          <section className="mb-16">
+          <GridSection>
             <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
               関連ページ
             </h2>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
               {navigationCards.map(nav => (
                 <Link
                   key={nav.title}
@@ -218,16 +221,16 @@ export default function AboutPage() {
                   </div>
                 </Link>
               ))}
-            </div>
-          </section>
+            </GridContent>
+          </GridSection>
 
           {/* Skills Overview */}
-          <section className="mb-16">
+          <GridSection>
             <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
               スキル概要
             </h2>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <GridContent cols={{ xs: 1, md: 2, xl: 4, '2xl': 4 }}>
               <div className="border-foreground/20 bg-gray/50 border p-6">
                 <h3 className="neue-haas-grotesk-display text-primary mb-3 text-lg">デザイン</h3>
                 <div className="noto-sans-jp text-foreground/70 space-y-1 text-sm">
@@ -269,11 +272,11 @@ export default function AboutPage() {
                   <div>GSAP</div>
                 </div>
               </div>
-            </div>
-          </section>
+            </GridContent>
+          </GridSection>
 
           {/* Basic Information */}
-          <section className="mb-16">
+          <GridSection>
             <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
               基本情報
             </h2>
@@ -301,15 +304,15 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
-          </section>
+          </GridSection>
 
           {/* Recent Highlights */}
-          <section>
+          <GridSection>
             <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
               最新のハイライト
             </h2>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
               <Link
                 href="/portfolio"
                 className="group border-foreground/20 bg-gray/50 hover:bg-gray border p-6 transition-colors"
@@ -348,25 +351,27 @@ export default function AboutPage() {
                 </p>
                 <p className="text-foreground/50 mt-2 text-xs">Workshop →</p>
               </Link>
-            </div>
-          </section>
+            </GridContent>
+          </GridSection>
         </main>
 
         {/* Footer */}
         <footer className="border-foreground/20 border-t py-8 text-center">
-          <p className="noto-sans-jp text-foreground/60 text-sm">
-            © 2025 samuido (木村友亮). All rights reserved.
-          </p>
-          <div className="mt-4 flex justify-center space-x-6">
-            <Link href="/contact" className="text-foreground/60 hover:text-primary text-sm">
-              Contact
-            </Link>
-            <Link href="/privacy-policy" className="text-foreground/60 hover:text-primary text-sm">
-              Privacy Policy
-            </Link>
-          </div>
+          <GridContainer>
+            <p className="noto-sans-jp text-foreground/60 text-sm">
+              © 2025 samuido (木村友亮). All rights reserved.
+            </p>
+            <div className="mt-4 flex justify-center space-x-6">
+              <Link href="/contact" className="text-foreground/60 hover:text-primary text-sm">
+                Contact
+              </Link>
+              <Link href="/privacy-policy" className="text-foreground/60 hover:text-primary text-sm">
+                Privacy Policy
+              </Link>
+            </div>
+          </GridContainer>
         </footer>
-      </div>
+      </GridLayout>
     </>
   );
 }

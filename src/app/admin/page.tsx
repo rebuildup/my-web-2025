@@ -13,6 +13,7 @@ import {
   HardDrive,
   Activity,
 } from 'lucide-react';
+import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 export default function AdminPage() {
   const [isDevMode, setIsDevMode] = useState(false);
@@ -38,37 +39,41 @@ export default function AdminPage() {
 
   if (!isDevMode) {
     return (
-      <div className="bg-gray flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <Shield size={64} className="text-primary mx-auto mb-6" />
-          <h1 className="neue-haas-grotesk-display text-primary mb-4 text-4xl">Access Denied</h1>
-          <p className="noto-sans-jp text-foreground/70 mb-6">
-            Admin access is only available in development mode.
-          </p>
-          <Link
-            href="/"
-            className="bg-primary hover:bg-primary/90 inline-block px-6 py-3 text-white transition-colors"
-          >
-            Back to Home
-          </Link>
-        </div>
-      </div>
+      <GridLayout background={false} className="bg-gray flex min-h-screen items-center justify-center">
+        <GridContainer>
+          <div className="text-center">
+            <Shield size={64} className="text-primary mx-auto mb-6" />
+            <h1 className="neue-haas-grotesk-display text-primary mb-4 text-4xl">Access Denied</h1>
+            <p className="noto-sans-jp text-foreground/70 mb-6">
+              Admin access is only available in development mode.
+            </p>
+            <Link
+              href="/"
+              className="bg-primary hover:bg-primary/90 inline-block px-6 py-3 text-white transition-colors"
+            >
+              Back to Home
+            </Link>
+          </div>
+        </GridContainer>
+      </GridLayout>
     );
   }
 
   return (
-    <div className="bg-gray min-h-screen">
+    <GridLayout background={false} className="bg-gray">
       {/* Navigation */}
       <nav className="border-foreground/20 border-b p-4">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <Link
-            href="/"
-            className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
-          >
-            ← Home
-          </Link>
-          <div className="text-foreground/60 text-sm">Development Mode Only</div>
-        </div>
+        <GridContainer>
+          <div className="flex items-center justify-between">
+            <Link
+              href="/"
+              className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
+            >
+              ← Home
+            </Link>
+            <div className="text-foreground/60 text-sm">Development Mode Only</div>
+          </div>
+        </GridContainer>
       </nav>
 
       {/* Header */}
@@ -81,12 +86,13 @@ export default function AdminPage() {
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 pb-16">
+      <main className="pb-16">
+        <GridContainer>
         {/* Quick Stats */}
         <section className="mb-12">
           <h2 className="neue-haas-grotesk-display text-foreground mb-6 text-2xl">Overview</h2>
 
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+          <GridContent cols={{ xs: 2, md: 4, xl: 4, '2xl': 4 }}>
             <div className="border-foreground/20 bg-gray/50 border p-6">
               <div className="mb-2 flex items-center justify-between">
                 <FileText size={24} className="text-primary" />
@@ -130,7 +136,7 @@ export default function AdminPage() {
               </div>
               <div className="text-foreground/70 text-sm">Search Queries</div>
             </div>
-          </div>
+          </GridContent>
         </section>
 
         {/* Admin Tools */}
@@ -139,7 +145,7 @@ export default function AdminPage() {
             Management Tools
           </h2>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <GridContent cols={{ xs: 1, md: 2, xl: 3, '2xl': 3 }}>
             <Link
               href="/admin/content"
               className="group border-foreground/20 bg-gray/50 hover:border-primary border p-6 transition-colors"
@@ -217,14 +223,14 @@ export default function AdminPage() {
                 Security settings, audit logs, and access control
               </p>
             </Link>
-          </div>
+          </GridContent>
         </section>
 
         {/* Quick Actions */}
         <section>
           <h2 className="neue-haas-grotesk-display text-foreground mb-6 text-2xl">Quick Actions</h2>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }}>
             <div className="border-foreground/20 bg-gray/50 border p-6">
               <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-lg">
                 Recent Activity
@@ -264,16 +270,19 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </GridContent>
         </section>
+        </GridContainer>
       </main>
 
       {/* Footer */}
       <footer className="border-foreground/20 border-t py-8 text-center">
-        <p className="noto-sans-jp text-foreground/60 text-sm">
-          Admin Dashboard - Development Mode Only
-        </p>
+        <GridContainer>
+          <p className="noto-sans-jp text-foreground/60 text-sm">
+            Admin Dashboard - Development Mode Only
+          </p>
+        </GridContainer>
       </footer>
-    </div>
+    </GridLayout>
   );
 }

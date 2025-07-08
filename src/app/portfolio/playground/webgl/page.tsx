@@ -14,6 +14,7 @@ import {
   Triangle,
   Maximize2
 } from 'lucide-react';
+import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 interface SceneSettings {
   animationSpeed: number;
@@ -371,10 +372,10 @@ export default function WebGLPlaygroundPage() {
   };
 
   return (
-    <div className="bg-gray min-h-screen">
+    <GridLayout background={false} className="bg-gray">
       {/* Navigation */}
       <nav className="border-foreground/20 border-b p-4">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
+        <GridContainer padding={false} className="flex items-center justify-between">
           <a
             href="/portfolio/playground"
             className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-xl"
@@ -382,24 +383,23 @@ export default function WebGLPlaygroundPage() {
             ← Playground
           </a>
           <div className="text-foreground/60 text-sm">WebGL Playground</div>
-        </div>
+        </GridContainer>
       </nav>
 
       {/* Header */}
-      <header className="px-4 py-8">
-        <div className="mx-auto max-w-7xl">
+      <GridSection spacing="md">
           <h1 className="neue-haas-grotesk-display text-primary mb-4 text-3xl md:text-4xl">
             WebGL Playground
           </h1>
           <p className="noto-sans-jp text-foreground/80">
             Interactive 3D graphics experiments powered by Three.js
           </p>
-        </div>
-      </header>
+      </GridSection>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 pb-16">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+      <main>
+        <GridContainer className="pb-16">
+          <GridContent cols={{ xs: 1, md: 1, xl: 4, '2xl': 4 }} className="gap-8">
           {/* Controls */}
           <div className="space-y-6">
             {/* Animation Controls */}
@@ -625,8 +625,9 @@ export default function WebGLPlaygroundPage() {
               </div>
             </div>
           </div>
-        </div>
+          </GridContent>
+        </GridContainer>
       </main>
-    </div>
+    </GridLayout>
   );
 }

@@ -18,6 +18,7 @@ import {
   Search,
 } from 'lucide-react';
 import { ContentItem } from '@/types/content';
+import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 interface ToolCard extends ContentItem {
   category:
@@ -115,17 +116,17 @@ export default function ToolsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="bg-gray min-h-screen">
+      <GridLayout background={false} className="bg-gray">
         {/* Navigation */}
         <nav className="border-foreground/20 border-b p-4">
-          <div className="mx-auto max-w-7xl">
+          <GridContainer>
             <Link
               href="/"
               className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
             >
               ← Home
             </Link>
-          </div>
+          </GridContainer>
         </nav>
 
         {/* Hero Header */}
@@ -133,21 +134,22 @@ export default function ToolsPage() {
           <h1 className="neue-haas-grotesk-display text-primary mb-6 text-6xl md:text-8xl">
             Tools
           </h1>
-          <div className="mx-auto max-w-4xl">
+          <GridContainer>
             <p className="noto-sans-jp text-foreground/80 mb-8 text-xl leading-relaxed md:text-2xl">
               実用的なWebツールのコレクション
               <br />
               すべて無償でご利用いただけます
             </p>
-          </div>
+          </GridContainer>
           <div className="bg-primary mx-auto mt-8 h-1 w-32"></div>
         </header>
 
         {/* Main Content */}
-        <main className="mx-auto max-w-7xl px-4 pb-16">
+        <main className="pb-16">
+          <GridContainer>
           {/* Statistics */}
           <section className="mb-12">
-            <div className="mx-auto grid max-w-2xl grid-cols-2 gap-4 md:grid-cols-4">
+            <GridContent cols={{ xs: 2, md: 4, xl: 4, '2xl': 4 }} className="mx-auto max-w-2xl">
               <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
                 <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">
                   {tools.length}
@@ -173,7 +175,7 @@ export default function ToolsPage() {
                 <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">100%</div>
                 <div className="noto-sans-jp text-foreground/70 text-sm">無償利用</div>
               </div>
-            </div>
+            </GridContent>
           </section>
 
           {/* Popular Tools */}
@@ -182,7 +184,7 @@ export default function ToolsPage() {
               人気ツール
             </h2>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
               {popularTools.map((tool, index) => (
                 <Link
                   key={tool.id}
@@ -222,7 +224,7 @@ export default function ToolsPage() {
                   </div>
                 </Link>
               ))}
-            </div>
+            </GridContent>
           </section>
 
           {/* Search and Filter */}
@@ -290,7 +292,7 @@ export default function ToolsPage() {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <GridContent cols={{ xs: 1, md: 2, xl: 3, '2xl': 3 }}>
                 {filteredTools.map(tool => (
                   <Link
                     key={tool.id}
@@ -337,26 +339,29 @@ export default function ToolsPage() {
                     </div>
                   </Link>
                 ))}
-              </div>
+              </GridContent>
             )}
           </section>
+          </GridContainer>
         </main>
 
         {/* Footer */}
         <footer className="border-foreground/20 border-t py-8 text-center">
-          <p className="noto-sans-jp text-foreground/60 text-sm">
-            © 2025 samuido (木村友亮). All rights reserved.
-          </p>
-          <div className="mt-4 flex justify-center space-x-6">
-            <Link href="/contact" className="text-foreground/60 hover:text-primary text-sm">
-              Contact
-            </Link>
-            <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">
-              About
-            </Link>
-          </div>
+          <GridContainer>
+            <p className="noto-sans-jp text-foreground/60 text-sm">
+              © 2025 samuido (木村友亮). All rights reserved.
+            </p>
+            <div className="mt-4 flex justify-center space-x-6">
+              <Link href="/contact" className="text-foreground/60 hover:text-primary text-sm">
+                Contact
+              </Link>
+              <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">
+                About
+              </Link>
+            </div>
+          </GridContainer>
         </footer>
-      </div>
+      </GridLayout>
     </>
   );
 }

@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Search, Filter, X, ExternalLink } from 'lucide-react';
 import { searchContent } from '@/lib/search';
 import { SearchResult, ContentType } from '@/types/content';
+import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 const contentTypes: { value: ContentType | ''; label: string }[] = [
   { value: '', label: '全て' },
@@ -143,34 +144,35 @@ function SearchPageContent() {
   };
 
   return (
-    <div className="bg-gray min-h-screen">
+    <GridLayout background={false} className="bg-gray">
       {/* Navigation */}
       <nav className="border-foreground/20 border-b p-4">
-        <div className="mx-auto max-w-7xl">
+        <GridContainer>
           <Link
             href="/"
             className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
           >
             ← Home
           </Link>
-        </div>
+        </GridContainer>
       </nav>
 
       {/* Hero Header */}
       <header className="px-4 py-16 text-center">
         <h1 className="neue-haas-grotesk-display text-primary mb-6 text-6xl md:text-8xl">Search</h1>
-        <div className="mx-auto max-w-4xl">
+        <GridContainer>
           <p className="noto-sans-jp text-foreground/80 mb-8 text-xl leading-relaxed md:text-2xl">
             サイト内のコンテンツを検索
             <br />
             キーワード、タグ、カテゴリで絞り込み可能
           </p>
-        </div>
+        </GridContainer>
         <div className="bg-primary mx-auto mt-8 h-1 w-32"></div>
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-4xl px-4 pb-16">
+      <main className="pb-16">
+        <GridContainer>
         {/* Search Form */}
         <section className="mb-8">
           <form onSubmit={handleSearch} className="space-y-4">
@@ -354,23 +356,26 @@ function SearchPageContent() {
             </div>
           )}
         </section>
+        </GridContainer>
       </main>
 
       {/* Footer */}
       <footer className="border-foreground/20 border-t py-8 text-center">
-        <p className="noto-sans-jp text-foreground/60 text-sm">
-          © 2025 samuido (木村友亮). All rights reserved.
-        </p>
-        <div className="mt-4 flex justify-center space-x-6">
-          <Link href="/contact" className="text-foreground/60 hover:text-primary text-sm">
-            Contact
-          </Link>
-          <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">
-            About
-          </Link>
-        </div>
+        <GridContainer>
+          <p className="noto-sans-jp text-foreground/60 text-sm">
+            © 2025 samuido (木村友亮). All rights reserved.
+          </p>
+          <div className="mt-4 flex justify-center space-x-6">
+            <Link href="/contact" className="text-foreground/60 hover:text-primary text-sm">
+              Contact
+            </Link>
+            <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">
+              About
+            </Link>
+          </div>
+        </GridContainer>
       </footer>
-    </div>
+    </GridLayout>
   );
 }
 

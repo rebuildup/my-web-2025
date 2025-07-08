@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Grid, Code, Video, Palette, Search, Filter, Calendar } from 'lucide-react';
+import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 export const metadata: Metadata = {
   title: 'Portfolio - samuido | 作品ギャラリー',
@@ -129,17 +130,17 @@ export default function PortfolioPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="bg-gray min-h-screen">
+      <GridLayout background={false} className="bg-gray">
         {/* Navigation */}
         <nav className="border-foreground/20 border-b p-4">
-          <div className="mx-auto max-w-7xl">
+          <GridContainer>
             <Link
               href="/"
               className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
             >
               ← Home
             </Link>
-          </div>
+          </GridContainer>
         </nav>
 
         {/* Hero Header */}
@@ -147,21 +148,22 @@ export default function PortfolioPage() {
           <h1 className="neue-haas-grotesk-display text-primary mb-6 text-6xl md:text-8xl">
             Portfolio
           </h1>
-          <div className="mx-auto max-w-4xl">
+          <GridContainer>
             <p className="noto-sans-jp text-foreground/80 mb-8 text-xl leading-relaxed md:text-2xl">
               Webデザイン、開発、映像制作における作品ギャラリー
               <br />
               カテゴリ別に整理された制作実績をご覧ください
             </p>
-          </div>
+          </GridContainer>
           <div className="bg-primary mx-auto mt-8 h-1 w-32"></div>
         </header>
 
         {/* Main Content */}
-        <main className="mx-auto max-w-7xl px-4 pb-16">
+        <main className="pb-16">
+          <GridContainer>
           {/* Statistics Overview */}
           <section className="mb-16">
-            <div className="mx-auto grid max-w-2xl grid-cols-2 gap-4 md:grid-cols-4">
+            <GridContent cols={{ xs: 2, md: 4, xl: 4, '2xl': 4 }} className="mx-auto max-w-2xl">
               <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
                 <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">12</div>
                 <div className="noto-sans-jp text-foreground/70 text-sm">総作品数</div>
@@ -181,7 +183,7 @@ export default function PortfolioPage() {
                 <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">3</div>
                 <div className="noto-sans-jp text-foreground/70 text-sm">デザイン作品</div>
               </div>
-            </div>
+            </GridContent>
           </section>
 
           {/* Gallery Categories */}
@@ -190,7 +192,7 @@ export default function PortfolioPage() {
               ギャラリーカテゴリ
             </h2>
 
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }} className="gap-8">
               {galleryCategories.map(category => (
                 <Link
                   key={category.id}
@@ -241,7 +243,7 @@ export default function PortfolioPage() {
                   </div>
                 </Link>
               ))}
-            </div>
+            </GridContent>
           </section>
 
           {/* Quick Actions */}
@@ -250,7 +252,7 @@ export default function PortfolioPage() {
               クイックアクション
             </h2>
 
-            <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-3">
+            <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }} className="mx-auto max-w-4xl">
               <Link
                 href="/portfolio/gallery/all?sort=newest"
                 className="group border-foreground/20 bg-gray/50 hover:bg-gray border p-6 transition-colors"
@@ -300,7 +302,7 @@ export default function PortfolioPage() {
                   フィルター →
                 </div>
               </Link>
-            </div>
+            </GridContent>
           </section>
 
           {/* Featured Works */}
@@ -309,7 +311,7 @@ export default function PortfolioPage() {
               注目の作品
             </h2>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
               <Link
                 href="/portfolio/detail/portfolio-1"
                 className="group border-foreground/20 bg-gray/50 overflow-hidden border transition-shadow hover:shadow-lg"
@@ -399,25 +401,28 @@ export default function PortfolioPage() {
                   </div>
                 </div>
               </Link>
-            </div>
+            </GridContent>
           </section>
+          </GridContainer>
         </main>
 
         {/* Footer */}
         <footer className="border-foreground/20 border-t py-8 text-center">
-          <p className="noto-sans-jp text-foreground/60 text-sm">
-            © 2025 samuido (木村友亮). All rights reserved.
-          </p>
-          <div className="mt-4 flex justify-center space-x-6">
-            <Link href="/contact" className="text-foreground/60 hover:text-primary text-sm">
-              Contact
-            </Link>
-            <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">
-              About
-            </Link>
-          </div>
+          <GridContainer>
+            <p className="noto-sans-jp text-foreground/60 text-sm">
+              © 2025 samuido (木村友亮). All rights reserved.
+            </p>
+            <div className="mt-4 flex justify-center space-x-6">
+              <Link href="/contact" className="text-foreground/60 hover:text-primary text-sm">
+                Contact
+              </Link>
+              <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">
+                About
+              </Link>
+            </div>
+          </GridContainer>
         </footer>
-      </div>
+      </GridLayout>
     </>
   );
 }

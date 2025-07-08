@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Star, TrendingUp, Clock, Users } from 'lucide-react';
 import { ContentItem } from '@/types/content';
+import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 // Tool Components
 import ColorPalette from '../components/ColorPalette';
@@ -82,22 +83,22 @@ export default function ToolPage() {
 
   if (isLoading) {
     return (
-      <div className="bg-gray min-h-screen">
+      <GridLayout background={false} className="bg-gray">
         <div className="flex h-screen items-center justify-center">
           <div className="text-center">
             <div className="loading mx-auto mb-4"></div>
             <p className="text-foreground/60 noto-sans-jp">ツールを読み込み中...</p>
           </div>
         </div>
-      </div>
+      </GridLayout>
     );
   }
 
   if (error || !tool) {
     return (
-      <div className="bg-gray min-h-screen">
+      <GridLayout background={false} className="bg-gray">
         <nav className="border-foreground/20 border-b p-4">
-          <div className="mx-auto max-w-7xl">
+          <GridContainer>
             <Link
               href="/tools"
               className="neue-haas-grotesk-display text-primary hover:text-primary/80 flex items-center space-x-2 text-xl"
@@ -105,7 +106,7 @@ export default function ToolPage() {
               <ArrowLeft size={20} />
               <span>← Tools</span>
             </Link>
-          </div>
+          </GridContainer>
         </nav>
         
         <div className="flex h-96 items-center justify-center">
@@ -124,7 +125,7 @@ export default function ToolPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </GridLayout>
     );
   }
 
@@ -161,10 +162,10 @@ export default function ToolPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="bg-gray min-h-screen">
+      <GridLayout background={false} className="bg-gray">
         {/* Navigation */}
         <nav className="border-foreground/20 border-b p-4">
-          <div className="mx-auto max-w-7xl">
+          <GridContainer>
             <Link
               href="/tools"
               className="neue-haas-grotesk-display text-primary hover:text-primary/80 flex items-center space-x-2 text-xl"
@@ -172,12 +173,12 @@ export default function ToolPage() {
               <ArrowLeft size={20} />
               <span>← Tools</span>
             </Link>
-          </div>
+          </GridContainer>
         </nav>
 
         {/* Tool Header */}
-        <header className="border-foreground/20 border-b px-4 py-8">
-          <div className="mx-auto max-w-7xl">
+        <header className="border-foreground/20 border-b">
+          <GridSection spacing="md">
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <span className="bg-primary/20 text-primary rounded px-2 py-1 text-sm">
                 {tool.category}
@@ -201,7 +202,7 @@ export default function ToolPage() {
             </p>
 
             {/* Tool Stats */}
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <GridContent cols={{ xs: 2, md: 4, xl: 4, '2xl': 4 }}>
               <div className="border-foreground/20 bg-gray/50 border p-3 text-center">
                 <div className="flex items-center justify-center space-x-1">
                   <Users size={16} className="text-primary" />
@@ -241,12 +242,13 @@ export default function ToolPage() {
                 </div>
                 <div className="noto-sans-jp text-foreground/70 text-xs">難易度</div>
               </div>
-            </div>
-          </div>
+            </GridContent>
+          </GridSection>
         </header>
 
         {/* Tool Content */}
-        <main className="mx-auto max-w-7xl px-4 py-8">
+        <main>
+          <GridContainer className="py-8">
           {ToolComponent ? (
             <ToolComponent />
           ) : (
@@ -275,7 +277,8 @@ export default function ToolPage() {
           )}
 
           {/* Tool Information */}
-          <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <div className="mt-12">
+            <GridContent cols={{ xs: 1, md: 1, xl: 2, '2xl': 2 }}>
             {/* Features */}
             <div className="border-foreground/20 border p-6">
               <h3 className="neue-haas-grotesk-display text-foreground mb-4 text-xl">
@@ -307,6 +310,7 @@ export default function ToolPage() {
                 ))}
               </div>
             </div>
+            </GridContent>
           </div>
 
           {/* Help Section */}
@@ -319,6 +323,7 @@ export default function ToolPage() {
               dangerouslySetInnerHTML={{ __html: tool.content.replace(/\n/g, '<br/>') }}
             />
           </div>
+          </GridContainer>
         </main>
 
         {/* Footer */}
@@ -338,7 +343,7 @@ export default function ToolPage() {
             </Link>
           </div>
         </footer>
-      </div>
+      </GridLayout>
     </>
   );
 }

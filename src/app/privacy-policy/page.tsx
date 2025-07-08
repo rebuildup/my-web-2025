@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy - samuido',
@@ -9,17 +10,17 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="bg-gray min-h-screen">
+    <GridLayout background={false} className="bg-gray">
       {/* Navigation */}
       <nav className="border-foreground/20 border-b p-4">
-        <div className="mx-auto max-w-7xl">
+        <GridContainer>
           <Link
             href="/"
             className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
           >
             ← Home
           </Link>
-        </div>
+        </GridContainer>
       </nav>
 
       {/* Header */}
@@ -27,12 +28,13 @@ export default function PrivacyPolicyPage() {
         <h1 className="neue-haas-grotesk-display text-primary mb-6 text-4xl md:text-6xl">
           Privacy Policy
         </h1>
-        <p className="noto-sans-jp text-foreground/80 text-lg">個人情報保護方針</p>
+        <p className="noto-sans-jp text-foreground/80 text-lg">個人情報保護方量</p>
         <div className="bg-primary mx-auto mt-8 h-1 w-32"></div>
       </header>
 
       {/* Content */}
-      <main className="mx-auto max-w-4xl px-4 pb-16">
+      <main className="pb-16">
+        <GridContainer>
         <div className="prose prose-invert max-w-none">
           <section className="mb-12">
             <h2 className="neue-haas-grotesk-display text-primary mb-4 text-2xl">基本方針</h2>
@@ -203,22 +205,25 @@ export default function PrivacyPolicyPage() {
             </div>
           </section>
         </div>
+        </GridContainer>
       </main>
 
       {/* Footer */}
       <footer className="border-foreground/20 border-t py-8 text-center">
-        <p className="noto-sans-jp text-foreground/60 text-sm">
-          © 2025 samuido (木村友亮). All rights reserved.
-        </p>
-        <div className="mt-4 flex justify-center space-x-6">
-          <Link href="/contact" className="text-foreground/60 hover:text-primary text-sm">
-            Contact
-          </Link>
-          <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">
-            About
-          </Link>
-        </div>
+        <GridContainer>
+          <p className="noto-sans-jp text-foreground/60 text-sm">
+            © 2025 samuido (木村友亮). All rights reserved.
+          </p>
+          <div className="mt-4 flex justify-center space-x-6">
+            <Link href="/contact" className="text-foreground/60 hover:text-primary text-sm">
+              Contact
+            </Link>
+            <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">
+              About
+            </Link>
+          </div>
+        </GridContainer>
       </footer>
-    </div>
+    </GridLayout>
   );
 }

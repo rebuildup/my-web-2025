@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Mail, Phone, MessageCircle, CheckCircle, AlertCircle, Send } from 'lucide-react';
 import { validateContactForm } from '@/lib/utils/validation';
+import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -131,19 +132,19 @@ export default function ContactPage() {
 
   if (showConfirmation) {
     return (
-      <div className="bg-gray min-h-screen">
+      <GridLayout background={false} className="bg-gray">
         <nav className="border-foreground/20 border-b p-4">
-          <div className="mx-auto max-w-7xl">
+          <GridContainer>
             <Link
               href="/"
               className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
             >
               ← Home
             </Link>
-          </div>
+          </GridContainer>
         </nav>
 
-        <div className="mx-auto max-w-2xl px-4 py-16">
+        <GridSection spacing="lg">
           <div className="mb-8 text-center">
             <h1 className="neue-haas-grotesk-display text-primary mb-4 text-4xl">送信内容の確認</h1>
             <p className="noto-sans-jp text-foreground/70">
@@ -227,8 +228,8 @@ export default function ContactPage() {
               )}
             </button>
           </div>
-        </div>
-      </div>
+        </GridSection>
+      </GridLayout>
     );
   }
 
@@ -239,17 +240,17 @@ export default function ContactPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="bg-gray min-h-screen">
+      <GridLayout background={false} className="bg-gray">
         {/* Navigation */}
         <nav className="border-foreground/20 border-b p-4">
-          <div className="mx-auto max-w-7xl">
+          <GridContainer>
             <Link
               href="/"
               className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
             >
               ← Home
             </Link>
-          </div>
+          </GridContainer>
         </nav>
 
         {/* Hero Header */}
@@ -257,18 +258,19 @@ export default function ContactPage() {
           <h1 className="neue-haas-grotesk-display text-primary mb-6 text-6xl md:text-8xl">
             Contact
           </h1>
-          <div className="mx-auto max-w-4xl">
+          <GridContainer>
             <p className="noto-sans-jp text-foreground/80 mb-8 text-xl leading-relaxed md:text-2xl">
               Webデザイン・開発のご依頼、プラグイン・ツールについてのご質問、
               <br />
               その他お問い合わせはこちらから
             </p>
-          </div>
+          </GridContainer>
           <div className="bg-primary mx-auto mt-8 h-1 w-32"></div>
         </header>
 
         {/* Main Content */}
-        <main className="mx-auto max-w-4xl px-4 pb-16">
+        <main className="pb-16">
+          <GridContainer>
           {/* Status Messages */}
           {submitStatus === 'success' && (
             <div className="mb-8 flex items-center space-x-2 border border-green-500 bg-green-500/10 p-4 text-green-500">
@@ -298,7 +300,7 @@ export default function ContactPage() {
           <section className="mb-12">
             <h2 className="neue-haas-grotesk-display text-foreground mb-6 text-2xl">連絡先情報</h2>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
               <div className="border-foreground/20 bg-gray/50 flex items-center space-x-3 border p-4">
                 <Mail size={24} className="text-primary" />
                 <div>
@@ -322,7 +324,7 @@ export default function ContactPage() {
                   <div className="text-foreground">24-48時間</div>
                 </div>
               </div>
-            </div>
+            </GridContent>
           </section>
 
           {/* Contact Form */}
@@ -333,7 +335,7 @@ export default function ContactPage() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name and Email */}
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }}>
                 <div>
                   <label htmlFor="name" className="text-foreground mb-2 block text-sm font-medium">
                     お名前 <span className="text-red-500">*</span>
@@ -369,10 +371,10 @@ export default function ContactPage() {
                     <div className="mt-1 text-sm text-red-500">{errors.email.join(', ')}</div>
                   )}
                 </div>
-              </div>
+              </GridContent>
 
               {/* Company and Phone */}
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }}>
                 <div>
                   <label
                     htmlFor="company"
@@ -403,10 +405,10 @@ export default function ContactPage() {
                     className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
                   />
                 </div>
-              </div>
+              </GridContent>
 
               {/* Category and Contact Method */}
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }}>
                 <div>
                   <label
                     htmlFor="category"
@@ -452,7 +454,7 @@ export default function ContactPage() {
                     ))}
                   </select>
                 </div>
-              </div>
+              </GridContent>
 
               {/* Subject */}
               <div>
@@ -528,23 +530,26 @@ export default function ContactPage() {
               </div>
             </form>
           </section>
+          </GridContainer>
         </main>
 
         {/* Footer */}
         <footer className="border-foreground/20 border-t py-8 text-center">
-          <p className="noto-sans-jp text-foreground/60 text-sm">
-            © 2025 samuido (木村友亮). All rights reserved.
-          </p>
-          <div className="mt-4 flex justify-center space-x-6">
-            <Link href="/privacy-policy" className="text-foreground/60 hover:text-primary text-sm">
-              Privacy Policy
-            </Link>
-            <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">
-              About
-            </Link>
-          </div>
+          <GridContainer>
+            <p className="noto-sans-jp text-foreground/60 text-sm">
+              © 2025 samuido (木村友亮). All rights reserved.
+            </p>
+            <div className="mt-4 flex justify-center space-x-6">
+              <Link href="/privacy-policy" className="text-foreground/60 hover:text-primary text-sm">
+                Privacy Policy
+              </Link>
+              <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">
+                About
+              </Link>
+            </div>
+          </GridContainer>
         </footer>
-      </div>
+      </GridLayout>
     </>
   );
 }

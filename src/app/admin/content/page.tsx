@@ -15,6 +15,7 @@ import {
   Search,
   Filter
 } from 'lucide-react';
+import { GridLayout, GridContainer, GridContent, GridSection } from '@/components/GridSystem';
 
 interface ContentItem {
   id: string;
@@ -228,10 +229,10 @@ export default function AdminContentPage() {
   };
 
   return (
-    <div className="bg-gray min-h-screen">
+    <GridLayout background={false} className="bg-gray">
       {/* Navigation */}
       <nav className="border-foreground/20 border-b p-4">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
+        <GridContainer padding={false} className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <a
               href="/admin"
@@ -241,23 +242,22 @@ export default function AdminContentPage() {
             </a>
           </div>
           <div className="text-foreground/60 text-sm">Content Management</div>
-        </div>
+        </GridContainer>
       </nav>
 
       {/* Header */}
-      <header className="px-4 py-8">
-        <div className="mx-auto max-w-7xl">
+      <GridSection spacing="md">
           <h1 className="neue-haas-grotesk-display text-primary mb-4 text-3xl md:text-4xl">
             Content Manager
           </h1>
           <p className="noto-sans-jp text-foreground/80">
             Create, edit, and manage all website content
           </p>
-        </div>
-      </header>
+      </GridSection>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 pb-16">
+      <main>
+        <GridContainer className="pb-16">
         {selectedTab === 'list' && (
           <div className="space-y-6">
             {/* Controls */}
@@ -406,7 +406,7 @@ export default function AdminContentPage() {
             </div>
 
             <div className="border-foreground/20 bg-gray/50 border p-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }}>
                 {/* Basic Information */}
                 <div className="space-y-4">
                   <div>
@@ -545,7 +545,7 @@ export default function AdminContentPage() {
                     </div>
                   )}
                 </div>
-              </div>
+              </GridContent>
 
               <div className="mt-6 flex items-center justify-end gap-4">
                 <button
@@ -565,7 +565,8 @@ export default function AdminContentPage() {
             </div>
           </div>
         )}
+        </GridContainer>
       </main>
-    </div>
+    </GridLayout>
   );
 }
