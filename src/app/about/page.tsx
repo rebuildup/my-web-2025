@@ -63,7 +63,7 @@ export default function AboutPage() {
           <p className="noto-sans-jp-light mb-8 text-xl text-gray-300 md:text-2xl">
             木村友亮 / samuido
           </p>
-          <p className="noto-sans-jp-regular mx-auto max-w-3xl text-base text-gray-400 md:text-lg">
+          <p className="noto-sans-jp-regular mx-auto max-w-3xl text-base md:text-lg">
             グラフィックデザイン、映像制作、個人開発など幅広く活動
             <br />
             やる気になれば何でもできるのが強み
