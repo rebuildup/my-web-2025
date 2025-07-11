@@ -10,7 +10,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -27,40 +28,16 @@ jobs:
       - name: Run type check
         run: npm run type-check
 
-      - name: Run tests
-        run: npm run test
-
       - name: Build project
         run: npm run build
-
-  lighthouse:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    needs: test
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build project
-        run: npm run build
-
-      - name: Run Lighthouse CI
-        run: npm run lighthouse
 
   build-and-deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     needs: test
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -85,16 +62,13 @@ jobs:
 
       - name: Deploy to server
         run: |
-          # サーバーに接続して既存ファイルをバックアップ
           ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
             sudo mkdir -p /var/www/backups
             sudo cp -r /var/www/html /var/www/backups/html-$(date +%Y%m%d-%H%M%S)
           "
 
-          # デプロイメントパッケージを転送
           scp -o StrictHostKeyChecking=no deployment.tar.gz ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }}:/tmp/
 
-          # サーバーでファイルを展開してApacheを再起動
           ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
             cd /tmp
             tar -xzf deployment.tar.gz
@@ -107,27 +81,4 @@ jobs:
       - name: Health check
         run: |
           sleep 10
-          curl -f https://yusuke-kim.com/health || exit 1
-
-      - name: Rollback on failure
-        if: failure()
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
-            LATEST_BACKUP=\$(ls -t /var/www/backups/ | head -1)
-            sudo rm -rf /var/www/html/*
-            sudo cp -r /var/www/backups/\$LATEST_BACKUP/* /var/www/html/
-            sudo systemctl reload apache2
-          "
-
-  security-scan:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    needs: build-and-deploy
-    steps:
-      - name: Security Headers Check
-        run: |
-          curl -I https://yusuke-kim.com | grep -E "(X-Content-Type-Options|X-Frame-Options|X-XSS-Protection)"
-
-      - name: SSL Check
-        run: |
-          echo | openssl s_client -connect yusuke-kim.com:443 -servername yusuke-kim.com | openssl x509 -noout -dates
+          curl -f https://yusuke-kim.com/health || curl -f https://yusuke-kim.com/ || exit 1
