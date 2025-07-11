@@ -164,18 +164,39 @@ jobs:
 
             # アプリケーションのデプロイ
             cd /tmp
-            sudo rm -rf /var/www/my-web-2025
-            sudo mkdir -p /var/www/my-web-2025
-            tar -xzf deployment.tar.gz -C /var/www/my-web-2025
-            cd /var/www/my-web-2025
+            
+            # 一時ディレクトリの作成と権限設定
+            sudo rm -rf /tmp/my-web-2025-temp
+            mkdir -p /tmp/my-web-2025-temp
+            cd /tmp/my-web-2025-temp
+            
+            # tarファイルの展開
+            echo "Extracting deployment package..."
+            tar -xzf /tmp/deployment.tar.gz
+            
+            # ファイルの存在確認
+            echo "Checking extracted files..."
+            ls -la
             
             # package.jsonの存在確認
             if [ ! -f "package.json" ]; then
               echo "Error: package.json not found!"
-              ls -la
               exit 1
             fi
             
+            # デプロイディレクトリの準備
+            sudo rm -rf /var/www/my-web-2025
+            sudo mkdir -p /var/www/my-web-2025
+            
+            # ファイルのコピーと権限設定
+            sudo cp -r ./* /var/www/my-web-2025/
+            sudo chown -R $(whoami):www-data /var/www/my-web-2025
+            sudo chmod -R 755 /var/www/my-web-2025
+            
+            cd /var/www/my-web-2025
+            
+            # 依存関係のインストール
+            echo "Installing dependencies..."
             sudo npm ci --production
             
             # 環境変数の設定
@@ -190,13 +211,13 @@ jobs:
             fi
             
             # Next.jsアプリケーションの起動
-            cd /var/www/my-web-2025
+            echo "Starting Next.js application..."
             NODE_ENV=production PORT=3000 pm2 start npm --name my-web-2025 -- start
             pm2 save
             
-            # 権限の設定
-            sudo chown -R $(whoami):www-data /var/www/my-web-2025
-            sudo chmod -R 755 /var/www/my-web-2025
+            # クリーンアップ
+            sudo rm -rf /tmp/my-web-2025-temp
+            sudo rm -f /tmp/deployment.tar.gz
 
             echo "Files deployed successfully"
             
