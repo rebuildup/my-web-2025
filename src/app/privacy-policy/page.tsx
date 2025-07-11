@@ -72,7 +72,7 @@ export default function PrivacyPolicyPage() {
           <p className="noto-sans-jp-light mb-8 text-xl text-gray-300 md:text-2xl">
             プライバシーポリシー
           </p>
-          <p className="noto-sans-jp-regular mx-auto max-w-3xl text-base text-gray-400 md:text-lg">
+          <p className="noto-sans-jp-regular mx-auto max-w-3xl text-base md:text-lg">
             個人情報の取り扱いについて
             <br />
             ユーザーのプライバシーを保護します
