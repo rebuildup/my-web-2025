@@ -71,7 +71,7 @@ export default function WorkshopPage() {
           <p className="noto-sans-jp-light mb-8 text-xl text-gray-300 md:text-2xl">
             プラグイン・ブログ・素材配布
           </p>
-          <p className="noto-sans-jp-regular mx-auto max-w-3xl text-base text-gray-400 md:text-lg">
+          <p className="noto-sans-jp-regular mx-auto max-w-3xl text-base md:text-lg">
             AfterEffectsプラグイン、技術記事、素材の配布
             <br />
             クリエイティブなコンテンツのハブページ
