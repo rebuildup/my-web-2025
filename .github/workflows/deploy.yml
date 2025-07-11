@@ -113,6 +113,9 @@ jobs:
             </VirtualHost>
             EOF
 
+            # デフォルトサイトを無効化
+            sudo a2dissite 000-default.conf
+
             # 設定ファイルの構文チェック
             sudo apache2ctl -t || exit 1
             
@@ -156,8 +159,8 @@ jobs:
             fi
 
             # PM2のパーミッション設定
-            sudo mkdir -p /home/$USER/.pm2
-            sudo chown -R $USER:$USER /home/$USER/.pm2
+            sudo mkdir -p ~/.pm2
+            sudo chown -R $(whoami):$(whoami) ~/.pm2
 
             # アプリケーションのデプロイ
             cd /tmp
@@ -165,6 +168,14 @@ jobs:
             sudo mkdir -p /var/www/my-web-2025
             tar -xzf deployment.tar.gz -C /var/www/my-web-2025
             cd /var/www/my-web-2025
+            
+            # package.jsonの存在確認
+            if [ ! -f "package.json" ]; then
+              echo "Error: package.json not found!"
+              ls -la
+              exit 1
+            fi
+            
             sudo npm ci --production
             
             # 環境変数の設定
@@ -177,15 +188,24 @@ jobs:
             if pm2 list | grep -q "my-web-2025"; then
               pm2 delete my-web-2025 || true
             fi
+            
+            # Next.jsアプリケーションの起動
             cd /var/www/my-web-2025
-            NODE_ENV=production pm2 start npm --name my-web-2025 -- start
+            NODE_ENV=production PORT=3000 pm2 start npm --name my-web-2025 -- start
             pm2 save
             
             # 権限の設定
-            sudo chown -R $USER:www-data /var/www/my-web-2025
+            sudo chown -R $(whoami):www-data /var/www/my-web-2025
             sudo chmod -R 755 /var/www/my-web-2025
 
             echo "Files deployed successfully"
+            
+            # デプロイ後の確認
+            echo "Checking deployment..."
+            sleep 5
+            curl -I http://localhost:3000/ || echo "Warning: Application not responding on port 3000"
+            pm2 list
+            pm2 logs my-web-2025 --lines 10
           '
 
       - name: Cleanup
@@ -216,7 +236,7 @@ jobs:
               cd /var/www/my-web-2025
               sudo -E pm2 start npm --name my-web-2025 -- start
               sudo -E pm2 save
-              sudo chown -R $USER:www-data /var/www/my-web-2025
+              sudo chown -R $(whoami):www-data /var/www/my-web-2025
               sudo systemctl reload apache2
               echo "Rollback completed"
             else
