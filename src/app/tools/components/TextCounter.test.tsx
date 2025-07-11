@@ -47,61 +47,55 @@ describe('TextCounter Component', () => {
     });
 
     it('should update character count when text is entered', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Hello');
+      await userEvent.type(textarea, 'Hello');
 
       expect(screen.getByText('Characters: 5')).toBeInTheDocument();
     });
 
     it('should update word count when text is entered', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Hello world');
+      await userEvent.type(textarea, 'Hello world');
 
       expect(screen.getByText('Words: 2')).toBeInTheDocument();
     });
 
     it('should update line count when text is entered', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Line 1\nLine 2');
+      await userEvent.type(textarea, 'Line 1\nLine 2');
 
       expect(screen.getByText('Lines: 2')).toBeInTheDocument();
     });
 
     it('should update sentence count when text is entered', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Hello. World. Test.');
+      await userEvent.type(textarea, 'Hello. World. Test.');
 
       expect(screen.getByText('Sentences: 3')).toBeInTheDocument();
     });
 
     it('should update paragraph count when text is entered', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Paragraph 1.\n\nParagraph 2.');
+      await userEvent.type(textarea, 'Paragraph 1.\n\nParagraph 2.');
 
       expect(screen.getByText('Paragraphs: 2')).toBeInTheDocument();
     });
 
     it('should handle empty text correctly', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.clear(textarea);
+      await userEvent.clear(textarea);
 
       expect(screen.getByText('Characters: 0')).toBeInTheDocument();
       expect(screen.getByText('Words: 0')).toBeInTheDocument();
@@ -111,11 +105,10 @@ describe('TextCounter Component', () => {
     });
 
     it('should handle whitespace correctly', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, '   \n\n   ');
+      await userEvent.type(textarea, '   \n\n   ');
 
       expect(screen.getByText('Characters: 6')).toBeInTheDocument();
       expect(screen.getByText('Words: 0')).toBeInTheDocument();
@@ -123,22 +116,20 @@ describe('TextCounter Component', () => {
     });
 
     it('should handle special characters correctly', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Hello! @#$%^&*()');
+      await userEvent.type(textarea, 'Hello! @#$%^&*()');
 
       expect(screen.getByText('Characters: 18')).toBeInTheDocument();
       expect(screen.getByText('Words: 2')).toBeInTheDocument();
     });
 
     it('should handle mixed content correctly', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(
+      await userEvent.type(
         textarea,
         'Hello world.\n\nThis is a test. It has multiple sentences.\n\nAnd paragraphs.'
       );
@@ -187,67 +178,61 @@ describe('TextCounter Component', () => {
     });
 
     it('should handle rapid text changes', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
 
-      await user.type(textarea, 'Hello');
-      await user.clear(textarea);
-      await user.type(textarea, 'World');
-      await user.clear(textarea);
-      await user.type(textarea, 'Final');
+      await userEvent.type(textarea, 'Hello');
+      await userEvent.clear(textarea);
+      await userEvent.type(textarea, 'World');
+      await userEvent.clear(textarea);
+      await userEvent.type(textarea, 'Final');
 
       expect(screen.getByText('Characters: 5')).toBeInTheDocument();
       expect(screen.getByText('Words: 1')).toBeInTheDocument();
     });
 
     it('should handle very long text', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
       const longText = 'A'.repeat(1000);
-      await user.type(textarea, longText);
+      await userEvent.type(textarea, longText);
 
       expect(screen.getByText('Characters: 1000')).toBeInTheDocument();
     });
 
     it('should handle unicode characters correctly', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'こんにちは世界！');
+      await userEvent.type(textarea, 'こんにちは世界！');
 
       expect(screen.getByText('Characters: 7')).toBeInTheDocument();
       expect(screen.getByText('Words: 1')).toBeInTheDocument();
     });
 
     it('should handle emoji characters correctly', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Hello 😀 World 🌍');
+      await userEvent.type(textarea, 'Hello 😀 World 🌍');
 
       expect(screen.getByText('Characters: 15')).toBeInTheDocument();
       expect(screen.getByText('Words: 3')).toBeInTheDocument();
     });
 
     it('should maintain focus after text changes', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.click(textarea);
-      await user.type(textarea, 'Test');
+      await userEvent.click(textarea);
+      await userEvent.type(textarea, 'Test');
 
       expect(textarea).toHaveFocus();
     });
 
     it('should handle copy and paste operations', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
@@ -265,85 +250,78 @@ describe('TextCounter Component', () => {
     });
 
     it('should handle keyboard shortcuts', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Hello');
+      await userEvent.type(textarea, 'Hello');
 
       // Test Ctrl+A (select all)
-      await user.keyboard('{Control>}a{/Control}');
-      await user.type(textarea, 'Replaced');
+      await userEvent.keyboard('{Control>}a{/Control}');
+      await userEvent.type(textarea, 'Replaced');
 
       expect(screen.getByText('Characters: 8')).toBeInTheDocument();
       expect(screen.getByText('Words: 1')).toBeInTheDocument();
     });
 
     it('should handle text selection', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Hello world');
+      await userEvent.type(textarea, 'Hello world');
 
       // Select "world" and replace it
-      textarea.setSelectionRange(6, 11);
-      await user.type(textarea, 'universe');
+      (textarea as HTMLTextAreaElement).setSelectionRange(6, 11);
+      await userEvent.type(textarea, 'universe');
 
       expect(screen.getByText('Characters: 12')).toBeInTheDocument();
       expect(screen.getByText('Words: 2')).toBeInTheDocument();
     });
 
     it('should handle undo/redo operations', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Hello');
+      await userEvent.type(textarea, 'Hello');
 
       // Test undo (Ctrl+Z)
-      await user.keyboard('{Control>}z{/Control}');
+      await userEvent.keyboard('{Control>}z{/Control}');
 
       expect(screen.getByText('Characters: 0')).toBeInTheDocument();
     });
 
     it('should handle text with multiple spaces', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Hello    world');
+      await userEvent.type(textarea, 'Hello    world');
 
       expect(screen.getByText('Words: 2')).toBeInTheDocument();
     });
 
     it('should handle text with tabs', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Hello\tworld');
+      await userEvent.type(textarea, 'Hello\tworld');
 
       expect(screen.getByText('Characters: 10')).toBeInTheDocument();
       expect(screen.getByText('Words: 2')).toBeInTheDocument();
     });
 
     it('should handle text with mixed line endings', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Line 1\r\nLine 2\nLine 3');
+      await userEvent.type(textarea, 'Line 1\r\nLine 2\nLine 3');
 
       expect(screen.getByText('Lines: 3')).toBeInTheDocument();
     });
 
     it('should handle text with only punctuation', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, '...!!!???');
+      await userEvent.type(textarea, '...!!!???');
 
       expect(screen.getByText('Characters: 9')).toBeInTheDocument();
       expect(screen.getByText('Words: 0')).toBeInTheDocument();
@@ -351,22 +329,20 @@ describe('TextCounter Component', () => {
     });
 
     it('should handle text with numbers', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, '123 456 789');
+      await userEvent.type(textarea, '123 456 789');
 
       expect(screen.getByText('Characters: 11')).toBeInTheDocument();
       expect(screen.getByText('Words: 3')).toBeInTheDocument();
     });
 
     it('should handle text with mixed content types', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.type(textarea, 'Hello 123! 😀\n\nWorld 456? 🌍');
+      await userEvent.type(textarea, 'Hello 123! 😀\n\nWorld 456? 🌍');
 
       expect(screen.getByText('Characters: 25')).toBeInTheDocument();
       expect(screen.getByText('Words: 4')).toBeInTheDocument();
@@ -404,22 +380,20 @@ describe('TextCounter Component', () => {
     });
 
     it('should handle textarea focus states', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.click(textarea);
+      await userEvent.click(textarea);
 
       expect(textarea).toHaveClass('focus:border-blue-500', 'focus:outline-none');
     });
 
     it('should handle textarea blur states', async () => {
-      const user = userEvent.setup();
       render(<TextCounter />);
 
       const textarea = screen.getByPlaceholderText('Enter your text here...');
-      await user.click(textarea);
-      await user.tab();
+      await userEvent.click(textarea);
+      await userEvent.tab();
 
       expect(textarea).not.toHaveFocus();
     });

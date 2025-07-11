@@ -1,24 +1,112 @@
-<testsuites id="" name="" tests="10" failures="0" skipped="0" errors="0" time="9.333272">
-<testsuite name="homepage.spec.ts" timestamp="2025-07-11T11:36:37.786Z" hostname="chromium" tests="10" failures="0" skipped="0" time="45.672" errors="0">
-<testcase name="Homepage › should display the main site navigation" classname="homepage.spec.ts" time="3.076">
+<testsuites id="" name="" tests="50" failures="0" skipped="0" errors="0" time="56.923754">
+<testsuite name="homepage.spec.ts" timestamp="2025-07-11T16:03:55.659Z" hostname="chromium" tests="10" failures="0" skipped="0" time="55.542" errors="0">
+<testcase name="Homepage › should display the main site navigation" classname="homepage.spec.ts" time="3.01">
 </testcase>
-<testcase name="Homepage › should have working category links" classname="homepage.spec.ts" time="6.585">
+<testcase name="Homepage › should have working category links" classname="homepage.spec.ts" time="14.735">
 </testcase>
-<testcase name="Homepage › should have search link navigation" classname="homepage.spec.ts" time="5.092">
+<testcase name="Homepage › should have search link navigation" classname="homepage.spec.ts" time="6.876">
 </testcase>
-<testcase name="Homepage › should display recent updates section" classname="homepage.spec.ts" time="3.653">
+<testcase name="Homepage › should display recent updates section" classname="homepage.spec.ts" time="4.622">
 </testcase>
-<testcase name="Homepage › should have proper footer" classname="homepage.spec.ts" time="4.851">
+<testcase name="Homepage › should have proper footer" classname="homepage.spec.ts" time="3.944">
 </testcase>
-<testcase name="Homepage › should have proper meta tags and SEO" classname="homepage.spec.ts" time="3.733">
+<testcase name="Homepage › should have proper meta tags and SEO" classname="homepage.spec.ts" time="4.368">
 </testcase>
-<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="4.713">
+<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="3.956">
 </testcase>
-<testcase name="Homepage › should have proper contrast and accessibility" classname="homepage.spec.ts" time="3.263">
+<testcase name="Homepage › should have proper contrast and accessibility" classname="homepage.spec.ts" time="4.184">
 </testcase>
-<testcase name="Homepage › should load within performance thresholds" classname="homepage.spec.ts" time="5.286">
+<testcase name="Homepage › should load within performance thresholds" classname="homepage.spec.ts" time="2.904">
 </testcase>
-<testcase name="Homepage › should handle keyboard navigation" classname="homepage.spec.ts" time="5.42">
+<testcase name="Homepage › should handle keyboard navigation" classname="homepage.spec.ts" time="6.943">
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-07-11T16:03:55.659Z" hostname="firefox" tests="10" failures="0" skipped="0" time="71.224" errors="0">
+<testcase name="Homepage › should display the main site navigation" classname="homepage.spec.ts" time="3.002">
+</testcase>
+<testcase name="Homepage › should have working category links" classname="homepage.spec.ts" time="18.091">
+</testcase>
+<testcase name="Homepage › should have search link navigation" classname="homepage.spec.ts" time="10.124">
+</testcase>
+<testcase name="Homepage › should display recent updates section" classname="homepage.spec.ts" time="3.194">
+</testcase>
+<testcase name="Homepage › should have proper footer" classname="homepage.spec.ts" time="5.468">
+</testcase>
+<testcase name="Homepage › should have proper meta tags and SEO" classname="homepage.spec.ts" time="5.942">
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="6.185">
+</testcase>
+<testcase name="Homepage › should have proper contrast and accessibility" classname="homepage.spec.ts" time="6.994">
+</testcase>
+<testcase name="Homepage › should load within performance thresholds" classname="homepage.spec.ts" time="6.014">
+</testcase>
+<testcase name="Homepage › should handle keyboard navigation" classname="homepage.spec.ts" time="6.21">
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-07-11T16:03:55.659Z" hostname="webkit" tests="10" failures="0" skipped="0" time="69.376" errors="0">
+<testcase name="Homepage › should display the main site navigation" classname="homepage.spec.ts" time="3.675">
+</testcase>
+<testcase name="Homepage › should have working category links" classname="homepage.spec.ts" time="22.903">
+</testcase>
+<testcase name="Homepage › should have search link navigation" classname="homepage.spec.ts" time="7.909">
+</testcase>
+<testcase name="Homepage › should display recent updates section" classname="homepage.spec.ts" time="5.294">
+</testcase>
+<testcase name="Homepage › should have proper footer" classname="homepage.spec.ts" time="5.501">
+</testcase>
+<testcase name="Homepage › should have proper meta tags and SEO" classname="homepage.spec.ts" time="3.585">
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="3.263">
+</testcase>
+<testcase name="Homepage › should have proper contrast and accessibility" classname="homepage.spec.ts" time="5.304">
+</testcase>
+<testcase name="Homepage › should load within performance thresholds" classname="homepage.spec.ts" time="3.209">
+</testcase>
+<testcase name="Homepage › should handle keyboard navigation" classname="homepage.spec.ts" time="8.733">
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-07-11T16:03:55.659Z" hostname="Mobile Chrome" tests="10" failures="0" skipped="0" time="49.087" errors="0">
+<testcase name="Homepage › should display the main site navigation" classname="homepage.spec.ts" time="2.479">
+</testcase>
+<testcase name="Homepage › should have working category links" classname="homepage.spec.ts" time="11.451">
+</testcase>
+<testcase name="Homepage › should have search link navigation" classname="homepage.spec.ts" time="6.617">
+</testcase>
+<testcase name="Homepage › should display recent updates section" classname="homepage.spec.ts" time="3.567">
+</testcase>
+<testcase name="Homepage › should have proper footer" classname="homepage.spec.ts" time="4.021">
+</testcase>
+<testcase name="Homepage › should have proper meta tags and SEO" classname="homepage.spec.ts" time="4.066">
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="4.731">
+</testcase>
+<testcase name="Homepage › should have proper contrast and accessibility" classname="homepage.spec.ts" time="3.804">
+</testcase>
+<testcase name="Homepage › should load within performance thresholds" classname="homepage.spec.ts" time="4.083">
+</testcase>
+<testcase name="Homepage › should handle keyboard navigation" classname="homepage.spec.ts" time="4.268">
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-07-11T16:03:55.659Z" hostname="Mobile Safari" tests="10" failures="0" skipped="0" time="34.939" errors="0">
+<testcase name="Homepage › should display the main site navigation" classname="homepage.spec.ts" time="2.886">
+</testcase>
+<testcase name="Homepage › should have working category links" classname="homepage.spec.ts" time="8.643">
+</testcase>
+<testcase name="Homepage › should have search link navigation" classname="homepage.spec.ts" time="4.729">
+</testcase>
+<testcase name="Homepage › should display recent updates section" classname="homepage.spec.ts" time="2.943">
+</testcase>
+<testcase name="Homepage › should have proper footer" classname="homepage.spec.ts" time="2.34">
+</testcase>
+<testcase name="Homepage › should have proper meta tags and SEO" classname="homepage.spec.ts" time="2.407">
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="homepage.spec.ts" time="3.18">
+</testcase>
+<testcase name="Homepage › should have proper contrast and accessibility" classname="homepage.spec.ts" time="2.178">
+</testcase>
+<testcase name="Homepage › should load within performance thresholds" classname="homepage.spec.ts" time="2.588">
+</testcase>
+<testcase name="Homepage › should handle keyboard navigation" classname="homepage.spec.ts" time="3.045">
 </testcase>
 </testsuite>
 </testsuites>

@@ -432,9 +432,9 @@ describe('Date Utils', () => {
       ];
 
       const result = sortByDate(itemsWithMissing, 'createdAt', 'desc');
-      expect((result[0] as any).id).toBe(3); // Latest date
-      expect((result[1] as any).id).toBe(1); // Earlier date
-      expect((result[2] as any).id).toBe(2); // No date (should be last)
+      expect(result[0].id).toBe(3); // Latest date
+      expect(result[1].id).toBe(1); // Earlier date
+      expect(result[2].id).toBe(2); // No date (should be last)
     });
 
     it('should handle all items without dates', () => {
@@ -447,7 +447,7 @@ describe('Date Utils', () => {
       const result = sortByDate(itemsWithoutDates);
       expect(result).toHaveLength(3);
       // Order should remain unchanged when all items have no dates
-      expect(result.map(item => (item as any).id)).toEqual([1, 2, 3]);
+      expect(result.map(item => item.id)).toEqual([1, 2, 3]);
     });
 
     it('should not mutate original array', () => {

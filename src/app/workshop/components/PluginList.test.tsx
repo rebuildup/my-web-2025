@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+
 import PluginList from './PluginList';
 
-// Mock the fetch function
-global.fetch = vi.fn();
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
 describe('PluginList Component', () => {
   const mockPluginData = [
@@ -67,7 +67,7 @@ describe('PluginList Component', () => {
     });
 
     it('should display plugins when data is loaded', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockPluginData,
       });
@@ -81,7 +81,7 @@ describe('PluginList Component', () => {
     });
 
     it('should display error message when fetch fails', async () => {
-      (fetch as any).mockRejectedValueOnce(new Error('Failed to fetch'));
+      mockFetch.mockRejectedValueOnce(new Error('Failed to fetch'));
 
       render(<PluginList />);
 
@@ -91,7 +91,7 @@ describe('PluginList Component', () => {
     });
 
     it('should display plugin descriptions', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockPluginData,
       });
@@ -105,7 +105,7 @@ describe('PluginList Component', () => {
     });
 
     it('should display plugin versions', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockPluginData,
       });
@@ -119,7 +119,7 @@ describe('PluginList Component', () => {
     });
 
     it('should display download counts', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockPluginData,
       });
@@ -133,7 +133,7 @@ describe('PluginList Component', () => {
     });
 
     it('should display plugin categories', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockPluginData,
       });
@@ -147,7 +147,7 @@ describe('PluginList Component', () => {
     });
 
     it('should handle empty plugin data', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => [],
       });
@@ -160,7 +160,7 @@ describe('PluginList Component', () => {
     });
 
     it('should handle network error gracefully', async () => {
-      (fetch as any).mockRejectedValueOnce(new Error('Network error'));
+      mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
       render(<PluginList />);
 
@@ -170,7 +170,7 @@ describe('PluginList Component', () => {
     });
 
     it('should handle malformed JSON response', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => {
           throw new Error('Invalid JSON');
@@ -193,7 +193,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => incompleteData,
       });
@@ -206,7 +206,7 @@ describe('PluginList Component', () => {
     });
 
     it('should display plugin links correctly', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockPluginData,
       });
@@ -234,7 +234,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => specialData,
       });
@@ -259,7 +259,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => longNameData,
       });
@@ -284,7 +284,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => zeroDownloadsData,
       });
@@ -309,7 +309,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => largeDownloadsData,
       });
@@ -334,7 +334,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => noCategoryData,
       });
@@ -360,7 +360,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => nullCategoryData,
       });
@@ -386,7 +386,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => invalidVersionData,
       });
@@ -412,7 +412,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => noSlugData,
       });
@@ -438,7 +438,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => negativeDownloadsData,
       });
@@ -464,7 +464,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => decimalVersionData,
       });
@@ -489,7 +489,7 @@ describe('PluginList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => preReleaseData,
       });

@@ -13,7 +13,6 @@ import {
   searchMarkdownContent,
   type MarkdownMetadata,
   type ProcessedMarkdown,
-  type TableOfContentsItem,
 } from './processor';
 
 // Mock DOMPurify

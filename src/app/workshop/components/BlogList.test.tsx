@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+
 import BlogList from './BlogList';
 
-// Mock the fetch function
-global.fetch = vi.fn();
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
 describe('BlogList Component', () => {
   const mockBlogData = [
@@ -65,7 +65,7 @@ describe('BlogList Component', () => {
     });
 
     it('should display blog posts when data is loaded', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockBlogData,
       });
@@ -79,7 +79,7 @@ describe('BlogList Component', () => {
     });
 
     it('should display error message when fetch fails', async () => {
-      (fetch as any).mockRejectedValueOnce(new Error('Failed to fetch'));
+      mockFetch.mockRejectedValueOnce(new Error('Failed to fetch'));
 
       render(<BlogList />);
 
@@ -89,7 +89,7 @@ describe('BlogList Component', () => {
     });
 
     it('should display blog post excerpts', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockBlogData,
       });
@@ -103,7 +103,7 @@ describe('BlogList Component', () => {
     });
 
     it('should display blog post dates', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockBlogData,
       });
@@ -117,7 +117,7 @@ describe('BlogList Component', () => {
     });
 
     it('should display blog post tags', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockBlogData,
       });
@@ -132,7 +132,7 @@ describe('BlogList Component', () => {
     });
 
     it('should handle empty blog data', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => [],
       });
@@ -145,7 +145,7 @@ describe('BlogList Component', () => {
     });
 
     it('should handle network error gracefully', async () => {
-      (fetch as any).mockRejectedValueOnce(new Error('Network error'));
+      mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
       render(<BlogList />);
 
@@ -155,7 +155,7 @@ describe('BlogList Component', () => {
     });
 
     it('should handle malformed JSON response', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => {
           throw new Error('Invalid JSON');
@@ -178,7 +178,7 @@ describe('BlogList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => incompleteData,
       });
@@ -191,7 +191,7 @@ describe('BlogList Component', () => {
     });
 
     it('should display blog post links correctly', async () => {
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockBlogData,
       });
@@ -218,7 +218,7 @@ describe('BlogList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => specialData,
       });
@@ -245,7 +245,7 @@ describe('BlogList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => longTitleData,
       });
@@ -269,7 +269,7 @@ describe('BlogList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => multiTagData,
       });
@@ -296,7 +296,7 @@ describe('BlogList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => noTagData,
       });
@@ -321,7 +321,7 @@ describe('BlogList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => nullTagData,
       });
@@ -346,7 +346,7 @@ describe('BlogList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => invalidDateData,
       });
@@ -371,7 +371,7 @@ describe('BlogList Component', () => {
         },
       ];
 
-      (fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => noSlugData,
       });

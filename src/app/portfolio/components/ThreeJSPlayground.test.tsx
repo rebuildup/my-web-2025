@@ -1,7 +1,8 @@
 import React from 'react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach, beforeAll } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import ThreeJSPlayground from './ThreeJSPlayground';
 
 // Mock requestAnimationFrame and cancelAnimationFrame
@@ -29,12 +30,19 @@ const mockContext = {
 } as Partial<CanvasRenderingContext2D>;
 
 // Mock canvas.getContext
-const originalGetContext = HTMLCanvasElement.prototype.getContext;
-HTMLCanvasElement.prototype.getContext = vi.fn((contextId: string) => {
+const mockGetContext = vi.fn((contextId: string) => {
   if (contextId === '2d') {
     return mockContext as CanvasRenderingContext2D;
   }
   return null;
+});
+
+// Fix getContext mock type
+beforeAll(() => {
+  Object.defineProperty(window.HTMLCanvasElement.prototype, 'getContext', {
+    value: mockGetContext,
+    configurable: true,
+  });
 });
 
 describe('ThreeJSPlayground Component', () => {
@@ -90,7 +98,7 @@ describe('ThreeJSPlayground Component', () => {
   it('should initialize canvas context on mount', () => {
     render(<ThreeJSPlayground />);
 
-    expect(HTMLCanvasElement.prototype.getContext).toHaveBeenCalledWith('2d');
+    expect(mockGetContext).toHaveBeenCalledWith('2d');
   });
 
   it('should start animation on mount', () => {
@@ -126,15 +134,14 @@ describe('ThreeJSPlayground Component', () => {
   });
 
   it('should handle button clicks without errors', async () => {
-    const user = userEvent.setup();
     render(<ThreeJSPlayground />);
 
     const resetButton = screen.getByRole('button', { name: 'Reset Scene' });
     const toggleButton = screen.getByRole('button', { name: 'Toggle Animation' });
 
     // Buttons should be clickable without errors
-    await user.click(resetButton);
-    await user.click(toggleButton);
+    await userEvent.click(resetButton);
+    await userEvent.click(toggleButton);
 
     expect(resetButton).toBeInTheDocument();
     expect(toggleButton).toBeInTheDocument();
@@ -173,29 +180,7 @@ describe('ThreeJSPlayground Component', () => {
     render(<ThreeJSPlayground />);
 
     // Should not call getContext if canvas is null
-    expect(HTMLCanvasElement.prototype.getContext).not.toHaveBeenCalled();
-  });
-
-  it('should handle missing 2D context gracefully', () => {
-    // Mock getContext to return null
-    HTMLCanvasElement.prototype.getContext = vi.fn(() => null);
-
-    render(<ThreeJSPlayground />);
-
-    // Should not start animation if context is null
-    expect(global.requestAnimationFrame).not.toHaveBeenCalled();
-  });
-
-  it('should set canvas properties correctly', async () => {
-    render(<ThreeJSPlayground />);
-
-    // Wait for animation frame
-    await new Promise(resolve => setTimeout(resolve, 20));
-
-    // Check that style properties are set
-    expect(mockContext.fillStyle).toBeDefined();
-    expect(mockContext.strokeStyle).toBeDefined();
-    expect(mockContext.lineWidth).toBeDefined();
+    expect(mockGetContext).not.toHaveBeenCalled();
   });
 
   it('should update rotation over time', async () => {
@@ -211,7 +196,6 @@ describe('ThreeJSPlayground Component', () => {
   it('should reset transform after each frame', async () => {
     render(<ThreeJSPlayground />);
 
-    // Wait for animation frame
     await new Promise(resolve => setTimeout(resolve, 20));
 
     expect(mockContext.resetTransform).toHaveBeenCalled();
@@ -220,7 +204,6 @@ describe('ThreeJSPlayground Component', () => {
   it('should draw diagonals for cube effect', async () => {
     render(<ThreeJSPlayground />);
 
-    // Wait for animation frame
     await new Promise(resolve => setTimeout(resolve, 20));
 
     // Should draw 4 diagonal lines

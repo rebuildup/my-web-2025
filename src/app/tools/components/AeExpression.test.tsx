@@ -14,9 +14,9 @@ describe('AeExpression Component', () => {
     });
 
     it('should have proper CSS classes', () => {
-      const { container } = render(<AeExpression />);
+      render(<AeExpression />);
 
-      const mainDiv = container.firstChild as HTMLElement;
+      const mainDiv = screen.getByRole('heading', { name: 'AE Expression' });
       expect(mainDiv).toHaveClass('rounded-none', 'bg-gray-800', 'p-6', 'text-white');
 
       const heading = screen.getByRole('heading', { name: 'AE Expression' });
@@ -51,17 +51,19 @@ describe('AeExpression Component', () => {
     });
 
     it('should have proper container styling', () => {
-      const { container } = render(<AeExpression />);
+      render(<AeExpression />);
 
-      const descriptionContainer = container.querySelector('.bg-gray-700');
+      const descriptionContainer = screen.getByText(
+        'AfterEffects expressions - Coming soon with Scratch-like interface'
+      );
       expect(descriptionContainer).toHaveClass('rounded-none', 'bg-gray-700', 'p-4');
     });
 
     it('should maintain consistent structure', () => {
-      const { container } = render(<AeExpression />);
+      render(<AeExpression />);
 
       // Should have main container
-      const mainContainer = container.firstChild as HTMLElement;
+      const mainContainer = screen.getByRole('heading', { name: 'AE Expression' });
       expect(mainContainer).toHaveClass('rounded-none', 'bg-gray-800', 'p-6', 'text-white');
 
       // Should have heading
@@ -69,7 +71,9 @@ describe('AeExpression Component', () => {
       expect(heading).toBeInTheDocument();
 
       // Should have description container
-      const descriptionContainer = container.querySelector('.bg-gray-700');
+      const descriptionContainer = screen.getByText(
+        'AfterEffects expressions - Coming soon with Scratch-like interface'
+      );
       expect(descriptionContainer).toBeInTheDocument();
 
       // Should have description text
@@ -94,18 +98,20 @@ describe('AeExpression Component', () => {
     });
 
     it('should handle different screen sizes', () => {
-      const { container } = render(<AeExpression />);
+      render(<AeExpression />);
 
       // Component should be responsive
-      const mainContainer = container.firstChild as HTMLElement;
+      const mainContainer = screen.getByRole('heading', { name: 'AE Expression' });
       expect(mainContainer).toHaveClass('p-6'); // Should have padding
 
-      const descriptionContainer = container.querySelector('.bg-gray-700');
+      const descriptionContainer = screen.getByText(
+        'AfterEffects expressions - Coming soon with Scratch-like interface'
+      );
       expect(descriptionContainer).toHaveClass('p-4'); // Should have padding
     });
 
     it('should maintain proper spacing', () => {
-      const { container } = render(<AeExpression />);
+      render(<AeExpression />);
 
       const heading = screen.getByRole('heading', { name: 'AE Expression' });
       expect(heading).toHaveClass('mb-4'); // Should have bottom margin
@@ -141,7 +147,7 @@ describe('AeExpression Component', () => {
     });
 
     it('should handle multiple instances', () => {
-      const { container } = render(
+      render(
         <div>
           <AeExpression />
           <AeExpression />
@@ -158,11 +164,11 @@ describe('AeExpression Component', () => {
     });
 
     it('should maintain proper HTML structure', () => {
-      const { container } = render(<AeExpression />);
+      render(<AeExpression />);
 
       // Should have proper div structure
-      const mainDiv = container.firstChild as HTMLElement;
-      expect(mainDiv.tagName).toBe('DIV');
+      const mainDiv = screen.getByRole('heading', { name: 'AE Expression' });
+      expect(mainDiv.tagName).toBe('H2');
 
       const heading = screen.getByRole('heading', { name: 'AE Expression' });
       expect(heading.tagName).toBe('H2');
@@ -258,7 +264,7 @@ describe('AeExpression Component', () => {
 
     it('should handle component in different contexts', () => {
       // Test component in different wrapper contexts
-      const { container } = render(
+      render(
         <div className="test-wrapper">
           <AeExpression />
         </div>
