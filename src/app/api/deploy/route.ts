@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 
