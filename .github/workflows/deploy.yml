@@ -82,8 +82,16 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.GCP_HOST }} >> ~/.ssh/known_hosts
 
+          # SSH接続の詳細テスト
+          echo "Testing SSH connection..."
+          ssh -v -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "echo 'SSH connection successful'" || {
+            echo "SSH connection failed. Checking details..."
+            ssh -v -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "echo 'test'" || true
+          }
+
       - name: Test SSH connection
         run: |
+          echo "Testing basic SSH connection..."
           ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "echo 'SSH connection successful'"
 
       - name: Setup Apache reverse proxy
