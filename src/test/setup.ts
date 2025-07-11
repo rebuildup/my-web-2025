@@ -54,7 +54,6 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock IntersectionObserver
-
 (
   global as typeof globalThis & {
     IntersectionObserver: typeof IntersectionObserver;
@@ -225,6 +224,16 @@ Object.defineProperty(global, 'sessionStorage', {
 // Mock fetch
 global.fetch = vi.fn();
 
+// Mock requestAnimationFrame
+global.requestAnimationFrame = vi.fn(callback => {
+  return setTimeout(callback, 0) as unknown as number;
+});
+
+// Mock cancelAnimationFrame
+global.cancelAnimationFrame = vi.fn(id => {
+  clearTimeout(id);
+});
+
 // Setup console warnings suppression for tests
 const originalConsoleError = console.error;
 beforeAll(() => {
@@ -252,20 +261,151 @@ afterEach(() => {
   sessionStorageMock.clear();
 });
 
-import { createCanvas } from 'canvas';
+// Enhanced canvas mocking for jsdom
+if (typeof window !== 'undefined') {
+  // Ensure document.body exists for tests
+  if (!document.body) {
+    document.body = document.createElement('body');
+  }
 
-// Patch HTMLCanvasElement for jsdom (for tests that use canvas)
-if (typeof window !== 'undefined' && window.HTMLCanvasElement) {
-  // @ts-expect-error: Patching HTMLCanvasElement for jsdom environment
-  window.HTMLCanvasElement.prototype.getContext = function (contextType: string) {
-    const canvas = createCanvas(this.width, this.height);
-    if (contextType === '2d') {
-      return canvas.getContext('2d');
-    }
-    return null;
-  };
-  window.HTMLCanvasElement.prototype.toDataURL = function toDataURL() {
-    const canvas = createCanvas(this.width, this.height);
-    return canvas.toDataURL();
-  };
+  // Mock HTMLCanvasElement if it exists
+  if (window.HTMLCanvasElement) {
+    // Mock getContext method
+    const originalGetContext = window.HTMLCanvasElement.prototype.getContext;
+    window.HTMLCanvasElement.prototype.getContext = function (
+      this: HTMLCanvasElement,
+      contextType: string,
+      options?: any
+    ) {
+      if (contextType === '2d') {
+        return {
+          fillRect: vi.fn(),
+          clearRect: vi.fn(),
+          getImageData: vi.fn(() => ({ data: new Uint8ClampedArray(4) })),
+          putImageData: vi.fn(),
+          createImageData: vi.fn(() => ({ data: new Uint8ClampedArray(4) })),
+          drawImage: vi.fn(),
+          save: vi.fn(),
+          fillText: vi.fn(),
+          restore: vi.fn(),
+          beginPath: vi.fn(),
+          moveTo: vi.fn(),
+          lineTo: vi.fn(),
+          closePath: vi.fn(),
+          stroke: vi.fn(),
+          translate: vi.fn(),
+          scale: vi.fn(),
+          rotate: vi.fn(),
+          arc: vi.fn(),
+          fill: vi.fn(),
+          measureText: vi.fn(() => ({ width: 0 })),
+          transform: vi.fn(),
+          rect: vi.fn(),
+          quadraticCurveTo: vi.fn(),
+          bezierCurveTo: vi.fn(),
+          clip: vi.fn(),
+          isPointInPath: vi.fn(() => false),
+          isPointInStroke: vi.fn(() => false),
+          createConicGradient: vi.fn(),
+          createLinearGradient: vi.fn(),
+          createRadialGradient: vi.fn(),
+          createPattern: vi.fn(),
+          drawFocusIfNeeded: vi.fn(),
+          scrollPathIntoView: vi.fn(),
+          addHitRegion: vi.fn(),
+          removeHitRegion: vi.fn(),
+          clearHitRegions: vi.fn(),
+          getLineDash: vi.fn(() => []),
+          setLineDash: vi.fn(),
+          getTransform: vi.fn(() => new DOMMatrix()),
+          setTransform: vi.fn(),
+          resetTransform: vi.fn(),
+          fillStyle: '',
+          strokeStyle: '',
+          lineWidth: 1,
+          font: '',
+          textAlign: 'left',
+          textBaseline: 'alphabetic',
+          globalAlpha: 1,
+          globalCompositeOperation: 'source-over',
+          canvas: this,
+        } as unknown as CanvasRenderingContext2D;
+      }
+      // For WebGL contexts, return a basic mock
+      if (contextType === 'webgl' || contextType === 'webgl2') {
+        return {
+          drawArrays: vi.fn(),
+          drawElements: vi.fn(),
+          clear: vi.fn(),
+          clearColor: vi.fn(),
+          createBuffer: vi.fn(() => ({})),
+          bindBuffer: vi.fn(),
+          bufferData: vi.fn(),
+          createShader: vi.fn(() => ({})),
+          shaderSource: vi.fn(),
+          compileShader: vi.fn(),
+          createProgram: vi.fn(() => ({})),
+          attachShader: vi.fn(),
+          linkProgram: vi.fn(),
+          useProgram: vi.fn(),
+          getAttribLocation: vi.fn(() => 0),
+          getUniformLocation: vi.fn(() => ({})),
+          uniformMatrix4fv: vi.fn(),
+          uniform1i: vi.fn(),
+          uniform1f: vi.fn(),
+          uniform2f: vi.fn(),
+          uniform3f: vi.fn(),
+          uniform4f: vi.fn(),
+          vertexAttribPointer: vi.fn(),
+          enableVertexAttribArray: vi.fn(),
+          viewport: vi.fn(),
+          canvas: this,
+        } as any;
+      }
+      return null;
+    } as any;
+
+    // Mock toDataURL method
+    window.HTMLCanvasElement.prototype.toDataURL = function toDataURL() {
+      return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+    };
+
+    // Mock toBlob method
+    window.HTMLCanvasElement.prototype.toBlob = function toBlob(
+      callback: (blob: Blob | null) => void
+    ) {
+      const blob = new Blob([''], { type: 'image/png' });
+      callback(blob);
+    };
+  }
+
+  // Mock WebGLRenderingContext and WebGL2RenderingContext
+  if (!window.WebGLRenderingContext) {
+    (window as any).WebGLRenderingContext = class MockWebGLRenderingContext {
+      static readonly POINTS = 0x0000;
+      static readonly LINES = 0x0001;
+      static readonly LINE_LOOP = 0x0002;
+      static readonly LINE_STRIP = 0x0003;
+      static readonly TRIANGLES = 0x0004;
+      static readonly TRIANGLE_STRIP = 0x0005;
+      static readonly TRIANGLE_FAN = 0x0006;
+    };
+  }
+
+  if (!window.WebGL2RenderingContext) {
+    (window as any).WebGL2RenderingContext = class MockWebGL2RenderingContext extends (
+      (window as any).WebGLRenderingContext
+    ) {
+      // WebGL2 specific constants
+    };
+  }
+
+  // Mock DOMMatrix if it doesn't exist
+  if (!window.DOMMatrix) {
+    (window as any).DOMMatrix = class MockDOMMatrix {
+      constructor(matrix?: string | number[]) {
+        // Mock implementation
+      }
+    };
+  }
 }
