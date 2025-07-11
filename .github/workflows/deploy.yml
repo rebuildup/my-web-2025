@@ -145,6 +145,7 @@ jobs:
           '
 
       - name: Deploy to server
+        timeout-minutes: 15
         run: |
           # バックアップの作成
           ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} '
@@ -211,9 +212,12 @@ jobs:
             
             cd /var/www/my-web-2025
             
-            # 依存関係のインストール
+            # 依存関係のインストール（タイムアウト対策）
             echo "Installing dependencies..."
-            sudo npm ci --production
+            npm config set fetch-timeout 300000
+            npm config set fetch-retry-mintimeout 20000
+            npm config set fetch-retry-maxtimeout 120000
+            sudo npm ci --omit=dev --no-audit --no-fund
             
             # 環境変数の設定
             sudo tee .env > /dev/null << "EOF"
