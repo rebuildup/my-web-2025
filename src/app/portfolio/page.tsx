@@ -72,7 +72,7 @@ export default function PortfolioPage() {
           <p className="noto-sans-jp-light mb-8 text-xl text-gray-300 md:text-2xl">
             作品ギャラリー
           </p>
-          <p className="noto-sans-jp-regular mx-auto max-w-3xl text-base text-gray-400 md:text-lg">
+          <p className="noto-sans-jp-regular mx-auto max-w-3xl text-gray-400 md:text-lg">
             4つのカテゴリ別ギャラリーで作品の全体像を把握
             <br />
             開発・映像・デザインの幅広い制作実績をご覧ください
