@@ -93,8 +93,10 @@ jobs:
             sudo a2enmod proxy
             sudo a2enmod proxy_http
             
-            # デフォルトサイトを無効化
-            sudo a2dissite 000-default.conf
+            # 既存の設定を無効化
+            sudo a2dissite 000-default.conf || true
+            sudo a2dissite yusuke-kim.conf || true
+            sudo a2dissite yusuke-kim-le-ssl.conf || true
             
             # Apache設定ファイルの作成
             sudo tee /etc/apache2/sites-available/my-web-2025.conf > /dev/null << "EOF"
