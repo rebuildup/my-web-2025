@@ -203,9 +203,16 @@ jobs:
             
             cd /var/www/my-web-2025
             
-            # 依存関係のインストール
+            # 依存関係のインストール（最適化）
             echo "Installing dependencies..."
-            sudo npm ci --production
+            npm config set registry https://registry.npmjs.org/
+            npm config set fetch-timeout 300000
+            npm config set fetch-retry-mintimeout 20000
+            npm config set fetch-retry-maxtimeout 120000
+            
+            # 既存のnode_modulesを削除してからインストール
+            sudo rm -rf node_modules package-lock.json
+            sudo npm install --omit=dev --no-audit --no-fund --prefer-offline
             
             # 環境変数の設定
             sudo tee .env > /dev/null << "EOF"
