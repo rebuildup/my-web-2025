@@ -93,11 +93,15 @@ jobs:
             sudo a2enmod proxy
             sudo a2enmod proxy_http
             
+            # デフォルトサイトを無効化
+            sudo a2dissite 000-default.conf
+            
             # Apache設定ファイルの作成
             sudo tee /etc/apache2/sites-available/my-web-2025.conf > /dev/null << "EOF"
             <VirtualHost *:80>
                 ServerName yusuke-kim.com
                 ServerAlias www.yusuke-kim.com
+                DocumentRoot /var/www/my-web-2025
 
                 ProxyPreserveHost On
                 ProxyPass / http://127.0.0.1:3000/
@@ -113,9 +117,6 @@ jobs:
             </VirtualHost>
             EOF
 
-            # デフォルトサイトを無効化
-            sudo a2dissite 000-default.conf
-
             # 設定ファイルの構文チェック
             sudo apache2ctl -t || exit 1
             
@@ -127,6 +128,10 @@ jobs:
             
             # Apacheのステータス確認
             sudo systemctl status apache2 --no-pager || true
+            
+            # Apache設定の確認
+            echo "Checking Apache configuration..."
+            sudo apache2ctl -S
           '
 
       - name: Deploy to server
@@ -190,6 +195,7 @@ jobs:
             
             # ファイルのコピーと権限設定
             sudo cp -r ./* /var/www/my-web-2025/
+            sudo cp -r ./.next /var/www/my-web-2025/ || echo "Warning: .next directory not found"
             sudo chown -R $(whoami):www-data /var/www/my-web-2025
             sudo chmod -R 755 /var/www/my-web-2025
             
@@ -212,7 +218,8 @@ jobs:
             
             # Next.jsアプリケーションの起動
             echo "Starting Next.js application..."
-            NODE_ENV=production PORT=3000 pm2 start npm --name my-web-2025 -- start
+            cd /var/www/my-web-2025
+            NODE_ENV=production PORT=3000 pm2 start npm --name my-web-2025 --cwd /var/www/my-web-2025 -- start
             pm2 save
             
             # クリーンアップ
