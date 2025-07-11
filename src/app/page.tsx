@@ -11,7 +11,7 @@ export default function HomePage() {
         <p className="noto-sans-jp-light mb-8 text-xl text-gray-300 md:text-2xl">
           フロントエンドエンジニアの個人サイト
         </p>
-        <p className="noto-sans-jp-regular mx-auto max-w-3xl text-base text-gray-400 md:text-lg">
+        <p className="noto-sans-jp-regular mx-auto max-w-3xl text-gray-400 md:text-lg">
           自己紹介 / 作品ギャラリー / プラグイン配布 / ツール など
           <br />
           欲しいもの全部詰め込みました
