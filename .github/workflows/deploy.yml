@@ -5,6 +5,7 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -57,29 +58,91 @@ jobs:
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
         run: npm run build
 
+      - name: Verify build output
+        run: |
+          echo "Checking build output..."
+          if [ -d "out" ]; then
+            echo "✅ out/ directory exists"
+            ls -la out/
+            echo "Total files: $(find out -type f | wc -l)"
+          else
+            echo "❌ out/ directory not found"
+            exit 1
+          fi
+
       - name: Create deployment package
         run: |
-          tar -czf deployment.tar.gz .next package.json next.config.ts public
+          tar -czf deployment.tar.gz out/
+          echo "Package size: $(du -h deployment.tar.gz)"
 
       - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.8.0
-        with:
-          ssh-private-key: ${{ secrets.GCP_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GCP_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.GCP_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Test SSH connection
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "echo 'SSH connection successful'"
 
       - name: Deploy to server
         run: |
-          scp -o StrictHostKeyChecking=no deployment.tar.gz ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }}:/tmp/
+          # バックアップの作成
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
+            sudo mkdir -p /var/www/backups
+            if [ -d '/var/www/html' ] && [ '\$(ls -A /var/www/html)' ]; then
+              sudo cp -r /var/www/html /var/www/backups/html-\$(date +%Y%m%d-%H%M%S)
+              echo 'Backup created'
+            else
+              echo 'No existing content to backup'
+            fi
+          "
 
-          ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
-            cd /var/www/html
-            sudo rm -rf .next package.json next.config.ts public
-            sudo tar -xzf /tmp/deployment.tar.gz -C /var/www/html
-            cd /var/www/html
-            npm install --omit=dev
-            (pm2 restart all || npm run start &)
+          # デプロイメントパッケージを転送
+          scp -i ~/.ssh/id_rsa deployment.tar.gz ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }}:/tmp/
+
+          # サーバーでファイルを展開
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
+            cd /tmp
+            tar -xzf deployment.tar.gz
+            sudo rm -rf /var/www/html/*
+            sudo cp -r out/* /var/www/html/
+            sudo chown -R www-data:www-data /var/www/html
+            sudo chmod -R 755 /var/www/html
+            echo 'Files deployed successfully'
+            sudo systemctl reload apache2
+            echo 'Apache reloaded'
+          "
+
+      - name: Cleanup
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
+            rm -f /tmp/deployment.tar.gz
+            sudo find /var/www/backups -name 'html-*' -mtime +7 -exec rm -rf {} \; 2>/dev/null || true
+            echo 'Cleanup completed'
           "
 
       - name: Health check
         run: |
           sleep 10
-          curl -f https://yusuke-kim.com/health || curl -f https://yusuke-kim.com/ || exit 1
+          echo 'Testing HTTP access...'
+          curl -f http://${{ secrets.GCP_HOST }}/ || echo 'HTTP test failed'
+          echo 'Testing HTTPS access...'
+          curl -f https://yusuke-kim.com/ || echo 'HTTPS test failed'
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
+            LATEST_BACKUP=\$(ls -t /var/www/backups/ 2>/dev/null | head -1)
+            if [ -n \"\$LATEST_BACKUP\" ]; then
+              sudo rm -rf /var/www/html/*
+              sudo cp -r /var/www/backups/\$LATEST_BACKUP/* /var/www/html/
+              sudo chown -R www-data:www-data /var/www/html
+              sudo systemctl reload apache2
+              echo 'Rollback completed'
+            else
+              echo 'No backup found for rollback'
+            fi
+          "
