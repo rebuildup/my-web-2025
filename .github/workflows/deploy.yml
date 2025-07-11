@@ -86,72 +86,15 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "echo 'SSH connection successful'"
 
-      - name: Deploy to server
-        run: |
-          # バックアップの作成
-          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
-            sudo mkdir -p /var/www/backups
-            if [ -d '/var/www/my-web-2025' ]; then
-              sudo cp -r /var/www/my-web-2025 /var/www/backups/my-web-2025-\$(date +%Y%m%d-%H%M%S)
-              echo 'Backup created'
-            else
-              echo 'No existing content to backup'
-            fi
-          "
-
-          # デプロイメントパッケージを転送
-          scp -i ~/.ssh/id_rsa deployment.tar.gz ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }}:/tmp/
-
-          # サーバーでファイルを展開とNode.jsセットアップ
-          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
-            # Node.jsがインストールされていない場合はインストール
-            if ! command -v node &> /dev/null; then
-              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-              sudo apt-get install -y nodejs
-            fi
-
-            # PM2がインストールされていない場合はインストール
-            if ! command -v pm2 &> /dev/null; then
-              sudo npm install -g pm2
-            fi
-
-            # アプリケーションのデプロイ
-            cd /tmp
-            sudo rm -rf /var/www/my-web-2025
-            sudo mkdir -p /var/www/my-web-2025
-            tar -xzf deployment.tar.gz -C /var/www/my-web-2025
-            cd /var/www/my-web-2025
-            sudo npm ci --production
-            
-            # 環境変数の設定
-            sudo bash -c 'cat > /var/www/my-web-2025/.env << \"EOL\"
-            RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
-            RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}
-            EOL'
-
-            # PM2の設定
-            if pm2 list | grep -q 'my-web-2025'; then
-              sudo -E pm2 delete my-web-2025 || true
-            fi
-            sudo -E NODE_ENV=production pm2 start npm --name my-web-2025 -- start
-            sudo -E pm2 save
-            
-            # 権限の設定
-            sudo chown -R www-data:www-data /var/www/my-web-2025
-            sudo chmod -R 755 /var/www/my-web-2025
-
-            echo 'Files deployed successfully'
-          "
-
       - name: Setup Apache reverse proxy
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} '
             # Apacheモジュールの有効化
             sudo a2enmod proxy
             sudo a2enmod proxy_http
             
             # Apache設定ファイルの作成
-            sudo tee /etc/apache2/sites-available/my-web-2025.conf > /dev/null << \"EOL\"
+            sudo tee /etc/apache2/sites-available/my-web-2025.conf > /dev/null << "EOF"
             <VirtualHost *:80>
                 ServerName yusuke-kim.com
                 ServerAlias www.yusuke-kim.com
@@ -160,15 +103,15 @@ jobs:
                 ProxyPass / http://127.0.0.1:3000/
                 ProxyPassReverse / http://127.0.0.1:3000/
 
-                ErrorLog \${APACHE_LOG_DIR}/my-web-2025-error.log
-                CustomLog \${APACHE_LOG_DIR}/my-web-2025-access.log combined
+                ErrorLog ${APACHE_LOG_DIR}/my-web-2025-error.log
+                CustomLog ${APACHE_LOG_DIR}/my-web-2025-access.log combined
 
                 # SSL設定（必要な場合）
                 #SSLEngine on
                 #SSLCertificateFile /path/to/certificate
                 #SSLCertificateKeyFile /path/to/private/key
             </VirtualHost>
-            EOL
+            EOF
 
             # 設定ファイルの構文チェック
             sudo apache2ctl -t || exit 1
@@ -181,40 +124,102 @@ jobs:
             
             # Apacheのステータス確認
             sudo systemctl status apache2 --no-pager || true
-          "
+          '
+
+      - name: Deploy to server
+        run: |
+          # バックアップの作成
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} '
+            sudo mkdir -p /var/www/backups
+            if [ -d "/var/www/my-web-2025" ]; then
+              sudo cp -r /var/www/my-web-2025 /var/www/backups/my-web-2025-$(date +%Y%m%d-%H%M%S)
+              echo "Backup created"
+            else
+              echo "No existing content to backup"
+            fi
+          '
+
+          # デプロイメントパッケージを転送
+          scp -i ~/.ssh/id_rsa deployment.tar.gz ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }}:/tmp/
+
+          # サーバーでファイルを展開とNode.jsセットアップ
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} '
+            # Node.jsがインストールされていない場合はインストール
+            if ! command -v node &> /dev/null; then
+              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+              sudo apt-get install -y nodejs
+            fi
+
+            # PM2がインストールされていない場合はインストール
+            if ! command -v pm2 &> /dev/null; then
+              sudo npm install -g pm2
+            fi
+
+            # PM2のパーミッション設定
+            sudo mkdir -p /home/$USER/.pm2
+            sudo chown -R $USER:$USER /home/$USER/.pm2
+
+            # アプリケーションのデプロイ
+            cd /tmp
+            sudo rm -rf /var/www/my-web-2025
+            sudo mkdir -p /var/www/my-web-2025
+            tar -xzf deployment.tar.gz -C /var/www/my-web-2025
+            cd /var/www/my-web-2025
+            sudo npm ci --production
+            
+            # 環境変数の設定
+            sudo tee .env > /dev/null << "EOF"
+            RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
+            RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}
+            EOF
+
+            # PM2の設定
+            if pm2 list | grep -q "my-web-2025"; then
+              pm2 delete my-web-2025 || true
+            fi
+            cd /var/www/my-web-2025
+            NODE_ENV=production pm2 start npm --name my-web-2025 -- start
+            pm2 save
+            
+            # 権限の設定
+            sudo chown -R $USER:www-data /var/www/my-web-2025
+            sudo chmod -R 755 /var/www/my-web-2025
+
+            echo "Files deployed successfully"
+          '
 
       - name: Cleanup
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} '
             rm -f /tmp/deployment.tar.gz
-            sudo find /var/www/backups -name 'my-web-2025-*' -mtime +7 -exec rm -rf {} \; 2>/dev/null || true
-            echo 'Cleanup completed'
-          "
+            sudo find /var/www/backups -name "my-web-2025-*" -mtime +7 -exec rm -rf {} \; 2>/dev/null || true
+            echo "Cleanup completed"
+          '
 
       - name: Health check
         run: |
           sleep 10
-          echo 'Testing HTTP access...'
-          curl -f http://${{ secrets.GCP_HOST }}/ || echo 'HTTP test failed'
-          echo 'Testing HTTPS access...'
-          curl -f https://yusuke-kim.com/ || echo 'HTTPS test failed'
+          echo "Testing HTTP access..."
+          curl -f http://${{ secrets.GCP_HOST }}/ || echo "HTTP test failed"
+          echo "Testing HTTPS access..."
+          curl -f https://yusuke-kim.com/ || echo "HTTPS test failed"
 
       - name: Rollback on failure
         if: failure()
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
-            LATEST_BACKUP=\$(ls -t /var/www/backups/my-web-2025-* 2>/dev/null | head -1)
-            if [ -n \"\$LATEST_BACKUP\" ]; then
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} '
+            LATEST_BACKUP=$(ls -t /var/www/backups/my-web-2025-* 2>/dev/null | head -1)
+            if [ -n "$LATEST_BACKUP" ]; then
               sudo -E pm2 delete my-web-2025 || true
               sudo rm -rf /var/www/my-web-2025
-              sudo cp -r \$LATEST_BACKUP /var/www/my-web-2025
+              sudo cp -r $LATEST_BACKUP /var/www/my-web-2025
               cd /var/www/my-web-2025
               sudo -E pm2 start npm --name my-web-2025 -- start
               sudo -E pm2 save
-              sudo chown -R www-data:www-data /var/www/my-web-2025
+              sudo chown -R $USER:www-data /var/www/my-web-2025
               sudo systemctl reload apache2
-              echo 'Rollback completed'
+              echo "Rollback completed"
             else
-              echo 'No backup found for rollback'
+              echo "No backup found for rollback"
             fi
-          "
+          '
