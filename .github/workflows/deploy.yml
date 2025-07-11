@@ -124,14 +124,16 @@ jobs:
             sudo npm ci --production
             
             # 環境変数の設定
-            sudo bash -c 'cat > /var/www/my-web-2025/.env << EOL
+            sudo bash -c 'cat > /var/www/my-web-2025/.env << \"EOL\"
             RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
             RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}
             EOL'
 
             # PM2の設定
-            sudo -E pm2 delete my-web-2025 || true
-            sudo -E pm2 start npm --name my-web-2025 -- start
+            if pm2 list | grep -q 'my-web-2025'; then
+              sudo -E pm2 delete my-web-2025 || true
+            fi
+            sudo -E NODE_ENV=production pm2 start npm --name my-web-2025 -- start
             sudo -E pm2 save
             
             # 権限の設定
@@ -144,24 +146,41 @@ jobs:
       - name: Setup Apache reverse proxy
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
-            sudo bash -c 'cat > /etc/apache2/sites-available/my-web-2025.conf << EOL
+            # Apacheモジュールの有効化
+            sudo a2enmod proxy
+            sudo a2enmod proxy_http
+            
+            # Apache設定ファイルの作成
+            sudo tee /etc/apache2/sites-available/my-web-2025.conf > /dev/null << \"EOL\"
             <VirtualHost *:80>
                 ServerName yusuke-kim.com
                 ServerAlias www.yusuke-kim.com
 
                 ProxyPreserveHost On
-                ProxyPass / http://localhost:3000/
-                ProxyPassReverse / http://localhost:3000/
+                ProxyPass / http://127.0.0.1:3000/
+                ProxyPassReverse / http://127.0.0.1:3000/
 
                 ErrorLog \${APACHE_LOG_DIR}/my-web-2025-error.log
                 CustomLog \${APACHE_LOG_DIR}/my-web-2025-access.log combined
-            </VirtualHost>
-            EOL'
 
-            sudo a2enmod proxy
-            sudo a2enmod proxy_http
+                # SSL設定（必要な場合）
+                #SSLEngine on
+                #SSLCertificateFile /path/to/certificate
+                #SSLCertificateKeyFile /path/to/private/key
+            </VirtualHost>
+            EOL
+
+            # 設定ファイルの構文チェック
+            sudo apache2ctl -t || exit 1
+            
+            # 設定の有効化
             sudo a2ensite my-web-2025.conf
-            sudo systemctl reload apache2
+            
+            # Apache再起動
+            sudo systemctl restart apache2
+            
+            # Apacheのステータス確認
+            sudo systemctl status apache2 --no-pager || true
           "
 
       - name: Cleanup
