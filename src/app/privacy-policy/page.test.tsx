@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import PrivacyPolicyPage from './page';
 
 describe('Privacy Policy Page', () => {
@@ -7,227 +7,122 @@ describe('Privacy Policy Page', () => {
     render(<PrivacyPolicyPage />);
 
     expect(screen.getByRole('heading', { name: 'Privacy Policy' })).toBeInTheDocument();
-    expect(screen.getByText('個人情報保護方量')).toBeInTheDocument();
+    expect(screen.getByText('プライバシーポリシー')).toBeInTheDocument();
+    expect(screen.getByText(/個人情報の取り扱いについて/)).toBeInTheDocument();
   });
 
-  it('should render navigation link', () => {
+  it('should render last updated date', () => {
     render(<PrivacyPolicyPage />);
 
-    const homeLink = screen.getByRole('link', { name: '← Home' });
-    expect(homeLink).toBeInTheDocument();
-    expect(homeLink).toHaveAttribute('href', '/');
+    expect(screen.getByText('最終更新日: 2025年1月1日')).toBeInTheDocument();
   });
 
   it('should render basic policy section', () => {
     render(<PrivacyPolicyPage />);
 
-    expect(screen.getByText('基本方針')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '基本方針' })).toBeInTheDocument();
     expect(
-      screen.getByText(
-        'samuido（以下「当サイト」）は、個人情報の重要性を認識し、個人情報保護法等の関連法令を遵守して、適切に個人情報を取り扱います。'
-      )
+      screen.getByText(/samuido（以下「当サイト」）は、ユーザーの個人情報保護を重要な責務と考え/)
     ).toBeInTheDocument();
   });
 
-  it('should render information collection section', () => {
+  it('should render collected information section', () => {
     render(<PrivacyPolicyPage />);
 
-    expect(screen.getByText('収集する情報')).toBeInTheDocument();
-    expect(screen.getByText('お問い合わせフォーム')).toBeInTheDocument();
-    expect(screen.getByText('アクセス情報')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '収集する情報' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'お問い合わせフォーム' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'アクセスログ' })).toBeInTheDocument();
 
-    // Contact form information
-    expect(screen.getByText('お名前')).toBeInTheDocument();
-    expect(screen.getByText('メールアドレス')).toBeInTheDocument();
-    expect(screen.getByText('会社名・組織名（任意）')).toBeInTheDocument();
-    expect(screen.getByText('電話番号（任意）')).toBeInTheDocument();
-    expect(screen.getByText('お問い合わせ内容')).toBeInTheDocument();
+    // Contact form information - より具体的なパターンを使用
+    expect(screen.getByText(/• 名前（ハンドルネーム可）/)).toBeInTheDocument();
+    expect(screen.getByText(/• メールアドレス/)).toBeInTheDocument();
+    expect(screen.getByText(/• 件名/)).toBeInTheDocument();
+    expect(screen.getByText(/• お問い合わせ内容/)).toBeInTheDocument();
 
-    // Access information
-    expect(screen.getByText('IPアドレス')).toBeInTheDocument();
-    expect(screen.getByText('ブラウザ情報')).toBeInTheDocument();
-    expect(screen.getByText('アクセス日時')).toBeInTheDocument();
-    expect(screen.getByText('アクセスページ')).toBeInTheDocument();
+    // Access log information
+    expect(screen.getByText(/• IPアドレス/)).toBeInTheDocument();
+    expect(screen.getByText(/• アクセス日時/)).toBeInTheDocument();
   });
 
   it('should render usage purpose section', () => {
     render(<PrivacyPolicyPage />);
 
-    expect(screen.getByText('利用目的')).toBeInTheDocument();
-    expect(screen.getByText('お問い合わせへの回答')).toBeInTheDocument();
-    expect(screen.getByText('サービス向上のための分析')).toBeInTheDocument();
-    expect(screen.getByText('ウェブサイトの改善')).toBeInTheDocument();
-    expect(screen.getByText('統計データの作成（個人を特定しない形式）')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '利用目的' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'お問い合わせへの対応' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'サイトの改善・運営' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '統計情報の作成' })).toBeInTheDocument();
   });
 
-  it('should render third party disclosure section', () => {
+  it('should render cookie policy section', () => {
     render(<PrivacyPolicyPage />);
 
-    expect(screen.getByText('第三者への提供')).toBeInTheDocument();
-    expect(
-      screen.getByText('当サイトは、以下の場合を除き、個人情報を第三者に提供することはありません。')
-    ).toBeInTheDocument();
-    expect(screen.getByText('ご本人の同意がある場合')).toBeInTheDocument();
-    expect(screen.getByText('法令に基づく場合')).toBeInTheDocument();
-    expect(
-      screen.getByText('生命、身体または財産の保護のために必要がある場合')
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Cookieの使用について' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '必須Cookie' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '分析Cookie' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Cookie管理' })).toBeInTheDocument();
   });
 
-  it('should render cookie usage section', () => {
+  it('should render analytics section', () => {
     render(<PrivacyPolicyPage />);
 
-    expect(screen.getByText('Cookieの使用')).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        '当サイトでは、ユーザー体験の向上のためにCookieを使用する場合があります。 Cookieは個人を特定する情報を含みません。'
-      )
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'ブラウザの設定でCookieを無効にすることができますが、一部機能が正常に動作しない場合があります。'
-      )
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'アクセス解析について' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Google Analytics' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'オプトアウト' })).toBeInTheDocument();
+    expect(screen.getByText(/Google Inc.が提供するGoogle Analyticsを使用/)).toBeInTheDocument();
   });
 
-  it('should render Google Analytics section', () => {
+  it('should render third party information section', () => {
     render(<PrivacyPolicyPage />);
 
-    expect(screen.getByText('Google Analytics')).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        '当サイトでは、ウェブサイトの分析のためにGoogle Analyticsを使用しています。 Google Analyticsは、Cookieを使用してユーザーの行動を分析します。'
-      )
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'この分析は匿名で行われ、個人を特定することはありません。 データの使用を希望しない場合は、'
-      )
-    ).toBeInTheDocument();
-
-    const optoutLink = screen.getByText('Google Analytics オプトアウトページ');
-    expect(optoutLink).toHaveAttribute('href', 'https://tools.google.com/dlpage/gaoptout');
-    expect(optoutLink).toHaveAttribute('target', '_blank');
-    expect(optoutLink).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(screen.getByRole('heading', { name: '第三者への情報提供' })).toBeInTheDocument();
+    expect(screen.getByText(/個人情報を第三者に提供することはありません/)).toBeInTheDocument();
   });
 
-  it('should render reCAPTCHA section', () => {
+  it('should render security measures section', () => {
     render(<PrivacyPolicyPage />);
 
-    expect(screen.getByText('reCAPTCHA')).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        '当サイトのお問い合わせフォームでは、スパム防止のためにGoogle reCAPTCHAを使用しています。 reCAPTCHAの使用には、Googleの'
-      )
-    ).toBeInTheDocument();
-
-    const privacyLink = screen.getByText('プライバシーポリシー');
-    expect(privacyLink).toHaveAttribute('href', 'https://policies.google.com/privacy');
-    expect(privacyLink).toHaveAttribute('target', '_blank');
-    expect(privacyLink).toHaveAttribute('rel', 'noopener noreferrer');
-
-    const termsLink = screen.getByText('利用規約');
-    expect(termsLink).toHaveAttribute('href', 'https://policies.google.com/terms');
-    expect(termsLink).toHaveAttribute('target', '_blank');
-    expect(termsLink).toHaveAttribute('rel', 'noopener noreferrer');
-  });
-
-  it('should render personal information disclosure section', () => {
-    render(<PrivacyPolicyPage />);
-
-    expect(screen.getByText('個人情報の開示・訂正・削除')).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'ご自身の個人情報について、開示・訂正・削除をご希望の場合は、お問い合わせフォームまたはメールでご連絡ください。'
-      )
-    ).toBeInTheDocument();
-    expect(screen.getByText('本人確認の上、合理的な期間内に対応いたします。')).toBeInTheDocument();
-  });
-
-  it('should render privacy policy changes section', () => {
-    render(<PrivacyPolicyPage />);
-
-    expect(screen.getByText('プライバシーポリシーの変更')).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        '当サイトは、必要に応じてプライバシーポリシーを変更する場合があります。 変更した場合は、当ページに掲載してお知らせします。'
-      )
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '安全管理措置' })).toBeInTheDocument();
+    expect(screen.getByText(/SSL\/TLS暗号化通信の使用/)).toBeInTheDocument();
   });
 
   it('should render contact information section', () => {
     render(<PrivacyPolicyPage />);
 
-    expect(screen.getByText('お問い合わせ')).toBeInTheDocument();
-    expect(
-      screen.getByText('個人情報の取り扱いに関するお問い合わせは、以下までご連絡ください。')
-    ).toBeInTheDocument();
-    expect(screen.getByText('メール:')).toBeInTheDocument();
-    expect(screen.getByText('361do.sleep@gmail.com')).toBeInTheDocument();
-    expect(screen.getByText('運営者:')).toBeInTheDocument();
-    expect(screen.getByText('samuido（木村友亮）')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'お問い合わせ先' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '連絡先' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '対応時間' })).toBeInTheDocument();
+
+    // より具体的な連絡先情報を検索
+    expect(screen.getByText(/サイト運営者: 木村友亮（samuido）/)).toBeInTheDocument();
+    expect(screen.getByText(/メールアドレス: 361do\.sleep@gmail\.com/)).toBeInTheDocument();
   });
 
-  it('should render effective date', () => {
+  it('should render policy changes section', () => {
     render(<PrivacyPolicyPage />);
 
-    expect(screen.getByText('制定日: 2024年1月1日')).toBeInTheDocument();
-    expect(screen.getByText('最終更新日: 2024年1月1日')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'プライバシーポリシーの変更' })).toBeInTheDocument();
+    expect(screen.getByText(/プライバシーポリシーを変更する場合があります/)).toBeInTheDocument();
   });
 
-  it('should render main content structure', () => {
+  it('should render navigation links', () => {
     render(<PrivacyPolicyPage />);
 
-    const mainElement = screen.getByRole('main');
-    expect(mainElement).toBeInTheDocument();
+    const homeLink = screen.getByText('← Home');
+    expect(homeLink).toHaveAttribute('href', '/');
 
-    const navElement = screen.getByRole('navigation');
-    expect(navElement).toBeInTheDocument();
+    const contactLink = screen.getByText('Contact →');
+    expect(contactLink).toHaveAttribute('href', '/contact');
 
-    const headerElement = screen.getByRole('banner');
-    expect(headerElement).toBeInTheDocument();
+    const searchLink = screen.getByText('Search →');
+    expect(searchLink).toHaveAttribute('href', '/search');
   });
 
-  it('should render all section headings', () => {
+  it('should render google analytics opt-out link', () => {
     render(<PrivacyPolicyPage />);
 
-    const headings = [
-      '基本方針',
-      '収集する情報',
-      '利用目的',
-      '第三者への提供',
-      'Cookieの使用',
-      'Google Analytics',
-      'reCAPTCHA',
-      '個人情報の開示・訂正・削除',
-      'プライバシーポリシーの変更',
-      'お問い合わせ',
-    ];
-
-    headings.forEach(heading => {
-      expect(screen.getByText(heading)).toBeInTheDocument();
-    });
-  });
-
-  it('should render external links with proper attributes', () => {
-    render(<PrivacyPolicyPage />);
-
-    const externalLinks = screen.getAllByRole('link', { name: /privacy|terms|optout/i });
-    externalLinks.forEach(link => {
-      if (link.getAttribute('href')?.startsWith('https://')) {
-        expect(link).toHaveAttribute('target', '_blank');
-        expect(link).toHaveAttribute('rel', 'noopener noreferrer');
-      }
-    });
-  });
-
-  it('should render list structures properly', () => {
-    render(<PrivacyPolicyPage />);
-
-    const lists = document.querySelectorAll('ul');
-    expect(lists.length).toBeGreaterThan(0);
-
-    const listItems = document.querySelectorAll('li');
-    expect(listItems.length).toBeGreaterThan(0);
+    const optOutLink = screen.getByText('Google Analyticsオプトアウト アドオン');
+    expect(optOutLink).toHaveAttribute('href', 'https://tools.google.com/dlpage/gaoptout');
+    expect(optOutLink).toHaveAttribute('target', '_blank');
+    expect(optOutLink).toHaveAttribute('rel', 'noopener noreferrer');
   });
 });

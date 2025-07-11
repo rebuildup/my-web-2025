@@ -1,141 +1,265 @@
-/* ultrathink - minimal style system */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;700&family=Shippori+Antique+B1&display=swap');
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme {
+  --color-primary: #0000ff;
+  --color-base: #222222;
+  --color-background: #222222;
+  --color-text: #ffffff;
+  --color-text-muted: #cccccc;
 
-:root {
-  /* Essential colors only */
-  --primary: #0000ff;
-  --background: #222222;
-  --foreground: #ffffff;
+  --breakpoint-xs: 384px;
+  --breakpoint-md: 768px;
+  --breakpoint-xl: 1152px;
+  --breakpoint-2xl: 1536px;
 
-  /* Essential spacing (Golden Ratio) */
-  --space: 1rem;
-  --space-lg: 1.618rem;
+  --max-width-grid-xs: 384px;
+  --max-width-grid-md: 768px;
+  --max-width-grid-xl: 1152px;
+  --max-width-grid-2xl: 1536px;
+
+  --font-family-neue-haas: neue-haas-grotesk-display, sans-serif;
+  --font-family-zen-kaku: zen-kaku-gothic-new, sans-serif;
+  --font-family-noto-sans: var(--font-noto-sans-jp), 'Noto Sans JP', sans-serif;
+  --font-family-shippori: var(--font-shippori-antique), 'Shippori Antique B1', serif;
 }
 
-/* Base reset */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* Container Grid Classes - 固定幅・中央揃え・384px未満でスケーリング */
+@layer utilities {
+  .container-grid {
+    /* 固定幅設定 - ブレークポイントごとに決まった幅 */
+    width: var(--max-width-grid-xs); /* デフォルト384px */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
+    /* 384px未満でのスケーリング */
+    transform-origin: top center;
+  }
+
+  /* 384px未満の場合：画面幅に合わせて動的スケーリング */
+  @media (max-width: 383px) {
+    .container-grid {
+      transform: scale(calc(100vw / 384));
+      transform-origin: top center;
+    }
+  }
+
+  /* 384px以上：固定幅に変更 */
+  @media (min-width: 384px) {
+    .container-grid {
+      width: var(--max-width-grid-xs);
+      padding-left: 2rem;
+      padding-right: 2rem;
+      transform: none;
+    }
+  }
+
+  /* 768px以上：2グリッド幅 */
+  @media (min-width: 768px) {
+    .container-grid {
+      width: var(--max-width-grid-md);
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+  }
+
+  /* 1152px以上：3グリッド幅 */
+  @media (min-width: 1152px) {
+    .container-grid {
+      width: var(--max-width-grid-xl);
+      padding-left: 4rem;
+      padding-right: 4rem;
+    }
+  }
+
+  /* 1536px以上：4グリッド幅 */
+  @media (min-width: 1536px) {
+    .container-grid {
+      width: var(--max-width-grid-2xl);
+      padding-left: 6rem;
+      padding-right: 6rem;
+    }
+  }
+
+  /* デバッグ用：グリッド境界線の表示 */
+  .container-grid-debug {
+    position: relative;
+  }
+
+  .container-grid-debug::before,
+  .container-grid-debug::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: rgba(0, 0, 255, 0.5);
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .container-grid-debug::before {
+    left: 50%;
+    transform: translateX(calc(-50% - var(--max-width-grid-xs) / 2));
+  }
+
+  .container-grid-debug::after {
+    right: 50%;
+    transform: translateX(calc(50% + var(--max-width-grid-xs) / 2));
+  }
+
+  @media (min-width: 768px) {
+    .container-grid-debug::before {
+      transform: translateX(calc(-50% - var(--max-width-grid-md) / 2));
+    }
+    .container-grid-debug::after {
+      transform: translateX(calc(50% + var(--max-width-grid-md) / 2));
+    }
+  }
+
+  @media (min-width: 1152px) {
+    .container-grid-debug::before {
+      transform: translateX(calc(-50% - var(--max-width-grid-xl) / 2));
+    }
+    .container-grid-debug::after {
+      transform: translateX(calc(50% + var(--max-width-grid-xl) / 2));
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .container-grid-debug::before {
+      transform: translateX(calc(-50% - var(--max-width-grid-2xl) / 2));
+    }
+    .container-grid-debug::after {
+      transform: translateX(calc(50% + var(--max-width-grid-2xl) / 2));
+    }
+  }
 }
 
-/* Body */
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: 'Noto Sans JP', sans-serif;
+/* Font Classes */
+.neue-haas-grotesk-display {
+  font-family: var(--font-family-neue-haas);
+  font-weight: 700;
+  font-style: italic;
+}
+
+.zen-kaku-gothic-new {
+  font-family: var(--font-family-zen-kaku);
+  font-weight: 700;
+  font-style: normal;
+}
+
+.noto-sans-jp-light {
+  font-family: var(--font-family-noto-sans);
+  font-optical-sizing: auto;
   font-weight: 300;
   font-style: italic;
-  line-height: 1.618;
-  -webkit-font-smoothing: antialiased;
 }
 
-/* Typography */
+.noto-sans-jp-regular {
+  font-family: var(--font-family-noto-sans);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.shippori-antique-b1-regular {
+  font-family: var(--font-family-shippori);
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Global Base Styles */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-family-noto-sans);
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* Remove all shadows, border radius, and gradients */
+*,
+*::before,
+*::after {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background-image: none !important;
+}
+
+/* Basic elements styling */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: neue-haas-grotesk-display, sans-serif;
+  font-family: var(--font-family-neue-haas);
   font-weight: 700;
   font-style: italic;
-  line-height: 1.2;
+  color: var(--color-text);
 }
 
-/* Links */
 a {
-  color: inherit;
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--color-primary);
   text-decoration: none;
 }
 
-/* Focus */
-:focus {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-/* Adobe Fonts */
-.font-display {
-  font-family: neue-haas-grotesk-display, sans-serif;
-  font-weight: 700;
-  font-style: italic;
-}
-
-.font-accent {
-  font-family: zen-kaku-gothic-new, sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-/* Google Fonts */
-.font-japanese {
-  font-family: 'Shippori Antique B1', sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-/* Essential utilities */
-.text-primary {
-  color: var(--primary);
-}
-.bg-primary {
-  background: var(--primary);
-}
-
-/* Form elements */
-input,
-textarea,
-select {
-  background: transparent;
-  border: 1px solid var(--foreground);
-  color: var(--foreground);
-  padding: 0.5rem;
-  width: 100%;
-}
-
 button {
-  background: transparent;
-  border: 1px solid var(--foreground);
-  color: var(--foreground);
-  cursor: pointer;
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  border: none;
   padding: 0.5rem 1rem;
-  transition: all 0.2s;
+  cursor: pointer;
+  font-family: var(--font-family-noto-sans);
+  font-weight: 400;
 }
 
-button:hover:not(:disabled) {
-  background: var(--foreground);
-  color: var(--background);
+button:hover {
+  background-color: var(--color-primary);
+  opacity: 0.8;
 }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+/* Card styles - minimal, functional only */
+.card {
+  background-color: var(--color-base);
+  border: 1px solid var(--color-primary);
+  padding: 1rem;
 }
 
-/* Images */
-img {
+.card:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-base);
+}
+
+/* Grid system integration */
+.grid-system {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Ensure proper centering for all content */
+.container-grid {
   display: block;
-  height: auto;
-  max-width: 100%;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  :root {
-    --space: 0.75rem;
-    --space-lg: 1.25rem;
-  }
-}
-
-/* Print */
-@media print {
-  body {
-    background: white;
-    color: black;
-  }
+  text-align: left;
 }

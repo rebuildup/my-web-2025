@@ -148,7 +148,7 @@
           "specs": [
             {
               "title": "should display the main site navigation",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -161,58 +161,18 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 7961,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:9:38",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 38,
-                          "line": 9
-                        },
-                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Check main title\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'My Web 2025'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[90m// Check category cards by looking for specific h2 elements in the navigation\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mconst\u001b[39m categories \u001b[33m=\u001b[39m [\u001b[32m'Portfolio'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Tools'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Workshop'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'About'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Contact'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Admin'\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 38,
-                            "line": 9
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Check main title\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'My Web 2025'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[90m// Check category cards by looking for specific h2 elements in the navigation\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mconst\u001b[39m categories \u001b[33m=\u001b[39m [\u001b[32m'Portfolio'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Tools'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Workshop'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'About'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Contact'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Admin'\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:9:38\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3076,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-08T06:33:55.550Z",
+                      "startTime": "2025-07-11T11:36:38.974Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 38,
-                        "line": 9
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "84e7eb052e8cbae1c9f0-7d2881bee6513a638bf7",
@@ -222,7 +182,7 @@
             },
             {
               "title": "should have working category links",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -235,58 +195,18 @@
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 8612,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator(':root')\nExpected string: \u001b[32m\"http://localhost:3000/\u001b[7mportfolio\u001b[27m\"\u001b[39m\nReceived string: \u001b[31m\"http://localhost:3000/\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator(':root')\u001b[22m\n\u001b[2m    8 × locator resolved to <html lang=\"ja\" class=\" wf-neue-haas-grotesk-display-n7-active wf-neue-haas-grotesk-display-i7-active wf-zen-kaku-gothic-new-n9-active wf-zen-kaku-gothic-new-n7-active wf-active\">…</html>\u001b[22m\n\u001b[2m      - unexpected value \"http://localhost:3000/\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator(':root')\nExpected string: \u001b[32m\"http://localhost:3000/\u001b[7mportfolio\u001b[27m\"\u001b[39m\nReceived string: \u001b[31m\"http://localhost:3000/\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator(':root')\u001b[22m\n\u001b[2m    8 × locator resolved to <html lang=\"ja\" class=\" wf-neue-haas-grotesk-display-n7-active wf-neue-haas-grotesk-display-i7-active wf-zen-kaku-gothic-new-n9-active wf-zen-kaku-gothic-new-n7-active wf-active\">…</html>\u001b[22m\n\u001b[2m      - unexpected value \"http://localhost:3000/\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:24:24",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 24,
-                          "line": 24
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 22 |\u001b[39m     \u001b[90m// Test Portfolio link - click on the link containing Portfolio h2\u001b[39m\n \u001b[90m 23 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'a:has(h2:text(\"Portfolio\"))'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 24 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/portfolio'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 25 |\u001b[39m\n \u001b[90m 26 |\u001b[39m     \u001b[90m// Go back to homepage\u001b[39m\n \u001b[90m 27 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 24,
-                            "line": 24
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator(':root')\nExpected string: \u001b[32m\"http://localhost:3000/\u001b[7mportfolio\u001b[27m\"\u001b[39m\nReceived string: \u001b[31m\"http://localhost:3000/\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator(':root')\u001b[22m\n\u001b[2m    8 × locator resolved to <html lang=\"ja\" class=\" wf-neue-haas-grotesk-display-n7-active wf-neue-haas-grotesk-display-i7-active wf-zen-kaku-gothic-new-n9-active wf-zen-kaku-gothic-new-n7-active wf-active\">…</html>\u001b[22m\n\u001b[2m      - unexpected value \"http://localhost:3000/\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 22 |\u001b[39m     \u001b[90m// Test Portfolio link - click on the link containing Portfolio h2\u001b[39m\n \u001b[90m 23 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'a:has(h2:text(\"Portfolio\"))'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 24 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/portfolio'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 25 |\u001b[39m\n \u001b[90m 26 |\u001b[39m     \u001b[90m// Go back to homepage\u001b[39m\n \u001b[90m 27 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:24:24\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 6585,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-08T06:33:55.538Z",
+                      "startTime": "2025-07-11T11:36:38.991Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-working-category-links-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-working-category-links-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-working-category-links-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 24,
-                        "line": 24
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "84e7eb052e8cbae1c9f0-74c92ce7ce821e7ea11f",
@@ -295,7 +215,7 @@
               "column": 7
             },
             {
-              "title": "should have functional search",
+              "title": "should have search link navigation",
               "ok": true,
               "tags": [],
               "tests": [
@@ -310,12 +230,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 8460,
+                      "duration": 5092,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-08T06:33:55.554Z",
+                      "startTime": "2025-07-11T11:36:38.952Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -323,14 +243,14 @@
                   "status": "expected"
                 }
               ],
-              "id": "84e7eb052e8cbae1c9f0-90869d3e9b34e33054fe",
+              "id": "84e7eb052e8cbae1c9f0-3138b3c37d01ced4325b",
               "file": "homepage.spec.ts",
-              "line": 34,
+              "line": 41,
               "column": 7
             },
             {
               "title": "should display recent updates section",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -343,63 +263,23 @@
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 7653,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:52:46",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 46,
-                          "line": 52
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// Check recent updates section\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=最新の更新'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 |\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[90m// Check for update items\u001b[39m\n \u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=React Portfolio Website'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 46,
-                            "line": 52
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n\n\n\u001b[0m \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// Check recent updates section\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=最新の更新'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 |\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[90m// Check for update items\u001b[39m\n \u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=React Portfolio Website'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:52:46\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3653,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-08T06:33:55.538Z",
+                      "startTime": "2025-07-11T11:36:38.985Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 46,
-                        "line": 52
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "84e7eb052e8cbae1c9f0-4959ebab6a869141456a",
               "file": "homepage.spec.ts",
-              "line": 48,
+              "line": 53,
               "column": 7
             },
             {
@@ -418,12 +298,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 3155,
+                      "duration": 4851,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-08T06:33:55.568Z",
+                      "startTime": "2025-07-11T11:36:38.988Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -433,12 +313,12 @@
               ],
               "id": "84e7eb052e8cbae1c9f0-8440272ffe6ebb290b7e",
               "file": "homepage.spec.ts",
-              "line": 60,
+              "line": 65,
               "column": 7
             },
             {
               "title": "should have proper meta tags and SEO",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -451,63 +331,23 @@
                     {
                       "workerIndex": 5,
                       "parallelIndex": 5,
-                      "status": "failed",
-                      "duration": 8588,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:77:35",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 35,
-                          "line": 77
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[90m// Check meta description\u001b[39m\n \u001b[90m 76 |\u001b[39m     \u001b[36mconst\u001b[39m metaDescription \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'meta[name=\"description\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m expect(metaDescription)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'content'\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/portfolio.*tools.*workshop/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m\n \u001b[90m 79 |\u001b[39m     \u001b[90m// Check language\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m htmlLang \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'html'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 35,
-                            "line": 77
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[90m// Check meta description\u001b[39m\n \u001b[90m 76 |\u001b[39m     \u001b[36mconst\u001b[39m metaDescription \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'meta[name=\"description\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m expect(metaDescription)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'content'\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/portfolio.*tools.*workshop/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m\n \u001b[90m 79 |\u001b[39m     \u001b[90m// Check language\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m htmlLang \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'html'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:77:35\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3733,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-08T06:33:55.594Z",
+                      "startTime": "2025-07-11T11:36:38.990Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 35,
-                        "line": 77
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "84e7eb052e8cbae1c9f0-ff33820a48b8684ae26e",
               "file": "homepage.spec.ts",
-              "line": 69,
+              "line": 75,
               "column": 7
             },
             {
@@ -526,12 +366,12 @@
                       "workerIndex": 6,
                       "parallelIndex": 6,
                       "status": "passed",
-                      "duration": 2919,
+                      "duration": 4713,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-08T06:33:55.561Z",
+                      "startTime": "2025-07-11T11:36:38.999Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -541,12 +381,12 @@
               ],
               "id": "84e7eb052e8cbae1c9f0-4be05f5cc70b6ba15efc",
               "file": "homepage.spec.ts",
-              "line": 84,
+              "line": 86,
               "column": 7
             },
             {
               "title": "should have proper contrast and accessibility",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -559,68 +399,28 @@
                     {
                       "workerIndex": 7,
                       "parallelIndex": 7,
-                      "status": "failed",
-                      "duration": 7856,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    9 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    9 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:107:38",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 38,
-                          "line": 107
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 105 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h2'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m8\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// 6 category titles + Site search + Recent updates\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[90m// Check for proper link accessibility\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[36mconst\u001b[39m links \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'a'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 38,
-                            "line": 107
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    9 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 105 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h2'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m8\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// 6 category titles + Site search + Recent updates\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[90m// Check for proper link accessibility\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[36mconst\u001b[39m links \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'a'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:107:38\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3263,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-08T06:33:55.604Z",
+                      "startTime": "2025-07-11T11:36:39.031Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 38,
-                        "line": 107
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "84e7eb052e8cbae1c9f0-e9c7288a014a6ee74493",
               "file": "homepage.spec.ts",
-              "line": 102,
+              "line": 103,
               "column": 7
             },
             {
               "title": "should load within performance thresholds",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -633,68 +433,28 @@
                     {
                       "workerIndex": 8,
                       "parallelIndex": 8,
-                      "status": "failed",
-                      "duration": 4855,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3000\u001b[39m\nReceived:   \u001b[31m3987\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3000\u001b[39m\nReceived:   \u001b[31m3987\u001b[39m\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:132:22",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 22,
-                          "line": 132
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 130 |\u001b[39m     \u001b[90m// Check that page loads within 3 seconds\u001b[39m\n \u001b[90m 131 |\u001b[39m     \u001b[36mconst\u001b[39m loadTime \u001b[33m=\u001b[39m \u001b[33mDate\u001b[39m\u001b[33m.\u001b[39mnow() \u001b[33m-\u001b[39m startTime\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 132 |\u001b[39m     expect(loadTime)\u001b[33m.\u001b[39mtoBeLessThan(\u001b[35m3000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 133 |\u001b[39m\n \u001b[90m 134 |\u001b[39m     \u001b[90m// Check that main content is visible\u001b[39m\n \u001b[90m 135 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 22,
-                            "line": 132
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3000\u001b[39m\nReceived:   \u001b[31m3987\u001b[39m\n\n\u001b[0m \u001b[90m 130 |\u001b[39m     \u001b[90m// Check that page loads within 3 seconds\u001b[39m\n \u001b[90m 131 |\u001b[39m     \u001b[36mconst\u001b[39m loadTime \u001b[33m=\u001b[39m \u001b[33mDate\u001b[39m\u001b[33m.\u001b[39mnow() \u001b[33m-\u001b[39m startTime\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 132 |\u001b[39m     expect(loadTime)\u001b[33m.\u001b[39mtoBeLessThan(\u001b[35m3000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 133 |\u001b[39m\n \u001b[90m 134 |\u001b[39m     \u001b[90m// Check that main content is visible\u001b[39m\n \u001b[90m 135 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:132:22\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 5286,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-08T06:33:55.609Z",
+                      "startTime": "2025-07-11T11:36:39.082Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-load-within-performance-thresholds-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-load-within-performance-thresholds-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-load-within-performance-thresholds-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 22,
-                        "line": 132
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "84e7eb052e8cbae1c9f0-751386f98beddfdb9d2d",
               "file": "homepage.spec.ts",
-              "line": 125,
+              "line": 126,
               "column": 7
             },
             {
               "title": "should handle keyboard navigation",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -707,2063 +467,23 @@
                     {
                       "workerIndex": 9,
                       "parallelIndex": 9,
-                      "status": "failed",
-                      "duration": 8916,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator(':root')\nExpected string: \u001b[32m\"http://localhost:3000/\u001b[7mportfolio\u001b[27m\"\u001b[39m\nReceived string: \u001b[31m\"http://localhost:3000/\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator(':root')\u001b[22m\n\u001b[2m    8 × locator resolved to <html lang=\"ja\" class=\" wf-neue-haas-grotesk-display-n7-active wf-neue-haas-grotesk-display-i7-active wf-zen-kaku-gothic-new-n9-active wf-zen-kaku-gothic-new-n7-active wf-active\">…</html>\u001b[22m\n\u001b[2m      - unexpected value \"http://localhost:3000/\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator(':root')\nExpected string: \u001b[32m\"http://localhost:3000/\u001b[7mportfolio\u001b[27m\"\u001b[39m\nReceived string: \u001b[31m\"http://localhost:3000/\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator(':root')\u001b[22m\n\u001b[2m    8 × locator resolved to <html lang=\"ja\" class=\" wf-neue-haas-grotesk-display-n7-active wf-neue-haas-grotesk-display-i7-active wf-zen-kaku-gothic-new-n9-active wf-zen-kaku-gothic-new-n7-active wf-active\">…</html>\u001b[22m\n\u001b[2m      - unexpected value \"http://localhost:3000/\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:151:24",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 24,
-                          "line": 151
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 149 |\u001b[39m\n \u001b[90m 150 |\u001b[39m     \u001b[90m// Should navigate to the linked page\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 151 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/portfolio'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 152 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 153 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 154 |\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 24,
-                            "line": 151
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator(':root')\nExpected string: \u001b[32m\"http://localhost:3000/\u001b[7mportfolio\u001b[27m\"\u001b[39m\nReceived string: \u001b[31m\"http://localhost:3000/\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator(':root')\u001b[22m\n\u001b[2m    8 × locator resolved to <html lang=\"ja\" class=\" wf-neue-haas-grotesk-display-n7-active wf-neue-haas-grotesk-display-i7-active wf-zen-kaku-gothic-new-n9-active wf-zen-kaku-gothic-new-n7-active wf-active\">…</html>\u001b[22m\n\u001b[2m      - unexpected value \"http://localhost:3000/\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 149 |\u001b[39m\n \u001b[90m 150 |\u001b[39m     \u001b[90m// Should navigate to the linked page\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 151 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/portfolio'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 152 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 153 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 154 |\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:151:24\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 5420,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-08T06:33:55.614Z",
+                      "startTime": "2025-07-11T11:36:39.005Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-handle-keyboard-navigation-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-handle-keyboard-navigation-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-handle-keyboard-navigation-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 24,
-                        "line": 151
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "84e7eb052e8cbae1c9f0-90d98250be24d56057d6",
               "file": "homepage.spec.ts",
-              "line": 139,
-              "column": 7
-            },
-            {
-              "title": "should display the main site navigation",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
-                    {
-                      "workerIndex": 12,
-                      "parallelIndex": 6,
-                      "status": "failed",
-                      "duration": 9634,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:9:38",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 38,
-                          "line": 9
-                        },
-                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Check main title\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'My Web 2025'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[90m// Check category cards by looking for specific h2 elements in the navigation\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mconst\u001b[39m categories \u001b[33m=\u001b[39m [\u001b[32m'Portfolio'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Tools'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Workshop'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'About'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Contact'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Admin'\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 38,
-                            "line": 9
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Check main title\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'My Web 2025'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[90m// Check category cards by looking for specific h2 elements in the navigation\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mconst\u001b[39m categories \u001b[33m=\u001b[39m [\u001b[32m'Portfolio'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Tools'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Workshop'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'About'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Contact'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Admin'\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:9:38\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:05.454Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-firefox\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-firefox\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-firefox\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 38,
-                        "line": 9
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-aa31f59ce62ee493a05b",
-              "file": "homepage.spec.ts",
-              "line": 5,
-              "column": 7
-            },
-            {
-              "title": "should have working category links",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
-                    {
-                      "workerIndex": 11,
-                      "parallelIndex": 4,
-                      "status": "passed",
-                      "duration": 9293,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:05.522Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-24d516eb91a6e85f6224",
-              "file": "homepage.spec.ts",
-              "line": 19,
-              "column": 7
-            },
-            {
-              "title": "should have functional search",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
-                    {
-                      "workerIndex": 10,
-                      "parallelIndex": 8,
-                      "status": "passed",
-                      "duration": 3312,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:05.459Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-eff8262ad561f43d2df3",
-              "file": "homepage.spec.ts",
-              "line": 34,
-              "column": 7
-            },
-            {
-              "title": "should display recent updates section",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
-                    {
-                      "workerIndex": 15,
-                      "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 9281,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:52:46",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 46,
-                          "line": 52
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// Check recent updates section\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=最新の更新'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 |\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[90m// Check for update items\u001b[39m\n \u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=React Portfolio Website'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 46,
-                            "line": 52
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n\n\n\u001b[0m \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// Check recent updates section\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=最新の更新'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 |\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[90m// Check for update items\u001b[39m\n \u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=React Portfolio Website'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:52:46\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:05.521Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-firefox\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-firefox\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-firefox\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 46,
-                        "line": 52
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-28a8b0f5e347ac974ed3",
-              "file": "homepage.spec.ts",
-              "line": 48,
-              "column": 7
-            },
-            {
-              "title": "should have proper footer",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
-                    {
-                      "workerIndex": 13,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 5227,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:05.502Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-4546a83fbde1f90ba090",
-              "file": "homepage.spec.ts",
-              "line": 60,
-              "column": 7
-            },
-            {
-              "title": "should have proper meta tags and SEO",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
-                    {
-                      "workerIndex": 14,
-                      "parallelIndex": 7,
-                      "status": "failed",
-                      "duration": 7780,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:77:35",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 35,
-                          "line": 77
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[90m// Check meta description\u001b[39m\n \u001b[90m 76 |\u001b[39m     \u001b[36mconst\u001b[39m metaDescription \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'meta[name=\"description\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m expect(metaDescription)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'content'\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/portfolio.*tools.*workshop/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m\n \u001b[90m 79 |\u001b[39m     \u001b[90m// Check language\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m htmlLang \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'html'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 35,
-                            "line": 77
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[90m// Check meta description\u001b[39m\n \u001b[90m 76 |\u001b[39m     \u001b[36mconst\u001b[39m metaDescription \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'meta[name=\"description\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m expect(metaDescription)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'content'\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/portfolio.*tools.*workshop/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m\n \u001b[90m 79 |\u001b[39m     \u001b[90m// Check language\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m htmlLang \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'html'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:77:35\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:05.517Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-firefox\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-firefox\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-firefox\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 35,
-                        "line": 77
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-a93425ae2b4ae9b1aa99",
-              "file": "homepage.spec.ts",
-              "line": 69,
-              "column": 7
-            },
-            {
-              "title": "should be responsive on mobile",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
-                    {
-                      "workerIndex": 16,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 5422,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:05.823Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-65f10bd92b89436ad57b",
-              "file": "homepage.spec.ts",
-              "line": 84,
-              "column": 7
-            },
-            {
-              "title": "should have proper contrast and accessibility",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
-                    {
-                      "workerIndex": 17,
-                      "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 9158,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    8 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    8 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:107:38",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 38,
-                          "line": 107
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 105 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h2'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m8\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// 6 category titles + Site search + Recent updates\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[90m// Check for proper link accessibility\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[36mconst\u001b[39m links \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'a'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 38,
-                            "line": 107
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    8 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 105 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h2'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m8\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// 6 category titles + Site search + Recent updates\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[90m// Check for proper link accessibility\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[36mconst\u001b[39m links \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'a'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:107:38\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:05.900Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-firefox\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-firefox\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-firefox\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 38,
-                        "line": 107
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-c2df890c1398d3276f43",
-              "file": "homepage.spec.ts",
-              "line": 102,
-              "column": 7
-            },
-            {
-              "title": "should load within performance thresholds",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
-                    {
-                      "workerIndex": 18,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 3765,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:06.012Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-81fdea49a79e9db982ac",
-              "file": "homepage.spec.ts",
-              "line": 125,
-              "column": 7
-            },
-            {
-              "title": "should handle keyboard navigation",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [
-                    {
-                      "workerIndex": 19,
-                      "parallelIndex": 9,
-                      "status": "passed",
-                      "duration": 7021,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:06.141Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-fcdbeef1e630f6d9e367",
-              "file": "homepage.spec.ts",
-              "line": 139,
-              "column": 7
-            },
-            {
-              "title": "should display the main site navigation",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
-                    {
-                      "workerIndex": 20,
-                      "parallelIndex": 8,
-                      "status": "failed",
-                      "duration": 8009,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:9:38",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 38,
-                          "line": 9
-                        },
-                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Check main title\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'My Web 2025'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[90m// Check category cards by looking for specific h2 elements in the navigation\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mconst\u001b[39m categories \u001b[33m=\u001b[39m [\u001b[32m'Portfolio'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Tools'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Workshop'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'About'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Contact'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Admin'\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 38,
-                            "line": 9
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Check main title\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'My Web 2025'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[90m// Check category cards by looking for specific h2 elements in the navigation\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mconst\u001b[39m categories \u001b[33m=\u001b[39m [\u001b[32m'Portfolio'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Tools'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Workshop'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'About'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Contact'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Admin'\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:9:38\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:13.264Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-webkit\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-webkit\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-webkit\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 38,
-                        "line": 9
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-c0908d7ae21423a23fe0",
-              "file": "homepage.spec.ts",
-              "line": 5,
-              "column": 7
-            },
-            {
-              "title": "should have working category links",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 7798,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:14.852Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-64268ff970ab2c01db93",
-              "file": "homepage.spec.ts",
-              "line": 19,
-              "column": 7
-            },
-            {
-              "title": "should have functional search",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
-                    {
-                      "workerIndex": 22,
-                      "parallelIndex": 7,
-                      "status": "passed",
-                      "duration": 3634,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:17.854Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-9247764c3a3b32a731f0",
-              "file": "homepage.spec.ts",
-              "line": 34,
-              "column": 7
-            },
-            {
-              "title": "should display recent updates section",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
-                    {
-                      "workerIndex": 23,
-                      "parallelIndex": 4,
-                      "status": "failed",
-                      "duration": 7439,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:52:46",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 46,
-                          "line": 52
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// Check recent updates section\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=最新の更新'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 |\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[90m// Check for update items\u001b[39m\n \u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=React Portfolio Website'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 46,
-                            "line": 52
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n\n\n\u001b[0m \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// Check recent updates section\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=最新の更新'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 |\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[90m// Check for update items\u001b[39m\n \u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=React Portfolio Website'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:52:46\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:19.232Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-webkit\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-webkit\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-webkit\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 46,
-                        "line": 52
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-ee8927c73421fc784c66",
-              "file": "homepage.spec.ts",
-              "line": 48,
-              "column": 7
-            },
-            {
-              "title": "should have proper footer",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
-                    {
-                      "workerIndex": 24,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2397,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:19.556Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-64b28ae2c42c6d6a27f7",
-              "file": "homepage.spec.ts",
-              "line": 60,
-              "column": 7
-            },
-            {
-              "title": "should have proper meta tags and SEO",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
-                    {
-                      "workerIndex": 26,
-                      "parallelIndex": 2,
-                      "status": "failed",
-                      "duration": 7862,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:77:35",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 35,
-                          "line": 77
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[90m// Check meta description\u001b[39m\n \u001b[90m 76 |\u001b[39m     \u001b[36mconst\u001b[39m metaDescription \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'meta[name=\"description\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m expect(metaDescription)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'content'\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/portfolio.*tools.*workshop/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m\n \u001b[90m 79 |\u001b[39m     \u001b[90m// Check language\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m htmlLang \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'html'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 35,
-                            "line": 77
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[90m// Check meta description\u001b[39m\n \u001b[90m 76 |\u001b[39m     \u001b[36mconst\u001b[39m metaDescription \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'meta[name=\"description\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m expect(metaDescription)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'content'\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/portfolio.*tools.*workshop/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m\n \u001b[90m 79 |\u001b[39m     \u001b[90m// Check language\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m htmlLang \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'html'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:77:35\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:20.181Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-webkit\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-webkit\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-webkit\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 35,
-                        "line": 77
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-3235503f17b5c1543475",
-              "file": "homepage.spec.ts",
-              "line": 69,
-              "column": 7
-            },
-            {
-              "title": "should be responsive on mobile",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
-                    {
-                      "workerIndex": 27,
-                      "parallelIndex": 9,
-                      "status": "passed",
-                      "duration": 2456,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:20.918Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-d2cc83b71263bf4517ff",
-              "file": "homepage.spec.ts",
-              "line": 84,
-              "column": 7
-            },
-            {
-              "title": "should have proper contrast and accessibility",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
-                    {
-                      "workerIndex": 25,
-                      "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 8169,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    8 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    8 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:107:38",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 38,
-                          "line": 107
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 105 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h2'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m8\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// 6 category titles + Site search + Recent updates\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[90m// Check for proper link accessibility\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[36mconst\u001b[39m links \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'a'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 38,
-                            "line": 107
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    8 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 105 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h2'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m8\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// 6 category titles + Site search + Recent updates\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[90m// Check for proper link accessibility\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[36mconst\u001b[39m links \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'a'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:107:38\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:19.990Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-webkit\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-webkit\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-webkit\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 38,
-                        "line": 107
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-2ee19d37e282121f9115",
-              "file": "homepage.spec.ts",
-              "line": 102,
-              "column": 7
-            },
-            {
-              "title": "should load within performance thresholds",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
-                    {
-                      "workerIndex": 28,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 2710,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:21.350Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-03b8726dee512abd7819",
-              "file": "homepage.spec.ts",
-              "line": 125,
-              "column": 7
-            },
-            {
-              "title": "should handle keyboard navigation",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [
-                    {
-                      "workerIndex": 29,
-                      "parallelIndex": 6,
-                      "status": "passed",
-                      "duration": 5276,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:22.894Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-40758f877b4607f0cd87",
-              "file": "homepage.spec.ts",
-              "line": 139,
-              "column": 7
-            },
-            {
-              "title": "should display the main site navigation",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 30,
-                      "parallelIndex": 8,
-                      "status": "failed",
-                      "duration": 7003,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:9:38",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 38,
-                          "line": 9
-                        },
-                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Check main title\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'My Web 2025'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[90m// Check category cards by looking for specific h2 elements in the navigation\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mconst\u001b[39m categories \u001b[33m=\u001b[39m [\u001b[32m'Portfolio'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Tools'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Workshop'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'About'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Contact'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Admin'\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 38,
-                            "line": 9
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Check main title\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'My Web 2025'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[90m// Check category cards by looking for specific h2 elements in the navigation\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mconst\u001b[39m categories \u001b[33m=\u001b[39m [\u001b[32m'Portfolio'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Tools'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Workshop'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'About'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Contact'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Admin'\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:9:38\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:23.400Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-Mobile-Chrome\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 38,
-                        "line": 9
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-9b75485a29034635255d",
-              "file": "homepage.spec.ts",
-              "line": 5,
-              "column": 7
-            },
-            {
-              "title": "should have working category links",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 31,
-                      "parallelIndex": 7,
-                      "status": "passed",
-                      "duration": 7221,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:23.571Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-8dd662670dc320fa389b",
-              "file": "homepage.spec.ts",
-              "line": 19,
-              "column": 7
-            },
-            {
-              "title": "should have functional search",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 32,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3660,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:23.983Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-a4383027162ca0c20553",
-              "file": "homepage.spec.ts",
-              "line": 34,
-              "column": 7
-            },
-            {
-              "title": "should display recent updates section",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 33,
-                      "parallelIndex": 5,
-                      "status": "failed",
-                      "duration": 7579,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:52:46",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 46,
-                          "line": 52
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// Check recent updates section\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=最新の更新'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 |\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[90m// Check for update items\u001b[39m\n \u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=React Portfolio Website'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 46,
-                            "line": 52
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n\n\n\u001b[0m \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// Check recent updates section\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=最新の更新'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 |\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[90m// Check for update items\u001b[39m\n \u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=React Portfolio Website'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:52:46\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:24.870Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-Mobile-Chrome\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 46,
-                        "line": 52
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-e93a472b53422d09354a",
-              "file": "homepage.spec.ts",
-              "line": 48,
-              "column": 7
-            },
-            {
-              "title": "should have proper footer",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 34,
-                      "parallelIndex": 9,
-                      "status": "passed",
-                      "duration": 2981,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:25.890Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-d9899bb5bbcc0a6f231a",
-              "file": "homepage.spec.ts",
-              "line": 60,
-              "column": 7
-            },
-            {
-              "title": "should have proper meta tags and SEO",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 35,
-                      "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 7953,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:77:35",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 35,
-                          "line": 77
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[90m// Check meta description\u001b[39m\n \u001b[90m 76 |\u001b[39m     \u001b[36mconst\u001b[39m metaDescription \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'meta[name=\"description\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m expect(metaDescription)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'content'\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/portfolio.*tools.*workshop/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m\n \u001b[90m 79 |\u001b[39m     \u001b[90m// Check language\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m htmlLang \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'html'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 35,
-                            "line": 77
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[90m// Check meta description\u001b[39m\n \u001b[90m 76 |\u001b[39m     \u001b[36mconst\u001b[39m metaDescription \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'meta[name=\"description\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m expect(metaDescription)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'content'\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/portfolio.*tools.*workshop/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m\n \u001b[90m 79 |\u001b[39m     \u001b[90m// Check language\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m htmlLang \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'html'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:77:35\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:27.230Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-Mobile-Chrome\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 35,
-                        "line": 77
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-20c8289018176c668fbc",
-              "file": "homepage.spec.ts",
-              "line": 69,
-              "column": 7
-            },
-            {
-              "title": "should be responsive on mobile",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 36,
-                      "parallelIndex": 4,
-                      "status": "passed",
-                      "duration": 2104,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:29.727Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-66f0794f6b52fb288e71",
-              "file": "homepage.spec.ts",
-              "line": 84,
-              "column": 7
-            },
-            {
-              "title": "should have proper contrast and accessibility",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 32,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 7795,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    9 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    9 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:107:38",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 38,
-                          "line": 107
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 105 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h2'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m8\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// 6 category titles + Site search + Recent updates\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[90m// Check for proper link accessibility\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[36mconst\u001b[39m links \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'a'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 38,
-                            "line": 107
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    9 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 105 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h2'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m8\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// 6 category titles + Site search + Recent updates\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[90m// Check for proper link accessibility\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[36mconst\u001b[39m links \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'a'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:107:38\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:27.864Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-Mobile-Chrome\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 38,
-                        "line": 107
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-e31f1aace49a2a25c1f8",
-              "file": "homepage.spec.ts",
-              "line": 102,
-              "column": 7
-            },
-            {
-              "title": "should load within performance thresholds",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 37,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 2007,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:30.643Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-9e19397b9026c91c431d",
-              "file": "homepage.spec.ts",
-              "line": 125,
-              "column": 7
-            },
-            {
-              "title": "should handle keyboard navigation",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 39,
-                      "parallelIndex": 6,
-                      "status": "passed",
-                      "duration": 2990,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:31.002Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-9996717d0e3c5e191b4b",
-              "file": "homepage.spec.ts",
-              "line": 139,
-              "column": 7
-            },
-            {
-              "title": "should display the main site navigation",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [
-                    {
-                      "workerIndex": 38,
-                      "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 7671,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:9:38",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 38,
-                          "line": 9
-                        },
-                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Check main title\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'My Web 2025'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[90m// Check category cards by looking for specific h2 elements in the navigation\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mconst\u001b[39m categories \u001b[33m=\u001b[39m [\u001b[32m'Portfolio'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Tools'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Workshop'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'About'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Contact'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Admin'\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 38,
-                            "line": 9
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h1')\nExpected string: \u001b[32m\"My Web 2025\"\u001b[39m\nReceived string: \u001b[31m\"Welcome to My Digital Workspace\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1')\u001b[22m\n\u001b[2m    8 × locator resolved to <h1 class=\"font-display text-foreground xs:text-7xl mb-10 text-6xl md:text-8xl\">Welcome to My Digital Workspace</h1>\u001b[22m\n\u001b[2m      - unexpected value \"Welcome to My Digital Workspace\"\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Check main title\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'My Web 2025'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[90m// Check category cards by looking for specific h2 elements in the navigation\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mconst\u001b[39m categories \u001b[33m=\u001b[39m [\u001b[32m'Portfolio'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Tools'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Workshop'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'About'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Contact'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Admin'\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:9:38\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:30.767Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-Mobile-Safari\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-Mobile-Safari\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-the-main-site-navigation-Mobile-Safari\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 38,
-                        "line": 9
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-07eececf6c5f49f0c428",
-              "file": "homepage.spec.ts",
-              "line": 5,
-              "column": 7
-            },
-            {
-              "title": "should have working category links",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [
-                    {
-                      "workerIndex": 40,
-                      "parallelIndex": 9,
-                      "status": "passed",
-                      "duration": 7871,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:31.854Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-90b210b466580ece73b0",
-              "file": "homepage.spec.ts",
-              "line": 19,
-              "column": 7
-            },
-            {
-              "title": "should have functional search",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [
-                    {
-                      "workerIndex": 41,
-                      "parallelIndex": 8,
-                      "status": "passed",
-                      "duration": 4022,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:33.221Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-a13f9cba7d001f0b8b74",
-              "file": "homepage.spec.ts",
-              "line": 34,
-              "column": 7
-            },
-            {
-              "title": "should display recent updates section",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [
-                    {
-                      "workerIndex": 42,
-                      "parallelIndex": 7,
-                      "status": "failed",
-                      "duration": 7126,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:52:46",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 46,
-                          "line": 52
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// Check recent updates section\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=最新の更新'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 |\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[90m// Check for update items\u001b[39m\n \u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=React Portfolio Website'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 46,
-                            "line": 52
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('text=最新の更新')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=最新の更新')\u001b[22m\n\n\n\u001b[0m \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// Check recent updates section\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=最新の更新'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 |\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[90m// Check for update items\u001b[39m\n \u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=React Portfolio Website'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:52:46\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:33.869Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-Mobile-Safari\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-Mobile-Safari\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-display-recent-updates-section-Mobile-Safari\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 46,
-                        "line": 52
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-a43011f8cb7f808fc02d",
-              "file": "homepage.spec.ts",
-              "line": 48,
-              "column": 7
-            },
-            {
-              "title": "should have proper footer",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [
-                    {
-                      "workerIndex": 43,
-                      "parallelIndex": 4,
-                      "status": "passed",
-                      "duration": 2249,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:34.817Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-f4573f712bab93fb8f2a",
-              "file": "homepage.spec.ts",
-              "line": 60,
-              "column": 7
-            },
-            {
-              "title": "should have proper meta tags and SEO",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [
-                    {
-                      "workerIndex": 44,
-                      "parallelIndex": 2,
-                      "status": "failed",
-                      "duration": 7391,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:77:35",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 35,
-                          "line": 77
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[90m// Check meta description\u001b[39m\n \u001b[90m 76 |\u001b[39m     \u001b[36mconst\u001b[39m metaDescription \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'meta[name=\"description\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m expect(metaDescription)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'content'\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/portfolio.*tools.*workshop/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m\n \u001b[90m 79 |\u001b[39m     \u001b[90m// Check language\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m htmlLang \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'html'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 35,
-                            "line": 77
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('meta[name=\"description\"]')\nExpected pattern: \u001b[32m/portfolio.*tools.*workshop/i\u001b[39m\nReceived string:  \u001b[31m\"Portfolio & Creative Tools\"\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('meta[name=\"description\"]')\u001b[22m\n\u001b[2m    8 × locator resolved to <meta name=\"description\" content=\"Portfolio & Creative Tools\"/>\u001b[22m\n\u001b[2m      - unexpected value \"Portfolio & Creative Tools\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[90m// Check meta description\u001b[39m\n \u001b[90m 76 |\u001b[39m     \u001b[36mconst\u001b[39m metaDescription \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'meta[name=\"description\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m expect(metaDescription)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'content'\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/portfolio.*tools.*workshop/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m\n \u001b[90m 79 |\u001b[39m     \u001b[90m// Check language\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mconst\u001b[39m htmlLang \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'html'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:77:35\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:35.010Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-Mobile-Safari\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-Mobile-Safari\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-have-proper-meta-tags-and-SEO-Mobile-Safari\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 35,
-                        "line": 77
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-eee1c0790c6d282d0671",
-              "file": "homepage.spec.ts",
-              "line": 69,
-              "column": 7
-            },
-            {
-              "title": "should be responsive on mobile",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [
-                    {
-                      "workerIndex": 45,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 3214,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:35.165Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-7b8711ff54e9ae36bb3e",
-              "file": "homepage.spec.ts",
-              "line": 84,
-              "column": 7
-            },
-            {
-              "title": "should have proper contrast and accessibility",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [
-                    {
-                      "workerIndex": 46,
-                      "parallelIndex": 6,
-                      "status": "failed",
-                      "duration": 7622,
-                      "error": {
-                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    8 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    8 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n\n    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:107:38",
-                        "location": {
-                          "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                          "column": 38,
-                          "line": 107
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 105 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h2'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m8\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// 6 category titles + Site search + Recent updates\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[90m// Check for proper link accessibility\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[36mconst\u001b[39m links \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'a'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                            "column": 38,
-                            "line": 107
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nLocator: locator('h2')\nExpected: \u001b[32m8\u001b[39m\nReceived: \u001b[31m7\u001b[39m\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h2')\u001b[22m\n\u001b[2m    8 × locator resolved to 7 elements\u001b[22m\n\u001b[2m      - unexpected value \"7\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 105 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 106 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 107 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h2'\u001b[39m))\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m8\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// 6 category titles + Site search + Recent updates\u001b[39m\n \u001b[90m     |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 108 |\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[90m// Check for proper link accessibility\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[36mconst\u001b[39m links \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'a'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts:107:38\u001b[22m"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:36.240Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-Mobile-Safari\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-Mobile-Safari\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\rebui\\Downloads\\my-web-2025\\test-results\\homepage-Homepage-should-h-06cc5--contrast-and-accessibility-Mobile-Safari\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\rebui\\Downloads\\my-web-2025\\tests\\homepage.spec.ts",
-                        "column": 38,
-                        "line": 107
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-b4451a7151ce59fb4ed1",
-              "file": "homepage.spec.ts",
-              "line": 102,
-              "column": 7
-            },
-            {
-              "title": "should load within performance thresholds",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [
-                    {
-                      "workerIndex": 47,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 2448,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:37.582Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-d644d62c74275cf84e5f",
-              "file": "homepage.spec.ts",
-              "line": 125,
-              "column": 7
-            },
-            {
-              "title": "should handle keyboard navigation",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [
-                    {
-                      "workerIndex": 48,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3333,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-08T06:34:37.639Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "84e7eb052e8cbae1c9f0-aee76b32dcb262a51750",
-              "file": "homepage.spec.ts",
-              "line": 139,
+              "line": 140,
               "column": 7
             }
           ]
@@ -2773,11 +493,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-07-08T06:33:49.871Z",
-    "duration": 54268.317,
-    "expected": 27,
+    "startTime": "2025-07-11T11:36:36.721Z",
+    "duration": 9333.271999999999,
+    "expected": 10,
     "skipped": 0,
-    "unexpected": 23,
+    "unexpected": 0,
     "flaky": 0
   }
 }

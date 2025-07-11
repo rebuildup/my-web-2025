@@ -1,385 +1,400 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import {
-  Palette,
-  QrCode,
-  Timer,
-  Gamepad2,
-  FileCode,
-  Image as ImageIcon,
-  Type,
-  Calculator,
-  Mail,
-  Code2,
-  Star,
-  TrendingUp,
-  Search,
-} from 'lucide-react';
-import { ContentItem } from '@/types/content';
-import { GridLayout, GridContainer, GridContent } from '@/components/GridSystem';
 
-interface ToolCard extends ContentItem {
-  category:
-    | 'design'
-    | 'utility'
-    | 'productivity'
-    | 'game'
-    | 'development'
-    | 'writing'
-    | 'communication';
-  usage?: number;
-  rating?: number;
-}
+export const metadata: Metadata = {
+  title: 'Tools - samuido | 便利なWebツール集',
+  description:
+    '実用的なWebツールのコレクション。カラーパレット生成、QRコード作成、料金計算機など、作業効率向上を支援するツール群。',
+  keywords: 'Webツール, カラーパレット, QRコード, 料金計算, テキストカウンタ, ツール集',
+  robots: 'index, follow',
+  alternates: {
+    canonical: 'https://yusuke-kim.com/tools',
+  },
+  openGraph: {
+    title: 'Tools - samuido | 便利なWebツール集',
+    description:
+      '実用的なWebツールのコレクション。カラーパレット生成、QRコード作成、料金計算機など、作業効率向上を支援するツール群。',
+    type: 'website',
+    url: 'https://yusuke-kim.com/tools',
+    images: [
+      {
+        url: 'https://yusuke-kim.com/tools-og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Tools - samuido | 便利なWebツール集',
+      },
+    ],
+    siteName: 'samuido',
+    locale: 'ja_JP',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tools - samuido | 便利なWebツール集',
+    description:
+      '実用的なWebツールのコレクション。カラーパレット生成、QRコード作成、料金計算機など、作業効率向上を支援するツール群。',
+    images: ['https://yusuke-kim.com/tools-twitter-image.jpg'],
+    creator: '@361do_sleep',
+  },
+};
 
-const toolCategories = [
-  { id: 'all', name: '全て', icon: <Code2 size={20} /> },
-  { id: 'design', name: 'デザイン', icon: <Palette size={20} /> },
-  { id: 'utility', name: 'ユーティリティ', icon: <QrCode size={20} /> },
-  { id: 'productivity', name: '生産性', icon: <Timer size={20} /> },
-  { id: 'game', name: 'ゲーム', icon: <Gamepad2 size={20} /> },
-  { id: 'development', name: '開発', icon: <FileCode size={20} /> },
-  { id: 'writing', name: 'ライティング', icon: <Type size={20} /> },
-  { id: 'communication', name: 'コミュニケーション', icon: <Mail size={20} /> },
-];
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'samuido Tools',
+  description: '実用的なWebツールのコレクション',
+  url: 'https://yusuke-kim.com/tools',
+  author: {
+    '@type': 'Person',
+    name: '木村友亮',
+    alternateName: 'samuido',
+  },
+  mainEntity: {
+    '@type': 'ItemList',
+    name: 'Webツール一覧',
+    description: '作業効率向上を支援するWebツールのコレクション',
+  },
+};
 
 export default function ToolsPage() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [tools, setTools] = useState<ToolCard[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Load tools data
-    const loadTools = async () => {
-      try {
-        const response = await fetch('/data/content/tool.json');
-        const data = await response.json();
-
-        // Transform data and add mock usage/rating data
-        const transformedTools: ToolCard[] = data.map((tool: ContentItem) => ({
-          ...tool,
-          usage: Math.floor(Math.random() * 10000) + 500,
-          rating: 4.2 + Math.random() * 0.8,
-        }));
-
-        setTools(transformedTools);
-      } catch (error) {
-        console.error('Failed to load tools:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadTools();
-  }, []);
-
-  const filteredTools = tools.filter(tool => {
-    const matchesCategory = selectedCategory === 'all' || tool.category === selectedCategory;
-    const matchesSearch =
-      searchQuery === '' ||
-      tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    return matchesCategory && matchesSearch;
-  });
-
-  const popularTools = tools
-    .filter(tool => tool.usage)
-    .sort((a, b) => (b.usage || 0) - (a.usage || 0))
-    .slice(0, 3);
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'samuido Tools',
-    description: '実用的なWebツールのコレクション',
-    url: 'https://yusuke-kim.com/tools',
-    author: {
-      '@type': 'Person',
-      name: '木村友亮',
-      alternateName: 'samuido',
-    },
-    mainEntity: {
-      '@type': 'ItemList',
-      name: 'Webツール一覧',
-      description: 'カラーパレット、QRコード、タイマーなどの実用ツール',
-    },
-  };
-
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <div className="container-grid">
+        {/* ヒーローヘッダー */}
+        <section className="py-16 text-center">
+          <h1 className="neue-haas-grotesk-display mb-4 text-4xl text-white md:text-6xl">Tools</h1>
+          <p className="noto-sans-jp-light mb-8 text-xl text-gray-300 md:text-2xl">
+            便利なWebツール集
+          </p>
+          <p className="noto-sans-jp-regular mx-auto max-w-3xl text-base text-gray-400 md:text-lg">
+            実用的なWebツールのコレクション
+            <br />
+            ユーザーの作業効率向上を支援します
+          </p>
+        </section>
 
-      <GridLayout background={false} className="bg-gray">
-        {/* Navigation */}
-        <nav className="border-foreground/20 border-b p-4">
-          <GridContainer>
+        {/* 統計情報 */}
+        <section className="py-12">
+          <div className="mb-12 grid grid-cols-2 gap-6 md:grid-cols-4">
+            <div className="card text-center">
+              <div className="neue-haas-grotesk-display mb-2 text-2xl text-blue-400 md:text-3xl">
+                12
+              </div>
+              <div className="noto-sans-jp-regular text-sm text-gray-300">総ツール数</div>
+            </div>
+            <div className="card text-center">
+              <div className="neue-haas-grotesk-display mb-2 text-2xl text-blue-400 md:text-3xl">
+                4.7K
+              </div>
+              <div className="noto-sans-jp-regular text-sm text-gray-300">月間利用数</div>
+            </div>
+            <div className="card text-center">
+              <div className="neue-haas-grotesk-display mb-2 text-2xl text-blue-400 md:text-3xl">
+                98%
+              </div>
+              <div className="noto-sans-jp-regular text-sm text-gray-300">稼働率</div>
+            </div>
+            <div className="card text-center">
+              <div className="neue-haas-grotesk-display mb-2 text-2xl text-blue-400 md:text-3xl">
+                24/7
+              </div>
+              <div className="noto-sans-jp-regular text-sm text-gray-300">利用可能</div>
+            </div>
+          </div>
+        </section>
+
+        {/* 人気ツール */}
+        <section className="py-12">
+          <h2 className="neue-haas-grotesk-display mb-8 text-center text-2xl text-white md:text-3xl">
+            Popular Tools
+          </h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {/* カラーパレット */}
+            <Link
+              href="/tools/color-palette"
+              className="card block transition-colors hover:border-blue-500"
+            >
+              <h3 className="neue-haas-grotesk-display mb-3 text-xl text-white">Color Palette</h3>
+              <p className="noto-sans-jp-regular mb-4 text-gray-300">カラーパレット生成ツール</p>
+              <ul className="noto-sans-jp-light mb-4 space-y-1 text-sm text-gray-400">
+                <li>• ランダムカラー生成</li>
+                <li>• ハーモニーカラー計算</li>
+                <li>• HEX・RGB・HSL対応</li>
+                <li>• ワンクリックコピー</li>
+              </ul>
+              <div className="text-xs text-blue-400">1,247 利用 →</div>
+            </Link>
+
+            {/* QRコード生成器 */}
+            <Link
+              href="/tools/qr-generator"
+              className="card block transition-colors hover:border-blue-500"
+            >
+              <h3 className="neue-haas-grotesk-display mb-3 text-xl text-white">QR Generator</h3>
+              <p className="noto-sans-jp-regular mb-4 text-gray-300">QRコード生成ツール</p>
+              <ul className="noto-sans-jp-light mb-4 space-y-1 text-sm text-gray-400">
+                <li>• テキスト・URL対応</li>
+                <li>• サイズ・エラー訂正レベル設定</li>
+                <li>• PNG・SVG出力</li>
+                <li>• 即座にダウンロード</li>
+              </ul>
+              <div className="text-xs text-blue-400">934 利用 →</div>
+            </Link>
+
+            {/* 料金計算機 */}
+            <Link
+              href="/tools/price-calculator"
+              className="card block transition-colors hover:border-blue-500"
+            >
+              <h3 className="neue-haas-grotesk-display mb-3 text-xl text-white">
+                Price Calculator
+              </h3>
+              <p className="noto-sans-jp-regular mb-4 text-gray-300">制作依頼料金計算機</p>
+              <ul className="noto-sans-jp-light mb-4 space-y-1 text-sm text-gray-400">
+                <li>• 開発・映像制作対応</li>
+                <li>• 期間・オプション計算</li>
+                <li>• 詳細な内訳表示</li>
+                <li>• 見積書PDF出力</li>
+              </ul>
+              <div className="text-xs text-blue-400">687 利用 →</div>
+            </Link>
+          </div>
+        </section>
+
+        {/* ツール一覧カード */}
+        <section className="py-12">
+          <h2 className="neue-haas-grotesk-display mb-8 text-center text-2xl text-white md:text-3xl">
+            All Tools
+          </h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {/* AE Expression */}
+            <Link
+              href="/tools/ae-expression"
+              className="card block transition-colors hover:border-blue-500"
+            >
+              <h3 className="neue-haas-grotesk-display mb-2 text-lg text-white">AE Expression</h3>
+              <p className="noto-sans-jp-light mb-3 text-sm text-gray-400">
+                After
+                Effectsエクスプレッション生成・編集ツール。Scratch風ブロックUIでパラメータ編集。
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">After Effects</span>
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Expression</span>
+              </div>
+            </Link>
+
+            {/* Business Mail Block */}
+            <Link
+              href="/tools/business-mail-block"
+              className="card block transition-colors hover:border-blue-500"
+            >
+              <h3 className="neue-haas-grotesk-display mb-2 text-lg text-white">
+                Business Mail Block
+              </h3>
+              <p className="noto-sans-jp-light mb-3 text-sm text-gray-400">
+                ビジネスメールテンプレート生成ツール。依頼、問い合わせ、謝罪、納品連絡などのテンプレート。
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Business</span>
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Email</span>
+              </div>
+            </Link>
+
+            {/* テキストカウンタ */}
+            <Link
+              href="/tools/text-counter"
+              className="card block transition-colors hover:border-blue-500"
+            >
+              <h3 className="neue-haas-grotesk-display mb-2 text-lg text-white">Text Counter</h3>
+              <p className="noto-sans-jp-light mb-3 text-sm text-gray-400">
+                テキストの文字数・単語数・行数をリアルタイムカウント。制限文字数の確認に便利。
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Text</span>
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Counter</span>
+              </div>
+            </Link>
+
+            {/* PNG Preview */}
+            <Link
+              href="/tools/sequential-png-preview"
+              className="card block transition-colors hover:border-blue-500"
+            >
+              <h3 className="neue-haas-grotesk-display mb-2 text-lg text-white">PNG Preview</h3>
+              <p className="noto-sans-jp-light mb-3 text-sm text-gray-400">
+                連番PNG画像のプレビューツール。After Effectsレンダリング結果の確認に最適。
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">PNG</span>
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Preview</span>
+              </div>
+            </Link>
+
+            {/* SVG to TSX */}
+            <Link
+              href="/tools/svg2tsx"
+              className="card block transition-colors hover:border-blue-500"
+            >
+              <h3 className="neue-haas-grotesk-display mb-2 text-lg text-white">SVG to TSX</h3>
+              <p className="noto-sans-jp-light mb-3 text-sm text-gray-400">
+                SVGファイルをReact TSXコンポーネントに変換。props対応、TypeScript型定義生成。
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">SVG</span>
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">React</span>
+              </div>
+            </Link>
+
+            {/* Pi Game */}
+            <Link
+              href="/tools/pi-game"
+              className="card block transition-colors hover:border-blue-500"
+            >
+              <h3 className="neue-haas-grotesk-display mb-2 text-lg text-white">Pi Game</h3>
+              <p className="noto-sans-jp-light mb-3 text-sm text-gray-400">
+                円周率記憶ゲーム。どこまで円周率を覚えているかチャレンジ。記録保存・ランキング機能。
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Game</span>
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Memory</span>
+              </div>
+            </Link>
+
+            {/* Pomodoro Timer */}
+            <Link
+              href="/tools/pomodoro"
+              className="card block transition-colors hover:border-blue-500"
+            >
+              <h3 className="neue-haas-grotesk-display mb-2 text-lg text-white">Pomodoro Timer</h3>
+              <p className="noto-sans-jp-light mb-3 text-sm text-gray-400">
+                ポモドーロテクニック用タイマー。25分作業・5分休憩のサイクル管理。音声通知対応。
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Timer</span>
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Productivity</span>
+              </div>
+            </Link>
+
+            {/* ProtoType */}
+            <Link
+              href="/tools/prototype"
+              className="card block transition-colors hover:border-blue-500"
+            >
+              <h3 className="neue-haas-grotesk-display mb-2 text-lg text-white">ProtoType</h3>
+              <p className="noto-sans-jp-light mb-3 text-sm text-gray-400">
+                プロトタイピング・アイデア検証ツール。UI/UXのアイデアを素早く形にして検証。
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Prototype</span>
+                <span className="bg-blue-600 px-2 py-1 text-xs text-white">Design</span>
+              </div>
+            </Link>
+
+            {/* その他のツール */}
+            <div className="card border-dashed border-gray-600">
+              <h3 className="neue-haas-grotesk-display mb-2 text-lg text-gray-500">More Tools</h3>
+              <p className="noto-sans-jp-light mb-3 text-sm text-gray-500">
+                新しいツールを随時追加予定。リクエストがあればお気軽にお声かけください。
+              </p>
+              <div className="text-xs text-gray-600">Coming Soon...</div>
+            </div>
+          </div>
+        </section>
+
+        {/* 利用統計 */}
+        <section className="py-12">
+          <h2 className="neue-haas-grotesk-display mb-8 text-center text-2xl text-white md:text-3xl">
+            Usage Statistics
+          </h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {/* 人気ツールランキング */}
+            <div className="card">
+              <h3 className="neue-haas-grotesk-display mb-4 text-lg text-white">
+                人気ツールランキング
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="noto-sans-jp-regular text-sm text-gray-300">Color Palette</div>
+                    <div className="text-xs text-gray-500">1,247 利用</div>
+                  </div>
+                  <div className="text-sm text-blue-400">#1</div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="noto-sans-jp-regular text-sm text-gray-300">QR Generator</div>
+                    <div className="text-xs text-gray-500">934 利用</div>
+                  </div>
+                  <div className="text-sm text-blue-400">#2</div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="noto-sans-jp-regular text-sm text-gray-300">
+                      Price Calculator
+                    </div>
+                    <div className="text-xs text-gray-500">687 利用</div>
+                  </div>
+                  <div className="text-sm text-blue-400">#3</div>
+                </div>
+              </div>
+            </div>
+
+            {/* 新着ツール */}
+            <div className="card">
+              <h3 className="neue-haas-grotesk-display mb-4 text-lg text-white">新着ツール</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="noto-sans-jp-regular text-sm text-gray-300">SVG to TSX</div>
+                    <div className="text-xs text-gray-500">2025/01/15 追加</div>
+                  </div>
+                  <div className="text-xs text-green-400">NEW</div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="noto-sans-jp-regular text-sm text-gray-300">PNG Preview</div>
+                    <div className="text-xs text-gray-500">2025/01/10 追加</div>
+                  </div>
+                  <div className="text-xs text-green-400">NEW</div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="noto-sans-jp-regular text-sm text-gray-300">ProtoType</div>
+                    <div className="text-xs text-gray-500">2025/01/05 追加</div>
+                  </div>
+                  <div className="text-xs text-blue-400">BETA</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ナビゲーション */}
+        <section className="py-12">
+          <div className="flex items-center justify-between">
             <Link
               href="/"
-              className="neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"
+              className="neue-haas-grotesk-display text-lg text-blue-400 hover:text-blue-300"
             >
               ← Home
             </Link>
-          </GridContainer>
-        </nav>
-
-        {/* Hero Header */}
-        <header className="px-4 py-16 text-center">
-          <h1 className="neue-haas-grotesk-display text-primary mb-6 text-6xl md:text-8xl">
-            Tools
-          </h1>
-          <GridContainer>
-            <p className="noto-sans-jp text-foreground/80 mb-8 text-xl leading-relaxed md:text-2xl">
-              実用的なWebツールのコレクション
-              <br />
-              すべて無償でご利用いただけます
-            </p>
-          </GridContainer>
-          <div className="bg-primary mx-auto mt-8 h-1 w-32"></div>
-        </header>
-
-        {/* Main Content */}
-        <main className="pb-16">
-          <GridContainer>
-            {/* Statistics */}
-            <section className="mb-12">
-              <GridContent cols={{ xs: 2, md: 4, xl: 4, '2xl': 4 }} className="mx-auto max-w-2xl">
-                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">
-                    {tools.length}
-                  </div>
-                  <div className="noto-sans-jp text-foreground/70 text-sm">総ツール数</div>
-                </div>
-
-                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">
-                    {tools.reduce((acc, tool) => acc + (tool.usage || 0), 0).toLocaleString()}
-                  </div>
-                  <div className="noto-sans-jp text-foreground/70 text-sm">総利用回数</div>
-                </div>
-
-                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">
-                    {toolCategories.length - 1}
-                  </div>
-                  <div className="noto-sans-jp text-foreground/70 text-sm">カテゴリ数</div>
-                </div>
-
-                <div className="border-foreground/20 bg-gray/50 border p-4 text-center">
-                  <div className="neue-haas-grotesk-display text-primary mb-1 text-2xl">100%</div>
-                  <div className="noto-sans-jp text-foreground/70 text-sm">無償利用</div>
-                </div>
-              </GridContent>
-            </section>
-
-            {/* Popular Tools */}
-            <section className="mb-12">
-              <h2 className="neue-haas-grotesk-display text-foreground mb-8 text-center text-3xl">
-                人気ツール
-              </h2>
-
-              <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
-                {popularTools.map((tool, index) => (
-                  <Link
-                    key={tool.id}
-                    href={`/tools/${tool.id}`}
-                    className="group border-primary/30 bg-gray/50 hover:border-primary border p-6 transition-all duration-300 hover:shadow-lg"
-                  >
-                    <div className="mb-3 flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Star size={16} className="fill-current text-yellow-500" />
-                        <span className="text-foreground/60 text-sm">#{index + 1} 人気</span>
-                      </div>
-                      <TrendingUp size={16} className="text-primary" />
-                    </div>
-
-                    <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary mb-2 text-lg transition-colors">
-                      {tool.title}
-                    </h3>
-
-                    <p className="noto-sans-jp text-foreground/70 mb-3 line-clamp-2 text-sm">
-                      {tool.description}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex flex-wrap gap-1">
-                        {tool.tags.slice(0, 2).map(tag => (
-                          <span
-                            key={tag}
-                            className="bg-primary/20 text-primary rounded px-2 py-1 text-xs"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="text-foreground/50 text-xs">
-                        {tool.usage?.toLocaleString()} 回利用
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </GridContent>
-            </section>
-
-            {/* Search and Filter */}
-            <section className="mb-8">
-              <div className="mx-auto max-w-4xl">
-                {/* Search */}
-                <div className="mb-6">
-                  <div className="relative mx-auto max-w-md">
-                    <Search
-                      size={20}
-                      className="text-foreground/50 absolute top-1/2 left-3 -translate-y-1/2 transform"
-                    />
-                    <input
-                      type="text"
-                      placeholder="ツールを検索..."
-                      className="border-foreground/20 bg-gray text-foreground focus:border-primary noto-sans-jp w-full rounded-none border py-3 pr-4 pl-10 focus:outline-none"
-                      value={searchQuery}
-                      onChange={e => setSearchQuery(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                {/* Category Filter */}
-                <div className="flex flex-wrap justify-center gap-2">
-                  {toolCategories.map(category => (
-                    <button
-                      key={category.id}
-                      onClick={() => setSelectedCategory(category.id)}
-                      className={`flex items-center space-x-2 border px-4 py-2 transition-colors ${
-                        selectedCategory === category.id
-                          ? 'border-primary bg-primary/10 text-primary'
-                          : 'border-foreground/20 text-foreground/70 hover:border-primary/50'
-                      }`}
-                    >
-                      {category.icon}
-                      <span className="noto-sans-jp text-sm">{category.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {/* Tools Grid */}
-            <section>
-              <div className="mb-6 flex items-center justify-between">
-                <h2 className="neue-haas-grotesk-display text-foreground text-2xl">
-                  {selectedCategory === 'all'
-                    ? '全ツール'
-                    : toolCategories.find(cat => cat.id === selectedCategory)?.name + 'ツール'}
-                </h2>
-                <div className="text-foreground/60 text-sm">{filteredTools.length} 件</div>
-              </div>
-
-              {isLoading ? (
-                <div className="py-12 text-center">
-                  <div className="loading mx-auto"></div>
-                  <p className="text-foreground/60 mt-4">ツールを読み込み中...</p>
-                </div>
-              ) : filteredTools.length === 0 ? (
-                <div className="py-12 text-center">
-                  <p className="text-foreground/60 noto-sans-jp">
-                    {searchQuery
-                      ? '検索結果が見つかりませんでした'
-                      : 'このカテゴリにはツールがありません'}
-                  </p>
-                </div>
-              ) : (
-                <GridContent cols={{ xs: 1, md: 2, xl: 3, '2xl': 3 }}>
-                  {filteredTools.map(tool => (
-                    <Link
-                      key={tool.id}
-                      href={`/tools/${tool.id}`}
-                      className="group border-foreground/20 bg-gray/50 hover:border-primary overflow-hidden border transition-all duration-300 hover:shadow-lg"
-                    >
-                      <div className="from-primary/10 to-primary/5 flex aspect-video items-center justify-center bg-gradient-to-br">
-                        {getToolIcon(tool.title)}
-                      </div>
-
-                      <div className="p-6">
-                        <div className="mb-2 flex items-start justify-between">
-                          <h3 className="neue-haas-grotesk-display text-foreground group-hover:text-primary text-lg transition-colors">
-                            {tool.title}
-                          </h3>
-                          <div className="text-primary bg-primary/10 rounded px-2 py-1 text-xs">
-                            {tool.category}
-                          </div>
-                        </div>
-
-                        <p className="noto-sans-jp text-foreground/70 mb-4 line-clamp-3 text-sm">
-                          {tool.description}
-                        </p>
-
-                        <div className="mb-4 flex flex-wrap gap-1">
-                          {tool.tags.slice(0, 3).map(tag => (
-                            <span
-                              key={tag}
-                              className="bg-foreground/10 text-foreground/70 rounded px-2 py-1 text-xs"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <div className="text-foreground/50 text-xs">
-                            {tool.usage?.toLocaleString()} 回利用
-                          </div>
-                          <div className="text-primary text-xs font-medium group-hover:underline">
-                            使用する →
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </GridContent>
-              )}
-            </section>
-          </GridContainer>
-        </main>
-
-        {/* Footer */}
-        <footer className="border-foreground/20 border-t py-8 text-center">
-          <GridContainer>
-            <p className="noto-sans-jp text-foreground/60 text-sm">
-              © 2025 samuido (木村友亮). All rights reserved.
-            </p>
-            <div className="mt-4 flex justify-center space-x-6">
-              <Link href="/contact" className="text-foreground/60 hover:text-primary text-sm">
-                Contact
+            <div className="flex gap-4">
+              <Link href="/about" className="text-sm text-blue-400 hover:text-blue-300">
+                About →
               </Link>
-              <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">
-                About
+              <Link href="/portfolio" className="text-sm text-blue-400 hover:text-blue-300">
+                Portfolio →
+              </Link>
+              <Link href="/workshop" className="text-sm text-blue-400 hover:text-blue-300">
+                Workshop →
               </Link>
             </div>
-          </GridContainer>
-        </footer>
-      </GridLayout>
+          </div>
+        </section>
+      </div>
     </>
   );
-}
-
-function getToolIcon(title: string) {
-  const iconMap: Record<string, React.ReactNode> = {
-    'Color Palette Generator': <Palette size={48} className="text-primary/60" />,
-    'QR Code Generator': <QrCode size={48} className="text-primary/60" />,
-    'Text Counter & Analyzer': <Type size={48} className="text-primary/60" />,
-    'Pomodoro Timer': <Timer size={48} className="text-primary/60" />,
-    'Business Mail Block': <Mail size={48} className="text-primary/60" />,
-    'AE Expression': <Code2 size={48} className="text-primary/60" />,
-    ProtoType: <Gamepad2 size={48} className="text-primary/60" />,
-    'Sequential PNG Preview': <ImageIcon size={48} className="text-primary/60" />,
-    SVG2TSX: <FileCode size={48} className="text-primary/60" />,
-    'Price Calculator': <Calculator size={48} className="text-primary/60" />,
-    'Pi Game': <Gamepad2 size={48} className="text-primary/60" />,
-  };
-
-  return iconMap[title] || <Code2 size={48} className="text-primary/60" />;
 }

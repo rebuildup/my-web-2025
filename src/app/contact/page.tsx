@@ -271,265 +271,282 @@ export default function ContactPage() {
         {/* Main Content */}
         <main className="pb-16">
           <GridContainer>
-          {/* Status Messages */}
-          {submitStatus === 'success' && (
-            <div className="mb-8 flex items-center space-x-2 border border-green-500 bg-green-500/10 p-4 text-green-500">
-              <CheckCircle size={20} />
-              <div>
-                <div className="font-medium">送信完了</div>
-                <div className="text-sm">
-                  お問い合わせを受け付けました。返信までしばらくお待ちください。
-                </div>
-              </div>
-            </div>
-          )}
-
-          {submitStatus === 'error' && (
-            <div className="mb-8 flex items-center space-x-2 border border-red-500 bg-red-500/10 p-4 text-red-500">
-              <AlertCircle size={20} />
-              <div>
-                <div className="font-medium">送信エラー</div>
-                <div className="text-sm">
-                  送信に失敗しました。しばらく時間をおいて再度お試しください。
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Contact Information */}
-          <section className="mb-12">
-            <h2 className="neue-haas-grotesk-display text-foreground mb-6 text-2xl">連絡先情報</h2>
-
-            <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
-              <div className="border-foreground/20 bg-gray/50 flex items-center space-x-3 border p-4">
-                <Mail size={24} className="text-primary" />
+            {/* Status Messages */}
+            {submitStatus === 'success' && (
+              <div className="mb-8 flex items-center space-x-2 border border-green-500 bg-green-500/10 p-4 text-green-500">
+                <CheckCircle size={20} />
                 <div>
-                  <div className="text-foreground/60 text-sm">メール</div>
-                  <div className="text-foreground">361do.sleep@gmail.com</div>
+                  <div className="font-medium">送信完了</div>
+                  <div className="text-sm">
+                    お問い合わせを受け付けました。返信までしばらくお待ちください。
+                  </div>
                 </div>
               </div>
+            )}
 
-              <div className="border-foreground/20 bg-gray/50 flex items-center space-x-3 border p-4">
-                <MessageCircle size={24} className="text-primary" />
+            {submitStatus === 'error' && (
+              <div className="mb-8 flex items-center space-x-2 border border-red-500 bg-red-500/10 p-4 text-red-500">
+                <AlertCircle size={20} />
                 <div>
-                  <div className="text-foreground/60 text-sm">Twitter</div>
-                  <div className="text-foreground">@361do_sleep</div>
+                  <div className="font-medium">送信エラー</div>
+                  <div className="text-sm">
+                    送信に失敗しました。しばらく時間をおいて再度お試しください。
+                  </div>
                 </div>
               </div>
+            )}
 
-              <div className="border-foreground/20 bg-gray/50 flex items-center space-x-3 border p-4">
-                <Phone size={24} className="text-primary" />
-                <div>
-                  <div className="text-foreground/60 text-sm">応答時間</div>
-                  <div className="text-foreground">24-48時間</div>
+            {/* Contact Information */}
+            <section className="mb-12">
+              <h2 className="neue-haas-grotesk-display text-foreground mb-6 text-2xl">
+                連絡先情報
+              </h2>
+
+              <GridContent cols={{ xs: 1, md: 3, xl: 3, '2xl': 3 }}>
+                <div className="border-foreground/20 bg-gray/50 flex items-center space-x-3 border p-4">
+                  <Mail size={24} className="text-primary" />
+                  <div>
+                    <div className="text-foreground/60 text-sm">メール</div>
+                    <div className="text-foreground">361do.sleep@gmail.com</div>
+                  </div>
                 </div>
-              </div>
-            </GridContent>
-          </section>
 
-          {/* Contact Form */}
-          <section>
-            <h2 className="neue-haas-grotesk-display text-foreground mb-6 text-2xl">
-              お問い合わせフォーム
-            </h2>
+                <div className="border-foreground/20 bg-gray/50 flex items-center space-x-3 border p-4">
+                  <MessageCircle size={24} className="text-primary" />
+                  <div>
+                    <div className="text-foreground/60 text-sm">Twitter</div>
+                    <div className="text-foreground">@361do_sleep</div>
+                  </div>
+                </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name and Email */}
-              <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }}>
+                <div className="border-foreground/20 bg-gray/50 flex items-center space-x-3 border p-4">
+                  <Phone size={24} className="text-primary" />
+                  <div>
+                    <div className="text-foreground/60 text-sm">応答時間</div>
+                    <div className="text-foreground">24-48時間</div>
+                  </div>
+                </div>
+              </GridContent>
+            </section>
+
+            {/* Contact Form */}
+            <section>
+              <h2 className="neue-haas-grotesk-display text-foreground mb-6 text-2xl">
+                お問い合わせフォーム
+              </h2>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Name and Email */}
+                <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }}>
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="text-foreground mb-2 block text-sm font-medium"
+                    >
+                      お名前 <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
+                      required
+                    />
+                    {errors.name && (
+                      <div className="mt-1 text-sm text-red-500">{errors.name.join(', ')}</div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="text-foreground mb-2 block text-sm font-medium"
+                    >
+                      メールアドレス <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
+                      required
+                    />
+                    {errors.email && (
+                      <div className="mt-1 text-sm text-red-500">{errors.email.join(', ')}</div>
+                    )}
+                  </div>
+                </GridContent>
+
+                {/* Company and Phone */}
+                <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }}>
+                  <div>
+                    <label
+                      htmlFor="company"
+                      className="text-foreground mb-2 block text-sm font-medium"
+                    >
+                      会社名・組織名
+                    </label>
+                    <input
+                      type="text"
+                      id="company"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleInputChange}
+                      className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="phone"
+                      className="text-foreground mb-2 block text-sm font-medium"
+                    >
+                      電話番号
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
+                    />
+                  </div>
+                </GridContent>
+
+                {/* Category and Contact Method */}
+                <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }}>
+                  <div>
+                    <label
+                      htmlFor="category"
+                      className="text-foreground mb-2 block text-sm font-medium"
+                    >
+                      カテゴリー <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      id="category"
+                      name="category"
+                      value={formData.category}
+                      onChange={handleInputChange}
+                      className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
+                      required
+                    >
+                      <option value="">選択してください</option>
+                      {categories.map(category => (
+                        <option key={category.value} value={category.value}>
+                          {category.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="contactMethod"
+                      className="text-foreground mb-2 block text-sm font-medium"
+                    >
+                      希望連絡方法
+                    </label>
+                    <select
+                      id="contactMethod"
+                      name="contactMethod"
+                      value={formData.contactMethod}
+                      onChange={handleInputChange}
+                      className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
+                    >
+                      {contactMethods.map(method => (
+                        <option key={method.value} value={method.value}>
+                          {method.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </GridContent>
+
+                {/* Subject */}
                 <div>
-                  <label htmlFor="name" className="text-foreground mb-2 block text-sm font-medium">
-                    お名前 <span className="text-red-500">*</span>
+                  <label
+                    htmlFor="subject"
+                    className="text-foreground mb-2 block text-sm font-medium"
+                  >
+                    件名 <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
                     onChange={handleInputChange}
                     className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
                     required
                   />
-                  {errors.name && (
-                    <div className="mt-1 text-sm text-red-500">{errors.name.join(', ')}</div>
+                  {errors.subject && (
+                    <div className="mt-1 text-sm text-red-500">{errors.subject.join(', ')}</div>
                   )}
                 </div>
 
+                {/* Content */}
                 <div>
-                  <label htmlFor="email" className="text-foreground mb-2 block text-sm font-medium">
-                    メールアドレス <span className="text-red-500">*</span>
+                  <label
+                    htmlFor="content"
+                    className="text-foreground mb-2 block text-sm font-medium"
+                  >
+                    お問い合わせ内容 <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
+                  <textarea
+                    id="content"
+                    name="content"
+                    value={formData.content}
                     onChange={handleInputChange}
-                    className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
+                    rows={8}
+                    className="border-foreground/20 bg-gray text-foreground focus:border-primary resize-vertical w-full border px-4 py-3 focus:outline-none"
+                    placeholder="お問い合わせ内容をできるだけ詳しくお書きください。"
                     required
                   />
-                  {errors.email && (
-                    <div className="mt-1 text-sm text-red-500">{errors.email.join(', ')}</div>
+                  <div className="text-foreground/60 mt-1 text-sm">
+                    {formData.content.length}/2000文字
+                  </div>
+                  {errors.content && (
+                    <div className="mt-1 text-sm text-red-500">{errors.content.join(', ')}</div>
                   )}
                 </div>
-              </GridContent>
 
-              {/* Company and Phone */}
-              <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }}>
+                {/* reCAPTCHA Notice */}
+                <div className="text-foreground/60 text-sm">
+                  このサイトはreCAPTCHAによって保護されており、Googleの
+                  <a
+                    href="https://policies.google.com/privacy"
+                    className="text-primary hover:underline"
+                  >
+                    プライバシーポリシー
+                  </a>
+                  と
+                  <a
+                    href="https://policies.google.com/terms"
+                    className="text-primary hover:underline"
+                  >
+                    利用規約
+                  </a>
+                  が適用されます。
+                </div>
+
+                {/* Submit Button */}
                 <div>
-                  <label
-                    htmlFor="company"
-                    className="text-foreground mb-2 block text-sm font-medium"
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="bg-primary hover:bg-primary/90 flex w-full items-center justify-center space-x-2 px-6 py-4 text-lg text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    会社名・組織名
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleInputChange}
-                    className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
-                  />
+                    <MessageCircle size={20} />
+                    <span>確認画面へ進む</span>
+                  </button>
                 </div>
-
-                <div>
-                  <label htmlFor="phone" className="text-foreground mb-2 block text-sm font-medium">
-                    電話番号
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
-                  />
-                </div>
-              </GridContent>
-
-              {/* Category and Contact Method */}
-              <GridContent cols={{ xs: 1, md: 2, xl: 2, '2xl': 2 }}>
-                <div>
-                  <label
-                    htmlFor="category"
-                    className="text-foreground mb-2 block text-sm font-medium"
-                  >
-                    カテゴリー <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    id="category"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
-                    required
-                  >
-                    <option value="">選択してください</option>
-                    {categories.map(category => (
-                      <option key={category.value} value={category.value}>
-                        {category.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="contactMethod"
-                    className="text-foreground mb-2 block text-sm font-medium"
-                  >
-                    希望連絡方法
-                  </label>
-                  <select
-                    id="contactMethod"
-                    name="contactMethod"
-                    value={formData.contactMethod}
-                    onChange={handleInputChange}
-                    className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
-                  >
-                    {contactMethods.map(method => (
-                      <option key={method.value} value={method.value}>
-                        {method.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </GridContent>
-
-              {/* Subject */}
-              <div>
-                <label htmlFor="subject" className="text-foreground mb-2 block text-sm font-medium">
-                  件名 <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                  className="border-foreground/20 bg-gray text-foreground focus:border-primary w-full border px-4 py-3 focus:outline-none"
-                  required
-                />
-                {errors.subject && (
-                  <div className="mt-1 text-sm text-red-500">{errors.subject.join(', ')}</div>
-                )}
-              </div>
-
-              {/* Content */}
-              <div>
-                <label htmlFor="content" className="text-foreground mb-2 block text-sm font-medium">
-                  お問い合わせ内容 <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  id="content"
-                  name="content"
-                  value={formData.content}
-                  onChange={handleInputChange}
-                  rows={8}
-                  className="border-foreground/20 bg-gray text-foreground focus:border-primary resize-vertical w-full border px-4 py-3 focus:outline-none"
-                  placeholder="お問い合わせ内容をできるだけ詳しくお書きください。"
-                  required
-                />
-                <div className="text-foreground/60 mt-1 text-sm">
-                  {formData.content.length}/2000文字
-                </div>
-                {errors.content && (
-                  <div className="mt-1 text-sm text-red-500">{errors.content.join(', ')}</div>
-                )}
-              </div>
-
-              {/* reCAPTCHA Notice */}
-              <div className="text-foreground/60 text-sm">
-                このサイトはreCAPTCHAによって保護されており、Googleの
-                <a
-                  href="https://policies.google.com/privacy"
-                  className="text-primary hover:underline"
-                >
-                  プライバシーポリシー
-                </a>
-                と
-                <a
-                  href="https://policies.google.com/terms"
-                  className="text-primary hover:underline"
-                >
-                  利用規約
-                </a>
-                が適用されます。
-              </div>
-
-              {/* Submit Button */}
-              <div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="bg-primary hover:bg-primary/90 flex w-full items-center justify-center space-x-2 px-6 py-4 text-lg text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <MessageCircle size={20} />
-                  <span>確認画面へ進む</span>
-                </button>
-              </div>
-            </form>
-          </section>
+              </form>
+            </section>
           </GridContainer>
         </main>
 
@@ -540,7 +557,10 @@ export default function ContactPage() {
               © 2025 samuido (木村友亮). All rights reserved.
             </p>
             <div className="mt-4 flex justify-center space-x-6">
-              <Link href="/privacy-policy" className="text-foreground/60 hover:text-primary text-sm">
+              <Link
+                href="/privacy-policy"
+                className="text-foreground/60 hover:text-primary text-sm"
+              >
                 Privacy Policy
               </Link>
               <Link href="/about" className="text-foreground/60 hover:text-primary text-sm">

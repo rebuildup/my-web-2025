@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import AboutPage from './page';
 
 describe('About Page', () => {
@@ -9,94 +9,127 @@ describe('About Page', () => {
     expect(screen.getByRole('heading', { name: 'About' })).toBeInTheDocument();
     expect(screen.getByText('木村友亮 / samuido')).toBeInTheDocument();
     expect(
-      screen.getByText('グラフィックデザイン、映像制作、個人開発など幅広く活動。')
+      screen.getByText(/グラフィックデザイン、映像制作、個人開発など幅広く活動/)
     ).toBeInTheDocument();
   });
 
-  it('should render profile cards', () => {
+  it('should render profile selection section', () => {
     render(<AboutPage />);
 
-    expect(screen.getByText('本名プロフィール')).toBeInTheDocument();
-    expect(screen.getByText('木村友亮 (Kimura Yusuke)')).toBeInTheDocument();
-    expect(screen.getByText('採用担当者や企業向けの正式な自己紹介')).toBeInTheDocument();
-
-    expect(screen.getByText('ハンドルネームプロフィール')).toBeInTheDocument();
-    expect(screen.getByText('samuido')).toBeInTheDocument();
-    expect(screen.getByText('ラフな自己紹介、同業者・仲間向け')).toBeInTheDocument();
-  });
-
-  it('should render navigation cards', () => {
-    render(<AboutPage />);
-
-    expect(screen.getByText('デジタル名刺')).toBeInTheDocument();
-    expect(screen.getByText('連絡先・SNS・基本情報をまとめたカード')).toBeInTheDocument();
-
-    expect(screen.getByText('リンクマップ')).toBeInTheDocument();
-    expect(screen.getByText('SNS・作品・プラットフォームへのリンク集')).toBeInTheDocument();
-
-    expect(screen.getByText('依頼について')).toBeInTheDocument();
-    expect(screen.getByText('制作依頼・コラボレーション・お仕事の相談')).toBeInTheDocument();
-  });
-
-  it('should render navigation link', () => {
-    render(<AboutPage />);
-
-    const homeLink = screen.getByRole('link', { name: '← Home' });
-    expect(homeLink).toBeInTheDocument();
-    expect(homeLink).toHaveAttribute('href', '/');
+    expect(screen.getByRole('heading', { name: 'Profile Selection' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '本名プロフィール' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'ハンドルネームプロフィール' })).toBeInTheDocument();
   });
 
   it('should render profile links', () => {
     render(<AboutPage />);
 
-    const realProfileLink = screen.getByText('本名プロフィール').closest('a');
+    const realProfileLink = screen.getByRole('heading', { name: '本名プロフィール' }).closest('a');
     expect(realProfileLink).toHaveAttribute('href', '/about/profile/real');
 
-    const handleProfileLink = screen.getByText('ハンドルネームプロフィール').closest('a');
+    const handleProfileLink = screen
+      .getByRole('heading', { name: 'ハンドルネームプロフィール' })
+      .closest('a');
     expect(handleProfileLink).toHaveAttribute('href', '/about/profile/handle');
   });
 
-  it('should render navigation card links', () => {
+  it('should render basic information section', () => {
     render(<AboutPage />);
 
-    const digitalCardLink = screen.getByText('デジタル名刺').closest('a');
-    expect(digitalCardLink).toHaveAttribute('href', '/about/card');
+    expect(screen.getByRole('heading', { name: 'Basic Information' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '基本情報' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '連絡先' })).toBeInTheDocument();
 
-    const linkMapLink = screen.getByText('リンクマップ').closest('a');
-    expect(linkMapLink).toHaveAttribute('href', '/about/links');
+    // Basic info
+    expect(screen.getByText(/平成19年10月生/)).toBeInTheDocument();
+    expect(screen.getByText(/現役高専生（2025年7月現在）/)).toBeInTheDocument();
+    expect(screen.getByText(/Webデザイナー・開発者/)).toBeInTheDocument();
 
-    const commissionLink = screen.getByText('依頼について').closest('a');
+    // Contact info
+    expect(screen.getByText(/rebuild\.up\.up@gmail\.com/)).toBeInTheDocument();
+    expect(screen.getByText(/361do\.sleep@gmail\.com/)).toBeInTheDocument();
+    expect(screen.getByText(/@361do_sleep/)).toBeInTheDocument();
+  });
+
+  it('should render skills section', () => {
+    render(<AboutPage />);
+
+    expect(screen.getByRole('heading', { name: 'Skills' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'デザイン' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'プログラミング' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '技術スタック' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '映像・その他' })).toBeInTheDocument();
+
+    // Skill items
+    expect(screen.getByText(/• Photoshop/)).toBeInTheDocument();
+    expect(screen.getByText(/• JavaScript/)).toBeInTheDocument();
+    expect(screen.getByText(/• React \/ Next\.js/)).toBeInTheDocument();
+    expect(screen.getByText(/• After Effects/)).toBeInTheDocument();
+  });
+
+  it('should render navigation section', () => {
+    render(<AboutPage />);
+
+    expect(screen.getByRole('heading', { name: 'Navigation' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Digital Card' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Link Map' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Commission' })).toBeInTheDocument();
+  });
+
+  it('should render navigation links', () => {
+    render(<AboutPage />);
+
+    const cardLink = screen.getByRole('heading', { name: 'Digital Card' }).closest('a');
+    expect(cardLink).toHaveAttribute('href', '/about/card');
+
+    const linksLink = screen.getByRole('heading', { name: 'Link Map' }).closest('a');
+    expect(linksLink).toHaveAttribute('href', '/about/links');
+
+    const commissionLink = screen.getByRole('heading', { name: 'Commission' }).closest('a');
     expect(commissionLink).toHaveAttribute('href', '/about/commission');
   });
 
-  it('should render JSON-LD script', () => {
+  it('should render featured works section', () => {
     render(<AboutPage />);
 
-    const jsonLdScript = document.querySelector('script[type="application/ld+json"]');
-    expect(jsonLdScript).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Featured Works & Tools' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '最新ポートフォリオ' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '便利ツール' })).toBeInTheDocument();
 
-    const jsonLdData = JSON.parse(jsonLdScript!.textContent!);
-    expect(jsonLdData['@context']).toBe('https://schema.org');
-    expect(jsonLdData['@type']).toBe('Person');
-    expect(jsonLdData.name).toBe('木村友亮');
-    expect(jsonLdData.alternateName).toBe('samuido');
-    expect(jsonLdData.jobTitle).toBe('Webデザイナー・開発者');
+    // Links
+    const portfolioLink = screen.getByText('ポートフォリオを見る →');
+    expect(portfolioLink).toHaveAttribute('href', '/portfolio');
+
+    const toolsLink = screen.getByText('ツール一覧を見る →');
+    expect(toolsLink).toHaveAttribute('href', '/tools');
   });
 
-  it('should render section headers', () => {
+  it('should render home navigation link', () => {
     render(<AboutPage />);
 
-    expect(screen.getByText('プロフィール選択')).toBeInTheDocument();
-    expect(screen.getByText('関連ページ')).toBeInTheDocument();
+    const homeLink = screen.getByText('← Home');
+    expect(homeLink).toHaveAttribute('href', '/');
   });
 
-  it('should render main content structure', () => {
+  it('should render profile descriptions', () => {
     render(<AboutPage />);
 
-    const mainElement = screen.getByRole('main');
-    expect(mainElement).toBeInTheDocument();
+    expect(screen.getByText('採用担当者や企業向けの正式な自己紹介')).toBeInTheDocument();
+    expect(screen.getByText('ラフな自己紹介、同業者向け')).toBeInTheDocument();
+    expect(screen.getByText(/• 学歴・経歴の詳細/)).toBeInTheDocument();
+    expect(screen.getByText(/• カジュアルな自己紹介/)).toBeInTheDocument();
+  });
 
-    const navElement = screen.getByRole('navigation');
-    expect(navElement).toBeInTheDocument();
+  it('should render contact information', () => {
+    render(<AboutPage />);
+
+    expect(screen.getByText(/開発関連:/)).toBeInTheDocument();
+    expect(screen.getByText(/映像・デザイン:/)).toBeInTheDocument();
+
+    // getAllByTextを使用してTwitterの複数要素を処理
+    const twitterElements = screen.getAllByText(/Twitter:/);
+    expect(twitterElements).toHaveLength(2);
+    expect(twitterElements[0]).toBeInTheDocument();
+    expect(twitterElements[1]).toBeInTheDocument();
   });
 });

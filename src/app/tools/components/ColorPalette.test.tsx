@@ -3,10 +3,11 @@ import { render, screen } from '@testing-library/react';
 import ColorPalette from './ColorPalette';
 
 // Mock clipboard API
-Object.assign(navigator, {
-  clipboard: {
+Object.defineProperty(navigator, 'clipboard', {
+  value: {
     writeText: vi.fn(),
   },
+  writable: true,
 });
 
 // Mock fetch for search index

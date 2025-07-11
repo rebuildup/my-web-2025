@@ -54,18 +54,145 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock IntersectionObserver
-global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+
+(
+  global as typeof globalThis & {
+    IntersectionObserver: typeof IntersectionObserver;
+  }
+).IntersectionObserver = class {
+  callback: IntersectionObserverCallback;
+  options: IntersectionObserverInit;
+  elements: Set<Element>;
+
+  constructor(callback: IntersectionObserverCallback, options: IntersectionObserverInit = {}) {
+    this.callback = callback;
+    this.options = options;
+    this.elements = new Set();
+  }
+
+  observe(element: Element) {
+    this.elements.add(element);
+    // Simulate immediate intersection for tests with async behavior
+    setTimeout(() => {
+      if (this.callback) {
+        this.callback(
+          [
+            {
+              isIntersecting: true,
+              intersectionRatio: 1,
+              target: element,
+              boundingClientRect: {
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100,
+                top: 0,
+                right: 100,
+                bottom: 100,
+                left: 0,
+                toJSON: () => ({}),
+              } as DOMRectReadOnly,
+              intersectionRect: {
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100,
+                top: 0,
+                right: 100,
+                bottom: 100,
+                left: 0,
+                toJSON: () => ({}),
+              } as DOMRectReadOnly,
+              rootBounds: null,
+              time: Date.now(),
+            } as IntersectionObserverEntry,
+          ],
+          this
+        );
+      }
+    }, 0);
+  }
+
+  unobserve(element: Element) {
+    this.elements.delete(element);
+  }
+
+  disconnect() {
+    this.elements.clear();
+  }
+
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+
+  get root() {
+    return this.options?.root || null;
+  }
+  get rootMargin() {
+    return this.options?.rootMargin || '';
+  }
+  get thresholds() {
+    return Array.isArray(this.options?.threshold)
+      ? this.options.threshold
+      : [this.options?.threshold || 0];
+  }
+};
 
 // Mock ResizeObserver
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+(
+  global as typeof globalThis & {
+    ResizeObserver: typeof ResizeObserver;
+  }
+).ResizeObserver = class {
+  callback: ResizeObserverCallback;
+  elements: Set<Element>;
+
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback;
+    this.elements = new Set();
+  }
+
+  observe(element: Element) {
+    this.elements.add(element);
+    // Simulate immediate resize for tests
+    setTimeout(() => {
+      if (this.callback) {
+        this.callback(
+          [
+            {
+              target: element,
+              contentRect: {
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100,
+                top: 0,
+                right: 100,
+                bottom: 100,
+                left: 0,
+                toJSON: () => ({}),
+              } as DOMRectReadOnly,
+              borderBoxSize: [{ blockSize: 100, inlineSize: 100 }] as ResizeObserverSize[],
+              contentBoxSize: [{ blockSize: 100, inlineSize: 100 }] as ResizeObserverSize[],
+              devicePixelContentBoxSize: [
+                { blockSize: 100, inlineSize: 100 },
+              ] as ResizeObserverSize[],
+            } as ResizeObserverEntry,
+          ],
+          this
+        );
+      }
+    }, 0);
+  }
+
+  unobserve(element: Element) {
+    this.elements.delete(element);
+  }
+
+  disconnect() {
+    this.elements.clear();
+  }
+};
 
 // Mock localStorage
 const localStorageMock = {

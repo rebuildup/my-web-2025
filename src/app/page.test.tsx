@@ -51,41 +51,85 @@ describe('HomePage', () => {
   it('should render the main heading', () => {
     render(<HomePage />);
 
-    expect(screen.getByText('Welcome to My Digital Workspace')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'samuido' })).toBeInTheDocument();
+    expect(screen.getByText('フロントエンドエンジニアの個人サイト')).toBeInTheDocument();
+  });
+
+  it('should render main categories section', () => {
+    render(<HomePage />);
+
+    expect(screen.getByRole('heading', { name: 'Main Categories' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'About' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Portfolio' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Workshop' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Tools' })).toBeInTheDocument();
   });
 
   it('should render navigation links', () => {
     render(<HomePage />);
 
-    expect(screen.getByText('About')).toBeInTheDocument();
-    expect(screen.getByText('Portfolio')).toBeInTheDocument();
-    expect(screen.getByText('Workshop')).toBeInTheDocument();
-    expect(screen.getByText('Tools')).toBeInTheDocument();
+    const aboutLink = screen.getByRole('heading', { name: 'About' }).closest('a');
+    expect(aboutLink).toHaveAttribute('href', '/about');
+
+    const portfolioLink = screen.getByRole('heading', { name: 'Portfolio' }).closest('a');
+    expect(portfolioLink).toHaveAttribute('href', '/portfolio');
+
+    const workshopLink = screen.getByRole('heading', { name: 'Workshop' }).closest('a');
+    expect(workshopLink).toHaveAttribute('href', '/workshop');
+
+    const toolsLink = screen.getByRole('heading', { name: 'Tools' }).closest('a');
+    expect(toolsLink).toHaveAttribute('href', '/tools');
   });
 
-  it('should render feature sections', () => {
+  it('should render site functions section', () => {
     render(<HomePage />);
 
-    expect(screen.getByText('Creative Development')).toBeInTheDocument();
-    expect(screen.getByText('Digital Tools')).toBeInTheDocument();
-    expect(screen.getByText('Open Source')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Site Functions' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Privacy Policy' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Search' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Contact' })).toBeInTheDocument();
   });
 
-  it('should render call-to-action buttons', () => {
+  it('should render site function links', () => {
     render(<HomePage />);
 
-    expect(screen.getByText('View Portfolio')).toBeInTheDocument();
-    expect(screen.getByText('Explore Tools')).toBeInTheDocument();
+    const privacyLink = screen.getByRole('heading', { name: 'Privacy Policy' }).closest('a');
+    expect(privacyLink).toHaveAttribute('href', '/privacy-policy');
+
+    const searchLink = screen.getByRole('heading', { name: 'Search' }).closest('a');
+    expect(searchLink).toHaveAttribute('href', '/search');
+
+    const contactLink = screen.getByRole('heading', { name: 'Contact' }).closest('a');
+    expect(contactLink).toHaveAttribute('href', '/contact');
   });
 
-  it('should have proper accessibility attributes', () => {
+  it('should render latest updates section', () => {
     render(<HomePage />);
 
-    const mainElement = screen.getByRole('main');
-    expect(mainElement).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Latest Updates' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '最新作品タイトル' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '最新ブログ記事' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '新機能追加' })).toBeInTheDocument();
+  });
 
-    const headings = screen.getAllByRole('heading');
-    expect(headings.length).toBeGreaterThan(0);
+  it('should render category descriptions', () => {
+    render(<HomePage />);
+
+    expect(screen.getByText('プロフィール、デジタル名刺、依頼ページへの導線')).toBeInTheDocument();
+    expect(screen.getByText(/4つのギャラリー.*への導線/)).toBeInTheDocument();
+    expect(
+      screen.getByText('プラグイン配布、ブログ、素材ダウンロードへの導線')
+    ).toBeInTheDocument();
+    expect(screen.getByText('実用的なWebツール集への導線')).toBeInTheDocument();
+  });
+
+  it('should render footer', () => {
+    render(<HomePage />);
+
+    expect(screen.getByText('© 2025 samuido (木村友亮)')).toBeInTheDocument();
+    expect(
+      screen.getByText('フロントエンドエンジニア・Webデザイナー・映像クリエイター')
+    ).toBeInTheDocument();
   });
 
   it('should render without crashing', () => {
