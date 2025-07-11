@@ -1,9 +1,6 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // 静的サイトとして出力
-  output: 'export',
-
   // トレイリングスラッシュを追加（Apache設定と一致）
   trailingSlash: true,
 

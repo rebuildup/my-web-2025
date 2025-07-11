@@ -59,7 +59,7 @@ jobs:
 
       - name: Create deployment package
         run: |
-          tar -czf deployment.tar.gz out/
+          tar -czf deployment.tar.gz .next package.json next.config.ts public
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.8.0
@@ -68,20 +68,15 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
-            sudo mkdir -p /var/www/backups
-            sudo cp -r /var/www/html /var/www/backups/html-$(date +%Y%m%d-%H%M%S)
-          "
-
           scp -o StrictHostKeyChecking=no deployment.tar.gz ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }}:/tmp/
 
           ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "
-            cd /tmp
-            tar -xzf deployment.tar.gz
-            sudo rm -rf /var/www/html/*
-            sudo cp -r out/* /var/www/html/
-            sudo chown -R www-data:www-data /var/www/html
-            sudo systemctl reload apache2
+            cd /var/www/html
+            sudo rm -rf .next package.json next.config.ts public
+            sudo tar -xzf /tmp/deployment.tar.gz -C /var/www/html
+            cd /var/www/html
+            npm install --omit=dev
+            (pm2 restart all || npm run start &)
           "
 
       - name: Health check
