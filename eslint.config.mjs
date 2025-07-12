@@ -23,6 +23,7 @@ const eslintConfig = [
           'input[type=image]': ['InputImage'],
         },
       ],
+      'jsx-a11y/alt-text': 'off', // Disable for Lucide React icons
     },
   },
   {
