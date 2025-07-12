@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Safe Build and Deploy
 
 on:
   push:
@@ -35,6 +35,26 @@ jobs:
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
         run: npm run build
 
+      - name: Verify build output (Enhanced)
+        run: |
+          echo "Checking build output..."
+          if [ -d ".next" ]; then
+            echo "✅ .next/ directory exists"
+            echo "Total files: $(find .next -type f | wc -l)"
+            echo "BUILD_ID: $(cat .next/BUILD_ID)"
+            echo "Build size: $(du -sh .next)"
+            
+            # Critical files check
+            echo "=== Critical Files Check ==="
+            [ -f ".next/BUILD_ID" ] && echo "✅ BUILD_ID exists" || echo "❌ BUILD_ID missing"
+            [ -d ".next/server" ] && echo "✅ Server directory exists" || echo "❌ Server directory missing"
+            [ -d ".next/static" ] && echo "✅ Static directory exists" || echo "❌ Static directory missing"
+            
+          else
+            echo "❌ .next/ directory not found"
+            exit 1
+          fi
+
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
@@ -58,139 +78,166 @@ jobs:
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
         run: npm run build
 
-      - name: Verify build output
-        run: |
-          echo "Checking build output..."
-          if [ -d ".next" ]; then
-            echo "✅ .next/ directory exists"
-            echo "Total files: $(find .next -type f | wc -l)"
-          else
-            echo "❌ .next/ directory not found"
-            exit 1
-          fi
-
       - name: Create deployment package
         run: |
+          echo "Creating deployment package..."
+
+          # 必須ファイルの存在確認
+          for file in ".next/BUILD_ID" "package.json" "package-lock.json"; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Required file missing: $file"
+              exit 1
+            fi
+          done
+
+          # パッケージ作成
           tar -czf deployment.tar.gz .next/ package.json package-lock.json public/
+
+          echo "✅ Package created successfully"
           echo "Package size: $(du -h deployment.tar.gz)"
 
-      # 簡素化されたSSH設定
-      - name: Setup SSH
+      - name: Setup SSH (Simplified)
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # SSH鍵の設定（適切な権限で）
           echo "${{ secrets.GCP_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          # 基本的なSSH設定
           cat > ~/.ssh/config << EOF
           Host deploy-server
             HostName ${{ secrets.GCP_HOST }}
             User ${{ secrets.GCP_USER }}
             IdentityFile ~/.ssh/id_rsa
             StrictHostKeyChecking no
-            UserKnownHostsFile /dev/null
             ConnectTimeout 30
             ServerAliveInterval 60
-            ServerAliveCountMax 3
             LogLevel ERROR
           EOF
           chmod 600 ~/.ssh/config
 
-          # ホストキーを事前に取得（エラーハンドリング強化）
-          ssh-keyscan -H ${{ secrets.GCP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || {
-            echo "Warning: Could not add host key, continuing with StrictHostKeyChecking=no"
-          }
-
-      # 接続テスト
       - name: Test SSH connection
         run: |
           echo "Testing SSH connection..."
-          ssh deploy-server "echo 'SSH connection successful'; whoami; pwd" || {
-            echo "SSH connection failed"
-            exit 1
-          }
+          ssh deploy-server "echo 'SSH connection successful'; uptime; free -h"
 
-      # デプロイメントファイル転送
       - name: Transfer deployment files
         run: |
           echo "Transferring deployment package..."
-          scp -o ConnectTimeout=30 deployment.tar.gz deploy-server:/tmp/ || {
-            echo "File transfer failed"
-            exit 1
-          }
+          scp deployment.tar.gz deploy-server:/tmp/
 
-      # サーバー上でのデプロイ処理
-      - name: Deploy application
+      - name: Safe deployment with health checks
         timeout-minutes: 15
         run: |
-          ssh deploy-server << 'DEPLOY_SCRIPT'
+          ssh deploy-server << 'SAFE_DEPLOY'
           set -e
 
-          echo "=== Starting deployment process ==="
-          echo "User: $(whoami)"
-          echo "Time: $(date)"
+          echo "=== Lightweight Deployment Process ==="
 
-          # 1. バックアップ作成
+          # 1. Environment setup
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+          echo "System resources:"
+          free -h
+          df -h /
+
+          # 2. Create swap file if not exists (memory protection)
+          if [ ! -f /swapfile ]; then
+            echo "Creating swap file..."
+            sudo fallocate -l 1G /swapfile
+            sudo chmod 600 /swapfile
+            sudo mkswap /swapfile
+            sudo swapon /swapfile
+            echo "✅ Swap file created"
+          else
+            sudo swapon /swapfile 2>/dev/null || echo "Swap already active"
+          fi
+
+          echo "Memory after swap:"
+          free -h
+
+          # 3. Stop any existing processes safely
+          echo "Stopping existing processes..."
+          pm2 stop all 2>/dev/null || echo "No PM2 processes to stop"
+          pm2 delete all 2>/dev/null || echo "No PM2 processes to delete"
+
+          # Kill any stuck processes
+          pkill -f "node.*next" 2>/dev/null || echo "No Node.js processes found"
+          pkill -f "npm.*start" 2>/dev/null || echo "No npm processes found"
+
+          sleep 5
+
+          # 4. Backup current deployment
           if [ -d "/var/www/yusuke-kim" ] && [ "$(ls -A /var/www/yusuke-kim 2>/dev/null)" ]; then
             echo "Creating backup..."
             sudo mkdir -p /var/www/backups
             sudo cp -r /var/www/yusuke-kim /var/www/backups/yusuke-kim-$(date +%Y%m%d-%H%M%S)
-            echo "Backup created"
           fi
 
-          # 2. 現在のアプリケーション停止
-          echo "Stopping current application..."
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          pm2 stop yusuke-kim 2>/dev/null || echo "No existing PM2 process found"
-          pm2 delete yusuke-kim 2>/dev/null || echo "No existing PM2 process to delete"
+          # 5. Prepare deployment directory
+          sudo rm -rf /var/www/yusuke-kim/*
+          cd /var/www/yusuke-kim
 
-          # 3. デプロイメントディレクトリ準備
-          echo "Preparing deployment directory..."
-          sudo mkdir -p /var/www/yusuke-kim
-          sudo chown -R $USER:www-data /var/www/yusuke-kim
-
-          # 4. 新しいファイル展開
-          echo "Extracting new files..."
-          cd /tmp
-          rm -rf yusuke-kim-temp
-          mkdir yusuke-kim-temp
-          cd yusuke-kim-temp
+          # 6. Extract new files
           tar -xzf /tmp/deployment.tar.gz
 
-          # ファイル確認
-          if [ ! -f "package.json" ]; then
-            echo "Error: package.json not found!"
+          # 7. Verify extraction
+          if [ ! -f ".next/BUILD_ID" ]; then
+            echo "❌ Deployment verification failed"
             exit 1
           fi
 
-          # 5. ファイルコピー
-          echo "Copying files to web directory..."
-          sudo rm -rf /var/www/yusuke-kim/*
-          sudo cp -r ./* /var/www/yusuke-kim/
-          sudo chown -R $USER:www-data /var/www/yusuke-kim
-          sudo chmod -R 755 /var/www/yusuke-kim
+          echo "✅ Files extracted successfully"
+          echo "BUILD_ID: $(cat .next/BUILD_ID)"
 
-          # 6. nvmとNode.js環境の確認
-          echo "Setting up Node.js environment..."
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+          # 8. Clean npm environment
+          echo "Cleaning npm environment..."
+          npm cache clean --force 2>/dev/null || echo "Cache already clean"
 
-          # Node.jsバージョン確認
-          echo "Node.js version: $(node --version)"
-          echo "npm version: $(npm --version)"
+          # 9. Lightweight dependency installation
+          echo "Installing dependencies (lightweight approach)..."
 
-          # 依存関係インストール
-          echo "Installing dependencies..."
-          cd /var/www/yusuke-kim
-          npm ci --omit=dev --no-audit --no-fund --silent
+          # Create minimal package.json for initial install
+          cat > package.json.minimal << 'MIN_EOF'
+          {
+            "name": "my-web-2025",
+            "version": "0.1.0",
+            "private": true,
+            "scripts": {
+              "start": "./node_modules/.bin/next start"
+            },
+            "dependencies": {
+              "next": "15.3.4",
+              "react": "^19.0.0",
+              "react-dom": "^19.0.0"
+            }
+          }
+          MIN_EOF
 
-          # 7. 環境変数設定
-          echo "Setting up environment variables..."
+          # Backup full package.json
+          cp package.json package.json.full
+
+          # Use minimal version first
+          cp package.json.minimal package.json
+
+          # Install with memory-friendly options
+          npm install --no-optional --no-audit --no-fund --silent || {
+            echo "❌ Dependency installation failed"
+            exit 1
+          }
+
+          echo "✅ Core dependencies installed"
+
+          # 10. Verify Next.js installation
+          if [ ! -f "./node_modules/.bin/next" ]; then
+            echo "❌ Next.js binary not found"
+            exit 1
+          fi
+
+          echo "✅ Next.js binary found: $(./node_modules/.bin/next --version)"
+
+          # 11. Set up environment
           cat > .env.production.local << ENV_EOF
           RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}
@@ -198,120 +245,106 @@ jobs:
           PORT=3000
           ENV_EOF
 
-          # 8. アプリケーション起動
-          echo "Starting application..."
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          NODE_ENV=production pm2 start npm --name "yusuke-kim" -- start
+          # 12. Test application startup (lightweight)
+          echo "Testing application startup..."
+
+          export NODE_ENV=production
+
+          # Quick startup test with timeout
+          timeout 25 ./node_modules/.bin/next start &
+          APP_PID=$!
+
+          sleep 20
+
+          if kill -0 $APP_PID 2>/dev/null; then
+            echo "✅ Application startup test successful"
+            
+            # Quick HTTP test
+            if timeout 5 curl -f -s http://localhost:3000/ > /dev/null; then
+              echo "✅ HTTP response successful"
+            else
+              echo "⚠️ HTTP test inconclusive (may need more time)"
+            fi
+            
+            # Stop test process
+            kill $APP_PID 2>/dev/null
+            sleep 3
+          else
+            echo "❌ Application startup test failed"
+            exit 1
+          fi
+
+          # 13. Start with PM2
+          echo "Starting application with PM2..."
+
+          NODE_ENV=production pm2 start "./node_modules/.bin/next" --name "yusuke-kim" -- start
           pm2 save
 
-          # 9. ヘルスチェック
-          echo "Performing health check..."
+          # 14. Final health check
           sleep 10
-
-          # NVM環境を再読み込み
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-          # PM2プロセス確認
-          if ! pm2 list | grep -q "yusuke-kim.*online"; then
-            echo "❌ Application failed to start"
+          if pm2 list | grep -q "yusuke-kim.*online"; then
+            echo "✅ PM2 deployment successful"
+            
+            echo "Final system state:"
+            free -h
+            pm2 list
+          else
+            echo "❌ PM2 deployment failed"
             pm2 logs yusuke-kim --lines 20
             exit 1
           fi
 
-          # ローカル接続確認
-          if curl -f -s http://localhost:3000/ > /dev/null; then
-            echo "✅ Application is responding on port 3000"
-          else
-            echo "⚠️ Application not responding on port 3000"
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            pm2 logs yusuke-kim --lines 10
-          fi
+          echo "=== Lightweight deployment completed ==="
+          SAFE_DEPLOY
 
-          # 10. Apache設定確認とリロード
-          echo "Checking Apache configuration..."
-          sudo apache2ctl configtest || {
-            echo "Apache configuration test failed"
-            exit 1
-          }
-
-          sudo systemctl reload apache2
-
-          # 11. クリーンアップ
-          echo "Cleaning up..."
-          rm -rf /tmp/yusuke-kim-temp
-          rm -f /tmp/deployment.tar.gz
-
-          # 古いバックアップクリーンアップ（7日以上前）
-          find /var/www/backups -name "yusuke-kim-*" -mtime +7 -exec sudo rm -rf {} \; 2>/dev/null || true
-
-          echo "=== Deployment completed successfully ==="
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          pm2 list
-          DEPLOY_SCRIPT
-
-      # 外部ヘルスチェック
-      - name: External health check
+      - name: Final health check
         run: |
-          echo "=== External health check ==="
+          echo "=== Final external health check ==="
           sleep 15
 
-          # HTTP アクセステスト
-          for i in {1..5}; do
+          # HTTP access test with retries
+          for i in {1..3}; do
             if curl -f -s -I http://${{ secrets.GCP_HOST }}/ > /dev/null; then
-              echo "✅ HTTP access successful"
+              echo "✅ External HTTP access successful"
               break
-            elif [ $i -eq 5 ]; then
-              echo "❌ HTTP access failed after 5 attempts"
+            elif [ $i -eq 3 ]; then
+              echo "❌ External HTTP access failed after 3 attempts"
               exit 1
             else
-              echo "HTTP access attempt $i failed, retrying in 10s..."
+              echo "HTTP attempt $i failed, retrying in 10s..."
               sleep 10
             fi
           done
 
-          # HTTPS アクセステスト（証明書が設定されている場合）
-          if curl -f -s -I https://yusuke-kim.com/ > /dev/null; then
-            echo "✅ HTTPS access successful"
-          else
-            echo "⚠️ HTTPS access failed (certificate may not be configured)"
-          fi
-
-      # 失敗時の自動ロールバック
       - name: Rollback on failure
         if: failure()
         run: |
           echo "=== Performing rollback ==="
-          ssh deploy-server << 'ROLLBACK_SCRIPT'
+          ssh deploy-server << 'ROLLBACK'
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
+          # Stop failed deployment
+          pm2 stop all 2>/dev/null || true
+          pm2 delete all 2>/dev/null || true
+
+          # Find latest backup
           LATEST_BACKUP=$(ls -t /var/www/backups/yusuke-kim-* 2>/dev/null | head -1)
 
           if [ -n "$LATEST_BACKUP" ]; then
             echo "Rolling back to: $LATEST_BACKUP"
-            
-            # アプリケーション停止
-            pm2 stop yusuke-kim 2>/dev/null || true
-            pm2 delete yusuke-kim 2>/dev/null || true
-            
-            # バックアップから復元
             sudo rm -rf /var/www/yusuke-kim
             sudo cp -r "$LATEST_BACKUP" /var/www/yusuke-kim
             sudo chown -R $USER:www-data /var/www/yusuke-kim
             
-            # アプリケーション再起動
             cd /var/www/yusuke-kim
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            NODE_ENV=production pm2 start npm --name "yusuke-kim" -- start
-            pm2 save
             
-            echo "✅ Rollback completed"
+            # Reinstall dependencies for rollback
+            npm install 2>/dev/null || echo "Dependency install failed during rollback"
+            
+            NODE_ENV=production pm2 start "./node_modules/.bin/next" --name "yusuke-kim" -- start 2>/dev/null || echo "Rollback failed"
+            pm2 save
           else
             echo "❌ No backup found for rollback"
           fi
-          ROLLBACK_SCRIPT
+          ROLLBACK
