@@ -36,7 +36,7 @@ export default function NotFound() {
 
             {/* Portfolio */}
             <Link
-              href="/portfolio"
+              href="/02_portfolio"
               className="group hover:border-primary border border-gray-700 bg-gray-800 p-6 transition-colors"
             >
               <div className="bg-primary mx-auto mb-4 h-8 w-8 transition-transform group-hover:scale-110"></div>
@@ -48,7 +48,7 @@ export default function NotFound() {
 
             {/* Tools */}
             <Link
-              href="/tools"
+              href="/04_tools"
               className="group hover:border-primary border border-gray-700 bg-gray-800 p-6 transition-colors"
             >
               <div className="border-primary mx-auto mb-4 h-8 w-8 border-2 transition-transform group-hover:scale-110"></div>
@@ -58,7 +58,7 @@ export default function NotFound() {
 
             {/* Workshop */}
             <Link
-              href="/workshop"
+              href="/03_workshop"
               className="group hover:border-primary border border-gray-700 bg-gray-800 p-6 transition-colors"
             >
               <div className="border-primary mx-auto mb-4 flex h-8 w-8 items-center justify-center border transition-transform group-hover:scale-110">
@@ -72,7 +72,7 @@ export default function NotFound() {
 
             {/* About */}
             <Link
-              href="/about"
+              href="/01_about"
               className="group hover:border-primary border border-gray-700 bg-gray-800 p-6 transition-colors"
             >
               <div className="border-primary mx-auto mb-4 h-8 w-8 rounded-full border-2 transition-transform group-hover:scale-110"></div>

@@ -63,16 +63,16 @@ import { lazy } from 'react';
 
 // Dynamic imports for heavy components (Chunk Split)
 export const LazyComponents = {
-  ColorPalette: lazy(() => import('@/app/tools/components/ColorPalette')),
-  QrGenerator: lazy(() => import('@/app/tools/components/QrGenerator')),
-  TextCounter: lazy(() => import('@/app/tools/components/TextCounter')),
-  PomodoroTimer: lazy(() => import('@/app/tools/components/PomodoroTimer')),
-  ThreeJSPlayground: lazy(() => import('@/app/portfolio/components/ThreeJSPlayground')),
-  PortfolioGallery: lazy(() => import('@/app/portfolio/components/PortfolioGallery')),
-  BlogList: lazy(() => import('@/app/workshop/components/BlogList')),
-  PluginList: lazy(() => import('@/app/workshop/components/PluginList')),
-  ContactForm: lazy(() => import('@/app/contact/components/ContactForm')),
-  AdminDataManager: lazy(() => import('@/app/admin/components/AdminDataManager')),
+  ColorPalette: lazy(() => import('@/app/04_tools/components/ColorPalette')),
+  QrGenerator: lazy(() => import('@/app/04_tools/components/QrGenerator')),
+  TextCounter: lazy(() => import('@/app/04_tools/components/TextCounter')),
+  PomodoroTimer: lazy(() => import('@/app/04_tools/components/PomodoroTimer')),
+  ThreeJSPlayground: lazy(() => import('@/app/02_portfolio/components/ThreeJSPlayground')),
+  PortfolioGallery: lazy(() => import('@/app/02_portfolio/components/PortfolioGallery')),
+  BlogList: lazy(() => import('@/app/03_workshop/components/BlogList')),
+  PluginList: lazy(() => import('@/app/03_workshop/components/PluginList')),
+  ContactForm: lazy(() => import('@/app/00_global/components/ContactForm')),
+  AdminDataManager: lazy(() => import('@/app/05_admin/components/AdminDataManager')),
 };
 
 // Image optimization wrapper

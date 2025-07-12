@@ -68,17 +68,15 @@ describe('HomePage', () => {
   it('should render navigation links', () => {
     render(<HomePage />);
 
-    const aboutLink = screen.getByRole('heading', { name: 'About' }).closest('a');
-    expect(aboutLink).toHaveAttribute('href', '/about');
+    const aboutLink = screen.getByRole('link', { name: /About/i });
+    const portfolioLink = screen.getByRole('link', { name: /Portfolio/i });
+    const workshopLink = screen.getByRole('link', { name: /Workshop/i });
+    const toolsLink = screen.getByRole('link', { name: /Tools/i });
 
-    const portfolioLink = screen.getByRole('heading', { name: 'Portfolio' }).closest('a');
-    expect(portfolioLink).toHaveAttribute('href', '/portfolio');
-
-    const workshopLink = screen.getByRole('heading', { name: 'Workshop' }).closest('a');
-    expect(workshopLink).toHaveAttribute('href', '/workshop');
-
-    const toolsLink = screen.getByRole('heading', { name: 'Tools' }).closest('a');
-    expect(toolsLink).toHaveAttribute('href', '/tools');
+    expect(aboutLink).toHaveAttribute('href', '/01_about');
+    expect(portfolioLink).toHaveAttribute('href', '/02_portfolio');
+    expect(workshopLink).toHaveAttribute('href', '/03_workshop');
+    expect(toolsLink).toHaveAttribute('href', '/04_tools');
   });
 
   it('should render site functions section', () => {
@@ -93,14 +91,13 @@ describe('HomePage', () => {
   it('should render site function links', () => {
     render(<HomePage />);
 
-    const privacyLink = screen.getByRole('heading', { name: 'Privacy Policy' }).closest('a');
-    expect(privacyLink).toHaveAttribute('href', '/privacy-policy');
+    const privacyLink = screen.getByRole('link', { name: /Privacy Policy/i });
+    const contactLink = screen.getByRole('link', { name: /Contact/i });
+    const searchLink = screen.getByRole('link', { name: /Search/i });
 
-    const searchLink = screen.getByRole('heading', { name: 'Search' }).closest('a');
-    expect(searchLink).toHaveAttribute('href', '/search');
-
-    const contactLink = screen.getByRole('heading', { name: 'Contact' }).closest('a');
-    expect(contactLink).toHaveAttribute('href', '/contact');
+    expect(privacyLink).toHaveAttribute('href', '/00_global/privacy-policy');
+    expect(contactLink).toHaveAttribute('href', '/00_global/contact');
+    expect(searchLink).toHaveAttribute('href', '/00_global/search');
   });
 
   it('should render latest updates section', () => {

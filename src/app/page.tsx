@@ -25,7 +25,7 @@ export default function HomePage() {
         </h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* About */}
-          <Link href="/about" className="card block transition-colors hover:border-blue-500">
+          <Link href="/01_about" className="card block transition-colors hover:border-blue-500">
             <h3 className="neue-haas-grotesk-display mb-3 text-xl text-white">About</h3>
             <p className="noto-sans-jp-regular mb-4 text-gray-300">
               プロフィール、デジタル名刺、依頼ページへの導線
@@ -38,7 +38,7 @@ export default function HomePage() {
           </Link>
 
           {/* Portfolio */}
-          <Link href="/portfolio" className="card block transition-colors hover:border-blue-500">
+          <Link href="/02_portfolio" className="card block transition-colors hover:border-blue-500">
             <h3 className="neue-haas-grotesk-display mb-3 text-xl text-white">Portfolio</h3>
             <p className="noto-sans-jp-regular mb-4 text-gray-300">
               4つのギャラリー（all / develop / video / video&design）への導線
@@ -52,7 +52,7 @@ export default function HomePage() {
           </Link>
 
           {/* Workshop */}
-          <Link href="/workshop" className="card block transition-colors hover:border-blue-500">
+          <Link href="/03_workshop" className="card block transition-colors hover:border-blue-500">
             <h3 className="neue-haas-grotesk-display mb-3 text-xl text-white">Workshop</h3>
             <p className="noto-sans-jp-regular mb-4 text-gray-300">
               プラグイン配布、ブログ、素材ダウンロードへの導線
@@ -65,7 +65,7 @@ export default function HomePage() {
           </Link>
 
           {/* Tools */}
-          <Link href="/tools" className="card block transition-colors hover:border-blue-500">
+          <Link href="/04_tools" className="card block transition-colors hover:border-blue-500">
             <h3 className="neue-haas-grotesk-display mb-3 text-xl text-white">Tools</h3>
             <p className="noto-sans-jp-regular mb-4 text-gray-300">実用的なWebツール集への導線</p>
             <ul className="noto-sans-jp-light space-y-1 text-sm text-gray-400">
@@ -86,7 +86,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {/* Privacy Policy */}
           <Link
-            href="/privacy-policy"
+            href="/00_global/privacy-policy"
             className="card block text-center transition-colors hover:border-blue-500"
           >
             <h3 className="neue-haas-grotesk-display mb-3 text-lg text-white">Privacy Policy</h3>
@@ -95,7 +95,7 @@ export default function HomePage() {
 
           {/* Search */}
           <Link
-            href="/search"
+            href="/00_global/search"
             className="card block text-center transition-colors hover:border-blue-500"
           >
             <h3 className="neue-haas-grotesk-display mb-3 text-lg text-white">Search</h3>
@@ -104,7 +104,7 @@ export default function HomePage() {
 
           {/* Contact */}
           <Link
-            href="/contact"
+            href="/00_global/contact"
             className="card block text-center transition-colors hover:border-blue-500"
           >
             <h3 className="neue-haas-grotesk-display mb-3 text-lg text-white">Contact</h3>

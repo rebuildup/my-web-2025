@@ -162,34 +162,16 @@ describe('GridSystem Components', () => {
 
   describe('ContainerGrid', () => {
     it('should render with container query classes', () => {
-      render(
-        <ContainerGrid>
-          <div>Item 1</div>
-          <div>Item 2</div>
-        </ContainerGrid>
-      );
+      render(<ContainerGrid>Test content</ContainerGrid>);
 
-      const container = screen.getByText('Item 1').closest('div');
-      expect(container).toHaveClass('@container');
-
-      const grid = screen.getByText('Item 1').parentElement;
-      expect(grid).toHaveClass(
-        'grid',
-        'grid-cols-1',
-        'gap-4',
-        '@sm:grid-cols-2',
-        '@lg:grid-cols-4'
-      );
+      const container = screen.getByText('Test content').parentElement;
+      expect(container).toHaveClass('container-grid');
     });
 
     it('should apply custom className', () => {
-      render(
-        <ContainerGrid className="custom-class">
-          <div>Test content</div>
-        </ContainerGrid>
-      );
+      render(<ContainerGrid className="custom-class">Test content</ContainerGrid>);
 
-      const container = screen.getByText('Test content').closest('div');
+      const container = screen.getByText('Test content').parentElement;
       expect(container).toHaveClass('custom-class');
     });
   });

@@ -1,0 +1,72 @@
+# Page snapshot
+
+```yaml
+- heading "samuido" [level=1]
+- paragraph: フロントエンドエンジニアの個人サイト
+- paragraph: 自己紹介 / 作品ギャラリー / プラグイン配布 / ツール など 欲しいもの全部詰め込みました
+- heading "Main Categories" [level=2]
+- link "About プロフィール、デジタル名刺、依頼ページへの導線 • 本名プロフィール（採用担当者・企業向け） • ハンドルネームプロフィール（同業者向け） • スキル・経歴・受賞歴":
+  - /url: /about/
+  - heading "About" [level=3]
+  - paragraph: プロフィール、デジタル名刺、依頼ページへの導線
+  - list:
+    - listitem: • 本名プロフィール（採用担当者・企業向け）
+    - listitem: • ハンドルネームプロフィール（同業者向け）
+    - listitem: • スキル・経歴・受賞歴
+- link "Portfolio 4つのギャラリー（all / develop / video / video&design）への導線 • 全作品一覧（バラエティ重視） • 開発系作品（プログラミング関連） • 映像作品（foriioライク表示） • 映像・デザイン作品（クリエイティブ）":
+  - /url: /portfolio/
+  - heading "Portfolio" [level=3]
+  - paragraph: 4つのギャラリー（all / develop / video / video&design）への導線
+  - list:
+    - listitem: • 全作品一覧（バラエティ重視）
+    - listitem: • 開発系作品（プログラミング関連）
+    - listitem: • 映像作品（foriioライク表示）
+    - listitem: • 映像・デザイン作品（クリエイティブ）
+- link "Workshop プラグイン配布、ブログ、素材ダウンロードへの導線 • プラグイン配布（After Effects等） • 技術ブログ・制作記録 • 素材・テンプレートダウンロード":
+  - /url: /workshop/
+  - heading "Workshop" [level=3]
+  - paragraph: プラグイン配布、ブログ、素材ダウンロードへの導線
+  - list:
+    - listitem: • プラグイン配布（After Effects等）
+    - listitem: • 技術ブログ・制作記録
+    - listitem: • 素材・テンプレートダウンロード
+- link "Tools 実用的なWebツール集への導線 • カラーパレット生成ツール • QRコード生成器 • テキストカウンタ • その他便利ツール":
+  - /url: /tools/
+  - heading "Tools" [level=3]
+  - paragraph: 実用的なWebツール集への導線
+  - list:
+    - listitem: • カラーパレット生成ツール
+    - listitem: • QRコード生成器
+    - listitem: • テキストカウンタ
+    - listitem: • その他便利ツール
+- heading "Site Functions" [level=2]
+- link "Privacy Policy プライバシーポリシー":
+  - /url: /privacy-policy/
+  - heading "Privacy Policy" [level=3]
+  - paragraph: プライバシーポリシー
+- link "Search サイト内検索機能":
+  - /url: /search/
+  - heading "Search" [level=3]
+  - paragraph: サイト内検索機能
+- link "Contact お問い合わせフォーム":
+  - /url: /contact/
+  - heading "Contact" [level=3]
+  - paragraph: お問い合わせフォーム
+- heading "Latest Updates" [level=2]
+- text: Portfolio
+- heading "最新作品タイトル" [level=3]
+- paragraph: 最新の制作作品についての簡単な説明です。技術スタックや制作期間など。
+- text: React TypeScript Blog
+- heading "最新ブログ記事" [level=3]
+- paragraph: 最新の技術記事や制作過程についての記事です。学習した内容の共有など。
+- text: 2025/01/20 Tools
+- heading "新機能追加" [level=3]
+- paragraph: 既存ツールに新機能を追加しました。使いやすさの向上を図っています。
+- text: 2025/01/18
+- contentinfo:
+  - paragraph: © 2025 samuido (木村友亮)
+  - paragraph: フロントエンドエンジニア・Webデザイナー・映像クリエイター
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+```

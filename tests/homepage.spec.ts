@@ -20,34 +20,34 @@ test.describe('Homepage', () => {
     await page.goto('/');
 
     // Test About link - click on the link containing About h3
-    await page.click('a:has(h3:text("About"))');
-    await expect(page).toHaveURL('/about');
+    await Promise.all([page.waitForNavigation(), page.click('a:has(h3:text("About"))')]);
+    await expect(page).toHaveURL(/\/about\/?$/);
 
     // Go back to homepage
     await page.goto('/');
 
     // Test Portfolio link - click on the link containing Portfolio h3
-    await page.click('a:has(h3:text("Portfolio"))');
-    await expect(page).toHaveURL('/portfolio');
+    await Promise.all([page.waitForNavigation(), page.click('a:has(h3:text("Portfolio"))')]);
+    await expect(page).toHaveURL(/\/portfolio\/?$/);
 
     // Go back to homepage
     await page.goto('/');
 
     // Test Tools link - click on the link containing Tools h3
-    await page.click('a:has(h3:text("Tools"))');
-    await expect(page).toHaveURL('/tools');
+    await Promise.all([page.waitForNavigation(), page.click('a:has(h3:text("Tools"))')]);
+    await expect(page).toHaveURL(/\/tools\/?$/);
   });
 
   test('should have search link navigation', async ({ page }) => {
     await page.goto('/');
 
-    // Find search link
-    const searchLink = page.locator('a[href="/search"]');
+    // Find search link by text content instead of href
+    const searchLink = page.locator('a:has(h3:text("Search"))');
     await expect(searchLink).toBeVisible();
 
     // Test search page navigation
-    await searchLink.click();
-    await expect(page).toHaveURL('/search');
+    await Promise.all([page.waitForNavigation(), searchLink.click()]);
+    await expect(page).toHaveURL(/\/search\/?$/);
   });
 
   test('should display recent updates section', async ({ page }) => {
@@ -96,7 +96,7 @@ test.describe('Homepage', () => {
     await expect(page.locator('h1')).toBeVisible();
 
     // Check that search link is still functional
-    const searchLink = page.locator('a[href="/search"]');
+    const searchLink = page.locator('a:has(h3:text("Search"))');
     await expect(searchLink).toBeVisible();
   });
 
@@ -146,9 +146,9 @@ test.describe('Homepage', () => {
     await expect(firstLink).toBeFocused();
 
     // Should be able to activate links with Enter
-    await page.keyboard.press('Enter');
+    await Promise.all([page.waitForNavigation(), page.keyboard.press('Enter')]);
 
     // Should navigate to the linked page
-    await expect(page).toHaveURL('/about');
+    await expect(page).toHaveURL(/\/about\/?$/);
   });
 });
