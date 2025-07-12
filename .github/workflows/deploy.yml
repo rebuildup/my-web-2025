@@ -74,17 +74,17 @@ jobs:
           tar -czf deployment.tar.gz .next/ package.json package-lock.json public/
           echo "Package size: $(du -h deployment.tar.gz)"
 
-      # SSH設定の最適化
-      - name: Setup SSH with connection multiplexing
+      # 簡素化されたSSH設定
+      - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # SSH鍵の設定
+          # SSH鍵の設定（適切な権限で）
           echo "${{ secrets.GCP_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          # SSH設定ファイル（接続多重化対応）
+          # 基本的なSSH設定
           cat > ~/.ssh/config << EOF
           Host deploy-server
             HostName ${{ secrets.GCP_HOST }}
@@ -92,132 +92,73 @@ jobs:
             IdentityFile ~/.ssh/id_rsa
             StrictHostKeyChecking no
             UserKnownHostsFile /dev/null
-            ControlMaster auto
-            ControlPath ~/.ssh/control-%h-%p-%r
-            ControlPersist 300
             ConnectTimeout 30
             ServerAliveInterval 60
             ServerAliveCountMax 3
+            LogLevel ERROR
           EOF
           chmod 600 ~/.ssh/config
 
-          # known_hostsの設定
-          ssh-keyscan -H ${{ secrets.GCP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
-          chmod 644 ~/.ssh/known_hosts
+          # ホストキーを事前に取得（エラーハンドリング強化）
+          ssh-keyscan -H ${{ secrets.GCP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || {
+            echo "Warning: Could not add host key, continuing with StrictHostKeyChecking=no"
+          }
 
-      # 単一SSH接続で全デプロイ処理を実行
-      - name: Deploy to server (Single SSH Session)
-        timeout-minutes: 20
+      # 接続テスト
+      - name: Test SSH connection
         run: |
-          # デプロイメントパッケージを転送
-          scp deployment.tar.gz deploy-server:/tmp/
+          echo "Testing SSH connection..."
+          ssh deploy-server "echo 'SSH connection successful'; whoami; pwd" || {
+            echo "SSH connection failed"
+            exit 1
+          }
 
-          # 単一SSH セッションで全ての処理を実行
-          ssh deploy-server << 'EOF'
-          set -e  # エラー時に即座に終了
+      # デプロイメントファイル転送
+      - name: Transfer deployment files
+        run: |
+          echo "Transferring deployment package..."
+          scp -o ConnectTimeout=30 deployment.tar.gz deploy-server:/tmp/ || {
+            echo "File transfer failed"
+            exit 1
+          }
+
+      # サーバー上でのデプロイ処理
+      - name: Deploy application
+        timeout-minutes: 15
+        run: |
+          ssh deploy-server << 'DEPLOY_SCRIPT'
+          set -e
 
           echo "=== Starting deployment process ==="
+          echo "User: $(whoami)"
+          echo "Time: $(date)"
 
-          # 現在の実行ユーザーとIPアドレスを表示
-          echo "Deploying as user: $(whoami)"
-          echo "Server IP: $(hostname -I | awk '{print $1}')"
-          echo "GitHub Actions IP: $(curl -s https://ipinfo.io/ip || echo 'unknown')"
-
-          # fail2ban のステータス確認（デバッグ用）
-          if command -v fail2ban-client &> /dev/null; then
-            echo "Checking fail2ban status..."
-            sudo fail2ban-client status sshd 2>/dev/null || echo "fail2ban not configured for sshd"
-          fi
-
-          # 1. システム準備
-          echo "=== System preparation ==="
-          sudo apt-get update -qq
-
-          # Node.js のインストール確認
-          if ! command -v node &> /dev/null; then
-            echo "Installing Node.js..."
-            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-          fi
-
-          # PM2 のインストール確認
-          if ! command -v pm2 &> /dev/null; then
-            echo "Installing PM2..."
-            sudo npm install -g pm2
-          fi
-
-          # Apache のインストールと設定
-          if ! command -v apache2 &> /dev/null; then
-            echo "Installing Apache..."
-            sudo apt-get install -y apache2
-          fi
-
-          # 2. Apache 設定
-          echo "=== Configuring Apache ==="
-
-          # 必要なモジュールの有効化
-          sudo a2enmod proxy proxy_http rewrite
-
-          # 既存設定の無効化
-          sudo a2dissite 000-default.conf 2>/dev/null || true
-          sudo a2dissite yusuke-kim.conf 2>/dev/null || true
-          sudo a2dissite yusuke-kim-le-ssl.conf 2>/dev/null || true
-
-          # 新しい設定ファイルの作成
-          cat > /tmp/apache-config.conf << 'APACHE_EOF'
-          <VirtualHost *:80>
-              ServerName yusuke-kim.com
-              ServerAlias www.yusuke-kim.com
-              DocumentRoot /var/www/my-web-2025
-
-              ProxyPreserveHost On
-              ProxyPass / http://127.0.0.1:3000/
-              ProxyPassReverse / http://127.0.0.1:3000/
-              
-              # Static files serving (backup)
-              ProxyPassMatch ^/(_next/static/.*|/favicon\.ico|/robots\.txt)$ !
-              Alias "/_next/static" "/var/www/my-web-2025/.next/static"
-              
-              ErrorLog ${APACHE_LOG_DIR}/my-web-2025-error.log
-              CustomLog ${APACHE_LOG_DIR}/my-web-2025-access.log combined
-          </VirtualHost>
-          APACHE_EOF
-          sudo cp /tmp/apache-config.conf /etc/apache2/sites-available/my-web-2025.conf
-
-          # Apache 設定の有効化
-          sudo apache2ctl configtest
-          sudo a2ensite my-web-2025.conf
-          sudo systemctl restart apache2
-          sudo systemctl enable apache2
-
-          # 3. アプリケーションの停止と バックアップ
-          echo "=== Application backup ==="
-
-          # 現在のアプリケーションを停止
-          if pm2 list | grep -q "my-web-2025"; then
-            echo "Stopping current application..."
-            pm2 stop my-web-2025
-            pm2 delete my-web-2025
-          fi
-
-          # バックアップの作成
-          sudo mkdir -p /var/www/backups
-          if [ -d "/var/www/my-web-2025" ] && [ "$(ls -A /var/www/my-web-2025 2>/dev/null)" ]; then
+          # 1. バックアップ作成
+          if [ -d "/var/www/yusuke-kim" ] && [ "$(ls -A /var/www/yusuke-kim 2>/dev/null)" ]; then
             echo "Creating backup..."
-            sudo cp -r /var/www/my-web-2025 /var/www/backups/my-web-2025-$(date +%Y%m%d-%H%M%S)
+            sudo mkdir -p /var/www/backups
+            sudo cp -r /var/www/yusuke-kim /var/www/backups/yusuke-kim-$(date +%Y%m%d-%H%M%S)
             echo "Backup created"
           fi
 
-          # 4. 新しいバージョンのデプロイ
-          echo "=== Deploying new version ==="
+          # 2. 現在のアプリケーション停止
+          echo "Stopping current application..."
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          pm2 stop yusuke-kim 2>/dev/null || echo "No existing PM2 process found"
+          pm2 delete yusuke-kim 2>/dev/null || echo "No existing PM2 process to delete"
 
-          # 一時ディレクトリでの展開
+          # 3. デプロイメントディレクトリ準備
+          echo "Preparing deployment directory..."
+          sudo mkdir -p /var/www/yusuke-kim
+          sudo chown -R $USER:www-data /var/www/yusuke-kim
+
+          # 4. 新しいファイル展開
+          echo "Extracting new files..."
           cd /tmp
-          rm -rf my-web-2025-temp
-          mkdir my-web-2025-temp
-          cd my-web-2025-temp
-
-          echo "Extracting deployment package..."
+          rm -rf yusuke-kim-temp
+          mkdir yusuke-kim-temp
+          cd yusuke-kim-temp
           tar -xzf /tmp/deployment.tar.gz
 
           # ファイル確認
@@ -226,52 +167,56 @@ jobs:
             exit 1
           fi
 
-          # アプリケーションディレクトリの準備
-          sudo rm -rf /var/www/my-web-2025
-          sudo mkdir -p /var/www/my-web-2025
+          # 5. ファイルコピー
+          echo "Copying files to web directory..."
+          sudo rm -rf /var/www/yusuke-kim/*
+          sudo cp -r ./* /var/www/yusuke-kim/
+          sudo chown -R $USER:www-data /var/www/yusuke-kim
+          sudo chmod -R 755 /var/www/yusuke-kim
 
-          # ファイルのコピー
-          sudo cp -r ./* /var/www/my-web-2025/
-          [ -d ".next" ] && sudo cp -r .next /var/www/my-web-2025/
+          # 6. nvmとNode.js環境の確認
+          echo "Setting up Node.js environment..."
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-          # 権限設定
-          sudo chown -R $USER:www-data /var/www/my-web-2025
-          sudo chmod -R 755 /var/www/my-web-2025
+          # Node.jsバージョン確認
+          echo "Node.js version: $(node --version)"
+          echo "npm version: $(npm --version)"
 
-          # 5. 依存関係のインストール
-          echo "=== Installing dependencies ==="
-          cd /var/www/my-web-2025
-
-          # npm 設定の最適化
-          npm config set fetch-timeout 300000
-          npm config set fetch-retry-mintimeout 20000
-          npm config set fetch-retry-maxtimeout 120000
-
+          # 依存関係インストール
+          echo "Installing dependencies..."
+          cd /var/www/yusuke-kim
           npm ci --omit=dev --no-audit --no-fund --silent
 
-          # 6. 環境変数の設定
-          echo "=== Setting environment variables ==="
-          cat > /tmp/env-config << 'ENV_EOF'
+          # 7. 環境変数設定
+          echo "Setting up environment variables..."
+          cat > .env.production.local << ENV_EOF
           RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}
           NODE_ENV=production
           PORT=3000
           ENV_EOF
-          sudo cp /tmp/env-config .env.production.local
 
-          # 7. アプリケーションの起動
-          echo "=== Starting application ==="
-          NODE_ENV=production pm2 start npm --name "my-web-2025" -- start
+          # 8. アプリケーション起動
+          echo "Starting application..."
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          NODE_ENV=production pm2 start npm --name "yusuke-kim" -- start
           pm2 save
 
-          # 8. ヘルスチェック
-          echo "=== Health check ==="
-          sleep 5
+          # 9. ヘルスチェック
+          echo "Performing health check..."
+          sleep 10
 
-          # PM2 状態確認
-          if ! pm2 list | grep -q "my-web-2025.*online"; then
+          # NVM環境を再読み込み
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+          # PM2プロセス確認
+          if ! pm2 list | grep -q "yusuke-kim.*online"; then
             echo "❌ Application failed to start"
-            pm2 logs my-web-2025 --lines 20
+            pm2 logs yusuke-kim --lines 20
             exit 1
           fi
 
@@ -280,40 +225,59 @@ jobs:
             echo "✅ Application is responding on port 3000"
           else
             echo "⚠️ Application not responding on port 3000"
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            pm2 logs yusuke-kim --lines 10
           fi
 
-          # 9. クリーンアップ
-          echo "=== Cleanup ==="
-          rm -rf /tmp/my-web-2025-temp
+          # 10. Apache設定確認とリロード
+          echo "Checking Apache configuration..."
+          sudo apache2ctl configtest || {
+            echo "Apache configuration test failed"
+            exit 1
+          }
+
+          sudo systemctl reload apache2
+
+          # 11. クリーンアップ
+          echo "Cleaning up..."
+          rm -rf /tmp/yusuke-kim-temp
           rm -f /tmp/deployment.tar.gz
 
-          # 古いバックアップのクリーンアップ（7日以上前）
-          find /var/www/backups -name "my-web-2025-*" -mtime +7 -exec sudo rm -rf {} \; 2>/dev/null || true
+          # 古いバックアップクリーンアップ（7日以上前）
+          find /var/www/backups -name "yusuke-kim-*" -mtime +7 -exec sudo rm -rf {} \; 2>/dev/null || true
 
           echo "=== Deployment completed successfully ==="
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           pm2 list
+          DEPLOY_SCRIPT
 
-          EOF
-
-      # デプロイ後の外部ヘルスチェック
+      # 外部ヘルスチェック
       - name: External health check
         run: |
           echo "=== External health check ==="
-          sleep 10
+          sleep 15
 
           # HTTP アクセステスト
-          if curl -f -s -I http://${{ secrets.GCP_HOST }}/ > /dev/null; then
-            echo "✅ HTTP access successful"
-          else
-            echo "❌ HTTP access failed"
-            exit 1
-          fi
+          for i in {1..5}; do
+            if curl -f -s -I http://${{ secrets.GCP_HOST }}/ > /dev/null; then
+              echo "✅ HTTP access successful"
+              break
+            elif [ $i -eq 5 ]; then
+              echo "❌ HTTP access failed after 5 attempts"
+              exit 1
+            else
+              echo "HTTP access attempt $i failed, retrying in 10s..."
+              sleep 10
+            fi
+          done
 
-          # HTTPS アクセステスト（設定されている場合）
+          # HTTPS アクセステスト（証明書が設定されている場合）
           if curl -f -s -I https://yusuke-kim.com/ > /dev/null; then
             echo "✅ HTTPS access successful"
           else
-            echo "⚠️ HTTPS access failed (may not be configured)"
+            echo "⚠️ HTTPS access failed (certificate may not be configured)"
           fi
 
       # 失敗時の自動ロールバック
@@ -321,35 +285,33 @@ jobs:
         if: failure()
         run: |
           echo "=== Performing rollback ==="
-          ssh deploy-server << 'EOF'
-          LATEST_BACKUP=$(ls -t /var/www/backups/my-web-2025-* 2>/dev/null | head -1)
+          ssh deploy-server << 'ROLLBACK_SCRIPT'
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+          LATEST_BACKUP=$(ls -t /var/www/backups/yusuke-kim-* 2>/dev/null | head -1)
 
           if [ -n "$LATEST_BACKUP" ]; then
             echo "Rolling back to: $LATEST_BACKUP"
             
             # アプリケーション停止
-            pm2 stop my-web-2025 2>/dev/null || true
-            pm2 delete my-web-2025 2>/dev/null || true
+            pm2 stop yusuke-kim 2>/dev/null || true
+            pm2 delete yusuke-kim 2>/dev/null || true
             
             # バックアップから復元
-            sudo rm -rf /var/www/my-web-2025
-            sudo cp -r "$LATEST_BACKUP" /var/www/my-web-2025
-            sudo chown -R $USER:www-data /var/www/my-web-2025
+            sudo rm -rf /var/www/yusuke-kim
+            sudo cp -r "$LATEST_BACKUP" /var/www/yusuke-kim
+            sudo chown -R $USER:www-data /var/www/yusuke-kim
             
             # アプリケーション再起動
-            cd /var/www/my-web-2025
-            NODE_ENV=production pm2 start npm --name "my-web-2025" -- start
+            cd /var/www/yusuke-kim
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            NODE_ENV=production pm2 start npm --name "yusuke-kim" -- start
             pm2 save
             
             echo "✅ Rollback completed"
           else
             echo "❌ No backup found for rollback"
           fi
-          EOF
-
-      # SSH接続のクリーンアップ
-      - name: Cleanup SSH connections
-        if: always()
-        run: |
-          # ControlMaster 接続の終了
-          ssh -O exit deploy-server 2>/dev/null || true
+          ROLLBACK_SCRIPT
