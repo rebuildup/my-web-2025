@@ -91,7 +91,7 @@ jobs:
           done
 
           # パッケージ作成
-          tar -czf deployment.tar.gz .next/ package.json package-lock.json public/
+          tar -czf deployment.tar.gz .next/ package.json package-lock.json public/ src/ next.config.js tailwind.config.js tsconfig.json postcss.config.js
 
           echo "✅ Package created successfully"
           echo "Package size: $(du -h deployment.tar.gz)"
