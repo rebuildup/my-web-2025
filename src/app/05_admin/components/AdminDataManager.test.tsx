@@ -6,6 +6,7 @@ import AdminDataManager from './AdminDataManager';
 describe('AdminDataManager', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.useFakeTimers();
   });
 
   it('should render the admin data manager', () => {
@@ -25,7 +26,7 @@ describe('AdminDataManager', () => {
 
   it('should display overview tab content after loading', async () => {
     render(<AdminDataManager />);
-
+    vi.runAllTimers();
     await waitFor(() => {
       expect(screen.getByText('1247')).toBeInTheDocument(); // Total Users
       expect(screen.getByText('89')).toBeInTheDocument(); // Content Items
@@ -37,7 +38,7 @@ describe('AdminDataManager', () => {
   it('should switch to data management tab', async () => {
     const user = userEvent.setup();
     render(<AdminDataManager />);
-
+    vi.runAllTimers();
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.getByText('1247')).toBeInTheDocument();
@@ -54,7 +55,7 @@ describe('AdminDataManager', () => {
   it('should switch to settings tab', async () => {
     const user = userEvent.setup();
     render(<AdminDataManager />);
-
+    vi.runAllTimers();
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.getByText('1247')).toBeInTheDocument();
@@ -72,7 +73,7 @@ describe('AdminDataManager', () => {
   it('should display data items with correct information', async () => {
     const user = userEvent.setup();
     render(<AdminDataManager />);
-
+    vi.runAllTimers();
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.getByText('1247')).toBeInTheDocument();
@@ -97,7 +98,7 @@ describe('AdminDataManager', () => {
 
   it('should display system health information', async () => {
     render(<AdminDataManager />);
-
+    vi.runAllTimers();
     await waitFor(() => {
       expect(screen.getByText('System Health')).toBeInTheDocument();
       expect(screen.getByText('Database Connection')).toBeInTheDocument();
@@ -111,7 +112,7 @@ describe('AdminDataManager', () => {
 
   it('should display correct statistics', async () => {
     render(<AdminDataManager />);
-
+    vi.runAllTimers();
     await waitFor(() => {
       expect(screen.getByText('Total Users')).toBeInTheDocument();
       expect(screen.getByText('Content Items')).toBeInTheDocument();
@@ -123,7 +124,7 @@ describe('AdminDataManager', () => {
   it('should handle tab navigation correctly', async () => {
     const user = userEvent.setup();
     render(<AdminDataManager />);
-
+    vi.runAllTimers();
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.getByText('1247')).toBeInTheDocument();
@@ -154,7 +155,7 @@ describe('AdminDataManager', () => {
   it('should display data items with correct formatting', async () => {
     const user = userEvent.setup();
     render(<AdminDataManager />);
-
+    vi.runAllTimers();
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.getByText('1247')).toBeInTheDocument();
@@ -173,7 +174,7 @@ describe('AdminDataManager', () => {
   it('should display correct status colors', async () => {
     const user = userEvent.setup();
     render(<AdminDataManager />);
-
+    vi.runAllTimers();
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.getByText('1247')).toBeInTheDocument();
@@ -190,7 +191,7 @@ describe('AdminDataManager', () => {
   it('should display correct type icons', async () => {
     const user = userEvent.setup();
     render(<AdminDataManager />);
-
+    vi.runAllTimers();
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.getByText('1247')).toBeInTheDocument();

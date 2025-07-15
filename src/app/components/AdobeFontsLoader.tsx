@@ -7,7 +7,7 @@ export default function AdobeFontsLoader() {
     script.src = 'https://use.typekit.net/blm5pmr.js';
     script.async = true;
     script.onload = () => {
-      // @ts-ignore
+      // @ts-expect-error: Typekitはwindowに追加される外部スクリプトのため型定義がない
       if (window.Typekit) window.Typekit.load();
     };
     document.head.appendChild(script);

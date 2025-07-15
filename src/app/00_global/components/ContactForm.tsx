@@ -317,6 +317,7 @@ const ContactForm: React.FC = () => {
               onExpired={handleRecaptchaExpired}
               theme="dark"
               size="normal"
+              data-testid="recaptcha"
             />
             {errors.recaptcha && <p className="text-sm text-red-400">{errors.recaptcha}</p>}
           </div>
