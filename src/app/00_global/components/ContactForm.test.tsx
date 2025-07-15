@@ -3,7 +3,6 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContactForm from './ContactForm';
 
-// ReCAPTCHAをテスト用にモック
 interface RecaptchaProps {
   onChange?: (token: string | null) => void;
   onError?: () => void;
