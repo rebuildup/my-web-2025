@@ -210,39 +210,16 @@ jobs:
           echo "Cleaning npm environment..."
           npm cache clean --force 2>/dev/null || echo "Cache already clean"
 
-          # 9. Lightweight dependency installation
-          echo "Installing dependencies (lightweight approach)..."
+          # 9. Full dependency installation
+          echo "Installing all dependencies..."
 
-          # Create minimal package.json for initial install
-          cat > package.json.minimal << 'MIN_EOF'
-          {
-            "name": "my-web-2025",
-            "version": "0.1.0",
-            "private": true,
-            "scripts": {
-              "start": "./node_modules/.bin/next start"
-            },
-            "dependencies": {
-              "next": "15.3.4",
-              "react": "^19.0.0",
-              "react-dom": "^19.0.0"
-            }
-          }
-          MIN_EOF
-
-          # Backup full package.json
-          cp package.json package.json.full
-
-          # Use minimal version first
-          cp package.json.minimal package.json
-
-          # Install with memory-friendly options
+          # Install complete dependencies from package.json
           npm install --no-optional --no-audit --no-fund --silent || {
             echo "❌ Dependency installation failed"
             exit 1
           }
 
-          echo "✅ Core dependencies installed"
+          echo "✅ All dependencies installed"
 
           # 10. Verify Next.js installation
           if [ ! -f "./node_modules/.bin/next" ]; then
