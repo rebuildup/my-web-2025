@@ -90,8 +90,23 @@ jobs:
             fi
           done
 
+          # 基本ファイル
+          FILES_TO_INCLUDE=".next/ package.json package-lock.json public/ src/"
+
+          # 設定ファイルが存在する場合のみ追加(TypeScript形式対応)
+          [ -f "next.config.ts" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE next.config.ts"
+          [ -f "next.config.js" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE next.config.js"
+          [ -f "tailwind.config.ts" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE tailwind.config.ts"
+          [ -f "tailwind.config.js" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE tailwind.config.js"
+          [ -f "postcss.config.mjs" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE postcss.config.mjs"
+          [ -f "postcss.config.js" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE postcss.config.js"
+          [ -f "tsconfig.json" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE tsconfig.json"
+          [ -f "eslint.config.mjs" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE eslint.config.mjs"
+
+          echo "Files to include: $FILES_TO_INCLUDE"
+
           # パッケージ作成
-          tar -czf deployment.tar.gz .next/ package.json package-lock.json public/ src/ next.config.js tailwind.config.js tsconfig.json postcss.config.js
+          tar -czf deployment.tar.gz $FILES_TO_INCLUDE
 
           echo "✅ Package created successfully"
           echo "Package size: $(du -h deployment.tar.gz)"
