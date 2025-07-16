@@ -90,6 +90,10 @@ class ErrorTracker {
     this.addBreadcrumb('system', 'Error tracker initialized');
   }
 
+  public configure(config: Partial<ErrorTrackerConfig>): void {
+    this.config = { ...this.config, ...config };
+  }
+
   private generateSessionId(): string {
     return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
@@ -409,12 +413,12 @@ class ErrorTracker {
     }
   }
 
-  public captureError(
+  public async captureError(
     error: Omit<ErrorEvent, 'id' | 'timestamp' | 'sessionId' | 'breadcrumbs' | 'fingerprint'>
-  ): void {
-    if (!this.config.enabled || !this.shouldSample()) return;
-
-    if (this.shouldIgnoreError(error.message)) return;
+  ): Promise<void> {
+    if (!this.config.enabled || !this.shouldSample() || this.shouldIgnoreError(error.message)) {
+      return;
+    }
 
     const errorEvent: ErrorEvent = {
       id: this.generateErrorId(),
@@ -426,42 +430,35 @@ class ErrorTracker {
       ...error,
     };
 
-    // Check for duplicate errors
-    const existingError = this.errors.find(e => e.fingerprint === errorEvent.fingerprint);
-    if (existingError) {
-      existingError.count = (existingError.count || 1) + 1;
-      existingError.timestamp = errorEvent.timestamp;
-      return;
+    // Send to API first
+    if (this.config.apiEndpoint) {
+      await this.sendToAPI(errorEvent);
     }
-
-    errorEvent.count = 1;
 
     // Process error through beforeSend hook
     const processedError = this.config.beforeSend ? this.config.beforeSend(errorEvent) : errorEvent;
     if (!processedError) return;
 
-    this.errors.push(processedError);
-
-    // Keep only the most recent errors
-    if (this.errors.length > this.config.maxErrors) {
-      this.errors = this.errors.slice(-this.config.maxErrors);
+    // Check for duplicate errors
+    const existingError = this.errors.find(e => e.fingerprint === processedError.fingerprint);
+    if (existingError) {
+      existingError.count = (existingError.count || 1) + 1;
+      existingError.timestamp = processedError.timestamp;
+      return;
     }
 
-    // Call error callback
+    processedError.count = 1;
+    this.errors.push(processedError);
+
+    if (this.errors.length > this.config.maxErrors) {
+      this.errors.shift();
+    }
+
     if (this.config.onError) {
       this.config.onError(processedError);
     }
 
-    // Send to API if configured
-    if (this.config.apiEndpoint) {
-      this.sendToAPI(processedError);
-    }
-
-    // Add breadcrumb for this error
-    this.addBreadcrumb('error', `${error.type}: ${error.message}`, {
-      severity: error.severity,
-      fingerprint: errorEvent.fingerprint,
-    });
+    this.addBreadcrumb('error', `${processedError.type}: ${processedError.message}`);
   }
 
   private async sendToAPI(error: ErrorEvent): Promise<void> {
@@ -582,16 +579,10 @@ export function createErrorBoundary(Component: React.ComponentType<any>) {
 
     render() {
       if (this.state.hasError) {
-        return React.createElement(
-          'div',
-          {
-            className: 'error-boundary',
-          },
-          'Something went wrong. Please refresh the page.'
-        );
+        return React.createElement(Component, this.props);
       }
 
-      return React.createElement(Component, this.props);
+      return this.props.children;
     }
   };
 }

@@ -1,27 +1,19 @@
 'use client';
 
+import { searchContent } from '@/lib/search';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { ContentType, SearchResult } from '@/types/content';
 
 // Note: metadata export needs to be in a separate component or moved to layout
 // For now, we'll handle SEO in the component itself using useEffect and document
-
-interface SearchResult {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  type: string;
-  url: string;
-  lastModified: string;
-}
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedType, setSelectedType] = useState('all');
+  const [selectedType, setSelectedType] = useState<ContentType | 'all'>('all');
   const [hasSearched, setHasSearched] = useState(false);
 
   // SEO設定
@@ -45,7 +37,7 @@ export default function SearchPage() {
     { id: 'tools', name: 'Tools' },
   ];
 
-  const types = [
+  const types: { id: ContentType | 'all'; name: string }[] = [
     { id: 'all', name: '全て' },
     { id: 'page', name: 'ページ' },
     { id: 'blog', name: 'ブログ記事' },
@@ -54,83 +46,19 @@ export default function SearchPage() {
     { id: 'portfolio', name: '作品' },
   ];
 
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) return;
+  const handleSearch = async (query?: string) => {
+    const finalQuery = query !== undefined ? query : searchQuery;
+    if (!finalQuery.trim()) return;
 
     setIsLoading(true);
     setHasSearched(true);
 
     try {
-      // シミュレートされた検索結果
-      const mockResults: SearchResult[] = [
-        {
-          id: '1',
-          title: 'About - プロフィール',
-          description:
-            'フロントエンドエンジニア・Webデザイナーの木村友亮のプロフィール。経歴、スキル、作品、連絡先情報をご紹介。',
-          category: 'about',
-          type: 'page',
-          url: '/about',
-          lastModified: '2025-01-20',
-        },
-        {
-          id: '2',
-          title: 'Color Palette Generator',
-          description:
-            'カラーパレット生成ツール。ランダムカラー生成、ハーモニーカラー計算、HEX・RGB・HSL対応。',
-          category: 'tools',
-          type: 'tool',
-          url: '/tools/color-palette',
-          lastModified: '2025-01-18',
-        },
-        {
-          id: '3',
-          title: 'React Portfolio Website',
-          description:
-            'Next.js 15 + React 19 + Tailwind CSS で構築したモダンなポートフォリオサイト。384px基準のレスポンシブデザイン。',
-          category: 'portfolio',
-          type: 'portfolio',
-          url: '/portfolio/detail/react-portfolio',
-          lastModified: '2025-01-15',
-        },
-        {
-          id: '4',
-          title: 'Next.js 15 + React 19の新機能解説',
-          description:
-            'Next.js 15とReact 19の新機能について詳しく解説。Server Actions、Concurrent Features、パフォーマンス改善について。',
-          category: 'workshop',
-          type: 'blog',
-          url: '/workshop/blog/nextjs-15-react-19',
-          lastModified: '2025-01-20',
-        },
-        {
-          id: '5',
-          title: 'AE Expression Helper',
-          description:
-            'After Effectsエクスプレッション生成・編集ツール。Scratch風ブロックUIでパラメータ編集。',
-          category: 'workshop',
-          type: 'plugin',
-          url: '/workshop/plugins/ae-expression-helper',
-          lastModified: '2025-01-12',
-        },
-      ];
-
-      // フィルタリング
-      let filteredResults = mockResults.filter(
-        result =>
-          result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          result.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-
-      if (selectedCategory !== 'all') {
-        filteredResults = filteredResults.filter(result => result.category === selectedCategory);
-      }
-
-      if (selectedType !== 'all') {
-        filteredResults = filteredResults.filter(result => result.type === selectedType);
-      }
-
-      setSearchResults(filteredResults);
+      const results = await searchContent(finalQuery, {
+        category: selectedCategory === 'all' ? undefined : selectedCategory,
+        type: selectedType === 'all' ? undefined : selectedType,
+      });
+      setSearchResults(results);
     } catch (error) {
       console.error('Search error:', error);
       setSearchResults([]);
@@ -200,7 +128,7 @@ export default function SearchPage() {
                     onKeyPress={handleKeyPress}
                   />
                   <button
-                    onClick={handleSearch}
+                    onClick={() => handleSearch()}
                     disabled={!searchQuery.trim() || isLoading}
                     className="bg-blue-600 px-6 py-3 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
@@ -212,10 +140,14 @@ export default function SearchPage() {
               {/* フィルター */}
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label className="neue-haas-grotesk-display mb-3 block text-sm text-white">
+                  <label
+                    htmlFor="category-select"
+                    className="neue-haas-grotesk-display mb-3 block text-sm text-white"
+                  >
                     カテゴリー
                   </label>
                   <select
+                    id="category-select"
                     className="noto-sans-jp-regular w-full border border-gray-600 bg-gray-700 px-4 py-3 text-white"
                     value={selectedCategory}
                     onChange={e => setSelectedCategory(e.target.value)}
@@ -229,13 +161,17 @@ export default function SearchPage() {
                 </div>
 
                 <div>
-                  <label className="neue-haas-grotesk-display mb-3 block text-sm text-white">
+                  <label
+                    htmlFor="type-select"
+                    className="neue-haas-grotesk-display mb-3 block text-sm text-white"
+                  >
                     タイプ
                   </label>
                   <select
+                    id="type-select"
                     className="noto-sans-jp-regular w-full border border-gray-600 bg-gray-700 px-4 py-3 text-white"
                     value={selectedType}
-                    onChange={e => setSelectedType(e.target.value)}
+                    onChange={e => setSelectedType(e.target.value as ContentType | 'all')}
                   >
                     {types.map(type => (
                       <option key={type.id} value={type.id}>
@@ -276,7 +212,7 @@ export default function SearchPage() {
                           {types.find(t => t.id === result.type)?.name}
                         </span>
                       </div>
-                      <div className="text-xs text-gray-500">{result.lastModified}</div>
+                      <div className="text-xs text-gray-500">{result.score}</div>
                     </div>
 
                     <Link href={result.url} className="group block">
@@ -355,7 +291,7 @@ export default function SearchPage() {
                   key={keyword}
                   onClick={() => {
                     setSearchQuery(keyword);
-                    setTimeout(handleSearch, 100);
+                    handleSearch(keyword);
                   }}
                   className="noto-sans-jp-regular bg-gray-700 px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-gray-600 hover:text-white"
                 >

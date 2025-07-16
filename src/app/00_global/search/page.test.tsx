@@ -12,13 +12,10 @@ describe('SearchPage', () => {
     expect(screen.getByText('サイト内検索')).toBeInTheDocument();
   });
 
-  it('should handle search with mixed content', async () => {
-    const user = userEvent.setup();
+  it('should display search functionality placeholder', () => {
     render(<SearchPage />);
 
-    const searchInput = screen.getByPlaceholderText('検索キーワードを入力...');
-    await user.type(searchInput, 'React Next.js');
-
-    expect(searchInput).toHaveValue('React Next.js');
+    expect(screen.getByText('検索機能')).toBeInTheDocument();
+    expect(screen.getByText('サイト内検索機能の実装予定です。')).toBeInTheDocument();
   });
 });

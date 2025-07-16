@@ -1,3 +1,4 @@
+/** @vitest-environment node */
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { GET, POST } from './route';
 import { NextRequest } from 'next/server';

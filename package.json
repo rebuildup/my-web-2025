@@ -65,6 +65,7 @@
     "textlint": "^15.1.0",
     "textlint-rule-preset-ai-writing": "^1.1.0",
     "typescript": "^5",
+    "undici": "^7.11.0",
     "vitest": "^3.2.4"
   },
   "overrides": {

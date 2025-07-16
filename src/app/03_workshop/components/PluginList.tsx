@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Download, Star } from 'lucide-react';
 
 interface Plugin {
   id: string;
@@ -9,64 +11,32 @@ interface Plugin {
   downloads: number;
   rating: number;
   tags: string[];
-  isInstalled: boolean;
+  slug: string;
 }
 
 const PluginList: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [plugins, setPlugins] = useState<Plugin[]>([
-    {
-      id: '1',
-      name: 'Code Formatter Plus',
-      description:
-        'Advanced code formatting with customizable rules and support for multiple languages.',
-      category: 'development',
-      version: '2.1.0',
-      downloads: 15420,
-      rating: 4.8,
-      tags: ['formatting', 'productivity', 'code quality'],
-      isInstalled: false,
-    },
-    {
-      id: '2',
-      name: 'Theme Designer',
-      description:
-        'Create and customize beautiful themes for your applications with real-time preview.',
-      category: 'design',
-      version: '1.5.2',
-      downloads: 8935,
-      rating: 4.6,
-      tags: ['themes', 'design', 'customization'],
-      isInstalled: true,
-    },
-    {
-      id: '3',
-      name: 'Performance Monitor',
-      description:
-        'Real-time performance monitoring and optimization suggestions for web applications.',
-      category: 'performance',
-      version: '3.0.1',
-      downloads: 12500,
-      rating: 4.9,
-      tags: ['monitoring', 'performance', 'optimization'],
-      isInstalled: false,
-    },
-  ]);
+  const [plugins, setPlugins] = useState<Plugin[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const categories = ['all', 'development', 'design', 'performance'];
+  useEffect(() => {
+    const fetchPlugins = async () => {
+      try {
+        const response = await fetch('/data/content/plugin.json');
+        if (!response.ok) {
+          throw new Error('Failed to fetch plugins');
+        }
+        const data = await response.json();
+        setPlugins(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const filteredPlugins =
-    selectedCategory === 'all'
-      ? plugins
-      : plugins.filter(plugin => plugin.category === selectedCategory);
-
-  const handleInstall = (pluginId: string) => {
-    setPlugins(
-      plugins.map(plugin =>
-        plugin.id === pluginId ? { ...plugin, isInstalled: !plugin.isInstalled } : plugin
-      )
-    );
-  };
+    fetchPlugins();
+  }, []);
 
   const formatDownloads = (downloads: number) => {
     if (downloads >= 1000) {
@@ -75,75 +45,40 @@ const PluginList: React.FC = () => {
     return downloads.toString();
   };
 
+  if (isLoading) {
+    return <div>Loading plugins...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
     <div className="rounded-none bg-gray-800 p-6 text-white">
       <h2 className="neue-haas-grotesk-display mb-4 text-xl font-bold text-blue-500">
         Plugin Library
       </h2>
-
-      {/* Filter buttons */}
-      <div className="mb-6 flex flex-wrap gap-2">
-        {categories.map(category => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`rounded-none px-4 py-2 text-sm font-medium transition-colors ${
-              selectedCategory === category
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            {category.charAt(0).toUpperCase() + category.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      {/* Plugin grid */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredPlugins.map(plugin => (
-          <div key={plugin.id} className="rounded-none bg-gray-700 p-6">
-            <div className="mb-3 flex items-start justify-between">
-              <h3 className="text-lg font-semibold text-blue-400">{plugin.name}</h3>
-              <span className="text-xs text-gray-400">v{plugin.version}</span>
-            </div>
-
+        {plugins.map(plugin => (
+          <Link
+            href={`/workshop/plugins/${plugin.slug}`}
+            key={plugin.id}
+            className="block rounded-none bg-gray-700 p-6"
+          >
+            <h3 className="text-lg font-semibold text-blue-400">{plugin.name}</h3>
+            <p className="mb-2 text-xs text-gray-400">v{plugin.version}</p>
             <p className="mb-4 text-sm text-gray-300">{plugin.description}</p>
-
-            <div className="mb-3 flex items-center gap-4 text-sm text-gray-400">
+            <div className="flex items-center justify-between text-sm text-gray-400">
               <div className="flex items-center gap-1">
-                <span className="text-yellow-400">★</span>
+                <Download size={16} />
+                <span>{formatDownloads(plugin.downloads)}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Star size={16} />
                 <span>{plugin.rating}</span>
               </div>
-              <span>{formatDownloads(plugin.downloads)} downloads</span>
             </div>
-
-            <div className="mb-4 flex flex-wrap gap-1">
-              {plugin.tags.map(tag => (
-                <span
-                  key={tag}
-                  className="rounded-none bg-gray-600 px-2 py-1 text-xs text-gray-300"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleInstall(plugin.id)}
-                className={`flex-1 rounded-none px-4 py-2 text-sm font-medium transition-colors ${
-                  plugin.isInstalled
-                    ? 'bg-green-600 text-white hover:bg-green-700'
-                    : 'bg-blue-500 text-white hover:bg-blue-600'
-                }`}
-              >
-                {plugin.isInstalled ? 'Installed' : 'Install'}
-              </button>
-              <button className="rounded-none bg-gray-600 px-4 py-2 text-sm text-white transition-colors hover:bg-gray-700">
-                Info
-              </button>
-            </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

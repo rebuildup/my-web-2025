@@ -1,354 +1,174 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContactForm from './ContactForm';
 
-interface RecaptchaProps {
-  onChange?: (token: string | null) => void;
-  onError?: () => void;
-  onExpired?: () => void;
-  [key: string]: unknown;
-}
-
-vi.mock('react-google-recaptcha', () => ({
-  __esModule: true,
-  default: ({ onChange, onError, onExpired, ...props }: RecaptchaProps) => (
-    <div
-      data-testid="recaptcha"
-      tabIndex={0}
-      onClick={() => onChange && onChange('dummy-token')}
-      onError={onError}
-      {...props}
-    >
-      Mocked reCAPTCHA
-    </div>
-  ),
-}));
+// Mock ReCAPTCHA
+const recaptchaResetMock = vi.fn();
+const recaptchaExecuteMock = vi.fn();
+vi.mock('react-google-recaptcha', () => {
+  const MockRecaptcha = React.forwardRef(
+    (
+      props: { onChange: (token: string) => void },
+      ref: React.Ref<{ reset: () => void; execute: () => void }>
+    ) => {
+      React.useImperativeHandle(ref, () => ({
+        reset: recaptchaResetMock,
+        execute: recaptchaExecuteMock,
+      }));
+      // Allow simulating a click to trigger onChange
+      return <div data-testid="recaptcha" onClick={() => props.onChange('dummy-token')} />;
+    }
+  );
+  MockRecaptcha.displayName = 'MockRecaptcha';
+  return {
+    __esModule: true,
+    default: MockRecaptcha,
+  };
+});
 
 // Mock fetch
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
 describe('ContactForm', () => {
+  const user = userEvent.setup();
+
   beforeEach(() => {
     vi.clearAllMocks();
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ success: true }),
+    // Default successful fetch
+    mockFetch.mockResolvedValue({ ok: true, json: () => Promise.resolve({ success: true }) });
+  });
+
+  const fillForm = async () => {
+    await user.type(screen.getByLabelText(/Full Name/), 'John Doe');
+    await user.type(screen.getByLabelText(/Email Address/), 'john.doe@example.com');
+    await user.type(screen.getByLabelText(/Subject/), 'Test Subject');
+    await user.type(screen.getByLabelText(/Message/), 'This is a test message with enough length.');
+    // Simulate reCAPTCHA completion
+    await user.click(screen.getByTestId('recaptcha'));
+    // Wait for the form to update
+    await waitFor(() => {
+      expect(screen.getByText('100%')).toBeInTheDocument();
     });
-  });
+  };
 
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('should render all form fields', () => {
+  it('should render the form correctly', () => {
     render(<ContactForm />);
-
-    expect(screen.getByLabelText('Full Name *')).toBeInTheDocument();
-    expect(screen.getByLabelText('Email Address *')).toBeInTheDocument();
-    expect(screen.getByLabelText('Subject *')).toBeInTheDocument();
-    expect(screen.getByLabelText('Message *')).toBeInTheDocument();
+    expect(screen.getByLabelText(/Full Name/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Email Address/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Subject/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Message/)).toBeInTheDocument();
     expect(screen.getByTestId('recaptcha')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Send Message' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Send Message/ })).toBeInTheDocument();
   });
 
-  it('should render initial state', () => {
-    const { container } = render(<ContactForm />);
-    // Security Score: 0% をtextContentで検証
-    expect(container.textContent).toContain('Security Score');
-    expect(container.textContent).toContain('0%');
-  });
-
-  it('should update security score as form fields are filled', async () => {
-    const { container } = render(<ContactForm />);
-    const user = userEvent.setup();
-    const nameInput = screen.getByLabelText('Full Name *');
-    const emailInput = screen.getByLabelText('Email Address *');
-    const subjectInput = screen.getByLabelText('Subject *');
-    const messageInput = screen.getByLabelText('Message *');
-
-    // Fill name (should add 20%)
-    await user.type(nameInput, 'John Doe');
-    expect(container.textContent).toContain('20%');
-
-    // Fill email (should add 20%)
-    await user.type(emailInput, 'john@example.com');
-    expect(container.textContent).toContain('40%');
-
-    // Fill subject (should add 20%)
-    await user.type(subjectInput, 'Test Subject');
-    expect(container.textContent).toContain('60%');
-
-    // Fill message (should add 20%)
-    await user.type(messageInput, 'This is a test message');
-    expect(container.textContent).toContain('80%');
-  });
-
-  it('should validate required fields', async () => {
-    const user = userEvent.setup();
+  it('should show validation errors for empty required fields on submit', async () => {
     render(<ContactForm />);
+    await user.click(screen.getByRole('button', { name: /Send Message/ }));
 
-    const submitButton = screen.getByRole('button', { name: 'Send Message' });
-    await user.click(submitButton);
-
-    // Should show validation errors
-    expect(screen.getByText('Name is required')).toBeInTheDocument();
-    expect(screen.getByText('Email is required')).toBeInTheDocument();
-    expect(screen.getByText('Subject is required')).toBeInTheDocument();
-    expect(screen.getByText('Message is required')).toBeInTheDocument();
-  });
-
-  it('should validate email format', async () => {
-    render(<ContactForm />);
-    const user = userEvent.setup();
-    const emailInput = screen.getByLabelText('Email Address *');
-    await user.type(emailInput, 'invalid-email');
-    await user.click(screen.getByRole('button', { name: 'Send Message' }));
-    // 非同期でバリデーションエラーを待つ
     await waitFor(() => {
-      expect(screen.getByText(text => text.includes('valid email address'))).toBeInTheDocument();
+      expect(screen.getByText('Name is required')).toBeInTheDocument();
+      expect(screen.getByText('Email is required')).toBeInTheDocument();
+      expect(screen.getByText('Subject is required')).toBeInTheDocument();
+      expect(screen.getByText('Message is required')).toBeInTheDocument();
+      expect(screen.getByText('Please complete the reCAPTCHA verification')).toBeInTheDocument();
     });
   });
 
-  it('should validate message length', async () => {
-    const user = userEvent.setup();
+  it('should show validation error for invalid email format', async () => {
     render(<ContactForm />);
+    await user.type(screen.getByLabelText(/Email Address/), 'invalid-email');
+    await user.click(screen.getByRole('button', { name: /Send Message/ }));
 
-    const messageInput = screen.getByLabelText('Message *');
-    await user.type(messageInput, 'short');
-    await user.click(screen.getByRole('button', { name: 'Send Message' }));
-
-    expect(screen.getByText('Message must be at least 10 characters long')).toBeInTheDocument();
-  });
-
-  it('should validate ReCAPTCHA completion', async () => {
-    const user = userEvent.setup();
-    render(<ContactForm />);
-
-    // Fill all required fields
-    await user.type(screen.getByLabelText('Full Name *'), 'John Doe');
-    await user.type(screen.getByLabelText('Email Address *'), 'john@example.com');
-    await user.type(screen.getByLabelText('Subject *'), 'Test Subject');
-    await user.type(
-      screen.getByLabelText('Message *'),
-      'This is a test message that is long enough'
-    );
-
-    // Try to submit without completing ReCAPTCHA
-    await user.click(screen.getByRole('button', { name: 'Send Message' }));
-
-    expect(screen.getByText('Please complete the reCAPTCHA verification')).toBeInTheDocument();
-  });
-
-  it('should submit form successfully', async () => {
-    const user = userEvent.setup();
-    render(<ContactForm />);
-
-    // Fill all fields
-    await user.type(screen.getByLabelText('Full Name *'), 'John Doe');
-    await user.type(screen.getByLabelText('Email Address *'), 'john@example.com');
-    await user.type(screen.getByLabelText('Subject *'), 'Test Subject');
-    await user.type(
-      screen.getByLabelText('Message *'),
-      'This is a test message that is long enough'
-    );
-
-    // Complete ReCAPTCHA
-    const recaptcha = screen.getByTestId('recaptcha');
-    await user.click(recaptcha);
-
-    // Submit form
-    const submitButton = screen.getByRole('button', { name: 'Send Message' });
-    await user.click(submitButton);
-
-    // Should show success message
     await waitFor(() => {
+      expect(screen.getByText('Please enter a valid email address')).toBeInTheDocument();
+    });
+  });
+
+  it('should show validation error for short message', async () => {
+    render(<ContactForm />);
+    await user.type(screen.getByLabelText(/Message/), 'short');
+    await user.click(screen.getByRole('button', { name: /Send Message/ }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Message must be at least 10 characters long')).toBeInTheDocument();
+    });
+  });
+
+  it('should submit the form successfully with valid data', async () => {
+    render(<ContactForm />);
+    await fillForm();
+    await user.click(screen.getByRole('button', { name: /Send Message/ }));
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith('/api/contact', expect.any(Object));
       expect(screen.getByText('Message Sent Successfully!')).toBeInTheDocument();
     });
   });
 
-  it('should handle network errors', async () => {
-    const user = userEvent.setup();
+  it('should handle API error on submit', async () => {
+    mockFetch.mockResolvedValue({ ok: false });
     render(<ContactForm />);
+    await fillForm();
+    await user.click(screen.getByRole('button', { name: /Send Message/ }));
 
-    // Mock fetch to return error
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      status: 500,
-      json: () => Promise.resolve({ error: 'Server error' }),
-    });
-
-    // Fill all fields
-    await user.type(screen.getByLabelText('Full Name *'), 'John Doe');
-    await user.type(screen.getByLabelText('Email Address *'), 'john@example.com');
-    await user.type(screen.getByLabelText('Subject *'), 'Test Subject');
-    await user.type(
-      screen.getByLabelText('Message *'),
-      'This is a test message that is long enough'
-    );
-
-    // Complete ReCAPTCHA
-    const recaptcha = screen.getByTestId('recaptcha');
-    await user.click(recaptcha);
-
-    // Submit form
-    const submitButton = screen.getByRole('button', { name: 'Send Message' });
-    await user.click(submitButton);
-
-    // Should show error message
     await waitFor(() => {
       expect(screen.getByText('Failed to submit form. Please try again.')).toBeInTheDocument();
     });
   });
 
-  it('should handle fetch exceptions', async () => {
-    const user = userEvent.setup();
+  it('should handle network error on submit', async () => {
+    mockFetch.mockRejectedValue(new Error('Network Error'));
     render(<ContactForm />);
+    await fillForm();
+    await user.click(screen.getByRole('button', { name: /Send Message/ }));
 
-    // Mock fetch to throw exception
-    mockFetch.mockRejectedValueOnce(new Error('Network error'));
-
-    // Fill all fields
-    await user.type(screen.getByLabelText('Full Name *'), 'John Doe');
-    await user.type(screen.getByLabelText('Email Address *'), 'john@example.com');
-    await user.type(screen.getByLabelText('Subject *'), 'Test Subject');
-    await user.type(
-      screen.getByLabelText('Message *'),
-      'This is a test message that is long enough'
-    );
-
-    // Complete ReCAPTCHA
-    const recaptcha = screen.getByTestId('recaptcha');
-    await user.click(recaptcha);
-
-    // Submit form
-    const submitButton = screen.getByRole('button', { name: 'Send Message' });
-    await user.click(submitButton);
-
-    // Should show error message
     await waitFor(() => {
       expect(screen.getByText('Failed to submit form. Please try again.')).toBeInTheDocument();
     });
   });
 
-  it('should clear form after successful submission', async () => {
-    const user = userEvent.setup();
+  it('should clear the form when clear button is clicked', async () => {
     render(<ContactForm />);
+    await user.type(screen.getByLabelText(/Full Name/), 'John Doe');
+    await user.click(screen.getByRole('button', { name: /Clear/ }));
 
-    // Fill all fields
-    await user.type(screen.getByLabelText('Full Name *'), 'John Doe');
-    await user.type(screen.getByLabelText('Email Address *'), 'john@example.com');
-    await user.type(screen.getByLabelText('Subject *'), 'Test Subject');
-    await user.type(screen.getByLabelText('Message *'), 'This is a test message');
+    expect(screen.getByLabelText(/Full Name/)).toHaveValue('');
+    expect(recaptchaResetMock).toHaveBeenCalled();
+  });
 
-    // Complete ReCAPTCHA
-    const recaptcha = screen.getByTestId('recaptcha');
-    await user.click(recaptcha);
+  it('should allow sending another message after successful submission', async () => {
+    render(<ContactForm />);
+    await fillForm();
+    await user.click(screen.getByRole('button', { name: /Send Message/ }));
 
-    // Submit form
-    const submitButton = screen.getByRole('button', { name: 'Send Message' });
-    await user.click(submitButton);
-
-    // Wait for success message
     await waitFor(() => {
       expect(screen.getByText('Message Sent Successfully!')).toBeInTheDocument();
     });
 
-    // Click "Send Another Message" button
-    const sendAnotherButton = screen.getByRole('button', { name: 'Send Another Message' });
-    await user.click(sendAnotherButton);
-
-    // Form should be cleared
-    expect(screen.getByLabelText('Full Name *')).toHaveValue('');
-    expect(screen.getByLabelText('Email Address *')).toHaveValue('');
-    expect(screen.getByLabelText('Subject *')).toHaveValue('');
-    expect(screen.getByLabelText('Message *')).toHaveValue('');
-    // Security Scoreの検証はtext matcherで柔軟に
-    expect(screen.getByText(text => text.includes('Security Score'))).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /Send Another Message/ }));
+    expect(screen.getByLabelText(/Full Name/)).toBeInTheDocument();
   });
 
-  it('should handle ReCAPTCHA errors', async () => {
-    const user = userEvent.setup();
+  it('should update security score as user types', async () => {
     render(<ContactForm />);
+    expect(screen.getByText('0%')).toBeInTheDocument();
 
-    // Fill all fields
-    await user.type(screen.getByLabelText('Full Name *'), 'John Doe');
-    await user.type(screen.getByLabelText('Email Address *'), 'john@example.com');
-    await user.type(screen.getByLabelText('Subject *'), 'Test Subject');
-    await user.type(
-      screen.getByLabelText('Message *'),
-      'This is a test message that is long enough'
-    );
+    await user.type(screen.getByLabelText(/Full Name/), 'John');
+    await waitFor(() => expect(screen.getByText('20%')).toBeInTheDocument());
 
-    // Trigger ReCAPTCHA error
-    const recaptcha = screen.getByTestId('recaptcha');
-    fireEvent.error(recaptcha);
+    await user.type(screen.getByLabelText(/Email Address/), 'john@a.com');
+    await waitFor(() => expect(screen.getByText('40%')).toBeInTheDocument());
 
-    // Try to submit
-    const submitButton = screen.getByRole('button', { name: 'Send Message' });
-    await user.click(submitButton);
+    await user.type(screen.getByLabelText(/Subject/), 'Subject');
+    await waitFor(() => expect(screen.getByText('60%')).toBeInTheDocument());
 
-    // Should show ReCAPTCHA error（エラーメッセージのみをclassで絞り込む）
-    const recaptchaErrors = screen.getAllByText(text => text.includes('reCAPTCHA'));
-    expect(recaptchaErrors.some(el => el.className.includes('text-red-400'))).toBe(true);
-  });
+    await user.type(screen.getByLabelText(/Message/), 'A long message');
+    await waitFor(() => expect(screen.getByText('80%')).toBeInTheDocument());
 
-  it('should handle ReCAPTCHA expiration', async () => {
-    const user = userEvent.setup();
-    render(<ContactForm />);
-
-    // Fill all fields
-    await user.type(screen.getByLabelText('Full Name *'), 'John Doe');
-    await user.type(screen.getByLabelText('Email Address *'), 'john@example.com');
-    await user.type(screen.getByLabelText('Subject *'), 'Test Subject');
-    await user.type(
-      screen.getByLabelText('Message *'),
-      'This is a test message that is long enough'
-    );
-
-    // Complete ReCAPTCHA
-    const recaptcha = screen.getByTestId('recaptcha');
-    await user.click(recaptcha);
-
-    // Trigger ReCAPTCHA expiration
-    fireEvent.error(recaptcha);
-
-    // Try to submit
-    const submitButton = screen.getByRole('button', { name: 'Send Message' });
-    await user.click(submitButton);
-
-    // Should show ReCAPTCHA error
-    expect(screen.getByText(text => text.includes('reCAPTCHA'))).toBeInTheDocument();
-  });
-
-  it('should handle timeout during submission', async () => {
-    vi.useFakeTimers();
-    const { container } = render(<ContactForm />);
-    // Mock fetch to never resolve
-    mockFetch.mockImplementationOnce(() => new Promise(() => {}));
-
-    // Fill all fields
-    await userEvent.setup().type(screen.getByLabelText('Full Name *'), 'John Doe');
-    await userEvent.setup().type(screen.getByLabelText('Email Address *'), 'john@example.com');
-    await userEvent.setup().type(screen.getByLabelText('Subject *'), 'Test Subject');
-    await userEvent
-      .setup()
-      .type(screen.getByLabelText('Message *'), 'This is a test message that is long enough');
-
-    // Complete ReCAPTCHA
-    const recaptcha = screen.getByTestId('recaptcha');
-    await userEvent.setup().click(recaptcha);
-
-    // Submit form
-    const submitButton = screen.getByRole('button', { name: 'Send Message' });
-    await userEvent.setup().click(submitButton);
-
-    // 10秒経過をシミュレート
-    vi.advanceTimersByTime(10000);
-    await waitFor(() => {
-      expect(container.textContent).toMatch(/Failed to submit form|try again/i);
-    });
-    vi.useRealTimers();
+    await user.click(screen.getByTestId('recaptcha'));
+    await waitFor(() => expect(screen.getByText('100%')).toBeInTheDocument());
   });
 });

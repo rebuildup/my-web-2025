@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
+type DataItemType = 'user' | 'content' | 'analytics' | 'unknown';
+type DataItemStatus = 'active' | 'inactive' | 'pending' | 'unknown';
+
 interface DataItem {
   id: string;
-  type: 'user' | 'content' | 'analytics';
+  type: DataItemType;
   title: string;
-  status: 'active' | 'inactive' | 'pending';
+  status: DataItemStatus;
   lastModified: string;
   size: string;
 }
@@ -29,11 +32,8 @@ const AdminDataManager: React.FC = () => {
 
   useEffect(() => {
     // Simulate loading data
-    const loadData = async () => {
+    const loadData = () => {
       setIsLoading(true);
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
 
       setSystemStats({
         totalUsers: 1247,
@@ -55,7 +55,7 @@ const AdminDataManager: React.FC = () => {
           id: '2',
           type: 'content',
           title: 'Blog Posts',
-          status: 'active',
+          status: 'inactive',
           lastModified: '2024-01-14T16:45:00Z',
           size: '850 KB',
         },
@@ -66,6 +66,14 @@ const AdminDataManager: React.FC = () => {
           status: 'pending',
           lastModified: '2024-01-13T09:15:00Z',
           size: '3.4 MB',
+        },
+        {
+          id: '4',
+          type: 'unknown',
+          title: 'Unknown Type Data',
+          status: 'unknown',
+          lastModified: '2024-01-12T09:15:00Z',
+          size: '1.0 MB',
         },
       ]);
 

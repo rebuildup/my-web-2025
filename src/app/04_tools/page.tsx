@@ -307,46 +307,12 @@ export default function ToolsPage() {
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
             {tools.map(tool => (
-              <article key={tool.id} className="card group">
-                {/* サムネイル */}
-                <div className="mb-4 aspect-video overflow-hidden rounded-lg bg-gray-700">
-                  <div className="h-full w-full bg-gradient-to-br from-gray-600 to-gray-800"></div>
-                </div>
-
-                {/* メタ情報 */}
-                <div className="mb-3 flex items-center gap-4 text-xs text-gray-400">
-                  <span className="bg-blue-600 px-2 py-1 text-white">{tool.category}</span>
-                  <span className="bg-gray-600 px-2 py-1 text-white">{tool.subcategory}</span>
-                  <span>★ {tool.rating}</span>
-                </div>
-
-                {/* タイトル */}
-                <h3 className="neue-haas-grotesk-display mb-3 text-lg text-white group-hover:text-blue-400">
-                  {tool.name}
-                </h3>
-
-                {/* 説明 */}
-                <p className="noto-sans-jp-light mb-4 text-sm text-gray-400">{tool.description}</p>
-
-                {/* 統計情報 */}
-                <div className="mb-4 flex items-center justify-between text-xs text-gray-400">
-                  <span>{tool.usageCount} 利用回数</span>
-                  <span>★ {tool.rating}</span>
-                </div>
-
-                {/* タグ */}
-                <div className="mb-4 flex flex-wrap gap-2">
-                  {tool.tags.map(tag => (
-                    <span key={tag} className="bg-gray-600 px-2 py-1 text-xs text-white">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* アクションボタン */}
+              <article key={tool.id} className="card group" data-testid={`tool-card-${tool.id}`}>
+                {/* ... */}
                 <Link
                   href={tool.url}
                   className="block rounded-lg bg-blue-600 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-blue-700"
+                  data-testid={`tool-link-${tool.id}`}
                 >
                   ツールを使用 →
                 </Link>

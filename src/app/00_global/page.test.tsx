@@ -1,480 +1,197 @@
+/// <reference types="vitest/globals" />
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SearchPage from './page';
+import { searchContent, getPopularSearchTerms } from '@/lib/search';
 
-// Mock the fetch function
-const mockFetch = vi.fn();
-global.fetch = mockFetch;
+// searchContentとgetPopularSearchTermsをモック化
+vi.mock('@/lib/search', () => ({
+  searchContent: vi.fn(),
+  getPopularSearchTerms: vi.fn(),
+}));
+
+const mockedSearchContent = searchContent as vi.Mock;
+const mockedGetPopularSearchTerms = getPopularSearchTerms as vi.Mock;
+
+const mockSearchResults = [
+  {
+    id: '1',
+    title: 'React Guide',
+    description: 'A comprehensive guide to React.',
+    category: 'workshop',
+    type: 'blog',
+    url: '/workshop/blog/react-guide',
+    lastModified: '2023-10-01',
+    score: 0.9,
+  },
+  {
+    id: '2',
+    title: 'Unknown Category',
+    description: 'This item has a category and type that does not exist.',
+    category: 'non-existent-category',
+    type: 'non-existent-type',
+    url: '/somewhere/else',
+    lastModified: '2023-10-02',
+    score: 0.8,
+  },
+];
 
 describe('SearchPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockedSearchContent.mockResolvedValue([]);
+    mockedGetPopularSearchTerms.mockResolvedValue(['React', 'Next.js']);
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  it('should render the search page', () => {
+  it('should render search form and popular keywords on initial load', async () => {
     render(<SearchPage />);
-
-    expect(screen.getByText('Search')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Search for content...')).toBeInTheDocument();
-  });
-
-  it('should display search results', async () => {
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'React Tutorial',
-        type: 'blog',
-        category: 'portfolio',
-        description: 'Learn React basics',
-        url: '/blog/react-tutorial',
-        tags: ['React', 'JavaScript'],
-      },
-      {
-        id: 2,
-        title: 'Vue.js Project',
-        type: 'portfolio',
-        category: 'web',
-        description: 'A Vue.js application',
-        url: '/portfolio/vue-project',
-        tags: ['Vue.js', 'JavaScript'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
-    render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await userEvent.type(searchInput, 'React');
-
+    expect(screen.getByPlaceholderText(/検索キーワードを入力/)).toBeInTheDocument();
     await waitFor(() => {
-      expect(screen.getByText('React Tutorial')).toBeInTheDocument();
-      expect(screen.getByText('Vue.js Project')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'React' })).toBeInTheDocument();
     });
   });
 
-  it('should filter by category', async () => {
+  it('should trigger search with input text and search button', async () => {
     const user = userEvent.setup();
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'React Tutorial',
-        type: 'blog',
-        category: 'portfolio',
-        description: 'Learn React basics',
-        url: '/blog/react-tutorial',
-        tags: ['React', 'JavaScript'],
-      },
-      {
-        id: 2,
-        title: 'Vue.js Project',
-        type: 'portfolio',
-        category: 'web',
-        description: 'A Vue.js application',
-        url: '/portfolio/vue-project',
-        tags: ['Vue.js', 'JavaScript'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
     render(<SearchPage />);
+    const searchInput = screen.getByPlaceholderText(/検索キーワードを入力/);
+    const searchButton = screen.getByRole('button', { name: '検索' });
+    await user.type(searchInput, 'Test Query');
+    await user.click(searchButton);
+    await waitFor(() => {
+      expect(mockedSearchContent).toHaveBeenCalledWith('Test Query', { category: 'all', type: 'all' });
+    });
+  });
 
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, 'React');
+  it('should trigger search with Enter key', async () => {
+    const user = userEvent.setup();
+    render(<SearchPage />);
+    const searchInput = screen.getByPlaceholderText(/検索キーワードを入力/);
+    await user.type(searchInput, 'Enter Key Test');
+    await user.keyboard('{enter}');
+    await waitFor(() => {
+      expect(mockedSearchContent).toHaveBeenCalledWith('Enter Key Test', { category: 'all', type: 'all' });
+    });
+  });
 
-    const categorySelect = screen.getByLabelText('Category');
+  it('should not trigger search if query is empty', async () => {
+    const user = userEvent.setup();
+    render(<SearchPage />);
+    const searchButton = screen.getByRole('button', { name: '検索' });
+    await user.click(searchButton);
+    expect(mockedSearchContent).not.toHaveBeenCalled();
+  });
+
+  it('should update filters and trigger search with them', async () => {
+    const user = userEvent.setup();
+    render(<SearchPage />);
+    const searchInput = screen.getByPlaceholderText(/検索キーワードを入力/);
+    const categorySelect = screen.getByLabelText('カテゴリー');
+    const typeSelect = screen.getByLabelText('タイプ');
+    const searchButton = screen.getByRole('button', { name: '検索' });
     await user.selectOptions(categorySelect, 'portfolio');
-
+    await user.selectOptions(typeSelect, 'tool');
+    await user.type(searchInput, 'Filtered Search');
+    await user.click(searchButton);
     await waitFor(() => {
-      expect(screen.getByText('React Tutorial')).toBeInTheDocument();
-      expect(screen.queryByText('Vue.js Project')).not.toBeInTheDocument();
+      expect(mockedSearchContent).toHaveBeenCalledWith('Filtered Search', { category: 'portfolio', type: 'tool' });
     });
   });
 
-  it('should filter by type', async () => {
+  it('should display search results and handle unknown categories/types', async () => {
+    mockedSearchContent.mockResolvedValue(mockSearchResults);
     const user = userEvent.setup();
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'React Tutorial',
-        type: 'blog',
-        category: 'portfolio',
-        description: 'Learn React basics',
-        url: '/blog/react-tutorial',
-        tags: ['React', 'JavaScript'],
-      },
-      {
-        id: 2,
-        title: 'Vue.js Project',
-        type: 'portfolio',
-        category: 'web',
-        description: 'A Vue.js application',
-        url: '/portfolio/vue-project',
-        tags: ['Vue.js', 'JavaScript'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
     render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
+    const searchInput = screen.getByPlaceholderText(/検索キーワードを入力/);
     await user.type(searchInput, 'React');
-
-    const typeSelect = screen.getByLabelText('Type');
-    await user.selectOptions(typeSelect, 'blog');
-
+    await user.keyboard('{enter}');
     await waitFor(() => {
-      expect(screen.getByText('React Tutorial')).toBeInTheDocument();
-      expect(screen.queryByText('Vue.js Project')).not.toBeInTheDocument();
+      expect(screen.getByText('React Guide')).toBeInTheDocument();
+      expect(screen.getByText('Unknown Category')).toBeInTheDocument();
     });
   });
 
-  it('should handle search button click', async () => {
+  it('should display "no results" message when search returns empty', async () => {
+    mockedSearchContent.mockResolvedValue([]);
     const user = userEvent.setup();
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'React Tutorial',
-        type: 'blog',
-        category: 'portfolio',
-        description: 'Learn React basics',
-        url: '/blog/react-tutorial',
-        tags: ['React', 'JavaScript'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
     render(<SearchPage />);
+    const searchInput = screen.getByPlaceholderText(/検索キーワードを入力/);
+    await user.type(searchInput, 'No Result Test');
+    await user.keyboard('{enter}');
+    await waitFor(() => {
+      expect(screen.getByText('検索結果が見つかりませんでした')).toBeInTheDocument();
+    });
+  });
 
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, 'React');
+  it('should handle search API errors gracefully', async () => {
+    const searchError = new Error('API Error');
+    mockedSearchContent.mockRejectedValue(searchError);
+    const user = userEvent.setup();
+    render(<SearchPage />);
+    const searchInput = screen.getByPlaceholderText(/検索キーワードを入力/);
+    await user.type(searchInput, 'Error Test');
+    await user.keyboard('{enter}');
+    await waitFor(() => {
+      expect(console.error).toHaveBeenCalledWith('Search error:', searchError);
+      expect(screen.getByText('検索結果が見つかりませんでした')).toBeInTheDocument();
+    });
+  });
 
-    const searchButton = screen.getByRole('button', { name: 'Search' });
+  it('should trigger search when a popular keyword is clicked', async () => {
+    const user = userEvent.setup();
+    render(<SearchPage />);
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'React' })).toBeInTheDocument();
+    });
+    const reactButton = screen.getByRole('button', { name: 'React' });
+    await user.click(reactButton);
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText(/検索キーワードを入力/)).toHaveValue('React');
+      expect(mockedSearchContent).toHaveBeenCalledWith('React', expect.any(Object));
+    });
+  });
+
+  it('should show loading state on button and results', async () => {
+    let resolveSearch: (value: unknown) => void;
+    mockedSearchContent.mockImplementation(() => new Promise(resolve => {
+      resolveSearch = resolve;
+    }));
+    const user = userEvent.setup();
+    render(<SearchPage />);
+    const searchInput = screen.getByPlaceholderText(/検索キーワードを入力/);
+    const searchButton = screen.getByRole('button', { name: '検索' });
+    await user.type(searchInput, 'Loading Test');
     await user.click(searchButton);
-
+    
     await waitFor(() => {
-      expect(screen.getByText('React Tutorial')).toBeInTheDocument();
+      expect(searchButton).toBeDisabled();
+      expect(screen.getAllByText('検索中...').length).toBeGreaterThan(0);
+    });
+
+    // @ts-ignore
+    resolveSearch([]); // Complete the search
+    await waitFor(() => {
+      expect(searchButton).not.toBeDisabled();
     });
   });
 
-  it('should handle Enter key press', async () => {
-    const user = userEvent.setup();
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'React Tutorial',
-        type: 'blog',
-        category: 'portfolio',
-        description: 'Learn React basics',
-        url: '/blog/react-tutorial',
-        tags: ['React', 'JavaScript'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
-    render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, 'React');
-    await user.keyboard('{Enter}');
-
-    await waitFor(() => {
-      expect(screen.getByText('React Tutorial')).toBeInTheDocument();
-    });
+  it('should not throw error if meta description tag does not exist', () => {
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.remove();
+    expect(() => render(<SearchPage />)).not.toThrow();
   });
 
-  it('should handle empty search results', async () => {
-    const user = userEvent.setup();
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => [],
-    });
-
+  it('should set meta description if it exists', () => {
+    const meta = document.createElement('meta');
+    meta.name = 'description';
+    meta.content = 'initial';
+    document.head.appendChild(meta);
     render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, 'nonexistent');
-
-    const searchButton = screen.getByRole('button', { name: 'Search' });
-    await user.click(searchButton);
-
-    await waitFor(() => {
-      expect(screen.getByText('No results found')).toBeInTheDocument();
-    });
-  });
-
-  it('should handle search error', async () => {
-    const user = userEvent.setup();
-    mockFetch.mockRejectedValueOnce(new Error('Search failed'));
-
-    render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, 'React');
-
-    const searchButton = screen.getByRole('button', { name: 'Search' });
-    await user.click(searchButton);
-
-    await waitFor(() => {
-      expect(screen.getByText('Failed to search')).toBeInTheDocument();
-    });
-  });
-
-  it('should handle keyword suggestions', async () => {
-    const user = userEvent.setup();
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'React Tutorial',
-        type: 'blog',
-        category: 'portfolio',
-        description: 'Learn React basics',
-        url: '/blog/react-tutorial',
-        tags: ['React', 'JavaScript'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
-    render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, 'React');
-
-    const searchButton = screen.getByRole('button', { name: 'Search' });
-    await user.click(searchButton);
-
-    await waitFor(() => {
-      expect(screen.getByText('React Tutorial')).toBeInTheDocument();
-    });
-
-    const reactKeyword = screen.getByText('React');
-    await user.click(reactKeyword);
-
-    // Should trigger a new search with the clicked keyword
-    await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledTimes(2);
-    });
-  });
-
-  it('should handle search with filters', async () => {
-    const user = userEvent.setup();
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'React Tutorial',
-        type: 'blog',
-        category: 'portfolio',
-        description: 'Learn React basics',
-        url: '/blog/react-tutorial',
-        tags: ['React', 'JavaScript'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
-    render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, 'React');
-
-    const categorySelect = screen.getByLabelText('Category');
-    await user.selectOptions(categorySelect, 'portfolio');
-
-    const searchButton = screen.getByRole('button', { name: 'Search' });
-    await user.click(searchButton);
-
-    await waitFor(() => {
-      expect(screen.getByText('React Tutorial')).toBeInTheDocument();
-    });
-  });
-
-  it('should handle search with type filter', async () => {
-    const user = userEvent.setup();
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'React Tutorial',
-        type: 'blog',
-        category: 'portfolio',
-        description: 'Learn React basics',
-        url: '/blog/react-tutorial',
-        tags: ['React', 'JavaScript'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
-    render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, 'React');
-
-    const typeSelect = screen.getByLabelText('Type');
-    await user.selectOptions(typeSelect, 'blog');
-
-    const searchButton = screen.getByRole('button', { name: 'Search' });
-    await user.click(searchButton);
-
-    await waitFor(() => {
-      expect(screen.getByText('React Tutorial')).toBeInTheDocument();
-    });
-  });
-
-  it('should handle search with whitespace', async () => {
-    const user = userEvent.setup();
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'React Tutorial',
-        type: 'blog',
-        category: 'portfolio',
-        description: 'Learn React basics',
-        url: '/blog/react-tutorial',
-        tags: ['React', 'JavaScript'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
-    render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, '   ');
-
-    const searchButton = screen.getByRole('button', { name: 'Search' });
-    await user.click(searchButton);
-
-    await waitFor(() => {
-      expect(screen.getByText('Please enter a search term')).toBeInTheDocument();
-    });
-  });
-
-  it('should handle search with special characters', async () => {
-    const user = userEvent.setup();
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'Color Palette Tool',
-        type: 'tool',
-        category: 'design',
-        description: 'A color palette generator',
-        url: '/tools/color-palette',
-        tags: ['Color', 'Design'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
-    render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, 'Color');
-
-    const searchButton = screen.getByRole('button', { name: 'Search' });
-    await user.click(searchButton);
-
-    await waitFor(() => {
-      expect(screen.getByText('Color Palette Tool')).toBeInTheDocument();
-    });
-  });
-
-  it('should handle search with numbers', async () => {
-    const user = userEvent.setup();
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'Project 2024',
-        type: 'portfolio',
-        category: 'web',
-        description: 'A project from 2024',
-        url: '/portfolio/project-2024',
-        tags: ['2024', 'Project'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
-    render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, '2024');
-
-    const searchButton = screen.getByRole('button', { name: 'Search' });
-    await user.click(searchButton);
-
-    await waitFor(() => {
-      expect(screen.getByText('Project 2024')).toBeInTheDocument();
-    });
-  });
-
-  it('should handle search with mixed content', async () => {
-    const user = userEvent.setup();
-    const mockSearchResults = [
-      {
-        id: 1,
-        title: 'Hello 123! 😀',
-        type: 'blog',
-        category: 'portfolio',
-        description: 'A blog post with mixed content',
-        url: '/blog/hello-123',
-        tags: ['Hello', '123', 'Emoji'],
-      },
-    ];
-
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockSearchResults,
-    });
-
-    render(<SearchPage />);
-
-    const searchInput = screen.getByPlaceholderText('Search for content...');
-    await user.type(searchInput, 'Hello 123! 😀');
-
-    const searchButton = screen.getByRole('button', { name: 'Search' });
-    await user.click(searchButton);
-
-    await waitFor(() => {
-      expect(screen.getByText('Hello 123! 😀')).toBeInTheDocument();
-    });
+    expect(document.querySelector('meta[name="description"]')?.getAttribute('content')).toBe(
+      'samuidoのサイト内検索。プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます。'
+    );
+    document.head.removeChild(meta);
   });
 });

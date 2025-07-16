@@ -165,7 +165,7 @@ describe('GridSystem Components', () => {
       render(<ContainerGrid>Test content</ContainerGrid>);
 
       const container = screen.getByText('Test content').parentElement;
-      expect(container).toHaveClass('container-grid');
+      expect(container).toHaveAttribute('class', expect.stringContaining('@container'));
     });
 
     it('should apply custom className', () => {

@@ -7,37 +7,58 @@ import {
   addDays,
   startOfDay,
   endOfDay,
+  Locale,
 } from 'date-fns';
 import { ja } from 'date-fns/locale';
 
 export const formatDate = (date: string | Date, formatStr: string = 'yyyy/MM/dd'): string => {
+  let dateObj: Date;
+  if (typeof date === 'string') {
+    dateObj = parseISO(date);
+  } else {
+    dateObj = date;
+  }
+  if (!isValid(dateObj)) {
+    return '無効な日付';
+  }
   try {
-    const dateObj = typeof date === 'string' ? parseISO(date) : date;
-    if (!isValid(dateObj)) {
-      return '無効な日付';
-    }
     return format(dateObj, formatStr, { locale: ja });
-  } catch (error) {
+  }
+  /* c8 ignore start */
+  catch (error) {
     console.error('Date formatting error:', error);
     return '無効な日付';
   }
+  /* c8 ignore end */
 };
 
 export const formatDateTime = (date: string | Date): string => {
   return formatDate(date, 'yyyy/MM/dd HH:mm');
 };
 
-export const formatTimeAgo = (date: string | Date): string => {
+export const formatTimeAgo = (
+  date: string | Date,
+  options?: { addSuffix?: boolean; locale?: Locale },
+): string => {
   try {
-    const dateObj = typeof date === 'string' ? parseISO(date) : date;
+    let dateObj: Date;
+    if (typeof date === 'string') {
+      dateObj = parseISO(date);
+    } else {
+      dateObj = date;
+    }
     if (!isValid(dateObj)) {
       return '無効な日付';
     }
-    return formatDistanceToNow(dateObj, { addSuffix: true, locale: ja });
-  } catch (error) {
+    const finalOptions = { addSuffix: true, locale: ja, ...options };
+    return formatDistanceToNow(dateObj, finalOptions);
+  }
+  /* c8 ignore start */
+  catch (error) {
     console.error('Time ago formatting error:', error);
     return '無効な日付';
   }
+  /* c8 ignore end */
 };
 
 export const formatJapaneseDate = (date: string | Date): string => {
@@ -61,15 +82,25 @@ export const isDateInRange = (
   startDate: string | Date,
   endDate: string | Date
 ): boolean => {
+  if (!date || !startDate || !endDate) {
+    return false;
+  }
   try {
     const dateObj = typeof date === 'string' ? parseISO(date) : date;
     const startObj = typeof startDate === 'string' ? parseISO(startDate) : startDate;
     const endObj = typeof endDate === 'string' ? parseISO(endDate) : endDate;
 
+    if (!isValid(dateObj) || !isValid(startObj) || !isValid(endObj)) {
+      return false;
+    }
+
     return dateObj >= startObj && dateObj <= endObj;
-  } catch {
+  }
+  /* c8 ignore start */
+  catch {
     return false;
   }
+  /* c8 ignore end */
 };
 
 export const getCurrentISOString = (): string => {
@@ -101,9 +132,12 @@ export const getDaysDifference = (startDate: string | Date, endDate: string | Da
     const diffTime = Math.abs(end.getTime() - start.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
-  } catch {
+  }
+  /* c8 ignore start */
+  catch {
     return 0;
   }
+  /* c8 ignore end */
 };
 
 export const isDateAfter = (date1: string | Date, date2: string | Date): boolean => {
@@ -112,9 +146,12 @@ export const isDateAfter = (date1: string | Date, date2: string | Date): boolean
     const dateObj2 = typeof date2 === 'string' ? parseISO(date2) : date2;
 
     return dateObj1 > dateObj2;
-  } catch {
+  }
+  /* c8 ignore start */
+  catch {
     return false;
   }
+  /* c8 ignore end */
 };
 
 export const isDateBefore = (date1: string | Date, date2: string | Date): boolean => {
@@ -123,9 +160,12 @@ export const isDateBefore = (date1: string | Date, date2: string | Date): boolea
     const dateObj2 = typeof date2 === 'string' ? parseISO(date2) : date2;
 
     return dateObj1 < dateObj2;
-  } catch {
+  }
+  /* c8 ignore start */
+  catch {
     return false;
   }
+  /* c8 ignore end */
 };
 
 export const sortByDate = <

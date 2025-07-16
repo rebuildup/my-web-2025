@@ -76,6 +76,8 @@ const ThreeJSPlayground: React.FC = () => {
           ref={canvasRef}
           width={600}
           height={400}
+          role="img"
+          aria-label="Three.js Playground Animation"
           className="h-auto w-full max-w-full rounded-none bg-gray-600"
         />
       </div>

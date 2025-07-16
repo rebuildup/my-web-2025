@@ -449,6 +449,7 @@ const ColorPalette: React.FC = () => {
                   <button
                     onClick={() => copyToClipboard(color.hex)}
                     className="text-foreground/60 hover:text-primary opacity-0 transition-opacity group-hover:opacity-100"
+                    aria-label="Copy"
                   >
                     <Copy size={14} />
                   </button>

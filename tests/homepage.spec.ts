@@ -21,21 +21,21 @@ test.describe('Homepage', () => {
 
     // Test About link - click on the link containing About h3
     await Promise.all([page.waitForNavigation(), page.click('a:has(h3:text("About"))')]);
-    await expect(page).toHaveURL(/\/about\/?$/);
+    await expect(page).toHaveURL(/\/01_about\/?$/);
 
     // Go back to homepage
     await page.goto('/');
 
     // Test Portfolio link - click on the link containing Portfolio h3
     await Promise.all([page.waitForNavigation(), page.click('a:has(h3:text("Portfolio"))')]);
-    await expect(page).toHaveURL(/\/portfolio\/?$/);
+    await expect(page).toHaveURL(/\/02_portfolio\/?$/);
 
     // Go back to homepage
     await page.goto('/');
 
     // Test Tools link - click on the link containing Tools h3
     await Promise.all([page.waitForNavigation(), page.click('a:has(h3:text("Tools"))')]);
-    await expect(page).toHaveURL(/\/tools\/?$/);
+    await expect(page).toHaveURL(/\/04_tools\/?$/);
   });
 
   test('should have search link navigation', async ({ page }) => {
@@ -149,6 +149,6 @@ test.describe('Homepage', () => {
     await Promise.all([page.waitForNavigation(), page.keyboard.press('Enter')]);
 
     // Should navigate to the linked page
-    await expect(page).toHaveURL(/\/about\/?$/);
+    await expect(page).toHaveURL(/\/01_about\/?$/);
   });
 });

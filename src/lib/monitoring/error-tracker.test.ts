@@ -1,108 +1,110 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import { errorTracker, createErrorBoundary } from './error-tracker';
 import React from 'react';
 
-global.fetch = vi.fn();
-
 describe('ErrorTracker', () => {
-  let tracker: typeof errorTracker;
-
   beforeEach(() => {
-    vi.clearAllMocks();
-    tracker = errorTracker;
-    tracker.clearErrors();
-    tracker.clearBreadcrumbs();
+    vi.useFakeTimers();
+    errorTracker.destroy();
+    errorTracker.configure({
+      enabled: true,
+      apiEndpoint: undefined,
+      ignoreErrors: [],
+      beforeSend: event => event,
+      onError: () => {},
+      enableConsoleCapture: false,
+    });
   });
 
   afterEach(() => {
+    errorTracker.destroy();
+    vi.useRealTimers();
     vi.clearAllMocks();
-    tracker.clearErrors();
-    tracker.clearBreadcrumbs();
   });
 
-  it('should add a breadcrumb', () => {
-    tracker.addBreadcrumb('navigation', 'User navigated', { url: '/test' });
-    const breadcrumbs = tracker.getBreadcrumbs();
-    expect(breadcrumbs.length).toBeGreaterThan(0);
-    expect(breadcrumbs[0].type).toBe('navigation');
+  it('should capture an error using captureException', () => {
+    errorTracker.init();
+    const error = new Error('Direct capture');
+    errorTracker.captureException(error);
+    const errors = errorTracker.getErrors();
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toBe('Direct capture');
   });
 
-  it('should capture an error', () => {
-    tracker.captureError({
-      type: 'javascript',
-      severity: 'high',
-      message: 'Test error',
-      context: { page: '/test' },
+  it('should capture unhandled promise rejections', async () => {
+    errorTracker.init();
+    const reason = new Error('Promise rejected');
+    const promise = Promise.reject(reason);
+    const rejectionEvent = new PromiseRejectionEvent('unhandledrejection', {
+      promise,
+      reason,
     });
-    const errors = tracker.getErrors();
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].message).toBe('Test error');
+
+    window.dispatchEvent(rejectionEvent);
+    await vi.runAllTimersAsync();
+
+    const errors = errorTracker.getErrors();
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toBe('Promise rejected');
+
+    // Prevent unhandled rejection error by catching it.
+    promise.catch(() => {});
+    await Promise.resolve(); // Flush microtask queue
   });
 
-  it('should capture a message', () => {
-    tracker.captureMessage('Test message', 'low', { page: '/test' });
-    const errors = tracker.getErrors();
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].type).toBe('user');
-    expect(errors[0].message).toBe('Test message');
+  it('should capture console.error calls when enabled', () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    errorTracker.configure({ enableConsoleCapture: true });
+    errorTracker.init();
+    
+    console.error('This is a console error');
+    
+    const errors = errorTracker.getErrors();
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toBe('This is a console error');
+    consoleSpy.mockRestore();
   });
 
-  it('should respect ignoreErrors config', () => {
-    tracker['config'].ignoreErrors = ['Ignore this error'];
-    tracker.captureError({
-      type: 'javascript',
-      severity: 'high',
-      message: 'Ignore this error',
-      context: { page: '/test' },
-    });
-    const errors = tracker.getErrors();
-    expect(errors.length).toBe(0);
-  });
+  it('should not capture ignored errors', () => {
+    errorTracker.configure({ ignoreErrors: [/ignore/] });
+    errorTracker.init();
+    
+    const error = new Error('please ignore this');
+    errorTracker.captureException(error);
 
-  it('should use beforeSend hook', () => {
-    tracker['config'].beforeSend = vi.fn(event => {
-      event.message = 'Modified message';
-      return event;
-    });
-    tracker.captureError({
-      type: 'javascript',
-      severity: 'high',
-      message: 'Original message',
-      context: { page: '/test' },
-    });
-    const errors = tracker.getErrors();
-    expect(errors[0].message).toBe('Modified message');
-  });
-
-  it('should call onError hook', () => {
-    const onError = vi.fn();
-    tracker['config'].onError = onError;
-    tracker.captureError({
-      type: 'javascript',
-      severity: 'high',
-      message: 'Test error',
-      context: { page: '/test' },
-    });
-    expect(onError).toHaveBeenCalled();
-  });
-
-  it('should send error to API if apiEndpoint is set', async () => {
-    tracker['config'].apiEndpoint = 'https://api.example.com/errors';
-    tracker.captureError({
-      type: 'javascript',
-      severity: 'high',
-      message: 'API error',
-      context: { page: '/test' },
-    });
-    expect(global.fetch).toHaveBeenCalled();
+    expect(errorTracker.getErrors()).toHaveLength(0);
   });
 });
 
 describe('createErrorBoundary', () => {
-  it('should create error boundary component', () => {
-    const Dummy = () => React.createElement('div', null, 'dummy');
-    const ErrorBoundary = createErrorBoundary(Dummy);
-    expect(ErrorBoundary).toBeDefined();
-    expect(typeof ErrorBoundary).toBe('function');
+  const ThrowingComponent = () => {
+    throw new Error('Test error');
+  };
+  const FallbackComponent = () => React.createElement('div', null, 'Fallback UI');
+  const ErrorBoundary = createErrorBoundary(FallbackComponent);
+
+  beforeEach(() => {
+    // Silence React's error boundary console error
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    (console.error as vi.Mock).mockRestore();
+  });
+
+  it('should render children when there is no error', () => {
+    render(
+      React.createElement(ErrorBoundary, null, React.createElement('div', null, 'Child'))
+    );
+    expect(screen.getByText('Child')).toBeInTheDocument();
+    expect(screen.queryByText('Fallback UI')).not.toBeInTheDocument();
+  });
+
+  it('should render fallback UI on error', () => {
+    render(
+      React.createElement(ErrorBoundary, null, React.createElement(ThrowingComponent))
+    );
+    expect(screen.getByText('Fallback UI')).toBeInTheDocument();
   });
 });

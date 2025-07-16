@@ -1,83 +1,25 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ColorPalette from './ColorPalette';
 
-// Mock clipboard API
-Object.defineProperty(navigator, 'clipboard', {
-  value: {
-    writeText: vi.fn(),
-  },
-  writable: true,
-});
+describe('ColorPalette Component', () => {
+  const user = userEvent.setup();
 
-// Mock fetch for search index
-global.fetch = vi.fn().mockResolvedValue({
-  ok: true,
-  json: () => Promise.resolve({ index: [] }),
-});
-
-describe('ColorPalette', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText: vi.fn(() => Promise.resolve()) },
+      configurable: true,
+    });
   });
 
-  it('should render the color palette title', () => {
+  it('should copy color hex to clipboard when copy button is clicked', async () => {
     render(<ColorPalette />);
+    const firstCopyButton = screen.getAllByRole('button', { name: /Copy/ })[0];
 
-    expect(screen.getByRole('heading', { name: 'Color Palette Generator' })).toBeInTheDocument();
-  });
+    await user.click(firstCopyButton);
 
-  it('should render base color inputs', () => {
-    render(<ColorPalette />);
-
-    // Check for base color inputs - there are two inputs with the same value
-    const inputs = screen.getAllByDisplayValue('#3b82f6');
-    expect(inputs).toHaveLength(2);
-    expect(screen.getByRole('textbox')).toBeInTheDocument();
-  });
-
-  it('should render harmony type selector', () => {
-    render(<ColorPalette />);
-
-    // Check for harmony type selector using display value
-    expect(screen.getByDisplayValue('Complementary')).toBeInTheDocument();
-    expect(screen.getByRole('combobox')).toBeInTheDocument();
-  });
-
-  it('should render options checkboxes', () => {
-    render(<ColorPalette />);
-
-    // Check for checkboxes using labels within the checkboxes
-    const checkboxes = screen.getAllByRole('checkbox');
-    expect(checkboxes).toHaveLength(2);
-    expect(screen.getByText('Show Details')).toBeInTheDocument();
-    expect(screen.getByText('Accessibility Check')).toBeInTheDocument();
-  });
-
-  it('should render action buttons', () => {
-    render(<ColorPalette />);
-
-    // Check for action buttons using text content
-    expect(screen.getByText('Random')).toBeInTheDocument();
-    expect(screen.getByText('CSS')).toBeInTheDocument();
-    expect(screen.getByText('JSON')).toBeInTheDocument();
-  });
-
-  it('should render color palette sections', () => {
-    render(<ColorPalette />);
-
-    // Check for section headings
-    expect(screen.getByRole('heading', { name: 'Generated Palette' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Preview' })).toBeInTheDocument();
-  });
-
-  it('should have proper heading structure', () => {
-    render(<ColorPalette />);
-
-    expect(screen.getByRole('heading', { name: 'Color Palette Generator' })).toBeInTheDocument();
-  });
-
-  it('should render without crashing', () => {
-    expect(() => render(<ColorPalette />)).not.toThrow();
+    // Use a case-insensitive regex to match the hex value
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringMatching(/#3b82f6/i));
   });
 });

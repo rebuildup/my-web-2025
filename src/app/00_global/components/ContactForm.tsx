@@ -122,11 +122,8 @@ const ContactForm: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-
-    // Clear error for this field when user starts typing
-    if (errors[name as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
-    }
+    const newErrors = validateForm();
+    setErrors(newErrors);
   };
 
   const handleRecaptchaChange = (token: string | null) => {
