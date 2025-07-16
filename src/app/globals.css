@@ -9,13 +9,13 @@
 
   --breakpoint-xs: 384px;
   --breakpoint-md: 768px;
-  --breakpoint-xl: 1152px;
-  --breakpoint-2xl: 1536px;
+  --breakpoint-xl: 1024px;
+  --breakpoint-2xl: 1280px;
 
   --max-width-grid-xs: 384px;
   --max-width-grid-md: 768px;
-  --max-width-grid-xl: 1152px;
-  --max-width-grid-2xl: 1536px;
+  --max-width-grid-xl: 1024px;
+  --max-width-grid-2xl: 1280px;
 
   --font-family-neue-haas: neue-haas-grotesk-display, sans-serif;
   --font-family-zen-kaku: zen-kaku-gothic-new, sans-serif;
@@ -64,8 +64,8 @@
     }
   }
 
-  /* 1152px以上：3グリッド幅 */
-  @media (min-width: 1152px) {
+  /* 1024px以上：3グリッド幅 */
+  @media (min-width: 1024px) {
     .container-grid {
       width: var(--max-width-grid-xl);
       padding-left: 4rem;
@@ -73,8 +73,8 @@
     }
   }
 
-  /* 1536px以上：4グリッド幅 */
-  @media (min-width: 1536px) {
+  /* 1280px以上：4グリッド幅 */
+  @media (min-width: 1280px) {
     .container-grid {
       width: var(--max-width-grid-2xl);
       padding-left: 6rem;
@@ -118,7 +118,7 @@
     }
   }
 
-  @media (min-width: 1152px) {
+  @media (min-width: 1024px) {
     .container-grid-debug::before {
       transform: translateX(calc(-50% - var(--max-width-grid-xl) / 2));
     }
@@ -127,7 +127,7 @@
     }
   }
 
-  @media (min-width: 1536px) {
+  @media (min-width: 1280px) {
     .container-grid-debug::before {
       transform: translateX(calc(-50% - var(--max-width-grid-2xl) / 2));
     }
@@ -240,7 +240,7 @@ button:hover {
 .card {
   background-color: var(--color-base);
   border: 1px solid var(--color-primary);
-  padding: 1rem;
+  padding: 2rem;
 }
 
 .card:hover {
@@ -262,4 +262,18 @@ button:hover {
 .container-grid {
   display: block;
   text-align: left;
+}
+
+/* Custom spacing classes */
+.py-24 {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+.mt-12 {
+  margin-top: 3rem;
+}
+
+.mt-24 {
+  margin-top: 6rem;
 }

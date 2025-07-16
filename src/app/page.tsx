@@ -4,9 +4,9 @@ import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <div className="container-grid container-grid-debug">
+    <div className="container-grid">
       {/* ヒーローヘッダー */}
-      <section className="py-16 text-center">
+      <section className="py-24 text-center">
         <h1 className="neue-haas-grotesk-display mb-4 text-4xl text-white md:text-6xl">samuido</h1>
         <p className="noto-sans-jp-light mb-8 text-xl text-gray-300 md:text-2xl">
           フロントエンドエンジニアの個人サイト
@@ -19,7 +19,7 @@ export default function HomePage() {
       </section>
 
       {/* カテゴリカード */}
-      <section className="py-12">
+      <section className="mt-12 py-24">
         <h2 className="neue-haas-grotesk-display mb-8 text-center text-2xl text-white md:text-3xl">
           Main Categories
         </h2>
@@ -79,7 +79,7 @@ export default function HomePage() {
       </section>
 
       {/* ルート機能カード */}
-      <section className="py-12">
+      <section className="mt-12 py-24">
         <h2 className="neue-haas-grotesk-display mb-8 text-center text-2xl text-white md:text-3xl">
           Site Functions
         </h2>
@@ -114,7 +114,7 @@ export default function HomePage() {
       </section>
 
       {/* 最新コンテンツハイライト */}
-      <section className="py-12">
+      <section className="mt-12 py-24">
         <h2 className="neue-haas-grotesk-display mb-8 text-center text-2xl text-white md:text-3xl">
           Latest Updates
         </h2>
@@ -155,10 +155,8 @@ export default function HomePage() {
       </section>
 
       {/* フッター */}
-      <footer className="mt-16 border-t border-gray-600 py-12 text-center">
-        <p className="noto-sans-jp-regular mb-2 text-sm text-gray-400">
-          © 2025 samuido (木村友亮)
-        </p>
+      <footer className="mt-24 border-t border-gray-600 py-24 text-center">
+        <p className="noto-sans-jp-regular mb-2 text-sm text-gray-400">© 2025 samuido</p>
         <p className="noto-sans-jp-light text-xs text-gray-500">
           フロントエンドエンジニア・Webデザイナー・映像クリエイター
         </p>

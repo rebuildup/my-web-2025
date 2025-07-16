@@ -10,6 +10,16 @@ export const siteMetadata: Metadata = {
   alternates: {
     canonical: 'https://yusuke-kim.com/',
   },
+  icons: {
+    icon: '/favicons/favicon.png',
+    shortcut: '/favicons/favicon.ico',
+    apple: '/favicons/favicon.png',
+    other: {
+      rel: 'icon',
+      url: '/favicons/favicon.svg',
+      type: 'image/svg+xml',
+    },
+  },
   openGraph: {
     title: 'samuidoのサイトルート',
     description:
