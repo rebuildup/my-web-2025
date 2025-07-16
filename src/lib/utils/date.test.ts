@@ -92,9 +92,9 @@ describe('Date Utils', () => {
     });
 
     it('should return false for nullish inputs', () => {
-      expect(isDateInRange(null as any, '2024-01-01', '2024-01-31')).toBe(false);
-      expect(isDateInRange('2024-01-15', null as any, '2024-01-31')).toBe(false);
-      expect(isDateInRange('2024-01-15', '2024-01-01', null as any)).toBe(false);
+      expect(isDateInRange(null as unknown as string, '2024-01-01', '2024-01-31')).toBe(false);
+      expect(isDateInRange('2024-01-15', null as unknown as string, '2024-01-31')).toBe(false);
+      expect(isDateInRange('2024-01-15', '2024-01-01', null as unknown as string)).toBe(false);
     });
   });
 
@@ -142,7 +142,7 @@ describe('Date Utils', () => {
       { createdAt: '2024-01-20', updatedAt: '2024-01-21' },
       { createdAt: '2024-01-15', updatedAt: '2024-01-18' },
     ];
-    const itemsWithMissing: ({ createdAt?: string })[] = [
+    const itemsWithMissing: { createdAt?: string }[] = [
       { createdAt: '2024-01-20' },
       {},
       { createdAt: '2024-01-15' },

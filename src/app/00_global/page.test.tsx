@@ -61,7 +61,10 @@ describe('SearchPage', () => {
     await user.type(searchInput, 'Test Query');
     await user.click(searchButton);
     await waitFor(() => {
-      expect(mockedSearchContent).toHaveBeenCalledWith('Test Query', { category: 'all', type: 'all' });
+      expect(mockedSearchContent).toHaveBeenCalledWith('Test Query', {
+        category: 'all',
+        type: 'all',
+      });
     });
   });
 
@@ -72,7 +75,10 @@ describe('SearchPage', () => {
     await user.type(searchInput, 'Enter Key Test');
     await user.keyboard('{enter}');
     await waitFor(() => {
-      expect(mockedSearchContent).toHaveBeenCalledWith('Enter Key Test', { category: 'all', type: 'all' });
+      expect(mockedSearchContent).toHaveBeenCalledWith('Enter Key Test', {
+        category: 'all',
+        type: 'all',
+      });
     });
   });
 
@@ -96,7 +102,10 @@ describe('SearchPage', () => {
     await user.type(searchInput, 'Filtered Search');
     await user.click(searchButton);
     await waitFor(() => {
-      expect(mockedSearchContent).toHaveBeenCalledWith('Filtered Search', { category: 'portfolio', type: 'tool' });
+      expect(mockedSearchContent).toHaveBeenCalledWith('Filtered Search', {
+        category: 'portfolio',
+        type: 'tool',
+      });
     });
   });
 
@@ -155,22 +164,25 @@ describe('SearchPage', () => {
 
   it('should show loading state on button and results', async () => {
     let resolveSearch: (value: unknown) => void;
-    mockedSearchContent.mockImplementation(() => new Promise(resolve => {
-      resolveSearch = resolve;
-    }));
+    mockedSearchContent.mockImplementation(
+      () =>
+        new Promise(resolve => {
+          resolveSearch = resolve;
+        })
+    );
     const user = userEvent.setup();
     render(<SearchPage />);
     const searchInput = screen.getByPlaceholderText(/検索キーワードを入力/);
     const searchButton = screen.getByRole('button', { name: '検索' });
     await user.type(searchInput, 'Loading Test');
     await user.click(searchButton);
-    
+
     await waitFor(() => {
       expect(searchButton).toBeDisabled();
       expect(screen.getAllByText('検索中...').length).toBeGreaterThan(0);
     });
 
-    // @ts-ignore
+    // @ts-expect-error - resolveSearch is a mock function defined in the test setup
     resolveSearch([]); // Complete the search
     await waitFor(() => {
       expect(searchButton).not.toBeDisabled();

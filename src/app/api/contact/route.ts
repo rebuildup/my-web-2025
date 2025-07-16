@@ -10,8 +10,9 @@ interface ContactFormData {
   recaptchaToken?: string;
 }
 
-async function sendContactEmail(formData: ContactFormData, resend: Resend) {
-  // ... implementation
+async function sendContactEmail(_formData: ContactFormData, _resend: Resend) {
+  // 実装は省略されていますが、パラメータは将来的に使用される予定
+  return true;
 }
 
 async function verifyRecaptcha(token: string) {
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest): Promise<Response> {
   try {
     const formData: ContactFormData = await request.json();
 
-    const validationErrors = validateContactForm(formData as any);
+    const validationErrors = validateContactForm(formData);
     if (Object.keys(validationErrors).length > 0) {
       throw new Error('Validation failed');
     }
