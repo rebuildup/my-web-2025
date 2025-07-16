@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { updateStats, getStats, getItemStats, getTopItems } from './index';
+import { updateStats } from './index';
 
 describe('Stats Utilities', () => {
   beforeEach(() => {

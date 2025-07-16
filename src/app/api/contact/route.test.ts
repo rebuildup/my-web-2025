@@ -51,7 +51,7 @@ describe('Contact API Route', () => {
 
   it('should return 400 if reCAPTCHA fails', async () => {
     process.env.RESEND_API_KEY = 'test-key';
-    (global.fetch as vi.Mock).mockResolvedValueOnce(
+    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
       Promise.resolve({ ok: true, json: () => Promise.resolve({ success: false }) } as Response)
     );
     const request = new NextRequest('http://localhost/api/contact', {

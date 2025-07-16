@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validators, validateForm as validate, ValidationResult } from './validation';
+import { validators, validateForm as validate } from './validation';
 
 describe('Validation Utils', () => {
   describe('validators', () => {

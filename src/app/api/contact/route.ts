@@ -11,11 +11,14 @@ interface ContactFormData {
 }
 
 async function sendContactEmail(_formData: ContactFormData, _resend: Resend) {
+  console.log(_formData);
+  console.log(_resend);
   // 実装は省略されていますが、パラメータは将来的に使用される予定
   return true;
 }
 
 async function verifyRecaptcha(token: string) {
+  console.log(token);
   // ... implementation
   return true;
 }
@@ -32,7 +35,15 @@ export async function POST(request: NextRequest): Promise<Response> {
   try {
     const formData: ContactFormData = await request.json();
 
-    const validationErrors = validateContactForm(formData);
+    // ContactFormDataをRecord<string, unknown>に変換
+    const formDataRecord: Record<string, unknown> = {
+      name: formData.name,
+      email: formData.email,
+      message: formData.message,
+      ...(formData.recaptchaToken && { recaptchaToken: formData.recaptchaToken }),
+    };
+
+    const validationErrors = validateContactForm(formDataRecord);
     if (Object.keys(validationErrors).length > 0) {
       throw new Error('Validation failed');
     }
@@ -50,7 +61,8 @@ export async function POST(request: NextRequest): Promise<Response> {
     await sendContactEmail(formData, resend);
 
     return Response.json({ success: true, message: 'Message sent successfully' });
-  } catch (err) {
+  } catch (e) {
+    console.log(e);
     return Response.json({ success: false, error: 'Failed to send message' }, { status: 500 });
   }
 }

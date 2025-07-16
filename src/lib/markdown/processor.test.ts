@@ -60,7 +60,9 @@ excerpt: Custom Excerpt
 ---
 # Hello
 Some content.`;
-      (marked.parse as vi.Mock).mockResolvedValue('<h1>Hello</h1><p>Some content.</p>');
+      (marked.parse as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(
+        '<h1>Hello</h1><p>Some content.</p>'
+      );
 
       const result = await processMarkdown(rawContent);
 
@@ -81,7 +83,9 @@ title: Test Title
 ---
 # Hello
 ${longContent}`;
-      (marked.parse as vi.Mock).mockResolvedValue(`<h1>Hello</h1><p>${longContent}</p>`);
+      (marked.parse as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(
+        `<h1>Hello</h1><p>${longContent}</p>`
+      );
 
       const result = await processMarkdown(rawContent);
       expect(result.excerpt).toContain('...');
@@ -92,7 +96,8 @@ ${longContent}`;
     it('should configure marked with a custom heading renderer', () => {
       addMarkdownExtensions();
       expect(marked.use).toHaveBeenCalled();
-      const rendererInstance = (marked.use as vi.Mock).mock.calls[0][0].renderer;
+      const rendererInstance = (marked.use as unknown as ReturnType<typeof vi.fn>).mock.calls[0][0]
+        .renderer;
       const headingHtml = rendererInstance.heading('Test Heading', 1);
       expect(headingHtml).toBe('<h1 id="test-heading">Test Heading</h1>');
     });

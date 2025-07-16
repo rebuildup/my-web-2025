@@ -57,9 +57,9 @@ describe('ErrorTracker', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     errorTracker.configure({ enableConsoleCapture: true });
     errorTracker.init();
-    
+
     console.error('This is a console error');
-    
+
     const errors = errorTracker.getErrors();
     expect(errors).toHaveLength(1);
     expect(errors[0].message).toBe('This is a console error');
@@ -69,7 +69,7 @@ describe('ErrorTracker', () => {
   it('should not capture ignored errors', () => {
     errorTracker.configure({ ignoreErrors: [/ignore/] });
     errorTracker.init();
-    
+
     const error = new Error('please ignore this');
     errorTracker.captureException(error);
 
@@ -90,21 +90,17 @@ describe('createErrorBoundary', () => {
   });
 
   afterEach(() => {
-    (console.error as vi.Mock).mockRestore();
+    (console.error as ReturnType<typeof vi.fn>).mockRestore();
   });
 
   it('should render children when there is no error', () => {
-    render(
-      React.createElement(ErrorBoundary, null, React.createElement('div', null, 'Child'))
-    );
+    render(React.createElement(ErrorBoundary, null, React.createElement('div', null, 'Child')));
     expect(screen.getByText('Child')).toBeInTheDocument();
     expect(screen.queryByText('Fallback UI')).not.toBeInTheDocument();
   });
 
   it('should render fallback UI on error', () => {
-    render(
-      React.createElement(ErrorBoundary, null, React.createElement(ThrowingComponent))
-    );
+    render(React.createElement(ErrorBoundary, null, React.createElement(ThrowingComponent)));
     expect(screen.getByText('Fallback UI')).toBeInTheDocument();
   });
 });

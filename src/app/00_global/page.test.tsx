@@ -11,8 +11,8 @@ vi.mock('@/lib/search', () => ({
   getPopularSearchTerms: vi.fn(),
 }));
 
-const mockedSearchContent = searchContent as vi.Mock;
-const mockedGetPopularSearchTerms = getPopularSearchTerms as vi.Mock;
+const mockedSearchContent = searchContent as ReturnType<typeof vi.fn>;
+const mockedGetPopularSearchTerms = getPopularSearchTerms as ReturnType<typeof vi.fn>;
 
 const mockSearchResults = [
   {
