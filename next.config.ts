@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
 
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   turbopack: {
     rules: {
       '**/*.svg': {

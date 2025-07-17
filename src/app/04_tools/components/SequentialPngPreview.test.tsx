@@ -8,24 +8,20 @@ describe('SequentialPngPreview Component', () => {
     render(<SequentialPngPreview />);
 
     expect(screen.getByRole('heading', { name: 'Sequential PNG Preview' })).toBeInTheDocument();
-    expect(
-      screen.getByText('Sequential PNG animation preview - Coming soon with file upload support')
-    ).toBeInTheDocument();
+    expect(screen.getByText('No image sequences loaded')).toBeInTheDocument();
   });
 
   it('should have proper heading styling', () => {
     render(<SequentialPngPreview />);
 
     const heading = screen.getByRole('heading', { name: 'Sequential PNG Preview' });
-    expect(heading).toHaveClass('neue-haas-grotesk-display', 'text-blue-500');
+    expect(heading).toHaveClass('neue-haas-grotesk-display');
   });
 
-  it('should have proper description styling', () => {
+  it('should have proper empty state message', () => {
     render(<SequentialPngPreview />);
 
-    const description = screen.getByText(
-      'Sequential PNG animation preview - Coming soon with file upload support'
-    );
-    expect(description).toHaveClass('text-sm', 'text-gray-300');
+    const description = screen.getByText('No image sequences loaded');
+    expect(description).toHaveClass('text-foreground/70');
   });
 });

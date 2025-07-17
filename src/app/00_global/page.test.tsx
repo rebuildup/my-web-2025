@@ -182,7 +182,6 @@ describe('SearchPage', () => {
       expect(screen.getAllByText('検索中...').length).toBeGreaterThan(0);
     });
 
-    // @ts-expect-error - resolveSearch is a mock function defined in the test setup
     resolveSearch([]); // Complete the search
     await waitFor(() => {
       expect(searchButton).not.toBeDisabled();

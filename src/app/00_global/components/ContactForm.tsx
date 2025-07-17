@@ -1,14 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-// 型定義がない場合の暫定対応
-// @ts-expect-error: No type definitions for react-google-recaptcha
-import ReCAPTCHA from 'react-google-recaptcha';
-import { Shield, AlertTriangle, CheckCircle } from 'lucide-react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { Send, RefreshCw, Check, AlertCircle } from 'lucide-react';
+import AccessibleRecaptcha from './AccessibleRecaptcha';
 
 interface FormData {
   name: string;
   email: string;
   subject: string;
   message: string;
+  inquiryType: 'development' | 'design' | 'general';
 }
 
 interface FormErrors {
@@ -17,73 +18,116 @@ interface FormErrors {
   subject?: string;
   message?: string;
   recaptcha?: string;
+  general?: string;
 }
 
-const ContactForm: React.FC = () => {
+interface ContactFormProps {
+  recaptchaSiteKey?: string;
+}
+
+export default function ContactForm({
+  recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+}: ContactFormProps) {
+  // Form state
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     subject: '',
     message: '',
+    inquiryType: 'general',
   });
+
+  // Form validation and submission state
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const [securityScore, setSecurityScore] = useState(0);
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
-  // Simulate security score calculation
+  // Refs (removed unused recaptchaRef)
+
+  // Update security score when form data changes
   useEffect(() => {
-    const calculateSecurityScore = () => {
-      let score = 0;
-      if (formData.name.length > 2) score += 20;
-      if (formData.email.includes('@') && formData.email.includes('.')) score += 20;
-      if (formData.subject.length > 5) score += 20;
-      if (formData.message.length > 10) score += 20;
-      if (recaptchaToken) score += 20;
-      setSecurityScore(score);
-    };
-
-    calculateSecurityScore();
+    let score = 0;
+    if (formData.name) score += 20;
+    if (formData.email) score += 20;
+    if (formData.subject) score += 20;
+    if (formData.message) score += 20;
+    if (recaptchaToken) score += 20;
+    setSecurityScore(score);
   }, [formData, recaptchaToken]);
 
-  const validateForm = (): FormErrors => {
+  // Handle form input changes
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+
+    // Clear error for this field when user types
+    if (errors[name as keyof FormErrors]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  // Handle reCAPTCHA verification
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+    if (errors.recaptcha) {
+      setErrors(prev => ({ ...prev, recaptcha: undefined }));
+    }
+  };
+
+  // Validate form data
+  const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
+    // Name validation
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters long';
     }
 
+    // Email validation
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+    } else {
+      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      if (!emailRegex.test(formData.email)) {
+        newErrors.email = 'Please enter a valid email address';
+      }
     }
 
+    // Subject validation
     if (!formData.subject.trim()) {
       newErrors.subject = 'Subject is required';
+    } else if (formData.subject.trim().length < 5) {
+      newErrors.subject = 'Subject must be at least 5 characters long';
     }
 
+    // Message validation
     if (!formData.message.trim()) {
       newErrors.message = 'Message is required';
-    } else if (formData.message.length < 10) {
+    } else if (formData.message.trim().length < 10) {
       newErrors.message = 'Message must be at least 10 characters long';
     }
 
+    // reCAPTCHA validation
     if (!recaptchaToken) {
       newErrors.recaptcha = 'Please complete the reCAPTCHA verification';
     }
 
-    return newErrors;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newErrors = validateForm();
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    // Validate form
+    if (!validateForm()) {
       return;
     }
 
@@ -91,7 +135,6 @@ const ContactForm: React.FC = () => {
     setErrors({});
 
     try {
-      // Submit form with reCAPTCHA token
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -103,258 +146,244 @@ const ContactForm: React.FC = () => {
         }),
       });
 
-      if (response.ok) {
-        setSubmitted(true);
-        setFormData({ name: '', email: '', subject: '', message: '' });
-        setRecaptchaToken(null);
-        recaptchaRef.current?.reset();
-      } else {
-        throw new Error('Failed to submit form');
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to submit form. Please try again.');
       }
+
+      // Success
+      setSubmitSuccess(true);
+      resetForm();
     } catch (error) {
-      console.error('Failed to submit form:', error);
-      setErrors({ recaptcha: 'Failed to submit form. Please try again.' });
+      setErrors({
+        general:
+          error instanceof Error ? error.message : 'Failed to submit form. Please try again.',
+      });
+      console.error('Contact form submission error:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    const newErrors = validateForm();
-    setErrors(newErrors);
-  };
-
-  const handleRecaptchaChange = (token: string | null) => {
-    setRecaptchaToken(token);
-    if (token && errors.recaptcha) {
-      setErrors(prev => ({ ...prev, recaptcha: undefined }));
-    }
-  };
-
-  const handleRecaptchaError = () => {
+  // Reset form
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
+      inquiryType: 'general',
+    });
     setRecaptchaToken(null);
-    setErrors(prev => ({ ...prev, recaptcha: 'reCAPTCHA error. Please try again.' }));
+    // recaptchaRefは使用しないように修正
+    setErrors({});
   };
 
-  const handleRecaptchaExpired = () => {
-    setRecaptchaToken(null);
-    setErrors(prev => ({ ...prev, recaptcha: 'reCAPTCHA expired. Please verify again.' }));
+  // Handle clear button click
+  const handleClear = () => {
+    resetForm();
   };
 
-  if (submitted) {
-    return (
-      <div className="rounded-none bg-gray-800 p-6 text-white">
-        <div className="rounded-none border border-green-700 bg-green-900 p-6 text-center">
-          <CheckCircle size={48} className="mx-auto mb-4 text-green-400" />
-          <h3 className="mb-2 text-xl font-bold text-green-400">Message Sent Successfully!</h3>
-          <p className="mb-4 text-green-300">
-            Thank you for your message. Your form was securely submitted and we&apos;ll get back to
-            you soon.
-          </p>
-          <div className="mb-4 flex items-center justify-center gap-2 text-sm text-green-300">
-            <Shield size={16} />
-            <span>Verified with reCAPTCHA</span>
+  // Handle sending another message after success
+  const handleSendAnother = () => {
+    setSubmitSuccess(false);
+  };
+
+  return (
+    <div className="mx-auto w-full max-w-2xl">
+      {submitSuccess ? (
+        <div className="border-primary/30 bg-primary/5 border p-6 text-center">
+          <div className="mb-4 flex justify-center">
+            <div className="bg-primary/20 rounded-full p-3">
+              <Check className="text-primary h-8 w-8" />
+            </div>
           </div>
+          <h3 className="text-foreground mb-2 text-xl font-medium">Message Sent Successfully!</h3>
+          <p className="text-foreground/70 mb-6">
+            Thank you for contacting us. We have received your message and will get back to you
+            soon.
+          </p>
           <button
-            onClick={() => {
-              setSubmitted(false);
-              setSecurityScore(0);
-            }}
-            className="mt-4 rounded-none bg-blue-500 px-4 py-2 text-white transition-colors hover:bg-blue-600"
+            onClick={handleSendAnother}
+            className="bg-primary hover:bg-primary/90 px-6 py-2 text-white transition-colors"
           >
             Send Another Message
           </button>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="rounded-none bg-gray-800 p-6 text-white">
-      <h2 className="neue-haas-grotesk-display mb-4 text-xl font-bold text-blue-500">
-        Contact Form
-      </h2>
-
-      {/* Security Score Display */}
-      <div className="mb-6 rounded-none border border-gray-600 bg-gray-700 p-4">
-        <div className="mb-2 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Shield size={16} className="text-blue-400" />
-            <span className="text-sm font-medium text-gray-300">Security Score</span>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Security score */}
+          <div className="mb-6">
+            <div className="mb-1 flex items-center justify-between">
+              <span className="text-foreground/70 text-sm">Security Score</span>
+              <span className="text-sm font-medium">{securityScore}%</span>
+            </div>
+            <div className="bg-foreground/10 h-2 w-full">
+              <div
+                className="bg-primary h-2 transition-all duration-300"
+                style={{ width: `${securityScore}%` }}
+              />
+            </div>
           </div>
-          <span
-            className={`font-bold ${
-              securityScore >= 80
-                ? 'text-green-400'
-                : securityScore >= 60
-                  ? 'text-yellow-400'
-                  : 'text-red-400'
-            }`}
-          >
-            {securityScore}%
-          </span>
-        </div>
-        <div className="h-2 w-full rounded-none bg-gray-600">
-          <div
-            className={`h-full rounded-none transition-all duration-500 ${
-              securityScore >= 80
-                ? 'bg-green-500'
-                : securityScore >= 60
-                  ? 'bg-yellow-500'
-                  : 'bg-red-500'
-            }`}
-            style={{ width: `${securityScore}%` }}
-          />
-        </div>
-        <div className="mt-2 flex items-center gap-2">
-          {securityScore >= 80 && <CheckCircle size={14} className="text-green-400" />}
-          {securityScore < 80 && securityScore >= 60 && (
-            <AlertTriangle size={14} className="text-yellow-400" />
-          )}
-          {securityScore < 60 && <AlertTriangle size={14} className="text-red-400" />}
-          <span className="text-xs text-gray-400">
-            {securityScore >= 80 && 'High security - Ready to submit'}
-            {securityScore < 80 && securityScore >= 60 && 'Medium security - Complete all fields'}
-            {securityScore < 60 && 'Low security - Please fill out the form and verify reCAPTCHA'}
-          </span>
-        </div>
-      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* General error message */}
+          {errors.general && (
+            <div className="flex items-start border border-red-300 bg-red-50 p-3 text-red-700">
+              <AlertCircle className="mt-0.5 mr-2 h-5 w-5 flex-shrink-0" />
+              <p>{errors.general}</p>
+            </div>
+          )}
+
+          {/* Name */}
           <div>
-            <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-300">
-              Full Name *
+            <label htmlFor="name" className="text-foreground mb-1 block text-sm font-medium">
+              Full Name <span className="text-red-500">*</span>
             </label>
             <input
-              type="text"
               id="name"
               name="name"
+              type="text"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full rounded-none border bg-gray-700 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none ${
-                errors.name ? 'border-red-500' : 'border-gray-600'
-              }`}
-              placeholder="Enter your full name"
+              className={`w-full border ${errors.name ? 'border-red-500' : 'border-foreground/20'} text-foreground focus:border-primary bg-transparent p-2 focus:outline-none`}
+              placeholder="Your name"
             />
-            {errors.name && <p className="mt-1 text-sm text-red-400">{errors.name}</p>}
+            {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
           </div>
 
+          {/* Email */}
           <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-300">
-              Email Address *
+            <label htmlFor="email" className="text-foreground mb-1 block text-sm font-medium">
+              Email Address <span className="text-red-500">*</span>
             </label>
             <input
-              type="email"
               id="email"
               name="email"
+              type="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full rounded-none border bg-gray-700 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none ${
-                errors.email ? 'border-red-500' : 'border-gray-600'
-              }`}
-              placeholder="Enter your email address"
+              className={`w-full border ${errors.email ? 'border-red-500' : 'border-foreground/20'} text-foreground focus:border-primary bg-transparent p-2 focus:outline-none`}
+              placeholder="your.email@example.com"
             />
-            {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
+            {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
           </div>
-        </div>
 
-        <div>
-          <label htmlFor="subject" className="mb-2 block text-sm font-medium text-gray-300">
-            Subject *
-          </label>
-          <input
-            type="text"
-            id="subject"
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            className={`w-full rounded-none border bg-gray-700 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none ${
-              errors.subject ? 'border-red-500' : 'border-gray-600'
-            }`}
-            placeholder="Enter the subject of your message"
-          />
-          {errors.subject && <p className="mt-1 text-sm text-red-400">{errors.subject}</p>}
-        </div>
+          {/* Inquiry Type */}
+          <div>
+            <label htmlFor="inquiryType" className="text-foreground mb-1 block text-sm font-medium">
+              Inquiry Type <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="inquiryType"
+              name="inquiryType"
+              value={formData.inquiryType}
+              onChange={handleChange}
+              className="border-foreground/20 text-foreground focus:border-primary w-full border bg-transparent p-2 focus:outline-none"
+            >
+              <option value="general">General Inquiry</option>
+              <option value="development">Development Work</option>
+              <option value="design">Design/Video Work</option>
+            </select>
+          </div>
 
-        <div>
-          <label htmlFor="message" className="mb-2 block text-sm font-medium text-gray-300">
-            Message *
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            rows={6}
-            className={`w-full resize-none rounded-none border bg-gray-700 px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none ${
-              errors.message ? 'border-red-500' : 'border-gray-600'
-            }`}
-            placeholder="Enter your message here..."
-          />
-          {errors.message && <p className="mt-1 text-sm text-red-400">{errors.message}</p>}
-        </div>
-
-        {/* reCAPTCHA */}
-        <div>
-          <label className="mb-2 block text-sm font-medium text-gray-300">
-            Security Verification *
-          </label>
-          <div className="flex flex-col items-start gap-2">
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={
-                process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
-                '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
-              }
-              onChange={handleRecaptchaChange}
-              onError={handleRecaptchaError}
-              onExpired={handleRecaptchaExpired}
-              theme="dark"
-              size="normal"
-              data-testid="recaptcha"
+          {/* Subject */}
+          <div>
+            <label htmlFor="subject" className="text-foreground mb-1 block text-sm font-medium">
+              Subject <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="subject"
+              name="subject"
+              type="text"
+              value={formData.subject}
+              onChange={handleChange}
+              className={`w-full border ${errors.subject ? 'border-red-500' : 'border-foreground/20'} text-foreground focus:border-primary bg-transparent p-2 focus:outline-none`}
+              placeholder="Subject of your message"
             />
-            {errors.recaptcha && <p className="text-sm text-red-400">{errors.recaptcha}</p>}
+            {errors.subject && <p className="mt-1 text-xs text-red-500">{errors.subject}</p>}
           </div>
-          <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
-            <Shield size={12} />
-            <span>
-              This form is protected by reCAPTCHA and subject to Google&apos;s Privacy Policy and
-              Terms of Service.
-            </span>
-          </div>
-        </div>
 
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`rounded-none px-6 py-2 font-medium transition-colors ${
-              isSubmitting
-                ? 'cursor-not-allowed bg-gray-600 text-gray-400'
-                : 'bg-blue-500 text-white hover:bg-blue-600'
-            }`}
-          >
-            {isSubmitting ? 'Sending...' : 'Send Message'}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setFormData({ name: '', email: '', subject: '', message: '' });
-              setErrors({});
-              setRecaptchaToken(null);
-              recaptchaRef.current?.reset();
-            }}
-            className="rounded-none bg-gray-600 px-6 py-2 font-medium text-white transition-colors hover:bg-gray-700"
-          >
-            Clear
-          </button>
-        </div>
-      </form>
+          {/* Message */}
+          <div>
+            <label htmlFor="message" className="text-foreground mb-1 block text-sm font-medium">
+              Message <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              rows={6}
+              className={`w-full border ${errors.message ? 'border-red-500' : 'border-foreground/20'} text-foreground focus:border-primary bg-transparent p-2 focus:outline-none`}
+              placeholder="Your message here..."
+            />
+            {errors.message && <p className="mt-1 text-xs text-red-500">{errors.message}</p>}
+          </div>
+
+          {/* reCAPTCHA */}
+          <div>
+            <div className="mb-2">
+              <AccessibleRecaptcha
+                siteKey={recaptchaSiteKey}
+                onChange={handleRecaptchaChange}
+                theme="light"
+                onExpired={() => {
+                  setRecaptchaToken(null);
+                  setErrors(prev => ({
+                    ...prev,
+                    recaptcha: 'reCAPTCHA verification expired. Please verify again.',
+                  }));
+                }}
+                onError={error => {
+                  console.error('reCAPTCHA error:', error);
+                  setErrors(prev => ({
+                    ...prev,
+                    recaptcha: 'Failed to load reCAPTCHA. Please try again later.',
+                  }));
+                }}
+              />
+            </div>
+            {errors.recaptcha && <p className="mt-1 text-xs text-red-500">{errors.recaptcha}</p>}
+          </div>
+
+          {/* Form Actions */}
+          <div className="flex items-center justify-between pt-2">
+            <button
+              type="button"
+              onClick={handleClear}
+              className="border-foreground/20 text-foreground/70 hover:border-primary/50 hover:text-primary border px-4 py-2 transition-colors"
+            >
+              <RefreshCw className="mr-2 inline-block h-4 w-4" />
+              Clear
+            </button>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-primary hover:bg-primary/90 flex items-center px-6 py-2 text-white transition-colors"
+            >
+              {isSubmitting ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Send className="mr-2 h-4 w-4" />
+                  Send Message
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Privacy notice */}
+          <div className="text-foreground/50 pt-4 text-center text-xs">
+            By submitting this form, you agree to our privacy policy. We&apos;ll never share your
+            information with third parties.
+          </div>
+        </form>
+      )}
     </div>
   );
-};
-
-export default ContactForm;
+}

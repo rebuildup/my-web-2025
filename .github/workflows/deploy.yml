@@ -29,10 +29,16 @@ jobs:
       - name: Run type check
         run: npm run type-check
 
+      - name: Run tests
+        run: npm run test
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
       - name: Build project
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+          NODE_OPTIONS: "--max-old-space-size=4096"
         run: npm run build
 
       - name: Verify build output (Enhanced)
@@ -76,6 +82,7 @@ jobs:
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+          NODE_OPTIONS: "--max-old-space-size=4096"
         run: npm run build
 
       - name: Create deployment package

@@ -50,7 +50,7 @@ export function extractFrontmatter(content: string): {
   const match = content.match(frontmatterRegex);
 
   if (!match) {
-    return { metadata: {}, content };
+    return { metadata: {} as Record<string, unknown>, content };
   }
 
   const [, frontmatterString, markdownContent] = match;

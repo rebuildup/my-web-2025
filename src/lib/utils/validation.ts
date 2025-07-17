@@ -174,10 +174,20 @@ export const contactFormSchema = {
     { type: 'minLength' as const, value: 5, message: 'Subject must be at least 5 characters' },
     { type: 'maxLength' as const, value: 100, message: 'Subject must be 100 characters or less' },
   ],
-  content: [
-    { type: 'required' as const, message: 'Content is required' },
-    { type: 'minLength' as const, value: 10, message: 'Content must be at least 10 characters' },
-    { type: 'maxLength' as const, value: 2000, message: 'Content must be 2000 characters or less' },
+  message: [
+    { type: 'required' as const, message: 'Message is required' },
+    { type: 'minLength' as const, value: 10, message: 'Message must be at least 10 characters' },
+    { type: 'maxLength' as const, value: 2000, message: 'Message must be 2000 characters or less' },
+  ],
+  inquiryType: [
+    {
+      type: 'custom' as const,
+      validator: (value: unknown) => {
+        if (!value) return true; // Optional field
+        return ['development', 'design', 'general'].includes(value as string);
+      },
+      message: 'Invalid inquiry type',
+    },
   ],
 };
 

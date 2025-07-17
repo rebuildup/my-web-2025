@@ -104,7 +104,7 @@ export default function HomePage() {
 
           {/* Contact */}
           <Link
-            href="/00_global/contact"
+            href="/contact"
             className="card block text-center transition-colors hover:border-blue-500"
           >
             <h3 className="neue-haas-grotesk-display mb-3 text-lg text-white">Contact</h3>

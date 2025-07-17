@@ -1,111 +1,245 @@
-import React, { useState } from 'react';
+'use client';
 
-interface PortfolioItem {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  image: string;
-  technologies: string[];
+import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Filter, Loader2, ExternalLink, Eye } from 'lucide-react';
+import { ContentItem } from '@/types/content';
+import { trackStat } from '@/lib/stats';
+
+interface PortfolioGalleryProps {
+  initialItems?: ContentItem[];
+  initialCategory?: string;
 }
 
-const PortfolioGallery: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+// Portfolio categories
+const CATEGORIES = [
+  { id: 'all', label: 'All' },
+  { id: 'develop', label: 'Development' },
+  { id: 'design', label: 'Design' },
+  { id: 'video', label: 'Video' },
+  { id: 'video&design', label: 'Video & Design' },
+];
 
-  const portfolioItems: PortfolioItem[] = [
-    {
-      id: '1',
-      title: 'Web Application Dashboard',
-      description: 'Modern responsive dashboard with real-time data visualization',
-      category: 'web',
-      image: '/placeholder-project.jpg',
-      technologies: ['React', 'TypeScript', 'Tailwind CSS'],
-    },
-    {
-      id: '2',
-      title: '3D Interactive Experience',
-      description: 'Immersive 3D environment built with Three.js',
-      category: '3d',
-      image: '/placeholder-project.jpg',
-      technologies: ['Three.js', 'WebGL', 'JavaScript'],
-    },
-    {
-      id: '3',
-      title: 'Mobile App Design',
-      description: 'Clean and intuitive mobile interface design',
-      category: 'design',
-      image: '/placeholder-project.jpg',
-      technologies: ['Figma', 'Sketch', 'Principle'],
-    },
-  ];
+export default function PortfolioGallery({
+  initialItems = [],
+  initialCategory = 'all',
+}: PortfolioGalleryProps) {
+  const [items, setItems] = useState<ContentItem[]>(initialItems);
+  const [filteredItems, setFilteredItems] = useState<ContentItem[]>(initialItems);
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
+  const [isLoading, setIsLoading] = useState<boolean>(initialItems.length === 0);
+  const [error, setError] = useState<string | null>(null);
 
-  const categories = ['all', 'web', '3d', 'design'];
+  // Filter items by category
+  const filterItems = useCallback(
+    (category: string, itemsToFilter = items) => {
+      if (category === 'all') {
+        setFilteredItems(itemsToFilter);
+      } else {
+        setFilteredItems(itemsToFilter.filter(item => item.category === category));
+      }
+    },
+    [items]
+  );
 
-  const filteredItems =
-    selectedCategory === 'all'
-      ? portfolioItems
-      : portfolioItems.filter(item => item.category === selectedCategory);
+  // Load portfolio items from API
+  const loadPortfolioItems = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/content/portfolio');
+
+      if (!response.ok) {
+        throw new Error('Failed to load portfolio items');
+      }
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to load portfolio items');
+      }
+
+      setItems(data.data);
+      filterItems(selectedCategory, data.data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load portfolio items');
+      console.error('Error loading portfolio items:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [filterItems, selectedCategory]);
+
+  // Load portfolio items if not provided
+  useEffect(() => {
+    if (initialItems.length === 0) {
+      loadPortfolioItems();
+    }
+  }, [initialItems, loadPortfolioItems]);
+
+  // Filter items when category changes
+  useEffect(() => {
+    filterItems(selectedCategory);
+  }, [selectedCategory, items, filterItems]);
+
+  // Handle category change
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+
+    // Update URL query parameter without page reload
+    const url = new URL(window.location.href);
+    url.searchParams.set('category', category);
+    window.history.pushState({}, '', url.toString());
+  };
+
+  // Track item view
+  const trackItemView = async (id: string) => {
+    try {
+      await trackStat('view', id);
+    } catch (err) {
+      console.error('Failed to track view:', err);
+    }
+  };
 
   return (
-    <div className="rounded-none bg-gray-800 p-6 text-white">
-      <h2 className="neue-haas-grotesk-display mb-4 text-xl font-bold text-blue-500">
-        Portfolio Gallery
-      </h2>
+    <div className="space-y-8">
+      {/* Header with filters and stats link */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="mr-2 flex items-center">
+            <Filter size={16} className="mr-1" />
+            <span className="text-sm font-medium">Filter:</span>
+          </div>
+          {CATEGORIES.map(category => (
+            <button
+              key={category.id}
+              onClick={() => handleCategoryChange(category.id)}
+              className={`border px-3 py-1 text-sm ${
+                selectedCategory === category.id
+                  ? 'border-primary bg-primary/10 text-primary'
+                  : 'border-foreground/20 text-foreground/70 hover:border-primary/50'
+              }`}
+            >
+              {category.label}
+            </button>
+          ))}
+        </div>
 
-      {/* Filter buttons */}
-      <div className="mb-6 flex flex-wrap gap-2">
-        {categories.map(category => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`rounded-none px-4 py-2 text-sm font-medium transition-colors ${
-              selectedCategory === category
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            {category.charAt(0).toUpperCase() + category.slice(1)}
-          </button>
-        ))}
+        <Link
+          href="/02_portfolio/stats"
+          className="text-foreground/70 hover:text-primary flex items-center text-sm"
+        >
+          <Eye size={16} className="mr-1" />
+          View Statistics
+        </Link>
       </div>
+
+      {/* Loading state */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="text-primary h-8 w-8 animate-spin" />
+        </div>
+      )}
+
+      {/* Error state */}
+      {error && (
+        <div className="rounded-none border border-red-300 bg-red-50 p-4 text-red-800">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {/* Empty state */}
+      {!isLoading && !error && filteredItems.length === 0 && (
+        <div className="border-foreground/20 bg-gray/50 rounded-none border p-6 text-center">
+          <h3 className="text-foreground mb-2 text-lg font-medium">No items found</h3>
+          <p className="text-foreground/70">No portfolio items found in the selected category.</p>
+        </div>
+      )}
 
       {/* Portfolio grid */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredItems.map(item => (
-          <div key={item.id} className="overflow-hidden rounded-none bg-gray-700">
-            <div className="flex h-48 w-full items-center justify-center bg-gray-600">
-              <div className="text-center text-gray-400">
-                <div className="mx-auto mb-2 h-16 w-16 rounded-none bg-gray-500"></div>
-                <p className="text-sm">Project Image</p>
+      {!isLoading && !error && filteredItems.length > 0 && (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredItems.map(item => (
+            <Link
+              key={item.id}
+              href={`/02_portfolio/${item.id}`}
+              onClick={() => trackItemView(item.id)}
+              className="group block"
+            >
+              <div className="border-foreground/20 overflow-hidden border">
+                {/* Thumbnail */}
+                <div className="relative h-48 w-full overflow-hidden bg-gray-100">
+                  {item.thumbnail ? (
+                    <Image
+                      src={item.thumbnail}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-gray-200">
+                      <span className="text-gray-400">No image</span>
+                    </div>
+                  )}
+
+                  {/* Category badge */}
+                  <div className="absolute right-2 bottom-2 bg-black/70 px-2 py-1 text-xs text-white">
+                    {item.category}
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-4">
+                  <h3 className="text-foreground group-hover:text-primary text-lg font-medium">
+                    {item.title}
+                  </h3>
+                  <p className="text-foreground/70 mt-1 line-clamp-2 text-sm">{item.description}</p>
+
+                  {/* Tags */}
+                  {item.tags && item.tags.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1">
+                      {item.tags.slice(0, 3).map(tag => (
+                        <span
+                          key={tag}
+                          className="bg-gray/50 text-foreground/60 px-2 py-0.5 text-xs"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      {item.tags.length > 3 && (
+                        <span className="bg-gray/50 text-foreground/60 px-2 py-0.5 text-xs">
+                          +{item.tags.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* External links */}
+                  {item.externalLinks && item.externalLinks.length > 0 && (
+                    <div className="mt-3 flex items-center gap-2">
+                      {item.externalLinks.map(link => (
+                        <a
+                          key={link.url}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={e => e.stopPropagation()}
+                          className="text-foreground/60 hover:text-primary flex items-center text-xs"
+                        >
+                          <ExternalLink size={12} className="mr-1" />
+                          {link.type}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="p-4">
-              <h3 className="mb-2 text-lg font-semibold text-blue-400">{item.title}</h3>
-              <p className="mb-3 text-sm text-gray-300">{item.description}</p>
-              <div className="mb-3 flex flex-wrap gap-1">
-                {item.technologies.map(tech => (
-                  <span
-                    key={tech}
-                    className="rounded-none bg-gray-600 px-2 py-1 text-xs text-gray-300"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <button className="rounded-none bg-blue-500 px-3 py-1 text-sm text-white transition-colors hover:bg-blue-600">
-                  View
-                </button>
-                <button className="rounded-none bg-gray-600 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700">
-                  Code
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
-};
-
-export default PortfolioGallery;
+}

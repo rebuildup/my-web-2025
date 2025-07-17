@@ -1,357 +1,210 @@
-// Statistics data management
+// Statistics tracking utilities
 import { StatData } from '@/types/content';
-import { AppErrorHandler } from '@/lib/utils/error-handling';
 
-// Update statistics for downloads, views, or searches
-export const updateStats = async (
-  type: 'download' | 'view' | 'search',
-  id: string
-): Promise<boolean> => {
+// Types of statistics that can be tracked
+export type StatType = 'view' | 'download' | 'search';
+
+// In-memory cache for stats data
+interface StatsCache {
+  [key: string]: StatData;
+}
+
+const statsCache: StatsCache = {};
+
+// Default empty stats data
+const createEmptyStatsData = (): StatData => ({
+  views: {},
+  downloads: {},
+  searches: {},
+  lastUpdated: new Date().toISOString(),
+});
+
+/**
+ * Tracks a statistic event (view, download, search)
+ * @param type Type of statistic to track
+ * @param id ID of the item being tracked
+ * @returns Updated count for the item
+ */
+export async function trackStat(type: StatType, id: string): Promise<number> {
+  // Normalize type for file naming
+  const fileType = `${type}s`; // views, downloads, searches
+
   try {
-    const response = await fetch(`/api/stats/${type}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id }),
-    });
+    // Load stats data
+    const statsData = await loadStatsData(fileType);
 
-    if (!response.ok) {
-      throw new Error(`Failed to update ${type} stats: ${response.status}`);
+    // Update stats
+    if (!statsData[id]) {
+      statsData[id] = 0;
     }
 
-    const data = await response.json();
-    return data.success;
+    statsData[id] += 1;
+
+    // Save updated stats
+    await saveStatsData(fileType, statsData);
+
+    return statsData[id];
   } catch (error) {
-    const appError = AppErrorHandler.handleApiError(error);
-    AppErrorHandler.logError(appError, `Update ${type} stats`);
-    return false;
+    console.error(`Failed to track ${type} for ${id}:`, error);
+    return 0;
   }
-};
+}
 
-// Get statistics for a specific item or all items
-export const getStats = async (
-  type: 'download' | 'view' | 'search',
-  id?: string
-): Promise<number | Record<string, number>> => {
+/**
+ * Gets statistics for a specific type
+ * @param type Type of statistic to get
+ * @param id Optional ID to filter by
+ * @returns Statistics data
+ */
+export async function getStats(type: StatType, id?: string): Promise<Record<string, number>> {
+  // Normalize type for file naming
+  const fileType = `${type}s`; // views, downloads, searches
+
   try {
-    const url = id ? `/api/stats/${type}?id=${encodeURIComponent(id)}` : `/api/stats/${type}`;
+    // Load stats data
+    const statsData = await loadStatsData(fileType);
 
-    const response = await fetch(url);
-
-    if (!response || !response.ok) {
-      throw new Error(`Failed to get ${type} stats: ${response?.status || 'No response'}`);
+    // Return filtered data if ID is provided
+    if (id) {
+      return { [id]: statsData[id] || 0 };
     }
 
-    const data = await response.json();
-
-    if (data.success) {
-      return data.data;
-    }
-
-    return id ? 0 : {};
+    return statsData;
   } catch (error) {
-    const appError = AppErrorHandler.handleApiError(error);
-    AppErrorHandler.logError(appError, `Get ${type} stats`);
-    return id ? 0 : {};
+    console.error(`Failed to get ${type} stats:`, error);
+    return {};
   }
-};
+}
 
-// Get all statistics for an item
-export const getItemStats = async (
-  id: string
-): Promise<{
-  views: number;
-  downloads: number;
-  searches: number;
-}> => {
-  try {
-    const [views, downloads, searches] = await Promise.all([
-      getStats('view', id),
-      getStats('download', id),
-      getStats('search', id),
-    ]);
-
-    return {
-      views: typeof views === 'number' ? views : 0,
-      downloads: typeof downloads === 'number' ? downloads : 0,
-      searches: typeof searches === 'number' ? searches : 0,
-    };
-  } catch (error) {
-    console.error('Failed to get item stats:', error);
-    return { views: 0, downloads: 0, searches: 0 };
-  }
-};
-
-// Get top items by statistics
-export const getTopItems = async (
-  type: 'download' | 'view' | 'search',
+/**
+ * Gets the top items by statistic count
+ * @param type Type of statistic to get
+ * @param limit Maximum number of items to return
+ * @returns Array of [id, count] pairs sorted by count
+ */
+export async function getTopStats(
+  type: StatType,
   limit: number = 10
-): Promise<Array<{ id: string; count: number }>> => {
+): Promise<Array<[string, number]>> {
   try {
-    const stats = await getStats(type);
+    // Load stats data
+    const statsData = await getStats(type);
 
-    if (typeof stats === 'object') {
-      return Object.entries(stats)
-        .map(([id, count]) => ({ id, count: count as number }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, limit);
-    }
-
-    return [];
+    // Sort by count (descending) and limit
+    return Object.entries(statsData)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, limit);
   } catch (error) {
-    console.error(`Failed to get top ${type} items:`, error);
+    console.error(`Failed to get top ${type} stats:`, error);
     return [];
   }
-};
+}
 
-// Get statistics summary
-export const getStatsSummary = async (): Promise<{
-  totalViews: number;
-  totalDownloads: number;
-  totalSearches: number;
-  topViewed: Array<{ id: string; count: number }>;
-  topDownloaded: Array<{ id: string; count: number }>;
-  topSearched: Array<{ id: string; count: number }>;
-}> => {
-  try {
-    const [viewStats, downloadStats, searchStats] = await Promise.all([
-      getStats('view'),
-      getStats('download'),
-      getStats('search'),
-    ]);
-
-    const calculateTotal = (stats: Record<string, number> | number): number => {
-      if (typeof stats === 'object') {
-        return Object.values(stats).reduce((sum: number, count: number) => sum + count, 0);
-      }
-      return typeof stats === 'number' ? stats : 0;
-    };
-
-    const getTopFromStats = (stats: Record<string, number> | number, limit: number = 5) => {
-      if (typeof stats === 'object') {
-        return Object.entries(stats)
-          .map(([id, count]) => ({ id, count: count as number }))
-          .sort((a, b) => b.count - a.count)
-          .slice(0, limit);
-      }
-      return [];
-    };
-
-    return {
-      totalViews: calculateTotal(viewStats),
-      totalDownloads: calculateTotal(downloadStats),
-      totalSearches: calculateTotal(searchStats),
-      topViewed: getTopFromStats(viewStats),
-      topDownloaded: getTopFromStats(downloadStats),
-      topSearched: getTopFromStats(searchStats),
-    };
-  } catch (error) {
-    console.error('Failed to get stats summary:', error);
-    return {
-      totalViews: 0,
-      totalDownloads: 0,
-      totalSearches: 0,
-      topViewed: [],
-      topDownloaded: [],
-      topSearched: [],
-    };
-  }
-};
-
-// Client-side statistics tracking
-export const trackView = async (id: string): Promise<void> => {
-  // Throttle view tracking to prevent spam
-  const key = `view_tracked_${id}`;
-  const lastTracked = localStorage.getItem(key);
-  const now = Date.now();
-
-  if (lastTracked && now - parseInt(lastTracked, 10) < 60000) {
-    return; // Don't track if viewed within last minute
+/**
+ * Loads statistics data from localStorage or memory cache
+ * @param fileType Type of statistics file to load
+ * @returns Statistics data
+ */
+async function loadStatsData(fileType: string): Promise<Record<string, number>> {
+  // Check cache first
+  if (statsCache[fileType]) {
+    if (fileType === 'views') return statsCache[fileType].views || {};
+    if (fileType === 'downloads') return statsCache[fileType].downloads || {};
+    if (fileType === 'searches') return statsCache[fileType].searches || {};
+    return {};
   }
 
-  try {
-    await updateStats('view', id);
-    localStorage.setItem(key, now.toString());
-  } catch (error) {
-    console.error('Failed to track view:', error);
-  }
-};
-
-export const trackDownload = async (id: string, filename?: string): Promise<void> => {
-  try {
-    await updateStats('download', id);
-
-    // Store download history locally
-    const downloads = getLocalDownloadHistory();
-    downloads.unshift({
-      id,
-      filename: filename || 'unknown',
-      timestamp: new Date().toISOString(),
-    });
-
-    // Keep only last 50 downloads
-    localStorage.setItem('download_history', JSON.stringify(downloads.slice(0, 50)));
-  } catch (error) {
-    console.error('Failed to track download:', error);
-  }
-};
-
-export const trackSearch = async (query: string): Promise<void> => {
-  try {
-    await updateStats('search', query.toLowerCase());
-
-    // Store search history locally
-    const searches = getLocalSearchHistory();
-    if (!searches.includes(query)) {
-      searches.unshift(query);
-      localStorage.setItem('search_history', JSON.stringify(searches.slice(0, 20)));
-    }
-  } catch (error) {
-    console.error('Failed to track search:', error);
-  }
-};
-
-// Local storage helpers
-export const getLocalDownloadHistory = (): Array<{
-  id: string;
-  filename: string;
-  timestamp: string;
-}> => {
-  try {
-    const history = localStorage.getItem('download_history');
-    return history ? JSON.parse(history) : [];
-  } catch {
-    return [];
-  }
-};
-
-export const getLocalSearchHistory = (): string[] => {
-  try {
-    const history = localStorage.getItem('search_history');
-    return history ? JSON.parse(history) : [];
-  } catch {
-    return [];
-  }
-};
-
-export const clearLocalHistory = (type: 'downloads' | 'searches' | 'all'): void => {
-  try {
-    if (type === 'downloads' || type === 'all') {
-      localStorage.removeItem('download_history');
-    }
-    if (type === 'searches' || type === 'all') {
-      localStorage.removeItem('search_history');
-    }
-  } catch (error) {
-    console.error('Failed to clear local history:', error);
-  }
-};
-
-// Statistics export
-export const exportStats = async (): Promise<StatData | null> => {
-  try {
-    const [downloads, views, searches] = await Promise.all([
-      getStats('download'),
-      getStats('view'),
-      getStats('search'),
-    ]);
-
-    // Check if any of the stats failed (returned empty objects)
-    if (
-      typeof downloads === 'object' &&
-      Object.keys(downloads).length === 0 &&
-      typeof views === 'object' &&
-      Object.keys(views).length === 0 &&
-      typeof searches === 'object' &&
-      Object.keys(searches).length === 0
-    ) {
-      return null;
-    }
-
-    return {
-      downloads: downloads as Record<string, number>,
-      views: views as Record<string, number>,
-      searches: searches as Record<string, number>,
-      lastUpdated: new Date().toISOString(),
-    };
-  } catch (error) {
-    console.error('Failed to export stats:', error);
-    return null;
-  }
-};
-
-// Real-time statistics updates
-export const subscribeToStatsUpdates = (
-  callback: (stats: { type: string; id: string; count: number }) => void
-): (() => void) => {
-  // This would typically use WebSockets or Server-Sent Events
-  // For now, we'll use polling as a fallback
-  const pollInterval = process.env.NODE_ENV === 'test' ? 1000 : 30000; // Shorter interval for tests
-
-  const interval = setInterval(async () => {
+  // In browser environment, use localStorage
+  if (typeof window !== 'undefined') {
     try {
-      const response = await fetch('/api/stats/updates');
-      if (response && response.ok) {
-        const updates = await response.json();
-        updates.forEach((update: { type: string; id: string; count: number }) => callback(update));
+      const storageKey = `stats_${fileType}`;
+      const storedData = localStorage.getItem(storageKey);
+
+      if (storedData) {
+        const statsData = JSON.parse(storedData) as StatData;
+
+        // Update cache
+        statsCache[fileType] = statsData;
+
+        if (fileType === 'views') return statsData.views || {};
+        if (fileType === 'downloads') return statsData.downloads || {};
+        if (fileType === 'searches') return statsData.searches || {};
       }
     } catch (error) {
-      console.error('Failed to fetch stats updates:', error);
+      console.error(`Error loading stats from localStorage: ${error}`);
     }
-  }, pollInterval);
-
-  return () => clearInterval(interval);
-};
-
-// Analytics integration helpers
-export const sendAnalyticsEvent = (
-  eventName: string,
-  parameters: Record<string, unknown>
-): void => {
-  // Google Analytics 4
-  if (
-    typeof window !== 'undefined' &&
-    (window as Window & typeof globalThis & { gtag: (...args: unknown[]) => void }).gtag
-  ) {
-    (window as Window & typeof globalThis & { gtag: (...args: unknown[]) => void }).gtag(
-      'event',
-      eventName,
-      parameters
-    );
   }
 
-  // Custom analytics
-  console.log('Analytics Event:', { eventName, parameters });
-};
+  // If we get here, either we're not in browser or localStorage failed
+  // Return empty data
+  const emptyStats: Record<string, number> = {};
+  const statsData = createEmptyStatsData();
 
-export const trackPageView = (page: string, title?: string): void => {
-  sendAnalyticsEvent('page_view', {
-    page_title: title || document.title,
-    page_location: window.location.href,
-    page_path: page,
-  });
-};
+  // Update cache
+  statsCache[fileType] = statsData;
 
-export const trackFileDownload = (fileId: string, fileName: string): void => {
-  sendAnalyticsEvent('file_download', {
-    file_id: fileId,
-    file_name: fileName,
-    value: 1,
-  });
-};
+  if (fileType === 'views') return emptyStats;
+  if (fileType === 'downloads') return emptyStats;
+  if (fileType === 'searches') return emptyStats;
+  return {};
+}
 
-export const trackSearchQuery = (query: string, resultCount: number): void => {
-  sendAnalyticsEvent('search', {
-    search_term: query,
-    result_count: resultCount,
-  });
-};
+/**
+ * Saves statistics data to localStorage and memory cache
+ * @param fileType Type of statistics file to save
+ * @param data Statistics data to save
+ */
+async function saveStatsData(fileType: string, data: Record<string, number>): Promise<void> {
+  // Create stats data object with proper structure
+  const statsData: StatData = {
+    views: fileType === 'views' ? data : {},
+    downloads: fileType === 'downloads' ? data : {},
+    searches: fileType === 'searches' ? data : {},
+    lastUpdated: new Date().toISOString(),
+  };
 
-export const trackToolUsage = (toolId: string, action: string): void => {
-  sendAnalyticsEvent('tool_usage', {
-    tool_id: toolId,
-    action,
-    value: 1,
-  });
-};
+  // Update cache
+  statsCache[fileType] = statsData;
+
+  // In browser environment, use localStorage
+  if (typeof window !== 'undefined') {
+    try {
+      const storageKey = `stats_${fileType}`;
+      localStorage.setItem(storageKey, JSON.stringify(statsData));
+    } catch (error) {
+      console.error(`Error saving stats to localStorage: ${error}`);
+    }
+  }
+}
+
+/**
+ * Clears the statistics cache
+ * @param fileType Optional type to clear, or all if not specified
+ */
+export function clearStatsCache(fileType?: string): void {
+  if (fileType) {
+    delete statsCache[fileType];
+
+    // Also clear from localStorage if in browser
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem(`stats_${fileType}`);
+      } catch (error) {
+        console.error(`Error clearing stats from localStorage: ${error}`);
+      }
+    }
+  } else {
+    Object.keys(statsCache).forEach(key => {
+      delete statsCache[key];
+
+      // Also clear from localStorage if in browser
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.removeItem(`stats_${key}`);
+        } catch (error) {
+          console.error(`Error clearing stats from localStorage: ${error}`);
+        }
+      }
+    });
+  }
+}

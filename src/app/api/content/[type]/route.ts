@@ -2,7 +2,10 @@
 import { NextRequest } from 'next/server';
 import { ContentItem, ContentType } from '@/types/content';
 import { AppErrorHandler } from '@/lib/utils/error-handling';
-import fs from 'fs/promises';
+import { getContentByType } from '@/lib/utils/content-loader';
+import { validateContentItem } from '@/lib/utils/content-validation';
+import { updateSearchIndex } from '@/lib/search/search-index-builder';
+import { promises as fs } from 'fs';
 import path from 'path';
 
 const VALID_CONTENT_TYPES: ContentType[] = [
@@ -15,52 +18,6 @@ const VALID_CONTENT_TYPES: ContentType[] = [
   'asset',
   'download',
 ];
-
-async function getContentByType(
-  type: string,
-  options: {
-    category?: string;
-    limit?: number;
-    offset?: number;
-    status?: string;
-  } = {}
-): Promise<ContentItem[]> {
-  try {
-    const contentPath = path.join(process.cwd(), 'public', 'data', 'content', `${type}.json`);
-    const fileContent = await fs.readFile(contentPath, 'utf-8');
-    let items: ContentItem[] = JSON.parse(fileContent);
-
-    // Filter by status (default to published only)
-    const status = options.status || 'published';
-    if (status !== 'all') {
-      items = items.filter(item => item.status === status);
-    }
-
-    // Filter by category if specified
-    if (options.category && options.category !== 'all') {
-      items = items.filter(item => item.category === options.category);
-    }
-
-    // Sort by priority (highest first), then by publication date (newest first)
-    items.sort((a, b) => {
-      const priorityDiff = (b.priority || 0) - (a.priority || 0);
-      if (priorityDiff !== 0) return priorityDiff;
-
-      const dateA = new Date(a.publishedAt || a.createdAt);
-      const dateB = new Date(b.publishedAt || b.createdAt);
-      return dateB.getTime() - dateA.getTime();
-    });
-
-    // Apply pagination
-    const offset = options.offset || 0;
-    const limit = options.limit || items.length;
-
-    return items.slice(offset, offset + limit);
-  } catch (error) {
-    console.error(`Failed to load ${type} content:`, error);
-    return [];
-  }
-}
 
 export async function GET(
   request: NextRequest,
@@ -104,7 +61,7 @@ export async function GET(
     }
 
     // Get content
-    const items = await getContentByType(type, {
+    const items = await getContentByType(type as ContentType, {
       category,
       limit,
       offset,
@@ -112,7 +69,7 @@ export async function GET(
     });
 
     // Get total count for pagination (without limit/offset)
-    const totalItems = await getContentByType(type, { category, status });
+    const totalItems = await getContentByType(type as ContentType, { category, status });
     const total = totalItems.length;
 
     return Response.json({
@@ -169,30 +126,32 @@ export async function POST(
 
     const contentData = await request.json();
 
-    // Validate required fields
-    const requiredFields = ['title', 'description', 'category'];
-    for (const field of requiredFields) {
-      if (!contentData[field]) {
-        return Response.json(
-          { success: false, error: `Missing required field: ${field}` },
-          { status: 400 }
-        );
-      }
-    }
-
     // Set defaults
     const newItem: ContentItem = {
       id: contentData.id || `${type}-${Date.now()}`,
       type: type as ContentType,
-      title: contentData.title,
-      description: contentData.description,
-      category: contentData.category,
+      title: contentData.title || '',
+      description: contentData.description || '',
+      category: contentData.category || '',
       tags: contentData.tags || [],
       status: contentData.status || 'draft',
       priority: contentData.priority || 50,
       createdAt: new Date().toISOString(),
       ...contentData,
     };
+
+    // Validate the content item
+    const validation = validateContentItem(newItem);
+    if (!validation.isValid) {
+      return Response.json(
+        {
+          success: false,
+          error: 'Content validation failed',
+          validationErrors: validation.errors,
+        },
+        { status: 400 }
+      );
+    }
 
     // Load existing content
     const contentPath = path.join(process.cwd(), 'public', 'data', 'content', `${type}.json`);
@@ -219,6 +178,11 @@ export async function POST(
     // Save to file
     await fs.writeFile(contentPath, JSON.stringify(existingItems, null, 2));
 
+    // Update search index (non-blocking)
+    updateSearchIndex(type as ContentType).catch(err => {
+      console.error('Failed to update search index:', err);
+    });
+
     return Response.json({
       success: true,
       data: newItem,
@@ -232,6 +196,203 @@ export async function POST(
       {
         success: false,
         error: 'Failed to create content',
+        code: appError.code,
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ type: string }> }
+): Promise<Response> {
+  // Only allow content updates in development
+  if (process.env.NODE_ENV !== 'development') {
+    return Response.json(
+      { success: false, error: 'Content updates are only available in development mode' },
+      { status: 403 }
+    );
+  }
+
+  try {
+    const { type } = await params;
+
+    if (!VALID_CONTENT_TYPES.includes(type as ContentType)) {
+      return Response.json(
+        { success: false, error: `Invalid content type: ${type}` },
+        { status: 400 }
+      );
+    }
+
+    const contentData = await request.json();
+    const { id } = contentData;
+
+    if (!id) {
+      return Response.json(
+        { success: false, error: 'ID is required for updates' },
+        { status: 400 }
+      );
+    }
+
+    // Load existing content
+    const contentPath = path.join(process.cwd(), 'public', 'data', 'content', `${type}.json`);
+    let existingItems: ContentItem[] = [];
+
+    try {
+      const fileContent = await fs.readFile(contentPath, 'utf-8');
+      existingItems = JSON.parse(fileContent);
+    } catch {
+      return Response.json(
+        { success: false, error: `Content file not found for type: ${type}` },
+        { status: 404 }
+      );
+    }
+
+    // Find the item to update
+    const itemIndex = existingItems.findIndex(item => item.id === id);
+    if (itemIndex === -1) {
+      return Response.json(
+        { success: false, error: `Item with ID ${id} not found` },
+        { status: 404 }
+      );
+    }
+
+    // Create updated item
+    const updatedItem: ContentItem = {
+      ...existingItems[itemIndex],
+      ...contentData,
+      type: type as ContentType, // Ensure type is not changed
+      updatedAt: new Date().toISOString(),
+    };
+
+    // Validate the updated item
+    const validation = validateContentItem(updatedItem);
+    if (!validation.isValid) {
+      return Response.json(
+        {
+          success: false,
+          error: 'Content validation failed',
+          validationErrors: validation.errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    // Update the item
+    existingItems[itemIndex] = updatedItem;
+
+    // Save to file
+    await fs.writeFile(contentPath, JSON.stringify(existingItems, null, 2));
+
+    // Update search index (non-blocking)
+    updateSearchIndex(type as ContentType).catch(err => {
+      console.error('Failed to update search index:', err);
+    });
+
+    return Response.json({
+      success: true,
+      data: updatedItem,
+      message: 'Content updated successfully',
+    });
+  } catch (error) {
+    const appError = AppErrorHandler.handleApiError(error);
+    AppErrorHandler.logError(appError, 'Content Update API');
+
+    return Response.json(
+      {
+        success: false,
+        error: 'Failed to update content',
+        code: appError.code,
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ type: string }> }
+): Promise<Response> {
+  // Only allow content deletion in development
+  if (process.env.NODE_ENV !== 'development') {
+    return Response.json(
+      { success: false, error: 'Content deletion is only available in development mode' },
+      { status: 403 }
+    );
+  }
+
+  try {
+    const { type } = await params;
+
+    if (!VALID_CONTENT_TYPES.includes(type as ContentType)) {
+      return Response.json(
+        { success: false, error: `Invalid content type: ${type}` },
+        { status: 400 }
+      );
+    }
+
+    // Get ID from query parameters
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id');
+
+    if (!id) {
+      return Response.json(
+        { success: false, error: 'ID is required for deletion' },
+        { status: 400 }
+      );
+    }
+
+    // Load existing content
+    const contentPath = path.join(process.cwd(), 'public', 'data', 'content', `${type}.json`);
+    let existingItems: ContentItem[] = [];
+
+    try {
+      const fileContent = await fs.readFile(contentPath, 'utf-8');
+      existingItems = JSON.parse(fileContent);
+    } catch {
+      return Response.json(
+        { success: false, error: `Content file not found for type: ${type}` },
+        { status: 404 }
+      );
+    }
+
+    // Find the item to delete
+    const itemIndex = existingItems.findIndex(item => item.id === id);
+    if (itemIndex === -1) {
+      return Response.json(
+        { success: false, error: `Item with ID ${id} not found` },
+        { status: 404 }
+      );
+    }
+
+    // Store the deleted item for the response
+    const deletedItem = existingItems[itemIndex];
+
+    // Remove the item
+    existingItems.splice(itemIndex, 1);
+
+    // Save to file
+    await fs.writeFile(contentPath, JSON.stringify(existingItems, null, 2));
+
+    // Update search index (non-blocking)
+    updateSearchIndex(type as ContentType).catch(err => {
+      console.error('Failed to update search index:', err);
+    });
+
+    return Response.json({
+      success: true,
+      data: deletedItem,
+      message: 'Content deleted successfully',
+    });
+  } catch (error) {
+    const appError = AppErrorHandler.handleApiError(error);
+    AppErrorHandler.logError(appError, 'Content Deletion API');
+
+    return Response.json(
+      {
+        success: false,
+        error: 'Failed to delete content',
         code: appError.code,
       },
       { status: 500 }

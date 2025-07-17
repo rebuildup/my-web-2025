@@ -1,139 +1,323 @@
-/** @vitest-environment node */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { handleGetSearch, handlePostSearch } from './logic';
-import type { SearchResult } from '@/types/content';
+import { NextRequest } from 'next/server';
+import { GET, POST } from './route';
+import { search } from '@/lib/search/search-engine';
+import { trackStat } from '@/lib/stats';
+import fs from 'fs/promises';
 
-describe('Search API Logic', () => {
-  const mockSearchContent = vi.fn();
-  const mockAdvancedSearch = vi.fn();
-  const mockUpdateSearchStats = vi.fn();
+// Mock search function
+vi.mock('@/lib/search/search-engine', () => ({
+  search: vi.fn(),
+}));
 
-  const mockDeps = {
-    searchContent: mockSearchContent,
-    advancedSearch: mockAdvancedSearch,
-    updateSearchStats: mockUpdateSearchStats,
+// Mock fs.writeFile and fs.mkdir
+vi.mock('fs/promises', () => ({
+  writeFile: vi.fn(),
+  mkdir: vi.fn(),
+  readFile: vi.fn(),
+}));
+
+describe('Search API', () => {
+  const mockSearchResults = {
+    results: [
+      {
+        id: 'test-1',
+        type: 'blog',
+        title: 'Test Blog Post',
+        description: 'Test description',
+        url: '/blog/test-1',
+        score: 0.9,
+        highlights: ['Test <mark>highlight</mark>'],
+      },
+    ],
+    total: 1,
+    query: 'test',
+    limit: 10,
+    offset: 0,
+    hasMore: false,
+    executionTimeMs: 5,
+    suggestedQueries: [],
   };
 
   beforeEach(() => {
     vi.resetAllMocks();
-    mockUpdateSearchStats.mockResolvedValue(undefined);
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    (search as ReturnType<typeof vi.fn>).mockResolvedValue(mockSearchResults);
+    (fs.readFile as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('File not found'));
+    (fs.writeFile as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+    (fs.mkdir as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
   });
 
-  describe('handleGetSearch', () => {
-    const mockResults: SearchResult[] = [
-      { id: '1', title: 'Test Result', url: '/test', type: 'portfolio', score: 1, highlights: [], description: 'desc' },
-    ];
-
-    it('should return search results for valid query', async () => {
-      mockSearchContent.mockResolvedValue(mockResults);
-      const request = new Request('http://localhost:3000/api/content/search?q=test');
-      const response = await handleGetSearch(request, mockDeps);
+  describe('GET', () => {
+    it('should return search results', async () => {
+      const request = new NextRequest('http://localhost/api/content/search?q=test');
+      const response = await GET(request);
       const data = await response.json();
+
       expect(response.status).toBe(200);
-      expect(data.data).toEqual(mockResults);
+      expect(data.success).toBe(true);
+      expect(data.data).toEqual(mockSearchResults.results);
+      expect(data.pagination).toBeDefined();
+      expect(data.query).toBe('test');
+      expect(search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          query: 'test',
+        })
+      );
     });
 
-    it('should return 400 for missing query', async () => {
-        const request = new Request('http://localhost:3000/api/content/search');
-        const response = await handleGetSearch(request, mockDeps);
-        expect(response.status).toBe(400);
+    it('should perform search with query parameters', async () => {
+      const request = new NextRequest(
+        'http://localhost/api/content/search?q=test&type=blog&limit=5'
+      );
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(search).toHaveBeenCalledWith({
+        query: 'test',
+        contentTypes: ['blog'],
+        limit: 5,
+        offset: 0,
+        fuzzy: true,
+        highlightMatches: true,
+      });
     });
 
-    it('should return empty results when search function fails', async () => {
-        mockSearchContent.mockRejectedValue(new Error('Search failed'));
-        const request = new Request('http://localhost:3000/api/content/search?q=test');
-        const response = await handleGetSearch(request, mockDeps);
-        const data = await response.json();
-        expect(response.status).toBe(200);
-        expect(data.data).toEqual([]);
-        expect(console.warn).toHaveBeenCalledWith('Search operation failed:', expect.any(Error));
+    it('should handle multiple content types', async () => {
+      const request = new NextRequest(
+        'http://localhost/api/content/search?q=test&type=blog&type=portfolio'
+      );
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(search).toHaveBeenCalledWith({
+        query: 'test',
+        contentTypes: ['blog', 'portfolio'],
+        limit: 10,
+        offset: 0,
+        fuzzy: true,
+        highlightMatches: true,
+      });
     });
 
-    it('should still return results even if stats tracking fails', async () => {
-        mockSearchContent.mockResolvedValue(mockResults);
-        mockUpdateSearchStats.mockRejectedValue(new Error('Stats failed'));
-        const request = new Request('http://localhost:3000/api/content/search?q=test');
-        const response = await handleGetSearch(request, mockDeps);
-        expect(response.status).toBe(200);
-        expect(console.warn).toHaveBeenCalledWith('Failed to update search stats:', expect.any(Error));
+    it('should handle pagination parameters', async () => {
+      const request = new NextRequest(
+        'http://localhost/api/content/search?q=test&limit=20&offset=40'
+      );
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(search).toHaveBeenCalledWith({
+        query: 'test',
+        limit: 20,
+        offset: 40,
+        fuzzy: true,
+        highlightMatches: true,
+      });
     });
 
-    it('should return 500 for invalid request URL', async () => {
-        const invalidRequest = { url: 'invalid-url' } as Request;
-        const response = await handleGetSearch(invalidRequest, mockDeps);
-        expect(response.status).toBe(500);
-        expect(console.error).toHaveBeenCalledWith('Search API GET error:', expect.any(TypeError));
+    it('should validate limit parameter', async () => {
+      const request = new NextRequest('http://localhost/api/content/search?q=test&limit=200');
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.success).toBe(false);
+      expect(data.error).toContain('Limit must be between');
+    });
+
+    it('should validate offset parameter', async () => {
+      const request = new NextRequest('http://localhost/api/content/search?q=test&offset=-5');
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.success).toBe(false);
+      expect(data.error).toContain('Offset must be non-negative');
+    });
+
+    it('should track search queries', async () => {
+      const request = new NextRequest('http://localhost/api/content/search?q=test');
+      await GET(request);
+
+      expect(fs.mkdir).toHaveBeenCalled();
+      expect(fs.writeFile).toHaveBeenCalled();
+    });
+
+    it('should handle search errors', async () => {
+      (search as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Search failed'));
+
+      const request = new NextRequest('http://localhost/api/content/search?q=test');
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.success).toBe(false);
+      expect(data.error).toBeDefined();
+    });
+
+    it('should handle empty query', async () => {
+      const request = new NextRequest('http://localhost/api/content/search');
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(search).toHaveBeenCalledWith({
+        query: '',
+        limit: 10,
+        offset: 0,
+        fuzzy: true,
+        highlightMatches: true,
+      });
     });
   });
 
-  describe('handlePostSearch', () => {
-    it('should call basic search when advanced is false', async () => {
-        mockSearchContent.mockResolvedValue([]);
-        const request = new Request('http://localhost:3000/api/content/search', {
-            method: 'POST',
-            body: JSON.stringify({ query: 'test', advanced: false }),
-        });
-        await handlePostSearch(request, mockDeps);
-        expect(mockSearchContent).toHaveBeenCalled();
+  describe('POST', () => {
+    it('should return search results', async () => {
+      const request = new NextRequest('http://localhost/api/content/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: 'test',
+        }),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(data.data).toEqual(mockSearchResults.results);
+      expect(search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          query: 'test',
+        })
+      );
     });
 
-    it('should call advanced search when advanced is true', async () => {
-        mockAdvancedSearch.mockResolvedValue([]);
-        const request = new Request('http://localhost:3000/api/content/search', {
-            method: 'POST',
-            body: JSON.stringify({ query: 'test', advanced: true }),
-        });
-        await handlePostSearch(request, mockDeps);
-        expect(mockAdvancedSearch).toHaveBeenCalled();
+    it('should perform search with request body', async () => {
+      const searchData = {
+        query: 'test query',
+        contentTypes: ['blog', 'portfolio'],
+        limit: 15,
+        offset: 30,
+      };
+
+      const request = new NextRequest('http://localhost/api/content/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(searchData),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(search).toHaveBeenCalledWith({
+        query: 'test query',
+        contentTypes: ['blog', 'portfolio'],
+        limit: 15,
+        offset: 30,
+        fuzzy: true,
+        highlightMatches: true,
+      });
     });
 
-    it.each([
-        { query: '' },
-        { limit: 99 },
-        { threshold: 1.1 },
-    ])('should return 400 for invalid parameters: %s', async (body) => {
-        const request = new Request('http://localhost:3000/api/content/search', {
-            method: 'POST',
-            body: JSON.stringify({ query: 'test', ...body }),
-        });
-        const response = await handlePostSearch(request, mockDeps);
-        expect(response.status).toBe(400);
+    it('should require query parameter', async () => {
+      const request = new NextRequest('http://localhost/api/content/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.success).toBe(false);
+      expect(data.error).toContain('Query is required');
     });
 
-    it('should return 500 on json parsing failure', async () => {
-        const request = new Request('http://localhost:3000/api/content/search', {
-            method: 'POST',
-            body: 'not-json',
-        });
-        const response = await handlePostSearch(request, mockDeps);
-        expect(response.status).toBe(500);
+    it('should validate limit parameter', async () => {
+      const request = new NextRequest('http://localhost/api/content/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: 'test',
+          limit: 200,
+        }),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.success).toBe(false);
+      expect(data.error).toContain('Limit must be between');
     });
 
-    it('should return 500 on unexpected error', async () => {
-        mockUpdateSearchStats.mockImplementation(() => {
-            throw new Error('Unexpected sync error');
-        });
-        const request = new Request('http://localhost:3000/api/content/search', {
-            method: 'POST',
-            body: JSON.stringify({ query: 'test' }),
-        });
-        const response = await handlePostSearch(request, mockDeps);
-        expect(response.status).toBe(500);
-        expect(console.error).toHaveBeenCalledWith('Search API POST error:', expect.any(Error));
+    it('should validate offset parameter in POST', async () => {
+      const request = new NextRequest('http://localhost/api/content/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: 'test', offset: -10 }),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.success).toBe(false);
+      expect(data.error).toContain('Offset must be non-negative');
     });
 
-    it('should still return results even if stats tracking fails on POST', async () => {
-        mockSearchContent.mockResolvedValue([]);
-        mockUpdateSearchStats.mockRejectedValue(new Error('Stats failed on POST'));
-        const request = new Request('http://localhost:3000/api/content/search', {
-            method: 'POST',
-            body: JSON.stringify({ query: 'test' }),
-        });
-        const response = await handlePostSearch(request, mockDeps);
-        expect(response.status).toBe(200);
-        expect(console.warn).toHaveBeenCalledWith('Failed to update search stats:', expect.any(Error));
+    it('should handle search errors', async () => {
+      (search as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Search failed'));
+
+      const request = new NextRequest('http://localhost/api/content/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: 'test',
+        }),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.success).toBe(false);
+      expect(data.error).toBeDefined();
+    });
+
+    it('should handle malformed JSON', async () => {
+      const request = new NextRequest('http://localhost/api/content/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: 'invalid json',
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.success).toBe(false);
+      expect(data.error).toBeDefined();
     });
   });
 });
