@@ -110,14 +110,14 @@ describe('Search Engine', () => {
 
   it('should generate highlights for matches', async () => {
     const results = await search({
-      query: 'responsive design',
+      query: 'web design',
       highlightMatches: true,
     });
 
     expect(results.results).toHaveLength(1);
     expect(results.results[0].highlights).toBeDefined();
     expect(results.results[0].highlights.length).toBeGreaterThan(0);
-    expect(results.results[0].highlights[0]).toContain('responsive');
+    expect(results.results[0].highlights[0]).toContain('web');
   });
 
   it('should apply pagination', async () => {

@@ -1,0 +1,2265 @@
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/rebui/Downloads/my-web-2025[39m
+
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render access denied when not in development mode[33m 1040[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: Access Denied. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray flex min-h-screen items-center justify-center"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"container-grid"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"text-center"[31m
+            [36m>[31m
+              [36m<svg[31m
+                [33maria-hidden[31m=[32m"true"[31m
+                [33mclass[31m=[32m"lucide lucide-shield text-primary mx-auto mb-6"[31m
+                [33mfill[31m=[32m"none"[31m
+                [33mheight[31m=[32m"64"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-linejoin[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"2"[31m
+                [33mviewBox[31m=[32m"0 0 24 24"[31m
+                [33mwidth[31m=[32m"64"[31m
+                [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+              [36m>[31m
+                [36m<path[31m
+                  [33md[31m=[32m"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"[31m
+                [36m/>[31m
+              [36m</svg>[31m
+              [36m<h1[31m
+                [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl"[31m
+              [36m>[31m
+                [0mAccess Denied[0m
+              [36m</h1>[31m
+              [36m<p[31m
+                [33mclass[31m=[32m"noto-sans-jp text-foreground/70 mb-6"[31m
+              [36m>[31m
+                [0mAdmin access is only available in development mode.[0m
+              [36m</p>[31m
+              [36m<a[31m
+                [33mclass[31m=[32m"bg-primary hover:bg-primary/90 inline-block px-6 py-3 text-white transition-colors"[31m
+                [33mhref[31m=[32m"/"[31m
+              [36m>[31m
+                [0mBack to Home[0m
+              [36m</a>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</body>[31m
+[36m</html>[31m[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render admin dashboard in development mode[33m 1038[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: Admin Dashboard. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render navigation in development mode[33m 1022[2mms[22m[39m
+[31m   竊・Unable to find role="link" and name "竊・Home"
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render statistics overview[33m 1024[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: Overview. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render stats values[33m 1014[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: 25. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render management tools section[33m 1020[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: Management Tools. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render management tool links[33m 1020[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: Content Manager. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render tool descriptions[33m 1023[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: Create, edit, and manage portfolio items, tools, and blog posts. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render main content structure[33m 1025[2mms[22m[39m
+[31m   竊・Unable to find role="main"
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render stats labels[33m 1021[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: CONTENT. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render additional management tools[33m 1022[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: Performance Monitor. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render additional management tool links[33m 1024[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: Performance Monitor. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render additional tool descriptions[33m 1020[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: Configure site settings, SEO, and integrations. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render Quick Actions section[33m 1020[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: Quick Actions. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m
+ [31mﾃ・[39m src/app/05_admin/page.test.tsx[2m > [22mAdmin Page[2m > [22mshould render Recent Activity items[33m 1022[2mms[22m[39m
+[31m   竊・Unable to find an element with the text: New portfolio item added. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body />[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m" min-h-screen text-[var(--color-foreground)] bg-gray"[31m
+      [36m>[31m
+        [36m<nav[31m
+          [33mclass[31m=[32m"border-foreground/20 border-b p-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-center justify-between"[31m
+              [36m>[31m
+                [36m<a[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-primary hover:text-primary/80 text-2xl"[31m
+                  [33mhref[31m=[32m"/"[31m
+                [36m>[31m
+                  [0m竊・Home[0m
+                [36m</a>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"text-foreground/60 text-sm"[31m
+                [36m>[31m
+                  [0mDevelopment Mode Only[0m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</nav>[31m
+        [36m<header[31m
+          [33mclass[31m=[32m"px-4 py-12 text-center"[31m
+        [36m>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"neue-haas-grotesk-display text-primary mb-4 text-4xl md:text-6xl"[31m
+          [36m>[31m
+            [0mAdmin Dashboard[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"noto-sans-jp text-foreground/80 text-lg"[31m
+          [36m>[31m
+            [0mContent Management & Analytics[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-primary mx-auto mt-6 h-1 w-24"[31m
+          [36m/>[31m
+        [36m</header>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"pb-16"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"container-grid"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"xs:px-6 px-4 md:px-8 "[31m
+            [36m>[31m
+              [36m<section[31m
+                [33mclass[31m=[32m"mb-12"[31m
+              [36m>[31m
+                [36m<h2[31m
+                  [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground mb-6 text-2xl"[31m
+                [36m>[31m
+                  [0mOverview[0m
+                [36m</h2>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"grid gap-4 xs:gap-6 md:gap-8 grid-cols-1 xs:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 "[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-file-text text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M10 9H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 13H8"[31m
+                        [36m/>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M16 17H8"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+                        [0mCONTENT[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"neue-haas-grotesk-display text-foreground text-2xl"[31m
+                    [36m>[31m
+                      [0m25[0m
+                    [36m</div>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"text-foreground/70 text-sm"[31m
+                    [36m>[31m
+                      [0mTotal Items[0m
+                    [36m</div>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"border-foreground/20 bg-gray/50 border p-6"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"mb-2 flex items-center justify-between"[31m
+                    [36m>[31m
+                      [36m<svg[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"lucide lucide-activity text-primary"[31m
+                        [33mfill[31m=[32m"none"[31m
+                        [33mheight[31m=[32m"24"[31m
+                        [33mstroke[31m=[32m"currentColor"[31m
+                        [33mstroke-linecap[31m=[32m"round"[31m
+                        [33mstroke-linejoin[31m=[32m"round"[31m
+                        [33mstroke-width[31m=[32m"2"[31m
+                        [33mviewBox[31m=[32m"0 0 24 24"[31m
+                        [33mwidth[31m=[32m"24"[31m
+                        [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+                      [36m>[31m
+                        [36m<path[31m
+                          [33md[31m=[32m"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"[31m
+                        [36m/>[31m
+                      [36m</svg>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-foreground/50 text-xs"[31m
+                      [36m>[31m
+      ...[39m

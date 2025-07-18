@@ -411,11 +411,11 @@ flowchart TD
 ```typescript
 interface ErrorResponse {
   success: false;
-  error: string;           // User-friendly message
-  code: ErrorCode;         // Machine-readable code
-  details?: unknown;       // Additional context (dev only)
-  timestamp: string;       // ISO 8601 timestamp
-  requestId?: string;      // For tracking
+  error: string; // User-friendly message
+  code: ErrorCode; // Machine-readable code
+  details?: unknown; // Additional context (dev only)
+  timestamp: string; // ISO 8601 timestamp
+  requestId?: string; // For tracking
 }
 ```
 
@@ -450,7 +450,7 @@ describe('validateContactForm', () => {
     const result = validateContactForm({
       name: 'Test',
       email: 'invalid-email',
-      message: 'Test message'
+      message: 'Test message',
     });
     expect(result.email).toBe('Invalid email format');
   });
@@ -564,34 +564,22 @@ const cspDirectives = {
     "'unsafe-inline'", // Required for Adobe Fonts
     'https://www.googletagmanager.com',
     'https://www.google-analytics.com',
-    'https://use.typekit.net'
+    'https://use.typekit.net',
   ],
   'style-src': [
     "'self'",
     "'unsafe-inline'", // Required for dynamic styles
     'https://fonts.googleapis.com',
-    'https://use.typekit.net'
+    'https://use.typekit.net',
   ],
-  'font-src': [
-    "'self'",
-    'https://fonts.gstatic.com',
-    'https://use.typekit.net'
-  ],
-  'img-src': [
-    "'self'",
-    'data:',
-    'https:',
-    'blob:'
-  ],
-  'connect-src': [
-    "'self'",
-    'https://www.google-analytics.com'
-  ],
+  'font-src': ["'self'", 'https://fonts.gstatic.com', 'https://use.typekit.net'],
+  'img-src': ["'self'", 'data:', 'https:', 'blob:'],
+  'connect-src': ["'self'", 'https://www.google-analytics.com'],
   'frame-src': [
     'https://www.google.com', // reCAPTCHA
     'https://www.youtube.com',
-    'https://player.vimeo.com'
-  ]
+    'https://player.vimeo.com',
+  ],
 };
 ```
 
@@ -608,16 +596,16 @@ interface RateLimitConfig {
 const rateLimits: Record<string, RateLimitConfig> = {
   '/api/content/*': {
     windowMs: 60 * 1000, // 1 minute
-    maxRequests: 60
+    maxRequests: 60,
   },
   '/api/contact': {
     windowMs: 15 * 60 * 1000, // 15 minutes
-    maxRequests: 3
+    maxRequests: 3,
   },
   '/api/stats/*': {
     windowMs: 60 * 1000, // 1 minute
-    maxRequests: 100
-  }
+    maxRequests: 100,
+  },
 };
 ```
 
@@ -666,7 +654,7 @@ const LazyComponents = {
   ColorPalette: lazy(() => import('@/app/tools/components/ColorPalette')),
   ThreeJSPlayground: lazy(() => import('@/app/portfolio/components/ThreeJSPlayground')),
   VideoPlayer: lazy(() => import('@/components/VideoPlayer')),
-  SequentialPngPreview: lazy(() => import('@/app/tools/components/SequentialPngPreview'))
+  SequentialPngPreview: lazy(() => import('@/app/tools/components/SequentialPngPreview')),
 };
 
 // Route-based code splitting (automatic with App Router)
@@ -684,7 +672,7 @@ interface PerformanceMetrics {
 
   // Custom metrics
   ttfb: number; // Time to First Byte
-  fcp: number;  // First Contentful Paint
+  fcp: number; // First Contentful Paint
 
   // Tool-specific metrics
   toolLoadTime: number;

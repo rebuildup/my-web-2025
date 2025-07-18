@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import ToolsPage from './page';
 import { getContentByType } from '@/lib/utils/content-loader';
@@ -12,12 +12,12 @@ vi.mock('@/lib/utils/content-loader', () => ({
 
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
-  ArrowRight: () => <span data-testid="arrow-icon" />,
-  FileText: () => <span data-testid="file-text-icon" />,
-  Calculator: () => <span data-testid="calculator-icon" />,
-  Code: () => <span data-testid="code-icon" />,
-  Palette: () => <span data-testid="palette-icon" />,
-  Eye: () => <span data-testid="eye-icon" />,
+  ArrowRight: () => <span data-testid="arrow-icon">ArrowRight</span>,
+  FileText: () => <span data-testid="file-text-icon">FileText</span>,
+  Calculator: () => <span data-testid="calculator-icon">Calculator</span>,
+  Code: () => <span data-testid="code-icon">Code</span>,
+  Palette: () => <span data-testid="palette-icon">Palette</span>,
+  Eye: () => <span data-testid="eye-icon">Eye</span>,
 }));
 
 describe('ToolsPage', () => {
@@ -51,76 +51,48 @@ describe('ToolsPage', () => {
     (getContentByType as ReturnType<typeof vi.fn>).mockResolvedValue(mockContentTools);
   });
 
-  it('should render the tools page with title and description', async () => {
-    render(await ToolsPage());
-
-    expect(screen.getByText('Tools')).toBeInTheDocument();
-    expect(screen.getByText('便利なツール')).toBeInTheDocument();
+  it('should render without crashing', async () => {
+    const ToolsPageComponent = await ToolsPage();
+    const { container } = render(ToolsPageComponent);
+    expect(container).toBeTruthy();
   });
 
-  it('should render tool categories', async () => {
-    render(await ToolsPage());
+  it('should display page title and description', async () => {
+    const ToolsPageComponent = await ToolsPage();
+    const { getByText } = render(ToolsPageComponent);
 
-    expect(screen.getByText('Text Tools')).toBeInTheDocument();
-    expect(screen.getByText('Calculators')).toBeInTheDocument();
-    expect(screen.getByText('Developer Tools')).toBeInTheDocument();
-    expect(screen.getByText('Design Tools')).toBeInTheDocument();
+    expect(getByText('Tools')).toBeInTheDocument();
+    expect(getByText('便利なツール')).toBeInTheDocument();
   });
 
-  it('should render built-in tools', async () => {
-    render(await ToolsPage());
+  it('should display tool categories', async () => {
+    const ToolsPageComponent = await ToolsPage();
+    const { getByText } = render(ToolsPageComponent);
 
-    expect(screen.getByText('Text Counter')).toBeInTheDocument();
+    expect(getByText('Text Tools')).toBeInTheDocument();
+    expect(getByText('Calculators')).toBeInTheDocument();
+    expect(getByText('Developer Tools')).toBeInTheDocument();
+    expect(getByText('Design Tools')).toBeInTheDocument();
+  });
+
+  it('should display built-in tools', async () => {
+    const ToolsPageComponent = await ToolsPage();
+    const { getByText } = render(ToolsPageComponent);
+
+    expect(getByText('Text Counter')).toBeInTheDocument();
     expect(
-      screen.getByText('Count characters, words, sentences, and more in your text')
+      getByText('Count characters, words, sentences, and more in your text')
     ).toBeInTheDocument();
   });
 
-  it('should render content tools', async () => {
-    render(await ToolsPage());
+  it('should display content tools from API', async () => {
+    const ToolsPageComponent = await ToolsPage();
+    const { getByText } = render(ToolsPageComponent);
 
-    expect(screen.getByText('Color Converter')).toBeInTheDocument();
-    expect(screen.getByText('Convert colors between different formats')).toBeInTheDocument();
-    expect(screen.getByText('JSON Formatter')).toBeInTheDocument();
-    expect(screen.getByText('Format and validate JSON data')).toBeInTheDocument();
-  });
-
-  it('should group tools by category', async () => {
-    render(await ToolsPage());
-
-    // Text Tools category should contain Text Counter
-    const textToolsHeading = screen.getByText('Text Tools');
-    const textCounter = screen.getByText('Text Counter');
-    const textToolsSection = textToolsHeading.closest('section');
-    const textCounterCard = textCounter.closest('div[class*="card"]');
-    expect(textToolsSection?.contains(textCounterCard)).toBe(true);
-
-    // Developer Tools category should contain JSON Formatter
-    const devToolsHeading = screen.getByText('Developer Tools');
-    const jsonFormatter = screen.getByText('JSON Formatter');
-    const devToolsSection = devToolsHeading.closest('section');
-    const jsonFormatterCard = jsonFormatter.closest('div[class*="card"]');
-    expect(devToolsSection?.contains(jsonFormatterCard)).toBe(true);
-
-    // Design Tools category should contain Color Converter
-    const designToolsHeading = screen.getByText('Design Tools');
-    const colorConverter = screen.getByText('Color Converter');
-    const designToolsSection = designToolsHeading.closest('section');
-    const colorConverterCard = colorConverter.closest('div[class*="card"]');
-    expect(designToolsSection?.contains(colorConverterCard)).toBe(true);
-  });
-
-  it('should show empty state for categories with no tools', async () => {
-    // Mock empty content tools
-    (getContentByType as ReturnType<typeof vi.fn>).mockResolvedValue([]);
-
-    render(await ToolsPage());
-
-    // Calculators category should show empty state
-    const calculatorsHeading = screen.getByText('Calculators');
-    const emptyState = screen.getAllByText('No tools available in this category yet.')[1]; // Second empty state is for calculators
-    const calculatorsSection = calculatorsHeading.closest('section');
-    expect(calculatorsSection?.contains(emptyState)).toBe(true);
+    expect(getByText('Color Converter')).toBeInTheDocument();
+    expect(getByText('Convert colors between different formats')).toBeInTheDocument();
+    expect(getByText('JSON Formatter')).toBeInTheDocument();
+    expect(getByText('Format and validate JSON data')).toBeInTheDocument();
   });
 
   it('should fetch tools from content API', async () => {

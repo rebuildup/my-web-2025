@@ -23,9 +23,8 @@ export const formatDate = (date: string | Date, formatStr: string = 'yyyy/MM/dd'
   }
   try {
     return format(dateObj, formatStr, { locale: ja });
-  }
-  /* c8 ignore start */
-  catch (error) {
+  } catch (error) {
+    /* c8 ignore start */
     console.error('Date formatting error:', error);
     return '無効な日付';
   }
@@ -38,7 +37,7 @@ export const formatDateTime = (date: string | Date): string => {
 
 export const formatTimeAgo = (
   date: string | Date,
-  options?: { addSuffix?: boolean; locale?: Locale },
+  options?: { addSuffix?: boolean; locale?: Locale }
 ): string => {
   try {
     let dateObj: Date;
@@ -52,9 +51,8 @@ export const formatTimeAgo = (
     }
     const finalOptions = { addSuffix: true, locale: ja, ...options };
     return formatDistanceToNow(dateObj, finalOptions);
-  }
-  /* c8 ignore start */
-  catch (error) {
+  } catch (error) {
+    /* c8 ignore start */
     console.error('Time ago formatting error:', error);
     return '無効な日付';
   }
@@ -95,9 +93,8 @@ export const isDateInRange = (
     }
 
     return dateObj >= startObj && dateObj <= endObj;
-  }
-  /* c8 ignore start */
-  catch {
+  } catch {
+    /* c8 ignore start */
     return false;
   }
   /* c8 ignore end */
@@ -132,9 +129,8 @@ export const getDaysDifference = (startDate: string | Date, endDate: string | Da
     const diffTime = Math.abs(end.getTime() - start.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
-  }
-  /* c8 ignore start */
-  catch {
+  } catch {
+    /* c8 ignore start */
     return 0;
   }
   /* c8 ignore end */
@@ -146,9 +142,8 @@ export const isDateAfter = (date1: string | Date, date2: string | Date): boolean
     const dateObj2 = typeof date2 === 'string' ? parseISO(date2) : date2;
 
     return dateObj1 > dateObj2;
-  }
-  /* c8 ignore start */
-  catch {
+  } catch {
+    /* c8 ignore start */
     return false;
   }
   /* c8 ignore end */
@@ -160,9 +155,8 @@ export const isDateBefore = (date1: string | Date, date2: string | Date): boolea
     const dateObj2 = typeof date2 === 'string' ? parseISO(date2) : date2;
 
     return dateObj1 < dateObj2;
-  }
-  /* c8 ignore start */
-  catch {
+  } catch {
+    /* c8 ignore start */
     return false;
   }
   /* c8 ignore end */

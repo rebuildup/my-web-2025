@@ -35,7 +35,7 @@ describe('Email Templates', () => {
       expect(html).toContain('This is a test message.<br>With multiple lines.');
 
       // Check for timestamp
-      expect(html).toContain('January 1, 2025');
+      expect(html).toContain('Jan 1, 2025');
     });
 
     it('should generate HTML notification email with design inquiry content', () => {
@@ -72,7 +72,7 @@ describe('Email Templates', () => {
       expect(text).toContain('This is a test message.\nWith multiple lines.');
 
       // Check for timestamp
-      expect(text).toContain('January 1, 2025');
+      expect(text).toContain('Jan 1, 2025');
     });
   });
 

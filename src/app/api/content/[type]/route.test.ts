@@ -20,6 +20,10 @@ vi.mock('@/lib/search/search-index-builder', () => ({
 }));
 
 vi.mock('fs/promises', () => ({
+  default: {
+    readFile: vi.fn(),
+    writeFile: vi.fn(),
+  },
   readFile: vi.fn(),
   writeFile: vi.fn(),
 }));
@@ -112,7 +116,8 @@ describe('Content API', () => {
     });
 
     it('should validate limit parameter', async () => {
-      const request = new NextRequest('http://localhost/api/content/blog?limit=200');
+      const url = new URL('http://localhost/api/content/blog?limit=200');
+      const request = new NextRequest(url);
       const response = await GET(request, { params: Promise.resolve({ type: 'blog' }) });
       const data = await response.json();
 
@@ -122,7 +127,8 @@ describe('Content API', () => {
     });
 
     it('should validate offset parameter', async () => {
-      const request = new NextRequest('http://localhost/api/content/blog?offset=-5');
+      const url = new URL('http://localhost/api/content/blog?offset=-5');
+      const request = new NextRequest(url);
       const response = await GET(request, { params: Promise.resolve({ type: 'blog' }) });
       const data = await response.json();
 
@@ -136,7 +142,8 @@ describe('Content API', () => {
         new Error('Failed to load content')
       );
 
-      const request = new NextRequest('http://localhost/api/content/blog');
+      const url = new URL('http://localhost/api/content/blog');
+      const request = new NextRequest(url);
       const response = await GET(request, { params: Promise.resolve({ type: 'blog' }) });
       const data = await response.json();
 
@@ -155,7 +162,8 @@ describe('Content API', () => {
         tags: ['test'],
       };
 
-      const request = new NextRequest('http://localhost/api/content/blog', {
+      const url = new URL('http://localhost/api/content/blog');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newItem),
@@ -177,7 +185,8 @@ describe('Content API', () => {
         errors: { title: ['Title is required'] },
       });
 
-      const request = new NextRequest('http://localhost/api/content/blog', {
+      const url = new URL('http://localhost/api/content/blog');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
@@ -193,7 +202,8 @@ describe('Content API', () => {
     });
 
     it('should check for duplicate IDs', async () => {
-      const request = new NextRequest('http://localhost/api/content/blog', {
+      const url = new URL('http://localhost/api/content/blog');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -215,7 +225,8 @@ describe('Content API', () => {
     it('should restrict content creation to development environment', async () => {
       vi.stubEnv('NODE_ENV', 'production');
 
-      const request = new NextRequest('http://localhost/api/content/blog', {
+      const url = new URL('http://localhost/api/content/blog');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: 'Test', description: 'Test', category: 'test' }),
@@ -238,7 +249,8 @@ describe('Content API', () => {
         description: 'Updated description',
       };
 
-      const request = new NextRequest('http://localhost/api/content/blog', {
+      const url = new URL('http://localhost/api/content/blog');
+      const request = new NextRequest(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedItem),
@@ -255,7 +267,8 @@ describe('Content API', () => {
     });
 
     it('should require an ID for updates', async () => {
-      const request = new NextRequest('http://localhost/api/content/blog', {
+      const url = new URL('http://localhost/api/content/blog');
+      const request = new NextRequest(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: 'No ID' }),
@@ -270,7 +283,8 @@ describe('Content API', () => {
     });
 
     it('should validate the item does exist', async () => {
-      const request = new NextRequest('http://localhost/api/content/blog', {
+      const url = new URL('http://localhost/api/content/blog');
+      const request = new NextRequest(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: 'non-existent', title: 'Not Found' }),
@@ -290,7 +304,8 @@ describe('Content API', () => {
         errors: { title: ['Title is required'] },
       });
 
-      const request = new NextRequest('http://localhost/api/content/blog', {
+      const url = new URL('http://localhost/api/content/blog');
+      const request = new NextRequest(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: 'blog-1', title: '' }),
@@ -307,7 +322,8 @@ describe('Content API', () => {
     it('should restrict content updates to development environment', async () => {
       vi.stubEnv('NODE_ENV', 'production');
 
-      const request = new NextRequest('http://localhost/api/content/blog', {
+      const url = new URL('http://localhost/api/content/blog');
+      const request = new NextRequest(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: 'blog-1', title: 'Updated' }),
@@ -324,7 +340,8 @@ describe('Content API', () => {
 
   describe('DELETE', () => {
     it('should delete an existing content item', async () => {
-      const request = new NextRequest('http://localhost/api/content/blog?id=blog-1');
+      const url = new URL('http://localhost/api/content/blog?id=blog-1');
+      const request = new NextRequest(url);
       const response = await DELETE(request, { params: Promise.resolve({ type: 'blog' }) });
       const data = await response.json();
 
@@ -336,7 +353,8 @@ describe('Content API', () => {
     });
 
     it('should require an ID for deletion', async () => {
-      const request = new NextRequest('http://localhost/api/content/blog');
+      const url = new URL('http://localhost/api/content/blog');
+      const request = new NextRequest(url);
       const response = await DELETE(request, { params: Promise.resolve({ type: 'blog' }) });
       const data = await response.json();
 
@@ -346,7 +364,8 @@ describe('Content API', () => {
     });
 
     it('should validate the item exists', async () => {
-      const request = new NextRequest('http://localhost/api/content/blog?id=non-existent');
+      const url = new URL('http://localhost/api/content/blog?id=non-existent');
+      const request = new NextRequest(url);
       const response = await DELETE(request, { params: Promise.resolve({ type: 'blog' }) });
       const data = await response.json();
 
@@ -358,7 +377,8 @@ describe('Content API', () => {
     it('should restrict content deletion to development environment', async () => {
       vi.stubEnv('NODE_ENV', 'production');
 
-      const request = new NextRequest('http://localhost/api/content/blog?id=blog-1');
+      const url = new URL('http://localhost/api/content/blog?id=blog-1');
+      const request = new NextRequest(url);
       const response = await DELETE(request, { params: Promise.resolve({ type: 'blog' }) });
       const data = await response.json();
 

@@ -8,9 +8,12 @@ import Svg2tsx from './Svg2tsx';
 describe('Simple Tool Components', () => {
   describe('PiGame Component', () => {
     it('should render the Pi Game component', () => {
-      render(<PiGame />);
+      const { container } = render(<PiGame />);
 
-      expect(screen.getByRole('heading', { name: 'Pi Game' })).toBeInTheDocument();
+      // Check for heading element using querySelector
+      const heading = container.querySelector('h2');
+      expect(heading).toBeInTheDocument();
+      expect(heading?.textContent).toBe('Pi Game');
       expect(
         screen.getByText('Pi sequence memory game - Coming soon with number pad interface')
       ).toBeInTheDocument();
@@ -22,7 +25,9 @@ describe('Simple Tool Components', () => {
       const mainDiv = container.firstChild as HTMLElement;
       expect(mainDiv).toHaveClass('rounded-none', 'bg-gray-800', 'p-6', 'text-white');
 
-      const heading = screen.getByRole('heading', { name: 'Pi Game' });
+      const heading = container.querySelector('h2');
+      expect(heading).toBeInTheDocument();
+      expect(heading?.textContent).toBe('Pi Game');
       expect(heading).toHaveClass(
         'neue-haas-grotesk-display',
         'mb-4',
@@ -39,9 +44,12 @@ describe('Simple Tool Components', () => {
 
   describe('AeExpression Component', () => {
     it('should render the AE Expression component', () => {
-      render(<AeExpression />);
+      const { container } = render(<AeExpression />);
 
-      expect(screen.getByRole('heading', { name: 'AE Expression' })).toBeInTheDocument();
+      // Check for heading element using querySelector
+      const heading = container.querySelector('h2');
+      expect(heading).toBeInTheDocument();
+      expect(heading?.textContent).toBe('AE Expression');
       expect(
         screen.getByText(
           'After Effects expression generator - Coming soon with Scratch-like block interface'
@@ -55,7 +63,9 @@ describe('Simple Tool Components', () => {
       const mainDiv = container.firstChild as HTMLElement;
       expect(mainDiv).toHaveClass('rounded-none', 'bg-gray-800', 'p-6', 'text-white');
 
-      const heading = screen.getByRole('heading', { name: 'AE Expression' });
+      const heading = container.querySelector('h2');
+      expect(heading).toBeInTheDocument();
+      expect(heading?.textContent).toBe('AE Expression');
       expect(heading).toHaveClass(
         'neue-haas-grotesk-display',
         'mb-4',
@@ -72,9 +82,12 @@ describe('Simple Tool Components', () => {
 
   describe('ProtoType Component', () => {
     it('should render the ProtoType component', () => {
-      render(<ProtoType />);
+      const { container } = render(<ProtoType />);
 
-      expect(screen.getByRole('heading', { name: 'ProtoType' })).toBeInTheDocument();
+      // Check for heading element using querySelector
+      const heading = container.querySelector('h2');
+      expect(heading).toBeInTheDocument();
+      expect(heading?.textContent).toBe('ProtoType');
       expect(
         screen.getByText('PIXIjs typing game - Coming soon with GitHub repository integration')
       ).toBeInTheDocument();
@@ -86,7 +99,9 @@ describe('Simple Tool Components', () => {
       const mainDiv = container.firstChild as HTMLElement;
       expect(mainDiv).toHaveClass('rounded-none', 'bg-gray-800', 'p-6', 'text-white');
 
-      const heading = screen.getByRole('heading', { name: 'ProtoType' });
+      const heading = container.querySelector('h2');
+      expect(heading).toBeInTheDocument();
+      expect(heading?.textContent).toBe('ProtoType');
       expect(heading).toHaveClass(
         'neue-haas-grotesk-display',
         'mb-4',
@@ -103,9 +118,12 @@ describe('Simple Tool Components', () => {
 
   describe('Svg2tsx Component', () => {
     it('should render the SVG2TSX component', () => {
-      render(<Svg2tsx />);
+      const { container } = render(<Svg2tsx />);
 
-      expect(screen.getByRole('heading', { name: 'SVG2TSX' })).toBeInTheDocument();
+      // Check for heading element using querySelector
+      const heading = container.querySelector('h2');
+      expect(heading).toBeInTheDocument();
+      expect(heading?.textContent).toBe('SVG2TSX');
       expect(
         screen.getByText('SVG to TSX converter - Coming soon with React component generation')
       ).toBeInTheDocument();
@@ -117,7 +135,9 @@ describe('Simple Tool Components', () => {
       const mainDiv = container.firstChild as HTMLElement;
       expect(mainDiv).toHaveClass('rounded-none', 'bg-gray-800', 'p-6', 'text-white');
 
-      const heading = screen.getByRole('heading', { name: 'SVG2TSX' });
+      const heading = container.querySelector('h2');
+      expect(heading).toBeInTheDocument();
+      expect(heading?.textContent).toBe('SVG2TSX');
       expect(heading).toHaveClass(
         'neue-haas-grotesk-display',
         'mb-4',
@@ -149,7 +169,9 @@ describe('Simple Tool Components', () => {
         expect(mainDiv.tagName).toBe('DIV');
 
         // Check heading existence
-        expect(screen.getByRole('heading', { name })).toBeInTheDocument();
+        const heading = container.querySelector('h2');
+        expect(heading).toBeInTheDocument();
+        expect(heading?.textContent).toBe(name);
 
         // Check content div existence
         const contentDiv = container.querySelector('.bg-gray-700');
@@ -187,8 +209,10 @@ describe('Simple Tool Components', () => {
       ];
 
       components.forEach(({ Component, name }) => {
-        render(<Component />);
-        const heading = screen.getByRole('heading', { name });
+        const { container } = render(<Component />);
+        const heading = container.querySelector('h2');
+        expect(heading).toBeInTheDocument();
+        expect(heading?.textContent).toBe(name);
         expect(heading).toHaveClass('text-blue-500');
       });
     });

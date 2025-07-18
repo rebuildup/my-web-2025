@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { GET, POST } from './route';
 import { search } from '@/lib/search/search-engine';
-import { trackStat } from '@/lib/stats';
+
 import fs from 'fs/promises';
 
 // Mock search function
@@ -12,6 +12,11 @@ vi.mock('@/lib/search/search-engine', () => ({
 
 // Mock fs.writeFile and fs.mkdir
 vi.mock('fs/promises', () => ({
+  default: {
+    writeFile: vi.fn(),
+    mkdir: vi.fn(),
+    readFile: vi.fn(),
+  },
   writeFile: vi.fn(),
   mkdir: vi.fn(),
   readFile: vi.fn(),
@@ -49,7 +54,8 @@ describe('Search API', () => {
 
   describe('GET', () => {
     it('should return search results', async () => {
-      const request = new NextRequest('http://localhost/api/content/search?q=test');
+      const url = new URL('http://localhost/api/content/search?q=test');
+      const request = new NextRequest(url);
       const response = await GET(request);
       const data = await response.json();
 
@@ -66,9 +72,8 @@ describe('Search API', () => {
     });
 
     it('should perform search with query parameters', async () => {
-      const request = new NextRequest(
-        'http://localhost/api/content/search?q=test&type=blog&limit=5'
-      );
+      const url = new URL('http://localhost/api/content/search?q=test&type=blog&limit=5');
+      const request = new NextRequest(url);
       const response = await GET(request);
       const data = await response.json();
 
@@ -85,9 +90,8 @@ describe('Search API', () => {
     });
 
     it('should handle multiple content types', async () => {
-      const request = new NextRequest(
-        'http://localhost/api/content/search?q=test&type=blog&type=portfolio'
-      );
+      const url = new URL('http://localhost/api/content/search?q=test&type=blog&type=portfolio');
+      const request = new NextRequest(url);
       const response = await GET(request);
       const data = await response.json();
 
@@ -104,9 +108,8 @@ describe('Search API', () => {
     });
 
     it('should handle pagination parameters', async () => {
-      const request = new NextRequest(
-        'http://localhost/api/content/search?q=test&limit=20&offset=40'
-      );
+      const url = new URL('http://localhost/api/content/search?q=test&limit=20&offset=40');
+      const request = new NextRequest(url);
       const response = await GET(request);
       const data = await response.json();
 
@@ -122,7 +125,8 @@ describe('Search API', () => {
     });
 
     it('should validate limit parameter', async () => {
-      const request = new NextRequest('http://localhost/api/content/search?q=test&limit=200');
+      const url = new URL('http://localhost/api/content/search?q=test&limit=200');
+      const request = new NextRequest(url);
       const response = await GET(request);
       const data = await response.json();
 
@@ -132,7 +136,8 @@ describe('Search API', () => {
     });
 
     it('should validate offset parameter', async () => {
-      const request = new NextRequest('http://localhost/api/content/search?q=test&offset=-5');
+      const url = new URL('http://localhost/api/content/search?q=test&offset=-5');
+      const request = new NextRequest(url);
       const response = await GET(request);
       const data = await response.json();
 
@@ -142,7 +147,8 @@ describe('Search API', () => {
     });
 
     it('should track search queries', async () => {
-      const request = new NextRequest('http://localhost/api/content/search?q=test');
+      const url = new URL('http://localhost/api/content/search?q=test');
+      const request = new NextRequest(url);
       await GET(request);
 
       expect(fs.mkdir).toHaveBeenCalled();
@@ -152,7 +158,8 @@ describe('Search API', () => {
     it('should handle search errors', async () => {
       (search as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Search failed'));
 
-      const request = new NextRequest('http://localhost/api/content/search?q=test');
+      const url = new URL('http://localhost/api/content/search?q=test');
+      const request = new NextRequest(url);
       const response = await GET(request);
       const data = await response.json();
 
@@ -162,7 +169,8 @@ describe('Search API', () => {
     });
 
     it('should handle empty query', async () => {
-      const request = new NextRequest('http://localhost/api/content/search');
+      const url = new URL('http://localhost/api/content/search');
+      const request = new NextRequest(url);
       const response = await GET(request);
       const data = await response.json();
 
@@ -180,7 +188,8 @@ describe('Search API', () => {
 
   describe('POST', () => {
     it('should return search results', async () => {
-      const request = new NextRequest('http://localhost/api/content/search', {
+      const url = new URL('http://localhost/api/content/search');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -211,7 +220,8 @@ describe('Search API', () => {
         offset: 30,
       };
 
-      const request = new NextRequest('http://localhost/api/content/search', {
+      const url = new URL('http://localhost/api/content/search');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(searchData),
@@ -233,7 +243,8 @@ describe('Search API', () => {
     });
 
     it('should require query parameter', async () => {
-      const request = new NextRequest('http://localhost/api/content/search', {
+      const url = new URL('http://localhost/api/content/search');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -250,7 +261,8 @@ describe('Search API', () => {
     });
 
     it('should validate limit parameter', async () => {
-      const request = new NextRequest('http://localhost/api/content/search', {
+      const url = new URL('http://localhost/api/content/search');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -270,7 +282,8 @@ describe('Search API', () => {
     });
 
     it('should validate offset parameter in POST', async () => {
-      const request = new NextRequest('http://localhost/api/content/search', {
+      const url = new URL('http://localhost/api/content/search');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: 'test', offset: -10 }),
@@ -287,7 +300,8 @@ describe('Search API', () => {
     it('should handle search errors', async () => {
       (search as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Search failed'));
 
-      const request = new NextRequest('http://localhost/api/content/search', {
+      const url = new URL('http://localhost/api/content/search');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,9 +1,64 @@
 // Test setup file for vitest
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
-
-// Mock Next.js router
 import { vi, beforeAll, afterAll, afterEach } from 'vitest';
+
+// Mock jsdom environment properly
+import { JSDOM } from 'jsdom';
+
+const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+  url: 'http://localhost',
+  pretendToBeVisual: true,
+});
+
+global.window = dom.window as unknown as Window & typeof globalThis;
+global.document = dom.window.document;
+global.navigator = dom.window.navigator;
+global.history = dom.window.history;
+global.localStorage = dom.window.localStorage;
+global.sessionStorage = dom.window.sessionStorage;
+
+// Mock window.location to prevent "Cannot redefine property: location" errors
+try {
+  Object.defineProperty(window, 'location', {
+    value: {
+      href: 'http://localhost',
+      origin: 'http://localhost',
+      protocol: 'http:',
+      host: 'localhost',
+      hostname: 'localhost',
+      port: '',
+      pathname: '/',
+      search: '',
+      hash: '',
+      assign: vi.fn(),
+      replace: vi.fn(),
+      reload: vi.fn(),
+    },
+    writable: true,
+    configurable: true,
+  });
+} catch {
+  // Location already defined, skip
+}
+
+// Mock getComputedStyle
+global.getComputedStyle = vi.fn(() => ({
+  getPropertyValue: vi.fn(),
+})) as unknown as typeof getComputedStyle;
+
+// Mock Element.prototype methods
+Element.prototype.getBoundingClientRect = vi.fn(() => ({
+  x: 0,
+  y: 0,
+  width: 100,
+  height: 100,
+  top: 0,
+  right: 100,
+  bottom: 100,
+  left: 0,
+  toJSON: () => ({}),
+})) as unknown as typeof Element.prototype.getBoundingClientRect;
 
 vi.mock('next/router', () => ({
   useRouter: () => ({

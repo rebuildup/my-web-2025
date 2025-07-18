@@ -3,14 +3,28 @@ import { EmailService } from './email-service';
 import { EmailTemplateData } from './templates';
 
 // Mock Resend
+const mockSend = vi.fn().mockResolvedValue({ data: { id: 'mock-email-id' }, error: null });
+
 vi.mock('resend', () => {
+  const MockResend = vi.fn().mockImplementation(() => ({
+    emails: {
+      send: mockSend,
+    },
+  }));
+
   return {
-    Resend: vi.fn().mockImplementation(() => ({
-      emails: {
-        send: vi.fn().mockResolvedValue({ data: { id: 'mock-email-id' }, error: null }),
-      },
-    })),
+    Resend: MockResend,
   };
+});
+
+// Mock console.error to prevent noise in tests
+const originalConsoleError = console.error;
+beforeEach(() => {
+  console.error = vi.fn();
+});
+
+afterEach(() => {
+  console.error = originalConsoleError;
 });
 
 describe('EmailService', () => {
@@ -38,10 +52,7 @@ describe('EmailService', () => {
       expect(result.messageId).toBe('mock-email-id');
 
       // Check that Resend was called with correct parameters
-      const resendInstance = (
-        emailService as unknown as { resend: { emails: { send: ReturnType<typeof vi.fn> } } }
-      ).resend;
-      expect(resendInstance.emails.send).toHaveBeenCalledWith(
+      expect(mockSend).toHaveBeenCalledWith(
         expect.objectContaining({
           from: expect.any(String),
           to: expect.arrayContaining(['rebuild.up.up@gmail.com']), // Development email
@@ -58,10 +69,7 @@ describe('EmailService', () => {
       await emailService.sendContactNotification(designData);
 
       // Check that Resend was called with correct parameters
-      const resendInstance = (
-        emailService as unknown as { resend: { emails: { send: ReturnType<typeof vi.fn> } } }
-      ).resend;
-      expect(resendInstance.emails.send).toHaveBeenCalledWith(
+      expect(mockSend).toHaveBeenCalledWith(
         expect.objectContaining({
           to: expect.arrayContaining(['361do.sleep@gmail.com']), // Design email
         })
@@ -73,10 +81,7 @@ describe('EmailService', () => {
       await emailService.sendContactNotification(generalData);
 
       // Check that Resend was called with correct parameters
-      const resendInstance = (
-        emailService as unknown as { resend: { emails: { send: ReturnType<typeof vi.fn> } } }
-      ).resend;
-      expect(resendInstance.emails.send).toHaveBeenCalledWith(
+      expect(mockSend).toHaveBeenCalledWith(
         expect.objectContaining({
           to: expect.arrayContaining(['info@samuido.com']), // General email
         })
@@ -85,10 +90,7 @@ describe('EmailService', () => {
 
     it('should handle email sending errors', async () => {
       // Mock Resend to return an error
-      const resendInstance = (
-        emailService as unknown as { resend: { emails: { send: ReturnType<typeof vi.fn> } } }
-      ).resend;
-      resendInstance.emails.send.mockResolvedValue({
+      mockSend.mockResolvedValue({
         data: null,
         error: { message: 'Failed to send email' },
       });
@@ -108,10 +110,7 @@ describe('EmailService', () => {
       expect(result.messageId).toBe('mock-email-id');
 
       // Check that Resend was called with correct parameters
-      const resendInstance = (
-        emailService as unknown as { resend: { emails: { send: ReturnType<typeof vi.fn> } } }
-      ).resend;
-      expect(resendInstance.emails.send).toHaveBeenCalledWith(
+      expect(mockSend).toHaveBeenCalledWith(
         expect.objectContaining({
           from: expect.any(String),
           to: expect.arrayContaining(['test@example.com']),
@@ -124,10 +123,7 @@ describe('EmailService', () => {
 
     it('should handle email sending errors', async () => {
       // Mock Resend to return an error
-      const resendInstance = (
-        emailService as unknown as { resend: { emails: { send: ReturnType<typeof vi.fn> } } }
-      ).resend;
-      resendInstance.emails.send.mockResolvedValue({
+      mockSend.mockResolvedValue({
         data: null,
         error: { message: 'Failed to send email' },
       });

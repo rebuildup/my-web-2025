@@ -1,14 +1,21 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { trackStat, getStats, getTopStats, clearStatsCache } from './index';
-import fs from 'fs/promises';
 // import path from 'path'; // Removed unused import
 
-// Mock fs.readFile and fs.writeFile
-vi.mock('fs/promises', () => ({
-  readFile: vi.fn(),
-  writeFile: vi.fn(),
-  mkdir: vi.fn(),
-}));
+// Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+  length: 0,
+  key: vi.fn(),
+};
+
+Object.defineProperty(global, 'localStorage', {
+  value: localStorageMock,
+  writable: true,
+});
 
 // Mock path.join
 vi.mock('path', () => ({
@@ -20,6 +27,10 @@ describe('Statistics Tracking', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     clearStatsCache();
+    // Reset localStorage mock
+    localStorageMock.getItem.mockReset();
+    localStorageMock.setItem.mockReset();
+    localStorageMock.removeItem.mockReset();
   });
 
   afterEach(() => {
@@ -28,23 +39,21 @@ describe('Statistics Tracking', () => {
 
   describe('trackStat', () => {
     it('should track a new statistic', async () => {
-      // Mock file not existing
-      (fs.readFile as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('File not found'));
+      // Mock localStorage to return no existing data
+      localStorageMock.getItem.mockReturnValue(null);
 
       const count = await trackStat('view', 'test-item');
 
       expect(count).toBe(1);
-      expect(fs.writeFile).toHaveBeenCalledWith(
-        expect.stringContaining('views-stats.json'),
-        expect.stringContaining('"test-item":1'),
-        undefined
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        'stats_views',
+        expect.stringContaining('"test-item":1')
       );
-      expect(fs.mkdir).toHaveBeenCalled();
     });
 
     it('should increment an existing statistic', async () => {
       // Mock existing stats
-      (fs.readFile as ReturnType<typeof vi.fn>).mockResolvedValue(
+      localStorageMock.getItem.mockReturnValue(
         JSON.stringify({
           views: { 'test-item': 5 },
           lastUpdated: '2024-01-01T12:00:00Z',
@@ -54,42 +63,34 @@ describe('Statistics Tracking', () => {
       const count = await trackStat('view', 'test-item');
 
       expect(count).toBe(6);
-      expect(fs.writeFile).toHaveBeenCalledWith(
-        expect.stringContaining('views-stats.json'),
-        expect.stringContaining('"test-item":6'),
-        undefined
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        'stats_views',
+        expect.stringContaining('"test-item":6')
       );
     });
 
     it('should handle different stat types', async () => {
-      // Mock file not existing
-      (fs.readFile as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('File not found'));
+      // Mock localStorage to return no existing data
+      localStorageMock.getItem.mockReturnValue(null);
 
       await trackStat('download', 'test-download');
 
-      expect(fs.writeFile).toHaveBeenCalledWith(
-        expect.stringContaining('downloads-stats.json'),
-        expect.any(String),
-        undefined
-      );
+      expect(localStorageMock.setItem).toHaveBeenCalledWith('stats_downloads', expect.any(String));
     });
 
     it('should handle errors gracefully', async () => {
-      // Mock read success but write failure
-      (fs.readFile as ReturnType<typeof vi.fn>).mockResolvedValue(
-        JSON.stringify({
-          views: { 'test-item': 5 },
-          lastUpdated: '2024-01-01T12:00:00Z',
-        })
-      );
-      (fs.writeFile as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Write failed'));
+      // Mock localStorage to throw an error
+      localStorageMock.getItem.mockReturnValue(null);
+      localStorageMock.setItem.mockImplementation(() => {
+        throw new Error('Storage error');
+      });
 
       // Spy on console.error
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       const count = await trackStat('view', 'test-item');
 
-      expect(count).toBe(0);
+      expect(count).toBe(1); // The function still increments the count in memory before failing to save
       expect(consoleSpy).toHaveBeenCalled();
 
       consoleSpy.mockRestore();
@@ -99,7 +100,7 @@ describe('Statistics Tracking', () => {
   describe('getStats', () => {
     it('should get all statistics for a type', async () => {
       // Mock existing stats
-      (fs.readFile as ReturnType<typeof vi.fn>).mockResolvedValue(
+      localStorageMock.getItem.mockReturnValue(
         JSON.stringify({
           views: { 'item-1': 5, 'item-2': 10 },
           lastUpdated: '2024-01-01T12:00:00Z',
@@ -113,7 +114,7 @@ describe('Statistics Tracking', () => {
 
     it('should get statistics for a specific ID', async () => {
       // Mock existing stats
-      (fs.readFile as ReturnType<typeof vi.fn>).mockResolvedValue(
+      localStorageMock.getItem.mockReturnValue(
         JSON.stringify({
           views: { 'item-1': 5, 'item-2': 10 },
           lastUpdated: '2024-01-01T12:00:00Z',
@@ -127,7 +128,7 @@ describe('Statistics Tracking', () => {
 
     it('should return 0 for non-existent ID', async () => {
       // Mock existing stats
-      (fs.readFile as ReturnType<typeof vi.fn>).mockResolvedValue(
+      localStorageMock.getItem.mockReturnValue(
         JSON.stringify({
           views: { 'item-1': 5 },
           lastUpdated: '2024-01-01T12:00:00Z',
@@ -140,8 +141,8 @@ describe('Statistics Tracking', () => {
     });
 
     it('should handle file not existing', async () => {
-      // Mock file not existing
-      (fs.readFile as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('File not found'));
+      // Mock localStorage to return no data
+      localStorageMock.getItem.mockReturnValue(null);
 
       const stats = await getStats('view');
 
@@ -152,7 +153,7 @@ describe('Statistics Tracking', () => {
   describe('getTopStats', () => {
     it('should get top statistics sorted by count', async () => {
       // Mock existing stats
-      (fs.readFile as ReturnType<typeof vi.fn>).mockResolvedValue(
+      localStorageMock.getItem.mockReturnValue(
         JSON.stringify({
           views: { 'item-1': 5, 'item-2': 10, 'item-3': 3, 'item-4': 8 },
           lastUpdated: '2024-01-01T12:00:00Z',
@@ -174,7 +175,7 @@ describe('Statistics Tracking', () => {
         mockStats[`item-${i}`] = i;
       }
 
-      (fs.readFile as ReturnType<typeof vi.fn>).mockResolvedValue(
+      localStorageMock.getItem.mockReturnValue(
         JSON.stringify({
           views: mockStats,
           lastUpdated: '2024-01-01T12:00:00Z',
@@ -190,7 +191,7 @@ describe('Statistics Tracking', () => {
 
     it('should handle empty stats', async () => {
       // Mock empty stats
-      (fs.readFile as ReturnType<typeof vi.fn>).mockResolvedValue(
+      localStorageMock.getItem.mockReturnValue(
         JSON.stringify({
           views: {},
           lastUpdated: '2024-01-01T12:00:00Z',

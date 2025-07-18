@@ -22,13 +22,15 @@ vi.mock('@/lib/email/email-service', () => {
   };
 });
 
+const mockVerifyToken = vi.fn().mockResolvedValue({
+  success: true,
+  score: 0.9,
+});
+
 vi.mock('@/lib/security/recaptcha-service', () => {
   return {
     RecaptchaService: vi.fn().mockImplementation(() => ({
-      verifyToken: vi.fn().mockResolvedValue({
-        success: true,
-        score: 0.9,
-      }),
+      verifyToken: mockVerifyToken,
     })),
   };
 });

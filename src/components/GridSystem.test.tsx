@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import { render } from '@/test/test-utils';
 import {
   GridLayout,
   GridContainer,
@@ -20,12 +21,12 @@ describe('GridSystem Components', () => {
         </GridLayout>
       );
 
-      const container = screen.getByText('Test content').parentElement;
-      expect(container).toHaveClass(
-        'bg-[var(--color-background)]',
-        'min-h-screen',
-        'text-[var(--color-foreground)]'
-      );
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const container = testContent.parentElement;
+      expect(container).toHaveClass('min-h-screen');
+      expect(container?.className).toContain('bg-[var(--color-background)]');
+      expect(container?.className).toContain('text-[var(--color-foreground)]');
     });
 
     it('should render without background', () => {
@@ -35,9 +36,12 @@ describe('GridSystem Components', () => {
         </GridLayout>
       );
 
-      const container = screen.getByText('Test content').parentElement;
-      expect(container).not.toHaveClass('bg-[var(--color-background)]');
-      expect(container).toHaveClass('min-h-screen', 'text-[var(--color-foreground)]');
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const container = testContent.parentElement;
+      expect(container?.className).not.toContain('bg-[var(--color-background)]');
+      expect(container).toHaveClass('min-h-screen');
+      expect(container?.className).toContain('text-[var(--color-foreground)]');
     });
 
     it('should apply custom className', () => {
@@ -47,7 +51,9 @@ describe('GridSystem Components', () => {
         </GridLayout>
       );
 
-      const container = screen.getByText('Test content').parentElement;
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const container = testContent.parentElement;
       expect(container).toHaveClass('custom-class');
     });
   });
@@ -60,9 +66,12 @@ describe('GridSystem Components', () => {
         </GridContainer>
       );
 
-      const container = screen.getByText('Test content').closest('.container-grid');
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const container = testContent.closest('.container-grid');
       expect(container).toBeInTheDocument();
-      expect(container?.querySelector('div')).toHaveClass('xs:px-6', 'px-4', 'md:px-8');
+      const innerDiv = testContent.parentElement;
+      expect(innerDiv).toHaveClass('xs:px-6', 'px-4', 'md:px-8');
     });
 
     it('should render without padding', () => {
@@ -72,9 +81,12 @@ describe('GridSystem Components', () => {
         </GridContainer>
       );
 
-      const container = screen.getByText('Test content').closest('.container-grid');
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const container = testContent.closest('.container-grid');
       expect(container).toBeInTheDocument();
-      expect(container?.querySelector('div')).not.toHaveClass('xs:px-6', 'px-4', 'md:px-8');
+      const innerDiv = testContent.parentElement;
+      expect(innerDiv).not.toHaveClass('xs:px-6', 'px-4', 'md:px-8');
     });
 
     it('should apply custom className', () => {
@@ -84,7 +96,9 @@ describe('GridSystem Components', () => {
         </GridContainer>
       );
 
-      const innerDiv = screen.getByText('Test content').parentElement;
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const innerDiv = testContent.parentElement;
       expect(innerDiv).toHaveClass('custom-class');
     });
   });
@@ -98,7 +112,9 @@ describe('GridSystem Components', () => {
         </GridContent>
       );
 
-      const grid = screen.getByText('Item 1').parentElement;
+      const item1 = screen.getByText('Item 1');
+      expect(item1).toBeInTheDocument();
+      const grid = item1.parentElement;
       expect(grid).toHaveClass('grid', 'gap-4', 'xs:gap-6', 'md:gap-8');
       expect(grid).toHaveClass(
         'grid-cols-1',
@@ -125,7 +141,9 @@ describe('GridSystem Components', () => {
         </GridContent>
       );
 
-      const grid = screen.getByText('Item 1').parentElement;
+      const item1 = screen.getByText('Item 1');
+      expect(item1).toBeInTheDocument();
+      const grid = item1.parentElement;
       expect(grid).toHaveClass(
         'grid-cols-2',
         'sm:grid-cols-3',
@@ -144,7 +162,9 @@ describe('GridSystem Components', () => {
         </GridContent>
       );
 
-      const grid = screen.getByText('Item 1').parentElement;
+      const item1 = screen.getByText('Item 1');
+      expect(item1).toBeInTheDocument();
+      const grid = item1.parentElement;
       expect(grid).toHaveClass('gap-6', 'xs:gap-8', 'md:gap-12');
     });
 
@@ -155,7 +175,9 @@ describe('GridSystem Components', () => {
         </GridContent>
       );
 
-      const grid = screen.getByText('Test content').parentElement;
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const grid = testContent.parentElement;
       expect(grid).toHaveClass('custom-class');
     });
   });
@@ -164,14 +186,18 @@ describe('GridSystem Components', () => {
     it('should render with container query classes', () => {
       render(<ContainerGrid>Test content</ContainerGrid>);
 
-      const container = screen.getByText('Test content').parentElement;
-      expect(container).toHaveAttribute('class', expect.stringContaining('@container'));
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const container = testContent.parentElement?.parentElement;
+      expect(container).toHaveClass('@container');
     });
 
     it('should apply custom className', () => {
       render(<ContainerGrid className="custom-class">Test content</ContainerGrid>);
 
-      const container = screen.getByText('Test content').parentElement;
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const container = testContent.parentElement?.parentElement;
       expect(container).toHaveClass('custom-class');
     });
   });
@@ -185,7 +211,9 @@ describe('GridSystem Components', () => {
         </SubGrid>
       );
 
-      const subgrid = screen.getByText('Item 1').parentElement;
+      const item1 = screen.getByText('Item 1');
+      expect(item1).toBeInTheDocument();
+      const subgrid = item1.parentElement;
       expect(subgrid).toHaveClass('col-span-3', 'grid', 'grid-cols-subgrid', 'gap-4');
     });
 
@@ -197,7 +225,9 @@ describe('GridSystem Components', () => {
         </SubGrid>
       );
 
-      const subgrid = screen.getByText('Item 1').parentElement;
+      const item1 = screen.getByText('Item 1');
+      expect(item1).toBeInTheDocument();
+      const subgrid = item1.parentElement;
       expect(subgrid).toHaveClass('col-span-5');
     });
 
@@ -208,7 +238,9 @@ describe('GridSystem Components', () => {
         </SubGrid>
       );
 
-      const subgrid = screen.getByText('Test content').parentElement;
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const subgrid = testContent.parentElement;
       expect(subgrid).toHaveClass('custom-class');
     });
   });
@@ -268,7 +300,9 @@ describe('GridSystem Components', () => {
         </GridItem>
       );
 
-      const item = screen.getByText('Test content').parentElement;
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const item = testContent.parentElement;
       expect(item).toBeInTheDocument();
       expect(item?.className.trim()).toBe('');
     });
@@ -289,7 +323,9 @@ describe('GridSystem Components', () => {
         </GridItem>
       );
 
-      const item = screen.getByText('Test content').parentElement;
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const item = testContent.parentElement;
       expect(item).toHaveClass(
         'col-span-1',
         'sm:col-span-2',
@@ -307,7 +343,9 @@ describe('GridSystem Components', () => {
         </GridItem>
       );
 
-      const item = screen.getByText('Test content').parentElement;
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const item = testContent.parentElement;
       expect(item).toHaveClass('custom-class');
     });
 
@@ -323,7 +361,9 @@ describe('GridSystem Components', () => {
         </GridItem>
       );
 
-      const item = screen.getByText('Test content').parentElement;
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const item = testContent.parentElement;
       expect(item).toHaveClass('col-span-2', 'md:col-span-4');
       expect(item).not.toHaveClass('sm:col-span-', 'lg:col-span-', 'xl:col-span-', '2xl:col-span-');
     });
@@ -338,7 +378,9 @@ describe('GridSystem Components', () => {
         </AutoFitGrid>
       );
 
-      const grid = screen.getByText('Item 1').parentElement;
+      const item1 = screen.getByText('Item 1');
+      expect(item1).toBeInTheDocument();
+      const grid = item1.parentElement;
       expect(grid).toHaveClass(
         'grid',
         'grid-cols-[repeat(auto-fit,minmax(min(100%,384px),1fr))]',
@@ -354,7 +396,9 @@ describe('GridSystem Components', () => {
         </AutoFitGrid>
       );
 
-      const grid = screen.getByText('Item 1').parentElement;
+      const item1 = screen.getByText('Item 1');
+      expect(item1).toBeInTheDocument();
+      const grid = item1.parentElement;
       expect(grid).toHaveClass('grid-cols-[repeat(auto-fit,minmax(min(100%,200px),1fr))]');
     });
 
@@ -365,7 +409,9 @@ describe('GridSystem Components', () => {
         </AutoFitGrid>
       );
 
-      const grid = screen.getByText('Test content').parentElement;
+      const testContent = screen.getByText('Test content');
+      expect(testContent).toBeInTheDocument();
+      const grid = testContent.parentElement;
       expect(grid).toHaveClass('custom-class');
     });
   });

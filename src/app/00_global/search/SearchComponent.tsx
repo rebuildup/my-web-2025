@@ -58,31 +58,6 @@ export default function SearchComponent({
 
   const ITEMS_PER_PAGE = 10;
 
-  // Update query from URL when component mounts or URL changes
-  useEffect(() => {
-    const urlQuery = searchParams.get('q') || '';
-    if (urlQuery !== query) {
-      setQuery(urlQuery);
-      if (urlQuery) {
-        performSearch(urlQuery);
-      }
-    }
-
-    // Get filters from URL
-    const types = searchParams.getAll('type') as ContentType[];
-    const categories = searchParams.getAll('category');
-
-    setSelectedTypes(types);
-    setSelectedCategories(categories);
-  }, [searchParams]);
-
-  // Focus search input on mount
-  useEffect(() => {
-    if (searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, []);
-
   const performSearch = useCallback(
     async (searchQuery: string, page = 1, append = false) => {
       if (!searchQuery.trim()) {
@@ -141,6 +116,31 @@ export default function SearchComponent({
     },
     [selectedTypes, selectedCategories]
   );
+
+  // Update query from URL when component mounts or URL changes
+  useEffect(() => {
+    const urlQuery = searchParams.get('q') || '';
+    if (urlQuery !== query) {
+      setQuery(urlQuery);
+      if (urlQuery) {
+        performSearch(urlQuery);
+      }
+    }
+
+    // Get filters from URL
+    const types = searchParams.getAll('type') as ContentType[];
+    const categories = searchParams.getAll('category');
+
+    setSelectedTypes(types);
+    setSelectedCategories(categories);
+  }, [searchParams, query, performSearch]);
+
+  // Focus search input on mount
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, []);
 
   const handleSearch = useCallback(
     (e?: React.FormEvent) => {

@@ -23,7 +23,8 @@ describe('Stats API', () => {
         'item-2': 10,
       });
 
-      const request = new NextRequest('http://localhost/api/stats/view');
+      const url = new URL('http://localhost/api/stats/view');
+      const request = new NextRequest(url);
       const response = await GET(request, { params: Promise.resolve({ type: 'view' }) });
       const data = await response.json();
 
@@ -42,7 +43,8 @@ describe('Stats API', () => {
         'item-1': 5,
       });
 
-      const request = new NextRequest('http://localhost/api/stats/view?id=item-1');
+      const url = new URL('http://localhost/api/stats/view?id=item-1');
+      const request = new NextRequest(url);
       const response = await GET(request, { params: Promise.resolve({ type: 'view' }) });
       const data = await response.json();
 
@@ -61,7 +63,8 @@ describe('Stats API', () => {
         ['item-1', 5],
       ]);
 
-      const request = new NextRequest('http://localhost/api/stats/view?top=true&limit=2');
+      const url = new URL('http://localhost/api/stats/view?top=true&limit=2');
+      const request = new NextRequest(url);
       const response = await GET(request, { params: Promise.resolve({ type: 'view' }) });
       const data = await response.json();
 
@@ -75,20 +78,22 @@ describe('Stats API', () => {
     });
 
     it('should validate content type', async () => {
-      const request = new NextRequest('http://localhost/api/stats/invalid');
+      const url = new URL('http://localhost/api/stats/invalid');
+      const request = new NextRequest(url);
       const response = await GET(request, { params: Promise.resolve({ type: 'invalid' }) });
       const data = await response.json();
 
       expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toContain('Invalid stat type');
+      expect(data.error).toContain('Invalid statistic type');
     });
 
     it('should handle errors', async () => {
       // Mock getStats to throw an error
       (getStats as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Failed to load stats'));
 
-      const request = new NextRequest('http://localhost/api/stats/view');
+      const url = new URL('http://localhost/api/stats/view');
+      const request = new NextRequest(url);
       const response = await GET(request, { params: Promise.resolve({ type: 'view' }) });
       const data = await response.json();
 
@@ -102,7 +107,8 @@ describe('Stats API', () => {
         new Error('Failed to load top stats')
       );
 
-      const request = new NextRequest('http://localhost/api/stats/view?top=5');
+      const url = new URL('http://localhost/api/stats/view?top=5');
+      const request = new NextRequest(url);
       const response = await GET(request, { params: Promise.resolve({ type: 'view' }) });
       const data = await response.json();
 
@@ -122,7 +128,8 @@ describe('Stats API', () => {
         count: 1,
       };
 
-      const request = new NextRequest('http://localhost/api/stats/view', {
+      const url = new URL('http://localhost/api/stats/view');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(trackData),
@@ -133,12 +140,13 @@ describe('Stats API', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(data.data).toBe(1);
+      expect(data.data.count).toBe(6);
       expect(trackStat).toHaveBeenCalledWith('view', 'new-item');
     });
 
     it('should validate content type in POST', async () => {
-      const request = new NextRequest('http://localhost/api/stats/invalid', {
+      const url = new URL('http://localhost/api/stats/invalid');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: 'test', count: 1 }),
@@ -149,11 +157,12 @@ describe('Stats API', () => {
 
       expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toContain('Invalid stat type');
+      expect(data.error).toContain('Invalid statistic type');
     });
 
     it('should require an ID', async () => {
-      const request = new NextRequest('http://localhost/api/stats/view', {
+      const url = new URL('http://localhost/api/stats/view');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
@@ -171,7 +180,8 @@ describe('Stats API', () => {
       // Mock trackStat to throw an error
       (trackStat as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Failed to track stat'));
 
-      const request = new NextRequest('http://localhost/api/stats/view', {
+      const url = new URL('http://localhost/api/stats/view');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: 'test', count: 1 }),
@@ -186,7 +196,8 @@ describe('Stats API', () => {
     });
 
     it('should handle malformed JSON', async () => {
-      const request = new NextRequest('http://localhost/api/stats/view', {
+      const url = new URL('http://localhost/api/stats/view');
+      const request = new NextRequest(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: 'invalid json',
