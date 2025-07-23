@@ -1,6 +1,4 @@
 {
-  "plugins": {},
-  "filters": {},
   "rules": {
     "preset-ai-writing": true
   }

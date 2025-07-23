@@ -1,165 +1,102 @@
-'use client';
+import Image from "next/image";
 
-import Link from 'next/link';
-
-export default function HomePage() {
+export default function Home() {
   return (
-    <div className="container-grid">
-      {/* ヒーローヘッダー */}
-      <section className="py-24 text-center">
-        <h1 className="neue-haas-grotesk-display mb-4 text-4xl text-white md:text-6xl">samuido</h1>
-        <p className="noto-sans-jp-light mb-8 text-xl text-gray-300 md:text-2xl">
-          フロントエンドエンジニアの個人サイト
-        </p>
-        <p className="noto-sans-jp-regular mx-auto max-w-3xl text-gray-400 md:text-lg">
-          自己紹介 / 作品ギャラリー / プラグイン配布 / ツール など
-          <br />
-          欲しいもの全部詰め込みました
-        </p>
-      </section>
+    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        <Image
+          className="dark:invert"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={180}
+          height={38}
+          priority
+        />
+        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
+          <li className="mb-2 tracking-[-.01em]">
+            Get started by editing{" "}
+            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
+              src/app/page.tsx
+            </code>
+            .
+          </li>
+          <li className="tracking-[-.01em]">
+            Save and see your changes instantly.
+          </li>
+        </ol>
 
-      {/* カテゴリカード */}
-      <section className="mt-12 py-24">
-        <h2 className="neue-haas-grotesk-display mb-8 text-center text-2xl text-white md:text-3xl">
-          Main Categories
-        </h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {/* About */}
-          <Link href="/01_about" className="card block transition-colors hover:border-blue-500">
-            <h3 className="neue-haas-grotesk-display mb-3 text-xl text-white">About</h3>
-            <p className="noto-sans-jp-regular mb-4 text-gray-300">
-              プロフィール、デジタル名刺、依頼ページへの導線
-            </p>
-            <ul className="noto-sans-jp-light space-y-1 text-sm text-gray-400">
-              <li>• 本名プロフィール（採用担当者・企業向け）</li>
-              <li>• ハンドルネームプロフィール（同業者向け）</li>
-              <li>• スキル・経歴・受賞歴</li>
-            </ul>
-          </Link>
-
-          {/* Portfolio */}
-          <Link href="/02_portfolio" className="card block transition-colors hover:border-blue-500">
-            <h3 className="neue-haas-grotesk-display mb-3 text-xl text-white">Portfolio</h3>
-            <p className="noto-sans-jp-regular mb-4 text-gray-300">
-              4つのギャラリー（all / develop / video / video&design）への導線
-            </p>
-            <ul className="noto-sans-jp-light space-y-1 text-sm text-gray-400">
-              <li>• 全作品一覧（バラエティ重視）</li>
-              <li>• 開発系作品（プログラミング関連）</li>
-              <li>• 映像作品（foriioライク表示）</li>
-              <li>• 映像・デザイン作品（クリエイティブ）</li>
-            </ul>
-          </Link>
-
-          {/* Workshop */}
-          <Link href="/03_workshop" className="card block transition-colors hover:border-blue-500">
-            <h3 className="neue-haas-grotesk-display mb-3 text-xl text-white">Workshop</h3>
-            <p className="noto-sans-jp-regular mb-4 text-gray-300">
-              プラグイン配布、ブログ、素材ダウンロードへの導線
-            </p>
-            <ul className="noto-sans-jp-light space-y-1 text-sm text-gray-400">
-              <li>• プラグイン配布（After Effects等）</li>
-              <li>• 技術ブログ・制作記録</li>
-              <li>• 素材・テンプレートダウンロード</li>
-            </ul>
-          </Link>
-
-          {/* Tools */}
-          <Link href="/04_tools" className="card block transition-colors hover:border-blue-500">
-            <h3 className="neue-haas-grotesk-display mb-3 text-xl text-white">Tools</h3>
-            <p className="noto-sans-jp-regular mb-4 text-gray-300">実用的なWebツール集への導線</p>
-            <ul className="noto-sans-jp-light space-y-1 text-sm text-gray-400">
-              <li>• カラーパレット生成ツール</li>
-              <li>• QRコード生成器</li>
-              <li>• テキストカウンタ</li>
-              <li>• その他便利ツール</li>
-            </ul>
-          </Link>
-        </div>
-      </section>
-
-      {/* ルート機能カード */}
-      <section className="mt-12 py-24">
-        <h2 className="neue-haas-grotesk-display mb-8 text-center text-2xl text-white md:text-3xl">
-          Site Functions
-        </h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {/* Privacy Policy */}
-          <Link
-            href="/00_global/privacy-policy"
-            className="card block text-center transition-colors hover:border-blue-500"
+        <div className="flex gap-4 items-center flex-col sm:flex-row">
+          <a
+            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
+            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <h3 className="neue-haas-grotesk-display mb-3 text-lg text-white">Privacy Policy</h3>
-            <p className="noto-sans-jp-regular text-sm text-gray-300">プライバシーポリシー</p>
-          </Link>
-
-          {/* Search */}
-          <Link
-            href="/00_global/search"
-            className="card block text-center transition-colors hover:border-blue-500"
+            <Image
+              className="dark:invert"
+              src="/vercel.svg"
+              alt="Vercel logomark"
+              width={20}
+              height={20}
+            />
+            Deploy now
+          </a>
+          <a
+            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
+            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <h3 className="neue-haas-grotesk-display mb-3 text-lg text-white">Search</h3>
-            <p className="noto-sans-jp-regular text-sm text-gray-300">サイト内検索機能</p>
-          </Link>
-
-          {/* Contact */}
-          <Link
-            href="/contact"
-            className="card block text-center transition-colors hover:border-blue-500"
-          >
-            <h3 className="neue-haas-grotesk-display mb-3 text-lg text-white">Contact</h3>
-            <p className="noto-sans-jp-regular text-sm text-gray-300">お問い合わせフォーム</p>
-          </Link>
+            Read our docs
+          </a>
         </div>
-      </section>
-
-      {/* 最新コンテンツハイライト */}
-      <section className="mt-12 py-24">
-        <h2 className="neue-haas-grotesk-display mb-8 text-center text-2xl text-white md:text-3xl">
-          Latest Updates
-        </h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {/* ポートフォリオ最新 */}
-          <div className="card">
-            <div className="noto-sans-jp-regular mb-2 text-xs text-blue-400">Portfolio</div>
-            <h3 className="neue-haas-grotesk-display mb-2 text-lg text-white">最新作品タイトル</h3>
-            <p className="noto-sans-jp-light mb-3 text-sm text-gray-400">
-              最新の制作作品についての簡単な説明です。技術スタックや制作期間など。
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <span className="bg-blue-600 px-2 py-1 text-xs text-white">React</span>
-              <span className="bg-blue-600 px-2 py-1 text-xs text-white">TypeScript</span>
-            </div>
-          </div>
-
-          {/* ブログ最新 */}
-          <div className="card">
-            <div className="noto-sans-jp-regular mb-2 text-xs text-blue-400">Blog</div>
-            <h3 className="neue-haas-grotesk-display mb-2 text-lg text-white">最新ブログ記事</h3>
-            <p className="noto-sans-jp-light mb-3 text-sm text-gray-400">
-              最新の技術記事や制作過程についての記事です。学習した内容の共有など。
-            </p>
-            <div className="text-xs text-gray-500">2025/01/20</div>
-          </div>
-
-          {/* ツール最新 */}
-          <div className="card">
-            <div className="noto-sans-jp-regular mb-2 text-xs text-blue-400">Tools</div>
-            <h3 className="neue-haas-grotesk-display mb-2 text-lg text-white">新機能追加</h3>
-            <p className="noto-sans-jp-light mb-3 text-sm text-gray-400">
-              既存ツールに新機能を追加しました。使いやすさの向上を図っています。
-            </p>
-            <div className="text-xs text-gray-500">2025/01/18</div>
-          </div>
-        </div>
-      </section>
-
-      {/* フッター */}
-      <footer className="mt-24 border-t border-gray-600 py-24 text-center">
-        <p className="noto-sans-jp-regular mb-2 text-sm text-gray-400">© 2025 samuido</p>
-        <p className="noto-sans-jp-light text-xs text-gray-500">
-          フロントエンドエンジニア・Webデザイナー・映像クリエイター
-        </p>
+      </main>
+      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/file.svg"
+            alt="File icon"
+            width={16}
+            height={16}
+          />
+          Learn
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/window.svg"
+            alt="Window icon"
+            width={16}
+            height={16}
+          />
+          Examples
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/globe.svg"
+            alt="Globe icon"
+            width={16}
+            height={16}
+          />
+          Go to nextjs.org →
+        </a>
       </footer>
     </div>
   );
