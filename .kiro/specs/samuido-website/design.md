@@ -297,11 +297,11 @@ interface SiteConfig {
 export const LazyComponents = {
   ColorPalette: lazy(() => import("@/app/tools/components/ColorPalette")),
   ThreeJSPlayground: lazy(
-    () => import("@/app/portfolio/components/ThreeJSPlayground")
+    () => import("@/app/portfolio/components/ThreeJSPlayground"),
   ),
   ProtoType: lazy(() => import("@/app/tools/components/ProtoType")),
   SequentialPngPreview: lazy(
-    () => import("@/app/tools/components/SequentialPngPreview")
+    () => import("@/app/tools/components/SequentialPngPreview"),
   ),
 };
 
@@ -329,7 +329,7 @@ export const searchContent = async (
     category?: string;
     limit?: number;
     includeContent?: boolean;
-  } = {}
+  } = {},
 ): Promise<SearchResult[]> => {
   // Fuse.js implementation with content filtering
 };
@@ -408,7 +408,7 @@ export class ContentError extends Error {
   constructor(
     message: string,
     public code: string,
-    public details?: any
+    public details?: any,
   ) {
     super(message);
     this.name = "ContentError";

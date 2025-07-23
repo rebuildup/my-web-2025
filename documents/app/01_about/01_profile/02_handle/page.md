@@ -100,8 +100,16 @@
   "jobTitle": "フロントエンドエンジニア",
   "description": "グラフィックデザイン、映像制作、個人開発など幅広く活動",
   "url": "https://yusuke-kim.com/about/profile/handle",
-  "sameAs": ["https://twitter.com/361do_sleep", "https://twitter.com/361do_design"],
-  "knowsAbout": ["Frontend Development", "Web Design", "Video Production", "Game Development"],
+  "sameAs": [
+    "https://twitter.com/361do_sleep",
+    "https://twitter.com/361do_design"
+  ],
+  "knowsAbout": [
+    "Frontend Development",
+    "Web Design",
+    "Video Production",
+    "Game Development"
+  ],
   "hasOccupation": {
     "@type": "Occupation",
     "name": "フロントエンドエンジニア",

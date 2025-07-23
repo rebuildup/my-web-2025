@@ -1,26 +1,240 @@
+/* Adobe Fonts Loading Script - Kit ID: blm5pmr */
+@import url("https://use.typekit.net/blm5pmr.css");
+
+/* Google Fonts Preconnect and Import */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Shippori+Antique+B1&display=swap");
+
 @import "tailwindcss";
 
+/* Custom Design System based on documents/02_style.md */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Color System */
+  --color-primary: #0000ff; /* 原色の青 */
+  --color-base: #222222; /* ダークグレー */
+  --color-background: #222222; /* 背景：単色 ベースカラー */
+  --color-foreground: #ffffff; /* Text on dark background */
+  --color-accent: #0000ff; /* Same as primary */
+
+  /* Golden Ratio System (1:1.618) */
+  --ratio-xs: 0.618rem;
+  --ratio-sm: 1rem;
+  --ratio-base: 1.618rem;
+  --ratio-lg: 2.618rem;
+  --ratio-xl: 4.236rem;
+  --ratio-2xl: 6.854rem;
+
+  /* Grid System (384px base) */
+  --grid-base: 384px;
+  --grid-half: 192px;
+  --grid-quarter: 96px;
+  --grid-eighth: 48px;
+  --grid-sixteenth: 24px;
+
+  /* Font Variables */
+  --font-neue-haas: "neue-haas-grotesk-display", sans-serif;
+  --font-zen-kaku: "zen-kaku-gothic-new", sans-serif;
+  --font-noto-jp: "Noto Sans JP", sans-serif;
+  --font-shippori: "Shippori Antique B1", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-primary: var(--color-primary);
+  --color-base: var(--color-base);
+  --color-accent: var(--color-accent);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-noto-jp);
+  font-weight: 300;
+  line-height: 1.618;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Classes based on documents/02_style.md */
+.neue-haas-grotesk-display {
+  font-family: var(--font-neue-haas);
+  font-weight: 700;
+  font-style: italic;
+}
+
+.zen-kaku-gothic-new {
+  font-family: var(--font-zen-kaku);
+  font-weight: 700;
+  font-style: normal;
+}
+
+.noto-sans-jp-light {
+  font-family: var(--font-noto-jp);
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.noto-sans-jp-regular {
+  font-family: var(--font-noto-jp);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.noto-sans-jp-italic {
+  font-family: var(--font-noto-jp);
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.shippori-antique-b1-regular {
+  font-family: var(--font-shippori);
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Container System - Content Area with Fixed Breakpoints */
+.container-system {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--ratio-base);
+  padding-right: var(--ratio-base);
+}
+
+/* Breakpoint-based fixed widths */
+@media (min-width: 384px) {
+  .container-system {
+    max-width: 384px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .container-system {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-system {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-system {
+    max-width: 1280px;
+  }
+}
+
+/* Grid System Classes within Container */
+.grid-system {
+  display: grid;
+  gap: var(--ratio-base);
+}
+
+.grid-1 {
+  grid-template-columns: 1fr;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Responsive Grid Classes */
+@media (min-width: 384px) {
+  .xs\:grid-1 {
+    grid-template-columns: 1fr;
+  }
+  .xs\:grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .sm\:grid-1 {
+    grid-template-columns: 1fr;
+  }
+  .sm\:grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .sm\:grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .md\:grid-1 {
+    grid-template-columns: 1fr;
+  }
+  .md\:grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .md\:grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .md\:grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .lg\:grid-1 {
+    grid-template-columns: 1fr;
+  }
+  .lg\:grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .lg\:grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .lg\:grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .lg\:grid-5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Remove all decorative elements as specified */
+* {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background-image: none !important;
+}
+
+/* Focus states for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Selection styles */
+::selection {
+  background: var(--color-primary);
+  color: var(--color-foreground);
 }

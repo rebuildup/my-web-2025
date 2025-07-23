@@ -147,7 +147,7 @@ export async function GET(): Promise<Response> {
   try {
     const healthChecks = {
       timestamp: new Date().toISOString(),
-      status: 'healthy',
+      status: "healthy",
       checks: {
         database: await checkDatabase(),
         fileSystem: await checkFileSystem(),
@@ -157,7 +157,9 @@ export async function GET(): Promise<Response> {
       },
     };
 
-    const isHealthy = Object.values(healthChecks.checks).every(check => check.status === 'healthy');
+    const isHealthy = Object.values(healthChecks.checks).every(
+      (check) => check.status === "healthy",
+    );
 
     return Response.json(healthChecks, {
       status: isHealthy ? 200 : 503,
@@ -166,10 +168,10 @@ export async function GET(): Promise<Response> {
     return Response.json(
       {
         timestamp: new Date().toISOString(),
-        status: 'unhealthy',
+        status: "unhealthy",
         error: error.message,
       },
-      { status: 503 }
+      { status: 503 },
     );
   }
 }
@@ -177,21 +179,21 @@ export async function GET(): Promise<Response> {
 async function checkDatabase(): Promise<{ status: string; details?: any }> {
   try {
     // 静的JSONファイルの読み込みテスト
-    const fs = require('fs').promises;
-    await fs.readFile('public/data/content/portfolio.json');
-    return { status: 'healthy' };
+    const fs = require("fs").promises;
+    await fs.readFile("public/data/content/portfolio.json");
+    return { status: "healthy" };
   } catch (error) {
-    return { status: 'unhealthy', details: error.message };
+    return { status: "unhealthy", details: error.message };
   }
 }
 
 async function checkFileSystem(): Promise<{ status: string; details?: any }> {
   try {
-    const fs = require('fs').promises;
-    await fs.access('/var/www/html');
-    return { status: 'healthy' };
+    const fs = require("fs").promises;
+    await fs.access("/var/www/html");
+    return { status: "healthy" };
   } catch (error) {
-    return { status: 'unhealthy', details: error.message };
+    return { status: "unhealthy", details: error.message };
   }
 }
 
@@ -200,45 +202,49 @@ async function checkExternalServices(): Promise<{
   details?: any;
 }> {
   const services = {
-    googleAnalytics: process.env.NEXT_PUBLIC_GA_ID ? 'configured' : 'not-configured',
-    resend: process.env.RESEND_API_KEY ? 'configured' : 'not-configured',
-    recaptcha: process.env.RECAPTCHA_SECRET_KEY ? 'configured' : 'not-configured',
+    googleAnalytics: process.env.NEXT_PUBLIC_GA_ID
+      ? "configured"
+      : "not-configured",
+    resend: process.env.RESEND_API_KEY ? "configured" : "not-configured",
+    recaptcha: process.env.RECAPTCHA_SECRET_KEY
+      ? "configured"
+      : "not-configured",
   };
 
   return {
-    status: 'healthy',
+    status: "healthy",
     details: services,
   };
 }
 
 async function checkMemoryUsage(): Promise<{ status: string; details?: any }> {
-  const os = require('os');
+  const os = require("os");
   const totalMem = os.totalmem();
   const freeMem = os.freemem();
   const memoryUsage = ((totalMem - freeMem) / totalMem) * 100;
 
   return {
-    status: memoryUsage < 90 ? 'healthy' : 'warning',
+    status: memoryUsage < 90 ? "healthy" : "warning",
     details: { usage: `${memoryUsage.toFixed(2)}%` },
   };
 }
 
 async function checkDiskSpace(): Promise<{ status: string; details?: any }> {
-  const fs = require('fs');
-  const path = require('path');
+  const fs = require("fs");
+  const path = require("path");
 
   try {
-    const stats = fs.statSync('/var/www/html');
+    const stats = fs.statSync("/var/www/html");
     const freeSpace = stats.blocks * 512; // 概算
     const totalSpace = 1000000000; // 1GB 想定
     const diskUsage = ((totalSpace - freeSpace) / totalSpace) * 100;
 
     return {
-      status: diskUsage < 90 ? 'healthy' : 'warning',
+      status: diskUsage < 90 ? "healthy" : "warning",
       details: { usage: `${diskUsage.toFixed(2)}%` },
     };
   } catch (error) {
-    return { status: 'unhealthy', details: error.message };
+    return { status: "unhealthy", details: error.message };
   }
 }
 ```
@@ -334,26 +340,26 @@ export interface PerformanceMetrics {
 export const performanceMonitor = {
   // Core Web Vitals測定
   measureWebVitals: (): Promise<PerformanceMetrics> => {
-    return new Promise(resolve => {
-      const observer = new PerformanceObserver(list => {
+    return new Promise((resolve) => {
+      const observer = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const metrics: Partial<PerformanceMetrics> = {};
 
         entries.forEach((entry: any) => {
           switch (entry.name) {
-            case 'LCP':
+            case "LCP":
               metrics.lcp = entry.startTime;
               break;
-            case 'FID':
+            case "FID":
               metrics.fid = entry.processingStart - entry.startTime;
               break;
-            case 'CLS':
+            case "CLS":
               metrics.cls = entry.value;
               break;
-            case 'TTFB':
+            case "TTFB":
               metrics.ttfb = entry.responseStart - entry.requestStart;
               break;
-            case 'FCP':
+            case "FCP":
               metrics.fcp = entry.startTime;
               break;
           }
@@ -368,7 +374,12 @@ export const performanceMonitor = {
       });
 
       observer.observe({
-        entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift', 'navigation'],
+        entryTypes: [
+          "largest-contentful-paint",
+          "first-input",
+          "layout-shift",
+          "navigation",
+        ],
       });
     });
   },
@@ -382,8 +393,12 @@ export const performanceMonitor = {
     };
 
     // カスタムメトリクスの測定
-    performance.mark('content-loaded');
-    performance.measure('content-load-time', 'navigationStart', 'content-loaded');
+    performance.mark("content-loaded");
+    performance.measure(
+      "content-load-time",
+      "navigationStart",
+      "content-loaded",
+    );
 
     return metrics;
   },
@@ -391,13 +406,13 @@ export const performanceMonitor = {
   // メトリクス送信
   sendMetrics: async (metrics: PerformanceMetrics) => {
     try {
-      await fetch('/api/metrics/performance', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      await fetch("/api/metrics/performance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(metrics),
       });
     } catch (error) {
-      console.error('Failed to send performance metrics:', error);
+      console.error("Failed to send performance metrics:", error);
     }
   },
 };
@@ -411,7 +426,7 @@ export interface AlertRule {
   name: string;
   condition: string;
   threshold: number;
-  severity: 'warning' | 'critical';
+  severity: "warning" | "critical";
   notification: {
     email: string;
     slack?: string;
@@ -420,39 +435,39 @@ export interface AlertRule {
 
 export const alertRules: AlertRule[] = [
   {
-    name: 'High Error Rate',
-    condition: 'error_rate > 5%',
+    name: "High Error Rate",
+    condition: "error_rate > 5%",
     threshold: 5,
-    severity: 'critical',
+    severity: "critical",
     notification: {
-      email: 'rebuild.up.up@gmail.com',
+      email: "rebuild.up.up@gmail.com",
     },
   },
   {
-    name: 'Slow Response Time',
-    condition: 'response_time > 3s',
+    name: "Slow Response Time",
+    condition: "response_time > 3s",
     threshold: 3000,
-    severity: 'warning',
+    severity: "warning",
     notification: {
-      email: 'rebuild.up.up@gmail.com',
+      email: "rebuild.up.up@gmail.com",
     },
   },
   {
-    name: 'High Memory Usage',
-    condition: 'memory_usage > 90%',
+    name: "High Memory Usage",
+    condition: "memory_usage > 90%",
     threshold: 90,
-    severity: 'critical',
+    severity: "critical",
     notification: {
-      email: 'rebuild.up.up@gmail.com',
+      email: "rebuild.up.up@gmail.com",
     },
   },
   {
-    name: 'Disk Space Critical',
-    condition: 'disk_usage > 95%',
+    name: "Disk Space Critical",
+    condition: "disk_usage > 95%",
     threshold: 95,
-    severity: 'critical',
+    severity: "critical",
     notification: {
-      email: 'rebuild.up.up@gmail.com',
+      email: "rebuild.up.up@gmail.com",
     },
   },
 ];
@@ -490,13 +505,13 @@ export const alertManager = {
 
 function evaluateCondition(condition: string, metrics: any): boolean {
   // 簡易的な条件評価
-  if (condition.includes('error_rate')) {
-    const rate = parseFloat(condition.match(/\d+/)?.[0] || '0');
+  if (condition.includes("error_rate")) {
+    const rate = parseFloat(condition.match(/\d+/)?.[0] || "0");
     return metrics.errorRate > rate;
   }
 
-  if (condition.includes('response_time')) {
-    const time = parseFloat(condition.match(/\d+/)?.[0] || '0');
+  if (condition.includes("response_time")) {
+    const time = parseFloat(condition.match(/\d+/)?.[0] || "0");
     return metrics.responseTime > time;
   }
 
@@ -517,9 +532,9 @@ function evaluateCondition(condition: string, metrics: any): boolean {
 export const monitoringConfig = {
   performance: { webVitals: true },
   errorTracking: { frontend: { capture: true }, backend: { capture: true } },
-  healthCheck: { endpoints: [{ path: '/health', interval: 30000 }] },
+  healthCheck: { endpoints: [{ path: "/health", interval: 30000 }] },
   alerts: {
-    rules: [{ name: 'High Error Rate', condition: 'error_rate > 5%' }],
+    rules: [{ name: "High Error Rate", condition: "error_rate > 5%" }],
   },
 };
 ```

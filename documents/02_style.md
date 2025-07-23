@@ -65,7 +65,7 @@
 // <weight>: Use a value from 100 to 900
 // <uniquifier>: Use a unique and descriptive class name
 .noto-sans-jp- <uniquifier > {
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: "Noto Sans JP", sans-serif;
   font-optical-sizing: auto;
   font-weight: <weight>;
   font-style: normal;
@@ -76,7 +76,7 @@
 
 ```css
 .shippori-antique-b1-regular {
-  font-family: 'Shippori Antique B1', sans-serif;
+  font-family: "Shippori Antique B1", sans-serif;
   font-weight: 400;
   font-style: normal;
 }

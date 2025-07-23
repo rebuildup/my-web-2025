@@ -9,7 +9,7 @@ Tailwind CSS v4 では、**3.5倍高速なビルド性能**と革新的な新機
 従来の `tailwind.config.js` に代わり、**CSS内で直接設定**を行う新しいアプローチを採用。設定は `@theme` ディレクティブを使用してCSS内で定義されます。
 
 ```css
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @theme {
   --breakpoint-3xl: 1920px;
@@ -83,7 +83,9 @@ Tailwind CSS v4 では、**3.5倍高速なビルド性能**と革新的な新機
 
 ```html
 <!-- レイアウトシフターパターン -->
-<div class="mx-auto grid max-w-sm grid-cols-1 sm:max-w-4xl sm:grid-cols-[200px_1fr]">
+<div
+  class="mx-auto grid max-w-sm grid-cols-1 sm:max-w-4xl sm:grid-cols-[200px_1fr]"
+>
   <nav class="sm:order-first">Navigation</nav>
   <main>Main content</main>
 </div>
@@ -167,7 +169,9 @@ Tailwind CSS v4 では、**3.5倍高速なビルド性能**と革新的な新機
 ### 任意の値サポート
 
 ```html
-<div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,384px),1fr))] gap-4">
+<div
+  class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,384px),1fr))] gap-4"
+>
   <!-- 384pxで自動的に折り返すカードグリッド -->
 </div>
 ```
