@@ -8,29 +8,32 @@ describe("Home", () => {
     // Check for key elements in the new samuido design
     expect(screen.getByText("samuido")).toBeInTheDocument();
     expect(
-      screen.getByText("クリエイティブポートフォリオ & ツール"),
+      screen.getByText("クリエイティブポートフォリオ & ツール")
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/映像制作、デザイン、プログラミング/),
+      screen.getByText(/映像制作、デザイン、プログラミング/)
     ).toBeInTheDocument();
 
-    // Check navigation sections
+    // Check navigation sections (using getAllByText for elements that appear multiple times)
     expect(screen.getByText("About")).toBeInTheDocument();
-    expect(screen.getByText("Portfolio")).toBeInTheDocument();
-    expect(screen.getByText("Workshop")).toBeInTheDocument();
-    expect(screen.getByText("Tools")).toBeInTheDocument();
+    expect(screen.getAllByText("Portfolio")).toHaveLength(2); // Navigation + Latest content
+    expect(screen.getAllByText("Workshop")).toHaveLength(2); // Navigation + Latest content
+    expect(screen.getAllByText("Tools")).toHaveLength(2); // Navigation + Latest content
 
     // Check global functions
     expect(screen.getByText("Search")).toBeInTheDocument();
     expect(screen.getByText("Contact")).toBeInTheDocument();
     expect(screen.getByText("Privacy")).toBeInTheDocument();
+
+    // Check latest content section
+    expect(screen.getByText("最新コンテンツ")).toBeInTheDocument();
   });
 
   it("renders the footer", () => {
     render(<Home />);
 
     const footer = screen.getByText(
-      "© 2025 samuido - Creative Portfolio & Tools",
+      "© 2025 samuido - Creative Portfolio & Tools"
     );
     expect(footer).toBeInTheDocument();
   });

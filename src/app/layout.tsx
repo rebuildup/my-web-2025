@@ -19,22 +19,52 @@ const shipporiAntique = Shippori_Antique_B1({
 });
 
 export const metadata: Metadata = {
-  title: "samuido - Creative Portfolio & Tools",
+  title: "samuidoのサイトルート",
   description:
-    "Creative portfolio, tools, and workshop by samuido. Featuring video production, design, programming, and interactive tools.",
+    "フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました",
   keywords: [
-    "portfolio",
-    "creative",
-    "video",
-    "design",
-    "programming",
-    "tools",
+    "ポートフォリオ",
+    "Webデザイン",
+    "フロントエンド開発",
+    "ツール",
+    "プラグイン",
+    "ブログ",
     "samuido",
+    "木村友亮",
   ],
-  authors: [{ name: "samuido" }],
+  authors: [{ name: "samuido", url: "https://yusuke-kim.com/about" }],
   creator: "samuido",
   publisher: "samuido",
   robots: "index, follow",
+  metadataBase: new URL("https://yusuke-kim.com"),
+  alternates: {
+    canonical: "https://yusuke-kim.com/",
+  },
+  openGraph: {
+    title: "samuidoのサイトルート",
+    description:
+      "フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました",
+    type: "website",
+    url: "https://yusuke-kim.com/",
+    images: [
+      {
+        url: "https://yusuke-kim.com/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "samuido - Creative Portfolio & Tools",
+      },
+    ],
+    siteName: "samuido",
+    locale: "ja_JP",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "samuidoのサイトルート",
+    description:
+      "フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました",
+    images: ["https://yusuke-kim.com/twitter-image.jpg"],
+    creator: "@361do_sleep",
+  },
 };
 
 export const viewport = {
@@ -65,6 +95,37 @@ export default function RootLayout({
         className={`${notoSansJP.variable} ${shipporiAntique.variable} antialiased bg-background text-foreground`}
       >
         {children}
+
+        {/* Structured Data (JSON-LD) */}
+        <Script
+          id="structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "samuido",
+              description: "フロントエンドエンジニアsamuidoの個人サイト",
+              url: "https://yusuke-kim.com/",
+              author: {
+                "@type": "Person",
+                name: "木村友亮",
+                jobTitle: "Webデザイナー・開発者",
+                url: "https://yusuke-kim.com/about",
+              },
+              publisher: {
+                "@type": "Organization",
+                name: "samuido",
+                url: "https://yusuke-kim.com/",
+              },
+              potentialAction: {
+                "@type": "SearchAction",
+                target: "https://yusuke-kim.com/search?q={search_term_string}",
+                "query-input": "required name=search_term_string",
+              },
+            }),
+          }}
+        />
 
         {/* Adobe Fonts Script - Kit ID: blm5pmr */}
         <Script

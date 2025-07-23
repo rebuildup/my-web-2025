@@ -131,7 +131,7 @@ Based on analysis of the current codebase and requirements, this implementation 
 
 ### 3.1 Root Layout and Global Styles
 
-- [ ] 3.1.1 Create root layout with comprehensive styling
+- [x] 3.1.1 Create root layout with comprehensive styling
   - Implement root layout.tsx with proper meta tags and SEO
   - Set up global CSS with Tailwind configuration and custom design system
   - Configure Adobe Fonts loading (kit ID: blm5pmr) with Neue Haas Grotesk Display and Zen Kaku Gothic New
@@ -139,7 +139,7 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Implement consistent color scheme (#0000ff primary, #222222 base) and 1:1.618 ratio
   - _Requirements: documents/02_style.md complete font and style specifications_
 
-- [ ] 3.1.2 Develop home page hero and navigation
+- [x] 3.1.2 Develop home page hero and navigation
   - Create hero header with site overview and proper SEO meta tags
   - Implement category navigation cards (About/Portfolio/Workshop/Tools) with hover effects
   - Add global function cards (Privacy Policy/Search/Contact) with proper routing
