@@ -5,6 +5,7 @@
 
 import { promises as fs } from "fs";
 import path from "path";
+import Fuse, { type IFuseOptions } from "fuse.js";
 import type { ContentType, SearchIndex, SearchResult } from "@/types";
 import { loadAllContent } from "@/lib/data";
 
@@ -100,7 +101,7 @@ export async function updateSearchIndex(): Promise<boolean> {
 }
 
 /**
- * Search content with fuzzy matching
+ * Search content with Fuse.js fuzzy matching (0.3 threshold)
  */
 export async function searchContent(
   query: string,
@@ -113,7 +114,13 @@ export async function searchContent(
   } = {}
 ): Promise<SearchResult[]> {
   try {
-    const { type, category, limit = 10, includeContent = false } = options;
+    const {
+      type,
+      category,
+      limit = 10,
+      includeContent = false,
+      threshold = 0.3,
+    } = options;
 
     const searchIndex = await loadSearchIndex();
     const normalizedQuery = query.toLowerCase().trim();
@@ -135,86 +142,102 @@ export async function searchContent(
       );
     }
 
-    // Simple fuzzy search implementation
-    const results: Array<
-      SearchIndex & { score: number; highlights: string[] }
-    > = [];
+    // Configure Fuse.js for fuzzy search
+    const fuseOptions: IFuseOptions<SearchIndex> = {
+      keys: includeContent
+        ? [
+            { name: "title", weight: 0.4 },
+            { name: "description", weight: 0.3 },
+            { name: "tags", weight: 0.2 },
+            { name: "category", weight: 0.1 },
+            { name: "content", weight: 0.1 },
+          ]
+        : [
+            { name: "title", weight: 0.5 },
+            { name: "description", weight: 0.3 },
+            { name: "tags", weight: 0.2 },
+          ],
+      threshold,
+      includeScore: true,
+      includeMatches: true,
+      minMatchCharLength: 2,
+      ignoreLocation: true,
+      findAllMatches: true,
+    };
 
-    for (const item of filteredIndex) {
-      const searchText = includeContent
-        ? item.searchableContent
-        : `${item.title} ${item.description} ${item.tags.join(" ")} ${item.category}`.toLowerCase();
+    // Create Fuse instance and search
+    const fuse = new Fuse(filteredIndex, fuseOptions);
+    const fuseResults = fuse.search(normalizedQuery);
 
-      // Calculate relevance score
-      let score = 0;
-      const highlights: string[] = [];
+    // Convert Fuse results to SearchResult format
+    const searchResults: SearchResult[] = fuseResults
+      .slice(0, limit)
+      .map((result) => {
+        const item = result.item;
+        const score = 1 - (result.score || 0); // Invert score (Fuse uses 0 = perfect match)
 
-      // Exact match in title (highest priority)
-      if (item.title.toLowerCase().includes(normalizedQuery)) {
-        score += 10;
-        highlights.push(item.title);
-      }
-
-      // Exact match in description
-      if (item.description.toLowerCase().includes(normalizedQuery)) {
-        score += 5;
-        highlights.push(item.description);
-      }
-
-      // Match in tags
-      for (const tag of item.tags) {
-        if (tag.toLowerCase().includes(normalizedQuery)) {
-          score += 3;
-          highlights.push(tag);
+        // Extract highlights from matches
+        const highlights: string[] = [];
+        if (result.matches) {
+          result.matches.forEach((match) => {
+            if (match.value) {
+              highlights.push(match.value);
+            }
+          });
         }
-      }
 
-      // Match in category
-      if (item.category.toLowerCase().includes(normalizedQuery)) {
-        score += 2;
-        highlights.push(item.category);
-      }
+        return {
+          id: item.id,
+          type: item.type,
+          title: item.title,
+          description: item.description,
+          url: generateContentUrl(item),
+          score,
+          highlights: [...new Set(highlights)], // Remove duplicates
+        };
+      });
 
-      // Match in content (if includeContent is true)
-      if (
-        includeContent &&
-        item.content.toLowerCase().includes(normalizedQuery)
-      ) {
-        score += 1;
-      }
-
-      // Fuzzy matching for partial matches
-      const words = normalizedQuery.split(" ");
-      for (const word of words) {
-        if (word.length > 2 && searchText.includes(word)) {
-          score += 0.5;
-        }
-      }
-
-      if (score > 0) {
-        results.push({ ...item, score, highlights });
-      }
-    }
-
-    // Sort by score (descending) and limit results
-    const sortedResults = results
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit);
-
-    // Convert to SearchResult format
-    return sortedResults.map((result) => ({
-      id: result.id,
-      type: result.type,
-      title: result.title,
-      description: result.description,
-      url: generateContentUrl(result),
-      score: result.score,
-      highlights: result.highlights,
-    }));
+    return searchResults;
   } catch (error) {
     console.error("Search failed:", error);
     return [];
   }
+}
+
+/**
+ * Simple search mode (title/tag only)
+ */
+export async function simpleSearch(
+  query: string,
+  options: {
+    type?: ContentType;
+    category?: string;
+    limit?: number;
+  } = {}
+): Promise<SearchResult[]> {
+  return searchContent(query, {
+    ...options,
+    includeContent: false,
+    threshold: 0.2, // More strict for simple search
+  });
+}
+
+/**
+ * Detailed search mode (including content)
+ */
+export async function detailedSearch(
+  query: string,
+  options: {
+    type?: ContentType;
+    category?: string;
+    limit?: number;
+  } = {}
+): Promise<SearchResult[]> {
+  return searchContent(query, {
+    ...options,
+    includeContent: true,
+    threshold: 0.4, // More lenient for detailed search
+  });
 }
 
 /**
