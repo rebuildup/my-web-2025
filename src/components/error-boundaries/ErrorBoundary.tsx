@@ -76,12 +76,12 @@ export class ErrorBoundary extends Component<
         : [];
 
       return (
-        <div className="min-h-[400px] flex items-center justify-center p-8">
+        <div className="min-h-[400px] bg-background text-foreground flex items-center justify-center p-ratio-lg">
           <div className="max-w-md w-full text-center">
-            <div className="mb-6">
-              <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+            <div className="mb-ratio-lg">
+              <div className="w-16 h-16 mx-auto mb-ratio-base border-2 border-primary flex items-center justify-center">
                 <svg
-                  className="w-8 h-8 text-red-600"
+                  className="w-8 h-8 text-primary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -94,29 +94,29 @@ export class ErrorBoundary extends Component<
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                Something went wrong
+              <h2 className="zen-kaku-gothic-new text-ratio-lg text-foreground mb-ratio-sm">
+                エラーが発生しました
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-lg">
                 {appError
                   ? errorHandler.createUserFriendlyMessage(appError)
-                  : "An unexpected error occurred in this section."}
+                  : "このセクションで予期しないエラーが発生しました。"}
               </p>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-ratio-sm">
               <button
                 onClick={this.handleRetry}
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="w-full px-ratio-sm py-ratio-xs bg-primary text-background hover:bg-foreground transition-colors noto-sans-jp-regular text-ratio-base"
               >
-                Try Again
+                再試行
               </button>
 
               {recoveryActions.map((action, index) => (
                 <button
                   key={index}
                   onClick={action.action}
-                  className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                  className="w-full px-ratio-sm py-ratio-xs border border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors noto-sans-jp-regular text-ratio-base"
                 >
                   {action.label}
                 </button>
@@ -124,11 +124,11 @@ export class ErrorBoundary extends Component<
             </div>
 
             {process.env.NODE_ENV === "development" && this.state.error && (
-              <details className="mt-6 text-left">
-                <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
-                  Error Details (Development)
+              <details className="mt-ratio-lg text-left">
+                <summary className="cursor-pointer text-ratio-sm opacity-60 hover:opacity-80 noto-sans-jp-light">
+                  エラー詳細 (開発環境)
                 </summary>
-                <pre className="mt-2 p-3 bg-gray-100 rounded text-xs overflow-auto">
+                <pre className="mt-ratio-sm p-ratio-sm bg-base border border-foreground text-ratio-xs overflow-auto noto-sans-jp-light">
                   {this.state.error.stack}
                 </pre>
               </details>
@@ -149,20 +149,19 @@ export const AboutErrorBoundary: React.FC<{ children: ReactNode }> = ({
   <ErrorBoundary
     section="about"
     fallback={
-      <div className="min-h-[400px] flex items-center justify-center">
+      <div className="min-h-[400px] bg-background text-foreground flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">
-            About Section Unavailable
+          <h2 className="zen-kaku-gothic-new text-ratio-lg text-foreground mb-ratio-sm">
+            Aboutセクションが利用できません
           </h2>
-          <p className="text-gray-600 mb-4">
-            The about section is temporarily unavailable. Please try again
-            later.
+          <p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
+            Aboutセクションは一時的に利用できません。後でもう一度お試しください。
           </p>
           <button
             onClick={() => (window.location.href = "/")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="px-ratio-sm py-ratio-xs bg-primary text-background hover:bg-foreground transition-colors noto-sans-jp-regular text-ratio-base"
           >
-            Go Home
+            ホームに戻る
           </button>
         </div>
       </div>
@@ -178,25 +177,26 @@ export const PortfolioErrorBoundary: React.FC<{ children: ReactNode }> = ({
   <ErrorBoundary
     section="portfolio"
     fallback={
-      <div className="min-h-[400px] flex items-center justify-center">
+      <div className="min-h-[400px] bg-background text-foreground flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Portfolio Unavailable</h2>
-          <p className="text-gray-600 mb-4">
-            The portfolio section is temporarily unavailable. Please try again
-            later.
+          <h2 className="zen-kaku-gothic-new text-ratio-lg text-foreground mb-ratio-sm">
+            Portfolioが利用できません
+          </h2>
+          <p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
+            Portfolioセクションは一時的に利用できません。後でもう一度お試しください。
           </p>
-          <div className="space-y-2">
+          <div className="space-y-ratio-sm">
             <button
               onClick={() => window.location.reload()}
-              className="block w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="block w-full px-ratio-sm py-ratio-xs bg-primary text-background hover:bg-foreground transition-colors noto-sans-jp-regular text-ratio-base"
             >
-              Retry
+              再読み込み
             </button>
             <button
               onClick={() => (window.location.href = "/")}
-              className="block w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
+              className="block w-full px-ratio-sm py-ratio-xs border border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors noto-sans-jp-regular text-ratio-base"
             >
-              Go Home
+              ホームに戻る
             </button>
           </div>
         </div>
@@ -213,18 +213,19 @@ export const WorkshopErrorBoundary: React.FC<{ children: ReactNode }> = ({
   <ErrorBoundary
     section="workshop"
     fallback={
-      <div className="min-h-[400px] flex items-center justify-center">
+      <div className="min-h-[400px] bg-background text-foreground flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Workshop Unavailable</h2>
-          <p className="text-gray-600 mb-4">
-            The workshop section is temporarily unavailable. Please try again
-            later.
+          <h2 className="zen-kaku-gothic-new text-ratio-lg text-foreground mb-ratio-sm">
+            Workshopが利用できません
+          </h2>
+          <p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
+            Workshopセクションは一時的に利用できません。後でもう一度お試しください。
           </p>
           <button
             onClick={() => (window.location.href = "/")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="px-ratio-sm py-ratio-xs bg-primary text-background hover:bg-foreground transition-colors noto-sans-jp-regular text-ratio-base"
           >
-            Go Home
+            ホームに戻る
           </button>
         </div>
       </div>
@@ -240,25 +241,26 @@ export const ToolsErrorBoundary: React.FC<{ children: ReactNode }> = ({
   <ErrorBoundary
     section="tools"
     fallback={
-      <div className="min-h-[400px] flex items-center justify-center">
+      <div className="min-h-[400px] bg-background text-foreground flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Tools Unavailable</h2>
-          <p className="text-gray-600 mb-4">
-            The tools section is temporarily unavailable. Please try again
-            later.
+          <h2 className="zen-kaku-gothic-new text-ratio-lg text-foreground mb-ratio-sm">
+            Toolsが利用できません
+          </h2>
+          <p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
+            Toolsセクションは一時的に利用できません。後でもう一度お試しください。
           </p>
-          <div className="space-y-2">
+          <div className="space-y-ratio-sm">
             <button
               onClick={() => window.location.reload()}
-              className="block w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="block w-full px-ratio-sm py-ratio-xs bg-primary text-background hover:bg-foreground transition-colors noto-sans-jp-regular text-ratio-base"
             >
-              Retry
+              再読み込み
             </button>
             <button
               onClick={() => (window.location.href = "/")}
-              className="block w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
+              className="block w-full px-ratio-sm py-ratio-xs border border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors noto-sans-jp-regular text-ratio-base"
             >
-              Go Home
+              ホームに戻る
             </button>
           </div>
         </div>
@@ -275,18 +277,19 @@ export const AdminErrorBoundary: React.FC<{ children: ReactNode }> = ({
   <ErrorBoundary
     section="admin"
     fallback={
-      <div className="min-h-[400px] flex items-center justify-center">
+      <div className="min-h-[400px] bg-background text-foreground flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Admin Panel Error</h2>
-          <p className="text-gray-600 mb-4">
-            The admin panel encountered an error. Please check the console for
-            details.
+          <h2 className="zen-kaku-gothic-new text-ratio-lg text-foreground mb-ratio-sm">
+            管理パネルエラー
+          </h2>
+          <p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
+            管理パネルでエラーが発生しました。詳細はコンソールを確認してください。
           </p>
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+            className="px-ratio-sm py-ratio-xs bg-primary text-background hover:bg-foreground transition-colors noto-sans-jp-regular text-ratio-base"
           >
-            Reload Admin Panel
+            管理パネルを再読み込み
           </button>
         </div>
       </div>

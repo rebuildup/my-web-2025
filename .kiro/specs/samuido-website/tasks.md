@@ -149,7 +149,7 @@ Based on analysis of the current codebase and requirements, this implementation 
 
 ### 3.2 Global Pages Implementation
 
-- [ ] 3.2.1 Create comprehensive search functionality
+- [x] 3.2.1 Create comprehensive search functionality
   - Implement /search page with simple and detailed search modes
   - Create search result highlighting and scoring with Fuse.js
   - Add search filters by content type, category, and tags
@@ -157,7 +157,7 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Ensure search performance under 1 second response time
   - _Requirements: documents/app/00_global/02_search/page.md_
 
-- [ ] 3.2.2 Develop privacy policy and legal pages
+- [x] 3.2.2 Develop privacy policy and legal pages
   - Create comprehensive privacy policy at /privacy-policy
   - Implement GDPR compliance features and cookie consent management
   - Add detailed cookie usage information and opt-out options
@@ -165,7 +165,7 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Implement granular cookie controls and user preferences
   - _Requirements: documents/07_rules.md, documents/app/00_global/01_privacy-policy/page.md_
 
-- [ ] 3.2.3 Create 404 and error handling pages
+- [x] 3.2.3 Create 404 and error handling pages
   - Implement custom 404 page at /not-found with navigation and search
   - Create error boundaries for each major section
   - Add proper error handling with user-friendly messages
