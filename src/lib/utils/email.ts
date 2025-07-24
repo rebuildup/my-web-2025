@@ -66,7 +66,7 @@ export async function verifyRecaptcha(token: string): Promise<boolean> {
           secret: recaptchaConfig.secretKey,
           response: token,
         }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -96,7 +96,7 @@ export function routeEmail(type?: "technical" | "design"): string {
  * Create email template for contact form
  */
 export function createContactEmailTemplate(
-  data: ContactFormData
+  data: ContactFormData,
 ): EmailTemplate {
   const { name, email, subject, message, type } = data;
   const routedEmail = routeEmail(type);

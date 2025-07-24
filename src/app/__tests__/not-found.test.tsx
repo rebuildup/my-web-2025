@@ -33,30 +33,26 @@ describe("404 Not Found Page", () => {
   it("renders action buttons", () => {
     render(<NotFound />);
 
-    const homeButton = screen.getByText("ホームに戻る");
-    const searchButton = screen.getByText("サイト内検索");
+    const backButton = screen.getByText("Back");
+    const homeButton = screen.getByText("Home");
 
+    expect(backButton).toBeInTheDocument();
     expect(homeButton).toBeInTheDocument();
-    expect(searchButton).toBeInTheDocument();
 
     expect(homeButton.closest("a")).toHaveAttribute("href", "/");
-    expect(searchButton.closest("a")).toHaveAttribute("href", "/search");
   });
 
-  it("renders navigation links", () => {
+  it("renders navigation buttons", () => {
     render(<NotFound />);
 
-    expect(screen.getByText("About")).toBeInTheDocument();
-    expect(screen.getByText("Portfolio")).toBeInTheDocument();
-    expect(screen.getByText("Workshop")).toBeInTheDocument();
-    expect(screen.getByText("Tools")).toBeInTheDocument();
-    expect(screen.getByText("Contact")).toBeInTheDocument();
+    expect(screen.getByText("Back")).toBeInTheDocument();
+    expect(screen.getByText("Home")).toBeInTheDocument();
   });
 
   it("renders back button", () => {
     render(<NotFound />);
 
-    const backButton = screen.getByText("前のページに戻る");
+    const backButton = screen.getByText("Back");
     expect(backButton).toBeInTheDocument();
   });
 

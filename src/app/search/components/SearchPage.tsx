@@ -40,6 +40,14 @@ export default function SearchPage() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  // Style variables matching root page
+  const CardStyle =
+    "bg-base border border-foreground block p-4 space-y-4 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
+  const Card_title =
+    "neue-haas-grotesk-display text-xl text-primary leading-snug";
+  const Card_description = "noto-sans-jp-light text-xs pb-2";
+  const Global_title = "noto-sans-jp-regular text-base leading-snug";
+
   // Perform search
   const performSearch = useCallback(
     async (searchQuery: string, type?: ContentType, category?: string) => {
@@ -148,243 +156,247 @@ export default function SearchPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="container-system py-ratio-lg">
-        {/* Page Header */}
-        <header className="mb-ratio-lg">
-          <h1 className="neue-haas-grotesk-display text-ratio-xl text-primary mb-ratio-sm">
-            Search
-          </h1>
-          <p className="noto-sans-jp-light text-ratio-base opacity-80">
-            サイト内のコンテンツを検索できます
-          </p>
-        </header>
+      <main className="flex items-center py-10">
+        <div className="container-system">
+          <div className="space-y-10">
+            {/* Page Header */}
+            <header className="space-y-12">
+              <h1 className="neue-haas-grotesk-display text-6xl text-primary">
+                Search
+              </h1>
+              <p className="noto-sans-jp-light text-sm max-w leading-loose">
+                サイト内のコンテンツを検索できます。
+                <br />
+                ポートフォリオ、ブログ、ツールなど、必要な情報を素早く見つけることができます。
+              </p>
+            </header>
 
-        {/* Search Form */}
-        <div className="mb-ratio-lg">
-          <div className="relative mb-ratio-sm">
-            <div className="relative">
-              <Search className="absolute left-ratio-xs top-1/2 transform -translate-y-1/2 w-5 h-5 text-foreground opacity-60" />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                onFocus={() => setShowSuggestions(true)}
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                placeholder="検索キーワードを入力..."
-                className="w-full pl-12 pr-4 py-ratio-xs bg-base border border-foreground text-foreground placeholder-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary"
-                aria-label="検索キーワード"
-              />
-            </div>
-
-            {/* Search Suggestions */}
-            {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 bg-base border border-foreground border-t-0 z-10">
-                {suggestions.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleSuggestionClick(suggestion)}
-                    className="w-full px-4 py-ratio-xs text-left hover:bg-primary hover:text-background transition-colors"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Search Mode Toggle */}
-          <div className="flex items-center gap-ratio-sm mb-ratio-sm">
-            <span className="noto-sans-jp-regular text-ratio-sm">
-              検索モード:
-            </span>
-            <button
-              onClick={() => setSearchMode("simple")}
-              className={`px-ratio-xs py-1 text-ratio-sm border transition-colors ${
-                searchMode === "simple"
-                  ? "bg-primary text-background border-primary"
-                  : "bg-base text-foreground border-foreground hover:bg-foreground hover:text-background"
-              }`}
-            >
-              シンプル
-            </button>
-            <button
-              onClick={() => setSearchMode("detailed")}
-              className={`px-ratio-xs py-1 text-ratio-sm border transition-colors ${
-                searchMode === "detailed"
-                  ? "bg-primary text-background border-primary"
-                  : "bg-base text-foreground border-foreground hover:bg-foreground hover:text-background"
-              }`}
-            >
-              詳細
-            </button>
-          </div>
-
-          {/* Filter Toggle */}
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-ratio-xs py-1 border border-foreground hover:bg-foreground hover:text-background transition-colors"
-          >
-            <Filter className="w-4 h-4" />
-            <span className="noto-sans-jp-regular text-ratio-sm">
-              フィルター
-            </span>
-          </button>
-
-          {/* Filters */}
-          {showFilters && (
-            <div className="mt-ratio-sm p-ratio-sm border border-foreground bg-base">
-              <div className="grid grid-1 sm:grid-2 gap-ratio-sm">
-                {/* Content Type Filter */}
-                <div>
-                  <label className="block noto-sans-jp-regular text-ratio-sm mb-2">
-                    コンテンツタイプ:
-                  </label>
-                  <select
-                    value={selectedType}
-                    onChange={(e) =>
-                      handleTypeChange(e.target.value as ContentType)
+            {/* Search Form */}
+            <section className="space-y-6">
+              <div className="relative">
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-foreground opacity-60" />
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    onFocus={() => setShowSuggestions(true)}
+                    onBlur={() =>
+                      setTimeout(() => setShowSuggestions(false), 200)
                     }
-                    className="w-full px-ratio-xs py-1 bg-background border border-foreground text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                  >
-                    <option value="">すべて</option>
-                    {Object.entries(CONTENT_TYPE_LABELS).map(
-                      ([type, label]) => (
-                        <option key={type} value={type}>
-                          {label}
-                        </option>
-                      )
-                    )}
-                  </select>
+                    placeholder="検索キーワードを入力..."
+                    className="w-full pl-12 pr-4 py-4 bg-base border border-foreground text-foreground placeholder-foreground/60 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                    aria-label="検索キーワード"
+                  />
                 </div>
 
-                {/* Category Filter */}
-                <div>
-                  <label className="block noto-sans-jp-regular text-ratio-sm mb-2">
-                    カテゴリー:
-                  </label>
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => handleCategoryChange(e.target.value)}
-                    className="w-full px-ratio-xs py-1 bg-background border border-foreground text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                  >
-                    {CATEGORIES.map((category) => (
-                      <option
-                        key={category}
-                        value={category === "すべて" ? "" : category}
+                {/* Search Suggestions */}
+                {showSuggestions && suggestions.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 bg-base border border-foreground border-t-0 z-10">
+                    {suggestions.map((suggestion, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        className="w-full px-4 py-3 text-left hover:bg-primary hover:text-background transition-colors noto-sans-jp-light text-sm"
                       >
-                        {category}
-                      </option>
+                        {suggestion}
+                      </button>
                     ))}
-                  </select>
-                </div>
+                  </div>
+                )}
               </div>
 
-              {/* Clear Filters */}
-              {(selectedType || selectedCategory) && (
+              {/* Search Mode Toggle */}
+              <div className="flex items-center gap-4">
+                <span className={Global_title}>検索モード:</span>
                 <button
-                  onClick={() => {
-                    setSelectedType("");
-                    setSelectedCategory("");
-                    performSearch(query);
-                  }}
-                  className="mt-ratio-sm flex items-center gap-2 px-ratio-xs py-1 text-ratio-sm text-foreground hover:text-primary transition-colors"
+                  onClick={() => setSearchMode("simple")}
+                  className={`px-4 py-2 text-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background ${
+                    searchMode === "simple"
+                      ? "bg-primary text-background border-primary"
+                      : "bg-base text-foreground border-foreground hover:bg-foreground hover:text-background"
+                  }`}
                 >
-                  <X className="w-4 h-4" />
-                  フィルターをクリア
+                  シンプル
                 </button>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Search Results */}
-        <div>
-          {loading && (
-            <div className="text-center py-ratio-lg">
-              <div className="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-              <p className="mt-ratio-sm noto-sans-jp-light text-ratio-sm">
-                検索中...
-              </p>
-            </div>
-          )}
-
-          {!loading && query && results.length === 0 && (
-            <div className="text-center py-ratio-lg">
-              <p className="noto-sans-jp-light text-ratio-base opacity-80">
-                「{query}」に一致する結果が見つかりませんでした
-              </p>
-            </div>
-          )}
-
-          {!loading && results.length > 0 && (
-            <div>
-              <p className="noto-sans-jp-light text-ratio-sm opacity-80 mb-ratio-base">
-                {results.length}件の結果が見つかりました
-              </p>
-
-              <div className="space-y-ratio-base">
-                {results.map((result) => (
-                  <article
-                    key={result.id}
-                    className="border border-foreground p-ratio-sm hover:bg-base transition-colors"
-                  >
-                    <div className="flex items-start justify-between mb-ratio-xs">
-                      <Link
-                        href={result.url}
-                        className="neue-haas-grotesk-display text-ratio-base text-primary hover:underline"
-                      >
-                        {result.title}
-                      </Link>
-                      <span className="noto-sans-jp-light text-ratio-xs opacity-60 ml-ratio-sm">
-                        {CONTENT_TYPE_LABELS[result.type]}
-                      </span>
-                    </div>
-
-                    <p className="noto-sans-jp-light text-ratio-sm opacity-80 mb-ratio-xs">
-                      {result.description}
-                    </p>
-
-                    {result.highlights.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {result.highlights
-                          .slice(0, 3)
-                          .map((highlight, index) => (
-                            <span
-                              key={index}
-                              className="px-2 py-1 bg-primary text-background text-ratio-xs"
-                            >
-                              {highlight}
-                            </span>
-                          ))}
-                      </div>
-                    )}
-
-                    <div className="flex items-center justify-between mt-ratio-xs">
-                      <Link
-                        href={result.url}
-                        className="noto-sans-jp-light text-ratio-xs text-primary hover:underline"
-                      >
-                        {result.url}
-                      </Link>
-                      <span className="noto-sans-jp-light text-ratio-xs opacity-60">
-                        関連度: {Math.round(result.score * 100)}%
-                      </span>
-                    </div>
-                  </article>
-                ))}
+                <button
+                  onClick={() => setSearchMode("detailed")}
+                  className={`px-4 py-2 text-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background ${
+                    searchMode === "detailed"
+                      ? "bg-primary text-background border-primary"
+                      : "bg-base text-foreground border-foreground hover:bg-foreground hover:text-background"
+                  }`}
+                >
+                  詳細
+                </button>
               </div>
-            </div>
-          )}
 
-          {!query && (
-            <div className="text-center py-ratio-lg">
-              <p className="noto-sans-jp-light text-ratio-base opacity-80">
-                検索キーワードを入力してください
-              </p>
-            </div>
-          )}
+              {/* Filter Toggle */}
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center gap-2 px-4 py-2 border border-foreground hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+              >
+                <Filter className="w-4 h-4" />
+                <span className={Global_title}>フィルター</span>
+              </button>
+
+              {/* Filters */}
+              {showFilters && (
+                <section className="p-4 border border-foreground bg-base space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {/* Content Type Filter */}
+                    <div>
+                      <label className={`block ${Global_title} mb-2`}>
+                        コンテンツタイプ:
+                      </label>
+                      <select
+                        value={selectedType}
+                        onChange={(e) =>
+                          handleTypeChange(e.target.value as ContentType)
+                        }
+                        className="w-full px-4 py-2 bg-background border border-foreground text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                      >
+                        <option value="">すべて</option>
+                        {Object.entries(CONTENT_TYPE_LABELS).map(
+                          ([type, label]) => (
+                            <option key={type} value={type}>
+                              {label}
+                            </option>
+                          )
+                        )}
+                      </select>
+                    </div>
+
+                    {/* Category Filter */}
+                    <div>
+                      <label className={`block ${Global_title} mb-2`}>
+                        カテゴリー:
+                      </label>
+                      <select
+                        value={selectedCategory}
+                        onChange={(e) => handleCategoryChange(e.target.value)}
+                        className="w-full px-4 py-2 bg-background border border-foreground text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                      >
+                        {CATEGORIES.map((category) => (
+                          <option
+                            key={category}
+                            value={category === "すべて" ? "" : category}
+                          >
+                            {category}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Clear Filters */}
+                  {(selectedType || selectedCategory) && (
+                    <button
+                      onClick={() => {
+                        setSelectedType("");
+                        setSelectedCategory("");
+                        performSearch(query);
+                      }}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                    >
+                      <X className="w-4 h-4" />
+                      フィルターをクリア
+                    </button>
+                  )}
+                </section>
+              )}
+            </section>
+
+            {/* Search Results */}
+            <section>
+              {loading && (
+                <div className="text-center py-16">
+                  <div className="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                  <p className="mt-4 noto-sans-jp-light text-sm">検索中...</p>
+                </div>
+              )}
+
+              {!loading && query && results.length === 0 && (
+                <div className="text-center py-16">
+                  <p className="noto-sans-jp-light text-base opacity-80">
+                    「{query}」に一致する結果が見つかりませんでした
+                  </p>
+                </div>
+              )}
+
+              {!loading && results.length > 0 && (
+                <div className="space-y-6">
+                  <p className="noto-sans-jp-light text-sm opacity-80">
+                    {results.length}件の結果が見つかりました
+                  </p>
+
+                  <div className="space-y-4">
+                    {results.map((result) => (
+                      <article key={result.id} className={CardStyle}>
+                        <div className="flex items-start justify-between mb-2">
+                          <Link href={result.url} className={Card_title}>
+                            {result.title}
+                          </Link>
+                          <span className="noto-sans-jp-light text-xs opacity-60 ml-4">
+                            {CONTENT_TYPE_LABELS[result.type]}
+                          </span>
+                        </div>
+
+                        <p className={`${Card_description} opacity-80`}>
+                          {result.description}
+                        </p>
+
+                        {result.highlights.length > 0 && (
+                          <div className="flex flex-wrap gap-2 pb-2">
+                            {result.highlights
+                              .slice(0, 3)
+                              .map((highlight, index) => (
+                                <span
+                                  key={index}
+                                  className="px-2 py-1 bg-primary text-background text-xs"
+                                >
+                                  {highlight}
+                                </span>
+                              ))}
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between text-xs">
+                          <Link
+                            href={result.url}
+                            className="noto-sans-jp-light text-primary hover:underline"
+                          >
+                            {result.url}
+                          </Link>
+                          <span className="noto-sans-jp-light opacity-60">
+                            関連度: {Math.round(result.score * 100)}%
+                          </span>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {!query && (
+                <div className="text-center py-16">
+                  <p className="noto-sans-jp-light text-base opacity-80">
+                    検索キーワードを入力してください
+                  </p>
+                </div>
+              )}
+            </section>
+
+            <footer className="pt-4 border-t border-foreground">
+              <div className="text-center">
+                <p className="shippori-antique-b1-regular text-sm inline-block">
+                  © 2025 samuido - Creative Portfolio & Tools
+                </p>
+              </div>
+            </footer>
+          </div>
         </div>
-      </div>
+      </main>
 
       {/* Structured Data */}
       <script

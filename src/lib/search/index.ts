@@ -62,7 +62,7 @@ export async function saveSearchIndex(index: SearchIndex[]): Promise<boolean> {
     await fs.writeFile(
       SEARCH_INDEX_PATH,
       JSON.stringify(index, null, 2),
-      "utf-8"
+      "utf-8",
     );
     return true;
   } catch (error) {
@@ -111,7 +111,7 @@ export async function searchContent(
     limit?: number;
     includeContent?: boolean;
     threshold?: number;
-  } = {}
+  } = {},
 ): Promise<SearchResult[]> {
   try {
     const {
@@ -138,7 +138,7 @@ export async function searchContent(
 
     if (category) {
       filteredIndex = filteredIndex.filter(
-        (item) => item.category === category
+        (item) => item.category === category,
       );
     }
 
@@ -213,7 +213,7 @@ export async function simpleSearch(
     type?: ContentType;
     category?: string;
     limit?: number;
-  } = {}
+  } = {},
 ): Promise<SearchResult[]> {
   return searchContent(query, {
     ...options,
@@ -231,7 +231,7 @@ export async function detailedSearch(
     type?: ContentType;
     category?: string;
     limit?: number;
-  } = {}
+  } = {},
 ): Promise<SearchResult[]> {
   return searchContent(query, {
     ...options,
@@ -264,7 +264,7 @@ function generateContentUrl(item: SearchIndex): string {
  */
 export async function getSearchSuggestions(
   query: string,
-  limit: number = 5
+  limit: number = 5,
 ): Promise<string[]> {
   try {
     const searchIndex = await loadSearchIndex();
@@ -311,7 +311,7 @@ export async function getSearchSuggestions(
  */
 export async function getRelatedContent(
   contentId: string,
-  limit: number = 5
+  limit: number = 5,
 ): Promise<SearchResult[]> {
   try {
     const searchIndex = await loadSearchIndex();
@@ -335,7 +335,7 @@ export async function getRelatedContent(
 
       // Shared tags
       const sharedTags = item.tags.filter((tag) =>
-        targetItem.tags.includes(tag)
+        targetItem.tags.includes(tag),
       );
       score += sharedTags.length * 2;
 

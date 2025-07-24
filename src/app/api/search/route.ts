@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     if (!query) {
       return NextResponse.json(
         { error: "Query parameter is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     console.error("Search API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

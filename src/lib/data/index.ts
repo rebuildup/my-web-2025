@@ -17,7 +17,7 @@ const CACHE_DIR = path.join(DATA_DIR, "cache");
  * Load content by type
  */
 export async function loadContentByType(
-  type: ContentType
+  type: ContentType,
 ): Promise<ContentItem[]> {
   try {
     const filePath = path.join(CONTENT_DIR, `${type}.json`);
@@ -34,7 +34,7 @@ export async function loadContentByType(
  */
 export async function saveContentByType(
   type: ContentType,
-  content: ContentItem[]
+  content: ContentItem[],
 ): Promise<boolean> {
   try {
     const filePath = path.join(CONTENT_DIR, `${type}.json`);
@@ -51,7 +51,7 @@ export async function saveContentByType(
  */
 export async function getContentById(
   type: ContentType,
-  id: string
+  id: string,
 ): Promise<ContentItem | null> {
   try {
     const content = await loadContentByType(type);
@@ -67,7 +67,7 @@ export async function getContentById(
  */
 export async function addContentItem(
   type: ContentType,
-  item: ContentItem
+  item: ContentItem,
 ): Promise<boolean> {
   try {
     const content = await loadContentByType(type);
@@ -85,7 +85,7 @@ export async function addContentItem(
 export async function updateContentItem(
   type: ContentType,
   id: string,
-  updates: Partial<ContentItem>
+  updates: Partial<ContentItem>,
 ): Promise<boolean> {
   try {
     const content = await loadContentByType(type);
@@ -112,7 +112,7 @@ export async function updateContentItem(
  */
 export async function deleteContentItem(
   type: ContentType,
-  id: string
+  id: string,
 ): Promise<boolean> {
   try {
     const content = await loadContentByType(type);
@@ -163,7 +163,7 @@ export async function searchContent(
     category?: string;
     limit?: number;
     status?: "published" | "draft" | "archived" | "scheduled";
-  } = {}
+  } = {},
 ): Promise<ContentItem[]> {
   try {
     const { type, category, limit = 50, status = "published" } = options;
@@ -183,7 +183,7 @@ export async function searchContent(
     // Filter by category
     if (category) {
       filteredContent = filteredContent.filter(
-        (item) => item.category === category
+        (item) => item.category === category,
       );
     }
 
@@ -226,7 +226,7 @@ export async function getContentStatistics(): Promise<{
         acc[type as ContentType] = items.length;
         return acc;
       },
-      {} as Record<ContentType, number>
+      {} as Record<ContentType, number>,
     );
 
     const itemsByStatus = flatContent.reduce(
@@ -234,7 +234,7 @@ export async function getContentStatistics(): Promise<{
         acc[item.status] = (acc[item.status] || 0) + 1;
         return acc;
       },
-      {} as Record<string, number>
+      {} as Record<string, number>,
     );
 
     return {
@@ -266,7 +266,7 @@ export function validateContentItem(item: unknown): item is ContentItem {
     typeof (item as ContentItem).category === "string" &&
     Array.isArray((item as ContentItem).tags) &&
     ["published", "draft", "archived", "scheduled"].includes(
-      (item as ContentItem).status
+      (item as ContentItem).status,
     ) &&
     typeof (item as ContentItem).priority === "number" &&
     typeof (item as ContentItem).createdAt === "string"

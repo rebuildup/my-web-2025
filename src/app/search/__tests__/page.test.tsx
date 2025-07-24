@@ -24,7 +24,7 @@ describe("Search Page", () => {
 
     expect(screen.getByText("Search")).toBeInTheDocument();
     expect(
-      screen.getByText("サイト内のコンテンツを検索できます")
+      screen.getByText(/サイト内のコンテンツを検索できます/)
     ).toBeInTheDocument();
   });
 

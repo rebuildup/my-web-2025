@@ -26,7 +26,7 @@ async function loadStats(filePath: string): Promise<Record<string, number>> {
  */
 async function saveStats(
   filePath: string,
-  stats: Record<string, number>
+  stats: Record<string, number>,
 ): Promise<boolean> {
   try {
     await fs.writeFile(filePath, JSON.stringify(stats, null, 2), "utf-8");
@@ -102,7 +102,7 @@ export async function updateSearchStats(query: string): Promise<boolean> {
  * Get download statistics
  */
 export async function getDownloadStats(
-  id?: string
+  id?: string,
 ): Promise<number | Record<string, number>> {
   try {
     const statsPath = path.join(STATS_DIR, "download-stats.json");
@@ -123,7 +123,7 @@ export async function getDownloadStats(
  * Get view statistics
  */
 export async function getViewStats(
-  id?: string
+  id?: string,
 ): Promise<number | Record<string, number>> {
   try {
     const statsPath = path.join(STATS_DIR, "view-stats.json");
@@ -157,7 +157,7 @@ export async function getSearchStats(): Promise<Record<string, number>> {
  * Get popular search queries
  */
 export async function getPopularSearchQueries(
-  limit: number = 10
+  limit: number = 10,
 ): Promise<Array<{ query: string; count: number }>> {
   try {
     const stats = await getSearchStats();
@@ -176,7 +176,7 @@ export async function getPopularSearchQueries(
  * Get most viewed content
  */
 export async function getMostViewedContent(
-  limit: number = 10
+  limit: number = 10,
 ): Promise<Array<{ id: string; views: number }>> {
   try {
     const stats = (await getViewStats()) as Record<string, number>;
@@ -195,7 +195,7 @@ export async function getMostViewedContent(
  * Get most downloaded content
  */
 export async function getMostDownloadedContent(
-  limit: number = 10
+  limit: number = 10,
 ): Promise<Array<{ id: string; downloads: number }>> {
   try {
     const stats = (await getDownloadStats()) as Record<string, number>;
@@ -230,15 +230,15 @@ export async function getStatsSummary(): Promise<{
 
     const totalViews = Object.values(viewStats).reduce(
       (sum, count) => sum + count,
-      0
+      0,
     );
     const totalDownloads = Object.values(downloadStats).reduce(
       (sum, count) => sum + count,
-      0
+      0,
     );
     const totalSearches = Object.values(searchStats).reduce(
       (sum, count) => sum + count,
-      0
+      0,
     );
 
     const [topQueries, topContent, topDownloads] = await Promise.all([

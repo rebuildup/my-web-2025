@@ -6,7 +6,9 @@ describe("Privacy Policy Page", () => {
     render(<PrivacyPolicy />);
 
     expect(screen.getByText("Privacy Policy")).toBeInTheDocument();
-    expect(screen.getByText("プライバシーポリシー")).toBeInTheDocument();
+    expect(
+      screen.getByText(/samuidoのプライバシーポリシー/)
+    ).toBeInTheDocument();
   });
 
   it("renders all main sections", () => {

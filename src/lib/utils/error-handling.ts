@@ -22,7 +22,7 @@ export class ContentError extends Error {
   constructor(
     message: string,
     public code: string,
-    public details?: Record<string, unknown>
+    public details?: Record<string, unknown>,
   ) {
     super(message);
     this.name = "ContentError";
@@ -33,7 +33,7 @@ export class ValidationError extends Error {
   constructor(
     message: string,
     public field: string,
-    public value?: unknown
+    public value?: unknown,
   ) {
     super(message);
     this.name = "ValidationError";
@@ -44,7 +44,7 @@ export class ApiError extends Error {
   constructor(
     message: string,
     public status: number,
-    public code?: string
+    public code?: string,
   ) {
     super(message);
     this.name = "ApiError";
@@ -55,7 +55,7 @@ export class FileError extends Error {
   constructor(
     message: string,
     public fileName: string,
-    public fileSize?: number
+    public fileSize?: number,
   ) {
     super(message);
     this.name = "FileError";
@@ -66,7 +66,7 @@ export class SearchError extends Error {
   constructor(
     message: string,
     public query: string,
-    public filters?: Record<string, unknown>
+    public filters?: Record<string, unknown>,
   ) {
     super(message);
     this.name = "SearchError";
@@ -146,7 +146,7 @@ export const errorHandler = {
    */
   logError: (
     error: AppError,
-    level: "error" | "warn" | "info" = "error"
+    level: "error" | "warn" | "info" = "error",
   ): void => {
     const logData = {
       ...error,
@@ -206,7 +206,7 @@ export const errorHandler = {
   withRetry: async <T>(
     operation: () => Promise<T>,
     maxRetries: number = 3,
-    delay: number = 1000
+    delay: number = 1000,
   ): Promise<T> => {
     let lastError: Error;
 
@@ -234,7 +234,7 @@ export const errorHandler = {
    */
   safeAsync: async <T>(
     operation: () => Promise<T>,
-    fallback?: T
+    fallback?: T,
   ): Promise<{ data?: T; error?: AppError }> => {
     try {
       const data = await operation();
@@ -265,7 +265,7 @@ export const errorBoundaryUtils = {
    */
   handleErrorBoundaryError: (
     error: Error,
-    errorInfo: Record<string, unknown>
+    errorInfo: Record<string, unknown>,
   ): ErrorBoundaryState => {
     const appError = errorHandler.handleApiError(error);
     errorHandler.logError(appError);
@@ -338,7 +338,7 @@ export const recoveryOptions = {
    * Provide recovery actions for different error types
    */
   getRecoveryActions: (
-    error: AppError
+    error: AppError,
   ): Array<{
     label: string;
     action: () => void;

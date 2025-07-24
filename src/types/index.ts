@@ -121,7 +121,7 @@ export const validateContentItem = (item: unknown): item is ContentItem => {
     typeof (item as ContentItem).category === "string" &&
     Array.isArray((item as ContentItem).tags) &&
     ["published", "draft", "archived", "scheduled"].includes(
-      (item as ContentItem).status
+      (item as ContentItem).status,
     ) &&
     typeof (item as ContentItem).priority === "number" &&
     typeof (item as ContentItem).createdAt === "string"

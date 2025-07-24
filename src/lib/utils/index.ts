@@ -12,7 +12,7 @@ export * from "./email";
 // Common utility functions
 export const debounce = <T extends (...args: unknown[]) => unknown>(
   func: T,
-  wait: number
+  wait: number,
 ): ((...args: Parameters<T>) => void) => {
   let timeout: NodeJS.Timeout;
 
@@ -24,7 +24,7 @@ export const debounce = <T extends (...args: unknown[]) => unknown>(
 
 export const throttle = <T extends (...args: unknown[]) => unknown>(
   func: T,
-  limit: number
+  limit: number,
 ): ((...args: Parameters<T>) => void) => {
   let inThrottle: boolean;
 

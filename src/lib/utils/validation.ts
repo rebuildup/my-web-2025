@@ -151,7 +151,7 @@ export const formValidation = {
       value?: unknown;
       message: string;
       customValidator?: (value: unknown) => boolean;
-    }>
+    }>,
   ): FieldValidationResult => {
     for (const rule of rules) {
       let isValid = false;
@@ -185,7 +185,7 @@ export const formValidation = {
           isValid = validators.range(
             value as number,
             (rule.value as { min: number; max: number }).min,
-            (rule.value as { min: number; max: number }).max
+            (rule.value as { min: number; max: number }).max,
           );
           break;
         case "japanese":
@@ -234,7 +234,7 @@ export const formValidation = {
         message: string;
         customValidator?: (value: unknown) => boolean;
       }>
-    >
+    >,
   ): ValidationResult => {
     const errors: string[] = [];
 
@@ -341,7 +341,7 @@ export const contentValidation = {
           if (!validators.url(image)) {
             errors.push(`Image at index ${index} must be a valid URL`);
           }
-        }
+        },
       );
     }
 
@@ -360,7 +360,7 @@ export const contentValidation = {
       allowedTypes?: string[];
       maxSize?: number; // in bytes
       minSize?: number; // in bytes
-    } = {}
+    } = {},
   ): ValidationResult => {
     const errors: string[] = [];
     const {
@@ -371,19 +371,19 @@ export const contentValidation = {
 
     if (!validators.fileType(file, allowedTypes)) {
       errors.push(
-        `File type ${file.type} is not allowed. Allowed types: ${allowedTypes.join(", ")}`
+        `File type ${file.type} is not allowed. Allowed types: ${allowedTypes.join(", ")}`,
       );
     }
 
     if (!validators.fileSize(file, maxSize)) {
       errors.push(
-        `File size ${file.size} bytes exceeds maximum ${maxSize} bytes`
+        `File size ${file.size} bytes exceeds maximum ${maxSize} bytes`,
       );
     }
 
     if (file.size < minSize) {
       errors.push(
-        `File size ${file.size} bytes is below minimum ${minSize} bytes`
+        `File size ${file.size} bytes is below minimum ${minSize} bytes`,
       );
     }
 

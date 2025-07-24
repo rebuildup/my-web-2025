@@ -8,13 +8,13 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      // Custom color scheme based on documents/02_style.md
+      // Custom color scheme - 青色を削除
       colors: {
-        primary: "#0000ff", // 原色の青 (Primary Blue)
+        primary: "#ffffff", // 白色をプライマリに
         base: "#222222", // ダークグレー (Dark Grey)
         background: "#222222", // 背景：単色 ベースカラー
         foreground: "#ffffff", // Text on dark background
-        accent: "#0000ff", // Same as primary for consistency
+        accent: "#0000ff", // 青色をアクセントに
       },
 
       // Breakpoint-based container system
@@ -33,15 +33,7 @@ const config: Config = {
         "container-lg": "1280px",
       },
 
-      // 1:1.618 golden ratio system
-      fontSize: {
-        "ratio-xs": "0.618rem",
-        "ratio-sm": "1rem",
-        "ratio-base": "1.618rem",
-        "ratio-lg": "2.618rem",
-        "ratio-xl": "4.236rem",
-        "ratio-2xl": "6.854rem",
-      },
+      // テキストサイズはCSSで直接定義
 
       // Font families based on documents/02_style.md
       fontFamily: {
@@ -67,21 +59,21 @@ const config: Config = {
         none: "0",
       },
 
-      // Golden ratio spacing
+      // マージン拡大 - テキストサイズの1.2倍以上
       spacing: {
-        "ratio-xs": "0.618rem",
-        "ratio-sm": "1rem",
-        "ratio-base": "1.618rem",
-        "ratio-lg": "2.618rem",
-        "ratio-xl": "4.236rem",
-        "ratio-2xl": "6.854rem",
+        "ratio-xs": "1.2rem",
+        "ratio-sm": "1.944rem",
+        "ratio-base": "3.146rem",
+        "ratio-lg": "5.089rem",
+        "ratio-xl": "8.235rem",
+        "ratio-2xl": "13.324rem",
       },
 
-      // Line heights based on golden ratio
+      // 行間をテキストサイズの1.2倍以上に
       lineHeight: {
-        "ratio-tight": "1.618",
-        "ratio-normal": "2.618",
-        "ratio-loose": "4.236",
+        "ratio-tight": "1.2",
+        "ratio-normal": "1.5",
+        "ratio-loose": "1.8",
       },
     },
   },

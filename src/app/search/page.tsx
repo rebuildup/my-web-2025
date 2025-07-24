@@ -55,22 +55,26 @@ export default function Search() {
 function SearchPageFallback() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="container-system py-ratio-lg">
-        <header className="mb-ratio-lg">
-          <h1 className="neue-haas-grotesk-display text-ratio-xl text-primary mb-ratio-sm">
-            Search
-          </h1>
-          <p className="noto-sans-jp-light text-ratio-base opacity-80">
-            サイト内のコンテンツを検索できます
-          </p>
-        </header>
-        <div className="text-center py-ratio-lg">
-          <div className="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-ratio-sm noto-sans-jp-light text-ratio-sm">
-            読み込み中...
-          </p>
+      <main className="flex items-center py-10">
+        <div className="container-system">
+          <div className="space-y-10">
+            <header className="space-y-12">
+              <h1 className="neue-haas-grotesk-display text-6xl text-primary">
+                Search
+              </h1>
+              <p className="noto-sans-jp-light text-sm max-w leading-loose">
+                サイト内のコンテンツを検索できます。
+                <br />
+                ポートフォリオ、ブログ、ツールなど、必要な情報を素早く見つけることができます。
+              </p>
+            </header>
+            <div className="text-center py-16">
+              <div className="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+              <p className="mt-4 noto-sans-jp-light text-sm">読み込み中...</p>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

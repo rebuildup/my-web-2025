@@ -16,6 +16,7 @@
 | axios                           | ^1.11.0    | HTTP クライアント                |
 | date-fns                        | ^4.1.0     | 日付ユーティリティ               |
 | eslint                          | ^9         | Lint                             |
+| eslint-plugin-tailwindcss       | beta       | Tailwind CSS Lint (v4対応)       |
 | prettier                        | ^3.6.2     | Format                           |
 | jest                            | ^30.0.5    | Unit Test                        |
 | @playwright/test                | ^1.54.1    | E2E Test                         |
@@ -70,6 +71,24 @@
 | @testing-library/user-event | ^14.6.1    | ユーザーイベントテスト     |
 | jest-environment-jsdom      | ^30.0.5    | Jest JSDOM 環境            |
 
+## ESLint 設定詳細
+
+### Tailwind CSS Lint 設定
+
+- `eslint-plugin-tailwindcss@beta` を使用（Tailwind CSS v4対応）
+- 有効なルール：
+  - `tailwindcss/classnames-order`: クラス名順序チェック（警告）
+  - `tailwindcss/enforces-shorthand`: 短縮記法推奨（警告）
+  - `tailwindcss/no-contradicting-classname`: 矛盾クラス名検出（エラー）
+- 無効化ルール：
+  - `tailwindcss/no-custom-classname`: カスタムクラス名許可（v4対応）
+  - `tailwindcss/enforces-negative-arbitrary-values`: 任意値制限無効化
+
+### 設定ファイル
+
+- `eslint.config.mjs`: Flat Config形式でESLint v9対応
+- Tailwind CSS v4のカスタムデザインシステムに対応
+
 ## バージョン管理
 
 - Git：trunk-based + feature branch
@@ -78,4 +97,4 @@
 
 ---
 
-> アップグレード指針：Next/Tailwind のメジャーアップは `next lint` と E2E テスト通過を確認してからマージすること。
+> **アップグレード指針**: Next/Tailwind のメジャーアップは `next lint` と E2E テスト通過を確認してからマージすること。eslint-plugin-tailwindcssは安定版リリース後にベータ版から移行予定。

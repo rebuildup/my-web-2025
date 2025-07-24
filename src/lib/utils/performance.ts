@@ -40,7 +40,7 @@ export interface OptimizedImageOptions {
 
 export const optimizeImage = (
   src: string,
-  options: OptimizedImageOptions = {}
+  options: OptimizedImageOptions = {},
 ): Partial<ImageProps> => {
   const {
     width,
@@ -348,7 +348,7 @@ export const cacheHeaders = {
 // Debounce utility for performance optimization
 export const debounce = <T extends (...args: unknown[]) => unknown>(
   func: T,
-  wait: number
+  wait: number,
 ): ((...args: Parameters<T>) => void) => {
   let timeout: NodeJS.Timeout;
 
@@ -361,7 +361,7 @@ export const debounce = <T extends (...args: unknown[]) => unknown>(
 // Throttle utility for performance optimization
 export const throttle = <T extends (...args: unknown[]) => unknown>(
   func: T,
-  limit: number
+  limit: number,
 ): ((...args: Parameters<T>) => void) => {
   let inThrottle: boolean;
 

@@ -8,20 +8,11 @@
 
 /* Custom Design System based on documents/02_style.md */
 :root {
-  /* Color System */
-  --color-primary: #0000ff; /* 原色の青 */
-  --color-base: #222222; /* ダークグレー */
-  --color-background: #222222; /* 背景：単色 ベースカラー */
-  --color-foreground: #ffffff; /* Text on dark background */
-  --color-accent: #0000ff; /* Same as primary */
-
-  /* Golden Ratio System (1:1.618) */
-  --ratio-xs: 0.618rem;
-  --ratio-sm: 1rem;
-  --ratio-base: 1.618rem;
-  --ratio-lg: 2.618rem;
-  --ratio-xl: 4.236rem;
-  --ratio-2xl: 6.854rem;
+  --color-primary: #ffffff;
+  --color-base: #222222;
+  --color-background: #222222;
+  --color-foreground: #ffffff;
+  --color-accent: #0000ff;
 
   /* Grid System (384px base) */
   --grid-base: 384px;
@@ -37,21 +28,6 @@
   --font-shippori: "Shippori Antique B1", sans-serif;
 }
 
-@theme {
-  --color-background: var(--color-background);
-  --color-foreground: var(--color-foreground);
-  --color-primary: var(--color-primary);
-  --color-base: var(--color-base);
-  --color-accent: var(--color-accent);
-}
-
-/* Base Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 html {
   font-size: 16px;
   scroll-behavior: smooth;
@@ -62,9 +38,104 @@ body {
   color: var(--color-foreground);
   font-family: var(--font-noto-jp);
   font-weight: 300;
-  line-height: 1.618;
+  line-height: 1.5; /* テキストサイズの1.2倍以上の行間 */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.wf-loading {
+  visibility: hidden;
+}
+
+.wf-active,
+.wf-inactive {
+  visibility: visible;
+}
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease-out;
+}
+
+.loading-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* マスクアニメーション用スタイル */
+.mask-bg {
+  color: transparent;
+  display: inline-block;
+  font-size: 36px;
+  font-weight: bold;
+  overflow: hidden;
+  position: relative;
+  transition: color 0ms 450ms;
+}
+
+.mask-bg::after {
+  background: linear-gradient(to right, #362ae0 0%, #3b79cc 50%, #42d3ed 100%);
+  bottom: 0;
+  content: "";
+  display: block;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(-100%, 0);
+}
+
+.mask-bg.is-animated {
+  color: #362ae0;
+}
+
+.mask-bg.is-animated::after {
+  animation: mask-bg 1.2s cubic-bezier(0.8, 0, 0.17, 1);
+}
+
+@keyframes mask-bg {
+  0% {
+    transform: translate(0, 101%);
+  }
+  40%,
+  60% {
+    transform: translate(0, 0%);
+  }
+  100% {
+    transform: translate(0, -100%);
+  }
+}
+
+.text-mask {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-foreground) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textMask 2s ease-in-out infinite;
+}
+
+@keyframes textMask {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* Typography Classes based on documents/02_style.md */
@@ -112,8 +183,8 @@ body {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding-left: var(--ratio-base);
-  padding-right: var(--ratio-base);
+  padding-left: 1rem; /* Tailwind px-4 equivalent */
+  padding-right: 1rem;
 }
 
 /* Breakpoint-based fixed widths */
@@ -146,7 +217,7 @@ body {
 /* Grid System Classes within Container */
 .grid-system {
   display: grid;
-  gap: var(--ratio-base);
+  gap: 1.5rem; /* Tailwind gap-6 equivalent */
 }
 
 .grid-1 {
@@ -220,21 +291,29 @@ body {
   }
 }
 
-/* Remove all decorative elements as specified */
-* {
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  background-image: none !important;
-}
-
-/* Focus states for accessibility */
+/* Focus states for accessibility - 白い枠を削除 */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline: none;
 }
 
-/* Selection styles */
+/* ボタンやクリック可能要素のフォーカス時の白い枠を削除 */
+button:focus,
+a:focus,
+input:focus,
+textarea:focus,
+select:focus,
+[tabindex]:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Selection styles - アクセントカラーの青に変更 */
 ::selection {
-  background: var(--color-primary);
+  background: var(--color-accent);
+  color: var(--color-foreground);
+}
+
+::-moz-selection {
+  background: var(--color-accent);
   color: var(--color-foreground);
 }
