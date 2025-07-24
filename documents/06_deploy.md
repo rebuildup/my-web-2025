@@ -75,8 +75,8 @@ NEXT_PUBLIC_ADOBE_FONTS_KIT_ID=blm5pmr
 
 # メール送信設定 (Resend使用)
 RESEND_API_KEY=your-resend-api-key
-CONTACT_EMAIL_TO=rebuild.up.up@gmail.com
-DESIGN_EMAIL_TO=361do.sleep@gmail.com
+CONTACT_EMAIL_TO=rebuild.up.up(at)gmail.com
+DESIGN_EMAIL_TO=361do.sleep(at)gmail.com
 
 # reCAPTCHA (Contact Form)
 NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LdZ3XgrAAAAAJhdhTA25XgqZBebMW_reZiIPreG
@@ -103,8 +103,8 @@ NEXT_PUBLIC_ADOBE_FONTS_KIT_ID=blm5pmr
 
 # メール送信設定 (Resend使用)
 RESEND_API_KEY=your-resend-api-key
-CONTACT_EMAIL_TO=rebuild.up.up@gmail.com
-DESIGN_EMAIL_TO=361do.sleep@gmail.com
+CONTACT_EMAIL_TO=rebuild.up.up(at)gmail.com
+DESIGN_EMAIL_TO=361do.sleep(at)gmail.com
 
 # reCAPTCHA (Contact Form)
 NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LdZ3XgrAAAAAJhdhTA25XgqZBebMW_reZiIPreG
@@ -158,7 +158,7 @@ export async function GET(): Promise<Response> {
     };
 
     const isHealthy = Object.values(healthChecks.checks).every(
-      (check) => check.status === "healthy",
+      (check) => check.status === "healthy"
     );
 
     return Response.json(healthChecks, {
@@ -171,7 +171,7 @@ export async function GET(): Promise<Response> {
         status: "unhealthy",
         error: error.message,
       },
-      { status: 503 },
+      { status: 503 }
     );
   }
 }
@@ -287,7 +287,7 @@ async function checkDiskSpace(): Promise<{ status: string; details?: any }> {
 LOG_DIR="/var/log/apache2"
 ERROR_LOG="$LOG_DIR/yusuke-kim_error.log"
 ACCESS_LOG="$LOG_DIR/yusuke-kim_access.log"
-ALERT_EMAIL="rebuild.up.up@gmail.com"
+ALERT_EMAIL="rebuild.up.up(at)gmail.com"
 
 # エラーレート監視
 check_error_rate() {
@@ -397,7 +397,7 @@ export const performanceMonitor = {
     performance.measure(
       "content-load-time",
       "navigationStart",
-      "content-loaded",
+      "content-loaded"
     );
 
     return metrics;
@@ -440,7 +440,7 @@ export const alertRules: AlertRule[] = [
     threshold: 5,
     severity: "critical",
     notification: {
-      email: "rebuild.up.up@gmail.com",
+      email: "rebuild.up.up(at)gmail.com",
     },
   },
   {
@@ -449,7 +449,7 @@ export const alertRules: AlertRule[] = [
     threshold: 3000,
     severity: "warning",
     notification: {
-      email: "rebuild.up.up@gmail.com",
+      email: "rebuild.up.up(at)gmail.com",
     },
   },
   {
@@ -458,7 +458,7 @@ export const alertRules: AlertRule[] = [
     threshold: 90,
     severity: "critical",
     notification: {
-      email: "rebuild.up.up@gmail.com",
+      email: "rebuild.up.up(at)gmail.com",
     },
   },
   {
@@ -467,7 +467,7 @@ export const alertRules: AlertRule[] = [
     threshold: 95,
     severity: "critical",
     notification: {
-      email: "rebuild.up.up@gmail.com",
+      email: "rebuild.up.up(at)gmail.com",
     },
   },
 ];
@@ -612,7 +612,7 @@ case $INCIDENT_LEVEL in
 
     # 緊急連絡先に通知
     echo "URGENT: P0 Incident detected at $TIMESTAMP - $INCIDENT_DESCRIPTION" | \
-      mail -s "URGENT: Website Down" rebuild.up.up@gmail.com
+      mail -s "URGENT: Website Down" rebuild.up.up(at)gmail.com
 
     # 自動復旧試行
     systemctl restart apache2
@@ -631,11 +631,11 @@ case $INCIDENT_LEVEL in
 
     # 開発チームに通知
     echo "P1 Incident detected at $TIMESTAMP - $INCIDENT_DESCRIPTION" | \
-      mail -s "P1 Incident Alert" rebuild.up.up@gmail.com
+      mail -s "P1 Incident Alert" rebuild.up.up(at)gmail.com
 
     # ログ分析
     tail -n 1000 /var/log/apache2/yusuke-kim_error.log | \
-      mail -s "Error Log Analysis" rebuild.up.up@gmail.com
+      mail -s "Error Log Analysis" rebuild.up.up(at)gmail.com
     ;;
 
   "P2")
@@ -644,7 +644,7 @@ case $INCIDENT_LEVEL in
 
     # 開発チームに通知
     echo "P2 Incident detected at $TIMESTAMP - $INCIDENT_DESCRIPTION" | \
-      mail -s "P2 Incident Alert" rebuild.up.up@gmail.com
+      mail -s "P2 Incident Alert" rebuild.up.up(at)gmail.com
     ;;
 
   "P3")
@@ -721,7 +721,7 @@ main() {
                 echo "$(date): Recovery failed, manual intervention required" >> /var/log/recovery.log
                 # 緊急通知
                 echo "Auto-recovery failed at $(date)" | \
-                  mail -s "URGENT: Auto-recovery Failed" rebuild.up.up@gmail.com
+                  mail -s "URGENT: Auto-recovery Failed" rebuild.up.up(at)gmail.com
             fi
         fi
     fi

@@ -42,6 +42,29 @@ global.IntersectionObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn(),
 }));
 
+// Suppress React act warnings and navigation errors in tests
+const originalError = console.error;
+beforeAll(() => {
+  console.error = (...args) => {
+    if (
+      typeof args[0] === "string" &&
+      (args[0].includes("Warning: An update to") ||
+        args[0].includes("An update to") ||
+        args[0].includes("Not implemented: navigation"))
+    ) {
+      return;
+    }
+    if (args[0] && args[0].type === "not implemented") {
+      return;
+    }
+    originalError.call(console, ...args);
+  };
+});
+
+afterAll(() => {
+  console.error = originalError;
+});
+
 // Mock window.matchMedia (only in browser environment)
 if (typeof window !== "undefined") {
   Object.defineProperty(window, "matchMedia", {

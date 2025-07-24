@@ -26,7 +26,7 @@ describe("Privacy Policy Page", () => {
   it("displays contact information", () => {
     render(<PrivacyPolicy />);
 
-    expect(screen.getByText("361do.sleep@gmail.com")).toBeInTheDocument();
+    expect(screen.getByText("361do.sleep(at)gmail.com")).toBeInTheDocument();
     expect(screen.getByText("平日 9:00-18:00")).toBeInTheDocument();
     expect(screen.getByText("24時間以内（営業日）")).toBeInTheDocument();
   });

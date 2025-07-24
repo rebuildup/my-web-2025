@@ -40,7 +40,7 @@
 
 ### 連絡方法
 
-- **メール**: 361do.sleep@gmail.com
+- **メール**: 361do.sleep(at)gmail.com
 - **X (Twitter)**: @361do_design
 - **対応時間**: 平日 9:00-18:00
 - **返信時間**: 24時間以内
@@ -108,7 +108,7 @@
     "@type": "Person",
     "name": "木村友亮",
     "alternateName": "samuido",
-    "email": "361do.sleep@gmail.com"
+    "email": "361do.sleep(at)gmail.com"
   },
   "serviceType": "Video Production",
   "areaServed": "Japan",

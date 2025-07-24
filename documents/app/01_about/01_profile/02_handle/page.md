@@ -25,7 +25,7 @@
 - **デザイン**: Photoshop, Illustrator, AdobeXD, Figma
 - **プログラミング言語**: C, C++, C#, HTML, JavaScript, TypeScript, CSS
 - **技術スタック**: React, NextJS, Tailwind CSS, p5js, PIXIjs, GSAP
-- **映像**: AfterEffects, Aviult, PremierePro, Blender
+- **映像**: AfterEffects, Aviutl, PremierePro, Blender
 - **その他**: Unity, Cubase
 
 ### 活動履歴
@@ -51,7 +51,7 @@
 
 ### 連絡先
 
-- **メール**: 361do.sleep@gmail.com
+- **メール**: 361do.sleep(at)gmail.com
 - **X**: @361do_sleep (開発関連)
 - **X**: @361do_design (映像・デザイン関連)
 - **GitHub**: 開発プロジェクト

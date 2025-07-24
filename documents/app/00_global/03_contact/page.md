@@ -97,7 +97,7 @@
   "mainEntity": {
     "@type": "ContactPoint",
     "contactType": "customer service",
-    "email": "361do.sleep@gmail.com",
+    "email": "361do.sleep(at)gmail.com",
     "availableLanguage": "Japanese"
   },
   "author": {

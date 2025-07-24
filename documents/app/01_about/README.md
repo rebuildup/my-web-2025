@@ -21,7 +21,7 @@
 
 ### プロフィール情報
 
-- **スキル**: デザイン(Photoshop, Illustrator, AdobeXD, Figma)、プログラミング言語(C, C++, C#, HTML, JavaScript, TypeScript, CSS)、技術スタック(React, NextJS, Tailwind CSS, p5js, PIXIjs, GSAP)、映像(AfterEffects, Aviult, PremierePro, Blender)、その他(Unity, Cubase)
+- **スキル**: デザイン(Photoshop, Illustrator, AdobeXD, Figma)、プログラミング言語(C, C++, C#, HTML, JavaScript, TypeScript, CSS)、技術スタック(React, NextJS, Tailwind CSS, p5js, PIXIjs, GSAP)、映像(AfterEffects, Aviutl, PremierePro, Blender)、その他(Unity, Cubase)
 - **基本情報**: 平成19年10月生、現役高専生(2025年7月現在)
 - **自己紹介**: グラフィックデザイン、映像制作、個人開発など幅広く活動。やる気になれば何でもできるのが強み
 
@@ -37,8 +37,8 @@
 ### 依頼関連
 
 - **連絡方法**: メールまたはXのDM
-  - 開発・技術依頼: rebuild.up.up@gmail.com または @361do_sleep
-  - 映像・デザイン依頼: 361do.sleep@gmail.com または @361do_design
+  - 開発・技術依頼: rebuild.up.up(at)gmail.com または @361do_sleep
+  - 映像・デザイン依頼: 361do.sleep(at)gmail.com または @361do_design
 - **料金体系**: 各依頼ページで公開
 
 > サブページごとの詳細仕様はそれぞれの `page.md` を参照してください。

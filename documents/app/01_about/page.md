@@ -20,7 +20,7 @@
 
 ### 共通プロフィール情報
 
-- **スキル**: デザイン(Photoshop, Illustrator, AdobeXD, Figma)、プログラミング言語(C, C++, C#, HTML, JavaScript, TypeScript, CSS)、技術スタック(React, NextJS, Tailwind CSS, p5js, PIXIjs, GSAP)、映像(AfterEffects, Aviult, PremierePro, Blender)、その他(Unity, Cubase)
+- **スキル**: デザイン(Photoshop, Illustrator, AdobeXD, Figma)、プログラミング言語(C, C++, C#, HTML, JavaScript, TypeScript, CSS)、技術スタック(React, NextJS, Tailwind CSS, p5js, PIXIjs, GSAP)、映像(AfterEffects, Aviutl, PremierePro, Blender)、その他(Unity, Cubase)
 - **基本情報**: 平成19年10月生、現役高専生(2025年7月現在)
 - **自己紹介**: グラフィックデザイン、映像制作、個人開発など幅広く活動。やる気になれば何でもできるのが強み
 

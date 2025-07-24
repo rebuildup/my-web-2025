@@ -38,7 +38,7 @@
 
 ### 連絡先情報
 
-- **メール**: 361do.sleep@gmail.com
+- **メール**: 361do.sleep(at)gmail.com
 - **X**: @361do_sleep (開発関連)
 - **X**: @361do_design (映像・デザイン関連)
 - **GitHub**: 開発プロジェクト
@@ -88,7 +88,7 @@
   "jobTitle": "フロントエンドエンジニア",
   "description": "グラフィックデザイン、映像制作、個人開発など幅広く活動",
   "url": "https://yusuke-kim.com/about/card/handle",
-  "email": "361do.sleep@gmail.com",
+  "email": "361do.sleep(at)gmail.com",
   "sameAs": [
     "https://twitter.com/361do_sleep",
     "https://twitter.com/361do_design"

@@ -124,7 +124,7 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Create email template system for contact forms
   - Implement contact form validation with Japanese spam protection
   - Set up reCAPTCHA integration (site key: 6LdZ3XgrAAAAAJhdhTA25XgqZBebMW_reZiIPreG)
-  - Create email routing (technical: rebuild.up.up@gmail.com, design: 361do.sleep@gmail.com)
+  - Create email routing (technical: rebuild.up.up(at)gmail.com, design: 361do.sleep(at)gmail.com)
   - _Requirements: documents/06_deploy.md environment variables, documents/app/00_global/03_contact/page.md_
 
 ## Phase 3: Home Page and Root Layout (Priority 3)
@@ -223,7 +223,7 @@ Based on analysis of the current codebase and requirements, this implementation 
 
 ### 5.1 About Main Pages
 
-- [ ] 5.1.1 Create About section main page
+- [x] 5.1.1 Create About section main page
   - Implement /about page with comprehensive overview
   - Add navigation to all subsections with proper hierarchy
   - Implement SEO optimization with structured data
@@ -231,7 +231,7 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Add skills showcase and achievement display
   - _Requirements: documents/app/01_about/README.md, documents/app/01_about/page.md_
 
-- [ ] 5.1.2 Develop profile pages
+- [x] 5.1.2 Develop profile pages
   - Create /about/profile/real with comprehensive information (born Oct 2007, current technical college student)
   - Implement /about/profile/handle with handle-specific content
   - Create /about/profile/AI with AI chat profile functionality
@@ -241,7 +241,7 @@ Based on analysis of the current codebase and requirements, this implementation 
 
 ### 5.2 Digital Cards and Commission Pages
 
-- [ ] 5.2.1 Create digital business cards
+- [x] 5.2.1 Create digital business cards
   - Implement /about/card/real with QR code generation
   - Create /about/card/handle with handle-specific card design
   - Add QR code generation for contact information

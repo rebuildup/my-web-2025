@@ -43,7 +43,7 @@ This project involves building a comprehensive personal portfolio website for sa
 2. WHEN profile sections are accessed THEN the system SHALL provide separate pages for real name profile (/about/profile/real), handle name profile (/about/profile/handle), and AI chat profile (/about/profile/AI)
 3. WHEN digital business cards are needed THEN the system SHALL provide real name card (/about/card/real) and handle name card (/about/card/handle) with QR codes
 4. WHEN commission information is requested THEN the system SHALL display separate sections for development (/about/commission/develop), video (/about/commission/video), and pricing calculator (/about/commission/estimate)
-5. WHEN contact methods are provided THEN the system SHALL route technical inquiries to rebuild.up.up@gmail.com/@361do_sleep and video/design inquiries to 361do.sleep@gmail.com/@361do_design
+5. WHEN contact methods are provided THEN the system SHALL route technical inquiries to rebuild.up.up(at)gmail.com/@361do_sleep and video/design inquiries to 361do.sleep(at)gmail.com/@361do_design
 6. WHEN achievements are displayed THEN the system SHALL show awards including U-16 Programming Contest awards (2022 Idea Award, 2023 Technical Award and Corporate Award) and Chugoku Region Technical College Computer Festival 2024 Game Division 1st Place
 7. WHEN links are accessed THEN the system SHALL provide comprehensive link map (/about/links) to external platforms and portfolios
 
@@ -104,7 +104,7 @@ This project involves building a comprehensive personal portfolio website for sa
 
 1. WHEN a user accesses contact information THEN the system SHALL provide contact form at /contact with email routing and social media links
 2. WHEN the contact form is submitted THEN the system SHALL validate input, implement Japanese language spam protection, verify reCAPTCHA, and send emails using Resend API
-3. WHEN contact emails are sent THEN the system SHALL route technical/development inquiries to rebuild.up.up@gmail.com and video/design inquiries to 361do.sleep@gmail.com
+3. WHEN contact emails are sent THEN the system SHALL route technical/development inquiries to rebuild.up.up(at)gmail.com and video/design inquiries to 361do.sleep(at)gmail.com
 4. WHEN form validation fails THEN the system SHALL display clear error messages, prevent submission, and provide no auto-reply functionality
 5. WHEN privacy policy is accessed THEN the system SHALL display comprehensive privacy policy at /privacy-policy with GDPR compliance, cookie usage details, and Google Analytics information
 6. WHEN 404 errors occur THEN the system SHALL display custom 404 page at /404 with error message, home page navigation, and search functionality

@@ -10,11 +10,39 @@ const config: Config = {
     extend: {
       // Custom color scheme - 青色を削除
       colors: {
-        primary: "#ffffff", // 白色をプライマリに
+        // Original design colors
+        primary: {
+          DEFAULT: "#0000ff", // 青色をプライマリに
+          foreground: "#ffffff",
+        },
         base: "#222222", // ダークグレー (Dark Grey)
-        background: "#222222", // 背景：単色 ベースカラー
-        foreground: "#ffffff", // Text on dark background
-        accent: "#0000ff", // 青色をアクセントに
+        background: "#ffffff", // 背景：白色
+        foreground: "#222222", // Text on light background
+        accent: {
+          DEFAULT: "#0000ff", // 青色をアクセントに
+          foreground: "#ffffff",
+        },
+
+        // UI component colors
+        card: {
+          DEFAULT: "#ffffff",
+          foreground: "#222222",
+        },
+        secondary: {
+          DEFAULT: "#f1f5f9",
+          foreground: "#0f172a",
+        },
+        muted: {
+          DEFAULT: "#f1f5f9",
+          foreground: "#64748b",
+        },
+        destructive: {
+          DEFAULT: "#ef4444",
+          foreground: "#ffffff",
+        },
+        border: "#e2e8f0",
+        input: "#e2e8f0",
+        ring: "#0000ff",
       },
 
       // Breakpoint-based container system

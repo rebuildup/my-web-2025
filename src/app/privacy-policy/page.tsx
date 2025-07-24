@@ -254,7 +254,7 @@ export default function PrivacyPolicy() {
                   </p>
                   <div className="p-4 bg-base">
                     <p className={`${Global_title} mb-2`}>
-                      <strong>連絡先:</strong> 361do.sleep@gmail.com
+                      <strong>連絡先:</strong> 361do.sleep(at)gmail.com
                     </p>
                     <p className={`${Global_title} mb-2`}>
                       <strong>対応時間:</strong> 平日 9:00-18:00

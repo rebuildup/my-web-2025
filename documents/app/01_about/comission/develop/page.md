@@ -39,7 +39,7 @@ Web開発、アプリケーション開発、プラグイン開発などの依�
 
 ### 連絡方法
 
-- **メール**: 361do.sleep@gmail.com
+- **メール**: 361do.sleep(at)gmail.com
 - **X (Twitter)**: @361do_sleep
 - **対応時間**: 平日 9:00-18:00
 - **返信時間**: 24時間以内
@@ -106,7 +106,7 @@ Web開発、アプリケーション開発、プラグイン開発などの依�
     "@type": "Person",
     "name": "木村友亮",
     "alternateName": "samuido",
-    "email": "361do.sleep@gmail.com"
+    "email": "361do.sleep(at)gmail.com"
   },
   "serviceType": "Web Development",
   "areaServed": "Japan",

@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
             "Too many contact form submissions. Please wait 15 minutes before trying again.",
           retryAfter: Math.ceil(RATE_LIMIT_WINDOW / 1000 / 60), // minutes
         },
-        { status: 429 },
+        { status: 429 }
       );
     }
 
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
           message: "Please correct the following errors:",
           errors: validation.errors,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -82,13 +82,13 @@ export async function POST(request: NextRequest) {
           message: result.message,
           errors: result.errors,
         },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
     // Log successful contact form submission (for analytics)
     console.log(
-      `Contact form submitted: ${contactData.email} - ${contactData.subject}`,
+      `Contact form submitted: ${contactData.email} - ${contactData.subject}`
     );
 
     return NextResponse.json({
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
         success: false,
         message: "An unexpected error occurred. Please try again later.",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -118,12 +118,12 @@ export async function GET() {
         recaptchaSiteKey: "6LdZ3XgrAAAAAJhdhTA25XgqZBebMW_reZiIPreG",
         emailRouting: {
           technical: {
-            email: "rebuild.up.up@gmail.com",
+            email: "rebuild.up.up(at)gmail.com",
             handle: "@361do_sleep",
             description: "Technical and development inquiries",
           },
           design: {
-            email: "361do.sleep@gmail.com",
+            email: "361do.sleep(at)gmail.com",
             handle: "@361do_design",
             description: "Video and design inquiries",
           },
@@ -146,7 +146,7 @@ export async function GET() {
     console.error("Contact config API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
