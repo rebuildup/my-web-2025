@@ -87,9 +87,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Log successful contact form submission (for analytics)
-    console.log(
-      `Contact form submitted: ${contactData.email} - ${contactData.subject}`
-    );
+    // console.log(
+    //   `Contact form submitted: ${contactData.email} - ${contactData.subject}`
+    // );
 
     return NextResponse.json({
       success: true,

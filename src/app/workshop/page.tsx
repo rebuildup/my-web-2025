@@ -1,0 +1,124 @@
+import Link from "next/link";
+
+export default function WorkshopPage() {
+  const CardStyle =
+    "bg-base border border-foreground block p-4 space-y-4 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
+  const Card_title =
+    "neue-haas-grotesk-display text-xl text-primary leading-snug";
+  const Card_description = "noto-sans-jp-light text-xs pb-2";
+  const Stats_number = "neue-haas-grotesk-display text-2xl text-accent";
+  const Stats_label = "noto-sans-jp-light text-xs";
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <main className="py-10">
+        <div className="container-system">
+          <div className="space-y-10">
+            <header className="space-y-6">
+              <h1 className="neue-haas-grotesk-display text-4xl text-primary">
+                Workshop
+              </h1>
+              <p className="noto-sans-jp-light text-sm max-w leading-loose">
+                プラグイン配布、技術記事、素材ダウンロードのクリエイティブハブ。
+                <br />
+                AfterEffectsプラグインから開発チュートリアルまで、制作に役立つコンテンツを公開しています。
+              </p>
+            </header>
+            <section aria-labelledby="stats-heading">
+              <h2 id="stats-heading" className="sr-only">
+                統計情報
+              </h2>
+              <div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
+                <div className="bg-base border border-foreground p-4 text-center">
+                  <div className={Stats_number}>0</div>
+                  <div className={Stats_label}>記事</div>
+                </div>
+                <div className="bg-base border border-foreground p-4 text-center">
+                  <div className={Stats_number}>0</div>
+                  <div className={Stats_label}>プラグイン</div>
+                </div>
+                <div className="bg-base border border-foreground p-4 text-center">
+                  <div className={Stats_number}>0</div>
+                  <div className={Stats_label}>ダウンロード</div>
+                </div>
+              </div>
+            </section>
+            <nav aria-label="Workshop categories">
+              <h2 className="sr-only">カテゴリ</h2>
+              <div className="grid-system grid-1 xs:grid-1 sm:grid-3 gap-8">
+                <Link
+                  href="/workshop/blog"
+                  className={CardStyle}
+                  aria-describedby="blog-description"
+                >
+                  <h3 className={Card_title}>Blog</h3>
+                  <p id="blog-description" className={Card_description}>
+                    技術記事・チュートリアル・解説記事
+                  </p>
+                  <div className="pt-2">
+                    <span className="noto-sans-jp-light text-xs text-accent">
+                      0件の記事
+                    </span>
+                  </div>
+                </Link>
+                <Link
+                  href="/workshop/plugins"
+                  className={CardStyle}
+                  aria-describedby="plugins-description"
+                >
+                  <h3 className={Card_title}>Plugins</h3>
+                  <p id="plugins-description" className={Card_description}>
+                    AfterEffects・Premiere Pro プラグイン
+                  </p>
+                  <div className="pt-2">
+                    <span className="noto-sans-jp-light text-xs text-accent">
+                      0個のプラグイン
+                    </span>
+                  </div>
+                </Link>
+                <Link
+                  href="/workshop/downloads"
+                  className={CardStyle}
+                  aria-describedby="downloads-description"
+                >
+                  <h3 className={Card_title}>Downloads</h3>
+                  <p id="downloads-description" className={Card_description}>
+                    テンプレート・素材集・サンプル
+                  </p>
+                  <div className="pt-2">
+                    <span className="noto-sans-jp-light text-xs text-accent">
+                      0個の素材
+                    </span>
+                  </div>
+                </Link>
+              </div>
+            </nav>
+            <section aria-labelledby="latest-heading">
+              <h2
+                id="latest-heading"
+                className="neue-haas-grotesk-display text-2xl text-primary mb-6"
+              >
+                Latest Content
+              </h2>
+              <div className="bg-base border border-foreground p-6">
+                <p className="noto-sans-jp-light text-sm text-center">
+                  最新のコンテンツは各カテゴリページでご確認ください
+                </p>
+              </div>
+            </section>
+            <nav aria-label="Site navigation">
+              <Link
+                href="/"
+                className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+              >
+                <span className="noto-sans-jp-regular text-base leading-snug">
+                  ← Home
+                </span>
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
