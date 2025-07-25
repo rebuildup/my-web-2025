@@ -10,6 +10,16 @@ interface ContentAPIResponse {
   total?: number;
 }
 
+// XML-safe URL encoding function
+function encodeXmlUrl(url: string): string {
+  return url
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
 // Static routes configuration
 const staticRoutes = [
   {
@@ -132,7 +142,7 @@ async function getDynamicRoutes() {
       if (portfolioData.success && portfolioData.data) {
         portfolioData.data.forEach((item: ContentItem) => {
           dynamicRoutes.push({
-            url: `${baseUrl}/portfolio/${item.id}`,
+            url: encodeXmlUrl(`${baseUrl}/portfolio/${item.id}`),
             lastModified: item.updatedAt
               ? new Date(item.updatedAt)
               : new Date(),
@@ -156,7 +166,7 @@ async function getDynamicRoutes() {
       if (blogData.success && blogData.data) {
         blogData.data.forEach((item: ContentItem) => {
           dynamicRoutes.push({
-            url: `${baseUrl}/workshop/blog/${item.id}`,
+            url: encodeXmlUrl(`${baseUrl}/workshop/blog/${item.id}`),
             lastModified: item.updatedAt
               ? new Date(item.updatedAt)
               : new Date(),
@@ -180,7 +190,7 @@ async function getDynamicRoutes() {
       if (pluginData.success && pluginData.data) {
         pluginData.data.forEach((item: ContentItem) => {
           dynamicRoutes.push({
-            url: `${baseUrl}/workshop/plugins/${item.id}`,
+            url: encodeXmlUrl(`${baseUrl}/workshop/plugins/${item.id}`),
             lastModified: item.updatedAt
               ? new Date(item.updatedAt)
               : new Date(),
@@ -204,7 +214,7 @@ async function getDynamicRoutes() {
       if (downloadData.success && downloadData.data) {
         downloadData.data.forEach((item: ContentItem) => {
           dynamicRoutes.push({
-            url: `${baseUrl}/workshop/downloads/${item.id}`,
+            url: encodeXmlUrl(`${baseUrl}/workshop/downloads/${item.id}`),
             lastModified: item.updatedAt
               ? new Date(item.updatedAt)
               : new Date(),
@@ -225,7 +235,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Generate static routes
   const staticSitemapRoutes: MetadataRoute.Sitemap = staticRoutes.map(
     (route) => ({
-      url: `${baseUrl}${route.url}`,
+      url: encodeXmlUrl(`${baseUrl}${route.url}`),
       lastModified: new Date(),
       changeFrequency: route.changeFrequency,
       priority: route.priority,
