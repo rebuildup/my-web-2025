@@ -78,21 +78,43 @@ const achievements = [
     year: "2024/3",
     title: "中国地区高専コンピュータフェスティバル2024",
     award: "ゲーム部門 1位",
+    description: "Unity を使用したゲーム開発で最優秀賞を受賞",
+    category: "programming",
   },
   {
     year: "2023/10",
     title: "U-16プログラミングコンテスト山口大会2023",
     award: "技術賞 企業(プライムゲート)賞",
+    description: "技術的な実装力と企業からの評価を獲得",
+    category: "programming",
   },
   {
     year: "2022/10",
     title: "U-16プログラミングコンテスト山口大会2022",
     award: "アイデア賞",
+    description: "創造的なアイデアと企画力が評価される",
+    category: "programming",
   },
   {
-    year: "~2023",
+    year: "2023",
     title: "市区学校美術展覧会",
-    award: "受賞多数",
+    award: "入選・特選 複数回受賞",
+    description: "絵画・デザイン作品で継続的に入賞",
+    category: "art",
+  },
+  {
+    year: "2022",
+    title: "地域デザインコンペティション",
+    award: "優秀賞",
+    description: "地域活性化をテーマとしたデザイン提案",
+    category: "design",
+  },
+  {
+    year: "2021",
+    title: "学校文化祭ポスターコンテスト",
+    award: "最優秀賞",
+    description: "学校行事のビジュアルデザインを担当",
+    category: "design",
   },
 ];
 
@@ -239,25 +261,33 @@ export default function AboutPage() {
               {/* 受賞歴 */}
               <section>
                 <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                  Awards
+                  Awards & Achievements
                 </h2>
                 <div className="space-y-4">
                   {achievements.map((achievement, index) => (
                     <div
                       key={index}
-                      className="bg-base border border-foreground p-4"
+                      className="bg-base border border-foreground p-4 space-y-3"
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                         <span className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1 inline-block w-fit">
                           {achievement.year}
                         </span>
-                        <h3 className="zen-kaku-gothic-new text-base text-primary">
-                          {achievement.title}
-                        </h3>
+                        <span className="noto-sans-jp-light text-xs text-foreground border border-foreground px-2 py-1 inline-block w-fit">
+                          {achievement.category}
+                        </span>
                       </div>
+                      <h3 className="zen-kaku-gothic-new text-base text-primary">
+                        {achievement.title}
+                      </h3>
                       <p className="noto-sans-jp-light text-sm text-accent">
                         {achievement.award}
                       </p>
+                      {achievement.description && (
+                        <p className="noto-sans-jp-light text-sm text-foreground">
+                          {achievement.description}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>

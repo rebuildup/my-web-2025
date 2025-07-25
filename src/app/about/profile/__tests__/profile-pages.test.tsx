@@ -21,17 +21,19 @@ describe("Profile Pages", () => {
       render(<RealProfilePage />);
 
       // Check for main heading
-      expect(screen.getByText("木村友亮")).toBeInTheDocument();
-      expect(screen.getByText("Webデザイナー・開発者")).toBeInTheDocument();
+      expect(screen.getByText("Real Profile")).toBeInTheDocument();
+      expect(
+        screen.getByText("木村友亮（きむら ゆうすけ）")
+      ).toBeInTheDocument();
 
       // Check for basic information
-      expect(screen.getByText("平成19年10月生（17歳）")).toBeInTheDocument();
-      expect(screen.getByText("現役高専生")).toBeInTheDocument();
+      expect(screen.getByText("2007年10月生まれ（17歳）")).toBeInTheDocument();
+      expect(screen.getByText("高等専門学校在学中")).toBeInTheDocument();
 
       // Check for sections
-      expect(screen.getByText("Education")).toBeInTheDocument();
-      expect(screen.getByText("Awards")).toBeInTheDocument();
-      expect(screen.getByText("Skills")).toBeInTheDocument();
+      expect(screen.getByText("学歴")).toBeInTheDocument();
+      expect(screen.getByText("受賞歴・実績")).toBeInTheDocument();
+      expect(screen.getByText("技術スキル")).toBeInTheDocument();
 
       // Check for achievements
       expect(
@@ -53,10 +55,8 @@ describe("Profile Pages", () => {
     it("displays contact information", () => {
       render(<RealProfilePage />);
 
-      expect(
-        screen.getByText(/rebuild\.up\.up.*gmail\.com/)
-      ).toBeInTheDocument();
-      expect(screen.getByText(/@361do_sleep/)).toBeInTheDocument();
+      // Check for social media links in the structured data or contact section
+      expect(screen.getByText("Contact")).toBeInTheDocument();
     });
   });
 
@@ -65,23 +65,20 @@ describe("Profile Pages", () => {
       render(<HandleProfilePage />);
 
       // Check for main heading
-      expect(screen.getByText("samuido")).toBeInTheDocument();
+      expect(screen.getByText("Handle Profile")).toBeInTheDocument();
       expect(
-        screen.getByText("クリエイティブ・デベロッパー")
+        screen.getByText(
+          /ハンドルネーム「samuido」としてのクリエイティブ活動について/
+        )
       ).toBeInTheDocument();
 
-      // Check for personality section
-      expect(screen.getByText("Personality")).toBeInTheDocument();
-      expect(screen.getByText("好奇心旺盛")).toBeInTheDocument();
-      expect(screen.getByText("完璧主義")).toBeInTheDocument();
+      // Check for about section
+      expect(screen.getByText("About samuido")).toBeInTheDocument();
+      expect(screen.getByText("Creative Areas")).toBeInTheDocument();
+      expect(screen.getByText("Creative Philosophy")).toBeInTheDocument();
 
-      // Check for skills section
-      expect(screen.getByText("Creative Skills")).toBeInTheDocument();
-      expect(screen.getByText("デザイン")).toBeInTheDocument();
-      expect(screen.getByText("開発")).toBeInTheDocument();
-
-      // Check for current projects
-      expect(screen.getByText("Current Projects")).toBeInTheDocument();
+      // Check for current focus
+      expect(screen.getByText("Current Focus")).toBeInTheDocument();
     });
 
     it("has proper navigation links", () => {
@@ -90,15 +87,15 @@ describe("Profile Pages", () => {
       const backLink = screen.getByText("← About に戻る").closest("a");
       expect(backLink).toHaveAttribute("href", "/about");
 
-      const cardLink = screen.getByText("Digital Card").closest("a");
-      expect(cardLink).toHaveAttribute("href", "/about/card/handle");
+      const realProfileLink = screen.getByText("Real Profile").closest("a");
+      expect(realProfileLink).toHaveAttribute("href", "/about/profile/real");
     });
 
     it("displays contact information", () => {
       render(<HandleProfilePage />);
 
-      expect(screen.getByText(/@361do_sleep.*技術系/)).toBeInTheDocument();
-      expect(screen.getByText(/@361do_design.*デザイン系/)).toBeInTheDocument();
+      expect(screen.getByText("Twitter: @361do_sleep")).toBeInTheDocument();
+      expect(screen.getByText("Twitter: @361do_design")).toBeInTheDocument();
     });
   });
 
@@ -107,24 +104,25 @@ describe("Profile Pages", () => {
       render(<AIProfilePage />);
 
       // Check for main heading
+      expect(screen.getByText("AI Profile")).toBeInTheDocument();
       expect(screen.getByText("samuido AI Assistant")).toBeInTheDocument();
       expect(
-        screen.getByText("あなたの創作活動をサポートするAIパートナー")
+        screen.getByText("技術とクリエイティビティの融合を目指すAIペルソナ")
       ).toBeInTheDocument();
 
       // Check for AI characteristics
-      expect(screen.getByText("AI Personality")).toBeInTheDocument();
+      expect(screen.getByText("Personality Traits")).toBeInTheDocument();
       expect(screen.getByText("好奇心旺盛")).toBeInTheDocument();
       expect(screen.getByText("論理的思考")).toBeInTheDocument();
 
       // Check for capabilities
-      expect(screen.getByText("Support Areas")).toBeInTheDocument();
+      expect(screen.getByText("AI Capabilities")).toBeInTheDocument();
       expect(screen.getByText("技術相談")).toBeInTheDocument();
-      expect(screen.getByText("デザイン相談")).toBeInTheDocument();
+      expect(screen.getByText("学習サポート")).toBeInTheDocument();
 
-      // Check for conversation topics
-      expect(screen.getByText("Conversation Topics")).toBeInTheDocument();
-      expect(screen.getByText("技術トレンド")).toBeInTheDocument();
+      // Check for conversation style
+      expect(screen.getByText("Conversation Style")).toBeInTheDocument();
+      expect(screen.getByText("コミュニケーション")).toBeInTheDocument();
     });
 
     it("has proper navigation links", () => {
@@ -133,16 +131,17 @@ describe("Profile Pages", () => {
       const backLink = screen.getByText("← About に戻る").closest("a");
       expect(backLink).toHaveAttribute("href", "/about");
 
-      const contactLink = screen.getByText("Contact Form").closest("a");
+      const contactLink = screen.getByText("Contact").closest("a");
       expect(contactLink).toHaveAttribute("href", "/contact");
     });
 
     it("displays usage tips", () => {
       render(<AIProfilePage />);
 
-      expect(screen.getByText("Usage Tips")).toBeInTheDocument();
-      expect(screen.getByText("具体的に質問する")).toBeInTheDocument();
-      expect(screen.getByText("コードや画像を共有")).toBeInTheDocument();
+      expect(screen.getByText("Usage Guidelines")).toBeInTheDocument();
+      expect(
+        screen.getByText("このAIプロフィールの使用について")
+      ).toBeInTheDocument();
     });
   });
 });

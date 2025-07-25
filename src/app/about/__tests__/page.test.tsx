@@ -30,7 +30,7 @@ describe("About Page", () => {
     expect(screen.getByText("プログラミング")).toBeInTheDocument();
 
     // Check for achievements section
-    expect(screen.getByText("Awards")).toBeInTheDocument();
+    expect(screen.getByText("Awards & Achievements")).toBeInTheDocument();
 
     // Check for navigation cards
     expect(screen.getByText("Digital Card")).toBeInTheDocument();
