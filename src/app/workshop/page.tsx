@@ -1,6 +1,74 @@
 import Link from "next/link";
+import { ContentItem } from "@/types/content";
 
-export default function WorkshopPage() {
+async function getWorkshopStats() {
+  try {
+    const [blogResponse, pluginResponse, downloadResponse] = await Promise.all([
+      fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/blog`,
+        { cache: "no-store" },
+      ),
+      fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/plugin`,
+        { cache: "no-store" },
+      ),
+      fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/download`,
+        { cache: "no-store" },
+      ),
+    ]);
+
+    const [blogData, pluginData, downloadData] = await Promise.all([
+      blogResponse.ok ? blogResponse.json() : { data: [] },
+      pluginResponse.ok ? pluginResponse.json() : { data: [] },
+      downloadResponse.ok ? downloadResponse.json() : { data: [] },
+    ]);
+
+    const blogPosts = blogData.data || [];
+    const plugins = pluginData.data || [];
+    const downloads = downloadData.data || [];
+
+    return {
+      blogCount: blogPosts.filter(
+        (item: ContentItem) => item.status === "published",
+      ).length,
+      pluginCount: plugins.filter(
+        (item: ContentItem) => item.status === "published",
+      ).length,
+      downloadCount: downloads.filter(
+        (item: ContentItem) => item.status === "published",
+      ).length,
+      latestContent: [
+        ...blogPosts
+          .filter((item: ContentItem) => item.status === "published")
+          .slice(0, 2),
+        ...plugins
+          .filter((item: ContentItem) => item.status === "published")
+          .slice(0, 2),
+        ...downloads
+          .filter((item: ContentItem) => item.status === "published")
+          .slice(0, 2),
+      ]
+        .sort(
+          (a, b) =>
+            new Date(b.publishedAt || b.createdAt).getTime() -
+            new Date(a.publishedAt || a.createdAt).getTime(),
+        )
+        .slice(0, 3),
+    };
+  } catch (error) {
+    console.error("Error fetching workshop stats:", error);
+    return {
+      blogCount: 0,
+      pluginCount: 0,
+      downloadCount: 0,
+      latestContent: [],
+    };
+  }
+}
+
+export default async function WorkshopPage() {
+  const stats = await getWorkshopStats();
   const CardStyle =
     "bg-base border border-foreground block p-4 space-y-4 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
   const Card_title =
@@ -30,15 +98,15 @@ export default function WorkshopPage() {
               </h2>
               <div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
                 <div className="bg-base border border-foreground p-4 text-center">
-                  <div className={Stats_number}>0</div>
+                  <div className={Stats_number}>{stats.blogCount}</div>
                   <div className={Stats_label}>記事</div>
                 </div>
                 <div className="bg-base border border-foreground p-4 text-center">
-                  <div className={Stats_number}>0</div>
+                  <div className={Stats_number}>{stats.pluginCount}</div>
                   <div className={Stats_label}>プラグイン</div>
                 </div>
                 <div className="bg-base border border-foreground p-4 text-center">
-                  <div className={Stats_number}>0</div>
+                  <div className={Stats_number}>{stats.downloadCount}</div>
                   <div className={Stats_label}>ダウンロード</div>
                 </div>
               </div>
@@ -57,7 +125,7 @@ export default function WorkshopPage() {
                   </p>
                   <div className="pt-2">
                     <span className="noto-sans-jp-light text-xs text-accent">
-                      0件の記事
+                      {stats.blogCount}件の記事
                     </span>
                   </div>
                 </Link>
@@ -72,7 +140,7 @@ export default function WorkshopPage() {
                   </p>
                   <div className="pt-2">
                     <span className="noto-sans-jp-light text-xs text-accent">
-                      0個のプラグイン
+                      {stats.pluginCount}個のプラグイン
                     </span>
                   </div>
                 </Link>
@@ -87,7 +155,7 @@ export default function WorkshopPage() {
                   </p>
                   <div className="pt-2">
                     <span className="noto-sans-jp-light text-xs text-accent">
-                      0個の素材
+                      {stats.downloadCount}個の素材
                     </span>
                   </div>
                 </Link>
@@ -100,11 +168,68 @@ export default function WorkshopPage() {
               >
                 Latest Content
               </h2>
-              <div className="bg-base border border-foreground p-6">
-                <p className="noto-sans-jp-light text-sm text-center">
-                  最新のコンテンツは各カテゴリページでご確認ください
-                </p>
-              </div>
+              {stats.latestContent.length > 0 ? (
+                <div className="grid-system grid-1 gap-4">
+                  {stats.latestContent.map((content) => {
+                    const getContentUrl = (content: ContentItem) => {
+                      switch (content.type) {
+                        case "blog":
+                          return `/workshop/blog/${content.id}`;
+                        case "plugin":
+                          return `/workshop/plugins/${content.id}`;
+                        case "download":
+                          return `/workshop/downloads/${content.id}`;
+                        default:
+                          return "#";
+                      }
+                    };
+
+                    const getContentTypeLabel = (type: string) => {
+                      switch (type) {
+                        case "blog":
+                          return "Blog";
+                        case "plugin":
+                          return "Plugin";
+                        case "download":
+                          return "Download";
+                        default:
+                          return type;
+                      }
+                    };
+
+                    return (
+                      <Link
+                        key={content.id}
+                        href={getContentUrl(content)}
+                        className={CardStyle}
+                      >
+                        <div className="flex justify-between items-start">
+                          <h3 className={Card_title}>{content.title}</h3>
+                          <div className="flex flex-col items-end space-y-1">
+                            <span className="text-xs text-accent uppercase">
+                              {getContentTypeLabel(content.type)}
+                            </span>
+                            <time className="text-xs text-accent">
+                              {new Date(
+                                content.publishedAt || content.createdAt,
+                              ).toLocaleDateString("ja-JP")}
+                            </time>
+                          </div>
+                        </div>
+                        <p className={Card_description}>
+                          {content.description}
+                        </p>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="bg-base border border-foreground p-6">
+                  <p className="noto-sans-jp-light text-sm text-center">
+                    最新のコンテンツは各カテゴリページでご確認ください
+                  </p>
+                </div>
+              )}
             </section>
             <nav aria-label="Site navigation">
               <Link

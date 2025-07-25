@@ -377,12 +377,16 @@ Based on analysis of the current codebase and requirements, this implementation 
 
 ### 7.3 Workshop Content Management
 
-- [ ] 7.3.1 Create unified content management
-  - Implement shared detail pages for blog/plugins/downloads
-  - Create consistent Markdown rendering across all content types
-  - Add embedded content support with security measures
-  - Ensure proper content categorization and tagging
-  - Implement content search and discovery features
+- [x] 7.3.1 Create unified content management
+  - ✅ Implement shared detail pages for blog/plugins/downloads
+  - ✅ Create consistent Markdown rendering across all content types
+  - ✅ Add embedded content support with security measures (YouTube, Vimeo, Code, X, iframe)
+  - ✅ Ensure proper content categorization and tagging
+  - ✅ Implement content search and discovery features
+  - ✅ Fix API data extraction issues (data.data property handling)
+  - ✅ Create comprehensive test script for quality assurance
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate on all tests (lint, type-check, build, jest, playwright, prettier)
   - _Requirements: documents/app/03_workshop/README.md unified specifications_
 
 - [ ] 7.3.2 Develop workshop analytics and statistics
@@ -391,6 +395,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Add popular content rankings and recommendations
   - Create analytics dashboard for content performance
   - Implement user engagement metrics and insights
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/03_workshop/README.md analytics specifications_
 
 ## Phase 8: Tools Section Implementation (Priority 4 - High Accessibility Focus)
@@ -403,6 +409,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Create proper navigation to individual tools with keyboard support
   - Implement responsive design with enhanced mobile experience
   - Add tool categories and filtering capabilities
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/README.md main page specifications_
 
 ### 8.2 Color and Design Tools
@@ -413,6 +421,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Add palette saving, management, and export functionality
   - Create CSS/Tailwind/JSON export formats with code generation
   - Implement color accessibility checking and contrast validation
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/color-palette/page.md complete specifications_
 
 - [ ] 8.2.2 Implement QR Code Generator
@@ -421,6 +431,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Implement PNG/SVG/PDF export functionality with high quality
   - Ensure offline functionality with local processing
   - Add QR code validation and testing features
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/README.md QR generator specifications_
 
 ### 8.3 Text and Code Tools
@@ -431,6 +443,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Create real-time counting with hiragana, katakana, kanji, alphanumeric classification
   - Implement advanced statistics (density, average, longest line)
   - Add customizable display settings and export options
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/text-counter/page.md complete specifications_
 
 - [ ] 8.3.2 Develop SVG to TSX Converter
@@ -439,6 +453,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Add local processing without file uploads for security
   - Create TSX download functionality with optimization
   - Implement SVG element support and code optimization
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/svg2tsx/page.md complete specifications_
 
 ### 8.4 Media and Preview Tools
@@ -449,6 +465,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Implement animation preview with playback controls
   - Create export functionality (GIF, MP4) with quality settings
   - Add frame management and editing capabilities
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/sequential-png-preview/page.md complete specifications_
 
 ### 8.5 Productivity and Game Tools
@@ -459,6 +477,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Create timer customization options and presets
   - Implement browser notification system with permission handling
   - Add statistics tracking and productivity insights
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/README.md Pomodoro specifications_
 
 - [ ] 8.5.2 Develop Pi Memory Game
@@ -467,6 +487,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Add score recording, tracking, and leaderboard functionality
   - Create game reset and progression features
   - Implement educational features and Pi digit learning aids
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/README.md Pi game specifications_
 
 ### 8.6 Professional and Development Tools
@@ -477,6 +499,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Implement template generation and export with formatting
   - Create professional email formatting and validation
   - Add template library and customization options
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/README.md business mail specifications_
 
 - [ ] 8.6.2 Create After Effects Expression Helper
@@ -485,6 +509,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Create expression preview and copy functionality
   - Implement parameter documentation and examples
   - Add expression validation and error checking
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/README.md AE expression specifications_
 
 - [ ] 8.6.3 Develop ProtoType Typing Game
@@ -493,6 +519,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Add score recording, statistics, and progress tracking
   - Create multiple game modes and difficulty levels
   - Implement GitHub repository integration for updates
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/ProtoType/page.md complete specifications_
 
 ### 8.7 Tools Accessibility and Quality Assurance
@@ -503,6 +531,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Create proper focus management and visual indicators
   - Ensure WCAG 2.1 AA compliance with color contrast and text scaling
   - Add accessibility testing and validation for each tool
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/README.md accessibility focus_
 
 - [ ] 8.7.2 Optimize tools performance and offline functionality
@@ -511,6 +541,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Add proper error handling and user feedback
   - Create performance optimization for heavy computations
   - Implement data persistence and settings management
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/README.md offline and performance requirements_
 
 ## Phase 9: Admin Panel Implementation (Priority 5 - Development Only)
@@ -523,6 +555,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Create access control and localhost-only restrictions
   - Implement admin dashboard with system status
   - Add quick access to common admin tasks
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/05_admin/README.md_
 
 ### 9.2 Data Manager Implementation
@@ -533,6 +567,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Add file upload and processing with ffmpeg.wasm integration
   - Create real-time preview functionality with live updates
   - Implement batch operations and bulk editing capabilities
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/05_admin/data-manager/page.md complete specifications_
 
 - [ ] 9.2.2 Implement file management system
@@ -541,6 +577,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Implement image processing with ffmpeg.wasm (WebP conversion, optimization)
   - Add thumbnail generation and multiple format support
   - Create file versioning and backup capabilities
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/05_admin/README.md file processing specifications_
 
 ### 9.3 Content Processing and Optimization
@@ -551,6 +589,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Add search index regeneration after content changes
   - Implement OGP image management and generation
   - Create favicon management system
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/05_admin/README.md content processing_
 
 - [ ] 9.3.2 Develop admin analytics and monitoring
@@ -559,6 +599,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Add system health monitoring and alerts
   - Create backup and restore functionality
   - Implement audit logging for admin actions
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/05_admin/README.md monitoring specifications_
 
 ## Phase 10: Final Integration and Optimization (Priority 6)
@@ -571,6 +613,8 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Add image optimization and lazy loading throughout site
   - Create service worker for offline functionality
   - Implement performance monitoring and alerting
+  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/05_requirement.md performance specifications_
 
 - [ ] 10.1.2 Optimize Core Web Vitals

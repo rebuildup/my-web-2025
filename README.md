@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# samuido Website
+
+This is a comprehensive personal portfolio website built with [Next.js](https://nextjs.org) 15.4.3, featuring a unified content management system for blog posts, plugin distribution, and download materials.
 
 ## Getting Started
 
@@ -6,19 +8,54 @@ First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Quality Assurance
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project maintains 100% test pass rates across all quality checks. Use the comprehensive test script to verify code quality:
+
+### Run All Tests (Recommended)
+
+```bash
+# PowerShell (Windows)
+npm run test:all
+
+# Bash (Linux/macOS)
+npm run test:all:bash
+```
+
+### Individual Test Commands
+
+```bash
+# Linting
+npm run lint
+
+# Type checking
+npm run type-check
+
+# Build verification
+npm run build
+
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Format check
+npx prettier --check src/app/workshop/
+```
+
+## Project Structure
+
+- `/src/app/workshop/` - Unified content management system
+  - Blog posts (`/workshop/blog`)
+  - Plugin distribution (`/workshop/plugins`)
+  - Download materials (`/workshop/downloads`)
+- `/scripts/` - Quality assurance scripts
+- `/public/data/` - JSON-based content storage
 
 ## Learn More
 
