@@ -47,8 +47,11 @@ describe("SVG Parser", () => {
     });
 
     it("returns null for invalid SVG", () => {
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
       const result = parseSVG(invalidSVG);
       expect(result).toBeNull();
+      expect(consoleSpy).toHaveBeenCalled();
+      consoleSpy.mockRestore();
     });
 
     it("handles nested elements", () => {

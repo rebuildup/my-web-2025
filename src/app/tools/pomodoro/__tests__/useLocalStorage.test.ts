@@ -76,6 +76,7 @@ describe("useLocalStorage", () => {
   });
 
   it("handles JSON parsing errors gracefully", () => {
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation();
     localStorageMock.getItem.mockReturnValue("invalid-json");
 
     const { result } = renderHook(() =>
@@ -83,6 +84,8 @@ describe("useLocalStorage", () => {
     );
 
     expect(result.current[0]).toBe("fallback");
+    expect(consoleSpy).toHaveBeenCalled();
+    consoleSpy.mockRestore();
   });
 
   it("handles localStorage setItem errors gracefully", () => {
