@@ -44,40 +44,11 @@ export default function TextCounterTool() {
     setText("");
   }, []);
 
-  const handleCopyStats = useCallback(() => {
-    const statsText = `
-テキスト統計情報
-================
-
-基本統計:
-- 総文字数: ${stats.totalCharacters}
-- 文字数（スペース除く）: ${stats.charactersWithoutSpaces}
-- 文字数（改行除く）: ${stats.charactersWithoutNewlines}
-- 文字数（空白除く）: ${stats.charactersWithoutWhitespace}
-
-構造統計:
-- 単語数: ${stats.wordCount}
-- 行数: ${stats.lineCount}
-- 段落数: ${stats.paragraphCount}
-- 文数: ${stats.sentenceCount}
-
-文字種別:
-- ひらがな: ${stats.characterTypes.hiragana}
-- カタカナ: ${stats.characterTypes.katakana}
-- 漢字: ${stats.characterTypes.kanji}
-- 英数字: ${stats.characterTypes.alphanumeric}
-- 記号: ${stats.characterTypes.symbols}
-
-詳細統計:
-- 平均行文字数: ${stats.averageCharactersPerLine.toFixed(1)}
-- 最長行文字数: ${stats.longestLineLength}
-- 文字密度: ${stats.characterDensity.toFixed(2)}%
-    `.trim();
-
-    navigator.clipboard.writeText(statsText).then(() => {
+  const handleCopyText = useCallback(() => {
+    navigator.clipboard.writeText(text).then(() => {
       // Could add a toast notification here
     });
-  }, [stats]);
+  }, [text]);
 
   return (
     <div
@@ -89,19 +60,19 @@ export default function TextCounterTool() {
         <div className="flex gap-2">
           <button
             onClick={handleClear}
-            className="flex items-center gap-2 px-4 py-2 bg-base border border-foreground hover:bg-accent transition-colors"
+            className="flex items-center justify-center w-10 h-10 bg-base border border-foreground hover:bg-accent transition-colors"
             aria-label="テキストをクリア"
+            title="クリア"
           >
             <RotateCcw size={16} />
-            クリア
           </button>
           <button
-            onClick={handleCopyStats}
-            className="flex items-center gap-2 px-4 py-2 bg-base border border-foreground hover:bg-accent transition-colors"
-            aria-label="統計情報をコピー"
+            onClick={handleCopyText}
+            className="flex items-center justify-center w-10 h-10 bg-base border border-foreground hover:bg-accent transition-colors"
+            aria-label="テキストをコピー"
+            title="テキストをコピー"
           >
             <Copy size={16} />
-            統計をコピー
           </button>
         </div>
 
@@ -113,40 +84,40 @@ export default function TextCounterTool() {
                 showGraphs: !prev.showGraphs,
               }))
             }
-            className={`flex items-center gap-2 px-4 py-2 border border-foreground transition-colors ${
+            className={`flex items-center justify-center w-10 h-10 border border-foreground transition-colors ${
               displaySettings.showGraphs
                 ? "bg-primary text-background"
                 : "bg-base hover:bg-accent"
             }`}
             aria-label="グラフ表示を切り替え"
+            title="グラフ"
           >
             <BarChart3 size={16} />
-            グラフ
           </button>
           <button
             onClick={() => setShowSettings(!showSettings)}
-            className={`flex items-center gap-2 px-4 py-2 border border-foreground transition-colors ${
+            className={`flex items-center justify-center w-10 h-10 border border-foreground transition-colors ${
               showSettings
                 ? "bg-primary text-background"
                 : "bg-base hover:bg-accent"
             }`}
             aria-label="設定パネルを切り替え"
+            title="設定"
           >
             <Settings size={16} />
-            設定
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <TextInput
-            value={text}
-            onChange={handleTextChange}
-            placeholder="ここにテキストを入力してください..."
-            fontSize={displaySettings.fontSize}
-          />
+      <div className="space-y-6">
+        <TextInput
+          value={text}
+          onChange={handleTextChange}
+          placeholder="ここにテキストを入力してください..."
+          fontSize={displaySettings.fontSize}
+        />
 
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {showSettings && (
             <SettingsPanel
               settings={settings}
@@ -155,10 +126,13 @@ export default function TextCounterTool() {
               onDisplaySettingsChange={setDisplaySettings}
             />
           )}
-        </div>
 
-        <div className="space-y-4">
-          <StatisticsDisplay stats={stats} displaySettings={displaySettings} />
+          <div className={showSettings ? "" : "lg:col-span-2"}>
+            <StatisticsDisplay
+              stats={stats}
+              displaySettings={displaySettings}
+            />
+          </div>
         </div>
       </div>
     </div>
