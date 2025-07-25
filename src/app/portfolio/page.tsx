@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { Code, Video, Palette, Eye, Calendar } from "lucide-react";
+import { PortfolioAnalytics, GoogleAnalytics } from "./components";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Portfolio - samuido | 作品集・開発・映像・デザイン",
@@ -250,6 +252,20 @@ export default function PortfolioPage() {
                       ))}
                     </div>
                   </div>
+
+                  {/* Live Analytics */}
+                  <div className="pt-4 border-t border-foreground">
+                    <Suspense
+                      fallback={
+                        <div className="animate-pulse">
+                          <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded w-24"></div>
+                        </div>
+                      }
+                    >
+                      <PortfolioAnalytics showSummary={true} />
+                    </Suspense>
+                  </div>
                 </div>
               </section>
 
@@ -417,6 +433,9 @@ export default function PortfolioPage() {
             </div>
           </div>
         </main>
+
+        {/* Google Analytics */}
+        <GoogleAnalytics />
       </div>
     </>
   );

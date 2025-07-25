@@ -29,6 +29,11 @@ Based on analysis of the current codebase and requirements, this implementation 
 - Lighthouse CI: 100% scores in Performance, Accessibility, Best Practices, SEO
 - Every task MUST reference documents/ directory for implementation guidance
 - **ALL PAGE STYLES MUST FOLLOW ROOT PAGE DESIGN PATTERNS**: Use src/app/page.tsx as the style reference for consistent design system implementation across all pages
+- **GLOBAL DESIGN SYSTEM COMPLIANCE**: All components MUST use the unified design system from Style.md including:
+  - Typography: neue-haas-grotesk-display, zen-kaku-gothic-new, noto-sans-jp-light, noto-sans-jp-regular, shippori-antique-b1-regular
+  - Colors: text-primary, text-foreground, text-accent, bg-base, bg-background, border-foreground
+  - Layout: container-system, grid-system, grid-1/2/3/4, space-y-_, gap-_
+  - Components: bg-base border border-foreground p-4 pattern for cards
 - Site structure MUST support easy modification and extension (flexible architecture)
 - All implementations MUST be production-ready and maintainable
 
@@ -324,7 +329,7 @@ Based on analysis of the current codebase and requirements, this implementation 
   - Create performance optimization for heavy interactive content
   - _Requirements: documents/app/02_portfolio/README.md playground specifications_
 
-- [ ] 6.3.2 Implement portfolio statistics and analytics
+- [x] 6.3.2 Implement portfolio statistics and analytics
   - Add view count tracking for all portfolio items
   - Create analytics integration with Google Analytics
   - Implement proper data aggregation and reporting
