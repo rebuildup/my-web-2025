@@ -66,6 +66,26 @@ export default function PomodoroTimer() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { requestPermission, showNotification } = useNotifications();
 
+  const handleNextSession = useCallback(() => {
+    if (currentSession === "work") {
+      const newSessionCount = sessionCount + 1;
+      setSessionCount(newSessionCount);
+
+      if (newSessionCount % settings.sessionsUntilLongBreak === 0) {
+        setCurrentSession("longBreak");
+        setTimeLeft(settings.longBreakDuration * 60);
+      } else {
+        setCurrentSession("shortBreak");
+        setTimeLeft(settings.shortBreakDuration * 60);
+      }
+    } else {
+      setCurrentSession("work");
+      setTimeLeft(settings.workDuration * 60);
+    }
+
+    setTimerState("idle");
+  }, [currentSession, sessionCount, settings]);
+
   const handleSessionComplete = useCallback(() => {
     setTimerState("completed");
 
@@ -139,7 +159,14 @@ export default function PomodoroTimer() {
         setTimerState("running");
       }, 1000);
     }
-  }, [currentSession, settings, showNotification, setSessions, setStats]);
+  }, [
+    currentSession,
+    settings,
+    showNotification,
+    setSessions,
+    setStats,
+    handleNextSession,
+  ]);
 
   // Calculate initial time when settings change
   useEffect(() => {
@@ -201,26 +228,6 @@ export default function PomodoroTimer() {
           : settings.longBreakDuration;
     setTimeLeft(duration * 60);
   }, [currentSession, settings]);
-
-  const handleNextSession = useCallback(() => {
-    if (currentSession === "work") {
-      const newSessionCount = sessionCount + 1;
-      setSessionCount(newSessionCount);
-
-      if (newSessionCount % settings.sessionsUntilLongBreak === 0) {
-        setCurrentSession("longBreak");
-        setTimeLeft(settings.longBreakDuration * 60);
-      } else {
-        setCurrentSession("shortBreak");
-        setTimeLeft(settings.shortBreakDuration * 60);
-      }
-    } else {
-      setCurrentSession("work");
-      setTimeLeft(settings.workDuration * 60);
-    }
-
-    setTimerState("idle");
-  }, [currentSession, sessionCount, settings]);
 
   const handleSkip = useCallback(() => {
     handleSessionComplete();

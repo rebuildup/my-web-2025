@@ -6,15 +6,15 @@ async function getWorkshopStats() {
     const [blogResponse, pluginResponse, downloadResponse] = await Promise.all([
       fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/blog`,
-        { cache: "no-store" },
+        { next: { revalidate: 300 } },
       ),
       fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/plugin`,
-        { cache: "no-store" },
+        { next: { revalidate: 300 } },
       ),
       fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/download`,
-        { cache: "no-store" },
+        { next: { revalidate: 300 } },
       ),
     ]);
 

@@ -199,7 +199,10 @@ jobs:
 
           # 5. Prepare deployment directory
           sudo rm -rf /var/www/yusuke-kim/*
+          sudo mkdir -p /var/www/yusuke-kim        
+          sudo chown $USER:www-data /var/www/yusuke-kim
           cd /var/www/yusuke-kim
+          sudo rm -rf ./*
 
           # 6. Extract new files
           tar -xzf /tmp/deployment.tar.gz

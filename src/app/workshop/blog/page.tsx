@@ -38,7 +38,7 @@ async function getBlogPosts(): Promise<ContentItem[]> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/blog`,
       {
-        cache: "no-store",
+        next: { revalidate: 300 },
       },
     );
     if (!response.ok) {

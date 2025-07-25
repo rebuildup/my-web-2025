@@ -42,7 +42,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       // If error, return initial value
       setStoredValue(initialValue);
     }
-  }, [key]);
+  }, [key, initialValue]);
 
   return [storedValue, setValue] as const;
 }
