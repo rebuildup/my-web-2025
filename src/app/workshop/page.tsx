@@ -231,6 +231,28 @@ export default async function WorkshopPage() {
                 </div>
               )}
             </section>
+            <section aria-labelledby="analytics-section">
+              <h2 id="analytics-section" className="sr-only">
+                Analytics
+              </h2>
+              <Link
+                href="/workshop/analytics"
+                className="bg-base border border-foreground block p-4 space-y-4 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+              >
+                <h3 className="neue-haas-grotesk-display text-xl text-primary leading-snug">
+                  Analytics Dashboard
+                </h3>
+                <p className="noto-sans-jp-light text-xs pb-2">
+                  コンテンツパフォーマンス・人気記事・ダウンロード統計
+                </p>
+                <div className="pt-2">
+                  <span className="noto-sans-jp-light text-xs text-accent">
+                    詳細な分析データを表示
+                  </span>
+                </div>
+              </Link>
+            </section>
+
             <nav aria-label="Site navigation">
               <Link
                 href="/"

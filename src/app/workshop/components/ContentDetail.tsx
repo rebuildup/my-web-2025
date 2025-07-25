@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ContentItem, MediaEmbed } from "@/types/content";
+import ContentRecommendations from "./ContentRecommendations";
 
 interface ContentDetailProps {
   content: ContentItem;
@@ -94,6 +95,7 @@ export default function ContentDetail({
 }: ContentDetailProps) {
   const [markdownContent, setMarkdownContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
+  const [viewTracked, setViewTracked] = useState(false);
 
   useEffect(() => {
     const loadMarkdownContent = async () => {
@@ -115,6 +117,30 @@ export default function ContentDetail({
 
     loadMarkdownContent();
   }, [content.contentPath, content.content]);
+
+  // Track view when component mounts
+  useEffect(() => {
+    const trackView = async () => {
+      if (!viewTracked) {
+        try {
+          await fetch("/api/stats/view", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ contentId: content.id }),
+          });
+          setViewTracked(true);
+        } catch (error) {
+          console.error("Error tracking view:", error);
+        }
+      }
+    };
+
+    // Track view after a short delay to ensure user is actually viewing content
+    const timer = setTimeout(trackView, 2000);
+    return () => clearTimeout(timer);
+  }, [content.id, viewTracked]);
 
   const handleDownload = async () => {
     if (content.downloadInfo) {
@@ -337,6 +363,15 @@ export default function ContentDetail({
                 </div>
               )}
             </section>
+
+            {/* Content Recommendations */}
+            <ContentRecommendations
+              currentContentId={content.id}
+              contentType={content.type}
+              category={content.category}
+              tags={content.tags}
+              limit={3}
+            />
 
             <nav aria-label="Site navigation">
               <Link
