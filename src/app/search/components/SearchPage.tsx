@@ -82,7 +82,7 @@ export default function SearchPage() {
         setLoading(false);
       }
     },
-    [searchMode]
+    [searchMode],
   );
 
   // Get search suggestions
@@ -94,7 +94,7 @@ export default function SearchPage() {
 
     try {
       const response = await fetch(
-        `/api/search/suggestions?q=${encodeURIComponent(searchQuery)}`
+        `/api/search/suggestions?q=${encodeURIComponent(searchQuery)}`,
       );
       if (response.ok) {
         const data = await response.json();
@@ -262,7 +262,7 @@ export default function SearchPage() {
                             <option key={type} value={type}>
                               {label}
                             </option>
-                          )
+                          ),
                         )}
                       </select>
                     </div>

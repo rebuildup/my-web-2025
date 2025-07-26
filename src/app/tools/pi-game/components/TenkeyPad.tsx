@@ -17,7 +17,7 @@ export default function TenkeyPad({
         onInput(digit);
       }
     },
-    [onInput, disabled]
+    [onInput, disabled],
   );
 
   // Handle keyboard input

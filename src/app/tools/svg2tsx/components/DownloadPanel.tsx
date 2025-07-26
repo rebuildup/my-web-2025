@@ -14,7 +14,7 @@ export function DownloadPanel({
   settings,
 }: DownloadPanelProps) {
   const [fileName, setFileName] = useState(
-    settings.componentName || "Component"
+    settings.componentName || "Component",
   );
   const [copySuccess, setCopySuccess] = useState(false);
 

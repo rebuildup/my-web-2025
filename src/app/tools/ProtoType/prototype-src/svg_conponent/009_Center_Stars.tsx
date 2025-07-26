@@ -133,4 +133,3 @@ const CenterStarsSvg: React.FC<CenterStarsSvgProps> = ({
 };
 
 export default CenterStarsSvg;
-

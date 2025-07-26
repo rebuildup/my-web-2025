@@ -17,7 +17,7 @@ export default function FrameGrid({
   onFrameSelect,
 }: FrameGridProps) {
   const [gridSize, setGridSize] = useState<"small" | "medium" | "large">(
-    "medium"
+    "medium",
   );
   const [showInfo, setShowInfo] = useState(true);
 
@@ -152,7 +152,7 @@ export default function FrameGrid({
             <span className="text-foreground/70">総ファイルサイズ:</span>
             <span className="ml-2 font-medium">
               {formatFileSize(
-                frames.reduce((total, frame) => total + frame.size, 0)
+                frames.reduce((total, frame) => total + frame.size, 0),
               )}
             </span>
           </div>
@@ -161,12 +161,12 @@ export default function FrameGrid({
             <span className="ml-2 font-medium">
               {Math.round(
                 frames.reduce((total, frame) => total + frame.width, 0) /
-                  frames.length
+                  frames.length,
               )}{" "}
               ×{" "}
               {Math.round(
                 frames.reduce((total, frame) => total + frame.height, 0) /
-                  frames.length
+                  frames.length,
               )}
               px
             </span>

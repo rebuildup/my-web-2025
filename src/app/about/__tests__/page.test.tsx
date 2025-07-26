@@ -64,14 +64,14 @@ describe("About Page", () => {
 
     // Check for specific achievements
     expect(
-      screen.getByText("中国地区高専コンピュータフェスティバル2024")
+      screen.getByText("中国地区高専コンピュータフェスティバル2024"),
     ).toBeInTheDocument();
     expect(screen.getByText("ゲーム部門 1位")).toBeInTheDocument();
     expect(
-      screen.getByText("U-16プログラミングコンテスト山口大会2023")
+      screen.getByText("U-16プログラミングコンテスト山口大会2023"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("技術賞 企業(プライムゲート)賞")
+      screen.getByText("技術賞 企業(プライムゲート)賞"),
     ).toBeInTheDocument();
   });
 
@@ -87,7 +87,7 @@ describe("About Page", () => {
       .closest("a");
     expect(handleProfileSection).toHaveAttribute(
       "href",
-      "/about/profile/handle"
+      "/about/profile/handle",
     );
 
     // Check for navigation links
@@ -106,10 +106,12 @@ describe("About Page", () => {
 
     // Check for tagline
     expect(
-      screen.getByText(/やる気になれば何でもできるのが強み/)
+      screen.getByText(/やる気になれば何でもできるのが強み/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/グラフィックデザイン、映像制作、個人開発など幅広く活動/)
+      screen.getByText(
+        /グラフィックデザイン、映像制作、個人開発など幅広く活動/,
+      ),
     ).toBeInTheDocument();
   });
 });

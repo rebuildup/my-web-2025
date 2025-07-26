@@ -71,7 +71,7 @@ export default function PiGame() {
         setHighlightThree(true);
       }
     },
-    [currentPosition, isGameStarted, isGameOver]
+    [currentPosition, isGameStarted, isGameOver],
   );
 
   // キーボード入力の処理

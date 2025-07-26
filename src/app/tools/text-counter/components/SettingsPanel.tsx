@@ -17,14 +17,14 @@ export default function SettingsPanel({
 }: SettingsPanelProps) {
   const handleCountSettingChange = (
     key: keyof CountSettings,
-    value: boolean | string
+    value: boolean | string,
   ) => {
     onSettingsChange({ ...settings, [key]: value });
   };
 
   const handleDisplaySettingChange = (
     key: keyof DisplaySettings,
-    value: boolean | string
+    value: boolean | string,
   ) => {
     onDisplaySettingsChange({ ...displaySettings, [key]: value });
   };

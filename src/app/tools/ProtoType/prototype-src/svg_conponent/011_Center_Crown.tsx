@@ -346,4 +346,3 @@ const CenterCrownSvg: React.FC<CenterCrownSvgProps> = ({
 };
 
 export default CenterCrownSvg;
-

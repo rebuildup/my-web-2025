@@ -7,4 +7,3 @@ export function reload_game(app: PIXI.Application): Promise<void> {
     resolve();
   });
 }
-

@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import ToolWrapper from "../../components/ToolWrapper";
+import AccessibleButton from "../../components/AccessibleButton";
+import AccessibleSelect from "../../components/AccessibleSelect";
 
 // QR Code generation utilities (simplified implementation)
 // For production, you might want to use a library like 'qrcode' or 'qr-code-generator'
@@ -122,7 +124,7 @@ export default function QRCodeGenerator() {
         if (!isValidURL(text)) {
           setIsValid(false);
           setValidationMessage(
-            "有効なURLを入力してください (例: https://example.com)"
+            "有効なURLを入力してください (例: https://example.com)",
           );
           return false;
         }
@@ -147,7 +149,7 @@ export default function QRCodeGenerator() {
         if (!text.includes("WIFI:")) {
           setIsValid(false);
           setValidationMessage(
-            "WiFi形式: WIFI:T:WPA;S:ネットワーク名;P:パスワード;;"
+            "WiFi形式: WIFI:T:WPA;S:ネットワーク名;P:パスワード;;",
           );
           return false;
         }
@@ -217,7 +219,7 @@ export default function QRCodeGenerator() {
             margin + j * cellSize,
             margin + i * cellSize,
             cellSize,
-            cellSize
+            cellSize,
           );
         }
       }
@@ -306,12 +308,12 @@ export default function QRCodeGenerator() {
 
     document.addEventListener(
       "toolShortcut",
-      handleToolShortcut as EventListener
+      handleToolShortcut as EventListener,
     );
     return () =>
       document.removeEventListener(
         "toolShortcut",
-        handleToolShortcut as EventListener
+        handleToolShortcut as EventListener,
       );
   }, [generateQR, downloadPNG, downloadSVG, resetForm, testQRCode]);
 
@@ -337,8 +339,7 @@ export default function QRCodeGenerator() {
   const Section_title = "neue-haas-grotesk-display text-xl text-primary mb-4";
   const Input_style =
     "bg-background border border-foreground p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-accent w-full";
-  const Button_style =
-    "bg-accent text-background px-4 py-2 border border-accent hover:bg-background hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background";
+
   const Select_style =
     "bg-background border border-foreground p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-accent";
 
@@ -360,7 +361,7 @@ export default function QRCodeGenerator() {
               <label className="neue-haas-grotesk-display text-sm text-primary mb-2 block">
                 Input Type
               </label>
-              <select
+              <AccessibleSelect
                 value={inputType}
                 onChange={(e) =>
                   setInputType(
@@ -369,18 +370,19 @@ export default function QRCodeGenerator() {
                       | "text"
                       | "email"
                       | "phone"
-                      | "wifi"
+                      | "wifi",
                   )
                 }
-                className={Select_style}
+                label="Input Type"
+                options={[
+                  { value: "url", label: "URL" },
+                  { value: "text", label: "Plain Text" },
+                  { value: "email", label: "Email" },
+                  { value: "phone", label: "Phone Number" },
+                  { value: "wifi", label: "WiFi Network" },
+                ]}
                 aria-label="Select input type"
-              >
-                <option value="url">URL</option>
-                <option value="text">Plain Text</option>
-                <option value="email">Email</option>
-                <option value="phone">Phone Number</option>
-                <option value="wifi">WiFi Network</option>
-              </select>
+              />
             </div>
 
             {/* Text Input */}
@@ -548,27 +550,33 @@ export default function QRCodeGenerator() {
               />
 
               <div className="flex flex-wrap justify-center gap-4">
-                <button
+                <AccessibleButton
                   onClick={generateQR}
-                  className={Button_style}
+                  variant="primary"
+                  shortcut="G"
+                  announceOnClick="QRコードを生成しました"
                   aria-label="Regenerate QR code"
                 >
-                  Generate (G)
-                </button>
-                <button
+                  Generate
+                </AccessibleButton>
+                <AccessibleButton
                   onClick={downloadPNG}
-                  className={Button_style}
+                  variant="secondary"
+                  shortcut="D"
+                  announceOnClick="PNGファイルをダウンロードしました"
                   aria-label="Download as PNG"
                 >
-                  PNG Download (D)
-                </button>
-                <button
+                  PNG Download
+                </AccessibleButton>
+                <AccessibleButton
                   onClick={downloadSVG}
-                  className={Button_style}
+                  variant="secondary"
+                  shortcut="S"
+                  announceOnClick="SVGファイルをダウンロードしました"
                   aria-label="Download as SVG"
                 >
-                  SVG Download (S)
-                </button>
+                  SVG Download
+                </AccessibleButton>
                 {inputType === "url" && (
                   <button
                     onClick={testQRCode}

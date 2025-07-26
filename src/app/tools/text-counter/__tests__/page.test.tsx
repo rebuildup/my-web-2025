@@ -14,12 +14,12 @@ describe("Text Counter Page", () => {
 
     // Check for main heading
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Text Counter"
+      "Text Counter",
     );
 
     // Check for description
     expect(
-      screen.getByText(/テキストの文字数を詳細にカウント/)
+      screen.getByText(/テキストの文字数を詳細にカウント/),
     ).toBeInTheDocument();
 
     // Check that the tool component is rendered
@@ -31,7 +31,7 @@ describe("Text Counter Page", () => {
 
     // Check for JSON-LD structured data
     const scripts = document.querySelectorAll(
-      'script[type="application/ld+json"]'
+      'script[type="application/ld+json"]',
     );
     expect(scripts.length).toBeGreaterThan(0);
 

@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
         acc[item.type] = (acc[item.type] || 0) + 1;
         return acc;
       },
-      {} as Record<string, number>
+      {} as Record<string, number>,
     );
 
     // Category breakdown
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
         acc[category] = (acc[category] || 0) + 1;
         return acc;
       },
-      {} as Record<string, number>
+      {} as Record<string, number>,
     );
 
     // Popular tags
@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
         });
         return acc;
       },
-      {} as Record<string, number>
+      {} as Record<string, number>,
     );
 
     const popularTags = Object.entries(tagCounts)
@@ -136,15 +136,15 @@ export async function GET(request: NextRequest) {
         performance: {
           mostViewedType:
             Object.entries(contentByType).reduce((a, b) =>
-              contentByType[a[0]] > contentByType[b[0]] ? a : b
+              contentByType[a[0]] > contentByType[b[0]] ? a : b,
             )?.[0] || "blog",
           mostDownloadedCategory:
             Object.entries(contentByCategory).reduce((a, b) =>
-              contentByCategory[a[0]] > contentByCategory[b[0]] ? a : b
+              contentByCategory[a[0]] > contentByCategory[b[0]] ? a : b,
             )?.[0] || "uncategorized",
           engagementScore:
             Math.round(
-              (averageViewsPerContent + averageDownloadsPerContent) * 10
+              (averageViewsPerContent + averageDownloadsPerContent) * 10,
             ) / 10,
         },
       };
@@ -156,7 +156,7 @@ export async function GET(request: NextRequest) {
     const headers = new Headers();
     headers.set(
       "Cache-Control",
-      "public, max-age=300, stale-while-revalidate=600"
+      "public, max-age=300, stale-while-revalidate=600",
     );
 
     return NextResponse.json(workshopAnalytics, { headers });
@@ -164,7 +164,7 @@ export async function GET(request: NextRequest) {
     console.error("Workshop analytics API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

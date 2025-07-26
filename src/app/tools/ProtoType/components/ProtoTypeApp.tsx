@@ -9,19 +9,19 @@ const Game = dynamic(() => import("../prototype-src/components/004_Game"), {
 });
 const PlayRecord = dynamic(
   () => import("../prototype-src/components/008_PlayRecord"),
-  { ssr: false }
+  { ssr: false },
 );
 const Ranking = dynamic(
   () => import("../prototype-src/components/005_Ranking"),
-  { ssr: false }
+  { ssr: false },
 );
 const Setting = dynamic(
   () => import("../prototype-src/components/007_Setting"),
-  { ssr: false }
+  { ssr: false },
 );
 const WebGLPopup = dynamic(
   () => import("../prototype-src/components/009_WebGLPopup"),
-  { ssr: false }
+  { ssr: false },
 );
 const Header = dynamic(() => import("../prototype-src/components/002_Header"), {
   ssr: false,
@@ -86,7 +86,7 @@ const ProtoTypeApp: React.FC = () => {
     // テーマの初期化
     const cachedTheme = loadFromCache<(typeof themes)[0]>(
       "colorTheme",
-      themes[0]
+      themes[0],
     );
     let colorIndex = 0;
     for (let i = 0; i < themes.length; i++) {
@@ -115,7 +115,7 @@ const ProtoTypeApp: React.FC = () => {
     });
     document.documentElement.style.setProperty(
       "--First-font",
-      cachedFont.fontFamily
+      cachedFont.fontFamily,
     );
     updateSetting("fontTheme", {
       fontFamily: cachedFont.fontFamily,

@@ -13,10 +13,10 @@ describe("PomodoroPage", () => {
     render(<PomodoroPage />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Pomodoro Timer"
+      "Pomodoro Timer",
     );
     expect(
-      screen.getByText(/シンプルなポモドーロタイマー/)
+      screen.getByText(/シンプルなポモドーロタイマー/),
     ).toBeInTheDocument();
   });
 

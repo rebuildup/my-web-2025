@@ -37,7 +37,7 @@ export const loadFromCache = <T>(key: string, defaultValue: T): T => {
 
 export const updateSetting = <K extends keyof typeof settings>(
   key: K,
-  newValue: (typeof settings)[K]
+  newValue: (typeof settings)[K],
 ) => {
   settings[key] = newValue;
   saveToCache(key, newValue);

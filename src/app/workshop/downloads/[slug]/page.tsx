@@ -27,8 +27,8 @@ async function getDownload(slug: string): Promise<ContentItem | null> {
         (download) => download.id === slug && download.status === "published",
       ) || null
     );
-  } catch (error) {
-    console.error("Error fetching download:", error);
+  } catch {
+    // Silently handle API connection errors during build time
     return null;
   }
 }
@@ -104,8 +104,8 @@ export default async function DownloadDetailPage({
         cache: "no-store",
       },
     );
-  } catch (error) {
-    console.error("Error tracking view:", error);
+  } catch {
+    // Silently handle view tracking errors during build time
   }
 
   return (

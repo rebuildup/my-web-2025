@@ -56,8 +56,8 @@ async function getWorkshopStats() {
         )
         .slice(0, 3),
     };
-  } catch (error) {
-    console.error("Error fetching workshop stats:", error);
+  } catch {
+    // Silently handle API connection errors during build time
     return {
       blogCount: 0,
       pluginCount: 0,

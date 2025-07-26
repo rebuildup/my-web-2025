@@ -189,12 +189,12 @@ function shift_get(input_char: string, backs: boolean = true): string {
 function mapKey(
   source: KeyboardLayout,
   target: KeyboardLayout,
-  key: string
+  key: string,
 ): string | undefined {
   for (let rowIndex = 0; rowIndex < source.layout.length; rowIndex++) {
     const row = source.layout[rowIndex];
     const colIndex = row.findIndex(
-      (item) => item.toLowerCase() === key.toLowerCase()
+      (item) => item.toLowerCase() === key.toLowerCase(),
     );
     if (colIndex !== -1) {
       if (
@@ -212,7 +212,7 @@ function mapKey(
   return undefined;
 }
 export function getLatestKey(
-  signal: AbortSignal
+  signal: AbortSignal,
 ): Promise<{ code: string; shift: boolean }> {
   return new Promise((resolve, reject) => {
     if (signal.aborted) {
@@ -238,10 +238,10 @@ export function getLatestKey(
 }
 export function keyCodeToText(code: string, shift: boolean): string {
   const root_layout = keyLayouts.find(
-    (layout) => layout.name === settings.keyLayout
+    (layout) => layout.name === settings.keyLayout,
   ) as KeyboardLayout;
   const play_layout = keyLayouts.find(
-    (layout) => layout.name === gameData.KeyLayout
+    (layout) => layout.name === gameData.KeyLayout,
   ) as KeyboardLayout;
 
   // Get the base character for the key code
@@ -258,10 +258,10 @@ export function keyCodeToText(code: string, shift: boolean): string {
 
 export function light_key_from_code(app: PIXI.Application, code: string) {
   const root_layout = keyLayouts.find(
-    (layout) => layout.name === settings.keyLayout
+    (layout) => layout.name === settings.keyLayout,
   ) as KeyboardLayout;
   const play_layout = keyLayouts.find(
-    (layout) => layout.name === "QWERTY"
+    (layout) => layout.name === "QWERTY",
   ) as KeyboardLayout;
 
   const baseChar = KEY_CODE_MAP[code as keyof typeof KEY_CODE_MAP];
@@ -285,13 +285,13 @@ export function light_key_from_code(app: PIXI.Application, code: string) {
 export function acc_key_from_code(
   app: PIXI.Application,
   code: string,
-  set: boolean
+  set: boolean,
 ) {
   const root_layout = keyLayouts.find(
-    (layout) => layout.name === gameData.KeyLayout
+    (layout) => layout.name === gameData.KeyLayout,
   ) as KeyboardLayout;
   const play_layout = keyLayouts.find(
-    (layout) => layout.name === "QWERTY"
+    (layout) => layout.name === "QWERTY",
   ) as KeyboardLayout;
 
   // Check if this is a shifted character
@@ -343,7 +343,7 @@ export function acc_key_from_code(
       // Check if there are any other shifted characters still active
       const stillHasShiftedChars = gameData.acc_keys.some((keyIndex) => {
         const char = Object.entries(CHAR_TO_INDEX_MAP).find(
-          ([i]) => String(i) === String(keyIndex)
+          ([i]) => String(i) === String(keyIndex),
         )?.[0];
         return char && Object.keys(SHIFT_MAP).includes(char);
       });
@@ -359,4 +359,3 @@ export function acc_key_from_code(
 export function isNomalKey(code: string) {
   return Object.keys(KEY_CODE_MAP).includes(code);
 }
-

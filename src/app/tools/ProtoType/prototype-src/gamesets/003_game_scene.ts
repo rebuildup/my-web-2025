@@ -39,7 +39,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
     const BG_plane = new PIXI.Graphics();
     app.stage.addChild(BG_plane);
     BG_plane.rect(0, 0, app.screen.width, app.screen.height).fill(
-      replaceHash(settings.colorTheme.colors.MainBG)
+      replaceHash(settings.colorTheme.colors.MainBG),
     );
     const grid = BG_grid(app);
 
@@ -214,11 +214,11 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
     const accuracyLine = new PIXI.Graphics();
     accuracyLine.moveTo(
       win_pos.x - (keybord_size.width * scale) / 2,
-      win_pos.y - 250
+      win_pos.y - 250,
     );
     accuracyLine.lineTo(
       win_pos.x + (keybord_size.width * scale) / 2,
-      win_pos.y - 250
+      win_pos.y - 250,
     );
     accuracyLine.stroke({
       width: 4,
@@ -230,11 +230,11 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
     const accuracyLine_flash = new PIXI.Graphics();
     accuracyLine_flash.moveTo(
       win_pos.x - (keybord_size.width * scale) / 2,
-      win_pos.y - 250
+      win_pos.y - 250,
     );
     accuracyLine_flash.lineTo(
       win_pos.x + (keybord_size.width * scale) / 2,
-      win_pos.y - 250
+      win_pos.y - 250,
     );
     accuracyLine_flash.stroke({
       width: 4,
@@ -246,11 +246,11 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
     const progressLine = new PIXI.Graphics();
     progressLine.moveTo(
       win_pos.x - (keybord_size.width * scale) / 2,
-      win_pos.y + 250
+      win_pos.y + 250,
     );
     progressLine.lineTo(
       win_pos.x + (keybord_size.width * scale) / 2,
-      win_pos.y + 250
+      win_pos.y + 250,
     );
     progressLine.stroke({
       width: 4,
@@ -331,7 +331,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
           y: 0,
           duration: 1,
           ease: CustomEase.create("custom", "M0,0 C0,0.25 0.2,0.96 1,1"),
-        }
+        },
       );
       gsap.fromTo(
         frame_right,
@@ -341,7 +341,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
           y: 0,
           duration: 1,
           ease: CustomEase.create("custom", "M0,0 C0,0.25 0.2,0.96 1,1"),
-        }
+        },
       );
       gsap.fromTo(
         frame_top,
@@ -351,7 +351,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
           y: -anim_max_width,
           duration: 1,
           ease: CustomEase.create("custom", "M0,0 C0,0.25 0.2,0.96 1,1"),
-        }
+        },
       );
       gsap.fromTo(
         frame_bottom,
@@ -361,7 +361,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
           y: app.screen.height,
           duration: 1,
           ease: CustomEase.create("custom", "M0,0 C0,0.25 0.2,0.96 1,1"),
-        }
+        },
       );
     }
 
@@ -440,7 +440,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
           y: win_pos.y - score_text.height / 2 - 198,
           duration: 0.1,
           ease: CustomEase.create("custom", "M0,0 C0,1 1,0 1,1"),
-        }
+        },
       );
       gsap.to(extra_text, {
         alpha: 0,
@@ -514,7 +514,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
           if (gameData.IsStarted) {
             let collectkeys = getNextKeysOptimized(
               gameData.Issues[gameData.current_Issue].romaji,
-              gameData.current_inputed
+              gameData.current_inputed,
             );
             if (gameData.GameMode != "focus") {
               for (let collec = 0; collec < collectkeys.length; collec++) {
@@ -559,7 +559,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
                     gameData.current_inputed +
                     keyCodeToText(keyCode.code, keyCode.shift);
                   const tendency = gameData.Conversion.find(
-                    (t) => t.key === collectkeys[i].flag.configKey
+                    (t) => t.key === collectkeys[i].flag.configKey,
                   );
                   if (tendency) {
                     tendency.tendency = String(collectkeys[i].flag.origin);
@@ -585,7 +585,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
                     duration: 0.2,
                     ease: CustomEase.create("custom", "M0,0 C0,1 1,0 1,1"),
                     delay: 0.2,
-                  }
+                  },
                 );
 
                 if (gameData.GameMode != "focus") {
@@ -605,14 +605,14 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
                 }
                 if (is_new_misskey) {
                   gameData.missKeys.push(
-                    keyCodeToText(keyCode.code, keyCode.shift)
+                    keyCodeToText(keyCode.code, keyCode.shift),
                   );
                 }
                 if (gameData.GameMode == "exact") gameData.current_inputed = "";
                 alphabet_text.text = getRomanizedTextFromTendency(
                   gameData.Conversion,
                   gameData.Issues[gameData.current_Issue].romaji,
-                  gameData.current_inputed
+                  gameData.current_inputed,
                 );
                 alphabet_text.x = win_pos.x - alphabet_text.width / 2;
               } else {
@@ -657,7 +657,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
             if (
               getNextKeysOptimized(
                 gameData.Issues[gameData.current_Issue].romaji,
-                gameData.current_inputed
+                gameData.current_inputed,
               ).length == 0
             ) {
               triggerSquareEffect();
@@ -704,7 +704,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
             alphabet_text.text = getRomanizedTextFromTendency(
               gameData.Conversion,
               gameData.Issues[gameData.current_Issue].romaji,
-              gameData.current_inputed
+              gameData.current_inputed,
             );
             alphabet_text.x = win_pos.x - alphabet_text.width / 2;
             if (gameData.current_inputed.length == 0) {
@@ -733,13 +733,13 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
                 win_pos.x -
                   ((keybord_size.width * scale) / 2) *
                     (1 - gameData.Miss / gameData.total_hit_cnt),
-                win_pos.y - 250
+                win_pos.y - 250,
               );
               accuracyLine.lineTo(
                 win_pos.x +
                   ((keybord_size.width * scale) / 2) *
                     (1 - gameData.Miss / gameData.total_hit_cnt),
-                win_pos.y - 250
+                win_pos.y - 250,
               );
               accuracyLine.stroke({
                 width: 4,
@@ -751,13 +751,13 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
                 win_pos.x -
                   ((keybord_size.width * scale) / 2) *
                     (1 - gameData.Miss / gameData.total_hit_cnt),
-                win_pos.y - 250
+                win_pos.y - 250,
               );
               accuracyLine_flash.lineTo(
                 win_pos.x +
                   ((keybord_size.width * scale) / 2) *
                     (1 - gameData.Miss / gameData.total_hit_cnt),
-                win_pos.y - 250
+                win_pos.y - 250,
               );
               accuracyLine_flash.stroke({
                 width: 4,
@@ -784,7 +784,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
                   alpha: 1,
                   duration: 1,
                   ease: CustomEase.create("custom", "M0,0 C0,1 0.1,1 1,1"),
-                }
+                },
               );
               rank_value_text.text = String(Rank_get(gameData.Score));
               gsap.fromTo(
@@ -795,7 +795,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
                   alpha: 1,
                   duration: 1,
                   ease: CustomEase.create("custom", "M0,0 C0,1 0.1,1 1,1"),
-                }
+                },
               );
               flashObj(app, rank_text);
               flashObj(app, rank_value_text);
@@ -808,7 +808,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
               rank_value_text.text = String(
                 Rank_get(gameData.Score) != -1
                   ? Rank_get(gameData.Score)
-                  : "ランク外"
+                  : "ランク外",
               );
               gsap.fromTo(
                 rank_value_text,
@@ -818,7 +818,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
                   y: win_pos.y - rank_text.height / 2 - 210,
                   duration: 1,
                   ease: CustomEase.create("custom", "M0,0 C0,1 0.1,1 1,1"),
-                }
+                },
               );
             }
           } else {
@@ -855,7 +855,7 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
               alphabet_text.text = getRomanizedTextFromTendency(
                 gameData.Conversion,
                 gameData.Issues[gameData.current_Issue].romaji,
-                gameData.current_inputed
+                gameData.current_inputed,
               );
               alphabet_text.x = win_pos.x - alphabet_text.width / 2;
               alphabet_current_text.text = gameData.current_inputed;
@@ -872,11 +872,11 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
               accuracyLine.clear();
               accuracyLine.moveTo(
                 win_pos.x - (keybord_size.width * scale) / 2,
-                win_pos.y - 250
+                win_pos.y - 250,
               );
               accuracyLine.lineTo(
                 win_pos.x + (keybord_size.width * scale) / 2,
-                win_pos.y - 250
+                win_pos.y - 250,
               );
               accuracyLine.stroke({
                 width: 4,
@@ -914,7 +914,7 @@ function grid_anim(grid: PIXI.Graphics) {
       alpha: 1,
       duration: 4,
       ease: "power1.out",
-    }
+    },
   );
 }
 
@@ -923,7 +923,7 @@ import { playCollect, playMiss } from "./012_soundplay";
 async function makeIssues(
   FromLen: number,
   ToLen: number,
-  N: number
+  N: number,
 ): Promise<void> {
   return new Promise<void>(async (resolve) => {
     let Issues: Issue[] = [];
@@ -979,4 +979,3 @@ function Rank_get(score: number) {
   }
   return -1;
 }
-

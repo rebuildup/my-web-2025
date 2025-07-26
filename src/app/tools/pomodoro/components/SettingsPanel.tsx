@@ -16,7 +16,7 @@ export default function SettingsPanel({
 }: SettingsPanelProps) {
   const updateSetting = <K extends keyof PomodoroSettings>(
     key: K,
-    value: PomodoroSettings[K]
+    value: PomodoroSettings[K],
   ) => {
     onSettingsChange({ ...settings, [key]: value });
   };
@@ -116,7 +116,7 @@ export default function SettingsPanel({
                 onChange={(e) =>
                   updateSetting(
                     "sessionsUntilLongBreak",
-                    parseInt(e.target.value)
+                    parseInt(e.target.value),
                   )
                 }
                 className="w-full"
@@ -191,7 +191,7 @@ export default function SettingsPanel({
                   onChange={(e) =>
                     updateSetting(
                       "notificationVolume",
-                      parseInt(e.target.value)
+                      parseInt(e.target.value),
                     )
                   }
                   className="w-full"

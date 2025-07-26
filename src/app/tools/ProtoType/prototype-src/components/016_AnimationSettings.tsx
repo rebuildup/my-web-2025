@@ -4,10 +4,10 @@ import "../styles/014_animation-setting.css";
 
 const AnimationSettings: React.FC = () => {
   const [animEnabled, setAnimEnabled] = useState(
-    settings.animationSettings.enabled
+    settings.animationSettings.enabled,
   );
   const [reducedMotion, setReducedMotion] = useState(
-    settings.animationSettings.reducedMotion
+    settings.animationSettings.reducedMotion,
   );
 
   // Update settings when toggles change
@@ -70,4 +70,3 @@ const AnimationSettings: React.FC = () => {
 };
 
 export default AnimationSettings;
-

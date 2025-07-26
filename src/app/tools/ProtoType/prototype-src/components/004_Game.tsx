@@ -16,4 +16,3 @@ const Game: React.FC<HomeProps> = ({ onOpenPopup }) => {
 };
 
 export default Game;
-

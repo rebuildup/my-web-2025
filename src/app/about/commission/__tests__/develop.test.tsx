@@ -18,12 +18,12 @@ describe("DevelopCommissionPage", () => {
     render(<DevelopCommissionPage />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "開発依頼" })
+      screen.getByRole("heading", { level: 1, name: "開発依頼" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        /Web開発・アプリケーション開発・プラグイン開発の依頼を承ります/
-      )
+        /Web開発・アプリケーション開発・プラグイン開発の依頼を承ります/,
+      ),
     ).toBeInTheDocument();
   });
 
@@ -68,14 +68,14 @@ describe("DevelopCommissionPage", () => {
     render(<DevelopCommissionPage />);
 
     expect(
-      screen.getByRole("link", { name: "← About に戻る" })
+      screen.getByRole("link", { name: "← About に戻る" }),
     ).toHaveAttribute("href", "/about");
     expect(
-      screen.getByRole("link", { name: "お問い合わせフォーム" })
+      screen.getByRole("link", { name: "お問い合わせフォーム" }),
     ).toHaveAttribute("href", "/contact");
     expect(screen.getByRole("link", { name: "料金計算機" })).toHaveAttribute(
       "href",
-      "/about/commission/estimate"
+      "/about/commission/estimate",
     );
   });
 
@@ -88,7 +88,7 @@ describe("DevelopCommissionPage", () => {
 
     // Check for structured data script
     const scripts = document.querySelectorAll(
-      'script[type="application/ld+json"]'
+      'script[type="application/ld+json"]',
     );
     expect(scripts.length).toBeGreaterThan(0);
   });

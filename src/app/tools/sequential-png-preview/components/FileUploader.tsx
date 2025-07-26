@@ -101,13 +101,13 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
         setError(
           err instanceof Error
             ? err.message
-            : "ファイルの処理中にエラーが発生しました。"
+            : "ファイルの処理中にエラーが発生しました。",
         );
       } finally {
         setIsProcessing(false);
       }
     },
-    [onFilesLoaded]
+    [onFilesLoaded],
   );
 
   const handleFileSelect = useCallback(
@@ -124,7 +124,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
           const zipFile = fileArray.find(
             (f) =>
               f.type === "application/zip" ||
-              f.name.toLowerCase().endsWith(".zip")
+              f.name.toLowerCase().endsWith(".zip"),
           );
           if (zipFile) {
             const frames = await processZipFile(zipFile);
@@ -136,7 +136,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
         } else {
           const pngFiles = fileArray.filter(
             (f) =>
-              f.type === "image/png" || f.name.toLowerCase().endsWith(".png")
+              f.type === "image/png" || f.name.toLowerCase().endsWith(".png"),
           );
 
           if (pngFiles.length === 0) {
@@ -152,13 +152,13 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
         setError(
           err instanceof Error
             ? err.message
-            : "ファイルの処理中にエラーが発生しました。"
+            : "ファイルの処理中にエラーが発生しました。",
         );
       } finally {
         setIsProcessing(false);
       }
     },
-    [selectedMethod, onFilesLoaded]
+    [selectedMethod, onFilesLoaded],
   );
 
   const triggerFileSelect = useCallback(() => {

@@ -36,7 +36,7 @@ const App: React.FC = () => {
   useLayoutEffect(() => {
     const cachedTheme = loadFromCache<(typeof themes)[0]>(
       "colorTheme",
-      themes[0]
+      themes[0],
     );
     let colorIndex = 0;
     for (let i = 0; i < themes.length; i++) {
@@ -60,7 +60,7 @@ const App: React.FC = () => {
     });
     document.documentElement.style.setProperty(
       "--First-font",
-      cachedFont.fontFamily
+      cachedFont.fontFamily,
     );
     updateSetting("fontTheme", {
       fontFamily: cachedFont.fontFamily,

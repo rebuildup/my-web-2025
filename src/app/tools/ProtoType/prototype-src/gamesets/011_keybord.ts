@@ -155,7 +155,7 @@ export function Keyboard(app: PIXI.Application) {
         alpha: 0,
         ease: "power1.out",
       },
-      "+=0.01"
+      "+=0.01",
     );
 
     tl.to(
@@ -165,7 +165,7 @@ export function Keyboard(app: PIXI.Application) {
         alpha: 1,
         ease: "power1.out",
       },
-      "<"
+      "<",
     );
   }
 }
@@ -248,4 +248,3 @@ export function update_Acc_key(app: PIXI.Application) {
   }
   app.stage.addChild(Acc_Key_Container);
 }
-

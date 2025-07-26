@@ -57,12 +57,12 @@ export default function PortfolioInsights({
         // Portfolio-specific insights
         const portfolioViews = analytics.engagement.topContent.filter(
           (item: { id: string; views: number }) =>
-            item.id.startsWith("portfolio-")
+            item.id.startsWith("portfolio-"),
         );
 
         const portfolioDownloads = analytics.engagement.topDownloads.filter(
           (item: { id: string; downloads: number }) =>
-            item.id.startsWith("portfolio-")
+            item.id.startsWith("portfolio-"),
         );
 
         // View insights
@@ -70,7 +70,7 @@ export default function PortfolioInsights({
           const totalPortfolioViews = portfolioViews.reduce(
             (sum: number, item: { id: string; views: number }) =>
               sum + item.views,
-            0
+            0,
           );
 
           generatedInsights.push({
@@ -103,7 +103,7 @@ export default function PortfolioInsights({
           const totalPortfolioDownloads = portfolioDownloads.reduce(
             (sum: number, item: { id: string; downloads: number }) =>
               sum + item.downloads,
-            0
+            0,
           );
 
           generatedInsights.push({
@@ -134,14 +134,14 @@ export default function PortfolioInsights({
           (query: { query: string; count: number }) =>
             query.query.toLowerCase().includes("portfolio") ||
             query.query.toLowerCase().includes("work") ||
-            query.query.toLowerCase().includes("project")
+            query.query.toLowerCase().includes("project"),
         );
 
         if (portfolioSearches.length > 0) {
           const totalPortfolioSearches = portfolioSearches.reduce(
             (sum: number, query: { query: string; count: number }) =>
               sum + query.count,
-            0
+            0,
           );
 
           generatedInsights.push({
@@ -279,7 +279,7 @@ export default function PortfolioInsights({
                   <span
                     className={`noto-sans-jp-regular text-xs ${getChangeColor(
                       insight.change,
-                      insight.trend
+                      insight.trend,
                     )}`}
                   >
                     {insight.change > 0 ? "+" : ""}

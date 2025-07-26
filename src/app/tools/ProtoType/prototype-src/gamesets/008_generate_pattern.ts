@@ -37,7 +37,7 @@ function isConsonant(char: string): boolean {
 // 入力予測エンジン
 export function getNextKeysOptimized(
   readingText: string,
-  currentInput: string
+  currentInput: string,
 ): NextKeyInfo[] {
   if (currentInput === readingTextToFullRomaji(readingText)) {
     return [];
@@ -45,7 +45,7 @@ export function getNextKeysOptimized(
 
   const cache = new Map<string, NextKeyInfo[]>();
   const sortedKeyConfigs = KEY_CONFIGS.slice().sort(
-    (a, b) => b.key.length - a.key.length
+    (a, b) => b.key.length - a.key.length,
   );
 
   // Helper: Get possible doubling candidates for small "っ"
@@ -83,8 +83,8 @@ export function getNextKeysOptimized(
         results.push(
           ...nextLetters(
             index + currentChar.length,
-            matched + currentChar.length
-          )
+            matched + currentChar.length,
+          ),
         );
       } else {
         results.push({
@@ -121,7 +121,7 @@ export function getNextKeysOptimized(
         for (const alt of fixedAlternatives) {
           if (currentInputRemaining.startsWith(alt)) {
             possibleResults.push(
-              ...nextLetters(index + 1, matched + alt.length)
+              ...nextLetters(index + 1, matched + alt.length),
             );
           }
         }
@@ -218,7 +218,7 @@ export function getNextKeysOptimized(
 export function getRomanizedTextFromTendency(
   tendencies: ConversionTendencies,
   readingText: string,
-  currentInput: string
+  currentInput: string,
 ): string {
   // Check if the candidate output is consistent with the current input
   function prefixMatches(out: string): boolean {
@@ -237,7 +237,7 @@ export function getRomanizedTextFromTendency(
     i: number,
     dup: boolean,
     out: string,
-    nonPreferred: number
+    nonPreferred: number,
   ): void {
     if (!prefixMatches(out)) return;
     if (i >= readingText.length) {
@@ -258,7 +258,7 @@ export function getRomanizedTextFromTendency(
       const doublingCandidates = (() => {
         const letters = new Set<string>();
         const sortedKeyConfigs = KEY_CONFIGS.slice().sort(
-          (a, b) => b.key.length - a.key.length
+          (a, b) => b.key.length - a.key.length,
         );
         for (const config of sortedKeyConfigs) {
           if (readingText.startsWith(config.key, nextIndex)) {
@@ -306,7 +306,7 @@ export function getRomanizedTextFromTendency(
 
     // Process other hiragana characters using sorted KEY_CONFIGS
     const sortedKeyConfigs = KEY_CONFIGS.slice().sort(
-      (a, b) => b.key.length - a.key.length
+      (a, b) => b.key.length - a.key.length,
     );
     for (const config of sortedKeyConfigs) {
       if (readingText.startsWith(config.key, i)) {
@@ -316,7 +316,7 @@ export function getRomanizedTextFromTendency(
           ? [
               tendencyEntry.tendency,
               ...config.origins.filter(
-                (origin) => origin !== tendencyEntry.tendency
+                (origin) => origin !== tendencyEntry.tendency,
               ),
             ]
           : config.origins;
@@ -354,7 +354,7 @@ function readingTextToBasicRomaji(readingText: string): string {
   let i = 0;
   // Use sorted KEY_CONFIGS by key length descending for proper matching
   const sortedKeyConfigs = KEY_CONFIGS.slice().sort(
-    (a, b) => b.key.length - a.key.length
+    (a, b) => b.key.length - a.key.length,
   );
 
   while (i < readingText.length) {
@@ -383,7 +383,7 @@ function readingTextToFullRomaji(readingText: string): string {
   let i = 0;
   // Sort key configs descending by key length
   const sortedKeyConfigs = KEY_CONFIGS.slice().sort(
-    (a, b) => b.key.length - a.key.length
+    (a, b) => b.key.length - a.key.length,
   );
 
   while (i < readingText.length) {
@@ -391,7 +391,7 @@ function readingTextToFullRomaji(readingText: string): string {
     if (readingText[i] === "っ") {
       if (i + 1 < readingText.length) {
         const nextKey = sortedKeyConfigs.find((config) =>
-          readingText.startsWith(config.key, i + 1)
+          readingText.startsWith(config.key, i + 1),
         );
         if (nextKey) {
           const origin = nextKey.origins[0];
@@ -1258,4 +1258,3 @@ export const KEY_CONFIGS: KeyConfigs = [
     origins: ["dwo"],
   },
 ];
-

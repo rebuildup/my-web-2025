@@ -47,8 +47,8 @@ async function getDownloads(): Promise<ContentItem[]> {
     }
     const data = await response.json();
     return data.data || [];
-  } catch (error) {
-    console.error("Error fetching downloads:", error);
+  } catch {
+    // Silently handle API connection errors during build time
     return [];
   }
 }

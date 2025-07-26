@@ -2373,4 +2373,3 @@ const InnerSpearSvg: React.FC<InnerSpearSvgProps> = ({
 };
 
 export default InnerSpearSvg;
-

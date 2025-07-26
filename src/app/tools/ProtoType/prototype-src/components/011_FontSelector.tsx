@@ -22,7 +22,7 @@ export const fonts = [
 
 export default function FontSelector() {
   const [selectedFont, setSelectedFont] = useState(
-    settings.fontTheme.fontFamily
+    settings.fontTheme.fontFamily,
   );
 
   const changeFont = (font: string) => {
@@ -52,4 +52,3 @@ export default function FontSelector() {
     </div>
   );
 }
-

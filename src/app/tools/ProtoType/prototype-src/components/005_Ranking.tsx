@@ -79,4 +79,3 @@ function transposeData(data: any) {
   }
   return output;
 }
-

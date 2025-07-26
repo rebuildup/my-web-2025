@@ -61,7 +61,7 @@ export default function PortfolioAnalyticsDashboard({
             headers: {
               "Cache-Control": "no-cache",
             },
-          }
+          },
         );
 
         if (!response.ok) {
@@ -113,11 +113,11 @@ export default function PortfolioAnalyticsDashboard({
   }
 
   const portfolioContent = analytics.engagement.topContent.filter((item) =>
-    item.id.startsWith("portfolio-")
+    item.id.startsWith("portfolio-"),
   );
 
   const portfolioDownloads = analytics.engagement.topDownloads.filter((item) =>
-    item.id.startsWith("portfolio-")
+    item.id.startsWith("portfolio-"),
   );
 
   return (

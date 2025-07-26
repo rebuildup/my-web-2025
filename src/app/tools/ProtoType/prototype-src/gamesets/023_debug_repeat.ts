@@ -15,4 +15,3 @@ export function debug_repeat(app: PIXI.Application): Promise<void> {
     }, 10000);
   });
 }
-

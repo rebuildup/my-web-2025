@@ -151,7 +151,7 @@ class SquareEffectManager {
       const success = this.initialize();
       if (!success) {
         console.error(
-          "SquareEffect: 初期化に失敗したためエフェクトを実行できません"
+          "SquareEffect: 初期化に失敗したためエフェクトを実行できません",
         );
         return;
       }
@@ -163,17 +163,17 @@ class SquareEffectManager {
     // 画面サイズを取得
     const viewportWidth = Math.max(
       document.documentElement.clientWidth || 0,
-      window.innerWidth || 0
+      window.innerWidth || 0,
     );
     const viewportHeight = Math.max(
       document.documentElement.clientHeight || 0,
-      window.innerHeight || 0
+      window.innerHeight || 0,
     );
 
     // 対角線の長さを計算（ピタゴラスの定理）
     const maxSize =
       Math.sqrt(
-        viewportWidth * viewportWidth + viewportHeight * viewportHeight
+        viewportWidth * viewportWidth + viewportHeight * viewportHeight,
       ) * 1.5;
 
     if (this.debugMode) {
@@ -214,7 +214,7 @@ class SquareEffectManager {
               if (this.debugMode)
                 console.log("SquareEffect: 背景アニメーション完了");
             },
-          }
+          },
         );
 
         // 前景正方形のアニメーション（先に開始、速く拡大）
@@ -239,7 +239,7 @@ class SquareEffectManager {
               if (this.debugMode)
                 console.log("SquareEffect: 前景アニメーション完了");
             },
-          }
+          },
         );
       }, 10);
     } catch (error) {
@@ -273,4 +273,3 @@ export function initializeSquareEffect(): boolean {
 export function setSquareEffectDebug(enabled: boolean): void {
   squareEffectManager.setDebugMode(enabled);
 }
-

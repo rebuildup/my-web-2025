@@ -64,7 +64,7 @@ export function insertLocalRanking(newPlayer: RankingPlayer): number {
   const ranking = gameData.localRanking;
 
   let index = ranking.findIndex(
-    (player) => newPlayer.player_score > player.player_score
+    (player) => newPlayer.player_score > player.player_score,
   );
 
   if (index === -1) {
@@ -92,7 +92,7 @@ export function insertOnlineRanking(newPlayer: RankingPlayer): number {
   const ranking = gameData.onlineRanking;
 
   let index = ranking.findIndex(
-    (player) => newPlayer.player_score > player.player_score
+    (player) => newPlayer.player_score > player.player_score,
   );
 
   if (index === -1) {
@@ -128,4 +128,3 @@ export async function deleteCache(cacheName: string): Promise<boolean> {
     return false;
   }
 }
-

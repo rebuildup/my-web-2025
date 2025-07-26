@@ -161,7 +161,7 @@ export default function BusinessMailBlockTool() {
       ) {
         // Add block to composed area
         const blockToAdd = availableBlocks.find(
-          (block) => block.id === result.draggableId
+          (block) => block.id === result.draggableId,
         );
         if (blockToAdd) {
           const newComposedBlock: ComposedBlock = {
@@ -184,7 +184,7 @@ export default function BusinessMailBlockTool() {
         setComposedBlocks(newComposedBlocks);
       }
     },
-    [availableBlocks, composedBlocks]
+    [availableBlocks, composedBlocks],
   );
 
   // Remove block from composed area
@@ -198,8 +198,8 @@ export default function BusinessMailBlockTool() {
       prev.map((block) =>
         block.id === blockId
           ? { ...block, isFavorite: !block.isFavorite }
-          : block
-      )
+          : block,
+      ),
     );
   }, []);
 
@@ -219,7 +219,7 @@ export default function BusinessMailBlockTool() {
           const value = variables[variable] || `{${variable}}`;
           content = content.replace(
             new RegExp(`\\{${variable}\\}`, "g"),
-            value
+            value,
           );
         });
       }
@@ -277,12 +277,12 @@ export default function BusinessMailBlockTool() {
 
     document.addEventListener(
       "toolShortcut",
-      handleToolShortcut as EventListener
+      handleToolShortcut as EventListener,
     );
     return () =>
       document.removeEventListener(
         "toolShortcut",
-        handleToolShortcut as EventListener
+        handleToolShortcut as EventListener,
       );
   }, [generatedEmail, copyToClipboard, downloadEmail]);
 
@@ -294,8 +294,8 @@ export default function BusinessMailBlockTool() {
   // Get all unique variables from composed blocks
   const allVariables = Array.from(
     new Set(
-      composedBlocks.flatMap((block) => (block.variables as string[]) || [])
-    )
+      composedBlocks.flatMap((block) => (block.variables as string[]) || []),
+    ),
   );
 
   return (

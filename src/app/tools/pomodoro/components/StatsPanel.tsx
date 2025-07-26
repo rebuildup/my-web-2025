@@ -27,7 +27,7 @@ export default function StatsPanel({
   const getTodaysSessions = () => {
     const today = new Date().toDateString();
     return sessions.filter(
-      (session) => session.completedAt.toDateString() === today
+      (session) => session.completedAt.toDateString() === today,
     ).length;
   };
 
@@ -37,7 +37,7 @@ export default function StatsPanel({
     weekStart.setHours(0, 0, 0, 0);
 
     return sessions.filter(
-      (session) => new Date(session.completedAt) >= weekStart
+      (session) => new Date(session.completedAt) >= weekStart,
     ).length;
   };
 
@@ -210,7 +210,9 @@ export default function StatsPanel({
                   <span className="text-foreground">平均セッション時間:</span>
                   <span className="font-medium">
                     {formatTime(
-                      Math.round(stats.totalWorkTime / stats.completedPomodoros)
+                      Math.round(
+                        stats.totalWorkTime / stats.completedPomodoros,
+                      ),
                     )}
                   </span>
                 </div>
@@ -220,7 +222,7 @@ export default function StatsPanel({
                     {Math.round(
                       (stats.totalWorkTime /
                         (stats.totalWorkTime + stats.totalBreakTime)) *
-                        100
+                        100,
                     )}
                     %
                   </span>
@@ -230,7 +232,7 @@ export default function StatsPanel({
                   <span className="font-medium">
                     {Math.round(
                       stats.completedPomodoros /
-                        Math.max(1, Math.ceil(sessions.length / 10))
+                        Math.max(1, Math.ceil(sessions.length / 10)),
                     )}
                   </span>
                 </div>
@@ -245,7 +247,7 @@ export default function StatsPanel({
             onClick={() => {
               if (
                 confirm(
-                  "統計データをリセットしますか？この操作は元に戻せません。"
+                  "統計データをリセットしますか？この操作は元に戻せません。",
                 )
               ) {
                 // This would need to be implemented in the parent component

@@ -48,12 +48,12 @@ const DEFAULT_STATS: PomodoroStats = {
 export default function PomodoroTimer() {
   const [settings, setSettings] = useLocalStorage(
     "pomodoro-settings",
-    DEFAULT_SETTINGS
+    DEFAULT_SETTINGS,
   );
   const [stats, setStats] = useLocalStorage("pomodoro-stats", DEFAULT_STATS);
   const [sessions, setSessions] = useLocalStorage<PomodoroSession[]>(
     "pomodoro-sessions",
-    []
+    [],
   );
 
   const [timerState, setTimerState] = useState<TimerState>("idle");
@@ -115,7 +115,7 @@ export default function PomodoroTimer() {
         newStats.currentStreak += 1;
         newStats.longestStreak = Math.max(
           newStats.longestStreak,
-          newStats.currentStreak
+          newStats.currentStreak,
         );
       } else {
         newStats.totalBreakTime += session.duration;

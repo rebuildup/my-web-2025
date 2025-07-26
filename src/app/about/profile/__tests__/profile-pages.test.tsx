@@ -23,7 +23,7 @@ describe("Profile Pages", () => {
       // Check for main heading
       expect(screen.getByText("Real Profile")).toBeInTheDocument();
       expect(
-        screen.getByText("木村友亮（きむら ゆうすけ）")
+        screen.getByText("木村友亮（きむら ゆうすけ）"),
       ).toBeInTheDocument();
 
       // Check for basic information
@@ -37,7 +37,7 @@ describe("Profile Pages", () => {
 
       // Check for achievements
       expect(
-        screen.getByText("中国地区高専コンピュータフェスティバル2024")
+        screen.getByText("中国地区高専コンピュータフェスティバル2024"),
       ).toBeInTheDocument();
       expect(screen.getByText("ゲーム部門 1位")).toBeInTheDocument();
     });
@@ -68,8 +68,8 @@ describe("Profile Pages", () => {
       expect(screen.getByText("Handle Profile")).toBeInTheDocument();
       expect(
         screen.getByText(
-          /ハンドルネーム「samuido」としてのクリエイティブ活動について/
-        )
+          /ハンドルネーム「samuido」としてのクリエイティブ活動について/,
+        ),
       ).toBeInTheDocument();
 
       // Check for about section
@@ -107,7 +107,7 @@ describe("Profile Pages", () => {
       expect(screen.getByText("AI Profile")).toBeInTheDocument();
       expect(screen.getByText("samuido AI Assistant")).toBeInTheDocument();
       expect(
-        screen.getByText("技術とクリエイティビティの融合を目指すAIペルソナ")
+        screen.getByText("技術とクリエイティビティの融合を目指すAIペルソナ"),
       ).toBeInTheDocument();
 
       // Check for AI characteristics
@@ -140,7 +140,7 @@ describe("Profile Pages", () => {
 
       expect(screen.getByText("Usage Guidelines")).toBeInTheDocument();
       expect(
-        screen.getByText("このAIプロフィールの使用について")
+        screen.getByText("このAIプロフィールの使用について"),
       ).toBeInTheDocument();
     });
   });

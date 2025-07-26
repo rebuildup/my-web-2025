@@ -70,7 +70,7 @@ export function Player_register(app: PIXI.Application): Promise<void> {
         y: 1,
         duration: 1,
         ease: CustomEase.create("custom", "M0,0 C0,0.2 0.3,1 1,1"),
-      }
+      },
     );
 
     const title_text = new PIXI.Text({
@@ -180,7 +180,7 @@ export function Player_register(app: PIXI.Application): Promise<void> {
         } else if (keyCode.code === "Enter") {
           reaction_jump(
             enter_text,
-            screenCenter.y - enter_text.height / 2 + 100
+            screenCenter.y - enter_text.height / 2 + 100,
           );
           gameData.CurrentSceneName = "game_scene";
           if (player_name.length != 0) {
@@ -199,4 +199,3 @@ export function Player_register(app: PIXI.Application): Promise<void> {
     }
   });
 }
-

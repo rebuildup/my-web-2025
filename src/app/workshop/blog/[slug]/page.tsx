@@ -26,8 +26,8 @@ async function getBlogPost(slug: string): Promise<ContentItem | null> {
       posts.find((post) => post.id === slug && post.status === "published") ||
       null
     );
-  } catch (error) {
-    console.error("Error fetching blog post:", error);
+  } catch {
+    // Silently handle API connection errors during build time
     return null;
   }
 }
@@ -99,8 +99,8 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
         cache: "no-store",
       },
     );
-  } catch (error) {
-    console.error("Error tracking view:", error);
+  } catch {
+    // Silently handle view tracking errors during build time
   }
 
   return (

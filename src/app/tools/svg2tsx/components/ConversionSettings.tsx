@@ -13,7 +13,7 @@ export function ConversionSettingsPanel({
 }: ConversionSettingsProps) {
   const updateSetting = <K extends keyof ConversionSettings>(
     key: K,
-    value: ConversionSettings[K]
+    value: ConversionSettings[K],
   ) => {
     onSettingsChange({ ...settings, [key]: value });
   };
@@ -170,7 +170,7 @@ export function ConversionSettingsPanel({
                 onChange={(e) =>
                   updateSetting(
                     "exportType",
-                    e.target.value as "default" | "named"
+                    e.target.value as "default" | "named",
                   )
                 }
                 className="w-full p-2 border border-foreground bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
@@ -189,7 +189,7 @@ export function ConversionSettingsPanel({
                 onChange={(e) =>
                   updateSetting(
                     "fileExtension",
-                    e.target.value as ConversionSettings["fileExtension"]
+                    e.target.value as ConversionSettings["fileExtension"],
                   )
                 }
                 className="w-full p-2 border border-foreground bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"

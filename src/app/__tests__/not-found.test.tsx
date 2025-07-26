@@ -25,8 +25,8 @@ describe("404 Not Found Page", () => {
 
     expect(
       screen.getByText(
-        /お探しのページは存在しないか、移動または削除された可能性があります/
-      )
+        /お探しのページは存在しないか、移動または削除された可能性があります/,
+      ),
     ).toBeInTheDocument();
   });
 
@@ -60,7 +60,7 @@ describe("404 Not Found Page", () => {
     render(<NotFound />);
 
     const structuredData = document.querySelector(
-      'script[type="application/ld+json"]'
+      'script[type="application/ld+json"]',
     );
     expect(structuredData).toBeInTheDocument();
 

@@ -24,7 +24,7 @@ describe("Search Page", () => {
 
     expect(screen.getByText("Search")).toBeInTheDocument();
     expect(
-      screen.getByText(/サイト内のコンテンツを検索できます/)
+      screen.getByText(/サイト内のコンテンツを検索できます/),
     ).toBeInTheDocument();
   });
 
@@ -32,7 +32,7 @@ describe("Search Page", () => {
     render(<Search />);
 
     expect(
-      screen.getByPlaceholderText("検索キーワードを入力...")
+      screen.getByPlaceholderText("検索キーワードを入力..."),
     ).toBeInTheDocument();
     expect(screen.getByText("シンプル")).toBeInTheDocument();
     expect(screen.getByText("詳細")).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe("Search Page", () => {
     render(<Search />);
 
     expect(
-      screen.getByText("検索キーワードを入力してください")
+      screen.getByText("検索キーワードを入力してください"),
     ).toBeInTheDocument();
   });
 });

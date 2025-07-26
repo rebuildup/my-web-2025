@@ -158,7 +158,7 @@ export async function GET(): Promise<Response> {
     };
 
     const isHealthy = Object.values(healthChecks.checks).every(
-      (check) => check.status === "healthy"
+      (check) => check.status === "healthy",
     );
 
     return Response.json(healthChecks, {
@@ -171,7 +171,7 @@ export async function GET(): Promise<Response> {
         status: "unhealthy",
         error: error.message,
       },
-      { status: 503 }
+      { status: 503 },
     );
   }
 }
@@ -397,7 +397,7 @@ export const performanceMonitor = {
     performance.measure(
       "content-load-time",
       "navigationStart",
-      "content-loaded"
+      "content-loaded",
     );
 
     return metrics;

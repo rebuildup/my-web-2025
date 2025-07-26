@@ -520,15 +520,15 @@ export default async function PortfolioItemPage({
                   {Object.values(projectsData)
                     .filter(
                       (p) =>
-                        p.id !== project.id && p.category === project.category
+                        p.id !== project.id && p.category === project.category,
                     )
                     .slice(0, 3)
                     .map((relatedProject) => {
                       const RelatedIcon = getCategoryIcon(
-                        relatedProject.category
+                        relatedProject.category,
                       );
                       const relatedColor = getCategoryColor(
-                        relatedProject.category
+                        relatedProject.category,
                       );
 
                       return (

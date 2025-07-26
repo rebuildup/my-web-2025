@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
             "Too many contact form submissions. Please wait 15 minutes before trying again.",
           retryAfter: Math.ceil(RATE_LIMIT_WINDOW / 1000 / 60), // minutes
         },
-        { status: 429 }
+        { status: 429 },
       );
     }
 
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
           message: "Please correct the following errors:",
           errors: validation.errors,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
           message: result.message,
           errors: result.errors,
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
         success: false,
         message: "An unexpected error occurred. Please try again later.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -146,7 +146,7 @@ export async function GET() {
     console.error("Contact config API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

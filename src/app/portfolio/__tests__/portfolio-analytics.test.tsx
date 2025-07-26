@@ -38,7 +38,7 @@ describe("Portfolio Analytics Components", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText("統計データが利用できません")
+          screen.getByText("統計データが利用できません"),
         ).toBeInTheDocument();
       });
     });

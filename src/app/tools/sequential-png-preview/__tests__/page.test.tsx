@@ -17,10 +17,10 @@ describe("SequentialPngPreviewPage", () => {
     render(<SequentialPngPreviewPage />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Sequential PNG Preview"
+      "Sequential PNG Preview",
     );
     expect(
-      screen.getByText(/連番PNGファイルをアニメーションとしてプレビュー/)
+      screen.getByText(/連番PNGファイルをアニメーションとしてプレビュー/),
     ).toBeInTheDocument();
   });
 

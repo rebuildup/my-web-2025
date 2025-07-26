@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AccessibilityTestingComponent } from "./components/AccessibilityTester";
 
 export const metadata = {
   title: "Tools - samuido | 実用的なWebツール集",
@@ -444,6 +445,15 @@ export default function ToolsPage() {
           }),
         }}
       />
+
+      {/* Accessibility Testing Component (development only) */}
+      {process.env.NODE_ENV === "development" && (
+        <AccessibilityTestingComponent
+          targetSelector="main"
+          autoRun={false}
+          showResults={false}
+        />
+      )}
     </div>
   );
 }

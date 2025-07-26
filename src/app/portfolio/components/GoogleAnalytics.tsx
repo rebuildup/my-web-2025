@@ -72,7 +72,7 @@ export const trackPortfolioEvent = (
   action: string,
   category: string = "Portfolio",
   label?: string,
-  value?: number
+  value?: number,
 ) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", action, {
@@ -92,7 +92,7 @@ export const trackPortfolioEvent = (
 export const trackPortfolioPageView = (
   pagePath: string,
   pageTitle: string,
-  contentId?: string
+  contentId?: string,
 ) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("config", process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID, {
@@ -122,13 +122,13 @@ export const trackPortfolioPageView = (
 export const trackPortfolioInteraction = (
   interactionType: "view" | "download" | "share" | "like",
   contentId: string,
-  contentType: "portfolio" | "gallery" | "detail" = "portfolio"
+  contentType: "portfolio" | "gallery" | "detail" = "portfolio",
 ) => {
   trackPortfolioEvent(
     `portfolio_${interactionType}`,
     "Portfolio Engagement",
     `${contentType}_${contentId}`,
-    1
+    1,
   );
 };
 
@@ -138,13 +138,13 @@ export const trackPortfolioInteraction = (
 export const trackPortfolioSearch = (
   searchTerm: string,
   resultsCount: number,
-  searchType: "simple" | "detailed" = "simple"
+  searchType: "simple" | "detailed" = "simple",
 ) => {
   trackPortfolioEvent(
     "portfolio_search",
     "Portfolio Search",
     searchTerm,
-    resultsCount
+    resultsCount,
   );
 
   // Additional search tracking
@@ -165,7 +165,7 @@ export const trackPortfolioSearch = (
  */
 export const trackPortfolioPerformance = (
   metricName: string,
-  value: number
+  value: number,
 ) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "timing_complete", {

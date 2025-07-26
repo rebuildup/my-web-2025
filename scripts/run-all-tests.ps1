@@ -103,26 +103,29 @@ try {
 }
 Write-Host ""
 
-# 6. Prettier Format Check
-Write-Host "6. Prettier Format Check Running..." -ForegroundColor Yellow
+# 6. Prettier Format Check & Auto-Fix
+Write-Host "6. Prettier Format Check & Auto-Fix Running..." -ForegroundColor Yellow
 try {
-    npx prettier --check src/app/workshop/
+    # Check formatting for the entire project
+    npm run format:check
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Warning: Fixing Prettier format issues..." -ForegroundColor Yellow
-        npx prettier --write src/app/workshop/
-        npx prettier --check src/app/workshop/
+        # Auto-fix formatting issues
+        npm run format
+        # Verify formatting is now correct
+        npm run format:check
         if ($LASTEXITCODE -ne 0) {
             throw "Prettier format check failed even after auto-fix"
         }
-        $testResults += "Prettier (Workshop): PASS (auto-fixed)"
-        Write-Host "Prettier (Workshop): PASS (auto-fixed)" -ForegroundColor Green
+        $testResults += "Prettier: PASS (auto-fixed)"
+        Write-Host "Prettier: PASS (auto-fixed)" -ForegroundColor Green
     } else {
-        $testResults += "Prettier (Workshop): PASS"
-        Write-Host "Prettier (Workshop): PASS" -ForegroundColor Green
+        $testResults += "Prettier: PASS"
+        Write-Host "Prettier: PASS" -ForegroundColor Green
     }
 } catch {
-    $testResults += "Prettier (Workshop): FAIL"
-    Write-Host "Prettier (Workshop): FAIL" -ForegroundColor Red
+    $testResults += "Prettier: FAIL"
+    Write-Host "Prettier: FAIL" -ForegroundColor Red
     Write-Host "Prettier Error Details:" -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor Red
     exit 1

@@ -117,19 +117,19 @@ export async function initializeGame(app: PIXI.Application) {
   gameData.FontFamily = settings.fontTheme.fontFamily;
   gameData.KeyLayout = loadFromCache<typeof gameData.KeyLayout>(
     "keylayout_GM",
-    settings.keyLayout
+    settings.keyLayout,
   );
   gameData.instant_key_n = loadFromCache<typeof gameData.instant_key_n>(
     "instant_key_GM",
-    20
+    20,
   );
   gameData.flashType = loadFromCache<typeof gameData.flashType>(
     "flashType_GM",
-    0
+    0,
   );
   gameData.total_keyhit = loadFromCache<typeof gameData.total_keyhit>(
     "total_keyhit_GM",
-    0
+    0,
   );
   gameData.acc_keys = [];
   if (settings.user.isLoggedin) {
@@ -1040,4 +1040,3 @@ function TendenciesInit() {
   ];
   gameData.Conversion = CONVERSION_TENDENCIES;
 }
-

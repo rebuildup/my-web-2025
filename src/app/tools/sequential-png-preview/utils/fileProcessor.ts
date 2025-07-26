@@ -36,7 +36,7 @@ export async function processZipFile(_zipFile: File): Promise<FrameData[]> {
   // For now, we'll implement a basic ZIP processing
   // In a real implementation, you'd use a library like JSZip
   throw new Error(
-    "ZIP file processing is not yet implemented. Please use individual files or folder selection."
+    "ZIP file processing is not yet implemented. Please use individual files or folder selection.",
   );
 }
 
@@ -69,7 +69,7 @@ function fileToDataUrl(file: File): Promise<string> {
 }
 
 function getImageDimensions(
-  dataUrl: string
+  dataUrl: string,
 ): Promise<{ width: number; height: number }> {
   return new Promise((resolve, reject) => {
     const img = new Image();

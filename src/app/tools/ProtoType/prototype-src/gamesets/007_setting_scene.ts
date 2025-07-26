@@ -184,7 +184,7 @@ export function setting_scene(app: PIXI.Application): Promise<void> {
     selectDotAcc.circle(0, 0, 8);
     selectDotAcc.position.set(
       Select_dot_x,
-      keylayout_text.y + keylayout_text.height / 2
+      keylayout_text.y + keylayout_text.height / 2,
     );
     selectDotAcc.fill(replaceHash(settings.colorTheme.colors.MainAccent));
     selectDotAcc.stroke({
@@ -225,7 +225,7 @@ export function setting_scene(app: PIXI.Application): Promise<void> {
         case option_select_values.instantkey_n:
           dot_to(
             Select_dot_x,
-            instantkey_n_text.y + instantkey_n_text.height / 2
+            instantkey_n_text.y + instantkey_n_text.height / 2,
           );
           break;
         case option_select_values.flashType:
@@ -235,7 +235,7 @@ export function setting_scene(app: PIXI.Application): Promise<void> {
     }
     function update_open(opened: number, select: number = 0) {
       const lastcontainer = app.stage.children.find(
-        (child) => child.label === "setting_container"
+        (child) => child.label === "setting_container",
       );
       if (lastcontainer) {
         app.stage.removeChild(lastcontainer);
@@ -433,7 +433,7 @@ export function setting_scene(app: PIXI.Application): Promise<void> {
       playMiss(0.3);
       isOpened_option = opened_options.keylayout;
       current_select = keyLayouts.findIndex(
-        (layout) => layout.name === gameData.KeyLayout
+        (layout) => layout.name === gameData.KeyLayout,
       );
       dot_pos_update(0);
       update_open(isOpened_option, current_select);
@@ -443,7 +443,7 @@ export function setting_scene(app: PIXI.Application): Promise<void> {
       playMiss(0.3);
       isOpened_option = opened_options.keylayout;
       current_select = keyLayouts.findIndex(
-        (layout) => layout.name === gameData.KeyLayout
+        (layout) => layout.name === gameData.KeyLayout,
       );
       dot_pos_update(0);
       update_open(isOpened_option, current_select);
@@ -504,7 +504,7 @@ export function setting_scene(app: PIXI.Application): Promise<void> {
     gsap.fromTo(
       hint,
       { alpha: 0, y: app.screen.height - 260 },
-      { alpha: 0.5, y: app.screen.height - 280, duration: 3, delay: 2 }
+      { alpha: 0.5, y: app.screen.height - 280, duration: 3, delay: 2 },
     );
     while (gameData.CurrentSceneName === "setting_scene") {
       currentKeyController = new AbortController();
@@ -599,7 +599,7 @@ export function setting_scene(app: PIXI.Application): Promise<void> {
               case option_select_values.keylayoutset:
                 isOpened_option = opened_options.keylayout;
                 current_select = keyLayouts.findIndex(
-                  (layout) => layout.name === gameData.KeyLayout
+                  (layout) => layout.name === gameData.KeyLayout,
                 );
                 break;
               case option_select_values.instantkey_n:
@@ -645,4 +645,3 @@ export function setting_scene(app: PIXI.Application): Promise<void> {
     }
   });
 }
-

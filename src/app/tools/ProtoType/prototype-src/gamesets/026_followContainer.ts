@@ -18,7 +18,7 @@ export function createMouseFollowContainer(
     easing?: number; // アニメーションのイージング係数（小さいほど遅く追従）
     returnToCenter?: boolean; // マウス移動が止まったとき中心に戻るか
     returnSpeed?: number; // 中心に戻る速度
-  } = {}
+  } = {},
 ): PIXI.Container {
   // デフォルト値の設定
   const maxDistance = options.maxDistance || 50;
@@ -121,7 +121,7 @@ export function openMouseFollowScene(
     returnSpeed?: number;
     entranceAnimation?: "fade" | "scale" | "slide" | "none";
     animationDuration?: number;
-  } = {}
+  } = {},
 ): { container: PIXI.Container; animationPromise: Promise<void> } {
   // アニメーション設定
   const entranceAnimation = options.entranceAnimation || "fade";
@@ -200,7 +200,7 @@ export function openMouseFollowScene(
 export function closeMouseFollowScene(
   container: PIXI.Container,
   exitAnimation: "fade" | "scale" | "slide" | "none" = "fade",
-  animationDuration: number = 0.5
+  animationDuration: number = 0.5,
 ): Promise<void> {
   return new Promise<void>((resolve) => {
     switch (exitAnimation) {
@@ -247,4 +247,3 @@ export function closeMouseFollowScene(
     }
   });
 }
-

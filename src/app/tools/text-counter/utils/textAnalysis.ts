@@ -9,7 +9,7 @@ const ALPHANUMERIC_RANGE = /[A-Za-z0-9]/g;
 export function calculateTextStats(
   text: string,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _settings: CountSettings
+  _settings: CountSettings,
 ): TextStats {
   if (!text) {
     return {
@@ -150,7 +150,7 @@ function analyzeCharacterTypes(text: string) {
 }
 
 export function getCharacterTypeBreakdown(
-  text: string
+  text: string,
 ): CharacterTypeBreakdown {
   const hiragana = text.match(HIRAGANA_RANGE) || [];
   const katakana = text.match(KATAKANA_RANGE) || [];
@@ -165,7 +165,7 @@ export function getCharacterTypeBreakdown(
       !KATAKANA_RANGE.test(char) &&
       !KANJI_RANGE.test(char) &&
       !ALPHANUMERIC_RANGE.test(char) &&
-      !/\s/.test(char)
+      !/\s/.test(char),
   );
 
   return {

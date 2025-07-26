@@ -500,7 +500,7 @@ export default function AEExpressionTool() {
     (paramName: string, value: string | number | boolean) => {
       setParameterValues((prev) => ({ ...prev, [paramName]: value }));
     },
-    []
+    [],
   );
 
   // Copy to clipboard
@@ -534,12 +534,12 @@ export default function AEExpressionTool() {
 
     document.addEventListener(
       "toolShortcut",
-      handleToolShortcut as EventListener
+      handleToolShortcut as EventListener,
     );
     return () =>
       document.removeEventListener(
         "toolShortcut",
-        handleToolShortcut as EventListener
+        handleToolShortcut as EventListener,
       );
   }, [generatedCode, isPreviewPlaying, copyToClipboard]);
 
@@ -702,12 +702,12 @@ export default function AEExpressionTool() {
                             max={param.max}
                             step={param.step}
                             value={Number(
-                              parameterValues[param.name] ?? param.defaultValue
+                              parameterValues[param.name] ?? param.defaultValue,
                             )}
                             onChange={(e) =>
                               updateParameter(
                                 param.name,
-                                parseFloat(e.target.value)
+                                parseFloat(e.target.value),
                               )
                             }
                             className="w-full"
@@ -718,12 +718,12 @@ export default function AEExpressionTool() {
                             max={param.max}
                             step={param.step}
                             value={Number(
-                              parameterValues[param.name] ?? param.defaultValue
+                              parameterValues[param.name] ?? param.defaultValue,
                             )}
                             onChange={(e) =>
                               updateParameter(
                                 param.name,
-                                parseFloat(e.target.value)
+                                parseFloat(e.target.value),
                               )
                             }
                             className="w-full px-3 py-2 border border-foreground bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
@@ -734,7 +734,7 @@ export default function AEExpressionTool() {
                       {param.type === "select" && (
                         <select
                           value={String(
-                            parameterValues[param.name] ?? param.defaultValue
+                            parameterValues[param.name] ?? param.defaultValue,
                           )}
                           onChange={(e) =>
                             updateParameter(param.name, e.target.value)
@@ -754,7 +754,7 @@ export default function AEExpressionTool() {
                           <input
                             type="checkbox"
                             checked={Boolean(
-                              parameterValues[param.name] ?? param.defaultValue
+                              parameterValues[param.name] ?? param.defaultValue,
                             )}
                             onChange={(e) =>
                               updateParameter(param.name, e.target.checked)
@@ -771,7 +771,7 @@ export default function AEExpressionTool() {
                         <input
                           type="text"
                           value={String(
-                            parameterValues[param.name] ?? param.defaultValue
+                            parameterValues[param.name] ?? param.defaultValue,
                           )}
                           onChange={(e) =>
                             updateParameter(param.name, e.target.value)

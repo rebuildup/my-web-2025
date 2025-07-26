@@ -134,7 +134,7 @@ async function getDynamicRoutes() {
       `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/portfolio`,
       {
         next: { revalidate: 3600 }, // Revalidate every hour
-      }
+      },
     );
 
     if (portfolioResponse.ok) {
@@ -158,7 +158,7 @@ async function getDynamicRoutes() {
       `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/blog`,
       {
         next: { revalidate: 3600 },
-      }
+      },
     );
 
     if (blogResponse.ok) {
@@ -182,7 +182,7 @@ async function getDynamicRoutes() {
       `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/plugin`,
       {
         next: { revalidate: 3600 },
-      }
+      },
     );
 
     if (pluginResponse.ok) {
@@ -206,7 +206,7 @@ async function getDynamicRoutes() {
       `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/download`,
       {
         next: { revalidate: 3600 },
-      }
+      },
     );
 
     if (downloadResponse.ok) {
@@ -224,8 +224,9 @@ async function getDynamicRoutes() {
         });
       }
     }
-  } catch (error) {
-    console.error("Error fetching dynamic routes for sitemap:", error);
+  } catch {
+    // Silently handle API connection errors during build time
+    // This is expected when external APIs are not available during static generation
   }
 
   return dynamicRoutes;
@@ -239,7 +240,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: route.changeFrequency,
       priority: route.priority,
-    })
+    }),
   );
 
   // Get dynamic routes

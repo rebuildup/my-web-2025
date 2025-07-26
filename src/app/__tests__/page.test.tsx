@@ -30,12 +30,12 @@ describe("Home", () => {
     // Check for key elements in the new samuido design
     expect(screen.getByText("samuido's website")).toBeInTheDocument();
     expect(
-      screen.getByText(/ようこそ！ このサイトはsamuidoの個人サイトです/)
+      screen.getByText(/ようこそ！ このサイトはsamuidoの個人サイトです/),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        /映像制作\/デザイン\/プログラミングを中心とした創作\/開発の記録と/
-      )
+        /映像制作\/デザイン\/プログラミングを中心とした創作\/開発の記録と/,
+      ),
     ).toBeInTheDocument();
 
     // Check navigation sections
@@ -54,7 +54,7 @@ describe("Home", () => {
     render(<Home />);
 
     const footer = screen.getByText(
-      "© 2025 samuido - Creative Portfolio & Tools"
+      "© 2025 samuido - Creative Portfolio & Tools",
     );
     expect(footer).toBeInTheDocument();
   });
@@ -67,7 +67,7 @@ describe("Home", () => {
     expect(mainHeading).toHaveClass("text-primary");
 
     const description = screen.getByText(
-      /映像制作\/デザイン\/プログラミングを中心とした創作\/開発の記録と/
+      /映像制作\/デザイン\/プログラミングを中心とした創作\/開発の記録と/,
     );
     expect(description).toHaveClass("noto-sans-jp-light");
   });

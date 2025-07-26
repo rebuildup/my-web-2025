@@ -28,4 +28,3 @@ export function error_scene(app: PIXI.Application): Promise<void> {
     }
   });
 }
-

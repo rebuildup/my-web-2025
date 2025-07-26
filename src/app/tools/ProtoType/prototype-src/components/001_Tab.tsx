@@ -38,4 +38,3 @@ const Tab: React.FC<TabProps> = ({ onTabChange }) => {
 };
 
 export default Tab;
-

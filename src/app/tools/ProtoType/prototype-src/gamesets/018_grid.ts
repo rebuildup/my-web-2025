@@ -37,4 +37,3 @@ export function BG_grid(app: PIXI.Application) {
   app.stage.addChild(graphics);
   return graphics;
 }
-

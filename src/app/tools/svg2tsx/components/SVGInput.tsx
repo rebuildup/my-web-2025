@@ -34,7 +34,7 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
       };
       reader.readAsText(file);
     },
-    [onSVGChange]
+    [onSVGChange],
   );
 
   const handleDrop = useCallback(
@@ -44,14 +44,14 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 
       const files = Array.from(e.dataTransfer.files);
       const svgFile = files.find(
-        (file) => file.type === "image/svg+xml" || file.name.endsWith(".svg")
+        (file) => file.type === "image/svg+xml" || file.name.endsWith(".svg"),
       );
 
       if (svgFile) {
         handleFileUpload(svgFile);
       }
     },
-    [handleFileUpload]
+    [handleFileUpload],
   );
 
   const handleCodeChange = useCallback(
@@ -62,7 +62,7 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
         content: value,
       });
     },
-    [onSVGChange]
+    [onSVGChange],
   );
 
   const handleUrlLoad = useCallback(async () => {

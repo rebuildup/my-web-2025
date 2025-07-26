@@ -23,7 +23,7 @@ export function validatePiInput(position: number, input: string): boolean {
 
 export function getFormattedPi(
   position: number,
-  context: number = 10
+  context: number = 10,
 ): {
   before: string;
   current: string;

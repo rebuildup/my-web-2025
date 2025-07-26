@@ -211,4 +211,3 @@ const InnerLineSplitSvg: React.FC<InnerLineSplitSvgProps> = ({
 };
 
 export default InnerLineSplitSvg;
-

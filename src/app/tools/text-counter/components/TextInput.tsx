@@ -25,7 +25,7 @@ export default function TextInput({
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       onChange(e.target.value);
     },
-    [onChange]
+    [onChange],
   );
 
   return (

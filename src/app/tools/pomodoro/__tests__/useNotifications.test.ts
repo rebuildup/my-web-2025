@@ -128,7 +128,7 @@ describe("useNotifications", () => {
 
     expect(NotificationMock).not.toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalledWith(
-      "Notification permission not granted"
+      "Notification permission not granted",
     );
 
     consoleSpy.mockRestore();
@@ -184,7 +184,7 @@ describe("useNotifications", () => {
 
     expect(consoleSpy).toHaveBeenCalledWith(
       "Error showing notification:",
-      expect.any(Error)
+      expect.any(Error),
     );
     expect(alertSpy).toHaveBeenCalledWith("Test Title\nTest Body");
 

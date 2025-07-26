@@ -81,4 +81,3 @@ export const gameData: GameData = {
   gameselect_open: 0,
   flashType: 0,
 };
-

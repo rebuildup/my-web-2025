@@ -67,7 +67,7 @@ export default function ExportPanel({
     // This is a placeholder implementation
     // In a real application, you would use a library like gif.js
     alert(
-      "GIF export is not yet implemented. This would require a GIF encoding library."
+      "GIF export is not yet implemented. This would require a GIF encoding library.",
     );
   };
 
@@ -75,7 +75,7 @@ export default function ExportPanel({
     // This is a placeholder implementation
     // In a real application, you would use a library like ffmpeg.wasm
     alert(
-      "MP4 export is not yet implemented. This would require video encoding capabilities."
+      "MP4 export is not yet implemented. This would require video encoding capabilities.",
     );
   };
 

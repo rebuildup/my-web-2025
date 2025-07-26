@@ -11,7 +11,7 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
   const { characterTypes } = stats;
   const total = Object.values(characterTypes).reduce(
     (sum, count) => sum + count,
-    0
+    0,
   );
 
   if (total === 0) {
@@ -96,13 +96,13 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
                       fill={item.color}
                       stroke="#222222"
                       strokeWidth="0.5"
-                    />
+                    />,
                   );
 
                   acc.currentAngle = endAngle;
                   return acc;
                 },
-                { paths: [] as React.ReactElement[], currentAngle: 0 }
+                { paths: [] as React.ReactElement[], currentAngle: 0 },
               ).paths
             }
           </svg>

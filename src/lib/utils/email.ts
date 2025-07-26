@@ -66,7 +66,7 @@ export async function verifyRecaptcha(token: string): Promise<boolean> {
           secret: recaptchaConfig.secretKey,
           response: token,
         }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -96,7 +96,7 @@ export function routeEmail(type?: "technical" | "design"): string {
  * Create email template for contact form
  */
 export function createContactEmailTemplate(
-  data: ContactFormData
+  data: ContactFormData,
 ): EmailTemplate {
   const { name, email, subject, message, type } = data;
   const routedEmail = routeEmail(type);
@@ -344,16 +344,9 @@ function isValidEmail(email: string): boolean {
 }
 
 /**
- * Helper function to escape HTML
+ * Helper function to escape HTML (server-side safe)
  */
 function escapeHtml(text: string): string {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-// Alternative HTML escape for server-side
-function escapeHtmlServer(text: string): string {
   return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -361,10 +354,3 @@ function escapeHtmlServer(text: string): string {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#x27;");
 }
-
-// Use appropriate escape function based on environment
-const escapeHtmlFn =
-  typeof document !== "undefined" ? escapeHtml : escapeHtmlServer;
-
-// Export the appropriate escape function
-export { escapeHtmlFn as escapeHtml };

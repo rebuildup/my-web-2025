@@ -70,7 +70,7 @@ export function useNotifications() {
         alert(`${options.title}\n${options.body}`);
       }
     },
-    [permission]
+    [permission],
   );
 
   return {

@@ -87,13 +87,13 @@ export function usePortfolioTracking({
         const data = await response.json();
         console.log(
           `Portfolio download tracked: ${contentType}-${contentId}`,
-          data
+          data,
         );
         return true;
       } else {
         console.warn(
           "Failed to track portfolio download:",
-          response.statusText
+          response.statusText,
         );
         return false;
       }

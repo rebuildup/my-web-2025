@@ -174,7 +174,7 @@ class FrameEffectManager {
           scale: 2,
           duration: duration,
           ease: easing,
-        }
+        },
       );
 
       // 右フレームのアニメーション
@@ -191,7 +191,7 @@ class FrameEffectManager {
           scale: 2,
           duration: duration,
           ease: easing,
-        }
+        },
       );
 
       // 下フレームのアニメーション
@@ -208,7 +208,7 @@ class FrameEffectManager {
           scale: 2,
           duration: duration,
           ease: easing,
-        }
+        },
       );
 
       // 左フレームのアニメーション
@@ -225,7 +225,7 @@ class FrameEffectManager {
           scale: 2,
           duration: duration,
           ease: easing,
-        }
+        },
       );
     } catch (error) {
       console.error("フレームアニメーションエラー:", error);
@@ -245,4 +245,3 @@ export function triggerFrameEffect(): void {
 export function initializeFrameEffect(): boolean {
   return frameEffectManager.initialize();
 }
-

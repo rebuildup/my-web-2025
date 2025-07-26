@@ -133,4 +133,3 @@ const InnerStarsSvg: React.FC<InnerStarsSvgProps> = ({
 };
 
 export default InnerStarsSvg;
-

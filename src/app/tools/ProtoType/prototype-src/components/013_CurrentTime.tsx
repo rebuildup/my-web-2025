@@ -36,4 +36,3 @@ const CurrentTime: React.FC = () => {
 };
 
 export default CurrentTime;
-

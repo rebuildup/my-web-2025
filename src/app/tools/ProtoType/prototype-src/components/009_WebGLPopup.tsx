@@ -59,4 +59,3 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 };
 
 export default WebGLPopup;
-

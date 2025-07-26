@@ -160,7 +160,7 @@ export function record_scene(app: PIXI.Application): Promise<void> {
     selectDotAcc.circle(0, 0, 8);
     selectDotAcc.position.set(
       Select_dot_x,
-      play_record_text.y + play_record_text.height / 2
+      play_record_text.y + play_record_text.height / 2,
     );
     selectDotAcc.fill(replaceHash(settings.colorTheme.colors.MainAccent));
     selectDotAcc.stroke({
@@ -201,12 +201,12 @@ export function record_scene(app: PIXI.Application): Promise<void> {
         case opened_record.play:
           dot_to(
             Select_dot_x,
-            play_record_text.y + play_record_text.height / 2
+            play_record_text.y + play_record_text.height / 2,
           );
           play_record_text.alpha = 1;
           reaction_jump(
             play_record_text,
-            screenCenter.y - play_record_text.height / 2 - 120
+            screenCenter.y - play_record_text.height / 2 - 120,
           );
           break;
         case opened_record.achieve:
@@ -214,7 +214,7 @@ export function record_scene(app: PIXI.Application): Promise<void> {
           achieve_text.alpha = 1;
           reaction_jump(
             achieve_text,
-            screenCenter.y - achieve_text.height / 2 - 40
+            screenCenter.y - achieve_text.height / 2 - 40,
           );
           break;
         case opened_record.ranking:
@@ -222,7 +222,7 @@ export function record_scene(app: PIXI.Application): Promise<void> {
           ranking_text.alpha = 1;
           reaction_jump(
             ranking_text,
-            screenCenter.y - ranking_text.height / 2 + 40
+            screenCenter.y - ranking_text.height / 2 + 40,
           );
           break;
         case opened_record.graph:
@@ -230,20 +230,20 @@ export function record_scene(app: PIXI.Application): Promise<void> {
           graph_text.alpha = 1;
           reaction_jump(
             graph_text,
-            screenCenter.y - graph_text.height / 2 + 120
+            screenCenter.y - graph_text.height / 2 + 120,
           );
           break;
       }
     }
     function update_open(opened: number) {
       const lastcontainer = app.stage.children.find(
-        (child) => child.label === "record_container"
+        (child) => child.label === "record_container",
       );
       if (lastcontainer) {
         app.stage.removeChild(lastcontainer);
       }
       const last_record_title = app.stage.children.find(
-        (child) => child.label === "record_title"
+        (child) => child.label === "record_title",
       );
       if (last_record_title) {
         app.stage.removeChild(last_record_title);
@@ -417,7 +417,7 @@ export function record_scene(app: PIXI.Application): Promise<void> {
             text: gameData.localRanking
               .reduce(
                 (max, player) => Math.max(max, player.player_max_kpm),
-                -Infinity
+                -Infinity,
               )
               .toFixed(0),
             style: {
@@ -491,7 +491,7 @@ export function record_scene(app: PIXI.Application): Promise<void> {
                     .map((player) => player.player_accracy)
                     .filter((score) => score !== 0).length
                 : 0
-              ).toFixed(1) + "%"
+              ).toFixed(1) + "%",
             ),
             style: {
               fontFamily: gameData.FontFamily,
@@ -597,7 +597,7 @@ export function record_scene(app: PIXI.Application): Promise<void> {
           lastPosition.y = e.global.y;
           currentScroll = Math.min(
             Math.max(currentScroll + deltaY, -maxScroll),
-            0
+            0,
           );
           updateScrollPosition();
           velocity = deltaY;
@@ -611,7 +611,7 @@ export function record_scene(app: PIXI.Application): Promise<void> {
         const wheelDelta = -e.deltaY;
         currentScroll = Math.min(
           Math.max(currentScroll + wheelDelta, -maxScroll),
-          0
+          0,
         );
         updateScrollPosition();
       });
@@ -630,7 +630,7 @@ export function record_scene(app: PIXI.Application): Promise<void> {
         velocity *= 0.95;
         currentScroll = Math.min(
           Math.max(currentScroll + velocity, -maxScroll),
-          0
+          0,
         );
         updateScrollPosition();
         if (Math.abs(velocity) > 0.5) {
@@ -643,7 +643,7 @@ export function record_scene(app: PIXI.Application): Promise<void> {
           velocity *= 0.95;
           currentScroll = Math.min(
             Math.max(currentScroll + velocity, -maxScroll),
-            0
+            0,
           );
           updateScrollPosition();
         }
@@ -702,4 +702,3 @@ export function record_scene(app: PIXI.Application): Promise<void> {
     }
   });
 }
-

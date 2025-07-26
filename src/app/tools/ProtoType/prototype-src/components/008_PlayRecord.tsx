@@ -11,4 +11,3 @@ const PlayRecord: React.FC = () => {
 };
 
 export default PlayRecord;
-

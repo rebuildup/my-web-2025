@@ -27,8 +27,8 @@ async function getPlugin(slug: string): Promise<ContentItem | null> {
         (plugin) => plugin.id === slug && plugin.status === "published",
       ) || null
     );
-  } catch (error) {
-    console.error("Error fetching plugin:", error);
+  } catch {
+    // Silently handle API connection errors during build time
     return null;
   }
 }
@@ -104,8 +104,8 @@ export default async function PluginDetailPage({
         cache: "no-store",
       },
     );
-  } catch (error) {
-    console.error("Error tracking view:", error);
+  } catch {
+    // Silently handle view tracking errors during build time
   }
 
   return (

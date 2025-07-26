@@ -33,4 +33,3 @@ export function opening_scene(app: PIXI.Application): Promise<void> {
     }, 1000);
   });
 }
-

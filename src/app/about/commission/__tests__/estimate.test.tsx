@@ -34,10 +34,10 @@ describe("EstimatePage", () => {
     render(<EstimatePage />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "映像制作見積もり計算機" })
+      screen.getByRole("heading", { level: 1, name: "映像制作見積もり計算機" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/映像制作の見積もりを自動計算します/)
+      screen.getByText(/映像制作の見積もりを自動計算します/),
     ).toBeInTheDocument();
   });
 
@@ -56,7 +56,7 @@ describe("EstimatePage", () => {
     render(<EstimatePage />);
 
     expect(
-      screen.getByText(/映像の種類と長さを選択すると/)
+      screen.getByText(/映像の種類と長さを選択すると/),
     ).toBeInTheDocument();
     expect(screen.getByText(/見積もりが表示されます/)).toBeInTheDocument();
   });
@@ -194,14 +194,14 @@ describe("EstimatePage", () => {
     render(<EstimatePage />);
 
     expect(
-      screen.getByRole("link", { name: "← About に戻る" })
+      screen.getByRole("link", { name: "← About に戻る" }),
     ).toHaveAttribute("href", "/about");
     expect(screen.getByRole("link", { name: "お問い合わせ" })).toHaveAttribute(
       "href",
-      "/contact"
+      "/contact",
     );
     expect(
-      screen.getByRole("link", { name: "映像依頼について" })
+      screen.getByRole("link", { name: "映像依頼について" }),
     ).toHaveAttribute("href", "/about/commission/video");
   });
 

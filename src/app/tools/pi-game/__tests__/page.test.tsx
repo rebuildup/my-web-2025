@@ -25,7 +25,7 @@ describe("Pi Game Page", () => {
     render(<PiGamePage />);
 
     expect(
-      screen.getByRole("heading", { name: "Pi Memory Game" })
+      screen.getByRole("heading", { name: "Pi Memory Game" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText((content, element) => {
@@ -33,7 +33,7 @@ describe("Pi Game Page", () => {
           element?.textContent ===
           "円周率の桁を記憶して入力するゲームです。テンキーインターフェースで楽しく学習できます。"
         );
-      })
+      }),
     ).toBeInTheDocument();
   });
 
@@ -75,7 +75,7 @@ describe("Pi Game Page", () => {
     expect(container).toHaveClass(
       "min-h-screen",
       "bg-background",
-      "text-foreground"
+      "text-foreground",
     );
 
     const mainContent = screen.getByRole("main");

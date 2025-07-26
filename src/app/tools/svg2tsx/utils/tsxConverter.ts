@@ -2,7 +2,7 @@ import { ConversionSettings, SVGElement, ConversionResult } from "../types";
 
 export function convertSVGToTSX(
   svgElement: SVGElement,
-  settings: ConversionSettings
+  settings: ConversionSettings,
 ): ConversionResult {
   try {
     const { componentName, propsType, includeComments, fileExtension } =
@@ -13,12 +13,12 @@ export function convertSVGToTSX(
     const propsInterface = generatePropsInterface(
       propsType,
       svgElement,
-      settings
+      settings,
     );
     const componentCode = generateComponent(
       componentName,
       svgElement,
-      settings
+      settings,
     );
     const exportStatement = generateExport(componentName, settings.exportType);
 
@@ -55,7 +55,7 @@ function generateImports(fileExtension: string): string {
 function generatePropsInterface(
   propsType: string,
   svgElement: SVGElement,
-  settings: ConversionSettings
+  settings: ConversionSettings,
 ): string {
   if (
     !propsType ||
@@ -93,7 +93,7 @@ function generatePropsInterface(
 function generateComponent(
   componentName: string,
   svgElement: SVGElement,
-  settings: ConversionSettings
+  settings: ConversionSettings,
 ): string {
   const propsParam =
     settings.propsType &&
@@ -113,7 +113,7 @@ function generateComponent(
 function convertElementToJSX(
   element: SVGElement,
   settings: ConversionSettings,
-  depth: number
+  depth: number,
 ): string {
   const indent = "  ".repeat(depth);
   const { attributes } = element;
@@ -145,7 +145,7 @@ function convertElementToJSX(
 
 function convertAttributes(
   attributes: Record<string, string>,
-  settings: ConversionSettings
+  settings: ConversionSettings,
 ): string[] {
   const jsxAttributes: string[] = [];
 
@@ -189,7 +189,7 @@ function convertAttributes(
 function convertAttributeName(name: string): string {
   // Convert kebab-case to camelCase
   const camelCase = name.replace(/-([a-z])/g, (_, letter) =>
-    letter.toUpperCase()
+    letter.toUpperCase(),
   );
 
   // Handle special cases
@@ -249,7 +249,7 @@ function extractColors(element: SVGElement): string[] {
 
 function generateExport(
   componentName: string,
-  exportType: "default" | "named"
+  exportType: "default" | "named",
 ): string {
   if (exportType === "default") {
     return `export default ${componentName};`;

@@ -337,7 +337,7 @@ export default function EstimatePage() {
                             onChange={(e) =>
                               handleEditingChange(
                                 editing.value,
-                                e.target.checked
+                                e.target.checked,
                               )
                             }
                             disabled={editing.value === "basic"}

@@ -3,7 +3,7 @@ const apiUrl =
 
 export async function checkUsername(username: string): Promise<number> {
   const url = `${apiUrl}?action=checkUsername&username=${encodeURIComponent(
-    username
+    username,
   )}`;
   const response = await fetch(url);
   const data = await response.json();
@@ -12,10 +12,10 @@ export async function checkUsername(username: string): Promise<number> {
 
 export async function checkPassword(
   id: number,
-  password: string
+  password: string,
 ): Promise<boolean> {
   const url = `${apiUrl}?action=checkPassword&id=${id}&password=${encodeURIComponent(
-    password
+    password,
   )}`;
   const response = await fetch(url);
   const data = await response.json();
@@ -24,10 +24,10 @@ export async function checkPassword(
 
 export async function createUser(
   username: string,
-  password: string
+  password: string,
 ): Promise<number> {
   const url = `${apiUrl}?action=createUser&username=${encodeURIComponent(
-    username
+    username,
   )}&password=${encodeURIComponent(password)}`;
   const response = await fetch(url);
   const data = await response.json();
@@ -84,4 +84,3 @@ fetchPlayerData("example_player_id")
   }
 })();
 */
-

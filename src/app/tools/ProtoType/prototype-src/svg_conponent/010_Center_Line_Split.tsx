@@ -128,4 +128,3 @@ const CenterLineSplitSvg: React.FC<CenterLineSplitSvgProps> = ({
 };
 
 export default CenterLineSplitSvg;
-

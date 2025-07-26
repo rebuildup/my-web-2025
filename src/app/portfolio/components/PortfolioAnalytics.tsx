@@ -68,11 +68,11 @@ export default function PortfolioAnalytics({
           // Filter portfolio items only
           const portfolioViewed = viewData.mostViewed.filter(
             (item: { id: string; views: number }) =>
-              item.id.startsWith("portfolio-")
+              item.id.startsWith("portfolio-"),
           );
           const portfolioDownloaded = downloadData.mostDownloaded.filter(
             (item: { id: string; downloads: number }) =>
-              item.id.startsWith("portfolio-")
+              item.id.startsWith("portfolio-"),
           );
 
           setStats({

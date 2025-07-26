@@ -40,7 +40,7 @@ function getCircularPosition(
   centerX: number,
   centerY: number,
   radius: number,
-  angle: number
+  angle: number,
 ) {
   return {
     x: centerX + radius * Math.cos(angle),
@@ -52,12 +52,12 @@ function animateSelectionDot(
   dot: PIXI.Graphics,
   targetY: number,
   delay: number,
-  isDown: boolean
+  isDown: boolean,
 ) {
   gsap.fromTo(
     dot,
     { y: isDown ? targetY - 10 : targetY + 10, alpha: 0 },
-    { y: targetY, alpha: 1, duration: 0.5, ease: "power4.out", delay }
+    { y: targetY, alpha: 1, duration: 0.5, ease: "power4.out", delay },
   );
 }
 
@@ -73,7 +73,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
     const gameSelectBtn = createButton("ゲーム選択");
     gameSelectBtn.position.set(
       winCenter.x - gameSelectBtn.width / 2,
-      winCenter.y - gameSelectBtn.height / 2
+      winCenter.y - gameSelectBtn.height / 2,
     );
     app.stage.addChild(gameSelectBtn);
     gameSelectBtn.alpha = 1;
@@ -81,7 +81,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
     const settingSelectBtn = createButton("ゲーム設定");
     settingSelectBtn.position.set(
       winCenter.x - settingSelectBtn.width / 2,
-      winCenter.y - settingSelectBtn.height / 2 + BUTTON_SPACING
+      winCenter.y - settingSelectBtn.height / 2 + BUTTON_SPACING,
     );
     app.stage.addChild(settingSelectBtn);
     settingSelectBtn.alpha = 0.6;
@@ -89,7 +89,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
     const recordBtn = createButton("プレイ記録");
     recordBtn.position.set(
       winCenter.x - recordBtn.width / 2,
-      winCenter.y - recordBtn.height / 2 - BUTTON_SPACING
+      winCenter.y - recordBtn.height / 2 - BUTTON_SPACING,
     );
     app.stage.addChild(recordBtn);
     recordBtn.alpha = 0.6;
@@ -98,7 +98,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
     selectDotAcc.circle(0, 0, 8);
     selectDotAcc.position.set(
       winCenter.x + (gameSelectBtn.width / 2 + 20),
-      winCenter.y
+      winCenter.y,
     );
     selectDotAcc.fill(replaceHash(settings.colorTheme.colors.MainAccent));
     selectDotAcc.stroke({
@@ -117,7 +117,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
     selectDotMain.circle(0, 0, 8);
     selectDotMain.position.set(
       winCenter.x - (gameSelectBtn.width / 2 + 15),
-      winCenter.y
+      winCenter.y,
     );
     selectDotMain.fill(replaceHash(settings.colorTheme.colors.MainColor));
     selectDotMain.stroke({
@@ -167,7 +167,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
       playCollect();
       reaction_jump(
         recordBtn,
-        winCenter.y - recordBtn.height / 2 - BUTTON_SPACING
+        winCenter.y - recordBtn.height / 2 - BUTTON_SPACING,
       );
       transitionToRecord();
     });
@@ -179,7 +179,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
       playCollect();
       reaction_jump(
         settingSelectBtn,
-        winCenter.y - settingSelectBtn.height / 2 + BUTTON_SPACING
+        winCenter.y - settingSelectBtn.height / 2 + BUTTON_SPACING,
       );
       transitionToSetting();
     });
@@ -205,7 +205,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
           recordBtn.alpha = 1;
           reaction_jump(
             recordBtn,
-            winCenter.y - recordBtn.height / 2 - BUTTON_SPACING
+            winCenter.y - recordBtn.height / 2 - BUTTON_SPACING,
           );
 
           break;
@@ -217,7 +217,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
           settingSelectBtn.alpha = 1;
           reaction_jump(
             settingSelectBtn,
-            winCenter.y - settingSelectBtn.height / 2 + BUTTON_SPACING
+            winCenter.y - settingSelectBtn.height / 2 + BUTTON_SPACING,
           );
           break;
       }
@@ -243,7 +243,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
     gsap.fromTo(
       hint,
       { alpha: 0, y: 80 },
-      { alpha: 0.3, y: 60, duration: 5, delay: 5 }
+      { alpha: 0.3, y: 60, duration: 5, delay: 5 },
     );
     const hint_two = new PIXI.Text({
       text: "ヒント:左右shift・上下左右キー・Space・Enter・Escキーで操作可能",
@@ -261,7 +261,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
     gsap.fromTo(
       hint_two,
       { alpha: 0, y: app.screen.height - 60 },
-      { alpha: 0.3, y: app.screen.height - 80, duration: 5, delay: 6 }
+      { alpha: 0.3, y: app.screen.height - 80, duration: 5, delay: 6 },
     );
 
     while (gameData.CurrentSceneName === "game_select") {
@@ -288,19 +288,19 @@ export async function game_select(app: PIXI.Application): Promise<void> {
             case 0:
               reaction_jump(
                 recordBtn,
-                winCenter.y - recordBtn.height / 2 - BUTTON_SPACING
+                winCenter.y - recordBtn.height / 2 - BUTTON_SPACING,
               );
               break;
             case 1:
               reaction_jump(
                 gameSelectBtn,
-                winCenter.y - gameSelectBtn.height / 2
+                winCenter.y - gameSelectBtn.height / 2,
               );
               break;
             case 2:
               reaction_jump(
                 settingSelectBtn,
-                winCenter.y - settingSelectBtn.height / 2 + BUTTON_SPACING
+                winCenter.y - settingSelectBtn.height / 2 + BUTTON_SPACING,
               );
               break;
           }
@@ -350,7 +350,7 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
         y: 1,
         duration: 1.2,
         ease: CustomEase.create("custom", "M0,0 C0,0.2 0.3,1 1,1"),
-      }
+      },
     );
 
     const exit_btn = new PIXI.Graphics();
@@ -370,7 +370,7 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
       });
     exit_btn.position.set(
       winCenter.x - CIRCULAR_BUTTON_CENTER_OFFSET - 20,
-      winCenter.y
+      winCenter.y,
     );
     exit_btn.rotation = Math.PI / 4 + Math.PI;
     exit_btn.interactive = true;
@@ -380,7 +380,7 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
     selectDotAcc.circle(circleRadius, 0, 8);
     selectDotAcc.position.set(
       winCenter.x - CIRCULAR_BUTTON_CENTER_OFFSET - 20,
-      winCenter.y
+      winCenter.y,
     );
     selectDotAcc.fill(replaceHash(settings.colorTheme.colors.MainAccent));
     selectDotAcc.stroke({
@@ -391,7 +391,7 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
     gsap.fromTo(
       selectDotAcc,
       { alpha: 0 },
-      { alpha: 1, duration: 2, ease: "power3.out" }
+      { alpha: 1, duration: 2, ease: "power3.out" },
     );
 
     const modeButtons: PIXI.Text[] = [];
@@ -410,7 +410,7 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
         winCenter.x - CIRCULAR_BUTTON_CENTER_OFFSET,
         winCenter.y - btn.height / 2,
         circleRadius,
-        item.angle
+        item.angle,
       );
       btn.position.set(pos.x, pos.y);
       flashObj(app, btn);
@@ -561,4 +561,3 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
     }
   });
 }
-

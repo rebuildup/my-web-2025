@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import ToolWrapper from "../../components/ToolWrapper";
+import AccessibleButton from "../../components/AccessibleButton";
 
 // Color utility functions
 interface HSVColor {
@@ -71,7 +72,7 @@ function hsvToRgb(h: number, s: number, v: number): RGBColor {
 function rgbToHsl(
   r: number,
   g: number,
-  b: number
+  b: number,
 ): { h: number; s: number; l: number } {
   r /= 255;
   g /= 255;
@@ -165,7 +166,7 @@ export default function ColorPaletteGenerator() {
   const [generatedColors, setGeneratedColors] = useState<ColorInfo[]>([]);
   const [savedPalettes, setSavedPalettes] = useState<ColorInfo[][]>([]);
   const [exportFormat, setExportFormat] = useState<"css" | "tailwind" | "json">(
-    "css"
+    "css",
   );
   const [showAccessibility, setShowAccessibility] = useState(false);
 
@@ -247,7 +248,7 @@ export default function ColorPaletteGenerator() {
         acc[`color-${index + 1}`] = color.hex;
         return acc;
       },
-      {} as Record<string, string>
+      {} as Record<string, string>,
     );
 
     return `module.exports = {
@@ -320,12 +321,12 @@ export default function ColorPaletteGenerator() {
 
     document.addEventListener(
       "toolShortcut",
-      handleToolShortcut as EventListener
+      handleToolShortcut as EventListener,
     );
     return () =>
       document.removeEventListener(
         "toolShortcut",
-        handleToolShortcut as EventListener
+        handleToolShortcut as EventListener,
       );
   }, [
     generateColors,
@@ -529,28 +530,38 @@ export default function ColorPaletteGenerator() {
         {/* Generation Controls */}
         <section className={CardStyle}>
           <div className="flex flex-wrap gap-4">
-            <button
+            <AccessibleButton
               onClick={generateColors}
-              className={Button_style}
+              variant="primary"
+              shortcut="G"
+              announceOnClick="新しいカラーパレットを生成しました"
               aria-label="Generate new color palette"
             >
-              Generate Colors (G)
-            </button>
-            <button
+              Generate Colors
+            </AccessibleButton>
+            <AccessibleButton
               onClick={savePalette}
               disabled={generatedColors.length === 0}
-              className={`${Button_style} disabled:opacity-50 disabled:cursor-not-allowed`}
+              variant="secondary"
+              shortcut="S"
+              announceOnClick="パレットを保存しました"
               aria-label="Save current palette"
             >
-              Save Palette (S)
-            </button>
-            <button
+              Save Palette
+            </AccessibleButton>
+            <AccessibleButton
               onClick={() => setShowAccessibility(!showAccessibility)}
-              className="bg-background border border-foreground px-4 py-2 hover:bg-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+              variant="ghost"
+              shortcut="A"
+              announceOnClick={
+                showAccessibility
+                  ? "アクセシビリティ情報を非表示にしました"
+                  : "アクセシビリティ情報を表示しました"
+              }
               aria-label="Toggle accessibility information"
             >
-              Accessibility (A)
-            </button>
+              Accessibility
+            </AccessibleButton>
           </div>
         </section>
 
@@ -642,7 +653,7 @@ export default function ColorPaletteGenerator() {
                   value={exportFormat}
                   onChange={(e) =>
                     setExportFormat(
-                      e.target.value as "css" | "tailwind" | "json"
+                      e.target.value as "css" | "tailwind" | "json",
                     )
                   }
                   className={Input_style}

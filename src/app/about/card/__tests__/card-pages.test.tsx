@@ -44,7 +44,7 @@ describe("Digital Business Card Pages", () => {
       // Check for main heading
       expect(screen.getByText("Digital Card (Real)")).toBeInTheDocument();
       expect(
-        screen.getByText(/正式なビジネス用デジタル名刺/)
+        screen.getByText(/正式なビジネス用デジタル名刺/),
       ).toBeInTheDocument();
 
       // Check for card content
@@ -52,7 +52,7 @@ describe("Digital Business Card Pages", () => {
       expect(screen.getByText("Yusuke Kimura")).toBeInTheDocument();
       expect(screen.getByText("Webデザイナー・開発者")).toBeInTheDocument();
       expect(
-        screen.getByText("rebuild.up.up(at)gmail.com")
+        screen.getByText("rebuild.up.up(at)gmail.com"),
       ).toBeInTheDocument();
 
       // Check for skills - using more flexible text matching
@@ -99,7 +99,7 @@ describe("Digital Business Card Pages", () => {
       // Check for achievements
       expect(screen.getByText("主要実績")).toBeInTheDocument();
       expect(
-        screen.getByText(/中国地区高専コンピュータフェスティバル2024/)
+        screen.getByText(/中国地区高専コンピュータフェスティバル2024/),
       ).toBeInTheDocument();
 
       // Check for contact info
@@ -115,21 +115,21 @@ describe("Digital Business Card Pages", () => {
       // Check for main heading
       expect(screen.getByText("Digital Card (Handle)")).toBeInTheDocument();
       expect(
-        screen.getByText(/クリエイティブ活動用のカジュアル名刺/)
+        screen.getByText(/クリエイティブ活動用のカジュアル名刺/),
       ).toBeInTheDocument();
 
       // Check for card content
       expect(screen.getByText("samuido")).toBeInTheDocument();
       expect(
-        screen.getByText("クリエイティブ・デベロッパー")
+        screen.getByText("クリエイティブ・デベロッパー"),
       ).toBeInTheDocument();
       expect(
-        screen.getByText("やる気になれば何でもできる")
+        screen.getByText("やる気になれば何でもできる"),
       ).toBeInTheDocument();
 
       // Check for contact information - using more flexible text matching
       expect(
-        screen.getByText(/rebuild\.up\.up.*gmail\.com/)
+        screen.getByText(/rebuild\.up\.up.*gmail\.com/),
       ).toBeInTheDocument();
       expect(screen.getByText(/361do\.sleep.*gmail\.com/)).toBeInTheDocument();
 

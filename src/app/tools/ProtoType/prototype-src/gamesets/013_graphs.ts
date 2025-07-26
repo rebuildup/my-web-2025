@@ -208,4 +208,3 @@ export function score_graph(app: Application, container: Container) {
     graphContainer.addChild(accPoint);
   }
 }
-

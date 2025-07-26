@@ -1117,4 +1117,3 @@ const InnerLineRepeatSvg: React.FC<InnerLineRepeatSvgProps> = ({
 };
 
 export default InnerLineRepeatSvg;
-
