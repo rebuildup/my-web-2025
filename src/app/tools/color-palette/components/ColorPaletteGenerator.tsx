@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import ToolWrapper from "../../components/ToolWrapper";
 import AccessibleButton from "../../components/AccessibleButton";
+import OfflineSettingsManager from "../../components/OfflineSettingsManager";
+import useOfflinePerformance from "@/hooks/useOfflinePerformance";
 
 // Color utility functions
 interface HSVColor {
@@ -157,18 +159,49 @@ const colorRangePresets = {
   earth: { hMin: 20, hMax: 60, sMin: 30, sMax: 80, vMin: 30, vMax: 70 },
 };
 
+// Settings interface for offline persistence
+interface ColorPaletteSettings extends Record<string, unknown> {
+  colorCount: number;
+  hueRange: { min: number; max: number };
+  saturationRange: { min: number; max: number };
+  valueRange: { min: number; max: number };
+  exportFormat: "css" | "tailwind" | "json";
+  showAccessibility: boolean;
+}
+
 export default function ColorPaletteGenerator() {
-  // State management
-  const [colorCount, setColorCount] = useState(5);
-  const [hueRange, setHueRange] = useState({ min: 0, max: 360 });
-  const [saturationRange, setSaturationRange] = useState({ min: 50, max: 100 });
-  const [valueRange, setValueRange] = useState({ min: 50, max: 90 });
+  // Default settings
+  const defaultSettings: ColorPaletteSettings = {
+    colorCount: 5,
+    hueRange: { min: 0, max: 360 },
+    saturationRange: { min: 50, max: 100 },
+    valueRange: { min: 50, max: 90 },
+    exportFormat: "css",
+    showAccessibility: false,
+  };
+
+  // State management with settings
+  const [settings, setSettings] =
+    useState<ColorPaletteSettings>(defaultSettings);
   const [generatedColors, setGeneratedColors] = useState<ColorInfo[]>([]);
   const [savedPalettes, setSavedPalettes] = useState<ColorInfo[][]>([]);
-  const [exportFormat, setExportFormat] = useState<"css" | "tailwind" | "json">(
-    "css",
-  );
-  const [showAccessibility, setShowAccessibility] = useState(false);
+
+  // Destructure settings for easier access
+  const {
+    colorCount,
+    hueRange,
+    saturationRange,
+    valueRange,
+    exportFormat,
+    showAccessibility,
+  } = settings;
+
+  // Performance optimization hook
+  const { processInChunks, measureTime } = useOfflinePerformance({
+    toolName: "color-palette",
+    enablePerformanceMonitoring: true,
+    enableOfflineNotifications: true,
+  });
 
   // Keyboard shortcuts
   const keyboardShortcuts = [
@@ -179,42 +212,86 @@ export default function ColorPaletteGenerator() {
     { key: "A", description: "アクセシビリティ表示切替" },
   ];
 
-  // Generate random colors
-  const generateColors = useCallback(() => {
-    const colors: ColorInfo[] = [];
-    const usedColors = new Set<string>();
+  // Generate random colors with performance optimization
+  const generateColors = useCallback(async () => {
+    const timedGeneration = measureTime(() => {
+      const colors: ColorInfo[] = [];
+      const usedColors = new Set<string>();
 
-    while (colors.length < colorCount) {
-      const h = randomInRange(hueRange.min, hueRange.max);
-      const s = randomInRange(saturationRange.min, saturationRange.max);
-      const v = randomInRange(valueRange.min, valueRange.max);
+      while (colors.length < colorCount) {
+        const h = randomInRange(hueRange.min, hueRange.max);
+        const s = randomInRange(saturationRange.min, saturationRange.max);
+        const v = randomInRange(valueRange.min, valueRange.max);
 
-      const rgb = hsvToRgb(h, s, v);
-      const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+        const rgb = hsvToRgb(h, s, v);
+        const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
 
-      // Avoid duplicate colors
-      if (!usedColors.has(hex)) {
-        usedColors.add(hex);
-        const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+        // Avoid duplicate colors
+        if (!usedColors.has(hex)) {
+          usedColors.add(hex);
+          const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
 
-        colors.push({
-          hex,
-          rgb,
-          hsv: { h, s, v },
-          hsl,
-        });
+          colors.push({
+            hex,
+            rgb,
+            hsv: { h, s, v },
+            hsl,
+          });
+        }
       }
-    }
 
-    setGeneratedColors(colors);
-  }, [colorCount, hueRange, saturationRange, valueRange]);
+      return colors;
+    }, "Color generation");
+
+    // For large color counts, use chunked processing
+    if (colorCount > 50) {
+      const colorIndices = Array.from({ length: colorCount }, (_, i) => i);
+      const colors = await processInChunks(
+        colorIndices,
+        () => {
+          const h = randomInRange(hueRange.min, hueRange.max);
+          const s = randomInRange(saturationRange.min, saturationRange.max);
+          const v = randomInRange(valueRange.min, valueRange.max);
+
+          const rgb = hsvToRgb(h, s, v);
+          const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+          const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+          return { hex, rgb, hsv: { h, s, v }, hsl };
+        },
+        { chunkSize: 10 }, // Process 10 colors at a time
+      );
+
+      // Remove duplicates
+      const uniqueColors = colors
+        .filter(
+          (color, index, arr) =>
+            arr.findIndex((c) => c.hex === color.hex) === index,
+        )
+        .slice(0, colorCount);
+
+      setGeneratedColors(uniqueColors);
+    } else {
+      setGeneratedColors(timedGeneration);
+    }
+  }, [
+    colorCount,
+    hueRange,
+    saturationRange,
+    valueRange,
+    processInChunks,
+    measureTime,
+  ]);
 
   // Apply preset color range
   const applyPreset = (preset: keyof typeof colorRangePresets) => {
     const range = colorRangePresets[preset];
-    setHueRange({ min: range.hMin, max: range.hMax });
-    setSaturationRange({ min: range.sMin, max: range.sMax });
-    setValueRange({ min: range.vMin, max: range.vMax });
+    setSettings((prev) => ({
+      ...prev,
+      hueRange: { min: range.hMin, max: range.hMax },
+      saturationRange: { min: range.sMin, max: range.sMax },
+      valueRange: { min: range.vMin, max: range.vMax },
+    }));
   };
 
   // Save current palette
@@ -314,7 +391,10 @@ export default function ColorPaletteGenerator() {
           setGeneratedColors([]);
           break;
         case "a":
-          setShowAccessibility(!showAccessibility);
+          setSettings((prev) => ({
+            ...prev,
+            showAccessibility: !prev.showAccessibility,
+          }));
           break;
       }
     };
@@ -369,376 +449,422 @@ export default function ColorPaletteGenerator() {
       description="HSV色域を指定してランダムなカラーパレットを生成。CSS・Tailwind・JSON形式でエクスポート可能。デザイナー・開発者向けの色彩ツール。"
       category="design"
       keyboardShortcuts={keyboardShortcuts}
+      showPerformanceInfo={true}
+      enableOptimizations={true}
     >
-      <div className="space-y-8">
-        {/* Color Range Settings */}
-        <section className={CardStyle}>
-          <h3 className={Section_title}>Color Range Settings</h3>
+      <OfflineSettingsManager
+        toolName="color-palette"
+        defaultSettings={defaultSettings}
+        settings={settings}
+        onSettingsChange={setSettings}
+        showControls={true}
+      >
+        {() => (
+          <div className="space-y-8">
+            {/* Color Range Settings */}
+            <section className={CardStyle}>
+              <h3 className={Section_title}>Color Range Settings</h3>
 
-          {/* Preset Buttons */}
-          <div className="space-y-4">
-            <h4 className="neue-haas-grotesk-display text-lg text-primary">
-              Presets
-            </h4>
-            <div className="grid-system grid-2 xs:grid-3 sm:grid-6 gap-2">
-              {Object.keys(colorRangePresets).map((preset) => (
-                <button
-                  key={preset}
-                  onClick={() =>
-                    applyPreset(preset as keyof typeof colorRangePresets)
-                  }
-                  className="bg-background border border-foreground px-3 py-2 text-sm hover:bg-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
-                >
-                  {preset}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Manual Range Controls */}
-          <div className="grid-system grid-1 sm:grid-3 gap-6">
-            {/* Hue Range */}
-            <div className="space-y-2">
-              <label className="neue-haas-grotesk-display text-sm text-primary">
-                Hue Range (色相): {hueRange.min}° - {hueRange.max}°
-              </label>
-              <div className="space-y-2">
-                <input
-                  type="range"
-                  min="0"
-                  max="360"
-                  value={hueRange.min}
-                  onChange={(e) =>
-                    setHueRange((prev) => ({
-                      ...prev,
-                      min: parseInt(e.target.value),
-                    }))
-                  }
-                  className="w-full"
-                  aria-label="Minimum hue value"
-                />
-                <input
-                  type="range"
-                  min="0"
-                  max="360"
-                  value={hueRange.max}
-                  onChange={(e) =>
-                    setHueRange((prev) => ({
-                      ...prev,
-                      max: parseInt(e.target.value),
-                    }))
-                  }
-                  className="w-full"
-                  aria-label="Maximum hue value"
-                />
-              </div>
-            </div>
-
-            {/* Saturation Range */}
-            <div className="space-y-2">
-              <label className="neue-haas-grotesk-display text-sm text-primary">
-                Saturation Range (彩度): {saturationRange.min}% -{" "}
-                {saturationRange.max}%
-              </label>
-              <div className="space-y-2">
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={saturationRange.min}
-                  onChange={(e) =>
-                    setSaturationRange((prev) => ({
-                      ...prev,
-                      min: parseInt(e.target.value),
-                    }))
-                  }
-                  className="w-full"
-                  aria-label="Minimum saturation value"
-                />
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={saturationRange.max}
-                  onChange={(e) =>
-                    setSaturationRange((prev) => ({
-                      ...prev,
-                      max: parseInt(e.target.value),
-                    }))
-                  }
-                  className="w-full"
-                  aria-label="Maximum saturation value"
-                />
-              </div>
-            </div>
-
-            {/* Value Range */}
-            <div className="space-y-2">
-              <label className="neue-haas-grotesk-display text-sm text-primary">
-                Value Range (明度): {valueRange.min}% - {valueRange.max}%
-              </label>
-              <div className="space-y-2">
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={valueRange.min}
-                  onChange={(e) =>
-                    setValueRange((prev) => ({
-                      ...prev,
-                      min: parseInt(e.target.value),
-                    }))
-                  }
-                  className="w-full"
-                  aria-label="Minimum value/brightness"
-                />
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={valueRange.max}
-                  onChange={(e) =>
-                    setValueRange((prev) => ({
-                      ...prev,
-                      max: parseInt(e.target.value),
-                    }))
-                  }
-                  className="w-full"
-                  aria-label="Maximum value/brightness"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Color Count */}
-          <div className="space-y-2">
-            <label className="neue-haas-grotesk-display text-sm text-primary">
-              Number of Colors: {colorCount}
-            </label>
-            <input
-              type="range"
-              min="1"
-              max="20"
-              value={colorCount}
-              onChange={(e) => setColorCount(parseInt(e.target.value))}
-              className="w-full"
-              aria-label="Number of colors to generate"
-            />
-          </div>
-        </section>
-
-        {/* Generation Controls */}
-        <section className={CardStyle}>
-          <div className="flex flex-wrap gap-4">
-            <AccessibleButton
-              onClick={generateColors}
-              variant="primary"
-              shortcut="G"
-              announceOnClick="新しいカラーパレットを生成しました"
-              aria-label="Generate new color palette"
-            >
-              Generate Colors
-            </AccessibleButton>
-            <AccessibleButton
-              onClick={savePalette}
-              disabled={generatedColors.length === 0}
-              variant="secondary"
-              shortcut="S"
-              announceOnClick="パレットを保存しました"
-              aria-label="Save current palette"
-            >
-              Save Palette
-            </AccessibleButton>
-            <AccessibleButton
-              onClick={() => setShowAccessibility(!showAccessibility)}
-              variant="ghost"
-              shortcut="A"
-              announceOnClick={
-                showAccessibility
-                  ? "アクセシビリティ情報を非表示にしました"
-                  : "アクセシビリティ情報を表示しました"
-              }
-              aria-label="Toggle accessibility information"
-            >
-              Accessibility
-            </AccessibleButton>
-          </div>
-        </section>
-
-        {/* Generated Colors Display */}
-        {generatedColors.length > 0 && (
-          <section className={CardStyle}>
-            <h3 className={Section_title}>Generated Palette</h3>
-            <div className="grid-system grid-1 xs:grid-2 sm:grid-3 md:grid-5 gap-4">
-              {generatedColors.map((color, index) => (
-                <div
-                  key={index}
-                  className="space-y-2"
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Color ${index + 1}: ${color.hex}`}
-                >
-                  <div
-                    className="w-full h-20 border border-foreground cursor-pointer"
-                    style={{ backgroundColor: color.hex }}
-                    onClick={() => copyColor(color, "hex")}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        copyColor(color, "hex");
+              {/* Preset Buttons */}
+              <div className="space-y-4">
+                <h4 className="neue-haas-grotesk-display text-lg text-primary">
+                  Presets
+                </h4>
+                <div className="grid-system grid-2 xs:grid-3 sm:grid-6 gap-2">
+                  {Object.keys(colorRangePresets).map((preset) => (
+                    <button
+                      key={preset}
+                      onClick={() =>
+                        applyPreset(preset as keyof typeof colorRangePresets)
                       }
-                    }}
-                    title={`Click to copy ${color.hex}`}
-                  />
-                  <div className="text-xs space-y-1">
-                    <button
-                      onClick={() => copyColor(color, "hex")}
-                      className="block w-full text-left hover:text-accent focus:outline-none focus:text-accent"
-                      title="Click to copy HEX value"
+                      className="bg-background border border-foreground px-3 py-2 text-sm hover:bg-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
                     >
-                      HEX: {color.hex}
+                      {preset}
                     </button>
-                    <button
-                      onClick={() => copyColor(color, "rgb")}
-                      className="block w-full text-left hover:text-accent focus:outline-none focus:text-accent"
-                      title="Click to copy RGB value"
-                    >
-                      RGB: {color.rgb.r}, {color.rgb.g}, {color.rgb.b}
-                    </button>
-                    <button
-                      onClick={() => copyColor(color, "hsl")}
-                      className="block w-full text-left hover:text-accent focus:outline-none focus:text-accent"
-                      title="Click to copy HSL value"
-                    >
-                      HSL: {color.hsl.h}, {color.hsl.s}%, {color.hsl.l}%
-                    </button>
+                  ))}
+                </div>
+              </div>
 
-                    {/* Accessibility Information */}
-                    {showAccessibility && (
-                      <div className="pt-2 border-t border-foreground">
-                        <div className="text-xs">
-                          <div>
-                            vs White:{" "}
-                            {getContrastRatio(color.rgb, {
-                              r: 255,
-                              g: 255,
-                              b: 255,
-                            }).toFixed(2)}
-                          </div>
-                          <div>
-                            vs Black:{" "}
-                            {getContrastRatio(color.rgb, {
-                              r: 0,
-                              g: 0,
-                              b: 0,
-                            }).toFixed(2)}
-                          </div>
-                        </div>
-                      </div>
-                    )}
+              {/* Manual Range Controls */}
+              <div className="grid-system grid-1 sm:grid-3 gap-6">
+                {/* Hue Range */}
+                <div className="space-y-2">
+                  <label className="neue-haas-grotesk-display text-sm text-primary">
+                    Hue Range (色相): {hueRange.min}° - {hueRange.max}°
+                  </label>
+                  <div className="space-y-2">
+                    <input
+                      type="range"
+                      min="0"
+                      max="360"
+                      value={hueRange.min}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          hueRange: {
+                            ...prev.hueRange,
+                            min: parseInt(e.target.value),
+                          },
+                        }))
+                      }
+                      className="w-full"
+                      aria-label="Minimum hue value"
+                    />
+                    <input
+                      type="range"
+                      min="0"
+                      max="360"
+                      value={hueRange.max}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          hueRange: {
+                            ...prev.hueRange,
+                            max: parseInt(e.target.value),
+                          },
+                        }))
+                      }
+                      className="w-full"
+                      aria-label="Maximum hue value"
+                    />
                   </div>
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
 
-        {/* Export Section */}
-        {generatedColors.length > 0 && (
-          <section className={CardStyle}>
-            <h3 className={Section_title}>Export Palette</h3>
-            <div className="space-y-4">
-              <div className="flex flex-wrap gap-4">
-                <select
-                  value={exportFormat}
+                {/* Saturation Range */}
+                <div className="space-y-2">
+                  <label className="neue-haas-grotesk-display text-sm text-primary">
+                    Saturation Range (彩度): {saturationRange.min}% -{" "}
+                    {saturationRange.max}%
+                  </label>
+                  <div className="space-y-2">
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={saturationRange.min}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          saturationRange: {
+                            ...prev.saturationRange,
+                            min: parseInt(e.target.value),
+                          },
+                        }))
+                      }
+                      className="w-full"
+                      aria-label="Minimum saturation value"
+                    />
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={saturationRange.max}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          saturationRange: {
+                            ...prev.saturationRange,
+                            max: parseInt(e.target.value),
+                          },
+                        }))
+                      }
+                      className="w-full"
+                      aria-label="Maximum saturation value"
+                    />
+                  </div>
+                </div>
+
+                {/* Value Range */}
+                <div className="space-y-2">
+                  <label className="neue-haas-grotesk-display text-sm text-primary">
+                    Value Range (明度): {valueRange.min}% - {valueRange.max}%
+                  </label>
+                  <div className="space-y-2">
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={valueRange.min}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          valueRange: {
+                            ...prev.valueRange,
+                            min: parseInt(e.target.value),
+                          },
+                        }))
+                      }
+                      className="w-full"
+                      aria-label="Minimum value/brightness"
+                    />
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={valueRange.max}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          valueRange: {
+                            ...prev.valueRange,
+                            max: parseInt(e.target.value),
+                          },
+                        }))
+                      }
+                      className="w-full"
+                      aria-label="Maximum value/brightness"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Color Count */}
+              <div className="space-y-2">
+                <label className="neue-haas-grotesk-display text-sm text-primary">
+                  Number of Colors: {colorCount}
+                </label>
+                <input
+                  type="range"
+                  min="1"
+                  max="20"
+                  value={colorCount}
                   onChange={(e) =>
-                    setExportFormat(
-                      e.target.value as "css" | "tailwind" | "json",
-                    )
+                    setSettings((prev) => ({
+                      ...prev,
+                      colorCount: parseInt(e.target.value),
+                    }))
                   }
-                  className={Input_style}
-                  aria-label="Select export format"
+                  className="w-full"
+                  aria-label="Number of colors to generate"
+                />
+              </div>
+            </section>
+
+            {/* Generation Controls */}
+            <section className={CardStyle}>
+              <div className="flex flex-wrap gap-4">
+                <AccessibleButton
+                  onClick={generateColors}
+                  variant="primary"
+                  shortcut="G"
+                  announceOnClick="新しいカラーパレットを生成しました"
+                  aria-label="Generate new color palette"
                 >
-                  <option value="css">CSS Variables</option>
-                  <option value="tailwind">Tailwind Config</option>
-                  <option value="json">JSON</option>
-                </select>
-                <button
-                  onClick={() => {
-                    const exportText =
-                      exportFormat === "css"
+                  Generate Colors
+                </AccessibleButton>
+                <AccessibleButton
+                  onClick={savePalette}
+                  disabled={generatedColors.length === 0}
+                  variant="secondary"
+                  shortcut="S"
+                  announceOnClick="パレットを保存しました"
+                  aria-label="Save current palette"
+                >
+                  Save Palette
+                </AccessibleButton>
+                <AccessibleButton
+                  onClick={() =>
+                    setSettings((prev) => ({
+                      ...prev,
+                      showAccessibility: !prev.showAccessibility,
+                    }))
+                  }
+                  variant="ghost"
+                  shortcut="A"
+                  announceOnClick={
+                    showAccessibility
+                      ? "アクセシビリティ情報を非表示にしました"
+                      : "アクセシビリティ情報を表示しました"
+                  }
+                  aria-label="Toggle accessibility information"
+                >
+                  Accessibility
+                </AccessibleButton>
+              </div>
+            </section>
+
+            {/* Generated Colors Display */}
+            {generatedColors.length > 0 && (
+              <section className={CardStyle}>
+                <h3 className={Section_title}>Generated Palette</h3>
+                <div className="grid-system grid-1 xs:grid-2 sm:grid-3 md:grid-5 gap-4">
+                  {generatedColors.map((color, index) => (
+                    <div
+                      key={index}
+                      className="space-y-2"
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Color ${index + 1}: ${color.hex}`}
+                    >
+                      <div
+                        className="w-full h-20 border border-foreground cursor-pointer"
+                        style={{ backgroundColor: color.hex }}
+                        onClick={() => copyColor(color, "hex")}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            copyColor(color, "hex");
+                          }
+                        }}
+                        title={`Click to copy ${color.hex}`}
+                      />
+                      <div className="text-xs space-y-1">
+                        <button
+                          onClick={() => copyColor(color, "hex")}
+                          className="block w-full text-left hover:text-accent focus:outline-none focus:text-accent"
+                          title="Click to copy HEX value"
+                        >
+                          HEX: {color.hex}
+                        </button>
+                        <button
+                          onClick={() => copyColor(color, "rgb")}
+                          className="block w-full text-left hover:text-accent focus:outline-none focus:text-accent"
+                          title="Click to copy RGB value"
+                        >
+                          RGB: {color.rgb.r}, {color.rgb.g}, {color.rgb.b}
+                        </button>
+                        <button
+                          onClick={() => copyColor(color, "hsl")}
+                          className="block w-full text-left hover:text-accent focus:outline-none focus:text-accent"
+                          title="Click to copy HSL value"
+                        >
+                          HSL: {color.hsl.h}, {color.hsl.s}%, {color.hsl.l}%
+                        </button>
+
+                        {/* Accessibility Information */}
+                        {showAccessibility && (
+                          <div className="pt-2 border-t border-foreground">
+                            <div className="text-xs">
+                              <div>
+                                vs White:{" "}
+                                {getContrastRatio(color.rgb, {
+                                  r: 255,
+                                  g: 255,
+                                  b: 255,
+                                }).toFixed(2)}
+                              </div>
+                              <div>
+                                vs Black:{" "}
+                                {getContrastRatio(color.rgb, {
+                                  r: 0,
+                                  g: 0,
+                                  b: 0,
+                                }).toFixed(2)}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Export Section */}
+            {generatedColors.length > 0 && (
+              <section className={CardStyle}>
+                <h3 className={Section_title}>Export Palette</h3>
+                <div className="space-y-4">
+                  <div className="flex flex-wrap gap-4">
+                    <select
+                      value={exportFormat}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          exportFormat: e.target.value as
+                            | "css"
+                            | "tailwind"
+                            | "json",
+                        }))
+                      }
+                      className={Input_style}
+                      aria-label="Select export format"
+                    >
+                      <option value="css">CSS Variables</option>
+                      <option value="tailwind">Tailwind Config</option>
+                      <option value="json">JSON</option>
+                    </select>
+                    <button
+                      onClick={() => {
+                        const exportText =
+                          exportFormat === "css"
+                            ? exportAsCSS()
+                            : exportFormat === "tailwind"
+                              ? exportAsTailwind()
+                              : exportAsJSON();
+                        copyToClipboard(exportText);
+                      }}
+                      className={Button_style}
+                      aria-label="Copy export code to clipboard"
+                    >
+                      Copy Export (E)
+                    </button>
+                  </div>
+
+                  <div className="bg-background border border-foreground p-4 overflow-x-auto">
+                    <pre className="text-xs whitespace-pre-wrap">
+                      {exportFormat === "css"
                         ? exportAsCSS()
                         : exportFormat === "tailwind"
                           ? exportAsTailwind()
-                          : exportAsJSON();
-                    copyToClipboard(exportText);
-                  }}
-                  className={Button_style}
-                  aria-label="Copy export code to clipboard"
-                >
-                  Copy Export (E)
-                </button>
-              </div>
-
-              <div className="bg-background border border-foreground p-4 overflow-x-auto">
-                <pre className="text-xs whitespace-pre-wrap">
-                  {exportFormat === "css"
-                    ? exportAsCSS()
-                    : exportFormat === "tailwind"
-                      ? exportAsTailwind()
-                      : exportAsJSON()}
-                </pre>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Saved Palettes */}
-        {savedPalettes.length > 0 && (
-          <section className={CardStyle}>
-            <h3 className={Section_title}>
-              Saved Palettes ({savedPalettes.length})
-            </h3>
-            <div className="space-y-4">
-              {savedPalettes.map((palette, paletteIndex) => (
-                <div
-                  key={paletteIndex}
-                  className="bg-background border border-foreground p-3"
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm">Palette {paletteIndex + 1}</span>
-                    <div className="space-x-2">
-                      <button
-                        onClick={() => loadPalette(palette)}
-                        className="text-xs bg-accent text-background px-2 py-1 hover:bg-background hover:text-accent border border-accent transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
-                      >
-                        Load
-                      </button>
-                      <button
-                        onClick={() => deletePalette(paletteIndex)}
-                        className="text-xs bg-background border border-foreground px-2 py-1 hover:bg-base transition-colors focus:outline-none focus:ring-1 focus:ring-foreground"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex gap-1">
-                    {palette.map((color, colorIndex) => (
-                      <div
-                        key={colorIndex}
-                        className="w-8 h-8 border border-foreground cursor-pointer"
-                        style={{ backgroundColor: color.hex }}
-                        onClick={() => copyColor(color, "hex")}
-                        title={color.hex}
-                      />
-                    ))}
+                          : exportAsJSON()}
+                    </pre>
                   </div>
                 </div>
-              ))}
-            </div>
-          </section>
+              </section>
+            )}
+
+            {/* Saved Palettes */}
+            {savedPalettes.length > 0 && (
+              <section className={CardStyle}>
+                <h3 className={Section_title}>
+                  Saved Palettes ({savedPalettes.length})
+                </h3>
+                <div className="space-y-4">
+                  {savedPalettes.map((palette, paletteIndex) => (
+                    <div
+                      key={paletteIndex}
+                      className="bg-background border border-foreground p-3"
+                    >
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm">
+                          Palette {paletteIndex + 1}
+                        </span>
+                        <div className="space-x-2">
+                          <button
+                            onClick={() => loadPalette(palette)}
+                            className="text-xs bg-accent text-background px-2 py-1 hover:bg-background hover:text-accent border border-accent transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
+                          >
+                            Load
+                          </button>
+                          <button
+                            onClick={() => deletePalette(paletteIndex)}
+                            className="text-xs bg-background border border-foreground px-2 py-1 hover:bg-base transition-colors focus:outline-none focus:ring-1 focus:ring-foreground"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex gap-1">
+                        {palette.map((color, colorIndex) => (
+                          <div
+                            key={colorIndex}
+                            className="w-8 h-8 border border-foreground cursor-pointer"
+                            style={{ backgroundColor: color.hex }}
+                            onClick={() => copyColor(color, "hex")}
+                            title={color.hex}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
         )}
-      </div>
+      </OfflineSettingsManager>
     </ToolWrapper>
   );
 }

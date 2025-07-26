@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useToolAccessibility } from "@/hooks/useAccessibility";
+import PerformanceOptimizer from "./PerformanceOptimizer";
 
 interface ToolWrapperProps {
   children: React.ReactNode;
@@ -13,6 +14,8 @@ interface ToolWrapperProps {
     key: string;
     description: string;
   }>;
+  showPerformanceInfo?: boolean;
+  enableOptimizations?: boolean;
 }
 
 export default function ToolWrapper({
@@ -21,6 +24,8 @@ export default function ToolWrapper({
   description,
   category,
   keyboardShortcuts = [],
+  showPerformanceInfo = false,
+  enableOptimizations = true,
 }: ToolWrapperProps) {
   const [showAccessibilityInfo, setShowAccessibilityInfo] = useState(false);
   const { containerRef, state, announce, runAccessibilityChecks } =
@@ -299,17 +304,25 @@ export default function ToolWrapper({
               </section>
             )}
 
-            {/* Tool Content */}
-            <div
-              role="application"
-              aria-label={`${toolName} tool`}
-              className={`focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background ${
-                state.prefersReducedMotion ? "" : "transition-all duration-200"
-              }`}
+            {/* Tool Content with Performance Optimization */}
+            <PerformanceOptimizer
+              toolName={toolName}
+              showPerformanceInfo={showPerformanceInfo}
+              enableOptimizations={enableOptimizations}
             >
-              <h2 className="sr-only">{toolName} Tool Interface</h2>
-              {children}
-            </div>
+              <div
+                role="application"
+                aria-label={`${toolName} tool`}
+                className={`focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-background ${
+                  state.prefersReducedMotion
+                    ? ""
+                    : "transition-all duration-200"
+                }`}
+              >
+                <h2 className="sr-only">{toolName} Tool Interface</h2>
+                {children}
+              </div>
+            </PerformanceOptimizer>
 
             {/* Navigation */}
             <nav aria-label="Site navigation">
