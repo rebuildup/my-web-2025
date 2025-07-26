@@ -12,6 +12,9 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
+    ignores: ["src/app/tools/ProtoType/prototype-src/**/*"],
+  },
+  {
     plugins: {
       tailwindcss: (await import("eslint-plugin-tailwindcss")).default,
     },

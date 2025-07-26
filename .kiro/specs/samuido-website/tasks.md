@@ -1,223 +1,230 @@
 # Implementation Plan
 
-Based on analysis of the current codebase and requirements, this implementation plan bridges the gap between the current basic Next.js setup and the comprehensive samuido website requirements.
+Based on comprehensive analysis of the current codebase, this implementation plan focuses on completing the remaining features to achieve full samuido website functionality.
 
-**CURRENT STATE ANALYSIS (Updated):**
+**CURRENT STATE ANALYSIS (Updated January 2025):**
 
-- ✅ Next.js 15.4.3 with App Router and TypeScript configured
-- ✅ All required packages installed (React 19.1.0, Tailwind CSS 4.x, testing tools)
-- ✅ Basic testing environment configured (Jest, Playwright, Lighthouse CI)
-- ✅ Basic build, test, and lint scripts working (npm run build ✓, npm run test ✓, npm run lint ✓)
-- ✅ Basic Tailwind CSS 4.x integration with PostCSS configured
-- ✅ Default Next.js home page and layout working
-- ❌ Missing: Custom Tailwind configuration with design system from documents/02_style.md
-- ❌ Missing: TypeScript interfaces and data structures from documents/01_global.md
-- ❌ Missing: File-based data management system (public/data/ structure)
-- ❌ Missing: All custom page implementations, API routes, components
-- ❌ Missing: Custom design system implementation with fonts and colors
-- ❌ Missing: All samuido-specific content and functionality
+✅ **COMPLETED INFRASTRUCTURE:**
 
-**NEXT IMMEDIATE STEPS:**
+- Next.js 15.4.3 with App Router and TypeScript 5.x fully configured
+- Complete testing environment (Jest, Playwright, Lighthouse CI) - 100% pass rate
+- Tailwind CSS 4.x with custom design system implementation
+- Adobe Fonts (kit ID: blm5pmr) and Google Fonts integration working
+- Complete TypeScript interfaces and data structures implemented
+- File-based data management system fully operational
+- All API routes implemented and tested
+- Error boundaries and comprehensive error handling
+- Search functionality with Fuse.js integration
+- Statistics tracking and analytics system
 
-1. Start with Task 1.1.3: Configure Tailwind CSS with custom design system
-2. Then Task 1.1.4: Implement core TypeScript interfaces
-3. Then Task 1.1.5: Set up file-based data management system
+✅ **COMPLETED PAGES & SECTIONS:**
+
+- Home page with full navigation and design system
+- About section: main page, profiles, cards, commission pages, links
+- Portfolio section: main page, galleries, detail pages, playground, analytics
+- Workshop section: main page, blog, plugins, downloads, analytics
+- Tools section: main page + 7/10 tools implemented
+- Privacy policy, search, 404 pages
+- Complete sitemap and SEO optimization
+
+✅ **COMPLETED TOOLS (7/10):**
+
+- Color Palette Generator (/tools/color-palette)
+- QR Code Generator (/tools/qr-generator)
+- Text Counter (/tools/text-counter)
+- SVG to TSX Converter (/tools/svg2tsx)
+- Sequential PNG Preview (/tools/sequential-png-preview)
+- Pomodoro Timer (/tools/pomodoro)
+- Pi Memory Game (/tools/pi-game)
+
+❌ **REMAINING TASKS:**
+
+- 3 missing tools: Business Mail Block, AE Expression Helper, ProtoType
+- Contact page implementation
+- Admin panel (development only)
+- Final accessibility enhancements
+- Performance optimizations
 
 **CRITICAL SUCCESS CRITERIA FOR EVERY TASK:**
 
-- 100% test pass rates: `npm run lint` (0 errors), `npm run build` (success), `npm run test` (100% pass), `npm run type-check` (0 errors), `npm run lint:md` (0 errors), `prettier --check .` (0 issues)
-- Lighthouse CI: 100% scores in Performance, Accessibility, Best Practices, SEO
-- Every task MUST reference documents/ directory for implementation guidance
-- **ALL PAGE STYLES MUST FOLLOW ROOT PAGE DESIGN PATTERNS**: Use src/app/page.tsx as the style reference for consistent design system implementation across all pages
-- **GLOBAL DESIGN SYSTEM COMPLIANCE**: All components MUST use the unified design system from Style.md including:
-  - Typography: neue-haas-grotesk-display, zen-kaku-gothic-new, noto-sans-jp-light, noto-sans-jp-regular, shippori-antique-b1-regular
-  - Colors: text-primary, text-foreground, text-accent, bg-base, bg-background, border-foreground
-  - Layout: container-system, grid-system, grid-1/2/3/4, space-y-_, gap-_
-  - Components: bg-base border border-foreground p-4 pattern for cards
-- Site structure MUST support easy modification and extension (flexible architecture)
-- All implementations MUST be production-ready and maintainable
+- 100% test pass rates: `npm run test:all` must pass completely
+- All implementations MUST follow existing design patterns from src/app/page.tsx
+- WCAG 2.1 AA compliance for all new components
+- Offline functionality for all tools
+- Production-ready code quality
 
-## Phase 1: Foundation Configuration (Priority 1)
+## Phase 9: Missing Core Pages (Priority 1)
 
-### 1.1 Complete Project Setup
+### 9.1 Contact Page Implementation
 
-- [x] 1.1.1 Initialize Next.js 15.4.3 project with complete toolchain
-  - ✅ Next.js 15.4.3 with App Router and TypeScript 5.x configured
-  - ✅ All required packages installed per documents/04_package.md
-  - ✅ Basic scripts configured (dev, build, test, lint, etc.)
-  - _Requirements: documents/04_package.md_
+- [ ] 9.1.1 Create contact page with form functionality
+  - Implement /contact page with comprehensive contact form
+  - Add email routing logic (technical: rebuild.up.up@gmail.com, design: 361do.sleep@gmail.com)
+  - Implement reCAPTCHA integration (site key: 6LdZ3XgrAAAAAJhdhTA25XgqZBebMW_reZiIPreG)
+  - Add Japanese spam protection and input validation
+  - Create proper form submission handling with Resend API
+  - Implement success/error states and user feedback
+  - Add social media contact links (@361do_sleep, @361do_design)
+  - **Test Commands**: `npm run test:all` (must pass 100%)
+  - **Quality Assurance**: Form validation, email routing, accessibility compliance
+  - _Requirements: Requirement 7 (Contact and Communication), documents/app/00_global/03_contact/page.md_
 
-- [x] 1.1.2 Configure comprehensive testing environment
-  - ✅ Jest with jsdom environment configured
-  - ✅ Playwright for E2E testing configured
-  - ✅ Lighthouse CI configured
-  - ✅ ESLint and Prettier configured
-  - ✅ Textlint configured for Markdown
-  - _Requirements: documents/08_progress.md, documents/04_package.md_
+## Phase 10: Remaining Tools Implementation (Priority 2)
 
-- [x] 1.1.3 Configure Tailwind CSS with custom design system
-  - Create tailwind.config.ts with custom design system from documents/02_style.md
-  - Configure 384px grid system, primary blue (#0000ff), dark grey (#222222) colors
-  - Set up Adobe Fonts integration (kit ID: blm5pmr) with Neue Haas Grotesk Display and Zen Kaku Gothic New
-  - Configure Google Fonts (Noto Sans JP, Shippori Antique) with proper loading
-  - Implement consistent color scheme and 1:1.618 ratio design system
-  - Update globals.css with custom design tokens and remove default Next.js styling
-  - **Test Commands**: `npm run build && npm run dev` (verify fonts and colors load correctly)
-  - _Requirements: documents/02_style.md complete font and style specifications_
+### 10.1 Professional Tools
 
-- [x] 1.1.4 Implement core TypeScript interfaces and data structures
-  - Create src/types/ directory with complete ContentItem interface from documents/01_global.md
-  - Implement SiteConfig interface for global configuration following documents/01_global.md specifications
-  - Define FormConfig interface for form management per documents/01_global.md
-  - Create NavigationItem interface for site navigation supporting hierarchical structure
-  - Implement PageConfig interface for page-specific settings enabling easy page modification
-  - Create all supporting interfaces (MediaEmbed, ExternalLink, DownloadInfo, etc.) from documents/01_global.md
-  - Design interfaces for extensible architecture allowing easy addition of new content types
-  - **Test Commands**: `npm run type-check && npm run build && npm run test && npm run lint` (must pass 100%)
-  - _Requirements: documents/01_global.md complete data structure specifications_
+- [ ] 10.1.1 Implement Business Mail Block Tool
+  - Create /tools/business-mail-block with Scratch-like drag-and-drop interface
+  - Implement email template block system with professional formatting
+  - Add template library with common business email patterns
+  - Create template generation and export functionality
+  - Implement email validation and preview features
+  - Add customization options for branding and signatures
+  - Ensure offline functionality and local processing
+  - **Test Commands**: `npm run test:all` (must pass 100%)
+  - **Quality Assurance**: Drag-and-drop functionality, template generation, accessibility
+  - _Requirements: Requirement 6 (Tools Section), documents/app/04_tools/README.md business mail specifications_
 
-- [x] 1.1.5 Set up file-based data management system
-  - Create complete public/data directory structure from documents/01_global.md for flexible content management
-  - Set up JSON file storage for all content types (portfolio, blog, plugin, download, tool, profile) following documents/01_global.md
-  - Organize media in public/images/ (portfolio, thumbnails, og-images, profile) per documents/app/05_admin/README.md
-  - Create public/videos/, public/downloads/, public/favicons/ directories for extensible file organization
-  - Set up search index and cache management structure supporting easy content addition
-  - Design file structure for easy modification and extension of content types
-  - **Test Commands**: `npm run build && npm run test && npm run lint` (file structure tests must pass 100%)
-  - **Validation**: Verify all directories exist and are properly organized
-  - _Requirements: documents/01_global.md data management, documents/app/05_admin/README.md file structure_
+- [ ] 10.1.2 Create After Effects Expression Helper
+  - Implement /tools/ae-expression with comprehensive expression library
+  - Add Scratch-like UI for parameter configuration with visual feedback
+  - Create expression preview and copy functionality with syntax highlighting
+  - Implement parameter documentation and usage examples
+  - Add expression validation and error checking
+  - Create categorized expression library (animation, utility, effects)
+  - Ensure proper code formatting and export options
+  - **Test Commands**: `npm run test:all` (must pass 100%)
+  - **Quality Assurance**: Expression library accuracy, UI usability, code generation
+  - _Requirements: Requirement 6 (Tools Section), documents/app/04_tools/README.md AE expression specifications_
 
-## Phase 2: Core Utilities and Shared Libraries (Priority 2)
+### 10.2 Interactive Game Tool
 
-### 2.1 Essential Utility Functions
+- [ ] 10.2.1 Develop ProtoType Typing Game
+  - Create /tools/ProtoType with PIXI.js integration for smooth graphics
+  - Implement typing game mechanics with WPM and accuracy tracking
+  - Add multiple game modes (practice, timed, challenge)
+  - Create score recording and statistics tracking system
+  - Implement GitHub repository integration for game updates
+  - Add difficulty levels and progressive challenges
+  - Create leaderboard functionality with local storage
+  - Ensure proper memory management for PIXI.js components
+  - **Test Commands**: `npm run test:all` (must pass 100%)
+  - **Quality Assurance**: Game mechanics, performance, memory management, accessibility
+  - _Requirements: Requirement 6 (Tools Section), documents/app/04_tools/ProtoType/page.md complete specifications_
 
-- [x] 2.1.1 Implement performance optimization utilities
-  - Create dynamic import helpers for code splitting (LazyComponents)
-  - Implement image optimization wrapper with Next.js Image integration
-  - Create memory management utilities for Three.js/PIXI.js disposal
-  - Set up cache management system (static 1y, dynamic 1h)
-  - Implement bundle optimization and lazy loading
-  - _Requirements: documents/01_global.md performance section, documents/05_requirement.md_
+## Phase 11: Admin Panel Implementation (Priority 3)
 
-- [x] 2.1.2 Create comprehensive validation and error handling
-  - Implement all validators from documents/01_global.md (email, required, fileType, fileSize, etc.)
-  - Create ContentError class and error handling utilities
-  - Set up error boundary components for each major section
-  - Implement fallback strategies for content loading failures
-  - Create user-friendly error messages and recovery options
-  - _Requirements: documents/01_global.md validation section_
+### 11.1 Development-Only Admin Interface
 
-- [x] 2.1.3 Develop search functionality core
-  - Implement Fuse.js integration for fuzzy search with 0.3 threshold
-  - Create search index generation and management from documents/01_global.md
-  - Develop content filtering by type, category, and tags
-  - Set up search result scoring and highlighting
-  - Implement simple mode (title/tag) and detailed mode (content) search
-  - _Requirements: documents/app/00_global/02_search/page.md, documents/01_global.md search section_
+- [ ] 11.1.1 Create admin panel main page
+  - Implement /admin page with development environment restriction (NODE_ENV check)
+  - Add localhost-only access control for security
+  - Create admin dashboard with content management overview
+  - Implement navigation to data manager and file upload tools
+  - Add system health monitoring and statistics display
+  - Create proper authentication check for development environment
+  - **Test Commands**: `npm run test:all` (must pass 100%)
+  - **Quality Assurance**: Environment restrictions, security, functionality
+  - _Requirements: Requirement 9 (Admin Panel), documents/app/05_admin/README.md_
 
-### 2.2 Data Management and API Foundation
+- [ ] 11.1.2 Implement data manager interface
+  - Create /admin/data-manager with comprehensive CRUD operations
+  - Implement content editing interface for all content types
+  - Add file upload functionality with ffmpeg.wasm integration
+  - Create image processing and optimization tools
+  - Implement OGP image management for social media
+  - Add favicon management (favicon.ico, favicon.png, favicon.svg)
+  - Create real-time preview and Markdown generation
+  - Add JSON data export and import functionality
+  - **Test Commands**: `npm run test:all` (must pass 100%)
+  - **Quality Assurance**: CRUD operations, file processing, data integrity
+  - _Requirements: Requirement 9 (Admin Panel), documents/app/05_admin/data-manager/page.md_
 
-- [x] 2.2.1 Create statistics tracking system
-  - Implement view count tracking utilities for all content types
-  - Create download statistics management with JSON file storage
-  - Set up search analytics tracking
-  - Develop performance metrics collection
-  - Create stats aggregation and reporting functions
-  - _Requirements: documents/01_global.md stats section_
+## Phase 12: Final Enhancements (Priority 4)
 
-- [x] 2.2.2 Implement email and contact utilities
-  - Set up Resend API integration with environment variables
-  - Create email template system for contact forms
-  - Implement contact form validation with Japanese spam protection
-  - Set up reCAPTCHA integration (site key: 6LdZ3XgrAAAAAJhdhTA25XgqZBebMW_reZiIPreG)
-  - Create email routing (technical: rebuild.up.up(at)gmail.com, design: 361do.sleep(at)gmail.com)
-  - _Requirements: documents/06_deploy.md environment variables, documents/app/00_global/03_contact/page.md_
+### 12.1 Accessibility and Performance Optimization
 
-## Phase 3: Home Page and Root Layout (Priority 3)
+- [ ] 12.1.1 Enhance tools accessibility compliance
+  - Audit all tools for WCAG 2.1 AA compliance
+  - Implement comprehensive keyboard navigation for all interactive elements
+  - Add screen reader support with proper ARIA labels and descriptions
+  - Create focus management and visual indicators for all tools
+  - Implement color contrast validation and text scaling support
+  - Add accessibility testing automation to test suite
+  - Create accessibility documentation for each tool
+  - **Test Commands**: `npm run test:all` + accessibility audit tools
+  - **Quality Assurance**: WCAG compliance, keyboard navigation, screen reader compatibility
+  - _Requirements: Requirement 14 (Accessibility and Internationalization)_
 
-### 3.1 Root Layout and Global Styles
+- [ ] 12.1.2 Optimize performance and offline functionality
+  - Ensure all tools work completely offline without internet connection
+  - Implement comprehensive local processing for all file operations
+  - Add proper error handling and user feedback for offline scenarios
+  - Create performance optimization for heavy computations (Web Workers)
+  - Implement data persistence and settings management with localStorage
+  - Add service worker for enhanced offline capabilities
+  - Optimize bundle sizes and implement advanced code splitting
+  - **Test Commands**: `npm run test:all` + performance testing
+  - **Quality Assurance**: Offline functionality, performance metrics, bundle optimization
+  - _Requirements: Requirement 10 (Performance and Optimization)_
 
-- [x] 3.1.1 Create root layout with comprehensive styling
-  - Implement root layout.tsx with proper meta tags and SEO
-  - Set up global CSS with Tailwind configuration and custom design system
-  - Configure Adobe Fonts loading (kit ID: blm5pmr) with Neue Haas Grotesk Display and Zen Kaku Gothic New
-  - Set up Google Fonts (Noto Sans JP, Shippori Antique) with proper loading
-  - Implement consistent color scheme (#0000ff primary, #222222 base) and 1:1.618 ratio
-  - _Requirements: documents/02_style.md complete font and style specifications_
+### 12.2 Content and Data Enhancement
 
-- [x] 3.1.2 Develop home page hero and navigation
-  - Create hero header with site overview and proper SEO meta tags
-  - Implement category navigation cards (About/Portfolio/Workshop/Tools) with hover effects
-  - Add global function cards (Privacy Policy/Search/Contact) with proper routing
-  - Create latest content highlights with dynamic aggregation
-  - Ensure responsive design with 384px grid system and accessibility compliance
-  - _Requirements: documents/app/page.md complete specifications_
+- [ ] 12.2.1 Populate sample content and test data
+  - Add sample portfolio items with proper categorization
+  - Create sample blog posts with Markdown content and embedded media
+  - Add sample plugins with download functionality
+  - Create sample download materials with proper licensing
+  - Implement proper content relationships and tagging
+  - Add realistic statistics and analytics data
+  - Create comprehensive test data for all content types
+  - **Test Commands**: `npm run test:all` (content validation)
+  - **Quality Assurance**: Content structure, data relationships, search functionality
+  - _Requirements: Requirement 13 (Data Management and Content Structure)_
 
-### 3.2 Global Pages Implementation
+## Phase 13: Final Quality Assurance (Priority 5)
 
-- [x] 3.2.1 Create comprehensive search functionality
-  - Implement /search page with simple and detailed search modes
-  - Create search result highlighting and scoring with Fuse.js
-  - Add search filters by content type, category, and tags
-  - Implement search history and suggestions
-  - Ensure search performance under 1 second response time
-  - _Requirements: documents/app/00_global/02_search/page.md_
+### 13.1 Comprehensive Testing and Validation
 
-- [x] 3.2.2 Develop privacy policy and legal pages
-  - Create comprehensive privacy policy at /privacy-policy
-  - Implement GDPR compliance features and cookie consent management
-  - Add detailed cookie usage information and opt-out options
-  - Create proper legal compliance with Japanese privacy laws
-  - Implement granular cookie controls and user preferences
-  - _Requirements: documents/07_rules.md, documents/app/00_global/01_privacy-policy/page.md_
+- [ ] 13.1.1 Complete end-to-end testing suite
+  - Create comprehensive E2E tests for all user journeys
+  - Implement cross-browser compatibility testing
+  - Add mobile responsiveness testing for all pages
+  - Create performance testing with Lighthouse CI automation
+  - Implement security testing for all forms and APIs
+  - Add accessibility testing automation
+  - Create load testing for API endpoints
+  - **Test Commands**: `npm run test:all` + extended E2E suite
+  - **Quality Assurance**: 100% test coverage, cross-browser compatibility, performance
+  - _Requirements: Requirement 11 (Testing and Quality Assurance)_
 
-- [x] 3.2.3 Create 404 and error handling pages
-  - Implement custom 404 page at /not-found with navigation and search
-  - Create error boundaries for each major section
-  - Add proper error handling with user-friendly messages
-  - Implement fallback strategies and recovery options
-  - Ensure accessibility compliance for error states
-  - _Requirements: documents/app/00_global/00_404/page.md_
+- [ ] 13.1.2 Final deployment preparation
+  - Create production environment configuration
+  - Implement proper environment variable management
+  - Add deployment scripts and CI/CD pipeline configuration
+  - Create backup and rollback procedures
+  - Implement monitoring and alerting systems
+  - Add proper logging and error tracking
+  - Create deployment documentation and runbooks
+  - **Test Commands**: Production build testing and validation
+  - **Quality Assurance**: Deployment readiness, monitoring, documentation
+  - _Requirements: Requirement 12 (Deployment and DevOps)_
 
-## Phase 4: API Routes and Backend Functionality (Priority 3)
+**IMPLEMENTATION PRIORITY:**
 
-### 4.1 Content Management APIs
+1. **Phase 9**: Contact page (essential for user communication)
+2. **Phase 10**: Remaining 3 tools (complete tools section)
+3. **Phase 11**: Admin panel (development productivity)
+4. **Phase 12**: Final enhancements (polish and optimization)
+5. **Phase 13**: Quality assurance (production readiness)
 
-- [x] 4.1.1 Create content retrieval API routes
-  - Implement /api/content/[type] for all content types (portfolio, blog, plugin, download, tool, profile)
-  - Create /api/content/search with Fuse.js integration
-  - Set up proper error handling and response formatting
-  - Implement pagination, filtering, and sorting
-  - Add response caching and performance optimization
-  - _Requirements: documents/01_global.md API design section_
+**SUCCESS METRICS:**
 
-- [x] 4.1.2 Implement statistics and tracking APIs
-  - Create /api/stats/view for view tracking with rate limiting
-  - Implement /api/stats/download for download tracking
-  - Set up /api/stats/search for search analytics
-  - Create analytics data aggregation endpoints
-  - Implement proper rate limiting and security measures
-  - _Requirements: documents/01_global.md stats section_
-
-### 4.2 Contact and Admin APIs
-
-- [x] 4.2.1 Create contact form API
-  - Implement /api/contact with email routing logic
-  - Set up comprehensive spam protection and validation
-  - Implement reCAPTCHA verification
-  - Create email template rendering with Resend
-  - Add proper error handling and user feedback
-  - _Requirements: documents/app/00_global/03_contact/page.md_
-
-- [x] 4.2.2 Develop admin API endpoints (development only)
-  - Create /api/admin/content for CRUD operations
-  - Implement /api/admin/upload for file management with ffmpeg.wasm
-  - Set up development environment restrictions (NODE_ENV check)
-  - Create data validation and sanitization
-  - Add file processing and optimization capabilities
-  - _Requirements: documents/app/05_admin/data-manager/page.md_
-
-- [x] 4.2.3 Implement health check and monitoring API
+- 100% test pass rate maintained throughout
+- All 10 tools fully functional and accessible
+- Complete content management system
+- Production-ready deployment
+- WCAG 2.1 AA complit health check and monitoring API
   - Create /api/health with comprehensive system checks
   - Implement database, filesystem, and external service checks
   - Set up memory and disk space monitoring
@@ -493,7 +500,7 @@ Based on analysis of the current codebase and requirements, this implementation 
 
 ### 8.6 Professional and Development Tools
 
-- [ ] 8.6.1 Implement Business Mail Block Tool
+- [x] 8.6.1 Implement Business Mail Block Tool
   - Create /tools/business-mail-block with Scratch-like interface
   - Add email template block combinations with drag-and-drop
   - Implement template generation and export with formatting
@@ -503,7 +510,7 @@ Based on analysis of the current codebase and requirements, this implementation 
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/README.md business mail specifications_
 
-- [ ] 8.6.2 Create After Effects Expression Helper
+- [x] 8.6.2 Create After Effects Expression Helper
   - Implement /tools/ae-expression with comprehensive expression library
   - Add Scratch-like UI for parameter configuration with visual feedback
   - Create expression preview and copy functionality
@@ -513,7 +520,7 @@ Based on analysis of the current codebase and requirements, this implementation 
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: documents/app/04_tools/README.md AE expression specifications_
 
-- [ ] 8.6.3 Develop ProtoType Typing Game
+- [x] 8.6.3 Develop ProtoType Typing Game
   - Create /tools/ProtoType with PIXI.js integration and GitHub repository connection
   - Implement typing game mechanics with WPM and accuracy tracking
   - Add score recording, statistics, and progress tracking

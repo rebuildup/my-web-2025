@@ -1,0 +1,30 @@
+// Javascript
+function countdown(seconds) {
+  return new Promise((resolve) => {
+    let counter = seconds;
+    let timer = setInterval(() => {
+      console.log(counter);
+      counter--;
+      if (counter < 0) {
+        clearInterval(timer);
+        resolve("Done");
+      }
+    }, 1000);
+  });
+}
+async function runCountdown() {
+  let result = await countdown(5);
+  console.log(result);
+  let numbers = [1, 2, 3, 4, 5];
+  let doubled = numbers.map((x) => x * 2);
+  console.log("Doubled:", doubled);
+  let sum = doubled.reduce((acc, cur) => acc + cur, 0);
+  console.log("Sum:", sum);
+  for (let i = 0; i < doubled.length; i++) {
+    console.log("Index " + i + ": " + doubled[i]);
+  }
+}
+runCountdown();
+setTimeout(function () {
+  console.log("Javascript demo complete.");
+}, 7000);

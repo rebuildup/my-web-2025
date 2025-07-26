@@ -1,0 +1,55 @@
+<!-- HTML -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML Demo</title>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+      .btn {
+        padding: 10px;
+        background-color: #008cba;
+        color: white;
+        border: none;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Interactive Table</h1>
+    <button class="btn" onclick="addRow()">Add Row</button>
+    <table id="dataTable">
+      <tr>
+        <th>ID</th>
+        <th>Value</th>
+      </tr>
+    </table>
+    <script>
+      let counter = 1;
+      function addRow() {
+        let table = document.getElementById("dataTable");
+        let row = table.insertRow(-1);
+        let cell1 = row.insertCell(0);
+        let cell2 = row.insertCell(1);
+        cell1.innerHTML = counter;
+        cell2.innerHTML = counter * 10;
+        counter++;
+      }
+      setInterval(function () {
+        console.log(
+          "Row count: " + document.getElementById("dataTable").rows.length
+        );
+      }, 2000);
+      for (let i = 0; i < 3; i++) {
+        addRow();
+      }
+    </script>
+  </body>
+</html>

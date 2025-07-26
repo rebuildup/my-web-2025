@@ -1,0 +1,33 @@
+.tab {
+  color: var(--ProtoTypeMainColor);
+  position: absolute;
+  top: 50vh;
+  margin-left: 5vw;
+  transform: translateY(-50%);
+}
+button {
+  border: none;
+  font-size: 1.2rem;
+}
+.tab-Btn {
+  transition: color 0.5s cubic-bezier(0, 0.7, 0.2, 1);
+}
+
+.tab-Btn:hover {
+  background: linear-gradient(
+    to top,
+    var(--ProtoTypeMainAccent) 50%,
+    var(--ProtoTypeMainBG) 50%
+  );
+  background-size: 100% 200%;
+  animation: slideInLeft 1s cubic-bezier(0, 0.7, 0.2, 1);
+}
+
+@keyframes slideInLeft {
+  from {
+    background-position: 0 100%;
+  }
+  to {
+    background-position: 0 0;
+  }
+}

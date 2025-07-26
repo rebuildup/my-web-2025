@@ -4,7 +4,20 @@ import { useState, useEffect } from "react";
 
 export function useLocalStorage<T>(key: string, initialValue: T) {
   // State to store our value
-  const [storedValue, setStoredValue] = useState<T>(initialValue);
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    // SSR対応：サーバーサイドでは初期値を返す
+    if (typeof window === "undefined") {
+      return initialValue;
+    }
+
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.error(`Error reading localStorage key "${key}":`, error);
+      return initialValue;
+    }
+  });
   const [isClient, setIsClient] = useState(false);
 
   // Return a wrapped version of useState's setter function that persists the new value to localStorage
@@ -26,23 +39,10 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     }
   };
 
-  // Set client flag and get from local storage on mount
+  // Set client flag on mount
   useEffect(() => {
     setIsClient(true);
-    try {
-      if (typeof window !== "undefined") {
-        const item = window.localStorage.getItem(key);
-        if (item) {
-          const parsedItem = JSON.parse(item);
-          setStoredValue(parsedItem);
-        }
-      }
-    } catch (error) {
-      console.error(`Error reading localStorage key "${key}":`, error);
-      // If error, return initial value
-      setStoredValue(initialValue);
-    }
-  }, [key, initialValue]);
+  }, []);
 
   return [storedValue, setValue] as const;
 }

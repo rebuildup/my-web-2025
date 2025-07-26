@@ -1,0 +1,36 @@
+// Go
+package main
+import (
+    "fmt"
+    "time"
+)
+func generator(n int, out chan<- int) {
+    for i := 1; i <= n; i++ {
+        out <- i
+        time.Sleep(50 * time.Millisecond)
+    }
+    close(out)
+}
+func worker(in <-chan int, out chan<- int) {
+    for num := range in {
+        out <- num * num
+    }
+    close(out)
+}
+func main(){
+    gen := make(chan int)
+    work := make(chan int)
+    go generator(10, gen)
+    go worker(gen, work)
+    results := []int{}
+    for res := range work {
+        results = append(results, res)
+    }
+    for i, v := range results {
+        fmt.Printf("Index %d: %d\n", i, v)
+    }
+    for i := 0; i < len(results); i++ {
+        fmt.Println("Extra:", results[i]/2)
+    }
+    fmt.Println("Go demo complete.")
+}

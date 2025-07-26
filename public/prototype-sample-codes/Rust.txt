@@ -1,0 +1,34 @@
+// Rust
+enum Operation {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+}
+fn compute(op: Operation, a: i32, b: i32) -> Option<i32> {
+    match op {
+        Operation::Add => Some(a + b),
+        Operation::Subtract => Some(a - b),
+        Operation::Multiply => Some(a * b),
+        Operation::Divide => if b != 0 { Some(a / b) } else { None },
+    }
+}
+fn main() {
+    let ops = [Operation::Add, Operation::Subtract, Operation::Multiply, Operation::Divide];
+    let a = 20;
+    let b = 4;
+    for op in &ops {
+        let result = compute(*op, a, b);
+        match result {
+            Some(val) => println!("Result: {}", val),
+            None => println!("Division by zero"),
+        }
+    }
+    let numbers: Vec<i32> = (1..=10).collect();
+    let squares: Vec<i32> = numbers.iter().map(|x| x * x).collect();
+    println!("Squares: {:?}", squares);
+    for (i, val) in squares.iter().enumerate() {
+        println!("Index {}: {}", i, val);
+    }
+    println!("Rust demo complete.");
+}

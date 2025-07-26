@@ -1,0 +1,44 @@
+// C#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+public class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public Person(string n, int a) { Name = n; Age = a; }
+}
+public class Program
+{
+    public static void Main()
+    {
+        List<Person> people = new List<Person>{
+            new Person("Alice", 30),
+            new Person("Bob", 25),
+            new Person("Charlie", 35),
+            new Person("Diana", 30),
+            new Person("Eve", 25)
+        };
+        var ageGroups = people.GroupBy(p => p.Age)
+                              .Select(g => new { Age = g.Key, Count = g.Count() })
+                              .OrderBy(g => g.Age);
+        foreach (var group in ageGroups)
+        {
+            Console.WriteLine("Age: " + group.Age + " Count: " + group.Count);
+        }
+        foreach (var p in people)
+        {
+            Console.WriteLine(p.Name + " is " + p.Age + " years old.");
+        }
+        var names = people.Where(p => p.Age > 28)
+                          .Select(p => p.Name.ToUpper())
+                          .ToList();
+        names.ForEach(n => Console.WriteLine(n));
+        Console.WriteLine("Additional loop:");
+        for (int i = 0; i < people.Count; i++)
+        {
+            Console.WriteLine("Index " + i + ": " + people[i].Name);
+        }
+        Console.WriteLine("C# demo complete.");
+    }
+}

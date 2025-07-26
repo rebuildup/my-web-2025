@@ -1,0 +1,32 @@
+# Ruby
+class DataProcessor
+    def initialize(data)
+      @data = data
+    end
+    def filter_even
+      @data.select { |x| x.even? }
+    end
+    def transform(&block)
+      @data.map(&block)
+    end
+    def summarize
+      { sum: @data.reduce(:+), count: @data.size }
+    end
+  end
+  values = (1..20).to_a
+  processor = DataProcessor.new(values)
+  evens = processor.filter_even
+  squares = processor.transform { |x| x * x }
+  summary = processor.summarize
+  puts "Evens: #{evens.join(', ')}"
+  puts "Squares: #{squares.join(', ')}"
+  puts "Summary: Sum=#{summary[:sum]} Count=#{summary[:count]}"
+  (1..5).each do |i|
+    puts "Iteration #{i}: Value=#{i * 3}"
+  end
+  result = evens.zip(squares)
+  result.each { |a, b| puts a.to_s + " -> " + b.to_s }
+  puts "Extra loop:"
+  (1..3).each { |i| puts "Extra line #{i}" }
+  puts "Ruby demo complete."
+  

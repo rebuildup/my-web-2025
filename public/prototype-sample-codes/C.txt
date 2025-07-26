@@ -1,0 +1,75 @@
+// C
+#include <stdio.h>
+#include <stdlib.h>
+struct Node
+{
+    int data;
+    struct Node *next;
+};
+struct Node *createNode(int data)
+{
+    struct Node *node = (struct Node *)malloc(sizeof(struct Node));
+    node->data = data;
+    node->next = NULL;
+    return node;
+}
+void appendNode(struct Node **head, int data)
+{
+    struct Node *newNode = createNode(data);
+    if (*head == NULL)
+    {
+        *head = newNode;
+        return;
+    }
+    struct Node *cur = *head;
+    while (cur->next)
+        cur = cur->next;
+    cur->next = newNode;
+}
+void printList(struct Node *head)
+{
+    while (head)
+    {
+        printf("%d ", head->data);
+        head = head->next;
+    }
+    printf("\n");
+}
+struct Node *reverseList(struct Node *head)
+{
+    struct Node *prev = NULL, *curr = head, *next = NULL;
+    while (curr)
+    {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}
+int main()
+{
+    struct Node *head = NULL;
+    for (int i = 1; i <= 10; i++)
+    {
+        appendNode(&head, i * 3);
+    }
+    printList(head);
+    head = reverseList(head);
+    printList(head);
+    int sum = 0;
+    struct Node *cur = head;
+    while (cur)
+    {
+        sum += cur->data;
+        cur = cur->next;
+    }
+    printf("Sum: %d\n", sum);
+    while (head)
+    {
+        struct Node *temp = head;
+        head = head->next;
+        free(temp);
+    }
+    return 0;
+}
