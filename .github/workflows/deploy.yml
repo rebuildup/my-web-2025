@@ -21,7 +21,15 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          # Check if package-lock.json is in sync with package.json
+          if npm ci --dry-run 2>&1 | grep -q "can only install packages when your package.json and package-lock.json"; then
+            echo "⚠️ package-lock.json is out of sync, running npm install to fix"
+            npm install
+          else
+            echo "✅ package-lock.json is in sync, using npm ci"
+            npm ci
+          fi
 
       - name: Run lint
         run: npm run lint
@@ -76,7 +84,15 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          # Check if package-lock.json is in sync with package.json
+          if npm ci --dry-run 2>&1 | grep -q "can only install packages when your package.json and package-lock.json"; then
+            echo "⚠️ package-lock.json is out of sync, running npm install to fix"
+            npm install
+          else
+            echo "✅ package-lock.json is in sync, using npm ci"
+            npm ci
+          fi
 
       - name: Build project
         env:
@@ -223,11 +239,23 @@ jobs:
           # 9. Full dependency installation
           echo "Installing all dependencies..."
 
-          # Install complete dependencies from package.json
-          npm install --no-optional --no-audit --no-fund --silent || {
-            echo "❌ Dependency installation failed"
-            exit 1
-          }
+          # Check if package-lock.json is in sync and install accordingly
+          if npm ci --dry-run 2>/dev/null; then
+            echo "✅ Using npm ci for faster installation"
+            npm ci --no-optional --no-audit --no-fund --silent || {
+              echo "⚠️ npm ci failed, falling back to npm install"
+              npm install --no-optional --no-audit --no-fund --silent || {
+                echo "❌ Dependency installation failed"
+                exit 1
+              }
+            }
+          else
+            echo "⚠️ package-lock.json out of sync, using npm install"
+            npm install --no-optional --no-audit --no-fund --silent || {
+              echo "❌ Dependency installation failed"
+              exit 1
+            }
+          fi
 
           echo "✅ All dependencies installed"
 

@@ -25,6 +25,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@hello-pangea/dnd": "^18.0.1",
     "@mui/material": "^7.2.0",
     "@radix-ui/react-slot": "^1.2.3",
@@ -72,6 +73,7 @@
     "@types/react-dom": "^19",
     "@types/react-google-recaptcha": "^2.1.9",
     "@types/three": "^0.178.1",
+    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.4.3",
     "eslint-plugin-tailwindcss": "^4.0.0-beta.0",
@@ -83,7 +85,6 @@
     "textlint": "^15.2.0",
     "textlint-rule-preset-ai-writing": "^1.1.0",
     "typescript": "^5",
-    "webpack-bundle-analyzer": "^4.10.2",
-    "cross-env": "^7.0.3"
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }
