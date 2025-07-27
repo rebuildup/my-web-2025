@@ -3,6 +3,14 @@ import { ContentItem } from "@/types/content";
 
 async function getWorkshopStats() {
   try {
+    // Skip API calls during build if no base URL is set
+    if (
+      !process.env.NEXT_PUBLIC_BASE_URL &&
+      process.env.NODE_ENV === "production"
+    ) {
+      return { blogPosts: [], plugins: [], downloads: [] };
+    }
+
     const [blogResponse, pluginResponse, downloadResponse] = await Promise.all([
       fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/blog`,
@@ -168,9 +176,9 @@ export default async function WorkshopPage() {
               >
                 Latest Content
               </h2>
-              {stats.latestContent.length > 0 ? (
+              {stats.latestContent && stats.latestContent.length > 0 ? (
                 <div className="grid-system grid-1 gap-4">
-                  {stats.latestContent.map((content) => {
+                  {stats.latestContent?.map((content) => {
                     const getContentUrl = (content: ContentItem) => {
                       switch (content.type) {
                         case "blog":

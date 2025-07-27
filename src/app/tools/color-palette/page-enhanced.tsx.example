@@ -1,0 +1,66 @@
+/**
+ * Example of enhanced SEO implementation using the new SEO utilities
+ * This shows how to use the comprehensive SEO utilities for better SEO optimization
+ */
+
+import ColorPaletteGenerator from "./components/ColorPaletteGenerator";
+import { 
+  generateToolMetadata, 
+  generateWebApplicationStructuredData,
+  generateCanonicalUrl 
+} from "@/lib/seo";
+
+// Generate metadata using the new SEO utilities
+export const metadata = generateToolMetadata({
+  name: "Color Palette Generator",
+  description: "色域を指定してランダムにカラーパレットを生成。デザインに活用できる美しい色の組み合わせを作成。",
+  keywords: ["カラーパレット", "色生成", "デザイン", "ランダム色", "色域設定", "CSS変数"],
+  path: "/tools/color-palette",
+});
+
+// Generate structured data using the new utilities
+const structuredData = generateWebApplicationStructuredData({
+  name: "Color Palette Generator",
+  description: "色域を指定してランダムにカラーパレットを生成",
+  url: "https://yusuke-kim.com/tools/color-palette",
+  category: "design",
+  features: [
+    "HSV色域指定",
+    "ランダム色生成",
+    "CSS変数出力",
+    "Tailwind CSS対応",
+    "JSON形式エクスポート",
+    "色のコピー機能",
+  ],
+});
+
+export default function ColorPalettePage() {
+  return (
+    <>
+      <ColorPaletteGenerator />
+
+      {/* Enhanced Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
+    </>
+  );
+}
+
+/**
+ * Benefits of using the new SEO utilities:
+ * 
+ * 1. Consistent metadata format across all pages
+ * 2. Automatic canonical URL generation
+ * 3. Proper Open Graph and Twitter Card metadata
+ * 4. Comprehensive structured data with all required Schema.org properties
+ * 5. SEO validation and scoring capabilities
+ * 6. Easy maintenance and updates
+ * 7. Type safety with TypeScript
+ * 8. Automatic image URL resolution
+ * 9. Proper robots meta tag handling
+ * 10. Enhanced search engine understanding
+ */

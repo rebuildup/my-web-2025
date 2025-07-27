@@ -11,6 +11,14 @@ interface BlogDetailPageProps {
 
 async function getBlogPost(slug: string): Promise<ContentItem | null> {
   try {
+    // Skip API calls during build if no base URL is set
+    if (
+      !process.env.NEXT_PUBLIC_BASE_URL &&
+      process.env.NODE_ENV === "production"
+    ) {
+      return null;
+    }
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/blog`,
       {

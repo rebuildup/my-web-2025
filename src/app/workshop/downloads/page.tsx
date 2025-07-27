@@ -36,6 +36,14 @@ export const metadata: Metadata = {
 
 async function getDownloads(): Promise<ContentItem[]> {
   try {
+    // Skip API calls during build if no base URL is set
+    if (
+      !process.env.NEXT_PUBLIC_BASE_URL &&
+      process.env.NODE_ENV === "production"
+    ) {
+      return [];
+    }
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/download`,
       {

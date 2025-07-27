@@ -3,11 +3,13 @@ import { Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { PerformanceProvider } from "@/components/providers/PerformanceProvider";
+import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { PerformanceDevPanel } from "@/components/ui/CoreWebVitalsMonitor";
 import {
   LayoutShiftDetector,
   CriticalResourcePreloader,
 } from "@/components/ui/LayoutStabilizer";
+import { CookieConsent } from "@/components/ui/CookieConsent";
 
 // Google Fonts configuration based on documents/02_style.md
 const notoSansJP = Noto_Sans_JP({
@@ -127,11 +129,14 @@ export default function RootLayout({
             },
           ]}
         />
-        <PerformanceProvider>
-          {children}
-          <PerformanceDevPanel />
-          <LayoutShiftDetector />
-        </PerformanceProvider>
+        <AnalyticsProvider>
+          <PerformanceProvider>
+            {children}
+            <PerformanceDevPanel />
+            <LayoutShiftDetector />
+            <CookieConsent />
+          </PerformanceProvider>
+        </AnalyticsProvider>
 
         {/* Structured Data (JSON-LD) */}
         <Script

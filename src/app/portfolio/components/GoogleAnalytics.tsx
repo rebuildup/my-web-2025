@@ -11,7 +11,7 @@ interface GoogleAnalyticsProps {
 
 declare global {
   interface Window {
-    dataLayer: unknown[];
+    dataLayer?: unknown[];
   }
 }
 
@@ -29,7 +29,7 @@ export default function GoogleAnalytics({
     window.dataLayer = window.dataLayer || [];
 
     function gtag(...args: unknown[]) {
-      window.dataLayer.push(args);
+      window.dataLayer!.push(args);
     }
 
     window.gtag = gtag;

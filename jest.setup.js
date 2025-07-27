@@ -44,25 +44,53 @@ global.IntersectionObserver = jest.fn().mockImplementation(() => ({
 
 // Suppress React act warnings and navigation errors in tests
 const originalError = console.error;
+const originalWarn = console.warn;
 beforeAll(() => {
   console.error = (...args) => {
     if (
       typeof args[0] === "string" &&
       (args[0].includes("Warning: An update to") ||
         args[0].includes("An update to") ||
-        args[0].includes("Not implemented: navigation"))
+        args[0].includes("Not implemented: navigation") ||
+        args[0].includes("Error in admin analytics API:") ||
+        args[0].includes("Error logging admin action:") ||
+        args[0].includes("Error creating backup:") ||
+        args[0].includes("Failed to measure custom metric") ||
+        args[0].includes("Invalid JSON in") ||
+        args[0].includes("Error in monitoring/") ||
+        args[0].includes("SyntaxError: Unexpected end of JSON input"))
     ) {
       return;
     }
     if (args[0] && args[0].type === "not implemented") {
       return;
     }
+    // Skip intentional test errors
+    if (
+      args[0] &&
+      typeof args[0] === "string" &&
+      args[0].includes("Test error")
+    ) {
+      return;
+    }
     originalError.call(console, ...args);
+  };
+
+  console.warn = (...args) => {
+    if (
+      typeof args[0] === "string" &&
+      (args[0].includes("Invalid JSON in") ||
+        args[0].includes("Error in monitoring/"))
+    ) {
+      return;
+    }
+    originalWarn.call(console, ...args);
   };
 });
 
 afterAll(() => {
   console.error = originalError;
+  console.warn = originalWarn;
 });
 
 // Mock window.matchMedia (only in browser environment)
