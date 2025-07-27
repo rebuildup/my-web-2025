@@ -241,7 +241,7 @@ export default function ColorPaletteGenerator() {
       }
 
       return colors;
-    }, "Color generation");
+    });
 
     // For large color counts, use chunked processing
     if (colorCount > 50) {
@@ -272,7 +272,7 @@ export default function ColorPaletteGenerator() {
 
       setGeneratedColors(uniqueColors);
     } else {
-      setGeneratedColors(timedGeneration);
+      setGeneratedColors(timedGeneration.result);
     }
   }, [
     colorCount,

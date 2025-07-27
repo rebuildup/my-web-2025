@@ -11,7 +11,6 @@ interface GoogleAnalyticsProps {
 
 declare global {
   interface Window {
-    gtag: (...args: unknown[]) => void;
     dataLayer: unknown[];
   }
 }
@@ -94,7 +93,11 @@ export const trackPortfolioPageView = (
   pageTitle: string,
   contentId?: string,
 ) => {
-  if (typeof window !== "undefined" && window.gtag) {
+  if (
+    typeof window !== "undefined" &&
+    window.gtag &&
+    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+  ) {
     window.gtag("config", process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID, {
       page_path: pagePath,
       page_title: pageTitle,

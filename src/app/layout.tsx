@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+import { PerformanceProvider } from "@/components/providers/PerformanceProvider";
+import { PerformanceDevPanel } from "@/components/ui/CoreWebVitalsMonitor";
+import {
+  LayoutShiftDetector,
+  CriticalResourcePreloader,
+} from "@/components/ui/LayoutStabilizer";
 
 // Google Fonts configuration based on documents/02_style.md
 const notoSansJP = Noto_Sans_JP({
@@ -90,11 +96,42 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link rel="preconnect" href="https://use.typekit.net" />
+
+        {/* Preload critical resources */}
+        <link rel="preload" href="/images/og-image.jpg" as="image" />
+        <link rel="preload" href="/favicon.ico" as="image" />
+
+        {/* DNS prefetch for external services */}
+        <link rel="dns-prefetch" href="//www.google-analytics.com" />
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+
+        {/* Service Worker registration */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#222222" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
       </head>
       <body
         className={`${notoSansJP.variable} ${shipporiAntique.variable} antialiased bg-background text-foreground`}
       >
-        {children}
+        <CriticalResourcePreloader
+          resources={[
+            { href: "/images/og-image.jpg", as: "image" },
+            { href: "/favicon.ico", as: "image" },
+            {
+              href: "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Shippori+Antique+B1&display=swap",
+              as: "style",
+            },
+          ]}
+        />
+        <PerformanceProvider>
+          {children}
+          <PerformanceDevPanel />
+          <LayoutShiftDetector />
+        </PerformanceProvider>
 
         {/* Structured Data (JSON-LD) */}
         <Script

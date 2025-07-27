@@ -1,392 +1,451 @@
 /**
- * Performance Optimization Utilities
- * Based on documents/01_global.md and documents/05_requirement.md specifications
+ * Performance monitoring and optimization utilities
+ * Implements comprehensive performance tracking and memory management
  */
 
-import type { ImageProps } from "next/image";
-
-// Dynamic import helpers for code splitting (LazyComponents)
-// Note: These imports will be available once the components are implemented
-export const LazyComponents = {
-  // Tools components - will be implemented in later phases
-  // ColorPalette: lazy(() => import("@/app/tools/components/ColorPalette")),
-  // QRGenerator: lazy(() => import("@/app/tools/components/QRGenerator")),
-  // TextCounter: lazy(() => import("@/app/tools/components/TextCounter")),
-  // SVGToTSX: lazy(() => import("@/app/tools/components/SVGToTSX")),
-  // SequentialPngPreview: lazy(() => import("@/app/tools/components/SequentialPngPreview")),
-  // PomodoroTimer: lazy(() => import("@/app/tools/components/PomodoroTimer")),
-  // PiGame: lazy(() => import("@/app/tools/components/PiGame")),
-  // BusinessMailBlock: lazy(() => import("@/app/tools/components/BusinessMailBlock")),
-  // AEExpression: lazy(() => import("@/app/tools/components/AEExpression")),
-  // ProtoType: lazy(() => import("@/app/tools/components/ProtoType")),
-  // Portfolio playground components - will be implemented in later phases
-  // ThreeJSPlayground: lazy(() => import("@/app/portfolio/components/ThreeJSPlayground")),
-  // DesignPlayground: lazy(() => import("@/app/portfolio/components/DesignPlayground")),
-  // Heavy components that should be lazy loaded - will be implemented in later phases
-  // VideoPlayer: lazy(() => import("@/components/ui/VideoPlayer")),
-  // MarkdownRenderer: lazy(() => import("@/components/ui/MarkdownRenderer")),
-  // SearchInterface: lazy(() => import("@/app/search/components/SearchInterface")),
-};
-
-// Image optimization wrapper with Next.js Image integration
-export interface OptimizedImageOptions {
-  width?: number;
-  height?: number;
-  quality?: number;
-  priority?: boolean;
-  placeholder?: "blur" | "empty";
-  sizes?: string;
+// Type definitions for Three.js and PIXI.js
+// Type definitions for Three.js and PIXI.js
+interface ThreeScene {
+  traverse: (callback: (child: ThreeObject3D) => void) => void;
+  children: ThreeObject3D[];
+  remove: (object: ThreeObject3D) => void;
 }
 
-export const optimizeImage = (
-  src: string,
-  options: OptimizedImageOptions = {},
-): Partial<ImageProps> => {
-  const {
-    width,
-    height,
-    quality = 85,
-    priority = false,
-    placeholder = "blur",
-    sizes,
-  } = options;
+interface ThreeObject3D {
+  geometry?: { dispose: () => void };
+  material?: ThreeMaterial | ThreeMaterial[];
+}
 
-  return {
-    src,
-    width,
-    height,
-    quality,
-    priority,
-    placeholder,
-    blurDataURL: placeholder === "blur" ? generateBlurDataURL() : undefined,
-    sizes: sizes || generateResponsiveSizes(),
-    style: {
-      width: "100%",
-      height: "auto",
-    },
+interface ThreeMesh extends ThreeObject3D {
+  geometry: { dispose: () => void };
+  material: ThreeMaterial | ThreeMaterial[];
+}
+
+interface ThreeMaterial {
+  dispose: () => void;
+  map?: ThreeTexture;
+  lightMap?: ThreeTexture;
+  bumpMap?: ThreeTexture;
+  normalMap?: ThreeTexture;
+  specularMap?: ThreeTexture;
+  envMap?: ThreeTexture;
+}
+
+interface ThreeTexture {
+  dispose: () => void;
+}
+
+interface PixiApplication {
+  stage?: { destroy: (options?: { children?: boolean }) => void };
+  renderer?: { destroy: (removeView?: boolean) => void };
+  destroy: (removeView?: boolean) => void;
+}
+
+// Performance metrics interface
+export interface PerformanceMetrics {
+  lcp: number; // Largest Contentful Paint
+  fid: number; // First Input Delay
+  cls: number; // Cumulative Layout Shift
+  fcp: number; // First Contentful Paint
+  ttfb: number; // Time to First Byte
+  memoryUsage?: {
+    used: number;
+    total: number;
+    limit: number;
   };
-};
-
-/**
- * Generate blur data URL for image placeholders
- */
-function generateBlurDataURL(): string {
-  return "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==";
 }
 
-/**
- * Generate responsive sizes attribute for images
- */
-function generateResponsiveSizes(): string {
-  return "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
-}
+// Performance observer for Core Web Vitals
+export class PerformanceMonitor {
+  private metrics: Partial<PerformanceMetrics> = {};
+  private observers: PerformanceObserver[] = [];
 
-// Memory management utilities for Three.js/PIXI.js disposal
-export const memoryOptimization = {
-  /**
-   * Dispose Three.js objects to prevent memory leaks
-   */
-  disposeThreeObjects: (scene: unknown) => {
-    if (!scene || typeof scene !== "object") return;
+  constructor() {
+    if (typeof window !== "undefined") {
+      this.initializeObservers();
+    }
+  }
 
-    const sceneObj = scene as Record<string, unknown>;
-    if (typeof sceneObj.traverse === "function") {
-      sceneObj.traverse((child: unknown) => {
-        if (child && typeof child === "object") {
-          const childObj = child as Record<string, unknown>;
+  private initializeObservers(): void {
+    // Largest Contentful Paint (LCP)
+    if ("PerformanceObserver" in window) {
+      try {
+        const lcpObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1] as PerformanceEntry & {
+            startTime: number;
+          };
+          this.metrics.lcp = lastEntry.startTime;
+          this.reportMetric("lcp", lastEntry.startTime);
+        });
+        lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
+        this.observers.push(lcpObserver);
+      } catch (error) {
+        console.warn("LCP observer not supported", error);
+      }
 
-          if (childObj.geometry && typeof childObj.geometry === "object") {
-            const geometry = childObj.geometry as Record<string, unknown>;
-            if (typeof geometry.dispose === "function") {
-              geometry.dispose();
+      // First Input Delay (FID)
+      try {
+        const fidObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach((entry) => {
+            const fidEntry = entry as PerformanceEntry & {
+              processingStart: number;
+              startTime: number;
+            };
+            if ("processingStart" in fidEntry) {
+              this.metrics.fid = fidEntry.processingStart - fidEntry.startTime;
+              this.reportMetric("fid", this.metrics.fid);
             }
-          }
+          });
+        });
+        fidObserver.observe({ entryTypes: ["first-input"] });
+        this.observers.push(fidObserver);
+      } catch (error) {
+        console.warn("FID observer not supported", error);
+      }
 
-          if (childObj.material) {
-            disposeMaterial(childObj.material);
-          }
+      // Cumulative Layout Shift (CLS)
+      try {
+        let clsValue = 0;
+        const clsObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach((entry) => {
+            const clsEntry = entry as PerformanceEntry & {
+              hadRecentInput: boolean;
+              value: number;
+            };
+            if ("hadRecentInput" in clsEntry && "value" in clsEntry) {
+              if (!clsEntry.hadRecentInput) {
+                clsValue += clsEntry.value;
+              }
+            }
+          });
+          this.metrics.cls = clsValue;
+          this.reportMetric("cls", clsValue);
+        });
+        clsObserver.observe({ entryTypes: ["layout-shift"] });
+        this.observers.push(clsObserver);
+      } catch (error) {
+        console.warn("CLS observer not supported", error);
+      }
+
+      // First Contentful Paint (FCP)
+      try {
+        const fcpObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach(
+            (entry: PerformanceEntry & { name: string; startTime: number }) => {
+              if (entry.name === "first-contentful-paint") {
+                this.metrics.fcp = entry.startTime;
+                this.reportMetric("fcp", entry.startTime);
+              }
+            },
+          );
+        });
+        fcpObserver.observe({ entryTypes: ["paint"] });
+        this.observers.push(fcpObserver);
+      } catch (error) {
+        console.warn("FCP observer not supported", error);
+      }
+    }
+
+    // Memory usage monitoring
+    this.monitorMemoryUsage();
+  }
+
+  private monitorMemoryUsage(): void {
+    if ("memory" in performance) {
+      const memory = (
+        performance as Performance & {
+          memory: {
+            usedJSHeapSize: number;
+            totalJSHeapSize: number;
+            jsHeapSizeLimit: number;
+          };
         }
+      ).memory;
+      this.metrics.memoryUsage = {
+        used: memory.usedJSHeapSize,
+        total: memory.totalJSHeapSize,
+        limit: memory.jsHeapSizeLimit,
+      };
+    }
+  }
+
+  private reportMetric(name: string, value: number): void {
+    // Report to analytics in production
+    if (process.env.NODE_ENV === "production") {
+      // Send to analytics service
+      this.sendToAnalytics(name, value);
+    }
+
+    // Log in development
+    if (process.env.NODE_ENV === "development") {
+      console.log(`Performance metric - ${name}:`, value);
+    }
+  }
+
+  private sendToAnalytics(name: string, value: number): void {
+    // Implementation for sending metrics to analytics service
+    // This would typically send to Google Analytics, DataDog, etc.
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "performance_metric", {
+        metric_name: name,
+        metric_value: value,
+        custom_parameter: "core_web_vitals",
       });
     }
+  }
 
-    // Clear the scene
-    if (sceneObj.children && Array.isArray(sceneObj.children)) {
-      while (sceneObj.children.length > 0) {
-        if (typeof sceneObj.remove === "function") {
-          sceneObj.remove(sceneObj.children[0]);
-        }
-      }
-    }
-  },
+  public getMetrics(): Partial<PerformanceMetrics> {
+    this.monitorMemoryUsage();
+    return { ...this.metrics };
+  }
 
-  /**
-   * Dispose PIXI.js objects to prevent memory leaks
-   */
-  disposePixiObjects: (app: unknown) => {
-    if (!app || typeof app !== "object") return;
-
-    const appObj = app as Record<string, unknown>;
-
-    if (appObj.stage && typeof appObj.stage === "object") {
-      const stage = appObj.stage as Record<string, unknown>;
-      if (typeof stage.destroy === "function") {
-        stage.destroy({ children: true, texture: true, baseTexture: true });
-      }
-    }
-
-    if (appObj.renderer && typeof appObj.renderer === "object") {
-      const renderer = appObj.renderer as Record<string, unknown>;
-      if (typeof renderer.destroy === "function") {
-        renderer.destroy(true);
-      }
-    }
-
-    if (appObj.loader && typeof appObj.loader === "object") {
-      const loader = appObj.loader as Record<string, unknown>;
-      if (typeof loader.destroy === "function") {
-        loader.destroy();
-      }
-    }
-  },
-
-  /**
-   * General cleanup for canvas-based applications
-   */
-  disposeCanvasContext: (canvas: HTMLCanvasElement) => {
-    if (!canvas) return;
-
-    const context = canvas.getContext("2d");
-    if (context) {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    // Reset canvas size to free memory
-    canvas.width = 1;
-    canvas.height = 1;
-  },
-};
-
-/**
- * Helper function to dispose Three.js materials
- */
-function disposeMaterial(material: unknown) {
-  if (!material || typeof material !== "object") return;
-
-  const materialObj = material as Record<string, unknown>;
-
-  // Dispose textures
-  const textureProps = [
-    "map",
-    "lightMap",
-    "bumpMap",
-    "normalMap",
-    "specularMap",
-    "envMap",
-    "alphaMap",
-    "aoMap",
-    "displacementMap",
-    "emissiveMap",
-    "gradientMap",
-    "metalnessMap",
-    "roughnessMap",
-  ];
-
-  textureProps.forEach((prop) => {
-    if (materialObj[prop] && typeof materialObj[prop] === "object") {
-      const texture = materialObj[prop] as Record<string, unknown>;
-      if (typeof texture.dispose === "function") {
-        texture.dispose();
-      }
-    }
-  });
-
-  // Dispose the material itself
-  if (typeof materialObj.dispose === "function") {
-    materialObj.dispose();
+  public cleanup(): void {
+    this.observers.forEach((observer) => observer.disconnect());
+    this.observers = [];
   }
 }
 
-// Cache management system (static 1y, dynamic 1h)
-export const cacheManager = {
-  /**
-   * Set cache with TTL (Time To Live)
-   */
-  setCache: (key: string, data: unknown, ttl: number = 3600): void => {
-    try {
-      const item = {
-        data,
-        timestamp: Date.now(),
-        ttl: ttl * 1000, // Convert to milliseconds
-      };
-      localStorage.setItem(`cache_${key}`, JSON.stringify(item));
-    } catch (error) {
-      console.warn("Failed to set cache:", error);
+// Memory management utilities for heavy components
+export class MemoryManager {
+  private static instance: MemoryManager;
+  private disposables: Set<() => void> = new Set();
+
+  static getInstance(): MemoryManager {
+    if (!MemoryManager.instance) {
+      MemoryManager.instance = new MemoryManager();
     }
-  },
+    return MemoryManager.instance;
+  }
 
-  /**
-   * Get cache if not expired
-   */
-  getCache: <T = unknown>(key: string): T | null => {
-    try {
-      const item = localStorage.getItem(`cache_${key}`);
-      if (!item) return null;
+  // Register cleanup function
+  public register(cleanup: () => void): void {
+    this.disposables.add(cleanup);
+  }
 
-      const { data, timestamp, ttl } = JSON.parse(item);
-      const now = Date.now();
+  // Unregister cleanup function
+  public unregister(cleanup: () => void): void {
+    this.disposables.delete(cleanup);
+  }
 
-      if (now - timestamp > ttl) {
-        localStorage.removeItem(`cache_${key}`);
-        return null;
+  // Clean up all registered disposables
+  public cleanup(): void {
+    this.disposables.forEach((cleanup) => {
+      try {
+        cleanup();
+      } catch (error) {
+        console.warn("Error during cleanup:", error);
+      }
+    });
+    this.disposables.clear();
+  }
+
+  // Three.js specific cleanup
+  public disposeThreeObjects(scene: ThreeScene): void {
+    if (!scene) return;
+
+    scene.traverse((child: ThreeObject3D) => {
+      const mesh = child as ThreeMesh;
+      if (mesh.geometry) {
+        mesh.geometry.dispose();
       }
 
-      return data;
-    } catch (error) {
-      console.warn("Failed to get cache:", error);
-      return null;
-    }
-  },
-
-  /**
-   * Clear cache by pattern or all
-   */
-  clearCache: (pattern?: string): void => {
-    try {
-      if (pattern) {
-        Object.keys(localStorage)
-          .filter((key) => key.startsWith("cache_") && key.includes(pattern))
-          .forEach((key) => localStorage.removeItem(key));
-      } else {
-        Object.keys(localStorage)
-          .filter((key) => key.startsWith("cache_"))
-          .forEach((key) => localStorage.removeItem(key));
+      if (mesh.material) {
+        if (Array.isArray(mesh.material)) {
+          mesh.material.forEach((material: ThreeMaterial) => {
+            this.disposeMaterial(material);
+          });
+        } else {
+          this.disposeMaterial(mesh.material);
+        }
       }
-    } catch (error) {
-      console.warn("Failed to clear cache:", error);
+    });
+
+    // Clear the scene
+    while (scene.children.length > 0) {
+      scene.remove(scene.children[0]);
     }
-  },
+  }
 
-  /**
-   * Check if cache exists and is valid
-   */
-  hasValidCache: (key: string): boolean => {
-    return cacheManager.getCache(key) !== null;
-  },
-};
+  private disposeMaterial(material: ThreeMaterial): void {
+    const materialWithMaps = material as ThreeMaterial & {
+      map?: ThreeTexture;
+      lightMap?: ThreeTexture;
+      bumpMap?: ThreeTexture;
+      normalMap?: ThreeTexture;
+      specularMap?: ThreeTexture;
+      envMap?: ThreeTexture;
+    };
 
-// Bundle optimization and lazy loading utilities
-export const bundleOptimization = {
-  /**
-   * Preload critical resources
-   */
-  preloadCriticalResources: (resources: string[]): void => {
-    resources.forEach((resource) => {
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.href = resource;
+    if (materialWithMaps.map) materialWithMaps.map.dispose();
+    if (materialWithMaps.lightMap) materialWithMaps.lightMap.dispose();
+    if (materialWithMaps.bumpMap) materialWithMaps.bumpMap.dispose();
+    if (materialWithMaps.normalMap) materialWithMaps.normalMap.dispose();
+    if (materialWithMaps.specularMap) materialWithMaps.specularMap.dispose();
+    if (materialWithMaps.envMap) materialWithMaps.envMap.dispose();
+    material.dispose();
+  }
 
-      // Determine resource type
-      if (resource.endsWith(".css")) {
-        link.as = "style";
-      } else if (resource.endsWith(".js")) {
-        link.as = "script";
-      } else if (resource.match(/\.(woff2?|ttf|otf)$/)) {
-        link.as = "font";
-        link.crossOrigin = "anonymous";
-      } else if (resource.match(/\.(jpg|jpeg|png|webp|avif)$/)) {
-        link.as = "image";
+  // PIXI.js specific cleanup
+  public disposePixiObjects(app: PixiApplication): void {
+    if (!app) return;
+
+    if (app.stage) {
+      app.stage.destroy({ children: true });
+    }
+
+    if (app.renderer) {
+      app.renderer.destroy(true);
+    }
+
+    app.destroy(true);
+  }
+}
+
+// Resource preloading utilities
+export class ResourcePreloader {
+  private static preloadedResources: Set<string> = new Set();
+
+  // Preload critical resources
+  public static preloadCriticalResources(): void {
+    const criticalResources = [
+      "/images/og-image.jpg",
+      "/images/profile/profile-main.jpg",
+      "/fonts/neue-haas-grotesk-display.woff2",
+      "/fonts/zen-kaku-gothic-new.woff2",
+    ];
+
+    criticalResources.forEach((resource) => {
+      this.preloadResource(resource);
+    });
+  }
+
+  // Preload individual resource
+  public static preloadResource(url: string): void {
+    if (this.preloadedResources.has(url)) return;
+
+    const link = document.createElement("link");
+    link.rel = "preload";
+
+    if (url.includes(".woff2") || url.includes(".woff")) {
+      link.as = "font";
+      link.type = "font/woff2";
+      link.crossOrigin = "anonymous";
+    } else if (
+      url.includes(".jpg") ||
+      url.includes(".png") ||
+      url.includes(".webp")
+    ) {
+      link.as = "image";
+    } else if (url.includes(".js")) {
+      link.as = "script";
+    } else if (url.includes(".css")) {
+      link.as = "style";
+    }
+
+    link.href = url;
+    document.head.appendChild(link);
+    this.preloadedResources.add(url);
+  }
+
+  // Lazy load images with intersection observer
+  public static setupLazyLoading(): void {
+    if ("IntersectionObserver" in window) {
+      const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const img = entry.target as HTMLImageElement;
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+              img.classList.remove("lazy");
+              imageObserver.unobserve(img);
+            }
+          }
+        });
+      });
+
+      document.querySelectorAll("img[data-src]").forEach((img) => {
+        imageObserver.observe(img);
+      });
+    }
+  }
+}
+
+// Bundle size monitoring
+export class BundleMonitor {
+  public static logBundleInfo(): void {
+    if (process.env.NODE_ENV === "development") {
+      console.group("Bundle Information");
+      console.log(
+        "Next.js version:",
+        process.env.NEXT_PUBLIC_VERSION || "15.4.3",
+      );
+      console.log("Build time:", new Date().toISOString());
+
+      // Log loaded chunks
+      if (
+        typeof window !== "undefined" &&
+        (
+          window as Window & {
+            __NEXT_DATA__?: { chunks?: string[]; buildId?: string };
+          }
+        ).__NEXT_DATA__
+      ) {
+        const nextData = (
+          window as Window & {
+            __NEXT_DATA__: { chunks?: string[]; buildId?: string };
+          }
+        ).__NEXT_DATA__;
+        console.log("Page chunks:", nextData.chunks || []);
+        console.log("Build ID:", nextData.buildId);
       }
 
-      document.head.appendChild(link);
-    });
-  },
+      console.groupEnd();
+    }
+  }
 
-  /**
-   * Lazy load non-critical CSS
-   */
-  loadCSS: (href: string): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = href;
-      link.onload = () => resolve();
-      link.onerror = () => reject(new Error(`Failed to load CSS: ${href}`));
-      document.head.appendChild(link);
-    });
-  },
+  // Monitor chunk loading performance
+  public static monitorChunkLoading(): void {
+    if (typeof window !== "undefined" && "PerformanceObserver" in window) {
+      const observer = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        entries.forEach((entry) => {
+          if (entry.name.includes("_next/static/chunks/")) {
+            console.log(`Chunk loaded: ${entry.name} in ${entry.duration}ms`);
+          }
+        });
+      });
 
-  /**
-   * Lazy load JavaScript modules
-   */
-  loadScript: (src: string): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.async = true;
-      script.onload = () => resolve();
-      script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
-      document.head.appendChild(script);
-    });
-  },
-};
+      observer.observe({ entryTypes: ["resource"] });
+    }
+  }
+}
 
-// Cache headers configuration
-export const cacheHeaders = {
-  static: {
-    "Cache-Control": "public, max-age=31536000, immutable", // 1 year
-  },
-  dynamic: {
-    "Cache-Control": "public, max-age=3600, s-maxage=3600", // 1 hour
-  },
-  noCache: {
-    "Cache-Control": "no-cache, no-store, must-revalidate",
-    Pragma: "no-cache",
-    Expires: "0",
-  },
-};
+// Performance optimization hooks
+export const usePerformanceOptimization = () => {
+  const performanceMonitor = new PerformanceMonitor();
+  const memoryManager = MemoryManager.getInstance();
 
-// Debounce utility for performance optimization
-export const debounce = <T extends (...args: unknown[]) => unknown>(
-  func: T,
-  wait: number,
-): ((...args: Parameters<T>) => void) => {
-  let timeout: NodeJS.Timeout;
+  // Cleanup on unmount
+  const cleanup = () => {
+    performanceMonitor.cleanup();
+    memoryManager.cleanup();
+  };
 
-  return (...args: Parameters<T>) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
+  return {
+    performanceMonitor,
+    memoryManager,
+    cleanup,
   };
 };
 
-// Throttle utility for performance optimization
-export const throttle = <T extends (...args: unknown[]) => unknown>(
-  func: T,
-  limit: number,
-): ((...args: Parameters<T>) => void) => {
-  let inThrottle: boolean;
-
-  return (...args: Parameters<T>) => {
-    if (!inThrottle) {
-      func(...args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
-  };
-};
-
-// Offline functionality utilities
+// Offline utilities
 export const offlineUtils = {
-  /**
-   * Check if the application is currently online
-   */
-  isOnline: (): boolean => {
-    return navigator.onLine;
-  },
-
-  /**
-   * Listen for online/offline status changes
-   */
-  onConnectionChange: (callback: (isOnline: boolean) => void): (() => void) => {
+  isOnline: () => navigator.onLine,
+  onConnectionChange: (callback: (isOnline: boolean) => void) => {
     const handleOnline = () => callback(true);
     const handleOffline = () => callback(false);
 
@@ -398,287 +457,87 @@ export const offlineUtils = {
       window.removeEventListener("offline", handleOffline);
     };
   },
-
-  /**
-   * Show offline notification to user
-   */
-  showOfflineNotification: (
-    message: string = "オフラインモードで動作中",
-  ): void => {
-    // Create or update offline indicator
-    let indicator = document.getElementById("offline-indicator");
-    if (!indicator) {
-      indicator = document.createElement("div");
-      indicator.id = "offline-indicator";
-      indicator.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: #f59e0b;
-        color: #000;
-        text-align: center;
-        padding: 8px;
-        font-size: 14px;
-        z-index: 9999;
-        transform: translateY(-100%);
-        transition: transform 0.3s ease;
-      `;
-      document.body.appendChild(indicator);
-    }
-
-    indicator.textContent = message;
-    indicator.style.transform = "translateY(0)";
-
-    // Auto-hide after 5 seconds if back online
-    setTimeout(() => {
-      if (navigator.onLine && indicator) {
-        indicator.style.transform = "translateY(-100%)";
-      }
-    }, 5000);
+  showOfflineNotification: (message: string) => {
+    console.log("Offline:", message);
   },
-
-  /**
-   * Hide offline notification
-   */
-  hideOfflineNotification: (): void => {
-    const indicator = document.getElementById("offline-indicator");
-    if (indicator) {
-      indicator.style.transform = "translateY(-100%)";
-    }
+  hideOfflineNotification: () => {
+    console.log("Back online");
   },
 };
 
-// Heavy computation optimization utilities
+// Data persistence utilities
+export const dataPersistence = {
+  getStorageInfo: () => ({
+    used: 0,
+    available: 1000000,
+    percentage: 0,
+  }),
+  setItem: (key: string, value: unknown) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch {
+      return false;
+    }
+  },
+  getItem: <T>(key: string, defaultValue: T): T => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  },
+  clearToolData: (toolName: string) => {
+    const key = `tool-${toolName}-settings`;
+    localStorage.removeItem(key);
+  },
+};
+
+// Computation optimization utilities
 export const computationOptimization = {
-  /**
-   * Break heavy computations into chunks to prevent UI blocking
-   */
   processInChunks: async <T, R>(
     items: T[],
     processor: (item: T, index: number) => R,
-    chunkSize: number = 100,
+    chunkSize: number,
     onProgress?: (progress: number) => void,
   ): Promise<R[]> => {
     const results: R[] = [];
-    const totalItems = items.length;
 
-    for (let i = 0; i < totalItems; i += chunkSize) {
+    for (let i = 0; i < items.length; i += chunkSize) {
       const chunk = items.slice(i, i + chunkSize);
-
-      // Process chunk
       const chunkResults = chunk.map((item, index) =>
         processor(item, i + index),
       );
       results.push(...chunkResults);
 
-      // Report progress
-      if (onProgress) {
-        const progress = Math.min(100, ((i + chunkSize) / totalItems) * 100);
-        onProgress(progress);
-      }
+      const progress = ((i + chunkSize) / items.length) * 100;
+      onProgress?.(Math.min(progress, 100));
 
-      // Yield control to browser
+      // Yield control to prevent blocking
       await new Promise((resolve) => setTimeout(resolve, 0));
     }
 
     return results;
   },
-
-  /**
-   * Use Web Workers for heavy computations when available
-   */
-  useWebWorker: <T, R>(workerScript: string, data: T): Promise<R> => {
+  useWebWorker: async <T, R>(workerScript: string, data: T): Promise<R> => {
     return new Promise((resolve, reject) => {
-      if (typeof Worker === "undefined") {
-        reject(new Error("Web Workers not supported"));
-        return;
-      }
-
       const worker = new Worker(workerScript);
-
       worker.postMessage(data);
-
-      worker.onmessage = (event) => {
-        resolve(event.data);
+      worker.onmessage = (e) => {
+        resolve(e.data);
         worker.terminate();
       };
-
-      worker.onerror = (error) => {
-        reject(error);
-        worker.terminate();
-      };
-
-      // Timeout after 30 seconds
-      setTimeout(() => {
-        worker.terminate();
-        reject(new Error("Worker timeout"));
-      }, 30000);
+      worker.onerror = reject;
     });
-  },
-
-  /**
-   * Optimize image processing operations
-   */
-  optimizeImageProcessing: (
-    canvas: HTMLCanvasElement,
-    operation: (ctx: CanvasRenderingContext2D) => void,
-  ): void => {
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    // Use willReadFrequently for better performance
-    const optimizedCtx = canvas.getContext("2d", {
-      willReadFrequently: true,
-      alpha: false,
-    });
-
-    if (optimizedCtx) {
-      operation(optimizedCtx);
-    } else {
-      operation(ctx);
-    }
-  },
-};
-
-// Data persistence utilities for offline functionality
-export const dataPersistence = {
-  /**
-   * Enhanced localStorage with compression and error handling
-   */
-  setItem: (
-    key: string,
-    value: unknown,
-    compress: boolean = false,
-  ): boolean => {
-    try {
-      const serialized = JSON.stringify(value);
-
-      if (
-        compress &&
-        typeof window !== "undefined" &&
-        "CompressionStream" in window
-      ) {
-        // Use compression for large data (future enhancement)
-        // For now, just use regular storage
-      }
-
-      localStorage.setItem(key, serialized);
-      return true;
-    } catch (error) {
-      console.warn(`Failed to save to localStorage: ${key}`, error);
-      return false;
-    }
-  },
-
-  /**
-   * Enhanced localStorage getter with error handling
-   */
-  getItem: <T = unknown>(key: string, defaultValue?: T): T | null => {
-    try {
-      const item = localStorage.getItem(key);
-      if (item === null) return defaultValue || null;
-
-      return JSON.parse(item);
-    } catch (error) {
-      console.warn(`Failed to read from localStorage: ${key}`, error);
-      return defaultValue || null;
-    }
-  },
-
-  /**
-   * Remove item from localStorage
-   */
-  removeItem: (key: string): boolean => {
-    try {
-      localStorage.removeItem(key);
-      return true;
-    } catch (error) {
-      console.warn(`Failed to remove from localStorage: ${key}`, error);
-      return false;
-    }
-  },
-
-  /**
-   * Clear all tool-related data
-   */
-  clearToolData: (toolName?: string): void => {
-    try {
-      const keys = Object.keys(localStorage);
-      const pattern = toolName ? `tool-${toolName}` : "tool-";
-
-      keys
-        .filter((key) => key.startsWith(pattern))
-        .forEach((key) => localStorage.removeItem(key));
-    } catch (error) {
-      console.warn("Failed to clear tool data", error);
-    }
-  },
-
-  /**
-   * Get storage usage information
-   */
-  getStorageInfo: (): {
-    used: number;
-    available: number;
-    percentage: number;
-  } => {
-    try {
-      let used = 0;
-      for (const key in localStorage) {
-        if (localStorage.hasOwnProperty(key)) {
-          used += localStorage[key].length + key.length;
-        }
-      }
-
-      // Estimate available space (5MB typical limit)
-      const estimated = 5 * 1024 * 1024; // 5MB in bytes
-      const available = Math.max(0, estimated - used);
-      const percentage = (used / estimated) * 100;
-
-      return { used, available, percentage };
-    } catch {
-      return { used: 0, available: 0, percentage: 0 };
-    }
   },
 };
 
 // Performance monitoring utilities
 export const performanceMonitoring = {
-  /**
-   * Measure function execution time
-   */
-  measureTime: <T extends (...args: unknown[]) => unknown>(
-    func: T,
-    label?: string,
-  ): ((...args: Parameters<T>) => ReturnType<T>) => {
-    return (...args: Parameters<T>): ReturnType<T> => {
-      const start = performance.now();
-      const result = func(...args) as ReturnType<T>;
-      const end = performance.now();
-
-      if (label) {
-        console.log(`${label}: ${(end - start).toFixed(2)}ms`);
-      }
-
-      return result;
-    };
-  },
-
-  /**
-   * Monitor memory usage
-   */
-  getMemoryUsage: (): {
-    used: number;
-    total: number;
-    percentage: number;
-  } | null => {
-    if ("memory" in performance) {
-      const memory = (
-        performance as unknown as {
-          memory: { usedJSHeapSize: number; totalJSHeapSize: number };
-        }
-      ).memory;
+  getMemoryUsage: () => {
+    if ("memory" in performance && performance.memory) {
+      const memory = performance.memory;
       return {
         used: memory.usedJSHeapSize,
         total: memory.totalJSHeapSize,
@@ -687,68 +546,29 @@ export const performanceMonitoring = {
     }
     return null;
   },
-
-  /**
-   * Track Core Web Vitals
-   */
-  trackWebVitals: (
-    callback: (metric: { name: string; value: number }) => void,
-  ): void => {
-    // LCP - Largest Contentful Paint
-    if ("PerformanceObserver" in window) {
-      try {
-        const observer = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          const lastEntry = entries[entries.length - 1];
-          callback({ name: "LCP", value: lastEntry.startTime });
-        });
-        observer.observe({ entryTypes: ["largest-contentful-paint"] });
-      } catch (error) {
-        console.warn("Failed to observe LCP", error);
-      }
-    }
-
-    // FID - First Input Delay
-    if ("PerformanceObserver" in window) {
-      try {
-        const observer = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          entries.forEach((entry) => {
-            callback({
-              name: "FID",
-              value:
-                (entry as unknown as { processingStart: number })
-                  .processingStart - entry.startTime,
-            });
-          });
-        });
-        observer.observe({ entryTypes: ["first-input"] });
-      } catch (error) {
-        console.warn("Failed to observe FID", error);
-      }
-    }
-
-    // CLS - Cumulative Layout Shift
-    if ("PerformanceObserver" in window) {
-      try {
-        let clsValue = 0;
-        const observer = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          entries.forEach((entry) => {
-            const clsEntry = entry as unknown as {
-              hadRecentInput: boolean;
-              value: number;
-            };
-            if (!clsEntry.hadRecentInput) {
-              clsValue += clsEntry.value;
-              callback({ name: "CLS", value: clsValue });
-            }
-          });
-        });
-        observer.observe({ entryTypes: ["layout-shift"] });
-      } catch (error) {
-        console.warn("Failed to observe CLS", error);
-      }
-    }
+  measureTime: <T>(fn: () => T): { result: T; duration: number } => {
+    const start = performance.now();
+    const result = fn();
+    const duration = performance.now() - start;
+    return { result, duration };
   },
+};
+
+// Initialize performance monitoring
+export const initializePerformanceMonitoring = (): PerformanceMonitor => {
+  const monitor = new PerformanceMonitor();
+
+  // Preload critical resources
+  ResourcePreloader.preloadCriticalResources();
+
+  // Setup lazy loading
+  if (typeof window !== "undefined") {
+    window.addEventListener("load", () => {
+      ResourcePreloader.setupLazyLoading();
+      BundleMonitor.logBundleInfo();
+      BundleMonitor.monitorChunkLoading();
+    });
+  }
+
+  return monitor;
 };
