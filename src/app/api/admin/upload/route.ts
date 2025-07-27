@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import sharp from "sharp";
 
 // Development environment check
 function isDevelopment() {
@@ -97,8 +98,20 @@ export async function POST(request: NextRequest) {
     const files = formData.getAll("files") as File[];
     const singleFile = formData.get("file") as File;
     const uploadType = formData.get("type") as string;
+    const metadataStr = formData.get("metadata") as string;
+    const processingOptionsStr = formData.get("processingOptions") as string;
 
     const filesToProcess = singleFile ? [singleFile] : files;
+
+    // Parse processing options
+    let processingOptions = {};
+    if (processingOptionsStr) {
+      try {
+        processingOptions = JSON.parse(processingOptionsStr);
+      } catch (error) {
+        console.warn("Failed to parse processing options:", error);
+      }
+    }
 
     if (!filesToProcess.length) {
       return NextResponse.json({ error: "No files provided" }, { status: 400 });
@@ -131,25 +144,52 @@ export async function POST(request: NextRequest) {
 
       const publicUrl = `/${publicPath}`;
 
-      uploadedFiles.push({
+      const fileInfo: {
+        originalName: string;
+        filename: string;
+        url: string;
+        size: number;
+        type: string;
+        metadata?: Record<string, unknown>;
+        versions?: Record<string, string>;
+      } = {
         originalName: file.name,
         filename: uniqueFilename,
         url: publicUrl,
         size: file.size,
         type: file.type,
-      });
-    }
+      };
 
-    // If processing images, generate thumbnails
-    if (uploadType !== "download") {
-      for (const uploadedFile of uploadedFiles) {
+      // Add metadata if provided
+      if (metadataStr) {
         try {
-          await generateThumbnail(uploadedFile.url);
+          const metadata = JSON.parse(metadataStr);
+          fileInfo.metadata = metadata;
         } catch (error) {
-          console.warn("Failed to generate thumbnail:", error);
-          // Continue without thumbnail - not critical
+          console.warn("Failed to parse metadata:", error);
         }
       }
+
+      // Process images if it's an image file and not a download
+      if (uploadType !== "download" && file.type.startsWith("image/")) {
+        try {
+          const versions = await createImageVersions(filePath, filePath, {
+            generateThumbnail: true,
+            optimizeImage: true,
+            convertToWebP: true,
+            quality: 85,
+            thumbnailSize: 300,
+            ...processingOptions,
+          });
+
+          fileInfo.versions = versions;
+        } catch (error) {
+          console.warn("Failed to generate image versions:", error);
+          // Continue without versions - not critical
+        }
+      }
+
+      uploadedFiles.push(fileInfo);
     }
 
     return NextResponse.json({
@@ -170,18 +210,146 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Generate thumbnail (placeholder implementation)
-async function generateThumbnail(imageUrl: string): Promise<void> {
-  // This is a placeholder for thumbnail generation
-  // In a real implementation, you would use a library like sharp or ffmpeg.wasm
-  // For now, we'll just log that thumbnail generation was requested
-  console.log(`Thumbnail generation requested for: ${imageUrl}`);
+// Generate thumbnail using Sharp
+async function generateThumbnail(
+  inputPath: string,
+  outputPath: string,
+  size: number = 300,
+): Promise<void> {
+  try {
+    await sharp(inputPath)
+      .resize(size, size, {
+        fit: "inside",
+        withoutEnlargement: true,
+      })
+      .jpeg({ quality: 80 })
+      .toFile(outputPath);
 
-  // TODO: Implement actual thumbnail generation with sharp or ffmpeg.wasm
-  // const sharp = require('sharp');
-  // const inputPath = path.join(process.cwd(), 'public', imageUrl);
-  // const thumbnailPath = path.join(process.cwd(), 'public', 'images', 'thumbnails', path.basename(imageUrl));
-  // await sharp(inputPath).resize(300, 300).jpeg({ quality: 80 }).toFile(thumbnailPath);
+    console.log(`Thumbnail generated: ${outputPath}`);
+  } catch (error) {
+    console.error("Thumbnail generation failed:", error);
+    throw error;
+  }
+}
+
+// Optimize image using Sharp
+async function optimizeImage(
+  inputPath: string,
+  outputPath: string,
+  options: {
+    quality?: number;
+    maxWidth?: number;
+    maxHeight?: number;
+    format?: "jpeg" | "png" | "webp";
+  } = {},
+): Promise<void> {
+  try {
+    const {
+      quality = 85,
+      maxWidth = 1920,
+      maxHeight = 1080,
+      format = "jpeg",
+    } = options;
+
+    let pipeline = sharp(inputPath);
+
+    // Resize if dimensions are specified
+    if (maxWidth || maxHeight) {
+      pipeline = pipeline.resize(maxWidth, maxHeight, {
+        fit: "inside",
+        withoutEnlargement: true,
+      });
+    }
+
+    // Apply format and quality
+    switch (format) {
+      case "jpeg":
+        pipeline = pipeline.jpeg({ quality });
+        break;
+      case "png":
+        pipeline = pipeline.png({ quality });
+        break;
+      case "webp":
+        pipeline = pipeline.webp({ quality });
+        break;
+    }
+
+    await pipeline.toFile(outputPath);
+    console.log(`Image optimized: ${outputPath}`);
+  } catch (error) {
+    console.error("Image optimization failed:", error);
+    throw error;
+  }
+}
+
+// Create multiple versions of an image
+async function createImageVersions(
+  inputPath: string,
+  baseOutputPath: string,
+  options: {
+    generateThumbnail?: boolean;
+    optimizeImage?: boolean;
+    convertToWebP?: boolean;
+    quality?: number;
+    thumbnailSize?: number;
+  } = {},
+): Promise<{
+  thumbnail?: string;
+  optimized?: string;
+  webp?: string;
+}> {
+  const results: {
+    thumbnail?: string;
+    optimized?: string;
+    webp?: string;
+  } = {};
+  const baseName = path.parse(baseOutputPath).name;
+  const baseDir = path.dirname(baseOutputPath);
+
+  try {
+    // Generate thumbnail
+    if (options.generateThumbnail) {
+      const thumbnailPath = path.join(
+        baseDir,
+        "..",
+        "thumbnails",
+        `${baseName}-thumb.jpg`,
+      );
+      await ensureDirectoryExists(path.dirname(thumbnailPath));
+      await generateThumbnail(inputPath, thumbnailPath, options.thumbnailSize);
+      results.thumbnail = path
+        .relative(path.join(process.cwd(), "public"), thumbnailPath)
+        .replace(/\\/g, "/");
+    }
+
+    // Generate optimized version
+    if (options.optimizeImage) {
+      const optimizedPath = path.join(baseDir, `${baseName}-optimized.jpg`);
+      await optimizeImage(inputPath, optimizedPath, {
+        quality: options.quality,
+        format: "jpeg",
+      });
+      results.optimized = path
+        .relative(path.join(process.cwd(), "public"), optimizedPath)
+        .replace(/\\/g, "/");
+    }
+
+    // Generate WebP version
+    if (options.convertToWebP) {
+      const webpPath = path.join(baseDir, `${baseName}.webp`);
+      await optimizeImage(inputPath, webpPath, {
+        quality: options.quality,
+        format: "webp",
+      });
+      results.webp = path
+        .relative(path.join(process.cwd(), "public"), webpPath)
+        .replace(/\\/g, "/");
+    }
+  } catch (error) {
+    console.warn("Some image versions failed to generate:", error);
+  }
+
+  return results;
 }
 
 // Delete uploaded file

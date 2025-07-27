@@ -1,12 +1,26 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
+import {
+  validateFile,
+  processImageWithFFmpeg,
+  extractFileMetadata,
+  compressFileIfNeeded,
+  FileProcessingOptions,
+} from "@/lib/utils/file-processing";
 
 interface FileUploadSectionProps {
   images: string[];
   thumbnail?: string;
   onImagesChange: (images: string[]) => void;
   onThumbnailChange: (thumbnail: string | undefined) => void;
+}
+
+interface UploadProgress {
+  filename: string;
+  progress: number;
+  status: "uploading" | "processing" | "complete" | "error";
+  error?: string;
 }
 
 export function FileUploadSection({
@@ -16,40 +30,173 @@ export function FileUploadSection({
   onThumbnailChange,
 }: FileUploadSectionProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
+  const [processingOptions, setProcessingOptions] =
+    useState<FileProcessingOptions>({
+      generateThumbnail: true,
+      optimizeImage: true,
+      convertToWebP: true,
+      quality: 85,
+      thumbnailSize: 300,
+      maxWidth: 1920,
+      maxHeight: 1080,
+    });
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const updateProgress = useCallback(
+    (filename: string, updates: Partial<UploadProgress>) => {
+      setUploadProgress((prev) =>
+        prev.map((p) => (p.filename === filename ? { ...p, ...updates } : p)),
+      );
+    },
+    [],
+  );
 
   const handleFileUpload = async (files: FileList) => {
     if (!files.length) return;
 
     setIsUploading(true);
-    const formData = new FormData();
+    const fileArray = Array.from(files);
 
-    Array.from(files).forEach((file) => {
-      formData.append("files", file);
-    });
+    // Initialize progress tracking
+    const initialProgress = fileArray.map((file) => ({
+      filename: file.name,
+      progress: 0,
+      status: "uploading" as const,
+    }));
+    setUploadProgress(initialProgress);
+
+    const uploadedUrls: string[] = [];
 
     try {
-      const response = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: formData,
-      });
+      for (const file of fileArray) {
+        try {
+          // Validate file
+          const validation = validateFile(file, "image");
+          if (!validation.valid) {
+            updateProgress(file.name, {
+              status: "error",
+              error: validation.error,
+            });
+            continue;
+          }
 
-      if (response.ok) {
-        const result = await response.json();
-        const newImages = [...images, ...result.urls];
+          updateProgress(file.name, { progress: 10 });
+
+          // Extract metadata
+          const metadata = await extractFileMetadata(file);
+          updateProgress(file.name, { progress: 20 });
+
+          // Compress if needed
+          let processedFile = file;
+          if (file.size > 5 * 1024 * 1024) {
+            // 5MB
+            processedFile = await compressFileIfNeeded(file);
+            updateProgress(file.name, { progress: 40 });
+          }
+
+          updateProgress(file.name, {
+            progress: 50,
+            status: "processing",
+          });
+
+          // Process with FFmpeg if it's an image
+          let processedVersions: {
+            original: File | Blob;
+            thumbnail?: Blob;
+            optimized?: Blob;
+            webp?: Blob;
+          } = { original: processedFile };
+          if (
+            file.type.startsWith("image/") &&
+            processingOptions.generateThumbnail
+          ) {
+            try {
+              processedVersions = await processImageWithFFmpeg(
+                processedFile,
+                processingOptions,
+              );
+              updateProgress(file.name, { progress: 70 });
+            } catch (error) {
+              console.warn("FFmpeg processing failed, using original:", error);
+            }
+          }
+
+          // Upload original file
+          const formData = new FormData();
+          formData.append("file", processedFile);
+          formData.append("type", "portfolio");
+          formData.append("metadata", JSON.stringify(metadata));
+
+          const response = await fetch("/api/admin/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          updateProgress(file.name, { progress: 90 });
+
+          if (response.ok) {
+            const result = await response.json();
+            uploadedUrls.push(...result.urls);
+
+            // Upload additional versions if they exist
+            if (processedVersions.thumbnail) {
+              const thumbnailFormData = new FormData();
+              thumbnailFormData.append("file", processedVersions.thumbnail);
+              thumbnailFormData.append("type", "thumbnail");
+
+              await fetch("/api/admin/upload", {
+                method: "POST",
+                body: thumbnailFormData,
+              });
+            }
+
+            if (processedVersions.webp) {
+              const webpFormData = new FormData();
+              webpFormData.append("file", processedVersions.webp);
+              webpFormData.append("type", "portfolio");
+
+              await fetch("/api/admin/upload", {
+                method: "POST",
+                body: webpFormData,
+              });
+            }
+
+            updateProgress(file.name, {
+              progress: 100,
+              status: "complete",
+            });
+          } else {
+            const errorData = await response.json();
+            updateProgress(file.name, {
+              status: "error",
+              error: errorData.error || "Upload failed",
+            });
+          }
+        } catch (error) {
+          updateProgress(file.name, {
+            status: "error",
+            error: error instanceof Error ? error.message : "Unknown error",
+          });
+        }
+      }
+
+      // Update images list with successfully uploaded files
+      if (uploadedUrls.length > 0) {
+        const newImages = [...images, ...uploadedUrls];
         onImagesChange(newImages);
 
         // Set first uploaded image as thumbnail if no thumbnail exists
-        if (!thumbnail && result.urls.length > 0) {
-          onThumbnailChange(result.urls[0]);
+        if (!thumbnail && uploadedUrls.length > 0) {
+          onThumbnailChange(uploadedUrls[0]);
         }
-      } else {
-        console.error("Upload failed");
       }
     } catch (error) {
       console.error("Upload error:", error);
     } finally {
       setIsUploading(false);
+      // Clear progress after a delay
+      setTimeout(() => setUploadProgress([]), 3000);
     }
   };
 
@@ -88,6 +235,125 @@ export function FileUploadSection({
   return (
     <div className="space-y-4">
       <h3 className="font-medium text-gray-700">Images & Files</h3>
+
+      {/* Processing Options */}
+      <div className="bg-gray-50 p-4 rounded-lg">
+        <h4 className="text-sm font-medium text-gray-700 mb-3">
+          Processing Options
+        </h4>
+        <div className="grid grid-cols-2 gap-4">
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={processingOptions.generateThumbnail}
+              onChange={(e) =>
+                setProcessingOptions((prev) => ({
+                  ...prev,
+                  generateThumbnail: e.target.checked,
+                }))
+              }
+              className="rounded border-gray-300"
+            />
+            <span className="text-sm text-gray-600">Generate Thumbnails</span>
+          </label>
+
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={processingOptions.optimizeImage}
+              onChange={(e) =>
+                setProcessingOptions((prev) => ({
+                  ...prev,
+                  optimizeImage: e.target.checked,
+                }))
+              }
+              className="rounded border-gray-300"
+            />
+            <span className="text-sm text-gray-600">Optimize Images</span>
+          </label>
+
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={processingOptions.convertToWebP}
+              onChange={(e) =>
+                setProcessingOptions((prev) => ({
+                  ...prev,
+                  convertToWebP: e.target.checked,
+                }))
+              }
+              className="rounded border-gray-300"
+            />
+            <span className="text-sm text-gray-600">Convert to WebP</span>
+          </label>
+
+          <div className="flex items-center space-x-2">
+            <label className="text-sm text-gray-600">Quality:</label>
+            <input
+              type="range"
+              min="20"
+              max="100"
+              value={processingOptions.quality}
+              onChange={(e) =>
+                setProcessingOptions((prev) => ({
+                  ...prev,
+                  quality: parseInt(e.target.value),
+                }))
+              }
+              className="flex-1"
+            />
+            <span className="text-xs text-gray-500 w-8">
+              {processingOptions.quality}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Upload Progress */}
+      {uploadProgress.length > 0 && (
+        <div className="bg-blue-50 p-4 rounded-lg">
+          <h4 className="text-sm font-medium text-gray-700 mb-3">
+            Upload Progress
+          </h4>
+          <div className="space-y-2">
+            {uploadProgress.map((progress) => (
+              <div key={progress.filename} className="space-y-1">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 truncate flex-1">
+                    {progress.filename}
+                  </span>
+                  <span className="text-xs text-gray-500 ml-2">
+                    {progress.status === "complete"
+                      ? "Complete"
+                      : progress.status === "error"
+                        ? "Error"
+                        : progress.status === "processing"
+                          ? "Processing"
+                          : `${progress.progress}%`}
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      progress.status === "complete"
+                        ? "bg-green-500"
+                        : progress.status === "error"
+                          ? "bg-red-500"
+                          : progress.status === "processing"
+                            ? "bg-blue-500"
+                            : "bg-blue-400"
+                    }`}
+                    style={{ width: `${progress.progress}%` }}
+                  />
+                </div>
+                {progress.error && (
+                  <p className="text-xs text-red-600">{progress.error}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* File Upload Area */}
       <div
@@ -222,7 +488,7 @@ export function FileUploadSection({
             type="url"
             placeholder="https://example.com/image.jpg"
             className={`${inputStyle} flex-1`}
-            onKeyPress={(e) => {
+            onKeyDown={(e) => {
               if (e.key === "Enter") {
                 const input = e.target as HTMLInputElement;
                 if (input.value.trim()) {

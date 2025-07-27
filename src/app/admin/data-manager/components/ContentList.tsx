@@ -53,6 +53,17 @@ export function ContentList({
     );
   }
 
+  // itemsが配列でない場合の安全性チェック
+  if (!Array.isArray(items)) {
+    return (
+      <div className="text-center py-8">
+        <p className="noto-sans-jp-light text-sm text-red-500">
+          Error: Invalid data format
+        </p>
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <div className="text-center py-8">

@@ -175,8 +175,9 @@ export default function AdminPage() {
                 </div>
 
                 {/* Analytics & Monitoring */}
-                <div
-                  className="bg-base border border-foreground opacity-50 p-4 space-y-4"
+                <Link
+                  href="/admin/analytics"
+                  className={CardStyle}
                   aria-describedby="analytics-description"
                 >
                   <h3 className={Card_title}>Analytics</h3>
@@ -188,10 +189,7 @@ export default function AdminPage() {
                     <p>• System health monitoring</p>
                     <p>• Audit logging and alerts</p>
                   </div>
-                  <p className="text-xs noto-sans-jp-light text-accent">
-                    Coming Soon
-                  </p>
-                </div>
+                </Link>
 
                 {/* System Tools */}
                 <div

@@ -33,10 +33,12 @@ export default function DataManagerPage() {
   const loadContentItems = async (type: ContentType) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/content/${type}`);
+      // 管理画面では全てのステータスのアイテムを表示
+      const response = await fetch(`/api/content/${type}?limit=100`);
       if (response.ok) {
-        const data = await response.json();
-        setContentItems(data);
+        const result = await response.json();
+        // APIは { data: ContentItem[] } の形式で返すので、dataプロパティを取得
+        setContentItems(result.data || []);
       } else {
         console.error("Failed to load content items");
         setContentItems([]);
@@ -108,7 +110,7 @@ export default function DataManagerPage() {
         `/api/admin/content?id=${id}&type=${selectedContentType}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (response.ok) {

@@ -31,7 +31,7 @@ export async function GET(
     // Parse query parameters
     const category = searchParams.get("category");
     const tags = searchParams.get("tags")?.split(",").filter(Boolean);
-    const status = searchParams.get("status") || "published";
+    const status = searchParams.get("status"); // デフォルトなしで全てのステータスを許可
     const limit = parseInt(searchParams.get("limit") || "50");
     const offset = parseInt(searchParams.get("offset") || "0");
     const sortBy = searchParams.get("sortBy") || "createdAt";
@@ -57,8 +57,8 @@ export async function GET(
 
     // Filter content
     const filteredContent = content.filter((item) => {
-      // Filter by status
-      if (item.status !== status) return false;
+      // Filter by status (only if status is specified)
+      if (status && item.status !== status) return false;
 
       // Filter by category
       if (category && item.category !== category) return false;
