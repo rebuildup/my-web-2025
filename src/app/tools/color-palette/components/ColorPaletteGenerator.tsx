@@ -509,6 +509,7 @@ export default function ColorPaletteGenerator() {
                       }
                       className="w-full"
                       aria-label="Minimum hue value"
+                      data-testid="hue-min"
                     />
                     <input
                       type="range"
@@ -526,6 +527,7 @@ export default function ColorPaletteGenerator() {
                       }
                       className="w-full"
                       aria-label="Maximum hue value"
+                      data-testid="hue-max"
                     />
                   </div>
                 </div>
@@ -553,6 +555,7 @@ export default function ColorPaletteGenerator() {
                       }
                       className="w-full"
                       aria-label="Minimum saturation value"
+                      data-testid="saturation-min"
                     />
                     <input
                       type="range"
@@ -570,6 +573,7 @@ export default function ColorPaletteGenerator() {
                       }
                       className="w-full"
                       aria-label="Maximum saturation value"
+                      data-testid="saturation-max"
                     />
                   </div>
                 </div>
@@ -649,6 +653,7 @@ export default function ColorPaletteGenerator() {
                   shortcut="G"
                   announceOnClick="新しいカラーパレットを生成しました"
                   aria-label="Generate new color palette"
+                  data-testid="generate-colors"
                 >
                   Generate Colors
                 </AccessibleButton>
@@ -695,6 +700,7 @@ export default function ColorPaletteGenerator() {
                       role="button"
                       tabIndex={0}
                       aria-label={`Color ${index + 1}: ${color.hex}`}
+                      data-testid="color-item"
                     >
                       <div
                         className="w-full h-20 border border-foreground cursor-pointer"
@@ -713,6 +719,7 @@ export default function ColorPaletteGenerator() {
                           onClick={() => copyColor(color, "hex")}
                           className="block w-full text-left hover:text-accent focus:outline-none focus:text-accent"
                           title="Click to copy HEX value"
+                          data-testid="copy-hex"
                         >
                           HEX: {color.hex}
                         </button>
@@ -797,6 +804,7 @@ export default function ColorPaletteGenerator() {
                       }}
                       className={Button_style}
                       aria-label="Copy export code to clipboard"
+                      data-testid="export-css"
                     >
                       Copy Export (E)
                     </button>

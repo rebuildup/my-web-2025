@@ -329,24 +329,27 @@ export class ResourcePreloader {
 
     const link = document.createElement("link");
     link.rel = "preload";
+    link.href = url;
 
     if (url.includes(".woff2") || url.includes(".woff")) {
-      link.as = "font";
-      link.type = "font/woff2";
-      link.crossOrigin = "anonymous";
+      link.setAttribute("as", "font");
+      link.setAttribute(
+        "type",
+        url.includes(".woff2") ? "font/woff2" : "font/woff",
+      );
+      link.setAttribute("crossorigin", "anonymous");
     } else if (
       url.includes(".jpg") ||
       url.includes(".png") ||
       url.includes(".webp")
     ) {
-      link.as = "image";
+      link.setAttribute("as", "image");
     } else if (url.includes(".js")) {
-      link.as = "script";
+      link.setAttribute("as", "script");
     } else if (url.includes(".css")) {
-      link.as = "style";
+      link.setAttribute("as", "style");
     }
 
-    link.href = url;
     document.head.appendChild(link);
     this.preloadedResources.add(url);
   }
@@ -377,7 +380,10 @@ export class ResourcePreloader {
 // Bundle size monitoring
 export class BundleMonitor {
   public static logBundleInfo(): void {
-    if (process.env.NODE_ENV === "development") {
+    if (
+      process.env.NODE_ENV === "development" ||
+      process.env.NODE_ENV === "test"
+    ) {
       console.group("Bundle Information");
       console.log(
         "Next.js version:",

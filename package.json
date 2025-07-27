@@ -57,6 +57,7 @@
     "three": "^0.178.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@eslint/eslintrc": "^3",
     "@next/bundle-analyzer": "^15.4.3",
     "@playwright/test": "^1.54.1",

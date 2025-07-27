@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <main className="flex items-center py-10">
+      <main id="main-content" role="main" className="flex items-center py-10">
         <div className="container-system">
           <div className="space-y-10">
             <header className="space-y-12">
@@ -25,7 +25,7 @@ export default function Home() {
                 便利なツールたちを公開します.
               </p>
             </header>
-            <nav aria-label="Main navigation">
+            <nav aria-label="Main navigation" role="navigation">
               <h3 className="sr-only">メインカテゴリ</h3>
               <div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-8">
                 <Link
@@ -74,7 +74,7 @@ export default function Home() {
               </div>
             </nav>
 
-            <nav aria-label="Global functions">
+            <nav aria-label="Global functions" role="navigation">
               <h3 className="sr-only">グローバル機能</h3>
               <div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
                 <Link

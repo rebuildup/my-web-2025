@@ -73,6 +73,31 @@ beforeAll(() => {
     ) {
       return;
     }
+    // Skip error handling test errors
+    if (
+      args[0] &&
+      typeof args[0] === "object" &&
+      args[0].code === "UNKNOWN_ERROR"
+    ) {
+      return;
+    }
+    // Skip Application Error logs from error handling tests
+    if (
+      typeof args[0] === "string" &&
+      (args[0].includes("Application Error:") ||
+        args[0].includes("Application Warning:") ||
+        args[0].includes("Application Info:"))
+    ) {
+      return;
+    }
+    // Skip when first argument is "Application Error:" and second is an object
+    if (
+      args[0] === "Application Error:" &&
+      args[1] &&
+      typeof args[1] === "object"
+    ) {
+      return;
+    }
     originalError.call(console, ...args);
   };
 

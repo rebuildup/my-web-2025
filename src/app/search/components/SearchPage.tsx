@@ -187,6 +187,7 @@ export default function SearchPage() {
                     placeholder="検索キーワードを入力..."
                     className="w-full pl-12 pr-4 py-4 bg-base border border-foreground text-foreground placeholder-foreground/60 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
                     aria-label="検索キーワード"
+                    data-testid="search-input"
                   />
                 </div>
 
@@ -216,6 +217,7 @@ export default function SearchPage() {
                       ? "bg-primary text-background border-primary"
                       : "bg-base text-foreground border-foreground hover:bg-foreground hover:text-background"
                   }`}
+                  data-testid="search-button"
                 >
                   シンプル
                 </button>
@@ -317,7 +319,7 @@ export default function SearchPage() {
               )}
 
               {!loading && query && results.length === 0 && (
-                <div className="text-center py-16">
+                <div className="text-center py-16" data-testid="no-results">
                   <p className="noto-sans-jp-light text-base opacity-80">
                     「{query}」に一致する結果が見つかりませんでした
                   </p>
@@ -330,9 +332,13 @@ export default function SearchPage() {
                     {results.length}件の結果が見つかりました
                   </p>
 
-                  <div className="space-y-4">
+                  <div className="space-y-4" data-testid="search-results">
                     {results.map((result) => (
-                      <article key={result.id} className={CardStyle}>
+                      <article
+                        key={result.id}
+                        className={CardStyle}
+                        data-testid="search-result"
+                      >
                         <div className="flex items-start justify-between mb-2">
                           <Link href={result.url} className={Card_title}>
                             {result.title}

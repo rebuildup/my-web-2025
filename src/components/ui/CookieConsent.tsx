@@ -18,6 +18,14 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
   const { consentGiven, setConsent } = useAnalytics();
 
   useEffect(() => {
+    // Don't show banner in test environment
+    if (
+      process.env.NODE_ENV === "test" ||
+      process.env.PLAYWRIGHT_TEST === "true"
+    ) {
+      return;
+    }
+
     // Show banner if consent hasn't been given or denied
     const savedConsent = localStorage.getItem("analytics-consent");
     if (savedConsent === null) {

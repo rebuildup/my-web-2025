@@ -180,7 +180,7 @@ export default function PortfolioPage() {
       />
 
       <div className="min-h-screen bg-background text-foreground">
-        <main className="flex items-center py-10">
+        <main id="main-content" role="main" className="flex items-center py-10">
           <div className="container-system">
             <div className="space-y-10">
               {/* Header */}
@@ -270,7 +270,7 @@ export default function PortfolioPage() {
               </section>
 
               {/* Category Navigation */}
-              <nav aria-label="Portfolio categories">
+              <nav aria-label="Portfolio categories" role="navigation">
                 <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
                   Browse by Category
                 </h2>
@@ -281,6 +281,7 @@ export default function PortfolioPage() {
                       href={category.href}
                       className={CardStyle}
                       aria-describedby={`${category.id}-description`}
+                      data-testid={`filter-${category.id}`}
                     >
                       <div className="flex items-center">
                         <category.icon
@@ -314,9 +315,12 @@ export default function PortfolioPage() {
                 </h2>
                 <div className="grid-system grid-1 xs:grid-2 sm:grid-3 md:grid-3 gap-6">
                   {featuredProjects.map((project) => (
-                    <div
+                    <Link
                       key={project.id}
-                      className="bg-base border border-foreground p-4 space-y-4"
+                      href={`/portfolio/${project.id}`}
+                      className="bg-base border border-foreground p-4 space-y-4 block hover:border-accent transition-colors"
+                      data-testid="portfolio-item"
+                      data-category={project.category}
                     >
                       <div className="aspect-video bg-background border border-foreground flex items-center justify-center">
                         <span className="noto-sans-jp-light text-xs text-foreground">
@@ -352,7 +356,7 @@ export default function PortfolioPage() {
                           ))}
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </section>

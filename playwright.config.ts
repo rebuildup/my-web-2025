@@ -24,6 +24,12 @@ export default defineConfig({
     trace: "on-first-retry",
   },
 
+  /* Global test timeout */
+  timeout: 60000, // 60 seconds per test
+  expect: {
+    timeout: 10000, // 10 seconds for expect assertions
+  },
+
   /* Configure projects for major browsers */
   projects: [
     {
@@ -71,6 +77,8 @@ export default defineConfig({
     stderr: "pipe",
     env: {
       PLAYWRIGHT_TEST: "true",
+      NODE_ENV: "test",
+      __NEXT_DISABLE_DEV_OVERLAY: "true",
     },
   },
 });

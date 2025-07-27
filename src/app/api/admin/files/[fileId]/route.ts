@@ -47,7 +47,7 @@ async function getFileInfo(filePath: string) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ fileId: string }> },
 ) {
   // Only allow access in development environment
   if (!isDevelopment()) {
@@ -59,7 +59,7 @@ export async function GET(
 
   try {
     const resolvedParams = await params;
-    const fileId = resolvedParams.id;
+    const fileId = resolvedParams.fileId;
     const filePath = decodeFileId(fileId);
 
     if (!filePath) {
@@ -107,7 +107,7 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ fileId: string }> },
 ) {
   // Only allow access in development environment
   if (!isDevelopment()) {
@@ -119,7 +119,7 @@ export async function DELETE(
 
   try {
     const resolvedParams = await params;
-    const fileId = resolvedParams.id;
+    const fileId = resolvedParams.fileId;
     const filePath = decodeFileId(fileId);
 
     if (!filePath) {
@@ -189,7 +189,7 @@ export async function DELETE(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ fileId: string }> },
 ) {
   // Only allow access in development environment
   if (!isDevelopment()) {
@@ -201,7 +201,7 @@ export async function PUT(
 
   try {
     const resolvedParams = await params;
-    const fileId = resolvedParams.id;
+    const fileId = resolvedParams.fileId;
     const filePath = decodeFileId(fileId);
     const body = await request.json();
     const { action, versionId, newPath } = body;

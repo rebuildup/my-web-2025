@@ -378,16 +378,16 @@ export const LayoutShiftDetector: React.FC = () => {
   }
 
   return (
-    <div className="fixed top-4 right-4 bg-red-100 border border-red-300 rounded-lg p-3 text-sm max-w-sm z-50">
-      <h4 className="font-semibold text-red-800 mb-2">
+    <div className="fixed top-4 right-4 bg-red-50 border border-red-400 rounded-lg p-3 text-sm max-w-sm z-50">
+      <h4 className="font-semibold text-red-900 mb-2">
         Layout Shifts Detected
       </h4>
       <div className="space-y-1 max-h-32 overflow-y-auto">
         {shifts.map((shift, index) => (
-          <div key={index} className="text-red-700">
+          <div key={index} className="text-red-800">
             <div>Value: {shift.value.toFixed(4)}</div>
             {shift.sources.length > 0 && (
-              <div className="text-xs text-red-600">
+              <div className="text-xs text-red-700">
                 Sources: {shift.sources.join(", ")}
               </div>
             )}

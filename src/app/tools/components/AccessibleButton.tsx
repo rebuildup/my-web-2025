@@ -17,6 +17,7 @@ interface AccessibleButtonProps
   shortcut?: string;
   announceOnClick?: string;
   ensureMinimumSize?: boolean;
+  "data-testid"?: string;
 }
 
 const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(

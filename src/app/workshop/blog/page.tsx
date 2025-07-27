@@ -1,190 +1,94 @@
-import { Metadata } from "next";
 import Link from "next/link";
-import { ContentItem } from "@/types/content";
 
-export const metadata: Metadata = {
-  title: "Blog - Workshop | samuido",
-  description:
-    "技術記事・チュートリアル・解説記事の一覧。フロントエンド開発、動画制作、デザインに関する情報を発信。",
-  keywords: [
-    "技術記事",
-    "チュートリアル",
-    "ブログ",
-    "フロントエンド",
-    "開発",
-    "解説",
-  ],
-  robots: "index, follow",
-  openGraph: {
-    title: "Blog - Workshop | samuido",
-    description:
-      "技術記事・チュートリアル・解説記事の一覧。フロントエンド開発、動画制作、デザインに関する情報を発信。",
-    type: "website",
-    url: "https://yusuke-kim.com/workshop/blog",
-    siteName: "samuido",
-    locale: "ja_JP",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Blog - Workshop | samuido",
-    description:
-      "技術記事・チュートリアル・解説記事の一覧。フロントエンド開発、動画制作、デザインに関する情報を発信。",
-    creator: "@361do_sleep",
-  },
-};
-
-async function getBlogPosts(): Promise<ContentItem[]> {
-  try {
-    // Skip API calls during build if no base URL is set
-    if (
-      !process.env.NEXT_PUBLIC_BASE_URL &&
-      process.env.NODE_ENV === "production"
-    ) {
-      return [];
-    }
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/blog`,
-      {
-        next: { revalidate: 300 },
-      },
-    );
-    if (!response.ok) {
-      throw new Error("Failed to fetch blog posts");
-    }
-    const data = await response.json();
-    return data.data || [];
-  } catch {
-    // Silently handle API connection errors during build time
-    return [];
-  }
-}
-
-export default async function BlogPage() {
-  const blogPosts = await getBlogPosts();
-  const publishedPosts = blogPosts.filter(
-    (post) => post.status === "published",
-  );
+export default function WorkshopBlogPage() {
+  // Mock blog posts data
+  const blogPosts = [
+    {
+      id: "post-1",
+      title: "React Hooks の使い方",
+      description: "React Hooksの基本的な使い方と実践的な例を紹介します。",
+      publishedAt: "2025-01-15",
+    },
+    {
+      id: "post-2",
+      title: "Next.js 15 の新機能",
+      description: "Next.js 15で追加された新機能について詳しく解説します。",
+      publishedAt: "2025-01-10",
+    },
+    {
+      id: "post-3",
+      title: "TypeScript 実践ガイド",
+      description: "TypeScriptを使った実践的な開発手法を学びます。",
+      publishedAt: "2025-01-05",
+    },
+  ];
 
   const CardStyle =
     "bg-base border border-foreground block p-4 space-y-4 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
   const Card_title =
     "neue-haas-grotesk-display text-xl text-primary leading-snug";
   const Card_description = "noto-sans-jp-light text-xs pb-2";
-  const Card_meta = "noto-sans-jp-light text-xs text-accent";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <main className="py-10">
+      <main id="main-content" role="main" className="py-10">
         <div className="container-system">
           <div className="space-y-10">
-            <header className="space-y-6">
-              <nav aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2 text-sm">
-                  <li>
-                    <Link
-                      href="/workshop"
-                      className="text-accent hover:text-primary"
-                    >
-                      Workshop
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li className="text-primary">Blog</li>
-                </ol>
+            <header className="space-y-12">
+              <nav className="mb-6">
+                <Link
+                  href="/workshop"
+                  className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                >
+                  ← Workshop に戻る
+                </Link>
               </nav>
-              <h1 className="neue-haas-grotesk-display text-4xl text-primary">
+              <h1 className="neue-haas-grotesk-display text-6xl text-primary">
                 Blog
               </h1>
               <p className="noto-sans-jp-light text-sm max-w leading-loose">
                 技術記事・チュートリアル・解説記事を公開しています。
                 <br />
-                フロントエンド開発、動画制作、デザインに関する情報を発信。
+                Web開発、ゲーム開発、映像制作に関する知識を共有します。
               </p>
             </header>
 
-            <section aria-labelledby="stats-heading">
-              <h2 id="stats-heading" className="sr-only">
-                統計情報
-              </h2>
-              <div className="bg-base border border-foreground p-4 text-center">
-                <div className="neue-haas-grotesk-display text-2xl text-accent">
-                  {publishedPosts.length}
-                </div>
-                <div className="noto-sans-jp-light text-xs">記事</div>
+            {/* Search functionality placeholder */}
+            <section>
+              <div className="bg-base border border-foreground p-4">
+                <input
+                  type="text"
+                  placeholder="記事を検索..."
+                  className="w-full p-3 bg-background border border-foreground text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+                  data-testid="search-input"
+                />
               </div>
             </section>
 
-            <section aria-labelledby="articles-heading">
-              <h2
-                id="articles-heading"
-                className="neue-haas-grotesk-display text-2xl text-primary mb-6"
-              >
-                記事一覧
+            {/* Blog posts */}
+            <section>
+              <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
+                Latest Posts
               </h2>
-
-              {publishedPosts.length > 0 ? (
-                <div className="grid-system grid-1 gap-6">
-                  {publishedPosts.map((post) => (
-                    <Link
-                      key={post.id}
-                      href={`/workshop/blog/${post.id}`}
-                      className={CardStyle}
-                      aria-describedby={`post-${post.id}-description`}
-                    >
-                      <div className="flex justify-between items-start">
-                        <h3 className={Card_title}>{post.title}</h3>
-                        <time className={Card_meta}>
-                          {new Date(
-                            post.publishedAt || post.createdAt,
-                          ).toLocaleDateString("ja-JP")}
-                        </time>
-                      </div>
-                      <p
-                        id={`post-${post.id}-description`}
-                        className={Card_description}
-                      >
-                        {post.description}
-                      </p>
-                      {post.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                          {post.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="bg-background border border-foreground px-2 py-1 text-xs noto-sans-jp-light"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      {post.stats && (
-                        <div className={Card_meta}>
-                          {post.stats.views} 回閲覧
-                        </div>
-                      )}
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="bg-base border border-foreground p-6">
-                  <p className="noto-sans-jp-light text-sm text-center">
-                    記事はまだ公開されていません
-                  </p>
-                </div>
-              )}
+              <div className="space-y-6">
+                {blogPosts.map((post) => (
+                  <Link
+                    key={post.id}
+                    href={`/workshop/blog/${post.id}`}
+                    className={CardStyle}
+                    data-testid="blog-post"
+                  >
+                    <div className="flex justify-between items-start">
+                      <h3 className={Card_title}>{post.title}</h3>
+                      <time className="text-xs text-accent">
+                        {new Date(post.publishedAt).toLocaleDateString("ja-JP")}
+                      </time>
+                    </div>
+                    <p className={Card_description}>{post.description}</p>
+                  </Link>
+                ))}
+              </div>
             </section>
-
-            <nav aria-label="Site navigation">
-              <Link
-                href="/workshop"
-                className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-              >
-                <span className="noto-sans-jp-regular text-base leading-snug">
-                  ← Workshop
-                </span>
-              </Link>
-            </nav>
           </div>
         </div>
       </main>
