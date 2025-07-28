@@ -16,8 +16,38 @@ interface PortfolioCardProps {
 
 export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
   const [imageError, setImageError] = useState(false);
+  const [currentImageSrc, setCurrentImageSrc] = useState(item.thumbnail);
 
   const handleImageError = () => {
+    if (currentImageSrc) {
+      // Try different image formats as fallback
+      const basePath = currentImageSrc
+        .replace(/\.(webp|png|jpg|jpeg)$/, "")
+        .replace(/-optimized$/, "");
+      const fallbackFormats = [".webp", ".png", ".jpg", "-optimized.jpg"];
+
+      const currentFormat =
+        currentImageSrc.match(/\.(webp|png|jpg|jpeg)$/)?.[0] || "";
+      const isOptimized = currentImageSrc.includes("-optimized");
+
+      const currentIndex = fallbackFormats.findIndex(
+        (format) => format === currentFormat,
+      );
+
+      // If current is optimized version, try non-optimized first
+      if (isOptimized && currentFormat) {
+        setCurrentImageSrc(basePath + currentFormat);
+        return;
+      }
+
+      if (currentIndex < fallbackFormats.length - 1) {
+        const nextFormat = fallbackFormats[currentIndex + 1];
+        setCurrentImageSrc(basePath + nextFormat);
+        return;
+      }
+    }
+
+    console.warn(`Failed to load image: ${item.thumbnail}`);
     setImageError(true);
   };
 
@@ -39,15 +69,18 @@ export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
     >
       {/* Thumbnail */}
       <div className="aspect-video bg-background border-b border-foreground overflow-hidden">
-        {item.thumbnail && !imageError ? (
+        {currentImageSrc && !imageError ? (
           <Image
-            src={item.thumbnail}
+            src={currentImageSrc}
             alt={item.title}
             width={400}
             height={225}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={handleImageError}
             loading="lazy"
+            {...(process.env.NODE_ENV === "production" && {
+              unoptimized: true,
+            })}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-background">

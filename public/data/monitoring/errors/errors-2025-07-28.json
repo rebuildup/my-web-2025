@@ -46,5 +46,41 @@
     "severity": "high",
     "category": "network",
     "resolved": false
+  },
+  {
+    "id": "error_1753702035786_b84a0mbfq",
+    "timestamp": "2025-07-28T11:27:15.786Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753702027013_edkssul77",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753702045819_6wrggz0e0",
+    "timestamp": "2025-07-28T11:27:25.819Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753702038894_ygih799iw",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
   }
 ]

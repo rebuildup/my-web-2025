@@ -40,9 +40,9 @@ export function Select({
 
   const variantStyles = {
     default:
-      'bg-white border-gray-300 text-gray-900 hover:border-gray-400 bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
+      'bg-background border-foreground text-foreground hover:border-accent bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
     admin:
-      'bg-white border-gray-300 text-gray-900 hover:border-gray-400 bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
+      'bg-background border-foreground text-foreground hover:border-accent bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
   };
 
   const disabledStyles = "opacity-50 cursor-not-allowed";
@@ -66,7 +66,7 @@ export function Select({
       className={selectClassName}
     >
       {placeholder && (
-        <option value="" disabled className="text-gray-500">
+        <option value="" disabled className="text-foreground/60">
           {placeholder}
         </option>
       )}
@@ -75,7 +75,7 @@ export function Select({
           key={option.value}
           value={option.value}
           disabled={option.disabled}
-          className="text-gray-900 bg-white"
+          className="text-foreground bg-background"
         >
           {option.label}
         </option>
@@ -96,7 +96,7 @@ export function Option({ value, label, disabled = false }: OptionProps) {
     <option
       value={value}
       disabled={disabled}
-      className="text-gray-900 bg-white"
+      className="text-foreground bg-background"
     >
       {label}
     </option>

@@ -441,11 +441,6 @@ export class PortfolioDataManager {
    * Private: Check if cache is valid
    */
   private isCacheValid(): boolean {
-    // 開発環境では常にキャッシュを無効化
-    if (process.env.NODE_ENV === "development") {
-      return false;
-    }
-
     const now = Date.now();
     const cacheAge = now - this.cache.lastUpdated.getTime();
     return cacheAge < this.CACHE_TTL && this.cache.portfolioData.size > 0;
@@ -484,18 +479,18 @@ export class PortfolioDataManager {
    */
   private async fetchRawPortfolioData(): Promise<ContentItem[]> {
     try {
-      // Skip API calls during build if no base URL is set
-      if (
-        !process.env.NEXT_PUBLIC_BASE_URL &&
-        process.env.NODE_ENV === "production"
-      ) {
-        return await this.loadPortfolioFromFile();
-      }
+      // In production, try API first, then fallback to file
+      const baseUrl =
+        process.env.NEXT_PUBLIC_BASE_URL ||
+        (typeof window !== "undefined"
+          ? window.location.origin
+          : "http://localhost:3000");
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/portfolio?limit=100`,
+        `${baseUrl}/api/content/portfolio?limit=100`,
         {
           next: { revalidate: 3600 }, // 1 hour cache
+          cache: "force-cache", // Use cache in production
         },
       );
 

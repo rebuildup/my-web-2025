@@ -8,6 +8,10 @@ import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import { AllGalleryClient } from "./components/AllGalleryClient";
 
+// Force dynamic rendering to ensure fresh data
+export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Revalidate every hour
+
 /**
  * Generate metadata for all gallery page
  */
@@ -34,9 +38,21 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 export default async function AllGalleryPage() {
   try {
+    console.log("AllGalleryPage: Starting data fetch...");
+
     // Get all portfolio data
-    const items = await portfolioDataManager.getPortfolioData();
+    const items = await portfolioDataManager.getPortfolioData(true); // Force refresh
     const searchFilters = await portfolioDataManager.getSearchFilters();
+
+    console.log("AllGalleryPage: Data fetched successfully", {
+      itemsCount: items.length,
+      filtersCount: searchFilters.length,
+      items: items.map((item) => ({
+        id: item.id,
+        title: item.title,
+        thumbnail: item.thumbnail,
+      })),
+    });
 
     // Generate structured data
     const seoGenerator = new PortfolioSEOMetadataGenerator(
@@ -64,6 +80,9 @@ export default async function AllGalleryPage() {
           <h1 className="text-2xl text-primary mb-4">Gallery Error</h1>
           <p className="text-foreground">
             Sorry, there was an error loading the gallery.
+          </p>
+          <p className="text-sm text-foreground/60 mt-2">
+            Error: {error instanceof Error ? error.message : "Unknown error"}
           </p>
         </div>
       </div>

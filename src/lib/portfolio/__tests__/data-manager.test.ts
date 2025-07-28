@@ -556,12 +556,28 @@ describe("PortfolioDataManager", () => {
       expect(data).toEqual([]);
     });
 
-    it("should skip API calls in production without base URL", async () => {
+    it("should fallback to file system when API fails in production", async () => {
       // Clear cache first
       dataManager.invalidateCache();
 
-      // Mock empty processed data when raw data is empty
-      mockDataProcessor.processRawData.mockResolvedValue([]);
+      // Mock API failure
+      (global.fetch as jest.Mock).mockRejectedValueOnce(
+        new Error("API not available"),
+      );
+
+      // Mock file system fallback
+      const mockFs = {
+        readFile: jest.fn().mockResolvedValue(JSON.stringify(mockRawData)),
+      };
+      const mockPath = {
+        join: jest.fn().mockReturnValue("/mock/path/portfolio.json"),
+      };
+
+      jest.doMock("fs/promises", () => mockFs);
+      jest.doMock("path", () => mockPath);
+
+      // Mock processed data
+      mockDataProcessor.processRawData.mockResolvedValue(mockProcessedData);
 
       const originalEnv = process.env.NODE_ENV;
       const originalBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -572,8 +588,11 @@ describe("PortfolioDataManager", () => {
 
       const data = await dataManager.getPortfolioData();
 
-      expect(global.fetch).not.toHaveBeenCalled();
-      expect(data).toEqual([]);
+      // API should be called first, then fallback to file system
+      expect(global.fetch).toHaveBeenCalled();
+      expect(data).toEqual(
+        mockProcessedData.filter((item) => item.status === "published"),
+      );
 
       (process.env as Record<string, string | undefined>).NODE_ENV =
         originalEnv;

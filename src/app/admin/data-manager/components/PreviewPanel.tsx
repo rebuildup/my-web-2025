@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentItem, MediaEmbed, ExternalLink } from "@/types/content";
+import { ContentItem, MediaEmbed } from "@/types/content";
 import { useState } from "react";
 
 interface PreviewPanelProps {

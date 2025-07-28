@@ -20,9 +20,9 @@
         "thumbnail": "https://img.youtube.com/vi/yr2bwYk0wAk/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/flashopen-1753697697064-xh8h37.png"],
+    "images": ["/images/portfolio/flashopen-1753697697064-xh8h37.webp"],
     "externalLinks": [],
-    "thumbnail": "/images/portfolio/flashopen-1753697697064-xh8h37.png"
+    "thumbnail": "/images/portfolio/flashopen-1753697697064-xh8h37.webp"
   },
   {
     "id": "portfolio-1753697297201",
@@ -45,9 +45,9 @@
         "thumbnail": "https://img.youtube.com/vi/9pNjS_Ahfjc/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/flashbgm-1753697381549-xlfwvd.png"],
+    "images": ["/images/portfolio/flashbgm-1753697381549-xlfwvd.webp"],
     "externalLinks": [],
-    "thumbnail": "/images/portfolio/flashbgm-1753697381549-xlfwvd.png"
+    "thumbnail": "/images/portfolio/flashbgm-1753697381549-xlfwvd.webp"
   },
   {
     "id": "portfolio-1753696188231",
@@ -70,7 +70,7 @@
         "thumbnail": "https://img.youtube.com/vi/D0pItdcPWqE/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/flash-1753696619864-g9cm6h.png"],
+    "images": ["/images/portfolio/flash-1753696619864-g9cm6h.webp"],
     "externalLinks": [
       {
         "type": "github",
@@ -79,7 +79,7 @@
         "description": "リポジトリです"
       }
     ],
-    "thumbnail": "/images/portfolio/flash-1753696619864-g9cm6h.png"
+    "thumbnail": "/images/portfolio/flash-1753696619864-g9cm6h.webp"
   },
   {
     "id": "portfolio-1753695303368",
@@ -102,8 +102,8 @@
         "thumbnail": "https://img.youtube.com/vi/s5b2M5DF6N4/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/otu-1753696554992-ghbvct.png"],
+    "images": ["/images/portfolio/otu-1753696554992-ghbvct.webp"],
     "externalLinks": [],
-    "thumbnail": "/images/portfolio/otu-1753696554992-ghbvct.png"
+    "thumbnail": "/images/portfolio/otu-1753696554992-ghbvct.webp"
   }
 ]

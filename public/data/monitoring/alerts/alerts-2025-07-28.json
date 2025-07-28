@@ -3122,5 +3122,708 @@
       "element": "H1",
       "url": ""
     }
+  },
+  {
+    "id": "perf_1753700824531_doef1cjqn",
+    "timestamp": "2025-07-28T11:07:04.531Z",
+    "metric": "cls",
+    "value": 0.2893694450613266,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/admin/data-manager",
+    "context": {
+      "sources": [
+        {
+          "previousRect": {
+            "x": 0,
+            "y": 8,
+            "width": 1263,
+            "height": 20,
+            "top": 8,
+            "right": 1263,
+            "bottom": 28,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 8,
+            "width": 1263,
+            "height": 20,
+            "top": 8,
+            "right": 1263,
+            "bottom": 28,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 632,
+            "y": 38,
+            "width": 631,
+            "height": 740,
+            "top": 38,
+            "right": 1263,
+            "bottom": 778,
+            "left": 632
+          },
+          "currentRect": {
+            "x": 119,
+            "y": 38,
+            "width": 1025,
+            "height": 740,
+            "top": 38,
+            "right": 1144,
+            "bottom": 778,
+            "left": 119
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 633,
+            "y": 1268,
+            "width": 630,
+            "height": 88,
+            "top": 1268,
+            "right": 1263,
+            "bottom": 1356,
+            "left": 633
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 1268,
+            "width": 1263,
+            "height": 88,
+            "top": 1268,
+            "right": 1263,
+            "bottom": 1356,
+            "left": 0
+          }
+        },
+        {
+          "element": "SPAN",
+          "previousRect": {
+            "x": 399,
+            "y": 553,
+            "width": 9,
+            "height": 17,
+            "top": 553,
+            "right": 408,
+            "bottom": 570,
+            "left": 399
+          },
+          "currentRect": {
+            "x": 314,
+            "y": 553,
+            "width": 81,
+            "height": 17,
+            "top": 553,
+            "right": 395,
+            "bottom": 570,
+            "left": 314
+          }
+        },
+        {
+          "element": "SPAN",
+          "previousRect": {
+            "x": 399,
+            "y": 691,
+            "width": 9,
+            "height": 17,
+            "top": 691,
+            "right": 408,
+            "bottom": 708,
+            "left": 399
+          },
+          "currentRect": {
+            "x": 314,
+            "y": 691,
+            "width": 81,
+            "height": 17,
+            "top": 691,
+            "right": 395,
+            "bottom": 708,
+            "left": 314
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753700841240_p31rtaokr",
+    "timestamp": "2025-07-28T11:07:21.240Z",
+    "metric": "lcp",
+    "value": 11636,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753700901013_i2j8dhmwp",
+    "timestamp": "2025-07-28T11:08:21.013Z",
+    "metric": "cls",
+    "value": 0.7740437493322272,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/all",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 636,
+            "y": 40,
+            "width": 642,
+            "height": 743,
+            "top": 40,
+            "right": 1278,
+            "bottom": 783,
+            "left": 636
+          },
+          "currentRect": {
+            "x": 123,
+            "y": 40,
+            "width": 1028,
+            "height": 756,
+            "top": 40,
+            "right": 1151,
+            "bottom": 796,
+            "left": 123
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 827,
+            "y": 601,
+            "width": 323,
+            "height": 148,
+            "top": 601,
+            "right": 1150,
+            "bottom": 749,
+            "left": 827
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 907,
+            "width": 1278,
+            "height": 89,
+            "top": 907,
+            "right": 1278,
+            "bottom": 996,
+            "left": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753702023596_ckeoalmor",
+    "timestamp": "2025-07-28T11:27:03.596Z",
+    "metric": "lcp",
+    "value": 5336,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702027791_2u4pfzcel",
+    "timestamp": "2025-07-28T11:27:07.791Z",
+    "metric": "lcp",
+    "value": 9372,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702028031_eyliwnu7d",
+    "timestamp": "2025-07-28T11:27:08.031Z",
+    "metric": "lcp",
+    "value": 9520,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702027864_onrbp9ute",
+    "timestamp": "2025-07-28T11:27:07.864Z",
+    "metric": "lcp",
+    "value": 9416,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702027631_dok078pbx",
+    "timestamp": "2025-07-28T11:27:07.631Z",
+    "metric": "lcp",
+    "value": 9060,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702031030_b2y8rf5q4",
+    "timestamp": "2025-07-28T11:27:11.030Z",
+    "metric": "lcp",
+    "value": 12816,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702034363_ei7hadpyn",
+    "timestamp": "2025-07-28T11:27:14.363Z",
+    "metric": "lcp",
+    "value": 6456,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702034067_uprg1vyak",
+    "timestamp": "2025-07-28T11:27:14.067Z",
+    "metric": "lcp",
+    "value": 15860,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702037079_1xenkzlkw",
+    "timestamp": "2025-07-28T11:27:17.079Z",
+    "metric": "lcp",
+    "value": 6112,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702036646_41l7qtmma",
+    "timestamp": "2025-07-28T11:27:16.646Z",
+    "metric": "lcp",
+    "value": 6132,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702039364_z2varbpl8",
+    "timestamp": "2025-07-28T11:27:19.364Z",
+    "metric": "lcp",
+    "value": 5804,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702042897_orn5olnsb",
+    "timestamp": "2025-07-28T11:27:22.897Z",
+    "metric": "lcp",
+    "value": 5732,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702045564_iw4cqx0x9",
+    "timestamp": "2025-07-28T11:27:25.564Z",
+    "metric": "lcp",
+    "value": 6832,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702045479_73avq7c25",
+    "timestamp": "2025-07-28T11:27:25.479Z",
+    "metric": "lcp",
+    "value": 5320,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702045813_3dbqyby5k",
+    "timestamp": "2025-07-28T11:27:25.813Z",
+    "metric": "lcp",
+    "value": 4616,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702048246_o4vbde8tp",
+    "timestamp": "2025-07-28T11:27:28.246Z",
+    "metric": "lcp",
+    "value": 4324,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702047514_nzectjnq8",
+    "timestamp": "2025-07-28T11:27:27.514Z",
+    "metric": "lcp",
+    "value": 5040,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702050931_ari5d2lka",
+    "timestamp": "2025-07-28T11:27:30.931Z",
+    "metric": "lcp",
+    "value": 4952,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702049448_xreu4ldni",
+    "timestamp": "2025-07-28T11:27:29.448Z",
+    "metric": "lcp",
+    "value": 7232,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702050938_7iek9nhbc",
+    "timestamp": "2025-07-28T11:27:30.938Z",
+    "metric": "lcp",
+    "value": 5416,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702060066_0oyyz7qyb",
+    "timestamp": "2025-07-28T11:27:40.066Z",
+    "metric": "lcp",
+    "value": 6244,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/search",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702060786_iz4oc4hzn",
+    "timestamp": "2025-07-28T11:27:40.786Z",
+    "metric": "lcp",
+    "value": 5644,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702067246_03b8rvsb4",
+    "timestamp": "2025-07-28T11:27:47.246Z",
+    "metric": "lcp",
+    "value": 7196,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702068381_jtnwh1zk2",
+    "timestamp": "2025-07-28T11:27:48.381Z",
+    "metric": "lcp",
+    "value": 6868,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702068246_rqmh5xwyn",
+    "timestamp": "2025-07-28T11:27:48.246Z",
+    "metric": "lcp",
+    "value": 6344,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702071462_tt26s7aty",
+    "timestamp": "2025-07-28T11:27:51.462Z",
+    "metric": "lcp",
+    "value": 8528,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/nonexistent-page",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702075762_ly3ekwuct",
+    "timestamp": "2025-07-28T11:27:55.762Z",
+    "metric": "lcp",
+    "value": 6012,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702075635_y37sdtqrq",
+    "timestamp": "2025-07-28T11:27:55.635Z",
+    "metric": "lcp",
+    "value": 5520,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702076796_u1obd1x1k",
+    "timestamp": "2025-07-28T11:27:56.796Z",
+    "metric": "lcp",
+    "value": 5400,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702077495_mbhy074xn",
+    "timestamp": "2025-07-28T11:27:57.495Z",
+    "metric": "lcp",
+    "value": 5620,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702099092_siyxn8mqs",
+    "timestamp": "2025-07-28T11:28:19.092Z",
+    "metric": "lcp",
+    "value": 8485,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702097328_6lqe6waq8",
+    "timestamp": "2025-07-28T11:28:17.328Z",
+    "metric": "lcp",
+    "value": 11652,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702100010_mwkndjk6w",
+    "timestamp": "2025-07-28T11:28:20.010Z",
+    "metric": "lcp",
+    "value": 8207,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702115759_f6omj12df",
+    "timestamp": "2025-07-28T11:28:35.759Z",
+    "metric": "lcp",
+    "value": 9529,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702117694_927xpi7ft",
+    "timestamp": "2025-07-28T11:28:37.694Z",
+    "metric": "lcp",
+    "value": 11180,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702120854_oeoouq1kj",
+    "timestamp": "2025-07-28T11:28:40.854Z",
+    "metric": "lcp",
+    "value": 10706,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753702121767_4djl42yc7",
+    "timestamp": "2025-07-28T11:28:41.767Z",
+    "metric": "lcp",
+    "value": 11144,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
   }
 ]
