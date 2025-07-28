@@ -1,46 +1,109 @@
 [
   {
-    "id": "portfolio-1753615145862",
+    "id": "portfolio-1753697544895",
     "type": "portfolio",
-    "title": "あいうえお",
-    "description": "かきくけこ",
-    "category": "カテゴリー",
-    "tags": ["ああああ"],
-    "status": "published",
-    "priority": 50,
-    "createdAt": "2025-07-27T11:19:05.862Z",
-    "updatedAt": "2025-07-27T11:21:01.953Z",
-    "content": "おえうーえうあーえあーえけい"
-  },
-  {
-    "id": "portfolio-1753614504288",
-    "type": "portfolio",
-    "title": "reel 2024",
-    "description": "2024年に作った映像のまとめです",
-    "category": "AfterEffects",
+    "title": "FlashBeatオープニング",
+    "description": "FlashBeatのオープニング Aeで作りました",
+    "category": "video",
     "tags": ["AfterEffects"],
-    "status": "published",
+    "status": "archived",
     "priority": 50,
-    "createdAt": "2025-07-27T11:08:24.288Z",
-    "updatedAt": "2025-07-27T11:15:20.347Z",
-    "content": "# マークダウン\n## テスト\nテストマークダウン",
-    "images": ["/images/portfolio/--1753614822051-3k30ay.jpg"],
-    "thumbnail": "/images/portfolio/--1753614822051-3k30ay.jpg",
+    "createdAt": "2025-07-28T10:12:24.895Z",
+    "updatedAt": "2025-07-28T10:29:45.032Z",
+    "content": "FlashBeatのオープニング Aeで作りました",
     "videos": [
       {
         "type": "youtube",
-        "url": "https://youtu.be/oqfjwzVYDc8?si=c5ExRsAXmassLp3E",
-        "title": "reel 2024",
-        "description": "説明の追加方法",
-        "thumbnail": "https://img.youtube.com/vi/oqfjwzVYDc8/maxresdefault.jpg"
-      },
+        "url": "https://youtu.be/yr2bwYk0wAk",
+        "title": "FlashBeatオープニング",
+        "description": "FlashBeatのオープニング Aeで作りました",
+        "thumbnail": "https://img.youtube.com/vi/yr2bwYk0wAk/maxresdefault.jpg"
+      }
+    ],
+    "images": ["/images/portfolio/flashopen-1753697697064-xh8h37.png"],
+    "externalLinks": [],
+    "thumbnail": "/images/portfolio/flashopen-1753697697064-xh8h37.png"
+  },
+  {
+    "id": "portfolio-1753697297201",
+    "type": "portfolio",
+    "title": "FlashBeatテーマ曲(BGM)",
+    "description": "自作音ゲーFlashBeatのテーマ曲 作曲しました",
+    "category": "design",
+    "tags": ["Cubase"],
+    "status": "published",
+    "priority": 50,
+    "createdAt": "2025-07-28T10:08:17.201Z",
+    "updatedAt": "2025-07-28T10:11:57.540Z",
+    "content": "自作音ゲーFlashBeatのテーマ曲 作曲しました",
+    "videos": [
       {
         "type": "youtube",
-        "url": "https://youtu.be/X7XddKpTolw?si=v2Bziiv4503VCjYX",
-        "title": "MultiSlicer",
-        "description": "説明の書き方もわからない",
-        "thumbnail": "https://img.youtube.com/vi/X7XddKpTolw/maxresdefault.jpg"
+        "url": "https://youtu.be/9pNjS_Ahfjc",
+        "title": "FlashBeatテーマ曲(BGM)",
+        "description": "自作音ゲーFlashBeatのテーマ曲 作曲しました",
+        "thumbnail": "https://img.youtube.com/vi/9pNjS_Ahfjc/maxresdefault.jpg"
       }
-    ]
+    ],
+    "images": ["/images/portfolio/flashbgm-1753697381549-xlfwvd.png"],
+    "externalLinks": [],
+    "thumbnail": "/images/portfolio/flashbgm-1753697381549-xlfwvd.png"
+  },
+  {
+    "id": "portfolio-1753696188231",
+    "type": "portfolio",
+    "title": "FlashBeat",
+    "description": "U-16プログラミングコンテスト山口大会 技術賞 企業賞 受賞 Unityで作ったゲームです",
+    "category": "develop",
+    "tags": ["Unity"],
+    "status": "published",
+    "priority": 50,
+    "createdAt": "2025-07-28T09:49:48.231Z",
+    "updatedAt": "2025-07-28T10:08:07.718Z",
+    "content": "U-16プログラミングコンテスト山口大会 技術賞 企業賞 受賞 Unityで作ったゲームです",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/D0pItdcPWqE",
+        "title": "FlashBeat",
+        "description": "U-16プログラミングコンテスト山口大会 技術賞 企業賞 受賞 Unityで作ったゲームです",
+        "thumbnail": "https://img.youtube.com/vi/D0pItdcPWqE/maxresdefault.jpg"
+      }
+    ],
+    "images": ["/images/portfolio/flash-1753696619864-g9cm6h.png"],
+    "externalLinks": [
+      {
+        "type": "github",
+        "url": "https://github.com/rebuildup/FlashBeat",
+        "title": "Githubリポジトリ",
+        "description": "リポジトリです"
+      }
+    ],
+    "thumbnail": "/images/portfolio/flash-1753696619864-g9cm6h.png"
+  },
+  {
+    "id": "portfolio-1753695303368",
+    "type": "portfolio",
+    "title": "テストお疲れ様でした アニメーション",
+    "description": "初めてAeで作った映像です",
+    "category": "video",
+    "tags": ["AfterEffects"],
+    "status": "published",
+    "priority": 50,
+    "createdAt": "2025-07-28T09:35:03.368Z",
+    "updatedAt": "2025-07-28T09:56:00.781Z",
+    "content": "初めてAeで作った映像です",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/s5b2M5DF6N4",
+        "title": "テストお疲れ様でしたアニメーション",
+        "description": "初めてAeで作った映像です",
+        "thumbnail": "https://img.youtube.com/vi/s5b2M5DF6N4/maxresdefault.jpg"
+      }
+    ],
+    "images": ["/images/portfolio/otu-1753696554992-ghbvct.png"],
+    "externalLinks": [],
+    "thumbnail": "/images/portfolio/otu-1753696554992-ghbvct.png"
   }
 ]

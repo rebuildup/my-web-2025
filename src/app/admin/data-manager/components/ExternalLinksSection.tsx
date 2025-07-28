@@ -18,6 +18,7 @@ export function ExternalLinksSection({
     title: "",
     description: "",
   });
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const addLink = () => {
     if (newLink.url.trim() && newLink.title.trim()) {
@@ -28,7 +29,18 @@ export function ExternalLinksSection({
         title: "",
         description: "",
       });
+      setShowAddForm(false); // フォームを閉じる
     }
+  };
+
+  const cancelAdd = () => {
+    setNewLink({
+      type: "website",
+      url: "",
+      title: "",
+      description: "",
+    });
+    setShowAddForm(false);
   };
 
   const updateLink = (
@@ -69,96 +81,102 @@ export function ExternalLinksSection({
 
   return (
     <div className="space-y-4">
-      <h3 className="font-medium text-gray-700">External Links</h3>
-
-      {/* Add New Link */}
-      <div className="border border-gray-200 p-4 rounded space-y-3">
-        <h4 className="text-sm font-medium text-gray-700">Add New Link</h4>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div>
-            <label className={labelStyle}>Type</label>
-            <select
-              value={newLink.type}
-              onChange={(e) =>
-                setNewLink((prev) => ({
-                  ...prev,
-                  type: e.target.value as ExternalLink["type"],
-                }))
-              }
-              className={`${inputStyle} bg-background text-foreground`}
-            >
-              <option value="website" className="bg-background text-foreground">
-                Website
-              </option>
-              <option value="github" className="bg-background text-foreground">
-                GitHub
-              </option>
-              <option value="demo" className="bg-background text-foreground">
-                Demo
-              </option>
-              <option value="booth" className="bg-background text-foreground">
-                Booth
-              </option>
-              <option value="other" className="bg-background text-foreground">
-                Other
-              </option>
-            </select>
-          </div>
-
-          <div>
-            <label className={labelStyle}>Title *</label>
-            <input
-              type="text"
-              value={newLink.title}
-              onChange={(e) =>
-                setNewLink((prev) => ({ ...prev, title: e.target.value }))
-              }
-              className={inputStyle}
-              placeholder="Link title"
-              required
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className={labelStyle}>URL *</label>
-          <input
-            type="url"
-            value={newLink.url}
-            onChange={(e) =>
-              setNewLink((prev) => ({ ...prev, url: e.target.value }))
-            }
-            className={inputStyle}
-            placeholder="https://example.com"
-            required
-          />
-        </div>
-
-        <div>
-          <label className={labelStyle}>Description</label>
-          <textarea
-            value={newLink.description || ""}
-            onChange={(e) =>
-              setNewLink((prev) => ({ ...prev, description: e.target.value }))
-            }
-            className={`${inputStyle} h-20 resize-vertical`}
-            placeholder="Optional description"
-            rows={2}
-          />
-        </div>
-
-        <div className="flex justify-end">
+      <div className="flex justify-between items-center">
+        <h3 className="font-medium text-gray-700">External Links</h3>
+        {!showAddForm && (
           <button
             type="button"
-            onClick={addLink}
+            onClick={() => setShowAddForm(true)}
             className={`${buttonStyle} bg-primary text-white border-primary hover:bg-primary-dark`}
-            disabled={!newLink.url.trim() || !newLink.title.trim()}
           >
-            Add Link
+            + Add Link
           </button>
-        </div>
+        )}
       </div>
+
+      {/* Add New Link Form - 条件付きで表示 */}
+      {showAddForm && (
+        <div className="border border-gray-200 p-4 rounded space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Add New Link</h4>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className={labelStyle}>Type</label>
+              <select
+                value={newLink.type}
+                onChange={(e) =>
+                  setNewLink((prev) => ({
+                    ...prev,
+                    type: e.target.value as ExternalLink["type"],
+                  }))
+                }
+                className={inputStyle}
+              >
+                <option value="website">Website</option>
+                <option value="github">GitHub</option>
+                <option value="demo">Demo</option>
+                <option value="booth">Booth</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label className={labelStyle}>Title *</label>
+              <input
+                type="text"
+                value={newLink.title}
+                onChange={(e) =>
+                  setNewLink((prev) => ({ ...prev, title: e.target.value }))
+                }
+                className={inputStyle}
+                placeholder="Link title"
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className={labelStyle}>URL *</label>
+            <input
+              type="url"
+              value={newLink.url}
+              onChange={(e) =>
+                setNewLink((prev) => ({ ...prev, url: e.target.value }))
+              }
+              className={inputStyle}
+              placeholder="https://example.com"
+              autoComplete="off"
+            />
+          </div>
+
+          <div>
+            <label className={labelStyle}>Description</label>
+            <textarea
+              value={newLink.description || ""}
+              onChange={(e) =>
+                setNewLink((prev) => ({ ...prev, description: e.target.value }))
+              }
+              className={`${inputStyle} h-20 resize-vertical`}
+              placeholder="Optional description"
+              rows={2}
+            />
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <button type="button" onClick={cancelAdd} className={buttonStyle}>
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={addLink}
+              className={`${buttonStyle} bg-primary text-white border-primary hover:bg-primary-dark`}
+              disabled={!newLink.url.trim() || !newLink.title.trim()}
+            >
+              Add Link
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Existing Links */}
       {links.length > 0 && (
@@ -182,38 +200,13 @@ export function ExternalLinksSection({
                         onChange={(e) =>
                           updateLink(index, "type", e.target.value)
                         }
-                        className={`${inputStyle} bg-background text-foreground`}
+                        className={inputStyle}
                       >
-                        <option
-                          value="website"
-                          className="bg-background text-foreground"
-                        >
-                          Website
-                        </option>
-                        <option
-                          value="github"
-                          className="bg-background text-foreground"
-                        >
-                          GitHub
-                        </option>
-                        <option
-                          value="demo"
-                          className="bg-background text-foreground"
-                        >
-                          Demo
-                        </option>
-                        <option
-                          value="booth"
-                          className="bg-background text-foreground"
-                        >
-                          Booth
-                        </option>
-                        <option
-                          value="other"
-                          className="bg-background text-foreground"
-                        >
-                          Other
-                        </option>
+                        <option value="website">Website</option>
+                        <option value="github">GitHub</option>
+                        <option value="demo">Demo</option>
+                        <option value="booth">Booth</option>
+                        <option value="other">Other</option>
                       </select>
                     </div>
 
@@ -226,7 +219,6 @@ export function ExternalLinksSection({
                           updateLink(index, "title", e.target.value)
                         }
                         className={inputStyle}
-                        required
                       />
                     </div>
                   </div>
@@ -238,7 +230,6 @@ export function ExternalLinksSection({
                       value={link.url}
                       onChange={(e) => updateLink(index, "url", e.target.value)}
                       className={inputStyle}
-                      required
                     />
                   </div>
 
@@ -298,51 +289,54 @@ export function ExternalLinksSection({
         </div>
       )}
 
-      {/* Quick Add Common Links */}
-      <div className="border border-gray-200 p-4 rounded">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">Quick Add</h4>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {[
-            {
-              type: "github" as const,
-              title: "GitHub Repository",
-              placeholder: "https://github.com/user/repo",
-            },
-            {
-              type: "demo" as const,
-              title: "Live Demo",
-              placeholder: "https://demo.example.com",
-            },
-            {
-              type: "booth" as const,
-              title: "Booth Store",
-              placeholder: "https://booth.pm/ja/items/...",
-            },
-            {
-              type: "website" as const,
-              title: "Website",
-              placeholder: "https://example.com",
-            },
-          ].map((template) => (
-            <button
-              key={template.type}
-              type="button"
-              onClick={() =>
-                setNewLink({
-                  type: template.type,
-                  title: template.title,
-                  url: "",
-                  description: "",
-                })
-              }
-              className={`${buttonStyle} text-center p-2`}
-            >
-              <div className="text-lg mb-1">{getLinkIcon(template.type)}</div>
-              <div className="text-xs">{template.type}</div>
-            </button>
-          ))}
+      {/* Quick Add Common Links - Add Linkフォームが表示されていない時のみ表示 */}
+      {!showAddForm && (
+        <div className="border border-gray-200 p-4 rounded">
+          <h4 className="text-sm font-medium text-gray-700 mb-3">Quick Add</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {[
+              {
+                type: "github" as const,
+                title: "GitHub Repository",
+                placeholder: "https://github.com/user/repo",
+              },
+              {
+                type: "demo" as const,
+                title: "Live Demo",
+                placeholder: "https://demo.example.com",
+              },
+              {
+                type: "booth" as const,
+                title: "Booth Store",
+                placeholder: "https://booth.pm/ja/items/...",
+              },
+              {
+                type: "website" as const,
+                title: "Website",
+                placeholder: "https://example.com",
+              },
+            ].map((template) => (
+              <button
+                key={template.type}
+                type="button"
+                onClick={() => {
+                  setNewLink({
+                    type: template.type,
+                    title: template.title,
+                    url: "",
+                    description: "",
+                  });
+                  setShowAddForm(true);
+                }}
+                className={`${buttonStyle} text-center p-2`}
+              >
+                <div className="text-lg mb-1">{getLinkIcon(template.type)}</div>
+                <div className="text-xs">{template.type}</div>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

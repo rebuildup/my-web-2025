@@ -3,51 +3,18 @@
  * Task 1.2: データ処理パイプラインの構築
  */
 
-import { ContentItem, SearchIndex } from "@/types/content";
+import {
+  ContentItem,
+  SearchIndex,
+  PortfolioCategory,
+  PORTFOLIO_CATEGORIES,
+  isValidPortfolioCategory,
+} from "@/types/content";
+import { PortfolioContentItem, PortfolioStats } from "@/types/portfolio";
 import { testLogger } from "../utils/test-logger";
 
-// Extended Portfolio Content Item type
-export interface PortfolioContentItem extends ContentItem {
-  // Gallery display properties
-  thumbnail: string;
-  aspectRatio?: number;
-  gridSize?: "1x1" | "1x2" | "2x1" | "2x2" | "1x3";
-
-  // Development project properties
-  repository?: {
-    type: "github" | "gitlab" | "bitbucket";
-    url: string;
-    title: string;
-    description?: string;
-  };
-  technologies: string[];
-  projectType?: "web" | "game" | "tool" | "plugin";
-
-  // Video project properties
-  videoType?: "mv" | "lyric" | "animation" | "promotion";
-  client?: string;
-  duration?: number;
-
-  // Playground properties
-  interactive?: boolean;
-  experimentType?: "design" | "webgl";
-  performanceLevel?: "low" | "medium" | "high";
-
-  // Enhanced SEO metadata
-  seo: {
-    title: string;
-    description: string;
-    keywords: string[];
-    ogImage: string;
-    twitterImage: string;
-    canonical: string;
-    structuredData: object;
-  };
-
-  // Search index data
-  searchIndex?: SearchIndex;
-  relatedItems?: string[]; // IDs of related portfolio items
-}
+// Re-export types for backward compatibility
+export type { PortfolioContentItem, PortfolioStats };
 
 // Data validation result
 export interface ValidationResult {
@@ -68,13 +35,7 @@ export interface ValidationWarning {
   suggestion?: string;
 }
 
-// Portfolio statistics
-export interface PortfolioStats {
-  totalProjects: number;
-  categoryCounts: Record<string, number>;
-  technologyCounts: Record<string, number>;
-  lastUpdate: Date;
-}
+// Portfolio statistics interface is now imported from @/types/portfolio
 
 /**
  * Main Portfolio Data Processor Class
@@ -143,8 +104,12 @@ export class PortfolioDataProcessor {
     data: ContentItem[],
   ): Promise<PortfolioContentItem[]> {
     return data.map((item) => {
+      // Normalize category to standard categories
+      const normalizedCategory = this.normalizeCategory(item.category);
+
       const normalized: PortfolioContentItem = {
         ...item,
+        category: normalizedCategory,
         // Ensure required fields
         thumbnail:
           item.thumbnail ||
@@ -154,13 +119,16 @@ export class PortfolioDataProcessor {
 
         // Calculate display properties
         aspectRatio: this.calculateAspectRatio(),
-        gridSize: this.determineGridSize(item.category, item.images),
+        gridSize: this.determineGridSize(normalizedCategory, item.images),
 
         // Set project type based on category and tags
-        projectType: this.determineProjectType(item.category, item.tags || []),
-        videoType: this.determineVideoType(item.category, item.tags || []),
+        projectType: this.determineProjectType(
+          normalizedCategory,
+          item.tags || [],
+        ),
+        videoType: this.determineVideoType(normalizedCategory, item.tags || []),
         experimentType: this.determineExperimentType(
-          item.category,
+          normalizedCategory,
           item.tags || [],
         ),
 
@@ -179,6 +147,69 @@ export class PortfolioDataProcessor {
 
       return normalized;
     });
+  }
+
+  /**
+   * Normalize category to standard portfolio categories
+   */
+  private normalizeCategory(category: string): PortfolioCategory {
+    const categoryLower = category?.toLowerCase() || "";
+
+    // First check if it's already a valid portfolio category
+    if (isValidPortfolioCategory(category)) {
+      return category;
+    }
+
+    // Map various category names to standard categories
+    const categoryMappings: Record<string, PortfolioCategory> = {
+      // Development categories
+      develop: PORTFOLIO_CATEGORIES.DEVELOP,
+      development: PORTFOLIO_CATEGORIES.DEVELOP,
+      programming: PORTFOLIO_CATEGORIES.DEVELOP,
+      coding: PORTFOLIO_CATEGORIES.DEVELOP,
+      web: PORTFOLIO_CATEGORIES.DEVELOP,
+      app: PORTFOLIO_CATEGORIES.DEVELOP,
+      software: PORTFOLIO_CATEGORIES.DEVELOP,
+      game: PORTFOLIO_CATEGORIES.DEVELOP,
+      unity: PORTFOLIO_CATEGORIES.DEVELOP,
+
+      // Video categories
+      video: PORTFOLIO_CATEGORIES.VIDEO,
+      aftereffects: PORTFOLIO_CATEGORIES.VIDEO,
+      "after effects": PORTFOLIO_CATEGORIES.VIDEO,
+      motion: PORTFOLIO_CATEGORIES.VIDEO,
+      animation: PORTFOLIO_CATEGORIES.VIDEO,
+      movie: PORTFOLIO_CATEGORIES.VIDEO,
+      film: PORTFOLIO_CATEGORIES.VIDEO,
+
+      // Design categories
+      design: PORTFOLIO_CATEGORIES.DESIGN,
+      graphic: PORTFOLIO_CATEGORIES.DESIGN,
+      ui: PORTFOLIO_CATEGORIES.DESIGN,
+      ux: PORTFOLIO_CATEGORIES.DESIGN,
+      branding: PORTFOLIO_CATEGORIES.DESIGN,
+      logo: PORTFOLIO_CATEGORIES.DESIGN,
+      visual: PORTFOLIO_CATEGORIES.DESIGN,
+      identity: PORTFOLIO_CATEGORIES.DESIGN,
+    };
+
+    // Check for exact matches first
+    if (categoryMappings[categoryLower]) {
+      return categoryMappings[categoryLower];
+    }
+
+    // Check for partial matches
+    for (const [key, value] of Object.entries(categoryMappings)) {
+      if (categoryLower.includes(key) || key.includes(categoryLower)) {
+        return value;
+      }
+    }
+
+    // Default to 'develop' if no match found
+    testLogger.warn(
+      `Unknown category "${category}", defaulting to "${PORTFOLIO_CATEGORIES.DEVELOP}"`,
+    );
+    return PORTFOLIO_CATEGORIES.DEVELOP;
   }
 
   /**

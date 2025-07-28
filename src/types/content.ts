@@ -13,12 +13,18 @@ export type ContentType =
   | "asset"
   | "download";
 
+// Portfolio specific category types
+export type PortfolioCategory = "develop" | "video" | "design";
+
+// General category type that can be extended for different content types
+export type CategoryType = PortfolioCategory | string;
+
 export interface ContentItem {
   id: string;
   type: ContentType;
   title: string;
   description: string;
-  category: string;
+  category: CategoryType;
   tags: string[];
   status: "published" | "draft" | "archived" | "scheduled";
   priority: number; // 0-100
@@ -121,3 +127,33 @@ export interface StatData {
   searches: Record<string, number>;
   lastUpdated: string;
 }
+
+// Portfolio category constants and helpers
+export const PORTFOLIO_CATEGORIES = {
+  DEVELOP: "develop" as const,
+  VIDEO: "video" as const,
+  DESIGN: "design" as const,
+} as const;
+
+export const PORTFOLIO_CATEGORY_LABELS = {
+  [PORTFOLIO_CATEGORIES.DEVELOP]: "Development",
+  [PORTFOLIO_CATEGORIES.VIDEO]: "Video",
+  [PORTFOLIO_CATEGORIES.DESIGN]: "Design",
+} as const;
+
+// Helper function to check if a category is a valid portfolio category
+export const isValidPortfolioCategory = (
+  category: string,
+): category is PortfolioCategory => {
+  return Object.values(PORTFOLIO_CATEGORIES).includes(
+    category as PortfolioCategory,
+  );
+};
+
+// Helper function to get portfolio category options for forms
+export const getPortfolioCategoryOptions = () => {
+  return Object.entries(PORTFOLIO_CATEGORY_LABELS).map(([value, label]) => ({
+    value,
+    label,
+  }));
+};

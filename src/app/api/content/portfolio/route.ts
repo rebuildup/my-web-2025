@@ -1,88 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
+import { promises as fs } from "fs";
+import path from "path";
+import { ContentItem } from "@/types/content";
 
-// テスト用のポートフォリオデータ
-const portfolioData = [
-  {
-    id: "portfolio-1753615145862",
-    type: "portfolio",
-    title: "React Dashboard Application",
-    description: "モダンなReactダッシュボードアプリケーションの開発",
-    category: "develop",
-    tags: ["React", "TypeScript", "Tailwind CSS", "Next.js"],
-    thumbnail: "/images/portfolio/--1753614822051-3k30ay-optimized.jpg",
-    images: ["/images/portfolio/--1753614822051-3k30ay-optimized.jpg"],
-    status: "published",
-    priority: 80,
-    createdAt: "2024-12-01T00:00:00Z",
-    updatedAt: "2024-12-01T00:00:00Z",
-    publishedAt: "2024-12-01T00:00:00Z",
-    content: "詳細なプロジェクト説明...",
-  },
-  {
-    id: "portfolio-1753615145863",
-    type: "portfolio",
-    title: "Unity Game Development",
-    description: "3Dアクションゲームの開発とリリース",
-    category: "develop",
-    tags: ["Unity", "C#", "3D", "Game Development"],
-    thumbnail: "/images/portfolio/blob-1753614822486-vqggc8-optimized.jpg",
-    images: ["/images/portfolio/blob-1753614822486-vqggc8-optimized.jpg"],
-    status: "published",
-    priority: 75,
-    createdAt: "2024-11-15T00:00:00Z",
-    updatedAt: "2024-11-15T00:00:00Z",
-    publishedAt: "2024-11-15T00:00:00Z",
-    content: "詳細なプロジェクト説明...",
-  },
-  {
-    id: "portfolio-1753615145864",
-    type: "portfolio",
-    title: "Motion Graphics Video",
-    description: "企業プロモーション用モーショングラフィックス",
-    category: "video",
-    tags: ["After Effects", "Motion Graphics", "Animation"],
-    thumbnail: "/images/portfolio/--1753614822051-3k30ay-optimized.jpg",
-    images: ["/images/portfolio/--1753614822051-3k30ay-optimized.jpg"],
-    status: "published",
-    priority: 70,
-    createdAt: "2024-10-20T00:00:00Z",
-    updatedAt: "2024-10-20T00:00:00Z",
-    publishedAt: "2024-10-20T00:00:00Z",
-    content: "詳細なプロジェクト説明...",
-  },
-  {
-    id: "portfolio-1753615145865",
-    type: "portfolio",
-    title: "Brand Identity Design",
-    description: "スタートアップ企業のブランドアイデンティティデザイン",
-    category: "design",
-    tags: ["Branding", "Logo Design", "Visual Identity"],
-    thumbnail: "/images/portfolio/blob-1753614822486-vqggc8-optimized.jpg",
-    images: ["/images/portfolio/blob-1753614822486-vqggc8-optimized.jpg"],
-    status: "published",
-    priority: 65,
-    createdAt: "2024-09-10T00:00:00Z",
-    updatedAt: "2024-09-10T00:00:00Z",
-    publishedAt: "2024-09-10T00:00:00Z",
-    content: "詳細なプロジェクト説明...",
-  },
-  {
-    id: "portfolio-1753615145866",
-    type: "portfolio",
-    title: "E-commerce Platform",
-    description: "フルスタックECサイトの開発",
-    category: "develop",
-    tags: ["Next.js", "Node.js", "PostgreSQL", "Stripe"],
-    thumbnail: "/images/portfolio/--1753614822051-3k30ay-optimized.jpg",
-    images: ["/images/portfolio/--1753614822051-3k30ay-optimized.jpg"],
-    status: "published",
-    priority: 85,
-    createdAt: "2024-08-05T00:00:00Z",
-    updatedAt: "2024-08-05T00:00:00Z",
-    publishedAt: "2024-08-05T00:00:00Z",
-    content: "詳細なプロジェクト説明...",
-  },
-];
+// Read portfolio data from file
+async function readPortfolioData(): Promise<ContentItem[]> {
+  try {
+    const filePath = path.join(
+      process.cwd(),
+      "public",
+      "data",
+      "content",
+      "portfolio.json",
+    );
+    const fileContent = await fs.readFile(filePath, "utf-8");
+    const data = JSON.parse(fileContent);
+    console.log(`Loaded ${data.length} portfolio items from file`);
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error("Error reading portfolio data:", error);
+    return [];
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -92,16 +31,30 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get("category");
     const id = searchParams.get("id");
 
+    // Read data from file
+    const portfolioData = await readPortfolioData();
     let filteredData = [...portfolioData];
 
     // IDで特定のアイテムを取得
     if (id) {
       const item = filteredData.find((item) => item.id === id);
       if (item) {
-        return NextResponse.json({
+        const response = NextResponse.json({
           success: true,
           data: item,
         });
+
+        // キャッシュ制御ヘッダーを追加（開発環境では無効化）
+        if (process.env.NODE_ENV === "development") {
+          response.headers.set(
+            "Cache-Control",
+            "no-store, no-cache, must-revalidate",
+          );
+          response.headers.set("Pragma", "no-cache");
+          response.headers.set("Expires", "0");
+        }
+
+        return response;
       } else {
         return NextResponse.json(
           { success: false, error: "Portfolio item not found" },
@@ -113,6 +66,9 @@ export async function GET(request: NextRequest) {
     // ステータスフィルター
     if (status) {
       filteredData = filteredData.filter((item) => item.status === status);
+    } else {
+      // デフォルトでは published のみを表示（ギャラリー用）
+      filteredData = filteredData.filter((item) => item.status === "published");
     }
 
     // カテゴリフィルター
@@ -123,7 +79,8 @@ export async function GET(request: NextRequest) {
     // 日付順でソート（新しい順）
     filteredData.sort(
       (a, b) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+        new Date(b.updatedAt || b.createdAt).getTime() -
+        new Date(a.updatedAt || a.createdAt).getTime(),
     );
 
     // リミット適用
@@ -131,11 +88,23 @@ export async function GET(request: NextRequest) {
       filteredData = filteredData.slice(0, limit);
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       data: filteredData,
       total: filteredData.length,
     });
+
+    // キャッシュ制御ヘッダーを追加（開発環境では無効化）
+    if (process.env.NODE_ENV === "development") {
+      response.headers.set(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate",
+      );
+      response.headers.set("Pragma", "no-cache");
+      response.headers.set("Expires", "0");
+    }
+
+    return response;
   } catch (error) {
     console.error("Portfolio API error:", error);
     return NextResponse.json(

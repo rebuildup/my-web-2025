@@ -21,9 +21,11 @@ export default function DataManagerPage() {
     useState<ContentType>("portfolio");
   const [contentItems, setContentItems] = useState<ContentItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
-  const [, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [previewMode, setPreviewMode] = useState<"form" | "preview">("form");
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "success" | "error"
+  >("idle");
 
   // Load content items for selected type
   useEffect(() => {
@@ -33,14 +35,29 @@ export default function DataManagerPage() {
   const loadContentItems = async (type: ContentType) => {
     setIsLoading(true);
     try {
-      // 管理画面では全てのステータスのアイテムを表示
-      const response = await fetch(`/api/content/${type}?limit=100`);
+      console.log(`Loading content items for type: ${type}`);
+      // キャッシュを回避するためにタイムスタンプを追加
+      const timestamp = Date.now();
+      const response = await fetch(
+        `/api/content/${type}?limit=100&_t=${timestamp}`,
+        {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache",
+          },
+        },
+      );
+      console.log(`Response status: ${response.status}`);
+
       if (response.ok) {
         const result = await response.json();
+        console.log(`Loaded content:`, result);
         // APIは { data: ContentItem[] } の形式で返すので、dataプロパティを取得
-        setContentItems(result.data || []);
+        const items = result.data || [];
+        console.log(`Setting ${items.length} items`);
+        setContentItems(items);
       } else {
-        console.error("Failed to load content items");
+        console.error("Failed to load content items", response.status);
         setContentItems([]);
       }
     } catch (error) {
@@ -59,24 +76,27 @@ export default function DataManagerPage() {
       description: "",
       category: "",
       tags: [],
-      status: "draft",
+      status: "published",
       priority: 50,
       createdAt: new Date().toISOString(),
     };
     setSelectedItem(newItem);
-    setIsEditing(true);
     setPreviewMode("form");
   };
 
   const handleEditItem = (item: ContentItem) => {
     setSelectedItem(item);
-    setIsEditing(true);
     setPreviewMode("form");
   };
 
   const handleSaveItem = async (item: ContentItem) => {
     setIsLoading(true);
+    setSaveStatus("saving");
+
     try {
+      console.log("=== Saving item ===");
+      console.log("Item data:", JSON.stringify(item, null, 2));
+
       const response = await fetch(`/api/admin/content`, {
         method: "POST",
         headers: {
@@ -85,15 +105,47 @@ export default function DataManagerPage() {
         body: JSON.stringify(item),
       });
 
+      console.log("Response status:", response.status);
+      console.log(
+        "Response headers:",
+        Object.fromEntries(response.headers.entries()),
+      );
+
+      const result = await response.json();
+      console.log("Save response:", JSON.stringify(result, null, 2));
+
       if (response.ok) {
+        console.log("Save successful!");
+        setSaveStatus("success");
+
+        // 保存されたアイテムでselectedItemを更新
+        const savedItem = result.data || item;
+        setSelectedItem(savedItem);
+
+        // データを即座に再読み込み
+        console.log("Reloading content items...");
         await loadContentItems(selectedContentType);
-        setIsEditing(false);
-        setSelectedItem(null);
+
+        // リストの中で更新されたアイテムを選択状態に保つ
+        setSelectedItem(savedItem);
+
+        // 成功メッセージを3秒後にリセット
+        setTimeout(() => setSaveStatus("idle"), 3000);
       } else {
-        console.error("Failed to save item");
+        console.error("Failed to save item:", result);
+        setSaveStatus("error");
+        alert(
+          `Failed to save item: ${result.error || "Unknown error"}\nDetails: ${result.details || "No details"}`,
+        );
+        setTimeout(() => setSaveStatus("idle"), 3000);
       }
     } catch (error) {
       console.error("Error saving item:", error);
+      setSaveStatus("error");
+      alert(
+        `Error saving item: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+      setTimeout(() => setSaveStatus("idle"), 3000);
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +169,6 @@ export default function DataManagerPage() {
         await loadContentItems(selectedContentType);
         if (selectedItem?.id === id) {
           setSelectedItem(null);
-          setIsEditing(false);
         }
       } else {
         console.error("Failed to delete item");
@@ -131,7 +182,6 @@ export default function DataManagerPage() {
 
   const handleCancel = () => {
     setSelectedItem(null);
-    setIsEditing(false);
     setPreviewMode("form");
   };
 
@@ -225,28 +275,51 @@ export default function DataManagerPage() {
               <div className="lg:col-span-2">
                 {selectedItem ? (
                   <div className="space-y-4">
-                    {/* Form/Preview Toggle */}
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setPreviewMode("form")}
-                        className={
-                          previewMode === "form"
-                            ? ActiveButtonStyle
-                            : ButtonStyle
-                        }
-                      >
-                        Edit Form
-                      </button>
-                      <button
-                        onClick={() => setPreviewMode("preview")}
-                        className={
-                          previewMode === "preview"
-                            ? ActiveButtonStyle
-                            : ButtonStyle
-                        }
-                      >
-                        Preview
-                      </button>
+                    {/* Form/Preview Toggle and Status */}
+                    <div className="flex justify-between items-center">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setPreviewMode("form")}
+                          className={
+                            previewMode === "form"
+                              ? ActiveButtonStyle
+                              : ButtonStyle
+                          }
+                        >
+                          Edit Form
+                        </button>
+                        <button
+                          onClick={() => setPreviewMode("preview")}
+                          className={
+                            previewMode === "preview"
+                              ? ActiveButtonStyle
+                              : ButtonStyle
+                          }
+                        >
+                          Preview
+                        </button>
+                      </div>
+
+                      {/* Save Status */}
+                      {saveStatus !== "idle" && (
+                        <div className="flex items-center gap-2">
+                          {saveStatus === "saving" && (
+                            <span className="text-blue-600 text-sm">
+                              Saving...
+                            </span>
+                          )}
+                          {saveStatus === "success" && (
+                            <span className="text-green-600 text-sm">
+                              ✓ Saved
+                            </span>
+                          )}
+                          {saveStatus === "error" && (
+                            <span className="text-red-600 text-sm">
+                              ✗ Error
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     {/* Content */}
@@ -257,6 +330,7 @@ export default function DataManagerPage() {
                           onSave={handleSaveItem}
                           onCancel={handleCancel}
                           isLoading={isLoading}
+                          saveStatus={saveStatus}
                         />
                       ) : (
                         <PreviewPanel

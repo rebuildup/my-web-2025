@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentItem } from "@/types/content";
+import { ContentItem, MediaEmbed, ExternalLink } from "@/types/content";
 import { useState } from "react";
 
 interface PreviewPanelProps {
@@ -12,6 +12,162 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
   const [previewMode, setPreviewMode] = useState<
     "desktop" | "tablet" | "mobile"
   >("desktop");
+  const [showVideoEmbeds, setShowVideoEmbeds] = useState<boolean>(true);
+  const [individualVideoStates, setIndividualVideoStates] = useState<
+    Record<number, boolean>
+  >({});
+
+  // YouTube動画IDを抽出する関数
+  const extractYouTubeId = (url: string): string | null => {
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+      /youtube\.com\/watch\?.*v=([^&\n?#]+)/,
+    ];
+
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match) return match[1];
+    }
+    return null;
+  };
+
+  // Vimeo動画IDを抽出する関数
+  const extractVimeoId = (url: string): string | null => {
+    const match = url.match(/vimeo\.com\/(?:.*\/)?(\d+)/);
+    return match ? match[1] : null;
+  };
+
+  // 個別の動画表示状態を取得する関数
+  const isVideoVisible = (index: number): boolean => {
+    return showVideoEmbeds && individualVideoStates[index] !== false;
+  };
+
+  // 個別の動画表示状態を切り替える関数
+  const toggleIndividualVideo = (index: number) => {
+    setIndividualVideoStates((prev) => ({
+      ...prev,
+      [index]: !isVideoVisible(index),
+    }));
+  };
+
+  // 動画のサムネイル画像を取得する関数
+  const getVideoThumbnail = (video: MediaEmbed): string | null => {
+    if (video.thumbnail) return video.thumbnail;
+
+    switch (video.type) {
+      case "youtube": {
+        const videoId = extractYouTubeId(video.url);
+        return videoId
+          ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+          : null;
+      }
+      case "vimeo": {
+        // Vimeoのサムネイルは別途APIが必要なので、デフォルトを返す
+        return null;
+      }
+      default:
+        return null;
+    }
+  };
+
+  // 動画の埋め込みコンポーネントを生成する関数
+  const renderVideoEmbed = (video: MediaEmbed, index: number) => {
+    const aspectRatio = "aspect-video"; // 16:9のアスペクト比
+
+    switch (video.type) {
+      case "youtube": {
+        const videoId = extractYouTubeId(video.url);
+        if (!videoId) {
+          return (
+            <div className="bg-red-50 border border-red-200 p-4 rounded">
+              <p className="text-red-600 text-sm">
+                Invalid YouTube URL: {video.url}
+              </p>
+            </div>
+          );
+        }
+
+        return (
+          <div className={`${aspectRatio} bg-black rounded overflow-hidden`}>
+            <iframe
+              src={`https://www.youtube.com/embed/${videoId}`}
+              title={video.title || `YouTube Video ${index + 1}`}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+        );
+      }
+
+      case "vimeo": {
+        const videoId = extractVimeoId(video.url);
+        if (!videoId) {
+          return (
+            <div className="bg-red-50 border border-red-200 p-4 rounded">
+              <p className="text-red-600 text-sm">
+                Invalid Vimeo URL: {video.url}
+              </p>
+            </div>
+          );
+        }
+
+        return (
+          <div className={`${aspectRatio} bg-black rounded overflow-hidden`}>
+            <iframe
+              src={`https://player.vimeo.com/video/${videoId}`}
+              title={video.title || `Vimeo Video ${index + 1}`}
+              className="w-full h-full"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+        );
+      }
+
+      case "iframe": {
+        return (
+          <div className={`${aspectRatio} bg-gray-100 rounded overflow-hidden`}>
+            <iframe
+              src={video.url}
+              title={video.title || `Embedded Content ${index + 1}`}
+              className="w-full h-full"
+              sandbox="allow-scripts allow-same-origin allow-presentation"
+              loading="lazy"
+            />
+          </div>
+        );
+      }
+
+      default: {
+        return (
+          <div className="bg-gray-50 border border-gray-200 p-4 rounded">
+            <div className="flex justify-between items-start mb-2">
+              <span className="font-medium text-sm">
+                {video.title || "Untitled Video"}
+              </span>
+              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                {video.type}
+              </span>
+            </div>
+            <a
+              href={video.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-blue-600 hover:underline block mb-2"
+            >
+              {video.url}
+            </a>
+            {video.description && (
+              <p className="text-xs text-gray-600">{video.description}</p>
+            )}
+          </div>
+        );
+      }
+    }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("ja-JP", {
@@ -202,27 +358,124 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
             {/* Videos */}
             {item.videos && item.videos.length > 0 && (
               <div>
-                <h3 className="font-medium text-gray-700 mb-2">Videos</h3>
-                <div className="space-y-2">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-medium text-gray-700">Videos</h3>
+                  <button
+                    onClick={() => setShowVideoEmbeds(!showVideoEmbeds)}
+                    className="text-xs text-blue-600 hover:text-blue-800 px-2 py-1 border border-blue-200 rounded hover:bg-blue-50 transition-colors"
+                  >
+                    {showVideoEmbeds ? "Hide Embeds" : "Show Embeds"}
+                  </button>
+                </div>
+                <div className="space-y-6">
                   {item.videos.map((video, index) => (
                     <div
                       key={index}
-                      className="border border-gray-200 p-3 rounded"
+                      className="border border-gray-200 rounded-lg p-4 space-y-3"
                     >
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="font-medium text-sm">
-                          {video.title || "Untitled Video"}
-                        </span>
-                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                          {video.type}
-                        </span>
+                      {/* Video Header */}
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm text-gray-800 mb-1">
+                            {video.title || `Video ${index + 1}`}
+                          </h4>
+                          {video.description && (
+                            <p className="text-xs text-gray-600 mb-2">
+                              {video.description}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 ml-4">
+                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                            {video.type}
+                          </span>
+                          <a
+                            href={video.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:text-blue-800 px-2 py-1 border border-blue-200 rounded hover:bg-blue-50 transition-colors"
+                            title="Open in new tab"
+                          >
+                            ↗
+                          </a>
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-600 mb-2">{video.url}</p>
-                      {video.description && (
-                        <p className="text-xs text-gray-600">
-                          {video.description}
-                        </p>
-                      )}
+
+                      {/* Video Embed */}
+                      <div className="relative">
+                        {isVideoVisible(index) ? (
+                          renderVideoEmbed(video, index)
+                        ) : (
+                          <div
+                            className="aspect-video bg-gray-100 border border-gray-200 rounded overflow-hidden relative group cursor-pointer"
+                            onClick={() => toggleIndividualVideo(index)}
+                          >
+                            {getVideoThumbnail(video) ? (
+                              <div className="relative w-full h-full">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={getVideoThumbnail(video)!}
+                                  alt={video.title || "Video thumbnail"}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    (
+                                      e.target as HTMLImageElement
+                                    ).style.display = "none";
+                                  }}
+                                />
+                                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                                  <div className="text-white text-center">
+                                    <svg
+                                      className="w-16 h-16 mx-auto mb-2"
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                        clipRule="evenodd"
+                                      />
+                                    </svg>
+                                    <p className="text-sm font-medium">
+                                      Click to load embed
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center justify-center h-full">
+                                <div className="text-center">
+                                  <div className="text-gray-400 mb-2">
+                                    <svg
+                                      className="w-12 h-12 mx-auto"
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                        clipRule="evenodd"
+                                      />
+                                    </svg>
+                                  </div>
+                                  <p className="text-xs text-gray-500 mb-1">
+                                    Video embed hidden
+                                  </p>
+                                  <p className="text-xs text-blue-600 hover:underline">
+                                    Click to show embed
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Video URL */}
+                      <div className="text-xs text-gray-500 truncate">
+                        <span className="font-medium">URL: </span>
+                        <span>{video.url}</span>
+                      </div>
                     </div>
                   ))}
                 </div>

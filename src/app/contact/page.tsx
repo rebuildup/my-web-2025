@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
   Loader2,
   CheckCircle,
@@ -86,54 +86,58 @@ export default function ContactPage() {
   const formRef = useRef<HTMLFormElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Multilingual messages
-  const messages: FormMessages = {
-    en: {
-      nameRequired: "Name is required",
-      nameMinLength: "Name must be at least {min} characters",
-      nameMaxLength: "Name must be less than {max} characters",
-      emailRequired: "Email is required",
-      emailInvalid: "Please enter a valid email address",
-      subjectRequired: "Subject is required",
-      subjectMinLength: "Subject must be at least {min} characters",
-      subjectMaxLength: "Subject must be less than {max} characters",
-      messageRequired: "Message is required",
-      messageMinLength: "Message must be at least {min} characters",
-      messageMaxLength: "Message must be less than {max} characters",
-      formSaved: "Form data saved locally",
-      formRestored: "Form data restored from previous session",
-      confirmSubmission: "Are you sure you want to send this message?",
-      submissionSuccess: "Your message has been sent successfully!",
-      submissionError: "Failed to send message. Please try again.",
-      networkError:
-        "Network error. Please check your connection and try again.",
-      spamDetected: "Message appears to be spam and cannot be sent",
-      recaptchaFailed: "reCAPTCHA verification failed. Please try again.",
-    },
-    ja: {
-      nameRequired: "お名前は必須です",
-      nameMinLength: "お名前は{min}文字以上で入力してください",
-      nameMaxLength: "お名前は{max}文字以内で入力してください",
-      emailRequired: "メールアドレスは必須です",
-      emailInvalid: "有効なメールアドレスを入力してください",
-      subjectRequired: "件名は必須です",
-      subjectMinLength: "件名は{min}文字以上で入力してください",
-      subjectMaxLength: "件名は{max}文字以内で入力してください",
-      messageRequired: "メッセージは必須です",
-      messageMinLength: "メッセージは{min}文字以上で入力してください",
-      messageMaxLength: "メッセージは{max}文字以内で入力してください",
-      formSaved: "フォームデータをローカルに保存しました",
-      formRestored: "前回のセッションからフォームデータを復元しました",
-      confirmSubmission: "このメッセージを送信してもよろしいですか？",
-      submissionSuccess: "メッセージが正常に送信されました！",
-      submissionError:
-        "メッセージの送信に失敗しました。もう一度お試しください。",
-      networkError:
-        "ネットワークエラーです。接続を確認してもう一度お試しください。",
-      spamDetected: "スパムメッセージと判定されたため送信できません",
-      recaptchaFailed: "reCAPTCHA認証に失敗しました。もう一度お試しください。",
-    },
-  };
+  // Multilingual messages - using useMemo to avoid dependency issues
+  const messages: FormMessages = useMemo(
+    () => ({
+      en: {
+        nameRequired: "Name is required",
+        nameMinLength: "Name must be at least {min} characters",
+        nameMaxLength: "Name must be less than {max} characters",
+        emailRequired: "Email is required",
+        emailInvalid: "Please enter a valid email address",
+        subjectRequired: "Subject is required",
+        subjectMinLength: "Subject must be at least {min} characters",
+        subjectMaxLength: "Subject must be less than {max} characters",
+        messageRequired: "Message is required",
+        messageMinLength: "Message must be at least {min} characters",
+        messageMaxLength: "Message must be less than {max} characters",
+        formSaved: "Form data saved locally",
+        formRestored: "Form data restored from previous session",
+        confirmSubmission: "Are you sure you want to send this message?",
+        submissionSuccess: "Your message has been sent successfully!",
+        submissionError: "Failed to send message. Please try again.",
+        networkError:
+          "Network error. Please check your connection and try again.",
+        spamDetected: "Message appears to be spam and cannot be sent",
+        recaptchaFailed: "reCAPTCHA verification failed. Please try again.",
+      },
+      ja: {
+        nameRequired: "お名前は必須です",
+        nameMinLength: "お名前は{min}文字以上で入力してください",
+        nameMaxLength: "お名前は{max}文字以内で入力してください",
+        emailRequired: "メールアドレスは必須です",
+        emailInvalid: "有効なメールアドレスを入力してください",
+        subjectRequired: "件名は必須です",
+        subjectMinLength: "件名は{min}文字以上で入力してください",
+        subjectMaxLength: "件名は{max}文字以内で入力してください",
+        messageRequired: "メッセージは必須です",
+        messageMinLength: "メッセージは{min}文字以上で入力してください",
+        messageMaxLength: "メッセージは{max}文字以内で入力してください",
+        formSaved: "フォームデータをローカルに保存しました",
+        formRestored: "前回のセッションからフォームデータを復元しました",
+        confirmSubmission: "このメッセージを送信してもよろしいですか？",
+        submissionSuccess: "メッセージが正常に送信されました！",
+        submissionError:
+          "メッセージの送信に失敗しました。もう一度お試しください。",
+        networkError:
+          "ネットワークエラーです。接続を確認してもう一度お試しください。",
+        spamDetected: "スパムメッセージと判定されたため送信できません",
+        recaptchaFailed:
+          "reCAPTCHA認証に失敗しました。もう一度お試しください。",
+      },
+    }),
+    [],
+  );
 
   // Get localized message
   const getMessage = useCallback(

@@ -1,125 +1,163 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { Code, Video, Palette, Eye, Calendar } from "lucide-react";
+import {
+  Code,
+  Video,
+  Palette,
+  Eye,
+  Calendar,
+  TrendingUp,
+  Clock,
+  Star,
+} from "lucide-react";
 import { PortfolioAnalytics, GoogleAnalytics } from "./components";
 import { Suspense } from "react";
 import { ContentItem } from "@/types/content";
+import { portfolioDataManager } from "@/lib/portfolio/data-manager";
+import { PortfolioIntegrationManager } from "@/lib/portfolio";
+import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 
-export const metadata: Metadata = {
-  title: "Portfolio - samuido | 作品集・開発・映像・デザイン",
-  description:
-    "samuidoの作品集。Web開発、ゲーム開発、映像制作、デザインなど幅広いクリエイティブ作品を紹介。技術スタックと制作プロセスも掲載。",
-  keywords: [
-    "ポートフォリオ",
-    "作品集",
-    "Web開発",
-    "ゲーム開発",
-    "映像制作",
-    "デザイン",
-    "React",
-    "Unity",
-    "AfterEffects",
-  ],
-  robots: "index, follow",
-  alternates: {
-    canonical: "https://yusuke-kim.com/portfolio",
-  },
-  openGraph: {
-    title: "Portfolio - samuido | 作品集・開発・映像・デザイン",
-    description:
-      "samuidoの作品集。Web開発、ゲーム開発、映像制作、デザインなど幅広いクリエイティブ作品を紹介。技術スタックと制作プロセスも掲載。",
-    type: "website",
-    url: "https://yusuke-kim.com/portfolio",
-    images: [
-      {
-        url: "https://yusuke-kim.com/portfolio-og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Portfolio - samuido",
-      },
-    ],
-    siteName: "samuido",
-    locale: "ja_JP",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Portfolio - samuido | 作品集・開発・映像・デザイン",
-    description:
-      "samuidoの作品集。Web開発、ゲーム開発、映像制作、デザインなど幅広いクリエイティブ作品を紹介。技術スタックと制作プロセスも掲載。",
-    images: ["https://yusuke-kim.com/portfolio-twitter-image.jpg"],
-    creator: "@361do_sleep",
-  },
-};
-
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "CreativeWork",
-  name: "samuido Portfolio",
-  description: "Web開発、ゲーム開発、映像制作、デザインの作品集",
-  url: "https://yusuke-kim.com/portfolio",
-  creator: {
-    "@type": "Person",
-    name: "木村友亮",
-    alternateName: "samuido",
-  },
-  genre: ["Web Development", "Game Development", "Video Production", "Design"],
-  workExample: [
-    {
-      "@type": "SoftwareApplication",
-      name: "Web開発プロジェクト",
-      applicationCategory: "WebApplication",
-    },
-    {
-      "@type": "VideoObject",
-      name: "映像制作作品",
-      genre: "Motion Graphics",
-    },
-    {
-      "@type": "Game",
-      name: "ゲーム開発作品",
-      genre: "Interactive",
-    },
-  ],
-};
-
-// データ取得関数
-async function getPortfolioData(): Promise<ContentItem[]> {
+// Generate dynamic metadata using SEO metadata generator
+export async function generateMetadata(): Promise<Metadata> {
   try {
-    // Skip API calls during build if no base URL is set
-    if (
-      !process.env.NEXT_PUBLIC_BASE_URL &&
-      process.env.NODE_ENV === "production"
-    ) {
-      return [];
-    }
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/portfolio?status=published&limit=100`,
-      {
-        next: { revalidate: 3600 }, // 1時間キャッシュ
-      },
+    const seoGenerator = new PortfolioSEOMetadataGenerator(
+      portfolioDataManager,
     );
-
-    if (!response.ok) {
-      console.error("Failed to fetch portfolio data:", response.status);
-      return [];
-    }
-
-    const data = await response.json();
-    return data.data || [];
+    const { metadata } = await seoGenerator.generatePortfolioTopMetadata();
+    return metadata;
   } catch (error) {
-    console.error("Error fetching portfolio data:", error);
-    return [];
+    console.error("Error generating portfolio metadata:", error);
+    // Fallback metadata
+    return {
+      title: "Portfolio - samuido | 作品集・開発・映像・デザイン",
+      description:
+        "samuidoの作品集。Web開発、ゲーム開発、映像制作、デザインなど幅広いクリエイティブ作品を紹介。技術スタックと制作プロセスも掲載。",
+      keywords: [
+        "ポートフォリオ",
+        "作品集",
+        "Web開発",
+        "ゲーム開発",
+        "映像制作",
+        "デザイン",
+        "React",
+        "Unity",
+        "AfterEffects",
+      ],
+      robots: "index, follow",
+      alternates: {
+        canonical: "https://yusuke-kim.com/portfolio",
+      },
+      openGraph: {
+        title: "Portfolio - samuido | 作品集・開発・映像・デザイン",
+        description:
+          "samuidoの作品集。Web開発、ゲーム開発、映像制作、デザインなど幅広いクリエイティブ作品を紹介。技術スタックと制作プロセスも掲載。",
+        type: "website",
+        url: "https://yusuke-kim.com/portfolio",
+        images: [
+          {
+            url: "https://yusuke-kim.com/portfolio-og-image.jpg",
+            width: 1200,
+            height: 630,
+            alt: "Portfolio - samuido",
+          },
+        ],
+        siteName: "samuido",
+        locale: "ja_JP",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: "Portfolio - samuido | 作品集・開発・映像・デザイン",
+        description:
+          "samuidoの作品集。Web開発、ゲーム開発、映像制作、デザインなど幅広いクリエイティブ作品を紹介。技術スタックと制作プロセスも掲載。",
+        images: ["https://yusuke-kim.com/portfolio-twitter-image.jpg"],
+        creator: "@361do_sleep",
+      },
+    };
+  }
+}
+
+// Enhanced data fetching using portfolio data manager
+async function getEnhancedPortfolioData() {
+  try {
+    // Get data from portfolio data manager with caching and processing
+    const portfolioData = await portfolioDataManager.getPortfolioData();
+    const portfolioStats = await portfolioDataManager.getPortfolioStats();
+    const featuredProjects = await portfolioDataManager.getFeaturedProjects(3);
+
+    // Create integration manager instance for home page data
+    const integrationManager = new PortfolioIntegrationManager(
+      portfolioDataManager,
+    );
+    const homePageData = await integrationManager.homePage.getHomePageData();
+
+    // Generate structured data using SEO metadata generator
+    const seoGenerator = new PortfolioSEOMetadataGenerator(
+      portfolioDataManager,
+    );
+    const { structuredData } =
+      await seoGenerator.generatePortfolioTopMetadata();
+
+    return {
+      portfolioData,
+      portfolioStats,
+      featuredProjects,
+      homePageData,
+      structuredData,
+    };
+  } catch (error) {
+    console.error("Error fetching enhanced portfolio data:", error);
+
+    // Fallback to basic data structure
+    return {
+      portfolioData: [],
+      portfolioStats: {
+        totalProjects: 0,
+        categoryCounts: {},
+        technologyCounts: {},
+        lastUpdate: new Date(),
+      },
+      featuredProjects: [],
+      homePageData: {
+        featuredProjects: [],
+        stats: {
+          totalProjects: 0,
+          categoryCounts: {},
+          technologyCounts: {},
+          lastUpdate: new Date(),
+        },
+        latestUpdates: [],
+      },
+      structuredData: {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        name: "samuido Portfolio",
+        description: "Web開発、ゲーム開発、映像制作、デザインの作品集",
+        url: "https://yusuke-kim.com/portfolio",
+        creator: {
+          "@type": "Person",
+          name: "木村友亮",
+          alternateName: "samuido",
+        },
+      },
+    };
   }
 }
 
 export default async function PortfolioPage() {
-  // 実際のデータを取得
-  let portfolioItems = await getPortfolioData();
+  // Enhanced data fetching with integration manager
+  const {
+    portfolioData: initialPortfolioItems,
+    portfolioStats: enhancedStats,
+    featuredProjects: managedFeaturedProjects,
+    homePageData,
+    structuredData,
+  } = await getEnhancedPortfolioData();
 
   // フォールバックデータ（テスト用）
+  let portfolioItems = initialPortfolioItems;
   if (portfolioItems.length === 0) {
-    portfolioItems = [
+    // Convert ContentItem to PortfolioContentItem for fallback
+    const fallbackItems: ContentItem[] = [
       {
         id: "portfolio-1753615145862",
         type: "portfolio",
@@ -168,39 +206,58 @@ export default async function PortfolioPage() {
         publishedAt: "2024-10-20T00:00:00Z",
         content: "詳細なプロジェクト説明...",
       },
-    ] as ContentItem[];
+    ];
+
+    // Process fallback data through the data manager
+    const processedResult =
+      await portfolioDataManager.processPortfolioData(fallbackItems);
+    portfolioItems = processedResult.data;
   }
 
-  // 実際のデータから統計を計算
+  // Use enhanced statistics from data manager with fallback
   const portfolioStats = {
-    totalProjects: portfolioItems.length,
+    totalProjects: enhancedStats.totalProjects || portfolioItems.length,
     categories: {
-      develop: portfolioItems.filter((item: ContentItem) =>
-        item.category?.toLowerCase().includes("develop"),
-      ).length,
-      video: portfolioItems.filter(
-        (item: ContentItem) =>
-          item.category?.toLowerCase().includes("video") ||
-          item.category?.toLowerCase().includes("aftereffects"),
-      ).length,
-      design: portfolioItems.filter((item: ContentItem) =>
-        item.category?.toLowerCase().includes("design"),
-      ).length,
+      develop:
+        enhancedStats.categoryCounts?.develop ||
+        portfolioItems.filter((item) =>
+          item.category?.toLowerCase().includes("develop"),
+        ).length,
+      video:
+        enhancedStats.categoryCounts?.video ||
+        portfolioItems.filter(
+          (item) =>
+            item.category?.toLowerCase().includes("video") ||
+            item.category?.toLowerCase().includes("aftereffects"),
+        ).length,
+      design:
+        enhancedStats.categoryCounts?.design ||
+        portfolioItems.filter((item) =>
+          item.category?.toLowerCase().includes("design"),
+        ).length,
     },
-    technologies: [
-      ...new Set(
-        portfolioItems.flatMap((item: ContentItem) => item.tags || []),
-      ),
-    ].slice(0, 10),
-    latestUpdate:
-      portfolioItems.length > 0
+    technologies:
+      Object.keys(enhancedStats.technologyCounts || {}).slice(0, 10) ||
+      [
+        ...new Set(
+          portfolioItems.flatMap(
+            (item) => item.technologies || item.tags || [],
+          ),
+        ),
+      ].slice(0, 10),
+    latestUpdate: enhancedStats.lastUpdate
+      ? new Date(enhancedStats.lastUpdate).toLocaleDateString("ja-JP", {
+          year: "numeric",
+          month: "long",
+        })
+      : portfolioItems.length > 0
         ? new Date(
             portfolioItems[0].updatedAt || portfolioItems[0].createdAt,
           ).toLocaleDateString("ja-JP", { year: "numeric", month: "long" })
         : "データなし",
   };
 
-  // カテゴリ情報
+  // Enhanced category information with dynamic data
   const categories = [
     {
       id: "all",
@@ -210,6 +267,8 @@ export default async function PortfolioPage() {
       count: portfolioStats.totalProjects,
       href: "/portfolio/gallery/all",
       color: "primary",
+      badge: "Complete",
+      trend: portfolioStats.totalProjects > 0 ? "up" : "stable",
     },
     {
       id: "develop",
@@ -219,6 +278,8 @@ export default async function PortfolioPage() {
       count: portfolioStats.categories.develop,
       href: "/portfolio/gallery/develop",
       color: "accent",
+      badge: "Active",
+      trend: "up",
     },
     {
       id: "video",
@@ -228,6 +289,8 @@ export default async function PortfolioPage() {
       count: portfolioStats.categories.video,
       href: "/portfolio/gallery/video",
       color: "primary",
+      badge: "Creative",
+      trend: "stable",
     },
     {
       id: "video-design",
@@ -237,32 +300,55 @@ export default async function PortfolioPage() {
       count: portfolioStats.categories.design,
       href: "/portfolio/gallery/video&design",
       color: "accent",
+      badge: "Artistic",
+      trend: "up",
     },
   ];
 
-  // 最新作品のハイライト（実際のデータから取得）
-  const featuredProjects = portfolioItems
-    .sort(
-      (a: ContentItem, b: ContentItem) =>
-        new Date(b.updatedAt || b.createdAt).getTime() -
-        new Date(a.updatedAt || a.createdAt).getTime(),
-    )
-    .slice(0, 3)
-    .map((item: ContentItem) => ({
-      id: item.id,
-      title: item.title,
-      category: item.category || "other",
-      description: item.description,
-      technologies: item.tags || [],
-      thumbnail:
-        item.thumbnail ||
-        item.images?.[0] ||
-        "/images/portfolio/default-thumb.jpg",
-      date: new Date(item.updatedAt || item.createdAt).toLocaleDateString(
-        "ja-JP",
-        { year: "numeric", month: "2-digit" },
-      ),
-    }));
+  // Enhanced featured projects using managed data with fallback
+  const featuredProjects =
+    managedFeaturedProjects.length > 0
+      ? managedFeaturedProjects.map((item) => ({
+          id: item.id,
+          title: item.title,
+          category: item.category || "other",
+          description: item.description,
+          technologies: item.technologies || item.tags || [],
+          thumbnail:
+            item.thumbnail ||
+            item.images?.[0] ||
+            "/images/portfolio/default-thumb.jpg",
+          date: new Date(item.updatedAt || item.createdAt).toLocaleDateString(
+            "ja-JP",
+            { year: "numeric", month: "2-digit" },
+          ),
+          priority: item.priority || 0,
+          status: item.status,
+        }))
+      : portfolioItems
+          .sort(
+            (a: ContentItem, b: ContentItem) =>
+              new Date(b.updatedAt || b.createdAt).getTime() -
+              new Date(a.updatedAt || a.createdAt).getTime(),
+          )
+          .slice(0, 3)
+          .map((item: ContentItem) => ({
+            id: item.id,
+            title: item.title,
+            category: item.category || "other",
+            description: item.description,
+            technologies: item.tags || [],
+            thumbnail:
+              item.thumbnail ||
+              item.images?.[0] ||
+              "/images/portfolio/default-thumb.jpg",
+            date: new Date(item.updatedAt || item.createdAt).toLocaleDateString(
+              "ja-JP",
+              { year: "numeric", month: "2-digit" },
+            ),
+            priority: item.priority || 0,
+            status: item.status,
+          }));
   const CardStyle =
     "bg-base border border-foreground block p-4 space-y-4 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
   const Card_title =
@@ -394,12 +480,24 @@ export default async function PortfolioPage() {
                         {category.description}
                       </p>
                       <div className="flex items-center justify-between">
-                        <span className="noto-sans-jp-light text-xs text-accent">
-                          {category.count} projects
-                        </span>
-                        <span className="noto-sans-jp-light text-xs text-foreground">
-                          →
-                        </span>
+                        <div className="flex items-center space-x-2">
+                          <span className="noto-sans-jp-light text-xs text-accent">
+                            {category.count} projects
+                          </span>
+                          {category.badge && (
+                            <span className="noto-sans-jp-light text-xs text-primary border border-primary px-2 py-1">
+                              {category.badge}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          {category.trend === "up" && (
+                            <TrendingUp className="w-3 h-3 text-accent" />
+                          )}
+                          <span className="noto-sans-jp-light text-xs text-foreground">
+                            →
+                          </span>
+                        </div>
                       </div>
                     </Link>
                   ))}
@@ -421,6 +519,8 @@ export default async function PortfolioPage() {
                       technologies: string[];
                       thumbnail: string;
                       date: string;
+                      priority?: number;
+                      status?: string;
                     }) => (
                       <Link
                         key={project.id}
@@ -437,10 +537,15 @@ export default async function PortfolioPage() {
 
                         <div className="space-y-2">
                           <div className="flex items-center justify-between">
-                            <h3 className="zen-kaku-gothic-new text-base text-primary">
-                              {project.title}
-                            </h3>
-                            <div className="flex items-center">
+                            <div className="flex items-center space-x-2">
+                              <h3 className="zen-kaku-gothic-new text-base text-primary">
+                                {project.title}
+                              </h3>
+                              {project.priority && project.priority >= 80 && (
+                                <Star className="w-4 h-4 text-accent" />
+                              )}
+                            </div>
+                            <div className="flex items-center space-x-2">
                               <Calendar className="w-4 h-4 text-accent mr-1" />
                               <span className="noto-sans-jp-light text-xs text-accent">
                                 {project.date}
@@ -469,40 +574,115 @@ export default async function PortfolioPage() {
                 </div>
               </section>
 
-              {/* Playground Section */}
+              {/* Latest Updates Section */}
+              <section>
+                <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
+                  Latest Updates
+                </h2>
+                <div className="bg-base border border-foreground p-4 space-y-4">
+                  <div className="grid-system grid-1 xs:grid-2 sm:grid-3 md:grid-3 gap-4">
+                    {homePageData.latestUpdates
+                      .slice(0, 3)
+                      .map(
+                        (update: {
+                          id: string;
+                          title: string;
+                          category: string;
+                          updatedAt: Date;
+                        }) => (
+                          <Link
+                            key={update.id}
+                            href={`/portfolio/${update.id}`}
+                            className="block p-3 border border-foreground hover:border-accent transition-colors"
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="noto-sans-jp-light text-xs text-accent">
+                                {update.category}
+                              </span>
+                              <span className="noto-sans-jp-light text-xs text-foreground">
+                                {new Date(update.updatedAt).toLocaleDateString(
+                                  "ja-JP",
+                                  {
+                                    month: "2-digit",
+                                    day: "2-digit",
+                                  },
+                                )}
+                              </span>
+                            </div>
+                            <h3 className="zen-kaku-gothic-new text-sm text-primary line-clamp-2">
+                              {update.title}
+                            </h3>
+                          </Link>
+                        ),
+                      )}
+                  </div>
+
+                  {homePageData.latestUpdates.length === 0 && (
+                    <div className="text-center py-8">
+                      <p className="noto-sans-jp-light text-sm text-foreground">
+                        最新の更新情報を読み込み中...
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              {/* Enhanced Playground Section */}
               <section>
                 <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
                   Experimental Playground
                 </h2>
+                <p className="noto-sans-jp-light text-sm text-foreground mb-6">
+                  技術実験とクリエイティブな表現の場。インタラクティブなデモンストレーションと最新技術の実装例を体験できます。
+                </p>
                 <div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
                   <Link
                     href="/portfolio/playground/design"
                     className="bg-base border border-foreground p-4 space-y-4 block hover:border-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
                   >
-                    <div className="flex items-center">
-                      <Palette className="w-6 h-6 text-accent mr-3" />
-                      <h3 className="zen-kaku-gothic-new text-lg text-primary">
-                        Design Experiments
-                      </h3>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <Palette className="w-6 h-6 text-accent mr-3" />
+                        <h3 className="zen-kaku-gothic-new text-lg text-primary">
+                          Design Experiments
+                        </h3>
+                      </div>
+                      <span className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1">
+                        Interactive
+                      </span>
                     </div>
                     <p className="noto-sans-jp-light text-sm text-foreground">
-                      インタラクティブデモとデザイン実験
+                      インタラクティブデモとデザイン実験。CSS、SVG、Canvas
+                      を使った視覚的表現の探求。
                     </p>
+                    <div className="flex items-center text-xs text-foreground">
+                      <Clock className="w-3 h-3 mr-1" />
+                      <span>リアルタイム更新</span>
+                    </div>
                   </Link>
 
                   <Link
                     href="/portfolio/playground/WebGL"
                     className="bg-base border border-foreground p-4 space-y-4 block hover:border-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
                   >
-                    <div className="flex items-center">
-                      <Code className="w-6 h-6 text-accent mr-3" />
-                      <h3 className="zen-kaku-gothic-new text-lg text-primary">
-                        WebGL Experiments
-                      </h3>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <Code className="w-6 h-6 text-accent mr-3" />
+                        <h3 className="zen-kaku-gothic-new text-lg text-primary">
+                          WebGL Experiments
+                        </h3>
+                      </div>
+                      <span className="noto-sans-jp-light text-xs text-primary border border-primary px-2 py-1">
+                        3D
+                      </span>
                     </div>
                     <p className="noto-sans-jp-light text-sm text-foreground">
-                      Three.js・WebGPU実装とインタラクティブ体験
+                      Three.js・WebGPU実装とインタラクティブ体験。シェーダー、パーティクル、3Dグラフィックス。
                     </p>
+                    <div className="flex items-center text-xs text-foreground">
+                      <Clock className="w-3 h-3 mr-1" />
+                      <span>パフォーマンス最適化済み</span>
+                    </div>
                   </Link>
                 </div>
               </section>

@@ -20,9 +20,11 @@ export interface PortfolioSearchIndex extends SearchIndex {
 
 export interface SearchFilter {
   type: "category" | "technology" | "tag" | "year" | "projectType";
-  value: string;
-  label: string;
-  count: number;
+  options: Array<{
+    value: string;
+    label: string;
+    count: number;
+  }>;
 }
 
 export interface SearchStats {
@@ -94,9 +96,11 @@ export class PortfolioSearchIndexGenerator {
 
     // Add external link titles and descriptions
     if (item.externalLinks) {
-      item.externalLinks.forEach((link) => {
-        contentParts.push(link.title, link.description || "");
-      });
+      item.externalLinks.forEach(
+        (link: import("@/types/content").ExternalLink) => {
+          contentParts.push(link.title, link.description || "");
+        },
+      );
     }
 
     return contentParts
@@ -352,14 +356,20 @@ export class PortfolioSearchIndexGenerator {
       categoryCount[item.category] = (categoryCount[item.category] || 0) + 1;
     });
 
-    Object.entries(categoryCount).forEach(([category, count]) => {
-      filters.push({
-        type: "category",
+    const categoryOptions = Object.entries(categoryCount).map(
+      ([category, count]) => ({
         value: category,
         label: this.getCategoryLabel(category),
         count,
+      }),
+    );
+
+    if (categoryOptions.length > 0) {
+      filters.push({
+        type: "category",
+        options: categoryOptions,
       });
-    });
+    }
 
     // Technology filters
     const technologyCount: Record<string, number> = {};
@@ -369,17 +379,21 @@ export class PortfolioSearchIndexGenerator {
       });
     });
 
-    Object.entries(technologyCount)
+    const technologyOptions = Object.entries(technologyCount)
       .sort(([, a], [, b]) => b - a) // Sort by count
       .slice(0, 20) // Top 20 technologies
-      .forEach(([tech, count]) => {
-        filters.push({
-          type: "technology",
-          value: tech,
-          label: tech,
-          count,
-        });
+      .map(([tech, count]) => ({
+        value: tech,
+        label: tech,
+        count,
+      }));
+
+    if (technologyOptions.length > 0) {
+      filters.push({
+        type: "technology",
+        options: technologyOptions,
       });
+    }
 
     // Year filters
     const yearCount: Record<string, number> = {};
@@ -388,16 +402,44 @@ export class PortfolioSearchIndexGenerator {
       yearCount[year] = (yearCount[year] || 0) + 1;
     });
 
-    Object.entries(yearCount)
+    const yearOptions = Object.entries(yearCount)
       .sort(([a], [b]) => parseInt(b) - parseInt(a)) // Sort by year descending
-      .forEach(([year, count]) => {
-        filters.push({
-          type: "year",
-          value: year,
-          label: `${year}年`,
-          count,
-        });
+      .map(([year, count]) => ({
+        value: year,
+        label: `${year}年`,
+        count,
+      }));
+
+    if (yearOptions.length > 0) {
+      filters.push({
+        type: "year",
+        options: yearOptions,
       });
+    }
+
+    // Tag filters
+    const tagCount: Record<string, number> = {};
+    searchIndex.forEach((item) => {
+      (item.tags || []).forEach((tag) => {
+        tagCount[tag] = (tagCount[tag] || 0) + 1;
+      });
+    });
+
+    const tagOptions = Object.entries(tagCount)
+      .sort(([, a], [, b]) => b - a) // Sort by count
+      .slice(0, 15) // Top 15 tags
+      .map(([tag, count]) => ({
+        value: tag,
+        label: tag,
+        count,
+      }));
+
+    if (tagOptions.length > 0) {
+      filters.push({
+        type: "tag",
+        options: tagOptions,
+      });
+    }
 
     return filters;
   }

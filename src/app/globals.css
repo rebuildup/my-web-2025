@@ -317,3 +317,73 @@ select:focus,
   background: var(--color-accent);
   color: var(--color-foreground);
 }
+
+/* Global Select Styles - 統一されたセレクトボックススタイル */
+select {
+  appearance: none;
+  background-color: #ffffff;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #111827;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 8px 32px 8px 12px;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+  width: 100%;
+}
+
+select:hover {
+  border-color: #9ca3af;
+}
+
+select:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(0, 0, 255, 0.1);
+  outline: none;
+}
+
+select:disabled {
+  background-color: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Select option styles */
+select option {
+  background-color: #ffffff;
+  color: #111827;
+  padding: 8px 12px;
+}
+
+select option:disabled {
+  color: #9ca3af;
+}
+
+/* Dark mode support for admin areas */
+.admin-dark select {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.admin-dark select:hover {
+  border-color: #6b7280;
+}
+
+.admin-dark select:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(0, 0, 255, 0.2);
+}
+
+.admin-dark select option {
+  background-color: #374151;
+  color: #f9fafb;
+}

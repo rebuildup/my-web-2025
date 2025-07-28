@@ -267,46 +267,58 @@ describe("PortfolioSearchIndexGenerator", () => {
 
     it("should generate category filters", () => {
       const filters = generator.generateSearchFilters(searchIndex);
-      const categoryFilters = filters.filter((f) => f.type === "category");
+      const categoryFilter = filters.find((f) => f.type === "category");
+      expect(categoryFilter).toBeDefined();
+      expect(categoryFilter!.options.length).toBeGreaterThan(0);
 
-      expect(categoryFilters.length).toBeGreaterThan(0);
+      const developOption = categoryFilter!.options.find(
+        (o) => o.value === "develop",
+      );
+      expect(developOption).toBeDefined();
+      expect(developOption!.count).toBe(2);
+      expect(developOption!.label).toBe("開発");
 
-      const developFilter = categoryFilters.find((f) => f.value === "develop");
-      expect(developFilter).toBeDefined();
-      expect(developFilter!.count).toBe(2);
-      expect(developFilter!.label).toBe("開発");
-
-      const videoFilter = categoryFilters.find((f) => f.value === "video");
-      expect(videoFilter).toBeDefined();
-      expect(videoFilter!.count).toBe(1);
-      expect(videoFilter!.label).toBe("映像");
+      const videoOption = categoryFilter!.options.find(
+        (o) => o.value === "video",
+      );
+      expect(videoOption).toBeDefined();
+      expect(videoOption!.count).toBe(1);
+      expect(videoOption!.label).toBe("映像");
     });
 
     it("should generate technology filters", () => {
       const filters = generator.generateSearchFilters(searchIndex);
-      const technologyFilters = filters.filter((f) => f.type === "technology");
+      const technologyFilter = filters.find((f) => f.type === "technology");
 
-      expect(technologyFilters.length).toBeGreaterThan(0);
+      expect(technologyFilter).toBeDefined();
+      expect(technologyFilter!.options.length).toBeGreaterThan(0);
 
-      const reactFilter = technologyFilters.find((f) => f.value === "React");
-      expect(reactFilter).toBeDefined();
-      expect(reactFilter!.count).toBe(1);
+      const reactOption = technologyFilter!.options.find(
+        (o) => o.value === "React",
+      );
+      expect(reactOption).toBeDefined();
+      expect(reactOption!.count).toBe(1);
 
-      const unityFilter = technologyFilters.find((f) => f.value === "Unity");
-      expect(unityFilter).toBeDefined();
-      expect(unityFilter!.count).toBe(1);
+      const unityOption = technologyFilter!.options.find(
+        (o) => o.value === "Unity",
+      );
+      expect(unityOption).toBeDefined();
+      expect(unityOption!.count).toBe(1);
     });
 
     it("should generate year filters", () => {
       const filters = generator.generateSearchFilters(searchIndex);
-      const yearFilters = filters.filter((f) => f.type === "year");
+      const yearFilter = filters.find((f) => f.type === "year");
 
-      expect(yearFilters.length).toBeGreaterThan(0);
+      expect(yearFilter).toBeDefined();
+      expect(yearFilter!.options.length).toBeGreaterThan(0);
 
-      const year2024Filter = yearFilters.find((f) => f.value === "2024");
-      expect(year2024Filter).toBeDefined();
-      expect(year2024Filter!.count).toBe(3); // All items are from 2024
-      expect(year2024Filter!.label).toBe("2024年");
+      const year2024Option = yearFilter!.options.find(
+        (o) => o.value === "2024",
+      );
+      expect(year2024Option).toBeDefined();
+      expect(year2024Option!.count).toBe(3); // All items are from 2024
+      expect(year2024Option!.label).toBe("2024年");
     });
 
     it("should sort technology filters by count", () => {
@@ -327,18 +339,21 @@ describe("PortfolioSearchIndexGenerator", () => {
       const allItems = [...mockPortfolioItems, ...additionalItems];
       const allIndex = generator.generateSearchIndex(allItems);
       const filters = generator.generateSearchFilters(allIndex);
-      const technologyFilters = filters.filter((f) => f.type === "technology");
+      const technologyFilter = filters.find((f) => f.type === "technology");
 
+      expect(technologyFilter).toBeDefined();
       // React should be first (appears 3 times)
-      expect(technologyFilters[0].value).toBe("React");
-      expect(technologyFilters[0].count).toBe(3);
+      expect(technologyFilter!.options[0].value).toBe("React");
+      expect(technologyFilter!.options[0].count).toBe(3);
     });
 
     it("should limit technology filters to top 20", () => {
       const filters = generator.generateSearchFilters(searchIndex);
-      const technologyFilters = filters.filter((f) => f.type === "technology");
+      const technologyFilter = filters.find((f) => f.type === "technology");
 
-      expect(technologyFilters.length).toBeLessThanOrEqual(20);
+      if (technologyFilter) {
+        expect(technologyFilter.options.length).toBeLessThanOrEqual(20);
+      }
     });
   });
 

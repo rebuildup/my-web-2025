@@ -32,7 +32,43 @@ async function writeContentFile(
 ): Promise<void> {
   try {
     const filePath = getContentFilePath(type);
+    console.log(`Writing to file: ${filePath}`);
+    console.log(`Content to write:`, JSON.stringify(content, null, 2));
+
+    // Check directory permissions
+    const dirPath = path.dirname(filePath);
+    console.log(`Checking directory: ${dirPath}`);
+
+    try {
+      await fs.access(dirPath, fs.constants.W_OK);
+      console.log(`Directory is writable: ${dirPath}`);
+    } catch (permError) {
+      console.error(`Directory is not writable: ${dirPath}`, permError);
+      // Try to create directory if it doesn't exist
+      try {
+        await fs.mkdir(dirPath, { recursive: true });
+        console.log(`Created directory: ${dirPath}`);
+      } catch (mkdirError) {
+        console.error(`Failed to create directory: ${dirPath}`, mkdirError);
+        throw new Error(`Directory is not accessible: ${dirPath}`);
+      }
+    }
+
+    // Write the file
     await fs.writeFile(filePath, JSON.stringify(content, null, 2), "utf-8");
+    console.log(`Successfully wrote ${content.length} items to ${filePath}`);
+
+    // Verify the write was successful
+    try {
+      const verification = await fs.readFile(filePath, "utf-8");
+      const verifiedContent = JSON.parse(verification);
+      console.log(
+        `Verification: ${verifiedContent.length} items written successfully`,
+      );
+    } catch (verifyError) {
+      console.error(`Failed to verify file write:`, verifyError);
+      throw new Error(`File write verification failed`);
+    }
   } catch (error) {
     console.error(`Error writing ${type} content:`, error);
     throw error;
@@ -41,8 +77,16 @@ async function writeContentFile(
 
 // Create or update content item
 export async function POST(request: NextRequest) {
+  console.log("=== POST request received at /api/admin/content ===");
+  console.log("NODE_ENV:", process.env.NODE_ENV);
+  console.log(
+    "Request headers:",
+    Object.fromEntries(request.headers.entries()),
+  );
+
   // Only allow access in development environment
   if (!isDevelopment()) {
+    console.log("Access denied - not in development environment");
     return NextResponse.json(
       { error: "Admin API is only available in development environment" },
       { status: 403 },
@@ -51,9 +95,15 @@ export async function POST(request: NextRequest) {
 
   try {
     const item: ContentItem = await request.json();
+    console.log("Received item for saving:", JSON.stringify(item, null, 2));
 
     // Validate required fields
     if (!item.id || !item.type || !item.title) {
+      console.error("Missing required fields:", {
+        id: item.id,
+        type: item.type,
+        title: item.title,
+      });
       return NextResponse.json(
         { error: "Missing required fields: id, type, title" },
         { status: 400 },
@@ -62,6 +112,9 @@ export async function POST(request: NextRequest) {
 
     // Read existing content
     const existingContent = await readContentFile(item.type);
+    console.log(
+      `Found ${existingContent.length} existing items of type ${item.type}`,
+    );
 
     // Find existing item or create new one
     const existingIndex = existingContent.findIndex(
@@ -70,12 +123,14 @@ export async function POST(request: NextRequest) {
 
     if (existingIndex >= 0) {
       // Update existing item
+      console.log(`Updating existing item at index ${existingIndex}`);
       existingContent[existingIndex] = {
         ...item,
         updatedAt: new Date().toISOString(),
       };
     } else {
       // Add new item
+      console.log("Adding new item");
       existingContent.push({
         ...item,
         createdAt: item.createdAt || new Date().toISOString(),
@@ -91,11 +146,15 @@ export async function POST(request: NextRequest) {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
 
+    console.log(`Writing ${existingContent.length} items to file`);
     // Write back to file
     await writeContentFile(item.type, existingContent);
+    console.log("File write completed");
 
     // Update search index
+    console.log("Updating search index...");
     await updateSearchIndex();
+    console.log("Search index updated");
 
     return NextResponse.json({
       success: true,

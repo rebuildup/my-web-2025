@@ -115,7 +115,10 @@ describe("PortfolioDataManager", () => {
     ]);
 
     mockSearchIndexGenerator.generateSearchFilters.mockReturnValue([
-      { type: "category", value: "develop", label: "開発", count: 2 },
+      {
+        type: "category",
+        options: [{ value: "develop", label: "開発", count: 2 }],
+      },
     ]);
 
     mockSearchIndexGenerator.generateSearchStats.mockReturnValue({
@@ -606,7 +609,10 @@ describe("PortfolioDataManager", () => {
       const filters = await dataManager.getSearchFilters();
 
       expect(filters).toEqual([
-        { type: "category", value: "develop", label: "開発", count: 2 },
+        {
+          type: "category",
+          options: [{ value: "develop", label: "開発", count: 2 }],
+        },
       ]);
     });
 

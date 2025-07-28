@@ -401,6 +401,30 @@ export async function generateDynamicSitemapEntries(
         config,
       ),
     );
+
+    // Add portfolio-specific sitemap entries using SEO integration
+    try {
+      const { portfolioDataManager } = await import(
+        "@/lib/portfolio/data-manager"
+      );
+      const { SEOIntegration } = await import(
+        "@/lib/portfolio/integrations/seo-integration"
+      );
+
+      const seoIntegration = new SEOIntegration(
+        portfolioDataManager,
+        config.baseUrl,
+      );
+      const portfolioSitemapEntries =
+        await seoIntegration.generatePortfolioSitemapEntries();
+
+      dynamicEntries.push(...portfolioSitemapEntries);
+    } catch (portfolioError) {
+      console.warn(
+        "Error generating portfolio sitemap entries:",
+        portfolioError,
+      );
+    }
   } catch (error) {
     console.warn("Error generating dynamic sitemap entries:", error);
   }

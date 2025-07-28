@@ -18,17 +18,42 @@ export function MediaEmbedSection({
     title: "",
     description: "",
   });
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const addVideo = () => {
-    if (newVideo.url.trim()) {
-      onVideosChange([...videos, { ...newVideo }]);
-      setNewVideo({
-        type: "youtube",
-        url: "",
-        title: "",
-        description: "",
-      });
+    if (!newVideo.url.trim()) {
+      alert("URL is required");
+      return;
     }
+
+    const videoToAdd = {
+      ...newVideo,
+      url: newVideo.url.trim(),
+      title: newVideo.title?.trim() || "",
+      description: newVideo.description?.trim() || "",
+    };
+
+    console.log("Adding video:", videoToAdd);
+    onVideosChange([...videos, videoToAdd]);
+
+    // Reset form and close
+    setNewVideo({
+      type: "youtube",
+      url: "",
+      title: "",
+      description: "",
+    });
+    setShowAddForm(false);
+  };
+
+  const cancelAdd = () => {
+    setNewVideo({
+      type: "youtube",
+      url: "",
+      title: "",
+      description: "",
+    });
+    setShowAddForm(false);
   };
 
   const updateVideo = (
@@ -95,128 +120,136 @@ export function MediaEmbedSection({
 
   return (
     <div className="space-y-4">
-      <h3 className="font-medium text-gray-700">Media Embeds</h3>
+      <div className="flex justify-between items-center">
+        <h3 className="font-medium text-gray-700">Media Embeds</h3>
+        {!showAddForm && (
+          <button
+            type="button"
+            onClick={() => setShowAddForm(true)}
+            className={`${buttonStyle} bg-primary text-white border-primary hover:bg-primary-dark`}
+          >
+            + Add Media
+          </button>
+        )}
+      </div>
 
-      {/* Add New Video */}
-      <div className="border border-gray-200 p-4 rounded space-y-3">
-        <h4 className="text-sm font-medium text-gray-700">Add New Media</h4>
+      {/* Add New Video Form - 条件付きで表示 */}
+      {showAddForm && (
+        <div className="border border-gray-200 p-4 rounded space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Add New Media</h4>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className={labelStyle}>Type</label>
+              <select
+                value={newVideo.type}
+                onChange={(e) =>
+                  setNewVideo((prev) => ({
+                    ...prev,
+                    type: e.target.value as MediaEmbed["type"],
+                  }))
+                }
+                className={inputStyle}
+              >
+                <option value="youtube">YouTube</option>
+                <option value="vimeo">Vimeo</option>
+                <option value="code">Code Embed</option>
+                <option value="social">Social Media</option>
+                <option value="iframe">Custom iFrame</option>
+              </select>
+            </div>
+
+            <div>
+              <label className={labelStyle}>Title</label>
+              <input
+                type="text"
+                value={newVideo.title || ""}
+                onChange={(e) =>
+                  setNewVideo((prev) => ({ ...prev, title: e.target.value }))
+                }
+                className={inputStyle}
+                placeholder="Video title"
+              />
+            </div>
+          </div>
+
           <div>
-            <label className={labelStyle}>Type</label>
-            <select
-              value={newVideo.type}
+            <label className={labelStyle}>URL *</label>
+            <input
+              type="url"
+              value={newVideo.url}
+              onChange={(e) => handleUrlChange(e.target.value)}
+              className={inputStyle}
+              placeholder="https://www.youtube.com/watch?v=..."
+            />
+          </div>
+
+          <div>
+            <label className={labelStyle}>Description</label>
+            <textarea
+              value={newVideo.description || ""}
               onChange={(e) =>
                 setNewVideo((prev) => ({
                   ...prev,
-                  type: e.target.value as MediaEmbed["type"],
+                  description: e.target.value,
                 }))
               }
-              className={`${inputStyle} bg-background text-foreground`}
-            >
-              <option value="youtube" className="bg-background text-foreground">
-                YouTube
-              </option>
-              <option value="vimeo" className="bg-background text-foreground">
-                Vimeo
-              </option>
-              <option value="code" className="bg-background text-foreground">
-                Code Embed
-              </option>
-              <option value="social" className="bg-background text-foreground">
-                Social Media
-              </option>
-              <option value="iframe" className="bg-background text-foreground">
-                Custom iFrame
-              </option>
-            </select>
-          </div>
-
-          <div>
-            <label className={labelStyle}>Title</label>
-            <input
-              type="text"
-              value={newVideo.title || ""}
-              onChange={(e) =>
-                setNewVideo((prev) => ({ ...prev, title: e.target.value }))
-              }
-              className={inputStyle}
-              placeholder="Video title"
+              className={`${inputStyle} h-20 resize-vertical`}
+              placeholder="Optional description"
+              rows={2}
             />
           </div>
-        </div>
 
-        <div>
-          <label className={labelStyle}>URL *</label>
-          <input
-            type="url"
-            value={newVideo.url}
-            onChange={(e) => handleUrlChange(e.target.value)}
-            className={inputStyle}
-            placeholder="https://www.youtube.com/watch?v=..."
-            required
-          />
-        </div>
-
-        <div>
-          <label className={labelStyle}>Description</label>
-          <textarea
-            value={newVideo.description || ""}
-            onChange={(e) =>
-              setNewVideo((prev) => ({ ...prev, description: e.target.value }))
-            }
-            className={`${inputStyle} h-20 resize-vertical`}
-            placeholder="Optional description"
-            rows={2}
-          />
-        </div>
-
-        {newVideo.type === "iframe" && (
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className={labelStyle}>Width</label>
-              <input
-                type="number"
-                value={newVideo.width || ""}
-                onChange={(e) =>
-                  setNewVideo((prev) => ({
-                    ...prev,
-                    width: parseInt(e.target.value) || undefined,
-                  }))
-                }
-                className={inputStyle}
-                placeholder="560"
-              />
+          {newVideo.type === "iframe" && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelStyle}>Width</label>
+                <input
+                  type="number"
+                  value={newVideo.width || ""}
+                  onChange={(e) =>
+                    setNewVideo((prev) => ({
+                      ...prev,
+                      width: parseInt(e.target.value) || undefined,
+                    }))
+                  }
+                  className={inputStyle}
+                  placeholder="560"
+                />
+              </div>
+              <div>
+                <label className={labelStyle}>Height</label>
+                <input
+                  type="number"
+                  value={newVideo.height || ""}
+                  onChange={(e) =>
+                    setNewVideo((prev) => ({
+                      ...prev,
+                      height: parseInt(e.target.value) || undefined,
+                    }))
+                  }
+                  className={inputStyle}
+                  placeholder="315"
+                />
+              </div>
             </div>
-            <div>
-              <label className={labelStyle}>Height</label>
-              <input
-                type="number"
-                value={newVideo.height || ""}
-                onChange={(e) =>
-                  setNewVideo((prev) => ({
-                    ...prev,
-                    height: parseInt(e.target.value) || undefined,
-                  }))
-                }
-                className={inputStyle}
-                placeholder="315"
-              />
-            </div>
+          )}
+
+          <div className="flex justify-end gap-2">
+            <button type="button" onClick={cancelAdd} className={buttonStyle}>
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={addVideo}
+              className={`${buttonStyle} bg-primary text-white border-primary hover:bg-primary-dark`}
+              disabled={!newVideo.url.trim()}
+            >
+              Add Media
+            </button>
           </div>
-        )}
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={addVideo}
-            className={`${buttonStyle} bg-primary text-white border-primary hover:bg-primary-dark`}
-            disabled={!newVideo.url.trim()}
-          >
-            Add Media
-          </button>
         </div>
-      </div>
+      )}
 
       {/* Existing Videos */}
       {videos.length > 0 && (
@@ -240,38 +273,13 @@ export function MediaEmbedSection({
                         onChange={(e) =>
                           updateVideo(index, "type", e.target.value)
                         }
-                        className={`${inputStyle} bg-background text-foreground`}
+                        className={inputStyle}
                       >
-                        <option
-                          value="youtube"
-                          className="bg-background text-foreground"
-                        >
-                          YouTube
-                        </option>
-                        <option
-                          value="vimeo"
-                          className="bg-background text-foreground"
-                        >
-                          Vimeo
-                        </option>
-                        <option
-                          value="code"
-                          className="bg-background text-foreground"
-                        >
-                          Code Embed
-                        </option>
-                        <option
-                          value="social"
-                          className="bg-background text-foreground"
-                        >
-                          Social Media
-                        </option>
-                        <option
-                          value="iframe"
-                          className="bg-background text-foreground"
-                        >
-                          Custom iFrame
-                        </option>
+                        <option value="youtube">YouTube</option>
+                        <option value="vimeo">Vimeo</option>
+                        <option value="code">Code Embed</option>
+                        <option value="social">Social Media</option>
+                        <option value="iframe">Custom iFrame</option>
                       </select>
                     </div>
 

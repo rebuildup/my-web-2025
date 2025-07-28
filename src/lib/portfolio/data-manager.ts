@@ -150,9 +150,20 @@ export class PortfolioDataManager {
   async getPortfolioData(
     forceRefresh: boolean = false,
   ): Promise<PortfolioContentItem[]> {
+    console.log("getPortfolioData called, forceRefresh:", forceRefresh);
+    console.log("Cache valid:", this.isCacheValid());
+    console.log("Cache size:", this.cache.portfolioData.size);
+
     if (!forceRefresh && this.isCacheValid()) {
       testLogger.log("Returning cached portfolio data");
-      return Array.from(this.cache.portfolioData.values());
+      const cachedData = Array.from(this.cache.portfolioData.values());
+      console.log("Cached data count:", cachedData.length);
+      console.log(
+        "Cached data statuses:",
+        cachedData.map((item) => ({ id: item.id, status: item.status })),
+      );
+      // Filter for published items only for gallery display
+      return cachedData.filter((item) => item.status === "published");
     }
 
     // Fetch fresh data from API
@@ -160,13 +171,16 @@ export class PortfolioDataManager {
     const result = await this.processPortfolioData(rawData);
 
     if (result.success) {
-      return result.data;
+      // Filter for published items only for gallery display
+      return result.data.filter((item) => item.status === "published");
     } else {
       testLogger.warn("Failed to process fresh data");
       // Only return cached data if we have valid cache, otherwise return empty array
       if (this.cache.portfolioData.size > 0) {
         testLogger.warn("Returning cached data as fallback");
-        return Array.from(this.cache.portfolioData.values());
+        const cachedData = Array.from(this.cache.portfolioData.values());
+        // Filter for published items only for gallery display
+        return cachedData.filter((item) => item.status === "published");
       } else {
         testLogger.warn("No cached data available, returning empty array");
         return [];
@@ -183,6 +197,63 @@ export class PortfolioDataManager {
   }
 
   /**
+   * Alias for getPortfolioItem - for integration compatibility
+   */
+  async getItemById(id: string): Promise<PortfolioContentItem | null> {
+    return this.getPortfolioItem(id);
+  }
+
+  /**
+   * Alias for getPortfolioData - for integration compatibility
+   */
+  async getAllItems(): Promise<PortfolioContentItem[]> {
+    return this.getPortfolioData();
+  }
+
+  /**
+   * Get all portfolio data including draft and archived items (for admin use)
+   */
+  async getAllPortfolioData(
+    forceRefresh: boolean = false,
+  ): Promise<PortfolioContentItem[]> {
+    if (!forceRefresh && this.isCacheValid()) {
+      testLogger.log("Returning all cached portfolio data (including drafts)");
+      return Array.from(this.cache.portfolioData.values());
+    }
+
+    // Fetch fresh data from API
+    const rawData = await this.fetchRawPortfolioData();
+    const result = await this.processPortfolioData(rawData);
+
+    if (result.success) {
+      return result.data; // Return all data without filtering
+    } else {
+      testLogger.warn("Failed to process fresh data");
+      if (this.cache.portfolioData.size > 0) {
+        testLogger.warn("Returning all cached data as fallback");
+        return Array.from(this.cache.portfolioData.values());
+      } else {
+        testLogger.warn("No cached data available, returning empty array");
+        return [];
+      }
+    }
+  }
+
+  /**
+   * Alias for getPortfolioItemsByCategory - for integration compatibility
+   */
+  async getItemsByCategory(category: string): Promise<PortfolioContentItem[]> {
+    return this.getPortfolioItemsByCategory(category);
+  }
+
+  /**
+   * Clear cache - for integration compatibility
+   */
+  async clearCache(): Promise<void> {
+    this.invalidateCache();
+  }
+
+  /**
    * Get portfolio items by category
    */
   async getPortfolioItemsByCategory(
@@ -191,9 +262,11 @@ export class PortfolioDataManager {
     const data = await this.getPortfolioData();
 
     if (category === "all") {
+      // Already filtered for published items in getPortfolioData
       return data;
     }
 
+    // Already filtered for published items in getPortfolioData
     return data.filter((item) => item.category === category);
   }
 
@@ -294,7 +367,7 @@ export class PortfolioDataManager {
     const data = await this.getPortfolioData();
 
     return data
-      .filter((item) => item.status === "published")
+      .filter((item) => item.status === "published") // Featured projects should only be published
       .sort((a, b) => {
         // Sort by priority first, then by update date
         if (a.priority !== b.priority) {
@@ -322,7 +395,7 @@ export class PortfolioDataManager {
 
     const data = await this.getPortfolioData();
     const relatedItems = item.relatedItems
-      .map((id) => data.find((item) => item.id === id))
+      .map((id: string) => data.find((item) => item.id === id))
       .filter(Boolean) as PortfolioContentItem[];
 
     return relatedItems.slice(0, limit);
@@ -368,6 +441,11 @@ export class PortfolioDataManager {
    * Private: Check if cache is valid
    */
   private isCacheValid(): boolean {
+    // 開発環境では常にキャッシュを無効化
+    if (process.env.NODE_ENV === "development") {
+      return false;
+    }
+
     const now = Date.now();
     const cacheAge = now - this.cache.lastUpdated.getTime();
     return cacheAge < this.CACHE_TTL && this.cache.portfolioData.size > 0;
@@ -411,15 +489,17 @@ export class PortfolioDataManager {
         !process.env.NEXT_PUBLIC_BASE_URL &&
         process.env.NODE_ENV === "production"
       ) {
-        return [];
+        return await this.loadPortfolioFromFile();
       }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/portfolio?status=published&limit=100`,
+        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/portfolio?limit=100`,
         {
           next: { revalidate: 3600 }, // 1 hour cache
         },
       );
+
+      console.log("Portfolio API response status:", response.status);
 
       if (!response.ok) {
         throw new Error(`API request failed: ${response.status}`);
@@ -428,7 +508,36 @@ export class PortfolioDataManager {
       const result = await response.json();
       return result.data || [];
     } catch (error) {
-      testLogger.error("Error fetching raw portfolio data:", error);
+      testLogger.error("Error fetching raw portfolio data from API:", error);
+      testLogger.log("Falling back to file system data...");
+      return await this.loadPortfolioFromFile();
+    }
+  }
+
+  /**
+   * Private: Load portfolio data from file system as fallback
+   */
+  private async loadPortfolioFromFile(): Promise<ContentItem[]> {
+    try {
+      const fs = await import("fs/promises");
+      const path = await import("path");
+
+      const filePath = path.join(
+        process.cwd(),
+        "public/data/content/portfolio.json",
+      );
+      const fileContent = await fs.readFile(filePath, "utf-8");
+      const data = JSON.parse(fileContent);
+
+      // Return all data for processing - filtering will be done in getPortfolioData
+      const allData = Array.isArray(data) ? data : [];
+
+      testLogger.log(
+        `Loaded ${allData.length} portfolio items from file system`,
+      );
+      return allData;
+    } catch (error) {
+      testLogger.error("Error loading portfolio data from file:", error);
       return [];
     }
   }

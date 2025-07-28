@@ -42,6 +42,33 @@ export {
   type SearchStats,
 } from "./search-index";
 
+// Integration manager
+export { PortfolioIntegrationManager } from "./integration-manager";
+
+// Integration classes
+export {
+  HomePageIntegration,
+  SearchIntegration,
+  AboutIntegration,
+  SEOIntegration,
+  AnalyticsIntegration,
+  type PortfolioStats as HomePortfolioStats,
+  type UpdateInfo,
+  type SearchIndex,
+  type SearchFilter as IntegrationSearchFilter,
+  type SearchResult,
+  type Skill,
+  type ClientProject,
+  type TechnologyExperience,
+  type SitemapEntry,
+  type MetaTags,
+  type OpenGraphData as IntegrationOpenGraphData,
+  type TwitterCardData as IntegrationTwitterCardData,
+  type AnalyticsEvent,
+  type PortfolioAnalytics,
+  type AnalyticsReport,
+} from "./integrations";
+
 // Import singleton instances for convenience functions
 import { portfolioDataManager } from "./data-manager";
 import { seoMetadataGenerator } from "./seo-generator";
@@ -132,5 +159,139 @@ export const portfolioDataPipeline = {
    */
   getCacheStatus() {
     return portfolioDataManager.getCacheStatus();
+  },
+};
+
+// Integration manager instance
+import { PortfolioIntegrationManager } from "./integration-manager";
+const portfolioIntegrationManager = new PortfolioIntegrationManager(
+  portfolioDataManager,
+);
+
+// Integration convenience functions
+export const portfolioIntegrations = {
+  /**
+   * Initialize all integrations
+   */
+  async initialize() {
+    return portfolioIntegrationManager.initialize();
+  },
+
+  /**
+   * Get home page integration data
+   */
+  async getHomePageData() {
+    return portfolioIntegrationManager.homePage.getHomePageData();
+  },
+
+  /**
+   * Search portfolio items with filters
+   */
+  async searchWithFilters(
+    query: string,
+    filters: Array<{ type: string; value: string }> = [],
+  ) {
+    return portfolioIntegrationManager.search.searchPortfolioItems(
+      query,
+      filters,
+    );
+  },
+
+  /**
+   * Get search filters
+   */
+  async getSearchFilters() {
+    return portfolioIntegrationManager.search.getSearchFilters();
+  },
+
+  /**
+   * Get skills extracted from projects
+   */
+  async getSkills() {
+    return portfolioIntegrationManager.about.extractSkillsFromProjects();
+  },
+
+  /**
+   * Get client work examples
+   */
+  async getClientWork() {
+    return portfolioIntegrationManager.about.getClientWorkExamples();
+  },
+
+  /**
+   * Generate sitemap for Next.js
+   */
+  async generateNextSitemap() {
+    return portfolioIntegrationManager.seo.generateNextSitemap();
+  },
+
+  /**
+   * Generate meta tags for page
+   */
+  async generateMetaTags(pageType: string, data: Record<string, unknown>) {
+    return portfolioIntegrationManager.seo.updateMetaTags(pageType, data);
+  },
+
+  /**
+   * Track portfolio analytics event
+   */
+  trackView(itemId: string, additionalData?: Record<string, unknown>) {
+    return portfolioIntegrationManager.analytics.trackPortfolioView(
+      itemId,
+      additionalData,
+    );
+  },
+
+  /**
+   * Track gallery interaction
+   */
+  trackGalleryInteraction(
+    galleryType: string,
+    action: string,
+    itemId?: string,
+  ) {
+    return portfolioIntegrationManager.analytics.trackGalleryInteraction(
+      galleryType,
+      action,
+      itemId,
+    );
+  },
+
+  /**
+   * Get analytics report
+   */
+  async getAnalyticsReport(startDate?: Date, endDate?: Date) {
+    return portfolioIntegrationManager.analytics.generatePortfolioReport(
+      startDate,
+      endDate,
+    );
+  },
+
+  /**
+   * Get dashboard data
+   */
+  async getDashboardData() {
+    return portfolioIntegrationManager.getDashboardData();
+  },
+
+  /**
+   * Get integration data for specific item
+   */
+  async getItemIntegrationData(itemId: string) {
+    return portfolioIntegrationManager.getItemIntegrationData(itemId);
+  },
+
+  /**
+   * Refresh all integrations
+   */
+  async refreshAll() {
+    return portfolioIntegrationManager.refreshAllIntegrations();
+  },
+
+  /**
+   * Health check for all integrations
+   */
+  async healthCheck() {
+    return portfolioIntegrationManager.healthCheck();
   },
 };

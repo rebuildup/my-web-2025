@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ContentItem } from "@/types/content";
+import {
+  ContentItem,
+  getPortfolioCategoryOptions,
+  isValidPortfolioCategory,
+} from "@/types/content";
+import { Select } from "@/components/ui/Select";
 import { FileUploadSection } from "./FileUploadSection";
 import { MediaEmbedSection } from "./MediaEmbedSection";
 import { ExternalLinksSection } from "./ExternalLinksSection";
@@ -13,6 +18,7 @@ interface DataManagerFormProps {
   onSave: (item: ContentItem) => void;
   onCancel: () => void;
   isLoading: boolean;
+  saveStatus?: "idle" | "saving" | "success" | "error";
 }
 
 export function DataManagerForm({
@@ -20,6 +26,7 @@ export function DataManagerForm({
   onSave,
   onCancel,
   isLoading,
+  saveStatus = "idle",
 }: DataManagerFormProps) {
   const [formData, setFormData] = useState<ContentItem>(item);
   const [activeTab, setActiveTab] = useState<
@@ -48,18 +55,66 @@ export function DataManagerForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+
+    console.log("=== Form submission started ===");
+    console.log("Original form data:", JSON.stringify(formData, null, 2));
+
+    // Basic validation
+    if (!formData.title.trim()) {
+      console.error("Validation failed: Title is required");
+      alert("Title is required");
+      return;
+    }
+
+    // Portfolio category validation
+    if (formData.type === "portfolio" && !formData.category) {
+      console.error("Validation failed: Portfolio category is required");
+      alert("Please select a category for portfolio items");
+      return;
+    }
+
+    if (
+      formData.type === "portfolio" &&
+      !isValidPortfolioCategory(formData.category)
+    ) {
+      console.error("Validation failed: Invalid portfolio category");
+      alert("Please select a valid portfolio category");
+      return;
+    }
+
+    // Filter out empty external links
+    const validExternalLinks = (formData.externalLinks || []).filter(
+      (link) => link.url.trim() && link.title.trim(),
+    );
+
+    // Ensure required fields are set
+    const dataToSave = {
+      ...formData,
+      title: formData.title.trim(),
+      description: formData.description || "",
+      category: formData.category || "",
+      tags: formData.tags || [],
+      videos: formData.videos || [],
+      images: formData.images || [],
+      externalLinks: validExternalLinks,
+      updatedAt: new Date().toISOString(),
+    };
+
+    console.log("Data to save:", JSON.stringify(dataToSave, null, 2));
+    console.log("Calling onSave...");
+    onSave(dataToSave);
   };
 
   const inputStyle =
-    "w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent";
+    "w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent rounded-md";
+
   const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
   const buttonStyle =
-    "border border-foreground px-4 py-2 text-sm hover:bg-foreground hover:text-background transition-colors";
+    "border border-foreground px-4 py-2 text-sm hover:bg-foreground hover:text-background transition-colors rounded-md";
   const activeTabStyle =
-    "border border-foreground px-4 py-2 text-sm bg-foreground text-background";
+    "border border-foreground px-4 py-2 text-sm bg-foreground text-background rounded-md";
   const tabStyle =
-    "border border-foreground px-4 py-2 text-sm hover:bg-gray-100 transition-colors";
+    "border border-foreground px-4 py-2 text-sm hover:bg-gray-100 transition-colors rounded-md";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -114,7 +169,6 @@ export function DataManagerForm({
               value={formData.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
               className={inputStyle}
-              required
             />
           </div>
 
@@ -131,43 +185,40 @@ export function DataManagerForm({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className={labelStyle}>Category</label>
-              <input
-                type="text"
-                value={formData.category}
-                onChange={(e) => handleInputChange("category", e.target.value)}
-                className={inputStyle}
-              />
+              {formData.type === "portfolio" ? (
+                <Select
+                  value={formData.category}
+                  onChange={(value) => handleInputChange("category", value)}
+                  options={getPortfolioCategoryOptions()}
+                  placeholder="Select Category"
+                  variant="admin"
+                />
+              ) : (
+                <input
+                  type="text"
+                  value={formData.category}
+                  onChange={(e) =>
+                    handleInputChange("category", e.target.value)
+                  }
+                  className={inputStyle}
+                  placeholder="Enter category"
+                />
+              )}
             </div>
 
             <div>
               <label className={labelStyle}>Status</label>
-              <select
+              <Select
                 value={formData.status}
-                onChange={(e) => handleInputChange("status", e.target.value)}
-                className={`${inputStyle} bg-background text-foreground`}
-              >
-                <option value="draft" className="bg-background text-foreground">
-                  Draft
-                </option>
-                <option
-                  value="published"
-                  className="bg-background text-foreground"
-                >
-                  Published
-                </option>
-                <option
-                  value="archived"
-                  className="bg-background text-foreground"
-                >
-                  Archived
-                </option>
-                <option
-                  value="scheduled"
-                  className="bg-background text-foreground"
-                >
-                  Scheduled
-                </option>
-              </select>
+                onChange={(value) => handleInputChange("status", value)}
+                options={[
+                  { value: "draft", label: "Draft" },
+                  { value: "published", label: "Published" },
+                  { value: "archived", label: "Archived" },
+                  { value: "scheduled", label: "Scheduled" },
+                ]}
+                variant="admin"
+              />
             </div>
           </div>
 
@@ -262,10 +313,15 @@ export function DataManagerForm({
         </button>
         <button
           type="submit"
-          className={`${buttonStyle} bg-primary text-white border-primary hover:bg-primary-dark`}
+          className={`${buttonStyle} bg-primary text-white border-primary hover:bg-primary-dark ${
+            saveStatus === "success" ? "bg-green-600 border-green-600" : ""
+          } ${saveStatus === "error" ? "bg-red-600 border-red-600" : ""}`}
           disabled={isLoading}
         >
-          {isLoading ? "Saving..." : "Save"}
+          {saveStatus === "saving" && "Saving..."}
+          {saveStatus === "success" && "✓ Saved"}
+          {saveStatus === "error" && "✗ Error"}
+          {saveStatus === "idle" && (isLoading ? "Saving..." : "Save")}
         </button>
       </div>
     </form>

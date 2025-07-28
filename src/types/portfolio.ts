@@ -29,6 +29,10 @@ export interface PortfolioContentItem extends ContentItem {
 
   // Enhanced SEO metadata
   seo: PortfolioSEOData;
+
+  // Search index data
+  searchIndex?: import("./content").SearchIndex;
+  relatedItems?: string[]; // IDs of related portfolio items
 }
 
 export interface PortfolioSEOData {
