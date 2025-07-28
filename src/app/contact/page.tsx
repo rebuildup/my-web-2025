@@ -1,7 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Loader2, CheckCircle, AlertCircle, Mail, User } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import {
+  Loader2,
+  CheckCircle,
+  AlertCircle,
+  Mail,
+  User,
+  RefreshCw,
+  Save,
+} from "lucide-react";
 
 interface ContactFormData {
   name: string;
@@ -17,6 +25,15 @@ interface FormErrors {
   subject?: string;
   message?: string;
   general?: string;
+}
+
+interface FormMessages {
+  en: {
+    [key: string]: string;
+  };
+  ja: {
+    [key: string]: string;
+  };
 }
 
 interface ContactConfig {
@@ -60,6 +77,133 @@ export default function ContactPage() {
   const [submitMessage, setSubmitMessage] = useState("");
   const [config, setConfig] = useState<ContactConfig | null>(null);
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+  const [language, setLanguage] = useState<"en" | "ja">("en");
+  const [isDirty, setIsDirty] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  // Refs for focus management
+  const formRef = useRef<HTMLFormElement>(null);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Multilingual messages
+  const messages: FormMessages = {
+    en: {
+      nameRequired: "Name is required",
+      nameMinLength: "Name must be at least {min} characters",
+      nameMaxLength: "Name must be less than {max} characters",
+      emailRequired: "Email is required",
+      emailInvalid: "Please enter a valid email address",
+      subjectRequired: "Subject is required",
+      subjectMinLength: "Subject must be at least {min} characters",
+      subjectMaxLength: "Subject must be less than {max} characters",
+      messageRequired: "Message is required",
+      messageMinLength: "Message must be at least {min} characters",
+      messageMaxLength: "Message must be less than {max} characters",
+      formSaved: "Form data saved locally",
+      formRestored: "Form data restored from previous session",
+      confirmSubmission: "Are you sure you want to send this message?",
+      submissionSuccess: "Your message has been sent successfully!",
+      submissionError: "Failed to send message. Please try again.",
+      networkError:
+        "Network error. Please check your connection and try again.",
+      spamDetected: "Message appears to be spam and cannot be sent",
+      recaptchaFailed: "reCAPTCHA verification failed. Please try again.",
+    },
+    ja: {
+      nameRequired: "お名前は必須です",
+      nameMinLength: "お名前は{min}文字以上で入力してください",
+      nameMaxLength: "お名前は{max}文字以内で入力してください",
+      emailRequired: "メールアドレスは必須です",
+      emailInvalid: "有効なメールアドレスを入力してください",
+      subjectRequired: "件名は必須です",
+      subjectMinLength: "件名は{min}文字以上で入力してください",
+      subjectMaxLength: "件名は{max}文字以内で入力してください",
+      messageRequired: "メッセージは必須です",
+      messageMinLength: "メッセージは{min}文字以上で入力してください",
+      messageMaxLength: "メッセージは{max}文字以内で入力してください",
+      formSaved: "フォームデータをローカルに保存しました",
+      formRestored: "前回のセッションからフォームデータを復元しました",
+      confirmSubmission: "このメッセージを送信してもよろしいですか？",
+      submissionSuccess: "メッセージが正常に送信されました！",
+      submissionError:
+        "メッセージの送信に失敗しました。もう一度お試しください。",
+      networkError:
+        "ネットワークエラーです。接続を確認してもう一度お試しください。",
+      spamDetected: "スパムメッセージと判定されたため送信できません",
+      recaptchaFailed: "reCAPTCHA認証に失敗しました。もう一度お試しください。",
+    },
+  };
+
+  // Get localized message
+  const getMessage = useCallback(
+    (key: string, params?: Record<string, string | number>): string => {
+      let message = messages[language][key] || messages.en[key] || key;
+      if (params) {
+        Object.entries(params).forEach(([param, value]) => {
+          message = message.replace(`{${param}}`, String(value));
+        });
+      }
+      return message;
+    },
+    [language, messages],
+  );
+
+  // Data persistence functions
+  const saveFormData = useCallback(() => {
+    try {
+      const dataToSave = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+        language,
+      };
+      localStorage.setItem("contactFormData", JSON.stringify(dataToSave));
+      setLastSaved(new Date());
+      setIsDirty(false);
+    } catch (error) {
+      console.error("Failed to save form data:", error);
+    }
+  }, [formData, language]);
+
+  const loadFormData = useCallback(() => {
+    try {
+      const saved = localStorage.getItem("contactFormData");
+      if (saved) {
+        const parsedData = JSON.parse(saved);
+        const savedTime = new Date(parsedData.timestamp);
+        const now = new Date();
+        const hoursDiff =
+          (now.getTime() - savedTime.getTime()) / (1000 * 60 * 60);
+
+        // Only restore if saved within last 24 hours
+        if (hoursDiff < 24) {
+          setFormData({
+            name: parsedData.name || "",
+            email: parsedData.email || "",
+            subject: parsedData.subject || "",
+            message: parsedData.message || "",
+            type: parsedData.type || "technical",
+          });
+          setLanguage(parsedData.language || "en");
+          setLastSaved(savedTime);
+          return true;
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load form data:", error);
+    }
+    return false;
+  }, []);
+
+  const clearFormData = useCallback(() => {
+    try {
+      localStorage.removeItem("contactFormData");
+      setLastSaved(null);
+      setIsDirty(false);
+    } catch (error) {
+      console.error("Failed to clear form data:", error);
+    }
+  }, []);
 
   // Load contact configuration
   useEffect(() => {
@@ -94,69 +238,84 @@ export default function ContactPage() {
     };
   }, [config]);
 
-  // Real-time validation
-  const validateField = (
-    name: keyof ContactFormData,
-    value: string,
-  ): string => {
-    if (!config) return "";
+  // Enhanced validation with Japanese language support
+  const validateField = useCallback(
+    (name: keyof ContactFormData, value: string): string => {
+      if (!config) return "";
 
-    switch (name) {
-      case "name":
-        if (!value.trim()) return "Name is required";
-        if (value.length < config.validation.nameMinLength)
-          return `Name must be at least ${config.validation.nameMinLength} characters`;
-        if (value.length > config.validation.nameMaxLength)
-          return `Name must be less than ${config.validation.nameMaxLength} characters`;
-        break;
+      switch (name) {
+        case "name":
+          if (!value.trim()) return getMessage("nameRequired");
+          if (value.length < config.validation.nameMinLength)
+            return getMessage("nameMinLength", {
+              min: config.validation.nameMinLength,
+            });
+          if (value.length > config.validation.nameMaxLength)
+            return getMessage("nameMaxLength", {
+              max: config.validation.nameMaxLength,
+            });
+          break;
 
-      case "email":
-        if (!value.trim()) return "Email is required";
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value))
-          return "Please enter a valid email address";
-        break;
+        case "email":
+          if (!value.trim()) return getMessage("emailRequired");
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(value)) return getMessage("emailInvalid");
+          break;
 
-      case "subject":
-        if (!value.trim()) return "Subject is required";
-        if (value.length < config.validation.subjectMinLength)
-          return `Subject must be at least ${config.validation.subjectMinLength} characters`;
-        if (value.length > config.validation.subjectMaxLength)
-          return `Subject must be less than ${config.validation.subjectMaxLength} characters`;
-        break;
+        case "subject":
+          if (!value.trim()) return getMessage("subjectRequired");
+          if (value.length < config.validation.subjectMinLength)
+            return getMessage("subjectMinLength", {
+              min: config.validation.subjectMinLength,
+            });
+          if (value.length > config.validation.subjectMaxLength)
+            return getMessage("subjectMaxLength", {
+              max: config.validation.subjectMaxLength,
+            });
+          break;
 
-      case "message":
-        if (!value.trim()) return "Message is required";
-        if (value.length < config.validation.messageMinLength)
-          return `Message must be at least ${config.validation.messageMinLength} characters`;
-        if (value.length > config.validation.messageMaxLength)
-          return `Message must be less than ${config.validation.messageMaxLength} characters`;
-        break;
-    }
+        case "message":
+          if (!value.trim()) return getMessage("messageRequired");
+          if (value.length < config.validation.messageMinLength)
+            return getMessage("messageMinLength", {
+              min: config.validation.messageMinLength,
+            });
+          if (value.length > config.validation.messageMaxLength)
+            return getMessage("messageMaxLength", {
+              max: config.validation.messageMaxLength,
+            });
+          break;
+      }
 
-    return "";
-  };
+      return "";
+    },
+    [config, getMessage],
+  );
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    const { name, value } = e.target;
-    const fieldName = name as keyof ContactFormData;
+  const handleInputChange = useCallback(
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >,
+    ) => {
+      const { name, value } = e.target;
+      const fieldName = name as keyof ContactFormData;
 
-    setFormData((prev) => ({ ...prev, [fieldName]: value }));
+      setFormData((prev) => ({ ...prev, [fieldName]: value }));
+      setIsDirty(true);
 
-    // Real-time validation
-    const error = validateField(fieldName, value);
-    setErrors((prev) => ({ ...prev, [fieldName]: error || undefined }));
+      // Real-time validation
+      const error = validateField(fieldName, value);
+      setErrors((prev) => ({ ...prev, [fieldName]: error || undefined }));
 
-    // Clear submit status when user starts typing
-    if (submitStatus !== "idle") {
-      setSubmitStatus("idle");
-      setSubmitMessage("");
-    }
-  };
+      // Clear submit status when user starts typing
+      if (submitStatus !== "idle") {
+        setSubmitStatus("idle");
+        setSubmitMessage("");
+      }
+    },
+    [validateField, submitStatus],
+  );
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -181,11 +340,25 @@ export default function ContactPage() {
     e.preventDefault();
 
     if (!validateForm()) {
+      // Focus on first error field
+      const firstErrorField = formRef.current?.querySelector(
+        '[aria-invalid="true"]',
+      ) as HTMLElement;
+      if (firstErrorField) {
+        firstErrorField.focus();
+      }
+      return;
+    }
+
+    // Show confirmation dialog
+    if (!showConfirmation) {
+      setShowConfirmation(true);
       return;
     }
 
     setIsSubmitting(true);
     setErrors({});
+    setShowConfirmation(false);
 
     try {
       let recaptchaToken = "";
@@ -203,6 +376,10 @@ export default function ContactPage() {
           });
         } catch (error) {
           console.error("reCAPTCHA failed:", error);
+          setSubmitStatus("error");
+          setSubmitMessage(getMessage("recaptchaFailed"));
+          setIsSubmitting(false);
+          return;
         }
       }
 
@@ -221,8 +398,8 @@ export default function ContactPage() {
 
       if (result.success) {
         setSubmitStatus("success");
-        setSubmitMessage(result.message);
-        // Reset form
+        setSubmitMessage(getMessage("submissionSuccess"));
+        // Clear form and local storage
         setFormData({
           name: "",
           email: "",
@@ -230,17 +407,34 @@ export default function ContactPage() {
           message: "",
           type: "technical",
         });
+        clearFormData();
+        setIsDirty(false);
+
+        // Focus on success message for screen readers
+        setTimeout(() => {
+          const successMessage = document.querySelector('[role="alert"]');
+          if (successMessage) {
+            (successMessage as HTMLElement).focus();
+          }
+        }, 100);
       } else {
         setSubmitStatus("error");
-        setSubmitMessage(result.message);
+        setSubmitMessage(result.message || getMessage("submissionError"));
 
         if (result.errors) {
           const newErrors: FormErrors = {};
           result.errors.forEach((error: string) => {
-            if (error.includes("Name")) newErrors.name = error;
-            else if (error.includes("Email")) newErrors.email = error;
-            else if (error.includes("Subject")) newErrors.subject = error;
-            else if (error.includes("Message")) newErrors.message = error;
+            // Map server errors to localized messages
+            if (error.includes("Name") || error.includes("お名前"))
+              newErrors.name = error;
+            else if (error.includes("Email") || error.includes("メール"))
+              newErrors.email = error;
+            else if (error.includes("Subject") || error.includes("件名"))
+              newErrors.subject = error;
+            else if (error.includes("Message") || error.includes("メッセージ"))
+              newErrors.message = error;
+            else if (error.includes("spam") || error.includes("スパム"))
+              newErrors.general = getMessage("spamDetected");
             else newErrors.general = error;
           });
           setErrors(newErrors);
@@ -249,15 +443,13 @@ export default function ContactPage() {
     } catch (error) {
       console.error("Form submission error:", error);
       setSubmitStatus("error");
-      setSubmitMessage(
-        "Network error. Please check your connection and try again.",
-      );
+      setSubmitMessage(getMessage("networkError"));
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setFormData({
       name: "",
       email: "",
@@ -268,7 +460,88 @@ export default function ContactPage() {
     setErrors({});
     setSubmitStatus("idle");
     setSubmitMessage("");
-  };
+    setShowConfirmation(false);
+    clearFormData();
+    setIsDirty(false);
+  }, [clearFormData]);
+
+  // Auto-save functionality
+  useEffect(() => {
+    if (isDirty) {
+      const timeoutId = setTimeout(() => {
+        saveFormData();
+      }, 2000); // Save after 2 seconds of inactivity
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [formData, isDirty, saveFormData]);
+
+  // Load saved data on mount
+  useEffect(() => {
+    const restored = loadFormData();
+    if (restored) {
+      // Show restoration message briefly
+      const timeoutId = setTimeout(() => {
+        setSubmitMessage(getMessage("formRestored"));
+        setSubmitStatus("success");
+        setTimeout(() => {
+          setSubmitStatus("idle");
+          setSubmitMessage("");
+        }, 3000);
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [loadFormData, getMessage]);
+
+  // Detect language preference
+  useEffect(() => {
+    const browserLang = navigator.language;
+    if (browserLang.startsWith("ja")) {
+      setLanguage("ja");
+    }
+  }, []);
+
+  // Keyboard navigation support
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + S to save draft
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault();
+        if (isDirty) {
+          saveFormData();
+        }
+      }
+
+      // Ctrl/Cmd + Enter to submit form
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        if (submitButtonRef.current && !isSubmitting) {
+          submitButtonRef.current.click();
+        }
+      }
+
+      // Escape to close confirmation dialog
+      if (e.key === "Escape" && showConfirmation) {
+        setShowConfirmation(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isDirty, saveFormData, isSubmitting, showConfirmation]);
+
+  // Focus management for accessibility
+  useEffect(() => {
+    if (submitStatus === "error" && Object.keys(errors).length > 0) {
+      // Focus on first error field after validation
+      const firstErrorField = formRef.current?.querySelector(
+        '[aria-invalid="true"]',
+      ) as HTMLElement;
+      if (firstErrorField) {
+        firstErrorField.focus();
+      }
+    }
+  }, [errors, submitStatus]);
 
   if (!config) {
     return (
@@ -285,9 +558,34 @@ export default function ContactPage() {
     <div className="min-h-screen bg-background text-foreground">
       <main id="main-content" role="main" className="py-10">
         <div className="container-system">
-          <h1 className="neue-haas-grotesk-display text-4xl text-primary mb-8">
-            Contact
-          </h1>
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="neue-haas-grotesk-display text-4xl text-primary">
+              Contact
+            </h1>
+
+            {/* Language Toggle */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-foreground/70">Language:</span>
+              <button
+                type="button"
+                onClick={() => setLanguage(language === "en" ? "ja" : "en")}
+                className="px-3 py-1 text-sm border border-foreground/20 hover:border-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+                aria-label={`Switch to ${language === "en" ? "Japanese" : "English"}`}
+              >
+                {language === "en" ? "日本語" : "English"}
+              </button>
+            </div>
+          </div>
+
+          {/* Form Status Indicators */}
+          {lastSaved && (
+            <div className="mb-4 flex items-center space-x-2 text-sm text-foreground/60">
+              <Save className="h-4 w-4" />
+              <span>
+                {getMessage("formSaved")} - {lastSaved.toLocaleTimeString()}
+              </span>
+            </div>
+          )}
 
           {/* Inquiry Type Selection */}
           <div className="mb-8 max-w-2xl">
@@ -347,8 +645,55 @@ export default function ContactPage() {
             </div>
           </div>
 
+          {/* Confirmation Dialog */}
+          {showConfirmation && (
+            <div
+              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="confirm-title"
+            >
+              <div className="bg-background border border-foreground p-6 max-w-md mx-4">
+                <h2 id="confirm-title" className="text-lg font-medium mb-4">
+                  {getMessage("confirmSubmission")}
+                </h2>
+                <div className="space-y-2 mb-6 text-sm text-foreground/70">
+                  <p>
+                    <strong>Name:</strong> {formData.name}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {formData.email}
+                  </p>
+                  <p>
+                    <strong>Subject:</strong> {formData.subject}
+                  </p>
+                  <p>
+                    <strong>Type:</strong> {formData.type}
+                  </p>
+                </div>
+                <div className="flex space-x-4">
+                  <button
+                    type="button"
+                    onClick={handleSubmit}
+                    className="bg-accent text-background px-4 py-2 border border-accent hover:bg-background hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+                  >
+                    {language === "en" ? "Send" : "送信"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmation(false)}
+                    className="px-4 py-2 border border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground"
+                  >
+                    {language === "en" ? "Cancel" : "キャンセル"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Contact Form */}
           <form
+            ref={formRef}
             data-testid="contact-form"
             onSubmit={handleSubmit}
             className="space-y-6 max-w-2xl"
@@ -522,8 +867,9 @@ export default function ContactPage() {
             )}
 
             {/* Form Actions */}
-            <div className="flex space-x-4">
+            <div className="flex flex-wrap gap-4">
               <button
+                ref={submitButtonRef}
                 type="submit"
                 data-testid="submit-button"
                 disabled={isSubmitting}
@@ -532,20 +878,38 @@ export default function ContactPage() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Sending...</span>
+                    <span>
+                      {language === "en" ? "Sending..." : "送信中..."}
+                    </span>
                   </>
                 ) : (
-                  <span>Send Message</span>
+                  <span>
+                    {language === "en" ? "Send Message" : "メッセージを送信"}
+                  </span>
                 )}
               </button>
 
-              {submitStatus === "success" && (
+              {(isDirty || submitStatus === "success") && (
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-6 py-3 border border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2"
+                  className="px-6 py-3 border border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 flex items-center space-x-2"
                 >
-                  Send Another Message
+                  <RefreshCw className="h-4 w-4" />
+                  <span>
+                    {language === "en" ? "Reset Form" : "フォームをリセット"}
+                  </span>
+                </button>
+              )}
+
+              {isDirty && (
+                <button
+                  type="button"
+                  onClick={saveFormData}
+                  className="px-4 py-3 border border-foreground/30 text-foreground/70 hover:border-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 flex items-center space-x-2"
+                >
+                  <Save className="h-4 w-4" />
+                  <span>{language === "en" ? "Save Draft" : "下書き保存"}</span>
                 </button>
               )}
             </div>

@@ -19,7 +19,7 @@ interface AnalyticsContextType {
   trackToolUsage: (
     toolName: string,
     action: string,
-    details?: Record<string, unknown>
+    details?: Record<string, unknown>,
   ) => void;
   trackPortfolioInteraction: (portfolioId: string, action: string) => void;
   trackDownload: (fileName: string, fileType: string, category: string) => void;
@@ -27,13 +27,13 @@ interface AnalyticsContextType {
   trackSearch: (
     query: string,
     resultsCount: number,
-    searchType: string
+    searchType: string,
   ) => void;
   trackError: (error: Error, context?: string) => void;
 }
 
 const AnalyticsContext = createContext<AnalyticsContextType | undefined>(
-  undefined
+  undefined,
 );
 
 interface AnalyticsProviderProps {
@@ -41,6 +41,33 @@ interface AnalyticsProviderProps {
 }
 
 export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
+  // Always initialize hooks first
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [consentGiven, setConsentGiven] = useState(false);
+
+  useEffect(() => {
+    // Skip effect in development
+    if (process.env.NODE_ENV === "development") {
+      return;
+    }
+    const savedConsent = localStorage.getItem("analytics-consent");
+
+    if (savedConsent === "true") {
+      setConsentGiven(true);
+      if (process.env.NEXT_PUBLIC_GA_ID) {
+        initializeAnalytics();
+      } else {
+        console.log("Analytics consent given but GA_ID not configured");
+        setIsInitialized(true);
+      }
+    } else if (savedConsent === "false") {
+      setConsentGiven(false);
+      setIsInitialized(true);
+    } else {
+      setIsInitialized(true);
+    }
+  }, []);
+
   // 開発環境では完全に無効化
   if (process.env.NODE_ENV === "development") {
     console.log("Analytics disabled in development environment");
@@ -69,29 +96,6 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     );
   }
 
-  // 本番環境用の実装
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [consentGiven, setConsentGiven] = useState(false);
-
-  useEffect(() => {
-    const savedConsent = localStorage.getItem("analytics-consent");
-
-    if (savedConsent === "true") {
-      setConsentGiven(true);
-      if (process.env.NEXT_PUBLIC_GA_ID) {
-        initializeAnalytics();
-      } else {
-        console.log("Analytics consent given but GA_ID not configured");
-        setIsInitialized(true);
-      }
-    } else if (savedConsent === "false") {
-      setConsentGiven(false);
-      setIsInitialized(true);
-    } else {
-      setIsInitialized(true);
-    }
-  }, []);
-
   const initializeAnalytics = async () => {
     try {
       await analytics.loadScript();
@@ -105,7 +109,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
             error instanceof Error
               ? error
               : new Error("Analytics initialization failed"),
-            { type: "analytics_init" }
+            { type: "analytics_init" },
           );
         } catch (trackingError) {
           console.warn("Failed to track analytics error:", trackingError);
@@ -146,7 +150,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const trackToolUsage = (
     toolName: string,
     action: string,
-    details?: Record<string, unknown>
+    details?: Record<string, unknown>,
   ) => {
     if (consentGiven) {
       analytics.trackToolUsage(toolName, action, details);
@@ -162,7 +166,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const trackDownload = (
     fileName: string,
     fileType: string,
-    category: string
+    category: string,
   ) => {
     if (consentGiven) {
       analytics.trackDownload(fileName, fileType, category);
@@ -178,7 +182,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const trackSearch = (
     query: string,
     resultsCount: number,
-    searchType: string
+    searchType: string,
   ) => {
     if (consentGiven) {
       analytics.trackSearch(query, resultsCount, searchType);
@@ -266,7 +270,7 @@ export function useErrorTracking() {
       window.removeEventListener("error", handleError);
       window.removeEventListener(
         "unhandledrejection",
-        handleUnhandledRejection
+        handleUnhandledRejection,
       );
     };
   }, [trackError]);

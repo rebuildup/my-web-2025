@@ -581,5 +581,171 @@
     "severity": "medium",
     "category": "javascript",
     "resolved": false
+  },
+  {
+    "id": "error_1753672898774_cfeeqh0wk",
+    "timestamp": "2025-07-28T03:21:38.774Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753672884341_h6audk9m5",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753673937778_rwrwx4bz6",
+    "timestamp": "2025-07-28T03:38:57.778Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753673928246_k4ukmz17d",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753674074021_3ds8v613e",
+    "timestamp": "2025-07-28T03:41:14.021Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753674068652_dquuqgsje",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/download"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753674074027_e5v89ewzx",
+    "timestamp": "2025-07-28T03:41:14.027Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753674068652_dquuqgsje",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753674434360_cnx05wsq9",
+    "timestamp": "2025-07-28T03:47:14.360Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753674427803_dcxagzovx",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753674559011_bibuevrg0",
+    "timestamp": "2025-07-28T03:49:19.011Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/tools",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753674553706_89xy77sco",
+    "context": {
+      "type": "network",
+      "url": "/workshop"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753675096205_yjmln2pq0",
+    "timestamp": "2025-07-28T03:58:16.205Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753675095929_d55l1ziv7",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753675096223_qum210c9p",
+    "timestamp": "2025-07-28T03:58:16.223Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753675095929_d55l1ziv7",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/download"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753676065878_uqwovme72",
+    "timestamp": "2025-07-28T04:14:25.879Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753676065564_56bau6kqd",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753676065881_br6r5kv63",
+    "timestamp": "2025-07-28T04:14:25.881Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753676065564_56bau6kqd",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/download"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
   }
 ]

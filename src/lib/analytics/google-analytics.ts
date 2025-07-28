@@ -214,7 +214,7 @@ class GoogleAnalytics {
   trackToolUsage(
     toolName: string,
     action: string,
-    details?: Record<string, unknown>
+    details?: Record<string, unknown>,
   ): void {
     this.trackEvent({
       action: "tool_usage",
@@ -356,7 +356,7 @@ class GoogleAnalytics {
         "client_id",
         (clientId: string) => {
           resolve(clientId);
-        }
+        },
       );
     });
   }
@@ -372,26 +372,26 @@ export const trackEvent = (event: GAEvent) => analytics.trackEvent(event);
 export const trackToolUsage = (
   toolName: string,
   action: string,
-  details?: Record<string, unknown>
+  details?: Record<string, unknown>,
 ) => analytics.trackToolUsage(toolName, action, details);
 export const trackPortfolioInteraction = (
   portfolioId: string,
-  action: string
+  action: string,
 ) => analytics.trackPortfolioInteraction(portfolioId, action);
 export const trackDownload = (
   fileName: string,
   fileType: string,
-  category: string
+  category: string,
 ) => analytics.trackDownload(fileName, fileType, category);
 export const trackContactForm = (formType: string, success: boolean) =>
   analytics.trackContactForm(formType, success);
 export const trackSearch = (
   query: string,
   resultsCount: number,
-  searchType: string
+  searchType: string,
 ) => analytics.trackSearch(query, resultsCount, searchType);
 export const trackPerformance = (
-  metrics: Parameters<typeof analytics.trackPerformance>[0]
+  metrics: Parameters<typeof analytics.trackPerformance>[0],
 ) => analytics.trackPerformance(metrics);
 export const trackError = (error: Error, context?: string) =>
   analytics.trackError(error, context);
