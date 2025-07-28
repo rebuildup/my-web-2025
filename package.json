@@ -18,6 +18,10 @@
     "lighthouse": "lhci autorun",
     "test:all": "powershell -ExecutionPolicy Bypass -File scripts/run-all-tests.ps1",
     "test:all:bash": "bash scripts/run-all-tests.sh",
+    "test:fast": "powershell -ExecutionPolicy Bypass -File scripts/run-all-tests-fast.ps1",
+    "test:fast:bash": "bash scripts/run-all-tests-fast.sh",
+    "test:fast:skip-e2e": "powershell -ExecutionPolicy Bypass -File scripts/run-all-tests-fast.ps1 -SkipSlowTests",
+    "test:fast:verbose": "powershell -ExecutionPolicy Bypass -File scripts/run-all-tests-fast.ps1 -Verbose",
     "analyze": "cross-env ANALYZE=true npm run build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server npm run build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser npm run build"

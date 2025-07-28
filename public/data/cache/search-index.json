@@ -1,5 +1,125 @@
 [
   {
+    "id": "portfolio-1753705653809",
+    "type": "portfolio",
+    "title": "初めてのBlender",
+    "description": "Blenderを初めて使った動画 普通に難しかったです",
+    "content": "Blenderを初めて使った動画 普通に難しかったです",
+    "tags": [],
+    "category": "video",
+    "searchableContent": "初めてのblender blenderを初めて使った動画 普通に難しかったです blenderを初めて使った動画 普通に難しかったです video"
+  },
+  {
+    "id": "portfolio-1753705628729",
+    "type": "portfolio",
+    "title": "忙しい人のための作文エディター 完成版",
+    "description": "U-22プロコンに向けて制作 チャットGPTAPIを初めて使いました ページ風のドキュメントを作るのが本当に難しかったです ページを開くのにAPIキーが必要です",
+    "content": "U-22プロコンに向けて制作 チャットGPTAPIを初めて使いました ページ風のドキュメントを作るのが本当に難しかったです ページを開くのにAPIキーが必要です",
+    "tags": [],
+    "category": "develop",
+    "searchableContent": "忙しい人のための作文エディター 完成版 u-22プロコンに向けて制作 チャットgptapiを初めて使いました ページ風のドキュメントを作るのが本当に難しかったです ページを開くのにapiキーが必要です u-22プロコンに向けて制作 チャットgptapiを初めて使いました ページ風のドキュメントを作るのが本当に難しかったです ページを開くのにapiキーが必要です develop"
+  },
+  {
+    "id": "portfolio-1753705617995",
+    "type": "portfolio",
+    "title": "忙しい人のための作文エディター 試作",
+    "description": "U-22プロコンに向けて制作 単語にマウスオーバーすると類義語が表示されるようなテキストエディターです 全体的なクオリティが低かったのでボツにしました",
+    "content": "U-22プロコンに向けて制作 単語にマウスオーバーすると類義語が表示されるようなテキストエディターです 全体的なクオリティが低かったのでボツにしました",
+    "tags": [],
+    "category": "develop",
+    "searchableContent": "忙しい人のための作文エディター 試作 u-22プロコンに向けて制作 単語にマウスオーバーすると類義語が表示されるようなテキストエディターです 全体的なクオリティが低かったのでボツにしました u-22プロコンに向けて制作 単語にマウスオーバーすると類義語が表示されるようなテキストエディターです 全体的なクオリティが低かったのでボツにしました develop"
+  },
+  {
+    "id": "portfolio-1753705569200",
+    "type": "portfolio",
+    "title": "赤と黒のデザイン",
+    "description": "webっぽいデザインの練習です 赤と黒はスタイリッシュな感じが出ますよね",
+    "content": "webっぽいデザインの練習です 赤と黒はスタイリッシュな感じが出ますよね",
+    "tags": [],
+    "category": "design",
+    "searchableContent": "赤と黒のデザイン webっぽいデザインの練習です 赤と黒はスタイリッシュな感じが出ますよね webっぽいデザインの練習です 赤と黒はスタイリッシュな感じが出ますよね design"
+  },
+  {
+    "id": "portfolio-1753705553752",
+    "type": "portfolio",
+    "title": "青と白のデザイン",
+    "description": "webっぽいデザインの練習です 青と白はかっこよくて好きです",
+    "content": "webっぽいデザインの練習です 青と白はかっこよくて好きです",
+    "tags": [],
+    "category": "design",
+    "searchableContent": "青と白のデザイン webっぽいデザインの練習です 青と白はかっこよくて好きです webっぽいデザインの練習です 青と白はかっこよくて好きです design"
+  },
+  {
+    "id": "portfolio-1753705545464",
+    "type": "portfolio",
+    "title": "どうにかなっちゃいそう 文字pv",
+    "description": "「どうにかなっちゃいそう/NOMELON NOLEMON」の文字pvです 音声に合わせてイラストが動くエクスプレッションの練習です",
+    "content": "「どうにかなっちゃいそう/NOMELON NOLEMON」の文字pvです 音声に合わせてイラストが動くエクスプレッションの練習です",
+    "tags": [],
+    "category": "video",
+    "searchableContent": "どうにかなっちゃいそう 文字pv 「どうにかなっちゃいそう/nomelon nolemon」の文字pvです 音声に合わせてイラストが動くエクスプレッションの練習です 「どうにかなっちゃいそう/nomelon nolemon」の文字pvです 音声に合わせてイラストが動くエクスプレッションの練習です video"
+  },
+  {
+    "id": "portfolio-1753705521159",
+    "type": "portfolio",
+    "title": "コンピュータ部パンフレットデザイン",
+    "description": "コンピュータ部のパンフレットを作りました",
+    "content": "コンピュータ部のパンフレットを作りました",
+    "tags": [],
+    "category": "design",
+    "searchableContent": "コンピュータ部パンフレットデザイン コンピュータ部のパンフレットを作りました コンピュータ部のパンフレットを作りました design"
+  },
+  {
+    "id": "portfolio-1753705501944",
+    "type": "portfolio",
+    "title": "テストお疲れ様でした アニメーション",
+    "description": "テスト終わりに作って部活動のDiscordサーバに投下しました",
+    "content": "テスト終わりに作って部活動のDiscordサーバに投下しました",
+    "tags": [],
+    "category": "video",
+    "searchableContent": "テストお疲れ様でした アニメーション テスト終わりに作って部活動のdiscordサーバに投下しました テスト終わりに作って部活動のdiscordサーバに投下しました video"
+  },
+  {
+    "id": "portfolio-1753705469624",
+    "type": "portfolio",
+    "title": "大雨警報発令中",
+    "description": "練習です大雨警報が発令中だったので作りました",
+    "content": "練習です大雨警報が発令中だったので作りました",
+    "tags": [],
+    "category": "video",
+    "searchableContent": "大雨警報発令中 練習です大雨警報が発令中だったので作りました 練習です大雨警報が発令中だったので作りました video"
+  },
+  {
+    "id": "portfolio-1753705448392",
+    "type": "portfolio",
+    "title": "動いたっ！ イラストアニメーション",
+    "description": "Aeでイラストを動かしてみました",
+    "content": "Aeでイラストを動かしてみました",
+    "tags": [],
+    "category": "video",
+    "searchableContent": "動いたっ！ イラストアニメーション aeでイラストを動かしてみました aeでイラストを動かしてみました video"
+  },
+  {
+    "id": "portfolio-draft-test",
+    "type": "portfolio",
+    "title": "嘘と未来 文字pv",
+    "description": "ボカロ曲「嘘と未来/うわべ」の文字pvです",
+    "content": "ボカロ曲「嘘と未来/うわべ」の文字pvです",
+    "tags": ["Test"],
+    "category": "develop",
+    "searchableContent": "嘘と未来 文字pv ボカロ曲「嘘と未来/うわべ」の文字pvです ボカロ曲「嘘と未来/うわべ」の文字pvです test develop"
+  },
+  {
+    "id": "portfolio-1753697544895",
+    "type": "portfolio",
+    "title": "FlashBeatオープニング",
+    "description": "FlashBeatのオープニング Aeで作りました",
+    "content": "FlashBeatのオープニング Aeで作りました",
+    "tags": ["AfterEffects"],
+    "category": "video",
+    "searchableContent": "flashbeatオープニング flashbeatのオープニング aeで作りました flashbeatのオープニング aeで作りました aftereffects video"
+  },
+  {
     "id": "portfolio-1753697297201",
     "type": "portfolio",
     "title": "FlashBeatテーマ曲(BGM)",

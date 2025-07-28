@@ -110,6 +110,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
                 height={450}
                 className="w-full h-full object-cover"
                 priority
+                unoptimized={true}
               />
             </div>
           )}
@@ -292,6 +293,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
                       height={200}
                       className="w-full h-full object-cover"
                       loading="lazy"
+                      unoptimized={true}
                     />
                   </div>
                 ))}

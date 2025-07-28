@@ -48,10 +48,16 @@ export async function GET(request: NextRequest) {
         if (process.env.NODE_ENV === "development") {
           response.headers.set(
             "Cache-Control",
-            "no-store, no-cache, must-revalidate",
+            "no-store, no-cache, must-revalidate, proxy-revalidate",
           );
           response.headers.set("Pragma", "no-cache");
           response.headers.set("Expires", "0");
+          response.headers.set("Surrogate-Control", "no-store");
+        } else {
+          response.headers.set(
+            "Cache-Control",
+            "public, max-age=300, s-maxage=300",
+          );
         }
 
         return response;
@@ -64,12 +70,13 @@ export async function GET(request: NextRequest) {
     }
 
     // ステータスフィルター
-    if (status) {
+    if (status && status !== "all") {
       filteredData = filteredData.filter((item) => item.status === status);
-    } else {
+    } else if (!status) {
       // デフォルトでは published のみを表示（ギャラリー用）
       filteredData = filteredData.filter((item) => item.status === "published");
     }
+    // status=all の場合は全てのデータを返す（データマネージャー用）
 
     // カテゴリフィルター
     if (category && category !== "all") {
@@ -98,10 +105,18 @@ export async function GET(request: NextRequest) {
     if (process.env.NODE_ENV === "development") {
       response.headers.set(
         "Cache-Control",
-        "no-store, no-cache, must-revalidate",
+        "no-store, no-cache, must-revalidate, proxy-revalidate",
       );
       response.headers.set("Pragma", "no-cache");
       response.headers.set("Expires", "0");
+      response.headers.set("Surrogate-Control", "no-store");
+    } else {
+      // 本番環境では短いキャッシュ時間を設定
+      response.headers.set(
+        "Cache-Control",
+        "public, max-age=300, s-maxage=300, stale-while-revalidate=600",
+      );
+      response.headers.set("Content-Type", "application/json");
     }
 
     return response;

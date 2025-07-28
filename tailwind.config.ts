@@ -8,16 +8,16 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      // Custom color scheme - 青色を削除
+      // Custom color scheme - ダークテーマに統一
       colors: {
         // Original design colors
         primary: {
-          DEFAULT: "#0000ff", // 青色をプライマリに
-          foreground: "#ffffff",
+          DEFAULT: "#ffffff", // 白色をプライマリに
+          foreground: "#222222",
         },
         base: "#222222", // ダークグレー (Dark Grey)
-        background: "#ffffff", // 背景：白色
-        foreground: "#222222", // Text on light background
+        background: "#222222", // 背景：ダークグレー
+        foreground: "#ffffff", // Text on dark background
         accent: {
           DEFAULT: "#0000ff", // 青色をアクセントに
           foreground: "#ffffff",
@@ -25,23 +25,23 @@ const config: Config = {
 
         // UI component colors
         card: {
-          DEFAULT: "#ffffff",
-          foreground: "#222222",
+          DEFAULT: "#222222",
+          foreground: "#ffffff",
         },
         secondary: {
-          DEFAULT: "#f1f5f9",
-          foreground: "#0f172a",
+          DEFAULT: "#333333",
+          foreground: "#ffffff",
         },
         muted: {
-          DEFAULT: "#f1f5f9",
-          foreground: "#64748b",
+          DEFAULT: "#444444",
+          foreground: "#cccccc",
         },
         destructive: {
           DEFAULT: "#ef4444",
           foreground: "#ffffff",
         },
-        border: "#e2e8f0",
-        input: "#e2e8f0",
+        border: "#ffffff",
+        input: "#333333",
         ring: "#0000ff",
       },
 

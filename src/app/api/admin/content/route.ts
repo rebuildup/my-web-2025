@@ -156,6 +156,22 @@ export async function POST(request: NextRequest) {
     await updateSearchIndex();
     console.log("Search index updated");
 
+    // Invalidate portfolio data manager cache if this is a portfolio item
+    if (item.type === "portfolio") {
+      console.log("Invalidating portfolio data manager cache...");
+      try {
+        // Import and invalidate the portfolio data manager cache
+        const { portfolioDataManager } = await import(
+          "@/lib/portfolio/data-manager"
+        );
+        portfolioDataManager.invalidateCache();
+        console.log("Portfolio data manager cache invalidated");
+      } catch (cacheError) {
+        console.error("Error invalidating portfolio cache:", cacheError);
+        // Don't fail the request if cache invalidation fails
+      }
+    }
+
     return NextResponse.json({
       success: true,
       data: item,
@@ -210,6 +226,19 @@ export async function DELETE(request: NextRequest) {
 
     // Update search index
     await updateSearchIndex();
+
+    // Invalidate portfolio data manager cache if this is a portfolio item
+    if (type === "portfolio") {
+      try {
+        const { portfolioDataManager } = await import(
+          "@/lib/portfolio/data-manager"
+        );
+        portfolioDataManager.invalidateCache();
+        console.log("Portfolio data manager cache invalidated after deletion");
+      } catch (cacheError) {
+        console.error("Error invalidating portfolio cache:", cacheError);
+      }
+    }
 
     return NextResponse.json({
       success: true,

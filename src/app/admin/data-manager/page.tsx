@@ -39,7 +39,7 @@ export default function DataManagerPage() {
       // キャッシュを回避するためにタイムスタンプを追加
       const timestamp = Date.now();
       const response = await fetch(
-        `/api/content/${type}?limit=100&_t=${timestamp}`,
+        `/api/content/${type}?limit=100&_t=${timestamp}&status=all`,
         {
           cache: "no-store",
           headers: {
@@ -128,6 +128,16 @@ export default function DataManagerPage() {
 
         // リストの中で更新されたアイテムを選択状態に保つ
         setSelectedItem(savedItem);
+
+        // ポートフォリオの場合、ギャラリーページのキャッシュを無効化するためのヒント
+        if (selectedContentType === "portfolio") {
+          console.log(
+            "Portfolio item saved - gallery cache should be invalidated",
+          );
+
+          // オプション: ギャラリーページを新しいタブで開いて確認を促す
+          // window.open('/portfolio/gallery/all', '_blank');
+        }
 
         // 成功メッセージを3秒後にリセット
         setTimeout(() => setSaveStatus("idle"), 3000);

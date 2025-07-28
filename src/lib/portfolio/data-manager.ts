@@ -486,11 +486,21 @@ export class PortfolioDataManager {
           ? window.location.origin
           : "http://localhost:3000");
 
+      // Add timestamp to prevent caching in development
+      const timestamp =
+        process.env.NODE_ENV === "development" ? `&_t=${Date.now()}` : "";
+
       const response = await fetch(
-        `${baseUrl}/api/content/portfolio?limit=100`,
+        `${baseUrl}/api/content/portfolio?limit=100&status=all${timestamp}`,
         {
-          next: { revalidate: 3600 }, // 1 hour cache
-          cache: "force-cache", // Use cache in production
+          next:
+            process.env.NODE_ENV === "development"
+              ? { revalidate: 0 } // No cache in development
+              : { revalidate: 300 }, // 5 minutes cache in production
+          cache:
+            process.env.NODE_ENV === "development"
+              ? "no-store" // No cache in development
+              : "default", // Default cache in production
         },
       );
 

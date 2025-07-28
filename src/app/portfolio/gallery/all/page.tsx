@@ -6,6 +6,8 @@
 import { Metadata } from "next";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
+import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
+import { SearchFilter } from "@/lib/portfolio/search-index";
 import { AllGalleryClient } from "./components/AllGalleryClient";
 
 // Force dynamic rendering to ensure fresh data
@@ -40,9 +42,24 @@ export default async function AllGalleryPage() {
   try {
     console.log("AllGalleryPage: Starting data fetch...");
 
-    // Get all portfolio data
-    const items = await portfolioDataManager.getPortfolioData(true); // Force refresh
-    const searchFilters = await portfolioDataManager.getSearchFilters();
+    // Force cache invalidation in development
+    if (process.env.NODE_ENV === "development") {
+      portfolioDataManager.invalidateCache();
+    }
+
+    // Get all portfolio data with error handling
+    let items: PortfolioContentItem[] = [];
+    let searchFilters: SearchFilter[] = [];
+
+    try {
+      items = await portfolioDataManager.getPortfolioData(true); // Force refresh
+      searchFilters = await portfolioDataManager.getSearchFilters();
+    } catch (dataError) {
+      console.error("Error fetching portfolio data:", dataError);
+      // Fallback to empty arrays to prevent page crash
+      items = [];
+      searchFilters = [];
+    }
 
     console.log("AllGalleryPage: Data fetched successfully", {
       itemsCount: items.length,

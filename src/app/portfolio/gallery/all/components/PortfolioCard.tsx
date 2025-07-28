@@ -78,9 +78,7 @@ export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={handleImageError}
             loading="lazy"
-            {...(process.env.NODE_ENV === "production" && {
-              unoptimized: true,
-            })}
+            unoptimized={true}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-background">
