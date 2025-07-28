@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     url: "https://yusuke-kim.com/",
     images: [
       {
-        url: "https://yusuke-kim.com/og-image.jpg",
+        url: "https://yusuke-kim.com/images/og-image.png",
         width: 1200,
         height: 630,
         alt: "samuido - Creative Portfolio & Tools",
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     title: "samuidoのサイトルート",
     description:
       "フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました",
-    images: ["https://yusuke-kim.com/twitter-image.jpg"],
+    images: ["https://yusuke-kim.com/images/twitter-image.png"],
     creator: "@361do_sleep",
   },
 };
@@ -99,9 +99,14 @@ export default function RootLayout({
         />
         <link rel="preconnect" href="https://use.typekit.net" />
 
+        {/* Favicon configuration */}
+        <link rel="icon" href="/favicons/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/favicons/favicon-32x32.png" />
+
         {/* Preload critical resources */}
-        <link rel="preload" href="/images/og-image.jpg" as="image" />
-        <link rel="preload" href="/favicon.ico" as="image" />
+        <link rel="preload" href="/images/og-image.png" as="image" />
+        <link rel="preload" href="/favicons/favicon.ico" as="image" />
 
         {/* DNS prefetch for external services */}
         <link rel="dns-prefetch" href="//www.google-analytics.com" />
@@ -121,8 +126,8 @@ export default function RootLayout({
       >
         <CriticalResourcePreloader
           resources={[
-            { href: "/images/og-image.jpg", as: "image" },
-            { href: "/favicon.ico", as: "image" },
+            { href: "/images/og-image.png", as: "image" },
+            { href: "/favicons/favicon.ico", as: "image" },
             {
               href: "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Shippori+Antique+B1&display=swap",
               as: "style",

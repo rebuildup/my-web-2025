@@ -12,18 +12,8 @@
   "categories": ["portfolio", "tools", "productivity", "design"],
   "icons": [
     {
-      "src": "/favicons/favicon-16x16.png",
-      "sizes": "16x16",
-      "type": "image/png"
-    },
-    {
       "src": "/favicons/favicon-32x32.png",
       "sizes": "32x32",
-      "type": "image/png"
-    },
-    {
-      "src": "/favicons/favicon-96x96.png",
-      "sizes": "96x96",
       "type": "image/png"
     },
     {
@@ -33,10 +23,9 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/favicons/favicon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "src": "/favicons/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ],
   "shortcuts": [
@@ -47,8 +36,8 @@
       "url": "/tools",
       "icons": [
         {
-          "src": "/favicons/favicon-96x96.png",
-          "sizes": "96x96"
+          "src": "/favicons/favicon-32x32.png",
+          "sizes": "32x32"
         }
       ]
     },
@@ -59,8 +48,8 @@
       "url": "/portfolio",
       "icons": [
         {
-          "src": "/favicons/favicon-96x96.png",
-          "sizes": "96x96"
+          "src": "/favicons/favicon-32x32.png",
+          "sizes": "32x32"
         }
       ]
     },
@@ -71,8 +60,8 @@
       "url": "/workshop",
       "icons": [
         {
-          "src": "/favicons/favicon-96x96.png",
-          "sizes": "96x96"
+          "src": "/favicons/favicon-32x32.png",
+          "sizes": "32x32"
         }
       ]
     }

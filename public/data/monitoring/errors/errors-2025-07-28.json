@@ -82,5 +82,509 @@
     "severity": "medium",
     "category": "network",
     "resolved": false
+  },
+  {
+    "id": "error_1753703917585_dh8xgmx1i",
+    "timestamp": "2025-07-28T11:58:37.585Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703909135_db67uh4r4",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703919496_1iuwlaqpz",
+    "timestamp": "2025-07-28T11:58:39.497Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/about",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703912699_tsi3ynszw",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703919845_8jcpjpdep",
+    "timestamp": "2025-07-28T11:58:39.845Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703913191_o1lpicgfh",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703920429_tonufyzl3",
+    "timestamp": "2025-07-28T11:58:40.429Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/workshop",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703913670_wwjpc2pmn",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703920328_mos2qigmr",
+    "timestamp": "2025-07-28T11:58:40.328Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/contact",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703913457_6puzf5yst",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703920645_8e1vb5y08",
+    "timestamp": "2025-07-28T11:58:40.645Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703913191_o1lpicgfh",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703921664_l4q83gxv3",
+    "timestamp": "2025-07-28T11:58:41.664Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/tools",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703914621_vvb7z6f0v",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703922238_23hefris4",
+    "timestamp": "2025-07-28T11:58:42.238Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703915069_x45rxrh45",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703927639_ccnfpxdsg",
+    "timestamp": "2025-07-28T11:58:47.639Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703920603_xl9aidfgr",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703929202_07r941wzf",
+    "timestamp": "2025-07-28T11:58:49.202Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703923293_j2epftit3",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703929540_2sw7xtqz1",
+    "timestamp": "2025-07-28T11:58:49.540Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703923293_j2epftit3",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703934486_oyu0wqd62",
+    "timestamp": "2025-07-28T11:58:54.486Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703930493_ysr07ij5l",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703937042_wzgydprd1",
+    "timestamp": "2025-07-28T11:58:57.042Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703932524_vdy3eg9lt",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703937456_a8oigpesz",
+    "timestamp": "2025-07-28T11:58:57.456Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/tools",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703933086_vj0iinpiu",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703938162_dio24ggzj",
+    "timestamp": "2025-07-28T11:58:58.162Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/workshop",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703933838_mle35mdjl",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703945101_wd1t0tu6t",
+    "timestamp": "2025-07-28T11:59:05.101Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/about",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703937768_10om8577e",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703947126_et3onk72s",
+    "timestamp": "2025-07-28T11:59:07.126Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/search",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703939601_w31sf2swc",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703947667_xiaigh3od",
+    "timestamp": "2025-07-28T11:59:07.667Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/search",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703940223_tuwy4agnk",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703954634_8ybt6uzui",
+    "timestamp": "2025-07-28T11:59:14.634Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703947933_auhpj4kz9",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703955227_k00czqtby",
+    "timestamp": "2025-07-28T11:59:15.227Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/nonexistent-page",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703948310_we87dijcz",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703957802_mqwvofj1g",
+    "timestamp": "2025-07-28T11:59:17.802Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "Error: Network error: 404 Not Found\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:38\n    at async Promise.allSettled (index 5)\n    at async CacheManager.preloadCriticalResources (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:730:13)",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753703951815_ie243xm4c",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703984077_dm6arw2kh",
+    "timestamp": "2025-07-28T11:59:44.077Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "[project]/src/lib/analytics/error-tracking.ts [app-client] (ecmascript)/monitorNetworkErrors/window.fetch@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40\nasync*[project]/src/lib/utils/service-worker.ts [app-client] (ecmascript)/preloadCriticalResources/cachePromises<@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:44\npreloadCriticalResources@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:717:53\nasync*initializeServiceWorker@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:785:26\nasync*PerformanceProvider.useEffect.initializePerformance@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:2397:244\nPerformanceProvider.useEffect@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:2471:13\nreact_stack_bottom_frame@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:13064:22\nrunWithFiberInDEV@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:131\ncommitHookEffectListMount@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6578:628\ncommitHookPassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6613:60\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7568:33\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\n",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753703966308_mgtxky0xn",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753703988676_i39o7smvb",
+    "timestamp": "2025-07-28T11:59:48.676Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "[project]/src/lib/analytics/error-tracking.ts [app-client] (ecmascript)/monitorNetworkErrors/window.fetch@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40\nasync*[project]/src/lib/utils/service-worker.ts [app-client] (ecmascript)/preloadCriticalResources/cachePromises<@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:719:44\npreloadCriticalResources@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:717:53\nasync*initializeServiceWorker@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:785:26\nasync*PerformanceProvider.useEffect.initializePerformance@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:2397:244\nPerformanceProvider.useEffect@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:2471:13\nreact_stack_bottom_frame@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:13064:22\nrunWithFiberInDEV@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:131\ncommitHookEffectListMount@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6578:628\ncommitHookPassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6613:60\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7568:33\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\n",
+    "url": "http://localhost:3000/contact",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753703972339_kp97xna01",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753704030417_xutxo2mvh",
+    "timestamp": "2025-07-28T12:00:30.417Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:49",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15",
+    "sessionId": "session_1753704021653_0lx6tiyod",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753704033911_l3r8nc37q",
+    "timestamp": "2025-07-28T12:00:33.911Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:49",
+    "url": "http://localhost:3000/contact",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15",
+    "sessionId": "session_1753704027247_64zlnvizi",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753704046803_t8vvqqlph",
+    "timestamp": "2025-07-28T12:00:46.803Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:49",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15",
+    "sessionId": "session_1753704036986_qq9igpgvw",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753704044406_hj2twjh71",
+    "timestamp": "2025-07-28T12:00:44.406Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:49",
+    "url": "http://localhost:3000/workshop",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15",
+    "sessionId": "session_1753704040270_v45qu5uy3",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753704049345_fxm4rrk5w",
+    "timestamp": "2025-07-28T12:00:49.345Z",
+    "message": "Network error: 404 Not Found",
+    "stack": "@http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:49",
+    "url": "http://localhost:3000/about",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15",
+    "sessionId": "session_1753704044333_gw5v47vvz",
+    "context": {
+      "type": "network",
+      "url": "/images/og-image.jpg",
+      "status": 404,
+      "statusText": "Not Found"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
   }
 ]
