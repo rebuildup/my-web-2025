@@ -19,7 +19,7 @@ interface AnalyticsContextType {
   trackToolUsage: (
     toolName: string,
     action: string,
-    details?: Record<string, unknown>,
+    details?: Record<string, unknown>
   ) => void;
   trackPortfolioInteraction: (portfolioId: string, action: string) => void;
   trackDownload: (fileName: string, fileType: string, category: string) => void;
@@ -27,13 +27,13 @@ interface AnalyticsContextType {
   trackSearch: (
     query: string,
     resultsCount: number,
-    searchType: string,
+    searchType: string
   ) => void;
   trackError: (error: Error, context?: string) => void;
 }
 
 const AnalyticsContext = createContext<AnalyticsContextType | undefined>(
-  undefined,
+  undefined
 );
 
 interface AnalyticsProviderProps {
@@ -41,65 +41,76 @@ interface AnalyticsProviderProps {
 }
 
 export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
+  // 開発環境では完全に無効化
+  if (process.env.NODE_ENV === "development") {
+    console.log("Analytics disabled in development environment");
+
+    const mockContextValue: AnalyticsContextType = {
+      isInitialized: true,
+      consentGiven: false,
+      setConsent: () => {},
+      trackPageView: () => {},
+      trackEvent: () => {},
+      trackToolUsage: () => {},
+      trackPortfolioInteraction: () => {},
+      trackDownload: () => {},
+      trackContactForm: () => {},
+      trackSearch: () => {},
+      trackError: (error: Error, context?: string) => {
+        // 開発環境でもエラートラッキングは有効にする（コンソールログのみ）
+        console.warn("Error tracked (dev mode):", error.message, context);
+      },
+    };
+
+    return (
+      <AnalyticsContext.Provider value={mockContextValue}>
+        {children}
+      </AnalyticsContext.Provider>
+    );
+  }
+
+  // 本番環境用の実装
   const [isInitialized, setIsInitialized] = useState(false);
   const [consentGiven, setConsentGiven] = useState(false);
 
   useEffect(() => {
-    // Check for existing consent
     const savedConsent = localStorage.getItem("analytics-consent");
-
-    // Debug: Clear consent if GA_ID is not configured (development only)
-    if (
-      process.env.NODE_ENV === "development" &&
-      !process.env.NEXT_PUBLIC_GA_ID &&
-      savedConsent
-    ) {
-      console.log("Clearing analytics consent due to missing GA_ID");
-      localStorage.removeItem("analytics-consent");
-      return;
-    }
 
     if (savedConsent === "true") {
       setConsentGiven(true);
-      // Only initialize if GA_ID is configured
       if (process.env.NEXT_PUBLIC_GA_ID) {
         initializeAnalytics();
       } else {
         console.log("Analytics consent given but GA_ID not configured");
-        setIsInitialized(true); // Set as initialized to prevent further attempts
+        setIsInitialized(true);
       }
     } else if (savedConsent === "false") {
       setConsentGiven(false);
+      setIsInitialized(true);
+    } else {
+      setIsInitialized(true);
     }
   }, []);
 
   const initializeAnalytics = async () => {
     try {
-      // Skip analytics initialization in development if GA_ID is not configured
-      if (
-        process.env.NODE_ENV === "development" &&
-        !process.env.NEXT_PUBLIC_GA_ID
-      ) {
-        console.log("Analytics disabled in development - GA_ID not configured");
-        setIsInitialized(true);
-        return;
-      }
-
       await analytics.loadScript();
       analytics.setConsent(true);
       setIsInitialized(true);
     } catch (error) {
-      console.warn("Analytics initialization skipped:", error);
-      // Don't track analytics initialization errors if GA_ID is not configured
+      console.warn("Analytics initialization failed:", error);
       if (process.env.NEXT_PUBLIC_GA_ID) {
-        errorTracker.captureError(
-          error instanceof Error
-            ? error
-            : new Error("Analytics initialization failed"),
-          { type: "analytics_init" },
-        );
+        try {
+          errorTracker.captureError(
+            error instanceof Error
+              ? error
+              : new Error("Analytics initialization failed"),
+            { type: "analytics_init" }
+          );
+        } catch (trackingError) {
+          console.warn("Failed to track analytics error:", trackingError);
+        }
       }
-      // Still set as initialized to prevent repeated attempts
       setIsInitialized(true);
     }
   };
@@ -109,12 +120,11 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     localStorage.setItem("analytics-consent", consent.toString());
 
     if (consent && !isInitialized) {
-      // Only initialize if GA_ID is configured
       if (process.env.NEXT_PUBLIC_GA_ID) {
         initializeAnalytics();
       } else {
         console.log("Analytics consent given but GA_ID not configured");
-        setIsInitialized(true); // Set as initialized to prevent further attempts
+        setIsInitialized(true);
       }
     } else {
       analytics.setConsent(consent);
@@ -136,7 +146,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const trackToolUsage = (
     toolName: string,
     action: string,
-    details?: Record<string, unknown>,
+    details?: Record<string, unknown>
   ) => {
     if (consentGiven) {
       analytics.trackToolUsage(toolName, action, details);
@@ -152,7 +162,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const trackDownload = (
     fileName: string,
     fileType: string,
-    category: string,
+    category: string
   ) => {
     if (consentGiven) {
       analytics.trackDownload(fileName, fileType, category);
@@ -168,7 +178,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const trackSearch = (
     query: string,
     resultsCount: number,
-    searchType: string,
+    searchType: string
   ) => {
     if (consentGiven) {
       analytics.trackSearch(query, resultsCount, searchType);
@@ -176,7 +186,6 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   };
 
   const trackError = (error: Error, context?: string) => {
-    // Error tracking doesn't require consent as it's for technical purposes
     errorTracker.captureError(error, context ? { type: context } : undefined);
 
     if (consentGiven) {
@@ -257,7 +266,7 @@ export function useErrorTracking() {
       window.removeEventListener("error", handleError);
       window.removeEventListener(
         "unhandledrejection",
-        handleUnhandledRejection,
+        handleUnhandledRejection
       );
     };
   }, [trackError]);

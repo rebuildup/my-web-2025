@@ -687,5 +687,157 @@
       "element": "P",
       "url": ""
     }
+  },
+  {
+    "id": "perf_1753671470103_i42vc0n3e",
+    "timestamp": "2025-07-28T02:57:50.103Z",
+    "metric": "lcp",
+    "value": 8760,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753671588389_tpj96wzy5",
+    "timestamp": "2025-07-28T02:59:48.389Z",
+    "metric": "lcp",
+    "value": 23988,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753671622836_s81mbe9je",
+    "timestamp": "2025-07-28T03:00:22.836Z",
+    "metric": "lcp",
+    "value": 7516,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753671622973_nbtj9x0mv",
+    "timestamp": "2025-07-28T03:00:22.973Z",
+    "metric": "lcp",
+    "value": 7652,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753671777924_i345h67h8",
+    "timestamp": "2025-07-28T03:02:57.924Z",
+    "metric": "lcp",
+    "value": 8964,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753671778104_vnve7h1np",
+    "timestamp": "2025-07-28T03:02:58.104Z",
+    "metric": "lcp",
+    "value": 9124,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753671890896_flat02ad8",
+    "timestamp": "2025-07-28T03:04:50.896Z",
+    "metric": "lcp",
+    "value": 8756,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753671891032_k16tzfgo2",
+    "timestamp": "2025-07-28T03:04:51.032Z",
+    "metric": "lcp",
+    "value": 8908,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753671898203_uzhd4zyae",
+    "timestamp": "2025-07-28T03:04:58.203Z",
+    "metric": "lcp",
+    "value": 16080,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753672087043_zfjbb17d3",
+    "timestamp": "2025-07-28T03:08:07.043Z",
+    "metric": "lcp",
+    "value": 9840,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753672087181_t2lu4a1z2",
+    "timestamp": "2025-07-28T03:08:07.181Z",
+    "metric": "lcp",
+    "value": 9960,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753672252330_7khsmyc3w",
+    "timestamp": "2025-07-28T03:10:52.330Z",
+    "metric": "lcp",
+    "value": 10284,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
   }
 ]

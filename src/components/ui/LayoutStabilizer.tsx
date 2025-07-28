@@ -56,7 +56,7 @@ export const SpaceReserver: React.FC<SpaceReserverProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [reservedHeight, setReservedHeight] = useState<string | number>(
-    minHeight,
+    minHeight
   );
 
   useEffect(() => {
@@ -190,7 +190,7 @@ export const FontLoader: React.FC<FontLoaderProps> = ({ fonts, children }) => {
         const fontPromises = fonts.map(
           ({ family, weight = "400", style = "normal" }) => {
             return document.fonts.load(`${weight} ${style} 16px "${family}"`);
-          },
+          }
         );
 
         await Promise.all(fontPromises);
@@ -332,14 +332,15 @@ export const LayoutShiftDetector: React.FC = () => {
 
           const sources =
             layoutShiftEntry.sources?.map((source) => {
-              if (source.node) {
-                return (
-                  source.node.tagName.toLowerCase() +
-                  (source.node.className
+              if (source.node && source.node.tagName) {
+                const tagName = source.node.tagName.toLowerCase();
+                const className =
+                  source.node.className &&
+                  typeof source.node.className === "string"
                     ? `.${source.node.className.split(" ")[0]}`
-                    : "") +
-                  (source.node.id ? `#${source.node.id}` : "")
-                );
+                    : "";
+                const id = source.node.id ? `#${source.node.id}` : "";
+                return tagName + className + id;
               }
               return "unknown";
             }) || [];
@@ -352,7 +353,7 @@ export const LayoutShiftDetector: React.FC = () => {
                 timestamp: Date.now(),
                 sources,
               },
-            ].slice(-10),
+            ].slice(-10)
           ); // Keep only last 10 shifts
 
           if (layoutShiftEntry.value > 0.1) {

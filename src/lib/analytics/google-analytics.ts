@@ -33,10 +33,16 @@ class GoogleAnalytics {
   private readonly GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
   constructor() {
+    // 開発環境では何もしない
+    if (process.env.NODE_ENV === "development") {
+      console.log("Google Analytics disabled in development environment");
+      return;
+    }
+
     if (typeof window !== "undefined") {
       if (this.GA_ID) {
         this.initializeGA();
-      } else if (process.env.NODE_ENV === "development") {
+      } else {
         console.log("Google Analytics disabled - GA_ID not configured");
       }
     }
@@ -47,6 +53,13 @@ class GoogleAnalytics {
    */
   private initializeGA(): void {
     if (!this.GA_ID || this.isInitialized) return;
+
+    // 開発環境では何もしない
+    if (process.env.NODE_ENV === "development") {
+      console.log("Development mode: GA initialization skipped");
+      this.isInitialized = true;
+      return;
+    }
 
     // Initialize dataLayer
     window.dataLayer = window.dataLayer || [];
@@ -76,10 +89,18 @@ class GoogleAnalytics {
    * Load GA script dynamically
    */
   loadScript(): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
+      // 開発環境では常にresolve
+      if (process.env.NODE_ENV === "development") {
+        console.log("Development mode: GA script load skipped");
+        resolve();
+        return;
+      }
+
+      // Production behavior
       if (!this.GA_ID) {
-        console.warn("GA_ID not configured - Analytics disabled");
-        resolve(); // Resolve instead of reject for development
+        console.error("GA_ID not configured in production");
+        resolve(); // Still resolve to prevent app crashes
         return;
       }
 
@@ -87,7 +108,10 @@ class GoogleAnalytics {
       script.async = true;
       script.src = `https://www.googletagmanager.com/gtag/js?id=${this.GA_ID}`;
       script.onload = () => resolve();
-      script.onerror = () => reject(new Error("Failed to load GA script"));
+      script.onerror = () => {
+        console.error("Failed to load GA script");
+        resolve(); // Resolve instead of reject to prevent app crashes
+      };
 
       document.head.appendChild(script);
     });
@@ -99,13 +123,19 @@ class GoogleAnalytics {
   setConsent(consent: boolean): void {
     this.consentGiven = consent;
 
+    // 開発環境では何もしない
+    if (process.env.NODE_ENV === "development") {
+      console.log("Development mode: GA consent set to", consent);
+      return;
+    }
+
     // Only call gtag if GA_ID is configured and gtag exists
     if (this.GA_ID && typeof window !== "undefined" && window.gtag) {
       (window.gtag as (...args: unknown[]) => void)("consent", "update", {
         analytics_storage: consent ? "granted" : "denied",
         ad_storage: "denied", // Always deny ad storage for privacy
       });
-    } else if (process.env.NODE_ENV === "development") {
+    } else {
       console.log("GA consent set:", consent, "but GA not initialized");
     }
   }
@@ -184,7 +214,7 @@ class GoogleAnalytics {
   trackToolUsage(
     toolName: string,
     action: string,
-    details?: Record<string, unknown>,
+    details?: Record<string, unknown>
   ): void {
     this.trackEvent({
       action: "tool_usage",
@@ -326,7 +356,7 @@ class GoogleAnalytics {
         "client_id",
         (clientId: string) => {
           resolve(clientId);
-        },
+        }
       );
     });
   }
@@ -342,26 +372,26 @@ export const trackEvent = (event: GAEvent) => analytics.trackEvent(event);
 export const trackToolUsage = (
   toolName: string,
   action: string,
-  details?: Record<string, unknown>,
+  details?: Record<string, unknown>
 ) => analytics.trackToolUsage(toolName, action, details);
 export const trackPortfolioInteraction = (
   portfolioId: string,
-  action: string,
+  action: string
 ) => analytics.trackPortfolioInteraction(portfolioId, action);
 export const trackDownload = (
   fileName: string,
   fileType: string,
-  category: string,
+  category: string
 ) => analytics.trackDownload(fileName, fileType, category);
 export const trackContactForm = (formType: string, success: boolean) =>
   analytics.trackContactForm(formType, success);
 export const trackSearch = (
   query: string,
   resultsCount: number,
-  searchType: string,
+  searchType: string
 ) => analytics.trackSearch(query, resultsCount, searchType);
 export const trackPerformance = (
-  metrics: Parameters<typeof analytics.trackPerformance>[0],
+  metrics: Parameters<typeof analytics.trackPerformance>[0]
 ) => analytics.trackPerformance(metrics);
 export const trackError = (error: Error, context?: string) =>
   analytics.trackError(error, context);
