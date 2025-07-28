@@ -70,7 +70,7 @@ Write-Host ""
 # 4. Jest Unit Tests
 Write-Host "4. Jest Unit Tests Running..." -ForegroundColor Yellow
 try {
-    npm run test
+    npm run test --silent
     if ($LASTEXITCODE -ne 0) {
         throw "Jest tests failed with exit code $LASTEXITCODE"
     }
@@ -88,7 +88,7 @@ Write-Host ""
 # 5. Playwright E2E Tests
 Write-Host "5. Playwright E2E Tests Running..." -ForegroundColor Yellow
 try {
-    npx playwright test
+    npx playwright test --quiet
     if ($LASTEXITCODE -ne 0) {
         throw "Playwright E2E tests failed with exit code $LASTEXITCODE"
     }
@@ -103,20 +103,21 @@ try {
 }
 Write-Host ""
 
-# 6. Prettier Format Check & Auto-Fix
 Write-Host "6. Prettier Format Check & Auto-Fix Running..." -ForegroundColor Yellow
 try {
-    # Check formatting for the entire project
     npm run format:check
+
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "Warning: Fixing Prettier format issues..." -ForegroundColor Yellow
-        # Auto-fix formatting issues
-        npm run format
-        # Verify formatting is now correct
+        Write-Host "Warning: Formatting issues detected. Attempting to auto-fix..." -ForegroundColor Yellow
+        npm run format -- --quiet
+        
+        Write-Host "Verifying format after auto-fix..." -ForegroundColor Gray
         npm run format:check
+        
         if ($LASTEXITCODE -ne 0) {
-            throw "Prettier format check failed even after auto-fix"
+            throw "Prettier format check failed even after auto-fix attempt."
         }
+        
         $testResults += "Prettier: PASS (auto-fixed)"
         Write-Host "Prettier: PASS (auto-fixed)" -ForegroundColor Green
     } else {
@@ -127,7 +128,7 @@ try {
     $testResults += "Prettier: FAIL"
     Write-Host "Prettier: FAIL" -ForegroundColor Red
     Write-Host "Prettier Error Details:" -ForegroundColor Red
-    Write-Host $_.Exception.Message -ForegroundColor Red
+    Write-Host ($_.Exception.Message | Out-String) -ForegroundColor Red
     exit 1
 }
 Write-Host ""

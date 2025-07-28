@@ -47,9 +47,27 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   useEffect(() => {
     // Check for existing consent
     const savedConsent = localStorage.getItem("analytics-consent");
+
+    // Debug: Clear consent if GA_ID is not configured (development only)
+    if (
+      process.env.NODE_ENV === "development" &&
+      !process.env.NEXT_PUBLIC_GA_ID &&
+      savedConsent
+    ) {
+      console.log("Clearing analytics consent due to missing GA_ID");
+      localStorage.removeItem("analytics-consent");
+      return;
+    }
+
     if (savedConsent === "true") {
       setConsentGiven(true);
-      initializeAnalytics();
+      // Only initialize if GA_ID is configured
+      if (process.env.NEXT_PUBLIC_GA_ID) {
+        initializeAnalytics();
+      } else {
+        console.log("Analytics consent given but GA_ID not configured");
+        setIsInitialized(true); // Set as initialized to prevent further attempts
+      }
     } else if (savedConsent === "false") {
       setConsentGiven(false);
     }
@@ -57,17 +75,32 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 
   const initializeAnalytics = async () => {
     try {
+      // Skip analytics initialization in development if GA_ID is not configured
+      if (
+        process.env.NODE_ENV === "development" &&
+        !process.env.NEXT_PUBLIC_GA_ID
+      ) {
+        console.log("Analytics disabled in development - GA_ID not configured");
+        setIsInitialized(true);
+        return;
+      }
+
       await analytics.loadScript();
       analytics.setConsent(true);
       setIsInitialized(true);
     } catch (error) {
-      console.error("Failed to initialize analytics:", error);
-      errorTracker.captureError(
-        error instanceof Error
-          ? error
-          : new Error("Analytics initialization failed"),
-        { type: "analytics_init" },
-      );
+      console.warn("Analytics initialization skipped:", error);
+      // Don't track analytics initialization errors if GA_ID is not configured
+      if (process.env.NEXT_PUBLIC_GA_ID) {
+        errorTracker.captureError(
+          error instanceof Error
+            ? error
+            : new Error("Analytics initialization failed"),
+          { type: "analytics_init" },
+        );
+      }
+      // Still set as initialized to prevent repeated attempts
+      setIsInitialized(true);
     }
   };
 
@@ -76,7 +109,13 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     localStorage.setItem("analytics-consent", consent.toString());
 
     if (consent && !isInitialized) {
-      initializeAnalytics();
+      // Only initialize if GA_ID is configured
+      if (process.env.NEXT_PUBLIC_GA_ID) {
+        initializeAnalytics();
+      } else {
+        console.log("Analytics consent given but GA_ID not configured");
+        setIsInitialized(true); // Set as initialized to prevent further attempts
+      }
     } else {
       analytics.setConsent(consent);
     }

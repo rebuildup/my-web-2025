@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { Filter, Calendar, Tag, Code, Video, Palette } from "lucide-react";
+import { ContentItem } from "@/types/content";
 
 export const metadata: Metadata = {
   title: "All Projects - Portfolio | samuido 全作品ギャラリー",
@@ -59,103 +60,95 @@ const structuredData = {
   },
 };
 
-// フィルタリングオプション
-const filterOptions = {
-  categories: [
-    { id: "all", label: "All", count: 24 },
-    { id: "develop", label: "Development", count: 12 },
-    { id: "video", label: "Video", count: 8 },
-    { id: "design", label: "Design", count: 4 },
-  ],
-  technologies: [
-    "React",
-    "Next.js",
-    "TypeScript",
-    "Unity",
-    "C#",
-    "After Effects",
-    "Premiere Pro",
-    "Photoshop",
-    "Illustrator",
-    "Blender",
-    "p5.js",
-    "Three.js",
-  ],
-  years: ["2025", "2024", "2023", "2022"],
-};
+// データ取得関数
+async function getPortfolioData(): Promise<ContentItem[]> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/portfolio?status=published&limit=100`,
+      {
+        next: { revalidate: 3600 }, // 1時間キャッシュ
+      },
+    );
 
-// サンプルプロジェクトデータ（実際の実装では動的に取得）
-const projects = [
-  {
-    id: "project-1",
-    title: "Interactive Portfolio Website",
-    category: "develop",
-    description:
-      "Next.js 15とTailwind CSSを使用したレスポンシブポートフォリオサイト",
-    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "React"],
-    date: "2025-01",
-    year: "2025",
-    thumbnail: "/images/portfolio/project-1-thumb.jpg",
-    featured: true,
-  },
-  {
-    id: "project-2",
-    title: "Music Video Animation",
-    category: "video",
-    description: "After Effectsを使用したリリックモーション制作",
-    technologies: ["After Effects", "Illustrator", "Photoshop"],
-    date: "2024-12",
-    year: "2024",
-    thumbnail: "/images/portfolio/project-2-thumb.jpg",
-    featured: true,
-  },
-  {
-    id: "project-3",
-    title: "Unity Game Prototype",
-    category: "develop",
-    description: "2Dアクションゲームのプロトタイプ開発",
-    technologies: ["Unity", "C#", "Photoshop"],
-    date: "2024-11",
-    year: "2024",
-    thumbnail: "/images/portfolio/project-3-thumb.jpg",
-    featured: false,
-  },
-  {
-    id: "project-4",
-    title: "Brand Identity Design",
-    category: "design",
-    description: "スタートアップ企業のブランドアイデンティティデザイン",
-    technologies: ["Illustrator", "Photoshop", "Figma"],
-    date: "2024-10",
-    year: "2024",
-    thumbnail: "/images/portfolio/project-4-thumb.jpg",
-    featured: false,
-  },
-  {
-    id: "project-5",
-    title: "Web Application Dashboard",
-    category: "develop",
-    description: "React とTypeScriptを使用したダッシュボードアプリケーション",
-    technologies: ["React", "TypeScript", "Chart.js", "CSS"],
-    date: "2024-09",
-    year: "2024",
-    thumbnail: "/images/portfolio/project-5-thumb.jpg",
-    featured: false,
-  },
-  {
-    id: "project-6",
-    title: "Motion Graphics Reel",
-    category: "video",
-    description: "モーショングラフィックス作品集",
-    technologies: ["After Effects", "Cinema 4D", "Illustrator"],
-    date: "2024-08",
-    year: "2024",
-    thumbnail: "/images/portfolio/project-6-thumb.jpg",
-    featured: false,
-  },
-];
+    if (!response.ok) {
+      console.error("Failed to fetch portfolio data:", response.status);
+      return [];
+    }
 
-export default function AllProjectsPage() {
+    const data = await response.json();
+    return data.data || [];
+  } catch (error) {
+    console.error("Error fetching portfolio data:", error);
+    return [];
+  }
+}
+
+export default async function AllProjectsPage() {
+  // 実際のデータを取得
+  const portfolioItems = await getPortfolioData();
+
+  // 実際のデータからフィルタリングオプションを生成
+  const filterOptions = {
+    categories: [
+      { id: "all", label: "All", count: portfolioItems.length },
+      {
+        id: "develop",
+        label: "Development",
+        count: portfolioItems.filter((item: ContentItem) =>
+          item.category?.toLowerCase().includes("develop"),
+        ).length,
+      },
+      {
+        id: "video",
+        label: "Video",
+        count: portfolioItems.filter(
+          (item: ContentItem) =>
+            item.category?.toLowerCase().includes("video") ||
+            item.category?.toLowerCase().includes("aftereffects"),
+        ).length,
+      },
+      {
+        id: "design",
+        label: "Design",
+        count: portfolioItems.filter((item: ContentItem) =>
+          item.category?.toLowerCase().includes("design"),
+        ).length,
+      },
+    ],
+    technologies: [
+      ...new Set(
+        portfolioItems.flatMap((item: ContentItem) => item.tags || []),
+      ),
+    ],
+    years: [
+      ...new Set(
+        portfolioItems.map((item: ContentItem) =>
+          new Date(item.createdAt).getFullYear().toString(),
+        ),
+      ),
+    ]
+      .sort()
+      .reverse(),
+  };
+
+  // 実際のデータをプロジェクト形式に変換
+  const projects = portfolioItems.map((item: ContentItem) => ({
+    id: item.id,
+    title: item.title,
+    category: item.category || "other",
+    description: item.description,
+    technologies: item.tags || [],
+    date: new Date(item.updatedAt || item.createdAt).toLocaleDateString(
+      "ja-JP",
+      { year: "numeric", month: "2-digit" },
+    ),
+    year: new Date(item.createdAt).getFullYear().toString(),
+    thumbnail:
+      item.thumbnail ||
+      item.images?.[0] ||
+      "/images/portfolio/default-thumb.jpg",
+    featured: (item.priority || 0) > 70, // 優先度70以上をfeaturedとする
+  }));
   const Global_title = "noto-sans-jp-regular text-base leading-snug";
 
   const getCategoryIcon = (category: string) => {
@@ -230,14 +223,20 @@ export default function AllProjectsPage() {
                       </h3>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {filterOptions.categories.map((category) => (
-                        <button
-                          key={category.id}
-                          className="noto-sans-jp-light text-sm text-foreground border border-foreground px-3 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-                        >
-                          {category.label} ({category.count})
-                        </button>
-                      ))}
+                      {filterOptions.categories.map(
+                        (category: {
+                          id: string;
+                          label: string;
+                          count: number;
+                        }) => (
+                          <button
+                            key={category.id}
+                            className="noto-sans-jp-light text-sm text-foreground border border-foreground px-3 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                          >
+                            {category.label} ({category.count})
+                          </button>
+                        ),
+                      )}
                     </div>
                   </div>
 
@@ -250,7 +249,7 @@ export default function AllProjectsPage() {
                       </h3>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {filterOptions.technologies.map((tech) => (
+                      {filterOptions.technologies.map((tech: string) => (
                         <button
                           key={tech}
                           className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1 hover:bg-accent hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
@@ -270,7 +269,7 @@ export default function AllProjectsPage() {
                       </h3>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {filterOptions.years.map((year) => (
+                      {filterOptions.years.map((year: string) => (
                         <button
                           key={year}
                           className="noto-sans-jp-light text-sm text-foreground border border-foreground px-3 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
@@ -291,82 +290,111 @@ export default function AllProjectsPage() {
                   </h2>
                   <div className="flex items-center gap-4">
                     <select className="noto-sans-jp-light text-sm text-foreground bg-background border border-foreground px-3 py-2 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background">
-                      <option value="date-desc">最新順</option>
-                      <option value="date-asc">古い順</option>
-                      <option value="title-asc">タイトル順</option>
+                      <option
+                        value="date-desc"
+                        className="bg-background text-foreground"
+                      >
+                        最新順
+                      </option>
+                      <option
+                        value="date-asc"
+                        className="bg-background text-foreground"
+                      >
+                        古い順
+                      </option>
+                      <option
+                        value="title-asc"
+                        className="bg-background text-foreground"
+                      >
+                        タイトル順
+                      </option>
                     </select>
                   </div>
                 </div>
 
                 <div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-3 gap-6">
-                  {projects.map((project) => {
-                    const CategoryIcon = getCategoryIcon(project.category);
-                    const categoryColor = getCategoryColor(project.category);
+                  {projects.map(
+                    (project: {
+                      id: string;
+                      title: string;
+                      category: string;
+                      description: string;
+                      technologies: string[];
+                      date: string;
+                      year: string;
+                      thumbnail: string;
+                      featured: boolean;
+                    }) => {
+                      const CategoryIcon = getCategoryIcon(project.category);
+                      const categoryColor = getCategoryColor(project.category);
 
-                    return (
-                      <Link
-                        key={project.id}
-                        href={`/portfolio/${project.id}`}
-                        className="bg-base border border-foreground p-4 space-y-4 block hover:border-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-                      >
-                        {/* Thumbnail */}
-                        <div className="aspect-video bg-background border border-foreground flex items-center justify-center relative">
-                          <span className="noto-sans-jp-light text-xs text-foreground">
-                            {project.title}
-                          </span>
-                          {project.featured && (
-                            <div className="absolute top-2 right-2 bg-accent text-background px-2 py-1 text-xs noto-sans-jp-light">
-                              Featured
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Project Info */}
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                              <CategoryIcon
-                                className={`w-4 h-4 text-${categoryColor} mr-2`}
-                              />
-                              <span className="noto-sans-jp-light text-xs text-accent">
-                                {project.category}
-                              </span>
-                            </div>
-                            <div className="flex items-center">
-                              <Calendar className="w-4 h-4 text-foreground mr-1" />
-                              <span className="noto-sans-jp-light text-xs text-foreground">
-                                {project.date}
-                              </span>
-                            </div>
-                          </div>
-
-                          <h3 className="zen-kaku-gothic-new text-base text-primary">
-                            {project.title}
-                          </h3>
-
-                          <p className="noto-sans-jp-light text-sm text-foreground">
-                            {project.description}
-                          </p>
-
-                          <div className="flex flex-wrap gap-1">
-                            {project.technologies.slice(0, 3).map((tech) => (
-                              <span
-                                key={tech}
-                                className="noto-sans-jp-light text-xs text-foreground border border-foreground px-2 py-1"
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                            {project.technologies.length > 3 && (
-                              <span className="noto-sans-jp-light text-xs text-accent px-2 py-1">
-                                +{project.technologies.length - 3}
-                              </span>
+                      return (
+                        <Link
+                          key={project.id}
+                          href={`/portfolio/${project.id}`}
+                          className="bg-base border border-foreground p-4 space-y-4 block hover:border-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                        >
+                          {/* Thumbnail */}
+                          <div className="aspect-video bg-background border border-foreground flex items-center justify-center relative">
+                            <span className="noto-sans-jp-light text-xs text-foreground">
+                              {project.title}
+                            </span>
+                            {project.featured && (
+                              <div className="absolute top-2 right-2 bg-accent text-background px-2 py-1 text-xs noto-sans-jp-light">
+                                Featured
+                              </div>
                             )}
                           </div>
-                        </div>
-                      </Link>
-                    );
-                  })}
+
+                          {/* Project Info */}
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center">
+                                <CategoryIcon
+                                  className={`w-4 h-4 text-${categoryColor} mr-2`}
+                                />
+                                <span className="noto-sans-jp-light text-xs text-accent">
+                                  {project.category}
+                                </span>
+                              </div>
+                              <div className="flex items-center">
+                                <Calendar className="w-4 h-4 text-foreground mr-1" />
+                                <span className="noto-sans-jp-light text-xs text-foreground">
+                                  {project.date}
+                                </span>
+                              </div>
+                            </div>
+
+                            <h3 className="zen-kaku-gothic-new text-base text-primary">
+                              {project.title}
+                            </h3>
+
+                            <p className="noto-sans-jp-light text-sm text-foreground">
+                              {project.description}
+                            </p>
+
+                            <div className="flex flex-wrap gap-1">
+                              {project.technologies
+                                .slice(0, 3)
+                                .map((tech: string) => (
+                                  <span
+                                    key={tech}
+                                    className="noto-sans-jp-light text-xs text-foreground border border-foreground px-2 py-1"
+                                  >
+                                    {tech}
+                                  </span>
+                                ))}
+                              {project.technologies.length > 3 && (
+                                <span className="noto-sans-jp-light text-xs text-accent px-2 py-1">
+                                  +{project.technologies.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </Link>
+                      );
+                    },
+                  )}
                 </div>
               </section>
 

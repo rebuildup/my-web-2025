@@ -8,7 +8,7 @@ const STATIC_CACHE = "samuido-static-v1";
 const DYNAMIC_CACHE = "samuido-dynamic-v1";
 const IMAGE_CACHE = "samuido-images-v1";
 
-// Resources to cache immediately
+// Resources to cache immediately (only essential and guaranteed to exist)
 const STATIC_ASSETS = [
   "/",
   "/about",
@@ -18,9 +18,6 @@ const STATIC_ASSETS = [
   "/search",
   "/privacy-policy",
   "/offline",
-  "/_next/static/css/app/layout.css",
-  "/_next/static/chunks/webpack.js",
-  "/_next/static/chunks/main.js",
   "/images/og-image.jpg",
   "/favicon.ico",
   "/manifest.json",
@@ -41,9 +38,30 @@ self.addEventListener("install", (event) => {
   console.log("Service Worker: Installing...");
 
   event.waitUntil(
-    caches.open(STATIC_CACHE).then((cache) => {
+    caches.open(STATIC_CACHE).then(async (cache) => {
       console.log("Service Worker: Caching static assets");
-      return cache.addAll(STATIC_ASSETS);
+
+      // Cache assets individually to handle failures gracefully
+      const cachePromises = STATIC_ASSETS.map(async (asset) => {
+        try {
+          const response = await fetch(asset);
+          if (response.ok) {
+            await cache.put(asset, response);
+            console.log("Service Worker: Cached", asset);
+          } else {
+            console.warn("Service Worker: Failed to cache (not found):", asset);
+          }
+        } catch (error) {
+          console.warn(
+            "Service Worker: Failed to cache (error):",
+            asset,
+            error.message,
+          );
+        }
+      });
+
+      await Promise.allSettled(cachePromises);
+      console.log("Service Worker: Static assets caching completed");
     }),
   );
 

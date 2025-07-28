@@ -99,7 +99,21 @@ async function loadExistingMetrics(): Promise<PerformanceMetrics[]> {
   try {
     if (existsSync(filePath)) {
       const content = await readFile(filePath, "utf-8");
-      return JSON.parse(content);
+
+      // Validate JSON before parsing
+      if (!content.trim()) {
+        return [];
+      }
+
+      try {
+        const parsed = JSON.parse(content);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (parseError) {
+        console.error("Invalid JSON in metrics file, resetting:", parseError);
+        // Reset corrupted file
+        await writeFile(filePath, "[]");
+        return [];
+      }
     }
   } catch (error) {
     console.error("Failed to load existing metrics:", error);
@@ -117,7 +131,21 @@ async function loadExistingAlerts(): Promise<PerformanceAlert[]> {
   try {
     if (existsSync(filePath)) {
       const content = await readFile(filePath, "utf-8");
-      return JSON.parse(content);
+
+      // Validate JSON before parsing
+      if (!content.trim()) {
+        return [];
+      }
+
+      try {
+        const parsed = JSON.parse(content);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (parseError) {
+        console.error("Invalid JSON in alerts file, resetting:", parseError);
+        // Reset corrupted file
+        await writeFile(filePath, "[]");
+        return [];
+      }
     }
   } catch (error) {
     console.error("Failed to load existing alerts:", error);
@@ -127,29 +155,59 @@ async function loadExistingAlerts(): Promise<PerformanceAlert[]> {
 }
 
 /**
- * Save metrics to file
+ * Save metrics to file with atomic write
  */
 async function saveMetrics(metrics: PerformanceMetrics[]): Promise<void> {
   const filePath = getCurrentMetricsPath();
+  const tempPath = `${filePath}.tmp`;
 
   try {
-    await writeFile(filePath, JSON.stringify(metrics, null, 2));
+    // Write to temporary file first
+    await writeFile(tempPath, JSON.stringify(metrics, null, 2));
+
+    // Atomic rename
+    const fs = await import("fs/promises");
+    await fs.rename(tempPath, filePath);
   } catch (error) {
     console.error("Failed to save metrics:", error);
+
+    // Clean up temp file if it exists
+    try {
+      const fs = await import("fs/promises");
+      await fs.unlink(tempPath);
+    } catch {
+      // Ignore cleanup errors
+    }
+
     throw error;
   }
 }
 
 /**
- * Save alerts to file
+ * Save alerts to file with atomic write
  */
 async function saveAlerts(alerts: PerformanceAlert[]): Promise<void> {
   const filePath = getCurrentAlertsPath();
+  const tempPath = `${filePath}.tmp`;
 
   try {
-    await writeFile(filePath, JSON.stringify(alerts, null, 2));
+    // Write to temporary file first
+    await writeFile(tempPath, JSON.stringify(alerts, null, 2));
+
+    // Atomic rename
+    const fs = await import("fs/promises");
+    await fs.rename(tempPath, filePath);
   } catch (error) {
     console.error("Failed to save alerts:", error);
+
+    // Clean up temp file if it exists
+    try {
+      const fs = await import("fs/promises");
+      await fs.unlink(tempPath);
+    } catch {
+      // Ignore cleanup errors
+    }
+
     throw error;
   }
 }

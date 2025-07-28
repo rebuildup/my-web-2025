@@ -86,13 +86,23 @@ export function ExternalLinksSection({
                   type: e.target.value as ExternalLink["type"],
                 }))
               }
-              className={inputStyle}
+              className={`${inputStyle} bg-background text-foreground`}
             >
-              <option value="website">Website</option>
-              <option value="github">GitHub</option>
-              <option value="demo">Demo</option>
-              <option value="booth">Booth</option>
-              <option value="other">Other</option>
+              <option value="website" className="bg-background text-foreground">
+                Website
+              </option>
+              <option value="github" className="bg-background text-foreground">
+                GitHub
+              </option>
+              <option value="demo" className="bg-background text-foreground">
+                Demo
+              </option>
+              <option value="booth" className="bg-background text-foreground">
+                Booth
+              </option>
+              <option value="other" className="bg-background text-foreground">
+                Other
+              </option>
             </select>
           </div>
 
@@ -172,13 +182,38 @@ export function ExternalLinksSection({
                         onChange={(e) =>
                           updateLink(index, "type", e.target.value)
                         }
-                        className={inputStyle}
+                        className={`${inputStyle} bg-background text-foreground`}
                       >
-                        <option value="website">Website</option>
-                        <option value="github">GitHub</option>
-                        <option value="demo">Demo</option>
-                        <option value="booth">Booth</option>
-                        <option value="other">Other</option>
+                        <option
+                          value="website"
+                          className="bg-background text-foreground"
+                        >
+                          Website
+                        </option>
+                        <option
+                          value="github"
+                          className="bg-background text-foreground"
+                        >
+                          GitHub
+                        </option>
+                        <option
+                          value="demo"
+                          className="bg-background text-foreground"
+                        >
+                          Demo
+                        </option>
+                        <option
+                          value="booth"
+                          className="bg-background text-foreground"
+                        >
+                          Booth
+                        </option>
+                        <option
+                          value="other"
+                          className="bg-background text-foreground"
+                        >
+                          Other
+                        </option>
                       </select>
                     </div>
 

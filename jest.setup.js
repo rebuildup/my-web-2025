@@ -45,6 +45,8 @@ global.IntersectionObserver = jest.fn().mockImplementation(() => ({
 // Suppress React act warnings and navigation errors in tests
 const originalError = console.error;
 const originalWarn = console.warn;
+const originalLog = console.log;
+
 beforeAll(() => {
   console.error = (...args) => {
     if (
@@ -58,7 +60,9 @@ beforeAll(() => {
         args[0].includes("Failed to measure custom metric") ||
         args[0].includes("Invalid JSON in") ||
         args[0].includes("Error in monitoring/") ||
-        args[0].includes("SyntaxError: Unexpected end of JSON input"))
+        args[0].includes("SyntaxError: Unexpected end of JSON input") ||
+        args[0].includes("Validation error for") ||
+        args[0].includes("Portfolio data processing failed:"))
     ) {
       return;
     }
@@ -105,17 +109,35 @@ beforeAll(() => {
     if (
       typeof args[0] === "string" &&
       (args[0].includes("Invalid JSON in") ||
-        args[0].includes("Error in monitoring/"))
+        args[0].includes("Error in monitoring/") ||
+        args[0].includes("Invalid portfolio item:"))
     ) {
       return;
     }
     originalWarn.call(console, ...args);
+  };
+
+  console.log = (...args) => {
+    if (
+      typeof args[0] === "string" &&
+      (args[0].includes("Starting portfolio data processing") ||
+        args[0].includes("Successfully processed") ||
+        args[0].includes("Generated search index") ||
+        args[0].includes("Cache updated with") ||
+        args[0].includes("Portfolio data processing completed") ||
+        args[0].includes("Returning cached portfolio data") ||
+        (args[0].includes("Processing") && args[0].includes("portfolio items")))
+    ) {
+      return;
+    }
+    originalLog.call(console, ...args);
   };
 });
 
 afterAll(() => {
   console.error = originalError;
   console.warn = originalWarn;
+  console.log = originalLog;
 });
 
 // Mock window.matchMedia (only in browser environment)

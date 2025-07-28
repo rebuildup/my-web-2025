@@ -51,7 +51,10 @@ export class ServiceWorkerManager {
       // Listen for controller changes
       navigator.serviceWorker.addEventListener("controllerchange", () => {
         console.log("Service Worker: Controller changed");
-        window.location.reload();
+        // Avoid immediate reload in development to prevent infinite loops
+        if (process.env.NODE_ENV !== "development") {
+          window.location.reload();
+        }
       });
 
       // Listen for messages from service worker
@@ -63,6 +66,7 @@ export class ServiceWorkerManager {
       return this.status;
     } catch (error) {
       console.error("Service Worker: Registration failed", error);
+      // Don't throw error, just return status
       return this.status;
     }
   }
@@ -301,13 +305,32 @@ export class CacheManager {
       "/workshop",
       "/tools",
       "/images/og-image.jpg",
-      "/_next/static/css/app/layout.css",
     ];
 
     try {
       const cache = await caches.open("samuido-critical-v1");
-      await cache.addAll(criticalResources);
-      console.log("Critical resources preloaded");
+
+      // Cache resources individually to handle failures gracefully
+      const cachePromises = criticalResources.map(async (resource) => {
+        try {
+          const response = await fetch(resource);
+          if (response.ok) {
+            await cache.put(resource, response);
+            console.log("Preloaded:", resource);
+          } else {
+            console.warn("Failed to preload (not found):", resource);
+          }
+        } catch (error) {
+          console.warn(
+            "Failed to preload (error):",
+            resource,
+            error instanceof Error ? error.message : String(error),
+          );
+        }
+      });
+
+      await Promise.allSettled(cachePromises);
+      console.log("Critical resources preloading completed");
     } catch (error) {
       console.error("Failed to preload critical resources:", error);
     }
@@ -361,17 +384,26 @@ export const initializeServiceWorker = async (): Promise<{
 
   // Register service worker
   if (typeof window !== "undefined") {
-    await serviceWorker.register();
+    try {
+      await serviceWorker.register();
 
-    // Preload critical resources
-    await CacheManager.preloadCriticalResources();
+      // Preload critical resources (don't await to avoid blocking)
+      CacheManager.preloadCriticalResources().catch((error) => {
+        console.warn("Critical resources preloading failed:", error);
+      });
 
-    // Setup network monitoring
-    networkMonitor.subscribe((isOnline) => {
-      if (isOnline) {
-        serviceWorker.syncWhenOnline();
-      }
-    });
+      // Setup network monitoring
+      networkMonitor.subscribe((isOnline) => {
+        if (isOnline) {
+          serviceWorker.syncWhenOnline().catch((error) => {
+            console.warn("Sync when online failed:", error);
+          });
+        }
+      });
+    } catch (error) {
+      console.error("Service Worker initialization failed:", error);
+      // Continue without service worker
+    }
   }
 
   return { serviceWorker, networkMonitor };

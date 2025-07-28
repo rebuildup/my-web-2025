@@ -112,13 +112,23 @@ export function MediaEmbedSection({
                   type: e.target.value as MediaEmbed["type"],
                 }))
               }
-              className={inputStyle}
+              className={`${inputStyle} bg-background text-foreground`}
             >
-              <option value="youtube">YouTube</option>
-              <option value="vimeo">Vimeo</option>
-              <option value="code">Code Embed</option>
-              <option value="social">Social Media</option>
-              <option value="iframe">Custom iFrame</option>
+              <option value="youtube" className="bg-background text-foreground">
+                YouTube
+              </option>
+              <option value="vimeo" className="bg-background text-foreground">
+                Vimeo
+              </option>
+              <option value="code" className="bg-background text-foreground">
+                Code Embed
+              </option>
+              <option value="social" className="bg-background text-foreground">
+                Social Media
+              </option>
+              <option value="iframe" className="bg-background text-foreground">
+                Custom iFrame
+              </option>
             </select>
           </div>
 
@@ -230,13 +240,38 @@ export function MediaEmbedSection({
                         onChange={(e) =>
                           updateVideo(index, "type", e.target.value)
                         }
-                        className={inputStyle}
+                        className={`${inputStyle} bg-background text-foreground`}
                       >
-                        <option value="youtube">YouTube</option>
-                        <option value="vimeo">Vimeo</option>
-                        <option value="code">Code Embed</option>
-                        <option value="social">Social Media</option>
-                        <option value="iframe">Custom iFrame</option>
+                        <option
+                          value="youtube"
+                          className="bg-background text-foreground"
+                        >
+                          YouTube
+                        </option>
+                        <option
+                          value="vimeo"
+                          className="bg-background text-foreground"
+                        >
+                          Vimeo
+                        </option>
+                        <option
+                          value="code"
+                          className="bg-background text-foreground"
+                        >
+                          Code Embed
+                        </option>
+                        <option
+                          value="social"
+                          className="bg-background text-foreground"
+                        >
+                          Social Media
+                        </option>
+                        <option
+                          value="iframe"
+                          className="bg-background text-foreground"
+                        >
+                          Custom iFrame
+                        </option>
                       </select>
                     </div>
 

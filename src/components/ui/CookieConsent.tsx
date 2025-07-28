@@ -57,7 +57,7 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg ${className}`}
+      className={`fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-foreground ${className}`}
       role="dialog"
       aria-labelledby="cookie-consent-title"
       aria-describedby="cookie-consent-description"
@@ -69,13 +69,13 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
             <div className="flex-1">
               <h3
                 id="cookie-consent-title"
-                className="text-lg font-semibold text-gray-900 mb-2"
+                className="neue-haas-grotesk-display text-xl text-primary mb-2"
               >
                 Cookie Settings
               </h3>
               <p
                 id="cookie-consent-description"
-                className="text-sm text-gray-600"
+                className="noto-sans-jp-light text-sm text-foreground"
               >
                 We use cookies to improve your experience and analyze site
                 usage. You can choose which cookies to accept.
@@ -84,19 +84,19 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
             <div className="flex flex-col sm:flex-row gap-2">
               <button
                 onClick={() => setShowDetails(true)}
-                className="px-4 py-2 text-sm text-blue-600 hover:text-blue-800 underline"
+                className="px-ratio-sm py-ratio-xs noto-sans-jp-light text-sm text-accent hover:text-primary underline focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
               >
                 Customize
               </button>
               <button
                 onClick={handleRejectAll}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+                className="px-ratio-sm py-ratio-xs noto-sans-jp-light text-sm border border-foreground hover:bg-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
               >
                 Reject All
               </button>
               <button
                 onClick={handleAcceptAll}
-                className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                className="px-ratio-sm py-ratio-xs noto-sans-jp-light text-sm bg-primary text-background hover:bg-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
               >
                 Accept All
               </button>
@@ -106,12 +106,12 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
           // Detailed consent options
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="neue-haas-grotesk-display text-xl text-primary">
                 Cookie Preferences
               </h3>
               <button
                 onClick={() => setShowDetails(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
                 aria-label="Close details"
               >
                 <svg
@@ -132,16 +132,16 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
 
             <div className="space-y-4 mb-6">
               {/* Essential Cookies */}
-              <div className="border border-gray-200 rounded-lg p-4">
+              <div className="border border-foreground p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-gray-900">
+                  <h4 className="neue-haas-grotesk-display text-base text-primary">
                     Essential Cookies
                   </h4>
-                  <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                  <span className="noto-sans-jp-light text-sm text-muted-foreground bg-secondary px-2 py-1">
                     Always Active
                   </span>
                 </div>
-                <p className="text-sm text-gray-600">
+                <p className="noto-sans-jp-light text-sm text-foreground">
                   These cookies are necessary for the website to function and
                   cannot be disabled. They are usually set in response to
                   actions made by you such as setting your privacy preferences.
@@ -149,9 +149,9 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
               </div>
 
               {/* Analytics Cookies */}
-              <div className="border border-gray-200 rounded-lg p-4">
+              <div className="border border-foreground p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-gray-900">
+                  <h4 className="neue-haas-grotesk-display text-base text-primary">
                     Analytics Cookies
                   </h4>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -164,19 +164,19 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
                         // For now, this is the only optional category
                       }}
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    <div className="w-11 h-6 bg-secondary peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-border after:border after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
                   </label>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">
+                <p className="noto-sans-jp-light text-sm text-foreground mb-2">
                   These cookies help us understand how visitors interact with
                   our website by collecting and reporting information
                   anonymously.
                 </p>
-                <details className="text-sm text-gray-500">
-                  <summary className="cursor-pointer hover:text-gray-700">
+                <details className="noto-sans-jp-light text-sm text-muted-foreground">
+                  <summary className="cursor-pointer hover:text-foreground">
                     View details
                   </summary>
-                  <div className="mt-2 pl-4 border-l-2 border-gray-200">
+                  <div className="mt-2 pl-4 border-l-2 border-border">
                     <p>
                       <strong>Google Analytics:</strong> Tracks page views, user
                       interactions, and performance metrics
@@ -200,19 +200,19 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
             <div className="flex flex-col sm:flex-row gap-2 justify-end">
               <button
                 onClick={handleRejectAll}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+                className="px-ratio-sm py-ratio-xs noto-sans-jp-light text-sm border border-foreground hover:bg-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
               >
                 Reject All
               </button>
               <button
                 onClick={handleAcceptSelected}
-                className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                className="px-ratio-sm py-ratio-xs noto-sans-jp-light text-sm bg-primary text-background hover:bg-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
               >
                 Save Preferences
               </button>
               <button
                 onClick={handleAcceptAll}
-                className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                className="px-ratio-sm py-ratio-xs noto-sans-jp-light text-sm bg-primary text-background hover:bg-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
               >
                 Accept All
               </button>
@@ -235,29 +235,33 @@ export function CookieSettings() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg border border-gray-200">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">
+    <div className="max-w-2xl mx-auto p-6 bg-background border border-foreground">
+      <h2 className="neue-haas-grotesk-display text-2xl text-primary mb-4">
         Cookie Settings
       </h2>
 
       <div className="space-y-4">
         {/* Essential Cookies */}
-        <div className="border border-gray-200 rounded-lg p-4">
+        <div className="border border-foreground p-4">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-medium text-gray-900">Essential Cookies</h3>
-            <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
+            <h3 className="neue-haas-grotesk-display text-base text-primary">
+              Essential Cookies
+            </h3>
+            <span className="noto-sans-jp-light text-sm text-muted-foreground bg-secondary px-2 py-1">
               Always Active
             </span>
           </div>
-          <p className="text-sm text-gray-600">
+          <p className="noto-sans-jp-light text-sm text-foreground">
             Required for basic website functionality. Cannot be disabled.
           </p>
         </div>
 
         {/* Analytics Cookies */}
-        <div className="border border-gray-200 rounded-lg p-4">
+        <div className="border border-foreground p-4">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-medium text-gray-900">Analytics Cookies</h3>
+            <h3 className="neue-haas-grotesk-display text-base text-primary">
+              Analytics Cookies
+            </h3>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -265,10 +269,10 @@ export function CookieSettings() {
                 checked={analyticsEnabled}
                 onChange={(e) => setAnalyticsEnabled(e.target.checked)}
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              <div className="w-11 h-6 bg-secondary peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-border after:border after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
             </label>
           </div>
-          <p className="text-sm text-gray-600">
+          <p className="noto-sans-jp-light text-sm text-foreground">
             Help us improve the website by allowing us to analyze usage
             patterns.
           </p>
@@ -278,7 +282,7 @@ export function CookieSettings() {
       <div className="mt-6 flex justify-end">
         <button
           onClick={handleSave}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="px-ratio-sm py-ratio-xs noto-sans-jp-light bg-primary text-background hover:bg-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
         >
           Save Preferences
         </button>

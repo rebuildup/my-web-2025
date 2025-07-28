@@ -33,8 +33,12 @@ class GoogleAnalytics {
   private readonly GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
   constructor() {
-    if (typeof window !== "undefined" && this.GA_ID) {
-      this.initializeGA();
+    if (typeof window !== "undefined") {
+      if (this.GA_ID) {
+        this.initializeGA();
+      } else if (process.env.NODE_ENV === "development") {
+        console.log("Google Analytics disabled - GA_ID not configured");
+      }
     }
   }
 
@@ -74,7 +78,8 @@ class GoogleAnalytics {
   loadScript(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!this.GA_ID) {
-        reject(new Error("GA_ID not configured"));
+        console.warn("GA_ID not configured - Analytics disabled");
+        resolve(); // Resolve instead of reject for development
         return;
       }
 
@@ -94,11 +99,14 @@ class GoogleAnalytics {
   setConsent(consent: boolean): void {
     this.consentGiven = consent;
 
-    if (typeof window !== "undefined" && window.gtag) {
+    // Only call gtag if GA_ID is configured and gtag exists
+    if (this.GA_ID && typeof window !== "undefined" && window.gtag) {
       (window.gtag as (...args: unknown[]) => void)("consent", "update", {
         analytics_storage: consent ? "granted" : "denied",
         ad_storage: "denied", // Always deny ad storage for privacy
       });
+    } else if (process.env.NODE_ENV === "development") {
+      console.log("GA consent set:", consent, "but GA not initialized");
     }
   }
 
@@ -106,8 +114,12 @@ class GoogleAnalytics {
    * Track page view
    */
   trackPageView(url: string, title?: string): void {
-    if (!this.GA_ID || !this.consentGiven || typeof window === "undefined")
+    if (!this.GA_ID || !this.consentGiven || typeof window === "undefined") {
+      if (process.env.NODE_ENV === "development" && !this.GA_ID) {
+        console.log("GA tracking (page view):", { url, title });
+      }
       return;
+    }
 
     if (!this.isInitialized) {
       this.initializeGA();
@@ -124,8 +136,12 @@ class GoogleAnalytics {
    * Track custom event
    */
   trackEvent(event: GAEvent): void {
-    if (!this.GA_ID || !this.consentGiven || typeof window === "undefined")
+    if (!this.GA_ID || !this.consentGiven || typeof window === "undefined") {
+      if (process.env.NODE_ENV === "development" && !this.GA_ID) {
+        console.log("GA tracking (event):", event);
+      }
       return;
+    }
 
     if (!this.isInitialized) {
       this.initializeGA();
@@ -143,8 +159,12 @@ class GoogleAnalytics {
    * Track conversion event
    */
   trackConversion(event: ConversionEvent): void {
-    if (!this.GA_ID || !this.consentGiven || typeof window === "undefined")
+    if (!this.GA_ID || !this.consentGiven || typeof window === "undefined") {
+      if (process.env.NODE_ENV === "development" && !this.GA_ID) {
+        console.log("GA tracking (conversion):", event);
+      }
       return;
+    }
 
     if (!this.isInitialized) {
       this.initializeGA();

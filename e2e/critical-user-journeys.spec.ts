@@ -26,6 +26,16 @@ test.describe("Critical User Journeys", () => {
       // Wait for navigation and verify detail page loads
       try {
         await page.waitForLoadState("networkidle", { timeout: 45000 });
+
+        // Wait for the loading state to finish
+        await page.waitForFunction(
+          () => {
+            const loadingText = document.querySelector("h1");
+            return loadingText && !loadingText.textContent?.includes("Loading");
+          },
+          { timeout: 30000 },
+        );
+
         await expect(page.locator("h1")).toBeVisible({ timeout: 20000 });
         await expect(
           page.locator('[data-testid="portfolio-detail"]'),
@@ -35,7 +45,30 @@ test.describe("Critical User Journeys", () => {
         const currentUrl = page.url();
         if (currentUrl.includes("/portfolio/")) {
           console.log("Portfolio detail page loaded but with timeout");
-          await expect(page.locator("h1")).toBeVisible({ timeout: 5000 });
+
+          // Wait a bit more for the content to load
+          await page.waitForTimeout(2000);
+
+          // Check if loading is finished
+          const isLoading = await page
+            .locator('h1:has-text("Loading")')
+            .isVisible()
+            .catch(() => false);
+          if (!isLoading) {
+            await expect(page.locator("h1")).toBeVisible({ timeout: 10000 });
+          } else {
+            // Wait for loading to finish
+            await page.waitForFunction(
+              () => {
+                const loadingText = document.querySelector("h1");
+                return (
+                  loadingText && !loadingText.textContent?.includes("Loading")
+                );
+              },
+              { timeout: 15000 },
+            );
+            await expect(page.locator("h1")).toBeVisible({ timeout: 5000 });
+          }
         } else {
           throw error;
         }

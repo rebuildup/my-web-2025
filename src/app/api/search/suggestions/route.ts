@@ -1,29 +1,59 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSearchSuggestions } from "@/lib/search";
+
+// 検索候補データ
+const suggestions = [
+  "React",
+  "TypeScript",
+  "Next.js",
+  "Unity",
+  "C#",
+  "After Effects",
+  "Motion Graphics",
+  "Animation",
+  "Color Palette",
+  "Text Counter",
+  "Portfolio",
+  "Development",
+  "Design",
+  "Video",
+  "Game",
+  "Web",
+  "Tool",
+  "プロフィール",
+  "ポートフォリオ",
+  "開発",
+  "映像",
+  "デザイン",
+  "ツール",
+  "ゲーム",
+];
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get("q");
-    const limit = parseInt(searchParams.get("limit") || "5");
+    const query = searchParams.get("q") || "";
 
-    if (!query) {
-      return NextResponse.json(
-        { error: "Query parameter is required" },
-        { status: 400 },
-      );
+    if (!query.trim() || query.length < 2) {
+      return NextResponse.json({
+        success: true,
+        suggestions: [],
+      });
     }
 
-    const suggestions = await getSearchSuggestions(query, limit);
+    const filteredSuggestions = suggestions
+      .filter((suggestion) =>
+        suggestion.toLowerCase().includes(query.toLowerCase()),
+      )
+      .slice(0, 5); // 最大5件
 
     return NextResponse.json({
-      query,
-      suggestions,
+      success: true,
+      suggestions: filteredSuggestions,
     });
   } catch (error) {
     console.error("Search suggestions API error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { success: false, error: "Internal server error" },
       { status: 500 },
     );
   }

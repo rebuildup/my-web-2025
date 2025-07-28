@@ -213,12 +213,20 @@ export function FileManagerPanel({
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className={inputStyle}
+          className={`${inputStyle} bg-background text-foreground`}
         >
-          <option value="all">All Types</option>
-          <option value="image">Images</option>
-          <option value="video">Videos</option>
-          <option value="application">Documents</option>
+          <option value="all" className="bg-background text-foreground">
+            All Types
+          </option>
+          <option value="image" className="bg-background text-foreground">
+            Images
+          </option>
+          <option value="video" className="bg-background text-foreground">
+            Videos
+          </option>
+          <option value="application" className="bg-background text-foreground">
+            Documents
+          </option>
         </select>
 
         <select
@@ -226,12 +234,20 @@ export function FileManagerPanel({
           onChange={(e) =>
             setSortBy(e.target.value as "name" | "date" | "size" | "type")
           }
-          className={inputStyle}
+          className={`${inputStyle} bg-background text-foreground`}
         >
-          <option value="date">Sort by Date</option>
-          <option value="name">Sort by Name</option>
-          <option value="size">Sort by Size</option>
-          <option value="type">Sort by Type</option>
+          <option value="date" className="bg-background text-foreground">
+            Sort by Date
+          </option>
+          <option value="name" className="bg-background text-foreground">
+            Sort by Name
+          </option>
+          <option value="size" className="bg-background text-foreground">
+            Sort by Size
+          </option>
+          <option value="type" className="bg-background text-foreground">
+            Sort by Type
+          </option>
         </select>
 
         {selectedFiles.size > 0 && (

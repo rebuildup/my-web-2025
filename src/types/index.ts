@@ -19,6 +19,27 @@ export type {
   StatData,
 } from "./content";
 
+// Portfolio-specific Types
+export type {
+  PortfolioContentItem,
+  PortfolioSEOData,
+  FilterOptions,
+  DevelopFilterOptions,
+  VideoFilterOptions,
+  GridConfig,
+  ExperimentItem,
+  WebGLExperiment,
+  DeviceCapabilities,
+  ValidationResult,
+  ValidationError,
+  ValidationWarning,
+  GalleryItem,
+  GalleryType,
+  PortfolioStats,
+  CategoryStats,
+  PortfolioSearchIndex,
+} from "./portfolio";
+
 // Site Configuration Types
 export type {
   SiteConfig,
@@ -42,7 +63,11 @@ export type {
 } from "./form-config";
 
 // Navigation Types
-export type { NavigationItem, PageConfig, GridConfig } from "./navigation";
+export type {
+  NavigationItem,
+  PageConfig,
+  GridConfig as NavigationGridConfig,
+} from "./navigation";
 
 // API Types
 export type {
@@ -68,7 +93,7 @@ export type {
   CacheItem,
   CacheManager,
   MemoryOptimization,
-  ValidationResult,
+  ValidationResult as UtilsValidationResult,
   Validators,
   FileUploadConfig,
   ProcessedFile,

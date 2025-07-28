@@ -50,7 +50,7 @@ echo ""
 
 # 4. Jest Unit Tests
 echo "4. Jest Unit Tests Running..."
-if npm run test; then
+if npm run test --silent; then
     test_results+=("Jest Tests: PASS")
     echo "Jest Tests: PASS"
 else
@@ -62,7 +62,7 @@ echo ""
 
 # 5. Playwright E2E Tests
 echo "5. Playwright E2E Tests Running..."
-if npx playwright test; then
+if npx playwright test --quiet; then
     test_results+=("Playwright E2E: PASS")
     echo "Playwright E2E: PASS"
 else
@@ -74,12 +74,12 @@ echo ""
 
 # 6. Prettier Format Check
 echo "6. Prettier Format Check Running..."
-if npx prettier --check src/app/workshop/; then
+if npx prettier --check .; then
     test_results+=("Prettier (Workshop): PASS")
     echo "Prettier (Workshop): PASS"
 else
     echo "Warning: Fixing Prettier format issues..."
-    npx prettier --write src/app/workshop/
+    npx prettier --write . --loglevel=error
     if npx prettier --check src/app/workshop/; then
         test_results+=("Prettier (Workshop): PASS (auto-fixed)")
         echo "Prettier (Workshop): PASS (auto-fixed)"

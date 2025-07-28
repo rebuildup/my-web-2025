@@ -144,12 +144,29 @@ export function DataManagerForm({
               <select
                 value={formData.status}
                 onChange={(e) => handleInputChange("status", e.target.value)}
-                className={inputStyle}
+                className={`${inputStyle} bg-background text-foreground`}
               >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-                <option value="archived">Archived</option>
-                <option value="scheduled">Scheduled</option>
+                <option value="draft" className="bg-background text-foreground">
+                  Draft
+                </option>
+                <option
+                  value="published"
+                  className="bg-background text-foreground"
+                >
+                  Published
+                </option>
+                <option
+                  value="archived"
+                  className="bg-background text-foreground"
+                >
+                  Archived
+                </option>
+                <option
+                  value="scheduled"
+                  className="bg-background text-foreground"
+                >
+                  Scheduled
+                </option>
               </select>
             </div>
           </div>

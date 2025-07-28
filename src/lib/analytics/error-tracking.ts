@@ -123,7 +123,13 @@ class ErrorTracker {
 
     // Log to console in development
     if (process.env.NODE_ENV === "development") {
-      console.error("Error captured:", errorReport);
+      console.error("Error captured:", {
+        message: errorReport.message,
+        stack: errorReport.stack,
+        context: errorReport.context,
+        severity: errorReport.severity,
+        category: errorReport.category,
+      });
     }
   }
 
@@ -162,6 +168,12 @@ class ErrorTracker {
       try {
         const response = await originalFetch(...args);
 
+        // Skip monitoring for monitoring endpoints to avoid infinite loops
+        const url = typeof args[0] === "string" ? args[0] : args[0]?.toString();
+        if (url?.includes("/api/monitoring/")) {
+          return response;
+        }
+
         if (!response.ok) {
           this.captureError(
             new Error(
@@ -179,6 +191,12 @@ class ErrorTracker {
 
         return response;
       } catch (error) {
+        // Skip monitoring for monitoring endpoints to avoid infinite loops
+        const url = typeof args[0] === "string" ? args[0] : args[0]?.toString();
+        if (url?.includes("/api/monitoring/")) {
+          throw error;
+        }
+
         this.captureError(
           error instanceof Error ? error : new Error(String(error)),
           {
@@ -366,7 +384,9 @@ class ErrorTracker {
       });
     } catch (error) {
       // Fail silently to avoid infinite error loops
-      console.error("Failed to send error report:", error);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Failed to send error report:", error);
+      }
     }
   }
 
@@ -377,16 +397,30 @@ class ErrorTracker {
     performanceIssue: PerformanceIssue,
   ): Promise<void> {
     try {
+      // Convert PerformanceIssue to the format expected by the API
+      const alertData = {
+        id: performanceIssue.id,
+        timestamp: performanceIssue.timestamp,
+        metric: performanceIssue.type,
+        value: performanceIssue.value,
+        threshold: performanceIssue.threshold,
+        severity: performanceIssue.severity,
+        url: performanceIssue.url,
+        context: performanceIssue.context,
+      };
+
       await fetch("/api/monitoring/performance", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(performanceIssue),
+        body: JSON.stringify(alertData),
       });
     } catch (error) {
-      // Fail silently
-      console.error("Failed to send performance report:", error);
+      // Fail silently to avoid infinite error loops
+      if (process.env.NODE_ENV === "development") {
+        console.error("Failed to send performance report:", error);
+      }
     }
   }
 

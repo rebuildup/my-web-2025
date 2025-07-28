@@ -414,11 +414,17 @@ export function FileUploadSection({
           <select
             value={thumbnail || ""}
             onChange={(e) => onThumbnailChange(e.target.value || undefined)}
-            className={inputStyle}
+            className={`${inputStyle} bg-background text-foreground`}
           >
-            <option value="">Select thumbnail...</option>
+            <option value="" className="bg-background text-foreground">
+              Select thumbnail...
+            </option>
             {images.map((image, index) => (
-              <option key={index} value={image}>
+              <option
+                key={index}
+                value={image}
+                className="bg-background text-foreground"
+              >
                 Image {index + 1}
               </option>
             ))}
