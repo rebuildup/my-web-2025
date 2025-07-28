@@ -16,7 +16,23 @@ test.describe("Accessibility Tests", () => {
     test("should pass accessibility audit on portfolio page", async ({
       page,
     }) => {
-      await page.goto("/portfolio");
+      // Set longer timeout for this test
+      test.setTimeout(120000);
+
+      // Navigate with basic load state first
+      await page.goto("/portfolio", { waitUntil: "domcontentloaded" });
+
+      // Wait for main content to be visible
+      await page.waitForSelector("main", { timeout: 60000 });
+
+      // Wait for portfolio content to load
+      await page.waitForSelector(
+        '[data-testid="portfolio-content"], .container-system, h1',
+        { timeout: 30000 },
+      );
+
+      // Wait a bit more for dynamic content to load
+      await page.waitForTimeout(3000);
 
       const accessibilityScanResults = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
