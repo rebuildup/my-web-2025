@@ -178,7 +178,7 @@ const config: Config = {
       colors: {
         primary: '#0000ff',
         background: '#ffffff',
-        foreground: '#222222',
+        foreground: '#181818',
         accent: '#0000ff',
         base: '#f8f8f8',
       },

@@ -56,8 +56,8 @@ pr-2
 ## colors
 
 --color-primary: #ffffff;
---color-base: #222222;
---color-background: #222222;
+--color-base: #181818;
+--color-background: #181818;
 --color-foreground: #ffffff;
 --color-accent: #0000ff;
 

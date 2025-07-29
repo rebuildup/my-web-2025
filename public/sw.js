@@ -240,7 +240,7 @@ async function handleOffline(request) {
           <style>
             body {
               font-family: 'Noto Sans JP', sans-serif;
-              background: #222222;
+              background: #181818;
               color: #ffffff;
               display: flex;
               align-items: center;

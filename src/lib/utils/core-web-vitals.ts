@@ -344,7 +344,7 @@ export class LCPOptimizer {
     const criticalStyles = `
       body { 
         font-family: 'Noto Sans JP', sans-serif; 
-        background: #222222; 
+        background: #181818; 
         color: #ffffff; 
       }
       .container-system { 

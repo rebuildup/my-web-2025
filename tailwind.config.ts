@@ -13,10 +13,10 @@ const config: Config = {
         // Original design colors
         primary: {
           DEFAULT: "#ffffff", // 白色をプライマリに
-          foreground: "#222222",
+          foreground: "#181818",
         },
-        base: "#222222", // ダークグレー (Dark Grey)
-        background: "#222222", // 背景：ダークグレー
+        base: "#181818", // ダークグレー (Dark Grey)
+        background: "#181818", // 背景：ダークグレー
         foreground: "#ffffff", // Text on dark background
         accent: {
           DEFAULT: "#0000ff", // 青色をアクセントに
@@ -25,7 +25,7 @@ const config: Config = {
 
         // UI component colors
         card: {
-          DEFAULT: "#222222",
+          DEFAULT: "#181818",
           foreground: "#ffffff",
         },
         secondary: {

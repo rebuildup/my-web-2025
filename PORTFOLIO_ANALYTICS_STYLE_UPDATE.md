@@ -55,7 +55,7 @@
 - **プライマリ**: `text-primary` (#ffffff)
 - **フォアグラウンド**: `text-foreground` (#ffffff)
 - **アクセント**: `text-accent` (#0000ff)
-- **背景**: `bg-base` (#222222), `bg-background` (#222222)
+- **背景**: `bg-base` (#181818), `bg-background` (#181818)
 - **ボーダー**: `border-foreground` (#ffffff)
 
 ### レイアウトシステム

@@ -78,7 +78,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#222222",
+  themeColor: "#181818",
   colorScheme: "dark",
 };
 
@@ -114,7 +114,7 @@ export default function RootLayout({
 
         {/* Service Worker registration */}
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#222222" />
+        <meta name="theme-color" content="#181818" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
           name="apple-mobile-web-app-status-bar-style"

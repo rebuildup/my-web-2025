@@ -48,7 +48,7 @@ END:VCARD`;
           margin: 2,
           color: {
             dark: "#ffffff",
-            light: "#222222",
+            light: "#181818",
           },
         });
         setQrCodeUrl(qrUrl);
@@ -72,7 +72,7 @@ END:VCARD`;
         canvas.height = 500;
 
         // Simple card rendering
-        ctx.fillStyle = "#222222";
+        ctx.fillStyle = "#181818";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = "#ffffff";

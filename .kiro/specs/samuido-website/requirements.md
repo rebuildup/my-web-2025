@@ -28,7 +28,7 @@ This project involves building a comprehensive personal portfolio website for sa
 1. WHEN a user visits the home page THEN the system SHALL display hero header, category cards (About/Portfolio/Workshop/Tools), root function cards (Privacy Policy/Search/Contact), and latest content highlights
 2. WHEN navigation is used THEN the system SHALL provide clear visual feedback for the current page with URL structure: yusuke-kim.com/about/, yusuke-kim.com/portfolio/, etc.
 3. WHEN the site is accessed on mobile devices THEN the system SHALL provide responsive navigation that works on all screen sizes with 384px grid system
-4. WHEN a user navigates THEN the system SHALL maintain consistent branding with primary blue (#0000ff) and dark grey (#222222) color scheme with minimal decoration
+4. WHEN a user navigates THEN the system SHALL maintain consistent branding with primary blue (#0000ff) and dark grey (#181818) color scheme with minimal decoration
 5. WHEN fonts are loaded THEN the system SHALL use Adobe Fonts (Neue Haas Grotesk Display bold italic for headings, Zen Kaku Gothic New for Japanese headings) and Google Fonts (Noto Sans JP italic/thin for body text, Shippori Antique for Japanese emphasis)
 6. WHEN search functionality is accessed THEN the system SHALL provide simple mode (title/tag search) and detailed mode (including Markdown content search)
 7. WHEN SEO is implemented THEN the system SHALL include proper meta information, Open Graph tags, Twitter Cards, and JSON-LD structured data

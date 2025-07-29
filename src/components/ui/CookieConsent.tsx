@@ -57,7 +57,7 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-foreground ${className}`}
+      className={`fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm shadow-lg ${className}`}
       role="dialog"
       aria-labelledby="cookie-consent-title"
       aria-describedby="cookie-consent-description"
@@ -81,7 +81,7 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
                 usage. You can choose which cookies to accept.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-row gap-2 flex-wrap">
               <button
                 onClick={() => setShowDetails(true)}
                 className="px-ratio-sm py-ratio-xs noto-sans-jp-light text-sm text-accent hover:text-primary underline focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
@@ -90,7 +90,7 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
               </button>
               <button
                 onClick={handleRejectAll}
-                className="px-ratio-sm py-ratio-xs noto-sans-jp-light text-sm border border-foreground hover:bg-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                className="px-ratio-sm py-ratio-xs noto-sans-jp-light text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
               >
                 Reject All
               </button>
@@ -132,12 +132,12 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
 
             <div className="space-y-4 mb-6">
               {/* Essential Cookies */}
-              <div className="border border-foreground p-4">
+              <div className="border border-foreground bg-background/80 backdrop-blur-sm p-4 rounded-sm">
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="neue-haas-grotesk-display text-base text-primary">
                     Essential Cookies
                   </h4>
-                  <span className="noto-sans-jp-light text-sm text-muted-foreground bg-secondary px-2 py-1">
+                  <span className="noto-sans-jp-light text-sm text-muted-foreground bg-secondary/80 px-2 py-1 rounded-sm">
                     Always Active
                   </span>
                 </div>
@@ -149,7 +149,7 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
               </div>
 
               {/* Analytics Cookies */}
-              <div className="border border-foreground p-4">
+              <div className="border border-foreground bg-background/80 backdrop-blur-sm p-4 rounded-sm">
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="neue-haas-grotesk-display text-base text-primary">
                     Analytics Cookies
@@ -197,10 +197,10 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-2 justify-end">
+            <div className="flex flex-row gap-2 justify-end flex-wrap">
               <button
                 onClick={handleRejectAll}
-                className="px-ratio-sm py-ratio-xs noto-sans-jp-light text-sm border border-foreground hover:bg-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                className="px-ratio-sm py-ratio-xs noto-sans-jp-light text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
               >
                 Reject All
               </button>
@@ -235,19 +235,19 @@ export function CookieSettings() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-background border border-foreground">
+    <div className="max-w-2xl mx-auto p-6 bg-background/95 backdrop-blur-sm border border-foreground rounded-sm shadow-lg">
       <h2 className="neue-haas-grotesk-display text-2xl text-primary mb-4">
         Cookie Settings
       </h2>
 
       <div className="space-y-4">
         {/* Essential Cookies */}
-        <div className="border border-foreground p-4">
+        <div className="border border-foreground bg-background/80 backdrop-blur-sm p-4 rounded-sm">
           <div className="flex items-center justify-between mb-2">
             <h3 className="neue-haas-grotesk-display text-base text-primary">
               Essential Cookies
             </h3>
-            <span className="noto-sans-jp-light text-sm text-muted-foreground bg-secondary px-2 py-1">
+            <span className="noto-sans-jp-light text-sm text-muted-foreground bg-secondary/80 px-2 py-1 rounded-sm">
               Always Active
             </span>
           </div>
@@ -257,7 +257,7 @@ export function CookieSettings() {
         </div>
 
         {/* Analytics Cookies */}
-        <div className="border border-foreground p-4">
+        <div className="border border-foreground bg-background/80 backdrop-blur-sm p-4 rounded-sm">
           <div className="flex items-center justify-between mb-2">
             <h3 className="neue-haas-grotesk-display text-base text-primary">
               Analytics Cookies

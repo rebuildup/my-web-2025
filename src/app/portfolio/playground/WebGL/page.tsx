@@ -124,7 +124,7 @@ const useWebGLSimulation = () => {
     if (canvas) {
       const ctx = canvas.getContext("2d");
       if (ctx) {
-        ctx.fillStyle = "#222222";
+        ctx.fillStyle = "#181818";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
     }
@@ -138,7 +138,7 @@ const useWebGLSimulation = () => {
       canvas.height = 400;
       const ctx = canvas.getContext("2d");
       if (ctx) {
-        ctx.fillStyle = "#222222";
+        ctx.fillStyle = "#181818";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
     }

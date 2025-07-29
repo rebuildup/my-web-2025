@@ -94,7 +94,7 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
                       key={item.label}
                       d={pathData}
                       fill={item.color}
-                      stroke="#222222"
+                      stroke="#181818"
                       strokeWidth="0.5"
                     />,
                   );

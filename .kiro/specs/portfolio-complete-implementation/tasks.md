@@ -55,7 +55,7 @@
   - _Requirements: 4.1, 4.5_
   - _Test: npm run test:all実行、ギャラリー表示・フィルター・ソートテスト_
 
-- [ ] 3.2 開発系ギャラリー(/portfolio/gallery/develop)の実装
+- [x] 3.2 開発系ギャラリー(/portfolio/gallery/develop)の実装
   - 2列交互配置レイアウトの実装
   - 技術スタック強調表示
   - プレビュー動画埋め込み機能
