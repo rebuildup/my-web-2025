@@ -843,5 +843,18 @@
       "element": "H1",
       "url": ""
     }
+  },
+  {
+    "id": "perf_1753766978324_g3hz9uj4v",
+    "timestamp": "2025-07-29T05:29:38.324Z",
+    "metric": "lcp",
+    "value": 11116,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
   }
 ]

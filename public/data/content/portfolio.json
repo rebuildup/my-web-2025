@@ -258,121 +258,327 @@
     "id": "portfolio-1753705824026",
     "type": "portfolio",
     "title": "まわる世界 文字pv",
-    "description": "",
+    "description": "「まわる世界/飯澤遥土」の二次創作文字pvです。",
     "category": "video",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:30:24.026Z",
-    "updatedAt": "2025-07-28T12:30:49.362Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T06:00:31.935Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/o4yKnfV2YVs",
+        "title": "まわる世界 文字pv",
+        "description": "「まわる世界/飯澤遥土」の二次創作文字pvです。",
+        "thumbnail": "https://img.youtube.com/vi/o4yKnfV2YVs/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/20241102_mawaru-1753768712385-d2237e.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_sleep/status/1852638050976751749",
+        "title": "X",
+        "description": "Xのリンク"
+      },
+      {
+        "type": "website",
+        "url": "https://www.tiktok.com/@harutoiizawa/video/7421877342030597384",
+        "title": "原曲",
+        "description": "原曲のリンク"
+      }
+    ],
+    "content": "「まわる世界/飯澤遥土」の二次創作文字pvです。",
+    "thumbnail": "/images/portfolio/20241102_mawaru-1753768712385-d2237e.png"
   },
   {
     "id": "portfolio-1753705810537",
     "type": "portfolio",
     "title": "冥界 二次創作pv",
-    "description": "",
+    "description": "「冥界/kabangu」の二次創作文字pvです。イラレで素材を作る練習です。",
     "category": "video",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:30:10.537Z",
-    "updatedAt": "2025-07-28T12:30:22.728Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T05:57:16.572Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/H-jr6SpAaE8",
+        "title": "冥界 二次創作pv",
+        "description": "「冥界/kabangu」の二次創作文字pvです。イラレで素材を作る練習です。",
+        "thumbnail": "https://img.youtube.com/vi/H-jr6SpAaE8/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/20241027_meikai-1753768460581-c1hso4.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_sleep/status/1850405797592973597",
+        "title": "X",
+        "description": "Xのリンクです"
+      },
+      {
+        "type": "website",
+        "url": "https://youtu.be/6vkz64v4IRc?si=xe-e1ajaHeYMn35l",
+        "title": "音源",
+        "description": "音源のリンクです"
+      }
+    ],
+    "content": "「冥界/kabangu」の二次創作文字pvです。イラレで素材を作る練習です。",
+    "thumbnail": "/images/portfolio/20241027_meikai-1753768460581-c1hso4.png"
   },
   {
     "id": "portfolio-1753705784056",
     "type": "portfolio",
     "title": "高専プロコン 非公式pv",
-    "description": "",
+    "description": "全国高等専門学校プログラミングコンテスト 第35回 奈良大会の非公式pvです",
     "category": "video",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:29:44.056Z",
-    "updatedAt": "2025-07-28T12:30:08.906Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T05:52:57.333Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/c02NG9I1iO8",
+        "title": "高専プロコン 非公式pv",
+        "description": "全国高等専門学校プログラミングコンテスト 第35回 奈良大会の非公式pvです",
+        "thumbnail": "https://img.youtube.com/vi/c02NG9I1iO8/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/kousenprocon-1753768234338-30vf60.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_sleep/status/1845653703463989526",
+        "title": "X",
+        "description": "Xのリンクです"
+      },
+      {
+        "type": "website",
+        "url": "https://x.com/complexivetunes/status/1842760522137297009",
+        "title": "音源",
+        "description": "音源のリンクです"
+      },
+      {
+        "type": "website",
+        "url": "https://www.procon.gr.jp",
+        "title": "高専プロコン",
+        "description": "高専プロコンのウェブサイトです"
+      }
+    ],
+    "content": "全国高等専門学校プログラミングコンテスト 第35回 奈良大会の非公式pvです",
+    "thumbnail": "/images/portfolio/kousenprocon-1753768234338-30vf60.png"
   },
   {
     "id": "portfolio-1753705763745",
     "type": "portfolio",
     "title": "シンカンセンスゴイカタイアイス p5js練習",
-    "description": "",
+    "description": "「シンカンセンスゴイカタイアイス/シャノン」の映像です p5.jsを使った映像制作の練習です そのうちGithubにソースコードを公開します 後半テンポがズレてるのは動画生成時の負荷で生じる若干のズレが重なったものだと思います",
     "category": "video",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:29:23.745Z",
-    "updatedAt": "2025-07-28T12:29:42.900Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T05:49:56.439Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/73KhhTBE3Mk",
+        "title": "シンカンセンスゴイカタイアイス p5js練習",
+        "description": "シンカンセンスゴイカタイアイス p5js練習",
+        "thumbnail": "https://img.youtube.com/vi/73KhhTBE3Mk/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/shinkan-1753768044049-ox85kd.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_sleep/status/1844685698991067303",
+        "title": "X",
+        "description": "Xのリンクです"
+      },
+      {
+        "type": "website",
+        "url": "https://www.youtube.com/watch?v=O_VRIuKM9gw",
+        "title": "原曲",
+        "description": "原曲のリンクです"
+      }
+    ],
+    "content": "「シンカンセンスゴイカタイアイス/シャノン」の映像です p5.jsを使った映像制作の練習です そのうちGithubにソースコードを公開します 後半テンポがズレてるのは動画生成時の負荷で生じる若干のズレが重なったものだと思います",
+    "thumbnail": "/images/portfolio/shinkan-1753768044049-ox85kd.png"
   },
   {
     "id": "portfolio-1753705752680",
     "type": "portfolio",
     "title": "熱異常 テキストモーション",
-    "description": "",
+    "description": "「熱異常/いよわ」のテキストモーションです インパクトのあるテキストモーションの練習です",
     "category": "video",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:29:12.680Z",
-    "updatedAt": "2025-07-28T12:29:22.078Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T05:46:38.940Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/IcknittbbFw",
+        "title": "熱異常 テキストモーション",
+        "description": "「熱異常/いよわ」のテキストモーションです インパクトのあるテキストモーションの練習です",
+        "thumbnail": "https://img.youtube.com/vi/IcknittbbFw/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/netu-1753767855803-zwbvzs.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_sleep/status/1840369939967840508",
+        "title": "X",
+        "description": "Xのリンクです"
+      },
+      {
+        "type": "website",
+        "url": "https://www.youtube.com/watch?v=b2NTglk9tvI",
+        "title": "原曲",
+        "description": "原曲のリンクです"
+      }
+    ],
+    "content": "「熱異常/いよわ」のテキストモーションです インパクトのあるテキストモーションの練習です",
+    "thumbnail": "/images/portfolio/netu-1753767855803-zwbvzs.png"
   },
   {
     "id": "portfolio-1753705731016",
     "type": "portfolio",
     "title": "フラフープハレーション 文字pv",
-    "description": "",
+    "description": "「フラフープハレーション/Twinfield」の文字pvです 雲を使ったテキストアニメーション",
     "category": "video",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:28:51.016Z",
-    "updatedAt": "2025-07-28T12:29:03.765Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T05:43:07.236Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/KYRbEEMCam0",
+        "title": "フラフープハレーション 文字pv",
+        "description": "「フラフープハレーション/Twinfield」の文字pvです 雲を使ったテキストアニメーション",
+        "thumbnail": "https://img.youtube.com/vi/KYRbEEMCam0/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/furafu-1753767679942-brw30p.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_sleep/status/1838567775390044294",
+        "title": "X",
+        "description": "Xのリンクです"
+      },
+      {
+        "type": "website",
+        "url": "https://www.youtube.com/watch?v=llftGyEqH_4",
+        "title": "原曲",
+        "description": "原曲のリンクです"
+      }
+    ],
+    "content": "「フラフープハレーション/Twinfield」の文字pvです 雲を使ったテキストアニメーション",
+    "thumbnail": "/images/portfolio/furafu-1753767679942-brw30p.png"
   },
   {
     "id": "portfolio-1753705712152",
     "type": "portfolio",
     "title": "盲目の怪物 文字pv",
-    "description": "",
+    "description": "「盲目の怪物/ひらぎ」の文字pvです 赤・黒・白のテキストアニメーション",
     "category": "video",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:28:32.152Z",
-    "updatedAt": "2025-07-28T12:28:49.237Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T05:39:31.119Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/Inr6kNzWMcA",
+        "title": "盲目の怪物 文字pv",
+        "description": "「盲目の怪物/ひらぎ」の文字pvです 赤・黒・白のテキストアニメーション",
+        "thumbnail": "https://img.youtube.com/vi/Inr6kNzWMcA/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/moumoku-1753767438352-gdcfzu.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_sleep/status/1837100915419140131",
+        "title": "X",
+        "description": "盲目の怪物 文字pv"
+      },
+      {
+        "type": "website",
+        "url": "https://www.youtube.com/watch?v=aLBMEIOSxdE",
+        "title": "原曲",
+        "description": "原曲のリンクです"
+      }
+    ],
+    "content": "「盲目の怪物/ひらぎ」の文字pvです 赤・黒・白のテキストアニメーション",
+    "thumbnail": "/images/portfolio/moumoku-1753767438352-gdcfzu.png"
   },
   {
     "id": "portfolio-1753705695648",
     "type": "portfolio",
     "title": "Alice in 冷凍庫 文字pv",
-    "description": "",
+    "description": "「Alice in 冷凍庫/Orangester Cover-ウォルピスカーター」の文字pvですAviutlを久しぶりに使いました",
     "category": "video",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:28:15.648Z",
-    "updatedAt": "2025-07-28T12:28:26.874Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T05:35:29.141Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/syScwjPw57U",
+        "title": "Alice in 冷凍庫 文字pv",
+        "description": "「Alice in 冷凍庫/Orangester Cover-ウォルピスカーター」の文字pvですAviutlを久しぶりに使いました",
+        "thumbnail": "https://img.youtube.com/vi/syScwjPw57U/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/alice-1753767142168-oknnpc.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "title": "X",
+        "url": "https://x.com/361do_sleep/status/1837100915419140131",
+        "description": "Alice in 冷凍庫 文字pv"
+      },
+      {
+        "type": "website",
+        "url": "https://www.youtube.com/watch?v=MDcfP97NVpY",
+        "title": "原曲",
+        "description": "原曲のリンクです"
+      }
+    ],
+    "content": "「Alice in 冷凍庫/Orangester Cover-ウォルピスカーター」の文字pvですAviutlを久しぶりに使いました",
+    "thumbnail": "/images/portfolio/alice-1753767142168-oknnpc.png"
   },
   {
     "id": "portfolio-1753705653809",
@@ -393,7 +599,9 @@
         "description": "Blenderを初めて使った動画 普通に難しかったです"
       }
     ],
-    "images": ["/images/portfolio/blen-1753707599484-8a4y4d.png"],
+    "images": [
+      "/images/portfolio/blen-1753707599484-8a4y4d.png"
+    ],
     "externalLinks": [
       {
         "type": "website",
@@ -425,7 +633,9 @@
         "thumbnail": "https://img.youtube.com/vi/szUAV_gMLQY/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/isogasii-1753707430577-rebwd9.png"],
+    "images": [
+      "/images/portfolio/isogasii-1753707430577-rebwd9.png"
+    ],
     "externalLinks": [
       {
         "type": "website",
@@ -463,7 +673,9 @@
         "thumbnail": "https://img.youtube.com/vi/RGKhatEchrI/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/isogatest-1753707321229-nmq8u5.png"],
+    "images": [
+      "/images/portfolio/isogatest-1753707321229-nmq8u5.png"
+    ],
     "externalLinks": [],
     "content": "U-22プロコンに向けて制作 単語にマウスオーバーすると類義語が表示されるようなテキストエディターです 全体的なクオリティが低かったのでボツにしました",
     "thumbnail": "/images/portfolio/isogatest-1753707321229-nmq8u5.png"
@@ -480,7 +692,9 @@
     "createdAt": "2025-07-28T12:26:09.200Z",
     "updatedAt": "2025-07-28T12:54:41.485Z",
     "videos": [],
-    "images": ["/images/portfolio/black-1753707278578-cqmdgl.png"],
+    "images": [
+      "/images/portfolio/black-1753707278578-cqmdgl.png"
+    ],
     "externalLinks": [],
     "content": "webっぽいデザインの練習です 赤と黒はスタイリッシュな感じが出ますよね",
     "thumbnail": "/images/portfolio/black-1753707278578-cqmdgl.png"
@@ -497,7 +711,9 @@
     "createdAt": "2025-07-28T12:25:53.752Z",
     "updatedAt": "2025-07-28T12:54:04.770Z",
     "videos": [],
-    "images": ["/images/portfolio/blue-1753707237299-5hcgzd.png"],
+    "images": [
+      "/images/portfolio/blue-1753707237299-5hcgzd.png"
+    ],
     "externalLinks": [],
     "content": "webっぽいデザインの練習です 青と白はかっこよくて好きです",
     "thumbnail": "/images/portfolio/blue-1753707237299-5hcgzd.png"
@@ -522,7 +738,9 @@
         "thumbnail": "https://img.youtube.com/vi/Rdrylnr6Vdc/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/dounika-1753707081038-m0js26.png"],
+    "images": [
+      "/images/portfolio/dounika-1753707081038-m0js26.png"
+    ],
     "externalLinks": [
       {
         "type": "website",
@@ -546,7 +764,9 @@
     "createdAt": "2025-07-28T12:25:21.159Z",
     "updatedAt": "2025-07-28T12:50:47.626Z",
     "videos": [],
-    "images": ["/images/portfolio/konpu-1753707007885-kwh651.png"],
+    "images": [
+      "/images/portfolio/konpu-1753707007885-kwh651.png"
+    ],
     "externalLinks": [
       {
         "type": "website",
@@ -578,7 +798,9 @@
         "thumbnail": "https://img.youtube.com/vi/ol9ZKw6nEYU/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/otukare-1753706893876-p5c7vt.png"],
+    "images": [
+      "/images/portfolio/otukare-1753706893876-p5c7vt.png"
+    ],
     "externalLinks": [],
     "content": "テスト終わりに作って部活動のDiscordサーバに投下しました",
     "thumbnail": "/images/portfolio/otukare-1753706893876-p5c7vt.png"
@@ -603,7 +825,9 @@
         "thumbnail": "https://img.youtube.com/vi/6xtoFf0h8x4/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/ooame-1753706697990-wimnl1.png"],
+    "images": [
+      "/images/portfolio/ooame-1753706697990-wimnl1.png"
+    ],
     "externalLinks": [],
     "content": "練習です大雨警報が発令中だったので作りました",
     "thumbnail": "/images/portfolio/ooame-1753706697990-wimnl1.png"
@@ -628,7 +852,9 @@
         "thumbnail": "https://img.youtube.com/vi/vcUXmDwI7PQ/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/ugoita-1753706654287-xl546f.png"],
+    "images": [
+      "/images/portfolio/ugoita-1753706654287-xl546f.png"
+    ],
     "externalLinks": [],
     "content": "Aeでイラストを動かしてみました",
     "thumbnail": "/images/portfolio/ugoita-1753706654287-xl546f.png"
@@ -639,7 +865,9 @@
     "title": "嘘と未来 文字pv",
     "description": "ボカロ曲「嘘と未来/うわべ」の文字pvです",
     "category": "develop",
-    "tags": ["Test"],
+    "tags": [
+      "Test"
+    ],
     "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T10:30:00.000Z",
@@ -654,7 +882,9 @@
         "thumbnail": "https://img.youtube.com/vi/qwlAC0qPMXI/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/usoto-1753706419203-7e35gq.png"],
+    "images": [
+      "/images/portfolio/usoto-1753706419203-7e35gq.png"
+    ],
     "externalLinks": [
       {
         "type": "website",
@@ -683,7 +913,9 @@
     "title": "FlashBeatオープニング",
     "description": "FlashBeatのオープニング Aeで作りました",
     "category": "video",
-    "tags": ["AfterEffects"],
+    "tags": [
+      "AfterEffects"
+    ],
     "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T10:12:24.895Z",
@@ -698,7 +930,9 @@
         "thumbnail": "https://img.youtube.com/vi/yr2bwYk0wAk/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/flashopen-1753697697064-xh8h37.webp"],
+    "images": [
+      "/images/portfolio/flashopen-1753697697064-xh8h37.webp"
+    ],
     "externalLinks": [],
     "thumbnail": "/images/portfolio/flashopen-1753697697064-xh8h37.webp"
   },
@@ -708,7 +942,9 @@
     "title": "FlashBeatテーマ曲(BGM)",
     "description": "自作音ゲーFlashBeatのテーマ曲 作曲しました",
     "category": "design",
-    "tags": ["Cubase"],
+    "tags": [
+      "Cubase"
+    ],
     "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T10:08:17.201Z",
@@ -723,7 +959,9 @@
         "thumbnail": "https://img.youtube.com/vi/9pNjS_Ahfjc/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/flashbgm-1753697381549-xlfwvd.webp"],
+    "images": [
+      "/images/portfolio/flashbgm-1753697381549-xlfwvd.webp"
+    ],
     "externalLinks": [],
     "thumbnail": "/images/portfolio/flashbgm-1753697381549-xlfwvd.webp"
   },
@@ -733,7 +971,9 @@
     "title": "FlashBeat",
     "description": "U-16プログラミングコンテスト山口大会 技術賞 企業賞 受賞 Unityで作ったゲームです",
     "category": "develop",
-    "tags": ["Unity"],
+    "tags": [
+      "Unity"
+    ],
     "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T09:49:48.231Z",
@@ -748,7 +988,9 @@
         "thumbnail": "https://img.youtube.com/vi/D0pItdcPWqE/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/flash-1753696619864-g9cm6h.webp"],
+    "images": [
+      "/images/portfolio/flash-1753696619864-g9cm6h.webp"
+    ],
     "externalLinks": [
       {
         "type": "github",
@@ -765,7 +1007,9 @@
     "title": "テストお疲れ様でした アニメーション",
     "description": "初めてAeで作った映像です",
     "category": "video",
-    "tags": ["AfterEffects"],
+    "tags": [
+      "AfterEffects"
+    ],
     "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T09:35:03.368Z",
@@ -780,7 +1024,9 @@
         "thumbnail": "https://img.youtube.com/vi/s5b2M5DF6N4/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/otu-1753696554992-ghbvct.webp"],
+    "images": [
+      "/images/portfolio/otu-1753696554992-ghbvct.webp"
+    ],
     "externalLinks": [],
     "thumbnail": "/images/portfolio/otu-1753696554992-ghbvct.webp"
   }
