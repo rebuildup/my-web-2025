@@ -104,20 +104,31 @@ export default async function VideoDesignProjectsPage() {
   try {
     // Get portfolio data with minimal error handling
     console.log("Fetching portfolio data...");
-    const items = await portfolioDataManager.getPortfolioData(true);
+    const items = await portfolioDataManager.getPortfolioData(false);
 
     // Filter for video&design category items
+    // Show video items and design items that have video-related content
     const videoDesignItems = items.filter(
       (item) =>
         item.category === "video&design" ||
-        (item.tags &&
-          item.tags.includes("video") &&
-          item.tags.includes("design")),
+        item.category === "video" ||
+        (item.category === "design" &&
+          ((item.videos && item.videos.length > 0) ||
+            (item.tags &&
+              (item.tags.some((tag) => tag.toLowerCase().includes("video")) ||
+                item.tags.some((tag) => tag.toLowerCase().includes("motion")) ||
+                item.tags.some((tag) =>
+                  tag.toLowerCase().includes("animation"),
+                ))))),
     );
 
-    console.log("Data fetched successfully:", {
+    console.log("Video&Design page debug:", {
       totalItems: items.length,
       videoDesignItems: videoDesignItems.length,
+      categories: videoDesignItems.map((item) => item.category),
+      itemsWithVideos: videoDesignItems.filter(
+        (item) => item.videos && item.videos.length > 0,
+      ).length,
     });
 
     // Generate SEO metadata and structured data

@@ -49,23 +49,29 @@ export const metadata: Metadata = {
   },
 };
 
-// Fetch video portfolio data
+// Fetch video portfolio data using data manager (consistent with other pages)
 async function getVideoPortfolioData(): Promise<ContentItem[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const response = await fetch(
-      `${baseUrl}/api/content/portfolio?category=video&status=published&sortBy=updatedAt&sortOrder=desc`,
-      {
-        next: { revalidate: 3600 }, // Cache for 1 hour
-      },
+    const { portfolioDataManager } = await import(
+      "@/lib/portfolio/data-manager"
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch portfolio data");
-    }
+    // Get all portfolio data and filter for video category
+    const allItems = await portfolioDataManager.getPortfolioData(false);
+    const videoItems = allItems.filter((item) => item.category === "video");
 
-    const result = await response.json();
-    return result.data || [];
+    console.log(
+      `Data manager: Found ${videoItems.length} video items out of ${allItems.length} total items`,
+    );
+
+    // Sort by updatedAt desc
+    const sortedItems = videoItems.sort(
+      (a, b) =>
+        new Date(b.updatedAt || b.createdAt).getTime() -
+        new Date(a.updatedAt || a.createdAt).getTime(),
+    );
+
+    return sortedItems;
   } catch (error) {
     console.error("Error fetching video portfolio data:", error);
     return [];
@@ -76,6 +82,15 @@ import VideoGallery from "./components/VideoGallery";
 
 export default async function VideoProjectsPage() {
   const videoItems = await getVideoPortfolioData();
+
+  // Debug information for development
+  if (process.env.NODE_ENV === "development") {
+    console.log("Video page debug:", {
+      totalVideoItems: videoItems.length,
+      videoCategories: videoItems.map((item) => item.category),
+      videoTitles: videoItems.map((item) => item.title).slice(0, 5),
+    });
+  }
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -127,6 +142,11 @@ export default async function VideoProjectsPage() {
                 <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
                   Video Projects ({videoItems.length})
                 </h2>
+                {process.env.NODE_ENV === "development" && (
+                  <div className="mb-4 p-2 bg-gray-100 text-gray-800 text-xs">
+                    Debug: Loaded {videoItems.length} video items
+                  </div>
+                )}
                 <VideoGallery items={videoItems} />
               </section>
 

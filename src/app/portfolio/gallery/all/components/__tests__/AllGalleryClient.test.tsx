@@ -309,8 +309,8 @@ describe("AllGalleryClient", () => {
   });
 
   it("should handle pagination", async () => {
-    // Create more items to test pagination
-    const manyItems = Array.from({ length: 15 }, (_, i) => ({
+    // Create more items to test pagination (need more than 24 items to trigger pagination)
+    const manyItems = Array.from({ length: 30 }, (_, i) => ({
       ...mockPortfolioItems[0],
       id: `item-${i + 1}`,
       title: `Project ${i + 1}`,

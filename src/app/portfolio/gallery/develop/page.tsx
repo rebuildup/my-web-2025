@@ -51,12 +51,6 @@ export default async function DevelopGalleryPage() {
         <div className="min-h-screen bg-background text-foreground">
           <main className="py-10">
             <div className="container mx-auto px-4">
-              <p className="text-foreground mb-4">
-                Found{" "}
-                {items.filter((item) => item.category === "develop").length}{" "}
-                development projects and {searchFilters.length} filters.
-              </p>
-
               {items.length > 0 ? (
                 <DevelopGalleryClient
                   initialItems={items}

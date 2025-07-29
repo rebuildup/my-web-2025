@@ -14,12 +14,10 @@ jest.mock("next/image", () => {
   const MockImage = ({
     src,
     alt,
-    unoptimized,
     ...props
   }: {
     src: string;
     alt: string;
-    unoptimized?: boolean;
     [key: string]: any;
   }) => (
     // eslint-disable-next-line @next/next/no-img-element

@@ -72,7 +72,7 @@
   - _Requirements: 4.3, 4.5_
   - _Test: npm run test:all実行、動画埋め込み・プレビューテスト_
 
-- [ ] 3.4 映像・デザインギャラリー(/portfolio/gallery/video&design)の実装
+- [x] 3.4 映像・デザインギャラリー(/portfolio/gallery/video&design)の実装
   - 縦3列グリッドレイアウトの実装
   - コンテンツ応答型サイズ調整（1×2、2×2、1×3表示）
   - アスペクト比計算機能

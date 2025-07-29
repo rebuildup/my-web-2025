@@ -50,9 +50,37 @@ export async function GET(
     try {
       const fileContent = await fs.readFile(contentPath, "utf-8");
       content = JSON.parse(fileContent);
-    } catch {
+      console.log(
+        `Successfully loaded ${content.length} ${type} items from ${contentPath}`,
+      );
+    } catch (error) {
       // If file doesn't exist or is empty, return empty array
-      console.warn(`Content file not found or invalid: ${contentPath}`);
+      console.warn(`Content file not found or invalid: ${contentPath}`, error);
+
+      // Try alternative paths for different deployment environments
+      const alternativePaths = [
+        path.join(process.cwd(), "public", "data", "content", `${type}.json`),
+        path.join(
+          __dirname,
+          "../../../../../public/data/content",
+          `${type}.json`,
+        ),
+        path.join("/var/task/public/data/content", `${type}.json`),
+      ];
+
+      for (const altPath of alternativePaths) {
+        try {
+          const altContent = await fs.readFile(altPath, "utf-8");
+          content = JSON.parse(altContent);
+          console.log(
+            `Successfully loaded ${content.length} ${type} items from alternative path: ${altPath}`,
+          );
+          break;
+        } catch (altError) {
+          console.log(`Alternative path failed: ${altPath}`, altError);
+          continue;
+        }
+      }
     }
 
     // Filter content

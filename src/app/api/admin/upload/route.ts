@@ -173,18 +173,31 @@ export async function POST(request: NextRequest) {
       // Process images if it's an image file and not a download
       if (uploadType !== "download" && file.type.startsWith("image/")) {
         try {
+          console.log("Processing image with Sharp:", filePath);
+
+          // Check if Sharp is available and file exists
+          await fs.access(filePath);
+          console.log("File exists, proceeding with Sharp processing");
+
           const versions = await createImageVersions(filePath, filePath, {
             generateThumbnail: true,
-            optimizeImage: true,
-            convertToWebP: true,
+            optimizeImage: false, // Temporarily disable optimization
+            convertToWebP: false, // Temporarily disable WebP conversion
             quality: 85,
             thumbnailSize: 300,
             ...processingOptions,
           });
 
+          console.log("Image versions created:", versions);
           fileInfo.versions = versions;
         } catch (error) {
-          console.warn("Failed to generate image versions:", error);
+          console.error("Failed to generate image versions:", error);
+          console.error("Error details:", {
+            message: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+            filePath,
+            fileType: file.type,
+          });
           // Continue without versions - not critical
         }
       }
@@ -217,6 +230,11 @@ async function generateThumbnail(
   size: number = 300,
 ): Promise<void> {
   try {
+    console.log(`Generating thumbnail: ${inputPath} -> ${outputPath}`);
+
+    // Check if input file exists
+    await fs.access(inputPath);
+
     await sharp(inputPath)
       .resize(size, size, {
         fit: "inside",
@@ -225,9 +243,15 @@ async function generateThumbnail(
       .jpeg({ quality: 80 })
       .toFile(outputPath);
 
-    console.log(`Thumbnail generated: ${outputPath}`);
+    console.log(`Thumbnail generated successfully: ${outputPath}`);
   } catch (error) {
     console.error("Thumbnail generation failed:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      inputPath,
+      outputPath,
+      size,
+    });
     throw error;
   }
 }
@@ -275,9 +299,15 @@ async function optimizeImage(
     }
 
     await pipeline.toFile(outputPath);
-    console.log(`Image optimized: ${outputPath}`);
+    console.log(`Image optimized successfully: ${outputPath}`);
   } catch (error) {
     console.error("Image optimization failed:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      inputPath,
+      outputPath,
+      options,
+    });
     throw error;
   }
 }
@@ -346,7 +376,13 @@ async function createImageVersions(
         .replace(/\\/g, "/");
     }
   } catch (error) {
-    console.warn("Some image versions failed to generate:", error);
+    console.error("Some image versions failed to generate:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      inputPath,
+      baseOutputPath,
+      options,
+    });
   }
 
   return results;

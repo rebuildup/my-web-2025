@@ -3,7 +3,6 @@
 import { useState, useRef, useCallback } from "react";
 import {
   validateFile,
-  processImageWithFFmpeg,
   extractFileMetadata,
   compressFileIfNeeded,
   FileProcessingOptions,
@@ -84,14 +83,44 @@ export function FileUploadSection({
           updateProgress(file.name, { progress: 10 });
 
           // Extract metadata
-          const metadata = await extractFileMetadata(file);
+          console.log("Extracting metadata for file:", file.name);
+          let metadata;
+          try {
+            metadata = await extractFileMetadata(file);
+            console.log("Metadata extracted successfully:", metadata);
+          } catch (metadataError) {
+            console.warn(
+              "Failed to extract metadata, using basic info:",
+              metadataError,
+            );
+            metadata = {
+              name: file.name,
+              size: file.size,
+              type: file.type,
+              lastModified: file.lastModified,
+              hash: "unknown",
+            };
+          }
           updateProgress(file.name, { progress: 20 });
 
           // Compress if needed
           let processedFile = file;
           if (file.size > 5 * 1024 * 1024) {
             // 5MB
-            processedFile = await compressFileIfNeeded(file);
+            console.log("File is large, attempting compression:", file.size);
+            try {
+              processedFile = await compressFileIfNeeded(file);
+              console.log(
+                "File compressed successfully, new size:",
+                processedFile.size,
+              );
+            } catch (compressionError) {
+              console.warn(
+                "File compression failed, using original:",
+                compressionError,
+              );
+              processedFile = file;
+            }
             updateProgress(file.name, { progress: 40 });
           }
 
@@ -100,77 +129,73 @@ export function FileUploadSection({
             status: "processing",
           });
 
-          // Process with FFmpeg if it's an image
-          let processedVersions: {
-            original: File | Blob;
-            thumbnail?: Blob;
-            optimized?: Blob;
-            webp?: Blob;
-          } = { original: processedFile };
-          if (
-            file.type.startsWith("image/") &&
-            processingOptions.generateThumbnail
-          ) {
-            try {
-              processedVersions = await processImageWithFFmpeg(
-                processedFile,
-                processingOptions,
-              );
-              updateProgress(file.name, { progress: 70 });
-            } catch (error) {
-              console.warn("FFmpeg processing failed, using original:", error);
-            }
-          }
+          // Skip client-side FFmpeg processing for now
+          // Server-side Sharp processing will handle image optimization
+          console.log(
+            "Skipping client-side FFmpeg processing, will use server-side Sharp instead",
+          );
 
-          // Upload original file
+          // Upload original file with processing options
           const formData = new FormData();
           formData.append("file", processedFile);
           formData.append("type", "portfolio");
           formData.append("metadata", JSON.stringify(metadata));
+          formData.append(
+            "processingOptions",
+            JSON.stringify(processingOptions),
+          );
 
-          const response = await fetch("/api/admin/upload", {
-            method: "POST",
-            body: formData,
-          });
+          console.log(
+            "Uploading file with processing options:",
+            processingOptions,
+          );
+          console.log("Starting upload request for file:", file.name);
 
-          updateProgress(file.name, { progress: 90 });
-
-          if (response.ok) {
-            const result = await response.json();
-            uploadedUrls.push(...result.urls);
-
-            // Upload additional versions if they exist
-            if (processedVersions.thumbnail) {
-              const thumbnailFormData = new FormData();
-              thumbnailFormData.append("file", processedVersions.thumbnail);
-              thumbnailFormData.append("type", "thumbnail");
-
-              await fetch("/api/admin/upload", {
-                method: "POST",
-                body: thumbnailFormData,
-              });
-            }
-
-            if (processedVersions.webp) {
-              const webpFormData = new FormData();
-              webpFormData.append("file", processedVersions.webp);
-              webpFormData.append("type", "portfolio");
-
-              await fetch("/api/admin/upload", {
-                method: "POST",
-                body: webpFormData,
-              });
-            }
-
-            updateProgress(file.name, {
-              progress: 100,
-              status: "complete",
+          try {
+            const response = await fetch("/api/admin/upload", {
+              method: "POST",
+              body: formData,
+              // Add timeout for large file uploads
+              signal: AbortSignal.timeout(60000), // 60 seconds timeout
             });
-          } else {
-            const errorData = await response.json();
+
+            console.log(
+              "Upload request completed, response status:",
+              response.status,
+            );
+            updateProgress(file.name, { progress: 90 });
+
+            if (response.ok) {
+              const result = await response.json();
+              console.log("Upload successful:", result);
+
+              // Use the main file URL
+              if (result.files && result.files.length > 0) {
+                uploadedUrls.push(result.files[0].url);
+              } else if (result.urls && result.urls.length > 0) {
+                uploadedUrls.push(...result.urls);
+              }
+
+              updateProgress(file.name, {
+                progress: 100,
+                status: "complete",
+              });
+            } else {
+              const errorData = await response.json();
+              console.error("Upload failed:", errorData);
+              updateProgress(file.name, {
+                status: "error",
+                error: errorData.error || "Upload failed",
+              });
+            }
+          } catch (uploadError) {
+            console.error("Upload request failed:", uploadError);
             updateProgress(file.name, {
               status: "error",
-              error: errorData.error || "Upload failed",
+              error:
+                uploadError instanceof Error
+                  ? uploadError.message
+                  : "Upload request failed",
             });
           }
         } catch (error) {

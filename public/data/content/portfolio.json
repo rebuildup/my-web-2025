@@ -3,61 +3,121 @@
     "id": "portfolio-1753706214241",
     "type": "portfolio",
     "title": "コンピュータ部 勧誘チラシ",
-    "description": "",
+    "description": "コンピュータ部の勧誘チラシを作成しました。",
     "category": "design",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:36:54.241Z",
-    "updatedAt": "2025-07-28T12:37:07.155Z",
+    "updatedAt": "2025-07-29T23:28:59.613Z",
     "videos": [],
-    "images": [],
-    "externalLinks": []
+    "images": [
+      "/images/portfolio/20250325_conpu-1753831731635-5tkf1a.jpg",
+      "/images/portfolio/20250325_conpu-1753831737057-37pwgg.jpg"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "title": "コンピュータ部X",
+        "url": "https://x.com/ube_k_cclub",
+        "description": "Xのリンクです"
+      }
+    ],
+    "content": "コンピュータ部の勧誘チラシを作成しました。",
+    "thumbnail": "/images/portfolio/20250325_conpu-1753831731635-5tkf1a.jpg"
   },
   {
     "id": "portfolio-1753706194107",
     "type": "portfolio",
     "title": "手書きアニメーション",
-    "description": "",
+    "description": "フォトショを使って初めて手書きアニメーションを作成しました。",
     "category": "design",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:36:34.107Z",
-    "updatedAt": "2025-07-28T12:36:52.422Z",
+    "updatedAt": "2025-07-29T23:17:25.725Z",
     "videos": [],
-    "images": [],
-    "externalLinks": []
+    "images": ["/images/portfolio/gifanim_m-1753831016627-vfiecn.gif"],
+    "externalLinks": [
+      {
+        "type": "website",
+        "title": "X",
+        "url": "https://x.com/361do_design/status/1905491397169611125",
+        "description": "Xのリンクです"
+      }
+    ],
+    "content": "フォトショを使って初めて手書きアニメーションを作成しました。",
+    "thumbnail": "/images/portfolio/gifanim_m-1753831016627-vfiecn.gif"
   },
   {
     "id": "portfolio-1753706148196",
     "type": "portfolio",
     "title": "コードタイプ風映像素材",
-    "description": "",
+    "description": "p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。",
     "category": "design",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:35:48.196Z",
-    "updatedAt": "2025-07-28T12:36:32.645Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T23:20:06.507Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtube.com/shorts/rq2WlOQa9zE",
+        "title": "コードタイプ風映像素材",
+        "description": "p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。"
+      }
+    ],
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-30-08h05m30s388-1753831109215-o605tg.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_design/status/1904339929557266477",
+        "title": "X",
+        "description": "Xのリンクです"
+      },
+      {
+        "type": "github",
+        "title": "GitHub Repository",
+        "url": "https://github.com/rebuildup/CodeType_p5",
+        "description": "GitHub Repository"
+      }
+    ],
+    "content": "p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。",
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-08h05m30s388-1753831109215-o605tg.png"
   },
   {
     "id": "portfolio-1753706133707",
     "type": "portfolio",
     "title": "Aeエフェクトプラグイン Stretch v2",
-    "description": "",
+    "description": "AeエフェクトプラグインStretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。Xの投稿が伸びてくれました。",
     "category": "develop",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:35:33.707Z",
-    "updatedAt": "2025-07-28T12:35:46.750Z",
+    "updatedAt": "2025-07-29T23:18:14.573Z",
     "videos": [],
-    "images": [],
-    "externalLinks": []
+    "images": ["/images/portfolio/stretch_v2-1753831090491-5qcmzj.jpg"],
+    "externalLinks": [
+      {
+        "type": "booth",
+        "title": "Booth",
+        "url": "https://361do.booth.pm/items/6472931",
+        "description": "Boothのリンクです"
+      },
+      {
+        "type": "website",
+        "url": "https://x.com/361do_sleep/status/1901612081641910556",
+        "title": "X",
+        "description": "Xのリンクです"
+      }
+    ],
+    "content": "AeエフェクトプラグインStretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。Xの投稿が伸びてくれました。",
+    "thumbnail": "/images/portfolio/stretch_v2-1753831090491-5qcmzj.jpg"
   },
   {
     "id": "portfolio-1753706120147",
@@ -66,14 +126,38 @@
     "description": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます",
     "category": "develop",
     "tags": [],
-    "status": "archived",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:35:20.147Z",
-    "updatedAt": "2025-07-29T15:08:11.291Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": [],
-    "content": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます"
+    "updatedAt": "2025-07-29T23:16:36.876Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/ZJsJ2ss4IBw",
+        "title": "タイピングゲーム ProtoType",
+        "description": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。",
+        "thumbnail": "https://img.youtube.com/vi/ZJsJ2ss4IBw/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-30-07h57m21s585-1753830992355-tntacj.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "demo",
+        "title": "タイピングゲーム ProtoType",
+        "url": "https://prototype.yusuke-kim.com",
+        "description": "タイピングゲーム ProtoType"
+      },
+      {
+        "type": "github",
+        "title": "コード(Github)",
+        "url": "https://github.com/rebuildup/ProtoType",
+        "description": "Githubリポジトリです"
+      }
+    ],
+    "content": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます",
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-07h57m21s585-1753830992355-tntacj.png"
   },
   {
     "id": "portfolio-1753706107538",
@@ -323,11 +407,11 @@
     "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:32:28.545Z",
-    "updatedAt": "2025-07-29T10:03:40.114Z",
+    "updatedAt": "2025-07-29T23:31:54.242Z",
     "videos": [
       {
         "type": "youtube",
-        "url": "https://youtu.be/RIzWX4QIkzE",
+        "url": "https://youtu.be/-_uzbG410Cg",
         "title": "Aeエフェクトプラグイン Stretch",
         "description": "AeでAviutlの引き伸ばしを再現しました。これでC++が出来ると自称していいのでしょうか...",
         "thumbnail": "https://img.youtube.com/vi/RIzWX4QIkzE/maxresdefault.jpg"

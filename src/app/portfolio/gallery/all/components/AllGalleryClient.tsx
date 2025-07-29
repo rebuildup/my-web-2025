@@ -33,7 +33,7 @@ interface AllGalleryClientProps {
   searchFilters: SearchFilter[];
 }
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 24;
 
 export function AllGalleryClient({
   initialItems,

@@ -150,18 +150,33 @@ export class PortfolioDataManager {
   async getPortfolioData(
     forceRefresh: boolean = false,
   ): Promise<PortfolioContentItem[]> {
-    if (!forceRefresh && this.isCacheValid()) {
+    // Always try to return cached data first if available and not forcing refresh
+    if (!forceRefresh && this.cache.portfolioData.size > 0) {
       testLogger.log("Returning cached portfolio data");
       const cachedData = Array.from(this.cache.portfolioData.values());
       // Filter for published items only for gallery display
       const publishedData = cachedData.filter(
         (item) => item.status === "published",
       );
-      return publishedData;
+      if (publishedData.length > 0) {
+        return publishedData;
+      }
     }
 
     // Fetch fresh data from API
     const rawData = await this.fetchRawPortfolioData();
+
+    if (rawData.length === 0) {
+      testLogger.warn("No raw data fetched, checking cache as fallback");
+      if (this.cache.portfolioData.size > 0) {
+        const cachedData = Array.from(this.cache.portfolioData.values());
+        const publishedData = cachedData.filter(
+          (item) => item.status === "published",
+        );
+        return publishedData;
+      }
+      return [];
+    }
 
     const result = await this.processPortfolioData(rawData);
 
@@ -169,6 +184,9 @@ export class PortfolioDataManager {
       // Filter for published items only for gallery display
       const publishedData = result.data.filter(
         (item) => item.status === "published",
+      );
+      testLogger.log(
+        `Successfully processed ${publishedData.length} published items`,
       );
       return publishedData;
     } else {

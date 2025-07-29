@@ -74,21 +74,35 @@ let isFFmpegLoaded = false;
  */
 export async function initializeFFmpeg(): Promise<FFmpeg> {
   if (ffmpegInstance && isFFmpegLoaded) {
+    console.log("FFmpeg already loaded, returning existing instance");
     return ffmpegInstance;
   }
 
+  console.log("Initializing FFmpeg...");
   ffmpegInstance = new FFmpeg();
 
   // Load FFmpeg with CDN URLs
   const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
 
-  await ffmpegInstance.load({
-    coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-    wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
-  });
+  try {
+    console.log("Loading FFmpeg core files from CDN...");
+    await ffmpegInstance.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+      wasmURL: await toBlobURL(
+        `${baseURL}/ffmpeg-core.wasm`,
+        "application/wasm",
+      ),
+    });
 
-  isFFmpegLoaded = true;
-  return ffmpegInstance;
+    isFFmpegLoaded = true;
+    console.log("FFmpeg loaded successfully");
+    return ffmpegInstance;
+  } catch (error) {
+    console.error("Failed to initialize FFmpeg:", error);
+    throw new Error(
+      `FFmpeg initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+  }
 }
 
 /**
@@ -173,22 +187,27 @@ export async function processImageWithFFmpeg(
   optimized?: Blob;
   webp?: Blob;
 }> {
-  const ffmpeg = await initializeFFmpeg();
-  const inputName = `input.${file.name.split(".").pop()}`;
-
-  // Write input file to FFmpeg filesystem
-  await ffmpeg.writeFile(inputName, new Uint8Array(await file.arrayBuffer()));
-
-  const results: {
-    original: File;
-    thumbnail?: Blob;
-    optimized?: Blob;
-    webp?: Blob;
-  } = { original: file };
+  console.log("Starting FFmpeg image processing for file:", file.name);
+  console.log("Processing options:", options);
 
   try {
+    const ffmpeg = await initializeFFmpeg();
+    const inputName = `input.${file.name.split(".").pop()}`;
+
+    console.log("Writing file to FFmpeg filesystem:", inputName);
+    // Write input file to FFmpeg filesystem
+    await ffmpeg.writeFile(inputName, new Uint8Array(await file.arrayBuffer()));
+
+    const results: {
+      original: File;
+      thumbnail?: Blob;
+      optimized?: Blob;
+      webp?: Blob;
+    } = { original: file };
+
     // Generate thumbnail if requested
     if (options.generateThumbnail) {
+      console.log("Generating thumbnail...");
       const thumbnailSize = options.thumbnailSize || 300;
       await ffmpeg.exec([
         "-i",
@@ -202,10 +221,12 @@ export async function processImageWithFFmpeg(
 
       const thumbnailData = await ffmpeg.readFile("thumbnail.jpg");
       results.thumbnail = new Blob([thumbnailData], { type: "image/jpeg" });
+      console.log("Thumbnail generated successfully");
     }
 
     // Generate optimized version if requested
     if (options.optimizeImage) {
+      console.log("Generating optimized version...");
       const quality = options.quality || 85;
       const maxWidth = options.maxWidth || 1920;
       const maxHeight = options.maxHeight || 1080;
@@ -222,10 +243,12 @@ export async function processImageWithFFmpeg(
 
       const optimizedData = await ffmpeg.readFile("optimized.jpg");
       results.optimized = new Blob([optimizedData], { type: "image/jpeg" });
+      console.log("Optimized version generated successfully");
     }
 
     // Convert to WebP if requested
     if (options.convertToWebP) {
+      console.log("Converting to WebP...");
       const quality = options.quality || 85;
 
       await ffmpeg.exec([
@@ -240,13 +263,24 @@ export async function processImageWithFFmpeg(
 
       const webpData = await ffmpeg.readFile("output.webp");
       results.webp = new Blob([webpData], { type: "image/webp" });
+      console.log("WebP conversion completed successfully");
     }
+
+    console.log("FFmpeg processing completed successfully");
+    return results;
   } catch (error) {
     console.error("FFmpeg processing error:", error);
-    throw new Error("Failed to process image with FFmpeg");
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+    });
+    throw new Error(
+      `Failed to process image with FFmpeg: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
   }
-
-  return results;
 }
 
 /**
@@ -293,44 +327,84 @@ export async function calculateFileHash(file: File): Promise<string> {
 }
 
 /**
- * Compress file if it exceeds size limit
+ * Compress file if it exceeds size limit using Canvas API
  */
 export async function compressFileIfNeeded(
   file: File,
   maxSize: number = 5 * 1024 * 1024, // 5MB default
 ): Promise<File> {
+  console.log("Checking if file needs compression:", file.size, "vs", maxSize);
+
   if (file.size <= maxSize) {
+    console.log("File size is within limit, no compression needed");
     return file;
   }
 
   if (!file.type.startsWith("image/")) {
+    console.warn("File too large and cannot be compressed (not an image)");
     throw new Error("File too large and cannot be compressed");
   }
 
-  // Use FFmpeg to compress the image
-  const ffmpeg = await initializeFFmpeg();
-  const inputName = `input.${file.name.split(".").pop()}`;
+  console.log("Compressing image using Canvas API");
 
-  await ffmpeg.writeFile(inputName, new Uint8Array(await file.arrayBuffer()));
+  try {
+    // Use Canvas API for client-side compression
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
 
-  // Calculate compression ratio needed
-  const compressionRatio = maxSize / file.size;
-  const quality = Math.max(20, Math.floor(compressionRatio * 100));
+    return new Promise((resolve, reject) => {
+      img.onload = () => {
+        // Calculate new dimensions to reduce file size
+        const compressionRatio = Math.sqrt(maxSize / file.size);
+        const newWidth = Math.floor(img.width * compressionRatio);
+        const newHeight = Math.floor(img.height * compressionRatio);
 
-  await ffmpeg.exec([
-    "-i",
-    inputName,
-    "-q:v",
-    quality.toString(),
-    "compressed.jpg",
-  ]);
+        canvas.width = newWidth;
+        canvas.height = newHeight;
 
-  const compressedData = await ffmpeg.readFile("compressed.jpg");
-  const compressedBlob = new Blob([compressedData], { type: "image/jpeg" });
+        // Draw and compress
+        ctx?.drawImage(img, 0, 0, newWidth, newHeight);
 
-  return new File([compressedBlob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
-    type: "image/jpeg",
-  });
+        // Calculate quality based on compression needed
+        const quality = Math.max(0.3, Math.min(0.9, maxSize / file.size));
+
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const compressedFile = new File(
+                [blob],
+                file.name.replace(/\.[^/.]+$/, ".jpg"),
+                {
+                  type: "image/jpeg",
+                },
+              );
+              console.log(
+                "Compression successful:",
+                file.size,
+                "->",
+                compressedFile.size,
+              );
+              resolve(compressedFile);
+            } else {
+              reject(new Error("Failed to compress image"));
+            }
+          },
+          "image/jpeg",
+          quality,
+        );
+      };
+
+      img.onerror = () => {
+        reject(new Error("Failed to load image for compression"));
+      };
+
+      img.src = URL.createObjectURL(file);
+    });
+  } catch (error) {
+    console.error("Canvas compression failed:", error);
+    throw new Error("Failed to compress image using Canvas API");
+  }
 }
 
 /**
@@ -345,6 +419,11 @@ export async function extractFileMetadata(file: File): Promise<{
   duration?: number;
   hash: string;
 }> {
+  console.log("Extracting metadata for file:", file.name);
+
+  // Generate a simple hash based on file properties instead of content
+  const simpleHash = `${file.name}-${file.size}-${file.lastModified}`;
+
   const metadata: {
     name: string;
     size: number;
@@ -358,7 +437,7 @@ export async function extractFileMetadata(file: File): Promise<{
     size: file.size,
     type: file.type,
     lastModified: file.lastModified,
-    hash: await calculateFileHash(file),
+    hash: simpleHash,
   };
 
   // Get image dimensions

@@ -226,15 +226,29 @@ export default async function PortfolioPage() {
       video:
         enhancedStats.categoryCounts?.video ||
         portfolioItems.filter(
-          (item) =>
-            item.category?.toLowerCase().includes("video") ||
-            item.category?.toLowerCase().includes("aftereffects"),
+          (item) => item.category?.toLowerCase() === "video",
         ).length,
       design:
         enhancedStats.categoryCounts?.design ||
         portfolioItems.filter((item) =>
           item.category?.toLowerCase().includes("design"),
         ).length,
+      // Video & Design: video items + design items with video content (matching gallery logic)
+      videoDesign: portfolioItems.filter(
+        (item) =>
+          item.category === "video&design" ||
+          item.category === "video" ||
+          (item.category === "design" &&
+            ((item.videos && item.videos.length > 0) ||
+              (item.tags &&
+                (item.tags.some((tag) => tag.toLowerCase().includes("video")) ||
+                  item.tags.some((tag) =>
+                    tag.toLowerCase().includes("motion"),
+                  ) ||
+                  item.tags.some((tag) =>
+                    tag.toLowerCase().includes("animation"),
+                  ))))),
+      ).length,
     },
     technologies:
       Object.keys(enhancedStats.technologyCounts || {}).slice(0, 10) ||
@@ -256,6 +270,17 @@ export default async function PortfolioPage() {
           ).toLocaleDateString("ja-JP", { year: "numeric", month: "long" })
         : "データなし",
   };
+
+  // Debug information for development
+  if (process.env.NODE_ENV === "development") {
+    console.log("Portfolio Stats Debug:", {
+      totalProjects: portfolioStats.totalProjects,
+      develop: portfolioStats.categories.develop,
+      video: portfolioStats.categories.video,
+      design: portfolioStats.categories.design,
+      videoDesign: portfolioStats.categories.videoDesign,
+    });
+  }
 
   // Enhanced category information with dynamic data
   const categories = [
@@ -297,7 +322,7 @@ export default async function PortfolioPage() {
       title: "Video & Design",
       description: "デザインコンセプトと映像表現を融合した作品",
       icon: Palette,
-      count: portfolioStats.categories.design,
+      count: portfolioStats.categories.videoDesign,
       href: "/portfolio/gallery/video&design",
       color: "accent",
       badge: "Artistic",

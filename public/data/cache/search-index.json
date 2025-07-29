@@ -1,5 +1,55 @@
 [
   {
+    "id": "portfolio-1753706214241",
+    "type": "portfolio",
+    "title": "コンピュータ部 勧誘チラシ",
+    "description": "コンピュータ部の勧誘チラシを作成しました。",
+    "content": "コンピュータ部の勧誘チラシを作成しました。",
+    "tags": [],
+    "category": "design",
+    "searchableContent": "コンピュータ部 勧誘チラシ コンピュータ部の勧誘チラシを作成しました。 コンピュータ部の勧誘チラシを作成しました。 design"
+  },
+  {
+    "id": "portfolio-1753706194107",
+    "type": "portfolio",
+    "title": "手書きアニメーション",
+    "description": "フォトショを使って初めて手書きアニメーションを作成しました。",
+    "content": "フォトショを使って初めて手書きアニメーションを作成しました。",
+    "tags": [],
+    "category": "design",
+    "searchableContent": "手書きアニメーション フォトショを使って初めて手書きアニメーションを作成しました。 フォトショを使って初めて手書きアニメーションを作成しました。 design"
+  },
+  {
+    "id": "portfolio-1753706148196",
+    "type": "portfolio",
+    "title": "コードタイプ風映像素材",
+    "description": "p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。",
+    "content": "p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。",
+    "tags": [],
+    "category": "design",
+    "searchableContent": "コードタイプ風映像素材 p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。 p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。 design"
+  },
+  {
+    "id": "portfolio-1753706133707",
+    "type": "portfolio",
+    "title": "Aeエフェクトプラグイン Stretch v2",
+    "description": "AeエフェクトプラグインStretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。Xの投稿が伸びてくれました。",
+    "content": "AeエフェクトプラグインStretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。Xの投稿が伸びてくれました。",
+    "tags": [],
+    "category": "develop",
+    "searchableContent": "aeエフェクトプラグイン stretch v2 aeエフェクトプラグインstretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。xの投稿が伸びてくれました。 aeエフェクトプラグインstretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。xの投稿が伸びてくれました。 develop"
+  },
+  {
+    "id": "portfolio-1753706120147",
+    "type": "portfolio",
+    "title": "タイピングゲーム ProtoType",
+    "description": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます",
+    "content": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます",
+    "tags": [],
+    "category": "develop",
+    "searchableContent": "タイピングゲーム prototype webgl(pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます webgl(pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます develop"
+  },
+  {
     "id": "portfolio-1753706107538",
     "type": "portfolio",
     "title": "ProtoType パンフレット",
