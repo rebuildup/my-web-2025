@@ -42,6 +42,7 @@ export interface ContentItem {
   stats?: ContentStats;
   seo?: SEOData;
   customFields?: Record<string, unknown>;
+  aspectRatio?: number; // For grid layout calculations
 }
 
 export interface MediaEmbed {
@@ -53,6 +54,14 @@ export interface MediaEmbed {
   duration?: number;
   width?: number;
   height?: number;
+}
+
+export interface ImageItem {
+  url: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+  caption?: string;
 }
 
 export interface ExternalLink {

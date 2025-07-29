@@ -1,35 +1,48 @@
 [
   {
-    "id": "perf_1753784555828_59wm2z3t8",
-    "timestamp": "2025-07-29T10:22:35.828Z",
+    "id": "perf_1753796190496_hucedoydv",
+    "timestamp": "2025-07-29T13:36:30.496Z",
     "metric": "lcp",
-    "value": 5940,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753784556641_g3la8ej18",
-    "timestamp": "2025-07-29T10:22:36.641Z",
-    "metric": "lcp",
-    "value": 4952,
+    "value": 4560,
     "threshold": 2500,
     "severity": "warning",
-    "url": "http://localhost:3000/",
+    "url": "http://localhost:3000/workshop",
     "context": {
-      "element": "H1",
+      "element": "P",
       "url": ""
     }
   },
   {
-    "id": "perf_1753784557029_e3bkla3dw",
-    "timestamp": "2025-07-29T10:22:37.029Z",
+    "id": "perf_1753796192896_3bflyeg5o",
+    "timestamp": "2025-07-29T13:36:32.896Z",
     "metric": "lcp",
-    "value": 8128,
+    "value": 5436,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796193814_3s9ui5wm2",
+    "timestamp": "2025-07-29T13:36:33.814Z",
+    "metric": "lcp",
+    "value": 4912,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/search",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796207562_g5lgyct10",
+    "timestamp": "2025-07-29T13:36:47.562Z",
+    "metric": "lcp",
+    "value": 10528,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/nonexistent-page",
@@ -39,10 +52,10 @@
     }
   },
   {
-    "id": "perf_1753784574694_zm0pfatev",
-    "timestamp": "2025-07-29T10:22:54.694Z",
+    "id": "perf_1753796213814_l4w9j1r2u",
+    "timestamp": "2025-07-29T13:36:53.814Z",
     "metric": "lcp",
-    "value": 8884,
+    "value": 9252,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/portfolio",
@@ -52,760 +65,10 @@
     }
   },
   {
-    "id": "perf_1753784574002_2i554ely1",
-    "timestamp": "2025-07-29T10:22:54.002Z",
+    "id": "perf_1753796214680_8j4zhfwxd",
+    "timestamp": "2025-07-29T13:36:54.681Z",
     "metric": "lcp",
-    "value": 5855,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753784595679_ksp3jac6k",
-    "timestamp": "2025-07-29T10:23:15.679Z",
-    "metric": "lcp",
-    "value": 8153,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/tools",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753784598802_liepb2yq1",
-    "timestamp": "2025-07-29T10:23:18.802Z",
-    "metric": "lcp",
-    "value": 8174,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/about",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753784598954_6kyl5lzs4",
-    "timestamp": "2025-07-29T10:23:18.954Z",
-    "metric": "lcp",
-    "value": 6393,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/contact",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753784594164_ukmfriudb",
-    "timestamp": "2025-07-29T10:23:14.164Z",
-    "metric": "lcp",
-    "value": 7084,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785710446_36z3cm9ip",
-    "timestamp": "2025-07-29T10:41:50.446Z",
-    "metric": "lcp",
-    "value": 5208,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785714434_dtdvn8rp2",
-    "timestamp": "2025-07-29T10:41:54.434Z",
-    "metric": "lcp",
-    "value": 9048,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/tools/color-palette",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785715765_5kigrqwp9",
-    "timestamp": "2025-07-29T10:41:55.765Z",
-    "metric": "lcp",
-    "value": 10504,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/workshop",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785721922_yuo468c6i",
-    "timestamp": "2025-07-29T10:42:01.922Z",
-    "metric": "lcp",
-    "value": 7260,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785719914_898jon5ku",
-    "timestamp": "2025-07-29T10:41:59.914Z",
-    "metric": "lcp",
-    "value": 6792,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785728126_364qbor5y",
-    "timestamp": "2025-07-29T10:42:08.126Z",
-    "metric": "cls",
-    "value": 0.9176385971249236,
-    "threshold": 0.1,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/develop",
-    "context": {
-      "sources": [
-        {
-          "element": "DIV",
-          "previousRect": {
-            "x": 339,
-            "y": 0,
-            "width": 592,
-            "height": 1315,
-            "top": 0,
-            "right": 931,
-            "bottom": 1315,
-            "left": 339
-          },
-          "currentRect": {
-            "x": 82,
-            "y": 0,
-            "width": 768,
-            "height": 1356,
-            "top": 0,
-            "right": 850,
-            "bottom": 1356,
-            "left": 82
-          }
-        },
-        {
-          "element": "DIV",
-          "previousRect": {
-            "x": 0,
-            "y": 0,
-            "width": 0,
-            "height": 0,
-            "top": 0,
-            "right": 0,
-            "bottom": 0,
-            "left": 0
-          },
-          "currentRect": {
-            "x": 97,
-            "y": 0,
-            "width": 737,
-            "height": 588,
-            "top": 0,
-            "right": 834,
-            "bottom": 588,
-            "left": 97
-          }
-        },
-        {
-          "element": "DIV",
-          "previousRect": {
-            "x": 0,
-            "y": 0,
-            "width": 0,
-            "height": 0,
-            "top": 0,
-            "right": 0,
-            "bottom": 0,
-            "left": 0
-          },
-          "currentRect": {
-            "x": 98,
-            "y": 1082,
-            "width": 736,
-            "height": 244,
-            "top": 1082,
-            "right": 834,
-            "bottom": 1326,
-            "left": 98
-          }
-        },
-        {
-          "element": "DIV",
-          "previousRect": {
-            "x": 467,
-            "y": 429,
-            "width": 464,
-            "height": 351,
-            "top": 429,
-            "right": 931,
-            "bottom": 780,
-            "left": 467
-          },
-          "currentRect": {
-            "x": 0,
-            "y": 0,
-            "width": 0,
-            "height": 0,
-            "top": 0,
-            "right": 0,
-            "bottom": 0,
-            "left": 0
-          }
-        },
-        {
-          "element": "DIV",
-          "previousRect": {
-            "x": 467,
-            "y": 828,
-            "width": 464,
-            "height": 351,
-            "top": 828,
-            "right": 931,
-            "bottom": 1179,
-            "left": 467
-          },
-          "currentRect": {
-            "x": 0,
-            "y": 0,
-            "width": 0,
-            "height": 0,
-            "top": 0,
-            "right": 0,
-            "bottom": 0,
-            "left": 0
-          }
-        }
-      ]
-    }
-  },
-  {
-    "id": "perf_1753785728618_8uhwfa063",
-    "timestamp": "2025-07-29T10:42:08.618Z",
-    "metric": "lcp",
-    "value": 9716,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/tools/color-palette",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785737760_buir55lfv",
-    "timestamp": "2025-07-29T10:42:17.760Z",
-    "metric": "lcp",
-    "value": 10444,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785738411_hb17o01ey",
-    "timestamp": "2025-07-29T10:42:18.411Z",
-    "metric": "lcp",
-    "value": 9580,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785740247_h7q8dsigr",
-    "timestamp": "2025-07-29T10:42:20.247Z",
-    "metric": "lcp",
-    "value": 7932,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785747212_jpv0yq4lj",
-    "timestamp": "2025-07-29T10:42:27.212Z",
-    "metric": "lcp",
-    "value": 7704,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/tools/color-palette",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785747734_gywme24ek",
-    "timestamp": "2025-07-29T10:42:27.734Z",
-    "metric": "lcp",
-    "value": 8348,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/tools",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785749632_y8s7ia03k",
-    "timestamp": "2025-07-29T10:42:29.632Z",
-    "metric": "lcp",
-    "value": 11756,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785749699_gpxv4258n",
-    "timestamp": "2025-07-29T10:42:29.699Z",
-    "metric": "lcp",
-    "value": 7272,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/workshop",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785757664_8j4kizmns",
-    "timestamp": "2025-07-29T10:42:37.664Z",
-    "metric": "lcp",
-    "value": 7692,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/contact",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785757680_b2a64fjdn",
-    "timestamp": "2025-07-29T10:42:37.680Z",
-    "metric": "lcp",
-    "value": 8700,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/about",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785760897_9uowmgd9p",
-    "timestamp": "2025-07-29T10:42:40.897Z",
-    "metric": "lcp",
-    "value": 7612,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/search",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785767146_cyfp2ez2p",
-    "timestamp": "2025-07-29T10:42:47.146Z",
-    "metric": "lcp",
-    "value": 8788,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785776362_ms5213epi",
-    "timestamp": "2025-07-29T10:42:56.362Z",
-    "metric": "lcp",
-    "value": 7252,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785776620_dcuhh4yg8",
-    "timestamp": "2025-07-29T10:42:56.620Z",
-    "metric": "lcp",
-    "value": 7104,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785777593_nqt8ub3dr",
-    "timestamp": "2025-07-29T10:42:57.593Z",
-    "metric": "lcp",
-    "value": 7460,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785792559_5ka47w3m9",
-    "timestamp": "2025-07-29T10:43:12.559Z",
-    "metric": "lcp",
-    "value": 7180,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785802926_dhjsz2i5k",
-    "timestamp": "2025-07-29T10:43:22.926Z",
-    "metric": "lcp",
-    "value": 8643,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/contact",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785801011_3pmdu28sg",
-    "timestamp": "2025-07-29T10:43:21.011Z",
-    "metric": "lcp",
-    "value": 20460,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785827723_29st5xptn",
-    "timestamp": "2025-07-29T10:43:47.723Z",
-    "metric": "lcp",
-    "value": 10695,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/workshop",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785827946_ytxts5185",
-    "timestamp": "2025-07-29T10:43:47.946Z",
-    "metric": "lcp",
-    "value": 9551,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/about",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753785818639_jjcqsyfnm",
-    "timestamp": "2025-07-29T10:43:38.639Z",
-    "metric": "lcp",
-    "value": 11349,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753786065327_v2ln7oayn",
-    "timestamp": "2025-07-29T10:47:45.327Z",
-    "metric": "cls",
-    "value": 0.6074285418011393,
-    "threshold": 0.1,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/develop",
-    "context": {
-      "sources": [
-        {
-          "element": "DIV",
-          "previousRect": {
-            "x": 82,
-            "y": 0,
-            "width": 768,
-            "height": 1355,
-            "top": 0,
-            "right": 850,
-            "bottom": 1355,
-            "left": 82
-          },
-          "currentRect": {
-            "x": 339,
-            "y": 0,
-            "width": 1536,
-            "height": 1315,
-            "top": 0,
-            "right": 1875,
-            "bottom": 1315,
-            "left": 339
-          }
-        },
-        {
-          "element": "DIV",
-          "previousRect": {
-            "x": 97,
-            "y": 0,
-            "width": 737,
-            "height": 588,
-            "top": 0,
-            "right": 834,
-            "bottom": 588,
-            "left": 97
-          },
-          "currentRect": {
-            "x": 0,
-            "y": 0,
-            "width": 0,
-            "height": 0,
-            "top": 0,
-            "right": 0,
-            "bottom": 0,
-            "left": 0
-          }
-        },
-        {
-          "element": "DIV",
-          "previousRect": {
-            "x": 0,
-            "y": 0,
-            "width": 0,
-            "height": 0,
-            "top": 0,
-            "right": 0,
-            "bottom": 0,
-            "left": 0
-          },
-          "currentRect": {
-            "x": 467,
-            "y": 429,
-            "width": 1280,
-            "height": 351,
-            "top": 429,
-            "right": 1747,
-            "bottom": 780,
-            "left": 467
-          }
-        },
-        {
-          "element": "DIV",
-          "previousRect": {
-            "x": 0,
-            "y": 0,
-            "width": 0,
-            "height": 0,
-            "top": 0,
-            "right": 0,
-            "bottom": 0,
-            "left": 0
-          },
-          "currentRect": {
-            "x": 467,
-            "y": 828,
-            "width": 1280,
-            "height": 351,
-            "top": 828,
-            "right": 1747,
-            "bottom": 1179,
-            "left": 467
-          }
-        },
-        {
-          "element": "DIV",
-          "previousRect": {
-            "x": 0,
-            "y": 1267,
-            "width": 931,
-            "height": 88,
-            "top": 1267,
-            "right": 931,
-            "bottom": 1355,
-            "left": 0
-          },
-          "currentRect": {
-            "x": 467,
-            "y": 1267,
-            "width": 1280,
-            "height": 88,
-            "top": 1267,
-            "right": 1747,
-            "bottom": 1355,
-            "left": 467
-          }
-        }
-      ]
-    }
-  },
-  {
-    "id": "perf_1753786079494_pdcl94a46",
-    "timestamp": "2025-07-29T10:47:59.494Z",
-    "metric": "lcp",
-    "value": 9568,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/develop",
-    "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2F20250109_stretch-0-00-00-00--1753783360584-s4oqu5.jpg&w=1200&q=75"
-    }
-  },
-  {
-    "id": "perf_1753786721748_vbv5yi7uw",
-    "timestamp": "2025-07-29T10:58:41.748Z",
-    "metric": "lcp",
-    "value": 9488,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
-    "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=https%3A%2F%2Fimg.youtube.com%2Fvi%2FqwlAC0qPMXI%2Fmaxresdefault.jpg&w=1920&q=75"
-    }
-  },
-  {
-    "id": "perf_1753787213343_m6d9nanfo",
-    "timestamp": "2025-07-29T11:06:53.343Z",
-    "metric": "lcp",
-    "value": 9280,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
-    "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fnetu-1753767855803-zwbvzs.png&w=1920&q=75"
-    }
-  },
-  {
-    "id": "perf_1753787213640_si7ih8yoo",
-    "timestamp": "2025-07-29T11:06:53.640Z",
-    "metric": "lcp",
-    "value": 9568,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
-    "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2F20241027_meikai-1753768460581-c1hso4.png&w=1920&q=75"
-    }
-  },
-  {
-    "id": "perf_1753787458859_tit16zpo5",
-    "timestamp": "2025-07-29T11:10:58.860Z",
-    "metric": "lcp",
-    "value": 11912,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
-    "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fnetu-1753767855803-zwbvzs.png&w=640&q=75"
-    }
-  },
-  {
-    "id": "perf_1753787655168_9qgamcepd",
-    "timestamp": "2025-07-29T11:14:15.168Z",
-    "metric": "lcp",
-    "value": 11660,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
-    "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2F20241027_meikai-1753768460581-c1hso4.png&w=640&q=75"
-    }
-  },
-  {
-    "id": "perf_1753788098827_mgs72co5s",
-    "timestamp": "2025-07-29T11:21:38.827Z",
-    "metric": "lcp",
-    "value": 25400,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753788121498_bul7hz5t3",
-    "timestamp": "2025-07-29T11:22:01.498Z",
-    "metric": "lcp",
-    "value": 12468,
+    "value": 10512,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/portfolio/gallery/video",
@@ -815,13 +78,1540 @@
     }
   },
   {
-    "id": "perf_1753789086839_rd7ioh5g3",
-    "timestamp": "2025-07-29T11:38:06.839Z",
+    "id": "perf_1753796218866_bw32esjtx",
+    "timestamp": "2025-07-29T13:36:58.866Z",
+    "metric": "lcp",
+    "value": 6711,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796233388_7opu8s7rr",
+    "timestamp": "2025-07-29T13:37:13.388Z",
+    "metric": "lcp",
+    "value": 7713,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796228918_yof6n4klf",
+    "timestamp": "2025-07-29T13:37:08.918Z",
+    "metric": "lcp",
+    "value": 8036,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796251424_y9s5zl1pw",
+    "timestamp": "2025-07-29T13:37:31.424Z",
+    "metric": "lcp",
+    "value": 8241,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796257707_bjao054uw",
+    "timestamp": "2025-07-29T13:37:37.707Z",
+    "metric": "lcp",
+    "value": 7149,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796258412_rj4qou1ke",
+    "timestamp": "2025-07-29T13:37:38.412Z",
+    "metric": "lcp",
+    "value": 8070,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796283823_o9n0ktnzg",
+    "timestamp": "2025-07-29T13:38:03.823Z",
+    "metric": "lcp",
+    "value": 9030,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796284118_7eo87acgv",
+    "timestamp": "2025-07-29T13:38:04.118Z",
+    "metric": "lcp",
+    "value": 9331,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1753796527137_424n5fv5f",
+    "timestamp": "2025-07-29T13:42:07.137Z",
+    "metric": "lcp",
+    "value": 11288,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796526253_n0dtavupf",
+    "timestamp": "2025-07-29T13:42:06.253Z",
+    "metric": "lcp",
+    "value": 10508,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796526795_lxs1u56bm",
+    "timestamp": "2025-07-29T13:42:06.795Z",
+    "metric": "lcp",
+    "value": 11148,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796527132_a6kbtly2z",
+    "timestamp": "2025-07-29T13:42:07.132Z",
+    "metric": "lcp",
+    "value": 11332,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796527233_xdnf4n95u",
+    "timestamp": "2025-07-29T13:42:07.233Z",
+    "metric": "lcp",
+    "value": 11384,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796531032_1bk4yjuif",
+    "timestamp": "2025-07-29T13:42:11.032Z",
+    "metric": "lcp",
+    "value": 7068,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796539700_ozx4gj6gr",
+    "timestamp": "2025-07-29T13:42:19.700Z",
+    "metric": "lcp",
+    "value": 23872,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796546144_a0hqrmkbq",
+    "timestamp": "2025-07-29T13:42:26.144Z",
+    "metric": "lcp",
+    "value": 7820,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796547532_yxtd85s5q",
+    "timestamp": "2025-07-29T13:42:27.532Z",
+    "metric": "lcp",
+    "value": 5760,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796550432_c5irgzps0",
+    "timestamp": "2025-07-29T13:42:30.432Z",
+    "metric": "lcp",
+    "value": 4884,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796549023_m415z07ds",
+    "timestamp": "2025-07-29T13:42:29.023Z",
+    "metric": "lcp",
+    "value": 5728,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796549314_ti4ek443r",
+    "timestamp": "2025-07-29T13:42:29.314Z",
+    "metric": "lcp",
+    "value": 5148,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796549632_qjk1p64xb",
+    "timestamp": "2025-07-29T13:42:29.632Z",
+    "metric": "lcp",
+    "value": 5080,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796549866_gaifmb8q5",
+    "timestamp": "2025-07-29T13:42:29.867Z",
+    "metric": "lcp",
+    "value": 7792,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796552237_tbolyqcts",
+    "timestamp": "2025-07-29T13:42:32.237Z",
+    "metric": "lcp",
+    "value": 5536,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796564928_lis6xva4c",
+    "timestamp": "2025-07-29T13:42:44.928Z",
+    "metric": "lcp",
+    "value": 7884,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796569598_sjxp90vyh",
+    "timestamp": "2025-07-29T13:42:49.598Z",
+    "metric": "lcp",
+    "value": 6552,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796573897_ly4l1bvpf",
+    "timestamp": "2025-07-29T13:42:53.897Z",
+    "metric": "lcp",
+    "value": 8876,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/nonexistent-page",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796583381_4ofwkiwei",
+    "timestamp": "2025-07-29T13:43:03.382Z",
+    "metric": "lcp",
+    "value": 9588,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1753796581304_wp70w5of3",
+    "timestamp": "2025-07-29T13:43:01.304Z",
+    "metric": "lcp",
+    "value": 10560,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796584515_gcs639qb4",
+    "timestamp": "2025-07-29T13:43:04.515Z",
+    "metric": "lcp",
+    "value": 10192,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1753796603408_d3zjmw9pt",
+    "timestamp": "2025-07-29T13:43:23.408Z",
+    "metric": "lcp",
+    "value": 10117,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796606857_4lfddz63q",
+    "timestamp": "2025-07-29T13:43:26.857Z",
+    "metric": "lcp",
+    "value": 9742,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796626322_xjailb01b",
+    "timestamp": "2025-07-29T13:43:46.322Z",
+    "metric": "lcp",
+    "value": 11194,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796627896_a2b700buk",
+    "timestamp": "2025-07-29T13:43:47.896Z",
+    "metric": "lcp",
+    "value": 4318,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796676616_e427bydbv",
+    "timestamp": "2025-07-29T13:44:36.616Z",
+    "metric": "lcp",
+    "value": 11270,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796947719_e3nncshxx",
+    "timestamp": "2025-07-29T13:49:07.719Z",
+    "metric": "lcp",
+    "value": 4808,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796953565_vbo739ux8",
+    "timestamp": "2025-07-29T13:49:13.565Z",
+    "metric": "lcp",
+    "value": 10680,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796953200_srryz0lr4",
+    "timestamp": "2025-07-29T13:49:13.200Z",
+    "metric": "lcp",
+    "value": 10384,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796963606_gpfn12jka",
+    "timestamp": "2025-07-29T13:49:23.606Z",
+    "metric": "lcp",
+    "value": 20868,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796974463_ekavw99t4",
+    "timestamp": "2025-07-29T13:49:34.463Z",
+    "metric": "lcp",
+    "value": 8664,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796975383_jhtxy6v5b",
+    "timestamp": "2025-07-29T13:49:35.383Z",
+    "metric": "lcp",
+    "value": 7308,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/search",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796975048_kf9kqc4cf",
+    "timestamp": "2025-07-29T13:49:35.048Z",
+    "metric": "lcp",
+    "value": 8452,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796975389_shcra0pbd",
+    "timestamp": "2025-07-29T13:49:35.389Z",
+    "metric": "lcp",
+    "value": 9640,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796986330_kuv1ubuw9",
+    "timestamp": "2025-07-29T13:49:46.330Z",
+    "metric": "lcp",
+    "value": 8764,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/nonexistent-page",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796988813_ospjnuu4e",
+    "timestamp": "2025-07-29T13:49:48.813Z",
+    "metric": "lcp",
+    "value": 5684,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753796989246_7y7jpokn8",
+    "timestamp": "2025-07-29T13:49:49.246Z",
+    "metric": "lcp",
+    "value": 9924,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about/commission/develop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797000060_t12ax2599",
+    "timestamp": "2025-07-29T13:50:00.060Z",
+    "metric": "lcp",
+    "value": 4975,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797010988_8ww79t1gu",
+    "timestamp": "2025-07-29T13:50:10.988Z",
+    "metric": "lcp",
+    "value": 5921,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797008465_6pcat81b3",
+    "timestamp": "2025-07-29T13:50:08.465Z",
+    "metric": "lcp",
+    "value": 6746,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797038567_nc58jof0c",
+    "timestamp": "2025-07-29T13:50:38.567Z",
+    "metric": "lcp",
+    "value": 9939,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797045143_lhhv5li8r",
+    "timestamp": "2025-07-29T13:50:45.143Z",
+    "metric": "lcp",
+    "value": 8603,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797045427_jkcuugpuk",
+    "timestamp": "2025-07-29T13:50:45.427Z",
+    "metric": "lcp",
+    "value": 8857,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797030963_miaf452kn",
+    "timestamp": "2025-07-29T13:50:30.963Z",
+    "metric": "lcp",
+    "value": 8637,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797579212_qkjy2098g",
+    "timestamp": "2025-07-29T13:59:39.212Z",
+    "metric": "lcp",
+    "value": 5200,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797583476_e5mwyk4wz",
+    "timestamp": "2025-07-29T13:59:43.476Z",
+    "metric": "lcp",
+    "value": 9352,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797586426_9t5i04s4z",
+    "timestamp": "2025-07-29T13:59:46.426Z",
+    "metric": "lcp",
+    "value": 12596,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797591923_rcrc57fpm",
+    "timestamp": "2025-07-29T13:59:51.923Z",
+    "metric": "lcp",
+    "value": 7676,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797588457_ka2ftz9im",
+    "timestamp": "2025-07-29T13:59:48.457Z",
+    "metric": "lcp",
+    "value": 6472,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797589507_f23eo71ft",
+    "timestamp": "2025-07-29T13:59:49.507Z",
+    "metric": "lcp",
+    "value": 15672,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797595140_cqpsim7cm",
+    "timestamp": "2025-07-29T13:59:55.140Z",
+    "metric": "lcp",
+    "value": 9536,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797596504_aiolsu47e",
+    "timestamp": "2025-07-29T13:59:56.504Z",
+    "metric": "lcp",
+    "value": 10156,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797604926_qvobvv9ha",
+    "timestamp": "2025-07-29T14:00:04.926Z",
+    "metric": "lcp",
+    "value": 30992,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797610212_8xs8pfk22",
+    "timestamp": "2025-07-29T14:00:10.212Z",
+    "metric": "lcp",
+    "value": 9908,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797611638_mcsoup2zu",
+    "timestamp": "2025-07-29T14:00:11.638Z",
+    "metric": "lcp",
+    "value": 7756,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797614422_uvqhin8hf",
+    "timestamp": "2025-07-29T14:00:14.422Z",
+    "metric": "lcp",
+    "value": 6092,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797615672_7mj0blmli",
+    "timestamp": "2025-07-29T14:00:15.672Z",
+    "metric": "lcp",
+    "value": 6740,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797617329_e9c7xc0bj",
+    "timestamp": "2025-07-29T14:00:17.329Z",
+    "metric": "lcp",
+    "value": 5768,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797617789_deufxlkym",
+    "timestamp": "2025-07-29T14:00:17.789Z",
+    "metric": "lcp",
+    "value": 5976,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797623593_cjo6b55gp",
+    "timestamp": "2025-07-29T14:00:23.593Z",
+    "metric": "lcp",
+    "value": 7688,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/search",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797619163_blsnqfy8z",
+    "timestamp": "2025-07-29T14:00:19.163Z",
+    "metric": "lcp",
+    "value": 6048,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797631689_iqynny0hx",
+    "timestamp": "2025-07-29T14:00:31.689Z",
+    "metric": "lcp",
+    "value": 8608,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797642247_ojsuuc8x1",
+    "timestamp": "2025-07-29T14:00:42.247Z",
+    "metric": "lcp",
+    "value": 8480,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797643746_v690cqu2m",
+    "timestamp": "2025-07-29T14:00:43.746Z",
+    "metric": "lcp",
+    "value": 7948,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797649888_r2zseik5f",
+    "timestamp": "2025-07-29T14:00:49.888Z",
+    "metric": "lcp",
+    "value": 8164,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797655441_nda8cbbm4",
+    "timestamp": "2025-07-29T14:00:55.441Z",
+    "metric": "lcp",
+    "value": 9420,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1753797655869_r80rwgmi1",
+    "timestamp": "2025-07-29T14:00:55.869Z",
+    "metric": "lcp",
+    "value": 10976,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1753797656005_a2by7b4p5",
+    "timestamp": "2025-07-29T14:00:56.005Z",
+    "metric": "lcp",
+    "value": 9512,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1753797667046_1mfk27f92",
+    "timestamp": "2025-07-29T14:01:07.046Z",
+    "metric": "lcp",
+    "value": 10836,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797673953_ehw9uiod9",
+    "timestamp": "2025-07-29T14:01:13.953Z",
+    "metric": "lcp",
+    "value": 9621,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797676501_6jxoskaud",
+    "timestamp": "2025-07-29T14:01:16.501Z",
+    "metric": "lcp",
+    "value": 10436,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797704363_y3aifdug4",
+    "timestamp": "2025-07-29T14:01:44.363Z",
+    "metric": "lcp",
+    "value": 9101,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797706608_jmnpqvql5",
+    "timestamp": "2025-07-29T14:01:46.608Z",
+    "metric": "lcp",
+    "value": 10122,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797709997_txz4iyrgu",
+    "timestamp": "2025-07-29T14:01:49.997Z",
+    "metric": "lcp",
+    "value": 10986,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797701554_efb32yha3",
+    "timestamp": "2025-07-29T14:01:41.554Z",
+    "metric": "lcp",
+    "value": 10171,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797729652_l4v5rm057",
+    "timestamp": "2025-07-29T14:02:09.652Z",
+    "metric": "lcp",
+    "value": 11586,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797737136_uyb9d46wi",
+    "timestamp": "2025-07-29T14:02:17.136Z",
+    "metric": "lcp",
+    "value": 10434,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753797966970_mvjc81jw6",
+    "timestamp": "2025-07-29T14:06:06.970Z",
     "metric": "cls",
-    "value": 0.14612546125461254,
+    "value": 0.3684185137443872,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 891,
+            "width": 1346,
+            "height": 128,
+            "top": 891,
+            "right": 1346,
+            "bottom": 1019,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 1257,
+            "width": 2545,
+            "height": 98,
+            "top": 1257,
+            "right": 2545,
+            "bottom": 1355,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 22,
+            "y": 0,
+            "width": 1282,
+            "height": 1355,
+            "top": 0,
+            "right": 1304,
+            "bottom": 1355,
+            "left": 22
+          },
+          "currentRect": {
+            "x": 632,
+            "y": 0,
+            "width": 1281,
+            "height": 1355,
+            "top": 0,
+            "right": 1913,
+            "bottom": 1355,
+            "left": 632
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 923,
+            "width": 74,
+            "height": 80,
+            "top": 923,
+            "right": 74,
+            "bottom": 1003,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 1289,
+            "width": 74,
+            "height": 66,
+            "top": 1289,
+            "right": 74,
+            "bottom": 1355,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 1131,
+            "y": 16,
+            "width": 179,
+            "height": 130,
+            "top": 16,
+            "right": 1310,
+            "bottom": 146,
+            "left": 1131
+          },
+          "currentRect": {
+            "x": 2350,
+            "y": 16,
+            "width": 179,
+            "height": 130,
+            "top": 16,
+            "right": 2529,
+            "bottom": 146,
+            "left": 2350
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753797986181_p2c5wxl8g",
+    "timestamp": "2025-07-29T14:06:26.181Z",
+    "metric": "lcp",
+    "value": 14088,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2F20241102_mawaru-1753768712385-d2237e.png&w=1920&q=75"
+    }
+  },
+  {
+    "id": "perf_1753797986977_vg5u3zedf",
+    "timestamp": "2025-07-29T14:06:26.977Z",
+    "metric": "lcp",
+    "value": 14884,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2F20241027_meikai-1753768460581-c1hso4.png&w=1920&q=75"
+    }
+  },
+  {
+    "id": "perf_1753798209856_nxw1edfe0",
+    "timestamp": "2025-07-29T14:10:09.856Z",
+    "metric": "cls",
+    "value": 0.12355135745134685,
     "threshold": 0.1,
     "severity": "warning",
-    "url": "http://localhost:3000/portfolio/gallery/video",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "previousRect": {
+            "x": 123,
+            "y": 1305,
+            "width": 24,
+            "height": 24,
+            "top": 1305,
+            "right": 147,
+            "bottom": 1329,
+            "left": 123
+          },
+          "currentRect": {
+            "x": 114,
+            "y": 1305,
+            "width": 24,
+            "height": 24,
+            "top": 1305,
+            "right": 138,
+            "bottom": 1329,
+            "left": 114
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 1065,
+            "y": 0,
+            "width": 416,
+            "height": 78,
+            "top": 0,
+            "right": 1481,
+            "bottom": 78,
+            "left": 1065
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 633,
+            "y": 1142,
+            "width": 848,
+            "height": 200,
+            "top": 1142,
+            "right": 1481,
+            "bottom": 1342,
+            "left": 633
+          },
+          "currentRect": {
+            "x": 633,
+            "y": 0,
+            "width": 416,
+            "height": 494,
+            "top": 0,
+            "right": 1049,
+            "bottom": 494,
+            "left": 633
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 1497,
+            "y": 1142,
+            "width": 416,
+            "height": 213,
+            "top": 1142,
+            "right": 1913,
+            "bottom": 1355,
+            "left": 1497
+          },
+          "currentRect": {
+            "x": 1497,
+            "y": 0,
+            "width": 416,
+            "height": 494,
+            "top": 0,
+            "right": 1913,
+            "bottom": 494,
+            "left": 1497
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 1497,
+            "y": 726,
+            "width": 416,
+            "height": 400,
+            "top": 726,
+            "right": 1913,
+            "bottom": 1126,
+            "left": 1497
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798312323_lnvio1kde",
+    "timestamp": "2025-07-29T14:11:52.323Z",
+    "metric": "lcp",
+    "value": 10764,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-29-18h38m55s416-1753781954114-wffzec.png&w=1920&q=75"
+    }
+  },
+  {
+    "id": "perf_1753798486324_22vodxfch",
+    "timestamp": "2025-07-29T14:14:46.324Z",
+    "metric": "cls",
+    "value": 0.17564169669201604,
+    "threshold": 0.1,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 1065,
+            "y": 200,
+            "width": 416,
+            "height": 790,
+            "top": 200,
+            "right": 1481,
+            "bottom": 990,
+            "left": 1065
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 1497,
+            "y": 200,
+            "width": 416,
+            "height": 250,
+            "top": 200,
+            "right": 1913,
+            "bottom": 450,
+            "left": 1497
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 1497,
+            "y": 1006,
+            "width": 416,
+            "height": 250,
+            "top": 1006,
+            "right": 1913,
+            "bottom": 1256,
+            "left": 1497
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 633,
+            "y": 1272,
+            "width": 416,
+            "height": 83,
+            "top": 1272,
+            "right": 1049,
+            "bottom": 1355,
+            "left": 633
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 1497,
+            "y": 1272,
+            "width": 416,
+            "height": 83,
+            "top": 1272,
+            "right": 1913,
+            "bottom": 1355,
+            "left": 1497
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798560654_xwqbsuh0y",
+    "timestamp": "2025-07-29T14:16:00.654Z",
+    "metric": "lcp",
+    "value": 11208,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753798560798_s7k0ygr8k",
+    "timestamp": "2025-07-29T14:16:00.798Z",
+    "metric": "lcp",
+    "value": 11412,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-29-18h38m55s416-1753781954114-wffzec.png&w=1920&q=75"
+    }
+  },
+  {
+    "id": "perf_1753798860372_w1v4bf18j",
+    "timestamp": "2025-07-29T14:21:00.372Z",
+    "metric": "cls",
+    "value": 0.9055651077241782,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
     "context": {
       "sources": [
         {
@@ -829,67 +1619,464 @@
           "previousRect": {
             "x": 0,
             "y": 0,
-            "width": 1114,
-            "height": 1355,
+            "width": 0,
+            "height": 0,
             "top": 0,
-            "right": 1114,
-            "bottom": 1355,
+            "right": 0,
+            "bottom": 0,
             "left": 0
           },
           "currentRect": {
-            "x": 44,
-            "y": 0,
-            "width": 1026,
-            "height": 1355,
-            "top": 0,
-            "right": 1070,
-            "bottom": 1355,
-            "left": 44
+            "x": 0,
+            "y": 891,
+            "width": 1326,
+            "height": 98,
+            "top": 891,
+            "right": 1326,
+            "bottom": 989,
+            "left": 0
           }
         },
         {
           "element": "DIV",
           "previousRect": {
-            "x": 1069,
-            "y": 16,
-            "width": 45,
-            "height": 90,
-            "top": 16,
-            "right": 1114,
-            "bottom": 106,
-            "left": 1069
+            "x": 632,
+            "y": 0,
+            "width": 694,
+            "height": 989,
+            "top": 0,
+            "right": 1326,
+            "bottom": 989,
+            "left": 632
           },
           "currentRect": {
-            "x": 916,
-            "y": 16,
-            "width": 182,
-            "height": 90,
-            "top": 16,
-            "right": 1098,
-            "bottom": 106,
-            "left": 916
+            "x": 22,
+            "y": 0,
+            "width": 1282,
+            "height": 989,
+            "top": 0,
+            "right": 1304,
+            "bottom": 989,
+            "left": 22
           }
         },
         {
           "element": "DIV",
           "previousRect": {
-            "x": 1051,
-            "y": 1301,
-            "width": 63,
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 923,
+            "width": 74,
+            "height": 66,
+            "top": 923,
+            "right": 74,
+            "bottom": 989,
+            "left": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798863286_joij3d0c5",
+    "timestamp": "2025-07-29T14:21:03.286Z",
+    "metric": "cls",
+    "value": 0.11072216843757594,
+    "threshold": 0.1,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 5,
+            "y": 0,
+            "width": 997,
+            "height": 989,
+            "top": 0,
+            "right": 1002,
+            "bottom": 989,
+            "left": 5
+          },
+          "currentRect": {
+            "x": 116,
+            "y": 0,
+            "width": 770,
+            "height": 989,
+            "top": 0,
+            "right": 886,
+            "bottom": 989,
+            "left": 116
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 117,
+            "y": 0,
+            "width": 507,
+            "height": 106,
+            "top": 0,
+            "right": 624,
+            "bottom": 106,
+            "left": 117
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 819,
+            "y": 935,
+            "width": 183,
             "height": 20,
-            "top": 1301,
-            "right": 1114,
-            "bottom": 1321,
-            "left": 1051
+            "top": 935,
+            "right": 1002,
+            "bottom": 955,
+            "left": 819
+          },
+          "currentRect": {
+            "x": 786,
+            "y": 935,
+            "width": 201,
+            "height": 20,
+            "top": 935,
+            "right": 987,
+            "bottom": 955,
+            "left": 786
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 961,
+            "y": 923,
+            "width": 41,
+            "height": 66,
+            "top": 923,
+            "right": 1002,
+            "bottom": 989,
+            "left": 961
+          },
+          "currentRect": {
+            "x": 928,
+            "y": 923,
+            "width": 74,
+            "height": 66,
+            "top": 923,
+            "right": 1002,
+            "bottom": 989,
+            "left": 928
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798863891_gu4u10t8a",
+    "timestamp": "2025-07-29T14:21:03.891Z",
+    "metric": "cls",
+    "value": 0.5520728008088979,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 752,
+            "height": 989,
+            "top": 0,
+            "right": 752,
+            "bottom": 989,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 183,
+            "y": 0,
+            "width": 386,
+            "height": 989,
+            "top": 0,
+            "right": 569,
+            "bottom": 989,
+            "left": 183
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 659,
+            "width": 499,
+            "height": 330,
+            "top": 659,
+            "right": 499,
+            "bottom": 989,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 540,
+            "y": 925,
+            "width": 201,
+            "height": 20,
+            "top": 925,
+            "right": 741,
+            "bottom": 945,
+            "left": 540
+          },
+          "currentRect": {
+            "x": 536,
+            "y": 925,
+            "width": 201,
+            "height": 20,
+            "top": 925,
+            "right": 737,
+            "bottom": 945,
+            "left": 536
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 682,
+            "y": 923,
+            "width": 70,
+            "height": 66,
+            "top": 923,
+            "right": 752,
+            "bottom": 989,
+            "left": 682
+          },
+          "currentRect": {
+            "x": 678,
+            "y": 923,
+            "width": 74,
+            "height": 66,
+            "top": 923,
+            "right": 752,
+            "bottom": 989,
+            "left": 678
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798865542_pavy4rewp",
+    "timestamp": "2025-07-29T14:21:05.542Z",
+    "metric": "cls",
+    "value": 0.5520728008088979,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 170,
+            "y": 0,
+            "width": 385,
+            "height": 989,
+            "top": 0,
+            "right": 555,
+            "bottom": 989,
+            "left": 170
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 768,
+            "height": 989,
+            "top": 0,
+            "right": 768,
+            "bottom": 989,
+            "left": 0
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 659,
+            "width": 507,
+            "height": 330,
+            "top": 659,
+            "right": 507,
+            "bottom": 989,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 509,
+            "y": 925,
+            "width": 201,
+            "height": 20,
+            "top": 925,
+            "right": 710,
+            "bottom": 945,
+            "left": 509
+          },
+          "currentRect": {
+            "x": 552,
+            "y": 925,
+            "width": 201,
+            "height": 20,
+            "top": 925,
+            "right": 753,
+            "bottom": 945,
+            "left": 552
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 651,
+            "y": 923,
+            "width": 78,
+            "height": 66,
+            "top": 923,
+            "right": 729,
+            "bottom": 989,
+            "left": 651
+          },
+          "currentRect": {
+            "x": 694,
+            "y": 923,
+            "width": 74,
+            "height": 66,
+            "top": 923,
+            "right": 768,
+            "bottom": 989,
+            "left": 694
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798867502_xsu7xgjpz",
+    "timestamp": "2025-07-29T14:21:07.502Z",
+    "metric": "cls",
+    "value": 0.10717896865520728,
+    "threshold": 0.1,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 972,
+            "height": 989,
+            "top": 0,
+            "right": 972,
+            "bottom": 989,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 101,
+            "y": 0,
+            "width": 770,
+            "height": 989,
+            "top": 0,
+            "right": 871,
+            "bottom": 989,
+            "left": 101
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 807,
+            "y": 935,
+            "width": 165,
+            "height": 20,
+            "top": 935,
+            "right": 972,
+            "bottom": 955,
+            "left": 807
+          },
+          "currentRect": {
+            "x": 756,
+            "y": 935,
+            "width": 201,
+            "height": 20,
+            "top": 935,
+            "right": 957,
+            "bottom": 955,
+            "left": 756
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 949,
+            "y": 923,
+            "width": 23,
+            "height": 66,
+            "top": 923,
+            "right": 972,
+            "bottom": 989,
+            "left": 949
           },
           "currentRect": {
             "x": 898,
-            "y": 1301,
-            "width": 201,
-            "height": 20,
-            "top": 1301,
-            "right": 1099,
-            "bottom": 1321,
+            "y": 923,
+            "width": 74,
+            "height": 66,
+            "top": 923,
+            "right": 972,
+            "bottom": 989,
             "left": 898
           }
         }
@@ -897,103 +2084,1178 @@
     }
   },
   {
-    "id": "perf_1753789551417_vqxik4q9r",
-    "timestamp": "2025-07-29T11:45:51.417Z",
-    "metric": "lcp",
-    "value": 4616,
-    "threshold": 2500,
-    "severity": "warning",
-    "url": "http://localhost:3000/portfolio/gallery/video",
+    "id": "perf_1753798867702_wv6gtivbm",
+    "timestamp": "2025-07-29T14:21:07.702Z",
+    "metric": "cls",
+    "value": 0.5123113248503623,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
     "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 52,
+            "y": 0,
+            "width": 670,
+            "height": 989,
+            "top": 0,
+            "right": 722,
+            "bottom": 989,
+            "left": 52
+          },
+          "currentRect": {
+            "x": 168,
+            "y": 0,
+            "width": 386,
+            "height": 989,
+            "top": 0,
+            "right": 554,
+            "bottom": 989,
+            "left": 168
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 436,
+            "y": 0,
+            "width": 117,
+            "height": 117,
+            "top": 0,
+            "right": 553,
+            "bottom": 117,
+            "left": 436
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 169,
+            "y": 0,
+            "width": 251,
+            "height": 383,
+            "top": 0,
+            "right": 420,
+            "bottom": 383,
+            "left": 169
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 53,
+            "y": 659,
+            "width": 506,
+            "height": 330,
+            "top": 659,
+            "right": 559,
+            "bottom": 989,
+            "left": 53
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 657,
+            "y": 925,
+            "width": 65,
+            "height": 20,
+            "top": 925,
+            "right": 722,
+            "bottom": 945,
+            "left": 657
+          },
+          "currentRect": {
+            "x": 506,
+            "y": 925,
+            "width": 201,
+            "height": 20,
+            "top": 925,
+            "right": 707,
+            "bottom": 945,
+            "left": 506
+          }
+        }
+      ]
     }
   },
   {
-    "id": "perf_1753789945175_7vx2tdszg",
-    "timestamp": "2025-07-29T11:52:25.175Z",
+    "id": "perf_1753798881513_99o0ssexx",
+    "timestamp": "2025-07-29T14:21:21.513Z",
+    "metric": "cls",
+    "value": 0.27567677909525085,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 117,
+            "y": 0,
+            "width": 385,
+            "height": 989,
+            "top": 0,
+            "right": 502,
+            "bottom": 989,
+            "left": 117
+          },
+          "currentRect": {
+            "x": 124,
+            "y": 0,
+            "width": 386,
+            "height": 989,
+            "top": 0,
+            "right": 510,
+            "bottom": 989,
+            "left": 124
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 835,
+            "width": 634,
+            "height": 154,
+            "top": 835,
+            "right": 634,
+            "bottom": 989,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 871,
+            "width": 634,
+            "height": 118,
+            "top": 871,
+            "right": 634,
+            "bottom": 989,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 418,
+            "y": 925,
+            "width": 201,
+            "height": 20,
+            "top": 925,
+            "right": 619,
+            "bottom": 945,
+            "left": 418
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798881760_0ogvp9e8c",
+    "timestamp": "2025-07-29T14:21:21.760Z",
+    "metric": "cls",
+    "value": 0.5520728008088979,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 179,
+            "y": 0,
+            "width": 386,
+            "height": 989,
+            "top": 0,
+            "right": 565,
+            "bottom": 989,
+            "left": 179
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 755,
+            "height": 989,
+            "top": 0,
+            "right": 755,
+            "bottom": 989,
+            "left": 0
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 722,
+            "width": 498,
+            "height": 250,
+            "top": 722,
+            "right": 498,
+            "bottom": 972,
+            "left": 0
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 514,
+            "y": 722,
+            "width": 241,
+            "height": 267,
+            "top": 722,
+            "right": 755,
+            "bottom": 989,
+            "left": 514
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 528,
+            "y": 925,
+            "width": 201,
+            "height": 20,
+            "top": 925,
+            "right": 729,
+            "bottom": 945,
+            "left": 528
+          },
+          "currentRect": {
+            "x": 539,
+            "y": 925,
+            "width": 201,
+            "height": 20,
+            "top": 925,
+            "right": 740,
+            "bottom": 945,
+            "left": 539
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 670,
+            "y": 923,
+            "width": 78,
+            "height": 66,
+            "top": 923,
+            "right": 748,
+            "bottom": 989,
+            "left": 670
+          },
+          "currentRect": {
+            "x": 681,
+            "y": 923,
+            "width": 74,
+            "height": 66,
+            "top": 923,
+            "right": 755,
+            "bottom": 989,
+            "left": 681
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798885561_pi8w7rfmi",
+    "timestamp": "2025-07-29T14:21:25.561Z",
+    "metric": "cls",
+    "value": 0.5520728008088979,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 738,
+            "height": 989,
+            "top": 0,
+            "right": 738,
+            "bottom": 989,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 176,
+            "y": 0,
+            "width": 386,
+            "height": 989,
+            "top": 0,
+            "right": 562,
+            "bottom": 989,
+            "left": 176
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 518,
+            "y": 452,
+            "width": 220,
+            "height": 67,
+            "top": 452,
+            "right": 738,
+            "bottom": 519,
+            "left": 518
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 1,
+            "y": 568,
+            "width": 737,
+            "height": 20,
+            "top": 568,
+            "right": 738,
+            "bottom": 588,
+            "left": 1
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 1,
+            "y": 620,
+            "width": 737,
+            "height": 369,
+            "top": 620,
+            "right": 738,
+            "bottom": 989,
+            "left": 1
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 574,
+            "y": 16,
+            "width": 164,
+            "height": 90,
+            "top": 16,
+            "right": 738,
+            "bottom": 106,
+            "left": 574
+          },
+          "currentRect": {
+            "x": 543,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 722,
+            "bottom": 106,
+            "left": 543
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798887177_g0lyzxcf9",
+    "timestamp": "2025-07-29T14:21:27.177Z",
+    "metric": "cls",
+    "value": 0.5520728008088979,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 183,
+            "y": 0,
+            "width": 385,
+            "height": 989,
+            "top": 0,
+            "right": 568,
+            "bottom": 989,
+            "left": 183
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 757,
+            "height": 989,
+            "top": 0,
+            "right": 757,
+            "bottom": 989,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 510,
+            "y": 452,
+            "width": 230,
+            "height": 67,
+            "top": 452,
+            "right": 740,
+            "bottom": 519,
+            "left": 510
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 568,
+            "width": 757,
+            "height": 20,
+            "top": 568,
+            "right": 757,
+            "bottom": 588,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 620,
+            "width": 757,
+            "height": 369,
+            "top": 620,
+            "right": 757,
+            "bottom": 989,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 556,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 735,
+            "bottom": 106,
+            "left": 556
+          },
+          "currentRect": {
+            "x": 562,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 741,
+            "bottom": 106,
+            "left": 562
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798888311_5jn806drz",
+    "timestamp": "2025-07-29T14:21:28.311Z",
+    "metric": "cls",
+    "value": 0.39497041420118345,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 118,
+            "y": 0,
+            "width": 769,
+            "height": 989,
+            "top": 0,
+            "right": 887,
+            "bottom": 989,
+            "left": 118
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 1014,
+            "height": 989,
+            "top": 0,
+            "right": 1014,
+            "bottom": 989,
+            "left": 0
+          }
+        },
+        {
+          "element": "P",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 17,
+            "y": 0,
+            "width": 202,
+            "height": 28,
+            "top": 0,
+            "right": 219,
+            "bottom": 28,
+            "left": 17
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 810,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 989,
+            "bottom": 106,
+            "left": 810
+          },
+          "currentRect": {
+            "x": 819,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 998,
+            "bottom": 106,
+            "left": 819
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 789,
+            "y": 935,
+            "width": 201,
+            "height": 20,
+            "top": 935,
+            "right": 990,
+            "bottom": 955,
+            "left": 789
+          },
+          "currentRect": {
+            "x": 798,
+            "y": 935,
+            "width": 201,
+            "height": 20,
+            "top": 935,
+            "right": 999,
+            "bottom": 955,
+            "left": 798
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 931,
+            "y": 923,
+            "width": 78,
+            "height": 66,
+            "top": 923,
+            "right": 1009,
+            "bottom": 989,
+            "left": 931
+          },
+          "currentRect": {
+            "x": 940,
+            "y": 923,
+            "width": 74,
+            "height": 66,
+            "top": 923,
+            "right": 1014,
+            "bottom": 989,
+            "left": 940
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798889735_nctwgcb0r",
+    "timestamp": "2025-07-29T14:21:29.735Z",
+    "metric": "cls",
+    "value": 0.41304347826086957,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 988,
+            "height": 989,
+            "top": 0,
+            "right": 988,
+            "bottom": 989,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 109,
+            "y": 0,
+            "width": 770,
+            "height": 989,
+            "top": 0,
+            "right": 879,
+            "bottom": 989,
+            "left": 109
+          }
+        },
+        {
+          "element": "P",
+          "previousRect": {
+            "x": 17,
+            "y": 0,
+            "width": 201,
+            "height": 28,
+            "top": 0,
+            "right": 218,
+            "bottom": 28,
+            "left": 17
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 818,
+            "y": 16,
+            "width": 170,
+            "height": 90,
+            "top": 16,
+            "right": 988,
+            "bottom": 106,
+            "left": 818
+          },
+          "currentRect": {
+            "x": 793,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 972,
+            "bottom": 106,
+            "left": 793
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 797,
+            "y": 935,
+            "width": 191,
+            "height": 20,
+            "top": 935,
+            "right": 988,
+            "bottom": 955,
+            "left": 797
+          },
+          "currentRect": {
+            "x": 772,
+            "y": 935,
+            "width": 201,
+            "height": 20,
+            "top": 935,
+            "right": 973,
+            "bottom": 955,
+            "left": 772
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 939,
+            "y": 923,
+            "width": 49,
+            "height": 66,
+            "top": 923,
+            "right": 988,
+            "bottom": 989,
+            "left": 939
+          },
+          "currentRect": {
+            "x": 914,
+            "y": 923,
+            "width": 74,
+            "height": 66,
+            "top": 923,
+            "right": 988,
+            "bottom": 989,
+            "left": 914
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753798894149_obf5v397b",
+    "timestamp": "2025-07-29T14:21:34.149Z",
+    "metric": "cls",
+    "value": 0.48058751587056553,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 871,
+            "width": 936,
+            "height": 148,
+            "top": 871,
+            "right": 936,
+            "bottom": 1019,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 1257,
+            "width": 2545,
+            "height": 98,
+            "top": 1257,
+            "right": 2545,
+            "bottom": 1355,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 73,
+            "y": 0,
+            "width": 770,
+            "height": 1355,
+            "top": 0,
+            "right": 843,
+            "bottom": 1355,
+            "left": 73
+          },
+          "currentRect": {
+            "x": 632,
+            "y": 0,
+            "width": 1281,
+            "height": 1355,
+            "top": 0,
+            "right": 1913,
+            "bottom": 1355,
+            "left": 632
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 721,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 900,
+            "bottom": 106,
+            "left": 721
+          },
+          "currentRect": {
+            "x": 2350,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 2529,
+            "bottom": 106,
+            "left": 2350
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 1267,
+            "width": 916,
+            "height": 88,
+            "top": 1267,
+            "right": 916,
+            "bottom": 1355,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 633,
+            "y": 1267,
+            "width": 1280,
+            "height": 88,
+            "top": 1267,
+            "right": 1913,
+            "bottom": 1355,
+            "left": 633
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 923,
+            "width": 74,
+            "height": 80,
+            "top": 923,
+            "right": 74,
+            "bottom": 1003,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 1289,
+            "width": 74,
+            "height": 66,
+            "top": 1289,
+            "right": 74,
+            "bottom": 1355,
+            "left": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753799200362_5jetkj27g",
+    "timestamp": "2025-07-29T14:26:40.362Z",
     "metric": "lcp",
-    "value": 9432,
+    "value": 8376,
     "threshold": 2500,
     "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
+    "url": "http://localhost:3000/admin",
     "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+      "element": "H1",
+      "url": ""
     }
   },
   {
-    "id": "perf_1753790192677_wbpxgwu07",
-    "timestamp": "2025-07-29T11:56:32.677Z",
+    "id": "perf_1753799356211_9wwk8py56",
+    "timestamp": "2025-07-29T14:29:16.211Z",
+    "metric": "lcp",
+    "value": 3012,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "element": "H2",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753799377384_sy9lo8727",
+    "timestamp": "2025-07-29T14:29:37.384Z",
     "metric": "lcp",
     "value": 11564,
     "threshold": 2500,
     "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
     "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+      "element": "H2",
+      "url": ""
     }
   },
   {
-    "id": "perf_1753790790214_x5u1ytunt",
-    "timestamp": "2025-07-29T12:06:30.214Z",
+    "id": "perf_1753799794469_yo7l1y11s",
+    "timestamp": "2025-07-29T14:36:34.469Z",
     "metric": "lcp",
-    "value": 7804,
+    "value": 10380,
     "threshold": 2500,
     "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
     "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+      "element": "DIV",
+      "url": "http://localhost:3000/images/portfolio/vlcsnap-2025-07-29-18h51m23s239-1753782776068-n1a04n.png"
     }
   },
   {
-    "id": "perf_1753790792694_hjlspnnhi",
-    "timestamp": "2025-07-29T12:06:32.694Z",
+    "id": "perf_1753800117467_ousgh7dj8",
+    "timestamp": "2025-07-29T14:41:57.468Z",
     "metric": "lcp",
-    "value": 10288,
+    "value": 13544,
     "threshold": 2500,
     "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
     "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+      "element": "DIV",
+      "url": "http://localhost:3000/images/portfolio/blen-1753707599484-8a4y4d.png"
     }
   },
   {
-    "id": "perf_1753790800770_efmk6yjan",
-    "timestamp": "2025-07-29T12:06:40.770Z",
+    "id": "perf_1753800244835_ckrcalezd",
+    "timestamp": "2025-07-29T14:44:04.835Z",
     "metric": "lcp",
-    "value": 3777,
+    "value": 28404,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "element": "DIV",
+      "url": "http://localhost:3000/images/portfolio/shinkan-1753768044049-ox85kd.png"
+    }
+  },
+  {
+    "id": "perf_1753800322745_ofoccsyyk",
+    "timestamp": "2025-07-29T14:45:22.745Z",
+    "metric": "cls",
+    "value": 0.14808168828250168,
+    "threshold": 0.1,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "sources": [
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 1497,
+            "y": 951,
+            "width": 416,
+            "height": 404,
+            "top": 951,
+            "right": 1913,
+            "bottom": 1355,
+            "left": 1497
+          },
+          "currentRect": {
+            "x": 633,
+            "y": 951,
+            "width": 848,
+            "height": 404,
+            "top": 951,
+            "right": 1481,
+            "bottom": 1355,
+            "left": 633
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 1497,
+            "y": 951,
+            "width": 416,
+            "height": 404,
+            "top": 951,
+            "right": 1913,
+            "bottom": 1355,
+            "left": 1497
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1753800362158_xlb5rgkgd",
+    "timestamp": "2025-07-29T14:46:02.158Z",
+    "metric": "lcp",
+    "value": 10708,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753800362728_ohgds5fun",
+    "timestamp": "2025-07-29T14:46:02.728Z",
+    "metric": "lcp",
+    "value": 11312,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "element": "DIV",
+      "url": "http://localhost:3000/images/portfolio/usoto-1753706419203-7e35gq.png"
+    }
+  },
+  {
+    "id": "perf_1753800669536_aiaw7epeo",
+    "timestamp": "2025-07-29T14:51:09.536Z",
+    "metric": "lcp",
+    "value": 114956,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "element": "DIV",
+      "url": "http://localhost:3000/images/portfolio/netu-1753767855803-zwbvzs.png"
+    }
+  },
+  {
+    "id": "perf_1753800804884_f51e9ou7p",
+    "timestamp": "2025-07-29T14:53:24.884Z",
+    "metric": "lcp",
+    "value": 9872,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "context": {
+      "element": "DIV",
+      "url": "http://localhost:3000/images/portfolio/vlcsnap-2025-07-29-18h38m55s416-1753781954114-wffzec.png"
+    }
+  },
+  {
+    "id": "perf_1753801812502_z2czdtbhn",
+    "timestamp": "2025-07-29T15:10:12.502Z",
+    "metric": "lcp",
+    "value": 4488,
     "threshold": 2500,
     "severity": "warning",
-    "url": "http://localhost:3000/portfolio/gallery/video",
-    "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
-    }
-  },
-  {
-    "id": "perf_1753790823556_bygc6wd6s",
-    "timestamp": "2025-07-29T12:07:03.556Z",
-    "metric": "lcp",
-    "value": 6044,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
-    "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
-    }
-  },
-  {
-    "id": "perf_1753791047808_84e64dzej",
-    "timestamp": "2025-07-29T12:10:47.808Z",
-    "metric": "lcp",
-    "value": 5092,
-    "threshold": 2500,
-    "severity": "critical",
     "url": "http://localhost:3000/",
     "context": {
       "element": "H1",
@@ -1001,10 +3263,10 @@
     }
   },
   {
-    "id": "perf_1753791051635_9hrr9f8ow",
-    "timestamp": "2025-07-29T12:10:51.635Z",
+    "id": "perf_1753801817138_7rx2tkd24",
+    "timestamp": "2025-07-29T15:10:17.138Z",
     "metric": "lcp",
-    "value": 8916,
+    "value": 9132,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/contact",
@@ -1014,10 +3276,10 @@
     }
   },
   {
-    "id": "perf_1753791050387_tplbcv3hy",
-    "timestamp": "2025-07-29T12:10:50.387Z",
+    "id": "perf_1753801817380_5dqcp0x1l",
+    "timestamp": "2025-07-29T15:10:17.380Z",
     "metric": "lcp",
-    "value": 7780,
+    "value": 9448,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/tools/color-palette",
@@ -1027,12 +3289,63 @@
     }
   },
   {
-    "id": "perf_1753791050701_8yeqx0eii",
-    "timestamp": "2025-07-29T12:10:50.701Z",
+    "id": "perf_1753801824356_kaathfmdr",
+    "timestamp": "2025-07-29T15:10:24.356Z",
     "metric": "lcp",
-    "value": 7852,
+    "value": 16388,
     "threshold": 2500,
     "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753801825196_89fpocpnw",
+    "timestamp": "2025-07-29T15:10:25.196Z",
+    "metric": "lcp",
+    "value": 6356,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753801827296_mabrp1ee0",
+    "timestamp": "2025-07-29T15:10:27.296Z",
+    "metric": "lcp",
+    "value": 7176,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753801831745_80l7mejrv",
+    "timestamp": "2025-07-29T15:10:31.745Z",
+    "metric": "lcp",
+    "value": 6076,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753801834574_umolbpua5",
+    "timestamp": "2025-07-29T15:10:34.574Z",
+    "metric": "lcp",
+    "value": 4364,
+    "threshold": 2500,
+    "severity": "warning",
     "url": "http://localhost:3000/workshop",
     "context": {
       "element": "P",
@@ -1040,10 +3353,152 @@
     }
   },
   {
-    "id": "perf_1753791052946_07bereht3",
-    "timestamp": "2025-07-29T12:10:52.946Z",
+    "id": "perf_1753801836383_tl5gclpid",
+    "timestamp": "2025-07-29T15:10:36.383Z",
     "metric": "lcp",
-    "value": 10168,
+    "value": 4808,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753801833838_rp3wcsorw",
+    "timestamp": "2025-07-29T15:10:33.838Z",
+    "metric": "lcp",
+    "value": 5544,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753801843086_x0uy90pqw",
+    "timestamp": "2025-07-29T15:10:43.086Z",
+    "metric": "lcp",
+    "value": 7208,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/search",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753801843487_xljr51tuj",
+    "timestamp": "2025-07-29T15:10:43.487Z",
+    "metric": "lcp",
+    "value": 6636,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/search",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753801858482_osp2pgyyy",
+    "timestamp": "2025-07-29T15:10:58.482Z",
+    "metric": "lcp",
+    "value": 7544,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753801858504_u0wsj60m4",
+    "timestamp": "2025-07-29T15:10:58.504Z",
+    "metric": "lcp",
+    "value": 7328,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753802546681_x7hyijsa4",
+    "timestamp": "2025-07-29T15:22:26.681Z",
+    "metric": "lcp",
+    "value": 5112,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753802552679_tb5ymnra1",
+    "timestamp": "2025-07-29T15:22:32.679Z",
+    "metric": "lcp",
+    "value": 11036,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753802551742_xqvn7a331",
+    "timestamp": "2025-07-29T15:22:31.742Z",
+    "metric": "lcp",
+    "value": 10264,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753802560782_sad9d53ss",
+    "timestamp": "2025-07-29T15:22:40.782Z",
+    "metric": "lcp",
+    "value": 19400,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753802570567_wezfxv26r",
+    "timestamp": "2025-07-29T15:22:50.568Z",
+    "metric": "lcp",
+    "value": 7876,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753802575543_lgxtaur35",
+    "timestamp": "2025-07-29T15:22:55.543Z",
+    "metric": "lcp",
+    "value": 7512,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/tools",
@@ -1053,22 +3508,10 @@
     }
   },
   {
-    "id": "perf_1753791060172_hahqk9dvd",
-    "timestamp": "2025-07-29T12:11:00.172Z",
+    "id": "perf_1753802574098_fvwlf2za8",
+    "timestamp": "2025-07-29T15:22:54.098Z",
     "metric": "lcp",
-    "value": 17468,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio",
-    "context": {
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791059581_5a7rglr4o",
-    "timestamp": "2025-07-29T12:10:59.581Z",
-    "metric": "lcp",
-    "value": 6808,
+    "value": 8612,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/",
@@ -1078,90 +3521,12 @@
     }
   },
   {
-    "id": "perf_1753791061247_5g1yrpov9",
-    "timestamp": "2025-07-29T12:11:01.247Z",
+    "id": "perf_1753802577131_l08rbxfre",
+    "timestamp": "2025-07-29T15:22:57.131Z",
     "metric": "lcp",
-    "value": 18584,
+    "value": 5436,
     "threshold": 2500,
     "severity": "critical",
-    "url": "http://localhost:3000/portfolio",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791065226_h5cu0z6tw",
-    "timestamp": "2025-07-29T12:11:05.226Z",
-    "metric": "lcp",
-    "value": 6660,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791067995_vd87j30g3",
-    "timestamp": "2025-07-29T12:11:07.995Z",
-    "metric": "lcp",
-    "value": 4812,
-    "threshold": 2500,
-    "severity": "warning",
-    "url": "http://localhost:3000/tools/color-palette",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791068007_43rhi2y2m",
-    "timestamp": "2025-07-29T12:11:08.007Z",
-    "metric": "lcp",
-    "value": 4676,
-    "threshold": 2500,
-    "severity": "warning",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791068551_w64fnqkqn",
-    "timestamp": "2025-07-29T12:11:08.551Z",
-    "metric": "lcp",
-    "value": 4876,
-    "threshold": 2500,
-    "severity": "warning",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791072935_z45p8t88c",
-    "timestamp": "2025-07-29T12:11:12.935Z",
-    "metric": "lcp",
-    "value": 6076,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791073217_fcjfoslhu",
-    "timestamp": "2025-07-29T12:11:13.217Z",
-    "metric": "lcp",
-    "value": 4788,
-    "threshold": 2500,
-    "severity": "warning",
     "url": "http://localhost:3000/workshop",
     "context": {
       "element": "P",
@@ -1169,49 +3534,10 @@
     }
   },
   {
-    "id": "perf_1753791073368_bg03bgd31",
-    "timestamp": "2025-07-29T12:11:13.368Z",
+    "id": "perf_1753802585458_3yhvod9ix",
+    "timestamp": "2025-07-29T15:23:05.458Z",
     "metric": "lcp",
-    "value": 5152,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/tools/color-palette",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791076384_oskwghps5",
-    "timestamp": "2025-07-29T12:11:16.384Z",
-    "metric": "lcp",
-    "value": 4888,
-    "threshold": 2500,
-    "severity": "warning",
-    "url": "http://localhost:3000/workshop",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791077094_xshcu1owy",
-    "timestamp": "2025-07-29T12:11:17.094Z",
-    "metric": "lcp",
-    "value": 5192,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/about",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791080530_tpq9rno2g",
-    "timestamp": "2025-07-29T12:11:20.530Z",
-    "metric": "lcp",
-    "value": 5576,
+    "value": 8420,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/search",
@@ -1221,10 +3547,10 @@
     }
   },
   {
-    "id": "perf_1753791081276_faf3qkknt",
-    "timestamp": "2025-07-29T12:11:21.276Z",
+    "id": "perf_1753802588308_rwb9jcci6",
+    "timestamp": "2025-07-29T15:23:08.308Z",
     "metric": "lcp",
-    "value": 5612,
+    "value": 6144,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/search",
@@ -1234,100 +3560,62 @@
     }
   },
   {
-    "id": "perf_1753791091330_iauaywe03",
-    "timestamp": "2025-07-29T12:11:31.330Z",
+    "id": "perf_1753802604106_n3y5xl7nd",
+    "timestamp": "2025-07-29T15:23:24.106Z",
     "metric": "lcp",
-    "value": 8160,
+    "value": 4572,
     "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/portfolio-1753615145862",
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video",
     "context": {
-      "url": ""
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
     }
   },
   {
-    "id": "perf_1753791091418_ufe2owh1j",
-    "timestamp": "2025-07-29T12:11:31.418Z",
+    "id": "perf_1753802606015_kwn8qiq8r",
+    "timestamp": "2025-07-29T15:23:26.015Z",
     "metric": "lcp",
-    "value": 8260,
+    "value": 2680,
     "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/portfolio-1753615145862",
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video",
     "context": {
-      "element": "P",
-      "url": ""
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-30-00h01m02s180-1753801283554-snqh1r.png&w=640&q=75"
     }
   },
   {
-    "id": "perf_1753791092600_83cguejfr",
-    "timestamp": "2025-07-29T12:11:32.600Z",
+    "id": "perf_1753802613190_vczx22bm1",
+    "timestamp": "2025-07-29T15:23:33.190Z",
     "metric": "lcp",
-    "value": 7308,
+    "value": 4089,
     "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/nonexistent-page",
-    "context": {
-      "element": "P",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791098282_qz8jnqa70",
-    "timestamp": "2025-07-29T12:11:38.282Z",
-    "metric": "lcp",
-    "value": 6712,
-    "threshold": 2500,
-    "severity": "critical",
+    "severity": "warning",
     "url": "http://localhost:3000/portfolio",
     "context": {
-      "element": "P",
+      "element": "H1",
       "url": ""
     }
   },
   {
-    "id": "perf_1753791099740_058pamkzq",
-    "timestamp": "2025-07-29T12:11:39.740Z",
+    "id": "perf_1753802624368_lvuj55l2f",
+    "timestamp": "2025-07-29T15:23:44.369Z",
     "metric": "lcp",
-    "value": 7320,
+    "value": 5780,
     "threshold": 2500,
     "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
+    "url": "http://localhost:3000/",
     "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+      "element": "H1",
+      "url": ""
     }
   },
   {
-    "id": "perf_1753791099796_5bgqmhn5n",
-    "timestamp": "2025-07-29T12:11:39.796Z",
+    "id": "perf_1753802630670_qn9lfl2x5",
+    "timestamp": "2025-07-29T15:23:50.670Z",
     "metric": "lcp",
-    "value": 8216,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
-    "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
-    }
-  },
-  {
-    "id": "perf_1753791107451_ex4s3mjq3",
-    "timestamp": "2025-07-29T12:11:47.451Z",
-    "metric": "lcp",
-    "value": 8632,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/portfolio/gallery/video",
-    "context": {
-      "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
-    }
-  },
-  {
-    "id": "perf_1753791126245_c2adrxnba",
-    "timestamp": "2025-07-29T12:12:06.245Z",
-    "metric": "lcp",
-    "value": 8436,
+    "value": 6938,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/contact",
@@ -1337,10 +3625,10 @@
     }
   },
   {
-    "id": "perf_1753791133128_dqym4mgwr",
-    "timestamp": "2025-07-29T12:12:13.128Z",
+    "id": "perf_1753802645661_gqcpmcum3",
+    "timestamp": "2025-07-29T15:24:05.661Z",
     "metric": "lcp",
-    "value": 6443,
+    "value": 10003,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/",
@@ -1350,23 +3638,10 @@
     }
   },
   {
-    "id": "perf_1753791126113_67omu8kmh",
-    "timestamp": "2025-07-29T12:12:06.113Z",
+    "id": "perf_1753802651794_qkpil7rlz",
+    "timestamp": "2025-07-29T15:24:11.794Z",
     "metric": "lcp",
-    "value": 10579,
-    "threshold": 2500,
-    "severity": "critical",
-    "url": "http://localhost:3000/",
-    "context": {
-      "element": "H1",
-      "url": ""
-    }
-  },
-  {
-    "id": "perf_1753791141872_xucadwvdm",
-    "timestamp": "2025-07-29T12:12:21.872Z",
-    "metric": "lcp",
-    "value": 8144,
+    "value": 11370,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/workshop",
@@ -1376,10 +3651,10 @@
     }
   },
   {
-    "id": "perf_1753791144417_fwsjk0c56",
-    "timestamp": "2025-07-29T12:12:24.417Z",
+    "id": "perf_1753802653777_stftc3zvs",
+    "timestamp": "2025-07-29T15:24:13.777Z",
     "metric": "lcp",
-    "value": 7234,
+    "value": 11395,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/about",
@@ -1389,16 +3664,341 @@
     }
   },
   {
-    "id": "perf_1753791162679_e3m6k4ejn",
-    "timestamp": "2025-07-29T12:12:42.679Z",
+    "id": "perf_1753803320010_n9k2czehg",
+    "timestamp": "2025-07-29T15:35:20.010Z",
     "metric": "lcp",
-    "value": 5853,
+    "value": 4516,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803329583_bcio3hd54",
+    "timestamp": "2025-07-29T15:35:29.583Z",
+    "metric": "lcp",
+    "value": 6196,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803326477_70rqbppl1",
+    "timestamp": "2025-07-29T15:35:26.477Z",
+    "metric": "lcp",
+    "value": 11120,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803327710_sptubpzrd",
+    "timestamp": "2025-07-29T15:35:27.710Z",
+    "metric": "lcp",
+    "value": 12364,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803334122_19rpgf6rk",
+    "timestamp": "2025-07-29T15:35:34.122Z",
+    "metric": "lcp",
+    "value": 7736,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803336819_44zlc2orz",
+    "timestamp": "2025-07-29T15:35:36.819Z",
+    "metric": "lcp",
+    "value": 21560,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803353619_gmuxdbs5g",
+    "timestamp": "2025-07-29T15:35:53.619Z",
+    "metric": "lcp",
+    "value": 6160,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803352509_4itq4crn9",
+    "timestamp": "2025-07-29T15:35:52.509Z",
+    "metric": "lcp",
+    "value": 8896,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803356527_j7k6t4hoh",
+    "timestamp": "2025-07-29T15:35:56.527Z",
+    "metric": "lcp",
+    "value": 6288,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803357685_rjgi7enkg",
+    "timestamp": "2025-07-29T15:35:57.685Z",
+    "metric": "lcp",
+    "value": 6856,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/search",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803372118_4uu8kqbky",
+    "timestamp": "2025-07-29T15:36:12.118Z",
+    "metric": "lcp",
+    "value": 13192,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803378582_z30w0zfjc",
+    "timestamp": "2025-07-29T15:36:18.582Z",
+    "metric": "lcp",
+    "value": 13248,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803389982_zblygsfmh",
+    "timestamp": "2025-07-29T15:36:29.982Z",
+    "metric": "lcp",
+    "value": 7320,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803387381_jtiz2rmja",
+    "timestamp": "2025-07-29T15:36:27.381Z",
+    "metric": "lcp",
+    "value": 10980,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803391874_ua8826s7w",
+    "timestamp": "2025-07-29T15:36:31.874Z",
+    "metric": "lcp",
+    "value": 7452,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803388550_ac32pjma2",
+    "timestamp": "2025-07-29T15:36:28.550Z",
+    "metric": "lcp",
+    "value": 8340,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803390890_n7hn3a41d",
+    "timestamp": "2025-07-29T15:36:30.890Z",
+    "metric": "lcp",
+    "value": 7232,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803391409_l2dvfwlhn",
+    "timestamp": "2025-07-29T15:36:31.409Z",
+    "metric": "lcp",
+    "value": 14360,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/nonexistent-page",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803401226_g7k8m7a6c",
+    "timestamp": "2025-07-29T15:36:41.226Z",
+    "metric": "lcp",
+    "value": 10992,
     "threshold": 2500,
     "severity": "critical",
     "url": "http://localhost:3000/portfolio/gallery/video",
     "context": {
       "element": "IMG",
-      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=640&q=75"
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-30-00h01m02s180-1753801283554-snqh1r.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1753803428112_jk8jn34cu",
+    "timestamp": "2025-07-29T15:37:08.112Z",
+    "metric": "lcp",
+    "value": 10393,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803437788_rhp5f7dzg",
+    "timestamp": "2025-07-29T15:37:17.788Z",
+    "metric": "lcp",
+    "value": 8613,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803449256_3emo7whld",
+    "timestamp": "2025-07-29T15:37:29.256Z",
+    "metric": "lcp",
+    "value": 10177,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803457056_mtkxsnfwn",
+    "timestamp": "2025-07-29T15:37:37.056Z",
+    "metric": "lcp",
+    "value": 12397,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803461999_cjh0gpdp4",
+    "timestamp": "2025-07-29T15:37:41.999Z",
+    "metric": "lcp",
+    "value": 12106,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803461859_rgpmyvozz",
+    "timestamp": "2025-07-29T15:37:41.859Z",
+    "metric": "lcp",
+    "value": 13203,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753803502189_lskn0ssi5",
+    "timestamp": "2025-07-29T15:38:22.189Z",
+    "metric": "lcp",
+    "value": 8348,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "H1",
+      "url": ""
     }
   }
 ]

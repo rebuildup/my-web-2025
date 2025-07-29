@@ -35,15 +35,12 @@ class GoogleAnalytics {
   constructor() {
     // 開発環境では何もしない
     if (process.env.NODE_ENV === "development") {
-      console.log("Google Analytics disabled in development environment");
       return;
     }
 
     if (typeof window !== "undefined") {
       if (this.GA_ID) {
         this.initializeGA();
-      } else {
-        console.log("Google Analytics disabled - GA_ID not configured");
       }
     }
   }

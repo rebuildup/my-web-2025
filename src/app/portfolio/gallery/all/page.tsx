@@ -10,20 +10,10 @@ import { AllGalleryClient } from "./components/AllGalleryClient";
  * All Gallery Page with proper SEO and structured data
  */
 export default async function AllGalleryPage() {
-  console.log("=== AllGalleryPage EXECUTED ===");
-  console.log("Environment:", process.env.NODE_ENV);
-  console.log("Timestamp:", new Date().toISOString());
-
   try {
     // Get portfolio data with minimal error handling
-    console.log("Fetching portfolio data...");
     const items = await portfolioDataManager.getPortfolioData(true);
     const searchFilters = await portfolioDataManager.getSearchFilters();
-
-    console.log("Data fetched successfully:", {
-      itemsCount: items.length,
-      filtersCount: searchFilters.length,
-    });
 
     // Generate SEO metadata and structured data
     let structuredData = null;
@@ -50,11 +40,6 @@ export default async function AllGalleryPage() {
         <div className="min-h-screen bg-background text-foreground">
           <main className="py-10">
             <div className="container mx-auto px-4">
-              <p className="text-foreground mb-4">
-                Found {items.length} portfolio items and {searchFilters.length}{" "}
-                filters.
-              </p>
-
               {items.length > 0 ? (
                 <AllGalleryClient
                   initialItems={items}

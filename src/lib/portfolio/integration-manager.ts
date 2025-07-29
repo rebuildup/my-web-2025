@@ -37,7 +37,6 @@ export class PortfolioIntegrationManager {
   async initialize(): Promise<void> {
     try {
       // 必要に応じて各連携機能の初期化処理を実行
-      console.log("Portfolio integration manager initialized");
     } catch (error) {
       console.error("Error initializing portfolio integration manager:", error);
       throw error;
@@ -58,8 +57,6 @@ export class PortfolioIntegrationManager {
         this.about.extractSkillsFromProjects(),
         this.seo.generateSitemapEntries(),
       ]);
-
-      console.log("All portfolio integrations refreshed");
     } catch (error) {
       console.error("Error refreshing portfolio integrations:", error);
       throw error;

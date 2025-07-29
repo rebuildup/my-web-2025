@@ -1,5 +1,65 @@
 [
   {
+    "id": "portfolio-1753706107538",
+    "type": "portfolio",
+    "title": "ProtoType パンフレット",
+    "description": "久しぶりのデザイン。過去に作った素材を使っています。",
+    "content": "久しぶりのデザイン。過去に作った素材を使っています。",
+    "tags": [],
+    "category": "design",
+    "searchableContent": "prototype パンフレット 久しぶりのデザイン。過去に作った素材を使っています。 久しぶりのデザイン。過去に作った素材を使っています。 design"
+  },
+  {
+    "id": "portfolio-1753706090299",
+    "type": "portfolio",
+    "title": "【二次創作】雪糅 文字pv",
+    "description": "サビがとても好き。落ち着いた映像が出来上がりました。",
+    "content": "サビがとても好き。落ち着いた映像が出来上がりました。",
+    "tags": [],
+    "category": "video",
+    "searchableContent": "【二次創作】雪糅 文字pv サビがとても好き。落ち着いた映像が出来上がりました。 サビがとても好き。落ち着いた映像が出来上がりました。 video"
+  },
+  {
+    "id": "portfolio-1753706048587",
+    "type": "portfolio",
+    "title": "【二次創作】花弁、それにまつわる音声 文字pv",
+    "description": "ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。",
+    "content": "ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。",
+    "tags": [],
+    "category": "video",
+    "searchableContent": "【二次創作】花弁、それにまつわる音声 文字pv ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。 ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。 video"
+  },
+  {
+    "id": "portfolio-1753706010674",
+    "type": "portfolio",
+    "title": "テストお疲れ様でした 4Q",
+    "description": "恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。",
+    "content": "恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。",
+    "tags": [],
+    "category": "video",
+    "searchableContent": "テストお疲れ様でした 4q 恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。 恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。 video"
+  },
+  {
+    "id": "portfolio-1753705999051",
+    "type": "portfolio",
+    "title": "Aeスクリプト Aulymo",
+    "description": "Ae全自動リリックモーション「Aulymo」v2の動作説明動画です。PremiereProを初めてまともに使いました。あと、コンピュータ部のMacBookを借りました。",
+    "content": "Ae全自動リリックモーション「Aulymo」v2の動作説明動画です。PremiereProを初めてまともに使いました。あと、コンピュータ部のMacBookを借りました。",
+    "tags": [],
+    "category": "develop",
+    "searchableContent": "aeスクリプト aulymo ae全自動リリックモーション「aulymo」v2の動作説明動画です。premiereproを初めてまともに使いました。あと、コンピュータ部のmacbookを借りました。 ae全自動リリックモーション「aulymo」v2の動作説明動画です。premiereproを初めてまともに使いました。あと、コンピュータ部のmacbookを借りました。 develop"
+  },
+  {
+    "id": "portfolio-1753705971770",
+    "type": "portfolio",
+    "title": "Aeエフェクトプラグイン sep_color",
+    "description": "画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はStretchよりもよくなってます。",
+    "content": "画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はStretchよりもよくなってます。",
+    "tags": [],
+    "category": "develop",
+    "searchableContent": "aeエフェクトプラグイン sep_color 画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はstretchよりもよくなってます。 画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はstretchよりもよくなってます。 develop"
+  },
+  {
     "id": "portfolio-1753705958241",
     "type": "portfolio",
     "title": "ONESELF 二次創作",

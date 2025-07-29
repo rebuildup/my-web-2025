@@ -76,7 +76,7 @@ export class PortfolioDataProcessor {
    * Main processing pipeline
    */
   async processRawData(
-    rawData: ContentItem[],
+    rawData: ContentItem[]
   ): Promise<PortfolioContentItem[]> {
     try {
       testLogger.log(`Processing ${rawData.length} portfolio items...`);
@@ -86,13 +86,13 @@ export class PortfolioDataProcessor {
       const enriched = await this.enrichData(validated);
 
       testLogger.log(
-        `Successfully processed ${enriched.length} portfolio items`,
+        `Successfully processed ${enriched.length} portfolio items`
       );
       return enriched;
     } catch (error) {
       testLogger.error("Error in portfolio data processing pipeline:", error);
       throw new Error(
-        `Data processing failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Data processing failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -101,7 +101,7 @@ export class PortfolioDataProcessor {
    * Normalize raw data to PortfolioContentItem format
    */
   private async normalizeData(
-    data: ContentItem[],
+    data: ContentItem[]
   ): Promise<PortfolioContentItem[]> {
     return data.map((item) => {
       // Normalize category to standard categories
@@ -111,6 +111,7 @@ export class PortfolioDataProcessor {
         ...item,
         category: normalizedCategory,
         // Ensure required fields
+        description: item.description || `${item.title}の作品詳細`,
         thumbnail:
           item.thumbnail ||
           item.images?.[0] ||
@@ -118,18 +119,22 @@ export class PortfolioDataProcessor {
         technologies: this.extractTechnologies(item.tags || []),
 
         // Calculate display properties
-        aspectRatio: this.calculateAspectRatio(),
-        gridSize: this.determineGridSize(normalizedCategory, item.images),
+        aspectRatio: this.calculateAspectRatio(item),
+        gridSize: this.determineGridSize(
+          normalizedCategory,
+          item.images,
+          item.priority
+        ),
 
         // Set project type based on category and tags
         projectType: this.determineProjectType(
           normalizedCategory,
-          item.tags || [],
+          item.tags || []
         ),
         videoType: this.determineVideoType(normalizedCategory, item.tags || []),
         experimentType: this.determineExperimentType(
           normalizedCategory,
-          item.tags || [],
+          item.tags || []
         ),
 
         // Initialize SEO data structure
@@ -207,7 +212,7 @@ export class PortfolioDataProcessor {
 
     // Default to 'develop' if no match found
     testLogger.warn(
-      `Unknown category "${category}", defaulting to "${PORTFOLIO_CATEGORIES.DEVELOP}"`,
+      `Unknown category "${category}", defaulting to "${PORTFOLIO_CATEGORIES.DEVELOP}"`
     );
     return PORTFOLIO_CATEGORIES.DEVELOP;
   }
@@ -218,33 +223,65 @@ export class PortfolioDataProcessor {
   private extractTechnologies(tags: string[]): string[] {
     return tags.filter((tag) =>
       this.TECHNOLOGY_KEYWORDS.some((tech) =>
-        tag.toLowerCase().includes(tech.toLowerCase()),
-      ),
+        tag.toLowerCase().includes(tech.toLowerCase())
+      )
     );
   }
 
   /**
-   * Calculate aspect ratio from image URL (placeholder implementation)
+   * Calculate aspect ratio from content item
    */
-  private calculateAspectRatio(): number {
-    // Default aspect ratio - in real implementation, this would analyze the image
-    return 16 / 9;
+  private calculateAspectRatio(item: ContentItem): number {
+    // If aspect ratio is already provided, use it
+    if (item.aspectRatio) {
+      return item.aspectRatio;
+    }
+
+    // Try to extract from first image if available
+    // For now, we'll use default aspect ratios based on category
+    // In the future, this could be enhanced to analyze actual image dimensions
+
+    // Default aspect ratios based on category
+    switch (item.category?.toLowerCase()) {
+      case "video":
+        return 16 / 9; // Standard video aspect ratio
+      case "design":
+        return 4 / 3; // Common design aspect ratio
+      case "develop":
+        return 16 / 10; // Common web development aspect ratio
+      default:
+        return 1; // Square fallback
+    }
   }
 
   /**
-   * Determine grid size based on category and content
+   * Determine grid size based on category, content, and priority
    */
   private determineGridSize(
     category: string,
     images?: string[],
+    priority: number = 50
   ): "1x1" | "1x2" | "2x1" | "2x2" | "1x3" {
     const imageCount = images?.length || 0;
 
+    // High priority items get larger sizes
+    if (priority >= 80) {
+      const largeSizes: ("2x2" | "1x3")[] = ["2x2", "1x3"];
+      return largeSizes[Math.floor(Math.random() * largeSizes.length)];
+    }
+
+    // Medium priority items
+    if (priority >= 60) {
+      const mediumSizes: ("1x2" | "2x1")[] = ["1x2", "2x1"];
+      return mediumSizes[Math.floor(Math.random() * mediumSizes.length)];
+    }
+
+    // Category-based sizing for lower priority items
     switch (category?.toLowerCase()) {
       case "video":
-        return imageCount > 2 ? "2x2" : "1x2";
+        return imageCount > 2 ? "1x2" : "1x1";
       case "design":
-        return imageCount > 3 ? "1x3" : "1x2";
+        return imageCount > 3 ? "1x2" : "1x1";
       case "develop":
         return "1x1";
       default:
@@ -257,7 +294,7 @@ export class PortfolioDataProcessor {
    */
   private determineProjectType(
     category: string,
-    tags: string[],
+    tags: string[]
   ): "web" | "game" | "tool" | "plugin" | undefined {
     if (category?.toLowerCase() !== "develop") return undefined;
 
@@ -276,7 +313,7 @@ export class PortfolioDataProcessor {
    */
   private determineVideoType(
     category: string,
-    tags: string[],
+    tags: string[]
   ): "mv" | "lyric" | "animation" | "promotion" | undefined {
     if (!category?.toLowerCase().includes("video")) return undefined;
 
@@ -294,7 +331,7 @@ export class PortfolioDataProcessor {
    */
   private determineExperimentType(
     category: string,
-    tags: string[],
+    tags: string[]
   ): "design" | "webgl" | undefined {
     const tagString = tags.join(" ").toLowerCase();
 
@@ -309,7 +346,7 @@ export class PortfolioDataProcessor {
    * Validate processed data
    */
   private async validateData(
-    data: PortfolioContentItem[],
+    data: PortfolioContentItem[]
   ): Promise<PortfolioContentItem[]> {
     const validItems: PortfolioContentItem[] = [];
 
@@ -321,14 +358,14 @@ export class PortfolioDataProcessor {
       } else {
         testLogger.warn(
           `Invalid portfolio item: ${item.id}`,
-          validation.errors,
+          validation.errors
         );
 
         // Log validation errors but continue processing
         validation.errors.forEach((error) => {
           if (error.severity === "error") {
             testLogger.error(
-              `Validation error for ${item.id}.${error.field}: ${error.message}`,
+              `Validation error for ${item.id}.${error.field}: ${error.message}`
             );
           }
         });
@@ -415,7 +452,7 @@ export class PortfolioDataProcessor {
    * Enrich data with additional computed fields
    */
   private async enrichData(
-    data: PortfolioContentItem[],
+    data: PortfolioContentItem[]
   ): Promise<PortfolioContentItem[]> {
     return Promise.all(
       data.map(async (item) => ({
@@ -423,7 +460,7 @@ export class PortfolioDataProcessor {
         seo: await this.generateSEOData(item),
         searchIndex: this.generateSearchIndex(item),
         relatedItems: await this.findRelatedItems(item, data),
-      })),
+      }))
     );
   }
 
@@ -431,7 +468,7 @@ export class PortfolioDataProcessor {
    * Generate SEO metadata for portfolio item
    */
   private async generateSEOData(
-    item: PortfolioContentItem,
+    item: PortfolioContentItem
   ): Promise<PortfolioContentItem["seo"]> {
     const baseTitle = `${item.title} - samuido | ポートフォリオ`;
     const baseDescription = item.description;
@@ -528,7 +565,7 @@ export class PortfolioDataProcessor {
    */
   private async findRelatedItems(
     item: PortfolioContentItem,
-    allItems: PortfolioContentItem[],
+    allItems: PortfolioContentItem[]
   ): Promise<string[]> {
     const related = allItems
       .filter((other) => other.id !== item.id)
@@ -549,7 +586,7 @@ export class PortfolioDataProcessor {
    */
   private calculateSimilarityScore(
     item1: PortfolioContentItem,
-    item2: PortfolioContentItem,
+    item2: PortfolioContentItem
   ): number {
     let score = 0;
 
@@ -585,7 +622,7 @@ export class PortfolioDataProcessor {
    * Generate portfolio statistics
    */
   async generatePortfolioStats(
-    items: PortfolioContentItem[],
+    items: PortfolioContentItem[]
   ): Promise<PortfolioStats> {
     const categoryCounts: Record<string, number> = {};
     const technologyCounts: Record<string, number> = {};

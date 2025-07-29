@@ -39,17 +39,6 @@ export function AllGalleryClient({
   initialItems,
   searchFilters,
 }: AllGalleryClientProps) {
-  // Debug logging
-  console.log("AllGalleryClient initialized with:", {
-    initialItemsCount: initialItems.length,
-    searchFiltersCount: searchFilters.length,
-    initialItems: initialItems.slice(0, 3).map((item) => ({
-      id: item.id,
-      title: item.title,
-      status: item.status,
-    })),
-  });
-
   // State management
   const [selectedItem, setSelectedItem] = useState<PortfolioContentItem | null>(
     null,

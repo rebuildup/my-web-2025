@@ -63,106 +63,221 @@
     "id": "portfolio-1753706120147",
     "type": "portfolio",
     "title": "タイピングゲーム ProtoType",
-    "description": "",
+    "description": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます",
     "category": "develop",
     "tags": [],
-    "status": "draft",
+    "status": "archived",
     "priority": 50,
     "createdAt": "2025-07-28T12:35:20.147Z",
-    "updatedAt": "2025-07-28T12:35:32.340Z",
+    "updatedAt": "2025-07-29T15:08:11.291Z",
     "videos": [],
     "images": [],
-    "externalLinks": []
+    "externalLinks": [],
+    "content": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます"
   },
   {
     "id": "portfolio-1753706107538",
     "type": "portfolio",
     "title": "ProtoType パンフレット",
-    "description": "",
+    "description": "久しぶりのデザイン。過去に作った素材を使っています。",
     "category": "design",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:35:07.538Z",
-    "updatedAt": "2025-07-28T12:35:18.687Z",
+    "updatedAt": "2025-07-29T15:04:12.112Z",
     "videos": [],
-    "images": [],
-    "externalLinks": []
+    "images": [
+      "/images/portfolio/20250311_com_pan-1753801396083-vqq8l9.jpg",
+      "/images/portfolio/20250311_com_pan-1753801416200-errbvy.jpg"
+    ],
+    "externalLinks": [
+      {
+        "type": "demo",
+        "title": "ProtoType",
+        "url": "https://prototype.yusuke-kim.com",
+        "description": "ProtoTypeの公開リンクです"
+      }
+    ],
+    "content": "久しぶりのデザイン。過去に作った素材を使っています。",
+    "thumbnail": "/images/portfolio/20250311_com_pan-1753801396083-vqq8l9.jpg"
   },
   {
     "id": "portfolio-1753706090299",
     "type": "portfolio",
     "title": "【二次創作】雪糅 文字pv",
-    "description": "",
+    "description": "サビがとても好き。落ち着いた映像が出来上がりました。",
     "category": "video",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:34:50.299Z",
-    "updatedAt": "2025-07-28T12:35:05.313Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T15:02:15.907Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/A1r3QpnS3GA",
+        "title": "【二次創作】雪糅 文字pv",
+        "description": "サビがとても好き。落ち着いた映像が出来上がりました。",
+        "thumbnail": "https://img.youtube.com/vi/A1r3QpnS3GA/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-30-00h01m02s180-1753801283554-snqh1r.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_design/status/1895423219542466819",
+        "title": "X",
+        "description": "Xのリンクです"
+      },
+      {
+        "type": "website",
+        "url": "https://www.nicovideo.jp/watch/sm44678796",
+        "title": "原曲",
+        "description": "原曲のリンクです"
+      }
+    ],
+    "content": "サビがとても好き。落ち着いた映像が出来上がりました。",
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-00h01m02s180-1753801283554-snqh1r.png"
   },
   {
     "id": "portfolio-1753706048587",
     "type": "portfolio",
     "title": "【二次創作】花弁、それにまつわる音声 文字pv",
-    "description": "",
+    "description": "ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。",
     "category": "video",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:34:08.587Z",
-    "updatedAt": "2025-07-28T12:34:48.852Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T14:58:46.236Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/ay5stCLI9v4",
+        "title": "【二次創作】花弁、それにまつわる音声 文字pv",
+        "description": "ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。",
+        "thumbnail": "https://img.youtube.com/vi/ay5stCLI9v4/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-29-23h56m15s497-1753801008078-sbcvvj.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_design/status/1893620585491792320",
+        "title": "X",
+        "description": "Xのリンクです"
+      },
+      {
+        "type": "website",
+        "url": "https://www.youtube.com/watch?v=LW1KBCgvEPQ",
+        "title": "原曲",
+        "description": "原曲のリンクです"
+      }
+    ],
+    "content": "ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。",
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-23h56m15s497-1753801008078-sbcvvj.png"
   },
   {
     "id": "portfolio-1753706010674",
     "type": "portfolio",
     "title": "テストお疲れ様でした 4Q",
-    "description": "",
+    "description": "恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。",
     "category": "video",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:33:30.674Z",
-    "updatedAt": "2025-07-28T12:34:07.236Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T14:54:12.124Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtube.com/shorts/D3SKN8nxOQ8?feature=share",
+        "title": "テストお疲れ様でした 4Q",
+        "description": "恒例のテストお疲れ様でした動画です。"
+      }
+    ],
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-29-23h52m13s550-1753800748155-t22xtb.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_design/status/1892911594834890817",
+        "title": "X",
+        "description": "X"
+      }
+    ],
+    "content": "恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。",
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-23h52m13s550-1753800748155-t22xtb.png"
   },
   {
     "id": "portfolio-1753705999051",
     "type": "portfolio",
     "title": "Aeスクリプト Aulymo",
-    "description": "",
+    "description": "Ae全自動リリックモーション「Aulymo」v2の動作説明動画です。PremiereProを初めてまともに使いました。あと、コンピュータ部のMacBookを借りました。",
     "category": "develop",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:33:19.051Z",
-    "updatedAt": "2025-07-28T12:33:28.442Z",
-    "videos": [],
-    "images": [],
-    "externalLinks": []
+    "updatedAt": "2025-07-29T14:45:16.585Z",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/watch?v=EbtybmiN5pM",
+        "title": "Aeスクリプト Aulymo",
+        "description": "Ae全自動リリックモーション「Aulymo」v2の動作説明動画です。",
+        "thumbnail": "https://img.youtube.com/vi/EbtybmiN5pM/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/vlcsnap-2025-01-23-21h17m27s569-1753800226443-atrscc.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "booth",
+        "title": "Aeスクリプト Aulymo",
+        "url": "https://361do.booth.pm/items/6403113",
+        "description": "Aeスクリプト Aulymoの販売リンクです"
+      }
+    ],
+    "content": "Ae全自動リリックモーション「Aulymo」v2の動作説明動画です。PremiereProを初めてまともに使いました。あと、コンピュータ部のMacBookを借りました。",
+    "thumbnail": "/images/portfolio/vlcsnap-2025-01-23-21h17m27s569-1753800226443-atrscc.png"
   },
   {
     "id": "portfolio-1753705971770",
     "type": "portfolio",
     "title": "Aeエフェクトプラグイン sep_color",
-    "description": "",
+    "description": "画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はStretchよりもよくなってます。",
     "category": "develop",
     "tags": [],
-    "status": "draft",
+    "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:32:51.770Z",
-    "updatedAt": "2025-07-28T12:33:16.556Z",
+    "updatedAt": "2025-07-29T14:28:57.048Z",
     "videos": [],
-    "images": [],
-    "externalLinks": []
+    "images": ["/images/portfolio/20250123_sep_color-1753799278738-gm6kk6.jpg"],
+    "externalLinks": [
+      {
+        "type": "booth",
+        "title": "Aeエフェクトプラグイン sep_color",
+        "url": "https://361do.booth.pm/items/6520211",
+        "description": "画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はStretchよりもよくなってます。"
+      },
+      {
+        "type": "website",
+        "url": "https://x.com/361do_sleep/status/1882412041526477277",
+        "title": "X",
+        "description": "Xのリンク"
+      }
+    ],
+    "content": "画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はStretchよりもよくなってます。",
+    "thumbnail": "/images/portfolio/20250123_sep_color-1753799278738-gm6kk6.jpg"
   },
   {
     "id": "portfolio-1753705958241",

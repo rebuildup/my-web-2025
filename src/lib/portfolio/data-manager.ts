@@ -150,63 +150,29 @@ export class PortfolioDataManager {
   async getPortfolioData(
     forceRefresh: boolean = false,
   ): Promise<PortfolioContentItem[]> {
-    console.log("getPortfolioData called, forceRefresh:", forceRefresh);
-    console.log("Cache valid:", this.isCacheValid());
-    console.log("Cache size:", this.cache.portfolioData.size);
-
     if (!forceRefresh && this.isCacheValid()) {
       testLogger.log("Returning cached portfolio data");
       const cachedData = Array.from(this.cache.portfolioData.values());
-      console.log("Cached data count:", cachedData.length);
-      console.log(
-        "Cached data statuses:",
-        cachedData.map((item) => ({ id: item.id, status: item.status })),
-      );
       // Filter for published items only for gallery display
       const publishedData = cachedData.filter(
         (item) => item.status === "published",
       );
-      console.log("Published data count:", publishedData.length);
       return publishedData;
     }
 
     // Fetch fresh data from API
-    console.log("Fetching fresh data from API...");
     const rawData = await this.fetchRawPortfolioData();
-    console.log("Raw data fetched:", rawData.length, "items");
-    console.log(
-      "Raw data sample:",
-      rawData.slice(0, 3).map((item) => ({
-        id: item.id,
-        status: item.status,
-        title: item.title,
-      })),
-    );
 
     const result = await this.processPortfolioData(rawData);
-    console.log("Processing result:", {
-      success: result.success,
-      dataCount: result.data.length,
-    });
 
     if (result.success) {
       // Filter for published items only for gallery display
       const publishedData = result.data.filter(
         (item) => item.status === "published",
       );
-      console.log(
-        "Published data after processing:",
-        publishedData.length,
-        "items",
-      );
-      console.log(
-        "Published items:",
-        publishedData.map((item) => ({ id: item.id, title: item.title })),
-      );
       return publishedData;
     } else {
       testLogger.warn("Failed to process fresh data");
-      console.log("Processing errors:", result.errors);
       // Only return cached data if we have valid cache, otherwise return empty array
       if (this.cache.portfolioData.size > 0) {
         testLogger.warn("Returning cached data as fallback");
@@ -527,7 +493,6 @@ export class PortfolioDataManager {
         process.env.NODE_ENV === "development" ? `&_t=${Date.now()}` : "";
 
       const apiUrl = `${baseUrl}/api/content/portfolio?limit=100&status=all${timestamp}`;
-      console.log("Fetching from API URL:", apiUrl);
 
       const response = await fetch(apiUrl, {
         next:
@@ -540,14 +505,11 @@ export class PortfolioDataManager {
             : "default", // Default cache in production
       });
 
-      console.log("Portfolio API response status:", response.status);
-
       if (!response.ok) {
         throw new Error(`API request failed: ${response.status}`);
       }
 
       const result = await response.json();
-      console.log("API response data count:", result.data?.length || 0);
       return result.data || [];
     } catch (error) {
       testLogger.error("Error fetching raw portfolio data from API:", error);
@@ -587,10 +549,8 @@ export class PortfolioDataManager {
 
       for (const filePath of possiblePaths) {
         try {
-          console.log("Trying to load portfolio data from:", filePath);
           fileContent = await fs.readFile(filePath, "utf-8");
           usedPath = filePath;
-          console.log("Successfully loaded from:", filePath);
           break;
         } catch (pathError) {
           console.log(
@@ -614,9 +574,6 @@ export class PortfolioDataManager {
       const allData = Array.isArray(data) ? data : [];
 
       testLogger.log(
-        `Loaded ${allData.length} portfolio items from file system (${usedPath})`,
-      );
-      console.log(
         `Loaded ${allData.length} portfolio items from file system (${usedPath})`,
       );
       return allData;

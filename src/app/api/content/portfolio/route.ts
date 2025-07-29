@@ -32,10 +32,8 @@ async function readPortfolioData(): Promise<ContentItem[]> {
 
     for (const filePath of possiblePaths) {
       try {
-        console.log("API: Trying to load portfolio data from:", filePath);
         fileContent = await fs.readFile(filePath, "utf-8");
         usedPath = filePath;
-        console.log("API: Successfully loaded from:", filePath);
         break;
       } catch (pathError) {
         console.log(

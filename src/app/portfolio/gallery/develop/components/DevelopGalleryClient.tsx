@@ -8,7 +8,7 @@
 import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Code, Github, ExternalLink, Calendar, Filter } from "lucide-react";
+import { Code, Github, ExternalLink, Calendar } from "lucide-react";
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
 import { SearchFilter } from "@/lib/portfolio/search-index";
 import { DetailModal } from "../../all/components/DetailModal";
@@ -40,17 +40,6 @@ export function DevelopGalleryClient({
   initialItems,
   searchFilters,
 }: DevelopGalleryClientProps) {
-  // Debug logging
-  console.log("DevelopGalleryClient initialized with:", {
-    initialItemsCount: initialItems.length,
-    searchFiltersCount: searchFilters.length,
-    initialItems: initialItems.slice(0, 3).map((item) => ({
-      id: item.id,
-      title: item.title,
-      status: item.status,
-    })),
-  });
-
   // State management
   const [selectedItem, setSelectedItem] = useState<PortfolioContentItem | null>(
     null,
@@ -172,10 +161,6 @@ export function DevelopGalleryClient({
         behavior: "smooth",
       });
     }
-  }, []);
-
-  const handleCardClick = useCallback((item: PortfolioContentItem) => {
-    setSelectedItem(item);
   }, []);
 
   const handleModalClose = useCallback(() => {

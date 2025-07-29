@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { Video as VideoIcon } from "lucide-react";
 
 interface YouTubeThumbnailProps {
   videoId: string;

@@ -265,7 +265,7 @@ describe("AllGalleryPage", () => {
 
     // The page should render successfully even if there are potential data loading issues
     await waitFor(() => {
-      expect(screen.getByText(/Found.*portfolio items/)).toBeInTheDocument();
+      expect(screen.getByText(/projects/)).toBeInTheDocument();
     });
   });
 
