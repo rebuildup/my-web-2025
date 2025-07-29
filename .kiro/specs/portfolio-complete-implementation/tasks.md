@@ -64,7 +64,7 @@
   - _Requirements: 4.2, 4.5_
   - _Test: npm run test:all実行、開発系特有機能のテスト_
 
-- [ ] 3.3 映像ギャラリー(/portfolio/gallery/video)の実装
+- [x] 3.3 映像ギャラリー(/portfolio/gallery/video)の実装
   - foriioライクな美しいレイアウトの実装
   - YouTube/Vimeo動画プレビュー機能
   - 軽量プレビュー機能の実装

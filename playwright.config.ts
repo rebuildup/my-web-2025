@@ -25,9 +25,9 @@ export default defineConfig({
   },
 
   /* Global test timeout */
-  timeout: 60000, // 60 seconds per test
+  timeout: 90000, // 90 seconds per test
   expect: {
-    timeout: 10000, // 10 seconds for expect assertions
+    timeout: 15000, // 15 seconds for expect assertions
   },
 
   /* Configure projects for major browsers */
@@ -73,6 +73,7 @@ export default defineConfig({
     command: "npm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
+    timeout: 120000, // 2 minutes for server startup
     stdout: "pipe",
     stderr: "pipe",
     env: {

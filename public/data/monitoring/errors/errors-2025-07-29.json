@@ -321,5 +321,335 @@
     "severity": "high",
     "category": "network",
     "resolved": false
+  },
+  {
+    "id": "error_1753785723524_dngwskcqu",
+    "timestamp": "2025-07-29T10:42:03.524Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753785713860_zsxdga6ta",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753785738773_auxzbemn2",
+    "timestamp": "2025-07-29T10:42:18.773Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753785727519_4zl5pujnn",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753785755906_9zdgkbubj",
+    "timestamp": "2025-07-29T10:42:35.906Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753785746655_ifm85u11r",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753785859036_5naa98fqu",
+    "timestamp": "2025-07-29T10:44:19.036Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753785851391_54obg73de",
+    "context": {
+      "type": "network",
+      "url": "/about"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753785859038_d98ycx7nr",
+    "timestamp": "2025-07-29T10:44:19.038Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753785851391_54obg73de",
+    "context": {
+      "type": "network",
+      "url": "/portfolio"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753785859051_nrymh0n1i",
+    "timestamp": "2025-07-29T10:44:19.051Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753785851391_54obg73de",
+    "context": {
+      "type": "network",
+      "url": "/tools"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753785859052_1k63xbjni",
+    "timestamp": "2025-07-29T10:44:19.052Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753785851391_54obg73de",
+    "context": {
+      "type": "network",
+      "url": "/workshop"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753785859056_xyr1j3djf",
+    "timestamp": "2025-07-29T10:44:19.056Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753785851391_54obg73de",
+    "context": {
+      "type": "network",
+      "url": "/"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753785869664_190us0xgx",
+    "timestamp": "2025-07-29T10:44:29.664Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753785868846_n43s1pod9",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/download"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753785869655_mlb5x1rxh",
+    "timestamp": "2025-07-29T10:44:29.655Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753785868846_n43s1pod9",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753788066609_myuz77hoe",
+    "timestamp": "2025-07-29T11:21:06.609Z",
+    "message": "Youtube is not defined",
+    "stack": "ReferenceError: Youtube is not defined\n    at eval (http://localhost:3000/_next/static/chunks/src_app_portfolio_gallery_video_components_2fea4d5a._.js?id=%255Bproject%255D%252Fsrc%252Fapp%252Fportfolio%252Fgallery%252Fvideo%252Fcomponents%252FVideoGallery.tsx+%255Bapp-client%255D+%2528ecmascript%2529:186:258)\n    at Array.map (<anonymous>)\n    at VideoGallery (http://localhost:3000/_next/static/chunks/src_app_portfolio_gallery_video_components_2fea4d5a._.js?id=%255Bproject%255D%252Fsrc%252Fapp%252Fportfolio%252Fgallery%252Fvideo%252Fcomponents%252FVideoGallery.tsx+%255Bapp-client%255D+%2528ecmascript%2529:78:33)\n    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:13014:24)\n    at renderWithHooks (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:4064:24)\n    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:5428:21)\n    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6022:24)\n    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:74)\n    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8236:97)\n    at workLoopSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8128:40)\n    at renderRootSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8111:13)\n    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7870:56)\n    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8828:9)\n    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8747:316)\n    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7986:86)\n    at scheduleRefresh (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:301:13)\n    at p.scheduleRefresh (chrome-extension://fmkadmapgofadopljbjfkapdkoienihi/build/installHook.js:1:82360)\n    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:396:33\n    at Set.forEach (<anonymous>)\n    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:389:38)\n    at applyUpdate (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:887:31)\n    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:895:13",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1753787719702_z39jam71x",
+    "context": {
+      "filename": "http://localhost:3000/_next/static/chunks/src_app_portfolio_gallery_video_components_2fea4d5a._.js?id=%255Bproject%255D%252Fsrc%252Fapp%252Fportfolio%252Fgallery%252Fvideo%252Fcomponents%252FVideoGallery.tsx+%255Bapp-client%255D+%2528ecmascript%2529",
+      "lineno": 186,
+      "colno": 258,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1753789027311_1mero050f",
+    "timestamp": "2025-07-29T11:37:07.311Z",
+    "message": "Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <RedirectErrorBoundary router={{...}}>\n      <InnerLayoutRouter url=\"/portfolio...\" tree={[...]} cacheNode={{lazyData:null, ...}} segmentPath={[...]}>\n        <VideoProjectsPage>\n          <script>\n          <div className=\"min-h-scre...\">\n            <main className=\"flex items...\">\n              <div className=\"container-...\">\n                <div className=\"space-y-10\">\n                  <header>\n                  <section>\n                    <h2>\n                    <VideoGallery items={[...]}>\n                      <div className=\"grid grid-...\">\n                        <div className=\"group curs...\" onClick={function onClick}>\n                          <div className=\"aspect-vid...\">\n                            <img\n                              alt=\"嘘と未来 文字pv\"\n                              fetchPriority={undefined}\n                              loading=\"lazy\"\n                              width={undefined}\n                              height={undefined}\n                              decoding=\"async\"\n                              data-nimg=\"fill\"\n+                             className=\"object-cover group-hover:scale-105 transition-transform duration-300 opacity-0\"\n-                             className=\"object-cover group-hover:scale-105 transition-transform duration-300\"\n                              style={{position:\"absolute\",height:\"100%\",width:\"100%\",left:0,top:0,right:0,bottom:0,objectFit:undefined, ...}}\n                              sizes=\"(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw\"\n                              srcSet={\"/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=128&...\"}\n                              src={\"/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=3840&q=75\"}\n                              ref={function}\n                              onLoad={function onLoad}\n                              onError={function onError}\n                            >\n                            <div\n+                             className=\"absolute inset-0 flex items-center justify-center\"\n-                             className=\"absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-a...\"\n                            >\n                              <Video className=\"w-12 h-12 ...\">\n+                               <svg\n+                                 ref={null}\n+                                 xmlns=\"http://www.w3.org/2000/svg\"\n+                                 width={24}\n+                                 height={24}\n+                                 viewBox=\"0 0 24 24\"\n+                                 fill=\"none\"\n+                                 stroke=\"currentColor\"\n+                                 strokeWidth={2}\n+                                 strokeLinecap=\"round\"\n+                                 strokeLinejoin=\"round\"\n+                                 className=\"lucide lucide-video w-12 h-12 text-foreground opacity-50\"\n+                                 aria-hidden=\"true\"\n+                               >\n-                               <div className=\"opacity-0 group-hover:opacity-100 transition-opacity duration-300\">\n                            ...\n                          ...\n                        ...\n                      ...\n                  ...\n        ...\n",
+    "stack": "Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <RedirectErrorBoundary router={{...}}>\n      <InnerLayoutRouter url=\"/portfolio...\" tree={[...]} cacheNode={{lazyData:null, ...}} segmentPath={[...]}>\n        <VideoProjectsPage>\n          <script>\n          <div className=\"min-h-scre...\">\n            <main className=\"flex items...\">\n              <div className=\"container-...\">\n                <div className=\"space-y-10\">\n                  <header>\n                  <section>\n                    <h2>\n                    <VideoGallery items={[...]}>\n                      <div className=\"grid grid-...\">\n                        <div className=\"group curs...\" onClick={function onClick}>\n                          <div className=\"aspect-vid...\">\n                            <img\n                              alt=\"嘘と未来 文字pv\"\n                              fetchPriority={undefined}\n                              loading=\"lazy\"\n                              width={undefined}\n                              height={undefined}\n                              decoding=\"async\"\n                              data-nimg=\"fill\"\n+                             className=\"object-cover group-hover:scale-105 transition-transform duration-300 opacity-0\"\n-                             className=\"object-cover group-hover:scale-105 transition-transform duration-300\"\n                              style={{position:\"absolute\",height:\"100%\",width:\"100%\",left:0,top:0,right:0,bottom:0,objectFit:undefined, ...}}\n                              sizes=\"(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw\"\n                              srcSet={\"/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=128&...\"}\n                              src={\"/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=3840&q=75\"}\n                              ref={function}\n                              onLoad={function onLoad}\n                              onError={function onError}\n                            >\n                            <div\n+                             className=\"absolute inset-0 flex items-center justify-center\"\n-                             className=\"absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-a...\"\n                            >\n                              <Video className=\"w-12 h-12 ...\">\n+                               <svg\n+                                 ref={null}\n+                                 xmlns=\"http://www.w3.org/2000/svg\"\n+                                 width={24}\n+                                 height={24}\n+                                 viewBox=\"0 0 24 24\"\n+                                 fill=\"none\"\n+                                 stroke=\"currentColor\"\n+                                 strokeWidth={2}\n+                                 strokeLinecap=\"round\"\n+                                 strokeLinejoin=\"round\"\n+                                 className=\"lucide lucide-video w-12 h-12 text-foreground opacity-50\"\n+                                 aria-hidden=\"true\"\n+                               >\n-                               <div className=\"opacity-0 group-hover:opacity-100 transition-opacity duration-300\">\n                            ...\n                          ...\n                        ...\n                      ...\n                  ...\n        ...\n\n    at throwOnHydrationMismatch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:2891:56)\n    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6089:918)\n    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:74)\n    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8236:97)\n    at workLoopConcurrentByScheduler (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8232:58)\n    at renderRootConcurrent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8214:71)\n    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7846:176)\n    at performWorkOnRootViaSchedulerTask (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8820:9)\n    at MessagePort.performWorkUntilDeadline (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:2588:64)",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1753789027141_n7opr5l65",
+    "context": {
+      "filename": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js",
+      "lineno": 2891,
+      "colno": 56,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753789216152_d5s9otwq0",
+    "timestamp": "2025-07-29T11:40:16.152Z",
+    "message": "undefined",
+    "stack": "Error: undefined\n    at http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3136:78",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1753789027141_n7opr5l65",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1753789532257_gfvu9yv7w",
+    "timestamp": "2025-07-29T11:45:32.257Z",
+    "message": "Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <RedirectErrorBoundary router={{...}}>\n      <InnerLayoutRouter url=\"/portfolio...\" tree={[...]} cacheNode={{lazyData:null, ...}} segmentPath={[...]}>\n        <VideoProjectsPage>\n          <script>\n          <div className=\"min-h-scre...\">\n            <main className=\"flex items...\">\n              <div className=\"container-...\">\n                <div className=\"space-y-10\">\n                  <header>\n                  <section>\n                    <h2>\n                    <VideoGallery items={[...]}>\n                      <div className=\"grid grid-...\">\n                        <div className=\"group curs...\" onClick={function onClick}>\n                          <div className=\"aspect-vid...\">\n                            <img\n                              alt=\"嘘と未来 文字pv\"\n                              fetchPriority={undefined}\n                              loading=\"lazy\"\n                              width={undefined}\n                              height={undefined}\n                              decoding=\"async\"\n                              data-nimg=\"fill\"\n+                             className=\"object-cover group-hover:scale-105 transition-transform duration-300 opacity-0\"\n-                             className=\"object-cover group-hover:scale-105 transition-transform duration-300\"\n                              style={{position:\"absolute\",height:\"100%\",width:\"100%\",left:0,top:0,right:0,bottom:0,objectFit:undefined, ...}}\n                              sizes=\"(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw\"\n                              srcSet={\"/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=128&...\"}\n                              src={\"/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=3840&q=75\"}\n                              ref={function}\n                              onLoad={function onLoad}\n                              onError={function onError}\n                            >\n                            <div\n+                             className=\"absolute inset-0 flex items-center justify-center\"\n-                             className=\"absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-a...\"\n                            >\n                              <Video className=\"w-12 h-12 ...\">\n+                               <svg\n+                                 ref={null}\n+                                 xmlns=\"http://www.w3.org/2000/svg\"\n+                                 width={24}\n+                                 height={24}\n+                                 viewBox=\"0 0 24 24\"\n+                                 fill=\"none\"\n+                                 stroke=\"currentColor\"\n+                                 strokeWidth={2}\n+                                 strokeLinecap=\"round\"\n+                                 strokeLinejoin=\"round\"\n+                                 className=\"lucide lucide-video w-12 h-12 text-foreground opacity-50\"\n+                                 aria-hidden=\"true\"\n+                               >\n-                               <div className=\"opacity-0 group-hover:opacity-100 transition-opacity duration-300\">\n                            ...\n                          ...\n                        ...\n                      ...\n                  ...\n        ...\n",
+    "stack": "Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <RedirectErrorBoundary router={{...}}>\n      <InnerLayoutRouter url=\"/portfolio...\" tree={[...]} cacheNode={{lazyData:null, ...}} segmentPath={[...]}>\n        <VideoProjectsPage>\n          <script>\n          <div className=\"min-h-scre...\">\n            <main className=\"flex items...\">\n              <div className=\"container-...\">\n                <div className=\"space-y-10\">\n                  <header>\n                  <section>\n                    <h2>\n                    <VideoGallery items={[...]}>\n                      <div className=\"grid grid-...\">\n                        <div className=\"group curs...\" onClick={function onClick}>\n                          <div className=\"aspect-vid...\">\n                            <img\n                              alt=\"嘘と未来 文字pv\"\n                              fetchPriority={undefined}\n                              loading=\"lazy\"\n                              width={undefined}\n                              height={undefined}\n                              decoding=\"async\"\n                              data-nimg=\"fill\"\n+                             className=\"object-cover group-hover:scale-105 transition-transform duration-300 opacity-0\"\n-                             className=\"object-cover group-hover:scale-105 transition-transform duration-300\"\n                              style={{position:\"absolute\",height:\"100%\",width:\"100%\",left:0,top:0,right:0,bottom:0,objectFit:undefined, ...}}\n                              sizes=\"(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw\"\n                              srcSet={\"/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=128&...\"}\n                              src={\"/_next/image?url=%2Fimages%2Fportfolio%2Fusoto-1753706419203-7e35gq.png&w=3840&q=75\"}\n                              ref={function}\n                              onLoad={function onLoad}\n                              onError={function onError}\n                            >\n                            <div\n+                             className=\"absolute inset-0 flex items-center justify-center\"\n-                             className=\"absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-a...\"\n                            >\n                              <Video className=\"w-12 h-12 ...\">\n+                               <svg\n+                                 ref={null}\n+                                 xmlns=\"http://www.w3.org/2000/svg\"\n+                                 width={24}\n+                                 height={24}\n+                                 viewBox=\"0 0 24 24\"\n+                                 fill=\"none\"\n+                                 stroke=\"currentColor\"\n+                                 strokeWidth={2}\n+                                 strokeLinecap=\"round\"\n+                                 strokeLinejoin=\"round\"\n+                                 className=\"lucide lucide-video w-12 h-12 text-foreground opacity-50\"\n+                                 aria-hidden=\"true\"\n+                               >\n-                               <div className=\"opacity-0 group-hover:opacity-100 transition-opacity duration-300\">\n                            ...\n                          ...\n                        ...\n                      ...\n                  ...\n        ...\n\n    at throwOnHydrationMismatch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:2891:56)\n    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6089:918)\n    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:74)\n    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8236:97)\n    at workLoopConcurrentByScheduler (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8232:58)\n    at renderRootConcurrent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8214:71)\n    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7846:176)\n    at performWorkOnRootViaSchedulerTask (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8820:9)\n    at MessagePort.performWorkUntilDeadline (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:2588:64)",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1753789531829_6w9yfkf34",
+    "context": {
+      "filename": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js",
+      "lineno": 2891,
+      "colno": 56,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753790824459_mqwiizwls",
+    "timestamp": "2025-07-29T12:07:04.459Z",
+    "message": "Invalid fetch response: \"https://use.typekit.net/af/1cd623/00000000000000007735ecb2/31/m?features=NONE&v=4&chunks=224&state=3.81.161.168.170.176.182.193.199.209.216.230.238&order=0\": 503",
+    "stack": "tb/</<@https://use.typekit.net/blm5pmr.js:56:277\npromise callback*tb/<@https://use.typekit.net/blm5pmr.js:56:233\ntb@https://use.typekit.net/blm5pmr.js:56:91\nsb.prototype.H/b.D</<@https://use.typekit.net/blm5pmr.js:55:359\npromise callback*sb.prototype.H/b.D<@https://use.typekit.net/blm5pmr.js:55:336\npromise callback*sb.prototype.H@https://use.typekit.net/blm5pmr.js:55:72\nRb.prototype.update@https://use.typekit.net/blm5pmr.js:67:415\nXb/<@https://use.typekit.net/blm5pmr.js:68:1048\nXb@https://use.typekit.net/blm5pmr.js:68:1015\nWb.prototype.load/</d<@https://use.typekit.net/blm5pmr.js:70:156\nEb/this.g<@https://use.typekit.net/blm5pmr.js:60:512\nxb/this.o<@https://use.typekit.net/blm5pmr.js:57:685\nMutationCallback*xb@https://use.typekit.net/blm5pmr.js:57:429\nEb@https://use.typekit.net/blm5pmr.js:60:362\nWb.prototype.load/<@https://use.typekit.net/blm5pmr.js:70:128\nca@https://use.typekit.net/blm5pmr.js:8:34\nWb.prototype.load@https://use.typekit.net/blm5pmr.js:70:72\ntk.onreadystatechange@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:8:437\nEventHandlerNonNull*@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:8:298\n@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:13:17\nloadScript@http://localhost:3000/_next/static/chunks/node_modules_dc0f015d._.js:255:19\n[project]/node_modules/next/dist/client/script.js [app-client] (ecmascript)/Script/<@http://localhost:3000/_next/static/chunks/node_modules_dc0f015d._.js:344:27\nreact_stack_bottom_frame@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:13064:22\nrunWithFiberInDEV@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:131\ncommitHookEffectListMount@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6578:628\ncommitHookPassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6613:60\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7568:33\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\n",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753790819314_typtztdju",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753790824474_92dpvmblu",
+    "timestamp": "2025-07-29T12:07:04.474Z",
+    "message": "Invalid fetch response: \"https://use.typekit.net/af/874c90/00000000000000007735ecbb/31/m?features=NONE&v=4&chunks=224&state=3.81.161.168.170.176.182.193.199.209.216.230.238&order=0\": 503",
+    "stack": "tb/</<@https://use.typekit.net/blm5pmr.js:56:277\npromise callback*tb/<@https://use.typekit.net/blm5pmr.js:56:233\ntb@https://use.typekit.net/blm5pmr.js:56:91\nsb.prototype.H/b.D</<@https://use.typekit.net/blm5pmr.js:55:359\npromise callback*sb.prototype.H/b.D<@https://use.typekit.net/blm5pmr.js:55:336\npromise callback*sb.prototype.H@https://use.typekit.net/blm5pmr.js:55:72\nRb.prototype.update@https://use.typekit.net/blm5pmr.js:67:415\nXb/<@https://use.typekit.net/blm5pmr.js:68:1048\nXb@https://use.typekit.net/blm5pmr.js:68:1015\nWb.prototype.load/</d<@https://use.typekit.net/blm5pmr.js:70:156\nEb/this.g<@https://use.typekit.net/blm5pmr.js:60:512\nxb/this.o<@https://use.typekit.net/blm5pmr.js:57:685\nMutationCallback*xb@https://use.typekit.net/blm5pmr.js:57:429\nEb@https://use.typekit.net/blm5pmr.js:60:362\nWb.prototype.load/<@https://use.typekit.net/blm5pmr.js:70:128\nca@https://use.typekit.net/blm5pmr.js:8:34\nWb.prototype.load@https://use.typekit.net/blm5pmr.js:70:72\ntk.onreadystatechange@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:8:437\nEventHandlerNonNull*@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:8:298\n@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:13:17\nloadScript@http://localhost:3000/_next/static/chunks/node_modules_dc0f015d._.js:255:19\n[project]/node_modules/next/dist/client/script.js [app-client] (ecmascript)/Script/<@http://localhost:3000/_next/static/chunks/node_modules_dc0f015d._.js:344:27\nreact_stack_bottom_frame@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:13064:22\nrunWithFiberInDEV@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:131\ncommitHookEffectListMount@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6578:628\ncommitHookPassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6613:60\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7568:33\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\n",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753790819314_typtztdju",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753791058102_064dqai29",
+    "timestamp": "2025-07-29T12:10:58.102Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3220:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753791049762_8d09ntwep",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753791157744_twua3b9du",
+    "timestamp": "2025-07-29T12:12:37.745Z",
+    "message": "Failed to load chunk /_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_5af4a3bc._.js from module [turbopack]/browser/dev/hmr-client/hmr-client.ts [app-client] (ecmascript, async loader)",
+    "stack": "loadChunkByUrl@http://localhost:3000/_next/static/chunks/_01f48b92._.js:503:15\nasync*loadChunkPath@http://localhost:3000/_next/static/chunks/_01f48b92._.js:510:12\nloadChunk@http://localhost:3000/_next/static/chunks/_01f48b92._.js:431:16\n[turbopack]/browser/dev/hmr-client/hmr-client.ts [app-client] (ecmascript, async loader)/</<@http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_6aaa83c7._.js:9:40\n[turbopack]/browser/dev/hmr-client/hmr-client.ts [app-client] (ecmascript, async loader)/<@http://localhost:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_6aaa83c7._.js:9:3\n[project]/node_modules/next/dist/client/dev/hot-reloader/app/use-websocket.js [app-client] (ecmascript)/useTurbopack/<@http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_20b209c9._.js:5483:124\nreact_stack_bottom_frame@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:13064:22\nrunWithFiberInDEV@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:131\ncommitHookEffectListMount@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6578:628\ncommitHookPassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6613:60\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7568:33\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7575:55\nflushPassiveEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8575:38\n[project]/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js [app-client] (ecmascript)/commitRoot/<@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8364:36\nperformWorkUntilDeadline@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:2588:72\nEventHandlerNonNull*[project]/node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js [app-client] (ecmascript)/<@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:2693:9\n[project]/node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js [app-client] (ecmascript)@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:2800:2\ninstantiateModule/<@http://localhost:3000/_next/static/chunks/_01f48b92._.js:766:26\nrunModuleExecutionHooks@http://localhost:3000/_next/static/chunks/_01f48b92._.js:811:26\ninstantiateModule@http://localhost:3000/_next/static/chunks/_01f48b92._.js:764:32\ngetOrInstantiateModuleFromParent@http://localhost:3000/_next/static/chunks/_01f48b92._.js:696:12\ncommonJsRequire@http://localhost:3000/_next/static/chunks/_01f48b92._.js:188:52\n[project]/node_modules/next/dist/compiled/scheduler/index.js [app-client] (ecmascript)@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:2812:44\ninstantiateModule/<@http://localhost:3000/_next/static/chunks/_01f48b92._.js:766:26\nrunModuleExecutionHooks@http://localhost:3000/_next/static/chunks/_01f48b92._.js:811:26\ninstantiateModule@http://localhost:3000/_next/static/chunks/_01f48b92._.js:764:32\ngetOrInstantiateModuleFromParent@http://localhost:3000/_next/static/chunks/_01f48b92._.js:696:12\ncommonJsRequire@http://localhost:3000/_next/static/chunks/_01f48b92._.js:188:52\n[project]/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js [app-client] (ecmascript)/<@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:11533:43\n[project]/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js [app-client] (ecmascript)@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:14512:2\ninstantiateModule/<@http://localhost:3000/_next/static/chunks/_01f48b92._.js:766:26\nrunModuleExecutionHooks@http://localhost:3000/_next/static/chunks/_01f48b92._.js:811:26\ninstantiateModule@http://localhost:3000/_next/static/chunks/_01f48b92._.js:764:32\ngetOrInstantiateModuleFromParent@http://localhost:3000/_next/static/chunks/_01f48b92._.js:696:12\ncommonJsRequire@http://localhost:3000/_next/static/chunks/_01f48b92._.js:188:52\n[project]/node_modules/next/dist/compiled/react-dom/client.js [app-client] (ecmascript)@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:14547:44\ninstantiateModule/<@http://localhost:3000/_next/static/chunks/_01f48b92._.js:766:26\nrunModuleExecutionHooks@http://localhost:3000/_next/static/chunks/_01f48b92._.js:811:26\ninstantiateModule@http://localhost:3000/_next/static/chunks/_01f48b92._.js:764:32\ngetOrInstantiateModuleFromParent@http://localhost:3000/_next/static/chunks/_01f48b92._.js:696:12\ncommonJsRequire@http://localhost:3000/_next/static/chunks/_01f48b92._.js:188:52\n[project]/node_modules/next/dist/client/app-index.js [app-client] (ecmascript)@http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_20b209c9._.js:9518:80\ninstantiateModule/<@http://localhost:3000/_next/static/chunks/_01f48b92._.js:766:26\nrunModuleExecutionHooks@http://localhost:3000/_next/static/chunks/_01f48b92._.js:811:26\ninstantiateModule@http://localhost:3000/_next/static/chunks/_01f48b92._.js:764:32\ngetOrInstantiateModuleFromParent@http://localhost:3000/_next/static/chunks/_01f48b92._.js:696:12\ncommonJsRequire@http://localhost:3000/_next/static/chunks/_01f48b92._.js:188:52\n[project]/node_modules/next/dist/client/app-next-turbopack.js [app-client] (ecmascript)/<@http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_20b209c9._.js:9758:47\n[project]/node_modules/next/dist/client/app-bootstrap.js [app-client] (ecmascript)/appBootstrap/<@http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_20b209c9._.js:71:9\nloadScriptsInSequence@http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_20b209c9._.js:31:16\nappBootstrap@http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_20b209c9._.js:64:26\n[project]/node_modules/next/dist/client/app-next-turbopack.js [app-client] (ecmascript)@http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_20b209c9._.js:9757:32\ninstantiateModule/<@http://localhost:3000/_next/static/chunks/_01f48b92._.js:766:26\nrunModuleExecutionHooks@http://localhost:3000/_next/static/chunks/_01f48b92._.js:811:26\ninstantiateModule@http://localhost:3000/_next/static/chunks/_01f48b92._.js:764:32\ngetOrInstantiateRuntimeModule@http://localhost:3000/_next/static/chunks/_01f48b92._.js:674:12\nregisterChunk@http://localhost:3000/_next/static/chunks/_01f48b92._.js:1518:50\nasync*registerChunk@http://localhost:3000/_next/static/chunks/_01f48b92._.js:620:20\n@http://localhost:3000/_next/static/chunks/_01f48b92._.js:1733:18\n@http://localhost:3000/_next/static/chunks/_01f48b92._.js:1737:3\n",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753791157673_xek1a9k7t",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1753791167791_ugqgifiyl",
+    "timestamp": "2025-07-29T12:12:47.792Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753791166910_ob15prop7",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/download"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753791167794_gehmon78j",
+    "timestamp": "2025-07-29T12:12:47.794Z",
+    "message": "NetworkError when attempting to fetch resource.",
+    "stack": "",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753791166910_ob15prop7",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
   }
 ]
