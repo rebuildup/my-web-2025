@@ -27,7 +27,7 @@ function checkStaticFileStructure() {
     ".next",
     "standalone",
     ".next",
-    "static"
+    "static",
   );
 
   console.log(`  静的ファイルディレクトリ: ${staticDir}`);
@@ -75,7 +75,7 @@ async function testCorrectJSPaths() {
     ".next",
     "standalone",
     ".next",
-    "static"
+    "static",
   );
   const chunksDir = path.join(staticDir, "chunks");
   const cssDir = path.join(staticDir, "css");

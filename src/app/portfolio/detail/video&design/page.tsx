@@ -405,7 +405,7 @@ export default function VideoDesignDetailPage() {
                           ))}
                         </div>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
               </section>

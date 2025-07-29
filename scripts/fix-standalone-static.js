@@ -14,7 +14,7 @@ function copyRecursiveSync(src, dest) {
     fs.readdirSync(src).forEach(function (childItemName) {
       copyRecursiveSync(
         path.join(src, childItemName),
-        path.join(dest, childItemName)
+        path.join(dest, childItemName),
       );
     });
   } else {

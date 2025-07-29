@@ -13,12 +13,12 @@ async function readPortfolioData(): Promise<ContentItem[]> {
       path.join(__dirname, "../../../../../public/data/content/portfolio.json"),
       path.join(
         __dirname,
-        "../../../../../../public/data/content/portfolio.json"
+        "../../../../../../public/data/content/portfolio.json",
       ),
       // Standalone build paths
       path.join(
         process.cwd(),
-        ".next/standalone/public/data/content/portfolio.json"
+        ".next/standalone/public/data/content/portfolio.json",
       ),
       path.join(__dirname, "../../public/data/content/portfolio.json"),
       path.join(__dirname, "../../../public/data/content/portfolio.json"),
@@ -41,7 +41,7 @@ async function readPortfolioData(): Promise<ContentItem[]> {
         console.log(
           "API: Failed to load from:",
           filePath,
-          pathError instanceof Error ? pathError.message : String(pathError)
+          pathError instanceof Error ? pathError.message : String(pathError),
         );
         continue;
       }
@@ -53,7 +53,7 @@ async function readPortfolioData(): Promise<ContentItem[]> {
 
     const data = JSON.parse(fileContent);
     console.log(
-      `Loaded ${data.length} portfolio items from file (${usedPath})`
+      `Loaded ${data.length} portfolio items from file (${usedPath})`,
     );
     return Array.isArray(data) ? data : [];
   } catch (error) {
@@ -87,8 +87,8 @@ export async function GET(request: NextRequest) {
           acc[item.status] = (acc[item.status] || 0) + 1;
           return acc;
         },
-        {} as Record<string, number>
-      )
+        {} as Record<string, number>,
+      ),
     );
 
     let filteredData = [...portfolioData];
@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
         if (process.env.NODE_ENV === "development") {
           response.headers.set(
             "Cache-Control",
-            "no-store, no-cache, must-revalidate, proxy-revalidate"
+            "no-store, no-cache, must-revalidate, proxy-revalidate",
           );
           response.headers.set("Pragma", "no-cache");
           response.headers.set("Expires", "0");
@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
         } else {
           response.headers.set(
             "Cache-Control",
-            "public, max-age=300, s-maxage=300"
+            "public, max-age=300, s-maxage=300",
           );
         }
 
@@ -122,7 +122,7 @@ export async function GET(request: NextRequest) {
       } else {
         return NextResponse.json(
           { success: false, error: "Portfolio item not found" },
-          { status: 404 }
+          { status: 404 },
         );
       }
     }
@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
       console.log(
         `Filtered by status '${status}':`,
         filteredData.length,
-        "items"
+        "items",
       );
     } else if (!status) {
       // デフォルトでは published のみを表示（ギャラリー用）
@@ -148,7 +148,7 @@ export async function GET(request: NextRequest) {
       console.log(
         `Filtered by category '${category}':`,
         filteredData.length,
-        "items"
+        "items",
       );
     }
 
@@ -156,7 +156,7 @@ export async function GET(request: NextRequest) {
     filteredData.sort(
       (a, b) =>
         new Date(b.updatedAt || b.createdAt).getTime() -
-        new Date(a.updatedAt || a.createdAt).getTime()
+        new Date(a.updatedAt || a.createdAt).getTime(),
     );
 
     // リミット適用
@@ -177,7 +177,7 @@ export async function GET(request: NextRequest) {
     if (process.env.NODE_ENV === "development") {
       response.headers.set(
         "Cache-Control",
-        "no-store, no-cache, must-revalidate, proxy-revalidate"
+        "no-store, no-cache, must-revalidate, proxy-revalidate",
       );
       response.headers.set("Pragma", "no-cache");
       response.headers.set("Expires", "0");
@@ -186,7 +186,7 @@ export async function GET(request: NextRequest) {
       // 本番環境では短いキャッシュ時間を設定
       response.headers.set(
         "Cache-Control",
-        "public, max-age=300, s-maxage=300, stale-while-revalidate=600"
+        "public, max-age=300, s-maxage=300, stale-while-revalidate=600",
       );
       response.headers.set("Content-Type", "application/json");
     }
@@ -196,7 +196,7 @@ export async function GET(request: NextRequest) {
     console.error("Portfolio API error:", error);
     return NextResponse.json(
       { success: false, error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

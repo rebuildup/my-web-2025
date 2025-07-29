@@ -57,7 +57,7 @@ async function analyzePageState() {
         console.log(`    Next.js scripts: ${hasNextScript ? "あり" : "なし"}`);
         console.log(`    React root: ${hasReactRoot ? "あり" : "なし"}`);
         console.log(
-          `    AllGalleryClient: ${hasPortfolioData ? "あり" : "なし"}`
+          `    AllGalleryClient: ${hasPortfolioData ? "あり" : "なし"}`,
         );
         console.log(`    initialItems: ${hasInitialItems ? "あり" : "なし"}`);
         console.log(`    searchFilters: ${hasSearchFilters ? "あり" : "なし"}`);
@@ -83,7 +83,7 @@ async function analyzePageState() {
             const matches = data.match(pattern);
             if (matches) {
               console.log(
-                `      パターン${index + 1}: ${matches.slice(0, 2).join(", ")}`
+                `      パターン${index + 1}: ${matches.slice(0, 2).join(", ")}`,
               );
             }
           });
@@ -96,7 +96,7 @@ async function analyzePageState() {
         if (hasStreaming) {
           // Streaming データの分析
           const streamingMatches = data.match(
-            /self\.__next_f\.push\(\[1,"([^"]+)"\]\)/g
+            /self\.__next_f\.push\(\[1,"([^"]+)"\]\)/g,
           );
           if (streamingMatches) {
             console.log(`    Streaming chunks: ${streamingMatches.length}個`);
@@ -105,12 +105,12 @@ async function analyzePageState() {
             try {
               const firstChunk = streamingMatches[0];
               const chunkData = firstChunk.match(
-                /self\.__next_f\.push\(\[1,"([^"]+)"\]\)/
+                /self\.__next_f\.push\(\[1,"([^"]+)"\]\)/,
               );
               if (chunkData && chunkData[1]) {
                 const decodedChunk = chunkData[1].replace(/\\"/g, '"');
                 console.log(
-                  `    First chunk preview: ${decodedChunk.substring(0, 100)}...`
+                  `    First chunk preview: ${decodedChunk.substring(0, 100)}...`,
                 );
               }
             } catch (e) {
@@ -214,11 +214,11 @@ async function checkEnvironmentInBrowser() {
       res.on("end", () => {
         console.log(`  環境確認:`);
         console.log(
-          `    Health API: ${res.statusCode === 200 ? "正常" : "エラー"}`
+          `    Health API: ${res.statusCode === 200 ? "正常" : "エラー"}`,
         );
         console.log(`    Node.js環境: ${process.env.NODE_ENV || "未設定"}`);
         console.log(
-          `    Base URL: ${process.env.NEXT_PUBLIC_BASE_URL || "未設定"}`
+          `    Base URL: ${process.env.NEXT_PUBLIC_BASE_URL || "未設定"}`,
         );
         resolve();
       });

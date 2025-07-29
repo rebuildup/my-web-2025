@@ -14,7 +14,7 @@ function copyRecursiveSync(src, dest) {
     fs.readdirSync(src).forEach(function (childItemName) {
       copyRecursiveSync(
         path.join(src, childItemName),
-        path.join(dest, childItemName)
+        path.join(dest, childItemName),
       );
     });
   } else {
@@ -108,7 +108,7 @@ function fixStaticFilesFinal() {
     const testFile = path.join(
       staticDest,
       "chunks",
-      "webpack-7ce12a5216d413b4.js"
+      "webpack-7ce12a5216d413b4.js",
     );
     if (fs.existsSync(testFile)) {
       const stats = fs.statSync(testFile);

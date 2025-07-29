@@ -11,7 +11,7 @@ function checkProductionFiles() {
     path.join(process.cwd(), "public/data/content/portfolio.json"),
     path.join(
       process.cwd(),
-      ".next/standalone/public/data/content/portfolio.json"
+      ".next/standalone/public/data/content/portfolio.json",
     ),
     path.join(__dirname, "../public/data/content/portfolio.json"),
   ];
@@ -23,14 +23,14 @@ function checkProductionFiles() {
         console.log(`  ✓ パス${index + 1}: ${filePath}`);
         console.log(`    データ数: ${data.length}`);
         console.log(
-          `    Published数: ${data.filter((item) => item.status === "published").length}`
+          `    Published数: ${data.filter((item) => item.status === "published").length}`,
         );
       } else {
         console.log(`  ✗ パス${index + 1}: ${filePath} (存在しない)`);
       }
     } catch (error) {
       console.log(
-        `  ✗ パス${index + 1}: ${filePath} (エラー: ${error.message})`
+        `  ✗ パス${index + 1}: ${filePath} (エラー: ${error.message})`,
       );
     }
   });
@@ -40,11 +40,11 @@ function checkProductionFiles() {
   const imagePaths = [
     path.join(
       process.cwd(),
-      "public/images/portfolio/blen-1753707599484-8a4y4d.png"
+      "public/images/portfolio/blen-1753707599484-8a4y4d.png",
     ),
     path.join(
       process.cwd(),
-      ".next/standalone/public/images/portfolio/blen-1753707599484-8a4y4d.png"
+      ".next/standalone/public/images/portfolio/blen-1753707599484-8a4y4d.png",
     ),
   ];
 
@@ -59,7 +59,7 @@ function checkProductionFiles() {
       }
     } catch (error) {
       console.log(
-        `  ✗ 画像パス${index + 1}: ${filePath} (エラー: ${error.message})`
+        `  ✗ 画像パス${index + 1}: ${filePath} (エラー: ${error.message})`,
       );
     }
   });
@@ -70,11 +70,11 @@ function checkProductionFiles() {
     path.join(process.cwd(), ".next/standalone/server.js"),
     path.join(
       process.cwd(),
-      ".next/standalone/.next/server/app/portfolio/gallery/all/page.js"
+      ".next/standalone/.next/server/app/portfolio/gallery/all/page.js",
     ),
     path.join(
       process.cwd(),
-      ".next/standalone/.next/server/app/api/content/portfolio/route.js"
+      ".next/standalone/.next/server/app/api/content/portfolio/route.js",
     ),
   ];
 
@@ -83,14 +83,14 @@ function checkProductionFiles() {
       if (fs.existsSync(filePath)) {
         const stats = fs.statSync(filePath);
         console.log(
-          `  ✓ ビルドファイル${index + 1}: 存在 (${stats.size} bytes)`
+          `  ✓ ビルドファイル${index + 1}: 存在 (${stats.size} bytes)`,
         );
       } else {
         console.log(`  ✗ ビルドファイル${index + 1}: ${filePath} (存在しない)`);
       }
     } catch (error) {
       console.log(
-        `  ✗ ビルドファイル${index + 1}: ${filePath} (エラー: ${error.message})`
+        `  ✗ ビルドファイル${index + 1}: ${filePath} (エラー: ${error.message})`,
       );
     }
   });
@@ -99,7 +99,7 @@ function checkProductionFiles() {
   console.log("\n4. 環境変数確認");
   console.log(`  NODE_ENV: ${process.env.NODE_ENV || "未設定"}`);
   console.log(
-    `  NEXT_PUBLIC_BASE_URL: ${process.env.NEXT_PUBLIC_BASE_URL || "未設定"}`
+    `  NEXT_PUBLIC_BASE_URL: ${process.env.NEXT_PUBLIC_BASE_URL || "未設定"}`,
   );
   console.log(`  PWD: ${process.cwd()}`);
 

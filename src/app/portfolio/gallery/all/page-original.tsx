@@ -20,7 +20,7 @@ export const revalidate = false;
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const seoGenerator = new PortfolioSEOMetadataGenerator(
-      portfolioDataManager
+      portfolioDataManager,
     );
     const { metadata } = await seoGenerator.generateGalleryMetadata("all");
     return metadata;
@@ -101,13 +101,13 @@ export default async function AllGalleryPage() {
         title: item.title,
         status: item.status,
         category: item.category,
-      }))
+      })),
     );
     console.log("=====================================");
 
     // Generate structured data
     const seoGenerator = new PortfolioSEOMetadataGenerator(
-      portfolioDataManager
+      portfolioDataManager,
     );
     const { structuredData } =
       await seoGenerator.generateGalleryMetadata("all");

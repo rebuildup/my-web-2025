@@ -52,7 +52,7 @@ function testAPI(path) {
             if (jsonData.data && jsonData.data.length > 0) {
               console.log(`    最初の項目: ${jsonData.data[0].title}`);
               console.log(
-                `    サムネイル: ${jsonData.data[0].thumbnail || "なし"}`
+                `    サムネイル: ${jsonData.data[0].thumbnail || "なし"}`,
               );
             }
           } else {
@@ -158,7 +158,7 @@ function testPage(path) {
         console.log(`    CSS: ${hasCSS ? "あり" : "なし"}`);
         console.log(`    JavaScript: ${hasJS ? "あり" : "なし"}`);
         console.log(
-          `    ポートフォリオ関連: ${hasPortfolioData ? "あり" : "なし"}`
+          `    ポートフォリオ関連: ${hasPortfolioData ? "あり" : "なし"}`,
         );
 
         // エラーメッセージの確認

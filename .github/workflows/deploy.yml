@@ -42,31 +42,66 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
-      - name: Build project
+      - name: Build project (Standalone)
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: npm run build
 
-      - name: Verify build output (Enhanced)
+      - name: Fix standalone static files
         run: |
-          echo "Checking build output..."
-          if [ -d ".next" ]; then
-            echo "✅ .next/ directory exists"
-            echo "Total files: $(find .next -type f | wc -l)"
-            echo "BUILD_ID: $(cat .next/BUILD_ID)"
-            echo "Build size: $(du -sh .next)"
+          echo "=== Fixing standalone static files ==="
+
+          # Copy static files to standalone directory
+          if [ -d ".next/static" ] && [ -d ".next/standalone" ]; then
+            echo "Copying static files..."
+            cp -r .next/static .next/standalone/.next/static
+            echo "✅ Static files copied successfully"
             
-            # Critical files check
-            echo "=== Critical Files Check ==="
-            [ -f ".next/BUILD_ID" ] && echo "✅ BUILD_ID exists" || echo "❌ BUILD_ID missing"
-            [ -d ".next/server" ] && echo "✅ Server directory exists" || echo "❌ Server directory missing"
-            [ -d ".next/static" ] && echo "✅ Static directory exists" || echo "❌ Static directory missing"
+            # Verify critical files
+            if [ -f ".next/standalone/.next/static/css/"*.css ]; then
+              echo "✅ CSS files found"
+            else
+              echo "⚠️ No CSS files found"
+            fi
             
+            if [ -d ".next/standalone/.next/static/chunks" ]; then
+              echo "✅ JavaScript chunks directory found"
+              echo "Chunk files: $(ls .next/standalone/.next/static/chunks | wc -l)"
+            else
+              echo "⚠️ No chunks directory found"
+            fi
           else
-            echo "❌ .next/ directory not found"
+            echo "❌ Required directories not found"
             exit 1
+          fi
+
+      - name: Verify standalone build
+        run: |
+          echo "=== Verifying standalone build ==="
+          if [ -f ".next/standalone/server.js" ]; then
+            echo "✅ server.js exists"
+          else
+            echo "❌ server.js not found"
+            exit 1
+          fi
+
+          if [ -d ".next/standalone/.next/static" ]; then
+            echo "✅ Static directory exists"
+            echo "Static files structure:"
+            find .next/standalone/.next/static -type d -name "*" | head -20
+          else
+            echo "❌ Static directory not found"
+            exit 1
+          fi
+
+          if [ -d ".next/standalone/public" ]; then
+            echo "✅ Public directory exists"
+          else
+            echo "⚠️ Public directory not found, copying..."
+            cp -r public .next/standalone/public
+            echo "✅ Public directory copied"
           fi
 
   deploy:
@@ -85,7 +120,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Check if package-lock.json is in sync with package.json
           if npm ci --dry-run 2>&1 | grep -q "can only install packages when your package.json and package-lock.json"; then
             echo "⚠️ package-lock.json is out of sync, running npm install to fix"
             npm install
@@ -94,47 +128,63 @@ jobs:
             npm ci
           fi
 
-      - name: Build project
+      - name: Build project (Standalone)
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: npm run build
 
+      - name: Prepare standalone deployment
+        run: |
+          echo "=== Preparing standalone deployment ==="
+
+          # Fix static files
+          if [ -d ".next/static" ] && [ -d ".next/standalone" ]; then
+            echo "Copying static files to standalone..."
+            cp -r .next/static .next/standalone/.next/static
+            
+            # Copy public directory if not exists
+            if [ ! -d ".next/standalone/public" ]; then
+              cp -r public .next/standalone/public
+            fi
+            
+            echo "✅ Standalone preparation complete"
+          else
+            echo "❌ Build directories not found"
+            exit 1
+          fi
+
+          # Create deployment info
+          echo "{
+            \"buildId\": \"$(cat .next/BUILD_ID)\",
+            \"buildTime\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",
+            \"gitCommit\": \"${GITHUB_SHA}\",
+            \"gitBranch\": \"${GITHUB_REF_NAME}\"
+          }" > .next/standalone/deployment-info.json
+
       - name: Create deployment package
         run: |
-          echo "Creating deployment package..."
+          echo "Creating standalone deployment package..."
+          cd .next/standalone
 
-          # 必須ファイルの存在確認
-          for file in ".next/BUILD_ID" "package.json" "package-lock.json"; do
-            if [ ! -f "$file" ]; then
-              echo "❌ Required file missing: $file"
+          # Create package with all necessary files
+          tar -czf ../../deployment-standalone.tar.gz \
+            server.js \
+            .next/ \
+            public/ \
+            node_modules/ \
+            package.json \
+            deployment-info.json || {
+              echo "❌ Failed to create deployment package"
               exit 1
-            fi
-          done
+            }
 
-          # 基本ファイル
-          FILES_TO_INCLUDE=".next/ package.json package-lock.json public/ src/"
-
-          # 設定ファイルが存在する場合のみ追加(TypeScript形式対応)
-          [ -f "next.config.ts" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE next.config.ts"
-          [ -f "next.config.js" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE next.config.js"
-          [ -f "tailwind.config.ts" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE tailwind.config.ts"
-          [ -f "tailwind.config.js" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE tailwind.config.js"
-          [ -f "postcss.config.mjs" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE postcss.config.mjs"
-          [ -f "postcss.config.js" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE postcss.config.js"
-          [ -f "tsconfig.json" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE tsconfig.json"
-          [ -f "eslint.config.mjs" ] && FILES_TO_INCLUDE="$FILES_TO_INCLUDE eslint.config.mjs"
-
-          echo "Files to include: $FILES_TO_INCLUDE"
-
-          # パッケージ作成
-          tar -czf deployment.tar.gz $FILES_TO_INCLUDE
-
+          cd ../..
           echo "✅ Package created successfully"
-          echo "Package size: $(du -h deployment.tar.gz)"
+          echo "Package size: $(du -h deployment-standalone.tar.gz)"
 
-      - name: Setup SSH (Simplified)
+      - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
@@ -161,113 +211,54 @@ jobs:
 
       - name: Transfer deployment files
         run: |
-          echo "Transferring deployment package..."
-          scp deployment.tar.gz deploy-server:/tmp/
+          echo "Transferring standalone deployment package..."
+          scp deployment-standalone.tar.gz deploy-server:/tmp/
 
-      - name: Safe deployment with health checks
+      - name: Deploy standalone application
         timeout-minutes: 15
         run: |
-          ssh deploy-server << 'SAFE_DEPLOY'
+          ssh deploy-server << 'STANDALONE_DEPLOY'
           set -e
 
-          echo "=== Lightweight Deployment Process ==="
+          echo "=== Standalone Deployment Process ==="
 
           # 1. Environment setup
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-          echo "System resources:"
-          free -h
-          df -h /
-
-          # 2. Create swap file if not exists (memory protection)
-          if [ ! -f /swapfile ]; then
-            echo "Creating swap file..."
-            sudo fallocate -l 1G /swapfile
-            sudo chmod 600 /swapfile
-            sudo mkswap /swapfile
-            sudo swapon /swapfile
-            echo "✅ Swap file created"
-          else
-            sudo swapon /swapfile 2>/dev/null || echo "Swap already active"
-          fi
-
-          echo "Memory after swap:"
-          free -h
-
-          # 3. Stop any existing processes safely
+          # 2. Stop existing processes
           echo "Stopping existing processes..."
           pm2 stop all 2>/dev/null || echo "No PM2 processes to stop"
           pm2 delete all 2>/dev/null || echo "No PM2 processes to delete"
 
-          # Kill any stuck processes
-          pkill -f "node.*next" 2>/dev/null || echo "No Node.js processes found"
-          pkill -f "npm.*start" 2>/dev/null || echo "No npm processes found"
-
-          sleep 5
-
-          # 4. Backup current deployment
+          # 3. Backup current deployment
           if [ -d "/var/www/yusuke-kim" ] && [ "$(ls -A /var/www/yusuke-kim 2>/dev/null)" ]; then
             echo "Creating backup..."
             sudo mkdir -p /var/www/backups
             sudo cp -r /var/www/yusuke-kim /var/www/backups/yusuke-kim-$(date +%Y%m%d-%H%M%S)
           fi
 
-          # 5. Prepare deployment directory
+          # 4. Prepare deployment directory
           sudo rm -rf /var/www/yusuke-kim/*
-          sudo mkdir -p /var/www/yusuke-kim        
+          sudo mkdir -p /var/www/yusuke-kim
           sudo chown $USER:www-data /var/www/yusuke-kim
           cd /var/www/yusuke-kim
-          sudo rm -rf ./*
 
-          # 6. Extract new files
-          tar -xzf /tmp/deployment.tar.gz
+          # 5. Extract standalone deployment
+          tar -xzf /tmp/deployment-standalone.tar.gz
 
-          # 7. Verify extraction
-          if [ ! -f ".next/BUILD_ID" ]; then
+          # 6. Verify deployment
+          if [ ! -f "server.js" ] || [ ! -f ".next/BUILD_ID" ]; then
             echo "❌ Deployment verification failed"
             exit 1
           fi
 
           echo "✅ Files extracted successfully"
           echo "BUILD_ID: $(cat .next/BUILD_ID)"
+          echo "Deployment info:"
+          cat deployment-info.json
 
-          # 8. Clean npm environment
-          echo "Cleaning npm environment..."
-          npm cache clean --force 2>/dev/null || echo "Cache already clean"
-
-          # 9. Full dependency installation
-          echo "Installing all dependencies..."
-
-          # Check if package-lock.json is in sync and install accordingly
-          if npm ci --dry-run 2>/dev/null; then
-            echo "✅ Using npm ci for faster installation"
-            npm ci --no-optional --no-audit --no-fund --silent || {
-              echo "⚠️ npm ci failed, falling back to npm install"
-              npm install --no-optional --no-audit --no-fund --silent || {
-                echo "❌ Dependency installation failed"
-                exit 1
-              }
-            }
-          else
-            echo "⚠️ package-lock.json out of sync, using npm install"
-            npm install --no-optional --no-audit --no-fund --silent || {
-              echo "❌ Dependency installation failed"
-              exit 1
-            }
-          fi
-
-          echo "✅ All dependencies installed"
-
-          # 10. Verify Next.js installation
-          if [ ! -f "./node_modules/.bin/next" ]; then
-            echo "❌ Next.js binary not found"
-            exit 1
-          fi
-
-          echo "✅ Next.js binary found: $(./node_modules/.bin/next --version)"
-
-          # 11. Set up environment
+          # 7. Set up environment
           cat > .env.production.local << ENV_EOF
           RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}
@@ -275,106 +266,99 @@ jobs:
           PORT=3000
           ENV_EOF
 
-          # 12. Test application startup (lightweight)
-          echo "Testing application startup..."
+          # 8. Quick test of standalone server
+          echo "Testing standalone server..."
+          timeout 30 node server.js &
+          TEST_PID=$!
 
-          export NODE_ENV=production
-
-          # Quick startup test with timeout
-          timeout 25 ./node_modules/.bin/next start &
-          APP_PID=$!
-
-          sleep 20
-
-          if kill -0 $APP_PID 2>/dev/null; then
-            echo "✅ Application startup test successful"
-            
-            # Quick HTTP test
-            if timeout 5 curl -f -s http://localhost:3000/ > /dev/null; then
-              echo "✅ HTTP response successful"
-            else
-              echo "⚠️ HTTP test inconclusive (may need more time)"
-            fi
-            
-            # Stop test process
-            kill $APP_PID 2>/dev/null
-            sleep 3
-          else
-            echo "❌ Application startup test failed"
-            exit 1
-          fi
-
-          # 13. Start with PM2
-          echo "Starting application with PM2..."
-
-          NODE_ENV=production pm2 start "./node_modules/.bin/next" --name "yusuke-kim" -- start
-          pm2 save
-
-          # 14. Final health check
-          sleep 10
-          if pm2 list | grep -q "yusuke-kim.*online"; then
-            echo "✅ PM2 deployment successful"
-            
-            echo "Final system state:"
-            free -h
-            pm2 list
-          else
-            echo "❌ PM2 deployment failed"
-            pm2 logs yusuke-kim --lines 20
-            exit 1
-          fi
-
-          echo "=== Lightweight deployment completed ==="
-          SAFE_DEPLOY
-
-      - name: Final health check
-        run: |
-          echo "=== Final external health check ==="
           sleep 15
 
-          # HTTP access test with retries
-          for i in {1..3}; do
-            if curl -f -s -I http://${{ secrets.GCP_HOST }}/ > /dev/null; then
-              echo "✅ External HTTP access successful"
-              break
-            elif [ $i -eq 3 ]; then
-              echo "❌ External HTTP access failed after 3 attempts"
-              exit 1
-            else
-              echo "HTTP attempt $i failed, retrying in 10s..."
-              sleep 10
+          if kill -0 $TEST_PID 2>/dev/null; then
+            echo "✅ Server startup successful"
+            
+            # Test endpoints
+            if curl -f -s http://localhost:3000/ > /dev/null; then
+              echo "✅ Home page responding"
             fi
-          done
-
-      - name: Rollback on failure
-        if: failure()
-        run: |
-          echo "=== Performing rollback ==="
-          ssh deploy-server << 'ROLLBACK'
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-          # Stop failed deployment
-          pm2 stop all 2>/dev/null || true
-          pm2 delete all 2>/dev/null || true
-
-          # Find latest backup
-          LATEST_BACKUP=$(ls -t /var/www/backups/yusuke-kim-* 2>/dev/null | head -1)
-
-          if [ -n "$LATEST_BACKUP" ]; then
-            echo "Rolling back to: $LATEST_BACKUP"
-            sudo rm -rf /var/www/yusuke-kim
-            sudo cp -r "$LATEST_BACKUP" /var/www/yusuke-kim
-            sudo chown -R $USER:www-data /var/www/yusuke-kim
             
-            cd /var/www/yusuke-kim
+            if curl -f -s http://localhost:3000/api/health > /dev/null; then
+              echo "✅ Health check responding"
+            fi
             
-            # Reinstall dependencies for rollback
-            npm install 2>/dev/null || echo "Dependency install failed during rollback"
-            
-            NODE_ENV=production pm2 start "./node_modules/.bin/next" --name "yusuke-kim" -- start 2>/dev/null || echo "Rollback failed"
-            pm2 save
+            kill $TEST_PID
+            sleep 3
           else
-            echo "❌ No backup found for rollback"
+            echo "❌ Server startup failed"
+            exit 1
           fi
-          ROLLBACK
+
+          # 9. Start with PM2
+          echo "Starting application with PM2..."
+          NODE_ENV=production pm2 start server.js --name "yusuke-kim" --env production
+          pm2 save
+          pm2 startup systemd -u $USER --hp /home/$USER || echo "PM2 startup already configured"
+
+          # 10. Final health check
+          sleep 10
+
+          echo "=== Final Health Check ==="
+          if pm2 status | grep -q "yusuke-kim.*online"; then
+            echo "✅ Application is running"
+            
+            # Multiple endpoint tests
+            ENDPOINTS=("/" "/api/health" "/portfolio/gallery/all" "/_next/static/css/")
+            
+            for endpoint in "${ENDPOINTS[@]}"; do
+              if curl -f -s -o /dev/null -w "%{http_code}" "http://localhost:3000${endpoint}" | grep -q "200\|304"; then
+                echo "✅ ${endpoint} - OK"
+              else
+                echo "⚠️ ${endpoint} - Failed"
+              fi
+            done
+          else
+            echo "❌ Application is not running properly"
+            pm2 logs yusuke-kim --lines 50
+            exit 1
+          fi
+
+          echo "=== Deployment completed successfully ==="
+          STANDALONE_DEPLOY
+
+      - name: Verify deployment
+        run: |
+          echo "Waiting for application to stabilize..."
+          sleep 15
+
+          echo "Testing production endpoints..."
+
+          # Test main site
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://yusuke-kim.com/)
+          if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "304" ]; then
+            echo "✅ Main site is accessible (HTTP $HTTP_CODE)"
+          else
+            echo "❌ Main site returned HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+          # Test portfolio page
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://yusuke-kim.com/portfolio/gallery/all)
+          if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "304" ]; then
+            echo "✅ Portfolio page is accessible (HTTP $HTTP_CODE)"
+          else
+            echo "⚠️ Portfolio page returned HTTP $HTTP_CODE"
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          ssh deploy-server << 'CLEANUP'
+          # Remove temporary files
+          rm -f /tmp/deployment-standalone.tar.gz
+
+          # Clean old backups (keep last 5)
+          if [ -d "/var/www/backups" ]; then
+            cd /var/www/backups
+            ls -t | grep "yusuke-kim-" | tail -n +6 | xargs -r sudo rm -rf
+            echo "✅ Old backups cleaned"
+          fi
+          CLEANUP

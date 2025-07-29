@@ -14,7 +14,7 @@ function copyRecursiveSync(src, dest) {
     fs.readdirSync(src).forEach(function (childItemName) {
       copyRecursiveSync(
         path.join(src, childItemName),
-        path.join(dest, childItemName)
+        path.join(dest, childItemName),
       );
     });
   } else {
@@ -86,7 +86,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
 
       // server.jsの適切な場所に挿入
       const insertPoint = serverContent.indexOf(
-        "const server = http.createServer"
+        "const server = http.createServer",
       );
       if (insertPoint !== -1) {
         serverContent =
@@ -153,6 +153,6 @@ if (success) {
   console.log("✓ すべての修正が完了しました。サーバーを再起動してください。");
 } else {
   console.log(
-    "⚠ 一部の修正に問題がありました。ビルドを再実行することをお勧めします。"
+    "⚠ 一部の修正に問題がありました。ビルドを再実行することをお勧めします。",
   );
 }

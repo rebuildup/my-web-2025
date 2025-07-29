@@ -52,7 +52,7 @@ export function AllGalleryClient({
 
   // State management
   const [selectedItem, setSelectedItem] = useState<PortfolioContentItem | null>(
-    null
+    null,
   );
   const [filters, setFilters] = useState<FilterOptions>({});
   const [sort, setSort] = useState<SortOptions>({
@@ -75,16 +75,16 @@ export function AllGalleryClient({
       items = items.filter((item) =>
         filters.technologies!.some((tech) =>
           (item.technologies || []).some((itemTech) =>
-            itemTech.toLowerCase().includes(tech.toLowerCase())
-          )
-        )
+            itemTech.toLowerCase().includes(tech.toLowerCase()),
+          ),
+        ),
       );
     }
 
     if (filters.year) {
       items = items.filter(
         (item) =>
-          new Date(item.createdAt).getFullYear().toString() === filters.year
+          new Date(item.createdAt).getFullYear().toString() === filters.year,
       );
     }
 
@@ -92,9 +92,9 @@ export function AllGalleryClient({
       items = items.filter((item) =>
         filters.tags!.some((tag) =>
           (item.tags || []).some((itemTag) =>
-            itemTag.toLowerCase().includes(tag.toLowerCase())
-          )
-        )
+            itemTag.toLowerCase().includes(tag.toLowerCase()),
+          ),
+        ),
       );
     }
 
@@ -104,7 +104,7 @@ export function AllGalleryClient({
         (item) =>
           item.title.toLowerCase().includes(searchTerm) ||
           item.description.toLowerCase().includes(searchTerm) ||
-          (item.content || "").toLowerCase().includes(searchTerm)
+          (item.content || "").toLowerCase().includes(searchTerm),
       );
     }
 
@@ -149,7 +149,7 @@ export function AllGalleryClient({
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredAndSortedItems.slice(
       startIndex,
-      startIndex + ITEMS_PER_PAGE
+      startIndex + ITEMS_PER_PAGE,
     );
   }, [filteredAndSortedItems, currentPage]);
 

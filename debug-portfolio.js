@@ -12,7 +12,7 @@ async function debugPortfolioData() {
       "public",
       "data",
       "content",
-      "portfolio.json"
+      "portfolio.json",
     );
     const fileContent = fs.readFileSync(filePath, "utf-8");
     const data = JSON.parse(fileContent);
@@ -35,7 +35,7 @@ async function debugPortfolioData() {
     console.log("  Published項目:");
     publishedItems.forEach((item, index) => {
       console.log(
-        `    ${index + 1}. ${item.title} (${item.category}) - ${item.id}`
+        `    ${index + 1}. ${item.title} (${item.category}) - ${item.id}`,
       );
     });
 

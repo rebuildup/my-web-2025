@@ -1,16 +1,13 @@
 /**
- * All Portfolio Gallery Page - Minimal working version
+ * All Portfolio Gallery Page
  */
 
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
+import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import { AllGalleryClient } from "./components/AllGalleryClient";
 
-// Remove dynamic forcing for production compatibility
-// export const dynamic = "force-dynamic";
-// export const revalidate = false;
-
 /**
- * Minimal working page to test data flow
+ * All Gallery Page with proper SEO and structured data
  */
 export default async function AllGalleryPage() {
   console.log("=== AllGalleryPage EXECUTED ===");
@@ -28,29 +25,50 @@ export default async function AllGalleryPage() {
       filtersCount: searchFilters.length,
     });
 
-    return (
-      <div className="min-h-screen bg-background text-foreground">
-        <main className="py-10">
-          <div className="container mx-auto px-4">
-            <h1 className="text-4xl text-primary mb-8">All Projects</h1>
-            <p className="text-foreground mb-4">
-              Found {items.length} portfolio items and {searchFilters.length}{" "}
-              filters.
-            </p>
+    // Generate SEO metadata and structured data
+    let structuredData = null;
+    try {
+      const seoGenerator = new PortfolioSEOMetadataGenerator(
+        portfolioDataManager,
+      );
+      const seoData = await seoGenerator.generateGalleryMetadata("all");
+      structuredData = seoData.structuredData;
+    } catch (seoError) {
+      console.error("SEO generation error:", seoError);
+    }
 
-            {items.length > 0 ? (
-              <AllGalleryClient
-                initialItems={items}
-                searchFilters={searchFilters}
-              />
-            ) : (
-              <div className="bg-red-100 p-4 rounded">
-                <p className="text-red-800">No portfolio items found.</p>
-              </div>
-            )}
-          </div>
-        </main>
-      </div>
+    return (
+      <>
+        {structuredData && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(structuredData),
+            }}
+          />
+        )}
+        <div className="min-h-screen bg-background text-foreground">
+          <main className="py-10">
+            <div className="container mx-auto px-4">
+              <p className="text-foreground mb-4">
+                Found {items.length} portfolio items and {searchFilters.length}{" "}
+                filters.
+              </p>
+
+              {items.length > 0 ? (
+                <AllGalleryClient
+                  initialItems={items}
+                  searchFilters={searchFilters}
+                />
+              ) : (
+                <div className="bg-red-100 p-4 rounded">
+                  <p className="text-red-800">No portfolio items found.</p>
+                </div>
+              )}
+            </div>
+          </main>
+        </div>
+      </>
     );
   } catch (error) {
     console.error("Error in AllGalleryPage:", error);
@@ -59,7 +77,6 @@ export default async function AllGalleryPage() {
       <div className="min-h-screen bg-background text-foreground">
         <main className="py-10">
           <div className="container mx-auto px-4">
-            <h1 className="text-4xl text-primary mb-8">Error</h1>
             <div className="bg-red-100 p-4 rounded">
               <p className="text-red-800">
                 Error loading portfolio:{" "}

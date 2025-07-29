@@ -64,7 +64,7 @@ export function generateBaseMetadata(
     ogImage?: string;
     twitterImage?: string;
   },
-  config: SEOConfig = defaultSEOConfig
+  config: SEOConfig = defaultSEOConfig,
 ): Metadata {
   const title = pageData.title
     ? `${pageData.title} - ${config.siteName}`
@@ -124,7 +124,7 @@ export function generateBaseMetadata(
  */
 export function generatePortfolioMetadata(
   item: ContentItem,
-  config: SEOConfig = defaultSEOConfig
+  config: SEOConfig = defaultSEOConfig,
 ): Metadata {
   const baseMetadata = generateBaseMetadata(
     {
@@ -135,7 +135,7 @@ export function generatePortfolioMetadata(
       ogImage: item.thumbnail || config.images.ogImage,
       twitterImage: item.thumbnail || config.images.twitterImage,
     },
-    config
+    config,
   );
 
   // Add portfolio-specific Open Graph properties
@@ -157,7 +157,7 @@ export function generatePortfolioMetadata(
  */
 export function generateBlogMetadata(
   item: ContentItem,
-  config: SEOConfig = defaultSEOConfig
+  config: SEOConfig = defaultSEOConfig,
 ): Metadata {
   const baseMetadata = generateBaseMetadata(
     {
@@ -168,7 +168,7 @@ export function generateBlogMetadata(
       ogImage: item.thumbnail || config.images.ogImage,
       twitterImage: item.thumbnail || config.images.twitterImage,
     },
-    config
+    config,
   );
 
   return {
@@ -190,7 +190,7 @@ export function generateBlogMetadata(
  */
 export function generatePluginMetadata(
   item: ContentItem,
-  config: SEOConfig = defaultSEOConfig
+  config: SEOConfig = defaultSEOConfig,
 ): Metadata {
   const baseMetadata = generateBaseMetadata(
     {
@@ -207,7 +207,7 @@ export function generatePluginMetadata(
       ogImage: item.thumbnail || config.images.ogImage,
       twitterImage: item.thumbnail || config.images.twitterImage,
     },
-    config
+    config,
   );
 
   return {
@@ -229,7 +229,7 @@ export function generateToolMetadata(
     keywords: string[];
     path: string;
   },
-  config: SEOConfig = defaultSEOConfig
+  config: SEOConfig = defaultSEOConfig,
 ): Metadata {
   return generateBaseMetadata(
     {
@@ -243,7 +243,7 @@ export function generateToolMetadata(
       ],
       path: toolData.path,
     },
-    config
+    config,
   );
 }
 
@@ -258,7 +258,7 @@ export function generateGalleryMetadata(
     path: string;
     itemCount: number;
   },
-  config: SEOConfig = defaultSEOConfig
+  config: SEOConfig = defaultSEOConfig,
 ): Metadata {
   return generateBaseMetadata(
     {
@@ -272,7 +272,7 @@ export function generateGalleryMetadata(
       ],
       path: galleryData.path,
     },
-    config
+    config,
   );
 }
 
@@ -281,7 +281,7 @@ export function generateGalleryMetadata(
  */
 export function generateSearchMetadata(
   query?: string,
-  config: SEOConfig = defaultSEOConfig
+  config: SEOConfig = defaultSEOConfig,
 ): Metadata {
   const title = query ? `"${query}"の検索結果` : "サイト内検索";
   const description = query
@@ -296,7 +296,7 @@ export function generateSearchMetadata(
       path: query ? `/search?q=${encodeURIComponent(query)}` : "/search",
       noindex: !!query, // Search result pages should not be indexed
     },
-    config
+    config,
   );
 }
 
@@ -304,7 +304,7 @@ export function generateSearchMetadata(
  * Generate metadata for contact page
  */
 export function generateContactMetadata(
-  config: SEOConfig = defaultSEOConfig
+  config: SEOConfig = defaultSEOConfig,
 ): Metadata {
   return generateBaseMetadata(
     {
@@ -320,7 +320,7 @@ export function generateContactMetadata(
       ],
       path: "/contact",
     },
-    config
+    config,
   );
 }
 
@@ -330,7 +330,7 @@ export function generateContactMetadata(
 export function generateAboutMetadata(
   pageType: "main" | "profile" | "commission" | "links",
   subType?: string,
-  config: SEOConfig = defaultSEOConfig
+  config: SEOConfig = defaultSEOConfig,
 ): Metadata {
   const titles = {
     main: "About - 自己紹介",
@@ -368,7 +368,7 @@ export function generateAboutMetadata(
       ],
       path: paths[pageType],
     },
-    config
+    config,
   );
 }
 
@@ -377,7 +377,7 @@ export function generateAboutMetadata(
  */
 export function generateAdminMetadata(
   pageType: "main" | "data-manager",
-  config: SEOConfig = defaultSEOConfig
+  config: SEOConfig = defaultSEOConfig,
 ): Metadata {
   const titles = {
     main: "Admin Panel",
@@ -403,7 +403,7 @@ export function generateAdminMetadata(
       noindex: true, // Admin pages should never be indexed
       nofollow: true,
     },
-    config
+    config,
   );
 }
 
@@ -412,7 +412,7 @@ export function generateAdminMetadata(
  */
 export function generateErrorMetadata(
   errorType: "404" | "500",
-  config: SEOConfig = defaultSEOConfig
+  config: SEOConfig = defaultSEOConfig,
 ): Metadata {
   const titles = {
     "404": "ページが見つかりません",
@@ -434,6 +434,6 @@ export function generateErrorMetadata(
       path: `/${errorType}`,
       noindex: true, // Error pages should not be indexed
     },
-    config
+    config,
   );
 }

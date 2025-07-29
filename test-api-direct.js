@@ -8,7 +8,7 @@ async function testAPI() {
     // 1. 全データ取得テスト
     console.log("1. 全データ取得テスト (status=all)");
     const allResponse = await fetch(
-      `${baseURL}/api/content/portfolio?status=all&limit=100`
+      `${baseURL}/api/content/portfolio?status=all&limit=100`,
     );
     const allData = await allResponse.json();
     console.log("  ステータス:", allResponse.status);
@@ -18,7 +18,7 @@ async function testAPI() {
     // 2. Publishedのみ取得テスト
     console.log("\n2. Publishedのみ取得テスト (デフォルト)");
     const publishedResponse = await fetch(
-      `${baseURL}/api/content/portfolio?limit=100`
+      `${baseURL}/api/content/portfolio?limit=100`,
     );
     const publishedData = await publishedResponse.json();
     console.log("  ステータス:", publishedResponse.status);
@@ -35,7 +35,7 @@ async function testAPI() {
     // 3. 特定カテゴリ取得テスト
     console.log("\n3. 特定カテゴリ取得テスト (develop)");
     const categoryResponse = await fetch(
-      `${baseURL}/api/content/portfolio?category=develop&limit=100`
+      `${baseURL}/api/content/portfolio?category=develop&limit=100`,
     );
     const categoryData = await categoryResponse.json();
     console.log("  ステータス:", categoryResponse.status);

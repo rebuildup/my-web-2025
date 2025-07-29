@@ -14,7 +14,7 @@ function copyRecursiveSync(src, dest) {
     fs.readdirSync(src).forEach(function (childItemName) {
       copyRecursiveSync(
         path.join(src, childItemName),
-        path.join(dest, childItemName)
+        path.join(dest, childItemName),
       );
     });
   } else {
@@ -28,7 +28,7 @@ function copyPublicToStandalone() {
     process.cwd(),
     ".next",
     "standalone",
-    "public"
+    "public",
   );
 
   console.log("Copying public directory to standalone build...");
@@ -45,7 +45,7 @@ function copyPublicToStandalone() {
         standaloneDest,
         "data",
         "content",
-        "portfolio.json"
+        "portfolio.json",
       );
       if (fs.existsSync(portfolioPath)) {
         const data = JSON.parse(fs.readFileSync(portfolioPath, "utf-8"));

@@ -97,7 +97,7 @@ async function analyzeCompleteHTML() {
             if (contexts) {
               contexts.slice(0, 2).forEach((context, index) => {
                 console.log(
-                  `        ${index + 1}: "${context.replace(/\n/g, " ")}"`
+                  `        ${index + 1}: "${context.replace(/\n/g, " ")}"`,
                 );
               });
             }
@@ -119,7 +119,7 @@ async function analyzeCompleteHTML() {
                 .replace(/\\"/g, '"')
                 .replace(/\\n/g, "\n");
               console.log(
-                `      Chunk ${index + 1} preview: "${decoded.substring(0, 100)}..."`
+                `      Chunk ${index + 1} preview: "${decoded.substring(0, 100)}..."`,
               );
 
               // チャンクにReactコンポーネントが含まれているかチェック
@@ -128,11 +128,11 @@ async function analyzeCompleteHTML() {
                 decoded.includes("initialItems") ||
                 decoded.includes("searchFilters");
               console.log(
-                `      Chunk ${index + 1} has components: ${hasComponent}`
+                `      Chunk ${index + 1} has components: ${hasComponent}`,
               );
             } catch (e) {
               console.log(
-                `      Chunk ${index + 1} decode error: ${e.message}`
+                `      Chunk ${index + 1} decode error: ${e.message}`,
               );
             }
           });
@@ -195,7 +195,7 @@ function quickPageCheck(requestNum) {
         const contentLength = data.length;
 
         resolve(
-          `Status: ${res.statusCode}, Length: ${contentLength}, AllGalleryClient: ${hasAllGalleryClient}, InitialItems: ${hasInitialItems}, Streaming: ${hasStreamingChunks}`
+          `Status: ${res.statusCode}, Length: ${contentLength}, AllGalleryClient: ${hasAllGalleryClient}, InitialItems: ${hasInitialItems}, Streaming: ${hasStreamingChunks}`,
         );
       });
     });

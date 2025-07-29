@@ -67,34 +67,34 @@ export class PortfolioDataManager {
   constructor(
     private dataProcessor: PortfolioDataProcessor = portfolioDataProcessor,
     private seoGenerator: SEOMetadataGenerator = seoMetadataGenerator,
-    private searchIndexGenerator: PortfolioSearchIndexGenerator = portfolioSearchIndexGenerator
+    private searchIndexGenerator: PortfolioSearchIndexGenerator = portfolioSearchIndexGenerator,
   ) {}
 
   /**
    * Process and cache portfolio data from raw ContentItem array
    */
   async processPortfolioData(
-    rawData: ContentItem[]
+    rawData: ContentItem[],
   ): Promise<ProcessingResult> {
     const errors: string[] = [];
     const warnings: string[] = [];
 
     try {
       testLogger.log(
-        `Starting portfolio data processing for ${rawData.length} items...`
+        `Starting portfolio data processing for ${rawData.length} items...`,
       );
 
       // Process raw data through the pipeline
       const processedData = await this.dataProcessor.processRawData(rawData);
       testLogger.log(
-        `Successfully processed ${processedData.length} portfolio items`
+        `Successfully processed ${processedData.length} portfolio items`,
       );
 
       // Generate search index
       const searchIndex =
         this.searchIndexGenerator.generateSearchIndex(processedData);
       testLogger.log(
-        `Generated search index with ${searchIndex.length} entries`
+        `Generated search index with ${searchIndex.length} entries`,
       );
 
       // Generate search filters and stats
@@ -113,7 +113,7 @@ export class PortfolioDataManager {
         searchIndex,
         searchFilters,
         searchStats,
-        portfolioStats
+        portfolioStats,
       );
 
       testLogger.log("Portfolio data processing completed successfully");
@@ -148,7 +148,7 @@ export class PortfolioDataManager {
    * Get processed portfolio data with caching
    */
   async getPortfolioData(
-    forceRefresh: boolean = false
+    forceRefresh: boolean = false,
   ): Promise<PortfolioContentItem[]> {
     console.log("getPortfolioData called, forceRefresh:", forceRefresh);
     console.log("Cache valid:", this.isCacheValid());
@@ -160,11 +160,11 @@ export class PortfolioDataManager {
       console.log("Cached data count:", cachedData.length);
       console.log(
         "Cached data statuses:",
-        cachedData.map((item) => ({ id: item.id, status: item.status }))
+        cachedData.map((item) => ({ id: item.id, status: item.status })),
       );
       // Filter for published items only for gallery display
       const publishedData = cachedData.filter(
-        (item) => item.status === "published"
+        (item) => item.status === "published",
       );
       console.log("Published data count:", publishedData.length);
       return publishedData;
@@ -180,7 +180,7 @@ export class PortfolioDataManager {
         id: item.id,
         status: item.status,
         title: item.title,
-      }))
+      })),
     );
 
     const result = await this.processPortfolioData(rawData);
@@ -192,16 +192,16 @@ export class PortfolioDataManager {
     if (result.success) {
       // Filter for published items only for gallery display
       const publishedData = result.data.filter(
-        (item) => item.status === "published"
+        (item) => item.status === "published",
       );
       console.log(
         "Published data after processing:",
         publishedData.length,
-        "items"
+        "items",
       );
       console.log(
         "Published items:",
-        publishedData.map((item) => ({ id: item.id, title: item.title }))
+        publishedData.map((item) => ({ id: item.id, title: item.title })),
       );
       return publishedData;
     } else {
@@ -213,7 +213,7 @@ export class PortfolioDataManager {
         const cachedData = Array.from(this.cache.portfolioData.values());
         // Filter for published items only for gallery display
         const publishedData = cachedData.filter(
-          (item) => item.status === "published"
+          (item) => item.status === "published",
         );
         console.log("Fallback published data count:", publishedData.length);
         return publishedData;
@@ -250,7 +250,7 @@ export class PortfolioDataManager {
    * Get all portfolio data including draft and archived items (for admin use)
    */
   async getAllPortfolioData(
-    forceRefresh: boolean = false
+    forceRefresh: boolean = false,
   ): Promise<PortfolioContentItem[]> {
     if (!forceRefresh && this.isCacheValid()) {
       testLogger.log("Returning all cached portfolio data (including drafts)");
@@ -293,7 +293,7 @@ export class PortfolioDataManager {
    * Get portfolio items by category
    */
   async getPortfolioItemsByCategory(
-    category: string
+    category: string,
   ): Promise<PortfolioContentItem[]> {
     const data = await this.getPortfolioData();
 
@@ -356,7 +356,7 @@ export class PortfolioDataManager {
       technology?: string;
       year?: string;
       limit?: number;
-    } = {}
+    } = {},
   ) {
     const searchIndex = await this.getSearchIndex();
 
@@ -365,22 +365,22 @@ export class PortfolioDataManager {
 
     if (options.category && options.category !== "all") {
       filteredIndex = filteredIndex.filter(
-        (item) => item.category === options.category
+        (item) => item.category === options.category,
       );
     }
 
     if (options.technology) {
       filteredIndex = filteredIndex.filter((item) =>
         item.technologies.some((tech) =>
-          tech.toLowerCase().includes(options.technology!.toLowerCase())
-        )
+          tech.toLowerCase().includes(options.technology!.toLowerCase()),
+        ),
       );
     }
 
     if (options.year) {
       filteredIndex = filteredIndex.filter(
         (item) =>
-          new Date(item.createdAt).getFullYear().toString() === options.year
+          new Date(item.createdAt).getFullYear().toString() === options.year,
       );
     }
 
@@ -390,7 +390,7 @@ export class PortfolioDataManager {
       {
         limit: options.limit || 50,
         includeContent: true,
-      }
+      },
     );
   }
 
@@ -398,7 +398,7 @@ export class PortfolioDataManager {
    * Get featured projects for home page
    */
   async getFeaturedProjects(
-    limit: number = 3
+    limit: number = 3,
   ): Promise<PortfolioContentItem[]> {
     const data = await this.getPortfolioData();
 
@@ -422,7 +422,7 @@ export class PortfolioDataManager {
    */
   async getRelatedItems(
     itemId: string,
-    limit: number = 3
+    limit: number = 3,
   ): Promise<PortfolioContentItem[]> {
     const item = await this.getPortfolioItem(itemId);
     if (!item || !item.relatedItems) {
@@ -490,7 +490,7 @@ export class PortfolioDataManager {
     searchIndex: PortfolioSearchIndex[],
     searchFilters: SearchFilter[],
     searchStats: SearchStats,
-    portfolioStats: PortfolioStats
+    portfolioStats: PortfolioStats,
   ): void {
     // Clear existing cache
     this.cache.portfolioData.clear();
@@ -573,7 +573,7 @@ export class PortfolioDataManager {
         // Standalone build paths
         path.join(
           process.cwd(),
-          ".next/standalone/public/data/content/portfolio.json"
+          ".next/standalone/public/data/content/portfolio.json",
         ),
         path.join(__dirname, "../../public/data/content/portfolio.json"),
         path.join(__dirname, "../../../public/data/content/portfolio.json"),
@@ -596,7 +596,7 @@ export class PortfolioDataManager {
           console.log(
             "Failed to load from:",
             filePath,
-            pathError instanceof Error ? pathError.message : String(pathError)
+            pathError instanceof Error ? pathError.message : String(pathError),
           );
           continue;
         }
@@ -604,7 +604,7 @@ export class PortfolioDataManager {
 
       if (!fileContent) {
         throw new Error(
-          "Could not find portfolio.json in any expected location"
+          "Could not find portfolio.json in any expected location",
         );
       }
 
@@ -614,10 +614,10 @@ export class PortfolioDataManager {
       const allData = Array.isArray(data) ? data : [];
 
       testLogger.log(
-        `Loaded ${allData.length} portfolio items from file system (${usedPath})`
+        `Loaded ${allData.length} portfolio items from file system (${usedPath})`,
       );
       console.log(
-        `Loaded ${allData.length} portfolio items from file system (${usedPath})`
+        `Loaded ${allData.length} portfolio items from file system (${usedPath})`,
       );
       return allData;
     } catch (error) {

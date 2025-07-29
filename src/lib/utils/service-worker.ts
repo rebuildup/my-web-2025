@@ -150,7 +150,7 @@ export class ServiceWorkerManager {
     window.dispatchEvent(
       new CustomEvent("connectionchange", {
         detail: { isOffline },
-      })
+      }),
     );
   }
 
@@ -324,7 +324,7 @@ export class CacheManager {
           console.warn(
             "Failed to preload (error):",
             resource,
-            error instanceof Error ? error.message : String(error)
+            error instanceof Error ? error.message : String(error),
           );
         }
       });

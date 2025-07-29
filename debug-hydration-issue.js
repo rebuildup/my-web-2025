@@ -55,7 +55,7 @@ function analyzePageHTML(path) {
         console.log(`    Next.js scripts: ${hasNextScript ? "あり" : "なし"}`);
         console.log(`    React root: ${hasReactRoot ? "あり" : "なし"}`);
         console.log(
-          `    Hydration script: ${hasHydrationScript ? "あり" : "なし"}`
+          `    Hydration script: ${hasHydrationScript ? "あり" : "なし"}`,
         );
 
         // エラーメッセージを探す
@@ -74,13 +74,13 @@ function analyzePageHTML(path) {
           const matches = data.match(pattern);
           if (matches && matches.length > 0) {
             console.log(
-              `      パターン${index + 1} (${pattern}): ${matches.length}個`
+              `      パターン${index + 1} (${pattern}): ${matches.length}個`,
             );
             // 最初の数個のマッチを表示
             matches.slice(0, 3).forEach((match) => {
               const context = data.substring(
                 Math.max(0, data.indexOf(match) - 50),
-                data.indexOf(match) + match.length + 50
+                data.indexOf(match) + match.length + 50,
               );
               console.log(`        "${context.replace(/\n/g, " ")}"`);
             });
@@ -90,7 +90,7 @@ function analyzePageHTML(path) {
         // __NEXT_DATA__の内容を確認
         if (hasNextData) {
           const nextDataMatch = data.match(
-            /<script id="__NEXT_DATA__"[^>]*>(.*?)<\/script>/s
+            /<script id="__NEXT_DATA__"[^>]*>(.*?)<\/script>/s,
           );
           if (nextDataMatch) {
             try {
@@ -99,19 +99,19 @@ function analyzePageHTML(path) {
               console.log(`      buildId: ${nextData.buildId || "なし"}`);
               console.log(`      page: ${nextData.page || "なし"}`);
               console.log(
-                `      props存在: ${nextData.props ? "あり" : "なし"}`
+                `      props存在: ${nextData.props ? "あり" : "なし"}`,
               );
               if (nextData.props && nextData.props.pageProps) {
                 console.log(
-                  `      pageProps.initialItems: ${nextData.props.pageProps.initialItems?.length || 0}個`
+                  `      pageProps.initialItems: ${nextData.props.pageProps.initialItems?.length || 0}個`,
                 );
                 console.log(
-                  `      pageProps.searchFilters: ${nextData.props.pageProps.searchFilters?.length || 0}個`
+                  `      pageProps.searchFilters: ${nextData.props.pageProps.searchFilters?.length || 0}個`,
                 );
               }
             } catch (parseError) {
               console.log(
-                `      __NEXT_DATA__パースエラー: ${parseError.message}`
+                `      __NEXT_DATA__パースエラー: ${parseError.message}`,
               );
             }
           }
@@ -190,10 +190,10 @@ function testStaticFile(path) {
 function checkEnvironmentVariables() {
   console.log(`  本番環境変数の問題:`);
   console.log(
-    `    NODE_ENV: ${process.env.NODE_ENV || "未設定"} (本番では'production'であるべき)`
+    `    NODE_ENV: ${process.env.NODE_ENV || "未設定"} (本番では'production'であるべき)`,
   );
   console.log(
-    `    NEXT_PUBLIC_BASE_URL: ${process.env.NEXT_PUBLIC_BASE_URL || "未設定"}`
+    `    NEXT_PUBLIC_BASE_URL: ${process.env.NEXT_PUBLIC_BASE_URL || "未設定"}`,
   );
 
   // 本番環境で必要な環境変数が設定されていない可能性

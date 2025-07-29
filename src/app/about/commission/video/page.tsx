@@ -358,7 +358,7 @@ export default function VideoCommissionPage() {
                           >
                             {software}
                           </div>
-                        )
+                        ),
                       )}
                     </div>
                   </div>

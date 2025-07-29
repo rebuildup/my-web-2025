@@ -160,7 +160,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: req.method !== "GET" ? JSON.stringify(req.body) : undefined,
-    }
+    },
   );
 
   const data = await response.json();

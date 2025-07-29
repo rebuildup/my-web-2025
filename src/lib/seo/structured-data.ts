@@ -46,7 +46,7 @@ const defaultConfig: StructuredDataConfig = {
  * Generate WebSite structured data for the main site
  */
 export function generateWebSiteStructuredData(
-  config: StructuredDataConfig = defaultConfig
+  config: StructuredDataConfig = defaultConfig,
 ) {
   return {
     "@context": "https://schema.org",
@@ -92,7 +92,7 @@ export function generatePersonStructuredData(
     skills?: string[];
     awards?: string[];
   },
-  config: StructuredDataConfig = defaultConfig
+  config: StructuredDataConfig = defaultConfig,
 ) {
   return {
     "@context": "https://schema.org",
@@ -120,7 +120,7 @@ export function generatePersonStructuredData(
  */
 export function generateCreativeWorkStructuredData(
   item: ContentItem,
-  config: StructuredDataConfig = defaultConfig
+  config: StructuredDataConfig = defaultConfig,
 ) {
   const baseStructuredData = {
     "@context": "https://schema.org",
@@ -151,7 +151,7 @@ export function generateCreativeWorkStructuredData(
       applicationCategory: "WebApplication",
       operatingSystem: "Web Browser",
       programmingLanguage: item.tags.filter((tag) =>
-        ["JavaScript", "TypeScript", "React", "Next.js", "CSS"].includes(tag)
+        ["JavaScript", "TypeScript", "React", "Next.js", "CSS"].includes(tag),
       ),
     };
   }
@@ -178,7 +178,7 @@ export function generateCreativeWorkStructuredData(
  */
 export function generateArticleStructuredData(
   item: ContentItem,
-  config: StructuredDataConfig = defaultConfig
+  config: StructuredDataConfig = defaultConfig,
 ) {
   return {
     "@context": "https://schema.org",
@@ -216,7 +216,7 @@ export function generateArticleStructuredData(
  */
 export function generateSoftwareApplicationStructuredData(
   item: ContentItem,
-  config: StructuredDataConfig = defaultConfig
+  config: StructuredDataConfig = defaultConfig,
 ) {
   return {
     "@context": "https://schema.org",
@@ -264,7 +264,7 @@ export function generateWebApplicationStructuredData(
     category: string;
     features: string[];
   },
-  config: StructuredDataConfig = defaultConfig
+  config: StructuredDataConfig = defaultConfig,
 ) {
   return {
     "@context": "https://schema.org",
@@ -302,7 +302,7 @@ export function generateWebApplicationStructuredData(
  */
 export function generateBreadcrumbStructuredData(
   breadcrumbs: Array<{ name: string; url: string }>,
-  config: StructuredDataConfig = defaultConfig
+  config: StructuredDataConfig = defaultConfig,
 ) {
   return {
     "@context": "https://schema.org",
@@ -326,7 +326,7 @@ export function generateCollectionPageStructuredData(
     url: string;
     items: ContentItem[];
   },
-  config: StructuredDataConfig = defaultConfig
+  config: StructuredDataConfig = defaultConfig,
 ) {
   return {
     "@context": "https://schema.org",
@@ -360,7 +360,7 @@ export function generateCollectionPageStructuredData(
  * Generate FAQ structured data for help pages
  */
 export function generateFAQStructuredData(
-  faqs: Array<{ question: string; answer: string }>
+  faqs: Array<{ question: string; answer: string }>,
 ) {
   return {
     "@context": "https://schema.org",
@@ -380,7 +380,7 @@ export function generateFAQStructuredData(
  * Generate ContactPage structured data
  */
 export function generateContactPageStructuredData(
-  config: StructuredDataConfig = defaultConfig
+  config: StructuredDataConfig = defaultConfig,
 ) {
   return {
     "@context": "https://schema.org",
@@ -421,7 +421,7 @@ export function generateContactPageStructuredData(
 export function generateSearchResultsPageStructuredData(
   query: string,
   results: Array<{ title: string; description: string; url: string }>,
-  config: StructuredDataConfig = defaultConfig
+  config: StructuredDataConfig = defaultConfig,
 ) {
   return {
     "@context": "https://schema.org",
