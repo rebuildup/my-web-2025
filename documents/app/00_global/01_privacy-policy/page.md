@@ -75,7 +75,7 @@
 - **og:description**: "samuidoのプライバシーポリシー。個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/privacy-policy"
-- **og:image**: "https://yusuke-kim.com/privacy-policy-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/privacy-policy-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

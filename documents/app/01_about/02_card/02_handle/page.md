@@ -65,7 +65,7 @@
 - **og:description**: "フロントエンドエンジニアsamuidoのデジタル名刺。QRコード付きでダウンロード可能。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/about/card/handle"
-- **og:image**: "https://yusuke-kim.com/about/card-handle-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/about/card-handle-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

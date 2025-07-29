@@ -83,7 +83,7 @@
 - **og:description**: "MV制作、リリックモーション、イラストアニメーション、プロモーション映像の制作依頼を受け付けています。AfterEffects、Premiere Proを使用した高品質な映像制作。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/about/comission/video"
-- **og:image**: "https://yusuke-kim.com/about/comission-video-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/about/comission-video-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

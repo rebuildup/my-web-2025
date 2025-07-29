@@ -77,7 +77,7 @@
 - **og:description**: "samuidoのサイト内検索。プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/search"
-- **og:image**: "https://yusuke-kim.com/search-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/search-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

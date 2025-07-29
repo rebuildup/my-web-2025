@@ -22,7 +22,7 @@ describe("Metadata Generation", () => {
       twitter: "@test",
     },
     images: {
-      ogImage: "/og-image.jpg",
+      ogImage: "/og-image.png",
       twitterImage: "/twitter-image.jpg",
       favicon: "/favicon.ico",
     },
@@ -98,7 +98,7 @@ describe("Metadata Generation", () => {
       const result = generateBaseMetadata(pageData, mockConfig);
 
       expect((result.twitter as { card?: string })?.card).toBe(
-        "summary_large_image",
+        "summary_large_image"
       );
       expect(result.twitter?.title).toBe("Twitter Test - Test Site");
       expect(result.twitter?.description).toBe("Twitter description");
@@ -132,7 +132,7 @@ describe("Metadata Generation", () => {
         ...mockItem.tags,
       ]);
       expect(result.alternates?.canonical).toBe(
-        "https://example.com/portfolio/test-portfolio",
+        "https://example.com/portfolio/test-portfolio"
       );
 
       // Check article-specific Open Graph properties
@@ -169,7 +169,7 @@ describe("Metadata Generation", () => {
         "無料",
       ]);
       expect(result.alternates?.canonical).toBe(
-        "https://example.com/tools/test-tool",
+        "https://example.com/tools/test-tool"
       );
     });
   });
@@ -191,7 +191,7 @@ describe("Metadata Generation", () => {
       expect(result.title).toBe('"test query"の検索結果 - Test Site');
       expect(result.description).toContain('"test query"に関する検索結果');
       expect(result.alternates?.canonical).toBe(
-        "https://example.com/search?q=test%20query",
+        "https://example.com/search?q=test%20query"
       );
       expect(result.robots).toBe("noindex, follow"); // Search results should not be indexed
     });

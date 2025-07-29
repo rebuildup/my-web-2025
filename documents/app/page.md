@@ -54,7 +54,7 @@
 - **og:description**: "フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/"
-- **og:image**: "https://yusuke-kim.com/og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

@@ -100,7 +100,7 @@ export const SEO_CONSTANTS = {
     url: "https://yusuke-kim.com/about",
   },
   IMAGES: {
-    ogImage: "/images/og-image.jpg",
+    ogImage: "/images/og-image.png",
     twitterImage: "/images/twitter-image.jpg",
     favicon: "/favicon.ico",
     logo: "/images/logo.png",

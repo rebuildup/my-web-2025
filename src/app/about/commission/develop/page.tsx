@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     url: "https://yusuke-kim.com/about/commission/develop",
     images: [
       {
-        url: "https://yusuke-kim.com/about/commission-develop-og-image.jpg",
+        url: "https://yusuke-kim.com/about/commission-develop-og-image.png",
         width: 1200,
         height: 630,
         alt: "開発依頼 - samuido",

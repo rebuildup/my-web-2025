@@ -108,7 +108,7 @@ markdownファイルをhtml形式に変換してプレビューし、埋め込�
 - **og:description**: "技術記事、制作過程、チュートリアルなどを掲載。Markdown対応で埋め込みコンテンツも表示。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/workshop/blog"
-- **og:image**: "https://yusuke-kim.com/workshop/blog-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/workshop/blog-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

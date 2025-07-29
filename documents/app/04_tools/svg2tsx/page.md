@@ -108,7 +108,7 @@ SVG画像またはSVGコードをReactコンポーネント（TSX形式）に変
 - **og:description**: "SVG画像をReactコンポーネント（TSX）に変換。TypeScript対応で最適化されたコードを生成。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/svg2tsx"
-- **og:image**: "https://yusuke-kim.com/tools/svg2tsx-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/tools/svg2tsx-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

@@ -18,7 +18,7 @@ const STATIC_ASSETS = [
   "/search",
   "/privacy-policy",
   "/offline",
-  "/images/og-image.jpg",
+  "/images/og-image.png",
   "/favicon.ico",
   "/manifest.json",
 ];
@@ -55,14 +55,14 @@ self.addEventListener("install", (event) => {
           console.warn(
             "Service Worker: Failed to cache (error):",
             asset,
-            error.message,
+            error.message
           );
         }
       });
 
       await Promise.allSettled(cachePromises);
       console.log("Service Worker: Static assets caching completed");
-    }),
+    })
   );
 
   // Skip waiting to activate immediately
@@ -86,9 +86,9 @@ self.addEventListener("activate", (event) => {
             console.log("Service Worker: Deleting old cache:", cacheName);
             return caches.delete(cacheName);
           }
-        }),
+        })
       );
-    }),
+    })
   );
 
   // Take control of all pages
@@ -278,7 +278,7 @@ async function handleOffline(request) {
       {
         status: 200,
         headers: { "Content-Type": "text/html; charset=utf-8" },
-      },
+      }
     );
   }
 
@@ -292,7 +292,7 @@ async function handleOffline(request) {
 // Helper functions
 function isStaticAsset(pathname) {
   return CACHE_STRATEGIES.static.some((pattern) =>
-    pathname.startsWith(pattern),
+    pathname.startsWith(pattern)
   );
 }
 
@@ -306,7 +306,7 @@ function isApiRoute(pathname) {
 
 function isDynamicPage(pathname) {
   return CACHE_STRATEGIES.dynamic.some((pattern) =>
-    pathname.startsWith(pattern),
+    pathname.startsWith(pattern)
   );
 }
 
@@ -395,9 +395,9 @@ self.addEventListener("message", (event) => {
     event.waitUntil(
       caches.keys().then((cacheNames) => {
         return Promise.all(
-          cacheNames.map((cacheName) => caches.delete(cacheName)),
+          cacheNames.map((cacheName) => caches.delete(cacheName))
         );
-      }),
+      })
     );
   }
 });

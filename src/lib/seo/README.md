@@ -230,7 +230,7 @@ export const SEO_CONSTANTS = {
     email: "rebuild.up.up@gmail.com",
   },
   IMAGES: {
-    ogImage: "/images/og-image.jpg",
+    ogImage: "/images/og-image.png",
     twitterImage: "/images/twitter-image.jpg",
     favicon: "/favicon.ico",
   },

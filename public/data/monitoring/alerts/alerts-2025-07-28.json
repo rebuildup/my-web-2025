@@ -7505,5 +7505,43 @@
       "element": "H1",
       "url": ""
     }
+  },
+  {
+    "id": "perf_1753743557039_6kae9h5q3",
+    "timestamp": "2025-07-28T22:59:17.039Z",
+    "metric": "lcp",
+    "value": 2684,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/all",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/images/portfolio/blen-1753707599484-8a4y4d.png"
+    }
+  },
+  {
+    "id": "perf_1753743953400_34t2xx1lw",
+    "timestamp": "2025-07-28T23:05:53.400Z",
+    "metric": "lcp",
+    "value": 9316,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1753743953522_xhq8vv64t",
+    "timestamp": "2025-07-28T23:05:53.522Z",
+    "metric": "lcp",
+    "value": 9508,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
   }
 ]

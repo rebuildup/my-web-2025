@@ -92,7 +92,7 @@
 - **og:description**: "円周率を順番に押し続けるゲーム。数字の記憶とタイピングスキルを向上させます。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/pi-game"
-- **og:image**: "https://yusuke-kim.com/tools/pi-game-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/tools/pi-game-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

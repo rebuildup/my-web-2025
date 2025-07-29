@@ -66,7 +66,7 @@
 - **og:description**: "samuidoの全作品ギャラリー。Web開発、映像制作、デザイン作品を一覧でご覧いただけます。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/gallery/all"
-- **og:image**: "https://yusuke-kim.com/portfolio/gallery-all-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/portfolio/gallery-all-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

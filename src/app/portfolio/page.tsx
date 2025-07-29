@@ -21,7 +21,7 @@ import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-gene
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const seoGenerator = new PortfolioSEOMetadataGenerator(
-      portfolioDataManager,
+      portfolioDataManager
     );
     const { metadata } = await seoGenerator.generatePortfolioTopMetadata();
     return metadata;
@@ -55,7 +55,7 @@ export async function generateMetadata(): Promise<Metadata> {
         url: "https://yusuke-kim.com/portfolio",
         images: [
           {
-            url: "https://yusuke-kim.com/portfolio-og-image.jpg",
+            url: "https://yusuke-kim.com/portfolio-og-image.png",
             width: 1200,
             height: 630,
             alt: "Portfolio - samuido",
@@ -86,13 +86,13 @@ async function getEnhancedPortfolioData() {
 
     // Create integration manager instance for home page data
     const integrationManager = new PortfolioIntegrationManager(
-      portfolioDataManager,
+      portfolioDataManager
     );
     const homePageData = await integrationManager.homePage.getHomePageData();
 
     // Generate structured data using SEO metadata generator
     const seoGenerator = new PortfolioSEOMetadataGenerator(
-      portfolioDataManager,
+      portfolioDataManager
     );
     const { structuredData } =
       await seoGenerator.generatePortfolioTopMetadata();
@@ -221,28 +221,26 @@ export default async function PortfolioPage() {
       develop:
         enhancedStats.categoryCounts?.develop ||
         portfolioItems.filter((item) =>
-          item.category?.toLowerCase().includes("develop"),
+          item.category?.toLowerCase().includes("develop")
         ).length,
       video:
         enhancedStats.categoryCounts?.video ||
         portfolioItems.filter(
           (item) =>
             item.category?.toLowerCase().includes("video") ||
-            item.category?.toLowerCase().includes("aftereffects"),
+            item.category?.toLowerCase().includes("aftereffects")
         ).length,
       design:
         enhancedStats.categoryCounts?.design ||
         portfolioItems.filter((item) =>
-          item.category?.toLowerCase().includes("design"),
+          item.category?.toLowerCase().includes("design")
         ).length,
     },
     technologies:
       Object.keys(enhancedStats.technologyCounts || {}).slice(0, 10) ||
       [
         ...new Set(
-          portfolioItems.flatMap(
-            (item) => item.technologies || item.tags || [],
-          ),
+          portfolioItems.flatMap((item) => item.technologies || item.tags || [])
         ),
       ].slice(0, 10),
     latestUpdate: enhancedStats.lastUpdate
@@ -252,7 +250,7 @@ export default async function PortfolioPage() {
         })
       : portfolioItems.length > 0
         ? new Date(
-            portfolioItems[0].updatedAt || portfolioItems[0].createdAt,
+            portfolioItems[0].updatedAt || portfolioItems[0].createdAt
           ).toLocaleDateString("ja-JP", { year: "numeric", month: "long" })
         : "データなし",
   };
@@ -320,7 +318,7 @@ export default async function PortfolioPage() {
             "/images/portfolio/default-thumb.jpg",
           date: new Date(item.updatedAt || item.createdAt).toLocaleDateString(
             "ja-JP",
-            { year: "numeric", month: "2-digit" },
+            { year: "numeric", month: "2-digit" }
           ),
           priority: item.priority || 0,
           status: item.status,
@@ -329,7 +327,7 @@ export default async function PortfolioPage() {
           .sort(
             (a: ContentItem, b: ContentItem) =>
               new Date(b.updatedAt || b.createdAt).getTime() -
-              new Date(a.updatedAt || a.createdAt).getTime(),
+              new Date(a.updatedAt || a.createdAt).getTime()
           )
           .slice(0, 3)
           .map((item: ContentItem) => ({
@@ -344,7 +342,7 @@ export default async function PortfolioPage() {
               "/images/portfolio/default-thumb.jpg",
             date: new Date(item.updatedAt || item.createdAt).toLocaleDateString(
               "ja-JP",
-              { year: "numeric", month: "2-digit" },
+              { year: "numeric", month: "2-digit" }
             ),
             priority: item.priority || 0,
             status: item.status,
@@ -569,7 +567,7 @@ export default async function PortfolioPage() {
                           </div>
                         </div>
                       </Link>
-                    ),
+                    )
                   )}
                 </div>
               </section>
@@ -605,7 +603,7 @@ export default async function PortfolioPage() {
                                   {
                                     month: "2-digit",
                                     day: "2-digit",
-                                  },
+                                  }
                                 )}
                               </span>
                             </div>
@@ -613,7 +611,7 @@ export default async function PortfolioPage() {
                               {update.title}
                             </h3>
                           </Link>
-                        ),
+                        )
                       )}
                   </div>
 

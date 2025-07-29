@@ -77,7 +77,7 @@
 - **og:description**: "フロントエンドエンジニアsamuidoのプロフィール。技術スタック、制作活動、個人開発についてご紹介。"
 - **og:type**: "profile"
 - **og:url**: "https://yusuke-kim.com/about/profile/handle"
-- **og:image**: "https://yusuke-kim.com/about/profile-handle-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/about/profile-handle-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

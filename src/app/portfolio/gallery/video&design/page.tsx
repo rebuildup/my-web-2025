@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     url: "https://yusuke-kim.com/portfolio/gallery/video&design",
     images: [
       {
-        url: "https://yusuke-kim.com/portfolio/gallery-video-design-og-image.jpg",
+        url: "https://yusuke-kim.com/portfolio/gallery-video-design-og-image.png",
         width: 1200,
         height: 630,
         alt: "Video & Design Projects - Portfolio",

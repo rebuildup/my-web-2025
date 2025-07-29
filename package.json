@@ -7,6 +7,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "start:production": "powershell -ExecutionPolicy Bypass -File scripts/start-production.ps1",
+    "start:prod": "powershell -ExecutionPolicy Bypass -File scripts/start-production-normal.ps1",
     "lint": "next lint",
     "lint:md": "textlint \"documents/**/*.md\"",
     "format": "prettier --write .",

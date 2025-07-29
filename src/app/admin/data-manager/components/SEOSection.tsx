@@ -94,7 +94,7 @@ export function SEOSection({ seo, onSEOChange }: SEOSectionProps) {
             value={seo?.ogImage || ""}
             onChange={(e) => handleInputChange("ogImage", e.target.value)}
             className={inputStyle}
-            placeholder="https://example.com/og-image.jpg"
+            placeholder="https://example.com/og-image.png"
           />
           <p className="text-xs text-gray-500 mt-1">
             Recommended size: 1200x630px. Used for Facebook, LinkedIn, etc.

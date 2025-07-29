@@ -63,7 +63,7 @@ Difyを使って学習させたAIのsamuidoとチャット形式で対話でき�
 - **og:description**: "AIのsamuidoとチャット形式で対話。プロフィール、作品、技術について質問できます。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/about/profile/AI"
-- **og:image**: "https://yusuke-kim.com/about/profile-AI-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/about/profile-AI-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 
@@ -160,7 +160,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: req.method !== "GET" ? JSON.stringify(req.body) : undefined,
-    },
+    }
   );
 
   const data = await response.json();

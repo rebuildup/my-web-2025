@@ -101,7 +101,7 @@
 - **og:description**: "シンプルなポモドーロタイマー。25分作業・5分休憩のサイクルで効率的な作業時間管理を実現。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/pomodoro"
-- **og:image**: "https://yusuke-kim.com/tools/pomodoro-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/tools/pomodoro-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

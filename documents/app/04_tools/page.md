@@ -99,7 +99,7 @@ export const calculatePrice = (options: {
       const extraPrice = extraMonths * 20000; // 平均20,000円
       durationPrice = extraPrice;
       breakdown.push(
-        `期間延長料金 (${extraMonths}ヶ月): ${extraPrice.toLocaleString()}円`,
+        `期間延長料金 (${extraMonths}ヶ月): ${extraPrice.toLocaleString()}円`
       );
     }
   } else if (options.type === "video") {
@@ -122,7 +122,7 @@ export const calculatePrice = (options: {
       const extraPrice = extraMinutes * 10000;
       durationPrice = extraPrice;
       breakdown.push(
-        `動画制作料金 (4分超): 20,000円 + ${extraMinutes}分 × 10,000円 = ${extraPrice.toLocaleString()}円`,
+        `動画制作料金 (4分超): 20,000円 + ${extraMinutes}分 × 10,000円 = ${extraPrice.toLocaleString()}円`
       );
     }
   }
@@ -408,7 +408,7 @@ export default function PriceCalculator() {
 - **og:description**: "カラーパレット生成、QRコード作成、ポモドーロタイマーなど実用的なWebツールを無償提供。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools"
-- **og:image**: "https://yusuke-kim.com/tools-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/tools-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

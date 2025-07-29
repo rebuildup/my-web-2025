@@ -101,7 +101,7 @@ PIXIjsを使用したタイピングゲームを提供し、タイピングス�
 - **og:description**: "PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/ProtoType"
-- **og:image**: "https://yusuke-kim.com/tools/ProtoType-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/tools/ProtoType-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

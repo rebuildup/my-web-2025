@@ -85,7 +85,7 @@ AfterEffectsのエクスプレッションをScratchのブロック風UIで一�
 - **og:description**: "AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/ae-expression"
-- **og:image**: "https://yusuke-kim.com/tools/ae-expression-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/tools/ae-expression-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

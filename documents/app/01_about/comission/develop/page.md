@@ -81,7 +81,7 @@ Web開発、アプリケーション開発、プラグイン開発などの依�
 - **og:description**: "Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています。React、NextJS、AfterEffectsなど幅広い技術に対応。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/about/comission/develop"
-- **og:image**: "https://yusuke-kim.com/about/comission-develop-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/about/comission-develop-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

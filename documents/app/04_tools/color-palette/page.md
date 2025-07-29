@@ -88,7 +88,7 @@
 - **og:description**: "色域を指定してランダムにカラーパレットを生成。デザインに活用できる美しい色の組み合わせを作成。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/color-palette"
-- **og:image**: "https://yusuke-kim.com/tools/color-palette-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/tools/color-palette-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

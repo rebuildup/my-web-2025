@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: "https://yusuke-kim.com/portfolio/detail/develop",
     images: [
       {
-        url: "https://yusuke-kim.com/portfolio/detail-develop-og-image.jpg",
+        url: "https://yusuke-kim.com/portfolio/detail-develop-og-image.png",
         width: 1200,
         height: 630,
         alt: "Development Detail - Portfolio",

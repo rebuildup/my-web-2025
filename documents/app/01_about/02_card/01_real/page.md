@@ -64,7 +64,7 @@
 - **og:description**: "Webデザイナー・開発者木村友亮のデジタル名刺。QRコード付きでダウンロード可能。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/about/card/real"
-- **og:image**: "https://yusuke-kim.com/about/card-real-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/about/card-real-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

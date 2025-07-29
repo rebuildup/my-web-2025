@@ -109,7 +109,7 @@
 - **og:description**: "テキストの文字数を詳細にカウント。総文字数、単語数、行数、文字種別など豊富な統計情報を提供。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/text-counter"
-- **og:image**: "https://yusuke-kim.com/tools/text-counter-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/tools/text-counter-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

@@ -140,7 +140,7 @@ export class PerformanceMonitor {
                 this.metrics.fcp = entry.startTime;
                 this.reportMetric("fcp", entry.startTime);
               }
-            },
+            }
           );
         });
         fcpObserver.observe({ entryTypes: ["paint"] });
@@ -312,7 +312,7 @@ export class ResourcePreloader {
   // Preload critical resources
   public static preloadCriticalResources(): void {
     const criticalResources = [
-      "/images/og-image.jpg",
+      "/images/og-image.png",
       "/images/profile/profile-main.jpg",
       "/fonts/neue-haas-grotesk-display.woff2",
       "/fonts/zen-kaku-gothic-new.woff2",
@@ -335,7 +335,7 @@ export class ResourcePreloader {
       link.setAttribute("as", "font");
       link.setAttribute(
         "type",
-        url.includes(".woff2") ? "font/woff2" : "font/woff",
+        url.includes(".woff2") ? "font/woff2" : "font/woff"
       );
       link.setAttribute("crossorigin", "anonymous");
     } else if (
@@ -387,7 +387,7 @@ export class BundleMonitor {
       console.group("Bundle Information");
       console.log(
         "Next.js version:",
-        process.env.NEXT_PUBLIC_VERSION || "15.4.3",
+        process.env.NEXT_PUBLIC_VERSION || "15.4.3"
       );
       console.log("Build time:", new Date().toISOString());
 
@@ -506,14 +506,14 @@ export const computationOptimization = {
     items: T[],
     processor: (item: T, index: number) => R,
     chunkSize: number,
-    onProgress?: (progress: number) => void,
+    onProgress?: (progress: number) => void
   ): Promise<R[]> => {
     const results: R[] = [];
 
     for (let i = 0; i < items.length; i += chunkSize) {
       const chunk = items.slice(i, i + chunkSize);
       const chunkResults = chunk.map((item, index) =>
-        processor(item, i + index),
+        processor(item, i + index)
       );
       results.push(...chunkResults);
 

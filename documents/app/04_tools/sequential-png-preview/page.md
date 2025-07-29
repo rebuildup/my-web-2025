@@ -108,7 +108,7 @@
 - **og:description**: "連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/sequential-png-preview"
-- **og:image**: "https://yusuke-kim.com/tools/sequential-png-preview-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/tools/sequential-png-preview-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

@@ -115,7 +115,7 @@
 - **og:description**: "無償配布するファイルのダウンロード。素材、ツール、テンプレートなどを提供。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/workshop/downloads"
-- **og:image**: "https://yusuke-kim.com/workshop/downloads-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/workshop/downloads-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

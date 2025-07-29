@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     url: "https://yusuke-kim.com/privacy-policy",
     images: [
       {
-        url: "https://yusuke-kim.com/privacy-policy-og-image.jpg",
+        url: "https://yusuke-kim.com/privacy-policy-og-image.png",
         width: 1200,
         height: 630,
         alt: "Privacy Policy - samuido | プライバシーポリシー",

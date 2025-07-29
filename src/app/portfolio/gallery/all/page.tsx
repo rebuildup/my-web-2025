@@ -1,107 +1,73 @@
 /**
- * All Portfolio Gallery Page
- * Task 3.1: 全作品ギャラリー(/portfolio/gallery/all)の実装
+ * All Portfolio Gallery Page - Minimal working version
  */
 
-import { Metadata } from "next";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
-import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
-import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
-import { SearchFilter } from "@/lib/portfolio/search-index";
 import { AllGalleryClient } from "./components/AllGalleryClient";
 
-// Force dynamic rendering to ensure fresh data
-export const dynamic = "force-dynamic";
-export const revalidate = 3600; // Revalidate every hour
+// Remove dynamic forcing for production compatibility
+// export const dynamic = "force-dynamic";
+// export const revalidate = false;
 
 /**
- * Generate metadata for all gallery page
- */
-export async function generateMetadata(): Promise<Metadata> {
-  try {
-    const seoGenerator = new PortfolioSEOMetadataGenerator(
-      portfolioDataManager,
-    );
-    const { metadata } = await seoGenerator.generateGalleryMetadata("all");
-    return metadata;
-  } catch (error) {
-    console.error("Error generating all gallery metadata:", error);
-    return {
-      title: "All Projects | Portfolio | samuido",
-      description:
-        "Browse all portfolio projects with advanced filtering and sorting",
-      robots: "index, follow",
-    };
-  }
-}
-
-/**
- * All Gallery Page Component
+ * Minimal working page to test data flow
  */
 export default async function AllGalleryPage() {
+  console.log("=== AllGalleryPage EXECUTED ===");
+  console.log("Environment:", process.env.NODE_ENV);
+  console.log("Timestamp:", new Date().toISOString());
+
   try {
-    console.log("AllGalleryPage: Starting data fetch...");
+    // Get portfolio data with minimal error handling
+    console.log("Fetching portfolio data...");
+    const items = await portfolioDataManager.getPortfolioData(true);
+    const searchFilters = await portfolioDataManager.getSearchFilters();
 
-    // Force cache invalidation in development
-    if (process.env.NODE_ENV === "development") {
-      portfolioDataManager.invalidateCache();
-    }
-
-    // Get all portfolio data with error handling
-    let items: PortfolioContentItem[] = [];
-    let searchFilters: SearchFilter[] = [];
-
-    try {
-      items = await portfolioDataManager.getPortfolioData(true); // Force refresh
-      searchFilters = await portfolioDataManager.getSearchFilters();
-    } catch (dataError) {
-      console.error("Error fetching portfolio data:", dataError);
-      // Fallback to empty arrays to prevent page crash
-      items = [];
-      searchFilters = [];
-    }
-
-    console.log("AllGalleryPage: Data fetched successfully", {
+    console.log("Data fetched successfully:", {
       itemsCount: items.length,
       filtersCount: searchFilters.length,
-      items: items.map((item) => ({
-        id: item.id,
-        title: item.title,
-        thumbnail: item.thumbnail,
-      })),
     });
 
-    // Generate structured data
-    const seoGenerator = new PortfolioSEOMetadataGenerator(
-      portfolioDataManager,
-    );
-    const { structuredData } =
-      await seoGenerator.generateGalleryMetadata("all");
-
     return (
-      <>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
+      <div className="min-h-screen bg-background text-foreground">
+        <main className="py-10">
+          <div className="container mx-auto px-4">
+            <h1 className="text-4xl text-primary mb-8">All Projects</h1>
+            <p className="text-foreground mb-4">
+              Found {items.length} portfolio items and {searchFilters.length}{" "}
+              filters.
+            </p>
 
-        <AllGalleryClient initialItems={items} searchFilters={searchFilters} />
-      </>
+            {items.length > 0 ? (
+              <AllGalleryClient
+                initialItems={items}
+                searchFilters={searchFilters}
+              />
+            ) : (
+              <div className="bg-red-100 p-4 rounded">
+                <p className="text-red-800">No portfolio items found.</p>
+              </div>
+            )}
+          </div>
+        </main>
+      </div>
     );
   } catch (error) {
-    console.error("Error rendering all gallery page:", error);
+    console.error("Error in AllGalleryPage:", error);
 
     return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl text-primary mb-4">Gallery Error</h1>
-          <p className="text-foreground">
-            Sorry, there was an error loading the gallery.
-          </p>
-          <p className="text-sm text-foreground/60 mt-2">
-            Error: {error instanceof Error ? error.message : "Unknown error"}
-          </p>
-        </div>
+      <div className="min-h-screen bg-background text-foreground">
+        <main className="py-10">
+          <div className="container mx-auto px-4">
+            <h1 className="text-4xl text-primary mb-8">Error</h1>
+            <div className="bg-red-100 p-4 rounded">
+              <p className="text-red-800">
+                Error loading portfolio:{" "}
+                {error instanceof Error ? error.message : "Unknown error"}
+              </p>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }

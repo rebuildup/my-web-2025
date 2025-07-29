@@ -101,7 +101,7 @@ URLからQRコードを生成し、簡単にシェアできるQRコードを作�
 - **og:description**: "URLからQRコードを簡単生成。カスタマイズ機能付きで美しいQRコードを作成できます。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/qr-generator"
-- **og:image**: "https://yusuke-kim.com/tools/qr-generator-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/tools/qr-generator-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

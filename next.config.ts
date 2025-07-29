@@ -56,7 +56,7 @@ const nextConfig: NextConfig = {
       config.plugins.push(
         new (require("@next/bundle-analyzer")({
           enabled: true,
-        }))(),
+        }))()
       );
       return config;
     },
@@ -193,8 +193,8 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  // Output configuration
-  output: "standalone",
+  // Output configuration - disable standalone for debugging
+  // output: "standalone",
   poweredByHeader: false,
   compress: true,
   generateEtags: true,

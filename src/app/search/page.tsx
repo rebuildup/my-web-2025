@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     url: "https://yusuke-kim.com/search",
     images: [
       {
-        url: "https://yusuke-kim.com/search-og-image.jpg",
+        url: "https://yusuke-kim.com/search-og-image.png",
         width: 1200,
         height: 630,
         alt: "Search - samuido | サイト内検索",

@@ -108,7 +108,7 @@
 - **og:description**: "作成したプラグインの一覧。AfterEffects、Premiere Pro、Web用プラグインを提供。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/workshop/plugins"
-- **og:image**: "https://yusuke-kim.com/workshop/plugins-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/workshop/plugins-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

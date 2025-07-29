@@ -78,7 +78,7 @@
 - **og:description**: "木村友亮が管理するSNS、開発関連、クリエイティブ関連の外部リンク集。各種サービスへの導線を提供。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/about/links"
-- **og:image**: "https://yusuke-kim.com/about/links-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/about/links-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

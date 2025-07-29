@@ -68,9 +68,6 @@ const testPortfolioAPI = async () => {
 
 // Node.js環境で実行
 if (typeof window === "undefined") {
-  // Node.js用のfetch polyfill
-  const fetch = require("node-fetch");
-  global.fetch = fetch;
   testPortfolioAPI();
 } else {
   // ブラウザ環境で実行

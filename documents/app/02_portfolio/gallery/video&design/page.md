@@ -70,7 +70,7 @@
 - **og:description**: "samuidoの映像&デザイン作品ギャラリー。映像とデザインを組み合わせた作品を独特なグリッドレイアウトでご覧いただけます。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/gallery/video&design"
-- **og:image**: "https://yusuke-kim.com/portfolio/gallery-video-design-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/portfolio/gallery-video-design-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

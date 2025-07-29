@@ -84,7 +84,7 @@
 - **og:description**: "開発サーバー専用のコンテンツデータ管理ツール。動画、画像、Markdownファイルなどを管理し、JSON出力とプレビュー機能を提供します。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/admin/data-manager"
-- **og:image**: "https://yusuke-kim.com/admin/data-manager-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/admin/data-manager-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

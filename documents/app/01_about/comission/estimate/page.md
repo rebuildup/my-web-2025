@@ -69,7 +69,7 @@
 - **og:description**: "映像制作の見積もりを自動計算。動画の長さ、品質、編集内容に応じてリアルタイムで料金を算出。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/about/comission/estimate"
-- **og:image**: "https://yusuke-kim.com/about/comission-estimate-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/about/comission-estimate-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

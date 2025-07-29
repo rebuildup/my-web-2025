@@ -68,7 +68,7 @@
 - **og:description**: "samuidoのデザインプレイグラウンド。デザインの実験や試作品を自由に展示し、デザインの可能性を探ります。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/playground/design"
-- **og:image**: "https://yusuke-kim.com/portfolio/playground-design-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/portfolio/playground-design-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

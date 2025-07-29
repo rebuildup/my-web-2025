@@ -65,7 +65,7 @@ foriioライクな表示で映像作品をサムネイル画像とタイトル�
 - **og:description**: "samuidoの映像作品ギャラリー。MV、リリックモーション、アニメーション、プロモーション映像などの作品を一覧でご覧いただけます。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/gallery/video"
-- **og:image**: "https://yusuke-kim.com/portfolio/gallery-video-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/portfolio/gallery-video-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

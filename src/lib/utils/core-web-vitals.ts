@@ -105,13 +105,13 @@ export class CoreWebVitalsMonitor {
           entry: PerformanceEntry & {
             duration: number;
             interactionId?: number;
-          },
+          }
         ) => {
           if (entry.interactionId) {
             this.metrics.inp = entry.duration;
             this.notifyCallbacks();
           }
-        },
+        }
       );
     });
 
@@ -122,13 +122,13 @@ export class CoreWebVitalsMonitor {
           entry: PerformanceEntry & {
             name: string;
             startTime: number;
-          },
+          }
         ) => {
           if (entry.name === "first-contentful-paint") {
             this.metrics.fcp = entry.startTime;
             this.notifyCallbacks();
           }
-        },
+        }
       );
     });
 
@@ -138,7 +138,7 @@ export class CoreWebVitalsMonitor {
 
   private observeMetric(
     entryType: string,
-    callback: (entries: PerformanceEntry[]) => void,
+    callback: (entries: PerformanceEntry[]) => void
   ): void {
     try {
       const observer = new PerformanceObserver((list) => {
@@ -153,7 +153,7 @@ export class CoreWebVitalsMonitor {
 
   private measureTTFB(): void {
     const navigation = performance.getEntriesByType(
-      "navigation",
+      "navigation"
     )[0] as PerformanceNavigationTiming;
     if (navigation) {
       this.metrics.ttfb = navigation.responseStart - navigation.requestStart;
@@ -173,7 +173,7 @@ export class CoreWebVitalsMonitor {
 
   // Subscribe to metrics updates
   public subscribe(
-    callback: (metrics: CoreWebVitalsMetrics) => void,
+    callback: (metrics: CoreWebVitalsMetrics) => void
   ): () => void {
     this.callbacks.add(callback);
     return () => this.callbacks.delete(callback);
@@ -187,7 +187,7 @@ export class CoreWebVitalsMonitor {
   // Get performance rating for a metric
   public static getRating(
     metric: keyof CoreWebVitalsMetrics,
-    value: number | null,
+    value: number | null
   ): PerformanceRating {
     if (value === null) return "poor";
 
@@ -243,7 +243,7 @@ export class CoreWebVitalsMonitor {
 
     // Calculate overall score (0-100)
     const goodCount = Object.values(ratings).filter(
-      (rating) => rating === "good",
+      (rating) => rating === "good"
     ).length;
     const totalMetrics = Object.keys(ratings).length;
     const score = Math.round((goodCount / totalMetrics) * 100);
@@ -253,25 +253,25 @@ export class CoreWebVitalsMonitor {
 
     if (ratings.lcp !== "good") {
       recommendations.push(
-        "Optimize Largest Contentful Paint: Use Next.js Image optimization, preload critical resources, optimize server response time",
+        "Optimize Largest Contentful Paint: Use Next.js Image optimization, preload critical resources, optimize server response time"
       );
     }
 
     if (ratings.fid !== "good") {
       recommendations.push(
-        "Improve First Input Delay: Break up long tasks, use code splitting, defer non-critical JavaScript",
+        "Improve First Input Delay: Break up long tasks, use code splitting, defer non-critical JavaScript"
       );
     }
 
     if (ratings.cls !== "good") {
       recommendations.push(
-        "Reduce Cumulative Layout Shift: Set explicit dimensions for images, avoid inserting content above existing content",
+        "Reduce Cumulative Layout Shift: Set explicit dimensions for images, avoid inserting content above existing content"
       );
     }
 
     if (ratings.inp !== "good") {
       recommendations.push(
-        "Optimize Interaction to Next Paint: Optimize event handlers, use requestIdleCallback for non-urgent tasks",
+        "Optimize Interaction to Next Paint: Optimize event handlers, use requestIdleCallback for non-urgent tasks"
       );
     }
 
@@ -296,7 +296,7 @@ export class LCPOptimizer {
   // Preload critical resources
   public static preloadCriticalResources(): void {
     const criticalResources = [
-      { href: "/images/og-image.jpg", as: "image" },
+      { href: "/images/og-image.png", as: "image" },
       { href: "/favicon.ico", as: "image" },
     ];
 
@@ -366,7 +366,7 @@ export class FIDOptimizer {
   public static breakUpLongTasks<T>(
     items: T[],
     processor: (item: T) => void,
-    batchSize: number = 5,
+    batchSize: number = 5
   ): Promise<void> {
     return new Promise((resolve) => {
       let index = 0;
@@ -390,7 +390,7 @@ export class FIDOptimizer {
                   scheduler: {
                     postTask: (
                       fn: () => void,
-                      options: { priority: string },
+                      options: { priority: string }
                     ) => void;
                   };
                 }
@@ -401,7 +401,7 @@ export class FIDOptimizer {
                 scheduler: {
                   postTask: (
                     fn: () => void,
-                    options: { priority: string },
+                    options: { priority: string }
                   ) => void;
                 };
               }
@@ -533,7 +533,7 @@ export class PerformanceBudget {
       // Log violation in development
       if (process.env.NODE_ENV === "development") {
         console.warn(
-          `Performance budget violation: ${metric} = ${value} (budget: ${budget})`,
+          `Performance budget violation: ${metric} = ${value} (budget: ${budget})`
         );
       }
     }

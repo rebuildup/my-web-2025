@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     url: "https://yusuke-kim.com/about/commission/video",
     images: [
       {
-        url: "https://yusuke-kim.com/about/commission-video-og-image.jpg",
+        url: "https://yusuke-kim.com/about/commission-video-og-image.png",
         width: 1200,
         height: 630,
         alt: "映像依頼 - samuido",
@@ -358,7 +358,7 @@ export default function VideoCommissionPage() {
                           >
                             {software}
                           </div>
-                        ),
+                        )
                       )}
                     </div>
                   </div>

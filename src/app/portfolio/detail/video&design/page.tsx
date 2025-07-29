@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     url: "https://yusuke-kim.com/portfolio/detail/video&design",
     images: [
       {
-        url: "https://yusuke-kim.com/portfolio/detail-video-design-og-image.jpg",
+        url: "https://yusuke-kim.com/portfolio/detail-video-design-og-image.png",
         width: 1200,
         height: 630,
         alt: "Video & Design Detail - Portfolio",
@@ -405,7 +405,7 @@ export default function VideoDesignDetailPage() {
                           ))}
                         </div>
                       </div>
-                    ),
+                    )
                   )}
                 </div>
               </section>

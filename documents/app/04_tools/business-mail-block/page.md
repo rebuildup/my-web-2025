@@ -88,7 +88,7 @@
 - **og:description**: "ビジネスメールをScratch風ブロックUIで簡単作成。挨拶、本文、締め、署名を組み合わせてプロフェッショナルなメールを作成。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/business-mail-block"
-- **og:image**: "https://yusuke-kim.com/tools/business-mail-block-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/tools/business-mail-block-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

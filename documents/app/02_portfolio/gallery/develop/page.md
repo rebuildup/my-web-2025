@@ -66,7 +66,7 @@
 - **og:description**: "samuidoの開発作品ギャラリー。Webアプリ、ゲーム、ツール、プラグインなどの開発作品を一覧でご覧いただけます。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/gallery/develop"
-- **og:image**: "https://yusuke-kim.com/portfolio/gallery-develop-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/portfolio/gallery-develop-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

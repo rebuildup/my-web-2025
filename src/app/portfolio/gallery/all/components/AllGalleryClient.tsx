@@ -39,9 +39,20 @@ export function AllGalleryClient({
   initialItems,
   searchFilters,
 }: AllGalleryClientProps) {
+  // Debug logging
+  console.log("AllGalleryClient initialized with:", {
+    initialItemsCount: initialItems.length,
+    searchFiltersCount: searchFilters.length,
+    initialItems: initialItems.slice(0, 3).map((item) => ({
+      id: item.id,
+      title: item.title,
+      status: item.status,
+    })),
+  });
+
   // State management
   const [selectedItem, setSelectedItem] = useState<PortfolioContentItem | null>(
-    null,
+    null
   );
   const [filters, setFilters] = useState<FilterOptions>({});
   const [sort, setSort] = useState<SortOptions>({
@@ -64,16 +75,16 @@ export function AllGalleryClient({
       items = items.filter((item) =>
         filters.technologies!.some((tech) =>
           (item.technologies || []).some((itemTech) =>
-            itemTech.toLowerCase().includes(tech.toLowerCase()),
-          ),
-        ),
+            itemTech.toLowerCase().includes(tech.toLowerCase())
+          )
+        )
       );
     }
 
     if (filters.year) {
       items = items.filter(
         (item) =>
-          new Date(item.createdAt).getFullYear().toString() === filters.year,
+          new Date(item.createdAt).getFullYear().toString() === filters.year
       );
     }
 
@@ -81,9 +92,9 @@ export function AllGalleryClient({
       items = items.filter((item) =>
         filters.tags!.some((tag) =>
           (item.tags || []).some((itemTag) =>
-            itemTag.toLowerCase().includes(tag.toLowerCase()),
-          ),
-        ),
+            itemTag.toLowerCase().includes(tag.toLowerCase())
+          )
+        )
       );
     }
 
@@ -93,7 +104,7 @@ export function AllGalleryClient({
         (item) =>
           item.title.toLowerCase().includes(searchTerm) ||
           item.description.toLowerCase().includes(searchTerm) ||
-          (item.content || "").toLowerCase().includes(searchTerm),
+          (item.content || "").toLowerCase().includes(searchTerm)
       );
     }
 
@@ -138,7 +149,7 @@ export function AllGalleryClient({
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredAndSortedItems.slice(
       startIndex,
-      startIndex + ITEMS_PER_PAGE,
+      startIndex + ITEMS_PER_PAGE
     );
   }, [filteredAndSortedItems, currentPage]);
 
@@ -235,7 +246,22 @@ export function AllGalleryClient({
 
             {/* Gallery Content */}
             <section id="gallery-content">
-              {paginatedItems.length > 0 ? (
+              {initialItems.length === 0 ? (
+                <div className="text-center py-16">
+                  <p className="noto-sans-jp-light text-sm text-foreground">
+                    ポートフォリオデータを読み込めませんでした。
+                  </p>
+                  <p className="noto-sans-jp-light text-xs text-foreground/60 mt-2">
+                    初期アイテム数: {initialItems.length}
+                  </p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 text-accent hover:text-primary transition-colors"
+                  >
+                    ページを再読み込み
+                  </button>
+                </div>
+              ) : paginatedItems.length > 0 ? (
                 <div className="space-y-8">
                   <div className="grid-system grid-1 xs:grid-2 sm:grid-3 lg:grid-4 gap-6">
                     {paginatedItems.map((item) => (
@@ -260,6 +286,10 @@ export function AllGalleryClient({
                 <div className="text-center py-16">
                   <p className="noto-sans-jp-light text-sm text-foreground">
                     フィルター条件に一致する作品が見つかりませんでした。
+                  </p>
+                  <p className="noto-sans-jp-light text-xs text-foreground/60 mt-2">
+                    初期アイテム数: {initialItems.length}, フィルター後:{" "}
+                    {filteredAndSortedItems.length}
                   </p>
                   <button
                     onClick={() => {

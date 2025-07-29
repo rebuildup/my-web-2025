@@ -73,7 +73,7 @@
 - **og:description**: "Webデザイン・開発のご依頼、プラグイン・ツールについてのご質問、その他お問い合わせはこちらから。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/contact"
-- **og:image**: "https://yusuke-kim.com/contact-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/contact-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

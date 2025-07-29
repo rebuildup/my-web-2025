@@ -67,34 +67,34 @@ export class PortfolioDataManager {
   constructor(
     private dataProcessor: PortfolioDataProcessor = portfolioDataProcessor,
     private seoGenerator: SEOMetadataGenerator = seoMetadataGenerator,
-    private searchIndexGenerator: PortfolioSearchIndexGenerator = portfolioSearchIndexGenerator,
+    private searchIndexGenerator: PortfolioSearchIndexGenerator = portfolioSearchIndexGenerator
   ) {}
 
   /**
    * Process and cache portfolio data from raw ContentItem array
    */
   async processPortfolioData(
-    rawData: ContentItem[],
+    rawData: ContentItem[]
   ): Promise<ProcessingResult> {
     const errors: string[] = [];
     const warnings: string[] = [];
 
     try {
       testLogger.log(
-        `Starting portfolio data processing for ${rawData.length} items...`,
+        `Starting portfolio data processing for ${rawData.length} items...`
       );
 
       // Process raw data through the pipeline
       const processedData = await this.dataProcessor.processRawData(rawData);
       testLogger.log(
-        `Successfully processed ${processedData.length} portfolio items`,
+        `Successfully processed ${processedData.length} portfolio items`
       );
 
       // Generate search index
       const searchIndex =
         this.searchIndexGenerator.generateSearchIndex(processedData);
       testLogger.log(
-        `Generated search index with ${searchIndex.length} entries`,
+        `Generated search index with ${searchIndex.length} entries`
       );
 
       // Generate search filters and stats
@@ -113,7 +113,7 @@ export class PortfolioDataManager {
         searchIndex,
         searchFilters,
         searchStats,
-        portfolioStats,
+        portfolioStats
       );
 
       testLogger.log("Portfolio data processing completed successfully");
@@ -148,7 +148,7 @@ export class PortfolioDataManager {
    * Get processed portfolio data with caching
    */
   async getPortfolioData(
-    forceRefresh: boolean = false,
+    forceRefresh: boolean = false
   ): Promise<PortfolioContentItem[]> {
     console.log("getPortfolioData called, forceRefresh:", forceRefresh);
     console.log("Cache valid:", this.isCacheValid());
@@ -160,27 +160,63 @@ export class PortfolioDataManager {
       console.log("Cached data count:", cachedData.length);
       console.log(
         "Cached data statuses:",
-        cachedData.map((item) => ({ id: item.id, status: item.status })),
+        cachedData.map((item) => ({ id: item.id, status: item.status }))
       );
       // Filter for published items only for gallery display
-      return cachedData.filter((item) => item.status === "published");
+      const publishedData = cachedData.filter(
+        (item) => item.status === "published"
+      );
+      console.log("Published data count:", publishedData.length);
+      return publishedData;
     }
 
     // Fetch fresh data from API
+    console.log("Fetching fresh data from API...");
     const rawData = await this.fetchRawPortfolioData();
+    console.log("Raw data fetched:", rawData.length, "items");
+    console.log(
+      "Raw data sample:",
+      rawData.slice(0, 3).map((item) => ({
+        id: item.id,
+        status: item.status,
+        title: item.title,
+      }))
+    );
+
     const result = await this.processPortfolioData(rawData);
+    console.log("Processing result:", {
+      success: result.success,
+      dataCount: result.data.length,
+    });
 
     if (result.success) {
       // Filter for published items only for gallery display
-      return result.data.filter((item) => item.status === "published");
+      const publishedData = result.data.filter(
+        (item) => item.status === "published"
+      );
+      console.log(
+        "Published data after processing:",
+        publishedData.length,
+        "items"
+      );
+      console.log(
+        "Published items:",
+        publishedData.map((item) => ({ id: item.id, title: item.title }))
+      );
+      return publishedData;
     } else {
       testLogger.warn("Failed to process fresh data");
+      console.log("Processing errors:", result.errors);
       // Only return cached data if we have valid cache, otherwise return empty array
       if (this.cache.portfolioData.size > 0) {
         testLogger.warn("Returning cached data as fallback");
         const cachedData = Array.from(this.cache.portfolioData.values());
         // Filter for published items only for gallery display
-        return cachedData.filter((item) => item.status === "published");
+        const publishedData = cachedData.filter(
+          (item) => item.status === "published"
+        );
+        console.log("Fallback published data count:", publishedData.length);
+        return publishedData;
       } else {
         testLogger.warn("No cached data available, returning empty array");
         return [];
@@ -214,7 +250,7 @@ export class PortfolioDataManager {
    * Get all portfolio data including draft and archived items (for admin use)
    */
   async getAllPortfolioData(
-    forceRefresh: boolean = false,
+    forceRefresh: boolean = false
   ): Promise<PortfolioContentItem[]> {
     if (!forceRefresh && this.isCacheValid()) {
       testLogger.log("Returning all cached portfolio data (including drafts)");
@@ -257,7 +293,7 @@ export class PortfolioDataManager {
    * Get portfolio items by category
    */
   async getPortfolioItemsByCategory(
-    category: string,
+    category: string
   ): Promise<PortfolioContentItem[]> {
     const data = await this.getPortfolioData();
 
@@ -320,7 +356,7 @@ export class PortfolioDataManager {
       technology?: string;
       year?: string;
       limit?: number;
-    } = {},
+    } = {}
   ) {
     const searchIndex = await this.getSearchIndex();
 
@@ -329,22 +365,22 @@ export class PortfolioDataManager {
 
     if (options.category && options.category !== "all") {
       filteredIndex = filteredIndex.filter(
-        (item) => item.category === options.category,
+        (item) => item.category === options.category
       );
     }
 
     if (options.technology) {
       filteredIndex = filteredIndex.filter((item) =>
         item.technologies.some((tech) =>
-          tech.toLowerCase().includes(options.technology!.toLowerCase()),
-        ),
+          tech.toLowerCase().includes(options.technology!.toLowerCase())
+        )
       );
     }
 
     if (options.year) {
       filteredIndex = filteredIndex.filter(
         (item) =>
-          new Date(item.createdAt).getFullYear().toString() === options.year,
+          new Date(item.createdAt).getFullYear().toString() === options.year
       );
     }
 
@@ -354,7 +390,7 @@ export class PortfolioDataManager {
       {
         limit: options.limit || 50,
         includeContent: true,
-      },
+      }
     );
   }
 
@@ -362,7 +398,7 @@ export class PortfolioDataManager {
    * Get featured projects for home page
    */
   async getFeaturedProjects(
-    limit: number = 3,
+    limit: number = 3
   ): Promise<PortfolioContentItem[]> {
     const data = await this.getPortfolioData();
 
@@ -386,7 +422,7 @@ export class PortfolioDataManager {
    */
   async getRelatedItems(
     itemId: string,
-    limit: number = 3,
+    limit: number = 3
   ): Promise<PortfolioContentItem[]> {
     const item = await this.getPortfolioItem(itemId);
     if (!item || !item.relatedItems) {
@@ -454,7 +490,7 @@ export class PortfolioDataManager {
     searchIndex: PortfolioSearchIndex[],
     searchFilters: SearchFilter[],
     searchStats: SearchStats,
-    portfolioStats: PortfolioStats,
+    portfolioStats: PortfolioStats
   ): void {
     // Clear existing cache
     this.cache.portfolioData.clear();
@@ -490,19 +526,19 @@ export class PortfolioDataManager {
       const timestamp =
         process.env.NODE_ENV === "development" ? `&_t=${Date.now()}` : "";
 
-      const response = await fetch(
-        `${baseUrl}/api/content/portfolio?limit=100&status=all${timestamp}`,
-        {
-          next:
-            process.env.NODE_ENV === "development"
-              ? { revalidate: 0 } // No cache in development
-              : { revalidate: 300 }, // 5 minutes cache in production
-          cache:
-            process.env.NODE_ENV === "development"
-              ? "no-store" // No cache in development
-              : "default", // Default cache in production
-        },
-      );
+      const apiUrl = `${baseUrl}/api/content/portfolio?limit=100&status=all${timestamp}`;
+      console.log("Fetching from API URL:", apiUrl);
+
+      const response = await fetch(apiUrl, {
+        next:
+          process.env.NODE_ENV === "development"
+            ? { revalidate: 0 } // No cache in development
+            : { revalidate: 300 }, // 5 minutes cache in production
+        cache:
+          process.env.NODE_ENV === "development"
+            ? "no-store" // No cache in development
+            : "default", // Default cache in production
+      });
 
       console.log("Portfolio API response status:", response.status);
 
@@ -511,6 +547,7 @@ export class PortfolioDataManager {
       }
 
       const result = await response.json();
+      console.log("API response data count:", result.data?.length || 0);
       return result.data || [];
     } catch (error) {
       testLogger.error("Error fetching raw portfolio data from API:", error);
@@ -527,22 +564,65 @@ export class PortfolioDataManager {
       const fs = await import("fs/promises");
       const path = await import("path");
 
-      const filePath = path.join(
-        process.cwd(),
-        "public/data/content/portfolio.json",
-      );
-      const fileContent = await fs.readFile(filePath, "utf-8");
+      // Try multiple possible paths for different deployment environments
+      const possiblePaths = [
+        path.join(process.cwd(), "public/data/content/portfolio.json"),
+        path.join(process.cwd(), "public", "data", "content", "portfolio.json"),
+        path.join(__dirname, "../../../public/data/content/portfolio.json"),
+        path.join(__dirname, "../../../../public/data/content/portfolio.json"),
+        // Standalone build paths
+        path.join(
+          process.cwd(),
+          ".next/standalone/public/data/content/portfolio.json"
+        ),
+        path.join(__dirname, "../../public/data/content/portfolio.json"),
+        path.join(__dirname, "../../../public/data/content/portfolio.json"),
+        // Vercel deployment paths
+        path.join("/var/task/public/data/content/portfolio.json"),
+        path.join("/tmp/public/data/content/portfolio.json"),
+      ];
+
+      let fileContent = "";
+      let usedPath = "";
+
+      for (const filePath of possiblePaths) {
+        try {
+          console.log("Trying to load portfolio data from:", filePath);
+          fileContent = await fs.readFile(filePath, "utf-8");
+          usedPath = filePath;
+          console.log("Successfully loaded from:", filePath);
+          break;
+        } catch (pathError) {
+          console.log(
+            "Failed to load from:",
+            filePath,
+            pathError instanceof Error ? pathError.message : String(pathError)
+          );
+          continue;
+        }
+      }
+
+      if (!fileContent) {
+        throw new Error(
+          "Could not find portfolio.json in any expected location"
+        );
+      }
+
       const data = JSON.parse(fileContent);
 
       // Return all data for processing - filtering will be done in getPortfolioData
       const allData = Array.isArray(data) ? data : [];
 
       testLogger.log(
-        `Loaded ${allData.length} portfolio items from file system`,
+        `Loaded ${allData.length} portfolio items from file system (${usedPath})`
+      );
+      console.log(
+        `Loaded ${allData.length} portfolio items from file system (${usedPath})`
       );
       return allData;
     } catch (error) {
       testLogger.error("Error loading portfolio data from file:", error);
+      console.error("Error loading portfolio data from file:", error);
       return [];
     }
   }

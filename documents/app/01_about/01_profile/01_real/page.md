@@ -82,7 +82,7 @@
 - **og:description**: "Webデザイナー・開発者木村友亮の詳細プロフィール。学歴、職歴、スキル、受賞歴を時系列でご紹介。"
 - **og:type**: "profile"
 - **og:url**: "https://yusuke-kim.com/about/profile/real"
-- **og:image**: "https://yusuke-kim.com/about/profile-real-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/about/profile-real-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

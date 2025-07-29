@@ -125,7 +125,7 @@
 - **og:description**: "Webデザイナー・開発者木村友亮の作品ポートフォリオ。Webサイト、アプリケーション、デザイン作品をカテゴリ別にご紹介。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio"
-- **og:image**: "https://yusuke-kim.com/portfolio-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/portfolio-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

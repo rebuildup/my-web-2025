@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     url: "https://yusuke-kim.com/tools/svg2tsx",
     images: [
       {
-        url: "https://yusuke-kim.com/tools/svg2tsx-og-image.jpg",
+        url: "https://yusuke-kim.com/tools/svg2tsx-og-image.png",
         width: 1200,
         height: 630,
         alt: "SVG to TSX Converter",

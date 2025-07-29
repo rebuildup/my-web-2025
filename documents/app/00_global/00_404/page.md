@@ -34,7 +34,7 @@
 - **og:description**: "お探しのページは存在しません。サイトトップページからお探しください。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/404"
-- **og:image**: "https://yusuke-kim.com/404-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/404-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

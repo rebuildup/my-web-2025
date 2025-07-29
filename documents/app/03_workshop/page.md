@@ -110,7 +110,7 @@
 - **og:description**: "AfterEffectsプラグイン、技術記事、素材の配布サイト。フロントエンドエンジニアsamuidoのクリエイティブハブ。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/workshop"
-- **og:image**: "https://yusuke-kim.com/workshop-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/workshop-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

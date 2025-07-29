@@ -75,7 +75,7 @@ WebGLを使った3Dグラフィックスやシェーダーの実験を自由に�
 - **og:description**: "samuidoのWebGLプレイグラウンド。WebGLを使った3Dグラフィックスやシェーダーの実験を自由に展示し、WebGLの可能性を探ります。"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/playground/WebGL"
-- **og:image**: "https://yusuke-kim.com/portfolio/playground-webgl-og-image.jpg"
+- **og:image**: "https://yusuke-kim.com/portfolio/playground-webgl-og-image.png"
 - **og:site_name**: "samuido"
 - **og:locale**: "ja_JP"
 

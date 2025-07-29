@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     url: "https://yusuke-kim.com/about/profile/real",
     images: [
       {
-        url: "https://yusuke-kim.com/about/profile-real-og-image.jpg",
+        url: "https://yusuke-kim.com/about/profile-real-og-image.png",
         width: 1200,
         height: 630,
         alt: "Real Profile - samuido",
