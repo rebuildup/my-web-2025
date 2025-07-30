@@ -1,5 +1,175 @@
 [
   {
+    "id": "portfolio-1753840532952",
+    "type": "portfolio",
+    "title": "期末テストお疲れ様でした 1Q",
+    "description": "今回もテストが終わった後に作りました",
+    "category": "video",
+    "tags": [],
+    "status": "published",
+    "priority": 50,
+    "createdAt": "2025-07-30T01:55:32.952Z",
+    "updatedAt": "2025-07-30T02:00:07.393Z",
+    "content": "今回もテストが終わった後に作りました",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtube.com/shorts/Lalr82cIgMg",
+        "title": "期末テストお疲れ様でした 1Q",
+        "description": "今回もテストが終わった後に作りました"
+      }
+    ],
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "title": "X",
+        "url": "https://x.com/361do_design/status/1930212755359006746",
+        "description": "Xの投稿です"
+      },
+      {
+        "type": "website",
+        "url": "https://soundcloud.com/ariiol/shunran",
+        "title": "音源",
+        "description": "音源のリンクです"
+      }
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png"
+  },
+  {
+    "id": "portfolio-1753840319431",
+    "type": "portfolio",
+    "title": "【Aeエフェクトプラグイン】LiteGlow",
+    "description": "Aeでシンプルなグローを実現するエフェクトプラグインです\nDeepGlowが高かったので自分で作りました",
+    "category": "develop",
+    "tags": [],
+    "status": "published",
+    "priority": 50,
+    "createdAt": "2025-07-30T01:51:59.431Z",
+    "updatedAt": "2025-07-30T01:55:16.490Z",
+    "content": "Aeでシンプルなグローを実現するエフェクトプラグインです\nDeepGlowが高かったので自分で作りました",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/V15m8WLGVwg",
+        "title": "【Aeエフェクトプラグイン】LiteGlow",
+        "description": "Aeでシンプルなグローを実現するエフェクトプラグインです",
+        "thumbnail": "https://img.youtube.com/vi/V15m8WLGVwg/maxresdefault.jpg"
+      }
+    ],
+    "images": ["/images/portfolio/LiteGlow-1753840373519-odqj9w.jpg"],
+    "externalLinks": [
+      {
+        "type": "booth",
+        "title": "Booth",
+        "url": "https://361do.booth.pm/items/6939869",
+        "description": "Boothのリンクです"
+      },
+      {
+        "type": "website",
+        "title": "X",
+        "url": "https://x.com/361do_sleep/status/1924057386731655327",
+        "description": "Xの投稿です"
+      }
+    ],
+    "thumbnail": "/images/portfolio/LiteGlow-1753840373519-odqj9w.jpg"
+  },
+  {
+    "id": "portfolio-1753840034006",
+    "type": "portfolio",
+    "title": "Ae縁取りエフェクト Border",
+    "description": "AfterEffectsで縁取りを描画するエフェクトです",
+    "category": "develop",
+    "tags": [],
+    "status": "published",
+    "priority": 50,
+    "createdAt": "2025-07-30T01:47:14.006Z",
+    "updatedAt": "2025-07-30T01:49:20.614Z",
+    "content": "AfterEffectsで縁取りを描画するエフェクトです\n",
+    "videos": [],
+    "images": ["/images/portfolio/Ae_Border-1753840089865-8nd2od.jpg"],
+    "externalLinks": [
+      {
+        "type": "booth",
+        "title": "Booth",
+        "url": "https://361do.booth.pm/items/6932001",
+        "description": "Boothのリンクです"
+      },
+      {
+        "type": "website",
+        "title": "X",
+        "url": "https://x.com/361do_sleep/status/1923332601713918423",
+        "description": "Xの投稿です"
+      }
+    ],
+    "thumbnail": "/images/portfolio/Ae_Border-1753840089865-8nd2od.jpg"
+  },
+  {
+    "id": "portfolio-1753839555107",
+    "type": "portfolio",
+    "title": "MultiSlicer",
+    "description": "Aeで画像をスライスするエフェクトプラグインです",
+    "category": "develop",
+    "tags": [],
+    "status": "published",
+    "priority": 50,
+    "createdAt": "2025-07-30T01:39:15.107Z",
+    "updatedAt": "2025-07-30T01:46:37.916Z",
+    "content": "Aeで画像をスライスするエフェクトプラグインです",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/X7XddKpTolw",
+        "title": "Ae版MultiSlicer PV",
+        "description": "Ae版MultiSlicerのPVです",
+        "thumbnail": "https://img.youtube.com/vi/X7XddKpTolw/maxresdefault.jpg"
+      }
+    ],
+    "images": ["/images/portfolio/20250503_multi-1753839872363-hw0x27.jpg"],
+    "externalLinks": [
+      {
+        "type": "booth",
+        "title": "Booth",
+        "url": "https://361do.booth.pm/items/6872180",
+        "description": "Boothリンクです 無料で配布しています"
+      },
+      {
+        "type": "website",
+        "url": "https://x.com/361do_sleep/status/1918615732939575763",
+        "title": "X",
+        "description": "Xで一番伸びた投稿です"
+      }
+    ],
+    "thumbnail": "/images/portfolio/20250503_multi-1753839872363-hw0x27.jpg"
+  },
+  {
+    "id": "portfolio-1753839404106",
+    "type": "portfolio",
+    "title": "デザイン練習 #001",
+    "description": "なにも考えずに手癖で作っています",
+    "category": "design",
+    "tags": [],
+    "status": "published",
+    "priority": 50,
+    "createdAt": "2025-07-30T01:36:44.106Z",
+    "updatedAt": "2025-07-30T01:38:55.789Z",
+    "content": "なにも考えずに手癖で作っています",
+    "videos": [],
+    "images": [
+      "https://pbs.twimg.com/media/GoVnXrGWIAAXdUS?format=jpg&name=large"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "title": "X",
+        "url": "https://x.com/361do_design/status/1911047618324795838",
+        "description": "Xのリンクです"
+      }
+    ]
+  },
+  {
     "id": "portfolio-1753706214241",
     "type": "portfolio",
     "title": "コンピュータ部 勧誘チラシ",
@@ -36,9 +206,12 @@
     "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:36:34.107Z",
-    "updatedAt": "2025-07-29T23:17:25.725Z",
+    "updatedAt": "2025-07-30T01:30:43.397Z",
     "videos": [],
-    "images": ["/images/portfolio/gifanim_m-1753831016627-vfiecn.gif"],
+    "images": [
+      "/images/portfolio/gifanim_m-1753831016627-vfiecn.gif",
+      "/images/portfolio/vlcsnap-2025-07-30-10h30m32s195-1753839037709-2itafx.png"
+    ],
     "externalLinks": [
       {
         "type": "website",
@@ -48,7 +221,7 @@
       }
     ],
     "content": "フォトショを使って初めて手書きアニメーションを作成しました。",
-    "thumbnail": "/images/portfolio/gifanim_m-1753831016627-vfiecn.gif"
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-10h30m32s195-1753839037709-2itafx.png"
   },
   {
     "id": "portfolio-1753706148196",

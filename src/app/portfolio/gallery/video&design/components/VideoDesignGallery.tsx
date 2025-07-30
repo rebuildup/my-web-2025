@@ -185,7 +185,7 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
       {/* Masonry-style Grid Layout */}
       <div
         className="grid grid-cols-3 gap-4"
-        style={{ gridAutoRows: "minmax(200px, auto)" }}
+        style={{ gridAutoRows: "minmax(var(--gallery-item-base), auto)" }}
       >
         {gridItems.map((item) => (
           <GridItemComponent

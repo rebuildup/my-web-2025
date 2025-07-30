@@ -1,5 +1,55 @@
 [
   {
+    "id": "portfolio-1753840532952",
+    "type": "portfolio",
+    "title": "期末テストお疲れ様でした 1Q",
+    "description": "今回もテストが終わった後に作りました",
+    "content": "今回もテストが終わった後に作りました",
+    "tags": [],
+    "category": "video",
+    "searchableContent": "期末テストお疲れ様でした 1q 今回もテストが終わった後に作りました 今回もテストが終わった後に作りました video"
+  },
+  {
+    "id": "portfolio-1753840319431",
+    "type": "portfolio",
+    "title": "【Aeエフェクトプラグイン】LiteGlow",
+    "description": "Aeでシンプルなグローを実現するエフェクトプラグインです\nDeepGlowが高かったので自分で作りました",
+    "content": "Aeでシンプルなグローを実現するエフェクトプラグインです\nDeepGlowが高かったので自分で作りました",
+    "tags": [],
+    "category": "develop",
+    "searchableContent": "【aeエフェクトプラグイン】liteglow aeでシンプルなグローを実現するエフェクトプラグインです\ndeepglowが高かったので自分で作りました aeでシンプルなグローを実現するエフェクトプラグインです\ndeepglowが高かったので自分で作りました develop"
+  },
+  {
+    "id": "portfolio-1753840034006",
+    "type": "portfolio",
+    "title": "Ae縁取りエフェクト Border",
+    "description": "AfterEffectsで縁取りを描画するエフェクトです",
+    "content": "AfterEffectsで縁取りを描画するエフェクトです\n",
+    "tags": [],
+    "category": "develop",
+    "searchableContent": "ae縁取りエフェクト border aftereffectsで縁取りを描画するエフェクトです aftereffectsで縁取りを描画するエフェクトです\n develop"
+  },
+  {
+    "id": "portfolio-1753839555107",
+    "type": "portfolio",
+    "title": "MultiSlicer",
+    "description": "Aeで画像をスライスするエフェクトプラグインです",
+    "content": "Aeで画像をスライスするエフェクトプラグインです",
+    "tags": [],
+    "category": "develop",
+    "searchableContent": "multislicer aeで画像をスライスするエフェクトプラグインです aeで画像をスライスするエフェクトプラグインです develop"
+  },
+  {
+    "id": "portfolio-1753839404106",
+    "type": "portfolio",
+    "title": "デザイン練習 #001",
+    "description": "なにも考えずに手癖で作っています",
+    "content": "なにも考えずに手癖で作っています",
+    "tags": [],
+    "category": "design",
+    "searchableContent": "デザイン練習 #001 なにも考えずに手癖で作っています なにも考えずに手癖で作っています design"
+  },
+  {
     "id": "portfolio-1753706214241",
     "type": "portfolio",
     "title": "コンピュータ部 勧誘チラシ",

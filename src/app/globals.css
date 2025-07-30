@@ -21,6 +21,11 @@
   --grid-eighth: 48px;
   --grid-sixteenth: 24px;
 
+  /* Video & Design Gallery Heights */
+  --gallery-item-base: 200px;
+  --gallery-item-double: 420px;
+  --gallery-item-triple: 640px;
+
   /* Font Variables */
   --font-neue-haas: "neue-haas-grotesk-display", sans-serif;
   --font-zen-kaku: "zen-kaku-gothic-new", sans-serif;

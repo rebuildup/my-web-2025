@@ -225,22 +225,23 @@ export function getGridItemClasses(gridSize: GridSize): string {
 }
 
 /**
- * Get minimum height for grid item based on size
+ * Get minimum height for grid item based on size using global grid system
  */
 export function getGridItemMinHeight(gridSize: GridSize): string {
+  // Use CSS custom properties from global grid system
   switch (gridSize) {
     case "1x1":
-      return "h-[250px]";
+      return "min-h-[var(--gallery-item-base)]"; // 200px base
     case "1x2":
-      return "h-[520px]";
+      return "min-h-[var(--gallery-item-double)]"; // 420px
     case "2x1":
-      return "h-[250px]";
+      return "min-h-[var(--gallery-item-base)]"; // 200px base
     case "2x2":
-      return "h-[520px]";
+      return "min-h-[var(--gallery-item-double)]"; // 420px
     case "1x3":
-      return "h-[790px]";
+      return "min-h-[var(--gallery-item-triple)]"; // 640px
     default:
-      return "h-[250px]";
+      return "min-h-[var(--gallery-item-base)]"; // 200px base
   }
 }
 
