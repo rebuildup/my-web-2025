@@ -2,7 +2,7 @@
 
 ## 1. データ構造拡張とマイグレーション
 
-- [ ] 1.1 拡張ContentItem型の定義と実装
+- [x] 1.1 拡張ContentItem型の定義と実装
   - EnhancedContentItem型の定義（複数カテゴリー、Otherカテゴリー、日付管理、画像管理、マークダウン管理対応）
   - EnhancedCategoryType型の定義（"other"カテゴリー追加）
   - TagInfo型とTagManagementSystem型の定義
@@ -11,7 +11,7 @@
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
   - _Test: npm run test:all実行、型チェック・単体テスト・統合テスト_
 
-- [ ] 1.2 データ移行システムの実装
+- [x] 1.2 データ移行システムの実装
   - ContentItemMigratorクラスの実装（旧形式から新形式への変換）
   - MigrationErrorHandlerクラスの実装（移行エラー処理）
   - バックアップ・ロールバック機能の実装

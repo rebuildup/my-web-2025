@@ -7,105 +7,143 @@
 // Content Management Types
 export type {
   ContentItem,
-  ContentType,
-  MediaEmbed,
-  ExternalLink,
-  DownloadInfo,
   ContentStats,
-  SEOData,
+  ContentType,
+  DownloadInfo,
+  ExternalLink,
+  MediaEmbed,
   SearchIndex,
-  SearchResult,
   SearchOptions,
+  SearchResult,
+  SEOData,
   StatData,
 } from "./content";
 
 // Portfolio-specific Types
 export type {
-  PortfolioContentItem,
-  PortfolioSEOData,
-  FilterOptions,
+  CategoryStats,
   DevelopFilterOptions,
-  VideoFilterOptions,
-  GridConfig,
-  ExperimentItem,
-  WebGLExperiment,
   DeviceCapabilities,
-  ValidationResult,
-  ValidationError,
-  ValidationWarning,
+  ExperimentItem,
+  FilterOptions,
   GalleryItem,
   GalleryType,
-  PortfolioStats,
-  CategoryStats,
+  GridConfig,
+  PortfolioContentItem,
   PortfolioSearchIndex,
+  PortfolioSEOData,
+  PortfolioStats,
+  ValidationError,
+  ValidationResult,
+  ValidationWarning,
+  VideoFilterOptions,
+  WebGLExperiment,
 } from "./portfolio";
+
+// Enhanced Content Types for Portfolio Content Data Enhancement
+export type {
+  DataMigrationHandler,
+  DateManagementSystem,
+  DatePickerProps,
+  EnhancedCategoryType,
+  EnhancedContentItem,
+  EnhancedDataManagerProps,
+  EnhancedFileUploadOptions,
+  EnhancedFileUploadSectionProps,
+  EnhancedGalleryFilterProps,
+  FileMetadata,
+  FileOperationError,
+  FileUploadResult,
+  MarkdownEditorProps,
+  MarkdownFileManager,
+  MigrationError,
+  MultiCategorySelectorProps,
+  TagInfo,
+  TagManagementSystem,
+  TagManagementUIProps,
+  VideoDesignGalleryProps,
+} from "./enhanced-content";
+
+// Enhanced Content Helper Functions
+export {
+  ENHANCED_PORTFOLIO_CATEGORIES as ENHANCED_CATEGORIES,
+  ENHANCED_PORTFOLIO_CATEGORY_LABELS as ENHANCED_CATEGORY_LABELS,
+  getEffectiveDate,
+  getEnhancedPortfolioCategoryOptions,
+  hasOtherCategory,
+  isEnhancedContentItem as isEnhancedContentItemHelper,
+  isValidEnhancedPortfolioCategory,
+  migrateCategoryToCategories,
+  shouldExcludeFromGallery,
+} from "./enhanced-content";
 
 // Site Configuration Types
 export type {
-  SiteConfig,
   AuthorInfo,
+  FeatureConfig,
+  GlobalSEOConfig,
+  IntegrationConfig,
+  SiteConfig,
   SocialLink,
   ThemeConfig,
-  FeatureConfig,
-  IntegrationConfig,
-  GlobalSEOConfig,
 } from "./site-config";
 
 // Form Configuration Types
 export type {
+  FieldValidation,
   FormConfig,
   FormField,
-  FormFieldType,
   FormFieldOption,
-  FieldValidation,
-  ValidationRule,
+  FormFieldType,
   SubmitConfig,
+  ValidationRule,
 } from "./form-config";
 
 // Navigation Types
 export type {
+  GridConfig as NavigationGridConfig,
   NavigationItem,
   PageConfig,
-  GridConfig as NavigationGridConfig,
 } from "./navigation";
 
 // API Types
 export type {
-  ApiResponse,
-  PaginationInfo,
-  ContentApiParams,
-  SearchApiRequest,
-  SearchApiResponse,
-  StatsUpdateRequest,
-  StatsResponse,
-  ContactFormData,
-  ContactApiResponse,
   AdminContentRequest,
   AdminUploadRequest,
   AdminUploadResponse,
+  ApiResponse,
   AppError,
+  ContactApiResponse,
+  ContactFormData,
+  ContentApiParams,
+  PaginationInfo,
+  SearchApiRequest,
+  SearchApiResponse,
+  StatsResponse,
+  StatsUpdateRequest,
 } from "./api";
 
 // Utility Types
 export type {
-  LazyComponentConfig,
-  ImageOptimizationConfig,
   CacheItem,
   CacheManager,
+  ColorInfo,
+  ColorPalette,
+  FileUploadConfig,
+  GridSystemConfig,
+  ImageOptimizationConfig,
+  LazyComponentConfig,
   MemoryOptimization,
+  ProcessedFile,
+  ToolConfig,
   ValidationResult as UtilsValidationResult,
   Validators,
-  FileUploadConfig,
-  ProcessedFile,
-  ColorPalette,
-  ColorInfo,
-  ToolConfig,
-  GridSystemConfig,
 } from "./utils";
 
 // Import types for type guards
+import type { ContentItem, ContentType } from "./content";
+import { EnhancedCategoryType, EnhancedContentItem } from "./enhanced-content";
 import type { FormFieldType } from "./form-config";
-import type { ContentType, ContentItem } from "./content";
 
 // Type Guards for Content Types
 export const isContentType = (value: string): value is ContentType => {
@@ -153,6 +191,47 @@ export const validateContentItem = (item: unknown): item is ContentItem => {
   );
 };
 
+// Enhanced content type guards and utilities
+export const isEnhancedCategoryType = (
+  value: string,
+): value is EnhancedCategoryType => {
+  return ["develop", "video", "design", "video&design", "other"].includes(
+    value,
+  );
+};
+
+export const validateEnhancedContentItem = (
+  item: unknown,
+): item is EnhancedContentItem => {
+  return (
+    typeof item === "object" &&
+    item !== null &&
+    typeof (item as EnhancedContentItem).id === "string" &&
+    isContentType((item as EnhancedContentItem).type) &&
+    typeof (item as EnhancedContentItem).title === "string" &&
+    typeof (item as EnhancedContentItem).description === "string" &&
+    Array.isArray((item as EnhancedContentItem).categories) &&
+    (item as EnhancedContentItem).categories.every((cat) =>
+      isEnhancedCategoryType(cat),
+    ) &&
+    Array.isArray((item as EnhancedContentItem).tags) &&
+    ["published", "draft", "archived", "scheduled"].includes(
+      (item as EnhancedContentItem).status,
+    ) &&
+    typeof (item as EnhancedContentItem).priority === "number" &&
+    typeof (item as EnhancedContentItem).createdAt === "string"
+  );
+};
+
+export const isEnhancedContentItem = (
+  item: ContentItem | EnhancedContentItem,
+): item is EnhancedContentItem => {
+  return (
+    "categories" in item &&
+    Array.isArray((item as EnhancedContentItem).categories)
+  );
+};
+
 // Constants for easy reference
 export const CONTENT_TYPES = [
   "portfolio",
@@ -181,6 +260,14 @@ export const CONTENT_STATUS_OPTIONS = [
   "draft",
   "archived",
   "scheduled",
+] as const;
+
+export const ENHANCED_PORTFOLIO_CATEGORIES = [
+  "develop",
+  "video",
+  "design",
+  "video&design",
+  "other",
 ] as const;
 
 // Export ContentError class for convenience
