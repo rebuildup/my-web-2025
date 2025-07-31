@@ -1,16 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Select } from "@/components/ui/Select";
+import { TagManagementUI } from "@/components/ui/TagManagementUI";
+import { clientTagManager } from "@/lib/portfolio/client-tag-manager";
 import {
   ContentItem,
   getPortfolioCategoryOptions,
   isValidPortfolioCategory,
 } from "@/types/content";
-import { Select } from "@/components/ui/Select";
+import { useEffect, useState } from "react";
+import { DownloadInfoSection } from "./DownloadInfoSection";
+import { ExternalLinksSection } from "./ExternalLinksSection";
 import { FileUploadSection } from "./FileUploadSection";
 import { MediaEmbedSection } from "./MediaEmbedSection";
-import { ExternalLinksSection } from "./ExternalLinksSection";
-import { DownloadInfoSection } from "./DownloadInfoSection";
 import { SEOSection } from "./SEOSection";
 
 interface DataManagerFormProps {
@@ -45,11 +47,7 @@ export function DataManagerForm({
     }));
   };
 
-  const handleTagsChange = (tagsString: string) => {
-    const tags = tagsString
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter((tag) => tag.length > 0);
+  const handleTagsChange = (tags: string[]) => {
     handleInputChange("tags", tags);
   };
 
@@ -223,13 +221,15 @@ export function DataManagerForm({
           </div>
 
           <div>
-            <label className={labelStyle}>Tags (comma-separated)</label>
-            <input
-              type="text"
-              value={formData.tags.join(", ")}
-              onChange={(e) => handleTagsChange(e.target.value)}
-              className={inputStyle}
-              placeholder="tag1, tag2, tag3"
+            <label className={labelStyle}>Tags</label>
+            <TagManagementUI
+              selectedTags={formData.tags || []}
+              onChange={handleTagsChange}
+              tagManager={clientTagManager}
+              allowNewTags={true}
+              maxTags={10}
+              placeholder="Search or add tags..."
+              className="mt-1"
             />
           </div>
 

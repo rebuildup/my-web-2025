@@ -19,6 +19,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
+    "test:e2e:fast": "playwright test --workers=4 --timeout=30000 --reporter=line",
+    "test:e2e:parallel": "playwright test --workers=6 --timeout=30000 --reporter=dot",
     "lighthouse": "lhci autorun",
     "test:all": "powershell -ExecutionPolicy Bypass -File scripts/run-all-tests.ps1",
     "test:all:bash": "bash scripts/run-all-tests.sh",

@@ -207,13 +207,20 @@ try {
 }
 Write-Host ""
 
-# 7. Playwright E2E Tests (最後に統合テスト)
+# 7. Playwright E2E Tests (最後に統合テスト) - 並列実行最適化
 Write-Host "7. Playwright E2E Tests Running..." -ForegroundColor Yellow
+Write-Host "   Using parallel workers for faster execution..." -ForegroundColor Gray
 try {
-    $playwrightOutput = npx playwright test --quiet 2>&1
+    # 並列実行とタイムアウト設定を最適化
+    $playwrightOutput = npm run test:e2e:fast --silent 2>&1
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Playwright Error Details:" -ForegroundColor Red
         Write-Host $playwrightOutput -ForegroundColor Red
+        
+        # 失敗したテストの詳細を表示
+        Write-Host "Running failed tests with detailed output..." -ForegroundColor Yellow
+        npx playwright test --workers=2 --timeout=30000 --reporter=list --only-failed
+        
         throw "Playwright E2E tests failed with exit code $LASTEXITCODE"
     }
     $testResults += "Playwright E2E: PASS"

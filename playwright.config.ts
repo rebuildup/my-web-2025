@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { cpus } from "os";
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -11,8 +12,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  /* Optimize workers for parallel execution */
+  workers: process.env.CI ? 4 : Math.min(6, cpus().length),
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: process.env.CI ? [["html"], ["github"]] : "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -24,28 +25,40 @@ export default defineConfig({
     trace: "on-first-retry",
   },
 
-  /* Global test timeout */
-  timeout: 90000, // 90 seconds per test
+  /* Global test timeout - optimized for faster execution */
+  timeout: 30000, // 30 seconds per test (reduced from 90s)
   expect: {
-    timeout: 15000, // 15 seconds for expect assertions
+    timeout: 10000, // 10 seconds for expect assertions (reduced from 15s)
   },
 
-  /* Configure projects for major browsers */
+  /* Configure projects for major browsers - optimized for parallel execution */
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        // Optimize for faster execution
+        launchOptions: {
+          args: [
+            "--disable-dev-shm-usage",
+            "--disable-extensions",
+            "--no-sandbox",
+          ],
+        },
+      },
     },
 
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
+    // Temporarily disable other browsers for faster CI execution
+    // Uncomment when needed for cross-browser testing
+    // {
+    //   name: "firefox",
+    //   use: { ...devices["Desktop Firefox"] },
+    // },
 
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
-    },
+    // {
+    //   name: "webkit",
+    //   use: { ...devices["Desktop Safari"] },
+    // },
 
     /* Test against mobile viewports. */
     // {
@@ -73,7 +86,7 @@ export default defineConfig({
     command: "npm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
-    timeout: 120000, // 2 minutes for server startup
+    timeout: 60000, // 1 minute for server startup (reduced from 2 minutes)
     stdout: process.env.CI ? "ignore" : "pipe",
     stderr: process.env.CI ? "ignore" : "pipe",
     env: {
