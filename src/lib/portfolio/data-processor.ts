@@ -17,6 +17,7 @@ import {
   MigrationErrorHandler,
   mixedDataFormatProcessor,
 } from "./data-migration";
+import { portfolioDateManager } from "./date-management";
 // Remove circular import - DataIntegrityIssue is defined in this file
 
 // Re-export types for backward compatibility
@@ -1393,21 +1394,6 @@ export class EnhancedPortfolioDataProcessor extends PortfolioDataProcessor {
   }
 
   /**
-   * Convert EnhancedContentItem to basic ContentItem for backward compatibility
-   */
-  private convertToEnhanced(item: ContentItem): EnhancedContentItem {
-    return {
-      ...item,
-      categories: [item.category as EnhancedCategoryType],
-      isOtherCategory: item.category === "other",
-      useManualDate: false,
-      effectiveDate: item.createdAt,
-      originalImages: [],
-      processedImages: item.images || [],
-    };
-  }
-
-  /**
    * Clear processing cache
    */
   clearCache(): void {
@@ -1424,7 +1410,217 @@ export class EnhancedPortfolioDataProcessor extends PortfolioDataProcessor {
       keys: Array.from(this.processingCache.keys()),
     };
   }
+  /**
+   * Enhanced item normalization with date management integration
+   */
+  private async normalizeEnhancedItemWithDateManagement(
+    item: EnhancedContentItem,
+  ): Promise<PortfolioContentItem> {
+    // Get effective date using date management system
+    const effectiveDate = portfolioDateManager.getEffectiveDate(item);
+
+    // Use the first category as the primary category for backward compatibility
+    const primaryCategory = item.categories[0] || "develop";
+    const normalizedCategory = this.normalizeCategory(primaryCategory);
+
+    // Use processed images as the main images array, fallback to original images
+    const images =
+      item.processedImages || item.originalImages || item.images || [];
+
+    const normalized: PortfolioContentItem = {
+      ...item,
+      category: normalizedCategory,
+      images,
+
+      // Date management integration
+      createdAt: effectiveDate.toISOString(),
+
+      // Ensure required fields
+      description: item.description || `${item.title}の作品詳細`,
+      thumbnail:
+        item.thumbnail || images[0] || "/images/portfolio/default-thumb.jpg",
+      technologies: this.extractTechnologies(
+        Array.isArray(item.tags) ? item.tags : [],
+      ),
+
+      // Calculate display properties
+      aspectRatio: this.calculateAspectRatio({
+        ...item,
+        category: primaryCategory,
+      } as ContentItem),
+      gridSize: this.determineGridSize(
+        normalizedCategory,
+        images,
+        item.priority,
+      ),
+
+      // Set project type based on category and tags
+      projectType: this.determineProjectType(
+        normalizedCategory,
+        Array.isArray(item.tags) ? item.tags : [],
+      ),
+      videoType: this.determineVideoType(
+        normalizedCategory,
+        Array.isArray(item.tags) ? item.tags : [],
+      ),
+      experimentType: this.determineExperimentType(
+        normalizedCategory,
+        Array.isArray(item.tags) ? item.tags : [],
+      ),
+
+      // Initialize SEO data structure with effective date
+      seo: {
+        title: item.title,
+        description: item.description,
+        keywords: Array.isArray(item.tags) ? item.tags : [],
+        ogImage: item.thumbnail || "/images/portfolio/default-og.jpg",
+        twitterImage: item.thumbnail || "/images/portfolio/default-twitter.jpg",
+        canonical: `https://yusuke-kim.com/portfolio/${item.id}`,
+        structuredData: {},
+      },
+    };
+
+    return normalized;
+  }
+
+  /**
+   * Update manual date for a portfolio item
+   */
+  async updateItemManualDate(itemId: string, date: string): Promise<void> {
+    try {
+      await portfolioDateManager.setManualDate(itemId, date);
+      testLogger.log(`Manual date updated for item ${itemId}: ${date}`);
+    } catch (error) {
+      testLogger.error(
+        `Failed to update manual date for item ${itemId}:`,
+        error,
+      );
+      throw error;
+    }
+  }
+
+  /**
+   * Get effective date for a portfolio item
+   */
+  getItemEffectiveDate(item: EnhancedContentItem): Date {
+    return portfolioDateManager.getEffectiveDate(item);
+  }
+
+  /**
+   * Get date statistics for all portfolio items
+   */
+  async getDateStatistics(): Promise<{
+    totalManualDates: number;
+    oldestManualDate?: string;
+    newestManualDate?: string;
+    recentlyUpdated: Array<{ itemId: string; date: string }>;
+  }> {
+    return await portfolioDateManager.getDateStats();
+  }
+
+  /**
+   * Bulk update manual dates for multiple items
+   */
+  async bulkUpdateManualDates(dates: Record<string, string>): Promise<void> {
+    try {
+      await portfolioDateManager.bulkSetManualDates(dates);
+      testLogger.log(
+        `Bulk updated manual dates for ${Object.keys(dates).length} items`,
+      );
+    } catch (error) {
+      testLogger.error("Failed to bulk update manual dates:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Format date for display in various formats
+   */
+  formatDateForDisplay(
+    date: string,
+    format: "iso" | "display" | "short" | "long" = "display",
+  ): string {
+    return portfolioDateManager.convertDateFormat(date, format);
+  }
+
+  /**
+   * Validate date format
+   */
+  validateDateFormat(date: string): boolean {
+    return portfolioDateManager.validateDate(date);
+  }
+
+  /**
+   * Parse and format date from various input formats
+   */
+  parseAndFormatDate(dateInput: string | Date): string {
+    return portfolioDateManager.parseAndFormatDate(dateInput);
+  }
+
+  /**
+   * Enhanced data processing with date management integration
+   */
+  async processRawDataWithDateManagement(
+    rawData: (ContentItem | EnhancedContentItem)[],
+  ): Promise<PortfolioContentItem[]> {
+    const startTime = Date.now();
+
+    try {
+      testLogger.log(
+        `Processing ${rawData.length} portfolio items with date management...`,
+      );
+
+      // First, handle data migration for mixed formats
+      const migratedData = await this.processMixedFormats(rawData);
+
+      // Process with date management integration
+      const normalized = await Promise.all(
+        migratedData.map(async (item) => {
+          const enhancedItem = this.convertToEnhanced(item);
+          return await this.normalizeEnhancedItemWithDateManagement(
+            enhancedItem,
+          );
+        }),
+      );
+
+      const validated = await this.validateData(normalized);
+      const enriched = await this.enrichData(validated);
+
+      const processingTime = Date.now() - startTime;
+      testLogger.log(
+        `Successfully processed ${enriched.length} portfolio items with date management in ${processingTime}ms`,
+      );
+
+      return enriched;
+    } catch (error) {
+      testLogger.error(
+        "Error in portfolio data processing with date management:",
+        error,
+      );
+      throw new Error(
+        `Data processing with date management failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
+  }
+
+  /**
+   * Convert ContentItem to EnhancedContentItem for date management
+   */
+  private convertToEnhanced(item: ContentItem): EnhancedContentItem {
+    return {
+      ...item,
+      category: item.category, // Keep original category for compatibility
+      categories: item.category
+        ? [item.category as EnhancedCategoryType]
+        : ["develop"],
+      isOtherCategory: item.category === "other",
+      useManualDate: false,
+      processedImages: item.images,
+      originalImages: [],
+    };
+  }
 }
+
 // Export singleton instances
 export const portfolioDataProcessor = new PortfolioDataProcessor();
 export const enhancedPortfolioDataProcessor =

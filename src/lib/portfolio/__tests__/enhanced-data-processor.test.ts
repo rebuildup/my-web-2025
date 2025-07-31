@@ -3,7 +3,8 @@
  * Task 1.3: 拡張データプロセッサーの実装 - テスト
  */
 
-import { ContentItem, EnhancedContentItem } from "@/types";
+import { ContentItem } from "@/types/content";
+import { EnhancedContentItem } from "@/types/enhanced-content";
 import { EnhancedPortfolioDataProcessor } from "../data-processor";
 
 describe("EnhancedPortfolioDataProcessor", () => {
