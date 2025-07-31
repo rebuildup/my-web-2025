@@ -52,6 +52,24 @@ declare global {
       postTask: (fn: () => void, options: { priority: string }) => void;
     };
   }
+
+  // Next.js specific types
+  namespace NodeJS {
+    interface ProcessEnv {
+      NODE_ENV: "development" | "production" | "test";
+      NEXT_PUBLIC_APP_URL: string;
+      NEXT_PUBLIC_VERCEL_URL?: string;
+      VERCEL_URL?: string;
+    }
+  }
+
+  // React 19 improvements
+  namespace React {
+    interface HTMLAttributes<T> {
+      // React 19 form actions
+      action?: string | ((formData: FormData) => void | Promise<void>);
+    }
+  }
 }
 
 export {};

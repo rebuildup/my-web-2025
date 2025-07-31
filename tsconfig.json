@@ -13,6 +13,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "assumeChangesOnlyAffectDirectDependencies": true,
+    "baseUrl": ".",
     "types": ["jest", "node", "@testing-library/jest-dom"],
     "plugins": [
       {
@@ -23,6 +25,16 @@
       "@/*": ["./src/*"]
     }
   },
+  "watchOptions": {
+    "watchFile": "useFsEvents",
+    "excludeDirectories": [
+      "**/node_modules",
+      "**/.git",
+      "**/.next",
+      "**/dist",
+      "**/build"
+    ]
+  },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
@@ -30,5 +42,14 @@
     ".next/types/**/*.ts",
     "src/types/global.d.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist",
+    "build",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }

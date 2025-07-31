@@ -14,6 +14,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "type-check": "tsc --noEmit",
+    "type-check:fast": "tsc-files --noEmit",
+    "type-coverage": "type-coverage --at-least 85",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
@@ -26,7 +28,8 @@
     "test:fast:verbose": "powershell -ExecutionPolicy Bypass -File scripts/run-all-tests-fast.ps1 -Verbose",
     "analyze": "cross-env ANALYZE=true npm run build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server npm run build",
-    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser npm run build"
+    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser npm run build",
+    "prepare": "husky"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -85,14 +88,28 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.3",
     "eslint-plugin-tailwindcss": "^4.0.0-beta.0",
+    "husky": "^9.1.7",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
     "lhci": "^4.1.1",
+    "lint-staged": "^16.1.2",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "textlint": "^15.2.0",
     "textlint-rule-preset-ai-writing": "^1.1.0",
+    "tsc-files": "^1.1.4",
+    "type-coverage": "^2.29.7",
     "typescript": "^5",
     "webpack-bundle-analyzer": "^4.10.2"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx}": [
+      "tsc-files --noEmit",
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{js,jsx,json,md}": [
+      "prettier --write"
+    ]
   }
 }

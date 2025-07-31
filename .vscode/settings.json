@@ -1,3 +1,13 @@
 {
-  "typescript.autoClosingTags": false
+  "typescript.autoClosingTags": false,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.addMissingImports": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.suggest.autoImports": true,
+  "typescript.inlayHints.includeInlayParameterNameHints": "all",
+  "typescript.preferences.includePackageJsonAutoImports": "auto"
 }
