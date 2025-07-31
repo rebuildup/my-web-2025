@@ -52,5 +52,71 @@
     "severity": "medium",
     "category": "javascript",
     "resolved": false
+  },
+  {
+    "id": "error_1753945135317_5tr185puq",
+    "timestamp": "2025-07-31T06:58:55.317Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3219:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753945129144_2lfziwaly",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753945145785_qbfyp6zze",
+    "timestamp": "2025-07-31T06:59:05.785Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3219:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1753945136081_ru308fqth",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753947576048_eqgnxguof",
+    "timestamp": "2025-07-31T07:39:36.048Z",
+    "message": "Invalid fetch response: \"https://use.typekit.net/af/1cd623/00000000000000007735ecb2/31/m?features=NONE&v=4&chunks=224&state=1.112.193.199.201.208.209.216.230.236.238.243&order=0\": 503",
+    "stack": "tb/</<@https://use.typekit.net/blm5pmr.js:56:277\npromise callback*tb/<@https://use.typekit.net/blm5pmr.js:56:233\ntb@https://use.typekit.net/blm5pmr.js:56:91\nsb.prototype.H/b.D</<@https://use.typekit.net/blm5pmr.js:55:359\npromise callback*sb.prototype.H/b.D<@https://use.typekit.net/blm5pmr.js:55:336\npromise callback*sb.prototype.H@https://use.typekit.net/blm5pmr.js:55:72\nRb.prototype.update@https://use.typekit.net/blm5pmr.js:67:415\nXb/<@https://use.typekit.net/blm5pmr.js:68:1048\nXb@https://use.typekit.net/blm5pmr.js:68:1015\nWb.prototype.load/</d<@https://use.typekit.net/blm5pmr.js:70:156\nEb/this.g<@https://use.typekit.net/blm5pmr.js:60:512\nxb/this.o<@https://use.typekit.net/blm5pmr.js:57:685\nMutationCallback*xb@https://use.typekit.net/blm5pmr.js:57:429\nEb@https://use.typekit.net/blm5pmr.js:60:362\nWb.prototype.load/<@https://use.typekit.net/blm5pmr.js:70:128\nca@https://use.typekit.net/blm5pmr.js:8:34\nWb.prototype.load@https://use.typekit.net/blm5pmr.js:70:72\ntk.onreadystatechange@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:8:437\nEventHandlerNonNull*@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:8:298\n@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:13:17\nloadScript@http://localhost:3000/_next/static/chunks/node_modules_dc0f015d._.js:255:19\n[project]/node_modules/next/dist/client/script.js [app-client] (ecmascript)/Script/<@http://localhost:3000/_next/static/chunks/node_modules_dc0f015d._.js:344:27\nreact_stack_bottom_frame@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:13064:22\nrunWithFiberInDEV@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:131\ncommitHookEffectListMount@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6578:628\ncommitHookPassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6613:60\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7568:33\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\n",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753947572732_wtg7y9sdp",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
+  },
+  {
+    "id": "error_1753947576052_ecfkx2t08",
+    "timestamp": "2025-07-31T07:39:36.052Z",
+    "message": "Invalid fetch response: \"https://use.typekit.net/af/874c90/00000000000000007735ecbb/31/m?features=NONE&v=4&chunks=224&state=1.112.193.199.201.208.209.216.230.236.238.243&order=0\": 503",
+    "stack": "tb/</<@https://use.typekit.net/blm5pmr.js:56:277\npromise callback*tb/<@https://use.typekit.net/blm5pmr.js:56:233\ntb@https://use.typekit.net/blm5pmr.js:56:91\nsb.prototype.H/b.D</<@https://use.typekit.net/blm5pmr.js:55:359\npromise callback*sb.prototype.H/b.D<@https://use.typekit.net/blm5pmr.js:55:336\npromise callback*sb.prototype.H@https://use.typekit.net/blm5pmr.js:55:72\nRb.prototype.update@https://use.typekit.net/blm5pmr.js:67:415\nXb/<@https://use.typekit.net/blm5pmr.js:68:1048\nXb@https://use.typekit.net/blm5pmr.js:68:1015\nWb.prototype.load/</d<@https://use.typekit.net/blm5pmr.js:70:156\nEb/this.g<@https://use.typekit.net/blm5pmr.js:60:512\nxb/this.o<@https://use.typekit.net/blm5pmr.js:57:685\nMutationCallback*xb@https://use.typekit.net/blm5pmr.js:57:429\nEb@https://use.typekit.net/blm5pmr.js:60:362\nWb.prototype.load/<@https://use.typekit.net/blm5pmr.js:70:128\nca@https://use.typekit.net/blm5pmr.js:8:34\nWb.prototype.load@https://use.typekit.net/blm5pmr.js:70:72\ntk.onreadystatechange@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:8:437\nEventHandlerNonNull*@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:8:298\n@http://localhost:3000/portfolio/gallery/video line 255 > injectedScript:13:17\nloadScript@http://localhost:3000/_next/static/chunks/node_modules_dc0f015d._.js:255:19\n[project]/node_modules/next/dist/client/script.js [app-client] (ecmascript)/Script/<@http://localhost:3000/_next/static/chunks/node_modules_dc0f015d._.js:344:27\nreact_stack_bottom_frame@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:13064:22\nrunWithFiberInDEV@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:131\ncommitHookEffectListMount@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6578:628\ncommitHookPassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6613:60\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7568:33\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7611:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7571:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\ncommitPassiveMountOnFiber@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7567:55\nrecursivelyTraversePassiveMountEffects@http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7559:131\n",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0.2) Gecko/20100101 Firefox/140.0.2",
+    "sessionId": "session_1753947572732_wtg7y9sdp",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
   }
 ]

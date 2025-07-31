@@ -83,7 +83,7 @@
 
 ## 4. 詳細ページ群の実装
 
-- [ ] 4.1 開発系詳細ページ(/portfolio/detail/develop)の実装
+- [x] 4.1 開発系詳細ページ(/portfolio/detail/develop)の実装
   - 技術詳細、実装方法、使用技術を重視した表示
   - コードブロック埋め込み機能
   - GitHub連携機能
@@ -91,7 +91,7 @@
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
   - _Test: npm run test:all実行、詳細表示・埋め込み機能テスト_
 
-- [ ] 4.2 映像詳細ページ(/portfolio/detail/video)の実装
+- [-] 4.2 映像詳細ページ(/portfolio/detail/video)の実装
   - 制作過程、使用ソフト、制作時間を重視した表示
   - 動画埋め込み最適化
   - 制作工程の可視化

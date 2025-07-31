@@ -26,6 +26,8 @@
     "test:fast:bash": "bash scripts/run-all-tests-fast.sh",
     "test:fast:skip-e2e": "powershell -ExecutionPolicy Bypass -File scripts/run-all-tests-fast.ps1 -SkipSlowTests",
     "test:fast:verbose": "powershell -ExecutionPolicy Bypass -File scripts/run-all-tests-fast.ps1 -Verbose",
+    "test:pre-commit": "npx lint-staged --allow-empty",
+    "test:husky": "npm run test:pre-commit",
     "analyze": "cross-env ANALYZE=true npm run build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server npm run build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser npm run build",
@@ -104,12 +106,15 @@
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
-      "tsc-files --noEmit",
+      "prettier --write",
       "eslint --fix",
-      "prettier --write"
+      "tsc-files --noEmit"
     ],
     "**/*.{js,jsx,json,md}": [
       "prettier --write"
+    ],
+    "**/*.md": [
+      "textlint --fix"
     ]
   }
 }

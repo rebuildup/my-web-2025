@@ -14,7 +14,7 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: "html",
+  reporter: process.env.CI ? [["html"], ["github"]] : "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -74,12 +74,13 @@ export default defineConfig({
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120000, // 2 minutes for server startup
-    stdout: "pipe",
-    stderr: "pipe",
+    stdout: process.env.CI ? "ignore" : "pipe",
+    stderr: process.env.CI ? "ignore" : "pipe",
     env: {
       PLAYWRIGHT_TEST: "true",
       NODE_ENV: "test",
       __NEXT_DISABLE_DEV_OVERLAY: "true",
+      NEXT_TELEMETRY_DISABLED: "1",
     },
   },
 });

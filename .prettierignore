@@ -77,3 +77,7 @@ jspm_packages/
 # Auto-generated files
 playwright-report/index.html
 test-results/.last-run.json
+
+# Large monitoring data files
+public/data/monitoring/alerts/*.json
+public/data/monitoring/errors/*.json
