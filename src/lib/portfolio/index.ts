@@ -18,18 +18,18 @@ export {
   PortfolioDataProcessor,
   portfolioDataProcessor,
   type PortfolioContentItem,
-  type ValidationResult,
-  type ValidationError,
-  type ValidationWarning,
   type PortfolioStats,
+  type ValidationError,
+  type ValidationResult,
+  type ValidationWarning,
 } from "./data-processor";
 
 // SEO generator
 export {
   SEOMetadataGenerator,
   seoMetadataGenerator,
-  type PageMetadata,
   type OpenGraphData,
+  type PageMetadata,
   type TwitterCardData,
 } from "./seo-generator";
 
@@ -45,28 +45,35 @@ export {
 // Integration manager
 export { PortfolioIntegrationManager } from "./integration-manager";
 
+// Tag management system
+export {
+  createTagManager,
+  PortfolioTagManager,
+  portfolioTagManager,
+} from "./tag-management";
+
 // Integration classes
 export {
+  AboutIntegration,
+  AnalyticsIntegration,
   HomePageIntegration,
   SearchIntegration,
-  AboutIntegration,
   SEOIntegration,
-  AnalyticsIntegration,
-  type PortfolioStats as HomePortfolioStats,
-  type UpdateInfo,
-  type SearchIndex,
-  type SearchFilter as IntegrationSearchFilter,
-  type SearchResult,
-  type Skill,
-  type ClientProject,
-  type TechnologyExperience,
-  type SitemapEntry,
-  type MetaTags,
-  type OpenGraphData as IntegrationOpenGraphData,
-  type TwitterCardData as IntegrationTwitterCardData,
   type AnalyticsEvent,
-  type PortfolioAnalytics,
   type AnalyticsReport,
+  type ClientProject,
+  type PortfolioStats as HomePortfolioStats,
+  type OpenGraphData as IntegrationOpenGraphData,
+  type SearchFilter as IntegrationSearchFilter,
+  type TwitterCardData as IntegrationTwitterCardData,
+  type MetaTags,
+  type PortfolioAnalytics,
+  type SearchIndex,
+  type SearchResult,
+  type SitemapEntry,
+  type Skill,
+  type TechnologyExperience,
+  type UpdateInfo,
 } from "./integrations";
 
 // Import singleton instances for convenience functions
