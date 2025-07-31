@@ -51,7 +51,7 @@
   - _Requirements: 3.1, 3.2, 3.3, 10.1, 10.2, 10.3_
   - _Test: npm run test:all実行、UIコンポーネント・ユーザーインタラクションテスト_
 
-- [ ] 2.3 タグ管理APIエンドポイントの実装
+- [x] 2.3 タグ管理APIエンドポイントの実装
   - GET /api/admin/tags - タグ一覧取得
   - POST /api/admin/tags - 新規タグ作成
   - PUT /api/admin/tags/[name] - タグ更新
