@@ -65,6 +65,7 @@ declare global {
 
   // React 19 improvements
   namespace React {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface HTMLAttributes<T> {
       // React 19 form actions
       action?: string | ((formData: FormData) => void | Promise<void>);

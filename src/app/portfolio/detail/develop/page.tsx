@@ -1,6 +1,7 @@
 import type { ContentItem } from "@/types";
 import { Calendar, Code, ExternalLink, Github, Star } from "lucide-react";
 import { Metadata } from "next";
+import NextImage from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -571,9 +572,11 @@ export default async function DevelopDetailPage({
                         className="bg-base border border-foreground p-4 space-y-4 hover:border-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
                       >
                         {project.thumbnail && (
-                          <img
+                          <NextImage
                             src={project.thumbnail}
                             alt={project.title}
+                            width={400}
+                            height={128}
                             className="w-full h-32 object-cover border border-foreground"
                           />
                         )}
@@ -724,10 +727,12 @@ export default async function DevelopDetailPage({
                               {selectedProject.images
                                 .slice(0, 2)
                                 .map((image, index) => (
-                                  <img
+                                  <NextImage
                                     key={index}
                                     src={image}
                                     alt={`${selectedProject.title} - Image ${index + 1}`}
+                                    width={400}
+                                    height={300}
                                     className="w-full h-auto border border-foreground"
                                   />
                                 ))}

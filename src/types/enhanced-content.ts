@@ -259,6 +259,7 @@ export const hasOtherCategory = (item: EnhancedContentItem): boolean => {
 // Helper function to check if an item should be excluded from specific galleries
 export const shouldExcludeFromGallery = (
   item: EnhancedContentItem,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _galleryType: "develop" | "video" | "design" | "video&design",
 ): boolean => {
   return hasOtherCategory(item);

@@ -110,6 +110,7 @@ export interface SearchIndex {
   tags: string[];
   category: string;
   searchableContent: string; // title + description + content + tags
+  searchScore?: number; // Optional search score for performance optimization
 }
 
 export interface SearchResult {
