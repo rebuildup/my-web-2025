@@ -3,15 +3,15 @@
  * Task 1.2: データ処理パイプラインの構築
  */
 
+import { ContentItem, EnhancedContentItem, SearchIndex } from "@/types";
 import {
-  ContentItem,
-  SearchIndex,
-  PortfolioCategory,
-  PORTFOLIO_CATEGORIES,
   isValidPortfolioCategory,
+  PORTFOLIO_CATEGORIES,
+  PortfolioCategory,
 } from "@/types/content";
 import { PortfolioContentItem, PortfolioStats } from "@/types/portfolio";
 import { testLogger } from "../utils/test-logger";
+import { mixedDataFormatProcessor } from "./data-migration";
 
 // Re-export types for backward compatibility
 export type { PortfolioContentItem, PortfolioStats };
@@ -73,15 +73,19 @@ export class PortfolioDataProcessor {
   ];
 
   /**
-   * Main processing pipeline
+   * Main processing pipeline - Enhanced to handle mixed data formats
    */
   async processRawData(
-    rawData: ContentItem[],
+    rawData: (ContentItem | EnhancedContentItem)[],
   ): Promise<PortfolioContentItem[]> {
     try {
       testLogger.log(`Processing ${rawData.length} portfolio items...`);
 
-      const normalized = await this.normalizeData(rawData);
+      // First, handle data migration for mixed formats
+      const migratedData = await this.processMixedFormats(rawData);
+
+      // Then process with existing pipeline
+      const normalized = await this.normalizeData(migratedData);
       const validated = await this.validateData(normalized);
       const enriched = await this.enrichData(validated);
 
@@ -95,6 +99,47 @@ export class PortfolioDataProcessor {
         `Data processing failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
+  }
+
+  /**
+   * Process mixed data formats (old ContentItem and new EnhancedContentItem)
+   */
+  private async processMixedFormats(
+    rawData: (ContentItem | EnhancedContentItem)[],
+  ): Promise<ContentItem[]> {
+    try {
+      // Use the migration system to handle mixed formats
+      const enhancedItems =
+        await mixedDataFormatProcessor.processMixedData(rawData);
+
+      // Convert enhanced items back to ContentItem format for existing pipeline
+      // This maintains backward compatibility while supporting enhanced features
+      return enhancedItems.map((item) =>
+        this.convertEnhancedToContentItem(item),
+      );
+    } catch (error) {
+      testLogger.error("Error processing mixed data formats:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Convert EnhancedContentItem back to ContentItem for backward compatibility
+   */
+  private convertEnhancedToContentItem(
+    enhancedItem: EnhancedContentItem,
+  ): ContentItem {
+    // Use the first category as the primary category for backward compatibility
+    const primaryCategory = enhancedItem.categories[0] || "develop";
+
+    return {
+      ...enhancedItem,
+      category: primaryCategory,
+      // Use processed images as the main images array
+      images: enhancedItem.processedImages || enhancedItem.images || [],
+      // Use markdown content if available, otherwise keep existing content
+      content: enhancedItem.markdownContent || enhancedItem.content,
+    };
   }
 
   /**
