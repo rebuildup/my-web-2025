@@ -5,9 +5,9 @@
  * Task 3.1: 統一されたカードレイアウトの実装
  */
 
-import { useState } from "react";
-import Image from "next/image";
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
+import Image from "next/image";
+import { useState } from "react";
 
 interface PortfolioCardProps {
   item: PortfolioContentItem;
@@ -78,7 +78,7 @@ export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={handleImageError}
             loading="lazy"
-            unoptimized
+            unoptimized={true}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-background">

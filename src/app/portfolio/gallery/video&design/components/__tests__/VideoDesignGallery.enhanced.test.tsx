@@ -95,6 +95,231 @@ describe("VideoDesignGallery Enhanced", () => {
     jest.clearAllMocks();
   });
 
+  describe("Category Display Options", () => {
+    it("should show only video items when showVideoItems is true and others are false", () => {
+      const mixedItems = [
+        {
+          id: "1",
+          type: "portfolio",
+          title: "Video Item",
+          description: "Test video item",
+          category: "video",
+          categories: ["video"],
+          tags: ["test"],
+          status: "published",
+          priority: 50,
+          createdAt: "2024-01-01",
+          thumbnail: "/test-video.jpg",
+          url: "/portfolio/1",
+        },
+        {
+          id: "2",
+          type: "portfolio",
+          title: "Design Item",
+          description: "Test design item",
+          category: "design",
+          categories: ["design"],
+          tags: ["test"],
+          status: "published",
+          priority: 50,
+          createdAt: "2024-01-01",
+          thumbnail: "/test-design.jpg",
+          url: "/portfolio/2",
+        },
+        {
+          id: "3",
+          type: "portfolio",
+          title: "Video&Design Item",
+          description: "Test video&design item",
+          category: "video&design",
+          categories: ["video&design"],
+          tags: ["test"],
+          status: "published",
+          priority: 50,
+          createdAt: "2024-01-01",
+          thumbnail: "/test-video-design.jpg",
+          url: "/portfolio/3",
+        },
+      ] as EnhancedContentItem[];
+
+      render(
+        <VideoDesignGallery
+          items={mixedItems}
+          showVideoItems={true}
+          showDesignItems={false}
+          showVideoDesignItems={false}
+        />,
+      );
+
+      expect(screen.getByText("Video Item")).toBeInTheDocument();
+      expect(screen.queryByText("Design Item")).not.toBeInTheDocument();
+      expect(screen.queryByText("Video&Design Item")).not.toBeInTheDocument();
+    });
+
+    it("should show all items when all display options are true", () => {
+      const mixedItems = [
+        {
+          id: "1",
+          type: "portfolio",
+          title: "Video Item",
+          description: "Test video item",
+          category: "video",
+          categories: ["video"],
+          tags: ["test"],
+          status: "published",
+          priority: 50,
+          createdAt: "2024-01-01",
+          thumbnail: "/test-video.jpg",
+          url: "/portfolio/1",
+        },
+        {
+          id: "2",
+          type: "portfolio",
+          title: "Design Item",
+          description: "Test design item",
+          category: "design",
+          categories: ["design"],
+          tags: ["test"],
+          status: "published",
+          priority: 50,
+          createdAt: "2024-01-01",
+          thumbnail: "/test-design.jpg",
+          url: "/portfolio/2",
+        },
+        {
+          id: "3",
+          type: "portfolio",
+          title: "Video&Design Item",
+          description: "Test video&design item",
+          category: "video&design",
+          categories: ["video&design"],
+          tags: ["test"],
+          status: "published",
+          priority: 50,
+          createdAt: "2024-01-01",
+          thumbnail: "/test-video-design.jpg",
+          url: "/portfolio/3",
+        },
+      ] as EnhancedContentItem[];
+
+      render(
+        <VideoDesignGallery
+          items={mixedItems}
+          showVideoItems={true}
+          showDesignItems={true}
+          showVideoDesignItems={true}
+        />,
+      );
+
+      expect(screen.getByText("Video Item")).toBeInTheDocument();
+      expect(screen.getByText("Design Item")).toBeInTheDocument();
+      expect(screen.getByText("Video&Design Item")).toBeInTheDocument();
+    });
+  });
+
+  describe("Deduplication", () => {
+    it("should remove duplicate items when deduplication is enabled", () => {
+      const duplicateItems = [
+        {
+          id: "1",
+          type: "portfolio",
+          title: "Duplicate Item",
+          description: "Test duplicate item",
+          category: "video",
+          categories: ["video"],
+          tags: ["test"],
+          status: "published",
+          priority: 50,
+          createdAt: "2024-01-01",
+          thumbnail: "/test-duplicate.jpg",
+          url: "/portfolio/1",
+        },
+        {
+          id: "1",
+          type: "portfolio",
+          title: "Duplicate Item",
+          description: "Test duplicate item",
+          category: "design",
+          categories: ["design"],
+          tags: ["test"],
+          status: "published",
+          priority: 50,
+          createdAt: "2024-01-01",
+          thumbnail: "/test-duplicate.jpg",
+          url: "/portfolio/1",
+        }, // Same ID
+        {
+          id: "2",
+          type: "portfolio",
+          title: "Unique Item",
+          description: "Test unique item",
+          category: "video&design",
+          categories: ["video&design"],
+          tags: ["test"],
+          status: "published",
+          priority: 50,
+          createdAt: "2024-01-01",
+          thumbnail: "/test-unique.jpg",
+          url: "/portfolio/2",
+        },
+      ] as EnhancedContentItem[];
+
+      render(
+        <VideoDesignGallery items={duplicateItems} deduplication={true} />,
+      );
+
+      // Should only show each unique ID once
+      const duplicateElements = screen.getAllByText("Duplicate Item");
+      expect(duplicateElements).toHaveLength(1);
+      expect(screen.getByText("Unique Item")).toBeInTheDocument();
+    });
+  });
+
+  describe("Error Handling", () => {
+    it("should handle invalid items gracefully", () => {
+      const invalidItems = [
+        null,
+        undefined,
+        { id: "", title: "No ID" },
+        { id: "valid", title: "" },
+        {
+          id: "valid2",
+          type: "portfolio",
+          title: "Valid Item",
+          description: "Test valid item",
+          category: "video",
+          categories: ["video"],
+          tags: ["test"],
+          status: "published",
+          priority: 50,
+          createdAt: "2024-01-01",
+          thumbnail: "/test-valid.jpg",
+          url: "/portfolio/valid2",
+        },
+      ] as (PortfolioContentItem | EnhancedContentItem)[];
+
+      render(<VideoDesignGallery items={invalidItems} />);
+
+      // Should only show the valid item
+      expect(screen.getByText("Valid Item")).toBeInTheDocument();
+      expect(screen.queryByText("No ID")).not.toBeInTheDocument();
+    });
+
+    it("should show error state when items is not an array", () => {
+      render(
+        <VideoDesignGallery
+          items={
+            null as unknown as (PortfolioContentItem | EnhancedContentItem)[]
+          }
+        />,
+      );
+
+      // Should show error state
+      expect(screen.getByText("Error Loading Gallery")).toBeInTheDocument();
+      expect(screen.getByText("Retry")).toBeInTheDocument();
+    });
+  });
+
   describe("Item Validation and Error Handling", () => {
     it("should handle invalid items gracefully", () => {
       const invalidItems = [
@@ -129,8 +354,8 @@ describe("VideoDesignGallery Enhanced", () => {
         />,
       );
 
-      // Should show empty state
-      expect(screen.getByText("No projects found")).toBeInTheDocument();
+      // Should show error state when items is null
+      expect(screen.getByText("Error Loading Gallery")).toBeInTheDocument();
     });
   });
 

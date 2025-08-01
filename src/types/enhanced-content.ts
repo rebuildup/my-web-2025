@@ -4,6 +4,7 @@
  */
 
 import type { CategoryType, ContentItem } from "./content";
+import type { PortfolioContentItem } from "./portfolio";
 
 // Enhanced category type with "other" category added
 export type EnhancedCategoryType =
@@ -168,11 +169,13 @@ export interface EnhancedGalleryFilterProps {
 }
 
 export interface VideoDesignGalleryProps {
-  items: EnhancedContentItem[];
+  items: (PortfolioContentItem | EnhancedContentItem)[];
   showVideoItems?: boolean; // Show video category
   showDesignItems?: boolean; // Show design category
   showVideoDesignItems?: boolean; // Show video&design category
   deduplication?: boolean; // Remove duplicates
+  enableCaching?: boolean; // Enable performance caching
+  onError?: (error: Error) => void; // Error callback
 }
 
 // Data migration types

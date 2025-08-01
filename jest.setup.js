@@ -24,8 +24,10 @@ jest.mock("next/navigation", () => ({
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props) => {
+    const { unoptimized, ...imgProps } = props;
+    // Remove unoptimized prop entirely to avoid DOM warnings
     // eslint-disable-next-line @next/next/no-img-element
-    return <img {...props} />;
+    return <img {...imgProps} />;
   },
 }));
 
@@ -62,7 +64,19 @@ beforeAll(() => {
         args[0].includes("Error in monitoring/") ||
         args[0].includes("SyntaxError: Unexpected end of JSON input") ||
         args[0].includes("Validation error for") ||
-        args[0].includes("Portfolio data processing failed:"))
+        args[0].includes("Portfolio data processing failed:") ||
+        args[0].includes("Received NaN for the `children` attribute") ||
+        args[0].includes("VideoDesignGallery Error") ||
+        args[0].includes("Validation failed:") ||
+        args[0].includes("Error creating markdown file:") ||
+        args[0].includes("Error fetching featured projects:") ||
+        args[0].includes("Error generating search index:") ||
+        args[0].includes("Error generating sitemap entries:") ||
+        args[0].includes("Error saving dates file:") ||
+        args[0].includes("Error saving tags file:") ||
+        args[0].includes("Error generating portfolio top metadata:") ||
+        args[0].includes("Received `true` for a non-boolean attribute") ||
+        args[0].includes("Received `false` for a non-boolean attribute"))
     ) {
       return;
     }
@@ -110,7 +124,15 @@ beforeAll(() => {
       typeof args[0] === "string" &&
       (args[0].includes("Invalid JSON in") ||
         args[0].includes("Error in monitoring/") ||
-        args[0].includes("Invalid portfolio item:"))
+        args[0].includes("Invalid portfolio item:") ||
+        args[0].includes("Failed to get metadata for") ||
+        args[0].includes("Failed to convert content to markdown file") ||
+        args[0].includes("Failed to read markdown file") ||
+        args[0].includes("Failed to update markdown file") ||
+        args[0].includes("Failed to delete markdown file") ||
+        args[0].includes("Error loading tags file:") ||
+        args[0].includes("VideoDesignGallery: Invalid item object found") ||
+        args[0].includes("VideoDesignGallery: Item missing valid"))
     ) {
       return;
     }
@@ -126,6 +148,13 @@ beforeAll(() => {
         args[0].includes("Cache updated with") ||
         args[0].includes("Portfolio data processing completed") ||
         args[0].includes("Returning cached portfolio data") ||
+        args[0].includes("VideoDesignGallery received items:") ||
+        args[0].includes("VideoDesignGallery: Removing duplicate item") ||
+        args[0].includes("Successfully loaded") ||
+        args[0].includes("=== Form submission started ===") ||
+        args[0].includes("Original form data:") ||
+        args[0].includes("Data to save:") ||
+        args[0].includes("Calling onSave...") ||
         (args[0].includes("Processing") && args[0].includes("portfolio items")))
     ) {
       return;

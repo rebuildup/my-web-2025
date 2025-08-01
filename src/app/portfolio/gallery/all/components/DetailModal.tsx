@@ -5,11 +5,11 @@
  * Task 3.1: 詳細パネル表示機能（モーダル）の実装
  */
 
-import { useEffect, useRef } from "react";
+import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
+import { Calendar, Code, ExternalLink, Tag, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, ExternalLink, Calendar, Tag, Code } from "lucide-react";
-import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
+import { useEffect, useRef } from "react";
 
 interface DetailModalProps {
   item: PortfolioContentItem;
@@ -110,7 +110,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
                 height={450}
                 className="w-full h-full object-cover"
                 priority
-                unoptimized
+                unoptimized={true}
               />
             </div>
           )}
@@ -293,7 +293,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
                       height={200}
                       className="w-full h-full object-cover"
                       loading="lazy"
-                      unoptimized
+                      unoptimized={true}
                     />
                   </div>
                 ))}

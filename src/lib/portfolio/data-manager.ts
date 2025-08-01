@@ -4,21 +4,21 @@
  */
 
 import { ContentItem } from "@/types/content";
+import { testLogger } from "../utils/test-logger";
 import {
-  PortfolioDataProcessor,
   PortfolioContentItem,
+  PortfolioDataProcessor,
   PortfolioStats,
   portfolioDataProcessor,
 } from "./data-processor";
-import { SEOMetadataGenerator, seoMetadataGenerator } from "./seo-generator";
 import {
-  PortfolioSearchIndexGenerator,
   PortfolioSearchIndex,
+  PortfolioSearchIndexGenerator,
   SearchFilter,
   SearchStats,
   portfolioSearchIndexGenerator,
 } from "./search-index";
-import { testLogger } from "../utils/test-logger";
+import { SEOMetadataGenerator, seoMetadataGenerator } from "./seo-generator";
 
 export interface DataCache {
   portfolioData: Map<string, PortfolioContentItem>;
@@ -498,8 +498,19 @@ export class PortfolioDataManager {
    * Private: Fetch raw portfolio data from API
    */
   private async fetchRawPortfolioData(): Promise<ContentItem[]> {
+    // Always try file system first during build or when server is not available
+    if (
+      typeof window === "undefined" &&
+      (process.env.NEXT_BUILD_TIME === "true" ||
+        process.env.NODE_ENV === "production" ||
+        process.env.NEXT_PHASE === "phase-production-build" ||
+        (!process.env.VERCEL_URL && !process.env.NEXT_PUBLIC_BASE_URL))
+    ) {
+      return await this.loadPortfolioFromFile();
+    }
+
     try {
-      // In production, try API first, then fallback to file
+      // In runtime, try API first, then fallback to file
       const baseUrl =
         process.env.NEXT_PUBLIC_BASE_URL ||
         (typeof window !== "undefined"
@@ -530,8 +541,16 @@ export class PortfolioDataManager {
       const result = await response.json();
       return result.data || [];
     } catch (error) {
-      testLogger.error("Error fetching raw portfolio data from API:", error);
-      testLogger.log("Falling back to file system data...");
+      // During build time, suppress API errors as they're expected
+      if (
+        typeof window === "undefined" &&
+        process.env.NODE_ENV === "production"
+      ) {
+        // Silent fallback during build
+      } else {
+        testLogger.error("Error fetching raw portfolio data from API:", error);
+        testLogger.log("Falling back to file system data...");
+      }
       return await this.loadPortfolioFromFile();
     }
   }

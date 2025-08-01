@@ -13,12 +13,25 @@ import type {
   EnhancedContentItem,
 } from "@/types/enhanced-content";
 import { PortfolioContentItem } from "@/types/portfolio";
-import { Eye, Filter, Palette, Video } from "lucide-react";
+import {
+  AlertTriangle,
+  Eye,
+  Filter,
+  Palette,
+  RefreshCw,
+  Video,
+} from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface VideoDesignGalleryProps {
   items: (PortfolioContentItem | EnhancedContentItem)[];
+  showVideoItems?: boolean; // Show video category
+  showDesignItems?: boolean; // Show design category
+  showVideoDesignItems?: boolean; // Show video&design category
+  deduplication?: boolean; // Enable deduplication
+  enableCaching?: boolean; // Enable performance caching
+  onError?: (error: Error) => void; // Error callback
 }
 
 interface FilterState {
@@ -27,7 +40,28 @@ interface FilterState {
   sortBy: "priority" | "date" | "title";
 }
 
-export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
+interface ErrorState {
+  hasError: boolean;
+  error?: Error;
+  errorBoundary?: boolean;
+}
+
+interface PerformanceMetrics {
+  renderTime: number;
+  itemCount: number;
+  filterTime: number;
+  layoutTime: number;
+}
+
+export function VideoDesignGallery({
+  items,
+  showVideoItems = true,
+  showDesignItems = true,
+  showVideoDesignItems = true,
+  deduplication = true,
+  enableCaching = true,
+  onError,
+}: VideoDesignGalleryProps) {
   const [filters, setFilters] = useState<FilterState>({
     category: "all",
     year: "all",
@@ -35,68 +69,284 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
   });
 
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [errorState, setErrorState] = useState<ErrorState>({ hasError: false });
+  const [performanceMetrics, setPerformanceMetrics] =
+    useState<PerformanceMetrics | null>(null);
 
-  // Validate and sanitize input items
+  // Performance tracking refs
+  const renderStartTime = useRef<number>(0);
+  const cacheRef = useRef<
+    Map<string, (PortfolioContentItem | EnhancedContentItem)[]>
+  >(new Map());
+  const lastItemsHash = useRef<string>("");
+
+  // Error handling callback
+  const handleError = useCallback(
+    (error: Error, context: string) => {
+      console.error(`VideoDesignGallery Error (${context}):`, error);
+      setErrorState({ hasError: true, error });
+      onError?.(error);
+    },
+    [onError],
+  );
+
+  // Performance measurement
+  useEffect(() => {
+    renderStartTime.current = performance.now();
+  });
+
+  useEffect(() => {
+    if (renderStartTime.current > 0) {
+      const renderTime = performance.now() - renderStartTime.current;
+      setPerformanceMetrics((prev) => (prev ? { ...prev, renderTime } : null));
+    }
+  }, []);
+
+  // Enhanced validation and sanitization with error handling
   const validItems = useMemo(() => {
-    if (!Array.isArray(items)) {
-      console.warn(
-        "VideoDesignGallery: items is not an array, using empty array",
+    try {
+      const startTime = performance.now();
+
+      if (!Array.isArray(items)) {
+        const error = new Error("Items is not an array");
+        handleError(error, "validation");
+        return [];
+      }
+
+      // Generate hash for caching
+      const itemsHash = JSON.stringify(
+        items.map((item) => ({ id: item?.id, title: item?.title })),
       );
+
+      // Use cache if enabled and hash matches
+      if (
+        enableCaching &&
+        itemsHash === lastItemsHash.current &&
+        cacheRef.current.has("validItems")
+      ) {
+        const cached = cacheRef.current.get("validItems");
+        return cached || [];
+      }
+
+      const validated = items.filter(
+        (item: PortfolioContentItem | EnhancedContentItem) => {
+          if (!item || typeof item !== "object") {
+            console.warn(
+              "VideoDesignGallery: Invalid item object found, skipping:",
+              item,
+            );
+            return false;
+          }
+
+          if (!item.id || typeof item.id !== "string") {
+            console.warn(
+              "VideoDesignGallery: Item missing valid id, skipping:",
+              item,
+            );
+            return false;
+          }
+
+          if (!item.title || typeof item.title !== "string") {
+            console.warn(
+              "VideoDesignGallery: Item missing valid title, skipping:",
+              item,
+            );
+            return false;
+          }
+
+          // Validate category structure
+          if ("categories" in item) {
+            const enhancedItem = item as EnhancedContentItem;
+            if (!Array.isArray(enhancedItem.categories)) {
+              console.warn(
+                "VideoDesignGallery: Enhanced item has invalid categories array, skipping:",
+                item,
+              );
+              return false;
+            }
+          } else {
+            const legacyItem = item as PortfolioContentItem;
+            if (
+              !legacyItem.category ||
+              typeof legacyItem.category !== "string"
+            ) {
+              console.warn(
+                "VideoDesignGallery: Legacy item missing valid category, skipping:",
+                item,
+              );
+              return false;
+            }
+          }
+
+          return true;
+        },
+      );
+
+      // Cache results if enabled
+      if (enableCaching) {
+        lastItemsHash.current = itemsHash;
+        cacheRef.current.set("validItems", validated);
+      }
+
+      const validationTime = performance.now() - startTime;
+      setPerformanceMetrics(
+        (prev) =>
+          ({
+            ...prev,
+            itemCount: validated.length,
+            filterTime: validationTime,
+          }) as PerformanceMetrics,
+      );
+
+      return validated;
+    } catch (error) {
+      handleError(error as Error, "validation");
       return [];
     }
-
-    return items.filter((item) => {
-      if (!item || !item.id || !item.title) {
-        console.warn("VideoDesignGallery: Invalid item found, skipping:", item);
-        return false;
-      }
-      return true;
-    });
-  }, [items]);
+  }, [items, enableCaching, handleError]);
 
   // Debug: Log items received
   console.log("VideoDesignGallery received items:", {
     total: validItems.length,
-    enhanced: validItems.filter((item) => "categories" in item).length,
-    legacy: validItems.filter((item) => !("categories" in item)).length,
-    categories: validItems.map((item) => {
-      if ("categories" in item && Array.isArray(item.categories)) {
-        return item.categories.join(", ");
-      }
-      return (item as PortfolioContentItem).category;
-    }),
+    enhanced: validItems.filter(
+      (item: PortfolioContentItem | EnhancedContentItem) =>
+        "categories" in item,
+    ).length,
+    legacy: validItems.filter(
+      (item: PortfolioContentItem | EnhancedContentItem) =>
+        !("categories" in item),
+    ).length,
+    categories: validItems.map(
+      (item: PortfolioContentItem | EnhancedContentItem) => {
+        if ("categories" in item && Array.isArray(item.categories)) {
+          return item.categories.join(", ");
+        }
+        return (item as PortfolioContentItem).category;
+      },
+    ),
   });
 
-  // Filter and sort items using enhanced gallery filter
+  // Enhanced filtering with category display options and deduplication
   const filteredItems = useMemo(() => {
-    // Use enhanced gallery filter for consistent filtering
-    const filterOptions: {
-      year?: number;
-      categories?: EnhancedCategoryType[];
-    } = {};
+    try {
+      const startTime = performance.now();
 
-    if (filters.year !== "all") {
-      filterOptions.year = parseInt(filters.year);
+      // Generate cache key for filtering
+      const filterCacheKey = `filtered_${JSON.stringify(filters)}_${showVideoItems}_${showDesignItems}_${showVideoDesignItems}_${deduplication}`;
+
+      // Use cache if enabled
+      if (enableCaching && cacheRef.current.has(filterCacheKey)) {
+        const cached = cacheRef.current.get(filterCacheKey);
+        return cached || [];
+      }
+
+      // Step 1: Apply category display options
+      let categoryFilteredItems = validItems.filter(
+        (item: PortfolioContentItem | EnhancedContentItem) => {
+          if ("categories" in item && Array.isArray(item.categories)) {
+            const enhancedItem = item as EnhancedContentItem;
+            const relevantCategories = enhancedItem.categories.filter((cat) =>
+              ["video", "design", "video&design"].includes(cat),
+            );
+
+            // Check if item should be shown based on display options
+            const hasVideo = relevantCategories.includes("video");
+            const hasDesign = relevantCategories.includes("design");
+            const hasVideoDesign = relevantCategories.includes("video&design");
+
+            return (
+              (showVideoItems && hasVideo) ||
+              (showDesignItems && hasDesign) ||
+              (showVideoDesignItems && hasVideoDesign)
+            );
+          } else {
+            const legacyItem = item as PortfolioContentItem;
+            const category = legacyItem.category;
+
+            return (
+              (showVideoItems && category === "video") ||
+              (showDesignItems && category === "design") ||
+              (showVideoDesignItems && category === "video&design")
+            );
+          }
+        },
+      );
+
+      // Step 2: Apply deduplication if enabled
+      if (deduplication) {
+        const seen = new Set<string>();
+        categoryFilteredItems = categoryFilteredItems.filter(
+          (item: PortfolioContentItem | EnhancedContentItem) => {
+            if (seen.has(item.id)) {
+              console.log(
+                `VideoDesignGallery: Removing duplicate item ${item.id}`,
+              );
+              return false;
+            }
+            seen.add(item.id);
+            return true;
+          },
+        );
+      }
+
+      // Step 3: Apply user filters
+      const filterOptions: {
+        year?: number;
+        categories?: EnhancedCategoryType[];
+      } = {};
+
+      if (filters.year !== "all") {
+        const yearNum = parseInt(filters.year);
+        if (!isNaN(yearNum)) {
+          filterOptions.year = yearNum;
+        }
+      }
+
+      if (filters.category !== "all") {
+        filterOptions.categories = [filters.category as EnhancedCategoryType];
+      }
+
+      const filtered = enhancedGalleryFilter.filterItemsForGallery(
+        categoryFilteredItems,
+        "video&design",
+        filterOptions,
+      );
+
+      // Step 4: Apply sorting using enhanced gallery filter
+      const sorted = enhancedGalleryFilter.sortItems(filtered, {
+        sortBy: filters.sortBy === "date" ? "createdAt" : filters.sortBy,
+        sortOrder: filters.sortBy === "title" ? "asc" : "desc",
+      });
+
+      // Cache results if enabled
+      if (enableCaching) {
+        cacheRef.current.set(filterCacheKey, sorted);
+      }
+
+      const filterTime = performance.now() - startTime;
+      setPerformanceMetrics(
+        (prev) =>
+          ({
+            ...prev,
+            filterTime,
+          }) as PerformanceMetrics,
+      );
+
+      return sorted;
+    } catch (error) {
+      handleError(error as Error, "filtering");
+      return [];
     }
-
-    if (filters.category !== "all") {
-      filterOptions.categories = [filters.category as EnhancedCategoryType];
-    }
-
-    const filtered = enhancedGalleryFilter.filterItemsForGallery(
-      validItems,
-      "video&design",
-      filterOptions,
-    );
-
-    // Apply sorting using enhanced gallery filter
-    const sorted = enhancedGalleryFilter.sortItems(filtered, {
-      sortBy: filters.sortBy === "date" ? "createdAt" : filters.sortBy,
-      sortOrder: filters.sortBy === "title" ? "asc" : "desc",
-    });
-
-    return sorted;
-  }, [validItems, filters]);
+  }, [
+    validItems,
+    filters,
+    showVideoItems,
+    showDesignItems,
+    showVideoDesignItems,
+    deduplication,
+    enableCaching,
+    handleError,
+  ]);
 
   // Generate grid layout with creative distribution
   const gridItems = useMemo(() => {
@@ -107,21 +357,24 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
 
     // Add some final randomization while maintaining visual balance and enhanced properties
     return balancedLayout.map((item, index) => {
-      const originalItem = filteredItems.find((fi) => fi.id === item.id);
+      const originalItem = filteredItems.find(
+        (fi: PortfolioContentItem | EnhancedContentItem) => fi.id === item.id,
+      );
       return {
         ...item,
         // Add categories from enhanced items
         categories: (originalItem as EnhancedContentItem)?.categories,
         // Add slight random variation to positioning for more organic feel
-        randomOffset: Math.sin(index * 1.3) * 0.1,
+        randomOffset: Math.sin((index || 0) * 1.3) * 0.1,
       } as EnhancedGridItem;
     });
   }, [filteredItems]);
 
   // Get available years for filter
   const availableYears = useMemo(() => {
-    const years = validItems.map((item) =>
-      new Date(item.createdAt).getFullYear(),
+    const years: number[] = validItems.map(
+      (item: PortfolioContentItem | EnhancedContentItem) =>
+        new Date(item.createdAt).getFullYear(),
     );
     return [...new Set(years)].sort((a, b) => b - a);
   }, [validItems]);
@@ -142,7 +395,7 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
       total: allItems.length,
     };
 
-    allItems.forEach((item) => {
+    allItems.forEach((item: PortfolioContentItem | EnhancedContentItem) => {
       // Handle enhanced items with multiple categories
       if ("categories" in item && Array.isArray(item.categories)) {
         const enhancedItem = item as EnhancedContentItem;
@@ -182,7 +435,7 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
   const availableCategories = useMemo(() => {
     const categories = new Set<string>();
 
-    validItems.forEach((item) => {
+    validItems.forEach((item: PortfolioContentItem | EnhancedContentItem) => {
       // Handle enhanced items with multiple categories
       if ("categories" in item && Array.isArray(item.categories)) {
         const enhancedItem = item as EnhancedContentItem;
@@ -207,8 +460,61 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
     return Array.from(categories).sort();
   }, [validItems]);
 
+  // Error boundary - show error state if there's an error
+  if (errorState.hasError) {
+    return (
+      <div className="space-y-8">
+        <div className="bg-red-50 border border-red-200 p-6 rounded-lg">
+          <div className="flex items-center mb-4">
+            <AlertTriangle className="w-6 h-6 text-red-600 mr-3" />
+            <h3
+              className="zen-kaku-gothic-new text-lg text-red-800"
+              role="alert"
+            >
+              Error Loading Gallery
+            </h3>
+          </div>
+          <p
+            className="noto-sans-jp-light text-sm text-red-700 mb-4"
+            role="alert"
+          >
+            {errorState.error?.message ||
+              "An unexpected error occurred while loading the gallery."}
+          </p>
+          <button
+            onClick={() => {
+              setErrorState({ hasError: false });
+              // Clear cache to force refresh
+              cacheRef.current.clear();
+            }}
+            className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>Retry</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
+      {/* Performance Metrics (Development Only) */}
+      {process.env.NODE_ENV === "development" && performanceMetrics && (
+        <div className="bg-gray-100 border border-gray-300 p-3 text-xs">
+          <div className="flex items-center space-x-4">
+            <span>Items: {performanceMetrics.itemCount}</span>
+            <span>
+              Filter: {(performanceMetrics.filterTime || 0).toFixed(2)}ms
+            </span>
+            <span>
+              Render: {(performanceMetrics.renderTime || 0).toFixed(2)}ms
+            </span>
+            <span>Cache: {enableCaching ? "ON" : "OFF"}</span>
+            <span>Dedup: {deduplication ? "ON" : "OFF"}</span>
+          </div>
+        </div>
+      )}
       {/* Filter Controls */}
       <div className="bg-base border border-foreground p-4">
         <div className="flex items-center mb-4">
@@ -216,82 +522,99 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
           <h3 className="zen-kaku-gothic-new text-lg text-primary">Filters</h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Category Filter */}
-          <div>
-            <label
-              htmlFor="category-filter"
-              className="noto-sans-jp-light text-sm text-foreground block mb-2"
-            >
-              Category
-            </label>
-            <select
-              id="category-filter"
-              value={filters.category}
-              onChange={(e) =>
-                setFilters((prev) => ({ ...prev, category: e.target.value }))
-              }
-              className="w-full bg-background border border-foreground px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
-            >
-              <option value="all">All Categories</option>
-              {availableCategories.map((category) => (
-                <option key={category} value={category}>
-                  {category === "video&design"
-                    ? "Video & Design"
-                    : category.charAt(0).toUpperCase() + category.slice(1)}
-                </option>
-              ))}
-            </select>
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Category Filter */}
+            <div>
+              <label
+                htmlFor="category-filter"
+                className="noto-sans-jp-light text-sm text-foreground block mb-2"
+              >
+                Category
+              </label>
+              <select
+                id="category-filter"
+                aria-label="Filter by category"
+                value={filters.category}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, category: e.target.value }))
+                }
+                className="w-full bg-background border border-foreground px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+              >
+                <option value="all">All Categories</option>
+                {availableCategories.map((category) => (
+                  <option key={category} value={category}>
+                    {category === "video&design"
+                      ? "Video & Design"
+                      : category.charAt(0).toUpperCase() + category.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Year Filter */}
+            <div>
+              <label
+                htmlFor="year-filter"
+                className="noto-sans-jp-light text-sm text-foreground block mb-2"
+              >
+                Year
+              </label>
+              <select
+                id="year-filter"
+                aria-label="Filter by year"
+                value={filters.year}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, year: e.target.value }))
+                }
+                className="w-full bg-background border border-foreground px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+              >
+                <option value="all">All Years</option>
+                {availableYears.map((year) => (
+                  <option key={year} value={year.toString()}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Sort Filter */}
+            <div>
+              <label
+                htmlFor="sort-filter"
+                className="noto-sans-jp-light text-sm text-foreground block mb-2"
+              >
+                Sort By
+              </label>
+              <select
+                id="sort-filter"
+                aria-label="Sort projects by"
+                value={filters.sortBy}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    sortBy: e.target.value as FilterState["sortBy"],
+                  }))
+                }
+                className="w-full bg-background border border-foreground px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+              >
+                <option value="priority">Priority</option>
+                <option value="date">Date</option>
+                <option value="title">Title</option>
+              </select>
+            </div>
           </div>
 
-          {/* Year Filter */}
-          <div>
-            <label
-              htmlFor="year-filter"
-              className="noto-sans-jp-light text-sm text-foreground block mb-2"
-            >
-              Year
-            </label>
-            <select
-              id="year-filter"
-              value={filters.year}
-              onChange={(e) =>
-                setFilters((prev) => ({ ...prev, year: e.target.value }))
+          {/* Reset Button */}
+          <div className="flex justify-end">
+            <button
+              onClick={() =>
+                setFilters({ category: "all", year: "all", sortBy: "priority" })
               }
-              className="w-full bg-background border border-foreground px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+              className="px-4 py-2 text-sm text-foreground border border-foreground hover:bg-accent hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
             >
-              <option value="all">All Years</option>
-              {availableYears.map((year) => (
-                <option key={year} value={year.toString()}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Sort Filter */}
-          <div>
-            <label
-              htmlFor="sort-filter"
-              className="noto-sans-jp-light text-sm text-foreground block mb-2"
-            >
-              Sort By
-            </label>
-            <select
-              id="sort-filter"
-              value={filters.sortBy}
-              onChange={(e) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  sortBy: e.target.value as FilterState["sortBy"],
-                }))
-              }
-              className="w-full bg-background border border-foreground px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
-            >
-              <option value="priority">Priority</option>
-              <option value="date">Date</option>
-              <option value="title">Title</option>
-            </select>
+              Reset Filters
+            </button>
           </div>
         </div>
       </div>
@@ -299,22 +622,29 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
       {/* Results Count */}
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <p className="noto-sans-jp-light text-sm text-foreground">
-            {gridItems.filter((item) => item.category !== "placeholder").length}{" "}
+          <p
+            className="noto-sans-jp-light text-sm text-foreground"
+            aria-live="polite"
+          >
+            {Math.max(
+              0,
+              gridItems.filter((item) => item.category !== "placeholder")
+                .length,
+            )}{" "}
             projects found
           </p>
           <div className="flex items-center space-x-4 text-xs text-foreground opacity-75">
-            {videoDesignStats.videoOnly > 0 && (
-              <span>Video: {videoDesignStats.videoOnly}</span>
+            {(videoDesignStats.videoOnly || 0) > 0 && (
+              <span>Video: {videoDesignStats.videoOnly || 0}</span>
             )}
-            {videoDesignStats.designOnly > 0 && (
-              <span>Design: {videoDesignStats.designOnly}</span>
+            {(videoDesignStats.designOnly || 0) > 0 && (
+              <span>Design: {videoDesignStats.designOnly || 0}</span>
             )}
-            {videoDesignStats.videoAndDesign > 0 && (
-              <span>V&D: {videoDesignStats.videoAndDesign}</span>
+            {(videoDesignStats.videoAndDesign || 0) > 0 && (
+              <span>V&D: {videoDesignStats.videoAndDesign || 0}</span>
             )}
-            {videoDesignStats.multiCategory > 0 && (
-              <span>Multi: {videoDesignStats.multiCategory}</span>
+            {(videoDesignStats.multiCategory || 0) > 0 && (
+              <span>Multi: {videoDesignStats.multiCategory || 0}</span>
             )}
           </div>
         </div>
@@ -350,17 +680,9 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
             <h3 className="zen-kaku-gothic-new text-xl text-primary mb-2">
               No projects found
             </h3>
-            <p className="noto-sans-jp-light text-sm text-foreground mb-4">
+            <p className="noto-sans-jp-light text-sm text-foreground">
               Try adjusting your filters to see more projects.
             </p>
-            <button
-              onClick={() =>
-                setFilters({ category: "all", year: "all", sortBy: "priority" })
-              }
-              className="noto-sans-jp-light text-sm text-accent border border-accent px-4 py-2 hover:bg-accent hover:text-background transition-colors"
-            >
-              Reset Filters
-            </button>
           </div>
         </div>
       )}
@@ -394,7 +716,7 @@ function GridItemComponent({
     transform: isHovered && !isPlaceholder ? "scale(1.02)" : "scale(1)",
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     // Add subtle rotation for more organic feel
-    "--rotation": `${Math.sin(item.priority * 0.1) * 2}deg`,
+    "--rotation": `${Math.sin((Number(item.priority) || 0) * 0.1) * 2}deg`,
   } as React.CSSProperties;
 
   // For placeholder items, render a simple black box

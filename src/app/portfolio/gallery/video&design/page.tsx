@@ -240,7 +240,14 @@ export default async function VideoDesignProjectsPage() {
                     Video & Design Gallery
                   </h2>
                   {videoDesignItems.length > 0 ? (
-                    <VideoDesignGallery items={videoDesignItems} />
+                    <VideoDesignGallery
+                      items={videoDesignItems}
+                      showVideoItems={true}
+                      showDesignItems={true}
+                      showVideoDesignItems={true}
+                      deduplication={true}
+                      enableCaching={true}
+                    />
                   ) : (
                     <div className="bg-base border border-foreground p-8 text-center">
                       <Eye className="w-12 h-12 text-accent mx-auto mb-4" />

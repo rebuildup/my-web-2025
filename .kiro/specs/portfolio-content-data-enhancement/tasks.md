@@ -198,7 +198,7 @@
   - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
   - _Test: npm run test:all実行、video&designフィルタリング・表示テスト_
 
-- [ ] 7.2 VideoDesignGalleryコンポーネントの拡張
+- [x] 7.2 VideoDesignGalleryコンポーネントの拡張
   - 複数カテゴリー対応の表示ロジック
   - カテゴリー別表示オプション
   - 重複除去機能の統合
@@ -207,7 +207,7 @@
   - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
   - _Test: npm run test:all実行、VideoDesignGalleryコンポーネント・重複除去テスト_
 
-- [ ] 7.3 video&designページのテスト・検証
+- [x] 7.3 video&designページのテスト・検証
   - 表示内容の正確性テスト
   - 複数カテゴリーアイテムの表示テスト
   - フィルター機能のテスト

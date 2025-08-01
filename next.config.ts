@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Environment variables
+  env: {
+    NEXT_BUILD_TIME: process.env.NODE_ENV === "production" ? "true" : "false",
+  },
+
   // Performance optimizations
   experimental: {
     optimizePackageImports: [
@@ -52,12 +57,12 @@ const nextConfig: NextConfig = {
 
   // Bundle analyzer (development only)
   ...(process.env.ANALYZE === "true" && {
-    webpack: (config: any) => {
-      config.plugins.push(
-        new (require("@next/bundle-analyzer")({
-          enabled: true,
-        }))(),
-      );
+    webpack: (config: Configuration) => {
+      // Dynamic import for bundle analyzer to avoid require()
+      const BundleAnalyzerPlugin = eval('require("@next/bundle-analyzer")')({
+        enabled: true,
+      });
+      config.plugins?.push(new BundleAnalyzerPlugin());
       return config;
     },
   }),

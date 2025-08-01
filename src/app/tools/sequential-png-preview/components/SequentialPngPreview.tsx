@@ -1,21 +1,21 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
-import Image from "next/image";
 import {
-  Play,
-  Pause,
-  RotateCcw,
   Download,
-  Settings,
   Grid,
   List,
+  Pause,
+  Play,
+  RotateCcw,
+  Settings,
 } from "lucide-react";
-import FileUploader from "./FileUploader";
+import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimationSettings, FrameData, PreviewMode } from "../types";
 import AnimationPlayer from "./AnimationPlayer";
-import FrameGrid from "./FrameGrid";
 import ExportPanel from "./ExportPanel";
-import { AnimationSettings, PreviewMode, FrameData } from "../types";
+import FileUploader from "./FileUploader";
+import FrameGrid from "./FrameGrid";
 
 export default function SequentialPngPreview() {
   const [frames, setFrames] = useState<FrameData[]>([]);
@@ -340,7 +340,7 @@ export default function SequentialPngPreview() {
                         width={64}
                         height={64}
                         className="w-16 h-16 object-contain border border-foreground/20 rounded"
-                        unoptimized
+                        unoptimized={true}
                       />
                       <div>
                         <div className="font-medium">フレーム {index + 1}</div>

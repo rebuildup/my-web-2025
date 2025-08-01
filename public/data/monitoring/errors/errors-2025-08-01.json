@@ -16,5 +16,23 @@
     "severity": "medium",
     "category": "network",
     "resolved": false
+  },
+  {
+    "id": "error_1754051177667_cu1c27se5",
+    "timestamp": "2025-08-01T12:26:17.667Z",
+    "message": "Network error: 400 Bad Request",
+    "stack": "Error: Network error: 400 Bad Request\n    at window.fetch (http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3219:40)\n    at async ToolWrapper.useEffect.trackToolUsage (http://localhost:3000/_next/static/chunks/src_b6a0a7f5._.js:1512:25)",
+    "url": "http://localhost:3000/tools/color-palette",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "sessionId": "session_1754051171202_y0nr4um97",
+    "context": {
+      "type": "network",
+      "url": "/api/stats/view",
+      "status": 400,
+      "statusText": "Bad Request"
+    },
+    "severity": "medium",
+    "category": "network",
+    "resolved": false
   }
 ]

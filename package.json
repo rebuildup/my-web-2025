@@ -5,7 +5,7 @@
   "scripts": {
     "clear-cache": "node scripts/clear-cache.js",
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "cross-env NEXT_BUILD_TIME=true next build",
     "start": "next start",
     "start:production": "powershell -ExecutionPolicy Bypass -File scripts/start-production.ps1",
     "start:prod": "powershell -ExecutionPolicy Bypass -File scripts/start-production-normal.ps1",
@@ -94,6 +94,7 @@
     "eslint-plugin-tailwindcss": "^4.0.0-beta.0",
     "husky": "^9.1.7",
     "jest": "^30.0.5",
+    "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "^30.0.5",
     "lhci": "^4.1.1",
     "lint-staged": "^16.1.2",
