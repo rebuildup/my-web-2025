@@ -4,6 +4,7 @@
 
 import type { ContentItem } from "@/types/content";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import React from "react";
 
 // Mock all dependencies to avoid complex setup
@@ -44,6 +45,40 @@ jest.mock("../FileUploadSection", () => ({
 
 jest.mock("../MediaEmbedSection", () => ({
   MediaEmbedSection: () => <div data-testid="media-embed-section" />,
+}));
+
+jest.mock("@/components/ui/DatePicker", () => ({
+  DatePicker: ({
+    value,
+    onChange,
+    useManualDate,
+    onToggleManualDate,
+  }: {
+    value?: string;
+    onChange: (date: string) => void;
+    useManualDate: boolean;
+    onToggleManualDate: (use: boolean) => void;
+  }) => (
+    <div data-testid="date-picker">
+      <button
+        data-testid="toggle-manual-date"
+        onClick={() => onToggleManualDate(!useManualDate)}
+      >
+        {useManualDate ? "Manual" : "Auto"}
+      </button>
+      <input
+        data-testid="date-input"
+        value={value || ""}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
+  ),
+}));
+
+jest.mock("@/lib/portfolio/client-date-manager", () => ({
+  clientDateManager: {
+    getEffectiveDate: jest.fn().mockReturnValue(new Date("2023-12-25")),
+  },
 }));
 
 jest.mock("../ExternalLinksSection", () => ({
@@ -139,5 +174,44 @@ describe("DataManagerForm TagManagementUI Integration", () => {
     render(<DataManagerForm {...defaultProps} item={itemWithUndefinedTags} />);
 
     expect(screen.getByTestId("tag-management-ui")).toBeInTheDocument();
+  });
+});
+
+describe("Enhanced Mode", () => {
+  const enhancedItem = {
+    ...mockItem,
+    categories: ["develop", "design"],
+    useManualDate: true,
+    manualDate: "2023-12-25T12:00:00.000Z",
+  };
+
+  const enhancedProps = {
+    item: enhancedItem,
+    onSave: jest.fn(),
+    onCancel: jest.fn(),
+    isLoading: false,
+  };
+
+  it("should render date management tab when enhanced mode is enabled", () => {
+    render(<DataManagerForm {...enhancedProps} enhanced={true} />);
+
+    expect(screen.getByText("Date Management")).toBeInTheDocument();
+  });
+
+  it("should not render date management tab when enhanced mode is disabled", () => {
+    render(<DataManagerForm {...enhancedProps} enhanced={false} />);
+
+    expect(screen.queryByText("Date Management")).not.toBeInTheDocument();
+  });
+
+  it("should render DatePicker component in enhanced mode", async () => {
+    const user = userEvent.setup();
+    render(<DataManagerForm {...enhancedProps} enhanced={true} />);
+
+    // Click on Date Management tab
+    const dateTab = screen.getByText("Date Management");
+    await user.click(dateTab);
+
+    expect(screen.getByTestId("date-picker")).toBeInTheDocument();
   });
 });

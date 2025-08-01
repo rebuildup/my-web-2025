@@ -1,8 +1,11 @@
 "use client";
 
+import { DatePicker } from "@/components/ui/DatePicker";
 import { Select } from "@/components/ui/Select";
 import { TagManagementUI } from "@/components/ui/TagManagementUI";
+import { clientDateManager } from "@/lib/portfolio/client-date-manager";
 import { clientTagManager } from "@/lib/portfolio/client-tag-manager";
+import { EnhancedContentItem } from "@/types";
 import {
   ContentItem,
   getPortfolioCategoryOptions,
@@ -16,11 +19,12 @@ import { MediaEmbedSection } from "./MediaEmbedSection";
 import { SEOSection } from "./SEOSection";
 
 interface DataManagerFormProps {
-  item: ContentItem;
-  onSave: (item: ContentItem) => void;
+  item: ContentItem | EnhancedContentItem;
+  onSave: (item: ContentItem | EnhancedContentItem) => void;
   onCancel: () => void;
   isLoading: boolean;
   saveStatus?: "idle" | "saving" | "success" | "error";
+  enhanced?: boolean; // Flag to enable enhanced features
 }
 
 export function DataManagerForm({
@@ -29,22 +33,56 @@ export function DataManagerForm({
   onCancel,
   isLoading,
   saveStatus = "idle",
+  enhanced = false,
 }: DataManagerFormProps) {
-  const [formData, setFormData] = useState<ContentItem>(item);
+  const [formData, setFormData] = useState<ContentItem | EnhancedContentItem>(
+    item,
+  );
   const [activeTab, setActiveTab] = useState<
-    "basic" | "media" | "links" | "download" | "seo"
+    "basic" | "media" | "links" | "download" | "seo" | "dates"
   >("basic");
+
+  // Date management state for enhanced mode
+  const [useManualDate, setUseManualDate] = useState<boolean>(
+    (enhanced && (item as EnhancedContentItem).useManualDate) || false,
+  );
 
   useEffect(() => {
     setFormData(item);
   }, [item]);
 
-  const handleInputChange = (field: keyof ContentItem, value: unknown) => {
+  const handleInputChange = (
+    field: keyof (ContentItem | EnhancedContentItem),
+    value: unknown,
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
       updatedAt: new Date().toISOString(),
     }));
+  };
+
+  const handleDateChange = (date: string) => {
+    if (enhanced) {
+      const enhancedItem = formData as EnhancedContentItem;
+      setFormData({
+        ...enhancedItem,
+        manualDate: date,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+  };
+
+  const handleToggleManualDate = (use: boolean) => {
+    setUseManualDate(use);
+    if (enhanced) {
+      const enhancedItem = formData as EnhancedContentItem;
+      setFormData({
+        ...enhancedItem,
+        useManualDate: use,
+        updatedAt: new Date().toISOString(),
+      });
+    }
   };
 
   const handleTagsChange = (tags: string[]) => {
@@ -73,6 +111,7 @@ export function DataManagerForm({
 
     if (
       formData.type === "portfolio" &&
+      formData.category &&
       !isValidPortfolioCategory(formData.category)
     ) {
       console.error("Validation failed: Invalid portfolio category");
@@ -155,6 +194,15 @@ export function DataManagerForm({
         >
           SEO
         </button>
+        {enhanced && (
+          <button
+            type="button"
+            onClick={() => setActiveTab("dates")}
+            className={activeTab === "dates" ? activeTabStyle : tabStyle}
+          >
+            Date Management
+          </button>
+        )}
       </div>
 
       {/* Tab Content */}
@@ -185,7 +233,7 @@ export function DataManagerForm({
               <label className={labelStyle}>Category</label>
               {formData.type === "portfolio" ? (
                 <Select
-                  value={formData.category}
+                  value={formData.category || ""}
                   onChange={(value) => handleInputChange("category", value)}
                   options={getPortfolioCategoryOptions()}
                   placeholder="Select Category"
@@ -299,6 +347,98 @@ export function DataManagerForm({
           seo={formData.seo}
           onSEOChange={(seo) => handleInputChange("seo", seo)}
         />
+      )}
+
+      {activeTab === "dates" && enhanced && (
+        <div className="space-y-6">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              Date Management
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Control how dates are managed for this content item. You can
+              either use automatic date management (based on creation/update
+              time) or set a manual date.
+            </p>
+
+            <DatePicker
+              value={(formData as EnhancedContentItem).manualDate}
+              onChange={handleDateChange}
+              useManualDate={useManualDate}
+              onToggleManualDate={handleToggleManualDate}
+              placeholder="Select a date..."
+            />
+          </div>
+
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <h4 className="text-sm font-medium text-blue-900 mb-2">
+              Current Date Information
+            </h4>
+            <div className="space-y-2 text-sm text-blue-800">
+              <div>
+                <span className="font-medium">Created:</span>{" "}
+                {new Date(formData.createdAt).toLocaleDateString("ja-JP", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  weekday: "short",
+                })}
+              </div>
+              <div>
+                <span className="font-medium">Last Updated:</span>{" "}
+                {new Date(
+                  formData.updatedAt || formData.createdAt,
+                ).toLocaleDateString("ja-JP", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  weekday: "short",
+                })}
+              </div>
+              {enhanced && (formData as EnhancedContentItem).manualDate && (
+                <div>
+                  <span className="font-medium">Manual Date:</span>{" "}
+                  {new Date(
+                    (formData as EnhancedContentItem).manualDate!,
+                  ).toLocaleDateString("ja-JP", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    weekday: "short",
+                  })}
+                </div>
+              )}
+              <div>
+                <span className="font-medium">Effective Date:</span>{" "}
+                {enhanced
+                  ? clientDateManager
+                      .getEffectiveDate(formData as EnhancedContentItem)
+                      .toLocaleDateString("ja-JP", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        weekday: "short",
+                      })
+                  : new Date(formData.createdAt).toLocaleDateString("ja-JP", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      weekday: "short",
+                    })}
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-yellow-50 p-4 rounded-lg">
+            <h4 className="text-sm font-medium text-yellow-900 mb-2">
+              Date History
+            </h4>
+            <p className="text-sm text-yellow-800">
+              Date changes are automatically tracked. The effective date will be
+              used for sorting and display purposes throughout the application.
+            </p>
+          </div>
+        </div>
       )}
 
       {/* Form Actions */}

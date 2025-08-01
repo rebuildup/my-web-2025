@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { ContentItem, ContentType } from "@/types/content";
-import { DataManagerForm } from "./components/DataManagerForm";
+import { EnhancedContentItem } from "@/types/enhanced-content";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ContentList } from "./components/ContentList";
+import { DataManagerForm } from "./components/DataManagerForm";
 import { PreviewPanel } from "./components/PreviewPanel";
 
 export default function DataManagerPage() {
@@ -89,7 +90,7 @@ export default function DataManagerPage() {
     setPreviewMode("form");
   };
 
-  const handleSaveItem = async (item: ContentItem) => {
+  const handleSaveItem = async (item: ContentItem | EnhancedContentItem) => {
     setIsLoading(true);
     setSaveStatus("saving");
 
