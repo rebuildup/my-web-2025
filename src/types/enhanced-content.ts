@@ -79,7 +79,7 @@ export interface EnhancedFileUploadOptions {
   customProcessing?: {
     watermark?: boolean;
     resize?: { width: number; height: number };
-    format?: "original" | "webp" | "jpeg" | "png";
+    format?: "webp" | "jpeg" | "png";
   };
 }
 
@@ -89,6 +89,8 @@ export interface FileUploadResult {
   thumbnailUrl?: string; // Thumbnail URL
   variants?: { [key: string]: string }; // Various sizes
   metadata: FileMetadata;
+  error?: string; // Error message if upload failed
+  isDuplicate?: boolean; // True if file is a duplicate
 }
 
 export interface FileMetadata {

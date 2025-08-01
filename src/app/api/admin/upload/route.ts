@@ -1,5 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import {
+  EnhancedFileUploadOptions,
+  FileMetadata,
+  FileUploadResult,
+} from "@/types";
+import crypto from "crypto";
 import { promises as fs } from "fs";
+import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import sharp from "sharp";
 
@@ -28,15 +34,15 @@ function getUploadDirectory(type?: string): string {
   }
 }
 
-// Generate unique filename
+// Generate unique filename with enhanced sanitization
 function generateUniqueFilename(originalName: string): string {
   const timestamp = Date.now();
   const random = Math.random().toString(36).substring(2, 8);
   const extension = path.extname(originalName);
   const baseName = path.basename(originalName, extension);
 
-  // Sanitize filename
-  const sanitizedBaseName = baseName
+  // Enhanced sanitization
+  const sanitizedBaseName = sanitizeFileName(baseName)
     .replace(/[^a-zA-Z0-9\-_]/g, "-")
     .replace(/-+/g, "-")
     .substring(0, 50);
@@ -44,13 +50,151 @@ function generateUniqueFilename(originalName: string): string {
   return `${sanitizedBaseName}-${timestamp}-${random}${extension}`;
 }
 
-// Validate file type and size
+// Process file with enhanced options
+async function processFileWithOptions(
+  buffer: Buffer,
+  filePath: string,
+  file: File,
+  options: EnhancedFileUploadOptions = {},
+): Promise<FileUploadResult> {
+  const publicPath = path
+    .relative(path.join(process.cwd(), "public"), filePath)
+    .replace(/\\/g, "/");
+  const publicUrl = `/${publicPath}`;
+
+  // Create file metadata
+  const metadata: FileMetadata = {
+    fileName: file.name,
+    fileSize: file.size,
+    mimeType: file.type,
+    uploadedAt: new Date().toISOString(),
+  };
+
+  // Get image dimensions if it's an image
+  if (file.type.startsWith("image/") && !options.skipProcessing) {
+    try {
+      const imageInfo = await sharp(buffer).metadata();
+      metadata.width = imageInfo.width;
+      metadata.height = imageInfo.height;
+    } catch (error) {
+      console.warn("Failed to get image metadata:", error);
+    }
+  }
+
+  const result: FileUploadResult = {
+    metadata,
+  };
+
+  // Handle skipProcessing option
+  if (options.skipProcessing) {
+    result.originalUrl = publicUrl;
+    return result;
+  }
+
+  // Handle preserveOriginal option
+  if (options.preserveOriginal) {
+    result.originalUrl = publicUrl;
+  }
+
+  // Process image if it's an image file
+  if (file.type.startsWith("image/")) {
+    const processedResult = await processImageWithEnhancedOptions(
+      buffer,
+      filePath,
+      options,
+    );
+
+    if (processedResult.processedUrl) {
+      result.processedUrl = processedResult.processedUrl;
+    }
+
+    if (processedResult.thumbnailUrl) {
+      result.thumbnailUrl = processedResult.thumbnailUrl;
+    }
+
+    if (processedResult.variants) {
+      result.variants = processedResult.variants;
+    }
+  }
+
+  // If no processed version was created, use original as processed
+  if (!result.processedUrl && !options.skipProcessing) {
+    result.processedUrl = publicUrl;
+  }
+
+  return result;
+}
+
+// Calculate file hash for duplicate detection
+async function calculateFileHash(buffer: Buffer): Promise<string> {
+  return crypto.createHash("sha256").update(buffer).digest("hex");
+}
+
+// Check for duplicate files
+async function checkForDuplicate(
+  buffer: Buffer,
+  uploadDir: string,
+): Promise<string | null> {
+  const fileHash = await calculateFileHash(buffer);
+  const hashFilePath = path.join(uploadDir, ".file-hashes.json");
+
+  try {
+    const hashData = await fs.readFile(hashFilePath, "utf-8");
+    const hashes = JSON.parse(hashData);
+
+    if (hashes[fileHash]) {
+      // Check if the file still exists
+      const existingFilePath = path.join(
+        process.cwd(),
+        "public",
+        hashes[fileHash],
+      );
+      try {
+        await fs.access(existingFilePath);
+        return hashes[fileHash]; // Return existing file URL
+      } catch {
+        // File doesn't exist anymore, remove from hash record
+        delete hashes[fileHash];
+        await fs.writeFile(hashFilePath, JSON.stringify(hashes, null, 2));
+      }
+    }
+  } catch {
+    // Hash file doesn't exist, create empty one
+    await fs.writeFile(hashFilePath, "{}");
+  }
+
+  return null;
+}
+
+// Record file hash
+async function recordFileHash(
+  buffer: Buffer,
+  uploadDir: string,
+  publicUrl: string,
+): Promise<void> {
+  const fileHash = await calculateFileHash(buffer);
+  const hashFilePath = path.join(uploadDir, ".file-hashes.json");
+
+  try {
+    const hashData = await fs.readFile(hashFilePath, "utf-8");
+    const hashes = JSON.parse(hashData);
+    hashes[fileHash] = publicUrl;
+    await fs.writeFile(hashFilePath, JSON.stringify(hashes, null, 2));
+  } catch {
+    const hashes = { [fileHash]: publicUrl };
+    await fs.writeFile(hashFilePath, JSON.stringify(hashes, null, 2));
+  }
+}
+
+// Enhanced file validation with security checks
 function validateFile(
   file: File,
   type?: string,
+  options?: EnhancedFileUploadOptions,
 ): { valid: boolean; error?: string } {
   const maxSize = type === "download" ? 100 * 1024 * 1024 : 10 * 1024 * 1024; // 100MB for downloads, 10MB for others
 
+  // File size validation
   if (file.size > maxSize) {
     return {
       valid: false,
@@ -58,15 +202,102 @@ function validateFile(
     };
   }
 
-  // Check file type for images
-  if (type !== "download" && !file.type.startsWith("image/")) {
+  // Minimum file size check (prevent empty files)
+  if (file.size < 10) {
     return {
       valid: false,
-      error: "Only image files are allowed for this upload type",
+      error: "File is too small or empty",
     };
   }
 
+  // File name validation
+  const fileName = file.name;
+  if (!fileName || fileName.length > 255) {
+    return {
+      valid: false,
+      error: "Invalid file name",
+    };
+  }
+
+  // Check for dangerous file extensions
+  const dangerousExtensions = [
+    ".exe",
+    ".bat",
+    ".cmd",
+    ".com",
+    ".pif",
+    ".scr",
+    ".vbs",
+    ".js",
+    ".jar",
+    ".php",
+    ".asp",
+    ".aspx",
+    ".jsp",
+    ".py",
+    ".rb",
+    ".pl",
+    ".sh",
+  ];
+
+  const extension = path.extname(fileName).toLowerCase();
+  if (dangerousExtensions.includes(extension)) {
+    return {
+      valid: false,
+      error: "File type not allowed for security reasons",
+    };
+  }
+
+  // MIME type validation
+  const allowedImageTypes = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/svg+xml",
+  ];
+
+  const allowedDownloadTypes = [
+    ...allowedImageTypes,
+    "application/pdf",
+    "application/zip",
+    "application/x-zip-compressed",
+    "text/plain",
+    "application/json",
+  ];
+
+  if (type === "download") {
+    if (!allowedDownloadTypes.includes(file.type)) {
+      return {
+        valid: false,
+        error: "File type not allowed for downloads",
+      };
+    }
+  } else {
+    if (!allowedImageTypes.includes(file.type)) {
+      return {
+        valid: false,
+        error: "Only image files are allowed for this upload type",
+      };
+    }
+  }
+
   return { valid: true };
+}
+
+// Sanitize file name for security
+function sanitizeFileName(fileName: string): string {
+  // Remove path traversal attempts
+  const baseName = path.basename(fileName);
+
+  // Replace dangerous characters
+  return baseName
+    .replace(/[<>:"/\\|?*\x00-\x1f]/g, "-")
+    .replace(/^\.+/, "") // Remove leading dots
+    .replace(/\.+$/, "") // Remove trailing dots
+    .replace(/-+/g, "-") // Collapse multiple dashes
+    .substring(0, 100); // Limit length
 }
 
 // Ensure directory exists
@@ -103,13 +334,15 @@ export async function POST(request: NextRequest) {
 
     const filesToProcess = singleFile ? [singleFile] : files;
 
-    // Parse processing options
-    let processingOptions = {};
+    // Parse enhanced processing options
+    let enhancedOptions: EnhancedFileUploadOptions = {};
     if (processingOptionsStr) {
       try {
-        processingOptions = JSON.parse(processingOptionsStr);
+        enhancedOptions = JSON.parse(
+          processingOptionsStr,
+        ) as EnhancedFileUploadOptions;
       } catch (error) {
-        console.warn("Failed to parse processing options:", error);
+        console.warn("Failed to parse enhanced processing options:", error);
       }
     }
 
@@ -123,82 +356,92 @@ export async function POST(request: NextRequest) {
     const uploadedFiles = [];
 
     for (const file of filesToProcess) {
-      // Validate file
-      const validation = validateFile(file, uploadType);
+      // Enhanced file validation
+      const validation = validateFile(file, uploadType, enhancedOptions);
       if (!validation.valid) {
         return NextResponse.json({ error: validation.error }, { status: 400 });
+      }
+
+      // Convert file to buffer
+      const buffer = await fileToBuffer(file);
+
+      // Check for duplicate files if not skipping processing
+      let existingFileUrl: string | null = null;
+      if (!enhancedOptions.skipProcessing) {
+        existingFileUrl = await checkForDuplicate(buffer, uploadDir);
+        if (existingFileUrl) {
+          console.log(
+            "Duplicate file found, returning existing URL:",
+            existingFileUrl,
+          );
+          uploadedFiles.push({
+            originalName: file.name,
+            filename: path.basename(existingFileUrl),
+            url: existingFileUrl,
+            size: file.size,
+            type: file.type,
+            isDuplicate: true,
+          });
+          continue;
+        }
       }
 
       // Generate unique filename
       const uniqueFilename = generateUniqueFilename(file.name);
       const filePath = path.join(uploadDir, uniqueFilename);
 
-      // Convert file to buffer and save
-      const buffer = await fileToBuffer(file);
+      // Save file to disk
       await fs.writeFile(filePath, buffer);
 
-      // Generate public URL
-      const publicPath = path
-        .relative(path.join(process.cwd(), "public"), filePath)
-        .replace(/\\/g, "/");
-
-      const publicUrl = `/${publicPath}`;
-
-      const fileInfo: {
-        originalName: string;
-        filename: string;
-        url: string;
-        size: number;
-        type: string;
-        metadata?: Record<string, unknown>;
-        versions?: Record<string, string>;
-      } = {
-        originalName: file.name,
-        filename: uniqueFilename,
-        url: publicUrl,
-        size: file.size,
-        type: file.type,
-      };
-
-      // Add metadata if provided
-      if (metadataStr) {
-        try {
-          const metadata = JSON.parse(metadataStr);
-          fileInfo.metadata = metadata;
-        } catch (error) {
-          console.warn("Failed to parse metadata:", error);
-        }
+      // Record file hash for duplicate detection
+      if (!enhancedOptions.skipProcessing) {
+        const publicPath = path
+          .relative(path.join(process.cwd(), "public"), filePath)
+          .replace(/\\/g, "/");
+        const publicUrl = `/${publicPath}`;
+        await recordFileHash(buffer, uploadDir, publicUrl);
       }
 
-      // Process images if it's an image file and not a download
-      if (uploadType !== "download" && file.type.startsWith("image/")) {
+      // Process file with enhanced options
+      const processResult = await processFileWithOptions(
+        buffer,
+        filePath,
+        file,
+        enhancedOptions,
+      );
+
+      // Create file info response
+      const fileInfo = {
+        originalName: file.name,
+        filename: uniqueFilename,
+        url:
+          processResult.originalUrl ||
+          processResult.processedUrl ||
+          `/${path
+            .relative(path.join(process.cwd(), "public"), filePath)
+            .replace(/\\/g, "/")}`,
+        size: file.size,
+        type: file.type,
+        metadata: processResult.metadata,
+        ...(processResult.originalUrl && {
+          originalUrl: processResult.originalUrl,
+        }),
+        ...(processResult.processedUrl && {
+          processedUrl: processResult.processedUrl,
+        }),
+        ...(processResult.thumbnailUrl && {
+          thumbnailUrl: processResult.thumbnailUrl,
+        }),
+        ...(processResult.variants && { variants: processResult.variants }),
+      };
+
+      // Add custom metadata if provided
+      if (metadataStr) {
         try {
-          console.log("Processing image with Sharp:", filePath);
-
-          // Check if Sharp is available and file exists
-          await fs.access(filePath);
-          console.log("File exists, proceeding with Sharp processing");
-
-          const versions = await createImageVersions(filePath, filePath, {
-            generateThumbnail: true,
-            optimizeImage: false, // Temporarily disable optimization
-            convertToWebP: false, // Temporarily disable WebP conversion
-            quality: 85,
-            thumbnailSize: 300,
-            ...processingOptions,
-          });
-
-          console.log("Image versions created:", versions);
-          fileInfo.versions = versions;
+          const customMetadata = JSON.parse(metadataStr);
+          fileInfo.metadata = { ...fileInfo.metadata, ...customMetadata };
         } catch (error) {
-          console.error("Failed to generate image versions:", error);
-          console.error("Error details:", {
-            message: error instanceof Error ? error.message : "Unknown error",
-            stack: error instanceof Error ? error.stack : undefined,
-            filePath,
-            fileType: file.type,
-          });
-          // Continue without versions - not critical
+          console.warn("Failed to parse custom metadata:", error);
         }
       }
 
@@ -450,5 +693,164 @@ export async function DELETE(request: NextRequest) {
       },
       { status: 500 },
     );
+  }
+}
+// Enhanced image processing with custom options
+async function processImageWithEnhancedOptions(
+  buffer: Buffer,
+  originalPath: string,
+  options: EnhancedFileUploadOptions,
+): Promise<{
+  processedUrl?: string;
+  thumbnailUrl?: string;
+  variants?: { [key: string]: string };
+}> {
+  const results: {
+    processedUrl?: string;
+    thumbnailUrl?: string;
+    variants?: { [key: string]: string };
+  } = {};
+
+  const baseName = path.parse(originalPath).name;
+  const baseDir = path.dirname(originalPath);
+  const variants: { [key: string]: string } = {};
+
+  try {
+    // Generate thumbnail (always generate unless skipProcessing is true)
+    if (!options.skipProcessing) {
+      const thumbnailPath = path.join(
+        baseDir,
+        "..",
+        "thumbnails",
+        `${baseName}-thumb.jpg`,
+      );
+      await ensureDirectoryExists(path.dirname(thumbnailPath));
+      await generateThumbnailFromBuffer(buffer, thumbnailPath, 300);
+      results.thumbnailUrl = `/${path
+        .relative(path.join(process.cwd(), "public"), thumbnailPath)
+        .replace(/\\/g, "/")}`;
+    }
+
+    // Handle custom processing options
+    if (options.customProcessing) {
+      const { resize, format, watermark } = options.customProcessing;
+
+      // Create processed version with custom options
+      const processedPath = path.join(
+        baseDir,
+        `${baseName}-processed.${format || "jpg"}`,
+      );
+      await processImageWithCustomOptions(buffer, processedPath, {
+        resize,
+        format: format || "jpeg",
+        watermark,
+        quality: 85,
+      });
+
+      results.processedUrl = `/${path
+        .relative(path.join(process.cwd(), "public"), processedPath)
+        .replace(/\\/g, "/")}`;
+    }
+
+    // Generate variants if requested
+    if (options.generateVariants) {
+      const variantSizes = [
+        { name: "small", width: 400, height: 300 },
+        { name: "medium", width: 800, height: 600 },
+        { name: "large", width: 1200, height: 900 },
+      ];
+
+      for (const size of variantSizes) {
+        const variantPath = path.join(baseDir, `${baseName}-${size.name}.jpg`);
+        await processImageWithCustomOptions(buffer, variantPath, {
+          resize: { width: size.width, height: size.height },
+          format: "jpeg",
+          quality: 80,
+        });
+
+        variants[size.name] = `/${path
+          .relative(path.join(process.cwd(), "public"), variantPath)
+          .replace(/\\/g, "/")}`;
+      }
+
+      results.variants = variants;
+    }
+  } catch (error) {
+    console.error("Enhanced image processing failed:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      originalPath,
+      options,
+    });
+  }
+
+  return results;
+}
+
+// Generate thumbnail from buffer
+async function generateThumbnailFromBuffer(
+  buffer: Buffer,
+  outputPath: string,
+  size: number = 300,
+): Promise<void> {
+  try {
+    await sharp(buffer)
+      .resize(size, size, {
+        fit: "inside",
+        withoutEnlargement: true,
+      })
+      .jpeg({ quality: 80 })
+      .toFile(outputPath);
+  } catch (error) {
+    console.error("Thumbnail generation from buffer failed:", error);
+    throw error;
+  }
+}
+
+// Process image with custom options
+async function processImageWithCustomOptions(
+  buffer: Buffer,
+  outputPath: string,
+  options: {
+    resize?: { width: number; height: number };
+    format?: "jpeg" | "png" | "webp";
+    quality?: number;
+    watermark?: boolean;
+  },
+): Promise<void> {
+  try {
+    let pipeline = sharp(buffer);
+
+    // Apply resize if specified
+    if (options.resize) {
+      pipeline = pipeline.resize(options.resize.width, options.resize.height, {
+        fit: "inside",
+        withoutEnlargement: true,
+      });
+    }
+
+    // Apply watermark if requested (placeholder implementation)
+    if (options.watermark) {
+      // TODO: Implement watermark functionality
+      console.log("Watermark requested but not implemented yet");
+    }
+
+    // Apply format and quality
+    switch (options.format) {
+      case "jpeg":
+        pipeline = pipeline.jpeg({ quality: options.quality || 85 });
+        break;
+      case "png":
+        pipeline = pipeline.png({ quality: options.quality || 85 });
+        break;
+      case "webp":
+        pipeline = pipeline.webp({ quality: options.quality || 85 });
+        break;
+    }
+
+    await pipeline.toFile(outputPath);
+  } catch (error) {
+    console.error("Custom image processing failed:", error);
+    throw error;
   }
 }
