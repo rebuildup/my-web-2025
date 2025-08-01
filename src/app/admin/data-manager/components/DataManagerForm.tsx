@@ -5,7 +5,7 @@ import { Select } from "@/components/ui/Select";
 import { TagManagementUI } from "@/components/ui/TagManagementUI";
 import { clientDateManager } from "@/lib/portfolio/client-date-manager";
 import { clientTagManager } from "@/lib/portfolio/client-tag-manager";
-import { EnhancedContentItem } from "@/types";
+import { EnhancedContentItem, EnhancedFileUploadOptions } from "@/types";
 import {
   ContentItem,
   getPortfolioCategoryOptions,
@@ -13,6 +13,7 @@ import {
 } from "@/types/content";
 import { useEffect, useState } from "react";
 import { DownloadInfoSection } from "./DownloadInfoSection";
+import { EnhancedFileUploadSection } from "./EnhancedFileUploadSection";
 import { ExternalLinksSection } from "./ExternalLinksSection";
 import { FileUploadSection } from "./FileUploadSection";
 import { MediaEmbedSection } from "./MediaEmbedSection";
@@ -47,12 +48,37 @@ export function DataManagerForm({
     (enhanced && (item as EnhancedContentItem).useManualDate) || false,
   );
 
+  // Enhanced file upload options state
+  const [uploadOptions, setUploadOptions] = useState<EnhancedFileUploadOptions>(
+    {
+      skipProcessing: false,
+      preserveOriginal: true,
+      generateVariants: false,
+      customProcessing: {
+        resize: { width: 1920, height: 1080 },
+        format: "jpeg",
+        watermark: false,
+      },
+    },
+  );
+
   useEffect(() => {
     setFormData(item);
   }, [item]);
 
   const handleInputChange = (
     field: keyof (ContentItem | EnhancedContentItem),
+    value: unknown,
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+      updatedAt: new Date().toISOString(),
+    }));
+  };
+
+  const handleEnhancedInputChange = (
+    field: keyof EnhancedContentItem,
     value: unknown,
   ) => {
     setFormData((prev) => ({
@@ -310,14 +336,33 @@ export function DataManagerForm({
 
       {activeTab === "media" && (
         <div className="space-y-6">
-          <FileUploadSection
-            images={formData.images || []}
-            thumbnail={formData.thumbnail}
-            onImagesChange={(images) => handleInputChange("images", images)}
-            onThumbnailChange={(thumbnail) =>
-              handleInputChange("thumbnail", thumbnail)
-            }
-          />
+          {enhanced ? (
+            <EnhancedFileUploadSection
+              images={formData.images || []}
+              originalImages={
+                (formData as EnhancedContentItem).originalImages || []
+              }
+              thumbnail={formData.thumbnail}
+              onImagesChange={(images) => handleInputChange("images", images)}
+              onOriginalImagesChange={(originalImages) =>
+                handleEnhancedInputChange("originalImages", originalImages)
+              }
+              onThumbnailChange={(thumbnail) =>
+                handleInputChange("thumbnail", thumbnail)
+              }
+              uploadOptions={uploadOptions}
+              onUploadOptionsChange={setUploadOptions}
+            />
+          ) : (
+            <FileUploadSection
+              images={formData.images || []}
+              thumbnail={formData.thumbnail}
+              onImagesChange={(images) => handleInputChange("images", images)}
+              onThumbnailChange={(thumbnail) =>
+                handleInputChange("thumbnail", thumbnail)
+              }
+            />
+          )}
 
           <MediaEmbedSection
             videos={formData.videos || []}

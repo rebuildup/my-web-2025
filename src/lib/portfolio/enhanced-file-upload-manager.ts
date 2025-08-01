@@ -52,7 +52,7 @@ export class EnhancedFileUploadManager {
     uploadType?: string,
   ): Promise<FileUploadResult> {
     // Validate file
-    const validation = this.validateFile(file, uploadType, options);
+    const validation = this.validateFile(file, uploadType);
     if (!validation.valid) {
       throw new Error(validation.error);
     }
@@ -197,7 +197,6 @@ export class EnhancedFileUploadManager {
   private validateFile(
     file: File,
     type?: string,
-    options?: EnhancedFileUploadOptions,
   ): { valid: boolean; error?: string } {
     const maxSize = type === "download" ? this.maxFileSize : this.maxImageSize;
 
@@ -342,7 +341,6 @@ export class EnhancedFileUploadManager {
 
     const baseName = basename(originalPath, extname(originalPath));
     const baseDir = dirname(originalPath);
-    const variants: { [key: string]: string } = {};
 
     try {
       // Generate thumbnail (always generate unless skipProcessing is true)
@@ -379,6 +377,7 @@ export class EnhancedFileUploadManager {
 
       // Generate variants if requested
       if (options.generateVariants) {
+        const variants: { [key: string]: string } = {};
         const variantSizes = [
           { name: "small", width: 400, height: 300 },
           { name: "medium", width: 800, height: 600 },
