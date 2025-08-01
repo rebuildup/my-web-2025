@@ -22,6 +22,38 @@ jest.mock("next/link", () => {
   return MockLink;
 });
 
+// Mock enhanced gallery filter
+jest.mock("@/lib/portfolio/enhanced-gallery-filter", () => ({
+  enhancedGalleryFilter: {
+    filterItemsForGallery: jest.fn(
+      (items: any[], galleryType: string, options: any) => {
+        let filtered = [...items];
+
+        // Apply search filter
+        if (options?.search) {
+          filtered = filtered.filter(
+            (item: any) =>
+              item.title.toLowerCase().includes(options.search.toLowerCase()) ||
+              item.description
+                .toLowerCase()
+                .includes(options.search.toLowerCase()),
+          );
+        }
+
+        // Apply category filter
+        if (options?.categories && options.categories.length > 0) {
+          filtered = filtered.filter((item: any) =>
+            options.categories.includes(item.category),
+          );
+        }
+
+        return filtered;
+      },
+    ),
+    sortItems: jest.fn((items: any[]) => items),
+  },
+}));
+
 // Mock child components
 jest.mock("../PortfolioCard", () => ({
   PortfolioCard: ({ item, onClick }: { item: any; onClick: () => void }) => (

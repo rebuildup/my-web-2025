@@ -79,6 +79,7 @@ export function Pagination({
     <nav
       className="flex items-center justify-center space-x-2"
       aria-label="Pagination Navigation"
+      data-testid="pagination"
     >
       {/* Previous Button */}
       <button
@@ -133,6 +134,7 @@ export function Pagination({
         disabled={currentPage === totalPages}
         className="flex items-center space-x-1 px-3 py-2 border border-foreground text-foreground hover:border-accent hover:text-accent disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-foreground disabled:hover:text-foreground transition-colors"
         aria-label="Go to next page"
+        data-testid="next-page"
       >
         <span className="text-sm">Next</span>
         <ChevronRight className="w-4 h-4" />

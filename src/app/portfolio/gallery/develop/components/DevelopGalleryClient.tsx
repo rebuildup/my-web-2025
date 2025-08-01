@@ -5,16 +5,18 @@
  * Development projects gallery with filtering and sorting
  */
 
-import { useState, useMemo, useCallback } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { Code, Github, ExternalLink, Calendar } from "lucide-react";
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
+import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
 import { SearchFilter } from "@/lib/portfolio/search-index";
+import { EnhancedContentItem } from "@/types";
+import { Calendar, Code, ExternalLink, Github } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useMemo, useState } from "react";
 import { DetailModal } from "../../all/components/DetailModal";
 import { FilterBar } from "../../all/components/FilterBar";
-import { SortControls } from "../../all/components/SortControls";
 import { Pagination } from "../../all/components/Pagination";
+import { SortControls } from "../../all/components/SortControls";
 
 export interface FilterOptions {
   category?: string;
@@ -53,79 +55,34 @@ export function DevelopGalleryClient({
 
   // Filter and sort items - only show develop category items
   const filteredAndSortedItems = useMemo(() => {
-    // First filter for published develop items only
-    let items = [...initialItems].filter(
-      (item) => item.status === "published" && item.category === "develop",
+    // Use enhanced gallery filter for develop category
+    let items = enhancedGalleryFilter.filterItemsForGallery(
+      initialItems,
+      "develop",
+      {
+        // Apply additional filters
+        tags: filters.tags,
+        year: filters.year ? parseInt(filters.year) : undefined,
+        search: filters.search,
+      },
     );
 
-    // Apply additional filters
+    // Apply technology filter (not handled by enhanced filter yet)
     if (filters.technologies && filters.technologies.length > 0) {
-      items = items.filter((item) =>
-        filters.technologies!.some((tech) =>
-          (item.technologies || []).some((itemTech) =>
-            itemTech.toLowerCase().includes(tech.toLowerCase()),
+      items = items.filter((item: EnhancedContentItem) =>
+        filters.technologies!.some((tech: string) =>
+          ((item as unknown as PortfolioContentItem).technologies || []).some(
+            (itemTech: string) =>
+              itemTech.toLowerCase().includes(tech.toLowerCase()),
           ),
         ),
       );
     }
 
-    if (filters.year) {
-      items = items.filter(
-        (item) =>
-          new Date(item.createdAt).getFullYear().toString() === filters.year,
-      );
-    }
-
-    if (filters.tags && filters.tags.length > 0) {
-      items = items.filter((item) =>
-        filters.tags!.some((tag) =>
-          (item.tags || []).some((itemTag) =>
-            itemTag.toLowerCase().includes(tag.toLowerCase()),
-          ),
-        ),
-      );
-    }
-
-    if (filters.search) {
-      const searchTerm = filters.search.toLowerCase();
-      items = items.filter(
-        (item) =>
-          item.title.toLowerCase().includes(searchTerm) ||
-          item.description.toLowerCase().includes(searchTerm) ||
-          (item.content || "").toLowerCase().includes(searchTerm),
-      );
-    }
-
-    // Apply sorting
-    items.sort((a, b) => {
-      let aValue: string | number;
-      let bValue: string | number;
-
-      switch (sort.sortBy) {
-        case "title":
-          aValue = a.title.toLowerCase();
-          bValue = b.title.toLowerCase();
-          break;
-        case "priority":
-          aValue = a.priority || 0;
-          bValue = b.priority || 0;
-          break;
-        case "createdAt":
-          aValue = new Date(a.createdAt).getTime();
-          bValue = new Date(b.createdAt).getTime();
-          break;
-        case "updatedAt":
-        default:
-          aValue = new Date(a.updatedAt || a.createdAt).getTime();
-          bValue = new Date(b.updatedAt || b.createdAt).getTime();
-          break;
-      }
-
-      if (sort.sortOrder === "asc") {
-        return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-      } else {
-        return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
-      }
+    // Apply sorting using enhanced gallery filter
+    items = enhancedGalleryFilter.sortItems(items, {
+      sortBy: sort.sortBy,
+      sortOrder: sort.sortOrder,
     });
 
     return items;
@@ -169,11 +126,12 @@ export function DevelopGalleryClient({
 
   // Transform portfolio item to development project format
   const transformToDevelopProject = useCallback(
-    (item: PortfolioContentItem) => {
+    (item: PortfolioContentItem | EnhancedContentItem) => {
       // Extract technologies from tags or use default
       const technologies =
-        item.technologies && item.technologies.length > 0
-          ? item.technologies
+        (item as unknown as PortfolioContentItem).technologies &&
+        (item as unknown as PortfolioContentItem).technologies.length > 0
+          ? (item as unknown as PortfolioContentItem).technologies
           : item.tags.length > 0
             ? item.tags
             : ["Web Development"];
@@ -409,7 +367,7 @@ export function DevelopGalleryClient({
                               Technology Stack:
                             </h4>
                             <div className="flex flex-wrap gap-2">
-                              {project.technologies.map((tech) => (
+                              {project.technologies.map((tech: string) => (
                                 <span
                                   key={tech}
                                   className="noto-sans-jp-light text-sm text-accent border border-accent px-3 py-1 bg-base hover:bg-accent hover:text-background transition-colors"

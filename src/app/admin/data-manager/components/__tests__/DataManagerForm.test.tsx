@@ -18,6 +18,21 @@ jest.mock("@/lib/portfolio/client-tag-manager", () => ({
   },
 }));
 
+jest.mock("@/components/ui/MultiCategorySelector", () => ({
+  MultiCategorySelector: ({
+    selectedCategories,
+    onChange,
+  }: {
+    selectedCategories: string[];
+    onChange: (categories: string[]) => void;
+  }) => (
+    <div data-testid="multi-category-selector">
+      <div>Selected: {selectedCategories.join(", ")}</div>
+      <button onClick={() => onChange(["develop"])}>Select Develop</button>
+    </div>
+  ),
+}));
+
 jest.mock("@/components/ui/TagManagementUI", () => ({
   TagManagementUI: ({
     selectedTags,

@@ -1515,5 +1515,336 @@
       "element": "P",
       "url": ""
     }
+  },
+  {
+    "id": "perf_1754036018582_v2y9p1ipr",
+    "timestamp": "2025-08-01T08:13:38.582Z",
+    "metric": "lcp",
+    "value": 10980,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754036900654_bcn38u2t8",
+    "timestamp": "2025-08-01T08:28:20.654Z",
+    "metric": "lcp",
+    "value": 9976,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/admin",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754044742698_jvym7gxea",
+    "timestamp": "2025-08-01T10:39:02.698Z",
+    "metric": "lcp",
+    "value": 7940,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754044744585_58uzcx10c",
+    "timestamp": "2025-08-01T10:39:04.585Z",
+    "metric": "lcp",
+    "value": 9864,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754044750659_pi4o9s60g",
+    "timestamp": "2025-08-01T10:39:10.659Z",
+    "metric": "lcp",
+    "value": 5656,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754044750873_1zk4hsefy",
+    "timestamp": "2025-08-01T10:39:10.873Z",
+    "metric": "lcp",
+    "value": 3104,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754044753845_t5neqfadw",
+    "timestamp": "2025-08-01T10:39:13.845Z",
+    "metric": "lcp",
+    "value": 2712,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754044767629_bsmzzx7co",
+    "timestamp": "2025-08-01T10:39:27.629Z",
+    "metric": "lcp",
+    "value": 2792,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754044770522_5vdcus4za",
+    "timestamp": "2025-08-01T10:39:30.522Z",
+    "metric": "lcp",
+    "value": 3344,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754044772777_f9gwfg4tx",
+    "timestamp": "2025-08-01T10:39:32.777Z",
+    "metric": "lcp",
+    "value": 2828,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/portfolio-1753615145862",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754044774474_jqdxsrj36",
+    "timestamp": "2025-08-01T10:39:34.474Z",
+    "metric": "lcp",
+    "value": 2632,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754044772830_r02bprkmy",
+    "timestamp": "2025-08-01T10:39:32.830Z",
+    "metric": "lcp",
+    "value": 2900,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/portfolio-1753615145862",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754044788830_61vc1vwnj",
+    "timestamp": "2025-08-01T10:39:48.830Z",
+    "metric": "lcp",
+    "value": 4108,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1754044789025_hidy37chr",
+    "timestamp": "2025-08-01T10:39:49.025Z",
+    "metric": "lcp",
+    "value": 4604,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1754045469728_ce1n96ijp",
+    "timestamp": "2025-08-01T10:51:09.728Z",
+    "metric": "lcp",
+    "value": 5648,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754045471653_iphf2x6yc",
+    "timestamp": "2025-08-01T10:51:11.653Z",
+    "metric": "lcp",
+    "value": 7564,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754045476367_0cck9wf9u",
+    "timestamp": "2025-08-01T10:51:16.367Z",
+    "metric": "lcp",
+    "value": 3356,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754045480233_nzv9npgvz",
+    "timestamp": "2025-08-01T10:51:20.233Z",
+    "metric": "lcp",
+    "value": 4332,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754045487909_wp9gn39wx",
+    "timestamp": "2025-08-01T10:51:27.909Z",
+    "metric": "cls",
+    "value": 0.18024088541666666,
+    "threshold": 0.1,
+    "severity": "warning",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 430,
+            "width": 1280,
+            "height": 154,
+            "top": 430,
+            "right": 1280,
+            "bottom": 584,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "NAV",
+          "previousRect": {
+            "x": 0,
+            "y": 624,
+            "width": 1280,
+            "height": 56,
+            "top": 624,
+            "right": 1280,
+            "bottom": 680,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754045494949_dbmx2prbb",
+    "timestamp": "2025-08-01T10:51:34.949Z",
+    "metric": "lcp",
+    "value": 2540,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754045507668_uaerbeyb4",
+    "timestamp": "2025-08-01T10:51:47.668Z",
+    "metric": "lcp",
+    "value": 2960,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1754045507716_qvjwkmqym",
+    "timestamp": "2025-08-01T10:51:47.716Z",
+    "metric": "lcp",
+    "value": 2996,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png&w=640&q=75"
+    }
   }
 ]

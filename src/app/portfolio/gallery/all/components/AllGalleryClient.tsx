@@ -5,15 +5,17 @@
  * Task 3.1: 全作品ギャラリーのクライアントサイド実装
  */
 
-import { useState, useMemo, useCallback } from "react";
-import Link from "next/link";
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
+import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
 import { SearchFilter } from "@/lib/portfolio/search-index";
-import { PortfolioCard } from "./PortfolioCard";
+import type { EnhancedCategoryType } from "@/types/enhanced-content";
+import Link from "next/link";
+import { useCallback, useMemo, useState } from "react";
 import { DetailModal } from "./DetailModal";
 import { FilterBar } from "./FilterBar";
-import { SortControls } from "./SortControls";
 import { Pagination } from "./Pagination";
+import { PortfolioCard } from "./PortfolioCard";
+import { SortControls } from "./SortControls";
 
 export interface FilterOptions {
   category?: string;
@@ -52,81 +54,38 @@ export function AllGalleryClient({
 
   // Filter and sort items
   const filteredAndSortedItems = useMemo(() => {
-    // First filter for published items only (safety check)
-    let items = [...initialItems].filter((item) => item.status === "published");
+    // Use enhanced gallery filter for all items
+    let items = enhancedGalleryFilter.filterItemsForGallery(
+      initialItems,
+      "all",
+      {
+        // Apply filters
+        categories:
+          filters.category && filters.category !== "all"
+            ? [filters.category as EnhancedCategoryType]
+            : undefined,
+        tags: filters.tags,
+        year: filters.year ? parseInt(filters.year) : undefined,
+        search: filters.search,
+      },
+    );
 
-    // Apply filters
-    if (filters.category && filters.category !== "all") {
-      items = items.filter((item) => item.category === filters.category);
-    }
-
+    // Apply technology filter (not handled by enhanced filter yet)
     if (filters.technologies && filters.technologies.length > 0) {
       items = items.filter((item) =>
         filters.technologies!.some((tech) =>
-          (item.technologies || []).some((itemTech) =>
-            itemTech.toLowerCase().includes(tech.toLowerCase()),
+          ((item as unknown as PortfolioContentItem).technologies || []).some(
+            (itemTech: string) =>
+              itemTech.toLowerCase().includes(tech.toLowerCase()),
           ),
         ),
       );
     }
 
-    if (filters.year) {
-      items = items.filter(
-        (item) =>
-          new Date(item.createdAt).getFullYear().toString() === filters.year,
-      );
-    }
-
-    if (filters.tags && filters.tags.length > 0) {
-      items = items.filter((item) =>
-        filters.tags!.some((tag) =>
-          (item.tags || []).some((itemTag) =>
-            itemTag.toLowerCase().includes(tag.toLowerCase()),
-          ),
-        ),
-      );
-    }
-
-    if (filters.search) {
-      const searchTerm = filters.search.toLowerCase();
-      items = items.filter(
-        (item) =>
-          item.title.toLowerCase().includes(searchTerm) ||
-          item.description.toLowerCase().includes(searchTerm) ||
-          (item.content || "").toLowerCase().includes(searchTerm),
-      );
-    }
-
-    // Apply sorting
-    items.sort((a, b) => {
-      let aValue: string | number;
-      let bValue: string | number;
-
-      switch (sort.sortBy) {
-        case "title":
-          aValue = a.title.toLowerCase();
-          bValue = b.title.toLowerCase();
-          break;
-        case "priority":
-          aValue = a.priority || 0;
-          bValue = b.priority || 0;
-          break;
-        case "createdAt":
-          aValue = new Date(a.createdAt).getTime();
-          bValue = new Date(b.createdAt).getTime();
-          break;
-        case "updatedAt":
-        default:
-          aValue = new Date(a.updatedAt || a.createdAt).getTime();
-          bValue = new Date(b.updatedAt || b.createdAt).getTime();
-          break;
-      }
-
-      if (sort.sortOrder === "asc") {
-        return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-      } else {
-        return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
-      }
+    // Apply sorting using enhanced gallery filter
+    items = enhancedGalleryFilter.sortItems(items, {
+      sortBy: sort.sortBy,
+      sortOrder: sort.sortOrder,
     });
 
     return items;
@@ -256,8 +215,12 @@ export function AllGalleryClient({
                     {paginatedItems.map((item) => (
                       <PortfolioCard
                         key={item.id}
-                        item={item}
-                        onClick={() => handleCardClick(item)}
+                        item={item as unknown as PortfolioContentItem}
+                        onClick={() =>
+                          handleCardClick(
+                            item as unknown as PortfolioContentItem,
+                          )
+                        }
                       />
                     ))}
                   </div>

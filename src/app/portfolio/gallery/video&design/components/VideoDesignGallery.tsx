@@ -1,19 +1,24 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import Link from "next/link";
-import { PortfolioContentItem } from "@/types/portfolio";
+import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
 import {
+  createBalancedLayout,
   generateGridLayout,
   getGridItemClasses,
   getGridItemMinHeight,
-  createBalancedLayout,
   GridItem,
 } from "@/lib/portfolio/grid-layout-utils";
-import { Play, Palette, Video, Eye, Filter } from "lucide-react";
+import type {
+  EnhancedCategoryType,
+  EnhancedContentItem,
+} from "@/types/enhanced-content";
+import { PortfolioContentItem } from "@/types/portfolio";
+import { Eye, Filter, Palette, Video } from "lucide-react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 
 interface VideoDesignGalleryProps {
-  items: PortfolioContentItem[];
+  items: (PortfolioContentItem | EnhancedContentItem)[];
 }
 
 interface FilterState {
@@ -31,66 +36,176 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
 
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
-  // Filter and sort items
-  const filteredItems = useMemo(() => {
-    let filtered = items.filter((item) => item.status === "published");
-
-    // Category filter
-    if (filters.category !== "all") {
-      filtered = filtered.filter((item) => item.category === filters.category);
-    }
-
-    // Year filter
-    if (filters.year !== "all") {
-      const year = parseInt(filters.year);
-      filtered = filtered.filter(
-        (item) => new Date(item.createdAt).getFullYear() === year,
+  // Validate and sanitize input items
+  const validItems = useMemo(() => {
+    if (!Array.isArray(items)) {
+      console.warn(
+        "VideoDesignGallery: items is not an array, using empty array",
       );
+      return [];
     }
 
-    // Sort items
-    filtered.sort((a, b) => {
-      switch (filters.sortBy) {
-        case "priority":
-          return b.priority - a.priority;
-        case "date":
-          return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-        case "title":
-          return a.title.localeCompare(b.title);
-        default:
-          return 0;
+    return items.filter((item) => {
+      if (!item || !item.id || !item.title) {
+        console.warn("VideoDesignGallery: Invalid item found, skipping:", item);
+        return false;
       }
+      return true;
+    });
+  }, [items]);
+
+  // Debug: Log items received
+  console.log("VideoDesignGallery received items:", {
+    total: validItems.length,
+    enhanced: validItems.filter((item) => "categories" in item).length,
+    legacy: validItems.filter((item) => !("categories" in item)).length,
+    categories: validItems.map((item) => {
+      if ("categories" in item && Array.isArray(item.categories)) {
+        return item.categories.join(", ");
+      }
+      return (item as PortfolioContentItem).category;
+    }),
+  });
+
+  // Filter and sort items using enhanced gallery filter
+  const filteredItems = useMemo(() => {
+    // Use enhanced gallery filter for consistent filtering
+    const filterOptions: {
+      year?: number;
+      categories?: EnhancedCategoryType[];
+    } = {};
+
+    if (filters.year !== "all") {
+      filterOptions.year = parseInt(filters.year);
+    }
+
+    if (filters.category !== "all") {
+      filterOptions.categories = [filters.category as EnhancedCategoryType];
+    }
+
+    const filtered = enhancedGalleryFilter.filterItemsForGallery(
+      validItems,
+      "video&design",
+      filterOptions,
+    );
+
+    // Apply sorting using enhanced gallery filter
+    const sorted = enhancedGalleryFilter.sortItems(filtered, {
+      sortBy: filters.sortBy === "date" ? "createdAt" : filters.sortBy,
+      sortOrder: filters.sortBy === "title" ? "asc" : "desc",
     });
 
-    return filtered;
-  }, [items, filters]);
+    return sorted;
+  }, [validItems, filters]);
 
   // Generate grid layout with creative distribution
   const gridItems = useMemo(() => {
-    const gridLayout = generateGridLayout(filteredItems);
+    const gridLayout = generateGridLayout(
+      filteredItems as unknown as PortfolioContentItem[],
+    );
     const balancedLayout = createBalancedLayout(gridLayout);
 
-    // Add some final randomization while maintaining visual balance
-    return balancedLayout.map((item, index) => ({
-      ...item,
-      // Add slight random variation to positioning for more organic feel
-      randomOffset: Math.sin(index * 1.3) * 0.1,
-    }));
+    // Add some final randomization while maintaining visual balance and enhanced properties
+    return balancedLayout.map((item, index) => {
+      const originalItem = filteredItems.find((fi) => fi.id === item.id);
+      return {
+        ...item,
+        // Add categories from enhanced items
+        categories: (originalItem as EnhancedContentItem)?.categories,
+        // Add slight random variation to positioning for more organic feel
+        randomOffset: Math.sin(index * 1.3) * 0.1,
+      } as EnhancedGridItem;
+    });
   }, [filteredItems]);
 
   // Get available years for filter
   const availableYears = useMemo(() => {
-    const years = items.map((item) => new Date(item.createdAt).getFullYear());
+    const years = validItems.map((item) =>
+      new Date(item.createdAt).getFullYear(),
+    );
     return [...new Set(years)].sort((a, b) => b - a);
-  }, [items]);
+  }, [validItems]);
 
-  // Get available categories for filter
+  // Statistics for video&design category items
+  const videoDesignStats = useMemo(() => {
+    const allItems = validItems as (
+      | PortfolioContentItem
+      | EnhancedContentItem
+    )[];
+
+    // Count items by category type
+    const stats = {
+      videoOnly: 0,
+      designOnly: 0,
+      videoAndDesign: 0,
+      multiCategory: 0,
+      total: allItems.length,
+    };
+
+    allItems.forEach((item) => {
+      // Handle enhanced items with multiple categories
+      if ("categories" in item && Array.isArray(item.categories)) {
+        const enhancedItem = item as EnhancedContentItem;
+        const relevantCategories = enhancedItem.categories.filter((cat) =>
+          ["video", "design", "video&design"].includes(cat),
+        );
+
+        if (relevantCategories.includes("video&design")) {
+          stats.videoAndDesign++;
+        } else if (
+          relevantCategories.includes("video") &&
+          relevantCategories.includes("design")
+        ) {
+          stats.multiCategory++;
+        } else if (relevantCategories.includes("video")) {
+          stats.videoOnly++;
+        } else if (relevantCategories.includes("design")) {
+          stats.designOnly++;
+        }
+      } else {
+        // Handle legacy items
+        const legacyItem = item as PortfolioContentItem;
+        if (legacyItem.category === "video&design") {
+          stats.videoAndDesign++;
+        } else if (legacyItem.category === "video") {
+          stats.videoOnly++;
+        } else if (legacyItem.category === "design") {
+          stats.designOnly++;
+        }
+      }
+    });
+
+    return stats;
+  }, [validItems]);
+
+  // Get available categories for filter (video&design specific)
   const availableCategories = useMemo(() => {
-    const categories = items.map((item) => item.category);
-    return [...new Set(categories)];
-  }, [items]);
+    const categories = new Set<string>();
+
+    validItems.forEach((item) => {
+      // Handle enhanced items with multiple categories
+      if ("categories" in item && Array.isArray(item.categories)) {
+        const enhancedItem = item as EnhancedContentItem;
+        enhancedItem.categories.forEach((category) => {
+          // Only include video, design, and video&design categories
+          if (["video", "design", "video&design"].includes(category)) {
+            categories.add(category);
+          }
+        });
+      } else {
+        // Handle legacy items
+        const legacyItem = item as PortfolioContentItem;
+        if (
+          legacyItem.category &&
+          ["video", "design", "video&design"].includes(legacyItem.category)
+        ) {
+          categories.add(legacyItem.category);
+        }
+      }
+    });
+
+    return Array.from(categories).sort();
+  }, [validItems]);
 
   return (
     <div className="space-y-8">
@@ -104,10 +219,14 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Category Filter */}
           <div>
-            <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
+            <label
+              htmlFor="category-filter"
+              className="noto-sans-jp-light text-sm text-foreground block mb-2"
+            >
               Category
             </label>
             <select
+              id="category-filter"
               value={filters.category}
               onChange={(e) =>
                 setFilters((prev) => ({ ...prev, category: e.target.value }))
@@ -117,7 +236,9 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
               <option value="all">All Categories</option>
               {availableCategories.map((category) => (
                 <option key={category} value={category}>
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                  {category === "video&design"
+                    ? "Video & Design"
+                    : category.charAt(0).toUpperCase() + category.slice(1)}
                 </option>
               ))}
             </select>
@@ -125,10 +246,14 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
 
           {/* Year Filter */}
           <div>
-            <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
+            <label
+              htmlFor="year-filter"
+              className="noto-sans-jp-light text-sm text-foreground block mb-2"
+            >
               Year
             </label>
             <select
+              id="year-filter"
               value={filters.year}
               onChange={(e) =>
                 setFilters((prev) => ({ ...prev, year: e.target.value }))
@@ -146,10 +271,14 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
 
           {/* Sort Filter */}
           <div>
-            <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
+            <label
+              htmlFor="sort-filter"
+              className="noto-sans-jp-light text-sm text-foreground block mb-2"
+            >
               Sort By
             </label>
             <select
+              id="sort-filter"
               value={filters.sortBy}
               onChange={(e) =>
                 setFilters((prev) => ({
@@ -169,10 +298,26 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
 
       {/* Results Count */}
       <div className="flex items-center justify-between">
-        <p className="noto-sans-jp-light text-sm text-foreground">
-          {gridItems.filter((item) => item.category !== "placeholder").length}{" "}
-          projects found
-        </p>
+        <div className="space-y-1">
+          <p className="noto-sans-jp-light text-sm text-foreground">
+            {gridItems.filter((item) => item.category !== "placeholder").length}{" "}
+            projects found
+          </p>
+          <div className="flex items-center space-x-4 text-xs text-foreground opacity-75">
+            {videoDesignStats.videoOnly > 0 && (
+              <span>Video: {videoDesignStats.videoOnly}</span>
+            )}
+            {videoDesignStats.designOnly > 0 && (
+              <span>Design: {videoDesignStats.designOnly}</span>
+            )}
+            {videoDesignStats.videoAndDesign > 0 && (
+              <span>V&D: {videoDesignStats.videoAndDesign}</span>
+            )}
+            {videoDesignStats.multiCategory > 0 && (
+              <span>Multi: {videoDesignStats.multiCategory}</span>
+            )}
+          </div>
+        </div>
         <div className="flex items-center space-x-2">
           <Palette className="w-4 h-4 text-accent" />
           <Video className="w-4 h-4 text-primary" />
@@ -190,7 +335,7 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
         {gridItems.map((item) => (
           <GridItemComponent
             key={item.id}
-            item={item}
+            item={item as EnhancedGridItem}
             isHovered={hoveredItem === item.id}
             onHover={setHoveredItem}
           />
@@ -223,8 +368,12 @@ export function VideoDesignGallery({ items }: VideoDesignGalleryProps) {
   );
 }
 
+interface EnhancedGridItem extends GridItem {
+  categories?: EnhancedCategoryType[];
+}
+
 interface GridItemComponentProps {
-  item: GridItem;
+  item: EnhancedGridItem;
   isHovered: boolean;
   onHover: (id: string | null) => void;
 }
@@ -303,14 +452,22 @@ function GridItemComponent({
           {/* Top Info */}
           <div className="flex items-start justify-between">
             <div className="flex items-center space-x-1">
-              {item.category === "video" && (
+              {/* Show icons for all categories the item belongs to */}
+              {(item.category === "video" ||
+                (item.categories && item.categories.includes("video"))) && (
                 <Video className="w-4 h-4 text-white" />
               )}
-              {item.category === "design" && (
+              {(item.category === "design" ||
+                (item.categories && item.categories.includes("design"))) && (
                 <Palette className="w-4 h-4 text-white" />
               )}
-              {item.category === "develop" && (
-                <Play className="w-4 h-4 text-white" />
+              {(item.category === "video&design" ||
+                (item.categories &&
+                  item.categories.includes("video&design"))) && (
+                <>
+                  <Video className="w-4 h-4 text-white" />
+                  <Palette className="w-4 h-4 text-white" />
+                </>
               )}
             </div>
             <div className="bg-black bg-opacity-50 px-2 py-1 rounded">
@@ -327,7 +484,22 @@ function GridItemComponent({
             </h3>
             <div className="flex items-center justify-between">
               <span className="noto-sans-jp-light text-xs text-white opacity-80">
-                {item.category}
+                {/* Display primary category or multiple categories */}
+                {item.categories && item.categories.length > 1
+                  ? item.categories
+                      .filter((cat) =>
+                        ["video", "design", "video&design"].includes(cat),
+                      )
+                      .map((cat) =>
+                        cat === "video&design"
+                          ? "V&D"
+                          : cat.charAt(0).toUpperCase(),
+                      )
+                      .join(" + ")
+                  : item.category === "video&design"
+                    ? "Video & Design"
+                    : item.category?.charAt(0).toUpperCase() +
+                      item.category?.slice(1)}
               </span>
               <div className="flex items-center space-x-1">
                 <Eye className="w-3 h-3 text-white opacity-60" />

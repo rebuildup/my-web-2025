@@ -21,7 +21,9 @@ export default function DataManagerPage() {
   const [selectedContentType, setSelectedContentType] =
     useState<ContentType>("portfolio");
   const [contentItems, setContentItems] = useState<ContentItem[]>([]);
-  const [selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<
+    ContentItem | EnhancedContentItem | null
+  >(null);
   const [isLoading, setIsLoading] = useState(false);
   const [previewMode, setPreviewMode] = useState<"form" | "preview">("form");
   const [saveStatus, setSaveStatus] = useState<
@@ -70,22 +72,43 @@ export default function DataManagerPage() {
   };
 
   const handleCreateNew = () => {
-    const newItem: ContentItem = {
-      id: `${selectedContentType}-${Date.now()}`,
-      type: selectedContentType,
-      title: "",
-      description: "",
-      category: "",
-      tags: [],
-      status: "published",
-      priority: 50,
-      createdAt: new Date().toISOString(),
-    };
-    setSelectedItem(newItem);
+    // Create enhanced content item for portfolio type
+    if (selectedContentType === "portfolio") {
+      const newItem: EnhancedContentItem = {
+        id: `${selectedContentType}-${Date.now()}`,
+        type: selectedContentType,
+        title: "",
+        description: "",
+        categories: [], // Use categories array instead of single category
+        tags: [],
+        status: "published",
+        priority: 50,
+        createdAt: new Date().toISOString(),
+        isOtherCategory: false,
+        useManualDate: false,
+        originalImages: [],
+        processedImages: [],
+      };
+      setSelectedItem(newItem);
+    } else {
+      // Use legacy format for non-portfolio items
+      const newItem: ContentItem = {
+        id: `${selectedContentType}-${Date.now()}`,
+        type: selectedContentType,
+        title: "",
+        description: "",
+        category: "",
+        tags: [],
+        status: "published",
+        priority: 50,
+        createdAt: new Date().toISOString(),
+      };
+      setSelectedItem(newItem);
+    }
     setPreviewMode("form");
   };
 
-  const handleEditItem = (item: ContentItem) => {
+  const handleEditItem = (item: ContentItem | EnhancedContentItem) => {
     setSelectedItem(item);
     setPreviewMode("form");
   };
@@ -342,6 +365,7 @@ export default function DataManagerPage() {
                           onCancel={handleCancel}
                           isLoading={isLoading}
                           saveStatus={saveStatus}
+                          enhanced={true} // Enable enhanced features
                         />
                       ) : (
                         <PreviewPanel

@@ -1,10 +1,11 @@
 "use client";
 
 import { ContentItem, MediaEmbed } from "@/types/content";
+import { EnhancedContentItem } from "@/types/enhanced-content";
 import { useState } from "react";
 
 interface PreviewPanelProps {
-  item: ContentItem;
+  item: ContentItem | EnhancedContentItem;
   onEdit: () => void;
 }
 

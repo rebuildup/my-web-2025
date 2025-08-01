@@ -1,8 +1,10 @@
+import { portfolioDataManager } from "@/lib/portfolio/data-manager";
+import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
+import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
+import type { PortfolioContentItem } from "@/types/portfolio";
+import { Eye, Lightbulb, Palette, Video } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
-import { Palette, Video, Lightbulb, Eye } from "lucide-react";
-import { portfolioDataManager } from "@/lib/portfolio/data-manager";
-import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import { VideoDesignGallery } from "./components/VideoDesignGallery";
 
 export const metadata: Metadata = {
@@ -106,29 +108,34 @@ export default async function VideoDesignProjectsPage() {
     console.log("Fetching portfolio data...");
     const items = await portfolioDataManager.getPortfolioData(false);
 
-    // Filter for video&design category items
-    // Show video items and design items that have video-related content
-    const videoDesignItems = items.filter(
-      (item) =>
-        item.category === "video&design" ||
-        item.category === "video" ||
-        (item.category === "design" &&
-          ((item.videos && item.videos.length > 0) ||
-            (item.tags &&
-              (item.tags.some((tag) => tag.toLowerCase().includes("video")) ||
-                item.tags.some((tag) => tag.toLowerCase().includes("motion")) ||
-                item.tags.some((tag) =>
-                  tag.toLowerCase().includes("animation"),
-                ))))),
+    // Use enhanced gallery filter for video&design category with proper integration
+    const videoDesignItems = enhancedGalleryFilter.filterItemsForGallery(
+      items,
+      "video&design",
+      {
+        status: "published", // Only show published items
+        includeOther: false, // Exclude Other category items
+      },
     );
 
     console.log("Video&Design page debug:", {
       totalItems: items.length,
       videoDesignItems: videoDesignItems.length,
-      categories: videoDesignItems.map((item) => item.category),
-      itemsWithVideos: videoDesignItems.filter(
-        (item) => item.videos && item.videos.length > 0,
-      ).length,
+      categories: videoDesignItems.map((item) => {
+        // Handle both enhanced and legacy items
+        if ("categories" in item && Array.isArray(item.categories)) {
+          return item.categories.join(", ");
+        }
+        return (item as unknown as PortfolioContentItem).category;
+      }),
+      itemsWithVideos: videoDesignItems.filter((item) => {
+        const portfolioItem = item as unknown as PortfolioContentItem;
+        return portfolioItem.videos && portfolioItem.videos.length > 0;
+      }).length,
+      enhancedItems: videoDesignItems.filter((item) => "categories" in item)
+        .length,
+      legacyItems: videoDesignItems.filter((item) => !("categories" in item))
+        .length,
     });
 
     // Generate SEO metadata and structured data

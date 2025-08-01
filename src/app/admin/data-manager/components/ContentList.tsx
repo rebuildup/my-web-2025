@@ -1,11 +1,12 @@
 "use client";
 
 import { ContentItem } from "@/types/content";
+import { EnhancedContentItem } from "@/types/enhanced-content";
 
 interface ContentListProps {
   items: ContentItem[];
-  selectedItem: ContentItem | null;
-  onSelectItem: (item: ContentItem) => void;
+  selectedItem: ContentItem | EnhancedContentItem | null;
+  onSelectItem: (item: ContentItem | EnhancedContentItem) => void;
   onDeleteItem: (id: string) => void;
   isLoading: boolean;
 }
