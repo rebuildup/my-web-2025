@@ -127,7 +127,7 @@ export interface MarkdownEditorProps {
   content: string;
   filePath?: string;
   onChange: (content: string) => void;
-  onSave: (content: string, filePath: string) => Promise<void>;
+  onSave?: (content: string, filePath: string) => Promise<void>;
   preview?: boolean;
   toolbar?: boolean;
 }

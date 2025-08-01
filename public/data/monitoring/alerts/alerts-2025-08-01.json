@@ -1283,5 +1283,237 @@
       "element": "IMG",
       "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png&w=640&q=75"
     }
+  },
+  {
+    "id": "perf_1754035177446_pmci9uodo",
+    "timestamp": "2025-08-01T07:59:37.446Z",
+    "metric": "lcp",
+    "value": 4120,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/about",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035179241_eyyy2gkcy",
+    "timestamp": "2025-08-01T07:59:39.241Z",
+    "metric": "lcp",
+    "value": 10616,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035179678_cb5yg0jjo",
+    "timestamp": "2025-08-01T07:59:39.678Z",
+    "metric": "lcp",
+    "value": 2724,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035184109_gzhc8168u",
+    "timestamp": "2025-08-01T07:59:44.109Z",
+    "metric": "lcp",
+    "value": 5276,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035185819_oivbn4bnn",
+    "timestamp": "2025-08-01T07:59:45.819Z",
+    "metric": "lcp",
+    "value": 2944,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035197319_tz81ayic8",
+    "timestamp": "2025-08-01T07:59:57.319Z",
+    "metric": "lcp",
+    "value": 2608,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035196223_j5xxb8knh",
+    "timestamp": "2025-08-01T07:59:56.223Z",
+    "metric": "lcp",
+    "value": 2616,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035199557_y2tur90r5",
+    "timestamp": "2025-08-01T07:59:59.557Z",
+    "metric": "lcp",
+    "value": 3696,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/tools/color-palette",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035208673_x4vwrtmrm",
+    "timestamp": "2025-08-01T08:00:08.673Z",
+    "metric": "lcp",
+    "value": 3836,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/workshop",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035209796_fnraalgki",
+    "timestamp": "2025-08-01T08:00:09.796Z",
+    "metric": "lcp",
+    "value": 4116,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/portfolio-1753615145862",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035211388_8rkgfzoj8",
+    "timestamp": "2025-08-01T08:00:11.388Z",
+    "metric": "lcp",
+    "value": 2620,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/contact",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035209845_ta2039j88",
+    "timestamp": "2025-08-01T08:00:09.845Z",
+    "metric": "lcp",
+    "value": 4168,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/portfolio-1753615145862",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035226476_8e45t4e9p",
+    "timestamp": "2025-08-01T08:00:26.476Z",
+    "metric": "lcp",
+    "value": 3156,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035231751_35dblntem",
+    "timestamp": "2025-08-01T08:00:31.751Z",
+    "metric": "lcp",
+    "value": 6444,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1754035232151_ndbmc8nvh",
+    "timestamp": "2025-08-01T08:00:32.151Z",
+    "metric": "lcp",
+    "value": 4296,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1754035233685_0v4mng7ky",
+    "timestamp": "2025-08-01T08:00:33.685Z",
+    "metric": "lcp",
+    "value": 3424,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/gallery/video",
+    "context": {
+      "element": "IMG",
+      "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2Fvlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png&w=640&q=75"
+    }
+  },
+  {
+    "id": "perf_1754035238907_7n7w2k3i5",
+    "timestamp": "2025-08-01T08:00:38.907Z",
+    "metric": "lcp",
+    "value": 3004,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/portfolio-1753615145862",
+    "context": {
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754035238963_pbyeo7qze",
+    "timestamp": "2025-08-01T08:00:38.964Z",
+    "metric": "lcp",
+    "value": 3076,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/portfolio-1753615145862",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
   }
 ]

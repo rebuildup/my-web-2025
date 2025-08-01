@@ -1,10 +1,12 @@
 "use client";
 
 import { DatePicker } from "@/components/ui/DatePicker";
+import { MarkdownEditor } from "@/components/ui/MarkdownEditor";
 import { Select } from "@/components/ui/Select";
 import { TagManagementUI } from "@/components/ui/TagManagementUI";
 import { clientDateManager } from "@/lib/portfolio/client-date-manager";
 import { clientTagManager } from "@/lib/portfolio/client-tag-manager";
+
 import { EnhancedContentItem, EnhancedFileUploadOptions } from "@/types";
 import {
   ContentItem,
@@ -60,6 +62,11 @@ export function DataManagerForm({
         watermark: false,
       },
     },
+  );
+
+  // Markdown editor state
+  const [markdownFilePath, setMarkdownFilePath] = useState<string | undefined>(
+    enhanced ? (item as EnhancedContentItem).markdownPath : undefined,
   );
 
   useEffect(() => {
@@ -161,6 +168,11 @@ export function DataManagerForm({
       images: formData.images || [],
       externalLinks: validExternalLinks,
       updatedAt: new Date().toISOString(),
+      // Include markdown file path for enhanced mode
+      ...(enhanced &&
+        markdownFilePath && {
+          markdownPath: markdownFilePath,
+        }),
     };
 
     console.log("Data to save:", JSON.stringify(dataToSave, null, 2));
@@ -323,13 +335,22 @@ export function DataManagerForm({
 
           <div>
             <label className={labelStyle}>Content (Markdown)</label>
-            <textarea
-              value={formData.content || ""}
-              onChange={(e) => handleInputChange("content", e.target.value)}
-              className={`${inputStyle} h-48 resize-vertical font-mono`}
-              rows={10}
-              placeholder="Enter Markdown content here..."
-            />
+            {enhanced ? (
+              <MarkdownEditor
+                content={formData.content || ""}
+                onChange={(content) => handleInputChange("content", content)}
+                preview={true}
+                toolbar={true}
+              />
+            ) : (
+              <textarea
+                value={formData.content || ""}
+                onChange={(e) => handleInputChange("content", e.target.value)}
+                className={`${inputStyle} h-48 resize-vertical font-mono`}
+                rows={10}
+                placeholder="Enter Markdown content here..."
+              />
+            )}
           </div>
         </div>
       )}
