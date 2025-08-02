@@ -1,7 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import {
+  GA_CONFIG,
+  initializeGoogleAnalytics,
+} from "@/lib/analytics/ga-config";
 import Script from "next/script";
+import { useEffect } from "react";
 
 interface GoogleAnalyticsProps {
   measurementId?: string;
@@ -12,42 +16,25 @@ interface GoogleAnalyticsProps {
 declare global {
   interface Window {
     dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
 export default function GoogleAnalytics({
-  measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
-  enabled = process.env.NODE_ENV === "production",
-  debugMode = process.env.NODE_ENV === "development",
+  measurementId = GA_CONFIG.MEASUREMENT_ID,
+  enabled = true, // 常に有効にする
+  debugMode = GA_CONFIG.DEBUG_MODE,
 }: GoogleAnalyticsProps) {
   useEffect(() => {
     if (!enabled || !measurementId) {
+      console.warn(
+        "Google Analytics: 設定が無効またはmeasurementIdが設定されていません",
+      );
       return;
     }
 
-    // Initialize dataLayer
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag(...args: unknown[]) {
-      window.dataLayer!.push(args);
-    }
-
-    window.gtag = gtag;
-
-    // Configure Google Analytics
-    gtag("js", new Date());
-    gtag("config", measurementId, {
-      // Privacy-compliant settings
-      anonymize_ip: true,
-      allow_google_signals: false,
-      allow_ad_personalization_signals: false,
-      cookie_flags: "SameSite=None;Secure",
-      debug_mode: debugMode,
-    });
-
-    if (debugMode) {
-      console.log("Google Analytics initialized:", measurementId);
-    }
+    // Google Analytics初期化
+    initializeGoogleAnalytics();
   }, [measurementId, enabled, debugMode]);
 
   if (!enabled || !measurementId) {
@@ -59,6 +46,12 @@ export default function GoogleAnalytics({
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
         strategy="afterInteractive"
+        onLoad={() => {
+          console.log("Google Analytics script loaded successfully");
+        }}
+        onError={(e) => {
+          console.error("Google Analytics script failed to load:", e);
+        }}
       />
     </>
   );
@@ -82,6 +75,9 @@ export const trackPortfolioEvent = (
         dimension1: "portfolio_section",
       },
     });
+    console.log(`Tracked event: ${action}`, { category, label, value });
+  } else {
+    console.warn("Google Analytics gtag not available");
   }
 };
 
@@ -93,12 +89,8 @@ export const trackPortfolioPageView = (
   pageTitle: string,
   contentId?: string,
 ) => {
-  if (
-    typeof window !== "undefined" &&
-    window.gtag &&
-    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
-  ) {
-    window.gtag("config", process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID, {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("config", GA_CONFIG.MEASUREMENT_ID, {
       page_path: pagePath,
       page_title: pageTitle,
       custom_map: {
@@ -116,6 +108,9 @@ export const trackPortfolioPageView = (
         dimension2: contentId || "unknown",
       },
     });
+    console.log(`Tracked page view: ${pagePath}`, { pageTitle, contentId });
+  } else {
+    console.warn("Google Analytics gtag not available for page view tracking");
   }
 };
 

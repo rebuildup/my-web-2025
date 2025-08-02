@@ -20,11 +20,20 @@ const mockFs = fs as jest.Mocked<typeof fs>;
 describe("PortfolioTagManager", () => {
   let tagManager: PortfolioTagManager;
   const testDataPath = "/test/tags.json";
+  let syncSpy: jest.SpyInstance;
 
   beforeEach(() => {
     jest.clearAllMocks();
     tagManager = createTagManager(testDataPath);
     tagManager.resetCache();
+    // @ts-expect-error - private method
+    syncSpy = jest
+      .spyOn(tagManager, "syncWithContentData")
+      .mockResolvedValue(undefined);
+  });
+
+  afterEach(() => {
+    syncSpy.mockRestore();
   });
 
   describe("createTag", () => {

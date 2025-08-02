@@ -1,3 +1,4 @@
+import GoogleAnalytics from "@/app/portfolio/components/GoogleAnalytics";
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { PerformanceProvider } from "@/components/providers/PerformanceProvider";
 import { CookieConsent } from "@/components/ui/CookieConsent";
@@ -144,6 +145,8 @@ export default function RootLayout({
             <CookieConsent />
             <GADebug />
             <GATestButton />
+            {/* Google Analytics - 直接記述で確実に動作 */}
+            <GoogleAnalytics enabled={true} />
           </PerformanceProvider>
         </AnalyticsProvider>
 

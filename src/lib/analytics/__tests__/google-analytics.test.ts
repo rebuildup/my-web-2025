@@ -22,7 +22,7 @@ Object.defineProperty(window, "dataLayer", {
 beforeEach(() => {
   jest.resetModules();
   process.env = { ...originalEnv };
-  process.env.NEXT_PUBLIC_GA_ID = "G-TEST123";
+  process.env.NEXT_PUBLIC_GA_ID = "G-RHP8NQ10X2";
   mockGtag.mockClear();
   window.dataLayer = [];
 });
@@ -60,7 +60,7 @@ describe("GoogleAnalytics", () => {
     });
 
     it("should initialize with GA_ID", () => {
-      expect(process.env.NEXT_PUBLIC_GA_ID).toBe("G-TEST123");
+      expect(process.env.NEXT_PUBLIC_GA_ID).toBe("G-RHP8NQ10X2");
     });
   });
 
@@ -95,7 +95,7 @@ describe("GoogleAnalytics", () => {
     it("should track page views", () => {
       analytics.trackPageView("/test-page", "Test Page");
 
-      expect(mockGtag).toHaveBeenCalledWith("config", "G-TEST123", {
+      expect(mockGtag).toHaveBeenCalledWith("config", "G-RHP8NQ10X2", {
         page_path: "/test-page",
         page_title: "Test Page",
       });

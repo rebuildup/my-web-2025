@@ -1734,5 +1734,44 @@
       "element": "H1",
       "url": ""
     }
+  },
+  {
+    "id": "perf_1754145828470_tqeur54kc",
+    "timestamp": "2025-08-02T14:43:48.470Z",
+    "metric": "lcp",
+    "value": 5060,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754145828550_kmqujx8v1",
+    "timestamp": "2025-08-02T14:43:48.550Z",
+    "metric": "lcp",
+    "value": 5160,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754145828511_97b1s5d2z",
+    "timestamp": "2025-08-02T14:43:48.511Z",
+    "metric": "lcp",
+    "value": 5100,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
   }
 ]
