@@ -284,18 +284,18 @@ export function DatePicker({
     <div className="space-y-3">
       {/* Manual/Auto Toggle */}
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-gray-700">
+        <label className="noto-sans-jp-regular text-sm font-medium text-foreground">
           Date Setting
         </label>
         <button
           type="button"
           onClick={handleToggleManualDate}
           className={`
-            flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium transition-colors
+            flex items-center gap-2 px-3 py-1 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background
             ${
               useManualDate
-                ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-foreground text-background hover:bg-opacity-80"
+                : "bg-base text-foreground hover:bg-foreground hover:bg-opacity-10 border border-foreground"
             }
           `}
           aria-label={`Switch to ${useManualDate ? "automatic" : "manual"} date mode`}
@@ -322,13 +322,13 @@ export function DatePicker({
             placeholder={useManualDate ? placeholder : "Auto (current date)"}
             disabled={!useManualDate}
             className={`
-              w-full pl-10 pr-12 py-2 border rounded-lg
-              focus:ring-2 focus:ring-blue-500 focus:border-transparent
-              disabled:bg-gray-100 disabled:cursor-not-allowed
+              w-full pl-10 pr-12 py-2 border bg-background text-foreground
+              focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background focus:border-transparent
+              disabled:bg-base disabled:cursor-not-allowed
               ${
                 state.validationError
-                  ? "border-red-300 focus:ring-red-500"
-                  : "border-gray-300"
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-foreground"
               }
               ${!useManualDate ? "opacity-60" : ""}
             `}
@@ -352,7 +352,7 @@ export function DatePicker({
 
         {/* Date Display */}
         {state.selectedDate && !state.validationError && (
-          <p className="mt-1 text-sm text-gray-600">
+          <p className="mt-1 text-sm text-gray-400">
             {formatDateForDisplay(state.selectedDate)}
           </p>
         )}
@@ -362,7 +362,8 @@ export function DatePicker({
       {state.isCalendarOpen && useManualDate && (
         <div
           ref={calendarRef}
-          className="absolute z-50 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-80"
+          className="absolute z-[9999] mt-1 border border-foreground rounded-lg shadow-xl p-4 w-80"
+          style={{ backgroundColor: "#181818", zIndex: 9999 }}
         >
           {/* Calendar Header */}
           <div className="flex items-center justify-between mb-4">
@@ -374,7 +375,7 @@ export function DatePicker({
             >
               ←
             </Button>
-            <h3 className="text-lg font-semibold">
+            <h3 className="text-lg font-semibold text-foreground">
               {currentDate.toLocaleDateString("ja-JP", {
                 year: "numeric",
                 month: "long",
@@ -395,7 +396,7 @@ export function DatePicker({
             {["日", "月", "火", "水", "木", "金", "土"].map((day) => (
               <div
                 key={day}
-                className="text-center text-sm font-medium text-gray-500 py-2"
+                className="text-center text-sm font-medium text-gray-400 py-2"
               >
                 {day}
               </div>
@@ -409,15 +410,15 @@ export function DatePicker({
                 type="button"
                 onClick={() => handleDateSelect(date)}
                 className={`
-                  p-2 text-sm rounded-lg transition-colors
+                  p-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background
                   ${
                     isSelected(date)
-                      ? "bg-blue-500 text-white"
+                      ? "bg-foreground text-background"
                       : isToday(date)
-                        ? "bg-blue-100 text-blue-700 font-medium"
+                        ? "bg-primary text-background font-medium"
                         : isCurrentMonth(date)
-                          ? "text-gray-900 hover:bg-gray-100"
-                          : "text-gray-400 hover:bg-gray-50"
+                          ? "text-foreground hover:bg-foreground hover:bg-opacity-10"
+                          : "text-gray-400 hover:bg-foreground hover:bg-opacity-5"
                   }
                 `}
               >
@@ -427,7 +428,7 @@ export function DatePicker({
           </div>
 
           {/* Quick Actions */}
-          <div className="flex gap-2 mt-4 pt-4 border-t border-gray-200">
+          <div className="flex gap-2 mt-4 pt-4 border-t border-foreground">
             <Button
               type="button"
               variant="outline"

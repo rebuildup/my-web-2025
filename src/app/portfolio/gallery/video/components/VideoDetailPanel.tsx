@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { X, Play, ExternalLink, Calendar } from "lucide-react";
 import { ContentItem } from "@/types";
+import { Calendar, ExternalLink, Play, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 interface VideoDetailPanelProps {
   item: ContentItem | null;
@@ -128,124 +128,65 @@ export default function VideoDetailPanel({
             </div>
           )}
 
-          {/* Content Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Left Column */}
-            <div className="space-y-4">
-              <div>
-                <h3 className="zen-kaku-gothic-new text-lg text-primary mb-2">
-                  作品情報
-                </h3>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-foreground" />
-                    <span className="noto-sans-jp-light text-sm text-foreground">
-                      {new Date(
-                        item.updatedAt || item.createdAt,
-                      ).toLocaleDateString("ja-JP")}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1">
-                      {item.category}
-                    </span>
-                  </div>
+          {/* Content Info - 縦並びレイアウト（3行） */}
+          <div className="space-y-6">
+            {/* 作品情報 */}
+            <div>
+              <h3 className="zen-kaku-gothic-new text-lg text-primary mb-2">
+                作品情報
+              </h3>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-foreground" />
+                  <span className="noto-sans-jp-light text-sm text-foreground">
+                    {new Date(
+                      item.updatedAt || item.createdAt,
+                    ).toLocaleDateString("ja-JP")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1">
+                    {item.category}
+                  </span>
                 </div>
               </div>
-
-              {/* Description */}
-              {item.description && (
-                <div>
-                  <h3 className="zen-kaku-gothic-new text-lg text-primary mb-2">
-                    説明
-                  </h3>
-                  <p className="noto-sans-jp-light text-sm text-foreground leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              )}
-
-              {/* Content */}
-              {item.content && (
-                <div>
-                  <h3 className="zen-kaku-gothic-new text-lg text-primary mb-2">
-                    詳細
-                  </h3>
-                  <p className="noto-sans-jp-light text-sm text-foreground leading-relaxed">
-                    {item.content}
-                  </p>
-                </div>
-              )}
             </div>
 
-            {/* Right Column */}
-            <div className="space-y-4">
-              {/* Tags */}
-              {item.tags && item.tags.length > 0 && (
-                <div>
-                  <h3 className="zen-kaku-gothic-new text-lg text-primary mb-2">
-                    タグ
-                  </h3>
-                  <div className="flex flex-wrap gap-1">
-                    {item.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="noto-sans-jp-light text-xs text-foreground border border-foreground px-2 py-1"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
+            {/* 説明 */}
+            {item.description && (
+              <div>
+                <h3 className="zen-kaku-gothic-new text-lg text-primary mb-2">
+                  説明
+                </h3>
+                <p className="noto-sans-jp-light text-sm text-foreground leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            )}
 
-              {/* External Links */}
-              {item.externalLinks && item.externalLinks.length > 0 && (
-                <div>
-                  <h3 className="zen-kaku-gothic-new text-lg text-primary mb-2">
-                    関連リンク
-                  </h3>
-                  <div className="space-y-2">
-                    {item.externalLinks.map((link, index) => (
-                      <a
-                        key={index}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-accent hover:text-primary transition-colors"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        <span className="noto-sans-jp-light text-sm">
-                          {link.title}
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Thumbnail */}
-              {item.thumbnail && (
-                <div>
-                  <h3 className="zen-kaku-gothic-new text-lg text-primary mb-2">
-                    サムネイル
-                  </h3>
-                  <div className="relative w-full aspect-video border border-foreground">
-                    <Image
-                      src={item.thumbnail}
-                      alt={item.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
+            {/* 関連リンク */}
+            {item.externalLinks && item.externalLinks.length > 0 && (
+              <div className="flex flex-wrap gap-4">
+                {item.externalLinks.map((link, index) => (
+                  <a
+                    key={index}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-accent hover:text-primary transition-colors"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    <span className="noto-sans-jp-light text-sm">
+                      {link.title}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-4 pt-4 border-t border-foreground">
+          <div className="flex justify-between pt-4 border-t border-foreground">
             <Link
               href={`/portfolio/${item.id}`}
               className="bg-primary text-background px-4 py-2 hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground"

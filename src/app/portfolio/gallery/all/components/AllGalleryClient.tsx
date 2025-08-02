@@ -137,7 +137,7 @@ export function AllGalleryClient({
       data-testid="all-gallery-client"
     >
       <main id="main-content" role="main" className="py-10">
-        <div className="container-system">
+        <div className="container mx-auto px-4">
           <div className="space-y-10">
             {/* Header */}
             <header className="space-y-8">
@@ -214,7 +214,7 @@ export function AllGalleryClient({
                 </div>
               ) : paginatedItems.length > 0 ? (
                 <div className="space-y-8">
-                  <div className="grid-system grid-1 xs:grid-2 sm:grid-3 lg:grid-4 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {paginatedItems.map((item) => (
                       <PortfolioCard
                         key={item.id}

@@ -25,14 +25,17 @@ export function SEOSection({ seo, onSEOChange }: SEOSectionProps) {
   };
 
   const inputStyle =
-    "w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent";
-  const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
+    "w-full border border-foreground px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
+  const labelStyle =
+    "block noto-sans-jp-regular text-sm font-medium text-foreground mb-1";
   const checkboxStyle =
-    "rounded border-gray-300 text-primary focus:ring-primary focus:ring-offset-0";
+    "rounded border-foreground text-primary focus:ring-foreground focus:ring-offset-0";
 
   return (
     <div className="space-y-4">
-      <h3 className="font-medium text-gray-700">SEO Settings</h3>
+      <h3 className="neue-haas-grotesk-display text-xl text-primary leading-snug">
+        SEO Settings
+      </h3>
 
       {/* Basic SEO */}
       <div className="space-y-4">
@@ -83,7 +86,7 @@ export function SEOSection({ seo, onSEOChange }: SEOSectionProps) {
 
       {/* Social Media Images */}
       <div className="space-y-4">
-        <h4 className="text-sm font-medium text-gray-700">
+        <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground">
           Social Media Images
         </h4>
 
@@ -118,7 +121,9 @@ export function SEOSection({ seo, onSEOChange }: SEOSectionProps) {
 
       {/* Advanced Settings */}
       <div className="space-y-4">
-        <h4 className="text-sm font-medium text-gray-700">Advanced Settings</h4>
+        <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground">
+          Advanced Settings
+        </h4>
 
         <div>
           <label className={labelStyle}>Canonical URL</label>
@@ -167,7 +172,7 @@ export function SEOSection({ seo, onSEOChange }: SEOSectionProps) {
       {/* SEO Preview */}
       {(seo?.title || seo?.description) && (
         <div className="border border-gray-200 p-4 rounded">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">
+          <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-3">
             Search Engine Preview
           </h4>
           <div className="space-y-2">
@@ -187,7 +192,7 @@ export function SEOSection({ seo, onSEOChange }: SEOSectionProps) {
       {/* Social Media Preview */}
       {(seo?.title || seo?.description || seo?.ogImage) && (
         <div className="border border-gray-200 p-4 rounded">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">
+          <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-3">
             Social Media Preview
           </h4>
           <div className="border border-gray-300 rounded overflow-hidden max-w-md">

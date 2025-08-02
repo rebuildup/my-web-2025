@@ -392,15 +392,16 @@ export function DataManagerForm({
   };
 
   const inputStyle =
-    "w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent rounded-md";
+    "w-full border border-foreground px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
 
-  const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
+  const labelStyle =
+    "block noto-sans-jp-regular text-sm font-medium text-foreground mb-1";
   const buttonStyle =
-    "border border-foreground px-4 py-2 text-sm hover:bg-foreground hover:text-background transition-colors rounded-md";
+    "border border-foreground px-4 py-2 text-sm hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
   const activeTabStyle =
-    "border border-foreground px-4 py-2 text-sm bg-foreground text-background rounded-md";
+    "border border-foreground px-4 py-2 text-sm bg-foreground text-background focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
   const tabStyle =
-    "border border-foreground px-4 py-2 text-sm hover:bg-gray-100 transition-colors rounded-md";
+    "border border-foreground px-4 py-2 text-sm hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -570,7 +571,7 @@ export function DataManagerForm({
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-4">
             <div>
               {formData.type === "portfolio" && enhanced ? (
                 // Enhanced mode: Multiple category selection
@@ -583,16 +584,9 @@ export function DataManagerForm({
                         : []
                   }
                   onChange={handleCategoriesChange}
-                  availableCategories={[
-                    "develop",
-                    "video",
-                    "design",
-                    "video&design",
-                    "other",
-                  ]}
+                  availableCategories={["develop", "video", "design"]}
                   maxSelections={3}
                   showOtherOption={true}
-                  className="col-span-full"
                 />
               ) : formData.type === "portfolio" ? (
                 // Legacy mode: Single category selection
@@ -623,19 +617,21 @@ export function DataManagerForm({
               )}
             </div>
 
-            <div>
-              <label className={labelStyle}>Status</label>
-              <Select
-                value={formData.status}
-                onChange={(value) => handleInputChange("status", value)}
-                options={[
-                  { value: "draft", label: "Draft" },
-                  { value: "published", label: "Published" },
-                  { value: "archived", label: "Archived" },
-                  { value: "scheduled", label: "Scheduled" },
-                ]}
-                variant="admin"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className={labelStyle}>Status</label>
+                <Select
+                  value={formData.status}
+                  onChange={(value) => handleInputChange("status", value)}
+                  options={[
+                    { value: "draft", label: "Draft" },
+                    { value: "published", label: "Published" },
+                    { value: "archived", label: "Archived" },
+                    { value: "scheduled", label: "Scheduled" },
+                  ]}
+                  variant="admin"
+                />
+              </div>
             </div>
           </div>
 
@@ -645,22 +641,31 @@ export function DataManagerForm({
             isEnhancedContentItem(formData) &&
             formData.categories &&
             formData.categories.length > 0 && (
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h4 className="text-sm font-medium text-gray-900 mb-3">
+              <div className="bg-base border border-foreground rounded-lg p-4">
+                <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-3">
                   Gallery Visibility Summary
                 </h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span className="font-medium">Will appear in:</span>
-                    <span className="text-gray-600">
-                      {formData.categories.includes("other")
+                    <span className="font-medium text-foreground">
+                      Will appear in:
+                    </span>
+                    <span className="text-gray-400">
+                      {formData.categories.includes("other") ||
+                      formData.categories.length === 0
                         ? "All gallery only"
                         : `All, ${formData.categories
+                            .filter((cat) => cat !== "other")
                             .map((cat) =>
-                              cat === "video&design"
-                                ? "Video & Design"
-                                : cat.charAt(0).toUpperCase() + cat.slice(1),
+                              cat === "develop"
+                                ? "Development"
+                                : cat === "video"
+                                  ? "Video"
+                                  : cat === "design"
+                                    ? "Design"
+                                    : cat.charAt(0).toUpperCase() +
+                                      cat.slice(1),
                             )
                             .join(", ")} galleries`}
                     </span>
@@ -801,11 +806,11 @@ export function DataManagerForm({
 
       {activeTab === "dates" && enhanced && (
         <div className="space-y-6">
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
+          <div className="bg-base border border-foreground p-4 rounded-lg">
+            <h3 className="neue-haas-grotesk-display text-xl text-primary leading-snug mb-4">
               Date Management
             </h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="noto-sans-jp-light text-xs pb-2 text-gray-400 mb-4">
               Control how dates are managed for this content item. You can
               either use automatic date management (based on creation/update
               time) or set a manual date.
@@ -820,11 +825,11 @@ export function DataManagerForm({
             />
           </div>
 
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h4 className="text-sm font-medium text-blue-900 mb-2">
+          <div className="bg-base border border-foreground p-4 rounded-lg">
+            <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-2">
               Current Date Information
             </h4>
-            <div className="space-y-2 text-sm text-blue-800">
+            <div className="space-y-2 text-sm text-foreground">
               <div>
                 <span className="font-medium">Created:</span>{" "}
                 {new Date(formData.createdAt).toLocaleDateString("ja-JP", {
@@ -879,11 +884,11 @@ export function DataManagerForm({
             </div>
           </div>
 
-          <div className="bg-yellow-50 p-4 rounded-lg">
-            <h4 className="text-sm font-medium text-yellow-900 mb-2">
+          <div className="bg-base border border-foreground p-4 rounded-lg">
+            <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-2">
               Date History
             </h4>
-            <p className="text-sm text-yellow-800">
+            <p className="noto-sans-jp-light text-xs text-gray-400">
               Date changes are automatically tracked. The effective date will be
               used for sorting and display purposes throughout the application.
             </p>

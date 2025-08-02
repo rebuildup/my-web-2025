@@ -695,5 +695,305 @@
     "severity": "medium",
     "category": "user",
     "resolved": false
+  },
+  {
+    "id": "error_1754138561430_8tuzjp79i",
+    "timestamp": "2025-08-02T12:42:41.430Z",
+    "message": "undefined",
+    "stack": "Error: undefined\n    at http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3135:78",
+    "url": "http://localhost:3000/admin/data-manager",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754138149305_sm4tx64bb",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754139829723_bloaqjkuz",
+    "timestamp": "2025-08-02T13:03:49.723Z",
+    "message": "Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.",
+    "stack": "Error: Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.\n    at stringify (<anonymous>:1:18)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4124:48)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4349:23)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4337:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4415:98)\n    at progress (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4581:25)",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754139696580_anenwcpvh",
+    "context": {
+      "filename": "<anonymous>",
+      "lineno": 1,
+      "colno": 18,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754139838356_lnpzwdijb",
+    "timestamp": "2025-08-02T13:03:58.356Z",
+    "message": "Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.",
+    "stack": "Error: Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.\n    at stringify (<anonymous>:1:18)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4124:48)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4349:23)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4337:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4415:98)\n    at progress (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4581:25)",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754139838037_5fym3j56k",
+    "context": {
+      "filename": "<anonymous>",
+      "lineno": 1,
+      "colno": 18,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754139838373_x2prrrytj",
+    "timestamp": "2025-08-02T13:03:58.373Z",
+    "message": "[object Event]",
+    "stack": "Error: [object Event]\n    at http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3135:78",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754139838037_5fym3j56k",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754139867841_9soau8tih",
+    "timestamp": "2025-08-02T13:04:27.841Z",
+    "message": "Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.",
+    "stack": "Error: Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.\n    at stringify (<anonymous>:1:18)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4124:48)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4349:23)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4337:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4415:98)\n    at progress (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4581:25)",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754139867484_69y5yaqyg",
+    "context": {
+      "filename": "<anonymous>",
+      "lineno": 1,
+      "colno": 18,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754139867875_5rjv1ad8p",
+    "timestamp": "2025-08-02T13:04:27.875Z",
+    "message": "[object Event]",
+    "stack": "Error: [object Event]\n    at http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3135:78",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754139867484_69y5yaqyg",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754139881410_ogdmgisbi",
+    "timestamp": "2025-08-02T13:04:41.410Z",
+    "message": "Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.",
+    "stack": "Error: Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.\n    at stringify (<anonymous>:1:18)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4124:48)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4349:23)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4337:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4415:98)\n    at progress (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4581:25)",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754139881083_rhxm6g01a",
+    "context": {
+      "filename": "<anonymous>",
+      "lineno": 1,
+      "colno": 18,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754139881444_xfms34v7g",
+    "timestamp": "2025-08-02T13:04:41.444Z",
+    "message": "[object Event]",
+    "stack": "Error: [object Event]\n    at http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3135:78",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754139881083_rhxm6g01a",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754140003643_q1f2zp5xd",
+    "timestamp": "2025-08-02T13:06:43.643Z",
+    "message": "Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.",
+    "stack": "Error: Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.\n    at stringify (<anonymous>:1:18)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4124:48)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4349:23)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4337:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4415:98)\n    at progress (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4581:25)",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754140003265_otz96knkd",
+    "context": {
+      "filename": "<anonymous>",
+      "lineno": 1,
+      "colno": 18,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754140003658_f9oh5tnag",
+    "timestamp": "2025-08-02T13:06:43.658Z",
+    "message": "[object Event]",
+    "stack": "Error: [object Event]\n    at http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3135:78",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754140003265_otz96knkd",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754140168467_ndjkq6f29",
+    "timestamp": "2025-08-02T13:09:28.467Z",
+    "message": "[object Event]",
+    "stack": "Error: [object Event]\n    at http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3135:78",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754140167996_mxtjidh48",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754140168451_2nnh04cvt",
+    "timestamp": "2025-08-02T13:09:28.451Z",
+    "message": "Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.",
+    "stack": "Error: Event handlers cannot be passed to Client Component props.\n  <img src=... alt=... className=... loading=... onError={function onError}>\n                                                         ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.\n    at stringify (<anonymous>:1:18)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4124:48)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4349:23)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4337:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4415:98)\n    at progress (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4581:25)",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754140167996_mxtjidh48",
+    "context": {
+      "filename": "<anonymous>",
+      "lineno": 1,
+      "colno": 18,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754140262186_jfgutmqiv",
+    "timestamp": "2025-08-02T13:11:02.186Z",
+    "message": "Image is not defined",
+    "stack": "ReferenceError: Image is not defined\n    at <anonymous> (rsc://React/Server/C:%5CUsers%5Crebui%5CDownloads%5Cmy-web-2025%5C.next%5Cserver%5Cchunks%5Cssr%5C%5Broot-of-the-server%5D__5350497a._.js?234:7231:347)\n    at Array.map (<anonymous>:1:18)\n    at PortfolioPage (rsc://React/Server/C:%5CUsers%5Crebui%5CDownloads%5Cmy-web-2025%5C.next%5Cserver%5Cchunks%5Cssr%5C%5Broot-of-the-server%5D__5350497a._.js?235:7223:76)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4124:48)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4349:23)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4337:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4415:98)\n    at progress (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4581:25)",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754140236444_g51et8axf",
+    "context": {
+      "filename": "rsc://React/Server/C:%5CUsers%5Crebui%5CDownloads%5Cmy-web-2025%5C.next%5Cserver%5Cchunks%5Cssr%5C%5Broot-of-the-server%5D__5350497a._.js?234",
+      "lineno": 7231,
+      "colno": 347,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754140268263_dyrfgfeal",
+    "timestamp": "2025-08-02T13:11:08.263Z",
+    "message": "Image is not defined",
+    "stack": "ReferenceError: Image is not defined\n    at <anonymous> (rsc://React/Server/C:%5CUsers%5Crebui%5CDownloads%5Cmy-web-2025%5C.next%5Cserver%5Cchunks%5Cssr%5C%5Broot-of-the-server%5D__5350497a._.js?43:7231:347)\n    at Array.map (<anonymous>:1:18)\n    at PortfolioPage (rsc://React/Server/C:%5CUsers%5Crebui%5CDownloads%5Cmy-web-2025%5C.next%5Cserver%5Cchunks%5Cssr%5C%5Broot-of-the-server%5D__5350497a._.js?44:7223:76)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4124:48)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4349:23)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4337:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4415:98)\n    at progress (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4581:25)",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754140267947_w8awdup4y",
+    "context": {
+      "filename": "rsc://React/Server/C:%5CUsers%5Crebui%5CDownloads%5Cmy-web-2025%5C.next%5Cserver%5Cchunks%5Cssr%5C%5Broot-of-the-server%5D__5350497a._.js?43",
+      "lineno": 7231,
+      "colno": 347,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754140268280_j6xukt14o",
+    "timestamp": "2025-08-02T13:11:08.280Z",
+    "message": "[object Event]",
+    "stack": "Error: [object Event]\n    at http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3135:78",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754140267947_w8awdup4y",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754140299423_o7ltac54o",
+    "timestamp": "2025-08-02T13:11:39.423Z",
+    "message": "[object Event]",
+    "stack": "Error: [object Event]\n    at http://localhost:3000/_next/static/chunks/src_83fb5d05._.js:3135:78",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754140299103_y0mk4mj0b",
+    "context": {
+      "type": "unhandled_promise_rejection"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754140299407_gaihsof1p",
+    "timestamp": "2025-08-02T13:11:39.407Z",
+    "message": "Image is not defined",
+    "stack": "ReferenceError: Image is not defined\n    at <anonymous> (rsc://React/Server/C:%5CUsers%5Crebui%5CDownloads%5Cmy-web-2025%5C.next%5Cserver%5Cchunks%5Cssr%5C%5Broot-of-the-server%5D__5350497a._.js?61:7231:347)\n    at Array.map (<anonymous>:1:18)\n    at PortfolioPage (rsc://React/Server/C:%5CUsers%5Crebui%5CDownloads%5Cmy-web-2025%5C.next%5Cserver%5Cchunks%5Cssr%5C%5Broot-of-the-server%5D__5350497a._.js?62:7223:76)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4124:48)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4349:23)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4337:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4415:98)\n    at progress (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4581:25)",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754140299103_y0mk4mj0b",
+    "context": {
+      "filename": "rsc://React/Server/C:%5CUsers%5Crebui%5CDownloads%5Cmy-web-2025%5C.next%5Cserver%5Cchunks%5Cssr%5C%5Broot-of-the-server%5D__5350497a._.js?61",
+      "lineno": 7231,
+      "colno": 347,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754140457089_j93njd32s",
+    "timestamp": "2025-08-02T13:14:17.089Z",
+    "message": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <RedirectErrorBoundary router={{...}}>\n      <InnerLayoutRouter url={\"/portfol...\"} tree={[...]} cacheNode={{lazyData:null, ...}} segmentPath={[...]}>\n        <VideoDesignProjectsPage>\n          <script>\n          <div className=\"min-h-scre...\">\n            <main className=\"py-10\">\n              <div className=\"container-...\">\n                <div className=\"space-y-10\">\n                  <header>\n                  <section>\n                  <section>\n                    <h2>\n                    <VideoDesignGallery items={[...]} showVideoItems={true} showDesignItems={true} ...>\n                      <div className=\"space-y-8\">\n                        <div className=\"bg-gray-10...\">\n                          <div className=\"flex items...\">\n                            <span>\n                            <span>\n+                             0.30\n-                             0.47\n                              ...\n                            ...\n                        ...\n                  ...\n        ...\n",
+    "stack": "Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <RedirectErrorBoundary router={{...}}>\n      <InnerLayoutRouter url={\"/portfol...\"} tree={[...]} cacheNode={{lazyData:null, ...}} segmentPath={[...]}>\n        <VideoDesignProjectsPage>\n          <script>\n          <div className=\"min-h-scre...\">\n            <main className=\"py-10\">\n              <div className=\"container-...\">\n                <div className=\"space-y-10\">\n                  <header>\n                  <section>\n                  <section>\n                    <h2>\n                    <VideoDesignGallery items={[...]} showVideoItems={true} showDesignItems={true} ...>\n                      <div className=\"space-y-8\">\n                        <div className=\"bg-gray-10...\">\n                          <div className=\"flex items...\">\n                            <span>\n                            <span>\n+                             0.30\n-                             0.47\n                              ...\n                            ...\n                        ...\n                  ...\n        ...\n\n    at throwOnHydrationMismatch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:2891:56)\n    at completeWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6365:36)\n    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:74)\n    at completeUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8301:23)\n    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8238:28)\n    at workLoopConcurrentByScheduler (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8232:58)\n    at renderRootConcurrent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8214:71)\n    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7846:176)\n    at performWorkOnRootViaSchedulerTask (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8820:9)\n    at MessagePort.performWorkUntilDeadline (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:2588:64)",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754140456978_lzqohf0hn",
+    "context": {
+      "filename": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js",
+      "lineno": 2891,
+      "colno": 56,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "user",
+    "resolved": false
   }
 ]

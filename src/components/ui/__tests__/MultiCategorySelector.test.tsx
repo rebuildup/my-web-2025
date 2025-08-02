@@ -29,7 +29,6 @@ describe("MultiCategorySelector", () => {
     expect(screen.getByText("Video")).toBeInTheDocument();
     expect(screen.getByText("Design")).toBeInTheDocument();
     expect(screen.getByText("Video & Design")).toBeInTheDocument();
-    expect(screen.getByText("Other")).toBeInTheDocument();
   });
 
   it("shows selected categories with check marks", () => {
@@ -41,16 +40,12 @@ describe("MultiCategorySelector", () => {
       />,
     );
 
-    // Check that selected categories have visual indicators
-    const developCategory = screen
-      .getAllByText("Development")[0]
-      .closest(".relative");
-    const videoCategory = screen.getAllByText("Video")[0].closest(".relative");
-    const designCategory = screen.getByText("Design").closest(".relative");
+    // Check that selected categories show check marks
+    expect(screen.getAllByText("Development")).toHaveLength(2); // Button and summary
+    expect(screen.getAllByText("Video")).toHaveLength(2); // Button and summary
 
-    expect(developCategory).toHaveClass("bg-blue-100");
-    expect(videoCategory).toHaveClass("bg-purple-100");
-    expect(designCategory).not.toHaveClass("bg-green-100");
+    // Check for selected state in summary
+    expect(screen.getByText(/2.*selected/)).toBeInTheDocument();
   });
 
   it("calls onChange when category is selected", () => {
@@ -62,7 +57,7 @@ describe("MultiCategorySelector", () => {
       />,
     );
 
-    const developCategory = screen.getByText("Development").closest("div");
+    const developCategory = screen.getByText("Development").closest("button");
     fireEvent.click(developCategory!);
 
     expect(mockOnChange).toHaveBeenCalledWith(["develop"]);
@@ -77,9 +72,9 @@ describe("MultiCategorySelector", () => {
       />,
     );
 
-    // Find the category card (not the tag in summary)
+    // Find the category button (not the tag in summary)
     const categoryCards = screen.getAllByText("Development");
-    const developCategory = categoryCards[0].closest("div");
+    const developCategory = categoryCards[0].closest("button");
     fireEvent.click(developCategory!);
 
     expect(mockOnChange).toHaveBeenCalledWith(["video"]);
@@ -98,10 +93,9 @@ describe("MultiCategorySelector", () => {
     const designCategory = screen.getByText("Design").closest("div");
     fireEvent.click(designCategory!);
 
-    // Should show validation error
-    expect(
-      screen.getByText("Maximum 2 categories can be selected"),
-    ).toBeInTheDocument();
+    // Design button should be disabled when max selections reached
+    const designButton = screen.getByText("Design").closest("button");
+    expect(designButton).toBeDisabled();
     expect(mockOnChange).not.toHaveBeenCalled();
   });
 
@@ -118,9 +112,7 @@ describe("MultiCategorySelector", () => {
     fireEvent.click(helpButton);
 
     expect(screen.getByText("Category Guidelines")).toBeInTheDocument();
-    expect(
-      screen.getByText(/Select one or more categories/),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Default is "Other"/)).toBeInTheDocument();
   });
 
   it("shows selection summary when categories are selected", () => {
@@ -150,7 +142,7 @@ describe("MultiCategorySelector", () => {
     );
 
     expect(
-      screen.getByText("All gallery only (due to Other category)"),
+      screen.getByText("All gallery only (Other category)"),
     ).toBeInTheDocument();
   });
 
@@ -192,9 +184,11 @@ describe("MultiCategorySelector", () => {
       />,
     );
 
-    expect(screen.getByText("No categories selected")).toBeInTheDocument();
     expect(
-      screen.getByText(/Select at least one category/),
+      screen.getByText("No specific categories selected"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Item will appear in "Other" category/),
     ).toBeInTheDocument();
   });
 
@@ -237,6 +231,8 @@ describe("MultiCategorySelector", () => {
       />,
     );
 
-    expect(screen.getByText("⚠ All gallery only")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Item will appear in.*Other.*category/),
+    ).toBeInTheDocument();
   });
 });

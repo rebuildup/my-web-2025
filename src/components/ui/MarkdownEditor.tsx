@@ -215,15 +215,15 @@ export function MarkdownEditor({
   }, [editorContent]);
 
   const buttonStyle =
-    "px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100 transition-colors";
+    "px-3 py-1 text-sm border border-foreground rounded hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
   const activeButtonStyle =
-    "px-3 py-1 text-sm border border-blue-500 bg-blue-50 text-blue-700 rounded";
+    "px-3 py-1 text-sm border border-foreground bg-foreground text-background rounded focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
+    <div className="border border-foreground rounded-lg overflow-hidden bg-background shadow-sm">
       {/* Toolbar */}
       {toolbar && (
-        <div className="bg-gray-50 border-b border-gray-300 p-2">
+        <div className="bg-base border-b border-foreground p-2">
           <div className="flex flex-wrap gap-1 items-center">
             {/* Format buttons */}
             {toolbarActions.map((action, index) => (
@@ -239,7 +239,7 @@ export function MarkdownEditor({
             ))}
 
             {/* Separator */}
-            <div className="w-px h-6 bg-gray-300 mx-2" />
+            <div className="w-px h-6 bg-foreground mx-2" />
 
             {/* Preview toggle */}
             {preview && (
@@ -256,7 +256,7 @@ export function MarkdownEditor({
             {/* Save button */}
             {typeof onSave === "function" && filePath && (
               <>
-                <div className="w-px h-6 bg-gray-300 mx-2" />
+                <div className="w-px h-6 bg-foreground mx-2" />
                 <button
                   type="button"
                   onClick={handleSave}
@@ -285,7 +285,7 @@ export function MarkdownEditor({
       <div className="relative">
         {isPreviewMode && preview ? (
           /* Preview Mode */
-          <div className="p-4 min-h-[300px] prose prose-sm max-w-none">
+          <div className="p-4 min-h-[300px] prose prose-sm max-w-none bg-background text-foreground">
             <div dangerouslySetInnerHTML={renderPreview()} />
           </div>
         ) : (
@@ -296,13 +296,13 @@ export function MarkdownEditor({
               value={editorContent}
               onChange={(e) => handleContentChange(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full min-h-[300px] p-4 pl-12 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset leading-5"
+              className="w-full min-h-[300px] p-4 pl-12 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-inset leading-5 bg-background text-foreground"
               placeholder="Enter your markdown content here..."
               spellCheck={false}
             />
 
             {/* Line numbers */}
-            <div className="absolute left-0 top-0 p-4 pr-2 text-gray-400 text-sm font-mono pointer-events-none select-none bg-gray-50 border-r border-gray-200">
+            <div className="absolute left-0 top-0 p-4 pr-2 text-gray-400 text-sm font-mono pointer-events-none select-none bg-base border-r border-foreground">
               {editorContent.split("\n").map((_, index) => (
                 <div key={index} className="leading-5 text-right">
                   {index + 1}
@@ -314,7 +314,7 @@ export function MarkdownEditor({
       </div>
 
       {/* Status Bar */}
-      <div className="bg-gray-50 border-t border-gray-300 px-4 py-2 text-xs text-gray-600 flex justify-between items-center">
+      <div className="bg-base border-t border-foreground px-4 py-2 text-xs text-gray-400 flex justify-between items-center">
         <div className="flex gap-4">
           <span>Lines: {editorContent.split("\n").length}</span>
           <span>Characters: {editorContent.length}</span>

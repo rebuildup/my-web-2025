@@ -79,12 +79,12 @@ export default function DataManagerPage() {
         type: selectedContentType,
         title: "",
         description: "",
-        categories: [], // Use categories array instead of single category
+        categories: ["other"], // Default to "other" category
         tags: [],
         status: "published",
         priority: 50,
         createdAt: new Date().toISOString(),
-        isOtherCategory: false,
+        isOtherCategory: true,
         useManualDate: false,
         originalImages: [],
         processedImages: [],
@@ -219,12 +219,16 @@ export default function DataManagerPage() {
     setPreviewMode("form");
   };
 
-  // Design system classes matching admin layout
-  const CardStyle = "bg-base border border-foreground p-4 space-y-4";
+  // Design system classes matching root page
+  const CardStyle =
+    "bg-base border border-foreground block p-4 space-y-4 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
+  const Card_title =
+    "neue-haas-grotesk-display text-xl text-primary leading-snug";
+
   const ButtonStyle =
-    "border border-foreground px-4 py-2 text-sm hover:bg-foreground hover:text-background transition-colors";
+    "border border-foreground px-4 py-2 text-sm hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
   const ActiveButtonStyle =
-    "border border-foreground px-4 py-2 text-sm bg-foreground text-background";
+    "border border-foreground px-4 py-2 text-sm bg-foreground text-background focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -245,9 +249,7 @@ export default function DataManagerPage() {
 
             {/* Content Type Selector */}
             <section className="space-y-4">
-              <h2 className="neue-haas-grotesk-display text-xl text-primary">
-                Content Type
-              </h2>
+              <h2 className={Card_title}>Content Type</h2>
               <div className="flex flex-wrap gap-2">
                 {(
                   [
@@ -281,7 +283,7 @@ export default function DataManagerPage() {
               <div className="lg:col-span-1">
                 <div className={CardStyle}>
                   <div className="flex justify-between items-center">
-                    <h3 className="neue-haas-grotesk-display text-lg text-primary">
+                    <h3 className={Card_title}>
                       {selectedContentType.charAt(0).toUpperCase() +
                         selectedContentType.slice(1)}{" "}
                       Items

@@ -207,9 +207,9 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
   };
 
   const buttonStyle =
-    "border border-foreground px-3 py-1 text-xs hover:bg-foreground hover:text-background transition-colors";
+    "border border-foreground px-3 py-1 text-xs hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
   const activeButtonStyle =
-    "border border-foreground px-3 py-1 text-xs bg-foreground text-background";
+    "border border-foreground px-3 py-1 text-xs bg-foreground text-background focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
 
   return (
     <div className="space-y-6">
@@ -265,7 +265,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
             {/* Title and Status */}
             <div className="space-y-2">
               <div className="flex justify-between items-start">
-                <h1 className="neue-haas-grotesk-display text-2xl text-primary">
+                <h1 className="neue-haas-grotesk-display text-2xl text-primary leading-snug">
                   {item.title || "Untitled"}
                 </h1>
                 <span
@@ -276,7 +276,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
               </div>
 
               {item.description && (
-                <p className="noto-sans-jp-light text-sm text-gray-600 leading-relaxed">
+                <p className="noto-sans-jp-light text-xs pb-2 text-gray-600 leading-relaxed">
                   {item.description}
                 </p>
               )}
@@ -286,18 +286,24 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               {item.category && (
                 <div>
-                  <span className="font-medium text-gray-700">Category:</span>
+                  <span className="noto-sans-jp-regular font-medium text-foreground">
+                    Category:
+                  </span>
                   <span className="ml-2 text-gray-600">{item.category}</span>
                 </div>
               )}
 
               <div>
-                <span className="font-medium text-gray-700">Priority:</span>
+                <span className="noto-sans-jp-regular font-medium text-foreground">
+                  Priority:
+                </span>
                 <span className="ml-2 text-gray-600">{item.priority}/100</span>
               </div>
 
               <div>
-                <span className="font-medium text-gray-700">Created:</span>
+                <span className="noto-sans-jp-regular font-medium text-foreground">
+                  Created:
+                </span>
                 <span className="ml-2 text-gray-600">
                   {formatDate(item.createdAt)}
                 </span>
@@ -305,7 +311,9 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 
               {item.updatedAt && (
                 <div>
-                  <span className="font-medium text-gray-700">Updated:</span>
+                  <span className="noto-sans-jp-regular font-medium text-foreground">
+                    Updated:
+                  </span>
                   <span className="ml-2 text-gray-600">
                     {formatDate(item.updatedAt)}
                   </span>

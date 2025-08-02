@@ -7,7 +7,6 @@
 
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
 import Image from "next/image";
-import { useState } from "react";
 
 interface PortfolioCardProps {
   item: PortfolioContentItem;
@@ -15,42 +14,6 @@ interface PortfolioCardProps {
 }
 
 export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
-  const [imageError, setImageError] = useState(false);
-  const [currentImageSrc, setCurrentImageSrc] = useState(item.thumbnail);
-
-  const handleImageError = () => {
-    if (currentImageSrc) {
-      // Try different image formats as fallback
-      const basePath = currentImageSrc
-        .replace(/\.(webp|png|jpg|jpeg)$/, "")
-        .replace(/-optimized$/, "");
-      const fallbackFormats = [".webp", ".png", ".jpg", "-optimized.jpg"];
-
-      const currentFormat =
-        currentImageSrc.match(/\.(webp|png|jpg|jpeg)$/)?.[0] || "";
-      const isOptimized = currentImageSrc.includes("-optimized");
-
-      const currentIndex = fallbackFormats.findIndex(
-        (format) => format === currentFormat,
-      );
-
-      // If current is optimized version, try non-optimized first
-      if (isOptimized && currentFormat) {
-        setCurrentImageSrc(basePath + currentFormat);
-        return;
-      }
-
-      if (currentIndex < fallbackFormats.length - 1) {
-        const nextFormat = fallbackFormats[currentIndex + 1];
-        setCurrentImageSrc(basePath + nextFormat);
-        return;
-      }
-    }
-
-    console.warn(`Failed to load image: ${item.thumbnail}`);
-    setImageError(true);
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -68,17 +31,15 @@ export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
       aria-label={`View details for ${item.title}`}
     >
       {/* Thumbnail */}
-      <div className="aspect-video bg-background border-b border-foreground overflow-hidden">
-        {currentImageSrc && !imageError ? (
+      <div className="aspect-video bg-background border-b border-foreground overflow-hidden relative">
+        {item.thumbnail ? (
           <Image
-            src={currentImageSrc}
+            src={item.thumbnail}
             alt={item.title}
-            width={400}
-            height={225}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            onError={handleImageError}
-            loading="lazy"
-            unoptimized={true}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            priority={false}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-background">

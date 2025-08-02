@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
 import {
-  validateFile,
-  extractFileMetadata,
   compressFileIfNeeded,
+  extractFileMetadata,
   FileProcessingOptions,
+  validateFile,
 } from "@/lib/utils/file-processing";
+import { useCallback, useRef, useState } from "react";
 
 interface FileUploadSectionProps {
   images: string[];
@@ -252,18 +252,21 @@ export function FileUploadSection({
   };
 
   const inputStyle =
-    "w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent";
-  const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
+    "w-full border border-foreground px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
+  const labelStyle =
+    "block noto-sans-jp-regular text-sm font-medium text-foreground mb-1";
   const buttonStyle =
-    "border border-foreground px-3 py-1 text-xs hover:bg-foreground hover:text-background transition-colors";
+    "border border-foreground px-3 py-1 text-xs hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
 
   return (
     <div className="space-y-4">
-      <h3 className="font-medium text-gray-700">Images & Files</h3>
+      <h3 className="neue-haas-grotesk-display text-xl text-primary leading-snug">
+        Images & Files
+      </h3>
 
       {/* Processing Options */}
-      <div className="bg-gray-50 p-4 rounded-lg">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">
+      <div className="bg-base border border-foreground p-4 rounded-lg">
+        <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-3">
           Processing Options
         </h4>
         <div className="grid grid-cols-2 gap-4">
@@ -336,18 +339,18 @@ export function FileUploadSection({
 
       {/* Upload Progress */}
       {uploadProgress.length > 0 && (
-        <div className="bg-blue-50 p-4 rounded-lg">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">
+        <div className="bg-base border border-foreground p-4 rounded-lg">
+          <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-3">
             Upload Progress
           </h4>
           <div className="space-y-2">
             {uploadProgress.map((progress) => (
               <div key={progress.filename} className="space-y-1">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600 truncate flex-1">
+                  <span className="text-sm text-foreground truncate flex-1">
                     {progress.filename}
                   </span>
-                  <span className="text-xs text-gray-500 ml-2">
+                  <span className="text-xs text-gray-400 ml-2">
                     {progress.status === "complete"
                       ? "Complete"
                       : progress.status === "error"
@@ -357,7 +360,7 @@ export function FileUploadSection({
                           : `${progress.progress}%`}
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-base border border-foreground rounded-full h-2">
                   <div
                     className={`h-2 rounded-full transition-all duration-300 ${
                       progress.status === "complete"

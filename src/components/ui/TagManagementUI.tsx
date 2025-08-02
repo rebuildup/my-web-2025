@@ -170,14 +170,14 @@ export function TagManagementUI({
         {selectedTags.map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+            className="inline-flex items-center gap-1 px-3 py-1 bg-foreground text-background rounded-full text-sm font-medium"
           >
             <TagIcon className="w-3 h-3" />
             {tag}
             <button
               type="button"
               onClick={() => handleTagRemove(tag)}
-              className="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition-colors"
+              className="ml-1 hover:bg-background hover:bg-opacity-20 rounded-full p-0.5 transition-colors"
               aria-label={`Remove ${tag} tag`}
             >
               <X className="w-3 h-3" />
@@ -202,8 +202,8 @@ export function TagManagementUI({
             }
             disabled={!canAddMoreTags}
             className={`
-              w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg
-              focus:ring-2 focus:ring-blue-500 focus:border-transparent
+              w-full pl-10 pr-4 py-2 border border-foreground bg-background text-foreground
+              focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background focus:border-transparent
               disabled:bg-gray-100 disabled:cursor-not-allowed
               ${!canAddMoreTags ? "opacity-60" : ""}
             `}
@@ -214,10 +214,11 @@ export function TagManagementUI({
         {isDropdownOpen && canAddMoreTags && (
           <div
             ref={dropdownRef}
-            className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+            className="absolute z-[9999] w-full mt-1 border border-foreground rounded-lg shadow-xl max-h-60 overflow-y-auto"
+            style={{ backgroundColor: "#181818", zIndex: 9999 }}
           >
             {isLoading ? (
-              <div className="px-4 py-3 text-gray-500 text-center">
+              <div className="px-4 py-3 text-foreground text-center">
                 Loading tags...
               </div>
             ) : (
@@ -227,7 +228,7 @@ export function TagManagementUI({
                   <button
                     type="button"
                     onClick={handleCreateNewTag}
-                    className="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 flex items-center gap-2 text-green-600"
+                    className="w-full px-4 py-3 text-left hover:bg-foreground hover:bg-opacity-10 border-b border-foreground flex items-center gap-2 text-green-600"
                   >
                     <Plus className="w-4 h-4" />
                     Create &quot;{newTagInput}&quot;
@@ -241,25 +242,25 @@ export function TagManagementUI({
                       key={tag.name}
                       type="button"
                       onClick={() => handleTagSelect(tag.name)}
-                      className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center justify-between group"
+                      className="w-full px-4 py-3 text-left hover:bg-foreground hover:bg-opacity-10 flex items-center justify-between group text-foreground"
                     >
                       <div className="flex items-center gap-2">
                         <TagIcon className="w-4 h-4 text-gray-400" />
                         <span>{tag.name}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <span className="bg-gray-100 px-2 py-1 rounded">
+                      <div className="flex items-center gap-2 text-xs text-gray-400">
+                        <span className="bg-foreground bg-opacity-10 px-2 py-1 rounded">
                           {tag.count} uses
                         </span>
                       </div>
                     </button>
                   ))
                 ) : searchQuery && !showCreateOption ? (
-                  <div className="px-4 py-3 text-gray-500 text-center">
+                  <div className="px-4 py-3 text-foreground text-center">
                     No tags found for &quot;{searchQuery}&quot;
                   </div>
                 ) : !searchQuery && filteredTags.length === 0 ? (
-                  <div className="px-4 py-3 text-gray-500 text-center">
+                  <div className="px-4 py-3 text-foreground text-center">
                     All available tags are already selected
                   </div>
                 ) : null}

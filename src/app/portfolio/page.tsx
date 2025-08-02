@@ -1,21 +1,22 @@
-import { Metadata } from "next";
-import Link from "next/link";
-import {
-  Code,
-  Video,
-  Palette,
-  Eye,
-  Calendar,
-  TrendingUp,
-  Clock,
-  Star,
-} from "lucide-react";
-import { PortfolioAnalytics, GoogleAnalytics } from "./components";
-import { Suspense } from "react";
-import { ContentItem } from "@/types/content";
-import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioIntegrationManager } from "@/lib/portfolio";
+import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
+import { ContentItem } from "@/types/content";
+import {
+  Calendar,
+  Clock,
+  Code,
+  Eye,
+  Palette,
+  Star,
+  TrendingUp,
+  Video,
+} from "lucide-react";
+import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { Suspense } from "react";
+import { GoogleAnalytics, PortfolioAnalytics } from "./components";
 
 // Generate dynamic metadata using SEO metadata generator
 export async function generateMetadata(): Promise<Metadata> {
@@ -554,10 +555,23 @@ export default async function PortfolioPage() {
                         data-testid="portfolio-item"
                         data-category={project.category}
                       >
-                        <div className="aspect-video bg-background border border-foreground flex items-center justify-center">
-                          <span className="noto-sans-jp-light text-xs text-foreground">
-                            {project.title}
-                          </span>
+                        <div className="aspect-video bg-background border border-foreground overflow-hidden">
+                          {project.thumbnail ? (
+                            <Image
+                              src={project.thumbnail}
+                              alt={project.title}
+                              fill
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                              className="object-cover"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <span className="noto-sans-jp-light text-xs text-foreground">
+                                {project.title}
+                              </span>
+                            </div>
+                          )}
                         </div>
 
                         <div className="space-y-2">

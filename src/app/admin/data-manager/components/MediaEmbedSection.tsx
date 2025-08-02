@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { MediaEmbed } from "@/types/content";
+import { useState } from "react";
 
 interface MediaEmbedSectionProps {
   videos: MediaEmbed[];
@@ -113,15 +113,18 @@ export function MediaEmbedSection({
   };
 
   const inputStyle =
-    "w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent";
-  const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
+    "w-full border border-foreground px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
+  const labelStyle =
+    "block noto-sans-jp-regular text-sm font-medium text-foreground mb-1";
   const buttonStyle =
-    "border border-foreground px-3 py-1 text-xs hover:bg-foreground hover:text-background transition-colors";
+    "border border-foreground px-3 py-1 text-xs hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="font-medium text-gray-700">Media Embeds</h3>
+        <h3 className="neue-haas-grotesk-display text-xl text-primary leading-snug">
+          Media Embeds
+        </h3>
         {!showAddForm && (
           <button
             type="button"
@@ -136,7 +139,9 @@ export function MediaEmbedSection({
       {/* Add New Video Form - 条件付きで表示 */}
       {showAddForm && (
         <div className="border border-gray-200 p-4 rounded space-y-3">
-          <h4 className="text-sm font-medium text-gray-700">Add New Media</h4>
+          <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground">
+            Add New Media
+          </h4>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
@@ -254,7 +259,7 @@ export function MediaEmbedSection({
       {/* Existing Videos */}
       {videos.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-medium text-gray-700">
+          <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground">
             Current Media ({videos.length})
           </h4>
 

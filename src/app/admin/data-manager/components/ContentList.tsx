@@ -68,7 +68,7 @@ export function ContentList({
   if (items.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="noto-sans-jp-light text-sm text-gray-500">
+        <p className="noto-sans-jp-light text-xs text-gray-500">
           No items found. Create your first item!
         </p>
       </div>
@@ -80,15 +80,22 @@ export function ContentList({
       {items.map((item) => (
         <div
           key={item.id}
-          className={`border p-3 cursor-pointer transition-colors ${
+          className={`border p-3 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background ${
             selectedItem?.id === item.id
               ? "border-primary bg-primary bg-opacity-10"
-              : "border-gray-300 hover:border-gray-400"
+              : "border-foreground hover:border-primary"
           }`}
           onClick={() => onSelectItem(item)}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onSelectItem(item);
+            }
+          }}
         >
           <div className="flex justify-between items-start mb-2">
-            <h4 className="noto-sans-jp-regular text-sm font-medium truncate flex-1">
+            <h4 className="neue-haas-grotesk-display text-sm text-primary font-medium truncate flex-1">
               {item.title || "Untitled"}
             </h4>
             <button
@@ -96,7 +103,7 @@ export function ContentList({
                 e.stopPropagation();
                 onDeleteItem(item.id);
               }}
-              className="text-red-500 hover:text-red-700 text-xs ml-2"
+              className="text-red-500 hover:text-red-700 text-xs ml-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-background rounded"
               title="Delete item"
             >
               ×

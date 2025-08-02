@@ -6,7 +6,7 @@
  */
 
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
-import { Calendar, Code, ExternalLink, Tag, X } from "lucide-react";
+import { Calendar, ExternalLink, Tag, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
@@ -115,74 +115,30 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
             </div>
           )}
 
-          {/* Metadata */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2 text-sm">
-                <Calendar className="w-4 h-4 text-accent" />
-                <span className="text-foreground/70">Created:</span>
-                <time dateTime={item.createdAt}>
-                  {new Date(item.createdAt).toLocaleDateString("ja-JP")}
-                </time>
-              </div>
-
-              {item.updatedAt && item.updatedAt !== item.createdAt && (
-                <div className="flex items-center space-x-2 text-sm">
-                  <Calendar className="w-4 h-4 text-accent" />
-                  <span className="text-foreground/70">Updated:</span>
-                  <time dateTime={item.updatedAt}>
-                    {new Date(item.updatedAt).toLocaleDateString("ja-JP")}
-                  </time>
-                </div>
-              )}
-
-              <div className="flex items-center space-x-2 text-sm">
-                <Tag className="w-4 h-4 text-accent" />
-                <span className="text-foreground/70">Category:</span>
-                <span>{item.category}</span>
-              </div>
+          {/* Metadata - 日付とカテゴリーを横並び */}
+          <div className="flex items-center gap-6 text-sm">
+            <div className="flex items-center space-x-2">
+              <Calendar className="w-4 h-4 text-accent" />
+              <span className="text-foreground/70">Created:</span>
+              <time dateTime={item.createdAt}>
+                {new Date(item.createdAt).toLocaleDateString("ja-JP")}
+              </time>
             </div>
 
-            <div className="space-y-4">
-              {/* Technologies */}
-              {item.technologies && item.technologies.length > 0 && (
-                <div>
-                  <div className="flex items-center space-x-2 text-sm mb-2">
-                    <Code className="w-4 h-4 text-accent" />
-                    <span className="text-foreground/70">Technologies:</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {item.technologies.map((tech, index) => (
-                      <span
-                        key={`${tech}-${index}`}
-                        className="noto-sans-jp-light text-xs text-foreground border border-foreground/30 px-2 py-1 bg-background/50"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
+            {item.updatedAt && item.updatedAt !== item.createdAt && (
+              <div className="flex items-center space-x-2">
+                <Calendar className="w-4 h-4 text-accent" />
+                <span className="text-foreground/70">Updated:</span>
+                <time dateTime={item.updatedAt}>
+                  {new Date(item.updatedAt).toLocaleDateString("ja-JP")}
+                </time>
+              </div>
+            )}
 
-              {/* Tags */}
-              {item.tags && item.tags.length > 0 && (
-                <div>
-                  <div className="flex items-center space-x-2 text-sm mb-2">
-                    <Tag className="w-4 h-4 text-accent" />
-                    <span className="text-foreground/70">Tags:</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {item.tags.map((tag, index) => (
-                      <span
-                        key={`${tag}-${index}`}
-                        className="noto-sans-jp-light text-xs text-foreground border border-foreground/30 px-2 py-1 bg-background/50"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
+            <div className="flex items-center space-x-2">
+              <Tag className="w-4 h-4 text-accent" />
+              <span className="text-foreground/70">Category:</span>
+              <span>{item.category}</span>
             </div>
           </div>
 
@@ -195,115 +151,10 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
               {item.description}
             </p>
           </div>
-
-          {/* Content */}
-          {item.content && (
-            <div className="space-y-2">
-              <h2 className="zen-kaku-gothic-new text-lg text-primary">
-                Details
-              </h2>
-              <div className="noto-sans-jp-light text-sm text-foreground leading-relaxed prose prose-sm max-w-none">
-                {/* Simple markdown-like rendering */}
-                {item.content.split("\n").map((line, index) => {
-                  if (line.startsWith("# ")) {
-                    return (
-                      <h3
-                        key={index}
-                        className="text-lg font-medium text-primary mt-4 mb-2"
-                      >
-                        {line.slice(2)}
-                      </h3>
-                    );
-                  } else if (line.startsWith("## ")) {
-                    return (
-                      <h4
-                        key={index}
-                        className="text-base font-medium text-primary mt-3 mb-2"
-                      >
-                        {line.slice(3)}
-                      </h4>
-                    );
-                  } else if (line.trim() === "") {
-                    return <br key={index} />;
-                  } else {
-                    return (
-                      <p key={index} className="mb-2">
-                        {line}
-                      </p>
-                    );
-                  }
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Videos */}
-          {item.videos && item.videos.length > 0 && (
-            <div className="space-y-4">
-              <h2 className="zen-kaku-gothic-new text-lg text-primary">
-                Videos
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {item.videos.map((video, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="aspect-video bg-background border border-foreground">
-                      {video.type === "youtube" && video.url && (
-                        <iframe
-                          src={video.url
-                            .replace("youtu.be/", "youtube.com/embed/")
-                            .replace("watch?v=", "embed/")}
-                          title={video.title || `Video ${index + 1}`}
-                          className="w-full h-full"
-                          allowFullScreen
-                        />
-                      )}
-                    </div>
-                    {video.title && (
-                      <h3 className="text-sm font-medium text-primary">
-                        {video.title}
-                      </h3>
-                    )}
-                    {video.description && (
-                      <p className="text-xs text-foreground/70">
-                        {video.description}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Additional Images */}
-          {item.images && item.images.length > 1 && (
-            <div className="space-y-4">
-              <h2 className="zen-kaku-gothic-new text-lg text-primary">
-                Gallery
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {item.images.slice(1).map((image, index) => (
-                  <div
-                    key={index}
-                    className="aspect-square bg-background border border-foreground overflow-hidden"
-                  >
-                    <Image
-                      src={image}
-                      alt={`${item.title} - Image ${index + 2}`}
-                      width={200}
-                      height={200}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                      unoptimized={true}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Footer */}
-        <footer className="p-6 border-t border-foreground flex items-center justify-between">
+        <footer className="p-6 border-t border-foreground">
           <Link
             href={`/portfolio/${item.id}`}
             className="flex items-center space-x-2 text-accent hover:text-primary transition-colors"
@@ -311,12 +162,6 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
             <ExternalLink className="w-4 h-4" />
             <span className="text-sm">View Full Page</span>
           </Link>
-          <button
-            onClick={onClose}
-            className="px-4 py-2 border border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors"
-          >
-            Close
-          </button>
         </footer>
       </div>
     </div>

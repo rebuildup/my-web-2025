@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
 import { DownloadInfo } from "@/types/content";
+import { useRef, useState } from "react";
 
 interface DownloadInfoSectionProps {
   downloadInfo?: DownloadInfo;
@@ -65,14 +65,17 @@ export function DownloadInfoSection({
   };
 
   const inputStyle =
-    "w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent";
-  const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
+    "w-full border border-foreground px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
+  const labelStyle =
+    "block noto-sans-jp-regular text-sm font-medium text-foreground mb-1";
   const buttonStyle =
-    "border border-foreground px-3 py-1 text-xs hover:bg-foreground hover:text-background transition-colors";
+    "border border-foreground px-3 py-1 text-xs hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
 
   return (
     <div className="space-y-4">
-      <h3 className="font-medium text-gray-700">Download Information</h3>
+      <h3 className="neue-haas-grotesk-display text-xl text-primary leading-snug">
+        Download Information
+      </h3>
 
       {!downloadInfo ? (
         /* File Upload Area */
@@ -126,7 +129,7 @@ export function DownloadInfoSection({
         <div className="space-y-4">
           {/* File Information */}
           <div className="bg-gray-50 border border-gray-200 p-4 rounded">
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
+            <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-2">
               File Information
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
@@ -183,7 +186,7 @@ export function DownloadInfoSection({
 
           {/* Statistics (Read-only) */}
           <div className="bg-gray-50 border border-gray-200 p-4 rounded">
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
+            <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-2">
               Download Statistics
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -249,7 +252,7 @@ export function DownloadInfoSection({
       {/* Manual Download Info Entry */}
       {!downloadInfo && (
         <div className="border border-gray-200 p-4 rounded">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">
+          <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-3">
             Or Enter Manually
           </h4>
           <div className="space-y-3">

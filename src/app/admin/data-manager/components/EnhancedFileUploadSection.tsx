@@ -205,8 +205,9 @@ export function EnhancedFileUploadSection({
   };
 
   const inputStyle =
-    "w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent";
-  const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
+    "w-full border border-foreground px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background bg-background text-foreground";
+  const labelStyle =
+    "block noto-sans-jp-regular text-sm font-medium text-foreground mb-1";
   const buttonStyle =
     "border border-foreground px-3 py-1 text-xs hover:bg-foreground hover:text-background transition-colors";
 
@@ -215,8 +216,8 @@ export function EnhancedFileUploadSection({
       <h3 className="font-medium text-gray-700">Enhanced File Upload</h3>
 
       {/* Enhanced Processing Options */}
-      <div className="bg-gray-50 p-4 rounded-lg">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">
+      <div className="bg-base border border-foreground p-4 rounded-lg">
+        <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-3">
           Upload Options
         </h4>
 
@@ -229,9 +230,9 @@ export function EnhancedFileUploadSection({
               onChange={(e) =>
                 handleOptionsChange({ skipProcessing: e.target.checked })
               }
-              className="rounded border-gray-300"
+              className="rounded border-foreground"
             />
-            <span className="text-sm text-gray-600">Skip Processing</span>
+            <span className="text-sm text-foreground">Skip Processing</span>
           </label>
 
           <label className="flex items-center space-x-2">
@@ -241,9 +242,9 @@ export function EnhancedFileUploadSection({
               onChange={(e) =>
                 handleOptionsChange({ preserveOriginal: e.target.checked })
               }
-              className="rounded border-gray-300"
+              className="rounded border-foreground"
             />
-            <span className="text-sm text-gray-600">Preserve Original</span>
+            <span className="text-sm text-foreground">Preserve Original</span>
           </label>
 
           <label className="flex items-center space-x-2">
@@ -253,16 +254,16 @@ export function EnhancedFileUploadSection({
               onChange={(e) =>
                 handleOptionsChange({ generateVariants: e.target.checked })
               }
-              className="rounded border-gray-300"
+              className="rounded border-foreground"
             />
-            <span className="text-sm text-gray-600">Generate Variants</span>
+            <span className="text-sm text-foreground">Generate Variants</span>
           </label>
         </div>
 
         {/* Custom Processing Options */}
         {!options.skipProcessing && (
-          <div className="border-t pt-4">
-            <h5 className="text-sm font-medium text-gray-700 mb-2">
+          <div className="border-t border-foreground pt-4">
+            <h5 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-2">
               Custom Processing
             </h5>
 
@@ -308,9 +309,9 @@ export function EnhancedFileUploadSection({
                       },
                     })
                   }
-                  className="rounded border-gray-300"
+                  className="rounded border-foreground"
                 />
-                <span className="text-sm text-gray-600">Add Watermark</span>
+                <span className="text-sm text-foreground">Add Watermark</span>
               </label>
 
               {/* Resize Options */}
