@@ -1773,5 +1773,986 @@
       "element": "H1",
       "url": ""
     }
+  },
+  {
+    "id": "perf_1754174332660_pnl6cgy9i",
+    "timestamp": "2025-08-02T22:38:52.660Z",
+    "metric": "lcp",
+    "value": 7388,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754174337146_t9qiyvszy",
+    "timestamp": "2025-08-02T22:38:57.146Z",
+    "metric": "cls",
+    "value": 0.6830522475390652,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 318,
+            "y": 34,
+            "width": 412,
+            "height": 489,
+            "top": 34,
+            "right": 730,
+            "bottom": 523,
+            "left": 318
+          },
+          "currentRect": {
+            "x": 171,
+            "y": 34,
+            "width": 386,
+            "height": 894,
+            "top": 34,
+            "right": 557,
+            "bottom": 928,
+            "left": 171
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 897,
+            "width": 730,
+            "height": 98,
+            "top": 897,
+            "right": 730,
+            "bottom": 995,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 877,
+            "width": 730,
+            "height": 118,
+            "top": 877,
+            "right": 730,
+            "bottom": 995,
+            "left": 0
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 377,
+            "y": 474,
+            "width": 180,
+            "height": 117,
+            "top": 474,
+            "right": 557,
+            "bottom": 591,
+            "left": 377
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 173,
+            "y": 711,
+            "width": 384,
+            "height": 56,
+            "top": 711,
+            "right": 557,
+            "bottom": 767,
+            "left": 173
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 173,
+            "y": 791,
+            "width": 384,
+            "height": 56,
+            "top": 791,
+            "right": 557,
+            "bottom": 847,
+            "left": 173
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754174386940_f76futqdy",
+    "timestamp": "2025-08-02T22:39:46.940Z",
+    "metric": "cls",
+    "value": 0.32039684915048877,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 166,
+            "y": 34,
+            "width": 386,
+            "height": 894,
+            "top": 34,
+            "right": 552,
+            "bottom": 928,
+            "left": 166
+          },
+          "currentRect": {
+            "x": 24,
+            "y": 34,
+            "width": 770,
+            "height": 614,
+            "top": 34,
+            "right": 794,
+            "bottom": 648,
+            "left": 24
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 284,
+            "y": 773,
+            "width": 440,
+            "height": 212,
+            "top": 773,
+            "right": 724,
+            "bottom": 985,
+            "left": 284
+          },
+          "currentRect": {
+            "x": 383,
+            "y": 773,
+            "width": 436,
+            "height": 212,
+            "top": 773,
+            "right": 819,
+            "bottom": 985,
+            "left": 383
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 533,
+            "y": 817,
+            "width": 171,
+            "height": 152,
+            "top": 817,
+            "right": 704,
+            "bottom": 969,
+            "left": 533
+          },
+          "currentRect": {
+            "x": 632,
+            "y": 817,
+            "width": 171,
+            "height": 152,
+            "top": 817,
+            "right": 803,
+            "bottom": 969,
+            "left": 632
+          }
+        },
+        {
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 20,
+            "y": 929,
+            "width": 36,
+            "height": 36,
+            "top": 929,
+            "right": 56,
+            "bottom": 965,
+            "left": 20
+          }
+        },
+        {
+          "previousRect": {
+            "x": 0,
+            "y": 961,
+            "width": 76,
+            "height": 24,
+            "top": 961,
+            "right": 76,
+            "bottom": 985,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 905,
+            "width": 96,
+            "height": 80,
+            "top": 905,
+            "right": 96,
+            "bottom": 985,
+            "left": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754174387013_17bpnt0ou",
+    "timestamp": "2025-08-02T22:39:47.013Z",
+    "metric": "cls",
+    "value": 0.12665218806324047,
+    "threshold": 0.1,
+    "severity": "warning",
+    "url": "http://localhost:3000/",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 24,
+            "y": 34,
+            "width": 770,
+            "height": 614,
+            "top": 34,
+            "right": 794,
+            "bottom": 648,
+            "left": 24
+          },
+          "currentRect": {
+            "x": 112,
+            "y": 34,
+            "width": 770,
+            "height": 614,
+            "top": 34,
+            "right": 882,
+            "bottom": 648,
+            "left": 112
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 867,
+            "width": 839,
+            "height": 118,
+            "top": 867,
+            "right": 839,
+            "bottom": 985,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 887,
+            "width": 995,
+            "height": 98,
+            "top": 887,
+            "right": 995,
+            "bottom": 985,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 383,
+            "y": 773,
+            "width": 440,
+            "height": 212,
+            "top": 773,
+            "right": 823,
+            "bottom": 985,
+            "left": 383
+          },
+          "currentRect": {
+            "x": 559,
+            "y": 773,
+            "width": 436,
+            "height": 212,
+            "top": 773,
+            "right": 995,
+            "bottom": 985,
+            "left": 559
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754174387106_bgp0otjn1",
+    "timestamp": "2025-08-02T22:39:47.106Z",
+    "metric": "cls",
+    "value": 0.2637178996375794,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 112,
+            "y": 34,
+            "width": 770,
+            "height": 614,
+            "top": 34,
+            "right": 882,
+            "bottom": 648,
+            "left": 112
+          },
+          "currentRect": {
+            "x": 57,
+            "y": 34,
+            "width": 1026,
+            "height": 489,
+            "top": 34,
+            "right": 1083,
+            "bottom": 523,
+            "left": 57
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 559,
+            "y": 773,
+            "width": 440,
+            "height": 212,
+            "top": 773,
+            "right": 999,
+            "bottom": 985,
+            "left": 559
+          },
+          "currentRect": {
+            "x": 706,
+            "y": 773,
+            "width": 436,
+            "height": 212,
+            "top": 773,
+            "right": 1142,
+            "bottom": 985,
+            "left": 706
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 808,
+            "y": 817,
+            "width": 171,
+            "height": 152,
+            "top": 817,
+            "right": 979,
+            "bottom": 969,
+            "left": 808
+          },
+          "currentRect": {
+            "x": 955,
+            "y": 817,
+            "width": 171,
+            "height": 152,
+            "top": 817,
+            "right": 1126,
+            "bottom": 969,
+            "left": 955
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754175101626_7tsjlfhr0",
+    "timestamp": "2025-08-02T22:51:41.626Z",
+    "metric": "lcp",
+    "value": 9696,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754175340802_d1rw1pghu",
+    "timestamp": "2025-08-02T22:55:40.802Z",
+    "metric": "lcp",
+    "value": 32336,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754175350040_4ddrszzu9",
+    "timestamp": "2025-08-02T22:55:50.040Z",
+    "metric": "lcp",
+    "value": 8108,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754175518412_i2kor5b01",
+    "timestamp": "2025-08-02T22:58:38.412Z",
+    "metric": "lcp",
+    "value": 8708,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754175784623_42kgi46sx",
+    "timestamp": "2025-08-02T23:03:04.623Z",
+    "metric": "cls",
+    "value": 0.4390743763302823,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 11,
+            "y": 34,
+            "width": 673,
+            "height": 489,
+            "top": 34,
+            "right": 684,
+            "bottom": 523,
+            "left": 11
+          },
+          "currentRect": {
+            "x": 148,
+            "y": 34,
+            "width": 386,
+            "height": 894,
+            "top": 34,
+            "right": 534,
+            "bottom": 928,
+            "left": 148
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 111,
+            "y": 1100,
+            "width": 573,
+            "height": 256,
+            "top": 1100,
+            "right": 684,
+            "bottom": 1356,
+            "left": 111
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 150,
+            "y": 791,
+            "width": 384,
+            "height": 56,
+            "top": 791,
+            "right": 534,
+            "bottom": 847,
+            "left": 150
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 887,
+            "width": 684,
+            "height": 128,
+            "top": 887,
+            "right": 684,
+            "bottom": 1015,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 1238,
+            "width": 684,
+            "height": 118,
+            "top": 1238,
+            "right": 684,
+            "bottom": 1356,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 16,
+            "y": 777,
+            "width": 247,
+            "height": 192,
+            "top": 777,
+            "right": 263,
+            "bottom": 969,
+            "left": 16
+          },
+          "currentRect": {
+            "x": 16,
+            "y": 1148,
+            "width": 247,
+            "height": 192,
+            "top": 1148,
+            "right": 263,
+            "bottom": 1340,
+            "left": 16
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754175795027_1jkv7as0x",
+    "timestamp": "2025-08-02T23:03:15.027Z",
+    "metric": "lcp",
+    "value": 8776,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754175801926_f6qkp90te",
+    "timestamp": "2025-08-02T23:03:21.926Z",
+    "metric": "cls",
+    "value": 0.18366714594070435,
+    "threshold": 0.1,
+    "severity": "warning",
+    "url": "http://localhost:3000/",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 178,
+            "y": 34,
+            "width": 386,
+            "height": 894,
+            "top": 34,
+            "right": 564,
+            "bottom": 928,
+            "left": 178
+          },
+          "currentRect": {
+            "x": 15,
+            "y": 34,
+            "width": 770,
+            "height": 614,
+            "top": 34,
+            "right": 785,
+            "bottom": 648,
+            "left": 15
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 171,
+            "y": 1100,
+            "width": 577,
+            "height": 256,
+            "top": 1100,
+            "right": 748,
+            "bottom": 1356,
+            "left": 171
+          },
+          "currentRect": {
+            "x": 228,
+            "y": 1100,
+            "width": 573,
+            "height": 256,
+            "top": 1100,
+            "right": 801,
+            "bottom": 1356,
+            "left": 228
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754175930354_vvv9vg8vs",
+    "timestamp": "2025-08-02T23:05:30.354Z",
+    "metric": "lcp",
+    "value": 8808,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754176273301_eu6e15qiw",
+    "timestamp": "2025-08-02T23:11:13.301Z",
+    "metric": "cls",
+    "value": 0.3357723960072683,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 42,
+            "y": 34,
+            "width": 770,
+            "height": 614,
+            "top": 34,
+            "right": 812,
+            "bottom": 648,
+            "left": 42
+          },
+          "currentRect": {
+            "x": 97,
+            "y": 34,
+            "width": 1282,
+            "height": 489,
+            "top": 34,
+            "right": 1379,
+            "bottom": 523,
+            "left": 97
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 887,
+            "width": 1477,
+            "height": 98,
+            "top": 887,
+            "right": 1477,
+            "bottom": 985,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 16,
+            "y": 777,
+            "width": 320,
+            "height": 192,
+            "top": 777,
+            "right": 336,
+            "bottom": 969,
+            "left": 16
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 904,
+            "y": 729,
+            "width": 573,
+            "height": 256,
+            "top": 729,
+            "right": 1477,
+            "bottom": 985,
+            "left": 904
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754176273304_a0nsci54o",
+    "timestamp": "2025-08-02T23:11:13.304Z",
+    "metric": "lcp",
+    "value": 3224,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754176275246_97f4wmwa9",
+    "timestamp": "2025-08-02T23:11:15.246Z",
+    "metric": "cls",
+    "value": 0.3792951594614374,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 97,
+            "y": 34,
+            "width": 758,
+            "height": 489,
+            "top": 34,
+            "right": 855,
+            "bottom": 523,
+            "left": 97
+          },
+          "currentRect": {
+            "x": 42,
+            "y": 34,
+            "width": 770,
+            "height": 614,
+            "top": 34,
+            "right": 812,
+            "bottom": 648,
+            "left": 42
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 440,
+            "y": 370,
+            "width": 372,
+            "height": 101,
+            "top": 370,
+            "right": 812,
+            "bottom": 471,
+            "left": 440
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 282,
+            "y": 1100,
+            "width": 573,
+            "height": 256,
+            "top": 1100,
+            "right": 855,
+            "bottom": 1356,
+            "left": 282
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 887,
+            "width": 855,
+            "height": 128,
+            "top": 887,
+            "right": 855,
+            "bottom": 1015,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 1238,
+            "width": 855,
+            "height": 118,
+            "top": 1238,
+            "right": 855,
+            "bottom": 1356,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 16,
+            "y": 777,
+            "width": 320,
+            "height": 192,
+            "top": 777,
+            "right": 336,
+            "bottom": 969,
+            "left": 16
+          },
+          "currentRect": {
+            "x": 16,
+            "y": 1148,
+            "width": 320,
+            "height": 192,
+            "top": 1148,
+            "right": 336,
+            "bottom": 1340,
+            "left": 16
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754176297015_e3mba9a7c",
+    "timestamp": "2025-08-02T23:11:37.015Z",
+    "metric": "lcp",
+    "value": 9192,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754176692076_tz6gy39gv",
+    "timestamp": "2025-08-02T23:18:12.076Z",
+    "metric": "lcp",
+    "value": 70336,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754176706502_ruht1mw4x",
+    "timestamp": "2025-08-02T23:18:26.502Z",
+    "metric": "lcp",
+    "value": 8596,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
   }
 ]

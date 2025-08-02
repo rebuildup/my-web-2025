@@ -3,8 +3,6 @@
  * Tracks Core Web Vitals and custom performance metrics
  */
 
-import { analytics } from "./google-analytics";
-
 export interface PerformanceMetrics {
   // Core Web Vitals
   lcp?: number; // Largest Contentful Paint
@@ -331,9 +329,19 @@ class PerformanceMonitor {
       }
     }
 
-    // Send to analytics
-    if (typeof value === "number") {
-      analytics.trackPerformance({ [metric]: value });
+    // Send to Google Analytics if available
+    if (
+      typeof value === "number" &&
+      typeof window !== "undefined" &&
+      window.gtag
+    ) {
+      window.gtag("event", "performance_metric", {
+        event_category: "Performance",
+        event_label: metric,
+        metric_name: metric,
+        metric_value: value,
+        url: window.location.href,
+      });
     }
   }
 

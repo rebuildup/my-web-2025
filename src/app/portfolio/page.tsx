@@ -16,7 +16,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
-import { GoogleAnalytics, PortfolioAnalytics } from "./components";
+import { PortfolioAnalytics } from "./components";
 
 // Generate dynamic metadata using SEO metadata generator
 export async function generateMetadata(): Promise<Metadata> {
@@ -764,9 +764,6 @@ export default async function PortfolioPage() {
             </div>
           </div>
         </main>
-
-        {/* Google Analytics */}
-        <GoogleAnalytics />
       </div>
     </>
   );

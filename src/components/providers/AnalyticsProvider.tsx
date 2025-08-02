@@ -1,21 +1,24 @@
 /**
  * Analytics Provider Component
- * Manages Google Analytics initialization and consent
+ * Simple Google Analytics integration using gtag
  */
 
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { analytics } from "@/lib/analytics/google-analytics";
 import { errorTracker } from "@/lib/analytics/error-tracking";
-// import { performanceMonitor } from "@/lib/analytics/performance-monitoring";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface AnalyticsContextType {
   isInitialized: boolean;
   consentGiven: boolean;
   setConsent: (consent: boolean) => void;
   trackPageView: (url: string, title?: string) => void;
-  trackEvent: (event: Parameters<typeof analytics.trackEvent>[0]) => void;
+  trackEvent: (
+    action: string,
+    category?: string,
+    label?: string,
+    value?: number,
+  ) => void;
   trackToolUsage: (
     toolName: string,
     action: string,
@@ -41,109 +44,48 @@ interface AnalyticsProviderProps {
 }
 
 export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
-  // Always initialize hooks first
   const [isInitialized, setIsInitialized] = useState(false);
   const [consentGiven, setConsentGiven] = useState(false);
 
   useEffect(() => {
-    // Skip effect in development
-    if (process.env.NODE_ENV === "development") {
-      return;
-    }
+    // Check for existing consent
     const savedConsent = localStorage.getItem("analytics-consent");
 
     if (savedConsent === "true") {
       setConsentGiven(true);
-      if (process.env.NEXT_PUBLIC_GA_ID) {
-        initializeAnalytics();
-      } else {
-        console.log("Analytics consent given but GA_ID not configured");
-        setIsInitialized(true);
-      }
     } else if (savedConsent === "false") {
       setConsentGiven(false);
-      setIsInitialized(true);
-    } else {
-      setIsInitialized(true);
     }
+
+    setIsInitialized(true);
   }, []);
-
-  // 開発環境では完全に無効化
-  if (process.env.NODE_ENV === "development") {
-    console.log("Analytics disabled in development environment");
-
-    const mockContextValue: AnalyticsContextType = {
-      isInitialized: true,
-      consentGiven: false,
-      setConsent: () => {},
-      trackPageView: () => {},
-      trackEvent: () => {},
-      trackToolUsage: () => {},
-      trackPortfolioInteraction: () => {},
-      trackDownload: () => {},
-      trackContactForm: () => {},
-      trackSearch: () => {},
-      trackError: (error: Error, context?: string) => {
-        // 開発環境でもエラートラッキングは有効にする（コンソールログのみ）
-        console.warn("Error tracked (dev mode):", error.message, context);
-      },
-    };
-
-    return (
-      <AnalyticsContext.Provider value={mockContextValue}>
-        {children}
-      </AnalyticsContext.Provider>
-    );
-  }
-
-  const initializeAnalytics = async () => {
-    try {
-      await analytics.loadScript();
-      analytics.setConsent(true);
-      setIsInitialized(true);
-    } catch (error) {
-      console.warn("Analytics initialization failed:", error);
-      if (process.env.NEXT_PUBLIC_GA_ID) {
-        try {
-          errorTracker.captureError(
-            error instanceof Error
-              ? error
-              : new Error("Analytics initialization failed"),
-            { type: "analytics_init" },
-          );
-        } catch (trackingError) {
-          console.warn("Failed to track analytics error:", trackingError);
-        }
-      }
-      setIsInitialized(true);
-    }
-  };
 
   const handleSetConsent = (consent: boolean) => {
     setConsentGiven(consent);
     localStorage.setItem("analytics-consent", consent.toString());
-
-    if (consent && !isInitialized) {
-      if (process.env.NEXT_PUBLIC_GA_ID) {
-        initializeAnalytics();
-      } else {
-        console.log("Analytics consent given but GA_ID not configured");
-        setIsInitialized(true);
-      }
-    } else {
-      analytics.setConsent(consent);
-    }
   };
 
   const trackPageView = (url: string, title?: string) => {
-    if (consentGiven) {
-      analytics.trackPageView(url, title);
+    if (consentGiven && typeof window !== "undefined" && window.gtag) {
+      window.gtag("config", "G-Q3YWX96WRS", {
+        page_path: url,
+        page_title: title || document.title,
+      });
     }
   };
 
-  const trackEvent = (event: Parameters<typeof analytics.trackEvent>[0]) => {
-    if (consentGiven) {
-      analytics.trackEvent(event);
+  const trackEvent = (
+    action: string,
+    category?: string,
+    label?: string,
+    value?: number,
+  ) => {
+    if (consentGiven && typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", action, {
+        event_category: category || "General",
+        event_label: label,
+        value: value,
+      });
     }
   };
 
@@ -152,14 +94,25 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     action: string,
     details?: Record<string, unknown>,
   ) => {
-    if (consentGiven) {
-      analytics.trackToolUsage(toolName, action, details);
+    if (consentGiven && typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "tool_usage", {
+        event_category: "Tools",
+        event_label: `${toolName}_${action}`,
+        tool_name: toolName,
+        tool_action: action,
+        ...details,
+      });
     }
   };
 
   const trackPortfolioInteraction = (portfolioId: string, action: string) => {
-    if (consentGiven) {
-      analytics.trackPortfolioInteraction(portfolioId, action);
+    if (consentGiven && typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "portfolio_interaction", {
+        event_category: "Portfolio",
+        event_label: `${action}_${portfolioId}`,
+        portfolio_id: portfolioId,
+        interaction_type: action,
+      });
     }
   };
 
@@ -168,14 +121,25 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     fileType: string,
     category: string,
   ) => {
-    if (consentGiven) {
-      analytics.trackDownload(fileName, fileType, category);
+    if (consentGiven && typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "download", {
+        event_category: "Downloads",
+        event_label: fileName,
+        file_name: fileName,
+        file_type: fileType,
+        category: category,
+      });
     }
   };
 
   const trackContactForm = (formType: string, success: boolean) => {
-    if (consentGiven) {
-      analytics.trackContactForm(formType, success);
+    if (consentGiven && typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "form_submit", {
+        event_category: "Contact",
+        event_label: `${formType}_${success ? "success" : "error"}`,
+        form_type: formType,
+        success: success,
+      });
     }
   };
 
@@ -184,16 +148,28 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     resultsCount: number,
     searchType: string,
   ) => {
-    if (consentGiven) {
-      analytics.trackSearch(query, resultsCount, searchType);
+    if (consentGiven && typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "search", {
+        event_category: "Search",
+        event_label: query,
+        search_term: query,
+        results_count: resultsCount,
+        search_type: searchType,
+      });
     }
   };
 
   const trackError = (error: Error, context?: string) => {
     errorTracker.captureError(error, context ? { type: context } : undefined);
 
-    if (consentGiven) {
-      analytics.trackError(error, context);
+    if (consentGiven && typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "exception", {
+        event_category: "Errors",
+        event_label: error.message,
+        error_message: error.message,
+        error_stack: error.stack,
+        context: context,
+      });
     }
   };
 

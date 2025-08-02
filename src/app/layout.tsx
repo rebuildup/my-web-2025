@@ -1,4 +1,8 @@
-import GoogleAnalytics from "@/app/portfolio/components/GoogleAnalytics";
+import type { Metadata } from "next";
+import { Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
+import Script from "next/script";
+import "./globals.css";
+
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { PerformanceProvider } from "@/components/providers/PerformanceProvider";
 import { CookieConsent } from "@/components/ui/CookieConsent";
@@ -9,10 +13,18 @@ import {
   CriticalResourcePreloader,
   LayoutShiftDetector,
 } from "@/components/ui/LayoutStabilizer";
-import type { Metadata } from "next";
-import { Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
-import Script from "next/script";
-import "./globals.css";
+
+// Google Analytics type definitions
+declare global {
+  interface Window {
+    dataLayer?: unknown[];
+    gtag?: (
+      command: "config" | "event" | "js" | "set",
+      targetId: string | Date,
+      config?: Record<string, unknown>,
+    ) => void;
+  }
+}
 
 // Google Fonts configuration based on documents/02_style.md
 const notoSansJP = Noto_Sans_JP({
@@ -91,37 +103,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className="dark wf-loading">
+    <html lang="ja">
       <head>
-        {/* Preconnect to external font services */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link rel="preconnect" href="https://use.typekit.net" />
-
-        {/* Favicon configuration */}
-        <link rel="icon" href="/favicons/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/favicons/favicon-32x32.png" />
-
-        {/* Preload critical resources */}
-        <link rel="preload" href="/images/og-image.png" as="image" />
-        <link rel="preload" href="/favicons/favicon.ico" as="image" />
-
-        {/* DNS prefetch for external services */}
-        <link rel="dns-prefetch" href="//www.google-analytics.com" />
-        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
-
-        {/* Service Worker registration */}
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#181818" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
+        />
+
+        {/* Google tag (gtag.js) */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-Q3YWX96WRS"
+        />
+        <Script
+          id="google-analytics"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-Q3YWX96WRS');
+            `,
+          }}
         />
       </head>
       <body
@@ -145,8 +150,6 @@ export default function RootLayout({
             <CookieConsent />
             <GADebug />
             <GATestButton />
-            {/* Google Analytics - 直接記述で確実に動作 */}
-            <GoogleAnalytics enabled={true} />
           </PerformanceProvider>
         </AnalyticsProvider>
 
@@ -158,48 +161,15 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "samuido",
-              description: "フロントエンドエンジニアsamuidoの個人サイト",
-              url: "https://yusuke-kim.com/",
-              author: {
-                "@type": "Person",
-                name: "木村友亮",
-                jobTitle: "Webデザイナー・開発者",
-                url: "https://yusuke-kim.com/about",
-              },
-              publisher: {
-                "@type": "Organization",
-                name: "samuido",
-                url: "https://yusuke-kim.com/",
-              },
+              name: "Rebuild Portfolio",
+              description: "Creative Portfolio and Development Works",
+              url: "https://rebuild.up.up",
               potentialAction: {
                 "@type": "SearchAction",
-                target: "https://yusuke-kim.com/search?q={search_term_string}",
+                target: "https://rebuild.up.up/search?q={search_term_string}",
                 "query-input": "required name=search_term_string",
               },
             }),
-          }}
-        />
-
-        {/* Adobe Fonts Script - Kit ID: blm5pmr */}
-        <Script
-          id="adobe-fonts"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(d) {
-                var config = {
-                  kitId: 'blm5pmr',
-                  scriptTimeout: 3000,
-                  async: true
-                },
-                h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\\bwf-loading\\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config);}catch(e){}};s.parentNode.insertBefore(tk,s);
-                
-                function hideLoading() {
-                  // ローディング画面は表示しないため、何もしない
-                }
-              })(document);
-            `,
           }}
         />
       </body>

@@ -3,8 +3,6 @@
  * Captures and reports errors with context information
  */
 
-import { analytics } from "./google-analytics";
-
 export interface ErrorReport {
   id: string;
   timestamp: string;
@@ -102,7 +100,8 @@ class ErrorTracker {
       message: error.message,
       stack: error.stack,
       url: typeof window !== "undefined" ? window.location.href : "",
-      userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "",
+      userAgent:
+        typeof window !== "undefined" ? window.navigator.userAgent : "",
       sessionId: this.sessionId,
       context,
       severity,
@@ -110,27 +109,29 @@ class ErrorTracker {
       resolved: false,
     };
 
+    // Store error locally
     this.errors.push(errorReport);
 
-    // Send to analytics
-    analytics.trackError(
-      error,
-      typeof context?.type === "string" ? context.type : undefined,
-    );
-
-    // Send to monitoring endpoint
-    this.sendErrorReport(errorReport);
-
-    // Log to console in development
-    if (process.env.NODE_ENV === "development") {
-      console.error("Error captured:", {
-        message: errorReport.message,
-        stack: errorReport.stack,
-        context: errorReport.context,
-        severity: errorReport.severity,
+    // Send to Google Analytics if available
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "exception", {
+        event_category: "Errors",
+        event_label: error.message,
+        error_message: error.message,
+        error_stack: error.stack,
+        context: context,
+        severity: severity,
         category: errorReport.category,
       });
     }
+
+    // Log to console in development
+    if (process.env.NODE_ENV === "development") {
+      console.warn("Error captured:", errorReport);
+    }
+
+    // Send error report
+    this.sendErrorReport(errorReport);
   }
 
   /**
@@ -356,10 +357,18 @@ class ErrorTracker {
 
     this.performanceIssues.push(performanceIssue);
 
-    // Send to analytics
-    analytics.trackPerformance({
-      [issue.type]: issue.value,
-    });
+    // Send to Google Analytics if available
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "performance_metric", {
+        event_category: "Performance",
+        event_label: performanceIssue.type,
+        metric_value: performanceIssue.value,
+        threshold: performanceIssue.threshold,
+        severity: performanceIssue.severity,
+        url: performanceIssue.url,
+        context: performanceIssue.context,
+      });
+    }
 
     // Send to monitoring endpoint
     this.sendPerformanceReport(performanceIssue);

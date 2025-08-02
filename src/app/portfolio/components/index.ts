@@ -6,23 +6,13 @@
 export { default as PortfolioAnalytics } from "./PortfolioAnalytics";
 export { default as PortfolioAnalyticsDashboard } from "./PortfolioAnalyticsDashboard";
 export { default as PortfolioInsights } from "./PortfolioInsights";
-export { default as GoogleAnalytics } from "./GoogleAnalytics";
 
 export {
-  usePortfolioTracking,
-  usePortfolioGalleryTracking,
   usePortfolioDetailTracking,
+  usePortfolioGalleryTracking,
   usePortfolioItemTracking,
+  usePortfolioTracking,
 } from "./usePortfolioTracking";
-
-export {
-  trackPortfolioEvent,
-  trackPortfolioPageView,
-  trackPortfolioInteraction,
-  trackPortfolioSearch,
-  trackPortfolioPerformance,
-  usePortfolioAnalytics,
-} from "./GoogleAnalytics";
 
 // Types for portfolio analytics
 export interface PortfolioAnalyticsData {
