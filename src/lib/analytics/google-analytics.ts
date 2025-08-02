@@ -33,11 +33,7 @@ class GoogleAnalytics {
   private readonly GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
   constructor() {
-    // 開発環境では何もしない
-    if (process.env.NODE_ENV === "development") {
-      return;
-    }
-
+    // 開発環境でもGA_IDが設定されている場合は初期化を試行
     if (typeof window !== "undefined") {
       if (this.GA_ID) {
         this.initializeGA();
@@ -51,11 +47,9 @@ class GoogleAnalytics {
   private initializeGA(): void {
     if (!this.GA_ID || this.isInitialized) return;
 
-    // 開発環境では何もしない
+    // 開発環境でも初期化を試行（テスト用）
     if (process.env.NODE_ENV === "development") {
-      console.log("Development mode: GA initialization skipped");
-      this.isInitialized = true;
-      return;
+      console.log("Development mode: GA initialization with debug logging");
     }
 
     // Initialize dataLayer
@@ -87,11 +81,9 @@ class GoogleAnalytics {
    */
   loadScript(): Promise<void> {
     return new Promise((resolve) => {
-      // 開発環境では常にresolve
+      // 開発環境でもGA_IDが設定されている場合はスクリプトを読み込み
       if (process.env.NODE_ENV === "development") {
-        console.log("Development mode: GA script load skipped");
-        resolve();
-        return;
+        console.log("Development mode: GA script load with debug logging");
       }
 
       // Production behavior
@@ -120,10 +112,9 @@ class GoogleAnalytics {
   setConsent(consent: boolean): void {
     this.consentGiven = consent;
 
-    // 開発環境では何もしない
+    // 開発環境でもコンセント設定を記録
     if (process.env.NODE_ENV === "development") {
       console.log("Development mode: GA consent set to", consent);
-      return;
     }
 
     // Only call gtag if GA_ID is configured and gtag exists

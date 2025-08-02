@@ -1708,5 +1708,31 @@
       "element": "IMG",
       "url": "http://localhost:3000/_next/image?url=%2Fimages%2Fportfolio%2F20250325_conpu-1753831731635-5tkf1a.jpg&w=1080&q=75"
     }
+  },
+  {
+    "id": "perf_1754143918441_ioflg5kgt",
+    "timestamp": "2025-08-02T14:11:58.441Z",
+    "metric": "lcp",
+    "value": 8344,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754144024384_lfzta0xkj",
+    "timestamp": "2025-08-02T14:13:44.384Z",
+    "metric": "lcp",
+    "value": 12732,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
   }
 ]

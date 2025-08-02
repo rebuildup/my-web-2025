@@ -7,6 +7,7 @@ declare global {
       targetId: string | Date,
       config?: Record<string, unknown>,
     ) => void;
+    dataLayer?: unknown[];
   }
 
   // Service Worker Background Sync API
