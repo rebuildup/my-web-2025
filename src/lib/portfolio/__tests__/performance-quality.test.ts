@@ -1,8 +1,7 @@
 import { performance } from "perf_hooks";
 import { EnhancedContentItem } from "../../../types/enhanced-content";
-import { EnhancedCacheManager } from "../../cache/EnhancedCacheManager";
+import { EnhancedCacheManager } from "../../cache/enhanced-cache-system";
 import { DateManagementSystem } from "../date-management";
-import { EnhancedPortfolioDataProcessor } from "../enhanced-data-pipeline";
 import { TagManagementSystem } from "../tag-management";
 
 // Mock file system operations for testing
@@ -16,24 +15,19 @@ jest.mock("fs/promises", () => ({
 }));
 
 describe.skip("Performance and Quality Tests", () => {
-  let processor: EnhancedPortfolioDataProcessor;
+  let processor: EnhancedDataProcessingPipeline;
   let cacheManager: EnhancedCacheManager;
-  let markdownManager: MarkdownFileManagerImpl;
+  let markdownManager: MarkdownFileManager;
   let tagManager: TagManagementSystem;
   let dateManager: DateManagementSystem;
 
   beforeEach(() => {
     // Initialize components
     cacheManager = new EnhancedCacheManager();
-    markdownManager = new MarkdownFileManagerImpl();
+    markdownManager = new MarkdownFileManager();
     tagManager = new TagManagementSystem();
     dateManager = new DateManagementSystem();
-    processor = new EnhancedPortfolioDataProcessor(
-      cacheManager,
-      markdownManager,
-      tagManager,
-      dateManager,
-    );
+    processor = new EnhancedDataProcessingPipeline();
 
     // Clear any existing timers
     jest.clearAllTimers();
