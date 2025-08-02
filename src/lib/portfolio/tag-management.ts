@@ -28,6 +28,7 @@ export class PortfolioTagManager implements TagManagementSystem {
    */
   async getAllTags(): Promise<TagInfo[]> {
     await this.loadTagsFromFile();
+    await this.syncWithContentData();
 
     const tags = Array.from(this.tagCache.values());
 
@@ -365,6 +366,84 @@ export class PortfolioTagManager implements TagManagementSystem {
    */
   public getCacheSize(): number {
     return this.tagCache.size;
+  }
+
+  /**
+   * Sync tags with actual content data
+   */
+  private async syncWithContentData(): Promise<void> {
+    try {
+      // Load portfolio content data
+      const portfolioPath = path.join(
+        process.cwd(),
+        "public/data/content/portfolio.json",
+      );
+      const portfolioContent = await fs.readFile(portfolioPath, "utf-8");
+      const portfolioItems = JSON.parse(portfolioContent);
+
+      // Extract all tags from content
+      const contentTags = new Map<string, number>();
+
+      if (Array.isArray(portfolioItems)) {
+        for (const item of portfolioItems) {
+          if (item.tags && Array.isArray(item.tags)) {
+            for (const tag of item.tags) {
+              if (typeof tag === "string" && tag.trim()) {
+                const normalizedTag = this.normalizeTagName(tag);
+                if (normalizedTag) {
+                  contentTags.set(
+                    normalizedTag,
+                    (contentTags.get(normalizedTag) || 0) + 1,
+                  );
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Update cache with content tags
+      const now = new Date().toISOString();
+      let hasChanges = false;
+
+      for (const [tagName, count] of contentTags.entries()) {
+        let existingTag = this.tagCache.get(tagName);
+
+        if (!existingTag) {
+          // Create new tag from content
+          existingTag = {
+            name: tagName,
+            count: count,
+            createdAt: now,
+            lastUsed: now,
+          };
+          this.tagCache.set(tagName, existingTag);
+          hasChanges = true;
+        } else if (existingTag.count !== count) {
+          // Update count if different
+          existingTag.count = count;
+          existingTag.lastUsed = now;
+          hasChanges = true;
+        }
+      }
+
+      // Remove tags that no longer exist in content (but keep manually created ones)
+      for (const [tagName, tag] of this.tagCache.entries()) {
+        if (!contentTags.has(tagName) && tag.count > 0) {
+          // Reset count for tags not found in content
+          tag.count = 0;
+          hasChanges = true;
+        }
+      }
+
+      // Save changes if any
+      if (hasChanges) {
+        await this.saveTagsToFile();
+      }
+    } catch (error) {
+      console.warn("Error syncing with content data:", error);
+      // Continue with existing cache if sync fails
+    }
   }
 }
 

@@ -555,7 +555,7 @@ export default async function PortfolioPage() {
                         data-testid="portfolio-item"
                         data-category={project.category}
                       >
-                        <div className="aspect-video bg-background border border-foreground overflow-hidden">
+                        <div className="relative aspect-video bg-background border border-foreground overflow-hidden">
                           {project.thumbnail ? (
                             <Image
                               src={project.thumbnail}
