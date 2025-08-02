@@ -1,7 +1,9 @@
 import { performance } from "perf_hooks";
-import { EnhancedContentItem } from "../../../types/enhanced-content";
-import { EnhancedCacheManager } from "../../cache/enhanced-cache-system";
-import { DateManagementSystem } from "../date-management";
+import {
+  EnhancedContentItem,
+  MarkdownFileManager,
+} from "../../../types/enhanced-content";
+import { EnhancedCacheManager } from "../../cache/EnhancedCacheManager";
 import { TagManagementSystem } from "../tag-management";
 
 // Mock file system operations for testing
@@ -19,14 +21,12 @@ describe.skip("Performance and Quality Tests", () => {
   let cacheManager: EnhancedCacheManager;
   let markdownManager: MarkdownFileManager;
   let tagManager: TagManagementSystem;
-  let dateManager: DateManagementSystem;
 
   beforeEach(() => {
     // Initialize components
     cacheManager = new EnhancedCacheManager();
     markdownManager = new MarkdownFileManager();
     tagManager = new TagManagementSystem();
-    dateManager = new DateManagementSystem();
     processor = new EnhancedDataProcessingPipeline();
 
     // Clear any existing timers

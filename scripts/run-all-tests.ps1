@@ -72,34 +72,57 @@ try {
 }
 Write-Host ""
 
-Write-Host "2. Lint-Staged Check Running..." -ForegroundColor Yellow
+Write-Host "2. Lint-Staged Simulation Running..." -ForegroundColor Yellow
+Write-Host "   Simulating pre-commit hooks on all TypeScript files..." -ForegroundColor Gray
 try {
-    $lintStagedOutput = npx lint-staged --allow-empty 2>&1 | Out-String
+    # Run prettier check on all TypeScript files (excluding build directories)
+    $prettierTsOutput = npx prettier --check "**/*.{ts,tsx}" --ignore-path .gitignore 2>&1 | Out-String
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "Lint-Staged Error Details:" -ForegroundColor Red
-        Write-Host $lintStagedOutput -ForegroundColor Red
-        $counts = Count-Errors $lintStagedOutput
+        Write-Host "Prettier TypeScript Check Failed:" -ForegroundColor Red
+        Write-Host $prettierTsOutput -ForegroundColor Red
+        $counts = Count-Errors $prettierTsOutput
         $script:errorCount += $counts.Errors
         $script:warningCount += $counts.Warnings
         Check-ErrorLimit $script:errorCount
-        $testResults += "Lint-Staged: FAIL"
-        Write-Host "Lint-Staged: FAIL" -ForegroundColor Red
+        $testResults += "Lint-Staged Simulation: FAIL (Prettier)"
+        Write-Host "Lint-Staged Simulation: FAIL (Prettier)" -ForegroundColor Red
         exit 1
     }
     
-    $counts = Count-Errors $lintStagedOutput
-    if ($counts.Warnings -gt 0) {
-        Write-Host "Lint-Staged Warnings:" -ForegroundColor Yellow
-        Write-Host $lintStagedOutput -ForegroundColor Yellow
+    # Run ESLint on all TypeScript files (excluding build directories)
+    $eslintTsOutput = npx eslint "**/*.{ts,tsx}" --ignore-pattern ".next/**" --ignore-pattern "out/**" --ignore-pattern "build/**" --ignore-pattern "dist/**" --ignore-pattern "node_modules/**" 2>&1 | Out-String
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ESLint TypeScript Check Failed:" -ForegroundColor Red
+        Write-Host $eslintTsOutput -ForegroundColor Red
+        $counts = Count-Errors $eslintTsOutput
+        $script:errorCount += $counts.Errors
         $script:warningCount += $counts.Warnings
+        Check-ErrorLimit $script:errorCount
+        $testResults += "Lint-Staged Simulation: FAIL (ESLint)"
+        Write-Host "Lint-Staged Simulation: FAIL (ESLint)" -ForegroundColor Red
+        exit 1
     }
     
-    $testResults += "Lint-Staged: PASS"
-    Write-Host "Lint-Staged: PASS" -ForegroundColor Green
+    # Run TypeScript check on all TypeScript files
+    $tscOutput = npx tsc --noEmit 2>&1 | Out-String
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "TypeScript Check Failed:" -ForegroundColor Red
+        Write-Host $tscOutput -ForegroundColor Red
+        $counts = Count-Errors $tscOutput
+        $script:errorCount += $counts.Errors
+        $script:warningCount += $counts.Warnings
+        Check-ErrorLimit $script:errorCount
+        $testResults += "Lint-Staged Simulation: FAIL (TypeScript)"
+        Write-Host "Lint-Staged Simulation: FAIL (TypeScript)" -ForegroundColor Red
+        exit 1
+    }
+    
+    $testResults += "Lint-Staged Simulation: PASS"
+    Write-Host "Lint-Staged Simulation: PASS" -ForegroundColor Green
 } catch {
-    $testResults += "Lint-Staged: FAIL"
-    Write-Host "Lint-Staged: FAIL" -ForegroundColor Red
-    Write-Host "Lint-Staged Error Details:" -ForegroundColor Red
+    $testResults += "Lint-Staged Simulation: FAIL"
+    Write-Host "Lint-Staged Simulation: FAIL" -ForegroundColor Red
+    Write-Host "Lint-Staged Simulation Error Details:" -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor Red
     $script:errorCount += 1
     Check-ErrorLimit $script:errorCount
@@ -126,17 +149,36 @@ Write-Host ""
 
 Write-Host "4. ESLint Check Running..." -ForegroundColor Yellow
 try {
-    $eslintOutput = npm run lint --silent 2>&1
+    $eslintOutput = npm run lint 2>&1 | Out-String
     if ($LASTEXITCODE -ne 0) {
         Write-Host "ESLint Error Details:" -ForegroundColor Red
         Write-Host $eslintOutput -ForegroundColor Red
-        throw "ESLint check failed with exit code $LASTEXITCODE"
+        $counts = Count-Errors $eslintOutput
+        $script:errorCount += $counts.Errors
+        $script:warningCount += $counts.Warnings
+        Check-ErrorLimit $script:errorCount
+        $testResults += "ESLint: FAIL"
+        Write-Host "ESLint: FAIL" -ForegroundColor Red
+        exit 1
     }
+    
+    # Check for warnings in output
+    $counts = Count-Errors $eslintOutput
+    if ($counts.Warnings -gt 0) {
+        Write-Host "ESLint Warnings:" -ForegroundColor Yellow
+        Write-Host $eslintOutput -ForegroundColor Yellow
+        $script:warningCount += $counts.Warnings
+    }
+    
     $testResults += "ESLint: PASS"
     Write-Host "ESLint: PASS" -ForegroundColor Green
 } catch {
     $testResults += "ESLint: FAIL"
     Write-Host "ESLint: FAIL" -ForegroundColor Red
+    Write-Host "ESLint Error Details:" -ForegroundColor Red
+    Write-Host $_.Exception.Message -ForegroundColor Red
+    $script:errorCount += 1
+    Check-ErrorLimit $script:errorCount
     exit 1
 }
 Write-Host ""
@@ -271,6 +313,19 @@ foreach ($result in $testResults) {
     Write-Host $result
 }
 Write-Host ""
+
+# Display error and warning summary
+if ($script:errorCount -gt 0 -or $script:warningCount -gt 0) {
+    Write-Host "=== Issues Summary ===" -ForegroundColor Yellow
+    if ($script:errorCount -gt 0) {
+        Write-Host "Total Errors: $script:errorCount" -ForegroundColor Red
+    }
+    if ($script:warningCount -gt 0) {
+        Write-Host "Total Warnings: $script:warningCount" -ForegroundColor Yellow
+    }
+    Write-Host ""
+}
+
 Write-Host "All tests completed successfully!" -ForegroundColor Green
 Write-Host "Completion Time: $(Get-Date)" -ForegroundColor Gray
 Write-Host "=== samuido Website - All Tests Completed ===" -ForegroundColor Green
