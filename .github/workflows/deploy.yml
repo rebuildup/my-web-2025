@@ -37,6 +37,24 @@ jobs:
       - name: Run type check
         run: npm run type-check
 
+      - name: Setup test environment
+        run: |
+          # Create required data directories for tests
+          mkdir -p public/data/content
+          mkdir -p public/data/stats
+          mkdir -p public/data/cache
+
+          # Create minimal required files
+          echo "[]" > public/data/content/portfolio.json
+          echo "[]" > public/data/content/blog.json
+          echo "[]" > public/data/content/plugin.json
+          echo "[]" > public/data/content/download.json
+          echo "[]" > public/data/content/tool.json
+          echo "[]" > public/data/content/profile.json
+          echo "{}" > public/data/stats/view-stats.json
+          echo "{}" > public/data/stats/download-stats.json
+          echo "{}" > public/data/stats/search-stats.json
+
       - name: Run tests
         run: npm run test
         env:
