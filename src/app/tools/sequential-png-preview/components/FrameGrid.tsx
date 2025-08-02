@@ -99,7 +99,7 @@ export default function FrameGrid({
                 height={frame.height}
                 className="w-full h-full object-contain"
                 loading="lazy"
-                unoptimized={true}
+                unoptimized
               />
 
               {/* Frame Number Overlay */}

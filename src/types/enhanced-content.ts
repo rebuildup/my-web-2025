@@ -35,6 +35,16 @@ export interface EnhancedContentItem extends Omit<ContentItem, "category"> {
   markdownPath?: string; // Path to .md file
   markdownContent?: string; // Cached markdown content
 
+  // Download-specific fields
+  downloadUrl?: string;
+  fileSize?: string;
+  fileFormat?: string;
+
+  // SEO fields
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
+
   // Backward compatibility
   category?: CategoryType; // Keep for migration compatibility
 }

@@ -2,8 +2,8 @@
  * @jest-environment node
  */
 
-import { GET } from "../content/[type]/route";
 import { NextRequest } from "next/server";
+import { GET } from "../content/[type]/route";
 
 // Mock the file system operations
 jest.mock("fs", () => ({
@@ -15,7 +15,7 @@ jest.mock("fs", () => ({
           type: "portfolio",
           title: "Test Portfolio Item",
           description: "Test description",
-          category: "web",
+          category: "develop",
           tags: ["react", "typescript"],
           status: "published",
           priority: 100,
@@ -26,7 +26,7 @@ jest.mock("fs", () => ({
           type: "portfolio",
           title: "Another Portfolio Item",
           description: "Another description",
-          category: "mobile",
+          category: "video",
           tags: ["react-native", "javascript"],
           status: "published",
           priority: 90,
@@ -58,7 +58,7 @@ describe("/api/content/[type]", () => {
 
   it("should filter content by category", async () => {
     const request = new NextRequest(
-      "http://localhost:3000/api/content/portfolio?category=web",
+      "http://localhost:3000/api/content/portfolio?category=develop",
     );
     const context = { params: Promise.resolve({ type: "portfolio" }) };
 
@@ -67,7 +67,7 @@ describe("/api/content/[type]", () => {
 
     expect(response.status).toBe(200);
     expect(data.data).toHaveLength(1);
-    expect(data.data[0].category).toBe("web");
+    expect(data.data[0].categories).toContain("develop");
   });
 
   it("should filter content by tags", async () => {

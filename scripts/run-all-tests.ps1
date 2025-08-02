@@ -1,11 +1,3 @@
-# 全テスト実行スクリプト (PowerShell) - 最適化版
-# samuido website - 包括的品質チェック
-# 
-# 実行順序の最適化:
-# 1. Prettier (コード整形) → 2. Lint-Staged (Husky同等) → 3. TypeScript (型チェック)
-# 4. ESLint (リント) → 5. Build (ビルド) → 6. Jest (単体テスト) 
-# 7. Playwright (E2E) → 8. Lighthouse (パフォーマンス)
-
 Write-Host "=== samuido Website - All Tests Start ===" -ForegroundColor Green
 Write-Host "Execution Time: $(Get-Date)" -ForegroundColor Gray
 Write-Host "Test execution with full error reporting and early termination on excessive errors" -ForegroundColor Gray
@@ -17,12 +9,10 @@ $errorCount = 0
 $warningCount = 0
 $maxErrors = 50
 
-# テスト実行時の環境変数設定
 $env:NODE_ENV = "test"
 $env:NEXT_TELEMETRY_DISABLED = "1"
 $env:CI = "true"
 
-# エラーカウント関数
 function Count-Errors {
     param([string]$output)
     $errors = ($output | Select-String -Pattern "error|Error|ERROR" -AllMatches).Matches.Count
@@ -30,7 +20,6 @@ function Count-Errors {
     return @{ Errors = $errors; Warnings = $warnings }
 }
 
-# エラー数チェック関数
 function Check-ErrorLimit {
     param([int]$currentErrors)
     if ($currentErrors -gt $script:maxErrors) {
@@ -43,7 +32,6 @@ function Check-ErrorLimit {
     }
 }
 
-# 1. Prettier Format Check & Auto-Fix (最初に実行してコードを整形)
 Write-Host "1. Prettier Format Check & Auto-Fix Running..." -ForegroundColor Yellow
 try {
     $formatCheckOutput = npm run format:check 2>&1 | Out-String
@@ -84,7 +72,6 @@ try {
 }
 Write-Host ""
 
-# 2. Lint-Staged Check (Huskyと同じ処理を実行)
 Write-Host "2. Lint-Staged Check Running..." -ForegroundColor Yellow
 try {
     $lintStagedOutput = npx lint-staged --allow-empty 2>&1 | Out-String
@@ -100,7 +87,6 @@ try {
         exit 1
     }
     
-    # 警告がある場合は表示
     $counts = Count-Errors $lintStagedOutput
     if ($counts.Warnings -gt 0) {
         Write-Host "Lint-Staged Warnings:" -ForegroundColor Yellow
@@ -121,7 +107,6 @@ try {
 }
 Write-Host ""
 
-# 3. TypeScript Type Check (早期にタイプエラーを検出)
 Write-Host "3. TypeScript Type Check Running..." -ForegroundColor Yellow
 try {
     $typeCheckOutput = npm run type-check --silent 2>&1
@@ -139,7 +124,6 @@ try {
 }
 Write-Host ""
 
-# 4. ESLint Check (TypeScriptチェック後にリントを実行)
 Write-Host "4. ESLint Check Running..." -ForegroundColor Yellow
 try {
     $eslintOutput = npm run lint --silent 2>&1
@@ -157,10 +141,19 @@ try {
 }
 Write-Host ""
 
-# 5. Build Test (コード品質チェック後にビルドテスト)
 Write-Host "5. Build Test Running..." -ForegroundColor Yellow
+Write-Host "   Ensuring development server is stopped for build test..." -ForegroundColor Gray
 try {
-    # 一時的にエラーアクションを変更
+    # Stop any running development servers on port 3000
+    $devProcesses = Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object {
+        $_.ProcessName -eq "node" -and (netstat -ano | Select-String ":3000.*$($_.Id)")
+    }
+    if ($devProcesses) {
+        Write-Host "   Stopping development server processes..." -ForegroundColor Gray
+        $devProcesses | Stop-Process -Force -ErrorAction SilentlyContinue
+        Start-Sleep -Seconds 2
+    }
+    
     $originalErrorAction = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     
@@ -176,7 +169,6 @@ try {
         $testResults += "Build: FAIL"
         Write-Host "Build: FAIL" -ForegroundColor Red
         Write-Host "Build Error Details:" -ForegroundColor Red
-        # エラーの場合のみ詳細を表示
         npm run build
         exit 1
     }
@@ -189,7 +181,6 @@ try {
 }
 Write-Host ""
 
-# 6. Jest Unit Tests (ビルド成功後に単体テスト)
 Write-Host "6. Jest Unit Tests Running..." -ForegroundColor Yellow
 try {
     $jestOutput = npm run test --silent 2>&1
@@ -207,19 +198,27 @@ try {
 }
 Write-Host ""
 
-# 7. Playwright E2E Tests (最後に統合テスト) - 並列実行最適化
 Write-Host "7. Playwright E2E Tests Running..." -ForegroundColor Yellow
-Write-Host "   Using parallel workers for faster execution..." -ForegroundColor Gray
+Write-Host "   Ensuring development server is stopped before E2E tests..." -ForegroundColor Gray
 try {
-    # 並列実行とタイムアウト設定を最適化
+    # Stop any running development servers on port 3000
+    $devProcesses = Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object {
+        $_.ProcessName -eq "node" -and (netstat -ano | Select-String ":3000.*$($_.Id)")
+    }
+    if ($devProcesses) {
+        Write-Host "   Stopping development server processes..." -ForegroundColor Gray
+        $devProcesses | Stop-Process -Force -ErrorAction SilentlyContinue
+        Start-Sleep -Seconds 3
+    }
+    
+    Write-Host "   Using 10+ parallel workers with quiet mode..." -ForegroundColor Gray
     $playwrightOutput = npm run test:e2e:fast --silent 2>&1
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Playwright Error Details:" -ForegroundColor Red
         Write-Host $playwrightOutput -ForegroundColor Red
         
-        # 失敗したテストの詳細を表示
         Write-Host "Running failed tests with detailed output..." -ForegroundColor Yellow
-        npx playwright test --workers=2 --timeout=30000 --reporter=list --only-failed
+        npx playwright test --workers=10 --timeout=90000 --reporter=list
         
         throw "Playwright E2E tests failed with exit code $LASTEXITCODE"
     }
@@ -232,9 +231,13 @@ try {
 }
 Write-Host ""
 
-# 8. Lighthouse Performance Test (最終的なパフォーマンステスト)
 Write-Host "8. Lighthouse Performance Test Running..." -ForegroundColor Yellow
+Write-Host "   Starting development server for performance testing..." -ForegroundColor Gray
 try {
+    # Start development server for Lighthouse test
+    $devServerJob = Start-Job -ScriptBlock { npm run dev }
+    Start-Sleep -Seconds 10  # Wait for server to start
+    
     $lighthouseOutput = npm run lighthouse --silent 2>&1
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Lighthouse Error Details:" -ForegroundColor Red
@@ -247,10 +250,22 @@ try {
     $testResults += "Lighthouse: FAIL"
     Write-Host "Lighthouse: FAIL" -ForegroundColor Red
     exit 1
+} finally {
+    # Clean up development server
+    if ($devServerJob) {
+        Stop-Job $devServerJob -ErrorAction SilentlyContinue
+        Remove-Job $devServerJob -ErrorAction SilentlyContinue
+    }
+    # Stop any remaining development server processes
+    $devProcesses = Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object {
+        $_.ProcessName -eq "node" -and (netstat -ano | Select-String ":3000.*$($_.Id)")
+    }
+    if ($devProcesses) {
+        $devProcesses | Stop-Process -Force -ErrorAction SilentlyContinue
+    }
 }
 Write-Host ""
 
-# Results Summary
 Write-Host "=== Test Results Summary ===" -ForegroundColor Green
 foreach ($result in $testResults) {
     Write-Host $result

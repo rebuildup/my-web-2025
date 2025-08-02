@@ -340,7 +340,7 @@ export default function SequentialPngPreview() {
                         width={64}
                         height={64}
                         className="w-16 h-16 object-contain border border-foreground/20 rounded"
-                        unoptimized={true}
+                        unoptimized
                       />
                       <div>
                         <div className="font-medium">フレーム {index + 1}</div>

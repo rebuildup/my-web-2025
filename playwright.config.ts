@@ -12,23 +12,29 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Optimize workers for parallel execution */
-  workers: process.env.CI ? 4 : Math.min(6, cpus().length),
+  /* Optimize workers for parallel execution - minimum 10 workers */
+  workers: process.env.CI
+    ? Math.max(10, cpus().length)
+    : Math.max(10, cpus().length),
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: process.env.CI ? [["html"], ["github"]] : "html",
+  /* Use quiet mode for less verbose output */
+  quiet: true,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: "http://localhost:3000",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: "on-first-retry",
+    trace: "retain-on-failure",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
   },
 
-  /* Global test timeout - optimized for faster execution */
-  timeout: 30000, // 30 seconds per test (reduced from 90s)
+  /* Global test timeout - optimized for speed */
+  timeout: 90000, // 90 seconds per test (increased for parallel execution)
   expect: {
-    timeout: 10000, // 10 seconds for expect assertions (reduced from 15s)
+    timeout: 20000, // 20 seconds for expect assertions (increased for parallel execution)
   },
 
   /* Configure projects for major browsers - optimized for parallel execution */
@@ -43,6 +49,11 @@ export default defineConfig({
             "--disable-dev-shm-usage",
             "--disable-extensions",
             "--no-sandbox",
+            "--disable-background-timer-throttling",
+            "--disable-backgrounding-occluded-windows",
+            "--disable-renderer-backgrounding",
+            "--disable-features=TranslateUI",
+            "--disable-ipc-flooding-protection",
           ],
         },
       },
@@ -85,8 +96,8 @@ export default defineConfig({
   webServer: {
     command: "npm run dev",
     url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
-    timeout: 60000, // 1 minute for server startup (reduced from 2 minutes)
+    reuseExistingServer: true, // Always reuse existing server
+    timeout: 120000, // 2 minutes for server startup
     stdout: process.env.CI ? "ignore" : "pipe",
     stderr: process.env.CI ? "ignore" : "pipe",
     env: {

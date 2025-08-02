@@ -1,0 +1,190 @@
+# Page snapshot
+
+```yaml
+- main:
+  - main:
+    - navigation "Breadcrumb":
+      - list:
+        - listitem:
+          - link "Home":
+            - /url: /
+        - listitem: /
+        - listitem:
+          - link "Portfolio":
+            - /url: /portfolio
+        - listitem: /
+        - listitem: All Projects
+    - heading "All Projects" [level=1]
+    - paragraph: 全ての作品を時系列・カテゴリ・技術で絞り込み表示。 フィルターとソート機能で効率的に作品を探索できます。
+    - text: 45 / 45 projects Updated 2025/8/2
+    - textbox "Search projects..."
+    - button "Filters"
+    - text: "Sort by:"
+    - combobox:
+      - option "Select an option" [disabled]
+      - option "Updated Date" [selected]
+      - option "Created Date"
+      - option "Title (A-Z)"
+      - option "Priority"
+    - button "Sort descending": Descending
+    - text: Sorted by Updated Date (descending)
+    - button "View details for 期末テストお疲れ様でした 1Q":
+      - img "期末テストお疲れ様でした 1Q"
+      - heading "期末テストお疲れ様でした 1Q" [level=2]
+      - paragraph: video
+      - paragraph: 今回もテストが終わった後に作りました
+      - time: 2025/7/30
+    - button "View details for 【Aeエフェクトプラグイン】LiteGlow":
+      - img "【Aeエフェクトプラグイン】LiteGlow"
+      - heading "【Aeエフェクトプラグイン】LiteGlow" [level=2]
+      - paragraph: develop
+      - paragraph: Aeでシンプルなグローを実現するエフェクトプラグインです DeepGlowが高かったので自分で作りました
+      - time: 2025/7/30
+    - button "View details for Ae縁取りエフェクト Border":
+      - img "Ae縁取りエフェクト Border"
+      - heading "Ae縁取りエフェクト Border" [level=2]
+      - paragraph: develop
+      - paragraph: AfterEffectsで縁取りを描画するエフェクトです
+      - time: 2025/7/30
+    - button "View details for MultiSlicer":
+      - img "MultiSlicer"
+      - heading "MultiSlicer" [level=2]
+      - paragraph: develop
+      - paragraph: Aeで画像をスライスするエフェクトプラグインです
+      - time: 2025/7/30
+    - 'button "View details for デザイン練習 #001"':
+      - 'img "デザイン練習 #001"'
+      - 'heading "デザイン練習 #001" [level=2]'
+      - paragraph: design
+      - paragraph: なにも考えずに手癖で作っています
+      - time: 2025/7/30
+    - button "View details for 手書きアニメーション":
+      - img "手書きアニメーション"
+      - heading "手書きアニメーション" [level=2]
+      - paragraph: design
+      - paragraph: フォトショを使って初めて手書きアニメーションを作成しました。
+      - time: 2025/7/28
+    - button "View details for Aeエフェクトプラグイン Stretch":
+      - img "Aeエフェクトプラグイン Stretch"
+      - heading "Aeエフェクトプラグイン Stretch" [level=2]
+      - paragraph: develop
+      - paragraph: AeでAviutlの引き伸ばしを再現しました。これでC++が出来ると自称していいのでしょうか...
+      - time: 2025/7/28
+    - button "View details for コンピュータ部 勧誘チラシ":
+      - img "コンピュータ部 勧誘チラシ"
+      - heading "コンピュータ部 勧誘チラシ" [level=2]
+      - paragraph: design
+      - paragraph: コンピュータ部の勧誘チラシを作成しました。
+      - time: 2025/7/28
+    - button "View details for コードタイプ風映像素材":
+      - img "コードタイプ風映像素材"
+      - heading "コードタイプ風映像素材" [level=2]
+      - paragraph: design
+      - paragraph: p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。
+      - time: 2025/7/28
+    - button "View details for Aeエフェクトプラグイン Stretch v2":
+      - img "Aeエフェクトプラグイン Stretch v2"
+      - heading "Aeエフェクトプラグイン Stretch v2" [level=2]
+      - paragraph: develop
+      - paragraph: AeエフェクトプラグインStretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。Xの投稿が伸びてくれました。
+      - time: 2025/7/28
+    - button "View details for タイピングゲーム ProtoType":
+      - img "タイピングゲーム ProtoType"
+      - heading "タイピングゲーム ProtoType" [level=2]
+      - paragraph: develop
+      - paragraph: WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます
+      - time: 2025/7/28
+    - button "View details for ProtoType パンフレット":
+      - img "ProtoType パンフレット"
+      - heading "ProtoType パンフレット" [level=2]
+      - paragraph: design
+      - paragraph: 久しぶりのデザイン。過去に作った素材を使っています。
+      - time: 2025/7/28
+    - button "View details for 【二次創作】雪糅 文字pv":
+      - img "【二次創作】雪糅 文字pv"
+      - heading "【二次創作】雪糅 文字pv" [level=2]
+      - paragraph: video
+      - paragraph: サビがとても好き。落ち着いた映像が出来上がりました。
+      - time: 2025/7/28
+    - button "View details for 【二次創作】花弁、それにまつわる音声 文字pv":
+      - img "【二次創作】花弁、それにまつわる音声 文字pv"
+      - heading "【二次創作】花弁、それにまつわる音声 文字pv" [level=2]
+      - paragraph: video
+      - paragraph: ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。
+      - time: 2025/7/28
+    - button "View details for テストお疲れ様でした 4Q":
+      - img "テストお疲れ様でした 4Q"
+      - heading "テストお疲れ様でした 4Q" [level=2]
+      - paragraph: video
+      - paragraph: 恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。
+      - time: 2025/7/28
+    - button "View details for Aeスクリプト Aulymo":
+      - img "Aeスクリプト Aulymo"
+      - heading "Aeスクリプト Aulymo" [level=2]
+      - paragraph: develop
+      - paragraph: Ae全自動リリックモーション「Aulymo」v2の動作説明動画です。PremiereProを初めてまともに使いました。あと、コンピュータ部のMacBookを借りました。
+      - time: 2025/7/28
+    - button "View details for Aeエフェクトプラグイン sep_color":
+      - img "Aeエフェクトプラグイン sep_color"
+      - heading "Aeエフェクトプラグイン sep_color" [level=2]
+      - paragraph: develop
+      - paragraph: 画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はStretchよりもよくなってます。
+      - time: 2025/7/28
+    - button "View details for 嘘と未来 文字pv":
+      - img "嘘と未来 文字pv"
+      - heading "嘘と未来 文字pv" [level=2]
+      - paragraph: video
+      - paragraph: ボカロ曲「嘘と未来/うわべ」の文字pvです
+      - time: 2025/7/28
+    - button "View details for ONESELF 二次創作":
+      - img "ONESELF 二次創作"
+      - heading "ONESELF 二次創作" [level=2]
+      - paragraph: video
+      - paragraph: TwinfieldさんのONESELFで文字pv(?)を作りました 満足
+      - time: 2025/7/28
+    - button "View details for ラプラスショコラ 二次創作":
+      - img "ラプラスショコラ 二次創作"
+      - heading "ラプラスショコラ 二次創作" [level=2]
+      - paragraph: video
+      - paragraph: 映像依頼の練習で5時間で作りました
+      - time: 2025/7/28
+    - button "View details for reel 2024":
+      - img "reel 2024"
+      - heading "reel 2024" [level=2]
+      - paragraph: video
+      - paragraph: 2024年に作った動画の総集編です
+      - time: 2025/7/28
+    - button "View details for Aulymo":
+      - img "Aulymo"
+      - heading "Aulymo" [level=2]
+      - paragraph: develop
+      - paragraph: Aeのスクリプトです 簡単にリリックモーションを作れます
+      - time: 2025/7/28
+    - button "View details for テストお疲れ様でした アニメーション":
+      - img "テストお疲れ様でした アニメーション"
+      - heading "テストお疲れ様でした アニメーション" [level=2]
+      - paragraph: video
+      - paragraph: テスト終わりに作りました
+      - time: 2025/7/28
+    - button "View details for まわる世界 文字pv":
+      - img "まわる世界 文字pv"
+      - heading "まわる世界 文字pv" [level=2]
+      - paragraph: video
+      - paragraph: 「まわる世界/飯澤遥土」の二次創作文字pvです。
+      - time: 2025/7/28
+    - navigation "Pagination Navigation":
+      - button "Go to previous page" [disabled]: Previous
+      - button "Go to page 1": "1"
+      - button "Go to page 2": "2"
+      - button "Go to next page": Next
+      - text: Page 1 of 2
+- button "⚡"
+- dialog "Cookie Settings":
+  - heading "Cookie Settings" [level=3]
+  - paragraph: We use cookies to improve your experience and analyze site usage. You can choose which cookies to accept.
+  - button "Customize"
+  - button "Reject All"
+  - button "Accept All"
+- button "📊"
+- alert
+```

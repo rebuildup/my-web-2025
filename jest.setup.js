@@ -66,6 +66,9 @@ beforeAll(() => {
         args[0].includes("Validation error for") ||
         args[0].includes("Portfolio data processing failed:") ||
         args[0].includes("Received NaN for the `children` attribute") ||
+        args[0].includes(
+          "Received `true` for a non-boolean attribute `unoptimized`",
+        ) ||
         args[0].includes("VideoDesignGallery Error") ||
         args[0].includes("Validation failed:") ||
         args[0].includes("Error creating markdown file:") ||

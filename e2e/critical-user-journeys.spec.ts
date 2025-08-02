@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import { error } from "console";
 
 test.describe("Critical User Journeys", () => {
   test.describe("Journey 1: Home → Portfolio → Detail view", () => {
@@ -24,7 +25,7 @@ test.describe("Critical User Journeys", () => {
       await portfolioItems.first().click();
 
       // Wait for navigation to complete
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(500);
 
       // Check if we're on a portfolio detail page
       const currentUrl = page.url();
@@ -65,7 +66,7 @@ test.describe("Critical User Journeys", () => {
                 console.log("Skipping portfolio detail navigation test");
                 return;
               }
-            } catch (error) {
+            } catch {
               // Skip the detail page test if direct navigation fails
               console.log(
                 "Direct navigation failed, skipping portfolio detail navigation test",
@@ -111,7 +112,7 @@ test.describe("Critical User Journeys", () => {
             /React|Unity|Motion|Project/,
           );
         }
-      } catch (error) {
+      } catch {
         console.log(
           "Portfolio detail page loaded with some issues, but continuing test",
         );
@@ -122,10 +123,12 @@ test.describe("Critical User Journeys", () => {
         let mainFound = false;
         for (let i = 0; i < 3; i++) {
           try {
-            await expect(page.locator("main")).toBeVisible({ timeout: 3000 });
+            await expect(page.locator("main").first()).toBeVisible({
+              timeout: 3000,
+            });
             mainFound = true;
             break;
-          } catch (error) {
+          } catch {
             console.log(
               `Main element check attempt ${i + 1} failed, retrying...`,
             );
@@ -146,7 +149,7 @@ test.describe("Critical User Journeys", () => {
       const developFilter = page.locator('[data-testid="filter-develop"]');
       if (await developFilter.isVisible()) {
         await developFilter.click();
-        await page.waitForTimeout(500);
+        await page.waitForTimeout(300);
 
         const developItems = page.locator(
           '[data-testid="portfolio-item"][data-category="develop"]',
@@ -160,7 +163,7 @@ test.describe("Critical User Journeys", () => {
       const allFilter = page.locator('[data-testid="filter-all"]');
       if (await allFilter.isVisible()) {
         await allFilter.click();
-        await page.waitForTimeout(500);
+        await page.waitForTimeout(300);
 
         const allItems = page.locator('[data-testid="portfolio-item"]');
         if (await allItems.first().isVisible()) {
@@ -372,7 +375,7 @@ test.describe("Critical User Journeys", () => {
         });
 
         contactPageLoaded = true;
-      } catch (error) {
+      } catch {
         console.log(
           "Link click failed, trying direct navigation:",
           error instanceof Error ? error.message : String(error),
@@ -387,7 +390,7 @@ test.describe("Critical User Journeys", () => {
           });
 
           contactPageLoaded = true;
-        } catch (directError) {
+        } catch {
           console.log("Direct navigation failed, checking current state");
           const currentUrl = page.url();
           if (currentUrl.includes("/contact")) {
@@ -422,7 +425,7 @@ test.describe("Critical User Journeys", () => {
           });
           headerFound = true;
           break;
-        } catch (error) {
+        } catch {
           console.log(`Header check attempt ${i + 1} failed, retrying...`);
           await page.waitForTimeout(1000);
         }
@@ -448,7 +451,7 @@ test.describe("Critical User Journeys", () => {
           });
           formFound = true;
           break;
-        } catch (error) {
+        } catch {
           console.log(`Form check attempt ${i + 1} failed, retrying...`);
           await page.waitForTimeout(1000);
         }
@@ -473,14 +476,14 @@ test.describe("Critical User Journeys", () => {
       await page.waitForLoadState("domcontentloaded");
 
       // Check if contact form exists with retry
-      let contactForm = page.locator('[data-testid="contact-form"]');
+      const contactForm = page.locator('[data-testid="contact-form"]');
 
       // Wait for form to be available
       for (let i = 0; i < 3; i++) {
         try {
           await expect(contactForm).toBeVisible({ timeout: 5000 });
           break;
-        } catch (error) {
+        } catch {
           console.log(
             `Contact form visibility check attempt ${i + 1} failed, retrying...`,
           );
@@ -615,7 +618,7 @@ test.describe("Critical User Journeys", () => {
           if (!isDevTool) {
             await expect(focusedElement.first()).toBeVisible();
           }
-        } catch (error) {
+        } catch {
           // Skip if element evaluation fails
           console.log(
             "Skipping keyboard navigation check due to dev tools interference",
@@ -666,7 +669,7 @@ test.describe("Critical User Journeys", () => {
         // Check if offline page loads
         const offlineContent = page.locator('h1:has-text("オフライン")');
         await expect(offlineContent).toBeVisible({ timeout: 5000 });
-      } catch (error) {
+      } catch {
         // If offline page doesn't exist, check for offline message
         const offlineMessage = page.locator('[data-testid="offline-message"]');
         const isVisible = await offlineMessage.isVisible().catch(() => false);
@@ -738,13 +741,13 @@ test.describe("Critical User Journeys", () => {
             waitUntil: "domcontentloaded", // Less strict than 'load'
           });
           successfulNavigations++;
-        } catch (error) {
+        } catch {
           console.log(`Navigation to ${pagePath} timed out, continuing...`);
           // Try a simpler page to ensure at least one navigation succeeds
           try {
             await page.goto("/about", { timeout: 15000 });
             successfulNavigations++;
-          } catch (fallbackError) {
+          } catch {
             console.log("Fallback navigation also failed");
           }
         }

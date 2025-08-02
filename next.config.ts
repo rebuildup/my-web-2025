@@ -57,7 +57,7 @@ const nextConfig: NextConfig = {
 
   // Bundle analyzer (development only)
   ...(process.env.ANALYZE === "true" && {
-    webpack: (config: Configuration) => {
+    webpack: (config: { plugins?: unknown[] }) => {
       // Dynamic import for bundle analyzer to avoid require()
       const BundleAnalyzerPlugin = eval('require("@next/bundle-analyzer")')({
         enabled: true,
