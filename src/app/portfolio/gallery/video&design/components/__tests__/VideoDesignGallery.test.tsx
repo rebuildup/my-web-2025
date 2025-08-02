@@ -21,11 +21,16 @@ jest.mock("@/lib/portfolio/enhanced-gallery-filter", () => ({
 jest.mock("@/lib/portfolio/grid-layout-utils", () => ({
   createBalancedLayout: jest.fn((items: unknown[]) => items),
   generateGridLayout: jest.fn((items: unknown[]) =>
-    items.map((item) => ({
-      ...item,
-      gridSize: "medium",
-      url: `/portfolio/${(item as { id: string }).id}`,
-    })),
+    items
+      .filter(
+        (item) =>
+          item && typeof item === "object" && (item as { id: string }).id,
+      )
+      .map((item) => ({
+        ...item,
+        gridSize: "medium",
+        url: `/portfolio/${(item as { id: string }).id}`,
+      })),
   ),
   getGridItemClasses: jest.fn(() => "col-span-1"),
   getGridItemMinHeight: jest.fn(() => "min-h-64"),

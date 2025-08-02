@@ -138,7 +138,11 @@ export function VideoDesignGallery({
             return false;
           }
 
-          if (!item.id || typeof item.id !== "string") {
+          if (
+            !item.id ||
+            typeof item.id !== "string" ||
+            item.id.trim() === ""
+          ) {
             console.warn(
               "VideoDesignGallery: Item missing valid id, skipping:",
               item,
@@ -146,12 +150,34 @@ export function VideoDesignGallery({
             return false;
           }
 
-          if (!item.title || typeof item.title !== "string") {
+          if (
+            !item.title ||
+            typeof item.title !== "string" ||
+            item.title.trim() === ""
+          ) {
             console.warn(
               "VideoDesignGallery: Item missing valid title, skipping:",
               item,
             );
             return false;
+          }
+
+          // Validate priority (should be a number)
+          if (typeof item.priority !== "number" || isNaN(item.priority)) {
+            console.warn(
+              "VideoDesignGallery: Item has invalid priority, setting default:",
+              item,
+            );
+            item.priority = 50; // Set default priority
+          }
+
+          // Validate createdAt (should be a valid date string)
+          if (!item.createdAt || isNaN(new Date(item.createdAt).getTime())) {
+            console.warn(
+              "VideoDesignGallery: Item has invalid createdAt, setting default:",
+              item,
+            );
+            item.createdAt = new Date().toISOString(); // Set current date as default
           }
 
           // Validate category structure
@@ -503,12 +529,14 @@ export function VideoDesignGallery({
       {process.env.NODE_ENV === "development" && performanceMetrics && (
         <div className="bg-gray-100 border border-gray-300 p-3 text-xs">
           <div className="flex items-center space-x-4">
-            <span>Items: {performanceMetrics.itemCount}</span>
+            <span>Items: {String(performanceMetrics.itemCount)}</span>
             <span>
-              Filter: {(performanceMetrics.filterTime || 0).toFixed(2)}ms
+              Filter: {String((performanceMetrics.filterTime || 0).toFixed(2))}
+              ms
             </span>
             <span>
-              Render: {(performanceMetrics.renderTime || 0).toFixed(2)}ms
+              Render: {String((performanceMetrics.renderTime || 0).toFixed(2))}
+              ms
             </span>
             <span>Cache: {enableCaching ? "ON" : "OFF"}</span>
             <span>Dedup: {deduplication ? "ON" : "OFF"}</span>
@@ -626,25 +654,27 @@ export function VideoDesignGallery({
             className="noto-sans-jp-light text-sm text-foreground"
             aria-live="polite"
           >
-            {Math.max(
-              0,
-              gridItems.filter((item) => item.category !== "placeholder")
-                .length,
+            {String(
+              Math.max(
+                0,
+                gridItems.filter((item) => item.category !== "placeholder")
+                  .length,
+              ),
             )}{" "}
             projects found
           </p>
           <div className="flex items-center space-x-4 text-xs text-foreground opacity-75">
             {(videoDesignStats.videoOnly || 0) > 0 && (
-              <span>Video: {videoDesignStats.videoOnly || 0}</span>
+              <span>Video: {String(videoDesignStats.videoOnly || 0)}</span>
             )}
             {(videoDesignStats.designOnly || 0) > 0 && (
-              <span>Design: {videoDesignStats.designOnly || 0}</span>
+              <span>Design: {String(videoDesignStats.designOnly || 0)}</span>
             )}
             {(videoDesignStats.videoAndDesign || 0) > 0 && (
-              <span>V&D: {videoDesignStats.videoAndDesign || 0}</span>
+              <span>V&D: {String(videoDesignStats.videoAndDesign || 0)}</span>
             )}
             {(videoDesignStats.multiCategory || 0) > 0 && (
-              <span>Multi: {videoDesignStats.multiCategory || 0}</span>
+              <span>Multi: {String(videoDesignStats.multiCategory || 0)}</span>
             )}
           </div>
         </div>
@@ -794,7 +824,7 @@ function GridItemComponent({
             </div>
             <div className="bg-black bg-opacity-50 px-2 py-1 rounded">
               <span className="noto-sans-jp-light text-xs text-white">
-                {item.gridSize}
+                {String(item.gridSize)}
               </span>
             </div>
           </div>
@@ -834,7 +864,7 @@ function GridItemComponent({
         </div>
 
         {/* Priority Indicator */}
-        {item.priority >= 80 && (
+        {(Number(item.priority) || 0) >= 80 && (
           <div className="absolute top-2 left-2 bg-accent text-background px-2 py-1 text-xs font-medium">
             Featured
           </div>

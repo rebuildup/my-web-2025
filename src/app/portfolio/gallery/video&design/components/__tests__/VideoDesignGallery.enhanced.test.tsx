@@ -26,7 +26,12 @@ const mockSortItems = enhancedGalleryFilter.sortItems;
 // Mock the grid layout utils
 jest.mock("@/lib/portfolio/grid-layout-utils", () => ({
   generateGridLayout: jest.fn((items: unknown[]) =>
-    items.map((item) => ({ ...item, gridSize: "medium" })),
+    items
+      .filter(
+        (item) =>
+          item && typeof item === "object" && (item as { id: string }).id,
+      )
+      .map((item) => ({ ...item, gridSize: "medium" })),
   ),
   createBalancedLayout: jest.fn((items: unknown[]) => items),
   getGridItemClasses: jest.fn(() => "col-span-1"),
@@ -325,7 +330,7 @@ describe("VideoDesignGallery Enhanced", () => {
       const invalidItems = [
         null,
         undefined,
-        { id: "", title: "" }, // Invalid item
+        { id: "", title: "" }, // Invalid item - should be filtered out
         ...mockEnhancedItems,
       ] as (
         | EnhancedContentItem

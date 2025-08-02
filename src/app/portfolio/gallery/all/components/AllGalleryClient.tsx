@@ -132,7 +132,10 @@ export function AllGalleryClient({
   }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div
+      className="min-h-screen bg-background text-foreground"
+      data-testid="all-gallery-client"
+    >
       <main id="main-content" role="main" className="py-10">
         <div className="container-system">
           <div className="space-y-10">

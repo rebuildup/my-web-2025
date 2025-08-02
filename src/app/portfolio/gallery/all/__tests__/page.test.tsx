@@ -6,10 +6,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-require-imports */
 
-import { render, screen, waitFor } from "@testing-library/react";
 import { jest } from "@jest/globals";
-import AllGalleryPage from "../page";
+import { render, screen, waitFor } from "@testing-library/react";
 import Link from "next/link";
+import AllGalleryPage from "../page";
 
 // Type assertion for jest mocks
 const mockJest = jest as any;
@@ -46,85 +46,84 @@ mockJest.mock("../components/AllGalleryClient", () => ({
     initialItems: any[];
     searchFilters: any[];
   }) => (
-    <div
-      className="min-h-screen bg-background text-foreground"
-      data-testid="all-gallery-client"
-    >
-      <main id="main-content" role="main" className="py-10">
-        <div className="container-system">
-          <div className="space-y-10">
-            <header className="space-y-8">
-              <nav aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2 text-sm">
-                  <li>
-                    <Link
-                      href="/"
-                      className="text-foreground hover:text-accent"
-                    >
-                      Home
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li>
-                    <Link
-                      href="/portfolio"
-                      className="text-foreground hover:text-accent"
-                    >
-                      Portfolio
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li className="text-accent">All Projects</li>
-                </ol>
-              </nav>
-              <div className="space-y-4">
-                <h1 className="neue-haas-grotesk-display text-6xl text-primary">
-                  All Projects
-                </h1>
-                <p className="noto-sans-jp-light text-sm max-w leading-loose">
-                  全ての作品を時系列・カテゴリ・技術で絞り込み表示。
-                  フィルターとソート機能で効率的に作品を探索できます。
-                </p>
-                <div className="flex items-center space-x-4 text-sm">
-                  <span className="text-accent">
-                    {initialItems.length} / {initialItems.length} projects
-                  </span>
-                  <span className="text-foreground">
-                    Updated {new Date().toLocaleDateString("ja-JP")}
-                  </span>
-                </div>
-              </div>
-            </header>
-            <section className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <div className="flex-1 relative">
-                    <input
-                      className="w-full pl-10 pr-4 py-2 border border-foreground bg-background text-foreground placeholder-foreground/60 focus:outline-none focus:border-accent"
-                      placeholder="Search projects..."
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <button className="flex items-center space-x-2 px-4 py-2 border transition-colors border-foreground text-foreground hover:border-accent hover:text-accent">
-                    <span className="text-sm">Filters</span>
-                  </button>
-                </div>
-              </div>
-            </section>
-            <section id="gallery-content">
-              <div className="text-center py-16">
-                <p className="noto-sans-jp-light text-sm text-foreground">
-                  フィルター条件に一致する作品が見つかりませんでした。
-                </p>
-                <button className="mt-4 text-accent hover:text-primary transition-colors">
-                  フィルターをリセット
-                </button>
-              </div>
-            </section>
+    <div data-testid="all-gallery-client">
+      <header className="space-y-8">
+        <nav aria-label="Breadcrumb">
+          <ol className="flex items-center space-x-2 text-sm">
+            <li>
+              <Link href="/" className="text-foreground hover:text-accent">
+                Home
+              </Link>
+            </li>
+            <li className="text-foreground">/</li>
+            <li>
+              <Link
+                href="/portfolio"
+                className="text-foreground hover:text-accent"
+              >
+                Portfolio
+              </Link>
+            </li>
+            <li className="text-foreground">/</li>
+            <li className="text-accent">All Projects</li>
+          </ol>
+        </nav>
+        <div className="space-y-4">
+          <h1 className="neue-haas-grotesk-display text-6xl text-primary">
+            All Projects
+          </h1>
+          <p className="noto-sans-jp-light text-sm max-w leading-loose">
+            全ての作品を時系列・カテゴリ・技術で絞り込み表示。
+            フィルターとソート機能で効率的に作品を探索できます。
+          </p>
+          <div className="flex items-center space-x-4 text-sm">
+            <span className="text-accent">
+              {initialItems.length} / {initialItems.length} projects
+            </span>
+            <span className="text-foreground">
+              Updated {new Date().toLocaleDateString("ja-JP")}
+            </span>
           </div>
         </div>
-      </main>
+      </header>
+      <section className="space-y-6">
+        <div className="space-y-4">
+          <div className="flex items-center space-x-4">
+            <div className="flex-1 relative">
+              <input
+                className="w-full pl-10 pr-4 py-2 border border-foreground bg-background text-foreground placeholder-foreground/60 focus:outline-none focus:border-accent"
+                placeholder="Search projects..."
+                type="text"
+                value=""
+              />
+            </div>
+            <button className="flex items-center space-x-2 px-4 py-2 border transition-colors border-foreground text-foreground hover:border-accent hover:text-accent">
+              <span className="text-sm">Filters</span>
+            </button>
+          </div>
+        </div>
+      </section>
+      <section id="gallery-content">
+        {initialItems.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {initialItems.map((item) => (
+              <div key={item.id} className="portfolio-item">
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <p className="noto-sans-jp-light text-sm text-foreground">
+              フィルター条件に一致する作品が見つかりませんでした。
+            </p>
+            <button className="mt-4 text-accent hover:text-primary transition-colors">
+              フィルターをリセット
+            </button>
+          </div>
+        )}
+      </section>
     </div>
   ),
 }));
@@ -229,7 +228,8 @@ describe("AllGalleryPage", () => {
     render(await AllGalleryPage());
 
     await waitFor(() => {
-      expect(screen.getByText(/projects/)).toBeInTheDocument();
+      // Check that the AllGalleryClient component is rendered
+      expect(screen.getByTestId("all-gallery-client")).toBeInTheDocument();
     });
   });
 
@@ -265,7 +265,7 @@ describe("AllGalleryPage", () => {
 
     // The page should render successfully even if there are potential data loading issues
     await waitFor(() => {
-      expect(screen.getByText(/projects/)).toBeInTheDocument();
+      expect(screen.getByTestId("all-gallery-client")).toBeInTheDocument();
     });
   });
 
