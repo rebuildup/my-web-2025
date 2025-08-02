@@ -253,14 +253,14 @@ try {
         Start-Sleep -Seconds 3
     }
     
-    Write-Host "   Using 10+ parallel workers with quiet mode..." -ForegroundColor Gray
-    $playwrightOutput = npm run test:e2e:fast --silent 2>&1
+    Write-Host "   Running working E2E tests with timeout=30000ms..." -ForegroundColor Gray
+    $playwrightOutput = npx playwright test --timeout=30000 --reporter=list 2>&1
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Playwright Error Details:" -ForegroundColor Red
         Write-Host $playwrightOutput -ForegroundColor Red
         
         Write-Host "Running failed tests with detailed output..." -ForegroundColor Yellow
-        npx playwright test --workers=10 --timeout=90000 --reporter=list
+        npx playwright test --timeout=30000 --reporter=list
         
         throw "Playwright E2E tests failed with exit code $LASTEXITCODE"
     }

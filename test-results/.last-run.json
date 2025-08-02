@@ -1,29 +1,4 @@
 {
-  "status": "interrupted",
-  "failedTests": [
-    "ddd864604af8a6a0198f-139e58770dd18fb00c31",
-    "fbf4e0d1f9f42e2ff006-c0cff478421350104057",
-    "fbf4e0d1f9f42e2ff006-1f93cff5ae06bd88381a",
-    "fbf4e0d1f9f42e2ff006-94e937c9f2ca3c549245",
-    "fbf4e0d1f9f42e2ff006-501542f21e328b068ed6",
-    "fbf4e0d1f9f42e2ff006-46a50e710a1de38b58cb",
-    "fbf4e0d1f9f42e2ff006-09feea7a6a92d0933788",
-    "fbf4e0d1f9f42e2ff006-139174344402f0a3e970",
-    "fbf4e0d1f9f42e2ff006-614054e84caffe46cb0f",
-    "fbf4e0d1f9f42e2ff006-3e74b023eb78d0646307",
-    "fbf4e0d1f9f42e2ff006-2038d0d8fc401198f92f",
-    "fbf4e0d1f9f42e2ff006-5f7ede99118f86e0db83",
-    "fbf4e0d1f9f42e2ff006-ce41db1997a3403bbbda",
-    "fbf4e0d1f9f42e2ff006-0dfced440355212e8fc5",
-    "2700cab64bee73625f0c-de41c18634ee6d5871c6",
-    "2700cab64bee73625f0c-76e2503ded448675c9f9",
-    "2700cab64bee73625f0c-5c606e53cd3481d9b992",
-    "2700cab64bee73625f0c-7203269c7a3487538258",
-    "2700cab64bee73625f0c-66d43c851bbe46e066cd",
-    "2700cab64bee73625f0c-bcf3a76b5eafe7baa745",
-    "2700cab64bee73625f0c-cc1aed99c4634c2a838e",
-    "3affe22ae27c5491a5ad-33cad637899f4bc2423c",
-    "3affe22ae27c5491a5ad-365090f48df4298cecf5",
-    "3affe22ae27c5491a5ad-2c82f1d0c9c8411873ac"
-  ]
+  "status": "passed",
+  "failedTests": []
 }
