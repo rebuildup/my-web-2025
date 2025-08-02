@@ -11,16 +11,90 @@ import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import Link from "next/link";
 import React from "react";
-import AllGalleryPage from "../page";
 
 // Type assertion for jest mocks
 const mockJest = jest as any;
 
-// Mock the portfolio data manager
+const mockPortfolioItems = [
+  {
+    id: "item-1",
+    type: "portfolio" as const,
+    title: "Test Project 1",
+    description: "Test description 1",
+    category: "develop",
+    tags: ["React", "TypeScript"],
+    technologies: ["React", "TypeScript"],
+    status: "published" as const,
+    priority: 50,
+    createdAt: "2024-01-01T00:00:00.000Z",
+    updatedAt: "2024-01-01T00:00:00.000Z",
+    content: "Test content 1",
+    thumbnail: "/test-image-1.jpg",
+    seo: {
+      title: "Test Project 1",
+      description: "Test description 1",
+      keywords: ["React", "TypeScript"],
+      ogImage: "/test-image-1.jpg",
+      twitterImage: "/test-image-1.jpg",
+      canonical: "/portfolio/item-1",
+      structuredData: {},
+    },
+  },
+  {
+    id: "item-2",
+    type: "portfolio" as const,
+    title: "Test Project 2",
+    description: "Test description 2",
+    category: "video",
+    tags: ["After Effects"],
+    technologies: ["After Effects"],
+    status: "published" as const,
+    priority: 60,
+    createdAt: "2024-01-02T00:00:00.000Z",
+    updatedAt: "2024-01-02T00:00:00.000Z",
+    content: "Test content 2",
+    thumbnail: "/test-image-2.jpg",
+    seo: {
+      title: "Test Project 2",
+      description: "Test description 2",
+      keywords: ["After Effects"],
+      ogImage: "/test-image-2.jpg",
+      twitterImage: "/test-image-2.jpg",
+      canonical: "/portfolio/item-2",
+      structuredData: {},
+    },
+  },
+];
+
+const mockSearchFilters = [
+  {
+    type: "category" as const,
+    options: [
+      { value: "develop", label: "開発", count: 1 },
+      { value: "video", label: "映像", count: 1 },
+    ],
+  },
+  {
+    type: "technology" as const,
+    options: [
+      { value: "React", label: "React", count: 1 },
+      { value: "After Effects", label: "After Effects", count: 1 },
+    ],
+  },
+];
+
+// Mock the portfolio data manager with proper mock functions
+const mockGetPortfolioData = mockJest.fn(() =>
+  Promise.resolve(mockPortfolioItems),
+);
+const mockGetSearchFilters = mockJest.fn(() =>
+  Promise.resolve(mockSearchFilters),
+);
+
 mockJest.mock("@/lib/portfolio/data-manager", () => ({
   portfolioDataManager: {
-    getPortfolioData: mockJest.fn().mockResolvedValue([]),
-    getSearchFilters: mockJest.fn().mockResolvedValue([]),
+    getPortfolioData: mockGetPortfolioData,
+    getSearchFilters: mockGetSearchFilters,
   },
 }));
 
@@ -191,86 +265,22 @@ mockJest.mock("../components/AllGalleryClient", () => ({
     ),
 }));
 
-const mockPortfolioItems = [
-  {
-    id: "item-1",
-    type: "portfolio" as const,
-    title: "Test Project 1",
-    description: "Test description 1",
-    category: "develop",
-    tags: ["React", "TypeScript"],
-    technologies: ["React", "TypeScript"],
-    status: "published" as const,
-    priority: 50,
-    createdAt: "2024-01-01T00:00:00.000Z",
-    updatedAt: "2024-01-01T00:00:00.000Z",
-    content: "Test content 1",
-    thumbnail: "/test-image-1.jpg",
-    seo: {
-      title: "Test Project 1",
-      description: "Test description 1",
-      keywords: ["React", "TypeScript"],
-      ogImage: "/test-image-1.jpg",
-      twitterImage: "/test-image-1.jpg",
-      canonical: "/portfolio/item-1",
-      structuredData: {},
-    },
-  },
-  {
-    id: "item-2",
-    type: "portfolio" as const,
-    title: "Test Project 2",
-    description: "Test description 2",
-    category: "video",
-    tags: ["After Effects"],
-    technologies: ["After Effects"],
-    status: "published" as const,
-    priority: 60,
-    createdAt: "2024-01-02T00:00:00.000Z",
-    updatedAt: "2024-01-02T00:00:00.000Z",
-    content: "Test content 2",
-    thumbnail: "/test-image-2.jpg",
-    seo: {
-      title: "Test Project 2",
-      description: "Test description 2",
-      keywords: ["After Effects"],
-      ogImage: "/test-image-2.jpg",
-      twitterImage: "/test-image-2.jpg",
-      canonical: "/portfolio/item-2",
-      structuredData: {},
-    },
-  },
-];
-
-const mockSearchFilters = [
-  {
-    type: "category" as const,
-    options: [
-      { value: "develop", label: "開発", count: 1 },
-      { value: "video", label: "映像", count: 1 },
-    ],
-  },
-  {
-    type: "technology" as const,
-    options: [
-      { value: "React", label: "React", count: 1 },
-      { value: "After Effects", label: "After Effects", count: 1 },
-    ],
-  },
-];
-
 describe("AllGalleryPage", () => {
+  let AllGalleryPage: any;
+
+  beforeAll(async () => {
+    // Import the page component after mocks are set up
+    const pageModule = await import("../page");
+    AllGalleryPage = pageModule.default;
+  });
+
   beforeEach(() => {
     // Reset all mocks before each test
     mockJest.clearAllMocks();
 
-    const { portfolioDataManager } = require("@/lib/portfolio/data-manager");
-    (portfolioDataManager.getPortfolioData as any).mockResolvedValue(
-      mockPortfolioItems,
-    );
-    (portfolioDataManager.getSearchFilters as any).mockResolvedValue(
-      mockSearchFilters,
-    );
+    // Set up mock return values
+    mockGetPortfolioData.mockResolvedValue(mockPortfolioItems);
+    mockGetSearchFilters.mockResolvedValue(mockSearchFilters);
   });
 
   afterEach(() => {
@@ -278,15 +288,6 @@ describe("AllGalleryPage", () => {
   });
 
   it("should render the all gallery page", async () => {
-    // Ensure mock is set up before rendering
-    const { portfolioDataManager } = require("@/lib/portfolio/data-manager");
-    (portfolioDataManager.getPortfolioData as any).mockResolvedValue(
-      mockPortfolioItems,
-    );
-    (portfolioDataManager.getSearchFilters as any).mockResolvedValue(
-      mockSearchFilters,
-    );
-
     render(await AllGalleryPage());
 
     await waitFor(() => {
@@ -305,15 +306,6 @@ describe("AllGalleryPage", () => {
   });
 
   it("should pass portfolio items to client component", async () => {
-    // Ensure mock is set up before rendering
-    const { portfolioDataManager } = require("@/lib/portfolio/data-manager");
-    (portfolioDataManager.getPortfolioData as any).mockResolvedValue(
-      mockPortfolioItems,
-    );
-    (portfolioDataManager.getSearchFilters as any).mockResolvedValue(
-      mockSearchFilters,
-    );
-
     render(await AllGalleryPage());
 
     await waitFor(() => {
@@ -323,15 +315,6 @@ describe("AllGalleryPage", () => {
   });
 
   it("should pass search filters to client component", async () => {
-    // Ensure mock is set up before rendering
-    const { portfolioDataManager } = require("@/lib/portfolio/data-manager");
-    (portfolioDataManager.getPortfolioData as any).mockResolvedValue(
-      mockPortfolioItems,
-    );
-    (portfolioDataManager.getSearchFilters as any).mockResolvedValue(
-      mockSearchFilters,
-    );
-
     render(await AllGalleryPage());
 
     await waitFor(() => {
@@ -355,15 +338,6 @@ describe("AllGalleryPage", () => {
   });
 
   it("should handle data loading errors gracefully", async () => {
-    // Ensure mock is set up before rendering
-    const { portfolioDataManager } = require("@/lib/portfolio/data-manager");
-    (portfolioDataManager.getPortfolioData as any).mockResolvedValue(
-      mockPortfolioItems,
-    );
-    (portfolioDataManager.getSearchFilters as any).mockResolvedValue(
-      mockSearchFilters,
-    );
-
     // This test verifies that the page component doesn't crash when data loading fails
     // Due to caching complexity in the data manager, we'll test that the component renders
     // without throwing errors, which is the main requirement for graceful error handling
