@@ -7,8 +7,10 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 
 import { jest } from "@jest/globals";
+import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import Link from "next/link";
+import React from "react";
 import AllGalleryPage from "../page";
 
 // Type assertion for jest mocks
@@ -17,8 +19,8 @@ const mockJest = jest as any;
 // Mock the portfolio data manager
 mockJest.mock("@/lib/portfolio/data-manager", () => ({
   portfolioDataManager: {
-    getPortfolioData: mockJest.fn(),
-    getSearchFilters: mockJest.fn(),
+    getPortfolioData: mockJest.fn().mockResolvedValue([]),
+    getSearchFilters: mockJest.fn().mockResolvedValue([]),
   },
 }));
 
@@ -45,87 +47,148 @@ mockJest.mock("../components/AllGalleryClient", () => ({
   }: {
     initialItems: any[];
     searchFilters: any[];
-  }) => (
-    <div data-testid="all-gallery-client">
-      <header className="space-y-8">
-        <nav aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2 text-sm">
-            <li>
-              <Link href="/" className="text-foreground hover:text-accent">
-                Home
-              </Link>
-            </li>
-            <li className="text-foreground">/</li>
-            <li>
-              <Link
-                href="/portfolio"
-                className="text-foreground hover:text-accent"
-              >
-                Portfolio
-              </Link>
-            </li>
-            <li className="text-foreground">/</li>
-            <li className="text-accent">All Projects</li>
-          </ol>
-        </nav>
-        <div className="space-y-4">
-          <h1 className="neue-haas-grotesk-display text-6xl text-primary">
-            All Projects
-          </h1>
-          <p className="noto-sans-jp-light text-sm max-w leading-loose">
-            全ての作品を時系列・カテゴリ・技術で絞り込み表示。
-            フィルターとソート機能で効率的に作品を探索できます。
-          </p>
-          <div className="flex items-center space-x-4 text-sm">
-            <span className="text-accent">
-              {initialItems.length} / {initialItems.length} projects
-            </span>
-            <span className="text-foreground">
-              Updated {new Date().toLocaleDateString("ja-JP")}
-            </span>
-          </div>
-        </div>
-      </header>
-      <section className="space-y-6">
-        <div className="space-y-4">
-          <div className="flex items-center space-x-4">
-            <div className="flex-1 relative">
-              <input
-                className="w-full pl-10 pr-4 py-2 border border-foreground bg-background text-foreground placeholder-foreground/60 focus:outline-none focus:border-accent"
-                placeholder="Search projects..."
-                type="text"
-                value=""
-              />
-            </div>
-            <button className="flex items-center space-x-2 px-4 py-2 border transition-colors border-foreground text-foreground hover:border-accent hover:text-accent">
-              <span className="text-sm">Filters</span>
-            </button>
-          </div>
-        </div>
-      </section>
-      <section id="gallery-content">
-        {initialItems.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {initialItems.map((item) => (
-              <div key={item.id} className="portfolio-item">
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <p className="noto-sans-jp-light text-sm text-foreground">
-              フィルター条件に一致する作品が見つかりませんでした。
-            </p>
-            <button className="mt-4 text-accent hover:text-primary transition-colors">
-              フィルターをリセット
-            </button>
-          </div>
-        )}
-      </section>
-    </div>
-  ),
+  }) =>
+    React.createElement(
+      "div",
+      { "data-testid": "all-gallery-client" },
+      React.createElement(
+        "header",
+        { className: "space-y-8" },
+        React.createElement(
+          "nav",
+          { "aria-label": "Breadcrumb" },
+          React.createElement(
+            "ol",
+            { className: "flex items-center space-x-2 text-sm" },
+            React.createElement(
+              "li",
+              null,
+              React.createElement(
+                Link,
+                { href: "/", className: "text-foreground hover:text-accent" },
+                "Home",
+              ),
+            ),
+            React.createElement("li", { className: "text-foreground" }, "/"),
+            React.createElement(
+              "li",
+              null,
+              React.createElement(
+                Link,
+                {
+                  href: "/portfolio",
+                  className: "text-foreground hover:text-accent",
+                },
+                "Portfolio",
+              ),
+            ),
+            React.createElement("li", { className: "text-foreground" }, "/"),
+            React.createElement(
+              "li",
+              { className: "text-accent" },
+              "All Projects",
+            ),
+          ),
+        ),
+        React.createElement(
+          "div",
+          { className: "space-y-4" },
+          React.createElement(
+            "h1",
+            { className: "neue-haas-grotesk-display text-6xl text-primary" },
+            "All Projects",
+          ),
+          React.createElement(
+            "p",
+            { className: "noto-sans-jp-light text-sm max-w leading-loose" },
+            "全ての作品を時系列・カテゴリ・技術で絞り込み表示。フィルターとソート機能で効率的に作品を探索できます。",
+          ),
+          React.createElement(
+            "div",
+            { className: "flex items-center space-x-4 text-sm" },
+            React.createElement(
+              "span",
+              { className: "text-accent" },
+              `${initialItems.length} / ${initialItems.length} projects`,
+            ),
+            React.createElement(
+              "span",
+              { className: "text-foreground" },
+              `Updated ${new Date().toLocaleDateString("ja-JP")}`,
+            ),
+          ),
+        ),
+      ),
+      React.createElement(
+        "section",
+        { className: "space-y-6" },
+        React.createElement(
+          "div",
+          { className: "space-y-4" },
+          React.createElement(
+            "div",
+            { className: "flex items-center space-x-4" },
+            React.createElement(
+              "div",
+              { className: "flex-1 relative" },
+              React.createElement("input", {
+                className:
+                  "w-full pl-10 pr-4 py-2 border border-foreground bg-background text-foreground placeholder-foreground/60 focus:outline-none focus:border-accent",
+                placeholder: "Search projects...",
+                type: "text",
+                value: "",
+                readOnly: true,
+              }),
+            ),
+            React.createElement(
+              "button",
+              {
+                className:
+                  "flex items-center space-x-2 px-4 py-2 border transition-colors border-foreground text-foreground hover:border-accent hover:text-accent",
+              },
+              React.createElement("span", { className: "text-sm" }, "Filters"),
+            ),
+          ),
+        ),
+      ),
+      React.createElement(
+        "section",
+        { id: "gallery-content" },
+        initialItems.length > 0
+          ? React.createElement(
+              "div",
+              {
+                className:
+                  "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
+              },
+              initialItems.map((item) =>
+                React.createElement(
+                  "div",
+                  { key: item.id, className: "portfolio-item" },
+                  React.createElement("h3", null, item.title),
+                  React.createElement("p", null, item.description),
+                ),
+              ),
+            )
+          : React.createElement(
+              "div",
+              { className: "text-center py-16" },
+              React.createElement(
+                "p",
+                { className: "noto-sans-jp-light text-sm text-foreground" },
+                "フィルター条件に一致する作品が見つかりませんでした。",
+              ),
+              React.createElement(
+                "button",
+                {
+                  className:
+                    "mt-4 text-accent hover:text-primary transition-colors",
+                },
+                "フィルターをリセット",
+              ),
+            ),
+      ),
+    ),
 }));
 
 const mockPortfolioItems = [
@@ -198,6 +261,9 @@ const mockSearchFilters = [
 
 describe("AllGalleryPage", () => {
   beforeEach(() => {
+    // Reset all mocks before each test
+    mockJest.clearAllMocks();
+
     const { portfolioDataManager } = require("@/lib/portfolio/data-manager");
     (portfolioDataManager.getPortfolioData as any).mockResolvedValue(
       mockPortfolioItems,
@@ -212,9 +278,23 @@ describe("AllGalleryPage", () => {
   });
 
   it("should render the all gallery page", async () => {
+    // Ensure mock is set up before rendering
+    const { portfolioDataManager } = require("@/lib/portfolio/data-manager");
+    (portfolioDataManager.getPortfolioData as any).mockResolvedValue(
+      mockPortfolioItems,
+    );
+    (portfolioDataManager.getSearchFilters as any).mockResolvedValue(
+      mockSearchFilters,
+    );
+
     render(await AllGalleryPage());
 
     await waitFor(() => {
+      // Check if the page renders without "No portfolio items found" error
+      expect(
+        screen.queryByText("No portfolio items found."),
+      ).not.toBeInTheDocument();
+
       // Use getAllByRole to handle multiple headings
       const headings = screen.getAllByRole("heading", { name: "All Projects" });
       expect(headings.length).toBeGreaterThan(0);
@@ -225,6 +305,15 @@ describe("AllGalleryPage", () => {
   });
 
   it("should pass portfolio items to client component", async () => {
+    // Ensure mock is set up before rendering
+    const { portfolioDataManager } = require("@/lib/portfolio/data-manager");
+    (portfolioDataManager.getPortfolioData as any).mockResolvedValue(
+      mockPortfolioItems,
+    );
+    (portfolioDataManager.getSearchFilters as any).mockResolvedValue(
+      mockSearchFilters,
+    );
+
     render(await AllGalleryPage());
 
     await waitFor(() => {
@@ -234,6 +323,15 @@ describe("AllGalleryPage", () => {
   });
 
   it("should pass search filters to client component", async () => {
+    // Ensure mock is set up before rendering
+    const { portfolioDataManager } = require("@/lib/portfolio/data-manager");
+    (portfolioDataManager.getPortfolioData as any).mockResolvedValue(
+      mockPortfolioItems,
+    );
+    (portfolioDataManager.getSearchFilters as any).mockResolvedValue(
+      mockSearchFilters,
+    );
+
     render(await AllGalleryPage());
 
     await waitFor(() => {
@@ -257,6 +355,15 @@ describe("AllGalleryPage", () => {
   });
 
   it("should handle data loading errors gracefully", async () => {
+    // Ensure mock is set up before rendering
+    const { portfolioDataManager } = require("@/lib/portfolio/data-manager");
+    (portfolioDataManager.getPortfolioData as any).mockResolvedValue(
+      mockPortfolioItems,
+    );
+    (portfolioDataManager.getSearchFilters as any).mockResolvedValue(
+      mockSearchFilters,
+    );
+
     // This test verifies that the page component doesn't crash when data loading fails
     // Due to caching complexity in the data manager, we'll test that the component renders
     // without throwing errors, which is the main requirement for graceful error handling
