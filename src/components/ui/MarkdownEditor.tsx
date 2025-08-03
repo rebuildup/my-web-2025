@@ -37,7 +37,6 @@ interface EnhancedMarkdownEditorProps {
   toolbar?: boolean;
   mediaData?: MediaData;
   embedSupport?: boolean;
-  onValidationErrors?: (errors: EmbedValidationError[]) => void;
 }
 
 /**
@@ -54,7 +53,6 @@ export function MarkdownEditor({
   toolbar = true,
   mediaData,
   embedSupport = true,
-  onValidationErrors,
 }: EnhancedMarkdownEditorProps) {
   const [editorContent, setEditorContent] = useState(content);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -66,7 +64,7 @@ export function MarkdownEditor({
   const [validationErrors, setValidationErrors] = useState<
     EmbedValidationError[]
   >([]);
-  const [showEmbedHelper, setShowEmbedHelper] = useState(false);
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Update editor content when prop changes
@@ -233,12 +231,9 @@ export function MarkdownEditor({
       if (embedSupport) {
         const errors = validateEmbedSyntax(newContent);
         setValidationErrors(errors);
-        if (onValidationErrors) {
-          onValidationErrors(errors);
-        }
       }
     },
-    [onChange, embedSupport, validateEmbedSyntax, onValidationErrors],
+    [onChange, embedSupport, validateEmbedSyntax],
   );
 
   // Handle save operation
@@ -264,189 +259,41 @@ export function MarkdownEditor({
     }
   }, [editorContent, filePath, onSave]);
 
-  // Insert markdown syntax at cursor position
-  const insertMarkdown = useCallback(
-    (before: string, after: string = "") => {
-      const textarea = textareaRef.current;
-      if (!textarea) return;
+  // Insert markdown syntax at cursor position (currently unused but kept for future use)
+  // const insertMarkdown = useCallback(
+  //   (before: string, after: string = "") => {
+  //     const textarea = textareaRef.current;
+  //     if (!textarea) return;
 
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = editorContent.substring(start, end);
-      const newContent =
-        editorContent.substring(0, start) +
-        before +
-        selectedText +
-        after +
-        editorContent.substring(end);
+  //     const start = textarea.selectionStart;
+  //     const end = textarea.selectionEnd;
+  //     const selectedText = editorContent.substring(start, end);
+  //     const newContent =
+  //       editorContent.substring(0, start) +
+  //       before +
+  //       selectedText +
+  //       after +
+  //       editorContent.substring(end);
 
-      handleContentChange(newContent);
+  //     handleContentChange(newContent);
 
-      // Restore cursor position
-      setTimeout(() => {
-        textarea.focus();
-        const newCursorPos = start + before.length + selectedText.length;
-        textarea.setSelectionRange(newCursorPos, newCursorPos);
-      }, 0);
-    },
-    [editorContent, handleContentChange],
-  );
+  //     // Restore cursor position
+  //     setTimeout(() => {
+  //       textarea.focus();
+  //       const newCursorPos = start + before.length + selectedText.length;
+  //       textarea.setSelectionRange(newCursorPos, newCursorPos);
+  //     }, 0);
+  //   },
+  //   [editorContent, handleContentChange],
+  // );
 
-  // Toolbar actions
-  const toolbarActions = [
-    {
-      label: "Bold",
-      icon: "B",
-      action: () => insertMarkdown("**", "**"),
-      shortcut: "Ctrl+B",
-    },
-    {
-      label: "Italic",
-      icon: "I",
-      action: () => insertMarkdown("*", "*"),
-      shortcut: "Ctrl+I",
-    },
-    {
-      label: "Heading 1",
-      icon: "H1",
-      action: () => insertMarkdown("# "),
-    },
-    {
-      label: "Heading 2",
-      icon: "H2",
-      action: () => insertMarkdown("## "),
-    },
-    {
-      label: "Heading 3",
-      icon: "H3",
-      action: () => insertMarkdown("### "),
-    },
-    {
-      label: "Link",
-      icon: "🔗",
-      action: () => insertMarkdown("[", "](url)"),
-    },
-    {
-      label: "Image",
-      icon: "🖼️",
-      action: () => insertMarkdown("![alt text](", ")"),
-    },
-    {
-      label: "Code",
-      icon: "</>",
-      action: () => insertMarkdown("`", "`"),
-    },
-    {
-      label: "Code Block",
-      icon: "{ }",
-      action: () => insertMarkdown("```\n", "\n```"),
-    },
-    {
-      label: "Quote",
-      icon: "❝",
-      action: () => insertMarkdown("> "),
-    },
-    {
-      label: "List",
-      icon: "•",
-      action: () => insertMarkdown("- "),
-    },
-    {
-      label: "Numbered List",
-      icon: "1.",
-      action: () => insertMarkdown("1. "),
-    },
-  ];
+  // Toolbar actions and embed actions removed for simplified interface
 
-  // Embed helper actions (only shown when embedSupport is enabled)
-  const embedActions = embedSupport
-    ? [
-        {
-          label: "Insert Image Embed",
-          icon: "🖼️",
-          action: () => {
-            const availableImages = mediaData?.images.length || 0;
-            if (availableImages === 0) {
-              alert(
-                "No images available for embedding. Please add images first.",
-              );
-              return;
-            }
-            const index = prompt(
-              `Enter image index (0-${availableImages - 1}):`,
-            );
-            if (index !== null && !isNaN(Number(index))) {
-              const altText = prompt("Enter alt text (optional):");
-              const embedText =
-                altText && altText.trim()
-                  ? `![image:${index} "${altText}"]`
-                  : `![image:${index}]`;
-              insertMarkdown(embedText);
-            }
-          },
-        },
-        {
-          label: "Insert Video Embed",
-          icon: "🎥",
-          action: () => {
-            const availableVideos = mediaData?.videos.length || 0;
-            if (availableVideos === 0) {
-              alert(
-                "No videos available for embedding. Please add videos first.",
-              );
-              return;
-            }
-            const index = prompt(
-              `Enter video index (0-${availableVideos - 1}):`,
-            );
-            if (index !== null && !isNaN(Number(index))) {
-              const title = prompt("Enter video title (optional):");
-              const embedText =
-                title && title.trim()
-                  ? `![video:${index} "${title}"]`
-                  : `![video:${index}]`;
-              insertMarkdown(embedText);
-            }
-          },
-        },
-        {
-          label: "Insert Link Embed",
-          icon: "🔗",
-          action: () => {
-            const availableLinks = mediaData?.externalLinks.length || 0;
-            if (availableLinks === 0) {
-              alert(
-                "No external links available for embedding. Please add links first.",
-              );
-              return;
-            }
-            const index = prompt(`Enter link index (0-${availableLinks - 1}):`);
-            if (index !== null && !isNaN(Number(index))) {
-              const customText = prompt("Enter custom link text (optional):");
-              const embedText =
-                customText && customText.trim()
-                  ? `[link:${index} "${customText}"]`
-                  : `[link:${index}]`;
-              insertMarkdown(embedText);
-            }
-          },
-        },
-      ]
-    : [];
-
-  // Handle keyboard shortcuts
+  // Handle keyboard shortcuts - simplified to only save
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey) {
         switch (e.key) {
-          case "b":
-            e.preventDefault();
-            insertMarkdown("**", "**");
-            break;
-          case "i":
-            e.preventDefault();
-            insertMarkdown("*", "*");
-            break;
           case "s":
             e.preventDefault();
             handleSave();
@@ -454,7 +301,7 @@ export function MarkdownEditor({
         }
       }
     },
-    [insertMarkdown, handleSave],
+    [handleSave],
   );
 
   // Render markdown preview
@@ -525,50 +372,6 @@ export function MarkdownEditor({
       {toolbar && (
         <div className="bg-base border-b border-foreground p-2">
           <div className="flex flex-wrap gap-1 items-center">
-            {/* Format buttons */}
-            {toolbarActions.map((action, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={action.action}
-                className={buttonStyle}
-                title={`${action.label}${action.shortcut ? ` (${action.shortcut})` : ""}`}
-              >
-                <span className="font-mono text-xs">{action.icon}</span>
-              </button>
-            ))}
-
-            {/* Embed helpers */}
-            {embedSupport && embedActions.length > 0 && (
-              <>
-                <div className="w-px h-6 bg-foreground mx-2" />
-                {embedActions.map((action, index) => (
-                  <button
-                    key={`embed-${index}`}
-                    type="button"
-                    onClick={action.action}
-                    className={buttonStyle}
-                    title={action.label}
-                  >
-                    <span className="font-mono text-xs">{action.icon}</span>
-                  </button>
-                ))}
-
-                {/* Embed helper toggle */}
-                <button
-                  type="button"
-                  onClick={() => setShowEmbedHelper(!showEmbedHelper)}
-                  className={showEmbedHelper ? activeButtonStyle : buttonStyle}
-                  title="Show Embed Helper"
-                >
-                  <span className="font-mono text-xs">?</span>
-                </button>
-              </>
-            )}
-
-            {/* Separator */}
-            <div className="w-px h-6 bg-foreground mx-2" />
-
             {/* Preview toggle */}
             {preview && (
               <button
@@ -605,87 +408,6 @@ export function MarkdownEditor({
                 </button>
               </>
             )}
-          </div>
-        </div>
-      )}
-
-      {/* Embed Helper Panel */}
-      {embedSupport && showEmbedHelper && mediaData && (
-        <div className="bg-blue-50 border-b border-foreground p-3 text-sm">
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="font-medium text-blue-900">Embed Reference Guide</h4>
-            <button
-              type="button"
-              onClick={() => setShowEmbedHelper(false)}
-              className="text-blue-600 hover:text-blue-800"
-            >
-              ✕
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div>
-              <h5 className="font-medium text-blue-800 mb-1">
-                Images ({mediaData.images.length})
-              </h5>
-              {mediaData.images.length > 0 ? (
-                <div className="space-y-1">
-                  {mediaData.images.slice(0, 3).map((img, index) => (
-                    <div key={index} className="text-blue-700">
-                      <code>![image:{index}]</code> - {img.split("/").pop()}
-                    </div>
-                  ))}
-                  {mediaData.images.length > 3 && (
-                    <div className="text-blue-600">
-                      ...and {mediaData.images.length - 3} more
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-gray-500">No images available</div>
-              )}
-            </div>
-            <div>
-              <h5 className="font-medium text-blue-800 mb-1">
-                Videos ({mediaData.videos.length})
-              </h5>
-              {mediaData.videos.length > 0 ? (
-                <div className="space-y-1">
-                  {mediaData.videos.slice(0, 3).map((video, index) => (
-                    <div key={index} className="text-blue-700">
-                      <code>![video:{index}]</code> - {video.title}
-                    </div>
-                  ))}
-                  {mediaData.videos.length > 3 && (
-                    <div className="text-blue-600">
-                      ...and {mediaData.videos.length - 3} more
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-gray-500">No videos available</div>
-              )}
-            </div>
-            <div>
-              <h5 className="font-medium text-blue-800 mb-1">
-                Links ({mediaData.externalLinks.length})
-              </h5>
-              {mediaData.externalLinks.length > 0 ? (
-                <div className="space-y-1">
-                  {mediaData.externalLinks.slice(0, 3).map((link, index) => (
-                    <div key={index} className="text-blue-700">
-                      <code>[link:{index}]</code> - {link.title}
-                    </div>
-                  ))}
-                  {mediaData.externalLinks.length > 3 && (
-                    <div className="text-blue-600">
-                      ...and {mediaData.externalLinks.length - 3} more
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-gray-500">No links available</div>
-              )}
-            </div>
           </div>
         </div>
       )}

@@ -164,8 +164,7 @@ describe("MarkdownRenderer", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText("Failed to load content")).toBeInTheDocument();
-        expect(screen.getByText(/Markdown file not found/)).toBeInTheDocument();
+        expect(screen.getByText("Content not available")).toBeInTheDocument();
       });
 
       expect(mockOnError).toHaveBeenCalledWith(expect.any(MarkdownFileError));
@@ -185,8 +184,7 @@ describe("MarkdownRenderer", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText("Failed to load content")).toBeInTheDocument();
-        expect(screen.getByText(/Network error/)).toBeInTheDocument();
+        expect(screen.getByText("Content not available")).toBeInTheDocument();
       });
 
       expect(mockOnError).toHaveBeenCalledWith(expect.any(MarkdownFileError));
@@ -226,8 +224,7 @@ describe("MarkdownRenderer", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText("Failed to load content")).toBeInTheDocument();
-        expect(screen.getByText(/No file path provided/)).toBeInTheDocument();
+        expect(screen.getByText("Content not available")).toBeInTheDocument();
       });
 
       expect(mockOnError).toHaveBeenCalledWith(expect.any(MarkdownFileError));

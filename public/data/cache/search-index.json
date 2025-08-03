@@ -14,20 +14,20 @@
     "type": "portfolio",
     "title": "期末テストお疲れ様でした 1Q",
     "description": "今回もテストが終わった後に作りました",
-    "content": "今回もテストが終わった後に作りました",
+    "content": "",
     "tags": [],
     "category": "video",
-    "searchableContent": "期末テストお疲れ様でした 1q 今回もテストが終わった後に作りました 今回もテストが終わった後に作りました video"
+    "searchableContent": "期末テストお疲れ様でした 1q 今回もテストが終わった後に作りました  video"
   },
   {
     "id": "portfolio-1753840319431",
     "type": "portfolio",
     "title": "【Aeエフェクトプラグイン】LiteGlow",
     "description": "Aeでシンプルなグローを実現するエフェクトプラグインです\nDeepGlowが高かったので自分で作りました",
-    "content": "Aeでシンプルなグローを実現するエフェクトプラグインです\nDeepGlowが高かったので自分で作りました",
+    "content": "",
     "tags": [],
     "category": "develop",
-    "searchableContent": "【aeエフェクトプラグイン】liteglow aeでシンプルなグローを実現するエフェクトプラグインです\ndeepglowが高かったので自分で作りました aeでシンプルなグローを実現するエフェクトプラグインです\ndeepglowが高かったので自分で作りました develop"
+    "searchableContent": "【aeエフェクトプラグイン】liteglow aeでシンプルなグローを実現するエフェクトプラグインです\ndeepglowが高かったので自分で作りました  develop"
   },
   {
     "id": "portfolio-1753840034006",
@@ -74,10 +74,10 @@
     "type": "portfolio",
     "title": "手書きアニメーション",
     "description": "フォトショを使って初めて手書きアニメーションを作成しました。",
-    "content": "フォトショを使って初めて手書きアニメーションを作成しました。",
+    "content": "",
     "tags": [],
     "category": "design",
-    "searchableContent": "手書きアニメーション フォトショを使って初めて手書きアニメーションを作成しました。 フォトショを使って初めて手書きアニメーションを作成しました。 design"
+    "searchableContent": "手書きアニメーション フォトショを使って初めて手書きアニメーションを作成しました。  design"
   },
   {
     "id": "portfolio-1753706148196",
@@ -184,10 +184,10 @@
     "type": "portfolio",
     "title": "Aeエフェクトプラグイン Stretch",
     "description": "AeでAviutlの引き伸ばしを再現しました。これでC++が出来ると自称していいのでしょうか...",
-    "content": "AeでAviutlの引き伸ばしを再現しました。これでC++が出来ると自称していいのでしょうか...",
+    "content": "",
     "tags": [],
     "category": "develop",
-    "searchableContent": "aeエフェクトプラグイン stretch aeでaviutlの引き伸ばしを再現しました。これでc++が出来ると自称していいのでしょうか... aeでaviutlの引き伸ばしを再現しました。これでc++が出来ると自称していいのでしょうか... develop"
+    "searchableContent": "aeエフェクトプラグイン stretch aeでaviutlの引き伸ばしを再現しました。これでc++が出来ると自称していいのでしょうか...  develop"
   },
   {
     "id": "portfolio-1753705921393",

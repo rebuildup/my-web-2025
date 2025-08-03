@@ -136,7 +136,8 @@ export class ContentParser implements ContentParserService {
                 </iframe>
               </div>`;
             }
-            break;
+            // Fall back to link format for malformed YouTube URLs
+            return `[${title}](${video.url})`;
           case "vimeo":
             const vimeoId = this.extractVimeoId(video.url);
             if (vimeoId) {
@@ -150,16 +151,12 @@ export class ContentParser implements ContentParserService {
                 </iframe>
               </div>`;
             }
-            break;
+            // Fall back to link format for malformed Vimeo URLs
+            return `[${title}](${video.url})`;
           default:
-            return `<div class="video-embed generic-embed">
-              <a href="${video.url}" target="_blank" rel="noopener noreferrer">
-                ${title}
-              </a>
-            </div>`;
+            // For unknown video types, fall back to simple link format
+            return `[${title}](${video.url})`;
         }
-
-        return `[${title}](${video.url})`;
       },
     );
 
@@ -193,6 +190,15 @@ export class ContentParser implements ContentParserService {
     const errors: EmbedError[] = [];
     const lines = content.split("\n");
 
+    // Handle null or undefined media data gracefully
+    if (!mediaData) {
+      return {
+        isValid: true,
+        errors: [],
+        warnings: [],
+      };
+    }
+
     // Extract all embed references for validation
     const embedRefs = this.extractEmbedReferences(content);
 
@@ -203,15 +209,15 @@ export class ContentParser implements ContentParserService {
 
       switch (type) {
         case "image":
-          maxIndex = mediaData.images.length;
+          maxIndex = mediaData?.images?.length || 0;
           isValid = this.mediaResolver.validateIndex(index, maxIndex);
           break;
         case "video":
-          maxIndex = mediaData.videos.length;
+          maxIndex = mediaData?.videos?.length || 0;
           isValid = this.mediaResolver.validateIndex(index, maxIndex);
           break;
         case "link":
-          maxIndex = mediaData.externalLinks.length;
+          maxIndex = mediaData?.externalLinks?.length || 0;
           isValid = this.mediaResolver.validateIndex(index, maxIndex);
           break;
       }

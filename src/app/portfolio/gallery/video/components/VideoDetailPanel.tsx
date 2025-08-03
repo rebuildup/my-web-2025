@@ -1,13 +1,13 @@
 "use client";
 
-import { ContentItem } from "@/types";
+import { ContentItem, EnhancedContentItem } from "@/types";
 import { Calendar, ExternalLink, Play, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
 interface VideoDetailPanelProps {
-  item: ContentItem | null;
+  item: ContentItem | EnhancedContentItem | null;
   isOpen: boolean;
   onClose: () => void;
 }

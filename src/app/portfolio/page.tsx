@@ -15,8 +15,6 @@ import {
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
-import { PortfolioAnalytics } from "./components";
 
 // Generate dynamic metadata using SEO metadata generator
 export async function generateMetadata(): Promise<Metadata> {
@@ -405,79 +403,6 @@ export default async function PortfolioPage() {
                   技術スタックと制作プロセスも含めて紹介しています.
                 </p>
               </header>
-
-              {/* Portfolio Statistics */}
-              <section>
-                <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                  Portfolio Overview
-                </h2>
-                <div className="bg-base border border-foreground p-4 space-y-4">
-                  <div className="grid-system grid-1 xs:grid-2 sm:grid-4 md:grid-4 gap-6">
-                    <div className="text-center">
-                      <div className="neue-haas-grotesk-display text-3xl text-accent mb-2">
-                        {portfolioStats.totalProjects}
-                      </div>
-                      <div className="noto-sans-jp-light text-sm text-foreground">
-                        総プロジェクト数
-                      </div>
-                    </div>
-
-                    <div className="text-center">
-                      <div className="neue-haas-grotesk-display text-3xl text-accent mb-2">
-                        {portfolioStats.categories.develop}
-                      </div>
-                      <div className="noto-sans-jp-light text-sm text-foreground">
-                        開発プロジェクト
-                      </div>
-                    </div>
-
-                    <div className="text-center">
-                      <div className="neue-haas-grotesk-display text-3xl text-accent mb-2">
-                        {portfolioStats.categories.video}
-                      </div>
-                      <div className="noto-sans-jp-light text-sm text-foreground">
-                        映像作品
-                      </div>
-                    </div>
-
-                    <div className="text-center">
-                      <div className="neue-haas-grotesk-display text-3xl text-accent mb-2">
-                        {portfolioStats.technologies.length}+
-                      </div>
-                      <div className="noto-sans-jp-light text-sm text-foreground">
-                        使用技術
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-foreground">
-                    <div className="flex flex-wrap gap-2">
-                      {portfolioStats.technologies.map((tech: string) => (
-                        <span
-                          key={tech}
-                          className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Live Analytics */}
-                  <div className="pt-4 border-t border-foreground">
-                    <Suspense
-                      fallback={
-                        <div className="animate-pulse">
-                          <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
-                          <div className="h-3 bg-gray-200 rounded w-24"></div>
-                        </div>
-                      }
-                    >
-                      <PortfolioAnalytics showSummary={true} />
-                    </Suspense>
-                  </div>
-                </div>
-              </section>
 
               {/* Category Navigation */}
               <nav aria-label="Portfolio categories" role="navigation">

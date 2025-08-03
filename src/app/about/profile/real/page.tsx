@@ -1,6 +1,6 @@
+import { Award, Calendar, GraduationCap, MapPin } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
-import { Calendar, MapPin, GraduationCap, Award } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Real Profile - samuido | 木村友亮のプロフィール",
@@ -83,7 +83,7 @@ const personalInfo = {
   age: "17歳",
   location: "日本",
   status: "高等専門学校在学中",
-  graduationYear: "2026年予定",
+  graduationYear: "2028年予定",
 };
 
 const education = [
@@ -99,7 +99,7 @@ const education = [
     status: "在学中",
   },
   {
-    period: "2026年3月予定",
+    period: "2028年3月予定",
     institution: "高等専門学校",
     description: "卒業予定",
     status: "予定",

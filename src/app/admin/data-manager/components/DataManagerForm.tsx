@@ -8,6 +8,7 @@ import { clientDateManager } from "@/lib/portfolio/client-date-manager";
 import { clientTagManager } from "@/lib/portfolio/client-tag-manager";
 
 import { MultiCategorySelector } from "@/components/ui/MultiCategorySelector";
+import { clientMarkdownService } from "@/lib/markdown/client-service";
 import {
   EnhancedCategoryType,
   EnhancedContentItem,
@@ -72,12 +73,26 @@ export function DataManagerForm({
   );
 
   // Markdown editor state
-  const [markdownFilePath] = useState<string | undefined>(
+  const [markdownFilePath, setMarkdownFilePath] = useState<string | undefined>(
     enhanced ? (item as EnhancedContentItem).markdownPath : undefined,
+  );
+  const [markdownContent, setMarkdownContent] = useState<string>(
+    formData.content || "",
+  );
+  const [needsMarkdownMigration, setNeedsMarkdownMigration] = useState<boolean>(
+    enhanced && !!(formData.content && !markdownFilePath),
   );
 
   useEffect(() => {
     setFormData(item);
+    setMarkdownContent(item.content || "");
+    setMarkdownFilePath(
+      enhanced ? (item as EnhancedContentItem).markdownPath : undefined,
+    );
+    setNeedsMarkdownMigration(
+      enhanced &&
+        !!(item.content && !(item as EnhancedContentItem).markdownPath),
+    );
 
     // Migration check is handled in the UI render
   }, [item, enhanced]);
@@ -276,11 +291,119 @@ export function DataManagerForm({
     handleInputChange("tags", tags);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Markdown file operations
+  const createMarkdownFile = async (
+    content: string,
+  ): Promise<string | null> => {
+    if (!enhanced) return null;
+
+    try {
+      const filePath = await clientMarkdownService.generateFilePath(
+        formData.id,
+        formData.type,
+      );
+      await clientMarkdownService.createMarkdownFile(
+        formData.id,
+        formData.type,
+        content,
+      );
+      return filePath;
+    } catch (error) {
+      console.error("Failed to create markdown file:", error);
+      return null;
+    }
+  };
+
+  const updateMarkdownFile = async (
+    filePath: string,
+    content: string,
+  ): Promise<boolean> => {
+    if (!enhanced) return false;
+
+    try {
+      await clientMarkdownService.updateMarkdownFile(filePath, content);
+      return true;
+    } catch (error) {
+      console.error("Failed to update markdown file:", error);
+      return false;
+    }
+  };
+
+  const handleMarkdownContentChange = (content: string) => {
+    setMarkdownContent(content);
+    // Also update the form data content for backward compatibility
+    handleInputChange("content", content);
+  };
+
+  const handleMarkdownSave = async (
+    content: string,
+    filePath: string,
+  ): Promise<void> => {
+    if (!enhanced) return;
+
+    try {
+      if (filePath && (await clientMarkdownService.fileExists(filePath))) {
+        // Update existing file
+        await updateMarkdownFile(filePath, content);
+      } else {
+        // Create new file
+        const newFilePath = await createMarkdownFile(content);
+        if (newFilePath) {
+          setMarkdownFilePath(newFilePath);
+          handleEnhancedInputChange("markdownPath", newFilePath);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to save markdown file:", error);
+      throw error;
+    }
+  };
+
+  const migrateContentToMarkdown = async () => {
+    if (!enhanced || !formData.content || markdownFilePath) return;
+
+    try {
+      const newFilePath = await createMarkdownFile(formData.content);
+      if (newFilePath) {
+        setMarkdownFilePath(newFilePath);
+        handleEnhancedInputChange("markdownPath", newFilePath);
+        setNeedsMarkdownMigration(false);
+
+        // Clear the old content field after successful migration
+        handleInputChange("content", "");
+      }
+    } catch (error) {
+      console.error("Failed to migrate content to markdown:", error);
+      alert("Failed to migrate content to markdown file. Please try again.");
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     console.log("=== Form submission started ===");
     console.log("Original form data:", JSON.stringify(formData, null, 2));
+
+    // Handle markdown file operations if enhanced mode is enabled
+    if (enhanced && markdownContent) {
+      try {
+        if (markdownFilePath) {
+          // Update existing markdown file
+          await updateMarkdownFile(markdownFilePath, markdownContent);
+        } else {
+          // Create new markdown file
+          const newFilePath = await createMarkdownFile(markdownContent);
+          if (newFilePath) {
+            setMarkdownFilePath(newFilePath);
+            handleEnhancedInputChange("markdownPath", newFilePath);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to handle markdown file:", error);
+        alert("Failed to save markdown file. Please try again.");
+        return;
+      }
+    }
 
     // Basic validation
     if (!formData.title.trim()) {
@@ -367,10 +490,11 @@ export function DataManagerForm({
       externalLinks: validExternalLinks,
       updatedAt: new Date().toISOString(),
       // Include markdown file path for enhanced mode
-      ...(enhanced &&
-        markdownFilePath && {
-          markdownPath: markdownFilePath,
-        }),
+      ...(enhanced && {
+        markdownPath: markdownFilePath,
+        // Clear content field if we have a markdown file
+        content: markdownFilePath ? "" : markdownContent,
+      }),
       // Handle category/categories based on mode
       ...(enhanced && isEnhancedContentItem(formData)
         ? {
@@ -743,12 +867,51 @@ export function DataManagerForm({
             />
           </div>
 
+          {/* Markdown Migration Helper */}
+          {enhanced && needsMarkdownMigration && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-white text-sm">📝</span>
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-medium text-blue-900 mb-2">
+                    Migrate to Markdown File System
+                  </h4>
+                  <p className="text-sm text-blue-800 mb-3">
+                    This content is currently stored as text. Migrate it to a
+                    markdown file to enable enhanced features like embed syntax
+                    and better content management.
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={migrateContentToMarkdown}
+                      className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                    >
+                      Migrate to Markdown File
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNeedsMarkdownMigration(false)}
+                      className="px-3 py-1 border border-blue-600 text-blue-600 text-sm rounded hover:bg-blue-50 transition-colors"
+                    >
+                      Keep as Text
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div>
             <label className={labelStyle}>Content (Markdown)</label>
             {enhanced ? (
               <MarkdownEditor
-                content={formData.content || ""}
-                onChange={(content) => handleInputChange("content", content)}
+                content={markdownContent}
+                filePath={markdownFilePath}
+                onChange={handleMarkdownContentChange}
+                onSave={handleMarkdownSave}
                 preview={true}
                 toolbar={true}
                 embedSupport={true}
@@ -760,10 +923,6 @@ export function DataManagerForm({
                   })),
                   externalLinks: formData.externalLinks || [],
                 }}
-                onValidationErrors={(errors) => {
-                  // Handle validation errors if needed
-                  console.log("Embed validation errors:", errors);
-                }}
               />
             ) : (
               <textarea
@@ -773,6 +932,28 @@ export function DataManagerForm({
                 rows={10}
                 placeholder="Enter Markdown content here..."
               />
+            )}
+
+            {/* Markdown File Status */}
+            {enhanced && (
+              <div className="mt-2 text-xs text-gray-500 flex items-center gap-2">
+                {markdownFilePath ? (
+                  <>
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    <span>
+                      Markdown file: {markdownFilePath.split("/").pop()}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                    <span>
+                      Content stored as text (consider migrating to markdown
+                      file)
+                    </span>
+                  </>
+                )}
+              </div>
             )}
           </div>
         </div>

@@ -3,13 +3,15 @@
  * Server-side rendered with optimized metadata generation
  */
 
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { Calendar, Tag, ExternalLink } from "lucide-react";
+import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
+import { isEnhancedContentItem } from "@/types";
 import { PortfolioContentItem } from "@/types/portfolio";
+import { Calendar, ExternalLink, Tag } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 interface PortfolioDetailPageProps {
   params: Promise<{
@@ -263,17 +265,48 @@ export default async function PortfolioDetailPage({
                     </div>
                   )}
 
-                  {/* Content */}
-                  {item.content && (
+                  {/* Content - Markdown or plain text */}
+                  {/* Always show Details section if there's any content or markdown path */}
+                  {(item.content ||
+                    item.description ||
+                    (isEnhancedContentItem(item) && item.markdownPath)) && (
                     <div className="space-y-4">
                       <h2 className="neue-haas-grotesk-display text-3xl text-primary">
                         Details
                       </h2>
                       <div className="prose prose-sm max-w-none">
-                        <div
-                          className="noto-sans-jp-light text-sm leading-relaxed"
-                          dangerouslySetInnerHTML={{ __html: item.content }}
-                        />
+                        {isEnhancedContentItem(item) && item.markdownPath ? (
+                          <MarkdownRenderer
+                            filePath={`/data/content/markdown/${item.markdownPath}`}
+                            mediaData={{
+                              images: item.images || [],
+                              videos: (item.videos || []).map((video) => ({
+                                ...video,
+                                title: video.title || `Video ${video.url}`,
+                              })),
+                              externalLinks: item.externalLinks || [],
+                            }}
+                            className="noto-sans-jp-light text-sm leading-relaxed"
+                            fallbackContent={
+                              item.content ||
+                              item.description ||
+                              "Content not available"
+                            }
+                          />
+                        ) : item.content ? (
+                          <div
+                            className="noto-sans-jp-light text-sm leading-relaxed whitespace-pre-wrap"
+                            dangerouslySetInnerHTML={{ __html: item.content }}
+                          />
+                        ) : item.description ? (
+                          <div className="noto-sans-jp-light text-sm leading-relaxed">
+                            {item.description}
+                          </div>
+                        ) : (
+                          <div className="noto-sans-jp-light text-sm leading-relaxed text-gray-500">
+                            No detailed content available for this item.
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}

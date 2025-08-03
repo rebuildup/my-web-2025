@@ -137,7 +137,7 @@ export function AllGalleryClient({
       data-testid="all-gallery-client"
     >
       <main id="main-content" role="main" className="py-10">
-        <div className="container mx-auto px-4">
+        <div className="container-system">
           <div className="space-y-10">
             {/* Header */}
             <header className="space-y-8">

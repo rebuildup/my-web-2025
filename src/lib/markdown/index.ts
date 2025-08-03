@@ -16,6 +16,35 @@ export {
   type MarkdownFileMetadata,
 } from "./file-management";
 
+// Migration System
+export {
+  ContentMigrationService,
+  contentMigrationService,
+  getMigrationStatus,
+  migrateAllContent,
+  migrateContentFile,
+  rollbackMigration,
+  type MigrationOptions,
+  type MigrationResult,
+  type MigrationSummary,
+} from "./migration";
+
+// Error Handling and Validation
+export {
+  EmbedValidator,
+  FileIntegrityChecker,
+  MarkdownError,
+  MarkdownErrorHandler,
+  MarkdownErrorType,
+  checkFileIntegrity,
+  embedValidator,
+  fileIntegrityChecker,
+  handleFileError,
+  markdownErrorHandler,
+  validateEmbeds,
+  type ErrorHandlingOptions,
+} from "./error-handling";
+
 // Directory Management
 export {
   DEFAULT_DIRECTORY_STRUCTURE,

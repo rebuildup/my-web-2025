@@ -23,6 +23,7 @@ export const DEFAULT_DIRECTORY_STRUCTURE: DirectoryStructure = {
     tool: "tool",
     asset: "asset",
     download: "download",
+    other: "other",
   },
 };
 

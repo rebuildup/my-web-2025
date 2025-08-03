@@ -11,7 +11,8 @@ export type ContentType =
   | "page"
   | "tool"
   | "asset"
-  | "download";
+  | "download"
+  | "other";
 
 // Portfolio specific category types
 export type PortfolioCategory = "develop" | "video" | "design";

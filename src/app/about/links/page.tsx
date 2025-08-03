@@ -1,14 +1,6 @@
+import { ExternalLink, Github, Mail, Twitter, Youtube } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
-import {
-  ExternalLink,
-  Twitter,
-  Github,
-  Instagram,
-  Youtube,
-  Mail,
-  Globe,
-} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Links - samuido | 外部リンク集",
@@ -88,57 +80,19 @@ const socialLinks = [
   },
   {
     name: "GitHub",
-    handle: "@361do",
-    url: "https://github.com/361do",
+    handle: "rebuildup",
+    url: "https://github.com/rebuildup",
     description: "開発プロジェクトとソースコード",
     icon: Github,
     category: "professional",
   },
   {
-    name: "Instagram",
-    handle: "@361do_sleep",
-    url: "https://instagram.com/361do_sleep",
-    description: "日常・作品の写真",
-    icon: Instagram,
-    category: "social",
-  },
-  {
     name: "YouTube",
-    handle: "@361do",
-    url: "https://youtube.com/@361do",
+    handle: "@361do_sleep",
+    url: "https://www.youtube.com/@361do_sleep",
     description: "映像作品・チュートリアル",
     icon: Youtube,
     category: "portfolio",
-  },
-];
-
-const portfolioLinks = [
-  {
-    name: "Behance",
-    handle: "samuido",
-    url: "https://behance.net/samuido",
-    description: "デザイン・映像作品集",
-    icon: Globe,
-    category: "portfolio",
-  },
-  {
-    name: "Dribbble",
-    handle: "samuido",
-    url: "https://dribbble.com/samuido",
-    description: "UI/UXデザイン作品",
-    icon: Globe,
-    category: "portfolio",
-  },
-];
-
-const professionalLinks = [
-  {
-    name: "LinkedIn",
-    handle: "yusuke-kim",
-    url: "https://linkedin.com/in/yusuke-kim",
-    description: "プロフェッショナルプロフィール",
-    icon: Globe,
-    category: "professional",
   },
 ];
 
@@ -215,26 +169,6 @@ export default function LinksPage() {
                 </h2>
                 <div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-3 gap-6">
                   {socialLinks.map(renderLinkCard)}
-                </div>
-              </section>
-
-              {/* Portfolio Links */}
-              <section>
-                <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                  Portfolio Sites
-                </h2>
-                <div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
-                  {portfolioLinks.map(renderLinkCard)}
-                </div>
-              </section>
-
-              {/* Professional Links */}
-              <section>
-                <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                  Professional
-                </h2>
-                <div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
-                  {professionalLinks.map(renderLinkCard)}
                 </div>
               </section>
 

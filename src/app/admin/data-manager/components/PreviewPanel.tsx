@@ -1,5 +1,7 @@
 "use client";
 
+import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
+import { isEnhancedContentItem } from "@/types";
 import { ContentItem, MediaEmbed } from "@/types/content";
 import { EnhancedContentItem } from "@/types/enhanced-content";
 import { useState } from "react";
@@ -530,14 +532,31 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
               </div>
             )}
 
-            {/* Content */}
-            {item.content && (
+            {/* Content - Markdown or plain text */}
+            {(item.content ||
+              (isEnhancedContentItem(item) && item.markdownPath)) && (
               <div>
                 <h3 className="font-medium text-gray-700 mb-2">Content</h3>
                 <div className="bg-gray-50 border border-gray-200 p-4 rounded">
-                  <pre className="text-sm text-gray-700 whitespace-pre-wrap font-mono">
-                    {item.content}
-                  </pre>
+                  {isEnhancedContentItem(item) && item.markdownPath ? (
+                    <MarkdownRenderer
+                      filePath={item.markdownPath}
+                      mediaData={{
+                        images: item.images || [],
+                        videos: (item.videos || []).map((video) => ({
+                          ...video,
+                          title: video.title || `Video ${video.url}`,
+                        })),
+                        externalLinks: item.externalLinks || [],
+                      }}
+                      className="prose prose-sm max-w-none text-gray-700"
+                      fallbackContent={item.content || "Content not available"}
+                    />
+                  ) : item.content ? (
+                    <pre className="text-sm text-gray-700 whitespace-pre-wrap font-mono">
+                      {item.content}
+                    </pre>
+                  ) : null}
                 </div>
               </div>
             )}

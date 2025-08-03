@@ -1,6 +1,6 @@
+import { ContentItem } from "@/types";
 import { Metadata } from "next";
 import Link from "next/link";
-import { ContentItem } from "@/types";
 
 export const metadata: Metadata = {
   title: "Video Projects - Portfolio | samuido 映像制作作品集",
@@ -119,13 +119,28 @@ export default async function VideoProjectsPage() {
             <div className="space-y-10">
               {/* Header */}
               <header className="space-y-12">
-                <nav className="mb-6">
-                  <Link
-                    href="/portfolio"
-                    className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-                  >
-                    ← Portfolio に戻る
-                  </Link>
+                <nav aria-label="Breadcrumb">
+                  <ol className="flex items-center space-x-2 text-sm">
+                    <li>
+                      <Link
+                        href="/"
+                        className="text-foreground hover:text-accent"
+                      >
+                        Home
+                      </Link>
+                    </li>
+                    <li className="text-foreground">/</li>
+                    <li>
+                      <Link
+                        href="/portfolio"
+                        className="text-foreground hover:text-accent"
+                      >
+                        Portfolio
+                      </Link>
+                    </li>
+                    <li className="text-foreground">/</li>
+                    <li className="text-accent">Video Projects</li>
+                  </ol>
                 </nav>
                 <h1 className="neue-haas-grotesk-display text-6xl text-primary">
                   Video Projects

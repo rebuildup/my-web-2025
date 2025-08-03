@@ -529,13 +529,15 @@ export function VideoDesignGallery({
       {process.env.NODE_ENV === "development" && performanceMetrics && (
         <div className="bg-gray-100 border border-gray-300 p-3 text-xs">
           <div className="flex items-center space-x-4">
-            <span>Items: {String(performanceMetrics.itemCount)}</span>
+            <span>Items: {String(performanceMetrics.itemCount || 0)}</span>
             <span>
-              Filter: {String((performanceMetrics.filterTime || 0).toFixed(2))}
+              Filter:{" "}
+              {String(Number(performanceMetrics.filterTime || 0).toFixed(2))}
               ms
             </span>
             <span>
-              Render: {String((performanceMetrics.renderTime || 0).toFixed(2))}
+              Render:{" "}
+              {String(Number(performanceMetrics.renderTime || 0).toFixed(2))}
               ms
             </span>
             <span>Cache: {enableCaching ? "ON" : "OFF"}</span>

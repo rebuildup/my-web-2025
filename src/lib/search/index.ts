@@ -3,11 +3,11 @@
  * Based on documents/01_global.md specifications
  */
 
-import { promises as fs } from "fs";
-import path from "path";
-import Fuse, { type IFuseOptions } from "fuse.js";
-import type { ContentType, SearchIndex, SearchResult } from "@/types";
 import { loadAllContent } from "@/lib/data";
+import type { ContentType, SearchIndex, SearchResult } from "@/types";
+import { promises as fs } from "fs";
+import Fuse, { type IFuseOptions } from "fuse.js";
+import path from "path";
 
 const CACHE_DIR = path.join(process.cwd(), "public/data/cache");
 const SEARCH_INDEX_PATH = path.join(CACHE_DIR, "search-index.json");
@@ -253,6 +253,7 @@ function generateContentUrl(item: SearchIndex): string {
     profile: "/about/profile",
     page: "",
     asset: "",
+    other: "",
   };
 
   const baseUrl = baseUrls[item.type] || "";

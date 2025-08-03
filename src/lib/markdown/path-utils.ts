@@ -31,6 +31,7 @@ export class PathGenerator {
     tool: "tool",
     asset: "asset",
     download: "download",
+    other: "other",
   };
 
   constructor(basePath: string = "public/data/content/markdown") {

@@ -162,6 +162,7 @@ export const isContentType = (value: string): value is ContentType => {
     "tool",
     "asset",
     "download",
+    "other",
   ].includes(value);
 };
 

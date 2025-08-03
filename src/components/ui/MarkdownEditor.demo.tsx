@@ -87,15 +87,6 @@ You can also embed custom content:
 
 export function MarkdownEditorDemo() {
   const [content, setContent] = useState(demoContent);
-  const [validationErrors, setValidationErrors] = useState<
-    Array<{
-      line: number;
-      column: number;
-      type: "INVALID_INDEX" | "MISSING_MEDIA" | "MALFORMED_SYNTAX";
-      message: string;
-      suggestion?: string;
-    }>
-  >([]);
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
@@ -130,19 +121,7 @@ export function MarkdownEditorDemo() {
           toolbar={true}
           embedSupport={true}
           mediaData={demoMediaData}
-          onValidationErrors={setValidationErrors}
         />
-
-        {validationErrors.length > 0 && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded">
-            <h3 className="font-medium text-red-900 mb-2">
-              Validation Errors:
-            </h3>
-            <pre className="text-sm text-red-700">
-              {JSON.stringify(validationErrors, null, 2)}
-            </pre>
-          </div>
-        )}
       </div>
 
       <div className="bg-gray-50 rounded-lg p-6">

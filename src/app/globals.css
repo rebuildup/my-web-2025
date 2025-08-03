@@ -57,10 +57,14 @@ html.wf-inactive {
 /* Adobe Fonts Fallback - Always available */
 .neue-haas-grotesk-display {
   font-family: "neue-haas-grotesk-display", "Noto Sans JP", sans-serif;
+  font-weight: 700;
+  font-style: italic;
 }
 
 .zen-kaku-gothic-new {
   font-family: "zen-kaku-gothic-new", "Noto Sans JP", sans-serif;
+  font-weight: 700;
+  font-style: normal;
 }
 
 .loading-screen {

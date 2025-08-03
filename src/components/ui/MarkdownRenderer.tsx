@@ -6,29 +6,51 @@
 
 "use client";
 
+import {
+  embedValidator,
+  MarkdownError,
+  markdownErrorHandler,
+  MarkdownErrorType,
+} from "@/lib/markdown/client";
 import DOMPurify from "isomorphic-dompurify";
 import { marked } from "marked";
 import React, { useCallback, useEffect, useState } from "react";
 import { createContentParser } from "../../lib/markdown/content-parser";
 import type { MediaData } from "../../types/content";
+import FallbackContent, {
+  MarkdownErrorBoundary,
+} from "../markdown/FallbackContent";
 
 // Component props interface
 interface MarkdownRendererProps {
   filePath: string;
   mediaData: MediaData;
   className?: string;
-  onError?: (error: Error) => void;
   fallbackContent?: string;
   enableSanitization?: boolean;
   customRenderer?: (content: string) => string;
+  enableValidation?: boolean;
+  enableIntegrityCheck?: boolean;
+  showRetryButton?: boolean;
+  contentId?: string;
+  onError?: (error: MarkdownFileError) => void;
 }
 
 // Component state interface
 interface MarkdownRendererState {
   content: string;
   isLoading: boolean;
-  error: Error | null;
+  error: MarkdownError | Error | null;
   parsedContent: string;
+  validationResult?: {
+    isValid: boolean;
+    errors: Array<{ message: string; line: number; column: number }>;
+    warnings?: string[];
+  };
+  integrityCheck?: {
+    isValid: boolean;
+    checksum: string;
+  };
 }
 
 // Error types for better error handling
@@ -107,21 +129,27 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   filePath,
   mediaData,
   className = "",
-  onError,
   fallbackContent = "Content not available",
   enableSanitization = true,
   customRenderer,
+  enableValidation = true,
+  enableIntegrityCheck = false,
+  showRetryButton = true,
+  contentId,
+  onError,
 }) => {
   const [state, setState] = useState<MarkdownRendererState>({
     content: "",
     isLoading: true,
     error: null,
     parsedContent: "",
+    validationResult: undefined,
+    integrityCheck: undefined,
   });
 
   const [contentParser] = useState(() => createContentParser());
 
-  // Fetch markdown file content
+  // Fetch markdown file content with enhanced error handling
   const fetchMarkdownContent = useCallback(
     async (path: string): Promise<string> => {
       try {
@@ -129,38 +157,88 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
         if (!response.ok) {
           if (response.status === 404) {
-            throw new MarkdownFileError(
+            throw new MarkdownError(
+              MarkdownErrorType.FILE_NOT_FOUND,
               `Markdown file not found: ${path}`,
-              "FILE_NOT_FOUND",
-              path,
+              { filePath: path, status: response.status },
+              "Check if the file path is correct and the file exists",
             );
           }
-          throw new MarkdownFileError(
+          throw new MarkdownError(
+            MarkdownErrorType.PERMISSION_DENIED,
             `Failed to fetch markdown file: ${response.statusText}`,
-            "FETCH_ERROR",
-            path,
+            { filePath: path, status: response.status },
+            "Check file permissions and server configuration",
           );
         }
 
-        return await response.text();
+        const content = await response.text();
+
+        // Note: File integrity check is not available in client components
+        // This feature requires server-side processing
+        if (enableIntegrityCheck) {
+          console.warn(
+            "File integrity check is not available in client components",
+          );
+        }
+
+        return content;
       } catch (error) {
-        if (error instanceof MarkdownFileError) {
+        if (error instanceof MarkdownError) {
           throw error;
         }
-        throw new MarkdownFileError(
-          `Network error while fetching markdown file: ${error instanceof Error ? error.message : "Unknown error"}`,
-          "FETCH_ERROR",
-          path,
-        );
+        throw markdownErrorHandler.handleFileError(error, path);
       }
     },
-    [],
+    [enableIntegrityCheck],
   );
 
-  // Process markdown content with embed resolution
+  // Process markdown content with embed resolution and validation
   const processMarkdownContent = useCallback(
     async (rawContent: string, media: MediaData): Promise<string> => {
       try {
+        // Validate embed references if enabled
+        if (enableValidation) {
+          const validationResult = embedValidator.validateEmbeds(
+            rawContent,
+            media,
+          );
+          setState((prev) => ({
+            ...prev,
+            validationResult: {
+              isValid: validationResult.isValid,
+              errors: validationResult.errors,
+              warnings: validationResult.warnings,
+            },
+          }));
+
+          // Log validation warnings
+          if (
+            validationResult.warnings &&
+            validationResult.warnings.length > 0
+          ) {
+            console.warn(
+              "Markdown validation warnings:",
+              validationResult.warnings,
+            );
+          }
+
+          // Throw error if validation fails
+          if (!validationResult.isValid && validationResult.errors.length > 0) {
+            const firstError = validationResult.errors[0];
+            throw new MarkdownError(
+              MarkdownErrorType.EMBED_ERROR,
+              `Embed validation failed: ${firstError.message}`,
+              {
+                validationErrors: validationResult.errors,
+                line: firstError.line,
+                column: firstError.column,
+              },
+              firstError.suggestion,
+            );
+          }
+        }
+
         // First, resolve embed references
         const contentWithResolvedEmbeds = await contentParser.parseMarkdown(
           rawContent,
@@ -231,14 +309,24 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
         return htmlContent;
       } catch (error) {
-        throw new MarkdownFileError(
+        if (error instanceof MarkdownError) {
+          throw error;
+        }
+        throw new MarkdownError(
+          MarkdownErrorType.INVALID_CONTENT,
           `Failed to process markdown content: ${error instanceof Error ? error.message : "Unknown error"}`,
-          "PARSE_ERROR",
-          filePath,
+          { filePath, originalError: error },
+          "Check the markdown syntax and embedded content references",
         );
       }
     },
-    [contentParser, customRenderer, enableSanitization, filePath],
+    [
+      contentParser,
+      customRenderer,
+      enableSanitization,
+      enableValidation,
+      filePath,
+    ],
   );
 
   // Load and process markdown content
@@ -259,6 +347,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       if (onError) {
         onError(error);
       }
+      console.warn("Failed to load markdown content:", error);
       return;
     }
 
@@ -297,6 +386,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       if (onError) {
         onError(markdownError);
       }
+      console.warn("Failed to load markdown content:", markdownError);
     }
   }, [
     filePath,
@@ -325,47 +415,44 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     );
   }
 
-  // Render error state with fallback
+  // Render error state with enhanced fallback
   if (state.error) {
     return (
       <div className={`markdown-renderer-error ${className}`}>
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
-          <div className="flex items-start">
-            <div className="flex-shrink-0">
-              <svg
-                className="h-5 w-5 text-red-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800 dark:text-red-200">
-                Failed to load content
-              </h3>
-              <div className="mt-2 text-sm text-red-700 dark:text-red-300">
-                <p>{state.error.message}</p>
-                {(state.error as MarkdownFileError).code ===
-                  "FILE_NOT_FOUND" && (
-                  <p className="mt-1 text-xs">
-                    The markdown file may not exist or may have been moved.
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <FallbackContent
+          error={state.error}
+          fallbackContent={fallbackContent}
+          contentId={contentId}
+          onRetry={showRetryButton ? loadContent : undefined}
+          showRetryButton={showRetryButton}
+          showErrorDetails={process.env.NODE_ENV === "development"}
+        />
 
-        {/* Fallback content */}
-        {fallbackContent && (
-          <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
-              {fallbackContent}
+        {/* Show validation errors if available */}
+        {state.validationResult && !state.validationResult.isValid && (
+          <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <h4 className="text-sm font-medium text-yellow-800 mb-2">
+              Content Validation Issues:
+            </h4>
+            <ul className="text-sm text-yellow-700 space-y-1">
+              {state.validationResult.errors.map((error, index) => (
+                <li key={index}>
+                  Line {error.line}, Column {error.column}: {error.message}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Show integrity check results if available */}
+        {state.integrityCheck && !state.integrityCheck.isValid && (
+          <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+            <h4 className="text-sm font-medium text-orange-800 mb-2">
+              File Integrity Warning:
+            </h4>
+            <p className="text-sm text-orange-700">
+              The file may have been modified or corrupted. Checksum:{" "}
+              {state.integrityCheck.checksum}
             </p>
           </div>
         )}
@@ -373,18 +460,39 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     );
   }
 
-  // Render markdown content
+  // Render markdown content with error boundary
   return (
-    <div className={`markdown-renderer ${className}`}>
-      <div
-        className="markdown-content prose prose-lg dark:prose-invert max-w-none"
-        dangerouslySetInnerHTML={{ __html: state.parsedContent }}
-      />
-    </div>
+    <MarkdownErrorBoundary
+      fallbackContent={fallbackContent}
+      contentId={contentId}
+    >
+      <div className={`markdown-renderer ${className}`}>
+        {/* Show validation warnings if any */}
+        {state.validationResult?.warnings &&
+          state.validationResult.warnings.length > 0 && (
+            <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <h4 className="text-sm font-medium text-yellow-800 mb-1">
+                Content Warnings:
+              </h4>
+              <ul className="text-xs text-yellow-700 space-y-1">
+                {state.validationResult.warnings.map((warning, index) => (
+                  <li key={index}>{warning}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+        <div
+          className="markdown-content prose prose-lg dark:prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: state.parsedContent }}
+        />
+      </div>
+    </MarkdownErrorBoundary>
   );
 };
 
 // Export additional utilities
+export { MarkdownError, MarkdownErrorType } from "../../lib/markdown/client";
 export type { MarkdownRendererProps, MarkdownRendererState };
 
 // Default export

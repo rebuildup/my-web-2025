@@ -2,7 +2,7 @@ import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import type { PortfolioContentItem } from "@/types/portfolio";
-import { Eye, Lightbulb, Palette, Video } from "lucide-react";
+import { Eye } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { VideoDesignGallery } from "./components/VideoDesignGallery";
@@ -50,51 +50,6 @@ export const metadata: Metadata = {
       "https://yusuke-kim.com/portfolio/gallery-video-design-twitter-image.jpg",
     ],
     creator: "@361do_design",
-  },
-};
-
-// デザインアプローチ
-const designApproaches = {
-  concept: {
-    title: "Concept Development",
-    description:
-      "プロジェクトの核となるコンセプトを明確化し、一貫したビジュアル言語を構築",
-    methods: [
-      "ブレインストーミング",
-      "ムードボード作成",
-      "コンセプトマップ",
-      "ビジュアルリサーチ",
-    ],
-  },
-  visual: {
-    title: "Visual Language",
-    description: "色彩、形状、タイポグラフィを統合したビジュアルシステムの設計",
-    methods: [
-      "カラーパレット",
-      "タイポグラフィシステム",
-      "グリッドシステム",
-      "アイコンデザイン",
-    ],
-  },
-  motion: {
-    title: "Motion Design",
-    description: "時間軸を活用した動的な表現とユーザー体験の設計",
-    methods: [
-      "タイミング設計",
-      "イージング調整",
-      "トランジション",
-      "インタラクション",
-    ],
-  },
-  integration: {
-    title: "System Integration",
-    description: "デザインと映像を統合した一貫性のあるブランド体験の構築",
-    methods: [
-      "ブランドガイドライン",
-      "モーションガイドライン",
-      "実装仕様",
-      "品質管理",
-    ],
   },
 };
 
@@ -168,13 +123,28 @@ export default async function VideoDesignProjectsPage() {
               <div className="space-y-10">
                 {/* Header */}
                 <header className="space-y-12">
-                  <nav className="mb-6">
-                    <Link
-                      href="/portfolio"
-                      className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-                    >
-                      ← Portfolio に戻る
-                    </Link>
+                  <nav aria-label="Breadcrumb">
+                    <ol className="flex items-center space-x-2 text-sm">
+                      <li>
+                        <Link
+                          href="/"
+                          className="text-foreground hover:text-accent"
+                        >
+                          Home
+                        </Link>
+                      </li>
+                      <li className="text-foreground">/</li>
+                      <li>
+                        <Link
+                          href="/portfolio"
+                          className="text-foreground hover:text-accent"
+                        >
+                          Portfolio
+                        </Link>
+                      </li>
+                      <li className="text-foreground">/</li>
+                      <li className="text-accent">Video & Design</li>
+                    </ol>
                   </nav>
                   <h1 className="neue-haas-grotesk-display text-6xl text-primary">
                     Video & Design
@@ -187,52 +157,6 @@ export default async function VideoDesignProjectsPage() {
                     縦3列グリッドでコンテンツに応じたサイズの独特なギャラリー表現を実現しています.
                   </p>
                 </header>
-
-                {/* Design Approach */}
-                <section>
-                  <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                    Design Approach
-                  </h2>
-                  <div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
-                    {Object.entries(designApproaches).map(([key, approach]) => (
-                      <div
-                        key={key}
-                        className="bg-base border border-foreground p-4 space-y-4"
-                      >
-                        <div className="flex items-center">
-                          {key === "concept" && (
-                            <Lightbulb className="w-6 h-6 text-accent mr-3" />
-                          )}
-                          {key === "visual" && (
-                            <Palette className="w-6 h-6 text-accent mr-3" />
-                          )}
-                          {key === "motion" && (
-                            <Video className="w-6 h-6 text-accent mr-3" />
-                          )}
-                          {key === "integration" && (
-                            <Eye className="w-6 h-6 text-accent mr-3" />
-                          )}
-                          <h3 className="zen-kaku-gothic-new text-lg text-primary">
-                            {approach.title}
-                          </h3>
-                        </div>
-                        <p className="noto-sans-jp-light text-sm text-foreground">
-                          {approach.description}
-                        </p>
-                        <div className="flex flex-wrap gap-1">
-                          {approach.methods.map((method) => (
-                            <span
-                              key={method}
-                              className="noto-sans-jp-light text-xs text-foreground border border-foreground px-2 py-1"
-                            >
-                              {method}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
 
                 {/* Main Gallery */}
                 <section>

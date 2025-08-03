@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { Search, Filter, X } from "lucide-react";
 import type { ContentType, SearchResult } from "@/types";
+import { Filter, Search, X } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 const CONTENT_TYPE_LABELS: Record<ContentType, string> = {
   portfolio: "ポートフォリオ",
@@ -15,6 +15,7 @@ const CONTENT_TYPE_LABELS: Record<ContentType, string> = {
   profile: "プロフィール",
   page: "ページ",
   asset: "アセット",
+  other: "その他",
 };
 
 const CATEGORIES = [
