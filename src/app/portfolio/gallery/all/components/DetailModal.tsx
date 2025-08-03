@@ -6,13 +6,14 @@
  */
 
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
+import { EnhancedContentItem } from "@/types";
 import { Calendar, ExternalLink, Tag, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 interface DetailModalProps {
-  item: PortfolioContentItem;
+  item: PortfolioContentItem | EnhancedContentItem;
   onClose: () => void;
 }
 
@@ -138,7 +139,11 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
             <div className="flex items-center space-x-2">
               <Tag className="w-4 h-4 text-accent" />
               <span className="text-foreground/70">Category:</span>
-              <span>{item.category}</span>
+              <span>
+                {(item as EnhancedContentItem).categories
+                  ? (item as EnhancedContentItem).categories.join(", ")
+                  : (item as PortfolioContentItem).category}
+              </span>
             </div>
           </div>
 

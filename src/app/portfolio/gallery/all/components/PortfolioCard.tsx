@@ -6,10 +6,11 @@
  */
 
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
+import { EnhancedContentItem } from "@/types";
 import Image from "next/image";
 
 interface PortfolioCardProps {
-  item: PortfolioContentItem;
+  item: PortfolioContentItem | EnhancedContentItem;
   onClick: () => void;
 }
 
@@ -40,6 +41,17 @@ export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             priority={false}
+            onError={(e) => {
+              console.error(
+                "Image failed to load:",
+                item.thumbnail,
+                "for item:",
+                item.title,
+              );
+            }}
+            onLoad={() => {
+              console.log("Image loaded successfully:", item.thumbnail);
+            }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-background">
@@ -69,7 +81,7 @@ export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
 
         {/* Technologies/Tags */}
         <div className="flex flex-wrap gap-1">
-          {(item.technologies || item.tags || [])
+          {((item as PortfolioContentItem).technologies || item.tags || [])
             .slice(0, 3)
             .map((tech, index) => (
               <span
@@ -79,9 +91,12 @@ export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
                 {tech}
               </span>
             ))}
-          {(item.technologies || item.tags || []).length > 3 && (
+          {((item as PortfolioContentItem).technologies || item.tags || [])
+            .length > 3 && (
             <span className="noto-sans-jp-light text-xs text-foreground/60 px-2 py-1">
-              +{(item.technologies || item.tags || []).length - 3}
+              +
+              {((item as PortfolioContentItem).technologies || item.tags || [])
+                .length - 3}
             </span>
           )}
         </div>

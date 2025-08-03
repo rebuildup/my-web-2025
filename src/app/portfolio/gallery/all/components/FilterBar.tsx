@@ -5,9 +5,9 @@
  * Task 3.1: フィルター機能（カテゴリ、技術、年別、タグ）の実装
  */
 
-import { useState, useCallback } from "react";
-import { Search, Filter, X } from "lucide-react";
 import { SearchFilter } from "@/lib/portfolio/search-index";
+import { Filter, Search, X } from "lucide-react";
+import { useCallback, useState } from "react";
 import { FilterOptions } from "./AllGalleryClient";
 
 interface FilterBarProps {
@@ -21,6 +21,15 @@ export function FilterBar({
   searchFilters,
   onFilterChange,
 }: FilterBarProps) {
+  console.log("FilterBar rendered with:", {
+    filtersCount: Object.keys(filters).length,
+    searchFiltersCount: searchFilters.length,
+    searchFilters: searchFilters.map((f) => ({
+      type: f.type,
+      optionsCount: f.options.length,
+    })),
+  });
+
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchTerm, setSearchTerm] = useState(filters.search || "");
 

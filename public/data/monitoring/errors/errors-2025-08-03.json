@@ -3074,5 +3074,41 @@
     "severity": "medium",
     "category": "user",
     "resolved": false
+  },
+  {
+    "id": "error_1754214376726_w8r1upcbm",
+    "timestamp": "2025-08-03T09:46:16.726Z",
+    "message": "Failed to read the 'localStorage' property from 'Window': Access is denied for this document.",
+    "stack": "SecurityError: Failed to read the 'localStorage' property from 'Window': Access is denied for this document.\n    at o8 (http://localhost:3000/_next/static/chunks/vendors-a397a415be9b48d9.js:5:472143)\n    at lO (http://localhost:3000/_next/static/chunks/vendors-a397a415be9b48d9.js:5:488032)\n    at lS (http://localhost:3000/_next/static/chunks/vendors-a397a415be9b48d9.js:5:487916)\n    at lO (http://localhost:3000/_next/static/chunks/vendors-a397a415be9b48d9.js:5:488077)\n    at lS (http://localhost:3000/_next/static/chunks/vendors-a397a415be9b48d9.js:5:487916)\n    at lO (http://localhost:3000/_next/static/chunks/vendors-a397a415be9b48d9.js:5:488077)\n    at lS (http://localhost:3000/_next/static/chunks/vendors-a397a415be9b48d9.js:5:487916)\n    at lO (http://localhost:3000/_next/static/chunks/vendors-a397a415be9b48d9.js:5:488012)\n    at lS (http://localhost:3000/_next/static/chunks/vendors-a397a415be9b48d9.js:5:487916)\n    at lO (http://localhost:3000/_next/static/chunks/vendors-a397a415be9b48d9.js:5:488077)",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754214376683_f7woycv2o",
+    "context": {
+      "filename": "http://localhost:3000/_next/static/chunks/vendors-a397a415be9b48d9.js",
+      "lineno": 5,
+      "colno": 472143,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754214383809_5i0rl4gpm",
+    "timestamp": "2025-08-03T09:46:23.809Z",
+    "message": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <RedirectErrorBoundary router={{...}}>\n      <InnerLayoutRouter url={\"/portfol...\"} tree={[...]} cacheNode={{lazyData:null, ...}} segmentPath={[...]}>\n        <VideoDesignProjectsPage>\n          <script>\n          <div className=\"min-h-scre...\">\n            <main className=\"py-10\">\n              <div className=\"container-...\">\n                <div className=\"space-y-10\">\n                  <header>\n                  <section>\n                    <h2>\n                    <VideoDesignGallery items={[...]} showVideoItems={true} showDesignItems={true} ...>\n                      <div className=\"space-y-8\">\n                        <div className=\"bg-gray-10...\">\n                          <div className=\"flex items...\">\n                            <span>\n                            <span>\n+                             0.40\n-                             0.65\n                              ...\n                            ...\n                        ...\n                  ...\n        ...\n",
+    "stack": "Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <RedirectErrorBoundary router={{...}}>\n      <InnerLayoutRouter url={\"/portfol...\"} tree={[...]} cacheNode={{lazyData:null, ...}} segmentPath={[...]}>\n        <VideoDesignProjectsPage>\n          <script>\n          <div className=\"min-h-scre...\">\n            <main className=\"py-10\">\n              <div className=\"container-...\">\n                <div className=\"space-y-10\">\n                  <header>\n                  <section>\n                    <h2>\n                    <VideoDesignGallery items={[...]} showVideoItems={true} showDesignItems={true} ...>\n                      <div className=\"space-y-8\">\n                        <div className=\"bg-gray-10...\">\n                          <div className=\"flex items...\">\n                            <span>\n                            <span>\n+                             0.40\n-                             0.65\n                              ...\n                            ...\n                        ...\n                  ...\n        ...\n\n    at throwOnHydrationMismatch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:2891:56)\n    at completeWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:6365:36)\n    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:890:74)\n    at completeUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8301:23)\n    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8238:28)\n    at workLoopConcurrentByScheduler (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8232:58)\n    at renderRootConcurrent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8214:71)\n    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:7846:176)\n    at performWorkOnRootViaSchedulerTask (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js:8820:9)\n    at MessagePort.performWorkUntilDeadline (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:2588:64)",
+    "url": "http://localhost:3000/portfolio/gallery/video&design",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754214383730_a8w6sd0bi",
+    "context": {
+      "filename": "http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc06._.js",
+      "lineno": 2891,
+      "colno": 56,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "user",
+    "resolved": false
   }
 ]

@@ -10,10 +10,22 @@ import { AllGalleryClient } from "./components/AllGalleryClient";
  * All Gallery Page with proper SEO and structured data
  */
 export default async function AllGalleryPage() {
+  console.log("=== AllGalleryPage EXECUTED ===");
+  console.log("Environment:", process.env.NODE_ENV);
+  console.log("Timestamp:", new Date().toISOString());
+
   try {
     // Get portfolio data with minimal error handling
+    console.log("Fetching portfolio data...");
     const items = await portfolioDataManager.getPortfolioData(true);
     const searchFilters = await portfolioDataManager.getSearchFilters();
+
+    console.log("All Gallery page debug:", {
+      totalItems: items.length,
+      searchFiltersCount: searchFilters.length,
+      itemsWithThumbnails: items.filter((item) => item.thumbnail).length,
+      categories: [...new Set(items.map((item) => item.category))],
+    });
 
     // Generate SEO metadata and structured data
     let structuredData = null;
