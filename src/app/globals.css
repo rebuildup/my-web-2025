@@ -1,3 +1,6 @@
+/* Google Fonts Preconnect and Import */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Shippori+Antique+B1&display=swap");
+
 @import "tailwindcss";
 
 /* Custom Design System based on documents/02_style.md */

@@ -71,15 +71,24 @@ jobs:
         run: |
           echo "=== Fixing standalone static files ==="
 
+          # Check if standalone build was created
+          if [ ! -d ".next/standalone" ]; then
+            echo "❌ Standalone build directory not found"
+            echo "Available directories in .next:"
+            ls -la .next/ || echo "No .next directory found"
+            exit 1
+          fi
+
           # Copy static files to standalone directory
-          if [ -d ".next/static" ] && [ -d ".next/standalone" ]; then
+          if [ -d ".next/static" ]; then
             echo "Copying static files..."
             cp -r .next/static .next/standalone/.next/static
             echo "✅ Static files copied successfully"
             
             # Verify critical files
-            if [ -f ".next/standalone/.next/static/css/"*.css ]; then
+            if ls .next/standalone/.next/static/css/*.css 1> /dev/null 2>&1; then
               echo "✅ CSS files found"
+              echo "CSS files: $(ls .next/standalone/.next/static/css/*.css | wc -l)"
             else
               echo "⚠️ No CSS files found"
             fi
@@ -91,7 +100,9 @@ jobs:
               echo "⚠️ No chunks directory found"
             fi
           else
-            echo "❌ Required directories not found"
+            echo "❌ Static files directory not found"
+            echo "Available directories in .next:"
+            ls -la .next/
             exit 1
           fi
 

@@ -47,6 +47,7 @@
     ".next",
     "dist",
     "build",
+    "temp_archive",
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",

@@ -3375,5 +3375,133 @@
         }
       ]
     }
+  },
+  {
+    "id": "perf_1754220245931_eetd617hi",
+    "timestamp": "2025-08-03T11:24:05.931Z",
+    "metric": "cls",
+    "value": 0.8105989606035159,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3001/portfolio",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 311,
+            "y": 0,
+            "width": 632,
+            "height": 992,
+            "top": 0,
+            "right": 943,
+            "bottom": 992,
+            "left": 311
+          },
+          "currentRect": {
+            "x": 86,
+            "y": 0,
+            "width": 770,
+            "height": 992,
+            "top": 0,
+            "right": 856,
+            "bottom": 992,
+            "left": 86
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 88,
+            "y": 0,
+            "width": 372,
+            "height": 123,
+            "top": 0,
+            "right": 460,
+            "bottom": 123,
+            "left": 88
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 484,
+            "y": 0,
+            "width": 372,
+            "height": 123,
+            "top": 0,
+            "right": 856,
+            "bottom": 123,
+            "left": 484
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 616,
+            "y": 231,
+            "width": 240,
+            "height": 310,
+            "top": 231,
+            "right": 856,
+            "bottom": 541,
+            "left": 616
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 313,
+            "y": 904,
+            "width": 630,
+            "height": 88,
+            "top": 904,
+            "right": 943,
+            "bottom": 992,
+            "left": 313
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 904,
+            "width": 943,
+            "height": 88,
+            "top": 904,
+            "right": 943,
+            "bottom": 992,
+            "left": 0
+          }
+        }
+      ]
+    }
   }
 ]
