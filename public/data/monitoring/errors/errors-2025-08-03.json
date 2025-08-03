@@ -3164,5 +3164,41 @@
     "severity": "medium",
     "category": "javascript",
     "resolved": false
+  },
+  {
+    "id": "error_1754219651864_4ylngh2yc",
+    "timestamp": "2025-08-03T11:14:11.864Z",
+    "message": "Failed to read the 'localStorage' property from 'Window': Access is denied for this document.",
+    "stack": "SecurityError: Failed to read the 'localStorage' property from 'Window': Access is denied for this document.\n    at o8 (http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js:5:472143)\n    at lO (http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js:5:488032)\n    at lS (http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js:5:487916)\n    at lO (http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js:5:488077)\n    at lS (http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js:5:487916)\n    at lO (http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js:5:488077)\n    at lS (http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js:5:487916)\n    at lO (http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js:5:488012)\n    at lS (http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js:5:487916)\n    at lO (http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js:5:488077)",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754219651815_wti0xufya",
+    "context": {
+      "filename": "http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js",
+      "lineno": 5,
+      "colno": 472143,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  },
+  {
+    "id": "error_1754219674755_6rgaf53rm",
+    "timestamp": "2025-08-03T11:14:34.755Z",
+    "message": "signal is aborted without reason",
+    "stack": "AbortError: signal is aborted without reason\n    at http://localhost:3000/_next/static/chunks/vendors-049d3876f4ebb4b4.js:60:4188",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754219674528_ojwfkl0tx",
+    "context": {
+      "type": "network",
+      "url": "http://localhost:3000/contact?_rsc=3lb4g"
+    },
+    "severity": "high",
+    "category": "network",
+    "resolved": false
+  }
+]e
   }
 ]

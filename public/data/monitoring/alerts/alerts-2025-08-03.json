@@ -3247,5 +3247,133 @@
         }
       ]
     }
+  },
+  {
+    "id": "perf_1754219682021_1guhop911",
+    "timestamp": "2025-08-03T11:14:42.021Z",
+    "metric": "cls",
+    "value": 0.4825064041248163,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/all",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 84,
+            "y": 40,
+            "width": 772,
+            "height": 951,
+            "top": 40,
+            "right": 856,
+            "bottom": 991,
+            "left": 84
+          },
+          "currentRect": {
+            "x": 309,
+            "y": 40,
+            "width": 1284,
+            "height": 951,
+            "top": 40,
+            "right": 1593,
+            "bottom": 991,
+            "left": 309
+          }
+        },
+        {
+          "element": "IMG",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 1292,
+            "y": 419,
+            "width": 300,
+            "height": 168,
+            "top": 419,
+            "right": 1592,
+            "bottom": 587,
+            "left": 1292
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 903,
+            "width": 943,
+            "height": 88,
+            "top": 903,
+            "right": 943,
+            "bottom": 991,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 313,
+            "y": 903,
+            "width": 1280,
+            "height": 88,
+            "top": 903,
+            "right": 1593,
+            "bottom": 991,
+            "left": 313
+          }
+        },
+        {
+          "element": "ARTICLE",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 965,
+            "y": 805,
+            "width": 302,
+            "height": 186,
+            "top": 805,
+            "right": 1267,
+            "bottom": 991,
+            "left": 965
+          }
+        },
+        {
+          "element": "ARTICLE",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 1291,
+            "y": 805,
+            "width": 302,
+            "height": 186,
+            "top": 805,
+            "right": 1593,
+            "bottom": 991,
+            "left": 1291
+          }
+        }
+      ]
+    }
   }
 ]

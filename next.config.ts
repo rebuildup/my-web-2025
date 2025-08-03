@@ -226,7 +226,7 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  // Output configuration - temporarily disabled for debugging
+  // Output configuration - temporarily disabled for testing
   // output: "standalone",
   poweredByHeader: false,
   compress: true,
