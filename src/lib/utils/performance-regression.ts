@@ -455,7 +455,9 @@ export class PerformanceTestRunner {
     this.collectMetrics().then((metrics) => {
       const environment = process.env.NODE_ENV as "development" | "production";
       this.detector.setBaseline(environment, metrics);
-      console.log(`Performance baseline set for ${environment}:`, metrics);
+      if (process.env.NODE_ENV === "development") {
+        console.log(`Performance baseline set for ${environment}:`, metrics);
+      }
     });
   }
 }

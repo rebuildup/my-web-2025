@@ -2,9 +2,9 @@
   "tags": [
     {
       "name": "aftereffects",
-      "count": 2,
+      "count": 4,
       "createdAt": "2025-08-02T14:01:15.266Z",
-      "lastUsed": "2025-08-02T14:01:15.266Z"
+      "lastUsed": "2025-08-03T00:43:07.656Z"
     },
     {
       "name": "illustrator",
@@ -29,7 +29,37 @@
       "count": 1,
       "createdAt": "2025-08-02T14:01:15.266Z",
       "lastUsed": "2025-08-02T14:01:15.266Z"
+    },
+    {
+      "name": "p5js",
+      "count": 1,
+      "createdAt": "2025-08-03T00:41:41.371Z",
+      "lastUsed": "2025-08-03T00:42:13.125Z"
+    },
+    {
+      "name": "c",
+      "count": 1,
+      "createdAt": "2025-08-03T00:42:31.589Z",
+      "lastUsed": "2025-08-03T00:43:07.604Z"
+    },
+    {
+      "name": "visualstudio",
+      "count": 1,
+      "createdAt": "2025-08-03T00:42:58.241Z",
+      "lastUsed": "2025-08-03T00:43:07.716Z"
+    },
+    {
+      "name": "pixijs",
+      "count": 1,
+      "createdAt": "2025-08-03T00:43:20.127Z",
+      "lastUsed": "2025-08-03T00:43:41.931Z"
+    },
+    {
+      "name": "vscode",
+      "count": 1,
+      "createdAt": "2025-08-03T00:43:24.982Z",
+      "lastUsed": "2025-08-03T00:43:41.983Z"
     }
   ],
-  "lastUpdated": "2025-08-02T14:01:15.266Z"
+  "lastUpdated": "2025-08-03T00:43:41.988Z"
 }

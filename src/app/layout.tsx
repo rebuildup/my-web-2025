@@ -8,7 +8,6 @@ import { PerformanceProvider } from "@/components/providers/PerformanceProvider"
 import { CookieConsent } from "@/components/ui/CookieConsent";
 import { PerformanceDevPanel } from "@/components/ui/CoreWebVitalsMonitor";
 import { GADebug } from "@/components/ui/ga-debug";
-import { GATestButton } from "@/components/ui/ga-test-button";
 import {
   CriticalResourcePreloader,
   LayoutShiftDetector,
@@ -136,10 +135,6 @@ export default function RootLayout({
           resources={[
             { href: "/images/og-image.png", as: "image" },
             { href: "/favicons/favicon.ico", as: "image" },
-            {
-              href: "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Shippori+Antique+B1&display=swap",
-              as: "style",
-            },
           ]}
         />
         <AnalyticsProvider>
@@ -149,9 +144,46 @@ export default function RootLayout({
             <LayoutShiftDetector />
             <CookieConsent />
             <GADebug />
-            <GATestButton />
           </PerformanceProvider>
         </AnalyticsProvider>
+
+        {/* Adobe Fonts (Typekit) - Load after hydration to avoid SSR mismatch */}
+        <Script
+          id="adobe-fonts"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(d) {
+                var config = {
+                  kitId: 'blm5pmr',
+                  scriptTimeout: 3000,
+                  async: true
+                },
+                h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\\bwf-loading\\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+              })(document);
+            `,
+          }}
+        />
+
+        {/* Easter Egg - Welcome Message */}
+        <Script
+          id="easter-egg"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              console.log(\`
+welcome !
+
+近況報告 : ウェブサイト作成中
+当分終わる気がしないです
+
+ここに来たあなたを
+いど端サーバーにご招待しましょう
+https://discord.gg/qmCGSBmc28
+              \`);
+            `,
+          }}
+        />
 
         {/* Structured Data (JSON-LD) */}
         <Script

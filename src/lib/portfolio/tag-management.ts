@@ -373,6 +373,8 @@ export class PortfolioTagManager implements TagManagementSystem {
    */
   private async syncWithContentData(): Promise<void> {
     try {
+      console.log("Syncing tags with content data...");
+
       // Load portfolio content data
       const portfolioPath = path.join(
         process.cwd(),
@@ -381,8 +383,11 @@ export class PortfolioTagManager implements TagManagementSystem {
       const portfolioContent = await fs.readFile(portfolioPath, "utf-8");
       const portfolioItems = JSON.parse(portfolioContent);
 
+      console.log(`Found ${portfolioItems.length} portfolio items`);
+
       // Extract all tags from content
       const contentTags = new Map<string, number>();
+      let totalTagsFound = 0;
 
       if (Array.isArray(portfolioItems)) {
         for (const item of portfolioItems) {
@@ -395,12 +400,17 @@ export class PortfolioTagManager implements TagManagementSystem {
                     normalizedTag,
                     (contentTags.get(normalizedTag) || 0) + 1,
                   );
+                  totalTagsFound++;
                 }
               }
             }
           }
         }
       }
+
+      console.log(
+        `Extracted ${totalTagsFound} tag instances across ${contentTags.size} unique tags`,
+      );
 
       // Update cache with content tags
       const now = new Date().toISOString();
@@ -419,11 +429,18 @@ export class PortfolioTagManager implements TagManagementSystem {
           };
           this.tagCache.set(tagName, existingTag);
           hasChanges = true;
+          console.log(
+            `Created new tag from content: ${tagName} (${count} uses)`,
+          );
         } else if (existingTag.count !== count) {
           // Update count if different
+          const oldCount = existingTag.count;
           existingTag.count = count;
           existingTag.lastUsed = now;
           hasChanges = true;
+          console.log(
+            `Updated tag count: ${tagName} (${oldCount} -> ${count})`,
+          );
         }
       }
 
@@ -431,14 +448,22 @@ export class PortfolioTagManager implements TagManagementSystem {
       for (const [tagName, tag] of this.tagCache.entries()) {
         if (!contentTags.has(tagName) && tag.count > 0) {
           // Reset count for tags not found in content
+          const oldCount = tag.count;
           tag.count = 0;
           hasChanges = true;
+          console.log(
+            `Reset tag count (not found in content): ${tagName} (${oldCount} -> 0)`,
+          );
         }
       }
 
       // Save changes if any
       if (hasChanges) {
+        console.log("Saving tag changes to file...");
         await this.saveTagsToFile();
+        console.log("Tag sync completed with changes");
+      } else {
+        console.log("Tag sync completed - no changes needed");
       }
     } catch (error) {
       console.warn("Error syncing with content data:", error);

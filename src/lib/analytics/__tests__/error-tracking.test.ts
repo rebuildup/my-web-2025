@@ -2,7 +2,7 @@
  * Tests for error tracking system
  */
 
-import { errorTracker, captureError } from "../error-tracking";
+import { captureError, errorTracker } from "../error-tracking";
 
 // Mock fetch
 global.fetch = jest.fn();
@@ -13,8 +13,9 @@ beforeEach(() => {
   console.error = jest.fn();
   (fetch as jest.Mock).mockClear();
 
-  // Clear previous errors
+  // Clear previous errors and reset cooldowns
   errorTracker.cleanup(new Date());
+  errorTracker.resetCooldowns();
 });
 
 afterEach(() => {
@@ -76,10 +77,19 @@ describe("ErrorTracker", () => {
       ).toBe("system");
     });
 
-    it("should send error report to API", () => {
+    it("should send error report to API", async () => {
       const error = new Error("API test error");
 
+      // Mock fetch to resolve immediately
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+      });
+
       captureError(error);
+
+      // Wait for async operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       expect(fetch).toHaveBeenCalledWith("/api/monitoring/errors", {
         method: "POST",

@@ -421,7 +421,9 @@ export class RealTimeMonitor {
       this.checkPerformanceMetrics();
     }, interval);
 
-    console.log("Performance monitoring started");
+    if (process.env.NODE_ENV === "development") {
+      console.log("Performance monitoring started");
+    }
   }
 
   // Stop monitoring
@@ -434,7 +436,9 @@ export class RealTimeMonitor {
       this.monitoringInterval = null;
     }
 
-    console.log("Performance monitoring stopped");
+    if (process.env.NODE_ENV === "development") {
+      console.log("Performance monitoring stopped");
+    }
   }
 
   // Check all performance metrics

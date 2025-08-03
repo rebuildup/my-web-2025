@@ -319,11 +319,11 @@
     "title": "コードタイプ風映像素材",
     "description": "p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。",
     "category": "design",
-    "tags": [],
+    "tags": ["p5js", "aftereffects"],
     "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:35:48.196Z",
-    "updatedAt": "2025-08-02T12:43:44.345Z",
+    "updatedAt": "2025-08-03T00:42:12.921Z",
     "videos": [
       {
         "type": "youtube",
@@ -365,11 +365,11 @@
     "title": "Aeエフェクトプラグイン Stretch v2",
     "description": "AeエフェクトプラグインStretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。Xの投稿が伸びてくれました。",
     "category": "develop",
-    "tags": [],
+    "tags": ["C++", "aftereffects", "VisualStudio"],
     "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:35:33.707Z",
-    "updatedAt": "2025-08-02T12:43:33.445Z",
+    "updatedAt": "2025-08-03T00:43:07.427Z",
     "videos": [],
     "images": ["/images/portfolio/stretch_v2-1753831090491-5qcmzj.jpg"],
     "externalLinks": [
@@ -400,11 +400,11 @@
     "title": "タイピングゲーム ProtoType",
     "description": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます",
     "category": "develop",
-    "tags": [],
+    "tags": ["PIXI.JS", "VSCode"],
     "status": "published",
     "priority": 50,
     "createdAt": "2025-07-28T12:35:20.147Z",
-    "updatedAt": "2025-08-02T12:43:25.073Z",
+    "updatedAt": "2025-08-03T00:43:41.773Z",
     "videos": [
       {
         "type": "youtube",

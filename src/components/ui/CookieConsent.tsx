@@ -5,8 +5,8 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
 import { useAnalytics } from "@/components/providers/AnalyticsProvider";
+import { useEffect, useState } from "react";
 
 interface CookieConsentProps {
   className?: string;

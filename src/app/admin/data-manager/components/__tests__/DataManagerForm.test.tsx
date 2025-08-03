@@ -163,7 +163,7 @@ describe("DataManagerForm TagManagementUI Integration", () => {
     render(<DataManagerForm {...defaultProps} />);
 
     expect(
-      screen.getByPlaceholderText("Search or add tags..."),
+      screen.getByPlaceholderText("Search existing tags or create new ones..."),
     ).toBeInTheDocument();
   });
 

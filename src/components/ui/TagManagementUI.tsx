@@ -36,10 +36,14 @@ export function TagManagementUI({
   const loadTags = useCallback(async () => {
     try {
       setIsLoading(true);
+      console.log("Loading tags from tag manager...");
       const tags = await tagManager.getAllTags();
+      console.log("Loaded tags:", tags);
       setAvailableTags(tags);
     } catch (error) {
       console.error("Failed to load tags:", error);
+      // Show empty array on error to prevent UI issues
+      setAvailableTags([]);
     } finally {
       setIsLoading(false);
     }
@@ -53,16 +57,39 @@ export function TagManagementUI({
   // Filter tags based on search query
   useEffect(() => {
     if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
       const filtered = availableTags.filter(
         (tag) =>
-          tag.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+          tag.name.toLowerCase().includes(query) &&
           !selectedTags.includes(tag.name),
       );
+
+      // Sort by relevance: exact match first, then starts with, then contains
+      filtered.sort((a, b) => {
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
+
+        const aExact = aName === query;
+        const bExact = bName === query;
+        if (aExact && !bExact) return -1;
+        if (!aExact && bExact) return 1;
+
+        const aStarts = aName.startsWith(query);
+        const bStarts = bName.startsWith(query);
+        if (aStarts && !bStarts) return -1;
+        if (!aStarts && bStarts) return 1;
+
+        // If same relevance, sort by usage count
+        return b.count - a.count;
+      });
+
       setFilteredTags(filtered);
     } else {
-      setFilteredTags(
-        availableTags.filter((tag) => !selectedTags.includes(tag.name)),
+      // Show all available tags sorted by usage when no search query
+      const available = availableTags.filter(
+        (tag) => !selectedTags.includes(tag.name),
       );
+      setFilteredTags(available);
     }
   }, [searchQuery, availableTags, selectedTags]);
 
@@ -94,6 +121,7 @@ export function TagManagementUI({
 
     // Update tag usage
     try {
+      console.log("Updating tag usage for:", tagName);
       await tagManager.updateTagUsage(tagName);
       await loadTags(); // Refresh to get updated usage counts
     } catch (error) {
@@ -101,6 +129,7 @@ export function TagManagementUI({
     }
 
     setSearchQuery("");
+    setNewTagInput("");
     setIsDropdownOpen(false);
   };
 
@@ -116,12 +145,18 @@ export function TagManagementUI({
     if (maxTags && selectedTags.length >= maxTags) return;
 
     try {
+      console.log("Creating new tag:", tagName);
       await tagManager.createTag(tagName);
       await handleTagSelect(tagName);
       setNewTagInput("");
+      setSearchQuery("");
       await loadTags(); // Refresh tag list
+      console.log("New tag created successfully:", tagName);
     } catch (error) {
       console.error("Failed to create new tag:", error);
+      alert(
+        `Failed to create tag "${tagName}": ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
     }
   };
 
@@ -237,33 +272,53 @@ export function TagManagementUI({
 
                 {/* Existing tags */}
                 {filteredTags.length > 0 ? (
-                  filteredTags.map((tag) => (
+                  filteredTags.slice(0, 20).map((tag) => (
                     <button
                       key={tag.name}
                       type="button"
                       onClick={() => handleTagSelect(tag.name)}
-                      className="w-full px-4 py-3 text-left hover:bg-foreground hover:bg-opacity-10 flex items-center justify-between group text-foreground"
+                      className="w-full px-4 py-3 text-left hover:bg-foreground hover:bg-opacity-10 flex items-center justify-between group text-foreground border-b border-gray-100 last:border-b-0"
                     >
                       <div className="flex items-center gap-2">
                         <TagIcon className="w-4 h-4 text-gray-400" />
-                        <span>{tag.name}</span>
+                        <span className="font-medium">{tag.name}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-gray-400">
                         <span className="bg-foreground bg-opacity-10 px-2 py-1 rounded">
-                          {tag.count} uses
+                          {tag.count} use{tag.count !== 1 ? "s" : ""}
                         </span>
                       </div>
                     </button>
                   ))
                 ) : searchQuery && !showCreateOption ? (
                   <div className="px-4 py-3 text-foreground text-center">
-                    No tags found for &quot;{searchQuery}&quot;
+                    <div className="text-gray-500 mb-2">
+                      No existing tags found for &quot;{searchQuery}&quot;
+                    </div>
+                    {allowNewTags && (
+                      <div className="text-xs text-gray-400">
+                        Press Enter to create a new tag
+                      </div>
+                    )}
                   </div>
                 ) : !searchQuery && filteredTags.length === 0 ? (
                   <div className="px-4 py-3 text-foreground text-center">
-                    All available tags are already selected
+                    <div className="text-gray-500 mb-2">
+                      All available tags are already selected
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      Type to create a new tag
+                    </div>
                   </div>
                 ) : null}
+
+                {/* Show more indicator if there are more tags */}
+                {filteredTags.length > 20 && (
+                  <div className="px-4 py-2 text-xs text-gray-400 text-center border-t border-gray-100">
+                    ... and {filteredTags.length - 20} more tags. Keep typing to
+                    narrow down results.
+                  </div>
+                )}
               </>
             )}
           </div>

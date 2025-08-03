@@ -1,29 +1,29 @@
 "use client";
 
 import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
-import { initializePerformanceMonitoring } from "@/lib/utils/performance";
-import { initializeServiceWorker } from "@/lib/utils/service-worker";
+  CoreWebVitalsMetrics,
+  CoreWebVitalsMonitor,
+  initializeCoreWebVitals,
+} from "@/lib/utils/core-web-vitals";
 import { initializeDynamicImports } from "@/lib/utils/dynamic-imports";
+import { initializePerformanceMonitoring } from "@/lib/utils/performance";
 import {
   initializePerformanceAlerting,
-  RealTimeMonitor,
   PerformanceAlert,
+  RealTimeMonitor,
 } from "@/lib/utils/performance-alerts";
-import {
-  initializeCoreWebVitals,
-  CoreWebVitalsMonitor,
-  CoreWebVitalsMetrics,
-} from "@/lib/utils/core-web-vitals";
 import {
   initializePerformanceRegression,
   PerformanceTestRunner,
 } from "@/lib/utils/performance-regression";
+import { initializeServiceWorker } from "@/lib/utils/service-worker";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface PerformanceReport {
   performance: {
@@ -208,7 +208,9 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
 
     try {
       const results = await testRunner.runPerformanceTests();
-      console.log("Performance test results:", results);
+      if (process.env.NODE_ENV === "development") {
+        console.log("Performance test results:", results);
+      }
 
       // Log regression results
       if (results.regressionReport.hasRegressions) {

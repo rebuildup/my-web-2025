@@ -142,6 +142,31 @@ export default function DataManagerPage() {
         console.log("Save successful!");
         setSaveStatus("success");
 
+        // Update tag usage counts for all tags in the item
+        if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
+          console.log("Updating tag usage for tags:", item.tags);
+          try {
+            // Update usage for each tag
+            await Promise.all(
+              item.tags.map(async (tag) => {
+                if (typeof tag === "string" && tag.trim()) {
+                  const tagResponse = await fetch(
+                    `/api/admin/tags/${encodeURIComponent(tag)}`,
+                    { method: "PUT" },
+                  );
+                  if (!tagResponse.ok) {
+                    console.warn(`Failed to update usage for tag: ${tag}`);
+                  }
+                }
+              }),
+            );
+            console.log("Tag usage updated successfully");
+          } catch (tagError) {
+            console.warn("Error updating tag usage:", tagError);
+            // Don't fail the save operation if tag update fails
+          }
+        }
+
         // 保存されたアイテムでselectedItemを更新
         const savedItem = result.data || item;
         setSelectedItem(savedItem);

@@ -697,15 +697,36 @@ export function DataManagerForm({
 
           <div>
             <label className={labelStyle}>Tags</label>
-            <TagManagementUI
-              selectedTags={formData.tags || []}
-              onChange={handleTagsChange}
-              tagManager={clientTagManager}
-              allowNewTags={true}
-              maxTags={10}
-              placeholder="Search or add tags..."
-              className="mt-1"
-            />
+            <div className="space-y-2">
+              <TagManagementUI
+                selectedTags={formData.tags || []}
+                onChange={handleTagsChange}
+                tagManager={clientTagManager}
+                allowNewTags={true}
+                maxTags={15}
+                placeholder="Search existing tags or create new ones..."
+                className="mt-1"
+              />
+              <div className="flex items-center justify-between text-xs text-gray-500">
+                <span>
+                  {formData.tags && formData.tags.length > 0
+                    ? `${formData.tags.length} tag${formData.tags.length > 1 ? "s" : ""} selected`
+                    : "No tags selected"}
+                </span>
+                <span className="text-gray-400">Max 15 tags</span>
+              </div>
+              <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded border">
+                <div className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">💡</span>
+                  <div>
+                    <strong>Tag Tips:</strong> Type to search existing tags or
+                    create new ones. Tags help categorize content and improve
+                    searchability. Use descriptive terms like &quot;react&quot;,
+                    &quot;design&quot;, &quot;video&quot;, etc.
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div>

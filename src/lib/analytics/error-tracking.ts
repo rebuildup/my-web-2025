@@ -34,6 +34,10 @@ class ErrorTracker {
   private performanceIssues: PerformanceIssue[] = [];
   private sessionId: string;
   private isInitialized = false;
+  private lastErrorReportTime = 0;
+  private lastPerformanceReportTime = 0;
+  private readonly ERROR_REPORT_COOLDOWN = 3000; // 3秒間隔 (increased from 1秒)
+  private readonly PERFORMANCE_REPORT_COOLDOWN = 5000; // 5秒間隔 (increased from 2秒)
 
   constructor() {
     this.sessionId = this.generateSessionId();
@@ -169,9 +173,15 @@ class ErrorTracker {
       try {
         const response = await originalFetch(...args);
 
-        // Skip monitoring for monitoring endpoints to avoid infinite loops
+        // Skip monitoring for monitoring endpoints and Google Analytics to avoid infinite loops
         const url = typeof args[0] === "string" ? args[0] : args[0]?.toString();
-        if (url?.includes("/api/monitoring/")) {
+        if (
+          url?.includes("/api/monitoring/") ||
+          url?.includes("googletagmanager.com") ||
+          url?.includes("google-analytics.com") ||
+          url?.includes("analytics.google.com") ||
+          url?.includes("doubleclick.net")
+        ) {
           return response;
         }
 
@@ -192,20 +202,31 @@ class ErrorTracker {
 
         return response;
       } catch (error) {
-        // Skip monitoring for monitoring endpoints to avoid infinite loops
+        // Skip monitoring for monitoring endpoints and Google Analytics to avoid infinite loops
         const url = typeof args[0] === "string" ? args[0] : args[0]?.toString();
-        if (url?.includes("/api/monitoring/")) {
+        if (
+          url?.includes("/api/monitoring/") ||
+          url?.includes("googletagmanager.com") ||
+          url?.includes("google-analytics.com") ||
+          url?.includes("analytics.google.com") ||
+          url?.includes("doubleclick.net")
+        ) {
           throw error;
         }
 
-        this.captureError(
-          error instanceof Error ? error : new Error(String(error)),
-          {
-            type: "network",
-            url: args[0],
-          },
-          "high",
-        );
+        // Only capture network errors that are not "Network error: 0" (which are often false positives)
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        if (errorMessage !== "Network error: 0") {
+          this.captureError(
+            error instanceof Error ? error : new Error(String(error)),
+            {
+              type: "network",
+              url: args[0],
+            },
+            "high",
+          );
+        }
         throw error;
       }
     };
@@ -383,6 +404,12 @@ class ErrorTracker {
    * Send error report to monitoring endpoint
    */
   private async sendErrorReport(errorReport: ErrorReport): Promise<void> {
+    const now = Date.now();
+    if (now - this.lastErrorReportTime < this.ERROR_REPORT_COOLDOWN) {
+      // Skip sending if too frequent
+      return;
+    }
+
     try {
       await fetch("/api/monitoring/errors", {
         method: "POST",
@@ -391,6 +418,7 @@ class ErrorTracker {
         },
         body: JSON.stringify(errorReport),
       });
+      this.lastErrorReportTime = now;
     } catch (error) {
       // Fail silently to avoid infinite error loops
       if (process.env.NODE_ENV === "development") {
@@ -405,6 +433,15 @@ class ErrorTracker {
   private async sendPerformanceReport(
     performanceIssue: PerformanceIssue,
   ): Promise<void> {
+    const now = Date.now();
+    if (
+      now - this.lastPerformanceReportTime <
+      this.PERFORMANCE_REPORT_COOLDOWN
+    ) {
+      // Skip sending if too frequent
+      return;
+    }
+
     try {
       // Convert PerformanceIssue to the format expected by the API
       const alertData = {
@@ -425,6 +462,7 @@ class ErrorTracker {
         },
         body: JSON.stringify(alertData),
       });
+      this.lastPerformanceReportTime = now;
     } catch (error) {
       // Fail silently to avoid infinite error loops
       if (process.env.NODE_ENV === "development") {
@@ -521,6 +559,14 @@ class ErrorTracker {
     this.performanceIssues = this.performanceIssues.filter(
       (issue) => new Date(issue.timestamp) >= olderThan,
     );
+  }
+
+  /**
+   * Reset cooldown timers (for testing)
+   */
+  resetCooldowns(): void {
+    this.lastErrorReportTime = 0;
+    this.lastPerformanceReportTime = 0;
   }
 
   /**

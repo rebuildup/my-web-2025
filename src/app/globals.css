@@ -1,6 +1,3 @@
-/* Adobe Fonts Loading Script - Kit ID: blm5pmr */
-@import url("https://use.typekit.net/blm5pmr.css");
-
 /* Google Fonts Preconnect and Import */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Shippori+Antique+B1&display=swap");
 
@@ -48,13 +45,22 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.wf-loading {
+html.wf-loading {
   visibility: hidden;
 }
 
-.wf-active,
-.wf-inactive {
+html.wf-active,
+html.wf-inactive {
   visibility: visible;
+}
+
+/* Adobe Fonts Fallback - Always available */
+.neue-haas-grotesk-display {
+  font-family: "neue-haas-grotesk-display", "Noto Sans JP", sans-serif;
+}
+
+.zen-kaku-gothic-new {
+  font-family: "zen-kaku-gothic-new", "Noto Sans JP", sans-serif;
 }
 
 .loading-screen {
@@ -144,41 +150,28 @@ body {
 }
 
 /* Typography Classes based on documents/02_style.md */
-.neue-haas-grotesk-display {
-  font-family: var(--font-neue-haas);
-  font-weight: 700;
-  font-style: italic;
-}
-
-.zen-kaku-gothic-new {
-  font-family: var(--font-zen-kaku);
-  font-weight: 700;
-  font-style: normal;
-}
-
+/* Adobe Fonts Classes with Fallbacks */
+/* Google Fonts Classes */
 .noto-sans-jp-light {
-  font-family: var(--font-noto-jp);
-  font-optical-sizing: auto;
+  font-family: "Noto Sans JP", sans-serif;
   font-weight: 300;
   font-style: normal;
 }
 
 .noto-sans-jp-regular {
-  font-family: var(--font-noto-jp);
-  font-optical-sizing: auto;
+  font-family: "Noto Sans JP", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
 
 .noto-sans-jp-italic {
-  font-family: var(--font-noto-jp);
-  font-optical-sizing: auto;
-  font-weight: 300;
+  font-family: "Noto Sans JP", sans-serif;
+  font-weight: 400;
   font-style: italic;
 }
 
 .shippori-antique-b1-regular {
-  font-family: var(--font-shippori);
+  font-family: "Shippori Antique B1", serif;
   font-weight: 400;
   font-style: normal;
 }

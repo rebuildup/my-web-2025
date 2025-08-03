@@ -65,9 +65,13 @@ const config: Config = {
 
       // Font families based on documents/02_style.md
       fontFamily: {
-        // Adobe Fonts
-        "neue-haas": ["neue-haas-grotesk-display", "sans-serif"],
-        "zen-kaku": ["zen-kaku-gothic-new", "sans-serif"],
+        // Adobe Fonts with fallbacks
+        "neue-haas": [
+          "neue-haas-grotesk-display",
+          "Noto Sans JP",
+          "sans-serif",
+        ],
+        "zen-kaku": ["zen-kaku-gothic-new", "Noto Sans JP", "sans-serif"],
 
         // Google Fonts
         "noto-jp": ["Noto Sans JP", "sans-serif"],
@@ -75,8 +79,8 @@ const config: Config = {
 
         // Default fallbacks
         sans: ["Noto Sans JP", "sans-serif"],
-        heading: ["neue-haas-grotesk-display", "sans-serif"],
-        accent: ["zen-kaku-gothic-new", "sans-serif"],
+        heading: ["neue-haas-grotesk-display", "Noto Sans JP", "sans-serif"],
+        accent: ["zen-kaku-gothic-new", "Noto Sans JP", "sans-serif"],
       },
 
       // Remove default decorations (no shadows, rounded corners, gradients)
