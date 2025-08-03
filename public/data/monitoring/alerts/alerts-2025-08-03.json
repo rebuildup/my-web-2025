@@ -3165,5 +3165,87 @@
         }
       ]
     }
+  },
+  {
+    "id": "perf_1754216720609_0errsb0fz",
+    "timestamp": "2025-08-03T10:25:20.609Z",
+    "metric": "cls",
+    "value": 0.2576773300196561,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 93,
+            "y": 34,
+            "width": 770,
+            "height": 614,
+            "top": 34,
+            "right": 863,
+            "bottom": 648,
+            "left": 93
+          },
+          "currentRect": {
+            "x": 318,
+            "y": 34,
+            "width": 1282,
+            "height": 489,
+            "top": 34,
+            "right": 1600,
+            "bottom": 523,
+            "left": 318
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 904,
+            "width": 958,
+            "height": 87,
+            "top": 904,
+            "right": 958,
+            "bottom": 991,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 320,
+            "y": 903,
+            "width": 1280,
+            "height": 88,
+            "top": 903,
+            "right": 1600,
+            "bottom": 991,
+            "left": 320
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 884,
+            "y": 926,
+            "width": 78,
+            "height": 65,
+            "top": 926,
+            "right": 962,
+            "bottom": 991,
+            "left": 884
+          },
+          "currentRect": {
+            "x": 1846,
+            "y": 925,
+            "width": 74,
+            "height": 66,
+            "top": 925,
+            "right": 1920,
+            "bottom": 991,
+            "left": 1846
+          }
+        }
+      ]
+    }
   }
 ]

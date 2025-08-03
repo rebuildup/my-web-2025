@@ -50,8 +50,8 @@ export default async function AllGalleryPage() {
           />
         )}
         <div className="min-h-screen bg-background text-foreground">
-          <main className="py-10">
-            <div className="container mx-auto px-4">
+          <main className="flex items-center py-10">
+            <div className="container-system">
               {items.length > 0 ? (
                 <AllGalleryClient
                   initialItems={items}
@@ -72,8 +72,8 @@ export default async function AllGalleryPage() {
 
     return (
       <div className="min-h-screen bg-background text-foreground">
-        <main className="py-10">
-          <div className="container mx-auto px-4">
+        <main className="flex items-center py-10">
+          <div className="container-system">
             <div className="bg-red-100 p-4 rounded">
               <p className="text-red-800">
                 Error loading portfolio:{" "}
