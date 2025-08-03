@@ -110,6 +110,34 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // CSS files with proper content type
+      {
+        source: "/_next/static/css/(.*)",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "text/css; charset=utf-8",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      // JavaScript files with proper content type
+      {
+        source: "/_next/static/chunks/(.*)",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/javascript; charset=utf-8",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
       {
         source: "/downloads/(.*)",
         headers: [
@@ -198,8 +226,8 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  // Output configuration - disable standalone for debugging
-  output: "standalone",
+  // Output configuration - temporarily disabled for debugging
+  // output: "standalone",
   poweredByHeader: false,
   compress: true,
   generateEtags: true,
