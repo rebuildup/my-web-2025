@@ -48,22 +48,22 @@ export default async function DevelopGalleryPage() {
             }}
           />
         )}
-        <div className="min-h-screen bg-background text-foreground">
-          <main className="py-10">
-            <div className="container mx-auto px-4">
-              {items.length > 0 ? (
-                <DevelopGalleryClient
-                  initialItems={items}
-                  searchFilters={searchFilters}
-                />
-              ) : (
+        {items.length > 0 ? (
+          <DevelopGalleryClient
+            initialItems={items}
+            searchFilters={searchFilters}
+          />
+        ) : (
+          <div className="min-h-screen bg-background text-foreground">
+            <main className="py-10">
+              <div className="container mx-auto px-4">
                 <div className="bg-red-100 p-4 rounded">
                   <p className="text-red-800">No development projects found.</p>
                 </div>
-              )}
-            </div>
-          </main>
-        </div>
+              </div>
+            </main>
+          </div>
+        )}
       </>
     );
   } catch (error) {

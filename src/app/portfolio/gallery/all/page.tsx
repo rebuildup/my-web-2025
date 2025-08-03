@@ -49,22 +49,22 @@ export default async function AllGalleryPage() {
             }}
           />
         )}
-        <div className="min-h-screen bg-background text-foreground">
-          <main className="flex items-center py-10">
-            <div className="container-system">
-              {items.length > 0 ? (
-                <AllGalleryClient
-                  initialItems={items}
-                  searchFilters={searchFilters}
-                />
-              ) : (
+        {items.length > 0 ? (
+          <AllGalleryClient
+            initialItems={items}
+            searchFilters={searchFilters}
+          />
+        ) : (
+          <div className="min-h-screen bg-background text-foreground">
+            <main className="py-10">
+              <div className="container mx-auto px-4">
                 <div className="bg-red-100 p-4 rounded">
                   <p className="text-red-800">No portfolio items found.</p>
                 </div>
-              )}
-            </div>
-          </main>
-        </div>
+              </div>
+            </main>
+          </div>
+        )}
       </>
     );
   } catch (error) {
@@ -72,8 +72,8 @@ export default async function AllGalleryPage() {
 
     return (
       <div className="min-h-screen bg-background text-foreground">
-        <main className="flex items-center py-10">
-          <div className="container-system">
+        <main className="py-10">
+          <div className="container mx-auto px-4">
             <div className="bg-red-100 p-4 rounded">
               <p className="text-red-800">
                 Error loading portfolio:{" "}
