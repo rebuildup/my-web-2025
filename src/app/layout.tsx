@@ -25,19 +25,21 @@ declare global {
   }
 }
 
-// Google Fonts configuration based on documents/02_style.md
+// Google Fonts configuration based on documents/02_style.md - Optimized for performance
 const notoSansJP = Noto_Sans_JP({
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-noto-jp",
   display: "swap",
+  preload: true,
 });
 
 const shipporiAntique = Shippori_Antique_B1({
   weight: ["400"],
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-shippori",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
