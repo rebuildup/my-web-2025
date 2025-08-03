@@ -37,12 +37,68 @@ export interface ContentItem {
   videos?: MediaEmbed[];
   externalLinks?: ExternalLink[];
   downloadInfo?: DownloadInfo;
-  content?: string; // Markdown or HTML
-  contentPath?: string; // Markdown path
+  content?: string; // Markdown or HTML - kept for backward compatibility
+  contentPath?: string; // Legacy field - kept for backward compatibility
+  markdownPath?: string; // New markdown file path
+  markdownMigrated?: boolean; // Migration completion flag
   stats?: ContentStats;
   seo?: SEOData;
   customFields?: Record<string, unknown>;
   aspectRatio?: number; // For grid layout calculations
+}
+
+// Enhanced content item interface for markdown system
+export interface MarkdownContentItem extends ContentItem {
+  markdownPath?: string; // Path to markdown file
+  markdownMigrated?: boolean; // Migration completion flag
+}
+
+// Markdown file metadata for tracking and integrity
+export interface MarkdownFileMetadata {
+  id: string;
+  filePath: string;
+  createdAt: string;
+  updatedAt: string;
+  size: number;
+  checksum: string; // File integrity check
+}
+
+// Embed resolution mapping for markdown content
+export interface EmbedResolutionMap {
+  images: Map<number, string>; // index -> URL
+  videos: Map<number, MediaEmbed>; // index -> video data
+  links: Map<number, ExternalLink>; // index -> link data
+}
+
+// Media data structure for embed resolution
+export interface MediaData {
+  images: string[];
+  videos: MediaEmbed[];
+  externalLinks: ExternalLink[];
+}
+
+// Embed reference structure for parsing
+export interface EmbedReference {
+  type: "image" | "video" | "link";
+  index: number;
+  altText?: string;
+  customText?: string;
+}
+
+// Validation result for embed syntax
+export interface ValidationResult {
+  isValid: boolean;
+  errors: EmbedError[];
+  warnings?: string[];
+}
+
+// Embed error types for validation
+export interface EmbedError {
+  type: "INVALID_INDEX" | "MISSING_MEDIA" | "MALFORMED_SYNTAX";
+  line: number;
+  column: number;
+  message: string;
+  suggestion?: string;
 }
 
 export interface MediaEmbed {

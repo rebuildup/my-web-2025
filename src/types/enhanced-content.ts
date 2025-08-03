@@ -141,6 +141,32 @@ export interface MarkdownEditorProps {
   onSave?: (content: string, filePath: string) => Promise<void>;
   preview?: boolean;
   toolbar?: boolean;
+  embedSupport?: boolean;
+  mediaData?: {
+    images: string[];
+    videos: Array<{
+      type: string;
+      url: string;
+      title?: string;
+      description?: string;
+      thumbnail?: string;
+    }>;
+    externalLinks: Array<{
+      type: string;
+      url: string;
+      title: string;
+      description?: string;
+    }>;
+  };
+  onValidationErrors?: (
+    errors: Array<{
+      line: number;
+      column: number;
+      type: "INVALID_INDEX" | "MISSING_MEDIA" | "MALFORMED_SYNTAX";
+      message: string;
+      suggestion?: string;
+    }>,
+  ) => void;
 }
 
 // Enhanced UI component types

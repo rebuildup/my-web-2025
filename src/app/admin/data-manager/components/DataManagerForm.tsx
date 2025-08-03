@@ -751,6 +751,19 @@ export function DataManagerForm({
                 onChange={(content) => handleInputChange("content", content)}
                 preview={true}
                 toolbar={true}
+                embedSupport={true}
+                mediaData={{
+                  images: formData.images || [],
+                  videos: (formData.videos || []).map((video) => ({
+                    ...video,
+                    title: video.title || `Video ${video.url}`,
+                  })),
+                  externalLinks: formData.externalLinks || [],
+                }}
+                onValidationErrors={(errors) => {
+                  // Handle validation errors if needed
+                  console.log("Embed validation errors:", errors);
+                }}
               />
             ) : (
               <textarea

@@ -10,7 +10,13 @@ export type {
   ContentStats,
   ContentType,
   DownloadInfo,
+  EmbedError,
+  EmbedReference,
+  EmbedResolutionMap,
   ExternalLink,
+  MarkdownContentItem,
+  MarkdownFileMetadata,
+  MediaData,
   MediaEmbed,
   SearchIndex,
   SearchOptions,
@@ -189,6 +195,29 @@ export const validateContentItem = (item: unknown): item is ContentItem => {
     typeof (item as ContentItem).priority === "number" &&
     typeof (item as ContentItem).createdAt === "string"
   );
+};
+
+// Import markdown types for validation
+import type { MarkdownContentItem } from "./content";
+
+// Markdown content item validation
+export const validateMarkdownContentItem = (
+  item: unknown,
+): item is MarkdownContentItem => {
+  return (
+    validateContentItem(item) &&
+    (typeof (item as MarkdownContentItem).markdownPath === "string" ||
+      (item as MarkdownContentItem).markdownPath === undefined) &&
+    (typeof (item as MarkdownContentItem).markdownMigrated === "boolean" ||
+      (item as MarkdownContentItem).markdownMigrated === undefined)
+  );
+};
+
+// Type guard to check if an item has markdown support
+export const isMarkdownContentItem = (
+  item: ContentItem,
+): item is MarkdownContentItem => {
+  return "markdownPath" in item || "markdownMigrated" in item;
 };
 
 // Enhanced content type guards and utilities
