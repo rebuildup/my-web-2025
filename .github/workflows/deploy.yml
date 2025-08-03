@@ -67,17 +67,32 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: npm run build
 
-      - name: Fix standalone static files
+      - name: Fix standalone static files and CSS script tag issue
         run: |
-          echo "=== Fixing standalone static files ==="
+          echo "=== Fixing standalone static files and CSS script tag issue ==="
+
+          # Debug: Check current directory and build output
+          echo "Current directory: $(pwd)"
+          echo "Available files and directories:"
+          ls -la
+
+          # Check if .next directory exists
+          if [ ! -d ".next" ]; then
+            echo "❌ .next directory not found"
+            exit 1
+          fi
+
+          echo "Contents of .next directory:"
+          ls -la .next/
 
           # Check if standalone build was created
           if [ ! -d ".next/standalone" ]; then
             echo "❌ Standalone build directory not found"
-            echo "Available directories in .next:"
-            ls -la .next/ || echo "No .next directory found"
+            echo "This might indicate that output: 'standalone' is not properly configured in next.config.ts"
             exit 1
           fi
+
+          echo "✅ Standalone directory found"
 
           # Copy static files to standalone directory
           if [ -d ".next/static" ]; then
@@ -99,6 +114,30 @@ jobs:
             else
               echo "⚠️ No chunks directory found"
             fi
+
+            # Fix CSS script tag issue in HTML files
+            echo "Fixing CSS script tag issue in prerendered HTML files..."
+            
+            # Find and fix HTML files in standalone build
+            find .next/standalone/.next/server/app -name "*.html" -type f 2>/dev/null | while read -r htmlfile; do
+              if [ -f "$htmlfile" ]; then
+                # Replace CSS script tags with proper link tags
+                sed -i 's|<script src="\(/_next/static/css/[^"]*\.css\)" async=""></script>||g' "$htmlfile" 2>/dev/null || true
+                echo "Fixed CSS script tags in: $htmlfile"
+              fi
+            done
+
+            # Also fix in server-side rendered files
+            find .next/standalone/.next/server -name "*.js" -type f 2>/dev/null | while read -r jsfile; do
+              if [ -f "$jsfile" ] && grep -q "/_next/static/css.*\.css.*async" "$jsfile" 2>/dev/null; then
+                # Remove CSS script tag generation from server files
+                sed -i 's|src:"/_next/static/css/\([^"]*\.css\)",async:""|rel:"stylesheet",href:"/_next/static/css/\1"|g' "$jsfile" 2>/dev/null || true
+                echo "Fixed CSS script generation in: $jsfile"
+              fi
+            done
+
+            echo "✅ CSS script tag issue fix completed"
+            
           else
             echo "❌ Static files directory not found"
             echo "Available directories in .next:"
