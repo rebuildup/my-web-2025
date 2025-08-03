@@ -305,7 +305,9 @@ describe("VideoDesignProjectsPage - Comprehensive Tests", () => {
       const page = await VideoDesignProjectsPage();
       render(page);
 
-      expect(screen.getByText("Video & Design")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { level: 1, name: "Video & Design" }),
+      ).toBeInTheDocument();
       expect(
         screen.getByText(
           /デザインコンセプトと映像表現を融合した創造的なプロジェクト集です/,
@@ -313,28 +315,18 @@ describe("VideoDesignProjectsPage - Comprehensive Tests", () => {
       ).toBeInTheDocument();
     });
 
-    it("should display all design approach sections", async () => {
+    it("should display gallery section", async () => {
       const page = await VideoDesignProjectsPage();
       render(page);
 
-      const expectedSections = [
-        "Design Approach",
-        "Concept Development",
-        "Visual Language",
-        "Motion Design",
-        "System Integration",
-      ];
-
-      expectedSections.forEach((section) => {
-        expect(screen.getByText(section)).toBeInTheDocument();
-      });
+      expect(screen.getByText("Video & Design Gallery")).toBeInTheDocument();
+      expect(screen.getByTestId("video-design-gallery")).toBeInTheDocument();
     });
 
     it("should display correct navigation links", async () => {
       const page = await VideoDesignProjectsPage();
       render(page);
 
-      expect(screen.getByText("← Portfolio に戻る")).toBeInTheDocument();
       expect(screen.getByText("All Projects")).toBeInTheDocument();
       expect(screen.getByText("Video Only")).toBeInTheDocument();
       expect(screen.getByText("Commission")).toBeInTheDocument();
@@ -819,7 +811,9 @@ describe("VideoDesignProjectsPage - Comprehensive Tests", () => {
       render(page);
 
       // Page should still render even if SEO fails
-      expect(screen.getByText("Video & Design")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { level: 1, name: "Video & Design" }),
+      ).toBeInTheDocument();
       expect(screen.getByTestId("video-design-gallery")).toBeInTheDocument();
     });
 

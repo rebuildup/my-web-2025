@@ -550,8 +550,9 @@ describe("Video&Design Gallery - Accessibility Tests", () => {
       render(page);
 
       // Navigation should be clear and consistent
-      expect(screen.getByText("← Portfolio に戻る")).toBeInTheDocument();
       expect(screen.getByText("All Projects")).toBeInTheDocument();
+      expect(screen.getByText("Video Only")).toBeInTheDocument();
+      expect(screen.getByText("Commission")).toBeInTheDocument();
     });
 
     it("should provide clear instructions and feedback", () => {
