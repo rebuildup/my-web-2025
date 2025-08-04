@@ -1,215 +1,146 @@
 "use client";
 
+import { webglExperiments } from "@/components/playground/webgl-experiments";
+import { deviceCapabilitiesDetector } from "@/lib/playground/device-capabilities";
+import {
+  DeviceCapabilities,
+  ExperimentFilter,
+  PerformanceMetrics,
+  PerformanceSettings,
+} from "@/types/playground";
+import {
+  ChevronDown,
+  ChevronUp,
+  Filter,
+  Monitor,
+  Settings,
+  Zap,
+} from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect, useRef, useCallback } from "react";
-import { Box, Play, Pause, RotateCcw, Settings, Zap } from "lucide-react";
-
-// シンプルなWebGLシミュレーション（実際のThree.jsの代替）
-const useWebGLSimulation = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number | undefined>(undefined);
-  const [isRunning, setIsRunning] = useState(false);
-  const [particleCount, setParticleCount] = useState(50);
-  const [speed, setSpeed] = useState(1);
-
-  const particles = useRef<
-    Array<{
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      size: number;
-      color: string;
-      life: number;
-    }>
-  >([]);
-
-  const initParticles = useCallback(() => {
-    particles.current = Array.from({ length: particleCount }, () => ({
-      x: Math.random() * 800,
-      y: Math.random() * 400,
-      vx: (Math.random() - 0.5) * speed,
-      vy: (Math.random() - 0.5) * speed,
-      size: Math.random() * 4 + 1,
-      color: `hsl(${Math.random() * 360}, 70%, 60%)`,
-      life: 1,
-    }));
-  }, [particleCount, speed]);
-
-  const animate = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    // Clear canvas
-    ctx.fillStyle = "rgba(34, 34, 34, 0.1)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Update and draw particles
-    particles.current.forEach((particle, index) => {
-      // Update position
-      particle.x += particle.vx;
-      particle.y += particle.vy;
-
-      // Bounce off edges
-      if (particle.x <= 0 || particle.x >= canvas.width) particle.vx *= -1;
-      if (particle.y <= 0 || particle.y >= canvas.height) particle.vy *= -1;
-
-      // Update life
-      particle.life -= 0.005;
-      if (particle.life <= 0) {
-        // Respawn particle
-        particle.x = Math.random() * canvas.width;
-        particle.y = Math.random() * canvas.height;
-        particle.vx = (Math.random() - 0.5) * speed;
-        particle.vy = (Math.random() - 0.5) * speed;
-        particle.life = 1;
-        particle.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
-      }
-
-      // Draw particle
-      ctx.save();
-      ctx.globalAlpha = particle.life;
-      ctx.fillStyle = particle.color;
-      ctx.beginPath();
-      ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      // Draw connections
-      particles.current.forEach((other, otherIndex) => {
-        if (index !== otherIndex) {
-          const dx = particle.x - other.x;
-          const dy = particle.y - other.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 100) {
-            ctx.save();
-            ctx.globalAlpha =
-              (1 - distance / 100) * 0.3 * particle.life * other.life;
-            ctx.strokeStyle = particle.color;
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(particle.x, particle.y);
-            ctx.lineTo(other.x, other.y);
-            ctx.stroke();
-            ctx.restore();
-          }
-        }
-      });
-    });
-
-    if (isRunning) {
-      animationRef.current = requestAnimationFrame(animate);
-    }
-  }, [isRunning, speed]);
-
-  const start = () => {
-    setIsRunning(true);
-  };
-
-  const stop = () => {
-    setIsRunning(false);
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-    }
-  };
-
-  const reset = () => {
-    stop();
-    initParticles();
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.fillStyle = "#181818";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-    }
-  };
-
-  useEffect(() => {
-    initParticles();
-    const canvas = canvasRef.current;
-    if (canvas) {
-      canvas.width = 800;
-      canvas.height = 400;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.fillStyle = "#181818";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-    }
-  }, [particleCount, initParticles]);
-
-  useEffect(() => {
-    if (isRunning) {
-      animate();
-    }
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [isRunning, speed, animate]);
-
-  return {
-    canvasRef,
-    isRunning,
-    start,
-    stop,
-    reset,
-    particleCount,
-    setParticleCount,
-    speed,
-    setSpeed,
-  };
-};
+import { useCallback, useEffect, useState } from "react";
 
 export default function WebGLPlaygroundPage() {
   const Global_title = "noto-sans-jp-regular text-base leading-snug";
-  const {
-    canvasRef,
-    isRunning,
-    start,
-    stop,
-    reset,
-    particleCount,
-    setParticleCount,
-    speed,
-    setSpeed,
-  } = useWebGLSimulation();
 
-  const [selectedDemo, setSelectedDemo] = useState("particles");
+  // State management
+  const [deviceCapabilities, setDeviceCapabilities] =
+    useState<DeviceCapabilities | null>(null);
+  const [performanceSettings, setPerformanceSettings] =
+    useState<PerformanceSettings>({
+      targetFPS: 60,
+      qualityLevel: "medium",
+      enableOptimizations: true,
+    });
+  const [performanceMetrics, setPerformanceMetrics] =
+    useState<PerformanceMetrics>({
+      fps: 0,
+      frameTime: 0,
+      memoryUsage: 0,
+    });
+  const [activeExperiment, setActiveExperiment] = useState<string | null>(null);
+  const [filter, setFilter] = useState<ExperimentFilter>({
+    category: undefined,
+    difficulty: undefined,
+    technology: undefined,
+  });
+  const [showSettings, setShowSettings] = useState(false);
+  const [showPerformance, setShowPerformance] = useState(false);
 
-  const demos = [
-    {
-      id: "particles",
-      title: "Particle System",
-      description: "インタラクティブなパーティクルシステム",
-      tech: "Canvas 2D API",
+  // Initialize device capabilities
+  useEffect(() => {
+    const initializeCapabilities = async () => {
+      try {
+        const capabilities = await deviceCapabilitiesDetector.getCapabilities();
+        setDeviceCapabilities(capabilities);
+
+        // Set recommended performance settings
+        const recommendedSettings =
+          deviceCapabilitiesDetector.getRecommendedSettings(capabilities);
+        setPerformanceSettings(recommendedSettings);
+      } catch (error) {
+        console.error("Failed to detect device capabilities:", error);
+        // Fallback to safe defaults
+        setDeviceCapabilities({
+          webglSupport: false,
+          webgl2Support: false,
+          performanceLevel: "medium",
+          touchSupport: false,
+          maxTextureSize: 2048,
+          devicePixelRatio: 1,
+          hardwareConcurrency: 4,
+          memoryLimit: 1024,
+        });
+      }
+    };
+
+    initializeCapabilities();
+  }, []);
+
+  // Performance monitoring
+  const handlePerformanceUpdate = useCallback(
+    (metrics: PerformanceMetrics) => {
+      setPerformanceMetrics(metrics);
+
+      // Auto-adjust quality if performance is poor
+      if (
+        performanceSettings.enableOptimizations &&
+        metrics.fps < performanceSettings.targetFPS * 0.7
+      ) {
+        setPerformanceSettings((prev) => ({
+          ...prev,
+          qualityLevel: prev.qualityLevel === "high" ? "medium" : "low",
+        }));
+      }
     },
-    {
-      id: "geometry",
-      title: "3D Geometry",
-      description: "3Dジオメトリとシェーダー（準備中）",
-      tech: "WebGL / Three.js",
-    },
-    {
-      id: "shaders",
-      title: "Custom Shaders",
-      description: "カスタムシェーダー実験（準備中）",
-      tech: "GLSL",
-    },
-    {
-      id: "physics",
-      title: "Physics Simulation",
-      description: "物理シミュレーション（準備中）",
-      tech: "WebGL + Physics",
-    },
-  ];
+    [performanceSettings],
+  );
+
+  // Filter experiments
+  const filteredExperiments = webglExperiments.filter((experiment) => {
+    if (filter.category && experiment.category !== filter.category)
+      return false;
+    if (filter.difficulty && experiment.difficulty !== filter.difficulty)
+      return false;
+    if (
+      filter.technology &&
+      !experiment.technology.some((tech) =>
+        tech.toLowerCase().includes(filter.technology!.toLowerCase()),
+      )
+    )
+      return false;
+    return true;
+  });
+
+  // Render experiment component
+  const renderExperiment = (experimentId: string) => {
+    const experiment = webglExperiments.find((exp) => exp.id === experimentId);
+    if (!experiment || !deviceCapabilities) return null;
+
+    const ExperimentComponent = experiment.component;
+
+    return (
+      <ExperimentComponent
+        isActive={activeExperiment === experimentId}
+        deviceCapabilities={deviceCapabilities}
+        performanceSettings={performanceSettings}
+        onPerformanceUpdate={handlePerformanceUpdate}
+        onError={(error) => console.error("Experiment error:", error)}
+      />
+    );
+  };
+
+  if (!deviceCapabilities) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-8 h-8 border-2 border-accent border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="noto-sans-jp-light text-sm text-foreground">
+            デバイス性能を検出中...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -230,142 +161,314 @@ export default function WebGLPlaygroundPage() {
                 WebGL Playground
               </h1>
               <p className="noto-sans-jp-light text-sm max-w leading-loose">
-                WebGL・Three.js・WebGPU実験場です.
+                WebGL・Three.js・WebGPU実験場です。
                 <br />
-                3D表現、シェーダー、パーティクルシステム、インタラクティブ体験を実験しています.
+                3D表現、シェーダー、パーティクルシステム、インタラクティブ体験を実験しています。
               </p>
             </header>
 
-            {/* Demo Selection */}
-            <section>
-              <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                Experiments
-              </h2>
-              <div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
-                {demos.map((demo) => (
-                  <button
-                    key={demo.id}
-                    onClick={() => setSelectedDemo(demo.id)}
-                    className={`bg-base border p-4 space-y-4 text-left transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background ${
-                      selectedDemo === demo.id
-                        ? "border-accent text-accent"
-                        : "border-foreground hover:border-accent hover:text-accent"
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <Box className="w-6 h-6 mr-3" />
-                      <h3 className="zen-kaku-gothic-new text-lg">
-                        {demo.title}
-                      </h3>
-                    </div>
-                    <p className="noto-sans-jp-light text-sm">
-                      {demo.description}
-                    </p>
-                    <span className="noto-sans-jp-light text-xs border px-2 py-1 inline-block">
-                      {demo.tech}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </section>
-
-            {/* Main Demo Area */}
-            <section>
-              <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                Interactive Demo
-              </h2>
+            {/* Device Info & Performance */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Device Capabilities */}
               <div className="bg-base border border-foreground p-4 space-y-4">
-                {selectedDemo === "particles" ? (
-                  <>
-                    {/* Canvas */}
-                    <div className="border border-foreground overflow-hidden">
-                      <canvas
-                        ref={canvasRef}
-                        className="block w-full h-auto max-w-full"
-                        style={{ aspectRatio: "2/1" }}
+                <button
+                  onClick={() => setShowSettings(!showSettings)}
+                  className="flex items-center justify-between w-full text-left"
+                >
+                  <h3 className="zen-kaku-gothic-new text-lg text-primary flex items-center">
+                    <Settings className="w-5 h-5 mr-2" />
+                    Device & Settings
+                  </h3>
+                  {showSettings ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </button>
+
+                {showSettings && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="noto-sans-jp-light text-foreground">
+                          WebGL Support:
+                        </span>
+                        <div className="text-accent">
+                          {deviceCapabilities.webglSupport ? "Yes" : "No"}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="noto-sans-jp-light text-foreground">
+                          WebGL2 Support:
+                        </span>
+                        <div className="text-accent">
+                          {deviceCapabilities.webgl2Support ? "Yes" : "No"}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="noto-sans-jp-light text-foreground">
+                          Performance Level:
+                        </span>
+                        <div className="text-accent">
+                          {deviceCapabilities.performanceLevel}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="noto-sans-jp-light text-foreground">
+                          Max Texture Size:
+                        </span>
+                        <div className="text-accent">
+                          {deviceCapabilities.maxTextureSize}px
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Performance Settings */}
+                    <div className="space-y-2">
+                      <label className="noto-sans-jp-light text-sm text-foreground">
+                        Quality Level
+                      </label>
+                      <select
+                        value={performanceSettings.qualityLevel}
+                        onChange={(e) =>
+                          setPerformanceSettings((prev) => ({
+                            ...prev,
+                            qualityLevel: e.target
+                              .value as PerformanceSettings["qualityLevel"],
+                          }))
+                        }
+                        className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
+                      >
+                        <option value="low">Low (30 FPS)</option>
+                        <option value="medium">Medium (60 FPS)</option>
+                        <option value="high">High (60+ FPS)</option>
+                      </select>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="optimizations"
+                        checked={performanceSettings.enableOptimizations}
+                        onChange={(e) =>
+                          setPerformanceSettings((prev) => ({
+                            ...prev,
+                            enableOptimizations: e.target.checked,
+                          }))
+                        }
+                        className="w-4 h-4"
                       />
-                    </div>
-
-                    {/* Controls */}
-                    <div className="space-y-4">
-                      <div className="flex flex-wrap items-center gap-4">
-                        <button
-                          onClick={isRunning ? stop : start}
-                          className="flex items-center border border-foreground px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-                        >
-                          {isRunning ? (
-                            <Pause className="w-4 h-4 mr-2" />
-                          ) : (
-                            <Play className="w-4 h-4 mr-2" />
-                          )}
-                          <span className="noto-sans-jp-light text-sm">
-                            {isRunning ? "Pause" : "Start"}
-                          </span>
-                        </button>
-
-                        <button
-                          onClick={reset}
-                          className="flex items-center border border-foreground px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-                        >
-                          <RotateCcw className="w-4 h-4 mr-2" />
-                          <span className="noto-sans-jp-light text-sm">
-                            Reset
-                          </span>
-                        </button>
-                      </div>
-
-                      <div className="grid-system grid-1 xs:grid-2 sm:grid-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="noto-sans-jp-light text-sm text-foreground">
-                            Particle Count: {particleCount}
-                          </label>
-                          <input
-                            type="range"
-                            min="10"
-                            max="200"
-                            value={particleCount}
-                            onChange={(e) =>
-                              setParticleCount(Number(e.target.value))
-                            }
-                            className="w-full"
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <label className="noto-sans-jp-light text-sm text-foreground">
-                            Speed: {speed.toFixed(1)}
-                          </label>
-                          <input
-                            type="range"
-                            min="0.1"
-                            max="5"
-                            step="0.1"
-                            value={speed}
-                            onChange={(e) => setSpeed(Number(e.target.value))}
-                            className="w-full"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="aspect-video bg-background border border-foreground flex items-center justify-center">
-                    <div className="text-center space-y-4">
-                      <Settings className="w-16 h-16 text-accent mx-auto" />
-                      <h3 className="zen-kaku-gothic-new text-xl text-primary">
-                        {demos.find((d) => d.id === selectedDemo)?.title}
-                      </h3>
-                      <p className="noto-sans-jp-light text-sm text-foreground">
-                        この実験は準備中です
-                      </p>
-                      <p className="noto-sans-jp-light text-xs text-accent">
-                        Coming Soon...
-                      </p>
+                      <label
+                        htmlFor="optimizations"
+                        className="noto-sans-jp-light text-sm text-foreground"
+                      >
+                        Auto Performance Optimization
+                      </label>
                     </div>
                   </div>
                 )}
               </div>
-            </section>
+
+              {/* Performance Monitor */}
+              <div className="bg-base border border-foreground p-4 space-y-4">
+                <button
+                  onClick={() => setShowPerformance(!showPerformance)}
+                  className="flex items-center justify-between w-full text-left"
+                >
+                  <h3 className="zen-kaku-gothic-new text-lg text-primary flex items-center">
+                    <Monitor className="w-5 h-5 mr-2" />
+                    Performance Monitor
+                  </h3>
+                  {showPerformance ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </button>
+
+                {showPerformance && (
+                  <div className="grid grid-cols-3 gap-4 text-sm">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-accent">
+                        {performanceMetrics.fps}
+                      </div>
+                      <div className="noto-sans-jp-light text-foreground">
+                        FPS
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-accent">
+                        {performanceMetrics.frameTime.toFixed(1)}
+                      </div>
+                      <div className="noto-sans-jp-light text-foreground">
+                        Frame Time (ms)
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-accent">
+                        {performanceMetrics.memoryUsage}
+                      </div>
+                      <div className="noto-sans-jp-light text-foreground">
+                        Memory (MB)
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Experiment Filter */}
+            <div className="bg-base border border-foreground p-4 space-y-4">
+              <h3 className="zen-kaku-gothic-new text-lg text-primary flex items-center">
+                <Filter className="w-5 h-5 mr-2" />
+                Experiment Filter
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <label className="noto-sans-jp-light text-sm text-foreground">
+                    Category
+                  </label>
+                  <select
+                    value={filter.category || ""}
+                    onChange={(e) =>
+                      setFilter((prev) => ({
+                        ...prev,
+                        category:
+                          (e.target.value as ExperimentFilter["category"]) ||
+                          undefined,
+                      }))
+                    }
+                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
+                  >
+                    <option value="">All Categories</option>
+                    <option value="3d">3D</option>
+                    <option value="shader">Shader</option>
+                    <option value="particle">Particle</option>
+                    <option value="effect">Effect</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="noto-sans-jp-light text-sm text-foreground">
+                    Difficulty
+                  </label>
+                  <select
+                    value={filter.difficulty || ""}
+                    onChange={(e) =>
+                      setFilter((prev) => ({
+                        ...prev,
+                        difficulty:
+                          (e.target.value as ExperimentFilter["difficulty"]) ||
+                          undefined,
+                      }))
+                    }
+                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
+                  >
+                    <option value="">All Levels</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="noto-sans-jp-light text-sm text-foreground">
+                    Technology
+                  </label>
+                  <input
+                    type="text"
+                    value={filter.technology || ""}
+                    onChange={(e) =>
+                      setFilter((prev) => ({
+                        ...prev,
+                        technology: e.target.value || undefined,
+                      }))
+                    }
+                    placeholder="Search technology..."
+                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Experiment Selection */}
+            <div className="bg-base border border-foreground p-4 space-y-4">
+              <h3 className="zen-kaku-gothic-new text-lg text-primary">
+                Available Experiments ({filteredExperiments.length})
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {filteredExperiments.map((experiment) => (
+                  <button
+                    key={experiment.id}
+                    onClick={() =>
+                      setActiveExperiment(
+                        activeExperiment === experiment.id
+                          ? null
+                          : experiment.id,
+                      )
+                    }
+                    className={`text-left p-4 border transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background ${
+                      activeExperiment === experiment.id
+                        ? "border-accent bg-accent bg-opacity-10"
+                        : "border-foreground hover:border-accent"
+                    }`}
+                  >
+                    <div className="space-y-2">
+                      <h4 className="zen-kaku-gothic-new text-base text-primary">
+                        {experiment.title}
+                      </h4>
+                      <p className="noto-sans-jp-light text-sm text-foreground">
+                        {experiment.description}
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        <span className="noto-sans-jp-light text-xs border border-foreground px-2 py-1">
+                          {experiment.category}
+                        </span>
+                        <span className="noto-sans-jp-light text-xs border border-foreground px-2 py-1">
+                          {experiment.difficulty}
+                        </span>
+                        <span className="noto-sans-jp-light text-xs border border-foreground px-2 py-1">
+                          {experiment.performanceLevel}
+                        </span>
+                        {experiment.requiresWebGL2 && (
+                          <span className="noto-sans-jp-light text-xs border border-accent text-accent px-2 py-1">
+                            WebGL2
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {experiment.technology
+                          .slice(0, 3)
+                          .map((tech, index) => (
+                            <span
+                              key={index}
+                              className="noto-sans-jp-light text-xs text-accent"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Active Experiment */}
+            {activeExperiment && (
+              <div className="bg-base border border-foreground p-4 space-y-4">
+                <h3 className="zen-kaku-gothic-new text-lg text-primary">
+                  Active Experiment:{" "}
+                  {
+                    webglExperiments.find((exp) => exp.id === activeExperiment)
+                      ?.title
+                  }
+                </h3>
+                {renderExperiment(activeExperiment)}
+              </div>
+            )}
 
             {/* Technical Notes */}
             <section>
@@ -382,10 +485,13 @@ export default function WebGLPlaygroundPage() {
                   </div>
                   <div className="space-y-2">
                     <p className="noto-sans-jp-light text-sm text-foreground">
-                      • requestAnimationFrame による滑らかなアニメーション
+                      • Three.js による本格的な3D表現
                     </p>
                     <p className="noto-sans-jp-light text-sm text-foreground">
-                      • メモリ効率的なパーティクル管理
+                      • デバイス性能に応じた品質調整
+                    </p>
+                    <p className="noto-sans-jp-light text-sm text-foreground">
+                      • GPU加速パーティクルシステム
                     </p>
                     <p className="noto-sans-jp-light text-sm text-foreground">
                       • 適切なリソース解放とクリーンアップ
@@ -395,20 +501,23 @@ export default function WebGLPlaygroundPage() {
 
                 <div className="bg-base border border-foreground p-4 space-y-4">
                   <div className="flex items-center">
-                    <Box className="w-6 h-6 text-accent mr-3" />
+                    <Settings className="w-6 h-6 text-accent mr-3" />
                     <h3 className="zen-kaku-gothic-new text-lg text-primary">
-                      Future Implementations
+                      WebGL Features
                     </h3>
                   </div>
                   <div className="space-y-2">
                     <p className="noto-sans-jp-light text-sm text-foreground">
-                      • Three.js による本格的な3D表現
-                    </p>
-                    <p className="noto-sans-jp-light text-sm text-foreground">
                       • カスタムシェーダーとGLSL実装
                     </p>
                     <p className="noto-sans-jp-light text-sm text-foreground">
-                      • WebGPU による次世代グラフィックス
+                      • 物理シミュレーションと衝突検出
+                    </p>
+                    <p className="noto-sans-jp-light text-sm text-foreground">
+                      • インタラクティブな3Dジオメトリ
+                    </p>
+                    <p className="noto-sans-jp-light text-sm text-foreground">
+                      • リアルタイムパフォーマンス監視
                     </p>
                   </div>
                 </div>

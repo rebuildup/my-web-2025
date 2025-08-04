@@ -3995,5 +3995,914 @@
       "element": "H1",
       "url": ""
     }
+  },
+  {
+    "id": "perf_1754304628282_9lc9p9896",
+    "timestamp": "2025-08-04T10:50:28.282Z",
+    "metric": "cls",
+    "value": 0.16229117998550027,
+    "threshold": 0.1,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/portfolio-1753840319431",
+    "context": {
+      "sources": [
+        {
+          "element": "P",
+          "previousRect": {
+            "x": 88,
+            "y": 736,
+            "width": 768,
+            "height": 23,
+            "top": 736,
+            "right": 856,
+            "bottom": 759,
+            "left": 88
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "UL",
+          "previousRect": {
+            "x": 88,
+            "y": 759,
+            "width": 768,
+            "height": 91,
+            "top": 759,
+            "right": 856,
+            "bottom": 850,
+            "left": 88
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "P",
+          "previousRect": {
+            "x": 88,
+            "y": 850,
+            "width": 768,
+            "height": 23,
+            "top": 850,
+            "right": 856,
+            "bottom": 873,
+            "left": 88
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "UL",
+          "previousRect": {
+            "x": 88,
+            "y": 873,
+            "width": 768,
+            "height": 91,
+            "top": 873,
+            "right": 856,
+            "bottom": 964,
+            "left": 88
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "H2",
+          "previousRect": {
+            "x": 88,
+            "y": 964,
+            "width": 768,
+            "height": 23,
+            "top": 964,
+            "right": 856,
+            "bottom": 987,
+            "left": 88
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754304680807_a02vvd52b",
+    "timestamp": "2025-08-04T10:51:20.807Z",
+    "metric": "cls",
+    "value": 0.7981925392535832,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/portfolio-1753840319431",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 93,
+            "y": 40,
+            "width": 770,
+            "height": 487,
+            "top": 40,
+            "right": 863,
+            "bottom": 527,
+            "left": 93
+          },
+          "currentRect": {
+            "x": 83,
+            "y": 40,
+            "width": 778,
+            "height": 952,
+            "top": 40,
+            "right": 861,
+            "bottom": 992,
+            "left": 83
+          }
+        },
+        {
+          "element": "NAV",
+          "previousRect": {
+            "x": 95,
+            "y": 470,
+            "width": 768,
+            "height": 57,
+            "top": 470,
+            "right": 863,
+            "bottom": 527,
+            "left": 95
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 742,
+            "y": 938,
+            "width": 201,
+            "height": 20,
+            "top": 938,
+            "right": 943,
+            "bottom": 958,
+            "left": 742
+          },
+          "currentRect": {
+            "x": 727,
+            "y": 938,
+            "width": 201,
+            "height": 20,
+            "top": 938,
+            "right": 928,
+            "bottom": 958,
+            "left": 727
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 884,
+            "y": 926,
+            "width": 59,
+            "height": 66,
+            "top": 926,
+            "right": 943,
+            "bottom": 992,
+            "left": 884
+          },
+          "currentRect": {
+            "x": 869,
+            "y": 926,
+            "width": 74,
+            "height": 66,
+            "top": 926,
+            "right": 943,
+            "bottom": 992,
+            "left": 869
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754304680821_lfizhggg9",
+    "timestamp": "2025-08-04T10:51:20.821Z",
+    "metric": "cls",
+    "value": 0.16229117998550027,
+    "threshold": 0.1,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/portfolio-1753840319431",
+    "context": {
+      "sources": [
+        {
+          "element": "P",
+          "previousRect": {
+            "x": 88,
+            "y": 736,
+            "width": 768,
+            "height": 23,
+            "top": 736,
+            "right": 856,
+            "bottom": 759,
+            "left": 88
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "UL",
+          "previousRect": {
+            "x": 88,
+            "y": 759,
+            "width": 768,
+            "height": 91,
+            "top": 759,
+            "right": 856,
+            "bottom": 850,
+            "left": 88
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "P",
+          "previousRect": {
+            "x": 88,
+            "y": 850,
+            "width": 768,
+            "height": 23,
+            "top": 850,
+            "right": 856,
+            "bottom": 873,
+            "left": 88
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "UL",
+          "previousRect": {
+            "x": 88,
+            "y": 873,
+            "width": 768,
+            "height": 91,
+            "top": 873,
+            "right": 856,
+            "bottom": 964,
+            "left": 88
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "H2",
+          "previousRect": {
+            "x": 88,
+            "y": 964,
+            "width": 768,
+            "height": 23,
+            "top": 964,
+            "right": 856,
+            "bottom": 987,
+            "left": 88
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754304766962_ifirad44u",
+    "timestamp": "2025-08-04T10:52:46.962Z",
+    "metric": "cls",
+    "value": 0.33760110821937084,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/portfolio-draft-test",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 320,
+            "y": 40,
+            "width": 1280,
+            "height": 427,
+            "top": 40,
+            "right": 1600,
+            "bottom": 467,
+            "left": 320
+          },
+          "currentRect": {
+            "x": 308,
+            "y": 40,
+            "width": 1290,
+            "height": 951,
+            "top": 40,
+            "right": 1598,
+            "bottom": 991,
+            "left": 308
+          }
+        },
+        {
+          "element": "NAV",
+          "previousRect": {
+            "x": 320,
+            "y": 410,
+            "width": 1280,
+            "height": 57,
+            "top": 410,
+            "right": 1600,
+            "bottom": 467,
+            "left": 320
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 320,
+            "y": 903,
+            "width": 1280,
+            "height": 88,
+            "top": 903,
+            "right": 1600,
+            "bottom": 991,
+            "left": 320
+          },
+          "currentRect": {
+            "x": 313,
+            "y": 903,
+            "width": 1280,
+            "height": 88,
+            "top": 903,
+            "right": 1593,
+            "bottom": 991,
+            "left": 313
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 1846,
+            "y": 925,
+            "width": 59,
+            "height": 66,
+            "top": 925,
+            "right": 1905,
+            "bottom": 991,
+            "left": 1846
+          },
+          "currentRect": {
+            "x": 1831,
+            "y": 925,
+            "width": 74,
+            "height": 66,
+            "top": 925,
+            "right": 1905,
+            "bottom": 991,
+            "left": 1831
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754304784816_46477slf9",
+    "timestamp": "2025-08-04T10:53:04.816Z",
+    "metric": "cls",
+    "value": 0.19622939331938527,
+    "threshold": 0.1,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/portfolio-1753705958241",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 320,
+            "y": 40,
+            "width": 859,
+            "height": 673,
+            "top": 40,
+            "right": 1179,
+            "bottom": 713,
+            "left": 320
+          },
+          "currentRect": {
+            "x": 78,
+            "y": 40,
+            "width": 1024,
+            "height": 673,
+            "top": 40,
+            "right": 1102,
+            "bottom": 713,
+            "left": 78
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 320,
+            "y": 903,
+            "width": 859,
+            "height": 88,
+            "top": 903,
+            "right": 1179,
+            "bottom": 991,
+            "left": 320
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 903,
+            "width": 1179,
+            "height": 88,
+            "top": 903,
+            "right": 1179,
+            "bottom": 991,
+            "left": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754304817019_o7qfntnt3",
+    "timestamp": "2025-08-04T10:53:37.019Z",
+    "metric": "cls",
+    "value": 0.3090514122545619,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/gallery/all",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 74,
+            "y": 0,
+            "width": 1028,
+            "height": 991,
+            "top": 0,
+            "right": 1102,
+            "bottom": 991,
+            "left": 74
+          },
+          "currentRect": {
+            "x": 316,
+            "y": 0,
+            "width": 1284,
+            "height": 991,
+            "top": 0,
+            "right": 1600,
+            "bottom": 991,
+            "left": 316
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 903,
+            "width": 1179,
+            "height": 88,
+            "top": 903,
+            "right": 1179,
+            "bottom": 991,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 320,
+            "y": 903,
+            "width": 1280,
+            "height": 88,
+            "top": 903,
+            "right": 1600,
+            "bottom": 991,
+            "left": 320
+          }
+        },
+        {
+          "element": "IMG",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 647,
+            "y": 180,
+            "width": 300,
+            "height": 168,
+            "top": 180,
+            "right": 947,
+            "bottom": 348,
+            "left": 647
+          }
+        },
+        {
+          "element": "IMG",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 973,
+            "y": 180,
+            "width": 300,
+            "height": 168,
+            "top": 180,
+            "right": 1273,
+            "bottom": 348,
+            "left": 973
+          }
+        },
+        {
+          "element": "IMG",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 1299,
+            "y": 180,
+            "width": 300,
+            "height": 168,
+            "top": 180,
+            "right": 1599,
+            "bottom": 348,
+            "left": 1299
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754304843345_wr62s638n",
+    "timestamp": "2025-08-04T10:54:03.345Z",
+    "metric": "cls",
+    "value": 0.6622139941891724,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/portfolio-1753706090299",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 320,
+            "y": 40,
+            "width": 1280,
+            "height": 427,
+            "top": 40,
+            "right": 1600,
+            "bottom": 467,
+            "left": 320
+          },
+          "currentRect": {
+            "x": 308,
+            "y": 40,
+            "width": 1290,
+            "height": 951,
+            "top": 40,
+            "right": 1598,
+            "bottom": 991,
+            "left": 308
+          }
+        },
+        {
+          "element": "NAV",
+          "previousRect": {
+            "x": 320,
+            "y": 410,
+            "width": 1280,
+            "height": 57,
+            "top": 410,
+            "right": 1600,
+            "bottom": 467,
+            "left": 320
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 1725,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 1904,
+            "bottom": 106,
+            "left": 1725
+          },
+          "currentRect": {
+            "x": 1710,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 1889,
+            "bottom": 106,
+            "left": 1710
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 320,
+            "y": 903,
+            "width": 1280,
+            "height": 88,
+            "top": 903,
+            "right": 1600,
+            "bottom": 991,
+            "left": 320
+          },
+          "currentRect": {
+            "x": 313,
+            "y": 903,
+            "width": 1280,
+            "height": 88,
+            "top": 903,
+            "right": 1593,
+            "bottom": 991,
+            "left": 313
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 1846,
+            "y": 925,
+            "width": 59,
+            "height": 66,
+            "top": 925,
+            "right": 1905,
+            "bottom": 991,
+            "left": 1846
+          },
+          "currentRect": {
+            "x": 1831,
+            "y": 925,
+            "width": 74,
+            "height": 66,
+            "top": 925,
+            "right": 1905,
+            "bottom": 991,
+            "left": 1831
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754304853358_owz34jztq",
+    "timestamp": "2025-08-04T10:54:13.358Z",
+    "metric": "cls",
+    "value": 0.6622139941891724,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/portfolio-1753839404106",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 320,
+            "y": 40,
+            "width": 1280,
+            "height": 427,
+            "top": 40,
+            "right": 1600,
+            "bottom": 467,
+            "left": 320
+          },
+          "currentRect": {
+            "x": 308,
+            "y": 40,
+            "width": 1290,
+            "height": 951,
+            "top": 40,
+            "right": 1598,
+            "bottom": 991,
+            "left": 308
+          }
+        },
+        {
+          "element": "NAV",
+          "previousRect": {
+            "x": 320,
+            "y": 410,
+            "width": 1280,
+            "height": 57,
+            "top": 410,
+            "right": 1600,
+            "bottom": 467,
+            "left": 320
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 1725,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 1904,
+            "bottom": 106,
+            "left": 1725
+          },
+          "currentRect": {
+            "x": 1710,
+            "y": 16,
+            "width": 179,
+            "height": 90,
+            "top": 16,
+            "right": 1889,
+            "bottom": 106,
+            "left": 1710
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 320,
+            "y": 903,
+            "width": 1280,
+            "height": 88,
+            "top": 903,
+            "right": 1600,
+            "bottom": 991,
+            "left": 320
+          },
+          "currentRect": {
+            "x": 313,
+            "y": 903,
+            "width": 1280,
+            "height": 88,
+            "top": 903,
+            "right": 1593,
+            "bottom": 991,
+            "left": 313
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 1846,
+            "y": 925,
+            "width": 59,
+            "height": 66,
+            "top": 925,
+            "right": 1905,
+            "bottom": 991,
+            "left": 1846
+          },
+          "currentRect": {
+            "x": 1831,
+            "y": 925,
+            "width": 74,
+            "height": 66,
+            "top": 925,
+            "right": 1905,
+            "bottom": 991,
+            "left": 1831
+          }
+        }
+      ]
+    }
   }
 ]

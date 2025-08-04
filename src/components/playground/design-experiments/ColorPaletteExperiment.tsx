@@ -1,0 +1,392 @@
+/**
+ * Color Palette Generator Experiment
+ * Interactive color palette generation with HSL color space
+ */
+
+"use client";
+
+import { performanceMonitor } from "@/lib/playground/performance-monitor";
+import { ExperimentProps } from "@/types/playground";
+import { Copy, Download, Palette, RefreshCw } from "lucide-react";
+import React, { useCallback, useEffect, useState } from "react";
+
+interface ColorPalette {
+  colors: string[];
+  name: string;
+  harmony:
+    | "monochromatic"
+    | "analogous"
+    | "complementary"
+    | "triadic"
+    | "random";
+}
+
+export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
+  isActive,
+  onPerformanceUpdate,
+  onError,
+}) => {
+  const [palette, setPalette] = useState<ColorPalette>({
+    colors: [],
+    name: "Generated Palette",
+    harmony: "random",
+  });
+  const [selectedHarmony, setSelectedHarmony] =
+    useState<ColorPalette["harmony"]>("random");
+  const [baseHue, setBaseHue] = useState(180);
+  const [saturation, setSaturation] = useState(70);
+  const [lightness, setLightness] = useState(50);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [copiedColor, setCopiedColor] = useState<string | null>(null);
+
+  // Generate color based on harmony rules
+  const generateHarmoniousColors = useCallback(
+    (
+      harmony: ColorPalette["harmony"],
+      baseH: number,
+      baseS: number,
+      baseL: number,
+    ): string[] => {
+      const colors: string[] = [];
+
+      switch (harmony) {
+        case "monochromatic":
+          // Same hue, different saturation and lightness
+          for (let i = 0; i < 5; i++) {
+            const s = Math.max(20, Math.min(100, baseS + (i - 2) * 15));
+            const l = Math.max(20, Math.min(80, baseL + (i - 2) * 10));
+            colors.push(`hsl(${baseH}, ${s}%, ${l}%)`);
+          }
+          break;
+
+        case "analogous":
+          // Adjacent hues on color wheel
+          for (let i = 0; i < 5; i++) {
+            const h = (baseH + (i - 2) * 30 + 360) % 360;
+            const s = Math.max(
+              40,
+              Math.min(90, baseS + (Math.random() - 0.5) * 20),
+            );
+            const l = Math.max(
+              30,
+              Math.min(70, baseL + (Math.random() - 0.5) * 20),
+            );
+            colors.push(`hsl(${h}, ${s}%, ${l}%)`);
+          }
+          break;
+
+        case "complementary":
+          // Base color and its complement
+          const complement = (baseH + 180) % 360;
+          colors.push(`hsl(${baseH}, ${baseS}%, ${baseL}%)`);
+          colors.push(`hsl(${complement}, ${baseS}%, ${baseL}%)`);
+          // Add variations
+          colors.push(
+            `hsl(${baseH}, ${Math.max(20, baseS - 30)}%, ${Math.min(80, baseL + 20)}%)`,
+          );
+          colors.push(
+            `hsl(${complement}, ${Math.max(20, baseS - 30)}%, ${Math.min(80, baseL + 20)}%)`,
+          );
+          colors.push(`hsl(${(baseH + 90) % 360}, ${baseS * 0.5}%, ${baseL}%)`);
+          break;
+
+        case "triadic":
+          // Three colors equally spaced on color wheel
+          for (let i = 0; i < 3; i++) {
+            const h = (baseH + i * 120) % 360;
+            colors.push(`hsl(${h}, ${baseS}%, ${baseL}%)`);
+          }
+          // Add lighter and darker variations
+          colors.push(
+            `hsl(${baseH}, ${Math.max(20, baseS - 20)}%, ${Math.min(80, baseL + 25)}%)`,
+          );
+          colors.push(
+            `hsl(${(baseH + 120) % 360}, ${Math.max(20, baseS - 20)}%, ${Math.max(20, baseL - 25)}%)`,
+          );
+          break;
+
+        default: // random
+          for (let i = 0; i < 5; i++) {
+            const h = Math.floor(Math.random() * 360);
+            const s = Math.floor(Math.random() * 50) + 50; // 50-100%
+            const l = Math.floor(Math.random() * 40) + 30; // 30-70%
+            colors.push(`hsl(${h}, ${s}%, ${l}%)`);
+          }
+          break;
+      }
+
+      return colors;
+    },
+    [],
+  );
+
+  // Generate new palette
+  const generatePalette = useCallback(() => {
+    try {
+      const colors = generateHarmoniousColors(
+        selectedHarmony,
+        baseHue,
+        saturation,
+        lightness,
+      );
+      setPalette({
+        colors,
+        name: `${selectedHarmony.charAt(0).toUpperCase() + selectedHarmony.slice(1)} Palette`,
+        harmony: selectedHarmony,
+      });
+
+      // Trigger animation
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 600);
+    } catch (error) {
+      onError?.(error as Error);
+    }
+  }, [
+    selectedHarmony,
+    baseHue,
+    saturation,
+    lightness,
+    generateHarmoniousColors,
+    onError,
+  ]);
+
+  // Copy color to clipboard
+  const copyColor = useCallback(async (color: string) => {
+    try {
+      await navigator.clipboard.writeText(color);
+      setCopiedColor(color);
+      setTimeout(() => setCopiedColor(null), 2000);
+    } catch (error) {
+      console.error("Failed to copy color:", error);
+    }
+  }, []);
+
+  // Download palette as JSON
+  const downloadPalette = useCallback(() => {
+    try {
+      const paletteData = {
+        ...palette,
+        timestamp: new Date().toISOString(),
+        harmony: selectedHarmony,
+        baseColor: { hue: baseHue, saturation, lightness },
+      };
+
+      const blob = new Blob([JSON.stringify(paletteData, null, 2)], {
+        type: "application/json",
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${palette.name.toLowerCase().replace(/\s+/g, "-")}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      onError?.(error as Error);
+    }
+  }, [palette, selectedHarmony, baseHue, saturation, lightness, onError]);
+
+  // Initialize palette
+  useEffect(() => {
+    generatePalette();
+  }, [generatePalette]);
+
+  // Performance monitoring
+  useEffect(() => {
+    if (!isActive) return;
+
+    const handlePerformanceUpdate = (metrics: {
+      fps: number;
+      frameTime: number;
+      memoryUsage: number;
+    }) => {
+      onPerformanceUpdate?.(metrics);
+    };
+
+    performanceMonitor.startMonitoring(handlePerformanceUpdate);
+
+    return () => {
+      performanceMonitor.stopMonitoring(handlePerformanceUpdate);
+    };
+  }, [isActive, onPerformanceUpdate]);
+
+  return (
+    <div className="space-y-6">
+      {/* Controls */}
+      <div className="bg-base border border-foreground p-4 space-y-4">
+        <h3 className="zen-kaku-gothic-new text-lg text-primary flex items-center">
+          <Palette className="w-5 h-5 mr-2" />
+          Color Harmony Controls
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Harmony Type */}
+          <div className="space-y-2">
+            <label className="noto-sans-jp-light text-sm text-foreground">
+              Color Harmony
+            </label>
+            <select
+              value={selectedHarmony}
+              onChange={(e) =>
+                setSelectedHarmony(e.target.value as ColorPalette["harmony"])
+              }
+              className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
+            >
+              <option value="random">Random</option>
+              <option value="monochromatic">Monochromatic</option>
+              <option value="analogous">Analogous</option>
+              <option value="complementary">Complementary</option>
+              <option value="triadic">Triadic</option>
+            </select>
+          </div>
+
+          {/* Base Hue */}
+          <div className="space-y-2">
+            <label className="noto-sans-jp-light text-sm text-foreground">
+              Base Hue: {baseHue}°
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="360"
+              value={baseHue}
+              onChange={(e) => setBaseHue(Number(e.target.value))}
+              className="w-full"
+              style={{
+                background: `linear-gradient(to right, 
+                  hsl(0, 70%, 50%), hsl(60, 70%, 50%), hsl(120, 70%, 50%), 
+                  hsl(180, 70%, 50%), hsl(240, 70%, 50%), hsl(300, 70%, 50%), hsl(360, 70%, 50%))`,
+              }}
+            />
+          </div>
+
+          {/* Saturation */}
+          <div className="space-y-2">
+            <label className="noto-sans-jp-light text-sm text-foreground">
+              Saturation: {saturation}%
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={saturation}
+              onChange={(e) => setSaturation(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          {/* Lightness */}
+          <div className="space-y-2">
+            <label className="noto-sans-jp-light text-sm text-foreground">
+              Lightness: {lightness}%
+            </label>
+            <input
+              type="range"
+              min="10"
+              max="90"
+              value={lightness}
+              onChange={(e) => setLightness(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-4">
+          <button
+            onClick={generatePalette}
+            className="flex items-center border border-foreground px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            <span className="noto-sans-jp-light text-sm">Generate New</span>
+          </button>
+
+          <button
+            onClick={downloadPalette}
+            className="flex items-center border border-foreground px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            <span className="noto-sans-jp-light text-sm">Download JSON</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Color Palette Display */}
+      <div className="bg-base border border-foreground p-4 space-y-4">
+        <h3 className="zen-kaku-gothic-new text-lg text-primary">
+          {palette.name}
+        </h3>
+
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
+          {palette.colors.map((color, index) => (
+            <div
+              key={`${color}-${index}`}
+              className={`group relative aspect-square border border-foreground cursor-pointer transition-all duration-300 ${
+                isAnimating ? "animate-pulse scale-105" : "hover:scale-105"
+              }`}
+              style={{ backgroundColor: color }}
+              onClick={() => copyColor(color)}
+              title={`Click to copy: ${color}`}
+            >
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                <Copy className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
+
+              <div className="absolute bottom-0 left-0 right-0 bg-background bg-opacity-90 p-2 text-center transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                <span className="noto-sans-jp-light text-xs text-foreground">
+                  {color}
+                </span>
+                {copiedColor === color && (
+                  <div className="text-xs text-accent mt-1">Copied!</div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center">
+          <p className="noto-sans-jp-light text-sm text-foreground">
+            カラーをクリックしてクリップボードにコピー
+          </p>
+        </div>
+      </div>
+
+      {/* Color Theory Information */}
+      <div className="bg-base border border-foreground p-4 space-y-4">
+        <h3 className="zen-kaku-gothic-new text-lg text-primary">
+          Color Theory:{" "}
+          {selectedHarmony.charAt(0).toUpperCase() + selectedHarmony.slice(1)}
+        </h3>
+
+        <div className="noto-sans-jp-light text-sm text-foreground space-y-2">
+          {selectedHarmony === "monochromatic" && (
+            <p>
+              単色調和：同じ色相で彩度と明度を変化させた配色。統一感があり、落ち着いた印象を与えます。
+            </p>
+          )}
+          {selectedHarmony === "analogous" && (
+            <p>
+              類似色調和：色相環で隣接する色を使った配色。自然で調和の取れた印象を与えます。
+            </p>
+          )}
+          {selectedHarmony === "complementary" && (
+            <p>
+              補色調和：色相環で正反対の位置にある色を使った配色。コントラストが強く、活動的な印象を与えます。
+            </p>
+          )}
+          {selectedHarmony === "triadic" && (
+            <p>
+              三色調和：色相環を三等分した位置の色を使った配色。バランスが良く、活気のある印象を与えます。
+            </p>
+          )}
+          {selectedHarmony === "random" && (
+            <p>
+              ランダム配色：規則性のない色の組み合わせ。予想外の美しい配色が生まれることがあります。
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
