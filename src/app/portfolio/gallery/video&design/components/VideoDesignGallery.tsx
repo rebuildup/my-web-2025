@@ -540,15 +540,21 @@ export function VideoDesignGallery({
       {process.env.NODE_ENV === "development" && performanceMetrics && (
         <div className="bg-gray-100 border border-gray-300 p-3 text-xs">
           <div className="flex items-center space-x-4">
-            <span>Items: {String(performanceMetrics.itemCount || 0)}</span>
+            <span>Items: {(performanceMetrics.itemCount || 0).toString()}</span>
             <span>
               Filter:{" "}
-              {String(Number(performanceMetrics.filterTime || 0).toFixed(2))}
+              {(typeof performanceMetrics.filterTime === "number"
+                ? performanceMetrics.filterTime
+                : 0
+              ).toFixed(2)}
               ms
             </span>
             <span>
               Render:{" "}
-              {String(Number(performanceMetrics.renderTime || 0).toFixed(2))}
+              {(typeof performanceMetrics.renderTime === "number"
+                ? performanceMetrics.renderTime
+                : 0
+              ).toFixed(2)}
               ms
             </span>
             <span>Cache: {enableCaching ? "ON" : "OFF"}</span>
@@ -678,16 +684,22 @@ export function VideoDesignGallery({
           </p>
           <div className="flex items-center space-x-4 text-xs text-foreground opacity-75">
             {(videoDesignStats.videoOnly || 0) > 0 && (
-              <span>Video: {String(videoDesignStats.videoOnly || 0)}</span>
+              <span>Video: {(videoDesignStats.videoOnly || 0).toString()}</span>
             )}
             {(videoDesignStats.designOnly || 0) > 0 && (
-              <span>Design: {String(videoDesignStats.designOnly || 0)}</span>
+              <span>
+                Design: {(videoDesignStats.designOnly || 0).toString()}
+              </span>
             )}
             {(videoDesignStats.videoAndDesign || 0) > 0 && (
-              <span>V&D: {String(videoDesignStats.videoAndDesign || 0)}</span>
+              <span>
+                V&D: {(videoDesignStats.videoAndDesign || 0).toString()}
+              </span>
             )}
             {(videoDesignStats.multiCategory || 0) > 0 && (
-              <span>Multi: {String(videoDesignStats.multiCategory || 0)}</span>
+              <span>
+                Multi: {(videoDesignStats.multiCategory || 0).toString()}
+              </span>
             )}
           </div>
         </div>
@@ -759,7 +771,7 @@ function GridItemComponent({
     transform: isHovered && !isPlaceholder ? "scale(1.02)" : "scale(1)",
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     // Add subtle rotation for more organic feel
-    "--rotation": `${Math.sin((Number(item.priority) || 0) * 0.1) * 2}deg`,
+    "--rotation": `${Math.sin((typeof item.priority === "number" && !isNaN(item.priority) ? item.priority : 0) * 0.1) * 2}deg`,
   } as React.CSSProperties;
 
   // For placeholder items, render a simple black box
@@ -877,7 +889,9 @@ function GridItemComponent({
         </div>
 
         {/* Priority Indicator */}
-        {(Number(item.priority) || 0) >= 80 && (
+        {(typeof item.priority === "number" && !isNaN(item.priority)
+          ? item.priority
+          : 0) >= 80 && (
           <div className="absolute top-2 left-2 bg-accent text-background px-2 py-1 text-xs font-medium">
             Featured
           </div>

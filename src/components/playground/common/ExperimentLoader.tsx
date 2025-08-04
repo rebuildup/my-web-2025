@@ -227,7 +227,7 @@ export function ExperimentPreloader({
     if (experimentIds.length > 0) {
       preloadExperiments();
     }
-  }, [preloadExperiments]);
+  }, [preloadExperiments, experimentIds.length]);
 
   if (!isPreloading && loadedCount === 0) {
     return null;

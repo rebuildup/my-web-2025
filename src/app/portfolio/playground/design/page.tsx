@@ -6,26 +6,31 @@
 
 "use client";
 
+import {
+  ResponsiveExperimentGrid,
+  ResponsiveFilterBar,
+} from "@/components/playground/common";
 import { designExperiments } from "@/components/playground/design-experiments/experiments-data";
+import { useResponsive } from "@/hooks/useResponsive";
+import { useExperimentSwipe } from "@/hooks/useTouchGestures";
 import { deviceCapabilitiesDetector } from "@/lib/playground/device-capabilities";
+import {
+  getExperimentComponent,
+  preloadCriticalExperiments,
+} from "@/lib/playground/dynamic-loader";
 import {
   DeviceCapabilities,
   ExperimentFilter,
   PerformanceMetrics,
   PerformanceSettings,
 } from "@/types/playground";
-import {
-  ChevronDown,
-  ChevronUp,
-  Filter,
-  Monitor,
-  Settings,
-} from "lucide-react";
+import { ChevronDown, ChevronUp, Monitor, Settings } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function DesignPlaygroundPage() {
   const Global_title = "noto-sans-jp-regular text-base leading-snug";
+  const responsive = useResponsive();
 
   // State management
   const [deviceCapabilities, setDeviceCapabilities] =
@@ -51,7 +56,7 @@ export default function DesignPlaygroundPage() {
   const [showSettings, setShowSettings] = useState(false);
   const [showPerformance, setShowPerformance] = useState(false);
 
-  // Initialize device capabilities
+  // Initialize device capabilities and preload critical experiments
   useEffect(() => {
     const initializeCapabilities = async () => {
       try {
@@ -62,6 +67,9 @@ export default function DesignPlaygroundPage() {
         const recommendedSettings =
           deviceCapabilitiesDetector.getRecommendedSettings(capabilities);
         setPerformanceSettings(recommendedSettings);
+
+        // Preload critical experiments for better performance
+        await preloadCriticalExperiments();
       } catch (error) {
         console.error("Failed to detect device capabilities:", error);
         // Fallback to safe defaults
@@ -100,27 +108,85 @@ export default function DesignPlaygroundPage() {
   );
 
   // Filter experiments
-  const filteredExperiments = designExperiments.filter((experiment) => {
-    if (filter.category && experiment.category !== filter.category)
-      return false;
-    if (filter.difficulty && experiment.difficulty !== filter.difficulty)
-      return false;
-    if (
-      filter.technology &&
-      !experiment.technology.some((tech) =>
-        tech.toLowerCase().includes(filter.technology!.toLowerCase()),
+  const filteredExperiments = useMemo(() => {
+    return designExperiments.filter((experiment) => {
+      if (filter.category && experiment.category !== filter.category)
+        return false;
+      if (filter.difficulty && experiment.difficulty !== filter.difficulty)
+        return false;
+      if (
+        filter.performanceLevel &&
+        experiment.performanceLevel !== filter.performanceLevel
       )
-    )
-      return false;
-    return true;
-  });
+        return false;
+      if (
+        filter.interactive !== undefined &&
+        experiment.interactive !== filter.interactive
+      )
+        return false;
+      if (
+        filter.technology &&
+        !experiment.technology.some((tech) =>
+          tech.toLowerCase().includes(filter.technology!.toLowerCase()),
+        )
+      )
+        return false;
+      return true;
+    });
+  }, [filter]);
 
-  // Render experiment component
+  // Available filter options
+  const availableCategories = useMemo(() => {
+    return Array.from(new Set(designExperiments.map((exp) => exp.category)));
+  }, []);
+
+  const availableTechnologies = useMemo(() => {
+    return Array.from(
+      new Set(designExperiments.flatMap((exp) => exp.technology)),
+    );
+  }, []);
+
+  // Experiment switching with swipe gestures
+  const experimentIds = filteredExperiments.map((exp) => exp.id);
+  const currentExperimentIndex = activeExperiment
+    ? experimentIds.indexOf(activeExperiment)
+    : -1;
+
+  const handleExperimentSwipe = useCallback(
+    (newIndex: number) => {
+      if (newIndex >= 0 && newIndex < experimentIds.length) {
+        setActiveExperiment(experimentIds[newIndex]);
+      }
+    },
+    [experimentIds],
+  );
+
+  const swipeHandlers = useExperimentSwipe(
+    experimentIds,
+    currentExperimentIndex,
+    handleExperimentSwipe,
+  );
+
+  // Render experiment component with dynamic loading
   const renderExperiment = (experimentId: string) => {
     const experiment = designExperiments.find((exp) => exp.id === experimentId);
     if (!experiment || !deviceCapabilities) return null;
 
-    const ExperimentComponent = experiment.component;
+    // Use dynamic component loading
+    const ExperimentComponent = getExperimentComponent(experimentId);
+
+    if (!ExperimentComponent) {
+      return (
+        <div className="aspect-video bg-background border border-red-500 flex items-center justify-center">
+          <div className="text-center space-y-2">
+            <div className="text-red-500 text-lg">⚠️ Loading Error</div>
+            <p className="text-sm text-foreground">
+              Failed to load experiment: {experimentId}
+            </p>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <ExperimentComponent
@@ -322,150 +388,64 @@ export default function DesignPlaygroundPage() {
               </div>
             </div>
 
-            {/* Experiment Filter */}
-            <div className="bg-base border border-foreground p-4 space-y-4">
-              <h3 className="zen-kaku-gothic-new text-lg text-primary flex items-center">
-                <Filter className="w-5 h-5 mr-2" />
-                Experiment Filter
-              </h3>
+            {/* Responsive Experiment Filter */}
+            <ResponsiveFilterBar
+              filter={filter}
+              onFilterChange={setFilter}
+              availableCategories={availableCategories}
+              availableTechnologies={availableTechnologies}
+            />
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <label className="noto-sans-jp-light text-sm text-foreground">
-                    Category
-                  </label>
-                  <select
-                    value={filter.category || ""}
-                    onChange={(e) =>
-                      setFilter((prev) => ({
-                        ...prev,
-                        category:
-                          (e.target.value as ExperimentFilter["category"]) ||
-                          undefined,
-                      }))
-                    }
-                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
-                  >
-                    <option value="">All Categories</option>
-                    <option value="css">CSS</option>
-                    <option value="svg">SVG</option>
-                    <option value="canvas">Canvas</option>
-                    <option value="animation">Animation</option>
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="noto-sans-jp-light text-sm text-foreground">
-                    Difficulty
-                  </label>
-                  <select
-                    value={filter.difficulty || ""}
-                    onChange={(e) =>
-                      setFilter((prev) => ({
-                        ...prev,
-                        difficulty:
-                          (e.target.value as ExperimentFilter["difficulty"]) ||
-                          undefined,
-                      }))
-                    }
-                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
-                  >
-                    <option value="">All Levels</option>
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="noto-sans-jp-light text-sm text-foreground">
-                    Technology
-                  </label>
-                  <input
-                    type="text"
-                    value={filter.technology || ""}
-                    onChange={(e) =>
-                      setFilter((prev) => ({
-                        ...prev,
-                        technology: e.target.value || undefined,
-                      }))
-                    }
-                    placeholder="Search technology..."
-                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Experiment Selection */}
-            <div className="bg-base border border-foreground p-4 space-y-4">
-              <h3 className="zen-kaku-gothic-new text-lg text-primary">
-                Available Experiments ({filteredExperiments.length})
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredExperiments.map((experiment) => (
-                  <button
-                    key={experiment.id}
-                    onClick={() =>
-                      setActiveExperiment(
-                        activeExperiment === experiment.id
-                          ? null
-                          : experiment.id,
-                      )
-                    }
-                    className={`text-left p-4 border transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background ${
-                      activeExperiment === experiment.id
-                        ? "border-accent bg-accent bg-opacity-10"
-                        : "border-foreground hover:border-accent"
-                    }`}
-                  >
-                    <div className="space-y-2">
-                      <h4 className="zen-kaku-gothic-new text-base text-primary">
-                        {experiment.title}
-                      </h4>
-                      <p className="noto-sans-jp-light text-sm text-foreground">
-                        {experiment.description}
-                      </p>
-                      <div className="flex flex-wrap gap-1">
-                        <span className="noto-sans-jp-light text-xs border border-foreground px-2 py-1">
-                          {experiment.category}
-                        </span>
-                        <span className="noto-sans-jp-light text-xs border border-foreground px-2 py-1">
-                          {experiment.difficulty}
-                        </span>
-                        <span className="noto-sans-jp-light text-xs border border-foreground px-2 py-1">
-                          {experiment.performanceLevel}
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {experiment.technology
-                          .slice(0, 3)
-                          .map((tech, index) => (
-                            <span
-                              key={index}
-                              className="noto-sans-jp-light text-xs text-accent"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
+            {/* Responsive Experiment Grid */}
+            <ResponsiveExperimentGrid
+              experiments={filteredExperiments}
+              activeExperiment={activeExperiment}
+              onExperimentSelect={setActiveExperiment}
+            />
 
             {/* Active Experiment */}
             {activeExperiment && (
-              <div className="bg-base border border-foreground p-4 space-y-4">
-                <h3 className="zen-kaku-gothic-new text-lg text-primary">
-                  Active Experiment:{" "}
-                  {
-                    designExperiments.find((exp) => exp.id === activeExperiment)
-                      ?.title
-                  }
-                </h3>
+              <div
+                className="bg-base border border-foreground p-4 space-y-4"
+                onTouchStart={
+                  responsive.touch.isTouchDevice
+                    ? swipeHandlers.onTouchStart
+                    : undefined
+                }
+                onTouchMove={
+                  responsive.touch.isTouchDevice
+                    ? swipeHandlers.onTouchMove
+                    : undefined
+                }
+                onTouchEnd={
+                  responsive.touch.isTouchDevice
+                    ? swipeHandlers.onTouchEnd
+                    : undefined
+                }
+              >
+                <div className="flex items-center justify-between">
+                  <h3 className="zen-kaku-gothic-new text-lg text-primary">
+                    Active Experiment:{" "}
+                    {
+                      designExperiments.find(
+                        (exp) => exp.id === activeExperiment,
+                      )?.title
+                    }
+                  </h3>
+
+                  {/* Mobile experiment navigation */}
+                  {responsive.isMobile && experimentIds.length > 1 && (
+                    <div className="flex items-center space-x-2">
+                      <span className="noto-sans-jp-light text-xs text-foreground">
+                        {currentExperimentIndex + 1} / {experimentIds.length}
+                      </span>
+                      <span className="noto-sans-jp-light text-xs text-foreground opacity-70">
+                        スワイプで切り替え
+                      </span>
+                    </div>
+                  )}
+                </div>
+
                 {renderExperiment(activeExperiment)}
               </div>
             )}

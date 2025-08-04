@@ -198,7 +198,13 @@ export function PhysicsSimulationExperiment({
       onError?.(new Error(errorMessage));
       return false;
     }
-  }, [deviceCapabilities, performanceSettings, onError]);
+  }, [
+    deviceCapabilities,
+    performanceSettings,
+    onError,
+    createBoundaries,
+    createPhysicsObjects,
+  ]);
 
   // Create boundaries (walls and floor)
   const createBoundaries = useCallback(() => {
@@ -511,6 +517,7 @@ export function PhysicsSimulationExperiment({
 
   // Cleanup on unmount
   useEffect(() => {
+    const mount = mountRef.current;
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -518,8 +525,8 @@ export function PhysicsSimulationExperiment({
 
       if (rendererRef.current) {
         rendererRef.current.dispose();
-        if (mountRef.current && rendererRef.current.domElement) {
-          mountRef.current.removeChild(rendererRef.current.domElement);
+        if (mount && rendererRef.current.domElement) {
+          mount.removeChild(rendererRef.current.domElement);
         }
       }
 

@@ -685,14 +685,14 @@ export class ContentParser implements ContentParserService {
     const suggestions = this.generateIndexSuggestions(
       index,
       totalImages,
-      "image",
+      "画像",
     );
-    const fallbackAlt = altText || `Image ${index}`;
+    const fallbackAlt = altText || `画像 ${index}`;
 
-    return `<div class="embed-fallback bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-4 text-center text-gray-600">
-      <div class="text-lg mb-2">🖼️</div>
-      <div class="font-medium text-gray-800">Image not found</div>
-      <div class="text-sm text-gray-600 mt-1">Index ${index} (${fallbackAlt})</div>
+    return `<div class="embed-fallback bg-gray-50 border border-gray-200 rounded-lg p-3 text-center text-gray-600 my-4">
+      <div class="text-lg mb-1">🖼️</div>
+      <div class="font-medium text-gray-700 text-sm">画像が見つかりません</div>
+      <div class="text-xs text-gray-500 mt-1">インデックス ${index} (${fallbackAlt})</div>
       ${suggestions ? `<div class="text-xs text-blue-600 mt-2">${suggestions}</div>` : ""}
     </div>`;
   }
@@ -705,14 +705,14 @@ export class ContentParser implements ContentParserService {
     const suggestions = this.generateIndexSuggestions(
       index,
       totalVideos,
-      "video",
+      "動画",
     );
-    const fallbackTitle = title || `Video ${index}`;
+    const fallbackTitle = title || `動画 ${index}`;
 
-    return `<div class="embed-fallback bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-4 text-center text-gray-600">
-      <div class="text-lg mb-2">🎥</div>
-      <div class="font-medium text-gray-800">Video not found</div>
-      <div class="text-sm text-gray-600 mt-1">Index ${index} (${fallbackTitle})</div>
+    return `<div class="embed-fallback bg-gray-50 border border-gray-200 rounded-lg p-3 text-center text-gray-600 my-4">
+      <div class="text-lg mb-1">🎥</div>
+      <div class="font-medium text-gray-700 text-sm">動画が見つかりません</div>
+      <div class="text-xs text-gray-500 mt-1">インデックス ${index} (${fallbackTitle})</div>
       ${suggestions ? `<div class="text-xs text-blue-600 mt-2">${suggestions}</div>` : ""}
     </div>`;
   }
@@ -725,14 +725,14 @@ export class ContentParser implements ContentParserService {
     const suggestions = this.generateIndexSuggestions(
       index,
       totalLinks,
-      "link",
+      "リンク",
     );
-    const fallbackText = customText || `Link ${index}`;
+    const fallbackText = customText || `リンク ${index}`;
 
     return `<span class="embed-fallback inline-block bg-red-50 border border-red-200 rounded px-2 py-1 text-red-700 text-sm">
       <span class="mr-1">🔗</span>
-      <span class="font-medium">Link not found:</span>
-      <span class="ml-1">Index ${index} (${fallbackText})</span>
+      <span class="font-medium">リンクが見つかりません:</span>
+      <span class="ml-1">インデックス ${index} (${fallbackText})</span>
       ${suggestions ? `<span class="block text-xs text-blue-600 mt-1">${suggestions}</span>` : ""}
     </span>`;
   }
@@ -743,15 +743,15 @@ export class ContentParser implements ContentParserService {
     type: string,
   ): string | null {
     if (totalItems === 0) {
-      return `No ${type} data available. Add ${type}s to your content first.`;
+      return `${type}データがありません。まず${type}を追加してください。`;
     }
 
     if (index >= totalItems) {
-      return `Try index 0-${totalItems - 1}. Available ${type}s: ${totalItems}`;
+      return `インデックス 0-${totalItems - 1} を使用してください。利用可能な${type}: ${totalItems}個`;
     }
 
     if (index < 0) {
-      return `Index must be 0 or greater. Available ${type}s: 0-${totalItems - 1}`;
+      return `インデックスは0以上である必要があります。利用可能な${type}: 0-${totalItems - 1}`;
     }
 
     return null;

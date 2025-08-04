@@ -336,7 +336,7 @@ describe("Markdown System Error Handling", () => {
       const result = await contentParser.parseMarkdown(content, emptyMediaData);
 
       expect(result).toContain("Image not found");
-      expect(result).toContain("Video not found");
+      expect(result).toContain("動画が見つかりません");
       expect(result).toContain("Link not found");
     });
 

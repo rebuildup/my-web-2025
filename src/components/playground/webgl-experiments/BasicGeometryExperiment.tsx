@@ -137,6 +137,7 @@ export function BasicGeometryExperiment({
     performanceSettings,
     controls.lightIntensity,
     onError,
+    createGeometry,
   ]);
 
   // Create geometry based on current settings
@@ -301,6 +302,7 @@ export function BasicGeometryExperiment({
 
   // Cleanup on unmount
   useEffect(() => {
+    const mount = mountRef.current;
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -308,8 +310,8 @@ export function BasicGeometryExperiment({
 
       if (rendererRef.current) {
         rendererRef.current.dispose();
-        if (mountRef.current && rendererRef.current.domElement) {
-          mountRef.current.removeChild(rendererRef.current.domElement);
+        if (mount && rendererRef.current.domElement) {
+          mount.removeChild(rendererRef.current.domElement);
         }
       }
 

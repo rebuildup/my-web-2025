@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useToolAccessibility } from "@/hooks/useAccessibility";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import PerformanceOptimizer from "./PerformanceOptimizer";
 
 interface ToolWrapperProps {
@@ -261,11 +261,11 @@ export default function ToolWrapper({
                       </li>
                       <li>
                         • ハイコントラスト:{" "}
-                        {state.isHighContrast ? "有効" : "無効"}
+                        {state.highContrastMode ? "有効" : "無効"}
                       </li>
                       <li>
                         • キーボード使用:{" "}
-                        {state.isKeyboardUser ? "検出" : "未検出"}
+                        {state.keyboardNavigation ? "検出" : "未検出"}
                       </li>
                     </ul>
                   </div>

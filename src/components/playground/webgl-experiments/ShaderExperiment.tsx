@@ -6,6 +6,9 @@
 
 "use client";
 
+import { performanceOptimizer } from "@/lib/playground/performance-optimizer";
+import { shaderOptimizer } from "@/lib/playground/shader-optimizer";
+import { webglMemoryManager } from "@/lib/playground/webgl-memory-manager";
 import { ExperimentProps } from "@/types/playground";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
@@ -158,6 +161,13 @@ export function ShaderExperiment({
     }
 
     try {
+      // Initialize performance optimizer
+      performanceOptimizer.initialize({
+        targetFPS: performanceSettings.targetFPS,
+        adaptiveQuality: true,
+        enableProfiling: true,
+      });
+
       // Scene
       const scene = new THREE.Scene();
       sceneRef.current = scene;
@@ -166,26 +176,30 @@ export function ShaderExperiment({
       const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
       cameraRef.current = camera;
 
-      // Renderer
+      // Get optimal WebGL settings
+      const webglSettings =
+        performanceOptimizer.getOptimalWebGLSettings(deviceCapabilities);
+
+      // Renderer with optimized settings
       const renderer = new THREE.WebGLRenderer({
-        antialias: false, // Not needed for shader experiments
-        alpha: true,
-        powerPreference:
-          deviceCapabilities.performanceLevel === "high"
-            ? "high-performance"
-            : "default",
+        antialias: webglSettings.antialias,
+        alpha: webglSettings.alpha,
+        powerPreference: webglSettings.powerPreference,
+        premultipliedAlpha: webglSettings.premultipliedAlpha,
+        preserveDrawingBuffer: webglSettings.preserveDrawingBuffer,
+        stencil: webglSettings.stencil,
+        depth: webglSettings.depth,
       });
 
       const width = mountRef.current.clientWidth;
       const height = mountRef.current.clientHeight;
 
       renderer.setSize(width, height);
-      renderer.setPixelRatio(
-        Math.min(
-          deviceCapabilities.devicePixelRatio,
-          performanceSettings.qualityLevel === "high" ? 2 : 1,
-        ),
-      );
+      renderer.setPixelRatio(webglSettings.pixelRatio);
+
+      // Optimize WebGL context
+      performanceOptimizer.optimizeWebGLContext(renderer.getContext());
+      performanceOptimizer.monitorWebGLPerformance(renderer.getContext());
 
       rendererRef.current = renderer;
       mountRef.current.appendChild(renderer.domElement);
@@ -224,7 +238,7 @@ export function ShaderExperiment({
       onError?.(new Error(errorMessage));
       return false;
     }
-  }, [deviceCapabilities, performanceSettings, onError]);
+  }, [deviceCapabilities, performanceSettings, onError, createShaderMaterial]);
 
   // Create shader material
   const createShaderMaterial = useCallback(() => {
@@ -240,11 +254,18 @@ export function ShaderExperiment({
     }
 
     try {
-      // Create fullscreen quad geometry
-      const geometry = new THREE.PlaneGeometry(2, 2);
+      // Create optimized geometry using memory manager
+      const geometry = webglMemoryManager.createOptimizedGeometry(
+        new Float32Array([
+          -1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0,
+        ]),
+        undefined,
+        "fullscreen-quad",
+      );
 
       // Vertex shader (simple passthrough)
       const vertexShader = `
+        attribute vec3 position;
         void main() {
           gl_Position = vec4(position, 1.0);
         }
@@ -256,22 +277,31 @@ export function ShaderExperiment({
           ? controls.customCode
           : PRESET_SHADERS[controls.presetShader];
 
-      // Create shader material
-      const material = new THREE.ShaderMaterial({
-        uniforms: {
-          time: { value: 0 },
-          resolution: {
-            value: new THREE.Vector2(
-              controls.resolution[0],
-              controls.resolution[1],
-            ),
-          },
-          mouse: { value: new THREE.Vector2(0, 0) },
+      // Create optimized shader material
+      const uniforms = {
+        time: { value: 0 },
+        resolution: {
+          value: new THREE.Vector2(
+            controls.resolution[0],
+            controls.resolution[1],
+          ),
         },
+        mouse: { value: new THREE.Vector2(0, 0) },
+      };
+
+      const material = shaderOptimizer.createOptimizedMaterial(
         vertexShader,
         fragmentShader,
-        side: THREE.DoubleSide,
-      });
+        uniforms,
+        deviceCapabilities,
+        {
+          precision: "mediump",
+          enableOptimizations: true,
+          stripComments: true,
+          minifyCode: performanceSettings.qualityLevel === "low",
+          cacheShaders: true,
+        },
+      );
 
       materialRef.current = material;
 
@@ -287,7 +317,13 @@ export function ShaderExperiment({
       setShaderError(errorMessage);
       console.error("Shader error:", err);
     }
-  }, [controls.presetShader, controls.customCode, controls.resolution]);
+  }, [
+    controls.presetShader,
+    controls.customCode,
+    controls.resolution,
+    deviceCapabilities,
+    performanceSettings.qualityLevel,
+  ]);
 
   // Compile custom shader
   const compileCustomShader = useCallback(() => {
@@ -410,6 +446,7 @@ export function ShaderExperiment({
 
   // Cleanup on unmount
   useEffect(() => {
+    const mount = mountRef.current;
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -417,8 +454,8 @@ export function ShaderExperiment({
 
       if (rendererRef.current) {
         rendererRef.current.dispose();
-        if (mountRef.current && rendererRef.current.domElement) {
-          mountRef.current.removeChild(rendererRef.current.domElement);
+        if (mount && rendererRef.current.domElement) {
+          mount.removeChild(rendererRef.current.domElement);
         }
       }
 

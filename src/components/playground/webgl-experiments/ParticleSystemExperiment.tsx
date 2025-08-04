@@ -6,6 +6,8 @@
 
 "use client";
 
+import { performanceOptimizer } from "@/lib/playground/performance-optimizer";
+import { webglMemoryManager } from "@/lib/playground/webgl-memory-manager";
 import { ExperimentProps } from "@/types/playground";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
@@ -75,6 +77,22 @@ export function ParticleSystemExperiment({
     }
 
     try {
+      // Initialize performance optimizer
+      performanceOptimizer.initialize({
+        targetFPS: performanceSettings.targetFPS,
+        adaptiveQuality: true,
+        enableProfiling: true,
+      });
+
+      // Set memory limit based on device capabilities
+      const memoryLimit =
+        deviceCapabilities.performanceLevel === "high"
+          ? 256
+          : deviceCapabilities.performanceLevel === "medium"
+            ? 128
+            : 64;
+      webglMemoryManager.setMemoryLimit(memoryLimit);
+
       // Scene
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x000011);
@@ -90,26 +108,29 @@ export function ParticleSystemExperiment({
       camera.position.z = 50;
       cameraRef.current = camera;
 
-      // Renderer
+      // Get optimal WebGL settings
+      const webglSettings =
+        performanceOptimizer.getOptimalWebGLSettings(deviceCapabilities);
+
+      // Renderer with optimized settings
       const renderer = new THREE.WebGLRenderer({
-        antialias: performanceSettings.qualityLevel !== "low",
-        alpha: true,
-        powerPreference:
-          deviceCapabilities.performanceLevel === "high"
-            ? "high-performance"
-            : "default",
+        antialias: webglSettings.antialias,
+        alpha: webglSettings.alpha,
+        powerPreference: webglSettings.powerPreference,
+        premultipliedAlpha: webglSettings.premultipliedAlpha,
+        preserveDrawingBuffer: webglSettings.preserveDrawingBuffer,
+        stencil: webglSettings.stencil,
+        depth: webglSettings.depth,
       });
 
       renderer.setSize(
         mountRef.current.clientWidth,
         mountRef.current.clientHeight,
       );
-      renderer.setPixelRatio(
-        Math.min(
-          deviceCapabilities.devicePixelRatio,
-          performanceSettings.qualityLevel === "high" ? 2 : 1,
-        ),
-      );
+      renderer.setPixelRatio(webglSettings.pixelRatio);
+
+      // Optimize WebGL context
+      performanceOptimizer.optimizeWebGLContext(renderer.getContext());
 
       rendererRef.current = renderer;
       mountRef.current.appendChild(renderer.domElement);
@@ -139,7 +160,7 @@ export function ParticleSystemExperiment({
       onError?.(new Error(errorMessage));
       return false;
     }
-  }, [deviceCapabilities, performanceSettings, onError]);
+  }, [deviceCapabilities, performanceSettings, onError, createParticleSystem]);
 
   // Create particle system
   const createParticleSystem = useCallback(() => {
@@ -473,6 +494,7 @@ export function ParticleSystemExperiment({
 
   // Cleanup on unmount
   useEffect(() => {
+    const mount = mountRef.current;
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -480,8 +502,8 @@ export function ParticleSystemExperiment({
 
       if (rendererRef.current) {
         rendererRef.current.dispose();
-        if (mountRef.current && rendererRef.current.domElement) {
-          mountRef.current.removeChild(rendererRef.current.domElement);
+        if (mount && rendererRef.current.domElement) {
+          mount.removeChild(rendererRef.current.domElement);
         }
       }
 

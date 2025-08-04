@@ -10,6 +10,7 @@ import { MarkdownContentItem } from "@/types/content";
 import { PortfolioContentItem } from "@/types/portfolio";
 import { Calendar, Tag } from "lucide-react";
 import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -72,7 +73,7 @@ export async function generateMetadata({
 
 /**
  * Content Section Component
- * Handles markdown and fallback content display
+ * Handles markdown and fallback content display with robust error handling
  */
 function ContentSection({ item }: { item: PortfolioContentItem }) {
   // Check if there's meaningful content to display
@@ -80,13 +81,9 @@ function ContentSection({ item }: { item: PortfolioContentItem }) {
   const hasContent = item.content && item.content.trim().length > 0;
   const hasDescription = item.description && item.description.trim().length > 0;
 
-  // Show content section only if there's meaningful content
-  const shouldShowContent = hasMarkdownPath || hasContent || hasDescription;
-
-  if (!shouldShowContent) {
-    // Return null to hide the content section entirely when no content exists
-    return null;
-  }
+  // Always show content section - never return null to avoid blank pages
+  const fallbackContent =
+    item.content || item.description || "詳細な説明は準備中です。";
 
   return (
     <section className="space-y-12">
@@ -100,13 +97,14 @@ function ContentSection({ item }: { item: PortfolioContentItem }) {
               externalLinks: item.externalLinks || [],
             }}
             className="markdown-content-detail"
-            fallbackContent={
-              item.content || item.description || "Content not available"
-            }
+            fallbackContent={fallbackContent}
             enableSanitization={true}
             enableValidation={true}
-            showRetryButton={true}
+            showRetryButton={false} // Disable retry button in production
             showEmptyState={true}
+            onError={(error) => {
+              console.warn(`[Portfolio] Markdown error for ${item.id}:`, error);
+            }}
           />
         </div>
       ) : hasContent ? (
@@ -118,7 +116,115 @@ function ContentSection({ item }: { item: PortfolioContentItem }) {
         <div className="noto-sans-jp-light text-sm leading-loose space-y-4">
           {item.description}
         </div>
-      ) : null}
+      ) : (
+        // Always show something, even if minimal
+        <div className="noto-sans-jp-light text-sm leading-loose space-y-4 text-foreground/60">
+          {fallbackContent}
+        </div>
+      )}
+
+      {/* Show basic item information as additional context */}
+      {(item.images?.length ||
+        item.videos?.length ||
+        item.externalLinks?.length) && (
+        <div className="pt-8 border-t border-foreground/10">
+          <div className="space-y-6">
+            {/* Images */}
+            {item.images && item.images.length > 0 && (
+              <div>
+                <h3 className="text-sm font-medium text-foreground mb-3">
+                  関連画像
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {item.images.slice(0, 4).map((image, index) => (
+                    <div
+                      key={index}
+                      className="aspect-video bg-gray-100 rounded-lg overflow-hidden"
+                    >
+                      <Image
+                        src={image}
+                        alt={`${item.title} - 画像 ${index + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Videos */}
+            {item.videos && item.videos.length > 0 && (
+              <div>
+                <h3 className="text-sm font-medium text-foreground mb-3">
+                  関連動画
+                </h3>
+                <div className="space-y-3">
+                  {item.videos.slice(0, 2).map((video, index) => (
+                    <div
+                      key={index}
+                      className="border border-foreground/10 rounded-lg p-3"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="text-lg">🎥</div>
+                        <div>
+                          <div className="font-medium text-sm">
+                            {video.title || `動画 ${index + 1}`}
+                          </div>
+                          {video.description && (
+                            <div className="text-xs text-foreground/60 mt-1">
+                              {video.description}
+                            </div>
+                          )}
+                          <a
+                            href={video.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:underline mt-1 inline-block"
+                          >
+                            動画を見る →
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* External Links */}
+            {item.externalLinks && item.externalLinks.length > 0 && (
+              <div>
+                <h3 className="text-sm font-medium text-foreground mb-3">
+                  関連リンク
+                </h3>
+                <div className="space-y-2">
+                  {item.externalLinks.map((link, index) => (
+                    <a
+                      key={index}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-3 p-3 border border-foreground/10 rounded-lg hover:bg-foreground/5 transition-colors"
+                    >
+                      <div className="text-lg">🔗</div>
+                      <div>
+                        <div className="font-medium text-sm">{link.title}</div>
+                        {link.description && (
+                          <div className="text-xs text-foreground/60 mt-1">
+                            {link.description}
+                          </div>
+                        )}
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

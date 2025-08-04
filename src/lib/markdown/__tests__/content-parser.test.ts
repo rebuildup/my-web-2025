@@ -299,7 +299,7 @@ describe("ContentParser", () => {
       const result = parser.resolveEmbedReferences(content, mockMediaData);
 
       expect(result).toContain("![Image not found: index 99]");
-      expect(result).toContain("Video not found");
+      expect(result).toContain("動画が見つかりません");
       expect(result).toContain("[Link not found: index 99]");
     });
 

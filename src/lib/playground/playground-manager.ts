@@ -14,6 +14,7 @@ import {
   PerformanceSettings,
   PlaygroundError,
 } from "@/types/playground";
+import { cacheManager } from "./cache-manager";
 
 export class PlaygroundManager {
   private static instance: PlaygroundManager;
@@ -127,27 +128,49 @@ export class PlaygroundManager {
   }
 
   /**
-   * Get all experiments
+   * Get all experiments with caching
    */
   getAllExperiments(): ExperimentItem[] {
-    return Array.from(this.experiments.values());
+    const cacheKey = "all-experiments";
+    const cached = cacheManager.getExperimentData(cacheKey);
+
+    if (cached) {
+      return cached as ExperimentItem[];
+    }
+
+    const experiments = Array.from(this.experiments.values());
+    cacheManager.cacheExperimentData(cacheKey, experiments);
+
+    return experiments;
   }
 
   /**
    * Get experiments by type
    */
   getExperimentsByType(type: "design" | "webgl"): ExperimentItem[] {
-    return Array.from(this.experiments.values()).filter((experiment) => {
-      if (type === "design") {
-        return ["css", "svg", "canvas", "animation"].includes(
-          experiment.category,
-        );
-      } else {
-        return ["3d", "shader", "particle", "effect"].includes(
-          experiment.category,
-        );
-      }
-    });
+    const cacheKey = `experiments-${type}`;
+    const cached = cacheManager.getExperimentData(cacheKey);
+
+    if (cached) {
+      return cached as ExperimentItem[];
+    }
+
+    const experiments = Array.from(this.experiments.values()).filter(
+      (experiment) => {
+        if (type === "design") {
+          return ["css", "svg", "canvas", "animation"].includes(
+            experiment.category,
+          );
+        } else {
+          return ["3d", "shader", "particle", "effect"].includes(
+            experiment.category,
+          );
+        }
+      },
+    );
+
+    cacheManager.cacheExperimentData(cacheKey, experiments);
+    return experiments;
   }
 
   /**

@@ -17,9 +17,7 @@ import { marked } from "marked";
 import React, { useCallback, useEffect, useState } from "react";
 import { createContentParser } from "../../lib/markdown/content-parser";
 import type { MediaData } from "../../types/content";
-import FallbackContent, {
-  MarkdownErrorBoundary,
-} from "../markdown/FallbackContent";
+import { MarkdownErrorBoundary } from "../markdown/FallbackContent";
 
 // Component props interface
 interface MarkdownRendererProps {
@@ -416,8 +414,29 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
   // Load content when filePath or mediaData changes
   useEffect(() => {
-    loadContent();
-  }, [loadContent]);
+    // Ensure we always attempt to load content, even if there are issues
+    loadContent().catch((error) => {
+      console.warn(
+        "[MarkdownRenderer] Failed to load content in useEffect:",
+        error,
+      );
+      // Set a fallback state to ensure the component still renders
+      setState((prev) => ({
+        ...prev,
+        isLoading: false,
+        error:
+          error instanceof MarkdownFileError
+            ? error
+            : new MarkdownFileError(
+                "Failed to load content",
+                "FETCH_ERROR",
+                filePath,
+              ),
+        parsedContent: "",
+        content: "",
+      }));
+    });
+  }, [loadContent, filePath]);
 
   // Render loading state
   if (state.isLoading) {
@@ -433,47 +452,85 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     );
   }
 
-  // Render error state with enhanced fallback
+  // Render error state with enhanced fallback - always show content, never block the page
   if (state.error) {
+    console.warn(
+      "[MarkdownRenderer] Rendering error state with fallback content",
+    );
+
     return (
       <div className={`markdown-renderer-error ${className}`}>
-        <FallbackContent
-          error={state.error}
-          fallbackContent={fallbackContent}
-          contentId={contentId}
-          onRetry={showRetryButton ? loadContent : undefined}
-          showRetryButton={showRetryButton}
-          showErrorDetails={process.env.NODE_ENV === "development"}
-        />
-
-        {/* Show validation errors if available */}
-        {state.validationResult && !state.validationResult.isValid && (
-          <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <h4 className="text-sm font-medium text-yellow-800 mb-2">
-              Content Validation Issues:
-            </h4>
-            <ul className="text-sm text-yellow-700 space-y-1">
-              {state.validationResult.errors.map((error, index) => (
-                <li key={index}>
-                  Line {error.line}, Column {error.column}: {error.message}
-                </li>
-              ))}
-            </ul>
+        {/* Always show fallback content instead of blocking the page */}
+        <div className="markdown-fallback-content">
+          <div className="markdown-empty-state text-foreground/60 text-sm noto-sans-jp-light py-4">
+            {fallbackContent || "コンテンツが利用できません。"}
           </div>
-        )}
 
-        {/* Show integrity check results if available */}
-        {state.integrityCheck && !state.integrityCheck.isValid && (
-          <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
-            <h4 className="text-sm font-medium text-orange-800 mb-2">
-              File Integrity Warning:
-            </h4>
-            <p className="text-sm text-orange-700">
-              The file may have been modified or corrupted. Checksum:{" "}
-              {state.integrityCheck.checksum}
-            </p>
-          </div>
-        )}
+          {/* Show error details only in development */}
+          {process.env.NODE_ENV === "development" && (
+            <details className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <summary className="text-sm font-medium text-red-800 cursor-pointer">
+                開発者向け: エラー詳細
+              </summary>
+              <div className="mt-2 text-xs text-red-700">
+                <p>
+                  <strong>エラー:</strong> {state.error.message}
+                </p>
+                <p>
+                  <strong>ファイルパス:</strong> {filePath}
+                </p>
+                {state.error instanceof MarkdownFileError && (
+                  <p>
+                    <strong>エラーコード:</strong> {state.error.code}
+                  </p>
+                )}
+              </div>
+            </details>
+          )}
+
+          {/* Show retry button if enabled */}
+          {showRetryButton && (
+            <button
+              onClick={loadContent}
+              className="mt-3 px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            >
+              再読み込み
+            </button>
+          )}
+        </div>
+
+        {/* Show validation errors if available (development only) */}
+        {process.env.NODE_ENV === "development" &&
+          state.validationResult &&
+          !state.validationResult.isValid && (
+            <details className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <summary className="text-sm font-medium text-yellow-800 cursor-pointer">
+                コンテンツ検証の問題
+              </summary>
+              <ul className="mt-2 text-sm text-yellow-700 space-y-1">
+                {state.validationResult.errors.map((error, index) => (
+                  <li key={index}>
+                    行 {error.line}, 列 {error.column}: {error.message}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+
+        {/* Show integrity check results if available (development only) */}
+        {process.env.NODE_ENV === "development" &&
+          state.integrityCheck &&
+          !state.integrityCheck.isValid && (
+            <details className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+              <summary className="text-sm font-medium text-orange-800 cursor-pointer">
+                ファイル整合性の警告
+              </summary>
+              <p className="mt-2 text-sm text-orange-700">
+                ファイルが変更または破損している可能性があります。チェックサム:{" "}
+                {state.integrityCheck.checksum}
+              </p>
+            </details>
+          )}
       </div>
     );
   }

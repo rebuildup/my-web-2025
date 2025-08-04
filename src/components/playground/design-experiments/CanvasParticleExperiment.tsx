@@ -8,7 +8,13 @@
 import { performanceMonitor } from "@/lib/playground/performance-monitor";
 import { ExperimentProps } from "@/types/playground";
 import { Pause, Play, RotateCcw, Settings } from "lucide-react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 interface Particle {
   x: number;
@@ -55,31 +61,34 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
   });
 
   // Color palettes
-  const colorPalettes = {
-    rainbow: [
-      "#ff0000",
-      "#ff8000",
-      "#ffff00",
-      "#80ff00",
-      "#00ff00",
-      "#00ff80",
-      "#00ffff",
-      "#0080ff",
-      "#0000ff",
-      "#8000ff",
-      "#ff00ff",
-      "#ff0080",
-    ],
-    monochrome: [
-      "#ffffff",
-      "#e0e0e0",
-      "#c0c0c0",
-      "#a0a0a0",
-      "#808080",
-      "#606060",
-    ],
-    gradient: ["#ff6b6b", "#4ecdc4", "#45b7d1", "#96ceb4", "#ffeaa7"],
-  };
+  const colorPalettes = useMemo(
+    () => ({
+      rainbow: [
+        "#ff0000",
+        "#ff8000",
+        "#ffff00",
+        "#80ff00",
+        "#00ff00",
+        "#00ff80",
+        "#00ffff",
+        "#0080ff",
+        "#0000ff",
+        "#8000ff",
+        "#ff00ff",
+        "#ff0080",
+      ],
+      monochrome: [
+        "#ffffff",
+        "#e0e0e0",
+        "#c0c0c0",
+        "#a0a0a0",
+        "#808080",
+        "#606060",
+      ],
+      gradient: ["#ff6b6b", "#4ecdc4", "#45b7d1", "#96ceb4", "#ffeaa7"],
+    }),
+    [],
+  );
 
   // Initialize particles
   const initParticles = useCallback(() => {
@@ -110,7 +119,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
     }
 
     particlesRef.current = particles;
-  }, [config]);
+  }, [config, colorPalettes]);
 
   // Update particle physics
   const updateParticles = useCallback(() => {
@@ -120,7 +129,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
     const particles = particlesRef.current;
     const mouse = mouseRef.current;
 
-    particles.forEach((particle, index) => {
+    particles.forEach((particle) => {
       // Apply physics based on mode
       switch (config.physics) {
         case "bounce":
