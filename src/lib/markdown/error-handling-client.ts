@@ -263,6 +263,9 @@ export class EmbedValidator {
             column: column + 1,
             message: `Image index ${index} is out of range. Available images: 0-${images.length - 1}`,
             suggestion: `Use an index between 0 and ${images.length - 1}, or add more images to your content`,
+            severity: "error",
+            embedType: "image",
+            embedIndex: index,
           });
         }
 
@@ -273,6 +276,9 @@ export class EmbedValidator {
             column: column + 1,
             message: `Image index ${index} cannot be negative`,
             suggestion: "Use a positive index starting from 0",
+            severity: "error",
+            embedType: "image",
+            embedIndex: index,
           });
         }
       }
@@ -305,6 +311,9 @@ export class EmbedValidator {
             column: column + 1,
             message: `Video index ${index} is out of range. Available videos: 0-${videos.length - 1}`,
             suggestion: `Use an index between 0 and ${videos.length - 1}, or add more videos to your content`,
+            severity: "error",
+            embedType: "video",
+            embedIndex: index,
           });
         }
 
@@ -315,6 +324,9 @@ export class EmbedValidator {
             column: column + 1,
             message: `Video index ${index} cannot be negative`,
             suggestion: "Use a positive index starting from 0",
+            severity: "error",
+            embedType: "video",
+            embedIndex: index,
           });
         }
       }
@@ -347,6 +359,9 @@ export class EmbedValidator {
             column: column + 1,
             message: `Link index ${index} is out of range. Available links: 0-${links.length - 1}`,
             suggestion: `Use an index between 0 and ${links.length - 1}, or add more links to your content`,
+            severity: "error",
+            embedType: "link",
+            embedIndex: index,
           });
         }
 
@@ -357,6 +372,9 @@ export class EmbedValidator {
             column: column + 1,
             message: `Link index ${index} cannot be negative`,
             suggestion: "Use a positive index starting from 0",
+            severity: "error",
+            embedType: "link",
+            embedIndex: index,
           });
         }
       }
@@ -428,6 +446,9 @@ export class EmbedValidator {
           type: "image",
           index: parseInt(match[1]),
           altText: match[2],
+          originalMatch: match[0],
+          startPos: match.index || 0,
+          endPos: (match.index || 0) + match[0].length,
         });
       }
 
@@ -438,6 +459,9 @@ export class EmbedValidator {
           type: "video",
           index: parseInt(match[1]),
           altText: match[2],
+          originalMatch: match[0],
+          startPos: match.index || 0,
+          endPos: (match.index || 0) + match[0].length,
         });
       }
 
@@ -448,6 +472,9 @@ export class EmbedValidator {
           type: "link",
           index: parseInt(match[1]),
           customText: match[2],
+          originalMatch: match[0],
+          startPos: match.index || 0,
+          endPos: (match.index || 0) + match[0].length,
         });
       }
     });

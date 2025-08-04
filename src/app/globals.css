@@ -389,3 +389,254 @@ select option:disabled {
   background-color: #374151;
   color: #f9fafb;
 }
+
+/* Markdown Content Styles for Portfolio Detail Pages */
+.markdown-content-detail {
+  /* Ensure proper spacing for all markdown elements */
+  line-height: 1.75;
+  color: var(--color-foreground);
+}
+
+/* Heading Styles - matching privacy-policy page */
+.markdown-content-detail h1 {
+  font-family: "neue-haas-grotesk-display", "Noto Sans JP", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 2.25rem; /* text-4xl */
+  color: var(--color-primary);
+  line-height: 1.2;
+  margin-bottom: 1.5rem; /* mb-6 */
+  margin-top: 3rem; /* mt-12 */
+}
+
+.markdown-content-detail h2 {
+  font-family: "neue-haas-grotesk-display", "Noto Sans JP", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 2.25rem; /* text-4xl */
+  color: var(--color-primary);
+  line-height: 1.2;
+  margin-bottom: 1.5rem; /* mb-6 */
+  margin-top: 3rem; /* mt-12 */
+}
+
+.markdown-content-detail h3 {
+  font-family: "Noto Sans JP", sans-serif;
+  font-weight: 400;
+  font-size: 1rem; /* text-base */
+  color: var(--color-primary);
+  line-height: 1.2;
+  margin-bottom: 0.75rem; /* mb-3 */
+  margin-top: 2rem; /* mt-8 */
+}
+
+.markdown-content-detail h4 {
+  font-family: "Noto Sans JP", sans-serif;
+  font-weight: 400;
+  font-size: 1rem; /* text-base */
+  color: var(--color-primary);
+  line-height: 1.2;
+  margin-bottom: 0.75rem; /* mb-3 */
+  margin-top: 1.5rem; /* mt-6 */
+}
+
+.markdown-content-detail h5 {
+  font-family: "Noto Sans JP", sans-serif;
+  font-weight: 400;
+  font-size: 1rem; /* text-base */
+  color: var(--color-primary);
+  line-height: 1.2;
+  margin-bottom: 0.75rem; /* mb-3 */
+  margin-top: 1.25rem; /* mt-5 */
+}
+
+.markdown-content-detail h6 {
+  font-family: "Noto Sans JP", sans-serif;
+  font-weight: 400;
+  font-size: 1rem; /* text-base */
+  color: var(--color-primary);
+  line-height: 1.2;
+  margin-bottom: 0.75rem; /* mb-3 */
+  margin-top: 1rem; /* mt-4 */
+}
+
+/* First heading has no top margin */
+.markdown-content-detail h1:first-child,
+.markdown-content-detail h2:first-child,
+.markdown-content-detail h3:first-child,
+.markdown-content-detail h4:first-child,
+.markdown-content-detail h5:first-child,
+.markdown-content-detail h6:first-child {
+  margin-top: 0;
+}
+
+/* Paragraph Styles - matching privacy-policy page */
+.markdown-content-detail p {
+  font-family: "Noto Sans JP", sans-serif;
+  font-weight: 300;
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.75; /* leading-loose */
+  margin-bottom: 1rem; /* mb-4 */
+  color: var(--color-foreground);
+}
+
+.markdown-content-detail p:last-child {
+  margin-bottom: 0;
+}
+
+/* List Styles - matching privacy-policy page */
+.markdown-content-detail ul,
+.markdown-content-detail ol {
+  font-family: "Noto Sans JP", sans-serif;
+  font-weight: 300;
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.75; /* leading-loose */
+  margin-bottom: 1rem; /* mb-4 */
+  padding-left: 1.5rem;
+}
+
+.markdown-content-detail ul {
+  list-style-type: disc;
+}
+
+.markdown-content-detail ol {
+  list-style-type: decimal;
+}
+
+.markdown-content-detail li {
+  margin-bottom: 0.25rem; /* space-y-1 */
+  color: var(--color-foreground);
+}
+
+.markdown-content-detail li:last-child {
+  margin-bottom: 0;
+}
+
+/* Link Styles - white color as requested */
+.markdown-content-detail a {
+  color: var(--color-foreground); /* white color */
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+
+.markdown-content-detail a:hover {
+  opacity: 0.8;
+}
+
+/* Image Styles */
+.markdown-content-detail img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 1.5rem 0;
+}
+
+/* Code Block Styles */
+.markdown-content-detail pre {
+  background-color: var(--color-base);
+  border: 1px solid var(--color-foreground);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  margin: 1.5rem 0;
+}
+
+.markdown-content-detail code {
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo,
+    monospace;
+  color: var(--color-foreground);
+}
+
+/* Blockquote Styles */
+.markdown-content-detail blockquote {
+  border-left: 4px solid var(--color-accent);
+  padding-left: 1rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 1.5rem 0;
+}
+
+/* Table styles for markdown content */
+.markdown-content-detail table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  border: 1px solid var(--color-foreground);
+  font-size: 1rem;
+}
+
+.markdown-content-detail th,
+.markdown-content-detail td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-foreground);
+  font-family: "Noto Sans JP", sans-serif;
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.markdown-content-detail th {
+  background-color: var(--color-base);
+  font-weight: 400;
+  color: var(--color-primary);
+}
+
+/* Horizontal rule styles */
+.markdown-content-detail hr {
+  border: none;
+  border-top: 1px solid var(--color-foreground);
+  margin: 2rem 0;
+}
+
+/* Strong and emphasis styles */
+.markdown-content-detail strong {
+  font-weight: 400;
+  color: var(--color-primary);
+}
+
+.markdown-content-detail em {
+  font-style: italic;
+  color: var(--color-foreground);
+}
+
+/* Inline code styles */
+.markdown-content-detail code:not(pre code) {
+  background-color: var(--color-base);
+  color: var(--color-foreground);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo,
+    monospace;
+  font-size: 0.9em;
+  border: 1px solid var(--color-foreground);
+}
+/* Section spacing - matching privacy-policy page space-y-12 */
+.markdown-content-detail > * + * {
+  margin-top: 3rem; /* space-y-12 equivalent */
+}
+
+/* Override for specific elements that need different spacing */
+.markdown-content-detail > h1 + *,
+.markdown-content-detail > h2 + * {
+  margin-top: 1.5rem; /* Smaller gap after main headings */
+}
+
+.markdown-content-detail > h3 + *,
+.markdown-content-detail > h4 + *,
+.markdown-content-detail > h5 + *,
+.markdown-content-detail > h6 + * {
+  margin-top: 1rem; /* Smaller gap after sub-headings */
+}
+
+/* Adjust table font size to match other text */
+.markdown-content-detail table,
+.markdown-content-detail th,
+.markdown-content-detail td {
+  font-size: 0.875rem; /* text-sm to match paragraphs */
+}

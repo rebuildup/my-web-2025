@@ -1,8 +1,15 @@
 /**
  * Enhanced Gallery Filter
  * Task 6.2: 複数カテゴリー対応フィルタリングロジックの拡張
+ * Task 4.2: Gallery performance optimization - NEVER load markdown files
  *
  * Based on portfolio-content-data-enhancement design specifications
+ *
+ * Gallery Performance Rules:
+ * - NEVER load markdown files during filtering or searching
+ * - Use caching to improve performance with large datasets
+ * - Only use item metadata (title, description, tags, category) for filtering
+ * - Maintain consistent performance regardless of markdown content existence
  */
 
 import type { ContentItem } from "@/types/content";
@@ -170,15 +177,15 @@ export class EnhancedGalleryFilter {
       });
     }
 
-    // Search filter
+    // Search filter - NEVER load markdown files for gallery performance (Requirement 6.4, 6.5)
     if (options.search) {
       const searchTerm = options.search.toLowerCase();
       filtered = filtered.filter(
         (item) =>
           item.title.toLowerCase().includes(searchTerm) ||
           item.description.toLowerCase().includes(searchTerm) ||
+          // Only search legacy content field if it exists, never load markdown files
           (item.content || "").toLowerCase().includes(searchTerm) ||
-          (item.markdownContent || "").toLowerCase().includes(searchTerm) ||
           item.tags.some((tag) => tag.toLowerCase().includes(searchTerm)),
       );
     }

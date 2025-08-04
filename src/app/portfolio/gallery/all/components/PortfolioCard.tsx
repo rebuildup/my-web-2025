@@ -3,24 +3,45 @@
 /**
  * Portfolio Card Component
  * Task 3.1: 統一されたカードレイアウトの実装
+ * Task 4.1: Gallery cards never display markdown content (Requirements 6.1, 6.2, 6.3, 6.4, 6.5)
+ *
+ * Gallery Card Content Rules:
+ * - NEVER display markdown content or legacy content field
+ * - ONLY show: title, description, thumbnail, category, tags, metadata
+ * - Show subtle indicator for items with markdown content
+ * - Maintain consistent layout regardless of content type
  */
 
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
 import { EnhancedContentItem } from "@/types";
+import { isEnhancedContentItem } from "@/types/enhanced-content";
+import { FileText } from "lucide-react";
 import Image from "next/image";
 
 interface PortfolioCardProps {
   item: PortfolioContentItem | EnhancedContentItem;
   onClick: () => void;
+  // Gallery cards should NEVER display markdown content (Requirement 6.1)
+  // Only display: title, description, thumbnail, category, tags (Requirement 6.2)
+  showMarkdownIndicator?: boolean; // Default: true
+  hideMarkdownContent?: boolean; // Always true for gallery cards (Requirement 6.1)
 }
 
-export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
+export function PortfolioCard({
+  item,
+  onClick,
+  showMarkdownIndicator = true,
+}: PortfolioCardProps) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       onClick();
     }
   };
+
+  // Check if item has detailed markdown content (Requirements 6.5)
+  // Only check for markdown content, not legacy content field
+  const hasDetailedContent = isEnhancedContentItem(item) && item.markdownPath;
 
   return (
     <article
@@ -60,6 +81,17 @@ export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
             </span>
           </div>
         )}
+
+        {/* Subtle indicator for items with detailed markdown content (Requirement 6.5) */}
+        {hasDetailedContent && showMarkdownIndicator && (
+          <div
+            className="absolute top-2 right-2 bg-primary/80 text-white p-1.5 rounded-full shadow-sm backdrop-blur-sm"
+            title="View detailed content"
+            aria-label="This item has detailed content available"
+          >
+            <FileText className="w-3 h-3" />
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -74,7 +106,7 @@ export function PortfolioCard({ item, onClick }: PortfolioCardProps) {
           </p>
         </div>
 
-        {/* Description */}
+        {/* Description - ONLY from item.description, NEVER from markdown content (Requirement 6.2) */}
         <p className="noto-sans-jp-light text-sm text-foreground line-clamp-2">
           {item.description}
         </p>

@@ -34,6 +34,7 @@ interface MarkdownRendererProps {
   showRetryButton?: boolean;
   contentId?: string;
   onError?: (error: MarkdownFileError) => void;
+  showEmptyState?: boolean;
 }
 
 // Component state interface
@@ -71,55 +72,6 @@ const configureMarked = () => {
     breaks: true,
     gfm: true,
   });
-
-  // Custom renderer for better styling
-  const renderer = new marked.Renderer();
-
-  // Custom image renderer to add responsive classes
-  renderer.image = ({
-    href,
-    title,
-    text,
-  }: {
-    href: string;
-    title?: string | null;
-    text: string;
-  }) => {
-    const titleAttr = title ? ` title="${title}"` : "";
-    return `<img src="${href}" alt="${text}"${titleAttr} class="markdown-image max-w-full h-auto rounded-lg shadow-sm" loading="lazy" />`;
-  };
-
-  // Custom link renderer for external links
-  renderer.link = ({
-    href,
-    title,
-    tokens,
-  }: {
-    href: string;
-    title?: string | null;
-    tokens: Array<{ raw: string }>;
-  }) => {
-    const text = tokens.map((token) => token.raw).join("");
-    const titleAttr = title ? ` title="${title}"` : "";
-    const isExternal = href.startsWith("http") || href.startsWith("//");
-    const externalAttrs = isExternal
-      ? ' target="_blank" rel="noopener noreferrer"'
-      : "";
-    return `<a href="${href}"${titleAttr}${externalAttrs} class="markdown-link text-blue-600 hover:text-blue-800 underline">${text}</a>`;
-  };
-
-  // Custom code block renderer
-  renderer.code = ({ text, lang }: { text: string; lang?: string }) => {
-    const language = lang || "text";
-    return `<pre class="markdown-code-block bg-gray-100 dark:bg-gray-800 rounded-lg p-4 overflow-x-auto"><code class="language-${language}">${text}</code></pre>`;
-  };
-
-  // Custom blockquote renderer
-  renderer.blockquote = (quote) => {
-    return `<blockquote class="markdown-blockquote border-l-4 border-blue-500 pl-4 italic text-gray-700 dark:text-gray-300">${quote}</blockquote>`;
-  };
-
-  marked.use({ renderer });
 };
 
 // Initialize marked configuration
@@ -137,6 +89,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   showRetryButton = true,
   contentId,
   onError,
+  showEmptyState = true,
 }) => {
   const [state, setState] = useState<MarkdownRendererState>({
     content: "",
@@ -153,26 +106,56 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   const fetchMarkdownContent = useCallback(
     async (path: string): Promise<string> => {
       try {
-        const response = await fetch(path);
+        // Ensure the path starts with / for absolute paths
+        const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+        console.log(
+          `[MarkdownRenderer] Fetching markdown file: ${normalizedPath}`,
+        );
+
+        const response = await fetch(normalizedPath, {
+          cache: "no-store", // Disable caching for development
+        });
+
+        console.log(
+          `[MarkdownRenderer] Response status: ${response.status}, ok: ${response.ok}`,
+        );
 
         if (!response.ok) {
           if (response.status === 404) {
+            console.error(
+              `[MarkdownRenderer] File not found: ${normalizedPath}`,
+            );
             throw new MarkdownError(
               MarkdownErrorType.FILE_NOT_FOUND,
-              `Markdown file not found: ${path}`,
-              { filePath: path, status: response.status },
+              `Markdown file not found: ${normalizedPath}`,
+              { filePath: normalizedPath, status: response.status },
               "Check if the file path is correct and the file exists",
             );
           }
+          console.error(
+            `[MarkdownRenderer] Fetch failed: ${response.status} ${response.statusText}`,
+          );
           throw new MarkdownError(
             MarkdownErrorType.PERMISSION_DENIED,
             `Failed to fetch markdown file: ${response.statusText}`,
-            { filePath: path, status: response.status },
+            { filePath: normalizedPath, status: response.status },
             "Check file permissions and server configuration",
           );
         }
 
         const content = await response.text();
+
+        console.log(`[MarkdownRenderer] Content length: ${content.length}`);
+        console.log(
+          `[MarkdownRenderer] Content preview: ${content.substring(0, 100)}...`,
+        );
+
+        // Check if content is empty or just whitespace
+        if (!content || content.trim().length === 0) {
+          console.info(`Markdown file is empty: ${normalizedPath}`);
+          return ""; // Return empty string for empty files
+        }
 
         // Note: File integrity check is not available in client components
         // This feature requires server-side processing
@@ -184,6 +167,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
         return content;
       } catch (error) {
+        console.error(`[MarkdownRenderer] Error fetching ${path}:`, error);
         if (error instanceof MarkdownError) {
           throw error;
         }
@@ -331,6 +315,10 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
   // Load and process markdown content
   const loadContent = useCallback(async () => {
+    console.log(
+      `[MarkdownRenderer] loadContent called with filePath: ${filePath}`,
+    );
+
     if (!filePath) {
       const error = new MarkdownFileError(
         "No file path provided",
@@ -341,6 +329,8 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         ...prev,
         isLoading: false,
         error,
+        parsedContent: "",
+        content: "",
       }));
 
       // Call error callback if provided
@@ -354,12 +344,35 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
+      console.log(
+        `[MarkdownRenderer] Starting to fetch content for: ${filePath}`,
+      );
       const rawContent = await fetchMarkdownContent(filePath);
+
+      // Handle empty content gracefully
+      if (!rawContent || rawContent.trim().length === 0) {
+        console.log(`[MarkdownRenderer] Content is empty, setting empty state`);
+        setState({
+          content: rawContent || "",
+          isLoading: false,
+          error: null,
+          parsedContent: "", // Empty parsed content for empty files
+        });
+        return;
+      }
+
+      console.log(`[MarkdownRenderer] Processing markdown content...`);
       const processedContent = await processMarkdownContent(
         rawContent,
         mediaData,
       );
 
+      console.log(
+        `[MarkdownRenderer] Content processed successfully, setting state`,
+      );
+      console.log(
+        `[MarkdownRenderer] Processed content preview: ${processedContent.substring(0, 200)}...`,
+      );
       setState({
         content: rawContent,
         isLoading: false,
@@ -367,19 +380,24 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         parsedContent: processedContent,
       });
     } catch (error) {
+      console.error(`[MarkdownRenderer] Error in loadContent:`, error);
       const markdownError =
         error instanceof MarkdownFileError
           ? error
-          : new MarkdownFileError(
-              `Unexpected error: ${error instanceof Error ? error.message : "Unknown error"}`,
-              "PARSE_ERROR",
-              filePath,
-            );
+          : error instanceof MarkdownError
+            ? new MarkdownFileError(error.message, "PARSE_ERROR", filePath)
+            : new MarkdownFileError(
+                `Unexpected error: ${error instanceof Error ? error.message : "Unknown error"}`,
+                "PARSE_ERROR",
+                filePath,
+              );
 
       setState((prev) => ({
         ...prev,
         isLoading: false,
         error: markdownError,
+        parsedContent: "",
+        content: "",
       }));
 
       // Call error callback if provided
@@ -460,6 +478,10 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     );
   }
 
+  // Check if content is empty
+  const isEmpty =
+    !state.parsedContent || state.parsedContent.trim().length === 0;
+
   // Render markdown content with error boundary
   return (
     <MarkdownErrorBoundary
@@ -482,10 +504,19 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             </div>
           )}
 
-        <div
-          className="markdown-content prose prose-lg dark:prose-invert max-w-none"
-          dangerouslySetInnerHTML={{ __html: state.parsedContent }}
-        />
+        {/* Render content or empty state */}
+        {isEmpty ? (
+          showEmptyState ? (
+            <div className="markdown-empty-state text-foreground/60 text-sm italic noto-sans-jp-light py-8">
+              {fallbackContent || "No detailed content available."}
+            </div>
+          ) : null
+        ) : (
+          <div
+            className="markdown-content-detail max-w-none prose prose-lg dark:prose-invert"
+            dangerouslySetInnerHTML={{ __html: state.parsedContent }}
+          />
+        )}
       </div>
     </MarkdownErrorBoundary>
   );

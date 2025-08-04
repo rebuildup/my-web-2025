@@ -62,6 +62,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://yusuke-kim.com/",
   },
+  icons: {
+    icon: [
+      { url: "/favicons/favicon.ico", sizes: "any" },
+      { url: "/favicons/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      {
+        url: "/favicons/favicon-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+    ],
+  },
+  manifest: "/manifest.json",
   openGraph: {
     title: "samuidoのサイトルート",
     description:
@@ -110,6 +125,12 @@ export default function RootLayout({
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
+
+        {/* Favicon links for better browser compatibility */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/favicons/favicon-192x192.png" />
+        <link rel="manifest" href="/manifest.json" />
 
         {/* Google tag (gtag.js) */}
         <Script

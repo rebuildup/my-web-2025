@@ -3,6 +3,13 @@
 /**
  * Develop Gallery Client Component
  * Development projects gallery with filtering and sorting
+ * Task 4.2: Gallery performance optimization - never load markdown files
+ *
+ * Gallery Performance Rules:
+ * - NEVER load markdown files for gallery display
+ * - Only display essential information (title, description, thumbnail, category, tags)
+ * - Use enhanced gallery filter with caching for performance
+ * - Maintain consistent performance with large datasets
  */
 
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";

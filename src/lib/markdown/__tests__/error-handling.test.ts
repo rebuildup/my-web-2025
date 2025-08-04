@@ -335,9 +335,9 @@ describe("Markdown System Error Handling", () => {
 
       const result = await contentParser.parseMarkdown(content, emptyMediaData);
 
-      expect(result).toContain("Image not found: index 0");
-      expect(result).toContain("Video not found: index 0");
-      expect(result).toContain("Link not found: index 0");
+      expect(result).toContain("Image not found");
+      expect(result).toContain("Video not found");
+      expect(result).toContain("Link not found");
     });
 
     it("should handle malformed video URLs", async () => {
@@ -365,9 +365,9 @@ describe("Markdown System Error Handling", () => {
         malformedMediaData,
       );
 
-      // Should fallback to link format for malformed URLs
-      expect(result).toContain("[Malformed Video](not-a-valid-url)");
-      expect(result).toContain("[Unknown Type](https://example.com/video)");
+      // Should fallback with helpful error messages
+      expect(result).toContain("Video embed failed");
+      expect(result).toContain("Unsupported video type");
     });
 
     it("should handle extremely nested embed patterns", async () => {

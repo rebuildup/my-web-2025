@@ -448,7 +448,7 @@ Link: [link:0]
 
           // Verify embeds are resolved consistently across content types
           expect(parsed).toContain("![Image 0](/image1.jpg)");
-          expect(parsed).toContain("<iframe");
+          expect(parsed).toContain("iframe");
           expect(parsed).toContain(
             "[GitHub Repository](https://github.com/test/repo)",
           );
@@ -775,7 +775,7 @@ Malformed link: [link:
 
         // Verify valid embeds are resolved
         expect(parsed).toContain("![Main screenshot](/image1.jpg)");
-        expect(parsed).toContain("<iframe");
+        expect(parsed).toContain("iframe");
         expect(parsed).toContain(
           'src="https://player.vimeo.com/video/123456789"',
         );

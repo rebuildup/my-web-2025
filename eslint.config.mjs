@@ -14,6 +14,7 @@ const eslintConfig = [
   {
     ignores: [
       "src/app/tools/ProtoType/prototype-src/**/*",
+      "temp_archive/**/*",
       ".next/**/*",
       "out/**/*",
       "build/**/*",

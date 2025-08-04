@@ -1,5 +1,16 @@
 "use client";
 
+/**
+ * Video & Design Gallery Component
+ * Task 4.2: Gallery performance optimization - never load markdown files
+ *
+ * Gallery Performance Rules:
+ * - NEVER load markdown files for gallery display
+ * - Only display essential information (title, description, thumbnail, category, tags)
+ * - Use enhanced gallery filter with caching for performance
+ * - Maintain consistent performance with large datasets
+ */
+
 import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
 import {
   createBalancedLayout,

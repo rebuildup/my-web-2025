@@ -27,6 +27,7 @@ const customJestConfig = {
     "<rootDir>/.next/",
     "<rootDir>/node_modules/",
     "<rootDir>/e2e/",
+    "<rootDir>/temp_archive/",
   ],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",

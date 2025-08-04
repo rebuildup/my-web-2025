@@ -78,12 +78,16 @@ export interface MediaData {
   externalLinks: ExternalLink[];
 }
 
-// Embed reference structure for parsing
+// Enhanced embed reference structure for parsing with Tailwind CSS support
 export interface EmbedReference {
-  type: "image" | "video" | "link";
+  type: "image" | "video" | "link" | "iframe";
   index: number;
   altText?: string;
   customText?: string;
+  cssClasses?: string;
+  originalMatch: string;
+  startPos: number;
+  endPos: number;
 }
 
 // Validation result for embed syntax
@@ -95,11 +99,19 @@ export interface ValidationResult {
 
 // Embed error types for validation
 export interface EmbedError {
-  type: "INVALID_INDEX" | "MISSING_MEDIA" | "MALFORMED_SYNTAX";
+  type:
+    | "INVALID_INDEX"
+    | "MISSING_MEDIA"
+    | "MALFORMED_SYNTAX"
+    | "UNSAFE_CONTENT"
+    | "CLASS_VALIDATION";
   line: number;
   column: number;
   message: string;
   suggestion?: string;
+  severity: "error" | "warning";
+  embedType: "image" | "video" | "link" | "iframe";
+  embedIndex?: number;
 }
 
 export interface MediaEmbed {
@@ -223,4 +235,11 @@ export const getPortfolioCategoryOptions = () => {
     value,
     label,
   }));
+};
+
+// Type guard to check if content item has enhanced markdown features
+export const isEnhancedContentItem = (
+  item: ContentItem,
+): item is MarkdownContentItem => {
+  return !!(item as MarkdownContentItem).markdownPath;
 };

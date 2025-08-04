@@ -1,9 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { Play, Calendar, Video as VideoIcon } from "lucide-react";
+/**
+ * Video Gallery Component
+ * Task 4.2: Gallery performance optimization - never load markdown files
+ *
+ * Gallery Performance Rules:
+ * - NEVER load markdown files for gallery display
+ * - Only display essential information (title, description, thumbnail, category, tags)
+ * - Maintain consistent performance with large datasets
+ * - Use item.description or item.content (legacy) but never markdown content
+ */
+
 import { ContentItem } from "@/types";
+import { Calendar, Play, Video as VideoIcon } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 import VideoDetailPanel from "./VideoDetailPanel";
 import YouTubeThumbnail from "./YouTubeThumbnail";
 
@@ -124,8 +135,9 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
                   {item.title}
                 </h3>
 
+                {/* Description - ONLY from item.description, NEVER from markdown content (Requirement 6.2) */}
                 <p className="noto-sans-jp-light text-sm text-foreground line-clamp-2 leading-relaxed">
-                  {item.description || item.content}
+                  {item.description}
                 </p>
 
                 {/* Meta Info */}

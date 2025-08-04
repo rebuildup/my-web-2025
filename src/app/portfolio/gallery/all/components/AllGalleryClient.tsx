@@ -3,6 +3,13 @@
 /**
  * All Gallery Client Component
  * Task 3.1: 全作品ギャラリーのクライアントサイド実装
+ * Task 4.2: Gallery performance optimization - never load markdown files
+ *
+ * Gallery Performance Rules:
+ * - NEVER load markdown files for gallery display
+ * - Use enhanced gallery filter with caching for performance
+ * - Only display essential information in cards (title, description, thumbnail, category, tags)
+ * - Maintain consistent performance with large datasets
  */
 
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
@@ -223,6 +230,8 @@ export function AllGalleryClient({
                             item as unknown as PortfolioContentItem,
                           )
                         }
+                        showMarkdownIndicator={true}
+                        hideMarkdownContent={true} // Always true for gallery cards (Requirement 6.1)
                       />
                     ))}
                   </div>

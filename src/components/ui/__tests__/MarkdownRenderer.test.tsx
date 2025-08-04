@@ -99,7 +99,7 @@ describe("MarkdownRenderer", () => {
         ).toBeInTheDocument();
       });
 
-      expect(mockFetch).toHaveBeenCalledWith("/test.md");
+      expect(mockFetch).toHaveBeenCalledWith("/test.md", { cache: "no-store" });
     });
 
     it("should process embed references in content", async () => {
@@ -121,7 +121,7 @@ describe("MarkdownRenderer", () => {
       });
 
       // The content should be processed through the content parser
-      expect(mockFetch).toHaveBeenCalledWith("/test.md");
+      expect(mockFetch).toHaveBeenCalledWith("/test.md", { cache: "no-store" });
     });
 
     it("should apply custom className to rendered content", async () => {
@@ -345,7 +345,9 @@ describe("MarkdownRenderer", () => {
       );
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith("/test1.md");
+        expect(mockFetch).toHaveBeenCalledWith("/test1.md", {
+          cache: "no-store",
+        });
       });
 
       rerender(
@@ -353,7 +355,9 @@ describe("MarkdownRenderer", () => {
       );
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith("/test2.md");
+        expect(mockFetch).toHaveBeenCalledWith("/test2.md", {
+          cache: "no-store",
+        });
       });
     });
   });

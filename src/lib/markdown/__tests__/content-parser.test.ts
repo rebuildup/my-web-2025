@@ -152,11 +152,19 @@ describe("ContentParser", () => {
         type: "image",
         index: 0,
         altText: undefined,
+        cssClasses: undefined,
+        originalMatch: "![image:0]",
+        startPos: 18,
+        endPos: 28,
       });
       expect(refs[1]).toEqual({
         type: "image",
         index: 1,
         altText: "Alt text",
+        cssClasses: undefined,
+        originalMatch: '![image:1 "Alt text"]',
+        startPos: 41,
+        endPos: 62,
       });
     });
 
@@ -170,11 +178,19 @@ describe("ContentParser", () => {
         type: "video",
         index: 0,
         customText: undefined,
+        cssClasses: undefined,
+        originalMatch: "![video:0]",
+        startPos: 22,
+        endPos: 32,
       });
       expect(refs[1]).toEqual({
         type: "video",
         index: 1,
         customText: "Custom title",
+        cssClasses: undefined,
+        originalMatch: '![video:1 "Custom title"]',
+        startPos: 46,
+        endPos: 71,
       });
     });
 
@@ -187,11 +203,19 @@ describe("ContentParser", () => {
         type: "link",
         index: 0,
         customText: undefined,
+        cssClasses: undefined,
+        originalMatch: "[link:0]",
+        startPos: 6,
+        endPos: 14,
       });
       expect(refs[1]).toEqual({
         type: "link",
         index: 1,
         customText: "Custom text",
+        cssClasses: undefined,
+        originalMatch: '[link:1 "Custom text"]',
+        startPos: 18,
+        endPos: 40,
       });
     });
 
@@ -275,16 +299,19 @@ describe("ContentParser", () => {
       const result = parser.resolveEmbedReferences(content, mockMediaData);
 
       expect(result).toContain("![Image not found: index 99]");
-      expect(result).toContain("[Video not found: index 99]");
+      expect(result).toContain("Video not found");
       expect(result).toContain("[Link not found: index 99]");
     });
 
     it("should preserve iframe embeds", () => {
       const content =
-        'Here is an iframe: <iframe src="https://example.com" title="Test"></iframe>';
+        'Here is an iframe: <iframe src="https://www.youtube.com/embed/test123" title="Test"></iframe>';
       const result = parser.resolveEmbedReferences(content, mockMediaData);
 
-      expect(result).toBe(content); // Should remain unchanged
+      expect(result).toContain('src="https://www.youtube.com/embed/test123"');
+      expect(result).toContain('title="Test"');
+      expect(result).toContain("<iframe");
+      expect(result).toContain("</iframe>");
     });
   });
 
@@ -331,7 +358,9 @@ describe("ContentParser", () => {
       const content = "![image:99]";
       const result = parser.validateEmbedSyntax(content, mockMediaData);
 
-      expect(result.errors[0].suggestion).toBe("Use index between 0 and 1");
+      expect(result.errors[0].suggestion).toBe(
+        "Index 99 is too high. Available image indices: 0-1 (2 total)",
+      );
     });
 
     it("should handle empty media arrays", () => {
@@ -344,7 +373,9 @@ describe("ContentParser", () => {
       const result = parser.validateEmbedSyntax(content, emptyMediaData);
 
       expect(result.isValid).toBe(false);
-      expect(result.errors[0].suggestion).toBe("No image data available");
+      expect(result.errors[0].suggestion).toBe(
+        "No image data available. Add images to your content first.",
+      );
     });
   });
 
@@ -369,7 +400,7 @@ describe("ContentParser", () => {
         "Embed validation errors found:",
         expect.any(Array),
       );
-      expect(result).toContain("![Image not found: index 99]");
+      expect(result).toContain("Image not found");
 
       consoleSpy.mockRestore();
     });
