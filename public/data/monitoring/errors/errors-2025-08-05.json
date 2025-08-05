@@ -1,0 +1,20 @@
+[
+  {
+    "id": "error_1754359624205_3lhhx549a",
+    "timestamp": "2025-08-05T02:07:04.205Z",
+    "message": "Event handlers cannot be passed to Client Component props.\n  <... filePath=... mediaData={{...}} className=... fallbackContent=... enableSanitization=... enableValidation=... showRetryButton=... showEmptyState=... onError={function onError}>\n                                                                                                                                                                   ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.",
+    "stack": "Error: Event handlers cannot be passed to Client Component props.\n  <... filePath=... mediaData={{...}} className=... fallbackContent=... enableSanitization=... enableValidation=... showRetryButton=... showEmptyState=... onError={function onError}>\n                                                                                                                                                                   ^^^^^^^^^^^^^^^^^^\nIf you need interactivity, consider converting part of this to a Client Component.\n    at stringify (<anonymous>:1:18)\n    at stringify (<anonymous>:1:18)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4124:48)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4349:23)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4337:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4415:98)\n    at progress (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0f1b9fd4._.js:4581:25)",
+    "url": "http://localhost:3000/portfolio/portfolio-1753840532952",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "sessionId": "session_1754359613406_hs47bca1g",
+    "context": {
+      "filename": "<anonymous>",
+      "lineno": 1,
+      "colno": 18,
+      "type": "global_error"
+    },
+    "severity": "medium",
+    "category": "javascript",
+    "resolved": false
+  }
+]

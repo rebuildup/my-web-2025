@@ -1,0 +1,53 @@
+# Page snapshot
+
+```yaml
+- main:
+  - navigation:
+    - link "← Portfolio に戻る":
+      - /url: /portfolio
+  - heading "Design Playground" [level=1]
+  - paragraph: インタラクティブなデザイン実験とアニメーションの実験場です。 CSS、SVG、Canvas を使った視覚的表現とリアルタイム更新機能を体験できます。
+  - button "Device & Settings":
+    - heading "Device & Settings" [level=3]
+  - button "Performance Monitor":
+    - heading "Performance Monitor" [level=3]
+  - button "Filters":
+    - heading "Filters" [level=3]
+  - heading "Available Experiments (6)" [level=3]
+  - text: 1 / 2
+  - paragraph: スワイプで実験を切り替えできます
+  - button "Color Palette Generator インタラクティブなカラーパレット生成とHSL色空間の実験 css beginner low Interactive CSS JavaScript +1":
+    - heading "Color Palette Generator" [level=4]
+    - paragraph: インタラクティブなカラーパレット生成とHSL色空間の実験
+    - text: css beginner low Interactive CSS JavaScript +1
+  - button "Typography Animation テキストアニメーションとグラデーション効果の実験 animation intermediate medium Interactive CSS Animation +1":
+    - heading "Typography Animation" [level=4]
+    - paragraph: テキストアニメーションとグラデーション効果の実験
+    - text: animation intermediate medium Interactive CSS Animation +1
+  - button "CSS Grid Layouts レスポンシブグリッドレイアウトとインタラクティブ要素 css intermediate low Interactive CSS Grid Flexbox +1":
+    - heading "CSS Grid Layouts" [level=4]
+    - paragraph: レスポンシブグリッドレイアウトとインタラクティブ要素
+    - text: css intermediate low Interactive CSS Grid Flexbox +1
+  - button "Go to page 1"
+  - button "Go to page 2"
+  - navigation "Design playground navigation":
+    - heading "Design Playground機能" [level=3]
+    - link "WebGL Playground":
+      - /url: /portfolio/playground/WebGL
+    - link "Portfolio Home":
+      - /url: /portfolio
+    - link "Tools":
+      - /url: /tools
+  - paragraph: © 2025 samuido - Design Playground
+- button "⚡"
+- dialog "Cookie Settings":
+  - heading "Cookie Settings" [level=3]
+  - paragraph: We use cookies to improve your experience and analyze site usage. You can choose which cookies to accept.
+  - button "Customize"
+  - button "Reject All"
+  - button "Accept All"
+- heading "Google Analytics Debug" [level=3]
+- text: "GA ID: G-Q3YWX96WRS Initialized: ✅ DataLayer: ✅ Gtag: ✅ Consent: ✅ Events: 5 Last: {\"0\":\"event\",\"1\":\"performance_metric\",\"2\":{\"event_category\":\"Performance\",\"event_label\":\"lcp\",\"metric_value\":30332,\"threshold\":2500,\"severity\":\"critical\",\"url\":\"http://localhost:3000/portfolio/playground/design\",\"context\":{\"element\":\"H1\",\"url\":\"\"}}}"
+- button "📊"
+- alert
+```

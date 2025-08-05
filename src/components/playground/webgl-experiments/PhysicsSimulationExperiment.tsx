@@ -142,11 +142,7 @@ export function PhysicsSimulationExperiment({
       }
       scene.add(directionalLight);
 
-      // Create boundaries
-      createBoundaries();
-
-      // Create physics objects
-      createPhysicsObjects();
+      // Create boundaries and physics objects will be created after initialization
 
       // Mouse interaction
       const handleMouseMove = (event: MouseEvent) => {
@@ -198,13 +194,7 @@ export function PhysicsSimulationExperiment({
       onError?.(new Error(errorMessage));
       return false;
     }
-  }, [
-    deviceCapabilities,
-    performanceSettings,
-    onError,
-    createBoundaries,
-    createPhysicsObjects,
-  ]);
+  }, [deviceCapabilities, performanceSettings, onError]);
 
   // Create boundaries (walls and floor)
   const createBoundaries = useCallback(() => {
@@ -478,6 +468,9 @@ export function PhysicsSimulationExperiment({
     if (isActive && !isInitialized) {
       const success = initializeScene();
       if (success) {
+        // Create boundaries and physics objects after scene initialization
+        createBoundaries();
+        createPhysicsObjects();
         animate();
       }
     }
@@ -488,7 +481,14 @@ export function PhysicsSimulationExperiment({
         animationRef.current = null;
       }
     };
-  }, [isActive, isInitialized, initializeScene, animate]);
+  }, [
+    isActive,
+    isInitialized,
+    initializeScene,
+    animate,
+    createBoundaries,
+    createPhysicsObjects,
+  ]);
 
   // Update objects when controls change
   useEffect(() => {

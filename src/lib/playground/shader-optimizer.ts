@@ -165,7 +165,6 @@ export class ShaderOptimizer {
       optimizedCode,
       type,
       deviceCapabilities,
-      settings,
     );
 
     // Validate shader syntax
@@ -181,10 +180,10 @@ export class ShaderOptimizer {
    */
   private getOptimalPrecision(
     deviceCapabilities: DeviceCapabilities,
-    settings: ShaderOptimizationSettings,
+    settings?: ShaderOptimizationSettings,
   ): "lowp" | "mediump" | "highp" {
     // Use settings precision if specified
-    if (settings.precision) {
+    if (settings?.precision) {
       return settings.precision;
     }
 
@@ -397,10 +396,7 @@ export class ShaderOptimizer {
    */
   precompileCommonShaders(deviceCapabilities: DeviceCapabilities): void {
     const settings: ShaderOptimizationSettings = {
-      precision: this.getOptimalPrecision(
-        deviceCapabilities,
-        {} as ShaderOptimizationSettings,
-      ),
+      precision: this.getOptimalPrecision(deviceCapabilities),
       enableOptimizations: true,
       stripComments: true,
       minifyCode: true,
@@ -522,10 +518,7 @@ export class ShaderOptimizer {
     deviceCapabilities: DeviceCapabilities,
   ): THREE.ShaderMaterial {
     const settings: ShaderOptimizationSettings = {
-      precision: this.getOptimalPrecision(
-        deviceCapabilities,
-        {} as ShaderOptimizationSettings,
-      ),
+      precision: this.getOptimalPrecision(deviceCapabilities),
       enableOptimizations: true,
       stripComments: true,
       minifyCode: true,

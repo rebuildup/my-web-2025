@@ -4904,5 +4904,260 @@
         }
       ]
     }
+  },
+  {
+    "id": "perf_1754346642921_7rrtrel9m",
+    "timestamp": "2025-08-04T22:30:42.921Z",
+    "metric": "cls",
+    "value": 0.44231366281644435,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/admin",
+    "context": {
+      "sources": [
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 903,
+            "width": 943,
+            "height": 88,
+            "top": 903,
+            "right": 943,
+            "bottom": 991,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 313,
+            "y": 903,
+            "width": 1280,
+            "height": 88,
+            "top": 903,
+            "right": 1593,
+            "bottom": 991,
+            "left": 313
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 84,
+            "y": 82,
+            "width": 772,
+            "height": 909,
+            "top": 82,
+            "right": 856,
+            "bottom": 991,
+            "left": 84
+          },
+          "currentRect": {
+            "x": 309,
+            "y": 82,
+            "width": 1284,
+            "height": 909,
+            "top": 82,
+            "right": 1593,
+            "bottom": 991,
+            "left": 309
+          }
+        },
+        {
+          "element": "A",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 747,
+            "y": 848,
+            "width": 411,
+            "height": 143,
+            "top": 848,
+            "right": 1158,
+            "bottom": 991,
+            "left": 747
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 1182,
+            "y": 848,
+            "width": 410,
+            "height": 143,
+            "top": 848,
+            "right": 1592,
+            "bottom": 991,
+            "left": 1182
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 688,
+            "y": 16,
+            "width": 239,
+            "height": 90,
+            "top": 16,
+            "right": 927,
+            "bottom": 106,
+            "left": 688
+          },
+          "currentRect": {
+            "x": 1650,
+            "y": 16,
+            "width": 239,
+            "height": 90,
+            "top": 16,
+            "right": 1889,
+            "bottom": 106,
+            "left": 1650
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "perf_1754346738368_8et6m1nil",
+    "timestamp": "2025-08-04T22:32:18.368Z",
+    "metric": "cls",
+    "value": 0.6818628536036384,
+    "threshold": 0.1,
+    "severity": "critical",
+    "url": "http://localhost:3000/admin/data-manager",
+    "context": {
+      "sources": [
+        {
+          "previousRect": {
+            "x": 0,
+            "y": 8,
+            "width": 943,
+            "height": 20,
+            "top": 8,
+            "right": 943,
+            "bottom": 28,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 8,
+            "width": 943,
+            "height": 20,
+            "top": 8,
+            "right": 943,
+            "bottom": 28,
+            "left": 0
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 312,
+            "y": 0,
+            "width": 631,
+            "height": 951,
+            "top": 0,
+            "right": 943,
+            "bottom": 951,
+            "left": 312
+          },
+          "currentRect": {
+            "x": 87,
+            "y": 0,
+            "width": 769,
+            "height": 992,
+            "top": 0,
+            "right": 856,
+            "bottom": 992,
+            "left": 87
+          }
+        },
+        {
+          "element": "INPUT",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 105,
+            "y": 5,
+            "width": 734,
+            "height": 38,
+            "top": 5,
+            "right": 839,
+            "bottom": 43,
+            "left": 105
+          }
+        },
+        {
+          "element": "TEXTAREA",
+          "previousRect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "currentRect": {
+            "x": 105,
+            "y": 83,
+            "width": 734,
+            "height": 96,
+            "top": 83,
+            "right": 839,
+            "bottom": 179,
+            "left": 105
+          }
+        },
+        {
+          "element": "DIV",
+          "previousRect": {
+            "x": 313,
+            "y": 904,
+            "width": 630,
+            "height": 88,
+            "top": 904,
+            "right": 943,
+            "bottom": 992,
+            "left": 313
+          },
+          "currentRect": {
+            "x": 0,
+            "y": 904,
+            "width": 943,
+            "height": 88,
+            "top": 904,
+            "right": 943,
+            "bottom": 992,
+            "left": 0
+          }
+        }
+      ]
+    }
   }
 ]

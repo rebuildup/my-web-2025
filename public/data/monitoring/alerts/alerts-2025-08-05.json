@@ -1,0 +1,327 @@
+[
+  {
+    "id": "perf_1754356031022_7yutcsdye",
+    "timestamp": "2025-08-05T01:07:11.022Z",
+    "metric": "lcp",
+    "value": 21088,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/design",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754356036004_az72xmmzn",
+    "timestamp": "2025-08-05T01:07:16.004Z",
+    "metric": "lcp",
+    "value": 26272,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/design",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754359613460_6fsga8g0f",
+    "timestamp": "2025-08-05T02:06:53.460Z",
+    "metric": "lcp",
+    "value": 8436,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754360731746_o0e1wu0h4",
+    "timestamp": "2025-08-05T02:25:31.746Z",
+    "metric": "lcp",
+    "value": 7580,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754360731751_7p0eom48g",
+    "timestamp": "2025-08-05T02:25:31.751Z",
+    "metric": "lcp",
+    "value": 7596,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754360921178_btjf9dj7j",
+    "timestamp": "2025-08-05T02:28:41.178Z",
+    "metric": "lcp",
+    "value": 6040,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/design",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754360923615_13ayu71cn",
+    "timestamp": "2025-08-05T02:28:43.615Z",
+    "metric": "lcp",
+    "value": 7552,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/design",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361311989_thzionpp3",
+    "timestamp": "2025-08-05T02:35:11.989Z",
+    "metric": "lcp",
+    "value": 8416,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/design",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361579834_yw5tuusaz",
+    "timestamp": "2025-08-05T02:39:39.834Z",
+    "metric": "lcp",
+    "value": 3020,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361590293_bkbim9e71",
+    "timestamp": "2025-08-05T02:39:50.293Z",
+    "metric": "lcp",
+    "value": 8896,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361593016_q0ba4h8qy",
+    "timestamp": "2025-08-05T02:39:53.016Z",
+    "metric": "lcp",
+    "value": 11044,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361594919_mphn7hgfc",
+    "timestamp": "2025-08-05T02:39:54.919Z",
+    "metric": "lcp",
+    "value": 11872,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361668830_jbu5le8rk",
+    "timestamp": "2025-08-05T02:41:08.830Z",
+    "metric": "lcp",
+    "value": 11268,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "P",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361743747_ulhdr788i",
+    "timestamp": "2025-08-05T02:42:23.747Z",
+    "metric": "lcp",
+    "value": 11032,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361849390_6cod6s4qc",
+    "timestamp": "2025-08-05T02:44:09.390Z",
+    "metric": "lcp",
+    "value": 9620,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361849683_jukqsck93",
+    "timestamp": "2025-08-05T02:44:09.683Z",
+    "metric": "lcp",
+    "value": 13672,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361896462_bf0uu4zl6",
+    "timestamp": "2025-08-05T02:44:56.462Z",
+    "metric": "lcp",
+    "value": 3892,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361896852_0hwuo9wzm",
+    "timestamp": "2025-08-05T02:44:56.852Z",
+    "metric": "lcp",
+    "value": 3928,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361901997_pnqohuewd",
+    "timestamp": "2025-08-05T02:45:01.997Z",
+    "metric": "lcp",
+    "value": 8332,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754361897294_y6b083e50",
+    "timestamp": "2025-08-05T02:44:57.294Z",
+    "metric": "lcp",
+    "value": 4052,
+    "threshold": 2500,
+    "severity": "warning",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754362366486_84o02zbpp",
+    "timestamp": "2025-08-05T02:52:46.486Z",
+    "metric": "lcp",
+    "value": 7052,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/design",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754362744352_qesk62gi3",
+    "timestamp": "2025-08-05T02:59:04.352Z",
+    "metric": "lcp",
+    "value": 6508,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754362750297_vs80o2agf",
+    "timestamp": "2025-08-05T02:59:10.297Z",
+    "metric": "lcp",
+    "value": 8028,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754362751014_6id1n2wwt",
+    "timestamp": "2025-08-05T02:59:11.014Z",
+    "metric": "lcp",
+    "value": 8328,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  },
+  {
+    "id": "perf_1754362882384_144079lhw",
+    "timestamp": "2025-08-05T03:01:22.384Z",
+    "metric": "lcp",
+    "value": 13172,
+    "threshold": 2500,
+    "severity": "critical",
+    "url": "http://localhost:3000/",
+    "context": {
+      "element": "H1",
+      "url": ""
+    }
+  }
+]

@@ -406,6 +406,44 @@ export class PerformanceOptimizer {
   }
 
   /**
+   * Optimize settings for device capabilities
+   */
+  optimizeForDevice(deviceCapabilities: DeviceCapabilities): {
+    targetFPS: number;
+    qualityLevel: "low" | "medium" | "high";
+    enableOptimizations: boolean;
+  } {
+    const { performanceLevel } = deviceCapabilities;
+
+    switch (performanceLevel) {
+      case "high":
+        return {
+          targetFPS: 60,
+          qualityLevel: "high",
+          enableOptimizations: true,
+        };
+      case "medium":
+        return {
+          targetFPS: 45,
+          qualityLevel: "medium",
+          enableOptimizations: true,
+        };
+      case "low":
+        return {
+          targetFPS: 30,
+          qualityLevel: "low",
+          enableOptimizations: true,
+        };
+      default:
+        return {
+          targetFPS: 60,
+          qualityLevel: "medium",
+          enableOptimizations: true,
+        };
+    }
+  }
+
+  /**
    * Get performance recommendations
    */
   getRecommendations(deviceCapabilities: DeviceCapabilities): string[] {

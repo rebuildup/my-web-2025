@@ -69,99 +69,6 @@ export function ParticleSystemExperiment({
     sizes: Float32Array;
   } | null>(null);
 
-  // Initialize Three.js scene
-  const initializeScene = useCallback(() => {
-    if (!mountRef.current || !deviceCapabilities?.webglSupport) {
-      setError("WebGL is not supported on this device");
-      return false;
-    }
-
-    try {
-      // Initialize performance optimizer
-      performanceOptimizer.initialize({
-        targetFPS: performanceSettings.targetFPS,
-        adaptiveQuality: true,
-        enableProfiling: true,
-      });
-
-      // Set memory limit based on device capabilities
-      const memoryLimit =
-        deviceCapabilities.performanceLevel === "high"
-          ? 256
-          : deviceCapabilities.performanceLevel === "medium"
-            ? 128
-            : 64;
-      webglMemoryManager.setMemoryLimit(memoryLimit);
-
-      // Scene
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x000011);
-      sceneRef.current = scene;
-
-      // Camera
-      const camera = new THREE.PerspectiveCamera(
-        75,
-        mountRef.current.clientWidth / mountRef.current.clientHeight,
-        0.1,
-        1000,
-      );
-      camera.position.z = 50;
-      cameraRef.current = camera;
-
-      // Get optimal WebGL settings
-      const webglSettings =
-        performanceOptimizer.getOptimalWebGLSettings(deviceCapabilities);
-
-      // Renderer with optimized settings
-      const renderer = new THREE.WebGLRenderer({
-        antialias: webglSettings.antialias,
-        alpha: webglSettings.alpha,
-        powerPreference: webglSettings.powerPreference,
-        premultipliedAlpha: webglSettings.premultipliedAlpha,
-        preserveDrawingBuffer: webglSettings.preserveDrawingBuffer,
-        stencil: webglSettings.stencil,
-        depth: webglSettings.depth,
-      });
-
-      renderer.setSize(
-        mountRef.current.clientWidth,
-        mountRef.current.clientHeight,
-      );
-      renderer.setPixelRatio(webglSettings.pixelRatio);
-
-      // Optimize WebGL context
-      performanceOptimizer.optimizeWebGLContext(renderer.getContext());
-
-      rendererRef.current = renderer;
-      mountRef.current.appendChild(renderer.domElement);
-
-      // Create particle system
-      createParticleSystem();
-
-      // Mouse tracking
-      const handleMouseMove = (event: MouseEvent) => {
-        const rect = mountRef.current?.getBoundingClientRect();
-        if (rect) {
-          mouseRef.current.x =
-            ((event.clientX - rect.left) / rect.width) * 2 - 1;
-          mouseRef.current.y =
-            -((event.clientY - rect.top) / rect.height) * 2 + 1;
-        }
-      };
-
-      mountRef.current.addEventListener("mousemove", handleMouseMove);
-
-      setIsInitialized(true);
-      setError(null);
-      return true;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      setError(`Failed to initialize particle system: ${errorMessage}`);
-      onError?.(new Error(errorMessage));
-      return false;
-    }
-  }, [deviceCapabilities, performanceSettings, onError, createParticleSystem]);
-
   // Create particle system
   const createParticleSystem = useCallback(() => {
     if (!sceneRef.current) return;
@@ -259,6 +166,99 @@ export function ParticleSystemExperiment({
     particlesRef.current = particles;
     sceneRef.current.add(particles);
   }, [controls]);
+
+  // Initialize Three.js scene
+  const initializeScene = useCallback(() => {
+    if (!mountRef.current || !deviceCapabilities?.webglSupport) {
+      setError("WebGL is not supported on this device");
+      return false;
+    }
+
+    try {
+      // Initialize performance optimizer
+      performanceOptimizer.initialize({
+        targetFPS: performanceSettings.targetFPS,
+        adaptiveQuality: true,
+        enableProfiling: true,
+      });
+
+      // Set memory limit based on device capabilities
+      const memoryLimit =
+        deviceCapabilities.performanceLevel === "high"
+          ? 256
+          : deviceCapabilities.performanceLevel === "medium"
+            ? 128
+            : 64;
+      webglMemoryManager.setMemoryLimit(memoryLimit);
+
+      // Scene
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x000011);
+      sceneRef.current = scene;
+
+      // Camera
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        mountRef.current.clientWidth / mountRef.current.clientHeight,
+        0.1,
+        1000,
+      );
+      camera.position.z = 50;
+      cameraRef.current = camera;
+
+      // Get optimal WebGL settings
+      const webglSettings =
+        performanceOptimizer.getOptimalWebGLSettings(deviceCapabilities);
+
+      // Renderer with optimized settings
+      const renderer = new THREE.WebGLRenderer({
+        antialias: webglSettings.antialias,
+        alpha: webglSettings.alpha,
+        powerPreference: webglSettings.powerPreference,
+        premultipliedAlpha: webglSettings.premultipliedAlpha,
+        preserveDrawingBuffer: webglSettings.preserveDrawingBuffer,
+        stencil: webglSettings.stencil,
+        depth: webglSettings.depth,
+      });
+
+      renderer.setSize(
+        mountRef.current.clientWidth,
+        mountRef.current.clientHeight,
+      );
+      renderer.setPixelRatio(webglSettings.pixelRatio);
+
+      // Optimize WebGL context
+      performanceOptimizer.optimizeWebGLContext(renderer.getContext());
+
+      rendererRef.current = renderer;
+      mountRef.current.appendChild(renderer.domElement);
+
+      // Create particle system
+      createParticleSystem();
+
+      // Mouse tracking
+      const handleMouseMove = (event: MouseEvent) => {
+        const rect = mountRef.current?.getBoundingClientRect();
+        if (rect) {
+          mouseRef.current.x =
+            ((event.clientX - rect.left) / rect.width) * 2 - 1;
+          mouseRef.current.y =
+            -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        }
+      };
+
+      mountRef.current.addEventListener("mousemove", handleMouseMove);
+
+      setIsInitialized(true);
+      setError(null);
+      return true;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      setError(`Failed to initialize particle system: ${errorMessage}`);
+      onError?.(new Error(errorMessage));
+      return false;
+    }
+  }, [deviceCapabilities, performanceSettings, onError, createParticleSystem]);
 
   // Get particle color based on mode
   const getParticleColor = (index: number, total: number, mode: string) => {

@@ -210,8 +210,7 @@ export function ShaderExperiment({
         resolution: [width, height],
       }));
 
-      // Create shader material
-      createShaderMaterial();
+      // Shader material will be created after initialization
 
       // Mouse tracking
       const handleMouseMove = (event: MouseEvent) => {
@@ -238,7 +237,7 @@ export function ShaderExperiment({
       onError?.(new Error(errorMessage));
       return false;
     }
-  }, [deviceCapabilities, performanceSettings, onError, createShaderMaterial]);
+  }, [deviceCapabilities, performanceSettings, onError]);
 
   // Create shader material
   const createShaderMaterial = useCallback(() => {
@@ -409,6 +408,8 @@ export function ShaderExperiment({
     if (isActive && !isInitialized) {
       const success = initializeScene();
       if (success) {
+        // Create shader material after scene initialization
+        createShaderMaterial();
         animate();
       }
     }
@@ -419,7 +420,7 @@ export function ShaderExperiment({
         animationRef.current = null;
       }
     };
-  }, [isActive, isInitialized, initializeScene, animate]);
+  }, [isActive, isInitialized, initializeScene, animate, createShaderMaterial]);
 
   // Update shader when preset changes
   useEffect(() => {

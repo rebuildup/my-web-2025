@@ -51,6 +51,73 @@ export function BasicGeometryExperiment({
     fps: 0,
   });
 
+  // Create geometry based on current settings
+  const createGeometry = useCallback(() => {
+    if (!sceneRef.current) return;
+
+    // Remove existing mesh
+    if (meshRef.current) {
+      sceneRef.current.remove(meshRef.current);
+      meshRef.current.geometry.dispose();
+      if (Array.isArray(meshRef.current.material)) {
+        meshRef.current.material.forEach((mat) => mat.dispose());
+      } else {
+        meshRef.current.material.dispose();
+      }
+    }
+
+    // Create geometry
+    let geometry: THREE.BufferGeometry;
+    switch (controls.geometryType) {
+      case "sphere":
+        geometry = new THREE.SphereGeometry(1, 32, 32);
+        break;
+      case "torus":
+        geometry = new THREE.TorusGeometry(1, 0.4, 16, 100);
+        break;
+      case "cone":
+        geometry = new THREE.ConeGeometry(1, 2, 32);
+        break;
+      default:
+        geometry = new THREE.BoxGeometry(2, 2, 2);
+    }
+
+    // Create material
+    let material: THREE.Material;
+    const materialOptions = {
+      wireframe: controls.wireframe,
+      color: 0x00ff88,
+    };
+
+    switch (controls.materialType) {
+      case "basic":
+        material = new THREE.MeshBasicMaterial(materialOptions);
+        break;
+      case "lambert":
+        material = new THREE.MeshLambertMaterial(materialOptions);
+        break;
+      case "phong":
+        material = new THREE.MeshPhongMaterial({
+          ...materialOptions,
+          shininess: 100,
+        });
+        break;
+      default:
+        material = new THREE.MeshStandardMaterial({
+          ...materialOptions,
+          metalness: 0.3,
+          roughness: 0.4,
+        });
+    }
+
+    // Create mesh
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.castShadow = performanceSettings.qualityLevel !== "low";
+    mesh.receiveShadow = performanceSettings.qualityLevel !== "low";
+    meshRef.current = mesh;
+    sceneRef.current.add(mesh);
+  }, [controls, performanceSettings.qualityLevel]);
+
   // Initialize Three.js scene
   const initializeScene = useCallback(() => {
     if (!mountRef.current || !deviceCapabilities?.webglSupport) {
@@ -139,73 +206,6 @@ export function BasicGeometryExperiment({
     onError,
     createGeometry,
   ]);
-
-  // Create geometry based on current settings
-  const createGeometry = useCallback(() => {
-    if (!sceneRef.current) return;
-
-    // Remove existing mesh
-    if (meshRef.current) {
-      sceneRef.current.remove(meshRef.current);
-      meshRef.current.geometry.dispose();
-      if (Array.isArray(meshRef.current.material)) {
-        meshRef.current.material.forEach((mat) => mat.dispose());
-      } else {
-        meshRef.current.material.dispose();
-      }
-    }
-
-    // Create geometry
-    let geometry: THREE.BufferGeometry;
-    switch (controls.geometryType) {
-      case "sphere":
-        geometry = new THREE.SphereGeometry(1, 32, 32);
-        break;
-      case "torus":
-        geometry = new THREE.TorusGeometry(1, 0.4, 16, 100);
-        break;
-      case "cone":
-        geometry = new THREE.ConeGeometry(1, 2, 32);
-        break;
-      default:
-        geometry = new THREE.BoxGeometry(2, 2, 2);
-    }
-
-    // Create material
-    let material: THREE.Material;
-    const materialOptions = {
-      wireframe: controls.wireframe,
-      color: 0x00ff88,
-    };
-
-    switch (controls.materialType) {
-      case "basic":
-        material = new THREE.MeshBasicMaterial(materialOptions);
-        break;
-      case "lambert":
-        material = new THREE.MeshLambertMaterial(materialOptions);
-        break;
-      case "phong":
-        material = new THREE.MeshPhongMaterial({
-          ...materialOptions,
-          shininess: 100,
-        });
-        break;
-      default:
-        material = new THREE.MeshStandardMaterial({
-          ...materialOptions,
-          metalness: 0.3,
-          roughness: 0.4,
-        });
-    }
-
-    // Create mesh
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.castShadow = performanceSettings.qualityLevel !== "low";
-    mesh.receiveShadow = performanceSettings.qualityLevel !== "low";
-    meshRef.current = mesh;
-    sceneRef.current.add(mesh);
-  }, [controls, performanceSettings.qualityLevel]);
 
   // Animation loop
   const animate = useCallback(() => {
