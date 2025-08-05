@@ -31,7 +31,6 @@ interface MarkdownRendererProps {
   enableIntegrityCheck?: boolean;
   showRetryButton?: boolean;
   contentId?: string;
-  onError?: (error: MarkdownFileError) => void;
   showEmptyState?: boolean;
 }
 
@@ -86,7 +85,6 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   enableIntegrityCheck = false,
   showRetryButton = true,
   contentId,
-  onError,
   showEmptyState = true,
 }) => {
   const [state, setState] = useState<MarkdownRendererState>({
@@ -222,9 +220,20 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         }
 
         // First, resolve embed references
+        console.log(`[MarkdownRenderer] Media data:`, media);
+        console.log(
+          `[MarkdownRenderer] Raw content preview:`,
+          rawContent.substring(0, 200),
+        );
+
         const contentWithResolvedEmbeds = await contentParser.parseMarkdown(
           rawContent,
           media,
+        );
+
+        console.log(
+          `[MarkdownRenderer] Content after embed resolution:`,
+          contentWithResolvedEmbeds.substring(0, 200),
         );
 
         // Then, parse markdown to HTML
@@ -331,10 +340,6 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         content: "",
       }));
 
-      // Call error callback if provided
-      if (onError) {
-        onError(error);
-      }
       console.warn("Failed to load markdown content:", error);
       return;
     }
@@ -398,19 +403,9 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         content: "",
       }));
 
-      // Call error callback if provided
-      if (onError) {
-        onError(markdownError);
-      }
       console.warn("Failed to load markdown content:", markdownError);
     }
-  }, [
-    filePath,
-    mediaData,
-    fetchMarkdownContent,
-    processMarkdownContent,
-    onError,
-  ]);
+  }, [filePath, mediaData, fetchMarkdownContent, processMarkdownContent]);
 
   // Load content when filePath or mediaData changes
   useEffect(() => {

@@ -26,6 +26,10 @@ const originalConsoleWarn = console.warn;
 beforeAll(() => {
   console.error = jest.fn();
   console.warn = jest.fn();
+
+  // Set required environment variables for tests
+  process.env.NEXT_PUBLIC_SITE_URL = "https://yusuke-kim.com";
+  process.env.NODE_ENV = "test";
 });
 
 afterAll(() => {
@@ -95,9 +99,9 @@ describe("/api/health", () => {
     expect(data).toHaveProperty("uptime");
     expect(data).toHaveProperty("checks");
     expect(data.checks).toHaveProperty("filesystem");
-    expect(data.checks).toHaveProperty("dataFiles");
+    expect(data.checks).toHaveProperty("environment");
     expect(data.checks).toHaveProperty("memory");
-    expect(data.checks).toHaveProperty("dependencies");
+    expect(data.checks).toHaveProperty("security");
   });
 
   it("should return detailed metrics when requested", async () => {
@@ -114,10 +118,10 @@ describe("/api/health", () => {
     }
 
     expect(response.status).toBe(200);
-    expect(data).toHaveProperty("metrics");
-    expect(data.metrics).toHaveProperty("totalContent");
-    expect(data.metrics).toHaveProperty("totalViews");
-    expect(data.metrics).toHaveProperty("totalDownloads");
-    expect(data.metrics).toHaveProperty("totalSearches");
+    expect(data).toHaveProperty("checks");
+    expect(data.checks).toHaveProperty("environment");
+    expect(data.checks).toHaveProperty("memory");
+    expect(data.checks).toHaveProperty("security");
+    expect(data.checks).toHaveProperty("responseTime");
   });
 });

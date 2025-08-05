@@ -1,5 +1,13 @@
 import "@testing-library/jest-dom";
 
+// Mock marked.js to avoid ES module issues
+jest.mock("marked", () => ({
+  marked: {
+    parse: jest.fn((content) => `<p>${content}</p>`),
+    setOptions: jest.fn(),
+  },
+}));
+
 // Mock next/navigation
 jest.mock("next/navigation", () => ({
   useRouter() {

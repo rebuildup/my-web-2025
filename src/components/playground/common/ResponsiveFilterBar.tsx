@@ -174,6 +174,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
               )
             }
             className={getInputClasses()}
+            role="combobox"
             aria-label="Filter by category"
           >
             <option value="">All Categories</option>
@@ -197,6 +198,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
               )
             }
             className={getInputClasses()}
+            role="combobox"
             aria-label="Filter by difficulty"
           >
             <option value="">All Levels</option>

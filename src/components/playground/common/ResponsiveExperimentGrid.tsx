@@ -157,6 +157,9 @@ export const ResponsiveExperimentGrid: React.FC<
 
       {/* Experiment grid */}
       <div
+        data-testid={
+          responsive.isMobile ? "mobile-experiment-grid" : "experiment-grid"
+        }
         className={getGridClasses()}
         onTouchStart={
           responsive.touch.isTouchDevice

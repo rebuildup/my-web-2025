@@ -1,560 +1,373 @@
-import { Metadata } from "next";
+/**
+ * Video & Design Projects Detail Page
+ * Specialized view for video and design fusion projects
+ */
+
+import { portfolioDataManager } from "@/lib/portfolio/data-manager";
+import { ContentItem } from "@/types/content";
+import Image from "next/image";
 import Link from "next/link";
-import {
-  Palette,
-  Video,
-  Lightbulb,
-  Eye,
-  Calendar,
-  Play,
-  Sparkles,
-} from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Video & Design Detail - Portfolio | samuido 映像×デザイン詳細",
-  description:
-    "samuidoの映像とデザインを融合したプロジェクトの詳細ページ。デザインコンセプト、クリエイティブな意図、視覚表現手法を詳しく解説。",
-  keywords: [
-    "映像デザイン詳細",
-    "デザインコンセプト",
-    "クリエイティブ意図",
-    "視覚表現",
-    "ブランドデザイン",
-    "モーションデザイン",
-  ],
-  robots: "index, follow",
-  alternates: {
-    canonical: "https://yusuke-kim.com/portfolio/detail/video&design",
-  },
-  openGraph: {
-    title: "Video & Design Detail - Portfolio | samuido 映像×デザイン詳細",
-    description:
-      "samuidoの映像とデザインを融合したプロジェクトの詳細ページ。デザインコンセプト、クリエイティブな意図、視覚表現手法を詳しく解説。",
-    type: "article",
-    url: "https://yusuke-kim.com/portfolio/detail/video&design",
-    images: [
-      {
-        url: "https://yusuke-kim.com/portfolio/detail-video-design-og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Video & Design Detail - Portfolio",
-      },
-    ],
-    siteName: "samuido",
-    locale: "ja_JP",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Video & Design Detail - Portfolio | samuido 映像×デザイン詳細",
-    description:
-      "samuidoの映像とデザインを融合したプロジェクトの詳細ページ。デザインコンセプト、クリエイティブな意図、視覚表現手法を詳しく解説。",
-    images: [
-      "https://yusuke-kim.com/portfolio/detail-video-design-twitter-image.jpg",
-    ],
-    creator: "@361do_design",
-  },
-};
+export default async function VideoDesignDetailPage() {
+  try {
+    // Get all portfolio items and filter for video&design projects
+    const allItems = await portfolioDataManager.getPortfolioData();
+    const videoDesignItems = allItems.filter(
+      (item) =>
+        item.category === "video&design" ||
+        item.category === "design" ||
+        (item.category === "video" &&
+          item.tags?.some((tag) =>
+            [
+              "Design",
+              "Branding",
+              "Identity",
+              "UI/UX",
+              "Graphic Design",
+            ].includes(tag),
+          )),
+    );
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "CreativeWork",
-  name: "Video & Design Project Details",
-  description:
-    "デザインコンセプトと映像表現を融合したクリエイティブプロジェクトの詳細",
-  url: "https://yusuke-kim.com/portfolio/detail/video&design",
-  creator: {
-    "@type": "Person",
-    name: "木村友亮",
-    alternateName: "samuido",
-  },
-  genre: ["Motion Design", "Brand Design"],
-};
-
-// サンプル映像×デザインプロジェクトデータ（実際の実装では動的に取得）
-const projectData = {
-  id: "brand-identity-motion",
-  title: "Brand Identity Motion System",
-  description:
-    "スタートアップ企業のブランドアイデンティティとモーションシステムの統合デザイン。ロゴから映像まで一貫したビジュアル言語を構築。",
-  concept: "シンプルさと革新性を表現するミニマルなデザインシステム",
-  creativeIntent:
-    "ブランドの価値観を動きで表現し、記憶に残るビジュアル体験を創造",
-  designEmphasis: "Brand Consistency",
-  duration: "2:30",
-  date: "2024-12",
-  client: "Tech Startup",
-  deliverables: [
-    "Brand Identity",
-    "Motion Graphics",
-    "Style Guide",
-    "Asset Library",
-  ],
-  software: ["After Effects", "Illustrator", "Figma", "Photoshop"],
-};
-
-// デザインプロセスの詳細
-const designProcess = {
-  research: {
-    title: "リサーチ・分析",
-    description: "ブランドの本質と市場環境の理解",
-    duration: "1週間",
-    activities: [
-      "ブランド価値の分析",
-      "競合他社調査",
-      "ターゲット層の理解",
-      "市場トレンド分析",
-      "ブランドポジショニング",
-    ],
-  },
-  concept: {
-    title: "コンセプト開発",
-    description: "ビジュアルコンセプトとデザイン方向性の決定",
-    duration: "1週間",
-    activities: [
-      "ムードボード作成",
-      "コンセプトスケッチ",
-      "カラーパレット検討",
-      "タイポグラフィ選定",
-      "ビジュアル言語定義",
-    ],
-  },
-  design: {
-    title: "デザイン制作",
-    description: "ブランドアイデンティティの具体的な制作",
-    duration: "2週間",
-    activities: [
-      "ロゴデザイン",
-      "アイコンシステム",
-      "カラーシステム",
-      "タイポグラフィシステム",
-      "レイアウトシステム",
-    ],
-  },
-  motion: {
-    title: "モーション制作",
-    description: "動的な表現とアニメーションの実装",
-    duration: "2週間",
-    activities: [
-      "ロゴアニメーション",
-      "トランジション効果",
-      "UI アニメーション",
-      "ブランド映像",
-      "モーションガイドライン",
-    ],
-  },
-  system: {
-    title: "システム化",
-    description: "一貫性のあるデザインシステムの構築",
-    duration: "1週間",
-    activities: [
-      "スタイルガイド作成",
-      "アセットライブラリ",
-      "実装ガイドライン",
-      "品質管理基準",
-      "運用マニュアル",
-    ],
-  },
-};
-
-// ビジュアル要素の詳細
-const visualElements = {
-  color: {
-    title: "カラーシステム",
-    description: "ブランドの個性を表現する色彩設計",
-    elements: [
-      "プライマリーカラー: 革新性を表現する鮮やかなブルー",
-      "セカンダリーカラー: 信頼性を示すダークグレー",
-      "アクセントカラー: エネルギーを表現するオレンジ",
-      "ニュートラルカラー: 可読性を重視したグレースケール",
-    ],
-  },
-  typography: {
-    title: "タイポグラフィ",
-    description: "読みやすさと個性を両立したフォントシステム",
-    elements: [
-      "ヘッドライン: モダンなサンセリフで力強い印象",
-      "ボディテキスト: 可読性を重視したクリーンなフォント",
-      "アクセント: ブランドの個性を表現する特徴的なフォント",
-      "システムフォント: 実装時の代替フォント設定",
-    ],
-  },
-  layout: {
-    title: "レイアウトシステム",
-    description: "一貫性のある構成とグリッドシステム",
-    elements: [
-      "グリッドシステム: 12カラムベースの柔軟なレイアウト",
-      "余白設定: 8pxベースのスペーシングシステム",
-      "階層構造: 明確な情報階層とビジュアル階層",
-      "レスポンシブ: 全デバイス対応の適応的レイアウト",
-    ],
-  },
-  motion: {
-    title: "モーションデザイン",
-    description: "ブランドの動的な表現とアニメーション",
-    elements: [
-      "イージング: ブランドらしい自然で心地よい動き",
-      "タイミング: 一貫性のあるアニメーション速度",
-      "トランジション: 滑らかで意味のある画面遷移",
-      "フィードバック: ユーザーアクションに対する適切な反応",
-    ],
-  },
-};
-
-// クリエイティブな意図
-const creativeIntents = [
-  {
-    aspect: "ブランド価値の可視化",
-    description:
-      "企業の革新性と信頼性を視覚的に表現し、ターゲット層に的確に伝える",
-    approach:
-      "シンプルで力強いビジュアル言語を通じて、複雑な技術を分かりやすく表現",
-  },
-  {
-    aspect: "感情的なつながり",
-    description: "論理的な情報伝達だけでなく、感情に訴えかける体験を創造",
-    approach: "色彩心理学と動きの心理効果を活用した感情的なコミュニケーション",
-  },
-  {
-    aspect: "記憶に残る体験",
-    description: "一度見たら忘れられない、印象的で独特なビジュアル体験の提供",
-    approach: "独創的でありながら機能的な、バランスの取れたデザインアプローチ",
-  },
-  {
-    aspect: "システムの拡張性",
-    description:
-      "将来的な成長と変化に対応できる柔軟で拡張可能なデザインシステム",
-    approach: "モジュラー設計とスケーラブルなコンポーネントシステムの構築",
-  },
-];
-
-export default function VideoDesignDetailPage() {
-  const Global_title = "noto-sans-jp-regular text-base leading-snug";
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-
+    return (
       <div className="min-h-screen bg-background text-foreground">
-        <main className="flex items-center py-10">
-          <div className="container-system">
+        <main className="py-10">
+          <div className="container mx-auto px-4">
             <div className="space-y-10">
               {/* Header */}
               <header className="space-y-12">
                 <nav className="mb-6">
                   <Link
-                    href="/portfolio/gallery/video&design"
-                    className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                    href="/portfolio"
+                    className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit"
                   >
-                    ← Video & Design Gallery に戻る
+                    ← Portfolio に戻る
                   </Link>
                 </nav>
                 <h1 className="neue-haas-grotesk-display text-6xl text-primary">
-                  Video & Design Detail
+                  Video & Design Projects
                 </h1>
                 <p className="noto-sans-jp-light text-sm max-w leading-loose">
-                  映像とデザインを融合したプロジェクトの詳細を紹介します.
+                  デザインコンセプトと映像表現を融合した作品の詳細ビューです。
                   <br />
-                  デザインコンセプト、クリエイティブな意図、視覚表現手法を詳しく解説します.
+                  ブランディング、UI/UX、グラフィックデザインと映像制作の統合プロジェクトを紹介しています。
                 </p>
               </header>
 
-              {/* Project Overview */}
-              <section>
-                <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                  Project Overview
+              {/* Creative Overview */}
+              <section className="bg-base border border-foreground p-6">
+                <h2 className="zen-kaku-gothic-new text-2xl text-primary mb-6">
+                  Creative Overview
                 </h2>
-                <div className="grid-system grid-1 lg:grid-2 gap-6">
-                  {/* Video Preview */}
-                  <div className="bg-base border border-foreground p-4 space-y-4">
-                    <div className="aspect-video bg-background border border-foreground flex items-center justify-center relative">
-                      <Play className="w-16 h-16 text-accent" />
-                      <div className="absolute top-2 left-2 bg-background px-2 py-1">
-                        <span className="noto-sans-jp-light text-xs text-foreground">
-                          {projectData.duration}
-                        </span>
-                      </div>
-                      <div className="absolute bottom-2 right-2 bg-background px-2 py-1">
-                        <span className="noto-sans-jp-light text-xs text-accent">
-                          {projectData.designEmphasis}
-                        </span>
-                      </div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-accent mb-2">
+                      {videoDesignItems.length}
                     </div>
-                    <div className="flex items-center justify-center">
-                      <div className="flex items-center">
-                        <Palette className="w-5 h-5 text-accent mr-2" />
-                        <Video className="w-5 h-5 text-primary mr-2" />
-                        <span className="noto-sans-jp-light text-sm text-foreground">
-                          Video & Design Integration
-                        </span>
-                      </div>
+                    <div className="noto-sans-jp-light text-sm text-foreground">
+                      Design Projects
                     </div>
                   </div>
-
-                  {/* Project Details */}
-                  <div className="bg-base border border-foreground p-4 space-y-4">
-                    <h3 className="zen-kaku-gothic-new text-xl text-primary">
-                      {projectData.title}
-                    </h3>
-                    <p className="noto-sans-jp-light text-sm text-foreground leading-relaxed">
-                      {projectData.description}
-                    </p>
-
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center">
-                          <Lightbulb className="w-5 h-5 text-accent mr-2" />
-                          <span className="noto-sans-jp-light text-xs text-accent">
-                            Design Concept:
-                          </span>
-                        </div>
-                        <p className="noto-sans-jp-light text-sm text-foreground italic pl-7">
-                          &ldquo;{projectData.concept}&rdquo;
-                        </p>
-                      </div>
-
-                      <div className="space-y-2">
-                        <div className="flex items-center">
-                          <Eye className="w-5 h-5 text-accent mr-2" />
-                          <span className="noto-sans-jp-light text-xs text-accent">
-                            Creative Intent:
-                          </span>
-                        </div>
-                        <p className="noto-sans-jp-light text-sm text-foreground pl-7">
-                          {projectData.creativeIntent}
-                        </p>
-                      </div>
-
-                      <div className="space-y-2">
-                        <div className="flex items-center">
-                          <Calendar className="w-5 h-5 text-accent mr-2" />
-                          <span className="noto-sans-jp-light text-xs text-accent">
-                            Project Info:
-                          </span>
-                        </div>
-                        <div className="pl-7 space-y-1">
-                          <p className="noto-sans-jp-light text-sm text-foreground">
-                            Client: {projectData.client}
-                          </p>
-                          <p className="noto-sans-jp-light text-sm text-foreground">
-                            Completed: {projectData.date}
-                          </p>
-                        </div>
-                      </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-accent mb-2">
+                      {
+                        videoDesignItems.filter(
+                          (item) => item.videos && item.videos.length > 0,
+                        ).length
+                      }
                     </div>
-
-                    <div className="pt-4 border-t border-foreground">
-                      <h4 className="zen-kaku-gothic-new text-lg text-primary mb-3">
-                        Deliverables
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {projectData.deliverables.map((item) => (
-                          <span
-                            key={item}
-                            className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1"
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
+                    <div className="noto-sans-jp-light text-sm text-foreground">
+                      With Video Content
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-accent mb-2">
+                      {
+                        videoDesignItems.filter((item) =>
+                          item.tags?.some((tag) =>
+                            ["Branding", "Identity"].includes(tag),
+                          ),
+                        ).length
+                      }
+                    </div>
+                    <div className="noto-sans-jp-light text-sm text-foreground">
+                      Brand Projects
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-accent mb-2">
+                      {
+                        Array.from(
+                          new Set(
+                            videoDesignItems.flatMap((item) => item.tags || []),
+                          ),
+                        ).length
+                      }
+                    </div>
+                    <div className="noto-sans-jp-light text-sm text-foreground">
+                      Design Tools
                     </div>
                   </div>
                 </div>
               </section>
 
-              {/* Design Process */}
+              {/* Projects Grid */}
               <section>
-                <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                  Design Process
+                <h2 className="zen-kaku-gothic-new text-2xl text-primary mb-6">
+                  Featured Design Projects
                 </h2>
-                <div className="space-y-6">
-                  {Object.entries(designProcess).map(
-                    ([key, process], index) => (
+                <div className="space-y-12">
+                  {videoDesignItems.map((item: ContentItem, index: number) => (
+                    <div
+                      key={item.id}
+                      className={`grid grid-cols-1 lg:grid-cols-2 gap-8 ${
+                        index % 2 === 1 ? "lg:grid-flow-col-dense" : ""
+                      }`}
+                    >
+                      {/* Project Visual */}
                       <div
-                        key={key}
-                        className="bg-base border border-foreground p-4 space-y-4"
+                        className={`${index % 2 === 1 ? "lg:col-start-2" : ""}`}
                       >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <div className="w-8 h-8 bg-accent text-background flex items-center justify-center font-bold mr-4 text-sm">
-                              {index + 1}
+                        <div className="relative aspect-[4/3] bg-background border border-foreground overflow-hidden">
+                          {item.videos && item.videos.length > 0 ? (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <div className="text-center space-y-4">
+                                <div className="text-accent text-4xl">▶️</div>
+                                <div>
+                                  <p className="zen-kaku-gothic-new text-lg text-primary mb-2">
+                                    {item.videos![0].title}
+                                  </p>
+                                  <p className="noto-sans-jp-light text-sm text-foreground">
+                                    Video Content Available
+                                  </p>
+                                </div>
+                              </div>
                             </div>
-                            <h3 className="zen-kaku-gothic-new text-lg text-primary">
-                              {process.title}
-                            </h3>
-                          </div>
-                          <span className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1">
-                            {process.duration}
-                          </span>
-                        </div>
-                        <p className="noto-sans-jp-light text-sm text-foreground ml-12">
-                          {process.description}
-                        </p>
-                        <div className="ml-12 grid-system grid-1 xs:grid-2 sm:grid-3 md:grid-5 gap-2">
-                          {process.activities.map((activity, idx) => (
-                            <div
-                              key={idx}
-                              className="bg-background border border-foreground p-2 text-center"
-                            >
-                              <span className="noto-sans-jp-light text-xs text-foreground">
-                                {activity}
+                          ) : item.thumbnail ? (
+                            <Image
+                              src={item.thumbnail}
+                              alt={item.title}
+                              fill
+                              sizes="(max-width: 1024px) 100vw, 50vw"
+                              className="object-cover"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <span className="noto-sans-jp-light text-lg text-foreground">
+                                {item.title}
                               </span>
                             </div>
-                          ))}
+                          )}
                         </div>
                       </div>
-                    ),
-                  )}
-                </div>
-              </section>
 
-              {/* Visual Elements */}
-              <section>
-                <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                  Visual Elements
-                </h2>
-                <div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
-                  {Object.entries(visualElements).map(([key, element]) => (
-                    <div
-                      key={key}
-                      className="bg-base border border-foreground p-4 space-y-4"
-                    >
-                      <div className="flex items-center">
-                        {key === "color" && (
-                          <Palette className="w-6 h-6 text-accent mr-3" />
-                        )}
-                        {key === "typography" && (
-                          <Sparkles className="w-6 h-6 text-accent mr-3" />
-                        )}
-                        {key === "layout" && (
-                          <Eye className="w-6 h-6 text-accent mr-3" />
-                        )}
-                        {key === "motion" && (
-                          <Video className="w-6 h-6 text-accent mr-3" />
-                        )}
-                        <h3 className="zen-kaku-gothic-new text-lg text-primary">
-                          {element.title}
-                        </h3>
-                      </div>
-                      <p className="noto-sans-jp-light text-sm text-foreground">
-                        {element.description}
-                      </p>
-                      <div className="space-y-2">
-                        {element.elements.map((item, index) => (
-                          <div key={index} className="flex items-start">
-                            <div className="w-1 h-1 bg-accent mt-2 mr-3 flex-shrink-0"></div>
-                            <span className="noto-sans-jp-light text-sm text-foreground">
-                              {item}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Creative Intent */}
-              <section>
-                <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                  Creative Intent & Approach
-                </h2>
-                <div className="space-y-6">
-                  {creativeIntents.map((intent, index) => (
-                    <div
-                      key={index}
-                      className="bg-base border border-foreground p-4 space-y-4"
-                    >
-                      <h3 className="zen-kaku-gothic-new text-lg text-primary">
-                        {intent.aspect}
-                      </h3>
-                      <p className="noto-sans-jp-light text-sm text-foreground leading-relaxed">
-                        {intent.description}
-                      </p>
-                      <div className="bg-background border border-foreground p-3">
-                        <span className="noto-sans-jp-light text-xs text-accent">
-                          Approach:
-                        </span>
-                        <p className="noto-sans-jp-light text-sm text-foreground mt-1">
-                          {intent.approach}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Software & Tools */}
-              <section>
-                <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
-                  Software & Tools
-                </h2>
-                <div className="bg-base border border-foreground p-4 space-y-4">
-                  <h3 className="zen-kaku-gothic-new text-lg text-primary">
-                    Production Pipeline
-                  </h3>
-                  <div className="grid-system grid-1 xs:grid-2 sm:grid-4 md:grid-4 gap-4">
-                    {projectData.software.map((tool, index) => (
+                      {/* Project Details */}
                       <div
-                        key={tool}
-                        className="bg-background border border-foreground p-3 text-center"
+                        className={`space-y-6 ${index % 2 === 1 ? "lg:col-start-1" : ""}`}
                       >
-                        <div className="w-8 h-8 bg-accent text-background flex items-center justify-center font-bold mx-auto mb-2 text-sm">
-                          {index + 1}
+                        <div>
+                          <h3 className="zen-kaku-gothic-new text-2xl text-primary mb-4">
+                            {item.title}
+                          </h3>
+                          <p className="noto-sans-jp-light text-base text-foreground leading-relaxed">
+                            {item.description}
+                          </p>
                         </div>
-                        <span className="noto-sans-jp-light text-sm text-foreground">
-                          {tool}
-                        </span>
+
+                        {/* Design Approach */}
+                        <div>
+                          <h4 className="zen-kaku-gothic-new text-lg text-primary mb-3">
+                            Design Approach
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {item.tags?.map((tag: string) => (
+                              <span
+                                key={tag}
+                                className="noto-sans-jp-light text-sm text-foreground border border-foreground px-3 py-1"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Project Highlights */}
+                        <div>
+                          <h4 className="zen-kaku-gothic-new text-lg text-primary mb-3">
+                            Project Highlights
+                          </h4>
+                          <ul className="space-y-2">
+                            <li className="noto-sans-jp-light text-sm text-foreground flex items-start">
+                              <span className="text-accent mr-2">•</span>
+                              <span>統合されたビジュアルアイデンティティ</span>
+                            </li>
+                            <li className="noto-sans-jp-light text-sm text-foreground flex items-start">
+                              <span className="text-accent mr-2">•</span>
+                              <span>動的な映像表現との融合</span>
+                            </li>
+                            <li className="noto-sans-jp-light text-sm text-foreground flex items-start">
+                              <span className="text-accent mr-2">•</span>
+                              <span>ユーザーエクスペリエンスの最適化</span>
+                            </li>
+                          </ul>
+                        </div>
+
+                        {/* Project Links */}
+                        <div className="flex flex-wrap gap-4">
+                          <Link
+                            href={`/portfolio/${item.id}`}
+                            className="noto-sans-jp-light text-sm text-accent border border-accent px-4 py-2 hover:bg-accent hover:text-background transition-colors"
+                          >
+                            View Full Project
+                          </Link>
+                          {item.videos && item.videos.length > 0 && (
+                            <a
+                              href={item.videos![0].url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="noto-sans-jp-light text-sm text-foreground border border-foreground px-4 py-2 hover:border-accent hover:text-accent transition-colors"
+                            >
+                              Watch Video
+                            </a>
+                          )}
+                          {item.externalLinks?.find(
+                            (link) => link.type === "demo",
+                          ) && (
+                            <a
+                              href={
+                                item.externalLinks.find(
+                                  (link) => link.type === "demo",
+                                )?.url || "#"
+                              }
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="noto-sans-jp-light text-sm text-foreground border border-foreground px-4 py-2 hover:border-accent hover:text-accent transition-colors"
+                            >
+                              Live Demo
+                            </a>
+                          )}
+                        </div>
+
+                        {/* Project Timeline */}
+                        <div className="text-xs text-foreground opacity-70 pt-4 border-t border-foreground">
+                          <span>
+                            Created:{" "}
+                            {item.createdAt
+                              ? new Date(item.createdAt).toLocaleDateString(
+                                  "ja-JP",
+                                )
+                              : "Unknown"}
+                          </span>
+                          {item.updatedAt !== item.createdAt && (
+                            <span className="ml-4">
+                              Updated:{" "}
+                              {new Date(
+                                item.updatedAt || "",
+                              ).toLocaleDateString("ja-JP")}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Empty State */}
+              {videoDesignItems.length === 0 && (
+                <div className="text-center py-12">
                   <p className="noto-sans-jp-light text-sm text-foreground">
-                    統合されたワークフローにより、デザインから映像まで一貫した品質を実現
+                    No video & design projects found.
                   </p>
+                </div>
+              )}
+
+              {/* Design Philosophy */}
+              <section className="bg-base border border-foreground p-6">
+                <h2 className="zen-kaku-gothic-new text-2xl text-primary mb-6">
+                  Design Philosophy
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="text-center space-y-4">
+                    <div className="text-4xl">🎨</div>
+                    <h3 className="zen-kaku-gothic-new text-lg text-primary">
+                      Visual Harmony
+                    </h3>
+                    <p className="noto-sans-jp-light text-sm text-foreground">
+                      デザインと映像の調和を重視し、一貫したビジュアル体験を創造
+                    </p>
+                  </div>
+                  <div className="text-center space-y-4">
+                    <div className="text-4xl">💡</div>
+                    <h3 className="zen-kaku-gothic-new text-lg text-primary">
+                      Concept First
+                    </h3>
+                    <p className="noto-sans-jp-light text-sm text-foreground">
+                      コンセプトを軸とした設計で、意味のあるデザインソリューションを提供
+                    </p>
+                  </div>
+                  <div className="text-center space-y-4">
+                    <div className="text-4xl">🚀</div>
+                    <h3 className="zen-kaku-gothic-new text-lg text-primary">
+                      Innovation
+                    </h3>
+                    <p className="noto-sans-jp-light text-sm text-foreground">
+                      最新技術とクリエイティブな発想で、革新的な表現を追求
+                    </p>
+                  </div>
                 </div>
               </section>
 
               {/* Navigation */}
-              <nav aria-label="Video & Design detail navigation">
-                <h3 className="sr-only">Video & Design Detail機能</h3>
-                <div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
+              <nav aria-label="Video & design detail navigation">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <Link
                     href="/portfolio/gallery/video&design"
-                    className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                    className="border border-foreground text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors"
                   >
-                    <span className={Global_title}>More Projects</span>
+                    <span className="noto-sans-jp-regular text-base">
+                      Video & Design Gallery
+                    </span>
                   </Link>
-
                   <Link
                     href="/portfolio"
-                    className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                    className="border border-foreground text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors"
                   >
-                    <span className={Global_title}>Portfolio Home</span>
+                    <span className="noto-sans-jp-regular text-base">
+                      Portfolio Home
+                    </span>
                   </Link>
-
                   <Link
-                    href="/about/commission/video"
-                    className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                    href="/about/commission/design"
+                    className="border border-foreground text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors"
                   >
-                    <span className={Global_title}>Commission</span>
+                    <span className="noto-sans-jp-regular text-base">
+                      Design Commission
+                    </span>
                   </Link>
                 </div>
               </nav>
-
-              {/* Footer */}
-              <footer className="pt-4 border-t border-foreground">
-                <div className="text-center">
-                  <p className="shippori-antique-b1-regular text-sm inline-block">
-                    © 2025 samuido - Video & Design Project Detail
-                  </p>
-                </div>
-              </footer>
             </div>
           </div>
         </main>
       </div>
-    </>
-  );
+    );
+  } catch (error) {
+    console.error("Error in VideoDesignDetailPage:", error);
+
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <main className="py-10">
+          <div className="container mx-auto px-4">
+            <div className="bg-red-100 p-4 rounded">
+              <p className="text-red-800">
+                Error loading video & design projects:{" "}
+                {error instanceof Error ? error.message : "Unknown error"}
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 }

@@ -1,5 +1,6 @@
 import { PortfolioIntegrationManager } from "@/lib/portfolio";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
+import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import { ContentItem } from "@/types/content";
 import {
@@ -208,9 +209,18 @@ export default async function PortfolioPage() {
     ];
 
     // Process fallback data through the data manager
-    const processedResult =
-      await portfolioDataManager.processPortfolioData(fallbackItems);
-    portfolioItems = processedResult.data;
+    try {
+      const processedResult =
+        await portfolioDataManager.processPortfolioData(fallbackItems);
+      if (processedResult && processedResult.data) {
+        portfolioItems = processedResult.data;
+      } else {
+        portfolioItems = fallbackItems as PortfolioContentItem[];
+      }
+    } catch (error) {
+      console.error("Error processing fallback data:", error);
+      portfolioItems = fallbackItems as PortfolioContentItem[];
+    }
   }
 
   // Use enhanced statistics from data manager with fallback

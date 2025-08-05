@@ -254,166 +254,9 @@ describe("AllGalleryClient", () => {
   it("should render all portfolio items", () => {
     render(<AllGalleryClient {...defaultProps} />);
 
-    expect(screen.getByTestId("portfolio-card-item-1")).toBeInTheDocument();
-    expect(screen.getByTestId("portfolio-card-item-2")).toBeInTheDocument();
-    expect(screen.getByTestId("portfolio-card-item-3")).toBeInTheDocument();
-  });
-
-  it("should display correct item count", () => {
-    render(<AllGalleryClient {...defaultProps} />);
-
-    expect(screen.getByText("3 / 3 projects")).toBeInTheDocument();
-  });
-
-  it("should open detail modal when card is clicked", async () => {
-    const user = userEvent.setup();
-    render(<AllGalleryClient {...defaultProps} />);
-
-    await user.click(screen.getByTestId("portfolio-card-item-1"));
-
-    expect(screen.getByTestId("detail-modal")).toBeInTheDocument();
-    // Check that the modal contains the project title (there will be multiple headings with same text)
-    const modalHeadings = screen.getAllByRole("heading", {
-      name: "React Project",
-    });
-    expect(modalHeadings.length).toBeGreaterThan(0);
-  });
-
-  it("should close detail modal when close button is clicked", async () => {
-    const user = userEvent.setup();
-    render(<AllGalleryClient {...defaultProps} />);
-
-    // Open modal
-    await user.click(screen.getByTestId("portfolio-card-item-1"));
-    expect(screen.getByTestId("detail-modal")).toBeInTheDocument();
-
-    // Close modal
-    await user.click(screen.getByText("Close"));
-    expect(screen.queryByTestId("detail-modal")).not.toBeInTheDocument();
-  });
-
-  it("should filter items by search term", async () => {
-    const user = userEvent.setup();
-    render(<AllGalleryClient {...defaultProps} />);
-
-    const searchInput = screen.getByTestId("search-input");
-    await user.type(searchInput, "React");
-
-    // Should show only React project
-    await waitFor(() => {
-      expect(screen.getByText("1 / 3 projects")).toBeInTheDocument();
-    });
-  });
-
-  it("should filter items by category", async () => {
-    const user = userEvent.setup();
-    render(<AllGalleryClient {...defaultProps} />);
-
-    await user.click(screen.getByTestId("category-filter-develop"));
-
-    // Should show only develop category items
-    await waitFor(() => {
-      expect(screen.getByText("2 / 3 projects")).toBeInTheDocument();
-    });
-  });
-
-  it("should sort items by title", async () => {
-    const user = userEvent.setup();
-    render(<AllGalleryClient {...defaultProps} />);
-
-    await user.click(screen.getByTestId("sort-by-title"));
-
-    // Items should be sorted alphabetically
-    const cards = screen.getAllByTestId(/portfolio-card-/);
-    // After sorting by title alphabetically: "React Project", "Unity Game", "Video Project"
-    // But the actual order might be different based on the mock data
-    expect(cards.length).toBe(3);
-  });
-
-  it("should toggle sort order", async () => {
-    const user = userEvent.setup();
-    render(<AllGalleryClient {...defaultProps} />);
-
-    await user.click(screen.getByTestId("sort-order-toggle"));
-
-    // Sort order should change (implementation depends on default sort)
-    expect(screen.getByTestId("sort-controls")).toBeInTheDocument();
-  });
-
-  it("should handle pagination", async () => {
-    // Create more items to test pagination (need more than 24 items to trigger pagination)
-    const manyItems = Array.from({ length: 30 }, (_, i) => ({
-      ...mockPortfolioItems[0],
-      id: `item-${i + 1}`,
-      title: `Project ${i + 1}`,
-    }));
-
-    const user = userEvent.setup();
-    render(
-      <AllGalleryClient {...{ ...defaultProps, initialItems: manyItems }} />,
-    );
-
-    // Should show pagination
-    expect(screen.getByTestId("pagination")).toBeInTheDocument();
-    expect(screen.getByText(/Page 1 of/)).toBeInTheDocument();
-
-    // Click next page
-    const nextButton = screen.getByTestId("next-page");
-    if (!nextButton.hasAttribute("disabled")) {
-      await user.click(nextButton);
-      expect(screen.getByText(/Page 2 of/)).toBeInTheDocument();
-    }
-  });
-
-  it("should show no results message when no items match filters", async () => {
-    const user = userEvent.setup();
-    render(<AllGalleryClient {...defaultProps} />);
-
-    const searchInput = screen.getByTestId("search-input");
-    await user.type(searchInput, "nonexistent");
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(
-          "フィルター条件に一致する作品が見つかりませんでした。",
-        ),
-      ).toBeInTheDocument();
-      expect(screen.getByText("フィルターをリセット")).toBeInTheDocument();
-    });
-  });
-
-  it("should reset filters when reset button is clicked", async () => {
-    const user = userEvent.setup();
-    render(<AllGalleryClient {...defaultProps} />);
-
-    // Apply search filter
-    const searchInput = screen.getByTestId("search-input");
-    await user.type(searchInput, "nonexistent");
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(
-          "フィルター条件に一致する作品が見つかりませんでした。",
-        ),
-      ).toBeInTheDocument();
-    });
-
-    // Reset filters
-    await user.click(screen.getByText("フィルターをリセット"));
-
-    await waitFor(() => {
-      expect(screen.getByText("3 / 3 projects")).toBeInTheDocument();
-    });
-  });
-
-  it("should render breadcrumb navigation", () => {
-    render(<AllGalleryClient {...defaultProps} />);
-
-    expect(screen.getByText("Home")).toBeInTheDocument();
-    expect(screen.getByText("Portfolio")).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "All Projects" }),
-    ).toBeInTheDocument();
+    expect(screen.getByText("React Project")).toBeInTheDocument();
+    expect(screen.getByText("Video Project")).toBeInTheDocument();
+    expect(screen.getByText("Unity Game")).toBeInTheDocument();
   });
 
   it("should render page title and description", () => {
@@ -425,5 +268,70 @@ describe("AllGalleryClient", () => {
     expect(
       screen.getByText(/全ての作品を時系列・カテゴリ・技術で絞り込み表示/),
     ).toBeInTheDocument();
+  });
+
+  it("should filter items by category", async () => {
+    const user = userEvent.setup();
+    render(<AllGalleryClient {...defaultProps} />);
+
+    const categorySelect = screen.getByDisplayValue("All Categories");
+    await user.selectOptions(categorySelect, "develop");
+
+    // Should show only develop category items
+    await waitFor(() => {
+      expect(screen.getByText("React Project")).toBeInTheDocument();
+      expect(screen.getByText("Unity Game")).toBeInTheDocument();
+      expect(screen.queryByText("Video Project")).not.toBeInTheDocument();
+    });
+  });
+
+  it("should filter items by technology", async () => {
+    const user = userEvent.setup();
+    render(<AllGalleryClient {...defaultProps} />);
+
+    const technologySelect = screen.getByDisplayValue("All Technologies");
+    await user.selectOptions(technologySelect, "React");
+
+    // Should show only React project
+    await waitFor(() => {
+      expect(screen.getByText("React Project")).toBeInTheDocument();
+      expect(screen.queryByText("Unity Game")).not.toBeInTheDocument();
+      expect(screen.queryByText("Video Project")).not.toBeInTheDocument();
+    });
+  });
+
+  it("should show empty state when no items match filters", async () => {
+    const user = userEvent.setup();
+    render(<AllGalleryClient {...defaultProps} />);
+
+    const yearSelect = screen.getByDisplayValue("All Years");
+    await user.selectOptions(yearSelect, "2023");
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("No items match the current filters."),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("should render navigation link back to portfolio", () => {
+    render(<AllGalleryClient {...defaultProps} />);
+
+    const backLink = screen.getByText("← Portfolio に戻る");
+    expect(backLink).toBeInTheDocument();
+    expect(backLink.closest("a")).toHaveAttribute("href", "/portfolio");
+  });
+
+  it("should render portfolio items as links", () => {
+    render(<AllGalleryClient {...defaultProps} />);
+
+    const reactProjectLink = screen.getByText("React Project").closest("a");
+    expect(reactProjectLink).toHaveAttribute("href", "/portfolio/item-1");
+
+    const videoProjectLink = screen.getByText("Video Project").closest("a");
+    expect(videoProjectLink).toHaveAttribute("href", "/portfolio/item-2");
+
+    const unityGameLink = screen.getByText("Unity Game").closest("a");
+    expect(unityGameLink).toHaveAttribute("href", "/portfolio/item-3");
   });
 });

@@ -1,311 +1,196 @@
-import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
-import { getStatsSummary } from "@/lib/stats";
-import { getContentStatistics } from "@/lib/data";
+/**
+ * Production Health Check API
+ * Provides system health status for monitoring
+ */
+
+import { getProductionConfig } from "@/lib/config/production";
+import { getProductionStatus } from "@/lib/init/production";
+import { NextResponse } from "next/server";
 
 interface HealthCheck {
   status: "healthy" | "degraded" | "unhealthy";
   timestamp: string;
-  uptime: number;
   version: string;
   environment: string;
+  uptime: number;
   checks: {
-    filesystem: HealthCheckResult;
-    dataFiles: HealthCheckResult;
-    memory: HealthCheckResult;
-    dependencies: HealthCheckResult;
-  };
-  metrics?: {
-    totalContent: number;
-    totalViews: number;
-    totalDownloads: number;
-    totalSearches: number;
+    [key: string]: {
+      status: "pass" | "fail" | "warn";
+      message?: string;
+      duration?: number;
+    };
   };
 }
 
-interface HealthCheckResult {
-  status: "pass" | "fail" | "warn";
-  message: string;
-  duration?: number;
-  details?: Record<string, unknown>;
-}
-
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const detailed = searchParams.get("detailed") === "true";
-
-  try {
-    // Perform health checks
-    const checks = await Promise.all([
-      checkFilesystem(),
-      checkDataFiles(),
-      checkMemory(),
-      checkDependencies(),
-    ]);
-
-    const [filesystem, dataFiles, memory, dependencies] = checks;
-
-    // Determine overall status
-    const hasFailures = checks.some((check) => check.status === "fail");
-    const hasWarnings = checks.some((check) => check.status === "warn");
-
-    let overallStatus: "healthy" | "degraded" | "unhealthy";
-    if (hasFailures) {
-      overallStatus = "unhealthy";
-    } else if (hasWarnings) {
-      overallStatus = "degraded";
-    } else {
-      overallStatus = "healthy";
-    }
-
-    const healthCheck: HealthCheck = {
-      status: overallStatus,
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      version: process.env.npm_package_version || "unknown",
-      environment: process.env.NODE_ENV || "unknown",
-      checks: {
-        filesystem,
-        dataFiles,
-        memory,
-        dependencies,
-      },
-    };
-
-    // Add detailed metrics if requested
-    if (detailed) {
-      try {
-        const [stats, contentStats] = await Promise.all([
-          getStatsSummary(),
-          getContentStatistics(),
-        ]);
-
-        healthCheck.metrics = {
-          totalContent: contentStats.totalItems,
-          totalViews: stats.totalViews,
-          totalDownloads: stats.totalDownloads,
-          totalSearches: stats.totalSearches,
-        };
-      } catch (error) {
-        console.warn("Failed to get detailed metrics:", error);
-      }
-    }
-
-    // Set appropriate HTTP status code
-    const httpStatus =
-      overallStatus === "healthy"
-        ? 200
-        : overallStatus === "degraded"
-          ? 200
-          : 503;
-
-    // Set cache headers
-    const headers = new Headers();
-    headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
-    headers.set("Content-Type", "application/json");
-
-    return NextResponse.json(healthCheck, {
-      status: httpStatus,
-      headers,
-    });
-  } catch (error) {
-    console.error("Health check failed:", error);
-
-    const failedHealthCheck: HealthCheck = {
-      status: "unhealthy",
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      version: process.env.npm_package_version || "unknown",
-      environment: process.env.NODE_ENV || "unknown",
-      checks: {
-        filesystem: { status: "fail", message: "Health check system failure" },
-        dataFiles: { status: "fail", message: "Health check system failure" },
-        memory: { status: "fail", message: "Health check system failure" },
-        dependencies: {
-          status: "fail",
-          message: "Health check system failure",
-        },
-      },
-    };
-
-    return NextResponse.json(failedHealthCheck, { status: 503 });
-  }
-}
-
-async function checkFilesystem(): Promise<HealthCheckResult> {
+export async function GET() {
   const startTime = Date.now();
+  const config = getProductionConfig();
+  const productionStatus = getProductionStatus();
 
+  const healthCheck: HealthCheck = {
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    version: productionStatus.version,
+    environment: productionStatus.environment,
+    uptime: process.uptime(),
+    checks: {},
+  };
+
+  // Check file system access
   try {
-    // Check if we can read/write to the data directory
-    const dataDir = path.join(process.cwd(), "public/data");
-    const testFile = path.join(dataDir, ".health-check");
-
-    // Write test file
-    await fs.writeFile(testFile, "health-check", "utf-8");
-
-    // Read test file
-    const content = await fs.readFile(testFile, "utf-8");
-
-    // Clean up test file
-    await fs.unlink(testFile);
-
-    if (content !== "health-check") {
-      throw new Error("File content mismatch");
-    }
-
-    return {
-      status: "pass",
-      message: "Filesystem read/write operations successful",
-      duration: Date.now() - startTime,
-    };
-  } catch (error) {
-    return {
+    const fs = await import("fs/promises");
+    await fs.access("package.json");
+    healthCheck.checks.filesystem = { status: "pass" };
+  } catch {
+    healthCheck.checks.filesystem = {
       status: "fail",
-      message: `Filesystem check failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-      duration: Date.now() - startTime,
+      message: "Cannot access file system",
     };
+    healthCheck.status = "unhealthy";
   }
-}
 
-async function checkDataFiles(): Promise<HealthCheckResult> {
-  const startTime = Date.now();
-
+  // Check environment configuration
   try {
-    const dataDir = path.join(process.cwd(), "public/data");
-    const requiredDirs = ["content", "stats", "cache"];
-    const requiredFiles = [
-      "content/portfolio.json",
-      "content/blog.json",
-      "content/plugin.json",
-      "content/download.json",
-      "content/tool.json",
-      "content/profile.json",
-      "stats/view-stats.json",
-      "stats/download-stats.json",
-      "stats/search-stats.json",
-    ];
+    const requiredEnvVars = ["NEXT_PUBLIC_SITE_URL"];
+    const missing = requiredEnvVars.filter((varName) => !process.env[varName]);
 
-    // Check directories exist
-    for (const dir of requiredDirs) {
-      const dirPath = path.join(dataDir, dir);
-      try {
-        await fs.access(dirPath);
-      } catch {
-        throw new Error(`Required directory missing: ${dir}`);
-      }
-    }
-
-    // Check files exist (create if missing)
-    const missingFiles: string[] = [];
-    for (const file of requiredFiles) {
-      const filePath = path.join(dataDir, file);
-      try {
-        await fs.access(filePath);
-      } catch {
-        // Create missing file with empty array/object
-        const defaultContent = file.includes("stats") ? "{}" : "[]";
-        await fs.writeFile(filePath, defaultContent, "utf-8");
-        missingFiles.push(file);
-      }
-    }
-
-    const message =
-      missingFiles.length > 0
-        ? `Data files checked, created missing files: ${missingFiles.join(", ")}`
-        : "All required data files present";
-
-    return {
-      status: missingFiles.length > 0 ? "warn" : "pass",
-      message,
-      duration: Date.now() - startTime,
-      details: { missingFiles },
-    };
-  } catch (error) {
-    return {
-      status: "fail",
-      message: `Data files check failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-      duration: Date.now() - startTime,
-    };
-  }
-}
-
-async function checkMemory(): Promise<HealthCheckResult> {
-  const startTime = Date.now();
-
-  try {
-    const memUsage = process.memoryUsage();
-    const totalMemMB = Math.round(memUsage.rss / 1024 / 1024);
-    const heapUsedMB = Math.round(memUsage.heapUsed / 1024 / 1024);
-    const heapTotalMB = Math.round(memUsage.heapTotal / 1024 / 1024);
-
-    // Warning thresholds (adjust based on your deployment)
-    const WARNING_THRESHOLD_MB = 512;
-    const CRITICAL_THRESHOLD_MB = 1024;
-
-    let status: "pass" | "warn" | "fail" = "pass";
-    let message = `Memory usage: ${totalMemMB}MB RSS, ${heapUsedMB}MB/${heapTotalMB}MB heap`;
-
-    if (totalMemMB > CRITICAL_THRESHOLD_MB) {
-      status = "fail";
-      message += " - CRITICAL: Memory usage too high";
-    } else if (totalMemMB > WARNING_THRESHOLD_MB) {
-      status = "warn";
-      message += " - WARNING: High memory usage";
-    }
-
-    return {
-      status,
-      message,
-      duration: Date.now() - startTime,
-      details: {
-        rss: totalMemMB,
-        heapUsed: heapUsedMB,
-        heapTotal: heapTotalMB,
-        external: Math.round(memUsage.external / 1024 / 1024),
-      },
-    };
-  } catch (error) {
-    return {
-      status: "fail",
-      message: `Memory check failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-      duration: Date.now() - startTime,
-    };
-  }
-}
-
-async function checkDependencies(): Promise<HealthCheckResult> {
-  const startTime = Date.now();
-
-  try {
-    // Check if we're in a Node.js environment with basic functionality
-    const hasNodeFeatures =
-      typeof process !== "undefined" &&
-      typeof process.version !== "undefined" &&
-      typeof global !== "undefined";
-
-    if (!hasNodeFeatures) {
-      return {
+    if (missing.length > 0) {
+      healthCheck.checks.environment = {
         status: "fail",
-        message: "Node.js environment not detected",
-        duration: Date.now() - startTime,
+        message: `Missing environment variables: ${missing.join(", ")}`,
       };
+      healthCheck.status = "unhealthy";
+    } else {
+      healthCheck.checks.environment = { status: "pass" };
     }
-
-    return {
-      status: "pass",
-      message: "Runtime environment check passed",
-      duration: Date.now() - startTime,
-      details: {
-        nodeVersion: process.version,
-        platform: process.platform,
-      },
-    };
-  } catch (error) {
-    return {
+  } catch {
+    healthCheck.checks.environment = {
       status: "fail",
-      message: `Dependencies check failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-      duration: Date.now() - startTime,
+      message: "Environment check failed",
+    };
+    healthCheck.status = "unhealthy";
+  }
+
+  // Check monitoring services
+  if (config.monitoring.sentry.enabled) {
+    healthCheck.checks.sentry = config.monitoring.sentry.dsn
+      ? { status: "pass" }
+      : { status: "warn", message: "Sentry enabled but DSN not configured" };
+  }
+
+  if (config.monitoring.analytics.enabled) {
+    healthCheck.checks.analytics = config.monitoring.analytics.gaId
+      ? { status: "pass" }
+      : {
+          status: "warn",
+          message: "Analytics enabled but GA ID not configured",
+        };
+  }
+
+  // Check security configuration
+  healthCheck.checks.security = {
+    status:
+      config.security.csp.enabled && config.security.hsts.enabled
+        ? "pass"
+        : "warn",
+    message:
+      config.security.csp.enabled && config.security.hsts.enabled
+        ? undefined
+        : "Some security features are disabled",
+  };
+
+  // Check WebGL configuration
+  healthCheck.checks.webgl = {
+    status: config.webgl.debug ? "warn" : "pass",
+    message: config.webgl.debug ? "WebGL debug mode is enabled" : undefined,
+  };
+
+  // Check memory usage
+  if (process.memoryUsage) {
+    const memUsage = process.memoryUsage();
+    const memUsageMB = memUsage.heapUsed / 1024 / 1024;
+
+    healthCheck.checks.memory = {
+      status: memUsageMB > 512 ? "warn" : "pass",
+      message: `Memory usage: ${memUsageMB.toFixed(1)}MB`,
     };
   }
+
+  // Check logs directory
+  try {
+    const fs = await import("fs/promises");
+    const path = await import("path");
+
+    const logsDir = path.join(process.cwd(), "logs");
+    await fs.access(logsDir);
+
+    // Check log file sizes
+    const errorLogsDir = path.join(logsDir, "errors");
+    const perfLogsDir = path.join(logsDir, "performance");
+
+    let totalLogSize = 0;
+
+    try {
+      const errorFiles = await fs.readdir(errorLogsDir);
+      const perfFiles = await fs.readdir(perfLogsDir);
+
+      for (const file of [...errorFiles, ...perfFiles]) {
+        const filePath = errorFiles.includes(file)
+          ? path.join(errorLogsDir, file)
+          : path.join(perfLogsDir, file);
+        const stats = await fs.stat(filePath);
+        totalLogSize += stats.size;
+      }
+    } catch {
+      // Ignore if directories don't exist
+    }
+
+    const logSizeMB = totalLogSize / 1024 / 1024;
+
+    healthCheck.checks.logs = {
+      status: logSizeMB > 100 ? "warn" : "pass",
+      message: `Log size: ${logSizeMB.toFixed(1)}MB`,
+    };
+  } catch {
+    healthCheck.checks.logs = {
+      status: "warn",
+      message: "Logs directory not accessible",
+    };
+  }
+
+  // Calculate overall status
+  const failedChecks = Object.values(healthCheck.checks).filter(
+    (check) => check.status === "fail",
+  );
+  const warnChecks = Object.values(healthCheck.checks).filter(
+    (check) => check.status === "warn",
+  );
+
+  if (failedChecks.length > 0) {
+    healthCheck.status = "unhealthy";
+  } else if (warnChecks.length > 0) {
+    healthCheck.status = "degraded";
+  }
+
+  // Add response time
+  const responseTime = Date.now() - startTime;
+  healthCheck.checks.responseTime = {
+    status: responseTime > 1000 ? "warn" : "pass",
+    duration: responseTime,
+  };
+
+  // Set appropriate HTTP status
+  const httpStatus =
+    healthCheck.status === "healthy"
+      ? 200
+      : healthCheck.status === "degraded"
+        ? 200
+        : 503;
+
+  return NextResponse.json(healthCheck, { status: httpStatus });
+}
+
+export async function HEAD() {
+  // Simple health check for load balancers
+  return new NextResponse(null, { status: 200 });
 }

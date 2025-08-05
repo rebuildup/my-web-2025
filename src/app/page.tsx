@@ -32,6 +32,7 @@ export default function Home() {
                   href="/about"
                   className={CardStyle}
                   aria-describedby="about-description"
+                  prefetch={false}
                 >
                   <h3 className={Card_title}>About</h3>
                   <p id="about-description" className={Card_description}>
@@ -43,6 +44,7 @@ export default function Home() {
                   href="/portfolio"
                   className={CardStyle}
                   aria-describedby="portfolio-description"
+                  prefetch={false}
                 >
                   <h3 className={Card_title}>Portfolio</h3>
                   <p id="portfolio-description" className={Card_description}>
@@ -54,6 +56,7 @@ export default function Home() {
                   href="/workshop"
                   className={CardStyle}
                   aria-describedby="workshop-description"
+                  prefetch={false}
                 >
                   <h3 className={Card_title}>Workshop</h3>
                   <p id="workshop-description" className={Card_description}>
@@ -65,6 +68,7 @@ export default function Home() {
                   href="/tools"
                   className={CardStyle}
                   aria-describedby="tools-description"
+                  prefetch={false}
                 >
                   <h3 className={Card_title}>Tools</h3>
                   <p id="tools-description" className={Card_description}>
@@ -80,6 +84,7 @@ export default function Home() {
                 <Link
                   href="/search"
                   className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                  prefetch={false}
                 >
                   <span className={Global_title}>Search</span>
                 </Link>
@@ -87,6 +92,7 @@ export default function Home() {
                 <Link
                   href="/contact"
                   className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                  prefetch={false}
                 >
                   <span className={Global_title}>Contact</span>
                 </Link>
@@ -94,6 +100,7 @@ export default function Home() {
                 <Link
                   href="/privacy-policy"
                   className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+                  prefetch={false}
                 >
                   <span className={Global_title}>Privacy</span>
                 </Link>

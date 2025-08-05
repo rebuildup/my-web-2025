@@ -1,10 +1,10 @@
 import { PortfolioDataManager } from "./data-manager";
 import {
+  AboutIntegration,
+  AnalyticsIntegration,
   HomePageIntegration,
   SearchIntegration,
-  AboutIntegration,
   SEOIntegration,
-  AnalyticsIntegration,
 } from "./integrations";
 
 /**
@@ -72,7 +72,7 @@ export class PortfolioIntegrationManager {
         await Promise.all([
           this.homePage.getHomePageData(),
           this.search.getSearchStats(),
-          this.about.getAboutPageData(),
+          this.about.getAboutData(),
           this.analytics.generatePortfolioReport(),
         ]);
 

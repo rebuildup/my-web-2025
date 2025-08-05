@@ -55,6 +55,7 @@ export default function DesignPlaygroundPage() {
   });
   const [showSettings, setShowSettings] = useState(false);
   const [showPerformance, setShowPerformance] = useState(false);
+  const [experimentError, setExperimentError] = useState<string | null>(null);
 
   // Initialize device capabilities and preload critical experiments
   useEffect(() => {
@@ -69,7 +70,12 @@ export default function DesignPlaygroundPage() {
         setPerformanceSettings(recommendedSettings);
 
         // Preload critical experiments for better performance
-        await preloadCriticalExperiments();
+        try {
+          await preloadCriticalExperiments();
+        } catch (error) {
+          console.warn("Failed to preload critical experiments:", error);
+          // Continue without preloading
+        }
       } catch (error) {
         console.error("Failed to detect device capabilities:", error);
         // Fallback to safe defaults
@@ -156,6 +162,7 @@ export default function DesignPlaygroundPage() {
     (newIndex: number) => {
       if (newIndex >= 0 && newIndex < experimentIds.length) {
         setActiveExperiment(experimentIds[newIndex]);
+        setExperimentError(null);
       }
     },
     [experimentIds],
@@ -194,7 +201,13 @@ export default function DesignPlaygroundPage() {
         deviceCapabilities={deviceCapabilities}
         performanceSettings={performanceSettings}
         onPerformanceUpdate={handlePerformanceUpdate}
-        onError={(error) => console.error("Experiment error:", error)}
+        onError={(error) => {
+          console.error("Experiment error:", error);
+          setExperimentError(
+            `Error loading experiment: ${error.message || error}`,
+          );
+          setActiveExperiment(null);
+        }}
       />
     );
   };
@@ -214,7 +227,11 @@ export default function DesignPlaygroundPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <main className="flex items-center py-10">
+      <main
+        role="main"
+        aria-label="Design playground"
+        className="flex items-center py-10"
+      >
         <div className="container-system">
           <div className="space-y-10">
             {/* Header */}
@@ -227,7 +244,11 @@ export default function DesignPlaygroundPage() {
                   ← Portfolio に戻る
                 </Link>
               </nav>
-              <h1 className="neue-haas-grotesk-display text-6xl text-primary">
+              <h1
+                className="neue-haas-grotesk-display text-6xl text-primary"
+                role="heading"
+                aria-level={1}
+              >
                 Design Playground
               </h1>
               <p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -236,6 +257,9 @@ export default function DesignPlaygroundPage() {
                 CSS、SVG、Canvas
                 を使った視覚的表現とリアルタイム更新機能を体験できます。
               </p>
+              <h2 className="sr-only" role="heading" aria-level={2}>
+                Interactive design experiments
+              </h2>
             </header>
 
             {/* Device Info & Performance */}
@@ -245,6 +269,8 @@ export default function DesignPlaygroundPage() {
                 <button
                   onClick={() => setShowSettings(!showSettings)}
                   className="flex items-center justify-between w-full text-left"
+                  role="button"
+                  aria-label="Settings"
                 >
                   <h3 className="zen-kaku-gothic-new text-lg text-primary flex items-center">
                     <Settings className="w-5 h-5 mr-2" />
@@ -309,6 +335,7 @@ export default function DesignPlaygroundPage() {
                           }))
                         }
                         className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
+                        data-testid="quality-select"
                       >
                         <option value="low">Low (30 FPS)</option>
                         <option value="medium">Medium (60 FPS)</option>
@@ -400,8 +427,24 @@ export default function DesignPlaygroundPage() {
             <ResponsiveExperimentGrid
               experiments={filteredExperiments}
               activeExperiment={activeExperiment}
-              onExperimentSelect={setActiveExperiment}
+              onExperimentSelect={(experimentId) => {
+                setActiveExperiment(experimentId);
+                setExperimentError(null);
+              }}
             />
+
+            {/* Error Message */}
+            {experimentError && (
+              <div className="bg-red-100 border border-red-500 text-red-700 p-4 rounded">
+                <p>{experimentError}</p>
+                <button
+                  onClick={() => setExperimentError(null)}
+                  className="mt-2 text-sm underline"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
 
             {/* Active Experiment */}
             {activeExperiment && (
@@ -422,6 +465,8 @@ export default function DesignPlaygroundPage() {
                     ? swipeHandlers.onTouchEnd
                     : undefined
                 }
+                aria-live="polite"
+                aria-label="Active experiment"
               >
                 <div className="flex items-center justify-between">
                   <h3 className="zen-kaku-gothic-new text-lg text-primary">

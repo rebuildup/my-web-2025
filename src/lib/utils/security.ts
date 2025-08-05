@@ -3,6 +3,8 @@
  * Comprehensive security functions for the samuido website
  */
 
+import { getProductionConfig } from "../config/production";
+
 export interface CSPDirectives {
   [key: string]: string[];
 }
@@ -168,20 +170,72 @@ export const securityUtils = {
    * Get security headers
    */
   getSecurityHeaders: (isHttps: boolean = false): SecurityHeaders => {
+    let config;
+    try {
+      config = getProductionConfig();
+    } catch {
+      // Fallback configuration if production config is not available
+      config = {
+        security: {
+          xss: { enabled: true, mode: "block" },
+          hsts: {
+            enabled: true, // Always enable HSTS in fallback
+            maxAge: 31536000,
+            includeSubDomains: true,
+            preload: true,
+          },
+          csp: { enabled: false, reportOnly: false, directives: {} },
+        },
+      };
+    }
     const headers: SecurityHeaders = {
       "X-Content-Type-Options": "nosniff",
       "X-Frame-Options": "DENY",
-      "X-XSS-Protection": "1; mode=block",
+      "X-XSS-Protection": config.security.xss.enabled
+        ? `1; mode=${config.security.xss.mode}`
+        : "0",
       "Referrer-Policy": "strict-origin-when-cross-origin",
-      "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+      "Permissions-Policy":
+        "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
     };
 
+    // Add HSTS header for HTTPS
     if (isHttps) {
+      const hsts = config.security.hsts;
       headers["Strict-Transport-Security"] =
-        "max-age=31536000; includeSubDomains; preload";
+        `max-age=${hsts.maxAge}${hsts.includeSubDomains ? "; includeSubDomains" : ""}${hsts.preload ? "; preload" : ""}`;
+    }
+
+    // Add CSP header
+    if (config.security.csp.enabled) {
+      const csp = securityUtils.generateCSP(config.security.csp.directives);
+      if (csp) {
+        if (config.security.csp.reportOnly) {
+          headers["Content-Security-Policy-Report-Only"] = csp;
+        } else {
+          headers["Content-Security-Policy"] = csp;
+        }
+      }
     }
 
     return headers;
+  },
+
+  /**
+   * Get production-specific security headers
+   */
+  getProductionSecurityHeaders: (): SecurityHeaders => {
+    const isProduction = process.env.NODE_ENV === "production";
+
+    return {
+      ...securityUtils.getSecurityHeaders(isProduction),
+      // Additional production headers
+      "X-Powered-By": "", // Remove X-Powered-By header
+      Server: "", // Remove Server header
+      "X-DNS-Prefetch-Control": "off",
+      "X-Download-Options": "noopen",
+      "X-Permitted-Cross-Domain-Policies": "none",
+    };
   },
 
   /**

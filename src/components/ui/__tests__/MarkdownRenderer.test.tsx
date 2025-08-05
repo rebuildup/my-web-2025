@@ -153,41 +153,28 @@ describe("MarkdownRenderer", () => {
         statusText: "Not Found",
       });
 
-      const mockOnError = jest.fn();
-
       render(
         <MarkdownRenderer
           filePath="/nonexistent.md"
           mediaData={mockMediaData}
-          onError={mockOnError}
         />,
       );
 
       await waitFor(() => {
         expect(screen.getByText("Content not available")).toBeInTheDocument();
       });
-
-      expect(mockOnError).toHaveBeenCalledWith(expect.any(MarkdownFileError));
     });
 
     it("should handle network errors", async () => {
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
-      const mockOnError = jest.fn();
-
       render(
-        <MarkdownRenderer
-          filePath="/test.md"
-          mediaData={mockMediaData}
-          onError={mockOnError}
-        />,
+        <MarkdownRenderer filePath="/test.md" mediaData={mockMediaData} />,
       );
 
       await waitFor(() => {
         expect(screen.getByText("Content not available")).toBeInTheDocument();
       });
-
-      expect(mockOnError).toHaveBeenCalledWith(expect.any(MarkdownFileError));
     });
 
     it("should show fallback content on error", async () => {
@@ -213,21 +200,11 @@ describe("MarkdownRenderer", () => {
     });
 
     it("should handle empty file path", async () => {
-      const mockOnError = jest.fn();
-
-      render(
-        <MarkdownRenderer
-          filePath=""
-          mediaData={mockMediaData}
-          onError={mockOnError}
-        />,
-      );
+      render(<MarkdownRenderer filePath="" mediaData={mockMediaData} />);
 
       await waitFor(() => {
         expect(screen.getByText("Content not available")).toBeInTheDocument();
       });
-
-      expect(mockOnError).toHaveBeenCalledWith(expect.any(MarkdownFileError));
     });
   });
 

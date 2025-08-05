@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
       "marked",
       "recharts",
     ],
+    // Disable prefetching to prevent LINK errors in development
+    ...(process.env.NODE_ENV === "development" && {
+      linkNoTouchStart: true,
+    }),
   },
 
   // Turbopack configuration (moved from experimental)
@@ -69,27 +73,22 @@ const nextConfig: NextConfig = {
 
   // Headers for caching and security
   async headers() {
+    // Basic security headers without dynamic import
+    const productionHeaders = {
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "X-XSS-Protection": "1; mode=block",
+    };
+
+    const baseHeaders = Object.entries(productionHeaders)
+      .filter(([, value]) => value !== "")
+      .map(([key, value]) => ({ key, value }));
+
     return [
       {
         source: "/(.*)",
-        headers: [
-          {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
-          },
-          {
-            key: "X-Frame-Options",
-            value: "DENY",
-          },
-          {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
-          },
-          {
-            key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
-          },
-        ],
+        headers: baseHeaders,
       },
       // Static assets caching
       {
@@ -126,7 +125,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=3600, stale-while-revalidate=86400", // 1 hour
+            value: `public, max-age=${process.env.CACHE_TTL_CONTENT || "3600"}, stale-while-revalidate=86400`,
           },
         ],
       },
@@ -135,7 +134,27 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=300, stale-while-revalidate=3600", // 5 minutes
+            value: `public, max-age=${process.env.CACHE_TTL_API || "300"}, stale-while-revalidate=3600`,
+          },
+        ],
+      },
+      // WebGL shader caching
+      {
+        source: "/api/playground/webgl/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800", // 24 hours
+          },
+        ],
+      },
+      // Monitoring endpoints (no cache)
+      {
+        source: "/api/monitoring/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate",
           },
         ],
       },

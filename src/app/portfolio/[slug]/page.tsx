@@ -102,9 +102,6 @@ function ContentSection({ item }: { item: PortfolioContentItem }) {
             enableValidation={true}
             showRetryButton={false} // Disable retry button in production
             showEmptyState={true}
-            onError={(error) => {
-              console.warn(`[Portfolio] Markdown error for ${item.id}:`, error);
-            }}
           />
         </div>
       ) : hasContent ? (
@@ -139,14 +136,15 @@ function ContentSection({ item }: { item: PortfolioContentItem }) {
                   {item.images.slice(0, 4).map((image, index) => (
                     <div
                       key={index}
-                      className="aspect-video bg-gray-100 rounded-lg overflow-hidden"
+                      className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden"
                     >
                       <Image
                         src={image}
                         alt={`${item.title} - 画像 ${index + 1}`}
                         fill
-                        className="object-cover"
+                        className="object-cover transition-opacity duration-300"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        priority={index === 0}
                       />
                     </div>
                   ))}

@@ -4,8 +4,8 @@
  * for all portfolio pages with proper optimization
  */
 
-import { Metadata } from "next";
 import { PortfolioContentItem } from "@/types/portfolio";
+import { Metadata } from "next";
 import { PortfolioDataManager } from "./data-manager";
 
 export interface PortfolioSEOConfig {
@@ -176,9 +176,13 @@ export class PortfolioSEOMetadataGenerator {
   ): Promise<PortfolioPageMetadata> {
     try {
       const categoryInfo = this.getCategoryInfo(category);
-      const items = await this.dataManager.getItemsByCategory(category);
+      const items =
+        await this.dataManager.getPortfolioItemsByCategory(category);
 
-      const title = `${categoryInfo.title} | ポートフォリオ | samuido`;
+      const title =
+        category === "all"
+          ? "All Projects | ポートフォリオ | samuido"
+          : `${categoryInfo.title} | ポートフォリオ | samuido`;
       const description = `${categoryInfo.description}の作品一覧（${items.length}件）。${categoryInfo.keywords.join("、")}などの技術を使用した制作実績をご覧ください。`;
 
       const metadata: Metadata = {
@@ -543,7 +547,7 @@ export class PortfolioSEOMetadataGenerator {
   private getCategoryInfo(category: string): CategoryInfo {
     const categoryMap: Record<string, CategoryInfo> = {
       all: {
-        title: "全作品",
+        title: "All Projects",
         description: "Web開発、映像制作、デザインの全作品",
         keywords: ["Web開発", "映像制作", "デザイン", "React", "After Effects"],
         image: "/images/portfolio-gallery-all-og.jpg",
@@ -666,4 +670,21 @@ export class PortfolioSEOMetadataGenerator {
 
     return { metadata, structuredData };
   }
+
+  /**
+   * Generate metadata for item detail (alias for generateDetailMetadata)
+   */
+  async generateItemMetadata(itemId: string): Promise<PortfolioPageMetadata> {
+    const item = await this.dataManager.getPortfolioItem(itemId);
+    if (!item) {
+      throw new Error(`Portfolio item not found: ${itemId}`);
+    }
+    return this.generateDetailMetadata(item);
+  }
 }
+
+// Export singleton instance
+export const seoMetadataGenerator = new PortfolioSEOMetadataGenerator(
+  // Will be injected when used
+  {} as PortfolioDataManager,
+);

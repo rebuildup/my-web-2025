@@ -26,7 +26,7 @@ export function FilterBar({
     searchFiltersCount: searchFilters.length,
     searchFilters: searchFilters.map((f) => ({
       type: f.type,
-      optionsCount: f.options.length,
+      optionsCount: f.options?.length || 0,
     })),
   });
 
@@ -63,7 +63,7 @@ export function FilterBar({
     (technology: string) => {
       const currentTechnologies = filters.technologies || [];
       const newTechnologies = currentTechnologies.includes(technology)
-        ? currentTechnologies.filter((t) => t !== technology)
+        ? currentTechnologies.filter((t: string) => t !== technology)
         : [...currentTechnologies, technology];
 
       onFilterChange({
@@ -88,7 +88,7 @@ export function FilterBar({
     (tag: string) => {
       const currentTags = filters.tags || [];
       const newTags = currentTags.includes(tag)
-        ? currentTags.filter((t) => t !== tag)
+        ? currentTags.filter((t: string) => t !== tag)
         : [...currentTags, tag];
 
       onFilterChange({
@@ -101,7 +101,14 @@ export function FilterBar({
 
   const handleClearFilters = useCallback(() => {
     setSearchTerm("");
-    onFilterChange({});
+    onFilterChange({
+      category: undefined,
+      technology: undefined,
+      year: undefined,
+      technologies: undefined,
+      tags: undefined,
+      search: undefined,
+    });
   }, [onFilterChange]);
 
   const hasActiveFilters = !!(

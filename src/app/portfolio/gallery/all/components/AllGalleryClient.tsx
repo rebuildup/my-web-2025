@@ -1,33 +1,21 @@
-"use client";
-
 /**
  * All Gallery Client Component
- * Task 3.1: 全作品ギャラリーのクライアントサイド実装
- * Task 4.2: Gallery performance optimization - never load markdown files
- *
- * Gallery Performance Rules:
- * - NEVER load markdown files for gallery display
- * - Use enhanced gallery filter with caching for performance
- * - Only display essential information in cards (title, description, thumbnail, category, tags)
- * - Maintain consistent performance with large datasets
+ * Client-side component for the all gallery page
  */
 
-import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
-import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
+"use client";
+
 import { SearchFilter } from "@/lib/portfolio/search-index";
-import type { EnhancedCategoryType } from "@/types/enhanced-content";
+import { ContentItem } from "@/types/content";
+import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
-import { DetailModal } from "./DetailModal";
-import { FilterBar } from "./FilterBar";
-import { Pagination } from "./Pagination";
-import { PortfolioCard } from "./PortfolioCard";
-import { SortControls } from "./SortControls";
+import { useMemo, useState } from "react";
 
 export interface FilterOptions {
   category?: string;
-  technologies?: string[];
+  technology?: string;
   year?: string;
+  technologies?: string[];
   tags?: string[];
   search?: string;
 }
@@ -38,242 +26,184 @@ export interface SortOptions {
 }
 
 interface AllGalleryClientProps {
-  initialItems: PortfolioContentItem[];
-  searchFilters: SearchFilter[];
+  initialItems: ContentItem[];
+  searchFilters?: SearchFilter[];
 }
 
-const ITEMS_PER_PAGE = 24;
-
-export function AllGalleryClient({
-  initialItems,
-  searchFilters,
-}: AllGalleryClientProps) {
-  // State management
-  const [selectedItem, setSelectedItem] = useState<PortfolioContentItem | null>(
-    null,
-  );
-  const [filters, setFilters] = useState<FilterOptions>({});
-  const [sort, setSort] = useState<SortOptions>({
-    sortBy: "updatedAt",
-    sortOrder: "desc",
+export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
+  const [items] = useState(initialItems);
+  const [filter, setFilter] = useState({
+    category: "",
+    technology: "",
+    year: "",
   });
-  const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter and sort items
-  const filteredAndSortedItems = useMemo(() => {
-    // Use enhanced gallery filter for all items
-    let items = enhancedGalleryFilter.filterItemsForGallery(
-      initialItems,
-      "all",
-      {
-        // Apply filters
-        categories:
-          filters.category && filters.category !== "all"
-            ? [filters.category as EnhancedCategoryType]
-            : undefined,
-        tags: filters.tags,
-        year: filters.year ? parseInt(filters.year) : undefined,
-        search: filters.search,
-      },
-    );
-
-    // Apply technology filter (not handled by enhanced filter yet)
-    if (filters.technologies && filters.technologies.length > 0) {
-      items = items.filter((item) =>
-        filters.technologies!.some((tech) =>
-          (item.tags || []).some((itemTech: string) =>
-            itemTech.toLowerCase().includes(tech.toLowerCase()),
-          ),
-        ),
-      );
-    }
-
-    // Apply sorting using enhanced gallery filter
-    items = enhancedGalleryFilter.sortItems(items, {
-      sortBy: sort.sortBy,
-      sortOrder: sort.sortOrder,
+  const filteredItems = useMemo(() => {
+    return items.filter((item) => {
+      if (filter.category && item.category !== filter.category) return false;
+      if (filter.technology && !item.tags?.includes(filter.technology))
+        return false;
+      if (filter.year) {
+        const itemYear = new Date(item.createdAt).getFullYear().toString();
+        if (itemYear !== filter.year) return false;
+      }
+      return true;
     });
-
-    return items;
-  }, [initialItems, filters, sort]);
-
-  // Pagination
-  const totalPages = Math.ceil(filteredAndSortedItems.length / ITEMS_PER_PAGE);
-  const paginatedItems = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredAndSortedItems.slice(
-      startIndex,
-      startIndex + ITEMS_PER_PAGE,
-    );
-  }, [filteredAndSortedItems, currentPage]);
-
-  // Event handlers
-  const handleFilterChange = useCallback((newFilters: FilterOptions) => {
-    setFilters(newFilters);
-    setCurrentPage(1); // Reset to first page when filters change
-  }, []);
-
-  const handleSortChange = useCallback((newSort: SortOptions) => {
-    setSort(newSort);
-    setCurrentPage(1); // Reset to first page when sort changes
-  }, []);
-
-  const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page);
-    // Scroll to top of gallery
-    const element = document.getElementById("gallery-content");
-    if (element && typeof element.scrollIntoView === "function") {
-      element.scrollIntoView({
-        behavior: "smooth",
-      });
-    }
-  }, []);
-
-  const handleCardClick = useCallback((item: PortfolioContentItem) => {
-    setSelectedItem(item);
-  }, []);
-
-  const handleModalClose = useCallback(() => {
-    setSelectedItem(null);
-  }, []);
+  }, [items, filter]);
 
   return (
     <div
       className="min-h-screen bg-background text-foreground"
       data-testid="all-gallery-client"
     >
-      <main id="main-content" role="main" className="flex items-center py-10">
-        <div className="container-system">
+      <main className="py-10">
+        <div className="container mx-auto px-4">
           <div className="space-y-10">
             {/* Header */}
-            <header className="space-y-8">
-              <nav aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2 text-sm">
-                  <li>
-                    <Link
-                      href="/"
-                      className="text-foreground hover:text-accent"
-                    >
-                      Home
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li>
-                    <Link
-                      href="/portfolio"
-                      className="text-foreground hover:text-accent"
-                    >
-                      Portfolio
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li className="text-accent">All Projects</li>
-                </ol>
+            <header className="space-y-12">
+              <nav className="mb-6">
+                <Link
+                  href="/portfolio"
+                  className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit"
+                >
+                  ← Portfolio に戻る
+                </Link>
               </nav>
-
-              <div className="space-y-4">
-                <h1 className="neue-haas-grotesk-display text-6xl text-primary">
-                  All Projects
-                </h1>
-                <p className="noto-sans-jp-light text-sm max-w leading-loose">
-                  全ての作品を時系列・カテゴリ・技術で絞り込み表示。
-                  フィルターとソート機能で効率的に作品を探索できます。
-                </p>
-                <div className="flex items-center space-x-4 text-sm">
-                  <span className="text-accent">
-                    {filteredAndSortedItems.length} / {initialItems.length}{" "}
-                    projects
-                  </span>
-                  <span className="text-foreground">
-                    Updated {new Date().toLocaleDateString("ja-JP")}
-                  </span>
-                </div>
-              </div>
+              <h1 className="neue-haas-grotesk-display text-6xl text-primary">
+                All Projects
+              </h1>
+              <p className="noto-sans-jp-light text-sm max-w leading-loose">
+                全ての作品を時系列・カテゴリ・技術で絞り込み表示します。
+              </p>
             </header>
 
-            {/* Controls */}
-            <section className="space-y-6">
-              <FilterBar
-                filters={filters}
-                searchFilters={searchFilters}
-                onFilterChange={handleFilterChange}
-              />
-              <SortControls sort={sort} onSortChange={handleSortChange} />
-            </section>
-
-            {/* Gallery Content */}
-            <section id="gallery-content">
-              {initialItems.length === 0 ? (
-                <div className="text-center py-16">
-                  <p className="noto-sans-jp-light text-sm text-foreground">
-                    ポートフォリオデータを読み込めませんでした。
-                  </p>
-                  <p className="noto-sans-jp-light text-xs text-foreground/60 mt-2">
-                    初期アイテム数: {initialItems.length}
-                  </p>
-                  <button
-                    onClick={() => window.location.reload()}
-                    className="mt-4 text-accent hover:text-primary transition-colors"
+            {/* Filters */}
+            <div className="bg-base border border-foreground p-4">
+              <h2 className="zen-kaku-gothic-new text-lg text-primary mb-4">
+                Filters
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
+                    Category
+                  </label>
+                  <select
+                    value={filter.category}
+                    onChange={(e) =>
+                      setFilter((prev) => ({
+                        ...prev,
+                        category: e.target.value,
+                      }))
+                    }
+                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
                   >
-                    ページを再読み込み
-                  </button>
+                    <option value="">All Categories</option>
+                    <option value="develop">Development</option>
+                    <option value="video">Video</option>
+                    <option value="video&design">Video & Design</option>
+                  </select>
                 </div>
-              ) : paginatedItems.length > 0 ? (
-                <div className="space-y-8">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {paginatedItems.map((item) => (
-                      <PortfolioCard
-                        key={item.id}
-                        item={item as unknown as PortfolioContentItem}
-                        onClick={() =>
-                          handleCardClick(
-                            item as unknown as PortfolioContentItem,
-                          )
-                        }
-                        showMarkdownIndicator={true}
-                        hideMarkdownContent={true} // Always true for gallery cards (Requirement 6.1)
+                <div>
+                  <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
+                    Technology
+                  </label>
+                  <select
+                    value={filter.technology}
+                    onChange={(e) =>
+                      setFilter((prev) => ({
+                        ...prev,
+                        technology: e.target.value,
+                      }))
+                    }
+                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
+                  >
+                    <option value="">All Technologies</option>
+                    <option value="React">React</option>
+                    <option value="TypeScript">TypeScript</option>
+                    <option value="After Effects">After Effects</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
+                    Year
+                  </label>
+                  <select
+                    value={filter.year}
+                    onChange={(e) =>
+                      setFilter((prev) => ({ ...prev, year: e.target.value }))
+                    }
+                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
+                  >
+                    <option value="">All Years</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Items Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredItems.map((item) => (
+                <Link
+                  key={item.id}
+                  href={`/portfolio/${item.id}`}
+                  className="bg-base border border-foreground p-4 space-y-4 block hover:border-accent transition-colors"
+                  data-testid="portfolio-item"
+                  data-category={item.category}
+                >
+                  <div className="relative aspect-video bg-background border border-foreground overflow-hidden">
+                    {item.thumbnail ? (
+                      <Image
+                        src={item.thumbnail}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover"
+                        loading="lazy"
                       />
-                    ))}
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="noto-sans-jp-light text-xs text-foreground">
+                          {item.title}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Pagination */}
-                  {totalPages > 1 && (
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      onPageChange={handlePageChange}
-                    />
-                  )}
-                </div>
-              ) : (
-                <div className="text-center py-16">
-                  <p className="noto-sans-jp-light text-sm text-foreground">
-                    フィルター条件に一致する作品が見つかりませんでした。
-                  </p>
-                  <p className="noto-sans-jp-light text-xs text-foreground/60 mt-2">
-                    初期アイテム数: {initialItems.length}, フィルター後:{" "}
-                    {filteredAndSortedItems.length}
-                  </p>
-                  <button
-                    onClick={() => {
-                      setFilters({});
-                      setCurrentPage(1);
-                    }}
-                    className="mt-4 text-accent hover:text-primary transition-colors"
-                  >
-                    フィルターをリセット
-                  </button>
-                </div>
-              )}
-            </section>
+                  <div className="space-y-2">
+                    <h3 className="zen-kaku-gothic-new text-base text-primary">
+                      {item.title}
+                    </h3>
+                    <p className="noto-sans-jp-light text-sm text-foreground">
+                      {item.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {item.tags?.map((tag: string) => (
+                        <span
+                          key={tag}
+                          className="noto-sans-jp-light text-xs text-foreground border border-foreground px-2 py-1"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Empty State */}
+            {filteredItems.length === 0 && (
+              <div className="text-center py-12">
+                <p className="noto-sans-jp-light text-sm text-foreground">
+                  No items match the current filters.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </main>
-
-      {/* Detail Modal */}
-      {selectedItem && (
-        <DetailModal item={selectedItem} onClose={handleModalClose} />
-      )}
     </div>
   );
 }

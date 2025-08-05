@@ -53,6 +53,65 @@
     "markdownMigrated": true
   },
   {
+    "id": "portfolio-1754408713848",
+    "type": "portfolio",
+    "title": "期末テストお疲れ様でした 2Q",
+    "description": "期末試験が終わったので作りました",
+    "categories": ["video"],
+    "tags": ["aftereffects"],
+    "status": "published",
+    "priority": 50,
+    "createdAt": "2025-08-05T15:45:13.848Z",
+    "isOtherCategory": false,
+    "useManualDate": false,
+    "originalImages": [
+      "/images/portfolio/vlcsnap-2025-08-06-00h42m05s057-1754408857220-5dleht.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h52m02s826-1754409380484-u405rz.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h52m10s499-1754409396148-lwr0vv.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h52m19s345-1754409400968-jt1u78.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h53m08s976-1754409405251-2y2yhp.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h53m33s343-1754409409457-m60u7r.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h53m54s340-1754409418423-p4zfp7.png"
+    ],
+    "processedImages": [],
+    "updatedAt": "2025-08-05T15:57:25.314Z",
+    "content": "期末試験が終わったので作りました",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/rDp8bg-k254",
+        "title": "期末テストお疲れ様でした 2Q",
+        "description": "期末試験が終わったので作りました",
+        "thumbnail": "https://img.youtube.com/vi/rDp8bg-k254/maxresdefault.jpg"
+      }
+    ],
+    "images": [
+      "/images/portfolio/vlcsnap-2025-08-06-00h42m05s057-1754408857220-5dleht-processed.jpeg",
+      "/images/portfolio/vlcsnap-2025-08-06-00h52m02s826-1754409380484-u405rz-processed.jpeg",
+      "/images/portfolio/vlcsnap-2025-08-06-00h52m10s499-1754409396148-lwr0vv-processed.jpeg",
+      "/images/portfolio/vlcsnap-2025-08-06-00h52m19s345-1754409400968-jt1u78-processed.jpeg",
+      "/images/portfolio/vlcsnap-2025-08-06-00h53m08s976-1754409405251-2y2yhp-processed.jpeg",
+      "/images/portfolio/vlcsnap-2025-08-06-00h53m33s343-1754409409457-m60u7r-processed.jpeg",
+      "/images/portfolio/vlcsnap-2025-08-06-00h53m54s340-1754409418423-p4zfp7-processed.jpeg"
+    ],
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://x.com/361do_design/status/1952670859908297200",
+        "title": "X",
+        "description": "Xの投稿です"
+      },
+      {
+        "type": "website",
+        "title": "音源",
+        "url": "https://www.youtube.com/watch?v=s7BJ2NqbXrM",
+        "description": "ロストアンブレラ(yuigot Remix)のインストを使いました"
+      }
+    ],
+    "category": "video",
+    "thumbnail": "/images/portfolio/vlcsnap-2025-08-06-00h42m05s057-1754408857220-5dleht-processed.jpeg"
+  },
+  {
     "id": "portfolio-1753840532952",
     "type": "portfolio",
     "title": "期末テストお疲れ様でした 1Q",

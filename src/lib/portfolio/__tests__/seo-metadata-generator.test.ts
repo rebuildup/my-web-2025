@@ -3,15 +3,15 @@
  * Ensures proper metadata generation for all portfolio pages
  */
 
-import { PortfolioSEOMetadataGenerator } from "../seo-metadata-generator";
-import { PortfolioDataManager } from "../data-manager";
 import { PortfolioContentItem } from "@/types/portfolio";
+import { PortfolioDataManager } from "../data-manager";
+import { PortfolioSEOMetadataGenerator } from "../seo-metadata-generator";
 
 // Mock portfolio data manager
 const mockDataManager = {
   getPortfolioStats: jest.fn(),
   getFeaturedProjects: jest.fn(),
-  getItemsByCategory: jest.fn(),
+  getPortfolioItemsByCategory: jest.fn(),
   getItemById: jest.fn(),
 } as unknown as PortfolioDataManager;
 
@@ -111,9 +111,9 @@ describe("PortfolioSEOMetadataGenerator", () => {
 
   describe("generateGalleryMetadata", () => {
     beforeEach(() => {
-      (mockDataManager.getItemsByCategory as jest.Mock).mockResolvedValue([
-        mockPortfolioItem,
-      ]);
+      (
+        mockDataManager.getPortfolioItemsByCategory as jest.Mock
+      ).mockResolvedValue([mockPortfolioItem]);
     });
 
     it("should generate metadata for develop gallery", async () => {
@@ -154,7 +154,7 @@ describe("PortfolioSEOMetadataGenerator", () => {
     it("should handle unknown category", async () => {
       const result = await seoGenerator.generateGalleryMetadata("unknown");
 
-      expect(result.metadata.title).toContain("全作品");
+      expect(result.metadata.title).toContain("All Projects");
       expect(result.metadata.description).toContain(
         "Web開発、映像制作、デザイン",
       );

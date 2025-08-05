@@ -174,29 +174,47 @@ interface ExperimentRegistry {
 }
 
 export const experimentRegistry: ExperimentRegistry = {
-  "css-animation": {
+  "color-palette-generator": {
     component: DynamicCSSAnimationExperiment,
     category: "design",
     dependencies: [],
     bundleSize: 15,
   },
-  "svg-interaction": {
+  "typography-animation": {
     component: DynamicSVGInteractionExperiment,
     category: "design",
     dependencies: [],
     bundleSize: 20,
   },
-  "canvas-drawing": {
+  "css-grid-layouts": {
     component: DynamicCanvasDrawingExperiment,
     category: "design",
     dependencies: [],
     bundleSize: 25,
   },
-  "generative-art": {
+  "svg-animations": {
     component: DynamicGenerativeArtExperiment,
     category: "design",
     dependencies: [],
     bundleSize: 30,
+  },
+  "canvas-particles": {
+    component: DynamicCSSAnimationExperiment,
+    category: "design",
+    dependencies: [],
+    bundleSize: 35,
+  },
+  "interactive-shapes": {
+    component: DynamicSVGInteractionExperiment,
+    category: "design",
+    dependencies: [],
+    bundleSize: 25,
+  },
+  "css-animation-test": {
+    component: DynamicCSSAnimationExperiment,
+    category: "design",
+    dependencies: [],
+    bundleSize: 15,
   },
   "shader-experiment": {
     component: DynamicShaderExperiment,

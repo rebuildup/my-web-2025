@@ -24,7 +24,7 @@ jest.mock("../../../hooks/usePerformanceOptimization", () => ({
 }));
 
 // Temporarily disabled due to require() imports - will be fixed in future update
-describe.skip("UI Performance Tests", () => {
+describe("UI Performance Tests", () => {
   test("should pass basic test", () => {
     expect(true).toBe(true);
   });

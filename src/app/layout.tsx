@@ -5,6 +5,7 @@ import "./globals.css";
 
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { PerformanceProvider } from "@/components/providers/PerformanceProvider";
+import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
 import { CookieConsent } from "@/components/ui/CookieConsent";
 import { PerformanceDevPanel } from "@/components/ui/CoreWebVitalsMonitor";
 import { GADebug } from "@/components/ui/ga-debug";
@@ -126,10 +127,7 @@ export default function RootLayout({
           content="black-translucent"
         />
 
-        {/* Favicon links for better browser compatibility */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/favicons/favicon-192x192.png" />
+        {/* Manifest link */}
         <link rel="manifest" href="/manifest.json" />
 
         {/* Google tag (gtag.js) */}
@@ -155,32 +153,38 @@ export default function RootLayout({
         <CriticalResourcePreloader
           resources={[
             { href: "/images/og-image.png", as: "image" },
-            { href: "/favicons/favicon.ico", as: "image" },
+            { href: "/favicon.ico", as: "image" },
           ]}
         />
-        <AnalyticsProvider>
-          <PerformanceProvider>
-            {children}
-            <PerformanceDevPanel />
-            <LayoutShiftDetector />
-            <CookieConsent />
-            <GADebug />
-          </PerformanceProvider>
-        </AnalyticsProvider>
+        <ProductionInitializer>
+          <AnalyticsProvider>
+            <PerformanceProvider>
+              {children}
+              <PerformanceDevPanel />
+              <LayoutShiftDetector />
+              <CookieConsent />
+              <GADebug />
+            </PerformanceProvider>
+          </AnalyticsProvider>
+        </ProductionInitializer>
 
-        {/* Adobe Fonts (Typekit) - Load after hydration to avoid SSR mismatch */}
+        {/* Adobe Fonts (Typekit) - Load after hydration with error handling */}
         <Script
           id="adobe-fonts"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function(d) {
-                var config = {
-                  kitId: 'blm5pmr',
-                  scriptTimeout: 3000,
-                  async: true
-                },
-                h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\\bwf-loading\\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+                try {
+                  var config = {
+                    kitId: 'blm5pmr',
+                    scriptTimeout: 3000,
+                    async: true
+                  },
+                  h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\\bwf-loading\\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){console.warn('Adobe Fonts loading failed:', e);}};tk.onerror=function(){console.warn('Adobe Fonts script failed to load');clearTimeout(t);h.className=h.className.replace(/\\bwf-loading\\b/g,"")+" wf-inactive";};s.parentNode.insertBefore(tk,s)
+                } catch(e) {
+                  console.warn('Adobe Fonts initialization failed:', e);
+                }
               })(document);
             `,
           }}

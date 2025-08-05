@@ -98,6 +98,20 @@ export const designExperiments: DesignExperiment[] = [
     createdAt: "2025-01-08T00:00:00Z",
     updatedAt: "2025-01-08T00:00:00Z",
   },
+  {
+    id: "css-animation-test",
+    title: "CSS Animation Test",
+    description: "CSS アニメーションのテスト実験",
+    technology: ["CSS", "Animation"],
+    interactive: true,
+    component: TypographyAnimationExperiment, // 既存のコンポーネントを再利用
+    category: "css",
+    difficulty: "beginner",
+    animationType: "continuous",
+    performanceLevel: "low",
+    createdAt: "2025-01-08T00:00:00Z",
+    updatedAt: "2025-01-08T00:00:00Z",
+  },
 ];
 
 // Filter experiments by category
