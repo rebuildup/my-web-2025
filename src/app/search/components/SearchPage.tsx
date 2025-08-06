@@ -1,7 +1,14 @@
 "use client";
 
+import {
+  SearchHistoryItem,
+  addToSearchHistory,
+  clearSearchHistory,
+  getSearchHistory,
+  removeFromSearchHistory,
+} from "@/lib/search/history";
 import type { ContentType, SearchResult } from "@/types";
-import { Filter, Search, X } from "lucide-react";
+import { Clock, Filter, Search, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -40,6 +47,8 @@ export default function SearchPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   // Style variables matching root page
   const CardStyle =
@@ -48,6 +57,23 @@ export default function SearchPage() {
     "neue-haas-grotesk-display text-xl text-primary leading-snug";
   const Card_description = "noto-sans-jp-light text-xs pb-2";
   const Global_title = "noto-sans-jp-regular text-base leading-snug";
+
+  // Track search analytics
+  const trackSearch = useCallback(async (searchQuery: string) => {
+    if (!searchQuery.trim()) return;
+
+    try {
+      await fetch("/api/search/analytics", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query: searchQuery }),
+      });
+    } catch (error) {
+      console.error("Failed to track search:", error);
+    }
+  }, []);
 
   // Perform search
   const performSearch = useCallback(
@@ -69,10 +95,17 @@ export default function SearchPage() {
         if (category && category !== "すべて")
           params.append("category", category);
 
-        const response = await fetch(`/api/search?${params}`);
+        const response = await fetch(`/api/content/search?${params}`);
         if (response.ok) {
           const data = await response.json();
           setResults(data.results || []);
+
+          // Track successful search
+          trackSearch(searchQuery);
+
+          // Add to search history
+          addToSearchHistory(searchQuery, data.results?.length || 0);
+          setSearchHistory(getSearchHistory());
         } else {
           setResults([]);
         }
@@ -83,7 +116,7 @@ export default function SearchPage() {
         setLoading(false);
       }
     },
-    [searchMode],
+    [searchMode, trackSearch],
   );
 
   // Get search suggestions
@@ -116,16 +149,24 @@ export default function SearchPage() {
     if (value) params.set("q", value);
     router.replace(`/search?${params.toString()}`, { scroll: false });
 
-    // Get suggestions
-    getSuggestions(value);
-    setShowSuggestions(true);
+    if (value.trim()) {
+      // Get suggestions
+      getSuggestions(value);
+      setShowSuggestions(true);
+      setShowHistory(false);
 
-    // Debounced search
-    const timeoutId = setTimeout(() => {
-      performSearch(value, selectedType || undefined, selectedCategory);
-    }, 300);
+      // Debounced search
+      const timeoutId = setTimeout(() => {
+        performSearch(value, selectedType || undefined, selectedCategory);
+      }, 300);
 
-    return () => clearTimeout(timeoutId);
+      return () => clearTimeout(timeoutId);
+    } else {
+      // Show history when input is empty
+      setShowSuggestions(false);
+      setShowHistory(true);
+      setResults([]);
+    }
   };
 
   // Handle filter changes
@@ -143,8 +184,40 @@ export default function SearchPage() {
   const handleSuggestionClick = (suggestion: string) => {
     setQuery(suggestion);
     setShowSuggestions(false);
+    setShowHistory(false);
     performSearch(suggestion, selectedType || undefined, selectedCategory);
   };
+
+  // Handle history item click
+  const handleHistoryClick = (historyItem: SearchHistoryItem) => {
+    setQuery(historyItem.query);
+    setShowHistory(false);
+    setShowSuggestions(false);
+    performSearch(
+      historyItem.query,
+      selectedType || undefined,
+      selectedCategory,
+    );
+  };
+
+  // Handle remove history item
+  const handleRemoveHistoryItem = (query: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    removeFromSearchHistory(query);
+    setSearchHistory(getSearchHistory());
+  };
+
+  // Handle clear all history
+  const handleClearHistory = () => {
+    clearSearchHistory();
+    setSearchHistory([]);
+    setShowHistory(false);
+  };
+
+  // Load search history on mount
+  useEffect(() => {
+    setSearchHistory(getSearchHistory());
+  }, []);
 
   // Initial search on mount
   useEffect(() => {
@@ -181,9 +254,20 @@ export default function SearchPage() {
                     type="text"
                     value={query}
                     onChange={(e) => handleSearchChange(e.target.value)}
-                    onFocus={() => setShowSuggestions(true)}
+                    onFocus={() => {
+                      if (!query.trim()) {
+                        setShowHistory(true);
+                        setShowSuggestions(false);
+                      } else {
+                        setShowSuggestions(true);
+                        setShowHistory(false);
+                      }
+                    }}
                     onBlur={() =>
-                      setTimeout(() => setShowSuggestions(false), 200)
+                      setTimeout(() => {
+                        setShowSuggestions(false);
+                        setShowHistory(false);
+                      }, 200)
                     }
                     placeholder="検索キーワードを入力..."
                     className="w-full pl-12 pr-4 py-4 bg-base border border-foreground text-foreground placeholder-foreground/60 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
@@ -199,9 +283,53 @@ export default function SearchPage() {
                       <button
                         key={index}
                         onClick={() => handleSuggestionClick(suggestion)}
-                        className="w-full px-4 py-3 text-left hover:bg-primary hover:text-background transition-colors noto-sans-jp-light text-sm"
+                        className="w-full px-4 py-3 text-left hover:bg-primary hover:text-background transition-colors noto-sans-jp-light text-sm flex items-center gap-2"
                       >
+                        <Search className="w-4 h-4 opacity-60" />
                         {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Search History */}
+                {showHistory && searchHistory.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 bg-base border border-foreground border-t-0 z-10">
+                    <div className="px-4 py-2 border-b border-foreground bg-foreground text-background">
+                      <div className="flex items-center justify-between">
+                        <span className="noto-sans-jp-light text-xs">
+                          最近の検索
+                        </span>
+                        <button
+                          onClick={handleClearHistory}
+                          className="text-xs hover:underline flex items-center gap-1"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          クリア
+                        </button>
+                      </div>
+                    </div>
+                    {searchHistory.slice(0, 5).map((historyItem, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleHistoryClick(historyItem)}
+                        className="w-full px-4 py-3 text-left hover:bg-primary hover:text-background transition-colors noto-sans-jp-light text-sm flex items-center justify-between group"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 opacity-60" />
+                          <span>{historyItem.query}</span>
+                          <span className="text-xs opacity-60">
+                            ({historyItem.resultCount}件)
+                          </span>
+                        </div>
+                        <button
+                          onClick={(e) =>
+                            handleRemoveHistoryItem(historyItem.query, e)
+                          }
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-foreground hover:text-background rounded"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
                       </button>
                     ))}
                   </div>

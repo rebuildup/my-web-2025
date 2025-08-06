@@ -1,155 +1,37 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import ToolWrapper from "../../components/ToolWrapper";
+import useOfflinePerformance from "@/hooks/useOfflinePerformance";
+import {
+  ColorHarmony,
+  ColorInfo,
+  generateColorHarmony,
+  generateGoldenRatioColors,
+  generatePerceptuallyUniformColors,
+  getAccessibilityInfo,
+  hexToRgb,
+  hsvToRgb,
+  randomInRange,
+  rgbToHex,
+  rgbToHsl,
+  sortColorsByHue,
+  sortColorsByLightness,
+  sortColorsBySaturation,
+} from "@/lib/utils/color";
+import { useCallback, useEffect, useRef, useState } from "react";
 import AccessibleButton from "../../components/AccessibleButton";
 import OfflineSettingsManager from "../../components/OfflineSettingsManager";
-import useOfflinePerformance from "@/hooks/useOfflinePerformance";
+import ToolWrapper from "../../components/ToolWrapper";
 
-// Color utility functions
-interface HSVColor {
-  h: number; // 0-360
-  s: number; // 0-100
-  v: number; // 0-100
+// Palette management interfaces
+interface SavedPalette {
+  id: string;
+  name: string;
+  colors: ColorInfo[];
+  createdAt: string;
+  tags: string[];
 }
 
-interface RGBColor {
-  r: number; // 0-255
-  g: number; // 0-255
-  b: number; // 0-255
-}
-
-interface ColorInfo {
-  hex: string;
-  rgb: RGBColor;
-  hsv: HSVColor;
-  hsl: { h: number; s: number; l: number };
-  name?: string;
-}
-
-// HSV to RGB conversion
-function hsvToRgb(h: number, s: number, v: number): RGBColor {
-  const c = (v / 100) * (s / 100);
-  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-  const m = v / 100 - c;
-
-  let r = 0,
-    g = 0,
-    b = 0;
-
-  if (0 <= h && h < 60) {
-    r = c;
-    g = x;
-    b = 0;
-  } else if (60 <= h && h < 120) {
-    r = x;
-    g = c;
-    b = 0;
-  } else if (120 <= h && h < 180) {
-    r = 0;
-    g = c;
-    b = x;
-  } else if (180 <= h && h < 240) {
-    r = 0;
-    g = x;
-    b = c;
-  } else if (240 <= h && h < 300) {
-    r = x;
-    g = 0;
-    b = c;
-  } else if (300 <= h && h < 360) {
-    r = c;
-    g = 0;
-    b = x;
-  }
-
-  return {
-    r: Math.round((r + m) * 255),
-    g: Math.round((g + m) * 255),
-    b: Math.round((b + m) * 255),
-  };
-}
-
-// RGB to HSL conversion
-function rgbToHsl(
-  r: number,
-  g: number,
-  b: number,
-): { h: number; s: number; l: number } {
-  r /= 255;
-  g /= 255;
-  b /= 255;
-
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  let h = 0,
-    s = 0;
-  const l = (max + min) / 2;
-
-  if (max === min) {
-    h = s = 0; // achromatic
-  } else {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-    switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0);
-        break;
-      case g:
-        h = (b - r) / d + 2;
-        break;
-      case b:
-        h = (r - g) / d + 4;
-        break;
-    }
-    h /= 6;
-  }
-
-  return {
-    h: Math.round(h * 360),
-    s: Math.round(s * 100),
-    l: Math.round(l * 100),
-  };
-}
-
-// RGB to HEX conversion
-function rgbToHex(r: number, g: number, b: number): string {
-  return (
-    "#" +
-    [r, g, b]
-      .map((x) => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? "0" + hex : hex;
-      })
-      .join("")
-  );
-}
-
-// Generate random number in range
-function randomInRange(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
-}
-
-// Color accessibility checking
-function getContrastRatio(color1: RGBColor, color2: RGBColor): number {
-  const getLuminance = (rgb: RGBColor) => {
-    const [r, g, b] = [rgb.r, rgb.g, rgb.b].map((c) => {
-      c = c / 255;
-      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-    });
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  };
-
-  const lum1 = getLuminance(color1);
-  const lum2 = getLuminance(color2);
-  const brightest = Math.max(lum1, lum2);
-  const darkest = Math.min(lum1, lum2);
-
-  return (brightest + 0.05) / (darkest + 0.05);
-}
-
-// Predefined color ranges
+// Predefined color ranges with enhanced options
 const colorRangePresets = {
   warm: { hMin: 0, hMax: 60, sMin: 50, sMax: 100, vMin: 40, vMax: 80 },
   cool: { hMin: 180, hMax: 240, sMin: 50, sMax: 100, vMin: 40, vMax: 80 },
@@ -157,6 +39,18 @@ const colorRangePresets = {
   monochrome: { hMin: 0, hMax: 0, sMin: 0, sMax: 0, vMin: 10, vMax: 90 },
   vibrant: { hMin: 0, hMax: 360, sMin: 70, sMax: 100, vMin: 70, vMax: 100 },
   earth: { hMin: 20, hMax: 60, sMin: 30, sMax: 80, vMin: 30, vMax: 70 },
+  ocean: { hMin: 180, hMax: 220, sMin: 40, sMax: 90, vMin: 30, vMax: 80 },
+  sunset: { hMin: 300, hMax: 60, sMin: 60, sMax: 100, vMin: 50, vMax: 90 },
+  forest: { hMin: 80, hMax: 140, sMin: 40, sMax: 80, vMin: 20, vMax: 60 },
+  neon: { hMin: 0, hMax: 360, sMin: 90, sMax: 100, vMin: 80, vMax: 100 },
+};
+
+// Generation algorithms
+const generationAlgorithms = {
+  random: "Random HSV",
+  golden: "Golden Ratio",
+  perceptual: "Perceptually Uniform",
+  harmony: "Color Harmony",
 };
 
 // Settings interface for offline persistence
@@ -167,6 +61,11 @@ interface ColorPaletteSettings extends Record<string, unknown> {
   valueRange: { min: number; max: number };
   exportFormat: "css" | "tailwind" | "json";
   showAccessibility: boolean;
+  generationAlgorithm: keyof typeof generationAlgorithms;
+  harmonyType: ColorHarmony["type"];
+  sortBy: "none" | "hue" | "lightness" | "saturation";
+  enableColorBlindCheck: boolean;
+  autoSave: boolean;
 }
 
 export default function ColorPaletteGenerator() {
@@ -178,15 +77,31 @@ export default function ColorPaletteGenerator() {
     valueRange: { min: 50, max: 90 },
     exportFormat: "css",
     showAccessibility: false,
+    generationAlgorithm: "random",
+    harmonyType: "analogous",
+    sortBy: "none",
+    enableColorBlindCheck: true,
+    autoSave: false,
   };
 
-  // State management with settings
+  // State management
   const [settings, setSettings] =
     useState<ColorPaletteSettings>(defaultSettings);
   const [generatedColors, setGeneratedColors] = useState<ColorInfo[]>([]);
-  const [savedPalettes, setSavedPalettes] = useState<ColorInfo[][]>([]);
+  const [savedPalettes, setSavedPalettes] = useState<SavedPalette[]>([]);
+  const [currentHarmony, setCurrentHarmony] = useState<ColorHarmony | null>(
+    null,
+  );
+  const [selectedColor, setSelectedColor] = useState<ColorInfo | null>(null);
+  const [importedPalette, setImportedPalette] = useState<string>("");
+  const [paletteSearch, setPaletteSearch] = useState<string>("");
+  const [showPaletteManager, setShowPaletteManager] = useState(false);
+  const [notification, setNotification] = useState<string>("");
 
-  // Destructure settings for easier access
+  // Refs for file operations
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Destructure settings
   const {
     colorCount,
     hueRange,
@@ -194,93 +109,148 @@ export default function ColorPaletteGenerator() {
     valueRange,
     exportFormat,
     showAccessibility,
+    generationAlgorithm,
+    harmonyType,
+    sortBy,
+    enableColorBlindCheck,
+    autoSave,
   } = settings;
 
   // Performance optimization hook
-  const { processInChunks, measureTime } = useOfflinePerformance({
+  const { measureTime } = useOfflinePerformance({
     toolName: "color-palette",
     enablePerformanceMonitoring: true,
     enableOfflineNotifications: true,
   });
 
-  // Keyboard shortcuts
+  // Enhanced keyboard shortcuts
   const keyboardShortcuts = [
     { key: "G", description: "新しいパレット生成" },
     { key: "S", description: "パレット保存" },
     { key: "E", description: "エクスポート" },
     { key: "R", description: "リセット" },
     { key: "A", description: "アクセシビリティ表示切替" },
+    { key: "H", description: "ハーモニー生成" },
+    { key: "M", description: "パレット管理" },
+    { key: "I", description: "パレットインポート" },
   ];
 
-  // Generate random colors with performance optimization
+  // Show notification
+  const showNotification = useCallback((message: string) => {
+    setNotification(message);
+    setTimeout(() => setNotification(""), 3000);
+  }, []);
+
+  // Generate random colors (original algorithm)
+  const generateRandomColors = useCallback((): ColorInfo[] => {
+    const colors: ColorInfo[] = [];
+    const usedColors = new Set<string>();
+
+    while (colors.length < colorCount) {
+      const h = randomInRange(hueRange.min, hueRange.max);
+      const s = randomInRange(saturationRange.min, saturationRange.max);
+      const v = randomInRange(valueRange.min, valueRange.max);
+
+      const rgb = hsvToRgb(h, s, v);
+      const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+
+      if (!usedColors.has(hex)) {
+        usedColors.add(hex);
+        const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+        const accessibility = getAccessibilityInfo(rgb);
+
+        colors.push({
+          hex,
+          rgb,
+          hsv: { h, s, v },
+          hsl,
+          accessibility,
+        });
+      }
+    }
+
+    return colors;
+  }, [colorCount, hueRange, saturationRange, valueRange]);
+
+  // Generate colors with advanced algorithms
   const generateColors = useCallback(async () => {
     const timedGeneration = measureTime(() => {
-      const colors: ColorInfo[] = [];
-      const usedColors = new Set<string>();
+      let colors: ColorInfo[] = [];
 
-      while (colors.length < colorCount) {
-        const h = randomInRange(hueRange.min, hueRange.max);
-        const s = randomInRange(saturationRange.min, saturationRange.max);
-        const v = randomInRange(valueRange.min, valueRange.max);
+      switch (generationAlgorithm) {
+        case "random":
+          colors = generateRandomColors();
+          break;
+        case "golden":
+          const baseHue = randomInRange(hueRange.min, hueRange.max);
+          colors = generateGoldenRatioColors(baseHue, colorCount);
+          break;
+        case "perceptual":
+          colors = generatePerceptuallyUniformColors(colorCount);
+          break;
+        case "harmony":
+          if (selectedColor) {
+            const harmony = generateColorHarmony(
+              selectedColor.hsv,
+              harmonyType,
+            );
+            colors = harmony.colors.slice(0, colorCount);
+            setCurrentHarmony(harmony);
+          } else {
+            const baseH = randomInRange(hueRange.min, hueRange.max);
+            const baseS = randomInRange(
+              saturationRange.min,
+              saturationRange.max,
+            );
+            const baseV = randomInRange(valueRange.min, valueRange.max);
+            const harmony = generateColorHarmony(
+              { h: baseH, s: baseS, v: baseV },
+              harmonyType,
+            );
+            colors = harmony.colors.slice(0, colorCount);
+            setCurrentHarmony(harmony);
+          }
+          break;
+      }
 
-        const rgb = hsvToRgb(h, s, v);
-        const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
-
-        // Avoid duplicate colors
-        if (!usedColors.has(hex)) {
-          usedColors.add(hex);
-          const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-
-          colors.push({
-            hex,
-            rgb,
-            hsv: { h, s, v },
-            hsl,
-          });
-        }
+      // Apply sorting
+      switch (sortBy) {
+        case "hue":
+          colors = sortColorsByHue(colors);
+          break;
+        case "lightness":
+          colors = sortColorsByLightness(colors);
+          break;
+        case "saturation":
+          colors = sortColorsBySaturation(colors);
+          break;
       }
 
       return colors;
     });
 
-    // For large color counts, use chunked processing
-    if (colorCount > 50) {
-      const colorIndices = Array.from({ length: colorCount }, (_, i) => i);
-      const colors = await processInChunks(
-        colorIndices,
-        () => {
-          const h = randomInRange(hueRange.min, hueRange.max);
-          const s = randomInRange(saturationRange.min, saturationRange.max);
-          const v = randomInRange(valueRange.min, valueRange.max);
+    setGeneratedColors(timedGeneration.result);
 
-          const rgb = hsvToRgb(h, s, v);
-          const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
-          const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-
-          return { hex, rgb, hsv: { h, s, v }, hsl };
-        },
-        { chunkSize: 10 }, // Process 10 colors at a time
-      );
-
-      // Remove duplicates
-      const uniqueColors = colors
-        .filter(
-          (color, index, arr) =>
-            arr.findIndex((c) => c.hex === color.hex) === index,
-        )
-        .slice(0, colorCount);
-
-      setGeneratedColors(uniqueColors);
-    } else {
-      setGeneratedColors(timedGeneration.result);
+    if (autoSave && timedGeneration.result.length > 0) {
+      await savePalette(`Auto-saved ${new Date().toLocaleTimeString()}`);
     }
+
+    showNotification(
+      `${timedGeneration.result.length}色のパレットを生成しました`,
+    );
   }, [
     colorCount,
     hueRange,
     saturationRange,
     valueRange,
-    processInChunks,
+    generationAlgorithm,
+    harmonyType,
+    sortBy,
+    selectedColor,
+    autoSave,
     measureTime,
+    showNotification,
+    generateRandomColors,
   ]);
 
   // Apply preset color range
@@ -292,26 +262,48 @@ export default function ColorPaletteGenerator() {
       saturationRange: { min: range.sMin, max: range.sMax },
       valueRange: { min: range.vMin, max: range.vMax },
     }));
+    showNotification(`${preset}プリセットを適用しました`);
   };
 
-  // Save current palette
-  const savePalette = useCallback(() => {
-    if (generatedColors.length > 0) {
-      setSavedPalettes((prev) => [...prev, generatedColors]);
-    }
-  }, [generatedColors]);
+  // Enhanced palette saving with metadata
+  const savePalette = useCallback(
+    async (customName?: string) => {
+      if (generatedColors.length === 0) return;
+
+      const name = customName || `Palette ${savedPalettes.length + 1}`;
+      const newPalette: SavedPalette = {
+        id: `palette-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        name,
+        colors: generatedColors,
+        createdAt: new Date().toISOString(),
+        tags: [generationAlgorithm, harmonyType],
+      };
+
+      setSavedPalettes((prev) => [newPalette, ...prev]);
+      showNotification(`パレット "${name}" を保存しました`);
+    },
+    [
+      generatedColors,
+      savedPalettes.length,
+      generationAlgorithm,
+      harmonyType,
+      showNotification,
+    ],
+  );
 
   // Load saved palette
-  const loadPalette = (palette: ColorInfo[]) => {
-    setGeneratedColors(palette);
+  const loadPalette = (palette: SavedPalette) => {
+    setGeneratedColors(palette.colors);
+    showNotification(`パレット "${palette.name}" を読み込みました`);
   };
 
   // Delete saved palette
-  const deletePalette = (index: number) => {
-    setSavedPalettes((prev) => prev.filter((_, i) => i !== index));
+  const deletePalette = (id: string) => {
+    setSavedPalettes((prev) => prev.filter((p) => p.id !== id));
+    showNotification("パレットを削除しました");
   };
 
-  // Export functions
+  // Enhanced export functions
   const exportAsCSS = useCallback(() => {
     const cssVars = generatedColors
       .map((color, index) => `  --color-${index + 1}: ${color.hex};`)
@@ -338,18 +330,50 @@ export default function ColorPaletteGenerator() {
   }, [generatedColors]);
 
   const exportAsJSON = useCallback(() => {
-    return JSON.stringify(generatedColors, null, 2);
-  }, [generatedColors]);
+    return JSON.stringify(
+      {
+        palette: {
+          name: `Generated Palette ${new Date().toISOString()}`,
+          algorithm: generationAlgorithm,
+          harmony: currentHarmony?.type,
+          colors: generatedColors,
+          metadata: {
+            createdAt: new Date().toISOString(),
+            settings: {
+              colorCount,
+              hueRange,
+              saturationRange,
+              valueRange,
+            },
+          },
+        },
+      },
+      null,
+      2,
+    );
+  }, [
+    generatedColors,
+    generationAlgorithm,
+    currentHarmony,
+    colorCount,
+    hueRange,
+    saturationRange,
+    valueRange,
+  ]);
 
   // Copy to clipboard
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      // Could add toast notification here
-    } catch (err) {
-      console.error("Failed to copy to clipboard:", err);
-    }
-  };
+  const copyToClipboard = useCallback(
+    async (text: string) => {
+      try {
+        await navigator.clipboard.writeText(text);
+        showNotification("クリップボードにコピーしました");
+      } catch (err) {
+        console.error("Failed to copy to clipboard:", err);
+        showNotification("コピーに失敗しました");
+      }
+    },
+    [showNotification],
+  );
 
   // Copy individual color
   const copyColor = async (color: ColorInfo, format: "hex" | "rgb" | "hsl") => {
@@ -367,6 +391,108 @@ export default function ColorPaletteGenerator() {
     }
     await copyToClipboard(text);
   };
+
+  // Import palette from various formats
+  const importPalette = useCallback(
+    (data: string) => {
+      try {
+        const parsed = JSON.parse(data);
+        if (parsed.palette && parsed.palette.colors) {
+          setGeneratedColors(parsed.palette.colors);
+          showNotification("JSONパレットをインポートしました");
+          return;
+        }
+
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const colors = parsed
+            .map(
+              (
+                item:
+                  | string
+                  | { hex: string; hsl: { h: number; s: number; l: number } },
+              ) => {
+                if (typeof item === "string" && item.startsWith("#")) {
+                  const rgb = hexToRgb(item);
+                  if (rgb) {
+                    const hsv = { h: 0, s: 0, v: 0 };
+                    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                    return {
+                      hex: item,
+                      rgb,
+                      hsv,
+                      hsl,
+                      accessibility: getAccessibilityInfo(rgb),
+                    } as ColorInfo;
+                  }
+                }
+                return null;
+              },
+            )
+            .filter((item): item is ColorInfo => item !== null);
+
+          if (colors.length > 0) {
+            setGeneratedColors(colors);
+            showNotification(`${colors.length}色をインポートしました`);
+            return;
+          }
+        }
+
+        showNotification("インポート形式が認識できません");
+      } catch {
+        const hexColors = data.match(/#[0-9a-fA-F]{6}/g);
+        if (hexColors && hexColors.length > 0) {
+          const colors: ColorInfo[] = hexColors
+            .map((hex) => {
+              const rgb = hexToRgb(hex);
+              if (rgb) {
+                const hsv = { h: 0, s: 0, v: 0 };
+                const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                return {
+                  hex,
+                  rgb,
+                  hsv,
+                  hsl,
+                  accessibility: getAccessibilityInfo(rgb),
+                };
+              }
+              return null;
+            })
+            .filter(Boolean) as ColorInfo[];
+
+          setGeneratedColors(colors);
+          showNotification(`${colors.length}色をインポートしました`);
+        } else {
+          showNotification("有効な色が見つかりません");
+        }
+      }
+    },
+    [showNotification],
+  );
+
+  // Handle file import
+  const handleFileImport = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const content = e.target?.result as string;
+          importPalette(content);
+        };
+        reader.readAsText(file);
+      }
+    },
+    [importPalette],
+  );
+
+  // Filter saved palettes
+  const filteredPalettes = savedPalettes.filter(
+    (palette) =>
+      palette.name.toLowerCase().includes(paletteSearch.toLowerCase()) ||
+      palette.tags.some((tag) =>
+        tag.toLowerCase().includes(paletteSearch.toLowerCase()),
+      ),
+  );
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -389,12 +515,30 @@ export default function ColorPaletteGenerator() {
           break;
         case "r":
           setGeneratedColors([]);
+          setCurrentHarmony(null);
+          setSelectedColor(null);
           break;
         case "a":
           setSettings((prev) => ({
             ...prev,
             showAccessibility: !prev.showAccessibility,
           }));
+          break;
+        case "h":
+          if (generatedColors.length > 0) {
+            setSelectedColor(generatedColors[0]);
+            setSettings((prev) => ({
+              ...prev,
+              generationAlgorithm: "harmony",
+            }));
+            generateColors();
+          }
+          break;
+        case "m":
+          setShowPaletteManager(!showPaletteManager);
+          break;
+        case "i":
+          fileInputRef.current?.click();
           break;
       }
     };
@@ -410,17 +554,20 @@ export default function ColorPaletteGenerator() {
       );
   }, [
     generateColors,
-    exportFormat,
-    showAccessibility,
-    exportAsCSS,
-    exportAsJSON,
-    exportAsTailwind,
     savePalette,
+    exportFormat,
+    exportAsCSS,
+    exportAsTailwind,
+    exportAsJSON,
+    copyToClipboard,
+    generatedColors,
+    selectedColor,
+    showPaletteManager,
   ]);
 
   // Load saved palettes from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("color-palettes");
+    const saved = localStorage.getItem("color-palettes-v2");
     if (saved) {
       try {
         setSavedPalettes(JSON.parse(saved));
@@ -432,7 +579,7 @@ export default function ColorPaletteGenerator() {
 
   // Save palettes to localStorage
   useEffect(() => {
-    localStorage.setItem("color-palettes", JSON.stringify(savedPalettes));
+    localStorage.setItem("color-palettes-v2", JSON.stringify(savedPalettes));
   }, [savedPalettes]);
 
   // Design system classes
@@ -446,7 +593,7 @@ export default function ColorPaletteGenerator() {
   return (
     <ToolWrapper
       toolName="Color Palette Generator"
-      description="HSV色域を指定してランダムなカラーパレットを生成。CSS・Tailwind・JSON形式でエクスポート可能。デザイナー・開発者向けの色彩ツール。"
+      description="高度なアルゴリズムとカラーハーモニー理論を使用したカラーパレット生成ツール。アクセシビリティチェック、パレット管理、多形式エクスポートに対応。"
       category="design"
       keyboardShortcuts={keyboardShortcuts}
       showPerformanceInfo={true}
@@ -461,6 +608,96 @@ export default function ColorPaletteGenerator() {
       >
         {() => (
           <div className="space-y-8">
+            {/* Notification */}
+            {notification && (
+              <div
+                className="bg-accent text-background p-3 border border-accent"
+                role="alert"
+              >
+                {notification}
+              </div>
+            )}
+
+            {/* Hidden file input for import */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json,.css,.gpl,.ase"
+              onChange={handleFileImport}
+              className="hidden"
+            />
+
+            {/* Generation Algorithm Selection */}
+            <section className={CardStyle}>
+              <h3 className={Section_title}>Generation Algorithm</h3>
+              <div className="grid-system grid-1 sm:grid-2 gap-4">
+                <div className="space-y-2">
+                  <label className="neue-haas-grotesk-display text-sm text-primary">
+                    Algorithm
+                  </label>
+                  <select
+                    value={generationAlgorithm}
+                    onChange={(e) =>
+                      setSettings((prev) => ({
+                        ...prev,
+                        generationAlgorithm: e.target
+                          .value as keyof typeof generationAlgorithms,
+                      }))
+                    }
+                    className={Input_style}
+                    aria-label="Select generation algorithm"
+                  >
+                    {Object.entries(generationAlgorithms).map(
+                      ([key, label]) => (
+                        <option key={key} value={key}>
+                          {label}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                </div>
+
+                {generationAlgorithm === "harmony" && (
+                  <div className="space-y-2">
+                    <label className="neue-haas-grotesk-display text-sm text-primary">
+                      Harmony Type
+                    </label>
+                    <select
+                      value={harmonyType}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          harmonyType: e.target.value as ColorHarmony["type"],
+                        }))
+                      }
+                      className={Input_style}
+                      aria-label="Select harmony type"
+                    >
+                      <option value="monochromatic">Monochromatic</option>
+                      <option value="analogous">Analogous</option>
+                      <option value="complementary">Complementary</option>
+                      <option value="triadic">Triadic</option>
+                      <option value="tetradic">Tetradic</option>
+                      <option value="split-complementary">
+                        Split Complementary
+                      </option>
+                    </select>
+                  </div>
+                )}
+              </div>
+
+              {currentHarmony && (
+                <div className="bg-background border border-foreground p-3">
+                  <h4 className="neue-haas-grotesk-display text-sm text-primary mb-2">
+                    Current Harmony: {currentHarmony.type}
+                  </h4>
+                  <p className="text-xs text-foreground">
+                    {currentHarmony.description}
+                  </p>
+                </div>
+              )}
+            </section>
+
             {/* Color Range Settings */}
             <section className={CardStyle}>
               <h3 className={Section_title}>Color Range Settings</h3>
@@ -470,14 +707,14 @@ export default function ColorPaletteGenerator() {
                 <h4 className="neue-haas-grotesk-display text-lg text-primary">
                   Presets
                 </h4>
-                <div className="grid-system grid-2 xs:grid-3 sm:grid-6 gap-2">
+                <div className="grid-system grid-2 xs:grid-3 sm:grid-5 gap-2">
                   {Object.keys(colorRangePresets).map((preset) => (
                     <button
                       key={preset}
                       onClick={() =>
                         applyPreset(preset as keyof typeof colorRangePresets)
                       }
-                      className="bg-background border border-foreground px-3 py-2 text-sm hover:bg-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+                      className="bg-background border border-foreground px-3 py-2 text-sm hover:bg-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent capitalize"
                     >
                       {preset}
                     </button>
@@ -622,25 +859,68 @@ export default function ColorPaletteGenerator() {
                 </div>
               </div>
 
-              {/* Color Count */}
-              <div className="space-y-2">
-                <label className="neue-haas-grotesk-display text-sm text-primary">
-                  Number of Colors: {colorCount}
-                </label>
-                <input
-                  type="range"
-                  min="1"
-                  max="20"
-                  value={colorCount}
-                  onChange={(e) =>
-                    setSettings((prev) => ({
-                      ...prev,
-                      colorCount: parseInt(e.target.value),
-                    }))
-                  }
-                  className="w-full"
-                  aria-label="Number of colors to generate"
-                />
+              {/* Additional Settings */}
+              <div className="grid-system grid-1 sm:grid-3 gap-4">
+                <div className="space-y-2">
+                  <label className="neue-haas-grotesk-display text-sm text-primary">
+                    Number of Colors: {colorCount}
+                  </label>
+                  <input
+                    type="range"
+                    min="1"
+                    max="20"
+                    value={colorCount}
+                    onChange={(e) =>
+                      setSettings((prev) => ({
+                        ...prev,
+                        colorCount: parseInt(e.target.value),
+                      }))
+                    }
+                    className="w-full"
+                    aria-label="Number of colors to generate"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="neue-haas-grotesk-display text-sm text-primary">
+                    Sort By
+                  </label>
+                  <select
+                    value={sortBy}
+                    onChange={(e) =>
+                      setSettings((prev) => ({
+                        ...prev,
+                        sortBy: e.target.value as typeof sortBy,
+                      }))
+                    }
+                    className={Input_style}
+                    aria-label="Sort colors by"
+                  >
+                    <option value="none">None</option>
+                    <option value="hue">Hue</option>
+                    <option value="lightness">Lightness</option>
+                    <option value="saturation">Saturation</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={autoSave}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          autoSave: e.target.checked,
+                        }))
+                      }
+                      className="focus:ring-2 focus:ring-accent"
+                    />
+                    <span className="neue-haas-grotesk-display text-sm text-primary">
+                      Auto Save
+                    </span>
+                  </label>
+                </div>
               </div>
             </section>
 
@@ -658,7 +938,7 @@ export default function ColorPaletteGenerator() {
                   Generate Colors
                 </AccessibleButton>
                 <AccessibleButton
-                  onClick={savePalette}
+                  onClick={() => savePalette()}
                   disabled={generatedColors.length === 0}
                   variant="secondary"
                   shortcut="S"
@@ -685,6 +965,24 @@ export default function ColorPaletteGenerator() {
                 >
                   Accessibility
                 </AccessibleButton>
+                <AccessibleButton
+                  onClick={() => setShowPaletteManager(!showPaletteManager)}
+                  variant="ghost"
+                  shortcut="M"
+                  announceOnClick="パレット管理を開きました"
+                  aria-label="Open palette manager"
+                >
+                  Manage
+                </AccessibleButton>
+                <AccessibleButton
+                  onClick={() => fileInputRef.current?.click()}
+                  variant="ghost"
+                  shortcut="I"
+                  announceOnClick="パレットインポートを開始します"
+                  aria-label="Import palette"
+                >
+                  Import
+                </AccessibleButton>
               </div>
             </section>
 
@@ -696,11 +994,20 @@ export default function ColorPaletteGenerator() {
                   {generatedColors.map((color, index) => (
                     <div
                       key={index}
-                      className="space-y-2"
+                      className={`space-y-2 ${
+                        selectedColor === color ? "ring-2 ring-accent" : ""
+                      }`}
                       role="button"
                       tabIndex={0}
                       aria-label={`Color ${index + 1}: ${color.hex}`}
                       data-testid="color-item"
+                      onClick={() => setSelectedColor(color)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedColor(color);
+                        }
+                      }}
                     >
                       <div
                         className="w-full h-20 border border-foreground cursor-pointer"
@@ -738,26 +1045,78 @@ export default function ColorPaletteGenerator() {
                           HSL: {color.hsl.h}, {color.hsl.s}%, {color.hsl.l}%
                         </button>
 
-                        {/* Accessibility Information */}
-                        {showAccessibility && (
+                        {/* Enhanced Accessibility Information */}
+                        {showAccessibility && color.accessibility && (
                           <div className="pt-2 border-t border-foreground">
-                            <div className="text-xs">
-                              <div>
-                                vs White:{" "}
-                                {getContrastRatio(color.rgb, {
-                                  r: 255,
-                                  g: 255,
-                                  b: 255,
-                                }).toFixed(2)}
+                            <div className="text-xs space-y-1">
+                              <div className="flex justify-between">
+                                <span>vs White:</span>
+                                <span
+                                  className={
+                                    color.accessibility.readableOnWhite
+                                      ? "text-green-600"
+                                      : "text-red-600"
+                                  }
+                                >
+                                  {color.accessibility.contrastWithWhite.toFixed(
+                                    2,
+                                  )}
+                                </span>
                               </div>
-                              <div>
-                                vs Black:{" "}
-                                {getContrastRatio(color.rgb, {
-                                  r: 0,
-                                  g: 0,
-                                  b: 0,
-                                }).toFixed(2)}
+                              <div className="flex justify-between">
+                                <span>vs Black:</span>
+                                <span
+                                  className={
+                                    color.accessibility.readableOnBlack
+                                      ? "text-green-600"
+                                      : "text-red-600"
+                                  }
+                                >
+                                  {color.accessibility.contrastWithBlack.toFixed(
+                                    2,
+                                  )}
+                                </span>
                               </div>
+                              <div className="flex justify-between">
+                                <span>WCAG AA:</span>
+                                <span
+                                  className={
+                                    color.accessibility.wcagAA
+                                      ? "text-green-600"
+                                      : "text-red-600"
+                                  }
+                                >
+                                  {color.accessibility.wcagAA ? "✓" : "✗"}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>WCAG AAA:</span>
+                                <span
+                                  className={
+                                    color.accessibility.wcagAAA
+                                      ? "text-green-600"
+                                      : "text-red-600"
+                                  }
+                                >
+                                  {color.accessibility.wcagAAA ? "✓" : "✗"}
+                                </span>
+                              </div>
+                              {enableColorBlindCheck && (
+                                <div className="flex justify-between">
+                                  <span>Color Blind Safe:</span>
+                                  <span
+                                    className={
+                                      color.accessibility.colorBlindSafe
+                                        ? "text-green-600"
+                                        : "text-yellow-600"
+                                    }
+                                  >
+                                    {color.accessibility.colorBlindSafe
+                                      ? "✓"
+                                      : "?"}
+                                  </span>
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
@@ -779,10 +1138,7 @@ export default function ColorPaletteGenerator() {
                       onChange={(e) =>
                         setSettings((prev) => ({
                           ...prev,
-                          exportFormat: e.target.value as
-                            | "css"
-                            | "tailwind"
-                            | "json",
+                          exportFormat: e.target.value as typeof exportFormat,
                         }))
                       }
                       className={Input_style}
@@ -804,9 +1160,9 @@ export default function ColorPaletteGenerator() {
                       }}
                       className={Button_style}
                       aria-label="Copy export code to clipboard"
-                      data-testid="export-css"
+                      data-testid="export-copy"
                     >
-                      Copy Export (E)
+                      Copy (E)
                     </button>
                   </div>
 
@@ -823,51 +1179,126 @@ export default function ColorPaletteGenerator() {
               </section>
             )}
 
-            {/* Saved Palettes */}
-            {savedPalettes.length > 0 && (
+            {/* Import Section */}
+            <section className={CardStyle}>
+              <h3 className={Section_title}>Import Palette</h3>
+              <div className="space-y-4">
+                <textarea
+                  value={importedPalette}
+                  onChange={(e) => setImportedPalette(e.target.value)}
+                  placeholder="Paste JSON palette data, hex colors, or other supported formats..."
+                  className={`${Input_style} w-full h-24 resize-none`}
+                  aria-label="Import palette data"
+                />
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => {
+                      if (importedPalette.trim()) {
+                        importPalette(importedPalette);
+                        setImportedPalette("");
+                      }
+                    }}
+                    disabled={!importedPalette.trim()}
+                    className={Button_style}
+                  >
+                    Import from Text
+                  </button>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className={Button_style}
+                  >
+                    Import from File
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            {/* Palette Manager */}
+            {showPaletteManager && (
               <section className={CardStyle}>
                 <h3 className={Section_title}>
                   Saved Palettes ({savedPalettes.length})
                 </h3>
-                <div className="space-y-4">
-                  {savedPalettes.map((palette, paletteIndex) => (
-                    <div
-                      key={paletteIndex}
-                      className="bg-background border border-foreground p-3"
-                    >
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm">
-                          Palette {paletteIndex + 1}
-                        </span>
-                        <div className="space-x-2">
-                          <button
-                            onClick={() => loadPalette(palette)}
-                            className="text-xs bg-accent text-background px-2 py-1 hover:bg-background hover:text-accent border border-accent transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
-                          >
-                            Load
-                          </button>
-                          <button
-                            onClick={() => deletePalette(paletteIndex)}
-                            className="text-xs bg-background border border-foreground px-2 py-1 hover:bg-base transition-colors focus:outline-none focus:ring-1 focus:ring-foreground"
-                          >
-                            Delete
-                          </button>
+
+                {savedPalettes.length > 0 && (
+                  <div className="space-y-4">
+                    <input
+                      type="text"
+                      value={paletteSearch}
+                      onChange={(e) => setPaletteSearch(e.target.value)}
+                      placeholder="Search palettes..."
+                      className={Input_style}
+                      aria-label="Search saved palettes"
+                    />
+
+                    <div className="space-y-4 max-h-96 overflow-y-auto">
+                      {filteredPalettes.map((palette) => (
+                        <div
+                          key={palette.id}
+                          className="bg-background border border-foreground p-3"
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <span className="text-sm font-medium">
+                                {palette.name}
+                              </span>
+                              <div className="text-xs text-foreground opacity-70">
+                                {new Date(
+                                  palette.createdAt,
+                                ).toLocaleDateString()}{" "}
+                                • {palette.colors.length} colors
+                              </div>
+                              {palette.tags.length > 0 && (
+                                <div className="flex gap-1 mt-1">
+                                  {palette.tags.map((tag, index) => (
+                                    <span
+                                      key={index}
+                                      className="text-xs bg-base border border-foreground px-2 py-1"
+                                    >
+                                      {tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            <div className="space-x-2">
+                              <button
+                                onClick={() => loadPalette(palette)}
+                                className="text-xs bg-accent text-background px-2 py-1 hover:bg-background hover:text-accent border border-accent transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
+                              >
+                                Load
+                              </button>
+                              <button
+                                onClick={() => deletePalette(palette.id)}
+                                className="text-xs bg-background border border-foreground px-2 py-1 hover:bg-base transition-colors focus:outline-none focus:ring-1 focus:ring-foreground"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex gap-1">
+                            {palette.colors.map((color, colorIndex) => (
+                              <div
+                                key={colorIndex}
+                                className="w-8 h-8 border border-foreground cursor-pointer"
+                                style={{ backgroundColor: color.hex }}
+                                onClick={() => copyColor(color, "hex")}
+                                title={color.hex}
+                              />
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex gap-1">
-                        {palette.map((color, colorIndex) => (
-                          <div
-                            key={colorIndex}
-                            className="w-8 h-8 border border-foreground cursor-pointer"
-                            style={{ backgroundColor: color.hex }}
-                            onClick={() => copyColor(color, "hex")}
-                            title={color.hex}
-                          />
-                        ))}
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
+
+                {savedPalettes.length === 0 && (
+                  <p className="text-sm text-foreground opacity-70">
+                    No saved palettes yet. Generate and save some palettes to
+                    see them here.
+                  </p>
+                )}
               </section>
             )}
           </div>

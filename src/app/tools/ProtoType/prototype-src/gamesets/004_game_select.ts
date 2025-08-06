@@ -1,14 +1,12 @@
-import * as PIXI from "pixi.js";
 import gsap from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { CustomEase } from "gsap/all";
-gsap.registerPlugin(PixiPlugin, CustomEase);
-import { gameData } from "./002_gameConfig";
+import * as PIXI from "pixi.js";
 import { settings } from "../SiteInterface";
 import { replaceHash } from "./001_game_master";
-import { playCollect, playMiss } from "./012_soundplay";
-import { BG_grid } from "./018_grid";
+import { gameData } from "./002_gameConfig";
 import { getLatestKey } from "./009_keyinput";
+import { playCollect, playMiss } from "./012_soundplay";
 import {
   closeScene,
   flashObj,
@@ -17,6 +15,8 @@ import {
   reaction_jump,
   wig_Type,
 } from "./014_mogura";
+import { BG_grid } from "./018_grid";
+gsap.registerPlugin(PixiPlugin, CustomEase);
 
 import { triggerFrameEffect } from "./024_FrameEffect";
 const BUTTON_SPACING = 120;
@@ -397,11 +397,13 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
     const modeButtons: PIXI.Text[] = [];
 
     const modes = [
-      { label: "長文モード", mode: "long", angle: -Math.PI / 5 },
-      { label: "集中モード", mode: "focus", angle: -Math.PI / 10 },
+      { label: "長文モード", mode: "long", angle: -Math.PI / 3 },
+      { label: "集中モード", mode: "focus", angle: -Math.PI / 6 },
       { label: "スタンダード", mode: "nomal", angle: 0 },
-      { label: "正確性重視", mode: "exact", angle: Math.PI / 10 },
-      { label: "数値入力", mode: "number", angle: Math.PI / 5 },
+      { label: "正確性重視", mode: "exact", angle: Math.PI / 6 },
+      { label: "数値入力", mode: "number", angle: Math.PI / 3 },
+      { label: "スピード重視", mode: "speed", angle: -Math.PI / 2 },
+      { label: "エンドレス", mode: "endless", angle: Math.PI / 2 },
     ];
 
     modes.forEach((item) => {
@@ -453,11 +455,13 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
 
     const moveDot = (selected: number) => {
       const rotations = [
-        -Math.PI / 5,
-        -Math.PI / 10,
+        -Math.PI / 3,
+        -Math.PI / 6,
         0,
-        Math.PI / 10,
-        Math.PI / 5,
+        Math.PI / 6,
+        Math.PI / 3,
+        -Math.PI / 2,
+        Math.PI / 2,
       ];
       gsap.to(selectDotAcc, {
         rotation: rotations[selected] || 0,

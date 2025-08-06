@@ -1,6 +1,7 @@
 /**
- * Search System
+ * Enhanced Search System
  * Based on documents/01_global.md specifications
+ * Implements full-text search, analytics, and performance optimization
  */
 
 import { loadAllContent } from "@/lib/data";
@@ -8,12 +9,18 @@ import type { ContentType, SearchIndex, SearchResult } from "@/types";
 import { promises as fs } from "fs";
 import Fuse, { type IFuseOptions } from "fuse.js";
 import path from "path";
+import { cacheSearchResults, getCachedSearchResults } from "./cache";
+
+// Cache for search index to improve performance
+let searchIndexCache: SearchIndex[] | null = null;
+let cacheTimestamp: number = 0;
+const CACHE_DURATION = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
 
 const CACHE_DIR = path.join(process.cwd(), "public/data/cache");
 const SEARCH_INDEX_PATH = path.join(CACHE_DIR, "search-index.json");
 
 /**
- * Generate search index from all content
+ * Generate enhanced search index from all content with improved scoring
  */
 export async function generateSearchIndex(): Promise<SearchIndex[]> {
   try {
@@ -23,6 +30,7 @@ export async function generateSearchIndex(): Promise<SearchIndex[]> {
     for (const [type, items] of Object.entries(allContent)) {
       for (const item of items) {
         if (item.status === "published") {
+          // Create comprehensive searchable content
           const searchableContent = [
             item.title,
             item.description,
@@ -31,7 +39,13 @@ export async function generateSearchIndex(): Promise<SearchIndex[]> {
             item.category,
           ]
             .join(" ")
-            .toLowerCase();
+            .toLowerCase()
+            .replace(/[^\w\s\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, " ") // Clean special chars but keep Japanese
+            .replace(/\s+/g, " ")
+            .trim();
+
+          // Calculate base search score based on content quality
+          const searchScore = calculateContentScore(item);
 
           searchIndex.push({
             id: item.id,
@@ -42,16 +56,84 @@ export async function generateSearchIndex(): Promise<SearchIndex[]> {
             tags: item.tags,
             category: item.category,
             searchableContent,
+            searchScore,
           });
         }
       }
     }
+
+    // Sort by search score for better performance
+    searchIndex.sort((a, b) => (b.searchScore || 0) - (a.searchScore || 0));
 
     return searchIndex;
   } catch (error) {
     console.error("Failed to generate search index:", error);
     return [];
   }
+}
+
+/**
+ * Calculate content quality score for search ranking
+ */
+function calculateContentScore(item: {
+  priority?: number;
+  title: string;
+  description: string;
+  content?: string;
+  tags: string[];
+  createdAt: string;
+  stats?: { views?: number };
+}): number {
+  let score = 0;
+
+  // Base score from priority
+  score += item.priority || 0;
+
+  // Title length bonus (not too short, not too long)
+  const titleLength = item.title.length;
+  if (titleLength >= 10 && titleLength <= 50) {
+    score += 10;
+  } else if (titleLength >= 5) {
+    score += 5;
+  }
+
+  // Description quality bonus
+  const descLength = item.description.length;
+  if (descLength >= 20 && descLength <= 200) {
+    score += 15;
+  } else if (descLength >= 10) {
+    score += 8;
+  }
+
+  // Content length bonus
+  const contentLength = (item.content || "").length;
+  if (contentLength > 100) {
+    score += 20;
+  } else if (contentLength > 50) {
+    score += 10;
+  }
+
+  // Tags bonus
+  score += Math.min(item.tags.length * 5, 25);
+
+  // Recent content bonus
+  const createdDate = new Date(item.createdAt);
+  const daysSinceCreated =
+    (Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24);
+  if (daysSinceCreated < 30) {
+    score += 15;
+  } else if (daysSinceCreated < 90) {
+    score += 10;
+  } else if (daysSinceCreated < 365) {
+    score += 5;
+  }
+
+  // View stats bonus (if available)
+  if (item.stats?.views) {
+    score += Math.min(item.stats.views / 10, 30);
+  }
+
+  return Math.max(score, 1); // Minimum score of 1
 }
 
 /**
@@ -72,28 +154,59 @@ export async function saveSearchIndex(index: SearchIndex[]): Promise<boolean> {
 }
 
 /**
- * Load search index from cache
+ * Load search index from cache with performance optimization
  */
 export async function loadSearchIndex(): Promise<SearchIndex[]> {
   try {
-    const data = await fs.readFile(SEARCH_INDEX_PATH, "utf-8");
-    return JSON.parse(data);
-  } catch {
-    // If index doesn't exist, generate it
-    console.log("Search index not found, generating new one...");
-    const index = await generateSearchIndex();
-    await saveSearchIndex(index);
-    return index;
+    // Check memory cache first
+    const now = Date.now();
+    if (searchIndexCache && now - cacheTimestamp < CACHE_DURATION) {
+      return searchIndexCache;
+    }
+
+    // Try to load from file cache
+    try {
+      const data = await fs.readFile(SEARCH_INDEX_PATH, "utf-8");
+      const index = JSON.parse(data);
+
+      // Update memory cache
+      searchIndexCache = index;
+      cacheTimestamp = now;
+
+      return index;
+    } catch {
+      // If index doesn't exist, generate it
+      console.log("Search index not found, generating new one...");
+      const index = await generateSearchIndex();
+      await saveSearchIndex(index);
+
+      // Update memory cache
+      searchIndexCache = index;
+      cacheTimestamp = now;
+
+      return index;
+    }
+  } catch (error) {
+    console.error("Failed to load search index:", error);
+    return [];
   }
 }
 
 /**
- * Update search index
+ * Update search index and clear cache
  */
 export async function updateSearchIndex(): Promise<boolean> {
   try {
     const index = await generateSearchIndex();
-    return await saveSearchIndex(index);
+    const success = await saveSearchIndex(index);
+
+    if (success) {
+      // Clear memory cache to force reload
+      searchIndexCache = null;
+      cacheTimestamp = 0;
+    }
+
+    return success;
   } catch (error) {
     console.error("Failed to update search index:", error);
     return false;
@@ -101,7 +214,15 @@ export async function updateSearchIndex(): Promise<boolean> {
 }
 
 /**
- * Search content with Fuse.js fuzzy matching (0.3 threshold)
+ * Clear search index cache
+ */
+export function clearSearchCache(): void {
+  searchIndexCache = null;
+  cacheTimestamp = 0;
+}
+
+/**
+ * Enhanced search with improved ranking and performance
  */
 export async function searchContent(
   query: string,
@@ -122,12 +243,19 @@ export async function searchContent(
       threshold = 0.3,
     } = options;
 
-    const searchIndex = await loadSearchIndex();
     const normalizedQuery = query.toLowerCase().trim();
 
     if (!normalizedQuery) {
       return [];
     }
+
+    // Check cache first
+    const cachedResults = getCachedSearchResults(query, options);
+    if (cachedResults) {
+      return cachedResults;
+    }
+
+    const searchIndex = await loadSearchIndex();
 
     // Filter by type and category
     let filteredIndex = searchIndex;
@@ -138,16 +266,16 @@ export async function searchContent(
 
     if (category) {
       filteredIndex = filteredIndex.filter(
-        (item) => item.category === category,
+        (item) => item.category.toLowerCase() === category.toLowerCase(),
       );
     }
 
-    // Configure Fuse.js for fuzzy search
+    // Enhanced Fuse.js configuration with better weights
     const fuseOptions: IFuseOptions<SearchIndex> = {
       keys: includeContent
         ? [
-            { name: "title", weight: 0.4 },
-            { name: "description", weight: 0.3 },
+            { name: "title", weight: 0.35 },
+            { name: "description", weight: 0.25 },
             { name: "tags", weight: 0.2 },
             { name: "category", weight: 0.1 },
             { name: "content", weight: 0.1 },
@@ -160,28 +288,49 @@ export async function searchContent(
       threshold,
       includeScore: true,
       includeMatches: true,
-      minMatchCharLength: 2,
+      minMatchCharLength: 1, // Allow single character matches for Japanese
       ignoreLocation: true,
       findAllMatches: true,
+      shouldSort: true,
+      sortFn: (a, b) => {
+        // Custom sorting that considers both Fuse score and content score
+        const itemA = a.item as unknown as SearchIndex & {
+          searchScore?: number;
+        };
+        const itemB = b.item as unknown as SearchIndex & {
+          searchScore?: number;
+        };
+        const scoreA = (a.score || 0) - (itemA.searchScore || 0) * 0.001;
+        const scoreB = (b.score || 0) - (itemB.searchScore || 0) * 0.001;
+        return scoreA - scoreB;
+      },
     };
 
     // Create Fuse instance and search
     const fuse = new Fuse(filteredIndex, fuseOptions);
     const fuseResults = fuse.search(normalizedQuery);
 
-    // Convert Fuse results to SearchResult format
+    // Convert Fuse results to SearchResult format with enhanced scoring
     const searchResults: SearchResult[] = fuseResults
       .slice(0, limit)
       .map((result) => {
         const item = result.item;
-        const score = 1 - (result.score || 0); // Invert score (Fuse uses 0 = perfect match)
+        const fuseScore = 1 - (result.score || 0); // Invert score (Fuse uses 0 = perfect match)
+        const contentScore = (item.searchScore || 0) / 100; // Normalize content score
 
-        // Extract highlights from matches
+        // Combined score: 70% relevance, 30% content quality
+        const finalScore = fuseScore * 0.7 + contentScore * 0.3;
+
+        // Extract and enhance highlights from matches
         const highlights: string[] = [];
         if (result.matches) {
           result.matches.forEach((match) => {
-            if (match.value) {
-              highlights.push(match.value);
+            if (match.value && match.indices) {
+              // Create snippet with context
+              const snippet = createSearchSnippet(match.value, normalizedQuery);
+              if (snippet) {
+                highlights.push(snippet);
+              }
             }
           });
         }
@@ -192,16 +341,46 @@ export async function searchContent(
           title: item.title,
           description: item.description,
           url: generateContentUrl(item),
-          score,
-          highlights: [...new Set(highlights)], // Remove duplicates
+          score: Math.min(finalScore, 1), // Cap at 1.0
+          highlights: [...new Set(highlights)].slice(0, 3), // Remove duplicates, limit to 3
         };
       });
+
+    // Cache the results
+    cacheSearchResults(query, options, searchResults);
 
     return searchResults;
   } catch (error) {
     console.error("Search failed:", error);
     return [];
   }
+}
+
+/**
+ * Create search snippet with context around matched terms
+ */
+function createSearchSnippet(
+  text: string,
+  query: string,
+  maxLength: number = 100,
+): string {
+  const lowerText = text.toLowerCase();
+  const lowerQuery = query.toLowerCase();
+
+  const index = lowerText.indexOf(lowerQuery);
+  if (index === -1) return "";
+
+  const start = Math.max(0, index - 20);
+  const end = Math.min(text.length, index + query.length + 20);
+
+  let snippet = text.substring(start, end);
+
+  if (start > 0) snippet = "..." + snippet;
+  if (end < text.length) snippet = snippet + "...";
+
+  return snippet.length > maxLength
+    ? snippet.substring(0, maxLength) + "..."
+    : snippet;
 }
 
 /**

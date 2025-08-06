@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useLayoutEffect } from "react";
 import dynamic from "next/dynamic";
+import React, { useLayoutEffect, useState } from "react";
 
 // ProtoTypeのコンポーネントを動的インポート
 const Game = dynamic(() => import("../prototype-src/components/004_Game"), {
@@ -54,6 +54,7 @@ import { themes } from "../prototype-src/components/010_ColorPalette";
 import { fonts } from "../prototype-src/components/011_FontSelector";
 import { initializeFrameEffect } from "../prototype-src/gamesets/024_FrameEffect";
 import { initializeSquareEffect } from "../prototype-src/gamesets/025_SquareEffect";
+import { initializeGitHubIntegration } from "../prototype-src/gamesets/027_github_integration";
 
 // ProtoTypeのスタイルを読み込み
 import "../prototype-src/index.css";
@@ -61,6 +62,7 @@ import "../prototype-src/styles/001_tab.css";
 import "../prototype-src/styles/002_header.css";
 import "../prototype-src/styles/004_game.css";
 import "../prototype-src/styles/007_setting.css";
+import "../prototype-src/styles/008_playrecord.css";
 import "../prototype-src/styles/009_webglPopup.css";
 import "../prototype-src/styles/010_colorpalette.css";
 import "../prototype-src/styles/011_rankingtable.css";
@@ -135,6 +137,9 @@ const ProtoTypeApp: React.FC = () => {
     // エフェクトの初期化
     initializeFrameEffect();
     initializeSquareEffect();
+
+    // GitHub統合の初期化
+    initializeGitHubIntegration();
 
     // 初期化完了
     setIsInitialized(true);

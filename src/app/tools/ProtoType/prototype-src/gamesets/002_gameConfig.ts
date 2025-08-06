@@ -41,6 +41,20 @@ export interface GameData {
   onlinedata: RankingPlayer[];
   gameselect_open: number;
   flashType: number;
+  // Enhanced statistics tracking
+  sessionStats: {
+    keyPressTimestamps: number[];
+    wpmHistory: number[];
+    accuracyHistory: number[];
+    comboHistory: number[];
+    difficultyLevel: number;
+    personalBest: {
+      wpm: number;
+      accuracy: number;
+      score: number;
+      combo: number;
+    };
+  };
 }
 
 export const gameData: GameData = {
@@ -80,4 +94,18 @@ export const gameData: GameData = {
   onlinedata: [],
   gameselect_open: 0,
   flashType: 0,
+  // Enhanced statistics tracking
+  sessionStats: {
+    keyPressTimestamps: [],
+    wpmHistory: [],
+    accuracyHistory: [],
+    comboHistory: [],
+    difficultyLevel: 1,
+    personalBest: {
+      wpm: 0,
+      accuracy: 0,
+      score: 0,
+      combo: 0,
+    },
+  },
 };

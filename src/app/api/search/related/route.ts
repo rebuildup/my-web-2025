@@ -1,38 +1,38 @@
-import { getSearchSuggestions } from "@/lib/search";
+import { getRelatedContent } from "@/lib/search";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get("q");
+    const contentId = searchParams.get("id");
     const limit = parseInt(searchParams.get("limit") || "5");
 
-    if (!query) {
+    if (!contentId) {
       return NextResponse.json(
-        { error: "Query parameter 'q' is required" },
+        { error: "Content ID parameter 'id' is required" },
         { status: 400 },
       );
     }
 
-    const suggestions = await getSearchSuggestions(query, limit);
+    const relatedContent = await getRelatedContent(contentId, limit);
 
     // Set cache headers for performance
     const headers = new Headers();
     headers.set(
       "Cache-Control",
-      "public, max-age=300, stale-while-revalidate=600",
+      "public, max-age=600, stale-while-revalidate=1200",
     );
 
     return NextResponse.json(
       {
-        query,
-        suggestions,
-        total: suggestions.length,
+        contentId,
+        related: relatedContent,
+        total: relatedContent.length,
       },
       { headers },
     );
   } catch (error) {
-    console.error("Search suggestions API error:", error);
+    console.error("Related content API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

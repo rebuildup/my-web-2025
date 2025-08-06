@@ -1,11 +1,11 @@
-import * as PIXI from "pixi.js";
 import gsap from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { CustomEase } from "gsap/all";
-gsap.registerPlugin(PixiPlugin, CustomEase);
+import * as PIXI from "pixi.js";
 import { replaceHash } from "./001_game_master";
 import { gameData } from "./002_gameConfig";
 import { Keyboard, keybord_size, scale } from "./011_keybord";
+gsap.registerPlugin(PixiPlugin, CustomEase);
 
 import { triggerFrameEffect } from "./024_FrameEffect";
 import { triggerSquareEffect } from "./025_SquareEffect";
@@ -13,10 +13,10 @@ import { triggerSquareEffect } from "./025_SquareEffect";
 import { settings } from "../SiteInterface";
 
 import {
+  acc_key_from_code,
   getLatestKey,
   keyCodeToText,
   light_key_from_code,
-  acc_key_from_code,
 } from "./009_keyinput";
 import { loadcache_localranking, RankingPlayer } from "./020_cacheControl";
 
@@ -72,6 +72,16 @@ export async function game_scene(app: PIXI.Application): Promise<void> {
         keybord_flag = true;
         win_pos.y = app.screen.height / 2 - 210;
         gameData.Issues_num = 15;
+        break;
+      case "speed":
+        keybord_flag = true;
+        win_pos.y = app.screen.height / 2 - 210;
+        gameData.Issues_num = 20;
+        break;
+      case "endless":
+        keybord_flag = true;
+        win_pos.y = app.screen.height / 2 - 210;
+        gameData.Issues_num = 999;
         break;
       default:
         console.log("gamemode nothing");
@@ -918,6 +928,7 @@ function grid_anim(grid: PIXI.Graphics) {
   );
 }
 
+import { ColorMatrixFilter } from "pixi.js";
 import { Issue } from "./002_gameConfig";
 import { playCollect, playMiss } from "./012_soundplay";
 async function makeIssues(
@@ -953,7 +964,6 @@ function isFibonacci(n: number): boolean {
   if (n < 0) return false;
   return isPerfectSquare(5 * n * n + 4) || isPerfectSquare(5 * n * n - 4);
 }
-import { ColorMatrixFilter } from "pixi.js";
 function filterflash(app: PIXI.Application) {
   const colorMatrix = new ColorMatrixFilter();
   if (gameData.flashType == 0) {
