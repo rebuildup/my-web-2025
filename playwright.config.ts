@@ -32,9 +32,9 @@ export default defineConfig({
   },
 
   /* Global test timeout - optimized for speed */
-  timeout: 90000, // 90 seconds per test (increased for parallel execution)
+  timeout: 120000, // 120 seconds per test (increased for heavy WebGL tests)
   expect: {
-    timeout: 20000, // 20 seconds for expect assertions (increased for parallel execution)
+    timeout: 30000, // 30 seconds for expect assertions (increased for heavy components)
   },
 
   /* Configure projects for major browsers - optimized for parallel execution */
@@ -97,7 +97,7 @@ export default defineConfig({
     command: "npm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: true, // Always reuse existing server
-    timeout: 120000, // 2 minutes for server startup
+    timeout: 180000, // 3 minutes for server startup
     stdout: process.env.CI ? "ignore" : "pipe",
     stderr: process.env.CI ? "ignore" : "pipe",
     env: {

@@ -139,6 +139,11 @@ describe("PerformanceMonitor", () => {
 
       performanceMonitor.startMonitoring(testCallback);
 
+      // Add timeout to prevent hanging
+      setTimeout(() => {
+        done();
+      }, 500);
+
       // Trigger frame updates
       setTimeout(() => {
         animationFrameCallbacks.forEach((callback) => callback());

@@ -5,6 +5,7 @@ import {
   ResponsiveFilterBar,
 } from "@/components/playground/common";
 import { webglExperiments } from "@/components/playground/webgl-experiments";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useExperimentSwipe } from "@/hooks/useTouchGestures";
 import { deviceCapabilitiesDetector } from "@/lib/playground/device-capabilities";
@@ -188,19 +189,22 @@ export default function WebGLPlaygroundPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <main className="flex items-center py-10">
+      <main className="flex items-center py-4">
         <div className="container-system">
           <div className="space-y-10">
+            {/* Breadcrumbs */}
+            <Breadcrumbs
+              items={[
+                { label: "Home", href: "/" },
+                { label: "Portfolio", href: "/portfolio" },
+                { label: "Playground", href: "/portfolio/playground/design" },
+                { label: "WebGL", isCurrent: true },
+              ]}
+              className="pt-4"
+            />
+
             {/* Header */}
             <header className="space-y-12">
-              <nav className="mb-6">
-                <Link
-                  href="/portfolio"
-                  className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-                >
-                  ← Portfolio に戻る
-                </Link>
-              </nav>
               <h1 className="neue-haas-grotesk-display text-6xl text-primary">
                 WebGL Playground
               </h1>

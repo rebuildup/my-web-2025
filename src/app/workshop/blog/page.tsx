@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import Link from "next/link";
 
 export default function WorkshopBlogPage() {
@@ -34,6 +35,16 @@ export default function WorkshopBlogPage() {
       <main id="main-content" role="main" className="py-10">
         <div className="container-system">
           <div className="space-y-10">
+            {/* Breadcrumbs */}
+            <div className="mb-6">
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Workshop", href: "/workshop" },
+                  { label: "Blog", isCurrent: true },
+                ]}
+              />
+            </div>
             <header className="space-y-12">
               <nav className="mb-6">
                 <Link

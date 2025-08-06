@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
@@ -118,34 +119,22 @@ export default async function VideoDesignProjectsPage() {
         )}
 
         <div className="min-h-screen bg-background text-foreground">
-          <main className="py-10">
+          <main className="py-4">
             <div className="container-system">
               <div className="space-y-10">
+                {/* Breadcrumbs */}
+                <Breadcrumbs
+                  items={[
+                    { label: "Home", href: "/" },
+                    { label: "Portfolio", href: "/portfolio" },
+                    { label: "Gallery", href: "/portfolio/gallery/all" },
+                    { label: "Video&Design", isCurrent: true },
+                  ]}
+                  className="pt-4"
+                />
+
                 {/* Header */}
                 <header className="space-y-12">
-                  <nav aria-label="Breadcrumb">
-                    <ol className="flex items-center space-x-2 text-sm">
-                      <li>
-                        <Link
-                          href="/"
-                          className="text-foreground hover:text-accent"
-                        >
-                          Home
-                        </Link>
-                      </li>
-                      <li className="text-foreground">/</li>
-                      <li>
-                        <Link
-                          href="/portfolio"
-                          className="text-foreground hover:text-accent"
-                        >
-                          Portfolio
-                        </Link>
-                      </li>
-                      <li className="text-foreground">/</li>
-                      <li className="text-accent">Video & Design</li>
-                    </ol>
-                  </nav>
                   <h1 className="neue-haas-grotesk-display text-6xl text-primary">
                     Video & Design
                   </h1>

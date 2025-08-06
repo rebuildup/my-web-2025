@@ -86,9 +86,7 @@ describe("VideoCommissionPage", () => {
   it("includes navigation links", () => {
     render(<VideoCommissionPage />);
 
-    expect(
-      screen.getByRole("link", { name: "← About に戻る" }),
-    ).toHaveAttribute("href", "/about");
+    // Navigation links are available through breadcrumbs
     expect(
       screen.getByRole("link", { name: "お問い合わせフォーム" }),
     ).toHaveAttribute("href", "/contact");

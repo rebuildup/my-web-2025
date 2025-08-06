@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import ColorPaletteGenerator from "./components/ColorPaletteGenerator";
 
 export const metadata = {
@@ -28,6 +29,15 @@ export const metadata = {
 export default function ColorPalettePage() {
   return (
     <>
+      <div className="container-system pt-10 pb-4">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Tools", href: "/tools" },
+            { label: "Color Palette Generator", isCurrent: true },
+          ]}
+        />
+      </div>
       <ColorPaletteGenerator />
 
       {/* Structured Data */}

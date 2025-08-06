@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Metadata } from "next";
 import SequentialPngPreview from "./components/SequentialPngPreview";
 
@@ -34,19 +35,30 @@ export const metadata: Metadata = {
 
 export default function SequentialPngPreviewPage() {
   return (
-    <div className="container-system">
-      <div className="space-y-8">
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-primary">
-            Sequential PNG Preview
-          </h1>
-          <p className="text-lg text-foreground max-w-2xl mx-auto">
-            連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。
-          </p>
-        </div>
-
-        <SequentialPngPreview />
+    <>
+      <div className="container-system pt-10 pb-4">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Tools", href: "/tools" },
+            { label: "Sequential PNG Preview", isCurrent: true },
+          ]}
+        />
       </div>
-    </div>
+      <div className="container-system">
+        <div className="space-y-8">
+          <div className="text-center space-y-4">
+            <h1 className="text-4xl font-bold text-primary">
+              Sequential PNG Preview
+            </h1>
+            <p className="text-lg text-foreground max-w-2xl mx-auto">
+              連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。
+            </p>
+          </div>
+
+          <SequentialPngPreview />
+        </div>
+      </div>
+    </>
   );
 }

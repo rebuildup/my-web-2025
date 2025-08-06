@@ -135,21 +135,6 @@ export default function ToolWrapper({
           <div className="space-y-10">
             {/* Header */}
             <header className="space-y-6">
-              <nav aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2 text-sm">
-                  <li>
-                    <Link
-                      href="/tools"
-                      className="noto-sans-jp-light text-accent hover:text-primary focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-                    >
-                      Tools
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li className="text-foreground">{toolName}</li>
-                </ol>
-              </nav>
-
               <div className="space-y-4">
                 <h1 className="neue-haas-grotesk-display text-4xl text-primary">
                   {toolName}

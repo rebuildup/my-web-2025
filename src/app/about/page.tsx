@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -137,6 +138,15 @@ export default function AboutPage() {
         <main className="flex items-center py-10">
           <div className="container-system">
             <div className="space-y-10">
+              {/* Breadcrumbs */}
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "About", isCurrent: true },
+                ]}
+                className="pt-4"
+              />
+
               {/* ヘッダー */}
               <header className="space-y-12">
                 <h1 className="neue-haas-grotesk-display text-6xl text-primary">

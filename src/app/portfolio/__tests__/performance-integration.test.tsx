@@ -266,7 +266,9 @@ describe("Performance Integration Tests", () => {
 
       // Should load within 2 seconds
       expect(loadTime).toBeLessThan(2000);
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
     });
 
     it("should handle large datasets efficiently", async () => {
@@ -356,7 +358,9 @@ describe("Performance Integration Tests", () => {
       expect(renderTime).toBeLessThan(500);
 
       // Should render portfolio page with navigation
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
       expect(screen.getByText("Browse by Category")).toBeInTheDocument();
     });
 
@@ -660,7 +664,9 @@ describe("Performance Integration Tests", () => {
       render(await AllGalleryPage());
 
       await waitFor(() => {
-        expect(screen.getAllByText("Portfolio")).toHaveLength(1);
+        expect(
+          screen.getByRole("heading", { name: "Portfolio" }),
+        ).toBeInTheDocument();
       });
 
       // Should minimize redundant requests through caching
@@ -685,7 +691,9 @@ describe("Performance Integration Tests", () => {
       render(await PortfolioPage());
 
       // Should show loading state or fallback content immediately
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
 
       const initialRenderTime = performance.now() - startTime;
       expect(initialRenderTime).toBeLessThan(5000); // Should render within reasonable time

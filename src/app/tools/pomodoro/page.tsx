@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Metadata } from "next";
 import PomodoroTimer from "./components/PomodoroTimer";
 
@@ -34,17 +35,28 @@ export const metadata: Metadata = {
 
 export default function PomodoroPage() {
   return (
-    <div className="container-system">
-      <div className="space-y-8">
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-primary">Pomodoro Timer</h1>
-          <p className="text-lg text-foreground max-w-2xl mx-auto">
-            シンプルなポモドーロタイマー。25分作業・5分休憩のサイクルで効率的な作業時間管理を実現。
-          </p>
-        </div>
-
-        <PomodoroTimer />
+    <>
+      <div className="container-system pt-10 pb-4">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Tools", href: "/tools" },
+            { label: "Pomodoro Timer", isCurrent: true },
+          ]}
+        />
       </div>
-    </div>
+      <div className="container-system">
+        <div className="space-y-8">
+          <div className="text-center space-y-4">
+            <h1 className="text-4xl font-bold text-primary">Pomodoro Timer</h1>
+            <p className="text-lg text-foreground max-w-2xl mx-auto">
+              シンプルなポモドーロタイマー。25分作業・5分休憩のサイクルで効率的な作業時間管理を実現。
+            </p>
+          </div>
+
+          <PomodoroTimer />
+        </div>
+      </div>
+    </>
   );
 }

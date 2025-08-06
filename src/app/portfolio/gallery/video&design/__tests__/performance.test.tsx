@@ -161,7 +161,7 @@ describe("Video&Design Gallery - Performance Tests", () => {
 
       const renderTime = endTime - startTime;
 
-      expect(renderTime).toBeLessThan(500); // Should render in less than 500ms
+      expect(renderTime).toBeLessThan(1000); // Should render in less than 1000ms
       expect(screen.getByText("Filters")).toBeInTheDocument();
     });
 

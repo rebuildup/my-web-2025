@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PortfolioIntegrationManager } from "@/lib/portfolio";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
@@ -398,9 +399,18 @@ export default async function PortfolioPage() {
       />
 
       <div className="min-h-screen bg-background text-foreground">
-        <main id="main-content" role="main" className="flex items-center py-10">
+        <main id="main-content" role="main" className="flex items-center py-4">
           <div className="container-system">
             <div className="space-y-10">
+              {/* Breadcrumbs */}
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Portfolio", isCurrent: true },
+                ]}
+                className="pt-4"
+              />
+
               {/* Header */}
               <header className="space-y-12">
                 <h1 className="neue-haas-grotesk-display text-6xl text-primary">

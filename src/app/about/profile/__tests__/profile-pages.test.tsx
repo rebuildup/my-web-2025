@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import RealProfilePage from "../real/page";
-import HandleProfilePage from "../handle/page";
 import AIProfilePage from "../AI/page";
+import HandleProfilePage from "../handle/page";
+import RealProfilePage from "../real/page";
 
 // Mock Next.js router
 jest.mock("next/navigation", () => ({
@@ -45,9 +45,7 @@ describe("Profile Pages", () => {
     it("has proper navigation links", () => {
       render(<RealProfilePage />);
 
-      const backLink = screen.getByText("← About に戻る").closest("a");
-      expect(backLink).toHaveAttribute("href", "/about");
-
+      // Navigation links are available through breadcrumbs
       const cardLink = screen.getByText("Digital Card").closest("a");
       expect(cardLink).toHaveAttribute("href", "/about/card/real");
     });
@@ -84,9 +82,7 @@ describe("Profile Pages", () => {
     it("has proper navigation links", () => {
       render(<HandleProfilePage />);
 
-      const backLink = screen.getByText("← About に戻る").closest("a");
-      expect(backLink).toHaveAttribute("href", "/about");
-
+      // Navigation links are available through breadcrumbs
       const realProfileLink = screen.getByText("Real Profile").closest("a");
       expect(realProfileLink).toHaveAttribute("href", "/about/profile/real");
     });
@@ -128,9 +124,7 @@ describe("Profile Pages", () => {
     it("has proper navigation links", () => {
       render(<AIProfilePage />);
 
-      const backLink = screen.getByText("← About に戻る").closest("a");
-      expect(backLink).toHaveAttribute("href", "/about");
-
+      // Navigation links are available through breadcrumbs
       const contactLink = screen.getByText("Contact").closest("a");
       expect(contactLink).toHaveAttribute("href", "/contact");
     });

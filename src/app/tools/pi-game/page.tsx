@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Metadata } from "next";
 import PiGame from "./components/PiGame";
 
@@ -40,6 +41,16 @@ export default function PiGamePage() {
       <main className="py-10">
         <div className="container-system">
           <div className="space-y-10">
+            {/* Breadcrumbs */}
+            <div className="mb-6">
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Tools", href: "/tools" },
+                  { label: "Pi Memory Game", isCurrent: true },
+                ]}
+              />
+            </div>
             <header className="space-y-6">
               <h1 className="neue-haas-grotesk-display text-4xl text-primary">
                 Pi Memory Game

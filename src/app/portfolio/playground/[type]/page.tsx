@@ -3,11 +3,11 @@
  * Generates optimized metadata for playground experiments
  */
 
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 interface PlaygroundPageProps {
   params: Promise<{
@@ -101,36 +101,22 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
           >
             <div className="container-system">
               <div className="space-y-10">
+                {/* Breadcrumbs */}
+                <Breadcrumbs
+                  items={[
+                    { label: "Home", href: "/" },
+                    { label: "Portfolio", href: "/portfolio" },
+                    {
+                      label: "Playground",
+                      href: "/portfolio/playground/design",
+                    },
+                    { label: playgroundInfo.title, isCurrent: true },
+                  ]}
+                  className="pt-4"
+                />
+
                 {/* Header */}
                 <header className="space-y-8">
-                  <nav aria-label="Breadcrumb">
-                    <ol className="flex items-center space-x-2 text-sm">
-                      <li>
-                        <Link
-                          href="/"
-                          className="text-foreground hover:text-accent"
-                        >
-                          Home
-                        </Link>
-                      </li>
-                      <li className="text-foreground">/</li>
-                      <li>
-                        <Link
-                          href="/portfolio"
-                          className="text-foreground hover:text-accent"
-                        >
-                          Portfolio
-                        </Link>
-                      </li>
-                      <li className="text-foreground">/</li>
-                      <li>
-                        <span className="text-foreground">Playground</span>
-                      </li>
-                      <li className="text-foreground">/</li>
-                      <li className="text-accent">{playgroundInfo.title}</li>
-                    </ol>
-                  </nav>
-
                   <div className="space-y-4">
                     <h1 className="neue-haas-grotesk-display text-6xl text-primary">
                       {playgroundInfo.title}

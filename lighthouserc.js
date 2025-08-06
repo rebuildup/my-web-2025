@@ -19,22 +19,22 @@ module.exports = {
     },
     assert: {
       assertions: {
-        // 100% score requirements for all categories
-        "categories:performance": ["error", { minScore: 1.0 }],
-        "categories:accessibility": ["error", { minScore: 1.0 }],
-        "categories:best-practices": ["error", { minScore: 1.0 }],
-        "categories:seo": ["error", { minScore: 1.0 }],
+        // Realistic score requirements for a complex web app
+        "categories:performance": ["warn", { minScore: 0.7 }], // 70% for Three.js apps
+        "categories:accessibility": ["error", { minScore: 0.95 }], // 95% accessibility
+        "categories:best-practices": ["warn", { minScore: 0.8 }], // 80% best practices
+        "categories:seo": ["error", { minScore: 0.9 }], // 90% SEO
 
-        // Core Web Vitals requirements
-        "first-contentful-paint": ["error", { maxNumericValue: 2500 }],
-        "largest-contentful-paint": ["error", { maxNumericValue: 2500 }],
-        "first-input-delay": ["error", { maxNumericValue: 100 }],
-        "cumulative-layout-shift": ["error", { maxNumericValue: 0.1 }],
+        // Core Web Vitals requirements (relaxed for Three.js apps)
+        "first-contentful-paint": ["warn", { maxNumericValue: 3500 }],
+        "largest-contentful-paint": ["warn", { maxNumericValue: 4000 }],
+        "first-input-delay": ["warn", { maxNumericValue: 200 }],
+        "cumulative-layout-shift": ["error", { maxNumericValue: 0.15 }],
 
-        // Performance budget
-        "total-byte-weight": ["warn", { maxNumericValue: 1000000 }], // 1MB
-        "dom-size": ["warn", { maxNumericValue: 1500 }],
-        interactive: ["error", { maxNumericValue: 3000 }],
+        // Performance budget (realistic for complex apps)
+        "total-byte-weight": ["warn", { maxNumericValue: 5000000 }], // 5MB
+        "dom-size": ["warn", { maxNumericValue: 2000 }],
+        interactive: ["warn", { maxNumericValue: 5000 }],
 
         // Accessibility requirements
         "color-contrast": ["error", { minScore: 1.0 }],

@@ -3,6 +3,7 @@
  * Server-side rendered with optimized metadata generation
  */
 
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
@@ -11,7 +12,6 @@ import { PortfolioContentItem } from "@/types/portfolio";
 import { Calendar, Tag } from "lucide-react";
 import { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 // Type guard to check if content item has enhanced markdown features
@@ -273,30 +273,15 @@ export default async function PortfolioDetailPage({
           >
             <div className="container-system">
               <div className="space-y-10">
-                {/* Breadcrumb */}
-                <nav aria-label="Breadcrumb">
-                  <ol className="flex items-center space-x-2 text-sm">
-                    <li>
-                      <Link
-                        href="/"
-                        className="text-foreground hover:text-accent"
-                      >
-                        Home
-                      </Link>
-                    </li>
-                    <li className="text-foreground">/</li>
-                    <li>
-                      <Link
-                        href="/portfolio"
-                        className="text-foreground hover:text-accent"
-                      >
-                        Portfolio
-                      </Link>
-                    </li>
-                    <li className="text-foreground">/</li>
-                    <li className="text-accent">{item.title}</li>
-                  </ol>
-                </nav>
+                {/* Breadcrumbs */}
+                <Breadcrumbs
+                  items={[
+                    { label: "Home", href: "/" },
+                    { label: "Portfolio", href: "/portfolio" },
+                    { label: item.title, isCurrent: true },
+                  ]}
+                  className="pt-4"
+                />
 
                 {/* Header */}
                 <header className="space-y-12">
@@ -347,14 +332,6 @@ export default async function PortfolioDetailPage({
                 <ContentSection item={item} />
 
                 {/* Navigation */}
-                <nav className="pt-8 border-t border-foreground">
-                  <Link
-                    href="/portfolio"
-                    className="inline-flex items-center space-x-2 text-accent hover:underline noto-sans-jp-regular"
-                  >
-                    <span>← Back to Portfolio</span>
-                  </Link>
-                </nav>
               </div>
             </div>
           </main>

@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import BusinessMailBlockTool from "./components/BusinessMailBlockTool";
 
 export const metadata = {
@@ -29,6 +30,15 @@ export const metadata = {
 export default function BusinessMailBlockPage() {
   return (
     <>
+      <div className="container-system pt-10 pb-4">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Tools", href: "/tools" },
+            { label: "Business Mail Builder", isCurrent: true },
+          ]}
+        />
+      </div>
       <BusinessMailBlockTool />
 
       {/* Structured Data */}

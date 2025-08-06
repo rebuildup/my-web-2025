@@ -2,6 +2,7 @@
  * Development Projects Gallery Page
  */
 
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import { DevelopGalleryClient } from "./components/DevelopGalleryClient";
@@ -48,22 +49,37 @@ export default async function DevelopGalleryPage() {
             }}
           />
         )}
-        {items.length > 0 ? (
-          <DevelopGalleryClient
-            initialItems={items}
-            searchFilters={searchFilters}
-          />
-        ) : (
-          <div className="min-h-screen bg-background text-foreground">
-            <main className="py-10">
-              <div className="container mx-auto px-4">
-                <div className="bg-red-100 p-4 rounded">
-                  <p className="text-red-800">No development projects found.</p>
-                </div>
+        <div className="min-h-screen bg-background text-foreground">
+          <main className="py-4">
+            <div className="container-system">
+              <div className="space-y-10">
+                {/* Breadcrumbs */}
+                <Breadcrumbs
+                  items={[
+                    { label: "Home", href: "/" },
+                    { label: "Portfolio", href: "/portfolio" },
+                    { label: "Gallery", href: "/portfolio/gallery/all" },
+                    { label: "Development", isCurrent: true },
+                  ]}
+                  className="pt-4"
+                />
+
+                {items.length > 0 ? (
+                  <DevelopGalleryClient
+                    initialItems={items}
+                    searchFilters={searchFilters}
+                  />
+                ) : (
+                  <div className="bg-red-100 p-4 rounded">
+                    <p className="text-red-800">
+                      No development projects found.
+                    </p>
+                  </div>
+                )}
               </div>
-            </main>
-          </div>
-        )}
+            </div>
+          </main>
+        </div>
       </>
     );
   } catch (error) {

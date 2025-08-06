@@ -314,12 +314,12 @@ describe("AllGalleryClient", () => {
     });
   });
 
-  it("should render navigation link back to portfolio", () => {
+  it("should render header without navigation link", () => {
     render(<AllGalleryClient {...defaultProps} />);
 
-    const backLink = screen.getByText("← Portfolio に戻る");
-    expect(backLink).toBeInTheDocument();
-    expect(backLink.closest("a")).toHaveAttribute("href", "/portfolio");
+    // Breadcrumbs are now handled by the parent component
+    expect(screen.getByText("All Projects")).toBeInTheDocument();
+    expect(screen.queryByText("← Portfolio に戻る")).not.toBeInTheDocument();
   });
 
   it("should render portfolio items as links", () => {

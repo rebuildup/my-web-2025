@@ -1,5 +1,6 @@
-import Link from "next/link";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { ContentItem } from "@/types/content";
+import Link from "next/link";
 
 async function getWorkshopStats() {
   try {
@@ -90,6 +91,15 @@ export default async function WorkshopPage() {
       <main className="py-10">
         <div className="container-system">
           <div className="space-y-10">
+            {/* Breadcrumbs */}
+            <div className="mb-6">
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Workshop", isCurrent: true },
+                ]}
+              />
+            </div>
             <header className="space-y-6">
               <h1 className="neue-haas-grotesk-display text-4xl text-primary">
                 Workshop

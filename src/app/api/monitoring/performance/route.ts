@@ -3,9 +3,9 @@
  * Receives and stores performance metrics and alerts
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { writeFile, readFile, mkdir } from "fs/promises";
 import { existsSync } from "fs";
+import { mkdir, readFile, writeFile } from "fs/promises";
+import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
 interface PerformanceMetrics {
@@ -317,16 +317,20 @@ async function sendCriticalAlert(alert: PerformanceAlert): Promise<void> {
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
+    // Allow performance monitoring in production for debugging
+    if (process.env.DISABLE_PERFORMANCE_MONITORING === "true") {
+      return NextResponse.json(
+        { error: "Performance monitoring is disabled" },
+        { status: 403 },
+      );
+    }
+
     let data;
     try {
       data = await request.json();
     } catch (jsonError) {
-      const userAgent = request.headers.get("user-agent") || "";
-      const isPlaywrightTest =
-        userAgent.includes("Playwright") ||
-        process.env.PLAYWRIGHT_TEST === "true";
-
-      if (process.env.NODE_ENV !== "test" && !isPlaywrightTest) {
+      // Silently handle JSON errors in production to prevent console spam
+      if (process.env.NODE_ENV === "development") {
         console.warn(
           "Invalid JSON in performance monitoring request:",
           jsonError,
@@ -437,8 +441,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    // Check if admin access (in development only)
-    if (process.env.NODE_ENV !== "development") {
+    // Allow access in production for monitoring
+    // Only restrict if explicitly disabled
+    if (process.env.DISABLE_MONITORING_API === "true") {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 

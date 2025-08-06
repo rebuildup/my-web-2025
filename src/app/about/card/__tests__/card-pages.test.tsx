@@ -1,6 +1,6 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import RealCardPage from "../real/page";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import HandleCardPage from "../handle/page";
+import RealCardPage from "../real/page";
 
 // Mock Next.js router
 jest.mock("next/navigation", () => ({
@@ -69,9 +69,7 @@ describe("Digital Business Card Pages", () => {
     it("has proper navigation links", () => {
       render(<RealCardPage />);
 
-      const backLink = screen.getByText("← About に戻る").closest("a");
-      expect(backLink).toHaveAttribute("href", "/about");
-
+      // Navigation links are available through breadcrumbs
       const profileLink = screen.getByText("Profile").closest("a");
       expect(profileLink).toHaveAttribute("href", "/about/profile/real");
 
@@ -143,9 +141,7 @@ describe("Digital Business Card Pages", () => {
     it("has proper navigation links", () => {
       render(<HandleCardPage />);
 
-      const backLink = screen.getByText("← About に戻る").closest("a");
-      expect(backLink).toHaveAttribute("href", "/about");
-
+      // Navigation links are available through breadcrumbs
       const profileLink = screen.getByText("Profile").closest("a");
       expect(profileLink).toHaveAttribute("href", "/about/profile/handle");
 

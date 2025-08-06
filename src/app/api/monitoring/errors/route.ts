@@ -3,7 +3,6 @@
  * Collects and processes client-side errors
  */
 
-import { getProductionConfig } from "@/lib/config/production";
 import { securityUtils } from "@/lib/utils/security";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -49,10 +48,9 @@ function checkErrorRateLimit(ip: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
-    const config = getProductionConfig();
-
-    // Check if error monitoring is enabled
-    if (!config.monitoring.sentry.enabled) {
+    // Allow error monitoring in all environments for debugging
+    // Only disable if explicitly set
+    if (process.env.DISABLE_ERROR_MONITORING === "true") {
       return NextResponse.json(
         { error: "Error monitoring is disabled" },
         { status: 403 },
@@ -72,7 +70,24 @@ export async function POST(request: NextRequest) {
     }
 
     // Parse and validate request body
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (jsonError) {
+      console.warn("Invalid JSON in error monitoring request:", jsonError);
+      return NextResponse.json(
+        { error: "Invalid JSON format" },
+        { status: 400 },
+      );
+    }
+
+    // Validate body exists
+    if (!body || typeof body !== "object") {
+      return NextResponse.json(
+        { error: "Invalid request data" },
+        { status: 400 },
+      );
+    }
 
     // Sanitize error data
     const errorReport: ErrorReport = {
@@ -114,7 +129,7 @@ export async function POST(request: NextRequest) {
     const severity = analyzeErrorSeverity(errorReport);
 
     // Send to external monitoring if configured
-    if (config.monitoring.sentry.dsn) {
+    if (process.env.SENTRY_DSN) {
       await forwardToSentry(errorReport, severity);
     }
 

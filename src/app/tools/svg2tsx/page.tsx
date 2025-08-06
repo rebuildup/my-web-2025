@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Metadata } from "next";
 import { SVGToTSXConverter } from "./components/SVGToTSXConverter";
 
@@ -61,6 +62,15 @@ export default function SVGToTSXPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <div className="container-system pt-10 pb-4">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Tools", href: "/tools" },
+            { label: "SVG to TSX Converter", isCurrent: true },
+          ]}
+        />
+      </div>
       <SVGToTSXConverter />
     </>
   );

@@ -217,7 +217,7 @@ describe("Video&Design Gallery - Accessibility Tests", () => {
       expect(screen.getByRole("main")).toBeInTheDocument();
 
       // Should have navigation landmarks
-      expect(screen.getAllByRole("navigation")).toHaveLength(2);
+      expect(screen.getAllByRole("navigation")).toHaveLength(2); // Breadcrumb and gallery functions
 
       // Should have proper sections (regions are not present in this component)
       const sections = screen.getAllByRole("heading");

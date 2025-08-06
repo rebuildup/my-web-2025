@@ -189,12 +189,40 @@ export class PerformanceMonitor {
   private sendToAnalytics(name: string, value: number): void {
     // Implementation for sending metrics to analytics service
     // This would typically send to Google Analytics, DataDog, etc.
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "performance_metric", {
-        metric_name: name,
-        metric_value: value,
-        custom_parameter: "core_web_vitals",
-      });
+    try {
+      if (typeof window !== "undefined" && window.gtag) {
+        window.gtag("event", "performance_metric", {
+          metric_name: name,
+          metric_value: value,
+          custom_parameter: "core_web_vitals",
+        });
+      }
+
+      // Send to internal monitoring API with error handling
+      if (
+        typeof window !== "undefined" &&
+        process.env.NODE_ENV === "production"
+      ) {
+        fetch("/api/monitoring/performance", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            [name]: value,
+            timestamp: new Date().toISOString(),
+            url: window.location.href,
+            userAgent: navigator.userAgent,
+          }),
+        }).catch(() => {
+          // Silently fail to prevent console errors
+        });
+      }
+    } catch (error) {
+      // Silently fail in production to prevent console errors
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to send analytics:", error);
+      }
     }
   }
 
@@ -313,7 +341,7 @@ export class ResourcePreloader {
   public static preloadCriticalResources(): void {
     const criticalResources = [
       "/images/og-image.png",
-      "/images/profile/profile-main.jpg",
+      // "/images/profile/profile-main.jpg", // Temporarily disabled - placeholder file
       "/fonts/neue-haas-grotesk-display.woff2",
       "/fonts/zen-kaku-gothic-new.woff2",
     ];

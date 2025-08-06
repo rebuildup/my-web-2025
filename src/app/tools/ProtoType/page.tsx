@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Metadata } from "next";
 import ProtoTypeClient from "./components/ProtoTypeClient";
 
@@ -43,6 +44,15 @@ export default function ProtoTypePage() {
         color: "var(--ProtoTypeMainColor, #ffffff)",
       }}
     >
+      <div className="container-system pt-10 pb-4">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Tools", href: "/tools" },
+            { label: "ProtoType Typing Game", isCurrent: true },
+          ]}
+        />
+      </div>
       <ProtoTypeClient />
 
       {/* Structured Data */}

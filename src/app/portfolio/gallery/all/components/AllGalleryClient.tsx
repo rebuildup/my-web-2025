@@ -52,158 +52,147 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
   }, [items, filter]);
 
   return (
-    <div
-      className="min-h-screen bg-background text-foreground"
-      data-testid="all-gallery-client"
-    >
-      <main className="py-10">
-        <div className="container mx-auto px-4">
-          <div className="space-y-10">
-            {/* Header */}
-            <header className="space-y-12">
-              <nav className="mb-6">
-                <Link
-                  href="/portfolio"
-                  className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit"
-                >
-                  ← Portfolio に戻る
-                </Link>
-              </nav>
-              <h1 className="neue-haas-grotesk-display text-6xl text-primary">
-                All Projects
-              </h1>
-              <p className="noto-sans-jp-light text-sm max-w leading-loose">
-                全ての作品を時系列・カテゴリ・技術で絞り込み表示します。
-              </p>
-            </header>
+    <div data-testid="all-gallery-client">
+      {/* Header */}
+      <div>
+        <header className="space-y-12">
+          <h1 className="neue-haas-grotesk-display text-6xl text-primary">
+            All Projects
+          </h1>
+          <p className="noto-sans-jp-light text-sm max-w leading-loose">
+            全ての作品を時系列・カテゴリ・技術で絞り込み表示します。
+          </p>
+        </header>
+      </div>
 
-            {/* Filters */}
-            <div className="bg-base border border-foreground p-4">
-              <h2 className="zen-kaku-gothic-new text-lg text-primary mb-4">
-                Filters
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
-                    Category
-                  </label>
-                  <select
-                    value={filter.category}
-                    onChange={(e) =>
-                      setFilter((prev) => ({
-                        ...prev,
-                        category: e.target.value,
-                      }))
-                    }
-                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
-                  >
-                    <option value="">All Categories</option>
-                    <option value="develop">Development</option>
-                    <option value="video">Video</option>
-                    <option value="video&design">Video & Design</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
-                    Technology
-                  </label>
-                  <select
-                    value={filter.technology}
-                    onChange={(e) =>
-                      setFilter((prev) => ({
-                        ...prev,
-                        technology: e.target.value,
-                      }))
-                    }
-                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
-                  >
-                    <option value="">All Technologies</option>
-                    <option value="React">React</option>
-                    <option value="TypeScript">TypeScript</option>
-                    <option value="After Effects">After Effects</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
-                    Year
-                  </label>
-                  <select
-                    value={filter.year}
-                    onChange={(e) =>
-                      setFilter((prev) => ({ ...prev, year: e.target.value }))
-                    }
-                    className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
-                  >
-                    <option value="">All Years</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                  </select>
-                </div>
-              </div>
+      {/* Filters */}
+      <div>
+        <div className="bg-base border border-foreground p-4">
+          <h2 className="zen-kaku-gothic-new text-lg text-primary mb-4">
+            Filters
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
+                Category
+              </label>
+              <select
+                value={filter.category}
+                onChange={(e) =>
+                  setFilter((prev) => ({
+                    ...prev,
+                    category: e.target.value,
+                  }))
+                }
+                className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
+              >
+                <option value="">All Categories</option>
+                <option value="develop">Development</option>
+                <option value="video">Video</option>
+                <option value="video&design">Video & Design</option>
+              </select>
             </div>
-
-            {/* Items Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredItems.map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/portfolio/${item.id}`}
-                  className="bg-base border border-foreground p-4 space-y-4 block hover:border-accent transition-colors"
-                  data-testid="portfolio-item"
-                  data-category={item.category}
-                >
-                  <div className="relative aspect-video bg-background border border-foreground overflow-hidden">
-                    {item.thumbnail ? (
-                      <Image
-                        src={item.thumbnail}
-                        alt={item.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <span className="noto-sans-jp-light text-xs text-foreground">
-                          {item.title}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <h3 className="zen-kaku-gothic-new text-base text-primary">
-                      {item.title}
-                    </h3>
-                    <p className="noto-sans-jp-light text-sm text-foreground">
-                      {item.description}
-                    </p>
-                    <div className="flex flex-wrap gap-1">
-                      {item.tags?.map((tag: string) => (
-                        <span
-                          key={tag}
-                          className="noto-sans-jp-light text-xs text-foreground border border-foreground px-2 py-1"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+            <div>
+              <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
+                Technology
+              </label>
+              <select
+                value={filter.technology}
+                onChange={(e) =>
+                  setFilter((prev) => ({
+                    ...prev,
+                    technology: e.target.value,
+                  }))
+                }
+                className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
+              >
+                <option value="">All Technologies</option>
+                <option value="React">React</option>
+                <option value="TypeScript">TypeScript</option>
+                <option value="After Effects">After Effects</option>
+              </select>
             </div>
-
-            {/* Empty State */}
-            {filteredItems.length === 0 && (
-              <div className="text-center py-12">
-                <p className="noto-sans-jp-light text-sm text-foreground">
-                  No items match the current filters.
-                </p>
-              </div>
-            )}
+            <div>
+              <label className="noto-sans-jp-light text-sm text-foreground block mb-2">
+                Year
+              </label>
+              <select
+                value={filter.year}
+                onChange={(e) =>
+                  setFilter((prev) => ({ ...prev, year: e.target.value }))
+                }
+                className="w-full border border-foreground bg-background text-foreground p-2 text-sm"
+              >
+                <option value="">All Years</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+              </select>
+            </div>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* Items Grid */}
+      <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredItems.map((item) => (
+            <Link
+              key={item.id}
+              href={`/portfolio/${item.id}`}
+              className="bg-base border border-foreground p-4 space-y-4 block hover:border-accent transition-colors"
+              data-testid="portfolio-item"
+              data-category={item.category}
+            >
+              <div className="relative aspect-video bg-background border border-foreground overflow-hidden">
+                {item.thumbnail ? (
+                  <Image
+                    src={item.thumbnail}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="noto-sans-jp-light text-xs text-foreground">
+                      {item.title}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="zen-kaku-gothic-new text-base text-primary">
+                  {item.title}
+                </h3>
+                <p className="noto-sans-jp-light text-sm text-foreground">
+                  {item.description}
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {item.tags?.map((tag: string) => (
+                    <span
+                      key={tag}
+                      className="noto-sans-jp-light text-xs text-foreground border border-foreground px-2 py-1"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {filteredItems.length === 0 && (
+          <div className="text-center py-12">
+            <p className="noto-sans-jp-light text-sm text-foreground">
+              No items match the current filters.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

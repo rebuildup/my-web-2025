@@ -1,7 +1,8 @@
-import { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { ContentItem } from "@/types/content";
+import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Plugins - Workshop | samuido",
@@ -79,21 +80,17 @@ export default async function PluginsPage() {
       <main className="py-10">
         <div className="container-system">
           <div className="space-y-10">
+            {/* Breadcrumbs */}
+            <div className="mb-6">
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Workshop", href: "/workshop" },
+                  { label: "Plugins", isCurrent: true },
+                ]}
+              />
+            </div>
             <header className="space-y-6">
-              <nav aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2 text-sm">
-                  <li>
-                    <Link
-                      href="/workshop"
-                      className="text-accent hover:text-primary"
-                    >
-                      Workshop
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li className="text-primary">Plugins</li>
-                </ol>
-              </nav>
               <h1 className="neue-haas-grotesk-display text-4xl text-primary">
                 Plugins
               </h1>

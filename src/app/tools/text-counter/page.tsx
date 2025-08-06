@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Metadata } from "next";
 import TextCounterTool from "./components/TextCounterTool";
 
@@ -59,6 +60,15 @@ export default function TextCounterPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <div className="container-system pt-10 pb-4">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Tools", href: "/tools" },
+            { label: "Text Counter", isCurrent: true },
+          ]}
+        />
+      </div>
       <div className="container-system">
         <div className="space-y-8">
           <div className="text-center space-y-4">

@@ -5,6 +5,7 @@
 
 "use client";
 
+// Import error tracking
 import { errorTracker } from "@/lib/analytics/error-tracking";
 import React, { createContext, useContext, useEffect, useState } from "react";
 

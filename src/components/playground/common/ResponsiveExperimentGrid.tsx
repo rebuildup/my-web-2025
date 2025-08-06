@@ -185,6 +185,11 @@ export const ResponsiveExperimentGrid: React.FC<
               className={getCardClasses(isActive)}
               aria-pressed={isActive}
               aria-describedby={`experiment-${experiment.id}-description`}
+              data-testid={
+                ["3d", "shader", "particle"].includes(experiment.category)
+                  ? "webgl-experiment-card"
+                  : "experiment-card"
+              }
             >
               <div className="space-y-2">
                 <h4 className={textClasses.title}>{experiment.title}</h4>

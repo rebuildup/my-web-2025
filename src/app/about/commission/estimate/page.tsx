@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Calculator, Copy, RefreshCw } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 
 interface EstimateForm {
   videoType: string;
@@ -76,8 +77,6 @@ const DEADLINES = [
 ];
 
 export default function EstimatePage() {
-  const Global_title = "noto-sans-jp-regular text-base leading-snug";
-
   const [form, setForm] = useState<EstimateForm>({
     videoType: "",
     duration: "",
@@ -192,16 +191,19 @@ export default function EstimatePage() {
       <main className="flex items-center py-10">
         <div className="container-system">
           <div className="space-y-10">
+            {/* Breadcrumbs */}
+            <Breadcrumbs
+              items={[
+                { label: "Home", href: "/" },
+                { label: "About", href: "/about" },
+                { label: "Commission", href: "/about/commission" },
+                { label: "Estimate", isCurrent: true },
+              ]}
+              className="pt-4"
+            />
+
             {/* Header */}
             <header className="space-y-12">
-              <nav className="mb-6">
-                <Link
-                  href="/about"
-                  className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-                >
-                  ← About に戻る
-                </Link>
-              </nav>
               <h1 className="neue-haas-grotesk-display text-6xl text-primary">
                 映像制作見積もり計算機
               </h1>
@@ -507,13 +509,17 @@ export default function EstimatePage() {
                       href="/contact"
                       className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
                     >
-                      <span className={Global_title}>お問い合わせ</span>
+                      <span className="noto-sans-jp-regular text-base leading-snug">
+                        お問い合わせ
+                      </span>
                     </Link>
                     <Link
                       href="/about/commission/video"
                       className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
                     >
-                      <span className={Global_title}>映像依頼について</span>
+                      <span className="noto-sans-jp-regular text-base leading-snug">
+                        映像依頼について
+                      </span>
                     </Link>
                   </div>
                 </div>

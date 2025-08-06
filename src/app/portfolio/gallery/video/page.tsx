@@ -78,6 +78,7 @@ async function getVideoPortfolioData(): Promise<ContentItem[]> {
   }
 }
 
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import VideoGallery from "./components/VideoGallery";
 
 export default async function VideoProjectsPage() {
@@ -114,34 +115,22 @@ export default async function VideoProjectsPage() {
       />
 
       <div className="min-h-screen bg-background text-foreground">
-        <main className="flex items-center py-10">
+        <main className="flex items-center py-4">
           <div className="container-system">
             <div className="space-y-10">
+              {/* Breadcrumbs */}
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Portfolio", href: "/portfolio" },
+                  { label: "Gallery", href: "/portfolio/gallery/all" },
+                  { label: "Video", isCurrent: true },
+                ]}
+                className="pt-4"
+              />
+
               {/* Header */}
               <header className="space-y-12">
-                <nav aria-label="Breadcrumb">
-                  <ol className="flex items-center space-x-2 text-sm">
-                    <li>
-                      <Link
-                        href="/"
-                        className="text-foreground hover:text-accent"
-                      >
-                        Home
-                      </Link>
-                    </li>
-                    <li className="text-foreground">/</li>
-                    <li>
-                      <Link
-                        href="/portfolio"
-                        className="text-foreground hover:text-accent"
-                      >
-                        Portfolio
-                      </Link>
-                    </li>
-                    <li className="text-foreground">/</li>
-                    <li className="text-accent">Video Projects</li>
-                  </ol>
-                </nav>
                 <h1 className="neue-haas-grotesk-display text-6xl text-primary">
                   Video Projects
                 </h1>

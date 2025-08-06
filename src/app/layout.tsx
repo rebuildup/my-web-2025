@@ -3,16 +3,7 @@ import { Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
-import { PerformanceProvider } from "@/components/providers/PerformanceProvider";
-import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
-import { CookieConsent } from "@/components/ui/CookieConsent";
-import { PerformanceDevPanel } from "@/components/ui/CoreWebVitalsMonitor";
-import { GADebug } from "@/components/ui/ga-debug";
-import {
-  CriticalResourcePreloader,
-  LayoutShiftDetector,
-} from "@/components/ui/LayoutStabilizer";
+// import { CriticalResourcePreloader } from "@/components/ui/LayoutStabilizer";
 
 // Google Analytics type definitions
 declare global {
@@ -150,23 +141,13 @@ export default function RootLayout({
       <body
         className={`${notoSansJP.variable} ${shipporiAntique.variable} antialiased bg-background text-foreground`}
       >
-        <CriticalResourcePreloader
+        {/* <CriticalResourcePreloader
           resources={[
             { href: "/images/og-image.png", as: "image" },
             { href: "/favicon.ico", as: "image" },
           ]}
-        />
-        <ProductionInitializer>
-          <AnalyticsProvider>
-            <PerformanceProvider>
-              {children}
-              <PerformanceDevPanel />
-              <LayoutShiftDetector />
-              <CookieConsent />
-              <GADebug />
-            </PerformanceProvider>
-          </AnalyticsProvider>
-        </ProductionInitializer>
+        /> */}
+        <div className="min-h-screen">{children}</div>
 
         {/* Adobe Fonts (Typekit) - Load after hydration with error handling */}
         <Script
@@ -178,12 +159,12 @@ export default function RootLayout({
                 try {
                   var config = {
                     kitId: 'blm5pmr',
-                    scriptTimeout: 3000,
+                    scriptTimeout: 5000,
                     async: true
                   },
-                  h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\\bwf-loading\\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){console.warn('Adobe Fonts loading failed:', e);}};tk.onerror=function(){console.warn('Adobe Fonts script failed to load');clearTimeout(t);h.className=h.className.replace(/\\bwf-loading\\b/g,"")+" wf-inactive";};s.parentNode.insertBefore(tk,s)
+                  h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\\bwf-loading\\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){if(console && console.warn) console.warn('Adobe Fonts loading failed:', e);}};tk.onerror=function(){if(console && console.warn) console.warn('Adobe Fonts script failed to load');clearTimeout(t);h.className=h.className.replace(/\\bwf-loading\\b/g,"")+" wf-inactive";};s.parentNode.insertBefore(tk,s)
                 } catch(e) {
-                  console.warn('Adobe Fonts initialization failed:', e);
+                  if(console && console.warn) console.warn('Adobe Fonts initialization failed:', e);
                 }
               })(document);
             `,

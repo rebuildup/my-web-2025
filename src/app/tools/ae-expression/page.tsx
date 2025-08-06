@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import AEExpressionTool from "./components/AEExpressionTool";
 
 export const metadata = {
@@ -29,6 +30,15 @@ export const metadata = {
 export default function AEExpressionPage() {
   return (
     <>
+      <div className="container-system pt-10 pb-4">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Tools", href: "/tools" },
+            { label: "After Effects Expression Helper", isCurrent: true },
+          ]}
+        />
+      </div>
       <AEExpressionTool />
 
       {/* Structured Data */}

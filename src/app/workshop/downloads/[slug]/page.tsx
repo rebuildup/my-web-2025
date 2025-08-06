@@ -1,5 +1,6 @@
-import { notFound } from "next/navigation";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 interface DownloadDetailPageProps {
   params: Promise<{
@@ -41,6 +42,17 @@ export default async function DownloadDetailPage({
       <main id="main-content" role="main" className="py-10">
         <div className="container-system">
           <div className="space-y-10">
+            {/* Breadcrumbs */}
+            <div className="mb-6">
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Workshop", href: "/workshop" },
+                  { label: "Downloads", href: "/workshop/downloads" },
+                  { label: download.title, isCurrent: true },
+                ]}
+              />
+            </div>
             <header className="space-y-12">
               <nav className="mb-6">
                 <Link

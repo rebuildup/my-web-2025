@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import Image from "next/image";
+import Link from "next/link";
 import QRCode from "qrcode";
+import { useEffect, useRef, useState } from "react";
 
 const cardData = {
   name: "samuido",
@@ -103,15 +104,16 @@ ${cardData.tagline}`;
       <main className="flex items-center py-10">
         <div className="container-system">
           <div className="space-y-10">
-            {/* ナビゲーション */}
-            <nav className="mb-8">
-              <Link
-                href="/about"
-                className="noto-sans-jp-light text-sm text-accent border border-accent px-4 py-2 inline-block focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-              >
-                ← About に戻る
-              </Link>
-            </nav>
+            {/* Breadcrumbs */}
+            <Breadcrumbs
+              items={[
+                { label: "Home", href: "/" },
+                { label: "About", href: "/about" },
+                { label: "Card", href: "/about/card" },
+                { label: "Handle", isCurrent: true },
+              ]}
+              className="pt-4"
+            />
 
             {/* ヘッダー */}
             <header className="space-y-12">

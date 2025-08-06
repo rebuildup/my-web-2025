@@ -17,9 +17,13 @@ const nextConfig: NextConfig = {
       "marked",
       "recharts",
     ],
-    // Disable prefetching to prevent LINK errors in development
+    // Development mode optimizations
     ...(process.env.NODE_ENV === "development" && {
       linkNoTouchStart: true,
+      // Force HMR to work properly
+      isrMemoryCacheSize: 0, // Disable ISR cache in development
+      // Disable static optimization for better HMR
+      forceSwcTransforms: true,
     }),
   },
 
@@ -155,6 +159,57 @@ const nextConfig: NextConfig = {
           {
             key: "Cache-Control",
             value: "no-store, no-cache, must-revalidate",
+          },
+        ],
+      },
+      // CSS files - comprehensive patterns
+      {
+        source: "/_next/static/css/(.*)",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "text/css; charset=utf-8",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/_next/static/chunks/(.*).css",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "text/css; charset=utf-8",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      // All CSS files pattern
+      {
+        source: "/(.*).css",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "text/css; charset=utf-8",
+          },
+        ],
+      },
+      // JS files
+      {
+        source: "/_next/static/chunks/(.*).js",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/javascript; charset=utf-8",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },

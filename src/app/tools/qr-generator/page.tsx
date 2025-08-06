@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import QRCodeGenerator from "./components/QRCodeGenerator";
 
 export const metadata = {
@@ -28,6 +29,15 @@ export const metadata = {
 export default function QRGeneratorPage() {
   return (
     <>
+      <div className="container-system pt-10 pb-4">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Tools", href: "/tools" },
+            { label: "QR Code Generator", isCurrent: true },
+          ]}
+        />
+      </div>
       <QRCodeGenerator />
 
       {/* Structured Data */}

@@ -221,7 +221,6 @@ describe("WebGLPlayground Component", () => {
       render(<WebGLPlaygroundPage />);
 
       await waitFor(() => {
-        expect(screen.getByText("← Portfolio に戻る")).toBeInTheDocument();
         expect(screen.getByText("Design Playground")).toBeInTheDocument();
         expect(screen.getByText("Portfolio Home")).toBeInTheDocument();
         expect(screen.getByText("Tools")).toBeInTheDocument();

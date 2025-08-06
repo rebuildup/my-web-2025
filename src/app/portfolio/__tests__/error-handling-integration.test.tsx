@@ -160,7 +160,9 @@ describe("Error Handling Integration Tests", () => {
       render(await PortfolioPage());
 
       // Should still render the page structure
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
       expect(screen.getByText("Browse by Category")).toBeInTheDocument();
 
       // Should show fallback content
@@ -203,7 +205,9 @@ describe("Error Handling Integration Tests", () => {
       render(await PortfolioPage());
 
       // Should still render with fallback stats
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
       const projectElements = screen.getAllByText(/\d+ projects/);
       expect(projectElements.length).toBeGreaterThan(0);
     });
@@ -227,7 +231,9 @@ describe("Error Handling Integration Tests", () => {
       render(await PortfolioPage());
 
       // Should still render the page
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
       expect(screen.getByText("Featured Projects")).toBeInTheDocument();
     });
   });
@@ -507,7 +513,9 @@ describe("Error Handling Integration Tests", () => {
       render(await PortfolioPage());
 
       // Should still render with fallback
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
     });
   });
 
@@ -552,7 +560,9 @@ describe("Error Handling Integration Tests", () => {
       render(await PortfolioPage());
 
       // Should filter out malformed data and show valid items
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
       expect(screen.getAllByText("1 projects")).toHaveLength(2); // Multiple categories can have 1 project
     });
 
@@ -592,7 +602,9 @@ describe("Error Handling Integration Tests", () => {
       render(await PortfolioPage());
 
       // Should render without images
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
       expect(
         screen.getAllByText("Project Without Image")[0],
       ).toBeInTheDocument();
@@ -713,7 +725,9 @@ describe("Error Handling Integration Tests", () => {
       render(await PortfolioPage());
 
       // Should still show the main content
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
       expect(screen.getByText("Browse by Category")).toBeInTheDocument();
     });
 

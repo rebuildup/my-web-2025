@@ -29,6 +29,12 @@ export class ServiceWorkerManager {
       return this.status;
     }
 
+    // Only register in production to avoid development issues
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Service Worker: Skipping registration in development");
+      return this.status;
+    }
+
     try {
       this.registration = await navigator.serviceWorker.register("/sw.js", {
         scope: "/",
@@ -50,11 +56,11 @@ export class ServiceWorkerManager {
 
       // Listen for controller changes
       navigator.serviceWorker.addEventListener("controllerchange", () => {
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV !== "production") {
           console.log("Service Worker: Controller changed");
         }
         // Avoid immediate reload in development to prevent infinite loops
-        if (process.env.NODE_ENV !== "development") {
+        if (process.env.NODE_ENV === "production") {
           window.location.reload();
         }
       });
@@ -64,7 +70,7 @@ export class ServiceWorkerManager {
         this.handleMessage(event);
       });
 
-      if (process.env.NODE_ENV === "development") {
+      if (process.env.NODE_ENV !== "production") {
         console.log("Service Worker: Registered successfully");
       }
       return this.status;
@@ -127,24 +133,24 @@ export class ServiceWorkerManager {
 
     switch (data.type) {
       case "CACHE_UPDATED":
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV !== "production") {
           console.log("Service Worker: Cache updated");
         }
         break;
       case "OFFLINE":
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV !== "production") {
           console.log("Service Worker: App is offline");
         }
         this.handleOfflineStatus(true);
         break;
       case "ONLINE":
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV !== "production") {
           console.log("Service Worker: App is online");
         }
         this.handleOfflineStatus(false);
         break;
       default:
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV !== "production") {
           console.log("Service Worker: Unknown message", data);
         }
     }
@@ -171,7 +177,7 @@ export class ServiceWorkerManager {
     if (!navigator.serviceWorker.controller) return;
 
     navigator.serviceWorker.controller.postMessage({ type: "CLEAR_CACHE" });
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV !== "production") {
       console.log("Service Worker: Cache cleared");
     }
   }
@@ -184,7 +190,7 @@ export class ServiceWorkerManager {
       const result = await this.registration.unregister();
       this.status.isRegistered = false;
       this.status.isActive = false;
-      if (process.env.NODE_ENV === "development") {
+      if (process.env.NODE_ENV !== "production") {
         console.log("Service Worker: Unregistered successfully");
       }
       return result;
@@ -212,11 +218,11 @@ export class ServiceWorkerManager {
       // Check if sync is supported
       if ("sync" in this.registration && this.registration.sync) {
         await this.registration.sync.register("analytics-sync");
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV !== "production") {
           console.log("Service Worker: Background sync registered");
         }
       } else {
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV !== "production") {
           console.log("Service Worker: Background sync not supported");
         }
       }
@@ -336,16 +342,16 @@ export class CacheManager {
           const response = await fetch(resource);
           if (response.ok) {
             await cache.put(resource, response);
-            if (process.env.NODE_ENV === "development") {
+            if (process.env.NODE_ENV !== "production") {
               console.log("Preloaded:", resource);
             }
           } else {
-            if (process.env.NODE_ENV === "development") {
+            if (process.env.NODE_ENV !== "production") {
               console.warn("Failed to preload (not found):", resource);
             }
           }
         } catch (error) {
-          if (process.env.NODE_ENV === "development") {
+          if (process.env.NODE_ENV !== "production") {
             console.warn(
               "Failed to preload (error):",
               resource,
@@ -356,7 +362,7 @@ export class CacheManager {
       });
 
       await Promise.allSettled(cachePromises);
-      if (process.env.NODE_ENV === "development") {
+      if (process.env.NODE_ENV !== "production") {
         console.log("Critical resources preloading completed");
       }
     } catch (error) {
@@ -370,7 +376,7 @@ export class CacheManager {
 
     try {
       const result = await caches.delete(cacheName);
-      if (process.env.NODE_ENV === "development") {
+      if (process.env.NODE_ENV !== "production") {
         console.log(`Cache ${cacheName} cleared:`, result);
       }
       return result;

@@ -401,8 +401,8 @@ export function VideoDesignGallery({
         ...item,
         // Add categories from enhanced items
         categories: (originalItem as EnhancedContentItem)?.categories,
-        // Add slight random variation to positioning for more organic feel
-        randomOffset: Math.sin((index || 0) * 1.3) * 0.1,
+        // Add slight deterministic variation to positioning for more organic feel
+        randomOffset: ((index || 0) % 10) * 0.01,
       } as EnhancedGridItem;
     });
   }, [filteredItems]);
@@ -770,8 +770,8 @@ function GridItemComponent({
   const dynamicStyles = {
     transform: isHovered && !isPlaceholder ? "scale(1.02)" : "scale(1)",
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    // Add subtle rotation for more organic feel
-    "--rotation": `${Math.sin((typeof item.priority === "number" && !isNaN(item.priority) ? item.priority : 0) * 0.1) * 2}deg`,
+    // Add subtle deterministic rotation for more organic feel
+    "--rotation": `${((typeof item.priority === "number" && !isNaN(item.priority) ? item.priority : 0) % 5) * 0.5}deg`,
   } as React.CSSProperties;
 
   // For placeholder items, render a simple black box

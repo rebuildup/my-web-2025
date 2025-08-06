@@ -3,6 +3,7 @@
  * Specialized view for development projects
  */
 
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { ContentItem } from "@/types/content";
 import Image from "next/image";
@@ -32,16 +33,19 @@ export default async function DevelopDetailPage() {
         <main className="py-10">
           <div className="container mx-auto px-4">
             <div className="space-y-10">
+              {/* Breadcrumbs */}
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Portfolio", href: "/portfolio" },
+                  { label: "Detail", href: "/portfolio/detail" },
+                  { label: "Develop", isCurrent: true },
+                ]}
+                className="pt-4"
+              />
+
               {/* Header */}
               <header className="space-y-12">
-                <nav className="mb-6">
-                  <Link
-                    href="/portfolio"
-                    className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit"
-                  >
-                    ← Portfolio に戻る
-                  </Link>
-                </nav>
                 <h1 className="neue-haas-grotesk-display text-6xl text-primary">
                   Development Projects
                 </h1>

@@ -219,271 +219,240 @@ export function DevelopGalleryClient({
   }, [paginatedItems, transformToDevelopProject]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <main id="main-content" role="main" className="py-10">
-        <div className="container-system">
-          <div className="space-y-10">
-            {/* Header */}
-            <header className="space-y-8">
-              <nav aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2 text-sm">
-                  <li>
-                    <Link
-                      href="/"
-                      className="text-foreground hover:text-accent"
-                    >
-                      Home
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li>
-                    <Link
-                      href="/portfolio"
-                      className="text-foreground hover:text-accent"
-                    >
-                      Portfolio
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li className="text-accent">Development Projects</li>
-                </ol>
-              </nav>
-
-              <div className="space-y-4">
-                <h1 className="neue-haas-grotesk-display text-6xl text-primary">
-                  Development Projects
-                </h1>
-                <p className="noto-sans-jp-light text-sm max-w leading-loose">
-                  Web開発・ゲーム開発・技術実装に重点を置いた作品集です。
-                  <br />
-                  技術スタック、GitHubリンク、実装の詳細を含めて紹介しています。
-                </p>
-                <div className="flex items-center space-x-4 text-sm">
-                  <span className="text-accent">
-                    {filteredAndSortedItems.length} development projects
-                  </span>
-                  <span className="text-foreground">
-                    Updated {new Date().toLocaleDateString("ja-JP")}
-                  </span>
-                </div>
-              </div>
-            </header>
-
-            {/* Controls */}
-            <section className="space-y-6">
-              <FilterBar
-                filters={filters}
-                searchFilters={searchFilters}
-                onFilterChange={handleFilterChange}
-              />
-              <SortControls sort={sort} onSortChange={handleSortChange} />
-            </section>
-
-            {/* Gallery Content - Alternating Layout */}
-            <section id="gallery-content">
-              {initialItems.length === 0 ? (
-                <div className="text-center py-16">
-                  <p className="noto-sans-jp-light text-sm text-foreground">
-                    開発プロジェクトデータを読み込めませんでした。
-                  </p>
-                  <p className="noto-sans-jp-light text-xs text-foreground/60 mt-2">
-                    初期アイテム数: {initialItems.length}
-                  </p>
-                  <button
-                    onClick={() => window.location.reload()}
-                    className="mt-4 text-accent hover:text-primary transition-colors"
-                  >
-                    ページを再読み込み
-                  </button>
-                </div>
-              ) : developProjects.length > 0 ? (
-                <div className="space-y-8">
-                  {/* All Projects - Single Row Alternating Layout */}
-                  <div className="space-y-12">
-                    {developProjects.map((project, index) => (
-                      <div
-                        key={project.id}
-                        className="flex flex-col lg:flex-row lg:items-center gap-8"
-                      >
-                        {/* Project Thumbnail - Left on even, Right on odd */}
-                        <div
-                          className={`lg:w-1/2 ${index % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}
-                        >
-                          <Link href={`/portfolio/${project.id}`}>
-                            <div className="aspect-video bg-base border border-foreground overflow-hidden hover:border-accent transition-colors group">
-                              {project.thumbnail &&
-                              project.thumbnail !==
-                                "/images/default-project.png" ? (
-                                <div className="relative w-full h-full">
-                                  <Image
-                                    src={project.thumbnail}
-                                    alt={project.title}
-                                    fill
-                                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                  />
-                                </div>
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-base">
-                                  <div className="text-center">
-                                    <Code className="w-12 h-12 text-accent mx-auto mb-2" />
-                                    <span className="noto-sans-jp-light text-sm text-foreground">
-                                      {project.title}
-                                    </span>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </Link>
-                        </div>
-
-                        {/* Project Info - Right on even, Left on odd */}
-                        <div
-                          className={`lg:w-1/2 space-y-4 ${index % 2 === 1 ? "lg:order-1" : "lg:order-2"}`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                              <Code className="w-5 h-5 text-accent mr-2" />
-                              <span
-                                className={`noto-sans-jp-light text-xs text-${getStatusColor(project.status)} border border-${getStatusColor(project.status)} px-2 py-1`}
-                              >
-                                {getStatusLabel(project.status)}
-                              </span>
-                            </div>
-                            <div className="flex items-center">
-                              <Calendar className="w-4 h-4 text-foreground mr-2" />
-                              <span className="noto-sans-jp-light text-sm text-foreground">
-                                {project.date}
-                              </span>
-                            </div>
-                          </div>
-
-                          <Link href={`/portfolio/${project.id}`}>
-                            <h3 className="zen-kaku-gothic-new text-2xl text-primary hover:text-accent transition-colors">
-                              {project.title}
-                            </h3>
-                          </Link>
-
-                          <p className="noto-sans-jp-light text-base text-foreground leading-relaxed">
-                            {project.description}
-                          </p>
-
-                          {/* Technology Stack Emphasis */}
-                          <div className="space-y-2">
-                            <h4 className="noto-sans-jp-light text-sm text-accent font-medium">
-                              Technology Stack:
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                              {project.technologies.map((tech: string) => (
-                                <span
-                                  key={tech}
-                                  className="noto-sans-jp-light text-sm text-accent border border-accent px-3 py-1 bg-base hover:bg-accent hover:text-background transition-colors"
-                                >
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Repository and Live Links */}
-                          <div className="flex items-center gap-6 pt-2">
-                            {project.githubUrl && (
-                              <a
-                                href={project.githubUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center text-foreground hover:text-accent transition-colors"
-                              >
-                                <Github className="w-5 h-5 mr-2" />
-                                <span className="noto-sans-jp-light text-sm">
-                                  Repository
-                                </span>
-                              </a>
-                            )}
-                            {project.liveUrl && (
-                              <a
-                                href={project.liveUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center text-foreground hover:text-accent transition-colors"
-                              >
-                                <ExternalLink className="w-5 h-5 mr-2" />
-                                <span className="noto-sans-jp-light text-sm">
-                                  Live Demo
-                                </span>
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Pagination */}
-                  {totalPages > 1 && (
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      onPageChange={handlePageChange}
-                    />
-                  )}
-                </div>
-              ) : (
-                <div className="text-center py-16">
-                  <p className="noto-sans-jp-light text-sm text-foreground">
-                    フィルター条件に一致する開発プロジェクトが見つかりませんでした。
-                  </p>
-                  <p className="noto-sans-jp-light text-xs text-foreground/60 mt-2">
-                    開発プロジェクト数: {filteredAndSortedItems.length}
-                  </p>
-                  <button
-                    onClick={() => {
-                      setFilters({});
-                      setCurrentPage(1);
-                    }}
-                    className="mt-4 text-accent hover:text-primary transition-colors"
-                  >
-                    フィルターをリセット
-                  </button>
-                </div>
-              )}
-            </section>
-
-            {/* Navigation Links */}
-            <nav aria-label="Development gallery functions">
-              <h3 className="sr-only">Development Gallery機能</h3>
-              <div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
-                <Link
-                  href="/portfolio/gallery/all"
-                  className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-                >
-                  <span className="noto-sans-jp-regular text-base leading-snug">
-                    All Projects
-                  </span>
-                </Link>
-
-                <Link
-                  href="/portfolio/gallery/video"
-                  className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-                >
-                  <span className="noto-sans-jp-regular text-base leading-snug">
-                    Video Projects
-                  </span>
-                </Link>
-
-                <Link
-                  href="/about/commission/develop"
-                  className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-                >
-                  <span className="noto-sans-jp-regular text-base leading-snug">
-                    Commission
-                  </span>
-                </Link>
-              </div>
-            </nav>
+    <div className="space-y-10">
+      {/* Header */}
+      <header className="space-y-8">
+        <div className="space-y-4">
+          <h1 className="neue-haas-grotesk-display text-6xl text-primary">
+            Development Projects
+          </h1>
+          <p className="noto-sans-jp-light text-sm max-w leading-loose">
+            Web開発・ゲーム開発・技術実装に重点を置いた作品集です。
+            <br />
+            技術スタック、GitHubリンク、実装の詳細を含めて紹介しています。
+          </p>
+          <div className="flex items-center space-x-4 text-sm">
+            <span className="text-accent">
+              {filteredAndSortedItems.length} development projects
+            </span>
+            <span className="text-foreground">
+              Updated {new Date().toLocaleDateString("ja-JP")}
+            </span>
           </div>
         </div>
-      </main>
+      </header>
+
+      {/* Controls */}
+      <section className="space-y-6">
+        <FilterBar
+          filters={filters}
+          searchFilters={searchFilters}
+          onFilterChange={handleFilterChange}
+        />
+        <SortControls sort={sort} onSortChange={handleSortChange} />
+      </section>
+
+      {/* Gallery Content - Alternating Layout */}
+      <section id="gallery-content">
+        {initialItems.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="noto-sans-jp-light text-sm text-foreground">
+              開発プロジェクトデータを読み込めませんでした。
+            </p>
+            <p className="noto-sans-jp-light text-xs text-foreground/60 mt-2">
+              初期アイテム数: {initialItems.length}
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 text-accent hover:text-primary transition-colors"
+            >
+              ページを再読み込み
+            </button>
+          </div>
+        ) : developProjects.length > 0 ? (
+          <div className="space-y-8">
+            {/* All Projects - Single Row Alternating Layout */}
+            <div className="space-y-12">
+              {developProjects.map((project, index) => (
+                <div
+                  key={project.id}
+                  className="flex flex-col lg:flex-row lg:items-center gap-8"
+                >
+                  {/* Project Thumbnail - Left on even, Right on odd */}
+                  <div
+                    className={`lg:w-1/2 ${index % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}
+                  >
+                    <Link href={`/portfolio/${project.id}`}>
+                      <div className="aspect-video bg-base border border-foreground overflow-hidden hover:border-accent transition-colors group">
+                        {project.thumbnail &&
+                        project.thumbnail !== "/images/default-project.png" ? (
+                          <div className="relative w-full h-full">
+                            <Image
+                              src={project.thumbnail}
+                              alt={project.title}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              sizes="(max-width: 768px) 100vw, 50vw"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-base">
+                            <div className="text-center">
+                              <Code className="w-12 h-12 text-accent mx-auto mb-2" />
+                              <span className="noto-sans-jp-light text-sm text-foreground">
+                                {project.title}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </Link>
+                  </div>
+
+                  {/* Project Info - Right on even, Left on odd */}
+                  <div
+                    className={`lg:w-1/2 space-y-4 ${index % 2 === 1 ? "lg:order-1" : "lg:order-2"}`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <Code className="w-5 h-5 text-accent mr-2" />
+                        <span
+                          className={`noto-sans-jp-light text-xs text-${getStatusColor(project.status)} border border-${getStatusColor(project.status)} px-2 py-1`}
+                        >
+                          {getStatusLabel(project.status)}
+                        </span>
+                      </div>
+                      <div className="flex items-center">
+                        <Calendar className="w-4 h-4 text-foreground mr-2" />
+                        <span className="noto-sans-jp-light text-sm text-foreground">
+                          {project.date}
+                        </span>
+                      </div>
+                    </div>
+
+                    <Link href={`/portfolio/${project.id}`}>
+                      <h3 className="zen-kaku-gothic-new text-2xl text-primary hover:text-accent transition-colors">
+                        {project.title}
+                      </h3>
+                    </Link>
+
+                    <p className="noto-sans-jp-light text-base text-foreground leading-relaxed">
+                      {project.description}
+                    </p>
+
+                    {/* Technology Stack Emphasis */}
+                    <div className="space-y-2">
+                      <h4 className="noto-sans-jp-light text-sm text-accent font-medium">
+                        Technology Stack:
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {project.technologies.map((tech: string) => (
+                          <span
+                            key={tech}
+                            className="noto-sans-jp-light text-sm text-accent border border-accent px-3 py-1 bg-base hover:bg-accent hover:text-background transition-colors"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Repository and Live Links */}
+                    <div className="flex items-center gap-6 pt-2">
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center text-foreground hover:text-accent transition-colors"
+                        >
+                          <Github className="w-5 h-5 mr-2" />
+                          <span className="noto-sans-jp-light text-sm">
+                            Repository
+                          </span>
+                        </a>
+                      )}
+                      {project.liveUrl && (
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center text-foreground hover:text-accent transition-colors"
+                        >
+                          <ExternalLink className="w-5 h-5 mr-2" />
+                          <span className="noto-sans-jp-light text-sm">
+                            Live Demo
+                          </span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <p className="noto-sans-jp-light text-sm text-foreground">
+              フィルター条件に一致する開発プロジェクトが見つかりませんでした。
+            </p>
+            <p className="noto-sans-jp-light text-xs text-foreground/60 mt-2">
+              開発プロジェクト数: {filteredAndSortedItems.length}
+            </p>
+            <button
+              onClick={() => {
+                setFilters({});
+                setCurrentPage(1);
+              }}
+              className="mt-4 text-accent hover:text-primary transition-colors"
+            >
+              フィルターをリセット
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* Navigation Links */}
+      <nav aria-label="Development gallery functions">
+        <h3 className="sr-only">Development Gallery機能</h3>
+        <div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
+          <Link
+            href="/portfolio/gallery/all"
+            className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+          >
+            <span className="noto-sans-jp-regular text-base leading-snug">
+              All Projects
+            </span>
+          </Link>
+
+          <Link
+            href="/portfolio/gallery/video"
+            className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+          >
+            <span className="noto-sans-jp-regular text-base leading-snug">
+              Video Projects
+            </span>
+          </Link>
+
+          <Link
+            href="/about/commission/develop"
+            className="border border-foreground text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+          >
+            <span className="noto-sans-jp-regular text-base leading-snug">
+              Commission
+            </span>
+          </Link>
+        </div>
+      </nav>
 
       {/* Detail Modal */}
       {selectedItem && (

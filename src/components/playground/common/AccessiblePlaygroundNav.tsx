@@ -7,7 +7,7 @@
 
 import { useAccessibility, useFocusManagement } from "@/hooks/useAccessibility";
 import { useResponsive } from "@/hooks/useResponsive";
-import { ChevronRight, Home, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -211,49 +211,6 @@ export const AccessiblePlaygroundNav: React.FC<
     </button>
   );
 
-  // Breadcrumb navigation
-  const Breadcrumb = () => (
-    <nav aria-label="パンくずナビゲーション" className="mb-6">
-      <ol className="flex items-center space-x-2 text-sm">
-        <li>
-          <Link
-            href="/"
-            className="text-foreground hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-          >
-            <Home className="w-4 h-4" aria-label="ホーム" />
-          </Link>
-        </li>
-        <li>
-          <ChevronRight
-            className="w-4 h-4 text-foreground opacity-50"
-            aria-hidden="true"
-          />
-        </li>
-        <li>
-          <Link
-            href="/portfolio"
-            className="text-foreground hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-          >
-            Portfolio
-          </Link>
-        </li>
-        <li>
-          <ChevronRight
-            className="w-4 h-4 text-foreground opacity-50"
-            aria-hidden="true"
-          />
-        </li>
-        <li>
-          <span className="text-accent font-medium">
-            {currentPage === "design"
-              ? "Design Playground"
-              : "WebGL Playground"}
-          </span>
-        </li>
-      </ol>
-    </nav>
-  );
-
   return (
     <div className={className}>
       {/* Skip link */}
@@ -263,9 +220,6 @@ export const AccessiblePlaygroundNav: React.FC<
       >
         メインコンテンツにスキップ
       </a>
-
-      {/* Breadcrumb */}
-      <Breadcrumb />
 
       {/* Navigation */}
       <nav

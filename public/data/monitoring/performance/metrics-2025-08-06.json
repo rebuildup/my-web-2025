@@ -1,0 +1,92 @@
+[
+  {
+    "lcp": 500,
+    "timestamp": "2025-08-06T03:38:56.798Z",
+    "url": "http://localhost:3000/portfolio/gallery/develop",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0.00022794579505517346,
+    "timestamp": "2025-08-06T03:38:57.017Z",
+    "url": "http://localhost:3000/portfolio/gallery/develop",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "fid": 0.5999999940395355,
+    "timestamp": "2025-08-06T03:38:59.578Z",
+    "url": "http://localhost:3000/portfolio/gallery/develop",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0.00022794579505517346,
+    "timestamp": "2025-08-06T03:39:10.204Z",
+    "url": "http://localhost:3000/portfolio/playground/design",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0.00022794579505517346,
+    "timestamp": "2025-08-06T03:39:10.220Z",
+    "url": "http://localhost:3000/portfolio/playground/design",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0.00022794579505517346,
+    "timestamp": "2025-08-06T03:39:11.513Z",
+    "url": "http://localhost:3000/portfolio/playground/design",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0.00022794579505517346,
+    "timestamp": "2025-08-06T03:39:17.966Z",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0.00022794579505517346,
+    "timestamp": "2025-08-06T03:39:17.980Z",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0.00022794579505517346,
+    "timestamp": "2025-08-06T03:39:20.095Z",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0.00023773380655854257,
+    "timestamp": "2025-08-06T03:39:29.245Z",
+    "url": "http://localhost:3000/portfolio/playground/WebGL",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0.0010300022147620785,
+    "timestamp": "2025-08-06T03:44:44.744Z",
+    "url": "http://localhost:3000/about",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0.0005063761592736547,
+    "timestamp": "2025-08-06T03:44:54.583Z",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "fid": 1,
+    "timestamp": "2025-08-06T03:44:55.727Z",
+    "url": "http://localhost:3000/",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0.0005063761592736547,
+    "timestamp": "2025-08-06T03:44:55.808Z",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  },
+  {
+    "cls": 0,
+    "timestamp": "2025-08-06T03:54:53.459Z",
+    "url": "http://localhost:3000/portfolio",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+  }
+]

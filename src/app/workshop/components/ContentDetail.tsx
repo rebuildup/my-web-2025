@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
 import { ContentItem, MediaEmbed } from "@/types/content";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import ContentRecommendations from "./ContentRecommendations";
 
 interface ContentDetailProps {
@@ -179,30 +179,6 @@ export default function ContentDetail({
         <div className="container-system">
           <div className="space-y-10">
             <header className="space-y-6">
-              <nav aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2 text-sm">
-                  <li>
-                    <Link
-                      href="/workshop"
-                      className="text-accent hover:text-primary"
-                    >
-                      Workshop
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li>
-                    <Link
-                      href={backUrl}
-                      className="text-accent hover:text-primary"
-                    >
-                      {backLabel}
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li className="text-primary">{content.title}</li>
-                </ol>
-              </nav>
-
               <div className="space-y-4">
                 <h1 className={Card_title}>{content.title}</h1>
                 <p className={Card_description}>{content.description}</p>

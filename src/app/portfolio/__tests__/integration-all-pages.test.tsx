@@ -301,7 +301,9 @@ describe("Portfolio Integration Tests - All 9 Pages", () => {
 
       // Check main sections
       expect(screen.getByRole("main")).toBeInTheDocument();
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
       expect(screen.getByText("Browse by Category")).toBeInTheDocument();
       expect(screen.getByText("Featured Projects")).toBeInTheDocument();
       expect(screen.getByText("Experimental Playground")).toBeInTheDocument();
@@ -331,7 +333,9 @@ describe("Portfolio Integration Tests - All 9 Pages", () => {
       render(await PortfolioPage());
 
       // Should still render with fallback data
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
       expect(screen.getByText("Browse by Category")).toBeInTheDocument();
     });
   });
@@ -662,7 +666,9 @@ describe("Portfolio Integration Tests - All 9 Pages", () => {
       render(await PortfolioPage());
 
       // Should still render with fallback data
-      expect(screen.getByText("Portfolio")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Portfolio" }),
+      ).toBeInTheDocument();
     });
 
     it("should maintain consistent error handling patterns", async () => {
@@ -763,7 +769,7 @@ describe("Portfolio Integration Tests - All 9 Pages", () => {
 
       // Check semantic HTML
       expect(screen.getByRole("main")).toBeInTheDocument();
-      expect(screen.getAllByRole("navigation")).toHaveLength(2); // Portfolio categories and Portfolio functions
+      expect(screen.getAllByRole("navigation")).toHaveLength(3); // Breadcrumb, Portfolio categories and Portfolio functions
 
       // Check ARIA labels
       const categoryNav = screen.getByLabelText("Portfolio categories");

@@ -1,15 +1,16 @@
-import { Metadata } from "next";
-import Link from "next/link";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import {
+  CheckCircle,
+  Clock,
+  Code,
+  Gamepad2,
+  Globe,
   Mail,
   MessageCircle,
-  Clock,
-  CheckCircle,
-  Code,
-  Globe,
-  Gamepad2,
   Wrench,
 } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "開発依頼 - samuido | Web開発・アプリ開発・プラグイン開発",
@@ -114,16 +115,19 @@ export default function DevelopCommissionPage() {
         <main className="flex items-center py-10">
           <div className="container-system">
             <div className="space-y-10">
+              {/* Breadcrumbs */}
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "About", href: "/about" },
+                  { label: "Commission", href: "/about/commission" },
+                  { label: "Develop", isCurrent: true },
+                ]}
+                className="pt-4"
+              />
+
               {/* Header */}
               <header className="space-y-12">
-                <nav className="mb-6">
-                  <Link
-                    href="/about"
-                    className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-                  >
-                    ← About に戻る
-                  </Link>
-                </nav>
                 <h1 className="neue-haas-grotesk-display text-6xl text-primary">
                   開発依頼
                 </h1>

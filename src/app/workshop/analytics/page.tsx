@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import Link from "next/link";
 import AnalyticsDashboard from "../components/AnalyticsDashboard";
 
@@ -12,21 +13,17 @@ export default function WorkshopAnalyticsPage() {
       <main className="py-10">
         <div className="container-system">
           <div className="space-y-10">
+            {/* Breadcrumbs */}
+            <div className="mb-6">
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Workshop", href: "/workshop" },
+                  { label: "Analytics", isCurrent: true },
+                ]}
+              />
+            </div>
             <header className="space-y-6">
-              <nav aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2 text-sm">
-                  <li>
-                    <Link
-                      href="/workshop"
-                      className="noto-sans-jp-light text-accent hover:text-primary focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-                    >
-                      Workshop
-                    </Link>
-                  </li>
-                  <li className="text-foreground">/</li>
-                  <li className="text-foreground">Analytics</li>
-                </ol>
-              </nav>
               <h1 className="neue-haas-grotesk-display text-4xl text-primary">
                 Workshop Analytics
               </h1>

@@ -1,6 +1,7 @@
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { Bot, Brain, Heart, MessageCircle, Sparkles, Zap } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
-import { Bot, MessageCircle, Zap, Brain, Heart, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "AI Profile - samuido | AIチャットプロフィール",
@@ -221,16 +222,19 @@ export default function AIProfilePage() {
         <main className="flex items-center py-10">
           <div className="container-system">
             <div className="space-y-10">
+              {/* Breadcrumbs */}
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "About", href: "/about" },
+                  { label: "Profile", href: "/about/profile" },
+                  { label: "AI", isCurrent: true },
+                ]}
+                className="pt-4"
+              />
+
               {/* Header */}
               <header className="space-y-12">
-                <nav className="mb-6">
-                  <Link
-                    href="/about"
-                    className="noto-sans-jp-light text-sm text-accent border border-accent px-2 py-1 inline-block w-fit focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-                  >
-                    ← About に戻る
-                  </Link>
-                </nav>
                 <h1 className="neue-haas-grotesk-display text-6xl text-primary">
                   AI Profile
                 </h1>
