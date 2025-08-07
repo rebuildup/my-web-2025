@@ -39,7 +39,7 @@ export default async function DownloadDetailPage({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <main id="main-content" role="main" className="py-10">
+      <main id="main-content" role="main" className="py-10" tabIndex={-1}>
         <div className="container-system">
           <div className="space-y-10">
             {/* Breadcrumbs */}

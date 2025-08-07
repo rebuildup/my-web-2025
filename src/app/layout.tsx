@@ -109,7 +109,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" className="scroll-smooth">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
@@ -117,6 +117,10 @@ export default function RootLayout({
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
+
+        {/* Accessibility meta tags */}
+        <meta name="color-scheme" content="dark light" />
+        <meta name="supported-color-schemes" content="dark light" />
 
         {/* Manifest link */}
         <link rel="manifest" href="/manifest.json" />
@@ -141,6 +145,28 @@ export default function RootLayout({
       <body
         className={`${notoSansJP.variable} ${shipporiAntique.variable} antialiased bg-background text-foreground`}
       >
+        {/* Skip links for keyboard navigation */}
+        <a href="#main-content" className="skip-link">
+          メインコンテンツにスキップ
+        </a>
+        <a href="#navigation" className="skip-link">
+          ナビゲーションにスキップ
+        </a>
+
+        {/* Screen reader announcements */}
+        <div
+          id="announcement-region"
+          className="announcement-region"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
+        <div
+          id="urgent-announcement-region"
+          className="announcement-region"
+          aria-live="assertive"
+          aria-atomic="true"
+        ></div>
+
         {/* <CriticalResourcePreloader
           resources={[
             { href: "/images/og-image.png", as: "image" },
@@ -148,6 +174,22 @@ export default function RootLayout({
           ]}
         /> */}
         <div className="min-h-screen">{children}</div>
+
+        {/* Accessibility Tester (Development Only) */}
+        {process.env.NODE_ENV === "development" && (
+          <>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  import('/src/components/ui/AccessibilityTester.js').then(module => {
+                    const AccessibilityTester = module.default;
+                    // Initialize accessibility tester
+                  }).catch(console.error);
+                `,
+              }}
+            />
+          </>
+        )}
 
         {/* Adobe Fonts (Typekit) - Load after hydration with error handling */}
         <Script
@@ -167,6 +209,95 @@ export default function RootLayout({
                   if(console && console.warn) console.warn('Adobe Fonts initialization failed:', e);
                 }
               })(document);
+            `,
+          }}
+        />
+
+        {/* Performance and Service Worker Initialization */}
+        <Script
+          id="performance-initialization"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Initialize performance monitoring
+              if (typeof window !== 'undefined') {
+                window.addEventListener('load', async () => {
+                  try {
+                    // Initialize bundle optimization
+                    const { initializeBundleOptimization } = await import('/src/lib/utils/bundle-optimization.js');
+                    initializeBundleOptimization();
+                    
+                    // Initialize performance monitoring
+                    const { initializePerformanceMonitoring } = await import('/src/lib/utils/performance.js');
+                    initializePerformanceMonitoring();
+                    
+                    console.log('Performance monitoring initialized');
+                  } catch (error) {
+                    console.warn('Performance monitoring initialization failed:', error);
+                  }
+                });
+              }
+            `,
+          }}
+        />
+
+        {/* Service Worker Registration */}
+        <Script
+          id="service-worker-registration"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', async () => {
+                  try {
+                    const registration = await navigator.serviceWorker.register('/sw.js', {
+                      scope: '/',
+                      updateViaCache: 'none'
+                    });
+                    console.log('Service Worker registered successfully');
+                    
+                    // Handle updates
+                    registration.addEventListener('updatefound', () => {
+                      const newWorker = registration.installing;
+                      if (newWorker) {
+                        newWorker.addEventListener('statechange', () => {
+                          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            console.log('New service worker available');
+                            // Auto-update after delay
+                            setTimeout(() => {
+                              if (registration.waiting) {
+                                registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                              }
+                            }, 5000);
+                          }
+                        });
+                      }
+                    });
+                    
+                    // Listen for service worker messages
+                    navigator.serviceWorker.addEventListener('message', (event) => {
+                      if (event.data && event.data.type === 'SW_ERROR') {
+                        console.error('Service Worker Error:', event.data.error);
+                        
+                        // Report to monitoring API
+                        fetch('/api/monitoring/errors', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            type: 'service_worker_client_error',
+                            error: event.data.error,
+                            timestamp: new Date().toISOString()
+                          })
+                        }).catch(() => {
+                          // Silently fail
+                        });
+                      }
+                    });
+                  } catch (error) {
+                    console.warn('Service Worker registration failed:', error);
+                  }
+                });
+              }
             `,
           }}
         />

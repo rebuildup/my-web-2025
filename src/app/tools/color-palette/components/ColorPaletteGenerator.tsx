@@ -172,6 +172,32 @@ export default function ColorPaletteGenerator() {
     return colors;
   }, [colorCount, hueRange, saturationRange, valueRange]);
 
+  // Enhanced palette saving with metadata
+  const savePalette = useCallback(
+    async (customName?: string) => {
+      if (generatedColors.length === 0) return;
+
+      const name = customName || `Palette ${savedPalettes.length + 1}`;
+      const newPalette: SavedPalette = {
+        id: `palette-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        name,
+        colors: generatedColors,
+        createdAt: new Date().toISOString(),
+        tags: [generationAlgorithm, harmonyType],
+      };
+
+      setSavedPalettes((prev) => [newPalette, ...prev]);
+      showNotification(`パレット "${name}" を保存しました`);
+    },
+    [
+      generatedColors,
+      savedPalettes.length,
+      generationAlgorithm,
+      harmonyType,
+      showNotification,
+    ],
+  );
+
   // Generate colors with advanced algorithms
   const generateColors = useCallback(async () => {
     const timedGeneration = measureTime(() => {
@@ -251,6 +277,7 @@ export default function ColorPaletteGenerator() {
     measureTime,
     showNotification,
     generateRandomColors,
+    savePalette,
   ]);
 
   // Apply preset color range
@@ -264,32 +291,6 @@ export default function ColorPaletteGenerator() {
     }));
     showNotification(`${preset}プリセットを適用しました`);
   };
-
-  // Enhanced palette saving with metadata
-  const savePalette = useCallback(
-    async (customName?: string) => {
-      if (generatedColors.length === 0) return;
-
-      const name = customName || `Palette ${savedPalettes.length + 1}`;
-      const newPalette: SavedPalette = {
-        id: `palette-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        name,
-        colors: generatedColors,
-        createdAt: new Date().toISOString(),
-        tags: [generationAlgorithm, harmonyType],
-      };
-
-      setSavedPalettes((prev) => [newPalette, ...prev]);
-      showNotification(`パレット "${name}" を保存しました`);
-    },
-    [
-      generatedColors,
-      savedPalettes.length,
-      generationAlgorithm,
-      harmonyType,
-      showNotification,
-    ],
-  );
 
   // Load saved palette
   const loadPalette = (palette: SavedPalette) => {

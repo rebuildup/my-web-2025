@@ -20,8 +20,6 @@ const nextConfig: NextConfig = {
     // Development mode optimizations
     ...(process.env.NODE_ENV === "development" && {
       linkNoTouchStart: true,
-      // Force HMR to work properly
-      isrMemoryCacheSize: 0, // Disable ISR cache in development
       // Disable static optimization for better HMR
       forceSwcTransforms: true,
     }),
@@ -234,34 +232,91 @@ const nextConfig: NextConfig = {
         ...config.optimization,
         splitChunks: {
           chunks: "all",
+          minSize: 20000,
+          maxSize: 200000, // Reduced from 244000 for better loading
           cacheGroups: {
+            default: {
+              minChunks: 2,
+              priority: -20,
+              reuseExistingChunk: true,
+            },
             vendor: {
               test: /[\\/]node_modules[\\/]/,
               name: "vendors",
               chunks: "all",
               priority: 10,
+              maxSize: 200000,
             },
             three: {
               test: /[\\/]node_modules[\\/](three|@types\/three)[\\/]/,
               name: "three",
               chunks: "all",
               priority: 20,
+              maxSize: 150000, // Smaller chunks for 3D libraries
             },
             pixi: {
               test: /[\\/]node_modules[\\/](pixi\.js|pixi-filters)[\\/]/,
               name: "pixi",
               chunks: "all",
               priority: 20,
+              maxSize: 150000,
             },
             ui: {
               test: /[\\/]node_modules[\\/](framer-motion|lucide-react)[\\/]/,
               name: "ui",
               chunks: "all",
               priority: 15,
+              maxSize: 100000,
+            },
+            react: {
+              test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+              name: "react",
+              chunks: "all",
+              priority: 25,
+              maxSize: 150000,
+            },
+            utils: {
+              test: /[\\/]node_modules[\\/](fuse\.js|marked|dompurify)[\\/]/,
+              name: "utils",
+              chunks: "all",
+              priority: 15,
+              maxSize: 100000,
+            },
+            // New cache groups for better optimization
+            tools: {
+              test: /[\\/]src[\\/]app[\\/]tools[\\/]/,
+              name: "tools",
+              chunks: "all",
+              priority: 30,
+              maxSize: 100000,
+            },
+            admin: {
+              test: /[\\/]src[\\/]app[\\/]admin[\\/]/,
+              name: "admin",
+              chunks: "all",
+              priority: 30,
+              maxSize: 100000,
             },
           },
         },
+        usedExports: true,
+        sideEffects: false,
+        // Additional optimizations
+        moduleIds: "deterministic",
+        chunkIds: "deterministic",
       };
+
+      // Tree shaking optimizations
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        // Optimize lodash imports
+        lodash: "lodash-es",
+      };
+
+      // Remove unused code
+      config.optimization.providedExports = true;
+      config.optimization.usedExports = true;
+      config.optimization.sideEffects = false;
     }
 
     // SVG handling
@@ -269,6 +324,14 @@ const nextConfig: NextConfig = {
       test: /\.svg$/,
       use: ["@svgr/webpack"],
     });
+
+    // Additional webpack optimizations
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
 
     return config;
   },

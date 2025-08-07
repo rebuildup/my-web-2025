@@ -75,6 +75,9 @@ export const useAccessibility = () => {
 
   const [announcements, setAnnouncements] = useState<AriaAnnouncement[]>([]);
   const announcementRef = useRef<HTMLDivElement>(null);
+  const [colorBlindnessSimulation, setColorBlindnessSimulation] = useState<
+    string | null
+  >(null);
 
   // Update accessibility state when media queries change
   useEffect(() => {
@@ -164,7 +167,7 @@ export const useAccessibility = () => {
   // Container ref for tools
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Run accessibility checks
+  // Enhanced accessibility checks
   const runAccessibilityChecks = useCallback(() => {
     if (!containerRef.current) return [];
 
@@ -181,14 +184,88 @@ export const useAccessibility = () => {
       if (
         ["INPUT", "SELECT", "TEXTAREA"].includes(element.tagName) &&
         !element.getAttribute("aria-label") &&
-        !element.getAttribute("aria-labelledby")
+        !element.getAttribute("aria-labelledby") &&
+        !element.getAttribute("id")
       ) {
         issues.push("Form element missing label");
       }
+
+      // Check for interactive elements without accessible names
+      if (
+        (element.tagName === "BUTTON" ||
+          element.getAttribute("role") === "button") &&
+        !element.textContent?.trim() &&
+        !element.getAttribute("aria-label") &&
+        !element.getAttribute("aria-labelledby")
+      ) {
+        issues.push("Button missing accessible name");
+      }
+
+      // Check for insufficient color contrast (simplified)
+      const computedStyle = window.getComputedStyle(element);
+      const color = computedStyle.color;
+      const backgroundColor = computedStyle.backgroundColor;
+
+      if (color && backgroundColor && color !== backgroundColor) {
+        // This is a simplified check - in production you'd want a more robust contrast calculation
+        const isLowContrast =
+          color === "rgb(128, 128, 128)" &&
+          backgroundColor === "rgb(255, 255, 255)";
+        if (isLowContrast) {
+          issues.push("Insufficient color contrast detected");
+        }
+      }
+
+      // Check for missing heading hierarchy
+      if (element.tagName.match(/^H[1-6]$/)) {
+        const level = parseInt(element.tagName.charAt(1));
+        const previousHeading =
+          element.previousElementSibling?.tagName.match(/^H[1-6]$/);
+        if (previousHeading) {
+          const previousLevel = parseInt(previousHeading[0].charAt(1));
+          if (level > previousLevel + 1) {
+            issues.push(
+              `Heading hierarchy skipped from H${previousLevel} to H${level}`,
+            );
+          }
+        }
+      }
     });
 
+    setState((prev) => ({ ...prev, accessibilityIssues: issues }));
     return issues;
   }, []);
+
+  // Color blindness simulation
+  const simulateColorBlindness = useCallback(
+    (type: string | null) => {
+      setColorBlindnessSimulation(type);
+
+      if (type) {
+        document.documentElement.style.filter = getColorBlindnessFilter(type);
+        announce(`色覚シミュレーション: ${type}を適用しました`);
+      } else {
+        document.documentElement.style.filter = "";
+        announce("色覚シミュレーションを解除しました");
+      }
+    },
+    [announce],
+  );
+
+  // Get color blindness filter
+  const getColorBlindnessFilter = (type: string): string => {
+    const filters = {
+      protanopia: "url(#protanopia)",
+      deuteranopia: "url(#deuteranopia)",
+      tritanopia: "url(#tritanopia)",
+      protanomaly: "url(#protanomaly)",
+      deuteranomaly: "url(#deuteranomaly)",
+      tritanomaly: "url(#tritanomaly)",
+      achromatopsia: "grayscale(100%)",
+      achromatomaly: "grayscale(50%)",
+    };
+    return filters[type as keyof typeof filters] || "";
+  };
 
   return {
     state,
@@ -198,6 +275,8 @@ export const useAccessibility = () => {
     ensureMinimumTouchTarget,
     containerRef,
     runAccessibilityChecks,
+    simulateColorBlindness,
+    colorBlindnessSimulation,
   };
 };
 

@@ -1,16 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import {
-  CoreWebVitalsMonitor,
-  CoreWebVitalsMetrics,
-  PerformanceRating,
-  initializeCoreWebVitals,
-} from "@/lib/utils/core-web-vitals";
-import {
-  PerformanceTestRunner,
+  PerformanceRegressionDetector,
   initializePerformanceRegression,
 } from "@/lib/utils/performance-regression";
+import React, { useEffect, useState } from "react";
+
+interface CoreWebVitalsMetrics {
+  lcp: number | null;
+  fid: number | null;
+  cls: number | null;
+  inp: number | null;
+  ttfb: number | null;
+  fcp: number | null;
+}
+
+type PerformanceRating = "good" | "needs-improvement" | "poor";
 
 interface CoreWebVitalsDisplayProps {
   showDetails?: boolean;
@@ -29,25 +34,127 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
     ttfb: null,
     fcp: null,
   });
-  const [monitor, setMonitor] = useState<CoreWebVitalsMonitor | null>(null);
-  const [testRunner, setTestRunner] = useState<PerformanceTestRunner | null>(
-    null,
-  );
+  const [detector, setDetector] =
+    useState<PerformanceRegressionDetector | null>(null);
 
   useEffect(() => {
-    const cwvMonitor = initializeCoreWebVitals();
-    const perfTestRunner = initializePerformanceRegression();
+    const perfDetector = initializePerformanceRegression();
+    setDetector(perfDetector);
 
-    setMonitor(cwvMonitor);
-    setTestRunner(perfTestRunner);
+    // Initialize performance observers
+    if (typeof window !== "undefined" && "PerformanceObserver" in window) {
+      try {
+        // LCP Observer
+        const lcpObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1] as PerformanceEntry & {
+            startTime: number;
+          };
+          setMetrics((prev) => ({ ...prev, lcp: lastEntry.startTime }));
+        });
+        lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
 
-    const unsubscribe = cwvMonitor.subscribe(setMetrics);
+        // FID Observer
+        const fidObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach((entry) => {
+            const fidEntry = entry as PerformanceEntry & {
+              processingStart: number;
+              startTime: number;
+            };
+            if ("processingStart" in fidEntry) {
+              const fid = fidEntry.processingStart - fidEntry.startTime;
+              setMetrics((prev) => ({ ...prev, fid }));
+            }
+          });
+        });
+        fidObserver.observe({ entryTypes: ["first-input"] });
 
-    return () => {
-      unsubscribe();
-      cwvMonitor.cleanup();
-    };
+        // CLS Observer
+        let clsValue = 0;
+        const clsObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach((entry) => {
+            const clsEntry = entry as PerformanceEntry & {
+              hadRecentInput: boolean;
+              value: number;
+            };
+            if ("hadRecentInput" in clsEntry && "value" in clsEntry) {
+              if (!clsEntry.hadRecentInput) {
+                clsValue += clsEntry.value;
+              }
+            }
+          });
+          setMetrics((prev) => ({ ...prev, cls: clsValue }));
+        });
+        clsObserver.observe({ entryTypes: ["layout-shift"] });
+
+        // FCP Observer
+        const fcpObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          entries.forEach(
+            (entry: PerformanceEntry & { name: string; startTime: number }) => {
+              if (entry.name === "first-contentful-paint") {
+                setMetrics((prev) => ({ ...prev, fcp: entry.startTime }));
+              }
+            },
+          );
+        });
+        fcpObserver.observe({ entryTypes: ["paint"] });
+
+        return () => {
+          lcpObserver.disconnect();
+          fidObserver.disconnect();
+          clsObserver.disconnect();
+          fcpObserver.disconnect();
+        };
+      } catch (error) {
+        console.warn("Performance observers failed to initialize:", error);
+      }
+    }
   }, []);
+
+  const getRating = (
+    metric: keyof CoreWebVitalsMetrics,
+    value: number | null,
+  ): PerformanceRating => {
+    if (value === null) return "poor";
+
+    switch (metric) {
+      case "lcp":
+        return value <= 2500
+          ? "good"
+          : value <= 4000
+            ? "needs-improvement"
+            : "poor";
+      case "fid":
+        return value <= 100
+          ? "good"
+          : value <= 300
+            ? "needs-improvement"
+            : "poor";
+      case "cls":
+        return value <= 0.1
+          ? "good"
+          : value <= 0.25
+            ? "needs-improvement"
+            : "poor";
+      case "fcp":
+        return value <= 1800
+          ? "good"
+          : value <= 3000
+            ? "needs-improvement"
+            : "poor";
+      case "ttfb":
+        return value <= 800
+          ? "good"
+          : value <= 1800
+            ? "needs-improvement"
+            : "poor";
+      default:
+        return "poor";
+    }
+  };
 
   const getRatingColor = (rating: PerformanceRating): string => {
     switch (rating) {
@@ -121,16 +228,16 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
   };
 
   const runPerformanceTest = async () => {
-    if (!testRunner) return;
+    if (!detector) return;
 
     try {
-      const results = await testRunner.runPerformanceTests();
-      console.log("Performance test results:", results);
+      const status = detector.getPerformanceStatus();
+      console.log("Performance status:", status);
 
       // Show results in development
       if (process.env.NODE_ENV === "development") {
         alert(
-          `Performance Test Complete!\nScore: ${results.regressionReport.summary.regressionCount === 0 ? "PASS" : "FAIL"}\nRegressions: ${results.regressionReport.summary.regressionCount}`,
+          `Performance Test Complete!\nRegressions: ${status.regressions.length}\nBaseline: ${status.baseline ? "Set" : "Not Set"}`,
         );
       }
     } catch (error) {
@@ -142,7 +249,7 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
     // Compact view - show only core metrics
     const coreMetrics = ["lcp", "fid", "cls"] as const;
     const allGood = coreMetrics.every((metric) => {
-      const rating = CoreWebVitalsMonitor.getRating(metric, metrics[metric]);
+      const rating = getRating(metric, metrics[metric]);
       return rating === "good";
     });
 
@@ -175,7 +282,7 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {Object.entries(metrics).map(([metric, value]) => {
           const metricKey = metric as keyof CoreWebVitalsMetrics;
-          const rating = CoreWebVitalsMonitor.getRating(metricKey, value);
+          const rating = getRating(metricKey, value);
           const colorClass = getRatingColor(rating);
 
           return (
@@ -207,9 +314,9 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
         })}
       </div>
 
-      {monitor && (
+      {detector && (
         <div className="mt-6">
-          <PerformanceReport monitor={monitor} />
+          <PerformanceReport detector={detector} />
         </div>
       )}
     </div>
@@ -217,19 +324,24 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
 };
 
 interface PerformanceReportProps {
-  monitor: CoreWebVitalsMonitor;
+  detector: PerformanceRegressionDetector;
 }
 
-const PerformanceReport: React.FC<PerformanceReportProps> = ({ monitor }) => {
-  const [report, setReport] = useState(monitor.generateReport());
+const PerformanceReport: React.FC<PerformanceReportProps> = ({ detector }) => {
+  const [status, setStatus] = useState(detector.getPerformanceStatus());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setReport(monitor.generateReport());
+      setStatus(detector.getPerformanceStatus());
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [monitor]);
+  }, [detector]);
+
+  const score =
+    status.regressions.length === 0
+      ? 100
+      : Math.max(0, 100 - status.regressions.length * 20);
 
   return (
     <div className="border-t pt-4">
@@ -237,27 +349,30 @@ const PerformanceReport: React.FC<PerformanceReportProps> = ({ monitor }) => {
         <h4 className="text-md font-medium text-gray-800">Performance Score</h4>
         <div
           className={`text-2xl font-bold ${
-            report.score >= 90
+            score >= 90
               ? "text-green-500"
-              : report.score >= 70
+              : score >= 70
                 ? "text-yellow-500"
                 : "text-red-500"
           }`}
         >
-          {report.score}/100
+          {score}/100
         </div>
       </div>
 
-      {report.recommendations.length > 0 && (
+      {status.regressions.length > 0 && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
           <h5 className="text-sm font-medium text-yellow-800 mb-2">
-            Recommendations
+            Performance Issues ({status.regressions.length})
           </h5>
           <ul className="text-sm text-yellow-700 space-y-1">
-            {report.recommendations.map((recommendation, index) => (
+            {status.regressions.map((regression, index) => (
               <li key={index} className="flex items-start">
                 <span className="mr-2">•</span>
-                <span>{recommendation}</span>
+                <span>
+                  {regression.metric}: {regression.regression.toFixed(1)}%
+                  regression
+                </span>
               </li>
             ))}
           </ul>

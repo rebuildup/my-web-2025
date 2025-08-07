@@ -1,12 +1,15 @@
 /**
  * Service Worker for samuido website
  * Implements caching strategies and offline functionality
+ * Enhanced with performance regression fixes
  */
 
-const CACHE_NAME = "samuido-v1";
-const STATIC_CACHE = "samuido-static-v1";
-const DYNAMIC_CACHE = "samuido-dynamic-v1";
-const IMAGE_CACHE = "samuido-images-v1";
+const CACHE_VERSION = "v2.0.0";
+const CACHE_NAME = `samuido-${CACHE_VERSION}`;
+const STATIC_CACHE = `samuido-static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `samuido-dynamic-${CACHE_VERSION}`;
+const IMAGE_CACHE = `samuido-images-${CACHE_VERSION}`;
+const API_CACHE = `samuido-api-${CACHE_VERSION}`;
 
 // Resources to cache immediately (only essential and guaranteed to exist)
 const STATIC_ASSETS = [
@@ -17,52 +20,186 @@ const STATIC_ASSETS = [
   "/tools",
   "/search",
   "/privacy-policy",
-  "/offline",
-  "/images/og-image.png",
   "/favicon.ico",
   "/manifest.json",
 ];
 
-// Cache strategies
+// Critical resources for performance
+const CRITICAL_RESOURCES = [
+  "/_next/static/css/",
+  "/_next/static/chunks/",
+  "/images/og-image.png",
+];
+
+// Performance monitoring
+const PERFORMANCE_METRICS = {
+  cacheHits: 0,
+  cacheMisses: 0,
+  networkRequests: 0,
+  errors: 0,
+};
+
+// Cache strategies with performance optimizations
 const CACHE_STRATEGIES = {
-  // Static assets - Cache first
+  // Static assets - Cache first with long TTL
   static: ["/_next/static/", "/images/", "/videos/", "/fonts/", "/favicons/"],
-  // API routes - Network first with fallback
-  api: ["/api/content/", "/api/stats/"],
+  // API routes - Network first with fallback and short TTL
+  api: ["/api/content/", "/api/stats/", "/api/monitoring/"],
   // Dynamic content - Stale while revalidate
   dynamic: ["/portfolio/", "/workshop/", "/tools/", "/about/"],
+  // Critical resources - Preload and cache aggressively
+  critical: CRITICAL_RESOURCES,
 };
+
+// Performance thresholds
+const PERFORMANCE_THRESHOLDS = {
+  SLOW_REQUEST: 3000, // 3 seconds
+  CACHE_SIZE_LIMIT: 50 * 1024 * 1024, // 50MB
+  MAX_CACHE_AGE: 7 * 24 * 60 * 60 * 1000, // 7 days
+};
+
+// Performance monitoring functions
+async function preloadCriticalResources() {
+  try {
+    const cache = await caches.open(STATIC_CACHE);
+    const preloadPromises = CRITICAL_RESOURCES.map(async (resource) => {
+      try {
+        const response = await fetch(resource, { cache: "force-cache" });
+        if (response.ok) {
+          await cache.put(resource, response);
+          console.log("Service Worker: Preloaded", resource);
+        }
+      } catch (error) {
+        console.warn(
+          "Service Worker: Failed to preload",
+          resource,
+          error.message,
+        );
+      }
+    });
+    await Promise.allSettled(preloadPromises);
+  } catch (error) {
+    console.error(
+      "Service Worker: Critical resource preloading failed:",
+      error,
+    );
+  }
+}
+
+function initializePerformanceMonitoring() {
+  // Set up periodic cache cleanup
+  setInterval(cleanupOldCaches, 60 * 60 * 1000); // Every hour
+
+  // Monitor cache size
+  setInterval(monitorCacheSize, 30 * 60 * 1000); // Every 30 minutes
+
+  console.log("Service Worker: Performance monitoring initialized");
+}
+
+async function cleanupOldCaches() {
+  try {
+    const cacheNames = await caches.keys();
+    const oldCaches = cacheNames.filter(
+      (name) => name.startsWith("samuido-") && !name.includes(CACHE_VERSION),
+    );
+
+    await Promise.all(oldCaches.map((name) => caches.delete(name)));
+
+    if (oldCaches.length > 0) {
+      console.log("Service Worker: Cleaned up old caches:", oldCaches);
+    }
+  } catch (error) {
+    console.error("Service Worker: Cache cleanup failed:", error);
+  }
+}
+
+async function monitorCacheSize() {
+  try {
+    if ("storage" in navigator && "estimate" in navigator.storage) {
+      const estimate = await navigator.storage.estimate();
+      const usage = estimate.usage || 0;
+      const quota = estimate.quota || 0;
+
+      if (usage > PERFORMANCE_THRESHOLDS.CACHE_SIZE_LIMIT) {
+        console.warn("Service Worker: Cache size limit exceeded", {
+          usage: Math.round(usage / 1024 / 1024) + "MB",
+          quota: Math.round(quota / 1024 / 1024) + "MB",
+        });
+
+        // Trigger cache cleanup
+        await cleanupOldCaches();
+      }
+    }
+  } catch (error) {
+    console.error("Service Worker: Cache size monitoring failed:", error);
+  }
+}
+
+function reportError(type, details) {
+  try {
+    // Send error to monitoring endpoint
+    fetch("/api/monitoring/errors", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "service_worker_error",
+        subtype: type,
+        details,
+        timestamp: new Date().toISOString(),
+        metrics: PERFORMANCE_METRICS,
+      }),
+    }).catch(() => {
+      // Silently fail if monitoring is unavailable
+    });
+  } catch (error) {
+    // Silently fail to prevent infinite error loops
+  }
+}
 
 // Install event - Cache static assets
 self.addEventListener("install", (event) => {
   console.log("Service Worker: Installing...");
 
   event.waitUntil(
-    caches.open(STATIC_CACHE).then(async (cache) => {
-      console.log("Service Worker: Caching static assets");
+    caches
+      .open(STATIC_CACHE)
+      .then(async (cache) => {
+        console.log("Service Worker: Caching static assets");
 
-      // Cache assets individually to handle failures gracefully
-      const cachePromises = STATIC_ASSETS.map(async (asset) => {
-        try {
-          const response = await fetch(asset);
-          if (response.ok) {
-            await cache.put(asset, response);
-            console.log("Service Worker: Cached", asset);
-          } else {
-            console.warn("Service Worker: Failed to cache (not found):", asset);
+        // Cache assets individually to handle failures gracefully
+        const cachePromises = STATIC_ASSETS.map(async (asset) => {
+          try {
+            const response = await fetch(asset, {
+              cache: "no-cache",
+              headers: {
+                "Cache-Control": "no-cache",
+              },
+            });
+            if (response.ok) {
+              await cache.put(asset, response);
+              console.log("Service Worker: Cached", asset);
+            } else {
+              console.warn(
+                "Service Worker: Failed to cache (not found):",
+                asset,
+              );
+            }
+          } catch (error) {
+            console.warn(
+              "Service Worker: Failed to cache (error):",
+              asset,
+              error.message,
+            );
+            // Continue with other assets even if one fails
           }
-        } catch (error) {
-          console.warn(
-            "Service Worker: Failed to cache (error):",
-            asset,
-            error.message,
-          );
-        }
-      });
+        });
 
-      await Promise.allSettled(cachePromises);
-      console.log("Service Worker: Static assets caching completed");
-    }),
+        await Promise.allSettled(cachePromises);
+        console.log("Service Worker: Static assets caching completed");
+      })
+      .catch((error) => {
+        console.error("Service Worker: Cache initialization failed:", error);
+      }),
   );
 
   // Skip waiting to activate immediately
@@ -113,105 +250,234 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(handleRequest(request));
 });
 
-// Main request handler
+// Main request handler with performance monitoring
 async function handleRequest(request) {
   const url = new URL(request.url);
   const pathname = url.pathname;
+  const startTime = performance.now();
 
   try {
+    PERFORMANCE_METRICS.networkRequests++;
+
+    let response;
+    let strategy = "default";
+
     // Static assets - Cache first strategy
     if (isStaticAsset(pathname)) {
-      return await cacheFirst(request, STATIC_CACHE);
+      response = await cacheFirst(request, STATIC_CACHE);
+      strategy = "cache-first";
     }
-
     // Images - Cache first with image cache
-    if (isImage(pathname)) {
-      return await cacheFirst(request, IMAGE_CACHE);
+    else if (isImage(pathname)) {
+      response = await cacheFirst(request, IMAGE_CACHE);
+      strategy = "cache-first-images";
     }
-
     // API routes - Network first strategy
-    if (isApiRoute(pathname)) {
-      return await networkFirst(request, DYNAMIC_CACHE);
+    else if (isApiRoute(pathname)) {
+      response = await networkFirst(request, API_CACHE);
+      strategy = "network-first-api";
     }
-
     // Dynamic pages - Stale while revalidate
-    if (isDynamicPage(pathname)) {
-      return await staleWhileRevalidate(request, DYNAMIC_CACHE);
+    else if (isDynamicPage(pathname)) {
+      response = await staleWhileRevalidate(request, DYNAMIC_CACHE);
+      strategy = "stale-while-revalidate";
+    }
+    // Default - Network first
+    else {
+      response = await networkFirst(request, DYNAMIC_CACHE);
+      strategy = "network-first-default";
     }
 
-    // Default - Network first
-    return await networkFirst(request, DYNAMIC_CACHE);
+    // Performance monitoring
+    const duration = performance.now() - startTime;
+    if (duration > PERFORMANCE_THRESHOLDS.SLOW_REQUEST) {
+      console.warn("Service Worker: Slow request detected", {
+        url: pathname,
+        duration: Math.round(duration),
+        strategy,
+      });
+
+      reportError("slow_request", {
+        url: pathname,
+        duration,
+        strategy,
+      });
+    }
+
+    return response;
   } catch (error) {
-    console.error("Service Worker: Request failed:", error);
+    PERFORMANCE_METRICS.errors++;
+    console.error("Service Worker: Request failed:", pathname, error.message);
+
+    // Report error for monitoring
+    reportError("request_failed", {
+      url: pathname,
+      error: error.message,
+      duration: performance.now() - startTime,
+    });
+
+    // Notify clients
+    if (typeof self.clients !== "undefined") {
+      self.clients
+        .matchAll()
+        .then((clients) => {
+          clients.forEach((client) => {
+            client.postMessage({
+              type: "SW_ERROR",
+              error: {
+                message: error.message,
+                url: request.url,
+                timestamp: Date.now(),
+              },
+            });
+          });
+        })
+        .catch(() => {
+          // Silently fail if client messaging fails
+        });
+    }
+
     return await handleOffline(request);
   }
 }
 
 // Cache first strategy
 async function cacheFirst(request, cacheName) {
-  const cache = await caches.open(cacheName);
-  const cachedResponse = await cache.match(request);
-
-  if (cachedResponse) {
-    return cachedResponse;
-  }
-
   try {
-    const networkResponse = await fetch(request);
+    const cache = await caches.open(cacheName);
+    const cachedResponse = await cache.match(request);
+
+    if (cachedResponse) {
+      PERFORMANCE_METRICS.cacheHits++;
+
+      // Check if cached response is still valid
+      const cacheDate = cachedResponse.headers.get("date");
+      if (cacheDate) {
+        const age = Date.now() - new Date(cacheDate).getTime();
+        // If cached for more than max age, try network first
+        if (age > PERFORMANCE_THRESHOLDS.MAX_CACHE_AGE) {
+          try {
+            const networkResponse = await fetch(request, {
+              signal: AbortSignal.timeout(5000), // 5 second timeout
+            });
+            if (networkResponse.ok) {
+              cache.put(request, networkResponse.clone()).catch(() => {
+                // Silently fail cache update
+              });
+              return networkResponse;
+            }
+          } catch (networkError) {
+            // Network failed, return cached version
+            console.log(
+              "Service Worker: Network failed, using cache:",
+              request.url,
+            );
+          }
+        }
+      }
+      return cachedResponse;
+    }
+
+    PERFORMANCE_METRICS.cacheMisses++;
+
+    const networkResponse = await fetch(request, {
+      signal: AbortSignal.timeout(10000), // 10 second timeout
+    });
     if (networkResponse.ok) {
-      cache.put(request, networkResponse.clone());
+      cache.put(request, networkResponse.clone()).catch(() => {
+        // Silently fail cache update
+      });
     }
     return networkResponse;
   } catch (error) {
+    console.warn(
+      "Service Worker: Cache first failed:",
+      request.url,
+      error.message,
+    );
     return await handleOffline(request);
   }
 }
 
 // Network first strategy
 async function networkFirst(request, cacheName) {
-  const cache = await caches.open(cacheName);
-
   try {
-    const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      cache.put(request, networkResponse.clone());
+    const cache = await caches.open(cacheName);
+
+    try {
+      const networkResponse = await fetch(request, {
+        signal: AbortSignal.timeout(8000), // 8 second timeout
+      });
+      if (networkResponse.ok) {
+        cache.put(request, networkResponse.clone()).catch(() => {
+          // Silently fail cache update
+        });
+      }
+      return networkResponse;
+    } catch (networkError) {
+      console.log("Service Worker: Network failed, trying cache:", request.url);
+      const cachedResponse = await cache.match(request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      throw networkError;
     }
-    return networkResponse;
   } catch (error) {
-    const cachedResponse = await cache.match(request);
-    if (cachedResponse) {
-      return cachedResponse;
-    }
+    console.warn(
+      "Service Worker: Network first failed:",
+      request.url,
+      error.message,
+    );
     return await handleOffline(request);
   }
 }
 
 // Stale while revalidate strategy
 async function staleWhileRevalidate(request, cacheName) {
-  const cache = await caches.open(cacheName);
-  const cachedResponse = await cache.match(request);
-
-  // Always try to update cache in background
-  const networkResponsePromise = fetch(request)
-    .then((networkResponse) => {
-      if (networkResponse.ok) {
-        cache.put(request, networkResponse.clone());
-      }
-      return networkResponse;
-    })
-    .catch(() => {
-      // Network failed, but we might have cached version
-    });
-
-  // Return cached version immediately if available
-  if (cachedResponse) {
-    return cachedResponse;
-  }
-
-  // Otherwise wait for network
   try {
-    return await networkResponsePromise;
+    const cache = await caches.open(cacheName);
+    const cachedResponse = await cache.match(request);
+
+    // Always try to update cache in background
+    const networkResponsePromise = fetch(request, {
+      signal: AbortSignal.timeout(6000), // 6 second timeout
+    })
+      .then((networkResponse) => {
+        if (networkResponse.ok) {
+          cache.put(request, networkResponse.clone()).catch(() => {
+            // Silently fail cache update
+          });
+        }
+        return networkResponse;
+      })
+      .catch((networkError) => {
+        console.log("Service Worker: Background update failed:", request.url);
+        // Network failed, but we might have cached version
+        return null;
+      });
+
+    // Return cached version immediately if available
+    if (cachedResponse) {
+      // Don't await the network promise, let it update in background
+      networkResponsePromise.catch(() => {
+        // Silently handle background update failures
+      });
+      return cachedResponse;
+    }
+
+    // Otherwise wait for network
+    const networkResponse = await networkResponsePromise;
+    if (networkResponse) {
+      return networkResponse;
+    }
+
+    throw new Error("No cached response and network failed");
   } catch (error) {
+    console.warn(
+      "Service Worker: Stale while revalidate failed:",
+      request.url,
+      error.message,
+    );
     return await handleOffline(request);
   }
 }

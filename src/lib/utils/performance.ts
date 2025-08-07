@@ -174,6 +174,21 @@ export class PerformanceMonitor {
   }
 
   private reportMetric(name: string, value: number): void {
+    // Check if metric exceeds thresholds
+    const thresholds = {
+      lcp: 2500, // 2.5s
+      fid: 100, // 100ms
+      cls: 0.1, // 0.1
+      fcp: 1800, // 1.8s
+    };
+
+    const threshold = thresholds[name as keyof typeof thresholds];
+    if (threshold && value > threshold) {
+      console.warn(
+        `Performance threshold exceeded - ${name}: ${value} (threshold: ${threshold})`,
+      );
+    }
+
     // Report to analytics in production
     if (process.env.NODE_ENV === "production") {
       // Send to analytics service
@@ -193,7 +208,7 @@ export class PerformanceMonitor {
       if (typeof window !== "undefined" && window.gtag) {
         window.gtag("event", "performance_metric", {
           metric_name: name,
-          metric_value: value,
+          metric_value: Math.round(value),
           custom_parameter: "core_web_vitals",
         });
       }
@@ -203,20 +218,57 @@ export class PerformanceMonitor {
         typeof window !== "undefined" &&
         process.env.NODE_ENV === "production"
       ) {
-        fetch("/api/monitoring/performance", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            [name]: value,
-            timestamp: new Date().toISOString(),
-            url: window.location.href,
-            userAgent: navigator.userAgent,
-          }),
-        }).catch(() => {
-          // Silently fail to prevent console errors
-        });
+        // Use requestIdleCallback to avoid blocking main thread
+        const sendMetric = () => {
+          fetch("/api/monitoring/performance", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              metric: name,
+              value: Math.round(value),
+              timestamp: new Date().toISOString(),
+              url: window.location.href,
+              userAgent: navigator.userAgent,
+              connection: (
+                navigator as Navigator & {
+                  connection?: {
+                    effectiveType: string;
+                    downlink: number;
+                  };
+                }
+              ).connection
+                ? {
+                    effectiveType: (
+                      navigator as Navigator & {
+                        connection: {
+                          effectiveType: string;
+                          downlink: number;
+                        };
+                      }
+                    ).connection.effectiveType,
+                    downlink: (
+                      navigator as Navigator & {
+                        connection: {
+                          effectiveType: string;
+                          downlink: number;
+                        };
+                      }
+                    ).connection.downlink,
+                  }
+                : undefined,
+            }),
+          }).catch(() => {
+            // Silently fail to prevent console errors
+          });
+        };
+
+        if ("requestIdleCallback" in window) {
+          requestIdleCallback(sendMetric, { timeout: 2000 });
+        } else {
+          setTimeout(sendMetric, 0);
+        }
       }
     } catch (error) {
       // Silently fail in production to prevent console errors
@@ -591,6 +643,20 @@ export const performanceMonitoring = {
 // Initialize performance monitoring
 export const initializePerformanceMonitoring = (): PerformanceMonitor => {
   const monitor = new PerformanceMonitor();
+
+  // Initialize regression detection
+  if (typeof window !== "undefined") {
+    import("./performance-regression")
+      .then(({ initializePerformanceRegression }) => {
+        initializePerformanceRegression();
+      })
+      .catch((error) => {
+        console.warn(
+          "Failed to initialize performance regression detection:",
+          error,
+        );
+      });
+  }
 
   // Preload critical resources
   ResourcePreloader.preloadCriticalResources();

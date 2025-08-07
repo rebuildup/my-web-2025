@@ -399,7 +399,12 @@ export default async function PortfolioPage() {
       />
 
       <div className="min-h-screen bg-background text-foreground">
-        <main id="main-content" role="main" className="flex items-center py-4">
+        <main
+          id="main-content"
+          role="main"
+          className="flex items-center py-4"
+          tabIndex={-1}
+        >
           <div className="container-system">
             <div className="space-y-10">
               {/* Breadcrumbs */}

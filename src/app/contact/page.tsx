@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
-  Loader2,
-  CheckCircle,
   AlertCircle,
+  CheckCircle,
+  Loader2,
   Mail,
-  User,
   RefreshCw,
   Save,
+  User,
 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface ContactFormData {
   name: string;
@@ -560,7 +560,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <main id="main-content" role="main" className="py-10">
+      <main id="main-content" role="main" className="py-10" tabIndex={-1}>
         <div className="container-system">
           <div className="flex justify-between items-center mb-8">
             <h1 className="neue-haas-grotesk-display text-4xl text-primary">
@@ -704,9 +704,12 @@ export default function ContactPage() {
             noValidate
           >
             {/* Name Field */}
-            <div>
+            <div className="form-field">
               <label htmlFor="name" className="block text-sm font-medium mb-2">
-                Name <span className="text-red-500">*</span>
+                Name{" "}
+                <span className="text-red-500" aria-label="必須項目">
+                  *
+                </span>
               </label>
               <input
                 type="text"
@@ -714,21 +717,32 @@ export default function ContactPage() {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`w-full p-3 border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent transition-colors ${
+                className={`w-full p-3 border-2 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-colors min-h-[44px] ${
                   errors.name
                     ? "border-red-500 focus:ring-red-500"
                     : "border-foreground"
                 }`}
                 required
-                aria-describedby={errors.name ? "name-error" : undefined}
+                aria-describedby={
+                  ["name-hint", errors.name ? "name-error" : null]
+                    .filter(Boolean)
+                    .join(" ") || undefined
+                }
                 aria-invalid={!!errors.name}
+                autoComplete="name"
+                placeholder="お名前を入力してください"
               />
+              <div id="name-hint" className="text-xs text-foreground/60 mt-1">
+                {config.validation.nameMinLength}文字以上
+                {config.validation.nameMaxLength}文字以内で入力してください
+              </div>
               {errors.name && (
                 <div
                   id="name-error"
                   data-testid="name-error"
-                  className="text-red-500 text-sm mt-1"
+                  className="error-message"
                   role="alert"
+                  aria-live="polite"
                 >
                   {errors.name}
                 </div>
@@ -736,9 +750,12 @@ export default function ContactPage() {
             </div>
 
             {/* Email Field */}
-            <div>
+            <div className="form-field">
               <label htmlFor="email" className="block text-sm font-medium mb-2">
-                Email <span className="text-red-500">*</span>
+                Email{" "}
+                <span className="text-red-500" aria-label="必須項目">
+                  *
+                </span>
               </label>
               <input
                 type="email"
@@ -746,21 +763,31 @@ export default function ContactPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full p-3 border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent transition-colors ${
+                className={`w-full p-3 border-2 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-colors min-h-[44px] ${
                   errors.email
                     ? "border-red-500 focus:ring-red-500"
                     : "border-foreground"
                 }`}
                 required
-                aria-describedby={errors.email ? "email-error" : undefined}
+                aria-describedby={
+                  ["email-hint", errors.email ? "email-error" : null]
+                    .filter(Boolean)
+                    .join(" ") || undefined
+                }
                 aria-invalid={!!errors.email}
+                autoComplete="email"
+                placeholder="example@email.com"
               />
+              <div id="email-hint" className="text-xs text-foreground/60 mt-1">
+                返信用のメールアドレスを入力してください
+              </div>
               {errors.email && (
                 <div
                   id="email-error"
                   data-testid="email-error"
-                  className="text-red-500 text-sm mt-1"
+                  className="error-message"
                   role="alert"
+                  aria-live="polite"
                 >
                   {errors.email}
                 </div>
@@ -768,12 +795,15 @@ export default function ContactPage() {
             </div>
 
             {/* Subject Field */}
-            <div>
+            <div className="form-field">
               <label
                 htmlFor="subject"
                 className="block text-sm font-medium mb-2"
               >
-                Subject <span className="text-red-500">*</span>
+                Subject{" "}
+                <span className="text-red-500" aria-label="必須項目">
+                  *
+                </span>
               </label>
               <input
                 type="text"
@@ -781,21 +811,34 @@ export default function ContactPage() {
                 name="subject"
                 value={formData.subject}
                 onChange={handleInputChange}
-                className={`w-full p-3 border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent transition-colors ${
+                className={`w-full p-3 border-2 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-colors min-h-[44px] ${
                   errors.subject
                     ? "border-red-500 focus:ring-red-500"
                     : "border-foreground"
                 }`}
                 required
-                aria-describedby={errors.subject ? "subject-error" : undefined}
+                aria-describedby={
+                  ["subject-hint", errors.subject ? "subject-error" : null]
+                    .filter(Boolean)
+                    .join(" ") || undefined
+                }
                 aria-invalid={!!errors.subject}
+                placeholder="お問い合わせの件名を入力してください"
               />
+              <div
+                id="subject-hint"
+                className="text-xs text-foreground/60 mt-1"
+              >
+                {config.validation.subjectMinLength}文字以上
+                {config.validation.subjectMaxLength}文字以内で入力してください
+              </div>
               {errors.subject && (
                 <div
                   id="subject-error"
                   data-testid="subject-error"
-                  className="text-red-500 text-sm mt-1"
+                  className="error-message"
                   role="alert"
+                  aria-live="polite"
                 >
                   {errors.subject}
                 </div>
@@ -803,12 +846,15 @@ export default function ContactPage() {
             </div>
 
             {/* Message Field */}
-            <div>
+            <div className="form-field">
               <label
                 htmlFor="message"
                 className="block text-sm font-medium mb-2"
               >
-                Message <span className="text-red-500">*</span>
+                Message{" "}
+                <span className="text-red-500" aria-label="必須項目">
+                  *
+                </span>
               </label>
               <textarea
                 id="message"
@@ -816,29 +862,50 @@ export default function ContactPage() {
                 value={formData.message}
                 onChange={handleInputChange}
                 rows={6}
-                className={`w-full p-3 border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent transition-colors resize-vertical ${
+                className={`w-full p-3 border-2 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-colors resize-vertical ${
                   errors.message
                     ? "border-red-500 focus:ring-red-500"
                     : "border-foreground"
                 }`}
                 required
-                aria-describedby={errors.message ? "message-error" : undefined}
+                aria-describedby={
+                  [
+                    "message-hint",
+                    "message-count",
+                    errors.message ? "message-error" : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" ") || undefined
+                }
                 aria-invalid={!!errors.message}
+                placeholder="お問い合わせ内容を詳しく入力してください"
               />
+              <div
+                id="message-hint"
+                className="text-xs text-foreground/60 mt-1"
+              >
+                {config.validation.messageMinLength}文字以上
+                {config.validation.messageMaxLength}文字以内で入力してください
+              </div>
+              <div
+                id="message-count"
+                className="text-xs text-foreground/50 mt-1"
+                aria-live="polite"
+              >
+                {formData.message.length}/{config.validation.messageMaxLength}{" "}
+                文字
+              </div>
               {errors.message && (
                 <div
                   id="message-error"
                   data-testid="message-error"
-                  className="text-red-500 text-sm mt-1"
+                  className="error-message"
                   role="alert"
+                  aria-live="polite"
                 >
                   {errors.message}
                 </div>
               )}
-              <div className="text-xs text-foreground/50 mt-1">
-                {formData.message.length}/{config.validation.messageMaxLength}{" "}
-                characters
-              </div>
             </div>
 
             {/* General Error */}
