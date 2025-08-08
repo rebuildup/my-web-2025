@@ -1,0 +1,277 @@
+[
+  {
+    "timestamp": "2025-08-07T00:54:20.213Z",
+    "alerts": [
+      {
+        "type": "threshold",
+        "metric": "branches",
+        "current": "23.79",
+        "threshold": 100,
+        "severity": "critical",
+        "message": "branches カバレッジが閾値を下回っています: 23.79% < 100%"
+      },
+      {
+        "type": "threshold",
+        "metric": "functions",
+        "current": "24.58",
+        "threshold": 100,
+        "severity": "critical",
+        "message": "functions カバレッジが閾値を下回っています: 24.58% < 100%"
+      },
+      {
+        "type": "threshold",
+        "metric": "lines",
+        "current": "25.43",
+        "threshold": 100,
+        "severity": "critical",
+        "message": "lines カバレッジが閾値を下回っています: 25.43% < 100%"
+      },
+      {
+        "type": "threshold",
+        "metric": "statements",
+        "current": "24.22",
+        "threshold": 100,
+        "severity": "critical",
+        "message": "statements カバレッジが閾値を下回っています: 24.22% < 100%"
+      },
+      {
+        "type": "low_coverage_files",
+        "count": 368,
+        "files": [
+          {
+            "path": "/src/app/layout.tsx",
+            "statements": {
+              "total": 10,
+              "covered": 0,
+              "percentage": 0
+            },
+            "branches": {
+              "total": 1,
+              "covered": 0,
+              "percentage": 0
+            },
+            "functions": {
+              "total": 1,
+              "covered": 0,
+              "percentage": 0
+            },
+            "lines": {
+              "total": 8,
+              "covered": 0,
+              "percentage": 0
+            }
+          },
+          {
+            "path": "/src/app/not-found.tsx",
+            "statements": {
+              "total": 4,
+              "covered": 3,
+              "percentage": 75
+            },
+            "branches": {
+              "total": 0,
+              "covered": 0,
+              "percentage": 100
+            },
+            "functions": {
+              "total": 3,
+              "covered": 2,
+              "percentage": 66.66666666666666
+            },
+            "lines": {
+              "total": 4,
+              "covered": 3,
+              "percentage": 75
+            }
+          },
+          {
+            "path": "/src/app/robots.ts",
+            "statements": {
+              "total": 3,
+              "covered": 0,
+              "percentage": 0
+            },
+            "branches": {
+              "total": 0,
+              "covered": 0,
+              "percentage": 100
+            },
+            "functions": {
+              "total": 1,
+              "covered": 0,
+              "percentage": 0
+            },
+            "lines": {
+              "total": 3,
+              "covered": 0,
+              "percentage": 0
+            }
+          },
+          {
+            "path": "/src/app/sitemap.ts",
+            "statements": {
+              "total": 3,
+              "covered": 0,
+              "percentage": 0
+            },
+            "branches": {
+              "total": 0,
+              "covered": 0,
+              "percentage": 100
+            },
+            "functions": {
+              "total": 1,
+              "covered": 0,
+              "percentage": 0
+            },
+            "lines": {
+              "total": 3,
+              "covered": 0,
+              "percentage": 0
+            }
+          },
+          {
+            "path": "/src/app/about/card/handle/page.tsx",
+            "statements": {
+              "total": 46,
+              "covered": 43,
+              "percentage": 93.47826086956522
+            },
+            "branches": {
+              "total": 6,
+              "covered": 4,
+              "percentage": 66.66666666666666
+            },
+            "functions": {
+              "total": 9,
+              "covered": 9,
+              "percentage": 100
+            },
+            "lines": {
+              "total": 45,
+              "covered": 43,
+              "percentage": 95.55555555555556
+            }
+          },
+          {
+            "path": "/src/app/about/card/real/page.tsx",
+            "statements": {
+              "total": 45,
+              "covered": 42,
+              "percentage": 93.33333333333333
+            },
+            "branches": {
+              "total": 6,
+              "covered": 4,
+              "percentage": 66.66666666666666
+            },
+            "functions": {
+              "total": 8,
+              "covered": 8,
+              "percentage": 100
+            },
+            "lines": {
+              "total": 44,
+              "covered": 42,
+              "percentage": 95.45454545454545
+            }
+          },
+          {
+            "path": "/src/app/about/commission/estimate/layout.tsx",
+            "statements": {
+              "total": 4,
+              "covered": 0,
+              "percentage": 0
+            },
+            "branches": {
+              "total": 0,
+              "covered": 0,
+              "percentage": 100
+            },
+            "functions": {
+              "total": 1,
+              "covered": 0,
+              "percentage": 0
+            },
+            "lines": {
+              "total": 3,
+              "covered": 0,
+              "percentage": 0
+            }
+          },
+          {
+            "path": "/src/app/about/commission/estimate/page.tsx",
+            "statements": {
+              "total": 73,
+              "covered": 56,
+              "percentage": 76.71232876712328
+            },
+            "branches": {
+              "total": 28,
+              "covered": 23,
+              "percentage": 82.14285714285714
+            },
+            "functions": {
+              "total": 34,
+              "covered": 26,
+              "percentage": 76.47058823529412
+            },
+            "lines": {
+              "total": 60,
+              "covered": 56,
+              "percentage": 93.33333333333333
+            }
+          },
+          {
+            "path": "/src/app/about/links/page.tsx",
+            "statements": {
+              "total": 11,
+              "covered": 0,
+              "percentage": 0
+            },
+            "branches": {
+              "total": 0,
+              "covered": 0,
+              "percentage": 100
+            },
+            "functions": {
+              "total": 2,
+              "covered": 0,
+              "percentage": 0
+            },
+            "lines": {
+              "total": 10,
+              "covered": 0,
+              "percentage": 0
+            }
+          },
+          {
+            "path": "/src/app/admin/layout.tsx",
+            "statements": {
+              "total": 7,
+              "covered": 0,
+              "percentage": 0
+            },
+            "branches": {
+              "total": 2,
+              "covered": 0,
+              "percentage": 0
+            },
+            "functions": {
+              "total": 2,
+              "covered": 0,
+              "percentage": 0
+            },
+            "lines": {
+              "total": 6,
+              "covered": 0,
+              "percentage": 0
+            }
+          }
+        ],
+        "severity": "info",
+        "message": "368 ファイルで低カバレッジが検出されました"
+      }
+    ]
+  }
+]

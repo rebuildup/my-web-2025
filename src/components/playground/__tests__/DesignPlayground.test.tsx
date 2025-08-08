@@ -4,6 +4,26 @@
  * Tests for DesignPlayground component and related functionality
  */
 
+// Mock Web APIs
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
+Object.defineProperty(navigator, "maxTouchPoints", {
+  writable: true,
+  value: 0,
+});
+
 import { deviceCapabilitiesDetector } from "@/lib/playground/device-capabilities";
 import { playgroundManager } from "@/lib/playground/playground-manager";
 import { DeviceCapabilities } from "@/types/playground";

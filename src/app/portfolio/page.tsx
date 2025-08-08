@@ -226,20 +226,20 @@ export default async function PortfolioPage() {
 
   // Use enhanced statistics from data manager with fallback
   const portfolioStats = {
-    totalProjects: enhancedStats.totalProjects || portfolioItems.length,
+    totalProjects: enhancedStats?.totalProjects || portfolioItems.length,
     categories: {
       develop:
-        enhancedStats.categoryCounts?.develop ||
+        enhancedStats?.categoryCounts?.develop ||
         portfolioItems.filter((item) =>
           item.category?.toLowerCase().includes("develop"),
         ).length,
       video:
-        enhancedStats.categoryCounts?.video ||
+        enhancedStats?.categoryCounts?.video ||
         portfolioItems.filter(
           (item) => item.category?.toLowerCase() === "video",
         ).length,
       design:
-        enhancedStats.categoryCounts?.design ||
+        enhancedStats?.categoryCounts?.design ||
         portfolioItems.filter((item) =>
           item.category?.toLowerCase().includes("design"),
         ).length,
@@ -261,7 +261,7 @@ export default async function PortfolioPage() {
       ).length,
     },
     technologies:
-      Object.keys(enhancedStats.technologyCounts || {}).slice(0, 10) ||
+      Object.keys(enhancedStats?.technologyCounts || {}).slice(0, 10) ||
       [
         ...new Set(
           portfolioItems.flatMap(
@@ -269,7 +269,7 @@ export default async function PortfolioPage() {
           ),
         ),
       ].slice(0, 10),
-    latestUpdate: enhancedStats.lastUpdate
+    latestUpdate: enhancedStats?.lastUpdate
       ? new Date(enhancedStats.lastUpdate).toLocaleDateString("ja-JP", {
           year: "numeric",
           month: "long",
@@ -342,7 +342,7 @@ export default async function PortfolioPage() {
 
   // Enhanced featured projects using managed data with fallback
   const featuredProjects =
-    managedFeaturedProjects.length > 0
+    (managedFeaturedProjects?.length || 0) > 0
       ? managedFeaturedProjects.map((item) => ({
           id: item.id,
           title: item.title,

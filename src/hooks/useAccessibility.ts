@@ -55,11 +55,23 @@ const getAccessibilityPreferences = (): Omit<
     };
   }
 
+  // Safe matchMedia access
+  const safeMatchMedia = (query: string): boolean => {
+    try {
+      return typeof window !== "undefined" &&
+        window.matchMedia &&
+        typeof window.matchMedia === "function"
+        ? window.matchMedia(query).matches
+        : false;
+    } catch {
+      return false;
+    }
+  };
+
   return {
     isScreenReaderActive: detectScreenReader(),
-    prefersReducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)")
-      .matches,
-    highContrastMode: window.matchMedia("(prefers-contrast: high)").matches,
+    prefersReducedMotion: safeMatchMedia("(prefers-reduced-motion: reduce)"),
+    highContrastMode: safeMatchMedia("(prefers-contrast: high)"),
     textScaling: 1.0, // Default text scaling
     accessibilityIssues: [],
   };
@@ -94,12 +106,16 @@ export const useAccessibility = () => {
     };
 
     mediaQueries.forEach((mq) => {
-      mq.addEventListener("change", updateState);
+      if (mq && typeof mq.addEventListener === "function") {
+        mq.addEventListener("change", updateState);
+      }
     });
 
     return () => {
       mediaQueries.forEach((mq) => {
-        mq.removeEventListener("change", updateState);
+        if (mq && typeof mq.removeEventListener === "function") {
+          mq.removeEventListener("change", updateState);
+        }
       });
     };
   }, []);

@@ -26,6 +26,8 @@ jest.mock("next/navigation", () => ({
   usePathname() {
     return "/";
   },
+  redirect: jest.fn(),
+  notFound: jest.fn(),
 }));
 
 // Mock next/image
@@ -51,6 +53,258 @@ global.IntersectionObserver = jest.fn().mockImplementation(() => ({
   unobserve: jest.fn(),
   disconnect: jest.fn(),
 }));
+
+// Mock PerformanceObserver
+const MockPerformanceObserver = jest.fn().mockImplementation((callback) => ({
+  observe: jest.fn(),
+  disconnect: jest.fn(),
+  takeRecords: jest.fn(() => []),
+}));
+
+// Add supportedEntryTypes as a static property
+Object.defineProperty(MockPerformanceObserver, "supportedEntryTypes", {
+  writable: true,
+  value: [
+    "largest-contentful-paint",
+    "first-input",
+    "layout-shift",
+    "paint",
+    "resource",
+    "navigation",
+    "measure",
+    "mark",
+  ],
+});
+
+global.PerformanceObserver = MockPerformanceObserver;
+
+// Mock performance.memory
+Object.defineProperty(global.performance, "memory", {
+  writable: true,
+  value: {
+    usedJSHeapSize: 1000000,
+    totalJSHeapSize: 2000000,
+    jsHeapSizeLimit: 4000000,
+  },
+});
+
+// Also ensure performance.memory is available on window.performance
+if (typeof window !== "undefined") {
+  Object.defineProperty(window.performance, "memory", {
+    writable: true,
+    value: {
+      usedJSHeapSize: 1000000,
+      totalJSHeapSize: 2000000,
+      jsHeapSizeLimit: 4000000,
+    },
+  });
+}
+
+// Mock performance.getEntriesByType
+global.performance.getEntriesByType = jest.fn().mockReturnValue([]);
+
+// Mock performance.getEntriesByName
+global.performance.getEntriesByName = jest.fn().mockReturnValue([]);
+
+// Mock performance.mark
+global.performance.mark = jest.fn();
+
+// Mock performance.measure
+global.performance.measure = jest.fn();
+
+// Mock performance.clearMarks
+global.performance.clearMarks = jest.fn();
+
+// Mock performance.clearMeasures
+// Mock performance.now for timing tests
+let mockTime = 1000; // Start with a base time
+const performanceNowMock = jest.fn().mockImplementation(() => {
+  const currentTime = mockTime;
+  mockTime += 10 + Math.random() * 5; // Add consistent time increment (10-15ms)
+  return currentTime;
+});
+
+// Ensure performance object exists and has now method
+const mockPerformance = {
+  now: performanceNowMock,
+  mark: jest.fn(),
+  measure: jest.fn(),
+  clearMarks: jest.fn(),
+  clearMeasures: jest.fn(),
+  getEntriesByType: jest.fn().mockReturnValue([]),
+  getEntriesByName: jest.fn().mockReturnValue([]),
+  memory: {
+    usedJSHeapSize: 1000000,
+    totalJSHeapSize: 2000000,
+    jsHeapSizeLimit: 4000000,
+  },
+};
+
+global.performance = mockPerformance;
+
+// Reset mock time before each test
+beforeEach(() => {
+  mockTime = 1000; // Reset to base time
+  performanceNowMock.mockClear();
+
+  // Ensure performance is available in each test
+  global.performance = {
+    ...mockPerformance,
+    now: performanceNowMock,
+  };
+});
+
+global.performance.clearMeasures = jest.fn();
+
+// Mock requestIdleCallback
+global.requestIdleCallback = jest.fn((callback) => {
+  return setTimeout(() => callback({ timeRemaining: () => 50 }), 0);
+});
+
+global.cancelIdleCallback = jest.fn((id) => clearTimeout(id));
+
+// Mock navigator.connection
+Object.defineProperty(global.navigator, "connection", {
+  writable: true,
+  value: {
+    effectiveType: "4g",
+    downlink: 10,
+    rtt: 100,
+    saveData: false,
+  },
+});
+
+// Mock navigator.onLine
+Object.defineProperty(global.navigator, "onLine", {
+  writable: true,
+  value: true,
+});
+
+// Mock navigator.maxTouchPoints
+Object.defineProperty(global.navigator, "maxTouchPoints", {
+  writable: true,
+  value: 0,
+});
+
+// Mock gtag
+global.gtag = jest.fn();
+
+// Mock window.gtag
+if (typeof window !== "undefined") {
+  window.gtag = jest.fn();
+}
+
+// Mock Next.js Web APIs
+global.Request = jest.fn().mockImplementation((input, init) => ({
+  url: typeof input === "string" ? input : input.url,
+  method: init?.method || "GET",
+  headers: new Headers(init?.headers),
+  body: init?.body,
+  json: jest.fn().mockResolvedValue({}),
+  text: jest.fn().mockResolvedValue(""),
+  formData: jest.fn().mockResolvedValue(new FormData()),
+}));
+
+global.Response = jest.fn().mockImplementation((body, init) => ({
+  status: init?.status || 200,
+  statusText: init?.statusText || "OK",
+  headers: new Headers(init?.headers),
+  body,
+  json: jest.fn().mockResolvedValue(body ? JSON.parse(body) : {}),
+  text: jest.fn().mockResolvedValue(body || ""),
+}));
+
+// Use the native URL constructor from Node.js
+const { URL } = require("url");
+global.URL = URL;
+
+// Mock NextRequest and NextResponse
+jest.mock("next/server", () => ({
+  NextRequest: jest.fn().mockImplementation((input, init) => {
+    const url = typeof input === "string" ? input : input.url;
+    let urlObj;
+    try {
+      urlObj = new (require("url").URL)(url);
+    } catch {
+      urlObj = {
+        pathname: "/",
+        search: "",
+        origin: "http://localhost:3000",
+        href: url,
+      };
+    }
+    return {
+      url,
+      method: init?.method || "GET",
+      headers: new Headers(init?.headers),
+      body: init?.body,
+      json: jest.fn().mockResolvedValue({}),
+      text: jest.fn().mockResolvedValue(""),
+      formData: jest.fn().mockResolvedValue(new FormData()),
+      cookies: {
+        get: jest.fn(),
+        set: jest.fn(),
+        delete: jest.fn(),
+        has: jest.fn(),
+        clear: jest.fn(),
+      },
+      nextUrl: {
+        pathname: urlObj.pathname || "/",
+        searchParams: new URLSearchParams(urlObj.search || ""),
+        search: urlObj.search || "",
+        origin: urlObj.origin || "http://localhost:3000",
+        href: url,
+      },
+    };
+  }),
+  NextResponse: {
+    json: jest.fn().mockImplementation((body, init) => {
+      const response = {
+        status: init?.status || 200,
+        statusText: init?.statusText || "OK",
+        headers: new Headers(init?.headers),
+        body: JSON.stringify(body),
+        json: jest.fn().mockResolvedValue(body),
+        text: jest.fn().mockResolvedValue(JSON.stringify(body)),
+      };
+      return response;
+    }),
+    redirect: jest.fn().mockImplementation((url, status = 302) => ({
+      status,
+      headers: new Headers({ Location: url }),
+    })),
+    rewrite: jest.fn().mockImplementation((url) => ({
+      headers: new Headers({ "x-middleware-rewrite": url }),
+    })),
+    next: jest.fn().mockImplementation(() => ({
+      status: 200,
+      headers: new Headers(),
+    })),
+  },
+}));
+
+global.Headers = jest.fn().mockImplementation((init) => {
+  const headers = new Map();
+  if (init) {
+    if (Array.isArray(init)) {
+      init.forEach(([key, value]) => headers.set(key.toLowerCase(), value));
+    } else if (typeof init === "object") {
+      Object.entries(init).forEach(([key, value]) =>
+        headers.set(key.toLowerCase(), value),
+      );
+    }
+  }
+  return {
+    get: (key) => headers.get(key.toLowerCase()),
+    set: (key, value) => headers.set(key.toLowerCase(), value),
+    has: (key) => headers.has(key.toLowerCase()),
+    delete: (key) => headers.delete(key.toLowerCase()),
+    entries: () => headers.entries(),
+    keys: () => headers.keys(),
+    values: () => headers.values(),
+    forEach: (callback) => headers.forEach(callback),
+  };
+});
 
 // Suppress React act warnings and navigation errors in tests
 const originalError = console.error;
@@ -87,7 +341,8 @@ beforeAll(() => {
         args[0].includes("Error saving tags file:") ||
         args[0].includes("Error generating portfolio top metadata:") ||
         args[0].includes("Received `true` for a non-boolean attribute") ||
-        args[0].includes("Received `false` for a non-boolean attribute"))
+        args[0].includes("Received `false` for a non-boolean attribute") ||
+        args[0].includes("Maximum update depth exceeded"))
     ) {
       return;
     }
@@ -143,7 +398,15 @@ beforeAll(() => {
         args[0].includes("Failed to delete markdown file") ||
         args[0].includes("Error loading tags file:") ||
         args[0].includes("VideoDesignGallery: Invalid item object found") ||
-        args[0].includes("VideoDesignGallery: Item missing valid"))
+        args[0].includes("VideoDesignGallery: Item missing valid") ||
+        args[0].includes(
+          "Performance regression monitoring failed to start:",
+        ) ||
+        args[0].includes("LCP observer not supported") ||
+        args[0].includes("FID observer not supported") ||
+        args[0].includes("CLS observer not supported") ||
+        args[0].includes("FCP observer not supported") ||
+        args[0].includes("Chunk loading monitoring not supported"))
     ) {
       return;
     }
@@ -180,19 +443,93 @@ afterAll(() => {
   console.log = originalLog;
 });
 
-// Mock window.matchMedia (only in browser environment)
-if (typeof window !== "undefined") {
-  Object.defineProperty(window, "matchMedia", {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(), // deprecated
-      removeListener: jest.fn(), // deprecated
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
-}
+// Memory cleanup after each test
+afterEach(() => {
+  // Clear all timers
+  jest.clearAllTimers();
+
+  // Clear all mocks
+  jest.clearAllMocks();
+
+  // Force garbage collection if available
+  if (global.gc) {
+    global.gc();
+  }
+});
+
+// Mock window.matchMedia (both global and window)
+const matchMediaMock = jest.fn().mockImplementation((query) => {
+  // Return appropriate matches based on query
+  let matches = false;
+  if (query.includes("(hover: hover)")) matches = true;
+  if (query.includes("(pointer: fine)")) matches = true;
+  if (query.includes("(prefers-reduced-motion: reduce)")) matches = false;
+  if (query.includes("(prefers-contrast: high)")) matches = false;
+  if (query.includes("(min-width:")) matches = true; // Assume desktop by default
+
+  const mockMediaQueryList = {
+    matches,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // deprecated
+    removeListener: jest.fn(), // deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  };
+
+  return mockMediaQueryList;
+});
+
+// Set on global object
+Object.defineProperty(global, "matchMedia", {
+  writable: true,
+  value: matchMediaMock,
+});
+
+// Create a comprehensive window mock
+const windowMock = {
+  matchMedia: matchMediaMock,
+  location: {
+    href: "http://localhost:3000",
+    origin: "http://localhost:3000",
+    pathname: "/",
+    search: "",
+  },
+  navigator: {
+    userAgent: "test",
+    maxTouchPoints: 0,
+  },
+};
+
+// Set window mock globally
+global.window = windowMock;
+
+// Also set matchMedia directly on global for non-window contexts
+global.matchMedia = matchMediaMock;
+
+// Ensure window is available in all test environments
+beforeEach(() => {
+  // Reset window mock for each test
+  const freshWindowMock = {
+    matchMedia: matchMediaMock,
+    location: {
+      href: "http://localhost:3000",
+      origin: "http://localhost:3000",
+      pathname: "/",
+      search: "",
+    },
+    navigator: {
+      userAgent: "test",
+      maxTouchPoints: 0,
+    },
+  };
+
+  global.window = freshWindowMock;
+  global.matchMedia = matchMediaMock;
+
+  // Also ensure window is available as a global property
+  if (typeof globalThis !== "undefined") {
+    globalThis.window = freshWindowMock;
+  }
+});

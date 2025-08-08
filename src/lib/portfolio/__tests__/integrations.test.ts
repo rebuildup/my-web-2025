@@ -173,6 +173,20 @@ describe("Portfolio Integration System", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // Reset mock implementations
+    (mockDataManager.getPortfolioData as jest.Mock).mockResolvedValue(
+      mockPortfolioItems,
+    );
+    (mockDataManager.getPortfolioStats as jest.Mock).mockResolvedValue({
+      totalProjects: 3,
+      categoryCounts: { develop: 1, video: 1, "video&design": 1 },
+      technologyCounts: { React: 1, "After Effects": 1, Figma: 1 },
+      lastUpdate: new Date(),
+    });
+    (mockDataManager.getFeaturedProjects as jest.Mock).mockResolvedValue(
+      mockPortfolioItems.slice(0, 3),
+    );
+
     homePageIntegration = new HomePageIntegration(mockDataManager);
     searchIntegration = new SearchIntegration(mockDataManager);
     aboutIntegration = new AboutIntegration(mockDataManager);

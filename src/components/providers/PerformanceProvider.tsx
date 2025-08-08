@@ -127,7 +127,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
   const clearCache = async () => {
     if (typeof window !== "undefined" && "caches" in window) {
       const cacheNames = await caches.keys();
-      await Promise.all(cacheNames.map((name) => caches.delete(name)));
+      await Promise.all((cacheNames || []).map((name) => caches.delete(name)));
       window.location.reload();
     }
   };

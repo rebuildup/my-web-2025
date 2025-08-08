@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 
-import { securityUtils, CSPDirectives } from "../security";
-import { TextEncoder, TextDecoder } from "util";
+import { TextDecoder, TextEncoder } from "util";
+import { CSPDirectives, securityUtils } from "../security";
 
 // Mock fetch for testing
 global.fetch = jest.fn();

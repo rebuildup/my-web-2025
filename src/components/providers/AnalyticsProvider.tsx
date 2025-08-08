@@ -50,12 +50,20 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 
   useEffect(() => {
     // Check for existing consent
-    const savedConsent = localStorage.getItem("analytics-consent");
+    try {
+      const savedConsent = localStorage.getItem("analytics-consent");
 
-    if (savedConsent === "true") {
-      setConsentGiven(true);
-    } else if (savedConsent === "false") {
-      setConsentGiven(false);
+      if (savedConsent === "true") {
+        setConsentGiven(true);
+      } else if (savedConsent === "false") {
+        setConsentGiven(false);
+      }
+    } catch (error) {
+      // Handle localStorage errors gracefully
+      console.warn(
+        "Failed to read analytics consent from localStorage:",
+        error,
+      );
     }
 
     setIsInitialized(true);
@@ -63,7 +71,12 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 
   const handleSetConsent = (consent: boolean) => {
     setConsentGiven(consent);
-    localStorage.setItem("analytics-consent", consent.toString());
+    try {
+      localStorage.setItem("analytics-consent", consent.toString());
+    } catch (error) {
+      // Handle localStorage errors gracefully
+      console.warn("Failed to save analytics consent to localStorage:", error);
+    }
   };
 
   const trackPageView = (url: string, title?: string) => {

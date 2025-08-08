@@ -322,3 +322,20 @@ export function useProgressiveImage(src: string, placeholder?: string) {
 
   return { currentSrc, isLoading, isError };
 }
+
+// Main performance optimization hook that combines multiple optimizations
+export function usePerformanceOptimization() {
+  const memoryOptimization = useMemoryOptimization();
+  const performanceMonitor = usePerformanceMonitor("PerformanceOptimization");
+
+  return {
+    ...memoryOptimization,
+    ...performanceMonitor,
+    debounce: useDebounce,
+    throttle: useThrottle,
+    lazyLoad: useLazyLoad,
+    virtualization: useVirtualization,
+    progressiveImage: useProgressiveImage,
+    batchUpdates: useBatchUpdates,
+  };
+}

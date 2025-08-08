@@ -200,7 +200,7 @@ export default function ColorPaletteGenerator() {
 
   // Generate colors with advanced algorithms
   const generateColors = useCallback(async () => {
-    const timedGeneration = measureTime(() => {
+    const timedGeneration = measureTime((): ColorInfo[] => {
       let colors: ColorInfo[] = [];
 
       switch (generationAlgorithm) {
@@ -255,14 +255,14 @@ export default function ColorPaletteGenerator() {
       return colors;
     });
 
-    setGeneratedColors(timedGeneration.result);
+    setGeneratedColors(timedGeneration.result as ColorInfo[]);
 
-    if (autoSave && timedGeneration.result.length > 0) {
+    if (autoSave && (timedGeneration.result as ColorInfo[]).length > 0) {
       await savePalette(`Auto-saved ${new Date().toLocaleTimeString()}`);
     }
 
     showNotification(
-      `${timedGeneration.result.length}色のパレットを生成しました`,
+      `${(timedGeneration.result as ColorInfo[]).length}色のパレットを生成しました`,
     );
   }, [
     colorCount,

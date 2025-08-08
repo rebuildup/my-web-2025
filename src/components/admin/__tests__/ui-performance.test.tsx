@@ -24,6 +24,23 @@ jest.mock("../../../hooks/usePerformanceOptimization", () => ({
 }));
 
 // Temporarily disabled due to require() imports - will be fixed in future update
+
+// Mock Performance API
+Object.defineProperty(global, "performance", {
+  writable: true,
+  value: {
+    getEntriesByType: jest.fn().mockReturnValue([]),
+    mark: jest.fn(),
+    measure: jest.fn(),
+    now: jest.fn().mockReturnValue(Date.now()),
+    timing: {},
+    navigation: {
+      type: 0,
+      redirectCount: 0,
+    },
+  },
+});
+
 describe("UI Performance Tests", () => {
   test("should pass basic test", () => {
     expect(true).toBe(true);

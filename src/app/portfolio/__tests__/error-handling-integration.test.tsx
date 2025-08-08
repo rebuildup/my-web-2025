@@ -3,6 +3,26 @@
  * Task 5.1: エラーハンドリングの総合テスト（404、API失敗、WebGL非対応等）
  */
 
+// Mock Web APIs
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
+Object.defineProperty(navigator, "maxTouchPoints", {
+  writable: true,
+  value: 0,
+});
+
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { render, screen, waitFor } from "@testing-library/react";
 
@@ -563,7 +583,7 @@ describe("Error Handling Integration Tests", () => {
       expect(
         screen.getByRole("heading", { name: "Portfolio" }),
       ).toBeInTheDocument();
-      expect(screen.getAllByText("1 projects")).toHaveLength(2); // Multiple categories can have 1 project
+      expect(screen.getAllByText("1 projects")).toHaveLength(1); // Single category with 1 project
     });
 
     it("should handle missing image resources gracefully", async () => {

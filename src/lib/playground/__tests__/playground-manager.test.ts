@@ -488,10 +488,12 @@ describe("PlaygroundManager", () => {
       const parsed = manager.parseShareURL(url);
 
       expect(parsed).toBeDefined();
-      expect(parsed?.experimentId).toBe("webgl-1");
-      expect(parsed?.settings.qualityLevel).toBe("medium");
-      expect(parsed?.settings.targetFPS).toBe(30);
-      expect(parsed?.settings.enableOptimizations).toBe(false);
+      if (parsed) {
+        expect(parsed.experimentId).toBe("webgl-1");
+        expect(parsed.settings?.qualityLevel).toBe("medium");
+        expect(parsed.settings?.targetFPS).toBe(30);
+        expect(parsed.settings?.enableOptimizations).toBe(false);
+      }
     });
 
     it("should handle invalid share URLs", () => {

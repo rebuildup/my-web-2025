@@ -361,10 +361,17 @@ export function useEnhancedDataManager(
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastAutoSaveRef = useRef<string>("");
 
-  // Initialize
+  // Initialize - only run once or when item ID changes
+  const itemId = item?.id;
+  const itemRef = useRef(item);
+  const modeRef = useRef(mode);
+
   useEffect(() => {
+    // Always initialize on first render or when item/mode changes
     dispatch({ type: "INITIALIZE", payload: { item, mode } });
-  }, [item, mode]);
+    itemRef.current = item;
+    modeRef.current = mode;
+  }, [itemId, mode, item]); // Include item to satisfy exhaustive-deps
 
   // Auto-save functionality
   useEffect(() => {

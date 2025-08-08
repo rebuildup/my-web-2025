@@ -36,10 +36,14 @@ const DEFAULT_CONFIG: Required<CanvasConfig> = {
 };
 
 export const useResponsiveCanvas = (
-  containerRef: React.RefObject<HTMLElement | null>,
+  containerRef?: React.RefObject<HTMLElement | null>,
   config: CanvasConfig = {},
 ) => {
   const responsive = useResponsive();
+
+  // Create a default ref if none provided
+  const defaultRef = useRef<HTMLElement | null>(null);
+  const activeRef = containerRef || defaultRef;
   const [dimensions, setDimensions] = useState<CanvasDimensions>({
     width: 800,
     height: 600,
@@ -54,11 +58,18 @@ export const useResponsiveCanvas = (
     let containerWidth = responsive.viewport.width;
     let containerHeight = responsive.viewport.height;
 
-    // Get container dimensions if available
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      containerWidth = rect.width;
-      containerHeight = rect.height;
+    // Get container dimensions if available (with error handling)
+    try {
+      if (activeRef && activeRef.current) {
+        const rect = activeRef.current.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          containerWidth = rect.width;
+          containerHeight = rect.height;
+        }
+      }
+    } catch (error) {
+      // Fallback to viewport dimensions if getBoundingClientRect fails
+      console.warn("Failed to get container dimensions:", error);
     }
 
     // Apply responsive adjustments
@@ -102,9 +113,11 @@ export const useResponsiveCanvas = (
       Math.min(height, finalConfig.maxHeight),
     );
 
-    // Calculate pixel ratio
+    // Calculate pixel ratio with fallback
     const basePixelRatio =
-      responsive.viewport.width > 0 ? window.devicePixelRatio || 1 : 1;
+      typeof window !== "undefined" && responsive.viewport.width > 0
+        ? window.devicePixelRatio || 1
+        : 1;
     const pixelRatio = basePixelRatio * finalConfig.pixelRatioMultiplier;
 
     // Adjust for device performance
@@ -128,13 +141,30 @@ export const useResponsiveCanvas = (
       displayWidth: width,
       displayHeight: height,
     };
-  }, [responsive, containerRef, config]);
+  }, [
+    responsive.viewport.width,
+    responsive.viewport.height,
+    responsive.isMobile,
+    responsive.isTablet,
+    config,
+    activeRef,
+  ]); // Optimize dependencies
 
   // Update dimensions when responsive state changes
   useEffect(() => {
     const newDimensions = calculateDimensions();
-    setDimensions(newDimensions);
-  }, [calculateDimensions]);
+    setDimensions((prevDimensions) => {
+      // Only update if dimensions actually changed
+      if (
+        prevDimensions.width === newDimensions.width &&
+        prevDimensions.height === newDimensions.height &&
+        prevDimensions.pixelRatio === newDimensions.pixelRatio
+      ) {
+        return prevDimensions;
+      }
+      return newDimensions;
+    });
+  }, [calculateDimensions]); // Include calculateDimensions in dependencies
 
   // Setup canvas with proper dimensions and pixel ratio
   const setupCanvas = useCallback(

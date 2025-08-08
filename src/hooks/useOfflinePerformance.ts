@@ -3,13 +3,13 @@
  * Implements task 8.7.2 requirements for offline functionality and performance
  */
 
-import { useEffect, useState, useCallback, useRef } from "react";
 import {
-  offlineUtils,
-  dataPersistence,
   computationOptimization,
+  dataPersistence,
+  offlineUtils,
   performanceMonitoring,
 } from "@/lib/utils/performance";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface OfflinePerformanceState {
   isOnline: boolean;
@@ -324,7 +324,13 @@ export function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
     clearError,
 
     // Performance utilities
-    measureTime: performanceMonitoring.measureTime,
+    measureTime: (fn: () => unknown) => {
+      const result = performanceMonitoring.measureTime(fn);
+      return {
+        result: result.result,
+        time: result.duration,
+      };
+    },
   };
 }
 

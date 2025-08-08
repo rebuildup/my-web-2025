@@ -152,7 +152,10 @@ describe("Tag Management API", () => {
 
   describe("URL Parameter Parsing", () => {
     it("should parse search parameters correctly", () => {
-      const testUrl = new URL(
+      // Use Node.js URL directly for testing
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const NodeURL = require("url").URL;
+      const testUrl = new NodeURL(
         "http://localhost:3000/api/admin/tags?q=react&limit=10&sortBy=name",
       );
 
@@ -162,7 +165,10 @@ describe("Tag Management API", () => {
     });
 
     it("should handle missing parameters", () => {
-      const testUrl = new URL("http://localhost:3000/api/admin/tags");
+      // Use Node.js URL directly for testing
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const NodeURL = require("url").URL;
+      const testUrl = new NodeURL("http://localhost:3000/api/admin/tags");
 
       expect(testUrl.searchParams.get("q")).toBeNull();
       expect(testUrl.searchParams.get("limit")).toBeNull();

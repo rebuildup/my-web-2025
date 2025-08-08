@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -17,20 +16,7 @@ declare global {
   }
 }
 
-// Google Fonts configuration based on documents/02_style.md
-const notoSansJP = Noto_Sans_JP({
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
-  variable: "--font-noto-jp",
-  display: "swap",
-});
-
-const shipporiAntique = Shippori_Antique_B1({
-  weight: ["400"],
-  subsets: ["latin"],
-  variable: "--font-shippori",
-  display: "swap",
-});
+// Google Fonts are loaded via CSS import in globals.css
 
 export const metadata: Metadata = {
   title: "samuidoのサイトルート",
@@ -142,17 +128,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body
-        className={`${notoSansJP.variable} ${shipporiAntique.variable} antialiased bg-background text-foreground`}
-      >
-        {/* Skip links for keyboard navigation */}
-        <a href="#main-content" className="skip-link">
-          メインコンテンツにスキップ
-        </a>
-        <a href="#navigation" className="skip-link">
-          ナビゲーションにスキップ
-        </a>
-
+      <body className="antialiased bg-background text-foreground">
         {/* Screen reader announcements */}
         <div
           id="announcement-region"

@@ -217,7 +217,10 @@ describe("Date Management API", () => {
 
   describe("URL Parameter Parsing", () => {
     it("should parse query parameters correctly", () => {
-      const testUrl = new URL(
+      // Use Node.js URL directly for testing
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const NodeURL = require("url").URL;
+      const testUrl = new NodeURL(
         "http://localhost:3000/api/admin/dates?itemId=test-item-123",
       );
 
@@ -225,7 +228,10 @@ describe("Date Management API", () => {
     });
 
     it("should handle missing parameters", () => {
-      const testUrl = new URL("http://localhost:3000/api/admin/dates");
+      // Use Node.js URL directly for testing
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const NodeURL = require("url").URL;
+      const testUrl = new NodeURL("http://localhost:3000/api/admin/dates");
 
       expect(testUrl.searchParams.get("itemId")).toBeNull();
     });

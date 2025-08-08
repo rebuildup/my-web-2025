@@ -312,7 +312,7 @@ export const initializePerformanceRegression =
     const detector = getPerformanceRegressionDetector();
 
     // Monitor Core Web Vitals
-    if (typeof window !== "undefined" && "PerformanceObserver" in window) {
+    if (typeof PerformanceObserver !== "undefined") {
       try {
         // LCP Observer
         const lcpObserver = new PerformanceObserver((list) => {

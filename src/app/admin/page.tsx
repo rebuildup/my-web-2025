@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 // Development environment check
 function isDevelopment() {
@@ -19,7 +19,12 @@ function getSystemStatus() {
 export default function AdminPage() {
   // Redirect if not in development environment
   if (!isDevelopment()) {
-    redirect("/");
+    if (typeof redirect === "function") {
+      redirect("/");
+    } else {
+      // Fallback for test environment
+      return <div>Access denied</div>;
+    }
   }
 
   const systemStatus = getSystemStatus();

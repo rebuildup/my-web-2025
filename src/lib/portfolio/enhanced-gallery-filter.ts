@@ -57,31 +57,51 @@ export class EnhancedGalleryFilter {
     galleryType: GalleryType,
     options: EnhancedFilterOptions = {},
   ): EnhancedContentItem[] {
-    // Generate cache key
-    const cacheKey = this.generateCacheKey(galleryType, options);
+    try {
+      // Input validation
+      if (!items || !Array.isArray(items)) {
+        console.warn("filterItemsForGallery: Invalid items array");
+        return [];
+      }
 
-    // Check cache first
-    const cached = this.getCachedResult(cacheKey);
-    if (cached) {
-      return cached;
+      // Generate cache key
+      const cacheKey = this.generateCacheKey(galleryType, options);
+
+      // Check cache first
+      const cached = this.getCachedResult(cacheKey);
+      if (cached) {
+        return cached;
+      }
+
+      // Convert all items to enhanced format
+      const enhancedItems = this.ensureEnhancedItems(items);
+
+      // Apply gallery-specific filtering
+      let filteredItems = this.applyGalleryTypeFilter(
+        enhancedItems,
+        galleryType,
+      );
+
+      // Apply additional filters
+      filteredItems = this.applyAdditionalFilters(filteredItems, options);
+
+      // Remove duplicates (important for multiple category items)
+      filteredItems = this.deduplicateItems(filteredItems);
+
+      // Ensure we return a valid array
+      if (!filteredItems || !Array.isArray(filteredItems)) {
+        console.warn("filterItemsForGallery: Invalid filtered items result");
+        return [];
+      }
+
+      // Cache the result
+      this.setCachedResult(cacheKey, filteredItems);
+
+      return filteredItems;
+    } catch (error) {
+      console.error("Error in filterItemsForGallery:", error);
+      return [];
     }
-
-    // Convert all items to enhanced format
-    const enhancedItems = this.ensureEnhancedItems(items);
-
-    // Apply gallery-specific filtering
-    let filteredItems = this.applyGalleryTypeFilter(enhancedItems, galleryType);
-
-    // Apply additional filters
-    filteredItems = this.applyAdditionalFilters(filteredItems, options);
-
-    // Remove duplicates (important for multiple category items)
-    filteredItems = this.deduplicateItems(filteredItems);
-
-    // Cache the result
-    this.setCachedResult(cacheKey, filteredItems);
-
-    return filteredItems;
   }
 
   /**
@@ -91,43 +111,54 @@ export class EnhancedGalleryFilter {
     items: EnhancedContentItem[],
     galleryType: GalleryType,
   ): EnhancedContentItem[] {
-    // Don't filter by status here - let applyAdditionalFilters handle it
-    const filtered = items;
+    try {
+      if (!items || !Array.isArray(items)) {
+        console.warn("applyGalleryTypeFilter: Invalid items array");
+        return [];
+      }
 
-    switch (galleryType) {
-      case "all":
-        // Show all items including Other category
-        return filtered;
+      // Don't filter by status here - let applyAdditionalFilters handle it
+      const filtered = items;
 
-      case "other":
-        // Show only Other category items
-        return filtered.filter((item) => this.hasOtherCategory(item));
+      switch (galleryType) {
+        case "all":
+          // Show all items including Other category
+          return filtered;
 
-      case "video&design":
-        // Show items that have video, design, or video&design categories
-        // Exclude Other category items
-        // Remove duplicates for items that have multiple relevant categories
-        const videoDesignFiltered = filtered.filter(
-          (item) =>
-            !this.hasOtherCategory(item) &&
-            this.hasAnyCategory(item, ["video", "design", "video&design"]),
-        );
+        case "other":
+          // Show only Other category items
+          return filtered.filter((item) => this.hasOtherCategory(item));
 
-        // Ensure proper deduplication for multi-category items
-        return this.deduplicateItems(videoDesignFiltered);
+        case "video&design":
+          // Show items that have video, design, or video&design categories
+          // Exclude Other category items
+          // Remove duplicates for items that have multiple relevant categories
+          const videoDesignFiltered = filtered.filter(
+            (item) =>
+              !this.hasOtherCategory(item) &&
+              this.hasAnyCategory(item, ["video", "design", "video&design"]),
+          );
 
-      case "develop":
-      case "video":
-      case "design":
-        // Show items that have the specific category
-        // Exclude Other category items
-        return filtered.filter(
-          (item) =>
-            !this.hasOtherCategory(item) && this.hasCategory(item, galleryType),
-        );
+          // Ensure proper deduplication for multi-category items
+          return this.deduplicateItems(videoDesignFiltered);
 
-      default:
-        return filtered;
+        case "develop":
+        case "video":
+        case "design":
+          // Show items that have the specific category
+          // Exclude Other category items
+          return filtered.filter(
+            (item) =>
+              !this.hasOtherCategory(item) &&
+              this.hasCategory(item, galleryType),
+          );
+
+        default:
+          return filtered;
+      }
+    } catch (error) {
+      console.error("Error in applyGalleryTypeFilter:", error);
+      return [];
     }
   }
 
@@ -245,29 +276,44 @@ export class EnhancedGalleryFilter {
    * Enhanced deduplication with priority handling
    */
   deduplicateItems(items: EnhancedContentItem[]): EnhancedContentItem[] {
-    const seen = new Map<string, EnhancedContentItem>();
-
-    items.forEach((item) => {
-      const existingItem = seen.get(item.id);
-
-      if (!existingItem) {
-        // First occurrence, add to map
-        seen.set(item.id, item);
-      } else {
-        // Duplicate found, keep the one with higher priority or more categories
-        const shouldReplace =
-          (item.priority || 0) > (existingItem.priority || 0) ||
-          ((item.priority || 0) === (existingItem.priority || 0) &&
-            (item.categories?.length || 0) >
-              (existingItem.categories?.length || 0));
-
-        if (shouldReplace) {
-          seen.set(item.id, item);
-        }
+    try {
+      if (!items || !Array.isArray(items)) {
+        console.warn("deduplicateItems: Invalid items array");
+        return [];
       }
-    });
 
-    return Array.from(seen.values());
+      const seen = new Map<string, EnhancedContentItem>();
+
+      items.forEach((item) => {
+        if (!item || !item.id) {
+          console.warn("deduplicateItems: Invalid item found");
+          return;
+        }
+
+        const existingItem = seen.get(item.id);
+
+        if (!existingItem) {
+          // First occurrence, add to map
+          seen.set(item.id, item);
+        } else {
+          // Duplicate found, keep the one with higher priority or more categories
+          const shouldReplace =
+            (item.priority || 0) > (existingItem.priority || 0) ||
+            ((item.priority || 0) === (existingItem.priority || 0) &&
+              (item.categories?.length || 0) >
+                (existingItem.categories?.length || 0));
+
+          if (shouldReplace) {
+            seen.set(item.id, item);
+          }
+        }
+      });
+
+      return Array.from(seen.values());
+    } catch (error) {
+      console.error("Error in deduplicateItems:", error);
+      return [];
+    }
   }
 
   /**
@@ -345,14 +391,31 @@ export class EnhancedGalleryFilter {
   private ensureEnhancedItems(
     items: (ContentItem | EnhancedContentItem)[],
   ): EnhancedContentItem[] {
-    return items.map((item) => {
-      if (this.isEnhancedContentItem(item)) {
-        return item as EnhancedContentItem;
-      } else {
-        // Convert legacy item to enhanced format
-        return this.migrateToEnhancedItem(item as ContentItem);
+    try {
+      if (!items || !Array.isArray(items)) {
+        console.warn("ensureEnhancedItems: Invalid items array");
+        return [];
       }
-    });
+
+      return items
+        .map((item) => {
+          if (!item) {
+            console.warn("ensureEnhancedItems: Null item found");
+            return null;
+          }
+
+          if (this.isEnhancedContentItem(item)) {
+            return item as EnhancedContentItem;
+          } else {
+            // Convert legacy item to enhanced format
+            return this.migrateToEnhancedItem(item as ContentItem);
+          }
+        })
+        .filter(Boolean) as EnhancedContentItem[];
+    } catch (error) {
+      console.error("Error in ensureEnhancedItems:", error);
+      return [];
+    }
   }
 
   /**

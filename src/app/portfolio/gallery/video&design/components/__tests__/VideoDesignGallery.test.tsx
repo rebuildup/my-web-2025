@@ -357,11 +357,13 @@ describe("VideoDesignGallery", () => {
       const resetButton = screen.getByText("Reset Filters");
       await user.click(resetButton);
 
-      // After reset, should call filter with default options
+      // After reset, should call filter with default options including status: "all"
       await waitFor(() => {
         expect(
           mockEnhancedGalleryFilter.filterItemsForGallery,
-        ).toHaveBeenCalledWith(testItems, "video&design", {});
+        ).toHaveBeenCalledWith(testItems, "video&design", {
+          status: "all",
+        });
       });
     });
   });

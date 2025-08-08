@@ -84,8 +84,8 @@ export default function WebGLPlaygroundPage() {
 
       // Auto-adjust quality if performance is poor
       if (
-        performanceSettings.enableOptimizations &&
-        metrics.fps < performanceSettings.targetFPS * 0.7
+        performanceSettings?.enableOptimizations &&
+        metrics.fps < (performanceSettings?.targetFPS || 60) * 0.7
       ) {
         setPerformanceSettings((prev) => ({
           ...prev,
@@ -277,7 +277,7 @@ export default function WebGLPlaygroundPage() {
                         Quality Level
                       </label>
                       <select
-                        value={performanceSettings.qualityLevel}
+                        value={performanceSettings?.qualityLevel || "medium"}
                         onChange={(e) =>
                           setPerformanceSettings((prev) => ({
                             ...prev,
@@ -297,7 +297,9 @@ export default function WebGLPlaygroundPage() {
                       <input
                         type="checkbox"
                         id="optimizations"
-                        checked={performanceSettings.enableOptimizations}
+                        checked={
+                          performanceSettings?.enableOptimizations || false
+                        }
                         onChange={(e) =>
                           setPerformanceSettings((prev) => ({
                             ...prev,

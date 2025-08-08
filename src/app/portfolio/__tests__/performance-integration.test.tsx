@@ -3,6 +3,26 @@
  * Task 5.1: パフォーマンス指標の総合確認
  */
 
+// Mock Web APIs
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
+Object.defineProperty(navigator, "maxTouchPoints", {
+  writable: true,
+  value: 0,
+});
+
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { ContentItem } from "@/types/content";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -223,6 +243,22 @@ const generateMockPortfolioItems = (count: number): ContentItem[] => {
     content: `Test content ${index + 1}`.repeat(50), // Longer content
   }));
 };
+
+// Mock Performance API
+Object.defineProperty(global, "performance", {
+  writable: true,
+  value: {
+    getEntriesByType: jest.fn().mockReturnValue([]),
+    mark: jest.fn(),
+    measure: jest.fn(),
+    now: jest.fn().mockReturnValue(Date.now()),
+    timing: {},
+    navigation: {
+      type: 0,
+      redirectCount: 0,
+    },
+  },
+});
 
 describe("Performance Integration Tests", () => {
   beforeEach(() => {

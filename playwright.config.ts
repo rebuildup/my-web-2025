@@ -93,18 +93,19 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
-    reuseExistingServer: true, // Always reuse existing server
-    timeout: 180000, // 3 minutes for server startup
-    stdout: process.env.CI ? "ignore" : "pipe",
-    stderr: process.env.CI ? "ignore" : "pipe",
-    env: {
-      PLAYWRIGHT_TEST: "true",
-      NODE_ENV: "test",
-      __NEXT_DISABLE_DEV_OVERLAY: "true",
-      NEXT_TELEMETRY_DISABLED: "1",
-    },
-  },
+  // webServer configuration disabled - server started manually in test script
+  // webServer: {
+  //   command: "npm run dev",
+  //   url: "http://localhost:3000",
+  //   reuseExistingServer: true, // Always reuse existing server
+  //   timeout: 300000, // 5 minutes for server startup (increased)
+  //   stdout: process.env.CI ? "ignore" : "pipe",
+  //   stderr: process.env.CI ? "ignore" : "pipe",
+  //   env: {
+  //     PLAYWRIGHT_TEST: "true",
+  //     NODE_ENV: "test",
+  //     __NEXT_DISABLE_DEV_OVERLAY: "true",
+  //     NEXT_TELEMETRY_DISABLED: "1",
+  //   },
+  // },
 });

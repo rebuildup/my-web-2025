@@ -31,34 +31,22 @@ jobs:
             npm ci
           fi
 
+      - name: Setup test environment
+        run: |
+          echo "Setting up test environment..."
+          npm run test:setup
+
       - name: Run lint
         run: npm run lint
 
       - name: Run type check
         run: npm run type-check
 
-      - name: Setup test environment
-        run: |
-          # Create required data directories for tests
-          mkdir -p public/data/content
-          mkdir -p public/data/stats
-          mkdir -p public/data/cache
-
-          # Create minimal required files
-          echo "[]" > public/data/content/portfolio.json
-          echo "[]" > public/data/content/blog.json
-          echo "[]" > public/data/content/plugin.json
-          echo "[]" > public/data/content/download.json
-          echo "[]" > public/data/content/tool.json
-          echo "[]" > public/data/content/profile.json
-          echo "{}" > public/data/stats/view-stats.json
-          echo "{}" > public/data/stats/download-stats.json
-          echo "{}" > public/data/stats/search-stats.json
-
       - name: Run tests
         run: npm run test
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
+          CI: true
 
       - name: Build project (Standalone)
         env:
@@ -195,6 +183,11 @@ jobs:
             echo "✅ package-lock.json is in sync, using npm ci"
             npm ci
           fi
+
+      - name: Setup production environment
+        run: |
+          echo "Setting up production environment..."
+          npm run test:setup
 
       - name: Build project (Standalone)
         env:

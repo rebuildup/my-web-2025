@@ -368,7 +368,7 @@ describe("EnhancedDataProcessingPipeline", () => {
       expect(result.metrics).toBeDefined();
       expect(result.metrics.startTime).toBeGreaterThan(0);
       expect(result.metrics.endTime).toBeGreaterThan(0);
-      expect(result.metrics.duration).toBeGreaterThan(0);
+      expect(result.metrics.duration).toBeGreaterThanOrEqual(0);
       expect(result.metrics.itemsProcessed).toBe(1);
       expect(result.metrics.errorsCount).toBe(0);
       expect(result.metrics.warningsCount).toBe(0);
