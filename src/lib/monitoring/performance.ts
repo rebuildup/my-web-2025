@@ -13,7 +13,7 @@ interface MemoryInfo {
  * Initialize Web Vitals monitoring
  */
 export function initWebVitals(): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || !window) return;
 
   // Basic Web Vitals monitoring
   console.log("Web Vitals monitoring initialized");
@@ -23,7 +23,7 @@ export function initWebVitals(): void {
  * Monitor page load performance
  */
 export function monitorPageLoad(): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || !window) return;
 
   window.addEventListener("load", () => {
     const navigation = performance.getEntriesByType(
@@ -40,7 +40,13 @@ export function monitorPageLoad(): void {
  * Monitor memory usage
  */
 export function monitorMemoryUsage(): void {
-  if (typeof window === "undefined" || !("memory" in performance)) return;
+  if (
+    typeof window === "undefined" ||
+    !window ||
+    typeof performance === "undefined" ||
+    !("memory" in performance)
+  )
+    return;
 
   setInterval(() => {
     const memory = (performance as Performance & { memory?: MemoryInfo })

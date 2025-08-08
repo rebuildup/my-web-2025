@@ -44,10 +44,10 @@
     "type": "portfolio",
     "title": "Ae縁取りエフェクト Border",
     "description": "AfterEffectsで縁取りを描画するエフェクトです",
-    "content": "AfterEffectsで縁取りを描画するエフェクトです\n",
+    "content": "",
     "tags": [],
     "category": "develop",
-    "searchableContent": "ae縁取りエフェクト border aftereffectsで縁取りを描画するエフェクトです aftereffectsで縁取りを描画するエフェクトです\n develop"
+    "searchableContent": "ae縁取りエフェクト border aftereffectsで縁取りを描画するエフェクトです  develop"
   },
   {
     "id": "portfolio-1753839555107",
@@ -64,20 +64,20 @@
     "type": "portfolio",
     "title": "デザイン練習 #001",
     "description": "なにも考えずに手癖で作っています",
-    "content": "なにも考えずに手癖で作っています",
+    "content": "",
     "tags": [],
     "category": "design",
-    "searchableContent": "デザイン練習 #001 なにも考えずに手癖で作っています なにも考えずに手癖で作っています design"
+    "searchableContent": "デザイン練習 #001 なにも考えずに手癖で作っています  design"
   },
   {
     "id": "portfolio-1753706214241",
     "type": "portfolio",
     "title": "コンピュータ部 勧誘チラシ",
     "description": "コンピュータ部の勧誘チラシを作成しました。",
-    "content": "コンピュータ部の勧誘チラシを作成しました。",
+    "content": "",
     "tags": ["Illustrator"],
     "category": "design",
-    "searchableContent": "コンピュータ部 勧誘チラシ コンピュータ部の勧誘チラシを作成しました。 コンピュータ部の勧誘チラシを作成しました。 illustrator design"
+    "searchableContent": "コンピュータ部 勧誘チラシ コンピュータ部の勧誘チラシを作成しました。  illustrator design"
   },
   {
     "id": "portfolio-1753706194107",
@@ -94,100 +94,100 @@
     "type": "portfolio",
     "title": "コードタイプ風映像素材",
     "description": "p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。",
-    "content": "p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。",
+    "content": "",
     "tags": ["p5js", "aftereffects"],
     "category": "design",
-    "searchableContent": "コードタイプ風映像素材 p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。 p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。 p5js aftereffects design"
+    "searchableContent": "コードタイプ風映像素材 p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。  p5js aftereffects design"
   },
   {
     "id": "portfolio-1753706133707",
     "type": "portfolio",
     "title": "Aeエフェクトプラグイン Stretch v2",
     "description": "AeエフェクトプラグインStretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。Xの投稿が伸びてくれました。",
-    "content": "AeエフェクトプラグインStretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。Xの投稿が伸びてくれました。",
+    "content": "",
     "tags": ["C++", "aftereffects", "VisualStudio"],
     "category": "develop",
-    "searchableContent": "aeエフェクトプラグイン stretch v2 aeエフェクトプラグインstretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。xの投稿が伸びてくれました。 aeエフェクトプラグインstretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。xの投稿が伸びてくれました。 c++ aftereffects visualstudio develop"
+    "searchableContent": "aeエフェクトプラグイン stretch v2 aeエフェクトプラグインstretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。xの投稿が伸びてくれました。  c++ aftereffects visualstudio develop"
   },
   {
     "id": "portfolio-1753706120147",
     "type": "portfolio",
     "title": "タイピングゲーム ProtoType",
     "description": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます",
-    "content": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます",
+    "content": "",
     "tags": ["PIXI.JS", "VSCode"],
     "category": "develop",
-    "searchableContent": "タイピングゲーム prototype webgl(pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます webgl(pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます pixi.js vscode develop"
+    "searchableContent": "タイピングゲーム prototype webgl(pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます  pixi.js vscode develop"
   },
   {
     "id": "portfolio-1753706107538",
     "type": "portfolio",
     "title": "ProtoType パンフレット",
     "description": "久しぶりのデザイン。過去に作った素材を使っています。",
-    "content": "久しぶりのデザイン。過去に作った素材を使っています。",
+    "content": "",
     "tags": [],
     "category": "design",
-    "searchableContent": "prototype パンフレット 久しぶりのデザイン。過去に作った素材を使っています。 久しぶりのデザイン。過去に作った素材を使っています。 design"
+    "searchableContent": "prototype パンフレット 久しぶりのデザイン。過去に作った素材を使っています。  design"
   },
   {
     "id": "portfolio-1753706090299",
     "type": "portfolio",
     "title": "【二次創作】雪糅 文字pv",
     "description": "サビがとても好き。落ち着いた映像が出来上がりました。",
-    "content": "サビがとても好き。落ち着いた映像が出来上がりました。",
+    "content": "",
     "tags": [],
     "category": "video",
-    "searchableContent": "【二次創作】雪糅 文字pv サビがとても好き。落ち着いた映像が出来上がりました。 サビがとても好き。落ち着いた映像が出来上がりました。 video"
+    "searchableContent": "【二次創作】雪糅 文字pv サビがとても好き。落ち着いた映像が出来上がりました。  video"
   },
   {
     "id": "portfolio-1753706048587",
     "type": "portfolio",
     "title": "【二次創作】花弁、それにまつわる音声 文字pv",
     "description": "ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。",
-    "content": "ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。",
+    "content": "",
     "tags": [],
     "category": "video",
-    "searchableContent": "【二次創作】花弁、それにまつわる音声 文字pv ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。 ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。 video"
+    "searchableContent": "【二次創作】花弁、それにまつわる音声 文字pv ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。  video"
   },
   {
     "id": "portfolio-1753706010674",
     "type": "portfolio",
     "title": "テストお疲れ様でした 4Q",
     "description": "恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。",
-    "content": "恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。",
+    "content": "",
     "tags": [],
     "category": "video",
-    "searchableContent": "テストお疲れ様でした 4q 恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。 恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。 video"
+    "searchableContent": "テストお疲れ様でした 4q 恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。  video"
   },
   {
     "id": "portfolio-1753705999051",
     "type": "portfolio",
     "title": "Aeスクリプト Aulymo",
     "description": "Ae全自動リリックモーション「Aulymo」v2の動作説明動画です。PremiereProを初めてまともに使いました。あと、コンピュータ部のMacBookを借りました。",
-    "content": "Ae全自動リリックモーション「Aulymo」v2の動作説明動画です。PremiereProを初めてまともに使いました。あと、コンピュータ部のMacBookを借りました。",
+    "content": "",
     "tags": [],
     "category": "develop",
-    "searchableContent": "aeスクリプト aulymo ae全自動リリックモーション「aulymo」v2の動作説明動画です。premiereproを初めてまともに使いました。あと、コンピュータ部のmacbookを借りました。 ae全自動リリックモーション「aulymo」v2の動作説明動画です。premiereproを初めてまともに使いました。あと、コンピュータ部のmacbookを借りました。 develop"
+    "searchableContent": "aeスクリプト aulymo ae全自動リリックモーション「aulymo」v2の動作説明動画です。premiereproを初めてまともに使いました。あと、コンピュータ部のmacbookを借りました。  develop"
   },
   {
     "id": "portfolio-1753705971770",
     "type": "portfolio",
     "title": "Aeエフェクトプラグイン sep_color",
     "description": "画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はStretchよりもよくなってます。",
-    "content": "画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はStretchよりもよくなってます。",
+    "content": "",
     "tags": [],
     "category": "develop",
-    "searchableContent": "aeエフェクトプラグイン sep_color 画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はstretchよりもよくなってます。 画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はstretchよりもよくなってます。 develop"
+    "searchableContent": "aeエフェクトプラグイン sep_color 画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はstretchよりもよくなってます。  develop"
   },
   {
     "id": "portfolio-1753705958241",
     "type": "portfolio",
     "title": "ONESELF 二次創作",
     "description": "TwinfieldさんのONESELFで文字pv(?)を作りました 満足",
-    "content": "TwinfieldさんのONESELFで文字pv(?)を作りました 満足",
+    "content": "",
     "tags": [],
     "category": "video",
-    "searchableContent": "oneself 二次創作 twinfieldさんのoneselfで文字pv(?)を作りました 満足 twinfieldさんのoneselfで文字pv(?)を作りました 満足 video"
+    "searchableContent": "oneself 二次創作 twinfieldさんのoneselfで文字pv(?)を作りました 満足  video"
   },
   {
     "id": "portfolio-1753705948545",
@@ -204,30 +204,30 @@
     "type": "portfolio",
     "title": "ラプラスショコラ 二次創作",
     "description": "映像依頼の練習で5時間で作りました",
-    "content": "映像依頼の練習で5時間で作りました",
+    "content": "",
     "tags": [],
     "category": "video",
-    "searchableContent": "ラプラスショコラ 二次創作 映像依頼の練習で5時間で作りました 映像依頼の練習で5時間で作りました video"
+    "searchableContent": "ラプラスショコラ 二次創作 映像依頼の練習で5時間で作りました  video"
   },
   {
     "id": "portfolio-1753705889177",
     "type": "portfolio",
     "title": "reel 2024",
     "description": "2024年に作った動画の総集編です",
-    "content": "2024年に作った動画の総集編です",
+    "content": "",
     "tags": [],
     "category": "video",
-    "searchableContent": "reel 2024 2024年に作った動画の総集編です 2024年に作った動画の総集編です video"
+    "searchableContent": "reel 2024 2024年に作った動画の総集編です  video"
   },
   {
     "id": "portfolio-1753705868178",
     "type": "portfolio",
     "title": "Aulymo",
     "description": "Aeのスクリプトです　簡単にリリックモーションを作れます",
-    "content": "Aeのスクリプトです　簡単にリリックモーションを作れます",
+    "content": "",
     "tags": [],
     "category": "develop",
-    "searchableContent": "aulymo aeのスクリプトです　簡単にリリックモーションを作れます aeのスクリプトです　簡単にリリックモーションを作れます develop"
+    "searchableContent": "aulymo aeのスクリプトです　簡単にリリックモーションを作れます  develop"
   },
   {
     "id": "portfolio-1753705850489",
@@ -414,10 +414,10 @@
     "type": "portfolio",
     "title": "嘘と未来 文字pv",
     "description": "ボカロ曲「嘘と未来/うわべ」の文字pvです",
-    "content": "ボカロ曲「嘘と未来/うわべ」の文字pvです",
+    "content": "",
     "tags": ["Test"],
     "category": "video",
-    "searchableContent": "嘘と未来 文字pv ボカロ曲「嘘と未来/うわべ」の文字pvです ボカロ曲「嘘と未来/うわべ」の文字pvです test video"
+    "searchableContent": "嘘と未来 文字pv ボカロ曲「嘘と未来/うわべ」の文字pvです  test video"
   },
   {
     "id": "portfolio-1753697544895",
