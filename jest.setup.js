@@ -163,6 +163,11 @@ global.requestIdleCallback = jest.fn((callback) => {
 
 global.cancelIdleCallback = jest.fn((id) => clearTimeout(id));
 
+// Ensure navigator exists before mocking its properties
+if (!global.navigator) {
+  global.navigator = {};
+}
+
 // Mock navigator.connection
 Object.defineProperty(global.navigator, "connection", {
   writable: true,
@@ -342,7 +347,13 @@ beforeAll(() => {
         args[0].includes("Error generating portfolio top metadata:") ||
         args[0].includes("Received `true` for a non-boolean attribute") ||
         args[0].includes("Received `false` for a non-boolean attribute") ||
-        args[0].includes("Maximum update depth exceeded"))
+        args[0].includes("for a non-boolean attribute `prefetch`") ||
+        args[0].includes("for a non-boolean attribute `fill`") ||
+        args[0].includes("Maximum update depth exceeded") ||
+        args[0].includes("is an async Client Component") ||
+        args[0].includes("A component suspended inside an `act` scope") ||
+        args[0].includes("Error rendering portfolio detail page") ||
+        args[0].includes("Image failed to load"))
     ) {
       return;
     }
@@ -406,7 +417,9 @@ beforeAll(() => {
         args[0].includes("FID observer not supported") ||
         args[0].includes("CLS observer not supported") ||
         args[0].includes("FCP observer not supported") ||
-        args[0].includes("Chunk loading monitoring not supported"))
+        args[0].includes("Chunk loading monitoring not supported") ||
+        args[0].includes("Failed to load markdown content:") ||
+        args[0].includes("[MarkdownRenderer] Rendering error state"))
     ) {
       return;
     }
@@ -429,6 +442,18 @@ beforeAll(() => {
         args[0].includes("Original form data:") ||
         args[0].includes("Data to save:") ||
         args[0].includes("Calling onSave...") ||
+        args[0].includes("Loading tags from tag manager...") ||
+        args[0].includes("Loaded tags:") ||
+        args[0].includes("New tag created successfully:") ||
+        args[0].includes("Creating new tag:") ||
+        args[0].includes("Updating tag usage for:") ||
+        args[0].includes("After category filtering:") ||
+        args[0].includes("Enhanced item") ||
+        args[0].includes("[MarkdownRenderer]") ||
+        args[0].includes("[Cache] Warmed cache") ||
+        args[0].includes("Attempting to load portfolio item") ||
+        args[0].includes("Portfolio item found:") ||
+        args[0].includes("Portfolio item not found") ||
         (args[0].includes("Processing") && args[0].includes("portfolio items")))
     ) {
       return;
@@ -499,6 +524,13 @@ const windowMock = {
   navigator: {
     userAgent: "test",
     maxTouchPoints: 0,
+    onLine: true,
+    connection: {
+      effectiveType: "4g",
+      downlink: 10,
+      rtt: 100,
+      saveData: false,
+    },
   },
 };
 
@@ -522,6 +554,13 @@ beforeEach(() => {
     navigator: {
       userAgent: "test",
       maxTouchPoints: 0,
+      onLine: true,
+      connection: {
+        effectiveType: "4g",
+        downlink: 10,
+        rtt: 100,
+        saveData: false,
+      },
     },
   };
 

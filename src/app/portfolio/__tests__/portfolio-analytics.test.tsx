@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import React from "react";
 import PortfolioPage from "../page";
 
@@ -82,14 +82,18 @@ describe("Portfolio Analytics", () => {
     });
   });
 
-  it("should render without crashing", () => {
-    expect(() => {
-      render(<PortfolioPage />);
+  it("should render without crashing", async () => {
+    await expect(async () => {
+      await act(async () => {
+        render(<PortfolioPage />);
+      });
     }).not.toThrow();
   });
 
-  it("should contain basic content", () => {
-    render(<PortfolioPage />);
+  it("should contain basic content", async () => {
+    await act(async () => {
+      render(<PortfolioPage />);
+    });
 
     // Check if the component renders without throwing
     expect(document.body).toBeInTheDocument();

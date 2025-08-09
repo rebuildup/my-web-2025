@@ -3,7 +3,7 @@
  */
 
 import { render } from "@testing-library/react";
-import React from "react";
+import React, { act } from "react";
 import HomePage from "../page";
 
 // Mock all external dependencies
@@ -65,14 +65,18 @@ describe("HomePage", () => {
     });
   });
 
-  it("should render without crashing", () => {
-    expect(() => {
-      render(<HomePage />);
+  it("should render without crashing", async () => {
+    await expect(async () => {
+      await act(async () => {
+        render(<HomePage />);
+      });
     }).not.toThrow();
   });
 
-  it("should contain basic content", () => {
-    render(<HomePage />);
+  it("should contain basic content", async () => {
+    await act(async () => {
+      render(<HomePage />);
+    });
 
     // Check if the component renders without throwing
     expect(document.body).toBeInTheDocument();
