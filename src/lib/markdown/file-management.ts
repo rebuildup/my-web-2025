@@ -368,17 +368,18 @@ export class MarkdownFileManager {
         return false;
       }
 
-      // In test environment, allow paths starting with /test/ for error handling tests
-      if (process.env.NODE_ENV === "test" && filePath.startsWith("/test/")) {
-        return true;
-      }
-
       // Normalize the path for comparison
       const normalizedPath = path.normalize(filePath);
       const normalizedBasePath = path.normalize(this.basePath);
 
       // For absolute paths, check if they're within the base path
       if (path.isAbsolute(filePath)) {
+        // In test environment, allow paths starting with /test/ for error handling tests
+        if (process.env.NODE_ENV === "test" && filePath.startsWith("/test/")) {
+          // For test paths, just check basic format requirements
+          return filePath.endsWith(".md");
+        }
+
         // Reject paths that are outside the base path
         if (!normalizedPath.startsWith(normalizedBasePath)) {
           return false;
@@ -433,11 +434,31 @@ export class MarkdownFileManager {
         return true;
       }
 
-      // Check if they would resolve within the base path
+      // For relative paths, check if they would resolve within the base path
       const resolvedPath = path.resolve(this.basePath, filePath);
       const resolvedBasePath = path.resolve(this.basePath);
 
-      return resolvedPath.startsWith(resolvedBasePath);
+      if (!resolvedPath.startsWith(resolvedBasePath)) {
+        return false;
+      }
+
+      // Additional check: reject paths that don't contain valid content type directories
+      const relativePath = path.relative(resolvedBasePath, resolvedPath);
+      const pathParts = relativePath.split(path.sep);
+
+      // Should have at least 2 parts: contentType/filename.md
+      if (pathParts.length < 2) {
+        return false;
+      }
+
+      // First part should be a valid content type directory
+      const contentTypeDir = pathParts[0];
+      const validDirs = Object.values(this.contentTypeDirectories);
+      if (!validDirs.includes(contentTypeDir)) {
+        return false;
+      }
+
+      return true;
     } catch {
       return false;
     }
