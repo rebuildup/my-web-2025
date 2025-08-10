@@ -3,7 +3,7 @@
  * Task 1.2: 検索インデックス生成機能
  */
 
-import { SearchIndex, SearchResult, SearchOptions } from "@/types/content";
+import { SearchIndex, SearchOptions, SearchResult } from "@/types/content";
 import { PortfolioContentItem } from "./data-processor";
 
 export interface PortfolioSearchIndex extends SearchIndex {
@@ -452,7 +452,6 @@ export class PortfolioSearchIndexGenerator {
       develop: "開発",
       video: "映像",
       design: "デザイン",
-      "video&design": "映像・デザイン",
       playground: "プレイグラウンド",
     };
 

@@ -503,7 +503,7 @@ describe("Video&Design Gallery - Accessibility Tests", () => {
       expect(screen.getByText("Filters")).toBeInTheDocument();
 
       // Check that aria-live region exists for dynamic announcements
-      const liveRegion = screen.getByText(/projects found/);
+      const liveRegion = screen.getByText(/\d+\s+projects found/);
       expect(liveRegion).toHaveAttribute("aria-live", "polite");
     });
   });
@@ -594,7 +594,7 @@ describe("Video&Design Gallery - Accessibility Tests", () => {
       expect(screen.getByText("Reset Filters")).toBeInTheDocument();
 
       // Should provide clear feedback about current state
-      expect(screen.getByText(/projects found/)).toBeInTheDocument();
+      expect(screen.getByText(/\d+\s+projects found/)).toBeInTheDocument();
     });
   });
 

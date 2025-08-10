@@ -69,6 +69,15 @@ export function MarkdownEditor({
 
   // Update editor content when prop changes
   useEffect(() => {
+    console.log(
+      "MarkdownEditor: content prop changed:",
+      content?.length || 0,
+      "characters",
+    );
+    console.log(
+      "MarkdownEditor: content preview:",
+      content?.substring(0, 100) || "empty",
+    );
     setEditorContent(content);
   }, [content]);
 

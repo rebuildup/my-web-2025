@@ -58,7 +58,7 @@ export function PortfolioCard({
           <Image
             src={item.thumbnail}
             alt={item.title}
-            fill={true}
+            fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             onError={() => {
@@ -106,12 +106,12 @@ export function PortfolioCard({
         </div>
 
         {/* Description - ONLY from item.description, NEVER from markdown content (Requirement 6.2) */}
-        <p className="noto-sans-jp-light text-sm text-foreground line-clamp-2">
+        <p className="noto-sans-jp-light text-sm text-foreground text-truncate-2-lines">
           {item.description}
         </p>
 
         {/* Technologies/Tags */}
-        <div className="flex flex-wrap gap-1">
+        <div className="tags-container flex flex-wrap gap-1">
           {((item as PortfolioContentItem).technologies || item.tags || [])
             .slice(0, 3)
             .map((tech, index) => (
@@ -124,7 +124,7 @@ export function PortfolioCard({
             ))}
           {((item as PortfolioContentItem).technologies || item.tags || [])
             .length > 3 && (
-            <span className="noto-sans-jp-light text-xs text-foreground/60 px-2 py-1">
+            <span className="noto-sans-jp-light text-xs tag-overflow-indicator">
               +
               {((item as PortfolioContentItem).technologies || item.tags || [])
                 .length - 3}

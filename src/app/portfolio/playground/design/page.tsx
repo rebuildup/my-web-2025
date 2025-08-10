@@ -227,7 +227,7 @@ export default function DesignPlaygroundPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground scrollbar-auto-stable">
       <main
         role="main"
         aria-label="Design playground"

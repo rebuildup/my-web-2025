@@ -89,7 +89,7 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
                 <option value="">All Categories</option>
                 <option value="develop">Development</option>
                 <option value="video">Video</option>
-                <option value="video&design">Video & Design</option>
+                <option value="design">Design</option>
               </select>
             </div>
             <div>

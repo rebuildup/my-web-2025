@@ -205,8 +205,7 @@ export function generateGridLayout(items: PortfolioContentItem[]): GridItem[] {
  * Get CSS classes for grid item based on size
  */
 export function getGridItemClasses(gridSize: GridSize): string {
-  const baseClasses =
-    "relative overflow-hidden bg-base border border-foreground";
+  const baseClasses = "relative border border-foreground";
 
   switch (gridSize) {
     case "1x1":
@@ -258,7 +257,7 @@ export function shuffleArray<T>(array: T[]): T[] {
 }
 
 /**
- * Create balanced grid layout with perfect gap filling and size variation
+ * Create balanced grid layout with improved bottom row alignment
  */
 export function createBalancedLayout(items: GridItem[]): GridItem[] {
   // Input validation
@@ -303,18 +302,18 @@ export function createBalancedLayout(items: GridItem[]): GridItem[] {
       }
     }
 
-    // Fill remaining gaps with placeholder items
-    const filledResult = fillGridGaps(result, gridState);
+    // Apply improved bottom row alignment
+    const alignedResult = alignBottomRow(result, gridState);
 
     // Ensure we return a valid array
-    if (!filledResult || !Array.isArray(filledResult)) {
+    if (!alignedResult || !Array.isArray(alignedResult)) {
       console.warn(
-        "createBalancedLayout: fillGridGaps returned invalid result",
+        "createBalancedLayout: alignBottomRow returned invalid result",
       );
       return result;
     }
 
-    return filledResult;
+    return alignedResult;
   } catch (error) {
     console.error("Error in createBalancedLayout:", error);
     // Return original items as fallback
@@ -323,7 +322,7 @@ export function createBalancedLayout(items: GridItem[]): GridItem[] {
 }
 
 /**
- * Grid tracker to manage perfect filling
+ * Grid tracker to manage perfect filling with improved bottom row handling
  */
 class GridTracker {
   private grid: boolean[][] = [];
@@ -348,7 +347,7 @@ class GridTracker {
 
     for (let row = 0; row < this.grid.length; row++) {
       for (let col = 0; col < this.COLS; col++) {
-        if (!this.grid[row][col]) {
+        if (!this.grid[row] || !this.grid[row][col]) {
           return { row, col };
         }
       }
@@ -375,20 +374,33 @@ class GridTracker {
       let maxCols = 0;
       let maxRows = 0;
 
-      // Check horizontal space
+      // Check horizontal space - ensure row exists
       if (this.grid[row]) {
         for (let c = col; c < this.COLS && !this.grid[row][c]; c++) {
           maxCols++;
         }
+      } else {
+        // If row doesn't exist, we have full width available
+        maxCols = this.COLS - col;
       }
 
-      // Check vertical space
-      for (
-        let r = row;
-        r < this.grid.length && this.grid[r] && !this.grid[r][col];
-        r++
-      ) {
-        maxRows++;
+      // Check vertical space - ensure each row exists before checking
+      for (let r = row; r < this.grid.length; r++) {
+        if (!this.grid[r]) {
+          // If row doesn't exist, we can expand vertically
+          maxRows++;
+        } else if (!this.grid[r][col]) {
+          // Row exists and cell is empty
+          maxRows++;
+        } else {
+          // Row exists and cell is occupied
+          break;
+        }
+      }
+
+      // If we haven't found any vertical space, we can still expand
+      if (maxRows === 0) {
+        maxRows = 1;
       }
 
       return { maxCols, maxRows };
@@ -425,7 +437,11 @@ class GridTracker {
       // Mark grid cells as occupied
       for (let r = row; r < row + rowSpan; r++) {
         for (let c = col; c < col + colSpan; c++) {
-          if (r < this.grid.length && c < this.COLS && this.grid[r]) {
+          if (r < this.grid.length && c < this.COLS) {
+            // Ensure row exists before accessing
+            if (!this.grid[r]) {
+              this.grid[r] = new Array(this.COLS).fill(false);
+            }
             this.grid[r][c] = true;
           }
         }
@@ -433,6 +449,41 @@ class GridTracker {
     } catch (error) {
       console.error("Error in placeItem:", error);
     }
+  }
+
+  /**
+   * Get the current grid state for debugging and analysis
+   */
+  getGridState(): boolean[][] {
+    return this.grid.map((row) => [...row]);
+  }
+
+  /**
+   * Get the last row that has any occupied cells
+   */
+  getLastOccupiedRow(): number {
+    for (let row = this.grid.length - 1; row >= 0; row--) {
+      if (this.grid[row] && this.grid[row].some((cell) => cell)) {
+        return row;
+      }
+    }
+    return -1;
+  }
+
+  /**
+   * Check if a row is complete (all cells occupied)
+   */
+  isRowComplete(row: number): boolean {
+    if (!this.grid[row]) return false;
+    return this.grid[row].every((cell) => cell);
+  }
+
+  /**
+   * Get the number of occupied cells in a row
+   */
+  getRowOccupancy(row: number): number {
+    if (!this.grid[row]) return 0;
+    return this.grid[row].filter((cell) => cell).length;
   }
 }
 
@@ -501,7 +552,7 @@ function findBestItemForPosition(
 }
 
 /**
- * Calculate score for item placement
+ * Calculate score for item placement with improved bottom row handling
  */
 function calculateItemScore(
   item: GridItem,
@@ -543,6 +594,34 @@ function calculateItemScore(
       score += 20;
     }
 
+    // Special handling for bottom row alignment
+    // Prefer items that create better visual balance
+    if (position.col > 0) {
+      // We're not at the start of a row, consider bottom row alignment
+      const remainingCols = availableSpace.maxCols;
+
+      if (remainingCols === 2 && colSpan === 2) {
+        // Perfect fit for remaining space
+        score += 30;
+      } else if (remainingCols === 1 && colSpan === 1) {
+        // Perfect fit for single remaining cell
+        score += 25;
+      } else if (remainingCols === 2 && colSpan === 1) {
+        // Leaves one cell, which is acceptable for visual balance
+        score += 15;
+      }
+    }
+
+    // Bonus for creating balanced layouts
+    // Prefer smaller items when we have limited space to avoid overflow
+    if (availableSpace.maxCols <= 2) {
+      if (colSpan <= availableSpace.maxCols) {
+        score += 10;
+      } else {
+        score -= 50; // Heavy penalty for items that don't fit
+      }
+    }
+
     return score;
   } catch (error) {
     console.error("Error in calculateItemScore:", error);
@@ -558,73 +637,84 @@ function getItemArea(gridSize: GridSize): number {
 }
 
 /**
- * Fill remaining gaps in the grid with placeholder items
+ * Align bottom row with improved spacing and consistent alignment
  */
-function fillGridGaps(items: GridItem[], gridState: GridTracker): GridItem[] {
+function alignBottomRow(items: GridItem[], gridState: GridTracker): GridItem[] {
   // Input validation
   if (!items || !Array.isArray(items)) {
-    console.warn("fillGridGaps: Invalid items array");
+    console.warn("alignBottomRow: Invalid items array");
     return [];
   }
 
   if (!gridState) {
-    console.warn("fillGridGaps: Invalid gridState");
+    console.warn("alignBottomRow: Invalid gridState");
     return items;
   }
 
   try {
     const result = [...items];
+    const lastOccupiedRow = gridState.getLastOccupiedRow();
+
+    // If no occupied rows, return as is
+    if (lastOccupiedRow < 0) {
+      return result;
+    }
+
+    // Check if the last row is incomplete
+    const isLastRowComplete = gridState.isRowComplete(lastOccupiedRow);
+
+    if (isLastRowComplete) {
+      // Last row is complete, no alignment needed
+      return result;
+    }
+
+    // Get current occupancy of the last row
+    const currentOccupancy = gridState.getRowOccupancy(lastOccupiedRow);
+    const remainingCells = 3 - currentOccupancy;
+
+    // Strategy for bottom row alignment based on remaining space
     let placeholderCount = 0;
 
-    // Fill only the current incomplete row
-    while (true) {
+    if (remainingCells === 2) {
+      // Two cells remaining - add one 2x1 placeholder for balanced look
+      const placeholder = createPlaceholderItem(placeholderCount++, "2x1");
       const nextPosition = gridState.getNextAvailablePosition();
 
-      // If we're at the start of a new row, stop (current row is complete)
-      if (nextPosition.col === 0) {
-        break;
+      if (nextPosition.row === lastOccupiedRow) {
+        result.push(placeholder);
+        gridState.placeItem(placeholder, nextPosition);
       }
+    } else if (remainingCells === 1) {
+      // One cell remaining - add one 1x1 placeholder
+      const placeholder = createPlaceholderItem(placeholderCount++, "1x1");
+      const nextPosition = gridState.getNextAvailablePosition();
 
-      const availableSpace = gridState.getAvailableSpace(nextPosition);
-
-      // If no space available, break
-      if (availableSpace.maxCols === 0 || availableSpace.maxRows === 0) {
-        break;
+      if (nextPosition.row === lastOccupiedRow) {
+        result.push(placeholder);
+        gridState.placeItem(placeholder, nextPosition);
       }
+    }
 
-      // Calculate remaining columns in current row
-      const remainingCols = 3 - nextPosition.col;
+    // For better visual balance, ensure we don't have orphaned single items
+    // If the last row has only one item, try to balance it
+    if (currentOccupancy === 1 && remainingCells === 2) {
+      // Add a 1x1 placeholder to create better visual balance
+      // This leaves one cell empty for a more organic look
+      const placeholder = createPlaceholderItem(placeholderCount++, "1x1");
+      const nextPosition = gridState.getNextAvailablePosition();
 
-      // Choose size based on remaining space
-      let placeholderSize: GridSize;
-      if (remainingCols >= 2) {
-        placeholderSize = "2x1"; // Fill 2 columns with single height
-      } else {
-        placeholderSize = "1x1"; // Fill 1 column
-      }
-
-      const placeholder = createPlaceholderItem(
-        placeholderCount++,
-        placeholderSize,
-      );
-
-      result.push(placeholder);
-      gridState.placeItem(placeholder, nextPosition);
-
-      // Safety check to prevent infinite loop
-      if (placeholderCount > 10) {
-        break;
+      if (nextPosition.row === lastOccupiedRow) {
+        result.push(placeholder);
+        gridState.placeItem(placeholder, nextPosition);
       }
     }
 
     return result;
   } catch (error) {
-    console.error("Error in fillGridGaps:", error);
+    console.error("Error in alignBottomRow:", error);
     return items;
   }
 }
-
-// Removed unused functions: determinePlaceholderSize and determinePlaceholderSizeForLastRow
 
 /**
  * Create a placeholder grid item

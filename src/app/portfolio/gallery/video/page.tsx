@@ -114,7 +114,7 @@ export default async function VideoProjectsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-background text-foreground scrollbar-auto-stable">
         <main className="flex items-center py-4">
           <div className="container-system">
             <div className="space-y-10">

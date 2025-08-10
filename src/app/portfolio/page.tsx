@@ -4,16 +4,7 @@ import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import { ContentItem } from "@/types/content";
-import {
-  Calendar,
-  Clock,
-  Code,
-  Eye,
-  Palette,
-  Star,
-  TrendingUp,
-  Video,
-} from "lucide-react";
+import { Calendar, Clock, Code, Eye, Palette, Star, Video } from "lucide-react";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -302,8 +293,6 @@ export default async function PortfolioPage() {
       count: portfolioStats.totalProjects,
       href: "/portfolio/gallery/all",
       color: "primary",
-      badge: "Complete",
-      trend: portfolioStats.totalProjects > 0 ? "up" : "stable",
     },
     {
       id: "develop",
@@ -313,8 +302,6 @@ export default async function PortfolioPage() {
       count: portfolioStats.categories.develop,
       href: "/portfolio/gallery/develop",
       color: "accent",
-      badge: "Active",
-      trend: "up",
     },
     {
       id: "video",
@@ -324,8 +311,6 @@ export default async function PortfolioPage() {
       count: portfolioStats.categories.video,
       href: "/portfolio/gallery/video",
       color: "primary",
-      badge: "Creative",
-      trend: "stable",
     },
     {
       id: "video-design",
@@ -335,8 +320,6 @@ export default async function PortfolioPage() {
       count: portfolioStats.categories.videoDesign,
       href: "/portfolio/gallery/video&design",
       color: "accent",
-      badge: "Artistic",
-      trend: "up",
     },
   ];
 
@@ -398,7 +381,7 @@ export default async function PortfolioPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-background text-foreground scrollbar-auto-stable">
         <main
           id="main-content"
           role="main"
@@ -456,20 +439,10 @@ export default async function PortfolioPage() {
                         {category.description}
                       </p>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <span className="noto-sans-jp-light text-xs text-accent">
-                            {category.count} projects
-                          </span>
-                          {category.badge && (
-                            <span className="noto-sans-jp-light text-xs text-primary border border-primary px-2 py-1">
-                              {category.badge}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          {category.trend === "up" && (
-                            <TrendingUp className="w-3 h-3 text-accent" />
-                          )}
+                        <span className="noto-sans-jp-light text-xs text-accent">
+                          {category.count} projects
+                        </span>
+                        <div className="flex items-center">
                           <span className="noto-sans-jp-light text-xs text-foreground">
                             →
                           </span>

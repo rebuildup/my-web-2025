@@ -34,10 +34,43 @@ jest.mock("next/navigation", () => ({
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props) => {
-    const { unoptimized, ...imgProps } = props;
-    // Remove unoptimized prop entirely to avoid DOM warnings
+    const {
+      unoptimized,
+      fill,
+      priority,
+      quality,
+      placeholder,
+      blurDataURL,
+      sizes,
+      loading,
+      onLoad,
+      onError,
+      width,
+      height,
+      ...imgProps
+    } = props;
+
+    // Handle fill prop by setting appropriate styles
+    const style = fill
+      ? {
+          position: "absolute",
+          height: "100%",
+          width: "100%",
+          left: 0,
+          top: 0,
+          right: 0,
+          bottom: 0,
+          objectFit: "cover",
+          ...imgProps.style,
+        }
+      : imgProps.style;
+
+    // Set dimensions for non-fill images
+    const dimensions = fill ? {} : { width, height };
+
+    // Remove Next.js specific props that don't belong on HTML img elements
     // eslint-disable-next-line @next/next/no-img-element
-    return <img {...imgProps} />;
+    return <img {...imgProps} {...dimensions} style={style} />;
   },
 }));
 

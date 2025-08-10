@@ -118,7 +118,7 @@ export default async function VideoDesignProjectsPage() {
           />
         )}
 
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen bg-background text-foreground scrollbar-auto-stable">
           <main className="py-4">
             <div className="container-system">
               <div className="space-y-10">
@@ -220,7 +220,7 @@ export default async function VideoDesignProjectsPage() {
     console.error("Error in VideoDesignProjectsPage:", error);
 
     return (
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-background text-foreground scrollbar-auto-stable">
         <main className="py-10">
           <div className="container-system">
             <div className="bg-red-100 p-4 rounded">

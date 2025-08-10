@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface OptimizedImageProps {
   src: string;
@@ -158,9 +158,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       <Image
         src={src}
         alt={alt}
-        width={fill ? undefined : width}
-        height={fill ? undefined : height}
-        fill={fill}
+        {...(fill ? { fill: true } : { width, height })}
         priority={priority}
         quality={quality}
         placeholder={placeholder}

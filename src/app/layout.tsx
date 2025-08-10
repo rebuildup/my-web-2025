@@ -149,7 +149,7 @@ export default function RootLayout({
             { href: "/favicon.ico", as: "image" },
           ]}
         /> */}
-        <div className="min-h-screen">{children}</div>
+        <div className="min-h-screen scrollbar-auto-stable">{children}</div>
 
         {/* Accessibility Tester (Development Only) */}
         {process.env.NODE_ENV === "development" && (
@@ -157,7 +157,7 @@ export default function RootLayout({
             <script
               dangerouslySetInnerHTML={{
                 __html: `
-                  import('/src/components/ui/AccessibilityTester.js').then(module => {
+                  import('@/components/ui/AccessibilityTester').then(module => {
                     const AccessibilityTester = module.default;
                     // Initialize accessibility tester
                   }).catch(console.error);

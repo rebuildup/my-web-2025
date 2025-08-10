@@ -23,6 +23,13 @@
   --gallery-item-double: 420px;
   --gallery-item-triple: 640px;
 
+  /* Video & Design Gallery Hover Effects */
+  --gallery-hover-scale: 1.05;
+  --gallery-hover-duration: 0.6s;
+  --gallery-hover-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --gallery-text-transition: 0.4s;
+  --gallery-overlay-bg: rgba(24, 24, 24, 0.5);
+
   /* Font Variables */
   --font-neue-haas: "neue-haas-grotesk-display", sans-serif;
   --font-zen-kaku: "zen-kaku-gothic-new", sans-serif;
@@ -47,6 +54,51 @@ body {
 
 html.wf-loading {
   visibility: hidden;
+}
+
+/* Video & Design Gallery Enhanced Hover Effects */
+.video-design-gallery-item {
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--gallery-text-transition)
+    var(--gallery-hover-easing);
+}
+
+.video-design-gallery-item .gallery-image {
+  transition:
+    transform var(--gallery-hover-duration) var(--gallery-hover-easing),
+    filter var(--gallery-hover-duration) var(--gallery-hover-easing);
+  transform-origin: center center;
+}
+
+.video-design-gallery-item:hover .gallery-image,
+.video-design-gallery-item:focus .gallery-image {
+  transform: scale(var(--gallery-hover-scale));
+  filter: brightness(0.95);
+}
+
+.video-design-gallery-item .gallery-text-overlay {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--gallery-text-transition) var(--gallery-hover-easing),
+    transform var(--gallery-text-transition) var(--gallery-hover-easing);
+  background-color: var(--gallery-overlay-bg);
+}
+
+.video-design-gallery-item:hover .gallery-text-overlay,
+.video-design-gallery-item:focus .gallery-text-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ensure proper z-index layering */
+.video-design-gallery-item .gallery-image-container {
+  z-index: 1;
+}
+
+.video-design-gallery-item .gallery-text-overlay {
+  z-index: 10;
 }
 
 html.wf-active,
@@ -989,4 +1041,110 @@ select,
 .markdown-content-detail th,
 .markdown-content-detail td {
   font-size: 0.875rem; /* text-sm to match paragraphs */
+}
+
+/* ===== TEXT TRUNCATION UTILITIES ===== */
+
+/* 2-line description truncation with ellipsis */
+.text-truncate-2-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+  height: 3em; /* 2 lines * 1.5 line-height */
+}
+
+/* 1-line tag display with fixed height */
+.tags-container {
+  height: 1.5em; /* Fixed height for 1 line */
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+/* Tag overflow indicator styling */
+.tag-overflow-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 1.5em;
+  font-size: 0.75rem;
+  color: var(--color-foreground);
+  opacity: 0.6;
+  font-weight: 300;
+}
+
+/* Fallback for browsers that don't support -webkit-line-clamp */
+@supports not (-webkit-line-clamp: 2) {
+  .text-truncate-2-lines {
+    max-height: 3em;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .text-truncate-2-lines::after {
+    content: "...";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--color-base);
+    padding-left: 0.5rem;
+  }
+}
+
+/* ===== SCROLLBAR CONSISTENCY UTILITIES ===== */
+
+/* Stable scrollbar behavior - reserves space for scrollbar to prevent layout shift */
+.scrollbar-stable {
+  scrollbar-gutter: stable;
+}
+
+/* Always show scrollbar */
+.scrollbar-always {
+  overflow-y: scroll;
+}
+
+/* Auto scrollbar with stable gutter */
+.scrollbar-auto-stable {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+/* Hidden scrollbar but maintains layout space */
+.scrollbar-hidden-stable {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.scrollbar-hidden-stable::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Fallback for browsers that don't support scrollbar-gutter */
+@supports not (scrollbar-gutter: stable) {
+  .scrollbar-stable,
+  .scrollbar-auto-stable {
+    /* Reserve space equivalent to scrollbar width on different platforms */
+    margin-right: 17px; /* Windows/Linux typical scrollbar width */
+    box-sizing: border-box;
+  }
+
+  /* macOS has thinner scrollbars */
+  @media screen and (-webkit-min-device-pixel-ratio: 2) {
+    .scrollbar-stable,
+    .scrollbar-auto-stable {
+      margin-right: 15px; /* macOS scrollbar width */
+    }
+  }
+
+  /* Mobile devices typically don't show scrollbars */
+  @media (max-width: 768px) {
+    .scrollbar-stable,
+    .scrollbar-auto-stable {
+      margin-right: 0;
+    }
+  }
 }

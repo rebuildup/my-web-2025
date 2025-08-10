@@ -28,7 +28,6 @@ export async function GET(request: NextRequest) {
     } else {
       // Get all manual dates
       const allDates = await portfolioDateManager.getAllManualDates();
-
       return NextResponse.json({
         success: true,
         data: allDates,
@@ -76,7 +75,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate date format
+    // Validate date using the date manager
     if (!portfolioDateManager.validateDate(date)) {
       return NextResponse.json(
         {
@@ -165,6 +164,7 @@ export async function PUT(request: NextRequest) {
       }
     }
 
+    // Update all dates using the date manager
     await portfolioDateManager.bulkSetManualDates(dates);
 
     return NextResponse.json({

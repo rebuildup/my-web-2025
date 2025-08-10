@@ -185,7 +185,7 @@ export default function ToolsPage() {
   const Global_title = "noto-sans-jp-regular text-base leading-snug";
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground scrollbar-auto-stable">
       <main id="main-content" role="main" className="py-10" tabIndex={-1}>
         <div className="container-system">
           <div className="space-y-10">

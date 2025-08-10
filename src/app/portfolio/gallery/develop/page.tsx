@@ -49,7 +49,7 @@ export default async function DevelopGalleryPage() {
             }}
           />
         )}
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen bg-background text-foreground scrollbar-auto-stable">
           <main className="py-4">
             <div className="container-system">
               <div className="space-y-10">
@@ -86,7 +86,7 @@ export default async function DevelopGalleryPage() {
     console.error("Error in DevelopGalleryPage:", error);
 
     return (
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-background text-foreground scrollbar-auto-stable">
         <main className="py-10">
           <div className="container mx-auto px-4">
             <div className="bg-red-100 p-4 rounded">

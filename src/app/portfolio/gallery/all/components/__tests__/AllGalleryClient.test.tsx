@@ -225,6 +225,30 @@ const mockPortfolioItems = [
       structuredData: {},
     },
   },
+  {
+    id: "item-4",
+    type: "portfolio" as const,
+    title: "Design Project",
+    description: "UI/UX design work",
+    category: "design",
+    tags: ["Figma", "Design"],
+    technologies: ["Figma", "Illustrator"],
+    status: "published" as const,
+    priority: 40,
+    createdAt: "2024-01-04T00:00:00.000Z",
+    updatedAt: "2024-01-04T00:00:00.000Z",
+    content: "Design project details",
+    thumbnail: "/design-project.jpg",
+    seo: {
+      title: "Design Project",
+      description: "UI/UX design work",
+      keywords: ["Figma", "Design"],
+      ogImage: "/design-project.jpg",
+      twitterImage: "/design-project.jpg",
+      canonical: "/portfolio/item-4",
+      structuredData: {},
+    },
+  },
 ];
 
 const mockSearchFilters = [
@@ -233,6 +257,7 @@ const mockSearchFilters = [
     options: [
       { value: "develop", label: "開発", count: 2 },
       { value: "video", label: "映像", count: 1 },
+      { value: "design", label: "デザイン", count: 1 },
     ],
   },
   {
@@ -281,6 +306,23 @@ describe("AllGalleryClient", () => {
     await waitFor(() => {
       expect(screen.getByText("React Project")).toBeInTheDocument();
       expect(screen.getByText("Unity Game")).toBeInTheDocument();
+      expect(screen.queryByText("Video Project")).not.toBeInTheDocument();
+      expect(screen.queryByText("Design Project")).not.toBeInTheDocument();
+    });
+  });
+
+  it("should filter items by design category", async () => {
+    const user = userEvent.setup();
+    render(<AllGalleryClient {...defaultProps} />);
+
+    const categorySelect = screen.getByDisplayValue("All Categories");
+    await user.selectOptions(categorySelect, "design");
+
+    // Should show only design category items
+    await waitFor(() => {
+      expect(screen.getByText("Design Project")).toBeInTheDocument();
+      expect(screen.queryByText("React Project")).not.toBeInTheDocument();
+      expect(screen.queryByText("Unity Game")).not.toBeInTheDocument();
       expect(screen.queryByText("Video Project")).not.toBeInTheDocument();
     });
   });

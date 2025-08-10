@@ -129,7 +129,7 @@ export default function ToolWrapper({
   ]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground scrollbar-auto-stable">
       <main className="py-10" tabIndex={-1} ref={containerRef}>
         <div className="container-system">
           <div className="space-y-10">

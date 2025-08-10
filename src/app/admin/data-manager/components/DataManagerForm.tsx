@@ -21,6 +21,7 @@ import {
   getPortfolioCategoryOptions,
   isValidPortfolioCategory,
 } from "@/types/content";
+
 import { useEffect, useState } from "react";
 import { DownloadInfoSection } from "./DownloadInfoSection";
 import { EnhancedFileUploadSection } from "./EnhancedFileUploadSection";
@@ -82,10 +83,13 @@ export function DataManagerForm({
   const [needsMarkdownMigration, setNeedsMarkdownMigration] = useState<boolean>(
     enhanced && !!(formData.content && !markdownFilePath),
   );
+  const [isLoadingMarkdown, setIsLoadingMarkdown] = useState<boolean>(false);
+  const [markdownLoadError, setMarkdownLoadError] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     setFormData(item);
-    setMarkdownContent(item.content || "");
     setMarkdownFilePath(
       enhanced ? (item as EnhancedContentItem).markdownPath : undefined,
     );
@@ -93,8 +97,119 @@ export function DataManagerForm({
       enhanced &&
         !!(item.content && !(item as EnhancedContentItem).markdownPath),
     );
+    setMarkdownLoadError(null);
 
-    // Migration check is handled in the UI render
+    // Load markdown content if markdownPath exists
+    const loadMarkdownContent = async () => {
+      if (enhanced && (item as EnhancedContentItem).markdownPath) {
+        setIsLoadingMarkdown(true);
+        try {
+          const markdownPath = (item as EnhancedContentItem).markdownPath!;
+          console.log("=== MARKDOWN LOADING DEBUG ===");
+          console.log("Loading markdown content from:", markdownPath);
+          console.log("Item data:", JSON.stringify(item, null, 2));
+
+          // First check if file exists
+          console.log("Checking if file exists...");
+          const existsResponse = await fetch(
+            `/api/markdown?action=fileExists&filePath=${encodeURIComponent(markdownPath)}`,
+          );
+
+          if (existsResponse.ok) {
+            const existsData = await existsResponse.json();
+            console.log("File exists check result:", existsData);
+
+            if (!existsData.exists) {
+              throw new Error(`Markdown file does not exist: ${markdownPath}`);
+            }
+          } else {
+            console.warn("Failed to check file existence, proceeding anyway");
+          }
+
+          // Test direct API call
+          console.log("Testing direct API call...");
+          const testResponse = await fetch(
+            `/api/markdown?action=getMarkdownContent&filePath=${encodeURIComponent(markdownPath)}`,
+          );
+          console.log("API Response status:", testResponse.status);
+          console.log(
+            "API Response headers:",
+            Object.fromEntries(testResponse.headers.entries()),
+          );
+
+          if (testResponse.ok) {
+            const testData = await testResponse.json();
+            console.log("API Response data:", testData);
+
+            if (testData.content) {
+              console.log(
+                "Successfully loaded via direct API:",
+                testData.content.length,
+                "characters",
+              );
+              console.log(
+                "Content preview:",
+                testData.content.substring(0, 200) + "...",
+              );
+
+              // Compare with item.content to ensure we're not getting the old content
+              const itemContent = item.content || "";
+              console.log("Item.content length:", itemContent.length);
+              console.log(
+                "Item.content preview:",
+                itemContent.substring(0, 200) + "...",
+              );
+
+              if (testData.content === itemContent) {
+                console.warn(
+                  "WARNING: Markdown file content is identical to item.content - this might be wrong!",
+                );
+              } else {
+                console.log(
+                  "SUCCESS: Markdown file content is different from item.content",
+                );
+              }
+
+              setMarkdownContent(testData.content);
+              setMarkdownLoadError(null);
+            } else {
+              throw new Error("No content in API response");
+            }
+          } else {
+            const errorData = await testResponse.json();
+            throw new Error(
+              `API Error: ${testResponse.status} - ${errorData.error || "Unknown error"}`,
+            );
+          }
+        } catch (error) {
+          console.error("Failed to load markdown content:", error);
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : "Failed to load markdown file";
+          console.error("Error details:", errorMessage);
+          setMarkdownLoadError(errorMessage);
+
+          // Don't use fallback content - show empty content to force user to fix the issue
+          console.log(
+            "Markdown file exists but failed to load - showing empty content",
+          );
+          setMarkdownContent("");
+        } finally {
+          setIsLoadingMarkdown(false);
+        }
+      } else {
+        // Use item.content for non-enhanced mode or items without markdownPath
+        console.log(
+          "No markdown path, using item.content:",
+          item.content?.length || 0,
+          "characters",
+        );
+        setMarkdownContent(item.content || "");
+      }
+    };
+
+    loadMarkdownContent();
   }, [item, enhanced]);
 
   const handleInputChange = (
@@ -907,23 +1022,46 @@ export function DataManagerForm({
           <div>
             <label className={labelStyle}>Content (Markdown)</label>
             {enhanced ? (
-              <MarkdownEditor
-                content={markdownContent}
-                filePath={markdownFilePath}
-                onChange={handleMarkdownContentChange}
-                onSave={handleMarkdownSave}
-                preview={true}
-                toolbar={true}
-                embedSupport={true}
-                mediaData={{
-                  images: formData.images || [],
-                  videos: (formData.videos || []).map((video) => ({
-                    ...video,
-                    title: video.title || `Video ${video.url}`,
-                  })),
-                  externalLinks: formData.externalLinks || [],
-                }}
-              />
+              isLoadingMarkdown ? (
+                <div className="border border-foreground rounded-lg p-8 text-center">
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-foreground border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-sm text-gray-600">
+                      Loading markdown content...
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="mb-2 text-xs text-gray-500 bg-yellow-50 p-2 border border-yellow-200 rounded">
+                    <div>Debug: Content length: {markdownContent.length}</div>
+                    <div>FilePath: {markdownFilePath || "none"}</div>
+                    <div>
+                      Content preview:{" "}
+                      {markdownContent.substring(0, 100) || "empty"}
+                    </div>
+                    <div>Loading: {isLoadingMarkdown ? "true" : "false"}</div>
+                    <div>Error: {markdownLoadError || "none"}</div>
+                  </div>
+                  <MarkdownEditor
+                    content={markdownContent}
+                    filePath={markdownFilePath}
+                    onChange={handleMarkdownContentChange}
+                    onSave={handleMarkdownSave}
+                    preview={true}
+                    toolbar={true}
+                    embedSupport={true}
+                    mediaData={{
+                      images: formData.images || [],
+                      videos: (formData.videos || []).map((video) => ({
+                        ...video,
+                        title: video.title || `Video ${video.url}`,
+                      })),
+                      externalLinks: formData.externalLinks || [],
+                    }}
+                  />
+                </div>
+              )
             ) : (
               <textarea
                 value={formData.content || ""}
@@ -934,24 +1072,61 @@ export function DataManagerForm({
               />
             )}
 
-            {/* Markdown File Status */}
+            {/* Markdown File Status and Migration */}
             {enhanced && (
-              <div className="mt-2 text-xs text-gray-500 flex items-center gap-2">
-                {markdownFilePath ? (
-                  <>
-                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span>
-                      Markdown file: {markdownFilePath.split("/").pop()}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-                    <span>
-                      Content stored as text (consider migrating to markdown
-                      file)
-                    </span>
-                  </>
+              <div className="mt-2 space-y-2">
+                <div className="text-xs text-gray-500 space-y-1">
+                  <div className="flex items-center gap-2">
+                    {markdownLoadError ? (
+                      <>
+                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <span className="text-red-600">
+                          Error loading markdown: {markdownLoadError}
+                        </span>
+                      </>
+                    ) : markdownFilePath ? (
+                      <>
+                        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                        <span>
+                          Markdown file: {markdownFilePath.split("/").pop()}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                        <span>
+                          Content stored as text (consider migrating to markdown
+                          file)
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  <div className="text-gray-400">
+                    Content length: {markdownContent.length} characters
+                    {isLoadingMarkdown && " (Loading...)"}
+                  </div>
+                </div>
+
+                {/* Migration Helper */}
+                {needsMarkdownMigration && (
+                  <div className="bg-blue-50 border border-blue-200 rounded p-3">
+                    <div className="flex items-start gap-2">
+                      <span className="text-blue-600 mt-0.5">💡</span>
+                      <div className="flex-1">
+                        <p className="text-sm text-blue-800 mb-2">
+                          This item has content stored as text. Migrate it to a
+                          markdown file for better organization and features.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={migrateContentToMarkdown}
+                          className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                        >
+                          Migrate to Markdown File
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
             )}

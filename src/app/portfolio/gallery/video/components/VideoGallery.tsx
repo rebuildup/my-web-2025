@@ -118,15 +118,6 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
                     <Play className="w-12 h-12 text-white drop-shadow-lg" />
                   </div>
                 </div>
-
-                {/* Video Source Indicator */}
-                <div className="absolute top-2 right-2 flex gap-1">
-                  {youtubeVideo && (
-                    <div className="bg-white bg-opacity-90 p-1 rounded shadow-sm">
-                      <VideoIcon className="w-4 h-4 text-red-500" />
-                    </div>
-                  )}
-                </div>
               </div>
 
               {/* Video Info */}
@@ -135,12 +126,33 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
                   {item.title}
                 </h3>
 
-                {/* Description - ONLY from item.description, NEVER from markdown content (Requirement 6.2) */}
-                <p className="noto-sans-jp-light text-sm text-foreground line-clamp-2 leading-relaxed">
+                {/* Description - 2-line truncation (Requirement 5.1) */}
+                <p className="noto-sans-jp-light text-sm text-foreground text-truncate-2-lines leading-relaxed">
                   {item.description}
                 </p>
 
-                {/* Meta Info */}
+                {/* Tags - moved above date (Requirement 5.2) */}
+                {item.tags && item.tags.length > 0 && (
+                  <div className="tags-container">
+                    <div className="flex flex-wrap gap-1">
+                      {item.tags.slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className="noto-sans-jp-light text-xs text-foreground border border-foreground px-2 py-1"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      {item.tags.length > 3 && (
+                        <span className="noto-sans-jp-light text-xs text-foreground tag-overflow-indicator">
+                          +{item.tags.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Meta Info - date and category */}
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-foreground" />
@@ -154,25 +166,6 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
                     {item.category}
                   </span>
                 </div>
-
-                {/* Tags */}
-                {item.tags && item.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1">
-                    {item.tags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag}
-                        className="noto-sans-jp-light text-xs text-foreground border border-foreground px-2 py-1"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                    {item.tags.length > 3 && (
-                      <span className="noto-sans-jp-light text-xs text-foreground px-2 py-1">
-                        +{item.tags.length - 3}
-                      </span>
-                    )}
-                  </div>
-                )}
               </div>
             </div>
           );

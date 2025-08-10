@@ -320,12 +320,17 @@ describe("VideoDesignGallery - Comprehensive Tests", () => {
 
   describe("3. 重複除去機能テスト", () => {
     beforeEach(() => {
+      // Include the duplicate item (index 4) in the mock return
+      const itemsWithDuplicate = [
+        testItems[0], // enhanced-multi-1 (original)
+        testItems[1], // enhanced-vd-1
+        testItems[2], // legacy-video-1
+        testItems[4], // enhanced-multi-1 (duplicate)
+      ];
       mockEnhancedGalleryFilter.filterItemsForGallery.mockReturnValue(
-        testItems.slice(0, 3),
+        itemsWithDuplicate,
       );
-      mockEnhancedGalleryFilter.sortItems.mockReturnValue(
-        testItems.slice(0, 3),
-      );
+      mockEnhancedGalleryFilter.sortItems.mockReturnValue(itemsWithDuplicate);
     });
 
     it("should remove duplicates when deduplication=true", () => {

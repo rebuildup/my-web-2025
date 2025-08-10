@@ -6,7 +6,7 @@
 
 import { expect, test } from "@playwright/test";
 
-test.describe.skip("Playground Lighthouse Tests", () => {
+test.describe("Playground Lighthouse Tests", () => {
   test.describe("Design Playground Lighthouse", () => {
     test("should achieve Lighthouse 90+ scores", async ({ page }) => {
       // Dynamic import for playwright-lighthouse

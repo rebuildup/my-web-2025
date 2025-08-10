@@ -1,0 +1,15 @@
+{
+  "timestamp": 1754743470771,
+  "buildId": "21888ca0f5d3f7c596e6ca64ca289ac2",
+  "headers": {
+    "Cache-Control": "no-cache, no-store, must-revalidate",
+    "Pragma": "no-cache",
+    "Expires": "0",
+    "ETag": "\"21888ca0f5d3f7c596e6ca64ca289ac2\"",
+    "Last-Modified": "Sat, 09 Aug 2025 12:44:30 GMT"
+  },
+  "meta": {
+    "viewport": "width=device-width, initial-scale=1",
+    "cache-control": "no-cache, no-store, must-revalidate"
+  }
+}
