@@ -55,13 +55,17 @@ export const metadata: Metadata = {
 };
 
 export default async function VideoDesignProjectsPage() {
-  console.log("=== VideoDesignProjectsPage EXECUTED ===");
-  console.log("Environment:", process.env.NODE_ENV);
-  console.log("Timestamp:", new Date().toISOString());
+  if (process.env.NODE_ENV !== "production") {
+    console.log("=== VideoDesignProjectsPage EXECUTED ===");
+    console.log("Environment:", process.env.NODE_ENV);
+    console.log("Timestamp:", new Date().toISOString());
+  }
 
   try {
     // Get portfolio data with minimal error handling
-    console.log("Fetching portfolio data...");
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Fetching portfolio data...");
+    }
     const items = await portfolioDataManager.getPortfolioData(false);
 
     // Use enhanced gallery filter for video&design category with proper integration
@@ -74,25 +78,27 @@ export default async function VideoDesignProjectsPage() {
       },
     );
 
-    console.log("Video&Design page debug:", {
-      totalItems: items.length,
-      videoDesignItems: videoDesignItems.length,
-      categories: videoDesignItems.map((item) => {
-        // Handle both enhanced and legacy items
-        if ("categories" in item && Array.isArray(item.categories)) {
-          return item.categories.join(", ");
-        }
-        return (item as unknown as PortfolioContentItem).category;
-      }),
-      itemsWithVideos: videoDesignItems.filter((item) => {
-        const portfolioItem = item as unknown as PortfolioContentItem;
-        return portfolioItem.videos && portfolioItem.videos.length > 0;
-      }).length,
-      enhancedItems: videoDesignItems.filter((item) => "categories" in item)
-        .length,
-      legacyItems: videoDesignItems.filter((item) => !("categories" in item))
-        .length,
-    });
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Video&Design page debug:", {
+        totalItems: items.length,
+        videoDesignItems: videoDesignItems.length,
+        categories: videoDesignItems.map((item) => {
+          // Handle both enhanced and legacy items
+          if ("categories" in item && Array.isArray(item.categories)) {
+            return item.categories.join(", ");
+          }
+          return (item as unknown as PortfolioContentItem).category;
+        }),
+        itemsWithVideos: videoDesignItems.filter((item) => {
+          const portfolioItem = item as unknown as PortfolioContentItem;
+          return portfolioItem.videos && portfolioItem.videos.length > 0;
+        }).length,
+        enhancedItems: videoDesignItems.filter((item) => "categories" in item)
+          .length,
+        legacyItems: videoDesignItems.filter((item) => !("categories" in item))
+          .length,
+      });
+    }
 
     // Generate SEO metadata and structured data
     let structuredData = null;

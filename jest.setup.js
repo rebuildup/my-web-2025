@@ -69,8 +69,30 @@ jest.mock("next/image", () => ({
     const dimensions = fill ? {} : { width, height };
 
     // Remove Next.js specific props that don't belong on HTML img elements
+    const {
+      src,
+      alt,
+      className,
+      onClick,
+      onMouseEnter,
+      onMouseLeave,
+      ...otherProps
+    } = imgProps;
+
+    // Only pass valid HTML img attributes
     // eslint-disable-next-line @next/next/no-img-element
-    return <img {...imgProps} {...dimensions} style={style} />;
+    return (
+      <img
+        src={src}
+        alt={alt}
+        className={className}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        {...dimensions}
+        style={style}
+      />
+    );
   },
 }));
 

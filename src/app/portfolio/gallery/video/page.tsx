@@ -146,11 +146,7 @@ export default async function VideoProjectsPage() {
                 <h2 className="neue-haas-grotesk-display text-3xl text-primary mb-8">
                   Video Projects ({videoItems.length})
                 </h2>
-                {process.env.NODE_ENV === "development" && (
-                  <div className="mb-4 p-2 bg-gray-100 text-gray-800 text-xs">
-                    Debug: Loaded {videoItems.length} video items
-                  </div>
-                )}
+                {/* Debug banner removed in production */}
                 <VideoGallery items={videoItems} />
               </section>
 

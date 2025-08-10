@@ -35,19 +35,33 @@ const nextConfig: NextConfig = {
     },
   },
 
-  // Image optimization
+  // Image optimization - Fixed for production deployment
   images: {
     formats: ["image/webp", "image/avif"],
     deviceSizes: [384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000, // 1 year
     dangerouslyAllowSVG: true,
-    contentDispositionType: "attachment",
+    // Ensure images render inline in <img> tags rather than forcing download
+    contentDispositionType: "inline",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    unoptimized: false, // Enable optimization
-    loader: "default",
-    domains: [], // Add external domains if needed
+    // Fix: Enable unoptimized only for standalone builds
+    unoptimized: process.env.NEXT_BUILD_STANDALONE === "true",
+    loader: process.env.NEXT_BUILD_STANDALONE === "true" ? "custom" : "default",
+    loaderFile:
+      process.env.NEXT_BUILD_STANDALONE === "true"
+        ? "./src/lib/utils/image-loader.ts"
+        : undefined,
+    domains: ["img.youtube.com", "i.ytimg.com"], // Add YouTube domains for thumbnails
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
+      },
+      {
+        protocol: "https",
+        hostname: "i.ytimg.com",
+      },
       {
         protocol: "https",
         hostname: "**",
@@ -92,13 +106,20 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: baseHeaders,
       },
-      // Static assets caching
+      // Static assets caching - Fixed for production
       {
         source: "/images/(.*)",
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            value:
+              process.env.NODE_ENV === "production"
+                ? "public, max-age=86400, stale-while-revalidate=31536000"
+                : "public, max-age=0, no-cache",
+          },
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
           },
         ],
       },
@@ -336,8 +357,8 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  // Output configuration
-  output: "standalone",
+  // Output configuration - Disabled for development
+  // output: "standalone", // Enable only for production deployment
   poweredByHeader: false,
   compress: true,
   generateEtags: true,

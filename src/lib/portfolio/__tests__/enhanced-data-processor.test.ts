@@ -64,11 +64,11 @@ describe("EnhancedPortfolioDataProcessor", () => {
 
       // Check that old format was properly processed
       expect(oldItem!.category).toBe("develop");
-      expect(oldItem!.images).toEqual(["image1.jpg"]);
+      expect(oldItem!.images).toEqual(["/image1.jpg"]); // Normalized with leading slash
 
       // Check that new format was properly processed
       expect(newItem!.category).toBe("video"); // First category becomes primary
-      expect(newItem!.images).toEqual(["image2.jpg"]); // Processed images used
+      expect(newItem!.images).toEqual(["/image2.jpg"]); // Processed images used, normalized
     });
 
     it("should handle empty data gracefully", async () => {

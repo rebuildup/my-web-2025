@@ -66,7 +66,7 @@ export function SortControls({ sort, onSortChange }: SortControlsProps) {
         {/* Sort Order Toggle */}
         <button
           onClick={handleSortOrderToggle}
-          className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 min-w-fit border border-foreground text-foreground hover:border-accent hover:text-accent transition-colors whitespace-nowrap"
+          className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 border border-foreground text-foreground hover:border-accent hover:text-accent transition-colors whitespace-nowrap min-w-fit w-auto"
           aria-label={`Sort ${sort.sortOrder === "asc" ? "ascending" : "descending"}`}
         >
           {getSortIcon()}

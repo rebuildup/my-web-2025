@@ -5,9 +5,9 @@
 
 "use client";
 
+import { SafeImage } from "@/components/ui/SafeImage";
 import { SearchFilter } from "@/lib/portfolio/search-index";
 import { ContentItem } from "@/types/content";
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -66,7 +66,7 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
       </div>
 
       {/* Filters */}
-      <div>
+      <div className="mb-6 md:mb-8">
         <div className="bg-base border border-foreground p-4">
           <h2 className="zen-kaku-gothic-new text-lg text-primary mb-4">
             Filters
@@ -133,7 +133,7 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
       </div>
 
       {/* Items Grid */}
-      <div>
+      <div className="mt-2 md:mt-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item) => (
             <Link
@@ -145,13 +145,14 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
             >
               <div className="relative aspect-video bg-background border border-foreground overflow-hidden">
                 {item.thumbnail ? (
-                  <Image
+                  <SafeImage
                     src={item.thumbnail}
                     alt={item.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover"
                     loading="lazy"
+                    showDebug={false}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">

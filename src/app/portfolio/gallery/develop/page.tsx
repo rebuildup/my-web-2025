@@ -12,20 +12,26 @@ import { DevelopGalleryClient } from "./components/DevelopGalleryClient";
  */
 
 export default async function DevelopGalleryPage() {
-  console.log("=== DevelopGalleryPage EXECUTED ===");
-  console.log("Environment:", process.env.NODE_ENV);
-  console.log("Timestamp:", new Date().toISOString());
+  if (process.env.NODE_ENV !== "production") {
+    console.log("=== DevelopGalleryPage EXECUTED ===");
+    console.log("Environment:", process.env.NODE_ENV);
+    console.log("Timestamp:", new Date().toISOString());
+  }
 
   try {
     // Get portfolio data with minimal error handling
-    console.log("Fetching portfolio data...");
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Fetching portfolio data...");
+    }
     const items = await portfolioDataManager.getPortfolioData(true);
     const searchFilters = await portfolioDataManager.getSearchFilters();
 
-    console.log("Data fetched successfully:", {
-      itemsCount: items.length,
-      filtersCount: searchFilters.length,
-    });
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Data fetched successfully:", {
+        itemsCount: items.length,
+        filtersCount: searchFilters.length,
+      });
+    }
 
     // Generate SEO metadata and structured data
     let structuredData = null;

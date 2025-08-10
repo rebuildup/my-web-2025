@@ -16,6 +16,28 @@ function isLocalhost(request: NextRequest) {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Handle image requests with proper headers
+  if (pathname.startsWith("/images/")) {
+    const response = NextResponse.next();
+
+    // Set proper CORS headers for images
+    response.headers.set("Access-Control-Allow-Origin", "*");
+    response.headers.set("Access-Control-Allow-Methods", "GET");
+    response.headers.set("Cross-Origin-Resource-Policy", "cross-origin");
+
+    // Set proper cache headers based on environment
+    if (process.env.NODE_ENV === "production") {
+      response.headers.set(
+        "Cache-Control",
+        "public, max-age=86400, stale-while-revalidate=31536000",
+      );
+    } else {
+      response.headers.set("Cache-Control", "no-cache");
+    }
+
+    return response;
+  }
+
   // Admin panel access control
   if (pathname.startsWith("/admin")) {
     // Block access if not in development environment
@@ -94,5 +116,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*", "/images/:path*"],
 };

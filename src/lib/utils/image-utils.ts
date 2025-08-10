@@ -13,10 +13,20 @@ export function getImageUrl(image: string | ImageItem | undefined): string {
   }
 
   if (typeof image === "string") {
-    return image;
+    // Handle absolute URLs (YouTube thumbnails, etc.)
+    if (image.startsWith("http://") || image.startsWith("https://")) {
+      return image;
+    }
+    // Handle relative paths - ensure they start with /
+    if (image.startsWith("/")) {
+      return image;
+    }
+    // Handle relative paths without leading slash
+    return `/${image}`;
   }
 
-  return image.url;
+  // Handle ImageItem object
+  return image.url || "/images/portfolio/placeholder-image.svg";
 }
 
 /**
@@ -27,7 +37,7 @@ export function getThumbnailUrl(
   images: (string | ImageItem)[] | undefined,
 ): string {
   if (thumbnail) {
-    return thumbnail;
+    return getImageUrl(thumbnail);
   }
 
   if (images && images.length > 0) {

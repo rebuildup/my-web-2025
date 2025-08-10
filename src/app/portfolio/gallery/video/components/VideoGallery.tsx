@@ -11,9 +11,9 @@
  * - Use item.description or item.content (legacy) but never markdown content
  */
 
+import { SafeImage } from "@/components/ui/SafeImage";
 import { ContentItem } from "@/types";
 import { Calendar, Play, Video as VideoIcon } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 import VideoDetailPanel from "./VideoDetailPanel";
 import YouTubeThumbnail from "./YouTubeThumbnail";
@@ -79,13 +79,14 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
               {/* Video Thumbnail */}
               <div className="aspect-video border border-foreground relative overflow-hidden mb-4">
                 {item.thumbnail ? (
-                  <Image
+                  <SafeImage
                     src={item.thumbnail}
                     alt={item.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                     priority={false}
+                    showDebug={false}
                   />
                 ) : videoId ? (
                   <YouTubeThumbnail

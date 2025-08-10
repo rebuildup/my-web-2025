@@ -205,10 +205,11 @@ export class PortfolioDataProcessor {
         category: normalizedCategory,
         // Ensure required fields
         description: item.description || `${item.title}の作品詳細`,
-        thumbnail:
+        thumbnail: this.normalizeImagePath(
           item.thumbnail ||
-          item.images?.[0] ||
-          "/images/portfolio/default-thumb.jpg",
+            item.images?.[0] ||
+            "/images/portfolio/default-thumb.jpg",
+        ),
         technologies: this.extractTechnologies(
           Array.isArray(item.tags) ? item.tags : [],
         ),
@@ -676,6 +677,27 @@ export class PortfolioDataProcessor {
   }
 
   /**
+   * Normalize image path for consistent handling
+   */
+  protected normalizeImagePath(imagePath: string | undefined): string {
+    if (!imagePath) {
+      return "/images/portfolio/placeholder-image.svg";
+    }
+
+    // Handle absolute URLs (YouTube thumbnails, etc.)
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+
+    // Ensure local paths start with /
+    if (!imagePath.startsWith("/")) {
+      return `/${imagePath}`;
+    }
+
+    return imagePath;
+  }
+
+  /**
    * Generate portfolio statistics
    */
   async generatePortfolioStats(
@@ -1048,8 +1070,10 @@ export class EnhancedPortfolioDataProcessor extends PortfolioDataProcessor {
 
     // Use processed images as the main images array, fallback to original images
     const images = item.processedImages?.length
-      ? item.processedImages
-      : item.originalImages || item.images || [];
+      ? item.processedImages.map((img) => this.normalizeImagePath(img))
+      : (item.originalImages || item.images || []).map((img) =>
+          this.normalizeImagePath(img),
+        );
 
     const normalized: PortfolioContentItem = {
       ...item,
@@ -1058,8 +1082,9 @@ export class EnhancedPortfolioDataProcessor extends PortfolioDataProcessor {
 
       // Ensure required fields
       description: item.description || `${item.title}の作品詳細`,
-      thumbnail:
+      thumbnail: this.normalizeImagePath(
         item.thumbnail || images[0] || "/images/portfolio/default-thumb.jpg",
+      ),
       technologies: this.extractTechnologies(
         Array.isArray(item.tags) ? item.tags : [],
       ),

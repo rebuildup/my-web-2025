@@ -12,11 +12,11 @@
  * - Maintain consistent layout regardless of content type
  */
 
+import { SafeImage } from "@/components/ui/SafeImage";
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
 import { EnhancedContentItem } from "@/types";
 import { isEnhancedContentItem } from "@/types/enhanced-content";
 import { FileText } from "lucide-react";
-import Image from "next/image";
 
 interface PortfolioCardProps {
   item: PortfolioContentItem | EnhancedContentItem;
@@ -55,7 +55,7 @@ export function PortfolioCard({
       {/* Thumbnail */}
       <div className="aspect-video bg-background border-b border-foreground overflow-hidden relative">
         {item.thumbnail ? (
-          <Image
+          <SafeImage
             src={item.thumbnail}
             alt={item.title}
             fill

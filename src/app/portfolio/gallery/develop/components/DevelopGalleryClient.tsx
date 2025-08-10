@@ -12,12 +12,12 @@
  * - Maintain consistent performance with large datasets
  */
 
+import { SafeImage } from "@/components/ui/SafeImage";
 import { PortfolioContentItem } from "@/lib/portfolio/data-processor";
 import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
 import { SearchFilter } from "@/lib/portfolio/search-index";
 import { EnhancedContentItem } from "@/types";
 import { Calendar, Code, ExternalLink, Github } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { DetailModal } from "../../all/components/DetailModal";
@@ -243,7 +243,7 @@ export function DevelopGalleryClient({
       </header>
 
       {/* Controls */}
-      <section className="space-y-6">
+      <section className="space-y-6 mb-6 md:mb-8">
         <FilterBar
           filters={filters}
           searchFilters={searchFilters}
@@ -253,7 +253,7 @@ export function DevelopGalleryClient({
       </section>
 
       {/* Gallery Content - Alternating Layout */}
-      <section id="gallery-content">
+      <section id="gallery-content" className="mt-2 md:mt-4">
         {initialItems.length === 0 ? (
           <div className="text-center py-16">
             <p className="noto-sans-jp-light text-sm text-foreground">
@@ -286,15 +286,14 @@ export function DevelopGalleryClient({
                       <div className="aspect-video bg-base border border-foreground overflow-hidden hover:border-accent transition-colors group">
                         {project.thumbnail &&
                         project.thumbnail !== "/images/default-project.png" ? (
-                          <div className="relative w-full h-full">
-                            <Image
-                              src={project.thumbnail}
-                              alt={project.title}
-                              fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
-                              sizes="(max-width: 768px) 100vw, 50vw"
-                            />
-                          </div>
+                          <SafeImage
+                            src={project.thumbnail}
+                            alt={project.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            showDebug={false}
+                          />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center bg-base">
                             <div className="text-center">
