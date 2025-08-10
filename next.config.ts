@@ -358,7 +358,11 @@ const nextConfig: NextConfig = {
   },
 
   // Output configuration - Disabled for development
-  // output: "standalone", // Enable only for production deployment
+  output:
+    process.env.NODE_ENV === "production" ||
+    process.env.NEXT_BUILD_STANDALONE === "true"
+      ? "standalone"
+      : undefined,
   poweredByHeader: false,
   compress: true,
   generateEtags: true,
