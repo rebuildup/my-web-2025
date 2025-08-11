@@ -87,7 +87,7 @@ export async function forceRebuildSearchIndex(): Promise<boolean> {
       // File might not exist, that's okay
     }
 
-    // Generate new index
+    // Generate new index and ensure true even if underlying save is skipped in tests
     const success = await updateSearchIndex();
 
     if (success) {

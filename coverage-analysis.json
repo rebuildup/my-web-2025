@@ -1,11 +1,11 @@
 {
-  "timestamp": "2025-08-07T00:57:30.246Z",
+  "timestamp": "2025-08-11T02:06:37.092Z",
   "summary": {
-    "totalFiles": 431,
-    "testedFiles": 170,
-    "untestedFiles": 261,
-    "coveragePercentage": 39.4,
-    "estimatedEffort": 856
+    "totalFiles": 444,
+    "testedFiles": 207,
+    "untestedFiles": 237,
+    "coveragePercentage": 46.6,
+    "estimatedEffort": 779
   },
   "typeStats": {
     "page": {
@@ -14,31 +14,31 @@
     },
     "layout": {
       "total": 6,
-      "tested": 0
+      "tested": 6
     },
     "component": {
-      "total": 148,
-      "tested": 17
+      "total": 154,
+      "tested": 30
     },
     "api": {
       "total": 43,
       "tested": 43
     },
     "other": {
-      "total": 54,
-      "tested": 6
+      "total": 57,
+      "tested": 8
     },
     "hook": {
       "total": 10,
-      "tested": 3
+      "tested": 10
     },
     "type": {
       "total": 12,
       "tested": 5
     },
     "utility": {
-      "total": 107,
-      "tested": 45
+      "total": 111,
+      "tested": 54
     }
   },
   "untestedFiles": [
@@ -107,22 +107,6 @@
       "estimatedEffort": 4
     },
     {
-      "path": "src\\app\\layout.tsx",
-      "type": "layout",
-      "complexity": "high",
-      "priority": 10,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\app\\offline\\components\\OfflinePageClient.tsx",
-      "type": "component",
-      "complexity": "high",
-      "priority": 10,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
       "path": "src\\app\\portfolio\\components\\PortfolioAnalytics.tsx",
       "type": "component",
       "complexity": "high",
@@ -179,14 +163,6 @@
       "estimatedEffort": 4
     },
     {
-      "path": "src\\app\\portfolio\\gallery\\all\\components\\SortControls.tsx",
-      "type": "component",
-      "complexity": "high",
-      "priority": 10,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
       "path": "src\\app\\portfolio\\gallery\\develop\\components\\DevelopGalleryClient.tsx",
       "type": "component",
       "complexity": "high",
@@ -228,14 +204,6 @@
     },
     {
       "path": "src\\app\\tools\\business-mail-block\\components\\BusinessMailBlockTool.tsx",
-      "type": "component",
-      "complexity": "high",
-      "priority": 10,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\app\\tools\\color-palette\\components\\ColorPaletteGenerator.tsx",
       "type": "component",
       "complexity": "high",
       "priority": 10,
@@ -571,23 +539,23 @@
       "estimatedEffort": 4
     },
     {
+      "path": "src\\components\\admin\\AdvancedCacheClearPanel.tsx",
+      "type": "component",
+      "complexity": "high",
+      "priority": 10,
+      "hasTest": false,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\components\\admin\\CacheClearPanel.tsx",
+      "type": "component",
+      "complexity": "high",
+      "priority": 10,
+      "hasTest": false,
+      "estimatedEffort": 4
+    },
+    {
       "path": "src\\components\\admin\\EnhancedDataManager.tsx",
-      "type": "component",
-      "complexity": "high",
-      "priority": 10,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\components\\error-boundaries\\ErrorBoundary.tsx",
-      "type": "component",
-      "complexity": "high",
-      "priority": 10,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\components\\markdown\\FallbackContent.tsx",
       "type": "component",
       "complexity": "high",
       "priority": 10,
@@ -771,22 +739,6 @@
       "estimatedEffort": 4
     },
     {
-      "path": "src\\components\\providers\\AnalyticsProvider.tsx",
-      "type": "component",
-      "complexity": "high",
-      "priority": 10,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\components\\providers\\PerformanceProvider.tsx",
-      "type": "component",
-      "complexity": "high",
-      "priority": 10,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
       "path": "src\\components\\ui\\AccessibilityTester.tsx",
       "type": "component",
       "complexity": "high",
@@ -812,14 +764,6 @@
     },
     {
       "path": "src\\components\\ui\\AccessibleTooltip.tsx",
-      "type": "component",
-      "complexity": "high",
-      "priority": 10,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\components\\ui\\card.tsx",
       "type": "component",
       "complexity": "high",
       "priority": 10,
@@ -883,6 +827,14 @@
       "estimatedEffort": 4
     },
     {
+      "path": "src\\components\\ui\\SafeImage.tsx",
+      "type": "component",
+      "complexity": "high",
+      "priority": 10,
+      "hasTest": false,
+      "estimatedEffort": 4
+    },
+    {
       "path": "src\\components\\ui\\Select.tsx",
       "type": "component",
       "complexity": "high",
@@ -899,56 +851,8 @@
       "estimatedEffort": 4
     },
     {
-      "path": "src\\hooks\\useAccessibility.ts",
-      "type": "hook",
-      "complexity": "high",
-      "priority": 9,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\hooks\\useEnhancedDataManager.ts",
-      "type": "hook",
-      "complexity": "high",
-      "priority": 9,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\hooks\\useOfflinePerformance.ts",
-      "type": "hook",
-      "complexity": "high",
-      "priority": 9,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\hooks\\usePerformanceOptimization.ts",
-      "type": "hook",
-      "complexity": "high",
-      "priority": 9,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\hooks\\useResponsive.ts",
-      "type": "hook",
-      "complexity": "high",
-      "priority": 9,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\hooks\\useResponsiveCanvas.ts",
-      "type": "hook",
-      "complexity": "high",
-      "priority": 9,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\hooks\\useTouchGestures.ts",
-      "type": "hook",
+      "path": "src\\lib\\advanced-cache-utils.ts",
+      "type": "utility",
       "complexity": "high",
       "priority": 9,
       "hasTest": false,
@@ -979,7 +883,7 @@
       "estimatedEffort": 4
     },
     {
-      "path": "src\\lib\\config\\production.ts",
+      "path": "src\\lib\\cache-utils.ts",
       "type": "utility",
       "complexity": "high",
       "priority": 9,
@@ -988,22 +892,6 @@
     },
     {
       "path": "src\\lib\\error-handling\\unified-error-handler.ts",
-      "type": "utility",
-      "complexity": "high",
-      "priority": 9,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\lib\\init\\production.ts",
-      "type": "utility",
-      "complexity": "high",
-      "priority": 9,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\lib\\logging\\enhanced-logger.ts",
       "type": "utility",
       "complexity": "high",
       "priority": 9,
@@ -1052,14 +940,6 @@
     },
     {
       "path": "src\\lib\\markdown\\tailwind-css-validator.ts",
-      "type": "utility",
-      "complexity": "high",
-      "priority": 9,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\lib\\monitoring\\pipeline-monitor.ts",
       "type": "utility",
       "complexity": "high",
       "priority": 9,
@@ -1203,14 +1083,6 @@
       "estimatedEffort": 4
     },
     {
-      "path": "src\\lib\\search\\cache.ts",
-      "type": "utility",
-      "complexity": "high",
-      "priority": 9,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
       "path": "src\\lib\\seo\\canonical.ts",
       "type": "utility",
       "complexity": "high",
@@ -1316,14 +1188,6 @@
     },
     {
       "path": "src\\lib\\utils\\service-worker.ts",
-      "type": "utility",
-      "complexity": "high",
-      "priority": 9,
-      "hasTest": false,
-      "estimatedEffort": 4
-    },
-    {
-      "path": "src\\lib\\webgl\\production-optimizer.ts",
       "type": "utility",
       "complexity": "high",
       "priority": 9,
@@ -1563,14 +1427,6 @@
       "estimatedEffort": 4
     },
     {
-      "path": "src\\components\\layout\\PageHeader.tsx",
-      "type": "component",
-      "complexity": "medium",
-      "priority": 8,
-      "hasTest": false,
-      "estimatedEffort": 2
-    },
-    {
       "path": "src\\components\\playground\\webgl-experiments\\experiments-data.ts",
       "type": "component",
       "complexity": "medium",
@@ -1611,40 +1467,8 @@
       "estimatedEffort": 2
     },
     {
-      "path": "src\\app\\about\\commission\\estimate\\layout.tsx",
-      "type": "layout",
-      "complexity": "low",
-      "priority": 7,
-      "hasTest": false,
-      "estimatedEffort": 1
-    },
-    {
-      "path": "src\\app\\admin\\data-manager\\layout.tsx",
-      "type": "layout",
-      "complexity": "low",
-      "priority": 7,
-      "hasTest": false,
-      "estimatedEffort": 1
-    },
-    {
-      "path": "src\\app\\admin\\layout.tsx",
-      "type": "layout",
-      "complexity": "low",
-      "priority": 7,
-      "hasTest": false,
-      "estimatedEffort": 1
-    },
-    {
       "path": "src\\app\\portfolio\\gallery\\video\\components\\YouTubeThumbnail.tsx",
       "type": "component",
-      "complexity": "low",
-      "priority": 7,
-      "hasTest": false,
-      "estimatedEffort": 1
-    },
-    {
-      "path": "src\\app\\tools\\layout.tsx",
-      "type": "layout",
       "complexity": "low",
       "priority": 7,
       "hasTest": false,
@@ -1715,8 +1539,8 @@
       "estimatedEffort": 1
     },
     {
-      "path": "src\\app\\workshop\\layout.tsx",
-      "type": "layout",
+      "path": "src\\components\\debug\\ImageDebugInfo.tsx",
+      "type": "component",
       "complexity": "low",
       "priority": 7,
       "hasTest": false,
@@ -1755,22 +1579,6 @@
       "estimatedEffort": 1
     },
     {
-      "path": "src\\components\\providers\\ProductionInitializer.tsx",
-      "type": "component",
-      "complexity": "low",
-      "priority": 7,
-      "hasTest": false,
-      "estimatedEffort": 1
-    },
-    {
-      "path": "src\\components\\ui\\badge.tsx",
-      "type": "component",
-      "complexity": "low",
-      "priority": 7,
-      "hasTest": false,
-      "estimatedEffort": 1
-    },
-    {
       "path": "src\\components\\ui\\BreadcrumbWrapper.tsx",
       "type": "component",
       "complexity": "low",
@@ -1795,15 +1603,7 @@
       "estimatedEffort": 2
     },
     {
-      "path": "src\\lib\\search\\history.ts",
-      "type": "utility",
-      "complexity": "medium",
-      "priority": 7,
-      "hasTest": false,
-      "estimatedEffort": 2
-    },
-    {
-      "path": "src\\lib\\search\\update-index.ts",
+      "path": "src\\lib\\utils\\image-fallback.ts",
       "type": "utility",
       "complexity": "medium",
       "priority": 7,
@@ -1915,14 +1715,6 @@
       "estimatedEffort": 1
     },
     {
-      "path": "src\\lib\\monitoring\\sentry.ts",
-      "type": "utility",
-      "complexity": "low",
-      "priority": 6,
-      "hasTest": false,
-      "estimatedEffort": 1
-    },
-    {
       "path": "src\\lib\\portfolio\\cache-utils.ts",
       "type": "utility",
       "complexity": "low",
@@ -1971,6 +1763,14 @@
       "estimatedEffort": 1
     },
     {
+      "path": "src\\lib\\utils\\image-loader.ts",
+      "type": "utility",
+      "complexity": "low",
+      "priority": 6,
+      "hasTest": false,
+      "estimatedEffort": 1
+    },
+    {
       "path": "src\\lib\\utils\\test-logger.ts",
       "type": "utility",
       "complexity": "low",
@@ -1980,22 +1780,6 @@
     },
     {
       "path": "src\\app\\portfolio\\gallery\\all\\page-backup.tsx",
-      "type": "other",
-      "complexity": "low",
-      "priority": 5,
-      "hasTest": false,
-      "estimatedEffort": 1
-    },
-    {
-      "path": "src\\app\\robots.ts",
-      "type": "other",
-      "complexity": "low",
-      "priority": 5,
-      "hasTest": false,
-      "estimatedEffort": 1
-    },
-    {
-      "path": "src\\app\\sitemap.ts",
       "type": "other",
       "complexity": "low",
       "priority": 5,
@@ -2107,6 +1891,30 @@
       "estimatedEffort": 1
     },
     {
+      "path": "src\\test-utils\\browser-mocks.ts",
+      "type": "other",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": false,
+      "estimatedEffort": 1
+    },
+    {
+      "path": "src\\test-utils\\common-mocks.ts",
+      "type": "other",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": false,
+      "estimatedEffort": 1
+    },
+    {
+      "path": "src\\test-utils\\test-wrapper.tsx",
+      "type": "other",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": false,
+      "estimatedEffort": 1
+    },
+    {
       "path": "src\\types\\form-config.ts",
       "type": "type",
       "complexity": "medium",
@@ -2155,6 +1963,14 @@
       "priority": 8,
       "hasTest": true,
       "estimatedEffort": 4
+    },
+    {
+      "path": "src\\app\\about\\commission\\estimate\\layout.tsx",
+      "type": "layout",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": true,
+      "estimatedEffort": 1
     },
     {
       "path": "src\\app\\about\\commission\\estimate\\page.tsx",
@@ -2237,12 +2053,28 @@
       "estimatedEffort": 4
     },
     {
+      "path": "src\\app\\admin\\data-manager\\layout.tsx",
+      "type": "layout",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": true,
+      "estimatedEffort": 1
+    },
+    {
       "path": "src\\app\\admin\\data-manager\\page.tsx",
       "type": "page",
       "complexity": "high",
       "priority": 8,
       "hasTest": true,
       "estimatedEffort": 4
+    },
+    {
+      "path": "src\\app\\admin\\layout.tsx",
+      "type": "layout",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": true,
+      "estimatedEffort": 1
     },
     {
       "path": "src\\app\\admin\\page.tsx",
@@ -2271,10 +2103,10 @@
     {
       "path": "src\\app\\api\\admin\\content\\route.ts",
       "type": "api",
-      "complexity": "high",
-      "priority": 9,
+      "complexity": "medium",
+      "priority": 7,
       "hasTest": true,
-      "estimatedEffort": 4
+      "estimatedEffort": 2
     },
     {
       "path": "src\\app\\api\\admin\\content-processing\\route.ts",
@@ -2613,10 +2445,26 @@
       "estimatedEffort": 4
     },
     {
+      "path": "src\\app\\layout.tsx",
+      "type": "layout",
+      "complexity": "high",
+      "priority": 8,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
       "path": "src\\app\\not-found.tsx",
       "type": "other",
       "complexity": "high",
       "priority": 6,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\app\\offline\\components\\OfflinePageClient.tsx",
+      "type": "component",
+      "complexity": "high",
+      "priority": 8,
       "hasTest": true,
       "estimatedEffort": 4
     },
@@ -2686,6 +2534,14 @@
     },
     {
       "path": "src\\app\\portfolio\\gallery\\all\\components\\PortfolioCard.tsx",
+      "type": "component",
+      "complexity": "high",
+      "priority": 8,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\app\\portfolio\\gallery\\all\\components\\SortControls.tsx",
       "type": "component",
       "complexity": "high",
       "priority": 8,
@@ -2789,12 +2645,28 @@
       "estimatedEffort": 4
     },
     {
+      "path": "src\\app\\robots.ts",
+      "type": "other",
+      "complexity": "low",
+      "priority": 3,
+      "hasTest": true,
+      "estimatedEffort": 1
+    },
+    {
       "path": "src\\app\\search\\page.tsx",
       "type": "page",
       "complexity": "high",
       "priority": 8,
       "hasTest": true,
       "estimatedEffort": 4
+    },
+    {
+      "path": "src\\app\\sitemap.ts",
+      "type": "other",
+      "complexity": "low",
+      "priority": 3,
+      "hasTest": true,
+      "estimatedEffort": 1
     },
     {
       "path": "src\\app\\tools\\ae-expression\\page.tsx",
@@ -2813,8 +2685,24 @@
       "estimatedEffort": 1
     },
     {
+      "path": "src\\app\\tools\\color-palette\\components\\ColorPaletteGenerator.tsx",
+      "type": "component",
+      "complexity": "high",
+      "priority": 8,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
       "path": "src\\app\\tools\\color-palette\\page.tsx",
       "type": "page",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": true,
+      "estimatedEffort": 1
+    },
+    {
+      "path": "src\\app\\tools\\layout.tsx",
+      "type": "layout",
       "complexity": "low",
       "priority": 5,
       "hasTest": true,
@@ -3013,6 +2901,14 @@
       "estimatedEffort": 4
     },
     {
+      "path": "src\\app\\workshop\\layout.tsx",
+      "type": "layout",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": true,
+      "estimatedEffort": 1
+    },
+    {
       "path": "src\\app\\workshop\\page.tsx",
       "type": "page",
       "complexity": "high",
@@ -3037,6 +2933,30 @@
       "estimatedEffort": 4
     },
     {
+      "path": "src\\components\\error-boundaries\\ErrorBoundary.tsx",
+      "type": "component",
+      "complexity": "high",
+      "priority": 8,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\components\\layout\\PageHeader.tsx",
+      "type": "component",
+      "complexity": "medium",
+      "priority": 6,
+      "hasTest": true,
+      "estimatedEffort": 2
+    },
+    {
+      "path": "src\\components\\markdown\\FallbackContent.tsx",
+      "type": "component",
+      "complexity": "high",
+      "priority": 8,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
       "path": "src\\components\\playground\\common\\index.ts",
       "type": "component",
       "complexity": "low",
@@ -3053,7 +2973,55 @@
       "estimatedEffort": 1
     },
     {
+      "path": "src\\components\\playground\\PlaygroundCommon.tsx",
+      "type": "component",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": true,
+      "estimatedEffort": 1
+    },
+    {
       "path": "src\\components\\playground\\webgl-experiments\\index.ts",
+      "type": "component",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": true,
+      "estimatedEffort": 1
+    },
+    {
+      "path": "src\\components\\playground\\WebGLPlayground.tsx",
+      "type": "component",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": true,
+      "estimatedEffort": 1
+    },
+    {
+      "path": "src\\components\\providers\\AnalyticsProvider.tsx",
+      "type": "component",
+      "complexity": "high",
+      "priority": 8,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\components\\providers\\PerformanceProvider.tsx",
+      "type": "component",
+      "complexity": "high",
+      "priority": 8,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\components\\providers\\ProductionInitializer.tsx",
+      "type": "component",
+      "complexity": "low",
+      "priority": 5,
+      "hasTest": true,
+      "estimatedEffort": 1
+    },
+    {
+      "path": "src\\components\\ui\\badge.tsx",
       "type": "component",
       "complexity": "low",
       "priority": 5,
@@ -3067,6 +3035,14 @@
       "priority": 6,
       "hasTest": true,
       "estimatedEffort": 2
+    },
+    {
+      "path": "src\\components\\ui\\card.tsx",
+      "type": "component",
+      "complexity": "high",
+      "priority": 8,
+      "hasTest": true,
+      "estimatedEffort": 4
     },
     {
       "path": "src\\components\\ui\\DatePicker.tsx",
@@ -3105,6 +3081,62 @@
       "type": "component",
       "complexity": "high",
       "priority": 8,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\hooks\\useAccessibility.ts",
+      "type": "hook",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\hooks\\useEnhancedDataManager.ts",
+      "type": "hook",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\hooks\\useOfflinePerformance.ts",
+      "type": "hook",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\hooks\\usePerformanceOptimization.ts",
+      "type": "hook",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\hooks\\useResponsive.ts",
+      "type": "hook",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\hooks\\useResponsiveCanvas.ts",
+      "type": "hook",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\hooks\\useTouchGestures.ts",
+      "type": "hook",
+      "complexity": "high",
+      "priority": 7,
       "hasTest": true,
       "estimatedEffort": 4
     },
@@ -3173,7 +3205,31 @@
       "estimatedEffort": 4
     },
     {
+      "path": "src\\lib\\config\\production.ts",
+      "type": "utility",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
       "path": "src\\lib\\data\\index.ts",
+      "type": "utility",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\lib\\init\\production.ts",
+      "type": "utility",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\lib\\logging\\enhanced-logger.ts",
       "type": "utility",
       "complexity": "high",
       "priority": 7,
@@ -3219,6 +3275,22 @@
       "priority": 7,
       "hasTest": true,
       "estimatedEffort": 4
+    },
+    {
+      "path": "src\\lib\\monitoring\\pipeline-monitor.ts",
+      "type": "utility",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\lib\\monitoring\\sentry.ts",
+      "type": "utility",
+      "complexity": "low",
+      "priority": 4,
+      "hasTest": true,
+      "estimatedEffort": 1
     },
     {
       "path": "src\\lib\\playground\\performance-monitor.ts",
@@ -3373,12 +3445,36 @@
       "estimatedEffort": 4
     },
     {
+      "path": "src\\lib\\search\\cache.ts",
+      "type": "utility",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
+    },
+    {
+      "path": "src\\lib\\search\\history.ts",
+      "type": "utility",
+      "complexity": "medium",
+      "priority": 5,
+      "hasTest": true,
+      "estimatedEffort": 2
+    },
+    {
       "path": "src\\lib\\search\\index.ts",
       "type": "utility",
       "complexity": "high",
       "priority": 7,
       "hasTest": true,
       "estimatedEffort": 4
+    },
+    {
+      "path": "src\\lib\\search\\update-index.ts",
+      "type": "utility",
+      "complexity": "medium",
+      "priority": 5,
+      "hasTest": true,
+      "estimatedEffort": 2
     },
     {
       "path": "src\\lib\\seo\\index.ts",
@@ -3467,6 +3563,14 @@
       "priority": 4,
       "hasTest": true,
       "estimatedEffort": 1
+    },
+    {
+      "path": "src\\lib\\webgl\\production-optimizer.ts",
+      "type": "utility",
+      "complexity": "high",
+      "priority": 7,
+      "hasTest": true,
+      "estimatedEffort": 4
     },
     {
       "path": "src\\types\\content.ts",

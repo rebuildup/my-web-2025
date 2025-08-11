@@ -10,14 +10,9 @@ import { useEffect, useState } from "react";
 interface ImageDebugInfoProps {
   src: string;
   alt: string;
-  showDebug?: boolean;
 }
 
-export function ImageDebugInfo({
-  src,
-  alt,
-  showDebug = false,
-}: ImageDebugInfoProps) {
+export function ImageDebugInfo({ src, alt }: ImageDebugInfoProps) {
   const [imageStatus, setImageStatus] = useState<
     "loading" | "loaded" | "error"
   >("loading");

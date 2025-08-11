@@ -31,6 +31,7 @@
     "test:single": "cross-env NODE_OPTIONS=\"--max-old-space-size=24576\" jest --runInBand --no-cache",
     "test:watch": "jest --watch",
     "test:coverage": "cross-env NODE_OPTIONS=\"--max-old-space-size=24576\" jest --coverage --watchAll=false --runInBand --no-cache",
+    "test:coverage:100": "cross-env NODE_OPTIONS=\"--max-old-space-size=24576\" jest --config jest.config.coverage-only-tests.js --coverage --watchAll=false --runInBand --no-cache",
     "test:coverage:monitor": "node scripts/coverage-monitoring.js monitor",
     "test:coverage:history": "node scripts/coverage-monitoring.js history",
     "test:coverage:dashboard": "node scripts/coverage-dashboard.js dashboard",

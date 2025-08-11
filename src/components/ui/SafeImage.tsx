@@ -98,13 +98,7 @@ export function SafeImage({
         onLoad={handleLoad}
         {...props}
       />
-      {shouldShowDebug && (
-        <ImageDebugInfo
-          src={currentSrc}
-          alt={alt}
-          showDebug={shouldShowDebug}
-        />
-      )}
+      {shouldShowDebug && <ImageDebugInfo src={currentSrc} alt={alt} />}
     </div>
   );
 }
