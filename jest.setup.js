@@ -448,6 +448,27 @@ beforeAll(() => {
     ) {
       return;
     }
+    // Skip React DOM attribute warnings in tests
+    if (
+      typeof args[0] === "string" &&
+      (args[0].includes("Received `true` for a non-boolean attribute") ||
+        args[0].includes("Received `false` for a non-boolean attribute") ||
+        args[0].includes("If you want to write it to the DOM"))
+    ) {
+      return;
+    }
+    // Skip JSDOM createElement errors after tests
+    if (
+      args[0] &&
+      typeof args[0] === "object" &&
+      args[0].detail &&
+      args[0].detail.message &&
+      args[0].detail.message.includes(
+        "Cannot read properties of undefined (reading 'createElement')",
+      )
+    ) {
+      return;
+    }
     originalError.call(console, ...args);
   };
 
@@ -509,6 +530,14 @@ beforeAll(() => {
         args[0].includes("Attempting to load portfolio item") ||
         args[0].includes("Portfolio item found:") ||
         args[0].includes("Portfolio item not found") ||
+        args[0].includes("Test environment: applying basic filtering") ||
+        args[0].includes("Grid classes for item:") ||
+        args[0].includes("Item thumbnail:") ||
+        args[0].includes("Image error state:") ||
+        args[0].includes("Item createdAt:") ||
+        args[0].includes("Component updated at:") ||
+        args[0].includes("Adding video:") ||
+        args[0].includes("[EnhancedDataPipeline]") ||
         (args[0].includes("Processing") && args[0].includes("portfolio items")))
     ) {
       return;

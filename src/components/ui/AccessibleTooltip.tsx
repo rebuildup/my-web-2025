@@ -71,7 +71,7 @@ export const AccessibleTooltip: React.FC<AccessibleTooltipProps> = ({
     children as React.ReactElement<Record<string, unknown>>,
     {
       ref: triggerRef,
-      "aria-describedby": isVisible ? tooltipId : undefined,
+      "aria-describedby": tooltipId,
       onMouseEnter: showTooltip,
       onMouseLeave: hideTooltip,
       onFocus: showTooltip,
@@ -82,16 +82,16 @@ export const AccessibleTooltip: React.FC<AccessibleTooltipProps> = ({
   );
 
   return (
-    <div className={`tooltip relative inline-block ${className}`}>
+    <div className="tooltip relative inline-block">
       {childWithProps}
 
       {isVisible && (
         <div
-          id={tooltipId}
-          role="tooltip"
-          className={`tooltip-content absolute z-50 px-2 py-1 text-sm bg-base text-foreground border border-foreground rounded shadow-lg ${positionClasses[position]}`}
+          className={`tooltip-content absolute z-50 px-2 py-1 text-sm bg-base text-foreground border border-foreground rounded shadow-lg ${positionClasses[position]} ${className}`}
         >
-          {content}
+          <div id={tooltipId} role="tooltip">
+            {content}
+          </div>
           <div
             className={`absolute w-0 h-0 border-4 ${arrowClasses[position]}`}
             aria-hidden="true"
@@ -107,14 +107,16 @@ interface AccessibleIconButtonProps
   icon: React.ReactNode;
   label: string;
   tooltip?: string;
+  showTooltip?: boolean;
   size?: "sm" | "md" | "lg";
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "secondary" | "ghost" | "danger";
 }
 
 export const AccessibleIconButton: React.FC<AccessibleIconButtonProps> = ({
   icon,
   label,
   tooltip,
+  showTooltip,
   size = "md",
   variant = "ghost",
   className = "",
@@ -132,20 +134,39 @@ export const AccessibleIconButton: React.FC<AccessibleIconButtonProps> = ({
     secondary:
       "bg-background text-foreground border border-foreground hover:bg-base",
     ghost: "bg-transparent text-foreground hover:bg-base",
+    danger: "text-red-600 hover:bg-red-50",
   };
 
   const button = (
     <button
-      className={`inline-flex items-center justify-center rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses[size]} ${variantClasses[variant]} ${className}`}
+      type="button"
+      className={`inline-flex items-center justify-center rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses[size]} ${variantClasses[variant]} ${props.disabled ? "opacity-50" : ""} ${className}`}
       aria-label={label}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          // Create a synthetic mouse event for keyboard activation
+          const target = e.currentTarget;
+          const rect = target.getBoundingClientRect();
+          const syntheticEvent = new MouseEvent("click", {
+            bubbles: true,
+            cancelable: true,
+            clientX: rect.left + rect.width / 2,
+            clientY: rect.top + rect.height / 2,
+          });
+          target.dispatchEvent(syntheticEvent);
+        }
+      }}
       {...props}
     >
       <span aria-hidden="true">{icon}</span>
     </button>
   );
 
-  if (tooltip) {
-    return <AccessibleTooltip content={tooltip}>{button}</AccessibleTooltip>;
+  if (tooltip || showTooltip) {
+    return (
+      <AccessibleTooltip content={tooltip || label}>{button}</AccessibleTooltip>
+    );
   }
 
   return button;

@@ -38,5 +38,17 @@ jobs:
       - name: Run tests
         run: npm run test
 
+      - name: Run app coverage (100% enforced on curated app entries)
+        run: npm run test:coverage:app:100
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage/
+            coverage-final.json
+
       - name: Build
         run: npm run build

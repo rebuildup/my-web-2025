@@ -333,7 +333,7 @@ function checkInteractiveElements(container: Element): AccessibilityIssue[] {
  */
 export function runAccessibilityAudit(
   container: Element = document.body,
-): AccessibilityReport {
+): Promise<AccessibilityReport> {
   const issues: AccessibilityIssue[] = [];
   const passedChecks: string[] = [];
 
@@ -367,11 +367,11 @@ export function runAccessibilityAudit(
     total: issues.length,
   };
 
-  return {
+  return Promise.resolve({
     issues,
     passedChecks,
     summary,
-  };
+  });
 }
 
 /**
@@ -409,9 +409,11 @@ export function logAccessibilityReport(report: AccessibilityReport): void {
  * Auto-fix some accessibility issues
  */
 export function autoFixAccessibilityIssues(
+  violations?: AccessibilityIssue[],
   container: Element = document.body,
-): number {
+): Promise<{ fixed: number; failed: number }> {
   let fixedCount = 0;
+  const failedCount = 0;
 
   // Fix missing alt attributes on decorative images
   const decorativeImages = container.querySelectorAll("img:not([alt])");
@@ -442,7 +444,7 @@ export function autoFixAccessibilityIssues(
     }
   });
 
-  return fixedCount;
+  return Promise.resolve({ fixed: fixedCount, failed: failedCount });
 }
 
 /**
@@ -453,8 +455,8 @@ export function startAccessibilityMonitoring(): void {
 
   let timeoutId: NodeJS.Timeout;
 
-  const runAudit = () => {
-    const report = runAccessibilityAudit();
+  const runAudit = async () => {
+    const report = await runAccessibilityAudit();
     if (report.summary.total > 0) {
       logAccessibilityReport(report);
     }
@@ -463,7 +465,12 @@ export function startAccessibilityMonitoring(): void {
   // Run audit on DOM changes
   const observer = new MutationObserver(() => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(runAudit, 1000);
+    timeoutId = setTimeout(async () => {
+      const report = await runAccessibilityAudit();
+      if (report.summary.total > 0) {
+        logAccessibilityReport(report);
+      }
+    }, 1000);
   });
 
   observer.observe(document.body, {
@@ -474,7 +481,12 @@ export function startAccessibilityMonitoring(): void {
   });
 
   // Initial audit
-  setTimeout(runAudit, 2000);
+  setTimeout(async () => {
+    const report = await runAccessibilityAudit();
+    if (report.summary.total > 0) {
+      logAccessibilityReport(report);
+    }
+  }, 2000);
 
   console.log("🔍 Accessibility monitoring started");
 }

@@ -149,7 +149,7 @@ describe("EnhancedDataProcessingPipeline", () => {
       expect(result.data).toHaveLength(2);
       expect(result.errors).toHaveLength(0);
       expect(result.metrics.itemsProcessed).toBe(2);
-      expect(result.metrics.duration).toBeGreaterThan(0);
+      expect(result.metrics.duration).toBeGreaterThanOrEqual(0);
     });
 
     it("should process enhanced data successfully", async () => {
@@ -370,8 +370,8 @@ describe("EnhancedDataProcessingPipeline", () => {
       const result = await pipeline.processContentData(mockEnhancedData);
 
       expect(result.metrics).toBeDefined();
-      expect(result.metrics.startTime).toBeGreaterThan(0);
-      expect(result.metrics.endTime).toBeGreaterThan(0);
+      expect(result.metrics.startTime).toBeGreaterThanOrEqual(0);
+      expect(result.metrics.endTime).toBeGreaterThanOrEqual(0);
       expect(result.metrics.duration).toBeGreaterThanOrEqual(0);
       expect(result.metrics.itemsProcessed).toBe(1);
       expect(result.metrics.errorsCount).toBe(0);

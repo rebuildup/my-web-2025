@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface UsePortfolioTrackingOptions {
   contentId: string;
@@ -21,12 +21,12 @@ export function usePortfolioTracking({
   trackDownloads = false,
   debounceMs = 2000,
 }: UsePortfolioTrackingOptions) {
-  const hasTrackedView = useRef(false);
+  const [hasTrackedView, setHasTrackedView] = useState(false);
   const trackingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Track page view
   useEffect(() => {
-    if (!trackViews || hasTrackedView.current || !contentId) {
+    if (!trackViews || hasTrackedView || !contentId) {
       return;
     }
 
@@ -46,7 +46,7 @@ export function usePortfolioTracking({
         });
 
         if (response.ok) {
-          hasTrackedView.current = true;
+          setHasTrackedView(true);
           console.log(`Portfolio view tracked: ${contentType}-${contentId}`);
         } else {
           console.warn("Failed to track portfolio view:", response.statusText);
@@ -61,7 +61,7 @@ export function usePortfolioTracking({
         clearTimeout(trackingTimeoutRef.current);
       }
     };
-  }, [contentId, contentType, trackViews, debounceMs]);
+  }, [contentId, contentType, trackViews, debounceMs, hasTrackedView]);
 
   // Download tracking function
   const trackDownload = async (fileName?: string, fileType?: string) => {
@@ -105,7 +105,7 @@ export function usePortfolioTracking({
 
   return {
     trackDownload,
-    hasTrackedView: hasTrackedView.current,
+    hasTrackedView,
   };
 }
 

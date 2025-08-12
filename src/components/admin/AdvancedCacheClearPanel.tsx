@@ -124,11 +124,52 @@ export default function AdvancedCacheClearPanel() {
   const getCacheHealthStatus = () => {
     const total = getTotalCacheItems();
     if (total === 0)
-      return { status: "excellent", color: "green", message: "完全にクリーン" };
-    if (total < 5) return { status: "good", color: "blue", message: "良好" };
+      return {
+        status: "excellent",
+        colorClasses: {
+          border: "border-green-200",
+          bg: "bg-green-50 dark:bg-green-900/20",
+          title: "text-green-900 dark:text-green-100",
+          text: "text-green-700 dark:text-green-300",
+          number: "text-green-600 dark:text-green-400",
+        },
+        message: "完全にクリーン",
+      };
+    if (total < 5)
+      return {
+        status: "good",
+        colorClasses: {
+          border: "border-blue-200",
+          bg: "bg-blue-50 dark:bg-blue-900/20",
+          title: "text-blue-900 dark:text-blue-100",
+          text: "text-blue-700 dark:text-blue-300",
+          number: "text-blue-600 dark:text-blue-400",
+        },
+        message: "良好",
+      };
     if (total < 20)
-      return { status: "warning", color: "yellow", message: "注意が必要" };
-    return { status: "critical", color: "red", message: "要クリア" };
+      return {
+        status: "warning",
+        colorClasses: {
+          border: "border-yellow-200",
+          bg: "bg-yellow-50 dark:bg-yellow-900/20",
+          title: "text-yellow-900 dark:text-yellow-100",
+          text: "text-yellow-700 dark:text-yellow-300",
+          number: "text-yellow-600 dark:text-yellow-400",
+        },
+        message: "注意が必要",
+      };
+    return {
+      status: "critical",
+      colorClasses: {
+        border: "border-red-200",
+        bg: "bg-red-50 dark:bg-red-900/20",
+        title: "text-red-900 dark:text-red-100",
+        text: "text-red-700 dark:text-red-300",
+        number: "text-red-600 dark:text-red-400",
+      },
+      message: "要クリア",
+    };
   };
 
   const health = getCacheHealthStatus();
@@ -146,24 +187,20 @@ export default function AdvancedCacheClearPanel() {
 
       {/* キャッシュ健康状態 */}
       <div
-        className={`mb-6 p-4 rounded-lg border-2 border-${health.color}-200 bg-${health.color}-50 dark:bg-${health.color}-900/20`}
+        className={`mb-6 p-4 rounded-lg border-2 ${health.colorClasses.border} ${health.colorClasses.bg}`}
       >
         <div className="flex items-center justify-between">
           <div>
             <h3
-              className={`font-semibold text-${health.color}-900 dark:text-${health.color}-100 text-lg`}
+              className={`font-semibold ${health.colorClasses.title} text-lg`}
             >
               📊 キャッシュ健康状態: {health.message}
             </h3>
-            <p
-              className={`text-${health.color}-700 dark:text-${health.color}-300`}
-            >
+            <p className={health.colorClasses.text}>
               合計キャッシュアイテム: {getTotalCacheItems()}
             </p>
           </div>
-          <div
-            className={`text-4xl font-bold text-${health.color}-600 dark:text-${health.color}-400`}
-          >
+          <div className={`text-4xl font-bold ${health.colorClasses.number}`}>
             {health.status === "excellent" && "🟢"}
             {health.status === "good" && "🔵"}
             {health.status === "warning" && "🟡"}

@@ -83,39 +83,47 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
 
   // Detect accessibility preferences
   useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) {
+      return;
+    }
+
     // Check for high contrast mode
     const highContrastQuery = window.matchMedia("(prefers-contrast: high)");
-    setHighContrastMode(highContrastQuery.matches);
+    setHighContrastMode(highContrastQuery?.matches || false);
 
     const handleHighContrastChange = (e: MediaQueryListEvent) => {
       setHighContrastMode(e.matches);
     };
 
-    highContrastQuery.addEventListener("change", handleHighContrastChange);
-
     // Check for reduced motion preference
     const reducedMotionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
-    setReducedMotion(reducedMotionQuery.matches);
+    setReducedMotion(reducedMotionQuery?.matches || false);
 
     const handleReducedMotionChange = (e: MediaQueryListEvent) => {
       setReducedMotion(e.matches);
     };
 
-    reducedMotionQuery.addEventListener("change", handleReducedMotionChange);
-
     // Detect text scaling (simplified)
     const updateTextScaling = () => {
-      const baseFontSize = 16;
-      const currentFontSize = parseFloat(
-        getComputedStyle(document.documentElement).fontSize,
-      );
-      setTextScaling(currentFontSize / baseFontSize);
+      if (typeof document !== "undefined" && document.documentElement) {
+        try {
+          const baseFontSize = 16;
+          const currentFontSize = parseFloat(
+            getComputedStyle(document.documentElement).fontSize,
+          );
+          const scaling = isNaN(currentFontSize)
+            ? 1
+            : currentFontSize / baseFontSize;
+          setTextScaling(scaling);
+        } catch {
+          setTextScaling(1); // fallback to default
+        }
+      } else {
+        setTextScaling(1); // fallback for test environment
+      }
     };
-
-    updateTextScaling();
-    window.addEventListener("resize", updateTextScaling);
 
     // Keyboard navigation detection
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -128,12 +136,21 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
       disableKeyboardNavigation();
     };
 
+    // Add event listeners
+    highContrastQuery?.addEventListener("change", handleHighContrastChange);
+    reducedMotionQuery?.addEventListener("change", handleReducedMotionChange);
+    updateTextScaling();
+    window.addEventListener("resize", updateTextScaling);
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("mousedown", handleMouseDown);
 
+    // Cleanup function
     return () => {
-      highContrastQuery.removeEventListener("change", handleHighContrastChange);
-      reducedMotionQuery.removeEventListener(
+      highContrastQuery?.removeEventListener(
+        "change",
+        handleHighContrastChange,
+      );
+      reducedMotionQuery?.removeEventListener(
         "change",
         handleReducedMotionChange,
       );

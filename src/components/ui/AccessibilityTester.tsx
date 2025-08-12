@@ -29,7 +29,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
   const runAudit = async () => {
     setIsRunning(true);
     try {
-      const newReport = runAccessibilityAudit();
+      const newReport = await runAccessibilityAudit();
       setReport(newReport);
       logAccessibilityReport(newReport);
     } catch (error) {
@@ -40,9 +40,10 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
   };
 
   // Auto-fix issues
-  const runAutoFix = () => {
-    const fixedCount = autoFixAccessibilityIssues();
-    setAutoFixCount(fixedCount);
+  const runAutoFix = async () => {
+    const violations = report?.issues || [];
+    const result = await autoFixAccessibilityIssues(violations);
+    setAutoFixCount(result.fixed || 0);
 
     // Re-run audit after fixes
     setTimeout(() => {
@@ -130,9 +131,9 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
           ) : (
             <Eye className="h-5 w-5" />
           )}
-          {report && report.summary.total > 0 && (
+          {report && report.summary && (report.summary.total || 0) > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">
-              {report.summary.total}
+              {report.summary.total || 0}
             </span>
           )}
         </button>
@@ -173,21 +174,21 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                 {/* Summary */}
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="bg-red-50 border border-red-200 p-2 rounded">
-                    <div className="text-red-600 font-medium">Errors</div>
+                    <div className="text-red-600 font-medium">Violations</div>
                     <div className="text-red-800 text-lg">
-                      {report.summary.errors}
+                      {report.summary.errors || 0}
                     </div>
                   </div>
                   <div className="bg-yellow-50 border border-yellow-200 p-2 rounded">
                     <div className="text-yellow-600 font-medium">Warnings</div>
                     <div className="text-yellow-800 text-lg">
-                      {report.summary.warnings}
+                      {report.summary.warnings || 0}
                     </div>
                   </div>
                 </div>
 
                 {/* Auto-fix button */}
-                {report.summary.total > 0 && (
+                {(report.summary.total || 0) > 0 && (
                   <div className="flex items-center justify-between">
                     <button
                       onClick={runAutoFix}
@@ -218,38 +219,38 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   </div>
                 )}
 
-                {/* Issues */}
-                {report.issues.length > 0 && (
+                {/* Issues/Violations */}
+                {(report.issues || []).length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="font-medium text-foreground">
-                      Issues Found:
-                    </h4>
-                    {report.issues.slice(0, 10).map((issue, index) => (
-                      <div
-                        key={index}
-                        className={`p-3 rounded border text-sm ${getSeverityColor(issue.severity)}`}
-                      >
-                        <div className="flex items-start space-x-2">
-                          {getIssueIcon(issue.type)}
-                          <div className="flex-1">
-                            <div className="font-medium">{issue.rule}</div>
-                            <div className="mt-1">{issue.message}</div>
-                            <div className="mt-1 text-xs opacity-75">
-                              Severity: {issue.severity}
+                    <h4 className="font-medium text-foreground">Issues:</h4>
+                    {(report.issues || [])
+                      .slice(0, 10)
+                      .map((issue, index: number) => (
+                        <div
+                          key={index}
+                          className={`p-3 rounded border text-sm ${getSeverityColor(issue.severity)}`}
+                        >
+                          <div className="flex items-start space-x-2">
+                            {getIssueIcon(issue.type)}
+                            <div className="flex-1">
+                              <div className="font-medium">{issue.rule}</div>
+                              <div className="mt-1">{issue.message}</div>
+                              <div className="mt-1 text-xs opacity-75">
+                                Severity: {issue.severity}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                    {report.issues.length > 10 && (
+                      ))}
+                    {(report.issues || []).length > 10 && (
                       <div className="text-sm text-foreground/60 text-center">
-                        ... and {report.issues.length - 10} more issues
+                        ... and {(report.issues || []).length - 10} more issues
                       </div>
                     )}
                   </div>
                 )}
 
-                {report.issues.length === 0 && (
+                {(report.issues || []).length === 0 && (
                   <div className="bg-green-50 border border-green-200 p-4 rounded text-center">
                     <CheckCircle className="h-8 w-8 text-green-500 mx-auto mb-2" />
                     <div className="text-green-700 font-medium">

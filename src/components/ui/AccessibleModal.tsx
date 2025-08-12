@@ -179,7 +179,10 @@ interface AccessibleConfirmModalProps {
   message: string;
   confirmText?: string;
   cancelText?: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
   variant?: "danger" | "warning" | "info";
+  loading?: boolean;
 }
 
 export const AccessibleConfirmModal: React.FC<AccessibleConfirmModalProps> = ({
@@ -191,6 +194,9 @@ export const AccessibleConfirmModal: React.FC<AccessibleConfirmModalProps> = ({
   confirmText = "確認",
   cancelText = "キャンセル",
   variant = "info",
+  confirmLabel,
+  cancelLabel,
+  loading,
 }) => {
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -223,18 +229,19 @@ export const AccessibleConfirmModal: React.FC<AccessibleConfirmModalProps> = ({
             onClick={onClose}
             className="px-4 py-2 text-sm font-medium text-foreground bg-background border border-foreground rounded-md hover:bg-base focus:outline-none focus:ring-2 focus:ring-foreground"
           >
-            {cancelText}
+            {cancelLabel || cancelText}
           </button>
           <button
             ref={confirmButtonRef}
             onClick={handleConfirm}
+            disabled={loading}
             className={`px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 ${
               buttonVariant === "danger"
                 ? "text-white bg-red-600 border border-red-600 hover:bg-red-700 focus:ring-red-500"
                 : "text-background bg-accent border border-accent hover:bg-background hover:text-accent focus:ring-accent"
-            }`}
+            } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           >
-            {confirmText}
+            {confirmLabel || confirmText}
           </button>
         </div>
       </div>

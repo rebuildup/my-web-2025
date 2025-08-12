@@ -49,59 +49,76 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
     ): string[] => {
       const colors: string[] = [];
 
+      // Ensure valid input values
+      const validH = isNaN(baseH) ? 180 : Math.max(0, Math.min(360, baseH));
+      const validS = isNaN(baseS) ? 70 : Math.max(0, Math.min(100, baseS));
+      const validL = isNaN(baseL) ? 50 : Math.max(10, Math.min(90, baseL));
+
       switch (harmony) {
         case "monochromatic":
           // Same hue, different saturation and lightness
           for (let i = 0; i < 5; i++) {
-            const s = Math.max(20, Math.min(100, baseS + (i - 2) * 15));
-            const l = Math.max(20, Math.min(80, baseL + (i - 2) * 10));
-            colors.push(`hsl(${baseH}, ${s}%, ${l}%)`);
+            const s = Math.max(20, Math.min(100, validS + (i - 2) * 15));
+            const l = Math.max(20, Math.min(80, validL + (i - 2) * 10));
+            colors.push(
+              `hsl(${Math.round(validH)}, ${Math.round(s)}%, ${Math.round(l)}%)`,
+            );
           }
           break;
 
         case "analogous":
           // Adjacent hues on color wheel
           for (let i = 0; i < 5; i++) {
-            const h = (baseH + (i - 2) * 30 + 360) % 360;
+            const h = (validH + (i - 2) * 30 + 360) % 360;
             const s = Math.max(
               40,
-              Math.min(90, baseS + (Math.random() - 0.5) * 20),
+              Math.min(90, validS + (Math.random() - 0.5) * 20),
             );
             const l = Math.max(
               30,
-              Math.min(70, baseL + (Math.random() - 0.5) * 20),
+              Math.min(70, validL + (Math.random() - 0.5) * 20),
             );
-            colors.push(`hsl(${h}, ${s}%, ${l}%)`);
+            colors.push(
+              `hsl(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(l)}%)`,
+            );
           }
           break;
 
         case "complementary":
           // Base color and its complement
-          const complement = (baseH + 180) % 360;
-          colors.push(`hsl(${baseH}, ${baseS}%, ${baseL}%)`);
-          colors.push(`hsl(${complement}, ${baseS}%, ${baseL}%)`);
+          const complement = (validH + 180) % 360;
+          colors.push(
+            `hsl(${Math.round(validH)}, ${Math.round(validS)}%, ${Math.round(validL)}%)`,
+          );
+          colors.push(
+            `hsl(${Math.round(complement)}, ${Math.round(validS)}%, ${Math.round(validL)}%)`,
+          );
           // Add variations
           colors.push(
-            `hsl(${baseH}, ${Math.max(20, baseS - 30)}%, ${Math.min(80, baseL + 20)}%)`,
+            `hsl(${Math.round(validH)}, ${Math.round(Math.max(20, validS - 30))}%, ${Math.round(Math.min(80, validL + 20))}%)`,
           );
           colors.push(
-            `hsl(${complement}, ${Math.max(20, baseS - 30)}%, ${Math.min(80, baseL + 20)}%)`,
+            `hsl(${Math.round(complement)}, ${Math.round(Math.max(20, validS - 30))}%, ${Math.round(Math.min(80, validL + 20))}%)`,
           );
-          colors.push(`hsl(${(baseH + 90) % 360}, ${baseS * 0.5}%, ${baseL}%)`);
+          colors.push(
+            `hsl(${Math.round((validH + 90) % 360)}, ${Math.round(validS * 0.5)}%, ${Math.round(validL)}%)`,
+          );
           break;
 
         case "triadic":
           // Three colors equally spaced on color wheel
           for (let i = 0; i < 3; i++) {
-            const h = (baseH + i * 120) % 360;
-            colors.push(`hsl(${h}, ${baseS}%, ${baseL}%)`);
+            const h = (validH + i * 120) % 360;
+            colors.push(
+              `hsl(${Math.round(h)}, ${Math.round(validS)}%, ${Math.round(validL)}%)`,
+            );
           }
           // Add lighter and darker variations
           colors.push(
-            `hsl(${baseH}, ${Math.max(20, baseS - 20)}%, ${Math.min(80, baseL + 25)}%)`,
+            `hsl(${Math.round(validH)}, ${Math.round(Math.max(20, validS - 20))}%, ${Math.round(Math.min(80, validL + 25))}%)`,
           );
           colors.push(
-            `hsl(${(baseH + 120) % 360}, ${Math.max(20, baseS - 20)}%, ${Math.max(20, baseL - 25)}%)`,
+            `hsl(${Math.round((validH + 120) % 360)}, ${Math.round(Math.max(20, validS - 20))}%, ${Math.round(Math.max(20, validL - 25))}%)`,
           );
           break;
 
@@ -224,10 +241,14 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Harmony Type */}
           <div className="space-y-2">
-            <label className="noto-sans-jp-light text-sm text-foreground">
+            <label
+              htmlFor="harmony-select"
+              className="noto-sans-jp-light text-sm text-foreground"
+            >
               Color Harmony
             </label>
             <select
+              id="harmony-select"
               value={selectedHarmony}
               onChange={(e) =>
                 setSelectedHarmony(e.target.value as ColorPalette["harmony"])
@@ -244,10 +265,14 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 
           {/* Base Hue */}
           <div className="space-y-2">
-            <label className="noto-sans-jp-light text-sm text-foreground">
+            <label
+              htmlFor="hue-slider"
+              className="noto-sans-jp-light text-sm text-foreground"
+            >
               Base Hue: {baseHue}°
             </label>
             <input
+              id="hue-slider"
               type="range"
               min="0"
               max="360"
@@ -264,10 +289,14 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 
           {/* Saturation */}
           <div className="space-y-2">
-            <label className="noto-sans-jp-light text-sm text-foreground">
+            <label
+              htmlFor="saturation-slider"
+              className="noto-sans-jp-light text-sm text-foreground"
+            >
               Saturation: {saturation}%
             </label>
             <input
+              id="saturation-slider"
               type="range"
               min="0"
               max="100"
@@ -279,10 +308,14 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 
           {/* Lightness */}
           <div className="space-y-2">
-            <label className="noto-sans-jp-light text-sm text-foreground">
+            <label
+              htmlFor="lightness-slider"
+              className="noto-sans-jp-light text-sm text-foreground"
+            >
               Lightness: {lightness}%
             </label>
             <input
+              id="lightness-slider"
               type="range"
               min="10"
               max="90"
@@ -296,6 +329,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
         <div className="flex flex-wrap gap-4">
           <button
             onClick={generatePalette}
+            tabIndex={0}
             className="flex items-center border border-foreground px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
@@ -304,6 +338,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 
           <button
             onClick={downloadPalette}
+            tabIndex={0}
             className="flex items-center border border-foreground px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
           >
             <Download className="w-4 h-4 mr-2" />

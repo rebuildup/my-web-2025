@@ -21,6 +21,9 @@ export function ImageDebugInfo({ src, alt }: ImageDebugInfoProps) {
   useEffect(() => {
     if (!src) return;
 
+    setImageStatus("loading");
+    setActualSrc("");
+
     const img = new Image();
     img.onload = () => {
       setImageStatus("loaded");

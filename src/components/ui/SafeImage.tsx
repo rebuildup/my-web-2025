@@ -47,7 +47,10 @@ export function SafeImage({
 
   const handleError = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-      if (process.env.NODE_ENV !== "production") {
+      if (
+        process.env.NODE_ENV !== "production" &&
+        process.env.NODE_ENV !== "test"
+      ) {
         console.error("SafeImage: Image failed to load:", currentSrc);
         console.error("SafeImage: Error details:", e);
       }
@@ -56,7 +59,10 @@ export function SafeImage({
         setHasError(true);
         const fallback =
           fallbackSrc || "/images/portfolio/placeholder-image.svg";
-        if (process.env.NODE_ENV !== "production") {
+        if (
+          process.env.NODE_ENV !== "production" &&
+          process.env.NODE_ENV !== "test"
+        ) {
           console.log("SafeImage: Using fallback:", fallback);
         }
         setCurrentSrc(fallback);
@@ -69,7 +75,10 @@ export function SafeImage({
 
   const handleLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-      if (process.env.NODE_ENV !== "production") {
+      if (
+        process.env.NODE_ENV !== "production" &&
+        process.env.NODE_ENV !== "test"
+      ) {
         console.log("SafeImage: Image loaded successfully:", currentSrc);
         console.log("SafeImage: Environment:", process.env.NODE_ENV);
       }
@@ -81,23 +90,30 @@ export function SafeImage({
   // Show debug info in development or when explicitly requested
   const shouldShowDebug = showDebug || process.env.NODE_ENV === "development";
 
+  // Prepare image props, filtering out undefined values to avoid DOM warnings
+  const imageProps: Omit<
+    NonNullable<Parameters<typeof Image>[0]>,
+    "src" | "alt"
+  > & { src?: string; alt?: string } = {
+    className,
+    loading,
+    onError: handleError,
+    onLoad: handleLoad,
+    ...props,
+  } as const;
+
+  // Only add boolean props if they are true to avoid DOM warnings
+  if (fill) imageProps.fill = fill;
+  if (priority) imageProps.priority = priority;
+  if (width) imageProps.width = width;
+  if (height) imageProps.height = height;
+  if (sizes) imageProps.sizes = sizes;
+  if (process.env.NEXT_BUILD_STANDALONE === "true")
+    imageProps.unoptimized = true;
+
   return (
     <div className={`relative ${fill ? "w-full h-full" : ""}`}>
-      <Image
-        src={currentSrc}
-        alt={alt}
-        fill={fill}
-        width={width}
-        height={height}
-        sizes={sizes}
-        className={className}
-        loading={loading}
-        priority={priority}
-        unoptimized={process.env.NEXT_BUILD_STANDALONE === "true"}
-        onError={handleError}
-        onLoad={handleLoad}
-        {...props}
-      />
+      <Image src={currentSrc} alt={alt} {...imageProps} />
       {shouldShowDebug && <ImageDebugInfo src={currentSrc} alt={alt} />}
     </div>
   );

@@ -71,7 +71,7 @@ export const AccessibleFormField: React.FC<AccessibleFormFieldProps> = ({
       {error && (
         <div
           id={errorId}
-          className="error-message"
+          className="error-message text-red-600 text-sm mt-1"
           role="alert"
           aria-live="polite"
         >
@@ -103,7 +103,7 @@ export const AccessibleInput = forwardRef<
       >
         <input
           ref={ref}
-          className={`w-full px-3 py-2 border-2 border-foreground bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${className}`}
+          className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : "border-foreground"} bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${props.disabled ? "opacity-50" : ""} ${className}`}
           {...props}
         />
       </AccessibleFormField>
@@ -113,7 +113,7 @@ export const AccessibleInput = forwardRef<
   return (
     <input
       ref={ref}
-      className={`w-full px-3 py-2 border-2 border-foreground bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${className}`}
+      className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : "border-foreground"} bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${props.disabled ? "opacity-50" : ""} ${className}`}
       {...props}
     />
   );
@@ -142,7 +142,7 @@ export const AccessibleTextarea = forwardRef<
       >
         <textarea
           ref={ref}
-          className={`w-full px-3 py-2 border-2 border-foreground bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent resize-vertical ${className}`}
+          className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : "border-foreground"} bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent resize-y ${className}`}
           {...props}
         />
       </AccessibleFormField>
@@ -152,7 +152,7 @@ export const AccessibleTextarea = forwardRef<
   return (
     <textarea
       ref={ref}
-      className={`w-full px-3 py-2 border-2 border-foreground bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent resize-vertical ${className}`}
+      className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : "border-foreground"} bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent resize-y ${className}`}
       {...props}
     />
   );
@@ -165,6 +165,7 @@ interface AccessibleSelectProps
   label?: string;
   error?: string;
   hint?: string;
+  placeholder?: string;
   options: Array<{ value: string; label: string; disabled?: boolean }>;
 }
 
@@ -173,15 +174,29 @@ export const AccessibleSelect = forwardRef<
   AccessibleSelectProps
 >(
   (
-    { label, error, hint, required, options, className = "", ...props },
+    {
+      label,
+      error,
+      hint,
+      required,
+      options,
+      placeholder,
+      className = "",
+      ...props
+    },
     ref,
   ) => {
     const selectElement = (
       <select
         ref={ref}
-        className={`w-full px-3 py-2 border-2 border-foreground bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${className}`}
+        className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : "border-foreground"} bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${className}`}
         {...props}
       >
+        {placeholder && (
+          <option value="" disabled>
+            {placeholder}
+          </option>
+        )}
         {options.map((option) => (
           <option
             key={option.value}
@@ -215,12 +230,13 @@ AccessibleSelect.displayName = "AccessibleSelect";
 
 interface AccessibleButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "danger" | "ghost";
+  variant?: "primary" | "secondary" | "danger" | "ghost" | "blue";
   size?: "sm" | "md" | "lg";
   loading?: boolean;
   loadingText?: string;
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
+  as?: React.ElementType;
 }
 
 export const AccessibleButton = forwardRef<
@@ -238,6 +254,7 @@ export const AccessibleButton = forwardRef<
       iconPosition = "left",
       className = "",
       disabled,
+      as: Component = "button",
       ...props
     },
     ref,
@@ -249,13 +266,14 @@ export const AccessibleButton = forwardRef<
 
     const variantStyles = {
       primary:
-        "bg-accent text-background border border-accent hover:bg-background hover:text-accent focus:ring-accent",
+        "bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 focus:ring-blue-500",
       secondary:
         "bg-background text-foreground border border-foreground hover:bg-base focus:ring-foreground",
       danger:
         "bg-red-600 text-white border border-red-600 hover:bg-red-700 focus:ring-red-500",
       ghost:
         "bg-transparent text-foreground border border-transparent hover:bg-base hover:border-foreground focus:ring-foreground",
+      blue: "bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 focus:ring-blue-500",
     };
 
     const sizeStyles = {
@@ -275,13 +293,31 @@ export const AccessibleButton = forwardRef<
       props.onClick?.(e);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        // Create a synthetic mouse event for keyboard activation
+        const target = e.currentTarget;
+        const rect = target.getBoundingClientRect();
+        const syntheticEvent = new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          clientX: rect.left + rect.width / 2,
+          clientY: rect.top + rect.height / 2,
+        });
+        target.dispatchEvent(syntheticEvent);
+      }
+      props.onKeyDown?.(e);
+    };
+
     return (
-      <button
+      <Component
         ref={ref}
-        className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+        className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${disabled || loading ? "opacity-50" : ""} ${className}`}
         disabled={disabled || loading}
         aria-busy={loading}
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
         {...props}
       >
         {loading ? (
@@ -320,7 +356,7 @@ export const AccessibleButton = forwardRef<
             )}
           </span>
         )}
-      </button>
+      </Component>
     );
   },
 );

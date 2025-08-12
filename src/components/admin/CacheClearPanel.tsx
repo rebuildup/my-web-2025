@@ -27,6 +27,7 @@ export default function CacheClearPanel() {
   const [cacheState, setCacheState] = useState<ExtendedCacheState | null>(null);
   const [lastCleared, setLastCleared] = useState<string | null>(null);
   const [browserInfo, setBrowserInfo] = useState<BrowserCacheInfo | null>(null);
+  const [, setBrowserInfoLoaded] = useState(false);
   // const [clearResult, setClearResult] = useState<CacheClearResult | null>(null);
 
   const manager = AdvancedBrowserCacheManager.getInstance();
@@ -54,6 +55,8 @@ export default function CacheClearPanel() {
       setBrowserInfo(info);
     } catch (error) {
       console.error("Failed to load browser info:", error);
+    } finally {
+      setBrowserInfoLoaded(true);
     }
   }, [manager]);
 
@@ -110,98 +113,94 @@ export default function CacheClearPanel() {
       </div>
 
       {/* ブラウザ情報 */}
-      {browserInfo && (
-        <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-          <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-            🌐 ブラウザ情報: {browserInfo.browser}
-          </h3>
-          {browserInfo.issues.length > 0 && (
-            <div className="mb-2">
-              <p className="text-sm text-blue-800 dark:text-blue-200 font-medium">
-                既知の問題:
-              </p>
-              <ul className="text-sm text-blue-700 dark:text-blue-300 ml-4">
-                {browserInfo.issues.map((issue, index) => (
-                  <li key={index} className="list-disc">
-                    {issue}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {browserInfo.solutions.length > 0 && (
-            <div>
-              <p className="text-sm text-blue-800 dark:text-blue-200 font-medium">
-                推奨解決策:
-              </p>
-              <ul className="text-sm text-blue-700 dark:text-blue-300 ml-4">
-                {browserInfo.solutions.map((solution, index) => (
-                  <li key={index} className="list-disc">
-                    {solution}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
+      <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+        <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+          🌐 ブラウザ情報: {browserInfo?.browser || "Unknown"}
+        </h3>
+        {browserInfo && browserInfo.issues.length > 0 && (
+          <div className="mb-2">
+            <p className="text-sm text-blue-800 dark:text-blue-200 font-medium">
+              既知の問題:
+            </p>
+            <ul className="text-sm text-blue-700 dark:text-blue-300 ml-4">
+              {browserInfo.issues.map((issue, index) => (
+                <li key={index} className="list-disc">
+                  {issue}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {browserInfo && browserInfo.solutions.length > 0 && (
+          <div>
+            <p className="text-sm text-blue-800 dark:text-blue-200 font-medium">
+              推奨解決策:
+            </p>
+            <ul className="text-sm text-blue-700 dark:text-blue-300 ml-4">
+              {browserInfo.solutions.map((solution, index) => (
+                <li key={index} className="list-disc">
+                  {solution}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
 
       {/* キャッシュ状態 */}
-      {cacheState && (
-        <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-          <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
-            📊 現在のキャッシュ状態
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-            <div className="bg-white dark:bg-gray-600 p-3 rounded">
-              <p className="font-medium text-gray-900 dark:text-white">
-                Service Workers
-              </p>
-              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {cacheState.serviceWorkers}
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-600 p-3 rounded">
-              <p className="font-medium text-gray-900 dark:text-white">
-                Local Storage
-              </p>
-              <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {cacheState.localStorage}
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-600 p-3 rounded">
-              <p className="font-medium text-gray-900 dark:text-white">
-                Session Storage
-              </p>
-              <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                {cacheState.sessionStorage}
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-600 p-3 rounded">
-              <p className="font-medium text-gray-900 dark:text-white">
-                Cache API
-              </p>
-              <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {cacheState.caches.length}
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-600 p-3 rounded">
-              <p className="font-medium text-gray-900 dark:text-white">
-                IndexedDB
-              </p>
-              <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-                {cacheState.indexedDBs.length}
-              </p>
-            </div>
-            <div className="bg-white dark:bg-gray-600 p-3 rounded">
-              <p className="font-medium text-gray-900 dark:text-white">合計</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {getTotalCacheItems()}
-              </p>
-            </div>
+      <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+        <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
+          📊 現在のキャッシュ状態
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+          <div className="bg-white dark:bg-gray-600 p-3 rounded">
+            <p className="font-medium text-gray-900 dark:text-white">
+              Service Workers
+            </p>
+            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              {cacheState?.serviceWorkers || 0}
+            </p>
+          </div>
+          <div className="bg-white dark:bg-gray-600 p-3 rounded">
+            <p className="font-medium text-gray-900 dark:text-white">
+              Local Storage
+            </p>
+            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+              {cacheState?.localStorage || 0}
+            </p>
+          </div>
+          <div className="bg-white dark:bg-gray-600 p-3 rounded">
+            <p className="font-medium text-gray-900 dark:text-white">
+              Session Storage
+            </p>
+            <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+              {cacheState?.sessionStorage || 0}
+            </p>
+          </div>
+          <div className="bg-white dark:bg-gray-600 p-3 rounded">
+            <p className="font-medium text-gray-900 dark:text-white">
+              Cache API
+            </p>
+            <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+              {cacheState?.caches.length || 0}
+            </p>
+          </div>
+          <div className="bg-white dark:bg-gray-600 p-3 rounded">
+            <p className="font-medium text-gray-900 dark:text-white">
+              IndexedDB
+            </p>
+            <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+              {cacheState?.indexedDBs.length || 0}
+            </p>
+          </div>
+          <div className="bg-white dark:bg-gray-600 p-3 rounded">
+            <p className="font-medium text-gray-900 dark:text-white">合計</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              {getTotalCacheItems()}
+            </p>
           </div>
         </div>
-      )}
+      </div>
 
       {/* アクションボタン */}
       <div className="space-y-4">
