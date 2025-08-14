@@ -14,15 +14,15 @@ async function getWorkshopStats() {
 
     const [blogResponse, pluginResponse, downloadResponse] = await Promise.all([
       fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/blog`,
+        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/by-type/blog`,
         { next: { revalidate: 300 } },
       ),
       fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/plugin`,
+        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/by-type/plugin`,
         { next: { revalidate: 300 } },
       ),
       fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/download`,
+        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/by-type/download`,
         { next: { revalidate: 300 } },
       ),
     ]);

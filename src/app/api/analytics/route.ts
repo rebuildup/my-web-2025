@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       message: "Analytics tracked",
       data: body,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         success: false,

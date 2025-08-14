@@ -102,6 +102,8 @@ describe("Markdown System Error Handling", () => {
       const error = new Error("Permission denied") as NodeJS.ErrnoException;
       error.code = "EACCES";
 
+      // Mock validateFilePath to return true for test paths
+      jest.spyOn(fileManager, "validateFilePath").mockReturnValue(true);
       mockFs.readFile.mockRejectedValueOnce(error);
 
       await expect(
@@ -116,6 +118,8 @@ describe("Markdown System Error Handling", () => {
       const error = new Error("Too many open files") as NodeJS.ErrnoException;
       error.code = "EMFILE";
 
+      // Mock validateFilePath to return true for test paths
+      jest.spyOn(fileManager, "validateFilePath").mockReturnValue(true);
       mockFs.readFile.mockRejectedValueOnce(error);
 
       await expect(
@@ -131,6 +135,8 @@ describe("Markdown System Error Handling", () => {
       const error = new Error("Is a directory") as NodeJS.ErrnoException;
       error.code = "EISDIR";
 
+      // Mock validateFilePath to return true for test paths
+      jest.spyOn(fileManager, "validateFilePath").mockReturnValue(true);
       mockFs.readFile.mockRejectedValueOnce(error);
 
       await expect(
@@ -166,6 +172,9 @@ describe("Markdown System Error Handling", () => {
 
     it("should handle file corruption scenarios", async () => {
       const corruptedContent = Buffer.from([0xff, 0xfe, 0x00, 0x00]).toString();
+
+      // Mock validateFilePath to return true for test paths
+      jest.spyOn(fileManager, "validateFilePath").mockReturnValue(true);
       mockFs.readFile.mockResolvedValueOnce(corruptedContent);
 
       const result = await fileManager.getMarkdownContent("/test/corrupted.md");
@@ -178,6 +187,9 @@ describe("Markdown System Error Handling", () => {
       const filePath = "/test/concurrent.md";
       const content1 = "# Content 1";
       const content2 = "# Content 2";
+
+      // Mock validateFilePath to return true for test paths
+      jest.spyOn(fileManager, "validateFilePath").mockReturnValue(true);
 
       // Mock file exists for both operations
       mockFs.access.mockResolvedValue(undefined);
@@ -473,6 +485,8 @@ describe("Markdown System Error Handling", () => {
       error.errno = -999;
       error.path = "/test/path.md";
 
+      // Mock validateFilePath to return true for test paths
+      jest.spyOn(fileManager, "validateFilePath").mockReturnValue(true);
       mockFs.readFile.mockRejectedValueOnce(error);
 
       try {
@@ -621,6 +635,9 @@ describe("Markdown System Error Handling", () => {
         "Operation timed out",
       ) as NodeJS.ErrnoException;
       timeoutError.code = "ETIMEDOUT";
+
+      // Mock validateFilePath to return true for test paths
+      jest.spyOn(fileManager, "validateFilePath").mockReturnValue(true);
       mockFs.readFile.mockRejectedValueOnce(timeoutError);
 
       await expect(

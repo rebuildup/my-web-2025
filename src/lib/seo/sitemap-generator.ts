@@ -3,8 +3,8 @@
  * Generates comprehensive XML sitemaps with proper priorities and frequencies
  */
 
-import { MetadataRoute } from "next";
 import { ContentItem } from "@/types/content";
+import { MetadataRoute } from "next";
 
 export interface SitemapConfig {
   baseUrl: string;
@@ -342,7 +342,7 @@ async function fetchContentSafely(
       process.env.NEXT_PUBLIC_BASE_URL ||
       config.baseUrl ||
       "http://localhost:3000";
-    const response = await fetch(`${baseUrl}/api/content/${endpoint}`, {
+    const response = await fetch(`${baseUrl}/api/content/by-type/${endpoint}`, {
       next: { revalidate: 3600 }, // Cache for 1 hour
     });
 

@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } },
 ) {
   try {
@@ -21,7 +21,7 @@ export async function GET(
         type: "portfolio",
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -48,7 +48,7 @@ export async function PUT(
         ...body,
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -60,7 +60,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } },
 ) {
   try {
@@ -71,7 +71,7 @@ export async function DELETE(
       success: true,
       message: `Content ${id} deleted`,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         success: false,

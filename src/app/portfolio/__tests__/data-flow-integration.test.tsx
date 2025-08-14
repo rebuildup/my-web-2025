@@ -239,7 +239,7 @@ describe("Portfolio Data Flow Integration Tests", () => {
     it("should handle API success responses correctly", async () => {
       const data = await portfolioDataManager.getPortfolioData();
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("/api/content/portfolio"),
+        expect.stringContaining("/api/content/by-type/portfolio"),
         expect.any(Object),
       );
       expect(data.map((d) => d.id)).toEqual(mockPortfolioData.map((d) => d.id));

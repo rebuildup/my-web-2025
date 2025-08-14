@@ -247,19 +247,19 @@ describe("Sitemap Generator", () => {
       await generateDynamicSitemapEntries(defaultConfig);
 
       expect(mockFetch).toHaveBeenCalledWith(
-        "https://test.com/api/content/portfolio",
+        "https://test.com/api/content/by-type/portfolio",
         { next: { revalidate: 3600 } },
       );
       expect(mockFetch).toHaveBeenCalledWith(
-        "https://test.com/api/content/blog",
+        "https://test.com/api/content/by-type/blog",
         { next: { revalidate: 3600 } },
       );
       expect(mockFetch).toHaveBeenCalledWith(
-        "https://test.com/api/content/plugin",
+        "https://test.com/api/content/by-type/plugin",
         { next: { revalidate: 3600 } },
       );
       expect(mockFetch).toHaveBeenCalledWith(
-        "https://test.com/api/content/download",
+        "https://test.com/api/content/by-type/download",
         { next: { revalidate: 3600 } },
       );
     });
@@ -324,7 +324,7 @@ describe("Sitemap Generator", () => {
       await generateDynamicSitemapEntries(defaultConfig);
 
       expect(mockFetch).toHaveBeenCalledWith(
-        "https://yusuke-kim.com/api/content/portfolio",
+        "https://yusuke-kim.com/api/content/by-type/portfolio",
         { next: { revalidate: 3600 } },
       );
     });

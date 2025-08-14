@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    await request.json();
 
     // Mock implementation for testing
     return NextResponse.json(
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 },
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         success: false,

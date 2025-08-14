@@ -15,7 +15,7 @@ export class AdminAuth {
     return token === "mock-admin-token";
   }
 
-  isAdminUser(user: unknown): boolean {
+  isAdminUser(_user: unknown): boolean {
     // Mock implementation for testing
     return true;
   }

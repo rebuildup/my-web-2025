@@ -49,7 +49,7 @@ export default function DataManagerPage() {
       // キャッシュを回避するためにタイムスタンプを追加
       const timestamp = Date.now();
       const response = await fetch(
-        `/api/content/${type}?limit=100&_t=${timestamp}&status=all${forceRefresh ? "&refresh=true" : ""}`,
+        `/api/content/by-type/${type}?limit=100&_t=${timestamp}&status=all${forceRefresh ? "&refresh=true" : ""}`,
         {
           cache: "no-store",
           headers: {

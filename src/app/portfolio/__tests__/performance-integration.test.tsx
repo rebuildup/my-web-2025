@@ -54,7 +54,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 
 // Get the mocked instance
-const mockedPortfolioDataManager = portfolioDataManager as jest.Mocked<
+const _mockedPortfolioDataManager = portfolioDataManager as jest.Mocked<
   typeof portfolioDataManager
 >;
 

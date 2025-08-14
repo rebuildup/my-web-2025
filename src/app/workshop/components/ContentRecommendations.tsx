@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { ContentItem } from "@/types/content";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface RecommendationProps {
   currentContentId?: string;
@@ -58,9 +58,9 @@ export default function ContentRecommendations({
           downloadResponse,
           analyticsResponse,
         ] = await Promise.all([
-          fetch("/api/content/blog"),
-          fetch("/api/content/plugin"),
-          fetch("/api/content/download"),
+          fetch("/api/content/by-type/blog"),
+          fetch("/api/content/by-type/plugin"),
+          fetch("/api/content/by-type/download"),
           fetch("/api/stats/analytics"),
         ]);
 

@@ -379,49 +379,21 @@ export class MarkdownFileManager {
         return false;
       }
 
-      // For test environments, be more lenient with path validation
-      if (process.env.NODE_ENV === "test" || process.env.JEST_WORKER_ID) {
-        // In test mode, allow paths that start with /test/ or contain test directories
-        // but still reject paths that are clearly outside the base directory
-        if (filePath.startsWith("/test/") || filePath.includes("/test/")) {
-          return true;
-        }
-        // Allow paths that start with the base path even if they're outside the resolved base
-        if (filePath.startsWith(this.basePath)) {
-          return true;
-        }
-        // Reject relative paths that don't start with base path or valid content directories
-        if (!path.isAbsolute(filePath) && !filePath.startsWith(this.basePath)) {
-          const validDirs = Object.values(this.contentTypeDirectories);
-          const pathSegments = filePath.split(path.sep);
-          const firstSegment = pathSegments[0];
-          if (!validDirs.includes(firstSegment)) {
+      // For absolute paths, check if they're within the base directory
+      if (path.isAbsolute(filePath)) {
+        try {
+          const resolvedPath = path.resolve(filePath);
+          const resolvedBasePath = path.resolve(this.basePath);
+
+          // Check if the resolved path is within the base directory
+          if (!resolvedPath.startsWith(resolvedBasePath)) {
             return false;
           }
+        } catch {
+          return false;
         }
-      }
-
-      // Resolve paths to check if they're within the base directory
-      let resolvedPath: string;
-      let resolvedBasePath: string;
-
-      try {
-        resolvedPath = path.resolve(filePath);
-        resolvedBasePath = path.resolve(this.basePath);
-      } catch {
-        return false;
-      }
-
-      // Check if the resolved path is within the base directory
-      if (!resolvedPath.startsWith(resolvedBasePath)) {
-        return false;
-      }
-
-      // Additional validation for relative paths
-      if (!path.isAbsolute(filePath)) {
-        // If it's a relative path, it should either:
-        // 1. Include the base path in it (like "public/data/content/markdown/portfolio/test.md")
-        // 2. Start with a valid content type directory
+      } else {
+        // For relative paths, validate they start with base path or valid content directory
         if (!filePath.includes(this.basePath)) {
           const validDirs = Object.values(this.contentTypeDirectories);
           const pathSegments = filePath.split(path.sep);

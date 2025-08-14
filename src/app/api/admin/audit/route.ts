@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       total: 0,
       limit: parseInt(limit),
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         success: false,

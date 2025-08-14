@@ -3,11 +3,11 @@
  * Task 1.2: データ処理パイプライン統合管理のテスト
  */
 
+import { ContentItem } from "@/types/content";
 import { PortfolioDataManager } from "../data-manager";
 import { PortfolioDataProcessor } from "../data-processor";
-import { SEOMetadataGenerator } from "../seo-generator";
 import { PortfolioSearchIndexGenerator } from "../search-index";
-import { ContentItem } from "@/types/content";
+import { SEOMetadataGenerator } from "../seo-generator";
 
 // Mock the fetch function
 global.fetch = jest.fn();
@@ -207,7 +207,7 @@ describe("PortfolioDataManager", () => {
       await dataManager.getPortfolioData();
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("/api/content/portfolio"),
+        expect.stringContaining("/api/content/by-type/portfolio"),
         expect.any(Object),
       );
       expect(mockDataProcessor.processRawData).toHaveBeenCalled();

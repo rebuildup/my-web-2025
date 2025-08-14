@@ -4,9 +4,9 @@
  */
 
 import type {
+  CategoryStats,
   PortfolioContentItem,
   PortfolioSearchIndex,
-  CategoryStats,
   PortfolioStats,
 } from "@/types/portfolio";
 import { testLogger } from "../utils/test-logger";
@@ -248,7 +248,7 @@ export class PortfolioDataCache extends PortfolioCache {
     try {
       // Preload portfolio data
       await this.getPortfolioData(async () => {
-        const response = await fetch("/api/content/portfolio");
+        const response = await fetch("/api/content/by-type/portfolio");
         if (!response.ok) throw new Error("Failed to fetch portfolio data");
         return response.json();
       });

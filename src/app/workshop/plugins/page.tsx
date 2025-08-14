@@ -46,7 +46,7 @@ async function getPlugins(): Promise<ContentItem[]> {
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/plugin`,
+      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/content/by-type/plugin`,
       {
         next: { revalidate: 300 },
       },

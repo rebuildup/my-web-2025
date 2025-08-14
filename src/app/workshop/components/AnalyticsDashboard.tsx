@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { ContentItem } from "@/types/content";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import EngagementMetrics from "./EngagementMetrics";
 
 interface AnalyticsData {
@@ -86,7 +86,9 @@ export default function AnalyticsDashboard() {
               // Try different content types
               const types = ["blog", "plugin", "download"];
               for (const type of types) {
-                const response = await fetch(`/api/content/${type}?id=${id}`);
+                const response = await fetch(
+                  `/api/content/by-type/${type}?id=${id}`,
+                );
                 if (response.ok) {
                   const data = await response.json();
                   const content = data.data?.find(

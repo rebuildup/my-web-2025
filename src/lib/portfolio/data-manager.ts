@@ -521,7 +521,7 @@ export class PortfolioDataManager {
       const timestamp =
         process.env.NODE_ENV === "development" ? `&_t=${Date.now()}` : "";
 
-      const apiUrl = `${baseUrl}/api/content/portfolio?limit=100&status=all${timestamp}`;
+      const apiUrl = `${baseUrl}/api/content/by-type/portfolio?limit=100&status=all${timestamp}`;
 
       const response = await fetch(apiUrl, {
         next:

@@ -3,9 +3,9 @@
  * Handles develop category content requests
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Mock implementation for testing
     return NextResponse.json({
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       data: [],
       category: "develop",
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         success: false,
