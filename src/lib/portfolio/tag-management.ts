@@ -326,8 +326,9 @@ export class PortfolioTagManager implements TagManagementSystem {
   private normalizeTagName(name: string): string {
     return name
       .trim()
-      .replace(/\s+/g, " ") // Replace multiple spaces with single space
-      .replace(/[^\p{L}\p{N}\s-]/gu, "") // Remove special characters except letters, numbers, spaces, and hyphens (Unicode-aware)
+      .toLowerCase() // Convert to lowercase
+      .replace(/\s+/g, "") // Remove all spaces
+      .replace(/[^\p{L}\p{N}-]/gu, "") // Remove special characters except letters, numbers, and hyphens (Unicode-aware)
       .trim();
   }
 
