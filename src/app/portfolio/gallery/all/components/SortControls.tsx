@@ -16,7 +16,7 @@ interface SortControlsProps {
 
 const sortOptions = [
   { value: "updatedAt", label: "Updated Date" },
-  { value: "createdAt", label: "Created Date" },
+  { value: "createdAt", label: "Manual Date" },
   { value: "title", label: "Title (A-Z)" },
   { value: "priority", label: "Priority" },
 ] as const;
@@ -46,8 +46,8 @@ export function SortControls({ sort, onSortChange }: SortControlsProps) {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div className="flex items-center space-x-2 sm:space-x-4">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 overflow-hidden">
+      <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
         <span className="text-sm text-foreground/70">Sort by:</span>
 
         {/* Sort By Dropdown */}
@@ -66,18 +66,15 @@ export function SortControls({ sort, onSortChange }: SortControlsProps) {
         {/* Sort Order Toggle */}
         <button
           onClick={handleSortOrderToggle}
-          className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 border border-foreground text-foreground hover:border-accent hover:text-accent transition-colors whitespace-nowrap min-w-fit w-auto"
+          className="flex items-center justify-center px-2 sm:px-3 py-2 border border-foreground text-foreground hover:border-accent hover:text-accent transition-colors"
           aria-label={`Sort ${sort.sortOrder === "asc" ? "ascending" : "descending"}`}
         >
           {getSortIcon()}
-          <span className="text-xs sm:text-sm">
-            {sort.sortOrder === "asc" ? "Ascending" : "Descending"}
-          </span>
         </button>
       </div>
 
       {/* Sort Description */}
-      <div className="text-xs sm:text-sm text-foreground/60">
+      <div className="hidden sm:block text-xs sm:text-sm text-foreground/60 flex-shrink-0">
         Sorted by {getSortLabel(sort.sortBy)} (
         {sort.sortOrder === "asc" ? "ascending" : "descending"})
       </div>

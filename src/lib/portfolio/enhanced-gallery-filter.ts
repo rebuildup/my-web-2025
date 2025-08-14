@@ -530,7 +530,8 @@ export class EnhancedGalleryFilter {
    * Get effective date for item (manual date or created date)
    */
   private getEffectiveDate(item: EnhancedContentItem): Date {
-    if (item.useManualDate && item.manualDate) {
+    // Always prioritize manual date if available, regardless of useManualDate flag
+    if (item.manualDate) {
       return new Date(item.manualDate);
     }
     return new Date(item.createdAt);

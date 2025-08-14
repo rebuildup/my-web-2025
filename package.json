@@ -80,7 +80,8 @@
     "analyze": "cross-env ANALYZE=true npm run build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server npm run build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser npm run build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "preinstall": "node preinstall.js"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

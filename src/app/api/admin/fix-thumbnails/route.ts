@@ -1,8 +1,8 @@
 import fs from "fs/promises";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import path from "path";
 
-export async function POST(_request: NextRequest) {
+export async function POST() {
   try {
     console.log("=== Thumbnail Fix API Called ===");
 

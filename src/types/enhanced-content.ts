@@ -306,9 +306,11 @@ export const shouldExcludeFromGallery = (
   return hasOtherCategory(item);
 };
 
-// Helper function to get effective date
-export const getEffectiveDate = (item: EnhancedContentItem): Date => {
-  if (item.useManualDate && item.manualDate) {
+// Helper function to get effective date (for enhanced content items only)
+// Note: Use the flexible getEffectiveDate from @/types for general use
+export const getEnhancedEffectiveDate = (item: EnhancedContentItem): Date => {
+  // Always prioritize manual date if available, regardless of useManualDate flag
+  if (item.manualDate) {
     return new Date(item.manualDate);
   }
   return new Date(item.createdAt);
