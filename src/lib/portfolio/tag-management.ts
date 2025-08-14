@@ -321,13 +321,13 @@ export class PortfolioTagManager implements TagManagementSystem {
 
   /**
    * Normalize tag name (trim, lowercase, remove extra spaces)
+   * Supports Unicode characters including Japanese
    */
   private normalizeTagName(name: string): string {
     return name
       .trim()
-      .toLowerCase()
       .replace(/\s+/g, " ") // Replace multiple spaces with single space
-      .replace(/[^\w\s-]/g, "") // Remove special characters except hyphens
+      .replace(/[^\p{L}\p{N}\s-]/gu, "") // Remove special characters except letters, numbers, spaces, and hyphens (Unicode-aware)
       .trim();
   }
 

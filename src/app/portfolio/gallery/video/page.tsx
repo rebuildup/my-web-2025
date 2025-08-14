@@ -64,12 +64,12 @@ async function getVideoPortfolioData(): Promise<ContentItem[]> {
       `Data manager: Found ${videoItems.length} video items out of ${allItems.length} total items`,
     );
 
-    // Sort by updatedAt desc
-    const sortedItems = videoItems.sort(
-      (a, b) =>
-        new Date(b.updatedAt || b.createdAt).getTime() -
-        new Date(a.updatedAt || a.createdAt).getTime(),
-    );
+    // Sort by effective date (manual date if set, otherwise createdAt) in descending order
+    const sortedItems = videoItems.sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return dateB.getTime() - dateA.getTime();
+    });
 
     return sortedItems;
   } catch (error) {

@@ -523,6 +523,8 @@ export function DataManagerForm({
 
     console.log("=== Form submission started ===");
     console.log("Original form data:", JSON.stringify(formData, null, 2));
+    console.log("Thumbnail in formData:", formData.thumbnail);
+    console.log("Images in formData:", formData.images);
 
     // Handle markdown file operations if enhanced mode is enabled
     if (enhanced && markdownContent) {
@@ -633,6 +635,12 @@ export function DataManagerForm({
       images: formData.images || [],
       externalLinks: validExternalLinks,
       updatedAt: new Date().toISOString(),
+      // Ensure thumbnail is set if images exist but no thumbnail is set
+      thumbnail:
+        formData.thumbnail ||
+        (formData.images && formData.images.length > 0
+          ? formData.images[0]
+          : undefined),
       // Include markdown file path for enhanced mode
       ...(enhanced && {
         markdownPath: markdownFilePath,
@@ -697,6 +705,8 @@ export function DataManagerForm({
     }
 
     console.log("Data to save:", JSON.stringify(dataToSave, null, 2));
+    console.log("Thumbnail in dataToSave:", dataToSave.thumbnail);
+    console.log("Images in dataToSave:", dataToSave.images);
     console.log("Calling onSave...");
     onSave(dataToSave);
   };

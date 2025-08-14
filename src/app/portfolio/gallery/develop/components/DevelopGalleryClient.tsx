@@ -55,7 +55,7 @@ export function DevelopGalleryClient({
   );
   const [filters, setFilters] = useState<FilterOptions>({});
   const [sort, setSort] = useState<SortOptions>({
-    sortBy: "updatedAt",
+    sortBy: "effectiveDate",
     sortOrder: "desc",
   });
   const [currentPage, setCurrentPage] = useState(1);

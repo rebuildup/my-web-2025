@@ -156,6 +156,10 @@ export function EnhancedFileUploadSection({
 
         // Set first uploaded image as thumbnail if no thumbnail exists
         if (!thumbnail && uploadedImages.length > 0) {
+          console.log(
+            "Setting first uploaded image as thumbnail:",
+            uploadedImages[0],
+          );
           onThumbnailChange(uploadedImages[0]);
         }
       }

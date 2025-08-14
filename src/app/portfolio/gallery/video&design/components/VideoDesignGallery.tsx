@@ -79,7 +79,7 @@ export function VideoDesignGallery({
   const [filters, setFilters] = useState<FilterState>({
     category: "all",
     year: "all",
-    sortBy: "priority",
+    sortBy: "date",
   });
 
   const [errorState, setErrorState] = useState<ErrorState>({ hasError: false });
@@ -390,7 +390,7 @@ export function VideoDesignGallery({
 
         // Apply sorting using enhanced gallery filter
         const sorted = enhancedGalleryFilter.sortItems(filtered, {
-          sortBy: filters.sortBy === "date" ? "createdAt" : filters.sortBy,
+          sortBy: filters.sortBy === "date" ? "effectiveDate" : filters.sortBy,
           sortOrder: filters.sortBy === "title" ? "asc" : "desc",
         });
 
@@ -501,7 +501,7 @@ export function VideoDesignGallery({
 
       // Step 4: Apply sorting using enhanced gallery filter
       const sorted = enhancedGalleryFilter.sortItems(filtered, {
-        sortBy: filters.sortBy === "date" ? "createdAt" : filters.sortBy,
+        sortBy: filters.sortBy === "date" ? "effectiveDate" : filters.sortBy,
         sortOrder: filters.sortBy === "title" ? "asc" : "desc",
       });
 
@@ -1069,6 +1069,7 @@ interface EnhancedGridItem extends GridItem {
   randomOffset?: number;
   description?: string;
   createdAt: string;
+  images?: string[];
 }
 
 interface GridItemComponentProps {
@@ -1078,12 +1079,20 @@ interface GridItemComponentProps {
 
 function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
   const [imageError, setImageError] = useState(false);
+
+  // Get the best available thumbnail image
+  const thumbnailSrc =
+    item.thumbnail ||
+    (item.images && item.images.length > 0 ? item.images[0] : null) ||
+    "/images/portfolio/default-thumb.jpg";
   const gridClasses = getGridItemClasses(item.gridSize);
   const minHeightClass = getGridItemMinHeight(item.gridSize);
 
   // Debug: Log the classes being applied
   console.log("Grid classes for item:", item.id, gridClasses);
   console.log("Item thumbnail:", item.thumbnail);
+  console.log("Item images:", item.images);
+  console.log("Resolved thumbnail src:", thumbnailSrc);
   console.log("Image error state:", imageError);
   console.log(
     "Item createdAt:",
@@ -1124,19 +1133,19 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
     >
       {/* Image Container - Enhanced hover effects with static frame */}
       <div className="gallery-image-container absolute inset-0 overflow-hidden">
-        {item.thumbnail && !imageError ? (
+        {thumbnailSrc && !imageError ? (
           <Image
-            src={item.thumbnail}
+            src={thumbnailSrc}
             alt={item.title || "Portfolio item"}
             fill
             className="gallery-image object-cover"
             loading="lazy"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             onLoad={() => {
-              console.log("Image loaded successfully:", item.thumbnail);
+              console.log("Image loaded successfully:", thumbnailSrc);
             }}
             onError={() => {
-              console.error("Image failed to load:", item.thumbnail);
+              console.error("Image failed to load:", thumbnailSrc);
               setImageError(true);
             }}
           />

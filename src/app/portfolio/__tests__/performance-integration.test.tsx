@@ -53,10 +53,10 @@ import { ContentItem } from "@/types/content";
 import { render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 
-// Get the mocked instance
-const _mockedPortfolioDataManager = portfolioDataManager as jest.Mocked<
-  typeof portfolioDataManager
->;
+// Get the mocked instance (commented out as it's not used)
+// const _mockedPortfolioDataManager = portfolioDataManager as jest.Mocked<
+//   typeof portfolioDataManager
+// >;
 
 // Mock performance APIs
 Object.defineProperty(window, "performance", {

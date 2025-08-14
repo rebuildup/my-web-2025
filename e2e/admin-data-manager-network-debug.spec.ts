@@ -134,7 +134,7 @@ test.describe("Admin Data Manager - Network Debug", () => {
           const parsedData = JSON.parse(req.postData);
           console.log(`  useManualDate: ${parsedData.useManualDate}`);
           console.log(`  manualDate: ${parsedData.manualDate}`);
-        } catch (error) {
+        } catch {
           console.log("  Failed to parse post data");
         }
       }

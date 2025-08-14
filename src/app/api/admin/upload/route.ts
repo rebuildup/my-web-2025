@@ -3,7 +3,7 @@
  * Provides file upload operations
  */
 
-import { writeFile } from "fs/promises";
+import { mkdir, writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
 
@@ -21,24 +21,43 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  console.log("=== Upload API called ===");
+
   try {
     const formData = await request.formData();
     const files = formData.getAll("files") as File[];
     const singleFile = formData.get("file") as File;
-    formData.get("type") as string;
-    formData.get("processingOptions") as string;
+    const type = formData.get("type") as string;
+    const processingOptions = formData.get("processingOptions") as string;
+
+    console.log("Upload request details:", {
+      filesCount: files.length,
+      hasSingleFile: !!singleFile,
+      type,
+      processingOptions: processingOptions ? "provided" : "not provided",
+    });
 
     if (!files.length && !singleFile) {
+      console.error("No files provided in upload request");
       return NextResponse.json({ error: "No files provided" }, { status: 400 });
     }
 
     const uploadedFiles = files.length ? files : [singleFile];
     const results = [];
 
+    console.log(`Processing ${uploadedFiles.length} files...`);
+
     for (const file of uploadedFiles) {
       try {
+        console.log(
+          `Processing file: ${file.name} (${file.size} bytes, ${file.type})`,
+        );
+
         // Validate file type
         if (!file.type.startsWith("image/")) {
+          console.error(
+            `Invalid file type: ${file.type} for file: ${file.name}`,
+          );
           results.push({
             originalName: file.name,
             size: file.size,
@@ -50,6 +69,9 @@ export async function POST(request: NextRequest) {
 
         // Validate file size (10MB limit)
         if (file.size > 10 * 1024 * 1024) {
+          console.error(
+            `File too large: ${file.size} bytes for file: ${file.name}`,
+          );
           results.push({
             originalName: file.name,
             size: file.size,
@@ -68,13 +90,23 @@ export async function POST(request: NextRequest) {
 
         // Use existing portfolio directory
         const uploadDir = join(process.cwd(), "public", "images", "portfolio");
+        console.log(`Upload directory: ${uploadDir}`);
+
+        // Ensure directory exists
+        try {
+          await mkdir(uploadDir, { recursive: true });
+        } catch (error) {
+          console.log("Directory already exists or creation failed:", error);
+        }
 
         // Convert file to buffer and save
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
         const filePath = join(uploadDir, uniqueFilename);
 
+        console.log(`Saving file to: ${filePath}`);
         await writeFile(filePath, buffer);
+        console.log(`File saved successfully: ${uniqueFilename}`);
 
         // Create URL for the uploaded file (matching existing pattern)
         const url = `/images/portfolio/${uniqueFilename}`;

@@ -269,6 +269,59 @@ export default function DataManagerPage() {
     setPreviewMode("form");
   };
 
+  const handleFixThumbnails = async () => {
+    if (
+      !confirm(
+        isClient
+          ? "サムネイルが設定されていないポートフォリオアイテムを自動修復しますか？\n（各アイテムの最初の画像がサムネイルに設定されます）"
+          : "Fix missing thumbnails for portfolio items?\n(First image will be set as thumbnail for each item)",
+      )
+    ) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      console.log("Fixing thumbnails...");
+      const response = await fetch("/api/admin/fix-thumbnails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+      console.log("Fix thumbnails result:", result);
+
+      if (response.ok) {
+        alert(
+          isClient
+            ? `✓ ${result.fixedItems?.length || 0}個のアイテムのサムネイルを修復しました`
+            : `✓ Fixed thumbnails for ${result.fixedItems?.length || 0} items`,
+        );
+
+        // Reload the content list to show updated data
+        await loadContentItems(selectedContentType, true);
+      } else {
+        console.error("Failed to fix thumbnails:", result);
+        alert(
+          isClient
+            ? `サムネイル修復に失敗しました: ${result.error}`
+            : `Failed to fix thumbnails: ${result.error}`,
+        );
+      }
+    } catch (error) {
+      console.error("Error fixing thumbnails:", error);
+      alert(
+        isClient
+          ? `エラーが発生しました: ${error instanceof Error ? error.message : "Unknown error"}`
+          : `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Design system classes matching root page
   const CardStyle =
     "bg-base border border-foreground block p-4 space-y-4 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background";
@@ -338,13 +391,25 @@ export default function DataManagerPage() {
                         selectedContentType.slice(1)}{" "}
                       Items
                     </h3>
-                    <button
-                      onClick={handleCreateNew}
-                      className={ButtonStyle}
-                      disabled={isLoading}
-                    >
-                      {isClient ? "+ 新規作成" : "+ New"}
-                    </button>
+                    <div className="flex gap-2">
+                      {selectedContentType === "portfolio" && (
+                        <button
+                          onClick={handleFixThumbnails}
+                          className={ButtonStyle}
+                          disabled={isLoading}
+                          title="Fix missing thumbnails for portfolio items"
+                        >
+                          {isClient ? "🔧 サムネイル修復" : "🔧 Fix Thumbnails"}
+                        </button>
+                      )}
+                      <button
+                        onClick={handleCreateNew}
+                        className={ButtonStyle}
+                        disabled={isLoading}
+                      >
+                        {isClient ? "+ 新規作成" : "+ New"}
+                      </button>
+                    </div>
                   </div>
 
                   <ContentList

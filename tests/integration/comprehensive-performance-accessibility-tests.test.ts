@@ -48,7 +48,7 @@ jest.mock("next/image", () => ({
     alt: string;
     [key: string]: unknown;
   }) => {
-    const React = require("react");
+    const React = await import("react");
     return React.createElement("img", { src, alt, ...props });
   },
 }));

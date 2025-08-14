@@ -68,6 +68,13 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
       });
     }
 
+    // Sort by effective date (manual date if set, otherwise createdAt) in descending order
+    filtered.sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return dateB.getTime() - dateA.getTime();
+    });
+
     return filtered;
   }, [items, filter]);
 
@@ -156,23 +163,31 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
               data-category={item.category}
             >
               <div className="relative aspect-video bg-background border border-foreground overflow-hidden">
-                {item.thumbnail ? (
-                  <SafeImage
-                    src={item.thumbnail}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover"
-                    loading="lazy"
-                    showDebug={false}
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="noto-sans-jp-light text-xs text-foreground">
-                      {item.title}
-                    </span>
-                  </div>
-                )}
+                {(() => {
+                  const thumbnailSrc =
+                    item.thumbnail ||
+                    (item.images && item.images.length > 0
+                      ? item.images[0]
+                      : null);
+
+                  return thumbnailSrc ? (
+                    <SafeImage
+                      src={thumbnailSrc}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover"
+                      loading="lazy"
+                      showDebug={false}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="noto-sans-jp-light text-xs text-foreground">
+                        {item.title}
+                      </span>
+                    </div>
+                  );
+                })()}
               </div>
 
               <div className="space-y-2">

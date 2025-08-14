@@ -445,6 +445,11 @@ export class EnhancedGalleryFilter {
       }
     }
 
+    // Ensure thumbnail is set - use existing thumbnail or first image as fallback
+    const thumbnail =
+      item.thumbnail ||
+      (item.images && item.images.length > 0 ? item.images[0] : undefined);
+
     return {
       ...item,
       categories,
@@ -452,6 +457,8 @@ export class EnhancedGalleryFilter {
       useManualDate: false,
       originalImages: [],
       processedImages: item.images || [],
+      // Ensure thumbnail is properly set
+      thumbnail,
       // Keep legacy category for backward compatibility
       category: item.category,
     };

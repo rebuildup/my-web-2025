@@ -203,14 +203,24 @@ export function FileUploadSection({
               }
             } else {
               const errorData = await response.json();
-              console.error("Upload failed:", errorData);
+              console.error("Upload failed:", {
+                status: response.status,
+                statusText: response.statusText,
+                errorData,
+                fileName: file.name,
+              });
               updateProgress(file.name, {
                 status: "error",
-                error: errorData.error || "Upload failed",
+                error: errorData.error || `Upload failed (${response.status})`,
               });
             }
           } catch (uploadError) {
-            console.error("Upload request failed:", uploadError);
+            console.error("Upload request failed:", {
+              error: uploadError,
+              fileName: file.name,
+              fileSize: file.size,
+              fileType: file.type,
+            });
             updateProgress(file.name, {
               status: "error",
               error:
@@ -234,6 +244,10 @@ export function FileUploadSection({
 
         // Set first uploaded image as thumbnail if no thumbnail exists
         if (!thumbnail && uploadedUrls.length > 0) {
+          console.log(
+            "Setting first uploaded image as thumbnail:",
+            uploadedUrls[0],
+          );
           onThumbnailChange(uploadedUrls[0]);
         }
       }

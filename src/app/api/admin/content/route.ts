@@ -27,6 +27,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log("=== ADMIN CONTENT API POST ===");
     console.log("Received data:", JSON.stringify(body, null, 2));
+    console.log("Thumbnail in received data:", body.thumbnail);
+    console.log("Images in received data:", body.images);
 
     const {
       id,
@@ -43,6 +45,7 @@ export async function POST(request: NextRequest) {
       useManualDate,
       manualDate,
       images,
+      thumbnail,
       videos,
       externalLinks,
       isOtherCategory,
@@ -95,6 +98,8 @@ export async function POST(request: NextRequest) {
         useManualDate: useManualDate || false,
         manualDate: manualDate || undefined,
         images: images || [],
+        thumbnail:
+          thumbnail || (images && images.length > 0 ? images[0] : undefined),
         videos: videos || [],
         externalLinks: externalLinks || [],
         isOtherCategory: isOtherCategory || false,
@@ -125,6 +130,8 @@ export async function POST(request: NextRequest) {
         priority: priority || 50,
         content: content || "",
         images: images || [],
+        thumbnail:
+          thumbnail || (images && images.length > 0 ? images[0] : undefined),
         videos: videos || [],
         externalLinks: externalLinks || [],
         createdAt: body.createdAt || new Date().toISOString(),

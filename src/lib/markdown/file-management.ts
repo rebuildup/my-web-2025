@@ -113,21 +113,33 @@ export class MarkdownFileManager {
 
     const filePath = this.generateFilePath(contentId, contentType);
 
-    // Check if file already exists
-    try {
-      await fs.access(filePath);
-      throw new Error(`Markdown file already exists: ${filePath}`);
-    } catch (error: unknown) {
-      if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+    // Check if file already exists and generate unique name if needed
+    let finalFilePath = filePath;
+    let counter = 1;
+
+    while (true) {
+      try {
+        await fs.access(finalFilePath);
+        // File exists, try with counter
+        const pathParts = filePath.split(".");
+        const extension = pathParts.pop();
+        const basePath = pathParts.join(".");
+        finalFilePath = `${basePath}-${counter}.${extension}`;
+        counter++;
+      } catch (error: unknown) {
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+          // File doesn't exist, we can use this path
+          break;
+        }
         throw error;
       }
     }
 
     try {
-      await fs.writeFile(filePath, content, "utf8");
-      return filePath;
+      await fs.writeFile(finalFilePath, content, "utf8");
+      return finalFilePath;
     } catch (error: unknown) {
-      throw markdownErrorHandler.handleFileError(error, filePath);
+      throw markdownErrorHandler.handleFileError(error, finalFilePath);
     }
   }
 

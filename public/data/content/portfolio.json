@@ -48,7 +48,8 @@
       "/images/portfolio/kousenprocon-1753768234338-30vf60.png"
     ],
     "createdAt": "2025-07-28T12:29:44.056Z",
-    "updatedAt": "2025-08-13T16:32:33.467Z"
+    "updatedAt": "2025-08-14T05:14:41.926Z",
+    "thumbnail": "/images/portfolio/kousenprocon-1753768234338-30vf60.png"
   },
   {
     "id": "portfolio-1755102496915",
@@ -59,9 +60,11 @@
     "tags": ["依頼", "AfterEffects"],
     "status": "published",
     "priority": 50,
-    "content": "依頼を頂いて制作した映像です",
+    "content": "",
     "useManualDate": false,
-    "images": [],
+    "images": [
+      "/images/portfolio/vlcsnap-2025-08-13-21h49m26s292-1755145692306-dokdvk.png"
+    ],
     "videos": [
       {
         "type": "youtube",
@@ -76,7 +79,8 @@
     "originalImages": [],
     "processedImages": [],
     "createdAt": "2025-08-13T16:28:16.915Z",
-    "updatedAt": "2025-08-13T16:39:13.681Z"
+    "updatedAt": "2025-08-14T05:14:41.927Z",
+    "thumbnail": "/images/portfolio/vlcsnap-2025-08-13-21h49m26s292-1755145692306-dokdvk.png"
   },
   {
     "id": "portfolio-1754408713848",
@@ -314,24 +318,26 @@
       "/images/portfolio/20250503_multi-1753839872363-hw0x27.jpg"
     ],
     "createdAt": "2025-07-30T01:39:15.107Z",
-    "updatedAt": "2025-08-13T15:59:49.984Z"
+    "updatedAt": "2025-08-14T05:14:41.927Z",
+    "thumbnail": "/images/portfolio/20250503_multi-1753839872363-hw0x27.jpg"
   },
   {
     "id": "portfolio-1753839404106",
     "type": "portfolio",
     "title": "デザイン練習 #001",
     "description": "なにも考えずに手癖で作っています",
-    "category": "design",
+    "categories": ["design"],
     "tags": [],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-30T01:36:44.106Z",
-    "updatedAt": "2025-08-08T17:09:46.561Z",
     "content": "",
-    "videos": [],
+    "markdownPath": "portfolio/portfolio-1753839404106.md",
+    "useManualDate": false,
+    "manualDate": "2025-04-11T15:00:00.000Z",
     "images": [
       "https://pbs.twimg.com/media/GoVnXrGWIAAXdUS?format=jpg&name=large"
     ],
+    "videos": [],
     "externalLinks": [
       {
         "type": "website",
@@ -340,16 +346,14 @@
         "description": "Xのリンクです"
       }
     ],
-    "categories": ["design"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "https://pbs.twimg.com/media/GoVnXrGWIAAXdUS?format=jpg&name=large"
     ],
-    "markdownPath": "portfolio/portfolio-1753839404106.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-04-11T15:00:00.000Z"
+    "createdAt": "2025-07-30T01:36:44.106Z",
+    "updatedAt": "2025-08-14T05:14:41.928Z",
+    "thumbnail": "https://pbs.twimg.com/media/GoVnXrGWIAAXdUS?format=jpg&name=large"
   },
   {
     "id": "portfolio-1753706214241",
@@ -1104,7 +1108,8 @@
       "/images/portfolio/vlcsnap-2025-07-29-18h38m55s416-1753781954114-wffzec.png"
     ],
     "createdAt": "2025-07-28T12:30:50.489Z",
-    "updatedAt": "2025-08-13T16:31:42.590Z"
+    "updatedAt": "2025-08-14T05:14:41.929Z",
+    "thumbnail": "/images/portfolio/20241205_testotu-1753781885501-mq2rtl.gif"
   },
   {
     "id": "portfolio-1753705824026",
@@ -1149,7 +1154,8 @@
       "/images/portfolio/20241102_mawaru-1753768712385-d2237e.png"
     ],
     "createdAt": "2025-07-28T12:30:24.026Z",
-    "updatedAt": "2025-08-13T16:31:53.057Z"
+    "updatedAt": "2025-08-14T05:14:41.929Z",
+    "thumbnail": "/images/portfolio/20241102_mawaru-1753768712385-d2237e.png"
   },
   {
     "id": "portfolio-1753705810537",
@@ -1194,7 +1200,8 @@
       "/images/portfolio/20241027_meikai-1753768460581-c1hso4.png"
     ],
     "createdAt": "2025-07-28T12:30:10.537Z",
-    "updatedAt": "2025-08-13T16:32:15.323Z"
+    "updatedAt": "2025-08-14T05:14:41.930Z",
+    "thumbnail": "/images/portfolio/20241027_meikai-1753768460581-c1hso4.png"
   },
   {
     "id": "portfolio-1753705763745",
@@ -1237,7 +1244,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/shinkan-1753768044049-ox85kd.png"],
     "createdAt": "2025-07-28T12:29:23.745Z",
-    "updatedAt": "2025-08-13T16:32:55.947Z"
+    "updatedAt": "2025-08-14T05:14:41.930Z",
+    "thumbnail": "/images/portfolio/shinkan-1753768044049-ox85kd.png"
   },
   {
     "id": "portfolio-1753705752680",
@@ -1280,7 +1288,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/netu-1753767855803-zwbvzs.png"],
     "createdAt": "2025-07-28T12:29:12.680Z",
-    "updatedAt": "2025-08-13T16:33:05.134Z"
+    "updatedAt": "2025-08-14T05:14:41.930Z",
+    "thumbnail": "/images/portfolio/netu-1753767855803-zwbvzs.png"
   },
   {
     "id": "portfolio-1753705731016",
@@ -1323,7 +1332,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/furafu-1753767679942-brw30p.png"],
     "createdAt": "2025-07-28T12:28:51.016Z",
-    "updatedAt": "2025-08-13T16:33:22.604Z"
+    "updatedAt": "2025-08-14T05:14:41.931Z",
+    "thumbnail": "/images/portfolio/furafu-1753767679942-brw30p.png"
   },
   {
     "id": "portfolio-1753705712152",
@@ -1366,7 +1376,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/moumoku-1753767438352-gdcfzu.png"],
     "createdAt": "2025-07-28T12:28:32.152Z",
-    "updatedAt": "2025-08-13T16:33:44.024Z"
+    "updatedAt": "2025-08-14T05:14:41.931Z",
+    "thumbnail": "/images/portfolio/moumoku-1753767438352-gdcfzu.png"
   },
   {
     "id": "portfolio-1753705695648",
@@ -1409,7 +1420,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/alice-1753767142168-oknnpc.png"],
     "createdAt": "2025-07-28T12:28:15.648Z",
-    "updatedAt": "2025-08-13T16:34:11.045Z"
+    "updatedAt": "2025-08-14T05:14:41.931Z",
+    "thumbnail": "/images/portfolio/alice-1753767142168-oknnpc.png"
   },
   {
     "id": "portfolio-1753705653809",
@@ -1445,7 +1457,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/blen-1753707599484-8a4y4d.png"],
     "createdAt": "2025-07-28T12:27:33.809Z",
-    "updatedAt": "2025-08-13T16:34:24.702Z"
+    "updatedAt": "2025-08-14T05:14:41.931Z",
+    "thumbnail": "/images/portfolio/blen-1753707599484-8a4y4d.png"
   },
   {
     "id": "portfolio-1753705628729",
@@ -1488,7 +1501,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/isogasii-1753707430577-rebwd9.png"],
     "createdAt": "2025-07-28T12:27:08.729Z",
-    "updatedAt": "2025-08-13T16:20:11.925Z"
+    "updatedAt": "2025-08-14T05:14:41.932Z",
+    "thumbnail": "/images/portfolio/isogasii-1753707430577-rebwd9.png"
   },
   {
     "id": "portfolio-1753705617995",
@@ -1542,7 +1556,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/black-1753707278578-cqmdgl.png"],
     "createdAt": "2025-07-28T12:26:09.200Z",
-    "updatedAt": "2025-08-13T16:19:24.480Z"
+    "updatedAt": "2025-08-14T05:14:41.932Z",
+    "thumbnail": "/images/portfolio/black-1753707278578-cqmdgl.png"
   },
   {
     "id": "portfolio-1753705553752",
@@ -1564,7 +1579,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/blue-1753707237299-5hcgzd.png"],
     "createdAt": "2025-07-28T12:25:53.752Z",
-    "updatedAt": "2025-08-13T16:19:10.335Z"
+    "updatedAt": "2025-08-14T05:14:41.933Z",
+    "thumbnail": "/images/portfolio/blue-1753707237299-5hcgzd.png"
   },
   {
     "id": "portfolio-1753705545464",
@@ -1601,7 +1617,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/dounika-1753707081038-m0js26.png"],
     "createdAt": "2025-07-28T12:25:45.464Z",
-    "updatedAt": "2025-08-13T16:17:50.792Z"
+    "updatedAt": "2025-08-14T05:14:41.933Z",
+    "thumbnail": "/images/portfolio/dounika-1753707081038-m0js26.png"
   },
   {
     "id": "portfolio-1753705521159",
@@ -1630,7 +1647,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/konpu-1753707007885-kwh651.png"],
     "createdAt": "2025-07-28T12:25:21.159Z",
-    "updatedAt": "2025-08-13T16:16:01.092Z"
+    "updatedAt": "2025-08-14T05:14:41.933Z",
+    "thumbnail": "/images/portfolio/konpu-1753707007885-kwh651.png"
   },
   {
     "id": "portfolio-1753705501944",
@@ -1660,7 +1678,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/otukare-1753706893876-p5c7vt.png"],
     "createdAt": "2025-07-28T12:25:01.944Z",
-    "updatedAt": "2025-08-13T16:14:56.018Z"
+    "updatedAt": "2025-08-14T05:14:41.933Z",
+    "thumbnail": "/images/portfolio/otukare-1753706893876-p5c7vt.png"
   },
   {
     "id": "portfolio-1753705469624",
@@ -1690,7 +1709,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/ooame-1753706697990-wimnl1.png"],
     "createdAt": "2025-07-28T12:24:29.624Z",
-    "updatedAt": "2025-08-13T16:12:50.980Z"
+    "updatedAt": "2025-08-14T05:14:41.934Z",
+    "thumbnail": "/images/portfolio/ooame-1753706697990-wimnl1.png"
   },
   {
     "id": "portfolio-1753705448392",
@@ -1720,7 +1740,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/ugoita-1753706654287-xl546f.png"],
     "createdAt": "2025-07-28T12:24:08.392Z",
-    "updatedAt": "2025-08-13T16:12:13.113Z"
+    "updatedAt": "2025-08-14T05:14:41.934Z",
+    "thumbnail": "/images/portfolio/ugoita-1753706654287-xl546f.png"
   },
   {
     "id": "portfolio-draft-test",
@@ -1804,7 +1825,8 @@
       "/images/portfolio/flashopen-1753697697064-xh8h37.webp"
     ],
     "createdAt": "2025-07-28T10:12:24.895Z",
-    "updatedAt": "2025-08-13T16:10:57.245Z"
+    "updatedAt": "2025-08-14T05:14:41.934Z",
+    "thumbnail": "/images/portfolio/flashopen-1753697697064-xh8h37.webp"
   },
   {
     "id": "portfolio-1753697297201",
@@ -1833,7 +1855,8 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/flashbgm-1753697381549-xlfwvd.webp"],
     "createdAt": "2025-07-28T10:08:17.201Z",
-    "updatedAt": "2025-08-13T16:24:20.861Z"
+    "updatedAt": "2025-08-14T05:14:41.935Z",
+    "thumbnail": "/images/portfolio/flashbgm-1753697381549-xlfwvd.webp"
   },
   {
     "id": "portfolio-1753696188231",
@@ -1902,6 +1925,7 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/otu-1753696554992-ghbvct.webp"],
     "createdAt": "2025-07-28T09:35:03.368Z",
-    "updatedAt": "2025-08-13T16:07:15.224Z"
+    "updatedAt": "2025-08-14T05:14:41.935Z",
+    "thumbnail": "/images/portfolio/otu-1753696554992-ghbvct.webp"
   }
 ]
