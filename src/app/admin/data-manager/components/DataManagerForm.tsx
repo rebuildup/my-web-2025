@@ -47,6 +47,7 @@ export function DataManagerForm({
   saveStatus = "idle",
   enhanced = false,
 }: DataManagerFormProps) {
+  const [isClient, setIsClient] = useState(false);
   const [formData, setFormData] = useState<ContentItem | EnhancedContentItem>(
     item,
   );
@@ -55,9 +56,7 @@ export function DataManagerForm({
   >("basic");
 
   // Date management state for enhanced mode
-  const [useManualDate, setUseManualDate] = useState<boolean>(
-    (enhanced && (item as EnhancedContentItem).useManualDate) || false,
-  );
+  const [useManualDate, setUseManualDate] = useState<boolean>(false);
 
   // Enhanced file upload options state
   const [uploadOptions, setUploadOptions] = useState<EnhancedFileUploadOptions>(
@@ -88,7 +87,21 @@ export function DataManagerForm({
     null,
   );
 
+  // Category change impact state
+  const [, setCategoryChangeImpact] = useState<{
+    show: boolean;
+    oldCategories: EnhancedCategoryType[];
+    newCategories: EnhancedCategoryType[];
+    impacts: string[];
+  }>({
+    show: false,
+    oldCategories: [],
+    newCategories: [],
+    impacts: [],
+  });
+
   useEffect(() => {
+    setIsClient(true);
     setFormData(item);
     setMarkdownFilePath(
       enhanced ? (item as EnhancedContentItem).markdownPath : undefined,
@@ -99,111 +112,103 @@ export function DataManagerForm({
     );
     setMarkdownLoadError(null);
 
+    // 日付管理の状態を更新
+    if (enhanced && isEnhancedContentItem(item)) {
+      const enhancedItem = item as EnhancedContentItem;
+      const shouldUseManual = enhancedItem.useManualDate || false;
+      setUseManualDate(shouldUseManual);
+      console.log("Date management state updated:", {
+        useManualDate: shouldUseManual,
+        manualDate: enhancedItem.manualDate,
+        itemId: enhancedItem.id,
+      });
+    } else {
+      setUseManualDate(false);
+    }
+
     // Load markdown content if markdownPath exists
     const loadMarkdownContent = async () => {
       if (enhanced && (item as EnhancedContentItem).markdownPath) {
         setIsLoadingMarkdown(true);
         try {
           const markdownPath = (item as EnhancedContentItem).markdownPath!;
-          console.log("=== MARKDOWN LOADING DEBUG ===");
-          console.log("Loading markdown content from:", markdownPath);
-          console.log("Item data:", JSON.stringify(item, null, 2));
+          console.log("=== Markdownファイル読み込み開始 ===");
+          console.log("読み込み対象パス:", markdownPath);
 
-          // First check if file exists
-          console.log("Checking if file exists...");
+          // ファイル存在確認
           const existsResponse = await fetch(
             `/api/markdown?action=fileExists&filePath=${encodeURIComponent(markdownPath)}`,
           );
 
           if (existsResponse.ok) {
             const existsData = await existsResponse.json();
-            console.log("File exists check result:", existsData);
+            console.log("ファイル存在確認結果:", existsData);
 
             if (!existsData.exists) {
-              throw new Error(`Markdown file does not exist: ${markdownPath}`);
+              console.warn(`Markdownファイルが存在しません: ${markdownPath}`);
+              console.log("markdownPathをクリアしてitem.contentを使用します");
+              setMarkdownFilePath(undefined);
+              setMarkdownContent(item.content || "");
+              setMarkdownLoadError(null);
+              setIsLoadingMarkdown(false);
+              return;
             }
           } else {
-            console.warn("Failed to check file existence, proceeding anyway");
+            console.warn(
+              "ファイル存在確認に失敗しましたが、読み込みを続行します",
+            );
           }
 
-          // Test direct API call
-          console.log("Testing direct API call...");
-          const testResponse = await fetch(
+          // Markdownコンテンツ取得
+          const contentResponse = await fetch(
             `/api/markdown?action=getMarkdownContent&filePath=${encodeURIComponent(markdownPath)}`,
           );
-          console.log("API Response status:", testResponse.status);
-          console.log(
-            "API Response headers:",
-            Object.fromEntries(testResponse.headers.entries()),
-          );
 
-          if (testResponse.ok) {
-            const testData = await testResponse.json();
-            console.log("API Response data:", testData);
+          if (contentResponse.ok) {
+            const contentData = await contentResponse.json();
+            console.log(
+              "Markdownコンテンツ取得成功:",
+              contentData.content?.length || 0,
+              "文字",
+            );
 
-            if (testData.content) {
-              console.log(
-                "Successfully loaded via direct API:",
-                testData.content.length,
-                "characters",
-              );
-              console.log(
-                "Content preview:",
-                testData.content.substring(0, 200) + "...",
-              );
-
-              // Compare with item.content to ensure we're not getting the old content
-              const itemContent = item.content || "";
-              console.log("Item.content length:", itemContent.length);
-              console.log(
-                "Item.content preview:",
-                itemContent.substring(0, 200) + "...",
-              );
-
-              if (testData.content === itemContent) {
-                console.warn(
-                  "WARNING: Markdown file content is identical to item.content - this might be wrong!",
-                );
-              } else {
-                console.log(
-                  "SUCCESS: Markdown file content is different from item.content",
-                );
-              }
-
-              setMarkdownContent(testData.content);
+            if (contentData.content !== undefined) {
+              setMarkdownContent(contentData.content);
               setMarkdownLoadError(null);
+              console.log("Markdownコンテンツを正常に設定しました");
             } else {
-              throw new Error("No content in API response");
+              throw new Error("APIレスポンスにコンテンツが含まれていません");
             }
           } else {
-            const errorData = await testResponse.json();
+            const errorData = await contentResponse.json();
             throw new Error(
-              `API Error: ${testResponse.status} - ${errorData.error || "Unknown error"}`,
+              `Markdown API エラー: ${contentResponse.status} - ${errorData.error || "不明なエラー"}`,
             );
           }
         } catch (error) {
-          console.error("Failed to load markdown content:", error);
+          console.error("Markdownコンテンツの読み込みに失敗:", error);
           const errorMessage =
             error instanceof Error
               ? error.message
-              : "Failed to load markdown file";
-          console.error("Error details:", errorMessage);
+              : "Markdownファイルの読み込みに失敗しました";
           setMarkdownLoadError(errorMessage);
 
-          // Don't use fallback content - show empty content to force user to fix the issue
+          // エラー時はitem.contentをフォールバックとして使用
           console.log(
-            "Markdown file exists but failed to load - showing empty content",
+            "Markdownファイル読み込み失敗、item.contentを使用:",
+            item.content?.length || 0,
+            "文字",
           );
-          setMarkdownContent("");
+          setMarkdownContent(item.content || "");
         } finally {
           setIsLoadingMarkdown(false);
         }
       } else {
-        // Use item.content for non-enhanced mode or items without markdownPath
+        // 拡張モードでない場合、またはmarkdownPathがない場合はitem.contentを使用
         console.log(
-          "No markdown path, using item.content:",
+          "Markdownパスなし、item.contentを使用:",
           item.content?.length || 0,
-          "characters",
+          "文字",
         );
         setMarkdownContent(item.content || "");
       }
@@ -233,14 +238,6 @@ export function DataManagerForm({
       updatedAt: new Date().toISOString(),
     }));
   };
-
-  // Category change impact analysis
-  const [categoryChangeImpact, setCategoryChangeImpact] = useState<{
-    show: boolean;
-    oldCategories: EnhancedCategoryType[];
-    newCategories: EnhancedCategoryType[];
-    impacts: string[];
-  } | null>(null);
 
   const analyzeCategoryChangeImpact = (
     oldCategories: EnhancedCategoryType[],
@@ -333,6 +330,7 @@ export function DataManagerForm({
 
   // Data migration helpers
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const checkIfNeedsMigration = (
     item: ContentItem | EnhancedContentItem,
   ): boolean => {
@@ -351,6 +349,7 @@ export function DataManagerForm({
     return false;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const migrateItemData = () => {
     if (!enhanced || isEnhancedContentItem(formData)) return;
 
@@ -380,24 +379,48 @@ export function DataManagerForm({
   };
 
   const handleDateChange = (date: string) => {
+    console.log("=== handleDateChange called ===", {
+      date,
+      useManualDate,
+      enhanced,
+    });
     if (enhanced) {
       const enhancedItem = formData as EnhancedContentItem;
-      setFormData({
+      const updatedData = {
         ...enhancedItem,
-        manualDate: date,
+        manualDate: date || new Date().toISOString(), // 空の場合は現在の日付を使用
+        useManualDate: useManualDate, // 現在のuseManualDate状態を保持
         updatedAt: new Date().toISOString(),
+      };
+      setFormData(updatedData);
+      console.log("Date changed - updated formData:", {
+        date,
+        useManualDate,
+        updatedManualDate: updatedData.manualDate,
+        updatedUseManualDate: updatedData.useManualDate,
       });
     }
   };
 
   const handleToggleManualDate = (use: boolean) => {
+    console.log("=== handleToggleManualDate called ===", { use, enhanced });
     setUseManualDate(use);
     if (enhanced) {
       const enhancedItem = formData as EnhancedContentItem;
-      setFormData({
+      const currentDate = new Date().toISOString();
+      const updatedData = {
         ...enhancedItem,
         useManualDate: use,
         updatedAt: new Date().toISOString(),
+        // Manualモードに切り替える場合は現在の日付を設定、Autoモードでも日付を設定
+        manualDate: enhancedItem.manualDate || currentDate,
+      };
+      setFormData(updatedData);
+      console.log("Manual date toggle - updated formData:", {
+        use,
+        previousManualDate: enhancedItem.manualDate,
+        updatedUseManualDate: updatedData.useManualDate,
+        updatedManualDate: updatedData.manualDate,
       });
     }
   };
@@ -489,7 +512,9 @@ export function DataManagerForm({
       }
     } catch (error) {
       console.error("Failed to migrate content to markdown:", error);
-      alert("Failed to migrate content to markdown file. Please try again.");
+      alert(
+        "コンテンツのMarkdownファイルへの移行に失敗しました。もう一度お試しください。",
+      );
     }
   };
 
@@ -515,7 +540,7 @@ export function DataManagerForm({
         }
       } catch (error) {
         console.error("Failed to handle markdown file:", error);
-        alert("Failed to save markdown file. Please try again.");
+        alert("Markdownファイルの保存に失敗しました。もう一度お試しください。");
         return;
       }
     }
@@ -523,7 +548,7 @@ export function DataManagerForm({
     // Basic validation
     if (!formData.title.trim()) {
       console.error("Validation failed: Title is required");
-      alert("Title is required");
+      alert("タイトルは必須項目です");
       return;
     }
 
@@ -533,7 +558,9 @@ export function DataManagerForm({
         // Enhanced mode: Validate multiple categories
         if (!formData.categories || formData.categories.length === 0) {
           console.error("Validation failed: At least one category is required");
-          alert("Please select at least one category for portfolio items");
+          alert(
+            "ポートフォリオアイテムには少なくとも1つのカテゴリを選択してください",
+          );
           return;
         }
 
@@ -546,7 +573,9 @@ export function DataManagerForm({
             "Validation failed: Invalid categories:",
             invalidCategories,
           );
-          alert(`Invalid categories selected: ${invalidCategories.join(", ")}`);
+          alert(
+            `無効なカテゴリが選択されています: ${invalidCategories.join(", ")}`,
+          );
           return;
         }
 
@@ -558,9 +587,9 @@ export function DataManagerForm({
 
         if (hasOther && hasSpecificCategories) {
           const shouldContinue = confirm(
-            "Warning: You have selected 'Other' category along with specific categories. " +
-              "Items with 'Other' category will only appear in the 'All' gallery, " +
-              "regardless of other selected categories. Do you want to continue?",
+            "警告: 「その他」カテゴリと特定のカテゴリの両方が選択されています。" +
+              "「その他」カテゴリを含むアイテムは、他のカテゴリに関係なく「すべて」ギャラリーにのみ表示されます。" +
+              "続行しますか？",
           );
           if (!shouldContinue) {
             return;
@@ -570,20 +599,20 @@ export function DataManagerForm({
         // Check for maximum categories
         if (formData.categories.length > 3) {
           console.error("Validation failed: Too many categories selected");
-          alert("Please select a maximum of 3 categories");
+          alert("カテゴリは最大3つまで選択できます");
           return;
         }
       } else {
         // Legacy mode: Validate single category
         if (!formData.category) {
           console.error("Validation failed: Portfolio category is required");
-          alert("Please select a category for portfolio items");
+          alert("ポートフォリオアイテムにはカテゴリを選択してください");
           return;
         }
 
         if (formData.category && !isValidPortfolioCategory(formData.category)) {
           console.error("Validation failed: Invalid portfolio category");
-          alert("Please select a valid portfolio category");
+          alert("有効なポートフォリオカテゴリを選択してください");
           return;
         }
       }
@@ -618,12 +647,54 @@ export function DataManagerForm({
             isOtherCategory: formData.categories?.includes("other") || false,
             // Keep legacy category for backward compatibility
             category: formData.categories?.[0] || "",
+            // Include date management fields
+            useManualDate: useManualDate,
+            manualDate: formData.manualDate || new Date().toISOString(),
           }
         : {
             // Legacy mode: Use single category
             category: formData.category || "",
           }),
     };
+
+    console.log("=== DEBUG: Save data preparation ===");
+    console.log("useManualDate state:", useManualDate);
+    console.log(
+      "formData.useManualDate:",
+      (formData as EnhancedContentItem).useManualDate,
+    );
+    console.log(
+      "formData.manualDate:",
+      (formData as EnhancedContentItem).manualDate,
+    );
+    console.log("enhanced:", enhanced);
+    console.log(
+      "isEnhancedContentItem(formData):",
+      isEnhancedContentItem(formData),
+    );
+    // 日付管理フィールドの詳細ログ
+    if (enhanced && isEnhancedContentItem(formData)) {
+      console.log("=== Date Management Fields in dataToSave ===");
+      console.log("useManualDate (from state):", useManualDate);
+      console.log(
+        "manualDate (from formData):",
+        "manualDate" in formData ? formData.manualDate : "N/A",
+      );
+      console.log(
+        "manualDate (computed):",
+        useManualDate && "manualDate" in formData
+          ? formData.manualDate
+          : new Date().toISOString(),
+      );
+      console.log(
+        "Final useManualDate in dataToSave:",
+        "useManualDate" in dataToSave ? dataToSave.useManualDate : "N/A",
+      );
+      console.log(
+        "Final manualDate in dataToSave:",
+        "manualDate" in dataToSave ? dataToSave.manualDate : "N/A",
+      );
+    }
 
     console.log("Data to save:", JSON.stringify(dataToSave, null, 2));
     console.log("Calling onSave...");
@@ -651,21 +722,21 @@ export function DataManagerForm({
           onClick={() => setActiveTab("basic")}
           className={activeTab === "basic" ? activeTabStyle : tabStyle}
         >
-          Basic Info
+          基本情報
         </button>
         <button
           type="button"
           onClick={() => setActiveTab("media")}
           className={activeTab === "media" ? activeTabStyle : tabStyle}
         >
-          Media
+          メディア
         </button>
         <button
           type="button"
           onClick={() => setActiveTab("links")}
           className={activeTab === "links" ? activeTabStyle : tabStyle}
         >
-          Links
+          リンク
         </button>
         {formData.type === "download" && (
           <button
@@ -673,7 +744,7 @@ export function DataManagerForm({
             onClick={() => setActiveTab("download")}
             className={activeTab === "download" ? activeTabStyle : tabStyle}
           >
-            Download
+            ダウンロード
           </button>
         )}
         <button
@@ -681,7 +752,7 @@ export function DataManagerForm({
           onClick={() => setActiveTab("seo")}
           className={activeTab === "seo" ? activeTabStyle : tabStyle}
         >
-          SEO
+          SEO設定
         </button>
         {enhanced && (
           <button
@@ -689,7 +760,7 @@ export function DataManagerForm({
             onClick={() => setActiveTab("dates")}
             className={activeTab === "dates" ? activeTabStyle : tabStyle}
           >
-            Date Management
+            日付管理
           </button>
         )}
       </div>
@@ -697,116 +768,25 @@ export function DataManagerForm({
       {/* Tab Content */}
       {activeTab === "basic" && (
         <div className="space-y-4">
-          {/* Migration Helper */}
-          {enhanced && checkIfNeedsMigration(formData) && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-white text-sm">!</span>
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-sm font-medium text-yellow-900 mb-2">
-                    Data Migration Required
-                  </h4>
-                  <p className="text-sm text-yellow-800 mb-3">
-                    This item uses the old single-category format. Migrate it to
-                    the new multi-category format to take advantage of enhanced
-                    features.
-                  </p>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={migrateItemData}
-                      className="px-3 py-1 bg-yellow-600 text-white text-sm rounded hover:bg-yellow-700 transition-colors"
-                    >
-                      Migrate Now
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        /* Migration helper is always shown when needed */
-                      }}
-                      className="px-3 py-1 border border-yellow-600 text-yellow-600 text-sm rounded hover:bg-yellow-50 transition-colors"
-                    >
-                      Dismiss
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Category Change Impact Analysis */}
-          {categoryChangeImpact?.show && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-white text-sm">i</span>
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-sm font-medium text-blue-900 mb-2">
-                    Category Change Impact
-                  </h4>
-                  <div className="space-y-2 text-sm text-blue-800 mb-3">
-                    {categoryChangeImpact.impacts.map((impact, index) => (
-                      <div key={index} className="flex items-start gap-2">
-                        <span className="text-blue-600 mt-0.5">•</span>
-                        <span>{impact}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setCategoryChangeImpact(null)}
-                      className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
-                    >
-                      Understood
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        // Revert to old categories
-                        if (categoryChangeImpact.oldCategories) {
-                          handleEnhancedInputChange(
-                            "categories",
-                            categoryChangeImpact.oldCategories,
-                          );
-                          handleEnhancedInputChange(
-                            "isOtherCategory",
-                            categoryChangeImpact.oldCategories.includes(
-                              "other",
-                            ),
-                          );
-                        }
-                        setCategoryChangeImpact(null);
-                      }}
-                      className="px-3 py-1 border border-blue-600 text-blue-600 text-sm rounded hover:bg-blue-50 transition-colors"
-                    >
-                      Revert Changes
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
           <div>
-            <label className={labelStyle}>Title *</label>
+            <label className={labelStyle}>タイトル *</label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
               className={inputStyle}
+              placeholder="コンテンツのタイトルを入力してください"
             />
           </div>
 
           <div>
-            <label className={labelStyle}>Description</label>
+            <label className={labelStyle}>説明</label>
             <textarea
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
               className={`${inputStyle} h-24 resize-vertical`}
               rows={3}
+              placeholder="コンテンツの説明を入力してください"
             />
           </div>
 
@@ -830,19 +810,19 @@ export function DataManagerForm({
               ) : formData.type === "portfolio" ? (
                 // Legacy mode: Single category selection
                 <div>
-                  <label className={labelStyle}>Category</label>
+                  <label className={labelStyle}>カテゴリ</label>
                   <Select
                     value={formData.category || ""}
                     onChange={(value) => handleInputChange("category", value)}
                     options={getPortfolioCategoryOptions()}
-                    placeholder="Select Category"
+                    placeholder="カテゴリを選択してください"
                     variant="admin"
                   />
                 </div>
               ) : (
                 // Non-portfolio items: Text input
                 <div>
-                  <label className={labelStyle}>Category</label>
+                  <label className={labelStyle}>カテゴリ</label>
                   <input
                     type="text"
                     value={formData.category}
@@ -850,7 +830,7 @@ export function DataManagerForm({
                       handleInputChange("category", e.target.value)
                     }
                     className={inputStyle}
-                    placeholder="Enter category"
+                    placeholder="カテゴリを入力してください"
                   />
                 </div>
               )}
@@ -858,15 +838,15 @@ export function DataManagerForm({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className={labelStyle}>Status</label>
+                <label className={labelStyle}>ステータス</label>
                 <Select
                   value={formData.status}
                   onChange={(value) => handleInputChange("status", value)}
                   options={[
-                    { value: "draft", label: "Draft" },
-                    { value: "published", label: "Published" },
-                    { value: "archived", label: "Archived" },
-                    { value: "scheduled", label: "Scheduled" },
+                    { value: "draft", label: "下書き" },
+                    { value: "published", label: "公開済み" },
+                    { value: "archived", label: "アーカイブ" },
+                    { value: "scheduled", label: "予約投稿" },
                   ]}
                   variant="admin"
                 />
@@ -935,7 +915,7 @@ export function DataManagerForm({
             )}
 
           <div>
-            <label className={labelStyle}>Tags</label>
+            <label className={labelStyle}>タグ</label>
             <div className="space-y-2">
               <TagManagementUI
                 selectedTags={formData.tags || []}
@@ -943,16 +923,16 @@ export function DataManagerForm({
                 tagManager={clientTagManager}
                 allowNewTags={true}
                 maxTags={15}
-                placeholder="Search existing tags or create new ones..."
+                placeholder="既存のタグを検索するか、新しいタグを作成してください..."
                 className="mt-1"
               />
               <div className="flex items-center justify-between text-xs text-gray-500">
                 <span>
                   {formData.tags && formData.tags.length > 0
-                    ? `${formData.tags.length} tag${formData.tags.length > 1 ? "s" : ""} selected`
-                    : "No tags selected"}
+                    ? `${formData.tags.length}個のタグが選択されています`
+                    : "タグが選択されていません"}
                 </span>
-                <span className="text-gray-400">Max 15 tags</span>
+                <span className="text-gray-400">最大15個</span>
               </div>
               <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded border">
                 <div className="flex items-start gap-2">
@@ -1066,9 +1046,9 @@ export function DataManagerForm({
               <textarea
                 value={formData.content || ""}
                 onChange={(e) => handleInputChange("content", e.target.value)}
-                className={`${inputStyle} h-48 resize-vertical font-mono`}
-                rows={10}
-                placeholder="Enter Markdown content here..."
+                className={`${inputStyle} h-96 resize-vertical font-mono`}
+                rows={20}
+                placeholder="Markdownコンテンツを入力してください..."
               />
             )}
 
@@ -1198,12 +1178,10 @@ export function DataManagerForm({
         <div className="space-y-6">
           <div className="bg-base border border-foreground p-4 rounded-lg">
             <h3 className="neue-haas-grotesk-display text-xl text-primary leading-snug mb-4">
-              Date Management
+              日付管理
             </h3>
             <p className="noto-sans-jp-light text-xs pb-2 text-gray-400 mb-4">
-              Control how dates are managed for this content item. You can
-              either use automatic date management (based on creation/update
-              time) or set a manual date.
+              このコンテンツアイテムの日付管理方法を制御します。自動日付管理（作成・更新時刻に基づく）または手動日付設定を選択できます。
             </p>
 
             <DatePicker
@@ -1211,17 +1189,17 @@ export function DataManagerForm({
               onChange={handleDateChange}
               useManualDate={useManualDate}
               onToggleManualDate={handleToggleManualDate}
-              placeholder="Select a date..."
+              placeholder="日付を選択してください..."
             />
           </div>
 
           <div className="bg-base border border-foreground p-4 rounded-lg">
             <h4 className="noto-sans-jp-regular text-sm font-medium text-foreground mb-2">
-              Current Date Information
+              現在の日付情報
             </h4>
             <div className="space-y-2 text-sm text-foreground">
               <div>
-                <span className="font-medium">Created:</span>{" "}
+                <span className="font-medium">作成日:</span>{" "}
                 {new Date(formData.createdAt).toLocaleDateString("ja-JP", {
                   year: "numeric",
                   month: "long",
@@ -1230,7 +1208,7 @@ export function DataManagerForm({
                 })}
               </div>
               <div>
-                <span className="font-medium">Last Updated:</span>{" "}
+                <span className="font-medium">最終更新:</span>{" "}
                 {new Date(
                   formData.updatedAt || formData.createdAt,
                 ).toLocaleDateString("ja-JP", {
@@ -1242,7 +1220,7 @@ export function DataManagerForm({
               </div>
               {enhanced && (formData as EnhancedContentItem).manualDate && (
                 <div>
-                  <span className="font-medium">Manual Date:</span>{" "}
+                  <span className="font-medium">手動設定日:</span>{" "}
                   {new Date(
                     (formData as EnhancedContentItem).manualDate!,
                   ).toLocaleDateString("ja-JP", {
@@ -1254,7 +1232,7 @@ export function DataManagerForm({
                 </div>
               )}
               <div>
-                <span className="font-medium">Effective Date:</span>{" "}
+                <span className="font-medium">有効日付:</span>{" "}
                 {enhanced
                   ? clientDateManager
                       .getEffectiveDate(formData as EnhancedContentItem)
@@ -1294,19 +1272,26 @@ export function DataManagerForm({
           className={buttonStyle}
           disabled={isLoading}
         >
-          Cancel
+          {isClient ? "キャンセル" : "Cancel"}
         </button>
         <button
           type="submit"
-          className={`${buttonStyle} bg-primary text-white border-primary hover:bg-primary-dark ${
+          className={`${buttonStyle} bg-foreground text-background hover:bg-gray-700 ${
             saveStatus === "success" ? "bg-green-600 border-green-600" : ""
           } ${saveStatus === "error" ? "bg-red-600 border-red-600" : ""}`}
           disabled={isLoading}
         >
-          {saveStatus === "saving" && "Saving..."}
-          {saveStatus === "success" && "✓ Saved"}
-          {saveStatus === "error" && "✗ Error"}
-          {saveStatus === "idle" && (isLoading ? "Saving..." : "Save")}
+          {saveStatus === "saving" && (isClient ? "保存中..." : "Saving...")}
+          {saveStatus === "success" && (isClient ? "✓ 保存完了" : "✓ Saved")}
+          {saveStatus === "error" && (isClient ? "✗ エラー" : "✗ Error")}
+          {saveStatus === "idle" &&
+            (isLoading
+              ? isClient
+                ? "保存中..."
+                : "Saving..."
+              : isClient
+                ? "保存"
+                : "Save")}
         </button>
       </div>
     </form>

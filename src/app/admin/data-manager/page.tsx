@@ -10,10 +10,15 @@ import { PreviewPanel } from "./components/PreviewPanel";
 
 export default function DataManagerPage() {
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
 
   // Check development environment on client side
   useEffect(() => {
-    if (process.env.NODE_ENV !== "development") {
+    setIsClient(true);
+    if (
+      process.env.NODE_ENV !== "development" &&
+      process.env.NODE_ENV !== "test"
+    ) {
       router.push("/");
     }
   }, [router]);
@@ -35,18 +40,21 @@ export default function DataManagerPage() {
     loadContentItems(selectedContentType);
   }, [selectedContentType]);
 
-  const loadContentItems = async (type: ContentType) => {
+  const loadContentItems = async (type: ContentType, forceRefresh = false) => {
     setIsLoading(true);
     try {
-      console.log(`Loading content items for type: ${type}`);
+      console.log(
+        `Loading content items for type: ${type}${forceRefresh ? " (forced refresh)" : ""}`,
+      );
       // キャッシュを回避するためにタイムスタンプを追加
       const timestamp = Date.now();
       const response = await fetch(
-        `/api/content/${type}?limit=100&_t=${timestamp}&status=all`,
+        `/api/content/${type}?limit=100&_t=${timestamp}&status=all${forceRefresh ? "&refresh=true" : ""}`,
         {
           cache: "no-store",
           headers: {
             "Cache-Control": "no-cache",
+            Pragma: "no-cache",
           },
         },
       );
@@ -79,15 +87,21 @@ export default function DataManagerPage() {
         type: selectedContentType,
         title: "",
         description: "",
-        categories: ["other"], // Default to "other" category
+        content: "",
+        categories: ["develop"], // Default to "develop" category instead of "other"
         tags: [],
         status: "published",
         priority: 50,
         createdAt: new Date().toISOString(),
-        isOtherCategory: true,
+        updatedAt: new Date().toISOString(),
+        isOtherCategory: false,
         useManualDate: false,
+        manualDate: undefined,
         originalImages: [],
         processedImages: [],
+        images: [],
+        videos: [],
+        externalLinks: [],
       };
       setSelectedItem(newItem);
     } else {
@@ -97,11 +111,16 @@ export default function DataManagerPage() {
         type: selectedContentType,
         title: "",
         description: "",
+        content: "",
         category: "",
         tags: [],
         status: "published",
         priority: 50,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        images: [],
+        videos: [],
+        externalLinks: [],
       };
       setSelectedItem(newItem);
     }
@@ -171,9 +190,9 @@ export default function DataManagerPage() {
         const savedItem = result.data || item;
         setSelectedItem(savedItem);
 
-        // データを即座に再読み込み
+        // データを即座に再読み込み（強制的にキャッシュをバイパス）
         console.log("Reloading content items...");
-        await loadContentItems(selectedContentType);
+        await loadContentItems(selectedContentType, true);
 
         // リストの中で更新されたアイテムを選択状態に保つ
         setSelectedItem(savedItem);
@@ -211,7 +230,13 @@ export default function DataManagerPage() {
   };
 
   const handleDeleteItem = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this item?")) {
+    if (
+      !confirm(
+        isClient
+          ? "このアイテムを削除してもよろしいですか？"
+          : "Are you sure you want to delete this item?",
+      )
+    ) {
       return;
     }
 
@@ -303,9 +328,9 @@ export default function DataManagerPage() {
             </section>
 
             {/* Main Content Area */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
               {/* Content List */}
-              <div className="lg:col-span-1">
+              <div className="lg:col-span-2">
                 <div className={CardStyle}>
                   <div className="flex justify-between items-center">
                     <h3 className={Card_title}>
@@ -318,7 +343,7 @@ export default function DataManagerPage() {
                       className={ButtonStyle}
                       disabled={isLoading}
                     >
-                      + New
+                      {isClient ? "+ 新規作成" : "+ New"}
                     </button>
                   </div>
 
@@ -333,7 +358,7 @@ export default function DataManagerPage() {
               </div>
 
               {/* Form/Preview Area */}
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-3">
                 {selectedItem ? (
                   <div className="space-y-4">
                     {/* Form/Preview Toggle and Status */}
@@ -347,7 +372,7 @@ export default function DataManagerPage() {
                               : ButtonStyle
                           }
                         >
-                          Edit Form
+                          {isClient ? "編集フォーム" : "Edit Form"}
                         </button>
                         <button
                           onClick={() => setPreviewMode("preview")}
@@ -357,7 +382,7 @@ export default function DataManagerPage() {
                               : ButtonStyle
                           }
                         >
-                          Preview
+                          {isClient ? "プレビュー" : "Preview"}
                         </button>
                       </div>
 
@@ -366,17 +391,17 @@ export default function DataManagerPage() {
                         <div className="flex items-center gap-2">
                           {saveStatus === "saving" && (
                             <span className="text-blue-600 text-sm">
-                              Saving...
+                              {isClient ? "保存中..." : "Saving..."}
                             </span>
                           )}
                           {saveStatus === "success" && (
                             <span className="text-green-600 text-sm">
-                              ✓ Saved
+                              {isClient ? "✓ 保存完了" : "✓ Saved"}
                             </span>
                           )}
                           {saveStatus === "error" && (
                             <span className="text-red-600 text-sm">
-                              ✗ Error
+                              {isClient ? "✗ エラー" : "✗ Error"}
                             </span>
                           )}
                         </div>
@@ -406,7 +431,9 @@ export default function DataManagerPage() {
                   <div className={CardStyle}>
                     <div className="text-center py-12">
                       <p className="noto-sans-jp-light text-sm text-gray-500">
-                        Select an item to edit or create a new one
+                        {isClient
+                          ? "編集するアイテムを選択するか、新しいアイテムを作成してください"
+                          : "Select an item to edit or create a new one"}
                       </p>
                     </div>
                   </div>
@@ -418,7 +445,9 @@ export default function DataManagerPage() {
             {isLoading && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-background border border-foreground p-6 rounded">
-                  <p className="noto-sans-jp-regular text-sm">Processing...</p>
+                  <p className="noto-sans-jp-regular text-sm">
+                    {isClient ? "処理中..." : "Processing..."}
+                  </p>
                 </div>
               </div>
             )}

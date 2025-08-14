@@ -61,6 +61,9 @@ export interface ColorHarmony {
 
 // Color conversion functions
 export function hsvToRgb(h: number, s: number, v: number): RGBColor {
+  // Normalize hue to 0-360 range
+  h = ((h % 360) + 360) % 360;
+
   const c = (v / 100) * (s / 100);
   const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = v / 100 - c;
@@ -103,6 +106,11 @@ export function hsvToRgb(h: number, s: number, v: number): RGBColor {
 }
 
 export function rgbToHsv(r: number, g: number, b: number): HSVColor {
+  // Handle NaN values
+  if (isNaN(r)) r = 0;
+  if (isNaN(g)) g = 0;
+  if (isNaN(b)) b = 0;
+
   r /= 255;
   g /= 255;
   b /= 255;
@@ -129,7 +137,11 @@ export function rgbToHsv(r: number, g: number, b: number): HSVColor {
     }
   }
 
-  return { h: Math.round(h), s: Math.round(s), v: Math.round(v) };
+  return {
+    h: isNaN(h) ? 0 : Math.round(h),
+    s: isNaN(s) ? 0 : Math.round(s),
+    v: isNaN(v) ? 0 : Math.round(v),
+  };
 }
 
 export function rgbToHsl(r: number, g: number, b: number): HSLColor {
@@ -213,9 +225,13 @@ export function rgbToLab(r: number, g: number, b: number): LABColor {
   y = y > 0.04045 ? Math.pow((y + 0.055) / 1.055, 2.4) : y / 12.92;
   z = z > 0.04045 ? Math.pow((z + 0.055) / 1.055, 2.4) : z / 12.92;
 
-  x = x * 0.4124 + y * 0.3576 + z * 0.1805;
-  y = x * 0.2126 + y * 0.7152 + z * 0.0722;
-  z = x * 0.0193 + y * 0.1192 + z * 0.9505;
+  const xTemp = x * 0.4124 + y * 0.3576 + z * 0.1805;
+  const yTemp = x * 0.2126 + y * 0.7152 + z * 0.0722;
+  const zTemp = x * 0.0193 + y * 0.1192 + z * 0.9505;
+
+  x = xTemp;
+  y = yTemp;
+  z = zTemp;
 
   // Convert XYZ to LAB
   x = x / 0.95047;
@@ -298,7 +314,8 @@ export function isColorBlindSafe(rgb: RGBColor): boolean {
   // Simplified color blind safety check
   // This checks if the color has sufficient difference in brightness and saturation
   const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
-  return hsv.s > 20 && hsv.v > 30 && hsv.v < 90;
+  // High saturation colors are generally more distinguishable for color blind users
+  return hsv.s >= 50 && hsv.v > 30;
 }
 
 // Color harmony generation

@@ -8,8 +8,16 @@
  */
 export function clearAnalyticsConsent(): void {
   if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
-    localStorage.removeItem("analytics-consent");
-    console.log("Analytics consent cleared");
+    try {
+      localStorage.removeItem("analytics-consent");
+      if (typeof console !== "undefined" && console.log) {
+        console.log("Analytics consent cleared");
+      }
+    } catch (error) {
+      if (typeof console !== "undefined" && console.warn) {
+        console.warn("Failed to clear analytics consent:", error);
+      }
+    }
   }
 }
 
@@ -18,7 +26,13 @@ export function clearAnalyticsConsent(): void {
  */
 export function checkAnalyticsConfig(): boolean {
   const hasGAId = !!process.env.NEXT_PUBLIC_GA_ID;
-  const hasConsent = localStorage.getItem("analytics-consent") === "true";
+  let hasConsent = false;
+
+  try {
+    hasConsent = localStorage.getItem("analytics-consent") === "true";
+  } catch (error) {
+    console.warn("Failed to access localStorage:", error);
+  }
 
   console.log("Analytics config check:", {
     hasGAId,

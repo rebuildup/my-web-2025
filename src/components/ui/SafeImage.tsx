@@ -57,8 +57,7 @@ export function SafeImage({
 
       if (!hasError) {
         setHasError(true);
-        const fallback =
-          fallbackSrc || "/images/portfolio/placeholder-image.svg";
+        const fallback = fallbackSrc || "/images/placeholder.svg";
         if (
           process.env.NODE_ENV !== "production" &&
           process.env.NODE_ENV !== "test"
@@ -87,8 +86,8 @@ export function SafeImage({
     [currentSrc, onLoad],
   );
 
-  // Show debug info in development or when explicitly requested
-  const shouldShowDebug = showDebug || process.env.NODE_ENV === "development";
+  // Show debug info only when explicitly requested (not automatically in development)
+  const shouldShowDebug = showDebug === true;
 
   // Prepare image props, filtering out undefined values to avoid DOM warnings
   const imageProps: Omit<

@@ -450,7 +450,7 @@ export function MarkdownEditor({
       <div className="relative">
         {isPreviewMode && preview ? (
           /* Preview Mode */
-          <div className="p-4 min-h-[300px] prose prose-sm max-w-none bg-background text-foreground">
+          <div className="p-4 min-h-[500px] prose prose-sm max-w-none bg-background text-foreground">
             <div dangerouslySetInnerHTML={renderPreview()} />
           </div>
         ) : (
@@ -461,7 +461,7 @@ export function MarkdownEditor({
               value={editorContent}
               onChange={(e) => handleContentChange(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full min-h-[300px] p-4 pl-12 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-inset leading-5 bg-background text-foreground"
+              className="w-full min-h-[500px] p-4 pl-12 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-inset leading-5 bg-background text-foreground"
               placeholder="Enter your markdown content here..."
               spellCheck={false}
             />

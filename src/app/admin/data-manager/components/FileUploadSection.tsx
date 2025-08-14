@@ -169,17 +169,38 @@ export function FileUploadSection({
               const result = await response.json();
               console.log("Upload successful:", result);
 
-              // Use the main file URL
+              // Use the main file URL from successful uploads
               if (result.files && result.files.length > 0) {
-                uploadedUrls.push(result.files[0].url);
+                const successfulFiles = result.files.filter(
+                  (f: { success: boolean; url?: string }) => f.success && f.url,
+                );
+                if (successfulFiles.length > 0) {
+                  uploadedUrls.push(successfulFiles[0].url);
+                  updateProgress(file.name, {
+                    progress: 100,
+                    status: "complete",
+                  });
+                } else {
+                  const errorFile = result.files.find(
+                    (f: { success: boolean; error?: string }) => !f.success,
+                  );
+                  updateProgress(file.name, {
+                    status: "error",
+                    error: errorFile?.error || "Upload processing failed",
+                  });
+                }
               } else if (result.urls && result.urls.length > 0) {
                 uploadedUrls.push(...result.urls);
+                updateProgress(file.name, {
+                  progress: 100,
+                  status: "complete",
+                });
+              } else {
+                updateProgress(file.name, {
+                  status: "error",
+                  error: "No valid file URLs returned",
+                });
               }
-
-              updateProgress(file.name, {
-                progress: 100,
-                status: "complete",
-              });
             } else {
               const errorData = await response.json();
               console.error("Upload failed:", errorData);
@@ -477,7 +498,7 @@ export function FileUploadSection({
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src =
-                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2Y3ZjdmNyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE0cHgiIGZpbGw9IiM5OTk5OTkiPkVycm9yPC90ZXh0Pjwvc3ZnPg==";
+                        "/images/placeholder.svg";
                     }}
                   />
                 </div>

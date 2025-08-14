@@ -101,17 +101,20 @@ jest.mock("@/components/ui/TagManagementUI", () => ({
   }: {
     selectedTags?: string[];
     onChange?: (tags: string[]) => void;
-  }) => (
-    <div data-testid="tag-management">
-      <button
-        onClick={() => onChange?.(["tag1", "tag2"])}
-        data-testid="add-tags"
-      >
-        Add Tags
-      </button>
-      <div>{selectedTags?.join(", ")}</div>
-    </div>
-  ),
+  }) => {
+    // Don't call tagManager methods in the mock
+    return (
+      <div data-testid="tag-management">
+        <button
+          onClick={() => onChange?.(["tag1", "tag2"])}
+          data-testid="add-tags"
+        >
+          Add Tags
+        </button>
+        <div>{selectedTags?.join(", ")}</div>
+      </div>
+    );
+  },
 }));
 
 jest.mock("@/hooks/useEnhancedDataManager", () => ({
@@ -168,7 +171,26 @@ jest.mock("@/hooks/usePerformanceOptimization", () => ({
 }));
 
 jest.mock("@/lib/portfolio/client-tag-manager", () => ({
-  clientTagManager: {},
+  clientTagManager: {
+    getAllTags: jest.fn().mockResolvedValue([]),
+    createTag: jest.fn().mockResolvedValue({ id: "1", name: "test", count: 0 }),
+    updateTag: jest
+      .fn()
+      .mockResolvedValue({ id: "1", name: "updated", count: 0 }),
+    deleteTag: jest.fn().mockResolvedValue(true),
+    getTagUsage: jest.fn().mockResolvedValue(0),
+    updateTagUsage: jest.fn().mockResolvedValue(true),
+  },
+  ClientTagManager: jest.fn().mockImplementation(() => ({
+    getAllTags: jest.fn().mockResolvedValue([]),
+    createTag: jest.fn().mockResolvedValue({ id: "1", name: "test", count: 0 }),
+    updateTag: jest
+      .fn()
+      .mockResolvedValue({ id: "1", name: "updated", count: 0 }),
+    deleteTag: jest.fn().mockResolvedValue(true),
+    getTagUsage: jest.fn().mockResolvedValue(0),
+    updateTagUsage: jest.fn().mockResolvedValue(true),
+  })),
 }));
 
 describe("EnhancedDataManager", () => {

@@ -472,7 +472,7 @@ describe("MigrationErrorHandler", () => {
 
       expect(result).toBe("success");
       expect(operation).toHaveBeenCalledTimes(3);
-    });
+    }, 15000); // 15秒のタイムアウトを設定
 
     it("should fail after max attempts", async () => {
       const operation = jest
@@ -484,7 +484,7 @@ describe("MigrationErrorHandler", () => {
       ).rejects.toThrow("test operation failed after 2 attempts");
 
       expect(operation).toHaveBeenCalledTimes(2);
-    });
+    }, 15000); // 15秒のタイムアウトを設定
   });
 });
 

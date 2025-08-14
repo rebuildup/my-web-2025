@@ -152,16 +152,15 @@ export class CoreWebVitalsMonitor {
   }
 
   private measureTTFB(): void {
-    const navigation = performance.getEntriesByType(
-      "navigation",
-    )[0] as PerformanceNavigationTiming;
-    if (navigation) {
+    const navigationEntries = performance.getEntriesByType("navigation");
+    const navigation = navigationEntries[0] as PerformanceNavigationTiming;
+    if (navigation && navigation.responseStart && navigation.requestStart) {
       this.metrics.ttfb = navigation.responseStart - navigation.requestStart;
       this.notifyCallbacks();
     }
   }
 
-  private notifyCallbacks(): void {
+  public notifyCallbacks(): void {
     this.callbacks.forEach((callback) => {
       try {
         callback({ ...this.metrics });
@@ -383,30 +382,27 @@ export class FIDOptimizer {
         if (index < items.length) {
           // Use scheduler API if available, otherwise setTimeout
           if (
+            typeof window !== "undefined" &&
             "scheduler" in window &&
             "postTask" in
               (
-                window as Window & {
+                window as unknown as Window & {
                   scheduler: {
-                    postTask: (
-                      fn: () => void,
-                      options: { priority: string },
-                    ) => void;
+                    postTask: (fn: () => void) => Promise<void>;
                   };
                 }
               ).scheduler
           ) {
-            (
-              window as Window & {
+            const scheduler = (
+              window as unknown as Window & {
                 scheduler: {
-                  postTask: (
-                    fn: () => void,
-                    options: { priority: string },
-                  ) => void;
+                  postTask: (fn: () => void) => Promise<void>;
                 };
               }
-            ).scheduler.postTask(processBatch, {
-              priority: "user-blocking",
+            ).scheduler;
+            scheduler.postTask(processBatch).catch(() => {
+              // Fallback to setTimeout if postTask fails
+              setTimeout(processBatch, 0);
             });
           } else {
             setTimeout(processBatch, 0);

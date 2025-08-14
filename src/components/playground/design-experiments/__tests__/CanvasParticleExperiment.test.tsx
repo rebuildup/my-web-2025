@@ -8,7 +8,6 @@
  */
 
 import { fireEvent, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import React from "react";
 import { CanvasParticleExperiment } from "../CanvasParticleExperiment";
 
@@ -90,12 +89,8 @@ Object.defineProperty(HTMLCanvasElement.prototype, "parentElement", {
   get: () => mockCanvas.parentElement,
 });
 
-// Mock requestAnimationFrame
-global.requestAnimationFrame = jest.fn((cb) => {
-  setTimeout(cb, 16);
-  return 1;
-});
-
+// Mock requestAnimationFrame - don't actually execute callbacks to avoid infinite loops
+global.requestAnimationFrame = jest.fn(() => 1);
 global.cancelAnimationFrame = jest.fn();
 
 describe("CanvasParticleExperiment", () => {
@@ -148,39 +143,35 @@ describe("CanvasParticleExperiment", () => {
   });
 
   describe("Animation Controls", () => {
-    it("should start animation on button click", async () => {
-      const user = userEvent.setup();
+    it("should start animation on button click", () => {
       render(<CanvasParticleExperiment {...defaultProps} />);
 
       const startButton = screen.getByText("Start");
-      await user.click(startButton);
+      fireEvent.click(startButton);
 
       expect(screen.getByText("Pause")).toBeInTheDocument();
       expect(global.requestAnimationFrame).toHaveBeenCalled();
     });
 
-    it("should pause animation", async () => {
-      const user = userEvent.setup();
+    it("should pause animation", () => {
       render(<CanvasParticleExperiment {...defaultProps} />);
 
       // Start animation first
       const startButton = screen.getByText("Start");
-      await user.click(startButton);
+      fireEvent.click(startButton);
 
       // Then pause it
       const pauseButton = screen.getByText("Pause");
-      await user.click(pauseButton);
+      fireEvent.click(pauseButton);
 
       expect(screen.getByText("Start")).toBeInTheDocument();
-      // Note: cancelAnimationFrame might not be called immediately in tests
     });
 
-    it("should reset particles", async () => {
-      const user = userEvent.setup();
+    it("should reset particles", () => {
       render(<CanvasParticleExperiment {...defaultProps} />);
 
       const resetButton = screen.getByText("Reset");
-      await user.click(resetButton);
+      fireEvent.click(resetButton);
 
       // Should clear canvas - check if getContext was called
       expect(mockCanvas.getContext).toHaveBeenCalled();
@@ -235,75 +226,69 @@ describe("CanvasParticleExperiment", () => {
   });
 
   describe("Physics Modes", () => {
-    it("should change physics mode", async () => {
-      const user = userEvent.setup();
+    it("should change physics mode", () => {
       render(<CanvasParticleExperiment {...defaultProps} />);
 
       const physicsSelect = screen.getByDisplayValue("Bounce");
-      await user.selectOptions(physicsSelect, "flow");
+      fireEvent.change(physicsSelect, { target: { value: "flow" } });
 
-      expect(screen.getByDisplayValue("Flow")).toBeInTheDocument();
+      expect(physicsSelect).toHaveValue("flow");
     });
 
-    it("should handle all physics modes", async () => {
-      const user = userEvent.setup();
+    it("should handle all physics modes", () => {
       render(<CanvasParticleExperiment {...defaultProps} />);
 
       const physicsModes = ["bounce", "flow", "attract", "repel"];
       const physicsSelect = screen.getByDisplayValue("Bounce");
 
       for (const mode of physicsModes) {
-        await user.selectOptions(physicsSelect, mode);
+        fireEvent.change(physicsSelect, { target: { value: mode } });
         expect(physicsSelect).toHaveValue(mode);
       }
     });
   });
 
   describe("Color Modes", () => {
-    it("should change color mode", async () => {
-      const user = userEvent.setup();
+    it("should change color mode", () => {
       render(<CanvasParticleExperiment {...defaultProps} />);
 
       const colorSelect = screen.getByDisplayValue("Rainbow");
-      await user.selectOptions(colorSelect, "monochrome");
+      fireEvent.change(colorSelect, { target: { value: "monochrome" } });
 
-      expect(screen.getByDisplayValue("Monochrome")).toBeInTheDocument();
+      expect(colorSelect).toHaveValue("monochrome");
     });
 
-    it("should handle all color modes", async () => {
-      const user = userEvent.setup();
+    it("should handle all color modes", () => {
       render(<CanvasParticleExperiment {...defaultProps} />);
 
       const colorModes = ["rainbow", "monochrome", "gradient"];
       const colorSelect = screen.getByDisplayValue("Rainbow");
 
       for (const mode of colorModes) {
-        await user.selectOptions(colorSelect, mode);
+        fireEvent.change(colorSelect, { target: { value: mode } });
         expect(colorSelect).toHaveValue(mode);
       }
     });
   });
 
   describe("Shape Modes", () => {
-    it("should change shape mode", async () => {
-      const user = userEvent.setup();
+    it("should change shape mode", () => {
       render(<CanvasParticleExperiment {...defaultProps} />);
 
       const shapeSelect = screen.getByDisplayValue("Mixed");
-      await user.selectOptions(shapeSelect, "circle");
+      fireEvent.change(shapeSelect, { target: { value: "circle" } });
 
-      expect(screen.getByDisplayValue("Circle")).toBeInTheDocument();
+      expect(shapeSelect).toHaveValue("circle");
     });
 
-    it("should handle all shape modes", async () => {
-      const user = userEvent.setup();
+    it("should handle all shape modes", () => {
       render(<CanvasParticleExperiment {...defaultProps} />);
 
       const shapeModes = ["mixed", "circle", "square", "triangle"];
       const shapeSelect = screen.getByDisplayValue("Mixed");
 
       for (const mode of shapeModes) {
-        await user.selectOptions(shapeSelect, mode);
+        fireEvent.change(shapeSelect, { target: { value: mode } });
         expect(shapeSelect).toHaveValue(mode);
       }
     });

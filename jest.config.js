@@ -1,4 +1,5 @@
 const nextJest = require("next/jest");
+const os = require("os");
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files
@@ -7,25 +8,60 @@ const createJestConfig = nextJest({
 
 // Add any custom config to be passed to Jest
 const isCoverageApp100 = process.env.COVERAGE_APP_100 === "true";
+const isCI = process.env.CI === "true";
+const isCoverageMode =
+  process.env.NODE_ENV === "coverage" || process.env.JEST_COVERAGE === "true";
+
+// Optimize worker count based on environment and coverage mode
+const getOptimalWorkers = () => {
+  const cpuCount = os.cpus().length;
+  if (isCI) return Math.max(1, Math.floor(cpuCount * 0.5)); // Conservative for CI
+  if (isCoverageMode) return Math.max(1, Math.floor(cpuCount * 0.75)); // More workers for coverage
+  return Math.max(1, cpuCount - 1); // Leave one CPU free for system
+};
 
 const customJestConfig = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   testEnvironment: "jsdom",
-  // Extreme memory optimization
-  maxWorkers: 1, // Run tests serially
-  workerIdleMemoryLimit: "512MB", // Increase worker memory limit for 24GB setup
+
+  // Optimized parallel execution
+  maxWorkers: getOptimalWorkers(),
+  workerIdleMemoryLimit: isCI ? "256MB" : "512MB",
+
+  // Performance optimizations
   logHeapUsage: false,
   detectOpenHandles: false,
   forceExit: true,
-  testTimeout: 30000, // Increase timeout for memory-constrained environment
-  // Memory optimization settings
-  cache: false, // Disable Jest cache
+  testTimeout: 5000, // Much shorter timeout for faster feedback
+
+  // Cache optimization - enable caching for better performance
+  cache: true,
+  cacheDirectory: "<rootDir>/.jest-cache",
+
+  // Mock management
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,
-  maxConcurrency: 1, // Limit concurrent tests
-  // Additional optimizations
-  collectCoverage: isCoverageApp100 ? true : false, // Enable only for targeted 100% mode
+
+  // Concurrency optimization
+  maxConcurrency: isCI ? 2 : 5,
+
+  // Coverage configuration
+  collectCoverage: isCoverageApp100 || isCoverageMode,
+  coverageProvider: "v8", // Faster than babel
+  coverageDirectory: "<rootDir>/coverage",
+
+  // Multiple coverage report formats for different use cases
+  coverageReporters: [
+    "text", // Console output
+    "text-summary", // Brief summary
+    "html", // Detailed HTML report
+    "json", // Machine-readable JSON
+    "json-summary", // Summary JSON
+    "lcov", // For external tools like Codecov
+    "cobertura", // For CI/CD systems
+    "clover", // XML format
+  ],
   // Reduce test file discovery overhead
   testMatch: [
     "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
@@ -79,23 +115,40 @@ const customJestConfig = {
         "!src/app/admin/data-manager/layout.tsx",
         "!src/app/admin/data-manager/page.tsx",
       ],
-  coverageThreshold: isCoverageApp100
-    ? {
-        global: {
-          branches: 100,
-          functions: 100,
-          lines: 100,
-          statements: 100,
-        },
-      }
-    : {
-        global: {
-          branches: 100,
-          functions: 100,
-          lines: 100,
-          statements: 100,
-        },
-      },
+  // Enforce 100% coverage thresholds for CI/CD
+  coverageThreshold: {
+    global: {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
+    },
+    // Per-directory thresholds for granular control
+    "./src/app/": {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
+    },
+    "./src/components/": {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
+    },
+    "./src/lib/": {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
+    },
+    "./src/hooks/": {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
+    },
+  },
   testPathIgnorePatterns: [
     "<rootDir>/.next/",
     "<rootDir>/node_modules/",
@@ -124,20 +177,37 @@ const customJestConfig = {
     "<rootDir>/src/app/admin/data-manager/page.tsx",
   ],
   transformIgnorePatterns: ["node_modules/(?!(marked|three)/)"],
-  // Additional memory optimizations
-  verbose: false, // Reduce output to save memory
-  silent: false, // Keep some output for debugging
-  // Optimize test environment
+
+  // Output optimization
+  verbose: isCI ? false : true,
+  silent: false,
+
+  // Test environment optimization
   testEnvironmentOptions: {
     url: "http://localhost",
     resources: "usable",
   },
-  // Garbage collection optimization
+
+  // Disable fake timers globally to avoid conflicts
+  fakeTimers: {
+    enableGlobally: false,
+  },
+
+  // Performance optimizations
   globals: {
     "ts-jest": {
       isolatedModules: true,
     },
   },
+
+  // Bail on first failure in CI for faster feedback
+  bail: isCI ? 1 : false,
+
+  // Error handling
+  errorOnDeprecated: true,
+
+  // Test result processor for custom reporting
+  testResultsProcessor: "<rootDir>/scripts/test-results-processor.js",
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

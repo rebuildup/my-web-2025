@@ -2,9 +2,9 @@
   "tags": [
     {
       "name": "aftereffects",
-      "count": 5,
+      "count": 27,
       "createdAt": "2025-08-02T14:01:15.266Z",
-      "lastUsed": "2025-08-09T14:05:59.034Z"
+      "lastUsed": "2025-08-13T16:39:15.156Z"
     },
     {
       "name": "illustrator",
@@ -20,9 +20,9 @@
     },
     {
       "name": "cubase",
-      "count": 1,
+      "count": 3,
       "createdAt": "2025-08-02T14:01:15.266Z",
-      "lastUsed": "2025-08-02T14:01:15.266Z"
+      "lastUsed": "2025-08-13T16:24:22.165Z"
     },
     {
       "name": "unity",
@@ -32,9 +32,9 @@
     },
     {
       "name": "p5js",
-      "count": 1,
+      "count": 4,
       "createdAt": "2025-08-03T00:41:41.371Z",
-      "lastUsed": "2025-08-08T16:58:01.955Z"
+      "lastUsed": "2025-08-13T16:32:56.345Z"
     },
     {
       "name": "c",
@@ -56,10 +56,40 @@
     },
     {
       "name": "vscode",
-      "count": 1,
+      "count": 3,
       "createdAt": "2025-08-03T00:43:24.982Z",
-      "lastUsed": "2025-08-08T17:04:36.512Z"
+      "lastUsed": "2025-08-13T16:32:56.421Z"
+    },
+    {
+      "name": "comission",
+      "count": 0,
+      "createdAt": "2025-08-13T02:10:48.663Z",
+      "lastUsed": "2025-08-13T02:10:48.663Z"
+    },
+    {
+      "name": "after effects",
+      "count": 3,
+      "createdAt": "2025-08-13T13:44:19.397Z",
+      "lastUsed": "2025-08-13T15:12:16.789Z"
+    },
+    {
+      "name": "pv",
+      "count": 1,
+      "createdAt": "2025-08-13T15:12:11.792Z",
+      "lastUsed": "2025-08-13T15:12:21.144Z"
+    },
+    {
+      "name": "aviutl",
+      "count": 5,
+      "createdAt": "2025-08-13T16:33:20.880Z",
+      "lastUsed": "2025-08-13T16:34:11.781Z"
+    },
+    {
+      "name": "blender",
+      "count": 1,
+      "createdAt": "2025-08-13T16:34:22.606Z",
+      "lastUsed": "2025-08-13T16:34:25.210Z"
     }
   ],
-  "lastUpdated": "2025-08-09T14:05:59.035Z"
+  "lastUpdated": "2025-08-13T16:39:15.161Z"
 }

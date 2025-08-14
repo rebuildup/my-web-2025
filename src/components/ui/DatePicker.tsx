@@ -190,6 +190,8 @@ export function DatePicker({
         validationError: null,
         selectedDate: parsedDate,
       }));
+      // onChangeを呼び出して親コンポーネントに変更を通知
+      onChange(parsedDate.toISOString());
     }
   };
 

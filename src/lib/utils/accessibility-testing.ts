@@ -462,6 +462,9 @@ export function startAccessibilityMonitoring(): void {
     }
   };
 
+  // Use runAudit function
+  void runAudit();
+
   // Run audit on DOM changes
   const observer = new MutationObserver(() => {
     clearTimeout(timeoutId);

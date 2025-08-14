@@ -1,0 +1,370 @@
+name: 100% Test Coverage Enforcement
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run type checking
+        run: npm run type-check
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run tests with 100% coverage enforcement
+        run: npm run test:coverage:100:ci
+        env:
+          NODE_ENV: coverage
+          CI: true
+
+      - name: Validate coverage thresholds
+        run: node scripts/validate-coverage.js
+
+      - name: CI Coverage Monitoring
+        run: npm run test:coverage:ci-monitor
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./coverage/lcov.info
+
+      - name: Archive coverage reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports-${{ matrix.node-version }}-${{ github.run_number }}
+          path: |
+            coverage/
+            !coverage/tmp/
+            !coverage/.nyc_output/
+          retention-days: 30
+
+      - name: Archive test reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports-${{ matrix.node-version }}-${{ github.run_number }}
+          path: |
+            coverage/reports/
+          retention-days: 7
+
+      - name: Archive coverage diff (PR only)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-diff-${{ github.run_number }}
+          path: |
+            coverage-diff.json
+            base-coverage-summary.json
+          retention-days: 14
+
+      - name: Track coverage trends
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          # Create coverage trend data
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          COMMIT_SHA="${{ github.sha }}"
+
+          if [ -f "coverage/coverage-summary.json" ]; then
+            STATEMENTS=$(cat coverage/coverage-summary.json | jq '.total.statements.pct')
+            BRANCHES=$(cat coverage/coverage-summary.json | jq '.total.branches.pct')
+            FUNCTIONS=$(cat coverage/coverage-summary.json | jq '.total.functions.pct')
+            LINES=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+            
+            # Create trend entry
+            TREND_ENTRY=$(cat << EOF
+          {
+            "timestamp": "$TIMESTAMP",
+            "commit": "$COMMIT_SHA",
+            "branch": "main",
+            "coverage": {
+              "statements": $STATEMENTS,
+              "branches": $BRANCHES,
+              "functions": $FUNCTIONS,
+              "lines": $LINES
+            },
+            "runId": "${{ github.run_id }}"
+          }
+          EOF
+            )
+            
+            # Save trend data
+            mkdir -p coverage/trends
+            echo "$TREND_ENTRY" > coverage/trends/trend-${{ github.run_number }}.json
+            
+            echo "📈 Coverage trend data saved"
+          fi
+
+      - name: Archive coverage trends
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-trends-${{ github.run_number }}
+          path: |
+            coverage/trends/
+          retention-days: 90
+
+      - name: Generate coverage diff report
+        if: github.event_name == 'pull_request'
+        id: coverage-diff
+        run: |
+          # Download base branch coverage if available
+          BASE_COVERAGE_FILE="base-coverage-summary.json"
+
+          # Try to get base branch coverage from artifacts or generate it
+          if [ ! -f "$BASE_COVERAGE_FILE" ]; then
+            echo "Base coverage not found, generating baseline..."
+            git fetch origin ${{ github.base_ref }}
+            git checkout origin/${{ github.base_ref }}
+            npm ci
+            npm run test:coverage:100:ci || true
+            cp coverage/coverage-summary.json $BASE_COVERAGE_FILE 2>/dev/null || echo '{"total":{"statements":{"pct":0},"branches":{"pct":0},"functions":{"pct":0},"lines":{"pct":0}}}' > $BASE_COVERAGE_FILE
+            git checkout ${{ github.sha }}
+            npm ci
+            npm run test:coverage:100:ci
+          fi
+
+          # Generate coverage diff
+          node -e "
+            const fs = require('fs');
+            const current = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8'));
+            const base = JSON.parse(fs.readFileSync('$BASE_COVERAGE_FILE', 'utf8'));
+            
+            const diff = {
+              statements: current.total.statements.pct - base.total.statements.pct,
+              branches: current.total.branches.pct - base.total.branches.pct,
+              functions: current.total.functions.pct - base.total.functions.pct,
+              lines: current.total.lines.pct - base.total.lines.pct
+            };
+            
+            fs.writeFileSync('coverage-diff.json', JSON.stringify({current: current.total, base: base.total, diff}, null, 2));
+          "
+
+      - name: Comment coverage on PR with diff
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const coveragePath = './coverage/coverage-summary.json';
+            const diffPath = './coverage-diff.json';
+
+            if (fs.existsSync(coveragePath)) {
+              const coverage = JSON.parse(fs.readFileSync(coveragePath, 'utf8'));
+              const { total } = coverage;
+              
+              let diffReport = '';
+              if (fs.existsSync(diffPath)) {
+                const diffData = JSON.parse(fs.readFileSync(diffPath, 'utf8'));
+                const formatDiff = (value) => {
+                  if (value > 0) return `+${value.toFixed(2)}% 📈`;
+                  if (value < 0) return `${value.toFixed(2)}% 📉`;
+                  return '±0.00% ➡️';
+                };
+                
+                diffReport = `
+              ### 📊 Coverage Comparison vs Base Branch
+              
+              | Metric | Current | Base | Diff |
+              |--------|---------|------|------|
+              | Statements | ${diffData.current.statements.pct}% | ${diffData.base.statements.pct}% | ${formatDiff(diffData.diff.statements)} |
+              | Branches | ${diffData.current.branches.pct}% | ${diffData.base.branches.pct}% | ${formatDiff(diffData.diff.branches)} |
+              | Functions | ${diffData.current.functions.pct}% | ${diffData.base.functions.pct}% | ${formatDiff(diffData.diff.functions)} |
+              | Lines | ${diffData.current.lines.pct}% | ${diffData.base.lines.pct}% | ${formatDiff(diffData.diff.lines)} |
+              `;
+              }
+              
+              const comment = `## 📊 Test Coverage Report
+              
+              | Metric | Coverage | Status |
+              |--------|----------|--------|
+              | Statements | ${total.statements.pct}% | ${total.statements.pct === 100 ? '✅' : '❌'} |
+              | Branches | ${total.branches.pct}% | ${total.branches.pct === 100 ? '✅' : '❌'} |
+              | Functions | ${total.functions.pct}% | ${total.functions.pct === 100 ? '✅' : '❌'} |
+              | Lines | ${total.lines.pct}% | ${total.lines.pct === 100 ? '✅' : '❌'} |
+              
+              **Required Threshold:** 100% for all metrics
+              ${diffReport}
+              
+              ${total.statements.pct === 100 && total.branches.pct === 100 && total.functions.pct === 100 && total.lines.pct === 100 
+                ? '🎉 All coverage thresholds met!' 
+                : '⚠️ Coverage thresholds not met. Please add tests to reach 100% coverage.'}
+              
+              ### 📁 Coverage Reports
+              - [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+              - [LCOV Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+              - [JSON Summary](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+              `;
+              
+              // Find existing coverage comment and update it, or create new one
+              const { data: comments } = await github.rest.issues.listComments({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
+              
+              const existingComment = comments.find(comment => 
+                comment.body.includes('📊 Test Coverage Report')
+              );
+              
+              if (existingComment) {
+                await github.rest.issues.updateComment({
+                  comment_id: existingComment.id,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: comment
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: comment
+                });
+              }
+            }
+
+  coverage-quality-gate:
+    runs-on: ubuntu-latest
+    needs: test-coverage
+    if: always()
+    outputs:
+      coverage-status: ${{ steps.quality-gate.outputs.coverage-status }}
+      coverage-failures: ${{ steps.quality-gate.outputs.coverage-failures }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Download coverage reports
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-reports-20.x-${{ github.run_number }}
+          path: coverage/
+
+      - name: Quality Gate - Enhanced Coverage Check
+        id: quality-gate
+        run: |
+          if [ -f "coverage/coverage-summary.json" ]; then
+            # Install jq if not available
+            if ! command -v jq &> /dev/null; then
+              sudo apt-get update && sudo apt-get install -y jq
+            fi
+            
+            STATEMENTS=$(cat coverage/coverage-summary.json | jq '.total.statements.pct')
+            BRANCHES=$(cat coverage/coverage-summary.json | jq '.total.branches.pct')
+            FUNCTIONS=$(cat coverage/coverage-summary.json | jq '.total.functions.pct')
+            LINES=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+            
+            echo "📊 Coverage Summary:"
+            echo "Statements: $STATEMENTS%"
+            echo "Branches: $BRANCHES%"
+            echo "Functions: $FUNCTIONS%"
+            echo "Lines: $LINES%"
+            
+            # Count failures
+            FAILURES=0
+            if [ "$STATEMENTS" != "100" ]; then FAILURES=$((FAILURES + 1)); fi
+            if [ "$BRANCHES" != "100" ]; then FAILURES=$((FAILURES + 1)); fi
+            if [ "$FUNCTIONS" != "100" ]; then FAILURES=$((FAILURES + 1)); fi
+            if [ "$LINES" != "100" ]; then FAILURES=$((FAILURES + 1)); fi
+            
+            # Set outputs
+            echo "coverage-failures=$FAILURES" >> $GITHUB_OUTPUT
+            
+            if [ $FAILURES -gt 0 ]; then
+              echo "coverage-status=failed" >> $GITHUB_OUTPUT
+              echo "❌ Quality Gate Failed: $FAILURES metrics below 100% threshold"
+              
+              # Generate detailed failure summary
+              echo "::group::Coverage Failure Details"
+              if [ "$STATEMENTS" != "100" ]; then
+                echo "::error::Statements coverage: $STATEMENTS% (required: 100%)"
+              fi
+              if [ "$BRANCHES" != "100" ]; then
+                echo "::error::Branches coverage: $BRANCHES% (required: 100%)"
+              fi
+              if [ "$FUNCTIONS" != "100" ]; then
+                echo "::error::Functions coverage: $FUNCTIONS% (required: 100%)"
+              fi
+              if [ "$LINES" != "100" ]; then
+                echo "::error::Lines coverage: $LINES% (required: 100%)"
+              fi
+              echo "::endgroup::"
+              
+              exit 1
+            else
+              echo "coverage-status=passed" >> $GITHUB_OUTPUT
+              echo "✅ Quality Gate Passed: 100% coverage achieved for all metrics"
+              echo "::notice::All coverage thresholds met at 100%"
+            fi
+          else
+            echo "coverage-status=error" >> $GITHUB_OUTPUT
+            echo "coverage-failures=4" >> $GITHUB_OUTPUT
+            echo "❌ Coverage file not found"
+            echo "::error::Coverage summary file missing - tests may have failed"
+            exit 1
+          fi
+
+  coverage-report-summary:
+    runs-on: ubuntu-latest
+    needs: [test-coverage, coverage-quality-gate]
+    if: always()
+
+    steps:
+      - name: Generate Final Coverage Report
+        run: |
+          echo "## 📊 Final Coverage Report Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ needs.coverage-quality-gate.outputs.coverage-status }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Failed Metrics:** ${{ needs.coverage-quality-gate.outputs.coverage-failures }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.coverage-quality-gate.outputs.coverage-status }}" = "passed" ]; then
+            echo "🎉 **All coverage thresholds met at 100%!**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **Coverage thresholds not met. Please review the coverage reports and add missing tests.**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
+            echo "1. Download the coverage reports from the artifacts" >> $GITHUB_STEP_SUMMARY
+            echo "2. Open the HTML coverage report to see uncovered lines" >> $GITHUB_STEP_SUMMARY
+            echo "3. Add tests for the uncovered code" >> $GITHUB_STEP_SUMMARY
+            echo "4. Run \`npm run test:coverage:100\` locally to verify" >> $GITHUB_STEP_SUMMARY
+          fi

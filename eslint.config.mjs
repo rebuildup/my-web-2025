@@ -23,6 +23,16 @@ const eslintConfig = [
     ],
   },
   {
+    files: ["**/__tests__/**/*", "**/*.test.*", "tests/**/*"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-require-imports": "warn",
+      "@typescript-eslint/ban-ts-comment": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "prefer-const": "warn",
+    },
+  },
+  {
     plugins: {
       tailwindcss: (await import("eslint-plugin-tailwindcss")).default,
     },

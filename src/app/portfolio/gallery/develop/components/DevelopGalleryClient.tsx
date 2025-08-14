@@ -34,7 +34,7 @@ export interface FilterOptions {
 }
 
 export interface SortOptions {
-  sortBy: "createdAt" | "updatedAt" | "title" | "priority";
+  sortBy: "createdAt" | "updatedAt" | "title" | "priority" | "effectiveDate";
   sortOrder: "asc" | "desc";
 }
 

@@ -149,10 +149,13 @@ describe("Security Utilities", () => {
       );
     });
 
-    it("should reset rate limit after window expires", () => {
+    it("should reset rate limit after window expires", async () => {
       const identifier = "test-user";
       const limit = 2;
       const windowMs = 100; // 100ms
+
+      // Use real timers for this test
+      jest.useRealTimers();
 
       // Use up the limit
       expect(securityUtils.checkRateLimit(identifier, limit, windowMs)).toBe(
@@ -166,15 +169,18 @@ describe("Security Utilities", () => {
       );
 
       // Wait for window to expire
-      return new Promise((resolve) => {
+      await new Promise<void>((resolve) => {
         setTimeout(() => {
           expect(
             securityUtils.checkRateLimit(identifier, limit, windowMs),
           ).toBe(true);
-          resolve(undefined);
+          resolve();
         }, windowMs + 10);
       });
-    });
+
+      // Restore fake timers
+      jest.useFakeTimers();
+    }, 5000);
   });
 
   describe("Content Security Policy", () => {
@@ -274,7 +280,7 @@ describe("Security Utilities", () => {
 
     it("should verify password hashes", async () => {
       // Mock crypto.subtle for testing with different outputs for different inputs
-      const mockDigest = jest.fn().mockImplementation((algorithm, data) => {
+      const mockDigest = jest.fn().mockImplementation((_algorithm, data) => {
         const input = new TextDecoder().decode(data);
         const buffer = new ArrayBuffer(32);
         const array = new Uint8Array(buffer);

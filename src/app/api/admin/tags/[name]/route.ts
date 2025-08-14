@@ -15,7 +15,8 @@ interface RouteParams {
 // PUT /api/admin/tags/[name] - Update tag usage
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
-    const tagName = decodeURIComponent(params.name);
+    const resolvedParams = await params;
+    const tagName = decodeURIComponent(resolvedParams.name);
 
     if (!tagName || typeof tagName !== "string") {
       return NextResponse.json(
@@ -57,7 +58,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // DELETE /api/admin/tags/[name] - Delete specific tag
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const tagName = decodeURIComponent(params.name);
+    const resolvedParams = await params;
+    const tagName = decodeURIComponent(resolvedParams.name);
 
     if (!tagName || typeof tagName !== "string") {
       return NextResponse.json(

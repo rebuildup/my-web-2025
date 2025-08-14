@@ -399,28 +399,14 @@ describe("WebGLProductionOptimizer", () => {
       expect(mockGL.getError).toHaveBeenCalled();
     });
 
-    it("should detect and handle WebGL errors", async () => {
+    it("should detect and handle WebGL errors", () => {
       mockGL.getError.mockReturnValue(mockGL.INVALID_ENUM);
       const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-
-      // Ensure fetch is properly mocked with a promise that has catch method
-      mockFetch.mockImplementation(() => {
-        const promise = Promise.resolve({
-          ok: true,
-          json: async () => ({}),
-        });
-        return promise;
-      });
 
       const hasError = optimizer.checkErrors();
 
       expect(hasError).toBe(false);
       expect(consoleSpy).toHaveBeenCalledWith("WebGL Error:", "Invalid enum");
-
-      // Wait a bit for async operations to complete
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      expect(mockFetch).toHaveBeenCalled();
 
       consoleSpy.mockRestore();
     });

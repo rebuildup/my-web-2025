@@ -3,23 +3,71 @@
  * Provides CRUD operations for portfolio tags
  */
 
+import { ContentItem } from "@/types/content";
+import { EnhancedContentItem } from "@/types/enhanced-content";
+import fs from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
+import path from "path";
 
-// Mock data for testing
-const mockTags = [
-  {
-    name: "tag1",
-    count: 5,
-    createdAt: "2023-01-01T00:00:00.000Z",
-    lastUsed: "2023-01-01T00:00:00.000Z",
-  },
-  {
-    name: "tag2",
-    count: 3,
-    createdAt: "2023-01-02T00:00:00.000Z",
-    lastUsed: "2023-01-02T00:00:00.000Z",
-  },
-];
+// Helper function to extract tags from all content files
+async function extractTagsFromContent(): Promise<
+  { name: string; count: number; lastUsed: string }[]
+> {
+  const dataDir = path.join(process.cwd(), "public", "data", "content");
+  const contentTypes = [
+    "portfolio",
+    "blog",
+    "plugin",
+    "download",
+    "tool",
+    "profile",
+  ];
+  const tagCounts = new Map<string, { count: number; lastUsed: string }>();
+
+  for (const contentType of contentTypes) {
+    try {
+      const filePath = path.join(dataDir, `${contentType}.json`);
+      const fileContent = await fs.readFile(filePath, "utf-8");
+      const items: (ContentItem | EnhancedContentItem)[] =
+        JSON.parse(fileContent);
+
+      items.forEach((item) => {
+        if (item.tags && Array.isArray(item.tags)) {
+          item.tags.forEach((tag) => {
+            if (typeof tag === "string" && tag.trim()) {
+              const tagName = tag.trim();
+              const existing = tagCounts.get(tagName);
+              const itemDate = item.updatedAt || item.createdAt;
+
+              if (existing) {
+                existing.count++;
+                if (new Date(itemDate) > new Date(existing.lastUsed)) {
+                  existing.lastUsed = itemDate;
+                }
+              } else {
+                tagCounts.set(tagName, {
+                  count: 1,
+                  lastUsed: itemDate,
+                });
+              }
+            }
+          });
+        }
+      });
+    } catch (error) {
+      console.log(
+        `No ${contentType}.json file found or error reading it:`,
+        error,
+      );
+    }
+  }
+
+  return Array.from(tagCounts.entries()).map(([name, data]) => ({
+    name,
+    count: data.count,
+    lastUsed: data.lastUsed,
+  }));
+}
 
 // GET /api/admin/tags - Get all tags with optional search
 export async function GET(request: NextRequest) {
@@ -29,11 +77,21 @@ export async function GET(request: NextRequest) {
     const sortBy = searchParams.get("sortBy") || "usage";
     const limit = parseInt(searchParams.get("limit") || "100");
 
-    let tags = [...mockTags];
+    console.log("=== TAG API GET ===");
+    console.log("Query:", query);
+    console.log("SortBy:", sortBy);
+    console.log("Limit:", limit);
+
+    // Extract tags from actual content files
+    let tags = await extractTagsFromContent();
+    console.log("Extracted tags from content:", tags.length);
 
     if (query) {
       // Search tags
-      tags = tags.filter((tag) => tag.name.includes(query));
+      tags = tags.filter((tag) =>
+        tag.name.toLowerCase().includes(query.toLowerCase()),
+      );
+      console.log("Filtered tags by query:", tags.length);
     }
 
     // Apply sorting
@@ -42,8 +100,11 @@ export async function GET(request: NextRequest) {
     } else if (sortBy === "date") {
       tags.sort(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          new Date(b.lastUsed).getTime() - new Date(a.lastUsed).getTime(),
       );
+    } else {
+      // Default: sort by usage count
+      tags.sort((a, b) => b.count - a.count);
     }
 
     // Apply limit
@@ -51,9 +112,16 @@ export async function GET(request: NextRequest) {
       tags = tags.slice(0, limit);
     }
 
+    console.log("Final tags to return:", tags.length);
+
     return NextResponse.json({
       success: true,
-      data: tags,
+      data: tags.map((tag) => ({
+        name: tag.name,
+        count: tag.count,
+        createdAt: tag.lastUsed, // Use lastUsed as createdAt for compatibility
+        lastUsed: tag.lastUsed,
+      })),
       total: tags.length,
     });
   } catch (error) {
@@ -86,14 +154,50 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const tagName = name.trim();
+    if (!tagName) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Invalid tag name",
+          message: "Tag name cannot be empty",
+        },
+        { status: 400 },
+      );
+    }
+
+    console.log("=== TAG API POST ===");
+    console.log("Creating tag:", tagName);
+
+    // Check if tag already exists
+    const existingTags = await extractTagsFromContent();
+    const existingTag = existingTags.find(
+      (tag) => tag.name.toLowerCase() === tagName.toLowerCase(),
+    );
+
+    if (existingTag) {
+      console.log("Tag already exists:", existingTag);
+      return NextResponse.json({
+        success: true,
+        data: {
+          name: existingTag.name,
+          count: existingTag.count,
+          createdAt: existingTag.lastUsed,
+          lastUsed: existingTag.lastUsed,
+        },
+        message: "Tag already exists",
+      });
+    }
+
+    // Create new tag (it will be added when used in content)
     const newTag = {
-      name,
+      name: tagName,
       count: 0,
       createdAt: new Date().toISOString(),
       lastUsed: new Date().toISOString(),
     };
 
-    mockTags.push(newTag);
+    console.log("New tag created:", newTag);
 
     return NextResponse.json({
       success: true,

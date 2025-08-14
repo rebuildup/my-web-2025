@@ -3,7 +3,9 @@
  * Provides file upload operations
  */
 
+import { writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
+import { join } from "path";
 
 // Development environment check
 function isDevelopment() {
@@ -23,39 +25,96 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const files = formData.getAll("files") as File[];
     const singleFile = formData.get("file") as File;
+    formData.get("type") as string;
+    formData.get("processingOptions") as string;
 
     if (!files.length && !singleFile) {
       return NextResponse.json({ error: "No files provided" }, { status: 400 });
     }
 
-    // Mock successful upload
     const uploadedFiles = files.length ? files : [singleFile];
-    const results = uploadedFiles.map((file) => ({
-      originalName: file.name,
-      size: file.size,
-      url: `/uploads/${file.name}`,
-      success: true,
-    }));
+    const results = [];
+
+    for (const file of uploadedFiles) {
+      try {
+        // Validate file type
+        if (!file.type.startsWith("image/")) {
+          results.push({
+            originalName: file.name,
+            size: file.size,
+            error: "Only image files are supported",
+            success: false,
+          });
+          continue;
+        }
+
+        // Validate file size (10MB limit)
+        if (file.size > 10 * 1024 * 1024) {
+          results.push({
+            originalName: file.name,
+            size: file.size,
+            error: "File size exceeds 10MB limit",
+            success: false,
+          });
+          continue;
+        }
+
+        // Generate unique filename
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(2, 8);
+        const extension = file.name.split(".").pop();
+        const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "-");
+        const uniqueFilename = `${sanitizedName.split(".")[0]}-${timestamp}-${random}.${extension}`;
+
+        // Use existing portfolio directory
+        const uploadDir = join(process.cwd(), "public", "images", "portfolio");
+
+        // Convert file to buffer and save
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const filePath = join(uploadDir, uniqueFilename);
+
+        await writeFile(filePath, buffer);
+
+        // Create URL for the uploaded file (matching existing pattern)
+        const url = `/images/portfolio/${uniqueFilename}`;
+
+        results.push({
+          originalName: file.name,
+          size: file.size,
+          url: url,
+          success: true,
+          processed: true,
+        });
+
+        console.log(`File saved successfully: ${file.name} -> ${filePath}`);
+      } catch (error) {
+        console.error(`Error processing file ${file.name}:`, error);
+        results.push({
+          originalName: file.name,
+          size: file.size,
+          error: error instanceof Error ? error.message : "Processing failed",
+          success: false,
+        });
+      }
+    }
 
     return NextResponse.json({
       success: true,
-      message: "Files uploaded successfully",
+      message: "Files processed successfully",
       files: results,
     });
   } catch (error) {
     console.error("Error uploading files:", error);
 
-    // Mock error handling - return success with error in file
-    return NextResponse.json({
-      success: true,
-      files: [
-        {
-          error: "Upload failed",
-          originalName: "unknown",
-          success: false,
-        },
-      ],
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Upload failed",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    );
   }
 }
 

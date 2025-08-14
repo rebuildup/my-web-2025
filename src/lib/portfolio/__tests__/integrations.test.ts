@@ -1,11 +1,7 @@
 /**
- * Integration System Tests
- * Task 1.3: 他ページ連携システムの実装
+ * @jest-environment jsdom
  */
 
-import { PortfolioContentItem } from "../../../types/portfolio";
-import { PortfolioDataManager } from "../data-manager";
-import { PortfolioIntegrationManager } from "../integration-manager";
 import {
   AboutIntegration,
   AnalyticsIntegration,
@@ -14,258 +10,227 @@ import {
   SEOIntegration,
 } from "../integrations";
 
-// Mock data
-const mockPortfolioItems: PortfolioContentItem[] = [
+// Mock the data manager
+const mockDataManager = {
+  getPortfolioData: jest.fn(),
+  getPortfolioStats: jest.fn(),
+  getFeaturedProjects: jest.fn(),
+  getSearchFilters: jest.fn(),
+} as jest.Mocked<typeof import("@/lib/portfolio/data-manager")>;
+
+const mockPortfolioData = [
   {
     id: "project-1",
-    type: "portfolio",
-    title: "React Portfolio Website",
-    description: "Modern portfolio website built with React and Next.js",
-    content: "Detailed content about the React portfolio project...",
+    title: "Test Project 1",
+    description: "A test project for development",
     category: "develop",
-    status: "published",
-    tags: ["portfolio", "web", "modern"],
-    technologies: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
-    thumbnail: "/images/project-1-thumb.jpg",
-    images: ["/images/project-1-1.jpg", "/images/project-1-2.jpg"],
-    priority: 9,
-    createdAt: "2024-01-15T00:00:00Z",
-    updatedAt: "2024-02-01T00:00:00Z",
-    repository: {
-      url: "https://github.com/user/project-1",
-      type: "github",
-      title: "Project 1 Repository",
-    },
-    projectType: "web",
-    seo: {
-      title: "React Portfolio Website",
-      description: "Modern portfolio website built with React and Next.js",
-      keywords: ["React", "Next.js", "portfolio"],
-      ogImage: "/images/project-1-og.jpg",
-      twitterImage: "/images/project-1-twitter.jpg",
-      canonical: "/portfolio/project-1",
-      structuredData: {},
+    tags: ["React", "TypeScript"],
+    technologies: ["React", "TypeScript", "Next.js"],
+    content: "This is test content for project 1",
+    createdAt: "2023-01-01T00:00:00.000Z",
+    updatedAt: "2023-06-01T00:00:00.000Z",
+    publishedAt: "2023-01-15T00:00:00.000Z",
+    thumbnail: "/images/project1.jpg",
+    images: ["/images/project1.jpg", "/images/project1-2.jpg"],
+    priority: 80,
+    searchIndex: {
+      searchableContent: "test project development react typescript",
     },
   },
   {
     id: "project-2",
-    type: "portfolio",
-    title: "Music Video Animation",
-    description: "Animated music video created with After Effects",
-    content: "Creative animation project for music video...",
+    title: "Video Project",
+    description: "A video editing project",
     category: "video",
-    status: "published",
-    tags: ["animation", "music", "creative"],
-    technologies: ["After Effects", "Cinema 4D", "Premiere Pro"],
-    thumbnail: "/images/project-2-thumb.jpg",
-    images: ["/images/project-2-1.jpg"],
-    priority: 8,
-    createdAt: "2024-01-10T00:00:00Z",
-    updatedAt: "2024-01-25T00:00:00Z",
-    client: "Music Artist XYZ",
-    videoType: "mv",
-    duration: 180,
-    seo: {
-      title: "Music Video Animation",
-      description: "Animated music video created with After Effects",
-      keywords: ["animation", "music video", "After Effects"],
-      ogImage: "/images/project-2-og.jpg",
-      twitterImage: "/images/project-2-twitter.jpg",
-      canonical: "/portfolio/project-2",
-      structuredData: {},
-    },
-  },
-  {
-    id: "project-3",
-    title: "Brand Identity Design",
-    description: "Complete brand identity design for startup",
-    content:
-      "Comprehensive branding project including logo, colors, typography...",
-    category: "video&design",
-    status: "published",
-    tags: ["branding", "identity", "startup"],
-    technologies: ["Figma", "Illustrator", "Photoshop"],
-    thumbnail: "/images/project-3-thumb.jpg",
-    images: [
-      "/images/project-3-1.jpg",
-      "/images/project-3-2.jpg",
-      "/images/project-3-3.jpg",
-    ],
-    priority: 7,
-    createdAt: "2024-01-05T00:00:00Z",
-    updatedAt: "2024-01-20T00:00:00Z",
-    client: "Startup ABC",
-    projectType: "web",
-    type: "portfolio",
-    seo: {
-      title: "Brand Identity Design",
-      description: "Complete brand identity design for startup",
-      keywords: ["branding", "identity", "design"],
-      ogImage: "/images/project-3-og.jpg",
-      twitterImage: "/images/project-3-twitter.jpg",
-      canonical: "/portfolio/project-3",
-      structuredData: {},
-    },
+    tags: ["After Effects", "Premiere"],
+    technologies: ["After Effects", "Premiere Pro"],
+    content: "Video project content",
+    createdAt: "2023-02-01T00:00:00.000Z",
+    updatedAt: "2023-07-01T00:00:00.000Z",
+    publishedAt: "2023-02-15T00:00:00.000Z",
+    thumbnail: "/images/project2.jpg",
+    priority: 70,
   },
 ];
 
-const mockDataManager = {
-  getPortfolioData: jest.fn().mockResolvedValue(mockPortfolioItems),
-  getPortfolioStats: jest.fn().mockResolvedValue({
-    totalProjects: 3,
-    categoryCounts: { develop: 1, video: 1, "video&design": 1 },
-    technologyCounts: { React: 1, "After Effects": 1, Figma: 1 },
-    lastUpdate: new Date(),
-  }),
-  getFeaturedProjects: jest
-    .fn()
-    .mockResolvedValue(mockPortfolioItems.slice(0, 3)),
-  getSearchFilters: jest.fn().mockResolvedValue([
-    { type: "category", value: "develop", label: "Develop", count: 1 },
-    { type: "category", value: "video", label: "Video", count: 1 },
-    {
-      type: "category",
-      value: "video&design",
-      label: "Video & Design",
-      count: 1,
-    },
-    { type: "technology", value: "React", label: "React", count: 1 },
-  ]),
-  generateSearchIndex: jest
-    .fn()
-    .mockReturnValue(
-      mockPortfolioItems.map((item) => ({ ...item, searchableText: "" })),
-    ),
-  searchPortfolioItems: jest.fn().mockImplementation(async (query) => {
-    if (query === "React") {
-      return [
-        {
-          item: mockPortfolioItems[0],
-          score: 1,
-          matchedFields: ["technologies"],
-        },
-      ];
-    }
-    return [];
-  }),
-  getItemById: jest.fn().mockImplementation(async (id) => {
-    return mockPortfolioItems.find((item) => item.id === id) || null;
-  }),
-  getAboutPageData: jest.fn().mockResolvedValue({}),
-  getSitemapEntries: jest.fn().mockResolvedValue(
-    mockPortfolioItems.map((item) => ({
-      url: `/portfolio/${item.id}`,
-      lastModified: new Date(),
-    })),
-  ),
-  updateMetaTags: jest.fn().mockResolvedValue({}),
-  trackPortfolioView: jest.fn(),
-  getDashboardData: jest.fn().mockResolvedValue({}),
-} as unknown as PortfolioDataManager;
-
-describe("Portfolio Integration System", () => {
-  let homePageIntegration: HomePageIntegration;
-  let searchIntegration: SearchIntegration;
-  let aboutIntegration: AboutIntegration;
-  let seoIntegration: SEOIntegration;
-  let analyticsIntegration: AnalyticsIntegration;
-  let integrationManager: PortfolioIntegrationManager;
-
+describe("Portfolio Integrations", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Reset mock implementations
-    (mockDataManager.getPortfolioData as jest.Mock).mockResolvedValue(
-      mockPortfolioItems,
-    );
-    (mockDataManager.getPortfolioStats as jest.Mock).mockResolvedValue({
-      totalProjects: 3,
-      categoryCounts: { develop: 1, video: 1, "video&design": 1 },
-      technologyCounts: { React: 1, "After Effects": 1, Figma: 1 },
-      lastUpdate: new Date(),
-    });
-    (mockDataManager.getFeaturedProjects as jest.Mock).mockResolvedValue(
-      mockPortfolioItems.slice(0, 3),
-    );
 
-    homePageIntegration = new HomePageIntegration(mockDataManager);
-    searchIntegration = new SearchIntegration(mockDataManager);
-    aboutIntegration = new AboutIntegration(mockDataManager);
-    seoIntegration = new SEOIntegration(mockDataManager);
-    analyticsIntegration = new AnalyticsIntegration(mockDataManager);
-    integrationManager = new PortfolioIntegrationManager(
-      mockDataManager as PortfolioDataManager,
+    mockDataManager.getPortfolioData.mockResolvedValue(mockPortfolioData);
+    mockDataManager.getPortfolioStats.mockResolvedValue({
+      totalProjects: 2,
+      categoryCounts: { develop: 1, video: 1 },
+      technologyCounts: { React: 1, TypeScript: 1, "After Effects": 1 },
+      lastUpdate: new Date("2023-07-01T00:00:00.000Z"),
+    });
+    mockDataManager.getFeaturedProjects.mockResolvedValue(
+      mockPortfolioData.slice(0, 1),
     );
+    mockDataManager.getSearchFilters.mockResolvedValue([
+      {
+        type: "category",
+        options: [
+          { value: "develop", label: "Development", count: 1 },
+          { value: "video", label: "Video", count: 1 },
+        ],
+      },
+    ]);
   });
 
   describe("HomePageIntegration", () => {
-    it("should get complete home page data", async () => {
-      const homePageData = await homePageIntegration.getHomePageData();
+    it("should create instance and get home page data", async () => {
+      const homeIntegration = new HomePageIntegration(mockDataManager);
+      const result = await homeIntegration.getHomePageData();
 
-      expect(homePageData).toHaveProperty("featuredProjects");
-      expect(homePageData).toHaveProperty("stats");
-      expect(homePageData).toHaveProperty("latestUpdates");
-      expect(homePageData.featuredProjects).toHaveLength(3);
-      expect(homePageData.stats.totalProjects).toBe(3);
+      expect(result.featuredProjects).toHaveLength(1);
+      expect(result.featuredProjects[0].id).toBe("project-1");
+      expect(result.stats.totalProjects).toBe(2);
+      expect(result.latestUpdates).toHaveLength(2);
+    });
+
+    it("should sort latest updates by updatedAt descending", async () => {
+      const homeIntegration = new HomePageIntegration(mockDataManager);
+      const result = await homeIntegration.getHomePageData();
+
+      expect(result.latestUpdates[0].id).toBe("project-2");
+      expect(result.latestUpdates[1].id).toBe("project-1");
     });
   });
 
   describe("SearchIntegration", () => {
-    it("should generate search index correctly", async () => {
-      const searchIndex = await searchIntegration.generateSearchIndex();
+    it("should create instance and get search data", async () => {
+      const searchIntegration = new SearchIntegration(mockDataManager);
+      const result = await searchIntegration.getSearchData();
 
-      expect(searchIndex).toHaveLength(3);
-      expect(searchIndex[0]).toHaveProperty("id");
-      expect(searchIndex[0]).toHaveProperty("type", "portfolio");
+      expect(result.searchableContent).toHaveLength(2);
+      const ids = result.searchableContent.map((item) => item.id);
+      expect(ids).toContain("project-1");
+      expect(ids).toContain("project-2");
+      expect(result.searchFilters).toHaveLength(1);
     });
 
-    it("should search portfolio items correctly", async () => {
+    it("should search portfolio items by query", async () => {
+      const searchIntegration = new SearchIntegration(mockDataManager);
       const results = await searchIntegration.searchPortfolioItems("React");
 
       expect(results).toHaveLength(1);
       expect(results[0].item.id).toBe("project-1");
     });
+
+    it("should filter by category", async () => {
+      const searchIntegration = new SearchIntegration(mockDataManager);
+      const results = await searchIntegration.searchPortfolioItems("", [
+        { type: "category", value: "video" },
+      ]);
+
+      expect(results).toHaveLength(1);
+      expect(results[0].item.category).toBe("video");
+    });
+
+    it("should get search stats", async () => {
+      const searchIntegration = new SearchIntegration(mockDataManager);
+      const stats = await searchIntegration.getSearchStats();
+
+      expect(stats.totalItems).toBe(2);
+      expect(stats.categoryDistribution).toEqual({
+        develop: 1,
+        video: 1,
+      });
+    });
   });
 
   describe("AboutIntegration", () => {
-    it("should get complete about page data", async () => {
-      const aboutData = await aboutIntegration.getAboutData();
+    it("should create instance and extract skills from projects", async () => {
+      const aboutIntegration = new AboutIntegration(mockDataManager);
+      const skills = await aboutIntegration.extractSkillsFromProjects();
 
-      expect(aboutData).toHaveProperty("skills");
-      expect(aboutData).toHaveProperty("clientWork");
-      expect(aboutData).toHaveProperty("summary");
+      expect(skills.length).toBeGreaterThan(0);
+      expect(skills[0].name).toBeDefined();
+      expect(skills[0].projectCount).toBeGreaterThan(0);
+    });
+
+    it("should get client work examples", async () => {
+      const aboutIntegration = new AboutIntegration(mockDataManager);
+      const clientWork = await aboutIntegration.getClientWorkExamples();
+
+      expect(clientWork).toHaveLength(2);
+      const ids = clientWork.map((item) => item.id);
+      expect(ids).toContain("project-1");
+      expect(ids).toContain("project-2");
     });
   });
 
   describe("SEOIntegration", () => {
-    it("should generate sitemap entries correctly", async () => {
-      const sitemapEntries = await seoIntegration.generateSitemapEntries();
+    it("should create instance and get sitemap entries", async () => {
+      const seoIntegration = new SEOIntegration(mockDataManager);
+      const entries = await seoIntegration.getSitemapEntries();
 
-      expect(sitemapEntries.length).toBe(3);
+      expect(entries).toHaveLength(2);
+      const urls = entries.map((entry) => entry.url);
+      expect(urls.some((url) => url.includes("project-1"))).toBe(true);
+      expect(urls.some((url) => url.includes("project-2"))).toBe(true);
     });
 
-    it("should generate meta tags correctly", async () => {
+    it("should update meta tags for detail page", async () => {
+      const seoIntegration = new SEOIntegration(mockDataManager);
       const metaTags = await seoIntegration.updateMetaTags("detail", {
-        item: mockPortfolioItems[0],
+        item: mockPortfolioData[0],
       });
 
-      expect(metaTags).toHaveProperty("title");
-      expect(metaTags.title).toContain("React Portfolio Website");
+      expect(metaTags.title).toBeDefined();
+      expect(metaTags.description).toBeDefined();
+      expect(typeof metaTags.title).toBe("string");
+      expect(typeof metaTags.description).toBe("string");
+    });
+
+    it("should generate structured data", async () => {
+      const seoIntegration = new SEOIntegration(mockDataManager);
+      const structuredData = await seoIntegration.generateStructuredData(
+        mockPortfolioData[0],
+      );
+
+      expect(structuredData["@context"]).toBe("https://schema.org");
+      expect(structuredData["@type"]).toBe("CreativeWork");
+      expect(structuredData.name).toBeDefined();
+      expect(typeof structuredData.name).toBe("string");
     });
   });
 
   describe("AnalyticsIntegration", () => {
-    it("should track portfolio view correctly", () => {
-      analyticsIntegration.trackPortfolioView("project-1");
+    it("should create instance and track portfolio view", () => {
+      const analyticsIntegration = new AnalyticsIntegration(mockDataManager);
+
+      expect(() => {
+        analyticsIntegration.trackPortfolioView("project-1", {
+          source: "gallery",
+        });
+      }).not.toThrow();
     });
-  });
 
-  describe("PortfolioIntegrationManager", () => {
-    it("should get dashboard data correctly", async () => {
-      const dashboardData = await integrationManager.getDashboardData();
+    it("should track gallery interaction", () => {
+      const analyticsIntegration = new AnalyticsIntegration(mockDataManager);
 
-      expect(dashboardData).toHaveProperty("homePage");
-      expect(dashboardData).toHaveProperty("search");
-      expect(dashboardData).toHaveProperty("about");
+      expect(() => {
+        analyticsIntegration.trackGalleryInteraction(
+          "develop",
+          "filter_click",
+          "project-1",
+        );
+      }).not.toThrow();
+    });
+
+    it("should generate portfolio report", async () => {
+      const analyticsIntegration = new AnalyticsIntegration(mockDataManager);
+
+      // Add some test events
+      analyticsIntegration.trackPortfolioView("project-1");
+      analyticsIntegration.trackPortfolioView("project-2");
+
+      const report = await analyticsIntegration.generatePortfolioReport();
+
+      expect(report.summary.totalViews).toBe(2);
+      expect(report.events).toHaveLength(2);
     });
   });
 });

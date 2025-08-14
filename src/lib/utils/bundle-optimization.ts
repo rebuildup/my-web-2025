@@ -89,7 +89,8 @@ export class BundleOptimizer {
     const k = 1024;
     const sizes = ["B", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    const value = bytes / Math.pow(k, i);
+    return value.toFixed(2) + " " + sizes[i];
   }
 
   // Report large chunk
@@ -232,48 +233,51 @@ export class ResourcePreloader {
     this.preloadQueue.push({ url, priority });
     this.preloadQueue.sort((a, b) => b.priority - a.priority);
 
+    // Process queue immediately
     this.processPreloadQueue();
   }
 
   // Process preload queue
   private static processPreloadQueue(): void {
-    if (this.preloadQueue.length === 0) return;
+    while (this.preloadQueue.length > 0) {
+      const { url } = this.preloadQueue.shift()!;
 
-    const { url } = this.preloadQueue.shift()!;
+      // Skip if already preloaded
+      if (this.preloadedResources.has(url)) continue;
 
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.href = url;
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.href = url;
 
-    // Determine resource type
-    if (url.includes(".woff2") || url.includes(".woff")) {
-      link.as = "font";
-      link.type = url.includes(".woff2") ? "font/woff2" : "font/woff";
-      link.crossOrigin = "anonymous";
-    } else if (url.match(/\.(jpg|jpeg|png|webp|avif)$/)) {
-      link.as = "image";
-    } else if (url.includes(".js")) {
-      link.as = "script";
-    } else if (url.includes(".css")) {
-      link.as = "style";
-    }
+      // Determine resource type
+      if (url.includes(".woff2") || url.includes(".woff")) {
+        link.as = "font";
+        link.type = url.includes(".woff2") ? "font/woff2" : "font/woff";
+        link.crossOrigin = "anonymous";
+      } else if (url.match(/\.(jpg|jpeg|png|webp|avif)$/)) {
+        link.as = "image";
+      } else if (url.includes(".js")) {
+        link.as = "script";
+      } else if (url.includes(".css")) {
+        link.as = "style";
+      }
 
-    link.onload = () => {
-      console.log("Resource preloaded:", url);
+      link.onload = () => {
+        console.log("Resource preloaded:", url);
+      };
+
+      link.onerror = () => {
+        console.warn("Failed to preload resource:", url);
+      };
+
+      document.head.appendChild(link);
       this.preloadedResources.add(url);
+    }
+  }
 
-      // Process next item in queue
-      setTimeout(() => this.processPreloadQueue(), 100);
-    };
-
-    link.onerror = () => {
-      console.warn("Failed to preload resource:", url);
-
-      // Process next item in queue
-      setTimeout(() => this.processPreloadQueue(), 100);
-    };
-
-    document.head.appendChild(link);
+  // Expose processQueue for testing
+  public static processQueue(): void {
+    this.processPreloadQueue();
   }
 
   // Preload critical resources
@@ -288,6 +292,9 @@ export class ResourcePreloader {
     criticalResources.forEach(({ url, priority }) => {
       this.preloadResource(url, priority);
     });
+
+    // Ensure queue is processed
+    this.processQueue();
   }
 }
 

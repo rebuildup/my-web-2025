@@ -90,7 +90,7 @@ describe("DataManagerPage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useRouter as jest.Mock).mockReturnValue(mockRouter);
-    process.env.NODE_ENV = "development";
+    process.env.NODE_ENV = "test";
 
     // Mock successful API responses
     (global.fetch as jest.Mock).mockResolvedValue({
@@ -114,8 +114,8 @@ describe("DataManagerPage", () => {
       });
     });
 
-    it("should not redirect in development environment", async () => {
-      process.env.NODE_ENV = "development";
+    it("should not redirect in test environment", async () => {
+      process.env.NODE_ENV = "test";
 
       render(<DataManagerPage />);
 
@@ -155,27 +155,33 @@ describe("DataManagerPage", () => {
       expect(screen.getByTestId("content-list")).toBeInTheDocument();
     });
 
-    it("should show empty state when no item is selected", () => {
+    it("should show empty state when no item is selected", async () => {
       render(<DataManagerPage />);
 
-      expect(
-        screen.getByText("Select an item to edit or create a new one"),
-      ).toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          screen.getByText(
+            "編集するアイテムを選択するか、新しいアイテムを作成してください",
+          ),
+        ).toBeInTheDocument();
+      });
     });
   });
 
   describe("basic functionality", () => {
-    it("should handle new item creation button", () => {
+    it("should handle new item creation button", async () => {
       render(<DataManagerPage />);
 
-      const newButton = screen.getByRole("button", { name: "+ New" });
-      expect(newButton).toBeInTheDocument();
+      await waitFor(() => {
+        const newButton = screen.getByRole("button", { name: "+ 新規作成" });
+        expect(newButton).toBeInTheDocument();
 
-      // Click the button
-      fireEvent.click(newButton);
+        // Click the button
+        fireEvent.click(newButton);
 
-      // Button should still be there after click
-      expect(newButton).toBeInTheDocument();
+        // Button should still be there after click
+        expect(newButton).toBeInTheDocument();
+      });
     });
 
     it("should handle content type buttons", () => {
@@ -236,7 +242,9 @@ describe("DataManagerPage", () => {
       render(<DataManagerPage />);
 
       // Should show loading overlay initially
-      expect(screen.getByText("Processing...")).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText("処理中...")).toBeInTheDocument();
+      });
     });
   });
 

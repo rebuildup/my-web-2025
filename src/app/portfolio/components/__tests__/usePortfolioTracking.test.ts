@@ -19,6 +19,7 @@ describe("usePortfolioTracking", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useFakeTimers();
+
     mockFetch.mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ success: true }),

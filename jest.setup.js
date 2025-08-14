@@ -1,5 +1,7 @@
 import "@testing-library/jest-dom";
 
+// Keep original timer functions available for tests that need them
+
 // Mock marked.js to avoid ES module issues
 jest.mock("marked", () => ({
   marked: {
@@ -207,6 +209,11 @@ beforeEach(() => {
     ...mockPerformance,
     now: performanceNowMock,
   };
+
+  // Reset fetch mock
+  if (global.fetch && typeof global.fetch.mockClear === "function") {
+    global.fetch.mockClear();
+  }
 });
 
 global.performance.clearMeasures = jest.fn();
@@ -246,6 +253,32 @@ Object.defineProperty(global.navigator, "maxTouchPoints", {
   value: 0,
 });
 
+// Mock fetch
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    status: 200,
+    statusText: "OK",
+    headers: new Headers(),
+    json: () => Promise.resolve({}),
+    text: () => Promise.resolve(""),
+    blob: () => Promise.resolve(new Blob()),
+    arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+    formData: () => Promise.resolve(new FormData()),
+    clone: () => ({
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: new Headers(),
+      json: () => Promise.resolve({}),
+      text: () => Promise.resolve(""),
+      blob: () => Promise.resolve(new Blob()),
+      arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+      formData: () => Promise.resolve(new FormData()),
+    }),
+  }),
+);
+
 // Mock gtag
 global.gtag = jest.fn();
 
@@ -270,7 +303,13 @@ global.Response = jest.fn().mockImplementation((body, init) => ({
   statusText: init?.statusText || "OK",
   headers: new Headers(init?.headers),
   body,
-  json: jest.fn().mockResolvedValue(body ? JSON.parse(body) : {}),
+  json: jest.fn().mockResolvedValue(() => {
+    try {
+      return body ? JSON.parse(body) : {};
+    } catch {
+      return {};
+    }
+  }),
   text: jest.fn().mockResolvedValue(body || ""),
 }));
 
@@ -656,3 +695,82 @@ beforeEach(() => {
     globalThis.window = freshWindowMock;
   }
 });
+
+// Coverage-specific setup with enhanced memory management
+if (
+  process.env.NODE_ENV === "coverage" ||
+  process.env.JEST_COVERAGE === "true"
+) {
+  // Initialize memory manager
+  const JestMemoryManager = require("./scripts/jest-memory-manager");
+  const memoryManager = new JestMemoryManager();
+  memoryManager.initialize();
+
+  // Increase timeout for coverage instrumentation
+  jest.setTimeout(45000);
+
+  // Global test setup for coverage mode
+  beforeAll(() => {
+    // Track memory usage at start
+    if (global.testUtils && global.testUtils.trackMemoryUsage) {
+      global.testUtils.trackMemoryUsage();
+    }
+
+    // Take initial memory snapshot
+    if (global.jestMemoryManager) {
+      global.jestMemoryManager.takeSnapshot("test-suite-start");
+    }
+
+    console.log("🔍 Running tests in coverage mode with 100% enforcement");
+  });
+
+  // Global test cleanup for coverage mode
+  afterAll(() => {
+    const testDuration = global.testUtils
+      ? global.testUtils.getTestDuration()
+      : Date.now() - (global.testUtils?.startTime || Date.now());
+
+    console.log(`\n⏱️  Total test execution time: ${testDuration}ms`);
+
+    // Final memory usage check
+    if (global.testUtils && global.testUtils.trackMemoryUsage) {
+      global.testUtils.trackMemoryUsage();
+    }
+
+    // Take final memory snapshot
+    if (global.jestMemoryManager) {
+      global.jestMemoryManager.takeSnapshot("test-suite-end");
+    }
+
+    // Force garbage collection if available
+    if (global.gc) {
+      global.gc();
+    }
+  });
+
+  // Memory management for coverage collection
+  beforeEach(() => {
+    // Clear any cached modules that might affect coverage
+    jest.clearAllMocks();
+
+    // Check memory status periodically
+    if (global.jestMemoryManager && Math.random() < 0.1) {
+      // 10% of tests
+      const status = global.jestMemoryManager.getMemoryStatus();
+      if (status.isHighMemory) {
+        global.jestMemoryManager.forceGarbageCollection();
+      }
+    }
+  });
+
+  afterEach(() => {
+    // Clean up after each test to prevent memory leaks
+    jest.restoreAllMocks();
+
+    // Force cleanup of large objects
+    if (global.gc && Math.random() < 0.05) {
+      // 5% of tests
+      global.gc();
+    }
+  });
+}

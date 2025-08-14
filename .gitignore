@@ -39,3 +39,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# temporary files and generated reports
+test-api-debug.js
+missing-images-report.json
+coverage-*.json
+cache-bust-config.json
+.next-build-id
+
+# jest cache
+.jest-cache/
+.jest-cache-coverage/
+
+# build artifacts
+.swc/

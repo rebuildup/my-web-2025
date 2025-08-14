@@ -616,19 +616,12 @@ describe("Markdown System Error Handling", () => {
     });
 
     it("should handle timeout scenarios for slow file operations", async () => {
-      // Mock slow file operation
-      mockFs.readFile.mockImplementation(
-        () =>
-          new Promise((_, reject) => {
-            setTimeout(() => {
-              const error = new Error(
-                "Operation timed out",
-              ) as NodeJS.ErrnoException;
-              error.code = "ETIMEDOUT";
-              reject(error);
-            }, 100);
-          }),
-      );
+      // Mock immediate timeout error
+      const timeoutError = new Error(
+        "Operation timed out",
+      ) as NodeJS.ErrnoException;
+      timeoutError.code = "ETIMEDOUT";
+      mockFs.readFile.mockRejectedValueOnce(timeoutError);
 
       await expect(
         fileManager.getMarkdownContent("/test/slow.md"),
@@ -637,6 +630,6 @@ describe("Markdown System Error Handling", () => {
         code: "ETIMEDOUT",
         type: "file_read",
       });
-    });
+    }, 1000); // 1秒のタイムアウトを設定
   });
 });
