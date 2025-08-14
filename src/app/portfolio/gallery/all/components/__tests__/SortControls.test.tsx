@@ -19,27 +19,29 @@ describe("SortControls", () => {
     mockOnSortChange.mockClear();
   });
 
-  it("renders sort controls with responsive button styling", () => {
+  it("renders sort controls with icon-only button styling", () => {
     render(<SortControls sort={defaultSort} onSortChange={mockOnSortChange} />);
 
     // Check that the sort order button exists
     const sortButton = screen.getByRole("button", { name: /sort descending/i });
     expect(sortButton).toBeInTheDocument();
 
-    // Check that the button has responsive classes for preventing text overflow
-    expect(sortButton).toHaveClass("min-w-fit");
-    expect(sortButton).toHaveClass("whitespace-nowrap");
+    // Check that the button has proper styling for icon-only display
+    expect(sortButton).toHaveClass("flex", "items-center", "justify-center");
     expect(sortButton).toHaveClass("px-2", "sm:px-3");
-    expect(sortButton).toHaveClass("space-x-1", "sm:space-x-2");
+    expect(sortButton).toHaveClass("border", "border-foreground");
   });
 
-  it("displays correct text for descending order", () => {
+  it("displays correct icon for descending order", () => {
     render(<SortControls sort={defaultSort} onSortChange={mockOnSortChange} />);
 
-    expect(screen.getByText("Descending")).toBeInTheDocument();
+    const sortButton = screen.getByRole("button", { name: /sort descending/i });
+    expect(sortButton).toBeInTheDocument();
+    // Check that the button contains an icon (ArrowDown)
+    expect(sortButton.querySelector("svg")).toBeInTheDocument();
   });
 
-  it("displays correct text for ascending order", () => {
+  it("displays correct icon for ascending order", () => {
     const ascendingSort: SortOptions = {
       sortBy: "updatedAt",
       sortOrder: "asc",
@@ -49,7 +51,10 @@ describe("SortControls", () => {
       <SortControls sort={ascendingSort} onSortChange={mockOnSortChange} />,
     );
 
-    expect(screen.getByText("Ascending")).toBeInTheDocument();
+    const sortButton = screen.getByRole("button", { name: /sort ascending/i });
+    expect(sortButton).toBeInTheDocument();
+    // Check that the button contains an icon (ArrowUp)
+    expect(sortButton.querySelector("svg")).toBeInTheDocument();
   });
 
   it("toggles sort order when button is clicked", () => {
@@ -64,11 +69,12 @@ describe("SortControls", () => {
     });
   });
 
-  it("has responsive text sizing", () => {
+  it("has proper button styling for icon-only display", () => {
     render(<SortControls sort={defaultSort} onSortChange={mockOnSortChange} />);
 
-    const buttonText = screen.getByText("Descending");
-    expect(buttonText).toHaveClass("text-xs", "sm:text-sm");
+    const sortButton = screen.getByRole("button", { name: /sort descending/i });
+    expect(sortButton).toHaveClass("flex", "items-center", "justify-center");
+    expect(sortButton).toHaveClass("px-2", "sm:px-3", "py-2");
   });
 
   it("has responsive container layout", () => {

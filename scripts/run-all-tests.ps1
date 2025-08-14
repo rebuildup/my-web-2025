@@ -248,9 +248,70 @@ try {
 Write-Host ""
 
 Write-Host "7. Playwright E2E Tests Running..." -ForegroundColor Yellow
+Write-Host "   Starting development server for E2E tests..." -ForegroundColor Gray
 try {
+    # Start development server in background
+    $env:NODE_ENV = "development"
+    $env:PLAYWRIGHT_TEST = "true"
+    $env:__NEXT_DISABLE_DEV_OVERLAY = "true"
+    
+    $devServerJob = Start-Job -ScriptBlock {
+        Set-Location $using:PWD
+        npm run dev
+    }
+    
+    # Wait for server to be ready (check if port 3000 is listening)
+    $serverReady = $false
+    $maxWaitTime = 120 # 2 minutes
+    $waitTime = 0
+    
+    Write-Host "   Waiting for development server to start..." -ForegroundColor Gray
+    while (-not $serverReady -and $waitTime -lt $maxWaitTime) {
+        Start-Sleep -Seconds 2
+        $waitTime += 2
+        
+        try {
+            $response = Invoke-WebRequest -Uri "http://localhost:3000" -TimeoutSec 5 -ErrorAction SilentlyContinue
+            if ($response.StatusCode -eq 200) {
+                $serverReady = $true
+                Write-Host "   Development server is ready!" -ForegroundColor Green
+            }
+        } catch {
+            # Server not ready yet, continue waiting
+        }
+        
+        if ($waitTime % 10 -eq 0) {
+            Write-Host "   Still waiting for server... ($waitTime/$maxWaitTime seconds)" -ForegroundColor Gray
+        }
+    }
+    
+    if (-not $serverReady) {
+        Write-Host "   Development server failed to start within $maxWaitTime seconds" -ForegroundColor Red
+        Stop-Job $devServerJob -ErrorAction SilentlyContinue
+        Remove-Job $devServerJob -ErrorAction SilentlyContinue
+        throw "Development server startup timeout"
+    }
+    
+    # Reset environment for tests
+    $env:NODE_ENV = "test"
+    
     # Run Playwright tests with optimized settings
+    Write-Host "   Running Playwright tests..." -ForegroundColor Gray
     $playwrightOutput = npx playwright test --workers=2 --timeout=30000 --reporter=dot --quiet 2>&1 | Out-String
+    
+    # Stop development server
+    Write-Host "   Stopping development server..." -ForegroundColor Gray
+    Stop-Job $devServerJob -ErrorAction SilentlyContinue
+    Remove-Job $devServerJob -ErrorAction SilentlyContinue
+    
+    # Kill any remaining node processes on port 3000
+    $devProcesses = Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object {
+        $_.ProcessName -eq "node" -and (netstat -ano | Select-String ":3000.*$($_.Id)")
+    }
+    if ($devProcesses) {
+        $devProcesses | Stop-Process -Force -ErrorAction SilentlyContinue
+    }
+    
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Playwright Warning: Some E2E tests may have failed" -ForegroundColor Yellow
         Write-Host $playwrightOutput -ForegroundColor Yellow
@@ -261,8 +322,20 @@ try {
         Write-Host "Playwright E2E: PASS" -ForegroundColor Green
     }
 } catch {
-    Write-Host "Playwright E2E: SKIPPED (configuration issue)" -ForegroundColor Yellow
+    Write-Host "Playwright E2E: SKIPPED (server startup failed)" -ForegroundColor Yellow
     $testResults += "Playwright E2E: SKIPPED"
+    
+    # Cleanup any remaining jobs/processes
+    if ($devServerJob) {
+        Stop-Job $devServerJob -ErrorAction SilentlyContinue
+        Remove-Job $devServerJob -ErrorAction SilentlyContinue
+    }
+    $devProcesses = Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object {
+        $_.ProcessName -eq "node" -and (netstat -ano | Select-String ":3000.*$($_.Id)")
+    }
+    if ($devProcesses) {
+        $devProcesses | Stop-Process -Force -ErrorAction SilentlyContinue
+    }
 }
 Write-Host ""
 

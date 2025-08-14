@@ -57,8 +57,8 @@ export class PortfolioDateManager implements DateManagementSystem {
       throw err;
     }
 
-    // If manual date is enabled and set, use it
-    if (item.useManualDate && item.manualDate) {
+    // Always prioritize manual date if available, regardless of useManualDate flag
+    if (item.manualDate) {
       const manualDate = new Date(item.manualDate);
       if (!isNaN(manualDate.getTime())) {
         return manualDate;

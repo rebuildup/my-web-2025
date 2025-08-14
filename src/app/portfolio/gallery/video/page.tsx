@@ -1,4 +1,4 @@
-import { ContentItem } from "@/types";
+import { ContentItem, getEffectiveDate } from "@/types";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -66,8 +66,8 @@ async function getVideoPortfolioData(): Promise<ContentItem[]> {
 
     // Sort by effective date (manual date if set, otherwise createdAt) in descending order
     const sortedItems = videoItems.sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
+      const dateA = getEffectiveDate(a);
+      const dateB = getEffectiveDate(b);
       return dateB.getTime() - dateA.getTime();
     });
 

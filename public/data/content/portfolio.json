@@ -5,7 +5,7 @@
     "title": "高専プロコン 非公式pv",
     "description": "全国高等専門学校プログラミングコンテスト 第35回 奈良大会の非公式pvです",
     "categories": ["video"],
-    "tags": ["AfterEffects"],
+    "tags": ["AfterEffects", "高専プロコン"],
     "status": "published",
     "priority": 80,
     "content": "",
@@ -13,6 +13,7 @@
     "useManualDate": false,
     "manualDate": "2024-10-12T15:00:00.000Z",
     "images": ["/images/portfolio/kousenprocon-1753768234338-30vf60.png"],
+    "thumbnail": "/images/portfolio/kousenprocon-1753768234338-30vf60.png",
     "videos": [
       {
         "type": "youtube",
@@ -48,8 +49,7 @@
       "/images/portfolio/kousenprocon-1753768234338-30vf60.png"
     ],
     "createdAt": "2025-07-28T12:29:44.056Z",
-    "updatedAt": "2025-08-14T05:14:41.926Z",
-    "thumbnail": "/images/portfolio/kousenprocon-1753768234338-30vf60.png"
+    "updatedAt": "2025-08-14T12:22:06.414Z"
   },
   {
     "id": "portfolio-1755102496915",
@@ -60,11 +60,13 @@
     "tags": ["依頼", "AfterEffects"],
     "status": "published",
     "priority": 50,
-    "content": "",
-    "useManualDate": false,
+    "content": "依頼を頂いて制作した映像です",
+    "useManualDate": true,
+    "manualDate": "2025-05-16T15:00:00.000Z",
     "images": [
       "/images/portfolio/vlcsnap-2025-08-13-21h49m26s292-1755145692306-dokdvk.png"
     ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-08-13-21h49m26s292-1755145692306-dokdvk.png",
     "videos": [
       {
         "type": "youtube",
@@ -79,8 +81,7 @@
     "originalImages": [],
     "processedImages": [],
     "createdAt": "2025-08-13T16:28:16.915Z",
-    "updatedAt": "2025-08-14T05:14:41.927Z",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-08-13-21h49m26s292-1755145692306-dokdvk.png"
+    "updatedAt": "2025-08-14T12:05:15.109Z"
   },
   {
     "id": "portfolio-1754408713848",
@@ -88,33 +89,12 @@
     "title": "期末テストお疲れ様でした 2Q",
     "description": "期末試験が終わったので作りました",
     "categories": ["video"],
-    "tags": ["aftereffects"],
+    "tags": ["aftereffects", "コンピュータ部"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-08-05T15:45:13.848Z",
-    "isOtherCategory": false,
-    "useManualDate": true,
-    "originalImages": [
-      "/images/portfolio/vlcsnap-2025-08-06-00h42m05s057-1754408857220-5dleht.png",
-      "/images/portfolio/vlcsnap-2025-08-06-00h52m02s826-1754409380484-u405rz.png",
-      "/images/portfolio/vlcsnap-2025-08-06-00h52m10s499-1754409396148-lwr0vv.png",
-      "/images/portfolio/vlcsnap-2025-08-06-00h52m19s345-1754409400968-jt1u78.png",
-      "/images/portfolio/vlcsnap-2025-08-06-00h53m08s976-1754409405251-2y2yhp.png",
-      "/images/portfolio/vlcsnap-2025-08-06-00h53m33s343-1754409409457-m60u7r.png",
-      "/images/portfolio/vlcsnap-2025-08-06-00h53m54s340-1754409418423-p4zfp7.png"
-    ],
-    "processedImages": [],
-    "updatedAt": "2025-08-09T13:24:21.427Z",
     "content": "期末試験が終わったので作りました",
-    "videos": [
-      {
-        "type": "youtube",
-        "url": "https://youtu.be/rDp8bg-k254",
-        "title": "期末テストお疲れ様でした 2Q",
-        "description": "期末試験が終わったので作りました",
-        "thumbnail": "https://img.youtube.com/vi/rDp8bg-k254/maxresdefault.jpg"
-      }
-    ],
+    "useManualDate": true,
+    "manualDate": "2025-08-04T15:00:00.000Z",
     "images": [
       "/images/portfolio/vlcsnap-2025-08-06-00h42m05s057-1754408857220-5dleht-processed.jpeg",
       "/images/portfolio/vlcsnap-2025-08-06-00h52m02s826-1754409380484-u405rz-processed.jpeg",
@@ -123,6 +103,16 @@
       "/images/portfolio/vlcsnap-2025-08-06-00h53m08s976-1754409405251-2y2yhp-processed.jpeg",
       "/images/portfolio/vlcsnap-2025-08-06-00h53m33s343-1754409409457-m60u7r-processed.jpeg",
       "/images/portfolio/vlcsnap-2025-08-06-00h53m54s340-1754409418423-p4zfp7-processed.jpeg"
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-08-06-00h42m05s057-1754408857220-5dleht-processed.jpeg",
+    "videos": [
+      {
+        "type": "youtube",
+        "url": "https://youtu.be/rDp8bg-k254",
+        "title": "期末テストお疲れ様でした 2Q",
+        "description": "期末試験が終わったので作りました",
+        "thumbnail": "https://img.youtube.com/vi/rDp8bg-k254/maxresdefault.jpg"
+      }
     ],
     "externalLinks": [
       {
@@ -138,22 +128,37 @@
         "description": "ロストアンブレラ(yuigot Remix)のインストを使いました"
       }
     ],
-    "category": "video",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-08-06-00h42m05s057-1754408857220-5dleht-processed.jpeg",
-    "manualDate": "2025-08-04T15:00:00.000Z"
+    "isOtherCategory": false,
+    "originalImages": [
+      "/images/portfolio/vlcsnap-2025-08-06-00h42m05s057-1754408857220-5dleht.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h52m02s826-1754409380484-u405rz.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h52m10s499-1754409396148-lwr0vv.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h52m19s345-1754409400968-jt1u78.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h53m08s976-1754409405251-2y2yhp.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h53m33s343-1754409409457-m60u7r.png",
+      "/images/portfolio/vlcsnap-2025-08-06-00h53m54s340-1754409418423-p4zfp7.png"
+    ],
+    "processedImages": [],
+    "createdAt": "2025-08-05T15:45:13.848Z",
+    "updatedAt": "2025-08-14T12:26:52.895Z"
   },
   {
     "id": "portfolio-1753840532952",
     "type": "portfolio",
     "title": "期末テストお疲れ様でした 1Q",
     "description": "今回もテストが終わった後に作りました",
-    "category": "video",
-    "tags": [],
+    "categories": ["video"],
+    "tags": ["AfterEffects", "コンピュータ部"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-30T01:55:32.952Z",
-    "updatedAt": "2025-08-08T16:48:53.337Z",
     "content": "",
+    "markdownPath": "portfolio/portfolio-1753840532952.md",
+    "useManualDate": false,
+    "manualDate": "2025-06-03T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png"
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png",
     "videos": [
       {
         "type": "youtube",
@@ -161,9 +166,6 @@
         "title": "期末テストお疲れ様でした 1Q",
         "description": "今回もテストが終わった後に作りました"
       }
-    ],
-    "images": [
-      "/images/portfolio/vlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png"
     ],
     "externalLinks": [
       {
@@ -179,30 +181,29 @@
         "description": "音源のリンクです"
       }
     ],
-    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png",
-    "categories": ["video"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/vlcsnap-2025-07-30-10h57m35s196-1753840661732-tvy8tn.png"
     ],
-    "markdownPath": "portfolio/portfolio-1753840532952.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-06-03T15:00:00.000Z"
+    "createdAt": "2025-07-30T01:55:32.952Z",
+    "updatedAt": "2025-08-14T12:30:10.597Z"
   },
   {
     "id": "portfolio-1753840319431",
     "type": "portfolio",
     "title": "【Aeエフェクトプラグイン】LiteGlow",
     "description": "Aeでシンプルなグローを実現するエフェクトプラグインです\nDeepGlowが高かったので自分で作りました",
-    "category": "develop",
-    "tags": [],
+    "categories": ["develop"],
+    "tags": ["AfterEffects", "プラグイン", "C++", "VisualStudio"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-30T01:51:59.431Z",
-    "updatedAt": "2025-08-08T16:49:21.686Z",
     "content": "",
+    "markdownPath": "portfolio/portfolio-1753840319431.md",
+    "useManualDate": false,
+    "manualDate": "2025-05-17T15:00:00.000Z",
+    "images": ["/images/portfolio/LiteGlow-1753840373519-odqj9w.jpg"],
+    "thumbnail": "/images/portfolio/LiteGlow-1753840373519-odqj9w.jpg",
     "videos": [
       {
         "type": "youtube",
@@ -212,7 +213,6 @@
         "thumbnail": "https://img.youtube.com/vi/V15m8WLGVwg/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/LiteGlow-1753840373519-odqj9w.jpg"],
     "externalLinks": [
       {
         "type": "booth",
@@ -227,30 +227,28 @@
         "description": "Xの投稿です"
       }
     ],
-    "thumbnail": "/images/portfolio/LiteGlow-1753840373519-odqj9w.jpg",
-    "categories": ["develop"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": ["/images/portfolio/LiteGlow-1753840373519-odqj9w.jpg"],
-    "markdownPath": "portfolio/portfolio-1753840319431.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-05-17T15:00:00.000Z"
+    "createdAt": "2025-07-30T01:51:59.431Z",
+    "updatedAt": "2025-08-14T12:29:45.221Z"
   },
   {
     "id": "portfolio-1753840034006",
     "type": "portfolio",
     "title": "Ae縁取りエフェクト Border",
     "description": "AfterEffectsで縁取りを描画するエフェクトです",
-    "category": "develop",
-    "tags": [],
+    "categories": ["develop"],
+    "tags": ["AfterEffects", "プラグイン", "C++", "VisualStudio"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-30T01:47:14.006Z",
-    "updatedAt": "2025-08-08T17:10:43.074Z",
     "content": "",
-    "videos": [],
+    "markdownPath": "portfolio/portfolio-1753840034006.md",
+    "useManualDate": false,
+    "manualDate": "2025-05-15T15:00:00.000Z",
     "images": ["/images/portfolio/Ae_Border-1753840089865-8nd2od.jpg"],
+    "thumbnail": "/images/portfolio/Ae_Border-1753840089865-8nd2od.jpg",
+    "videos": [],
     "externalLinks": [
       {
         "type": "booth",
@@ -265,15 +263,11 @@
         "description": "Xの投稿です"
       }
     ],
-    "thumbnail": "/images/portfolio/Ae_Border-1753840089865-8nd2od.jpg",
-    "categories": ["develop"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": ["/images/portfolio/Ae_Border-1753840089865-8nd2od.jpg"],
-    "markdownPath": "portfolio/portfolio-1753840034006.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-05-15T15:00:00.000Z"
+    "createdAt": "2025-07-30T01:47:14.006Z",
+    "updatedAt": "2025-08-14T12:20:41.323Z"
   },
   {
     "id": "portfolio-1753839555107",
@@ -281,7 +275,7 @@
     "title": "MultiSlicer",
     "description": "Aeで画像をスライスするエフェクトプラグインです",
     "categories": ["design", "develop", "video"],
-    "tags": [],
+    "tags": ["AfterEffects", "プラグイン", "C++", "VisualStudio"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -289,6 +283,7 @@
     "useManualDate": true,
     "manualDate": "2025-05-02T15:00:00.000Z",
     "images": ["/images/portfolio/20250503_multi-1753839872363-hw0x27.jpg"],
+    "thumbnail": "/images/portfolio/20250503_multi-1753839872363-hw0x27.jpg",
     "videos": [
       {
         "type": "youtube",
@@ -318,8 +313,7 @@
       "/images/portfolio/20250503_multi-1753839872363-hw0x27.jpg"
     ],
     "createdAt": "2025-07-30T01:39:15.107Z",
-    "updatedAt": "2025-08-14T05:14:41.927Z",
-    "thumbnail": "/images/portfolio/20250503_multi-1753839872363-hw0x27.jpg"
+    "updatedAt": "2025-08-14T12:20:01.761Z"
   },
   {
     "id": "portfolio-1753839404106",
@@ -327,7 +321,7 @@
     "title": "デザイン練習 #001",
     "description": "なにも考えずに手癖で作っています",
     "categories": ["design"],
-    "tags": [],
+    "tags": ["AfterEffects", "デザイン"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -337,6 +331,7 @@
     "images": [
       "https://pbs.twimg.com/media/GoVnXrGWIAAXdUS?format=jpg&name=large"
     ],
+    "thumbnail": "https://pbs.twimg.com/media/GoVnXrGWIAAXdUS?format=jpg&name=large",
     "videos": [],
     "externalLinks": [
       {
@@ -352,25 +347,27 @@
       "https://pbs.twimg.com/media/GoVnXrGWIAAXdUS?format=jpg&name=large"
     ],
     "createdAt": "2025-07-30T01:36:44.106Z",
-    "updatedAt": "2025-08-14T05:14:41.928Z",
-    "thumbnail": "https://pbs.twimg.com/media/GoVnXrGWIAAXdUS?format=jpg&name=large"
+    "updatedAt": "2025-08-14T12:19:29.898Z"
   },
   {
     "id": "portfolio-1753706214241",
     "type": "portfolio",
     "title": "コンピュータ部 勧誘チラシ",
     "description": "コンピュータ部の勧誘チラシを作成しました。",
-    "category": "design",
-    "tags": ["Illustrator"],
+    "categories": ["design"],
+    "tags": ["Illustrator", "コンピュータ部"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:36:54.241Z",
-    "updatedAt": "2025-08-08T16:55:35.012Z",
-    "videos": [],
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753706214241.md",
+    "useManualDate": false,
+    "manualDate": "2025-03-29T15:00:00.000Z",
     "images": [
       "/images/portfolio/20250325_conpu-1753831731635-5tkf1a.jpg",
       "/images/portfolio/20250325_conpu-1753831737057-37pwgg.jpg"
     ],
+    "thumbnail": "/images/portfolio/20250325_conpu-1753831731635-5tkf1a.jpg",
+    "videos": [],
     "externalLinks": [
       {
         "type": "website",
@@ -379,36 +376,34 @@
         "description": "Xのリンクです"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/20250325_conpu-1753831731635-5tkf1a.jpg",
-    "categories": ["design"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/20250325_conpu-1753831731635-5tkf1a.jpg",
       "/images/portfolio/20250325_conpu-1753831737057-37pwgg.jpg"
     ],
-    "markdownPath": "portfolio/portfolio-1753706214241.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-03-29T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:36:54.241Z",
+    "updatedAt": "2025-08-14T12:28:00.208Z"
   },
   {
     "id": "portfolio-1753706194107",
     "type": "portfolio",
     "title": "手書きアニメーション",
     "description": "フォトショを使って初めて手書きアニメーションを作成しました。",
-    "category": "design",
-    "tags": [],
+    "categories": ["design"],
+    "tags": ["Photoshop", "手書きアニメーション"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:36:34.107Z",
-    "updatedAt": "2025-08-08T16:50:41.950Z",
-    "videos": [],
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753706194107.md",
+    "useManualDate": false,
+    "manualDate": "2025-03-27T15:00:00.000Z",
     "images": [
       "/images/portfolio/gifanim_m-1753831016627-vfiecn.gif",
       "/images/portfolio/vlcsnap-2025-07-30-10h30m32s195-1753839037709-2itafx.png"
     ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-10h30m32s195-1753839037709-2itafx.png",
+    "videos": [],
     "externalLinks": [
       {
         "type": "website",
@@ -417,31 +412,32 @@
         "description": "Xのリンクです"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-10h30m32s195-1753839037709-2itafx.png",
-    "markdownPath": "portfolio/portfolio-1753706194107.md",
-    "markdownMigrated": true,
-    "categories": ["design"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/gifanim_m-1753831016627-vfiecn.gif",
       "/images/portfolio/vlcsnap-2025-07-30-10h30m32s195-1753839037709-2itafx.png"
     ],
-    "manualDate": "2025-03-27T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:36:34.107Z",
+    "updatedAt": "2025-08-14T12:28:48.108Z"
   },
   {
     "id": "portfolio-1753706148196",
     "type": "portfolio",
     "title": "コードタイプ風映像素材",
     "description": "p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。",
-    "category": "design",
+    "categories": ["design", "develop"],
     "tags": ["p5js", "aftereffects"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:35:48.196Z",
-    "updatedAt": "2025-08-08T16:51:53.007Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753706148196.md",
+    "useManualDate": true,
+    "manualDate": "2025-03-24T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-30-08h05m30s388-1753831109215-o605tg.png"
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-08h05m30s388-1753831109215-o605tg.png",
     "videos": [
       {
         "type": "youtube",
@@ -449,9 +445,6 @@
         "title": "コードタイプ風映像素材",
         "description": "p5jsを使ってプログラムコードのアニメーションを作成しました。透過png連番です。"
       }
-    ],
-    "images": [
-      "/images/portfolio/vlcsnap-2025-07-30-08h05m30s388-1753831109215-o605tg.png"
     ],
     "externalLinks": [
       {
@@ -467,32 +460,30 @@
         "description": "GitHub Repository"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-08h05m30s388-1753831109215-o605tg.png",
-    "categories": ["design", "develop"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/vlcsnap-2025-07-30-08h05m30s388-1753831109215-o605tg.png"
     ],
-    "markdownPath": "portfolio/portfolio-1753706148196.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-03-24T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:35:48.196Z",
+    "updatedAt": "2025-08-14T12:44:13.795Z"
   },
   {
     "id": "portfolio-1753706133707",
     "type": "portfolio",
     "title": "Aeエフェクトプラグイン Stretch v2",
     "description": "AeエフェクトプラグインStretchのv2です。操作性を改善して斜めに引き伸ばせるようにしました。Xの投稿が伸びてくれました。",
-    "category": "develop",
-    "tags": ["C++", "aftereffects", "VisualStudio"],
+    "categories": ["develop"],
+    "tags": ["C++", "VisualStudio", "プラグイン", "AfterEffects"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:35:33.707Z",
-    "updatedAt": "2025-08-08T16:51:23.949Z",
-    "videos": [],
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753706133707.md",
+    "useManualDate": true,
+    "manualDate": "2025-03-16T15:00:00.000Z",
     "images": ["/images/portfolio/stretch_v2-1753831090491-5qcmzj.jpg"],
+    "thumbnail": "/images/portfolio/stretch_v2-1753831090491-5qcmzj.jpg",
+    "videos": [],
     "externalLinks": [
       {
         "type": "booth",
@@ -507,30 +498,31 @@
         "description": "Xのリンクです"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/stretch_v2-1753831090491-5qcmzj.jpg",
-    "categories": ["develop"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/stretch_v2-1753831090491-5qcmzj.jpg"
     ],
-    "markdownPath": "portfolio/portfolio-1753706133707.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-03-17T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:35:33.707Z",
+    "updatedAt": "2025-08-14T12:31:15.743Z"
   },
   {
     "id": "portfolio-1753706120147",
     "type": "portfolio",
     "title": "タイピングゲーム ProtoType",
     "description": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。ゲームの実装が難しかった、、。ネットで公開してます",
-    "category": "develop",
-    "tags": ["PIXI.JS", "VSCode"],
+    "categories": ["develop"],
+    "tags": ["PIXI.JS", "VSCode", "コンフェス"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:35:20.147Z",
-    "updatedAt": "2025-08-08T17:02:22.106Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753706120147.md",
+    "useManualDate": false,
+    "manualDate": "2025-03-12T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-30-07h57m21s585-1753830992355-tntacj.png"
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-07h57m21s585-1753830992355-tntacj.png",
     "videos": [
       {
         "type": "youtube",
@@ -539,9 +531,6 @@
         "description": "WebGL(Pixi.js)を使ってタイピングゲームを作りました。",
         "thumbnail": "https://img.youtube.com/vi/ZJsJ2ss4IBw/maxresdefault.jpg"
       }
-    ],
-    "images": [
-      "/images/portfolio/vlcsnap-2025-07-30-07h57m21s585-1753830992355-tntacj.png"
     ],
     "externalLinks": [
       {
@@ -557,35 +546,33 @@
         "description": "Githubリポジトリです"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-07h57m21s585-1753830992355-tntacj.png",
-    "categories": ["develop"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/vlcsnap-2025-07-30-07h57m21s585-1753830992355-tntacj.png"
     ],
-    "markdownPath": "portfolio/portfolio-1753706120147.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-03-12T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:35:20.147Z",
+    "updatedAt": "2025-08-14T12:25:15.735Z"
   },
   {
     "id": "portfolio-1753706107538",
     "type": "portfolio",
     "title": "ProtoType パンフレット",
     "description": "久しぶりのデザイン。過去に作った素材を使っています。",
-    "category": "design",
-    "tags": [],
+    "categories": ["design"],
+    "tags": ["デザイン", "コンフェス", "Illustrator"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:35:07.538Z",
-    "updatedAt": "2025-08-08T17:02:59.976Z",
-    "videos": [],
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753706107538.md",
+    "useManualDate": false,
+    "manualDate": "2025-01-30T15:00:00.000Z",
     "images": [
       "/images/portfolio/20250311_com_pan-1753801396083-vqq8l9.jpg",
       "/images/portfolio/20250311_com_pan-1753801416200-errbvy.jpg"
     ],
+    "thumbnail": "/images/portfolio/20250311_com_pan-1753801396083-vqq8l9.jpg",
+    "videos": [],
     "externalLinks": [
       {
         "type": "demo",
@@ -594,31 +581,32 @@
         "description": "ProtoTypeの公開リンクです"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/20250311_com_pan-1753801396083-vqq8l9.jpg",
-    "categories": ["design"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/20250311_com_pan-1753801396083-vqq8l9.jpg",
       "/images/portfolio/20250311_com_pan-1753801416200-errbvy.jpg"
     ],
-    "markdownPath": "portfolio/portfolio-1753706107538.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-01-30T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:35:07.538Z",
+    "updatedAt": "2025-08-14T12:24:51.936Z"
   },
   {
     "id": "portfolio-1753706090299",
     "type": "portfolio",
     "title": "【二次創作】雪糅 文字pv",
     "description": "サビがとても好き。落ち着いた映像が出来上がりました。",
-    "category": "video",
-    "tags": [],
+    "categories": ["video"],
+    "tags": ["AfterEffects", "文字pv"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:34:50.299Z",
-    "updatedAt": "2025-08-08T16:56:01.766Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753706090299.md",
+    "useManualDate": false,
+    "manualDate": "2025-02-27T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-30-00h01m02s180-1753801283554-snqh1r.png"
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-00h01m02s180-1753801283554-snqh1r.png",
     "videos": [
       {
         "type": "youtube",
@@ -627,9 +615,6 @@
         "description": "サビがとても好き。落ち着いた映像が出来上がりました。",
         "thumbnail": "https://img.youtube.com/vi/A1r3QpnS3GA/maxresdefault.jpg"
       }
-    ],
-    "images": [
-      "/images/portfolio/vlcsnap-2025-07-30-00h01m02s180-1753801283554-snqh1r.png"
     ],
     "externalLinks": [
       {
@@ -645,30 +630,31 @@
         "description": "原曲のリンクです"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-07-30-00h01m02s180-1753801283554-snqh1r.png",
-    "categories": ["video"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/vlcsnap-2025-07-30-00h01m02s180-1753801283554-snqh1r.png"
     ],
-    "markdownPath": "portfolio/portfolio-1753706090299.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-02-27T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:34:50.299Z",
+    "updatedAt": "2025-08-14T12:27:06.911Z"
   },
   {
     "id": "portfolio-1753706048587",
     "type": "portfolio",
     "title": "【二次創作】花弁、それにまつわる音声 文字pv",
     "description": "ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。",
-    "category": "video",
-    "tags": [],
+    "categories": ["video"],
+    "tags": ["AfterEffects", "文字pv"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:34:08.587Z",
-    "updatedAt": "2025-08-08T16:56:25.934Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753706048587.md",
+    "useManualDate": false,
+    "manualDate": "2025-02-22T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-29-23h56m15s497-1753801008078-sbcvvj.png"
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-23h56m15s497-1753801008078-sbcvvj.png",
     "videos": [
       {
         "type": "youtube",
@@ -677,9 +663,6 @@
         "description": "ボカコレが盛り上がってましたね。あんまり作らない文字が大きいタイプの映像です。",
         "thumbnail": "https://img.youtube.com/vi/ay5stCLI9v4/maxresdefault.jpg"
       }
-    ],
-    "images": [
-      "/images/portfolio/vlcsnap-2025-07-29-23h56m15s497-1753801008078-sbcvvj.png"
     ],
     "externalLinks": [
       {
@@ -695,30 +678,31 @@
         "description": "原曲のリンクです"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-23h56m15s497-1753801008078-sbcvvj.png",
-    "categories": ["video"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/vlcsnap-2025-07-29-23h56m15s497-1753801008078-sbcvvj.png"
     ],
-    "markdownPath": "portfolio/portfolio-1753706048587.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-02-22T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:34:08.587Z",
+    "updatedAt": "2025-08-14T12:26:38.226Z"
   },
   {
     "id": "portfolio-1753706010674",
     "type": "portfolio",
     "title": "テストお疲れ様でした 4Q",
     "description": "恒例のテストお疲れ様でした動画です。 上手くなった気がします。このタイミングで映像垢作りました。",
-    "category": "video",
-    "tags": [],
+    "categories": ["video"],
+    "tags": ["AfterEffects", "コンピュータ部"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:33:30.674Z",
-    "updatedAt": "2025-08-08T16:56:54.855Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753706010674.md",
+    "useManualDate": false,
+    "manualDate": "2025-02-20T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-29-23h52m13s550-1753800748155-t22xtb.png"
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-23h52m13s550-1753800748155-t22xtb.png",
     "videos": [
       {
         "type": "youtube",
@@ -726,9 +710,6 @@
         "title": "テストお疲れ様でした 4Q",
         "description": "恒例のテストお疲れ様でした動画です。"
       }
-    ],
-    "images": [
-      "/images/portfolio/vlcsnap-2025-07-29-23h52m13s550-1753800748155-t22xtb.png"
     ],
     "externalLinks": [
       {
@@ -738,30 +719,31 @@
         "description": "X"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-23h52m13s550-1753800748155-t22xtb.png",
-    "categories": ["video"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/vlcsnap-2025-07-29-23h52m13s550-1753800748155-t22xtb.png"
     ],
-    "markdownPath": "portfolio/portfolio-1753706010674.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-02-20T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:33:30.674Z",
+    "updatedAt": "2025-08-14T12:26:15.339Z"
   },
   {
     "id": "portfolio-1753705999051",
     "type": "portfolio",
     "title": "Aeスクリプト Aulymo",
     "description": "Ae全自動リリックモーション「Aulymo」v2の動作説明動画です。PremiereProを初めてまともに使いました。あと、コンピュータ部のMacBookを借りました。",
-    "category": "develop",
-    "tags": [],
+    "categories": ["develop"],
+    "tags": ["AfterEffects", "プラグイン", "スクリプト", "VSCode"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:33:19.051Z",
-    "updatedAt": "2025-08-08T16:58:14.361Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753705999051.md",
+    "useManualDate": true,
+    "manualDate": "2024-12-20T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/vlcsnap-2025-01-23-21h17m27s569-1753800226443-atrscc.png"
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-01-23-21h17m27s569-1753800226443-atrscc.png",
     "videos": [
       {
         "type": "youtube",
@@ -771,9 +753,6 @@
         "thumbnail": "https://img.youtube.com/vi/EbtybmiN5pM/maxresdefault.jpg"
       }
     ],
-    "images": [
-      "/images/portfolio/vlcsnap-2025-01-23-21h17m27s569-1753800226443-atrscc.png"
-    ],
     "externalLinks": [
       {
         "type": "booth",
@@ -782,32 +761,30 @@
         "description": "Aeスクリプト Aulymoの販売リンクです"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-01-23-21h17m27s569-1753800226443-atrscc.png",
-    "categories": ["develop"],
     "isOtherCategory": false,
-    "useManualDate": true,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/vlcsnap-2025-01-23-21h17m27s569-1753800226443-atrscc.png"
     ],
-    "markdownPath": "portfolio/portfolio-1753705999051.md",
-    "markdownMigrated": true,
-    "manualDate": "2024-12-20T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:33:19.051Z",
+    "updatedAt": "2025-08-14T12:25:43.022Z"
   },
   {
     "id": "portfolio-1753705971770",
     "type": "portfolio",
     "title": "Aeエフェクトプラグイン sep_color",
     "description": "画像のようにレイヤーの不透明な塗りつぶします。線と円で塗りつぶせるようにしたのがポイント 操作性はStretchよりもよくなってます。",
-    "category": "develop",
-    "tags": [],
+    "categories": ["develop"],
+    "tags": ["AfterEffects", "プラグイン", "C++", "VisualStudio"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:32:51.770Z",
-    "updatedAt": "2025-08-08T17:03:36.036Z",
-    "videos": [],
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753705971770.md",
+    "useManualDate": false,
+    "manualDate": "2025-01-22T15:00:00.000Z",
     "images": ["/images/portfolio/20250123_sep_color-1753799278738-gm6kk6.jpg"],
+    "thumbnail": "/images/portfolio/20250123_sep_color-1753799278738-gm6kk6.jpg",
+    "videos": [],
     "externalLinks": [
       {
         "type": "booth",
@@ -822,30 +799,31 @@
         "description": "Xのリンク"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/20250123_sep_color-1753799278738-gm6kk6.jpg",
-    "categories": ["develop"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/20250123_sep_color-1753799278738-gm6kk6.jpg"
     ],
-    "markdownPath": "portfolio/portfolio-1753705971770.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-01-22T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:32:51.770Z",
+    "updatedAt": "2025-08-14T12:24:15.936Z"
   },
   {
     "id": "portfolio-1753705958241",
     "type": "portfolio",
     "title": "ONESELF 二次創作",
     "description": "TwinfieldさんのONESELFで文字pv(?)を作りました 満足",
-    "category": "video",
-    "tags": [],
+    "categories": ["video"],
+    "tags": ["AfterEffects", "文字pv"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:32:38.241Z",
-    "updatedAt": "2025-08-08T17:06:56.746Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753705958241.md",
+    "useManualDate": false,
+    "manualDate": "2025-01-11T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/20250112_-0-00-04-54--1753783555771-7w17az.jpg"
+    ],
+    "thumbnail": "/images/portfolio/20250112_-0-00-04-54--1753783555771-7w17az.jpg",
     "videos": [
       {
         "type": "youtube",
@@ -855,9 +833,6 @@
         "thumbnail": "https://img.youtube.com/vi/aSjeoaoBKPc/maxresdefault.jpg"
       }
     ],
-    "images": [
-      "/images/portfolio/20250112_-0-00-04-54--1753783555771-7w17az.jpg"
-    ],
     "externalLinks": [
       {
         "type": "website",
@@ -866,30 +841,31 @@
         "description": "Xのリンクです"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/20250112_-0-00-04-54--1753783555771-7w17az.jpg",
-    "categories": ["video"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/20250112_-0-00-04-54--1753783555771-7w17az.jpg"
     ],
-    "markdownPath": "portfolio/portfolio-1753705958241.md",
-    "markdownMigrated": true,
-    "manualDate": "2025-01-11T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:32:38.241Z",
+    "updatedAt": "2025-08-14T12:23:51.456Z"
   },
   {
     "id": "portfolio-1753705948545",
     "type": "portfolio",
     "title": "Aeエフェクトプラグイン Stretch",
     "description": "AeでAviutlの引き伸ばしを再現しました。これでC++が出来ると自称していいのでしょうか...",
-    "category": "develop",
-    "tags": [],
+    "categories": ["develop"],
+    "tags": ["AfterEffects", "プラグイン", "C++", "VisualStudio"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:32:28.545Z",
-    "updatedAt": "2025-08-08T16:50:08.796Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753705948545.md",
+    "useManualDate": true,
+    "manualDate": "2025-01-09T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/20250109_stretch-0-00-00-00--1753783360584-s4oqu5.jpg"
+    ],
+    "thumbnail": "/images/portfolio/20250109_stretch-0-00-00-00--1753783360584-s4oqu5.jpg",
     "videos": [
       {
         "type": "youtube",
@@ -898,9 +874,6 @@
         "description": "AeでAviutlの引き伸ばしを再現しました。これでC++が出来ると自称していいのでしょうか...",
         "thumbnail": "https://img.youtube.com/vi/RIzWX4QIkzE/maxresdefault.jpg"
       }
-    ],
-    "images": [
-      "/images/portfolio/20250109_stretch-0-00-00-00--1753783360584-s4oqu5.jpg"
     ],
     "externalLinks": [
       {
@@ -916,30 +889,31 @@
         "description": "Aeエフェクトプラグイン Stretch"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/20250109_stretch-0-00-00-00--1753783360584-s4oqu5.jpg",
-    "markdownPath": "portfolio/portfolio-1753705948545.md",
-    "markdownMigrated": true,
-    "categories": ["develop"],
     "isOtherCategory": false,
-    "useManualDate": true,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/20250109_stretch-0-00-00-00--1753783360584-s4oqu5.jpg"
     ],
-    "manualDate": "2025-01-09T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:32:28.545Z",
+    "updatedAt": "2025-08-14T12:29:19.660Z"
   },
   {
     "id": "portfolio-1753705921393",
     "type": "portfolio",
     "title": "ラプラスショコラ 二次創作",
     "description": "映像依頼の練習で5時間で作りました",
-    "category": "video",
-    "tags": [],
+    "categories": ["video"],
+    "tags": ["AfterEffects"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:32:01.393Z",
-    "updatedAt": "2025-08-08T17:07:40.507Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753705921393.md",
+    "useManualDate": false,
+    "manualDate": "2024-12-30T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-29-18h55m30s074-1753782939486-rm0z6e.jpg"
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-18h55m30s074-1753782939486-rm0z6e.jpg",
     "videos": [
       {
         "type": "youtube",
@@ -948,9 +922,6 @@
         "description": "映像依頼の練習で5時間で作りました",
         "thumbnail": "https://img.youtube.com/vi/R1nFXZB9lG8/maxresdefault.jpg"
       }
-    ],
-    "images": [
-      "/images/portfolio/vlcsnap-2025-07-29-18h55m30s074-1753782939486-rm0z6e.jpg"
     ],
     "externalLinks": [
       {
@@ -966,30 +937,31 @@
         "description": "音源のリンクです"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-18h55m30s074-1753782939486-rm0z6e.jpg",
-    "categories": ["video"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/vlcsnap-2025-07-29-18h55m30s074-1753782939486-rm0z6e.jpg"
     ],
-    "markdownPath": "portfolio/portfolio-1753705921393.md",
-    "markdownMigrated": true,
-    "manualDate": "2024-12-30T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:32:01.393Z",
+    "updatedAt": "2025-08-14T12:21:51.656Z"
   },
   {
     "id": "portfolio-1753705889177",
     "type": "portfolio",
     "title": "reel 2024",
     "description": "2024年に作った動画の総集編です",
-    "category": "video",
-    "tags": [],
+    "categories": ["video"],
+    "tags": ["AfterEffects"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:31:29.177Z",
-    "updatedAt": "2025-08-08T17:08:39.618Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753705889177.md",
+    "useManualDate": false,
+    "manualDate": "2024-12-26T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-29-18h51m23s239-1753782776068-n1a04n.png"
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-18h51m23s239-1753782776068-n1a04n.png",
     "videos": [
       {
         "type": "youtube",
@@ -999,9 +971,6 @@
         "thumbnail": "https://img.youtube.com/vi/oqfjwzVYDc8/maxresdefault.jpg"
       }
     ],
-    "images": [
-      "/images/portfolio/vlcsnap-2025-07-29-18h51m23s239-1753782776068-n1a04n.png"
-    ],
     "externalLinks": [
       {
         "type": "website",
@@ -1010,30 +979,37 @@
         "description": "Youtubeのリンクです"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-18h51m23s239-1753782776068-n1a04n.png",
-    "categories": ["video"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/vlcsnap-2025-07-29-18h51m23s239-1753782776068-n1a04n.png"
     ],
-    "markdownPath": "portfolio/portfolio-1753705889177.md",
-    "markdownMigrated": true,
-    "manualDate": "2024-12-26T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:31:29.177Z",
+    "updatedAt": "2025-08-14T12:21:38.178Z"
   },
   {
     "id": "portfolio-1753705868178",
     "type": "portfolio",
     "title": "Aulymo",
     "description": "Aeのスクリプトです　簡単にリリックモーションを作れます",
-    "category": "develop",
-    "tags": [],
+    "categories": ["develop"],
+    "tags": [
+      "AfterEffects",
+      "プラグイン",
+      "スクリプト",
+      "ExtendScript",
+      "VSCode"
+    ],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:31:08.178Z",
-    "updatedAt": "2025-08-08T17:09:19.088Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753705868178.md",
+    "useManualDate": false,
+    "manualDate": "2024-12-20T15:00:00.000Z",
+    "images": [
+      "/images/portfolio/vlcsnap-2025-07-29-18h46m54s624-1753782433828-yq6ihh.png"
+    ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-18h46m54s624-1753782433828-yq6ihh.png",
     "videos": [
       {
         "type": "youtube",
@@ -1043,9 +1019,6 @@
         "thumbnail": "https://img.youtube.com/vi/SewXH0Bbm-c/maxresdefault.jpg"
       }
     ],
-    "images": [
-      "/images/portfolio/vlcsnap-2025-07-29-18h46m54s624-1753782433828-yq6ihh.png"
-    ],
     "externalLinks": [
       {
         "type": "booth",
@@ -1054,18 +1027,13 @@
         "description": "Aeのスクリプトです 簡単にリリックモーションを作れます"
       }
     ],
-    "content": "",
-    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-18h46m54s624-1753782433828-yq6ihh.png",
-    "categories": ["develop"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": [
       "/images/portfolio/vlcsnap-2025-07-29-18h46m54s624-1753782433828-yq6ihh.png"
     ],
-    "markdownPath": "portfolio/portfolio-1753705868178.md",
-    "markdownMigrated": true,
-    "manualDate": "2024-12-20T15:00:00.000Z"
+    "createdAt": "2025-07-28T12:31:08.178Z",
+    "updatedAt": "2025-08-14T12:21:21.702Z"
   },
   {
     "id": "portfolio-1753705850489",
@@ -1084,6 +1052,7 @@
       "/images/portfolio/20241205_testotu-1753781885501-mq2rtl.gif",
       "/images/portfolio/vlcsnap-2025-07-29-18h38m55s416-1753781954114-wffzec.png"
     ],
+    "thumbnail": "/images/portfolio/vlcsnap-2025-07-29-18h38m55s416-1753781954114-wffzec.png",
     "videos": [
       {
         "type": "youtube",
@@ -1108,8 +1077,7 @@
       "/images/portfolio/vlcsnap-2025-07-29-18h38m55s416-1753781954114-wffzec.png"
     ],
     "createdAt": "2025-07-28T12:30:50.489Z",
-    "updatedAt": "2025-08-14T05:14:41.929Z",
-    "thumbnail": "/images/portfolio/20241205_testotu-1753781885501-mq2rtl.gif"
+    "updatedAt": "2025-08-14T11:43:42.742Z"
   },
   {
     "id": "portfolio-1753705824026",
@@ -1117,7 +1085,7 @@
     "title": "まわる世界 文字pv",
     "description": "「まわる世界/飯澤遥土」の二次創作文字pvです。",
     "categories": ["video"],
-    "tags": ["AfterEffects"],
+    "tags": ["AfterEffects", "文字pv"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -1125,6 +1093,7 @@
     "useManualDate": false,
     "manualDate": "2024-10-30T15:00:00.000Z",
     "images": ["/images/portfolio/20241102_mawaru-1753768712385-d2237e.png"],
+    "thumbnail": "/images/portfolio/20241102_mawaru-1753768712385-d2237e.png",
     "videos": [
       {
         "type": "youtube",
@@ -1154,8 +1123,7 @@
       "/images/portfolio/20241102_mawaru-1753768712385-d2237e.png"
     ],
     "createdAt": "2025-07-28T12:30:24.026Z",
-    "updatedAt": "2025-08-14T05:14:41.929Z",
-    "thumbnail": "/images/portfolio/20241102_mawaru-1753768712385-d2237e.png"
+    "updatedAt": "2025-08-14T12:22:20.593Z"
   },
   {
     "id": "portfolio-1753705810537",
@@ -1163,7 +1131,7 @@
     "title": "冥界 二次創作pv",
     "description": "「冥界/kabangu」の二次創作文字pvです。イラレで素材を作る練習です。",
     "categories": ["video"],
-    "tags": ["AfterEffects"],
+    "tags": ["AfterEffects", "文字pv"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -1171,6 +1139,7 @@
     "useManualDate": false,
     "manualDate": "2024-10-26T15:00:00.000Z",
     "images": ["/images/portfolio/20241027_meikai-1753768460581-c1hso4.png"],
+    "thumbnail": "/images/portfolio/20241027_meikai-1753768460581-c1hso4.png",
     "videos": [
       {
         "type": "youtube",
@@ -1200,8 +1169,7 @@
       "/images/portfolio/20241027_meikai-1753768460581-c1hso4.png"
     ],
     "createdAt": "2025-07-28T12:30:10.537Z",
-    "updatedAt": "2025-08-14T05:14:41.930Z",
-    "thumbnail": "/images/portfolio/20241027_meikai-1753768460581-c1hso4.png"
+    "updatedAt": "2025-08-14T12:27:21.744Z"
   },
   {
     "id": "portfolio-1753705763745",
@@ -1214,9 +1182,10 @@
     "priority": 50,
     "content": "",
     "markdownPath": "portfolio/portfolio-1753705763745.md",
-    "useManualDate": false,
+    "useManualDate": true,
     "manualDate": "2024-10-08T15:00:00.000Z",
     "images": ["/images/portfolio/shinkan-1753768044049-ox85kd.png"],
+    "thumbnail": "/images/portfolio/shinkan-1753768044049-ox85kd.png",
     "videos": [
       {
         "type": "youtube",
@@ -1244,8 +1213,7 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/shinkan-1753768044049-ox85kd.png"],
     "createdAt": "2025-07-28T12:29:23.745Z",
-    "updatedAt": "2025-08-14T05:14:41.930Z",
-    "thumbnail": "/images/portfolio/shinkan-1753768044049-ox85kd.png"
+    "updatedAt": "2025-08-14T12:45:24.582Z"
   },
   {
     "id": "portfolio-1753705752680",
@@ -1253,7 +1221,7 @@
     "title": "熱異常 テキストモーション",
     "description": "「熱異常/いよわ」のテキストモーションです インパクトのあるテキストモーションの練習です",
     "categories": ["video"],
-    "tags": ["AfterEffects"],
+    "tags": ["AfterEffects", "リリックモーション"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -1261,6 +1229,7 @@
     "useManualDate": true,
     "manualDate": "2024-09-28T15:00:00.000Z",
     "images": ["/images/portfolio/netu-1753767855803-zwbvzs.png"],
+    "thumbnail": "/images/portfolio/netu-1753767855803-zwbvzs.png",
     "videos": [
       {
         "type": "youtube",
@@ -1288,8 +1257,7 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/netu-1753767855803-zwbvzs.png"],
     "createdAt": "2025-07-28T12:29:12.680Z",
-    "updatedAt": "2025-08-14T05:14:41.930Z",
-    "thumbnail": "/images/portfolio/netu-1753767855803-zwbvzs.png"
+    "updatedAt": "2025-08-14T12:22:52.102Z"
   },
   {
     "id": "portfolio-1753705731016",
@@ -1466,7 +1434,7 @@
     "title": "忙しい人のための作文エディター 完成版",
     "description": "U-22プロコンに向けて制作 チャットGPTAPIを初めて使いました ページ風のドキュメントを作るのが本当に難しかったです ページを開くのにAPIキーが必要です",
     "categories": ["develop"],
-    "tags": [],
+    "tags": ["Web", "JavaScript", "HTML", "chatGPT API", "css", "VSCode"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -1474,6 +1442,7 @@
     "useManualDate": true,
     "manualDate": "2024-08-27T15:00:00.000Z",
     "images": ["/images/portfolio/isogasii-1753707430577-rebwd9.png"],
+    "thumbnail": "/images/portfolio/isogasii-1753707430577-rebwd9.png",
     "videos": [
       {
         "type": "youtube",
@@ -1501,20 +1470,23 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/isogasii-1753707430577-rebwd9.png"],
     "createdAt": "2025-07-28T12:27:08.729Z",
-    "updatedAt": "2025-08-14T05:14:41.932Z",
-    "thumbnail": "/images/portfolio/isogasii-1753707430577-rebwd9.png"
+    "updatedAt": "2025-08-14T12:18:42.455Z"
   },
   {
     "id": "portfolio-1753705617995",
     "type": "portfolio",
     "title": "忙しい人のための作文エディター 試作",
     "description": "U-22プロコンに向けて制作 単語にマウスオーバーすると類義語が表示されるようなテキストエディターです 全体的なクオリティが低かったのでボツにしました",
-    "category": "develop",
+    "categories": ["develop"],
     "tags": [],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T12:26:57.995Z",
-    "updatedAt": "2025-08-02T12:05:18.468Z",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753705617995.md",
+    "useManualDate": true,
+    "manualDate": "2024-08-12T15:00:00.000Z",
+    "images": ["/images/portfolio/isogatest-1753707321229-nmq8u5.png"],
+    "thumbnail": "/images/portfolio/isogatest-1753707321229-nmq8u5.png",
     "videos": [
       {
         "type": "youtube",
@@ -1524,17 +1496,12 @@
         "thumbnail": "https://img.youtube.com/vi/RGKhatEchrI/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/isogatest-1753707321229-nmq8u5.png"],
     "externalLinks": [],
-    "content": "U-22プロコンに向けて制作 単語にマウスオーバーすると類義語が表示されるようなテキストエディターです 全体的なクオリティが低かったのでボツにしました",
-    "thumbnail": "/images/portfolio/isogatest-1753707321229-nmq8u5.png",
-    "categories": ["develop"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": ["/images/portfolio/isogatest-1753707321229-nmq8u5.png"],
-    "markdownPath": "portfolio/portfolio-1753705617995.md",
-    "markdownMigrated": true
+    "createdAt": "2025-07-28T12:26:57.995Z",
+    "updatedAt": "2025-08-14T12:38:58.520Z"
   },
   {
     "id": "portfolio-1753705569200",
@@ -1542,7 +1509,7 @@
     "title": "赤と黒のデザイン",
     "description": "webっぽいデザインの練習です 赤と黒はスタイリッシュな感じが出ますよね",
     "categories": ["design"],
-    "tags": [],
+    "tags": ["Adobe XD", "デザイン"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -1550,14 +1517,14 @@
     "useManualDate": true,
     "manualDate": "2024-09-08T15:00:00.000Z",
     "images": ["/images/portfolio/black-1753707278578-cqmdgl.png"],
+    "thumbnail": "/images/portfolio/black-1753707278578-cqmdgl.png",
     "videos": [],
     "externalLinks": [],
     "isOtherCategory": false,
     "originalImages": [],
     "processedImages": ["/images/portfolio/black-1753707278578-cqmdgl.png"],
     "createdAt": "2025-07-28T12:26:09.200Z",
-    "updatedAt": "2025-08-14T05:14:41.932Z",
-    "thumbnail": "/images/portfolio/black-1753707278578-cqmdgl.png"
+    "updatedAt": "2025-08-14T12:19:03.494Z"
   },
   {
     "id": "portfolio-1753705553752",
@@ -1565,7 +1532,7 @@
     "title": "青と白のデザイン",
     "description": "webっぽいデザインの練習です 青と白はかっこよくて好きです",
     "categories": ["design"],
-    "tags": [],
+    "tags": ["Adobe XD", "デザイン"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -1573,14 +1540,14 @@
     "useManualDate": true,
     "manualDate": "2024-09-08T15:00:00.000Z",
     "images": ["/images/portfolio/blue-1753707237299-5hcgzd.png"],
+    "thumbnail": "/images/portfolio/blue-1753707237299-5hcgzd.png",
     "videos": [],
     "externalLinks": [],
     "isOtherCategory": false,
     "originalImages": [],
     "processedImages": ["/images/portfolio/blue-1753707237299-5hcgzd.png"],
     "createdAt": "2025-07-28T12:25:53.752Z",
-    "updatedAt": "2025-08-14T05:14:41.933Z",
-    "thumbnail": "/images/portfolio/blue-1753707237299-5hcgzd.png"
+    "updatedAt": "2025-08-14T12:16:19.260Z"
   },
   {
     "id": "portfolio-1753705545464",
@@ -1588,7 +1555,7 @@
     "title": "どうにかなっちゃいそう 文字pv",
     "description": "「どうにかなっちゃいそう/NOMELON NOLEMON」の文字pvです 音声に合わせてイラストが動くエクスプレッションの練習です",
     "categories": ["video"],
-    "tags": [],
+    "tags": ["AfterEffects"],
     "status": "archived",
     "priority": 50,
     "content": "",
@@ -1596,6 +1563,7 @@
     "useManualDate": true,
     "manualDate": "2024-07-13T15:00:00.000Z",
     "images": ["/images/portfolio/dounika-1753707081038-m0js26.png"],
+    "thumbnail": "/images/portfolio/dounika-1753707081038-m0js26.png",
     "videos": [
       {
         "type": "youtube",
@@ -1617,8 +1585,7 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/dounika-1753707081038-m0js26.png"],
     "createdAt": "2025-07-28T12:25:45.464Z",
-    "updatedAt": "2025-08-14T05:14:41.933Z",
-    "thumbnail": "/images/portfolio/dounika-1753707081038-m0js26.png"
+    "updatedAt": "2025-08-14T12:16:38.914Z"
   },
   {
     "id": "portfolio-1753705521159",
@@ -1626,7 +1593,7 @@
     "title": "コンピュータ部パンフレットデザイン",
     "description": "コンピュータ部のパンフレットを作りました",
     "categories": ["design"],
-    "tags": [],
+    "tags": ["Illustrator", "コンピュータ部", "デザイン"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -1634,6 +1601,7 @@
     "useManualDate": true,
     "manualDate": "2024-08-05T15:00:00.000Z",
     "images": ["/images/portfolio/konpu-1753707007885-kwh651.png"],
+    "thumbnail": "/images/portfolio/konpu-1753707007885-kwh651.png",
     "videos": [],
     "externalLinks": [
       {
@@ -1647,8 +1615,7 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/konpu-1753707007885-kwh651.png"],
     "createdAt": "2025-07-28T12:25:21.159Z",
-    "updatedAt": "2025-08-14T05:14:41.933Z",
-    "thumbnail": "/images/portfolio/konpu-1753707007885-kwh651.png"
+    "updatedAt": "2025-08-14T12:15:56.962Z"
   },
   {
     "id": "portfolio-1753705501944",
@@ -1656,7 +1623,7 @@
     "title": "テストお疲れ様でした アニメーション",
     "description": "テスト終わりに作って部活動のDiscordサーバに投下しました",
     "categories": ["video"],
-    "tags": [],
+    "tags": ["AfterEffects", "コンピュータ部"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -1664,6 +1631,7 @@
     "useManualDate": true,
     "manualDate": "2024-08-04T15:00:00.000Z",
     "images": ["/images/portfolio/otukare-1753706893876-p5c7vt.png"],
+    "thumbnail": "/images/portfolio/otukare-1753706893876-p5c7vt.png",
     "videos": [
       {
         "type": "youtube",
@@ -1678,8 +1646,7 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/otukare-1753706893876-p5c7vt.png"],
     "createdAt": "2025-07-28T12:25:01.944Z",
-    "updatedAt": "2025-08-14T05:14:41.933Z",
-    "thumbnail": "/images/portfolio/otukare-1753706893876-p5c7vt.png"
+    "updatedAt": "2025-08-14T12:17:32.157Z"
   },
   {
     "id": "portfolio-1753705469624",
@@ -1687,7 +1654,7 @@
     "title": "大雨警報発令中",
     "description": "練習です大雨警報が発令中だったので作りました",
     "categories": ["video"],
-    "tags": [],
+    "tags": ["AfterEffects"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -1695,6 +1662,7 @@
     "useManualDate": true,
     "manualDate": "2024-06-30T15:00:00.000Z",
     "images": ["/images/portfolio/ooame-1753706697990-wimnl1.png"],
+    "thumbnail": "/images/portfolio/ooame-1753706697990-wimnl1.png",
     "videos": [
       {
         "type": "youtube",
@@ -1709,8 +1677,7 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/ooame-1753706697990-wimnl1.png"],
     "createdAt": "2025-07-28T12:24:29.624Z",
-    "updatedAt": "2025-08-14T05:14:41.934Z",
-    "thumbnail": "/images/portfolio/ooame-1753706697990-wimnl1.png"
+    "updatedAt": "2025-08-14T12:16:58.741Z"
   },
   {
     "id": "portfolio-1753705448392",
@@ -1718,7 +1685,7 @@
     "title": "動いたっ！ イラストアニメーション",
     "description": "Aeでイラストを動かしてみました",
     "categories": ["video"],
-    "tags": [],
+    "tags": ["AfterEffects"],
     "status": "published",
     "priority": 50,
     "content": "",
@@ -1726,6 +1693,7 @@
     "useManualDate": true,
     "manualDate": "2024-06-10T15:00:00.000Z",
     "images": ["/images/portfolio/ugoita-1753706654287-xl546f.png"],
+    "thumbnail": "/images/portfolio/ugoita-1753706654287-xl546f.png",
     "videos": [
       {
         "type": "youtube",
@@ -1740,21 +1708,23 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/ugoita-1753706654287-xl546f.png"],
     "createdAt": "2025-07-28T12:24:08.392Z",
-    "updatedAt": "2025-08-14T05:14:41.934Z",
-    "thumbnail": "/images/portfolio/ugoita-1753706654287-xl546f.png"
+    "updatedAt": "2025-08-14T12:17:09.712Z"
   },
   {
     "id": "portfolio-draft-test",
     "type": "portfolio",
     "title": "嘘と未来 文字pv",
     "description": "ボカロ曲「嘘と未来/うわべ」の文字pvです",
-    "category": "video",
-    "tags": [],
+    "categories": ["video"],
+    "tags": ["AfterEffects"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T10:30:00.000Z",
-    "updatedAt": "2025-08-09T13:23:58.421Z",
     "content": "",
+    "markdownPath": "portfolio/portfolio-draft-test.md",
+    "useManualDate": false,
+    "manualDate": "2024-05-14T15:00:00.000Z",
+    "images": ["/images/portfolio/usoto-1753706419203-7e35gq.png"],
+    "thumbnail": "/images/portfolio/usoto-1753706419203-7e35gq.png",
     "videos": [
       {
         "type": "youtube",
@@ -1764,7 +1734,6 @@
         "thumbnail": "https://img.youtube.com/vi/qwlAC0qPMXI/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/usoto-1753706419203-7e35gq.png"],
     "externalLinks": [
       {
         "type": "website",
@@ -1785,15 +1754,11 @@
         "description": "原曲のYoutubeリンクです"
       }
     ],
-    "thumbnail": "/images/portfolio/usoto-1753706419203-7e35gq.png",
-    "categories": ["video"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": ["/images/portfolio/usoto-1753706419203-7e35gq.png"],
-    "markdownPath": "portfolio/portfolio-draft-test.md",
-    "markdownMigrated": true,
-    "manualDate": "2024-05-14T15:00:00.000Z"
+    "createdAt": "2025-07-28T10:30:00.000Z",
+    "updatedAt": "2025-08-14T12:20:15.376Z"
   },
   {
     "id": "portfolio-1753697544895",
@@ -1834,13 +1799,14 @@
     "title": "FlashBeatテーマ曲(BGM)",
     "description": "自作音ゲーFlashBeatのテーマ曲 作曲しました",
     "categories": ["other"],
-    "tags": ["Cubase"],
+    "tags": ["Cubase", "DTM"],
     "status": "published",
     "priority": 50,
     "content": "",
     "markdownPath": "portfolio/portfolio-1753697297201.md",
     "useManualDate": false,
     "images": ["/images/portfolio/flashbgm-1753697381549-xlfwvd.webp"],
+    "thumbnail": "/images/portfolio/flashbgm-1753697381549-xlfwvd.webp",
     "videos": [
       {
         "type": "youtube",
@@ -1855,21 +1821,23 @@
     "originalImages": [],
     "processedImages": ["/images/portfolio/flashbgm-1753697381549-xlfwvd.webp"],
     "createdAt": "2025-07-28T10:08:17.201Z",
-    "updatedAt": "2025-08-14T05:14:41.935Z",
-    "thumbnail": "/images/portfolio/flashbgm-1753697381549-xlfwvd.webp"
+    "updatedAt": "2025-08-14T12:05:45.681Z"
   },
   {
     "id": "portfolio-1753696188231",
     "type": "portfolio",
     "title": "FlashBeat",
     "description": "U-16プログラミングコンテスト山口大会 技術賞 企業賞 受賞 Unityで作ったゲームです",
-    "category": "develop",
+    "categories": ["develop"],
     "tags": ["Unity"],
     "status": "published",
     "priority": 50,
-    "createdAt": "2025-07-28T09:49:48.231Z",
-    "updatedAt": "2025-08-02T12:04:33.087Z",
-    "content": "U-16プログラミングコンテスト山口大会 技術賞 企業賞 受賞 Unityで作ったゲームです",
+    "content": "",
+    "markdownPath": "portfolio/portfolio-1753696188231.md",
+    "useManualDate": true,
+    "manualDate": "2023-11-03T15:00:00.000Z",
+    "images": ["/images/portfolio/flash-1753696619864-g9cm6h.webp"],
+    "thumbnail": "/images/portfolio/flash-1753696619864-g9cm6h.webp",
     "videos": [
       {
         "type": "youtube",
@@ -1879,7 +1847,6 @@
         "thumbnail": "https://img.youtube.com/vi/D0pItdcPWqE/maxresdefault.jpg"
       }
     ],
-    "images": ["/images/portfolio/flash-1753696619864-g9cm6h.webp"],
     "externalLinks": [
       {
         "type": "github",
@@ -1888,14 +1855,11 @@
         "description": "リポジトリです"
       }
     ],
-    "thumbnail": "/images/portfolio/flash-1753696619864-g9cm6h.webp",
-    "categories": ["develop"],
     "isOtherCategory": false,
-    "useManualDate": false,
     "originalImages": [],
     "processedImages": ["/images/portfolio/flash-1753696619864-g9cm6h.webp"],
-    "markdownPath": "portfolio/portfolio-1753696188231.md",
-    "markdownMigrated": true
+    "createdAt": "2025-07-28T09:49:48.231Z",
+    "updatedAt": "2025-08-14T12:33:49.623Z"
   },
   {
     "id": "portfolio-1753695303368",

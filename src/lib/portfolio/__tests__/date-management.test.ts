@@ -210,7 +210,7 @@ describe("PortfolioDateManager", () => {
       expect(effectiveDate.toISOString()).toBe("2023-01-01T00:00:00.000Z");
     });
 
-    it("should return creation date when useManualDate is false", () => {
+    it("should return manual date even when useManualDate is false", () => {
       const itemWithDisabledManualDate: EnhancedContentItem = {
         ...mockItem,
         useManualDate: false,
@@ -220,7 +220,7 @@ describe("PortfolioDateManager", () => {
       const effectiveDate = dateManager.getEffectiveDate(
         itemWithDisabledManualDate,
       );
-      expect(effectiveDate.toISOString()).toBe("2023-01-01T00:00:00.000Z");
+      expect(effectiveDate.toISOString()).toBe("2023-06-15T12:30:45.123Z");
     });
 
     it("should handle invalid manual dates gracefully", () => {

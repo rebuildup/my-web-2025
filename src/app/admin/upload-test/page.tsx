@@ -129,6 +129,7 @@ export default function UploadTestPage() {
                     <h4 className="font-medium mb-2">
                       アップロードされた画像:
                     </h4>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={uploadResult.files[0].url}
                       alt="Uploaded"

@@ -7,6 +7,7 @@
 
 import { SafeImage } from "@/components/ui/SafeImage";
 import { SearchFilter } from "@/lib/portfolio/search-index";
+import { getEffectiveDate } from "@/types";
 import { ContentItem } from "@/types/content";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -70,8 +71,8 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
 
     // Sort by effective date (manual date if set, otherwise createdAt) in descending order
     filtered.sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
+      const dateA = getEffectiveDate(a);
+      const dateB = getEffectiveDate(b);
       return dateB.getTime() - dateA.getTime();
     });
 

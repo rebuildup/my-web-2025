@@ -74,7 +74,6 @@ export type {
 export {
   ENHANCED_PORTFOLIO_CATEGORIES as ENHANCED_CATEGORIES,
   ENHANCED_PORTFOLIO_CATEGORY_LABELS as ENHANCED_CATEGORY_LABELS,
-  getEffectiveDate,
   getEnhancedPortfolioCategoryOptions,
   hasOtherCategory,
   isEnhancedContentItem as isEnhancedContentItemHelper,
@@ -82,6 +81,18 @@ export {
   migrateCategoryToCategories,
   shouldExcludeFromGallery,
 } from "./enhanced-content";
+
+// Flexible getEffectiveDate function that works with both ContentItem and EnhancedContentItem
+export const getEffectiveDate = (
+  item: ContentItem | EnhancedContentItem,
+): Date => {
+  // Check if it's an enhanced content item with manual date
+  if (isEnhancedContentItem(item) && (item as EnhancedContentItem).manualDate) {
+    return new Date((item as EnhancedContentItem).manualDate!);
+  }
+  // Fall back to creation date for all items
+  return new Date(item.createdAt);
+};
 
 // Site Configuration Types
 export type {
