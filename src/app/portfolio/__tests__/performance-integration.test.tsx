@@ -23,10 +23,40 @@ Object.defineProperty(navigator, "maxTouchPoints", {
   value: 0,
 });
 
+// Mock the portfolio data manager
+const mockPortfolioDataManager = {
+  getPortfolioItemsByCategory: jest.fn(),
+  getPortfolioStats: jest.fn(),
+  getFeaturedProjects: jest.fn(),
+  processPortfolioData: jest.fn(),
+  getPortfolioData: jest.fn(),
+  searchPortfolio: jest.fn(),
+  getPortfolioItem: jest.fn(),
+};
+
+jest.mock("@/lib/portfolio/data-manager", () => ({
+  portfolioDataManager: mockPortfolioDataManager,
+}));
+
+// Mock the SEO metadata generator
+jest.mock("@/lib/portfolio/seo-metadata-generator", () => ({
+  PortfolioSEOMetadataGenerator: jest.fn().mockImplementation(() => ({
+    generateGalleryMetadata: jest.fn().mockResolvedValue({
+      metadata: { title: "Test Gallery" },
+      structuredData: { "@type": "WebPage" },
+    }),
+  })),
+}));
+
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { ContentItem } from "@/types/content";
 import { render, screen, waitFor } from "@testing-library/react";
 import React from "react";
+
+// Get the mocked instance
+const mockedPortfolioDataManager = portfolioDataManager as jest.Mocked<
+  typeof portfolioDataManager
+>;
 
 // Mock performance APIs
 Object.defineProperty(window, "performance", {
@@ -263,6 +293,21 @@ Object.defineProperty(global, "performance", {
 describe("Performance Integration Tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Setup mock implementations
+    mockPortfolioDataManager.getPortfolioItemsByCategory.mockResolvedValue([]);
+    mockPortfolioDataManager.getPortfolioStats.mockResolvedValue({
+      totalProjects: 0,
+      technologyCounts: {},
+      categoryCounts: {},
+    });
+    mockPortfolioDataManager.getFeaturedProjects.mockResolvedValue([]);
+    mockPortfolioDataManager.getPortfolioData.mockResolvedValue([]);
+    mockPortfolioDataManager.searchPortfolio.mockResolvedValue({
+      items: [],
+      totalCount: 0,
+      hasMore: false,
+    });
 
     // Reset performance mocks
     (window.performance.now as jest.Mock).mockImplementation(() => Date.now());

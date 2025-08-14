@@ -175,6 +175,14 @@ export class PortfolioSEOMetadataGenerator {
     category: string,
   ): Promise<PortfolioPageMetadata> {
     try {
+      // Check if dataManager is properly initialized
+      if (
+        !this.dataManager ||
+        typeof this.dataManager.getPortfolioItemsByCategory !== "function"
+      ) {
+        throw new Error("PortfolioDataManager is not properly initialized");
+      }
+
       const categoryInfo = this.getCategoryInfo(category);
       const items =
         await this.dataManager.getPortfolioItemsByCategory(category);

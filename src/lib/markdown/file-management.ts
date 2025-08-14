@@ -386,8 +386,19 @@ export class MarkdownFileManager {
           } else {
             // Relative paths should start with a valid content type directory
             const validDirs = Object.values(this.contentTypeDirectories);
-            const firstSegment = filePath.split(path.sep)[0];
-            if (!validDirs.includes(firstSegment)) {
+            const pathSegments = filePath.split(path.sep);
+            const firstSegment = pathSegments[0];
+
+            // Check if it's a simple relative path like "relative/path.md"
+            if (pathSegments.length > 1 && !validDirs.includes(firstSegment)) {
+              return false;
+            }
+
+            // Single segment relative paths are not allowed
+            if (
+              pathSegments.length === 1 &&
+              !validDirs.includes(firstSegment.replace(".md", ""))
+            ) {
               return false;
             }
           }
@@ -398,7 +409,9 @@ export class MarkdownFileManager {
             process.env.NODE_ENV === "test"
           ) {
             // This is a test path, allow it for testing error scenarios
+            return true;
           } else {
+            // Absolute paths outside base directory are not allowed
             return false;
           }
         }
