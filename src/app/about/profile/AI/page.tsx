@@ -226,7 +226,7 @@ export default function AIProfilePage() {
 								items={[
 									{ label: "Home", href: "/" },
 									{ label: "About", href: "/about" },
-									{ label: "Profile", href: "/about/profile" },
+									{ label: "Profile", href: "/about" },
 									{ label: "AI", isCurrent: true },
 								]}
 								className="pt-4"

@@ -11,37 +11,41 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 // react-bits componentsを動的インポート
 const GlitchText = dynamic(
-	() =>
-		import("@appletosolutions/reactbits").then((mod) => mod.GlitchText),
+	() => import("@appletosolutions/reactbits").then((mod) => mod.GlitchText),
 	{ ssr: false },
 );
 const ShinyText = dynamic(
-	() =>
-		import("@appletosolutions/reactbits").then((mod) => mod.ShinyText),
+	() => import("@appletosolutions/reactbits").then((mod) => mod.ShinyText),
 	{ ssr: false },
 );
 const ScrollVelocity = dynamic(
-	() =>
-		import("@appletosolutions/reactbits").then((mod) => mod.ScrollVelocity),
+	() => import("@appletosolutions/reactbits").then((mod) => mod.ScrollVelocity),
 	{ ssr: false },
 );
 const CircularText = dynamic(
-	() =>
-		import("@appletosolutions/reactbits").then((mod) => mod.CircularText),
+	() => import("@appletosolutions/reactbits").then((mod) => mod.CircularText),
 	{ ssr: false },
 );
 const SpotlightCard = dynamic(
-	() =>
-		import("@appletosolutions/reactbits").then((mod) => mod.SpotlightCard),
+	() => import("@appletosolutions/reactbits").then((mod) => mod.SpotlightCard),
 	{ ssr: false },
 );
 const GlareHover = dynamic(
-	() =>
-		import("@appletosolutions/reactbits").then((mod) => mod.GlareHover),
+	() => import("@appletosolutions/reactbits").then((mod) => mod.GlareHover),
 	{ ssr: false },
 );
 // Custom typing animation component
-function TypingText({ text, className, speed = 20, delay = 0 }: { text: string; className?: string; speed?: number; delay?: number }) {
+function TypingText({
+	text,
+	className,
+	speed = 20,
+	delay = 0,
+}: {
+	text: string;
+	className?: string;
+	speed?: number;
+	delay?: number;
+}) {
 	const [displayedText, setDisplayedText] = useState("");
 
 	useEffect(() => {
@@ -119,28 +123,32 @@ export default function AboutPage() {
 		const observer = new IntersectionObserver(
 			(entries) => {
 				// すべてのエントリを処理
-				const sectionStates = entries.map((entry) => {
-					const section = sections.find(
-						(s) => s.ref.current === entry.target,
-					);
-					if (!section) return null;
-					
-					// SKILLSセクションはより厳しい条件（0.95以上）
-					if (section.name === "Skills") {
+				const sectionStates = entries
+					.map((entry) => {
+						const section = sections.find(
+							(s) => s.ref.current === entry.target,
+						);
+						if (!section) return null;
+
+						// SKILLSセクションはより厳しい条件（0.95以上）
+						if (section.name === "Skills") {
+							return {
+								...section,
+								isIntersecting:
+									entry.isIntersecting && entry.intersectionRatio >= 0.95,
+								ratio: entry.intersectionRatio,
+							};
+						}
+
+						// 他のセクションは通常の条件
 						return {
 							...section,
-							isIntersecting: entry.isIntersecting && entry.intersectionRatio >= 0.95,
+							isIntersecting:
+								entry.isIntersecting && entry.intersectionRatio >= 0.3,
 							ratio: entry.intersectionRatio,
 						};
-					}
-					
-					// 他のセクションは通常の条件
-					return {
-						...section,
-						isIntersecting: entry.isIntersecting && entry.intersectionRatio >= 0.3,
-						ratio: entry.intersectionRatio,
-					};
-				}).filter((s): s is NonNullable<typeof s> => s !== null);
+					})
+					.filter((s): s is NonNullable<typeof s> => s !== null);
 
 				// 交差しているセクションを優先順位でソート
 				const intersectingSections = sectionStates
@@ -155,11 +163,15 @@ export default function AboutPage() {
 					});
 
 				// SKILLSセクションが選択されるのは、他のセクションが交差していない場合のみ
-				const nonSkillsSections = intersectingSections.filter(s => s.name !== "Skills");
-				const skillsSections = intersectingSections.filter(s => s.name === "Skills");
-				
+				const nonSkillsSections = intersectingSections.filter(
+					(s) => s.name !== "Skills",
+				);
+				const skillsSections = intersectingSections.filter(
+					(s) => s.name === "Skills",
+				);
+
 				let selectedSection = null;
-				
+
 				// 他のセクションがある場合は、その中から優先度の高いものを選択
 				if (nonSkillsSections.length > 0) {
 					selectedSection = nonSkillsSections[0];
@@ -172,7 +184,16 @@ export default function AboutPage() {
 				if (selectedSection) {
 					// デバッグ用（本番環境では削除可能）
 					if (process.env.NODE_ENV === "development") {
-						console.log("Current section:", selectedSection.name, "ratio:", selectedSection.ratio, "all intersecting:", intersectingSections.map(s => `${s.name}:${s.ratio}`).join(", "));
+						console.log(
+							"Current section:",
+							selectedSection.name,
+							"ratio:",
+							selectedSection.ratio,
+							"all intersecting:",
+							intersectingSections
+								.map((s) => `${s.name}:${s.ratio}`)
+								.join(", "),
+						);
 					}
 					setCurrentSection(selectedSection.name);
 				}
@@ -199,21 +220,36 @@ export default function AboutPage() {
 	}, [mounted]);
 
 	const educationData = [
-		{ date: "2023/3", contentJa: "公立中学校 卒業", contentEn: "Graduated from public junior high school" },
-		{ date: "2023/4", contentJa: "宇部高等専門学校 制御情報工学科 入学", contentEn: "Enrolled in Ube National Institute of Technology" },
-		{ date: "~2028/3", contentJa: "宇部高等専門学校 制御情報工学科 在学中", contentEn: "Currently enrolled in Ube National Institute of Technology" },
+		{
+			date: "2023/3",
+			contentJa: "公立中学校 卒業",
+			contentEn: "Graduated from public junior high school",
+		},
+		{
+			date: "2023/4",
+			contentJa: "宇部高等専門学校 制御情報工学科 入学",
+			contentEn: "Enrolled in Ube National Institute of Technology",
+		},
+		{
+			date: "~2028/3",
+			contentJa: "宇部高等専門学校 制御情報工学科 在学中",
+			contentEn: "Currently enrolled in Ube National Institute of Technology",
+		},
 	];
 
 	const achievementsData = [
 		{
 			date: "2024/3",
 			contentJa: "中国地区高専コンピュータフェスティバル2024 ゲーム部門 1位",
-			contentEn: "Chugoku Regional National Institute of Technology Computer Festival 2024 - Game Division 1st Place",
+			contentEn:
+				"Chugoku Regional National Institute of Technology Computer Festival 2024 - Game Division 1st Place",
 		},
 		{
 			date: "2023/10",
-			contentJa: "U-16プログラミングコンテスト山口大会2023 技術賞・企業(プライムゲート)賞",
-			contentEn: "U-16 Programming Contest Yamaguchi 2023 - Technical Award, Corporate (PrimeGate) Award",
+			contentJa:
+				"U-16プログラミングコンテスト山口大会2023 技術賞・企業(プライムゲート)賞",
+			contentEn:
+				"U-16 Programming Contest Yamaguchi 2023 - Technical Award, Corporate (PrimeGate) Award",
 		},
 		{
 			date: "2022/10",
@@ -238,20 +274,16 @@ export default function AboutPage() {
 		},
 		{
 			title: "Tech Stack",
-			items: [
-				"React",
-				"NextJS",
-				"Tailwind CSS",
-				"p5js",
-				"PIXIjs",
-				"GSAP",
-			],
+			items: ["React", "NextJS", "Tailwind CSS", "p5js", "PIXIjs", "GSAP"],
 		},
 		{
 			title: "Video",
 			items: ["AfterEffects", "Aviutl", "PremierePro", "Blender"],
 		},
-		{ title: "Others", items: ["Unity", "Cubase","VSCode","Cursor","Visual Studio"] },
+		{
+			title: "Others",
+			items: ["Unity", "Cubase", "VSCode", "Cursor", "Visual Studio"],
+		},
 	];
 
 	return (
@@ -350,7 +382,12 @@ export default function AboutPage() {
 							<motion.div
 								style={{ y: imageY }}
 								className="relative w-full h-full"
-								transition={{ type: "spring", damping: 30, stiffness: 200, mass: 0.5 }}
+								transition={{
+									type: "spring",
+									damping: 30,
+									stiffness: 200,
+									mass: 0.5,
+								}}
 							>
 								<Image
 									src="/images/20250412_tekuse.jpg"
@@ -364,7 +401,21 @@ export default function AboutPage() {
 					</section>
 
 					{/* Profile Links Section */}
-					<section ref={profileRef} className="-mt-80 mb-16 relative profile-section" style={{ overflowX: "hidden", overflowY: "visible", paddingTop: "10rem", paddingBottom: "10rem", minHeight: "auto", height: "auto", position: "relative", scrollbarWidth: "none", msOverflowStyle: "none" }}>
+					<section
+						ref={profileRef}
+						className="-mt-80 mb-16 relative profile-section"
+						style={{
+							overflowX: "hidden",
+							overflowY: "visible",
+							paddingTop: "10rem",
+							paddingBottom: "10rem",
+							minHeight: "auto",
+							height: "auto",
+							position: "relative",
+							scrollbarWidth: "none",
+							msOverflowStyle: "none",
+						}}
+					>
 						{/* Wrapper for all profile content - rotated together */}
 						<div
 							style={{
@@ -383,7 +434,10 @@ export default function AboutPage() {
 							}}
 						>
 							{/* Top - PROFILE text */}
-							<div className="mb-0 overflow-visible relative" style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>
+							<div
+								className="mb-0 overflow-visible relative"
+								style={{ paddingTop: "2rem", paddingBottom: "2rem" }}
+							>
 								<div
 									className="flex whitespace-nowrap animate-scroll"
 									style={{
@@ -399,9 +453,10 @@ export default function AboutPage() {
 											fontStyle: "italic",
 										}}
 									>
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE{" "}
 									</span>
 									<span
 										className="text-main/50 text-base md:text-lg mr-8 font-bold italic"
@@ -412,9 +467,10 @@ export default function AboutPage() {
 											fontStyle: "italic",
 										}}
 									>
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE{" "}
 									</span>
 								</div>
 							</div>
@@ -426,7 +482,9 @@ export default function AboutPage() {
 								>
 									<h2 className="text-xl md:text-2xl font-bold inline-flex items-center gap-2 text-main relative pb-1">
 										<span className="relative inline-flex items-center gap-2">
-											<span className="profile-link-text">「木村友亮」について知りたい方</span>
+											<span className="profile-link-text">
+												「木村友亮」について知りたい方
+											</span>
 											<span className="profile-link-arrow text-main/60">→</span>
 											<span className="profile-link-underline"></span>
 										</span>
@@ -438,7 +496,9 @@ export default function AboutPage() {
 								>
 									<h2 className="text-xl md:text-2xl font-bold inline-flex items-center gap-2 text-main relative pb-1">
 										<span className="relative inline-flex items-center gap-2">
-											<span className="profile-link-text">「samuido」について知りたい方</span>
+											<span className="profile-link-text">
+												「samuido」について知りたい方
+											</span>
 											<span className="profile-link-arrow text-main/60">→</span>
 											<span className="profile-link-underline"></span>
 										</span>
@@ -447,7 +507,10 @@ export default function AboutPage() {
 							</div>
 
 							{/* Bottom - PROFILE text */}
-							<div className="mt-0 overflow-visible relative" style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>
+							<div
+								className="mt-0 overflow-visible relative"
+								style={{ paddingTop: "2rem", paddingBottom: "2rem" }}
+							>
 								<div
 									className="flex whitespace-nowrap animate-scroll"
 									style={{
@@ -463,9 +526,10 @@ export default function AboutPage() {
 											fontStyle: "italic",
 										}}
 									>
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE{" "}
 									</span>
 									<span
 										className="text-main/50 text-base md:text-lg mr-8 font-bold italic"
@@ -476,9 +540,10 @@ export default function AboutPage() {
 											fontStyle: "italic",
 										}}
 									>
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
-										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE{" "}
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE PROFILE
+										PROFILE PROFILE PROFILE{" "}
 									</span>
 								</div>
 							</div>
@@ -512,14 +577,26 @@ export default function AboutPage() {
 						</motion.div>
 					</div>
 
-					<div className="p-10"/>
+					<div className="p-10" />
 					{/* Skills Section */}
-					<section ref={skillsRef} className="-mt-80 mb-16 relative skills-section" style={{ overflowX: "hidden", overflow: "visible", paddingTop: "12rem", paddingBottom: "6rem", position: "relative", scrollbarWidth: "none", msOverflowStyle: "none" }}>
+					<section
+						ref={skillsRef}
+						className="-mt-80 mb-16 relative skills-section"
+						style={{
+							overflowX: "hidden",
+							overflow: "visible",
+							paddingTop: "12rem",
+							paddingBottom: "6rem",
+							position: "relative",
+							scrollbarWidth: "none",
+							msOverflowStyle: "none",
+						}}
+					>
 						{/* Top - SKILLS text - separated and rotated */}
 						<ScrollFloat stagger={0}>
 							{mounted && (
-								<div 
-									className="mb-0 overflow-visible relative skills-text-wrapper" 
+								<div
+									className="mb-0 overflow-visible relative skills-text-wrapper"
 									style={{ paddingTop: "2rem", paddingBottom: "2rem" }}
 								>
 									<ScrollVelocity
@@ -538,24 +615,33 @@ export default function AboutPage() {
 							}}
 						>
 							{mounted && (
-								<div className="space-y-20" style={{ overflow: "visible", position: "relative" }}>
+								<div
+									className="space-y-20"
+									style={{ overflow: "visible", position: "relative" }}
+								>
 									{skillsData.map((skill) => (
-										<div key={skill.title} className="relative mb-12" style={{ overflow: "visible" }}>
-											<h3 
+										<div
+											key={skill.title}
+											className="relative mb-12"
+											style={{ overflow: "visible" }}
+										>
+											<h3
 												className="text-xl font-bold text-main text-right mr-4 z-10 relative"
-												style={{
-													transform: "translateY(4.5rem) rotate(10deg)",
-													transformOrigin: "right center",
-													opacity: 1,
-													willChange: "transform",
-													display: "block",
-													position: "relative",
-													marginBottom: "0",
-												} as React.CSSProperties}
+												style={
+													{
+														transform: "translateY(4.5rem) rotate(10deg)",
+														transformOrigin: "right center",
+														opacity: 1,
+														willChange: "transform",
+														display: "block",
+														position: "relative",
+														marginBottom: "0",
+													} as React.CSSProperties
+												}
 											>
 												{skill.title}
 											</h3>
-											<div 
+											<div
 												className="logo-loop-container overflow-hidden"
 												style={{
 													transform: "rotate(10deg)",
@@ -564,7 +650,13 @@ export default function AboutPage() {
 											>
 												<div className="flex logo-loop gap-4">
 													{/* 複数回繰り返してシームレスなループ効果を作る */}
-													{[...skill.items, ...skill.items, ...skill.items, ...skill.items,...skill.items].map((item, index) => (
+													{[
+														...skill.items,
+														...skill.items,
+														...skill.items,
+														...skill.items,
+														...skill.items,
+													].map((item, index) => (
 														<div
 															key={`${item}-${index}`}
 															className="px-4 py-2 text-main bg-main/5 rounded-full border border-main/10 hover:bg-main/10 hover:border-main/20 transition-colors text-center whitespace-nowrap shrink-0"
@@ -583,8 +675,8 @@ export default function AboutPage() {
 						{/* Bottom - SKILLS text - separated and rotated */}
 						<ScrollFloat stagger={0}>
 							{mounted && (
-								<div 
-									className="mt-0 overflow-visible relative skills-text-wrapper" 
+								<div
+									className="mt-0 overflow-visible relative skills-text-wrapper"
 									style={{ paddingTop: "2rem", paddingBottom: "2rem" }}
 								>
 									<ScrollVelocity
@@ -613,16 +705,22 @@ export default function AboutPage() {
 							<div className="relative pl-8 timeline-container">
 								{/* タイムラインの縦線 */}
 								<div className="absolute left-0 top-0 bottom-0 w-0.5 bg-main/20 timeline-line"></div>
-								
+
 								{educationData.map((edu, index) => (
 									<div key={index} className="relative mb-8 timeline-item">
 										{/* タイムラインノード（点） */}
 										<div className="absolute w-3 h-3 rounded-full bg-main/60 border-2 border-main timeline-node"></div>
-										
+
 										<div className="text-main">
-											<div className="text-sm md:text-base font-bold text-main/60 mb-2">{edu.date}</div>
-											<div className="text-base md:text-lg text-main mb-1">{edu.contentJa}</div>
-											<div className="text-main/60 text-[10px] md:text-xs leading-relaxed">{edu.contentEn}</div>
+											<div className="text-sm md:text-base font-bold text-main/60 mb-2">
+												{edu.date}
+											</div>
+											<div className="text-base md:text-lg text-main mb-1">
+												{edu.contentJa}
+											</div>
+											<div className="text-main/60 text-[10px] md:text-xs leading-relaxed">
+												{edu.contentEn}
+											</div>
 										</div>
 									</div>
 								))}
@@ -651,18 +749,22 @@ export default function AboutPage() {
 											<div className="text-sm md:text-base font-bold text-main/60 mb-2">
 												{achievement.date}
 											</div>
-											<div className="text-base md:text-lg text-main mb-1">{achievement.contentJa}</div>
-											<div className="text-main/60 text-[10px] md:text-xs leading-relaxed">{achievement.contentEn}</div>
+											<div className="text-base md:text-lg text-main mb-1">
+												{achievement.contentJa}
+											</div>
+											<div className="text-main/60 text-[10px] md:text-xs leading-relaxed">
+												{achievement.contentEn}
+											</div>
 										</div>
 									</div>
 								))}
 							</div>
 						</ScrollFloat>
 					</section>
-					<div className="p-40"/>
+					<div className="p-40" />
 					<footer className="left-0 right-0 z-10 flex items-center justify-center ">
-				<span className="text-xs text-main">© 2025 361do_sleep</span>
-			</footer>
+						<span className="text-xs text-main">© 2025 361do_sleep</span>
+					</footer>
 				</div>
 			</main>
 		</div>

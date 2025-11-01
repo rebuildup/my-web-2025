@@ -1,51 +1,96 @@
-import { Award, Calendar, GraduationCap, MapPin } from "lucide-react";
-import type { Metadata } from "next";
+"use client";
+
+import { useEffect, useState, useRef } from "react";
+import { Calendar, GraduationCap, MapPin } from "lucide-react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+import { ScrollFloat } from "@/components/ScrollFloat";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
-export const metadata: Metadata = {
-	title: "Real Profile - samuido | 木村友亮のプロフィール",
-	description:
-		"木村友亮（samuido）の本名プロフィール。生年月日、学歴、経歴、技術スキル、受賞歴などの詳細情報。採用担当者向け。",
-	keywords: [
-		"木村友亮",
-		"本名プロフィール",
-		"経歴",
-		"学歴",
-		"技術スキル",
-		"採用",
-		"高専生",
-	],
-	robots: "index, follow",
-	alternates: {
-		canonical: "https://yusuke-kim.com/about/profile/real",
-	},
-	openGraph: {
-		title: "Real Profile - samuido | 木村友亮のプロフィール",
-		description:
-			"木村友亮（samuido）の本名プロフィール。生年月日、学歴、経歴、技術スキル、受賞歴などの詳細情報。採用担当者向け。",
-		type: "profile",
-		url: "https://yusuke-kim.com/about/profile/real",
-		images: [
-			{
-				url: "https://yusuke-kim.com/about/profile-real-og-image.png",
-				width: 1200,
-				height: 630,
-				alt: "Real Profile - samuido",
-			},
-		],
-		siteName: "samuido",
-		locale: "ja_JP",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "Real Profile - samuido | 木村友亮のプロフィール",
-		description:
-			"木村友亮（samuido）の本名プロフィール。生年月日、学歴、経歴、技術スキル、受賞歴などの詳細情報。採用担当者向け。",
-		images: ["https://yusuke-kim.com/about/profile-real-twitter-image.jpg"],
-		creator: "@361do_sleep",
-	},
-};
+// react-bits componentsを動的インポート
+const ScrollVelocity = dynamic(
+	() => import("@appletosolutions/reactbits").then((mod) => mod.ScrollVelocity),
+	{ ssr: false },
+);
+const SpotlightCard = dynamic(
+	() => import("@appletosolutions/reactbits").then((mod) => mod.SpotlightCard),
+	{ ssr: false },
+);
+const GlareHover = dynamic(
+	() => import("@appletosolutions/reactbits").then((mod) => mod.GlareHover),
+	{ ssr: false },
+);
+// ランダム選択された性格をリスト表示するコンポーネント
+function RandomPersonalityList({ items }: { items: string[] }) {
+	const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+	useEffect(() => {
+		// ランダムに3つ選ぶ
+		const shuffled = [...items].sort(() => Math.random() - 0.5);
+		setSelectedItems(shuffled.slice(0, 3));
+	}, [items]);
+
+	return (
+		<div className="space-y-3">
+			{selectedItems.map((item, index) => (
+				<SpotlightCard key={index} className="bg-main/5 p-3 rounded-lg">
+					<p className="noto-sans-jp-light text-sm text-main">{item}</p>
+				</SpotlightCard>
+			))}
+		</div>
+	);
+}
+
+// Custom typing animation component
+function TypingText({
+	text,
+	className,
+	speed = 20,
+	delay = 0,
+}: {
+	text: string;
+	className?: string;
+	speed?: number;
+	delay?: number;
+}) {
+	const [displayedText, setDisplayedText] = useState("");
+
+	useEffect(() => {
+		setDisplayedText("");
+		let currentIndex = 0;
+		let timeoutId: NodeJS.Timeout;
+		let intervalId: NodeJS.Timeout;
+
+		const startTyping = () => {
+			currentIndex = 0;
+			intervalId = setInterval(() => {
+				if (currentIndex <= text.length) {
+					setDisplayedText(text.slice(0, currentIndex));
+					currentIndex++;
+				} else {
+					clearInterval(intervalId);
+				}
+			}, speed);
+		};
+
+		if (delay > 0) {
+			timeoutId = setTimeout(startTyping, delay);
+		} else {
+			startTyping();
+		}
+
+		return () => {
+			if (timeoutId) clearTimeout(timeoutId);
+			if (intervalId) clearInterval(intervalId);
+		};
+	}, [text, speed, delay]);
+
+	return (
+		<p className={className} style={{ minHeight: "1.5em" }}>
+			{displayedText || "\u00A0"}
+		</p>
+	);
+}
 
 const structuredData = {
 	"@context": "https://schema.org",
@@ -81,109 +126,142 @@ const personalInfo = {
 	nameReading: "きむら ゆうすけ",
 	handleName: "samuido",
 	birthDate: "2007年10月",
-	age: "17歳",
-	location: "日本",
+	age: "18歳",
+	location: "山口県 宇部市",
 	status: "高等専門学校在学中",
 	graduationYear: "2028年予定",
 };
 
 const education = [
 	{
-		period: "2020年4月 - 2023年3月",
-		institution: "中学校",
-		description: "基礎学習と美術・技術分野での活動",
+		date: "2023/3",
+		contentJa: "公立中学校 卒業",
+		contentEn: "Graduated from public junior high school",
 	},
 	{
-		period: "2023年4月 - 現在",
-		institution: "高等専門学校",
-		description: "情報工学科にて専門技術を学習中",
-		status: "在学中",
+		date: "2023/4",
+		contentJa: "宇部高等専門学校 制御情報工学科 入学",
+		contentEn: "Enrolled in Ube National Institute of Technology",
 	},
 	{
-		period: "2028年3月予定",
-		institution: "高等専門学校",
-		description: "卒業予定",
-		status: "予定",
+		date: "~2028/3",
+		contentJa: "宇部高等専門学校 制御情報工学科 在学中",
+		contentEn: "Currently enrolled in Ube National Institute of Technology",
 	},
 ];
-
-const skills = {
-	programming: {
-		title: "プログラミング言語",
-		items: [
-			"C",
-			"C++",
-			"C#",
-			"HTML",
-			"CSS",
-			"JavaScript",
-			"TypeScript",
-			"Python",
-		],
-		level: "中級〜上級",
-	},
-	frameworks: {
-		title: "フレームワーク・ライブラリ",
-		items: [
-			"React",
-			"Next.js",
-			"Tailwind CSS",
-			"p5.js",
-			"PIXI.js",
-			"GSAP",
-			"Unity",
-		],
-		level: "中級",
-	},
-	design: {
-		title: "デザインツール",
-		items: ["Photoshop", "Illustrator", "Adobe XD", "Figma"],
-		level: "中級〜上級",
-	},
-	video: {
-		title: "映像制作",
-		items: ["After Effects", "Premiere Pro", "Aviutl", "Blender"],
-		level: "中級〜上級",
-	},
-	other: {
-		title: "その他",
-		items: ["Git", "GitHub", "Cubase", "音楽制作"],
-		level: "中級",
-	},
-};
 
 const achievements = [
 	{
-		year: "2024年3月",
-		title: "中国地区高専コンピュータフェスティバル2024",
-		award: "ゲーム部門 1位",
-		description: "Unityを使用したゲーム開発で最優秀賞を受賞",
-		category: "プログラミング",
+		date: "2024/3",
+		contentJa: "中国地区高専コンピュータフェスティバル2024 ゲーム部門 1位",
+		contentEn:
+			"Chugoku Regional National Institute of Technology Computer Festival 2024 - Game Division 1st Place",
 	},
 	{
-		year: "2023年10月",
-		title: "U-16プログラミングコンテスト山口大会2023",
-		award: "技術賞・企業(プライムゲート)賞",
-		description: "技術的な実装力と企業からの評価を獲得",
-		category: "プログラミング",
+		date: "2023/10",
+		contentJa:
+			"U-16プログラミングコンテスト山口大会2023 技術賞・企業(プライムゲート)賞",
+		contentEn:
+			"U-16 Programming Contest Yamaguchi 2023 - Technical Award, Corporate (PrimeGate) Award",
 	},
 	{
-		year: "2022年10月",
-		title: "U-16プログラミングコンテスト山口大会2022",
-		award: "アイデア賞",
-		description: "創造的なアイデアと企画力が評価される",
-		category: "プログラミング",
+		date: "2022/10",
+		contentJa: "U-16プログラミングコンテスト山口大会2022 アイデア賞",
+		contentEn: "U-16 Programming Contest Yamaguchi 2022 - Idea Award",
 	},
 	{
-		year: "2021年〜2023年",
-		title: "市区学校美術展覧会",
-		award: "入選・特選 複数回受賞",
-		description: "絵画・デザイン作品で継続的に入賞",
-		category: "美術・デザイン",
+		date: "~2023",
+		contentJa: "市区学校美術展覧会 入選・特選 複数回受賞",
+		contentEn: "Multiple awards at city school art exhibition",
 	},
 ];
 
+const activities = [
+	{
+		ja: "宇部高専コンピューター部部長",
+		en: "President of Ube Kosen Computer Club",
+	},
+	{
+		ja: "学生寮広報委員",
+		en: "Public Relations Committee Member of Dormitory",
+	},
+	{
+		ja: "高専祭のWebサイト制作",
+		en: "Website Development for Kosen Festival",
+	},
+	{
+		ja: "自作ツールのオンライン販売 実績 20万円",
+		en: "Online Tool Sales - 200,000 JPY Revenue",
+	},
+	{
+		ja: "自作ツールのオンライン配布 DL数 8000回以上",
+		en: "Online Tool Distribution - Over 8,000 Downloads",
+	},
+	{
+		ja: "映像依頼実績 5件",
+		en: "Video Production Requests - 5 Projects",
+	},
+	{
+		ja: "宇部市 第2回地球温暖化対策ショートムービーコンテスト　3位",
+		en: "Ube City 2nd Short Movie Contest on Global Warming - 3rd Place",
+	},
+	{
+		ja: "全国高等専門学校プログラミングコンテスト 2年連続出場",
+		en: "National Technical College Programming Contest - Participated 2 Years Consecutively",
+	},
+	{
+		ja: "U-16プログラミングコンテスト 動画編集 講師",
+		en: "U-16 Programming Contest - Video Editing Instructor",
+	},
+];
+
+const skillsDetail = [
+	"paizaランク B",
+	"ゲーム開発(Unity,WebGL,Scratch等)",
+	"マイコンプログラミング(実習と趣味で少し Arduino,M5Stack,)",
+	"Web開発(html,css,javascript,typescript,React,Vite,NextJS,Tailwind CSS,GCP,Apache,PIXI.js,Three.js,P5JS等)",
+	"映像制作(After Effects,Aviutl,Unity)",
+	"AfterEffectsプラグイン開発(ExtendScript,C++,CEP)",
+	"DTM(Cubase,Studio One,UTAU,Voisona)",
+];
+
+const personality = [
+	"INTP",
+	"コミュ障で声が小さい",
+	"雰囲気を伺って帰れそうだったら速攻帰る人",
+	"功利主義ぎみ",
+	"自分がやったほうがいいことは仕方なくやる人",
+	"自分の中の明確な〆切がある人",
+	"しばらくゲームしてなかったら、めちゃ下手になってやめた人",
+	"土日は昼夜逆転を一周させる人",
+	"デュアルモニターじゃないと集中して作業できない人",
+	"好き嫌いはほぼ無くて嫌いでも食べるが、梅干しとは和解できない人",
+	"甘党",
+	"コーヒーを飲みたい日がしばしばある人",
+	"フロントエンドに生きたい人",
+	"新しいものが好きな人",
+	"買い物は4000を超えると考える時間が生まれる人",
+	"Adobeを高専1年生のときから契約している人",
+	"バス待ち30分なら30分歩く人",
+	"コンビニで弁当買って部屋で食べる人",
+];
+
 export default function RealProfilePage() {
+	const [mounted, setMounted] = useState(false);
+	const [shuffledPersonality, setShuffledPersonality] = useState<string[]>([]);
+
+	const personalInfoRef = useRef<HTMLElement>(null);
+	const educationRef = useRef<HTMLElement>(null);
+	const skillsRef = useRef<HTMLElement>(null);
+	const achievementsRef = useRef<HTMLElement>(null);
+
+	useEffect(() => {
+		setMounted(true);
+		// 性格・特徴をランダムにシャッフル
+		const shuffled = [...personality].sort(() => Math.random() - 0.5);
+		setShuffledPersonality(shuffled);
+	}, []);
+
 	const Global_title = "noto-sans-jp-regular text-base leading-snug";
 
 	return (
@@ -192,71 +270,141 @@ export default function RealProfilePage() {
 				{JSON.stringify(structuredData)}
 			</script>
 
-			<div className="min-h-screen bg-base text-main">
-				<main className="flex items-center py-10">
-					<div className="container-system">
-						<div className="space-y-10">
-							{/* Breadcrumbs */}
-							<Breadcrumbs
-								items={[
-									{ label: "Home", href: "/" },
-									{ label: "About", href: "/about" },
-									{ label: "Profile", href: "/about/profile" },
-									{ label: "Real", isCurrent: true },
-								]}
-								className="pt-4"
-							/>
+			<div className="min-h-screen relative">
+				{/* Decorative ScrollVelocity */}
+				{mounted && (
+					<div className="fixed top-20 right-10 z-5 pointer-events-none hidden lg:block">
+						<ScrollVelocity
+							text="Profile Profile Profile "
+							className="text-main/10 text-6xl"
+						/>
+					</div>
+				)}
 
-							{/* Header */}
-							<header className="space-y-12">
-								<h1 className="neue-haas-grotesk-display text-6xl text-main">
-									Real Profile
-								</h1>
-								<p className="noto-sans-jp-light text-sm max-w leading-loose">
-									本名プロフィール・採用担当者向けの詳細情報です.
-									<br />
-									学歴、技術スキル、受賞歴などを掲載しています.
-								</p>
-							</header>
+				<main className="relative z-10 min-h-screen pt-8 pb-16 px-4">
+					<div className="container mx-auto max-w-5xl">
+						{/* Breadcrumbs */}
+						<Breadcrumbs
+							items={[
+								{ label: "Home", href: "/" },
+								{ label: "About", href: "/about" },
+								{ label: "Profile", href: "/about" },
+								{ label: "Real", isCurrent: true },
+							]}
+							className="mb-8"
+						/>
 
-							{/* Personal Information */}
-							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
-									基本情報
-								</h2>
-								<div className="bg-base border border-main p-4 space-y-4">
-									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-3 gap-6">
-										<div className="space-y-3">
-											<div className="flex items-center">
-												<Calendar className="w-5 h-5 text-accent mr-2" />
-												<h3 className="zen-kaku-gothic-new text-base text-main">
-													生年月日・年齢
-												</h3>
-											</div>
+						{/* Header */}
+						<section className="mb-24 overflow-visible">
+							<ScrollFloat stagger={0}>
+								{mounted && (
+									<div className="-mb-8">
+										<TypingText
+											text="「面白い」を見つけて、探求する"
+											className="text-main text-base md:text-lg mb-2 -ml-2"
+											speed={15}
+											delay={800}
+										/>
+										<TypingText
+											text="こんにちは 木村友亮です"
+											className="text-main text-base md:text-lg mb-4"
+											speed={15}
+											delay={1000}
+										/>
+										<TypingText
+											text="Discovering and exploring what's interesting"
+											className="text-main/60 text-[10px] md:text-xs leading-relaxed"
+											speed={5}
+											delay={1200}
+										/>
+										<TypingText
+											text="Hello, I'm Yusuke Kimura."
+											className="text-main/60 text-[10px] md:text-xs leading-relaxed"
+											speed={5}
+											delay={1400}
+										/>
+									</div>
+								)}
+							</ScrollFloat>
+						</section>
+
+						{/* Activities & Achievements */}
+						<section className="mb-24">
+							<ScrollFloat stagger={0}>
+								{mounted && (
+									<div className="mb-8">
+										<ScrollVelocity
+											text="Activities Activities Activities "
+											className="text-3xl md:text-4xl text-main"
+										/>
+									</div>
+								)}
+							</ScrollFloat>
+
+							<ScrollFloat stagger={100}>
+								<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+									{activities.map((activity, index) => (
+										<div
+											key={index}
+											className="bg-main/5 p-4 rounded-lg hover:bg-main/10 transition-colors flex flex-col"
+										>
+											<h4 className="zen-kaku-gothic-new text-base text-main mb-2">
+												{activity.ja}
+											</h4>
+											<p className="noto-sans-jp-light text-xs text-main/60 leading-relaxed grow">
+												{activity.en}
+											</p>
+										</div>
+									))}
+								</div>
+							</ScrollFloat>
+						</section>
+
+						{/* Personal Information */}
+						<section ref={personalInfoRef} className="mb-24">
+							<ScrollFloat stagger={0}>
+								{mounted && (
+									<div className="mb-8">
+										<ScrollVelocity
+											text="Personal Information Personal Information "
+											className="text-3xl md:text-4xl text-main"
+										/>
+									</div>
+								)}
+							</ScrollFloat>
+
+							<ScrollFloat stagger={100}>
+								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+									<div className="flex items-start gap-2">
+										<Calendar className="w-5 h-5 text-accent shrink-0 mt-1" />
+										<div className="flex-1">
+											<h3 className="zen-kaku-gothic-new text-sm text-main/60 mb-1">
+												生年月日・年齢
+											</h3>
 											<p className="noto-sans-jp-light text-sm text-main">
 												{personalInfo.birthDate}生まれ（{personalInfo.age}）
 											</p>
 										</div>
+									</div>
 
-										<div className="space-y-3">
-											<div className="flex items-center">
-												<MapPin className="w-5 h-5 text-accent mr-2" />
-												<h3 className="zen-kaku-gothic-new text-base text-main">
-													居住地
-												</h3>
-											</div>
+									<div className="flex items-start gap-2">
+										<MapPin className="w-5 h-5 text-accent shrink-0 mt-1" />
+										<div className="flex-1">
+											<h3 className="zen-kaku-gothic-new text-sm text-main/60 mb-1">
+												居住地
+											</h3>
 											<p className="noto-sans-jp-light text-sm text-main">
 												{personalInfo.location}
 											</p>
 										</div>
+									</div>
 
-										<div className="space-y-3">
-											<div className="flex items-center">
-												<GraduationCap className="w-5 h-5 text-accent mr-2" />
-												<h3 className="zen-kaku-gothic-new text-base text-main">
-													現在の状況
-												</h3>
-											</div>
+									<div className="flex items-start gap-2">
+										<GraduationCap className="w-5 h-5 text-accent shrink-0 mt-1" />
+										<div className="flex-1">
+											<h3 className="zen-kaku-gothic-new text-sm text-main/60 mb-1">
+												現在の状況
+											</h3>
 											<p className="noto-sans-jp-light text-sm text-main">
 												{personalInfo.status}
 											</p>
@@ -266,198 +414,176 @@ export default function RealProfilePage() {
 										</div>
 									</div>
 
-									<div className="pt-4 border-t border-main">
-										<h3 className="zen-kaku-gothic-new text-base text-main mb-2">
-											名前
-										</h3>
-										<p className="noto-sans-jp-light text-sm text-main">
-											{personalInfo.name}（{personalInfo.nameReading}）
-										</p>
-										<p className="noto-sans-jp-light text-xs text-accent">
-											ハンドルネーム: {personalInfo.handleName}
-										</p>
-									</div>
-								</div>
-							</section>
-
-							{/* Education */}
-							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
-									学歴
-								</h2>
-								<div className="space-y-4">
-									{education.map((edu) => (
-										<div
-											key={`${edu.period}-${edu.institution}`}
-											className="bg-base border border-main p-4 space-y-3"
-										>
-											<div className="flex flex-col sm:flex-row sm:items-center gap-2">
-												<span className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1 inline-block w-fit">
-													{edu.period}
-												</span>
-												{edu.status && (
-													<span className="noto-sans-jp-light text-xs text-main border border-main px-2 py-1 inline-block w-fit">
-														{edu.status}
-													</span>
-												)}
-											</div>
-											<h3 className="zen-kaku-gothic-new text-base text-main">
-												{edu.institution}
+									<div className="flex items-start gap-2">
+										<div className="flex-1">
+											<h3 className="zen-kaku-gothic-new text-sm text-main/60 mb-1">
+												名前
 											</h3>
 											<p className="noto-sans-jp-light text-sm text-main">
-												{edu.description}
+												{personalInfo.name}（{personalInfo.nameReading}）
+											</p>
+											<p className="noto-sans-jp-light text-xs text-accent">
+												ハンドルネーム: {personalInfo.handleName}
 											</p>
 										</div>
-									))}
+									</div>
 								</div>
-							</section>
+							</ScrollFloat>
+						</section>
 
-							{/* Technical Skills */}
-							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
-									技術スキル
-								</h2>
-								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-3 gap-6">
-									{Object.entries(skills).map(([key, skill]) => (
-										<div
-											key={key}
-											className="bg-base border border-main p-4 space-y-4"
-										>
-											<div>
-												<h3 className="zen-kaku-gothic-new text-lg text-main">
-													{skill.title}
-												</h3>
-												<p className="noto-sans-jp-light text-xs text-accent">
-													レベル: {skill.level}
-												</p>
-											</div>
-											<div className="space-y-2">
-												{skill.items.map((item) => (
-													<div
-														key={item}
-														className="noto-sans-jp-light text-sm text-main"
-													>
-														{item}
-													</div>
-												))}
-											</div>
-										</div>
-									))}
-								</div>
-							</section>
+						{/* Education */}
+						<section ref={educationRef} className="mb-24">
+							<ScrollFloat stagger={0}>
+								{mounted && (
+									<div className="mb-8">
+										<ScrollVelocity
+											text="Education Education Education "
+											className="text-3xl md:text-4xl text-main"
+										/>
+									</div>
+								)}
+							</ScrollFloat>
 
-							{/* Achievements */}
-							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
-									受賞歴・実績
-								</h2>
-								<div className="space-y-4">
-									{achievements.map((achievement) => (
+							<ScrollFloat stagger={100}>
+								<div className="relative pl-8 timeline-container">
+									{/* タイムラインの縦線 */}
+									<div className="absolute left-0 top-0 bottom-0 w-0.5 bg-main/20 timeline-line"></div>
+
+									{education.map((edu, index) => (
 										<div
-											key={`${achievement.year}-${achievement.title}`}
-											className="bg-base border border-main p-4 space-y-3"
+											key={index}
+											className="relative mb-8 timeline-item"
 										>
-											<div className="flex flex-col sm:flex-row sm:items-center gap-2">
-												<span className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1 inline-block w-fit">
-													{achievement.year}
-												</span>
-												<span className="noto-sans-jp-light text-xs text-main border border-main px-2 py-1 inline-block w-fit">
-													{achievement.category}
-												</span>
-											</div>
-											<div className="flex items-start">
-												<Award className="w-5 h-5 text-accent mr-3 mt-1 flex-shrink-0" />
-												<div className="flex-grow">
-													<h3 className="zen-kaku-gothic-new text-base text-main">
-														{achievement.title}
-													</h3>
-													<p className="noto-sans-jp-light text-sm text-accent mb-2">
-														{achievement.award}
-													</p>
-													<p className="noto-sans-jp-light text-sm text-main">
-														{achievement.description}
-													</p>
+											{/* タイムラインノード（点） */}
+											<div className="absolute w-3 h-3 rounded-full bg-main/60 border-2 border-main timeline-node"></div>
+
+											<div className="text-main">
+												<div className="text-sm md:text-base font-bold text-main/60 mb-2">
+													{edu.date}
+												</div>
+												<div className="text-base md:text-lg text-main mb-1">
+													{edu.contentJa}
+												</div>
+												<div className="text-main/60 text-[10px] md:text-xs leading-relaxed">
+													{edu.contentEn}
 												</div>
 											</div>
 										</div>
 									))}
 								</div>
-							</section>
+							</ScrollFloat>
+						</section>
 
-							{/* Career Goals */}
-							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
-									将来の目標・志向
-								</h2>
-								<div className="bg-base border border-main p-4 space-y-4">
-									<div className="space-y-3">
-										<h3 className="zen-kaku-gothic-new text-lg text-main">
-											技術分野での成長
-										</h3>
-										<p className="noto-sans-jp-light text-sm text-main">
-											Web開発、ゲーム開発、映像制作の技術を深め、
-											クリエイティブと技術を融合した作品作りを目指しています。
-										</p>
+						{/* Technical Skills */}
+						<section ref={skillsRef} className="mb-24">
+							<ScrollFloat stagger={0}>
+								{mounted && (
+									<div className="mb-8">
+										<ScrollVelocity
+											text="Skills Skills Skills "
+											className="text-3xl md:text-4xl text-main"
+										/>
 									</div>
+								)}
+							</ScrollFloat>
 
-									<div className="space-y-3">
-										<h3 className="zen-kaku-gothic-new text-lg text-main">
-											学習への取り組み
-										</h3>
-										<p className="noto-sans-jp-light text-sm text-main">
-											新しい技術への好奇心が強く、継続的な学習と実践を通じて
-											スキルアップを図っています。
-										</p>
-									</div>
-
-									<div className="space-y-3">
-										<h3 className="zen-kaku-gothic-new text-lg text-main">
-											コラボレーション
-										</h3>
-										<p className="noto-sans-jp-light text-sm text-main">
-											チームでの開発やクリエイティブプロジェクトに積極的に参加し、
-											多様な視点から学ぶことを重視しています。
-										</p>
-									</div>
+							<ScrollFloat stagger={100}>
+								<div className="space-y-3">
+									{skillsDetail.map((skill, index) => (
+										<div
+											key={index}
+											className="bg-main/5 p-3 rounded-lg hover:bg-main/10 transition-colors"
+										>
+											<p className="noto-sans-jp-light text-sm text-main">
+												{skill}
+											</p>
+										</div>
+									))}
 								</div>
-							</section>
+							</ScrollFloat>
+						</section>
 
-							{/* CTA */}
-							<nav aria-label="Profile navigation">
+						{/* Achievements */}
+						<section ref={achievementsRef} className="mb-24">
+							<ScrollFloat stagger={0}>
+								{mounted && (
+									<div className="mb-8">
+										<ScrollVelocity
+											text="Achievements Achievements Achievements "
+											className="text-3xl md:text-4xl text-main"
+										/>
+									</div>
+								)}
+							</ScrollFloat>
+
+							<ScrollFloat stagger={100}>
+								<div className="space-y-12 pt-40">
+									{achievements.map((achievement, index) => (
+										<div key={index} className="text-left">
+											<div className="text-main">
+												<div className="text-sm md:text-base font-bold text-main/60 mb-2">
+													{achievement.date}
+												</div>
+												<div className="text-base md:text-lg text-main mb-1">
+													{achievement.contentJa}
+												</div>
+												<div className="text-main/60 text-[10px] md:text-xs leading-relaxed">
+													{achievement.contentEn}
+												</div>
+											</div>
+										</div>
+									))}
+								</div>
+							</ScrollFloat>
+						</section>
+
+						{/* Personality */}
+						<section className="mb-24">
+							<ScrollFloat stagger={0}>
+								{mounted && (
+									<div className="mb-8">
+										<ScrollVelocity
+											text="About Me About Me About Me "
+											className="text-3xl md:text-4xl text-main"
+										/>
+									</div>
+								)}
+							</ScrollFloat>
+
+							<ScrollFloat stagger={100}>
+								{mounted && shuffledPersonality.length > 0 && (
+									<RandomPersonalityList items={shuffledPersonality} />
+								)}
+							</ScrollFloat>
+						</section>
+
+						{/* CTA */}
+						<nav aria-label="Profile navigation" className="mb-24">
+							<ScrollFloat stagger={0}>
 								<h3 className="sr-only">Profile機能</h3>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-3 gap-6">
 									<Link
 										href="/about/profile/handle"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+										className="bg-main/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base hover:bg-main/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Handle Profile</span>
 									</Link>
 
 									<Link
 										href="/about/card/real"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+										className="bg-main/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base hover:bg-main/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Digital Card</span>
 									</Link>
-
-									<Link
-										href="/contact"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
-									>
-										<span className={Global_title}>Contact</span>
-									</Link>
 								</div>
-							</nav>
+							</ScrollFloat>
+						</nav>
 
-							{/* Footer */}
-							<footer className="pt-4 border-t border-main">
-								<div className="text-center">
-									<p className="shippori-antique-b1-regular text-sm inline-block">
-										© 2025 samuido - Real Profile
-									</p>
-								</div>
-							</footer>
-						</div>
+						<div className="p-40" />
+						{/* Footer */}
+						<footer className="left-0 right-0 z-10 flex items-center justify-center">
+							<span className="text-xs text-main">© 2025 361do_sleep</span>
+						</footer>
 					</div>
 				</main>
 			</div>

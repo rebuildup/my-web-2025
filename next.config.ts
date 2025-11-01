@@ -8,7 +8,12 @@ const nextConfig: NextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
 	},
+	// Turbopack configuration for module resolution
+	// Note: Next.js 16 Turbopack may not support resolveAlias in this format
+	// Using shamefully-hoist in .npmrc instead for pnpm compatibility
 	turbopack: {},
+	// Transpile @appletosolutions/reactbits to ensure @chakra-ui/react is resolved
+	transpilePackages: ["@appletosolutions/reactbits"],
 	// Environment variables
 	env: {
 		NEXT_BUILD_TIME: isProduction ? "true" : "false",
@@ -48,7 +53,6 @@ const nextConfig: NextConfig = {
 		formats: ["image/webp", "image/avif"],
 		deviceSizes: [384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
 		imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-		minimumCacheTTL: 31536000, // 1 year
 		dangerouslyAllowSVG: true,
 		// Ensure images render inline in <img> tags rather than forcing download
 		contentDispositionType: "inline",
@@ -96,7 +100,7 @@ const nextConfig: NextConfig = {
 		},
 	}),
 
-	// Headers for caching and security
+	// Headers for security
 	async headers() {
 		// Basic security headers without dynamic import
 		const productionHeaders = {
@@ -115,129 +119,12 @@ const nextConfig: NextConfig = {
 				source: "/(.*)",
 				headers: baseHeaders,
 			},
-			// Static assets caching - Fixed for production
 			{
 				source: "/images/(.*)",
 				headers: [
 					{
-						key: "Cache-Control",
-						value:
-							process.env.NODE_ENV === "production"
-								? "public, max-age=86400, stale-while-revalidate=31536000"
-								: "public, max-age=0, no-cache",
-					},
-					{
 						key: "Access-Control-Allow-Origin",
 						value: "*",
-					},
-				],
-			},
-			{
-				source: "/videos/(.*)",
-				headers: [
-					{
-						key: "Cache-Control",
-						value: "public, max-age=31536000, immutable",
-					},
-				],
-			},
-
-			{
-				source: "/downloads/(.*)",
-				headers: [
-					{
-						key: "Cache-Control",
-						value: "public, max-age=86400", // 1 day
-					},
-				],
-			},
-			// API routes caching
-			{
-				source: "/api/content/(.*)",
-				headers: [
-					{
-						key: "Cache-Control",
-						value: `public, max-age=${process.env.CACHE_TTL_CONTENT || "3600"}, stale-while-revalidate=86400`,
-					},
-				],
-			},
-			{
-				source: "/api/stats/(.*)",
-				headers: [
-					{
-						key: "Cache-Control",
-						value: `public, max-age=${process.env.CACHE_TTL_API || "300"}, stale-while-revalidate=3600`,
-					},
-				],
-			},
-			// WebGL shader caching
-			{
-				source: "/api/playground/webgl/(.*)",
-				headers: [
-					{
-						key: "Cache-Control",
-						value: "public, max-age=86400, stale-while-revalidate=604800", // 24 hours
-					},
-				],
-			},
-			// Monitoring endpoints (no cache)
-			{
-				source: "/api/monitoring/(.*)",
-				headers: [
-					{
-						key: "Cache-Control",
-						value: "no-store, no-cache, must-revalidate",
-					},
-				],
-			},
-			// CSS files - comprehensive patterns
-			{
-				source: "/_next/static/css/(.*)",
-				headers: [
-					{
-						key: "Content-Type",
-						value: "text/css; charset=utf-8",
-					},
-					{
-						key: "Cache-Control",
-						value: "public, max-age=31536000, immutable",
-					},
-				],
-			},
-			{
-				source: "/_next/static/chunks/(.*).css",
-				headers: [
-					{
-						key: "Content-Type",
-						value: "text/css; charset=utf-8",
-					},
-					{
-						key: "Cache-Control",
-						value: "public, max-age=31536000, immutable",
-					},
-				],
-			},
-			// All CSS files pattern
-			{
-				source: "/(.*).css",
-				headers: [
-					{
-						key: "Content-Type",
-						value: "text/css; charset=utf-8",
-					},
-				],
-			},
-			// JS files
-			{
-				source: "/_next/static/chunks/(.*).js",
-				headers: [
-					{
-						key: "Content-Type",
-						value: "application/javascript; charset=utf-8",
-					},
-					{
-						key: "Cache-Control",
-						value: "public, max-age=31536000, immutable",
 					},
 				],
 			},
@@ -367,6 +254,17 @@ const nextConfig: NextConfig = {
 			tls: false,
 		};
 
+		// Ensure @chakra-ui/react is resolved correctly for @appletosolutions/reactbits
+		try {
+			const chakraPath = require.resolve("@chakra-ui/react");
+			config.resolve.alias = {
+				...config.resolve.alias,
+				"@chakra-ui/react": chakraPath,
+			};
+		} catch (error) {
+			// @chakra-ui/react not found, skip alias
+		}
+
 		return config;
 	},
 
@@ -378,7 +276,6 @@ const nextConfig: NextConfig = {
 			: undefined,
 	poweredByHeader: false,
 	compress: true,
-	generateEtags: true,
 	trailingSlash: false,
 };
 
