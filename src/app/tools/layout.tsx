@@ -1,17 +1,7 @@
-import type { Metadata } from "next";
+import type { ReactNode } from "react";
 
-export const metadata: Metadata = {
-  title: {
-    template: "%s - Tools | samuido",
-    default: "Tools - samuido | 実用的なWebツール集",
-  },
-  description: "実用的なWebツールのコレクション。すべて無償で提供。",
-};
+export const dynamic = "force-dynamic";
 
-export default function ToolsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <>{children}</>;
+export default function ToolsLayout({ children }: { children: ReactNode }) {
+	return children;
 }

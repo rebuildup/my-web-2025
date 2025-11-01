@@ -1,146 +1,146 @@
 .noto-sans-jp-regular {
-  font-family: "Noto Sans JP", serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+	font-family: "Noto Sans JP", serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
 }
 .noto-sans-jp-medium {
-  font-family: "Noto Sans JP", serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
+	font-family: "Noto Sans JP", serif;
+	font-optical-sizing: auto;
+	font-weight: 500;
+	font-style: normal;
 }
 .noto-sans-jp-semi-bold {
-  font-family: "Noto Sans JP", serif;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
+	font-family: "Noto Sans JP", serif;
+	font-optical-sizing: auto;
+	font-weight: 600;
+	font-style: normal;
 }
 .noto-sans-jp-bold {
-  font-family: "Noto Sans JP", serif;
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-style: normal;
+	font-family: "Noto Sans JP", serif;
+	font-optical-sizing: auto;
+	font-weight: 700;
+	font-style: normal;
 }
 .zen-kaku-gothic-new-medium {
-  font-family: "Zen Kaku Gothic New", serif;
-  font-weight: 500;
-  font-style: normal;
+	font-family: "Zen Kaku Gothic New", serif;
+	font-weight: 500;
+	font-style: normal;
 }
 
 .zen-kaku-gothic-new-bold {
-  font-family: "Zen Kaku Gothic New", serif;
-  font-weight: 700;
-  font-style: normal;
+	font-family: "Zen Kaku Gothic New", serif;
+	font-weight: 700;
+	font-style: normal;
 }
 
 .zen-kaku-gothic-new-black {
-  font-family: "Zen Kaku Gothic New", serif;
-  font-weight: 900;
-  font-style: normal;
+	font-family: "Zen Kaku Gothic New", serif;
+	font-weight: 900;
+	font-style: normal;
 }
 
 .zen-maru-gothic-regular {
-  font-family: "Zen Maru Gothic", serif;
-  font-weight: 400;
-  font-style: normal;
+	font-family: "Zen Maru Gothic", serif;
+	font-weight: 400;
+	font-style: normal;
 }
 .shippori-antique-b1-regular {
-  font-family: "Shippori Antique B1", serif;
-  font-weight: 400;
-  font-style: normal;
+	font-family: "Shippori Antique B1", serif;
+	font-weight: 400;
+	font-style: normal;
 }
 .hiragino-kaku-gothic-pron {
-  font-family: "hiragino-kaku-gothic-pron", sans-serif;
-  font-weight: 600;
-  font-style: normal;
+	font-family: "hiragino-kaku-gothic-pron", sans-serif;
+	font-weight: 600;
+	font-style: normal;
 }
 .hiragino-mincho-pron {
-  font-family: "hiragino-mincho-pron", sans-serif;
-  font-weight: 600;
-  font-style: normal;
+	font-family: "hiragino-mincho-pron", sans-serif;
+	font-weight: 600;
+	font-style: normal;
 }
 .fot-cezanne-pron {
-  font-family: "fot-cezanne-pron", sans-serif;
-  font-weight: 500;
-  font-style: normal;
+	font-family: "fot-cezanne-pron", sans-serif;
+	font-weight: 500;
+	font-style: normal;
 }
 .klee-one {
-  font-family: "klee-one", sans-serif;
-  font-weight: 600;
-  font-style: normal;
+	font-family: "klee-one", sans-serif;
+	font-weight: 600;
+	font-style: normal;
 }
 .source-han-sans-japanese {
-  font-family: "source-han-sans-japanese", sans-serif;
-  font-weight: 900;
-  font-style: normal;
+	font-family: "source-han-sans-japanese", sans-serif;
+	font-weight: 900;
+	font-style: normal;
 }
 .shippori-mincho-b1 {
-  font-family: "shippori-mincho-b1", sans-serif;
-  font-weight: 800;
-  font-style: normal;
+	font-family: "shippori-mincho-b1", sans-serif;
+	font-weight: 800;
+	font-style: normal;
 }
 
 :root {
-  --ProtoTypeMainBG: #000000;
-  --ProtoTypeMainColor: #ffffff;
-  --ProtoTypeMainAccent: #ff0000;
-  --ProtoTypeSecondAccent: #ffffff;
-  --First-font: "Arial", sans-serif;
-  --Second-font: "Noto Sans JP", sans-serif;
+	--ProtoTypeMainBG: #000000;
+	--ProtoTypeMainColor: #ffffff;
+	--ProtoTypeMainAccent: #ff0000;
+	--ProtoTypeSecondAccent: #ffffff;
+	--First-font: "Arial", sans-serif;
+	--Second-font: "Noto Sans JP", sans-serif;
 }
 
 * {
-  font-family: var(--First-font);
+	font-family: var(--First-font);
 }
 body {
-  font-family: var(--First-font);
-  font-weight: bold;
-  background-color: var(--ProtoTypeMainBG) !important;
+	font-family: var(--First-font);
+	font-weight: bold;
+	background-color: var(--ProtoTypeMainBG);
 }
 button {
-  color: var(--ProtoTypeMainColor);
-  border: none;
-  background-color: rgba(0, 0, 0, 0);
-  font-size: 20px;
-  cursor: pointer;
-  font-family: var(--First-font);
+	color: var(--ProtoTypeMainColor);
+	border: none;
+	background-color: rgba(0, 0, 0, 0);
+	font-size: 20px;
+	cursor: pointer;
+	font-family: var(--First-font);
 }
 .Components {
-  color: var(--ProtoTypeMainColor);
-  position: absolute;
-  top: 50vh;
-  left: 50vw;
-  transform: translate(-50%, -50%);
-  width: 50vw;
-  height: 50vh;
-  border: 4px 4px 4px 4px solid var(--ProtoTypeMainColor);
-  overflow-y: auto;
-  scrollbar-width: thin;
+	color: var(--ProtoTypeMainColor);
+	position: absolute;
+	top: 50vh;
+	left: 50vw;
+	transform: translate(-50%, -50%);
+	width: 50vw;
+	height: 50vh;
+	border: 4px 4px 4px 4px solid var(--ProtoTypeMainColor);
+	overflow-y: auto;
+	scrollbar-width: thin;
 }
 .mySiteLink {
-  color: var(--ProtoTypeMainColor);
-  text-decoration: none;
-  position: absolute;
-  bottom: 1em;
-  left: 50vw;
-  transform: translateX(-50%);
+	color: var(--ProtoTypeMainColor);
+	text-decoration: none;
+	position: absolute;
+	bottom: 1em;
+	left: 50vw;
+	transform: translateX(-50%);
 }
 .GithubLink {
-  color: var(--ProtoTypeMainColor);
-  fill: var(--ProtoTypeMainColor);
-  text-decoration: none;
-  position: absolute;
-  bottom: 1em;
-  right: 64px;
-  transform: translateX(-50%);
+	color: var(--ProtoTypeMainColor);
+	fill: var(--ProtoTypeMainColor);
+	text-decoration: none;
+	position: absolute;
+	bottom: 1em;
+	right: 64px;
+	transform: translateX(-50%);
 }
 .XLink {
-  color: var(--ProtoTypeMainColor);
-  fill: var(--ProtoTypeMainColor);
-  text-decoration: none;
-  position: absolute;
-  bottom: 1em;
-  right: 16px;
-  transform: translateX(-50%);
+	color: var(--ProtoTypeMainColor);
+	fill: var(--ProtoTypeMainColor);
+	text-decoration: none;
+	position: absolute;
+	bottom: 1em;
+	right: 16px;
+	transform: translateX(-50%);
 }

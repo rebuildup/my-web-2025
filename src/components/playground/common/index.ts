@@ -11,8 +11,8 @@ export { ExperimentLoader, ExperimentPreloader } from "./ExperimentLoader";
 export { ExperimentSharing, ShareButton } from "./ExperimentSharing";
 export { PerformanceSettingsUI } from "./PerformanceSettingsUI";
 export {
-  PlaygroundErrorBoundary,
-  PlaygroundErrorHandler,
+	PlaygroundErrorBoundary,
+	PlaygroundErrorHandler,
 } from "./PlaygroundErrorHandler";
 export { PlaygroundStatistics } from "./PlaygroundStatistics";
 export { ResponsiveExperimentGrid } from "./ResponsiveExperimentGrid";

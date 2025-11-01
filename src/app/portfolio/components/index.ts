@@ -8,33 +8,33 @@ export { default as PortfolioAnalyticsDashboard } from "./PortfolioAnalyticsDash
 export { default as PortfolioInsights } from "./PortfolioInsights";
 
 export {
-  usePortfolioDetailTracking,
-  usePortfolioGalleryTracking,
-  usePortfolioItemTracking,
-  usePortfolioTracking,
+	usePortfolioDetailTracking,
+	usePortfolioGalleryTracking,
+	usePortfolioItemTracking,
+	usePortfolioTracking,
 } from "./usePortfolioTracking";
 
 // Types for portfolio analytics
 export interface PortfolioAnalyticsData {
-  totalViews: number;
-  totalDownloads: number;
-  mostViewed: Array<{ id: string; views: number }>;
-  mostDownloaded: Array<{ id: string; downloads: number }>;
+	totalViews: number;
+	totalDownloads: number;
+	mostViewed: Array<{ id: string; views: number }>;
+	mostDownloaded: Array<{ id: string; downloads: number }>;
 }
 
 export interface PortfolioInsightData {
-  metric: string;
-  value: number;
-  change: number;
-  trend: "up" | "down" | "stable";
-  period: string;
-  description: string;
+	metric: string;
+	value: number;
+	change: number;
+	trend: "up" | "down" | "stable";
+	period: string;
+	description: string;
 }
 
 export interface PortfolioTrackingOptions {
-  contentId: string;
-  contentType?: "portfolio" | "portfolio-gallery" | "portfolio-detail";
-  trackViews?: boolean;
-  trackDownloads?: boolean;
-  debounceMs?: number;
+	contentId: string;
+	contentType?: "portfolio" | "portfolio-gallery" | "portfolio-detail";
+	trackViews?: boolean;
+	trackDownloads?: boolean;
+	debounceMs?: number;
 }

@@ -7,48 +7,48 @@
  * Useful when GA_ID is not configured
  */
 export function clearAnalyticsConsent(): void {
-  if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
-    try {
-      localStorage.removeItem("analytics-consent");
-      if (typeof console !== "undefined" && console.log) {
-        console.log("Analytics consent cleared");
-      }
-    } catch (error) {
-      if (typeof console !== "undefined" && console.warn) {
-        console.warn("Failed to clear analytics consent:", error);
-      }
-    }
-  }
+	if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
+		try {
+			localStorage.removeItem("analytics-consent");
+			if (typeof console !== "undefined" && console.log) {
+				console.log("Analytics consent cleared");
+			}
+		} catch (error) {
+			if (typeof console !== "undefined" && console.warn) {
+				console.warn("Failed to clear analytics consent:", error);
+			}
+		}
+	}
 }
 
 /**
  * Check if analytics is properly configured
  */
 export function checkAnalyticsConfig(): boolean {
-  const hasGAId = !!process.env.NEXT_PUBLIC_GA_ID;
-  let hasConsent = false;
+	const hasGAId = !!process.env.NEXT_PUBLIC_GA_ID;
+	let hasConsent = false;
 
-  try {
-    hasConsent = localStorage.getItem("analytics-consent") === "true";
-  } catch (error) {
-    console.warn("Failed to access localStorage:", error);
-  }
+	try {
+		hasConsent = localStorage.getItem("analytics-consent") === "true";
+	} catch (error) {
+		console.warn("Failed to access localStorage:", error);
+	}
 
-  console.log("Analytics config check:", {
-    hasGAId,
-    hasConsent,
-    gaId: process.env.NEXT_PUBLIC_GA_ID || "not configured",
-  });
+	console.log("Analytics config check:", {
+		hasGAId,
+		hasConsent,
+		gaId: process.env.NEXT_PUBLIC_GA_ID || "not configured",
+	});
 
-  return hasGAId;
+	return hasGAId;
 }
 
 // Auto-clear consent if GA_ID is not configured (development only)
 if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
-  if (
-    !process.env.NEXT_PUBLIC_GA_ID &&
-    localStorage.getItem("analytics-consent")
-  ) {
-    clearAnalyticsConsent();
-  }
+	if (
+		!process.env.NEXT_PUBLIC_GA_ID &&
+		localStorage.getItem("analytics-consent")
+	) {
+		clearAnalyticsConsent();
+	}
 }

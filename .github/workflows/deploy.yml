@@ -18,32 +18,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          cache: "pnpm"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install dependencies
-        run: |
-          # Check if package-lock.json is in sync with package.json
-          if npm ci --dry-run 2>&1 | grep -q "can only install packages when your package.json and package-lock.json"; then
-            echo "⚠️ package-lock.json is out of sync, running npm install to fix"
-            npm install
-          else
-            echo "✅ package-lock.json is in sync, using npm ci"
-            npm ci
-          fi
+        run: pnpm install --frozen-lockfile
 
-      - name: Setup test environment
-        run: |
-          echo "Setting up test environment..."
-          npm run test:setup
-
-      - name: Run lint
-        run: npm run lint
+      - name: Run lint (Biome)
+        run: pnpm run lint
 
       - name: Run type check
-        run: npm run type-check
+        run: pnpm run type-check
 
       - name: Run tests
-        run: npm run test
+        run: pnpm run test
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
           NODE_ENV: test
@@ -54,7 +46,7 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
           NODE_OPTIONS: "--max-old-space-size=4096"
-        run: npm run build
+        run: pnpm run build
 
       - name: Fix standalone static files and CSS script tag issue
         run: |
@@ -173,29 +165,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          cache: "pnpm"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install dependencies
-        run: |
-          if npm ci --dry-run 2>&1 | grep -q "can only install packages when your package.json and package-lock.json"; then
-            echo "⚠️ package-lock.json is out of sync, running npm install to fix"
-            npm install
-          else
-            echo "✅ package-lock.json is in sync, using npm ci"
-            npm ci
-          fi
+        run: pnpm install --frozen-lockfile
 
       - name: Setup production environment
-        run: |
-          echo "Setting up production environment..."
-          npm run test:setup
+        run: echo "Setting up production environment..."
 
       - name: Build project (Standalone)
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
           NODE_OPTIONS: "--max-old-space-size=4096"
-        run: npm run build
+        run: pnpm run build
 
       - name: Prepare standalone deployment
         run: |

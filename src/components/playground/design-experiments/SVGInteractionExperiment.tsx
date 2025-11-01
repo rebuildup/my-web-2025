@@ -5,15 +5,15 @@
 
 "use client";
 
-import { ExperimentProps } from "@/types/playground";
+import type { ExperimentProps } from "@/types/playground";
 
 export function SVGInteractionExperiment({}: ExperimentProps) {
-  return (
-    <div className="aspect-video bg-background border border-foreground flex items-center justify-center">
-      <div className="text-center space-y-2">
-        <div className="text-lg text-accent">SVG Interaction Experiment</div>
-        <p className="text-sm text-foreground">Coming soon...</p>
-      </div>
-    </div>
-  );
+	return (
+		<div className="aspect-video bg-base border border-main flex items-center justify-center">
+			<div className="text-center space-y-2">
+				<div className="text-lg text-accent">SVG Interaction Experiment</div>
+				<p className="text-sm text-main">Coming soon...</p>
+			</div>
+		</div>
+	);
 }

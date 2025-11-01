@@ -1,56 +1,56 @@
 const apiUrl =
-  "https://script.google.com/macros/s/AKfycbyVgq9boRy9J0bMhxKAyDfkPXryA45m7tOigWeRBkVAxQmyzsogxPWEv5mf8TtprdR8/exec";
+	"https://script.google.com/macros/s/AKfycbyVgq9boRy9J0bMhxKAyDfkPXryA45m7tOigWeRBkVAxQmyzsogxPWEv5mf8TtprdR8/exec";
 
 export async function checkUsername(username: string): Promise<number> {
-  const url = `${apiUrl}?action=checkUsername&username=${encodeURIComponent(
-    username,
-  )}`;
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
+	const url = `${apiUrl}?action=checkUsername&username=${encodeURIComponent(
+		username,
+	)}`;
+	const response = await fetch(url);
+	const data = await response.json();
+	return data;
 }
 
 export async function checkPassword(
-  id: number,
-  password: string,
+	id: number,
+	password: string,
 ): Promise<boolean> {
-  const url = `${apiUrl}?action=checkPassword&id=${id}&password=${encodeURIComponent(
-    password,
-  )}`;
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
+	const url = `${apiUrl}?action=checkPassword&id=${id}&password=${encodeURIComponent(
+		password,
+	)}`;
+	const response = await fetch(url);
+	const data = await response.json();
+	return data;
 }
 
 export async function createUser(
-  username: string,
-  password: string,
+	username: string,
+	password: string,
 ): Promise<number> {
-  const url = `${apiUrl}?action=createUser&username=${encodeURIComponent(
-    username,
-  )}&password=${encodeURIComponent(password)}`;
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
+	const url = `${apiUrl}?action=createUser&username=${encodeURIComponent(
+		username,
+	)}&password=${encodeURIComponent(password)}`;
+	const response = await fetch(url);
+	const data = await response.json();
+	return data;
 }
 
 export async function fetchPlayerData(playerId: string): Promise<any> {
-  // Replace with your deployed App Script web app URL
-  const endpoint =
-    "https://script.google.com/macros/s/AKfycbwFo9EeP6-wrvmPjUL5kPaC86u2gnzKpXA8-Pts2KWhTYj6ZxVGiQHu4ppMEn8x3DEV/exec";
-  const url = `${endpoint}?id=${encodeURIComponent(playerId)}`;
+	// Replace with your deployed App Script web app URL
+	const endpoint =
+		"https://script.google.com/macros/s/AKfycbwFo9EeP6-wrvmPjUL5kPaC86u2gnzKpXA8-Pts2KWhTYj6ZxVGiQHu4ppMEn8x3DEV/exec";
+	const url = `${endpoint}?id=${encodeURIComponent(playerId)}`;
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching player data:", error);
-    throw error;
-  }
+	try {
+		const response = await fetch(url);
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Error fetching player data:", error);
+		throw error;
+	}
 }
 /*
 // Example usage:

@@ -57,78 +57,78 @@ import type { ContentItem, ExternalLink } from "./content";
  * ```
  */
 export interface PortfolioContentItem extends ContentItem {
-  /**
-   * Gallery Display Properties
-   * These properties control how the item appears in various gallery layouts
-   */
+	/**
+	 * Gallery Display Properties
+	 * These properties control how the item appears in various gallery layouts
+	 */
 
-  /** Thumbnail image URL for gallery display */
-  thumbnail: string;
+	/** Thumbnail image URL for gallery display */
+	thumbnail: string;
 
-  /** Aspect ratio for responsive image display (width/height) */
-  aspectRatio?: number;
+	/** Aspect ratio for responsive image display (width/height) */
+	aspectRatio?: number;
 
-  /** Grid size for video&design gallery layout */
-  gridSize?: "1x1" | "1x2" | "2x1" | "2x2" | "1x3";
+	/** Grid size for video&design gallery layout */
+	gridSize?: "1x1" | "1x2" | "2x1" | "2x2" | "1x3";
 
-  /**
-   * Development Project Properties
-   * Specific to development/programming projects
-   */
+	/**
+	 * Development Project Properties
+	 * Specific to development/programming projects
+	 */
 
-  /** Link to source code repository (GitHub, GitLab, etc.) */
-  repository?: ExternalLink;
+	/** Link to source code repository (GitHub, GitLab, etc.) */
+	repository?: ExternalLink;
 
-  /** Array of technologies used in the project */
-  technologies: string[];
+	/** Array of technologies used in the project */
+	technologies: string[];
 
-  /** Type of development project */
-  projectType?: "web" | "game" | "tool" | "plugin";
+	/** Type of development project */
+	projectType?: "web" | "game" | "tool" | "plugin";
 
-  /**
-   * Video Project Properties
-   * Specific to video/motion graphics projects
-   */
+	/**
+	 * Video Project Properties
+	 * Specific to video/motion graphics projects
+	 */
 
-  /** Type of video content */
-  videoType?: "mv" | "lyric" | "animation" | "promotion";
+	/** Type of video content */
+	videoType?: "mv" | "lyric" | "animation" | "promotion";
 
-  /** Client name for commissioned work */
-  client?: string;
+	/** Client name for commissioned work */
+	client?: string;
 
-  /** Video duration in seconds */
-  duration?: number;
+	/** Video duration in seconds */
+	duration?: number;
 
-  /**
-   * Playground Properties
-   * For interactive experiments and demonstrations
-   */
+	/**
+	 * Playground Properties
+	 * For interactive experiments and demonstrations
+	 */
 
-  /** Whether the item includes interactive elements */
-  interactive?: boolean;
+	/** Whether the item includes interactive elements */
+	interactive?: boolean;
 
-  /** Type of playground experiment */
-  experimentType?: "design" | "webgl";
+	/** Type of playground experiment */
+	experimentType?: "design" | "webgl";
 
-  /** Performance requirements level */
-  performanceLevel?: "low" | "medium" | "high";
+	/** Performance requirements level */
+	performanceLevel?: "low" | "medium" | "high";
 
-  /**
-   * Enhanced SEO and Metadata
-   */
+	/**
+	 * Enhanced SEO and Metadata
+	 */
 
-  /** Comprehensive SEO metadata for the portfolio item */
-  seo: PortfolioSEOData;
+	/** Comprehensive SEO metadata for the portfolio item */
+	seo: PortfolioSEOData;
 
-  /**
-   * Search and Discovery
-   */
+	/**
+	 * Search and Discovery
+	 */
 
-  /** Search index data for full-text search */
-  searchIndex?: import("./content").SearchIndex;
+	/** Search index data for full-text search */
+	searchIndex?: import("./content").SearchIndex;
 
-  /** Array of related portfolio item IDs for recommendations */
-  relatedItems?: string[];
+	/** Array of related portfolio item IDs for recommendations */
+	relatedItems?: string[];
 }
 
 /**
@@ -157,141 +157,141 @@ export interface PortfolioContentItem extends ContentItem {
  * ```
  */
 export interface PortfolioSEOData {
-  /** Page title for search engines and browser tabs */
-  title: string;
+	/** Page title for search engines and browser tabs */
+	title: string;
 
-  /** Meta description for search engine results */
-  description: string;
+	/** Meta description for search engine results */
+	description: string;
 
-  /** Array of relevant keywords for SEO */
-  keywords: string[];
+	/** Array of relevant keywords for SEO */
+	keywords: string[];
 
-  /** Open Graph image URL for social media sharing */
-  ogImage: string;
+	/** Open Graph image URL for social media sharing */
+	ogImage: string;
 
-  /** Twitter Card image URL */
-  twitterImage: string;
+	/** Twitter Card image URL */
+	twitterImage: string;
 
-  /** Canonical URL to prevent duplicate content issues */
-  canonical: string;
+	/** Canonical URL to prevent duplicate content issues */
+	canonical: string;
 
-  /** JSON-LD structured data for rich snippets */
-  structuredData: object;
+	/** JSON-LD structured data for rich snippets */
+	structuredData: object;
 }
 
 // Filter options for different gallery types
 export interface FilterOptions {
-  category?: string;
-  tags?: string[];
-  year?: number;
-  sortBy: "createdAt" | "updatedAt" | "title" | "priority";
-  sortOrder: "asc" | "desc";
+	category?: string;
+	tags?: string[];
+	year?: number;
+	sortBy: "createdAt" | "updatedAt" | "title" | "priority";
+	sortOrder: "asc" | "desc";
 }
 
 export interface DevelopFilterOptions extends FilterOptions {
-  technologies?: string[];
-  projectType?: "web" | "game" | "tool" | "plugin";
+	technologies?: string[];
+	projectType?: "web" | "game" | "tool" | "plugin";
 }
 
 export interface VideoFilterOptions extends FilterOptions {
-  videoType?: "mv" | "lyric" | "animation" | "promotion";
-  client?: string;
+	videoType?: "mv" | "lyric" | "animation" | "promotion";
+	client?: string;
 }
 
 // Grid configuration for video&design gallery
 export interface GridConfig {
-  columns: number;
-  aspectRatio: number;
-  dynamicSizing: boolean;
+	columns: number;
+	aspectRatio: number;
+	dynamicSizing: boolean;
 }
 
 // Experiment items for playground
 export interface ExperimentItem {
-  id: string;
-  title: string;
-  description: string;
-  technology: string[];
-  interactive: boolean;
-  component: React.ComponentType;
+	id: string;
+	title: string;
+	description: string;
+	technology: string[];
+	interactive: boolean;
+	component: React.ComponentType;
 }
 
 export interface WebGLExperiment extends ExperimentItem {
-  webglType: "3d" | "shader" | "particle" | "effect";
-  performanceLevel: "low" | "medium" | "high";
+	webglType: "3d" | "shader" | "particle" | "effect";
+	performanceLevel: "low" | "medium" | "high";
 }
 
 // Device capabilities for WebGL optimization
 export interface DeviceCapabilities {
-  webglSupport: boolean;
-  performanceLevel: "low" | "medium" | "high";
-  touchSupport: boolean;
+	webglSupport: boolean;
+	performanceLevel: "low" | "medium" | "high";
+	touchSupport: boolean;
 }
 
 // Validation result
 export interface ValidationResult {
-  isValid: boolean;
-  errors: ValidationError[];
-  warnings: ValidationWarning[];
+	isValid: boolean;
+	errors: ValidationError[];
+	warnings: ValidationWarning[];
 }
 
 export interface ValidationError {
-  field: string;
-  message: string;
-  code: string;
+	field: string;
+	message: string;
+	code: string;
 }
 
 export interface ValidationWarning {
-  field: string;
-  message: string;
-  code: string;
+	field: string;
+	message: string;
+	code: string;
 }
 
 // Gallery item for transformed data
 export interface GalleryItem {
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  category: string;
-  tags: string[];
-  aspectRatio?: number;
-  gridSize?: string;
-  technologies?: string[];
-  videoType?: string;
-  client?: string;
-  interactive?: boolean;
-  url: string;
+	id: string;
+	title: string;
+	description: string;
+	thumbnail: string;
+	category: string;
+	tags: string[];
+	aspectRatio?: number;
+	gridSize?: string;
+	technologies?: string[];
+	videoType?: string;
+	client?: string;
+	interactive?: boolean;
+	url: string;
 }
 
 export type GalleryType = "all" | "develop" | "video" | "video&design";
 
 // Statistics for portfolio
 export interface PortfolioStats {
-  totalProjects: number;
-  categoryCounts: Record<string, number>;
-  technologyCounts: Record<string, number>;
-  lastUpdate: Date;
+	totalProjects: number;
+	categoryCounts: Record<string, number>;
+	technologyCounts: Record<string, number>;
+	lastUpdate: Date;
 }
 
 // Category statistics
 export interface CategoryStats {
-  all: number;
-  develop: number;
-  video: number;
-  "video&design": number;
+	all: number;
+	develop: number;
+	video: number;
+	"video&design": number;
 }
 
 // Search index for portfolio items
 export interface PortfolioSearchIndex {
-  id: string;
-  type: "portfolio";
-  title: string;
-  description: string;
-  content: string;
-  tags: string[];
-  category: string;
-  technologies: string[];
-  searchableText: string;
-  url: string;
-  thumbnail: string;
+	id: string;
+	type: "portfolio";
+	title: string;
+	description: string;
+	content: string;
+	tags: string[];
+	category: string;
+	technologies: string[];
+	searchableText: string;
+	url: string;
+	thumbnail: string;
 }

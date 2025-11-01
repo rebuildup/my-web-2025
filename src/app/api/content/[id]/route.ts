@@ -3,81 +3,60 @@
  * Handles requests for specific content items
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
+import { loadAllContent } from "@/lib/data";
 
 export async function GET(
-  _request: NextRequest,
-  { params }: { params: { id: string } },
+	_request: NextRequest,
+	{ params }: { params: { id: string } },
 ) {
-  try {
-    const { id } = params;
+	try {
+		const { id } = params;
+		const contentByType = await loadAllContent();
+		const item =
+			Object.values(contentByType)
+				.flat()
+				.find((entry) => entry.id === id) || null;
 
-    // Mock implementation for testing
-    return NextResponse.json({
-      success: true,
-      data: {
-        id,
-        title: "Test Content",
-        type: "portfolio",
-      },
-    });
-  } catch {
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to fetch content",
-      },
-      { status: 500 },
-    );
-  }
+		if (!item) {
+			return NextResponse.json(
+				{ success: false, error: "Content not found" },
+				{ status: 404 },
+			);
+		}
+
+		return NextResponse.json({
+			success: true,
+			data: item,
+		});
+	} catch (error) {
+		console.error("Content by ID API error:", error);
+		return NextResponse.json(
+			{
+				success: false,
+				error: "Failed to fetch content",
+			},
+			{ status: 500 },
+		);
+	}
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
-  try {
-    const { id } = params;
-    const body = await request.json();
-
-    // Mock implementation for testing
-    return NextResponse.json({
-      success: true,
-      data: {
-        id,
-        ...body,
-      },
-    });
-  } catch {
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to update content",
-      },
-      { status: 500 },
-    );
-  }
+export async function PUT() {
+	return NextResponse.json(
+		{
+			success: false,
+			error: "Use /api/cms/contents for content updates",
+		},
+		{ status: 405 },
+	);
 }
 
-export async function DELETE(
-  _request: NextRequest,
-  { params }: { params: { id: string } },
-) {
-  try {
-    const { id } = params;
-
-    // Mock implementation for testing
-    return NextResponse.json({
-      success: true,
-      message: `Content ${id} deleted`,
-    });
-  } catch {
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to delete content",
-      },
-      { status: 500 },
-    );
-  }
+export async function DELETE() {
+	return NextResponse.json(
+		{
+			success: false,
+			error: "Use /api/cms/contents for content deletion",
+		},
+		{ status: 405 },
+	);
 }

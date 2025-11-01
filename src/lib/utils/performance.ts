@@ -6,692 +6,694 @@
 // Type definitions for Three.js and PIXI.js
 // Type definitions for Three.js and PIXI.js
 interface ThreeScene {
-  traverse: (callback: (child: ThreeObject3D) => void) => void;
-  children: ThreeObject3D[];
-  remove: (object: ThreeObject3D) => void;
+	traverse: (callback: (child: ThreeObject3D) => void) => void;
+	children: ThreeObject3D[];
+	remove: (object: ThreeObject3D) => void;
 }
 
 interface ThreeObject3D {
-  geometry?: { dispose: () => void };
-  material?: ThreeMaterial | ThreeMaterial[];
+	geometry?: { dispose: () => void };
+	material?: ThreeMaterial | ThreeMaterial[];
 }
 
 interface ThreeMesh extends ThreeObject3D {
-  geometry: { dispose: () => void };
-  material: ThreeMaterial | ThreeMaterial[];
+	geometry: { dispose: () => void };
+	material: ThreeMaterial | ThreeMaterial[];
 }
 
 interface ThreeMaterial {
-  dispose: () => void;
-  map?: ThreeTexture;
-  lightMap?: ThreeTexture;
-  bumpMap?: ThreeTexture;
-  normalMap?: ThreeTexture;
-  specularMap?: ThreeTexture;
-  envMap?: ThreeTexture;
+	dispose: () => void;
+	map?: ThreeTexture;
+	lightMap?: ThreeTexture;
+	bumpMap?: ThreeTexture;
+	normalMap?: ThreeTexture;
+	specularMap?: ThreeTexture;
+	envMap?: ThreeTexture;
 }
 
 interface ThreeTexture {
-  dispose: () => void;
+	dispose: () => void;
 }
 
 interface PixiApplication {
-  stage?: { destroy: (options?: { children?: boolean }) => void };
-  renderer?: { destroy: (removeView?: boolean) => void };
-  destroy: (removeView?: boolean) => void;
+	stage?: { destroy: (options?: { children?: boolean }) => void };
+	renderer?: { destroy: (removeView?: boolean) => void };
+	destroy: (removeView?: boolean) => void;
 }
 
 // Performance metrics interface
 export interface PerformanceMetrics {
-  lcp: number; // Largest Contentful Paint
-  fid: number; // First Input Delay
-  cls: number; // Cumulative Layout Shift
-  fcp: number; // First Contentful Paint
-  ttfb: number; // Time to First Byte
-  memoryUsage?: {
-    used: number;
-    total: number;
-    limit: number;
-  };
+	lcp: number; // Largest Contentful Paint
+	fid: number; // First Input Delay
+	cls: number; // Cumulative Layout Shift
+	fcp: number; // First Contentful Paint
+	ttfb: number; // Time to First Byte
+	memoryUsage?: {
+		used: number;
+		total: number;
+		limit: number;
+	};
 }
 
 // Performance observer for Core Web Vitals
 export class PerformanceMonitor {
-  private metrics: Partial<PerformanceMetrics> = {};
-  private observers: PerformanceObserver[] = [];
+	private metrics: Partial<PerformanceMetrics> = {};
+	private observers: PerformanceObserver[] = [];
 
-  constructor() {
-    this.initializeObservers();
-  }
+	constructor() {
+		this.initializeObservers();
+	}
 
-  private initializeObservers(): void {
-    // Largest Contentful Paint (LCP)
-    if (typeof PerformanceObserver !== "undefined") {
-      try {
-        const lcpObserver = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          const lastEntry = entries[entries.length - 1] as PerformanceEntry & {
-            startTime: number;
-          };
-          this.metrics.lcp = lastEntry.startTime;
-          this.reportMetric("lcp", lastEntry.startTime);
-        });
-        lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
-        this.observers.push(lcpObserver);
-      } catch (error) {
-        console.warn("LCP observer not supported", error);
-      }
+	private initializeObservers(): void {
+		// Largest Contentful Paint (LCP)
+		if (typeof PerformanceObserver !== "undefined") {
+			try {
+				const lcpObserver = new PerformanceObserver((list) => {
+					const entries = list.getEntries();
+					const lastEntry = entries[entries.length - 1] as PerformanceEntry & {
+						startTime: number;
+					};
+					this.metrics.lcp = lastEntry.startTime;
+					this.reportMetric("lcp", lastEntry.startTime);
+				});
+				lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
+				this.observers.push(lcpObserver);
+			} catch (error) {
+				console.warn("LCP observer not supported", error);
+			}
 
-      // First Input Delay (FID)
-      try {
-        const fidObserver = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          entries.forEach((entry) => {
-            const fidEntry = entry as PerformanceEntry & {
-              processingStart: number;
-              startTime: number;
-            };
-            if ("processingStart" in fidEntry) {
-              this.metrics.fid = fidEntry.processingStart - fidEntry.startTime;
-              this.reportMetric("fid", this.metrics.fid);
-            }
-          });
-        });
-        fidObserver.observe({ entryTypes: ["first-input"] });
-        this.observers.push(fidObserver);
-      } catch (error) {
-        console.warn("FID observer not supported", error);
-      }
+			// First Input Delay (FID)
+			try {
+				const fidObserver = new PerformanceObserver((list) => {
+					const entries = list.getEntries();
+					entries.forEach((entry) => {
+						const fidEntry = entry as PerformanceEntry & {
+							processingStart: number;
+							startTime: number;
+						};
+						if ("processingStart" in fidEntry) {
+							this.metrics.fid = fidEntry.processingStart - fidEntry.startTime;
+							this.reportMetric("fid", this.metrics.fid);
+						}
+					});
+				});
+				fidObserver.observe({ entryTypes: ["first-input"] });
+				this.observers.push(fidObserver);
+			} catch (error) {
+				console.warn("FID observer not supported", error);
+			}
 
-      // Cumulative Layout Shift (CLS)
-      try {
-        let clsValue = 0;
-        const clsObserver = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          entries.forEach((entry) => {
-            const clsEntry = entry as PerformanceEntry & {
-              hadRecentInput: boolean;
-              value: number;
-            };
-            if ("hadRecentInput" in clsEntry && "value" in clsEntry) {
-              if (!clsEntry.hadRecentInput) {
-                clsValue += clsEntry.value;
-              }
-            }
-          });
-          this.metrics.cls = clsValue;
-          this.reportMetric("cls", clsValue);
-        });
-        clsObserver.observe({ entryTypes: ["layout-shift"] });
-        this.observers.push(clsObserver);
-      } catch (error) {
-        console.warn("CLS observer not supported", error);
-      }
+			// Cumulative Layout Shift (CLS)
+			try {
+				let clsValue = 0;
+				const clsObserver = new PerformanceObserver((list) => {
+					const entries = list.getEntries();
+					entries.forEach((entry) => {
+						const clsEntry = entry as PerformanceEntry & {
+							hadRecentInput: boolean;
+							value: number;
+						};
+						if ("hadRecentInput" in clsEntry && "value" in clsEntry) {
+							if (!clsEntry.hadRecentInput) {
+								clsValue += clsEntry.value;
+							}
+						}
+					});
+					this.metrics.cls = clsValue;
+					this.reportMetric("cls", clsValue);
+				});
+				clsObserver.observe({ entryTypes: ["layout-shift"] });
+				this.observers.push(clsObserver);
+			} catch (error) {
+				console.warn("CLS observer not supported", error);
+			}
 
-      // First Contentful Paint (FCP)
-      try {
-        const fcpObserver = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          entries.forEach(
-            (entry: PerformanceEntry & { name: string; startTime: number }) => {
-              if (entry.name === "first-contentful-paint") {
-                this.metrics.fcp = entry.startTime;
-                this.reportMetric("fcp", entry.startTime);
-              }
-            },
-          );
-        });
-        fcpObserver.observe({ entryTypes: ["paint"] });
-        this.observers.push(fcpObserver);
-      } catch (error) {
-        console.warn("FCP observer not supported", error);
-      }
-    }
+			// First Contentful Paint (FCP)
+			try {
+				const fcpObserver = new PerformanceObserver((list) => {
+					const entries = list.getEntries();
+					entries.forEach(
+						(entry: PerformanceEntry & { name: string; startTime: number }) => {
+							if (entry.name === "first-contentful-paint") {
+								this.metrics.fcp = entry.startTime;
+								this.reportMetric("fcp", entry.startTime);
+							}
+						},
+					);
+				});
+				fcpObserver.observe({ entryTypes: ["paint"] });
+				this.observers.push(fcpObserver);
+			} catch (error) {
+				console.warn("FCP observer not supported", error);
+			}
+		}
 
-    // Memory usage monitoring
-    this.monitorMemoryUsage();
-  }
+		// Memory usage monitoring
+		this.monitorMemoryUsage();
+	}
 
-  private monitorMemoryUsage(): void {
-    if (typeof performance !== "undefined" && "memory" in performance) {
-      const memory = (
-        performance as Performance & {
-          memory: {
-            usedJSHeapSize: number;
-            totalJSHeapSize: number;
-            jsHeapSizeLimit: number;
-          };
-        }
-      ).memory;
-      this.metrics.memoryUsage = {
-        used: memory.usedJSHeapSize,
-        total: memory.totalJSHeapSize,
-        limit: memory.jsHeapSizeLimit,
-      };
-    } else {
-      // Fallback for test environment
-      this.metrics.memoryUsage = {
-        used: 1000000,
-        total: 2000000,
-        limit: 4000000,
-      };
-    }
-  }
+	private monitorMemoryUsage(): void {
+		if (typeof performance !== "undefined" && "memory" in performance) {
+			const memory = (
+				performance as Performance & {
+					memory: {
+						usedJSHeapSize: number;
+						totalJSHeapSize: number;
+						jsHeapSizeLimit: number;
+					};
+				}
+			).memory;
+			this.metrics.memoryUsage = {
+				used: memory.usedJSHeapSize,
+				total: memory.totalJSHeapSize,
+				limit: memory.jsHeapSizeLimit,
+			};
+		} else {
+			// Fallback for test environment
+			this.metrics.memoryUsage = {
+				used: 1000000,
+				total: 2000000,
+				limit: 4000000,
+			};
+		}
+	}
 
-  private reportMetric(name: string, value: number): void {
-    // Check if metric exceeds thresholds
-    const thresholds = {
-      lcp: 2500, // 2.5s
-      fid: 100, // 100ms
-      cls: 0.1, // 0.1
-      fcp: 1800, // 1.8s
-    };
+	private reportMetric(name: string, value: number): void {
+		// Check if metric exceeds thresholds
+		const thresholds = {
+			lcp: 2500, // 2.5s
+			fid: 100, // 100ms
+			cls: 0.1, // 0.1
+			fcp: 1800, // 1.8s
+		};
 
-    const threshold = thresholds[name as keyof typeof thresholds];
-    if (threshold && value > threshold) {
-      console.warn(
-        `Performance threshold exceeded - ${name}: ${value} (threshold: ${threshold})`,
-      );
-    }
+		const threshold = thresholds[name as keyof typeof thresholds];
+		if (threshold && value > threshold) {
+			console.warn(
+				`Performance threshold exceeded - ${name}: ${value} (threshold: ${threshold})`,
+			);
+		}
 
-    // Report to analytics in production
-    if (process.env.NODE_ENV === "production") {
-      // Send to analytics service
-      this.sendToAnalytics(name, value);
-    }
+		// Report to analytics in production
+		if (process.env.NODE_ENV === "production") {
+			// Send to analytics service
+			this.sendToAnalytics(name, value);
+		}
 
-    // Log in development
-    if (process.env.NODE_ENV === "development") {
-      console.log(`Performance metric - ${name}:`, value);
-    }
-  }
+		// Log in development
+		if (process.env.NODE_ENV === "development") {
+			console.log(`Performance metric - ${name}:`, value);
+		}
+	}
 
-  private sendToAnalytics(name: string, value: number): void {
-    // Implementation for sending metrics to analytics service
-    // This would typically send to Google Analytics, DataDog, etc.
-    try {
-      if (typeof window !== "undefined" && window.gtag) {
-        window.gtag("event", "performance_metric", {
-          metric_name: name,
-          metric_value: Math.round(value),
-          custom_parameter: "core_web_vitals",
-        });
-      }
+	private sendToAnalytics(name: string, value: number): void {
+		// Implementation for sending metrics to analytics service
+		// This would typically send to Google Analytics, DataDog, etc.
+		try {
+			if (typeof window !== "undefined" && window.gtag) {
+				window.gtag("event", "performance_metric", {
+					metric_name: name,
+					metric_value: Math.round(value),
+					custom_parameter: "core_web_vitals",
+				});
+			}
 
-      // Send to internal monitoring API with error handling
-      if (
-        typeof window !== "undefined" &&
-        process.env.NODE_ENV === "production"
-      ) {
-        // Use requestIdleCallback to avoid blocking main thread
-        const sendMetric = () => {
-          fetch("/api/monitoring/performance", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              metric: name,
-              value: Math.round(value),
-              timestamp: new Date().toISOString(),
-              url: window.location.href,
-              userAgent: navigator.userAgent,
-              connection: (
-                navigator as Navigator & {
-                  connection?: {
-                    effectiveType: string;
-                    downlink: number;
-                  };
-                }
-              ).connection
-                ? {
-                    effectiveType: (
-                      navigator as Navigator & {
-                        connection: {
-                          effectiveType: string;
-                          downlink: number;
-                        };
-                      }
-                    ).connection.effectiveType,
-                    downlink: (
-                      navigator as Navigator & {
-                        connection: {
-                          effectiveType: string;
-                          downlink: number;
-                        };
-                      }
-                    ).connection.downlink,
-                  }
-                : undefined,
-            }),
-          }).catch(() => {
-            // Silently fail to prevent console errors
-          });
-        };
+			// Send to internal monitoring API with error handling
+			if (
+				typeof window !== "undefined" &&
+				process.env.NODE_ENV === "production"
+			) {
+				// Use requestIdleCallback to avoid blocking main thread
+				const sendMetric = () => {
+					fetch("/api/monitoring/performance", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							metric: name,
+							value: Math.round(value),
+							timestamp: new Date().toISOString(),
+							url: window.location.href,
+							userAgent: navigator.userAgent,
+							connection: (
+								navigator as Navigator & {
+									connection?: {
+										effectiveType: string;
+										downlink: number;
+									};
+								}
+							).connection
+								? {
+										effectiveType: (
+											navigator as Navigator & {
+												connection: {
+													effectiveType: string;
+													downlink: number;
+												};
+											}
+										).connection.effectiveType,
+										downlink: (
+											navigator as Navigator & {
+												connection: {
+													effectiveType: string;
+													downlink: number;
+												};
+											}
+										).connection.downlink,
+									}
+								: undefined,
+						}),
+					}).catch(() => {
+						// Silently fail to prevent console errors
+					});
+				};
 
-        if ("requestIdleCallback" in window) {
-          requestIdleCallback(sendMetric, { timeout: 2000 });
-        } else {
-          setTimeout(sendMetric, 0);
-        }
-      }
-    } catch (error) {
-      // Silently fail in production to prevent console errors
-      if (process.env.NODE_ENV === "development") {
-        console.warn("Failed to send analytics:", error);
-      }
-    }
-  }
+				if ("requestIdleCallback" in window) {
+					requestIdleCallback(sendMetric, { timeout: 2000 });
+				} else {
+					setTimeout(sendMetric, 0);
+				}
+			}
+		} catch (error) {
+			// Silently fail in production to prevent console errors
+			if (process.env.NODE_ENV === "development") {
+				console.warn("Failed to send analytics:", error);
+			}
+		}
+	}
 
-  public getMetrics(): Partial<PerformanceMetrics> {
-    this.monitorMemoryUsage();
-    return { ...this.metrics };
-  }
+	public getMetrics(): Partial<PerformanceMetrics> {
+		this.monitorMemoryUsage();
+		return { ...this.metrics };
+	}
 
-  public cleanup(): void {
-    this.observers.forEach((observer) => observer.disconnect());
-    this.observers = [];
-  }
+	public cleanup(): void {
+		this.observers.forEach((observer) => {
+			observer.disconnect();
+		});
+		this.observers = [];
+	}
 }
 
 // Memory management utilities for heavy components
 export class MemoryManager {
-  private static instance: MemoryManager;
-  private disposables: Set<() => void> = new Set();
+	private static instance: MemoryManager;
+	private disposables: Set<() => void> = new Set();
 
-  static getInstance(): MemoryManager {
-    if (!MemoryManager.instance) {
-      MemoryManager.instance = new MemoryManager();
-    }
-    return MemoryManager.instance;
-  }
+	static getInstance(): MemoryManager {
+		if (!MemoryManager.instance) {
+			MemoryManager.instance = new MemoryManager();
+		}
+		return MemoryManager.instance;
+	}
 
-  // Register cleanup function
-  public register(cleanup: () => void): void {
-    this.disposables.add(cleanup);
-  }
+	// Register cleanup function
+	public register(cleanup: () => void): void {
+		this.disposables.add(cleanup);
+	}
 
-  // Unregister cleanup function
-  public unregister(cleanup: () => void): void {
-    this.disposables.delete(cleanup);
-  }
+	// Unregister cleanup function
+	public unregister(cleanup: () => void): void {
+		this.disposables.delete(cleanup);
+	}
 
-  // Clean up all registered disposables
-  public cleanup(): void {
-    this.disposables.forEach((cleanup) => {
-      try {
-        cleanup();
-      } catch (error) {
-        console.warn("Error during cleanup:", error);
-      }
-    });
-    this.disposables.clear();
-  }
+	// Clean up all registered disposables
+	public cleanup(): void {
+		this.disposables.forEach((cleanup) => {
+			try {
+				cleanup();
+			} catch (error) {
+				console.warn("Error during cleanup:", error);
+			}
+		});
+		this.disposables.clear();
+	}
 
-  // Three.js specific cleanup
-  public disposeThreeObjects(scene: ThreeScene): void {
-    if (!scene) return;
+	// Three.js specific cleanup
+	public disposeThreeObjects(scene: ThreeScene): void {
+		if (!scene) return;
 
-    scene.traverse((child: ThreeObject3D) => {
-      const mesh = child as ThreeMesh;
-      if (mesh.geometry) {
-        mesh.geometry.dispose();
-      }
+		scene.traverse((child: ThreeObject3D) => {
+			const mesh = child as ThreeMesh;
+			if (mesh.geometry) {
+				mesh.geometry.dispose();
+			}
 
-      if (mesh.material) {
-        if (Array.isArray(mesh.material)) {
-          mesh.material.forEach((material: ThreeMaterial) => {
-            this.disposeMaterial(material);
-          });
-        } else {
-          this.disposeMaterial(mesh.material);
-        }
-      }
-    });
+			if (mesh.material) {
+				if (Array.isArray(mesh.material)) {
+					mesh.material.forEach((material: ThreeMaterial) => {
+						this.disposeMaterial(material);
+					});
+				} else {
+					this.disposeMaterial(mesh.material);
+				}
+			}
+		});
 
-    // Clear the scene
-    while (scene.children.length > 0) {
-      scene.remove(scene.children[0]);
-    }
-  }
+		// Clear the scene
+		while (scene.children.length > 0) {
+			scene.remove(scene.children[0]);
+		}
+	}
 
-  private disposeMaterial(material: ThreeMaterial): void {
-    const materialWithMaps = material as ThreeMaterial & {
-      map?: ThreeTexture;
-      lightMap?: ThreeTexture;
-      bumpMap?: ThreeTexture;
-      normalMap?: ThreeTexture;
-      specularMap?: ThreeTexture;
-      envMap?: ThreeTexture;
-    };
+	private disposeMaterial(material: ThreeMaterial): void {
+		const materialWithMaps = material as ThreeMaterial & {
+			map?: ThreeTexture;
+			lightMap?: ThreeTexture;
+			bumpMap?: ThreeTexture;
+			normalMap?: ThreeTexture;
+			specularMap?: ThreeTexture;
+			envMap?: ThreeTexture;
+		};
 
-    if (materialWithMaps.map) materialWithMaps.map.dispose();
-    if (materialWithMaps.lightMap) materialWithMaps.lightMap.dispose();
-    if (materialWithMaps.bumpMap) materialWithMaps.bumpMap.dispose();
-    if (materialWithMaps.normalMap) materialWithMaps.normalMap.dispose();
-    if (materialWithMaps.specularMap) materialWithMaps.specularMap.dispose();
-    if (materialWithMaps.envMap) materialWithMaps.envMap.dispose();
-    material.dispose();
-  }
+		if (materialWithMaps.map) materialWithMaps.map.dispose();
+		if (materialWithMaps.lightMap) materialWithMaps.lightMap.dispose();
+		if (materialWithMaps.bumpMap) materialWithMaps.bumpMap.dispose();
+		if (materialWithMaps.normalMap) materialWithMaps.normalMap.dispose();
+		if (materialWithMaps.specularMap) materialWithMaps.specularMap.dispose();
+		if (materialWithMaps.envMap) materialWithMaps.envMap.dispose();
+		material.dispose();
+	}
 
-  // PIXI.js specific cleanup
-  public disposePixiObjects(app: PixiApplication): void {
-    if (!app) return;
+	// PIXI.js specific cleanup
+	public disposePixiObjects(app: PixiApplication): void {
+		if (!app) return;
 
-    if (app.stage) {
-      app.stage.destroy({ children: true });
-    }
+		if (app.stage) {
+			app.stage.destroy({ children: true });
+		}
 
-    if (app.renderer) {
-      app.renderer.destroy(true);
-    }
+		if (app.renderer) {
+			app.renderer.destroy(true);
+		}
 
-    app.destroy(true);
-  }
+		app.destroy(true);
+	}
 }
 
 // Resource preloading utilities
 export class ResourcePreloader {
-  private static preloadedResources: Set<string> = new Set();
+	private static preloadedResources: Set<string> = new Set();
 
-  // Preload critical resources
-  public static preloadCriticalResources(): void {
-    const criticalResources = [
-      "/images/og-image.png",
-      // "/images/profile/profile-main.jpg", // Temporarily disabled - placeholder file
-      "/fonts/neue-haas-grotesk-display.woff2",
-      "/fonts/zen-kaku-gothic-new.woff2",
-    ];
+	// Preload critical resources
+	public static preloadCriticalResources(): void {
+		const criticalResources = [
+			"/images/og-image.png",
+			// "/images/profile/profile-main.jpg", // Temporarily disabled - placeholder file
+			"/fonts/neue-haas-grotesk-display.woff2",
+			"/fonts/zen-kaku-gothic-new.woff2",
+		];
 
-    criticalResources.forEach((resource) => {
-      this.preloadResource(resource);
-    });
-  }
+		criticalResources.forEach((resource) => {
+			ResourcePreloader.preloadResource(resource);
+		});
+	}
 
-  // Preload individual resource
-  public static preloadResource(url: string): void {
-    if (this.preloadedResources.has(url)) return;
+	// Preload individual resource
+	public static preloadResource(url: string): void {
+		if (ResourcePreloader.preloadedResources.has(url)) return;
 
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.href = url;
+		const link = document.createElement("link");
+		link.rel = "preload";
+		link.href = url;
 
-    if (url.includes(".woff2") || url.includes(".woff")) {
-      link.setAttribute("as", "font");
-      link.setAttribute(
-        "type",
-        url.includes(".woff2") ? "font/woff2" : "font/woff",
-      );
-      link.setAttribute("crossorigin", "anonymous");
-    } else if (
-      url.includes(".jpg") ||
-      url.includes(".png") ||
-      url.includes(".webp")
-    ) {
-      link.setAttribute("as", "image");
-    } else if (url.includes(".js")) {
-      link.setAttribute("as", "script");
-    } else if (url.includes(".css")) {
-      link.setAttribute("as", "style");
-    }
+		if (url.includes(".woff2") || url.includes(".woff")) {
+			link.setAttribute("as", "font");
+			link.setAttribute(
+				"type",
+				url.includes(".woff2") ? "font/woff2" : "font/woff",
+			);
+			link.setAttribute("crossorigin", "anonymous");
+		} else if (
+			url.includes(".jpg") ||
+			url.includes(".png") ||
+			url.includes(".webp")
+		) {
+			link.setAttribute("as", "image");
+		} else if (url.includes(".js")) {
+			link.setAttribute("as", "script");
+		} else if (url.includes(".css")) {
+			link.setAttribute("as", "style");
+		}
 
-    document.head.appendChild(link);
-    this.preloadedResources.add(url);
-  }
+		document.head.appendChild(link);
+		ResourcePreloader.preloadedResources.add(url);
+	}
 
-  // Lazy load images with intersection observer
-  public static setupLazyLoading(): void {
-    if ("IntersectionObserver" in window) {
-      const imageObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const img = entry.target as HTMLImageElement;
-            if (img.dataset.src) {
-              img.src = img.dataset.src;
-              img.classList.remove("lazy");
-              imageObserver.unobserve(img);
-            }
-          }
-        });
-      });
+	// Lazy load images with intersection observer
+	public static setupLazyLoading(): void {
+		if ("IntersectionObserver" in window) {
+			const imageObserver = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						const img = entry.target as HTMLImageElement;
+						if (img.dataset.src) {
+							img.src = img.dataset.src;
+							img.classList.remove("lazy");
+							imageObserver.unobserve(img);
+						}
+					}
+				});
+			});
 
-      document.querySelectorAll("img[data-src]").forEach((img) => {
-        imageObserver.observe(img);
-      });
-    }
-  }
+			document.querySelectorAll("img[data-src]").forEach((img) => {
+				imageObserver.observe(img);
+			});
+		}
+	}
 }
 
 // Bundle size monitoring
 export class BundleMonitor {
-  public static logBundleInfo(): void {
-    if (
-      process.env.NODE_ENV === "development" ||
-      process.env.NODE_ENV === "test"
-    ) {
-      console.group("Bundle Information");
-      console.log(
-        "Next.js version:",
-        process.env.NEXT_PUBLIC_VERSION || "15.4.3",
-      );
-      console.log("Build time:", new Date().toISOString());
+	public static logBundleInfo(): void {
+		if (
+			process.env.NODE_ENV === "development" ||
+			process.env.NODE_ENV === "test"
+		) {
+			console.group("Bundle Information");
+			console.log(
+				"Next.js version:",
+				process.env.NEXT_PUBLIC_VERSION || "15.4.3",
+			);
+			console.log("Build time:", new Date().toISOString());
 
-      // Log loaded chunks
-      if (
-        typeof window !== "undefined" &&
-        (
-          window as Window & {
-            __NEXT_DATA__?: { chunks?: string[]; buildId?: string };
-          }
-        ).__NEXT_DATA__
-      ) {
-        const nextData = (
-          window as Window & {
-            __NEXT_DATA__: { chunks?: string[]; buildId?: string };
-          }
-        ).__NEXT_DATA__;
-        console.log("Page chunks:", nextData.chunks || []);
-        console.log("Build ID:", nextData.buildId);
-      }
+			// Log loaded chunks
+			if (
+				typeof window !== "undefined" &&
+				(
+					window as Window & {
+						__NEXT_DATA__?: { chunks?: string[]; buildId?: string };
+					}
+				).__NEXT_DATA__
+			) {
+				const nextData = (
+					window as Window & {
+						__NEXT_DATA__: { chunks?: string[]; buildId?: string };
+					}
+				).__NEXT_DATA__;
+				console.log("Page chunks:", nextData.chunks || []);
+				console.log("Build ID:", nextData.buildId);
+			}
 
-      console.groupEnd();
-    }
-  }
+			console.groupEnd();
+		}
+	}
 
-  // Monitor chunk loading performance
-  public static monitorChunkLoading(): void {
-    if (typeof PerformanceObserver !== "undefined") {
-      try {
-        const observer = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          entries.forEach((entry) => {
-            if (entry.name.includes("_next/static/chunks/")) {
-              console.log(`Chunk loaded: ${entry.name} in ${entry.duration}ms`);
-            }
-          });
-        });
+	// Monitor chunk loading performance
+	public static monitorChunkLoading(): void {
+		if (typeof PerformanceObserver !== "undefined") {
+			try {
+				const observer = new PerformanceObserver((list) => {
+					const entries = list.getEntries();
+					entries.forEach((entry) => {
+						if (entry.name.includes("_next/static/chunks/")) {
+							console.log(`Chunk loaded: ${entry.name} in ${entry.duration}ms`);
+						}
+					});
+				});
 
-        observer.observe({ entryTypes: ["resource"] });
-      } catch (error) {
-        console.warn("Chunk loading monitoring not supported", error);
-      }
-    }
-  }
+				observer.observe({ entryTypes: ["resource"] });
+			} catch (error) {
+				console.warn("Chunk loading monitoring not supported", error);
+			}
+		}
+	}
 }
 
 // Performance optimization hooks
 export const usePerformanceOptimization = () => {
-  const performanceMonitor = new PerformanceMonitor();
-  const memoryManager = MemoryManager.getInstance();
+	const performanceMonitor = new PerformanceMonitor();
+	const memoryManager = MemoryManager.getInstance();
 
-  // Cleanup on unmount
-  const cleanup = () => {
-    performanceMonitor.cleanup();
-    memoryManager.cleanup();
-  };
+	// Cleanup on unmount
+	const cleanup = () => {
+		performanceMonitor.cleanup();
+		memoryManager.cleanup();
+	};
 
-  return {
-    performanceMonitor,
-    memoryManager,
-    cleanup,
-  };
+	return {
+		performanceMonitor,
+		memoryManager,
+		cleanup,
+	};
 };
 
 // Offline utilities
 export const offlineUtils = {
-  isOnline: () => navigator.onLine,
-  onConnectionChange: (callback: (isOnline: boolean) => void) => {
-    const handleOnline = () => callback(true);
-    const handleOffline = () => callback(false);
+	isOnline: () => navigator.onLine,
+	onConnectionChange: (callback: (isOnline: boolean) => void) => {
+		const handleOnline = () => callback(true);
+		const handleOffline = () => callback(false);
 
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+		window.addEventListener("online", handleOnline);
+		window.addEventListener("offline", handleOffline);
 
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  },
-  showOfflineNotification: (message: string) => {
-    console.log("Offline:", message);
-  },
-  hideOfflineNotification: () => {
-    console.log("Back online");
-  },
+		return () => {
+			window.removeEventListener("online", handleOnline);
+			window.removeEventListener("offline", handleOffline);
+		};
+	},
+	showOfflineNotification: (message: string) => {
+		console.log("Offline:", message);
+	},
+	hideOfflineNotification: () => {
+		console.log("Back online");
+	},
 };
 
 // Data persistence utilities
 export const dataPersistence = {
-  getStorageInfo: () => ({
-    used: 0,
-    available: 1000000,
-    percentage: 0,
-  }),
-  setItem: (key: string, value: unknown) => {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-      return true;
-    } catch {
-      return false;
-    }
-  },
-  getItem: <T>(key: string, defaultValue: T): T => {
-    try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : defaultValue;
-    } catch {
-      return defaultValue;
-    }
-  },
-  clearToolData: (toolName: string) => {
-    const key = `tool-${toolName}-settings`;
-    localStorage.removeItem(key);
-  },
+	getStorageInfo: () => ({
+		used: 0,
+		available: 1000000,
+		percentage: 0,
+	}),
+	setItem: (key: string, value: unknown) => {
+		try {
+			localStorage.setItem(key, JSON.stringify(value));
+			return true;
+		} catch {
+			return false;
+		}
+	},
+	getItem: <T>(key: string, defaultValue: T): T => {
+		try {
+			const item = localStorage.getItem(key);
+			return item ? JSON.parse(item) : defaultValue;
+		} catch {
+			return defaultValue;
+		}
+	},
+	clearToolData: (toolName: string) => {
+		const key = `tool-${toolName}-settings`;
+		localStorage.removeItem(key);
+	},
 };
 
 // Computation optimization utilities
 export const computationOptimization = {
-  processInChunks: async <T, R>(
-    items: T[],
-    processor: (item: T, index: number) => R,
-    chunkSize: number,
-    onProgress?: (progress: number) => void,
-  ): Promise<R[]> => {
-    const results: R[] = [];
+	processInChunks: async <T, R>(
+		items: T[],
+		processor: (item: T, index: number) => R,
+		chunkSize: number,
+		onProgress?: (progress: number) => void,
+	): Promise<R[]> => {
+		const results: R[] = [];
 
-    for (let i = 0; i < items.length; i += chunkSize) {
-      const chunk = items.slice(i, i + chunkSize);
-      const chunkResults = chunk.map((item, index) =>
-        processor(item, i + index),
-      );
-      results.push(...chunkResults);
+		for (let i = 0; i < items.length; i += chunkSize) {
+			const chunk = items.slice(i, i + chunkSize);
+			const chunkResults = chunk.map((item, index) =>
+				processor(item, i + index),
+			);
+			results.push(...chunkResults);
 
-      const progress = ((i + chunkSize) / items.length) * 100;
-      onProgress?.(Math.min(progress, 100));
+			const progress = ((i + chunkSize) / items.length) * 100;
+			onProgress?.(Math.min(progress, 100));
 
-      // Yield control to prevent blocking
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    }
+			// Yield control to prevent blocking
+			await new Promise((resolve) => setTimeout(resolve, 0));
+		}
 
-    return results;
-  },
-  useWebWorker: async <T, R>(workerScript: string, data: T): Promise<R> => {
-    return new Promise((resolve, reject) => {
-      const worker = new Worker(workerScript);
-      worker.postMessage(data);
-      worker.onmessage = (e) => {
-        resolve(e.data);
-        worker.terminate();
-      };
-      worker.onerror = reject;
-    });
-  },
+		return results;
+	},
+	useWebWorker: async <T, R>(workerScript: string, data: T): Promise<R> => {
+		return new Promise((resolve, reject) => {
+			const worker = new Worker(workerScript);
+			worker.postMessage(data);
+			worker.onmessage = (e) => {
+				resolve(e.data);
+				worker.terminate();
+			};
+			worker.onerror = reject;
+		});
+	},
 };
 
 // Performance monitoring utilities
 export const performanceMonitoring = {
-  getMemoryUsage(): { used: number; total: number; percentage: number } | null {
-    if (typeof performance !== "undefined" && "memory" in performance) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const memory = (performance as any).memory;
-      return {
-        used: memory.usedJSHeapSize,
-        total: memory.totalJSHeapSize,
-        percentage: Math.round(
-          (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100,
-        ),
-      };
-    }
-    // Fallback for test environment
-    return {
-      used: 1000000,
-      total: 2000000,
-      percentage: 50,
-    };
-  },
+	getMemoryUsage(): { used: number; total: number; percentage: number } | null {
+		if (typeof performance !== "undefined" && "memory" in performance) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const memory = (performance as any).memory;
+			return {
+				used: memory.usedJSHeapSize,
+				total: memory.totalJSHeapSize,
+				percentage: Math.round(
+					(memory.usedJSHeapSize / memory.totalJSHeapSize) * 100,
+				),
+			};
+		}
+		// Fallback for test environment
+		return {
+			used: 1000000,
+			total: 2000000,
+			percentage: 50,
+		};
+	},
 
-  measureTime<T>(fn: () => T): { result: T; duration: number } {
-    const start = performance.now();
-    const result = fn();
-    const end = performance.now();
-    const duration = end - start;
+	measureTime<T>(fn: () => T): { result: T; duration: number } {
+		const start = performance.now();
+		const result = fn();
+		const end = performance.now();
+		const duration = end - start;
 
-    return {
-      result,
-      duration: isNaN(duration) ? 0 : duration,
-    };
-  },
+		return {
+			result,
+			duration: Number.isNaN(duration) ? 0 : duration,
+		};
+	},
 };
 
 // Initialize performance monitoring
 export const initializePerformanceMonitoring = (): PerformanceMonitor => {
-  const monitor = new PerformanceMonitor();
+	const monitor = new PerformanceMonitor();
 
-  // Initialize regression detection
-  if (typeof window !== "undefined") {
-    import("./performance-regression")
-      .then(({ initializePerformanceRegression }) => {
-        initializePerformanceRegression();
-      })
-      .catch((error) => {
-        console.warn(
-          "Failed to initialize performance regression detection:",
-          error,
-        );
-      });
-  }
+	// Initialize regression detection
+	if (typeof window !== "undefined") {
+		import("./performance-regression")
+			.then(({ initializePerformanceRegression }) => {
+				initializePerformanceRegression();
+			})
+			.catch((error) => {
+				console.warn(
+					"Failed to initialize performance regression detection:",
+					error,
+				);
+			});
+	}
 
-  // Preload critical resources
-  ResourcePreloader.preloadCriticalResources();
+	// Preload critical resources
+	ResourcePreloader.preloadCriticalResources();
 
-  // Setup lazy loading
-  if (typeof window !== "undefined") {
-    window.addEventListener("load", () => {
-      ResourcePreloader.setupLazyLoading();
-      BundleMonitor.logBundleInfo();
-      BundleMonitor.monitorChunkLoading();
-    });
-  }
+	// Setup lazy loading
+	if (typeof window !== "undefined") {
+		window.addEventListener("load", () => {
+			ResourcePreloader.setupLazyLoading();
+			BundleMonitor.logBundleInfo();
+			BundleMonitor.monitorChunkLoading();
+		});
+	}
 
-  return monitor;
+	return monitor;
 };

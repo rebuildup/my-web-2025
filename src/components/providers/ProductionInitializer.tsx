@@ -5,41 +5,41 @@
 
 "use client";
 
+import { type ReactNode, useEffect } from "react";
 import {
-  checkProductionReadiness,
-  initProduction,
+	checkProductionReadiness,
+	initProduction,
 } from "@/lib/init/production";
-import { ReactNode, useEffect } from "react";
 
 interface ProductionInitializerProps {
-  children: ReactNode;
+	children: ReactNode;
 }
 
 export function ProductionInitializer({
-  children,
+	children,
 }: ProductionInitializerProps) {
-  useEffect(() => {
-    // Only initialize in browser environment
-    if (typeof window === "undefined") return;
+	useEffect(() => {
+		// Only initialize in browser environment
+		if (typeof window === "undefined") return;
 
-    // Check production readiness
-    const readiness = checkProductionReadiness();
+		// Check production readiness
+		const readiness = checkProductionReadiness();
 
-    if (!readiness.ready) {
-      console.error("Production readiness issues:", readiness.issues);
-    }
+		if (!readiness.ready) {
+			console.error("Production readiness issues:", readiness.issues);
+		}
 
-    if (readiness.warnings.length > 0) {
-      console.warn("Production warnings:", readiness.warnings);
-    }
+		if (readiness.warnings.length > 0) {
+			console.warn("Production warnings:", readiness.warnings);
+		}
 
-    // Initialize production environment
-    try {
-      initProduction();
-    } catch (error) {
-      console.error("Failed to initialize production environment:", error);
-    }
-  }, []);
+		// Initialize production environment
+		try {
+			initProduction();
+		} catch (error) {
+			console.error("Failed to initialize production environment:", error);
+		}
+	}, []);
 
-  return <>{children}</>;
+	return <>{children}</>;
 }

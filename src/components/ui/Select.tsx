@@ -1,51 +1,51 @@
 "use client";
 
 interface SelectOption {
-  value: string;
-  label: string;
-  disabled?: boolean;
+	value: string;
+	label: string;
+	disabled?: boolean;
 }
 
 interface SelectProps {
-  value: string;
-  onChange: (value: string) => void;
-  options: SelectOption[];
-  placeholder?: string;
-  disabled?: boolean;
-  className?: string;
-  size?: "sm" | "md" | "lg";
-  variant?: "default" | "admin";
+	value: string;
+	onChange: (value: string) => void;
+	options: SelectOption[];
+	placeholder?: string;
+	disabled?: boolean;
+	className?: string;
+	size?: "sm" | "md" | "lg";
+	variant?: "default" | "admin";
 }
 
 export function Select({
-  value,
-  onChange,
-  options,
-  placeholder = "Select an option",
-  disabled = false,
-  className = "",
-  size = "md",
-  variant = "default",
+	value,
+	onChange,
+	options,
+	placeholder = "Select an option",
+	disabled = false,
+	className = "",
+	size = "md",
+	variant = "default",
 }: SelectProps) {
-  const baseStyles =
-    "border focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background focus:border-transparent cursor-pointer appearance-none bg-no-repeat bg-right transition-colors";
+	const baseStyles =
+		"border focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base focus:border-transparent cursor-pointer appearance-none bg-no-repeat bg-right transition-colors";
 
-  const sizeStyles = {
-    sm: "px-2 py-1 text-xs pr-6 bg-[length:10px]",
-    md: "px-3 py-2 text-sm pr-8 bg-[length:12px]",
-    lg: "px-4 py-3 text-base pr-10 bg-[length:14px]",
-  };
+	const sizeStyles = {
+		sm: "px-2 py-1 text-xs pr-6 bg-[length:10px]",
+		md: "px-3 py-2 text-sm pr-8 bg-[length:12px]",
+		lg: "px-4 py-3 text-base pr-10 bg-[length:14px]",
+	};
 
-  const variantStyles = {
-    default:
-      'bg-background border-foreground text-foreground hover:border-accent bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
-    admin:
-      'bg-background border-foreground text-foreground hover:border-primary bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23ffffff" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
-  };
+	const variantStyles = {
+		default:
+			'bg-base border-main text-main hover:border-accent bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
+		admin:
+			'bg-base border-main text-main hover:border-main bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23ffffff" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
+	};
 
-  const disabledStyles = "opacity-50 cursor-not-allowed";
+	const disabledStyles = "opacity-50 cursor-not-allowed";
 
-  const selectClassName = `
+	const selectClassName = `
     w-full
     ${baseStyles}
     ${sizeStyles[size]}
@@ -53,50 +53,46 @@ export function Select({
     ${disabled ? disabledStyles : ""}
     ${className}
   `
-    .trim()
-    .replace(/\s+/g, " ");
+		.trim()
+		.replace(/\s+/g, " ");
 
-  return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      disabled={disabled}
-      className={selectClassName}
-    >
-      {placeholder && (
-        <option value="" disabled className="text-foreground/60">
-          {placeholder}
-        </option>
-      )}
-      {options.map((option) => (
-        <option
-          key={option.value}
-          value={option.value}
-          disabled={option.disabled}
-          className="text-foreground bg-background"
-        >
-          {option.label}
-        </option>
-      ))}
-    </select>
-  );
+	return (
+		<select
+			value={value}
+			onChange={(e) => onChange(e.target.value)}
+			disabled={disabled}
+			className={selectClassName}
+		>
+			{placeholder && (
+				<option value="" disabled className="text-main/60">
+					{placeholder}
+				</option>
+			)}
+			{options.map((option) => (
+				<option
+					key={option.value}
+					value={option.value}
+					disabled={option.disabled}
+					className="text-main bg-base"
+				>
+					{option.label}
+				</option>
+			))}
+		</select>
+	);
 }
 
 // Option component for better type safety
 export interface OptionProps {
-  value: string;
-  label: string;
-  disabled?: boolean;
+	value: string;
+	label: string;
+	disabled?: boolean;
 }
 
 export function Option({ value, label, disabled = false }: OptionProps) {
-  return (
-    <option
-      value={value}
-      disabled={disabled}
-      className="text-foreground bg-background"
-    >
-      {label}
-    </option>
-  );
+	return (
+		<option value={value} disabled={disabled} className="text-main bg-base">
+			{label}
+		</option>
+	);
 }

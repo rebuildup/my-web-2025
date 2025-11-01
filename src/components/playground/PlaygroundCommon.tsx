@@ -1,20 +1,20 @@
-import React from "react";
+import type React from "react";
 
 interface PlaygroundCommonProps {
-  children?: React.ReactNode;
-  title?: string;
+	children?: React.ReactNode;
+	title?: string;
 }
 
 const PlaygroundCommon: React.FC<PlaygroundCommonProps> = ({
-  children,
-  title = "Playground",
+	children,
+	title = "Playground",
 }) => {
-  return (
-    <div className="playground-common">
-      <h1>{title}</h1>
-      <div className="playground-content">{children}</div>
-    </div>
-  );
+	return (
+		<div className="playground-common">
+			<h1>{title}</h1>
+			<div className="playground-content">{children}</div>
+		</div>
+	);
 };
 
 export default PlaygroundCommon;

@@ -1,18 +1,18 @@
-import React from "react";
+import type React from "react";
 import "../styles/004_game.css";
 
 interface HomeProps {
-  onOpenPopup: () => void;
+	onOpenPopup: () => void;
 }
 
 const Game: React.FC<HomeProps> = ({ onOpenPopup }) => {
-  return (
-    <div className="home-container" style={{ zIndex: 1 }}>
-      <button onClick={onOpenPopup} className="openbtn">
-        Game Start
-      </button>
-    </div>
-  );
+	return (
+		<div className="home-container" style={{ zIndex: 1 }}>
+			<button type="button" onClick={onOpenPopup} className="openbtn">
+				Game Start
+			</button>
+		</div>
+	);
 };
 
 export default Game;

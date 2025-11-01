@@ -1,7 +1,7 @@
 .p-4 {
-  color: var(--ProtoTypeMainColor);
+	color: var(--ProtoTypeMainColor);
 }
 button {
-  color: var(--ProtoTypeMainColor);
-  margin: 1em;
+	color: var(--ProtoTypeMainColor);
+	margin: 1em;
 }

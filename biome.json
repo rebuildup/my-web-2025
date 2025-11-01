@@ -1,0 +1,47 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.3.2/schema.json",
+	"formatter": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": false,
+			"suspicious": {
+				"noArrayIndexKey": "off"
+			},
+			"a11y": {
+				"recommended": false
+			},
+			"complexity": {
+				"noStaticOnlyClass": "off"
+			}
+		}
+	},
+	"files": {
+		"includes": [
+			"src/**/*",
+			"scripts/**/*",
+			"*.{js,json,ts,tsx}",
+			"public/**/*",
+			"next.config.ts",
+			"!!node_modules",
+			"!!.next",
+			"!!playwright-report",
+			"!!test-results",
+			"!!coverage",
+			"!!src/app/admin",
+			"!!src/app/api",
+			"!!src/test-utils",
+			"!!src/app/tailwind.css",
+			"!!src/app/app.css",
+			"!!src/app/tools/ProtoType/prototype-src/styles/009_webglPopup.css",
+			"!!src/app/tools/ProtoType/prototype-src/styles/styles/009_webglPopup.css",
+			"!!src/app/tools/ProtoType"
+		]
+	},
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git"
+	}
+}

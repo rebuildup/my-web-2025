@@ -5,8 +5,8 @@
  */
 
 export { BasicGeometryExperiment } from "./BasicGeometryExperiment";
-export { webglExperiments } from "./experiments-data";
 export type { default as WebGLExperimentsData } from "./experiments-data";
+export { webglExperiments } from "./experiments-data";
 export { ParticleSystemExperiment } from "./ParticleSystemExperiment";
 export { PhysicsSimulationExperiment } from "./PhysicsSimulationExperiment";
 export { ShaderExperiment } from "./ShaderExperiment";

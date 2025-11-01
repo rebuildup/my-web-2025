@@ -1,25 +1,25 @@
-/**
- * Content All API Route
- * Handles requests for all content items
- */
-
 import { NextResponse } from "next/server";
+import { loadAllContent } from "@/lib/data";
 
 export async function GET() {
-  try {
-    // Mock implementation for testing
-    return NextResponse.json({
-      success: true,
-      data: [],
-      total: 0,
-    });
-  } catch {
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to fetch content",
-      },
-      { status: 500 },
-    );
-  }
+	try {
+		const contentByType = await loadAllContent();
+		const combined = Object.values(contentByType).flat();
+
+		return NextResponse.json({
+			success: true,
+			data: combined,
+			total: combined.length,
+			byType: contentByType,
+		});
+	} catch (error) {
+		console.error("Content all API error:", error);
+		return NextResponse.json(
+			{
+				success: false,
+				error: "Failed to fetch content",
+			},
+			{ status: 500 },
+		);
+	}
 }

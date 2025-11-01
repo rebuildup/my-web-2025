@@ -40,12 +40,9 @@ export default function ColorPalettePage() {
       <ColorPaletteGenerator />
 
       {/* Enhanced Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData),
-        }}
-      />
+      <script type="application/ld+json">
+        {JSON.stringify(structuredData)}
+      </script>
     </>
   );
 }

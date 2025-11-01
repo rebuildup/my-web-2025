@@ -5,293 +5,294 @@
 
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Settings, Download, Upload, RotateCcw, Save } from "lucide-react";
+import { Download, RotateCcw, Save, Settings, Upload } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import useOfflinePerformance from "@/hooks/useOfflinePerformance";
 import AccessibleButton from "./AccessibleButton";
 
 interface SettingsManagerProps<T> {
-  toolName: string;
-  defaultSettings: T;
-  settings: T;
-  onSettingsChange: (settings: T) => void;
-  children: (props: {
-    settings: T;
-    updateSetting: <K extends keyof T>(key: K, value: T[K]) => void;
-    resetSettings: () => void;
-    exportSettings: () => void;
-    importSettings: (file: File) => void;
-  }) => React.ReactNode;
-  showControls?: boolean;
+	toolName: string;
+	defaultSettings: T;
+	settings: T;
+	onSettingsChange: (settings: T) => void;
+	children: (props: {
+		settings: T;
+		updateSetting: <K extends keyof T>(key: K, value: T[K]) => void;
+		resetSettings: () => void;
+		exportSettings: () => void;
+		importSettings: (file: File) => void;
+	}) => React.ReactNode;
+	showControls?: boolean;
 }
 
 export default function OfflineSettingsManager<
-  T extends Record<string, unknown>,
+	T extends Record<string, unknown>,
 >({
-  toolName,
-  defaultSettings,
-  settings,
-  onSettingsChange,
-  children,
-  showControls = true,
+	toolName,
+	defaultSettings,
+	settings,
+	onSettingsChange,
+	children,
+	showControls = true,
 }: SettingsManagerProps<T>) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+	const [isExpanded, setIsExpanded] = useState(false);
+	const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
-  const { saveSettings, loadSettings, isOnline } = useOfflinePerformance({
-    toolName,
-    enablePerformanceMonitoring: false,
-    enableOfflineNotifications: false,
-  });
+	const { saveSettings, loadSettings, isOnline } = useOfflinePerformance({
+		toolName,
+		enablePerformanceMonitoring: false,
+		enableOfflineNotifications: false,
+	});
 
-  // Load settings on mount
-  useEffect(() => {
-    const savedSettings = loadSettings(defaultSettings);
-    if (
-      savedSettings &&
-      JSON.stringify(savedSettings) !== JSON.stringify(settings)
-    ) {
-      onSettingsChange(savedSettings);
-    }
-  }, [defaultSettings, loadSettings, onSettingsChange, settings]);
+	// Load settings on mount
+	useEffect(() => {
+		const savedSettings = loadSettings(defaultSettings);
+		if (
+			savedSettings &&
+			JSON.stringify(savedSettings) !== JSON.stringify(settings)
+		) {
+			onSettingsChange(savedSettings);
+		}
+	}, [defaultSettings, loadSettings, onSettingsChange, settings]);
 
-  // Auto-save settings when they change
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (JSON.stringify(settings) !== JSON.stringify(defaultSettings)) {
-        const success = saveSettings(settings);
-        if (success) {
-          setLastSaved(new Date());
-        }
-      }
-    }, 1000); // Debounce saves by 1 second
+	// Auto-save settings when they change
+	useEffect(() => {
+		const timeoutId = setTimeout(() => {
+			if (JSON.stringify(settings) !== JSON.stringify(defaultSettings)) {
+				const success = saveSettings(settings);
+				if (success) {
+					setLastSaved(new Date());
+				}
+			}
+		}, 1000); // Debounce saves by 1 second
 
-    return () => clearTimeout(timeoutId);
-  }, [settings, defaultSettings, saveSettings]);
+		return () => clearTimeout(timeoutId);
+	}, [settings, defaultSettings, saveSettings]);
 
-  // Update individual setting
-  const updateSetting = useCallback(
-    <K extends keyof T>(key: K, value: T[K]) => {
-      const newSettings = { ...settings, [key]: value };
-      onSettingsChange(newSettings);
-    },
-    [settings, onSettingsChange],
-  );
+	// Update individual setting
+	const updateSetting = useCallback(
+		<K extends keyof T>(key: K, value: T[K]) => {
+			const newSettings = { ...settings, [key]: value };
+			onSettingsChange(newSettings);
+		},
+		[settings, onSettingsChange],
+	);
 
-  // Reset to default settings
-  const resetSettings = useCallback(() => {
-    onSettingsChange(defaultSettings);
-    saveSettings(defaultSettings);
-    setLastSaved(new Date());
-  }, [defaultSettings, onSettingsChange, saveSettings]);
+	// Reset to default settings
+	const resetSettings = useCallback(() => {
+		onSettingsChange(defaultSettings);
+		saveSettings(defaultSettings);
+		setLastSaved(new Date());
+	}, [defaultSettings, onSettingsChange, saveSettings]);
 
-  // Export settings as JSON file
-  const exportSettings = useCallback(() => {
-    const dataStr = JSON.stringify(settings, null, 2);
-    const dataBlob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(dataBlob);
+	// Export settings as JSON file
+	const exportSettings = useCallback(() => {
+		const dataStr = JSON.stringify(settings, null, 2);
+		const dataBlob = new Blob([dataStr], { type: "application/json" });
+		const url = URL.createObjectURL(dataBlob);
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${toolName}-settings.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+		const link = document.createElement("a");
+		link.href = url;
+		link.download = `${toolName}-settings.json`;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
 
-    URL.revokeObjectURL(url);
-  }, [settings, toolName]);
+		URL.revokeObjectURL(url);
+	}, [settings, toolName]);
 
-  // Import settings from JSON file
-  const importSettings = useCallback(
-    (file: File) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const result = e.target?.result;
-          if (typeof result === "string") {
-            const importedSettings = JSON.parse(result) as T;
+	// Import settings from JSON file
+	const importSettings = useCallback(
+		(file: File) => {
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				try {
+					const result = e.target?.result;
+					if (typeof result === "string") {
+						const importedSettings = JSON.parse(result) as T;
 
-            // Validate imported settings have required keys
-            const requiredKeys = Object.keys(defaultSettings);
-            const importedKeys = Object.keys(importedSettings);
-            const hasAllKeys = requiredKeys.every((key) =>
-              importedKeys.includes(key),
-            );
+						// Validate imported settings have required keys
+						const requiredKeys = Object.keys(defaultSettings);
+						const importedKeys = Object.keys(importedSettings);
+						const hasAllKeys = requiredKeys.every((key) =>
+							importedKeys.includes(key),
+						);
 
-            if (hasAllKeys) {
-              onSettingsChange(importedSettings);
-              saveSettings(importedSettings);
-              setLastSaved(new Date());
-            } else {
-              throw new Error("Invalid settings file format");
-            }
-          }
-        } catch (error) {
-          console.error("Failed to import settings:", error);
-          alert(
-            "設定ファイルの読み込みに失敗しました。ファイル形式を確認してください。",
-          );
-        }
-      };
-      reader.readAsText(file);
-    },
-    [defaultSettings, onSettingsChange, saveSettings],
-  );
+						if (hasAllKeys) {
+							onSettingsChange(importedSettings);
+							saveSettings(importedSettings);
+							setLastSaved(new Date());
+						} else {
+							throw new Error("Invalid settings file format");
+						}
+					}
+				} catch (error) {
+					console.error("Failed to import settings:", error);
+					alert(
+						"設定ファイルの読み込みに失敗しました。ファイル形式を確認してください。",
+					);
+				}
+			};
+			reader.readAsText(file);
+		},
+		[defaultSettings, onSettingsChange, saveSettings],
+	);
 
-  // Handle file input for import
-  const handleFileImport = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (file) {
-        importSettings(file);
-      }
-      // Reset input value to allow importing the same file again
-      event.target.value = "";
-    },
-    [importSettings],
-  );
+	// Handle file input for import
+	const handleFileImport = useCallback(
+		(event: React.ChangeEvent<HTMLInputElement>) => {
+			const file = event.target.files?.[0];
+			if (file) {
+				importSettings(file);
+			}
+			// Reset input value to allow importing the same file again
+			event.target.value = "";
+		},
+		[importSettings],
+	);
 
-  // Manual save (for explicit user action)
-  const manualSave = useCallback(() => {
-    const success = saveSettings(settings);
-    if (success) {
-      setLastSaved(new Date());
-    }
-  }, [settings, saveSettings]);
+	// Manual save (for explicit user action)
+	const manualSave = useCallback(() => {
+		const success = saveSettings(settings);
+		if (success) {
+			setLastSaved(new Date());
+		}
+	}, [settings, saveSettings]);
 
-  return (
-    <div className="space-y-4">
-      {/* Settings Controls */}
-      {showControls && (
-        <div className="bg-base border border-foreground p-4">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <Settings size={16} className="text-primary" />
-              <h3 className="neue-haas-grotesk-display text-sm text-primary">
-                Settings Manager
-              </h3>
-              {!isOnline && (
-                <span className="text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded">
-                  Offline
-                </span>
-              )}
-            </div>
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="text-xs text-accent hover:text-primary focus:outline-none focus:ring-1 focus:ring-accent"
-              aria-label="Toggle settings controls"
-            >
-              {isExpanded ? "Hide" : "Show"} Controls
-            </button>
-          </div>
+	return (
+		<div className="space-y-4">
+			{/* Settings Controls */}
+			{showControls && (
+				<div className="bg-base border border-main p-4">
+					<div className="flex items-center justify-between mb-4">
+						<div className="flex items-center space-x-2">
+							<Settings size={16} className="text-main" />
+							<h3 className="neue-haas-grotesk-display text-sm text-main">
+								Settings Manager
+							</h3>
+							{!isOnline && (
+								<span className="text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded">
+									Offline
+								</span>
+							)}
+						</div>
+						<button
+							type="button"
+							onClick={() => setIsExpanded(!isExpanded)}
+							className="text-xs text-accent hover:text-main focus:outline-none focus:ring-1 focus:ring-accent"
+							aria-label="Toggle settings controls"
+						>
+							{isExpanded ? "Hide" : "Show"} Controls
+						</button>
+					</div>
 
-          {isExpanded && (
-            <div className="space-y-4">
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-2">
-                <AccessibleButton
-                  onClick={manualSave}
-                  variant="primary"
-                  size="sm"
-                  shortcut="Ctrl+S"
-                  announceOnClick="設定を保存しました"
-                >
-                  <Save size={14} />
-                  Save
-                </AccessibleButton>
+					{isExpanded && (
+						<div className="space-y-4">
+							{/* Action Buttons */}
+							<div className="flex flex-wrap gap-2">
+								<AccessibleButton
+									onClick={manualSave}
+									variant="primary"
+									size="sm"
+									shortcut="Ctrl+S"
+									announceOnClick="設定を保存しました"
+								>
+									<Save size={14} />
+									Save
+								</AccessibleButton>
 
-                <AccessibleButton
-                  onClick={resetSettings}
-                  variant="secondary"
-                  size="sm"
-                  announceOnClick="設定をリセットしました"
-                >
-                  <RotateCcw size={14} />
-                  Reset
-                </AccessibleButton>
+								<AccessibleButton
+									onClick={resetSettings}
+									variant="secondary"
+									size="sm"
+									announceOnClick="設定をリセットしました"
+								>
+									<RotateCcw size={14} />
+									Reset
+								</AccessibleButton>
 
-                <AccessibleButton
-                  onClick={exportSettings}
-                  variant="secondary"
-                  size="sm"
-                  announceOnClick="設定をエクスポートしました"
-                >
-                  <Download size={14} />
-                  Export
-                </AccessibleButton>
+								<AccessibleButton
+									onClick={exportSettings}
+									variant="secondary"
+									size="sm"
+									announceOnClick="設定をエクスポートしました"
+								>
+									<Download size={14} />
+									Export
+								</AccessibleButton>
 
-                <label className="inline-flex">
-                  <span className="inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-background text-foreground border border-foreground hover:bg-base focus:ring-foreground focus:ring-offset-background px-3 py-1.5 text-sm min-h-[32px] cursor-pointer">
-                    <Upload size={14} />
-                    Import
-                  </span>
-                  <input
-                    type="file"
-                    accept=".json"
-                    onChange={handleFileImport}
-                    className="sr-only"
-                    aria-label="Import settings file"
-                  />
-                </label>
-              </div>
+								<label className="inline-flex">
+									<span className="inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-base text-main border border-main hover:bg-base focus:ring-main focus:ring-offset-base px-3 py-1.5 text-sm min-h-[32px] cursor-pointer">
+										<Upload size={14} />
+										Import
+									</span>
+									<input
+										type="file"
+										accept=".json"
+										onChange={handleFileImport}
+										className="sr-only"
+										aria-label="Import settings file"
+									/>
+								</label>
+							</div>
 
-              {/* Status Information */}
-              <div className="text-xs text-foreground space-y-1">
-                <div className="flex justify-between">
-                  <span>Auto-save:</span>
-                  <span className="text-green-600">Enabled</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Storage:</span>
-                  <span className="text-accent">Local Storage</span>
-                </div>
-                {lastSaved && (
-                  <div className="flex justify-between">
-                    <span>Last saved:</span>
-                    <span className="text-accent">
-                      {lastSaved.toLocaleTimeString()}
-                    </span>
-                  </div>
-                )}
-              </div>
+							{/* Status Information */}
+							<div className="text-xs text-main space-y-1">
+								<div className="flex justify-between">
+									<span>Auto-save:</span>
+									<span className="text-green-600">Enabled</span>
+								</div>
+								<div className="flex justify-between">
+									<span>Storage:</span>
+									<span className="text-accent">Local Storage</span>
+								</div>
+								{lastSaved && (
+									<div className="flex justify-between">
+										<span>Last saved:</span>
+										<span className="text-accent">
+											{lastSaved.toLocaleTimeString()}
+										</span>
+									</div>
+								)}
+							</div>
 
-              {/* Settings Info */}
-              <div className="pt-2 border-t border-foreground">
-                <h4 className="text-xs font-medium mb-2">
-                  Settings Information
-                </h4>
-                <ul className="text-xs space-y-1 text-foreground">
-                  <li>• 設定は自動的にローカルストレージに保存されます</li>
-                  <li>• オフラインでも設定の変更・保存が可能です</li>
-                  <li>• JSON形式でエクスポート・インポートできます</li>
-                  <li>• ブラウザのデータを削除すると設定も失われます</li>
-                </ul>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+							{/* Settings Info */}
+							<div className="pt-2 border-t border-main">
+								<h4 className="text-xs font-medium mb-2">
+									Settings Information
+								</h4>
+								<ul className="text-xs space-y-1 text-main">
+									<li>• 設定は自動的にローカルストレージに保存されます</li>
+									<li>• オフラインでも設定の変更・保存が可能です</li>
+									<li>• JSON形式でエクスポート・インポートできます</li>
+									<li>• ブラウザのデータを削除すると設定も失われます</li>
+								</ul>
+							</div>
+						</div>
+					)}
+				</div>
+			)}
 
-      {/* Settings Content */}
-      {children({
-        settings,
-        updateSetting,
-        resetSettings,
-        exportSettings,
-        importSettings,
-      })}
-    </div>
-  );
+			{/* Settings Content */}
+			{children({
+				settings,
+				updateSetting,
+				resetSettings,
+				exportSettings,
+				importSettings,
+			})}
+		</div>
+	);
 }
 
 // Keyboard shortcut handler for manual save
 if (typeof window !== "undefined") {
-  document.addEventListener("keydown", (event) => {
-    if (event.ctrlKey && event.key === "s") {
-      event.preventDefault();
-      // Trigger manual save event
-      const saveEvent = new CustomEvent("manualSave");
-      document.dispatchEvent(saveEvent);
-    }
-  });
+	document.addEventListener("keydown", (event) => {
+		if (event.ctrlKey && event.key === "s") {
+			event.preventDefault();
+			// Trigger manual save event
+			const saveEvent = new CustomEvent("manualSave");
+			document.dispatchEvent(saveEvent);
+		}
+	});
 }

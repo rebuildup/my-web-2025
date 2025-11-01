@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    font-size: 16px;
+  }
+
+  body {
+    @apply min-h-screen antialiased;
+    font-family: "Noto Sans JP", "Shippori Antique B1", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: #020202;
+    color: #f2f2f2;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "neue-haas-grotesk-display", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+
+  p {
+    font-family: "Noto Sans JP", "Shippori Antique B1", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 300;
+  }
+
+  footer {
+    font-family: "Shippori Antique B1", "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  a {
+    @apply no-underline;
+    color: #f2f2f2;
+  }
+
+  a:hover,
+  a:focus-visible {
+    color: #261fa7;
+  }
+}
