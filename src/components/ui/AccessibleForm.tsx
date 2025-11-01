@@ -310,8 +310,12 @@ export const AccessibleButton = forwardRef<
 			props.onKeyDown?.(e);
 		};
 
+		// Type assertion needed for polymorphic component with `as` prop
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const ComponentAny = Component as any;
+
 		return (
-			<Component
+			<ComponentAny
 				ref={ref}
 				className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${disabled || loading ? "opacity-50" : ""} ${className}`}
 				disabled={disabled || loading}
@@ -356,7 +360,7 @@ export const AccessibleButton = forwardRef<
 						)}
 					</span>
 				)}
-			</Component>
+			</ComponentAny>
 		);
 	},
 );

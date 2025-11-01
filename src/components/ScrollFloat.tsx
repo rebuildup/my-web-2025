@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef, type ReactNode } from "react";
+import { type ReactNode, useRef } from "react";
 
 interface ScrollFloatProps {
 	children: ReactNode;

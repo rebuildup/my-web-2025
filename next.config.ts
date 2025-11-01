@@ -268,10 +268,11 @@ const nextConfig: NextConfig = {
 		return config;
 	},
 
-	// Output configuration - Disabled for development
+	// Output configuration - Disabled for development and Windows (symlink issues)
 	output:
-		process.env.NODE_ENV === "production" ||
-		process.env.NEXT_BUILD_STANDALONE === "true"
+		(process.env.NODE_ENV === "production" ||
+			process.env.NEXT_BUILD_STANDALONE === "true") &&
+		process.platform !== "win32"
 			? "standalone"
 			: undefined,
 	poweredByHeader: false,

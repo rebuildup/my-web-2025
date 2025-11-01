@@ -1,9 +1,9 @@
 "use client";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import DarkVeil from "@/components/DarkVeil";
 import GlassSurface from "@/components/GlassSurface";
 import XProfileImage from "@/components/XProfileImage";
-import { motion } from "framer-motion";
 
 export default function Home() {
 	return (

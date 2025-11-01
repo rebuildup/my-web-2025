@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
 import { Calendar, GraduationCap, MapPin } from "lucide-react";
-import Link from "next/link";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { ScrollFloat } from "@/components/ScrollFloat";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
@@ -450,10 +450,7 @@ export default function RealProfilePage() {
 									<div className="absolute left-0 top-0 bottom-0 w-0.5 bg-main/20 timeline-line"></div>
 
 									{education.map((edu, index) => (
-										<div
-											key={index}
-											className="relative mb-8 timeline-item"
-										>
+										<div key={index} className="relative mb-8 timeline-item">
 											{/* タイムラインノード（点） */}
 											<div className="absolute w-3 h-3 rounded-full bg-main/60 border-2 border-main timeline-node"></div>
 

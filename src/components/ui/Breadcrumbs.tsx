@@ -22,7 +22,10 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
 	}
 
 	return (
-		<nav aria-label="Breadcrumb" className={`text-xs md:text-sm mb-4 ${className}`}>
+		<nav
+			aria-label="Breadcrumb"
+			className={`text-xs md:text-sm mb-4 ${className}`}
+		>
 			<ol className="flex items-baseline space-x-1 md:space-x-2 noto-sans-jp-light">
 				{items.map((item, index) => {
 					const isLast = index === items.length - 1;

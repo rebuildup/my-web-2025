@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
 import { Code, Coffee, Gamepad2, Music, Palette, Video } from "lucide-react";
-import Link from "next/link";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { ScrollFloat } from "@/components/ScrollFloat";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
@@ -94,7 +94,11 @@ const creativeAreas = [
 		title: "Creative Coding",
 		icon: Code,
 		description: "p5.js、PIXI.js、Three.jsを使ったインタラクティブ作品制作",
-		projects: ["ジェネラティブアート", "データビジュアライゼーション", "インタラクティブ体験"],
+		projects: [
+			"ジェネラティブアート",
+			"データビジュアライゼーション",
+			"インタラクティブ体験",
+		],
 	},
 	{
 		title: "Motion Graphics",
