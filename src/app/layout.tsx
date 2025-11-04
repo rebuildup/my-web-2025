@@ -1,7 +1,13 @@
 import "./app.css";
 import "./globals.css";
+import type { Viewport } from "next";
 import Script from "next/script";
 import type { ReactNode } from "react";
+
+export const viewport: Viewport = {
+	width: "device-width",
+	initialScale: 1,
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
