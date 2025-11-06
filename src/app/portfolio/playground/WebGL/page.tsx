@@ -3,6 +3,7 @@
 import { ChevronDown, ChevronUp, Monitor, Settings, Zap } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import DomeGallery from "@/components/DomeGallery";
 import {
 	ResponsiveExperimentGrid,
 	ResponsiveFilterBar,
@@ -218,6 +219,10 @@ export default function WebGLPlaygroundPage() {
 
 						{/* Device Info & Performance */}
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+							{/* Dome Gallery quick demo */}
+							<div className="bg-base border border-main p-0 overflow-hidden">
+								<DomeGallery />
+							</div>
 							{/* Device Capabilities */}
 							<div className="bg-base border border-main p-4 space-y-4">
 								<button

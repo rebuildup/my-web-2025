@@ -86,7 +86,7 @@ export function Pagination({
 				type="button"
 				onClick={handlePrevious}
 				disabled={currentPage === 1}
-				className="flex items-center space-x-1 px-3 py-2 border border-main text-main hover:border-accent hover:text-accent disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-main disabled:hover:text-main transition-colors"
+				className="flex items-center space-x-1 px-4 py-1.5 rounded-full bg-base/40 text-main/90 hover:bg-base/60 hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
 				aria-label="Go to previous page"
 			>
 				<ChevronLeft className="w-4 h-4" />
@@ -119,10 +119,10 @@ export function Pagination({
 							type="button"
 							key={pageNumber}
 							onClick={() => handlePageClick(pageNumber)}
-							className={`px-3 py-2 text-sm border transition-colors ${
+							className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
 								isCurrentPage
-									? "border-accent bg-accent text-main"
-									: "border-main text-main hover:border-accent hover:text-accent"
+									? "bg-accent text-main"
+									: "bg-base/40 text-main/90 hover:bg-base/60 hover:text-accent"
 							}`}
 							aria-label={`Go to page ${pageNumber}`}
 							aria-current={isCurrentPage ? "page" : undefined}
@@ -138,7 +138,7 @@ export function Pagination({
 				type="button"
 				onClick={handleNext}
 				disabled={currentPage === totalPages}
-				className="flex items-center space-x-1 px-3 py-2 border border-main text-main hover:border-accent hover:text-accent disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-main disabled:hover:text-main transition-colors"
+				className="flex items-center space-x-1 px-4 py-1.5 rounded-full bg-base/40 text-main/90 hover:bg-base/60 hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
 				aria-label="Go to next page"
 				data-testid="next-page"
 			>

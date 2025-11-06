@@ -325,33 +325,6 @@ export default function AdminMediaManager() {
 				]}
 			/>
 
-			<Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
-				<Button
-					component={Link}
-					href="/admin/content"
-					variant="outlined"
-					startIcon={<FileText size={16} />}
-				>
-					コンテンツ管理
-				</Button>
-				<Button
-					component={Link}
-					href="/admin/content/markdown"
-					variant="outlined"
-					startIcon={<FolderOpen size={16} />}
-				>
-					Markdown管理
-				</Button>
-				<Button
-					component={Link}
-					href="/admin/content/databases"
-					variant="outlined"
-					startIcon={<Database size={16} />}
-				>
-					データベース
-				</Button>
-			</Stack>
-
 			<Paper
 				variant="outlined"
 				sx={{ p: 3, display: "grid", gap: 2.5, borderColor: "divider" }}

@@ -88,8 +88,8 @@ export function contentToRow(content: Partial<Content>): Partial<ContentRow> {
 		// 状態
 		visibility: content.visibility || "draft",
 		status: content.status || "draft",
-		published_at: content.publishedAt || null,
-		unpublished_at: content.unpublishedAt || null,
+		published_at: content.publishedAt ?? null,
+		unpublished_at: content.unpublishedAt ?? null,
 
 		// 検索
 		search_full_text: content.searchable?.fullText || null,
@@ -160,8 +160,8 @@ export function rowToContent(
 		// 状態
 		visibility: row.visibility as "public" | "unlisted" | "private" | "draft",
 		status: row.status as "draft" | "published" | "archived",
-		publishedAt: row.published_at || undefined,
-		unpublishedAt: row.unpublished_at || undefined,
+		publishedAt: row.published_at ? row.published_at : undefined,
+		unpublishedAt: row.unpublished_at ? row.unpublished_at : undefined,
 
 		// 検索
 		searchable: row.searchable ? JSON.parse(row.searchable) : undefined,
@@ -286,7 +286,15 @@ export function getFullContent(
 		.prepare("SELECT * FROM content_relations WHERE source_id = ?")
 		.all(id) as ContentRelationRow[];
 
-	return rowToContent(row, tags, assets, links, relations);
+	const content = rowToContent(row, tags, assets, links, relations);
+	if (process.env.NODE_ENV !== "production" && process.env.CMS_DEBUG === "1") {
+		console.log("[content-mapper] getFullContent:", {
+			id: content.id,
+			publishedAt: content.publishedAt,
+			rowPublishedAt: row.published_at,
+		});
+	}
+	return content;
 }
 
 // ========== コンテンツ保存（関連データも含む） ==========
@@ -297,7 +305,18 @@ export function saveFullContent(
 	try {
 		const row = contentToRow(content);
 
-		// メインデータ保存
+		if (
+			process.env.NODE_ENV !== "production" &&
+			process.env.CMS_DEBUG === "1"
+		) {
+			console.log("[content-mapper] saveFullContent:", {
+				id: content.id,
+				publishedAt: content.publishedAt,
+				rowPublishedAt: row.published_at,
+			});
+		}
+
+		// メインデータ保存（null値も含める）
 		const fields = Object.keys(row).filter(
 			(k) => row[k as keyof typeof row] !== undefined,
 		);
@@ -311,6 +330,13 @@ export function saveFullContent(
       INSERT OR REPLACE INTO contents (${columns})
       VALUES (${placeholders})
     `);
+		if (
+			process.env.NODE_ENV !== "production" &&
+			process.env.CMS_DEBUG === "1"
+		) {
+			console.log("[content-mapper] Saving row fields:", fields);
+			console.log("[content-mapper] Row data published_at:", row.published_at);
+		}
 		stmt.run(row);
 	} catch (error) {
 		console.error("Error saving content:", error);

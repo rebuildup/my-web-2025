@@ -11,17 +11,10 @@
  * - Maintain consistent performance with large datasets
  */
 
-import {
-	AlertTriangle,
-	Eye,
-	Filter,
-	Palette,
-	RefreshCw,
-	Video,
-} from "lucide-react";
-import Image from "next/image";
+import { AlertTriangle, Eye, Palette, RefreshCw, Video } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { SafeImage } from "@/components/ui/SafeImage";
 import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
 import {
 	createBalancedLayout,
@@ -47,12 +40,6 @@ interface VideoDesignGalleryProps {
 	onError?: (error: Error) => void; // Error callback
 }
 
-interface FilterState {
-	category: string;
-	year: string;
-	sortBy: "priority" | "date" | "title";
-}
-
 interface ErrorState {
 	hasError: boolean;
 	error?: Error;
@@ -76,11 +63,6 @@ export function VideoDesignGallery({
 	onError,
 }: VideoDesignGalleryProps) {
 	// Initialize all hooks first before any early returns
-	const [filters, setFilters] = useState<FilterState>({
-		category: "all",
-		year: "all",
-		sortBy: "date",
-	});
 
 	const [errorState, setErrorState] = useState<ErrorState>({ hasError: false });
 	const [performanceMetrics, setPerformanceMetrics] =
@@ -240,10 +222,9 @@ export function VideoDesignGallery({
 						Number.isNaN(item.priority)
 					) {
 						console.warn(
-							"VideoDesignGallery: Item has invalid priority, setting default:",
+							"VideoDesignGallery: Item has invalid priority (immutable input), using default in render:",
 							item,
 						);
-						item.priority = 50; // Set default priority
 					}
 
 					// Validate createdAt (should be a valid date string)
@@ -252,10 +233,9 @@ export function VideoDesignGallery({
 						Number.isNaN(new Date(item.createdAt).getTime())
 					) {
 						console.warn(
-							"VideoDesignGallery: Item has invalid createdAt, setting default:",
+							"VideoDesignGallery: Item has invalid createdAt (immutable input), using fallback in render:",
 							item,
 						);
-						item.createdAt = new Date().toISOString(); // Set current date as default
 					}
 
 					// Validate category structure
@@ -368,43 +348,51 @@ export function VideoDesignGallery({
 					},
 				);
 
-				// In test environment, still call the enhanced gallery filter functions for testing
-				const filterOptions: {
-					year?: number;
-					categories?: EnhancedCategoryType[];
-					status?: "published" | "draft" | "archived" | "scheduled" | "all";
-				} = {
-					status: "all", // Show all statuses for testing
-				};
-
-				if (filters.year !== "all") {
-					const yearNum = parseInt(filters.year, 10);
-					if (!Number.isNaN(yearNum)) {
-						filterOptions.year = yearNum;
+				// Convert to EnhancedContentItem[] and apply sorting using enhanced gallery filter
+				const enhancedItems = filteredForTest.map((item) => {
+					if ("categories" in item && Array.isArray(item.categories)) {
+						return item as EnhancedContentItem;
 					}
-				}
-
-				if (filters.category !== "all") {
-					filterOptions.categories = [filters.category as EnhancedCategoryType];
-				}
-
-				const filtered = enhancedGalleryFilter.filterItemsForGallery(
-					filteredForTest,
-					"video&design",
-					filterOptions,
-				);
-
-				// Apply sorting using enhanced gallery filter
-				const sorted = enhancedGalleryFilter.sortItems(filtered, {
-					sortBy: filters.sortBy === "date" ? "effectiveDate" : filters.sortBy,
-					sortOrder: filters.sortBy === "title" ? "asc" : "desc",
+					// Convert legacy PortfolioContentItem to EnhancedContentItem
+					const legacyItem = item as PortfolioContentItem;
+					return {
+						...legacyItem,
+						categories: [
+							legacyItem.category || "other",
+						] as EnhancedCategoryType[],
+						isOtherCategory: legacyItem.category === "other",
+						useManualDate: false,
+						originalImages: [],
+						processedImages: legacyItem.images || [],
+					} as EnhancedContentItem;
 				});
+				// publishedAt最優先で降順（fallback: updatedAt→createdAt）
+				const sorted = [...enhancedItems].sort((a: any, b: any) => {
+					const aTime = new Date(
+						a.publishedAt || a.updatedAt || a.createdAt,
+					).getTime();
+					const bTime = new Date(
+						b.publishedAt || b.updatedAt || b.createdAt,
+					).getTime();
+					return bTime - aTime;
+				});
+				if (String(process.env.NODE_ENV) !== "production") {
+					console.log(
+						"[VideoDesignGallery] top5 by publishedAt:",
+						sorted.slice(0, 5).map((i: any) => ({
+							id: i.id,
+							publishedAt: i.publishedAt,
+							updatedAt: i.updatedAt,
+							createdAt: i.createdAt,
+						})),
+					);
+				}
 
 				return sorted;
 			}
 
 			// Generate cache key for filtering
-			const filterCacheKey = `filtered_${JSON.stringify(filters)}_${showVideoItems}_${showDesignItems}_${showVideoDesignItems}_${deduplication}`;
+			const filterCacheKey = `filtered_${showVideoItems}_${showDesignItems}_${showVideoDesignItems}_${deduplication}`;
 
 			// Use cache if enabled
 			if (enableCaching && cacheRef.current.has(filterCacheKey)) {
@@ -474,41 +462,27 @@ export function VideoDesignGallery({
 				);
 			}
 
-			// Step 3: Apply user filters
-			const filterOptions: {
-				year?: number;
-				categories?: EnhancedCategoryType[];
-				status?: "published" | "draft" | "archived" | "scheduled" | "all";
-			} = {
-				status: "all", // Show all statuses for testing
-			};
-
-			if (filters.year !== "all") {
-				const yearNum = parseInt(filters.year, 10);
-				if (!Number.isNaN(yearNum)) {
-					filterOptions.year = yearNum;
+			// Step 3: Convert to EnhancedContentItem[] and apply sorting using enhanced gallery filter
+			const enhancedItems = categoryFilteredItems.map((item) => {
+				if ("categories" in item && Array.isArray(item.categories)) {
+					return item as EnhancedContentItem;
 				}
-			}
-
-			if (filters.category !== "all") {
-				filterOptions.categories = [filters.category as EnhancedCategoryType];
-			}
-
-			const filtered = enhancedGalleryFilter.filterItemsForGallery(
-				categoryFilteredItems,
-				"video&design",
-				filterOptions,
-			);
-
-			console.log(`After enhanced filtering: ${filtered.length} items`);
-			console.log("Enhanced filter input:", categoryFilteredItems);
-			console.log("Enhanced filter options:", filterOptions);
-			console.log("Enhanced filter output:", filtered);
-
-			// Step 4: Apply sorting using enhanced gallery filter
-			const sorted = enhancedGalleryFilter.sortItems(filtered, {
-				sortBy: filters.sortBy === "date" ? "effectiveDate" : filters.sortBy,
-				sortOrder: filters.sortBy === "title" ? "asc" : "desc",
+				// Convert legacy PortfolioContentItem to EnhancedContentItem
+				const legacyItem = item as PortfolioContentItem;
+				return {
+					...legacyItem,
+					categories: [
+						legacyItem.category || "other",
+					] as EnhancedCategoryType[],
+					isOtherCategory: legacyItem.category === "other",
+					useManualDate: false,
+					originalImages: [],
+					processedImages: legacyItem.images || [],
+				} as EnhancedContentItem;
+			});
+			const sorted = enhancedGalleryFilter.sortItems(enhancedItems, {
+				sortBy: "effectiveDate",
+				sortOrder: "desc",
 			});
 
 			console.log("Final sorted items:", sorted);
@@ -538,7 +512,6 @@ export function VideoDesignGallery({
 		}
 	}, [
 		validItems,
-		filters,
 		showVideoItems,
 		showDesignItems,
 		showVideoDesignItems,
@@ -849,9 +822,8 @@ export function VideoDesignGallery({
 	if (!isClient) {
 		return (
 			<div className="space-y-8">
-				<div className="bg-base border border-main p-4">
+				<div className="bg-base/30 backdrop-blur p-4 rounded-[20px]">
 					<div className="flex items-center mb-4">
-						<Filter className="w-5 h-5 text-accent mr-2" />
 						<h3 className="zen-kaku-gothic-new text-lg text-main">
 							Loading...
 						</h3>
@@ -863,188 +835,10 @@ export function VideoDesignGallery({
 
 	return (
 		<div className="space-y-8">
-			{/* Performance Metrics (Development Only) */}
-			{process.env.NODE_ENV === "development" && performanceMetrics && (
-				<div className="bg-gray-100 border border-gray-300 p-3 text-xs">
-					<div className="flex items-center space-x-4">
-						<span>
-							Items:{" "}
-							{Number.isInteger(performanceMetrics.itemCount)
-								? String(performanceMetrics.itemCount)
-								: "0"}
-						</span>
-						<span>
-							Filter:{" "}
-							{Number.isFinite(performanceMetrics.filterTime)
-								? performanceMetrics.filterTime.toFixed(2)
-								: "0.00"}
-							ms
-						</span>
-						<span>
-							Render:{" "}
-							{Number.isFinite(performanceMetrics.renderTime)
-								? performanceMetrics.renderTime.toFixed(2)
-								: "0.00"}
-							ms
-						</span>
-						<span>Cache: {enableCaching ? "ON" : "OFF"}</span>
-						<span>Dedup: {deduplication ? "ON" : "OFF"}</span>
-					</div>
-				</div>
-			)}
-			{/* Filter Controls */}
-			<div className="bg-base border border-main p-4">
-				<div className="flex items-center mb-4">
-					<Filter className="w-5 h-5 text-accent mr-2" />
-					<h3 className="zen-kaku-gothic-new text-lg text-main">Filters</h3>
-				</div>
-
-				<div className="space-y-4">
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-						{/* Category Filter */}
-						<div>
-							<label
-								htmlFor="category-filter"
-								className="noto-sans-jp-light text-sm text-main block mb-2"
-							>
-								Category
-							</label>
-							<select
-								id="category-filter"
-								aria-label="Filter by category"
-								value={filters.category}
-								onChange={(e) =>
-									setFilters((prev) => ({ ...prev, category: e.target.value }))
-								}
-								className="w-full bg-base border border-main px-3 py-2 text-sm text-main focus:outline-none focus:ring-2 focus:ring-accent"
-							>
-								<option value="all">All Categories</option>
-								{availableCategories.map((category) => (
-									<option key={category} value={category}>
-										{category === "video&design"
-											? "Video & Design"
-											: category.charAt(0).toUpperCase() + category.slice(1)}
-									</option>
-								))}
-							</select>
-						</div>
-
-						{/* Year Filter */}
-						<div>
-							<label
-								htmlFor="year-filter"
-								className="noto-sans-jp-light text-sm text-main block mb-2"
-							>
-								Year
-							</label>
-							<select
-								id="year-filter"
-								aria-label="Filter by year"
-								value={filters.year}
-								onChange={(e) =>
-									setFilters((prev) => ({ ...prev, year: e.target.value }))
-								}
-								className="w-full bg-base border border-main px-3 py-2 text-sm text-main focus:outline-none focus:ring-2 focus:ring-accent"
-							>
-								<option value="all">All Years</option>
-								{availableYears.map((year) => (
-									<option key={year} value={String(year)}>
-										{String(year)}
-									</option>
-								))}
-							</select>
-						</div>
-
-						{/* Sort Filter */}
-						<div>
-							<label
-								htmlFor="sort-filter"
-								className="noto-sans-jp-light text-sm text-main block mb-2"
-							>
-								Sort By
-							</label>
-							<select
-								id="sort-filter"
-								aria-label="Sort projects by"
-								value={filters.sortBy}
-								onChange={(e) =>
-									setFilters((prev) => ({
-										...prev,
-										sortBy: e.target.value as FilterState["sortBy"],
-									}))
-								}
-								className="w-full bg-base border border-main px-3 py-2 text-sm text-main focus:outline-none focus:ring-2 focus:ring-accent"
-							>
-								<option value="priority">Priority</option>
-								<option value="date">Date</option>
-								<option value="title">Title</option>
-							</select>
-						</div>
-					</div>
-
-					{/* Reset Button */}
-					<div className="flex justify-end">
-						<button
-							type="button"
-							onClick={() =>
-								setFilters({ category: "all", year: "all", sortBy: "priority" })
-							}
-							className="px-4 py-2 text-sm text-main border border-main hover:bg-accent hover:text-main transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
-						>
-							Reset Filters
-						</button>
-					</div>
-				</div>
-			</div>
-
-			{/* Results Count */}
-			<div className="flex items-center justify-between">
-				<div className="space-y-1">
-					<p
-						className="noto-sans-jp-light text-sm text-main"
-						aria-live="polite"
-					>
-						{String(
-							Math.max(
-								0,
-								gridItems.filter((item) => item.category !== "placeholder")
-									.length,
-							),
-						)}{" "}
-						projects found
-					</p>
-					<div className="flex items-center space-x-4 text-xs text-main opacity-75">
-						{Number.isInteger(videoDesignStats.videoOnly) &&
-							videoDesignStats.videoOnly > 0 && (
-								<span>Video: {String(videoDesignStats.videoOnly)}</span>
-							)}
-						{Number.isInteger(videoDesignStats.designOnly) &&
-							videoDesignStats.designOnly > 0 && (
-								<span>Design: {String(videoDesignStats.designOnly)}</span>
-							)}
-						{Number.isInteger(videoDesignStats.videoAndDesign) &&
-							videoDesignStats.videoAndDesign > 0 && (
-								<span>V&D: {String(videoDesignStats.videoAndDesign)}</span>
-							)}
-						{Number.isInteger(videoDesignStats.multiCategory) &&
-							videoDesignStats.multiCategory > 0 && (
-								<span>Multi: {String(videoDesignStats.multiCategory)}</span>
-							)}
-					</div>
-				</div>
-				<div className="flex items-center space-x-2">
-					<Palette className="w-4 h-4 text-accent" />
-					<Video className="w-4 h-4 text-main" />
-					<span className="noto-sans-jp-light text-xs text-main">
-						Video & Design
-					</span>
-				</div>
-			</div>
-
 			{/* Masonry-style Grid Layout */}
 			<div
-				className="grid grid-cols-3 gap-4"
-				style={{ gridAutoRows: "minmax(var(--gallery-item-base), auto)" }}
+				className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+				style={{ gridAutoRows: "minmax(200px, auto)" }}
 			>
 				{gridItems.map((item) => (
 					<GridItemComponentV2
@@ -1058,13 +852,13 @@ export function VideoDesignGallery({
 			{/* Empty State */}
 			{(!filteredItems || filteredItems.length === 0) && (
 				<div className="text-center py-12">
-					<div className="bg-base border border-main p-8">
+					<div className="bg-base/30 backdrop-blur p-8 rounded-[20px]">
 						<Eye className="w-12 h-12 text-accent mx-auto mb-4" />
 						<h3 className="zen-kaku-gothic-new text-xl text-main mb-2">
 							No projects found
 						</h3>
 						<p className="noto-sans-jp-light text-sm text-main">
-							Try adjusting your filters to see more projects.
+							No video & design projects available.
 						</p>
 					</div>
 				</div>
@@ -1094,8 +888,23 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 		item.thumbnail ||
 		(item.images && item.images.length > 0 ? item.images[0] : null) ||
 		"/images/portfolio/default-thumb.jpg";
+	const handleImageError = useCallback(() => {
+		if (
+			process.env.NODE_ENV !== "production" &&
+			process.env.NODE_ENV !== "test"
+		) {
+			console.error("Image failed to load:", thumbnailSrc);
+		}
+		setImageError(true);
+	}, [thumbnailSrc]);
+
+	const handleImageLoad = useCallback(() => {
+		setImageError(false);
+	}, []);
+
 	const gridClasses = getGridItemClasses(item.gridSize);
 	const minHeightClass = getGridItemMinHeight(item.gridSize);
+	const overlayClasses = "px-2 py-[1px] bg-black text-white rounded-[4px]";
 
 	// Debug: Log the classes being applied
 	console.log("Grid classes for item:", item.id, gridClasses);
@@ -1122,7 +931,7 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 	if (isPlaceholder) {
 		return (
 			<div
-				className={`${gridClasses} ${minHeightClass} border border-main`}
+				className={`${gridClasses} ${minHeightClass} bg-base/30 backdrop-blur min-h-[200px] border-0`}
 				style={{
 					display: "block",
 					position: "relative",
@@ -1134,32 +943,42 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 	return (
 		<Link
 			href={item.url}
-			className={`${gridClasses} ${minHeightClass} video-design-gallery-item block relative border border-main hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent`}
+			// isolation keeps the overlay and image within the same stacking context
+			className={`${gridClasses} ${minHeightClass} video-design-gallery-item group block relative bg-transparent overflow-hidden hover:bg-base/50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent min-h-[200px] border-0 isolate`}
 			onMouseEnter={() => onHover(item.id)}
 			onMouseLeave={() => onHover(null)}
 			onFocus={() => onHover(item.id)}
 			onBlur={() => onHover(null)}
 		>
-			{/* Image Container - Enhanced hover effects with static frame */}
-			<div className="gallery-image-container absolute inset-0 overflow-hidden">
+			{/* Image Container - タイル全面にフィットさせる（親のminHeightに追従） */}
+			<div
+				className="gallery-image-container absolute inset-0 overflow-hidden"
+				style={{ zIndex: 0 }}
+			>
 				{thumbnailSrc && !imageError ? (
-					<Image
-						src={thumbnailSrc}
-						alt={item.title || "Portfolio item"}
-						fill
-						className="gallery-image object-cover"
-						loading="lazy"
-						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-						onLoad={() => {
-							console.log("Image loaded successfully:", thumbnailSrc);
-						}}
-						onError={() => {
-							console.error("Image failed to load:", thumbnailSrc);
-							setImageError(true);
-						}}
-					/>
+					<div
+						className="absolute inset-0 overflow-hidden"
+						style={{ borderRadius: "6px" }}
+					>
+						<SafeImage
+							src={thumbnailSrc}
+							alt={item.title || "Portfolio item"}
+							fill
+							className="gallery-image object-cover"
+							style={{
+								objectFit: "cover",
+								width: "100%",
+								height: "100%",
+								borderRadius: "6px",
+							}}
+							loading="lazy"
+							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+							onLoad={handleImageLoad}
+							onError={handleImageError}
+						/>
+					</div>
 				) : (
-					<div className="gallery-image absolute inset-0 flex items-center justify-center bg-black bg-opacity-10">
+					<div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-10">
 						<div className="text-center text-white">
 							<Palette className="w-8 h-8 mx-auto mb-2" />
 							<span className="text-xs">No Image</span>
@@ -1168,32 +987,49 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 				)}
 			</div>
 
-			{/* Content Overlay - Text visible only on hover */}
-			<div className="gallery-text-overlay absolute inset-0 p-4 flex flex-col justify-end">
-				<div className="p-3">
-					<h3 className="zen-kaku-gothic-new text-sm font-medium text-main mb-1 line-clamp-2">
-						{item.title}
-					</h3>
+			{/* Content Overlay */}
+			<div className="gallery-text-overlay absolute inset-0 p-2 flex flex-col justify-end z-10">
+				<div
+					className={`${overlayClasses} inline-flex w-fit flex-col gap-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100`}
+				>
+					{/* Row: icons + title inline */}
+					<div className="flex items-center gap-1 leading-none">
+						<div className="flex items-center gap-1">
+							{item.categories?.includes("video") && (
+								<Video className="w-4 h-4" />
+							)}
+							{item.categories?.includes("design") && (
+								<Palette className="w-4 h-4" />
+							)}
+						</div>
+						<h3 className="zen-kaku-gothic-new text-sm font-medium leading-tight line-clamp-1">
+							{item.title}
+						</h3>
+					</div>
+
+					{/* Description (optional) */}
 					{item.description && (
-						<p className="noto-sans-jp-light text-xs text-main mb-2 line-clamp-2">
+						<p className="noto-sans-jp-light text-xs leading-snug line-clamp-2">
 							{item.description}
 						</p>
 					)}
-					<div className="flex items-center justify-between mt-2">
-						<div className="flex items-center space-x-1">
-							{item.categories?.includes("video") && (
-								<Video className="w-3 h-3 text-main" />
-							)}
-							{item.categories?.includes("design") && (
-								<Palette className="w-3 h-3 text-accent" />
-							)}
-						</div>
-						<span className="text-xs text-white text-opacity-50">
+
+					{/* Row: published date at right */}
+					<div className="flex items-center justify-end mt-0">
+						<span className="text-[11px] leading-none">
 							{(() => {
-								const currentYear = new Date().getFullYear();
-								if (!item.createdAt) return currentYear;
-								const year = new Date(item.createdAt).getFullYear();
-								return Number.isNaN(year) ? currentYear : year;
+								const baseDate =
+									(item as any).publishedAt ||
+									(item as any).updatedAt ||
+									item.createdAt;
+								const d = baseDate ? new Date(baseDate) : null;
+								return d && !Number.isNaN(d.getTime())
+									? d.toLocaleDateString("ja-JP", {
+											year: "numeric",
+											month: "2-digit",
+											day: "2-digit",
+										})
+									: "";
 							})()}
 						</span>
 					</div>

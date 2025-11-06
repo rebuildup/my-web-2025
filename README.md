@@ -57,6 +57,20 @@ npx prettier --check src/app/workshop/
 - `/scripts/` - Quality assurance scripts
 - `/public/data/` - JSON-based content storage
 
+## Portfolio Import
+
+ポートフォリオデータをCMSにインポートするには、Playwrightを使用した自動化スクリプトを使用します：
+
+```bash
+# 開発サーバーを起動（別ターミナル）
+pnpm dev
+
+# ポートフォリオデータをインポート
+pnpm import-portfolio
+```
+
+このスクリプトは `portfolio.json` のデータを読み込み、管理ページから各コンテンツを自動的に作成します。開発サーバーが `http://localhost:3010` で起動している必要があります。
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

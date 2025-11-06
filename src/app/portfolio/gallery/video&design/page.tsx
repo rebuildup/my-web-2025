@@ -1,6 +1,8 @@
 import { Eye } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getAllFromIndex } from "@/cms/lib/content-db-manager";
+import Plasma from "@/components/Plasma";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
@@ -66,21 +68,76 @@ export default async function VideoDesignProjectsPage() {
 		if (process.env.NODE_ENV !== "production") {
 			console.log("Fetching portfolio data...");
 		}
-		const items = await portfolioDataManager.getPortfolioData(false);
+		// 管理ページと同じ経路（インデックスDB）から取得
+		const rows = getAllFromIndex();
+		// タグのみで design or video を含むもの（video&designの要件: video または design）
+		const videoDesignItems = rows
+			.filter((r: any) => r.status === "published")
+			.filter((r: any) => {
+				const tags = Array.isArray(r?.tags) ? r.tags : [];
+				return (
+					tags.includes("video") ||
+					tags.includes("design") ||
+					tags.includes("video&design")
+				);
+			})
+			.map((r: any) => {
+				const thumbs = r.thumbnails || {};
+				const pickThumb = () => {
+					if (thumbs?.image?.src) return thumbs.image.src;
+					if (thumbs?.gif?.src) return thumbs.gif.src;
+					if (thumbs?.webm?.poster) return thumbs.webm.poster;
+					return undefined;
+				};
+				const tags: string[] = Array.isArray(r.tags) ? r.tags : [];
+				const hasVideo = tags.includes("video");
+				const hasDesign = tags.includes("design");
+				const category =
+					hasVideo && hasDesign
+						? "video&design"
+						: hasVideo
+							? "video"
+							: hasDesign
+								? "design"
+								: "design";
+				return {
+					id: r.id,
+					title: r.title,
+					description: r.summary ?? "",
+					tags,
+					category,
+					priority: 50,
+					status: r.status,
+					publishedAt: r.publishedAt,
+					createdAt: r.createdAt || r.updatedAt || new Date().toISOString(),
+					updatedAt: r.updatedAt || r.createdAt || new Date().toISOString(),
+					thumbnail: pickThumb(),
+				} as any;
+			})
+			.sort(
+				(a: any, b: any) =>
+					new Date(b.publishedAt || b.updatedAt || b.createdAt).getTime() -
+					new Date(a.publishedAt || a.updatedAt || a.createdAt).getTime(),
+			);
 
-		// Use enhanced gallery filter for video&design category with proper integration
-		const videoDesignItems = enhancedGalleryFilter.filterItemsForGallery(
-			items,
-			"video&design",
-			{
-				status: "published", // Only show published items
-				includeOther: false, // Exclude Other category items
-			},
-		);
+		if (process.env.NODE_ENV !== "production") {
+			const withTags = rows.filter((r: any) => Array.isArray(r?.tags));
+			const sample = withTags.slice(0, 5).map((r: any) => r.tags);
+			console.log(
+				"[VideoDesignGallery] total:",
+				rows.length,
+				"tagged:",
+				withTags.length,
+				"filtered:",
+				videoDesignItems.length,
+				"sampleTags:",
+				sample,
+			);
+		}
 
 		if (process.env.NODE_ENV !== "production") {
 			console.log("Video&Design page debug:", {
-				totalItems: items.length,
+				totalItems: rows.length,
 				videoDesignItems: videoDesignItems.length,
 				categories: videoDesignItems.map((item) => {
 					// Handle both enhanced and legacy items
@@ -117,6 +174,16 @@ export default async function VideoDesignProjectsPage() {
 
 		return (
 			<>
+				<div className="fixed inset-0 -z-10">
+					<Plasma
+						color="#0f1f4d"
+						speed={1}
+						direction="forward"
+						scale={1.0}
+						opacity={0.85}
+						mouseInteractive={false}
+					/>
+				</div>
 				{structuredData && (
 					<script type="application/ld+json">
 						{JSON.stringify(structuredData)}
@@ -125,7 +192,7 @@ export default async function VideoDesignProjectsPage() {
 
 				<div className="min-h-screen bg-base text-main scrollbar-auto-stable">
 					<main className="py-4">
-						<div className="container-system">
+						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-10">
 								{/* Breadcrumbs */}
 								<Breadcrumbs
@@ -139,7 +206,7 @@ export default async function VideoDesignProjectsPage() {
 								/>
 
 								{/* Header */}
-								<header className="space-y-12">
+								<header className="space-y-4">
 									<h1 className="neue-haas-grotesk-display text-6xl text-main">
 										Video & Design
 									</h1>
@@ -176,6 +243,25 @@ export default async function VideoDesignProjectsPage() {
 												Video and design projects will appear here once they are
 												published.
 											</p>
+											{process.env.NODE_ENV !== "production" && (
+												<div className="mt-2 text-xs text-main/70 space-y-1">
+													<p>Diagnostics:</p>
+													<ul className="list-disc pl-5 space-y-0.5">
+														<li>Loaded items: {rows.length}</li>
+														<li>
+															Items with tags:{" "}
+															{
+																rows.filter((it: any) =>
+																	Array.isArray(it?.tags),
+																).length
+															}
+														</li>
+														<li>
+															Filtered (video/design): {videoDesignItems.length}
+														</li>
+													</ul>
+												</div>
+											)}
 										</div>
 									)}
 								</section>
@@ -183,24 +269,24 @@ export default async function VideoDesignProjectsPage() {
 								{/* Global Functions */}
 								<nav aria-label="Video & Design gallery functions">
 									<h3 className="sr-only">Video & Design Gallery機能</h3>
-									<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
+									<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
 										<Link
 											href="/portfolio/gallery/all"
-											className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+											className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
 										>
 											<span className={Global_title}>All Projects</span>
 										</Link>
 
 										<Link
 											href="/portfolio/gallery/video"
-											className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+											className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
 										>
 											<span className={Global_title}>Video Only</span>
 										</Link>
 
 										<Link
 											href="/about/commission/video"
-											className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+											className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
 										>
 											<span className={Global_title}>Commission</span>
 										</Link>
@@ -208,7 +294,7 @@ export default async function VideoDesignProjectsPage() {
 								</nav>
 
 								{/* Footer */}
-								<footer className="pt-4 border-t border-main">
+								<footer className="pt-4">
 									<div className="text-center">
 										<p className="shippori-antique-b1-regular text-sm inline-block">
 											© 2025 samuido - Video & Design Projects

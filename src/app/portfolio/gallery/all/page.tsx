@@ -3,6 +3,8 @@
  */
 
 import { Suspense } from "react";
+import { getAllFromIndex } from "@/cms/lib/content-db-manager";
+import Plasma from "@/components/Plasma";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
@@ -13,9 +15,59 @@ import { AllGalleryClient } from "./components/AllGalleryClient";
  */
 export default async function AllGalleryPage() {
 	try {
-		// Get portfolio data with minimal error handling
-		const items = await portfolioDataManager.getPortfolioData(true);
+		// 管理ページと同じインデックスDBから取得し、published + 指定タグのみ
+		const rows = getAllFromIndex();
+		const filtered = rows
+			.filter((r: any) => r.status === "published")
+			.filter(
+				(r: any) =>
+					Array.isArray(r?.tags) &&
+					(r.tags.includes("develop") ||
+						r.tags.includes("video") ||
+						r.tags.includes("design") ||
+						r.tags.includes("video&design")),
+			)
+			.map((r: any) => {
+				const thumbs = r.thumbnails || {};
+				const pickThumb = () => {
+					if (thumbs?.image?.src) return thumbs.image.src;
+					if (thumbs?.gif?.src) return thumbs.gif.src;
+					if (thumbs?.webm?.poster) return thumbs.webm.poster;
+					return undefined;
+				};
+				return {
+					id: r.id,
+					title: r.title,
+					description: r.summary ?? "",
+					tags: Array.isArray(r.tags) ? r.tags : [],
+					status: r.status,
+					publishedAt: r.publishedAt,
+					createdAt: r.createdAt,
+					updatedAt: r.updatedAt,
+					thumbnail: pickThumb(),
+				} as any;
+			})
+			.sort(
+				(a: any, b: any) =>
+					new Date(b.publishedAt || b.updatedAt || b.createdAt).getTime() -
+					new Date(a.publishedAt || a.updatedAt || a.createdAt).getTime(),
+			);
 		const searchFilters = await portfolioDataManager.getSearchFilters();
+
+		if (process.env.NODE_ENV !== "production") {
+			const withTags = rows.filter((r: any) => Array.isArray(r?.tags));
+			const sample = withTags.slice(0, 5).map((r: any) => r.tags);
+			console.log(
+				"[AllGallery] total:",
+				rows.length,
+				"tagged:",
+				withTags.length,
+				"filtered:",
+				filtered.length,
+				"sampleTags:",
+				sample,
+			);
+		}
 
 		// Generate SEO metadata and structured data
 		let structuredData = null;
@@ -31,6 +83,16 @@ export default async function AllGalleryPage() {
 
 		return (
 			<>
+				<div className="fixed inset-0 -z-10">
+					<Plasma
+						color="#0f1f4d"
+						speed={1}
+						direction="forward"
+						scale={1.0}
+						opacity={0.85}
+						mouseInteractive={false}
+					/>
+				</div>
 				{structuredData && (
 					<script type="application/ld+json">
 						{JSON.stringify(structuredData)}
@@ -38,7 +100,7 @@ export default async function AllGalleryPage() {
 				)}
 				<div className="min-h-screen bg-base text-main scrollbar-auto-stable">
 					<main className="py-4">
-						<div className="container-system">
+						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-10">
 								{/* Breadcrumbs */}
 								<Breadcrumbs
@@ -67,9 +129,9 @@ export default async function AllGalleryPage() {
 											</div>
 										}
 									>
-										{items.length > 0 ? (
+										{filtered.length > 0 ? (
 											<AllGalleryClient
-												initialItems={items}
+												initialItems={filtered}
 												searchFilters={searchFilters}
 											/>
 										) : (
@@ -77,6 +139,26 @@ export default async function AllGalleryPage() {
 												<p className="text-red-800">
 													No portfolio items found.
 												</p>
+												{process.env.NODE_ENV !== "production" && (
+													<div className="mt-2 text-xs text-red-900/80 space-y-1">
+														<p>Diagnostics:</p>
+														<ul className="list-disc pl-5 space-y-0.5">
+															<li>Loaded items (all): {rows.length}</li>
+															<li>
+																Items with tags:{" "}
+																{
+																	rows.filter((r: any) =>
+																		Array.isArray(r?.tags),
+																	).length
+																}
+															</li>
+															<li>
+																Filtered (develop/video/design):{" "}
+																{filtered.length}
+															</li>
+														</ul>
+													</div>
+												)}
 											</div>
 										)}
 									</Suspense>

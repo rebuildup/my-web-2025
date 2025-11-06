@@ -32,6 +32,16 @@ const theme = createTheme({
 			"sans-serif",
 		].join(","),
 	},
+	// Tailwind breakpointsに合わせてMUI breakpointsをカスタマイズ
+	breakpoints: {
+		values: {
+			xs: 0, // Tailwind: < 640px
+			sm: 640, // Tailwind: >= 640px
+			md: 768, // Tailwind: >= 768px
+			lg: 1024, // Tailwind: >= 1024px
+			xl: 1280, // Tailwind: >= 1280px
+		},
+	},
 	components: {
 		MuiButton: {
 			styleOverrides: {

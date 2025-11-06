@@ -338,8 +338,8 @@ export default function AdminPageEditor() {
 		],
 	);
 
-	return (
-		<EditorLayout
+    return (
+        <EditorLayout
 			sidebar={
 				<Sidebar title="Content">
 					<ContentSelector
@@ -404,6 +404,6 @@ export default function AdminPageEditor() {
 					)}
 				</Stack>
 			}
-		/>
+        />
 	);
 }

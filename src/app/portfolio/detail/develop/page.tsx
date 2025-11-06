@@ -201,17 +201,17 @@ export default async function DevelopDetailPage() {
 												{/* Development Timeline */}
 												<div className="text-xs text-main opacity-70">
 													<span>
-														Created:{" "}
-														{new Date(item.createdAt).toLocaleDateString(
-															"ja-JP",
-														)}
+														Published:{" "}
+														{new Date(
+															(item as any).publishedAt || item.createdAt,
+														).toLocaleDateString("ja-JP")}
 													</span>
-													{item.updatedAt !== item.createdAt && (
+													{item.updatedAt && (
 														<span className="ml-4">
 															Updated:{" "}
-															{new Date(
-																item.updatedAt || item.createdAt,
-															).toLocaleDateString("ja-JP")}
+															{new Date(item.updatedAt).toLocaleDateString(
+																"ja-JP",
+															)}
 														</span>
 													)}
 												</div>

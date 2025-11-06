@@ -255,19 +255,19 @@ export default async function VideoDesignDetailPage() {
 												{/* Project Timeline */}
 												<div className="text-xs text-main opacity-70 pt-4 border-t border-main">
 													<span>
-														Created:{" "}
-														{item.createdAt
-															? new Date(item.createdAt).toLocaleDateString(
-																	"ja-JP",
-																)
-															: "Unknown"}
+														Published:{" "}
+														{new Date(
+															(item as any).publishedAt ||
+																item.createdAt ||
+																new Date().toISOString(),
+														).toLocaleDateString("ja-JP")}
 													</span>
-													{item.updatedAt !== item.createdAt && (
+													{item.updatedAt && (
 														<span className="ml-4">
 															Updated:{" "}
-															{new Date(
-																item.updatedAt || "",
-															).toLocaleDateString("ja-JP")}
+															{new Date(item.updatedAt).toLocaleDateString(
+																"ja-JP",
+															)}
 														</span>
 													)}
 												</div>

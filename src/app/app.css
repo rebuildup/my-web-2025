@@ -83,24 +83,6 @@
   animation-play-state: paused;
 }
 
-/* LogoLoopスタイル - reactbits.devの設定に基づく */
-.logo-loop-container {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-}
-
-.logo-loop {
-  display: flex;
-  width: fit-content;
-  animation: logo-loop-scroll 20s linear infinite;
-  will-change: transform;
-}
-
-.logo-loop-container:hover .logo-loop {
-  animation-play-state: paused;
-}
-
 @keyframes logo-loop-scroll {
   0% {
     transform: translateX(0);
@@ -108,90 +90,5 @@
   100% {
     transform: translateX(-50%);
   }
-}
-
-/* Skills テキストを単体で回転 */
-.skills-text-wrapper {
-  transform: rotate(10deg);
-  transform-origin: left center;
-}
-
-.skills-text-wrapper > * {
-  transform: rotate(0deg);
-}
-
-.profile-section::-webkit-scrollbar,
-.skills-section::-webkit-scrollbar {
-  display: none;
-}
-
-.profile-link-underline {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: rgb(242 242 242);
-  transition: width 0.3s cubic-bezier(0.2, 1, 0.3, 1);
-}
-
-.profile-link:hover .profile-link-underline {
-  width: 100% !important;
-}
-
-.circular-text-wrapper {
-  transform: scale(2);
-  transform-origin: center center;
-}
-
-/* フォントとサイズを強制適用 */
-.circular-text-wrapper,
-.circular-text-wrapper *,
-.circular-text-wrapper svg,
-.circular-text-wrapper text,
-.circular-text-wrapper tspan,
-.circular-text-wrapper [class*="text"],
-.circular-text-wrapper [class*="circular"],
-.circular-text-content,
-.circular-text-content *,
-.circular-text-content svg {
-  font-family: "neue-haas-grotesk-display", -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
-  font-weight: 900 !important;
-  font-size: 18px !important;
-  letter-spacing: 12px !important;
-  text-transform: uppercase !important;
-  opacity: 0.6 !important;
-}
-
-/* タイムラインスタイル */
-.timeline-container {
-  position: relative;
-}
-
-.timeline-line {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background-color: rgba(242, 242, 242, 0.2);
-}
-
-.timeline-item {
-  position: relative;
-  padding-left: 2rem;
-}
-
-.timeline-node {
-  position: absolute;
-  left: -32px;
-  top: 0.5rem;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: rgba(242, 242, 242, 0.6);
-  border: 2px solid rgba(242, 242, 242, 0.8);
-  z-index: 10;
-  transform: translateX(-50%);
 }
 

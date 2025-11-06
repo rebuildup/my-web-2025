@@ -308,33 +308,6 @@ export default function AdminMarkdownManager() {
 				]}
 			/>
 
-			<Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
-				<Button
-					component={Link}
-					href="/admin/content"
-					variant="outlined"
-					startIcon={<FileText size={16} />}
-				>
-					コンテンツ管理
-				</Button>
-				<Button
-					component={Link}
-					href="/admin/content/media"
-					variant="outlined"
-					startIcon={<BarChart3 size={16} />}
-				>
-					メディア管理
-				</Button>
-				<Button
-					component={Link}
-					href="/admin/content/page-editor"
-					variant="outlined"
-					startIcon={<PenSquare size={16} />}
-				>
-					ブロックエディタ
-				</Button>
-			</Stack>
-
 			<Paper
 				variant="outlined"
 				sx={{ p: 3, display: "grid", gap: 2.5, borderColor: "divider" }}

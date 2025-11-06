@@ -18,6 +18,7 @@ interface SafeImageProps {
 	height?: number;
 	sizes?: string;
 	className?: string;
+	style?: React.CSSProperties;
 	loading?: "lazy" | "eager";
 	priority?: boolean;
 	fallbackSrc?: string;
@@ -110,9 +111,43 @@ export function SafeImage({
 	if (process.env.NEXT_BUILD_STANDALONE === "true")
 		imageProps.unoptimized = true;
 
+	// Normalize style so object-position is respected
+	const style: React.CSSProperties = {
+		...(props.style || {}),
+	};
+	// If objectPosition is not provided, default to center when using cover positioning patterns
+	if (!style.objectPosition && (className || "").includes("object-cover")) {
+		style.objectPosition = "center center";
+	}
+
+	// next/image はクエリ付きローカルURLに対して localPatterns 設定が必要。
+	// ギャラリーでは /api/cms/media?… を直接表示するため、該当ケースは <img> にフォールバック。
+	const isApiMediaSrc =
+		typeof currentSrc === "string" && currentSrc.startsWith("/api/cms/media");
+
+	if (isApiMediaSrc) {
+		return (
+			<div className={`relative ${fill ? "w-full h-full" : ""}`}>
+				<img
+					src={currentSrc}
+					alt={alt}
+					className={className}
+					loading={loading}
+					onError={handleError}
+					onLoad={handleLoad}
+					width={width}
+					height={height}
+					style={style}
+					{...(props as Record<string, unknown>)}
+				/>
+				{shouldShowDebug && <ImageDebugInfo src={currentSrc} alt={alt} />}
+			</div>
+		);
+	}
+
 	return (
 		<div className={`relative ${fill ? "w-full h-full" : ""}`}>
-			<Image src={currentSrc} alt={alt} {...imageProps} />
+			<Image src={currentSrc} alt={alt} {...imageProps} style={style} />
 			{shouldShowDebug && <ImageDebugInfo src={currentSrc} alt={alt} />}
 		</div>
 	);

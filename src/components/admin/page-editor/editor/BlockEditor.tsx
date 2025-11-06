@@ -587,6 +587,7 @@ export function BlockEditor({
 							alignItems: "stretch",
 							gap: 1.5,
 							px: 1,
+							pl: 8, // reserve space for handles to avoid negative left overflow
 							py: 1.25,
 							borderRadius: 1,
 							bgcolor: isActive ? "action.hover" : "rgba(255,255,255,0.02)",
@@ -622,7 +623,7 @@ export function BlockEditor({
 								sx={{
 									position: "absolute",
 									top: 8,
-									left: -36,
+									left: 8,
 									display: "flex",
 									alignItems: "center",
 									justifyContent: "center",
@@ -654,7 +655,7 @@ export function BlockEditor({
 								sx={{
 									position: "absolute",
 									top: 8,
-									left: -64,
+									left: 40,
 									display: "flex",
 									alignItems: "center",
 									justifyContent: "center",

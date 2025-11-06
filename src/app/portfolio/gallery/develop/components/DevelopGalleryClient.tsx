@@ -15,15 +15,14 @@
 import { Calendar, Code, ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
+import GlowCard from "@/components/ui/GlowCard";
 import { SafeImage } from "@/components/ui/SafeImage";
 import type { PortfolioContentItem } from "@/lib/portfolio/data-processor";
 import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
 import type { SearchFilter } from "@/lib/portfolio/search-index";
 import type { EnhancedContentItem } from "@/types";
 import { DetailModal } from "../../all/components/DetailModal";
-import { FilterBar } from "../../all/components/FilterBar";
 import { Pagination } from "../../all/components/Pagination";
-import { SortControls } from "../../all/components/SortControls";
 
 export interface FilterOptions {
 	category?: string;
@@ -53,47 +52,46 @@ export function DevelopGalleryClient({
 	const [selectedItem, setSelectedItem] = useState<PortfolioContentItem | null>(
 		null,
 	);
-	const [filters, setFilters] = useState<FilterOptions>({});
-	const [sort, setSort] = useState<SortOptions>({
-		sortBy: "effectiveDate",
-		sortOrder: "desc",
-	});
 	const [currentPage, setCurrentPage] = useState(1);
 
-	// Filter and sort items - only show develop category items
+	// Filter and sort items - only show develop category items（空のときフォールバック）
 	const filteredAndSortedItems = useMemo(() => {
-		// Use enhanced gallery filter for develop category
-		let items = enhancedGalleryFilter.filterItemsForGallery(
-			initialItems,
-			"develop",
-			{
-				// Apply additional filters
-				tags: filters.tags,
-				year: filters.year ? parseInt(filters.year, 10) : undefined,
-				search: filters.search,
-			},
-		);
+		// 1) 簡易フォールバック（tags/category/categories）
+		let items = initialItems.filter((it: any) => {
+			const hasTags = Array.isArray(it?.tags) && it.tags.includes("develop");
+			const hasCategory =
+				typeof it?.category === "string" && it.category === "develop";
+			const hasCategories =
+				Array.isArray(it?.categories) && it.categories.includes("develop");
+			return hasTags || hasCategory || hasCategories;
+		}) as unknown as EnhancedContentItem[];
 
-		// Apply technology filter (not handled by enhanced filter yet)
-		if (filters.technologies && filters.technologies.length > 0) {
-			items = items.filter((item: EnhancedContentItem) =>
-				filters.technologies?.some((tech: string) =>
-					((item as unknown as PortfolioContentItem).technologies || []).some(
-						(itemTech: string) =>
-							itemTech.toLowerCase().includes(tech.toLowerCase()),
-					),
-				),
+		// 2) ソート（publishedAt最優先の降順。フォールバックはupdatedAt→createdAt）
+		items = [...items].sort((a: any, b: any) => {
+			const aTime = new Date(
+				a.publishedAt || a.updatedAt || a.createdAt,
+			).getTime();
+			const bTime = new Date(
+				b.publishedAt || b.updatedAt || b.createdAt,
+			).getTime();
+			return bTime - aTime;
+		});
+		if (process.env.NODE_ENV !== "production") {
+			// 先頭数件のpublishedAtを確認
+			// eslint-disable-next-line no-console
+			console.log(
+				"[DevelopGalleryClient] top5 by publishedAt:",
+				items.slice(0, 5).map((i: any) => ({
+					id: i.id,
+					publishedAt: i.publishedAt,
+					updatedAt: i.updatedAt,
+					createdAt: i.createdAt,
+				})),
 			);
 		}
 
-		// Apply sorting using enhanced gallery filter
-		items = enhancedGalleryFilter.sortItems(items, {
-			sortBy: sort.sortBy,
-			sortOrder: sort.sortOrder,
-		});
-
 		return items;
-	}, [initialItems, filters, sort]);
+	}, [initialItems]);
 
 	// Pagination
 	const totalPages = Math.ceil(filteredAndSortedItems.length / ITEMS_PER_PAGE);
@@ -106,16 +104,6 @@ export function DevelopGalleryClient({
 	}, [filteredAndSortedItems, currentPage]);
 
 	// Event handlers
-	const handleFilterChange = useCallback((newFilters: FilterOptions) => {
-		setFilters(newFilters);
-		setCurrentPage(1); // Reset to first page when filters change
-	}, []);
-
-	const handleSortChange = useCallback((newSort: SortOptions) => {
-		setSort(newSort);
-		setCurrentPage(1); // Reset to first page when sort changes
-	}, []);
-
 	const handlePageChange = useCallback((page: number) => {
 		setCurrentPage(page);
 		// Scroll to top of gallery
@@ -153,9 +141,9 @@ export function DevelopGalleryClient({
 				(link) => link.type === "demo" || link.type === "website",
 			)?.url;
 
-			// Format date
+			// Format date (publishedAt優先)
 			const date = new Date(
-				item.updatedAt || item.createdAt,
+				(item as any).publishedAt || item.updatedAt || item.createdAt,
 			).toLocaleDateString("ja-JP", {
 				year: "numeric",
 				month: "2-digit",
@@ -231,26 +219,8 @@ export function DevelopGalleryClient({
 						<br />
 						技術スタック、GitHubリンク、実装の詳細を含めて紹介しています。
 					</p>
-					<div className="flex items-center space-x-4 text-sm">
-						<span className="text-accent">
-							{filteredAndSortedItems.length} development projects
-						</span>
-						<span className="text-main">
-							Updated {new Date().toLocaleDateString("ja-JP")}
-						</span>
-					</div>
 				</div>
 			</header>
-
-			{/* Controls */}
-			<section className="space-y-6 mb-6 md:mb-8">
-				<FilterBar
-					filters={filters}
-					searchFilters={searchFilters}
-					onFilterChange={handleFilterChange}
-				/>
-				<SortControls sort={sort} onSortChange={handleSortChange} />
-			</section>
 
 			{/* Gallery Content - Alternating Layout */}
 			<section id="gallery-content" className="mt-2 md:mt-4">
@@ -284,28 +254,31 @@ export function DevelopGalleryClient({
 										className={`lg:w-1/2 ${index % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}
 									>
 										<Link href={`/portfolio/${project.id}`}>
-											<div className="aspect-video bg-base border border-main overflow-hidden hover:border-accent transition-colors group">
-												{project.thumbnail &&
-												project.thumbnail !== "/images/default-project.png" ? (
-													<SafeImage
-														src={project.thumbnail}
-														alt={project.title}
-														fill
-														className="object-cover group-hover:scale-105 transition-transform duration-300"
-														sizes="(max-width: 768px) 100vw, 50vw"
-														showDebug={false}
-													/>
-												) : (
-													<div className="w-full h-full flex items-center justify-center bg-base">
-														<div className="text-center">
-															<Code className="w-12 h-12 text-accent mx-auto mb-2" />
-															<span className="noto-sans-jp-light text-sm text-main">
-																{project.title}
-															</span>
+											<GlowCard className="group cursor-pointer text-left block bg-base/30 backdrop-blur overflow-hidden">
+												<div className="aspect-video bg-base overflow-hidden relative">
+													{project.thumbnail &&
+													project.thumbnail !==
+														"/images/default-project.png" ? (
+														<SafeImage
+															src={project.thumbnail}
+															alt={project.title}
+															fill
+															className="object-cover group-hover:scale-105 transition-transform duration-300"
+															sizes="(max-width: 768px) 100vw, 50vw"
+															showDebug={false}
+														/>
+													) : (
+														<div className="w-full h-full flex items-center justify-center bg-base">
+															<div className="text-center">
+																<Code className="w-12 h-12 text-accent mx-auto mb-2" />
+																<span className="noto-sans-jp-light text-sm text-main">
+																	{project.title}
+																</span>
+															</div>
 														</div>
-													</div>
-												)}
-											</div>
+													)}
+												</div>
+											</GlowCard>
 										</Link>
 									</div>
 
@@ -313,43 +286,46 @@ export function DevelopGalleryClient({
 									<div
 										className={`lg:w-1/2 space-y-4 ${index % 2 === 1 ? "lg:order-1" : "lg:order-2"}`}
 									>
+										{/* Title row with dev icon and date */}
 										<div className="flex items-center justify-between">
-											<div className="flex items-center">
-												<Code className="w-5 h-5 text-accent mr-2" />
-												<span
-													className={`noto-sans-jp-light text-xs text-${getStatusColor(project.status)} border border-${getStatusColor(project.status)} px-2 py-1`}
-												>
-													{getStatusLabel(project.status)}
-												</span>
+											<div className="flex items-center gap-2">
+												<Code className="w-5 h-5 text-accent" />
+												<Link href={`/portfolio/${project.id}`}>
+													<h3 className="zen-kaku-gothic-new text-2xl text-main hover:text-accent transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
+														{project.title}
+													</h3>
+												</Link>
 											</div>
 											<div className="flex items-center">
-												<Calendar className="w-4 h-4 text-main mr-2" />
-												<span className="noto-sans-jp-light text-sm text-main">
+												<Calendar className="w-4 h-4 text-main/70 mr-2" />
+												<span className="noto-sans-jp-light text-sm text-main/70 whitespace-nowrap">
 													{project.date}
 												</span>
 											</div>
 										</div>
 
-										<Link href={`/portfolio/${project.id}`}>
-											<h3 className="zen-kaku-gothic-new text-2xl text-main hover:text-accent transition-colors">
-												{project.title}
-											</h3>
-										</Link>
+										{/* Description - fixed 3 lines */}
+										<div className="h-[72px] overflow-hidden">
+											<p
+												className="noto-sans-jp-light text-base text-main leading-6"
+												style={{
+													display: "-webkit-box",
+													WebkitLineClamp: 3,
+													WebkitBoxOrient: "vertical",
+													overflow: "hidden",
+												}}
+											>
+												{project.description}
+											</p>
+										</div>
 
-										<p className="noto-sans-jp-light text-base text-main leading-relaxed">
-											{project.description}
-										</p>
-
-										{/* Technology Stack Emphasis */}
+										{/* Technologies (no heading) */}
 										<div className="space-y-2">
-											<h4 className="noto-sans-jp-light text-sm text-accent font-medium">
-												Technology Stack:
-											</h4>
-											<div className="flex flex-wrap gap-2">
+											<div className="flex flex-wrap gap-1.5">
 												{project.technologies.map((tech: string) => (
 													<span
 														key={tech}
-														className="noto-sans-jp-light text-sm text-accent border border-accent px-3 py-1 bg-base hover:bg-accent hover:text-main transition-colors"
+														className="noto-sans-jp-light text-xs text-main/90 px-3 py-1 bg-main/10 rounded-full"
 													>
 														{tech}
 													</span>
@@ -358,13 +334,13 @@ export function DevelopGalleryClient({
 										</div>
 
 										{/* Repository and Live Links */}
-										<div className="flex items-center gap-6 pt-2">
+										<div className="flex items-center gap-3 pt-2">
 											{project.githubUrl && (
 												<a
 													href={project.githubUrl}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center text-main hover:text-accent transition-colors"
+													className="flex items-center px-3 py-1.5 rounded-[8px] bg-base/30 hover:bg-base/50 transition-colors ring-1 ring-main/20"
 												>
 													<Github className="w-5 h-5 mr-2" />
 													<span className="noto-sans-jp-light text-sm">
@@ -377,7 +353,7 @@ export function DevelopGalleryClient({
 													href={project.liveUrl}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center text-main hover:text-accent transition-colors"
+													className="flex items-center px-3 py-1.5 rounded-[8px] bg-base/30 hover:bg-base/50 transition-colors ring-1 ring-main/20"
 												>
 													<ExternalLink className="w-5 h-5 mr-2" />
 													<span className="noto-sans-jp-light text-sm">
@@ -408,16 +384,6 @@ export function DevelopGalleryClient({
 						<p className="noto-sans-jp-light text-xs text-main/60 mt-2">
 							開発プロジェクト数: {filteredAndSortedItems.length}
 						</p>
-						<button
-							type="button"
-							onClick={() => {
-								setFilters({});
-								setCurrentPage(1);
-							}}
-							className="mt-4 text-accent hover:text-main transition-colors"
-						>
-							フィルターをリセット
-						</button>
 					</div>
 				)}
 			</section>
@@ -425,10 +391,10 @@ export function DevelopGalleryClient({
 			{/* Navigation Links */}
 			<nav aria-label="Development gallery functions">
 				<h3 className="sr-only">Development Gallery機能</h3>
-				<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
+				<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
 					<Link
 						href="/portfolio/gallery/all"
-						className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
 					>
 						<span className="noto-sans-jp-regular text-base leading-snug">
 							All Projects
@@ -437,7 +403,7 @@ export function DevelopGalleryClient({
 
 					<Link
 						href="/portfolio/gallery/video"
-						className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
 					>
 						<span className="noto-sans-jp-regular text-base leading-snug">
 							Video Projects
@@ -446,7 +412,7 @@ export function DevelopGalleryClient({
 
 					<Link
 						href="/about/commission/develop"
-						className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
 					>
 						<span className="noto-sans-jp-regular text-base leading-snug">
 							Commission

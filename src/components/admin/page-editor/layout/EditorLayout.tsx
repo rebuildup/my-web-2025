@@ -23,8 +23,11 @@ export function EditorLayout({
 				gridTemplateColumns: rightPanel
 					? { xs: "1fr", lg: "300px 1fr 320px" }
 					: { xs: "1fr", lg: "300px 1fr" },
-				height: "100vh",
-				width: "100vw",
+				height: "100%",
+				minHeight: "100%",
+				width: "100%",
+				minWidth: 0,
+				overflowX: "hidden",
 				bgcolor: "transparent",
 			}}
 		>

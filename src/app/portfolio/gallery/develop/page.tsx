@@ -2,6 +2,8 @@
  * Development Projects Gallery Page
  */
 
+import { getAllFromIndex } from "@/cms/lib/content-db-manager";
+import Plasma from "@/components/Plasma";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
@@ -23,8 +25,61 @@ export default async function DevelopGalleryPage() {
 		if (process.env.NODE_ENV !== "production") {
 			console.log("Fetching portfolio data...");
 		}
-		const items = await portfolioDataManager.getPortfolioData(true);
+		// 管理ページと同じデータ取得経路（インデックスDB）を使用
+		const indexRows = getAllFromIndex();
+		const items = indexRows
+			.filter((r: any) => r.status === "published")
+			.map((r: any) => {
+				const thumbs = r.thumbnails || {};
+				const pickThumb = () => {
+					if (thumbs?.image?.src) return thumbs.image.src;
+					if (thumbs?.gif?.src) return thumbs.gif.src;
+					if (thumbs?.webm?.poster) return thumbs.webm.poster;
+					return undefined;
+				};
+				return {
+					id: r.id,
+					title: r.title,
+					description: r.summary ?? "",
+					tags: Array.isArray(r.tags) ? r.tags : [],
+					status: r.status,
+					publishedAt: r.publishedAt,
+					createdAt: r.createdAt,
+					updatedAt: r.updatedAt,
+					thumbnail: pickThumb(),
+				} as any;
+			});
+		// タグのみで develop を抽出
+		const tagItems = items
+			.filter(
+				(it: any) => Array.isArray(it?.tags) && it.tags.includes("develop"),
+			)
+			.sort(
+				(a: any, b: any) =>
+					new Date(b.publishedAt || b.updatedAt || b.createdAt).getTime() -
+					new Date(a.publishedAt || a.updatedAt || a.createdAt).getTime(),
+			);
 		const searchFilters = await portfolioDataManager.getSearchFilters();
+
+		// Debug logging/non-prod panel data
+		if (process.env.NODE_ENV !== "production") {
+			const total = items.length;
+			const totalAll = indexRows.length;
+			const withTags = items.filter((it: any) => Array.isArray(it?.tags));
+			const sampleTags = withTags.slice(0, 5).map((it: any) => it.tags);
+			console.log(
+				"[DevelopGallery] total:",
+				total,
+				"totalAll:",
+				totalAll,
+				"tagged:",
+				withTags.length,
+				"developFiltered:",
+				tagItems.length,
+				"sampleTags:",
+				sampleTags,
+			);
+		}
 
 		if (process.env.NODE_ENV !== "production") {
 			console.log("Data fetched successfully:", {
@@ -47,6 +102,16 @@ export default async function DevelopGalleryPage() {
 
 		return (
 			<>
+				<div className="fixed inset-0 -z-10">
+					<Plasma
+						color="#0f1f4d"
+						speed={1}
+						direction="forward"
+						scale={1.0}
+						opacity={0.85}
+						mouseInteractive={false}
+					/>
+				</div>
 				{structuredData && (
 					<script type="application/ld+json">
 						{JSON.stringify(structuredData)}
@@ -54,7 +119,7 @@ export default async function DevelopGalleryPage() {
 				)}
 				<div className="min-h-screen bg-base text-main scrollbar-auto-stable">
 					<main className="py-4">
-						<div className="container-system">
+						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-10">
 								{/* Breadcrumbs */}
 								<Breadcrumbs
@@ -67,9 +132,9 @@ export default async function DevelopGalleryPage() {
 									className="pt-4"
 								/>
 
-								{items.length > 0 ? (
+								{tagItems.length > 0 ? (
 									<DevelopGalleryClient
-										initialItems={items}
+										initialItems={tagItems}
 										searchFilters={searchFilters}
 									/>
 								) : (
@@ -77,6 +142,23 @@ export default async function DevelopGalleryPage() {
 										<p className="text-red-800">
 											No development projects found.
 										</p>
+										{process.env.NODE_ENV !== "production" && (
+											<div className="mt-2 text-xs text-red-900/80 space-y-1">
+												<p>Diagnostics:</p>
+												<ul className="list-disc pl-5 space-y-0.5">
+													<li>Loaded items (published): {items.length}</li>
+													<li>Loaded items (all): {indexRows.length}</li>
+													<li>
+														Items with tags:{" "}
+														{
+															items.filter((it: any) => Array.isArray(it?.tags))
+																.length
+														}
+													</li>
+													<li>Filtered (develop): {tagItems.length}</li>
+												</ul>
+											</div>
+										)}
 									</div>
 								)}
 							</div>

@@ -6,6 +6,8 @@ import fs from "node:fs";
 import path from "node:path";
 // Lazy-load better-sqlite3 only in Node.js runtime to avoid binding errors in other environments
 import type Database from "better-sqlite3";
+import { getFullContent, saveFullContent } from "@/cms/lib/content-mapper";
+import type { Content } from "@/cms/types/content";
 import type { ContentIndexRow } from "@/cms/types/database";
 
 const DATA_DIR = path.join(process.cwd(), "data");
@@ -421,6 +423,84 @@ export function getFromIndex(contentId: string): {
 		thumbnails: row.thumbnails ? JSON.parse(row.thumbnails) : undefined,
 		seo: row.seo ? JSON.parse(row.seo) : undefined,
 	};
+}
+
+// ========== コンテンツデータベースコピー（新規作成してデータ移行） ==========
+
+export function copyContentDb(oldId: string, newId: string): boolean {
+	const oldPath = getContentDbPath(oldId);
+	const newPath = getContentDbPath(newId);
+
+	if (!fs.existsSync(oldPath)) {
+		console.error(`Content database file not found: ${oldPath}`);
+		return false;
+	}
+
+	// 新しいIDのDBファイルが既に存在する場合はエラー
+	if (fs.existsSync(newPath)) {
+		console.error(`Content database already exists for new ID: ${newId}`);
+		return false;
+	}
+
+	const DatabaseCtor = getBetterSqlite3();
+
+	try {
+		// 古いDBから完全なコンテンツデータを取得
+		const oldDb = getContentDb(oldId);
+		let oldContent: Content | null = null;
+		try {
+			oldContent = getFullContent(oldDb, oldId);
+			if (!oldContent) {
+				console.error(`Content not found in old database: ${oldId}`);
+				return false;
+			}
+		} finally {
+			oldDb.close();
+		}
+
+		// 新しいIDでコンテンツデータを作成（IDを更新）
+		const newContent: Partial<Content> = {
+			...oldContent,
+			id: newId, // 新しいIDに更新
+			updatedAt: new Date().toISOString(),
+		};
+
+		// 新しいDBを作成してデータを保存
+		const newDb = getContentDb(newId);
+		try {
+			saveFullContent(newDb, newContent);
+		} finally {
+			newDb.close();
+		}
+
+		// インデックスから古いIDを削除（新しいIDは後で追加される）
+		removeFromIndex(oldId);
+
+		// 古いDBファイルを削除（成功後に）
+		try {
+			if (fs.existsSync(oldPath)) {
+				fs.unlinkSync(oldPath);
+			}
+			const oldWalPath = `${oldPath}-wal`;
+			if (fs.existsSync(oldWalPath)) {
+				fs.unlinkSync(oldWalPath);
+			}
+			const oldShmPath = `${oldPath}-shm`;
+			if (fs.existsSync(oldShmPath)) {
+				fs.unlinkSync(oldShmPath);
+			}
+		} catch (error) {
+			// 古いファイルの削除に失敗しても続行（後で削除できる）
+			console.warn(`Failed to delete old database file: ${error}`);
+		}
+
+		return true;
+	} catch (error) {
+		console.error("Failed to copy content database:", error);
+		console.error(`Old ID: ${oldId}, New ID: ${newId}`);
+		console.error(`Old path: ${oldPath}, New path: ${newPath}`);
+		return false;
+	}
 }
 
 // ========== コンテンツデータベース削除 ==========

@@ -315,33 +315,6 @@ export default function AdminDatabaseManager() {
 				]}
 			/>
 
-			<Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
-				<Button
-					component={Link}
-					href="/admin/content"
-					variant="outlined"
-					startIcon={<FileText size={16} />}
-				>
-					コンテンツ管理
-				</Button>
-				<Button
-					component={Link}
-					href="/admin/content/markdown"
-					variant="outlined"
-					startIcon={<FolderOpen size={16} />}
-				>
-					Markdown管理
-				</Button>
-				<Button
-					component={Link}
-					href="/admin/content/page-editor"
-					variant="outlined"
-					startIcon={<PenSquare size={16} />}
-				>
-					ブロックエディタ
-				</Button>
-			</Stack>
-
 			<Paper
 				variant="outlined"
 				sx={{ p: 3, borderColor: "divider", display: "grid", gap: 3 }}

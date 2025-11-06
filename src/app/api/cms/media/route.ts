@@ -19,14 +19,29 @@ export async function GET(req: Request) {
 			return Response.json({ error: "contentId is required" }, { status: 400 });
 		}
 
-		// 特定のメディアを取得
+        // 特定のメディアを取得
 		if (mediaId) {
 			const media = getMedia(contentId, mediaId);
 			if (!media) {
 				return Response.json({ error: "Media not found" }, { status: 404 });
 			}
 
-			// バイナリデータをBase64に変換
+            // 生バイナリで返す（<img src> などで直接参照したい場合）
+            const raw = searchParams.get("raw");
+            if (raw === "1" || raw === "true") {
+                if (!media.data) {
+                    return new Response("Media data not found", { status: 404 });
+                }
+                const body = media.data as unknown as Uint8Array; // Buffer is Uint8Array-compatible
+                return new Response(body as BodyInit, {
+                    headers: {
+                        "Content-Type": media.mimeType || "application/octet-stream",
+                        "Cache-Control": "public, max-age=31536000, immutable",
+                    },
+                });
+            }
+
+            // バイナリデータをBase64に変換
 			const base64 = media.data?.toString("base64");
 			return Response.json(
 				{

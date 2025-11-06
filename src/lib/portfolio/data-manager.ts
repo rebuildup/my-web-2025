@@ -67,6 +67,7 @@ export class PortfolioDataManager {
 	};
 
 	private readonly CACHE_TTL = 3600000; // 1 hour in milliseconds
+	private emptyBackoffUntil = 0; // throttle when no data fetched
 
 	constructor(
 		private dataProcessor: PortfolioDataProcessor = portfolioDataProcessor,
@@ -154,6 +155,10 @@ export class PortfolioDataManager {
 	async getPortfolioData(
 		forceRefresh: boolean = false,
 	): Promise<PortfolioContentItem[]> {
+		// Backoff if we recently saw empty source to avoid tight loops in dev
+		if (!forceRefresh && Date.now() < this.emptyBackoffUntil) {
+			return [];
+		}
 		// Always try to return cached data first if available and not forcing refresh
 		if (!forceRefresh && this.cache.portfolioData.size > 0) {
 			testLogger.log("Returning cached portfolio data");
@@ -171,7 +176,11 @@ export class PortfolioDataManager {
 		const rawData = await this.fetchRawPortfolioData();
 
 		if (rawData.length === 0) {
-			testLogger.warn("No raw data fetched, checking cache as fallback");
+			if (process.env.CMS_DEBUG === "1") {
+				testLogger.warn("No raw data fetched, checking cache as fallback");
+			}
+			// throttle next attempts for 10s
+			this.emptyBackoffUntil = Date.now() + 10_000;
 			if (this.cache.portfolioData.size > 0) {
 				const cachedData = Array.from(this.cache.portfolioData.values());
 				const publishedData = cachedData.filter(

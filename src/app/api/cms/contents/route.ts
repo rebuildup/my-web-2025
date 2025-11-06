@@ -1,5 +1,6 @@
 import {
 	addToIndex,
+	copyContentDb,
 	deleteContentDb,
 	getAllFromIndex,
 	getContentDb,
@@ -91,6 +92,8 @@ export async function POST(req: Request) {
 			lang: data.lang || "ja",
 			status: data.status || "draft",
 			visibility: data.visibility || "draft",
+			publishedAt: data.publishedAt,
+			unpublishedAt: data.unpublishedAt,
 			thumbnails: data.thumbnails,
 			assets: data.assets,
 			links: data.links,
@@ -154,31 +157,76 @@ export async function PUT(req: Request) {
 			return Response.json({ error: "ID is required" }, { status: 400 });
 		}
 
-		// インデックスで存在確認
-		const indexData = getFromIndex(data.id);
-		if (!indexData) {
-			return Response.json({ error: "Content not found" }, { status: 404 });
+		// 古いIDを取得（編集時にoldIdが送られてくる場合）
+		const oldId = (data as any).oldId;
+		const newId = data.id;
+
+		// IDが変更されている場合（oldIdが指定され、oldIdとnewIdが異なる場合）
+		let existingContent: Content | null = null;
+		
+		if (oldId && oldId !== newId) {
+			// 古いIDで存在確認
+			const indexData = getFromIndex(oldId);
+			if (!indexData) {
+				return Response.json({ error: "Content not found" }, { status: 404 });
+			}
+
+			// 既存のコンテンツを取得（リネーム前に）
+			const oldDb = getContentDb(oldId);
+			try {
+				existingContent = getFullContent(oldDb, oldId);
+				if (!existingContent) {
+					return Response.json(
+						{ error: "Content not found in database" },
+						{ status: 404 },
+					);
+				}
+			} finally {
+				oldDb.close();
+			}
+
+			// 新しいDBファイルを作成してデータをコピー（既存の接続を閉じた後）
+			const copySuccess = copyContentDb(oldId, newId);
+			if (!copySuccess) {
+				return Response.json(
+					{ error: "Failed to copy content database" },
+					{ status: 500 },
+				);
+			}
+		} else {
+			// IDが変更されていない場合、通常の更新処理
+			const indexData = getFromIndex(newId);
+			if (!indexData) {
+				return Response.json({ error: "Content not found" }, { status: 404 });
+			}
 		}
 
-		// コンテンツ専用のデータベースを取得
-		const db = getContentDb(data.id);
+		// コンテンツ専用のデータベースを取得（新しいIDで）
+		const db = getContentDb(newId);
 
 		try {
-			// 既存のコンテンツを取得
-			const existing = getFullContent(db, data.id);
+			// 既存のコンテンツを取得（リネームした場合は既に取得済み）
+			let existing = existingContent;
 			if (!existing) {
-				return Response.json(
-					{ error: "Content not found in database" },
-					{ status: 404 },
-				);
+				existing = getFullContent(db, newId);
+				if (!existing) {
+					return Response.json(
+						{ error: "Content not found in database" },
+						{ status: 404 },
+					);
+				}
 			}
 
 			// 更新データをマージ
 			const content: Partial<Content> = {
 				...existing,
 				...data,
-				id: data.id, // IDは変更不可
+				id: newId, // 新しいIDを使用
 				updatedAt: new Date().toISOString(),
+				// publishedAtが明示的に送信されている場合は更新、undefinedの場合は既存の値を保持
+				// ただし、dataにpublishedAtプロパティが存在する場合は、その値を使用（undefinedでも）
+				publishedAt: Object.prototype.hasOwnProperty.call(data, 'publishedAt') ? data.publishedAt : existing.publishedAt,
+				unpublishedAt: Object.prototype.hasOwnProperty.call(data, 'unpublishedAt') ? data.unpublishedAt : existing.unpublishedAt,
 				searchable: data.searchable || {
 					fullText: `${data.title || existing.title} ${data.summary || existing.summary || ""} ${(data.tags || existing.tags || []).join(" ")}`,
 				},

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
 interface YouTubeThumbnailProps {
 	videoId: string;
@@ -8,6 +9,7 @@ interface YouTubeThumbnailProps {
 	fallbackSrc?: string;
 	className?: string;
 	onLoad?: () => void;
+	style?: CSSProperties;
 }
 
 export default function YouTubeThumbnail({
@@ -16,6 +18,7 @@ export default function YouTubeThumbnail({
 	fallbackSrc,
 	className = "",
 	onLoad,
+	style,
 }: YouTubeThumbnailProps) {
 	// Try maxresdefault first for highest quality
 	const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
@@ -26,7 +29,8 @@ export default function YouTubeThumbnail({
 			alt={alt}
 			fill
 			sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-			className={className}
+			className={`${className} object-cover object-center`}
+			style={style}
 			onLoad={onLoad}
 			onError={(e) => {
 				const img = e.target as HTMLImageElement;

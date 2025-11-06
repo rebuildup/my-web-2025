@@ -130,23 +130,18 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 
 					{/* Metadata - 日付とカテゴリーを横並び */}
 					<div className="flex items-center gap-6 text-sm">
-						<div className="flex items-center space-x-2">
-							<Calendar className="w-4 h-4 text-accent" />
-							<span className="text-main/70">Created:</span>
-							<time dateTime={item.createdAt}>
-								{new Date(item.createdAt).toLocaleDateString("ja-JP")}
-							</time>
-						</div>
-
-						{item.updatedAt && item.updatedAt !== item.createdAt && (
-							<div className="flex items-center space-x-2">
-								<Calendar className="w-4 h-4 text-accent" />
-								<span className="text-main/70">Updated:</span>
-								<time dateTime={item.updatedAt}>
-									{new Date(item.updatedAt).toLocaleDateString("ja-JP")}
-								</time>
-							</div>
-						)}
+						{(() => {
+							const effective = (item as any).publishedAt || item.createdAt;
+							return (
+								<div className="flex items-center space-x-2">
+									<Calendar className="w-4 h-4 text-accent" />
+									<span className="text-main/70">Published:</span>
+									<time dateTime={effective}>
+										{new Date(effective).toLocaleDateString("ja-JP")}
+									</time>
+								</div>
+							);
+						})()}
 
 						<div className="flex items-center space-x-2">
 							<Tag className="w-4 h-4 text-accent" />

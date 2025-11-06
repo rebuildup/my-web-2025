@@ -58,11 +58,44 @@ export function useCmsResource<T>(
 		if (!immediate) {
 			return;
 		}
-		void refresh();
+		// 初期マウント時のみ実行
+		const controller = new AbortController();
+		abortController.current = controller;
+		setLoading(true);
+		setError(null);
+
+		fetch(endpoint, {
+			signal: controller.signal,
+			cache: "no-store",
+		})
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error(`Request failed with status ${response.status}`);
+				}
+				return response.json();
+			})
+			.then((raw) => {
+				if (controller.signal.aborted) return;
+				setData(parse ? parse(raw) : (raw as T));
+			})
+			.catch((err) => {
+				if (err.name === "AbortError") {
+					return;
+				}
+				setError(err);
+				onError?.(err);
+			})
+			.finally(() => {
+				if (!controller.signal.aborted) {
+					setLoading(false);
+				}
+			});
+
 		return () => {
-			abortController.current?.abort();
+			controller.abort();
 		};
-	}, [immediate, refresh]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [immediate, endpoint]);
 
 	return { data, loading, error, refresh, setData };
 }

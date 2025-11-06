@@ -6,7 +6,7 @@
 import { Calendar, Tag } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
@@ -40,9 +40,62 @@ export async function generateMetadata({
 }: PortfolioDetailPageProps): Promise<Metadata> {
 	try {
 		const { slug } = await params;
+		const baseSlug = slug.endsWith(".md") ? slug.slice(0, -3) : slug;
 
-		// Get portfolio item
-		const item = await portfolioDataManager.getItemById(slug);
+		// Get portfolio item (primary: data manager; fallback: CMS API)
+		let item = await portfolioDataManager.getItemById(baseSlug);
+		if (!item) {
+			try {
+				const res = await fetch(
+					`/api/cms/contents?id=${encodeURIComponent(baseSlug)}`,
+					{ cache: "no-store" },
+				);
+				if (res.ok) {
+					const full = await res.json();
+					const thumbs = full?.thumbnails || {};
+					const pickThumb = () => {
+						if (thumbs?.image?.src) return thumbs.image.src as string;
+						if (thumbs?.gif?.src) return thumbs.gif.src as string;
+						if (thumbs?.webm?.poster) return thumbs.webm.poster as string;
+						return undefined;
+					};
+					item = {
+						id: full.id,
+						title: full.title,
+						description: full.summary ?? "",
+						category:
+							Array.isArray(full.tags) && full.tags.length > 0
+								? full.tags[0]
+								: "portfolio",
+						tags: Array.isArray(full.tags) ? (full.tags as string[]) : [],
+						status: full.status ?? "draft",
+						priority: 0,
+						createdAt: full.createdAt ?? new Date().toISOString(),
+						updatedAt:
+							full.updatedAt ?? full.createdAt ?? new Date().toISOString(),
+						publishedAt: full.publishedAt ?? undefined,
+						thumbnail: pickThumb(),
+						images: Array.isArray(full.assets)
+							? (full.assets
+									.map((a: any) =>
+										typeof a?.src === "string" ? a.src : undefined,
+									)
+									.filter(Boolean) as string[])
+							: undefined,
+						externalLinks: Array.isArray(full.links)
+							? full.links.map((l: any) => ({
+									type: (typeof l?.rel === "string" ? l.rel : "other") as any,
+									url: l?.href,
+									title: l?.label ?? l?.href,
+									description: l?.description ?? undefined,
+								}))
+							: undefined,
+					} as unknown as PortfolioContentItem;
+				}
+			} catch {
+				// ignore
+			}
+		}
 
 		if (!item) {
 			return {
@@ -75,7 +128,13 @@ export async function generateMetadata({
  * Content Section Component
  * Handles markdown and fallback content display with robust error handling
  */
-function ContentSection({ item }: { item: PortfolioContentItem }) {
+function ContentSection({
+	item,
+	detail,
+}: {
+	item: PortfolioContentItem;
+	detail?: { title?: string; summary?: string } | null;
+}) {
 	// Check if there's meaningful content to display
 	const hasMarkdownPath = isEnhancedContentItem(item) && item.markdownPath;
 	const hasContent = item.content && item.content.trim().length > 0;
@@ -108,6 +167,19 @@ function ContentSection({ item }: { item: PortfolioContentItem }) {
 							/>
 						);
 					})()}
+				</div>
+			) : detail ? (
+				<div className="space-y-3">
+					{detail.title && (
+						<h2 className="zen-kaku-gothic-new text-xl text-main">
+							{detail.title}
+						</h2>
+					)}
+					{detail.summary && (
+						<p className="noto-sans-jp-light text-sm text-main/80">
+							{detail.summary}
+						</p>
+					)}
 				</div>
 			) : hasContent ? (
 				<div
@@ -235,20 +307,86 @@ export default async function PortfolioDetailPage({
 	params,
 }: PortfolioDetailPageProps) {
 	const { slug } = await params;
+	const baseSlug = slug.endsWith(".md") ? slug.slice(0, -3) : slug;
 
 	try {
-		console.log(`Attempting to load portfolio item with slug: ${slug}`);
+		// .md リクエストはmiddlewareで別ルートにrewriteされる想定（ここでは処理しない）
+
+		// Try to fetch markdown page (legacy detail) whose slug === id
+		let detailFromMarkdown: {
+			title?: string;
+			summary?: string;
+			body?: string;
+		} | null = null;
+		try {
+			const dbModule = await import("@/cms/lib/db");
+			const db = dbModule.default;
+			try {
+				const row = db
+					.prepare(
+						`SELECT frontmatter, body FROM markdown_pages WHERE slug = @slug LIMIT 1`,
+					)
+					.get({ slug: baseSlug }) as
+					| { frontmatter: string; body: string }
+					| undefined;
+				if (row?.frontmatter) {
+					const fm = JSON.parse(row.frontmatter);
+					detailFromMarkdown = {
+						title: fm.title,
+						summary: fm.summary ?? fm.description,
+						body: row.body,
+					};
+				}
+			} finally {
+				// global db is shared; do not close here
+			}
+		} catch {}
 
 		// Get portfolio item
-		const item = await portfolioDataManager.getItemById(slug);
-		console.log(
-			`Portfolio item found:`,
-			item ? `${item.id} - ${item.title}` : "null",
-		);
+		let item = await portfolioDataManager.getItemById(baseSlug);
 
 		if (!item) {
-			console.log(`Portfolio item not found for slug: ${slug}`);
-			notFound();
+			// Fallback: build minimal item from markdown if exists
+			if (detailFromMarkdown) {
+				const now = new Date().toISOString();
+				item = {
+					id: slug,
+					title: detailFromMarkdown.title || slug,
+					description: detailFromMarkdown.summary || "",
+					category: "portfolio",
+					tags: [],
+					status: "draft",
+					priority: 0,
+					createdAt: now,
+					updatedAt: now,
+					thumbnail: undefined,
+					images: [],
+					externalLinks: [],
+					content: detailFromMarkdown.body || "",
+				} as unknown as PortfolioContentItem;
+			} else {
+				try {
+					redirect("/404");
+				} catch {
+					notFound();
+				}
+			}
+		}
+
+		// Enrich item with publishedAt from CMS if missing
+		if (item && !(item as any).publishedAt) {
+			try {
+				const res = await fetch(
+					`http://localhost:3010/api/cms/contents?id=${encodeURIComponent(baseSlug)}`,
+					{ cache: "no-store" },
+				);
+				if (res.ok) {
+					const full = await res.json();
+					if (full?.publishedAt) {
+						(item as any).publishedAt = full.publishedAt;
+					}
+				}
+			} catch {}
 		}
 
 		// Markdown content will be loaded client-side by MarkdownRenderer
@@ -267,7 +405,7 @@ export default async function PortfolioDetailPage({
 
 				<div className="min-h-screen bg-base text-main">
 					<main id="main-content" className="flex items-center py-10">
-						<div className="container-system">
+						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-10">
 								{/* Breadcrumbs */}
 								<Breadcrumbs
@@ -291,7 +429,9 @@ export default async function PortfolioDetailPage({
 												<Calendar className="w-4 h-4 text-accent" />
 												<span className="noto-sans-jp-light text-main">
 													{new Date(
-														item.updatedAt || item.createdAt,
+														(item as any).publishedAt ||
+															item.updatedAt ||
+															item.createdAt,
 													).toLocaleDateString("ja-JP", {
 														year: "numeric",
 														month: "long",
@@ -325,7 +465,7 @@ export default async function PortfolioDetailPage({
 								</header>
 
 								{/* Content */}
-								<ContentSection item={item} />
+								<ContentSection item={item} detail={detailFromMarkdown} />
 
 								{/* Navigation */}
 							</div>

@@ -5,15 +5,16 @@
 
 const isTestEnvironment =
 	process.env.NODE_ENV === "test" || process.env.JEST_WORKER_ID !== undefined;
+const isVerbose = process.env.CMS_DEBUG === "1";
 
 export const testLogger = {
 	log: (...args: unknown[]) => {
-		if (!isTestEnvironment) {
+		if (!isTestEnvironment && isVerbose) {
 			console.log(...args);
 		}
 	},
 	warn: (...args: unknown[]) => {
-		if (!isTestEnvironment) {
+		if (!isTestEnvironment && isVerbose) {
 			console.warn(...args);
 		}
 	},
@@ -23,12 +24,12 @@ export const testLogger = {
 		}
 	},
 	info: (...args: unknown[]) => {
-		if (!isTestEnvironment) {
+		if (!isTestEnvironment && isVerbose) {
 			console.info(...args);
 		}
 	},
 	debug: (...args: unknown[]) => {
-		if (!isTestEnvironment) {
+		if (!isTestEnvironment && isVerbose) {
 			console.debug(...args);
 		}
 	},
