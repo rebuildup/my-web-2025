@@ -12,6 +12,8 @@
 		"test": "jest --passWithNoTests",
 		"lint": "biome check .",
 		"format": "biome format --write .",
+		"import-portfolio": "tsx scripts/import-portfolio.ts",
+		"update-published-dates": "tsx scripts/update-published-dates.ts",
 		"postinstall": "node scripts/install-hooks.js",
 		"preinstall": "echo 'Installing dependencies...'",
 		"install": "node scripts/install-hooks.js",
@@ -62,6 +64,7 @@
 		"@sentry/nextjs": "^10.22.0",
 		"@tanstack/react-table": "^8.21.3",
 		"@types/qrcode": "^1.5.6",
+		"@use-gesture/react": "^10.3.1",
 		"autoprefixer": "^10.4.21",
 		"axios": "^1.13.1",
 		"better-sqlite3": "^12.4.1",
@@ -77,6 +80,7 @@
 		"lucide-react": "^0.548.0",
 		"marked": "^16.4.1",
 		"matter-js": "^0.20.0",
+		"motion": "^12.23.24",
 		"nanoid": "^5.1.6",
 		"next": "16.0.1",
 		"ogl": "^1.0.11",
@@ -101,6 +105,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.2",
 		"@jest/globals": "^30.2.0",
+		"@playwright/test": "^1.56.1",
 		"@tailwindcss/postcss": "^4.1.16",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.0",
@@ -113,7 +118,9 @@
 		"jest": "^30.2.0",
 		"jest-environment-jsdom": "^30.2.0",
 		"jsdom": "^27.0.1",
+		"playwright": "^1.56.1",
 		"shadcn": "^3.5.0",
+		"tsx": "^4.20.6",
 		"typescript": "5.9.3"
 	}
 }
