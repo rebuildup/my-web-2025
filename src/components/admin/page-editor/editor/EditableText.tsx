@@ -28,6 +28,7 @@ const baseStyles: SxProps<Theme> = (theme) => ({
 	outline: "none",
 	typography: "body1",
 	lineHeight: 1.7,
+	color: theme.palette.mode === "dark" ? "#f2f2f2" : theme.palette.text.primary,
 	"&:focus": {
 		borderColor: alpha(theme.palette.primary.main, 0.5),
 		backgroundColor: alpha(theme.palette.primary.main, 0.12),
@@ -37,8 +38,12 @@ const baseStyles: SxProps<Theme> = (theme) => ({
 		color: theme.palette.text.disabled,
 	},
 	"&.is-readonly": {
-		opacity: 0.7,
+		opacity: 1,
 		pointerEvents: "none",
+		backgroundColor: "transparent",
+		border: "none",
+		padding: 0,
+		color: "#f2f2f2",
 	},
 });
 

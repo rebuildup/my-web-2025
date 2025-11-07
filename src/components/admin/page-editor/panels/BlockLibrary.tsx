@@ -32,19 +32,31 @@ export function BlockLibrary({ onInsertBlock }: BlockLibraryProps) {
 	}, [definitions]);
 
 	return (
-		<div style={{ padding: 8 }}>
+		<div
+			style={{
+				height: "100%",
+				display: "flex",
+				flexDirection: "column",
+				minHeight: 0,
+				padding: 8,
+				overflow: "hidden",
+				boxSizing: "border-box",
+			}}
+		>
 			<div
 				style={{
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "space-between",
 					padding: "6px 0",
+					flexShrink: 0,
 				}}
 			>
 				<h3 style={{ margin: 0, fontSize: 14, fontWeight: 700 }}>Blocks</h3>
 				<button
 					onClick={() => setQuery("")}
 					disabled={!query}
+					type="button"
 					style={{
 						fontSize: 12,
 						padding: "4px 8px",
@@ -63,6 +75,7 @@ export function BlockLibrary({ onInsertBlock }: BlockLibraryProps) {
 					flexDirection: "column",
 					gap: 10,
 					padding: "6px 0",
+					flexShrink: 0,
 				}}
 			>
 				<input
@@ -78,107 +91,117 @@ export function BlockLibrary({ onInsertBlock }: BlockLibraryProps) {
 						outline: "none",
 					}}
 				/>
-				<div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-					{Object.entries(grouped).map(([group, items]) => (
+			</div>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					gap: 12,
+					minHeight: 0,
+					flex: 1,
+					overflowY: "auto",
+				}}
+			>
+				{Object.entries(grouped).map(([group, items]) => (
+					<div
+						key={group}
+						style={{ display: "flex", flexDirection: "column", gap: 6 }}
+					>
 						<div
-							key={group}
-							style={{ display: "flex", flexDirection: "column", gap: 6 }}
+							style={{
+								fontSize: 11,
+								opacity: 0.65,
+								textTransform: "uppercase",
+								letterSpacing: 1,
+							}}
 						>
-							<div
-								style={{
-									fontSize: 11,
-									opacity: 0.65,
-									textTransform: "uppercase",
-									letterSpacing: 1,
-								}}
-							>
-								{translateGroup(group)}
-							</div>
-							<div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-								{items.map((item) => (
-									<button
-										key={item.type}
-										onClick={() => onInsertBlock?.(item.type)}
+							{translateGroup(group)}
+						</div>
+						<div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+							{items.map((item) => (
+								<button
+									key={item.type}
+									onClick={() => onInsertBlock?.(item.type)}
+									type="button"
+									style={{
+										display: "flex",
+										alignItems: "center",
+										justifyContent: "flex-start",
+										gap: 8,
+										padding: "4px 6px",
+										borderRadius: 6,
+										cursor: "pointer",
+										border: "none",
+										background: "transparent",
+										outline: "none",
+										textAlign: "left",
+									}}
+									onMouseEnter={(e) => {
+										(e.currentTarget as HTMLButtonElement).style.background =
+											"rgba(255,255,255,0.06)";
+									}}
+									onMouseLeave={(e) => {
+										(e.currentTarget as HTMLButtonElement).style.background =
+											"transparent";
+									}}
+								>
+									<div
+										style={{
+											width: 28,
+											height: 28,
+											display: "inline-flex",
+											alignItems: "center",
+											justifyContent: "center",
+											borderRadius: 6,
+											background: "#3b82f6",
+											color: "#fff",
+											fontWeight: 700,
+											fontSize: 11,
+											flexShrink: 0,
+											marginLeft: -6,
+										}}
+									>
+										{String(item.icon ?? "?")}
+									</div>
+									<div
 										style={{
 											display: "flex",
-											alignItems: "center",
-											justifyContent: "flex-start",
-											gap: 8,
-											padding: "4px 6px",
-											borderRadius: 6,
-											cursor: "pointer",
-											border: "none",
-											background: "transparent",
-											outline: "none",
+											flexDirection: "column",
+											minWidth: 0,
 											textAlign: "left",
-										}}
-										onMouseEnter={(e) => {
-											(e.currentTarget as HTMLButtonElement).style.background =
-												"rgba(255,255,255,0.06)";
-										}}
-										onMouseLeave={(e) => {
-											(e.currentTarget as HTMLButtonElement).style.background =
-												"transparent";
 										}}
 									>
 										<div
 											style={{
-												width: 28,
-												height: 28,
-												display: "inline-flex",
-												alignItems: "center",
-												justifyContent: "center",
-												borderRadius: 6,
-												background: "#3b82f6",
-												color: "#fff",
+												fontSize: 14,
 												fontWeight: 700,
-												fontSize: 11,
-												flexShrink: 0,
-												marginLeft: -6,
-											}}
-										>
-											{String(item.icon ?? "?")}
-										</div>
-										<div
-											style={{
-												display: "flex",
-												flexDirection: "column",
-												minWidth: 0,
+												whiteSpace: "nowrap",
+												textOverflow: "ellipsis",
+												overflow: "hidden",
 												textAlign: "left",
 											}}
 										>
+											{item.label}
+										</div>
+										{item.description ? (
 											<div
 												style={{
-													fontSize: 14,
-													fontWeight: 700,
+													fontSize: 12,
+													opacity: 0.7,
 													whiteSpace: "nowrap",
 													textOverflow: "ellipsis",
 													overflow: "hidden",
-													textAlign: "left",
 												}}
 											>
-												{item.label}
+												{item.description}
 											</div>
-											{item.description ? (
-												<div
-													style={{
-														fontSize: 12,
-														opacity: 0.7,
-														whiteSpace: "nowrap",
-														textOverflow: "ellipsis",
-														overflow: "hidden",
-													}}
-												>
-													{item.description}
-												</div>
-											) : null}
-										</div>
-									</button>
-								))}
-							</div>
+										) : null}
+									</div>
+								</button>
+							))}
 						</div>
-					))}
-				</div>
+					</div>
+				))}
 			</div>
 		</div>
 	);

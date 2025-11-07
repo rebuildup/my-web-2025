@@ -20,6 +20,7 @@ export function CalloutBlock({
 	block,
 	readOnly,
 	onContentChange,
+	onAttributesChange: _onAttributesChange,
 	autoFocus,
 	onKeyDown,
 }: BlockComponentProps) {

@@ -1,7 +1,7 @@
 "use client";
 
+import CollectionsRoundedIcon from "@mui/icons-material/CollectionsRounded";
 import { Paper, Stack, Typography } from "@mui/material";
-import { Images } from "lucide-react";
 import type { BlockComponentProps } from "../types";
 
 export function GalleryBlock({ block }: BlockComponentProps) {
@@ -16,7 +16,7 @@ export function GalleryBlock({ block }: BlockComponentProps) {
 		>
 			<Stack spacing={1}>
 				<Stack direction="row" spacing={1.5} alignItems="center">
-					<Images size={18} />
+					<CollectionsRoundedIcon color="primary" />
 					<Typography variant="subtitle2">Gallery block</Typography>
 				</Stack>
 				<Typography variant="body2" color="text.secondary">

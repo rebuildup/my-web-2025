@@ -1,5 +1,7 @@
 "use client";
 
+import CloudUploadRoundedIcon from "@mui/icons-material/CloudUploadRounded";
+import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
 import {
 	Alert,
 	Box,
@@ -10,7 +12,6 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import { Image as ImageIcon, Upload } from "lucide-react";
 import { type ChangeEvent, useCallback, useRef, useState } from "react";
 import { getMediaUrl, uploadMediaFile } from "@/cms/page-editor/lib/api/media";
 import { formatFileSize } from "@/cms/page-editor/lib/utils/file-upload";
@@ -127,7 +128,7 @@ export function ImageBlock({
 						spacing={1}
 						sx={{ py: 6, color: "text.secondary" }}
 					>
-						<ImageIcon size={24} />
+						<ImageRoundedIcon fontSize="large" color="primary" />
 						<Typography variant="body2">Paste an image URL</Typography>
 					</Stack>
 				)}
@@ -221,7 +222,7 @@ export function ImageBlock({
 							<Button
 								variant="outlined"
 								fullWidth
-								startIcon={<Upload />}
+								startIcon={<CloudUploadRoundedIcon />}
 								component="label"
 								disabled={!contentId || isUploading}
 								sx={{ whiteSpace: "nowrap" }}

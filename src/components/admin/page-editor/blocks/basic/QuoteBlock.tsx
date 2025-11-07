@@ -8,6 +8,7 @@ export function QuoteBlock({
 	block,
 	readOnly,
 	onContentChange,
+	onAttributesChange: _onAttributesChange,
 	autoFocus,
 	onKeyDown,
 }: BlockComponentProps) {

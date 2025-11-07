@@ -23,17 +23,16 @@ export function EditorLayout({
 				gridTemplateColumns: rightPanel
 					? { xs: "1fr", lg: "300px 1fr 320px" }
 					: { xs: "1fr", lg: "300px 1fr" },
-				height: "100%",
-				minHeight: "100%",
+				height: "calc(100dvh - 64px)",
 				width: "100%",
-				minWidth: 0,
-				overflowX: "hidden",
+				overflow: "hidden",
 				bgcolor: "transparent",
 			}}
 		>
 			<Box
 				component="aside"
 				sx={{
+					minHeight: 0,
 					display: { xs: "none", lg: "block" },
 					bgcolor: "transparent",
 					// 枠線は使わず背景コントラストのみ
@@ -47,6 +46,7 @@ export function EditorLayout({
 			<Stack
 				component="main"
 				sx={{
+					minHeight: 0,
 					position: "relative",
 					overflow: "hidden",
 					px: { xs: 2, md: 4 },
@@ -86,10 +86,12 @@ export function EditorLayout({
 				<Box
 					component="aside"
 					sx={{
+						minHeight: 0,
 						display: { xs: "none", lg: "block" },
 						bgcolor: "transparent",
 						// 枠線は使わず背景コントラストのみ
-						overflowY: "auto",
+						overflow: "hidden",
+						boxSizing: "border-box",
 						px: 3,
 						py: 4,
 					}}

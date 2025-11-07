@@ -1,5 +1,6 @@
 "use client";
 
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 import {
 	Box,
 	IconButton,
@@ -9,7 +10,6 @@ import {
 	ToggleButton,
 	ToggleButtonGroup,
 } from "@mui/material";
-import { Copy } from "lucide-react";
 import Prism from "prismjs";
 import { useEffect, useMemo, useState } from "react";
 import "prismjs/components/prism-markup";
@@ -20,22 +20,6 @@ import type { BlockComponentProps } from "../types";
 
 type ViewMode = "edit" | "preview" | "split";
 
-const LANGUAGE_ALIAS_MAP: Record<string, string> = {
-	js: "javascript",
-	jsx: "jsx",
-	ts: "typescript",
-	tsx: "tsx",
-	sh: "bash",
-	zsh: "bash",
-	shell: "bash",
-	py: "python",
-	yml: "yaml",
-	md: "markdown",
-	html: "markup",
-	xml: "markup",
-	txt: "plaintext",
-};
-
 export function CodeBlock({
 	block,
 	readOnly,
@@ -43,11 +27,25 @@ export function CodeBlock({
 	onAttributesChange,
 }: BlockComponentProps) {
 	const language = (block.attributes.language as string | undefined) ?? "";
+	const aliasMap: Record<string, string> = {
+		js: "javascript",
+		jsx: "jsx",
+		ts: "typescript",
+		tsx: "tsx",
+		sh: "bash",
+		zsh: "bash",
+		shell: "bash",
+		py: "python",
+		yml: "yaml",
+		md: "markdown",
+		html: "markup",
+		xml: "markup",
+		txt: "plaintext",
+	};
+
 	const normalizedLang = useMemo(() => {
 		const input = (language || "").trim().toLowerCase();
-		const preferred = input
-			? (LANGUAGE_ALIAS_MAP[input] ?? input)
-			: "plaintext";
+		const preferred = input ? (aliasMap[input] ?? input) : "plaintext";
 		return preferred || "plaintext";
 	}, [language]);
 
@@ -220,7 +218,7 @@ export function CodeBlock({
 							"&:hover": { bgcolor: "rgba(0,0,0,0.55)" },
 						}}
 					>
-						<Copy size={16} />
+						<ContentCopyRoundedIcon fontSize="small" />
 					</IconButton>
 				</Box>
 			)}

@@ -8,7 +8,11 @@ const createJestConfig = nextJest({
 module.exports = createJestConfig({
 	testEnvironment: "jsdom",
 	modulePathIgnorePatterns: [".next/"],
-	testPathIgnorePatterns: ["/node_modules/", "/.next/"],
+	testPathIgnorePatterns: [
+		"/node_modules/",
+		"/.next/",
+		"/scripts/.*\\.spec\\.ts$", // Playwright spec files
+	],
 	moduleNameMapper: {
 		"^@/(.*)$": "<rootDir>/src/$1",
 	},

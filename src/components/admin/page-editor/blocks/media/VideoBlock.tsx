@@ -1,5 +1,7 @@
 "use client";
 
+import CloudUploadRoundedIcon from "@mui/icons-material/CloudUploadRounded";
+import MovieCreationRoundedIcon from "@mui/icons-material/MovieCreationRounded";
 import {
 	Alert,
 	Box,
@@ -12,7 +14,6 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import { Film, Upload } from "lucide-react";
 import { type ChangeEvent, useCallback, useRef, useState } from "react";
 import { getMediaUrl, uploadMediaFile } from "@/cms/page-editor/lib/api/media";
 import { formatFileSize } from "@/cms/page-editor/lib/utils/file-upload";
@@ -120,7 +121,7 @@ export function VideoBlock({
 						spacing={1}
 						sx={{ py: 6, color: "text.secondary" }}
 					>
-						<Film size={24} />
+						<MovieCreationRoundedIcon fontSize="large" color="primary" />
 						<Typography variant="body2">Paste a video URL</Typography>
 					</Stack>
 				)}
@@ -234,7 +235,7 @@ export function VideoBlock({
 							<Button
 								variant="outlined"
 								fullWidth
-								startIcon={<Upload />}
+								startIcon={<CloudUploadRoundedIcon />}
 								component="label"
 								disabled={!contentId || isUploading}
 								sx={{ whiteSpace: "nowrap" }}

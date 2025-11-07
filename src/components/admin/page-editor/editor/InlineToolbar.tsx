@@ -1,7 +1,11 @@
 "use client";
 
+import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
+import FormatBoldRoundedIcon from "@mui/icons-material/FormatBoldRounded";
+import FormatItalicRoundedIcon from "@mui/icons-material/FormatItalicRounded";
+import FormatUnderlinedRoundedIcon from "@mui/icons-material/FormatUnderlinedRounded";
+import StrikethroughSRoundedIcon from "@mui/icons-material/StrikethroughSRounded";
 import { Paper, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
-import { Bold, Code, Italic, Strikethrough, Underline } from "lucide-react";
 import type { EditorCommand } from "@/cms/types/editor";
 
 type IconElement = React.ReactElement;
@@ -13,27 +17,27 @@ const BUTTONS: Array<{
 }> = [
 	{
 		command: "toggle-bold",
-		icon: <Bold size={16} />,
+		icon: <FormatBoldRoundedIcon fontSize="small" />,
 		title: "Bold (Cmd+B)",
 	},
 	{
 		command: "toggle-italic",
-		icon: <Italic size={16} />,
+		icon: <FormatItalicRoundedIcon fontSize="small" />,
 		title: "Italic (Cmd+I)",
 	},
 	{
 		command: "toggle-underline",
-		icon: <Underline size={16} />,
+		icon: <FormatUnderlinedRoundedIcon fontSize="small" />,
 		title: "Underline (Cmd+U)",
 	},
 	{
 		command: "toggle-strike",
-		icon: <Strikethrough size={16} />,
+		icon: <StrikethroughSRoundedIcon fontSize="small" />,
 		title: "Strikethrough (Cmd+Shift+X)",
 	},
 	{
 		command: "toggle-code",
-		icon: <Code size={16} />,
+		icon: <CodeRoundedIcon fontSize="small" />,
 		title: "Inline code (Cmd+`)",
 	},
 ];

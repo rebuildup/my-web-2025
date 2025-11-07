@@ -122,8 +122,8 @@ export function AdminShell({ children }: AdminShellProps) {
 					sx={{
 						flexGrow: 1,
 						width: "100%",
-						pt: { xs: 8, md: 8 },
-						pb: { xs: 4, md: 6 },
+						pt: isFullWidthPage ? 8 : { xs: 8, md: 8 },
+						pb: isFullWidthPage ? 0 : { xs: 4, md: 6 },
 						px: 0,
 					}}
 				>

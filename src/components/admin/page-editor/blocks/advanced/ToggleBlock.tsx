@@ -1,5 +1,6 @@
 "use client";
 
+import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import {
 	Accordion,
 	AccordionDetails,
@@ -7,7 +8,6 @@ import {
 	Stack,
 	Typography,
 } from "@mui/material";
-import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
 import type { BlockComponentProps } from "../types";
@@ -33,7 +33,7 @@ export function ToggleBlock({
 				"&:before": { display: "none" },
 			}}
 		>
-			<AccordionSummary expandIcon={<ChevronDown size={18} />}>
+			<AccordionSummary expandIcon={<ExpandMoreRoundedIcon />}>
 				<EditableText
 					value={summary}
 					onChange={(value) => onAttributesChange({ summary: value })}

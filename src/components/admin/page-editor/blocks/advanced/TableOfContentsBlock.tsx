@@ -1,9 +1,10 @@
 "use client";
 
+import TocRoundedIcon from "@mui/icons-material/TocRounded";
 import { Paper, Stack, Typography } from "@mui/material";
-import { List } from "lucide-react";
+import type { BlockComponentProps } from "../types";
 
-export function TableOfContentsBlock() {
+export function TableOfContentsBlock(_: BlockComponentProps) {
 	return (
 		<Paper
 			variant="outlined"
@@ -17,7 +18,7 @@ export function TableOfContentsBlock() {
 			}}
 		>
 			<Stack direction="row" spacing={1.5} alignItems="center">
-				<List color="currentColor" size={18} />
+				<TocRoundedIcon color="primary" />
 				<Typography variant="subtitle2" fontWeight={600}>
 					Table of contents
 				</Typography>

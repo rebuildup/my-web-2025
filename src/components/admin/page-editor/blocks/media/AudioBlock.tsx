@@ -1,5 +1,7 @@
 "use client";
 
+import CloudUploadRoundedIcon from "@mui/icons-material/CloudUploadRounded";
+import GraphicEqRoundedIcon from "@mui/icons-material/GraphicEqRounded";
 import {
 	Alert,
 	Box,
@@ -10,7 +12,6 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import { Upload, Waves } from "lucide-react";
 import { type ChangeEvent, useCallback, useRef, useState } from "react";
 import { getMediaUrl, uploadMediaFile } from "@/cms/page-editor/lib/api/media";
 import { formatFileSize } from "@/cms/page-editor/lib/utils/file-upload";
@@ -105,7 +106,7 @@ export function AudioBlock({
 							<Button
 								variant="outlined"
 								fullWidth
-								startIcon={<Upload />}
+								startIcon={<CloudUploadRoundedIcon />}
 								component="label"
 								disabled={!contentId || isUploading}
 								sx={{ whiteSpace: "nowrap" }}
@@ -184,7 +185,7 @@ export function AudioBlock({
 						spacing={1}
 						sx={{ py: 4, color: "text.secondary" }}
 					>
-						<Waves color="currentColor" />
+						<GraphicEqRoundedIcon color="primary" />
 						<Typography variant="body2">Paste an audio URL</Typography>
 					</Stack>
 				)}

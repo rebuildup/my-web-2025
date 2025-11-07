@@ -1,7 +1,7 @@
 "use client";
 
+import TableChartRoundedIcon from "@mui/icons-material/TableChartRounded";
 import { Paper, Stack, Typography } from "@mui/material";
-import { Table as TableIcon } from "lucide-react";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
 import type { BlockComponentProps } from "../types";
 
@@ -21,7 +21,7 @@ export function TableBlock({
 		>
 			<Stack spacing={1.5}>
 				<Stack direction="row" spacing={1.5} alignItems="center">
-					<TableIcon size={18} />
+					<TableChartRoundedIcon color="primary" />
 					<Typography variant="subtitle2">
 						Table (Markdown-compatible)
 					</Typography>

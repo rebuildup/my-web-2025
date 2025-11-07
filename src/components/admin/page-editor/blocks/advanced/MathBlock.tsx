@@ -1,7 +1,7 @@
 "use client";
 
+import FunctionsRoundedIcon from "@mui/icons-material/FunctionsRounded";
 import { Paper, Stack, Typography } from "@mui/material";
-import { FunctionSquare } from "lucide-react";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
 import type { BlockComponentProps } from "../types";
 
@@ -21,7 +21,7 @@ export function MathBlock({
 		>
 			<Stack spacing={2}>
 				<Stack direction="row" spacing={1.5} alignItems="center">
-					<FunctionSquare color="currentColor" size={18} />
+					<FunctionsRoundedIcon color="primary" />
 					<Typography variant="subtitle2">TeX Expression</Typography>
 				</Stack>
 				<EditableText

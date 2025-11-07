@@ -1,5 +1,8 @@
 "use client";
 
+import CloudDoneRoundedIcon from "@mui/icons-material/CloudDoneRounded";
+import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import {
 	Box,
 	Button,
@@ -11,7 +14,6 @@ import {
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { formatDistanceToNow } from "date-fns";
-import { AlertTriangle, CloudCheck, Save } from "lucide-react";
 
 export interface BlockToolbarProps {
 	onSave?: () => void;
@@ -26,6 +28,14 @@ export function BlockToolbar({
 	lastSaved,
 	hasUnsavedChanges = false,
 }: BlockToolbarProps) {
+	const statusIcon = isSaving
+		? CircularProgress
+		: hasUnsavedChanges
+			? WarningAmberRoundedIcon
+			: CloudDoneRoundedIcon;
+
+	const StatusIcon = statusIcon;
+
 	const statusLabel = isSaving
 		? "Saving..."
 		: hasUnsavedChanges
@@ -44,10 +54,11 @@ export function BlockToolbar({
 				<Stack direction="row" spacing={2} alignItems="center">
 					{isSaving ? (
 						<CircularProgress size={20} />
-					) : hasUnsavedChanges ? (
-						<AlertTriangle size={18} color="#f59e0b" />
 					) : (
-						<CloudCheck size={18} color="#22c55e" />
+						<StatusIcon
+							color={hasUnsavedChanges ? "warning" : "success"}
+							fontSize="small"
+						/>
 					)}
 					<Box>
 						<Typography variant="subtitle2">{statusLabel}</Typography>
@@ -69,7 +80,7 @@ export function BlockToolbar({
 				<Button
 					variant="contained"
 					color="primary"
-					startIcon={!isSaving ? <Save /> : undefined}
+					startIcon={!isSaving ? <SaveRoundedIcon /> : undefined}
 					disabled={!hasUnsavedChanges || isSaving || !onSave}
 					onClick={() => onSave?.()}
 				>

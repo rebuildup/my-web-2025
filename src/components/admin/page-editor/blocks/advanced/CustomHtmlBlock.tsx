@@ -1,5 +1,7 @@
 "use client";
 
+import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
+import PreviewRoundedIcon from "@mui/icons-material/PreviewRounded";
 import {
 	Box,
 	Card,
@@ -7,7 +9,6 @@ import {
 	ToggleButton,
 	ToggleButtonGroup,
 } from "@mui/material";
-import { Code, Eye } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
 import type { BlockComponentProps } from "../types";
@@ -110,10 +111,10 @@ export function CustomHtmlBlock({
 								onChange={handleModeChange}
 							>
 								<ToggleButton value="edit" aria-label="Edit HTML">
-									<Code size={16} />
+									<CodeRoundedIcon fontSize="small" />
 								</ToggleButton>
 								<ToggleButton value="preview" aria-label="Preview HTML">
-									<Eye size={16} />
+									<PreviewRoundedIcon fontSize="small" />
 								</ToggleButton>
 							</ToggleButtonGroup>
 						</Box>

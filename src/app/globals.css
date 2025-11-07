@@ -1,1 +1,94 @@
 /* Global overrides intentionally kept to Tailwind defaults. */
+
+/* Portfolio detail page block content styles */
+.block-content-renderer {
+	width: 100%;
+}
+
+.block-content-renderer [data-editor-id] {
+	max-width: 100% !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+/* Block editor read-only mode styles for detail pages */
+.block-content-renderer [data-block-id] {
+	border-bottom: 1px solid rgba(242, 242, 242, 0.1) !important;
+	padding: 0.75rem 0 !important;
+	margin-bottom: 0 !important;
+}
+
+.block-content-renderer [data-block-id]:last-child {
+	border-bottom: none !important;
+}
+
+/* Text colors for blocks */
+.block-content-renderer .MuiTypography-root,
+.block-content-renderer [contenteditable="true"],
+.block-content-renderer [role="textbox"] {
+	color: #f2f2f2 !important; /* text-main */
+}
+
+.block-content-renderer .MuiTypography-colorTextSecondary {
+	color: rgba(242, 242, 242, 0.7) !important; /* text-main/70 */
+}
+
+/* Block background colors */
+.block-content-renderer [data-block-id] {
+	background-color: transparent !important;
+}
+
+/* Image block styles */
+.block-content-renderer .MuiCard-root {
+	background-color: transparent !important;
+	border-color: rgba(242, 242, 242, 0.1) !important;
+}
+
+/* Bookmark block styles */
+.block-content-renderer .MuiCard-root a {
+	color: #f2f2f2 !important;
+	text-decoration: none;
+}
+
+.block-content-renderer .MuiCard-root a:hover {
+	opacity: 0.8;
+}
+
+/* Code block styles */
+.block-content-renderer pre {
+	background-color: rgba(242, 242, 242, 0.05) !important;
+	border-color: rgba(242, 242, 242, 0.1) !important;
+	color: #f2f2f2 !important;
+}
+
+.block-content-renderer code {
+	color: #f2f2f2 !important;
+}
+
+/* Callout block styles */
+.block-content-renderer [class*="MuiBox-root"] {
+	color: inherit;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+	.block-content-renderer {
+		padding: 0;
+	}
+}
+
+@media (min-width: 768px) {
+	.block-content-renderer [data-editor-id] {
+		max-width: 100%;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+}
+
+@media (min-width: 1024px) {
+	.block-content-renderer [data-editor-id] {
+		max-width: 100%;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+}

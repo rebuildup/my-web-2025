@@ -1,0 +1,16 @@
+{
+	"name": "samuido Portfolio",
+	"short_name": "samuido",
+	"description": "Creative Portfolio and Development Works",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#181818",
+	"theme_color": "#0000ff",
+	"icons": [
+		{
+			"src": "/favicons/favicon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		}
+	]
+}

@@ -104,6 +104,7 @@ export function ContentSelector({
 						<FormControl fullWidth size="small" variant="outlined">
 							<InputLabel id="content-selector-label">Content</InputLabel>
 							<Select
+								data-testid="content-select"
 								labelId="content-selector-label"
 								label="Content"
 								value={selectedContentId ?? ""}

@@ -3,10 +3,10 @@
  * Server-side rendered with optimized metadata generation
  */
 
-import { Calendar, Tag } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
+import { BlockContentRenderer } from "@/components/portfolio/BlockContentRenderer";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
@@ -133,20 +133,28 @@ function ContentSection({
 	detail,
 }: {
 	item: PortfolioContentItem;
-	detail?: { title?: string; summary?: string } | null;
+	detail?: { title?: string; summary?: string; body?: string } | null;
 }) {
 	// Check if there's meaningful content to display
 	const hasMarkdownPath = isEnhancedContentItem(item) && item.markdownPath;
 	const hasContent = item.content && item.content.trim().length > 0;
 	const hasDescription = item.description && item.description.trim().length > 0;
+	const hasMarkdownBody = detail?.body && detail.body.trim().length > 0;
 
 	// Always show content section - never return null to avoid blank pages
 	const fallbackContent =
 		item.content || item.description || "詳細な説明は準備中です。";
 
 	return (
-		<section className="space-y-12">
-			{hasMarkdownPath ? (
+		<section className="space-y-8 sm:space-y-12">
+			{hasMarkdownBody ? (
+				<div className="block-content-container">
+					<BlockContentRenderer
+						markdown={detail.body || ""}
+						contentId={item.id}
+					/>
+				</div>
+			) : hasMarkdownPath ? (
 				<div className="markdown-container">
 					{(() => {
 						const mdPath = (item as MarkdownContentItem).markdownPath as string;
@@ -171,28 +179,28 @@ function ContentSection({
 			) : detail ? (
 				<div className="space-y-3">
 					{detail.title && (
-						<h2 className="zen-kaku-gothic-new text-xl text-main">
+						<h2 className="zen-kaku-gothic-new text-lg sm:text-xl text-main">
 							{detail.title}
 						</h2>
 					)}
 					{detail.summary && (
-						<p className="noto-sans-jp-light text-sm text-main/80">
+						<p className="noto-sans-jp-light text-sm sm:text-base text-main/80 leading-relaxed">
 							{detail.summary}
 						</p>
 					)}
 				</div>
 			) : hasContent ? (
 				<div
-					className="noto-sans-jp-light text-sm leading-loose whitespace-pre-wrap space-y-4"
+					className="noto-sans-jp-light text-sm sm:text-base leading-loose whitespace-pre-wrap space-y-4 text-main"
 					dangerouslySetInnerHTML={{ __html: item.content || "" }}
 				/>
 			) : hasDescription ? (
-				<div className="noto-sans-jp-light text-sm leading-loose space-y-4">
+				<div className="noto-sans-jp-light text-sm sm:text-base leading-loose space-y-4 text-main">
 					{item.description}
 				</div>
 			) : (
 				// Always show something, even if minimal
-				<div className="noto-sans-jp-light text-sm leading-loose space-y-4 text-main/60">
+				<div className="noto-sans-jp-light text-sm sm:text-base leading-loose space-y-4 text-main/60">
 					{fallbackContent}
 				</div>
 			)}
@@ -201,24 +209,26 @@ function ContentSection({
 			{(item.images?.length ||
 				item.videos?.length ||
 				item.externalLinks?.length) && (
-				<div className="pt-8 border-t border-main/10">
-					<div className="space-y-6">
+				<div className="pt-6 sm:pt-8 border-t border-main/10">
+					<div className="space-y-6 sm:space-y-8">
 						{/* Images */}
 						{item.images && item.images.length > 0 && (
 							<div>
-								<h3 className="text-sm font-medium text-main mb-3">関連画像</h3>
-								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+								<h3 className="text-sm sm:text-base font-medium text-main mb-3 sm:mb-4">
+									関連画像
+								</h3>
+								<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
 									{item.images.slice(0, 4).map((image, index) => (
 										<div
 											key={`${item.id}-image-${image}-${index}`}
-											className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden"
+											className="relative aspect-video bg-main/5 rounded-lg overflow-hidden"
 										>
 											<Image
 												src={image}
 												alt={`${item.title} - 画像 ${index + 1}`}
 												fill
 												className="object-cover transition-opacity duration-300"
-												sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+												sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 50vw, 33vw"
 												priority={index === 0}
 											/>
 										</div>
@@ -230,21 +240,23 @@ function ContentSection({
 						{/* Videos */}
 						{item.videos && item.videos.length > 0 && (
 							<div>
-								<h3 className="text-sm font-medium text-main mb-3">関連動画</h3>
+								<h3 className="text-sm sm:text-base font-medium text-main mb-3 sm:mb-4">
+									関連動画
+								</h3>
 								<div className="space-y-3">
 									{item.videos.slice(0, 2).map((video, index) => (
 										<div
 											key={`${item.id}-video-${video.url ?? index}`}
-											className="border border-main/10 rounded-lg p-3"
+											className="border border-main/10 rounded-lg p-3 sm:p-4"
 										>
 											<div className="flex items-center space-x-3">
-												<div className="text-lg">🎥</div>
-												<div>
-													<div className="font-medium text-sm">
+												<div className="text-lg flex-shrink-0">🎥</div>
+												<div className="min-w-0 flex-1">
+													<div className="font-medium text-sm sm:text-base text-main">
 														{video.title || `動画 ${index + 1}`}
 													</div>
 													{video.description && (
-														<div className="text-xs text-main/60 mt-1">
+														<div className="text-xs sm:text-sm text-main/60 mt-1">
 															{video.description}
 														</div>
 													)}
@@ -252,7 +264,7 @@ function ContentSection({
 														href={video.url}
 														target="_blank"
 														rel="noopener noreferrer"
-														className="text-xs text-blue-600 hover:underline mt-1 inline-block"
+														className="text-xs sm:text-sm text-accent hover:underline mt-1 inline-block"
 													>
 														動画を見る →
 													</a>
@@ -267,23 +279,25 @@ function ContentSection({
 						{/* External Links */}
 						{item.externalLinks && item.externalLinks.length > 0 && (
 							<div>
-								<h3 className="text-sm font-medium text-main mb-3">
+								<h3 className="text-sm sm:text-base font-medium text-main mb-3 sm:mb-4">
 									関連リンク
 								</h3>
-								<div className="space-y-2">
+								<div className="space-y-2 sm:space-y-3">
 									{item.externalLinks.map((link, index) => (
 										<a
 											key={`${item.id}-link-${link.url ?? index}`}
 											href={link.url}
 											target="_blank"
 											rel="noopener noreferrer"
-											className="flex items-center space-x-3 p-3 border border-main/10 rounded-lg hover:bg-main/5 transition-colors"
+											className="flex items-center space-x-3 p-3 sm:p-4 border border-main/10 rounded-lg hover:bg-main/5 transition-colors text-main"
 										>
-											<div className="text-lg">🔗</div>
-											<div>
-												<div className="font-medium text-sm">{link.title}</div>
+											<div className="text-lg flex-shrink-0">🔗</div>
+											<div className="min-w-0 flex-1">
+												<div className="font-medium text-sm sm:text-base">
+													{link.title}
+												</div>
 												{link.description && (
-													<div className="text-xs text-main/60 mt-1">
+													<div className="text-xs sm:text-sm text-main/60 mt-1">
 														{link.description}
 													</div>
 												)}
@@ -404,9 +418,9 @@ export default async function PortfolioDetailPage({
 				</script>
 
 				<div className="min-h-screen bg-base text-main">
-					<main id="main-content" className="flex items-center py-10">
+					<main id="main-content" className="flex items-center py-6 sm:py-10">
 						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-							<div className="space-y-10">
+							<div className="space-y-8 sm:space-y-10">
 								{/* Breadcrumbs */}
 								<Breadcrumbs
 									items={[
@@ -417,57 +431,8 @@ export default async function PortfolioDetailPage({
 									className="pt-4"
 								/>
 
-								{/* Header */}
-								<header className="space-y-12">
-									<h1 className="neue-haas-grotesk-display text-6xl text-main">
-										{item.title}
-									</h1>
-
-									<div className="space-y-4">
-										<div className="flex flex-wrap items-center gap-4 text-sm">
-											<div className="flex items-center space-x-2">
-												<Calendar className="w-4 h-4 text-accent" />
-												<span className="noto-sans-jp-light text-main">
-													{new Date(
-														(item as any).publishedAt ||
-															item.updatedAt ||
-															item.createdAt,
-													).toLocaleDateString("ja-JP", {
-														year: "numeric",
-														month: "long",
-														day: "numeric",
-													})}
-												</span>
-											</div>
-
-											{item.category && (
-												<div className="flex items-center space-x-2">
-													<Tag className="w-4 h-4 text-accent" />
-													<span className="noto-sans-jp-light text-main capitalize">
-														{item.category}
-													</span>
-												</div>
-											)}
-
-											{item.status && (
-												<span
-													className={`px-2 py-1 text-xs border noto-sans-jp-light ${
-														item.status === "published"
-															? "text-accent border-accent"
-															: "text-main border-main"
-													}`}
-												>
-													{item.status}
-												</span>
-											)}
-										</div>
-									</div>
-								</header>
-
 								{/* Content */}
 								<ContentSection item={item} detail={detailFromMarkdown} />
-
-								{/* Navigation */}
 							</div>
 						</div>
 					</main>

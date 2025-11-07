@@ -1,7 +1,8 @@
 "use client";
 
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import { Box, Menu, MenuItem, Stack } from "@mui/material";
-import { GripVertical, Plus } from "lucide-react";
 import { nanoid } from "nanoid";
 import {
 	type DragEvent,
@@ -13,7 +14,6 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import { createEmptyBlock } from "@/cms/page-editor/lib/conversion";
 import { createInitialBlock } from "@/cms/page-editor/lib/editor/factory";
 import type { Block, BlockType } from "@/cms/types/blocks";
 import { CodeBlock } from "@/components/admin/page-editor/blocks/advanced/CodeBlock";
@@ -532,6 +532,9 @@ export function BlockEditor({
 			applyBlocks((previous) =>
 				previous.map((block) => {
 					if (block.id !== id) return block;
+					const {
+						createEmptyBlock,
+					} = require("@/cms/page-editor/lib/conversion");
 					const defaults = createEmptyBlock(nextType);
 					return {
 						...block,
@@ -546,11 +549,11 @@ export function BlockEditor({
 
 	return (
 		<Stack
-			spacing={2}
+			spacing={readOnly ? 0 : 2}
 			{...(editorId && { "data-editor-id": editorId })}
 			sx={{
 				position: "relative",
-				maxWidth: 768,
+				maxWidth: readOnly ? "100%" : 768,
 				mx: "auto",
 				width: "100%",
 				bgcolor: "transparent",
@@ -585,23 +588,31 @@ export function BlockEditor({
 							position: "relative",
 							display: "flex",
 							alignItems: "stretch",
-							gap: 1.5,
-							px: 1,
-							pl: 8, // reserve space for handles to avoid negative left overflow
-							py: 1.25,
-							borderRadius: 1,
-							bgcolor: isActive ? "action.hover" : "rgba(255,255,255,0.02)",
+							gap: readOnly ? 0 : 1.5,
+							px: readOnly ? 0 : 1,
+							py: readOnly ? 0.75 : 1.25,
+							borderRadius: readOnly ? 0 : 1,
+							bgcolor: readOnly
+								? "transparent"
+								: isActive
+									? "action.hover"
+									: "rgba(255,255,255,0.02)",
 							cursor: readOnly ? "default" : "text",
 							opacity: isDragging ? 0.4 : 1,
-							transition: "background-color 0.2s ease, opacity 0.2s ease",
-							boxShadow:
-								dropIndicator === "before"
+							transition: readOnly
+								? "none"
+								: "background-color 0.2s ease, opacity 0.2s ease",
+							boxShadow: readOnly
+								? undefined
+								: dropIndicator === "before"
 									? (theme) => `inset 0 2px 0 ${theme.palette.primary.main}`
 									: dropIndicator === "after"
 										? (theme) => `inset 0 -2px 0 ${theme.palette.primary.main}`
 										: undefined,
 							"&:not(:last-of-type)": {
-								borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+								borderBottom: readOnly
+									? "1px solid rgba(242, 242, 242, 0.1)"
+									: (theme) => `1px solid ${theme.palette.divider}`,
 							},
 						}}
 						data-block-id={block.id}
@@ -623,7 +634,7 @@ export function BlockEditor({
 								sx={{
 									position: "absolute",
 									top: 8,
-									left: 8,
+									left: -36,
 									display: "flex",
 									alignItems: "center",
 									justifyContent: "center",
@@ -638,7 +649,7 @@ export function BlockEditor({
 									"&:active": { cursor: "grabbing" },
 								}}
 							>
-								<GripVertical size={16} />
+								<DragIndicatorRoundedIcon fontSize="small" />
 							</Box>
 						)}
 						{!readOnly && (hoveredBlockId === block.id || isActive) && (
@@ -655,7 +666,7 @@ export function BlockEditor({
 								sx={{
 									position: "absolute",
 									top: 8,
-									left: 40,
+									left: -64,
 									display: "flex",
 									alignItems: "center",
 									justifyContent: "center",
@@ -669,7 +680,7 @@ export function BlockEditor({
 									color: isActive ? "text.primary" : "text.secondary",
 								}}
 							>
-								<Plus size={16} />
+								<AddRoundedIcon fontSize="small" />
 							</Box>
 						)}
 						<Stack

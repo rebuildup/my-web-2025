@@ -9,6 +9,7 @@ export function HeadingBlock({
 	block,
 	readOnly,
 	onContentChange,
+	onAttributesChange: _onAttributesChange,
 	autoFocus,
 	onKeyDown,
 }: BlockComponentProps) {

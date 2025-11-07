@@ -1,7 +1,7 @@
 "use client";
 
+import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import { Paper, Stack, Typography } from "@mui/material";
-import { LayoutDashboard } from "lucide-react";
 import type { BlockComponentProps } from "../types";
 
 export function BoardBlock({ block }: BlockComponentProps) {
@@ -16,7 +16,7 @@ export function BoardBlock({ block }: BlockComponentProps) {
 		>
 			<Stack spacing={1}>
 				<Stack direction="row" spacing={1.5} alignItems="center">
-					<LayoutDashboard size={18} />
+					<DashboardRoundedIcon color="primary" />
 					<Typography variant="subtitle2">Board block</Typography>
 				</Stack>
 				<Typography variant="body2" color="text.secondary">

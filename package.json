@@ -19,11 +19,15 @@
 		"thumbnails-from-youtube": "tsx scripts/thumbnails-from-youtube.ts",
 		"promote-with-thumbnails": "tsx scripts/promote-with-thumbnails.ts",
 		"create-detail-markdown": "tsx scripts/create-detail-markdown.ts",
+		"articles:create": "pnpm exec playwright test scripts/create-detail-articles.spec.ts --reporter=line",
+		"articles:create-browser": "pnpm exec playwright test scripts/create-detail-articles-browser.spec.ts --reporter=line",
+		"portfolio:create-articles": "pnpm exec playwright test scripts/create-portfolio-articles.spec.ts --headed --reporter=line",
 		"postinstall": "node scripts/install-hooks.js",
 		"preinstall": "echo 'Installing dependencies...'",
 		"install": "node scripts/install-hooks.js",
 		"prebuild": "node scripts/install-hooks.js",
-		"postbuild": "node scripts/install-hooks.js"
+		"postbuild": "node scripts/install-hooks.js",
+		"content:rebuild-pages": "pnpm exec playwright test scripts/rebuild-content-pages.spec.ts --headed --reporter=line"
 	},
 	"trustedDependencies": [
 		"better-sqlite3",
@@ -62,6 +66,7 @@
 		"@ffmpeg/util": "^0.12.2",
 		"@hello-pangea/dnd": "^18.0.1",
 		"@heroicons/react": "^2.2.0",
+		"@mui/icons-material": "^7.3.5",
 		"@mui/material": "^7.3.4",
 		"@radix-ui/react-slot": "^1.2.3",
 		"@react-three/drei": "^10.7.6",
@@ -95,6 +100,7 @@
 		"qrcode": "^1.5.4",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-dropzone": "^14.3.8",
 		"react-google-recaptcha": "^3.1.0",
 		"recharts": "^3.3.0",
 		"resend": "^6.3.0",

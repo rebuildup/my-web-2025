@@ -1,5 +1,7 @@
 "use client";
 
+import CloudUploadRoundedIcon from "@mui/icons-material/CloudUploadRounded";
+import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 import {
 	Alert,
 	Box,
@@ -9,7 +11,6 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import { FileText, Upload } from "lucide-react";
 import { type ChangeEvent, useCallback, useRef, useState } from "react";
 import { getMediaUrl, uploadMediaFile } from "@/cms/page-editor/lib/api/media";
 import { formatFileSize } from "@/cms/page-editor/lib/utils/file-upload";
@@ -103,7 +104,7 @@ export function FileBlock({
 							flexShrink: 0,
 						}}
 					>
-						<FileText />
+						<DescriptionRoundedIcon />
 					</Box>
 					<Box sx={{ minWidth: 0, flex: 1 }}>
 						{url ? (
@@ -158,7 +159,7 @@ export function FileBlock({
 						<Button
 							variant="outlined"
 							fullWidth
-							startIcon={<Upload />}
+							startIcon={<CloudUploadRoundedIcon />}
 							component="label"
 							disabled={!contentId || isUploading}
 							sx={{ whiteSpace: "nowrap" }}

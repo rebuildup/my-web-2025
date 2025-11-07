@@ -1,7 +1,7 @@
 "use client";
 
+import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 import { Paper, Stack, Typography } from "@mui/material";
-import { CalendarCheck } from "lucide-react";
 import type { BlockComponentProps } from "../types";
 
 export function CalendarBlock({ block }: BlockComponentProps) {
@@ -16,7 +16,7 @@ export function CalendarBlock({ block }: BlockComponentProps) {
 		>
 			<Stack spacing={1}>
 				<Stack direction="row" spacing={1.5} alignItems="center">
-					<CalendarCheck size={18} />
+					<EventAvailableRoundedIcon color="primary" />
 					<Typography variant="subtitle2">Calendar block</Typography>
 				</Stack>
 				<Typography variant="body2" color="text.secondary">

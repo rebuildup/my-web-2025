@@ -51,6 +51,7 @@ export function getMediaUrl(contentId: string, id: string) {
 	return buildUrl("/api/cms/media", {
 		contentId,
 		id,
+		raw: 1,
 	});
 }
 

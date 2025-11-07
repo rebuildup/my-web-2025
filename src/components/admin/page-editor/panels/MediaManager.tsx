@@ -1,5 +1,10 @@
 "use client";
 
+import AudiotrackRoundedIcon from "@mui/icons-material/AudiotrackRounded";
+import CloudUploadRoundedIcon from "@mui/icons-material/CloudUploadRounded";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
+import MovieCreationRoundedIcon from "@mui/icons-material/MovieCreationRounded";
 import {
 	Alert,
 	Box,
@@ -10,8 +15,8 @@ import {
 	Stack,
 	Typography,
 } from "@mui/material";
-import { File, Film, Music, Trash2, Upload } from "lucide-react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import {
 	deleteMedia,
 	getMediaUrl,
@@ -35,27 +40,32 @@ export function MediaManager({
 }: MediaManagerProps) {
 	const [isUploading, setIsUploading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const topFileInputRef = useRef<HTMLInputElement | null>(null);
 
-	const handleTopFileChange = useCallback(
-		async (event: React.ChangeEvent<HTMLInputElement>) => {
-			const file = event.target.files?.[0];
-			if (!file || !contentId) return;
+	const onDrop = useCallback(
+		async (files: File[]) => {
+			if (!contentId || files.length === 0) {
+				return;
+			}
 			try {
 				setIsUploading(true);
 				setError(null);
+				const [file] = files;
 				await uploadMediaFile(contentId, file);
 				onRefresh?.();
 			} catch (err) {
 				console.error("Failed to upload media", err);
 				setError(err instanceof Error ? err.message : "Media upload failed");
 			} finally {
-				if (topFileInputRef.current) topFileInputRef.current.value = "";
 				setIsUploading(false);
 			}
 		},
 		[contentId, onRefresh],
 	);
+
+	const { getRootProps, getInputProps } = useDropzone({
+		onDrop,
+		disabled: !contentId || isUploading,
+	});
 
 	const handleDelete = useCallback(
 		async (item: MediaItem) => {
@@ -94,16 +104,11 @@ export function MediaManager({
 				<Button
 					size="small"
 					variant="outlined"
-					startIcon={<Upload />}
+					startIcon={<CloudUploadRoundedIcon />}
 					disabled={!contentId || isUploading}
-					onClick={() => topFileInputRef.current?.click()}
+					{...getRootProps()}
 				>
-					<input
-						ref={topFileInputRef}
-						type="file"
-						hidden
-						onChange={handleTopFileChange}
-					/>
+					<input {...getInputProps()} />
 					{isUploading ? "Uploading..." : "Add file"}
 				</Button>
 			</Stack>
@@ -115,15 +120,17 @@ export function MediaManager({
 				) : (
 					<>
 						<Box
+							{...getRootProps()}
 							sx={{
 								p: 2,
 								textAlign: "center",
 								color: "text.secondary",
-								cursor: "default",
+								cursor: !contentId || isUploading ? "not-allowed" : "pointer",
 							}}
 						>
+							<input {...getInputProps()} />
 							<Typography variant="body2" sx={{ fontWeight: 500 }}>
-								Use the button above to upload a file.
+								Drop files here or use the button above to upload.
 							</Typography>
 						</Box>
 						{error && <Alert severity="error">{error}</Alert>}
@@ -179,7 +186,7 @@ export function MediaManager({
 											onClick={() => void handleDelete(item)}
 											size="small"
 										>
-											<Trash2 />
+											<DeleteRoundedIcon />
 										</IconButton>
 									</Box>
 								))
@@ -220,11 +227,13 @@ function MediaPreview({
 		);
 	}
 
-	const Icon = item.mimeType.startsWith("audio/")
-		? Music
+	const icon = item.mimeType.startsWith("audio/")
+		? AudiotrackRoundedIcon
 		: item.mimeType.startsWith("video/")
-			? Film
-			: File;
+			? MovieCreationRoundedIcon
+			: InsertDriveFileRoundedIcon;
+
+	const Icon = icon;
 
 	return (
 		<Box
@@ -239,7 +248,7 @@ function MediaPreview({
 				border: (theme) => `1px solid ${theme.palette.divider}`,
 			}}
 		>
-			<Icon size={18} />
+			<Icon color="primary" />
 		</Box>
 	);
 }

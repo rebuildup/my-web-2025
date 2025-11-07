@@ -1,7 +1,6 @@
 "use client";
 
 import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
-// Use simple CSS grid to avoid Grid type issues
 import { useMemo, useState } from "react";
 import type { BlockComponentProps } from "../types";
 
@@ -93,20 +92,10 @@ export function GalleryBlock({
 				}}
 			>
 				{/* tiles */}
-				<Box
-					sx={{
-						display: "grid",
-						gridTemplateColumns: {
-							xs: "repeat(2, 1fr)",
-							sm: `repeat(${Math.max(1, Math.min(6, Math.floor(12 / Math.floor(12 / columns))))}, 1fr)`,
-							md: `repeat(${Math.max(1, Math.min(6, Math.floor(12 / Math.floor(12 / columns))))}, 1fr)`,
-						},
-						gap: 1.5,
-					}}
-				>
+				<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
 					{/* Add tile */}
 					{!readOnly && (
-						<Box>
+						<div className="col-span-1 sm:col-span-1 md:col-span-1">
 							<Box
 								onMouseEnter={() => setAddHovered(true)}
 								onMouseLeave={() => setAddHovered(false)}
@@ -125,84 +114,97 @@ export function GalleryBlock({
 							>
 								<Typography variant="body2">+ Add media</Typography>
 							</Box>
-						</Box>
+						</div>
 					)}
-					{items.slice(0, visibleCount).map((item, idx) => (
-						<Box key={`${item.kind}-${idx}`}>
-							<Box
-								onClick={() => setSelected(idx)}
-								sx={{
-									border: (theme) =>
-										`1px solid ${selected === idx ? theme.palette.primary.main : theme.palette.divider}`,
-									boxShadow:
-										selected === idx
-											? (theme) =>
-													`0 0 0 2px ${theme.palette.primary.main}33 inset`
-											: undefined,
-									cursor: "pointer",
-									borderRadius: 1.5,
-									overflow: "hidden",
-									bgcolor: "rgba(255,255,255,0.03)",
-								}}
-							>
-								{item.kind === "image" && (
-									<Box
-										component="img"
-										src={item.url}
-										alt={item.label ?? ""}
-										sx={{
-											display: "block",
-											width: "100%",
-											height: 140,
-											objectFit: "cover",
-										}}
-									/>
-								)}
-								{item.kind === "video" && (
-									<Box
-										component="video"
-										src={item.url}
-										controls
-										sx={{
-											display: "block",
-											width: "100%",
-											height: 140,
-											objectFit: "cover",
-										}}
-									/>
-								)}
-								{item.kind === "audio" && (
-									<Box sx={{ p: 1 }}>
-										<audio src={item.url} controls style={{ width: "100%" }}>
-											<track kind="captions" />
-										</audio>
-									</Box>
-								)}
-								{item.kind === "file" && (
-									<Box sx={{ p: 1 }}>
-										<Typography variant="caption" color="text.secondary">
-											File
-										</Typography>
-										<Link
-											href={item.url}
-											target="_blank"
-											rel="noreferrer"
-											underline="hover"
+					{items.slice(0, visibleCount).map((item, idx) => {
+						const colSpan = Math.floor(12 / columns);
+						const colSpanClass =
+							colSpan === 12
+								? "col-span-2"
+								: colSpan === 6
+									? "col-span-1 sm:col-span-1"
+									: colSpan === 4
+										? "col-span-1 sm:col-span-1 md:col-span-1"
+										: colSpan === 3
+											? "col-span-1 sm:col-span-1 md:col-span-1"
+											: "col-span-1";
+						return (
+							<div key={`${item.kind}-${idx}`} className={colSpanClass}>
+								<Box
+									onClick={() => setSelected(idx)}
+									sx={{
+										border: (theme) =>
+											`1px solid ${selected === idx ? theme.palette.primary.main : theme.palette.divider}`,
+										boxShadow:
+											selected === idx
+												? (theme) =>
+														`0 0 0 2px ${theme.palette.primary.main}33 inset`
+												: undefined,
+										cursor: "pointer",
+										borderRadius: 1.5,
+										overflow: "hidden",
+										bgcolor: "rgba(255,255,255,0.03)",
+									}}
+								>
+									{item.kind === "image" && (
+										<Box
+											component="img"
+											src={item.url}
+											alt={item.label ?? ""}
 											sx={{
 												display: "block",
-												overflow: "hidden",
-												textOverflow: "ellipsis",
-												whiteSpace: "nowrap",
+												width: "100%",
+												height: 140,
+												objectFit: "cover",
 											}}
-										>
-											{item.label ?? item.url}
-										</Link>
-									</Box>
-								)}
-							</Box>
-						</Box>
-					))}
-				</Box>
+										/>
+									)}
+									{item.kind === "video" && (
+										<Box
+											component="video"
+											src={item.url}
+											controls
+											sx={{
+												display: "block",
+												width: "100%",
+												height: 140,
+												objectFit: "cover",
+											}}
+										/>
+									)}
+									{item.kind === "audio" && (
+										<Box sx={{ p: 1 }}>
+											<audio src={item.url} controls style={{ width: "100%" }}>
+												<track kind="captions" />
+											</audio>
+										</Box>
+									)}
+									{item.kind === "file" && (
+										<Box sx={{ p: 1 }}>
+											<Typography variant="caption" color="text.secondary">
+												File
+											</Typography>
+											<Link
+												href={item.url}
+												target="_blank"
+												rel="noreferrer"
+												underline="hover"
+												sx={{
+													display: "block",
+													overflow: "hidden",
+													textOverflow: "ellipsis",
+													whiteSpace: "nowrap",
+												}}
+											>
+												{item.label ?? item.url}
+											</Link>
+										</Box>
+									)}
+								</Box>
+							</div>
+						);
+					})}
+				</div>
 
 				{/* hover controls overlay (bottom): item controls or gallery settings */}
 				<Box
