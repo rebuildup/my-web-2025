@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev --turbo -p 3010",
-		"build": "node scripts/verify-images.js && next build",
+		"build": "node scripts/verify-images.js && next build && node scripts/copy-content-data.js",
 		"start": "next start -p 3010",
 		"dev:port": "next dev -p $PORT",
 		"start:port": "next start -p $PORT",

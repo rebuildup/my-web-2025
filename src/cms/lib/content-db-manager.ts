@@ -10,16 +10,61 @@ import { getFullContent, saveFullContent } from "@/cms/lib/content-mapper";
 import type { Content } from "@/cms/types/content";
 import type { ContentIndexRow } from "@/cms/types/database";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = resolveDataDirectory();
 const CONTENT_DB_DIR = path.join(DATA_DIR, "contents");
 const INDEX_DB_PATH = path.join(DATA_DIR, "index.db");
 
-// ディレクトリが存在しない場合は作成
-if (!fs.existsSync(DATA_DIR)) {
-	fs.mkdirSync(DATA_DIR, { recursive: true });
+ensureDirectory(DATA_DIR);
+ensureDirectory(CONTENT_DB_DIR);
+
+function resolveDataDirectory(): string {
+	const envDir =
+		process.env.CONTENT_DATA_DIR ||
+		process.env.NEXT_CONTENT_DATA_DIR ||
+		process.env.PORTFOLIO_DATA_DIR ||
+		process.env.NEXT_PUBLIC_CONTENT_DATA_DIR ||
+		"";
+
+	const cwd = process.cwd();
+	const candidateRoots = [
+		envDir,
+		path.join(cwd, "data"),
+		path.join(cwd, "..", "data"),
+		path.join(cwd, "..", "..", "data"),
+		path.join(cwd, ".next", "data"),
+		path.join(cwd, "standalone", "data"),
+		path.join(cwd, ".next", "standalone", "data"),
+		path.join(__dirname, "..", "..", "..", "..", "data"),
+	].filter((dir): dir is string => Boolean(dir));
+
+	for (const dir of candidateRoots) {
+		try {
+			if (fs.existsSync(dir)) {
+				return dir;
+			}
+		} catch (error) {
+			console.warn(
+				`[CMS] Failed to access data directory candidate ${dir}:`,
+				error,
+			);
+		}
+	}
+
+	const fallback = path.join(cwd, "data");
+	console.warn(
+		`[CMS] Content data directory not found. Falling back to ${fallback} (directory will be created if missing).`,
+	);
+	return fallback;
 }
-if (!fs.existsSync(CONTENT_DB_DIR)) {
-	fs.mkdirSync(CONTENT_DB_DIR, { recursive: true });
+
+function ensureDirectory(dir: string): void {
+	try {
+		if (!fs.existsSync(dir)) {
+			fs.mkdirSync(dir, { recursive: true });
+		}
+	} catch (error) {
+		console.warn(`[CMS] Failed to ensure directory ${dir}:`, error);
+	}
 }
 
 function getBetterSqlite3(): typeof import("better-sqlite3") {
