@@ -358,7 +358,13 @@ jobs:
             echo "Restoring existing data directory..."
             if [ -d "data" ]; then
               echo "Merging data directories..."
-              sudo cp -r /tmp/yusuke-kim-data-backup/* data/ 2>/dev/null || true
+              # 既存のデータベースファイルを保持しつつ、新しいファイルを追加
+              sudo cp -rn /tmp/yusuke-kim-data-backup/* data/ 2>/dev/null || true
+              # contentsディレクトリを個別にマージ
+              if [ -d "/tmp/yusuke-kim-data-backup/contents" ] && [ -d "data/contents" ]; then
+                echo "Merging contents databases..."
+                sudo cp -rn /tmp/yusuke-kim-data-backup/contents/* data/contents/ 2>/dev/null || true
+              fi
             else
               sudo mv /tmp/yusuke-kim-data-backup data
             fi
@@ -372,8 +378,25 @@ jobs:
             sudo chown $USER:www-data data
           fi
           
+          # Verify data directory contents
+          echo "=== Data directory verification ==="
           echo "Data directory status:"
           ls -la data/ 2>/dev/null || echo "Data directory is empty or inaccessible"
+          
+          if [ -d "data/contents" ]; then
+            echo "Contents directory found"
+            echo "Number of database files: $(find data/contents -name '*.db' 2>/dev/null | wc -l)"
+            echo "Database files:"
+            find data/contents -name '*.db' 2>/dev/null | head -10
+          else
+            echo "⚠️  Warning: contents directory not found"
+          fi
+          
+          if [ -f "data/index.db" ]; then
+            echo "✅ Index database found"
+          else
+            echo "⚠️  Warning: index database not found"
+          fi
 
           # 6. Verify deployment
           if [ ! -f "server.js" ] || [ ! -f ".next/BUILD_ID" ]; then
