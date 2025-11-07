@@ -314,6 +314,8 @@ jobs:
           set -euo pipefail
 
           LOG_FILE="/tmp/deploy-standalone-$(date +%Y%m%d-%H%M%S).log"
+          BACKUP_TMP_DIR=""
+          BACKUP_DATA_DIR=""
           exec > >(tee -a "$LOG_FILE") 2>&1
           trap 'echo "[deploy] ERROR at line $LINENO: command \"$BASH_COMMAND\" exited with code $?"' ERR
 
@@ -345,8 +347,10 @@ jobs:
           # 4. Prepare deployment directory (preserve data directory)
           echo "Preparing deployment directory..."
           if [ -d "/var/www/yusuke-kim/data" ]; then
-            echo "Preserving existing data directory..."
-            sudo mv /var/www/yusuke-kim/data /tmp/yusuke-kim-data-backup
+            BACKUP_TMP_DIR=$(mktemp -d /tmp/yusuke-kim-data-backup-XXXXXX)
+            BACKUP_DATA_DIR="$BACKUP_TMP_DIR/data"
+            echo "Preserving existing data directory at ${BACKUP_TMP_DIR}..."
+            sudo mv /var/www/yusuke-kim/data "$BACKUP_TMP_DIR"
           fi
           
           sudo rm -rf /var/www/yusuke-kim/*
@@ -358,15 +362,15 @@ jobs:
           tar -xzf /tmp/deployment-standalone.tar.gz
 
           # 5a. Restore or merge data directory
-          if [ -d "/tmp/yusuke-kim-data-backup" ]; then
+          if [ -n "$BACKUP_DATA_DIR" ] && [ -d "$BACKUP_DATA_DIR" ]; then
             echo "Restoring existing data directory..."
             if [ -d "data" ]; then
               echo "Merging data directories..."
               # 既存のデータベースファイルを保持しつつ、新しいファイルを追加
-              if [ -f "/tmp/yusuke-kim-data-backup/index.db" ] && [ ! -f "data/index.db" ]; then
-                sudo cp "/tmp/yusuke-kim-data-backup/index.db" "data/index.db" || true
+              if [ -f "${BACKUP_DATA_DIR}/index.db" ] && [ ! -f "data/index.db" ]; then
+                sudo cp "${BACKUP_DATA_DIR}/index.db" "data/index.db" || true
               fi
-              if [ -d "/tmp/yusuke-kim-data-backup/contents" ]; then
+              if [ -d "${BACKUP_DATA_DIR}/contents" ]; then
                 if [ ! -d "data/contents" ]; then
                   echo "Creating contents directory..."
                   sudo mkdir -p data/contents || true
@@ -379,10 +383,10 @@ jobs:
                       sudo cp "$db_file" "data/contents/$db_filename" || true
                     fi
                   fi
-                done < <(find /tmp/yusuke-kim-data-backup/contents -name "*.db" -type f 2>/dev/null)
+                done < <(find "${BACKUP_DATA_DIR}/contents" -name "*.db" -type f 2>/dev/null)
               fi
             else
-              sudo mv /tmp/yusuke-kim-data-backup data || true
+              sudo mv "$BACKUP_DATA_DIR" data || true
             fi
             sudo chown -R $USER:www-data data || true
           fi
