@@ -35,11 +35,15 @@ function resolveDataDirectory(): string {
 		path.join(cwd, "standalone", "data"),
 		path.join(cwd, ".next", "standalone", "data"),
 		path.join(__dirname, "..", "..", "..", "..", "data"),
+		// デプロイ環境用のパス
+		"/var/www/yusuke-kim/data",
+		path.join(process.cwd(), "data"),
 	].filter((dir): dir is string => Boolean(dir));
 
 	for (const dir of candidateRoots) {
 		try {
 			if (fs.existsSync(dir)) {
+				console.log(`[CMS] Using data directory: ${dir}`);
 				return dir;
 			}
 		} catch (error) {
@@ -54,6 +58,7 @@ function resolveDataDirectory(): string {
 	console.warn(
 		`[CMS] Content data directory not found. Falling back to ${fallback} (directory will be created if missing).`,
 	);
+	console.warn(`[CMS] Checked directories: ${candidateRoots.join(", ")}`);
 	return fallback;
 }
 

@@ -23,6 +23,9 @@ export async function GET(req: Request) {
 		if (mediaId) {
 			const media = getMedia(contentId, mediaId);
 			if (!media) {
+				console.error(
+					`[media-api] Media not found: contentId=${contentId}, mediaId=${mediaId}`,
+				);
 				return Response.json({ error: "Media not found" }, { status: 404 });
 			}
 

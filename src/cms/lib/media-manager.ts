@@ -71,9 +71,20 @@ export function getMedia(contentId: string, mediaId: string): MediaItem | null {
 
 		const row = stmt.get(mediaId) as MediaRow | undefined;
 
-		if (!row) return null;
+		if (!row) {
+			console.warn(
+				`[media-manager] Media not found in database: contentId=${contentId}, mediaId=${mediaId}`,
+			);
+			return null;
+		}
 
 		const data = deriveMediaBuffer(row.data);
+
+		if (!data) {
+			console.warn(
+				`[media-manager] Media data is null or undefined: contentId=${contentId}, mediaId=${mediaId}`,
+			);
+		}
 
 		return {
 			id: row.id,
@@ -90,6 +101,12 @@ export function getMedia(contentId: string, mediaId: string): MediaItem | null {
 			createdAt: row.created_at || new Date().toISOString(),
 			updatedAt: row.updated_at || new Date().toISOString(),
 		};
+	} catch (error) {
+		console.error(
+			`[media-manager] Error getting media: contentId=${contentId}, mediaId=${mediaId}`,
+			error,
+		);
+		return null;
 	} finally {
 		db.close();
 	}

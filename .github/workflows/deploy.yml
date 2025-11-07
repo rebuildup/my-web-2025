@@ -218,11 +218,18 @@ jobs:
           echo "Creating standalone deployment package..."
           cd .next/standalone
 
+          # Ensure data directory exists in standalone
+          if [ -d "../../data" ] && [ ! -d "data" ]; then
+            echo "Copying data directory to standalone..."
+            cp -r ../../data .
+          fi
+
           # Create package with all necessary files
           tar -czf ../../deployment-standalone.tar.gz \
             server.js \
             .next/ \
             public/ \
+            data/ \
             node_modules/ \
             package.json \
             deployment-info.json || {
@@ -286,9 +293,22 @@ jobs:
             echo "Creating backup..."
             sudo mkdir -p /var/www/backups
             sudo cp -r /var/www/yusuke-kim /var/www/backups/yusuke-kim-$(date +%Y%m%d-%H%M%S)
+            
+            # Backup existing data directory if it exists
+            if [ -d "/var/www/yusuke-kim/data" ]; then
+              echo "Backing up existing data directory..."
+              sudo mkdir -p /var/www/backups/data-$(date +%Y%m%d-%H%M%S)
+              sudo cp -r /var/www/yusuke-kim/data /var/www/backups/data-$(date +%Y%m%d-%H%M%S)/
+            fi
           fi
 
-          # 4. Prepare deployment directory
+          # 4. Prepare deployment directory (preserve data directory)
+          echo "Preparing deployment directory..."
+          if [ -d "/var/www/yusuke-kim/data" ]; then
+            echo "Preserving existing data directory..."
+            sudo mv /var/www/yusuke-kim/data /tmp/yusuke-kim-data-backup
+          fi
+          
           sudo rm -rf /var/www/yusuke-kim/*
           sudo mkdir -p /var/www/yusuke-kim
           sudo chown $USER:www-data /var/www/yusuke-kim
@@ -296,6 +316,28 @@ jobs:
 
           # 5. Extract standalone deployment
           tar -xzf /tmp/deployment-standalone.tar.gz
+
+          # 5a. Restore or merge data directory
+          if [ -d "/tmp/yusuke-kim-data-backup" ]; then
+            echo "Restoring existing data directory..."
+            if [ -d "data" ]; then
+              echo "Merging data directories..."
+              sudo cp -r /tmp/yusuke-kim-data-backup/* data/ 2>/dev/null || true
+            else
+              sudo mv /tmp/yusuke-kim-data-backup data
+            fi
+            sudo chown -R $USER:www-data data
+          fi
+          
+          # Ensure data directory exists
+          if [ ! -d "data" ]; then
+            echo "⚠️  Warning: data directory not found in deployment package"
+            sudo mkdir -p data
+            sudo chown $USER:www-data data
+          fi
+          
+          echo "Data directory status:"
+          ls -la data/ 2>/dev/null || echo "Data directory is empty or inaccessible"
 
           # 6. Verify deployment
           if [ ! -f "server.js" ] || [ ! -f ".next/BUILD_ID" ]; then
