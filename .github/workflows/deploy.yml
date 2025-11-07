@@ -199,6 +199,16 @@ jobs:
               cp -r public .next/standalone/public
             fi
             
+            # Ensure data directory is copied to standalone (copy-content-data.js should have done this)
+            if [ -d "data" ] && [ ! -d ".next/standalone/data" ]; then
+              echo "Copying data directory to standalone..."
+              cp -r data .next/standalone/data
+            elif [ -d ".next/standalone/data" ]; then
+              echo "✅ Data directory already exists in standalone"
+            else
+              echo "⚠️  Warning: data directory not found"
+            fi
+            
             echo "✅ Standalone preparation complete"
           else
             echo "❌ Build directories not found"
@@ -212,16 +222,42 @@ jobs:
             \"gitCommit\": \"${GITHUB_SHA}\",
             \"gitBranch\": \"${GITHUB_REF_NAME}\"
           }" > .next/standalone/deployment-info.json
+          
+          # Verify data directory exists
+          echo "=== Verifying data directory ==="
+          if [ -d ".next/standalone/data" ]; then
+            echo "✅ Data directory exists"
+            echo "Data directory contents:"
+            ls -la .next/standalone/data/ | head -20
+            if [ -d ".next/standalone/data/contents" ]; then
+              echo "✅ Contents directory exists"
+              echo "Number of content databases: $(find .next/standalone/data/contents -name '*.db' 2>/dev/null | wc -l)"
+            else
+              echo "⚠️  Warning: contents directory not found"
+            fi
+          else
+            echo "❌ Data directory not found in standalone"
+            exit 1
+          fi
 
       - name: Create deployment package
         run: |
           echo "Creating standalone deployment package..."
           cd .next/standalone
 
-          # Ensure data directory exists in standalone
-          if [ -d "../../data" ] && [ ! -d "data" ]; then
-            echo "Copying data directory to standalone..."
-            cp -r ../../data .
+          # Verify data directory exists before packaging
+          if [ ! -d "data" ]; then
+            echo "❌ Error: data directory not found in standalone"
+            echo "Current directory: $(pwd)"
+            echo "Directory contents:"
+            ls -la
+            exit 1
+          fi
+          
+          echo "Data directory verification:"
+          ls -la data/ | head -10
+          if [ -d "data/contents" ]; then
+            echo "Contents directory found with $(find data/contents -name '*.db' 2>/dev/null | wc -l) database files"
           fi
 
           # Create package with all necessary files

@@ -21,13 +21,20 @@ export async function GET(req: Request) {
 
         // 特定のメディアを取得
 		if (mediaId) {
-			const media = getMedia(contentId, mediaId);
-			if (!media) {
-				console.error(
-					`[media-api] Media not found: contentId=${contentId}, mediaId=${mediaId}`,
-				);
-				return Response.json({ error: "Media not found" }, { status: 404 });
-			}
+			try {
+				const media = getMedia(contentId, mediaId);
+				if (!media) {
+					console.error(
+						`[media-api] Media not found: contentId=${contentId}, mediaId=${mediaId}`,
+					);
+					console.error(
+						`[media-api] Current working directory: ${process.cwd()}`,
+					);
+					console.error(
+						`[media-api] NODE_ENV: ${process.env.NODE_ENV}`,
+					);
+					return Response.json({ error: "Media not found" }, { status: 404 });
+				}
 
             // 生バイナリで返す（<img src> などで直接参照したい場合）
             const raw = searchParams.get("raw");
@@ -83,6 +90,10 @@ export async function GET(req: Request) {
 					},
 				},
 			);
+			} catch (error) {
+				console.error(`[media-api] Error getting media: contentId=${contentId}, mediaId=${mediaId}`, error);
+				return Response.json({ error: "Failed to fetch media" }, { status: 500 });
+			}
 		}
 
 		// メディア一覧を取得（バイナリデータは含めない）
