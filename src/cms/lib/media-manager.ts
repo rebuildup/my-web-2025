@@ -198,12 +198,40 @@ function deriveMediaBuffer(source: MediaRow["data"]): Buffer | undefined {
 		return undefined;
 	}
 	if (typeof source === "string") {
-		return Buffer.from(source, "base64");
+		// Base64エンコードされた文字列の場合
+		try {
+			return Buffer.from(source, "base64");
+		} catch {
+			// Base64でない場合はそのままBufferに変換
+			return Buffer.from(source);
+		}
 	}
 	if (Buffer.isBuffer(source)) {
-		return Buffer.from(source);
+		// 既にBufferの場合はそのまま返す
+		return source;
 	}
-	return undefined;
+	// その他の型の場合はBufferに変換を試みる
+	try {
+		if (typeof source === "object" && source !== null) {
+			// Uint8ArrayやArrayBufferのようなオブジェクトの場合
+			if ("byteLength" in source && "byteOffset" in source) {
+				// Uint8Arrayのような型
+				return Buffer.from(source as unknown as ArrayLike<number>);
+			}
+			if ("byteLength" in source && !("byteOffset" in source)) {
+				// ArrayBufferのような型
+				return Buffer.from(new Uint8Array(source as unknown as ArrayBuffer));
+			}
+		}
+		// その他の場合はBuffer.fromで変換を試みる
+		if (typeof source === "string") {
+			return Buffer.from(source);
+		}
+		return Buffer.from(source as unknown as ArrayLike<number>);
+	} catch {
+		// 変換に失敗した場合はundefinedを返す
+		return undefined;
+	}
 }
 
 function ensureContentRow(db: Database.Database, contentId: string) {

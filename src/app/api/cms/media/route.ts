@@ -30,13 +30,36 @@ export async function GET(req: Request) {
             const raw = searchParams.get("raw");
             if (raw === "1" || raw === "true") {
                 if (!media.data) {
+                    console.error(`[media-api] Media data not found for contentId=${contentId}, mediaId=${mediaId}`);
                     return new Response("Media data not found", { status: 404 });
                 }
-                const body = media.data as unknown as Uint8Array; // Buffer is Uint8Array-compatible
+                // Bufferを明示的にUint8Arrayに変換（デプロイ環境での互換性のため）
+                let body: Uint8Array;
+                try {
+                    if (Buffer.isBuffer(media.data)) {
+                        body = new Uint8Array(media.data);
+                    } else {
+                        // Buffer以外の型の場合はBufferに変換してからUint8Arrayに変換
+                        let buffer: Buffer;
+                        if (typeof media.data === "string") {
+                            buffer = Buffer.from(media.data);
+                        } else if (typeof media.data === "object" && media.data !== null && "byteLength" in media.data && !("byteOffset" in media.data)) {
+                            // ArrayBufferのような型
+                            buffer = Buffer.from(new Uint8Array(media.data as unknown as ArrayBuffer));
+                        } else {
+                            buffer = Buffer.from(media.data as unknown as ArrayLike<number>);
+                        }
+                        body = new Uint8Array(buffer);
+                    }
+                } catch (error) {
+                    console.error(`[media-api] Failed to convert media data to Uint8Array:`, error);
+                    return new Response("Failed to process media data", { status: 500 });
+                }
                 return new Response(body as BodyInit, {
                     headers: {
                         "Content-Type": media.mimeType || "application/octet-stream",
                         "Cache-Control": "public, max-age=31536000, immutable",
+                        "Content-Length": body.length.toString(),
                     },
                 });
             }
