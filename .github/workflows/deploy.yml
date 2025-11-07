@@ -354,22 +354,45 @@ jobs:
           tar -xzf /tmp/deployment-standalone.tar.gz
 
           # 5a. Restore or merge data directory
+          set +e  # 一時的にエラーを無視
           if [ -d "/tmp/yusuke-kim-data-backup" ]; then
             echo "Restoring existing data directory..."
             if [ -d "data" ]; then
               echo "Merging data directories..."
               # 既存のデータベースファイルを保持しつつ、新しいファイルを追加
-              sudo cp -rn /tmp/yusuke-kim-data-backup/* data/ 2>/dev/null || true
+              # ファイルごとに個別にコピー（既存ファイルはスキップ）
+              for file in /tmp/yusuke-kim-data-backup/*; do
+                [ ! -e "$file" ] && continue  # ファイルが見つからない場合はスキップ
+                if [ -f "$file" ]; then
+                  filename=$(basename "$file")
+                  if [ ! -f "data/$filename" ]; then
+                    sudo cp "$file" "data/$filename" 2>/dev/null || true
+                  fi
+                fi
+              done
               # contentsディレクトリを個別にマージ
-              if [ -d "/tmp/yusuke-kim-data-backup/contents" ] && [ -d "data/contents" ]; then
+              if [ -d "/tmp/yusuke-kim-data-backup/contents" ]; then
+                if [ ! -d "data/contents" ]; then
+                  echo "Creating contents directory..."
+                  sudo mkdir -p data/contents
+                fi
                 echo "Merging contents databases..."
-                sudo cp -rn /tmp/yusuke-kim-data-backup/contents/* data/contents/ 2>/dev/null || true
+                for db_file in /tmp/yusuke-kim-data-backup/contents/*.db; do
+                  [ ! -e "$db_file" ] && continue  # ファイルが見つからない場合はスキップ
+                  if [ -f "$db_file" ]; then
+                    db_filename=$(basename "$db_file")
+                    if [ ! -f "data/contents/$db_filename" ]; then
+                      sudo cp "$db_file" "data/contents/$db_filename" 2>/dev/null || true
+                    fi
+                  fi
+                done
               fi
             else
               sudo mv /tmp/yusuke-kim-data-backup data
             fi
             sudo chown -R $USER:www-data data
           fi
+          set -e  # エラーチェックを再度有効化
           
           # Ensure data directory exists
           if [ ! -d "data" ]; then
@@ -385,9 +408,12 @@ jobs:
           
           if [ -d "data/contents" ]; then
             echo "Contents directory found"
-            echo "Number of database files: $(find data/contents -name '*.db' 2>/dev/null | wc -l)"
-            echo "Database files:"
-            find data/contents -name '*.db' 2>/dev/null | head -10
+            DB_COUNT=$(find data/contents -name '*.db' 2>/dev/null | wc -l)
+            echo "Number of database files: $DB_COUNT"
+            if [ "$DB_COUNT" -gt 0 ]; then
+              echo "Database files:"
+              find data/contents -name '*.db' 2>/dev/null | head -10
+            fi
           else
             echo "⚠️  Warning: contents directory not found"
           fi
