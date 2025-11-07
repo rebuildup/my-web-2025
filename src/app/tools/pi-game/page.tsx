@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import PiGame from "./components/PiGame";
 
@@ -37,42 +38,43 @@ export const metadata: Metadata = {
 
 export default function PiGamePage() {
 	return (
-		<div className="min-h-screen bg-base text-main">
-			<main className="py-10">
+		<div className="relative min-h-screen bg-base text-main">
+			<main className="relative z-10 min-h-screen py-10" tabIndex={-1}>
 				<div className="container-system">
-					<div className="space-y-10">
-						{/* Breadcrumbs */}
-						<div className="mb-6">
-							<Breadcrumbs
-								items={[
-									{ label: "Home", href: "/" },
-									{ label: "Tools", href: "/tools" },
-									{ label: "Pi Memory Game", isCurrent: true },
-								]}
-							/>
-						</div>
+					<div className="mx-auto w-full max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
+						<Breadcrumbs
+							items={[
+								{ label: "Home", href: "/" },
+								{ label: "Tools", href: "/tools" },
+								{ label: "Pi Memory Game", isCurrent: true },
+							]}
+							className="pt-4"
+						/>
+
 						<header className="space-y-6">
-							<h1 className="neue-haas-grotesk-display text-4xl text-main">
+							<h1 className="neue-haas-grotesk-display text-4xl text-main sm:text-5xl lg:text-6xl">
 								Pi Memory Game
 							</h1>
-							<p className="noto-sans-jp-light text-sm max-w leading-loose">
+							<p className="noto-sans-jp-light text-sm text-main/70 leading-relaxed max-w-2xl">
 								円周率の桁を記憶して入力するゲームです。
 								<br />
 								テンキーインターフェースで楽しく学習できます。
 							</p>
 						</header>
 
-						<PiGame />
-						<div className="max-w h-8" />
+						<section className="space-y-6">
+							<PiGame />
+						</section>
+
 						<nav aria-label="Site navigation">
-							<a
+							<Link
 								href="/tools"
-								className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+								className="block rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 							>
-								<span className="noto-sans-jp-regular text-base leading-snug">
+								<span className="noto-sans-jp-regular text-base leading-snug text-main">
 									← Tools
 								</span>
-							</a>
+							</Link>
 						</nav>
 					</div>
 				</div>

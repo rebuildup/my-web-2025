@@ -78,7 +78,7 @@ export default function StatsPanel({
 	};
 
 	return (
-		<div className="bg-base border border-main p-6 rounded-lg">
+		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
 			<div className="flex items-center justify-between mb-6">
 				<h3 className="text-lg font-semibold text-main">統計情報</h3>
 				<button
@@ -94,7 +94,7 @@ export default function StatsPanel({
 			<div className="space-y-6">
 				{/* Overview Stats */}
 				<div className="grid grid-2 gap-4">
-					<div className="bg-base border border-main/20 p-4 rounded-lg text-center">
+					<div className="rounded-lg bg-main/5 p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
 							<Target className="text-main" size={20} />
 							<span className="text-sm font-medium">完了ポモドーロ</span>
@@ -104,7 +104,7 @@ export default function StatsPanel({
 						</div>
 					</div>
 
-					<div className="bg-base border border-main/20 p-4 rounded-lg text-center">
+					<div className="rounded-lg bg-main/5 p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
 							<Clock className="text-accent" size={20} />
 							<span className="text-sm font-medium">総作業時間</span>
@@ -114,7 +114,7 @@ export default function StatsPanel({
 						</div>
 					</div>
 
-					<div className="bg-base border border-main/20 p-4 rounded-lg text-center">
+					<div className="rounded-lg bg-main/5 p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
 							<Zap className="text-green-600" size={20} />
 							<span className="text-sm font-medium">現在の連続記録</span>
@@ -124,7 +124,7 @@ export default function StatsPanel({
 						</div>
 					</div>
 
-					<div className="bg-base border border-main/20 p-4 rounded-lg text-center">
+					<div className="rounded-lg bg-main/5 p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
 							<Calendar className="text-purple-600" size={20} />
 							<span className="text-sm font-medium">今日のセッション</span>
@@ -170,7 +170,7 @@ export default function StatsPanel({
 							getRecentSessions().map((session) => (
 								<div
 									key={session.id}
-									className="flex items-center justify-between p-3 bg-base border border-main/20 rounded"
+									className="flex items-center justify-between p-3 rounded-lg bg-main/5"
 								>
 									<div className="flex items-center gap-3">
 										<span
@@ -205,7 +205,7 @@ export default function StatsPanel({
 					<div className="space-y-4">
 						<h4 className="font-medium text-main">生産性の洞察</h4>
 
-						<div className="bg-base border border-main/20 p-4 rounded-lg">
+						<div className="rounded-lg bg-main/5 p-4">
 							<div className="space-y-2 text-sm">
 								<div className="flex justify-between">
 									<span className="text-main">平均セッション時間:</span>

@@ -1014,14 +1014,14 @@ ${generatedCode}`;
 								placeholder="エクスプレッション、タグ、テンプレートを検索..."
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
-								className="w-full pl-10 pr-4 py-2 border border-main bg-base text-main focus:outline-none focus:ring-2 focus:ring-accent"
+								className="w-full pl-10 pr-4 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 							/>
 						</div>
 
 						<select
 							value={selectedCategory}
 							onChange={(e) => setSelectedCategory(e.target.value)}
-							className="px-4 py-2 border border-main bg-base text-main focus:outline-none focus:ring-2 focus:ring-accent"
+							className="px-4 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 						>
 							<option value="all">全カテゴリ</option>
 							<option value="animation">アニメーション</option>
@@ -1033,7 +1033,7 @@ ${generatedCode}`;
 						<select
 							value={selectedDifficulty}
 							onChange={(e) => setSelectedDifficulty(e.target.value)}
-							className="px-4 py-2 border border-main bg-base text-main focus:outline-none focus:ring-2 focus:ring-accent"
+							className="px-4 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 						>
 							<option value="all">全難易度</option>
 							<option value="beginner">初級</option>
@@ -1044,7 +1044,7 @@ ${generatedCode}`;
 						<button
 							type="button"
 							onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-							className={`px-4 py-2 border border-main flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent noto-sans-jp-light ${
+							className={`px-4 py-2 rounded-lg bg-main/10 hover:bg-main/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
 								showFavoritesOnly ? "bg-accent text-main" : "bg-base text-main"
 							}`}
 						>
@@ -1055,7 +1055,7 @@ ${generatedCode}`;
 						<button
 							type="button"
 							onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
-							className="px-4 py-2 border border-main bg-base text-main hover:bg-accent hover:text-main focus:outline-none focus:ring-2 focus:ring-accent flex items-center gap-2 noto-sans-jp-light"
+							className="px-4 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-light"
 						>
 							<Settings className="w-4 h-4" />
 							詳細設定
@@ -1064,7 +1064,7 @@ ${generatedCode}`;
 
 					{/* Advanced Settings Panel */}
 					{showAdvancedSettings && (
-						<div className="border border-main p-4 bg-base space-y-4">
+						<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-4">
 							<h3 className="text-lg noto-sans-jp-regular font-medium">
 								詳細設定
 							</h3>
@@ -1083,7 +1083,7 @@ ${generatedCode}`;
 										onChange={(e) =>
 											setExportFormat(e.target.value as "jsx" | "txt" | "json")
 										}
-										className="w-full px-3 py-2 border border-main bg-base text-main focus:outline-none focus:ring-2 focus:ring-accent"
+										className="w-full px-3 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<option value="txt">テキスト (.txt)</option>
 										<option value="jsx">JSX (.jsx)</option>
@@ -1099,7 +1099,7 @@ ${generatedCode}`;
 										<button
 											type="button"
 											onClick={() => setShowDocumentation(!showDocumentation)}
-											className={`px-3 py-2 border border-main flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent noto-sans-jp-light ${
+											className={`px-3 py-2 rounded-lg bg-main/10 hover:bg-main/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
 												showDocumentation
 													? "bg-accent text-main"
 													: "bg-base text-main"
@@ -1118,11 +1118,11 @@ ${generatedCode}`;
 									<h4 className="text-sm noto-sans-jp-regular">
 										保存済みエクスプレッション
 									</h4>
-									<div className="max-h-32 overflow-y-auto border border-main p-2 space-y-1">
+									<div className="max-h-32 overflow-y-auto rounded-lg bg-main/10 p-2 space-y-1">
 										{savedExpressions.map((saved) => (
 											<div
 												key={saved.id}
-												className="flex items-center justify-between p-2 bg-base border border-main"
+												className="flex items-center justify-between p-2 rounded-lg bg-main/10"
 											>
 												<span className="text-sm noto-sans-jp-light truncate">
 													{saved.name}
@@ -1162,11 +1162,11 @@ ${generatedCode}`;
 							エクスプレッション一覧
 						</h2>
 
-						<div className="space-y-3 max-h-96 overflow-y-auto border border-main p-4">
+						<div className="space-y-3 max-h-96 overflow-y-auto rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 							{filteredExpressions.map((expr) => (
 								<div
 									key={expr.id}
-									className={`p-3 border border-main cursor-pointer hover:bg-accent hover:text-main transition-colors ${
+									className={`p-3 rounded-lg bg-main/10 cursor-pointer hover:bg-main/20 transition-colors ${
 										selectedExpression?.id === expr.id
 											? "bg-accent text-main"
 											: "bg-base text-main"
@@ -1186,7 +1186,7 @@ ${generatedCode}`;
 											}}
 										>
 											<div className="flex items-center gap-2 mb-1">
-												<span className="text-xs bg-base border border-main px-2 py-1 noto-sans-jp-light">
+												<span className="text-xs rounded-lg bg-main/10 px-2 py-1 noto-sans-jp-light">
 													{CATEGORY_NAMES[expr.category]}
 												</span>
 												<span
@@ -1258,7 +1258,7 @@ ${generatedCode}`;
 						</h2>
 
 						{selectedExpression ? (
-							<div className="space-y-4 border border-main p-4">
+							<div className="space-y-4 rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 								<div className="mb-4">
 									<div className="flex items-center justify-between mb-2">
 										<h3 className="text-lg noto-sans-jp-regular font-medium flex items-center gap-2">
@@ -1271,7 +1271,7 @@ ${generatedCode}`;
 											<button
 												type="button"
 												onClick={() => toggleFavorite(selectedExpression.id)}
-												className="p-2 border border-main bg-base text-main hover:bg-accent hover:text-main focus:outline-none focus:ring-2 focus:ring-accent"
+												className="p-2 rounded-lg bg-main/10 text-main hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 											>
 												<Heart
 													className={`w-4 h-4 ${selectedExpression.isFavorite ? "fill-red-500 text-red-500" : ""}`}
@@ -1280,7 +1280,7 @@ ${generatedCode}`;
 											<button
 												type="button"
 												onClick={() => setShowDocumentation(!showDocumentation)}
-												className="p-2 border border-main bg-base text-main hover:bg-accent hover:text-main focus:outline-none focus:ring-2 focus:ring-accent"
+												className="p-2 rounded-lg bg-main/10 text-main hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 											>
 												<Info className="w-4 h-4" />
 											</button>
@@ -1304,7 +1304,7 @@ ${generatedCode}`;
 
 								{/* Documentation Panel */}
 								{showDocumentation && selectedExpression.documentation && (
-									<div className="border border-main p-4 bg-base mb-4">
+									<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 mb-4">
 										<h4 className="text-sm noto-sans-jp-regular font-medium mb-2 flex items-center gap-2">
 											<BookOpen className="w-4 h-4" />
 											詳細ドキュメント
@@ -1379,7 +1379,7 @@ ${generatedCode}`;
 																parseFloat(e.target.value),
 															)
 														}
-														className="w-full px-3 py-2 border border-main bg-base text-main focus:outline-none focus:ring-2 focus:ring-accent"
+														className="w-full px-3 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 													/>
 												</div>
 											)}
@@ -1392,7 +1392,7 @@ ${generatedCode}`;
 													onChange={(e) =>
 														updateParameter(param.name, e.target.value)
 													}
-													className="w-full px-3 py-2 border border-main bg-base text-main focus:outline-none focus:ring-2 focus:ring-accent"
+													className="w-full px-3 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 												>
 													{param.options?.map((option) => (
 														<option key={option} value={option}>
@@ -1429,7 +1429,7 @@ ${generatedCode}`;
 													onChange={(e) =>
 														updateParameter(param.name, e.target.value)
 													}
-													className="w-full px-3 py-2 border border-main bg-base text-main focus:outline-none focus:ring-2 focus:ring-accent"
+													className="w-full px-3 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 												/>
 											)}
 										</div>
@@ -1437,7 +1437,7 @@ ${generatedCode}`;
 								</div>
 							</div>
 						) : (
-							<div className="border border-main p-8 text-center">
+							<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-8 text-center">
 								<p className="text-accent noto-sans-jp-light">
 									左側からエクスプレッションを選択してください
 								</p>
@@ -1455,7 +1455,7 @@ ${generatedCode}`;
 								<button
 									type="button"
 									onClick={() => setIsPreviewPlaying(!isPreviewPlaying)}
-									className="px-3 py-2 border border-main bg-base text-main hover:bg-accent hover:text-main focus:outline-none focus:ring-2 focus:ring-accent flex items-center gap-2 noto-sans-jp-light"
+									className="px-3 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-light"
 								>
 									{isPreviewPlaying ? (
 										<Pause className="w-4 h-4" />
@@ -1470,7 +1470,7 @@ ${generatedCode}`;
 										setPreviewTime(0);
 										setIsPreviewPlaying(false);
 									}}
-									className="px-3 py-2 border border-main bg-base text-main hover:bg-accent hover:text-main focus:outline-none focus:ring-2 focus:ring-accent flex items-center gap-2 noto-sans-jp-light"
+									className="px-3 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-light"
 								>
 									<RotateCcw className="w-4 h-4" />
 									リセット
@@ -1479,7 +1479,7 @@ ${generatedCode}`;
 									type="button"
 									onClick={saveExpression}
 									disabled={!selectedExpression || !generatedCode}
-									className="px-3 py-2 border border-main bg-base text-main hover:bg-accent hover:text-main disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent flex items-center gap-2 noto-sans-jp-light"
+									className="px-3 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-light"
 								>
 									<Save className="w-4 h-4" />
 									保存
@@ -1488,7 +1488,7 @@ ${generatedCode}`;
 									type="button"
 									onClick={exportExpression}
 									disabled={!generatedCode}
-									className="px-3 py-2 border border-main bg-base text-main hover:bg-accent hover:text-main disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent flex items-center gap-2 noto-sans-jp-light"
+									className="px-3 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-light"
 								>
 									<Download className="w-4 h-4" />
 									エクスポート
@@ -1497,7 +1497,7 @@ ${generatedCode}`;
 									type="button"
 									onClick={copyToClipboard}
 									disabled={!generatedCode}
-									className={`px-4 py-2 border border-main hover:bg-accent hover:text-main disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent flex items-center gap-2 noto-sans-jp-regular ${
+									className={`px-4 py-2 rounded-lg bg-main/10 hover:bg-main/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-regular ${
 										copySuccess
 											? "bg-green-100 text-green-800 border-green-300"
 											: "bg-base text-main"
@@ -1562,7 +1562,7 @@ ${generatedCode}`;
 							</div>
 						)}
 
-						<div className="border border-main p-4 bg-base min-h-32">
+						<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 min-h-32">
 							<pre className="whitespace-pre-wrap text-sm text-main noto-sans-jp-light leading-relaxed font-mono">
 								{generatedCode || "エクスプレッションを選択してください..."}
 							</pre>
@@ -1570,7 +1570,7 @@ ${generatedCode}`;
 
 						{/* Preview Time Display */}
 						{selectedExpression && (
-							<div className="border border-main p-4 bg-base">
+							<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 								<div className="flex items-center justify-between mb-2">
 									<span className="text-sm noto-sans-jp-regular">
 										プレビュー時間
@@ -1588,7 +1588,7 @@ ${generatedCode}`;
 
 						{/* Example Display */}
 						{selectedExpression && (
-							<div className="border border-main p-4 bg-base">
+							<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 								<h3 className="text-sm noto-sans-jp-regular mb-2">使用例</h3>
 								<pre className="text-xs text-accent noto-sans-jp-light font-mono">
 									{selectedExpression.example}

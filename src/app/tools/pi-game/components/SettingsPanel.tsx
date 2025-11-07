@@ -22,7 +22,7 @@ export default function SettingsPanel({
 
 	return (
 		<div className="fixed inset-0 bg-base bg-opacity-95 flex items-center justify-center p-4 z-50">
-			<div className="bg-base border border-main max-w-md w-full shadow-lg">
+			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] max-w-md w-full">
 				<div className="p-6 space-y-6">
 					<div className="flex justify-between items-center">
 						<h2 className="neue-haas-grotesk-display text-2xl text-main">
@@ -54,13 +54,13 @@ export default function SettingsPanel({
 								onChange={(e) =>
 									handleSettingChange("playSound", e.target.checked)
 								}
-								className="w-4 h-4 text-main bg-base border-main focus:ring-main focus:ring-2"
+								className="w-4 h-4 text-main rounded bg-main/10 focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 							/>
 						</div>
 					</div>
 
 					{/* Game Rules */}
-					<div className="bg-base border border-main p-4">
+					<div className="rounded-lg bg-main/10 p-4">
 						<h3 className="neue-haas-grotesk-display text-sm text-main mb-2">
 							ゲームルール
 						</h3>
@@ -72,7 +72,7 @@ export default function SettingsPanel({
 					</div>
 
 					{/* Reset Data */}
-					<div className="border-t border-main pt-4">
+					<div className="border-t border-main/20 pt-4">
 						<button
 							type="button"
 							onClick={() => {

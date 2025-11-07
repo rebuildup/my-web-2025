@@ -184,10 +184,10 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 						type="button"
 						key={method.type}
 						onClick={() => setSelectedMethod(method.type)}
-						className={`p-4 border rounded-lg text-left transition-colors ${
+						className={`p-4 rounded-lg text-left transition-colors ${
 							selectedMethod === method.type
-								? "border-main bg-main/10"
-								: "border-main hover:bg-main/5"
+								? "bg-main/20"
+								: "bg-main/10 hover:bg-main/15"
 						}`}
 					>
 						<div className="flex items-center gap-2 mb-2">
@@ -207,10 +207,10 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 				onDragLeave={handleDragLeave}
 				onDrop={handleDrop}
 				onClick={triggerFileSelect}
-				className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+				className={`border-2 border-dashed border-main/20 rounded-lg p-8 text-center cursor-pointer transition-colors ${
 					isDragging
-						? "border-main bg-main/10"
-						: "border-main/30 hover:border-main/50 hover:bg-main/5"
+						? "border-accent bg-main/10"
+						: "hover:border-main/40 hover:bg-main/5"
 				}`}
 			>
 				<Upload size={48} className="mx-auto mb-4 text-main/50" />
@@ -257,7 +257,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 			{/* Processing State */}
 			{isProcessing && (
 				<div className="text-center py-4">
-					<div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-main"></div>
+					<div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
 					<p className="mt-2 text-sm text-main">ファイルを処理中...</p>
 				</div>
 			)}

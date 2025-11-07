@@ -123,11 +123,19 @@ export function SafeImage({
 	// next/image はクエリ付きローカルURLに対して localPatterns 設定が必要。
 	// ギャラリーでは /api/cms/media?… を直接表示するため、該当ケースは <img> にフォールバック。
 	const isApiMediaSrc =
-		typeof currentSrc === "string" && currentSrc.startsWith("/api/cms/media");
+		typeof currentSrc === "string" &&
+		(currentSrc.startsWith("/api/cms/media") ||
+			currentSrc.includes("/api/cms/media"));
 
-	if (isApiMediaSrc) {
+	// width と height が undefined の場合、fill を使うか <img> にフォールバック
+	const shouldUseFill = !fill && !width && !height;
+	const shouldUseImgTag = isApiMediaSrc || shouldUseFill;
+
+	if (shouldUseImgTag) {
 		return (
-			<div className={`relative ${fill ? "w-full h-full" : ""}`}>
+			<div
+				className={`relative ${fill || shouldUseFill ? "w-full h-full" : ""}`}
+			>
 				<img
 					src={currentSrc}
 					alt={alt}

@@ -29,16 +29,26 @@ export const metadata = {
 export default function ColorPalettePage() {
 	return (
 		<>
-			<div className="container-system pt-10 pb-4">
-				<Breadcrumbs
-					items={[
-						{ label: "Home", href: "/" },
-						{ label: "Tools", href: "/tools" },
-						{ label: "Color Palette Generator", isCurrent: true },
-					]}
-				/>
+			<div className="relative min-h-screen bg-base text-main">
+				<main className="relative z-10 min-h-screen py-10" tabIndex={-1}>
+					<div className="container-system">
+						<div className="mx-auto w-full max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
+							<Breadcrumbs
+								items={[
+									{ label: "Home", href: "/" },
+									{ label: "Tools", href: "/tools" },
+									{ label: "Color Palette Generator", isCurrent: true },
+								]}
+								className="pt-4"
+							/>
+
+							<section className="space-y-6">
+								<ColorPaletteGenerator />
+							</section>
+						</div>
+					</div>
+				</main>
 			</div>
-			<ColorPaletteGenerator />
 
 			{/* Structured Data */}
 			<script type="application/ld+json">

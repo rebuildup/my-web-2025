@@ -16,16 +16,6 @@ function isLocalhost(request: NextRequest) {
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 
-	// 1) Rewrite /portfolio/:slug.md -> /portfolio/md/:slug (raw markdown)
-	const mdMatch = pathname.match(/^\/(.+)\.md$/);
-	if (mdMatch) {
-		const lastSegment = mdMatch[1].split("/").pop() || "";
-		const slug = lastSegment;
-		const url = request.nextUrl.clone();
-		url.pathname = `/md/${slug}`;
-		return NextResponse.rewrite(url);
-	}
-
 	// Handle image requests with proper headers
 	if (pathname.startsWith("/images/")) {
 		const response = NextResponse.next();

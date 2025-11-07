@@ -84,7 +84,7 @@ const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectProps>(
       disabled:opacity-50 disabled:cursor-not-allowed
       appearance-none cursor-pointer
       ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
-      ${error ? "border-red-500" : "border-main"}
+      ${error ? "border-red-500" : "border-main/20"}
       ${isFocused ? "ring-2 ring-accent ring-offset-2 ring-offset-base" : ""}
     `;
 

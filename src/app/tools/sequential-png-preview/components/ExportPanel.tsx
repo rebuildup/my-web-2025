@@ -102,7 +102,7 @@ export default function ExportPanel({
 	};
 
 	return (
-		<div className="bg-base border border-main p-6 rounded-lg">
+		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
 			<div className="flex items-center justify-between mb-6">
 				<h3 className="text-lg font-semibold text-main">エクスポート設定</h3>
 				<button
@@ -127,10 +127,10 @@ export default function ExportPanel({
 							onClick={() =>
 								setExportSettings((prev) => ({ ...prev, format: "frames" }))
 							}
-							className={`p-4 border rounded-lg text-left transition-colors ${
+							className={`p-4 rounded-lg text-left transition-colors ${
 								exportSettings.format === "frames"
-									? "border-main bg-main/10"
-									: "border-main hover:bg-main/5"
+									? "bg-main/20"
+									: "bg-main/10 hover:bg-main/15"
 							}`}
 						>
 							<div className="flex items-center gap-2 mb-2">
@@ -147,10 +147,10 @@ export default function ExportPanel({
 							onClick={() =>
 								setExportSettings((prev) => ({ ...prev, format: "gif" }))
 							}
-							className={`p-4 border rounded-lg text-left transition-colors ${
+							className={`p-4 rounded-lg text-left transition-colors ${
 								exportSettings.format === "gif"
-									? "border-main bg-main/10"
-									: "border-main hover:bg-main/5"
+									? "bg-main/20"
+									: "bg-main/10 hover:bg-main/15"
 							}`}
 						>
 							<div className="flex items-center gap-2 mb-2">
@@ -165,10 +165,10 @@ export default function ExportPanel({
 							onClick={() =>
 								setExportSettings((prev) => ({ ...prev, format: "mp4" }))
 							}
-							className={`p-4 border rounded-lg text-left transition-colors ${
+							className={`p-4 rounded-lg text-left transition-colors ${
 								exportSettings.format === "mp4"
-									? "border-main bg-main/10"
-									: "border-main hover:bg-main/5"
+									? "bg-main/20"
+									: "bg-main/10 hover:bg-main/15"
 							}`}
 						>
 							<div className="flex items-center gap-2 mb-2">
@@ -223,7 +223,7 @@ export default function ExportPanel({
 										width: parseInt(e.target.value, 10) || 800,
 									}))
 								}
-								className="w-full p-2 border border-main rounded"
+								className="w-full p-2 rounded-lg bg-main/10"
 							/>
 						</div>
 						<div>
@@ -241,7 +241,7 @@ export default function ExportPanel({
 										height: parseInt(e.target.value, 10) || 600,
 									}))
 								}
-								className="w-full p-2 border border-main rounded"
+								className="w-full p-2 rounded-lg bg-main/10"
 							/>
 						</div>
 					</div>
@@ -274,7 +274,7 @@ export default function ExportPanel({
 				)}
 
 				{/* Export Info */}
-				<div className="p-4 bg-base border border-main/20 rounded-lg">
+				<div className="p-4 rounded-lg bg-main/5">
 					<h4 className="font-medium mb-2 text-main">エクスポート情報</h4>
 					<div className="space-y-1 text-sm">
 						<div className="flex justify-between">

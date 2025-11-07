@@ -116,7 +116,7 @@ export function SVGToTSXConverter() {
 				<PreviewPanel svgInput={svgInput} conversionResult={conversionResult} />
 
 				{/* Usage Instructions */}
-				<div className="bg-base border border-main p-4">
+				<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 					<h3 className="text-lg font-medium mb-4">使用方法</h3>
 					<div className="space-y-3 text-sm">
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

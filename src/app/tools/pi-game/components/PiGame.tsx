@@ -10,8 +10,8 @@ export default function PiGame() {
 	const DISPLAY_HEIGHT = "h-30"; // 入力枠の高さ（キーと同じ）
 
 	// キーの共通スタイル
-	const KEY_BASE_STYLE = `${KEY_SIZE} bg-base border border-main flex items-center justify-center text-2xl neue-haas-grotesk-display cursor-pointer select-none transition-all duration-150 hover:bg-main hover:text-base active:bg-white active:text-black focus:outline-none focus:ring-2 focus:ring-main`;
-	const KEY_ZERO_STYLE = `col-span-2 h-30 w-[calc(2*7.5rem+0.5rem)] bg-base border border-main flex items-center justify-center text-2xl neue-haas-grotesk-display cursor-pointer select-none transition-all duration-150 hover:bg-main hover:text-base active:bg-white active:text-black focus:outline-none focus:ring-2 focus:ring-main`;
+	const KEY_BASE_STYLE = `${KEY_SIZE} rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] flex items-center justify-center text-2xl neue-haas-grotesk-display cursor-pointer select-none transition-all duration-150 hover:bg-main/20 hover:shadow-[0_12px_32px_rgba(0,0,0,0.35)] active:bg-main/30 active:text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base`;
+	const KEY_ZERO_STYLE = `col-span-2 h-30 w-[calc(2*7.5rem+0.5rem)] rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] flex items-center justify-center text-2xl neue-haas-grotesk-display cursor-pointer select-none transition-all duration-150 hover:bg-main/20 hover:shadow-[0_12px_32px_rgba(0,0,0,0.35)] active:bg-main/30 active:text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base`;
 
 	const [currentPosition, setCurrentPosition] = useState(-1); // -1: 小数点待ち, 0以上: 小数点以下の桁
 	const [inputSequence, setInputSequence] = useState("3");
@@ -105,7 +105,7 @@ export default function PiGame() {
 			{/* 数字表示エリア - キーと同じ高さ、テンキーと同じ横幅 */}
 			<div className="flex justify-center">
 				<div
-					className={`${DISPLAY_HEIGHT} w-[calc(3*7.5rem+2*0.5rem)] bg-base border border-main flex items-center justify-center`}
+					className={`${DISPLAY_HEIGHT} w-[calc(3*7.5rem+2*0.5rem)] rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] flex items-center justify-center`}
 				>
 					<div className="font-mono text-3xl text-center overflow-hidden px-4">
 						{!isGameStarted ? (
@@ -215,10 +215,10 @@ export default function PiGame() {
 					<button
 						type="button"
 						onClick={() => handleInput("3")}
-						className={`${KEY_SIZE} border border-main flex items-center justify-center text-2xl neue-haas-grotesk-display cursor-pointer select-none transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-main ${
+						className={`${KEY_SIZE} rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] flex items-center justify-center text-2xl neue-haas-grotesk-display cursor-pointer select-none transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base ${
 							highlightThree
-								? "bg-main text-base hover:bg-main hover:text-base active:bg-white active:text-black"
-								: "bg-base hover:bg-main hover:text-base active:bg-white active:text-black"
+								? "bg-main/30 text-main hover:bg-main/40 hover:text-main active:bg-main/50 active:text-main"
+								: "bg-base/75 hover:bg-main/20 hover:text-main active:bg-main/30 active:text-main"
 						}`}
 					>
 						3

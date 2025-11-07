@@ -43,7 +43,7 @@ export default function StatsPanel({
 
 	return (
 		<div className="fixed inset-0 bg-base bg-opacity-95 flex items-center justify-center p-4 z-50">
-			<div className="bg-base border border-main max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-lg">
+			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] max-w-2xl w-full max-h-[90vh] overflow-y-auto">
 				<div className="p-6 space-y-6">
 					<div className="flex justify-between items-center">
 						<h2 className="neue-haas-grotesk-display text-2xl text-main">
@@ -97,7 +97,7 @@ export default function StatsPanel({
 								{recentScores.map((record, index) => (
 									<div
 										key={index}
-										className="bg-base border border-main p-3 flex justify-between items-center"
+										className="rounded-lg bg-main/10 p-3 flex justify-between items-center"
 									>
 										<div className="flex items-center space-x-4">
 											<div className="neue-haas-grotesk-display text-lg text-main">
@@ -127,7 +127,7 @@ export default function StatsPanel({
 						<h3 className="neue-haas-grotesk-display text-lg text-main mb-4">
 							学習の進歩
 						</h3>
-						<div className="bg-base border border-main p-4">
+						<div className="rounded-lg bg-main/10 p-4">
 							<div className="space-y-2">
 								<div className="flex justify-between text-sm">
 									<span className="text-accent">円周率の知識</span>
@@ -153,7 +153,7 @@ export default function StatsPanel({
 						<h3 className="neue-haas-grotesk-display text-lg text-main mb-4">
 							円周率について
 						</h3>
-						<div className="bg-base border border-main p-4 space-y-2">
+						<div className="rounded-lg bg-main/10 p-4 space-y-2">
 							<div className="noto-sans-jp-light text-sm text-main">
 								• 円周率πは円の円周と直径の比率を表す無理数です
 							</div>

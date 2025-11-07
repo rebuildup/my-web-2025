@@ -20,9 +20,142 @@ import { createContentParser } from "../../lib/markdown/content-parser";
 import type { MediaData } from "../../types/content";
 import { MarkdownErrorBoundary } from "../markdown/FallbackContent";
 
+interface BookmarkPayload {
+	title?: string;
+	description?: string;
+	url: string;
+	image?: string;
+}
+
+const escapeHtml = (value: string): string =>
+	value.replace(/[&<>"']/g, (char) => {
+		const map: Record<string, string> = {
+			"&": "&amp;",
+			"<": "&lt;",
+			">": "&gt;",
+			'"': "&quot;",
+			"'": "&#39;",
+		};
+		return map[char] ?? char;
+	});
+
+const renderBookmarkCardHtml = (payload: BookmarkPayload): string => {
+	const url = (payload.url || "").trim();
+	const title = (payload.title || url).trim();
+	const description = payload.description?.trim();
+	const image = payload.image?.trim();
+	const safeTitle = escapeHtml(title || "Bookmark");
+	const safeDescription = description ? escapeHtml(description) : null;
+	let domain = "";
+	try {
+		if (url) {
+			const parsed = new URL(url);
+			domain = parsed.hostname;
+		}
+	} catch {
+		domain = url;
+	}
+	const safeDomain = domain ? escapeHtml(domain) : null;
+	const safeUrl = url ? escapeHtml(url) : "";
+	const safeImage = image ? escapeHtml(image) : null;
+
+	const linkSection = url
+		? `<a href="${safeUrl}" class="bookmark-card-link" target="_blank" rel="noreferrer">
+			<div class="bookmark-card-layout">
+				${safeImage ? `<div class="bookmark-card-thumbnail"><img src="${safeImage}" alt="" loading="lazy" /></div>` : ""}
+				<div class="bookmark-card-text">
+					<div class="bookmark-card-title">${safeTitle || "Bookmark"}</div>
+					${safeDescription ? `<p class="bookmark-card-description">${safeDescription}</p>` : ""}
+				</div>
+				<div class="bookmark-card-meta">
+					${safeDomain ? `<span class="bookmark-card-domain">${safeDomain}</span>` : ""}
+					<span class="bookmark-card-arrow">→</span>
+				</div>
+			</div>
+		</a>`
+		: `<div class="bookmark-card-layout">
+			${safeImage ? `<div class="bookmark-card-thumbnail"><img src="${safeImage}" alt="" loading="lazy" /></div>` : ""}
+			<div class="bookmark-card-text">
+				<div class="bookmark-card-title">${safeTitle}</div>
+				${safeDescription ? `<p class="bookmark-card-description">${safeDescription}</p>` : ""}
+			</div>
+			<div class="bookmark-card-meta">
+				${safeDomain ? `<span class="bookmark-card-domain">${safeDomain}</span>` : ""}
+				<span class="bookmark-card-arrow">→</span>
+			</div>
+		</div>`;
+
+	return `<div class="markdown-bookmark-card${url ? "" : " bookmark-card--invalid"}">
+		${linkSection}
+	</div>`;
+};
+
+const renderBookmarkFallback = (payload?: Partial<BookmarkPayload>): string => {
+	const safeMessage = escapeHtml(
+		payload?.title || payload?.url || "リンク情報を取得できませんでした",
+	);
+	const safeDescription = payload?.description
+		? escapeHtml(payload.description)
+		: null;
+	return `<div class="markdown-bookmark-card bookmark-card--invalid">
+		<div class="bookmark-card-layout">
+			<div class="bookmark-card-text">
+				<div class="bookmark-card-title">${safeMessage}</div>
+				${safeDescription ? `<p class="bookmark-card-description">${safeDescription}</p>` : ""}
+			</div>
+			<div class="bookmark-card-meta">
+				<span class="bookmark-card-arrow">→</span>
+			</div>
+		</div>
+	</div>`;
+};
+
+const transformBookmarkPlaceholders = (html: string): string =>
+	html
+		.replace(
+			/<p>\s*(<bookmark-card\b[^>]*><\/bookmark-card>)\s*<\/p>/gi,
+			(_match, inner) => inner,
+		)
+		.replace(
+			/<bookmark-card\s+data-json="([^"]*)"><\/bookmark-card>/gi,
+			(match, encoded) => {
+				try {
+					const data = JSON.parse(
+						decodeURIComponent(encoded),
+					) as BookmarkPayload;
+					if (!data) {
+						return "";
+					}
+
+					const trimmedTitle = data.title?.trim();
+					const trimmedDescription = data.description?.trim();
+					const trimmedUrl = data.url?.trim();
+					const trimmedImage = (data as any).image?.trim();
+
+					if (!trimmedTitle && !trimmedDescription && !trimmedUrl) {
+						return "";
+					}
+
+					return renderBookmarkCardHtml({
+						title: trimmedTitle,
+						description: trimmedDescription,
+						url: trimmedUrl ?? "",
+						image: trimmedImage,
+					});
+				} catch (error) {
+					console.warn("Failed to transform bookmark placeholder", error);
+					return "";
+				}
+			},
+		);
+
+const removeDanglingCounters = (html: string): string =>
+	html.replace(/\n?\s*<p>0<\/p>\s*$/i, "");
+
 // Component props interface
 interface MarkdownRendererProps {
-	filePath: string;
+	filePath?: string;
+	content?: string;
 	mediaData: MediaData;
 	className?: string;
 	fallbackContent?: string;
@@ -77,6 +210,7 @@ configureMarked();
 
 export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 	filePath,
+	content,
 	mediaData,
 	className = "",
 	fallbackContent = "Content not available",
@@ -242,8 +376,18 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 					? customRenderer(contentWithResolvedEmbeds)
 					: await marked.parse(contentWithResolvedEmbeds);
 
+				htmlContent = transformBookmarkPlaceholders(htmlContent);
+				htmlContent = removeDanglingCounters(htmlContent);
+
 				// Sanitize HTML if enabled
 				if (enableSanitization) {
+					const resetTargetHook = (node: Element) => {
+						if (node.tagName === "A") {
+							node.removeAttribute("target");
+							node.removeAttribute("rel");
+						}
+					};
+					DOMPurify.addHook("afterSanitizeAttributes", resetTargetHook);
 					htmlContent = DOMPurify.sanitize(htmlContent, {
 						ALLOWED_TAGS: [
 							"h1",
@@ -285,8 +429,6 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 							"src",
 							"class",
 							"id",
-							"target",
-							"rel",
 							"width",
 							"height",
 							"frameborder",
@@ -297,6 +439,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 						ALLOWED_URI_REGEXP:
 							/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
 					});
+					DOMPurify.removeHook("afterSanitizeAttributes", resetTargetHook);
 				}
 
 				return htmlContent;
@@ -327,9 +470,9 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 			`[MarkdownRenderer] loadContent called with filePath: ${filePath}`,
 		);
 
-		if (!filePath) {
+		if (!filePath && typeof content !== "string") {
 			const error = new MarkdownFileError(
-				"No file path provided",
+				"No content source provided",
 				"FILE_NOT_FOUND",
 				"",
 			);
@@ -348,10 +491,22 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 		setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
 		try {
-			console.log(
-				`[MarkdownRenderer] Starting to fetch content for: ${filePath}`,
-			);
-			const rawContent = await fetchMarkdownContent(filePath);
+			let rawContent: string;
+			if (typeof content === "string") {
+				rawContent = content;
+				console.log("[MarkdownRenderer] Using provided markdown content");
+			} else if (filePath) {
+				console.log(
+					`[MarkdownRenderer] Starting to fetch content for: ${filePath}`,
+				);
+				rawContent = await fetchMarkdownContent(filePath);
+			} else {
+				throw new MarkdownFileError(
+					"No markdown content available",
+					"FILE_NOT_FOUND",
+					"",
+				);
+			}
 
 			// Handle empty content gracefully
 			if (!rawContent || rawContent.trim().length === 0) {
@@ -389,11 +544,15 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 				error instanceof MarkdownFileError
 					? error
 					: error instanceof MarkdownError
-						? new MarkdownFileError(error.message, "PARSE_ERROR", filePath)
+						? new MarkdownFileError(
+								error.message,
+								"PARSE_ERROR",
+								filePath || "",
+							)
 						: new MarkdownFileError(
 								`Unexpected error: ${error instanceof Error ? error.message : "Unknown error"}`,
 								"PARSE_ERROR",
-								filePath,
+								filePath || "",
 							);
 
 			setState((prev) => ({
@@ -406,179 +565,59 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
 			console.warn("Failed to load markdown content:", markdownError);
 		}
-	}, [filePath, mediaData, fetchMarkdownContent, processMarkdownContent]);
+	}, [
+		filePath,
+		content,
+		mediaData,
+		fetchMarkdownContent,
+		processMarkdownContent,
+	]);
 
-	// Load content when filePath or mediaData changes
 	useEffect(() => {
-		// Ensure we always attempt to load content, even if there are issues
-		loadContent().catch((error) => {
-			console.warn(
-				"[MarkdownRenderer] Failed to load content in useEffect:",
-				error,
-			);
-			// Set a fallback state to ensure the component still renders
-			setState((prev) => ({
-				...prev,
-				isLoading: false,
-				error:
-					error instanceof MarkdownFileError
-						? error
-						: new MarkdownFileError(
-								"Failed to load content",
-								"FETCH_ERROR",
-								filePath,
-							),
-				parsedContent: "",
-				content: "",
-			}));
-		});
-	}, [loadContent, filePath]);
+		loadContent();
+	}, [loadContent]);
 
-	// Render loading state
-	if (state.isLoading) {
+	if (state.isLoading && showEmptyState) {
 		return (
-			<div className={`markdown-renderer-loading ${className}`}>
-				<div className="flex items-center justify-center p-8">
-					<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-					<span className="ml-3 text-gray-600 dark:text-gray-400">
-						Loading content...
-					</span>
-				</div>
+			<div className="markdown-renderer-loading">
+				<p>Loading markdown content...</p>
 			</div>
 		);
 	}
 
-	// Render error state with enhanced fallback - always show content, never block the page
 	if (state.error) {
-		console.warn(
-			"[MarkdownRenderer] Rendering error state with fallback content",
-		);
-
 		return (
-			<div className={`markdown-renderer-error ${className}`}>
-				{/* Always show fallback content instead of blocking the page */}
-				<div className="markdown-fallback-content">
-					<div className="markdown-empty-state text-main/60 text-sm noto-sans-jp-light py-4">
-						{fallbackContent || "コンテンツが利用できません。"}
-					</div>
-
-					{/* Show error details only in development */}
-					{process.env.NODE_ENV === "development" && (
-						<details className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-							<summary className="text-sm font-medium text-red-800 cursor-pointer">
-								開発者向け: エラー詳細
-							</summary>
-							<div className="mt-2 text-xs text-red-700">
-								<p>
-									<strong>エラー:</strong> {state.error.message}
-								</p>
-								<p>
-									<strong>ファイルパス:</strong> {filePath}
-								</p>
-								{state.error instanceof MarkdownFileError && (
-									<p>
-										<strong>エラーコード:</strong> {state.error.code}
-									</p>
-								)}
-							</div>
-						</details>
-					)}
-
-					{/* Show retry button if enabled */}
+			<MarkdownErrorBoundary contentId={contentId}>
+				<div className="markdown-renderer-error">
+					<p>Error loading markdown content: {state.error.message}</p>
 					{showRetryButton && (
 						<button
 							type="button"
 							onClick={loadContent}
-							className="mt-3 px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+							className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
 						>
-							再読み込み
+							Retry
 						</button>
 					)}
 				</div>
+			</MarkdownErrorBoundary>
+		);
+	}
 
-				{/* Show validation errors if available (development only) */}
-				{process.env.NODE_ENV === "development" &&
-					state.validationResult &&
-					!state.validationResult.isValid && (
-						<details className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-							<summary className="text-sm font-medium text-yellow-800 cursor-pointer">
-								コンテンツ検証の問題
-							</summary>
-							<ul className="mt-2 text-sm text-yellow-700 space-y-1">
-								{state.validationResult.errors.map((error, index) => (
-									<li key={index}>
-										行 {error.line}, 列 {error.column}: {error.message}
-									</li>
-								))}
-							</ul>
-						</details>
-					)}
-
-				{/* Show integrity check results if available (development only) */}
-				{process.env.NODE_ENV === "development" &&
-					state.integrityCheck &&
-					!state.integrityCheck.isValid && (
-						<details className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
-							<summary className="text-sm font-medium text-orange-800 cursor-pointer">
-								ファイル整合性の警告
-							</summary>
-							<p className="mt-2 text-sm text-orange-700">
-								ファイルが変更または破損している可能性があります。チェックサム:{" "}
-								{state.integrityCheck.checksum}
-							</p>
-						</details>
-					)}
+	if (!state.parsedContent && showEmptyState) {
+		return (
+			<div className="markdown-renderer-empty">
+				<p>{fallbackContent}</p>
 			</div>
 		);
 	}
 
-	// Check if content is empty
-	const isEmpty =
-		!state.parsedContent || state.parsedContent.trim().length === 0;
-
-	// Render markdown content with error boundary
 	return (
-		<MarkdownErrorBoundary
-			fallbackContent={fallbackContent}
-			contentId={contentId}
-		>
-			<div className={`markdown-renderer ${className}`}>
-				{/* Show validation warnings if any */}
-				{state.validationResult?.warnings &&
-					state.validationResult.warnings.length > 0 && (
-						<div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-							<h4 className="text-sm font-medium text-yellow-800 mb-1">
-								Content Warnings:
-							</h4>
-							<ul className="text-xs text-yellow-700 space-y-1">
-								{state.validationResult.warnings.map((warning, index) => (
-									<li key={index}>{warning}</li>
-								))}
-							</ul>
-						</div>
-					)}
-
-				{/* Render content or empty state */}
-				{isEmpty ? (
-					showEmptyState ? (
-						<div className="markdown-empty-state text-main/60 text-sm italic noto-sans-jp-light py-8">
-							{fallbackContent || "No detailed content available."}
-						</div>
-					) : null
-				) : (
-					<div
-						className="markdown-content-detail max-w-none prose prose-lg dark:prose-invert"
-						dangerouslySetInnerHTML={{ __html: state.parsedContent }}
-					/>
-				)}
-			</div>
-		</MarkdownErrorBoundary>
+		<div
+			className={`markdown-renderer ${className}`}
+			dangerouslySetInnerHTML={{ __html: state.parsedContent }}
+		/>
 	);
 };
 
-// Export additional utilities
-export { MarkdownError, MarkdownErrorType } from "../../lib/markdown/client";
-export type { MarkdownRendererProps, MarkdownRendererState };
-
-// Default export
 export default MarkdownRenderer;

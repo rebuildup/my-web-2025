@@ -61,7 +61,7 @@ export default function TextCounterTool() {
 					<button
 						type="button"
 						onClick={handleClear}
-						className="flex items-center justify-center w-10 h-10 bg-base border border-main hover:bg-accent transition-colors"
+						className="flex items-center justify-center w-10 h-10 rounded-lg bg-main/10 hover:bg-main/20 transition-colors"
 						aria-label="テキストをクリア"
 						title="クリア"
 					>
@@ -70,7 +70,7 @@ export default function TextCounterTool() {
 					<button
 						type="button"
 						onClick={handleCopyText}
-						className="flex items-center justify-center w-10 h-10 bg-base border border-main hover:bg-accent transition-colors"
+						className="flex items-center justify-center w-10 h-10 rounded-lg bg-main/10 hover:bg-main/20 transition-colors"
 						aria-label="テキストをコピー"
 						title="テキストをコピー"
 					>
@@ -87,10 +87,10 @@ export default function TextCounterTool() {
 								showGraphs: !prev.showGraphs,
 							}))
 						}
-						className={`flex items-center justify-center w-10 h-10 border border-main transition-colors ${
+						className={`flex items-center justify-center w-10 h-10 rounded-lg transition-colors ${
 							displaySettings.showGraphs
-								? "bg-main text-base"
-								: "bg-base hover:bg-accent"
+								? "bg-main/30 text-main"
+								: "bg-main/10 hover:bg-main/20"
 						}`}
 						aria-label="グラフ表示を切り替え"
 						title="グラフ"
@@ -100,8 +100,10 @@ export default function TextCounterTool() {
 					<button
 						type="button"
 						onClick={() => setShowSettings(!showSettings)}
-						className={`flex items-center justify-center w-10 h-10 border border-main transition-colors ${
-							showSettings ? "bg-main text-base" : "bg-base hover:bg-accent"
+						className={`flex items-center justify-center w-10 h-10 rounded-lg transition-colors ${
+							showSettings
+								? "bg-main/30 text-main"
+								: "bg-main/10 hover:bg-main/20"
 						}`}
 						aria-label="設定パネルを切り替え"
 						title="設定"

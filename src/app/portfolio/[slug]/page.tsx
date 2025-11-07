@@ -5,14 +5,47 @@
 
 import type { Metadata } from "next";
 import Image from "next/image";
-import { notFound, redirect } from "next/navigation";
-import { BlockContentRenderer } from "@/components/portfolio/BlockContentRenderer";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import type { MarkdownContentItem } from "@/types/content";
 import type { PortfolioContentItem } from "@/types/portfolio";
+
+interface MarkdownDetail {
+	title?: string;
+	summary?: string;
+	body?: string;
+}
+
+async function loadMarkdownDetail(
+	slug: string,
+): Promise<MarkdownDetail | null> {
+	try {
+		const dbModule = await import("@/cms/lib/db");
+		const db = dbModule.default;
+		const row = db
+			.prepare(
+				`SELECT frontmatter, body FROM markdown_pages WHERE slug = @slug LIMIT 1`,
+			)
+			.get({ slug }) as { frontmatter?: string; body?: string } | undefined;
+		if (!row) {
+			return null;
+		}
+		if (!row.frontmatter && !row.body) {
+			return null;
+		}
+		const fm = row.frontmatter ? JSON.parse(row.frontmatter) : {};
+		return {
+			title: fm.title,
+			summary: fm.summary ?? fm.description,
+			body: typeof row.body === "string" ? row.body : "",
+		};
+	} catch (error) {
+		console.warn("Failed to load markdown detail for", slug, error);
+		return null;
+	}
+}
 
 // Type guard to check if content item has enhanced markdown features
 const isEnhancedContentItem = (
@@ -40,10 +73,18 @@ export async function generateMetadata({
 }: PortfolioDetailPageProps): Promise<Metadata> {
 	try {
 		const { slug } = await params;
-		const baseSlug = slug.endsWith(".md") ? slug.slice(0, -3) : slug;
+		const baseSlug = slug;
 
 		// Get portfolio item (primary: data manager; fallback: CMS API)
 		let item = await portfolioDataManager.getItemById(baseSlug);
+		if (!item) {
+			try {
+				const allItems = await portfolioDataManager.getAllPortfolioData();
+				item = allItems.find((candidate) => candidate.id === baseSlug) || null;
+			} catch {
+				// ignore
+			}
+		}
 		if (!item) {
 			try {
 				const res = await fetch(
@@ -98,10 +139,13 @@ export async function generateMetadata({
 		}
 
 		if (!item) {
+			const detail = await loadMarkdownDetail(baseSlug);
+			const fallbackTitle = detail?.title ?? baseSlug;
 			return {
-				title: "Portfolio Item Not Found | samuido",
-				description: "The requested portfolio item was not found.",
-				robots: "noindex, nofollow",
+				title: `${fallbackTitle} | samuido`,
+				description:
+					detail?.summary || "Portfolio project details and information",
+				robots: "index, follow",
 			};
 		}
 
@@ -133,7 +177,7 @@ function ContentSection({
 	detail,
 }: {
 	item: PortfolioContentItem;
-	detail?: { title?: string; summary?: string; body?: string } | null;
+	detail?: MarkdownDetail | null;
 }) {
 	// Check if there's meaningful content to display
 	const hasMarkdownPath = isEnhancedContentItem(item) && item.markdownPath;
@@ -148,9 +192,20 @@ function ContentSection({
 	return (
 		<section className="space-y-8 sm:space-y-12">
 			{hasMarkdownBody ? (
-				<div className="block-content-container">
-					<BlockContentRenderer
-						markdown={detail.body || ""}
+				<div className="markdown-container">
+					<MarkdownRenderer
+						content={detail.body || ""}
+						mediaData={{
+							images: item.images || [],
+							videos: item.videos || [],
+							externalLinks: item.externalLinks || [],
+						}}
+						className="markdown-content-detail"
+						fallbackContent={fallbackContent}
+						enableSanitization={true}
+						enableValidation={true}
+						showRetryButton={false}
+						showEmptyState={true}
 						contentId={item.id}
 					/>
 				</div>
@@ -262,8 +317,6 @@ function ContentSection({
 													)}
 													<a
 														href={video.url}
-														target="_blank"
-														rel="noopener noreferrer"
 														className="text-xs sm:text-sm text-accent hover:underline mt-1 inline-block"
 													>
 														動画を見る →
@@ -287,8 +340,6 @@ function ContentSection({
 										<a
 											key={`${item.id}-link-${link.url ?? index}`}
 											href={link.url}
-											target="_blank"
-											rel="noopener noreferrer"
 											className="flex items-center space-x-3 p-3 sm:p-4 border border-main/10 rounded-lg hover:bg-main/5 transition-colors text-main"
 										>
 											<div className="text-lg flex-shrink-0">🔗</div>
@@ -321,69 +372,46 @@ export default async function PortfolioDetailPage({
 	params,
 }: PortfolioDetailPageProps) {
 	const { slug } = await params;
-	const baseSlug = slug.endsWith(".md") ? slug.slice(0, -3) : slug;
+	const baseSlug = slug;
 
 	try {
-		// .md リクエストはmiddlewareで別ルートにrewriteされる想定（ここでは処理しない）
-
-		// Try to fetch markdown page (legacy detail) whose slug === id
-		let detailFromMarkdown: {
-			title?: string;
-			summary?: string;
-			body?: string;
-		} | null = null;
-		try {
-			const dbModule = await import("@/cms/lib/db");
-			const db = dbModule.default;
-			try {
-				const row = db
-					.prepare(
-						`SELECT frontmatter, body FROM markdown_pages WHERE slug = @slug LIMIT 1`,
-					)
-					.get({ slug: baseSlug }) as
-					| { frontmatter: string; body: string }
-					| undefined;
-				if (row?.frontmatter) {
-					const fm = JSON.parse(row.frontmatter);
-					detailFromMarkdown = {
-						title: fm.title,
-						summary: fm.summary ?? fm.description,
-						body: row.body,
-					};
-				}
-			} finally {
-				// global db is shared; do not close here
-			}
-		} catch {}
+		let detailFromMarkdown = await loadMarkdownDetail(baseSlug);
 
 		// Get portfolio item
 		let item = await portfolioDataManager.getItemById(baseSlug);
+		if (!item) {
+			try {
+				const allItems = await portfolioDataManager.getAllPortfolioData();
+				item = allItems.find((candidate) => candidate.id === baseSlug) || null;
+			} catch {
+				// ignore
+			}
+		}
 
 		if (!item) {
-			// Fallback: build minimal item from markdown if exists
-			if (detailFromMarkdown) {
-				const now = new Date().toISOString();
-				item = {
-					id: slug,
-					title: detailFromMarkdown.title || slug,
-					description: detailFromMarkdown.summary || "",
-					category: "portfolio",
-					tags: [],
-					status: "draft",
-					priority: 0,
-					createdAt: now,
-					updatedAt: now,
-					thumbnail: undefined,
-					images: [],
-					externalLinks: [],
-					content: detailFromMarkdown.body || "",
-				} as unknown as PortfolioContentItem;
-			} else {
-				try {
-					redirect("/404");
-				} catch {
-					notFound();
-				}
+			const now = new Date().toISOString();
+			const fallbackTitle = detailFromMarkdown?.title || baseSlug;
+			item = {
+				id: baseSlug,
+				title: fallbackTitle,
+				description: detailFromMarkdown?.summary || "",
+				category: "portfolio",
+				tags: [],
+				status: "draft",
+				priority: 0,
+				createdAt: now,
+				updatedAt: now,
+				thumbnail: undefined,
+				images: [],
+				externalLinks: [],
+				content: detailFromMarkdown?.body || "",
+			} as unknown as PortfolioContentItem;
+			if (!detailFromMarkdown) {
+				detailFromMarkdown = {
+					title: fallbackTitle,
+					summary: "こちらのポートフォリオ詳細は準備中です。",
+					body: "",
+				};
 			}
 		}
 

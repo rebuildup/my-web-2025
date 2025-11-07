@@ -37,7 +37,7 @@ export default function TenkeyPad({
 	}, [handleKeyPress, disabled]);
 
 	const buttonClass = `
-    bg-base border border-main aspect-square flex items-center justify-center text-2xl neue-haas-grotesk-display
+    rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] aspect-square flex items-center justify-center text-2xl neue-haas-grotesk-display
     focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base
     transition-colors duration-150 min-h-16
     ${

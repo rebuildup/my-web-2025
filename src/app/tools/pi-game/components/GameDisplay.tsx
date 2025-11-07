@@ -23,7 +23,7 @@ export default function GameDisplay({
 	return (
 		<div className="space-y-6">
 			{/* Score and Status */}
-			<div className="bg-base border border-main p-6 text-center">
+			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 text-center">
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 					<div>
 						<div className="neue-haas-grotesk-display text-3xl text-main">
@@ -41,7 +41,7 @@ export default function GameDisplay({
 			</div>
 
 			{/* Pi Display */}
-			<div className="bg-base border border-main p-6">
+			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
 				<div className="text-center space-y-4">
 					<h3 className="neue-haas-grotesk-display text-xl text-main">
 						円周率 π

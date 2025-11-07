@@ -21,14 +21,13 @@ const RAW_HTML_TAGS = new Set([
 	"script",
 ]);
 
-function createBlock(type: BlockType, overrides?: Partial<Block>): Block {
-	return {
-		id: nanoid(8),
-		type,
-		content: "",
-		attributes: {},
-		...overrides,
-	};
+export interface ConvertMarkdownToBlocksOptions {
+	generateBlockId?: (payload: {
+		type: BlockType;
+		index: number;
+		content?: string;
+	}) => string;
+	generateListItemId?: (payload: { index: number; content: string }) => string;
 }
 
 function parseAttributes(tag: string): Record<string, string> {
@@ -42,32 +41,32 @@ function parseAttributes(tag: string): Record<string, string> {
 	return attributes;
 }
 
-function parseList(
-	lines: string[],
-	startIndex: number,
-	ordered: boolean,
-): { block: Block; nextIndex: number } {
-	const items: ListItem[] = [];
-	let index = startIndex;
-	const pattern = ordered ? /^\d+\.\s+/ : /^-\s+/;
+export function convertMarkdownToBlocks(
+	markdown: string,
+	options?: ConvertMarkdownToBlocksOptions,
+): Block[] {
+	let blockIndex = 0;
+	let listItemIndex = 0;
 
-	while (index < lines.length && pattern.test(lines[index])) {
-		const raw = lines[index];
-		const content = raw.replace(pattern, "");
-		items.push({
-			id: nanoid(6),
-			content,
-		});
-		index++;
-	}
+	const createBlock = (type: BlockType, overrides?: Partial<Block>): Block => {
+		const contentValue = overrides?.content;
+		const id = options?.generateBlockId
+			? options.generateBlockId({
+					type,
+					index: blockIndex,
+					content: typeof contentValue === "string" ? contentValue : undefined,
+				})
+			: nanoid(8);
+		blockIndex += 1;
+		return {
+			id,
+			type,
+			content: "",
+			attributes: {},
+			...overrides,
+		};
+	};
 
-	const block = createBlock("list", {
-		attributes: { ordered, items },
-	});
-	return { block, nextIndex: index };
-}
-
-export function convertMarkdownToBlocks(markdown: string): Block[] {
 	if (!markdown.trim()) {
 		return [
 			createBlock("paragraph", {
@@ -79,6 +78,35 @@ export function convertMarkdownToBlocks(markdown: string): Block[] {
 	const lines = markdown.split(/\r?\n/);
 	const blocks: Block[] = [];
 	let i = 0;
+
+	const parseList = (
+		inputLines: string[],
+		startIndex: number,
+		ordered: boolean,
+	): { block: Block; nextIndex: number } => {
+		const items: ListItem[] = [];
+		let index = startIndex;
+		const pattern = ordered ? /^\d+\.\s+/ : /^-\s+/;
+
+		while (index < inputLines.length && pattern.test(inputLines[index])) {
+			const raw = inputLines[index];
+			const content = raw.replace(pattern, "");
+			const itemId = options?.generateListItemId
+				? options.generateListItemId({ index: listItemIndex, content })
+				: nanoid(6);
+			listItemIndex += 1;
+			items.push({
+				id: itemId,
+				content,
+			});
+			index++;
+		}
+
+		const block = createBlock("list", {
+			attributes: { ordered, items },
+		});
+		return { block, nextIndex: index };
+	};
 
 	while (i < lines.length) {
 		const line = lines[i];

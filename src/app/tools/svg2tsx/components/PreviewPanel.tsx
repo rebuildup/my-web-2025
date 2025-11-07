@@ -15,11 +15,11 @@ export function PreviewPanel({
 	const [activeTab, setActiveTab] = useState<"svg" | "tsx">("svg");
 
 	return (
-		<div className="bg-base border border-main p-4">
+		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 			<h3 className="text-lg font-medium mb-4">プレビュー</h3>
 
 			{/* Tab Navigation */}
-			<div className="flex border-b border-main mb-4">
+			<div className="flex border-b border-main/20 mb-4">
 				{[
 					{ key: "svg", label: "SVGプレビュー" },
 					{ key: "tsx", label: "TSXコード" },
@@ -30,8 +30,8 @@ export function PreviewPanel({
 						onClick={() => setActiveTab(key as typeof activeTab)}
 						className={`px-4 py-2 border-b-2 transition-colors ${
 							activeTab === key
-								? "border-main text-main"
-								: "border-transparent hover:border-main"
+								? "border-accent text-main"
+								: "border-transparent hover:border-main/40"
 						}`}
 					>
 						{label}
@@ -43,7 +43,7 @@ export function PreviewPanel({
 			{activeTab === "svg" && (
 				<div className="space-y-4">
 					{svgInput?.content ? (
-						<div className="border border-main p-4 bg-base">
+						<div className="rounded-lg bg-main/10 p-4">
 							<div className="flex justify-center items-center min-h-[200px]">
 								<div
 									dangerouslySetInnerHTML={{ __html: svgInput.content }}
@@ -52,7 +52,7 @@ export function PreviewPanel({
 							</div>
 						</div>
 					) : (
-						<div className="border border-main p-8 text-center text-main/50">
+						<div className="rounded-lg bg-main/5 p-8 text-center text-main/50">
 							SVGを入力してください
 						</div>
 					)}
@@ -65,7 +65,7 @@ export function PreviewPanel({
 					{conversionResult ? (
 						<div>
 							{conversionResult.success ? (
-								<div className="border border-main bg-base">
+								<div className="rounded-lg bg-main/10">
 									<pre className="p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">
 										<code>{conversionResult.tsxCode}</code>
 									</pre>
@@ -90,7 +90,7 @@ export function PreviewPanel({
 								)}
 						</div>
 					) : (
-						<div className="border border-main p-8 text-center text-main/50">
+						<div className="rounded-lg bg-main/5 p-8 text-center text-main/50">
 							SVGを入力すると変換結果が表示されます
 						</div>
 					)}

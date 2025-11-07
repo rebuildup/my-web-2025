@@ -111,7 +111,8 @@ export class ContentParser implements ContentParserService {
 		}
 
 		// Resolve embed references to markdown format for parseMarkdown
-		return this.resolveEmbedReferences(content, mediaData);
+		const resolved = this.resolveEmbedReferences(content, mediaData);
+		return this.transformBookmarkTags(resolved);
 	}
 
 	// New method for HTML generation (used by MarkdownRenderer)
@@ -292,6 +293,7 @@ export class ContentParser implements ContentParserService {
 			},
 		);
 
+		processedContent = this.transformBookmarkTags(processedContent);
 		return processedContent;
 	}
 
@@ -433,6 +435,7 @@ export class ContentParser implements ContentParserService {
 			},
 		);
 
+		processedContent = this.transformBookmarkTags(processedContent);
 		return processedContent;
 	}
 
@@ -909,6 +912,60 @@ export class ContentParser implements ContentParserService {
 
 		feedback += "</div>";
 		return feedback;
+	}
+
+	private transformBookmarkTags(content: string): string {
+		const bookmarkPattern = /<Bookmark\b([^>]*)>([\s\S]*?)<\/Bookmark>/gi;
+		let lastIndex = 0;
+		let result = "";
+		let match: RegExpExecArray | null = bookmarkPattern.exec(content);
+
+		while (match) {
+			const [fullMatch, rawAttributes = "", body = ""] = match;
+			result += content.slice(lastIndex, match.index);
+
+			const attributes: Record<string, string> = {};
+			const attributePattern = /(\w+)=(?:"([^"]*)"|'([^']*)')/g;
+			let attributeMatch: RegExpExecArray | null =
+				attributePattern.exec(rawAttributes);
+			while (attributeMatch) {
+				const [, name, valueDouble, valueSingle] = attributeMatch;
+				attributes[name] = (valueDouble ?? valueSingle ?? "").trim();
+				attributeMatch = attributePattern.exec(rawAttributes);
+			}
+
+			const url = (attributes.url || "").trim();
+			const textBody = this.stripHtml(body).trim();
+			const titleCandidate = attributes.title || textBody || url;
+			const descriptionCandidate = attributes.description || textBody || "";
+			const payload = {
+				title: titleCandidate.trim() || undefined,
+				description: descriptionCandidate.trim() || undefined,
+				url: url || undefined,
+				image: attributes.image?.trim() || undefined,
+			};
+
+			if (!payload.url && !payload.title && !payload.description) {
+				result += "";
+			} else {
+				try {
+					const encoded = encodeURIComponent(JSON.stringify(payload));
+					result += `<bookmark-card data-json="${encoded}"></bookmark-card>`;
+				} catch (error) {
+					console.warn("Failed to serialize bookmark payload", payload, error);
+				}
+			}
+
+			lastIndex = match.index + fullMatch.length;
+			match = bookmarkPattern.exec(content);
+		}
+
+		result += content.slice(lastIndex);
+		return result;
+	}
+
+	private stripHtml(value: string): string {
+		return value.replace(/<[^>]*>/g, "");
 	}
 
 	// Helper methods for video URL processing

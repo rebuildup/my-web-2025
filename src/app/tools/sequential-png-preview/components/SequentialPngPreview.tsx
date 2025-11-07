@@ -103,7 +103,7 @@ export default function SequentialPngPreview() {
 	return (
 		<div className="space-y-6">
 			{/* File Upload Section */}
-			<div className="bg-base border border-main p-6 rounded-lg">
+			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
 				<h2 className="text-xl font-semibold mb-4 text-main">ファイル選択</h2>
 				<FileUploader onFilesLoaded={handleFilesLoaded} />
 			</div>
@@ -111,7 +111,7 @@ export default function SequentialPngPreview() {
 			{frames.length > 0 && (
 				<>
 					{/* Controls */}
-					<div className="bg-base border border-main p-4 rounded-lg">
+					<div className="rounded-lg bg-main/10 p-4">
 						<div className="flex flex-wrap items-center justify-between gap-4">
 							<div className="flex items-center gap-2">
 								<button
@@ -127,7 +127,7 @@ export default function SequentialPngPreview() {
 								<button
 									type="button"
 									onClick={resetAnimation}
-									className="flex items-center gap-2 px-4 py-2 border border-main rounded hover:bg-main/10 transition-colors"
+									className="flex items-center gap-2 px-4 py-2 rounded-lg bg-main/10 hover:bg-main/20 transition-colors"
 									aria-label="リセット"
 								>
 									<RotateCcw size={16} />
@@ -136,7 +136,7 @@ export default function SequentialPngPreview() {
 							</div>
 
 							<div className="flex items-center gap-2">
-								<div className="flex border border-main rounded overflow-hidden">
+								<div className="flex rounded-lg bg-main/10 overflow-hidden">
 									<button
 										type="button"
 										onClick={() => setPreviewMode("animation")}
@@ -181,7 +181,7 @@ export default function SequentialPngPreview() {
 								<button
 									type="button"
 									onClick={() => setShowSettings(!showSettings)}
-									className="flex items-center gap-2 px-4 py-2 border border-main rounded hover:bg-main/10 transition-colors"
+									className="flex items-center gap-2 px-4 py-2 rounded-lg bg-main/10 hover:bg-main/20 transition-colors"
 									aria-label="設定"
 								>
 									<Settings size={16} />
@@ -209,7 +209,7 @@ export default function SequentialPngPreview() {
 
 					{/* Settings Panel */}
 					{showSettings && (
-						<div className="bg-base border border-main p-6 rounded-lg">
+						<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
 							<h3 className="text-lg font-semibold mb-4 text-main">
 								アニメーション設定
 							</h3>
@@ -248,7 +248,7 @@ export default function SequentialPngPreview() {
 													| "pingpong",
 											}))
 										}
-										className="w-full p-2 border border-main rounded"
+										className="w-full p-2 rounded-lg bg-main/10"
 									>
 										<option value="forward">順再生</option>
 										<option value="backward">逆再生</option>
@@ -284,7 +284,7 @@ export default function SequentialPngPreview() {
 												quality: e.target.value as "low" | "medium" | "high",
 											}))
 										}
-										className="w-full p-2 border border-main rounded"
+										className="w-full p-2 rounded-lg bg-main/10"
 									>
 										<option value="low">低品質</option>
 										<option value="medium">中品質</option>
@@ -305,7 +305,7 @@ export default function SequentialPngPreview() {
 					)}
 
 					{/* Preview Area */}
-					<div className="bg-base border border-main rounded-lg overflow-hidden">
+					<div className="rounded-lg bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] overflow-hidden">
 						{previewMode === "animation" && (
 							<AnimationPlayer
 								frames={frames}
@@ -334,7 +334,7 @@ export default function SequentialPngPreview() {
 											key={frame.dataUrl}
 											className={`flex items-center gap-4 p-3 rounded cursor-pointer transition-colors ${
 												index === currentFrame
-													? "bg-main/20 border border-main"
+													? "bg-main/20"
 													: "hover:bg-main/5"
 											}`}
 											onClick={() => handleFrameSelect(index)}
@@ -344,7 +344,7 @@ export default function SequentialPngPreview() {
 												alt={`Frame ${index + 1}`}
 												width={64}
 												height={64}
-												className="w-16 h-16 object-contain border border-main/20 rounded"
+												className="w-16 h-16 object-contain rounded bg-main/5"
 												unoptimized={true}
 											/>
 											<div>

@@ -97,7 +97,7 @@ export default function AnimationPlayer({
 			{/* Canvas Container */}
 			<div
 				ref={containerRef}
-				className="relative bg-base border border-main/20 rounded overflow-hidden"
+				className="relative rounded-lg bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] overflow-hidden"
 			>
 				<canvas
 					ref={canvasRef}

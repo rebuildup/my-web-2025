@@ -30,7 +30,7 @@ export default function SettingsPanel({
 	};
 
 	return (
-		<div className="bg-base border border-main p-4 space-y-6">
+		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-6">
 			<h3 className="font-medium text-main">設定</h3>
 
 			{/* Count Settings */}
@@ -73,7 +73,7 @@ export default function SettingsPanel({
 						onChange={(e) =>
 							handleCountSettingChange("countMethod", e.target.value)
 						}
-						className="w-full p-2 bg-base border border-main text-main focus:outline-none focus:ring-2 focus:ring-main"
+						className="w-full p-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<option value="all">すべての文字</option>
 						<option value="visible">表示可能文字のみ</option>
@@ -130,7 +130,7 @@ export default function SettingsPanel({
 						onChange={(e) =>
 							handleDisplaySettingChange("fontSize", e.target.value)
 						}
-						className="w-full p-2 bg-base border border-main text-main focus:outline-none focus:ring-2 focus:ring-main"
+						className="w-full p-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<option value="small">小</option>
 						<option value="medium">中</option>
@@ -162,7 +162,7 @@ function CheckboxSetting({
 				id={id}
 				checked={checked}
 				onChange={(e) => onChange(e.target.checked)}
-				className="w-4 h-4 text-main bg-base border border-main focus:ring-2 focus:ring-main"
+				className="w-4 h-4 text-main rounded bg-main/10 focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 			/>
 			<label htmlFor={id} className="text-sm text-main cursor-pointer">
 				{label}

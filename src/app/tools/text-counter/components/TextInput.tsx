@@ -42,9 +42,9 @@ export default function TextInput({
 				onChange={handleChange}
 				placeholder={placeholder}
 				className={`
-          w-full h-96 p-4 
-          bg-base border border-main 
-          focus:outline-none focus:ring-2 focus:ring-main focus:border-transparent
+          w-full h-96 p-4 rounded-xl
+          bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)]
+          focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
           resize-none
           ${fontSizeClasses[fontSize]}
         `}

@@ -585,10 +585,11 @@ export default function ColorPaletteGenerator() {
 	}, [savedPalettes]);
 
 	// Design system classes
-	const CardStyle = "bg-base border border-main p-4 space-y-4";
+	const CardStyle =
+		"rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-4";
 	const Section_title = "neue-haas-grotesk-display text-xl text-main mb-4";
 	const Input_style =
-		"bg-base border border-main p-2 text-main focus:outline-none focus:ring-2 focus:ring-accent";
+		"rounded-lg bg-main/10 p-2 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base";
 	const Button_style =
 		"bg-accent text-main px-4 py-2 border border-accent hover:bg-base hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base";
 
@@ -689,7 +690,7 @@ export default function ColorPaletteGenerator() {
 							</div>
 
 							{currentHarmony && (
-								<div className="bg-base border border-main p-3">
+								<div className="rounded-lg bg-main/10 p-3">
 									<h4 className="neue-haas-grotesk-display text-sm text-main mb-2">
 										Current Harmony: {currentHarmony.type}
 									</h4>
@@ -717,7 +718,7 @@ export default function ColorPaletteGenerator() {
 											onClick={() =>
 												applyPreset(preset as keyof typeof colorRangePresets)
 											}
-											className="bg-base border border-main px-3 py-2 text-sm hover:bg-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent capitalize"
+											className="rounded-lg bg-main/10 px-3 py-2 text-sm hover:bg-main/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base capitalize"
 										>
 											{preset}
 										</button>
@@ -1013,7 +1014,7 @@ export default function ColorPaletteGenerator() {
 											}}
 										>
 											<div
-												className="w-full h-20 border border-main cursor-pointer"
+												className="w-full h-20 rounded-lg cursor-pointer ring-2 ring-main/20 hover:ring-main/40 transition-all"
 												style={{ backgroundColor: color.hex }}
 												onClick={() => copyColor(color, "hex")}
 												onKeyDown={(e) => {
@@ -1053,7 +1054,7 @@ export default function ColorPaletteGenerator() {
 
 												{/* Enhanced Accessibility Information */}
 												{showAccessibility && color.accessibility && (
-													<div className="pt-2 border-t border-main">
+													<div className="pt-2 border-t border-main/20">
 														<div className="text-xs space-y-1">
 															<div className="flex justify-between">
 																<span>vs White:</span>
@@ -1173,7 +1174,7 @@ export default function ColorPaletteGenerator() {
 										</button>
 									</div>
 
-									<div className="bg-base border border-main p-4 overflow-x-auto">
+									<div className="rounded-lg bg-main/10 p-4 overflow-x-auto">
 										<pre className="text-xs whitespace-pre-wrap">
 											{exportFormat === "css"
 												? exportAsCSS()
@@ -1244,7 +1245,7 @@ export default function ColorPaletteGenerator() {
 											{filteredPalettes.map((palette) => (
 												<div
 													key={palette.id}
-													className="bg-base border border-main p-3"
+													className="rounded-lg bg-main/10 p-3"
 												>
 													<div className="flex justify-between items-start mb-2">
 														<div>
@@ -1262,7 +1263,7 @@ export default function ColorPaletteGenerator() {
 																	{palette.tags.map((tag, index) => (
 																		<span
 																			key={index}
-																			className="text-xs bg-base border border-main px-2 py-1"
+																			className="text-xs rounded-lg bg-main/10 px-2 py-1"
 																		>
 																			{tag}
 																		</span>
@@ -1281,7 +1282,7 @@ export default function ColorPaletteGenerator() {
 															<button
 																type="button"
 																onClick={() => deletePalette(palette.id)}
-																className="text-xs bg-base border border-main px-2 py-1 hover:bg-base transition-colors focus:outline-none focus:ring-1 focus:ring-main"
+																className="text-xs rounded-lg bg-main/10 px-2 py-1 hover:bg-main/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 															>
 																Delete
 															</button>
@@ -1291,7 +1292,7 @@ export default function ColorPaletteGenerator() {
 														{palette.colors.map((color, colorIndex) => (
 															<div
 																key={colorIndex}
-																className="w-8 h-8 border border-main cursor-pointer"
+																className="w-8 h-8 rounded cursor-pointer ring-2 ring-main/20 hover:ring-main/40 transition-all"
 																style={{ backgroundColor: color.hex }}
 																onClick={() => copyColor(color, "hex")}
 																title={color.hex}

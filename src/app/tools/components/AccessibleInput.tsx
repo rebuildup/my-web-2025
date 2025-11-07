@@ -109,7 +109,7 @@ const AccessibleInput = forwardRef<
       focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
       disabled:opacity-50 disabled:cursor-not-allowed
       ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
-      ${error ? "border-red-500" : "border-main"}
+      ${error ? "border-red-500" : "border-main/20"}
       ${isFocused ? "ring-2 ring-accent ring-offset-2 ring-offset-base" : ""}
     `;
 

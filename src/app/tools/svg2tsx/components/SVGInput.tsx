@@ -84,11 +84,11 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 	}, [urlInput, onSVGChange]);
 
 	return (
-		<div className="bg-base border border-main p-4">
+		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 			<h3 className="text-lg font-medium mb-4">SVG入力</h3>
 
 			{/* Tab Navigation */}
-			<div className="flex border-b border-main mb-4">
+			<div className="flex border-b border-main/20 mb-4">
 				{[
 					{ key: "file", label: "ファイル" },
 					{ key: "code", label: "コード" },
@@ -100,8 +100,8 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 						onClick={() => setActiveTab(key as typeof activeTab)}
 						className={`px-4 py-2 border-b-2 transition-colors ${
 							activeTab === key
-								? "border-main text-main"
-								: "border-transparent hover:border-main"
+								? "border-accent text-main"
+								: "border-transparent hover:border-main/40"
 						}`}
 					>
 						{label}
@@ -112,10 +112,10 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 			{/* File Upload */}
 			{activeTab === "file" && (
 				<div
-					className={`border-2 border-dashed p-8 text-center transition-colors ${
+					className={`border-2 border-dashed border-main/20 p-8 text-center transition-colors rounded-lg ${
 						dragOver
-							? "border-main bg-main/10"
-							: "border-main hover:border-main"
+							? "border-accent bg-main/10"
+							: "hover:border-main/40 hover:bg-main/5"
 					}`}
 					onDrop={handleDrop}
 					onDragOver={(e) => {
@@ -160,7 +160,7 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 						value={codeInput}
 						onChange={(e) => handleCodeChange(e.target.value)}
 						placeholder="<svg>...</svg>"
-						className="w-full h-64 p-3 border border-main bg-base font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-main"
+						className="w-full h-64 p-3 rounded-lg bg-main/10 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 					/>
 				</div>
 			)}
@@ -175,7 +175,7 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 							value={urlInput}
 							onChange={(e) => setUrlInput(e.target.value)}
 							placeholder="https://example.com/image.svg"
-							className="flex-1 p-3 border border-main bg-base focus:outline-none focus:ring-2 focus:ring-main"
+							className="flex-1 p-3 rounded-lg bg-main/10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 						/>
 						<button
 							type="button"

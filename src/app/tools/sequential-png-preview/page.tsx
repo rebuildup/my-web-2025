@@ -35,30 +35,34 @@ export const metadata: Metadata = {
 
 export default function SequentialPngPreviewPage() {
 	return (
-		<>
-			<div className="container-system pt-10 pb-4">
-				<Breadcrumbs
-					items={[
-						{ label: "Home", href: "/" },
-						{ label: "Tools", href: "/tools" },
-						{ label: "Sequential PNG Preview", isCurrent: true },
-					]}
-				/>
-			</div>
-			<div className="container-system">
-				<div className="space-y-8">
-					<div className="text-center space-y-4">
-						<h1 className="text-4xl font-bold text-main">
-							Sequential PNG Preview
-						</h1>
-						<p className="text-lg text-main max-w-2xl mx-auto">
-							連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。
-						</p>
-					</div>
+		<div className="relative min-h-screen bg-base text-main">
+			<main className="relative z-10 min-h-screen py-10" tabIndex={-1}>
+				<div className="container-system">
+					<div className="mx-auto w-full max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
+						<Breadcrumbs
+							items={[
+								{ label: "Home", href: "/" },
+								{ label: "Tools", href: "/tools" },
+								{ label: "Sequential PNG Preview", isCurrent: true },
+							]}
+							className="pt-4"
+						/>
 
-					<SequentialPngPreview />
+						<header className="space-y-6">
+							<h1 className="neue-haas-grotesk-display text-4xl text-main sm:text-5xl lg:text-6xl">
+								Sequential PNG Preview
+							</h1>
+							<p className="noto-sans-jp-light text-sm text-main/70 leading-relaxed max-w-2xl">
+								連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。
+							</p>
+						</header>
+
+						<section className="space-y-6">
+							<SequentialPngPreview />
+						</section>
+					</div>
 				</div>
-			</div>
-		</>
+			</main>
+		</div>
 	);
 }

@@ -46,7 +46,7 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
 									{item.count} ({percentage.toFixed(1)}%)
 								</span>
 							</div>
-							<div className="w-full bg-base border border-main h-2">
+							<div className="w-full rounded-full bg-main/10 h-2">
 								<div
 									className="h-full transition-all duration-300"
 									style={{
@@ -114,7 +114,7 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
 				{chartData.map((item) => (
 					<div key={item.label} className="flex items-center gap-1 text-xs">
 						<div
-							className="w-3 h-3 border border-main"
+							className="w-3 h-3 rounded"
 							style={{ backgroundColor: item.color }}
 						/>
 						<span className="text-main">{item.label}</span>

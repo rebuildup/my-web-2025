@@ -261,7 +261,7 @@ export default function PomodoroTimer() {
 	return (
 		<div className="space-y-8">
 			{/* Timer Display */}
-			<div className="bg-base border border-main p-8 rounded-lg text-center">
+			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-8 text-center">
 				<div className="space-y-6">
 					<div className="space-y-2">
 						<h2 className="text-2xl font-semibold text-main">
@@ -316,7 +316,7 @@ export default function PomodoroTimer() {
 						<button
 							type="button"
 							onClick={handleStop}
-							className="flex items-center gap-2 px-4 py-3 border border-main rounded-lg hover:bg-main/10 transition-colors"
+							className="flex items-center gap-2 px-4 py-3 rounded-lg bg-main/10 hover:bg-main/20 transition-colors"
 							aria-label="タイマー停止"
 						>
 							<Square size={20} />
@@ -326,7 +326,7 @@ export default function PomodoroTimer() {
 						<button
 							type="button"
 							onClick={handleSkip}
-							className="flex items-center gap-2 px-4 py-3 border border-main rounded-lg hover:bg-main/10 transition-colors"
+							className="flex items-center gap-2 px-4 py-3 rounded-lg bg-main/10 hover:bg-main/20 transition-colors"
 							aria-label="セッションスキップ"
 						>
 							<SkipForward size={20} />
@@ -353,7 +353,7 @@ export default function PomodoroTimer() {
 				<button
 					type="button"
 					onClick={() => setShowSettings(!showSettings)}
-					className="flex items-center gap-2 px-4 py-2 border border-main rounded-lg hover:bg-main/10 transition-colors"
+					className="flex items-center gap-2 px-4 py-2 rounded-lg bg-main/10 hover:bg-main/20 transition-colors"
 					aria-label="設定"
 				>
 					<Settings size={20} />
@@ -363,7 +363,7 @@ export default function PomodoroTimer() {
 				<button
 					type="button"
 					onClick={() => setShowStats(!showStats)}
-					className="flex items-center gap-2 px-4 py-2 border border-main rounded-lg hover:bg-main/10 transition-colors"
+					className="flex items-center gap-2 px-4 py-2 rounded-lg bg-main/10 hover:bg-main/20 transition-colors"
 					aria-label="統計"
 				>
 					<BarChart3 size={20} />
@@ -390,7 +390,7 @@ export default function PomodoroTimer() {
 			)}
 
 			{/* Instructions */}
-			<div className="bg-base border border-main p-6 rounded-lg">
+			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
 				<h3 className="text-lg font-semibold mb-4 text-main">
 					ポモドーロテクニックについて
 				</h3>

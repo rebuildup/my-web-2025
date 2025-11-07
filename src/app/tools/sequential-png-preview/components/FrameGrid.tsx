@@ -57,7 +57,7 @@ export default function FrameGrid({
 							onChange={(e) =>
 								setGridSize(e.target.value as "small" | "medium" | "large")
 							}
-							className="px-2 py-1 border border-main rounded text-sm"
+							className="px-2 py-1 rounded-lg bg-main/10 text-sm"
 						>
 							<option value="small">小</option>
 							<option value="medium">中</option>
@@ -81,10 +81,10 @@ export default function FrameGrid({
 				{frames.map((frame, index) => (
 					<div
 						key={frame.dataUrl}
-						className={`relative group cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
+						className={`relative group cursor-pointer rounded-lg overflow-hidden transition-all ${
 							index === currentFrame
-								? "border-main shadow-lg scale-105"
-								: "border-main/20 hover:border-main/40 hover:scale-102"
+								? "bg-main/20 shadow-lg scale-105 ring-2 ring-accent"
+								: "bg-main/5 hover:bg-main/10 hover:scale-102"
 						}`}
 						onClick={() => onFrameSelect(index)}
 					>
@@ -119,7 +119,7 @@ export default function FrameGrid({
 
 						{/* Frame Info */}
 						{showInfo && (
-							<div className="p-2 bg-base border-t border-main/20">
+							<div className="p-2 bg-main/5 border-t border-main/10">
 								<div className="text-xs space-y-1">
 									<div className="font-medium truncate" title={frame.name}>
 										{frame.name}
@@ -141,7 +141,7 @@ export default function FrameGrid({
 			</div>
 
 			{/* Grid Statistics */}
-			<div className="mt-6 p-4 bg-base border border-main/20 rounded-lg">
+			<div className="mt-6 p-4 rounded-lg bg-main/5">
 				<h4 className="font-medium mb-2 text-main">統計情報</h4>
 				<div className="grid grid-2 gap-4 text-sm">
 					<div>

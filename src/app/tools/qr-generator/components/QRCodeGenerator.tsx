@@ -336,13 +336,14 @@ export default function QRCodeGenerator() {
 	}, [drawQRCode]);
 
 	// Design system classes
-	const CardStyle = "bg-base border border-main p-4 space-y-4";
+	const CardStyle =
+		"rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-4";
 	const Section_title = "neue-haas-grotesk-display text-xl text-main mb-4";
 	const Input_style =
-		"bg-base border border-main p-2 text-main focus:outline-none focus:ring-2 focus:ring-accent w-full";
+		"rounded-lg bg-main/10 p-2 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base w-full";
 
 	const Select_style =
-		"bg-base border border-main p-2 text-main focus:outline-none focus:ring-2 focus:ring-accent";
+		"rounded-lg bg-main/10 p-2 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
 		<ToolWrapper
@@ -497,14 +498,14 @@ export default function QRCodeGenerator() {
 										type="color"
 										value={foregroundColor}
 										onChange={(e) => setForegroundColor(e.target.value)}
-										className="w-12 h-8 border border-main cursor-pointer"
+										className="w-12 h-8 rounded bg-main/10 cursor-pointer hover:bg-main/20 transition-colors"
 										aria-label="Foreground color picker"
 									/>
 									<input
 										type="text"
 										value={foregroundColor}
 										onChange={(e) => setForegroundColor(e.target.value)}
-										className="flex-1 bg-base border border-main p-2 text-main focus:outline-none focus:ring-2 focus:ring-accent"
+										className="flex-1 rounded-lg bg-main/10 p-2 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 										placeholder="#000000"
 										aria-label="Foreground color hex value"
 									/>
@@ -520,14 +521,14 @@ export default function QRCodeGenerator() {
 										type="color"
 										value={backgroundColor}
 										onChange={(e) => setBackgroundColor(e.target.value)}
-										className="w-12 h-8 border border-main cursor-pointer"
+										className="w-12 h-8 rounded bg-main/10 cursor-pointer hover:bg-main/20 transition-colors"
 										aria-label="Background color picker"
 									/>
 									<input
 										type="text"
 										value={backgroundColor}
 										onChange={(e) => setBackgroundColor(e.target.value)}
-										className="flex-1 bg-base border border-main p-2 text-main focus:outline-none focus:ring-2 focus:ring-accent"
+										className="flex-1 rounded-lg bg-main/10 p-2 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 										placeholder="#ffffff"
 										aria-label="Background color hex value"
 									/>
@@ -545,7 +546,7 @@ export default function QRCodeGenerator() {
 						<div className="text-center space-y-4">
 							<canvas
 								ref={canvasRef}
-								className="border border-main mx-auto"
+								className="rounded-lg bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] mx-auto"
 								style={{ maxWidth: "100%", height: "auto" }}
 								aria-label="Generated QR code"
 							/>
@@ -582,7 +583,7 @@ export default function QRCodeGenerator() {
 									<button
 										type="button"
 										onClick={testQRCode}
-										className="bg-base border border-main px-4 py-2 hover:bg-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+										className="rounded-lg bg-main/10 px-4 py-2 hover:bg-main/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 										aria-label="Test URL in new tab"
 									>
 										Test URL (T)
@@ -591,7 +592,7 @@ export default function QRCodeGenerator() {
 								<button
 									type="button"
 									onClick={resetForm}
-									className="bg-base border border-main px-4 py-2 hover:bg-base transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+									className="rounded-lg bg-main/10 px-4 py-2 hover:bg-main/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 									aria-label="Reset form"
 								>
 									Reset (R)
@@ -635,7 +636,7 @@ export default function QRCodeGenerator() {
 							</div>
 						</div>
 
-						<div className="bg-base border border-main p-4">
+						<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 							<p className="noto-sans-jp-light text-xs text-center">
 								注意: このツールは簡易的なQRコード生成機能です。
 								商用利用や重要な用途には専用ライブラリの使用を推奨します。

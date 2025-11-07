@@ -19,7 +19,7 @@ export function ConversionSettingsPanel({
 	};
 
 	return (
-		<div className="bg-base border border-main p-4">
+		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 			<h3 className="text-lg font-medium mb-4">変換設定</h3>
 
 			<div className="space-y-6">
@@ -36,7 +36,7 @@ export function ConversionSettingsPanel({
 								type="text"
 								value={settings.componentName}
 								onChange={(e) => updateSetting("componentName", e.target.value)}
-								className="w-full p-2 border border-main bg-base text-sm focus:outline-none focus:ring-2 focus:ring-main"
+								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								placeholder="MyIcon"
 							/>
 						</div>
@@ -49,7 +49,7 @@ export function ConversionSettingsPanel({
 								type="text"
 								value={settings.propsType}
 								onChange={(e) => updateSetting("propsType", e.target.value)}
-								className="w-full p-2 border border-main bg-base text-sm focus:outline-none focus:ring-2 focus:ring-main"
+								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								placeholder="IconProps"
 							/>
 						</div>
@@ -139,7 +139,7 @@ export function ConversionSettingsPanel({
 								onChange={(e) =>
 									updateSetting("indentSize", parseInt(e.target.value, 10))
 								}
-								className="w-full p-2 border border-main bg-base text-sm focus:outline-none focus:ring-2 focus:ring-main"
+								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 							>
 								<option value={2}>2スペース</option>
 								<option value={4}>4スペース</option>
@@ -154,7 +154,7 @@ export function ConversionSettingsPanel({
 								onChange={(e) =>
 									updateSetting("lineBreaks", e.target.value as "lf" | "crlf")
 								}
-								className="w-full p-2 border border-main bg-base text-sm focus:outline-none focus:ring-2 focus:ring-main"
+								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 							>
 								<option value="lf">LF (Unix)</option>
 								<option value="crlf">CRLF (Windows)</option>
@@ -173,7 +173,7 @@ export function ConversionSettingsPanel({
 										e.target.value as "default" | "named",
 									)
 								}
-								className="w-full p-2 border border-main bg-base text-sm focus:outline-none focus:ring-2 focus:ring-main"
+								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 							>
 								<option value="default">デフォルトエクスポート</option>
 								<option value="named">名前付きエクスポート</option>
@@ -192,7 +192,7 @@ export function ConversionSettingsPanel({
 										e.target.value as ConversionSettings["fileExtension"],
 									)
 								}
-								className="w-full p-2 border border-main bg-base text-sm focus:outline-none focus:ring-2 focus:ring-main"
+								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 							>
 								<option value=".tsx">.tsx (TypeScript JSX)</option>
 								<option value=".ts">.ts (TypeScript)</option>

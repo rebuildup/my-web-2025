@@ -254,7 +254,7 @@ export default function AccessibilityTestingComponent({
 
 	return (
 		<div className="fixed bottom-4 right-4 z-50 max-w-md">
-			<div className="bg-base border border-main shadow-lg rounded-lg overflow-hidden">
+			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] overflow-hidden">
 				{/* Header */}
 				<div className="bg-accent text-main p-3 flex justify-between items-center">
 					<h3 className="neue-haas-grotesk-display text-sm font-medium">

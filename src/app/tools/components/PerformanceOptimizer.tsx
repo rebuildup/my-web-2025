@@ -59,7 +59,7 @@ export default function PerformanceOptimizer({
 		<div className="relative">
 			{/* Performance Status Bar */}
 			{showPerformanceInfo && (
-				<div className="mb-4 bg-base border border-main p-3">
+				<div className="mb-4 rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
 					<div className="flex items-center justify-between mb-2">
 						<h3 className="neue-haas-grotesk-display text-sm text-main">
 							Performance Status
@@ -115,7 +115,7 @@ export default function PerformanceOptimizer({
 
 					{/* Detailed Information */}
 					{showDetails && (
-						<div className="mt-4 pt-4 border-t border-main space-y-3">
+						<div className="mt-4 pt-4 border-t border-main/20 space-y-3">
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
 								<div>
 									<h4 className="font-medium mb-2">Storage Information</h4>
@@ -124,7 +124,7 @@ export default function PerformanceOptimizer({
 										<div>
 											Available: {(storageUsage.available / 1024).toFixed(1)} KB
 										</div>
-										<div className="w-full bg-base border border-main h-2">
+										<div className="w-full rounded-full bg-main/10 h-2">
 											<div
 												className="h-full bg-accent transition-all duration-300"
 												style={{
@@ -174,14 +174,14 @@ export default function PerformanceOptimizer({
 								<button
 									type="button"
 									onClick={clearData}
-									className="text-xs bg-base border border-main px-3 py-1 hover:bg-base transition-colors focus:outline-none focus:ring-1 focus:ring-main"
+									className="text-xs rounded-lg bg-main/10 px-3 py-1 hover:bg-main/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								>
 									Clear Tool Data
 								</button>
 								<button
 									type="button"
 									onClick={() => window.location.reload()}
-									className="text-xs bg-base border border-main px-3 py-1 hover:bg-base transition-colors focus:outline-none focus:ring-1 focus:ring-main"
+									className="text-xs rounded-lg bg-main/10 px-3 py-1 hover:bg-main/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								>
 									Refresh Tool
 								</button>
@@ -193,14 +193,14 @@ export default function PerformanceOptimizer({
 
 			{/* Processing Progress Bar */}
 			{isProcessing && (
-				<div className="mb-4 bg-base border border-main p-3">
+				<div className="mb-4 rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
 					<div className="flex items-center justify-between mb-2">
 						<span className="text-sm text-main">Processing...</span>
 						<span className="text-sm text-accent">
 							{processingProgress.toFixed(0)}%
 						</span>
 					</div>
-					<div className="w-full bg-base border border-main h-2">
+					<div className="w-full rounded-full bg-main/10 h-2">
 						<div
 							className="h-full bg-accent transition-all duration-300"
 							style={{ width: `${processingProgress}%` }}
@@ -248,7 +248,7 @@ export default function PerformanceOptimizer({
 
 			{/* Performance Optimization Tips */}
 			{showPerformanceInfo && enableOptimizations && (
-				<div className="mt-6 bg-base border border-main p-4">
+				<div className="mt-6 rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 					<h3 className="neue-haas-grotesk-display text-sm text-main mb-3">
 						Performance Tips
 					</h3>

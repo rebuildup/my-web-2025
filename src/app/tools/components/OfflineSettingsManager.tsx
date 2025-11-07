@@ -163,7 +163,7 @@ export default function OfflineSettingsManager<
 		<div className="space-y-4">
 			{/* Settings Controls */}
 			{showControls && (
-				<div className="bg-base border border-main p-4">
+				<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 					<div className="flex items-center justify-between mb-4">
 						<div className="flex items-center space-x-2">
 							<Settings size={16} className="text-main" />
@@ -222,7 +222,7 @@ export default function OfflineSettingsManager<
 								</AccessibleButton>
 
 								<label className="inline-flex">
-									<span className="inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-base text-main border border-main hover:bg-base focus:ring-main focus:ring-offset-base px-3 py-1.5 text-sm min-h-[32px] cursor-pointer">
+									<span className="inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg bg-main/10 text-main hover:bg-main/20 focus:ring-accent focus:ring-offset-base px-3 py-1.5 text-sm min-h-[32px] cursor-pointer">
 										<Upload size={14} />
 										Import
 									</span>
@@ -257,7 +257,7 @@ export default function OfflineSettingsManager<
 							</div>
 
 							{/* Settings Info */}
-							<div className="pt-2 border-t border-main">
+							<div className="pt-2 border-t border-main/20">
 								<h4 className="text-xs font-medium mb-2">
 									Settings Information
 								</h4>

@@ -47,7 +47,7 @@ export function DownloadPanel({
 	const isDisabled = !conversionResult?.success || !conversionResult.tsxCode;
 
 	return (
-		<div className="bg-base border border-main p-4">
+		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 			<h3 className="text-lg font-medium mb-4">ダウンロード</h3>
 
 			<div className="space-y-4">
@@ -59,7 +59,7 @@ export function DownloadPanel({
 							type="text"
 							value={fileName}
 							onChange={(e) => setFileName(e.target.value)}
-							className="flex-1 p-2 border border-main bg-base text-sm focus:outline-none focus:ring-2 focus:ring-main"
+							className="flex-1 p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 							placeholder="Component"
 						/>
 						<span className="flex items-center px-2 text-sm text-main/70">
@@ -84,7 +84,7 @@ export function DownloadPanel({
 						type="button"
 						onClick={handleCopy}
 						disabled={isDisabled}
-						className={`flex-1 border border-main px-4 py-2 transition-colors ${
+						className={`flex-1 rounded-lg bg-main/10 hover:bg-main/20 px-4 py-2 transition-colors ${
 							copySuccess
 								? "bg-green-100 text-green-700 border-green-500"
 								: "hover:bg-main/10"

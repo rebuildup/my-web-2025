@@ -81,9 +81,7 @@ export default function TimerDisplay({
 			<div className="grid grid-3 gap-4 text-center text-sm">
 				<div
 					className={`p-3 rounded-lg ${
-						sessionType === "work"
-							? "bg-main/20 border border-main"
-							: "bg-main/5"
+						sessionType === "work" ? "bg-main/20" : "bg-main/5"
 					}`}
 				>
 					<div className="font-medium">作業</div>

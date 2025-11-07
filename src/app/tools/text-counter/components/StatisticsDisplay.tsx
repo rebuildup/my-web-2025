@@ -17,7 +17,7 @@ export default function StatisticsDisplay({
 			<h2 className="text-xl font-semibold text-main">統計情報</h2>
 
 			{displaySettings.showBasicStats && (
-				<div className="bg-base border border-main p-4 space-y-3">
+				<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
 					<h3 className="font-medium text-main">基本統計</h3>
 					<div className="grid grid-cols-2 gap-4">
 						<StatItem label="総文字数" value={stats.totalCharacters} />
@@ -38,7 +38,7 @@ export default function StatisticsDisplay({
 			)}
 
 			{displaySettings.showStructureStats && (
-				<div className="bg-base border border-main p-4 space-y-3">
+				<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
 					<h3 className="font-medium text-main">構造統計</h3>
 					<div className="grid grid-cols-2 gap-4">
 						<StatItem label="単語数" value={stats.wordCount} />
@@ -50,7 +50,7 @@ export default function StatisticsDisplay({
 			)}
 
 			{displaySettings.showCharacterTypes && (
-				<div className="bg-base border border-main p-4 space-y-3">
+				<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
 					<h3 className="font-medium text-main">文字種別</h3>
 					<div className="grid grid-cols-2 gap-4">
 						<StatItem label="ひらがな" value={stats.characterTypes.hiragana} />
@@ -72,7 +72,7 @@ export default function StatisticsDisplay({
 			)}
 
 			{displaySettings.showDetailedStats && (
-				<div className="bg-base border border-main p-4 space-y-3">
+				<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
 					<h3 className="font-medium text-main">詳細統計</h3>
 					<div className="space-y-2">
 						<StatItem

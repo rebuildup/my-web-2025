@@ -38,22 +38,30 @@ export const metadata: Metadata = {
 export default function ProtoTypePage() {
 	return (
 		<div
-			className="min-h-screen"
+			className="relative min-h-screen"
 			style={{
 				backgroundColor: "var(--ProtoTypeMainBG, #000000)",
 				color: "var(--ProtoTypeMainColor, #ffffff)",
 			}}
 		>
-			<div className="container-system pt-10 pb-4">
-				<Breadcrumbs
-					items={[
-						{ label: "Home", href: "/" },
-						{ label: "Tools", href: "/tools" },
-						{ label: "ProtoType Typing Game", isCurrent: true },
-					]}
-				/>
-			</div>
-			<ProtoTypeClient />
+			<main className="relative z-10 min-h-screen py-10" tabIndex={-1}>
+				<div className="container-system">
+					<div className="mx-auto w-full max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
+						<Breadcrumbs
+							items={[
+								{ label: "Home", href: "/" },
+								{ label: "Tools", href: "/tools" },
+								{ label: "ProtoType Typing Game", isCurrent: true },
+							]}
+							className="pt-4"
+						/>
+
+						<section className="space-y-6">
+							<ProtoTypeClient />
+						</section>
+					</div>
+				</div>
+			</main>
 
 			{/* Structured Data */}
 			<script type="application/ld+json">

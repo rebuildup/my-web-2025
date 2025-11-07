@@ -22,7 +22,7 @@ export default function SettingsPanel({
 	};
 
 	return (
-		<div className="bg-base border border-main p-6 rounded-lg">
+		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
 			<div className="flex items-center justify-between mb-6">
 				<h3 className="text-lg font-semibold text-main">タイマー設定</h3>
 				<button
@@ -233,7 +233,7 @@ export default function SettingsPanel({
 							onChange={(e) =>
 								updateSetting("theme", e.target.value as "light" | "dark")
 							}
-							className="w-full p-2 border border-main rounded"
+							className="w-full p-2 rounded-lg bg-main/10"
 						>
 							<option value="light">ライト</option>
 							<option value="dark">ダーク</option>
@@ -260,7 +260,7 @@ export default function SettingsPanel({
 							};
 							onSettingsChange(defaultSettings);
 						}}
-						className="w-full px-4 py-2 border border-main rounded hover:bg-main/10 transition-colors text-sm"
+						className="w-full px-4 py-2 rounded-lg bg-main/10 hover:bg-main/20 transition-colors text-sm"
 					>
 						設定をリセット
 					</button>
