@@ -404,11 +404,11 @@ jobs:
           
           if [ -d "data/contents" ]; then
             echo "Contents directory found"
-            DB_COUNT=$(find data/contents -name '*.db' 2>/dev/null | wc -l)
+            DB_COUNT=$(find data/contents -name '*.db' -type f 2>/dev/null | wc -l 2>/dev/null || echo "0")
             echo "Number of database files: $DB_COUNT"
-            if [ "$DB_COUNT" -gt 0 ]; then
+            if [ "$DB_COUNT" -gt 0 ] 2>/dev/null; then
               echo "Database files:"
-              find data/contents -name '*.db' 2>/dev/null | head -10
+              find data/contents -name '*.db' -type f 2>/dev/null | head -10 || true
             fi
           else
             echo "⚠️  Warning: contents directory not found"
@@ -427,9 +427,13 @@ jobs:
           fi
 
           echo "✅ Files extracted successfully"
-          echo "BUILD_ID: $(cat .next/BUILD_ID)"
+          echo "BUILD_ID: $(cat .next/BUILD_ID 2>/dev/null || echo 'unknown')"
           echo "Deployment info:"
-          cat deployment-info.json
+          if [ -f "deployment-info.json" ]; then
+            cat deployment-info.json
+          else
+            echo "⚠️  Warning: deployment-info.json not found"
+          fi
 
           # 7. Set up environment
           cat > .env.production.local << ENV_EOF
@@ -441,7 +445,11 @@ jobs:
 
           # 8. Quick test of standalone server
           echo "Testing standalone server..."
-          timeout 30 node server.js &
+          if command -v timeout >/dev/null 2>&1; then
+            timeout 30 node server.js &
+          else
+            node server.js &
+          fi
           TEST_PID=$!
 
           sleep 15
@@ -450,15 +458,11 @@ jobs:
             echo "✅ Server startup successful"
             
             # Test endpoints
-            if curl -f -s http://localhost:3000/ > /dev/null; then
-              echo "✅ Home page responding"
-            fi
+            curl -f -s http://localhost:3000/ > /dev/null 2>&1 && echo "✅ Home page responding" || echo "⚠️  Home page not responding"
             
-            if curl -f -s http://localhost:3000/api/health > /dev/null; then
-              echo "✅ Health check responding"
-            fi
+            curl -f -s http://localhost:3000/api/health > /dev/null 2>&1 && echo "✅ Health check responding" || echo "⚠️  Health check not responding"
             
-            kill $TEST_PID
+            kill $TEST_PID 2>/dev/null || true
             sleep 3
           else
             echo "❌ Server startup failed"
