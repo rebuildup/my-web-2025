@@ -112,18 +112,28 @@ export default function AdminDatabaseManager() {
 					`/api/cms/databases/stats?id=${encodeURIComponent(databaseId)}`,
 				);
 				if (!response.ok) {
+					// 404エラーの場合は、データベースが存在しない可能性があるため、静かに処理
+					if (response.status === 404) {
+						// 統計情報を取得できなかったことを記録するだけ
+						// エラーをスローせず、統計情報を表示しない
+						return;
+					}
 					throw new Error(`Failed to fetch stats: ${response.status}`);
 				}
 				const data = (await response.json()) as DatabaseStats;
 				setStatsMap((prev) => ({ ...prev, [databaseId]: data }));
 			} catch (error) {
-				console.error("[Database] stats failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "統計情報の取得に失敗しました",
-					"error",
-				);
+				// 404エラー以外のエラーのみログに記録
+				if (
+					error instanceof Error &&
+					!error.message.includes("404")
+				) {
+					console.error("[Database] stats failed", error);
+					showSnackbar(
+						error.message || "統計情報の取得に失敗しました",
+						"error",
+					);
+				}
 			}
 		},
 		[showSnackbar],
@@ -290,11 +300,7 @@ export default function AdminDatabaseManager() {
 			<PageHeader
 				title="データベース管理"
 				description="SQLiteベースのコンテンツデータベースをコピー・切替・編集します。アクティブなDBを切り替えることで、柔軟な運用フローを実現します。"
-				breadcrumbs={[
-					{ label: "Admin", href: "/admin" },
-					{ label: "Content", href: "/admin/content" },
-					{ label: "Databases" },
-				]}
+				
 				actions={[
 					<Button
 						key="refresh"

@@ -178,18 +178,12 @@ export default async function VideoProjectsPage() {
 									Video Projects
 								</h1>
 								<p className="noto-sans-jp-light text-sm max-w leading-loose">
-									映像制作・モーショングラフィックス・アニメーション作品集です.
-									<br />
-									YouTube・Vimeo埋め込みと制作プロセスを含めて紹介しています.
+									制作した映像作品をまとめたギャラリーです
 								</p>
 							</header>
 
 							{/* Video Gallery */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
-									Video Projects ({videoItems.length})
-								</h2>
-								{/* Debug banner removed in production */}
 								<VideoGallery items={videoItems} />
 
 								{process.env.NODE_ENV !== "production" &&

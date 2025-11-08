@@ -493,12 +493,27 @@ export function BlockEditor({
 	}, []);
 
 	const handleBlockMouseEnter = useCallback((blockId: string) => {
-		setHoveredBlockId(blockId);
+		setHoveredBlockId((current) => {
+			// 既に同じブロックがホバーされている場合は更新しない
+			if (current === blockId) {
+				return current;
+			}
+			return blockId;
+		});
 	}, []);
 
-	const handleBlockMouseLeave = useCallback(() => {
-		setHoveredBlockId(null);
-	}, []);
+	const handleBlockMouseLeave = useCallback(
+		(event: React.MouseEvent<HTMLDivElement>) => {
+			// マウスが子要素に移動した場合はホバーを解除しない
+			const relatedTarget = event.relatedTarget as Node | null;
+			const currentTarget = event.currentTarget;
+			if (relatedTarget && currentTarget.contains(relatedTarget)) {
+				return;
+			}
+			setHoveredBlockId(null);
+		},
+		[],
+	);
 
 	const isMenuOpen = Boolean(menuAnchor);
 	const isAddMenuOpen = Boolean(addMenuAnchor);
@@ -578,8 +593,16 @@ export function BlockEditor({
 					<Box
 						key={block.id}
 						onClick={() => setActive(block.id)}
-						onMouseEnter={() => handleBlockMouseEnter(block.id)}
-						onMouseLeave={handleBlockMouseLeave}
+						onMouseEnter={(event) => {
+							// イベントバブリングを防ぐ
+							event.stopPropagation();
+							handleBlockMouseEnter(block.id);
+						}}
+						onMouseLeave={(event) => {
+							// イベントバブリングを防ぐ
+							event.stopPropagation();
+							handleBlockMouseLeave(event);
+						}}
 						onDragEnter={(event) => handleDragOver(event, block.id)}
 						onDragOver={(event) => handleDragOver(event, block.id)}
 						onDragLeave={(event) => handleDragLeave(event, block.id)}

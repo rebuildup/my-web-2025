@@ -112,12 +112,12 @@ export function SafeImage({
 		imageProps.unoptimized = true;
 
 	// Normalize style so object-position is respected
-	const style: React.CSSProperties = {
+	const baseStyle: React.CSSProperties = {
 		...(props.style || {}),
 	};
 	// If objectPosition is not provided, default to center when using cover positioning patterns
-	if (!style.objectPosition && (className || "").includes("object-cover")) {
-		style.objectPosition = "center center";
+	if (!baseStyle.objectPosition && (className || "").includes("object-cover")) {
+		baseStyle.objectPosition = "center center";
 	}
 
 	// next/image はクエリ付きローカルURLに対して localPatterns 設定が必要。
@@ -132,6 +132,25 @@ export function SafeImage({
 	const shouldUseImgTag = isApiMediaSrc || shouldUseFill;
 
 	if (shouldUseImgTag) {
+		// fillプロパティを使っている場合、画像を親要素にフィットさせる
+		const imgStyle: React.CSSProperties = {
+			...baseStyle,
+		};
+		if (fill || shouldUseFill) {
+			// fillプロパティを使っている場合、position: absoluteを優先
+			// props.styleで上書きされないように、最後に設定
+			Object.assign(imgStyle, {
+				position: "absolute",
+				top: "0",
+				left: "0",
+				width: "100%",
+				height: "100%",
+			});
+		}
+		// propsからstyleを除外して、imgStyleを優先
+		const { style: _style, ...restProps } = props as Record<string, unknown> & {
+			style?: React.CSSProperties;
+		};
 		return (
 			<div
 				className={`relative ${fill || shouldUseFill ? "w-full h-full" : ""}`}
@@ -145,8 +164,8 @@ export function SafeImage({
 					onLoad={handleLoad}
 					width={width}
 					height={height}
-					style={style}
-					{...(props as Record<string, unknown>)}
+					style={imgStyle}
+					{...restProps}
 				/>
 				{shouldShowDebug && <ImageDebugInfo src={currentSrc} alt={alt} />}
 			</div>
@@ -155,7 +174,7 @@ export function SafeImage({
 
 	return (
 		<div className={`relative ${fill ? "w-full h-full" : ""}`}>
-			<Image src={currentSrc} alt={alt} {...imageProps} style={style} />
+			<Image src={currentSrc} alt={alt} {...imageProps} style={baseStyle} />
 			{shouldShowDebug && <ImageDebugInfo src={currentSrc} alt={alt} />}
 		</div>
 	);

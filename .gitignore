@@ -53,5 +53,3 @@ cache-bust-config.json
 
 # build artifacts
 .swc/
-
-pnpm-lock.yaml

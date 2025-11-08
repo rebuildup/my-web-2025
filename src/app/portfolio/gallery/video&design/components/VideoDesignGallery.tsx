@@ -964,9 +964,10 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 							src={thumbnailSrc}
 							alt={item.title || "Portfolio item"}
 							fill
-							className="gallery-image object-cover"
+							className="gallery-image object-cover object-center"
 							style={{
 								objectFit: "cover",
+								objectPosition: "center center",
 								width: "100%",
 								height: "100%",
 								borderRadius: "6px",

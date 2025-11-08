@@ -283,11 +283,6 @@ export default function AdminMarkdownManager() {
 			<PageHeader
 				title="Markdownページ管理"
 				description="コンテンツに紐づくMarkdown本文を一覧・編集・分析します。検索とフィルタで対象ページを素早く特定し、統計情報から文章品質を確認できます。"
-				breadcrumbs={[
-					{ label: "Admin", href: "/admin" },
-					{ label: "Content", href: "/admin/content" },
-					{ label: "Markdown" },
-				]}
 				actions={[
 					<Button
 						key="refresh"

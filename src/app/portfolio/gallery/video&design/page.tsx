@@ -211,19 +211,12 @@ export default async function VideoDesignProjectsPage() {
 										Video & Design
 									</h1>
 									<p className="noto-sans-jp-light text-sm max-w leading-loose">
-										デザインコンセプトと映像表現を融合した創造的なプロジェクト集です.
-										<br />
-										クリエイティブな意図と視覚的な表現手法を重視して紹介しています.
-										<br />
-										縦3列グリッドでコンテンツに応じたサイズの独特なギャラリー表現を実現しています.
+										制作した映像作品とデザイン作品をまとめたギャラリーです
 									</p>
 								</header>
 
 								{/* Main Gallery */}
 								<section>
-									<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
-										Video & Design Gallery
-									</h2>
 									{videoDesignItems.length > 0 ? (
 										<VideoDesignGallery
 											items={videoDesignItems}

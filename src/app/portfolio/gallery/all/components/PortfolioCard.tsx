@@ -50,7 +50,7 @@ export function PortfolioCard({
 	const CardRoot = ({ children }: { children: React.ReactNode }) => {
 		if (variant === "glow") {
 			return (
-				<GlowCard className="group cursor-pointer text-left block bg-base/30 backdrop-blur flex flex-col">
+				<GlowCard className="group cursor-pointer text-left bg-base/30 backdrop-blur flex flex-col">
 					{children}
 				</GlowCard>
 			);
@@ -78,7 +78,10 @@ export function PortfolioCard({
 						fill
 						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 						className="object-cover object-center group-hover:scale-105 transition-transform duration-300"
-						style={{ objectPosition: "center center" }}
+						style={{
+							objectPosition: "center center",
+							transformOrigin: "center center",
+						}}
 						onError={() => {
 							console.error(
 								"Image failed to load:",

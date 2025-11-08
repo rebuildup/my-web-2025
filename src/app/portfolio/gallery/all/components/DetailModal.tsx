@@ -121,7 +121,8 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 								alt={item.title}
 								width={800}
 								height={450}
-								className="w-full h-full object-cover"
+								className="w-full h-full object-cover object-center"
+								style={{ objectPosition: "center center" }}
 								priority
 								unoptimized={true}
 							/>

@@ -75,7 +75,7 @@ export function SortControls({ sort, onSortChange }: SortControlsProps) {
 			</div>
 
 			{/* Sort Description */}
-			<div className="hidden sm:block text-xs sm:text-sm text-main/60 flex-shrink-0">
+			<div className="hidden sm:block text-xs sm:text-sm text-main/60 shrink-0">
 				Sorted by {getSortLabel(sort.sortBy)} (
 				{sort.sortOrder === "asc" ? "ascending" : "descending"})
 			</div>

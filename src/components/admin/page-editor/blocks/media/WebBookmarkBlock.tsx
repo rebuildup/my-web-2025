@@ -9,7 +9,7 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { sanitizeUrl } from "@/cms/page-editor/lib/utils/sanitize";
 import type { BlockComponentProps } from "../types";
 
@@ -27,12 +27,18 @@ export function WebBookmarkBlock({
 	const [hovered, setHovered] = useState(false);
 	const safeUrl = useMemo(() => sanitizeUrl(url), [url]);
 
+	// onAttributesChangeをrefで保持して、useEffectの依存配列から除外
+	const onAttributesChangeRef = useRef(onAttributesChange);
+	useEffect(() => {
+		onAttributesChangeRef.current = onAttributesChange;
+	}, [onAttributesChange]);
+
 	useEffect(() => {
 		let cancelled = false;
 		const fetchOg = async () => {
 			if (!safeUrl) {
 				if (image) {
-					onAttributesChange({ image: "" });
+					onAttributesChangeRef.current({ image: "" });
 				}
 				return;
 			}
@@ -54,12 +60,12 @@ export function WebBookmarkBlock({
 					if ((data.description || "") !== (description || ""))
 						next.description = data.description || "";
 					if (Object.keys(next).length > 0) {
-						onAttributesChange(next);
+						onAttributesChangeRef.current(next);
 					}
 				}
 			} catch {
 				if (!cancelled && image) {
-					onAttributesChange({ image: "" });
+					onAttributesChangeRef.current({ image: "" });
 				}
 			}
 		};
@@ -67,7 +73,9 @@ export function WebBookmarkBlock({
 		return () => {
 			cancelled = true;
 		};
-	}, [safeUrl, image, title, description, onAttributesChange]);
+		// onAttributesChangeを依存配列から除外
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [safeUrl, image, title, description]);
 
 	return (
 		<Card

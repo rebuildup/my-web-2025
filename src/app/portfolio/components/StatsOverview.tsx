@@ -131,7 +131,11 @@ export function StatsOverview({
 											src={featured.thumbnail}
 											alt={featured.title}
 											fill
-											className="object-cover transition-transform duration-500 group-hover:scale-105"
+											className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+											style={{
+												objectPosition: "center center",
+												transformOrigin: "center center",
+											}}
 											sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
 										/>
 									) : (
@@ -400,7 +404,11 @@ export function StatsOverview({
 										src={randomItem.thumbnail}
 										alt={randomItem.title}
 										fill
-										className="object-cover transition-transform duration-500 group-hover:scale-105"
+										className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+										style={{
+											objectPosition: "center center",
+											transformOrigin: "center center",
+										}}
 										sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
 									/>
 								) : (

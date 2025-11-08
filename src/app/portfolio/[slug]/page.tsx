@@ -261,9 +261,9 @@ function ContentSection({
 			)}
 
 			{/* Show basic item information as additional context */}
-			{(item.images?.length ||
-				item.videos?.length ||
-				item.externalLinks?.length) && (
+			{((item.images?.length ?? 0) > 0 ||
+				(item.videos?.length ?? 0) > 0 ||
+				(item.externalLinks?.length ?? 0) > 0) && (
 				<div className="pt-6 sm:pt-8 border-t border-main/10">
 					<div className="space-y-6 sm:space-y-8">
 						{/* Images */}
@@ -282,7 +282,8 @@ function ContentSection({
 												src={image}
 												alt={`${item.title} - 画像 ${index + 1}`}
 												fill
-												className="object-cover transition-opacity duration-300"
+												className="object-cover object-center transition-opacity duration-300"
+												style={{ objectPosition: "center center" }}
 												sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 50vw, 33vw"
 												priority={index === 0}
 											/>

@@ -34,6 +34,7 @@ export function CustomHtmlBlock({
 		[block.content],
 	);
 	const previewRef = useRef<HTMLDivElement | null>(null);
+	const lastHtmlRef = useRef<string>("");
 
 	useEffect(() => {
 		if (readOnly) {
@@ -48,11 +49,22 @@ export function CustomHtmlBlock({
 		setMode(next);
 	}, []);
 
+	// HTMLコンテンツを更新する（コンテンツが変更された場合のみ）
 	useEffect(() => {
 		if (!previewRef.current || (mode !== "preview" && !readOnly)) {
 			return;
 		}
 
+		// コンテンツが変更されていない場合は何もしない（再読み込みを防ぐ）
+		if (lastHtmlRef.current === sanitizedHtml && sanitizedHtml !== "") {
+			return;
+		}
+
+		// HTMLコンテンツを設定
+		previewRef.current.innerHTML = sanitizedHtml;
+		lastHtmlRef.current = sanitizedHtml;
+
+		// スクリプトを再実行
 		const scripts = Array.from(
 			previewRef.current.querySelectorAll("script"),
 		) as HTMLScriptElement[];
@@ -65,7 +77,7 @@ export function CustomHtmlBlock({
 			replacement.textContent = script.textContent;
 			script.replaceWith(replacement);
 		});
-	}, [mode, readOnly]);
+	}, [mode, readOnly, sanitizedHtml]);
 
 	return (
 		<Card
@@ -139,7 +151,7 @@ export function CustomHtmlBlock({
 											maxWidth: "100%",
 										},
 									}}
-									dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+									// dangerouslySetInnerHTMLは使用せず、useEffectで制御
 								/>
 							)}
 						</Box>

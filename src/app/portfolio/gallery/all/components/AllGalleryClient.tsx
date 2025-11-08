@@ -70,7 +70,7 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
 						All Projects
 					</h1>
 					<p className="noto-sans-jp-light text-sm max-w leading-loose">
-						全ての作品を時系列・カテゴリ・技術で絞り込み表示します。
+						全ての制作物をまとめたギャラリーです
 					</p>
 				</header>
 			</div>

@@ -17,7 +17,6 @@ import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import type { PortfolioContentItem } from "@/types/portfolio";
 import { LatestWorksSection } from "./components/LatestWorksSection";
-import RandomContent from "./components/RandomContent";
 import { StatsOverview } from "./components/StatsOverview";
 
 /**
@@ -310,8 +309,7 @@ export default async function PortfolioPage() {
 											Portfolio
 										</h1>
 										<p className="noto-sans-jp-light text-sm max-w-2xl leading-loose">
-											4つのカテゴリ別ギャラリーへの導線を提供し、作品の全体像を把握できるハブページです。
-											プログラミング、ゲーム開発、映像制作、デザインなど幅広いクリエイティブ作品を紹介しています。
+											これまでに制作した作品/プロジェクトをまとめたポートフォリオページです。
 										</p>
 									</div>
 								</header>

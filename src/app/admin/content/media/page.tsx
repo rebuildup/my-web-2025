@@ -297,11 +297,7 @@ export default function AdminMediaManager() {
 			<PageHeader
 				title="メディアライブラリ"
 				description="コンテンツごとの画像・アセットを一元管理します。検索やタグフィルタで目的のメディアを素早く見つけ、詳細情報やプレビューを確認できます。"
-				breadcrumbs={[
-					{ label: "Admin", href: "/admin" },
-					{ label: "Content", href: "/admin/content" },
-					{ label: "Media" },
-				]}
+				
 				actions={[
 					<Button
 						key="refresh"

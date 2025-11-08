@@ -51,7 +51,8 @@ export function AdminShell({ children }: AdminShellProps) {
 	const pathname = usePathname();
 	const router = useRouter();
 	const [mobileOpen, setMobileOpen] = useState(false);
-	const isDesktop = useMediaQuery("(min-width:900px)");
+	// useMediaQueryはSSRとCSRで異なる値を返す可能性があるため、noSsrオプションを使用
+	const isDesktop = useMediaQuery("(min-width:900px)", { noSsr: true });
 	const isFullWidthPage = pathname.startsWith("/admin/content/page-editor");
 	const tabIndex = getTabIndex(pathname);
 
@@ -99,7 +100,12 @@ export function AdminShell({ children }: AdminShellProps) {
 							flexWrap: "wrap",
 						}}
 					>
-						<Typography variant="subtitle1" fontWeight={600} noWrap>
+						<Typography
+							variant="subtitle1"
+							fontWeight={600}
+							noWrap
+							sx={{ pl: 2 }}
+						>
 							Content Management
 						</Typography>
 						<Box sx={{ flex: 1 }} />

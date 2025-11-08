@@ -186,11 +186,6 @@ export const staticRoutes: SitemapEntry[] = [
 		priority: 0.7,
 		changeFrequency: "weekly",
 	},
-	{
-		url: "/workshop/analytics",
-		priority: 0.5,
-		changeFrequency: "monthly",
-	},
 
 	// Tools - high priority for user engagement
 	{

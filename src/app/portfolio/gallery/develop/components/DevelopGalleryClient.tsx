@@ -215,9 +215,7 @@ export function DevelopGalleryClient({
 						Development Projects
 					</h1>
 					<p className="noto-sans-jp-light text-sm max-w leading-loose">
-						Web開発・ゲーム開発・技術実装に重点を置いた作品集です。
-						<br />
-						技術スタック、GitHubリンク、実装の詳細を含めて紹介しています。
+						開発系プロジェクトをまとめたギャラリーです
 					</p>
 				</div>
 			</header>
@@ -263,7 +261,11 @@ export function DevelopGalleryClient({
 															src={project.thumbnail}
 															alt={project.title}
 															fill
-															className="object-cover group-hover:scale-105 transition-transform duration-300"
+															className="object-cover object-center group-hover:scale-105 transition-transform duration-300"
+															style={{
+																objectPosition: "center center",
+																transformOrigin: "center center",
+															}}
 															sizes="(max-width: 768px) 100vw, 50vw"
 															showDebug={false}
 														/>

@@ -35,7 +35,10 @@ export class GitHubIntegration {
 		return GitHubIntegration.instance;
 	}
 
-	private async fetchWithCache<T>(url: string): Promise<T> {
+	private async fetchWithCache<T>(
+		url: string,
+		allow404: boolean = false,
+	): Promise<T | null> {
 		const cached = this.cache.get(url);
 		if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
 			return cached.data;
@@ -50,6 +53,14 @@ export class GitHubIntegration {
 			});
 
 			if (!response.ok) {
+				// 404エラーの場合、allow404がtrueの場合はnullを返す
+				if (response.status === 404 && allow404) {
+					return null;
+				}
+				// 404エラーの場合は静かに処理（リポジトリが存在しない可能性）
+				if (response.status === 404) {
+					return null;
+				}
 				throw new Error(`GitHub API error: ${response.status}`);
 			}
 
@@ -57,8 +68,18 @@ export class GitHubIntegration {
 			this.cache.set(url, { data, timestamp: Date.now() });
 			return data;
 		} catch (error) {
-			console.error("GitHub API fetch error:", error);
-			throw error;
+			// 404エラーの場合は静かに処理
+			if (
+				error instanceof Error &&
+				error.message.includes("404")
+			) {
+				return null;
+			}
+			// その他のエラーはログに記録するが、開発環境でのみ表示
+			if (process.env.NODE_ENV === "development") {
+				console.warn("GitHub API fetch error:", error);
+			}
+			return null;
 		}
 	}
 
@@ -66,10 +87,11 @@ export class GitHubIntegration {
 		try {
 			const release = await this.fetchWithCache<GitHubRelease>(
 				`${GITHUB_API_BASE}/releases/latest`,
+				true,
 			);
 			return release;
 		} catch (error) {
-			console.error("Failed to fetch latest release:", error);
+			// エラーは既にfetchWithCacheで処理されているため、ここではnullを返す
 			return null;
 		}
 	}
@@ -78,10 +100,11 @@ export class GitHubIntegration {
 		try {
 			const releases = await this.fetchWithCache<GitHubRelease[]>(
 				`${GITHUB_API_BASE}/releases?per_page=${limit}`,
+				true,
 			);
-			return releases;
+			return releases || [];
 		} catch (error) {
-			console.error("Failed to fetch releases:", error);
+			// エラーは既にfetchWithCacheで処理されているため、ここでは空配列を返す
 			return [];
 		}
 	}
@@ -147,7 +170,13 @@ export class GitHubIntegration {
 		lastUpdated: string;
 	} | null> {
 		try {
-			const repo = await this.fetchWithCache<any>(`${GITHUB_API_BASE}`);
+			const repo = await this.fetchWithCache<any>(
+				`${GITHUB_API_BASE}`,
+				true,
+			);
+			if (!repo) {
+				return null;
+			}
 			return {
 				stars: repo.stargazers_count,
 				forks: repo.forks_count,
@@ -155,7 +184,7 @@ export class GitHubIntegration {
 				lastUpdated: repo.updated_at,
 			};
 		} catch (error) {
-			console.error("Failed to fetch repository stats:", error);
+			// エラーは既にfetchWithCacheで処理されているため、ここではnullを返す
 			return null;
 		}
 	}
@@ -171,7 +200,11 @@ export class GitHubIntegration {
 		try {
 			const contributors = await this.fetchWithCache<any[]>(
 				`${GITHUB_API_BASE}/contributors`,
+				true,
 			);
+			if (!contributors) {
+				return [];
+			}
 			return contributors.map((contributor) => ({
 				login: contributor.login,
 				avatar_url: contributor.avatar_url,
@@ -179,7 +212,7 @@ export class GitHubIntegration {
 				html_url: contributor.html_url,
 			}));
 		} catch (error) {
-			console.error("Failed to fetch contributors:", error);
+			// エラーは既にfetchWithCacheで処理されているため、ここでは空配列を返す
 			return [];
 		}
 	}
@@ -221,6 +254,7 @@ export const initializeGitHubIntegration = async (): Promise<void> => {
 			localStorage.setItem("prototypeUpdateInfo", JSON.stringify(updateInfo));
 		}
 	} catch (_error) {
-		console.log("GitHub integration initialized with limited functionality");
+		// エラーは既に内部で処理されているため、ここでは何もしない
+		// GitHubリポジトリが存在しない場合でも、アプリケーションは正常に動作する
 	}
 };

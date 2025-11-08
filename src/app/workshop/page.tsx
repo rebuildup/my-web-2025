@@ -215,7 +215,8 @@ async function loadMarkdownPagesFromDb(): Promise<MarkdownPage[]> {
 				"SELECT id, content_id, slug, frontmatter, body, html_cache, path, lang, status, version, created_at, updated_at, published_at FROM markdown_pages ORDER BY updated_at DESC",
 			)
 			.all();
-		return rows
+		console.log("[Workshop] Raw markdown rows from DB:", rows.length);
+		const parsed = rows
 			.map((row) => {
 				try {
 					const frontmatter = row.frontmatter
@@ -238,13 +239,25 @@ async function loadMarkdownPagesFromDb(): Promise<MarkdownPage[]> {
 					};
 					return parsed;
 				} catch (error) {
-					console.error("Failed to parse markdown row", row.slug, error);
+					console.error(
+						"[Workshop] Failed to parse markdown row",
+						row.slug,
+						error,
+					);
 					return null;
 				}
 			})
 			.filter((item): item is MarkdownPage => item !== null);
+		console.log(
+			"[Workshop] Successfully parsed markdown pages:",
+			parsed.length,
+		);
+		return parsed;
 	} catch (error) {
-		console.error("Failed to load markdown pages from database", error);
+		console.error(
+			"[Workshop] Failed to load markdown pages from database",
+			error,
+		);
 		return [];
 	}
 }
@@ -359,6 +372,11 @@ export default async function WorkshopPage() {
 		loadMarkdownPagesFromDb(),
 		loadContentByType("blog"),
 	]);
+
+	// デバッグ: データ読み込み結果をログに出力
+	console.log("[Workshop] Markdown pages loaded:", markdownPages.length);
+	console.log("[Workshop] Blog content items loaded:", blogContentItems.length);
+
 	const contentIndexEntries = getAllFromIndex();
 	const contentIndexMap = new Map<string, ContentIndexEntry>(
 		contentIndexEntries.map((entry) => [entry.id, entry]),
@@ -369,6 +387,8 @@ export default async function WorkshopPage() {
 	const publishedMarkdown = markdownPages.filter(
 		(page) => (page.status ?? "draft") === "published",
 	);
+	console.log("[Workshop] Published markdown pages:", publishedMarkdown.length);
+
 	const pagesForDisplay =
 		publishedMarkdown.length > 0 ? publishedMarkdown : markdownPages;
 

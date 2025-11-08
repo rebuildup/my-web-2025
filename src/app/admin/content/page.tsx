@@ -258,7 +258,6 @@ export default function AdminContentPage() {
 			<PageHeader
 				title="コンテンツ管理"
 				description="コンテンツの作成・編集・公開状態を管理します。"
-				breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Content", href: "/admin/content" }]}
 				actions={[
 					<Button key="refresh" variant="outlined" onClick={handleRefresh} startIcon={<RefreshCcw size={16} />}>更新</Button>,
 					<Button key="create" variant="contained" startIcon={<Plus size={16} />} onClick={() => setIsCreateOpen(true)}>新規コンテンツ</Button>,
