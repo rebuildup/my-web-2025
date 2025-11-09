@@ -39,41 +39,62 @@ try {
 		try {
 			// better-sqlite3を再ビルド（複数の方法を試行）
 			console.log("🔨 方法1: pnpm rebuild...");
-			execSync("pnpm rebuild better-sqlite3", { stdio: "inherit" });
+			try {
+				execSync("pnpm rebuild better-sqlite3", { stdio: "inherit" });
+			} catch (rebuildError) {
+				console.log("⚠️ pnpm rebuild failed, continuing...");
+			}
 
 			// 動作確認
 			console.log("🧪 動作確認中...");
-			const Database = require("better-sqlite3");
-			const testDb = new Database(":memory:");
-			testDb.close();
-
-			console.log("✅ better-sqlite3の自動ビルド完了！");
-		} catch (_error) {
-			console.log("🔄 方法1が失敗、方法2を試行中...");
 			try {
-				// 代替方法: npm rebuild
-				execSync("npm rebuild better-sqlite3", { stdio: "inherit" });
-
-				// 動作確認
-				console.log("🧪 動作確認中...");
 				const Database = require("better-sqlite3");
 				const testDb = new Database(":memory:");
 				testDb.close();
-
 				console.log("✅ better-sqlite3の自動ビルド完了！");
-			} catch (_error2) {
-				console.log("🔄 方法2が失敗、方法3を試行中...");
+			} catch (requireError) {
+				console.log("🔄 方法1が失敗、方法2を試行中...");
 				try {
-					// 最終手段: 手動ビルド
-					execSync("node -e \"require('better-sqlite3')\"", { stdio: "inherit" });
-					console.log("✅ better-sqlite3が利用可能です！");
-				} catch (error3) {
-					console.error("❌ 全ての自動ビルド方法が失敗しました");
-					console.error("❌ エラー:", error3.message);
-					console.log("💡 手動でビルドを実行してください: pnpm rebuild better-sqlite3");
-					// エラーが発生してもプロセスを続行（postinstallが失敗してもインストールは完了）
+					// 代替方法: npm rebuild
+					try {
+						execSync("npm rebuild better-sqlite3", { stdio: "inherit" });
+					} catch (npmRebuildError) {
+						console.log("⚠️ npm rebuild failed, continuing...");
+					}
+
+					// 動作確認
+					console.log("🧪 動作確認中...");
+					try {
+						const Database = require("better-sqlite3");
+						const testDb = new Database(":memory:");
+						testDb.close();
+						console.log("✅ better-sqlite3の自動ビルド完了！");
+					} catch (requireError2) {
+						console.log("🔄 方法2が失敗、方法3を試行中...");
+						try {
+							// 最終手段: 手動ビルド
+							try {
+								execSync("node -e \"require('better-sqlite3')\"", { stdio: "inherit" });
+								console.log("✅ better-sqlite3が利用可能です！");
+							} catch (nodeError) {
+								console.error("❌ 全ての自動ビルド方法が失敗しました");
+								console.error("❌ エラー:", nodeError.message);
+								console.log("💡 手動でビルドを実行してください: pnpm rebuild better-sqlite3");
+								// エラーが発生してもプロセスを続行（postinstallが失敗してもインストールは完了）
+							}
+						} catch (error3) {
+							console.error("❌ 方法3でエラーが発生しました:", error3.message);
+							// エラーが発生してもプロセスを続行
+						}
+					}
+				} catch (_error2) {
+					console.error("❌ 方法2でエラーが発生しました:", _error2.message);
+					// エラーが発生してもプロセスを続行
 				}
 			}
+		} catch (_error) {
+			console.error("❌ 方法1でエラーが発生しました:", _error.message);
+			// エラーが発生してもプロセスを続行
 		}
 	} else {
 		console.log("ℹ️ better-sqlite3が見つかりません。スキップします。");
