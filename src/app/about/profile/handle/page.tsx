@@ -12,11 +12,6 @@ const ScrollVelocity = dynamic(
 	() => import("@appletosolutions/reactbits").then((mod) => mod.ScrollVelocity),
 	{ ssr: false },
 );
-const SpotlightCard = dynamic(
-	() => import("@appletosolutions/reactbits").then((mod) => mod.SpotlightCard),
-	{ ssr: false },
-);
-
 // Custom typing animation component
 function TypingText({
 	text,

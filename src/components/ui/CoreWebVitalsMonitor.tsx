@@ -368,15 +368,18 @@ const PerformanceReport: React.FC<PerformanceReportProps> = ({ detector }) => {
 						Performance Issues ({status.regressions.length})
 					</h5>
 					<ul className="text-sm text-yellow-700 space-y-1">
-						{status.regressions.map((regression, index) => (
-							<li key={index} className="flex items-start">
-								<span className="mr-2">•</span>
-								<span>
-									{regression.metric}: {regression.regression.toFixed(1)}%
-									regression
-								</span>
-							</li>
-						))}
+						{status.regressions.map((regression) => {
+							const regressionKey = `${regression.metric}-${regression.regression.toFixed(1)}`;
+							return (
+								<li key={regressionKey} className="flex items-start">
+									<span className="mr-2">•</span>
+									<span>
+										{regression.metric}: {regression.regression.toFixed(1)}%
+										regression
+									</span>
+								</li>
+							);
+						})}
 					</ul>
 				</div>
 			)}

@@ -228,8 +228,8 @@ export const ResponsiveExperimentGrid: React.FC<
 								<div className="flex flex-wrap gap-1">
 									{experiment.technology
 										.slice(0, responsive.isMobile ? 2 : 3)
-										.map((tech, index) => (
-											<span key={index} className={textClasses.tech}>
+										.map((tech) => (
+											<span key={tech} className={textClasses.tech}>
 												{tech}
 											</span>
 										))}
@@ -251,17 +251,20 @@ export const ResponsiveExperimentGrid: React.FC<
 			{/* Page indicators for mobile */}
 			{responsive.isMobile && totalPages > 1 && (
 				<div className="flex justify-center space-x-2">
-					{Array.from({ length: totalPages }, (_, index) => (
-						<button
-							type="button"
-							key={index}
-							onClick={() => setCurrentPage(index)}
-							className={`w-2 h-2 rounded-full transition-colors ${
-								index === currentPage ? "bg-accent" : "bg-main opacity-30"
-							}`}
-							aria-label={`Go to page ${index + 1}`}
-						/>
-					))}
+					{Array.from({ length: totalPages }, (_, index) => {
+						const pageNumber = index + 1;
+						return (
+							<button
+								type="button"
+								key={pageNumber}
+								onClick={() => setCurrentPage(index)}
+								className={`w-2 h-2 rounded-full transition-colors ${
+									index === currentPage ? "bg-accent" : "bg-main opacity-30"
+								}`}
+								aria-label={`Go to page ${pageNumber}`}
+							/>
+						);
+					})}
 				</div>
 			)}
 		</div>

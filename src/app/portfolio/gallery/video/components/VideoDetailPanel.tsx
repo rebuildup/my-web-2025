@@ -1,8 +1,6 @@
 "use client";
 
-import { GlareHover } from "@appletosolutions/reactbits";
 import { Calendar, ExternalLink, Play, X } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { SafeImage } from "@/components/ui/SafeImage";
@@ -41,7 +39,6 @@ export default function VideoDetailPanel({
 }: VideoDetailPanelProps) {
 	const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 	const [full, setFull] = useState<FullContent | null>(null);
-	const [loading, setLoading] = useState(false);
 
 	// Load full content (with links/assets/ext) when panel opens
 	useEffect(() => {
@@ -50,7 +47,6 @@ export default function VideoDetailPanel({
 			return;
 		}
 		let aborted = false;
-		setLoading(true);
 		fetch(`/api/cms/contents?id=${encodeURIComponent(item.id)}`, {
 			cache: "no-store",
 		})
@@ -60,7 +56,7 @@ export default function VideoDetailPanel({
 				setFull(data as FullContent);
 			})
 			.finally(() => {
-				if (!aborted) setLoading(false);
+				// no-op
 			});
 		return () => {
 			aborted = true;

@@ -69,7 +69,7 @@ if (copied.length === 0) {
 }
 
 console.log(
-	"[copy-content-data] Copied data directory to:\n - " + copied.join("\n - "),
+	`[copy-content-data] Copied data directory to:\n - ${copied.join("\n - ")}`,
 );
 
 // Final verification

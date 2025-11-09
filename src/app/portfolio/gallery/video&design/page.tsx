@@ -5,7 +5,6 @@ import { getAllFromIndex } from "@/cms/lib/content-db-manager";
 import Plasma from "@/components/Plasma";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
-import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import type { PortfolioContentItem } from "@/types/portfolio";
 import { VideoDesignGallery } from "./components/VideoDesignGallery";

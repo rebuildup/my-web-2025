@@ -2,7 +2,7 @@
 
 import { Box, Breadcrumbs, Chip, Stack, Typography } from "@mui/material";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, isValidElement } from "react";
 
 export interface BreadcrumbItem {
 	label: string;
@@ -108,9 +108,13 @@ export function PageHeader({
 					}}
 				>
 					{Array.isArray(actions)
-						? actions.map((action, index) => (
-								<Fragment key={index}>{action}</Fragment>
-							))
+						? actions.map((action, index) => {
+								const actionKey =
+									isValidElement(action) && action.key != null
+										? action.key
+										: `action-${index}`;
+								return <Fragment key={actionKey}>{action}</Fragment>;
+							})
 						: actions}
 				</Box>
 			)}

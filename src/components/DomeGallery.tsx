@@ -429,7 +429,7 @@ export default function DomeGallery({
 						}
 					}
 
-					let [vMagX, vMagY] = velArr;
+					const [vMagX, vMagY] = velArr;
 					const [dirX, dirY] = dirArr;
 					let vx = vMagX * dirX;
 					let vy = vMagY * dirY;
@@ -548,10 +548,10 @@ export default function DomeGallery({
 			void animatingOverlay.getBoundingClientRect();
 
 			requestAnimationFrame(() => {
-				animatingOverlay.style.left = originalPosRelativeToRoot.left + "px";
-				animatingOverlay.style.top = originalPosRelativeToRoot.top + "px";
-				animatingOverlay.style.width = originalPosRelativeToRoot.width + "px";
-				animatingOverlay.style.height = originalPosRelativeToRoot.height + "px";
+				animatingOverlay.style.left = `${originalPosRelativeToRoot.left}px`;
+				animatingOverlay.style.top = `${originalPosRelativeToRoot.top}px`;
+				animatingOverlay.style.width = `${originalPosRelativeToRoot.width}px`;
+				animatingOverlay.style.height = `${originalPosRelativeToRoot.height}px`;
 				animatingOverlay.style.opacity = "0";
 			});
 
@@ -709,8 +709,8 @@ export default function DomeGallery({
 				overlay.style.width = tempWidth;
 				overlay.style.height = tempHeight;
 				const newRect = overlay.getBoundingClientRect();
-				overlay.style.width = frameR.width + "px";
-				overlay.style.height = frameR.height + "px";
+				overlay.style.width = `${frameR.width}px`;
+				overlay.style.height = `${frameR.height}px`;
 				void overlay.offsetWidth;
 				overlay.style.transition = `left ${enlargeTransitionMs}ms ease, top ${enlargeTransitionMs}ms ease, width ${enlargeTransitionMs}ms ease, height ${enlargeTransitionMs}ms ease`;
 				const centeredLeft =

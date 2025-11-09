@@ -564,33 +564,36 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 					Video Management
 				</h3>
 				<div className="space-y-3">
-					{formData.videos?.map((video, index) => (
-						<div key={index} className="flex items-center space-x-3">
-							<input
-								type="text"
-								value={video.url || ""}
-								onChange={(e) => {
-									const newVideos = [...(formData.videos || [])];
-									newVideos[index] = { ...video, url: e.target.value };
-									handleFieldChange("videos", newVideos);
-								}}
-								className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-								placeholder="Video URL"
-							/>
-							<button
-								type="button"
-								onClick={() => {
-									const newVideos = formData.videos?.filter(
-										(_, i) => i !== index,
-									);
-									handleFieldChange("videos", newVideos || []);
-								}}
-								className="px-3 py-2 text-red-600 hover:text-red-800"
-							>
-								Remove
-							</button>
-						</div>
-					))}
+					{formData.videos?.map((video, index) => {
+						const videoKey = video.url ?? video.title ?? `video-${index}`;
+						return (
+							<div key={videoKey} className="flex items-center space-x-3">
+								<input
+									type="text"
+									value={video.url || ""}
+									onChange={(e) => {
+										const newVideos = [...(formData.videos || [])];
+										newVideos[index] = { ...video, url: e.target.value };
+										handleFieldChange("videos", newVideos);
+									}}
+									className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+									placeholder="Video URL"
+								/>
+								<button
+									type="button"
+									onClick={() => {
+										const newVideos = formData.videos?.filter(
+											(_, i) => i !== index,
+										);
+										handleFieldChange("videos", newVideos || []);
+									}}
+									className="px-3 py-2 text-red-600 hover:text-red-800"
+								>
+									Remove
+								</button>
+							</div>
+						);
+					})}
 					<button
 						type="button"
 						onClick={() => {
@@ -617,52 +620,58 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 					External Links
 				</h3>
 				<div className="space-y-3">
-					{formData.externalLinks?.map((link, index) => (
-						<div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-3">
-							<input
-								type="text"
-								value={link.title || ""}
-								onChange={(e) => {
-									const newLinks = [...(formData.externalLinks || [])];
-									newLinks[index] = {
-										...newLinks[index],
-										title: e.target.value,
-									};
-									handleFieldChange("externalLinks", newLinks);
-								}}
-								className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-								placeholder="Link title"
-							/>
-							<div className="flex space-x-2">
+					{formData.externalLinks?.map((link, index) => {
+						const linkKey = link.url ?? link.title ?? `link-${index}`;
+						return (
+							<div
+								key={linkKey}
+								className="grid grid-cols-1 md:grid-cols-2 gap-3"
+							>
 								<input
-									type="url"
-									value={link.url || ""}
+									type="text"
+									value={link.title || ""}
 									onChange={(e) => {
 										const newLinks = [...(formData.externalLinks || [])];
 										newLinks[index] = {
 											...newLinks[index],
-											url: e.target.value,
+											title: e.target.value,
 										};
 										handleFieldChange("externalLinks", newLinks);
 									}}
-									className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-									placeholder="https://..."
+									className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+									placeholder="Link title"
 								/>
-								<button
-									type="button"
-									onClick={() => {
-										const newLinks = formData.externalLinks?.filter(
-											(_, i) => i !== index,
-										);
-										handleFieldChange("externalLinks", newLinks || []);
-									}}
-									className="px-3 py-2 text-red-600 hover:text-red-800"
-								>
-									Remove
-								</button>
+								<div className="flex space-x-2">
+									<input
+										type="url"
+										value={link.url || ""}
+										onChange={(e) => {
+											const newLinks = [...(formData.externalLinks || [])];
+											newLinks[index] = {
+												...newLinks[index],
+												url: e.target.value,
+											};
+											handleFieldChange("externalLinks", newLinks);
+										}}
+										className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+										placeholder="https://..."
+									/>
+									<button
+										type="button"
+										onClick={() => {
+											const newLinks = formData.externalLinks?.filter(
+												(_, i) => i !== index,
+											);
+											handleFieldChange("externalLinks", newLinks || []);
+										}}
+										className="px-3 py-2 text-red-600 hover:text-red-800"
+									>
+										Remove
+									</button>
+								</div>
 							</div>
-						</div>
-					))}
+						);
+					})}
 					<button
 						type="button"
 						onClick={() => {

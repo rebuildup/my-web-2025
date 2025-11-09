@@ -16,10 +16,6 @@ const SpotlightCard = dynamic(
 	() => import("@appletosolutions/reactbits").then((mod) => mod.SpotlightCard),
 	{ ssr: false },
 );
-const GlareHover = dynamic(
-	() => import("@appletosolutions/reactbits").then((mod) => mod.GlareHover),
-	{ ssr: false },
-);
 // ランダム選択された性格をリスト表示するコンポーネント
 function RandomPersonalityList({ items }: { items: string[] }) {
 	const [selectedItems, setSelectedItems] = useState<string[]>([]);

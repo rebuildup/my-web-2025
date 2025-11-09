@@ -135,7 +135,7 @@ export function MarkdownEditorDemo() {
 						</h3>
 						<ul className="text-sm space-y-1">
 							{demoMediaData.images.map((img, index) => (
-								<li key={index} className="font-mono">
+								<li key={img} className="font-mono">
 									![image:{index}] → {img.split("/").pop()}
 								</li>
 							))}
@@ -147,7 +147,10 @@ export function MarkdownEditorDemo() {
 						</h3>
 						<ul className="text-sm space-y-1">
 							{demoMediaData.videos.map((video, index) => (
-								<li key={index} className="font-mono">
+								<li
+									key={video.url ?? `${video.title}-${index}`}
+									className="font-mono"
+								>
 									![video:{index}] → {video.title}
 								</li>
 							))}
@@ -159,7 +162,10 @@ export function MarkdownEditorDemo() {
 						</h3>
 						<ul className="text-sm space-y-1">
 							{demoMediaData.externalLinks.map((link, index) => (
-								<li key={index} className="font-mono">
+								<li
+									key={link.url ?? `${link.title}-${index}`}
+									className="font-mono"
+								>
 									[link:{index}] → {link.title}
 								</li>
 							))}

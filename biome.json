@@ -16,11 +16,55 @@
 			"complexity": {
 				"noStaticOnlyClass": "off"
 			},
+			"correctness": {
+				"noUnusedImports": "error",
+				"noUnusedVariables": "error"
+			},
 			"style": {
-				"useShorthandAssign": "off"
+				"useShorthandAssign": "off",
+				"useNodejsImportProtocol": "error",
+				"useTemplate": "error"
 			}
 		}
 	},
+	"overrides": [
+		{
+			"includes": ["scripts/**/*"],
+			"linter": {
+				"rules": {
+					"recommended": true,
+					"style": {
+						"noNonNullAssertion": "error"
+					}
+				}
+			}
+		},
+		{
+			"includes": [
+				"src/components/ui/PerformanceDashboard.tsx",
+				"src/components/ui/MonitoringDashboard.tsx",
+				"src/components/ui/MarkdownEditor.tsx",
+				"src/components/ui/MarkdownEditor.demo.tsx",
+				"src/components/ui/CoreWebVitalsMonitor.tsx",
+				"src/components/ui/AccessibilityTester.tsx",
+				"src/components/ui/DatePicker.tsx",
+				"src/components/ui/LayoutStabilizer.tsx",
+				"src/components/markdown/FallbackContent.tsx",
+				"src/components/providers/PerformanceProvider.tsx",
+				"src/components/admin/EnhancedDataManager.tsx",
+				"src/components/admin/layout/PageHeader.tsx",
+				"src/components/MagicBento.tsx",
+				"src/components/playground/common/ResponsiveExperimentGrid.tsx"
+			],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noArrayIndexKey": "error"
+					}
+				}
+			}
+		}
+	],
 	"files": {
 		"includes": [
 			"src/**/*",
@@ -30,9 +74,9 @@
 			"next.config.ts",
 			"!!node_modules",
 			"!!.next",
-			"!!playwright-report",
-			"!!test-results",
 			"!!coverage",
+			"!!biome-report.json",
+			"!!biome-output.txt",
 			"!!src/app/admin",
 			"!!src/app/api",
 			"!!src/test-utils",

@@ -324,8 +324,11 @@ const PerformanceIndicators: React.FC = () => {
 									{alerts.length} alert{alerts.length !== 1 ? "s" : ""}
 								</div>
 								<div className="max-h-20 overflow-y-auto">
-									{alerts.slice(-3).map((alert, index) => (
-										<div key={index} className="text-xs text-gray-600 truncate">
+									{alerts.slice(-3).map((alert) => (
+										<div
+											key={alert.id}
+											className="text-xs text-gray-600 truncate"
+										>
 											{alert.message}
 										</div>
 									))}

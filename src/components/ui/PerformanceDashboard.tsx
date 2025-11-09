@@ -48,6 +48,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 		const i = Math.floor(Math.log(bytes) / Math.log(k));
 		return `${parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
 	};
+	const bundleRecommendations = Array.from(new Set(bundleInfo.recommendations));
 
 	return (
 		<div className={`fixed bottom-4 right-4 z-50 ${className}`}>
@@ -158,20 +159,18 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 									</div>
 								</div>
 
-								{bundleInfo.recommendations.length > 0 && (
+								{bundleRecommendations.length > 0 && (
 									<div>
 										<h4 className="text-sm font-medium mb-2">
 											Recommendations:
 										</h4>
 										<ul className="text-xs space-y-1">
-											{bundleInfo.recommendations
-												.slice(0, 3)
-												.map((rec, index) => (
-													<li key={index} className="flex items-start">
-														<span className="mr-2">•</span>
-														<span>{rec}</span>
-													</li>
-												))}
+											{bundleRecommendations.slice(0, 3).map((rec) => (
+												<li key={rec} className="flex items-start">
+													<span className="mr-2">•</span>
+													<span>{rec}</span>
+												</li>
+											))}
 										</ul>
 									</div>
 								)}
@@ -193,64 +192,68 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 									</div>
 								) : (
 									<div className="space-y-3">
-										{regressionStatus.regressions.map((regression, index) => (
-											<div
-												key={index}
-												className={`p-3 rounded-lg border ${
-													regression.severity === "critical"
-														? "bg-red-50 border-red-200"
-														: regression.severity === "high"
-															? "bg-orange-50 border-orange-200"
-															: regression.severity === "medium"
-																? "bg-yellow-50 border-yellow-200"
-																: "bg-blue-50 border-blue-200"
-												}`}
-											>
-												<div className="flex justify-between items-center mb-2">
-													<span className="font-medium text-sm">
-														{regression.metric.toUpperCase()}
-													</span>
-													<span
-														className={`text-xs px-2 py-1 rounded ${
-															regression.severity === "critical"
-																? "bg-red-100 text-red-800"
-																: regression.severity === "high"
-																	? "bg-orange-100 text-orange-800"
-																	: regression.severity === "medium"
-																		? "bg-yellow-100 text-yellow-800"
-																		: "bg-blue-100 text-blue-800"
-														}`}
-													>
-														{regression.severity}
-													</span>
-												</div>
+										{regressionStatus.regressions.map((regression) => {
+											const regressionKey = `${regression.metric}-${regression.severity}-${Math.round(regression.regression)}`;
+											const regressionRecommendations = Array.from(
+												new Set(regression.recommendations),
+											).slice(0, 2);
+											return (
+												<div
+													key={regressionKey}
+													className={`p-3 rounded-lg border ${
+														regression.severity === "critical"
+															? "bg-red-50 border-red-200"
+															: regression.severity === "high"
+																? "bg-orange-50 border-orange-200"
+																: regression.severity === "medium"
+																	? "bg-yellow-50 border-yellow-200"
+																	: "bg-blue-50 border-blue-200"
+													}`}
+												>
+													<div className="flex justify-between items-center mb-2">
+														<span className="font-medium text-sm">
+															{regression.metric.toUpperCase()}
+														</span>
+														<span
+															className={`text-xs px-2 py-1 rounded ${
+																regression.severity === "critical"
+																	? "bg-red-100 text-red-800"
+																	: regression.severity === "high"
+																		? "bg-orange-100 text-orange-800"
+																		: regression.severity === "medium"
+																			? "bg-yellow-100 text-yellow-800"
+																			: "bg-blue-100 text-blue-800"
+															}`}
+														>
+															{regression.severity}
+														</span>
+													</div>
 
-												<div className="text-xs text-gray-600 mb-2">
-													Current: {Math.round(regression.current)} | Baseline:{" "}
-													{Math.round(regression.baseline)} | Regression: +
-													{regression.regression.toFixed(1)}%
-												</div>
+													<div className="text-xs text-gray-600 mb-2">
+														Current: {Math.round(regression.current)} |
+														Baseline: {Math.round(regression.baseline)} |
+														Regression: +{regression.regression.toFixed(1)}%
+													</div>
 
-												{regression.recommendations.length > 0 && (
-													<div className="text-xs">
-														<strong>Recommendations:</strong>
-														<ul className="mt-1 space-y-1">
-															{regression.recommendations
-																.slice(0, 2)
-																.map((rec, recIndex) => (
+													{regressionRecommendations.length > 0 && (
+														<div className="text-xs">
+															<strong>Recommendations:</strong>
+															<ul className="mt-1 space-y-1">
+																{regressionRecommendations.map((rec) => (
 																	<li
-																		key={recIndex}
+																		key={`${regression.metric}-${rec}`}
 																		className="flex items-start"
 																	>
 																		<span className="mr-1">•</span>
 																		<span>{rec}</span>
 																	</li>
 																))}
-														</ul>
-													</div>
-												)}
-											</div>
-										))}
+															</ul>
+														</div>
+													)}
+												</div>
+											);
+										})}
 									</div>
 								)}
 

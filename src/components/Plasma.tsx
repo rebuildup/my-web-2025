@@ -1,7 +1,8 @@
 "use client";
 
 import { Mesh, Program, Renderer, Triangle } from "ogl";
-import React, { useEffect, useRef } from "react";
+import type React from "react";
+import { useEffect, useRef } from "react";
 
 interface PlasmaProps {
 	color?: string;
@@ -182,7 +183,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
 		let raf = 0;
 		const t0 = performance.now();
 		const loop = (t: number) => {
-			let timeValue = (t - t0) * 0.001;
+			const timeValue = (t - t0) * 0.001;
 
 			if (direction === "pingpong") {
 				const cycle = Math.sin(timeValue * 0.5) * directionMultiplier;

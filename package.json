@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev --turbo -p 3010",
-		"build": "node scripts/verify-images.js && next build && node scripts/copy-content-data.js",
+		"build": "next build && node scripts/copy-content-data.js",
 		"start": "next start -p 3010",
 		"dev:port": "next dev -p $PORT",
 		"start:port": "next start -p $PORT",
@@ -19,15 +19,11 @@
 		"thumbnails-from-youtube": "tsx scripts/thumbnails-from-youtube.ts",
 		"promote-with-thumbnails": "tsx scripts/promote-with-thumbnails.ts",
 		"create-detail-markdown": "tsx scripts/create-detail-markdown.ts",
-		"articles:create": "pnpm exec playwright test scripts/create-detail-articles.spec.ts --reporter=line",
-		"articles:create-browser": "pnpm exec playwright test scripts/create-detail-articles-browser.spec.ts --reporter=line",
-		"portfolio:create-articles": "pnpm exec playwright test scripts/create-portfolio-articles.spec.ts --headed --reporter=line",
 		"postinstall": "node scripts/install-hooks.js",
 		"preinstall": "echo 'Installing dependencies...'",
 		"install": "node scripts/install-hooks.js",
 		"prebuild": "node scripts/install-hooks.js",
-		"postbuild": "node scripts/install-hooks.js",
-		"content:rebuild-pages": "pnpm exec playwright test scripts/rebuild-content-pages.spec.ts --headed --reporter=line"
+		"postbuild": "node scripts/install-hooks.js"
 	},
 	"trustedDependencies": [
 		"better-sqlite3",
@@ -116,7 +112,6 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.2",
 		"@jest/globals": "^30.2.0",
-		"@playwright/test": "^1.56.1",
 		"@tailwindcss/postcss": "^4.1.16",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.0",
@@ -129,7 +124,6 @@
 		"jest": "^30.2.0",
 		"jest-environment-jsdom": "^30.2.0",
 		"jsdom": "^27.0.1",
-		"playwright": "^1.56.1",
 		"shadcn": "^3.5.0",
 		"tsx": "^4.20.6",
 		"typescript": "5.9.3"

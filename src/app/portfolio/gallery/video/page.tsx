@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllFromIndex } from "@/cms/lib/content-db-manager";
-import { type ContentItem, getEffectiveDate } from "@/types";
+import type { ContentItem } from "@/types";
 
 export const metadata: Metadata = {
 	title: "Video Projects - Portfolio | samuido 映像制作作品集",

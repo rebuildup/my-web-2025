@@ -27,6 +27,40 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 			</head>
 			<body className="bg-base text-main font-sans">
 				{children}
+				{/* React DevTools version fix */}
+				<Script
+					id="react-devtools-fix"
+					strategy="beforeInteractive"
+					dangerouslySetInnerHTML={{
+						__html: `
+							(function() {
+								if (typeof window === 'undefined') return;
+								try {
+									const reactVersion = '18.2.0';
+									if (!window.__REACT_VERSION__) {
+										window.__REACT_VERSION__ = reactVersion;
+									}
+									if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+										if (!window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers) {
+											window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers = new Map();
+										}
+										const originalRegisterRenderer = window.__REACT_DEVTOOLS_GLOBAL_HOOK__.registerRenderer;
+										if (originalRegisterRenderer) {
+											window.__REACT_DEVTOOLS_GLOBAL_HOOK__.registerRenderer = function(renderer) {
+												if (renderer && !renderer.version) {
+													renderer.version = reactVersion;
+												}
+												return originalRegisterRenderer.call(this, renderer);
+											};
+										}
+									}
+								} catch (e) {
+									console.debug('React DevTools version fix failed:', e);
+								}
+							})();
+						`,
+					}}
+				/>
 				{/* Adobe Fonts (Typekit) - body内で読み込んでハイドレーションエラーを回避 */}
 				<Script
 					id="adobe-fonts"

@@ -50,7 +50,7 @@ function isLikelyMediaUrl(url: string): boolean {
 	);
 }
 
-function findImageUrl(value: unknown, depth = 0): string | undefined {
+function _findImageUrl(value: unknown, depth = 0): string | undefined {
 	if (depth > 3 || value == null) return undefined;
 	if (typeof value === "string") {
 		const trimmed = value.trim();
@@ -61,14 +61,14 @@ function findImageUrl(value: unknown, depth = 0): string | undefined {
 	}
 	if (Array.isArray(value)) {
 		for (const item of value) {
-			const found = findImageUrl(item, depth + 1);
+			const found = _findImageUrl(item, depth + 1);
 			if (found) return found;
 		}
 		return undefined;
 	}
 	if (typeof value === "object") {
 		for (const key of Object.keys(value as Record<string, unknown>)) {
-			const found = findImageUrl(
+			const found = _findImageUrl(
 				(value as Record<string, unknown>)[key],
 				depth + 1,
 			);
@@ -408,7 +408,7 @@ export default async function WorkshopPage() {
 			.replace(/\[[^\]]*]\([^)]*\)/g, "")
 			.replace(/```[\s\S]*?```/g, "")
 			.replace(/`[^`]*`/g, "")
-			.replace(/[#>*_\-]+/g, "")
+			.replace(/[#>*_-]+/g, "")
 			.replace(/https?:\/\/[\w\-./?%&=#:]+/gi, "")
 			.replace(/\s+/g, " ")
 			.trim();

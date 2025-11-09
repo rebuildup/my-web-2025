@@ -8,7 +8,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PortfolioCard } from "@/app/portfolio/gallery/all/components/PortfolioCard";
 import { getAllFromIndex } from "@/cms/lib/content-db-manager";
-import Counter from "@/components/Counter";
 import DarkVeil from "@/components/DarkVeil";
 import Plasma from "@/components/Plasma";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -65,58 +64,6 @@ function CategoryCard({
 				</div>
 			</GlowCard>
 		</Link>
-	);
-}
-
-/**
- * Statistics section
- */
-function StatisticsSection({
-	stats,
-}: {
-	stats: {
-		totalProjects: number;
-		categoryCounts: Record<string, number>;
-		technologyCounts: Record<string, number>;
-		lastUpdate: Date;
-	};
-}) {
-	const categories = [
-		{ key: "all", label: "All", count: stats.totalProjects },
-		{
-			key: "develop",
-			label: "Develop",
-			count: stats.categoryCounts.develop || 0,
-		},
-		{ key: "video", label: "Video", count: stats.categoryCounts.video || 0 },
-		{
-			key: "video&design",
-			label: "Video & Design",
-			count: stats.categoryCounts["video&design"] || 0,
-		},
-	];
-
-	return (
-		<section className="space-y-6">
-			<h2 className="neue-haas-grotesk-display text-3xl text-main">
-				Statistics
-			</h2>
-			<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-				{categories.map((category) => (
-					<GlowCard key={category.key} className="p-4 bg-base/30 backdrop-blur">
-						<div className="noto-sans-jp-light text-xs text-main/70">
-							{category.label}
-						</div>
-						<div className="neue-haas-grotesk-display text-3xl text-accent">
-							<Counter value={category.count} />
-						</div>
-					</GlowCard>
-				))}
-			</div>
-			<div className="text-xs text-main/60 noto-sans-jp-light">
-				Last updated: {stats.lastUpdate.toLocaleDateString("ja-JP")}
-			</div>
-		</section>
 	);
 }
 
@@ -213,11 +160,6 @@ export default async function PortfolioPage() {
 				new Date(b.updatedAt || b.createdAt).getTime() -
 				new Date(a.updatedAt || a.createdAt).getTime(),
 		)[0];
-
-		const statsWithCategories = {
-			...stats,
-			categoryCounts,
-		};
 
 		// Category information
 		const categories = [

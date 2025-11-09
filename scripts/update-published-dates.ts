@@ -1,5 +1,5 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { chromium } from "playwright";
 
 interface PortfolioItem {
@@ -71,7 +71,7 @@ async function updatePublishedDates() {
 					for (let i = 0; i < rowCount; i++) {
 						const row = allRows.nth(i);
 						const rowText = await row.textContent();
-						if (rowText && rowText.includes(item.id)) {
+						if (rowText?.includes(item.id)) {
 							const button = row.getByRole("button", { name: /編集/ }).first();
 							if ((await button.count()) > 0) {
 								editButton = button;
@@ -81,7 +81,7 @@ async function updatePublishedDates() {
 								try {
 									await row.scrollIntoViewIfNeeded();
 									await page.waitForTimeout(200);
-								} catch (e) {
+								} catch {
 									// スクロールエラーは無視
 								}
 								break;
@@ -128,7 +128,12 @@ async function updatePublishedDates() {
 				}
 
 				// 日付を設定
-				const date = new Date(item.manualDate!);
+				if (!item.manualDate) {
+					console.warn(`  手動日付が設定されていません: ${item.id}`);
+					errorCount++;
+					continue;
+				}
+				const date = new Date(item.manualDate);
 				const dateStr = date.toISOString().slice(0, 10);
 				console.log(`  日付を設定: ${dateStr}`);
 
@@ -174,7 +179,7 @@ async function updatePublishedDates() {
 						await cancelButton.click();
 						await page.waitForTimeout(500);
 					}
-				} catch (e) {
+				} catch {
 					// ダイアログが既に閉じている場合は無視
 				}
 			}

@@ -44,11 +44,14 @@ export const FallbackContent: React.FC<FallbackContentProps> = ({
 					</div>
 					<div className="fallback-body mt-3">
 						<div className="prose prose-sm max-w-none">
-							{fallbackContent.split("\n").map((line, index) => (
-								<p key={index} className="mb-2">
-									{line}
-								</p>
-							))}
+							{fallbackContent.split("\n").map((line, index) => {
+								const paragraphKey = `${line}-${index}`;
+								return (
+									<p key={paragraphKey} className="mb-2">
+										{line}
+									</p>
+								);
+							})}
 						</div>
 					</div>
 					{showRetryButton && onRetry && (

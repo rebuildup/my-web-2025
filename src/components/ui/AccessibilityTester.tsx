@@ -228,23 +228,26 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 										<h4 className="font-medium text-main">Issues:</h4>
 										{(report.issues || [])
 											.slice(0, 10)
-											.map((issue, index: number) => (
-												<div
-													key={index}
-													className={`p-3 rounded border text-sm ${getSeverityColor(issue.severity)}`}
-												>
-													<div className="flex items-start space-x-2">
-														{getIssueIcon(issue.type)}
-														<div className="flex-1">
-															<div className="font-medium">{issue.rule}</div>
-															<div className="mt-1">{issue.message}</div>
-															<div className="mt-1 text-xs opacity-75">
-																Severity: {issue.severity}
+											.map((issue, index: number) => {
+												const issueKey = `${issue.rule}-${issue.message}-${index}`;
+												return (
+													<div
+														key={issueKey}
+														className={`p-3 rounded border text-sm ${getSeverityColor(issue.severity)}`}
+													>
+														<div className="flex items-start space-x-2">
+															{getIssueIcon(issue.type)}
+															<div className="flex-1">
+																<div className="font-medium">{issue.rule}</div>
+																<div className="mt-1">{issue.message}</div>
+																<div className="mt-1 text-xs opacity-75">
+																	Severity: {issue.severity}
+																</div>
 															</div>
 														</div>
 													</div>
-												</div>
-											))}
+												);
+											})}
 										{(report.issues || []).length > 10 && (
 											<div className="text-sm text-main/60 text-center">
 												... and {(report.issues || []).length - 10} more issues

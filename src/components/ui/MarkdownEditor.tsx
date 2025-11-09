@@ -66,6 +66,10 @@ export function MarkdownEditor({
 	>([]);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const lineMarkers = editorContent.split("\n").map((line, position) => ({
+		id: `${line}-${position + 1}`,
+		number: position + 1,
+	}));
 
 	// Update editor content when prop changes
 	useEffect(() => {
@@ -429,19 +433,22 @@ export function MarkdownEditor({
 						<h4 className="font-medium text-red-900">Embed Syntax Errors</h4>
 					</div>
 					<div className="space-y-1 text-sm">
-						{validationErrors.map((error, index) => (
-							<div key={index} className="text-red-700">
-								<span className="font-mono text-xs bg-red-100 px-1 rounded">
-									Line {error.line}:{error.column}
-								</span>{" "}
-								{error.message}
-								{error.suggestion && (
-									<div className="text-red-600 text-xs mt-1 ml-4">
-										💡 {error.suggestion}
-									</div>
-								)}
-							</div>
-						))}
+						{validationErrors.map((error) => {
+							const errorKey = `${error.type}-${error.line}-${error.column}-${error.message}`;
+							return (
+								<div key={errorKey} className="text-red-700">
+									<span className="font-mono text-xs bg-red-100 px-1 rounded">
+										Line {error.line}:{error.column}
+									</span>{" "}
+									{error.message}
+									{error.suggestion && (
+										<div className="text-red-600 text-xs mt-1 ml-4">
+											💡 {error.suggestion}
+										</div>
+									)}
+								</div>
+							);
+						})}
 					</div>
 				</div>
 			)}
@@ -468,9 +475,9 @@ export function MarkdownEditor({
 
 						{/* Line numbers */}
 						<div className="absolute left-0 top-0 p-4 pr-2 text-gray-400 text-sm font-mono pointer-events-none select-none bg-base border-r border-main">
-							{editorContent.split("\n").map((_, index) => (
-								<div key={index} className="leading-5 text-right">
-									{index + 1}
+							{lineMarkers.map((marker) => (
+								<div key={marker.id} className="leading-5 text-right">
+									{marker.number}
 								</div>
 							))}
 						</div>

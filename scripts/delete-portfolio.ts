@@ -1,5 +1,5 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { chromium } from "playwright";
 
 interface PortfolioItem {
@@ -61,12 +61,12 @@ async function main() {
 					try {
 						await row.scrollIntoViewIfNeeded();
 						await page.waitForTimeout(100);
-					} catch (e) {
+					} catch {
 						// スクロールエラーは無視
 					}
 
 					const text = await row.textContent();
-					if (text && text.trim().includes(item.id)) {
+					if (text?.trim().includes(item.id)) {
 						// さらに確実にするため、TableCell内のテキストも確認
 						const cells = row.locator("td");
 						const cellCount = await cells.count();

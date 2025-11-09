@@ -46,13 +46,6 @@ interface ErrorState {
 	errorBoundary?: boolean;
 }
 
-interface PerformanceMetrics {
-	renderTime: number;
-	itemCount: number;
-	filterTime: number;
-	layoutTime: number;
-}
-
 export function VideoDesignGallery({
 	items,
 	showVideoItems = true,
@@ -65,8 +58,6 @@ export function VideoDesignGallery({
 	// Initialize all hooks first before any early returns
 
 	const [errorState, setErrorState] = useState<ErrorState>({ hasError: false });
-	const [performanceMetrics, setPerformanceMetrics] =
-		useState<PerformanceMetrics | null>(null);
 	const [isClient, setIsClient] = useState(process.env.NODE_ENV === "test");
 
 	// Performance tracking refs
@@ -112,18 +103,6 @@ export function VideoDesignGallery({
 	useEffect(() => {
 		if (isClient) {
 			renderStartTime.current = performance.now();
-		}
-	}, [isClient]);
-
-	useEffect(() => {
-		if (isClient && renderStartTime.current > 0) {
-			const renderTime = performance.now() - renderStartTime.current;
-			setPerformanceMetrics((prev) => ({
-				itemCount: prev?.itemCount || 0,
-				filterTime: prev?.filterTime || 0,
-				renderTime,
-				layoutTime: prev?.layoutTime || 0,
-			}));
 		}
 	}, [isClient]);
 
@@ -274,14 +253,8 @@ export function VideoDesignGallery({
 
 			const validationTime = performance.now() - startTime;
 			if (isClient) {
-				setPerformanceMetrics(
-					(prev) =>
-						({
-							itemCount: validated.length,
-							filterTime: validationTime,
-							renderTime: prev?.renderTime || 0,
-							layoutTime: prev?.layoutTime || 0,
-						}) as PerformanceMetrics,
+				console.debug(
+					`VideoDesignGallery validation processed ${validated.length} items in ${validationTime.toFixed(2)}ms`,
 				);
 			}
 
@@ -494,14 +467,8 @@ export function VideoDesignGallery({
 
 			const filterTime = performance.now() - startTime;
 			if (isClient) {
-				setPerformanceMetrics(
-					(prev) =>
-						({
-							itemCount: prev?.itemCount || 0,
-							filterTime,
-							renderTime: prev?.renderTime || 0,
-							layoutTime: prev?.layoutTime || 0,
-						}) as PerformanceMetrics,
+				console.debug(
+					`VideoDesignGallery filtering finished in ${filterTime.toFixed(2)}ms`,
 				);
 			}
 
@@ -618,113 +585,6 @@ export function VideoDesignGallery({
 			);
 		}
 	}, [filteredItems, handleError]);
-
-	// Get available years for filter
-	const availableYears = useMemo(() => {
-		if (!validItems || !Array.isArray(validItems)) {
-			return [];
-		}
-		const years: number[] = validItems.map(
-			(item: PortfolioContentItem | EnhancedContentItem) =>
-				new Date(item.createdAt).getFullYear(),
-		);
-		return [...new Set(years)].sort((a, b) => b - a);
-	}, [validItems]);
-
-	// Statistics for video&design category items
-	const videoDesignStats = useMemo(() => {
-		if (!validItems || !Array.isArray(validItems)) {
-			return {
-				videoOnly: 0,
-				designOnly: 0,
-				videoAndDesign: 0,
-				multiCategory: 0,
-				total: 0,
-			};
-		}
-
-		const allItems = validItems as (
-			| PortfolioContentItem
-			| EnhancedContentItem
-		)[];
-
-		// Count items by category type
-		const stats = {
-			videoOnly: 0,
-			designOnly: 0,
-			videoAndDesign: 0,
-			multiCategory: 0,
-			total: allItems.length,
-		};
-
-		allItems.forEach((item: PortfolioContentItem | EnhancedContentItem) => {
-			// Handle enhanced items with multiple categories
-			if ("categories" in item && Array.isArray(item.categories)) {
-				const enhancedItem = item as EnhancedContentItem;
-				const relevantCategories = enhancedItem.categories.filter((cat) =>
-					["video", "design", "video&design"].includes(cat),
-				);
-
-				if (relevantCategories.includes("video&design")) {
-					stats.videoAndDesign++;
-				} else if (
-					relevantCategories.includes("video") &&
-					relevantCategories.includes("design")
-				) {
-					stats.multiCategory++;
-				} else if (relevantCategories.includes("video")) {
-					stats.videoOnly++;
-				} else if (relevantCategories.includes("design")) {
-					stats.designOnly++;
-				}
-			} else {
-				// Handle legacy items
-				const legacyItem = item as PortfolioContentItem;
-				if (legacyItem.category === "video&design") {
-					stats.videoAndDesign++;
-				} else if (legacyItem.category === "video") {
-					stats.videoOnly++;
-				} else if (legacyItem.category === "design") {
-					stats.designOnly++;
-				}
-			}
-		});
-
-		return stats;
-	}, [validItems]);
-
-	// Get available categories for filter (video&design specific)
-	const availableCategories = useMemo(() => {
-		if (!validItems || !Array.isArray(validItems)) {
-			return [];
-		}
-
-		const categories = new Set<string>();
-
-		validItems.forEach((item: PortfolioContentItem | EnhancedContentItem) => {
-			// Handle enhanced items with multiple categories
-			if ("categories" in item && Array.isArray(item.categories)) {
-				const enhancedItem = item as EnhancedContentItem;
-				enhancedItem.categories.forEach((category) => {
-					// Only include video, design, and video&design categories
-					if (["video", "design", "video&design"].includes(category)) {
-						categories.add(category);
-					}
-				});
-			} else {
-				// Handle legacy items
-				const legacyItem = item as PortfolioContentItem;
-				if (
-					legacyItem.category &&
-					["video", "design", "video&design"].includes(legacyItem.category)
-				) {
-					categories.add(legacyItem.category);
-				}
-			}
-		});
-
-		return Array.from(categories).sort();
-	}, [validItems]);
 
 	// Skip early validation in test environment to allow proper testing
 	if (process.env.NODE_ENV !== "test" && (!items || !Array.isArray(items))) {

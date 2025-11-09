@@ -3,21 +3,17 @@
 import {
 	AppBar,
 	Box,
-	Chip,
 	Tab,
 	Tabs,
 	Toolbar,
-	Tooltip,
 	Typography,
 	useMediaQuery,
 } from "@mui/material";
-import type { LucideIcon } from "lucide-react";
-import { Database, FileText, FolderTree, Image, PenSquare } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { MUIThemeProvider } from "@/lib/theme";
 
-const DRAWER_WIDTH = 248;
+const _DRAWER_WIDTH = 248;
 const NAV_TABS = [
 	{ label: "コンテンツ一覧", href: "/admin/content" },
 	{ label: "ブロックエディタ", href: "/admin/content/page-editor" },
@@ -50,9 +46,9 @@ function getTabIndex(pathname: string): number {
 export function AdminShell({ children }: AdminShellProps) {
 	const pathname = usePathname();
 	const router = useRouter();
-	const [mobileOpen, setMobileOpen] = useState(false);
+	const [_mobileOpen, _setMobileOpen] = useState(false);
 	// useMediaQueryはSSRとCSRで異なる値を返す可能性があるため、noSsrオプションを使用
-	const isDesktop = useMediaQuery("(min-width:900px)", { noSsr: true });
+	const _isDesktop = useMediaQuery("(min-width:900px)", { noSsr: true });
 	const isFullWidthPage = pathname.startsWith("/admin/content/page-editor");
 	const tabIndex = getTabIndex(pathname);
 

@@ -261,7 +261,7 @@ const nextConfig: NextConfig = {
 				...config.resolve.alias,
 				"@chakra-ui/react": chakraPath,
 			};
-		} catch (error) {
+		} catch {
 			// @chakra-ui/react not found, skip alias
 		}
 

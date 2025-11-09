@@ -10,28 +10,12 @@ import { ScrollFloat } from "@/components/ScrollFloat";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 // react-bits componentsを動的インポート
-const GlitchText = dynamic(
-	() => import("@appletosolutions/reactbits").then((mod) => mod.GlitchText),
-	{ ssr: false },
-);
-const ShinyText = dynamic(
-	() => import("@appletosolutions/reactbits").then((mod) => mod.ShinyText),
-	{ ssr: false },
-);
 const ScrollVelocity = dynamic(
 	() => import("@appletosolutions/reactbits").then((mod) => mod.ScrollVelocity),
 	{ ssr: false },
 );
 const CircularText = dynamic(
 	() => import("@appletosolutions/reactbits").then((mod) => mod.CircularText),
-	{ ssr: false },
-);
-const SpotlightCard = dynamic(
-	() => import("@appletosolutions/reactbits").then((mod) => mod.SpotlightCard),
-	{ ssr: false },
-);
-const GlareHover = dynamic(
-	() => import("@appletosolutions/reactbits").then((mod) => mod.GlareHover),
 	{ ssr: false },
 );
 // Custom typing animation component

@@ -1,6 +1,11 @@
 "use client";
 
-import { MotionValue, motion, useSpring, useTransform } from "motion/react";
+import {
+	type MotionValue,
+	motion,
+	useSpring,
+	useTransform,
+} from "motion/react";
 import { useEffect } from "react";
 
 interface NumberProps {
@@ -10,9 +15,9 @@ interface NumberProps {
 }
 
 function Number({ mv, number, height }: NumberProps) {
-	let y = useTransform(mv, (latest) => {
-		let placeValue = latest % 10;
-		let offset = (10 + number - placeValue) % 10;
+	const y = useTransform(mv, (latest) => {
+		const placeValue = latest % 10;
+		const offset = (10 + number - placeValue) % 10;
 		let memo = offset * height;
 		if (offset > 5) {
 			memo -= 10 * height;
@@ -42,8 +47,8 @@ interface DigitProps {
 }
 
 function Digit({ place, value, height, digitStyle }: DigitProps) {
-	let valueRoundedToPlace = Math.floor(value / place);
-	let animatedValue = useSpring(valueRoundedToPlace);
+	const valueRoundedToPlace = Math.floor(value / place);
+	const animatedValue = useSpring(valueRoundedToPlace);
 
 	useEffect(() => {
 		animatedValue.set(valueRoundedToPlace);

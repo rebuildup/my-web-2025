@@ -1,7 +1,9 @@
 import { gsap } from "gsap";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface BentoCardProps {
+	id?: string;
 	color?: string;
 	title?: string;
 	description?: string;
@@ -718,6 +720,7 @@ const MagicBento: React.FC<BentoProps> = ({
 						const baseClassName = `card flex flex-col justify-between relative aspect-[4/3] min-h-[200px] w-full max-w-full p-5 rounded-[20px] border border-solid font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] ${
 							enableBorderGlow ? "card--border-glow" : ""
 						}`;
+						const cardKey = card.id ?? card.title ?? `card-${index}`;
 
 						const cardStyle = {
 							backgroundColor: card.color || "var(--background-dark)",
@@ -732,7 +735,7 @@ const MagicBento: React.FC<BentoProps> = ({
 						if (enableStars) {
 							return (
 								<ParticleCard
-									key={index}
+									key={cardKey}
 									className={baseClassName}
 									style={cardStyle}
 									disableAnimations={shouldDisableAnimations}
@@ -763,7 +766,7 @@ const MagicBento: React.FC<BentoProps> = ({
 
 						return (
 							<div
-								key={index}
+								key={cardKey}
 								className={baseClassName}
 								style={cardStyle}
 								ref={(el) => {

@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 // Reactbits: Plasma background inspired style
 // Reference: https://www.reactbits.dev/backgrounds/plasma
 // This is a lightweight CSS-only background (no canvas), responsive and GPU-friendly.

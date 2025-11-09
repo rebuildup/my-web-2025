@@ -407,12 +407,14 @@ export function DatePicker({
 					</div>
 
 					<div className="grid grid-cols-7 gap-1">
-						{calendarDays.map((date, index) => (
-							<button
-								key={index}
-								type="button"
-								onClick={() => handleDateSelect(date)}
-								className={`
+						{calendarDays.map((date) => {
+							const dayKey = date.toISOString();
+							return (
+								<button
+									key={dayKey}
+									type="button"
+									onClick={() => handleDateSelect(date)}
+									className={`
                   p-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base
                   ${
 										isSelected(date)
@@ -424,10 +426,11 @@ export function DatePicker({
 													: "text-gray-400 hover:bg-main hover:bg-opacity-5"
 									}
                 `}
-							>
-								{date.getDate()}
-							</button>
-						))}
+								>
+									{date.getDate()}
+								</button>
+							);
+						})}
 					</div>
 
 					{/* Quick Actions */}

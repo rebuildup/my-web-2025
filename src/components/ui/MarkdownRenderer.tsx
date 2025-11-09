@@ -90,7 +90,9 @@ const renderBookmarkCardHtml = (payload: BookmarkPayload): string => {
 	</div>`;
 };
 
-const renderBookmarkFallback = (payload?: Partial<BookmarkPayload>): string => {
+const _renderBookmarkFallback = (
+	payload?: Partial<BookmarkPayload>,
+): string => {
 	const safeMessage = escapeHtml(
 		payload?.title || payload?.url || "リンク情報を取得できませんでした",
 	);

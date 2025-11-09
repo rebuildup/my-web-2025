@@ -1,31 +1,20 @@
 "use client";
 
 import {
-	Accordion,
-	AccordionDetails,
-	AccordionSummary,
 	Alert,
 	Autocomplete,
 	Box,
 	Button,
 	Chip,
-	CircularProgress,
-	Divider,
-	FormControl,
-	Grid,
 	IconButton,
-	InputLabel,
-	MenuItem,
-	Select,
 	Stack,
 	Tab,
 	Tabs,
 	TextField,
 	Typography,
 } from "@mui/material";
-import { CalendarClock, ChevronDown, Plus, Trash2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { ThumbnailVariants } from "@/cms/types/common";
+import { Trash2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Content } from "@/cms/types/content";
 
 interface ContentFormProps {
@@ -38,7 +27,7 @@ interface ContentFormProps {
 	controlledVisibility?: Content["visibility"];
 }
 
-const TAG_SUGGESTIONS = [
+const _TAG_SUGGESTIONS = [
 	"develop",
 	"design",
 	"video",
@@ -49,7 +38,7 @@ const TAG_SUGGESTIONS = [
 	"motion",
 ];
 
-function slugify(input: string): string {
+function _slugify(input: string): string {
 	return input
 		.toLowerCase()
 		.normalize("NFKD")
@@ -413,7 +402,7 @@ export function ContentForm({
 			(submitData as any).oldId = originalId;
 		}
 		// publishedAtがundefinedでも明示的に送信する（nullに変換）
-		if (!Object.prototype.hasOwnProperty.call(submitData, "publishedAt")) {
+		if (!Object.hasOwn(submitData, "publishedAt")) {
 			submitData.publishedAt = formData.publishedAt;
 		}
 		console.log("[ContentForm] handleSubmit formData:", formData);
@@ -425,7 +414,7 @@ export function ContentForm({
 		onSubmit(submitData);
 	};
 
-	const addTag = () => {
+	const _addTag = () => {
 		if (!newTag.trim()) return;
 		if ((formData.tags ?? []).includes(newTag.trim())) return;
 		setFormData((prev) => ({
@@ -458,7 +447,7 @@ export function ContentForm({
 
 	// No upload handler (URL-based)
 
-	const renderJsonField = (
+	const _renderJsonField = (
 		label: string,
 		field: keyof Content,
 		helperText?: string,
@@ -480,7 +469,7 @@ export function ContentForm({
 
 	// requestUpload removed
 
-	const thumbnailImage = useMemo(
+	const _thumbnailImage = useMemo(
 		() => formData.thumbnails?.image?.src || "",
 		[formData.thumbnails?.image?.src],
 	);

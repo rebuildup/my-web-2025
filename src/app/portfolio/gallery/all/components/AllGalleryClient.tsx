@@ -10,7 +10,6 @@ import { useMemo, useState } from "react";
 import type { PortfolioContentItem } from "@/lib/portfolio/data-processor";
 import type { SearchFilter } from "@/lib/portfolio/search-index";
 import type { EnhancedContentItem } from "@/types";
-import { getEffectiveDate } from "@/types";
 import type { ContentItem } from "@/types/content";
 import { PortfolioCard } from "./PortfolioCard";
 

@@ -12,7 +12,7 @@ function animateCount(
 ) {
 	const start = performance.now();
 	const from = 0;
-	const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+	const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 	let raf = 0;
 	const tick = (now: number) => {
 		const elapsed = now - start;

@@ -18,7 +18,6 @@ import { useCallback, useMemo, useState } from "react";
 import GlowCard from "@/components/ui/GlowCard";
 import { SafeImage } from "@/components/ui/SafeImage";
 import type { PortfolioContentItem } from "@/lib/portfolio/data-processor";
-import { enhancedGalleryFilter } from "@/lib/portfolio/enhanced-gallery-filter";
 import type { SearchFilter } from "@/lib/portfolio/search-index";
 import type { EnhancedContentItem } from "@/types";
 import { DetailModal } from "../../all/components/DetailModal";
@@ -39,14 +38,13 @@ export interface SortOptions {
 
 interface DevelopGalleryClientProps {
 	initialItems: PortfolioContentItem[];
-	searchFilters: SearchFilter[];
+	searchFilters?: SearchFilter[];
 }
 
 const ITEMS_PER_PAGE = 12;
 
 export function DevelopGalleryClient({
 	initialItems,
-	searchFilters,
 }: DevelopGalleryClientProps) {
 	// State management
 	const [selectedItem, setSelectedItem] = useState<PortfolioContentItem | null>(
@@ -178,28 +176,6 @@ export function DevelopGalleryClient({
 		},
 		[],
 	);
-
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case "completed":
-				return "accent";
-			case "ongoing":
-				return "main";
-			default:
-				return "main";
-		}
-	};
-
-	const getStatusLabel = (status: string) => {
-		switch (status) {
-			case "completed":
-				return "完成";
-			case "ongoing":
-				return "進行中";
-			default:
-				return "未定";
-		}
-	};
 
 	// Transform paginated items to development project format
 	const developProjects = useMemo(() => {

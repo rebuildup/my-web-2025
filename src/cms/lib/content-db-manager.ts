@@ -492,8 +492,6 @@ export function copyContentDb(oldId: string, newId: string): boolean {
 		return false;
 	}
 
-	const DatabaseCtor = getBetterSqlite3();
-
 	try {
 		// 古いDBから完全なコンテンツデータを取得
 		const oldDb = getContentDb(oldId);
