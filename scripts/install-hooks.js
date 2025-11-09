@@ -58,7 +58,7 @@ try {
 					// 代替方法: npm rebuild
 					try {
 						execSync("npm rebuild better-sqlite3", { stdio: "inherit" });
-					} catch (npmRebuildError) {
+					} catch (_npmRebuildError) {
 						console.log("⚠️ npm rebuild failed, continuing...");
 					}
 
@@ -69,7 +69,7 @@ try {
 						const testDb = new Database(":memory:");
 						testDb.close();
 						console.log("✅ better-sqlite3の自動ビルド完了！");
-					} catch (requireError2) {
+					} catch (_requireError2) {
 						console.log("🔄 方法2が失敗、方法3を試行中...");
 						try {
 							// 最終手段: 手動ビルド
