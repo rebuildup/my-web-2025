@@ -3,6 +3,7 @@
 /**
  * インストールフックスクリプト
  * better-sqlite3のインストール時に自動でビルドを実行
+ * postinstallフックとして実行されるため、pnpm installの後に自動的に実行される
  */
 const { execSync } = require("node:child_process");
 const fs = require("node:fs");
@@ -29,6 +30,7 @@ if (packageJson.dependencies?.["better-sqlite3"]) {
 		testDb.close();
 
 		console.log("✅ better-sqlite3の自動ビルド完了！");
+		process.exit(0);
 	} catch (_error) {
 		console.log("🔄 方法1が失敗、方法2を試行中...");
 		try {
@@ -42,19 +44,24 @@ if (packageJson.dependencies?.["better-sqlite3"]) {
 			testDb.close();
 
 			console.log("✅ better-sqlite3の自動ビルド完了！");
+			process.exit(0);
 		} catch (_error2) {
 			console.log("🔄 方法2が失敗、方法3を試行中...");
 			try {
 				// 最終手段: 手動ビルド
 				execSync("node -e \"require('better-sqlite3')\"", { stdio: "inherit" });
 				console.log("✅ better-sqlite3が利用可能です！");
+				process.exit(0);
 			} catch (error3) {
 				console.error("❌ 全ての自動ビルド方法が失敗しました");
 				console.error("❌ エラー:", error3.message);
-				console.log("💡 手動でビルドを実行してください: pnpm run build:native");
+				console.log("💡 手動でビルドを実行してください: pnpm rebuild better-sqlite3");
+				// エラーが発生してもプロセスを続行（postinstallが失敗してもインストールは完了）
+				process.exit(0);
 			}
 		}
 	}
 } else {
 	console.log("ℹ️ better-sqlite3が見つかりません。スキップします。");
+	process.exit(0);
 }
