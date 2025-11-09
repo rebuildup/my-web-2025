@@ -4,7 +4,7 @@ import DarkVeil from "@/components/DarkVeil";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { getContentById } from "@/lib/data";
-import type { MarkdownContentItem, ContentItem } from "@/types/content";
+import type { ContentItem, MarkdownContentItem } from "@/types/content";
 import { isEnhancedContentItem } from "@/types/content";
 
 export const runtime = "nodejs";
@@ -70,7 +70,9 @@ export async function generateMetadata({
 		const dbModule = await import("@/cms/lib/db");
 		const db = dbModule.default;
 		const pageRow = db
-			.prepare(`SELECT content_id FROM markdown_pages WHERE slug = @slug LIMIT 1`)
+			.prepare(
+				`SELECT content_id FROM markdown_pages WHERE slug = @slug LIMIT 1`,
+			)
 			.get({ slug }) as { content_id?: string | null } | undefined;
 
 		const contentId = pageRow?.content_id;
@@ -111,14 +113,19 @@ function ContentSection({
 	detail?: MarkdownDetail | null;
 }) {
 	// Check if there's meaningful content to display
-	const hasMarkdownPath = item && isEnhancedContentItem(item) && item.markdownPath;
+	const hasMarkdownPath =
+		item && isEnhancedContentItem(item) && item.markdownPath;
 	const hasContent = item?.content && item.content.trim().length > 0;
-	const hasDescription = item?.description && item.description.trim().length > 0;
+	const hasDescription =
+		item?.description && item.description.trim().length > 0;
 	const hasMarkdownBody = detail?.body && detail.body.trim().length > 0;
 
 	// Always show content section - never return null to avoid blank pages
 	const fallbackContent =
-		item?.content || item?.description || detail?.summary || "詳細な説明は準備中です。";
+		item?.content ||
+		item?.description ||
+		detail?.summary ||
+		"詳細な説明は準備中です。";
 
 	return (
 		<section className="space-y-8 sm:space-y-12">
@@ -207,7 +214,9 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 	const dbModule = await import("@/cms/lib/db");
 	const db = dbModule.default;
 	const pageRow = db
-		.prepare(`SELECT content_id FROM markdown_pages WHERE slug = @slug LIMIT 1`)
+		.prepare(
+			`SELECT content_id FROM markdown_pages WHERE slug = @slug LIMIT 1`,
+		)
 		.get({ slug }) as { content_id?: string | null } | undefined;
 
 	const contentId = pageRow?.content_id;

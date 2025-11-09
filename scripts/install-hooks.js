@@ -25,7 +25,7 @@ try {
 
 	// better-sqlite3がインストールされているかチェック
 	const packageJsonPath = path.join(process.cwd(), "package.json");
-	
+
 	if (!fs.existsSync(packageJsonPath)) {
 		console.log("⚠️ package.jsonが見つかりません。スキップします。");
 		process.exit(0);
@@ -74,12 +74,16 @@ try {
 						try {
 							// 最終手段: 手動ビルド
 							try {
-								execSync("node -e \"require('better-sqlite3')\"", { stdio: "inherit" });
+								execSync("node -e \"require('better-sqlite3')\"", {
+									stdio: "inherit",
+								});
 								console.log("✅ better-sqlite3が利用可能です！");
 							} catch (nodeError) {
 								console.error("❌ 全ての自動ビルド方法が失敗しました");
 								console.error("❌ エラー:", nodeError.message);
-								console.log("💡 手動でビルドを実行してください: pnpm rebuild better-sqlite3");
+								console.log(
+									"💡 手動でビルドを実行してください: pnpm rebuild better-sqlite3",
+								);
 								// エラーが発生してもプロセスを続行（postinstallが失敗してもインストールは完了）
 							}
 						} catch (error3) {
