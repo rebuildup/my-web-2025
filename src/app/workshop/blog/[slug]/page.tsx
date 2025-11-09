@@ -214,9 +214,7 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 	const dbModule = await import("@/cms/lib/db");
 	const db = dbModule.default;
 	const pageRow = db
-		.prepare(
-			`SELECT content_id FROM markdown_pages WHERE slug = @slug LIMIT 1`,
-		)
+		.prepare(`SELECT content_id FROM markdown_pages WHERE slug = @slug LIMIT 1`)
 		.get({ slug }) as { content_id?: string | null } | undefined;
 
 	const contentId = pageRow?.content_id;
