@@ -377,9 +377,6 @@ jobs:
             if [ -d "data" ]; then
               echo "Merging data directories..."
               # 既存のデータベースファイルを保持しつつ、新しいファイルを追加
-              if [ -f "${BACKUP_DATA_DIR}/index.db" ] && [ ! -f "data/index.db" ]; then
-                sudo cp "${BACKUP_DATA_DIR}/index.db" "data/index.db" || true
-              fi
               if [ -d "${BACKUP_DATA_DIR}/contents" ]; then
                 if [ ! -d "data/contents" ]; then
                   echo "Creating contents directory..."
@@ -425,11 +422,6 @@ jobs:
             echo "⚠️  Warning: contents directory not found"
           fi
           
-          if [ -f "data/index.db" ]; then
-            echo "✅ Index database found"
-          else
-            echo "⚠️  Warning: index database not found"
-          fi
 
           # 6. Verify deployment
           if [ ! -f "server.js" ] || [ ! -f ".next/BUILD_ID" ]; then

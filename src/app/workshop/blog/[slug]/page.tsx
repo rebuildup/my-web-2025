@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { findMarkdownPage } from "@/cms/server/markdown-service";
 import DarkVeil from "@/components/DarkVeilWrapper";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
@@ -26,24 +27,17 @@ async function loadMarkdownDetail(
 	slug: string,
 ): Promise<MarkdownDetail | null> {
 	try {
-		const dbModule = await import("@/cms/lib/db");
-		const db = dbModule.default;
-		const row = db
-			.prepare(
-				`SELECT frontmatter, body FROM markdown_pages WHERE slug = @slug LIMIT 1`,
-			)
-			.get({ slug }) as { frontmatter?: string; body?: string } | undefined;
-		if (!row) {
+		const match = findMarkdownPage(slug);
+		if (!match) {
 			return null;
 		}
-		if (!row.frontmatter && !row.body) {
-			return null;
-		}
-		const fm = row.frontmatter ? JSON.parse(row.frontmatter) : {};
+		const fm = match.page.frontmatter ?? {};
 		return {
-			title: fm.title,
-			summary: fm.summary ?? fm.description,
-			body: typeof row.body === "string" ? row.body : "",
+			title: fm.title as string | undefined,
+			summary:
+				(fm.summary as string | undefined) ??
+				(fm.description as string | undefined),
+			body: match.page.body ?? "",
 		};
 	} catch (error) {
 		console.warn("Failed to load markdown detail for", slug, error);
@@ -66,16 +60,8 @@ export async function generateMetadata({
 		const { slug } = await params;
 		const detailFromMarkdown = await loadMarkdownDetail(slug);
 
-		// content_idからコンテンツデータを取得
-		const dbModule = await import("@/cms/lib/db");
-		const db = dbModule.default;
-		const pageRow = db
-			.prepare(
-				`SELECT content_id FROM markdown_pages WHERE slug = @slug LIMIT 1`,
-			)
-			.get({ slug }) as { content_id?: string | null } | undefined;
-
-		const contentId = pageRow?.content_id;
+		const pageMatch = findMarkdownPage(slug);
+		const contentId = pageMatch?.page.contentId;
 		const content = contentId ? await getContentById("blog", contentId) : null;
 
 		const title = content?.title || detailFromMarkdown?.title || slug;
@@ -211,13 +197,8 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 
 	// content_idからコンテンツデータを取得（メディアデータ用）
 	// まず、markdown_pagesテーブルからcontent_idを取得
-	const dbModule = await import("@/cms/lib/db");
-	const db = dbModule.default;
-	const pageRow = db
-		.prepare(`SELECT content_id FROM markdown_pages WHERE slug = @slug LIMIT 1`)
-		.get({ slug }) as { content_id?: string | null } | undefined;
-
-	const contentId = pageRow?.content_id;
+	const pageMatch = findMarkdownPage(slug);
+	const contentId = pageMatch?.page.contentId;
 	const content = contentId ? await getContentById("blog", contentId) : null;
 
 	const title = content?.title || detailFromMarkdown.title || slug;

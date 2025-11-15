@@ -23,20 +23,44 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 			app = new PIXI.Application();
 			try {
+				const bgColor = replaceHash(settings.colorTheme.colors.MainBG);
 				await app.init({
 					width: 720 * 2,
 					height: 600 * 2,
-					backgroundColor: replaceHash(settings.colorTheme.colors.MainBG),
+					backgroundColor: bgColor || 0x000000,
 					resolution: window.devicePixelRatio || 1,
 					autoDensity: true,
 					//antialias: true,
 				});
 
-				if (!isMounted || !popupRef.current) return;
+				if (!isMounted || !popupRef.current) {
+					app?.destroy(true);
+					return;
+				}
+
+				// WebGLコンテキストが正しく初期化されているか確認
+				const renderer = app.renderer;
+				if (!renderer) {
+					throw new Error("Renderer not initialized");
+				}
+
+				// 背景色を明示的に設定
+				if (renderer.background) {
+					renderer.background.color = bgColor || 0x000000;
+				}
+				renderer.clear();
 
 				appRef.current = app;
 				popupRef.current.appendChild(app.canvas);
-				initializeGame(app);
+				
+				// initializeGameは非同期関数なのでawaitする必要がある
+				try {
+					await initializeGame(app);
+				} catch (gameError) {
+					console.error("Game initialization failed:", gameError);
+					// ゲーム初期化エラーが発生しても、アプリケーションは破棄しない
+					// ユーザーにエラーメッセージを表示するか、リトライできるようにする
+				}
 			} catch (error) {
 				console.error("PixiJS initialization failed:", error);
 				app?.destroy(true);

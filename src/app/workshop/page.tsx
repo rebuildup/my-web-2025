@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllFromIndex } from "@/cms/lib/content-db-manager";
+import { listMarkdownPages } from "@/cms/server/markdown-service";
 import type { MarkdownPage } from "@/cms/types/markdown";
 import DarkVeil from "@/components/DarkVeilWrapper";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -13,22 +14,6 @@ const CARD_SURFACE =
 	"group relative flex h-full flex-col overflow-hidden rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-0.5";
 
 type ContentIndexEntry = ReturnType<typeof getAllFromIndex>[number];
-
-type MarkdownPageRow = {
-	id: string;
-	content_id?: string | null;
-	slug: string;
-	frontmatter: string | null;
-	body: string;
-	html_cache?: string | null;
-	path?: string | null;
-	lang?: string | null;
-	status?: string | null;
-	version?: number | null;
-	created_at: string;
-	updated_at: string;
-	published_at?: string | null;
-};
 
 function isLikelyMediaUrl(url: string): boolean {
 	if (typeof url !== "string") return false;
@@ -202,66 +187,6 @@ function resolveImageSrc(src: string | undefined | null): string | undefined {
 	return `/${sanitized}`;
 }
 
-async function loadMarkdownPagesFromDb(): Promise<MarkdownPage[]> {
-	try {
-		const dbModule = await import("@/cms/lib/db");
-		const db = dbModule.default as {
-			prepare: (sql: string) => {
-				all: (...params: unknown[]) => MarkdownPageRow[];
-			};
-		};
-		const rows = db
-			.prepare(
-				"SELECT id, content_id, slug, frontmatter, body, html_cache, path, lang, status, version, created_at, updated_at, published_at FROM markdown_pages ORDER BY updated_at DESC",
-			)
-			.all();
-		console.log("[Workshop] Raw markdown rows from DB:", rows.length);
-		const parsed = rows
-			.map((row) => {
-				try {
-					const frontmatter = row.frontmatter
-						? (JSON.parse(row.frontmatter) as MarkdownPage["frontmatter"])
-						: {};
-					const parsed: MarkdownPage = {
-						id: row.id,
-						contentId: row.content_id ?? undefined,
-						slug: row.slug,
-						frontmatter,
-						body: row.body,
-						htmlCache: row.html_cache ?? undefined,
-						path: row.path ?? undefined,
-						lang: row.lang ?? undefined,
-						status: (row.status as MarkdownPage["status"]) ?? "draft",
-						version: row.version ?? undefined,
-						createdAt: row.created_at,
-						updatedAt: row.updated_at,
-						publishedAt: row.published_at ?? undefined,
-					};
-					return parsed;
-				} catch (error) {
-					console.error(
-						"[Workshop] Failed to parse markdown row",
-						row.slug,
-						error,
-					);
-					return null;
-				}
-			})
-			.filter((item): item is MarkdownPage => item !== null);
-		console.log(
-			"[Workshop] Successfully parsed markdown pages:",
-			parsed.length,
-		);
-		return parsed;
-	} catch (error) {
-		console.error(
-			"[Workshop] Failed to load markdown pages from database",
-			error,
-		);
-		return [];
-	}
-}
-
 function formatDate(isoDate: string | undefined) {
 	if (!isoDate) return "公開日未設定";
 	const date = new Date(isoDate);
@@ -369,7 +294,7 @@ function getContentHref(item: ContentItem) {
 
 export default async function WorkshopPage() {
 	const [markdownPages, blogContentItems] = await Promise.all([
-		loadMarkdownPagesFromDb(),
+		Promise.resolve(listMarkdownPages()),
 		loadContentByType("blog"),
 	]);
 

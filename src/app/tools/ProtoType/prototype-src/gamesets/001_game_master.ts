@@ -86,24 +86,60 @@ export async function initializeGame(app: PIXI.Application) {
 			})
 			.set(mask, { x: startX });
 	});
-	const fetchtext = await fetchTexts();
+	
+	let fetchtext: any = [];
+	try {
+		fetchtext = await fetchTexts();
+	} catch (error) {
+		console.error("Failed to fetch texts:", error);
+		// エラーが発生した場合、キャッシュから読み込むか、デフォルトデータを使用
+		const cachedTexts = loadFromCache<any>("api_texts", []);
+		if (cachedTexts && cachedTexts.length > 0 && cachedTexts[0] !== "no_text") {
+			fetchtext = cachedTexts;
+		} else {
+			// キャッシュもない場合、エラーメッセージを表示
+			loading_text.text = "テキストの読み込みに失敗しました";
+			loading_text.style.fill = replaceHash(settings.colorTheme.colors.MainAccent);
+			loading_text.position = {
+				x: app.screen.width / 2 - loading_text.width / 2,
+				y: app.screen.height / 2 - loading_text.height / 2,
+			};
+			throw new Error("Failed to fetch texts and no cache available");
+		}
+	}
 
 	const textsData: Issue[][] = [];
-	for (let i = 0; i < fetchtext.length; i++) {
-		for (let j = 0; j < fetchtext[i].length; j += 3) {
-			if (fetchtext[i][j] !== "") {
-				const tmp_Issue: Issue = {
-					text: String(fetchtext[i][j]),
-					romaji: String(fetchtext[i][j + 1]),
-				};
-				const groupIndex = j / 3;
-				if (!textsData[groupIndex]) {
-					textsData[groupIndex] = [];
+	if (fetchtext && Array.isArray(fetchtext) && fetchtext.length > 0) {
+		for (let i = 0; i < fetchtext.length; i++) {
+			if (Array.isArray(fetchtext[i])) {
+				for (let j = 0; j < fetchtext[i].length; j += 3) {
+					if (fetchtext[i][j] !== "" && fetchtext[i][j] !== undefined) {
+						const tmp_Issue: Issue = {
+							text: String(fetchtext[i][j]),
+							romaji: String(fetchtext[i][j + 1] || ""),
+						};
+						const groupIndex = j / 3;
+						if (!textsData[groupIndex]) {
+							textsData[groupIndex] = [];
+						}
+						textsData[groupIndex].push(tmp_Issue);
+					}
 				}
-				textsData[groupIndex].push(tmp_Issue);
 			}
 		}
 	}
+	
+	// textsDataが空の場合、エラーをスロー
+	if (textsData.length === 0 || textsData.every(group => group.length === 0)) {
+		loading_text.text = "テキストデータが見つかりません";
+		loading_text.style.fill = replaceHash(settings.colorTheme.colors.MainAccent);
+		loading_text.position = {
+			x: app.screen.width / 2 - loading_text.width / 2,
+			y: app.screen.height / 2 - loading_text.height / 2,
+		};
+		throw new Error("No valid text data available");
+	}
+	
 	gameData.textsData = textsData;
 	//console.log(textsData);
 

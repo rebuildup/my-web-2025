@@ -5,6 +5,7 @@
 
 import type { Metadata } from "next";
 import Image from "next/image";
+import { findMarkdownPage } from "@/cms/server/markdown-service";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
@@ -32,27 +33,18 @@ async function loadMarkdownDetail(
 	slug: string,
 ): Promise<MarkdownDetail | null> {
 	try {
-		const dbModule = await import("@/cms/lib/db");
-		const db = dbModule.default;
-		const row = db
-			.prepare(
-				`SELECT frontmatter, body FROM markdown_pages WHERE slug = @slug LIMIT 1`,
-			)
-			.get({ slug }) as { frontmatter?: string; body?: string } | undefined;
-		if (!row) {
+		const match = findMarkdownPage(slug);
+		if (!match) {
 			return null;
 		}
-		if (!row.frontmatter && !row.body) {
-			return null;
-		}
-		const fm = row.frontmatter ? JSON.parse(row.frontmatter) : {};
-		const body = typeof row.body === "string" ? row.body : "";
-		// Normalize URLs in markdown content
-		const normalizedBody = normalizeMarkdownUrls(body);
+		const frontmatter = match.page.frontmatter ?? {};
+		const body = normalizeMarkdownUrls(match.page.body ?? "");
 		return {
-			title: fm.title,
-			summary: fm.summary ?? fm.description,
-			body: normalizedBody,
+			title: frontmatter.title as string | undefined,
+			summary:
+				(frontmatter.summary as string | undefined) ??
+				(frontmatter.description as string | undefined),
+			body,
 		};
 	} catch (error) {
 		console.warn("Failed to load markdown detail for", slug, error);

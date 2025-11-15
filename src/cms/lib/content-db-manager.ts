@@ -1,10 +1,5 @@
-/**
- * コンテンツごとの個別データベース管理
- */
-
 import fs from "node:fs";
 import path from "node:path";
-// Lazy-load better-sqlite3 only in Node.js runtime to avoid binding errors in other environments
 import type Database from "better-sqlite3";
 import { getFullContent, saveFullContent } from "@/cms/lib/content-mapper";
 import type { Content } from "@/cms/types/content";
@@ -12,7 +7,7 @@ import type { ContentIndexRow } from "@/cms/types/database";
 
 const DATA_DIR = resolveDataDirectory();
 const CONTENT_DB_DIR = path.join(DATA_DIR, "contents");
-const INDEX_DB_PATH = path.join(DATA_DIR, "index.db");
+const TAG_CATALOG_FILE = path.join(DATA_DIR, "tag-catalog.json");
 
 ensureDirectory(DATA_DIR);
 ensureDirectory(CONTENT_DB_DIR);
@@ -35,14 +30,13 @@ function resolveDataDirectory(): string {
 		path.join(cwd, "standalone", "data"),
 		path.join(cwd, ".next", "standalone", "data"),
 		path.join(__dirname, "..", "..", "..", "..", "data"),
-		// デプロイ環境用のパス
 		"/var/www/yusuke-kim/data",
 		path.join(process.cwd(), "data"),
 	].filter((dir): dir is string => Boolean(dir));
 
 	for (const dir of candidateRoots) {
 		try {
-			if (fs.existsSync(dir)) {
+			if (dir && fs.existsSync(dir)) {
 				console.log(`[CMS] Using data directory: ${dir}`);
 				return dir;
 			}
@@ -78,98 +72,49 @@ function getBetterSqlite3(): typeof import("better-sqlite3") {
 	return mod;
 }
 
-// ========== インデックスデータベース（コンテンツの一覧管理） ==========
-
-export function getIndexDb(): Database.Database {
-	const DatabaseCtor = getBetterSqlite3();
-	// 念のため親ディレクトリを準備
-	if (!fs.existsSync(DATA_DIR)) {
-		fs.mkdirSync(DATA_DIR, { recursive: true });
+function listContentDbFiles(): string[] {
+	if (!fs.existsSync(CONTENT_DB_DIR)) {
+		return [];
 	}
-	let db: Database.Database;
-	try {
-		db = new DatabaseCtor(INDEX_DB_PATH);
-	} catch {
-		// ファイルDBが開けない環境ではメモリDBにフォールバック（読み取り系APIを継続）
-		db = new DatabaseCtor(":memory:");
-	}
-	try {
-		db.pragma("journal_mode = WAL");
-	} catch {
-		// 一部環境で失敗しても致命的ではないため無視
-	}
-
-	// インデックステーブル作成
-	db.exec(`
-    CREATE TABLE IF NOT EXISTS content_index (
-      id TEXT PRIMARY KEY,
-      db_file TEXT NOT NULL,
-      title TEXT NOT NULL,
-      summary TEXT,
-      lang TEXT DEFAULT 'ja',
-      status TEXT DEFAULT 'draft',
-      visibility TEXT DEFAULT 'draft',
-      created_at TEXT NOT NULL,
-      updated_at TEXT NOT NULL,
-      published_at TEXT,
-      tags TEXT, -- JSON array
-      thumbnails TEXT, -- JSON
-      seo TEXT -- JSON
-    );
-    
-    CREATE INDEX IF NOT EXISTS idx_content_index_status ON content_index(status);
-    CREATE INDEX IF NOT EXISTS idx_content_index_created ON content_index(created_at);
-
-    CREATE TABLE IF NOT EXISTS tag_catalog (
-      name TEXT PRIMARY KEY,
-      created_at TEXT NOT NULL,
-      last_used TEXT,
-      metadata TEXT
-    );
-
-    CREATE TABLE IF NOT EXISTS manual_dates (
-      content_id TEXT PRIMARY KEY,
-      date TEXT NOT NULL,
-      updated_at TEXT NOT NULL
-    );
-  `);
-
-	return db;
+	return fs
+		.readdirSync(CONTENT_DB_DIR)
+		.filter((file) => file.endsWith(".db"))
+		.sort();
 }
 
-// ========== コンテンツデータベースのファイル名生成 ==========
+function extractContentIdFromFileName(file: string): string {
+	if (!file.startsWith("content-") || !file.endsWith(".db")) {
+		return file.replace(/\.db$/, "");
+	}
+	return file.slice("content-".length, -".db".length);
+}
 
 export function getContentDbPath(contentId: string): string {
 	const sanitizedId = contentId.replace(/[^a-zA-Z0-9_-]/g, "_");
 	return path.join(CONTENT_DB_DIR, `content-${sanitizedId}.db`);
 }
 
-// ========== コンテンツデータベースの作成・取得 ==========
-
 export function getContentDb(contentId: string): Database.Database {
 	const dbPath = getContentDbPath(contentId);
 	const isNewDb = !fs.existsSync(dbPath);
-
 	const DatabaseCtor = getBetterSqlite3();
 	const db = new DatabaseCtor(dbPath);
 	try {
 		db.pragma("journal_mode = WAL");
 	} catch {
-		// ignore pragma failure
+		// ignore pragma failures
 	}
 
-	// 新規データベースの場合はスキーマを作成
 	if (isNewDb) {
 		initializeContentDbSchema(db);
+	} else {
+		ensureSchemaUpgrades(db);
 	}
 
 	return db;
 }
 
-// ========== コンテンツデータベースのスキーマ初期化 ==========
-
 function initializeContentDbSchema(db: Database.Database): void {
-	// メインテーブル: contents
 	db.exec(`
     CREATE TABLE IF NOT EXISTS contents (
       id TEXT PRIMARY KEY,
@@ -323,33 +268,84 @@ function initializeContentDbSchema(db: Database.Database): void {
       INSERT INTO markdown_pages_fts(rowid, id, slug, body)
       VALUES (new.rowid, new.id, new.slug, new.body);
     END;
-    
-    CREATE TABLE IF NOT EXISTS media (
-      id TEXT PRIMARY KEY,
-      content_id TEXT,
-      filename TEXT NOT NULL,
-      mime_type TEXT NOT NULL,
-      size INTEGER NOT NULL,
-      width INTEGER,
-      height INTEGER,
-      alt TEXT,
-      description TEXT,
-      tags TEXT,
-      data BLOB NOT NULL,
-      created_at TEXT NOT NULL,
-      updated_at TEXT NOT NULL,
-      FOREIGN KEY (content_id) REFERENCES contents(id) ON DELETE SET NULL
+  `);
+
+	ensureManualDatesTable(db);
+}
+
+function ensureSchemaUpgrades(db: Database.Database): void {
+	ensureManualDatesTable(db);
+}
+
+function ensureManualDatesTable(db: Database.Database): void {
+	db.exec(`
+    CREATE TABLE IF NOT EXISTS manual_dates (
+      content_id TEXT PRIMARY KEY,
+      date TEXT NOT NULL,
+      updated_at TEXT NOT NULL
     );
-    
-    CREATE INDEX IF NOT EXISTS idx_media_content ON media(content_id);
-    CREATE INDEX IF NOT EXISTS idx_media_filename ON media(filename);
-    CREATE INDEX IF NOT EXISTS idx_media_created ON media(created_at);
   `);
 }
 
-// ========== インデックスデータベース操作 ==========
+function readContentRowsFromFile(file: string): ContentIndexRow[] {
+	const dbPath = path.join(CONTENT_DB_DIR, file);
+	const DatabaseCtor = getBetterSqlite3();
+	const db = new DatabaseCtor(dbPath);
+	try {
+		ensureSchemaUpgrades(db);
+		const rows = db
+			.prepare(
+				`SELECT id, COALESCE(title, id) AS title, COALESCE(summary, '') AS summary, COALESCE(lang, 'ja') AS lang,
+          COALESCE(status, 'draft') AS status, COALESCE(visibility, 'draft') AS visibility,
+          created_at, updated_at, published_at, thumbnails, seo
+        FROM contents ORDER BY created_at DESC`,
+			)
+			.all() as Array<{
+			id: string;
+			title: string;
+			summary: string;
+			lang: string;
+			status: string;
+			visibility: string;
+			created_at: string;
+			updated_at: string;
+			published_at?: string | null;
+			thumbnails?: string | null;
+			seo?: string | null;
+		}>;
 
-export function addToIndex(contentData: {
+		return rows.map((row) => {
+			const tags = db
+				.prepare("SELECT tag FROM content_tags WHERE content_id = ?")
+				.all(row.id) as Array<{ tag: string }>;
+			return {
+				id: row.id,
+				db_file: file,
+				title: row.title,
+				summary: row.summary,
+				lang: row.lang,
+				status: row.status,
+				visibility: row.visibility,
+				created_at: row.created_at,
+				updated_at: row.updated_at,
+				published_at: row.published_at ?? undefined,
+				tags:
+					tags.length > 0
+						? JSON.stringify(tags.map((tag) => tag.tag))
+						: undefined,
+				thumbnails: row.thumbnails ?? undefined,
+				seo: row.seo ?? undefined,
+			};
+		});
+	} catch (error) {
+		console.warn(`[CMS] Failed to read index data from ${file}:`, error);
+		return [];
+	} finally {
+		db.close();
+	}
+}
+
+export function addToIndex(_contentData: {
 	id: string;
 	title: string;
 	summary?: string;
@@ -363,38 +359,20 @@ export function addToIndex(contentData: {
 	thumbnails?: Record<string, unknown>;
 	seo?: Record<string, unknown>;
 }): void {
-	const indexDb = getIndexDb();
-	const dbFile = path.basename(getContentDbPath(contentData.id));
-
-	const stmt = indexDb.prepare(`
-    INSERT OR REPLACE INTO content_index 
-    (id, db_file, title, summary, lang, status, visibility, created_at, updated_at, published_at, tags, thumbnails, seo)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-
-	stmt.run(
-		contentData.id,
-		dbFile,
-		contentData.title,
-		contentData.summary || null,
-		contentData.lang || "ja",
-		contentData.status || "draft",
-		contentData.visibility || "draft",
-		contentData.createdAt,
-		contentData.updatedAt,
-		contentData.publishedAt || null,
-		contentData.tags ? JSON.stringify(contentData.tags) : null,
-		contentData.thumbnails ? JSON.stringify(contentData.thumbnails) : null,
-		contentData.seo ? JSON.stringify(contentData.seo) : null,
-	);
-
-	indexDb.close();
+	// Index entries are derived directly from per-content databases, so no-op.
 }
 
-export function removeFromIndex(contentId: string): void {
-	const indexDb = getIndexDb();
-	indexDb.prepare("DELETE FROM content_index WHERE id = ?").run(contentId);
-	indexDb.close();
+export function removeFromIndex(_contentId: string): void {
+	// No aggregate index to update.
+}
+
+function parseJson<T>(value: string | null | undefined): T | undefined {
+	if (!value) return undefined;
+	try {
+		return JSON.parse(value) as T;
+	} catch {
+		return undefined;
+	}
 }
 
 export function getAllFromIndex(): Array<{
@@ -408,31 +386,29 @@ export function getAllFromIndex(): Array<{
 	createdAt: string;
 	updatedAt: string;
 	publishedAt?: string;
-	tags?: string;
-	thumbnails?: string;
-	seo?: string;
+	tags?: string[];
+	thumbnails?: Record<string, unknown>;
+	seo?: Record<string, unknown>;
 }> {
-	const indexDb = getIndexDb();
-	const rows = indexDb
-		.prepare("SELECT * FROM content_index ORDER BY created_at DESC")
-		.all() as ContentIndexRow[];
-	indexDb.close();
+	const rows = listContentDbFiles().flatMap((file) =>
+		readContentRowsFromFile(file).map((row) => ({
+			id: row.id,
+			dbFile: row.db_file,
+			title: row.title,
+			summary: row.summary,
+			lang: row.lang,
+			status: row.status,
+			visibility: row.visibility,
+			createdAt: row.created_at,
+			updatedAt: row.updated_at,
+			publishedAt: row.published_at,
+			tags: parseJson<string[]>(row.tags),
+			thumbnails: parseJson<Record<string, unknown>>(row.thumbnails),
+			seo: parseJson<Record<string, unknown>>(row.seo),
+		})),
+	);
 
-	return rows.map((row: ContentIndexRow) => ({
-		id: row.id,
-		dbFile: row.db_file,
-		title: row.title,
-		summary: row.summary,
-		lang: row.lang,
-		status: row.status,
-		visibility: row.visibility,
-		createdAt: row.created_at,
-		updatedAt: row.updated_at,
-		publishedAt: row.published_at,
-		tags: row.tags ? JSON.parse(row.tags) : undefined,
-		thumbnails: row.thumbnails ? JSON.parse(row.thumbnails) : undefined,
-		seo: row.seo ? JSON.parse(row.seo) : undefined,
-	}));
+	return rows.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 export function getFromIndex(contentId: string): {
@@ -446,36 +422,68 @@ export function getFromIndex(contentId: string): {
 	createdAt: string;
 	updatedAt: string;
 	publishedAt?: string;
-	tags?: string;
-	thumbnails?: string;
-	seo?: string;
+	tags?: string[];
+	thumbnails?: Record<string, unknown>;
+	seo?: Record<string, unknown>;
 } | null {
-	const indexDb = getIndexDb();
-	const row = indexDb
-		.prepare("SELECT * FROM content_index WHERE id = ?")
-		.get(contentId) as ContentIndexRow | undefined;
-	indexDb.close();
-
-	if (!row) return null;
-
-	return {
-		id: row.id,
-		dbFile: row.db_file,
-		title: row.title,
-		summary: row.summary,
-		lang: row.lang,
-		status: row.status,
-		visibility: row.visibility,
-		createdAt: row.created_at,
-		updatedAt: row.updated_at,
-		publishedAt: row.published_at,
-		tags: row.tags ? JSON.parse(row.tags) : undefined,
-		thumbnails: row.thumbnails ? JSON.parse(row.thumbnails) : undefined,
-		seo: row.seo ? JSON.parse(row.seo) : undefined,
-	};
+	const dbPath = getContentDbPath(contentId);
+	if (!fs.existsSync(dbPath)) {
+		return null;
+	}
+	const DatabaseCtor = getBetterSqlite3();
+	const db = new DatabaseCtor(dbPath);
+	try {
+		ensureSchemaUpgrades(db);
+		const row = db
+			.prepare(
+				`SELECT id, title, COALESCE(summary, '') AS summary, COALESCE(lang, 'ja') AS lang,
+          COALESCE(status, 'draft') AS status, COALESCE(visibility, 'draft') AS visibility,
+          created_at, updated_at, published_at, thumbnails, seo
+        FROM contents WHERE id = ? LIMIT 1`,
+			)
+			.get(contentId) as
+			| {
+					id: string;
+					title: string;
+					summary: string;
+					lang: string;
+					status: string;
+					visibility: string;
+					created_at: string;
+					updated_at: string;
+					published_at?: string | null;
+					thumbnails?: string | null;
+					seo?: string | null;
+			  }
+			| undefined;
+		if (!row) {
+			return null;
+		}
+		const tags = db
+			.prepare("SELECT tag FROM content_tags WHERE content_id = ?")
+			.all(row.id) as Array<{ tag: string }>;
+		return {
+			id: row.id,
+			dbFile: path.basename(dbPath),
+			title: row.title,
+			summary: row.summary,
+			lang: row.lang,
+			status: row.status,
+			visibility: row.visibility,
+			createdAt: row.created_at,
+			updatedAt: row.updated_at,
+			publishedAt: row.published_at ?? undefined,
+			tags: tags.length > 0 ? tags.map((tag) => tag.tag) : undefined,
+			thumbnails: parseJson<Record<string, unknown>>(row.thumbnails),
+			seo: parseJson<Record<string, unknown>>(row.seo),
+		};
+	} catch (error) {
+		console.warn(`[CMS] Failed to read index entry for ${contentId}:`, error);
+		return null;
+	} finally {
+		db.close();
+	}
 }
-
-// ========== コンテンツデータベースコピー（新規作成してデータ移行） ==========
 
 export function copyContentDb(oldId: string, newId: string): boolean {
 	const oldPath = getContentDbPath(oldId);
@@ -486,34 +494,29 @@ export function copyContentDb(oldId: string, newId: string): boolean {
 		return false;
 	}
 
-	// 新しいIDのDBファイルが既に存在する場合はエラー
 	if (fs.existsSync(newPath)) {
 		console.error(`Content database already exists for new ID: ${newId}`);
 		return false;
 	}
 
 	try {
-		// 古いDBから完全なコンテンツデータを取得
 		const oldDb = getContentDb(oldId);
 		let oldContent: Content | null = null;
 		try {
 			oldContent = getFullContent(oldDb, oldId);
 			if (!oldContent) {
-				console.error(`Content not found in old database: ${oldId}`);
 				return false;
 			}
 		} finally {
 			oldDb.close();
 		}
 
-		// 新しいIDでコンテンツデータを作成（IDを更新）
 		const newContent: Partial<Content> = {
 			...oldContent,
-			id: newId, // 新しいIDに更新
+			id: newId,
 			updatedAt: new Date().toISOString(),
 		};
 
-		// 新しいDBを作成してデータを保存
 		const newDb = getContentDb(newId);
 		try {
 			saveFullContent(newDb, newContent);
@@ -521,37 +524,31 @@ export function copyContentDb(oldId: string, newId: string): boolean {
 			newDb.close();
 		}
 
-		// インデックスから古いIDを削除（新しいIDは後で追加される）
-		removeFromIndex(oldId);
-
-		// 古いDBファイルを削除（成功後に）
 		try {
 			if (fs.existsSync(oldPath)) {
 				fs.unlinkSync(oldPath);
 			}
-			const oldWalPath = `${oldPath}-wal`;
-			if (fs.existsSync(oldWalPath)) {
-				fs.unlinkSync(oldWalPath);
+			const wal = `${oldPath}-wal`;
+			if (fs.existsSync(wal)) {
+				fs.unlinkSync(wal);
 			}
-			const oldShmPath = `${oldPath}-shm`;
-			if (fs.existsSync(oldShmPath)) {
-				fs.unlinkSync(oldShmPath);
+			const shm = `${oldPath}-shm`;
+			if (fs.existsSync(shm)) {
+				fs.unlinkSync(shm);
 			}
 		} catch (error) {
-			// 古いファイルの削除に失敗しても続行（後で削除できる）
-			console.warn(`Failed to delete old database file: ${error}`);
+			console.warn(
+				`[CMS] Failed to delete old database files for ${oldId}:`,
+				error,
+			);
 		}
 
 		return true;
 	} catch (error) {
 		console.error("Failed to copy content database:", error);
-		console.error(`Old ID: ${oldId}, New ID: ${newId}`);
-		console.error(`Old path: ${oldPath}, New path: ${newPath}`);
 		return false;
 	}
 }
-
-// ========== コンテンツデータベース削除 ==========
 
 export function deleteContentDb(contentId: string): boolean {
 	const dbPath = getContentDbPath(contentId);
@@ -561,7 +558,6 @@ export function deleteContentDb(contentId: string): boolean {
 	}
 
 	try {
-		// データベースファイルとWALファイルを削除
 		fs.unlinkSync(dbPath);
 
 		const walPath = `${dbPath}-wal`;
@@ -574,17 +570,12 @@ export function deleteContentDb(contentId: string): boolean {
 			fs.unlinkSync(shmPath);
 		}
 
-		// インデックスから削除
-		removeFromIndex(contentId);
-
 		return true;
 	} catch (error) {
 		console.error("Failed to delete content database:", error);
 		return false;
 	}
 }
-
-// ========== 統計情報 ==========
 
 export function getContentDbStats(): {
 	totalContents: number;
@@ -597,40 +588,54 @@ export function getContentDbStats(): {
 		size: number;
 	}>;
 } {
-	const indexDb = getIndexDb();
-	const allContents = indexDb
-		.prepare("SELECT id, title, db_file FROM content_index")
-		.all() as ContentIndexRow[];
-	indexDb.close();
-
+	const summaries = getAllFromIndex();
 	let totalSize = 0;
-	const contentsList = allContents.map((row: ContentIndexRow) => {
-		const dbPath = path.join(CONTENT_DB_DIR, row.db_file);
+	const contentsList = summaries.map((summary) => {
+		const dbPath = path.join(CONTENT_DB_DIR, summary.dbFile);
 		let size = 0;
-
 		if (fs.existsSync(dbPath)) {
 			const stats = fs.statSync(dbPath);
 			size = stats.size;
 			totalSize += size;
 		}
-
 		return {
-			id: row.id,
-			title: row.title,
-			dbFile: row.db_file,
+			id: summary.id,
+			title: summary.title,
+			dbFile: summary.dbFile,
 			size,
 		};
 	});
 
 	return {
-		totalContents: allContents.length,
+		totalContents: summaries.length,
 		totalDbFiles: contentsList.length,
 		totalSize,
 		contentsList,
 	};
 }
 
-// ========== タグカタログ操作 ==========
+function readTagCatalog(): TagCatalogEntry[] {
+	try {
+		const raw = fs.readFileSync(TAG_CATALOG_FILE, "utf-8");
+		const parsed = JSON.parse(raw) as
+			| { entries?: TagCatalogEntry[] }
+			| TagCatalogEntry[];
+		if (Array.isArray(parsed)) {
+			return parsed;
+		}
+		if (parsed && Array.isArray(parsed.entries)) {
+			return parsed.entries;
+		}
+	} catch {
+		// ignore
+	}
+	return [];
+}
+
+function writeTagCatalog(entries: TagCatalogEntry[]): void {
+	const payload = JSON.stringify({ entries }, null, 2);
+	fs.writeFileSync(TAG_CATALOG_FILE, payload, "utf-8");
+}
 
 export interface TagCatalogEntry {
 	name: string;
@@ -640,16 +645,7 @@ export interface TagCatalogEntry {
 }
 
 export function listTagCatalogEntries(): TagCatalogEntry[] {
-	const db = getIndexDb();
-	try {
-		return db
-			.prepare(
-				"SELECT name, created_at, last_used, metadata FROM tag_catalog ORDER BY name ASC",
-			)
-			.all() as TagCatalogEntry[];
-	} finally {
-		db.close();
-	}
+	return readTagCatalog();
 }
 
 export function upsertTagCatalogEntry(entry: {
@@ -658,40 +654,46 @@ export function upsertTagCatalogEntry(entry: {
 	lastUsed?: string | null;
 	metadata?: unknown;
 }): void {
-	const db = getIndexDb();
-	try {
-		const stmt = db.prepare(`
-      INSERT INTO tag_catalog (name, created_at, last_used, metadata)
-      VALUES (@name, COALESCE(@created_at, CURRENT_TIMESTAMP), @last_used, @metadata)
-      ON CONFLICT(name) DO UPDATE SET
-        last_used = COALESCE(excluded.last_used, tag_catalog.last_used),
-        metadata = COALESCE(excluded.metadata, tag_catalog.metadata)
-    `);
-		stmt.run({
-			name: entry.name,
-			created_at: entry.createdAt ?? null,
-			last_used: entry.lastUsed ?? null,
-			metadata:
-				entry.metadata !== undefined ? JSON.stringify(entry.metadata) : null,
-		});
-	} finally {
-		db.close();
+	const normalized = entry.name.trim();
+	if (!normalized) {
+		return;
 	}
+	const entries = readTagCatalog();
+	const now = new Date().toISOString();
+	const metadataValue =
+		entry.metadata !== undefined ? JSON.stringify(entry.metadata) : null;
+	const existingIndex = entries.findIndex((item) => item.name === normalized);
+	if (existingIndex >= 0) {
+		entries[existingIndex] = {
+			name: normalized,
+			created_at: entries[existingIndex].created_at,
+			last_used: entry.lastUsed ?? entries[existingIndex].last_used ?? now,
+			metadata: metadataValue ?? entries[existingIndex].metadata ?? null,
+		};
+	} else {
+		entries.push({
+			name: normalized,
+			created_at: entry.createdAt ?? now,
+			last_used: entry.lastUsed ?? now,
+			metadata: metadataValue,
+		});
+	}
+	writeTagCatalog(entries);
 }
 
 export function removeTagCatalogEntry(name: string): boolean {
-	const db = getIndexDb();
-	try {
-		const result = db
-			.prepare("DELETE FROM tag_catalog WHERE name = ?")
-			.run(name);
-		return result.changes > 0;
-	} finally {
-		db.close();
+	const normalized = name.trim();
+	if (!normalized) {
+		return false;
 	}
+	const entries = readTagCatalog();
+	const next = entries.filter((entry) => entry.name !== normalized);
+	if (next.length === entries.length) {
+		return false;
+	}
+	writeTagCatalog(next);
+	return true;
 }
-
-// ========== 手動日付管理 ==========
 
 export interface ManualDateEntry {
 	content_id: string;
@@ -699,52 +701,84 @@ export interface ManualDateEntry {
 	updated_at: string;
 }
 
-export function listManualDateEntries(): ManualDateEntry[] {
-	const db = getIndexDb();
-	try {
-		return db
-			.prepare(
-				"SELECT content_id, date, updated_at FROM manual_dates ORDER BY updated_at DESC",
-			)
-			.all() as ManualDateEntry[];
-	} finally {
-		db.close();
+function readManualDateFromDb(
+	db: Database.Database,
+	fallbackId: string,
+): ManualDateEntry | null {
+	const row = db
+		.prepare(
+			"SELECT content_id, date, updated_at FROM manual_dates ORDER BY updated_at DESC LIMIT 1",
+		)
+		.get() as
+		| { content_id?: string | null; date: string; updated_at: string }
+		| undefined;
+	if (!row) {
+		return null;
 	}
+	return {
+		content_id: row.content_id || fallbackId,
+		date: row.date,
+		updated_at: row.updated_at,
+	};
+}
+
+function getPrimaryContentId(db: Database.Database): string | null {
+	const row = db
+		.prepare("SELECT id FROM contents ORDER BY created_at ASC LIMIT 1")
+		.get() as { id: string } | undefined;
+	return row?.id ?? null;
+}
+
+export function listManualDateEntries(): ManualDateEntry[] {
+	const entries: ManualDateEntry[] = [];
+	for (const file of listContentDbFiles()) {
+		const dbPath = path.join(CONTENT_DB_DIR, file);
+		const DatabaseCtor = getBetterSqlite3();
+		const db = new DatabaseCtor(dbPath);
+		try {
+			ensureSchemaUpgrades(db);
+			const fallbackId =
+				getPrimaryContentId(db) ?? extractContentIdFromFileName(file);
+			if (!fallbackId) {
+				continue;
+			}
+			const entry = readManualDateFromDb(db, fallbackId);
+			if (entry) {
+				entries.push(entry);
+			}
+		} catch (error) {
+			console.warn(`[CMS] Failed to read manual date from ${file}:`, error);
+		} finally {
+			db.close();
+		}
+	}
+	return entries;
 }
 
 export function getManualDateEntry(contentId: string): ManualDateEntry | null {
-	const db = getIndexDb();
+	const db = getContentDb(contentId);
 	try {
-		const row = db
-			.prepare(
-				"SELECT content_id, date, updated_at FROM manual_dates WHERE content_id = ?",
-			)
-			.get(contentId) as ManualDateEntry | undefined;
-		return row ?? null;
+		return readManualDateFromDb(db, contentId);
 	} finally {
 		db.close();
 	}
 }
 
 export function upsertManualDateEntry(contentId: string, date: string): void {
-	const db = getIndexDb();
+	const db = getContentDb(contentId);
 	try {
-		const stmt = db.prepare(`
-      INSERT INTO manual_dates (content_id, date, updated_at)
-      VALUES (?, ?, ?)
-      ON CONFLICT(content_id) DO UPDATE SET
-        date = excluded.date,
-        updated_at = excluded.updated_at
-    `);
 		const now = new Date().toISOString();
-		stmt.run(contentId, date, now);
+		db.prepare(
+			`INSERT INTO manual_dates (content_id, date, updated_at) VALUES (?, ?, ?)
+        ON CONFLICT(content_id) DO UPDATE SET date = excluded.date, updated_at = excluded.updated_at`,
+		).run(contentId, date, now);
 	} finally {
 		db.close();
 	}
 }
 
 export function removeManualDateEntry(contentId: string): boolean {
-	const db = getIndexDb();
+	const db = getContentDb(contentId);
 	try {
 		const result = db
 			.prepare("DELETE FROM manual_dates WHERE content_id = ?")

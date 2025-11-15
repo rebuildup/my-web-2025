@@ -1,10 +1,8 @@
 import type Database from "better-sqlite3";
-import { getFromIndex } from "@/cms/lib/content-db-manager";
+import { getContentDb, getFromIndex } from "@/cms/lib/content-db-manager";
 import {
-	deleteMarkdownPage,
 	getMarkdownPage,
 	importMarkdownFile,
-	type MarkdownPageRow,
 	saveMarkdownPage,
 } from "@/cms/lib/markdown-mapper";
 import type {
@@ -12,13 +10,14 @@ import type {
 	MarkdownFrontmatter,
 	MarkdownPage,
 } from "@/cms/types/markdown";
+import {
+	deleteMarkdownPage as deleteMarkdownEntry,
+	findMarkdownPage,
+	listMarkdownPages,
+	slugExists,
+} from "@/cms/server/markdown-service";
 
 export const runtime = "nodejs";
-
-async function getDb(): Promise<Database.Database> {
-	const dbModule = await import("@/cms/lib/db");
-	return dbModule.default as Database.Database;
-}
 
 function normalizeFrontmatter(input: unknown): MarkdownFrontmatter {
 	if (!input) return {};
@@ -78,6 +77,36 @@ function ensureContentRecord(
 	).run(payload);
 }
 
+function persistMarkdownPage(
+	contentId: string,
+	page: Partial<MarkdownPage>,
+	fallback?: {
+		title?: string;
+		summary?: string;
+		lang?: string;
+		visibility?: string;
+		status?: string;
+		publishedAt?: string;
+	},
+): MarkdownPage {
+	const db = getContentDb(contentId);
+	try {
+		ensureContentRecord(db, contentId, fallback);
+		saveMarkdownPage(db, { ...page, contentId });
+		const identifier = page.id || page.slug || contentId;
+		const saved = identifier ? getMarkdownPage(db, identifier) : null;
+		if (saved) {
+			return saved;
+		}
+		return {
+			...(page as MarkdownPage),
+			contentId,
+		};
+	} finally {
+		db.close();
+	}
+}
+
 type MarkdownStatus = "draft" | "published" | "archived";
 const MARKDOWN_STATUS_SET = new Set<MarkdownStatus>([
 	"draft",
@@ -95,29 +124,6 @@ function normalizeStatus(status: unknown): MarkdownStatus {
 	return "draft";
 }
 
-function mapRowToPage(row: MarkdownPageRow): MarkdownPage | null {
-	try {
-		return {
-			id: row.id,
-			contentId: row.content_id || undefined,
-			slug: row.slug,
-			frontmatter: JSON.parse(row.frontmatter),
-			body: row.body,
-			lang: row.lang,
-			status: normalizeStatus(row.status),
-			version: row.version,
-			createdAt: row.created_at,
-			updatedAt: row.updated_at,
-			publishedAt: row.published_at || undefined,
-			path: row.path || undefined,
-			htmlCache: row.html_cache || undefined,
-		} satisfies MarkdownPage;
-	} catch (error) {
-		console.error("Failed to parse markdown row:", row.slug, error);
-		return null;
-	}
-}
-
 // ========== OPTIONS: CORS preflight ==========
 export async function OPTIONS() {
 	return new Response(null, {
@@ -133,18 +139,19 @@ export async function OPTIONS() {
 // ========== GET: Markdown�y�[�W�ꗗ�܂��͌ʎ擾 ==========
 export async function GET(req: Request) {
 	try {
-		const db = await getDb();
 		const { searchParams } = new URL(req.url);
 		const id = searchParams.get("id")?.trim();
 		const slug = searchParams.get("slug")?.trim();
 		const contentId = searchParams.get("contentId")?.trim();
 
 		if (id || slug) {
-			const page = getMarkdownPage(db, id || slug || "");
-			if (!page) {
+			const match = findMarkdownPage(id || slug || "", {
+				contentId: contentId || undefined,
+			});
+			if (!match) {
 				return Response.json({ error: "Page not found" }, { status: 404 });
 			}
-			return Response.json(page, {
+			return Response.json(match.page, {
 				headers: {
 					"Access-Control-Allow-Origin": "*",
 					"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -153,21 +160,9 @@ export async function GET(req: Request) {
 			});
 		}
 
-		let query = `
-      SELECT id, content_id, slug, frontmatter, body, lang, status, version, created_at, updated_at, published_at, path, html_cache
-      FROM markdown_pages
-    `;
-		const params: unknown[] = [];
-		if (contentId) {
-			query += " WHERE content_id = ? ";
-			params.push(contentId);
-		}
-		query += " ORDER BY updated_at DESC";
-
-		const rows = db.prepare(query).all(...params) as MarkdownPageRow[];
-		const pages = rows
-			.map((row) => mapRowToPage(row))
-			.filter((page): page is MarkdownPage => page !== null);
+		const pages = listMarkdownPages({
+			contentId: contentId || undefined,
+		});
 
 		return Response.json(pages, {
 			headers: {
@@ -185,42 +180,42 @@ export async function GET(req: Request) {
 	}
 }
 
-// ========== POST: �V�KMarkdown�y�[�W�쐬 ==========
+// ========== POST: Markdownページ作成 ========== 
 export async function POST(req: Request) {
 	try {
-		const db = await getDb();
 		const data = await req.json();
 
-		// Markdown�t�@�C���`���ł̃C���|�[�g
 		if (data.file) {
 			const file: MarkdownFile = data.file;
 			const page = importMarkdownFile(file);
-			const contentId =
+			const requestedContentId =
 				typeof data.contentId === "string" ? data.contentId.trim() : undefined;
-			if (contentId) {
-				page.contentId = contentId;
-			}
-			page.status = normalizeStatus(page.status);
-			page.lang = page.lang || "ja";
+			const resolvedContentId = requestedContentId || page.contentId || page.slug;
 
 			if (!page.slug) {
 				return Response.json({ error: "Slug is required" }, { status: 400 });
 			}
 
-			const conflict = db
-				.prepare("SELECT id FROM markdown_pages WHERE slug = ?")
-				.get(page.slug) as { id: string } | undefined;
-			if (conflict) {
+			if (!resolvedContentId) {
+				return Response.json(
+					{ error: "contentId is required" },
+					{ status: 400 },
+				);
+			}
+
+			page.contentId = resolvedContentId;
+			page.status = normalizeStatus(page.status);
+			page.lang = page.lang || "ja";
+
+			if (slugExists(page.slug)) {
 				return Response.json({ error: "Slug already exists" }, { status: 400 });
 			}
 
-			ensureContentRecord(db, page.contentId, {
+			const saved = persistMarkdownPage(resolvedContentId, page, {
 				title: page.frontmatter.title,
 				summary: page.frontmatter.description,
 			});
 
-			saveMarkdownPage(db, page);
-			const saved = getMarkdownPage(db, page.id) ?? page;
 			return Response.json({
 				ok: true,
 				id: saved.id,
@@ -234,14 +229,15 @@ export async function POST(req: Request) {
 			return Response.json({ error: "Slug is required" }, { status: 400 });
 		}
 
-		const contentId =
+		const requestedContentId =
 			typeof data.contentId === "string" ? data.contentId.trim() : undefined;
+		const resolvedContentId = requestedContentId || slug;
 		const frontmatter = normalizeFrontmatter(data.frontmatter);
 		const now = new Date().toISOString();
 
 		const page: Partial<MarkdownPage> = {
 			id: typeof data.id === "string" ? data.id.trim() : undefined,
-			contentId,
+			contentId: resolvedContentId,
 			slug,
 			frontmatter,
 			body: typeof data.body === "string" ? data.body : "",
@@ -252,14 +248,11 @@ export async function POST(req: Request) {
 			updatedAt: now,
 		};
 
-		const existingRow = db
-			.prepare("SELECT id FROM markdown_pages WHERE slug = ?")
-			.get(slug) as { id: string } | undefined;
-		if (existingRow) {
+		if (slugExists(slug)) {
 			return Response.json({ error: "Slug already exists" }, { status: 400 });
 		}
 
-		ensureContentRecord(db, contentId, {
+		const savedPage = persistMarkdownPage(resolvedContentId, page, {
 			title: frontmatter.title || slug,
 			summary: frontmatter.description,
 			lang: page.lang,
@@ -268,15 +261,10 @@ export async function POST(req: Request) {
 			publishedAt: frontmatter.date,
 		});
 
-		saveMarkdownPage(db, page);
-		const savedPage =
-			getMarkdownPage(db, slug) ??
-			(page.id ? getMarkdownPage(db, page.id) : null);
-
 		return Response.json({
 			ok: true,
-			id: savedPage?.id || page.id || "",
-			slug,
+			id: savedPage.id || page.id || "",
+			slug: savedPage.slug,
 			page: savedPage,
 		});
 	} catch (error) {
@@ -288,12 +276,9 @@ export async function POST(req: Request) {
 			{ status: 500 },
 		);
 	}
-}
-
-// ========== PUT: Markdown�y�[�W�X�V ==========
+}// ========== PUT: Markdownページ更新 ========== 
 export async function PUT(req: Request) {
 	try {
-		const db = await getDb();
 		const data = await req.json();
 		const identifier =
 			(typeof data.id === "string" && data.id.trim()) ||
@@ -306,27 +291,32 @@ export async function PUT(req: Request) {
 			);
 		}
 
-		const existing = getMarkdownPage(db, identifier);
-		if (!existing) {
+		const match = findMarkdownPage(identifier);
+		if (!match) {
 			return Response.json({ error: "Page not found" }, { status: 404 });
 		}
 
+		const existing = match.page;
 		const nextSlug =
 			typeof data.slug === "string"
 				? data.slug.trim() || existing.slug
 				: existing.slug;
-		if (nextSlug !== existing.slug) {
-			const conflict = db
-				.prepare("SELECT id FROM markdown_pages WHERE slug = ? AND id != ?")
-				.get(nextSlug, existing.id) as { id: string } | undefined;
-			if (conflict) {
-				return Response.json({ error: "Slug already exists" }, { status: 400 });
-			}
+
+		if (nextSlug !== existing.slug && slugExists(nextSlug, existing.id)) {
+			return Response.json({ error: "Slug already exists" }, { status: 400 });
 		}
 
-		const contentId =
+		const requestedContentId =
 			(typeof data.contentId === "string" && data.contentId.trim()) ||
 			existing.contentId;
+
+		if (!requestedContentId) {
+			return Response.json(
+				{ error: "contentId is required" },
+				{ status: 400 },
+			);
+		}
+
 		const frontmatter =
 			data.frontmatter !== undefined
 				? normalizeFrontmatter(data.frontmatter)
@@ -339,7 +329,7 @@ export async function PUT(req: Request) {
 			...data,
 			id: existing.id,
 			slug: nextSlug,
-			contentId,
+			contentId: requestedContentId,
 			frontmatter,
 			body: typeof data.body === "string" ? data.body : existing.body,
 			status,
@@ -347,7 +337,7 @@ export async function PUT(req: Request) {
 			version: (existing.version || 1) + 1,
 		};
 
-		ensureContentRecord(db, contentId, {
+		const savedPage = persistMarkdownPage(requestedContentId, page, {
 			title: frontmatter.title || nextSlug,
 			summary: frontmatter.description,
 			lang: page.lang,
@@ -356,13 +346,14 @@ export async function PUT(req: Request) {
 			publishedAt: frontmatter.date,
 		});
 
-		saveMarkdownPage(db, page);
-		const savedPage = getMarkdownPage(db, existing.id) ?? page;
+		if (existing.contentId && existing.contentId !== requestedContentId) {
+			deleteMarkdownEntry(existing.id, { contentId: existing.contentId });
+		}
 
 		return Response.json({
 			ok: true,
 			id: existing.id,
-			slug: nextSlug,
+			slug: savedPage.slug,
 			page: savedPage,
 		});
 	} catch (error) {
@@ -372,12 +363,9 @@ export async function PUT(req: Request) {
 			{ status: 500 },
 		);
 	}
-}
-
-// ========== DELETE: Markdown�y�[�W�폜 ==========
+}// ========== DELETE: Markdownページ削除 ========== 
 export async function DELETE(req: Request) {
 	try {
-		const db = await getDb();
 		const { searchParams } = new URL(req.url);
 		const id = searchParams.get("id")?.trim();
 		const slug = searchParams.get("slug")?.trim();
@@ -396,10 +384,18 @@ export async function DELETE(req: Request) {
 				{ status: 400 },
 			);
 		}
-		const deleted = deleteMarkdownPage(db, targetId);
+
+		const match = findMarkdownPage(targetId);
+		if (!match) {
+			return Response.json({ error: "Page not found" }, { status: 404 });
+		}
+
+		const deleted = deleteMarkdownEntry(targetId, {
+			contentId: match.page.contentId,
+		});
 
 		if (!deleted) {
-			return Response.json({ error: "Page not found" }, { status: 404 });
+			return Response.json({ error: "Failed to delete page" }, { status: 500 });
 		}
 
 		return Response.json({ ok: true, id: targetId });
@@ -411,3 +407,5 @@ export async function DELETE(req: Request) {
 		);
 	}
 }
+
+
