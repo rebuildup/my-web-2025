@@ -1,6 +1,6 @@
 {
 	"name": "my-web-2025",
-	"version": "0.1.1",
+	"version": "2.1.1",
 	"private": true,
 	"scripts": {
 		"dev": "next dev --turbo -p 3010",
@@ -48,6 +48,9 @@
 			"@react-three/*",
 			"ogl",
 			"@react-three/drei"
+		],
+		"ignoredBuiltDependencies": [
+			"better-sqlite3"
 		]
 	},
 	"dependencies": {
@@ -91,6 +94,7 @@
 		"pixi.js": "^8.14.0",
 		"prismjs": "^1.30.0",
 		"qrcode": "^1.5.4",
+		"qrcode.react": "^4.2.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-dropzone": "^14.3.8",
