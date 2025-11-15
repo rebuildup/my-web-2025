@@ -18,6 +18,16 @@ interface MarkdownDetail {
 	body?: string;
 }
 
+// Normalize URLs in markdown content (replace localhost:3010 with relative paths)
+function normalizeMarkdownUrls(content: string): string {
+	if (!content) return content;
+	// Replace http://localhost:3010 and https://localhost:3010 with relative paths
+	return content.replace(
+		/https?:\/\/localhost:3010(\/api\/cms\/media[^\s"')]*)/g,
+		"$1",
+	);
+}
+
 async function loadMarkdownDetail(
 	slug: string,
 ): Promise<MarkdownDetail | null> {
@@ -36,10 +46,13 @@ async function loadMarkdownDetail(
 			return null;
 		}
 		const fm = row.frontmatter ? JSON.parse(row.frontmatter) : {};
+		const body = typeof row.body === "string" ? row.body : "";
+		// Normalize URLs in markdown content
+		const normalizedBody = normalizeMarkdownUrls(body);
 		return {
 			title: fm.title,
 			summary: fm.summary ?? fm.description,
-			body: typeof row.body === "string" ? row.body : "",
+			body: normalizedBody,
 		};
 	} catch (error) {
 		console.warn("Failed to load markdown detail for", slug, error);
@@ -231,6 +244,24 @@ function ContentSection({
 						);
 					})()}
 				</div>
+			) : hasContent ? (
+				<div className="markdown-container">
+					<MarkdownRenderer
+						content={normalizeMarkdownUrls(item.content || "")}
+						mediaData={{
+							images: item.images || [],
+							videos: item.videos || [],
+							externalLinks: item.externalLinks || [],
+						}}
+						className="markdown-content-detail"
+						fallbackContent={fallbackContent}
+						enableSanitization={true}
+						enableValidation={true}
+						showRetryButton={false}
+						showEmptyState={true}
+						contentId={item.id}
+					/>
+				</div>
 			) : detail ? (
 				<div className="space-y-3">
 					{detail.title && (
@@ -244,11 +275,6 @@ function ContentSection({
 						</p>
 					)}
 				</div>
-			) : hasContent ? (
-				<div
-					className="noto-sans-jp-light text-sm sm:text-base leading-loose whitespace-pre-wrap space-y-4 text-main"
-					dangerouslySetInnerHTML={{ __html: item.content || "" }}
-				/>
 			) : hasDescription ? (
 				<div className="noto-sans-jp-light text-sm sm:text-base leading-loose space-y-4 text-main">
 					{item.description}
@@ -419,8 +445,13 @@ export default async function PortfolioDetailPage({
 		// Enrich item with publishedAt from CMS if missing
 		if (item && !(item as any).publishedAt) {
 			try {
+				const baseUrl =
+					process.env.NEXT_PUBLIC_BASE_URL ||
+					(process.env.NODE_ENV === "production"
+						? "https://www.yusuke-kim.com"
+						: "http://localhost:3010");
 				const res = await fetch(
-					`http://localhost:3010/api/cms/contents?id=${encodeURIComponent(baseSlug)}`,
+					`${baseUrl}/api/cms/contents?id=${encodeURIComponent(baseSlug)}`,
 					{ cache: "no-store" },
 				);
 				if (res.ok) {

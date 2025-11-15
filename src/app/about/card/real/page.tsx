@@ -1,6 +1,5 @@
 "use client";
 
-import { color } from "framer-motion";
 import MeishiPhiCard from "./card";
 
 export default function RealCardPage() {

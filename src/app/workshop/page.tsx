@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getAllFromIndex } from "@/cms/lib/content-db-manager";
 import type { MarkdownPage } from "@/cms/types/markdown";
-import DarkVeil from "@/components/DarkVeil";
+import DarkVeil from "@/components/DarkVeilWrapper";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { loadContentByType } from "@/lib/data";
 import type { ContentItem } from "@/types/content";

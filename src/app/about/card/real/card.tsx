@@ -1,5 +1,5 @@
-import React from "react";
 import { QRCodeSVG } from "qrcode.react";
+import React from "react";
 
 // Golden ratio constant
 const PHI = (1 + Math.sqrt(5)) / 2;

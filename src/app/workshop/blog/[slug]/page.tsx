@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import DarkVeil from "@/components/DarkVeil";
+import DarkVeil from "@/components/DarkVeilWrapper";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { getContentById } from "@/lib/data";
