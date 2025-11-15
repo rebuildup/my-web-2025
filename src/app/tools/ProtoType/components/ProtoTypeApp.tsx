@@ -139,8 +139,10 @@ const ProtoTypeApp: React.FC = () => {
 		initializeFrameEffect();
 		initializeSquareEffect();
 
-		// GitHub統合の初期化
-		initializeGitHubIntegration();
+		// GitHub統合の初期化（エラーが発生してもアプリケーションは正常に動作する）
+		initializeGitHubIntegration().catch(() => {
+			// エラーは既に内部で処理されているため、ここでは何もしない
+		});
 
 		// 初期化完了
 		setIsInitialized(true);

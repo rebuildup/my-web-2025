@@ -44,37 +44,51 @@ export class GitHubIntegration {
 			return cached.data;
 		}
 
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒でタイムアウト
+
 		try {
 			const response = await fetch(url, {
 				headers: {
 					Accept: "application/vnd.github.v3+json",
 					"User-Agent": "ProtoType-Game",
 				},
+				signal: controller.signal,
 			});
 
+			clearTimeout(timeoutId);
+
 			if (!response.ok) {
-				// 404エラーの場合、allow404がtrueの場合はnullを返す
-				if (response.status === 404 && allow404) {
-					return null;
-				}
 				// 404エラーの場合は静かに処理（リポジトリが存在しない可能性）
 				if (response.status === 404) {
+					// 404エラーもキャッシュに保存して、短時間の再試行を防ぐ
+					this.cache.set(url, { data: null, timestamp: Date.now() });
 					return null;
 				}
-				throw new Error(`GitHub API error: ${response.status}`);
+				// その他のエラーはキャッシュしない
+				return null;
 			}
 
 			const data = await response.json();
 			this.cache.set(url, { data, timestamp: Date.now() });
 			return data;
 		} catch (error) {
+			clearTimeout(timeoutId);
+
+			// AbortError（タイムアウト）の場合は静かに処理
+			if (error instanceof Error && error.name === "AbortError") {
+				return null;
+			}
+
 			// 404エラーの場合は静かに処理
 			if (
 				error instanceof Error &&
 				error.message.includes("404")
 			) {
+				this.cache.set(url, { data: null, timestamp: Date.now() });
 				return null;
 			}
+
 			// その他のエラーはログに記録するが、開発環境でのみ表示
 			if (process.env.NODE_ENV === "development") {
 				console.warn("GitHub API fetch error:", error);
