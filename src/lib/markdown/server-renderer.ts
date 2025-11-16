@@ -33,49 +33,40 @@ const transformBookmarkPlaceholders = (html: string): string => {
 		description?: string;
 		url: string;
 		image?: string;
+		linkText?: string;
 	}): string => {
 		const url = (payload.url || "").trim();
 		const title = (payload.title || url).trim();
 		const description = payload.description?.trim();
 		const image = payload.image?.trim();
+		const linkText = payload.linkText?.trim();
 		const safeTitle = escapeHtml(title || "Bookmark");
 		const safeDescription = description ? escapeHtml(description) : null;
-		let domain = "";
-		try {
-			if (url) {
-				const parsed = new URL(url);
-				domain = parsed.hostname;
-			}
-		} catch {
-			domain = url;
-		}
-		const safeDomain = domain ? escapeHtml(domain) : null;
+		const safeLinkText = linkText ? escapeHtml(linkText) : null;
 		const safeUrl = url ? escapeHtml(url) : "";
 		const safeImage = image ? escapeHtml(image) : null;
+
+		const thumbnailHtml = safeImage
+			? `<div class="bookmark-card-thumbnail" style="max-width: 140px; max-height: 140px; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; border-radius: 0.375rem; overflow: hidden;"><img src="${safeImage}" alt="" loading="lazy" style="max-width: 140px; max-height: 140px; width: auto; height: auto; object-fit: contain; display: block; border-radius: 0.375rem;" /></div>`
+			: "";
 
 		const linkSection = url
 			? `<a href="${safeUrl}" class="bookmark-card-link" target="_blank" rel="noreferrer">
 				<div class="bookmark-card-layout">
-					${safeImage ? `<div class="bookmark-card-thumbnail"><img src="${safeImage}" alt="" loading="lazy" /></div>` : ""}
-					<div class="bookmark-card-text">
+					${thumbnailHtml}
+					<div class="bookmark-card-content">
 						<div class="bookmark-card-title">${safeTitle || "Bookmark"}</div>
-						${safeDescription ? `<p class="bookmark-card-description">${safeDescription}</p>` : ""}
-					</div>
-					<div class="bookmark-card-meta">
-						${safeDomain ? `<span class="bookmark-card-domain">${safeDomain}</span>` : ""}
-						<span class="bookmark-card-arrow">→</span>
+						${safeDescription ? `<div class="bookmark-card-description">${safeDescription}</div>` : ""}
+						${safeLinkText ? `<div class="bookmark-card-link-text">${safeLinkText}</div>` : ""}
 					</div>
 				</div>
 			</a>`
 			: `<div class="bookmark-card-layout">
-				${safeImage ? `<div class="bookmark-card-thumbnail"><img src="${safeImage}" alt="" loading="lazy" /></div>` : ""}
-				<div class="bookmark-card-text">
+				${thumbnailHtml}
+				<div class="bookmark-card-content">
 					<div class="bookmark-card-title">${safeTitle}</div>
-					${safeDescription ? `<p class="bookmark-card-description">${safeDescription}</p>` : ""}
-				</div>
-				<div class="bookmark-card-meta">
-					${safeDomain ? `<span class="bookmark-card-domain">${safeDomain}</span>` : ""}
-					<span class="bookmark-card-arrow">→</span>
+					${safeDescription ? `<div class="bookmark-card-description">${safeDescription}</div>` : ""}
+					${safeLinkText ? `<div class="bookmark-card-link-text">${safeLinkText}</div>` : ""}
 				</div>
 			</div>`;
 
@@ -98,6 +89,7 @@ const transformBookmarkPlaceholders = (html: string): string => {
 						description?: string;
 						url: string;
 						image?: string;
+						linkText?: string;
 					};
 					if (!data) {
 						return "";
@@ -117,6 +109,7 @@ const transformBookmarkPlaceholders = (html: string): string => {
 						description: trimmedDescription,
 						url: trimmedUrl ?? "",
 						image: trimmedImage,
+						linkText: data.linkText?.trim(),
 					});
 				} catch (error) {
 					console.warn("Failed to transform bookmark placeholder", error);

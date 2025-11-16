@@ -943,6 +943,7 @@ export class ContentParser implements ContentParserService {
 				description: descriptionCandidate.trim() || undefined,
 				url: url || undefined,
 				image: attributes.image?.trim() || undefined,
+				linkText: textBody || undefined,
 			};
 
 			if (!payload.url && !payload.title && !payload.description) {

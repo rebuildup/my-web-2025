@@ -9,7 +9,8 @@
 import DOMPurify from "isomorphic-dompurify";
 import { marked } from "marked";
 import type React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
 import {
 	embedValidator,
 	MarkdownError,
@@ -19,12 +20,14 @@ import {
 import { createContentParser } from "../../lib/markdown/content-parser";
 import type { MediaData } from "../../types/content";
 import { MarkdownErrorBoundary } from "../markdown/FallbackContent";
+import { BookmarkCard } from "./BookmarkCard";
 
 interface BookmarkPayload {
 	title?: string;
 	description?: string;
 	url: string;
 	image?: string;
+	linkText?: string;
 }
 
 const escapeHtml = (value: string): string =>
@@ -44,44 +47,34 @@ const renderBookmarkCardHtml = (payload: BookmarkPayload): string => {
 	const title = (payload.title || url).trim();
 	const description = payload.description?.trim();
 	const image = payload.image?.trim();
+	const linkText = payload.linkText?.trim();
 	const safeTitle = escapeHtml(title || "Bookmark");
 	const safeDescription = description ? escapeHtml(description) : null;
-	let domain = "";
-	try {
-		if (url) {
-			const parsed = new URL(url);
-			domain = parsed.hostname;
-		}
-	} catch {
-		domain = url;
-	}
-	const safeDomain = domain ? escapeHtml(domain) : null;
+	const safeLinkText = linkText ? escapeHtml(linkText) : null;
 	const safeUrl = url ? escapeHtml(url) : "";
 	const safeImage = image ? escapeHtml(image) : null;
+
+	const thumbnailHtml = safeImage
+		? `<div class="bookmark-card-thumbnail" style="max-width: 140px; max-height: 140px; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; border-radius: 0.375rem; overflow: hidden;"><img src="${safeImage}" alt="" loading="lazy" style="max-width: 140px; max-height: 140px; width: auto; height: auto; object-fit: contain; display: block; border-radius: 0.375rem;" /></div>`
+		: "";
 
 	const linkSection = url
 		? `<a href="${safeUrl}" class="bookmark-card-link" target="_blank" rel="noreferrer">
 			<div class="bookmark-card-layout">
-				${safeImage ? `<div class="bookmark-card-thumbnail"><img src="${safeImage}" alt="" loading="lazy" /></div>` : ""}
-				<div class="bookmark-card-text">
+				${thumbnailHtml}
+				<div class="bookmark-card-content">
 					<div class="bookmark-card-title">${safeTitle || "Bookmark"}</div>
-					${safeDescription ? `<p class="bookmark-card-description">${safeDescription}</p>` : ""}
-				</div>
-				<div class="bookmark-card-meta">
-					${safeDomain ? `<span class="bookmark-card-domain">${safeDomain}</span>` : ""}
-					<span class="bookmark-card-arrow">→</span>
+					${safeDescription ? `<div class="bookmark-card-description">${safeDescription}</div>` : ""}
+					${safeLinkText ? `<div class="bookmark-card-link-text">${safeLinkText}</div>` : ""}
 				</div>
 			</div>
 		</a>`
 		: `<div class="bookmark-card-layout">
-			${safeImage ? `<div class="bookmark-card-thumbnail"><img src="${safeImage}" alt="" loading="lazy" /></div>` : ""}
-			<div class="bookmark-card-text">
+			${thumbnailHtml}
+			<div class="bookmark-card-content">
 				<div class="bookmark-card-title">${safeTitle}</div>
-				${safeDescription ? `<p class="bookmark-card-description">${safeDescription}</p>` : ""}
-			</div>
-			<div class="bookmark-card-meta">
-				${safeDomain ? `<span class="bookmark-card-domain">${safeDomain}</span>` : ""}
-				<span class="bookmark-card-arrow">→</span>
+				${safeDescription ? `<div class="bookmark-card-description">${safeDescription}</div>` : ""}
+				${safeLinkText ? `<div class="bookmark-card-link-text">${safeLinkText}</div>` : ""}
 			</div>
 		</div>`;
 
@@ -143,6 +136,7 @@ const transformBookmarkPlaceholders = (html: string): string =>
 						description: trimmedDescription,
 						url: trimmedUrl ?? "",
 						image: trimmedImage,
+						linkText: (data as any).linkText?.trim(),
 					});
 				} catch (error) {
 					console.warn("Failed to transform bookmark placeholder", error);
@@ -579,6 +573,206 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 		loadContent();
 	}, [loadContent]);
 
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	// Initialize Twitter embeds after rendering
+	useEffect(() => {
+		if (!containerRef.current || !state.parsedContent) return;
+
+		// Check if there are any Twitter embeds
+		const hasTwitterEmbeds = containerRef.current.querySelector(
+			"blockquote.twitter-tweet",
+		);
+		if (!hasTwitterEmbeds) return;
+
+		// Load Twitter widgets if available
+		const loadTwitterWidgets = () => {
+			if (typeof window !== "undefined" && (window as any).twttr) {
+				const twttr = (window as any).twttr;
+				if (twttr.ready) {
+					twttr.ready(() => {
+						if (twttr.widgets && twttr.widgets.load && containerRef.current) {
+							twttr.widgets.load(containerRef.current);
+						}
+					});
+				} else if (
+					twttr.widgets &&
+					twttr.widgets.load &&
+					containerRef.current
+				) {
+					twttr.widgets.load(containerRef.current);
+				}
+			}
+		};
+
+		// Wait for Twitter script to load
+		const checkTwitter = setInterval(() => {
+			if (typeof window !== "undefined" && (window as any).twttr) {
+				clearInterval(checkTwitter);
+				loadTwitterWidgets();
+			}
+		}, 100);
+
+		// Cleanup interval after 10 seconds
+		const timeout = setTimeout(() => {
+			clearInterval(checkTwitter);
+		}, 10000);
+
+		return () => {
+			clearInterval(checkTwitter);
+			clearTimeout(timeout);
+		};
+	}, [state.parsedContent]);
+
+	// Replace bookmark cards with React components after rendering
+	useEffect(() => {
+		if (!containerRef.current || !state.parsedContent) return;
+
+		// Use requestAnimationFrame to ensure DOM is ready
+		const frameId = requestAnimationFrame(() => {
+			if (!containerRef.current) return;
+
+			const bookmarkCards = Array.from(
+				containerRef.current.querySelectorAll(".markdown-bookmark-card"),
+			);
+
+			bookmarkCards.forEach((card) => {
+				// Check if already properly rendered (has proper structure)
+				const hasProperStructure =
+					card.querySelector(".bookmark-card-link") ||
+					card.querySelector(".bookmark-card-layout");
+
+				// If already properly rendered and marked, skip
+				if (
+					hasProperStructure &&
+					card.getAttribute("data-react-rendered") === "true"
+				) {
+					return;
+				}
+
+				// If marked but not properly rendered, remove the mark to retry
+				if (
+					card.getAttribute("data-react-rendered") === "true" &&
+					!hasProperStructure
+				) {
+					card.removeAttribute("data-react-rendered");
+				}
+
+				// Mark as processed immediately to prevent duplicate processing
+				card.setAttribute("data-react-rendered", "true");
+
+				// Try to find link element
+				const link = card.querySelector(".bookmark-card-link");
+				let url = link?.getAttribute("href") || "";
+
+				// If no link element, try to extract URL from data attributes or text content
+				if (!url) {
+					// Check if there's a data-json attribute with URL
+					const dataJson = card.getAttribute("data-json");
+					if (dataJson) {
+						try {
+							const data = JSON.parse(decodeURIComponent(dataJson));
+							url = data.url || "";
+						} catch {
+							// Ignore parse errors
+						}
+					}
+				}
+
+				// Extract existing data
+				const titleEl = card.querySelector(".bookmark-card-title");
+				const descriptionEl = card.querySelector(".bookmark-card-description");
+				const imageEl = card.querySelector(".bookmark-card-thumbnail img");
+				const linkTextEl = card.querySelector(".bookmark-card-link-text");
+
+				let title = titleEl?.textContent?.trim();
+				let description = descriptionEl?.textContent?.trim();
+				const image = imageEl?.getAttribute("src") || undefined;
+				let linkText = linkTextEl?.textContent?.trim();
+
+				// If no structured data found, try to extract from text content
+				if (!title && !description) {
+					// Get all text nodes, excluding nested elements
+					const textContent = Array.from(card.childNodes)
+						.filter((node) => node.nodeType === Node.TEXT_NODE)
+						.map((node) => node.textContent?.trim())
+						.filter((text) => text && text.length > 0)
+						.join(" ")
+						.trim();
+
+					if (textContent) {
+						// Try to parse the text content
+						// Split by common separators (|, -, etc.)
+						const parts = textContent
+							.split(/[|・\-]/)
+							.map((p) => p.trim())
+							.filter((p) => p);
+						if (parts.length > 0) {
+							title = parts[0];
+							if (parts.length > 1) {
+								description = parts.slice(1).join(" ").trim();
+							}
+						} else {
+							// Use the whole text as title if no structure found
+							title = textContent;
+						}
+					}
+
+					// Also check if there's text directly in the link element
+					if (!title && link) {
+						const linkText = link.textContent?.trim();
+						if (linkText && linkText !== url) {
+							const parts = linkText
+								.split(/[|・\-]/)
+								.map((p) => p.trim())
+								.filter((p) => p);
+							if (parts.length > 0) {
+								title = parts[0];
+								if (parts.length > 1) {
+									description = parts.slice(1).join(" ").trim();
+								}
+							}
+						}
+					}
+				}
+
+				// Skip if no URL and no meaningful content
+				if (!url && !title && !description) {
+					return;
+				}
+
+				// Create a container for React component
+				const reactContainer = document.createElement("div");
+				reactContainer.className = card.className;
+				// Preserve any other attributes except data-react-rendered
+				Array.from(card.attributes).forEach((attr) => {
+					if (attr.name !== "class" && attr.name !== "data-react-rendered") {
+						reactContainer.setAttribute(attr.name, attr.value);
+					}
+				});
+
+				// Replace the card with the new container
+				if (card.parentNode) {
+					card.parentNode.replaceChild(reactContainer, card);
+				}
+
+				// Render React component
+				const root = createRoot(reactContainer);
+				root.render(
+					<BookmarkCard
+						url={url || "#"}
+						title={title}
+						description={description}
+						image={image}
+						linkText={linkText}
+					/>,
+				);
+			});
+		});
+
+		return () => cancelAnimationFrame(frameId);
+	}, [state.parsedContent]);
+
 	if (state.isLoading && showEmptyState) {
 		return (
 			<div className="markdown-renderer-loading">
@@ -616,6 +810,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
 	return (
 		<div
+			ref={containerRef}
 			className={`markdown-renderer ${className}`}
 			dangerouslySetInnerHTML={{ __html: state.parsedContent }}
 		/>

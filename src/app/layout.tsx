@@ -67,6 +67,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					strategy="afterInteractive"
 					src="/scripts/adobe-fonts.js"
 				/>
+				{/* Twitter (X) Embed Widgets */}
+				<Script
+					id="twitter-widgets"
+					strategy="lazyOnload"
+					src="https://platform.twitter.com/widgets.js"
+					charSet="utf-8"
+				/>
 			</body>
 		</html>
 	);
