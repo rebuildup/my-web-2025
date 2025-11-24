@@ -45,6 +45,10 @@ const nextConfig: NextConfig = {
 					}),
 		}),
 	},
+	outputFileTracingIncludes: {
+		"/api/cms/(.*)": ["./data/**"],
+		"/api/admin/(.*)": ["./data/**"],
+	},
 
 	// Remove custom turbopack rules in dev/prod to avoid fallback to webpack
 
