@@ -27,6 +27,7 @@ function resolveDataDirectory(): string {
 		path.join(cwd, "..", "data"),
 		path.join(cwd, "..", "..", "data"),
 		path.join(cwd, ".next", "data"),
+		path.join(cwd, ".next", "server", "data"),
 		path.join(cwd, "standalone", "data"),
 		path.join(cwd, ".next", "standalone", "data"),
 		path.join(__dirname, "..", "..", "..", "..", "data"),
