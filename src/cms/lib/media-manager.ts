@@ -425,9 +425,10 @@ function loadPersistedMedia(
 		if (!fs.existsSync(metaPath) || !fs.existsSync(binPath)) {
 			return null;
 		}
-		const meta = JSON.parse(
-			fs.readFileSync(metaPath, "utf-8"),
-		) as Omit<PersistedMediaRecord, "data">;
+		const meta = JSON.parse(fs.readFileSync(metaPath, "utf-8")) as Omit<
+			PersistedMediaRecord,
+			"data"
+		>;
 		const data = fs.readFileSync(binPath);
 		return {
 			...meta,
