@@ -1,8 +1,11 @@
 "use client";
 
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { useServerInsertedHTML } from "next/navigation";
+import { useState } from "react";
 
 const theme = createTheme({
 	palette: {
@@ -53,21 +56,60 @@ const theme = createTheme({
 	},
 });
 
+function createEmotionCache() {
+	const cache = createCache({ key: "mui", prepend: true });
+	cache.compat = true;
+	return cache;
+}
+
 export function MUIThemeProvider({ children }: { children: React.ReactNode }) {
-	const [mounted, setMounted] = useState(false);
+	const [{ cache, flush }] = useState(() => {
+		const cacheInstance = createEmotionCache();
+		const prevInsert = cacheInstance.insert;
+		let inserted: string[] = [];
 
-	useEffect(() => {
-		setMounted(true);
-	}, []);
+		cacheInstance.insert = (...args) => {
+			const [, serialized] = args;
+			if (cacheInstance.inserted[serialized.name] === undefined) {
+				inserted.push(serialized.name);
+			}
+			return prevInsert(...args);
+		};
 
-	if (!mounted) {
-		return <>{children}</>;
-	}
+		const flush = () => {
+			const prev = inserted;
+			inserted = [];
+			return prev;
+		};
+
+		return { cache: cacheInstance, flush };
+	});
+
+	useServerInsertedHTML(() => {
+		const names = flush();
+		if (names.length === 0) {
+			return null;
+		}
+		const styles = names
+			.map((name) => cache.inserted[name])
+			.filter((value): value is string => typeof value === "string")
+			.join("");
+
+		return (
+			<style
+				key={cache.key}
+				data-emotion={`${cache.key} ${names.join(" ")}`}
+				dangerouslySetInnerHTML={{ __html: styles }}
+			/>
+		);
+	});
 
 	return (
-		<ThemeProvider theme={theme}>
-			<CssBaseline />
-			{children}
-		</ThemeProvider>
+		<CacheProvider value={cache}>
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				{children}
+			</ThemeProvider>
+		</CacheProvider>
 	);
 }

@@ -320,31 +320,34 @@ export default async function WorkshopPage() {
 	const displayPages = pagesForDisplay.map((page) => {
 		const content = page.contentId ? contentMap.get(page.contentId) : undefined;
 		const title = content?.title || page.frontmatter?.title || page.slug;
-		const rawDescription: string =
-			typeof content?.description === "string"
-				? content.description
-				: typeof page.frontmatter?.description === "string"
-					? page.frontmatter.description
-					: page.body;
-		const description = rawDescription
-			.replace(/<[^>]*>/g, "")
-			.replace(/Media[\s\S]*$/i, "")
-			.replace(/!\[[^\]]*]\([^)]*\)/g, "")
-			.replace(/\[[^\]]*]\([^)]*\)/g, "")
-			.replace(/```[\s\S]*?```/g, "")
-			.replace(/`[^`]*`/g, "")
-			.replace(/[#>*_-]+/g, "")
-			.replace(/https?:\/\/[\w\-./?%&=#:]+/gi, "")
-			.replace(/\s+/g, " ")
-			.trim();
-		const tags: string[] =
-			content?.tags && content.tags.length > 0
-				? content.tags
-				: getPageTags(page);
 		const indexEntryId = page.contentId ?? content?.id ?? page.slug;
 		const indexEntry = indexEntryId
 			? contentIndexMap.get(indexEntryId)
 			: undefined;
+		const sanitizeDescription = (value: string | undefined) =>
+			value
+				? value
+						.replace(/<[^>]*>/g, "")
+						.replace(/\s+/g, " ")
+						.trim()
+				: "";
+		const descriptionSource =
+			(typeof content?.description === "string" &&
+			content.description.length > 0
+				? content.description
+				: undefined) ??
+			(typeof indexEntry?.summary === "string" && indexEntry.summary.length > 0
+				? indexEntry.summary
+				: undefined) ??
+			(typeof page.frontmatter?.description === "string" &&
+			page.frontmatter.description.length > 0
+				? page.frontmatter.description
+				: undefined);
+		const description = sanitizeDescription(descriptionSource);
+		const tags: string[] =
+			content?.tags && content.tags.length > 0
+				? content.tags
+				: getPageTags(page);
 		const indexThumbnail = indexEntry
 			? pickIndexThumbnail(indexEntry.thumbnails)
 			: undefined;
@@ -442,7 +445,15 @@ export default async function WorkshopPage() {
 																{title}
 															</h3>
 															{description && (
-																<p className="noto-sans-jp-light text-sm leading-relaxed text-main/80">
+																<p
+																	className="noto-sans-jp-light text-sm leading-relaxed text-main/80"
+																	style={{
+																		display: "-webkit-box",
+																		WebkitLineClamp: 2,
+																		WebkitBoxOrient: "vertical",
+																		overflow: "hidden",
+																	}}
+																>
 																	{description}
 																</p>
 															)}

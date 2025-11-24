@@ -29,8 +29,8 @@ const copied = [];
 for (const target of targets) {
 	const parent = path.dirname(target);
 	if (!fs.existsSync(parent)) {
-		console.warn(
-			`[copy-content-data] Parent directory not found: ${parent}, skipping ${target}`,
+		console.log(
+			`[copy-content-data] ℹ️ Parent directory not found: ${parent}, skipping ${target}`,
 		);
 		continue;
 	}
@@ -73,23 +73,30 @@ console.log(
 );
 
 // Final verification
-const standaloneData = path.join(projectRoot, ".next", "standalone", "data");
-if (fs.existsSync(standaloneData)) {
-	const contentsDir = path.join(standaloneData, "contents");
-	if (fs.existsSync(contentsDir)) {
-		const dbFiles = fs
-			.readdirSync(contentsDir)
-			.filter((f) => f.endsWith(".db"));
-		console.log(
-			`[copy-content-data] ✅ Verification: ${dbFiles.length} content database files found in standalone/data/contents`,
-		);
+const standaloneDir = path.join(projectRoot, ".next", "standalone");
+const standaloneData = path.join(standaloneDir, "data");
+if (fs.existsSync(standaloneDir)) {
+	if (fs.existsSync(standaloneData)) {
+		const contentsDir = path.join(standaloneData, "contents");
+		if (fs.existsSync(contentsDir)) {
+			const dbFiles = fs
+				.readdirSync(contentsDir)
+				.filter((f) => f.endsWith(".db"));
+			console.log(
+				`[copy-content-data] ✅ Verification: ${dbFiles.length} content database files found in standalone/data/contents`,
+			);
+		} else {
+			console.warn(
+				"[copy-content-data] ⚠️  Warning: contents directory not found in standalone/data",
+			);
+		}
 	} else {
 		console.warn(
-			"[copy-content-data] ⚠️  Warning: contents directory not found in standalone/data",
+			"[copy-content-data] ⚠️  Warning: standalone directory detected but data subdirectory is missing",
 		);
 	}
 } else {
-	console.warn(
-		"[copy-content-data] ⚠️  Warning: standalone/data directory not found",
+	console.log(
+		"[copy-content-data] ℹ️ standalone directory not found; skipping standalone verification",
 	);
 }

@@ -92,6 +92,13 @@ interface BlockEditorProps {
 	contentId?: string;
 }
 
+function isDomNode(target: EventTarget | null): target is Node {
+	if (typeof window === "undefined" || typeof Node === "undefined") {
+		return false;
+	}
+	return target instanceof Node;
+}
+
 export function BlockEditor({
 	editorId,
 	blocks,
@@ -281,7 +288,20 @@ export function BlockEditor({
 			event.preventDefault();
 			const bounds = event.currentTarget.getBoundingClientRect();
 			const isAfter = event.clientY > bounds.top + bounds.height / 2;
-			setDragOverInfo({ id: blockId, position: isAfter ? "after" : "before" });
+			const nextState: DragOverInfo = {
+				id: blockId,
+				position: isAfter ? "after" : "before",
+			};
+			setDragOverInfo((current) => {
+				if (
+					current &&
+					current.id === nextState.id &&
+					current.position === nextState.position
+				) {
+					return current;
+				}
+				return nextState;
+			});
 			if (event.dataTransfer) {
 				event.dataTransfer.dropEffect = "move";
 			}
@@ -319,8 +339,8 @@ export function BlockEditor({
 
 	const handleDragLeave = useCallback(
 		(event: DragEvent<HTMLDivElement>, blockId: string) => {
-			const related = event.relatedTarget as Node | null;
-			if (!related || !event.currentTarget.contains(related)) {
+			const related = event.relatedTarget;
+			if (!isDomNode(related) || !event.currentTarget.contains(related)) {
 				setDragOverInfo((current) =>
 					current?.id === blockId ? null : current,
 				);
@@ -503,11 +523,11 @@ export function BlockEditor({
 	}, []);
 
 	const handleBlockMouseLeave = useCallback(
-		(event: React.MouseEvent<HTMLDivElement>) => {
+		(event: MouseEvent<HTMLDivElement>) => {
 			// マウスが子要素に移動した場合はホバーを解除しない
-			const relatedTarget = event.relatedTarget as Node | null;
+			const relatedTarget = event.relatedTarget;
 			const currentTarget = event.currentTarget;
-			if (relatedTarget && currentTarget.contains(relatedTarget)) {
+			if (isDomNode(relatedTarget) && currentTarget.contains(relatedTarget)) {
 				return;
 			}
 			setHoveredBlockId(null);

@@ -18,6 +18,12 @@ import type { PortfolioContentItem } from "@/types/portfolio";
 import { LatestWorksSection } from "./components/LatestWorksSection";
 import { StatsOverview } from "./components/StatsOverview";
 
+type ContentIndexEntry = ReturnType<typeof getAllFromIndex>[number];
+type PortfolioItemWithEnhancedFields = PortfolioContentItem & {
+	categories?: string[];
+	effectiveDate?: string;
+};
+
 /**
  * Generate metadata for portfolio top page
  */
@@ -72,45 +78,124 @@ function CategoryCard({
  */
 export default async function PortfolioPage() {
 	try {
-		// Get portfolio data first (align with gallery: index DB)
-		const rows = getAllFromIndex();
-		const items: PortfolioContentItem[] = rows
-			.filter((r: any) => r.status === "published")
-			.map((r: any) => {
-				const thumbs = r.thumbnails || {};
-				const pickThumb = () => {
-					if (thumbs?.image?.src) return thumbs.image.src as string;
-					if (thumbs?.gif?.src) return thumbs.gif.src as string;
-					if (thumbs?.webm?.poster) return thumbs.webm.poster as string;
-					return undefined;
-				};
-				const tags: string[] = Array.isArray(r.tags) ? r.tags : [];
-				const hasVideo = tags.includes("video");
-				const hasDesign = tags.includes("design");
-				const category =
-					hasVideo && hasDesign
-						? "video&design"
-						: hasVideo
-							? "video"
-							: tags.includes("develop")
-								? "develop"
-								: hasDesign
-									? "design"
-									: "all";
-				return {
-					id: r.id,
-					title: r.title,
-					description: r.summary ?? "",
-					category,
-					tags,
-					status: r.status,
-					priority: 0,
-					publishedAt: r.publishedAt,
-					createdAt: r.createdAt,
-					updatedAt: r.updatedAt,
-					thumbnail: pickThumb(),
-				} as PortfolioContentItem;
-			});
+		// Fetch processed portfolio data (published items only)
+		let items: PortfolioItemWithEnhancedFields[] = [];
+		try {
+			items =
+				(await portfolioDataManager.getPortfolioData()) as PortfolioItemWithEnhancedFields[];
+		} catch (error) {
+			console.error("[PortfolioPage] Failed to load processed data:", error);
+		}
+
+		if (!items || items.length === 0) {
+			const rows = getAllFromIndex();
+			items = rows
+				.filter((row) => row.status === "published")
+				.map((row: ContentIndexEntry) => {
+					type ThumbnailVariant =
+						| string
+						| {
+								src?: string;
+								poster?: string;
+						  }
+						| undefined;
+					type NormalizedThumbnails = {
+						image?: ThumbnailVariant;
+						gif?: ThumbnailVariant;
+						webm?: ThumbnailVariant;
+						[key: string]: ThumbnailVariant;
+					};
+
+					const thumbs = row.thumbnails as NormalizedThumbnails | undefined;
+					const extractSrc = (
+						variant: ThumbnailVariant,
+						key: "src" | "poster",
+					) => {
+						if (!variant) return undefined;
+						if (typeof variant === "string") return variant;
+						if (key === "src" && typeof variant.src === "string")
+							return variant.src;
+						if (key === "poster" && typeof variant.poster === "string")
+							return variant.poster;
+						return undefined;
+					};
+					const pickThumb = () => {
+						const prioritized =
+							extractSrc(thumbs?.image, "src") ||
+							extractSrc(thumbs?.gif, "src") ||
+							extractSrc(thumbs?.webm, "poster");
+						return prioritized;
+					};
+
+					const tags: string[] = Array.isArray(row.tags)
+						? row.tags.filter((tag): tag is string => typeof tag === "string")
+						: [];
+					const normalizedTags = tags.map((tag) => tag.toLowerCase());
+					const hasVideo = normalizedTags.includes("video");
+					const hasDesign = normalizedTags.includes("design");
+					const hasDevelop = normalizedTags.includes("develop");
+					const categories = Array.from(
+						new Set(
+							[
+								hasDevelop ? "develop" : undefined,
+								hasVideo ? "video" : undefined,
+								hasDesign ? "design" : undefined,
+								hasVideo && hasDesign ? "video&design" : undefined,
+							].filter((cat): cat is string => Boolean(cat)),
+						),
+					);
+					const primaryCategory = categories[0] || "all";
+					const fallbackDate =
+						row.publishedAt ||
+						row.updatedAt ||
+						row.createdAt ||
+						new Date().toISOString();
+					const thumbnail =
+						pickThumb() ?? "/images/portfolio/default-thumb.jpg";
+					const description =
+						typeof row.summary === "string" && row.summary.length > 0
+							? row.summary
+							: `${row.title}の作品詳細`;
+					const rowPriority =
+						typeof (row as { priority?: unknown }).priority === "number"
+							? ((row as { priority?: number }).priority as number)
+							: 0;
+
+					const fallbackItem: PortfolioItemWithEnhancedFields = {
+						id: row.id,
+						type: "portfolio",
+						title: row.title,
+						description,
+						category: primaryCategory,
+						tags,
+						status: row.status as PortfolioContentItem["status"],
+						priority: rowPriority,
+						createdAt: row.createdAt ?? fallbackDate,
+						updatedAt: row.updatedAt ?? fallbackDate,
+						publishedAt: row.publishedAt ?? fallbackDate,
+						thumbnail,
+						images: [],
+						technologies: [],
+						seo: {
+							title: row.title,
+							description,
+							keywords: tags,
+							ogImage: thumbnail,
+							twitterImage: thumbnail,
+							canonical: `https://yusuke-kim.com/portfolio/${row.id}`,
+							structuredData: {},
+						},
+					};
+
+					fallbackItem.categories =
+						categories.length > 0 ? categories : [primaryCategory];
+					fallbackItem.effectiveDate = fallbackDate;
+					return fallbackItem;
+				});
+			console.warn(
+				"[PortfolioPage] Falling back to index data. Processed items unavailable.",
+			);
+		}
 
 		// Get statistics (will use cached data if available)
 		const stats = await portfolioDataManager.getPortfolioStats();
@@ -129,37 +214,93 @@ export default async function PortfolioPage() {
 			// Continue without structured data
 		}
 
-		// Calculate category counts
+		// Calculate category counts (supports multi-category items + video&design union)
 		const categoryCounts: Record<string, number> = {};
-		items.forEach((item) => {
-			const category = item.category || "all";
+		const getItemCategories = (item: PortfolioContentItem): string[] => {
+			const enhancedCategories = (
+				item as {
+					categories?: string[];
+				}
+			).categories;
+			if (Array.isArray(enhancedCategories) && enhancedCategories.length > 0) {
+				return enhancedCategories
+					.filter(
+						(category): category is string => typeof category === "string",
+					)
+					.map((category) => category.toLowerCase());
+			}
+			return item.category ? [item.category.toLowerCase()] : [];
+		};
+		const incrementCategory = (category: string) => {
 			categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+		};
+		const videoDesignEligibleIds = new Set<string>();
+
+		items.forEach((item) => {
+			const categories = getItemCategories(item);
+			if (categories.length === 0) {
+				return;
+			}
+
+			categories.forEach((category) => incrementCategory(category));
+
+			const normalizedTags = Array.isArray(item.tags)
+				? item.tags
+						.filter((tag): tag is string => typeof tag === "string")
+						.map((tag) => tag.toLowerCase())
+				: [];
+			const matchesVideoDesign =
+				categories.some((category) =>
+					["video", "design", "video&design"].includes(category),
+				) ||
+				normalizedTags.some((tag) =>
+					["video", "design", "video&design"].includes(tag),
+				);
+			if (matchesVideoDesign) {
+				videoDesignEligibleIds.add(item.id);
+			}
+		});
+
+		categoryCounts["video&design"] = videoDesignEligibleIds.size;
+		["develop", "video", "design", "video&design"].forEach((key) => {
+			if (typeof categoryCounts[key] !== "number") {
+				categoryCounts[key] = 0;
+			}
 		});
 
 		// Time window counts
 		const now = Date.now();
 		const msDay = 24 * 60 * 60 * 1000;
-		const withinDays = (d: string | undefined, days: number) => {
-			if (!d) return false;
-			const t = new Date(d).getTime();
+		const getEffectiveDateString = (item: PortfolioContentItem) => {
+			const enhancedItem = item as PortfolioContentItem & {
+				effectiveDate?: string;
+			};
+			return (
+				enhancedItem.effectiveDate ||
+				item.publishedAt ||
+				item.updatedAt ||
+				item.createdAt
+			);
+		};
+		const withinDays = (item: PortfolioContentItem, days: number) => {
+			const dateString = getEffectiveDateString(item);
+			if (!dateString) return false;
+			const t = new Date(dateString).getTime();
+			if (Number.isNaN(t)) return false;
 			return now - t <= days * msDay;
 		};
-		const count7d = items.filter((it) =>
-			withinDays(it.updatedAt || it.createdAt, 7),
-		).length;
-		const count30d = items.filter((it) =>
-			withinDays(it.updatedAt || it.createdAt, 30),
-		).length;
-		const count365d = items.filter((it) =>
-			withinDays(it.updatedAt || it.createdAt, 365),
-		).length;
+		const count7d = items.filter((it) => withinDays(it, 7)).length;
+		const count30d = items.filter((it) => withinDays(it, 30)).length;
+		const count365d = items.filter((it) => withinDays(it, 365)).length;
 
 		// Featured: latest by updatedAt/createdAt
-		const featured = [...items].sort(
-			(a, b) =>
-				new Date(b.updatedAt || b.createdAt).getTime() -
-				new Date(a.updatedAt || a.createdAt).getTime(),
-		)[0];
+		const featured = [...items].sort((a, b) => {
+			const toTime = (item: PortfolioContentItem) => {
+				const dateString = getEffectiveDateString(item);
+				return dateString ? new Date(dateString).getTime() : 0;
+			};
+			return toTime(b) - toTime(a);
+		})[0];
 
 		// Category information
 		const categories = [

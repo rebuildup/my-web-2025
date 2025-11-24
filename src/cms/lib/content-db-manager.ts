@@ -271,10 +271,12 @@ function initializeContentDbSchema(db: Database.Database): void {
   `);
 
 	ensureManualDatesTable(db);
+	ensureMediaTable(db);
 }
 
 function ensureSchemaUpgrades(db: Database.Database): void {
 	ensureManualDatesTable(db);
+	ensureMediaTable(db);
 }
 
 function ensureManualDatesTable(db: Database.Database): void {
@@ -284,6 +286,30 @@ function ensureManualDatesTable(db: Database.Database): void {
       date TEXT NOT NULL,
       updated_at TEXT NOT NULL
     );
+  `);
+}
+
+function ensureMediaTable(db: Database.Database): void {
+	db.exec(`
+    CREATE TABLE IF NOT EXISTS media (
+      id TEXT PRIMARY KEY,
+      content_id TEXT NOT NULL,
+      filename TEXT,
+      mime_type TEXT,
+      size INTEGER,
+      width INTEGER,
+      height INTEGER,
+      alt TEXT,
+      description TEXT,
+      tags TEXT,
+      data BLOB,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      FOREIGN KEY (content_id) REFERENCES contents(id) ON DELETE CASCADE
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_media_content ON media(content_id);
+    CREATE INDEX IF NOT EXISTS idx_media_mime ON media(mime_type);
   `);
 }
 
