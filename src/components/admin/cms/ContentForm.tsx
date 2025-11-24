@@ -14,7 +14,14 @@ import {
 	Typography,
 } from "@mui/material";
 import { Trash2 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+	type ChangeEvent,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import type { Content } from "@/cms/types/content";
 
 interface ContentFormProps {
@@ -242,6 +249,98 @@ export function ContentForm({
 	} | null>(null);
 	const [tagOptions, setTagOptions] = useState<string[]>([]);
 	const initialRef = useRef<Partial<Content>>(initialData);
+	const imageInputRef = useRef<HTMLInputElement>(null);
+	const gifInputRef = useRef<HTMLInputElement>(null);
+	const webmInputRef = useRef<HTMLInputElement>(null);
+
+	const uploadMediaFile = useCallback(
+		async (file: File) => {
+			if (!formData.id) {
+				console.warn("[ContentForm] Missing content ID for media upload");
+				return null;
+			}
+			const base64 = await new Promise<string>((resolve, reject) => {
+				const reader = new FileReader();
+				reader.onload = () => {
+					const result = String(reader.result ?? "");
+					resolve(result.includes(",") ? result.split(",")[1] ?? "" : result);
+				};
+				reader.onerror = () => reject(reader.error);
+				reader.readAsDataURL(file);
+			});
+			const res = await fetch("/api/cms/media", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					contentId: formData.id,
+					filename: file.name,
+					mimeType: file.type,
+					base64Data: base64,
+				}),
+			});
+			if (!res.ok) {
+				console.error("[ContentForm] Failed to upload media", await res.text());
+				return null;
+			}
+			const { id } = (await res.json()) as { id: string };
+			return `/api/cms/media?contentId=${formData.id}&id=${id}&raw=1`;
+		},
+		[formData.id],
+	);
+
+	const handleImageFileChange = useCallback(
+		async (event: ChangeEvent<HTMLInputElement>) => {
+			const file = event.target.files?.[0];
+			if (!file) return;
+			const url = await uploadMediaFile(file);
+			event.target.value = "";
+			if (!url) return;
+			setFormData((prev) => ({
+				...prev,
+				thumbnails: {
+					...(prev.thumbnails || {}),
+					image: { ...(prev.thumbnails?.image || {}), src: url },
+				},
+			}));
+		},
+		[uploadMediaFile],
+	);
+
+	const handleGifFileChange = useCallback(
+		async (event: ChangeEvent<HTMLInputElement>) => {
+			const file = event.target.files?.[0];
+			if (!file) return;
+			const url = await uploadMediaFile(file);
+			event.target.value = "";
+			if (!url) return;
+			setFormData((prev) => ({
+				...prev,
+				thumbnails: {
+					...(prev.thumbnails || {}),
+					gif: { ...(prev.thumbnails?.gif || {}), src: url },
+				},
+			}));
+		},
+		[uploadMediaFile],
+	);
+
+	const handleWebmFileChange = useCallback(
+		async (event: ChangeEvent<HTMLInputElement>) => {
+			const file = event.target.files?.[0];
+			if (!file) return;
+			const url = await uploadMediaFile(file);
+			event.target.value = "";
+			if (!url) return;
+			setFormData((prev) => ({
+				...prev,
+				thumbnails: {
+					...(prev.thumbnails || {}),
+					webm: { ...(prev.thumbnails?.webm || {}), src: url },
+				},
+			}));
+		},
+		[uploadMediaFile],
+	);
 
 	// initialDataが変更されたときにformDataを更新（編集モードのみ）
 	useEffect(() => {
@@ -657,45 +756,20 @@ export function ContentForm({
 				/>
 			)}
 			<Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-				<Button variant="outlined" size="small" component="label">
+				<Button
+					variant="outlined"
+					size="small"
+					onClick={() => imageInputRef.current?.click()}
+				>
 					画像を埋め込み
-					<input
-						hidden
-						type="file"
-						accept="image/*"
-						onChange={async (e) => {
-							const file = e.target.files?.[0];
-							if (!file || !formData.id) return;
-							const base64 = await new Promise<string>((resolve, reject) => {
-								const r = new FileReader();
-								r.onload = () => resolve(String(r.result).split(",")[1] || "");
-								r.onerror = () => reject(r.error);
-								r.readAsDataURL(file);
-							});
-							const res = await fetch("/api/cms/media", {
-								method: "POST",
-								headers: { "Content-Type": "application/json" },
-								body: JSON.stringify({
-									contentId: formData.id,
-									filename: file.name,
-									mimeType: file.type,
-									base64Data: base64,
-								}),
-							});
-							if (res.ok) {
-								const { id } = await res.json();
-								const url = `/api/cms/media?contentId=${formData.id}&id=${id}&raw=1`;
-								setFormData((prev) => ({
-									...prev,
-									thumbnails: {
-										...(prev.thumbnails || {}),
-										image: { ...(prev.thumbnails?.image || {}), src: url },
-									},
-								}));
-							}
-						}}
-					/>
 				</Button>
+				<input
+					ref={imageInputRef}
+					type="file"
+					accept="image/*"
+					style={{ display: "none" }}
+					onChange={handleImageFileChange}
+				/>
 			</Stack>
 			<TextField
 				fullWidth
@@ -778,45 +852,20 @@ export function ContentForm({
 				}
 			/>
 			<Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-				<Button variant="outlined" size="small" component="label">
+				<Button
+					variant="outlined"
+					size="small"
+					onClick={() => gifInputRef.current?.click()}
+				>
 					GIFを埋め込み
-					<input
-						hidden
-						type="file"
-						accept="image/gif"
-						onChange={async (e) => {
-							const file = e.target.files?.[0];
-							if (!file || !formData.id) return;
-							const base64 = await new Promise<string>((resolve, reject) => {
-								const r = new FileReader();
-								r.onload = () => resolve(String(r.result).split(",")[1] || "");
-								r.onerror = () => reject(r.error);
-								r.readAsDataURL(file);
-							});
-							const res = await fetch("/api/cms/media", {
-								method: "POST",
-								headers: { "Content-Type": "application/json" },
-								body: JSON.stringify({
-									contentId: formData.id,
-									filename: file.name,
-									mimeType: file.type,
-									base64Data: base64,
-								}),
-							});
-							if (res.ok) {
-								const { id } = await res.json();
-								const url = `/api/cms/media?contentId=${formData.id}&id=${id}&raw=1`;
-								setFormData((prev) => ({
-									...prev,
-									thumbnails: {
-										...(prev.thumbnails || {}),
-										gif: { ...(prev.thumbnails?.gif || {}), src: url },
-									},
-								}));
-							}
-						}}
-					/>
 				</Button>
+				<input
+					ref={gifInputRef}
+					type="file"
+					accept="image/gif"
+					style={{ display: "none" }}
+					onChange={handleGifFileChange}
+				/>
 			</Stack>
 			<TextField
 				fullWidth
@@ -851,45 +900,20 @@ export function ContentForm({
 				}
 			/>
 			<Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-				<Button variant="outlined" size="small" component="label">
+				<Button
+					variant="outlined"
+					size="small"
+					onClick={() => webmInputRef.current?.click()}
+				>
 					WEBMを埋め込み
-					<input
-						hidden
-						type="file"
-						accept="video/webm"
-						onChange={async (e) => {
-							const file = e.target.files?.[0];
-							if (!file || !formData.id) return;
-							const base64 = await new Promise<string>((resolve, reject) => {
-								const r = new FileReader();
-								r.onload = () => resolve(String(r.result).split(",")[1] || "");
-								r.onerror = () => reject(r.error);
-								r.readAsDataURL(file);
-							});
-							const res = await fetch("/api/cms/media", {
-								method: "POST",
-								headers: { "Content-Type": "application/json" },
-								body: JSON.stringify({
-									contentId: formData.id,
-									filename: file.name,
-									mimeType: file.type,
-									base64Data: base64,
-								}),
-							});
-							if (res.ok) {
-								const { id } = await res.json();
-								const url = `/api/cms/media?contentId=${formData.id}&id=${id}&raw=1`;
-								setFormData((prev) => ({
-									...prev,
-									thumbnails: {
-										...(prev.thumbnails || {}),
-										webm: { ...(prev.thumbnails?.webm || {}), src: url },
-									},
-								}));
-							}
-						}}
-					/>
 				</Button>
+				<input
+					ref={webmInputRef}
+					type="file"
+					accept="video/webm"
+					style={{ display: "none" }}
+					onChange={handleWebmFileChange}
+				/>
 			</Stack>
 			{formData.thumbnails?.webm?.src && (
 				<Box

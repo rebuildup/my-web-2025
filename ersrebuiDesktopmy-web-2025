@@ -1,0 +1,60 @@
+[33mcommit 3744277003e9afe00295d0d32200e4eff5cfec84[m
+Author: rebuildup <rebuild.up.up@gmail.com>
+Date:   Fri Nov 7 19:10:09 2025 +0900
+
+    media api update
+
+[1mdiff --git a/src/app/api/cms/media/route.ts b/src/app/api/cms/media/route.ts[m
+[1mindex feb3b4f3..ada790ad 100644[m
+[1m--- a/src/app/api/cms/media/route.ts[m
+[1m+++ b/src/app/api/cms/media/route.ts[m
+[36m@@ -23,6 +23,9 @@[m [mexport async function GET(req: Request) {[m
+ 		if (mediaId) {[m
+ 			const media = getMedia(contentId, mediaId);[m
+ 			if (!media) {[m
+[32m+[m				[32mconsole.error([m
+[32m+[m					[32m`[media-api] Media not found: contentId=${contentId}, mediaId=${mediaId}`,[m
+[32m+[m				[32m);[m
+ 				return Response.json({ error: "Media not found" }, { status: 404 });[m
+ 			}[m
+ [m
+[1mdiff --git a/src/cms/lib/media-manager.ts b/src/cms/lib/media-manager.ts[m
+[1mindex 60bbe974..59b27e6a 100644[m
+[1m--- a/src/cms/lib/media-manager.ts[m
+[1m+++ b/src/cms/lib/media-manager.ts[m
+[36m@@ -71,10 +71,21 @@[m [mexport function getMedia(contentId: string, mediaId: string): MediaItem | null {[m
+ [m
+ 		const row = stmt.get(mediaId) as MediaRow | undefined;[m
+ [m
+[31m-		if (!row) return null;[m
+[32m+[m		[32mif (!row) {[m
+[32m+[m			[32mconsole.warn([m
+[32m+[m				[32m`[media-manager] Media not found in database: contentId=${contentId}, mediaId=${mediaId}`,[m
+[32m+[m			[32m);[m
+[32m+[m			[32mreturn null;[m
+[32m+[m		[32m}[m
+ [m
+ 		const data = deriveMediaBuffer(row.data);[m
+ [m
+[32m+[m		[32mif (!data) {[m
+[32m+[m			[32mconsole.warn([m
+[32m+[m				[32m`[media-manager] Media data is null or undefined: contentId=${contentId}, mediaId=${mediaId}`,[m
+[32m+[m			[32m);[m
+[32m+[m		[32m}[m
+[32m+[m
+ 		return {[m
+ 			id: row.id,[m
+ 			contentId: row.content_id,[m
+[36m@@ -90,6 +101,12 @@[m [mexport function getMedia(contentId: string, mediaId: string): MediaItem | null {[m
+ 			createdAt: row.created_at || new Date().toISOString(),[m
+ 			updatedAt: row.updated_at || new Date().toISOString(),[m
+ 		};[m
+[32m+[m	[32m} catch (error) {[m
+[32m+[m		[32mconsole.error([m
+[32m+[m			[32m`[media-manager] Error getting media: contentId=${contentId}, mediaId=${mediaId}`,[m
+[32m+[m			[32merror,[m
+[32m+[m		[32m);[m
+[32m+[m		[32mreturn null;[m
+ 	} finally {[m
+ 		db.close();[m
+ 	}[m

@@ -94,6 +94,10 @@ export function getContentDbPath(contentId: string): string {
 	return path.join(CONTENT_DB_DIR, `content-${sanitizedId}.db`);
 }
 
+export function getDataDirectory(): string {
+	return DATA_DIR;
+}
+
 export function getContentDb(contentId: string): Database.Database {
 	const dbPath = getContentDbPath(contentId);
 	const isNewDb = !fs.existsSync(dbPath);
