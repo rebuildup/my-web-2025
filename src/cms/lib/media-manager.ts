@@ -2,35 +2,10 @@
  * メディア（画像）管理機能
  */
 
-import fs from "node:fs";
-import path from "node:path";
 import type Database from "better-sqlite3";
 import type { MediaRow } from "@/cms/types/database";
 import type { MediaItem } from "@/cms/types/media";
-import {
-	getContentDb,
-	getDataDirectory,
-	getFromIndex,
-} from "./content-db-manager";
-
-const MEDIA_STORE_DIR = path.join(getDataDirectory(), "media-store");
-ensureDirectory(MEDIA_STORE_DIR);
-
-interface PersistedMediaRecord {
-	id: string;
-	contentId: string;
-	filename: string;
-	mimeType: string;
-	size: number;
-	width?: number;
-	height?: number;
-	alt?: string;
-	description?: string;
-	tags?: string[];
-	data: Buffer;
-	createdAt: string;
-	updatedAt: string;
-}
+import { getContentDb, getFromIndex } from "./content-db-manager";
 
 // ========== メディア保存 ==========
 
@@ -54,25 +29,29 @@ export function saveMedia(
 	try {
 		ensureContentRow(db, contentId);
 
-		const now = new Date().toISOString();
-		const record: PersistedMediaRecord = {
-			id: mediaData.id,
-			contentId,
-			filename: mediaData.filename,
-			mimeType: mediaData.mimeType,
-			size: mediaData.size,
-			width: mediaData.width,
-			height: mediaData.height,
-			alt: mediaData.alt,
-			description: mediaData.description,
-			tags: mediaData.tags,
-			data: mediaData.data,
-			createdAt: now,
-			updatedAt: now,
-		};
+		const stmt = db.prepare(`
+      INSERT OR REPLACE INTO media (
+        id, content_id, filename, mime_type, size, width, height, alt, description, tags, data, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
 
-		insertOrReplaceMediaRow(db, record);
-		persistMediaToStore(record);
+		const now = new Date().toISOString();
+
+		stmt.run(
+			mediaData.id,
+			contentId,
+			mediaData.filename,
+			mediaData.mimeType,
+			mediaData.size,
+			mediaData.width || null,
+			mediaData.height || null,
+			mediaData.alt || null,
+			mediaData.description || null,
+			mediaData.tags ? JSON.stringify(mediaData.tags) : null,
+			mediaData.data,
+			now,
+			now,
+		);
 	} finally {
 		db.close();
 	}
@@ -84,8 +63,6 @@ export function getMedia(contentId: string, mediaId: string): MediaItem | null {
 	const db = getContentDb(contentId);
 
 	try {
-		syncMediaStoreToDb(contentId, db);
-
 		const stmt = db.prepare(`
       SELECT id, content_id, filename, mime_type, size, width, height, alt, description, tags, data, created_at, updated_at
       FROM media
@@ -141,8 +118,6 @@ export function listMedia(contentId: string): MediaItem[] {
 	const db = getContentDb(contentId);
 
 	try {
-		syncMediaStoreToDb(contentId, db);
-
 		const stmt = db.prepare(`
       SELECT id, content_id, filename, mime_type, size, width, height, alt, description, tags, created_at, updated_at
       FROM media
@@ -191,9 +166,6 @@ export function deleteMedia(contentId: string, mediaId: string): boolean {
 	try {
 		const stmt = db.prepare("DELETE FROM media WHERE id = ?");
 		const result = stmt.run(mediaId);
-		if (result.changes > 0) {
-			deleteMediaFromStore(contentId, mediaId);
-		}
 		return result.changes > 0;
 	} finally {
 		db.close();
@@ -210,8 +182,6 @@ export function getMediaStats(contentId: string): {
 	const db = getContentDb(contentId);
 
 	try {
-		syncMediaStoreToDb(contentId, db);
-
 		const countStmt = db.prepare("SELECT COUNT(*) as count FROM media");
 		const sizeStmt = db.prepare("SELECT SUM(size) as total FROM media");
 		const typeStmt = db.prepare(
@@ -315,153 +285,4 @@ function ensureContentRow(db: Database.Database, contentId: string) {
       @id, @title, @summary, @lang, @visibility, @status, @published_at, @created_at, @updated_at
     )`,
 	).run(payload);
-}
-
-function insertOrReplaceMediaRow(
-	db: Database.Database,
-	record: PersistedMediaRecord,
-) {
-	const stmt = db.prepare(`
-    INSERT OR REPLACE INTO media (
-      id, content_id, filename, mime_type, size, width, height, alt, description, tags, data, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-
-	stmt.run(
-		record.id,
-		record.contentId,
-		record.filename,
-		record.mimeType,
-		record.size,
-		record.width || null,
-		record.height || null,
-		record.alt || null,
-		record.description || null,
-		record.tags ? JSON.stringify(record.tags) : null,
-		record.data,
-		record.createdAt,
-		record.updatedAt,
-	);
-}
-
-function persistMediaToStore(record: PersistedMediaRecord): void {
-	try {
-		const dir = getMediaStoreDir(record.contentId);
-		ensureDirectory(dir);
-		fs.writeFileSync(
-			getMediaBinaryPath(record.contentId, record.id),
-			record.data,
-		);
-		const meta = {
-			id: record.id,
-			contentId: record.contentId,
-			filename: record.filename,
-			mimeType: record.mimeType,
-			size: record.size,
-			width: record.width,
-			height: record.height,
-			alt: record.alt,
-			description: record.description,
-			tags: record.tags,
-			createdAt: record.createdAt,
-			updatedAt: record.updatedAt,
-		};
-		fs.writeFileSync(
-			getMediaMetaPath(record.contentId, record.id),
-			JSON.stringify(meta, null, 2),
-		);
-	} catch (error) {
-		console.warn("[media-manager] Failed to persist media to store:", error);
-	}
-}
-
-function deleteMediaFromStore(contentId: string, mediaId: string): void {
-	for (const target of [
-		getMediaBinaryPath(contentId, mediaId),
-		getMediaMetaPath(contentId, mediaId),
-	]) {
-		try {
-			if (fs.existsSync(target)) {
-				fs.rmSync(target, { force: true });
-			}
-		} catch (error) {
-			console.warn("[media-manager] Failed to delete media file:", error);
-		}
-	}
-}
-
-function syncMediaStoreToDb(contentId: string, db: Database.Database): void {
-	const dir = getMediaStoreDir(contentId);
-	if (!fs.existsSync(dir)) {
-		return;
-	}
-	for (const entry of fs.readdirSync(dir)) {
-		if (!entry.endsWith(".json")) continue;
-		const mediaId = entry.slice(0, -".json".length);
-		const exists = db
-			.prepare("SELECT 1 FROM media WHERE id = ?")
-			.get(mediaId) as unknown;
-		if (exists) continue;
-		const record = loadPersistedMedia(contentId, mediaId);
-		if (!record) continue;
-		try {
-			insertOrReplaceMediaRow(db, record);
-		} catch (error) {
-			console.warn(
-				`[media-manager] Failed to rehydrate media ${mediaId} for ${contentId}:`,
-				error,
-			);
-		}
-	}
-}
-
-function loadPersistedMedia(
-	contentId: string,
-	mediaId: string,
-): PersistedMediaRecord | null {
-	try {
-		const metaPath = getMediaMetaPath(contentId, mediaId);
-		const binPath = getMediaBinaryPath(contentId, mediaId);
-		if (!fs.existsSync(metaPath) || !fs.existsSync(binPath)) {
-			return null;
-		}
-		const meta = JSON.parse(fs.readFileSync(metaPath, "utf-8")) as Omit<
-			PersistedMediaRecord,
-			"data"
-		>;
-		const data = fs.readFileSync(binPath);
-		return {
-			...meta,
-			data,
-		};
-	} catch (error) {
-		console.warn("[media-manager] Failed to load persisted media:", error);
-		return null;
-	}
-}
-
-function getMediaStoreDir(contentId: string): string {
-	return path.join(MEDIA_STORE_DIR, sanitizeId(contentId));
-}
-
-function getMediaBinaryPath(contentId: string, mediaId: string): string {
-	return path.join(getMediaStoreDir(contentId), `${mediaId}.bin`);
-}
-
-function getMediaMetaPath(contentId: string, mediaId: string): string {
-	return path.join(getMediaStoreDir(contentId), `${mediaId}.json`);
-}
-
-function ensureDirectory(dir: string): void {
-	try {
-		if (!fs.existsSync(dir)) {
-			fs.mkdirSync(dir, { recursive: true });
-		}
-	} catch (error) {
-		console.warn("[media-manager] Failed to ensure directory:", error);
-	}
-}
-
-function sanitizeId(value: string): string {
-	return value.replace(/[^a-zA-Z0-9_-]/g, "_");
 }
