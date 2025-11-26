@@ -897,6 +897,7 @@ export default function PomodoroTimer() {
 	const setSessionsRef = useRef(setSessions);
 	const setStatsRef = useRef(setStats);
 	const autoStartNextRef = useRef(false);
+	const hasQueuedAutoAdvanceRef = useRef(false);
 
 	// Keep refs up to date
 	useEffect(() => {
@@ -1054,7 +1055,16 @@ export default function PomodoroTimer() {
 	}, [currentStepIndex, customSchedule, setSavedTime]);
 
 	useEffect(() => {
-		if (!isFinished || customSchedule.length === 0) return;
+		if (!isFinished || customSchedule.length === 0) {
+			hasQueuedAutoAdvanceRef.current = false;
+			return;
+		}
+
+		// Prevent double-queuing when currentStepIndex changes while we're still marked finished
+		if (hasQueuedAutoAdvanceRef.current) {
+			return;
+		}
+		hasQueuedAutoAdvanceRef.current = true;
 
 		const nextIndex =
 			currentStepIndex < customSchedule.length - 1 ? currentStepIndex + 1 : 0;
@@ -1063,10 +1073,17 @@ export default function PomodoroTimer() {
 		autoStartNextRef.current = true;
 
 		// Use setTimeout to ensure the ref is set before the step change triggers
-		setTimeout(() => {
+		const timeoutId = window.setTimeout(() => {
 			setCurrentStepIndex(nextIndex);
 		}, 0);
-	}, [isFinished, currentStepIndex, customSchedule.length]);
+
+		return () => clearTimeout(timeoutId);
+	}, [
+		isFinished,
+		currentStepIndex,
+		customSchedule.length,
+		setCurrentStepIndex,
+	]);
 
 	// ワークフロー変更時に自動適用（タイマーが停止中の場合のみ）
 	useEffect(() => {
