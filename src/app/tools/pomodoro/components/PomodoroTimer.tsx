@@ -30,9 +30,7 @@ import type {
 	PomodoroSettings,
 	PomodoroStats,
 } from "../types";
-import {
-	playNotificationSound,
-} from "../utils/soundPlayer";
+import { playNotificationSound } from "../utils/soundPlayer";
 import MiniTimer from "./MiniTimer";
 import YouTubePlayer from "./youtube/YouTubePlayer";
 
@@ -86,70 +84,70 @@ let SCHEDULE = [
 		type: "focus",
 		duration: 15,
 		label: "Warm up",
-		desc: "閼ｳ縺ｮ繧｢繧､繝峨Μ繝ｳ繧ｰ驕玖ｻ｢縲ゅΓ繝ｼ繝ｫ遒ｺ隱阪ｄ莉頑律縺ｮ險育判遶九※縺ｪ縺ｩ縲∬ｻｽ縺・ち繧ｹ繧ｯ縺九ｉ蟋九ａ縺ｾ縺励ｇ縺・・,
+		desc: "脳のアイドリング運転。メール確認や今日の計画立てなど、軽いタスクから始めましょう。",
 	},
 	{
 		id: 2,
 		type: "break",
 		duration: 5,
 		label: "Short Break",
-		desc: "豺ｱ蜻ｼ蜷ｸ繧偵＠縺ｦ縲∫判髱｢縺九ｉ逶ｮ繧帝屬縺励∪縺励ｇ縺・よｰｴ蛻・｣懃ｵｦ繧貞ｿ倥ｌ縺壹↓縲・,
+		desc: "深呼吸をして、画面から目を離しましょう。水分補給を忘れずに。",
 	},
 	{
 		id: 3,
 		type: "focus",
 		duration: 30,
 		label: "Deep Work I",
-		desc: "繧ｨ繝ｳ繧ｸ繝ｳ縺後°縺九▲縺ｦ縺阪∪縺励◆縲ゆｸｻ隕√↑繧ｿ繧ｹ繧ｯ縺ｮ讒区・繧堤ｷｴ縺｣縺溘ｊ縲∫捩謇九＠縺溘ｊ縺吶ｋ譎る俣縺ｧ縺吶・,
+		desc: "エンジンがかかってきました。主要なタスクの構成を練ったり、着手したりする時間です。",
 	},
 	{
 		id: 4,
 		type: "break",
 		duration: 5,
 		label: "Short Break",
-		desc: "遶九■荳翫′縺｣縺ｦ繧ｹ繝医Ξ繝・メ縲り｡豬√ｒ濶ｯ縺上＠縺ｦ谺｡縺ｮ髮・ｸｭ縺ｫ蛯吶∴縺ｾ縺吶・,
+		desc: "立ち上がってストレッチ。血流を良くして次の集中に備えます。",
 	},
 	{
 		id: 5,
 		type: "focus",
 		duration: 45,
 		label: "Deep Work II",
-		desc: "髮・ｸｭ蜉帙′繝斐・繧ｯ縺ｫ驕斐☆繧区凾髢灘ｸｯ縲ゅけ繝ｪ繧ｨ繧､繝・ぅ繝悶↑菴懈･ｭ繧・､・尅縺ｪ諤晁・ｒ隕√☆繧九ち繧ｹ繧ｯ縺ｫ譛驕ｩ縺ｧ縺吶・,
+		desc: "集中力がピークに達する時間帯。クリエイティブな作業や複雑な思考を要するタスクに最適です。",
 	},
 	{
 		id: 6,
 		type: "break",
 		duration: 5,
 		label: "Short Break",
-		desc: "遏ｭ縺・ｼ第・縺ｧ縺吶′縲∫岼繧帝哩縺倥※閼ｳ繧貞ｮ悟・縺ｫ莨代ａ繧九％縺ｨ繧呈э隴倥＠縺ｦ縺上□縺輔＞縲・,
+		desc: "短い休憩ですが、目を閉じて脳を完全に休めることを意識してください。",
 	},
 	{
 		id: 7,
 		type: "focus",
 		duration: 60,
 		label: "Flow State I",
-		desc: "繝輔Ο繝ｼ迥ｶ諷九∈縺ｮ豐｡蜈･縲よ凾髢薙・縺ゅ▲縺ｨ縺・≧髢薙↓驕弱℃蜴ｻ繧翫∪縺吶る夂衍繧貞・繧翫∪縺励ｇ縺・・,
+		desc: "フロー状態への没入。時間はあっという間に過ぎ去ります。通知を切りましょう。",
 	},
 	{
 		id: 8,
 		type: "break",
 		duration: 5,
 		label: "Short Break",
-		desc: "譛蠕後・螟ｧ縺阪↑豕｢縺ｮ蜑阪・荳蜻ｼ蜷ｸ縲らｳ門・陬懃ｵｦ繧り憶縺・°繧ゅ＠繧後∪縺帙ｓ縲・,
+		desc: "最後の大きな波の前の一呼吸。糖分補給も良いかもしれません。",
 	},
 	{
 		id: 9,
 		type: "focus",
 		duration: 75,
 		label: "Flow State II",
-		desc: "縺薙・繧ｻ繝・す繝ｧ繝ｳ縺ｮ髮・､ｧ謌舌る剞逡後ｒ雜・∴縺ｦ豐｡鬆ｭ縺吶ｋ縲∵怙繧ら函逕｣諤ｧ縺ｮ鬮倥＞譎る俣縺ｧ縺吶・,
+		desc: "このセッションの集大成。限界を超えて没頭する、最も生産性の高い時間です。",
 	},
 	{
 		id: 10,
 		type: "break",
 		duration: 30,
 		label: "Long Break",
-		desc: "縺顔夢繧梧ｧ倥〒縺励◆縲よ淵豁ｩ縺ｫ蜃ｺ繧九°縲・｣滉ｺ九ｒ縺ｨ縺｣縺ｦ螳悟・縺ｫ繝ｪ繝輔Ξ繝・す繝･縺励※縺上□縺輔＞縲・,
+		desc: "お疲れ様でした。散歩に出るか、食事をとって完全にリフレッシュしてください。",
 	},
 ];
 
@@ -320,7 +318,8 @@ const MarkdownViewer = ({
 					return (
 						<div key={i} className="flex items-center gap-2">
 							<div className="w-3 h-3 border bg-blue-500 rounded flex items-center justify-center text-[8px] text-white">
-								笨・							</div>
+								✓
+							</div>
 							<span className="line-through opacity-50">{line.slice(4)}</span>
 						</div>
 					);
@@ -405,7 +404,8 @@ const Widget = ({
 	});
 
 	const handleMouseDown = (e: React.MouseEvent) => {
-		// 繝・・繝鈴Κ蛻・ｼ・tape-handle・峨ｒ繧ｯ繝ｪ繝・け縺励◆蝣ｴ蜷医・縺ｿ繝峨Λ繝・げ髢句ｧ・		if (!(e.target as HTMLElement).closest(".tape-handle")) return;
+		// テープ部分（.tape-handle）をクリックした場合のみドラッグ開始
+		if (!(e.target as HTMLElement).closest(".tape-handle")) return;
 		if ((e.target as HTMLElement).closest(".no-drag")) return;
 		setIsDragging(true);
 		if (isSticky) {
@@ -425,7 +425,8 @@ const Widget = ({
 				y: e.clientY - dragOffset.y,
 			});
 
-			// 蜑企勁繧ｨ繝ｪ繧｢縺ｮ蛻､螳・			const deleteZone = document.querySelector(".delete-zone");
+			// 削除エリアの判定
+			const deleteZone = document.querySelector(".delete-zone");
 			if (deleteZone && isSticky) {
 				const rect = deleteZone.getBoundingClientRect();
 				const isOver =
@@ -434,7 +435,7 @@ const Widget = ({
 					e.clientY >= rect.top &&
 					e.clientY <= rect.bottom;
 				setIsOverDeleteZone(isOver);
-				// 蜑企勁繧ｨ繝ｪ繧｢縺ｮ隕冶ｦ夂噪繝輔ぅ繝ｼ繝峨ヰ繝・け
+				// 削除エリアの視覚的フィードバック
 				const indicator = deleteZone.querySelector("#delete-zone-indicator");
 				const icon = deleteZone.querySelector("#delete-zone-icon");
 				if (indicator && icon) {
@@ -622,7 +623,7 @@ const Widget = ({
 						: "rounded-xl border backdrop-blur-md"
 			} ${isOverDeleteZone ? "opacity-50 scale-95" : ""}`}
 		>
-			{/* 繝｡繝｢蟶ｳ縺ｮ蝣ｴ蜷医・繝・・繝鈴｢ｨ縺ｮ繝上Φ繝峨Ν */}
+			{/* メモ帳の場合はテープ風のハンドル */}
 			{isSticky && (
 				<div
 					onMouseDown={handleMouseDown}
@@ -640,7 +641,7 @@ const Widget = ({
 				</div>
 			)}
 
-			{/* 莉悶・繧ｦ繧｣繧ｸ繧ｧ繝・ヨ繧ｿ繧､繝励・繝倥ャ繝繝ｼ */}
+			{/* 他のウィジェットタイプのヘッダー */}
 			{!isSticky && (
 				<div
 					onMouseDown={handleMouseDown}
@@ -676,7 +677,7 @@ const Widget = ({
 								updateWidget(widget.id, { content: e.target.value })
 							}
 							onBlur={() => {
-								// 繧ｭ繝｣繝ｬ繝・ヨ縺悟､悶ｌ縺溘→縺阪↓閾ｪ蜍輔〒繝励Ξ繝薙Η繝ｼ陦ｨ遉ｺ縺ｫ
+								// キャレットが外れたときに自動でプレビュー表示に
 								setIsEditing(false);
 							}}
 							autoFocus
@@ -1059,7 +1060,8 @@ export default function PomodoroTimer() {
 		}, 0);
 	}, [isFinished, currentStepIndex, customSchedule.length]);
 
-	// 繝ｯ繝ｼ繧ｯ繝輔Ο繝ｼ螟画峩譎ゅ↓閾ｪ蜍暮←逕ｨ・医ち繧､繝槭・縺悟●豁｢荳ｭ縺ｮ蝣ｴ蜷医・縺ｿ・・	useEffect(() => {
+	// ワークフロー変更時に自動適用（タイマーが停止中の場合のみ）
+	useEffect(() => {
 		if (!isActive && currentStepIndex < customSchedule.length) {
 			const newDuration = customSchedule[currentStepIndex].duration * 60 * 1000;
 			setTimeLeft(newDuration);
@@ -1079,10 +1081,11 @@ export default function PomodoroTimer() {
 		if (isFinished) {
 			handleNext();
 		} else if (isActive) {
-			// 螳溯｡御ｸｭ縺ｯ蛛懈ｭ｢繝繧､繧｢繝ｭ繧ｰ繧定｡ｨ遉ｺ
+			// 実行中は停止ダイアログを表示
 			setShowStopDialog(true);
 		} else {
-			// 蛛懈ｭ｢荳ｭ縺ｯ髢句ｧ・			requestPermission();
+			// 停止中は開始
+			requestPermission();
 			setIsActive(true);
 		}
 	};
@@ -1356,7 +1359,7 @@ export default function PomodoroTimer() {
 								</div>
 								<div className="absolute inset-0 flex justify-center pointer-events-none">
 									<div className="relative w-full h-full">
-										{/* 荳螳壹・濶ｲ縺ｧ陦ｨ遉ｺ・磯℃蜴ｻ縺ｮ繧ｹ繝・ャ繝暦ｼ・*/}
+										{/* 一定の色で表示（過去のステップ） */}
 										<div
 											className="absolute inset-0 w-full h-full transition-opacity duration-300"
 											style={{
@@ -1365,7 +1368,7 @@ export default function PomodoroTimer() {
 											}}
 										/>
 
-										{/* 繝帙ヰ繝ｼ譎ゅ↓轣ｰ濶ｲ縺ｧ譏弱ｋ縺剰｡ｨ遉ｺ */}
+										{/* ホバー時に灰色で明るく表示 */}
 										<div
 											className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"} ${
 												theme === "dark" ? "bg-gray-400/30" : "bg-gray-600/20"
@@ -1413,7 +1416,7 @@ export default function PomodoroTimer() {
 				</div>
 			</aside>
 
-			{/* Delete Zone - 繝峨ャ繧ｯ縺ｮ荳翫√ラ繝ｩ繝・げ荳ｭ縺ｮ縺ｿ陦ｨ遉ｺ */}
+			{/* Delete Zone - ドックの上、ドラッグ中のみ表示 */}
 			{isDraggingNote && (
 				<div className="delete-zone fixed bottom-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
 					<div
@@ -1461,28 +1464,29 @@ export default function PomodoroTimer() {
 								theme === "dark" ? "text-white" : "text-black"
 							}`}
 						>
-							繧ｿ繧､繝槭・繧貞●豁｢縺励∪縺吶°・・						</h3>
+							タイマーを停止しますか？
+						</h3>
 						<div className="grid grid-cols-3 gap-3">
 							<button
 								onClick={handleReset}
 								className="px-2 py-4 rounded-xl font-medium transition-all flex flex-col items-center justify-center gap-2 bg-gray-200 text-gray-800 hover:bg-gray-300"
 							>
 								<RotateCcw size={24} />
-								<span className="text-xs">繝ｪ繧ｻ繝・ヨ</span>
+								<span className="text-xs">リセット</span>
 							</button>
 							<button
 								onClick={handleStop}
 								className="px-2 py-4 rounded-xl font-medium transition-all flex flex-col items-center justify-center gap-2 bg-gray-200 text-gray-800 hover:bg-gray-300"
 							>
 								<Pause size={24} />
-								<span className="text-xs">荳譎ょ●豁｢</span>
+								<span className="text-xs">一時停止</span>
 							</button>
 							<button
 								onClick={handleSkip}
 								className="px-2 py-4 rounded-xl font-medium transition-all flex flex-col items-center justify-center gap-2 bg-gray-200 text-gray-800 hover:bg-gray-300"
 							>
 								<SkipForward size={24} />
-								<span className="text-xs">繧ｹ繧ｭ繝・・</span>
+								<span className="text-xs">スキップ</span>
 							</button>
 						</div>
 					</div>
@@ -1585,7 +1589,8 @@ export default function PomodoroTimer() {
 										theme === "dark" ? "text-white" : "text-black"
 									}`}
 								>
-									險ｭ螳・								</h2>
+									設定
+								</h2>
 								<button
 									onClick={() => setShowSettingsPanel(false)}
 									className={`p-2 rounded-lg transition-colors ${
@@ -1610,7 +1615,7 @@ export default function PomodoroTimer() {
 												: "hover:bg-gray-50 text-gray-700"
 									}`}
 								>
-									繝ｯ繝ｼ繧ｯ繝輔Ο繝ｼ
+									ワークフロー
 								</button>
 								<button
 									onClick={() => setSettingsTab("dock")}
@@ -1624,7 +1629,7 @@ export default function PomodoroTimer() {
 												: "hover:bg-gray-50 text-gray-700"
 									}`}
 								>
-									繝峨ャ繧ｯ
+									ドック
 								</button>
 							</div>
 						</div>
@@ -1638,7 +1643,8 @@ export default function PomodoroTimer() {
 											theme === "dark" ? "text-white" : "text-black"
 										}`}
 									>
-										繝ｯ繝ｼ繧ｯ繝輔Ο繝ｼ縺ｮ邱ｨ髮・									</h3>
+										ワークフローの編集
+									</h3>
 									<div className="space-y-2">
 										{customSchedule.map((step, index) => (
 											<div
@@ -1665,7 +1671,7 @@ export default function PomodoroTimer() {
 															? "border-white/20 text-white"
 															: "border-gray-300 text-black"
 													}`}
-													placeholder="繝ｩ繝吶Ν"
+													placeholder="ラベル"
 												/>
 												<input
 													type="number"
@@ -1690,7 +1696,8 @@ export default function PomodoroTimer() {
 														theme === "dark" ? "text-gray-400" : "text-gray-600"
 													}`}
 												>
-													蛻・												</span>
+													分
+												</span>
 												<select
 													value={step.type}
 													onChange={(e) => {
@@ -1713,8 +1720,8 @@ export default function PomodoroTimer() {
 														paddingRight: "2rem",
 													}}
 												>
-													<option value="focus">菴懈･ｭ</option>
-													<option value="break">莨第・</option>
+													<option value="focus">作業</option>
+													<option value="break">休憩</option>
 												</select>
 												<button
 													onClick={() => {
@@ -1746,7 +1753,7 @@ export default function PomodoroTimer() {
 													: "border-gray-300 hover:bg-gray-50 text-gray-700"
 											}`}
 										>
-											+ 繧ｹ繝・ャ繝励ｒ霑ｽ蜉
+											+ ステップを追加
 										</button>
 									</div>
 								</div>
@@ -1759,7 +1766,8 @@ export default function PomodoroTimer() {
 											theme === "dark" ? "text-white" : "text-black"
 										}`}
 									>
-										繝峨ャ繧ｯ縺ｮ陦ｨ遉ｺ險ｭ螳・									</h3>
+										ドックの表示設定
+									</h3>
 									<div className="space-y-2">
 										{Object.entries(dockVisibility)
 											.filter(([key]) => key !== "settings")
@@ -1791,14 +1799,14 @@ export default function PomodoroTimer() {
 														}`}
 													>
 														{key === "note"
-															? "繝｡繝｢"
+															? "メモ"
 															: key === "image"
-																? "逕ｻ蜒・
+																? "画像"
 																: key === "music"
-																	? "髻ｳ讌ｽ"
+																	? "音楽"
 																	: key === "theme"
-																		? "繝・・繝・
-																		: "險ｭ螳・}
+																		? "テーマ"
+																		: "設定"}
 													</span>
 												</label>
 											))}
@@ -1812,4 +1820,3 @@ export default function PomodoroTimer() {
 		</div>
 	);
 }
-

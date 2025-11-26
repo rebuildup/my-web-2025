@@ -1,4 +1,4 @@
-﻿import { Pause, Play, RotateCcw, Timer, Watch } from "lucide-react";
+import { Pause, Play, RotateCcw, Timer, Watch } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { playNotificationSound } from "../utils/soundPlayer";

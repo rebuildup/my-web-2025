@@ -1,4 +1,4 @@
-﻿import { YouTubeSource } from "./types";
+import { YouTubeSource } from "./types";
 
 export const parseYouTubeUrl = (url: string): YouTubeSource | null => {
 	try {
