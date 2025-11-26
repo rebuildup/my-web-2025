@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import PiGame from "./components/PiGame";
 
@@ -65,17 +64,6 @@ export default function PiGamePage() {
 						<section className="space-y-6">
 							<PiGame />
 						</section>
-
-						<nav aria-label="Site navigation">
-							<Link
-								href="/tools"
-								className="block rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
-							>
-								<span className="noto-sans-jp-regular text-base leading-snug text-main">
-									← Tools
-								</span>
-							</Link>
-						</nav>
 					</div>
 				</div>
 			</main>

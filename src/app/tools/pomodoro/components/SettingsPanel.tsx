@@ -136,34 +136,57 @@ export default function SettingsPanel({
 					</div>
 				</div>
 
-				{/* Auto-start Settings */}
+				{/* YouTube Player Settings */}
 				<div className="space-y-4">
-					<h4 className="font-medium text-main">自動開始設定</h4>
+					<h4 className="font-medium text-main">YouTubeプレイヤー設定</h4>
 
 					<div className="space-y-3">
 						<label className="flex items-center gap-3">
 							<input
 								type="checkbox"
-								checked={settings.autoStartBreaks}
+								checked={settings.autoPlayOnFocusSession ?? true}
 								onChange={(e) =>
-									updateSetting("autoStartBreaks", e.target.checked)
+									updateSetting("autoPlayOnFocusSession", e.target.checked)
 								}
 								className="w-4 h-4"
 							/>
-							<span className="text-sm">休憩を自動開始</span>
+							<span className="text-sm">集中開始時に自動再生</span>
 						</label>
 
 						<label className="flex items-center gap-3">
 							<input
 								type="checkbox"
-								checked={settings.autoStartPomodoros}
+								checked={settings.pauseOnBreak ?? true}
 								onChange={(e) =>
-									updateSetting("autoStartPomodoros", e.target.checked)
+									updateSetting("pauseOnBreak", e.target.checked)
 								}
 								className="w-4 h-4"
 							/>
-							<span className="text-sm">作業を自動開始</span>
+							<span className="text-sm">休憩中は一時停止</span>
 						</label>
+
+						<div>
+							<label className="block text-sm font-medium mb-2">
+								デフォルト音量: {settings.youtubeDefaultVolume ?? 30}%
+							</label>
+							<input
+								type="range"
+								min="0"
+								max="100"
+								value={settings.youtubeDefaultVolume ?? 30}
+								onChange={(e) =>
+									updateSetting(
+										"youtubeDefaultVolume",
+										parseInt(e.target.value, 10),
+									)
+								}
+								className="w-full"
+							/>
+							<div className="flex justify-between text-xs text-main mt-1">
+								<span>0%</span>
+								<span>100%</span>
+							</div>
+						</div>
 					</div>
 				</div>
 
@@ -251,8 +274,6 @@ export default function SettingsPanel({
 								shortBreakDuration: 5,
 								longBreakDuration: 15,
 								sessionsUntilLongBreak: 4,
-								autoStartBreaks: false,
-								autoStartPomodoros: false,
 								notificationSound: true,
 								notificationVolume: 50,
 								vibration: true,

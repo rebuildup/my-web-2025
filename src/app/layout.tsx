@@ -11,7 +11,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="ja">
+		<html lang="ja" suppressHydrationWarning>
 			<head>
 				{/* Google Fonts */}
 				<link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -78,9 +78,16 @@ export default function PiGame() {
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			const digit = event.key;
-			if (/^[0-9]$/.test(digit)) {
+			// 数字キーまたはテンキーの小数点を検出
+			if (
+				/^[0-9]$/.test(digit) ||
+				digit === "." ||
+				event.code === "NumpadDecimal"
+			) {
 				event.preventDefault();
-				handleInput(digit);
+				handleInput(
+					digit === "." || event.code === "NumpadDecimal" ? "." : digit,
+				);
 			}
 		};
 

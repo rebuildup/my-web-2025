@@ -3,12 +3,13 @@ export interface PomodoroSettings {
 	shortBreakDuration: number; // in minutes
 	longBreakDuration: number; // in minutes
 	sessionsUntilLongBreak: number;
-	autoStartBreaks: boolean;
-	autoStartPomodoros: boolean;
 	notificationSound: boolean;
 	notificationVolume: number; // 0-100
 	vibration: boolean;
 	theme: "light" | "dark";
+	autoPlayOnFocusSession?: boolean;
+	pauseOnBreak?: boolean;
+	youtubeDefaultVolume?: number; // 0-100
 }
 
 export interface PomodoroSession {
@@ -30,6 +31,10 @@ export interface PomodoroStats {
 
 export type TimerState = "idle" | "running" | "paused" | "completed";
 export type SessionType = "work" | "shortBreak" | "longBreak";
+
+// 新しいサイクルシステム: 15分→5分→30分→5分→45分→5分→60分→5分→75分→30分
+export const PROGRESSIVE_WORK_DURATIONS = [15, 30, 45, 60, 75]; // in minutes
+export const PROGRESSIVE_BREAK_DURATIONS = [5, 5, 5, 5, 30]; // in minutes
 
 export interface TimerDisplay {
 	minutes: number;

@@ -117,6 +117,15 @@ const tools: Tool[] = [
 		category: "ゲーム",
 		icon: Code,
 	},
+	{
+		id: "code-type-p5",
+		title: "Code Type p5",
+		description:
+			"p5.jsでコードタイピング風の映像素材を作成。複数のプログラミング言語に対応し、PNGシーケンスとしてエクスポート可能。",
+		href: "/tools/code-type-p5",
+		category: "デザイン",
+		icon: Code,
+	},
 ];
 
 const categories = [
