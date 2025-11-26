@@ -12,11 +12,21 @@ export interface PomodoroSettings {
 	youtubeDefaultVolume?: number; // 0-100
 }
 
+export type PomodoroSessionType =
+	| "work"
+	| "shortBreak"
+	| "longBreak"
+	| "focus"
+	| "break";
+
 export interface PomodoroSession {
 	id: string;
-	type: "work" | "shortBreak" | "longBreak";
-	duration: number; // in seconds
-	completedAt: Date;
+	type: PomodoroSessionType;
+	duration: number; // stored in minutes for progressive schedule
+	completedAt: string | Date;
+	startTime?: string;
+	endTime?: string;
+	completed?: boolean;
 }
 
 export interface PomodoroStats {

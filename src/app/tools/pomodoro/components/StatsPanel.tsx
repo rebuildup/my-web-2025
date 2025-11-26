@@ -14,6 +14,9 @@ export default function StatsPanel({
 	sessions,
 	onClose,
 }: StatsPanelProps) {
+	const toDate = (value: Date | string) =>
+		value instanceof Date ? value : new Date(value);
+
 	const formatTime = (seconds: number): string => {
 		const hours = Math.floor(seconds / 3600);
 		const minutes = Math.floor((seconds % 3600) / 60);
@@ -27,7 +30,7 @@ export default function StatsPanel({
 	const getTodaysSessions = () => {
 		const today = new Date().toDateString();
 		return sessions.filter(
-			(session) => session.completedAt.toDateString() === today,
+			(session) => toDate(session.completedAt).toDateString() === today,
 		).length;
 	};
 
@@ -37,7 +40,7 @@ export default function StatsPanel({
 		weekStart.setHours(0, 0, 0, 0);
 
 		return sessions.filter(
-			(session) => new Date(session.completedAt) >= weekStart,
+			(session) => toDate(session.completedAt) >= weekStart,
 		).length;
 	};
 

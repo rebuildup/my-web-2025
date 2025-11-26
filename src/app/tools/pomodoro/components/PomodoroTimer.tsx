@@ -27,6 +27,7 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useNotifications } from "../hooks/useNotifications";
 import type {
 	PomodoroSession,
+	PomodoroSessionType,
 	PomodoroSettings,
 	PomodoroStats,
 } from "../types";
@@ -925,10 +926,13 @@ export default function PomodoroTimer() {
 			savedTimeRef.current = 0;
 
 			// Play sound
-			playNotificationSound(
-				settingsRef.current.notificationSound,
-				settingsRef.current.notificationVolume,
-			);
+			if (settingsRef.current.notificationSound) {
+				const normalizedVolume = Math.min(
+					1,
+					Math.max(0, settingsRef.current.notificationVolume / 100),
+				);
+				playNotificationSound(normalizedVolume);
+			}
 
 			// Vibration
 			if (settingsRef.current.vibration && navigator.vibrate) {
@@ -950,28 +954,32 @@ export default function PomodoroTimer() {
 			});
 
 			// Update sessions log
-			setSessionsRef.current((prev) => [
-				...prev,
-				{
-					id: Date.now().toString(),
-					type: step.type,
-					startTime: new Date(Date.now() - step.duration * 60000).toISOString(),
-					endTime: new Date().toISOString(),
-					duration: step.duration,
-					completed: true,
-				},
-			]);
+			setSessionsRef.current((prev) => {
+				const completedAt = new Date();
+				return [
+					...prev,
+					{
+						id: completedAt.getTime().toString(),
+						type: step.type as PomodoroSessionType,
+						startTime: new Date(
+							completedAt.getTime() - step.duration * 60000,
+						).toISOString(),
+						endTime: completedAt.toISOString(),
+						duration: step.duration,
+						completed: true,
+						completedAt: completedAt.toISOString(),
+					},
+				];
+			});
 
 			// Show notification
-			showNotificationRef.current(
-				step.type === "focus" ? "Work Session Complete!" : "Break Over!",
-				{
-					body:
-						step.type === "focus"
-							? "Time to take a break."
-							: "Time to get back to work.",
-				},
-			);
+			showNotificationRef.current({
+				title: step.type === "focus" ? "Work Session Complete!" : "Break Over!",
+				body:
+					step.type === "focus"
+						? "Time to take a break."
+						: "Time to get back to work.",
+			});
 		} else {
 			requestRef.current = requestAnimationFrame(animate);
 		}

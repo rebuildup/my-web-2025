@@ -79,7 +79,7 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 
 					if (currentDisplayTime <= 0) {
 						setIsActive(false);
-						playNotificationSound(true, 50);
+						playNotificationSound(0.5);
 						if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
 						// Final save
 						setSavedTimeLeft(0);
