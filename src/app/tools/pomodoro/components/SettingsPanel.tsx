@@ -22,7 +22,7 @@ export default function SettingsPanel({
 	};
 
 	return (
-		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
+		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 select-text">
 			<div className="flex items-center justify-between mb-6">
 				<h3 className="text-lg font-semibold text-main">タイマー設定</h3>
 				<button

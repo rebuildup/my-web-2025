@@ -25,6 +25,7 @@ import React, {
 } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useNotifications } from "../hooks/useNotifications";
+import { useSessionStorage } from "../hooks/useSessionStorage";
 import type {
 	PomodoroSession,
 	PomodoroSessionType,
@@ -50,6 +51,9 @@ const STICKY_NOTE_COLORS = [
 const STICKY_NOTE_SIZE = 240;
 
 const STICKY_IMAGE_MAX_WIDTH = 480;
+const STICKY_WIDGET_TYPES = new Set(["note", "image", "youtube", "timer"]);
+
+const isStickyWidgetType = (type: string) => STICKY_WIDGET_TYPES.has(type);
 
 const getRandomStickyColor = () =>
 	STICKY_NOTE_COLORS[Math.floor(Math.random() * STICKY_NOTE_COLORS.length)];
@@ -390,7 +394,7 @@ const Widget = ({
 	const isImageSticky = widget.type === "image";
 	const isYouTube = widget.type === "youtube";
 	const isTimer = widget.type === "timer";
-	const isSticky = isNote || isImageSticky || isYouTube || isTimer;
+	const isSticky = isStickyWidgetType(widget.type);
 
 	const widgetRef = useRef<HTMLDivElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -525,9 +529,9 @@ const Widget = ({
 	const tapeWidth = numericWidth + 40;
 	const tapeOffset = isImageSticky ? -10 : -14;
 	const stickyContentWrapperClass = isImageSticky
-		? "flex-1 w-full h-full no-drag flex items-center justify-center overflow-hidden"
-		: "flex-1 w-full h-full no-drag [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent";
-	const nonStickyContentWrapperClass = `p-4 overflow-auto no-drag ${
+		? "flex-1 w-full h-full no-drag select-text flex items-center justify-center overflow-hidden"
+		: "flex-1 w-full h-full no-drag select-text [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent";
+	const nonStickyContentWrapperClass = `p-4 overflow-auto no-drag select-text ${
 		widget.type === "music" ? "p-0" : ""
 	}`;
 	const contentWrapperClass = isSticky
@@ -671,7 +675,7 @@ const Widget = ({
 					(isEditing ? (
 						<textarea
 							ref={textareaRef}
-							className={`w-full h-full bg-transparent resize-none outline-none font-mono text-sm ${textClass} [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent`}
+							className={`w-full h-full bg-transparent resize-none outline-none font-mono text-sm select-text ${textClass} [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent`}
 							placeholder="# Title&#10;- List item&#10;**Bold text**"
 							value={widget.content || ""}
 							onChange={(e) =>
@@ -685,7 +689,7 @@ const Widget = ({
 						/>
 					) : (
 						<div
-							className="h-full cursor-text"
+							className="h-full cursor-text select-text"
 							onClick={() => setIsEditing(true)}
 						>
 							<MarkdownViewer content={widget.content} theme={theme} />
@@ -842,12 +846,12 @@ export default function PomodoroTimer() {
 		[],
 	);
 
-	const [currentStepIndex, setCurrentStepIndex] = useLocalStorage(
+	const [currentStepIndex, setCurrentStepIndex] = useSessionStorage(
 		"pomodoro-current-step",
 		0,
 	);
 	const [customSchedule, setCustomSchedule] = useState(SCHEDULE);
-	const [savedTime, setSavedTime] = useLocalStorage("pomodoro-time-left", -1);
+	const [savedTime, setSavedTime] = useSessionStorage("pomodoro-time-left", -1);
 	const [timeLeft, setTimeLeft] = useState(() => {
 		if (savedTime !== -1) return savedTime;
 		return customSchedule[0].duration * 60 * 1000;
@@ -881,7 +885,7 @@ export default function PomodoroTimer() {
 			color?: string;
 		}>
 	>("pomodoro-widgets", []);
-	const [isDraggingNote, setIsDraggingNote] = useState(false);
+	const [isDraggingStickyWidget, setIsDraggingStickyWidget] = useState(false);
 	const [hoveredStepIndex, setHoveredStepIndex] = useState<number | null>(null);
 
 	const startTimeRef = useRef<number | null>(null);
@@ -1232,9 +1236,39 @@ export default function PomodoroTimer() {
 		);
 	}, [timeLeft, currentStep.duration]);
 
+	const currentStepProgressPercent = useMemo(() => {
+		const durationMs = currentStep.duration * 60 * 1000;
+		if (durationMs <= 0) return 0;
+		const progress = ((durationMs - timeLeft) / durationMs) * 100;
+		return Math.min(100, Math.max(0, progress));
+	}, [currentStep.duration, timeLeft]);
+
+	const workflowProgressPercent = useMemo(() => {
+		if (!customSchedule.length || totalDuration <= 0) return 0;
+		const completedMinutes = customSchedule
+			.slice(0, currentStepIndex)
+			.reduce((acc, step) => acc + step.duration, 0);
+		const currentStepMinutes =
+			(currentStep.duration * currentStepProgressPercent) / 100;
+		const rawPercent =
+			((completedMinutes + currentStepMinutes) / totalDuration) * 100;
+		return Math.min(100, Math.max(0, rawPercent));
+	}, [
+		customSchedule,
+		currentStep.duration,
+		currentStepIndex,
+		currentStepProgressPercent,
+		totalDuration,
+	]);
+
+	const workflowFillStyle =
+		theme === "dark"
+			? "linear-gradient(180deg, rgba(96,165,250,0.35), rgba(14,165,233,0.25))"
+			: "linear-gradient(180deg, rgba(37,99,235,0.35), rgba(6,182,212,0.25))";
+
 	return (
 		<div
-			className={`relative w-full h-screen overflow-hidden transition-colors duration-500 ${
+			className={`relative w-full h-screen overflow-hidden transition-colors duration-500 select-none ${
 				theme === "dark"
 					? "bg-[#050505] text-gray-100"
 					: "bg-[#f5f5f7] text-gray-900"
@@ -1242,8 +1276,8 @@ export default function PomodoroTimer() {
 			style={{
 				backgroundImage:
 					theme === "light"
-						? "radial-gradient(#e5e5e5 1px, transparent 1px)"
-						: "radial-gradient(#1a1a1a 1px, transparent 1px)",
+						? "radial-gradient(rgba(0,0,0,0.12) 1px, transparent 1px)"
+						: "radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px)",
 				backgroundSize: "24px 24px",
 			}}
 		>
@@ -1256,10 +1290,12 @@ export default function PomodoroTimer() {
 					removeWidget={removeWidget}
 					theme={theme}
 					onDragStart={() => {
-						if (widget.type === "note") setIsDraggingNote(true);
+						if (isStickyWidgetType(widget.type)) {
+							setIsDraggingStickyWidget(true);
+						}
 					}}
 					onDragEnd={() => {
-						setIsDraggingNote(false);
+						setIsDraggingStickyWidget(false);
 					}}
 					pomodoroState={{
 						isActive,
@@ -1336,113 +1372,120 @@ export default function PomodoroTimer() {
       `}
 			>
 				<div
-					className="relative flex flex-col items-center h-[60vh] w-1.5 rounded-full bg-opacity-20 backdrop-blur-sm transition-all duration-300 hover:w-2"
+					className="relative h-[60vh] w-1.5 rounded-full bg-opacity-20 backdrop-blur-sm transition-all duration-300 hover:w-2"
 					style={{
 						backgroundColor:
-							theme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
+							theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
 					}}
 				>
-					{customSchedule.map((step, index) => {
-						const heightPercent = (step.duration / totalDuration) * 100;
-						const isCurrent = index === currentStepIndex;
-						const isPast = index < currentStepIndex;
-						const isHovered = hoveredStepIndex === index;
-						const barColor =
-							step.type === "focus"
-								? theme === "dark"
-									? "#3b82f6"
-									: "#2563eb"
-								: theme === "dark"
-									? "#0ea5e9"
-									: "#06b6d4";
+					<div
+						className="pointer-events-none absolute inset-0 z-10"
+						aria-hidden="true"
+					>
+						<div
+							className="absolute left-0 right-0 top-0"
+							style={{
+								height: `${workflowProgressPercent}%`,
+								backgroundImage: workflowFillStyle,
+								borderRadius: "9999px",
+							}}
+						/>
+					</div>
+					<div className="relative flex flex-col items-center h-full w-full z-20">
+						{customSchedule.map((step, index) => {
+							const heightPercent = (step.duration / totalDuration) * 100;
+							const isCurrent = index === currentStepIndex;
+							const isHovered = hoveredStepIndex === index;
+							const barColor =
+								step.type === "focus"
+									? theme === "dark"
+										? "#3b82f6"
+										: "#2563eb"
+									: theme === "dark"
+										? "#0ea5e9"
+										: "#06b6d4";
 
-						const hoverPaddingLeft = 28;
-						const hoverPaddingRight = 24;
+							const hoverPaddingLeft = 28;
+							const hoverPaddingRight = 24;
 
-						return (
-							<div
-								key={step.id}
-								className="relative w-full border-b border-transparent last:border-0"
-								style={{ height: `${heightPercent}%` }}
-							>
+							return (
 								<div
-									className="absolute inset-y-0"
-									style={{
-										left: -hoverPaddingLeft,
-										right: -hoverPaddingRight,
-									}}
+									key={step.id}
+									className="relative w-full border-b border-transparent last:border-0"
+									style={{ height: `${heightPercent}%` }}
 								>
 									<div
-										className="w-full h-full cursor-pointer"
-										onMouseEnter={() => setHoveredStepIndex(index)}
-										onMouseLeave={() =>
-											setHoveredStepIndex((prev) =>
-												prev === index ? null : prev,
-											)
-										}
-									/>
-								</div>
-								<div className="absolute inset-0 flex justify-center pointer-events-none">
-									<div className="relative w-full h-full">
-										{/* 一定の色で表示（過去のステップ） */}
+										className="absolute inset-y-0"
+										style={{
+											left: -hoverPaddingLeft,
+											right: -hoverPaddingRight,
+										}}
+									>
 										<div
-											className="absolute inset-0 w-full h-full transition-opacity duration-300"
-											style={{
-												backgroundColor: isPast ? barColor : "transparent",
-												opacity: isPast ? 0.4 : 0,
-											}}
+											className="w-full h-full cursor-pointer"
+											onMouseEnter={() => setHoveredStepIndex(index)}
+											onMouseLeave={() =>
+												setHoveredStepIndex((prev) =>
+													prev === index ? null : prev,
+												)
+											}
 										/>
-
-										{/* ホバー時に灰色で明るく表示 */}
-										<div
-											className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"} ${
-												theme === "dark" ? "bg-gray-400/30" : "bg-gray-600/20"
-											}`}
-										/>
-
-										{isCurrent && (
-											<div
-												className="absolute top-0 left-0 w-full transition-all duration-75 ease-linear shadow-[0_0_15px_rgba(59,130,246,0.5)]"
-												style={{
-													height: `${progressPercent}%`,
-													backgroundColor: barColor,
-												}}
-											/>
-										)}
 									</div>
-								</div>
+									<div className="absolute inset-0 flex justify-center pointer-events-none">
+										<div className="relative w-full h-full">
+											{/* 一定の色で表示（過去のステップ） */}
 
-								<div
-									className={`absolute top-1/2 -translate-y-1/2 w-48 p-2 rounded-lg backdrop-blur-md border transition-all duration-300 pointer-events-none shadow-xl z-50 ${
-										isHovered
-											? "opacity-100 translate-x-0"
-											: "opacity-0 translate-x-[-10px]"
-									}
+											{/* ホバー時に灰色で明るく表示 */}
+											<div
+												className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"} ${
+													theme === "dark" ? "bg-gray-400/30" : "bg-gray-600/20"
+												}`}
+											/>
+
+											{isCurrent && (
+												<div
+													className="absolute bottom-0 left-0 w-full transition-all duration-100 ease-linear"
+													style={{
+														height: `${currentStepProgressPercent}%`,
+														backgroundColor: barColor,
+													}}
+												/>
+											)}
+										</div>
+									</div>
+
+									<div
+										className={`absolute top-1/2 -translate-y-1/2 w-48 p-2 rounded-lg backdrop-blur-md border transition-all duration-300 pointer-events-none shadow-xl z-50 ${
+											isHovered
+												? "opacity-100 translate-x-0"
+												: "opacity-0 translate-x-[-10px]"
+										}
                     ${theme === "dark" ? "bg-[#1a1a1a]/90 border-white/10 text-gray-100" : "bg-white/90 border-black/5 text-gray-800"}
                  `}
-									style={{
-										left: `calc(50% + ${hoverPaddingRight}px)`,
-									}}
-								>
-									<div className="flex items-center justify-between">
-										<span
-											className={`text-xs font-bold uppercase tracking-wider ${step.type === "focus" ? "text-blue-400" : "text-sky-400"}`}
-										>
-											{step.label}
-										</span>
-										<span className="text-[10px] font-mono opacity-50">
-											{step.duration} min
-										</span>
+										style={{
+											left: `calc(50% + ${hoverPaddingRight}px)`,
+										}}
+									>
+										<div className="flex items-center justify-between">
+											<span
+												className={`text-xs font-bold uppercase tracking-wider ${step.type === "focus" ? "text-blue-400" : "text-sky-400"}`}
+											>
+												{step.label}
+											</span>
+											<span className="text-[10px] font-mono opacity-50">
+												{step.duration} min
+											</span>
+										</div>
 									</div>
 								</div>
-							</div>
-						);
-					})}
+							);
+						})}
+					</div>
 				</div>
 			</aside>
 
 			{/* Delete Zone - ドックの上、ドラッグ中のみ表示 */}
-			{isDraggingNote && (
+			{isDraggingStickyWidget && (
 				<div className="delete-zone fixed bottom-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
 					<div
 						id="delete-zone-indicator"

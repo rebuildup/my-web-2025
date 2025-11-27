@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export function useLocalStorage<T>(key: string, initialValue: T) {
+export function useSessionStorage<T>(key: string, initialValue: T) {
 	const [storedValue, setStoredValue] = useState<T>(initialValue);
 	const [isClient, setIsClient] = useState(false);
 	const initialValueRef = useRef(initialValue);
@@ -15,10 +15,10 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
 			setStoredValue(valueToStore);
 
 			if (isClient && typeof window !== "undefined") {
-				window.localStorage.setItem(key, JSON.stringify(valueToStore));
+				window.sessionStorage.setItem(key, JSON.stringify(valueToStore));
 			}
 		} catch (error) {
-			console.error(`Error saving to localStorage key "${key}":`, error);
+			console.error(`Error saving to sessionStorage key "${key}":`, error);
 		}
 	};
 
@@ -26,17 +26,17 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
 		if (typeof window === "undefined") return;
 
 		try {
-			const item = window.localStorage.getItem(key);
+			const item = window.sessionStorage.getItem(key);
 			if (item !== null) {
 				setStoredValue(JSON.parse(item));
 			} else {
-				window.localStorage.setItem(
+				window.sessionStorage.setItem(
 					key,
 					JSON.stringify(initialValueRef.current),
 				);
 			}
 		} catch (error) {
-			console.error(`Error reading localStorage key "${key}":`, error);
+			console.error(`Error reading sessionStorage key "${key}":`, error);
 		} finally {
 			setIsClient(true);
 		}
