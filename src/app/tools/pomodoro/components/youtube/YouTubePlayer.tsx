@@ -9,7 +9,6 @@ import {
 	SkipForward,
 	Volume2,
 	VolumeX,
-	X,
 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import {
@@ -27,7 +26,6 @@ declare global {
 }
 
 interface YouTubePlayerProps {
-	onClose: () => void;
 	pomodoroState: {
 		isActive: boolean;
 		sessionType: "work" | "shortBreak" | "longBreak";
@@ -42,7 +40,6 @@ interface YouTubePlayerProps {
 }
 
 export default function YouTubePlayer({
-	onClose,
 	pomodoroState,
 	theme,
 	url,
@@ -116,13 +113,15 @@ export default function YouTubePlayer({
 					list:
 						source.type === "playlist" || source.type === "mixed"
 							? source.playlistId
-							: undefined,
+							: settings.loop && source.videoId
+								? source.videoId
+								: undefined,
 					index: source.index,
 					autoplay: 0,
 					controls: 1,
 					modestbranding: 1,
 					rel: 0,
-					loop: 1,
+					loop: settings.loop ? 1 : 0,
 				},
 				events: {
 					onReady: (event: any) => {
@@ -133,6 +132,9 @@ export default function YouTubePlayer({
 						// -1: unstarted, 0: ended, 1: playing, 2: paused, 3: buffering, 5: video cued
 						if (event.data === 1) setPlaybackState("playing");
 						if (event.data === 2) setPlaybackState("paused");
+						if (event.data === 0 && settings.loop) {
+							event.target.playVideo();
+						}
 					},
 					onError: (event: any) => {
 						setPlaybackState("error");
@@ -163,6 +165,15 @@ export default function YouTubePlayer({
 			setError("無効なURL形式です。");
 		}
 	};
+
+	// Recreate player when loop setting changes to apply IFrame params
+	useEffect(() => {
+		if (player) {
+			player.destroy();
+			setPlayer(null);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [settings.loop, source?.videoId, source?.playlistId]);
 
 	// Pomodoro Integration
 	useEffect(() => {
@@ -269,12 +280,6 @@ export default function YouTubePlayer({
 						className={`p-1.5 rounded hover:bg-gray-500/20 transition-colors ${showSettings ? "bg-gray-500/20" : ""}`}
 					>
 						<Settings size={14} />
-					</button>
-					<button
-						onClick={onClose}
-						className="p-1.5 rounded hover:bg-red-500/20 hover:text-red-500 transition-colors"
-					>
-						<X size={14} />
 					</button>
 				</div>
 			</div>
@@ -392,6 +397,22 @@ export default function YouTubePlayer({
 								>
 									<Save size={14} />
 								</button>
+							</div>
+
+							<div className="flex items-center gap-3 text-xs">
+								<label className="flex items-center gap-2 cursor-pointer select-none">
+									<input
+										type="checkbox"
+										checked={settings.loop}
+										onChange={(e) =>
+											setSettings({ ...settings, loop: e.target.checked })
+										}
+									/>
+									<span>ループ再生</span>
+								</label>
+								<span className="opacity-60">
+									動画終了時に自動で頭出しします
+								</span>
 							</div>
 						</div>
 					)}

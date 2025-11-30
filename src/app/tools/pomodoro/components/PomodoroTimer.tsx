@@ -1,6 +1,7 @@
 "use client";
 
 import {
+	BarChart2,
 	Edit3,
 	Image as ImageIcon,
 	Moon,
@@ -34,6 +35,7 @@ import type {
 } from "../types";
 import { playNotificationSound } from "../utils/soundPlayer";
 import MiniTimer from "./MiniTimer";
+import StatsWidget from "./StatsWidget";
 import YouTubePlayer from "./youtube/YouTubePlayer";
 
 const STICKY_NOTE_COLORS = [
@@ -51,7 +53,14 @@ const STICKY_NOTE_COLORS = [
 const STICKY_NOTE_SIZE = 240;
 
 const STICKY_IMAGE_MAX_WIDTH = 480;
-const STICKY_WIDGET_TYPES = new Set(["note", "image", "youtube", "timer"]);
+const STICKY_WIDGET_TYPES = new Set([
+	"note",
+	"image",
+	"youtube",
+	"timer",
+	"stats",
+]);
+const BASE_WIDGET_Z = 60;
 
 const isStickyWidgetType = (type: string) => STICKY_WIDGET_TYPES.has(type);
 
@@ -60,7 +69,7 @@ const getRandomStickyColor = () =>
 
 const DEFAULT_SETTINGS: PomodoroSettings = {
 	workDuration: 25,
-	shortBreakDuration: 5,
+	shortBreakDuration: 3,
 	longBreakDuration: 15,
 	sessionsUntilLongBreak: 4,
 	notificationSound: true,
@@ -94,7 +103,7 @@ let SCHEDULE = [
 	{
 		id: 2,
 		type: "break",
-		duration: 5,
+		duration: 3,
 		label: "Short Break",
 		desc: "深呼吸をして、画面から目を離しましょう。水分補給を忘れずに。",
 	},
@@ -108,7 +117,7 @@ let SCHEDULE = [
 	{
 		id: 4,
 		type: "break",
-		duration: 5,
+		duration: 3,
 		label: "Short Break",
 		desc: "立ち上がってストレッチ。血流を良くして次の集中に備えます。",
 	},
@@ -122,7 +131,7 @@ let SCHEDULE = [
 	{
 		id: 6,
 		type: "break",
-		duration: 5,
+		duration: 3,
 		label: "Short Break",
 		desc: "短い休憩ですが、目を閉じて脳を完全に休めることを意識してください。",
 	},
@@ -177,17 +186,29 @@ const Dock = ({
 		}
 	};
 
+	const handleTouchMove = (e: React.TouchEvent) => {
+		if (!dockRef.current || !e.touches[0]) return;
+		const rect = dockRef.current.getBoundingClientRect();
+		setMouseX(e.touches[0].clientX - rect.left);
+	};
+
 	const handleMouseLeave = () => {
+		setMouseX(null);
+	};
+
+	const handleTouchEnd = () => {
 		setMouseX(null);
 	};
 
 	return (
 		<div
-			className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-40 px-4 h-16 rounded-2xl border backdrop-blur-xl shadow-2xl flex items-end gap-2 transition-all duration-300 no-timer-click
+			className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-60 px-4 h-16 rounded-2xl border backdrop-blur-xl shadow-2xl flex items-end gap-2 transition-all duration-300 no-timer-click
          ${theme === "dark" ? "bg-[#111]/80 border-white/10" : "bg-white/80 border-black/5"}
       `}
 			onMouseMove={handleMouseMove}
 			onMouseLeave={handleMouseLeave}
+			onTouchMove={handleTouchMove}
+			onTouchEnd={handleTouchEnd}
 			ref={dockRef}
 		>
 			{React.Children.map(children, (child) => {
@@ -356,10 +377,13 @@ const Widget = ({
 	updateWidget,
 	removeWidget,
 	theme,
+	bringToFront,
 	onDragStart,
 	onDragEnd,
 	settings,
 	pomodoroState,
+	stats,
+	sessions,
 }: {
 	widget: {
 		id: number;
@@ -375,6 +399,7 @@ const Widget = ({
 	updateWidget: (id: number, data: Partial<typeof widget>) => void;
 	removeWidget: (id: number) => void;
 	theme: string;
+	bringToFront: () => void;
 	onDragStart?: () => void;
 	onDragEnd?: () => void;
 	settings?: PomodoroSettings;
@@ -382,6 +407,8 @@ const Widget = ({
 		isActive: boolean;
 		sessionType: "work" | "shortBreak" | "longBreak";
 	};
+	stats?: PomodoroStats;
+	sessions?: PomodoroSession[];
 }) => {
 	const [isDragging, setIsDragging] = useState(false);
 	const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -395,11 +422,13 @@ const Widget = ({
 	const isYouTube = widget.type === "youtube";
 	const isTimer = widget.type === "timer";
 	const isSticky = isStickyWidgetType(widget.type);
+	const widgetZIndex = widget.zIndex ?? BASE_WIDGET_Z;
 
 	const widgetRef = useRef<HTMLDivElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const onDragStartRef = useRef<(() => void) | undefined>(undefined);
 	const onDragEndRef = useRef<(() => void) | undefined>(undefined);
+	const lastPointerId = useRef<number | null>(null);
 
 	// Update refs when props change
 	useEffect(() => {
@@ -408,29 +437,44 @@ const Widget = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	});
 
-	const handleMouseDown = (e: React.MouseEvent) => {
-		// テープ部分（.tape-handle）をクリックした場合のみドラッグ開始
-		if (!(e.target as HTMLElement).closest(".tape-handle")) return;
-		if ((e.target as HTMLElement).closest(".no-drag")) return;
+	const startDrag = (clientX: number, clientY: number) => {
+		bringToFront();
 		setIsDragging(true);
 		if (isSticky) {
 			onDragStartRef.current?.();
 		}
 		if (widgetRef.current) {
 			const rect = widgetRef.current.getBoundingClientRect();
-			setDragOffset({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+			setDragOffset({ x: clientX - rect.left, y: clientY - rect.top });
 		}
 	};
 
+	const handlePointerDown = (e: React.PointerEvent) => {
+		const target = e.target as HTMLElement;
+		const canDrag = isSticky ? !!target.closest(".tape-handle") : true;
+		if (!canDrag) return;
+		if (target.closest(".no-drag")) return;
+		e.preventDefault();
+		lastPointerId.current = e.pointerId;
+		if (widgetRef.current?.setPointerCapture) {
+			try {
+				widgetRef.current.setPointerCapture(e.pointerId);
+			} catch {
+				// ignore
+			}
+		}
+		startDrag(e.clientX, e.clientY);
+	};
+
 	useEffect(() => {
-		const handleMouseMove = (e: MouseEvent) => {
+		const handlePointerMove = (e: PointerEvent) => {
 			if (!isDragging) return;
+			e.preventDefault();
 			updateWidget(widget.id, {
 				x: e.clientX - dragOffset.x,
 				y: e.clientY - dragOffset.y,
 			});
 
-			// 削除エリアの判定
 			const deleteZone = document.querySelector(".delete-zone");
 			if (deleteZone && isSticky) {
 				const rect = deleteZone.getBoundingClientRect();
@@ -440,7 +484,6 @@ const Widget = ({
 					e.clientY >= rect.top &&
 					e.clientY <= rect.bottom;
 				setIsOverDeleteZone(isOver);
-				// 削除エリアの視覚的フィードバック
 				const indicator = deleteZone.querySelector("#delete-zone-indicator");
 				const icon = deleteZone.querySelector("#delete-zone-icon");
 				if (indicator && icon) {
@@ -463,9 +506,19 @@ const Widget = ({
 			}
 		};
 
-		const handleMouseUp = () => {
+		const handlePointerUp = () => {
 			if (isDragging && isOverDeleteZone && isSticky) {
 				removeWidget(widget.id);
+			}
+			if (
+				lastPointerId.current !== null &&
+				widgetRef.current?.releasePointerCapture
+			) {
+				try {
+					widgetRef.current.releasePointerCapture(lastPointerId.current);
+				} catch {
+					// ignore
+				}
 			}
 			setIsDragging(false);
 			setIsOverDeleteZone(false);
@@ -474,13 +527,28 @@ const Widget = ({
 			}
 		};
 
+		const handleVisibility = () => {
+			if (document.hidden) {
+				setIsDragging(false);
+				setIsOverDeleteZone(false);
+			}
+		};
+
 		if (isDragging) {
-			window.addEventListener("mousemove", handleMouseMove);
-			window.addEventListener("mouseup", handleMouseUp);
+			window.addEventListener("pointermove", handlePointerMove);
+			window.addEventListener("pointerup", handlePointerUp);
+			window.addEventListener("pointercancel", handlePointerUp);
+			window.addEventListener("mouseup", handlePointerUp);
+			window.addEventListener("touchend", handlePointerUp);
+			window.addEventListener("visibilitychange", handleVisibility);
 		}
 		return () => {
-			window.removeEventListener("mousemove", handleMouseMove);
-			window.removeEventListener("mouseup", handleMouseUp);
+			window.removeEventListener("pointermove", handlePointerMove);
+			window.removeEventListener("pointerup", handlePointerUp);
+			window.removeEventListener("pointercancel", handlePointerUp);
+			window.removeEventListener("mouseup", handlePointerUp);
+			window.removeEventListener("touchend", handlePointerUp);
+			window.removeEventListener("visibilitychange", handleVisibility);
 		};
 	}, [
 		isDragging,
@@ -493,7 +561,7 @@ const Widget = ({
 	]);
 
 	const handleFocus = () => {
-		updateWidget(widget.id, { zIndex: Date.now() });
+		bringToFront();
 	};
 
 	useEffect(() => {
@@ -604,9 +672,10 @@ const Widget = ({
 			style={{
 				left: widget.x,
 				top: widget.y,
-				zIndex: widget.zIndex || 1,
+				zIndex: widgetZIndex,
 				width: computedWidth,
 				height: computedHeight,
+				touchAction: "none",
 				backgroundColor: isImageLoaded
 					? "transparent"
 					: isSticky && widget.type !== "image" && widget.type !== "youtube"
@@ -631,12 +700,13 @@ const Widget = ({
 			{/* メモ帳の場合はテープ風のハンドル */}
 			{isSticky && (
 				<div
-					onMouseDown={handleMouseDown}
+					onPointerDown={handlePointerDown}
 					className="tape-handle absolute left-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing flex justify-center"
 					style={{
 						top: `${tapeOffset}px`,
 						width: `${tapeWidth}px`,
-						zIndex: (widget.zIndex || 1) + 5,
+						touchAction: "none",
+						zIndex: widgetZIndex + 5,
 					}}
 				>
 					<div
@@ -649,8 +719,9 @@ const Widget = ({
 			{/* 他のウィジェットタイプのヘッダー */}
 			{!isSticky && (
 				<div
-					onMouseDown={handleMouseDown}
+					onPointerDown={handlePointerDown}
 					className={`h-8 flex items-center justify-between px-2 cursor-grab border-b ${theme === "dark" ? "border-white/5" : "border-black/5"}`}
+					style={{ touchAction: "none" }}
 				>
 					<div className="flex items-center gap-2 opacity-50">
 						{widget.type === "image" && <ImageIcon size={14} />}
@@ -805,7 +876,6 @@ const Widget = ({
 				)}
 				{widget.type === "youtube" && (
 					<YouTubePlayer
-						onClose={() => removeWidget(widget.id)}
 						pomodoroState={
 							pomodoroState || {
 								isActive: false,
@@ -829,6 +899,9 @@ const Widget = ({
 						pauseOnBreak={settings?.pauseOnBreak ?? true}
 						defaultVolume={settings?.youtubeDefaultVolume ?? 30}
 					/>
+				)}
+				{widget.type === "stats" && stats && sessions && (
+					<StatsWidget stats={stats} sessions={sessions} />
 				)}
 				{widget.type === "timer" && (
 					<MiniTimer id={widget.id} theme={theme as "light" | "dark"} />
@@ -869,6 +942,7 @@ export default function PomodoroTimer() {
 		image: true,
 		music: true,
 		timer: true,
+		stats: true,
 		theme: true,
 		settings: true,
 	});
@@ -885,6 +959,20 @@ export default function PomodoroTimer() {
 			color?: string;
 		}>
 	>("pomodoro-widgets", []);
+	const zCounterRef = useRef(BASE_WIDGET_Z);
+	const nextZ = useCallback(() => {
+		zCounterRef.current = (zCounterRef.current || BASE_WIDGET_Z) + 1;
+		return zCounterRef.current;
+	}, []);
+	useEffect(() => {
+		const maxZ =
+			widgets.reduce(
+				(acc, w) => Math.max(acc, w.zIndex ?? BASE_WIDGET_Z),
+				BASE_WIDGET_Z,
+			) + 1;
+		zCounterRef.current = Math.max(zCounterRef.current, maxZ);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 	const [isDraggingStickyWidget, setIsDraggingStickyWidget] = useState(false);
 	const [hoveredStepIndex, setHoveredStepIndex] = useState<number | null>(null);
 
@@ -1167,6 +1255,23 @@ export default function PomodoroTimer() {
 				content: "",
 				w: 400,
 				h: "auto",
+				zIndex: nextZ(),
+			};
+			setWidgets([...widgets, newWidget]);
+			return;
+		}
+		if (type === "stats") {
+			const id = Date.now();
+			const newWidget = {
+				id,
+				type: "stats",
+				x: window.innerWidth / 2 - 180 + (Math.random() * 40 - 20),
+				y: window.innerHeight / 2 - 120 + (Math.random() * 40 - 20),
+				content: "",
+				w: STICKY_NOTE_SIZE,
+				h: STICKY_NOTE_SIZE,
+				zIndex: nextZ(),
+				color: getRandomStickyColor(),
 			};
 			setWidgets([...widgets, newWidget]);
 			return;
@@ -1184,6 +1289,7 @@ export default function PomodoroTimer() {
 			w: initialSize,
 			h: initialSize,
 			color: shouldHaveStickyStyle ? getRandomStickyColor() : undefined,
+			zIndex: nextZ(),
 		};
 		setWidgets([...widgets, newWidget]);
 	};
@@ -1210,18 +1316,18 @@ export default function PomodoroTimer() {
         ${isActive ? "opacity-100" : "opacity-60 hover:opacity-80"}
       `}
 			>
-				<span className="text-8xl leading-none text-right w-auto min-w-18">
+				<span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none text-right w-auto min-w-[64px] sm:min-w-[76px] md:min-w-[92px] lg:min-w-[110px]">
 					{String(minutes).padStart(2, "0")}
 				</span>
 				<span
-					className={`text-8xl leading-none -mx-1.25 -translate-y-0.75 ${isActive ? "animate-pulse" : "opacity-50"}`}
+					className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none -mx-1.25 -translate-y-0.75 ${isActive ? "animate-pulse" : "opacity-50"}`}
 				>
 					:
 				</span>
-				<span className="text-8xl leading-none text-left w-auto min-w-18">
+				<span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none text-left w-auto min-w-[64px] sm:min-w-[76px] md:min-w-[92px] lg:min-w-[110px]">
 					{String(seconds).padStart(2, "0")}
 				</span>
-				<span className="text-2xl leading-none ml-0.75 w-14 opacity-40 font-medium self-end mb-2.5">
+				<span className="text-lg sm:text-xl md:text-2xl leading-none ml-0.5 sm:ml-1 md:ml-1.5 lg:ml-2 w-10 sm:w-12 md:w-14 lg:w-16 min-w-[30px] sm:min-w-[36px] md:min-w-[42px] lg:min-w-[48px] opacity-40 font-medium self-end mb-1 sm:mb-1.5 md:mb-2">
 					.{String(milliseconds).padStart(2, "0")}
 				</span>
 			</div>
@@ -1289,6 +1395,7 @@ export default function PomodoroTimer() {
 					updateWidget={updateWidget}
 					removeWidget={removeWidget}
 					theme={theme}
+					bringToFront={() => updateWidget(widget.id, { zIndex: nextZ() })}
 					onDragStart={() => {
 						if (isStickyWidgetType(widget.type)) {
 							setIsDraggingStickyWidget(true);
@@ -1302,6 +1409,8 @@ export default function PomodoroTimer() {
 						sessionType:
 							currentStep.type === "focus" ? "work" : ("shortBreak" as any),
 					}}
+					stats={_stats}
+					sessions={_sessions}
 				/>
 			))}
 
@@ -1315,11 +1424,8 @@ export default function PomodoroTimer() {
 			</div>
 
 			{/* Center: Main Timer with circular progress */}
-			<div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none">
-				<div
-					className="relative flex items-center justify-center"
-					style={{ width: "500px", height: "500px" }}
-				>
+			<div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none">
+				<div className="relative flex items-center justify-center w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] md:w-[420px] md:h-[420px] lg:w-[520px] lg:h-[520px]">
 					{/* Background circle */}
 					<svg
 						className="absolute inset-0 w-full h-full"
@@ -1367,7 +1473,7 @@ export default function PomodoroTimer() {
 
 			{/* Left Panel: Flow Progress Bar */}
 			<aside
-				className={`fixed left-8 top-1/2 transform -translate-y-1/2 z-20 flex flex-col items-start gap-4 transition-opacity duration-500 no-timer-click
+				className={`fixed left-8 top-1/2 transform -translate-y-1/2 z-30 flex flex-col items-start gap-4 transition-opacity duration-500 no-timer-click
          ${isActive ? "opacity-20 hover:opacity-100" : "opacity-100"}
       `}
 			>
@@ -1394,16 +1500,10 @@ export default function PomodoroTimer() {
 					<div className="relative flex flex-col items-center h-full w-full z-20">
 						{customSchedule.map((step, index) => {
 							const heightPercent = (step.duration / totalDuration) * 100;
-							const isCurrent = index === currentStepIndex;
 							const isHovered = hoveredStepIndex === index;
-							const barColor =
-								step.type === "focus"
-									? theme === "dark"
-										? "#3b82f6"
-										: "#2563eb"
-									: theme === "dark"
-										? "#0ea5e9"
-										: "#06b6d4";
+							const barColor = theme === "dark" ? "#60a5fa" : "#2563eb";
+							const stepFillPercent = 0; // remove per-step fill
+							const highlightOpacity = isHovered ? 0.35 : 0;
 
 							const hoverPaddingLeft = 28;
 							const hoverPaddingRight = 24;
@@ -1437,20 +1537,20 @@ export default function PomodoroTimer() {
 
 											{/* ホバー時に灰色で明るく表示 */}
 											<div
-												className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"} ${
+												className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${isHovered ? "opacity-30" : "opacity-0"} ${
 													theme === "dark" ? "bg-gray-400/30" : "bg-gray-600/20"
 												}`}
 											/>
 
-											{isCurrent && (
-												<div
-													className="absolute bottom-0 left-0 w-full transition-all duration-100 ease-linear"
-													style={{
-														height: `${currentStepProgressPercent}%`,
-														backgroundColor: barColor,
-													}}
-												/>
-											)}
+											<div
+												className="absolute bottom-0 left-0 w-full transition-all duration-100 ease-linear"
+												style={{
+													height: `${stepFillPercent}%`,
+													background: `linear-gradient(180deg, ${barColor}33, ${barColor})`,
+													opacity: highlightOpacity,
+													borderRadius: "9999px",
+												}}
+											/>
 										</div>
 									</div>
 
@@ -1599,6 +1699,15 @@ export default function PomodoroTimer() {
 						colorClass="hover:text-green-500"
 					/>
 				)}
+				{dockVisibility.stats && (
+					<DockButton
+						onClick={() => addWidget("stats")}
+						icon={BarChart2}
+						label="Stats"
+						theme={theme}
+						colorClass="hover:text-amber-500"
+					/>
+				)}
 
 				{(dockVisibility.note ||
 					dockVisibility.image ||
@@ -1627,7 +1736,7 @@ export default function PomodoroTimer() {
 
 			{/* Settings Panel */}
 			{showSettingsPanel && (
-				<div className="fixed inset-0 z-100 flex items-center justify-center pointer-events-auto">
+				<div className="fixed inset-0 z-[2147483647] flex items-center justify-center pointer-events-auto">
 					{/* Overlay */}
 					<div
 						className="absolute inset-0 bg-black/50 backdrop-blur-sm"
