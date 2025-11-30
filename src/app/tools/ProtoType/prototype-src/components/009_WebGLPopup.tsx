@@ -1,16 +1,18 @@
 import * as PIXI from "pixi.js";
 import type React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import "../styles/009_webglPopup.css";
 import { initializeGame, replaceHash } from "../gamesets/001_game_master";
 import { settings } from "../SiteInterface";
 
-//import { setProp } from "../gamesets/gameConfig";
-
 const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 	const popupRef = useRef<HTMLDivElement>(null);
 	const appRef = useRef<PIXI.Application | null>(null);
+	const [status, setStatus] = useState<"loading" | "ready" | "error">(
+		"loading",
+	);
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -23,6 +25,13 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 			app = new PIXI.Application();
 			try {
+				// safety timeout so UI never stays stuck on loading
+				timeoutRef.current = setTimeout(() => {
+					if (isMounted) {
+						setStatus((s) => (s === "loading" ? "error" : s));
+					}
+				}, 15000);
+
 				const bgColor = replaceHash(settings.colorTheme.colors.MainBG);
 				await app.init({
 					width: 720 * 2,
@@ -38,13 +47,11 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 					return;
 				}
 
-				// WebGLコンテキストが正しく初期化されているか確認
 				const renderer = app.renderer;
 				if (!renderer) {
 					throw new Error("Renderer not initialized");
 				}
 
-				// 背景色を明示的に設定
 				if (renderer.background) {
 					renderer.background.color = bgColor || 0x000000;
 				}
@@ -52,23 +59,37 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 				appRef.current = app;
 				popupRef.current.appendChild(app.canvas);
-				
-				// initializeGameは非同期関数なのでawaitする必要がある
+
 				try {
 					await initializeGame(app);
+					if (isMounted) setStatus("ready");
 				} catch (gameError) {
 					console.error("Game initialization failed:", gameError);
-					// ゲーム初期化エラーが発生しても、アプリケーションは破棄しない
-					// ユーザーにエラーメッセージを表示するか、リトライできるようにする
+					if (isMounted) setStatus("error");
+				} finally {
+					if (timeoutRef.current) {
+						clearTimeout(timeoutRef.current);
+						timeoutRef.current = null;
+					}
 				}
 			} catch (error) {
 				console.error("PixiJS initialization failed:", error);
+				if (isMounted) setStatus("error");
 				app?.destroy(true);
+			} finally {
+				if (timeoutRef.current) {
+					clearTimeout(timeoutRef.current);
+					timeoutRef.current = null;
+				}
 			}
 		})();
 
 		return () => {
 			isMounted = false;
+			if (timeoutRef.current) {
+				clearTimeout(timeoutRef.current);
+				timeoutRef.current = null;
+			}
 			if (appRef.current) {
 				appRef.current.destroy(true);
 				appRef.current = null;
@@ -77,12 +98,23 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 	}, []);
 
 	return (
-		<div className="webgl-popup" ref={popupRef} style={{ zIndex: 3 }}>
+		<>
 			<div className="webGL-BG" onClick={onClose} />
-			<button type="button" onClick={onClose}>
-				Close
-			</button>
-		</div>
+			<div
+				className="webgl-popup"
+				ref={popupRef}
+				style={{ zIndex: 3, position: "fixed" }}
+			>
+				{status !== "ready" && (
+					<div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white bg-black/60 pointer-events-none">
+						{status === "loading" ? "Loading..." : "Failed to start"}
+					</div>
+				)}
+				<button type="button" onClick={onClose}>
+					Close
+				</button>
+			</div>
+		</>
 	);
 };
 
