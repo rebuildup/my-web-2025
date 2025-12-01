@@ -5,9 +5,6 @@
 
 // Dynamic imports for heavy components
 export const LazyComponents = {
-	// PIXI.js components
-	ProtoType: () => import("@/app/tools/ProtoType/components/ProtoTypeApp"),
-
 	// Heavy tool components
 	ColorPaletteGenerator: () =>
 		import("@/app/tools/color-palette/components/ColorPaletteGenerator"),
