@@ -9,37 +9,16 @@ import "../styles/012_footer.css";
 const Footer: React.FC = () => {
 	const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
 	const [showUpdateNotification, setShowUpdateNotification] = useState(false);
+	const [checkingUpdate, setCheckingUpdate] = useState(false);
 
 	useEffect(() => {
-		// Check for cached update info
+		// 以前のキャッシュがあれば表示だけ復元（自動チェックはしない）
 		const cachedUpdateInfo = localStorage.getItem("prototypeUpdateInfo");
 		if (cachedUpdateInfo) {
 			const info = JSON.parse(cachedUpdateInfo);
 			setUpdateInfo(info);
 			setShowUpdateNotification(info.hasUpdate);
 		}
-
-		// Check for updates periodically
-		const checkUpdates = async () => {
-			try {
-				const info = await githubIntegration.checkForUpdates();
-				setUpdateInfo(info);
-				if (info.hasUpdate) {
-					setShowUpdateNotification(true);
-					localStorage.setItem("prototypeUpdateInfo", JSON.stringify(info));
-				}
-			} catch (_error) {
-				console.log(
-					"Update check failed, continuing with offline functionality",
-				);
-			}
-		};
-
-		checkUpdates();
-
-		// Check for updates every 30 minutes
-		const interval = setInterval(checkUpdates, 30 * 60 * 1000);
-		return () => clearInterval(interval);
 	}, []);
 
 	const handleUpdateClick = () => {
@@ -47,6 +26,25 @@ const Footer: React.FC = () => {
 			window.open(updateInfo.downloadUrl, "_blank");
 		}
 		setShowUpdateNotification(false);
+	};
+
+	const handleManualCheck = async () => {
+		setCheckingUpdate(true);
+		try {
+			const info = await githubIntegration.checkForUpdates();
+			setUpdateInfo(info);
+			if (info.hasUpdate) {
+				setShowUpdateNotification(true);
+				localStorage.setItem("prototypeUpdateInfo", JSON.stringify(info));
+			} else {
+				setShowUpdateNotification(false);
+				localStorage.removeItem("prototypeUpdateInfo");
+			}
+		} catch (_error) {
+			console.log("Manual update check failed.");
+		} finally {
+			setCheckingUpdate(false);
+		}
 	};
 
 	const dismissUpdate = () => {
@@ -91,6 +89,15 @@ const Footer: React.FC = () => {
 				>
 					yusuke-kim.com
 				</a>
+				<button
+					type="button"
+					onClick={handleManualCheck}
+					className="update-btn"
+					disabled={checkingUpdate}
+					style={{ minWidth: "140px" }}
+				>
+					{checkingUpdate ? "Checking..." : "更新チェック"}
+				</button>
 				<a
 					className="GithubLink rotating-element"
 					href="https://github.com/rebuildup/ProtoType"

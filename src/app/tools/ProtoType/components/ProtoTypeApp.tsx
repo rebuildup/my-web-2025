@@ -53,7 +53,6 @@ import { themes } from "../prototype-src/components/010_ColorPalette";
 import { fonts } from "../prototype-src/components/011_FontSelector";
 import { initializeFrameEffect } from "../prototype-src/gamesets/024_FrameEffect";
 import { initializeSquareEffect } from "../prototype-src/gamesets/025_SquareEffect";
-import { initializeGitHubIntegration } from "../prototype-src/gamesets/027_github_integration";
 // ProtoTypeのユーティリティ関数
 import { loadFromCache, updateSetting } from "../prototype-src/SiteInterface";
 
@@ -86,63 +85,6 @@ const ProtoTypeApp: React.FC = () => {
 	};
 
 	useLayoutEffect(() => {
-		// テーマの初期化
-		const cachedTheme = loadFromCache<(typeof themes)[0]>(
-			"colorTheme",
-			themes[0],
-		);
-		let colorIndex = 0;
-		for (let i = 0; i < themes.length; i++) {
-			if (themes[i].name === cachedTheme.name) colorIndex = i;
-		}
-		Object.entries(themes[colorIndex].colors).forEach(([key, value]) => {
-			document.documentElement.style.setProperty(key, value);
-		});
-
-		// bodyの背景色も明示的に更新
-		document.body.style.backgroundColor =
-			themes[colorIndex].colors["--ProtoTypeMainBG"];
-		updateSetting("colorTheme", {
-			name: cachedTheme.name,
-			colors: {
-				MainBG: themes[colorIndex].colors["--ProtoTypeMainBG"],
-				MainColor: themes[colorIndex].colors["--ProtoTypeMainColor"],
-				MainAccent: themes[colorIndex].colors["--ProtoTypeMainAccent"],
-				SecondAccent: themes[colorIndex].colors["--ProtoTypeSecondAccent"],
-			},
-		});
-
-		// フォントの初期化
-		const cachedFont = loadFromCache<{ fontFamily: string }>("fontTheme", {
-			fontFamily: fonts[0].value,
-		});
-		document.documentElement.style.setProperty(
-			"--First-font",
-			cachedFont.fontFamily,
-		);
-		updateSetting("fontTheme", {
-			fontFamily: cachedFont.fontFamily,
-			fontSize: 16,
-		});
-
-		// キーレイアウトの初期化
-		const cachedLayout = loadFromCache<string>("keyLayout", "QWERTY");
-		updateSetting("keyLayout", cachedLayout);
-
-		// アニメーション設定の初期化
-		updateSetting("animationSettings", {
-			enabled: true,
-			reducedMotion: false,
-		});
-
-		// エフェクトの初期化
-		initializeFrameEffect();
-		initializeSquareEffect();
-
-		// GitHub統合の初期化（エラーが発生してもアプリケーションは正常に動作する）
-		initializeGitHubIntegration().catch(() => {
-			// エラーは既に内部で処理されているため、ここでは何もしない
-		});
 
 		// 初期化完了
 		setIsInitialized(true);

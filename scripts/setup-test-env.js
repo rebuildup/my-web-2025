@@ -100,4 +100,14 @@ faviconFiles.forEach((filePath) => {
 	}
 });
 
+// Suppress baseline-browser-mapping warnings
+const originalWarn = console.warn;
+console.warn = (...args) => {
+	const message = args.join(" ");
+	if (message.includes("baseline-browser-mapping")) {
+		return; // Suppress baseline-browser-mapping warnings
+	}
+	originalWarn(...args);
+};
+
 console.log("✅ Test environment setup completed");

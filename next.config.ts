@@ -151,6 +151,16 @@ const nextConfig: NextConfig = {
 
 	// Webpack optimizations
 	webpack: (config, { dev, isServer }) => {
+		// Suppress baseline-browser-mapping warnings
+		const originalWarn = console.warn;
+		console.warn = (...args: unknown[]) => {
+			const message = String(args[0] || "");
+			if (message.includes("baseline-browser-mapping")) {
+				return; // Suppress baseline-browser-mapping warnings
+			}
+			originalWarn(...args);
+		};
+
 		// Production optimizations
 		if (!dev && !isServer) {
 			config.optimization = {

@@ -99,17 +99,21 @@ export class GitHubIntegration {
 
 	async getLatestRelease(): Promise<GitHubRelease | null> {
 		try {
-			const release = await this.fetchWithCache<GitHubRelease>(
-				`${GITHUB_API_BASE}/releases/latest`,
+			// /releases/latest returns 404 when the repo has no releases; that shows a red console error.
+			// /releases?per_page=1 responds 200 with an empty array instead, so use it to avoid noisy errors.
+			const releases = await this.fetchWithCache<GitHubRelease[]>(
+				`${GITHUB_API_BASE}/releases?per_page=1`,
 				true,
 			);
-			return release;
-		} catch (error) {
-			// エラーは既にfetchWithCacheで処理されているため、ここではnullを返す
+			if (!releases || releases.length === 0) {
+				return null;
+			}
+			return releases[0];
+		} catch (_error) {
+			// Errors are already handled inside fetchWithCache, so return null here.
 			return null;
 		}
 	}
-
 	async getAllReleases(limit: number = 10): Promise<GitHubRelease[]> {
 		try {
 			const releases = await this.fetchWithCache<GitHubRelease[]>(
