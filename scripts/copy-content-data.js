@@ -29,9 +29,7 @@ const copied = [];
 for (const target of targets) {
 	const parent = path.dirname(target);
 	if (!fs.existsSync(parent)) {
-		console.log(
-			`[copy-content-data] ℹ️ Parent directory not found: ${parent}, skipping ${target}`,
-		);
+		// Skip silently if parent directory doesn't exist (normal for standalone builds)
 		continue;
 	}
 	try {
@@ -95,8 +93,5 @@ if (fs.existsSync(standaloneDir)) {
 			"[copy-content-data] ⚠️  Warning: standalone directory detected but data subdirectory is missing",
 		);
 	}
-} else {
-	console.log(
-		"[copy-content-data] ℹ️ standalone directory not found; skipping standalone verification",
-	);
 }
+// Skip verification message if standalone directory doesn't exist (normal for non-standalone builds)
