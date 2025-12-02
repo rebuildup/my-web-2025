@@ -17,6 +17,7 @@ import {
 	YouTubeSettings,
 } from "./types";
 import { parseYouTubeUrl } from "./utils";
+import { ElasticSlider } from "../ElasticSlider";
 
 declare global {
 	interface Window {
@@ -37,6 +38,7 @@ interface YouTubePlayerProps {
 	autoPlayOnFocusSession: boolean;
 	pauseOnBreak: boolean;
 	defaultVolume: number;
+	loopEnabled: boolean;
 }
 
 export default function YouTubePlayer({
@@ -48,10 +50,15 @@ export default function YouTubePlayer({
 	autoPlayOnFocusSession,
 	pauseOnBreak,
 	defaultVolume,
+	loopEnabled,
 }: YouTubePlayerProps) {
 	const [settings, setSettings] = useState<YouTubeSettings>(
 		DEFAULT_YOUTUBE_SETTINGS,
 	);
+
+	useEffect(() => {
+		setSettings((prev) => ({ ...prev, loop: loopEnabled }));
+	}, [loopEnabled]);
 
 	const source = useMemo(() => parseYouTubeUrl(url), [url]);
 
@@ -357,14 +364,20 @@ export default function YouTubePlayer({
 									<Volume2 size={16} />
 								)}
 							</button>
-							<input
-								type="range"
-								min="0"
-								max="100"
-								value={volume}
-								onChange={handleVolumeChange}
-								className="w-full h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-blue-500"
-							/>
+							<div className="flex-1">
+								<ElasticSlider
+									min={0}
+									max={100}
+									value={volume}
+									onChange={(v) =>
+										handleVolumeChange({
+											target: { value: String(v) },
+										} as React.ChangeEvent<HTMLInputElement>)
+									}
+									accentColor="#3b82f6"
+									ariaLabel="YouTube volume"
+								/>
+							</div>
 						</div>
 					</div>
 
@@ -399,21 +412,6 @@ export default function YouTubePlayer({
 								</button>
 							</div>
 
-							<div className="flex items-center gap-3 text-xs">
-								<label className="flex items-center gap-2 cursor-pointer select-none">
-									<input
-										type="checkbox"
-										checked={settings.loop}
-										onChange={(e) =>
-											setSettings({ ...settings, loop: e.target.checked })
-										}
-									/>
-									<span>ループ再生</span>
-								</label>
-								<span className="opacity-60">
-									動画終了時に自動で頭出しします
-								</span>
-							</div>
 						</div>
 					)}
 				</div>

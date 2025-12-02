@@ -112,7 +112,7 @@ importers:
         specifier: ^0.20.0
         version: 0.20.0
       motion:
-        specifier: ^12.23.24
+        specifier: ^12.23.12
         version: 12.23.24(@emotion/is-prop-valid@1.4.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nanoid:
         specifier: ^5.1.6

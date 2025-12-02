@@ -10,7 +10,27 @@ export interface PomodoroSettings {
 	autoPlayOnFocusSession?: boolean;
 	pauseOnBreak?: boolean;
 	youtubeDefaultVolume?: number; // 0-100
+	/**
+	 * Base size (width & height) for sticky-style widgets (note, image, timer, stats)
+	 * in pixels. If not set, falls back to the internal default sticky size.
+	 */
+	stickyWidgetSize?: number;
+	/**
+	 * Width for YouTube widgets in pixels.
+	 * Height is automatically adjusted based on content.
+	 */
+	youtubeWidgetWidth?: number;
+	/**
+	 * Whether newly added YouTube players should loop playback by default.
+	 */
+	youtubeLoop?: boolean;
+	/**
+	 * Accent/highlight color used across the UI (hex string).
+	 */
+	highlightColor?: string;
 }
+
+export const DEFAULT_HIGHLIGHT_COLOR = "#3b82f6";
 
 export type PomodoroSessionType =
 	| "work"

@@ -33,6 +33,8 @@ import type {
 	PomodoroSettings,
 	PomodoroStats,
 } from "../types";
+import { DEFAULT_HIGHLIGHT_COLOR } from "../types";
+import { ElasticSlider } from "./ElasticSlider";
 import { playNotificationSound } from "../utils/soundPlayer";
 import MiniTimer from "./MiniTimer";
 import StatsWidget from "./StatsWidget";
@@ -79,6 +81,10 @@ const DEFAULT_SETTINGS: PomodoroSettings = {
 	autoPlayOnFocusSession: true,
 	pauseOnBreak: true,
 	youtubeDefaultVolume: 30,
+	stickyWidgetSize: STICKY_NOTE_SIZE,
+	youtubeWidgetWidth: 400,
+	youtubeLoop: false,
+	highlightColor: DEFAULT_HIGHLIGHT_COLOR,
 };
 
 const DEFAULT_STATS: PomodoroStats = {
@@ -167,6 +173,22 @@ let SCHEDULE = [
 
 const getTotalDuration = (schedule: typeof SCHEDULE) =>
 	schedule.reduce((acc, step) => acc + step.duration, 0);
+
+const hexToRgba = (hex: string, alpha = 1) => {
+	const sanitized = hex.replace("#", "");
+	const value =
+		sanitized.length === 3
+			? sanitized
+					.split("")
+					.map((c) => c + c)
+					.join("")
+			: sanitized.padEnd(6, "0");
+	const intVal = parseInt(value, 16);
+	const r = (intVal >> 16) & 255;
+	const g = (intVal >> 8) & 255;
+	const b = intVal & 255;
+	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
 
 // Dock Component
 const Dock = ({
@@ -268,34 +290,52 @@ const DockButton = ({
 	label,
 	theme,
 	colorClass,
+	accentColor,
 }: {
 	onClick: () => void;
 	icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	label: string;
 	theme: string;
 	colorClass?: string;
-}) => (
-	<button
-		onClick={onClick}
-		className={`w-full h-full rounded-full flex items-center justify-center shadow-md transition-colors relative group
+	accentColor?: string;
+}) => {
+	const [isHovered, setIsHovered] = useState(false);
+	const accentStyle =
+		accentColor && isHovered
+			? {
+					boxShadow: `0 0 18px ${hexToRgba(accentColor, 0.45)}`,
+				}
+			: undefined;
+
+	return (
+		<button
+			onClick={onClick}
+			onMouseEnter={() => setIsHovered(true)}
+			onMouseLeave={() => setIsHovered(false)}
+			onFocus={() => setIsHovered(true)}
+			onBlur={() => setIsHovered(false)}
+			className={`w-full h-full rounded-full flex items-center justify-center shadow-md transition-colors relative group
       ${theme === "dark" ? "bg-white/10 hover:bg-white/20" : "bg-black/5 hover:bg-black/10"}
       ${colorClass || ""}
     `}
-	>
-		<Icon
-			className={`pointer-events-none ${
-				theme === "dark" ? "text-white" : "text-gray-900"
-			}`}
-		/>
-		<span
-			className={`absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none
+			style={accentStyle}
+		>
+			<Icon
+				className={`pointer-events-none ${
+					theme === "dark" ? "text-white" : "text-gray-900"
+				}`}
+				style={accentColor && isHovered ? { color: accentColor } : undefined}
+			/>
+			<span
+				className={`absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none
        ${theme === "dark" ? "bg-[#333] text-white" : "bg-white text-black shadow-sm"}
     `}
-		>
-			{label}
-		</span>
-	</button>
-);
+			>
+				{label}
+			</span>
+		</button>
+	);
+};
 
 // Markdown Viewer
 const MarkdownViewer = ({
@@ -898,6 +938,7 @@ const Widget = ({
 						autoPlayOnFocusSession={settings?.autoPlayOnFocusSession ?? true}
 						pauseOnBreak={settings?.pauseOnBreak ?? true}
 						defaultVolume={settings?.youtubeDefaultVolume ?? 30}
+						loopEnabled={settings?.youtubeLoop ?? false}
 					/>
 				)}
 				{widget.type === "stats" && stats && sessions && (
@@ -912,7 +953,11 @@ const Widget = ({
 };
 
 export default function PomodoroTimer() {
-	const [settings] = useLocalStorage("pomodoro-settings", DEFAULT_SETTINGS);
+	const [settings, setSettings] = useLocalStorage(
+		"pomodoro-settings",
+		DEFAULT_SETTINGS,
+	);
+	const highlightColor = settings.highlightColor ?? DEFAULT_HIGHLIGHT_COLOR;
 	const [_stats, setStats] = useLocalStorage("pomodoro-stats", DEFAULT_STATS);
 	const [_sessions, setSessions] = useLocalStorage<PomodoroSession[]>(
 		"pomodoro-sessions",
@@ -934,15 +979,15 @@ export default function PomodoroTimer() {
 	const [theme, setTheme] = useState(settings.theme || "dark");
 	const [showStopDialog, setShowStopDialog] = useState(false);
 	const [showSettingsPanel, setShowSettingsPanel] = useState(false);
-	const [settingsTab, setSettingsTab] = useState<"workflow" | "dock">(
-		"workflow",
-	);
+	const [settingsTab, setSettingsTab] = useState<
+		"workflow" | "dock" | "widgets" | "youtube"
+	>("workflow");
 	const [dockVisibility, setDockVisibility] = useState({
 		note: true,
-		image: true,
+		image: false,
 		music: true,
 		timer: true,
-		stats: true,
+		stats: false,
 		theme: true,
 		settings: true,
 	});
@@ -1245,15 +1290,19 @@ export default function PomodoroTimer() {
 		setTheme((prev) => (prev === "light" ? "dark" : "light"));
 
 	const addWidget = (type: string) => {
+		const currentSettings = settingsRef.current || DEFAULT_SETTINGS;
+		const stickySize = currentSettings.stickyWidgetSize ?? STICKY_NOTE_SIZE;
+		const youtubeWidth = currentSettings.youtubeWidgetWidth ?? 400;
+
 		if (type === "music") {
 			const id = Date.now();
 			const newWidget = {
 				id,
 				type: "youtube",
-				x: window.innerWidth / 2 - 200 + (Math.random() * 40 - 20),
+				x: window.innerWidth / 2 - youtubeWidth / 2 + (Math.random() * 40 - 20),
 				y: window.innerHeight / 2 - 150 + (Math.random() * 40 - 20),
 				content: "",
-				w: 400,
+				w: youtubeWidth,
 				h: "auto",
 				zIndex: nextZ(),
 			};
@@ -1268,8 +1317,8 @@ export default function PomodoroTimer() {
 				x: window.innerWidth / 2 - 180 + (Math.random() * 40 - 20),
 				y: window.innerHeight / 2 - 120 + (Math.random() * 40 - 20),
 				content: "",
-				w: STICKY_NOTE_SIZE,
-				h: STICKY_NOTE_SIZE,
+				w: stickySize,
+				h: stickySize,
 				zIndex: nextZ(),
 				color: getRandomStickyColor(),
 			};
@@ -1278,8 +1327,9 @@ export default function PomodoroTimer() {
 		}
 		const id = Date.now();
 		const content = "";
-		const shouldHaveStickyStyle = type === "note" || type === "image";
-		const initialSize = shouldHaveStickyStyle ? STICKY_NOTE_SIZE : undefined;
+		const shouldHaveStickyStyle =
+			type === "note" || type === "image" || type === "timer";
+		const initialSize = shouldHaveStickyStyle ? stickySize : undefined;
 		const newWidget = {
 			id,
 			type,
@@ -1367,10 +1417,14 @@ export default function PomodoroTimer() {
 		totalDuration,
 	]);
 
-	const workflowFillStyle =
-		theme === "dark"
-			? "linear-gradient(180deg, rgba(96,165,250,0.35), rgba(14,165,233,0.25))"
-			: "linear-gradient(180deg, rgba(37,99,235,0.35), rgba(6,182,212,0.25))";
+	const workflowFillStyle = useMemo(() => {
+		const startAlpha = theme === "dark" ? 0.45 : 0.5;
+		const endAlpha = theme === "dark" ? 0.25 : 0.3;
+		return `linear-gradient(180deg, ${hexToRgba(
+			highlightColor,
+			startAlpha,
+		)}, ${hexToRgba(highlightColor, endAlpha)})`;
+	}, [highlightColor, theme]);
 
 	return (
 		<div
@@ -1473,7 +1527,7 @@ export default function PomodoroTimer() {
 
 			{/* Left Panel: Flow Progress Bar */}
 			<aside
-				className={`fixed left-8 top-1/2 transform -translate-y-1/2 z-30 flex flex-col items-start gap-4 transition-opacity duration-500 no-timer-click
+				className={`fixed left-8 top-1/2 transform -translate-y-1/2 z-[70] flex flex-col items-start gap-4 transition-opacity duration-500 no-timer-click
          ${isActive ? "opacity-20 hover:opacity-100" : "opacity-100"}
       `}
 			>
@@ -1501,7 +1555,7 @@ export default function PomodoroTimer() {
 						{customSchedule.map((step, index) => {
 							const heightPercent = (step.duration / totalDuration) * 100;
 							const isHovered = hoveredStepIndex === index;
-							const barColor = theme === "dark" ? "#60a5fa" : "#2563eb";
+							const barColor = highlightColor;
 							const stepFillPercent = 0; // remove per-step fill
 							const highlightOpacity = isHovered ? 0.35 : 0;
 
@@ -1555,7 +1609,7 @@ export default function PomodoroTimer() {
 									</div>
 
 									<div
-										className={`absolute top-1/2 -translate-y-1/2 w-48 p-2 rounded-lg backdrop-blur-md border transition-all duration-300 pointer-events-none shadow-xl z-50 ${
+										className={`absolute top-1/2 -translate-y-1/2 w-48 p-2 rounded-lg backdrop-blur-md border transition-all duration-300 pointer-events-none shadow-xl z-[100] ${
 											isHovered
 												? "opacity-100 translate-x-0"
 												: "opacity-0 translate-x-[-10px]"
@@ -1730,7 +1784,7 @@ export default function PomodoroTimer() {
 					icon={Settings}
 					label="Settings"
 					theme={theme}
-					colorClass="hover:text-purple-500"
+					accentColor={highlightColor}
 				/>
 			</Dock>
 
@@ -1744,20 +1798,20 @@ export default function PomodoroTimer() {
 					/>
 					{/* Panel */}
 					<div
-						className={`relative z-10 rounded-2xl border backdrop-blur-xl shadow-2xl max-w-6xl w-full mx-4 h-[600px] overflow-hidden flex flex-row ${
+						className={`relative z-10 rounded-2xl border backdrop-blur-xl shadow-2xl max-w-6xl w-full mx-4 h-[calc(100vh-2rem)] md:h-[600px] overflow-hidden flex flex-col md:flex-row ${
 							theme === "dark"
 								? "bg-[#1a1a1a]/95 border-white/10"
 								: "bg-white/95 border-black/5"
 						}`}
 					>
-						{/* Left Sidebar - Tabs */}
+						{/* Tabs - Top on mobile, Left on desktop */}
 						<div
-							className={`w-64 border-r flex flex-col shrink-0 ${
+							className={`md:w-64 border-b md:border-b-0 md:border-r flex flex-row md:flex-col shrink-0 ${
 								theme === "dark" ? "border-white/10" : "border-black/5"
 							}`}
 						>
 							<div
-								className={`flex items-center justify-between p-4 border-b shrink-0 ${
+								className={`flex items-center justify-between p-4 border-b md:border-b shrink-0 ${
 									theme === "dark" ? "border-white/10" : "border-black/5"
 								}`}
 							>
@@ -1779,40 +1833,36 @@ export default function PomodoroTimer() {
 									<X size={20} />
 								</button>
 							</div>
-							<div className="flex-1 overflow-y-auto p-2 min-h-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent">
-								<button
-									onClick={() => setSettingsTab("workflow")}
-									className={`w-full text-left px-4 py-3 rounded-lg transition-colors mb-1 ${
-										settingsTab === "workflow"
-											? theme === "dark"
-												? "bg-white/10 text-white"
-												: "bg-gray-100 text-black"
-											: theme === "dark"
-												? "hover:bg-white/5 text-gray-300"
-												: "hover:bg-gray-50 text-gray-700"
-									}`}
-								>
-									ワークフロー
-								</button>
-								<button
-									onClick={() => setSettingsTab("dock")}
-									className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-										settingsTab === "dock"
-											? theme === "dark"
-												? "bg-white/10 text-white"
-												: "bg-gray-100 text-black"
-											: theme === "dark"
-												? "hover:bg-white/5 text-gray-300"
-												: "hover:bg-gray-50 text-gray-700"
-									}`}
-								>
-									ドック
-								</button>
+							<div className="flex flex-row md:flex-col flex-1 overflow-x-auto md:overflow-y-auto p-2 min-h-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent">
+								{[
+									{ key: "workflow", label: "ワークフロー" },
+									{ key: "dock", label: "ドック" },
+									{ key: "widgets", label: "ウィジェット" },
+									{ key: "youtube", label: "YouTube" },
+								].map((tab) => (
+									<button
+										key={tab.key}
+										onClick={() =>
+											setSettingsTab(tab.key as typeof settingsTab)
+										}
+										className={`whitespace-nowrap text-left px-4 py-3 rounded-lg transition-colors md:w-full ${
+											settingsTab === tab.key
+												? theme === "dark"
+													? "bg-white/10 text-white"
+													: "bg-gray-100 text-black"
+												: theme === "dark"
+													? "hover:bg-white/5 text-gray-300"
+													: "hover:bg-gray-50 text-gray-700"
+										} ${tab.key === "workflow" ? "md:mb-1" : ""}`}
+									>
+										{tab.label}
+									</button>
+								))}
 							</div>
 						</div>
 
-						{/* Right Content */}
-						<div className="flex-1 overflow-y-auto p-6 min-h-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent">
+						{/* Content */}
+						<div className="flex-1 overflow-y-auto p-4 md:p-6 min-h-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent">
 							{settingsTab === "workflow" && (
 								<div>
 									<h3
@@ -1937,56 +1987,258 @@ export default function PomodoroTimer() {
 							)}
 
 							{settingsTab === "dock" && (
-								<div>
+								<div className="space-y-6">
 									<h3
-										className={`text-lg font-semibold mb-4 ${
+										className={`text-lg font-semibold ${
 											theme === "dark" ? "text-white" : "text-black"
 										}`}
 									>
-										ドックの表示設定
+										ドックとウィジェット設定
 									</h3>
+
+									{/* Dock visibility */}
 									<div className="space-y-2">
-										{Object.entries(dockVisibility)
-											.filter(([key]) => key !== "settings")
-											.map(([key, value]) => (
-												<label
-													key={key}
-													className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
+										<p
+											className={`text-sm ${
+												theme === "dark" ? "text-gray-400" : "text-gray-600"
+											}`}
+										>
+											ドックに表示する項目を選択します。
+										</p>
+										{[
+											{
+												key: "note",
+												icon: StickyNote,
+												name: "メモ",
+											},
+											{
+												key: "image",
+												icon: ImageIcon,
+												name: "画像",
+											},
+											{
+												key: "music",
+												icon: Music,
+												name: "YouTube",
+											},
+											{
+												key: "timer",
+												icon: Timer,
+												name: "タイマー",
+											},
+											{
+												key: "stats",
+												icon: BarChart2,
+												name: "統計",
+											},
+											{
+												key: "theme",
+												icon: theme === "dark" ? Sun : Moon,
+												name: "テーマ",
+											},
+										].map(({ key, icon: Icon, name }) => (
+											<label
+												key={key}
+												className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors ${
+													theme === "dark"
+														? "bg-white/5 border-white/10"
+														: "bg-gray-50 border-gray-200"
+												} ${
+													theme === "dark"
+														? "hover:bg-white/10"
+														: "hover:bg-gray-100"
+												}`}
+											>
+												<Icon
+													size={16}
+													className={`shrink-0 ${
+														theme === "dark" ? "text-white" : "text-black"
+													} ${
+														dockVisibility[key as keyof typeof dockVisibility]
+															? "opacity-100"
+															: "opacity-50"
+													}`}
+												/>
+												<span
+													className={`flex-1 text-sm ${
 														theme === "dark"
-															? "hover:bg-white/5"
-															: "hover:bg-gray-50"
+															? "text-gray-300"
+															: "text-gray-700"
 													}`}
 												>
-													<input
-														type="checkbox"
-														checked={value as boolean}
-														onChange={(e) =>
-															setDockVisibility((prev) => ({
-																...prev,
-																[key]: e.target.checked,
-															}))
-														}
-														className="w-4 h-4 rounded"
-													/>
-													<span
-														className={`text-sm ${
-															theme === "dark"
-																? "text-gray-300"
-																: "text-gray-700"
-														}`}
-													>
-														{key === "note"
-															? "メモ"
-															: key === "image"
-																? "画像"
-																: key === "music"
-																	? "音楽"
-																	: key === "theme"
-																		? "テーマ"
-																		: "設定"}
+													{name}
+												</span>
+												<input
+													type="checkbox"
+													checked={
+														dockVisibility[
+															key as keyof typeof dockVisibility
+														] as boolean
+													}
+													onChange={(e) =>
+														setDockVisibility((prev) => ({
+															...prev,
+															[key]: e.target.checked,
+														}))
+													}
+													className="w-4 h-4 rounded shrink-0 cursor-pointer"
+												/>
+											</label>
+										))}
+									</div>
+								</div>
+							)}
+
+							{settingsTab === "widgets" && (
+								<div className="space-y-6">
+									<div>
+										<h3
+											className={`text-lg font-semibold mb-2 ${
+												theme === "dark" ? "text-white" : "text-black"
+											}`}
+										>
+											ウィジェットサイズ
+										</h3>
+										<p
+											className={`text-sm mb-4 ${
+												theme === "dark" ? "text-gray-400" : "text-gray-600"
+											}`}
+										>
+											新しく追加するウィジェットの基本サイズを調整します。
+										</p>
+										<div className="space-y-4">
+											<ElasticSlider
+												min={160}
+												max={360}
+												step={10}
+												value={settings.stickyWidgetSize ?? STICKY_NOTE_SIZE}
+												onChange={(v) =>
+													setSettings({
+														...settings,
+														stickyWidgetSize: v,
+													})
+												}
+												accentColor={highlightColor}
+												label={
+													<span className="block text-xs font-medium text-gray-400">
+														メモ / 画像 / タイマー / 統計
 													</span>
-												</label>
-											))}
+												}
+												valueLabel={`${settings.stickyWidgetSize ?? STICKY_NOTE_SIZE}px`}
+											/>
+											<ElasticSlider
+												min={320}
+												max={640}
+												step={20}
+												value={settings.youtubeWidgetWidth ?? 400}
+												onChange={(v) =>
+													setSettings({
+														...settings,
+														youtubeWidgetWidth: v,
+													})
+												}
+												accentColor={highlightColor}
+												label={
+													<span className="block text-xs font-medium text-gray-400">
+														YouTubeウィジェットの幅
+													</span>
+												}
+												valueLabel={`${settings.youtubeWidgetWidth ?? 400}px`}
+											/>
+										</div>
+									</div>
+
+								</div>
+							)}
+
+							{settingsTab === "youtube" && (
+								<div className="space-y-6">
+									<div>
+										<h3
+											className={`text-lg font-semibold mb-2 ${
+												theme === "dark" ? "text-white" : "text-black"
+											}`}
+										>
+											YouTubeプレイヤー設定
+										</h3>
+										<p
+											className={`text-sm mb-4 ${
+												theme === "dark" ? "text-gray-400" : "text-gray-600"
+											}`}
+										>
+											全てのYouTubeウィジェットで共有する再生動作とデフォルト値です。
+										</p>
+										<div className="space-y-3">
+											<label className="flex items-center gap-3 cursor-pointer">
+												<input
+													type="checkbox"
+													checked={settings.autoPlayOnFocusSession ?? true}
+													onChange={(e) =>
+														setSettings({
+															...settings,
+															autoPlayOnFocusSession: e.target.checked,
+														})
+													}
+													className="w-4 h-4"
+												/>
+												<span className="text-sm">
+													集中開始時に自動再生する
+												</span>
+											</label>
+
+											<label className="flex items-center gap-3 cursor-pointer">
+												<input
+													type="checkbox"
+													checked={settings.pauseOnBreak ?? true}
+													onChange={(e) =>
+														setSettings({
+															...settings,
+															pauseOnBreak: e.target.checked,
+														})
+													}
+													className="w-4 h-4"
+												/>
+												<span className="text-sm">
+													休憩が始まったら自動で一時停止する
+												</span>
+											</label>
+
+											<label className="flex items-center gap-3 cursor-pointer">
+												<input
+													type="checkbox"
+													checked={settings.youtubeLoop ?? false}
+													onChange={(e) =>
+														setSettings({
+															...settings,
+															youtubeLoop: e.target.checked,
+														})
+													}
+													className="w-4 h-4"
+												/>
+												<span className="text-sm">ループ再生を有効にする</span>
+											</label>
+
+											<div className="pt-2">
+												<ElasticSlider
+													min={0}
+													max={100}
+													value={settings.youtubeDefaultVolume ?? 30}
+													onChange={(v) =>
+														setSettings({
+															...settings,
+															youtubeDefaultVolume: v,
+														})
+													}
+													accentColor={highlightColor}
+													label={
+														<span className="block text-xs font-medium text-gray-400">
+															デフォルト音量
+														</span>
+													}
+													valueLabel={`${settings.youtubeDefaultVolume ?? 30}%`}
+												/>
+											</div>
+										</div>
 									</div>
 								</div>
 							)}
