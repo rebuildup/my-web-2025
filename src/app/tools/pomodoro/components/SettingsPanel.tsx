@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { X } from "lucide-react";
+import { useState } from "react";
 import type { PomodoroSettings } from "../types";
 import { DEFAULT_HIGHLIGHT_COLOR } from "../types";
 import { ElasticSlider } from "./ElasticSlider";
@@ -197,7 +197,9 @@ export default function SettingsPanel({
 									step={10}
 									value={settings.notificationVolume}
 									onChange={(v) => updateSetting("notificationVolume", v)}
-									accentColor={settings.highlightColor ?? DEFAULT_HIGHLIGHT_COLOR}
+									accentColor={
+										settings.highlightColor ?? DEFAULT_HIGHLIGHT_COLOR
+									}
 									label="通知音量"
 									valueLabel={`${settings.notificationVolume}%`}
 								/>
@@ -207,9 +209,7 @@ export default function SettingsPanel({
 								<input
 									type="checkbox"
 									checked={settings.vibration}
-									onChange={(e) =>
-										updateSetting("vibration", e.target.checked)
-									}
+									onChange={(e) => updateSetting("vibration", e.target.checked)}
 									className="w-4 h-4"
 								/>
 								<span className="text-sm">振動通知（モバイル）</span>
@@ -243,7 +243,9 @@ export default function SettingsPanel({
 								<input
 									type="color"
 									value={settings.highlightColor ?? DEFAULT_HIGHLIGHT_COLOR}
-									onChange={(e) => updateSetting("highlightColor", e.target.value)}
+									onChange={(e) =>
+										updateSetting("highlightColor", e.target.value)
+									}
 									className="w-12 h-10 rounded border border-main/20 bg-transparent cursor-pointer"
 								/>
 								<div className="flex gap-2">

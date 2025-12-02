@@ -11,13 +11,13 @@ import {
 	VolumeX,
 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
+import { ElasticSlider } from "../ElasticSlider";
 import {
 	DEFAULT_YOUTUBE_SETTINGS,
 	YouTubePlaybackState,
 	YouTubeSettings,
 } from "./types";
 import { parseYouTubeUrl } from "./utils";
-import { ElasticSlider } from "../ElasticSlider";
 
 declare global {
 	interface Window {
@@ -411,7 +411,6 @@ export default function YouTubePlayer({
 									<Save size={14} />
 								</button>
 							</div>
-
 						</div>
 					)}
 				</div>

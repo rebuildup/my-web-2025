@@ -34,8 +34,8 @@ import type {
 	PomodoroStats,
 } from "../types";
 import { DEFAULT_HIGHLIGHT_COLOR } from "../types";
-import { ElasticSlider } from "./ElasticSlider";
 import { playNotificationSound } from "../utils/soundPlayer";
+import { ElasticSlider } from "./ElasticSlider";
 import MiniTimer from "./MiniTimer";
 import StatsWidget from "./StatsWidget";
 import YouTubePlayer from "./youtube/YouTubePlayer";
@@ -2061,9 +2061,7 @@ export default function PomodoroTimer() {
 												/>
 												<span
 													className={`flex-1 text-sm ${
-														theme === "dark"
-															? "text-gray-300"
-															: "text-gray-700"
+														theme === "dark" ? "text-gray-300" : "text-gray-700"
 													}`}
 												>
 													{name}
@@ -2147,7 +2145,6 @@ export default function PomodoroTimer() {
 											/>
 										</div>
 									</div>
-
 								</div>
 							)}
 
