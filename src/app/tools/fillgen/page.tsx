@@ -1140,8 +1140,6 @@ export default function FillGenPage() {
 											end,
 										});
 										if (start !== end) {
-											const start = selectionStart;
-											const end = selectionEnd;
 											requestAnimationFrame(() => {
 												openCaretMenu({
 													start,
