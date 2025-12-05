@@ -180,6 +180,17 @@ server {
 ```
 HTTPS は `certbot --nginx -d yusuke-kim.com` で取得。
 
+### 4.4 ネットワーク / DNS / 外部公開でつまずいたポイント
+- **必須ポート**: 22/tcp (SSH), 80/tcp (HTTP), 443/tcp (HTTPS)。3000/tcp は内部確認用。テスト後は閉じる。  
+  - UFW 例: `sudo ufw allow 22/tcp`, `sudo ufw allow 80/tcp`, `sudo ufw allow 443/tcp`, （必要なら）`sudo ufw allow 3000/tcp` →確認後 `sudo ufw delete allow 3000/tcp`  
+  - GCP ファイアウォールでも同じポートを Allow にすること。
+- **nginx 仮想ホスト衝突**: `server_name _` のデフォルトと衝突すると 80 に来たリクエストが正しく流れない。  
+  - `/etc/nginx/sites-available/yusuke-kim` に `server_name yusuke-kim.com;`（固定IP時はそのIP）を設定し、`/etc/nginx/sites-enabled/default` を削除。  
+  - テスト: `curl -I http://yusuke-kim.com` と `curl -I -H "Host: yusuke-kim.com" http://127.0.0.1`
+- **証明書取得**: DNS の A レコードが IP を向いたのを確認後、`certbot --nginx -d yusuke-kim.com` で 443 を有効化。80→443 リダイレクトは certbot が自動設定。
+- **NEXT_PUBLIC_SITE_URL の未設定で /api/health が 503 に**: Actions の Verify が落ちる場合は Secrets に `NEXT_PUBLIC_SITE_URL=https://yusuke-kim.com` を入れる。
+- **外部チェックをドメインで行う**: Actions では SSH 経由で `curl http://localhost:3000` と、外部からドメインに `curl` する二段構え。DNS反映前は外部チェックが失敗するので、DNS切替直後はリトライする。
+
 ---
 
 ## 5. ランタイム構成チェックリスト
@@ -224,3 +235,4 @@ HTTPS は `certbot --nginx -d yusuke-kim.com` で取得。
 
 ## 9. 変更履歴
 - 2025-12-05: インシデント対応のため全面改訂。Apache 記述を削除し、pm2/standalone 構成へ統一。未使用の環境変数とメール先設定を整理。 Secrets 全再発行を前提に手順更新。
+- 2025-12-05 夕: 外部アクセス不可トラブルを反映。nginx の default サイト衝突回避、80/443 開放、NEXT_PUBLIC_SITE_URL 未設定による /api/health 失敗、バックアップの `/tmp` 容量枯渇回避（/var/www/backups にコピー・3世代保持）を追記。
