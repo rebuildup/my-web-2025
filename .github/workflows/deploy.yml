@@ -367,23 +367,16 @@ jobs:
           
           # Check disk space on remote server before transfer
           echo "=== Checking remote disk space ==="
-          ssh deploy-server << 'DISK_CHECK'
-          echo "Disk space for /tmp:"
-          df -h /tmp 2>/dev/null || df -h /
-          echo ""
-          echo "Disk space for home directory:"
-          df -h "$HOME" 2>/dev/null || df -h /
-          echo ""
-          echo "Available space in /tmp:"
-          AVAIL_TMP=$(df /tmp 2>/dev/null | tail -1 | awk '{print $4}' || df / | tail -1 | awk '{print $4}' || echo "0")
-          AVAIL_TMP_MB=$((AVAIL_TMP / 1024))
-          echo "${AVAIL_TMP_MB}MB available"
-          echo ""
-          echo "Available space in home:"
-          AVAIL_HOME=$(df "$HOME" 2>/dev/null | tail -1 | awk '{print $4}' || df / | tail -1 | awk '{print $4}' || echo "0")
-          AVAIL_HOME_MB=$((AVAIL_HOME / 1024))
-          echo "${AVAIL_HOME_MB}MB available"
-          DISK_CHECK
+          ssh deploy-server "echo 'Disk space for /tmp:'; df -h /tmp 2>/dev/null || df -h /; echo ''; echo 'Disk space for home directory:'; df -h \\\$HOME 2>/dev/null || df -h /"
+          
+          # Get available space values
+          AVAIL_TMP_KB=$(ssh deploy-server "df /tmp 2>/dev/null | tail -1 | awk '{print \$4}' || df / | tail -1 | awk '{print \$4}' || echo '0'")
+          AVAIL_TMP_MB=$((AVAIL_TMP_KB / 1024))
+          echo "Available space in /tmp: ${AVAIL_TMP_MB}MB"
+          
+          AVAIL_HOME_KB=$(ssh deploy-server "df \\\$HOME 2>/dev/null | tail -1 | awk '{print \$4}' || df / | tail -1 | awk '{print \$4}' || echo '0'")
+          AVAIL_HOME_MB=$((AVAIL_HOME_KB / 1024))
+          echo "Available space in home: ${AVAIL_HOME_MB}MB"
           
           # Determine transfer location based on available space
           # Need at least 250MB free space (package is 140MB, but need buffer for extraction)
@@ -396,9 +389,6 @@ jobs:
           # Try /tmp first if it has enough space, otherwise use home directory
           TRANSFER_SUCCESS=false
           DEPLOYMENT_PACKAGE_PATH=""
-          
-          # Check /tmp space
-          AVAIL_TMP_MB=$(ssh deploy-server "df /tmp 2>/dev/null | tail -1 | awk '{print \$4}' || df / | tail -1 | awk '{print \$4}' || echo '0'" | awk '{print int($1/1024)}')
           
           if [ "$AVAIL_TMP_MB" -ge "$REQUIRED_SPACE_MB" ]; then
             echo "Attempting to transfer to /tmp/ (${AVAIL_TMP_MB}MB available)..."
@@ -440,17 +430,7 @@ jobs:
           if [ "$TRANSFER_SUCCESS" = "false" ]; then
             echo "❌ Transfer failed to both locations"
             echo "Troubleshooting information:"
-            ssh deploy-server << 'TROUBLESHOOT'
-            echo "=== Troubleshooting ==="
-            echo "Disk space:"
-            df -h
-            echo ""
-            echo "/tmp permissions:"
-            ls -ld /tmp
-            echo ""
-            echo "Home directory permissions:"
-            ls -ld "$HOME"
-            TROUBLESHOOT
+            ssh deploy-server "echo '=== Troubleshooting ==='; df -h; echo ''; echo '/tmp permissions:'; ls -ld /tmp; echo ''; echo 'Home directory permissions:'; ls -ld \$HOME"
             exit 1
           fi
           
