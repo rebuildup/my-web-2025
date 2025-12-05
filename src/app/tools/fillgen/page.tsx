@@ -1,29 +1,29 @@
 "use client";
 
 import { Add, Delete, Download } from "@mui/icons-material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
+	Accordion,
+	AccordionDetails,
+	AccordionSummary,
 	Box,
 	Button,
 	Card,
 	CardContent,
+	Divider,
+	FormControl,
+	Grid,
+	InputLabel,
+	MenuItem,
 	Paper,
+	Select,
+	Slider,
 	Stack,
 	Tab,
 	Tabs,
 	TextField,
 	Typography,
-	Accordion,
-	AccordionSummary,
-	AccordionDetails,
-	Select,
-	MenuItem,
-	FormControl,
-	InputLabel,
-	Slider,
-	Grid,
-	Divider,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
@@ -199,7 +199,7 @@ const generateStyle = (settings: StyleSettings): string => {
 	return `:root{--bg-color:${colors.bgColor};--text-color:${colors.textColor};--accent-color:${colors.accentColor};--correct-color:${colors.correctColor};--incorrect-color:${colors.incorrectColor};--block-bg:${colors.blockBg}}body{background:var(--bg-color);color:var(--text-color);font-family:sans-serif;line-height:1.6;font-size:${textSize.base}px}.container{max-width:900px;margin:0 auto 80px}.sheet{display:none}.sheet.active{display:block}h1.sheet-title{text-align:center;font-family:sans-serif;font-size:${textSize.title}px;margin:40px 0 20px;padding-bottom:10px;border-bottom:3px solid var(--accent-color);color:var(--accent-color)}h2.main-header{font-size:${textSize.header}px;margin:40px 0 15px;color:#444;font-family:sans-serif;border-left:5px solid #888;padding-left:10px}.quiz-section{background:var(--block-bg);padding:30px;margin-bottom:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid #e1e4e8;color:var(--text-color)}.quiz-section h3{font-family:sans-serif;margin-top:0;padding-bottom:10px;border-bottom:1px solid #eee;font-size:${textSize.section}px;color:var(--accent-color)}p{margin-bottom:1.5em;text-align:justify;color:var(--text-color);font-size:${textSize.base}px}.input-wrapper{position:relative;display:inline-block;margin:0 2px}input.blank{font-family:sans-serif;font-size:${textSize.blank}px;border:none;border-bottom:${blank.borderWidth}px ${blank.borderStyle} #333;background-color:${blank.backgroundColor};text-align:center;padding:0 4px;font-weight:bold;color:var(--accent-color);transition:.2s;border-radius:3px 3px 0 0}input.blank:focus{outline:none;background-color:#eaf6ff;border-bottom:${blank.borderWidth + 1}px ${blank.borderStyle} #3498db}input.blank.correct{border-bottom:${blank.borderWidth}px ${blank.borderStyle} var(--correct-color);background-color:#e8f8f5;color:#145a32}input.blank.incorrect{border-bottom:${blank.borderWidth}px ${blank.borderStyle} var(--incorrect-color);background-color:#fdedec}.ans-tooltip{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--incorrect-color);color:#fff;padding:4px 8px;font-size:12px;border-radius:4px;white-space:nowrap;pointer-events:none;opacity:0;transition:.2s;z-index:10;margin-bottom:5px;box-shadow:0 2px 4px rgba(0,0,0,.2)}.ans-tooltip:after{content:'';position:absolute;top:100%;left:50%;margin-left:-5px;border-width:5px;border-style:solid;border-color:var(--incorrect-color) transparent transparent transparent}.input-wrapper.show-ans .ans-tooltip{opacity:1}.section-controls{margin-top:20px;padding-top:15px;border-top:1px dashed #ddd;text-align:right;display:flex;justify-content:flex-end;gap:10px}.btn-mini{padding:${button.padding};border-radius:${button.borderRadius}px;font-size:${button.fontSize}px;border:none;cursor:pointer;font-weight:bold;font-family:sans-serif;transition:.2s}.btn-check{background:var(--correct-color);color:#fff}.btn-ans{background:var(--incorrect-color);color:#fff}.btn-reset{background:#ecf0f1;color:#333;border:1px solid #ccc}.nav-bar{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.95);padding:10px 0;display:flex;gap:8px;flex-wrap:wrap}.nav-btn{background:transparent;border:1px solid #ccc;padding:${navTab.padding};border-radius:${navTab.borderRadius}px;font-weight:bold;color:#555;font-family:sans-serif;transition:.2s;font-size:${navTab.fontSize}px}.nav-btn.active{background:var(--accent-color);color:#fff;border-color:var(--accent-color)}`;
 };
 
-const baseStyle = generateStyle(presets.default);
+const _baseStyle = generateStyle(presets.default);
 
 const defaultInput = `# 第1回 第二次世界大戦の終焉
 ## 第二次世界大戦の終焉

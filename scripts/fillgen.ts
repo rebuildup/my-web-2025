@@ -132,7 +132,10 @@ function parse(text: string): QuizDoc {
 const doc = parse(raw);
 
 function renderInput(answerRaw: string, widthHint?: string) {
-	const answers = answerRaw.split("/").map((a) => a.trim()).filter(Boolean);
+	const answers = answerRaw
+		.split("/")
+		.map((a) => a.trim())
+		.filter(Boolean);
 	const width =
 		widthHint && widthHint.trim() !== ""
 			? widthHint
@@ -149,7 +152,9 @@ const escapeHtml = (str: string) =>
 		.replace(/"/g, "&quot;");
 
 function renderParagraph(text: string) {
-	return text.replace(placeholderRe, (_, ans, width) => renderInput(ans, width));
+	return text.replace(placeholderRe, (_, ans, width) =>
+		renderInput(ans, width),
+	);
 }
 
 function renderHtml(doc: QuizDoc) {
@@ -303,16 +308,16 @@ export function GeneratedQuiz({ title }: Props) {
       <div ref={containerRef} className="container">
         <h1 className="sheet-title">{title ?? "${escapeHtml(doc.title)}"}</h1>
         ${doc.blocks
-			.map((block) => {
-				const mainHeader = block.header
-					? `<h2 className="main-header">${escapeHtml(block.header)}</h2>`
-					: "";
-				const sections = block.sections
-					.map((sec) => {
-						const paras = sec.paragraphs
-							.map((p) => `<p>${renderParagraph(p)}</p>`)
-							.join("\\n");
-						return `<div className="quiz-section">
+					.map((block) => {
+						const mainHeader = block.header
+							? `<h2 className="main-header">${escapeHtml(block.header)}</h2>`
+							: "";
+						const sections = block.sections
+							.map((sec) => {
+								const paras = sec.paragraphs
+									.map((p) => `<p>${renderParagraph(p)}</p>`)
+									.join("\\n");
+								return `<div className="quiz-section">
   <h3>${escapeHtml(sec.title)}</h3>
   ${paras}
   <div className="section-controls">
@@ -321,11 +326,11 @@ export function GeneratedQuiz({ title }: Props) {
     <button className="btn-mini btn-reset" onClick={(e)=>resetSection(e.currentTarget)}>リセット</button>
   </div>
 </div>`;
+							})
+							.join("\\n");
+						return `${mainHeader}\\n${sections}`;
 					})
-					.join("\\n");
-				return `${mainHeader}\\n${sections}`;
-			})
-			.join("\\n")}
+					.join("\\n")}
       </div>
     </>
   );
@@ -348,7 +353,12 @@ if (opts.react) {
 if (opts.preview && opts.html) {
 	try {
 		const resolved = path.resolve(opts.html);
-		const opener = process.platform === "win32" ? "start" : process.platform === "darwin" ? "open" : "xdg-open";
+		const opener =
+			process.platform === "win32"
+				? "start"
+				: process.platform === "darwin"
+					? "open"
+					: "xdg-open";
 		execSync(`${opener} "${resolved}"`);
 	} catch (err) {
 		console.warn("Preview failed:", err);
