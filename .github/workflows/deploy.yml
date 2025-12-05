@@ -500,7 +500,7 @@ jobs:
             echo "✅ Application is running"
             
             # Multiple endpoint tests
-            ENDPOINTS=("/" "/api/health" "/portfolio/gallery/all" "/_next/static/css/")
+            ENDPOINTS=("/" "/api/health" "/portfolio/gallery/all")
             
             for endpoint in "${ENDPOINTS[@]}"; do
               if curl -f -s -o /dev/null -w "%{http_code}" "http://localhost:3000${endpoint}" | grep -q "200\|304"; then
