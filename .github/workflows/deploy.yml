@@ -363,11 +363,17 @@ jobs:
 
           # 4. Prepare deployment directory (preserve data directory)
           echo "Preparing deployment directory..."
+          BACKUP_ROOT="/var/www/backups"
+          sudo mkdir -p "$BACKUP_ROOT"
+          # keep last 3 data backups
+          sudo sh -c "cd $BACKUP_ROOT && ls -1t yusuke-kim-data-* 2>/dev/null | tail -n +4 | xargs -r rm -rf"
+
+          BACKUP_DATA_DIR=""
           if [ -d "/var/www/yusuke-kim/data" ]; then
-            BACKUP_TMP_DIR=$(mktemp -d /tmp/yusuke-kim-data-backup-XXXXXX)
-            BACKUP_DATA_DIR="$BACKUP_TMP_DIR/data"
-            echo "Preserving existing data directory at ${BACKUP_TMP_DIR}..."
-            sudo mv /var/www/yusuke-kim/data "$BACKUP_TMP_DIR"
+            BACKUP_DATA_DIR="$BACKUP_ROOT/yusuke-kim-data-$(date +%Y%m%d-%H%M%S)"
+            echo "Preserving existing data directory at ${BACKUP_DATA_DIR}..."
+            sudo mkdir -p "$BACKUP_DATA_DIR"
+            sudo cp -r /var/www/yusuke-kim/data "$BACKUP_DATA_DIR/" || echo "?? Data backup failed (disk space?)"
           fi
           
           sudo rm -rf /var/www/yusuke-kim/*
@@ -379,12 +385,12 @@ jobs:
           tar -xzf /tmp/deployment-standalone.tar.gz
 
           # 5a. Restore or merge data directory
-          if [ -n "$BACKUP_DATA_DIR" ] && [ -d "$BACKUP_DATA_DIR" ]; then
+          if [ -n "$BACKUP_DATA_DIR" ] && [ -d "$BACKUP_DATA_DIR/data" ]; then
             echo "Restoring existing data directory..."
             if [ -d "data" ]; then
               echo "Merging data directories..."
               # 既存のデータベースファイルを保持しつつ、新しいファイルを追加
-              if [ -d "${BACKUP_DATA_DIR}/contents" ]; then
+              if [ -d "${BACKUP_DATA_DIR}/data/contents" ]; then
                 if [ ! -d "data/contents" ]; then
                   echo "Creating contents directory..."
                   sudo mkdir -p data/contents || true
@@ -397,10 +403,10 @@ jobs:
                       sudo cp "$db_file" "data/contents/$db_filename" || true
                     fi
                   fi
-                done < <(find "${BACKUP_DATA_DIR}/contents" -name "*.db" -type f 2>/dev/null)
+                done < <(find "${BACKUP_DATA_DIR}/data/contents" -name "*.db" -type f 2>/dev/null)
               fi
             else
-              sudo mv "$BACKUP_DATA_DIR" data || true
+              sudo cp -r "${BACKUP_DATA_DIR}/data" data || true
             fi
             sudo chown -R $USER:www-data data || true
           fi
