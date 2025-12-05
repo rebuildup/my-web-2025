@@ -12,7 +12,6 @@ import {
 	CardContent,
 	Divider,
 	FormControl,
-	Grid,
 	InputLabel,
 	MenuItem,
 	Paper,
@@ -1076,26 +1075,34 @@ export default function FillGenPage() {
 								onSelect={(e) => {
 									// 穴埋め化処理中は選択範囲を更新しない
 									if (isWrappingRef.current) return;
-									const { selectionStart, selectionEnd } = e.currentTarget;
-									if (selectionStart !== null && selectionEnd !== null) {
+									const textarea = textareaRef.current;
+									if (
+										textarea &&
+										textarea.selectionStart !== null &&
+										textarea.selectionEnd !== null
+									) {
 										setSelectionRange({
-											start: selectionStart,
-											end: selectionEnd,
+											start: textarea.selectionStart,
+											end: textarea.selectionEnd,
 										});
 									}
 								}}
 								onMouseUp={(e) => {
 									// 穴埋め化処理中は選択範囲を更新しない
 									if (isWrappingRef.current) return;
-									const { selectionStart, selectionEnd } = e.currentTarget;
-									if (selectionStart !== null && selectionEnd !== null) {
+									const textarea = textareaRef.current;
+									if (
+										textarea &&
+										textarea.selectionStart !== null &&
+										textarea.selectionEnd !== null
+									) {
+										const start = textarea.selectionStart;
+										const end = textarea.selectionEnd;
 										setSelectionRange({
-											start: selectionStart,
-											end: selectionEnd,
+											start,
+											end,
 										});
-										if (selectionStart !== selectionEnd) {
-											const start = selectionStart;
-											const end = selectionEnd;
+										if (start !== end) {
 											const mouseLeft = e.clientX;
 											const mouseTop = e.clientY;
 											requestAnimationFrame(() => {
@@ -1120,13 +1127,19 @@ export default function FillGenPage() {
 								onKeyUp={(e) => {
 									// 穴埋め化処理中は選択範囲を更新しない
 									if (isWrappingRef.current) return;
-									const { selectionStart, selectionEnd } = e.currentTarget;
-									if (selectionStart !== null && selectionEnd !== null) {
+									const textarea = textareaRef.current;
+									if (
+										textarea &&
+										textarea.selectionStart !== null &&
+										textarea.selectionEnd !== null
+									) {
+										const start = textarea.selectionStart;
+										const end = textarea.selectionEnd;
 										setSelectionRange({
-											start: selectionStart,
-											end: selectionEnd,
+											start,
+											end,
 										});
-										if (selectionStart !== selectionEnd) {
+										if (start !== end) {
 											const start = selectionStart;
 											const end = selectionEnd;
 											requestAnimationFrame(() => {
@@ -1364,8 +1377,17 @@ export default function FillGenPage() {
 													<Typography fontWeight={600}>色設定</Typography>
 												</AccordionSummary>
 												<AccordionDetails>
-													<Grid container spacing={2}>
-														<Grid item xs={12} sm={6}>
+													<Box
+														sx={{
+															display: "grid",
+															gridTemplateColumns: {
+																xs: "1fr",
+																sm: "repeat(2, 1fr)",
+															},
+															gap: 2,
+														}}
+													>
+														<Box>
 															<Stack spacing={1}>
 																<Typography variant="body2">背景色</Typography>
 																<input
@@ -1388,8 +1410,8 @@ export default function FillGenPage() {
 																	}}
 																/>
 															</Stack>
-														</Grid>
-														<Grid item xs={12} sm={6}>
+														</Box>
+														<Box>
 															<Stack spacing={1}>
 																<Typography variant="body2">
 																	テキスト色
@@ -1414,8 +1436,8 @@ export default function FillGenPage() {
 																	}}
 																/>
 															</Stack>
-														</Grid>
-														<Grid item xs={12} sm={6}>
+														</Box>
+														<Box>
 															<Stack spacing={1}>
 																<Typography variant="body2">
 																	アクセント色
@@ -1440,8 +1462,8 @@ export default function FillGenPage() {
 																	}}
 																/>
 															</Stack>
-														</Grid>
-														<Grid item xs={12} sm={6}>
+														</Box>
+														<Box>
 															<Stack spacing={1}>
 																<Typography variant="body2">正解色</Typography>
 																<input
@@ -1464,8 +1486,8 @@ export default function FillGenPage() {
 																	}}
 																/>
 															</Stack>
-														</Grid>
-														<Grid item xs={12} sm={6}>
+														</Box>
+														<Box>
 															<Stack spacing={1}>
 																<Typography variant="body2">
 																	不正解色
@@ -1490,8 +1512,8 @@ export default function FillGenPage() {
 																	}}
 																/>
 															</Stack>
-														</Grid>
-														<Grid item xs={12} sm={6}>
+														</Box>
+														<Box>
 															<Stack spacing={1}>
 																<Typography variant="body2">
 																	ブロック背景色
@@ -1516,8 +1538,8 @@ export default function FillGenPage() {
 																	}}
 																/>
 															</Stack>
-														</Grid>
-													</Grid>
+														</Box>
+													</Box>
 												</AccordionDetails>
 											</Accordion>
 
