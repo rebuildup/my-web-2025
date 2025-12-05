@@ -2,7 +2,7 @@
 
 ## 概要
 
-このドキュメントは、Next.jsベースのポートフォリオシステムの完全な技術文書です。システムの構成、コンポーネント、データフロー、保守・運用方法について詳述します。
+Next.js 16 (App Router, standalone) + pnpm + PM2 で動く現行ポートフォリオサイトの技術ドキュメント。データはリポジトリ内の `data/contents/*.db` をビルド時にスタンドアロン成果物へ同梱し、外部DBは不要。
 
 ## 目次
 
@@ -19,32 +19,24 @@
 
 ## システム概要
 
-### 実装済み機能 ✅
+### 実装カバレッジ
 
-- **ポートフォリオトップページ** (`/portfolio`) - 完全実装済み
-- **ギャラリーページ群** (`/portfolio/gallery/*`) - 4種類完全実装済み
-  - 全作品ギャラリー (`/portfolio/gallery/all`)
-  - 開発系ギャラリー (`/portfolio/gallery/develop`)
-  - 映像ギャラリー (`/portfolio/gallery/video`)
-  - 映像・デザインギャラリー (`/portfolio/gallery/video&design`)
-- **作品詳細ページ** (`/portfolio/[slug]`) - 動的ルート完全実装済み
-- **カテゴリ別詳細ページ** (`/portfolio/detail/*`) - 3種類完全実装済み
-- **プレイグラウンドページ** (`/portfolio/playground/*`) - 2種類完全実装済み
-- **データ管理システム** - 完全実装済み
-- **アナリティクス機能** - 完全実装済み
-- **他ページ連携システム** - 完全実装済み
-- **SEOメタデータ動的生成** - 完全実装済み
+- ポートフォリオトップ `/portfolio`
+- ギャラリー群 `/portfolio/gallery/{all,develop,video,video&design}`
+- 動的詳細 `/portfolio/[slug]`
+- カテゴリ詳細 `/portfolio/detail/*`
+- Playground / Tools（ProtoType 同梱、`pnpm proto:sync` で更新）
+- 管理・データ系 API（開発環境限定の管理ルートを含む）
+- SEO/OGP メタデータ生成、サイトマップ
 
 ### 技術スタック
 
-- **フレームワーク**: Next.js 14 (App Router)
-- **言語**: TypeScript
-- **スタイリング**: Tailwind CSS
-- **3Dグラフィックス**: Three.js, WebGL
-- **テスト**: Jest, Playwright
-- **パフォーマンス監視**: Lighthouse, Custom Metrics
-- **アクセシビリティ**: WCAG 2.1 AA準拠
-
+- フレームワーク: Next.js 16 (App Router, standalone 出力)
+- 言語/ツール: TypeScript 5.9, pnpm 10, Biome (lint/format)
+- スタイリング: Tailwind CSS v4 + Chakra UI / MUI 併用
+- メディア/3D: Three.js, Pixi.js, @ffmpeg/ffmpeg, GSAP
+- テスト: Jest + Testing Library（E2E は未同梱／必要に応じて追加）
+- 運用: PM2 (Node 20) 常駐、データは同梱 SQLite
 ## アーキテクチャ
 
 ### システム構成図

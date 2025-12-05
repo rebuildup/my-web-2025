@@ -1,812 +1,226 @@
-# デプロイ & インフラ (Deploy)
+# デプロイ & インフラ手順 (2025 リフレッシュ版)
 
-> GitHub Actions × GCP VM (Apache) による CI/CD パイプライン概要
-
-## 0. 開発プロセス
-
-1. ブランチ戦略：`main` = production、 `feat/*` = 1 PR / 1 機能、`hotfix/*` = 緊急修正。
-2. コードレビュー：1 Approve + CI Green でマージ可。
-3. CI：Push 時に Unit/Integration、PR 時に Lighthouse & Security Scan を実行。
-4. リリース：`main` にマージで Git Tag → GitHub Actions `build-and-deploy`。
-5. 監視：デプロイ後 `/health` & Sentry で自動チェック。
-
-## 1. フロー
-
-```
-Git push → GitHub Actions → build & test → rsync to GCP VM → Apache reload
-```
-
-## 2. GitHub Actions ワークフロー
-
-- test ジョブ：Lint / Type-check / Jest / Build
-- lighthouse ジョブ：PR 時に LHCI でパフォーマンス計測
-- build-and-deploy ジョブ (main ブランチ)：
-  1. Next.js `npm run build`
-  2. 画像最適化 & favicon 生成
-  3. `rsync` で `/tmp/website-deploy` へ転送
-  4. `/var/www/html` に上書き & 権限設定
-  5. Apache `systemctl reload`
-  6. `certbot renew --dry-run`
-  7. `/health` エンドポイントでヘルスチェック
-- security-scan ジョブ：本番に対してヘッダー & SSL チェック
-
-## 3. GCP VM 設定
-
-| 項目   | 値                      |
-| ------ | ----------------------- |
-| OS     | Ubuntu 22.04 LTS        |
-| Web    | Apache 2.4 + mod_ssl    |
-| Domain | yusuke-kim.com          |
-| SSL    | Let's Encrypt (Certbot) |
-
-### Apache バーチャルホスト (抜粋)
-
-```
-<VirtualHost *:443>
-  ServerName yusuke-kim.com
-  DocumentRoot /var/www/html
-  SSLEngine on
-  SSLCertificateFile /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem
-  SSLCertificateKeyFile /etc/letsencrypt/live/yusuke-kim.com/privkey.pem
-
-  # SPA ルーティング
-  RewriteEngine On
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^ /index.html [L]
-</VirtualHost>
-```
-
-## 4. 環境変数
-
-### 開発環境 (.env.local)
-
-```bash
-# 基本設定
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_SITE_NAME=samuido
-NODE_ENV=development
-
-# Google Analytics
-NEXT_PUBLIC_GA_ID=G-Q3YWX96WRS
-
-# Adobe Fonts
-NEXT_PUBLIC_ADOBE_FONTS_KIT_ID=blm5pmr
-
-# メール送信設定 (Resend使用)
-RESEND_API_KEY=your-resend-api-key
-CONTACT_EMAIL_TO=rebuild.up.up(at)gmail.com
-DESIGN_EMAIL_TO=361do.sleep(at)gmail.com
-
-# reCAPTCHA (Contact Form)
-NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LdZ3XgrAAAAAJhdhTA25XgqZBebMW_reZiIPreG
-RECAPTCHA_SECRET_KEY=
-# Admin機能
-NEXT_PUBLIC_ADMIN_ENABLED=true
-ADMIN_SECRET=your-admin-secret
-```
-
-### 本番環境
-
-```bash
-# 基本設定
-NEXT_PUBLIC_SITE_URL=https://yusuke-kim.com
-NEXT_PUBLIC_SITE_NAME=samuido
-NODE_ENV=production
-
-# Google Analytics
-NEXT_PUBLIC_GA_ID=G-Q3YWX96WRS
-
-# Adobe Fonts
-NEXT_PUBLIC_ADOBE_FONTS_KIT_ID=blm5pmr
-
-# メール送信設定 (Resend使用)
-RESEND_API_KEY=your-resend-api-key
-CONTACT_EMAIL_TO=rebuild.up.up(at)gmail.com
-DESIGN_EMAIL_TO=361do.sleep(at)gmail.com
-
-# reCAPTCHA (Contact Form)
-NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LdZ3XgrAAAAAJhdhTA25XgqZBebMW_reZiIPreG
-RECAPTCHA_SECRET_KEY=6LdZ3XgrAAAAAPXuBvy0XUwmALmDA5clWyRfsd5h
-
-# Admin機能 (本番では無効化)
-NEXT_PUBLIC_ADMIN_ENABLED=false
-```
-
-### GitHub Secrets
-
-```bash
-# デプロイ関連
-GCP_SSH_KEY=your-private-key
-GCP_HOST=your-server-ip
-GCP_USER=your-username
-
-# セキュリティ関連
-ADMIN_SECRET=your-admin-secret
-RECAPTCHA_SECRET_KEY=your-secret-key
-SMTP_PASSWORD=your-app-password
-```
-
-## 5. バックアップ
-
-- デプロイ前に `/var/www/html` を `/var/www/backups/html-YYYYMMDD-HHMMSS` にコピー
-- `gsutil rsync -r /var/www/backups gs://yusuke-kim-backup` で週次クラウドバックアップ
+> 目的: VM 再構築時に、クリーン環境で本番を安全に立ち上げ直すための決定版手順。  
+> 前提: GitHub Actions でビルド、GCP/Linux VM (Ubuntu 22.04 以上) に pm2 + Node で常駐。Apache は不使用。Nginx は任意のリバースプロキシ。
 
 ---
 
-> ロールバック手順：GitHub Actions の最後にある `Rollback on failure` ステップ、または GCP VM で最新バックアップを手動リストア。
+## 1. アーキテクチャ概要
+- アプリ: Next.js 16 (output: standalone), Node 20 ランタイム、pnpm 10。  
+- プロセス管理: pm2 (systemd による自動起動)。  
+- ビルド成果物: `.next/standalone` + `.next/static` + `public/` + `data/`.  
+- データ: `data/contents/*.db` をビルド後に `scripts/copy-content-data.js` で `.next/standalone/data` へ複製。DB サーバーは不要。  
+- CD: `.github/workflows/deploy.yml` の `deploy` ジョブが `deployment-standalone.tar.gz` を生成し、SSH 経由で VM へ配布。  
+- 監視: `/api/health`（アプリ内）、pm2 ステータス、クラウドメトリクス。
 
-## 6. 監視 & ログ
+---
 
-### 6.1 ヘルスチェック
+## 2. クリーン VM セットアップ (from zero)
 
-```typescript
-// src/app/api/health/route.ts
-export async function GET(): Promise<Response> {
-  try {
-    const healthChecks = {
-      timestamp: new Date().toISOString(),
-      status: "healthy",
-      checks: {
-        database: await checkDatabase(),
-        fileSystem: await checkFileSystem(),
-        externalServices: await checkExternalServices(),
-        memory: await checkMemoryUsage(),
-        disk: await checkDiskSpace(),
-      },
-    };
+### 2.0 マシンスペック（最安・必要十分）
+- **最小で動かすなら**: 2 vCPU / 2 GB RAM / 20 GB SSD  
+  - pnpm install + better-sqlite3 ビルドでメモリが逼迫するため、**2GB なら swap 2GB 以上を必ず有効化**。  
+  - ディスク目安: `node_modules` 約 1.3 GB、`.next` ビルド後 ~1.5 GB、`data/` 数百 MB、ログ少量 → 20 GB で足りるが、余裕を見るなら 30 GB。  
+- **推奨（安定）**: 2 vCPU / 4 GB RAM / 30 GB SSD。swap なしでもビルドが安定する。
 
-    const isHealthy = Object.values(healthChecks.checks).every(
-      (check) => check.status === "healthy",
-    );
-
-    return Response.json(healthChecks, {
-      status: isHealthy ? 200 : 503,
-    });
-  } catch (error) {
-    return Response.json(
-      {
-        timestamp: new Date().toISOString(),
-        status: "unhealthy",
-        error: error.message,
-      },
-      { status: 503 },
-    );
-  }
-}
-
-async function checkDatabase(): Promise<{ status: string; details?: any }> {
-  try {
-    // 静的JSONファイルの読み込みテスト
-    const fs = require("fs").promises;
-    await fs.readFile("public/data/content/portfolio.json");
-    return { status: "healthy" };
-  } catch (error) {
-    return { status: "unhealthy", details: error.message };
-  }
-}
-
-async function checkFileSystem(): Promise<{ status: string; details?: any }> {
-  try {
-    const fs = require("fs").promises;
-    await fs.access("/var/www/html");
-    return { status: "healthy" };
-  } catch (error) {
-    return { status: "unhealthy", details: error.message };
-  }
-}
-
-async function checkExternalServices(): Promise<{
-  status: string;
-  details?: any;
-}> {
-  const services = {
-    googleAnalytics: process.env.NEXT_PUBLIC_GA_ID
-      ? "configured"
-      : "not-configured",
-    resend: process.env.RESEND_API_KEY ? "configured" : "not-configured",
-    recaptcha: process.env.RECAPTCHA_SECRET_KEY
-      ? "configured"
-      : "not-configured",
-  };
-
-  return {
-    status: "healthy",
-    details: services,
-  };
-}
-
-async function checkMemoryUsage(): Promise<{ status: string; details?: any }> {
-  const os = require("os");
-  const totalMem = os.totalmem();
-  const freeMem = os.freemem();
-  const memoryUsage = ((totalMem - freeMem) / totalMem) * 100;
-
-  return {
-    status: memoryUsage < 90 ? "healthy" : "warning",
-    details: { usage: `${memoryUsage.toFixed(2)}%` },
-  };
-}
-
-async function checkDiskSpace(): Promise<{ status: string; details?: any }> {
-  const fs = require("fs");
-  const path = require("path");
-
-  try {
-    const stats = fs.statSync("/var/www/html");
-    const freeSpace = stats.blocks * 512; // 概算
-    const totalSpace = 1000000000; // 1GB 想定
-    const diskUsage = ((totalSpace - freeSpace) / totalSpace) * 100;
-
-    return {
-      status: diskUsage < 90 ? "healthy" : "warning",
-      details: { usage: `${diskUsage.toFixed(2)}%` },
-    };
-  } catch (error) {
-    return { status: "unhealthy", details: error.message };
-  }
-}
-```
-
-### 6.2 ログ設定
-
-```apache
-# /etc/apache2/sites-available/yusuke-kim.conf
-<VirtualHost *:443>
-  ServerName yusuke-kim.com
-  DocumentRoot /var/www/html
-
-  # ログ設定
-  ErrorLog ${APACHE_LOG_DIR}/yusuke-kim_error.log
-  CustomLog ${APACHE_LOG_DIR}/yusuke-kim_access.log combined
-
-  # ログローテーション
-  LogLevel warn
-
-  # セキュリティヘッダー
-  Header always set X-Content-Type-Options nosniff
-  Header always set X-Frame-Options DENY
-  Header always set X-XSS-Protection "1; mode=block"
-  Header always set Referrer-Policy "strict-origin-when-cross-origin"
-
-  # CSP設定
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://www.google-analytics.com; frame-src https://www.google.com;"
-
-  # HSTS設定
-  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-</VirtualHost>
-```
-
-### 6.3 ログ監視スクリプト
-
+#### swap 付与例（2GB RAM 構成向け）
 ```bash
-#!/bin/bash
-# /usr/local/bin/monitor-logs.sh
-
-LOG_DIR="/var/log/apache2"
-ERROR_LOG="$LOG_DIR/yusuke-kim_error.log"
-ACCESS_LOG="$LOG_DIR/yusuke-kim_access.log"
-ALERT_EMAIL="rebuild.up.up(at)gmail.com"
-
-# エラーレート監視
-check_error_rate() {
-    local error_count=$(tail -n 1000 "$ACCESS_LOG" | grep -c " 5[0-9][0-9] ")
-    local total_count=$(tail -n 1000 "$ACCESS_LOG" | wc -l)
-    local error_rate=$(echo "scale=2; $error_count * 100 / $total_count" | bc)
-
-    if (( $(echo "$error_rate > 5" | bc -l) )); then
-        echo "High error rate detected: ${error_rate}%" | mail -s "Website Alert: High Error Rate" "$ALERT_EMAIL"
-    fi
-}
-
-# レスポンス時間監視
-check_response_time() {
-    local slow_requests=$(tail -n 1000 "$ACCESS_LOG" | awk '$NF > 3 {print $0}' | wc -l)
-
-    if [ "$slow_requests" -gt 10 ]; then
-        echo "Slow response times detected: $slow_requests requests > 3s" | mail -s "Website Alert: Slow Response Times" "$ALERT_EMAIL"
-    fi
-}
-
-# ディスク容量監視
-check_disk_space() {
-    local disk_usage=$(df /var/www/html | tail -1 | awk '{print $5}' | sed 's/%//')
-
-    if [ "$disk_usage" -gt 90 ]; then
-        echo "Disk space critical: ${disk_usage}%" | mail -s "Website Alert: Disk Space Critical" "$ALERT_EMAIL"
-    fi
-}
-
-# メイン実行
-check_error_rate
-check_response_time
-check_disk_space
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+sudo swapon -a
 ```
 
-### 6.4 パフォーマンス監視
-
-```typescript
-// lib/monitoring/performance.ts
-export interface PerformanceMetrics {
-  lcp: number;
-  fid: number;
-  cls: number;
-  ttfb: number;
-  fcp: number;
-  timestamp: string;
-}
-
-export const performanceMonitor = {
-  // Core Web Vitals測定
-  measureWebVitals: (): Promise<PerformanceMetrics> => {
-    return new Promise((resolve) => {
-      const observer = new PerformanceObserver((list) => {
-        const entries = list.getEntries();
-        const metrics: Partial<PerformanceMetrics> = {};
-
-        entries.forEach((entry: any) => {
-          switch (entry.name) {
-            case "LCP":
-              metrics.lcp = entry.startTime;
-              break;
-            case "FID":
-              metrics.fid = entry.processingStart - entry.startTime;
-              break;
-            case "CLS":
-              metrics.cls = entry.value;
-              break;
-            case "TTFB":
-              metrics.ttfb = entry.responseStart - entry.requestStart;
-              break;
-            case "FCP":
-              metrics.fcp = entry.startTime;
-              break;
-          }
-        });
-
-        if (Object.keys(metrics).length >= 3) {
-          resolve({
-            ...metrics,
-            timestamp: new Date().toISOString(),
-          } as PerformanceMetrics);
-        }
-      });
-
-      observer.observe({
-        entryTypes: [
-          "largest-contentful-paint",
-          "first-input",
-          "layout-shift",
-          "navigation",
-        ],
-      });
-    });
-  },
-
-  // カスタムメトリクス測定
-  measureCustomMetrics: () => {
-    const metrics = {
-      contentLoadTime: performance.now(),
-      toolInitTime: 0,
-      searchResponseTime: 0,
-    };
-
-    // カスタムメトリクスの測定
-    performance.mark("content-loaded");
-    performance.measure(
-      "content-load-time",
-      "navigationStart",
-      "content-loaded",
-    );
-
-    return metrics;
-  },
-
-  // メトリクス送信
-  sendMetrics: async (metrics: PerformanceMetrics) => {
-    try {
-      await fetch("/api/metrics/performance", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(metrics),
-      });
-    } catch (error) {
-      console.error("Failed to send performance metrics:", error);
-    }
-  },
-};
-```
-
-### 6.5 アラート設定
-
-```typescript
-// lib/monitoring/alerts.ts
-export interface AlertRule {
-  name: string;
-  condition: string;
-  threshold: number;
-  severity: "warning" | "critical";
-  notification: {
-    email: string;
-    slack?: string;
-  };
-}
-
-export const alertRules: AlertRule[] = [
-  {
-    name: "High Error Rate",
-    condition: "error_rate > 5%",
-    threshold: 5,
-    severity: "critical",
-    notification: {
-      email: "rebuild.up.up(at)gmail.com",
-    },
-  },
-  {
-    name: "Slow Response Time",
-    condition: "response_time > 3s",
-    threshold: 3000,
-    severity: "warning",
-    notification: {
-      email: "rebuild.up.up(at)gmail.com",
-    },
-  },
-  {
-    name: "High Memory Usage",
-    condition: "memory_usage > 90%",
-    threshold: 90,
-    severity: "critical",
-    notification: {
-      email: "rebuild.up.up(at)gmail.com",
-    },
-  },
-  {
-    name: "Disk Space Critical",
-    condition: "disk_usage > 95%",
-    threshold: 95,
-    severity: "critical",
-    notification: {
-      email: "rebuild.up.up(at)gmail.com",
-    },
-  },
-];
-
-export const alertManager = {
-  checkAlerts: async (metrics: any) => {
-    const triggeredAlerts = [];
-
-    for (const rule of alertRules) {
-      const isTriggered = evaluateCondition(rule.condition, metrics);
-
-      if (isTriggered) {
-        triggeredAlerts.push(rule);
-        await sendAlert(rule, metrics);
-      }
-    }
-
-    return triggeredAlerts;
-  },
-
-  sendAlert: async (rule: AlertRule, metrics: any) => {
-    const message = `Alert: ${rule.name}\nCondition: ${rule.condition}\nSeverity: ${rule.severity}\nMetrics: ${JSON.stringify(metrics)}`;
-
-    // メール送信
-    if (rule.notification.email) {
-      await sendEmailAlert(rule.notification.email, message);
-    }
-
-    // Slack通知（設定されている場合）
-    if (rule.notification.slack) {
-      await sendSlackAlert(rule.notification.slack, message);
-    }
-  },
-};
-
-function evaluateCondition(condition: string, metrics: any): boolean {
-  // 簡易的な条件評価
-  if (condition.includes("error_rate")) {
-    const rate = parseFloat(condition.match(/\d+/)?.[0] || "0");
-    return metrics.errorRate > rate;
-  }
-
-  if (condition.includes("response_time")) {
-    const time = parseFloat(condition.match(/\d+/)?.[0] || "0");
-    return metrics.responseTime > time;
-  }
-
-  return false;
-}
-```
-
-| 項目           | 設定                                                                |
-| -------------- | ------------------------------------------------------------------- |
-| ヘルスチェック | `/health` (60s)・`/api/health` (5m)                                 |
-| パフォーマンス | Core Web Vitals, custom metrics (`contentLoadTime`, `toolInitTime`) |
-| ログ           | `app.log` ローテ 10MB ×7、アクセスログ combined                     |
-| アラート       | error_rate>5% (critical), response_time>3s (warning)                |
-
-### monitoringConfig (抜粋)
-
-```typescript
-export const monitoringConfig = {
-  performance: { webVitals: true },
-  errorTracking: { frontend: { capture: true }, backend: { capture: true } },
-  healthCheck: { endpoints: [{ path: "/health", interval: 30000 }] },
-  alerts: {
-    rules: [{ name: "High Error Rate", condition: "error_rate > 5%" }],
-  },
-};
-```
-
-## 7. セキュリティ
-
-- CSP：`default-src 'self'`; `img-src` `data:` `blob:` `https:`
-- HSTS：`max-age=31536000; includeSubDomains`
-- Rate Limit：API 60/m, Contact 3/15m, Download 10/h
-- XSS 対策：`DOMPurify.sanitize()` + `sanitizeInput()` util
-- File Upload：画像 10MB, 動画 100MB, mime-type whitelist, ClamAV スキャン
-
-## 8. Apache 設定 (完全版)
-
-`/etc/apache2/sites-available/yusuke-kim.conf` の追加設定:
-
-```apache
-<Directory "/var/www/html">
-  Options -Indexes
-  AllowOverride All
-  Require all granted
-
-  # 静的キャッシュ
-  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|webp)$">
-    ExpiresActive On
-    ExpiresDefault "access plus 1 year"
-    Header set Cache-Control "public, max-age=31536000, immutable"
-  </FilesMatch>
-
-  # Gzip / Brotli
-  AddOutputFilterByType DEFLATE text/html text/css application/javascript
-</Directory>
-```
-
-## 9. 災害復旧 & バックアップ
-
-### バックアップ戦略
-
-- データ: 日次 (`cron 2:00`) → local + cloud + external
-- コード: GitHub (primary) + GitLab (mirror) + local-git
-- 保持期間: 30 日 (data) / 無期限 (git)
-
-### 復旧手順 (RTO 24h / RPO 24h)
-
-1. 新 VM 構築 & Apache + SSL セットアップ
-2. `gsutil cp` で最新バックアップ取得
-3. `tar -xvf backup.tar.gz -C /var/www/html`
-4. DNS 切替 & ヘルスチェック
-
-## 10. 障害対応手順
-
-### 10.1 障害レベル定義
-
-| レベル | 定義               | 対応時間   | 通知先     |
-| ------ | ------------------ | ---------- | ---------- |
-| P0     | サイト完全停止     | 1時間以内  | 緊急連絡先 |
-| P1     | 主要機能停止       | 4時間以内  | 開発チーム |
-| P2     | 部分機能停止       | 24時間以内 | 開発チーム |
-| P3     | パフォーマンス低下 | 72時間以内 | 開発チーム |
-
-### 10.2 障害対応フロー
-
+1) **OS 更新 & 基本ツール**
 ```bash
-#!/bin/bash
-# /usr/local/bin/incident-response.sh
-
-INCIDENT_LEVEL=$1
-INCIDENT_DESCRIPTION=$2
-TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
-
-case $INCIDENT_LEVEL in
-  "P0")
-    # 緊急対応
-    echo "[$TIMESTAMP] P0 Incident: $INCIDENT_DESCRIPTION" >> /var/log/incidents.log
-
-    # 緊急連絡先に通知
-    echo "URGENT: P0 Incident detected at $TIMESTAMP - $INCIDENT_DESCRIPTION" | \
-      mail -s "URGENT: Website Down" rebuild.up.up(at)gmail.com
-
-    # 自動復旧試行
-    systemctl restart apache2
-    systemctl restart nginx 2>/dev/null || true
-
-    # ヘルスチェック
-    curl -f http://localhost/health || {
-      echo "Automatic recovery failed, manual intervention required"
-      exit 1
-    }
-    ;;
-
-  "P1")
-    # 重要対応
-    echo "[$TIMESTAMP] P1 Incident: $INCIDENT_DESCRIPTION" >> /var/log/incidents.log
-
-    # 開発チームに通知
-    echo "P1 Incident detected at $TIMESTAMP - $INCIDENT_DESCRIPTION" | \
-      mail -s "P1 Incident Alert" rebuild.up.up(at)gmail.com
-
-    # ログ分析
-    tail -n 1000 /var/log/apache2/yusuke-kim_error.log | \
-      mail -s "Error Log Analysis" rebuild.up.up(at)gmail.com
-    ;;
-
-  "P2")
-    # 通常対応
-    echo "[$TIMESTAMP] P2 Incident: $INCIDENT_DESCRIPTION" >> /var/log/incidents.log
-
-    # 開発チームに通知
-    echo "P2 Incident detected at $TIMESTAMP - $INCIDENT_DESCRIPTION" | \
-      mail -s "P2 Incident Alert" rebuild.up.up(at)gmail.com
-    ;;
-
-  "P3")
-    # 軽微対応
-    echo "[$TIMESTAMP] P3 Incident: $INCIDENT_DESCRIPTION" >> /var/log/incidents.log
-
-    # ログ記録のみ
-    ;;
-
-  *)
-    echo "Invalid incident level: $INCIDENT_LEVEL"
-    exit 1
-    ;;
-esac
+sudo apt update && sudo apt -y upgrade
+sudo apt -y install build-essential python3 git curl unzip ca-certificates fail2ban ufw
 ```
 
-### 10.3 自動復旧スクリプト
-
+2) **デプロイ用ユーザー作成**
 ```bash
-#!/bin/bash
-# /usr/local/bin/auto-recovery.sh
-
-# ヘルスチェック
-check_health() {
-    local response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/health)
-    [ "$response" = "200" ]
-}
-
-# Apache再起動
-restart_apache() {
-    systemctl restart apache2
-    sleep 10
-    check_health
-}
-
-# SSL証明書更新
-renew_ssl() {
-    certbot renew --dry-run
-    if [ $? -eq 0 ]; then
-        certbot renew
-        systemctl reload apache2
-    fi
-}
-
-# ディスク容量クリーンアップ
-cleanup_disk() {
-    # 古いログファイル削除
-    find /var/log -name "*.log.*" -mtime +7 -delete
-
-    # 古いバックアップ削除
-    find /var/www/backups -name "html-*" -mtime +30 -delete
-
-    # 一時ファイル削除
-    rm -rf /tmp/website-deploy-*
-}
-
-# メイン処理
-main() {
-    # ヘルスチェック失敗時の復旧
-    if ! check_health; then
-        echo "$(date): Health check failed, attempting recovery..." >> /var/log/recovery.log
-
-        # Apache再起動
-        if restart_apache; then
-            echo "$(date): Recovery successful via Apache restart" >> /var/log/recovery.log
-        else
-            # SSL証明書問題の可能性
-            renew_ssl
-            restart_apache
-
-            if check_health; then
-                echo "$(date): Recovery successful via SSL renewal" >> /var/log/recovery.log
-            else
-                echo "$(date): Recovery failed, manual intervention required" >> /var/log/recovery.log
-                # 緊急通知
-                echo "Auto-recovery failed at $(date)" | \
-                  mail -s "URGENT: Auto-recovery Failed" rebuild.up.up(at)gmail.com
-            fi
-        fi
-    fi
-
-    # 定期的なメンテナンス
-    cleanup_disk
-}
-
-# 実行
-main
+sudo adduser deploy
+sudo usermod -aG sudo deploy
+# 公開鍵を /home/deploy/.ssh/authorized_keys に登録
 ```
 
-### 10.4 監視ダッシュボード
+3) **SSH/Firewall ハードニング**
+```bash
+sudo sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
+sudo systemctl reload ssh
+sudo ufw allow OpenSSH
+sudo ufw allow 80/tcp && sudo ufw allow 443/tcp && sudo ufw allow 3000/tcp  # 3000 は内部確認用。公開不要なら省略
+sudo ufw --force enable
+```
 
-```typescript
-// src/app/admin/monitoring/page.tsx (開発環境のみ)
-export default function MonitoringDashboard() {
-  const [metrics, setMetrics] = useState<any>(null);
-  const [alerts, setAlerts] = useState<any[]>([]);
+> 以降の作業は **deploy ユーザーに切り替えて実行** する  
+> `sudo -iu deploy`
 
-  useEffect(() => {
-    const fetchMetrics = async () => {
-      const response = await fetch('/api/health');
-      const data = await response.json();
-      setMetrics(data);
-    };
+4) **Node / pnpm / pm2**
+```bash
+# deploy ユーザーで
+curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.nvm/nvm.sh
+nvm install 20
+nvm alias default 20
 
-    const fetchAlerts = async () => {
-      const response = await fetch('/api/admin/alerts');
-      const data = await response.json();
-      setAlerts(data.alerts);
-    };
+# pnpm 本体
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+source ~/.bashrc
+pnpm setup          # PNPM_HOME を自動設定
 
-    fetchMetrics();
-    fetchAlerts();
+# プロセスマネージャ
+pnpm add -g pm2
+```
+トラブルシュート: `pnpm: command not found` の場合は `source ~/.bashrc` を挟んでから再実行。pm2/pnpm のパス確認は `which pnpm && which pm2` で行う。
 
-    const interval = setInterval(() => {
-      fetchMetrics();
-      fetchAlerts();
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  if (process.env.NODE_ENV !== 'development') {
-    return <div>Access denied in production</div>;
-  }
-
-  return (
-    <div className="monitoring-dashboard">
-      <h1>Monitoring Dashboard</h1>
-
-      <div className="metrics-grid">
-        <div className="metric-card">
-          <h3>System Health</h3>
-          <div className="status-indicator">
-            {metrics?.status === 'healthy' ? '🟢' : '🔴'} {metrics?.status}
-          </div>
-        </div>
-
-        <div className="metric-card">
-          <h3>Performance</h3>
-          <div>LCP: {metrics?.checks?.performance?.lcp || 'N/A'}ms</div>
-          <div>FID: {metrics?.checks?.performance?.fid || 'N/A'}ms</div>
-        </div>
-
-        <div className="metric-card">
-          <h3>Active Alerts</h3>
-          <div>{alerts.length} active alerts</div>
-        </div>
-      </div>
-
-      <div className="alerts-list">
-        <h3>Recent Alerts</h3>
-        {alerts.map((alert, index) => (
-          <div key={index} className={`alert-item ${alert.severity}`}>
-            <span className="alert-time">{alert.timestamp}</span>
-            <span className="alert-message">{alert.message}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+5) **ディレクトリ準備**
+```bash
+sudo mkdir -p /var/www/yusuke-kim
+sudo chown deploy:deploy /var/www/yusuke-kim
 ```
 
 ---
 
-> **重要**: 監視・ログ・アラートの設定により、障害の早期発見と迅速な対応が可能になります。
+## 3. 環境変数・Secrets（最小セット）
+
+| 変数 | 必須 | 用途 / 依存コード |
+| ---- | ---- | ----------------- |
+| `NEXT_PUBLIC_SITE_URL` | ◎ | サイト基本 URL。`lib/init/production.ts` で必須チェック。 |
+| `NEXT_PUBLIC_GA_ID` | △ | GA 有効化。未設定で GA 無効。 |
+| `NEXT_PUBLIC_ADOBE_FONTS_KIT_ID` | △ | Typekit (public/scripts/adobe-fonts.js)。未設定でも致命的でない。 |
+| `SENTRY_DSN` | △ | エラートラッキング。有効化は optional。 |
+| `NEXT_PUBLIC_CDN_URL`, `NEXT_PUBLIC_IMAGES_CDN` | △ | 画像/CDN を使う場合のみ。 |
+| `CACHE_TTL_STATIC`, `CACHE_TTL_CONTENT`, `CACHE_TTL_API` | △ | TTL 調整。デフォルトあり。 |
+
+> ⚠️ 以前のドキュメントにあった `CONTACT_EMAIL_TO` / `DESIGN_EMAIL_TO` / `SMTP_*` は現行コードで使用していません。不要。
+
+### GitHub Secrets (Actions 用・ダミー例付き)
+| Name | 例 (ダミー) | 用途 |
+| ---- | ----------- | ---- |
+| `GCP_SSH_KEY` | `-----BEGIN OPENSSH PRIVATE KEY-----FAKE...` | デプロイ先へ ssh 接続する秘密鍵 |
+| `GCP_HOST` | `203.0.113.10` | デプロイ先の公開IPまたはFQDN |
+| `GCP_USER` | `deploy` | 接続ユーザー名 |
+| `ANTHROPIC_API_KEY` | `sk-ant-api-xxxxxxxx` | `.github/workflows/claude.yml` 用 |
+| `SENTRY_DSN` | `https://abc123.ingest.sentry.io/999999` | （任意）Sentry を使う場合 |
+| `NEXT_PUBLIC_GA_ID` | `G-XXXXXX` | （任意）GA を使う場合 |
+| `NEXT_PUBLIC_ADOBE_FONTS_KIT_ID` | `blm5pmr` | （任意）Typekit を使う場合 |
+| `NEXT_PUBLIC_CDN_URL` | `https://cdn.example.com` | （任意）静的配信用 CDN |
+| `NEXT_PUBLIC_IMAGES_CDN` | `https://img.example.com` | （任意）画像CDN |
+
+> Note: `GITHUB_TOKEN` は GitHub が自動で注入するため登録不要。
+
+#### ローカルでの SSH 鍵作成と VM 登録手順
+1. **開発PCで鍵を作成**  
+   - PowerShell:  
+     ```powershell
+     New-Item -ItemType Directory -Force -Path $env:USERPROFILE\.ssh | Out-Null
+     ssh-keygen -t ed25519 -C "deploy@my-web-2025" -f $env:USERPROFILE\.ssh\gcp_deploy
+     ```
+   - できるもの:  
+     - 秘密鍵 `~/.ssh/gcp_deploy`（Secrets の `GCP_SSH_KEY` に貼る）  
+     - 公開鍵 `~/.ssh/gcp_deploy.pub`
+
+2. **公開鍵を VM の deploy ユーザーへ登録**（VM に一度入れる状態で）  
+   ```bash
+   sudo -iu deploy
+   mkdir -p ~/.ssh && chmod 700 ~/.ssh
+   cat >> ~/.ssh/authorized_keys   # ここでローカルの gcp_deploy.pub の1行を貼り付け、Ctrl+Dで終了
+   chmod 600 ~/.ssh/authorized_keys
+   ```
+
+3. **動作確認（ローカルから）**  
+   ```bash
+   ssh -i ~/.ssh/gcp_deploy deploy@<GCP_HOST>
+   ```
+
+4. **GitHub Secrets へ登録**  
+   - `GCP_SSH_KEY`: `~/.ssh/gcp_deploy` の全文  
+   - `GCP_HOST`: VMの外向きIP/FQDN  
+   - `GCP_USER`: `deploy`
+
+Secrets は今回のインシデントを受け**全再発行**し、古いキーは破棄してください。
+
+---
+
+## 4. デプロイ手順
+
+### 4.1 CI/CD (推奨フロー)
+GitHub Actions `.github/workflows/deploy.yml` が実施:
+1. `pnpm install --frozen-lockfile`
+2. Lint / Type-check / Jest
+3. `pnpm run build`  
+   - `scripts/filter-warnings.js` 経由で警告フィルタ  
+   - `scripts/copy-content-data.js` で `data/` を `.next/standalone/data` へ複製
+4. `.next/static` を standalone へコピー
+5. `deployment-standalone.tar.gz` を生成し SSH で VM `/tmp/` へ転送
+6. VM 内で展開 → pm2 再起動 → `/api/health` 等をチェック
+
+### 4.2 手動デプロイ (緊急時)
+```bash
+sudo -iu deploy bash
+cd /var/www/yusuke-kim
+git clone https://github.com/<org>/<repo>.git .
+pnpm install --frozen-lockfile
+pnpm run build   # .next/standalone/server.js 生成を確認
+PORT=3000 NODE_ENV=production pm2 start .next/standalone/server.js --name yusuke-kim
+pm2 save
+pm2 startup systemd -u deploy --hp /home/deploy   # 初回のみ、表示された sudo コマンドを実行
+```
+
+### 4.3 リバースプロキシ (任意, nginx)
+```nginx
+server {
+  listen 80;
+  server_name yusuke-kim.com;
+  location / { proxy_pass http://127.0.0.1:3000; }
+}
+```
+HTTPS は `certbot --nginx -d yusuke-kim.com` で取得。
+
+---
+
+## 5. ランタイム構成チェックリスト
+- `.next/standalone/server.js` が存在すること  
+- `.next/standalone/.next/static` に静的ファイルがコピーされていること  
+- `.next/standalone/data/contents/*.db` が配置されていること  
+- `pm2 status` で `yusuke-kim` が `online`  
+- `curl -f http://localhost:3000/api/health` が 200
+
+---
+
+## 6. バックアップ & ロールバック
+
+- **データ**: `/var/www/yusuke-kim/data` を最低日次バックアップ。  
+  - 例: `tar -czf /var/backups/yusuke-kim-data-$(date +%Y%m%d).tar.gz /var/www/yusuke-kim/data`
+- **リリースパッケージ**: `deployment-standalone.tar.gz` を 3 世代保持。  
+- **ロールバック**:  
+  1. `pm2 stop yusuke-kim`  
+  2. 直近の tarball を `/var/www/yusuke-kim` に展開  
+  3. `pm2 start yusuke-kim && pm2 save`
+
+---
+
+## 7. セキュリティ運用
+- SSH 鍵のみ許可、パスワード/ルートログイン禁止。  
+- UFW + fail2ban (sshd) 有効化。  
+- Secrets は最低半年ごとにローテーション。今回の再発行後は Next ローテ日を記録。  
+- pm2 / application ログの送信先をクラウド監視に接続する場合は、`pm2 logs --json` を syslog へフォワード。  
+- サプライチェーン: `pnpm install --frozen-lockfile` を徹底し、`pnpm audit` を月次実行。
+
+---
+
+## 8. 運用コマンドクイックリファレンス
+- プロセス確認: `pm2 status`  
+- ログ閲覧: `pm2 logs yusuke-kim --lines 200`  
+- リスタート: `pm2 restart yusuke-kim`  
+- 再起動後に永続化: `pm2 save`  
+- ビルド再実行: `pnpm run build`  
+- ヘルスチェック: `curl -I http://localhost:3000/api/health`
+
+---
+
+## 9. 変更履歴
+- 2025-12-05: インシデント対応のため全面改訂。Apache 記述を削除し、pm2/standalone 構成へ統一。未使用の環境変数とメール先設定を整理。 Secrets 全再発行を前提に手順更新。

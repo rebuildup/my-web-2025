@@ -6,6 +6,7 @@ import {
 	Mail,
 	Palette,
 	QrCode,
+	ScrollText,
 	Timer,
 	Type,
 	Zap,
@@ -125,6 +126,15 @@ const tools: Tool[] = [
 		href: "/tools/code-type-p5",
 		category: "デザイン",
 		icon: Code,
+	},
+	{
+		id: "fillgen",
+		title: "穴埋めプリントジェネレーター",
+		description:
+			"{{答え|幅}} を含むテキストから history-quiz 形式のプレビュー／HTML／React を即時生成しコピーできるエディター。",
+		href: "/tools/fillgen",
+		category: "ユーティリティ",
+		icon: ScrollText,
 	},
 ];
 
