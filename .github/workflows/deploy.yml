@@ -445,8 +445,7 @@ jobs:
           set -euo pipefail
 
           LOG_FILE="/tmp/deploy-standalone-$(date +%Y%m%d-%H%M%S).log"
-          BACKUP_TMP_DIR=""
-          BACKUP_DATA_DIR=""
+          EXISTING_DATA_DIR=""
           exec > >(tee -a "$LOG_FILE") 2>&1
           trap 'echo "[deploy] ERROR at line $LINENO: command \"$BASH_COMMAND\" exited with code $?"' ERR
 
@@ -494,146 +493,23 @@ jobs:
           pm2 stop all 2>/dev/null || echo "No PM2 processes to stop"
           pm2 delete all 2>/dev/null || echo "No PM2 processes to delete"
 
-          # 3. Clean old backups BEFORE creating new ones (to free up disk space)
-          echo "=== Cleaning old backups ==="
-          BACKUP_ROOT="/var/www/backups"
-          BACKUP_KEEP_COUNT=2  # Keep only the last 2 backups
-          
-          sudo mkdir -p "$BACKUP_ROOT"
-          
-          # Check disk space before cleanup
-          echo "Disk space before cleanup:"
-          df -h "$BACKUP_ROOT" 2>/dev/null || df -h /
-          
-          # Clean all backup types: yusuke-kim-*, yusuke-kim-data-*, data-*
-          echo "Removing old backups (keeping last ${BACKUP_KEEP_COUNT})..."
-          
-          # Clean yusuke-kim-* backups (full deployment backups)
-          if [ -d "$BACKUP_ROOT" ]; then
-            cd "$BACKUP_ROOT"
-            OLD_BACKUPS=$(ls -1t yusuke-kim-* 2>/dev/null | tail -n +$((BACKUP_KEEP_COUNT + 1)) || true)
-            if [ -n "$OLD_BACKUPS" ]; then
-              echo "Removing old yusuke-kim-* backups:"
-              echo "$OLD_BACKUPS" | while read -r backup; do
-                if [ -n "$backup" ]; then
-                  echo "  Removing: $backup ($(du -sh "$backup" 2>/dev/null | cut -f1 || echo 'unknown size'))"
-                  sudo rm -rf "$backup"
-                fi
-              done
-            else
-              echo "No old yusuke-kim-* backups to remove"
-            fi
-            
-            # Clean yusuke-kim-data-* backups
-            OLD_DATA_BACKUPS=$(ls -1t yusuke-kim-data-* 2>/dev/null | tail -n +$((BACKUP_KEEP_COUNT + 1)) || true)
-            if [ -n "$OLD_DATA_BACKUPS" ]; then
-              echo "Removing old yusuke-kim-data-* backups:"
-              echo "$OLD_DATA_BACKUPS" | while read -r backup; do
-                if [ -n "$backup" ]; then
-                  echo "  Removing: $backup ($(du -sh "$backup" 2>/dev/null | cut -f1 || echo 'unknown size'))"
-                  sudo rm -rf "$backup"
-                fi
-              done
-            else
-              echo "No old yusuke-kim-data-* backups to remove"
-            fi
-            
-            # Clean data-* backups
-            OLD_DATA_BACKUPS2=$(ls -1t data-* 2>/dev/null | tail -n +$((BACKUP_KEEP_COUNT + 1)) || true)
-            if [ -n "$OLD_DATA_BACKUPS2" ]; then
-              echo "Removing old data-* backups:"
-              echo "$OLD_DATA_BACKUPS2" | while read -r backup; do
-                if [ -n "$backup" ]; then
-                  echo "  Removing: $backup ($(du -sh "$backup" 2>/dev/null | cut -f1 || echo 'unknown size'))"
-                  sudo rm -rf "$backup"
-                fi
-              done
-            else
-              echo "No old data-* backups to remove"
-            fi
-          fi
-          
-          # Check disk space after cleanup
-          echo "Disk space after cleanup:"
-          df -h "$BACKUP_ROOT" 2>/dev/null || df -h /
-          
-          # Calculate available space
-          AVAILABLE_SPACE=$(df "$BACKUP_ROOT" 2>/dev/null | tail -1 | awk '{print $4}' || df / | tail -1 | awk '{print $4}' || echo "0")
-          AVAILABLE_SPACE_GB=$((AVAILABLE_SPACE / 1024 / 1024))
-          echo "Available space: ${AVAILABLE_SPACE_GB}GB"
-          
-          # Check if we have enough space (at least 2GB recommended)
-          if [ "$AVAILABLE_SPACE_GB" -lt 2 ]; then
-            echo "⚠️  Warning: Low disk space (${AVAILABLE_SPACE_GB}GB available)"
-            echo "Attempting to free more space by removing additional old backups..."
-            # Remove one more backup if space is critically low
-            cd "$BACKUP_ROOT"
-            OLDEST_BACKUP=$(ls -1t yusuke-kim-* 2>/dev/null | tail -n 1 || true)
-            if [ -n "$OLDEST_BACKUP" ]; then
-              echo "Removing oldest backup: $OLDEST_BACKUP"
-              sudo rm -rf "$OLDEST_BACKUP"
-            fi
-            df -h "$BACKUP_ROOT" 2>/dev/null || df -h /
-          fi
-
-          # 4. Backup current deployment (only if we have enough space)
-          if [ -d "/var/www/yusuke-kim" ] && [ "$(ls -A /var/www/yusuke-kim 2>/dev/null)" ]; then
-            echo "=== Creating backup ==="
-            BACKUP_NAME="yusuke-kim-$(date +%Y%m%d-%H%M%S)"
-            echo "Creating backup: $BACKUP_NAME"
-            
-            # Estimate size before backup
-            ESTIMATED_SIZE=$(du -sm /var/www/yusuke-kim 2>/dev/null | cut -f1 || echo "0")
-            echo "Estimated backup size: ${ESTIMATED_SIZE}MB"
-            
-            # Check if we have enough space (need at least 1.5x the estimated size)
-            REQUIRED_SPACE=$((ESTIMATED_SIZE * 3 / 2))
-            AVAILABLE_SPACE_MB=$((AVAILABLE_SPACE / 1024))
-            
-            if [ "$AVAILABLE_SPACE_MB" -lt "$REQUIRED_SPACE" ]; then
-              echo "⚠️  Warning: May not have enough space for backup"
-              echo "Available: ${AVAILABLE_SPACE_MB}MB, Required: ${REQUIRED_SPACE}MB"
-              echo "Proceeding anyway, but backup may fail..."
-            fi
-            
-            sudo mkdir -p /var/www/backups
-            if sudo cp -r /var/www/yusuke-kim "/var/www/backups/$BACKUP_NAME" 2>&1; then
-              echo "✅ Backup created successfully: $BACKUP_NAME"
-              echo "Backup size: $(du -sh "/var/www/backups/$BACKUP_NAME" | cut -f1)"
-            else
-              echo "❌ Backup creation failed (likely due to insufficient disk space)"
-              echo "Removing failed backup attempt..."
-              sudo rm -rf "/var/www/backups/$BACKUP_NAME" 2>/dev/null || true
-              echo "⚠️  Continuing deployment without backup..."
-            fi
-            
-            # Backup existing data directory if it exists (separate, smaller backup)
-            if [ -d "/var/www/yusuke-kim/data" ]; then
-              echo "Creating data directory backup..."
-              DATA_BACKUP_NAME="yusuke-kim-data-$(date +%Y%m%d-%H%M%S)"
-              if sudo mkdir -p "/var/www/backups/$DATA_BACKUP_NAME" && sudo cp -r /var/www/yusuke-kim/data "/var/www/backups/$DATA_BACKUP_NAME/" 2>&1; then
-                echo "✅ Data backup created: $DATA_BACKUP_NAME"
-                echo "Data backup size: $(du -sh "/var/www/backups/$DATA_BACKUP_NAME" | cut -f1)"
-              else
-                echo "⚠️  Data backup failed (continuing anyway)"
-                sudo rm -rf "/var/www/backups/$DATA_BACKUP_NAME" 2>/dev/null || true
-              fi
-            fi
-          fi
-
-          # 6. Prepare deployment directory (preserve data directory)
-          echo "=== Preparing deployment directory ==="
-
-          BACKUP_DATA_DIR=""
+          # 3. Preserve existing data directory (no backup needed - Git has history)
+          echo "=== Preserving existing data directory ==="
+          EXISTING_DATA_DIR=""
           if [ -d "/var/www/yusuke-kim/data" ]; then
-            # Data backup was already created above, so we just need to reference it
-            LATEST_DATA_BACKUP=$(ls -1t "$BACKUP_ROOT/yusuke-kim-data-"* 2>/dev/null | head -n 1 || true)
-            if [ -n "$LATEST_DATA_BACKUP" ]; then
-              BACKUP_DATA_DIR="$LATEST_DATA_BACKUP"
-              echo "Using existing data backup: $BACKUP_DATA_DIR"
-            fi
+            echo "Found existing data directory, will preserve it"
+            # Create temporary location for data directory
+            EXISTING_DATA_DIR="/tmp/preserved-data-$(date +%s)"
+            echo "Temporarily moving data directory to: $EXISTING_DATA_DIR"
+            sudo mkdir -p "$EXISTING_DATA_DIR"
+            sudo cp -r /var/www/yusuke-kim/data "$EXISTING_DATA_DIR/" || {
+              echo "⚠️  Warning: Failed to preserve data directory, continuing anyway"
+              EXISTING_DATA_DIR=""
+            }
           fi
-          
+
+          # 4. Prepare deployment directory
+          echo "=== Preparing deployment directory ==="
           sudo rm -rf /var/www/yusuke-kim/*
           sudo mkdir -p /var/www/yusuke-kim
           sudo chown $USER:www-data /var/www/yusuke-kim
@@ -643,17 +519,15 @@ jobs:
           echo "=== Extracting standalone deployment ==="
           DEPLOYMENT_PACKAGE=""
           
-          # Check for package in /tmp first
-          if [ -f "/tmp/deployment-standalone.tar.gz" ]; then
-            DEPLOYMENT_PACKAGE="/tmp/deployment-standalone.tar.gz"
-            echo "Found package in /tmp/"
-          # Check for package in home directory
-          elif [ -f "$HOME/deployment-standalone.tar.gz" ]; then
+          # Prefer home directory over /tmp/ (which may be full or corrupted)
+          if [ -f "$HOME/deployment-standalone.tar.gz" ]; then
             DEPLOYMENT_PACKAGE="$HOME/deployment-standalone.tar.gz"
-            echo "Found package in home directory"
-            echo "Note: Extracting directly from home directory (not moving to /tmp/ due to space constraints)"
+            echo "Found package in home directory (preferred location)"
+          elif [ -f "/tmp/deployment-standalone.tar.gz" ]; then
+            DEPLOYMENT_PACKAGE="/tmp/deployment-standalone.tar.gz"
+            echo "Found package in /tmp/ (fallback)"
           else
-            echo "❌ Deployment package not found in /tmp/ or home directory"
+            echo "❌ Deployment package not found in home directory or /tmp/"
             echo "Searching for package..."
             find /tmp "$HOME" -name "deployment-standalone.tar.gz" -type f 2>/dev/null | head -5 || true
             exit 1
@@ -664,28 +538,39 @@ jobs:
           
           echo "Verifying package integrity..."
           if ! tar -tzf "$DEPLOYMENT_PACKAGE" > /dev/null 2>&1; then
-            echo "❌ Deployment package is corrupted or invalid"
-            exit 1
+            echo "❌ Deployment package is corrupted or invalid: $DEPLOYMENT_PACKAGE"
+            # Try alternative location if available
+            if [ "$DEPLOYMENT_PACKAGE" = "/tmp/deployment-standalone.tar.gz" ] && [ -f "$HOME/deployment-standalone.tar.gz" ]; then
+              echo "Trying alternative package in home directory..."
+              DEPLOYMENT_PACKAGE="$HOME/deployment-standalone.tar.gz"
+              if tar -tzf "$DEPLOYMENT_PACKAGE" > /dev/null 2>&1; then
+                echo "✅ Alternative package is valid, using it"
+              else
+                echo "❌ Alternative package is also corrupted"
+                exit 1
+              fi
+            else
+              exit 1
+            fi
           fi
           
           echo "Extracting deployment package from $DEPLOYMENT_PACKAGE..."
           tar -xzf "$DEPLOYMENT_PACKAGE"
           
-          # Clean up package file after extraction (if in home directory to save space)
-          if [ "$DEPLOYMENT_PACKAGE" != "/tmp/deployment-standalone.tar.gz" ]; then
-            echo "Cleaning up package file from home directory..."
-            rm -f "$DEPLOYMENT_PACKAGE" || true
-          fi
+          # Clean up package file after extraction
+          echo "Cleaning up package file..."
+          rm -f "$DEPLOYMENT_PACKAGE" || true
+          # Also clean up from /tmp if it exists there
+          rm -f /tmp/deployment-standalone.tar.gz || true
 
-          # 7a. Restore or merge data directory
-          echo "=== Restoring data directory ==="
-          echo "BACKUP_DATA_DIR: ${BACKUP_DATA_DIR:-'not set'}"
-          if [ -n "$BACKUP_DATA_DIR" ] && [ -d "$BACKUP_DATA_DIR/data" ]; then
-            echo "Restoring existing data directory from: $BACKUP_DATA_DIR"
+          # 7a. Restore preserved data directory
+          echo "=== Restoring preserved data directory ==="
+          if [ -n "$EXISTING_DATA_DIR" ] && [ -d "$EXISTING_DATA_DIR/data" ]; then
+            echo "Restoring preserved data directory from: $EXISTING_DATA_DIR"
             if [ -d "data" ]; then
               echo "Merging data directories..."
               # 既存のデータベースファイルを保持しつつ、新しいファイルを追加
-              if [ -d "${BACKUP_DATA_DIR}/data/contents" ]; then
+              if [ -d "$EXISTING_DATA_DIR/data/contents" ]; then
                 if [ ! -d "data/contents" ]; then
                   echo "Creating contents directory..."
                   sudo mkdir -p data/contents || true
@@ -698,12 +583,15 @@ jobs:
                       sudo cp "$db_file" "data/contents/$db_filename" || true
                     fi
                   fi
-                done < <(find "${BACKUP_DATA_DIR}/data/contents" -name "*.db" -type f 2>/dev/null)
+                done < <(find "$EXISTING_DATA_DIR/data/contents" -name "*.db" -type f 2>/dev/null)
               fi
             else
-              sudo cp -r "${BACKUP_DATA_DIR}/data" data || true
+              sudo cp -r "$EXISTING_DATA_DIR/data" data || true
             fi
             sudo chown -R $USER:www-data data || true
+            # Clean up temporary data directory
+            echo "Cleaning up temporary data directory..."
+            sudo rm -rf "$EXISTING_DATA_DIR" || true
           fi
           
           # Ensure data directory exists
@@ -884,32 +772,9 @@ jobs:
           ssh deploy-server << 'CLEANUP'
           # Remove temporary files
           rm -f /tmp/deployment-standalone.tar.gz
-
-          # Clean old backups (this is a safety net, main cleanup happens before backup creation)
-          # Keep only the last 2 backups
-          BACKUP_KEEP_COUNT=2
-          if [ -d "/var/www/backups" ]; then
-            cd /var/www/backups
-            echo "Final cleanup of old backups (keeping last ${BACKUP_KEEP_COUNT})..."
-            
-            # Clean all backup types
-            for pattern in "yusuke-kim-*" "yusuke-kim-data-*" "data-*"; do
-              OLD_BACKUPS=$(ls -1t $pattern 2>/dev/null | tail -n +$((BACKUP_KEEP_COUNT + 1)) || true)
-              if [ -n "$OLD_BACKUPS" ]; then
-                echo "$OLD_BACKUPS" | while read -r backup; do
-                  if [ -n "$backup" ]; then
-                    echo "  Removing: $backup"
-                    sudo rm -rf "$backup"
-                  fi
-                done
-              fi
-            done
-            
-            echo "✅ Old backups cleaned"
-            echo "Remaining backups:"
-            ls -lh /var/www/backups/ | head -10 || true
-            echo "Total backup size: $(du -sh /var/www/backups 2>/dev/null | cut -f1 || echo 'unknown')"
-          fi
+          rm -f $HOME/deployment-standalone.tar.gz
+          # Clean up any temporary preserved data directories
+          sudo rm -rf /tmp/preserved-data-* 2>/dev/null || true
           CLEANUP
 
       - name: Fetch deployment log
