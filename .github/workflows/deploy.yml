@@ -312,10 +312,52 @@ jobs:
           echo "Testing SSH connection..."
           ssh deploy-server "echo 'SSH connection successful'; uptime; free -h"
 
+      - name: Check remote server disk space and permissions
+        run: |
+          echo "Checking remote server disk space and permissions..."
+          ssh deploy-server << 'REMOTE_CHECK'
+          echo "=== Disk Space Check ==="
+          df -h /tmp /home/$USER 2>/dev/null || df -h /
+          
+          echo ""
+          echo "=== /tmp Directory Check ==="
+          ls -ld /tmp
+          touch /tmp/.deploy-test 2>&1 && rm -f /tmp/.deploy-test && echo "✅ /tmp is writable" || echo "❌ /tmp is not writable"
+          
+          echo ""
+          echo "=== Home Directory Check ==="
+          echo "Home directory: $HOME"
+          ls -ld "$HOME"
+          touch "$HOME/.deploy-test" 2>&1 && rm -f "$HOME/.deploy-test" && echo "✅ Home directory is writable" || echo "❌ Home directory is not writable"
+          REMOTE_CHECK
+
       - name: Transfer deployment files
         run: |
-          echo "Transferring standalone deployment package..."
-          scp deployment-standalone.tar.gz deploy-server:/tmp/
+          echo "=== Transferring standalone deployment package ==="
+          echo "Package size: $(du -h deployment-standalone.tar.gz | cut -f1)"
+          echo "Package size in bytes: $(stat -f%z deployment-standalone.tar.gz 2>/dev/null || stat -c%s deployment-standalone.tar.gz 2>/dev/null || echo 'unknown')"
+          
+          # Try /tmp first, fallback to home directory if it fails
+          echo "Attempting to transfer to /tmp/..."
+          if scp -v deployment-standalone.tar.gz deploy-server:/tmp/ 2>&1; then
+            echo "✅ Transfer to /tmp/ successful"
+          else
+            echo "⚠️ Transfer to /tmp/ failed, trying home directory..."
+            DEPLOY_USER=$(ssh deploy-server "echo \$USER")
+            if scp -v deployment-standalone.tar.gz deploy-server:"\$HOME/deployment-standalone.tar.gz" 2>&1; then
+              echo "✅ Transfer to home directory successful"
+              # Move file to /tmp/ on remote server
+              ssh deploy-server "mv \$HOME/deployment-standalone.tar.gz /tmp/deployment-standalone.tar.gz || sudo mv \$HOME/deployment-standalone.tar.gz /tmp/deployment-standalone.tar.gz"
+              echo "✅ File moved to /tmp/ on remote server"
+            else
+              echo "❌ Transfer failed to both locations"
+              exit 1
+            fi
+          fi
+          
+          # Verify file was transferred successfully
+          echo "Verifying transferred file..."
+          ssh deploy-server "ls -lh /tmp/deployment-standalone.tar.gz && echo '✅ File exists on remote server'"
 
       - name: Deploy standalone application
         timeout-minutes: 15
@@ -347,33 +389,144 @@ jobs:
           pm2 stop all 2>/dev/null || echo "No PM2 processes to stop"
           pm2 delete all 2>/dev/null || echo "No PM2 processes to delete"
 
-          # 3. Backup current deployment
-          if [ -d "/var/www/yusuke-kim" ] && [ "$(ls -A /var/www/yusuke-kim 2>/dev/null)" ]; then
-            echo "Creating backup..."
-            sudo mkdir -p /var/www/backups
-            sudo cp -r /var/www/yusuke-kim /var/www/backups/yusuke-kim-$(date +%Y%m%d-%H%M%S)
+          # 3. Clean old backups BEFORE creating new ones (to free up disk space)
+          echo "=== Cleaning old backups ==="
+          BACKUP_ROOT="/var/www/backups"
+          BACKUP_KEEP_COUNT=2  # Keep only the last 2 backups
+          
+          sudo mkdir -p "$BACKUP_ROOT"
+          
+          # Check disk space before cleanup
+          echo "Disk space before cleanup:"
+          df -h "$BACKUP_ROOT" 2>/dev/null || df -h /
+          
+          # Clean all backup types: yusuke-kim-*, yusuke-kim-data-*, data-*
+          echo "Removing old backups (keeping last ${BACKUP_KEEP_COUNT})..."
+          
+          # Clean yusuke-kim-* backups (full deployment backups)
+          if [ -d "$BACKUP_ROOT" ]; then
+            cd "$BACKUP_ROOT"
+            OLD_BACKUPS=$(ls -1t yusuke-kim-* 2>/dev/null | tail -n +$((BACKUP_KEEP_COUNT + 1)) || true)
+            if [ -n "$OLD_BACKUPS" ]; then
+              echo "Removing old yusuke-kim-* backups:"
+              echo "$OLD_BACKUPS" | while read -r backup; do
+                if [ -n "$backup" ]; then
+                  echo "  Removing: $backup ($(du -sh "$backup" 2>/dev/null | cut -f1 || echo 'unknown size'))"
+                  sudo rm -rf "$backup"
+                fi
+              done
+            else
+              echo "No old yusuke-kim-* backups to remove"
+            fi
             
-            # Backup existing data directory if it exists
+            # Clean yusuke-kim-data-* backups
+            OLD_DATA_BACKUPS=$(ls -1t yusuke-kim-data-* 2>/dev/null | tail -n +$((BACKUP_KEEP_COUNT + 1)) || true)
+            if [ -n "$OLD_DATA_BACKUPS" ]; then
+              echo "Removing old yusuke-kim-data-* backups:"
+              echo "$OLD_DATA_BACKUPS" | while read -r backup; do
+                if [ -n "$backup" ]; then
+                  echo "  Removing: $backup ($(du -sh "$backup" 2>/dev/null | cut -f1 || echo 'unknown size'))"
+                  sudo rm -rf "$backup"
+                fi
+              done
+            else
+              echo "No old yusuke-kim-data-* backups to remove"
+            fi
+            
+            # Clean data-* backups
+            OLD_DATA_BACKUPS2=$(ls -1t data-* 2>/dev/null | tail -n +$((BACKUP_KEEP_COUNT + 1)) || true)
+            if [ -n "$OLD_DATA_BACKUPS2" ]; then
+              echo "Removing old data-* backups:"
+              echo "$OLD_DATA_BACKUPS2" | while read -r backup; do
+                if [ -n "$backup" ]; then
+                  echo "  Removing: $backup ($(du -sh "$backup" 2>/dev/null | cut -f1 || echo 'unknown size'))"
+                  sudo rm -rf "$backup"
+                fi
+              done
+            else
+              echo "No old data-* backups to remove"
+            fi
+          fi
+          
+          # Check disk space after cleanup
+          echo "Disk space after cleanup:"
+          df -h "$BACKUP_ROOT" 2>/dev/null || df -h /
+          
+          # Calculate available space
+          AVAILABLE_SPACE=$(df "$BACKUP_ROOT" 2>/dev/null | tail -1 | awk '{print $4}' || df / | tail -1 | awk '{print $4}' || echo "0")
+          AVAILABLE_SPACE_GB=$((AVAILABLE_SPACE / 1024 / 1024))
+          echo "Available space: ${AVAILABLE_SPACE_GB}GB"
+          
+          # Check if we have enough space (at least 2GB recommended)
+          if [ "$AVAILABLE_SPACE_GB" -lt 2 ]; then
+            echo "⚠️  Warning: Low disk space (${AVAILABLE_SPACE_GB}GB available)"
+            echo "Attempting to free more space by removing additional old backups..."
+            # Remove one more backup if space is critically low
+            cd "$BACKUP_ROOT"
+            OLDEST_BACKUP=$(ls -1t yusuke-kim-* 2>/dev/null | tail -n 1 || true)
+            if [ -n "$OLDEST_BACKUP" ]; then
+              echo "Removing oldest backup: $OLDEST_BACKUP"
+              sudo rm -rf "$OLDEST_BACKUP"
+            fi
+            df -h "$BACKUP_ROOT" 2>/dev/null || df -h /
+          fi
+
+          # 4. Backup current deployment (only if we have enough space)
+          if [ -d "/var/www/yusuke-kim" ] && [ "$(ls -A /var/www/yusuke-kim 2>/dev/null)" ]; then
+            echo "=== Creating backup ==="
+            BACKUP_NAME="yusuke-kim-$(date +%Y%m%d-%H%M%S)"
+            echo "Creating backup: $BACKUP_NAME"
+            
+            # Estimate size before backup
+            ESTIMATED_SIZE=$(du -sm /var/www/yusuke-kim 2>/dev/null | cut -f1 || echo "0")
+            echo "Estimated backup size: ${ESTIMATED_SIZE}MB"
+            
+            # Check if we have enough space (need at least 1.5x the estimated size)
+            REQUIRED_SPACE=$((ESTIMATED_SIZE * 3 / 2))
+            AVAILABLE_SPACE_MB=$((AVAILABLE_SPACE / 1024))
+            
+            if [ "$AVAILABLE_SPACE_MB" -lt "$REQUIRED_SPACE" ]; then
+              echo "⚠️  Warning: May not have enough space for backup"
+              echo "Available: ${AVAILABLE_SPACE_MB}MB, Required: ${REQUIRED_SPACE}MB"
+              echo "Proceeding anyway, but backup may fail..."
+            fi
+            
+            sudo mkdir -p /var/www/backups
+            if sudo cp -r /var/www/yusuke-kim "/var/www/backups/$BACKUP_NAME" 2>&1; then
+              echo "✅ Backup created successfully: $BACKUP_NAME"
+              echo "Backup size: $(du -sh "/var/www/backups/$BACKUP_NAME" | cut -f1)"
+            else
+              echo "❌ Backup creation failed (likely due to insufficient disk space)"
+              echo "Removing failed backup attempt..."
+              sudo rm -rf "/var/www/backups/$BACKUP_NAME" 2>/dev/null || true
+              echo "⚠️  Continuing deployment without backup..."
+            fi
+            
+            # Backup existing data directory if it exists (separate, smaller backup)
             if [ -d "/var/www/yusuke-kim/data" ]; then
-              echo "Backing up existing data directory..."
-              sudo mkdir -p /var/www/backups/data-$(date +%Y%m%d-%H%M%S)
-              sudo cp -r /var/www/yusuke-kim/data /var/www/backups/data-$(date +%Y%m%d-%H%M%S)/
+              echo "Creating data directory backup..."
+              DATA_BACKUP_NAME="yusuke-kim-data-$(date +%Y%m%d-%H%M%S)"
+              if sudo mkdir -p "/var/www/backups/$DATA_BACKUP_NAME" && sudo cp -r /var/www/yusuke-kim/data "/var/www/backups/$DATA_BACKUP_NAME/" 2>&1; then
+                echo "✅ Data backup created: $DATA_BACKUP_NAME"
+                echo "Data backup size: $(du -sh "/var/www/backups/$DATA_BACKUP_NAME" | cut -f1)"
+              else
+                echo "⚠️  Data backup failed (continuing anyway)"
+                sudo rm -rf "/var/www/backups/$DATA_BACKUP_NAME" 2>/dev/null || true
+              fi
             fi
           fi
 
-          # 4. Prepare deployment directory (preserve data directory)
-          echo "Preparing deployment directory..."
-          BACKUP_ROOT="/var/www/backups"
-          sudo mkdir -p "$BACKUP_ROOT"
-          # keep last 3 data backups
-          sudo sh -c "cd $BACKUP_ROOT && ls -1t yusuke-kim-data-* 2>/dev/null | tail -n +4 | xargs -r rm -rf"
+          # 6. Prepare deployment directory (preserve data directory)
+          echo "=== Preparing deployment directory ==="
 
           BACKUP_DATA_DIR=""
           if [ -d "/var/www/yusuke-kim/data" ]; then
-            BACKUP_DATA_DIR="$BACKUP_ROOT/yusuke-kim-data-$(date +%Y%m%d-%H%M%S)"
-            echo "Preserving existing data directory at ${BACKUP_DATA_DIR}..."
-            sudo mkdir -p "$BACKUP_DATA_DIR"
-            sudo cp -r /var/www/yusuke-kim/data "$BACKUP_DATA_DIR/" || echo "?? Data backup failed (disk space?)"
+            # Data backup was already created above, so we just need to reference it
+            LATEST_DATA_BACKUP=$(ls -1t "$BACKUP_ROOT/yusuke-kim-data-"* 2>/dev/null | head -n 1 || true)
+            if [ -n "$LATEST_DATA_BACKUP" ]; then
+              BACKUP_DATA_DIR="$LATEST_DATA_BACKUP"
+              echo "Using existing data backup: $BACKUP_DATA_DIR"
+            fi
           fi
           
           sudo rm -rf /var/www/yusuke-kim/*
@@ -381,12 +534,34 @@ jobs:
           sudo chown $USER:www-data /var/www/yusuke-kim
           cd /var/www/yusuke-kim
 
-          # 5. Extract standalone deployment
+          # 7. Extract standalone deployment
+          echo "Checking for deployment package..."
+          if [ ! -f "/tmp/deployment-standalone.tar.gz" ]; then
+            echo "❌ Deployment package not found at /tmp/deployment-standalone.tar.gz"
+            echo "Searching for package in alternative locations..."
+            if [ -f "$HOME/deployment-standalone.tar.gz" ]; then
+              echo "Found package in home directory, moving to /tmp/..."
+              mv "$HOME/deployment-standalone.tar.gz" /tmp/deployment-standalone.tar.gz || sudo mv "$HOME/deployment-standalone.tar.gz" /tmp/deployment-standalone.tar.gz
+            else
+              echo "❌ Deployment package not found anywhere"
+              exit 1
+            fi
+          fi
+          
+          echo "Verifying package integrity..."
+          if ! tar -tzf /tmp/deployment-standalone.tar.gz > /dev/null 2>&1; then
+            echo "❌ Deployment package is corrupted or invalid"
+            exit 1
+          fi
+          
+          echo "Extracting deployment package..."
           tar -xzf /tmp/deployment-standalone.tar.gz
 
-          # 5a. Restore or merge data directory
+          # 7a. Restore or merge data directory
+          echo "=== Restoring data directory ==="
+          echo "BACKUP_DATA_DIR: ${BACKUP_DATA_DIR:-'not set'}"
           if [ -n "$BACKUP_DATA_DIR" ] && [ -d "$BACKUP_DATA_DIR/data" ]; then
-            echo "Restoring existing data directory..."
+            echo "Restoring existing data directory from: $BACKUP_DATA_DIR"
             if [ -d "data" ]; then
               echo "Merging data directories..."
               # 既存のデータベースファイルを保持しつつ、新しいファイルを追加
@@ -436,7 +611,7 @@ jobs:
           fi
           
 
-          # 6. Verify deployment
+          # 8. Verify deployment
           if [ ! -f "server.js" ] || [ ! -f ".next/BUILD_ID" ]; then
             echo "❌ Deployment verification failed"
             exit 1
@@ -455,7 +630,7 @@ jobs:
             echo "⚠️  Warning: deployment-info.json not found"
           fi
 
-          # 7. Set up environment
+          # 9. Set up environment
           cat > .env.production.local << ENV_EOF
           RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}
@@ -464,7 +639,7 @@ jobs:
           PORT=3000
           ENV_EOF
 
-          # 8. Quick test of standalone server
+          # 10. Quick test of standalone server
           echo "Testing standalone server..."
           TEST_PID=""
           if command -v timeout >/dev/null 2>&1; then
@@ -492,13 +667,13 @@ jobs:
             exit 1
           fi
 
-          # 9. Start with PM2
+          # 11. Start with PM2
           echo "Starting application with PM2..."
           NODE_ENV=production pm2 start server.js --name "yusuke-kim" --env production
           pm2 save
           pm2 startup systemd -u $USER --hp /home/$USER || echo "PM2 startup already configured"
 
-          # 10. Final health check
+          # 12. Final health check
           sleep 10
 
           echo "=== Final Health Check ==="
@@ -590,11 +765,30 @@ jobs:
           # Remove temporary files
           rm -f /tmp/deployment-standalone.tar.gz
 
-          # Clean old backups (keep last 5)
+          # Clean old backups (this is a safety net, main cleanup happens before backup creation)
+          # Keep only the last 2 backups
+          BACKUP_KEEP_COUNT=2
           if [ -d "/var/www/backups" ]; then
             cd /var/www/backups
-            ls -t | grep "yusuke-kim-" | tail -n +6 | xargs -r sudo rm -rf
+            echo "Final cleanup of old backups (keeping last ${BACKUP_KEEP_COUNT})..."
+            
+            # Clean all backup types
+            for pattern in "yusuke-kim-*" "yusuke-kim-data-*" "data-*"; do
+              OLD_BACKUPS=$(ls -1t $pattern 2>/dev/null | tail -n +$((BACKUP_KEEP_COUNT + 1)) || true)
+              if [ -n "$OLD_BACKUPS" ]; then
+                echo "$OLD_BACKUPS" | while read -r backup; do
+                  if [ -n "$backup" ]; then
+                    echo "  Removing: $backup"
+                    sudo rm -rf "$backup"
+                  fi
+                done
+              fi
+            done
+            
             echo "✅ Old backups cleaned"
+            echo "Remaining backups:"
+            ls -lh /var/www/backups/ | head -10 || true
+            echo "Total backup size: $(du -sh /var/www/backups 2>/dev/null | cut -f1 || echo 'unknown')"
           fi
           CLEANUP
 
