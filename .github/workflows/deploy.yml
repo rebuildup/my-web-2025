@@ -538,15 +538,44 @@ jobs:
           echo ""
           echo "=== Testing external endpoints (public access) ==="
           EXTERNAL_ENDPOINTS=("/" "/api/health" "/portfolio/gallery/all")
+          EXTERNAL_ERRORS=0
           for endpoint in "${EXTERNAL_ENDPOINTS[@]}"; do
-            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://yusuke-kim.com${endpoint}")
+            URL="https://yusuke-kim.com${endpoint}"
+            # curl with timeout and error handling
+            CURL_EXIT=0
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 --connect-timeout 5 "${URL}" 2>&1) || CURL_EXIT=$?
+            
+            if [ "$CURL_EXIT" -ne 0 ]; then
+              echo "⚠️ ${URL} - Connection failed (curl exit code: $CURL_EXIT)"
+              EXTERNAL_ERRORS=$((EXTERNAL_ERRORS + 1))
+              continue
+            fi
+            
             if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "304" ]; then
-              echo "✅ https://yusuke-kim.com${endpoint} - OK (HTTP $HTTP_CODE)"
+              echo "✅ ${URL} - OK (HTTP $HTTP_CODE)"
+            elif [ -z "$HTTP_CODE" ] || [ "$HTTP_CODE" = "000" ]; then
+              echo "⚠️ ${URL} - No response (possible timeout or connection issue)"
+              EXTERNAL_ERRORS=$((EXTERNAL_ERRORS + 1))
             else
-              echo "⚠️ https://yusuke-kim.com${endpoint} - Failed (HTTP $HTTP_CODE)"
-              # 外部アクセスは一時的な問題の可能性があるため、エラーにはしない
+              echo "⚠️ ${URL} - Failed (HTTP $HTTP_CODE)"
+              EXTERNAL_ERRORS=$((EXTERNAL_ERRORS + 1))
             fi
           done
+          
+          if [ "$EXTERNAL_ERRORS" -gt 0 ]; then
+            echo ""
+            echo "⚠️ Warning: $EXTERNAL_ERRORS external endpoint(s) failed. This may be due to:"
+            echo "  - DNS propagation delay"
+            echo "  - Network connectivity issues from GitHub Actions"
+            echo "  - Firewall or security group restrictions"
+            echo "  - SSL certificate issues"
+            echo ""
+            echo "Internal endpoints are working correctly, so the deployment is likely successful."
+            echo "Please verify external access manually if needed."
+          else
+            echo ""
+            echo "✅ All external endpoints are accessible!"
+          fi
 
       - name: Cleanup
         if: always()
