@@ -334,6 +334,13 @@ jobs:
           # 1. Environment setup
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          export PNPM_HOME="$HOME/.local/share/pnpm"
+          export PATH="$PNPM_HOME:$PATH"
+          if ! command -v pm2 >/dev/null 2>&1; then
+            echo "pm2 not found; installing via pnpm..."
+            command -v pnpm >/dev/null 2>&1 || { echo "pnpm not found in PATH"; exit 1; }
+            pnpm add -g pm2
+          fi
 
           # 2. Stop existing processes
           echo "Stopping existing processes..."
