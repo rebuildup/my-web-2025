@@ -376,28 +376,52 @@ jobs:
           echo ""
           echo "Available space in /tmp:"
           AVAIL_TMP=$(df /tmp 2>/dev/null | tail -1 | awk '{print $4}' || df / | tail -1 | awk '{print $4}' || echo "0")
-          echo "$AVAIL_TMP KB available"
+          AVAIL_TMP_MB=$((AVAIL_TMP / 1024))
+          echo "${AVAIL_TMP_MB}MB available"
+          echo ""
+          echo "Available space in home:"
+          AVAIL_HOME=$(df "$HOME" 2>/dev/null | tail -1 | awk '{print $4}' || df / | tail -1 | awk '{print $4}' || echo "0")
+          AVAIL_HOME_MB=$((AVAIL_HOME / 1024))
+          echo "${AVAIL_HOME_MB}MB available"
           DISK_CHECK
           
-          # Try /tmp first
-          echo "Attempting to transfer to /tmp/..."
+          # Determine transfer location based on available space
+          # Need at least 250MB free space (package is 140MB, but need buffer for extraction)
+          PACKAGE_SIZE_MB=150
+          REQUIRED_SPACE_MB=250
+          
+          echo "Package size: ~${PACKAGE_SIZE_MB}MB"
+          echo "Required free space: ${REQUIRED_SPACE_MB}MB"
+          
+          # Try /tmp first if it has enough space, otherwise use home directory
           TRANSFER_SUCCESS=false
+          DEPLOYMENT_PACKAGE_PATH=""
           
-          # Use set +e to allow checking exit codes
-          set +e
-          SCP_OUTPUT=$(scp deployment-standalone.tar.gz deploy-server:/tmp/deployment-standalone.tar.gz 2>&1)
-          SCP_EXIT_CODE=$?
-          set -e
+          # Check /tmp space
+          AVAIL_TMP_MB=$(ssh deploy-server "df /tmp 2>/dev/null | tail -1 | awk '{print \$4}' || df / | tail -1 | awk '{print \$4}' || echo '0'" | awk '{print int($1/1024)}')
           
-          if [ $SCP_EXIT_CODE -eq 0 ]; then
-            echo "✅ Transfer to /tmp/ successful"
-            TRANSFER_SUCCESS=true
-          else
-            echo "⚠️ Transfer to /tmp/ failed (exit code: $SCP_EXIT_CODE)"
-            echo "SCP output: $SCP_OUTPUT"
-            echo "Trying home directory as fallback..."
+          if [ "$AVAIL_TMP_MB" -ge "$REQUIRED_SPACE_MB" ]; then
+            echo "Attempting to transfer to /tmp/ (${AVAIL_TMP_MB}MB available)..."
+            set +e
+            SCP_OUTPUT=$(scp deployment-standalone.tar.gz deploy-server:/tmp/deployment-standalone.tar.gz 2>&1)
+            SCP_EXIT_CODE=$?
+            set -e
             
-            # Try home directory with explicit path
+            if [ $SCP_EXIT_CODE -eq 0 ]; then
+              echo "✅ Transfer to /tmp/ successful"
+              DEPLOYMENT_PACKAGE_PATH="/tmp/deployment-standalone.tar.gz"
+              TRANSFER_SUCCESS=true
+            else
+              echo "⚠️ Transfer to /tmp/ failed (exit code: $SCP_EXIT_CODE)"
+              echo "SCP output: $SCP_OUTPUT"
+            fi
+          else
+            echo "⚠️ /tmp/ has insufficient space (${AVAIL_TMP_MB}MB < ${REQUIRED_SPACE_MB}MB required)"
+          fi
+          
+          # If /tmp transfer failed or doesn't have space, use home directory
+          if [ "$TRANSFER_SUCCESS" = "false" ]; then
+            echo "Transferring to home directory instead..."
             set +e
             SCP_HOME_OUTPUT=$(scp deployment-standalone.tar.gz deploy-server:"${REMOTE_HOME}/deployment-standalone.tar.gz" 2>&1)
             SCP_HOME_EXIT_CODE=$?
@@ -405,17 +429,8 @@ jobs:
             
             if [ $SCP_HOME_EXIT_CODE -eq 0 ]; then
               echo "✅ Transfer to home directory successful"
-              # Move file to /tmp/ on remote server
-              MOVE_OUTPUT=$(ssh deploy-server "mv ${REMOTE_HOME}/deployment-standalone.tar.gz /tmp/deployment-standalone.tar.gz 2>&1 || sudo mv ${REMOTE_HOME}/deployment-standalone.tar.gz /tmp/deployment-standalone.tar.gz 2>&1")
-              MOVE_EXIT_CODE=$?
-              
-              if ssh deploy-server "test -f /tmp/deployment-standalone.tar.gz" 2>/dev/null; then
-                echo "✅ File moved to /tmp/ on remote server"
-                TRANSFER_SUCCESS=true
-              else
-                echo "❌ Failed to move file to /tmp/ (exit code: $MOVE_EXIT_CODE)"
-                echo "Move output: $MOVE_OUTPUT"
-              fi
+              DEPLOYMENT_PACKAGE_PATH="${REMOTE_HOME}/deployment-standalone.tar.gz"
+              TRANSFER_SUCCESS=true
             else
               echo "❌ Transfer to home directory also failed (exit code: $SCP_HOME_EXIT_CODE)"
               echo "SCP output: $SCP_HOME_OUTPUT"
@@ -435,19 +450,13 @@ jobs:
             echo ""
             echo "Home directory permissions:"
             ls -ld "$HOME"
-            echo ""
-            echo "Trying to create test file in /tmp:"
-            touch /tmp/.test-write 2>&1 && rm -f /tmp/.test-write && echo "✅ /tmp is writable" || echo "❌ /tmp is not writable"
-            echo ""
-            echo "Trying to create test file in home:"
-            touch "$HOME/.test-write" 2>&1 && rm -f "$HOME/.test-write" && echo "✅ Home is writable" || echo "❌ Home is not writable"
             TROUBLESHOOT
             exit 1
           fi
           
           # Verify file was transferred successfully
           echo "Verifying transferred file..."
-          ssh deploy-server "ls -lh /tmp/deployment-standalone.tar.gz && echo '✅ File exists on remote server'"
+          ssh deploy-server "ls -lh ${DEPLOYMENT_PACKAGE_PATH} && echo '✅ File exists on remote server at ${DEPLOYMENT_PACKAGE_PATH}'"
 
       - name: Deploy standalone application
         timeout-minutes: 15
@@ -476,13 +485,13 @@ jobs:
           echo "Disk space after cleanup:"
           df -h /tmp 2>/dev/null || df -h /
           
-          # Check if we have enough space in /tmp (need at least 200MB for 140MB package)
+          # Check if we have enough space in /tmp (need at least 250MB for 140MB package + extraction buffer)
           AVAIL_TMP=$(df /tmp 2>/dev/null | tail -1 | awk '{print $4}' || df / | tail -1 | awk '{print $4}' || echo "0")
           AVAIL_TMP_MB=$((AVAIL_TMP / 1024))
           echo "Available space in /tmp: ${AVAIL_TMP_MB}MB"
           
-          if [ "$AVAIL_TMP_MB" -lt 200 ]; then
-            echo "⚠️  Warning: Low disk space in /tmp (${AVAIL_TMP_MB}MB available)"
+          if [ "$AVAIL_TMP_MB" -lt 250 ]; then
+            echo "⚠️  Warning: Low disk space in /tmp (${AVAIL_TMP_MB}MB available, need at least 250MB)"
             echo "Attempting to free more space..."
             # Remove any remaining old files
             sudo find /tmp -type f -mtime +1 -delete 2>/dev/null || true
@@ -651,27 +660,42 @@ jobs:
           cd /var/www/yusuke-kim
 
           # 7. Extract standalone deployment
-          echo "Checking for deployment package..."
-          if [ ! -f "/tmp/deployment-standalone.tar.gz" ]; then
-            echo "❌ Deployment package not found at /tmp/deployment-standalone.tar.gz"
-            echo "Searching for package in alternative locations..."
-            if [ -f "$HOME/deployment-standalone.tar.gz" ]; then
-              echo "Found package in home directory, moving to /tmp/..."
-              mv "$HOME/deployment-standalone.tar.gz" /tmp/deployment-standalone.tar.gz || sudo mv "$HOME/deployment-standalone.tar.gz" /tmp/deployment-standalone.tar.gz
-            else
-              echo "❌ Deployment package not found anywhere"
-              exit 1
-            fi
+          echo "=== Extracting standalone deployment ==="
+          DEPLOYMENT_PACKAGE=""
+          
+          # Check for package in /tmp first
+          if [ -f "/tmp/deployment-standalone.tar.gz" ]; then
+            DEPLOYMENT_PACKAGE="/tmp/deployment-standalone.tar.gz"
+            echo "Found package in /tmp/"
+          # Check for package in home directory
+          elif [ -f "$HOME/deployment-standalone.tar.gz" ]; then
+            DEPLOYMENT_PACKAGE="$HOME/deployment-standalone.tar.gz"
+            echo "Found package in home directory"
+            echo "Note: Extracting directly from home directory (not moving to /tmp/ due to space constraints)"
+          else
+            echo "❌ Deployment package not found in /tmp/ or home directory"
+            echo "Searching for package..."
+            find /tmp "$HOME" -name "deployment-standalone.tar.gz" -type f 2>/dev/null | head -5 || true
+            exit 1
           fi
           
+          echo "Using package: $DEPLOYMENT_PACKAGE"
+          echo "Package size: $(du -h "$DEPLOYMENT_PACKAGE" | cut -f1)"
+          
           echo "Verifying package integrity..."
-          if ! tar -tzf /tmp/deployment-standalone.tar.gz > /dev/null 2>&1; then
+          if ! tar -tzf "$DEPLOYMENT_PACKAGE" > /dev/null 2>&1; then
             echo "❌ Deployment package is corrupted or invalid"
             exit 1
           fi
           
-          echo "Extracting deployment package..."
-          tar -xzf /tmp/deployment-standalone.tar.gz
+          echo "Extracting deployment package from $DEPLOYMENT_PACKAGE..."
+          tar -xzf "$DEPLOYMENT_PACKAGE"
+          
+          # Clean up package file after extraction (if in home directory to save space)
+          if [ "$DEPLOYMENT_PACKAGE" != "/tmp/deployment-standalone.tar.gz" ]; then
+            echo "Cleaning up package file from home directory..."
+            rm -f "$DEPLOYMENT_PACKAGE" || true
+          fi
 
           # 7a. Restore or merge data directory
           echo "=== Restoring data directory ==="
