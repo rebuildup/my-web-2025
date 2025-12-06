@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Viewport } from "next";
 import Script from "next/script";
 import type { ReactNode } from "react";
+import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
 
 export const viewport: Viewport = {
 	width: "device-width",
@@ -47,7 +48,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					/>
 				</noscript>
 				{/* End Google Tag Manager (noscript) */}
-				{children}
+				<ProductionInitializer>{children}</ProductionInitializer>
 				{/* React DevTools version fix */}
 				<Script
 					id="react-devtools-fix"

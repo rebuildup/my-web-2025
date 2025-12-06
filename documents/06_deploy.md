@@ -177,14 +177,153 @@ pm2 startup systemd -u deploy --hp /home/deploy   # 初回のみ、表示され�
 ```
 
 ### 4.3 リバースプロキシ (任意, nginx)
+
+#### 基本的なnginx設定（HTTP）
 ```nginx
 server {
   listen 80;
-  server_name yusuke-kim.com;
-  location / { proxy_pass http://127.0.0.1:3000; }
+  server_name yusuke-kim.com;  # または IPアドレス、または _ (すべてのホスト名)
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+  }
 }
 ```
-HTTPS は `certbot --nginx -d yusuke-kim.com` で取得。
+
+#### HTTPS化（Let's Encrypt / certbot）
+
+**前提条件:**
+- ドメイン名が設定されていること（IPアドレスのみではLet's Encryptの証明書は取得できません）
+- DNSのAレコードがサーバーのIPアドレスを指していること
+- ポート80と443が外部からアクセス可能であること
+
+**手順:**
+
+1. **certbotをインストール**
+   ```bash
+   sudo apt update
+   sudo apt install -y certbot python3-certbot-nginx
+   ```
+
+2. **証明書を取得してnginx設定を自動更新**
+   ```bash
+   sudo certbot --nginx -d yusuke-kim.com
+   ```
+   
+   実行時に以下を入力:
+   - Email address: 証明書の有効期限通知を受け取るメールアドレス
+   - Agree to terms: `Y`
+   - Share email: 任意（`Y`または`N`）
+   - Redirect HTTP to HTTPS: `2`（推奨）
+
+3. **証明書の自動更新設定（既に自動設定されているが確認）**
+   ```bash
+   # 自動更新のテスト
+   sudo certbot renew --dry-run
+   
+   # systemd timerの確認
+   sudo systemctl status certbot.timer
+   ```
+
+4. **動作確認**
+   ```bash
+   # HTTPSでアクセスできるか確認
+   curl -I https://yusuke-kim.com
+   
+   # 証明書の有効期限確認
+   sudo certbot certificates
+   ```
+
+**トラブルシューティング:**
+
+証明書は取得できたが、nginxへのインストールが失敗した場合（`Could not automatically find a matching server block`エラー）:
+
+1. **nginx設定の`server_name`をドメイン名に変更**
+   ```bash
+   sudo nano /etc/nginx/sites-available/yusuke-kim
+   # server_name _; を server_name yusuke-kim.com; に変更
+   ```
+
+2. **nginxをリロード**
+   ```bash
+   sudo nginx -t
+   sudo systemctl reload nginx
+   ```
+
+3. **証明書を再インストール**
+   ```bash
+   sudo certbot install --cert-name yusuke-kim.com
+   ```
+
+または、手動でSSL設定を追加:
+```bash
+# 現在の設定をバックアップ
+sudo cp /etc/nginx/sites-available/yusuke-kim /etc/nginx/sites-available/yusuke-kim.backup
+
+# SSL設定を追加
+sudo tee /etc/nginx/sites-available/yusuke-kim > /dev/null << 'EOF'
+server {
+  listen 80;
+  server_name yusuke-kim.com;
+  return 301 https://$server_name$request_uri;
+}
+
+server {
+  listen 443 ssl http2;
+  server_name yusuke-kim.com;
+  
+  ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem;
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_ciphers HIGH:!aNULL:!MD5;
+  
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+  }
+}
+EOF
+
+# 設定をテストしてリロード
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+**注意事項:**
+- Let's Encryptの証明書は90日間有効で、自動更新されます
+- 証明書取得にはドメイン名が必要です（IPアドレスのみでは取得できません）
+- 初回取得時は、DNSのAレコードが正しく設定されていることを確認してください
+- 証明書取得後、nginxの設定ファイルは自動的に更新され、80→443のリダイレクトも設定されます
+- `server_name`が`_`（すべてのホスト名）の場合、certbotが自動インストールできないため、手動で設定する必要があります
+
+**IPアドレスのみでHTTPS化する場合:**
+IPアドレスのみの場合は、Let's Encryptの証明書は取得できません。自己署名証明書を使用するか、ドメイン名を設定してください。
+
+自己署名証明書を使用する場合:
+```bash
+# 自己署名証明書を生成
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /etc/ssl/private/nginx-selfsigned.key \
+  -out /etc/ssl/certs/nginx-selfsigned.crt
+
+# nginx設定を手動で更新（443ポートを追加）
+sudo nano /etc/nginx/sites-available/yusuke-kim
+```
+
+ただし、自己署名証明書はブラウザで警告が表示されるため、本番環境ではドメイン名を設定してLet's Encryptの証明書を使用することを強く推奨します。
 
 ### 4.4 ネットワーク / DNS / 外部公開でつまずいたポイント
 - **必須ポート**: 22/tcp (SSH), 80/tcp (HTTP), 443/tcp (HTTPS)。3000/tcp は内部確認用。テスト後は閉じる。  
@@ -196,6 +335,110 @@ HTTPS は `certbot --nginx -d yusuke-kim.com` で取得。
 - **証明書取得**: DNS の A レコードが IP を向いたのを確認後、`certbot --nginx -d yusuke-kim.com` で 443 を有効化。80→443 リダイレクトは certbot が自動設定。
 - **NEXT_PUBLIC_SITE_URL の未設定で /api/health が 503 に**: Actions の Verify が落ちる場合は Secrets に `NEXT_PUBLIC_SITE_URL=https://yusuke-kim.com` を入れる。
 - **外部チェックをドメインで行う**: Actions では SSH 経由で `curl http://localhost:3000` と、外部からドメインに `curl` する二段構え。DNS反映前は外部チェックが失敗するので、DNS切替直後はリトライする。
+
+### 4.5 外部アクセスできない場合のトラブルシューティング
+
+#### 診断コマンド
+```bash
+# SSH経由で診断スクリプトを実行
+ssh deploy@<GCP_HOST> 'bash -s' < scripts/diagnose-server.sh
+
+# または手動で確認
+ssh deploy@<GCP_HOST>
+pm2 status
+sudo systemctl status nginx
+sudo ufw status
+sudo netstat -tlnp | grep -E ':(80|443|3000)'
+curl http://localhost:3000/api/health
+```
+
+#### よくある問題と解決方法
+
+1. **nginxがインストールされていない**
+   ```bash
+   sudo apt update
+   sudo apt install -y nginx
+   sudo systemctl enable nginx
+   sudo systemctl start nginx
+   ```
+
+2. **nginxの設定が存在しない**
+   ```bash
+   # 設定ファイルを作成
+   sudo tee /etc/nginx/sites-available/yusuke-kim > /dev/null << 'EOF'
+   server {
+     listen 80;
+     server_name yusuke-kim.com;  # または IPアドレス
+     
+     location / {
+       proxy_pass http://127.0.0.1:3000;
+       proxy_http_version 1.1;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header X-Forwarded-Proto $scheme;
+       proxy_cache_bypass $http_upgrade;
+     }
+   }
+   EOF
+   
+   # シンボリックリンクを作成
+   sudo ln -sf /etc/nginx/sites-available/yusuke-kim /etc/nginx/sites-enabled/
+   
+   # defaultサイトを無効化（存在する場合）
+   sudo rm -f /etc/nginx/sites-enabled/default
+   
+   # 設定をテスト
+   sudo nginx -t
+   
+   # nginxを再起動
+   sudo systemctl reload nginx
+   ```
+
+3. **UFWでポートが開いていない**
+   ```bash
+   sudo ufw allow 22/tcp
+   sudo ufw allow 80/tcp
+   sudo ufw allow 443/tcp
+   sudo ufw status
+   ```
+
+4. **GCPファイアウォールでポートが開いていない**
+   - GCP Console → VPC network → Firewall rules
+   - 以下のルールが存在することを確認:
+     - `default-allow-http` (ポート80)
+     - `default-allow-https` (ポート443)
+     - `default-allow-ssh` (ポート22)
+   - 存在しない場合は作成:
+     ```bash
+     # gcloud CLIを使用する場合
+     gcloud compute firewall-rules create default-allow-http \
+       --allow tcp:80 \
+       --source-ranges 0.0.0.0/0 \
+       --target-tags http-server
+     
+     gcloud compute firewall-rules create default-allow-https \
+       --allow tcp:443 \
+       --source-ranges 0.0.0.0/0 \
+       --target-tags https-server
+     ```
+
+5. **pm2が起動していない**
+   ```bash
+   cd /var/www/yusuke-kim
+   pm2 status
+   pm2 restart yusuke-kim
+   pm2 logs yusuke-kim --lines 50
+   ```
+
+6. **IPアドレスで直接アクセスする場合**
+   - nginxの`server_name`にIPアドレスを指定:
+     ```nginx
+     server_name <IPアドレス>;
+     ```
+   - または`server_name _;`を使用（すべてのホスト名を受け入れる）
 
 ---
 

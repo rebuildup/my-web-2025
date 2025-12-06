@@ -22,6 +22,19 @@ interface MarkdownDetail {
 	body?: string;
 }
 
+// Normalize URLs in markdown content (replace localhost:3010 with relative paths)
+function normalizeMarkdownUrls(content: string): string {
+	if (!content) return content;
+	// Replace http://localhost:3010 and https://localhost:3010 with relative paths
+	// Handle both markdown format and HTML img tags
+	return content
+		.replace(/https?:\/\/localhost:3010(\/api\/cms\/media[^\s"')]*)/g, "$1")
+		.replace(
+			/(<img[^>]*src=["'])https?:\/\/localhost:3010(\/api\/cms\/media[^"']*)(["'])/gi,
+			"$1$2$3",
+		);
+}
+
 // portfolio/[slug]と同じ方法でマークダウンを読み込む
 async function loadMarkdownDetail(
 	slug: string,
@@ -32,12 +45,13 @@ async function loadMarkdownDetail(
 			return null;
 		}
 		const fm = match.page.frontmatter ?? {};
+		const body = normalizeMarkdownUrls(match.page.body ?? "");
 		return {
 			title: fm.title as string | undefined,
 			summary:
 				(fm.summary as string | undefined) ??
 				(fm.description as string | undefined),
-			body: match.page.body ?? "",
+			body,
 		};
 	} catch (error) {
 		console.warn("Failed to load markdown detail for", slug, error);

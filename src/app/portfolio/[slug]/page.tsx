@@ -23,10 +23,13 @@ interface MarkdownDetail {
 function normalizeMarkdownUrls(content: string): string {
 	if (!content) return content;
 	// Replace http://localhost:3010 and https://localhost:3010 with relative paths
-	return content.replace(
-		/https?:\/\/localhost:3010(\/api\/cms\/media[^\s"')]*)/g,
-		"$1",
-	);
+	// Handle both markdown format and HTML img tags
+	return content
+		.replace(/https?:\/\/localhost:3010(\/api\/cms\/media[^\s"')]*)/g, "$1")
+		.replace(
+			/(<img[^>]*src=["'])https?:\/\/localhost:3010(\/api\/cms\/media[^"']*)(["'])/gi,
+			"$1$2$3",
+		);
 }
 
 async function loadMarkdownDetail(

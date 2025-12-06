@@ -81,8 +81,9 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 	};
 
 	const trackPageView = (url: string, title?: string) => {
-		if (consentGiven && typeof window !== "undefined" && window.gtag) {
-			window.gtag("config", "G-Q3YWX96WRS", {
+		const gaId = process.env.NEXT_PUBLIC_GA_ID;
+		if (consentGiven && typeof window !== "undefined" && window.gtag && gaId) {
+			window.gtag("config", gaId, {
 				page_path: url,
 				page_title: title || document.title,
 			});
