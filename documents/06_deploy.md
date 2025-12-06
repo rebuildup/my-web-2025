@@ -44,6 +44,9 @@ sudo adduser deploy
 sudo usermod -aG sudo deploy
 # 公開鍵を /home/deploy/.ssh/authorized_keys に登録
 ```
+```
+su - deploy
+```
 
 3) **SSH/Firewall ハードニング**
 ```bash
@@ -113,12 +116,15 @@ sudo chown deploy:deploy /var/www/yusuke-kim
 > Note: `GITHUB_TOKEN` は GitHub が自動で注入するため登録不要。
 
 #### ローカルでの SSH 鍵作成と VM 登録手順
-1. **開発PCで鍵を作成**  
+1. **開発PCで鍵を作成**（CI用・パスフレーズなし）  
    - PowerShell:  
      ```powershell
      New-Item -ItemType Directory -Force -Path $env:USERPROFILE\.ssh | Out-Null
-     ssh-keygen -t ed25519 -C "deploy@my-web-2025" -f $env:USERPROFILE\.ssh\gcp_deploy
+     ssh-keygen -t ed25519 -C "deploy@my-web-2025" -f $env:USERPROFILE\.ssh\gcp_deploy -N "" -q
      ```
+   - オプション説明:  
+     - `-N ""`: パスフレーズを空（なし）に設定（CI環境で必須）  
+     - `-q`: 対話的なプロンプトを抑制（自動化向け）  
    - できるもの:  
      - 秘密鍵 `~/.ssh/gcp_deploy`（Secrets の `GCP_SSH_KEY` に貼る）  
      - 公開鍵 `~/.ssh/gcp_deploy.pub`
