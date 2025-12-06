@@ -501,8 +501,8 @@ jobs:
             # Create temporary location for data directory
             EXISTING_DATA_DIR="/tmp/preserved-data-$(date +%s)"
             echo "Temporarily moving data directory to: $EXISTING_DATA_DIR"
-            sudo mkdir -p "$EXISTING_DATA_DIR"
-            sudo cp -r /var/www/yusuke-kim/data "$EXISTING_DATA_DIR/" || {
+            mkdir -p "$EXISTING_DATA_DIR"
+            cp -r /var/www/yusuke-kim/data "$EXISTING_DATA_DIR/" || {
               echo "⚠️  Warning: Failed to preserve data directory, continuing anyway"
               EXISTING_DATA_DIR=""
             }
@@ -510,9 +510,9 @@ jobs:
 
           # 4. Prepare deployment directory
           echo "=== Preparing deployment directory ==="
-          sudo rm -rf /var/www/yusuke-kim/*
-          sudo mkdir -p /var/www/yusuke-kim
-          sudo chown $USER:www-data /var/www/yusuke-kim
+          # /var/www/yusuke-kim should be owned by deploy user (set up during initial VM setup)
+          rm -rf /var/www/yusuke-kim/*
+          mkdir -p /var/www/yusuke-kim
           cd /var/www/yusuke-kim
 
           # 7. Extract standalone deployment
@@ -573,32 +573,30 @@ jobs:
               if [ -d "$EXISTING_DATA_DIR/data/contents" ]; then
                 if [ ! -d "data/contents" ]; then
                   echo "Creating contents directory..."
-                  sudo mkdir -p data/contents || true
+                  mkdir -p data/contents || true
                 fi
                 echo "Merging contents databases..."
                 while IFS= read -r db_file; do
                   if [ -n "$db_file" ] && [ -f "$db_file" ]; then
                     db_filename=$(basename "$db_file")
                     if [ ! -f "data/contents/$db_filename" ]; then
-                      sudo cp "$db_file" "data/contents/$db_filename" || true
+                      cp "$db_file" "data/contents/$db_filename" || true
                     fi
                   fi
                 done < <(find "$EXISTING_DATA_DIR/data/contents" -name "*.db" -type f 2>/dev/null)
               fi
             else
-              sudo cp -r "$EXISTING_DATA_DIR/data" data || true
+              cp -r "$EXISTING_DATA_DIR/data" data || true
             fi
-            sudo chown -R $USER:www-data data || true
             # Clean up temporary data directory
             echo "Cleaning up temporary data directory..."
-            sudo rm -rf "$EXISTING_DATA_DIR" || true
+            rm -rf "$EXISTING_DATA_DIR" || true
           fi
           
           # Ensure data directory exists
           if [ ! -d "data" ]; then
             echo "⚠️  Warning: data directory not found in deployment package"
-            sudo mkdir -p data
-            sudo chown $USER:www-data data
+            mkdir -p data
           fi
           
           # Verify data directory contents
@@ -774,7 +772,7 @@ jobs:
           rm -f /tmp/deployment-standalone.tar.gz
           rm -f $HOME/deployment-standalone.tar.gz
           # Clean up any temporary preserved data directories
-          sudo rm -rf /tmp/preserved-data-* 2>/dev/null || true
+          rm -rf /tmp/preserved-data-* 2>/dev/null || true
           CLEANUP
 
       - name: Fetch deployment log
