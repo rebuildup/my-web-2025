@@ -2,6 +2,10 @@
 import * as PIXI from "pixi.js";
 import gsap from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
+// Register PIXI with GSAP
+if (typeof window !== "undefined") {
+	(window as any).PIXI = PIXI;
+}
 PixiPlugin.registerPIXI(PIXI);
 
 import { game_scene } from "./003_game_scene";
@@ -26,6 +30,8 @@ import { settings } from "../SiteInterface";
 import { getLocalTexts } from "./028_local_texts";
 import { loadFromCache } from "../SiteInterface";
 import { loadcache_localranking } from "./020_cacheControl";
+import { ConversionTendencies } from "./008_generate_pattern";
+import { debug_repeat } from "./023_debug_repeat";
 
 export async function initializeGame(app: PIXI.Application) {
   app.stage.removeChildren();
@@ -157,8 +163,6 @@ export function replaceHash(color: string): string {
   if (typeof color !== "string") return "";
   return color.startsWith("#") ? color.replace("#", "0x") : color;
 }
-import { ConversionTendencies } from "./008_generate_pattern";
-import { debug_repeat } from "./023_debug_repeat";
 
 function TendenciesInit() {
   const CONVERSION_TENDENCIES: ConversionTendencies = [
