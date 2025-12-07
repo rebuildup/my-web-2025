@@ -4,7 +4,9 @@ import Game from "./components/004_Game";
 import PlayRecord from "./components/008_PlayRecord";
 import Ranking from "./components/005_Ranking";
 import Setting from "./components/007_Setting";
-import WebGLPopup from "./components/009_WebGLPopup";
+// import WebGLPopup from "./components/009_WebGLPopup";
+import dynamic from "next/dynamic";
+const WebGLPopup = dynamic(() => import("./components/009_WebGLPopup"), { ssr: false });
 import Header from "./components/002_Header";
 import Tab from "./components/001_Tab";
 
