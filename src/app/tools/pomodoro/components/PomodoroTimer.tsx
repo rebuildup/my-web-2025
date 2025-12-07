@@ -279,7 +279,9 @@ const DockItem = ({
 			style={{ width: `${width}px`, height: `${width}px` }}
 			className="relative flex items-center justify-center mb-2 transition-[width,height] duration-100 ease-out will-change-[width,height] rounded-full overflow-hidden"
 		>
-			{React.cloneElement(children, { size: width * 0.5 })}
+			{React.cloneElement(children as any, {
+				size: width * 0.5,
+			})}
 		</div>
 	);
 };

@@ -251,7 +251,7 @@ const nextConfig: NextConfig = {
 			// Remove unused code
 			config.optimization.providedExports = true;
 			config.optimization.usedExports = true;
-			config.optimization.sideEffects = false;
+			// config.optimization.sideEffects = false; // Removed to prevent incorrect tree-shaking
 		}
 
 		// SVG handling

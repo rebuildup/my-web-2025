@@ -1,268 +1,409 @@
-import { ExternalLink, Github, Mail, Twitter, Youtube } from "lucide-react";
-import type { Metadata } from "next";
+"use client";
+
+import { motion } from "framer-motion";
+import {
+	ArrowLeft,
+	Code,
+	Gamepad2,
+	Github,
+	Languages,
+	LayoutGrid,
+	Linkedin,
+	Mail,
+	MessageCircle,
+	MousePointer2,
+	Palette,
+	ShoppingBag,
+	Twitter,
+	User,
+	Video,
+	Youtube,
+} from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { cn } from "@/lib/utils";
 
-export const metadata: Metadata = {
-	title: "Links - samuido | 外部リンク集",
-	description:
-		"samuidoの各種SNSアカウント、ポートフォリオサイト、プロフェッショナルリンクをまとめたリンク集。",
-	keywords: [
-		"リンク集",
-		"SNS",
-		"ポートフォリオ",
-		"Twitter",
-		"GitHub",
-		"Instagram",
-		"YouTube",
-	],
-	robots: "index, follow",
-	alternates: {
-		canonical: "https://yusuke-kim.com/about/links",
-	},
-	openGraph: {
-		title: "Links - samuido | 外部リンク集",
-		description:
-			"samuidoの各種SNSアカウント、ポートフォリオサイト、プロフェッショナルリンクをまとめたリンク集。",
-		type: "website",
-		url: "https://yusuke-kim.com/about/links",
-		images: [
-			{
-				url: "https://yusuke-kim.com/about/links-og-image.png",
-				width: 1200,
-				height: 630,
-				alt: "Links - samuido",
-			},
-		],
-		siteName: "samuido",
-		locale: "ja_JP",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "Links - samuido | 外部リンク集",
-		description:
-			"samuidoの各種SNSアカウント、ポートフォリオサイト、プロフェッショナルリンクをまとめたリンク集。",
-		images: ["https://yusuke-kim.com/about/links-twitter-image.jpg"],
-		creator: "@361do_sleep",
-	},
+// --- Types & Data ---
+
+type LinkItem = {
+	id: string;
+	title: string;
+	url: string;
+	icon: React.ComponentType<{
+		className?: string;
+		style?: React.CSSProperties;
+	}>;
+	description?: string;
+	color?: string; // Optional custom color for the icon/glow
 };
 
-const structuredData = {
-	"@context": "https://schema.org",
-	"@type": "Person",
-	name: "木村友亮",
-	alternateName: "samuido",
-	url: "https://yusuke-kim.com/about/links",
-	sameAs: [
-		"https://twitter.com/361do_sleep",
-		"https://twitter.com/361do_design",
-		"https://github.com/361do",
-		"https://instagram.com/361do_sleep",
-		"https://youtube.com/@361do",
-	],
-};
+const links: LinkItem[] = [
+	// --- Internal / Works ---
+	{
+		id: "profile",
+		title: "Profile",
+		url: "/about",
+		icon: User,
+		description: "About Me",
+		color: "#ffffff",
+	},
+	{
+		id: "portfolio",
+		title: "Portfolio",
+		url: "/portfolio",
+		icon: LayoutGrid,
+		description: "All Works",
+		color: "#ffffff",
+	},
+	{
+		id: "develop",
+		title: "Development",
+		url: "/portfolio/gallery/develop",
+		icon: Code,
+		description: "develop pj",
+		color: "#00ff9d",
+	},
+	{
+		id: "video",
+		title: "Video",
+		url: "/portfolio/gallery/video",
+		icon: Video,
+		description: "video pj",
+		color: "#00ccff",
+	},
+	{
+		id: "design",
+		title: "Design",
+		url: "/portfolio/gallery/video&design",
+		icon: Palette,
+		description: "design pj",
+		color: "#ff00d4",
+	},
 
-const socialLinks = [
+	// --- Socials / Professional ---
 	{
-		name: "Twitter (Tech)",
-		handle: "@361do_sleep",
-		url: "https://twitter.com/361do_sleep",
-		description: "技術・開発関連のツイート",
+		id: "twitter-tech",
+		title: "X (Tech)",
+		url: "https://x.com/361do_sleep",
 		icon: Twitter,
-		category: "social",
+		description: "@361do_sleep",
+		color: "#1da1f2",
 	},
 	{
-		name: "Twitter (Design)",
-		handle: "@361do_design",
-		url: "https://twitter.com/361do_design",
-		description: "映像・デザイン関連のツイート",
+		id: "twitter-design",
+		title: "X (Design)",
+		url: "https://x.com/361do_design",
 		icon: Twitter,
-		category: "social",
+		description: "@361do_design",
+		color: "#1da1f2",
 	},
 	{
-		name: "GitHub",
-		handle: "rebuildup",
+		id: "github",
+		title: "GitHub",
 		url: "https://github.com/rebuildup",
-		description: "開発プロジェクトとソースコード",
 		icon: Github,
-		category: "professional",
+		description: "rebuildup",
+		color: "#ffffff",
 	},
 	{
-		name: "YouTube",
-		handle: "@361do_sleep",
+		id: "linkedin",
+		title: "LinkedIn",
+		url: "https://www.linkedin.com/in/yusuke-kimura-835055398/",
+		icon: Linkedin,
+		description: "Yusuke Kimura",
+		color: "#0a66c2",
+	},
+	{
+		id: "youtube",
+		title: "YouTube",
 		url: "https://www.youtube.com/@361do_sleep",
-		description: "映像作品・チュートリアル",
 		icon: Youtube,
-		category: "portfolio",
+		description: "@361do_sleep",
+		color: "#ff0000",
+	},
+	{
+		id: "discord",
+		title: "Discord Server",
+		url: "https://discord.gg/qmCGSBmc28",
+		icon: MessageCircle,
+		description: "いど端",
+		color: "#5865F2",
+	},
+
+	// --- Store / Hobbies ---
+	{
+		id: "booth",
+		title: "Booth",
+		url: "https://361do.booth.pm",
+		icon: ShoppingBag,
+		description: "361doのbooth",
+		color: "#FC4D50",
+	},
+	{
+		id: "tetrio",
+		title: "Tetrio",
+		url: "https://ch.tetr.io/u/samuido",
+		icon: Gamepad2,
+		description: "samuido",
+		color: "#BC40E4",
+	},
+	{
+		id: "osu",
+		title: "osu!",
+		url: "https://osu.ppy.sh/users/36986836",
+		icon: MousePointer2,
+		description: "samuido",
+		color: "#ff66aa",
+	},
+	{
+		id: "duolingo",
+		title: "Duolingo",
+		url: "https://www.duolingo.com/profile/samuido",
+		icon: Languages,
+		description: "samuido",
+		color: "#58cc02",
 	},
 ];
 
-export default function LinksPage() {
-	const Global_title = "noto-sans-jp-regular text-base leading-snug";
+const contactLinks: LinkItem[] = [
+	{
+		id: "mail-tech",
+		title: "Email (Dev)",
+		url: "mailto:rebuild.up.up@gmail.com",
+		icon: Mail,
+		description: "rebuild.up.up(at)gmail.com",
+	},
+	{
+		id: "mail-design",
+		title: "Email (Design)",
+		url: "mailto:361do.sleep@gmail.com",
+		icon: Mail,
+		description: "361do.sleep(at)gmail.com",
+	},
+];
 
-	const renderLinkCard = (link: {
-		name: string;
-		handle: string;
-		url: string;
-		description: string;
-		icon: React.ComponentType<{ className?: string }>;
-	}) => (
-		<a
-			key={link.name}
-			href={link.url}
-			target="_blank"
-			rel="noopener noreferrer"
-			className="bg-base border border-main p-4 space-y-4 block hover:border-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
-		>
-			<div className="flex items-center">
-				<link.icon className="w-6 h-6 text-accent mr-3" />
-				<div className="flex-grow">
-					<h3 className="zen-kaku-gothic-new text-lg text-main">{link.name}</h3>
-					<p className="noto-sans-jp-light text-xs text-accent">
-						{link.handle}
-					</p>
-				</div>
-				<ExternalLink className="w-4 h-4 text-main" />
-			</div>
-			<p className="noto-sans-jp-light text-sm text-main">{link.description}</p>
-		</a>
-	);
+// --- Components ---
+
+const AboutBackground = dynamic(() => import("@/components/AboutBackground"), {
+	ssr: false,
+});
+
+const getFaviconUrl = (url: string) => {
+	try {
+		const domain = new URL(url).hostname;
+		return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+	} catch {
+		return "";
+	}
+};
+
+function LinkIcon({ item, className }: { item: LinkItem; className?: string }) {
+	const isExternal = item.url.startsWith("http");
+	const favicon = isExternal ? getFaviconUrl(item.url) : null;
+
+	if (isExternal && favicon) {
+		return (
+			<img
+				src={favicon}
+				alt={item.title}
+				className={cn(
+					"object-contain opacity-90 hover:opacity-100 transition-opacity rounded-sm",
+					className,
+				)}
+			/>
+		);
+	}
 
 	return (
-		<>
-			<script type="application/ld+json">
-				{JSON.stringify(structuredData)}
-			</script>
+		<item.icon
+			className={className}
+			style={{ color: item.color || "currentColor" }}
+		/>
+	);
+}
 
-			<div className="min-h-screen bg-base text-main">
-				<main className="flex items-center py-10">
-					<div className="container-system">
-						<div className="space-y-10">
-							{/* Breadcrumbs */}
-							<Breadcrumbs
-								items={[
-									{ label: "Home", href: "/" },
-									{ label: "About", href: "/about" },
-									{ label: "Links", isCurrent: true },
-								]}
-								className="pt-4"
-							/>
+function ProfileHeader() {
+	return (
+		<motion.div
+			initial={{ opacity: 0, y: 20 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.6 }}
+			className="flex flex-col items-center text-center mb-10"
+		>
+			<div className="relative mb-6 flex justify-center items-center gap-6">
+				{/* Tech Avatar */}
+				<a
+					href="https://x.com/361do_sleep"
+					target="_blank"
+					rel="noopener noreferrer"
+					className="w-20 h-20 rounded-full bg-gradient-to-tr from-accent p-[2px] shadow-2xl z-10 cursor-pointer group"
+					title="Tech Account (@361do_sleep)"
+				>
+					<div className="w-full h-full rounded-full overflow-hidden bg-base relative">
+						<motion.img
+							whileHover={{ rotate: 360 }}
+							transition={{ duration: 2, ease: [0.9, 0, 0.1, 1] }}
+							src="https://pbs.twimg.com/profile_images/1977152336486449153/uWHA4dAC_400x400.jpg"
+							alt="samuido (Tech)"
+							className="w-full h-full object-cover"
+						/>
+					</div>
+				</a>
 
-							{/* Header */}
-							<header className="space-y-12">
-								<h1 className="neue-haas-grotesk-display text-6xl text-main">
-									Links
-								</h1>
-								<p className="noto-sans-jp-light text-sm max-w leading-loose">
-									各種SNSアカウント、ポートフォリオサイト、プロフェッショナルリンクをまとめました.
-									<br />
-									お気軽にフォローやコンタクトをお待ちしています.
-								</p>
-							</header>
+				{/* Design Avatar */}
+				<a
+					href="https://x.com/361do_design"
+					target="_blank"
+					rel="noopener noreferrer"
+					className="w-20 h-20 rounded-full bg-gradient-to-tr p-[2px] shadow-xl z-10 cursor-pointer group"
+					title="Design Account (@361do_design)"
+				>
+					<div className="w-full h-full rounded-full overflow-hidden bg-base relative">
+						<motion.img
+							whileHover={{ rotate: 360 }}
+							transition={{ duration: 2, ease: [0.9, 0, 0.1, 1] }}
+							src="https://pbs.twimg.com/profile_images/1932016030551048192/xWwBlKiB_400x400.jpg"
+							alt="samuido (Design)"
+							className="w-full h-full object-cover"
+						/>
+					</div>
+				</a>
+			</div>
 
-							{/* Social Media Links */}
-							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
-									Social Media
-								</h2>
-								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-3 gap-6">
-									{socialLinks.map(renderLinkCard)}
-								</div>
-							</section>
+			<h1 className="text-3xl font-display font-black text-main tracking-tight mb-2">
+				samuido
+			</h1>
+			<p className="text-main/60 font-mono text-xs tracking-widest uppercase">
+				Developer / Creator
+			</p>
 
-							{/* Contact Information */}
-							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
-									Contact
-								</h2>
-								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
-									<div className="bg-base border border-main p-4 space-y-4">
-										<div className="flex items-center">
-											<Mail className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
-												技術・開発関連
-											</h3>
-										</div>
-										<p className="noto-sans-jp-light text-sm text-main">
-											rebuild.up.up(at)gmail.com
-										</p>
-									</div>
+			<div className="flex justify-center gap-4 mt-4 mb-6">
+				{links
+					.filter((l) =>
+						["twitter-tech", "github", "linkedin", "discord", "booth"].includes(
+							l.id,
+						),
+					)
+					.map((link) => (
+						<a
+							key={link.id}
+							href={link.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-main/60 hover:text-accent transition-colors overflow-hidden p-1.5"
+						>
+							<LinkIcon item={link} className="w-full h-full" />
+						</a>
+					))}
+			</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
-										<div className="flex items-center">
-											<Mail className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
-												映像・デザイン関連
-											</h3>
-										</div>
-										<p className="noto-sans-jp-light text-sm text-main">
-											361do.sleep@gmail.com
-										</p>
-									</div>
-								</div>
-							</section>
+			<p className="text-sm text-main/80 max-w-sm leading-relaxed font-light">
+				Web制作・映像制作・ツール開発。
+				<span className="text-xs text-main/50 mt-1 block">
+					Yamaguchi, Japan
+				</span>
+			</p>
+		</motion.div>
+	);
+}
 
-							{/* Link Validation Notice */}
-							<section>
-								<div className="bg-base border border-accent p-4">
-									<h3 className="zen-kaku-gothic-new text-lg text-main mb-3">
-										リンクについて
-									</h3>
-									<div className="space-y-2">
-										<p className="noto-sans-jp-light text-sm text-main">
-											• 外部リンクは新しいタブで開きます
-										</p>
-										<p className="noto-sans-jp-light text-sm text-main">
-											•
-											リンク先の内容については各サイトの利用規約をご確認ください
-										</p>
-										<p className="noto-sans-jp-light text-sm text-main">
-											•
-											リンク切れやお問い合わせは上記メールアドレスまでご連絡ください
-										</p>
-									</div>
-								</div>
-							</section>
+function LinkButton({ item, index }: { item: LinkItem; index: number }) {
+	return (
+		<motion.a
+			href={item.url}
+			target={
+				item.url.startsWith("mailto") || item.url.startsWith("/")
+					? undefined
+					: "_blank"
+			}
+			rel={
+				item.url.startsWith("mailto") || item.url.startsWith("/")
+					? undefined
+					: "noopener noreferrer"
+			}
+			initial={{ opacity: 0, y: 10 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ delay: index * 0.05 + 0.2 }}
+			className="relative group block w-full"
+		>
+			<div className="relative z-10 flex items-center px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/5 hover:bg-white/10 hover:border-white/10 transition-colors duration-200 overflow-hidden">
+				{/* Icon container */}
+				<div className="flex-shrink-0 w-8 h-8 rounded-md bg-base/50 flex items-center justify-center border border-white/5 overflow-hidden p-[5px]">
+					<LinkIcon item={item} className="w-full h-full" />
+				</div>
 
-							{/* CTA */}
-							<nav aria-label="About navigation">
-								<h3 className="sr-only">About機能</h3>
-								<div className="grid-system grid-1 xs:grid-2 sm:grid-3 gap-6">
-									<Link
-										href="/about/profile/real"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
-									>
-										<span className={Global_title}>Profile</span>
-									</Link>
+				{/* Text content */}
+				<div className="flex-grow px-4 text-left min-w-0 flex items-baseline justify-between">
+					<span className="text-main font-bold text-sm tracking-tight truncate">
+						{item.title}
+					</span>
+					<span className="text-main/40 text-xs font-mono ml-2 flex-shrink-0 truncate max-w-[120px]">
+						{item.description}
+					</span>
+				</div>
+			</div>
+		</motion.a>
+	);
+}
 
-									<Link
-										href="/about/commission/develop"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
-									>
-										<span className={Global_title}>Commission</span>
-									</Link>
+export default function LinksPage() {
+	return (
+		<div className="min-h-screen relative bg-transparent overflow-x-hidden selection:bg-accent/30 text-main">
+			{/* Shared Background */}
+			<AboutBackground />
 
-									<Link
-										href="/contact"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
-									>
-										<span className={Global_title}>Contact</span>
-									</Link>
-								</div>
-							</nav>
+			<main className="relative z-10 w-full max-w-lg mx-auto px-6 py-12 min-h-screen flex flex-col items-center">
+				{/* Top Nav */}
+				<div className="absolute top-6 left-6 z-50">
+					<Link
+						href="/about"
+						className="group flex items-center gap-2 text-main/50 hover:text-main transition-colors text-[10px] font-mono uppercase tracking-widest backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/5 bg-black/20 hover:bg-black/40"
+					>
+						<ArrowLeft className="w-3 h-3" />
+						Back
+					</Link>
+				</div>
 
-							{/* Footer */}
-							<footer className="pt-4 border-t border-main">
-								<div className="text-center">
-									<p className="shippori-antique-b1-regular text-sm inline-block">
-										© 2025 samuido - External Links
-									</p>
-								</div>
-							</footer>
+				{/* Content */}
+				<div className="w-full flex-grow flex flex-col items-center pt-6">
+					<ProfileHeader />
+
+					<div className="w-full flex flex-col gap-3">
+						{links.map((link, idx) => (
+							<LinkButton key={link.id} item={link} index={idx} />
+						))}
+					</div>
+
+					<div className="w-full mt-8 pt-6 border-t border-white/5">
+						<motion.h3
+							initial={{ opacity: 0 }}
+							whileInView={{ opacity: 1 }}
+							className="text-center text-[10px] font-mono text-main/30 uppercase tracking-widest mb-4"
+						>
+							Contact
+						</motion.h3>
+						<div className="flex flex-col gap-3 w-full">
+							{contactLinks.map((link, idx) => (
+								<LinkButton
+									key={link.id}
+									item={link}
+									index={links.length + idx}
+								/>
+							))}
 						</div>
 					</div>
-				</main>
-			</div>
-		</>
+				</div>
+
+				{/* Footer */}
+				<motion.footer
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ delay: 0.8 }}
+					className="text-center mt-12 text-main/20 text-[10px] font-mono"
+				>
+					© 2025 361do_sleep
+				</motion.footer>
+			</main>
+		</div>
 	);
 }

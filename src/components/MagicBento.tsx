@@ -530,7 +530,7 @@ const GlobalSpotlight: React.FC<{
 
 export const BentoCardGrid: React.FC<{
 	children: React.ReactNode;
-	gridRef?: React.RefObject<HTMLDivElement>;
+	gridRef?: React.RefObject<HTMLDivElement | null>;
 	className?: string;
 }> = ({ children, gridRef, className = "" }) => (
 	<div
