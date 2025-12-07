@@ -682,50 +682,38 @@ export function reaction_jump(obj: PIXI.Graphics | PIXI.Text, absolute_y: number
   );
 }
 
+// wig_Type function implementation
 export function wig_Type(app: PIXI.Application) {
   const CONFIG = {
-    // 位置ズレの範囲
     POSITION_JITTER_MIN: -100,
     POSITION_JITTER_MAX: 100,
-    // フォントサイズの範囲
     FONT_SIZE_MIN: 160,
     FONT_SIZE_MAX: 350,
-    // 透明度の範囲
     OPACITY_MIN: 0.2,
     OPACITY_MAX: 0.6,
-    // アニメーション間隔（ミリ秒）
     UPDATE_INTERVAL_MIN: 1600,
     UPDATE_INTERVAL_MAX: 2000,
-    // 円の設定
-    CIRCLE_RADIUS_MIN: 900, // 最小半径（中心を避けるため）
-    CIRCLE_RADIUS_MAX: 900, // 最大半径
-    // 余白（画面端からの距離）
+    CIRCLE_RADIUS_MIN: 900,
+    CIRCLE_RADIUS_MAX: 900,
     MARGIN: 100,
   };
 
   const letters = ["P", "r", "o", "t", "o", "T", "y", "p", "e"];
   const textContainer = new PIXI.Container();
-  const textObjs: any = [];
+  const textObjs: PIXI.Text[] = [];
+  const timeouts: NodeJS.Timeout[] = [];
+  let isActive = true;
 
-  // 各文字の設定と円状配置
   function setupText() {
     const numLetters = letters.length;
-
-    // 円状に配置するための角度計算
     const angleStep = (2 * Math.PI) / numLetters;
-
-    // 画面サイズに基づいて円の最大半径を調整
     const maxPossibleRadius = Math.min(
       app.screen.width / 2 - CONFIG.MARGIN,
       app.screen.height / 2 - CONFIG.MARGIN,
     );
-
-    // 設定した最大半径が画面に収まらない場合は調整
     const effectiveMaxRadius = Math.min(maxPossibleRadius, CONFIG.CIRCLE_RADIUS_MAX);
 
-    // 各文字を円周上に配置
     letters.forEach((letter, index) => {
-      // ランダムなフォントサイズ
       const randomFontSize = Math.floor(
         CONFIG.FONT_SIZE_MIN + Math.random() * (CONFIG.FONT_SIZE_MAX - CONFIG.FONT_SIZE_MIN + 1),
       );
@@ -737,33 +725,26 @@ export function wig_Type(app: PIXI.Application) {
         fill: replaceHash(settings.colorTheme.colors.MainColor),
       });
 
-      const textObj = new PIXI.Text(letter, textStyle);
+      const textObj = new PIXI.Text({ text: letter, style: textStyle }); // Correct v8 instantiation
 
-      // 円周上の位置を計算（角度に基づく）
       const angle = index * angleStep;
-
-      // ランダムな半径（最小半径〜最大半径）
       const radiusRange = effectiveMaxRadius - CONFIG.CIRCLE_RADIUS_MIN;
       const radius = CONFIG.CIRCLE_RADIUS_MIN + Math.random() * radiusRange;
 
-      // 円周上の位置を計算
       const x = app.screen.width / 2 + Math.cos(angle) * radius;
       const y = app.screen.height / 2 + Math.sin(angle) * radius;
 
       textObj.x = x;
       textObj.y = y;
       textObj.anchor.set(0.5);
-
-      // 回転の原点を設定
       textObj.pivot.x = 0;
       textObj.pivot.y = textObj.height / 2;
-
-      // ランダムな初期回転
       textObj.rotation = Math.random() * 0.8 - 0.4;
-
-      // ランダムな透明度
       textObj.alpha =
         CONFIG.OPACITY_MIN + Math.random() * (CONFIG.OPACITY_MAX - CONFIG.OPACITY_MIN);
+
+      (textObj as any).originalX = x;
+      (textObj as any).originalY = y;
 
       textContainer.addChild(textObj);
       textObjs.push(textObj);
@@ -772,22 +753,19 @@ export function wig_Type(app: PIXI.Application) {
     app.stage.addChild(textContainer);
   }
 
-  // アニメーションの設定
   function setupAnimation() {
-    // 各文字の初期位置を保存
-    textObjs.forEach((textObj: any) => {
-      textObj.originalX = textObj.x;
-      textObj.originalY = textObj.y;
-      // 初回のアニメーション開始（各文字ごとにわずかな遅延をつける）
-      setTimeout(() => {
+    textObjs.forEach((textObj) => {
+      const timeoutId = setTimeout(() => {
         animateLetter(textObj);
-      }, Math.random() * 500); // 0〜500msのランダムな遅延で開始
+      }, Math.random() * 500);
+      timeouts.push(timeoutId);
     });
   }
 
-  // 文字をランダムに動かす関数（滑らかなアニメーションなし、即座に位置変更）
-  function animateLetter(textObj: any) {
-    // ランダムな新しい位置を生成
+  function animateLetter(textObj: PIXI.Text) {
+    if (!isActive) return;
+    if (textObj.destroyed) return;
+
     const jitterX =
       CONFIG.POSITION_JITTER_MIN +
       Math.random() * (CONFIG.POSITION_JITTER_MAX - CONFIG.POSITION_JITTER_MIN);
@@ -795,46 +773,39 @@ export function wig_Type(app: PIXI.Application) {
       CONFIG.POSITION_JITTER_MIN +
       Math.random() * (CONFIG.POSITION_JITTER_MAX - CONFIG.POSITION_JITTER_MIN);
 
-    const newX = textObj.originalX + jitterX;
-    const newY = textObj.originalY + jitterY;
-    const newRotation = Math.random() * 0.3 - 0.15; // -0.15〜0.15のランダムな回転
-
-    // ランダムなフォントサイズ
+    const newX = (textObj as any).originalX + jitterX;
+    const newY = (textObj as any).originalY + jitterY;
+    const newRotation = Math.random() * 0.3 - 0.15;
     const newFontSize = Math.floor(
       CONFIG.FONT_SIZE_MIN + Math.random() * (CONFIG.FONT_SIZE_MAX - CONFIG.FONT_SIZE_MIN + 1),
     );
-
-    // ランダムな透明度
     const newAlpha = CONFIG.OPACITY_MIN + Math.random() * (CONFIG.OPACITY_MAX - CONFIG.OPACITY_MIN);
 
-    // 即座に位置を変更（アニメーションなし）
     textObj.x = newX;
     textObj.y = newY;
     textObj.rotation = newRotation;
     textObj.alpha = newAlpha;
-
-    // フォントサイズの変更（テキストスタイルを更新）
     textObj.style.fontSize = newFontSize;
 
-    // ランダムな時間間隔で次の位置変更をスケジュール
     const nextUpdateTime =
       CONFIG.UPDATE_INTERVAL_MIN +
       Math.random() * (CONFIG.UPDATE_INTERVAL_MAX - CONFIG.UPDATE_INTERVAL_MIN);
 
-    // 次の位置更新をスケジュール
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       animateLetter(textObj);
     }, nextUpdateTime);
+    timeouts.push(timeoutId);
   }
 
-  // リサイズイベント処理
-  window.addEventListener("resize", () => {
-    // リサイズ時には再配置が理想的だが、
-    // 簡易的な対応として画面中心を基準点として維持
-    textContainer.position.set(app.screen.width / 2, app.screen.height / 2);
-  });
-
-  // 初期化
   setupText();
   setupAnimation();
+
+  // Return a cleanup function
+  return () => {
+    isActive = false;
+    timeouts.forEach((id) => clearTimeout(id));
+    if (!textContainer.destroyed) {
+        textContainer.destroy({ children: true });
+    }
+  };
 }

@@ -190,7 +190,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
           break;
       }
     };
-    wig_Type(app);
+    const cleanupWigType = wig_Type(app);
     flashObj(app, recordBtn);
     flashObj(app, gameSelectBtn);
     flashObj(app, settingSelectBtn);
@@ -261,6 +261,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
               break;
           }
           currentKeyController.abort();
+          cleanupWigType(); // Cleanup animation
           if (selectedIndex === 0) {
             transitionToRecord();
           } else if (selectedIndex === 1) {
@@ -277,6 +278,8 @@ export async function game_select(app: PIXI.Application): Promise<void> {
         }
       }
     }
+    // Ensure cleanup if loop exits otherwise
+    cleanupWigType();
   });
 }
 function game_mode_select(app: PIXI.Application): Promise<void> {
@@ -452,7 +455,7 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
     exit_btn.on("pointerdown", async () => {
       exit();
     });
-    wig_Type(app);
+    const cleanupWigType = wig_Type(app);
     openScene(app, 0);
 
     // 初期選択状態を設定
@@ -473,7 +476,8 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
           selectedModeIndex = (selectedModeIndex + modes.length - 1) % modes.length;
           moveDot(selectedModeIndex);
         } else if (keyCode.code === "Escape") {
-          exit();
+            cleanupWigType();
+            exit();
         } else if (["Enter", "Space"].includes(keyCode.code)) {
           triggerFrameEffect();
           playCollect();
@@ -485,6 +489,7 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
           } else {
             gameData.CurrentSceneName = "register_scene";
           }
+          cleanupWigType();
           await closeScene(app, 2);
           resolve();
         }
@@ -496,5 +501,6 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
         }
       }
     }
+    cleanupWigType();
   });
 }
