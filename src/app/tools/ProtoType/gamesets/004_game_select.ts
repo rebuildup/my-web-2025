@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import gsap from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { CustomEase } from "gsap/all";
-gsap.registerPlugin(PixiPlugin, CustomEase);
+// gsap.registerPlugin(PixiPlugin, CustomEase);
 import { gameData } from "./002_gameConfig";
 import { settings } from "../SiteInterface";
 import { replaceHash } from "./001_game_master";

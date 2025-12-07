@@ -1,11 +1,12 @@
 // game_master.ts
 import * as PIXI from "pixi.js";
 import gsap from "gsap";
-import { PixiPlugin } from "gsap/PixiPlugin";
+import { CustomEase } from "gsap/all";
 // Register PIXI with GSAP
 if (typeof window !== "undefined") {
 	(window as any).PIXI = PIXI;
 }
+gsap.registerPlugin(PixiPlugin, CustomEase);
 PixiPlugin.registerPIXI(PIXI);
 
 import { game_scene } from "./003_game_scene";
