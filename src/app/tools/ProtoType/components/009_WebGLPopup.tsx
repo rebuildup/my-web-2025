@@ -32,8 +32,18 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         if (!isMounted || !popupRef.current) return;
 
+        app.stage.position.set(0, 0); // Reset stage position
         appRef.current = app;
-        popupRef.current.appendChild(app.canvas);
+        const canvas = app.canvas as HTMLCanvasElement;
+        canvas.style.position = 'absolute';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        // Ensure z-index is correct relative to other elements in popup
+        popupRef.current.appendChild(canvas);
+        
+        console.log("PixiJS initialized", app.screen.width, app.screen.height);
         initializeGame(app);
       } catch (error) {
         console.error("PixiJS initialization failed:", error);
