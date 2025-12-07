@@ -2,7 +2,7 @@
 import * as PIXI from "pixi.js";
 import gsap from "gsap";
 import { CustomEase } from "gsap/all";
-import { PixiPlugin } from "gsap/PixiPlugin";
+// import { PixiPlugin } from "gsap/PixiPlugin";
 // GSAP Registration removed from here to support SSR/Next.js
 // Registration moved to WebGLPopup.tsx
 // if (typeof window !== "undefined") {

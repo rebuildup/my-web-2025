@@ -4,8 +4,8 @@ import { replaceHash } from "./001_game_master";
 import { settings } from "../SiteInterface";
 
 import gsap from "gsap";
-import { PixiPlugin } from "gsap/PixiPlugin";
-PixiPlugin.registerPIXI(PIXI);
+// import { PixiPlugin } from "gsap/PixiPlugin";
+// PixiPlugin.registerPIXI(PIXI);
 
 import { getLatestKey } from "./009_keyinput";
 import { playCollect, playMiss } from "./012_soundplay";

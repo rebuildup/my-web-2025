@@ -1,16 +1,15 @@
 import * as PIXI from "pixi.js";
 import gsap from "gsap";
-import { PixiPlugin } from "gsap/PixiPlugin";
 import { CustomEase } from "gsap/all";
-gsap.registerPlugin(PixiPlugin, CustomEase);
+// gsap.registerPlugin(PixiPlugin, CustomEase);
 import { gameData } from "./002_gameConfig";
 import { replaceHash } from "./001_game_master";
 import { settings } from "../SiteInterface";
 
 /*
 import gsap from "gsap";
-import { PixiPlugin } from "gsap/PixiPlugin";
-PixiPlugin.registerPIXI(PIXI);
+// import { PixiPlugin } from "gsap/PixiPlugin";
+// PixiPlugin.registerPIXI(PIXI);
 */
 import { getLatestKey, isNomalKey, keyCodeToText } from "./009_keyinput";
 import { closeScene, flashObj, openScene, reaction, reaction_jump, wig_Type } from "./014_mogura";
