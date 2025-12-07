@@ -2,6 +2,7 @@
 import * as PIXI from "pixi.js";
 import gsap from "gsap";
 import { CustomEase } from "gsap/all";
+import { PixiPlugin } from "gsap/PixiPlugin";
 // Register PIXI with GSAP
 if (typeof window !== "undefined") {
 	(window as any).PIXI = PIXI;
