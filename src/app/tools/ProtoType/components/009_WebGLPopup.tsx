@@ -1,6 +1,11 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
+import gsap from "gsap";
+// Do not import PixiPlugin/CustomEase statically to avoid SSR issues with some bundlers if they assume browser env
+// We will register them inside useEffect to be safe
+// import { PixiPlugin } from "gsap/PixiPlugin"; 
+// import { CustomEase } from "gsap/all";
 
 import { settings } from "../SiteInterface";
 import { initializeGame, replaceHash } from "../gamesets/001_game_master";
@@ -15,6 +20,16 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     let app: PIXI.Application | null = null;
 
     (async () => {
+      // Dynamic import to avoid SSR issues
+      const { PixiPlugin } = await import("gsap/PixiPlugin");
+      const { CustomEase } = await import("gsap/all");
+      
+      if (typeof window !== "undefined") {
+          (window as any).PIXI = PIXI;
+      }
+      gsap.registerPlugin(PixiPlugin, CustomEase);
+      PixiPlugin.registerPIXI(PIXI);
+
       if (!popupRef.current) return;
 
       popupRef.current.querySelector("canvas")?.remove();
