@@ -129,8 +129,10 @@ export function ShaderExperiment({
 	const meshRef = useRef<THREE.Mesh | null>(null);
 	const materialRef = useRef<THREE.ShaderMaterial | null>(null);
 	const animationRef = useRef<number | null>(null);
+	const animateRef = useRef<(() => void) | undefined>(undefined);
 	const clockRef = useRef<THREE.Clock>(new THREE.Clock());
 	const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
+	const isActiveRef = useRef(false);
 
 	const [controls, setControls] = useState<ShaderControls>({
 		shaderType: "fragment",
@@ -145,6 +147,7 @@ export function ShaderExperiment({
 	const [error, setError] = useState<string | null>(null);
 	const [shaderError, setShaderError] = useState<string | null>(null);
 	const [showCode, setShowCode] = useState(false);
+	const [elapsedTime, setElapsedTime] = useState(0);
 
 	// Performance monitoring
 	const performanceRef = useRef({
@@ -271,10 +274,12 @@ export function ShaderExperiment({
       `;
 
 			// Get fragment shader code
-			const fragmentShader =
-				controls.presetShader === "custom"
-					? controls.customCode
-					: PRESET_SHADERS[controls.presetShader];
+			let fragmentShader: string;
+			if (controls.presetShader === "custom") {
+				fragmentShader = controls.customCode;
+			} else {
+				fragmentShader = PRESET_SHADERS[controls.presetShader];
+			}
 
 			// Create optimized shader material
 			const uniforms = {
@@ -288,6 +293,11 @@ export function ShaderExperiment({
 				mouse: { value: new THREE.Vector2(0, 0) },
 			};
 
+			let minifyCode = false;
+			if (performanceSettings.qualityLevel === "low") {
+				minifyCode = true;
+			}
+
 			const material = shaderOptimizer.createOptimizedMaterial(
 				vertexShader,
 				fragmentShader,
@@ -297,7 +307,7 @@ export function ShaderExperiment({
 					precision: "mediump",
 					enableOptimizations: true,
 					stripComments: true,
-					minifyCode: performanceSettings.qualityLevel === "low",
+					minifyCode,
 					cacheShaders: true,
 				},
 			);
@@ -311,8 +321,10 @@ export function ShaderExperiment({
 
 			setShaderError(null);
 		} catch (err) {
-			const errorMessage =
-				err instanceof Error ? err.message : "Shader compilation error";
+			let errorMessage = "Shader compilation error";
+			if (err instanceof Error) {
+				errorMessage = err.message;
+			}
 			setShaderError(errorMessage);
 			console.error("Shader error:", err);
 		}
@@ -334,7 +346,7 @@ export function ShaderExperiment({
 	// Animation loop
 	const animate = useCallback(() => {
 		if (
-			!isActive ||
+			!isActiveRef.current ||
 			!rendererRef.current ||
 			!sceneRef.current ||
 			!cameraRef.current
@@ -362,27 +374,57 @@ export function ShaderExperiment({
 					(currentTime - performanceRef.current.lastTime),
 			);
 
-			onPerformanceUpdate?.({
-				fps: performanceRef.current.fps,
-				frameTime:
-					(currentTime - performanceRef.current.lastTime) /
-					performanceRef.current.frameCount,
-				memoryUsage: (() => {
-					const perfMemory = (
-						performance as { memory?: { usedJSHeapSize: number } }
-					).memory;
-					return perfMemory?.usedJSHeapSize
-						? Math.round(perfMemory.usedJSHeapSize / 1024 / 1024)
-						: 0;
-				})(),
-			});
+			if (onPerformanceUpdate) {
+				let memoryUsage = 0;
+				const perfMemory = (
+					performance as { memory?: { usedJSHeapSize: number } }
+				).memory;
+				if (perfMemory?.usedJSHeapSize) {
+					memoryUsage = Math.round(perfMemory.usedJSHeapSize / 1024 / 1024);
+				}
+				onPerformanceUpdate({
+					fps: performanceRef.current.fps,
+					frameTime:
+						(currentTime - performanceRef.current.lastTime) /
+						performanceRef.current.frameCount,
+					memoryUsage,
+				});
+			}
 
 			performanceRef.current.frameCount = 0;
 			performanceRef.current.lastTime = currentTime;
 		}
 
-		animationRef.current = requestAnimationFrame(animate);
-	}, [isActive, onPerformanceUpdate]);
+		if (animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
+		}
+	}, [onPerformanceUpdate]);
+
+	// Update animate ref when it changes
+	useEffect(() => {
+		animateRef.current = animate;
+	}, [animate]);
+
+	// Update isActive ref when it changes
+	useEffect(() => {
+		isActiveRef.current = isActive;
+	}, [isActive]);
+
+	// Update elapsed time for display
+	useEffect(() => {
+		if (!isActive) {
+			setElapsedTime(0);
+			return;
+		}
+
+		const interval = setInterval(() => {
+			if (clockRef.current) {
+				setElapsedTime(clockRef.current.getElapsedTime());
+			}
+		}, 100); // Update every 100ms for display
+
+		return () => clearInterval(interval);
+	}, [isActive]);
 
 	// Handle window resize
 	const handleResize = useCallback(() => {
@@ -410,7 +452,9 @@ export function ShaderExperiment({
 			if (success) {
 				// Create shader material after scene initialization
 				createShaderMaterial();
-				animate();
+				if (animateRef.current) {
+					animationRef.current = requestAnimationFrame(animateRef.current);
+				}
 			}
 		}
 
@@ -420,7 +464,19 @@ export function ShaderExperiment({
 				animationRef.current = null;
 			}
 		};
-	}, [isActive, isInitialized, initializeScene, animate, createShaderMaterial]);
+	}, [isActive, isInitialized, initializeScene, createShaderMaterial]);
+
+	// Handle animation state changes
+	useEffect(() => {
+		if (isActive && animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
+		} else if (!isActive && animationRef.current) {
+			if (animationRef.current) {
+				cancelAnimationFrame(animationRef.current);
+				animationRef.current = null;
+			}
+		}
+	}, [isActive]);
 
 	// Update shader when preset changes
 	useEffect(() => {
@@ -585,9 +641,7 @@ export function ShaderExperiment({
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
 					<div className="bg-base border border-main p-3">
 						<div className="text-accent font-medium">Time</div>
-						<div className="text-main">
-							{clockRef.current?.getElapsedTime().toFixed(2)}s
-						</div>
+						<div className="text-main">{elapsedTime.toFixed(2)}s</div>
 					</div>
 					<div className="bg-base border border-main p-3">
 						<div className="text-accent font-medium">Resolution</div>

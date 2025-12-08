@@ -212,8 +212,6 @@ type Section = { title: string; paragraphs: string[] };
 type Block = { header: string; sections: Section[] };
 type Doc = { title: string; blocks: Block[] };
 
-const placeholderRe = /\{\{([^}|]+)(?:\|([^}]+))?\}\}/g;
-
 function parseDoc(text: string): Doc {
 	const lines = text.split(/\r?\n/);
 	let title = "Quiz";
@@ -262,6 +260,8 @@ function autoWidth(ans: string) {
 }
 
 function paragraphToHtml(text: string) {
+	// React Compiler: avoid shared regex state by creating a fresh instance
+	const placeholderRe = /\{\{([^}|]+)(?:\|([^}]+))?\}\}/g;
 	return text.replace(placeholderRe, (_, ansRaw, width) => {
 		const answers = ansRaw
 			.split("/")
@@ -550,7 +550,7 @@ export default function FillGenPage() {
 	const menuRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const isWrappingRef = useRef(false);
+	const [isWrapping, setIsWrapping] = useState(false);
 
 	const resizeInputElement = (input: HTMLInputElement) => {
 		const base = Number.parseInt(input.dataset.baseWidth ?? "0", 10) || 80;
@@ -593,7 +593,7 @@ export default function FillGenPage() {
 		const wrapped = `${before}{{${selected}}}${after}`;
 
 		// 選択を即座にクリア（先に実行）
-		isWrappingRef.current = true;
+		setIsWrapping(true);
 		setMenuPos(null);
 		setSelectionRange(null);
 		// グローバルな選択範囲も解除
@@ -657,7 +657,7 @@ export default function FillGenPage() {
 						selection4.removeAllRanges();
 					}
 					ta4.setSelectionRange(collapsePos, collapsePos);
-					isWrappingRef.current = false;
+					setIsWrapping(false);
 				}, 0);
 			});
 		});
@@ -671,7 +671,7 @@ export default function FillGenPage() {
 			anchor?: { left: number; top: number };
 		}) => {
 			// 穴埋め化処理中はメニューを表示しない
-			if (isWrappingRef.current) return;
+			if (isWrapping) return;
 			const ta = textareaRef.current;
 			if (!ta) return;
 			const start = opts?.start ?? selectionRange?.start ?? ta.selectionStart;
@@ -842,7 +842,7 @@ export default function FillGenPage() {
 
 	// pages更新後に選択範囲がnullの場合は選択を確実に解除
 	useEffect(() => {
-		if (isWrappingRef.current && !selectionRange) {
+		if (isWrapping && !selectionRange) {
 			const ta = textareaRef.current;
 			if (!ta) return;
 			// メニューを確実に非表示にする
@@ -873,7 +873,7 @@ export default function FillGenPage() {
 		// メニューが表示されているときのみ選択を維持
 		if (!menuPos || !selectionRange) return;
 		// 穴埋め化処理中は選択を再適用しない
-		if (isWrappingRef.current) return;
+		if (isWrapping) return;
 		const ta = textareaRef.current;
 		if (!ta) return;
 		// メニューが表示されているときのみ実行（nullになったときは実行しない）
@@ -911,7 +911,7 @@ export default function FillGenPage() {
 		};
 		const handlePointerUp = (e: PointerEvent) => {
 			// 穴埋め化処理中は選択範囲を更新しない
-			if (isWrappingRef.current) return;
+			if (isWrapping) return;
 			const { selectionStart, selectionEnd } = ta;
 			if (
 				selectionStart === null ||
@@ -942,7 +942,7 @@ export default function FillGenPage() {
 	useEffect(() => {
 		const handler = () => {
 			// 穴埋め化処理中は選択範囲を更新しない
-			if (isWrappingRef.current) return;
+			if (isWrapping) return;
 			const ta = textareaRef.current;
 			if (!ta) return;
 			if (document.activeElement !== ta) return;
@@ -1074,7 +1074,7 @@ export default function FillGenPage() {
 								inputRef={textareaRef}
 								onSelect={(e) => {
 									// 穴埋め化処理中は選択範囲を更新しない
-									if (isWrappingRef.current) return;
+									if (isWrapping) return;
 									const textarea = textareaRef.current;
 									if (
 										textarea &&
@@ -1089,7 +1089,7 @@ export default function FillGenPage() {
 								}}
 								onMouseUp={(e) => {
 									// 穴埋め化処理中は選択範囲を更新しない
-									if (isWrappingRef.current) return;
+									if (isWrapping) return;
 									const textarea = textareaRef.current;
 									if (
 										textarea &&
@@ -1126,7 +1126,7 @@ export default function FillGenPage() {
 								}}
 								onKeyUp={(e) => {
 									// 穴埋め化処理中は選択範囲を更新しない
-									if (isWrappingRef.current) return;
+									if (isWrapping) return;
 									const textarea = textareaRef.current;
 									if (
 										textarea &&
@@ -1879,7 +1879,7 @@ export default function FillGenPage() {
 					</CardContent>
 				</Card>
 
-				{menuPos && !isWrappingRef.current && (
+				{menuPos && !isWrapping && (
 					<div
 						ref={menuRef}
 						style={{

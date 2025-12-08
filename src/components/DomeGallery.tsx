@@ -337,7 +337,8 @@ export default function DomeGallery({
 					inertiaRAF.current = null;
 					return;
 				}
-				if (++frames > maxFrames) {
+				frames = frames + 1;
+				if (frames > maxFrames) {
 					inertiaRAF.current = null;
 					return;
 				}
@@ -840,12 +841,14 @@ export default function DomeGallery({
 				className="sphere-root relative w-full h-full"
 				style={
 					{
-						["--segments-x" as any]: segments,
-						["--segments-y" as any]: segments,
-						["--overlay-blur-color" as any]: overlayBlurColor,
-						["--tile-radius" as any]: imageBorderRadius,
-						["--enlarge-radius" as any]: openedImageBorderRadius,
-						["--image-filter" as any]: grayscale ? "grayscale(1)" : "none",
+						...({
+							"--segments-x": segments,
+							"--segments-y": segments,
+							"--overlay-blur-color": overlayBlurColor,
+							"--tile-radius": imageBorderRadius,
+							"--enlarge-radius": openedImageBorderRadius,
+							"--image-filter": grayscale ? "grayscale(1)" : "none",
+						} as React.CSSProperties),
 					} as React.CSSProperties
 				}
 			>
@@ -871,10 +874,12 @@ export default function DomeGallery({
 									data-size-y={it.sizeY}
 									style={
 										{
-											["--offset-x" as any]: it.x,
-											["--offset-y" as any]: it.y,
-											["--item-size-x" as any]: it.sizeX,
-											["--item-size-y" as any]: it.sizeY,
+											...({
+												"--offset-x": it.x,
+												"--offset-y": it.y,
+												"--item-size-x": it.sizeX,
+												"--item-size-y": it.sizeY,
+											} as React.CSSProperties),
 											top: "-999px",
 											bottom: "-999px",
 											left: "-999px",

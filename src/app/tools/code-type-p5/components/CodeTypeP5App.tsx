@@ -25,7 +25,7 @@ import {
 } from "@mui/material";
 import JSZip from "jszip";
 import p5 from "p5";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { EditorManager } from "../lib/001_Editors/001_EditorManager";
 import { setupAnimationRenderer } from "../lib/001_Editors/002_AnimationRenderer";
 import { ANIMATION_CONFIG, CANVAS_CONFIG } from "../lib/config";
@@ -75,6 +75,61 @@ export default function CodeTypeP5App() {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const p5InstanceRef = useRef<any>(null);
 	const isInitializingRef = useRef<boolean>(false);
+
+	const loadInitialData = useCallback((editorManager: EditorManager) => {
+		const animations = window.animationFunctions?.getAnimations();
+		if (animations && animations.length > 0) {
+			const codescroll = animations[0];
+			if (typeof codescroll.getCode === "function") {
+				setCode(codescroll.getCode());
+			}
+			if (typeof codescroll.getConfig === "function") {
+				const animConfig = codescroll.getConfig();
+				setConfig((prev) => ({
+					...prev,
+					fontSize: animConfig.fontSize || prev.fontSize,
+					lineHeight: animConfig.lineHeight || prev.lineHeight,
+					height: animConfig.canvasHeight || prev.height,
+					language: animConfig.language || prev.language,
+				}));
+			}
+		}
+
+		// Get global config
+		const fps = editorManager.getFPS();
+		const frameCount = editorManager.getFrameCount();
+		setConfig((prev) => ({
+			...prev,
+			fps: fps || prev.fps,
+			duration:
+				frameCount && fps
+					? parseFloat((frameCount / fps).toFixed(1))
+					: prev.duration,
+		}));
+
+		// Get canvas size - use actual canvas size if available, otherwise use config
+		const canvas = document.querySelector("canvas");
+		if (canvas && canvas.width && canvas.height) {
+			setConfig((prev) => ({
+				...prev,
+				width: canvas.width,
+				height: canvas.height,
+			}));
+		}
+
+		// Get background color from config
+		const bgColor = CANVAS_CONFIG.BACKGROUND_COLOR;
+		setConfig((prev) => ({
+			...prev,
+			backgroundColor: { r: bgColor[0], g: bgColor[1], b: bgColor[2] },
+			backgroundTransparent: bgColor[3] === 0,
+		}));
+
+		// Subscribe to playback changes
+		editorManager.setEvents({
+			onPlaybackChange: (playing: boolean) => setIsPlaying(playing),
+		});
+	}, []);
 
 	// Initialize p5.js and setup
 	// Use useEffect to initialize after component mounts
@@ -162,28 +217,28 @@ export default function CodeTypeP5App() {
 			editorManagerRef.current = editorManager;
 
 			// Setup animation renderer (this will create the p5 instance)
+			let p5Instance: any;
 			try {
 				console.log("Setting up animation renderer...");
-				const p5Instance = setupAnimationRenderer(
-					editorManager,
-					canvasContainer,
-				);
-				if (p5Instance) {
-					p5InstanceRef.current = p5Instance;
-				}
+				p5Instance = setupAnimationRenderer(editorManager, canvasContainer);
 				console.log("Animation renderer setup complete");
-
-				// Wait a bit for p5 to initialize
-				setTimeout(() => {
-					console.log("Loading initial data...");
-					loadInitialData(editorManager);
-					setIsLoaded(true);
-					console.log("Initialization complete");
-				}, 1000);
 			} catch (error) {
 				console.error("Error setting up animation renderer:", error);
 				setIsLoaded(true); // Still set loaded to show error state
+				return;
 			}
+
+			if (p5Instance) {
+				p5InstanceRef.current = p5Instance;
+			}
+
+			// Wait a bit for p5 to initialize
+			setTimeout(() => {
+				console.log("Loading initial data...");
+				loadInitialData(editorManager);
+				setIsLoaded(true);
+				console.log("Initialization complete");
+			}, 1000);
 		};
 
 		// Start initialization
@@ -229,62 +284,7 @@ export default function CodeTypeP5App() {
 
 			clearTimeout(timeoutId);
 		};
-	}, []); // Empty dependency array - only run once on mount
-
-	const loadInitialData = (editorManager: EditorManager) => {
-		const animations = window.animationFunctions?.getAnimations();
-		if (animations && animations.length > 0) {
-			const codescroll = animations[0];
-			if (typeof codescroll.getCode === "function") {
-				setCode(codescroll.getCode());
-			}
-			if (typeof codescroll.getConfig === "function") {
-				const animConfig = codescroll.getConfig();
-				setConfig((prev) => ({
-					...prev,
-					fontSize: animConfig.fontSize || prev.fontSize,
-					lineHeight: animConfig.lineHeight || prev.lineHeight,
-					height: animConfig.canvasHeight || prev.height,
-					language: animConfig.language || prev.language,
-				}));
-			}
-		}
-
-		// Get global config
-		const fps = editorManager.getFPS();
-		const frameCount = editorManager.getFrameCount();
-		setConfig((prev) => ({
-			...prev,
-			fps: fps || prev.fps,
-			duration:
-				frameCount && fps
-					? parseFloat((frameCount / fps).toFixed(1))
-					: prev.duration,
-		}));
-
-		// Get canvas size - use actual canvas size if available, otherwise use config
-		const canvas = document.querySelector("canvas");
-		if (canvas && canvas.width && canvas.height) {
-			setConfig((prev) => ({
-				...prev,
-				width: canvas.width,
-				height: canvas.height,
-			}));
-		}
-
-		// Get background color from config
-		const bgColor = CANVAS_CONFIG.BACKGROUND_COLOR;
-		setConfig((prev) => ({
-			...prev,
-			backgroundColor: { r: bgColor[0], g: bgColor[1], b: bgColor[2] },
-			backgroundTransparent: bgColor[3] === 0,
-		}));
-
-		// Subscribe to playback changes
-		editorManager.setEvents({
-			onPlaybackChange: (playing: boolean) => setIsPlaying(playing),
-		});
-	};
+	}, [loadInitialData]); // Include loadInitialData in dependencies
 
 	const handleApply = () => {
 		if (!editorManagerRef.current) return;

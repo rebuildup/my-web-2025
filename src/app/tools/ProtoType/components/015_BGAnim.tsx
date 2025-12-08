@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import OuterStarSvg from "../svg_conponent/001_Outer_star";
 import OuterCircleSvg from "../svg_conponent/002_Outer_circ";
 import OuterSpearSvg from "../svg_conponent/003_Outer_Spear";
@@ -51,6 +51,14 @@ const BGAnim: React.FC = () => {
   const isVisibleRef = useRef(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // MainAccent色を取得する関数
+  const updateAccentColor = useCallback(() => {
+    const color = getComputedStyle(document.documentElement)
+      .getPropertyValue("--MainAccent")
+      .trim();
+    setAccentColor(color);
+  }, []);
+
   // Observe animation settings changes
   useEffect(() => {
     // Function to check for changes in animation settings
@@ -89,7 +97,7 @@ const BGAnim: React.FC = () => {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [updateAccentColor]);
 
   // Implement visibility-based performance optimization
   useEffect(() => {
@@ -122,14 +130,6 @@ const BGAnim: React.FC = () => {
       }
     };
   }, []);
-
-  // MainAccent色を取得する関数
-  const updateAccentColor = () => {
-    const color = getComputedStyle(document.documentElement)
-      .getPropertyValue("--MainAccent")
-      .trim();
-    setAccentColor(color);
-  };
 
   // If animations are disabled, return null
   if (!animSettings.enabled) {

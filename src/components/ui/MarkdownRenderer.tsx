@@ -234,7 +234,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 		async (path: string): Promise<string> => {
 			try {
 				// Ensure the path starts with / for absolute paths
-				const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+				let normalizedPath: string;
+				if (path.startsWith("/")) {
+					normalizedPath = path;
+				} else {
+					normalizedPath = `/${path}`;
+				}
 
 				console.log(
 					`[MarkdownRenderer] Fetching markdown file: ${normalizedPath}`,
@@ -253,22 +258,24 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 						console.error(
 							`[MarkdownRenderer] File not found: ${normalizedPath}`,
 						);
-						throw new MarkdownError(
+						const fileNotFoundError = new MarkdownError(
 							MarkdownErrorType.FILE_NOT_FOUND,
 							`Markdown file not found: ${normalizedPath}`,
 							{ filePath: normalizedPath, status: response.status },
 							"Check if the file path is correct and the file exists",
 						);
+						return Promise.reject(fileNotFoundError);
 					}
 					console.error(
 						`[MarkdownRenderer] Fetch failed: ${response.status} ${response.statusText}`,
 					);
-					throw new MarkdownError(
+					const fetchError = new MarkdownError(
 						MarkdownErrorType.PERMISSION_DENIED,
 						`Failed to fetch markdown file: ${response.statusText}`,
 						{ filePath: normalizedPath, status: response.status },
 						"Check file permissions and server configuration",
 					);
+					return Promise.reject(fetchError);
 				}
 
 				const content = await response.text();
@@ -279,7 +286,11 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 				);
 
 				// Check if content is empty or just whitespace
-				if (!content || content.trim().length === 0) {
+				if (!content) {
+					console.info(`Markdown file is empty: ${normalizedPath}`);
+					return ""; // Return empty string for empty files
+				}
+				if (content.trim().length === 0) {
 					console.info(`Markdown file is empty: ${normalizedPath}`);
 					return ""; // Return empty string for empty files
 				}
@@ -296,9 +307,10 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 			} catch (error) {
 				console.error(`[MarkdownRenderer] Error fetching ${path}:`, error);
 				if (error instanceof MarkdownError) {
-					throw error;
+					return Promise.reject(error);
 				}
-				throw markdownErrorHandler.handleFileError(error, path);
+				const handledError = markdownErrorHandler.handleFileError(error, path);
+				return Promise.reject(handledError);
 			}
 		},
 		[enableIntegrityCheck],
@@ -324,29 +336,31 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 					}));
 
 					// Log validation warnings
-					if (
-						validationResult.warnings &&
-						validationResult.warnings.length > 0
-					) {
-						console.warn(
-							"Markdown validation warnings:",
-							validationResult.warnings,
-						);
+					if (validationResult.warnings) {
+						if (validationResult.warnings.length > 0) {
+							console.warn(
+								"Markdown validation warnings:",
+								validationResult.warnings,
+							);
+						}
 					}
 
-					// Throw error if validation fails
-					if (!validationResult.isValid && validationResult.errors.length > 0) {
-						const firstError = validationResult.errors[0];
-						throw new MarkdownError(
-							MarkdownErrorType.EMBED_ERROR,
-							`Embed validation failed: ${firstError.message}`,
-							{
-								validationErrors: validationResult.errors,
-								line: firstError.line,
-								column: firstError.column,
-							},
-							firstError.suggestion,
-						);
+					// Return error if validation fails
+					if (!validationResult.isValid) {
+						if (validationResult.errors.length > 0) {
+							const firstError = validationResult.errors[0];
+							const validationError = new MarkdownError(
+								MarkdownErrorType.EMBED_ERROR,
+								`Embed validation failed: ${firstError.message}`,
+								{
+									validationErrors: validationResult.errors,
+									line: firstError.line,
+									column: firstError.column,
+								},
+								firstError.suggestion,
+							);
+							return Promise.reject(validationError);
+						}
 					}
 				}
 
@@ -368,9 +382,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 				);
 
 				// Then, parse markdown to HTML
-				let htmlContent = customRenderer
-					? customRenderer(contentWithResolvedEmbeds)
-					: await marked.parse(contentWithResolvedEmbeds);
+				let htmlContent: string;
+				if (customRenderer) {
+					htmlContent = customRenderer(contentWithResolvedEmbeds);
+				} else {
+					htmlContent = await marked.parse(contentWithResolvedEmbeds);
+				}
 
 				htmlContent = transformBookmarkPlaceholders(htmlContent);
 				htmlContent = removeDanglingCounters(htmlContent);
@@ -441,14 +458,19 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 				return htmlContent;
 			} catch (error) {
 				if (error instanceof MarkdownError) {
-					throw error;
+					return Promise.reject(error);
 				}
-				throw new MarkdownError(
+				let errorMessage = "Unknown error";
+				if (error instanceof Error) {
+					errorMessage = error.message;
+				}
+				const processError = new MarkdownError(
 					MarkdownErrorType.INVALID_CONTENT,
-					`Failed to process markdown content: ${error instanceof Error ? error.message : "Unknown error"}`,
+					`Failed to process markdown content: ${errorMessage}`,
 					{ filePath, originalError: error },
 					"Check the markdown syntax and embedded content references",
 				);
+				return Promise.reject(processError);
 			}
 		},
 		[
@@ -497,18 +519,29 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 				);
 				rawContent = await fetchMarkdownContent(filePath);
 			} else {
-				throw new MarkdownFileError(
+				const noContentError = new MarkdownFileError(
 					"No markdown content available",
 					"FILE_NOT_FOUND",
 					"",
 				);
+				return Promise.reject(noContentError);
 			}
 
 			// Handle empty content gracefully
-			if (!rawContent || rawContent.trim().length === 0) {
+			if (!rawContent) {
 				console.log(`[MarkdownRenderer] Content is empty, setting empty state`);
 				setState({
-					content: rawContent || "",
+					content: "",
+					isLoading: false,
+					error: null,
+					parsedContent: "", // Empty parsed content for empty files
+				});
+				return;
+			}
+			if (rawContent.trim().length === 0) {
+				console.log(`[MarkdownRenderer] Content is empty, setting empty state`);
+				setState({
+					content: "",
 					isLoading: false,
 					error: null,
 					parsedContent: "", // Empty parsed content for empty files
@@ -670,11 +703,15 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 					// Check if there's a data-json attribute with URL
 					const dataJson = card.getAttribute("data-json");
 					if (dataJson) {
+						let parsedData: { url?: string } | null = null;
 						try {
-							const data = JSON.parse(decodeURIComponent(dataJson));
-							url = data.url || "";
+							parsedData = JSON.parse(decodeURIComponent(dataJson));
 						} catch {
 							// Ignore parse errors
+						}
+						if (parsedData) {
+							const parsedUrl = parsedData.url;
+							url = parsedUrl || "";
 						}
 					}
 				}

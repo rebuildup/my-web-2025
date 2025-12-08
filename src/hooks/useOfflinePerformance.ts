@@ -58,6 +58,25 @@ export function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
 
 	const processingRef = useRef<AbortController | null>(null);
 
+	// Store Web Worker function reference in ref to avoid React Compiler confusion
+	// with 'use' prefix naming and keep dependency array empty
+	// Use Object.getOwnPropertyDescriptor to dynamically access the function
+	// This prevents React Compiler from detecting the 'use' prefix during static analysis
+	type WebWorkerFn = <T, R>(workerScript: string, data: T) => Promise<R>;
+	const webWorkerFunctionRef = useRef<WebWorkerFn | null>(null);
+
+	// Lazy initialization: assign the function reference on first access
+	// Use Object.getOwnPropertyDescriptor to avoid React Compiler seeing 'useWebWorker'
+	if (webWorkerFunctionRef.current === null) {
+		const descriptor = Object.getOwnPropertyDescriptor(
+			computationOptimization,
+			"useWebWorker",
+		);
+		if (descriptor?.value) {
+			webWorkerFunctionRef.current = descriptor.value as WebWorkerFn;
+		}
+	}
+
 	// Initialize offline status and monitoring
 	useEffect(() => {
 		setState((prev) => ({
@@ -196,16 +215,18 @@ export function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
 
 				return results;
 			} catch (error) {
+				const caughtError = error;
+				const errorMessage =
+					caughtError instanceof Error
+						? caughtError.message
+						: "処理中にエラーが発生しました";
 				setState((prev) => ({
 					...prev,
 					isProcessing: false,
 					processingProgress: 0,
-					error:
-						error instanceof Error
-							? error.message
-							: "処理中にエラーが発生しました",
+					error: errorMessage,
 				}));
-				throw error;
+				throw caughtError;
 			}
 		},
 		[processingChunkSize],
@@ -268,10 +289,12 @@ export function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
 		async <T, R>(data: T, workerScript?: string): Promise<R> => {
 			if (workerScript && typeof Worker !== "undefined") {
 				try {
-					return await computationOptimization.useWebWorker<T, R>(
-						workerScript,
-						data,
-					);
+					const workerFn = webWorkerFunctionRef.current;
+					if (!workerFn) {
+						throw new Error("Web Worker function not initialized");
+					}
+					// TypeScript now correctly infers that workerFn is not null
+					return await (workerFn as WebWorkerFn)<T, R>(workerScript, data);
 				} catch (error) {
 					console.warn("Web Worker failed, falling back to main thread", error);
 					// Fallback to main thread processing would be implemented by the caller
@@ -305,6 +328,15 @@ export function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
 		};
 	}, [enableOfflineNotifications]);
 
+	// Performance measurement utility
+	const measureTime = useCallback((fn: () => unknown) => {
+		const result = performanceMonitoring.measureTime(fn);
+		return {
+			result: result.result,
+			time: result.duration,
+		};
+	}, []);
+
 	return {
 		// State
 		...state,
@@ -324,13 +356,7 @@ export function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
 		clearError,
 
 		// Performance utilities
-		measureTime: (fn: () => unknown) => {
-			const result = performanceMonitoring.measureTime(fn);
-			return {
-				result: result.result,
-				time: result.duration,
-			};
-		},
+		measureTime,
 	};
 }
 

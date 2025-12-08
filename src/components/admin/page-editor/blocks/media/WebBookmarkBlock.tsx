@@ -27,6 +27,24 @@ export function WebBookmarkBlock({
 	const [hovered, setHovered] = useState(false);
 	const safeUrl = useMemo(() => sanitizeUrl(url), [url]);
 
+	// Extract hostname from URL safely
+	const urlHostname = useMemo(() => {
+		if (!safeUrl) return "";
+		try {
+			const urlObj = new URL(safeUrl);
+			return urlObj.host;
+		} catch {
+			return "";
+		}
+	}, [safeUrl]);
+
+	// Determine display title
+	const displayTitle = useMemo(() => {
+		if (title) return title;
+		if (urlHostname) return urlHostname;
+		return "Bookmark";
+	}, [title, urlHostname]);
+
 	// onAttributesChangeをrefで保持して、useEffectの依存配列から除外
 	const onAttributesChangeRef = useRef(onAttributesChange);
 	useEffect(() => {
@@ -42,30 +60,55 @@ export function WebBookmarkBlock({
 				}
 				return;
 			}
+			let data: {
+				image?: string;
+				title?: string;
+				description?: string;
+			} | null = null;
+
 			try {
 				const res = await fetch(
 					`/api/metadata?url=${encodeURIComponent(safeUrl)}`,
 				);
-				const data = (await res.json()) as {
+				data = (await res.json()) as {
 					image?: string;
 					title?: string;
 					description?: string;
 				};
-				if (!cancelled) {
-					const next: Record<string, string> = {};
-					if ((data.image || "") !== (image || ""))
-						next.image = data.image || "";
-					if ((data.title || "") !== (title || ""))
-						next.title = data.title || "";
-					if ((data.description || "") !== (description || ""))
-						next.description = data.description || "";
-					if (Object.keys(next).length > 0) {
-						onAttributesChangeRef.current(next);
-					}
-				}
 			} catch {
 				if (!cancelled && image) {
 					onAttributesChangeRef.current({ image: "" });
+				}
+				return;
+			}
+
+			// Process data outside try/catch block
+			if (!cancelled && data) {
+				const next: Record<string, string> = {};
+
+				// Compare and set image
+				const dataImage = data.image || "";
+				const currentImage = image || "";
+				if (dataImage !== currentImage) {
+					next.image = dataImage;
+				}
+
+				// Compare and set title
+				const dataTitle = data.title || "";
+				const currentTitle = title || "";
+				if (dataTitle !== currentTitle) {
+					next.title = dataTitle;
+				}
+
+				// Compare and set description
+				const dataDescription = data.description || "";
+				const currentDescription = description || "";
+				if (dataDescription !== currentDescription) {
+					next.description = dataDescription;
+				}
+
+				if (Object.keys(next).length > 0) {
+					onAttributesChangeRef.current(next);
 				}
 			}
 		};
@@ -73,8 +116,6 @@ export function WebBookmarkBlock({
 		return () => {
 			cancelled = true;
 		};
-		// onAttributesChangeを依存配列から除外
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [safeUrl, image, title, description]);
 
 	return (
@@ -151,15 +192,7 @@ export function WebBookmarkBlock({
 				)}
 				<CardContent sx={{ flex: 1 }}>
 					<Typography variant="subtitle1" fontWeight={600}>
-						{title ||
-							(() => {
-								try {
-									return safeUrl ? new URL(safeUrl).host : "";
-								} catch {
-									return "";
-								}
-							})() ||
-							"Bookmark"}
+						{displayTitle}
 					</Typography>
 					{description && (
 						<Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>

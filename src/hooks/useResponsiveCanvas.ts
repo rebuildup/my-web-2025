@@ -44,6 +44,13 @@ export const useResponsiveCanvas = (
 	// Create a default ref if none provided
 	const defaultRef = useRef<HTMLElement | null>(null);
 	const activeRef = containerRef || defaultRef;
+
+	// Track container size in state to avoid React Compiler issues with ref.current access
+	const [containerSize, setContainerSize] = useState<{
+		width: number;
+		height: number;
+	} | null>(null);
+
 	const [dimensions, setDimensions] = useState<CanvasDimensions>({
 		width: 800,
 		height: 600,
@@ -53,106 +60,137 @@ export const useResponsiveCanvas = (
 		displayHeight: 600,
 	});
 
-	const calculateDimensions = useCallback((): CanvasDimensions => {
-		const finalConfig = { ...DEFAULT_CONFIG, ...config };
-		let containerWidth = responsive.viewport.width;
-		let containerHeight = responsive.viewport.height;
+	const calculateDimensions = useCallback(
+		(containerSize?: { width: number; height: number }): CanvasDimensions => {
+			const finalConfig = { ...DEFAULT_CONFIG, ...config };
+			let containerWidth = containerSize?.width ?? responsive.viewport.width;
+			let containerHeight = containerSize?.height ?? responsive.viewport.height;
 
-		// Get container dimensions if available (with error handling)
-		try {
-			if (activeRef?.current) {
-				const rect = activeRef.current.getBoundingClientRect();
-				if (rect.width > 0 && rect.height > 0) {
-					containerWidth = rect.width;
-					containerHeight = rect.height;
+			// Apply responsive adjustments
+			if (responsive.isMobile) {
+				containerWidth = Math.min(containerWidth * 0.95, finalConfig.maxWidth);
+				containerHeight = Math.min(
+					containerHeight * 0.6,
+					finalConfig.maxHeight,
+				);
+			} else if (responsive.isTablet) {
+				containerWidth = Math.min(containerWidth * 0.9, finalConfig.maxWidth);
+				containerHeight = Math.min(
+					containerHeight * 0.7,
+					finalConfig.maxHeight,
+				);
+			} else {
+				containerWidth = Math.min(containerWidth * 0.8, finalConfig.maxWidth);
+				containerHeight = Math.min(
+					containerHeight * 0.8,
+					finalConfig.maxHeight,
+				);
+			}
+
+			let width = containerWidth;
+			let height = containerHeight;
+
+			// Maintain aspect ratio if required
+			if (finalConfig.maintainAspectRatio) {
+				const targetAspectRatio = finalConfig.aspectRatio;
+				const containerAspectRatio = containerWidth / containerHeight;
+
+				if (containerAspectRatio > targetAspectRatio) {
+					// Container is wider than target aspect ratio
+					width = containerHeight * targetAspectRatio;
+					height = containerHeight;
+				} else {
+					// Container is taller than target aspect ratio
+					width = containerWidth;
+					height = containerWidth / targetAspectRatio;
 				}
 			}
-		} catch (error) {
-			// Fallback to viewport dimensions if getBoundingClientRect fails
-			console.warn("Failed to get container dimensions:", error);
-		}
 
-		// Apply responsive adjustments
-		if (responsive.isMobile) {
-			containerWidth = Math.min(containerWidth * 0.95, finalConfig.maxWidth);
-			containerHeight = Math.min(containerHeight * 0.6, finalConfig.maxHeight);
-		} else if (responsive.isTablet) {
-			containerWidth = Math.min(containerWidth * 0.9, finalConfig.maxWidth);
-			containerHeight = Math.min(containerHeight * 0.7, finalConfig.maxHeight);
-		} else {
-			containerWidth = Math.min(containerWidth * 0.8, finalConfig.maxWidth);
-			containerHeight = Math.min(containerHeight * 0.8, finalConfig.maxHeight);
-		}
+			// Apply min/max constraints
+			width = Math.max(
+				finalConfig.minWidth,
+				Math.min(width, finalConfig.maxWidth),
+			);
+			height = Math.max(
+				finalConfig.minHeight,
+				Math.min(height, finalConfig.maxHeight),
+			);
 
-		let width = containerWidth;
-		let height = containerHeight;
+			// Calculate pixel ratio with fallback
+			const basePixelRatio =
+				typeof window !== "undefined" && responsive.viewport.width > 0
+					? window.devicePixelRatio || 1
+					: 1;
+			const pixelRatio = basePixelRatio * finalConfig.pixelRatioMultiplier;
 
-		// Maintain aspect ratio if required
-		if (finalConfig.maintainAspectRatio) {
-			const targetAspectRatio = finalConfig.aspectRatio;
-			const containerAspectRatio = containerWidth / containerHeight;
-
-			if (containerAspectRatio > targetAspectRatio) {
-				// Container is wider than target aspect ratio
-				width = containerHeight * targetAspectRatio;
-				height = containerHeight;
-			} else {
-				// Container is taller than target aspect ratio
-				width = containerWidth;
-				height = containerWidth / targetAspectRatio;
+			// Adjust for device performance
+			let performanceMultiplier = 1;
+			if (responsive.isMobile) {
+				performanceMultiplier = 0.75; // Reduce resolution on mobile for performance
+			} else if (responsive.isTablet) {
+				performanceMultiplier = 0.85;
 			}
-		}
 
-		// Apply min/max constraints
-		width = Math.max(
-			finalConfig.minWidth,
-			Math.min(width, finalConfig.maxWidth),
-		);
-		height = Math.max(
-			finalConfig.minHeight,
-			Math.min(height, finalConfig.maxHeight),
-		);
+			const actualWidth = Math.floor(
+				width * pixelRatio * performanceMultiplier,
+			);
+			const actualHeight = Math.floor(
+				height * pixelRatio * performanceMultiplier,
+			);
 
-		// Calculate pixel ratio with fallback
-		const basePixelRatio =
-			typeof window !== "undefined" && responsive.viewport.width > 0
-				? window.devicePixelRatio || 1
-				: 1;
-		const pixelRatio = basePixelRatio * finalConfig.pixelRatioMultiplier;
+			return {
+				width: actualWidth,
+				height: actualHeight,
+				aspectRatio: actualWidth / actualHeight,
+				pixelRatio,
+				displayWidth: width,
+				displayHeight: height,
+			};
+		},
+		[
+			responsive.viewport.width,
+			responsive.viewport.height,
+			responsive.isMobile,
+			responsive.isTablet,
+			config,
+		],
+	);
 
-		// Adjust for device performance
-		let performanceMultiplier = 1;
-		if (responsive.isMobile) {
-			performanceMultiplier = 0.75; // Reduce resolution on mobile for performance
-		} else if (responsive.isTablet) {
-			performanceMultiplier = 0.85;
-		}
-
-		const actualWidth = Math.floor(width * pixelRatio * performanceMultiplier);
-		const actualHeight = Math.floor(
-			height * pixelRatio * performanceMultiplier,
-		);
-
-		return {
-			width: actualWidth,
-			height: actualHeight,
-			aspectRatio: actualWidth / actualHeight,
-			pixelRatio,
-			displayWidth: width,
-			displayHeight: height,
-		};
-	}, [
-		responsive.viewport.width,
-		responsive.viewport.height,
-		responsive.isMobile,
-		responsive.isTablet,
-		config,
-		activeRef,
-	]); // Optimize dependencies
-
-	// Update dimensions when responsive state changes
+	// Update container size and dimensions when responsive state changes
 	useEffect(() => {
-		const newDimensions = calculateDimensions();
+		// Update container size inline to avoid React Compiler issues with ref.current
+		// access in useCallback dependencies
+		const currentRef = activeRef?.current;
+		if (!currentRef) {
+			setContainerSize(null);
+			return;
+		}
+
+		// Extract conditional logic outside try/catch to satisfy React Compiler
+		let rect: DOMRect | null = null;
+		try {
+			rect = currentRef.getBoundingClientRect();
+		} catch (error) {
+			// Fallback to null if getBoundingClientRect fails
+			console.warn("Failed to get container dimensions:", error);
+			setContainerSize(null);
+			return;
+		}
+
+		// Conditional logic outside try/catch block
+		const hasValidDimensions = rect.width > 0 && rect.height > 0;
+		if (hasValidDimensions) {
+			setContainerSize({ width: rect.width, height: rect.height });
+		} else {
+			setContainerSize(null);
+		}
+		// activeRef is stable, so we can safely include it in dependencies
+		// React Compiler handles ref.current access within useEffect correctly
+	}, [activeRef, calculateDimensions]);
+
+	// Update dimensions when container size or responsive state changes
+	useEffect(() => {
+		const newDimensions = calculateDimensions(containerSize ?? undefined);
 		setDimensions((prevDimensions) => {
 			// Only update if dimensions actually changed
 			if (
@@ -164,12 +202,51 @@ export const useResponsiveCanvas = (
 			}
 			return newDimensions;
 		});
-	}, [calculateDimensions]); // Include calculateDimensions in dependencies
+	}, [calculateDimensions, containerSize]);
+
+	// Observe container size changes with ResizeObserver
+	useEffect(() => {
+		const currentRef = activeRef?.current;
+		if (!currentRef || typeof ResizeObserver === "undefined") {
+			return;
+		}
+
+		const resizeObserver = new ResizeObserver(() => {
+			// Update container size inline to avoid React Compiler issues
+			// Extract conditional logic outside try/catch to satisfy React Compiler
+			let rect: DOMRect | null = null;
+			try {
+				rect = currentRef.getBoundingClientRect();
+			} catch (error) {
+				// Fallback to null if getBoundingClientRect fails
+				console.warn("Failed to get container dimensions:", error);
+				setContainerSize(null);
+				return;
+			}
+
+			// Conditional logic outside try/catch block
+			const hasValidDimensions = rect.width > 0 && rect.height > 0;
+			if (hasValidDimensions) {
+				setContainerSize({ width: rect.width, height: rect.height });
+			} else {
+				setContainerSize(null);
+			}
+		});
+
+		resizeObserver.observe(currentRef);
+
+		return () => {
+			resizeObserver.disconnect();
+		};
+		// activeRef is stable, so we can safely include it in dependencies
+		// React Compiler handles ref.current access within useEffect correctly
+	}, [activeRef]);
 
 	// Setup canvas with proper dimensions and pixel ratio
 	const setupCanvas = useCallback(
 		(canvas: HTMLCanvasElement): CanvasDimensions => {
-			const dims = calculateDimensions();
+			// Use containerSize from state to avoid React Compiler issues with ref.current access
+			const dims = calculateDimensions(containerSize ?? undefined);
 
 			// Set display size (CSS)
 			canvas.style.width = `${dims.displayWidth}px`;
@@ -187,13 +264,14 @@ export const useResponsiveCanvas = (
 
 			return dims;
 		},
-		[calculateDimensions],
+		[calculateDimensions, containerSize],
 	);
 
 	// WebGL canvas setup
 	const setupWebGLCanvas = useCallback(
 		(canvas: HTMLCanvasElement): CanvasDimensions => {
-			const dims = calculateDimensions();
+			// Use containerSize from state to avoid React Compiler issues with ref.current access
+			const dims = calculateDimensions(containerSize ?? undefined);
 
 			// Set display size (CSS)
 			canvas.style.width = `${dims.displayWidth}px`;
@@ -211,7 +289,7 @@ export const useResponsiveCanvas = (
 
 			return dims;
 		},
-		[calculateDimensions],
+		[calculateDimensions, containerSize],
 	);
 
 	return {

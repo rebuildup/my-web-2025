@@ -130,79 +130,68 @@ export function DataManagerForm({
 		const loadMarkdownContent = async () => {
 			if (enhanced && (item as EnhancedContentItem).markdownPath) {
 				setIsLoadingMarkdown(true);
-				try {
-					const markdownPath = (item as EnhancedContentItem).markdownPath!;
-					console.log("=== Markdownファイル読み込み開始 ===");
-					console.log("読み込み対象パス:", markdownPath);
+			const markdownPath = (item as EnhancedContentItem).markdownPath!;
+			console.log("=== Markdownファイル読み込み開始 ===");
+			console.log("読み込み対象パス:", markdownPath);
 
-					// ファイル存在確認
-					const existsResponse = await fetch(
-						`/api/markdown?action=fileExists&filePath=${encodeURIComponent(markdownPath)}`,
-					);
+			const existsResponse = await fetch(
+				`/api/markdown?action=fileExists&filePath=${encodeURIComponent(markdownPath)}`,
+			).catch((error) => {
+				console.warn("ファイル存在確認でエラーが発生しました:", error);
+				return null;
+			});
 
-					if (existsResponse.ok) {
-						const existsData = await existsResponse.json();
-						console.log("ファイル存在確認結果:", existsData);
+			if (existsResponse && existsResponse.ok) {
+				const existsData = await existsResponse.json().catch(() => null);
+				console.log("ファイル存在確認結果:", existsData);
+				if (!existsData || existsData.exists === false) {
+					console.warn(`Markdownファイルが存在しません: ${markdownPath}`);
+					setMarkdownFilePath(undefined);
+					setMarkdownContent(item.content || "");
+					setMarkdownLoadError(null);
+					setIsLoadingMarkdown(false);
+					return;
+				}
+			} else {
+				console.warn("ファイル存在確認に失敗しましたが、読み込みを続行します");
+			}
 
-						if (!existsData.exists) {
-							console.warn(`Markdownファイルが存在しません: ${markdownPath}`);
-							console.log("markdownPathをクリアしてitem.contentを使用します");
-							setMarkdownFilePath(undefined);
-							setMarkdownContent(item.content || "");
-							setMarkdownLoadError(null);
-							setIsLoadingMarkdown(false);
-							return;
-						}
-					} else {
-						console.warn(
-							"ファイル存在確認に失敗しましたが、読み込みを続行します",
-						);
-					}
+			const contentResponse = await fetch(
+				`/api/markdown?action=getMarkdownContent&filePath=${encodeURIComponent(markdownPath)}`,
+			).catch((error) => {
+				console.error("Markdownコンテンツ取得でエラー:", error);
+				return null;
+			});
 
-					// Markdownコンテンツ取得
-					const contentResponse = await fetch(
-						`/api/markdown?action=getMarkdownContent&filePath=${encodeURIComponent(markdownPath)}`,
-					);
-
-					if (contentResponse.ok) {
-						const contentData = await contentResponse.json();
-						console.log(
-							"Markdownコンテンツ取得成功:",
-							contentData.content?.length || 0,
-							"文字",
-						);
-
-						if (contentData.content !== undefined) {
-							setMarkdownContent(contentData.content);
-							setMarkdownLoadError(null);
-							console.log("Markdownコンテンツを正常に設定しました");
-						} else {
-							throw new Error("APIレスポンスにコンテンツが含まれていません");
-						}
-					} else {
-						const errorData = await contentResponse.json();
-						throw new Error(
-							`Markdown API エラー: ${contentResponse.status} - ${errorData.error || "不明なエラー"}`,
-						);
-					}
-				} catch (error) {
-					console.error("Markdownコンテンツの読み込みに失敗:", error);
-					const errorMessage =
-						error instanceof Error
-							? error.message
-							: "Markdownファイルの読み込みに失敗しました";
-					setMarkdownLoadError(errorMessage);
-
-					// エラー時はitem.contentをフォールバックとして使用
+			if (contentResponse && contentResponse.ok) {
+				const contentData = await contentResponse.json().catch(() => null);
+				if (contentData && contentData.content !== undefined) {
 					console.log(
-						"Markdownファイル読み込み失敗、item.contentを使用:",
-						item.content?.length || 0,
+						"Markdownコンテンツ取得成功:",
+						contentData.content?.length || 0,
 						"文字",
 					);
-					setMarkdownContent(item.content || "");
-				} finally {
+					setMarkdownContent(contentData.content);
+					setMarkdownLoadError(null);
 					setIsLoadingMarkdown(false);
+					return;
 				}
+				console.warn("APIレスポンスにコンテンツが含まれていません");
+			} else if (contentResponse) {
+				const errorData = await contentResponse.json().catch(() => ({}));
+				console.error(
+					`Markdown API エラー: ${contentResponse.status} - ${errorData.error || "不明なエラー"}`,
+				);
+			}
+
+			setMarkdownLoadError("Markdownファイルの読み込みに失敗しました");
+			console.log(
+				"Markdownファイル読み込み失敗、item.contentを使用:",
+				item.content?.length || 0,
+				"文字",
+			);
+			setMarkdownContent(item.content || "");
+			setIsLoadingMarkdown(false);
 			} else {
 				// 拡張モードでない場合、またはmarkdownPathがない場合はitem.contentを使用
 				console.log(
@@ -435,21 +424,23 @@ export function DataManagerForm({
 	): Promise<string | null> => {
 		if (!enhanced) return null;
 
-		try {
-			const filePath = await clientMarkdownService.generateFilePath(
-				formData.id,
-				formData.type,
-			);
-			await clientMarkdownService.createMarkdownFile(
-				formData.id,
-				formData.type,
-				content,
-			);
-			return filePath;
-		} catch (error) {
-			console.error("Failed to create markdown file:", error);
-			return null;
-		}
+		const filePath = await clientMarkdownService
+			.generateFilePath(formData.id, formData.type)
+			.catch((error) => {
+				console.error("Failed to create markdown file:", error);
+				return null;
+			});
+		if (!filePath) return null;
+
+		const created = await clientMarkdownService
+			.createMarkdownFile(formData.id, formData.type, content)
+			.catch((error) => {
+				console.error("Failed to create markdown file:", error);
+				return null;
+			});
+		if (!created) return null;
+
+		return filePath;
 	};
 
 	const updateMarkdownFile = async (
@@ -458,13 +449,13 @@ export function DataManagerForm({
 	): Promise<boolean> => {
 		if (!enhanced) return false;
 
-		try {
-			await clientMarkdownService.updateMarkdownFile(filePath, content);
-			return true;
-		} catch (error) {
-			console.error("Failed to update markdown file:", error);
-			return false;
-		}
+		const updated = await clientMarkdownService
+			.updateMarkdownFile(filePath, content)
+			.catch((error) => {
+				console.error("Failed to update markdown file:", error);
+				return null;
+			});
+		return Boolean(updated);
 	};
 
 	const handleMarkdownContentChange = (content: string) => {
@@ -479,43 +470,39 @@ export function DataManagerForm({
 	): Promise<void> => {
 		if (!enhanced) return;
 
-		try {
-			if (filePath && (await clientMarkdownService.fileExists(filePath))) {
-				// Update existing file
+		if (filePath) {
+			const exists = await clientMarkdownService
+				.fileExists(filePath)
+				.catch(() => false);
+			if (exists) {
 				await updateMarkdownFile(filePath, content);
-			} else {
-				// Create new file
-				const newFilePath = await createMarkdownFile(content);
-				if (newFilePath) {
-					setMarkdownFilePath(newFilePath);
-					handleEnhancedInputChange("markdownPath", newFilePath);
-				}
+				return;
 			}
-		} catch (error) {
-			console.error("Failed to save markdown file:", error);
-			throw error;
+		}
+
+		const newFilePath = await createMarkdownFile(content);
+		if (newFilePath) {
+			setMarkdownFilePath(newFilePath);
+			handleEnhancedInputChange("markdownPath", newFilePath);
 		}
 	};
 
 	const migrateContentToMarkdown = async () => {
 		if (!enhanced || !formData.content || markdownFilePath) return;
 
-		try {
-			const newFilePath = await createMarkdownFile(formData.content);
-			if (newFilePath) {
-				setMarkdownFilePath(newFilePath);
-				handleEnhancedInputChange("markdownPath", newFilePath);
-				setNeedsMarkdownMigration(false);
-
-				// Clear the old content field after successful migration
-				handleInputChange("content", "");
-			}
-		} catch (error) {
-			console.error("Failed to migrate content to markdown:", error);
+		const newFilePath = await createMarkdownFile(formData.content);
+		if (!newFilePath) {
+			console.error("Failed to migrate content to markdown");
 			alert(
 				"コンテンツのMarkdownファイルへの移行に失敗しました。もう一度お試しください。",
 			);
+			return;
 		}
+
+		setMarkdownFilePath(newFilePath);
+		handleEnhancedInputChange("markdownPath", newFilePath);
+		setNeedsMarkdownMigration(false);
+		handleInputChange("content", "");
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -528,22 +515,20 @@ export function DataManagerForm({
 
 		// Handle markdown file operations if enhanced mode is enabled
 		if (enhanced && markdownContent) {
-			try {
-				if (markdownFilePath) {
-					// Update existing markdown file
-					await updateMarkdownFile(markdownFilePath, markdownContent);
-				} else {
-					// Create new markdown file
-					const newFilePath = await createMarkdownFile(markdownContent);
-					if (newFilePath) {
-						setMarkdownFilePath(newFilePath);
-						handleEnhancedInputChange("markdownPath", newFilePath);
-					}
+			if (markdownFilePath) {
+				const ok = await updateMarkdownFile(markdownFilePath, markdownContent);
+				if (!ok) {
+					alert("Markdownファイルの保存に失敗しました。もう一度お試しください。");
+					return;
 				}
-			} catch (error) {
-				console.error("Failed to handle markdown file:", error);
-				alert("Markdownファイルの保存に失敗しました。もう一度お試しください。");
-				return;
+			} else {
+				const newFilePath = await createMarkdownFile(markdownContent);
+				if (!newFilePath) {
+					alert("Markdownファイルの保存に失敗しました。もう一度お試しください。");
+					return;
+				}
+				setMarkdownFilePath(newFilePath);
+				handleEnhancedInputChange("markdownPath", newFilePath);
 			}
 		}
 

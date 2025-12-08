@@ -9,6 +9,10 @@ import React, { useEffect, useRef, useState } from "react";
 
 const MAX_OVERFLOW = 50;
 
+// Default icons as constants to avoid JSX fragments in default parameters
+const DEFAULT_LEFT_ICON = <>-</>;
+const DEFAULT_RIGHT_ICON = <>+</>;
+
 interface ElasticSliderProps {
 	defaultValue?: number;
 	startingValue?: number;
@@ -30,8 +34,8 @@ const ElasticSlider: React.FC<ElasticSliderProps> = ({
 	className = "",
 	isStepped = false,
 	stepSize = 1,
-	leftIcon = <>-</>,
-	rightIcon = <>+</>,
+	leftIcon = DEFAULT_LEFT_ICON,
+	rightIcon = DEFAULT_RIGHT_ICON,
 	onChange,
 	showValue = false,
 }) => {

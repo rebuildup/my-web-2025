@@ -34,8 +34,10 @@ export function ParticleSystemExperiment({
 	const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 	const particlesRef = useRef<THREE.Points | null>(null);
 	const animationRef = useRef<number | null>(null);
+	const animateRef = useRef<(() => void) | undefined>(undefined);
 	const clockRef = useRef<THREE.Clock>(new THREE.Clock());
 	const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
+	const isActiveRef = useRef(false);
 
 	const [controls, setControls] = useState<ParticleControls>({
 		particleCount:
@@ -231,12 +233,12 @@ export function ParticleSystemExperiment({
 			});
 
 			// Set memory limit based on device capabilities
-			const memoryLimit =
-				deviceCapabilities.performanceLevel === "high"
-					? 256
-					: deviceCapabilities.performanceLevel === "medium"
-						? 128
-						: 64;
+			let memoryLimit = 64;
+			if (deviceCapabilities.performanceLevel === "high") {
+				memoryLimit = 256;
+			} else if (deviceCapabilities.performanceLevel === "medium") {
+				memoryLimit = 128;
+			}
 			webglMemoryManager.setMemoryLimit(memoryLimit);
 
 			// Scene
@@ -286,8 +288,8 @@ export function ParticleSystemExperiment({
 
 			// Mouse tracking
 			const handleMouseMove = (event: MouseEvent) => {
-				const rect = mountRef.current?.getBoundingClientRect();
-				if (rect) {
+				if (mountRef.current) {
+					const rect = mountRef.current.getBoundingClientRect();
 					mouseRef.current.x =
 						((event.clientX - rect.left) / rect.width) * 2 - 1;
 					mouseRef.current.y =
@@ -301,9 +303,14 @@ export function ParticleSystemExperiment({
 			setError(null);
 			return true;
 		} catch (err) {
-			const errorMessage = err instanceof Error ? err.message : "Unknown error";
+			let errorMessage = "Unknown error";
+			if (err instanceof Error) {
+				errorMessage = err.message;
+			}
 			setError(`Failed to initialize particle system: ${errorMessage}`);
-			onError?.(new Error(errorMessage));
+			if (onError) {
+				onError(new Error(errorMessage));
+			}
 			return false;
 		}
 	}, [deviceCapabilities, performanceSettings, onError, createParticleSystem]);
@@ -391,7 +398,7 @@ export function ParticleSystemExperiment({
 	// Animation loop
 	const animate = useCallback(() => {
 		if (
-			!isActive ||
+			!isActiveRef.current ||
 			!rendererRef.current ||
 			!sceneRef.current ||
 			!cameraRef.current
@@ -425,25 +432,39 @@ export function ParticleSystemExperiment({
 					(currentTime - performanceRef.current.lastTime),
 			);
 
-			onPerformanceUpdate?.({
-				fps: performanceRef.current.fps,
-				frameTime: deltaTime * 1000,
-				memoryUsage: (() => {
-					const perfMemory = (
-						performance as { memory?: { usedJSHeapSize: number } }
-					).memory;
-					return perfMemory?.usedJSHeapSize
-						? Math.round(perfMemory.usedJSHeapSize / 1024 / 1024)
-						: 0;
-				})(),
-			});
+			if (onPerformanceUpdate) {
+				let memoryUsage = 0;
+				const perfMemory = (
+					performance as { memory?: { usedJSHeapSize: number } }
+				).memory;
+				if (perfMemory?.usedJSHeapSize) {
+					memoryUsage = Math.round(perfMemory.usedJSHeapSize / 1024 / 1024);
+				}
+				onPerformanceUpdate({
+					fps: performanceRef.current.fps,
+					frameTime: deltaTime * 1000,
+					memoryUsage,
+				});
+			}
 
 			performanceRef.current.frameCount = 0;
 			performanceRef.current.lastTime = currentTime;
 		}
 
-		animationRef.current = requestAnimationFrame(animate);
-	}, [isActive, updateParticles, onPerformanceUpdate]);
+		if (animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
+		}
+	}, [updateParticles, onPerformanceUpdate]);
+
+	// Update animate ref when it changes
+	useEffect(() => {
+		animateRef.current = animate;
+	}, [animate]);
+
+	// Update isActive ref when it changes
+	useEffect(() => {
+		isActiveRef.current = isActive;
+	}, [isActive]);
 
 	// Handle window resize
 	const handleResize = useCallback(() => {
@@ -461,8 +482,8 @@ export function ParticleSystemExperiment({
 	useEffect(() => {
 		if (isActive && !isInitialized) {
 			const success = initializeScene();
-			if (success) {
-				animate();
+			if (success && animateRef.current) {
+				animationRef.current = requestAnimationFrame(animateRef.current);
 			}
 		}
 
@@ -472,7 +493,19 @@ export function ParticleSystemExperiment({
 				animationRef.current = null;
 			}
 		};
-	}, [isActive, isInitialized, initializeScene, animate]);
+	}, [isActive, isInitialized, initializeScene]);
+
+	// Handle animation state changes
+	useEffect(() => {
+		if (isActive && animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
+		} else if (!isActive && animationRef.current) {
+			if (animationRef.current) {
+				cancelAnimationFrame(animationRef.current);
+				animationRef.current = null;
+			}
+		}
+	}, [isActive]);
 
 	// Update particle system when controls change
 	useEffect(() => {

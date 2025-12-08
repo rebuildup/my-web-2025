@@ -65,9 +65,8 @@ const STICKY_WIDGET_TYPES = new Set([
 const BASE_WIDGET_Z = 60;
 
 const isStickyWidgetType = (type: string) => STICKY_WIDGET_TYPES.has(type);
-
-const getRandomStickyColor = () =>
-	STICKY_NOTE_COLORS[Math.floor(Math.random() * STICKY_NOTE_COLORS.length)];
+const getStickyColorById = (id: number) =>
+	STICKY_NOTE_COLORS[Math.abs(id) % STICKY_NOTE_COLORS.length];
 
 const DEFAULT_SETTINGS: PomodoroSettings = {
 	workDuration: 25,
@@ -608,12 +607,12 @@ const Widget = ({
 
 	useEffect(() => {
 		if (isSticky && !widget.color) {
-			updateWidget(widget.id, { color: getRandomStickyColor() });
+			updateWidget(widget.id, { color: getStickyColorById(widget.id) });
 		}
 	}, [isSticky, updateWidget, widget.color, widget.id]);
 
 	const fallbackStickyColor = useMemo(
-		() => getRandomStickyColor(),
+		() => getStickyColorById(widget.id),
 		[widget.id],
 	);
 	const stickyColor = widget.color ?? fallbackStickyColor;
@@ -959,6 +958,25 @@ export default function PomodoroTimer() {
 		"pomodoro-settings",
 		DEFAULT_SETTINGS,
 	);
+	// Deterministic pseudo-random generator for React Compiler compatibility
+	const seedRef = useRef(123456789);
+	const nextSeed = useCallback(() => {
+		// Linear congruential generator (LCG) for stable pseudo-random values
+		seedRef.current = (seedRef.current * 1664525 + 1013904223) >>> 0;
+		return seedRef.current;
+	}, []);
+	const nextJitter = useCallback(
+		(range: number) => {
+			const value = nextSeed() / 0xffffffff;
+			return (value - 0.5) * range * 2;
+		},
+		[nextSeed],
+	);
+	const nextId = useCallback(() => nextSeed(), [nextSeed]);
+	const getDeterministicStickyColor = useCallback(() => {
+		const index = nextSeed() % STICKY_NOTE_COLORS.length;
+		return STICKY_NOTE_COLORS[index];
+	}, [nextSeed]);
 	const highlightColor = settings.highlightColor ?? DEFAULT_HIGHLIGHT_COLOR;
 	const [_stats, setStats] = useLocalStorage("pomodoro-stats", DEFAULT_STATS);
 	const [_sessions, setSessions] = useLocalStorage<PomodoroSession[]>(
@@ -1297,12 +1315,12 @@ export default function PomodoroTimer() {
 		const youtubeWidth = currentSettings.youtubeWidgetWidth ?? 400;
 
 		if (type === "music") {
-			const id = Date.now();
+			const id = nextId();
 			const newWidget = {
 				id,
 				type: "youtube",
-				x: window.innerWidth / 2 - youtubeWidth / 2 + (Math.random() * 40 - 20),
-				y: window.innerHeight / 2 - 150 + (Math.random() * 40 - 20),
+				x: window.innerWidth / 2 - youtubeWidth / 2 + nextJitter(40),
+				y: window.innerHeight / 2 - 150 + nextJitter(40),
 				content: "",
 				w: youtubeWidth,
 				h: "auto",
@@ -1312,22 +1330,22 @@ export default function PomodoroTimer() {
 			return;
 		}
 		if (type === "stats") {
-			const id = Date.now();
+			const id = nextId();
 			const newWidget = {
 				id,
 				type: "stats",
-				x: window.innerWidth / 2 - 180 + (Math.random() * 40 - 20),
-				y: window.innerHeight / 2 - 120 + (Math.random() * 40 - 20),
+				x: window.innerWidth / 2 - 180 + nextJitter(40),
+				y: window.innerHeight / 2 - 120 + nextJitter(40),
 				content: "",
 				w: stickySize,
 				h: stickySize,
 				zIndex: nextZ(),
-				color: getRandomStickyColor(),
+				color: getDeterministicStickyColor(),
 			};
 			setWidgets([...widgets, newWidget]);
 			return;
 		}
-		const id = Date.now();
+		const id = nextId();
 		const content = "";
 		const shouldHaveStickyStyle =
 			type === "note" || type === "image" || type === "timer";
@@ -1335,12 +1353,12 @@ export default function PomodoroTimer() {
 		const newWidget = {
 			id,
 			type,
-			x: window.innerWidth / 2 - 150 + (Math.random() * 40 - 20),
-			y: window.innerHeight / 2 - 100 + (Math.random() * 40 - 20),
+			x: window.innerWidth / 2 - 150 + nextJitter(40),
+			y: window.innerHeight / 2 - 100 + nextJitter(40),
 			content,
 			w: initialSize,
 			h: initialSize,
-			color: shouldHaveStickyStyle ? getRandomStickyColor() : undefined,
+			color: shouldHaveStickyStyle ? getDeterministicStickyColor() : undefined,
 			zIndex: nextZ(),
 		};
 		setWidgets([...widgets, newWidget]);
@@ -1968,7 +1986,7 @@ export default function PomodoroTimer() {
 										<button
 											onClick={() => {
 												const newStep = {
-													id: Date.now(),
+													id: nextId(),
 													type: "focus" as const,
 													duration: 25,
 													label: "New Step",

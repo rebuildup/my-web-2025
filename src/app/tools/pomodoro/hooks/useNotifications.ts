@@ -50,11 +50,22 @@ export function useNotifications() {
 				return;
 			}
 
+			// Calculate notification options outside try/catch block
+			let icon = "/favicon.ico";
+			if (options.icon) {
+				icon = options.icon;
+			}
+
+			let requireInteraction = false;
+			if (options.requireInteraction) {
+				requireInteraction = options.requireInteraction;
+			}
+
 			try {
 				const notification = new Notification(options.title, {
 					body: options.body,
-					icon: options.icon || "/favicon.ico",
-					requireInteraction: options.requireInteraction || false,
+					icon,
+					requireInteraction,
 					tag: "pomodoro-timer",
 				});
 

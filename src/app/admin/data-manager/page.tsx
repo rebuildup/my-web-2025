@@ -3,7 +3,7 @@
 import { ContentItem, ContentType } from "@/types/content";
 import { EnhancedContentItem } from "@/types/enhanced-content";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ContentList } from "./components/ContentList";
 import { DataManagerForm } from "./components/DataManagerForm";
 import { PreviewPanel } from "./components/PreviewPanel";
@@ -11,6 +11,11 @@ import { PreviewPanel } from "./components/PreviewPanel";
 export default function DataManagerPage() {
 	const router = useRouter();
 	const [isClient, setIsClient] = useState(false);
+	const idSeedRef = useRef(1);
+	const nextSeed = useCallback(() => {
+		idSeedRef.current += 1;
+		return idSeedRef.current;
+	}, []);
 
 	// Check development environment on client side
 	useEffect(() => {
@@ -35,19 +40,10 @@ export default function DataManagerPage() {
 		"idle" | "saving" | "success" | "error"
 	>("idle");
 
-	// Load content items for selected type
-	useEffect(() => {
-		loadContentItems(selectedContentType);
-	}, [selectedContentType]);
-
-	const loadContentItems = async (type: ContentType, forceRefresh = false) => {
-		setIsLoading(true);
-		try {
-			console.log(
-				`Loading content items for type: ${type}${forceRefresh ? " (forced refresh)" : ""}`,
-			);
-			// キャッシュを回避するためにタイムスタンプを追加
-			const timestamp = Date.now();
+	const loadContentItems = useCallback(
+		async (type: ContentType, forceRefresh = false) => {
+			setIsLoading(true);
+			const timestamp = nextSeed();
 			const response = await fetch(
 				`/api/content/by-type/${type}?limit=100&_t=${timestamp}&status=all${forceRefresh ? "&refresh=true" : ""}`,
 				{
@@ -57,13 +53,20 @@ export default function DataManagerPage() {
 						Pragma: "no-cache",
 					},
 				},
-			);
+			).catch((error) => {
+				console.error("Error loading content items:", error);
+				return null;
+			});
+			if (!response) {
+				setContentItems([]);
+				setIsLoading(false);
+				return;
+			}
 			console.log(`Response status: ${response.status}`);
 
 			if (response.ok) {
 				const result = await response.json();
 				console.log(`Loaded content:`, result);
-				// APIは { data: ContentItem[] } の形式で返すので、dataプロパティを取得
 				const items = result.data || [];
 				console.log(`Setting ${items.length} items`);
 				setContentItems(items);
@@ -71,19 +74,21 @@ export default function DataManagerPage() {
 				console.error("Failed to load content items", response.status);
 				setContentItems([]);
 			}
-		} catch (error) {
-			console.error("Error loading content items:", error);
-			setContentItems([]);
-		} finally {
 			setIsLoading(false);
-		}
-	};
+		},
+		[nextSeed],
+	);
+
+	// Load content items for selected type
+	useEffect(() => {
+		loadContentItems(selectedContentType);
+	}, [selectedContentType, loadContentItems]);
 
 	const handleCreateNew = () => {
 		// Create enhanced content item for portfolio type
 		if (selectedContentType === "portfolio") {
 			const newItem: EnhancedContentItem = {
-				id: `${selectedContentType}-${Date.now()}`,
+				id: `${selectedContentType}-${nextSeed()}`,
 				type: selectedContentType,
 				title: "",
 				description: "",
@@ -107,7 +112,7 @@ export default function DataManagerPage() {
 		} else {
 			// Use legacy format for non-portfolio items
 			const newItem: ContentItem = {
-				id: `${selectedContentType}-${Date.now()}`,
+				id: `${selectedContentType}-${nextSeed()}`,
 				type: selectedContentType,
 				title: "",
 				description: "",
@@ -136,97 +141,78 @@ export default function DataManagerPage() {
 		setIsLoading(true);
 		setSaveStatus("saving");
 
-		try {
-			console.log("=== Saving item ===");
-			console.log("Item data:", JSON.stringify(item, null, 2));
+		console.log("=== Saving item ===");
+		console.log("Item data:", JSON.stringify(item, null, 2));
 
-			const response = await fetch(`/api/admin/content`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(item),
-			});
-
-			console.log("Response status:", response.status);
-			console.log(
-				"Response headers:",
-				Object.fromEntries(response.headers.entries()),
-			);
-
-			const result = await response.json();
-			console.log("Save response:", JSON.stringify(result, null, 2));
-
-			if (response.ok) {
-				console.log("Save successful!");
-				setSaveStatus("success");
-
-				// Update tag usage counts for all tags in the item
-				if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
-					console.log("Updating tag usage for tags:", item.tags);
-					try {
-						// Update usage for each tag
-						await Promise.all(
-							item.tags.map(async (tag) => {
-								if (typeof tag === "string" && tag.trim()) {
-									const tagResponse = await fetch(
-										`/api/admin/tags/${encodeURIComponent(tag)}`,
-										{ method: "PUT" },
-									);
-									if (!tagResponse.ok) {
-										console.warn(`Failed to update usage for tag: ${tag}`);
-									}
-								}
-							}),
-						);
-						console.log("Tag usage updated successfully");
-					} catch (tagError) {
-						console.warn("Error updating tag usage:", tagError);
-						// Don't fail the save operation if tag update fails
-					}
-				}
-
-				// 保存されたアイテムでselectedItemを更新
-				const savedItem = result.data || item;
-				setSelectedItem(savedItem);
-
-				// データを即座に再読み込み（強制的にキャッシュをバイパス）
-				console.log("Reloading content items...");
-				await loadContentItems(selectedContentType, true);
-
-				// リストの中で更新されたアイテムを選択状態に保つ
-				setSelectedItem(savedItem);
-
-				// ポートフォリオの場合、ギャラリーページのキャッシュを無効化するためのヒント
-				if (selectedContentType === "portfolio") {
-					console.log(
-						"Portfolio item saved - gallery cache should be invalidated",
-					);
-
-					// オプション: ギャラリーページを新しいタブで開いて確認を促す
-					// window.open('/portfolio/gallery/all', '_blank');
-				}
-
-				// 成功メッセージを3秒後にリセット
-				setTimeout(() => setSaveStatus("idle"), 3000);
-			} else {
-				console.error("Failed to save item:", result);
-				setSaveStatus("error");
-				alert(
-					`Failed to save item: ${result.error || "Unknown error"}\nDetails: ${result.details || "No details"}`,
-				);
-				setTimeout(() => setSaveStatus("idle"), 3000);
-			}
-		} catch (error) {
+		const response = await fetch(`/api/admin/content`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(item),
+		}).catch((error) => {
 			console.error("Error saving item:", error);
 			setSaveStatus("error");
 			alert(
 				`Error saving item: ${error instanceof Error ? error.message : "Unknown error"}`,
 			);
 			setTimeout(() => setSaveStatus("idle"), 3000);
-		} finally {
 			setIsLoading(false);
+			return null;
+		});
+		if (!response) return;
+
+		console.log("Response status:", response.status);
+		console.log(
+			"Response headers:",
+			Object.fromEntries(response.headers.entries()),
+		);
+
+		const result = await response.json();
+		console.log("Save response:", JSON.stringify(result, null, 2));
+
+		if (!response.ok) {
+			console.error("Failed to save item:", result);
+			setSaveStatus("error");
+			alert(
+				`Failed to save item: ${result.error || "Unknown error"}\nDetails: ${result.details || "No details"}`,
+			);
+			setTimeout(() => setSaveStatus("idle"), 3000);
+			setIsLoading(false);
+			return;
 		}
+
+		setSaveStatus("success");
+
+		if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
+			console.log("Updating tag usage for tags:", item.tags);
+			await Promise.all(
+				item.tags.map(async (tag) => {
+					if (typeof tag === "string" && tag.trim()) {
+						const tagResponse = await fetch(
+							`/api/admin/tags/${encodeURIComponent(tag)}`,
+							{ method: "PUT" },
+						).catch(() => null);
+						if (!tagResponse || !tagResponse.ok) {
+							console.warn(`Failed to update usage for tag: ${tag}`);
+						}
+					}
+				}),
+			);
+		}
+
+		const savedItem = result.data || item;
+		setSelectedItem(savedItem);
+		console.log("Reloading content items...");
+		await loadContentItems(selectedContentType, true);
+		setSelectedItem(savedItem);
+
+		if (selectedContentType === "portfolio") {
+			console.log("Portfolio item saved - gallery cache should be invalidated");
+		}
+
+		setTimeout(() => setSaveStatus("idle"), 3000);
+		setIsLoading(false);
 	};
 
 	const handleDeleteItem = async (id: string) => {
@@ -241,27 +227,27 @@ export default function DataManagerPage() {
 		}
 
 		setIsLoading(true);
-		try {
-			const response = await fetch(
-				`/api/admin/content?id=${id}&type=${selectedContentType}`,
-				{
-					method: "DELETE",
-				},
-			);
-
-			if (response.ok) {
-				await loadContentItems(selectedContentType);
-				if (selectedItem?.id === id) {
-					setSelectedItem(null);
-				}
-			} else {
-				console.error("Failed to delete item");
-			}
-		} catch (error) {
+		const response = await fetch(
+			`/api/admin/content?id=${id}&type=${selectedContentType}`,
+			{
+				method: "DELETE",
+			},
+		).catch((error) => {
 			console.error("Error deleting item:", error);
-		} finally {
 			setIsLoading(false);
+			return null;
+		});
+		if (!response) return;
+
+		if (response.ok) {
+			await loadContentItems(selectedContentType);
+			if (selectedItem?.id === id) {
+				setSelectedItem(null);
+			}
+		} else {
+			console.error("Failed to delete item");
 		}
+		setIsLoading(false);
 	};
 
 	const handleCancel = () => {
@@ -281,45 +267,43 @@ export default function DataManagerPage() {
 		}
 
 		setIsLoading(true);
-		try {
-			console.log("Fixing thumbnails...");
-			const response = await fetch("/api/admin/fix-thumbnails", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-
-			const result = await response.json();
-			console.log("Fix thumbnails result:", result);
-
-			if (response.ok) {
-				alert(
-					isClient
-						? `✓ ${result.fixedItems?.length || 0}個のアイテムのサムネイルを修復しました`
-						: `✓ Fixed thumbnails for ${result.fixedItems?.length || 0} items`,
-				);
-
-				// Reload the content list to show updated data
-				await loadContentItems(selectedContentType, true);
-			} else {
-				console.error("Failed to fix thumbnails:", result);
-				alert(
-					isClient
-						? `サムネイル修復に失敗しました: ${result.error}`
-						: `Failed to fix thumbnails: ${result.error}`,
-				);
-			}
-		} catch (error) {
+		console.log("Fixing thumbnails...");
+		const response = await fetch("/api/admin/fix-thumbnails", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		}).catch((error) => {
 			console.error("Error fixing thumbnails:", error);
 			alert(
 				isClient
 					? `エラーが発生しました: ${error instanceof Error ? error.message : "Unknown error"}`
 					: `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
 			);
-		} finally {
 			setIsLoading(false);
+			return null;
+		});
+		if (!response) return;
+
+		const result = await response.json();
+		console.log("Fix thumbnails result:", result);
+
+		if (response.ok) {
+			alert(
+				isClient
+					? `✓ ${result.fixedItems?.length || 0}個のアイテムのサムネイルを修復しました`
+					: `✓ Fixed thumbnails for ${result.fixedItems?.length || 0} items`,
+			);
+			await loadContentItems(selectedContentType, true);
+		} else {
+			console.error("Failed to fix thumbnails:", result);
+			alert(
+				isClient
+					? `サムネイル修復に失敗しました: ${result.error}`
+					: `Failed to fix thumbnails: ${result.error}`,
+			);
 		}
+		setIsLoading(false);
 	};
 
 	// Design system classes matching root page

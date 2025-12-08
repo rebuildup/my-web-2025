@@ -237,8 +237,12 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
 
 			// Show results in development
 			if (process.env.NODE_ENV === "development") {
+				let baselineText = "Not Set";
+				if (status.baseline) {
+					baselineText = "Set";
+				}
 				alert(
-					`Performance Test Complete!\nRegressions: ${status.regressions.length}\nBaseline: ${status.baseline ? "Set" : "Not Set"}`,
+					`Performance Test Complete!\nRegressions: ${status.regressions.length}\nBaseline: ${baselineText}`,
 				);
 			}
 		} catch (error) {

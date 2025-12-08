@@ -175,7 +175,9 @@ export const useResponsive = (): ResponsiveState => {
 			mediaQueries.push(hoverQuery, pointerQuery);
 
 			mediaQueries.forEach((mq) => {
-				if (mq && typeof mq.addEventListener === "function") {
+				// Check conditions outside try/catch to support React Compiler optimization
+				const canAddListener = mq && typeof mq.addEventListener === "function";
+				if (canAddListener) {
 					mq.addEventListener("change", updateState);
 				}
 			});
@@ -193,12 +195,15 @@ export const useResponsive = (): ResponsiveState => {
 			}
 
 			mediaQueries.forEach((mq) => {
-				try {
-					if (mq && typeof mq.removeEventListener === "function") {
+				// Check conditions outside try/catch to support React Compiler optimization
+				const canRemoveListener =
+					mq && typeof mq.removeEventListener === "function";
+				if (canRemoveListener) {
+					try {
 						mq.removeEventListener("change", updateState);
+					} catch {
+						// Ignore cleanup errors
 					}
-				} catch {
-					// Ignore cleanup errors
 				}
 			});
 		};

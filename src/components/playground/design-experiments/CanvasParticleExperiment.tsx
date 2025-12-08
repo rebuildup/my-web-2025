@@ -40,8 +40,10 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 }) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const animationRef = useRef<number | undefined>(undefined);
+	const animateRef = useRef<(() => void) | undefined>(undefined);
 	const particlesRef = useRef<Particle[]>([]);
 	const mouseRef = useRef({ x: 0, y: 0, isDown: false });
+	const isAnimatingRef = useRef(false);
 
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [config, setConfig] = useState<ParticleConfig>({
@@ -307,14 +309,27 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 		updateParticles();
 		drawParticles();
 
-		if (isAnimating) {
-			animationRef.current = requestAnimationFrame(animate);
+		if (isAnimatingRef.current && animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
 		}
-	}, [isAnimating, updateParticles, drawParticles]);
+	}, [updateParticles, drawParticles]);
+
+	// Update animate ref when it changes
+	useEffect(() => {
+		animateRef.current = animate;
+	}, [animate]);
+
+	// Update isAnimating ref when it changes
+	useEffect(() => {
+		isAnimatingRef.current = isAnimating;
+	}, [isAnimating]);
 
 	// Start animation
 	const startAnimation = useCallback(() => {
 		setIsAnimating(true);
+		if (animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
+		}
 	}, []);
 
 	// Stop animation
@@ -324,6 +339,15 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 			cancelAnimationFrame(animationRef.current);
 		}
 	}, []);
+
+	// Handle animation state changes
+	useEffect(() => {
+		if (isAnimating && animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
+		} else if (!isAnimating && animationRef.current) {
+			cancelAnimationFrame(animationRef.current);
+		}
+	}, [isAnimating]);
 
 	// Reset particles
 	const resetParticles = useCallback(() => {

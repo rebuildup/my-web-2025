@@ -50,6 +50,10 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const animationFrameRef = useRef<number | undefined>(undefined);
+	const isAnimatingRef = useRef(false);
+	const animationLoopRef = useRef<((currentTime: number) => void) | undefined>(
+		undefined,
+	);
 	const performanceRef = useRef({
 		lastTime: 0,
 		frameCount: 0,
@@ -91,35 +95,61 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 				| null = null;
 
 			// Set up canvas dimensions
+			let initializationError: Error | null = null;
+
 			if (canvasType === "2d") {
 				setupCanvas(canvas);
 				context = canvas.getContext("2d");
 				if (!context) {
-					throw new Error("2D canvas context not supported");
+					initializationError = new Error("2D canvas context not supported");
 				}
 			} else {
 				setupWebGLCanvas(canvas);
 
 				if (canvasType === "webgl2") {
 					context = canvas.getContext("webgl2");
-					if (!context && deviceCapabilities.webgl2Support) {
-						throw new Error("WebGL2 not supported on this device");
+					if (!context) {
+						if (deviceCapabilities.webgl2Support) {
+							initializationError = new Error(
+								"WebGL2 not supported on this device",
+							);
+						}
 					}
 				}
 
-				if (!context) {
-					context = canvas.getContext("webgl");
-					if (!context) {
-						throw new Error("WebGL not supported on this device");
+				if (context === null) {
+					if (initializationError === null) {
+						context = canvas.getContext("webgl");
+						if (!context) {
+							initializationError = new Error(
+								"WebGL not supported on this device",
+							);
+						}
 					}
 				}
 
 				// WebGL-specific setup
-				if (context) {
-					context.viewport(0, 0, canvas.width, canvas.height);
-					context.clearColor(0.0, 0.0, 0.0, 1.0);
-					context.clear(context.COLOR_BUFFER_BIT);
+				if (context !== null) {
+					if (initializationError === null) {
+						context.viewport(0, 0, canvas.width, canvas.height);
+						context.clearColor(0.0, 0.0, 0.0, 1.0);
+						context.clear(context.COLOR_BUFFER_BIT);
+					}
 				}
+			}
+
+			if (initializationError) {
+				const errorMessage = initializationError.message;
+				setCanvasState((prev) => ({
+					...prev,
+					hasError: true,
+					errorMessage,
+				}));
+				if (onError) {
+					onError(initializationError);
+				}
+				announce(`キャンバスエラー: ${errorMessage}`, "assertive");
+				return;
 			}
 
 			setCanvasState((prev) => ({
@@ -129,7 +159,9 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 				errorMessage: "",
 			}));
 
-			onCanvasReady?.(canvas, context);
+			if (onCanvasReady) {
+				onCanvasReady(canvas, context);
+			}
 			announce(`${title} キャンバスが初期化されました`, "polite");
 		} catch (error) {
 			const errorMessage =
@@ -139,7 +171,9 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 				hasError: true,
 				errorMessage,
 			}));
-			onError?.(error instanceof Error ? error : new Error(errorMessage));
+			if (onError) {
+				onError(error instanceof Error ? error : new Error(errorMessage));
+			}
 			announce(`キャンバスエラー: ${errorMessage}`, "assertive");
 		}
 	}, [
@@ -197,21 +231,30 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 	// Animation loop for performance monitoring
 	const animationLoop = useCallback(
 		(currentTime: number) => {
-			if (canvasState.isAnimating) {
+			if (isAnimatingRef.current) {
 				updatePerformanceMetrics(currentTime);
-				animationFrameRef.current = requestAnimationFrame(animationLoop);
+				animationFrameRef.current = requestAnimationFrame(
+					animationLoopRef.current!,
+				);
 			}
 		},
-		[canvasState.isAnimating, updatePerformanceMetrics],
+		[updatePerformanceMetrics],
 	);
+
+	// Update animation loop ref when it changes (outside of render)
+	useEffect(() => {
+		animationLoopRef.current = animationLoop;
+	}, [animationLoop]);
 
 	// Start/stop animation monitoring
 	const startAnimation = useCallback(() => {
+		isAnimatingRef.current = true;
 		setCanvasState((prev) => ({ ...prev, isAnimating: true }));
 		animationFrameRef.current = requestAnimationFrame(animationLoop);
 	}, [animationLoop]);
 
 	const stopAnimation = useCallback(() => {
+		isAnimatingRef.current = false;
 		setCanvasState((prev) => ({ ...prev, isAnimating: false }));
 		if (animationFrameRef.current) {
 			cancelAnimationFrame(animationFrameRef.current);

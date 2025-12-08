@@ -8,23 +8,30 @@ export function useSessionStorage<T>(key: string, initialValue: T) {
 	const initialValueRef = useRef(initialValue);
 
 	const setValue = (value: T | ((val: T) => T)) => {
-		try {
-			const valueToStore =
-				value instanceof Function ? value(storedValue) : value;
+		let valueToStore: T;
+		if (value instanceof Function) {
+			valueToStore = value(storedValue);
+		} else {
+			valueToStore = value;
+		}
 
-			setStoredValue(valueToStore);
+		setStoredValue(valueToStore);
 
-			if (isClient && typeof window !== "undefined") {
-				window.sessionStorage.setItem(key, JSON.stringify(valueToStore));
+		if (isClient) {
+			if (typeof window !== "undefined") {
+				try {
+					window.sessionStorage.setItem(key, JSON.stringify(valueToStore));
+				} catch (error) {
+					console.error(`Error saving to sessionStorage key "${key}":`, error);
+				}
 			}
-		} catch (error) {
-			console.error(`Error saving to sessionStorage key "${key}":`, error);
 		}
 	};
 
 	useEffect(() => {
 		if (typeof window === "undefined") return;
 
+		let completed = false;
 		try {
 			const item = window.sessionStorage.getItem(key);
 			if (item !== null) {
@@ -35,12 +42,15 @@ export function useSessionStorage<T>(key: string, initialValue: T) {
 					JSON.stringify(initialValueRef.current),
 				);
 			}
+			completed = true;
 		} catch (error) {
 			console.error(`Error reading sessionStorage key "${key}":`, error);
-		} finally {
+			completed = true;
+		}
+
+		if (completed) {
 			setIsClient(true);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [key]);
 
 	return [storedValue, setValue] as const;

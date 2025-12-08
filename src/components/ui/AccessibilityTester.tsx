@@ -16,11 +16,14 @@ interface AccessibilityTesterProps {
 	showFloatingButton?: boolean;
 }
 
+const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+
 export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
-	enabled = process.env.NODE_ENV === "development",
+	enabled,
 	autoRun = true,
 	showFloatingButton = true,
 }) => {
+	const isEnabled = enabled !== undefined ? enabled : IS_DEVELOPMENT;
 	const [isOpen, setIsOpen] = useState(false);
 	const [report, setReport] = useState<AccessibilityReport | null>(null);
 	const [isRunning, setIsRunning] = useState(false);
@@ -33,9 +36,9 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 			const newReport = await runAccessibilityAudit();
 			setReport(newReport);
 			logAccessibilityReport(newReport);
+			setIsRunning(false);
 		} catch (error) {
 			console.error("Accessibility audit failed:", error);
-		} finally {
 			setIsRunning(false);
 		}
 	};
@@ -54,7 +57,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 
 	// Auto-run on mount and DOM changes
 	useEffect(() => {
-		if (!enabled || !autoRun) return;
+		if (!isEnabled || !autoRun) return;
 
 		let timeoutId: NodeJS.Timeout;
 
@@ -85,9 +88,9 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 			clearTimeout(timeoutId);
 			observer.disconnect();
 		};
-	}, [enabled, autoRun, runAudit]);
+	}, [isEnabled, autoRun, runAudit]);
 
-	if (!enabled) return null;
+	if (!isEnabled) return null;
 
 	const getIssueIcon = (type: string) => {
 		switch (type) {

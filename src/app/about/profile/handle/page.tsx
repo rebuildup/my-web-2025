@@ -25,21 +25,22 @@ function TypingText({
 	delay?: number;
 }) {
 	const [displayedText, setDisplayedText] = useState("");
+	const indexRef = useRef(0);
 
 	useEffect(() => {
 		setDisplayedText("");
-		let currentIndex = 0;
-		let timeoutId: NodeJS.Timeout;
-		let intervalId: NodeJS.Timeout;
+		indexRef.current = 0;
+		let timeoutId: NodeJS.Timeout | null = null;
+		let intervalId: NodeJS.Timeout | null = null;
 
 		const startTyping = () => {
-			currentIndex = 0;
 			intervalId = setInterval(() => {
-				if (currentIndex <= text.length) {
-					setDisplayedText(text.slice(0, currentIndex));
-					currentIndex++;
+				const nextIndex = indexRef.current + 1;
+				if (nextIndex <= text.length) {
+					indexRef.current = nextIndex;
+					setDisplayedText(text.slice(0, nextIndex));
 				} else {
-					clearInterval(intervalId);
+					if (intervalId) clearInterval(intervalId);
 				}
 			}, speed);
 		};

@@ -112,7 +112,8 @@ export default function AccessibilityTestingComponent({
 			"p, span, div, h1, h2, h3, h4, h5, h6, label",
 		);
 		let contrastIssues = 0;
-		textElements.forEach((el) => {
+		for (let i = 0; i < textElements.length; i++) {
+			const el = textElements[i];
 			const styles = window.getComputedStyle(el);
 			const color = styles.color;
 			const backgroundColor = styles.backgroundColor;
@@ -121,9 +122,9 @@ export default function AccessibilityTestingComponent({
 				color === "rgb(128, 128, 128)" &&
 				backgroundColor === "rgb(255, 255, 255)"
 			) {
-				contrastIssues++;
+				contrastIssues = contrastIssues + 1;
 			}
-		});
+		}
 
 		if (contrastIssues > 0) {
 			issues.push({
@@ -172,12 +173,16 @@ export default function AccessibilityTestingComponent({
 	const runTest = useCallback(async () => {
 		setIsRunning(true);
 
+		let testCompleted = false;
 		try {
 			const targetElement = document.querySelector(
 				targetSelector,
 			) as HTMLElement;
 			if (!targetElement) {
-				throw new Error(`Target element not found: ${targetSelector}`);
+				console.error(`Target element not found: ${targetSelector}`);
+				announce("テスト対象の要素が見つかりません");
+				testCompleted = true;
+				return;
 			}
 
 			// Run basic accessibility checks
@@ -212,10 +217,14 @@ export default function AccessibilityTestingComponent({
 			announce(
 				`アクセシビリティテスト完了。スコア: ${score}点、問題: ${allIssues.length}件`,
 			);
+			testCompleted = true;
 		} catch (error) {
 			console.error("Accessibility test failed:", error);
 			announce("アクセシビリティテストでエラーが発生しました");
-		} finally {
+			testCompleted = true;
+		}
+
+		if (testCompleted) {
 			setIsRunning(false);
 		}
 	}, [targetSelector, announce, getSuggestion, runCustomChecks]);

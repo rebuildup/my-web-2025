@@ -48,32 +48,36 @@ export default function CacheClearPanel() {
 		}
 	}, [manager]);
 
-	const loadBrowserInfo = useCallback(async () => {
-		try {
-			const info = await manager.detectBrowserInfo();
-			setBrowserInfo(info);
-		} catch (error) {
-			console.error("Failed to load browser info:", error);
-		} finally {
-			setBrowserInfoLoaded(true);
-		}
-	}, [manager]);
-
 	useEffect(() => {
+		const loadBrowserInfo = async () => {
+			try {
+				const info = await manager.detectBrowserInfo();
+				setBrowserInfo(info);
+			} catch (error) {
+				console.error("Failed to load browser info:", error);
+			}
+			setBrowserInfoLoaded(true);
+		};
+
 		loadCacheState();
 		loadBrowserInfo();
-	}, [loadCacheState, loadBrowserInfo]);
+	}, [loadCacheState, manager]);
 
 	const handleClearCache = async () => {
 		setIsClearing(true);
+		let completed = false;
 		try {
 			await clearAllCaches();
 			await loadCacheState();
 			setLastCleared(new Date().toLocaleString("ja-JP"));
+			completed = true;
 		} catch (error) {
 			console.error("Cache clear failed:", error);
 			alert("キャッシュクリアに失敗しました。コンソールを確認してください。");
-		} finally {
+			completed = true;
+		}
+
+		if (completed) {
 			setIsClearing(false);
 		}
 	};

@@ -67,11 +67,11 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 	// Typewriter effect
 	const typewriterEffect = useCallback((text: string) => {
 		setTypewriterText("");
-		let index = 0;
+		const indexRef = { current: 0 };
 		const interval = setInterval(() => {
-			if (index <= text.length) {
-				setTypewriterText(text.slice(0, index));
-				index++;
+			if (indexRef.current <= text.length) {
+				setTypewriterText(text.slice(0, indexRef.current));
+				indexRef.current = indexRef.current + 1;
 			} else {
 				clearInterval(interval);
 				setTimeout(() => {

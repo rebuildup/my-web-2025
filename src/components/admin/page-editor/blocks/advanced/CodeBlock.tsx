@@ -20,6 +20,17 @@ import type { BlockComponentProps } from "../types";
 
 type ViewMode = "edit" | "preview" | "split";
 
+// Helper function to load Prism language component dynamically
+async function loadPrismLanguage(name: string): Promise<boolean> {
+	try {
+		await import(`prismjs/components/prism-${name}.js` as unknown as string);
+		return true;
+	} catch {
+		// ignore missing language
+		return false;
+	}
+}
+
 export function CodeBlock({
 	block,
 	readOnly,
@@ -66,19 +77,13 @@ export function CodeBlock({
 		const name = normalizedLang.replace(/[^a-z0-9-]/g, "");
 		if (!name || name === "plaintext") return;
 		const load = async () => {
-			try {
-				await import(
-					`prismjs/components/prism-${name}.js` as unknown as string
-				);
-			} catch {
-				// ignore missing language
-			} finally {
-				if (mounted) {
-					// trigger highlight on next tick
-					requestAnimationFrame(() => {
-						Prism.highlightAllUnder?.(document.body);
-					});
-				}
+			const completed = await loadPrismLanguage(name);
+
+			if (completed && mounted) {
+				// trigger highlight on next tick
+				requestAnimationFrame(() => {
+					Prism.highlightAllUnder?.(document.body);
+				});
 			}
 		};
 		void load();
@@ -106,8 +111,13 @@ export function CodeBlock({
 	// 自動設定は行わない（ユーザー選択を尊重）
 
 	const handleCopy = async () => {
+		let textToCopy = "";
+		if (block.content) {
+			textToCopy = block.content;
+		}
+
 		try {
-			await navigator.clipboard.writeText(block.content || "");
+			await navigator.clipboard.writeText(textToCopy);
 		} catch {}
 	};
 

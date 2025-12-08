@@ -97,6 +97,7 @@ export default function ColorPaletteGenerator() {
 	const [paletteSearch, setPaletteSearch] = useState<string>("");
 	const [showPaletteManager, setShowPaletteManager] = useState(false);
 	const [notification, setNotification] = useState<string>("");
+	const paletteIdRef = useRef(1);
 
 	// Refs for file operations
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -179,7 +180,7 @@ export default function ColorPaletteGenerator() {
 
 			const name = customName || `Palette ${savedPalettes.length + 1}`;
 			const newPalette: SavedPalette = {
-				id: `palette-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+				id: `palette-${paletteIdRef.current++}`,
 				name,
 				colors: generatedColors,
 				createdAt: new Date().toISOString(),
@@ -394,73 +395,94 @@ export default function ColorPaletteGenerator() {
 		await copyToClipboard(text);
 	};
 
-	// Import palette from various formats
-	const importPalette = useCallback(
-		(data: string) => {
-			try {
-				const parsed = JSON.parse(data);
-				if (parsed.palette?.colors) {
-					setGeneratedColors(parsed.palette.colors);
-					showNotification("JSONパレットをインポートしました");
-					return;
-				}
+	// Helper function to parse JSON palette data
+	const parseJsonPalette = useCallback((data: string): ColorInfo[] | null => {
+		const parsed = JSON.parse(data);
 
-				if (Array.isArray(parsed) && parsed.length > 0) {
-					const colors = parsed
-						.map(
-							(
-								item:
-									| string
-									| { hex: string; hsl: { h: number; s: number; l: number } },
-							) => {
-								if (typeof item === "string" && item.startsWith("#")) {
-									const rgb = hexToRgb(item);
-									if (rgb) {
-										const hsv = { h: 0, s: 0, v: 0 };
-										const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-										return {
-											hex: item,
-											rgb,
-											hsv,
-											hsl,
-											accessibility: getAccessibilityInfo(rgb),
-										} as ColorInfo;
-									}
-								}
-								return null;
-							},
-						)
-						.filter((item): item is ColorInfo => item !== null);
+		// Check for palette object format
+		if (parsed.palette) {
+			if (parsed.palette.colors) {
+				return parsed.palette.colors;
+			}
+		}
 
-					if (colors.length > 0) {
-						setGeneratedColors(colors);
-						showNotification(`${colors.length}色をインポートしました`);
-						return;
-					}
-				}
-
-				showNotification("インポート形式が認識できません");
-			} catch {
-				const hexColors = data.match(/#[0-9a-fA-F]{6}/g);
-				if (hexColors && hexColors.length > 0) {
-					const colors: ColorInfo[] = hexColors
-						.map((hex) => {
-							const rgb = hexToRgb(hex);
+		// Check for array format
+		if (Array.isArray(parsed)) {
+			if (parsed.length > 0) {
+				const colors: ColorInfo[] = [];
+				for (const item of parsed) {
+					if (typeof item === "string") {
+						if (item.startsWith("#")) {
+							const rgb = hexToRgb(item);
 							if (rgb) {
 								const hsv = { h: 0, s: 0, v: 0 };
 								const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-								return {
-									hex,
+								colors.push({
+									hex: item,
 									rgb,
 									hsv,
 									hsl,
 									accessibility: getAccessibilityInfo(rgb),
-								};
+								});
 							}
-							return null;
-						})
-						.filter(Boolean) as ColorInfo[];
+						}
+					}
+				}
+				if (colors.length > 0) {
+					return colors;
+				}
+			}
+		}
 
+		return null;
+	}, []);
+
+	// Helper function to parse hex colors from string
+	const parseHexColors = useCallback((data: string): ColorInfo[] | null => {
+		const hexColors = data.match(/#[0-9a-fA-F]{6}/g);
+		if (!hexColors) {
+			return null;
+		}
+		if (hexColors.length === 0) {
+			return null;
+		}
+
+		const colors: ColorInfo[] = [];
+		for (const hex of hexColors) {
+			const rgb = hexToRgb(hex);
+			if (rgb) {
+				const hsv = { h: 0, s: 0, v: 0 };
+				const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+				colors.push({
+					hex,
+					rgb,
+					hsv,
+					hsl,
+					accessibility: getAccessibilityInfo(rgb),
+				});
+			}
+		}
+
+		if (colors.length > 0) {
+			return colors;
+		}
+		return null;
+	}, []);
+
+	// Import palette from various formats
+	const importPalette = useCallback(
+		(data: string) => {
+			try {
+				const colors = parseJsonPalette(data);
+				if (colors) {
+					setGeneratedColors(colors);
+					showNotification("JSONパレットをインポートしました");
+					return;
+				}
+				showNotification("インポート形式が認識できません");
+			} catch {
+				const colors = parseHexColors(data);
+				if (colors) {
 					setGeneratedColors(colors);
 					showNotification(`${colors.length}色をインポートしました`);
 				} else {
@@ -468,7 +490,7 @@ export default function ColorPaletteGenerator() {
 				}
 			}
 		},
-		[showNotification],
+		[showNotification, parseJsonPalette, parseHexColors],
 	);
 
 	// Handle file import

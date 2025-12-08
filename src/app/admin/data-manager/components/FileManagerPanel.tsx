@@ -51,19 +51,19 @@ export function FileManagerPanel({
 
 	const loadFiles = useCallback(async () => {
 		setLoading(true);
-		try {
-			const response = await fetch(
-				`/api/admin/files${category ? `?category=${category}` : ""}`,
-			);
-			if (response.ok) {
-				const data = await response.json();
-				setFiles(data.files || []);
-			}
-		} catch (error) {
+		const response = await fetch(
+			`/api/admin/files${category ? `?category=${category}` : ""}`,
+		).catch((error) => {
 			console.error("Failed to load files:", error);
-		} finally {
 			setLoading(false);
+			return null;
+		});
+		if (response === null) return;
+		if (response.ok) {
+			const data = await response.json();
+			setFiles(data.files || []);
 		}
+		setLoading(false);
 	}, [category]);
 
 	// Load files
@@ -108,21 +108,21 @@ export function FileManagerPanel({
 	const handleFileDelete = async (fileId: string) => {
 		if (!confirm("Are you sure you want to delete this file?")) return;
 
-		try {
-			const response = await fetch(`/api/admin/files/${fileId}`, {
-				method: "DELETE",
-			});
-
-			if (response.ok) {
-				setFiles((prev) => prev.filter((f) => f.id !== fileId));
-				setSelectedFiles((prev) => {
-					const newSet = new Set(prev);
-					newSet.delete(fileId);
-					return newSet;
-				});
-			}
-		} catch (error) {
+		const response = await fetch(`/api/admin/files/${fileId}`, {
+			method: "DELETE",
+		}).catch((error) => {
 			console.error("Failed to delete file:", error);
+			return null;
+		});
+		if (response === null) return;
+
+		if (response.ok) {
+			setFiles((prev) => prev.filter((f) => f.id !== fileId));
+			setSelectedFiles((prev) => {
+				const newSet = new Set(prev);
+				newSet.delete(fileId);
+				return newSet;
+			});
 		}
 	};
 
@@ -133,19 +133,19 @@ export function FileManagerPanel({
 		)
 			return;
 
-		try {
-			const response = await fetch("/api/admin/files/bulk-delete", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ fileIds: Array.from(selectedFiles) }),
-			});
-
-			if (response.ok) {
-				setFiles((prev) => prev.filter((f) => !selectedFiles.has(f.id)));
-				setSelectedFiles(new Set());
-			}
-		} catch (error) {
+		const response = await fetch("/api/admin/files/bulk-delete", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ fileIds: Array.from(selectedFiles) }),
+		}).catch((error) => {
 			console.error("Failed to delete files:", error);
+			return null;
+		});
+		if (response === null) return;
+
+		if (response.ok) {
+			setFiles((prev) => prev.filter((f) => !selectedFiles.has(f.id)));
+			setSelectedFiles(new Set());
 		}
 	};
 

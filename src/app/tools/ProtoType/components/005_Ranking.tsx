@@ -7,13 +7,18 @@ const Ranking: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      let completed = false;
       try {
         const data = await getRanking_Data(0);
         const transposed = transposeData(data);
         setTableData(transposed);
+        completed = true;
       } catch (error) {
         console.error("Failed to fetch ranking data:", error);
-      } finally {
+        completed = true;
+      }
+
+      if (completed) {
         setLoading(false);
       }
     };

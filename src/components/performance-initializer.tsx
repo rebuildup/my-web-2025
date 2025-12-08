@@ -7,6 +7,20 @@
 
 import { useEffect } from "react";
 
+// Helper function to load performance utilities dynamically
+async function loadPerformanceUtilities() {
+	const bundleOptimizationModule = await import(
+		"@/lib/utils/bundle-optimization"
+	);
+	const performanceModule = await import("@/lib/utils/performance");
+	return {
+		initializeBundleOptimization:
+			bundleOptimizationModule.initializeBundleOptimization,
+		initializePerformanceMonitoring:
+			performanceModule.initializePerformanceMonitoring,
+	};
+}
+
 export function PerformanceInitializer() {
 	useEffect(() => {
 		if (typeof window === "undefined") {
@@ -17,20 +31,21 @@ export function PerformanceInitializer() {
 
 		const handleLoad = async () => {
 			try {
-				const [
-					{ initializeBundleOptimization },
-					{ initializePerformanceMonitoring },
-				] = await Promise.all([
-					import("@/lib/utils/bundle-optimization"),
-					import("@/lib/utils/performance"),
-				]);
+				const {
+					initializeBundleOptimization,
+					initializePerformanceMonitoring,
+				} = await loadPerformanceUtilities();
 
 				if (canceled) {
 					return;
 				}
 
-				initializeBundleOptimization?.();
-				initializePerformanceMonitoring?.();
+				if (initializeBundleOptimization) {
+					initializeBundleOptimization();
+				}
+				if (initializePerformanceMonitoring) {
+					initializePerformanceMonitoring();
+				}
 				console.log("Performance monitoring initialized");
 			} catch (error) {
 				if (!canceled) {

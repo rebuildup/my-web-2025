@@ -179,8 +179,7 @@ export default function YouTubePlayer({
 			player.destroy();
 			setPlayer(null);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [settings.loop, source?.videoId, source?.playlistId]);
+	}, [settings.loop, source]);
 
 	// Pomodoro Integration
 	useEffect(() => {

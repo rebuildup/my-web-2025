@@ -108,320 +108,161 @@ export function VideoDesignGallery({
 
 	// Enhanced validation and sanitization with error handling
 	const validItems = useMemo(() => {
-		try {
-			const startTime = performance.now();
-
-			// In test environment, be more lenient with validation
-			if (process.env.NODE_ENV === "test") {
-				if (!items) {
-					handleError(new Error("Items is not an array"), "validation");
-					return [];
-				}
-				if (!Array.isArray(items)) {
-					handleError(new Error("Items is not an array"), "validation");
-					return [];
-				}
-				// In test environment, return items even if they don't have all required fields
-				// Add default values for missing fields
-				return items
-					.filter((item) => item && typeof item === "object")
-					.map((item) => ({
-						...item,
-						id: item.id || `test-${Math.random()}`,
-						title: item.title || "Test Item",
-						priority: typeof item.priority === "number" ? item.priority : 50,
-						createdAt: item.createdAt || new Date().toISOString(),
-					}));
+		// In test environment, be more lenient with validation
+		if (process.env.NODE_ENV === "test") {
+			if (!items) {
+				handleError(new Error("Items is not an array"), "validation");
+				return [];
 			}
-
 			if (!Array.isArray(items)) {
-				console.error("VideoDesignGallery: Items is not an array:", items);
+				handleError(new Error("Items is not an array"), "validation");
 				return [];
 			}
+			// In test environment, return items even if they don't have all required fields
+			// Add default values for missing fields
+			return items
+				.filter((item) => item && typeof item === "object")
+				.map((item, index) => ({
+					...item,
+					id: item.id || `test-${index}`,
+					title: item.title || "Test Item",
+					priority: typeof item.priority === "number" ? item.priority : 50,
+					createdAt: item.createdAt || "2024-01-01T00:00:00.000Z",
+				}));
+		}
 
-			if (items.length === 0) {
-				console.warn("VideoDesignGallery: Empty items array provided");
-				return [];
-			}
-
-			// Generate hash for caching
-			const itemsHash = JSON.stringify(
-				items
-					.map((item) => ({ id: item?.id, title: item?.title }))
-					.filter(Boolean),
-			);
-
-			// Use cache if enabled and hash matches
-			if (
-				enableCaching &&
-				itemsHash === lastItemsHash.current &&
-				cacheRef.current.has("validItems")
-			) {
-				const cached = cacheRef.current.get("validItems");
-				return cached || [];
-			}
-
-			const validated = items.filter(
-				(item: PortfolioContentItem | EnhancedContentItem) => {
-					if (!item || typeof item !== "object") {
-						console.warn(
-							"VideoDesignGallery: Invalid item object found, skipping:",
-							item,
-						);
-						return false;
-					}
-
-					if (
-						!item.id ||
-						typeof item.id !== "string" ||
-						item.id.trim() === ""
-					) {
-						console.warn(
-							"VideoDesignGallery: Item missing valid id, skipping:",
-							item,
-						);
-						return false;
-					}
-
-					if (
-						!item.title ||
-						typeof item.title !== "string" ||
-						item.title.trim() === ""
-					) {
-						console.warn(
-							"VideoDesignGallery: Item missing valid title, skipping:",
-							item,
-						);
-						return false;
-					}
-
-					// Validate priority (should be a number)
-					if (
-						typeof item.priority !== "number" ||
-						Number.isNaN(item.priority)
-					) {
-						console.warn(
-							"VideoDesignGallery: Item has invalid priority (immutable input), using default in render:",
-							item,
-						);
-					}
-
-					// Validate createdAt (should be a valid date string)
-					if (
-						!item.createdAt ||
-						Number.isNaN(new Date(item.createdAt).getTime())
-					) {
-						console.warn(
-							"VideoDesignGallery: Item has invalid createdAt (immutable input), using fallback in render:",
-							item,
-						);
-					}
-
-					// Validate category structure
-					if ("categories" in item) {
-						const enhancedItem = item as EnhancedContentItem;
-						if (!Array.isArray(enhancedItem.categories)) {
-							console.warn(
-								"VideoDesignGallery: Enhanced item has invalid categories array, skipping:",
-								item,
-							);
-							return false;
-						}
-					} else {
-						const legacyItem = item as PortfolioContentItem;
-						if (
-							!legacyItem.category ||
-							typeof legacyItem.category !== "string"
-						) {
-							console.warn(
-								"VideoDesignGallery: Legacy item missing valid category, skipping:",
-								item,
-							);
-							return false;
-						}
-					}
-
-					return true;
-				},
-			);
-
-			// Cache results if enabled
-			if (enableCaching) {
-				lastItemsHash.current = itemsHash;
-				cacheRef.current.set("validItems", validated);
-			}
-
-			const validationTime = performance.now() - startTime;
-			if (isClient) {
-				console.debug(
-					`VideoDesignGallery validation processed ${validated.length} items in ${validationTime.toFixed(2)}ms`,
-				);
-			}
-
-			return validated;
-		} catch (error) {
-			handleError(error as Error, "validation");
+		if (!Array.isArray(items)) {
+			console.error("VideoDesignGallery: Items is not an array:", items);
 			return [];
 		}
+
+		if (items.length === 0) {
+			console.warn("VideoDesignGallery: Empty items array provided");
+			return [];
+		}
+
+		const validated = items.filter(
+			(item: PortfolioContentItem | EnhancedContentItem) => {
+				if (!item || typeof item !== "object") {
+					console.warn(
+						"VideoDesignGallery: Invalid item object found, skipping:",
+						item,
+					);
+					return false;
+				}
+
+				if (!item.id || typeof item.id !== "string" || item.id.trim() === "") {
+					console.warn(
+						"VideoDesignGallery: Item missing valid id, skipping:",
+						item,
+					);
+					return false;
+				}
+
+				if (
+					!item.title ||
+					typeof item.title !== "string" ||
+					item.title.trim() === ""
+				) {
+					console.warn(
+						"VideoDesignGallery: Item missing valid title, skipping:",
+						item,
+					);
+					return false;
+				}
+
+				// Validate priority (should be a number)
+				if (typeof item.priority !== "number" || Number.isNaN(item.priority)) {
+					console.warn(
+						"VideoDesignGallery: Item has invalid priority (immutable input), using default in render:",
+						item,
+					);
+				}
+
+				// Validate createdAt (should be a valid date string)
+				if (
+					!item.createdAt ||
+					Number.isNaN(new Date(item.createdAt).getTime())
+				) {
+					console.warn(
+						"VideoDesignGallery: Item has invalid createdAt (immutable input), using fallback in render:",
+						item,
+					);
+				}
+
+				// Validate category structure
+				if ("categories" in item) {
+					const enhancedItem = item as EnhancedContentItem;
+					if (!Array.isArray(enhancedItem.categories)) {
+						console.warn(
+							"VideoDesignGallery: Enhanced item has invalid categories array, skipping:",
+							item,
+						);
+						return false;
+					}
+				} else {
+					const legacyItem = item as PortfolioContentItem;
+					if (!legacyItem.category || typeof legacyItem.category !== "string") {
+						console.warn(
+							"VideoDesignGallery: Legacy item missing valid category, skipping:",
+							item,
+						);
+						return false;
+					}
+				}
+
+				return true;
+			},
+		);
+
+		if (isClient) {
+			console.debug(
+				`VideoDesignGallery validation processed ${validated.length} items`,
+			);
+		}
+
+		return validated;
 	}, [items, enableCaching, handleError, isClient]);
+
+	// Cache validItems results in useEffect (cannot access refs during render)
+	useEffect(() => {
+		if (!enableCaching) return;
+		const itemsHash = JSON.stringify(
+			items
+				.map((item) => ({ id: item?.id, title: item?.title }))
+				.filter(Boolean),
+		);
+		lastItemsHash.current = itemsHash;
+		cacheRef.current.set("validItems", validItems);
+	}, [validItems, enableCaching, items]);
 
 	// Enhanced filtering with category display options and deduplication
 	const filteredItems = useMemo(() => {
-		try {
-			const startTime = performance.now();
+		// In test environment, still use enhanced gallery filter for proper testing
+		if (process.env.NODE_ENV === "test") {
+			console.log("Test environment: applying basic filtering", validItems);
 
-			// In test environment, still use enhanced gallery filter for proper testing
-			if (process.env.NODE_ENV === "test") {
-				console.log("Test environment: applying basic filtering", validItems);
-
-				// Apply basic category filtering for tests
-				let filteredForTest = validItems.filter(
-					(item: PortfolioContentItem | EnhancedContentItem) => {
-						if ("categories" in item && Array.isArray(item.categories)) {
-							const enhancedItem = item as EnhancedContentItem;
-							return enhancedItem.categories.some((cat) =>
-								["video", "design", "video&design"].includes(cat),
-							);
-						} else {
-							const legacyItem = item as PortfolioContentItem;
-							return ["video", "design", "video&design"].includes(
-								legacyItem.category,
-							);
-						}
-					},
-				);
-
-				// Apply deduplication if enabled
-				if (deduplication) {
-					const seen = new Set<string>();
-					filteredForTest = filteredForTest.filter(
-						(item: PortfolioContentItem | EnhancedContentItem) => {
-							if (seen.has(item.id)) {
-								console.log(
-									`VideoDesignGallery: Removing duplicate item ${item.id}`,
-								);
-								return false;
-							}
-							seen.add(item.id);
-							return true;
-						},
-					);
-				}
-
-				// Filter out "other" category items for video&design gallery
-				filteredForTest = filteredForTest.filter(
-					(item: PortfolioContentItem | EnhancedContentItem) => {
-						if ("categories" in item && Array.isArray(item.categories)) {
-							const enhancedItem = item as EnhancedContentItem;
-							return !enhancedItem.categories.includes("other");
-						} else {
-							const legacyItem = item as PortfolioContentItem;
-							return legacyItem.category !== "other";
-						}
-					},
-				);
-
-				// Convert to EnhancedContentItem[] and apply sorting using enhanced gallery filter
-				const enhancedItems = filteredForTest.map((item) => {
-					if ("categories" in item && Array.isArray(item.categories)) {
-						return item as EnhancedContentItem;
-					}
-					// Convert legacy PortfolioContentItem to EnhancedContentItem
-					const legacyItem = item as PortfolioContentItem;
-					return {
-						...legacyItem,
-						categories: [
-							legacyItem.category || "other",
-						] as EnhancedCategoryType[],
-						isOtherCategory: legacyItem.category === "other",
-						useManualDate: false,
-						originalImages: [],
-						processedImages: legacyItem.images || [],
-					} as EnhancedContentItem;
-				});
-				// publishedAt最優先で降順（fallback: updatedAt→createdAt）
-				const sorted = [...enhancedItems].sort((a: any, b: any) => {
-					const aTime = new Date(
-						a.publishedAt || a.updatedAt || a.createdAt,
-					).getTime();
-					const bTime = new Date(
-						b.publishedAt || b.updatedAt || b.createdAt,
-					).getTime();
-					return bTime - aTime;
-				});
-				if (String(process.env.NODE_ENV) !== "production") {
-					console.log(
-						"[VideoDesignGallery] top5 by publishedAt:",
-						sorted.slice(0, 5).map((i: any) => ({
-							id: i.id,
-							publishedAt: i.publishedAt,
-							updatedAt: i.updatedAt,
-							createdAt: i.createdAt,
-						})),
-					);
-				}
-
-				return sorted;
-			}
-
-			// Generate cache key for filtering
-			const filterCacheKey = `filtered_${showVideoItems}_${showDesignItems}_${showVideoDesignItems}_${deduplication}`;
-
-			// Use cache if enabled
-			if (enableCaching && cacheRef.current.has(filterCacheKey)) {
-				const cached = cacheRef.current.get(filterCacheKey);
-				return cached || [];
-			}
-
-			// Step 1: Apply category display options
-			let categoryFilteredItems = validItems.filter(
+			// Apply basic category filtering for tests
+			let filteredForTest = validItems.filter(
 				(item: PortfolioContentItem | EnhancedContentItem) => {
 					if ("categories" in item && Array.isArray(item.categories)) {
 						const enhancedItem = item as EnhancedContentItem;
-						const relevantCategories = enhancedItem.categories.filter((cat) =>
+						return enhancedItem.categories.some((cat) =>
 							["video", "design", "video&design"].includes(cat),
 						);
-
-						// Check if item should be shown based on display options
-						const hasVideo = relevantCategories.includes("video");
-						const hasDesign = relevantCategories.includes("design");
-						const hasVideoDesign = relevantCategories.includes("video&design");
-
-						const shouldShow =
-							(showVideoItems && hasVideo) ||
-							(showDesignItems && hasDesign) ||
-							(showVideoDesignItems && hasVideoDesign);
-
-						console.log(
-							`Enhanced item ${item.id}: categories=${item.categories.join(",")}, shouldShow=${shouldShow}`,
-						);
-						return shouldShow;
 					} else {
 						const legacyItem = item as PortfolioContentItem;
-						const category = legacyItem.category;
-
-						const shouldShow =
-							(showVideoItems && category === "video") ||
-							(showDesignItems && category === "design") ||
-							(showVideoDesignItems && category === "video&design");
-
-						console.log(
-							`Legacy item ${item.id}: category=${category}, shouldShow=${shouldShow}`,
+						return ["video", "design", "video&design"].includes(
+							legacyItem.category,
 						);
-						return shouldShow;
 					}
 				},
 			);
 
-			console.log(
-				`After category filtering: ${categoryFilteredItems.length} items`,
-			);
-			console.log("Category filtered items:", categoryFilteredItems);
-
-			// Step 2: Apply deduplication if enabled
+			// Apply deduplication if enabled
 			if (deduplication) {
 				const seen = new Set<string>();
-				categoryFilteredItems = categoryFilteredItems.filter(
+				filteredForTest = filteredForTest.filter(
 					(item: PortfolioContentItem | EnhancedContentItem) => {
 						if (seen.has(item.id)) {
 							console.log(
@@ -435,8 +276,21 @@ export function VideoDesignGallery({
 				);
 			}
 
-			// Step 3: Convert to EnhancedContentItem[] and apply sorting using enhanced gallery filter
-			const enhancedItems = categoryFilteredItems.map((item) => {
+			// Filter out "other" category items for video&design gallery
+			filteredForTest = filteredForTest.filter(
+				(item: PortfolioContentItem | EnhancedContentItem) => {
+					if ("categories" in item && Array.isArray(item.categories)) {
+						const enhancedItem = item as EnhancedContentItem;
+						return !enhancedItem.categories.includes("other");
+					} else {
+						const legacyItem = item as PortfolioContentItem;
+						return legacyItem.category !== "other";
+					}
+				},
+			);
+
+			// Convert to EnhancedContentItem[] and apply sorting using enhanced gallery filter
+			const enhancedItems = filteredForTest.map((item) => {
 				if ("categories" in item && Array.isArray(item.categories)) {
 					return item as EnhancedContentItem;
 				}
@@ -453,30 +307,121 @@ export function VideoDesignGallery({
 					processedImages: legacyItem.images || [],
 				} as EnhancedContentItem;
 			});
-			const sorted = enhancedGalleryFilter.sortItems(enhancedItems, {
-				sortBy: "effectiveDate",
-				sortOrder: "desc",
+			// publishedAt最優先で降順（fallback: updatedAt→createdAt）
+			const sorted = [...enhancedItems].sort((a: any, b: any) => {
+				const aTime = new Date(
+					a.publishedAt || a.updatedAt || a.createdAt,
+				).getTime();
+				const bTime = new Date(
+					b.publishedAt || b.updatedAt || b.createdAt,
+				).getTime();
+				return bTime - aTime;
 			});
-
-			console.log("Final sorted items:", sorted);
-
-			// Cache results if enabled
-			if (enableCaching) {
-				cacheRef.current.set(filterCacheKey, sorted);
-			}
-
-			const filterTime = performance.now() - startTime;
-			if (isClient) {
-				console.debug(
-					`VideoDesignGallery filtering finished in ${filterTime.toFixed(2)}ms`,
+			if (String(process.env.NODE_ENV) !== "production") {
+				console.log(
+					"[VideoDesignGallery] top5 by publishedAt:",
+					sorted.slice(0, 5).map((i: any) => ({
+						id: i.id,
+						publishedAt: i.publishedAt,
+						updatedAt: i.updatedAt,
+						createdAt: i.createdAt,
+					})),
 				);
 			}
 
 			return sorted;
-		} catch (error) {
-			handleError(error as Error, "filtering");
-			return [];
 		}
+
+		// Step 1: Apply category display options
+		let categoryFilteredItems = validItems.filter(
+			(item: PortfolioContentItem | EnhancedContentItem) => {
+				if ("categories" in item && Array.isArray(item.categories)) {
+					const enhancedItem = item as EnhancedContentItem;
+					const relevantCategories = enhancedItem.categories.filter((cat) =>
+						["video", "design", "video&design"].includes(cat),
+					);
+
+					// Check if item should be shown based on display options
+					const hasVideo = relevantCategories.includes("video");
+					const hasDesign = relevantCategories.includes("design");
+					const hasVideoDesign = relevantCategories.includes("video&design");
+
+					const shouldShow =
+						(showVideoItems && hasVideo) ||
+						(showDesignItems && hasDesign) ||
+						(showVideoDesignItems && hasVideoDesign);
+
+					console.log(
+						`Enhanced item ${item.id}: categories=${item.categories.join(",")}, shouldShow=${shouldShow}`,
+					);
+					return shouldShow;
+				} else {
+					const legacyItem = item as PortfolioContentItem;
+					const category = legacyItem.category;
+
+					const shouldShow =
+						(showVideoItems && category === "video") ||
+						(showDesignItems && category === "design") ||
+						(showVideoDesignItems && category === "video&design");
+
+					console.log(
+						`Legacy item ${item.id}: category=${category}, shouldShow=${shouldShow}`,
+					);
+					return shouldShow;
+				}
+			},
+		);
+
+		console.log(
+			`After category filtering: ${categoryFilteredItems.length} items`,
+		);
+		console.log("Category filtered items:", categoryFilteredItems);
+
+		// Step 2: Apply deduplication if enabled
+		if (deduplication) {
+			const seen = new Set<string>();
+			categoryFilteredItems = categoryFilteredItems.filter(
+				(item: PortfolioContentItem | EnhancedContentItem) => {
+					if (seen.has(item.id)) {
+						console.log(
+							`VideoDesignGallery: Removing duplicate item ${item.id}`,
+						);
+						return false;
+					}
+					seen.add(item.id);
+					return true;
+				},
+			);
+		}
+
+		// Step 3: Convert to EnhancedContentItem[] and apply sorting using enhanced gallery filter
+		const enhancedItems = categoryFilteredItems.map((item) => {
+			if ("categories" in item && Array.isArray(item.categories)) {
+				return item as EnhancedContentItem;
+			}
+			// Convert legacy PortfolioContentItem to EnhancedContentItem
+			const legacyItem = item as PortfolioContentItem;
+			return {
+				...legacyItem,
+				categories: [legacyItem.category || "other"] as EnhancedCategoryType[],
+				isOtherCategory: legacyItem.category === "other",
+				useManualDate: false,
+				originalImages: [],
+				processedImages: legacyItem.images || [],
+			} as EnhancedContentItem;
+		});
+		const sorted = enhancedGalleryFilter.sortItems(enhancedItems, {
+			sortBy: "effectiveDate",
+			sortOrder: "desc",
+		});
+
+		console.log("Final sorted items:", sorted);
+
+		if (isClient) {
+			console.debug(`VideoDesignGallery filtering finished`);
+		}
+
+		return sorted;
 	}, [
 		validItems,
 		showVideoItems,
@@ -484,107 +429,103 @@ export function VideoDesignGallery({
 		showVideoDesignItems,
 		deduplication,
 		enableCaching,
-		handleError,
 		isClient,
+	]);
+
+	// Cache filteredItems results in useEffect (cannot access refs during render)
+	useEffect(() => {
+		if (!enableCaching) return;
+		const filterCacheKey = `filtered_${showVideoItems}_${showDesignItems}_${showVideoDesignItems}_${deduplication}`;
+		cacheRef.current.set(filterCacheKey, filteredItems);
+	}, [
+		filteredItems,
+		enableCaching,
+		showVideoItems,
+		showDesignItems,
+		showVideoDesignItems,
+		deduplication,
 	]);
 
 	// Generate grid layout with creative distribution
 	const gridItems = useMemo(() => {
-		try {
-			// Ensure filteredItems is valid
-			if (!filteredItems || !Array.isArray(filteredItems)) {
-				if (process.env.NODE_ENV !== "test") {
-					console.warn("filteredItems is invalid, returning empty array");
-				}
-				return [];
+		// Ensure filteredItems is valid
+		if (!filteredItems || !Array.isArray(filteredItems)) {
+			if (process.env.NODE_ENV !== "test") {
+				console.warn("filteredItems is invalid, returning empty array");
 			}
+			return [];
+		}
 
-			// If no items after filtering, return empty array
-			if (filteredItems.length === 0) {
-				if (process.env.NODE_ENV !== "test") {
-					console.log("No filtered items, returning empty array");
-				}
-				return [];
+		// If no items after filtering, return empty array
+		if (filteredItems.length === 0) {
+			if (process.env.NODE_ENV !== "test") {
+				console.log("No filtered items, returning empty array");
 			}
+			return [];
+		}
 
-			// In test environment, create simple grid items directly from filtered items
-			if (process.env.NODE_ENV === "test") {
-				return filteredItems.map((item, index) => ({
-					...item,
-					gridSize: "1x1" as GridSize,
-					categories: (item as EnhancedContentItem)?.categories,
-					randomOffset: (index % 10) * 0.01,
-					url: `/portfolio/${item.id}`,
-					aspectRatio: 1,
-					thumbnail: item.thumbnail || "/test-thumb.jpg",
-				})) as EnhancedGridItem[];
-			}
+		// In test environment, create simple grid items directly from filtered items
+		if (process.env.NODE_ENV === "test") {
+			return filteredItems.map((item, index) => ({
+				...item,
+				gridSize: "1x1" as GridSize,
+				categories: (item as EnhancedContentItem)?.categories,
+				randomOffset: (index % 10) * 0.01,
+				url: `/portfolio/${item.id}`,
+				aspectRatio: 1,
+				thumbnail: item.thumbnail || "/test-thumb.jpg",
+			})) as EnhancedGridItem[];
+		}
 
-			console.log("Filtered items for grid layout:", filteredItems);
+		console.log("Filtered items for grid layout:", filteredItems);
 
-			const gridLayout = generateGridLayout(
-				filteredItems as unknown as PortfolioContentItem[],
+		const gridLayout = generateGridLayout(
+			filteredItems as unknown as PortfolioContentItem[],
+		);
+		console.log("Grid layout result:", gridLayout);
+
+		const balancedLayout = createBalancedLayout(gridLayout);
+		console.log("Balanced layout result:", balancedLayout);
+
+		// Ensure balancedLayout is not undefined or null
+		if (!balancedLayout || !Array.isArray(balancedLayout)) {
+			console.warn(
+				"createBalancedLayout returned invalid result, using gridLayout as fallback",
 			);
-			console.log("Grid layout result:", gridLayout);
-
-			const balancedLayout = createBalancedLayout(gridLayout);
-			console.log("Balanced layout result:", balancedLayout);
-
-			// Ensure balancedLayout is not undefined or null
-			if (!balancedLayout || !Array.isArray(balancedLayout)) {
-				console.warn(
-					"createBalancedLayout returned invalid result, using gridLayout as fallback",
-				);
-				// Ensure gridLayout is also valid before mapping
-				if (!gridLayout || !Array.isArray(gridLayout)) {
-					console.warn("gridLayout is also invalid, returning empty array");
-					return [];
-				}
-				return gridLayout.map(
-					(item, index) =>
-						({
-							...item,
-							categories: (
-								(filteredItems || []).find(
-									(fi: PortfolioContentItem | EnhancedContentItem) =>
-										fi.id === item.id,
-								) as EnhancedContentItem
-							)?.categories,
-							randomOffset: ((index || 0) % 10) * 0.01,
-						}) as EnhancedGridItem,
-				);
+			// Ensure gridLayout is also valid before mapping
+			if (!gridLayout || !Array.isArray(gridLayout)) {
+				console.warn("gridLayout is also invalid, returning empty array");
+				return [];
 			}
-
-			// Add some final randomization while maintaining visual balance and enhanced properties
-			return balancedLayout.map((item, index) => {
-				const originalItem = (filteredItems || []).find(
-					(fi: PortfolioContentItem | EnhancedContentItem) => fi.id === item.id,
-				);
-				return {
-					...item,
-					// Add categories from enhanced items
-					categories: (originalItem as EnhancedContentItem)?.categories,
-					// Add slight deterministic variation to positioning for more organic feel
-					randomOffset: ((index || 0) % 10) * 0.01,
-				} as EnhancedGridItem;
-			});
-		} catch (error) {
-			console.error("Error in gridItems generation:", error);
-			handleError(error as Error, "grid layout generation");
-			// Return a safe fallback
-			const safeItems = filteredItems || [];
-			return safeItems.map(
+			return gridLayout.map(
 				(item, index) =>
 					({
 						...item,
-						gridSize: "1x1" as GridSize,
-						categories: (item as EnhancedContentItem)?.categories,
+						categories: (
+							(filteredItems || []).find(
+								(fi: PortfolioContentItem | EnhancedContentItem) =>
+									fi.id === item.id,
+							) as EnhancedContentItem
+						)?.categories,
 						randomOffset: ((index || 0) % 10) * 0.01,
-						url: `/portfolio/${item.id}`,
 					}) as EnhancedGridItem,
 			);
 		}
-	}, [filteredItems, handleError]);
+
+		// Add some final randomization while maintaining visual balance and enhanced properties
+		return balancedLayout.map((item, index) => {
+			const originalItem = (filteredItems || []).find(
+				(fi: PortfolioContentItem | EnhancedContentItem) => fi.id === item.id,
+			);
+			return {
+				...item,
+				// Add categories from enhanced items
+				categories: (originalItem as EnhancedContentItem)?.categories,
+				// Add slight deterministic variation to positioning for more organic feel
+				randomOffset: ((index || 0) % 10) * 0.01,
+			} as EnhancedGridItem;
+		});
+	}, [filteredItems]);
 
 	// Skip early validation in test environment to allow proper testing
 	if (process.env.NODE_ENV !== "test" && (!items || !Array.isArray(items))) {
@@ -779,8 +720,7 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 		typeof item.createdAt,
 	);
 
-	// Force component update - timestamp: ${Date.now()}
-	console.log("Component updated at:", new Date().toISOString());
+	console.log("Component updated");
 
 	// Check if this is a placeholder item
 	const isPlaceholder = item.category === "placeholder";

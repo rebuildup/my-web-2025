@@ -50,7 +50,19 @@ export function ExperimentLoader({
 			// Get experiment from manager
 			const exp = playgroundManager.getExperiment(experimentId);
 			if (!exp) {
-				throw new Error(`Experiment "${experimentId}" not found`);
+				const notFoundError: PlaygroundError = {
+					type: "runtime",
+					message: `Experiment "${experimentId}" not found`,
+					details: `The experiment with ID "${experimentId}" could not be found in the playground manager.`,
+					recoverable: true,
+				};
+				setError(notFoundError);
+				if (onError) {
+					onError(notFoundError);
+				}
+				playgroundManager.addError(notFoundError);
+				setIsLoading(false);
+				return;
 			}
 
 			// Check compatibility
@@ -67,7 +79,10 @@ export function ExperimentLoader({
 					recoverable: false,
 				};
 				setError(compatibilityError);
-				onError?.(compatibilityError);
+				if (onError) {
+					onError(compatibilityError);
+				}
+				setIsLoading(false);
 				return;
 			}
 
@@ -77,18 +92,25 @@ export function ExperimentLoader({
 
 			// Add to playground manager error log if needed
 			playgroundManager.clearErrors();
+			setIsLoading(false);
 		} catch (err) {
+			let errorMessage = "Failed to load experiment";
+			let errorDetails: string | undefined = undefined;
+			if (err instanceof Error) {
+				errorMessage = err.message;
+				errorDetails = err.stack;
+			}
 			const loadError: PlaygroundError = {
 				type: "runtime",
-				message:
-					err instanceof Error ? err.message : "Failed to load experiment",
-				details: err instanceof Error ? err.stack : undefined,
+				message: errorMessage,
+				details: errorDetails,
 				recoverable: true,
 			};
 			setError(loadError);
-			onError?.(loadError);
+			if (onError) {
+				onError(loadError);
+			}
 			playgroundManager.addError(loadError);
-		} finally {
 			setIsLoading(false);
 		}
 	}, [experimentId, deviceCapabilities, onError]);

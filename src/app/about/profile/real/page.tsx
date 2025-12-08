@@ -3,9 +3,20 @@
 import { Calendar, GraduationCap, MapPin } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollFloat } from "@/components/ScrollFloat";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+
+const deterministicSample = (items: string[], count: number) => {
+	if (!items.length || count <= 0) return [];
+	const seed = items
+		.join("|")
+		.split("")
+		.reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) | 0, 7);
+	const start = Math.abs(seed) % items.length;
+	const looped = [...items.slice(start), ...items.slice(0, start)];
+	return looped.slice(0, Math.min(count, items.length));
+};
 
 // react-bits componentsを動的インポート
 const ScrollVelocity = dynamic(
@@ -18,13 +29,7 @@ const SpotlightCard = dynamic(
 );
 // ランダム選択された性格をリスト表示するコンポーネント
 function RandomPersonalityList({ items }: { items: string[] }) {
-	const [selectedItems, setSelectedItems] = useState<string[]>([]);
-
-	useEffect(() => {
-		// ランダムに3つ選ぶ
-		const shuffled = [...items].sort(() => Math.random() - 0.5);
-		setSelectedItems(shuffled.slice(0, 3));
-	}, [items]);
+	const selectedItems = useMemo(() => deterministicSample(items, 3), [items]);
 
 	return (
 		<div className="space-y-3">
@@ -50,21 +55,22 @@ function TypingText({
 	delay?: number;
 }) {
 	const [displayedText, setDisplayedText] = useState("");
+	const indexRef = useRef(0);
 
 	useEffect(() => {
 		setDisplayedText("");
-		let currentIndex = 0;
-		let timeoutId: NodeJS.Timeout;
-		let intervalId: NodeJS.Timeout;
+		indexRef.current = 0;
+		let timeoutId: NodeJS.Timeout | null = null;
+		let intervalId: NodeJS.Timeout | null = null;
 
 		const startTyping = () => {
-			currentIndex = 0;
 			intervalId = setInterval(() => {
-				if (currentIndex <= text.length) {
-					setDisplayedText(text.slice(0, currentIndex));
-					currentIndex++;
+				const nextIndex = indexRef.current + 1;
+				if (nextIndex <= text.length) {
+					indexRef.current = nextIndex;
+					setDisplayedText(text.slice(0, nextIndex));
 				} else {
-					clearInterval(intervalId);
+					if (intervalId) clearInterval(intervalId);
 				}
 			}, speed);
 		};
@@ -244,7 +250,10 @@ const personality = [
 
 export default function RealProfilePage() {
 	const [mounted, setMounted] = useState(false);
-	const [shuffledPersonality, setShuffledPersonality] = useState<string[]>([]);
+	const shuffledPersonality = useMemo(
+		() => deterministicSample(personality, personality.length),
+		[],
+	);
 
 	const personalInfoRef = useRef<HTMLElement>(null);
 	const educationRef = useRef<HTMLElement>(null);
@@ -253,9 +262,6 @@ export default function RealProfilePage() {
 
 	useEffect(() => {
 		setMounted(true);
-		// 性格・特徴をランダムにシャッフル
-		const shuffled = [...personality].sort(() => Math.random() - 0.5);
-		setShuffledPersonality(shuffled);
 	}, []);
 
 	const Global_title = "noto-sans-jp-regular text-base leading-snug";

@@ -78,26 +78,26 @@ export default function PageEditorHome() {
 
   const loadPages = useCallback(
     async (contentId: string) => {
-      try {
-        console.log("[PageEditor] Loading pages for contentId:", contentId);
-        setPagesLoading(true);
-        const data = await fetchMarkdownPages(contentId);
-        console.log("[PageEditor] Pages loaded:", data);
-        setPages(
-          data.sort(
-            (a, b) =>
-              new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-          ),
-        );
-      } catch (error) {
+      console.log("[PageEditor] Loading pages for contentId:", contentId);
+      setPagesLoading(true);
+      const data = await fetchMarkdownPages(contentId).catch((error) => {
         console.error("[PageEditor] Failed to load pages", error);
         showMessage({
           type: "error",
           text: `Failed to load pages: ${error instanceof Error ? error.message : "Unknown error"}`,
         });
-      } finally {
         setPagesLoading(false);
-      }
+        return null;
+      });
+      if (data === null) return;
+      console.log("[PageEditor] Pages loaded:", data);
+      setPages(
+        data.sort(
+          (a, b) =>
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+        ),
+      );
+      setPagesLoading(false);
     },
     [showMessage],
   );
@@ -108,21 +108,21 @@ export default function PageEditorHome() {
         setMedia([]);
         return;
       }
-      try {
-        console.log("[PageEditor] Loading media for contentId:", contentId);
-        setMediaLoading(true);
-        const items = await fetchMediaList(contentId);
-        console.log("[PageEditor] Media loaded:", items);
-        setMedia(items);
-      } catch (error) {
+      console.log("[PageEditor] Loading media for contentId:", contentId);
+      setMediaLoading(true);
+      const items = await fetchMediaList(contentId).catch((error) => {
         console.error("[PageEditor] Failed to load media", error);
         showMessage({
           type: "error",
           text: `Failed to load media: ${error instanceof Error ? error.message : "Unknown error"}`,
         });
-      } finally {
         setMediaLoading(false);
-      }
+        return null;
+      });
+      if (items === null) return;
+      console.log("[PageEditor] Media loaded:", items);
+      setMedia(items);
+      setMediaLoading(false);
     },
     [showMessage],
   );
@@ -147,15 +147,15 @@ export default function PageEditorHome() {
 
   const handleSelectPage = useCallback(
     async (targetPage: MarkdownPage) => {
-      try {
-        const detail = await fetchMarkdownPage(targetPage.id);
-        const value = convertMarkdownToBlocks(detail.body ?? "");
-        reset(detail, value);
-        setActiveBlockId(value[0]?.id ?? null);
-      } catch (error) {
+      const detail = await fetchMarkdownPage(targetPage.id).catch((error) => {
         console.error("Failed to load page detail", error);
         showMessage({ type: "error", text: "Failed to load the page." });
-      }
+        return null;
+      });
+      if (detail === null) return;
+      const value = convertMarkdownToBlocks(detail.body ?? "");
+      reset(detail, value);
+      setActiveBlockId(value[0]?.id ?? null);
     },
     [reset, showMessage],
   );
@@ -166,22 +166,22 @@ export default function PageEditorHome() {
       return;
     }
 
-    try {
-      await updateMarkdownPage({
-        id: page.id,
-        contentId: selectedContentId,
-        slug: page.slug,
-        frontmatter: page.frontmatter,
-        body: markdown,
-        updatedAt: new Date().toISOString(),
-      });
-      setHasChanges(false);
-      showMessage({ type: "success", text: "Saved successfully." });
-      void loadPages(selectedContentId);
-    } catch (error) {
+    const result = await updateMarkdownPage({
+      id: page.id,
+      contentId: selectedContentId,
+      slug: page.slug,
+      frontmatter: page.frontmatter,
+      body: markdown,
+      updatedAt: new Date().toISOString(),
+    }).catch((error) => {
       console.error("Manual save failed", error);
       showMessage({ type: "error", text: "Failed to save changes." });
-    }
+      return null;
+    });
+    if (result === null) return;
+    setHasChanges(false);
+    showMessage({ type: "success", text: "Saved successfully." });
+    void loadPages(selectedContentId);
   }, [
     selectedContentId,
     page,
@@ -208,34 +208,35 @@ export default function PageEditorHome() {
     }
     const slug = normalizeSlug(slugInput) || defaultSlug;
 
-    try {
-      const now = new Date().toISOString();
-      const response = await createMarkdownPage({
-        contentId: selectedContentId,
+    const now = new Date().toISOString();
+    const response = await createMarkdownPage({
+      contentId: selectedContentId,
+      slug,
+      frontmatter: {
+        title,
         slug,
-        frontmatter: {
-          title,
-          slug,
-          updated: now,
-          draft: true,
-        },
-        body: "",
-        createdAt: now,
-        updatedAt: now,
-      });
-
-      await loadPages(selectedContentId);
-      const newPageId = response.page?.id ?? response.id;
-      if (newPageId) {
-        const detail = await fetchMarkdownPage(newPageId);
-        const value = convertMarkdownToBlocks(detail.body ?? "");
-        reset(detail, value);
-        setActiveBlockId(value[0]?.id ?? null);
-        showMessage({ type: "success", text: "Created a new page." });
-      }
-    } catch (error) {
+        updated: now,
+        draft: true,
+      },
+      body: "",
+      createdAt: now,
+      updatedAt: now,
+    }).catch((error) => {
       console.error("Failed to create page", error);
       showMessage({ type: "error", text: "Failed to create page." });
+      return null;
+    });
+    if (response === null) return;
+
+    await loadPages(selectedContentId);
+    const newPageId = response.page?.id ?? response.id;
+    if (newPageId) {
+      const detail = await fetchMarkdownPage(newPageId).catch(() => null);
+      if (detail === null) return;
+      const value = convertMarkdownToBlocks(detail.body ?? "");
+      reset(detail, value);
+      setActiveBlockId(value[0]?.id ?? null);
+      showMessage({ type: "success", text: "Created a new page." });
     }
   }, [selectedContentId, loadPages, reset, showMessage]);
 
@@ -251,28 +252,28 @@ export default function PageEditorHome() {
       }
       const slug = normalizeSlug(slugInput) || target.slug;
 
-      try {
-        const result = await updateMarkdownPage({
-          id: target.id,
-          contentId: target.contentId ?? selectedContentId,
+      const result = await updateMarkdownPage({
+        id: target.id,
+        contentId: target.contentId ?? selectedContentId,
+        slug,
+        frontmatter: {
+          ...target.frontmatter,
+          title,
           slug,
-          frontmatter: {
-            ...target.frontmatter,
-            title,
-            slug,
-          },
-        });
-        await loadPages(selectedContentId);
-        if (result.page && page?.id === result.page.id) {
-          const value = convertMarkdownToBlocks(result.page.body ?? "");
-          reset(result.page, value);
-          setActiveBlockId(value[0]?.id ?? null);
-        }
-        showMessage({ type: "success", text: "Updated page metadata." });
-      } catch (error) {
+        },
+      }).catch((error) => {
         console.error("Failed to update metadata", error);
         showMessage({ type: "error", text: "Failed to update metadata." });
+        return null;
+      });
+      if (result === null) return;
+      await loadPages(selectedContentId);
+      if (result.page && page?.id === result.page.id) {
+        const value = convertMarkdownToBlocks(result.page.body ?? "");
+        reset(result.page, value);
+        setActiveBlockId(value[0]?.id ?? null);
       }
+      showMessage({ type: "success", text: "Updated page metadata." });
     },
     [selectedContentId, page, loadPages, reset, showMessage],
   );
@@ -284,17 +285,17 @@ export default function PageEditorHome() {
       if (!confirmDelete) {
         return;
       }
-      try {
-        await deleteMarkdownPage(target.id);
-        showMessage({ type: "success", text: "Deleted page." });
-        if (page?.id === target.id) {
-          resetEditor();
-        }
-        await loadPages(selectedContentId);
-      } catch (error) {
+      const deleteResult = await deleteMarkdownPage(target.id).catch((error) => {
         console.error("Failed to delete page", error);
         showMessage({ type: "error", text: "Failed to delete page." });
+        return null;
+      });
+      if (deleteResult === null) return;
+      showMessage({ type: "success", text: "Deleted page." });
+      if (page?.id === target.id) {
+        resetEditor();
       }
+      await loadPages(selectedContentId);
     },
     [page, resetEditor, showMessage, loadPages, selectedContentId],
   );

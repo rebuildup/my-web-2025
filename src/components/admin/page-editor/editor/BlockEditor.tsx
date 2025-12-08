@@ -39,6 +39,12 @@ import { VideoBlock } from "@/components/admin/page-editor/blocks/media/VideoBlo
 import { WebBookmarkBlock } from "@/components/admin/page-editor/blocks/media/WebBookmarkBlock";
 import type { BlockComponentProps } from "@/components/admin/page-editor/blocks/types";
 
+// Helper function to load conversion utilities dynamically
+async function loadConversionUtils() {
+	const conversionModule = await import("@/cms/page-editor/lib/conversion");
+	return conversionModule.convertBlocksToMarkdown;
+}
+
 const BLOCK_COMPONENTS: Partial<
 	Record<BlockType, (props: BlockComponentProps) => JSX.Element>
 > = {
@@ -547,9 +553,7 @@ export function BlockEditor({
 			if (!target) return;
 			try {
 				// 単一ブロックをMarkdown化してコピー
-				const { convertBlocksToMarkdown } = await import(
-					"@/cms/page-editor/lib/conversion"
-				);
+				const convertBlocksToMarkdown = await loadConversionUtils();
 				const md = convertBlocksToMarkdown([target]);
 				await navigator.clipboard.writeText(md);
 			} catch {

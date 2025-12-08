@@ -101,30 +101,59 @@ export default function OfflineSettingsManager<
 		URL.revokeObjectURL(url);
 	}, [settings, toolName]);
 
+	// Helper function to parse and validate imported settings
+	const parseImportedSettings = useCallback(
+		(content: string): T | null => {
+			const importedSettings = JSON.parse(content) as T;
+
+			// Validate imported settings have required keys
+			const requiredKeys = Object.keys(defaultSettings);
+			const importedKeys = Object.keys(importedSettings);
+			const hasAllKeys = requiredKeys.every((key) =>
+				importedKeys.includes(key),
+			);
+
+			if (hasAllKeys) {
+				return importedSettings;
+			}
+			return null;
+		},
+		[defaultSettings],
+	);
+
 	// Import settings from JSON file
 	const importSettings = useCallback(
 		(file: File) => {
 			const reader = new FileReader();
 			reader.onload = (e) => {
-				try {
-					const result = e.target?.result;
-					if (typeof result === "string") {
-						const importedSettings = JSON.parse(result) as T;
-
-						// Validate imported settings have required keys
-						const requiredKeys = Object.keys(defaultSettings);
-						const importedKeys = Object.keys(importedSettings);
-						const hasAllKeys = requiredKeys.every((key) =>
-							importedKeys.includes(key),
-						);
-
-						if (hasAllKeys) {
-							onSettingsChange(importedSettings);
-							saveSettings(importedSettings);
-							setLastSaved(new Date());
-						} else {
-							throw new Error("Invalid settings file format");
+				let fileContent: string | null = null;
+				if (e.target) {
+					if (e.target.result) {
+						if (typeof e.target.result === "string") {
+							fileContent = e.target.result;
 						}
+					}
+				}
+
+				if (!fileContent) {
+					console.error("Failed to import settings: invalid file content");
+					alert(
+						"設定ファイルの読み込みに失敗しました。ファイル形式を確認してください。",
+					);
+					return;
+				}
+
+				try {
+					const importedSettings = parseImportedSettings(fileContent);
+					if (importedSettings) {
+						onSettingsChange(importedSettings);
+						saveSettings(importedSettings);
+						setLastSaved(new Date());
+					} else {
+						console.error(
+							"Invalid settings file format: missing required keys",
+						);
+						alert("設定ファイルの形式が無効です。必要なキーが不足しています。");
 					}
 				} catch (error) {
 					console.error("Failed to import settings:", error);
@@ -135,7 +164,7 @@ export default function OfflineSettingsManager<
 			};
 			reader.readAsText(file);
 		},
-		[defaultSettings, onSettingsChange, saveSettings],
+		[onSettingsChange, saveSettings, parseImportedSettings],
 	);
 
 	// Handle file input for import

@@ -261,13 +261,15 @@ export function MarkdownEditor({
 			await onSave(editorContent, filePath);
 			setSaveStatus("success");
 			setTimeout(() => setSaveStatus("idle"), 2000);
+			setIsSaving(false);
 		} catch (err) {
-			const errorMessage =
-				err instanceof Error ? err.message : "Failed to save file";
+			let errorMessage = "Failed to save file";
+			if (err instanceof Error) {
+				errorMessage = err.message;
+			}
 			setError(errorMessage);
 			setSaveStatus("error");
 			setTimeout(() => setSaveStatus("idle"), 3000);
-		} finally {
 			setIsSaving(false);
 		}
 	}, [editorContent, filePath, onSave]);

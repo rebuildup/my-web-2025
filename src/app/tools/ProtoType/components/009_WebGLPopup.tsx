@@ -11,6 +11,16 @@ import { settings } from "../SiteInterface";
 import { initializeGame, replaceHash } from "../gamesets/001_game_master";
 //import { setProp } from "../gamesets/gameConfig";
 
+// Helper function to load GSAP plugins dynamically
+async function loadGSAPPlugins() {
+  const pixiPluginModule = await import("gsap/PixiPlugin");
+  const customEaseModule = await import("gsap/all");
+  return {
+    PixiPlugin: pixiPluginModule.PixiPlugin,
+    CustomEase: customEaseModule.CustomEase,
+  };
+}
+
 const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<PIXI.Application | null>(null);
@@ -19,10 +29,9 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     let isMounted = true;
     let app: PIXI.Application | null = null;
 
-    (async () => {
+    const initializePixi = async () => {
       // Dynamic import to avoid SSR issues
-      const { PixiPlugin } = await import("gsap/PixiPlugin");
-      const { CustomEase } = await import("gsap/all");
+      const { PixiPlugin, CustomEase } = await loadGSAPPlugins();
       
       if (typeof window !== "undefined") {
           (window as any).PIXI = PIXI;
@@ -34,18 +43,25 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
       popupRef.current.querySelector("canvas")?.remove();
 
+      // Calculate resolution outside try/catch block
+      let resolution = 1;
+      if (window.devicePixelRatio) {
+        resolution = window.devicePixelRatio;
+      }
+
       app = new PIXI.Application();
       try {
         await app.init({
           width: 720 * 2,
           height: 600 * 2,
           backgroundColor: replaceHash(settings.colorTheme.colors.MainBG),
-          resolution: window.devicePixelRatio || 1,
+          resolution,
           autoDensity: true,
           //antialias: true,
         });
 
-        if (!isMounted || !popupRef.current) return;
+        if (!isMounted) return;
+        if (!popupRef.current) return;
 
         app.stage.position.set(0, 0); // Reset stage position
         appRef.current = app;
@@ -62,9 +78,13 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         initializeGame(app);
       } catch (error) {
         console.error("PixiJS initialization failed:", error);
-        app?.destroy(true);
+        if (app) {
+          app.destroy(true);
+        }
       }
-    })();
+    };
+
+    initializePixi();
 
     return () => {
       isMounted = false;

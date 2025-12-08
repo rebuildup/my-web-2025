@@ -21,6 +21,9 @@ const nextConfig: NextConfig = {
 
 	// Performance optimizations
 	experimental: {
+		// Enable React Compiler so marker extension can report optimization
+		// @ts-expect-error - Next.js 16 types might not include reactCompiler yet
+		reactCompiler: true,
 		...(isProduction
 			? {
 					optimizePackageImports: [

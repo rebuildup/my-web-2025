@@ -26,6 +26,10 @@ export function useCmsResource<T>(
 	const [error, setError] = useState<unknown>(null);
 	const abortController = useRef<AbortController | null>(null);
 
+	const handleRequestError = useCallback((status: number): Error => {
+		return new Error(`Request failed with status ${status}`);
+	}, []);
+
 	const refresh = useCallback(async () => {
 		abortController.current?.abort();
 		const controller = new AbortController();
@@ -33,26 +37,49 @@ export function useCmsResource<T>(
 		setLoading(true);
 		setError(null);
 
+		let response: Response;
 		try {
-			const response = await fetch(endpoint, {
+			response = await fetch(endpoint, {
 				signal: controller.signal,
 				cache: "no-store",
 			});
-			if (!response.ok) {
-				throw new Error(`Request failed with status ${response.status}`);
+		} catch (fetchErr) {
+			if ((fetchErr as Error).name === "AbortError") {
+				setLoading(false);
+				return;
 			}
-			const raw = await response.json();
-			setData(parse ? parse(raw) : (raw as T));
+			setError(fetchErr);
+			onError?.(fetchErr);
+			setLoading(false);
+			return;
+		}
+
+		if (!response.ok) {
+			const error = handleRequestError(response.status);
+			setError(error);
+			onError?.(error);
+			setLoading(false);
+			return;
+		}
+
+		let raw: unknown;
+		try {
+			raw = await response.json();
 		} catch (err) {
 			if ((err as Error).name === "AbortError") {
+				setLoading(false);
 				return;
 			}
 			setError(err);
 			onError?.(err);
-		} finally {
 			setLoading(false);
+			return;
 		}
-	}, [endpoint, onError, parse]);
+
+		const parsedData = parse ? parse(raw) : (raw as T);
+		setData(parsedData);
+		setLoading(false);
+	}, [endpoint, onError, parse, handleRequestError]);
 
 	useEffect(() => {
 		if (!immediate) {
@@ -77,6 +104,9 @@ export function useCmsResource<T>(
 			.then((raw) => {
 				if (controller.signal.aborted) return;
 				setData(parse ? parse(raw) : (raw as T));
+				if (!controller.signal.aborted) {
+					setLoading(false);
+				}
 			})
 			.catch((err) => {
 				if (err.name === "AbortError") {
@@ -84,8 +114,6 @@ export function useCmsResource<T>(
 				}
 				setError(err);
 				onError?.(err);
-			})
-			.finally(() => {
 				if (!controller.signal.aborted) {
 					setLoading(false);
 				}
@@ -94,8 +122,7 @@ export function useCmsResource<T>(
 		return () => {
 			controller.abort();
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [immediate, endpoint]);
+	}, [immediate, endpoint, parse, onError]);
 
 	return { data, loading, error, refresh, setData };
 }

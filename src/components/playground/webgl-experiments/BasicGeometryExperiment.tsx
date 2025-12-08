@@ -31,7 +31,9 @@ export function BasicGeometryExperiment({
 	const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 	const meshRef = useRef<THREE.Mesh | null>(null);
 	const animationRef = useRef<number | null>(null);
+	const animateRef = useRef<(() => void) | undefined>(undefined);
 	const clockRef = useRef<THREE.Clock>(new THREE.Clock());
+	const isActiveRef = useRef(false);
 
 	const [controls, setControls] = useState<GeometryControls>({
 		rotationSpeed: 1.0,
@@ -142,24 +144,28 @@ export function BasicGeometryExperiment({
 			cameraRef.current = camera;
 
 			// Renderer
+			let powerPreference: "high-performance" | "default" = "default";
+			if (deviceCapabilities.performanceLevel === "high") {
+				powerPreference = "high-performance";
+			}
+
 			const renderer = new THREE.WebGLRenderer({
 				antialias: performanceSettings.qualityLevel !== "low",
 				alpha: true,
-				powerPreference:
-					deviceCapabilities.performanceLevel === "high"
-						? "high-performance"
-						: "default",
+				powerPreference,
 			});
 
 			renderer.setSize(
 				mountRef.current.clientWidth,
 				mountRef.current.clientHeight,
 			);
+
+			let pixelRatioValue = 1;
+			if (performanceSettings.qualityLevel === "high") {
+				pixelRatioValue = 2;
+			}
 			renderer.setPixelRatio(
-				Math.min(
-					deviceCapabilities.devicePixelRatio,
-					performanceSettings.qualityLevel === "high" ? 2 : 1,
-				),
+				Math.min(deviceCapabilities.devicePixelRatio, pixelRatioValue),
 			);
 
 			// Enable shadows for better quality
@@ -194,9 +200,14 @@ export function BasicGeometryExperiment({
 			setError(null);
 			return true;
 		} catch (err) {
-			const errorMessage = err instanceof Error ? err.message : "Unknown error";
+			let errorMessage = "Unknown error";
+			if (err instanceof Error) {
+				errorMessage = err.message;
+			}
 			setError(`Failed to initialize WebGL: ${errorMessage}`);
-			onError?.(new Error(errorMessage));
+			if (onError) {
+				onError(new Error(errorMessage));
+			}
 			return false;
 		}
 	}, [
@@ -210,7 +221,7 @@ export function BasicGeometryExperiment({
 	// Animation loop
 	const animate = useCallback(() => {
 		if (
-			!isActive ||
+			!isActiveRef.current ||
 			!rendererRef.current ||
 			!sceneRef.current ||
 			!cameraRef.current
@@ -238,25 +249,40 @@ export function BasicGeometryExperiment({
 					(currentTime - performanceRef.current.lastTime),
 			);
 
-			onPerformanceUpdate?.({
-				fps: performanceRef.current.fps,
-				frameTime: deltaTime * 1000,
-				memoryUsage: (() => {
-					const perfMemory = (
-						performance as { memory?: { usedJSHeapSize: number } }
-					).memory;
-					return perfMemory?.usedJSHeapSize
-						? Math.round(perfMemory.usedJSHeapSize / 1024 / 1024)
-						: 0;
-				})(),
-			});
+			if (onPerformanceUpdate) {
+				onPerformanceUpdate({
+					fps: performanceRef.current.fps,
+					frameTime: deltaTime * 1000,
+					memoryUsage: (() => {
+						const perfMemory = (
+							performance as { memory?: { usedJSHeapSize: number } }
+						).memory;
+						if (perfMemory?.usedJSHeapSize) {
+							return Math.round(perfMemory.usedJSHeapSize / 1024 / 1024);
+						}
+						return 0;
+					})(),
+				});
+			}
 
 			performanceRef.current.frameCount = 0;
 			performanceRef.current.lastTime = currentTime;
 		}
 
-		animationRef.current = requestAnimationFrame(animate);
-	}, [isActive, controls.rotationSpeed, onPerformanceUpdate]);
+		if (animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
+		}
+	}, [controls.rotationSpeed, onPerformanceUpdate]);
+
+	// Update animate ref when it changes
+	useEffect(() => {
+		animateRef.current = animate;
+	}, [animate]);
+
+	// Update isActive ref when it changes
+	useEffect(() => {
+		isActiveRef.current = isActive;
+	}, [isActive]);
 
 	// Handle window resize
 	const handleResize = useCallback(() => {
@@ -274,8 +300,8 @@ export function BasicGeometryExperiment({
 	useEffect(() => {
 		if (isActive && !isInitialized) {
 			const success = initializeScene();
-			if (success) {
-				animate();
+			if (success && animateRef.current) {
+				animationRef.current = requestAnimationFrame(animateRef.current);
 			}
 		}
 
@@ -285,7 +311,19 @@ export function BasicGeometryExperiment({
 				animationRef.current = null;
 			}
 		};
-	}, [isActive, isInitialized, initializeScene, animate]);
+	}, [isActive, isInitialized, initializeScene]);
+
+	// Handle animation state changes
+	useEffect(() => {
+		if (isActive && animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
+		} else if (!isActive && animationRef.current) {
+			if (animationRef.current) {
+				cancelAnimationFrame(animationRef.current);
+				animationRef.current = null;
+			}
+		}
+	}, [isActive]);
 
 	// Update geometry when controls change
 	useEffect(() => {

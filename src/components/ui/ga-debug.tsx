@@ -31,14 +31,15 @@ export function GADebug() {
 
 		// dataLayerの変更を監視
 		if (typeof window !== "undefined") {
-			const originalPush = window.dataLayer?.push;
-			if (originalPush) {
-				window.dataLayer!.push = function (...args) {
-					const result = originalPush.apply(this, args);
+			const dataLayer = window.dataLayer;
+			const originalPush = dataLayer?.push;
+			if (originalPush && dataLayer) {
+				dataLayer.push = function (...args) {
+					const result = originalPush.call(dataLayer, ...args);
 					setGaStatus((prev) => ({
 						...prev,
 						lastEvent: JSON.stringify(args[0]),
-						eventCount: window.dataLayer?.length || 0,
+						eventCount: dataLayer.length || 0,
 					}));
 					return result;
 				};

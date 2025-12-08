@@ -38,9 +38,11 @@ export function PhysicsSimulationExperiment({
 	const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
 	const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 	const animationRef = useRef<number | null>(null);
+	const animateRef = useRef<(() => void) | undefined>(undefined);
 	const clockRef = useRef<THREE.Clock>(new THREE.Clock());
 	const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
 	const raycasterRef = useRef<THREE.Raycaster>(new THREE.Raycaster());
+	const isActiveRef = useRef(false);
 
 	const physicsObjectsRef = useRef<PhysicsObject[]>([]);
 	const boundariesRef = useRef<THREE.Mesh[]>([]);
@@ -94,24 +96,28 @@ export function PhysicsSimulationExperiment({
 			cameraRef.current = camera;
 
 			// Renderer
+			let powerPreference: "high-performance" | "default" = "default";
+			if (deviceCapabilities.performanceLevel === "high") {
+				powerPreference = "high-performance";
+			}
+
 			const renderer = new THREE.WebGLRenderer({
 				antialias: performanceSettings.qualityLevel !== "low",
 				alpha: true,
-				powerPreference:
-					deviceCapabilities.performanceLevel === "high"
-						? "high-performance"
-						: "default",
+				powerPreference,
 			});
 
 			renderer.setSize(
 				mountRef.current.clientWidth,
 				mountRef.current.clientHeight,
 			);
+
+			let pixelRatioValue = 1;
+			if (performanceSettings.qualityLevel === "high") {
+				pixelRatioValue = 2;
+			}
 			renderer.setPixelRatio(
-				Math.min(
-					deviceCapabilities.devicePixelRatio,
-					performanceSettings.qualityLevel === "high" ? 2 : 1,
-				),
+				Math.min(deviceCapabilities.devicePixelRatio, pixelRatioValue),
 			);
 
 			// Enable shadows
@@ -146,8 +152,8 @@ export function PhysicsSimulationExperiment({
 
 			// Mouse interaction
 			const handleMouseMove = (event: MouseEvent) => {
-				const rect = mountRef.current?.getBoundingClientRect();
-				if (rect) {
+				if (mountRef.current) {
+					const rect = mountRef.current.getBoundingClientRect();
 					mouseRef.current.x =
 						((event.clientX - rect.left) / rect.width) * 2 - 1;
 					mouseRef.current.y =
@@ -189,9 +195,14 @@ export function PhysicsSimulationExperiment({
 			setError(null);
 			return true;
 		} catch (err) {
-			const errorMessage = err instanceof Error ? err.message : "Unknown error";
+			let errorMessage = "Unknown error";
+			if (err instanceof Error) {
+				errorMessage = err.message;
+			}
 			setError(`Failed to initialize physics simulation: ${errorMessage}`);
-			onError?.(new Error(errorMessage));
+			if (onError) {
+				onError(new Error(errorMessage));
+			}
 			return false;
 		}
 	}, [deviceCapabilities, performanceSettings, onError]);
@@ -400,7 +411,7 @@ export function PhysicsSimulationExperiment({
 	// Animation loop
 	const animate = useCallback(() => {
 		if (
-			!isActive ||
+			!isActiveRef.current ||
 			!rendererRef.current ||
 			!sceneRef.current ||
 			!cameraRef.current
@@ -425,25 +436,39 @@ export function PhysicsSimulationExperiment({
 					(currentTime - performanceRef.current.lastTime),
 			);
 
-			onPerformanceUpdate?.({
-				fps: performanceRef.current.fps,
-				frameTime: deltaTime * 1000,
-				memoryUsage: (() => {
-					const perfMemory = (
-						performance as { memory?: { usedJSHeapSize: number } }
-					).memory;
-					return perfMemory?.usedJSHeapSize
-						? Math.round(perfMemory.usedJSHeapSize / 1024 / 1024)
-						: 0;
-				})(),
-			});
+			if (onPerformanceUpdate) {
+				let memoryUsage = 0;
+				const perfMemory = (
+					performance as { memory?: { usedJSHeapSize: number } }
+				).memory;
+				if (perfMemory?.usedJSHeapSize) {
+					memoryUsage = Math.round(perfMemory.usedJSHeapSize / 1024 / 1024);
+				}
+				onPerformanceUpdate({
+					fps: performanceRef.current.fps,
+					frameTime: deltaTime * 1000,
+					memoryUsage,
+				});
+			}
 
 			performanceRef.current.frameCount = 0;
 			performanceRef.current.lastTime = currentTime;
 		}
 
-		animationRef.current = requestAnimationFrame(animate);
-	}, [isActive, updatePhysics, onPerformanceUpdate]);
+		if (animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
+		}
+	}, [updatePhysics, onPerformanceUpdate]);
+
+	// Update animate ref when it changes
+	useEffect(() => {
+		animateRef.current = animate;
+	}, [animate]);
+
+	// Update isActive ref when it changes
+	useEffect(() => {
+		isActiveRef.current = isActive;
+	}, [isActive]);
 
 	// Handle window resize
 	const handleResize = useCallback(() => {
@@ -471,7 +496,9 @@ export function PhysicsSimulationExperiment({
 				// Create boundaries and physics objects after scene initialization
 				createBoundaries();
 				createPhysicsObjects();
-				animate();
+				if (animateRef.current) {
+					animationRef.current = requestAnimationFrame(animateRef.current);
+				}
 			}
 		}
 
@@ -485,10 +512,21 @@ export function PhysicsSimulationExperiment({
 		isActive,
 		isInitialized,
 		initializeScene,
-		animate,
 		createBoundaries,
 		createPhysicsObjects,
 	]);
+
+	// Handle animation state changes
+	useEffect(() => {
+		if (isActive && animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
+		} else if (!isActive && animationRef.current) {
+			if (animationRef.current) {
+				cancelAnimationFrame(animationRef.current);
+				animationRef.current = null;
+			}
+		}
+	}, [isActive]);
 
 	// Update objects when controls change
 	useEffect(() => {

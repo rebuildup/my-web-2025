@@ -82,7 +82,7 @@ export function StatsOverview({
 		return emphasis ? "text-xl" : "text-lg";
 	};
 
-	// Highlights data
+	// Highlights data (deterministic pick to satisfy React Compiler)
 	const pool = useMemo(
 		() =>
 			Array.isArray(items)
@@ -90,19 +90,39 @@ export function StatsOverview({
 				: [],
 		[items],
 	);
-	const pickRandom = useCallback(() => {
+
+	const deterministicPick = useMemo(() => {
 		if (pool.length === 0) return null;
-		const i = Math.floor(Math.random() * pool.length);
-		return pool[i] || null;
+		// simple deterministic hash from ids to avoid Math.random
+		const seed = pool
+			.map((it) => it.id)
+			.join("|")
+			.split("")
+			.reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) | 0, 7);
+		const index = Math.abs(seed) % pool.length;
+		return pool[index] || null;
 	}, [pool]);
+
 	const [randomItem, setRandomItem] = useState<{
 		id: string;
 		title: string;
 		thumbnail?: string;
 	} | null>(null);
+
+	const rotateHighlight = useCallback(() => {
+		if (pool.length === 0) return;
+		setRandomItem((prev) => {
+			const currentIndex = prev
+				? pool.findIndex((item) => item.id === prev.id)
+				: -1;
+			const nextIndex = (currentIndex + 1 + pool.length) % pool.length;
+			return pool[nextIndex] || null;
+		});
+	}, [pool]);
+
 	useEffect(() => {
-		setRandomItem(pickRandom());
-	}, [pickRandom]);
+		setRandomItem(deterministicPick);
+	}, [deterministicPick]);
 
 	return (
 		<section>
@@ -384,7 +404,7 @@ export function StatsOverview({
 					<button
 						type="button"
 						className="text-left group md:col-span-1 lg:col-span-1 lg:row-span-1"
-						onClick={() => setRandomItem(pickRandom())}
+						onClick={rotateHighlight}
 						title="クリックで入れ替え"
 					>
 						<ParticleCard

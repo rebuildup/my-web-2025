@@ -196,61 +196,87 @@ export default function AdminContentPage() {
 		void refreshStats();
 	}, [refreshContents, refreshStats]);
 
-	const handleCreate = useCallback(async (payload: Partial<Content>) => {
-		setSubmitting(true);
-		try {
+	const handleCreate = useCallback(
+		async (payload: Partial<Content>) => {
+			setSubmitting(true);
 			const res = await fetch("/api/cms/contents", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(payload),
 			});
 			if (!res.ok) {
-				const err = await res.json();
-				throw new Error(err.error || "作成に失敗しました");
+				let errMsg = "作成に失敗しました";
+				try {
+					const err = await res.json();
+					if (err.error) {
+						errMsg = err.error;
+					}
+				} catch {
+					// ignore parse errors
+				}
+				console.error("[content] create failed", errMsg);
+				setSubmitting(false);
+				return;
 			}
 			setIsCreateOpen(false);
 			await handleRefresh();
-		} catch (e) {
-			console.error("[content] create failed", e);
-		} finally {
 			setSubmitting(false);
-		}
-	}, [handleRefresh]);
+		},
+		[handleRefresh],
+	);
 
-	const handleUpdate = useCallback(async (payload: Partial<Content>) => {
-		setSubmitting(true);
-		try {
+	const handleUpdate = useCallback(
+		async (payload: Partial<Content>) => {
+			setSubmitting(true);
 			const res = await fetch("/api/cms/contents", {
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(payload),
 			});
 			if (!res.ok) {
-				const err = await res.json();
-				throw new Error(err.error || "更新に失敗しました");
+				let errMsg = "更新に失敗しました";
+				try {
+					const err = await res.json();
+					if (err.error) {
+						errMsg = err.error;
+					}
+				} catch {
+					// ignore parse errors
+				}
+				console.error("[content] update failed", errMsg);
+				setSubmitting(false);
+				return;
 			}
 			setEditTarget(null);
 			await handleRefresh();
-		} catch (e) {
-			console.error("[content] update failed", e);
-		} finally {
 			setSubmitting(false);
-		}
-	}, [handleRefresh]);
+		},
+		[handleRefresh],
+	);
 
-	const handleDelete = useCallback(async (id: string) => {
-		try {
-			const res = await fetch(`/api/cms/contents?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+	const handleDelete = useCallback(
+		async (id: string) => {
+			const res = await fetch(`/api/cms/contents?id=${encodeURIComponent(id)}`, {
+				method: "DELETE",
+			});
 			if (!res.ok) {
-				const err = await res.json();
-				throw new Error(err.error || "削除に失敗しました");
+				let errMsg = "削除に失敗しました";
+				try {
+					const err = await res.json();
+					if (err.error) {
+						errMsg = err.error;
+					}
+				} catch {
+					// ignore parse errors
+				}
+				console.error("[content] delete failed", errMsg);
+				return;
 			}
 			setDeleteTarget(null);
 			await handleRefresh();
-		} catch (e) {
-			console.error("[content] delete failed", e);
-		}
-	}, [handleRefresh]);
+		},
+		[handleRefresh],
+	);
 
 	return (
 		<NoSsr>

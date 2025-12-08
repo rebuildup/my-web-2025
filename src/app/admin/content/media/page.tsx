@@ -114,55 +114,44 @@ export default function AdminMediaManager() {
 				return;
 			}
 			setMediaLoading(true);
-			try {
-				const response = await fetch(
-					`/api/cms/media?contentId=${encodeURIComponent(contentId)}`,
-				);
-				if (!response.ok) {
-					throw new Error(`Failed to fetch media: ${response.status}`);
-				}
-				const data = (await response.json()) as MediaItem[];
-				const itemsWithPreview = await Promise.all(
-					data.map(async (item) => {
-						if (item.base64) {
-							return {
-								...item,
-								preview: `data:${item.mimeType};base64,${item.base64}`,
-							};
-						}
-						try {
-							const detailResponse = await fetch(
-								`/api/cms/media?contentId=${encodeURIComponent(contentId)}&id=${encodeURIComponent(item.id)}`,
-							);
-							if (!detailResponse.ok) {
-								return item;
-							}
-							const detail = await detailResponse.json();
-							if (detail.base64) {
-								return {
-									...item,
-									preview: `data:${detail.mimeType};base64,${detail.base64}`,
-								};
-							}
-						} catch (error) {
-							console.warn("Failed to fetch media preview", error);
-						}
-						return item;
-					}),
-				);
-				setMediaItems(itemsWithPreview);
-			} catch (error) {
-				console.error("[Media] fetch failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "メディアの取得に失敗しました",
-					"error",
-				);
+			const response = await fetch(
+				`/api/cms/media?contentId=${encodeURIComponent(contentId)}`,
+			);
+			if (!response.ok) {
+				const errMsg = `メディアの取得に失敗しました (${response.status})`;
+				console.error("[Media] fetch failed", errMsg);
+				showSnackbar(errMsg, "error");
 				setMediaItems([]);
-			} finally {
 				setMediaLoading(false);
+				return;
 			}
+			const data = (await response.json()) as MediaItem[];
+			const itemsWithPreview = await Promise.all(
+				data.map(async (item) => {
+					if (item.base64) {
+						return {
+							...item,
+							preview: `data:${item.mimeType};base64,${item.base64}`,
+						};
+					}
+					const detailResponse = await fetch(
+						`/api/cms/media?contentId=${encodeURIComponent(contentId)}&id=${encodeURIComponent(item.id)}`,
+					);
+					if (!detailResponse.ok) {
+						return item;
+					}
+					const detail = await detailResponse.json();
+					if (detail.base64) {
+						return {
+							...item,
+							preview: `data:${detail.mimeType};base64,${detail.base64}`,
+						};
+					}
+					return item;
+				}),
+			);
+			setMediaItems(itemsWithPreview);
+			setMediaLoading(false);
 		},
 		[showSnackbar],
 	);
@@ -182,50 +171,48 @@ export default function AdminMediaManager() {
 				return;
 			}
 			setIsUploading(true);
-			try {
-				const base64Data = await readFileAsBase64(file);
-				const payload = {
-					contentId,
-					filename: file.name,
-					mimeType: file.type,
-					base64Data,
-					alt: formData.get("alt") || undefined,
-					description: formData.get("description") || undefined,
-					tags: formData
-						.get("tags")
-						?.toString()
-						.split(",")
-						.map((tag) => tag.trim())
-						.filter(Boolean),
-				};
+			const base64Data = await readFileAsBase64(file);
+			const payload = {
+				contentId,
+				filename: file.name,
+				mimeType: file.type,
+				base64Data,
+				alt: formData.get("alt") || undefined,
+				description: formData.get("description") || undefined,
+				tags: formData
+					.get("tags")
+					?.toString()
+					.split(",")
+					.map((tag) => tag.trim())
+					.filter(Boolean),
+			};
 
-				const response = await fetch("/api/cms/media", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(payload),
-				});
-				if (!response.ok) {
-					const error = await response.json();
-					throw new Error(
-						error.error || "メディアのアップロードに失敗しました",
-					);
+			const response = await fetch("/api/cms/media", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+			if (!response.ok) {
+				let errMsg = "メディアのアップロードに失敗しました";
+				try {
+					const err = await response.json();
+					if (err.error) {
+						errMsg = err.error;
+					}
+				} catch {
+					// ignore parse errors
 				}
-				showSnackbar("メディアをアップロードしました", "success");
-				setIsUploadDialogOpen(false);
-				if (contentId === selectedContentId) {
-					await fetchMedia(contentId);
-				}
-			} catch (error) {
-				console.error("[Media] upload failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "メディアのアップロードに失敗しました",
-					"error",
-				);
-			} finally {
+				console.error("[Media] upload failed", errMsg);
+				showSnackbar(errMsg, "error");
 				setIsUploading(false);
+				return;
 			}
+			showSnackbar("メディアをアップロードしました", "success");
+			setIsUploadDialogOpen(false);
+			if (contentId === selectedContentId) {
+				await fetchMedia(contentId);
+			}
+			setIsUploading(false);
 		},
 		[fetchMedia, selectedContentId, showSnackbar],
 	);
@@ -233,27 +220,27 @@ export default function AdminMediaManager() {
 	const handleDelete = useCallback(
 		async (media: MediaWithPreview) => {
 			if (!selectedContentId) return;
-			try {
-				const response = await fetch(
-					`/api/cms/media?contentId=${encodeURIComponent(selectedContentId)}&id=${encodeURIComponent(media.id)}`,
-					{ method: "DELETE" },
-				);
-				if (!response.ok) {
-					const error = await response.json();
-					throw new Error(error.error || "メディアの削除に失敗しました");
+			const response = await fetch(
+				`/api/cms/media?contentId=${encodeURIComponent(selectedContentId)}&id=${encodeURIComponent(media.id)}`,
+				{ method: "DELETE" },
+			);
+			if (!response.ok) {
+				let errMsg = "メディアの削除に失敗しました";
+				try {
+					const err = await response.json();
+					if (err.error) {
+						errMsg = err.error;
+					}
+				} catch {
+					// ignore parse errors
 				}
-				showSnackbar("メディアを削除しました", "success");
-				setDeleteTarget(null);
-				await fetchMedia(selectedContentId);
-			} catch (error) {
-				console.error("[Media] delete failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "メディアの削除に失敗しました",
-					"error",
-				);
+				console.error("[Media] delete failed", errMsg);
+				showSnackbar(errMsg, "error");
+				return;
 			}
+			showSnackbar("メディアを削除しました", "success");
+			setDeleteTarget(null);
+			await fetchMedia(selectedContentId);
 		},
 		[fetchMedia, selectedContentId, showSnackbar],
 	);

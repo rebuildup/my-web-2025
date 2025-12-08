@@ -114,9 +114,10 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
 					const currentFontSize = parseFloat(
 						getComputedStyle(document.documentElement).fontSize,
 					);
-					const scaling = Number.isNaN(currentFontSize)
-						? 1
-						: currentFontSize / baseFontSize;
+					let scaling = 1;
+					if (!Number.isNaN(currentFontSize)) {
+						scaling = currentFontSize / baseFontSize;
+					}
 					setTextScaling(scaling);
 				} catch {
 					setTextScaling(1); // fallback to default

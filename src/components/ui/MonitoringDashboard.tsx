@@ -78,21 +78,9 @@ export function MonitoringDashboard({
 		});
 	const [isLoading, setIsLoading] = useState(true);
 
-	// Only show in development
-	if (process.env.NODE_ENV !== "development") {
-		return (
-			<div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-				<p className="text-red-800">
-					Monitoring dashboard is only available in development mode.
-				</p>
-			</div>
-		);
-	}
-
 	const loadData = useCallback(async () => {
+		setIsLoading(true);
 		try {
-			setIsLoading(true);
-
 			// Load client-side data
 			const clientErrors = getErrors();
 			const clientPerformanceIssues = getPerformanceIssues();
@@ -129,9 +117,9 @@ export function MonitoringDashboard({
 			} catch (serverError) {
 				console.warn("Failed to load server monitoring data:", serverError);
 			}
+			setIsLoading(false);
 		} catch (error) {
 			console.error("Failed to load monitoring data:", error);
-		} finally {
 			setIsLoading(false);
 		}
 	}, []);
@@ -164,6 +152,17 @@ export function MonitoringDashboard({
 				return "text-gray-600 bg-gray-50";
 		}
 	};
+
+	// Only show in development
+	if (process.env.NODE_ENV !== "development") {
+		return (
+			<div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+				<p className="text-red-800">
+					Monitoring dashboard is only available in development mode.
+				</p>
+			</div>
+		);
+	}
 
 	return (
 		<div className={`bg-white rounded-lg border border-gray-200 ${className}`}>

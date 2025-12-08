@@ -138,48 +138,136 @@ export function ContentForm({
 			unpublishedAt: initialData.unpublishedAt ?? undefined,
 		};
 		// Derive YouTube preview from assets if ext.thumbnail.youtube is not set
-		try {
-			const hasThumbYouTube = (base.ext as any)?.thumbnail?.youtube;
-			if (!hasThumbYouTube && Array.isArray(base.assets)) {
-				const yt = (base.assets as any[]).find(
-					(a) =>
-						a?.type === "video/youtube" ||
-						(typeof a?.src === "string" && a.src.includes("youtube.")),
-				);
-				if (yt?.src) {
-					base.ext = {
-						...((base.ext as any) || {}),
-						thumbnail: {
-							...((base.ext as any)?.thumbnail || {}),
-							youtube: yt.src,
-						},
-					} as any;
+		const deriveYouTubePreview = () => {
+			let hasThumbYouTube = false;
+			if (base.ext) {
+				const extAny = base.ext as any;
+				if (extAny.thumbnail) {
+					if (extAny.thumbnail.youtube) {
+						hasThumbYouTube = true;
+					}
 				}
 			}
+
+			if (hasThumbYouTube) {
+				return;
+			}
+
+			if (!Array.isArray(base.assets)) {
+				return;
+			}
+
+			let ytSrc: string | null = null;
+			for (const a of base.assets as any[]) {
+				if (a) {
+					if (a.type === "video/youtube") {
+						if (a.src) {
+							ytSrc = a.src;
+							break;
+						}
+					}
+					if (a.src) {
+						if (typeof a.src === "string") {
+							if (a.src.includes("youtube.")) {
+								ytSrc = a.src;
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			if (ytSrc) {
+				const currentExt = base.ext as any;
+				const currentThumbnail = currentExt?.thumbnail || {};
+				base.ext = {
+					...(currentExt || {}),
+					thumbnail: {
+						...currentThumbnail,
+						youtube: ytSrc,
+					},
+				} as any;
+			}
+		};
+
+		try {
+			deriveYouTubePreview();
 		} catch {}
 		return base;
 	});
 
+	// Track previous id to detect changes
+	const prevIdRef = useRef<string | undefined>(formData.id);
+
 	// 一度だけの補完: youtube フィールドが空の場合、assets/linksから推測して補完
+	// Run once on mount or when id changes
 	useEffect(() => {
-		const current = (formData.ext as any)?.thumbnail?.youtube || "";
+		// Only run when id changes
+		if (prevIdRef.current === formData.id) {
+			return;
+		}
+		prevIdRef.current = formData.id;
+
+		// Check if YouTube thumbnail is already set
+		let current = "";
+		if (formData.ext) {
+			const extAny = formData.ext as any;
+			if (extAny.thumbnail) {
+				if (extAny.thumbnail.youtube) {
+					current = extAny.thumbnail.youtube;
+				}
+			}
+		}
 		if (current) return; // already set
+
+		// Helper function to find YouTube URL from assets/links
+		const findYouTubeUrl = (): string => {
+			let found = "";
+
+			// Search in assets
+			if (Array.isArray(formData.assets)) {
+				for (const x of formData.assets as any[]) {
+					if (x) {
+						if (x.type === "video/youtube") {
+							if (x.src) {
+								found = x.src;
+								break;
+							}
+						}
+						if (x.src) {
+							if (typeof x.src === "string") {
+								if (x.src.includes("youtube.")) {
+									found = x.src;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Search in links if not found in assets
+			if (!found && Array.isArray(formData.links)) {
+				for (const x of formData.links as any[]) {
+					if (x) {
+						if (x.href) {
+							if (typeof x.href === "string") {
+								if (x.href.includes("youtube.")) {
+									found = x.href;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return found;
+		};
+
 		let found = "";
 		try {
-			if (Array.isArray(formData.assets)) {
-				const a = (formData.assets as any[]).find(
-					(x) =>
-						x?.type === "video/youtube" ||
-						(typeof x?.src === "string" && x.src.includes("youtube.")),
-				);
-				if (a?.src) found = a.src;
-			}
-			if (!found && Array.isArray(formData.links)) {
-				const l = (formData.links as any[]).find(
-					(x) => typeof x?.href === "string" && x.href.includes("youtube."),
-				);
-				if (l?.href) found = l.href;
-			}
+			found = findYouTubeUrl();
 		} catch {}
 		if (found) {
 			setFormData((prev) => ({
@@ -193,8 +281,6 @@ export function ContentForm({
 				} as any,
 			}));
 		}
-		// run once on mount or when id changes
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [formData.id]);
 
 	// 追加フェッチ: 編集時にsummary以外の詳細が欠落している場合は一度だけ詳細をロード
@@ -212,29 +298,51 @@ export function ContentForm({
 					formData.searchable,
 			);
 			if (hasDetails) return;
+			let full: any = null;
 			try {
 				const res = await fetch(
 					`/api/cms/contents?id=${encodeURIComponent(formData.id)}`,
 					{ cache: "no-store" },
 				);
 				if (!res.ok) return;
-				const full = await res.json();
-				if (cancelled || !full) return;
-				setFormData((prev) => ({
-					...prev,
-					assets: prev.assets || full.assets,
-					links: prev.links || full.links,
-					relations: prev.relations || full.relations,
-					seo: prev.seo || full.seo,
-					searchable: prev.searchable || full.searchable,
-					ext: prev.ext || full.ext,
-					thumbnails: prev.thumbnails || full.thumbnails,
-					publishedAt:
-						full.publishedAt !== undefined
-							? full.publishedAt
-							: prev.publishedAt, // publishedAtも更新（APIから取得した値で上書き）
-				}));
+				full = await res.json();
 			} catch {}
+
+			// Check cancellation and full data outside try/catch
+			if (cancelled) return;
+			if (!full) return;
+
+			// Prepare form data update outside try/catch
+			setFormData((prev) => {
+				const updated: Partial<Content> = { ...prev };
+
+				if (!prev.assets && full.assets) {
+					updated.assets = full.assets;
+				}
+				if (!prev.links && full.links) {
+					updated.links = full.links;
+				}
+				if (!prev.relations && full.relations) {
+					updated.relations = full.relations;
+				}
+				if (!prev.seo && full.seo) {
+					updated.seo = full.seo;
+				}
+				if (!prev.searchable && full.searchable) {
+					updated.searchable = full.searchable;
+				}
+				if (!prev.ext && full.ext) {
+					updated.ext = full.ext;
+				}
+				if (!prev.thumbnails && full.thumbnails) {
+					updated.thumbnails = full.thumbnails;
+				}
+				if (full.publishedAt !== undefined) {
+					updated.publishedAt = full.publishedAt;
+				}
+
+				return updated;
+			});
 		})();
 		return () => {
 			cancelled = true;
@@ -248,7 +356,8 @@ export function ContentForm({
 		message: string;
 	} | null>(null);
 	const [tagOptions, setTagOptions] = useState<string[]>([]);
-	const initialRef = useRef<Partial<Content>>(initialData);
+	const [initialDataState, setInitialDataState] =
+		useState<Partial<Content>>(initialData);
 	const imageInputRef = useRef<HTMLInputElement>(null);
 	const gifInputRef = useRef<HTMLInputElement>(null);
 	const webmInputRef = useRef<HTMLInputElement>(null);
@@ -375,24 +484,60 @@ export function ContentForm({
 				unpublishedAt: initialData.unpublishedAt ?? undefined,
 			};
 			// Derive YouTube preview from assets if ext.thumbnail.youtube is not set
-			try {
-				const hasThumbYouTube = (base.ext as any)?.thumbnail?.youtube;
-				if (!hasThumbYouTube && Array.isArray(base.assets)) {
-					const yt = (base.assets as any[]).find(
-						(a) =>
-							a?.type === "video/youtube" ||
-							(typeof a?.src === "string" && a.src.includes("youtube.")),
-					);
-					if (yt?.src) {
-						base.ext = {
-							...((base.ext as any) || {}),
-							thumbnail: {
-								...((base.ext as any)?.thumbnail || {}),
-								youtube: yt.src,
-							},
-						} as any;
+			const deriveYouTubePreview = () => {
+				let hasThumbYouTube = false;
+				if (base.ext) {
+					const extAny = base.ext as any;
+					if (extAny.thumbnail) {
+						if (extAny.thumbnail.youtube) {
+							hasThumbYouTube = true;
+						}
 					}
 				}
+
+				if (hasThumbYouTube) {
+					return;
+				}
+
+				if (!Array.isArray(base.assets)) {
+					return;
+				}
+
+				let ytSrc: string | null = null;
+				for (const a of base.assets as any[]) {
+					if (a) {
+						if (a.type === "video/youtube") {
+							if (a.src) {
+								ytSrc = a.src;
+								break;
+							}
+						}
+						if (a.src) {
+							if (typeof a.src === "string") {
+								if (a.src.includes("youtube.")) {
+									ytSrc = a.src;
+									break;
+								}
+							}
+						}
+					}
+				}
+
+				if (ytSrc) {
+					const currentExt = base.ext as any;
+					const currentThumbnail = currentExt?.thumbnail || {};
+					base.ext = {
+						...(currentExt || {}),
+						thumbnail: {
+							...currentThumbnail,
+							youtube: ytSrc,
+						},
+					} as any;
+				}
+			};
+
+			try {
+				deriveYouTubePreview();
 			} catch {}
 			console.log("[ContentForm] initialData:", {
 				id: initialData.id,
@@ -402,7 +547,7 @@ export function ContentForm({
 				publishedAt: base.publishedAt,
 			});
 			setFormData(base);
-			initialRef.current = initialData;
+			setInitialDataState(initialData);
 		}
 	}, [
 		mode,
@@ -427,13 +572,13 @@ export function ContentForm({
 	}
 	const isDirty = useMemo(() => {
 		try {
-			const a = JSON.stringify(normalize(initialRef.current));
+			const a = JSON.stringify(normalize(initialDataState));
 			const b = JSON.stringify(normalize(formData));
 			return a !== b;
 		} catch {
 			return true;
 		}
-	}, [formData]);
+	}, [formData, initialDataState]);
 
 	// Auto-set publicUrl when id changes and publicUrl is empty
 	useEffect(() => {
@@ -449,24 +594,38 @@ export function ContentForm({
 	useEffect(() => {
 		const controller = new AbortController();
 		(async () => {
+			let data: any = null;
 			try {
 				const res = await fetch("/api/cms/contents", {
 					signal: controller.signal,
 					cache: "no-store",
 				});
 				if (!res.ok) return;
-				const data = await res.json();
-				const all: string[] = Array.isArray(data)
-					? data.flatMap((c: any) => (Array.isArray(c?.tags) ? c.tags : []))
-					: [];
-				const unique = Array.from(
-					new Set(all.filter((t) => typeof t === "string" && t.trim())),
-				);
-				unique.sort((a, b) => a.localeCompare(b, "ja"));
-				setTagOptions(unique);
+				data = await res.json();
 			} catch {
 				/* ignore */
+				return;
 			}
+
+			// Process data outside try/catch block
+			const all: string[] = [];
+			if (Array.isArray(data)) {
+				for (const c of data) {
+					if (c) {
+						if (Array.isArray(c.tags)) {
+							for (const tag of c.tags) {
+								all.push(tag);
+							}
+						}
+					}
+				}
+			}
+
+			const unique = Array.from(
+				new Set(all.filter((t) => typeof t === "string" && t.trim())),
+			);
+			unique.sort((a, b) => a.localeCompare(b, "ja"));
+			setTagOptions(unique);
 		})();
 		return () => controller.abort();
 	}, []);
@@ -490,8 +649,8 @@ export function ContentForm({
 			updatedAt: new Date().toISOString(),
 		};
 		// 編集モードでIDが変更された場合、oldIdを含める
-		// initialRef.currentを使用して、初期データのIDを参照
-		const originalId = initialRef.current?.id;
+		// initialDataStateを使用して、初期データのIDを参照
+		const originalId = initialDataState?.id;
 		if (
 			mode === "edit" &&
 			originalId &&
@@ -534,12 +693,14 @@ export function ContentForm({
 		try {
 			const parsed = parseJsonSafely(value);
 			setFormData((prev) => ({ ...prev, [field]: parsed }));
-			setJsonErrors((prev) => ({ ...prev, [field as string]: "" }));
+			const fieldKey = field as string;
+			setJsonErrors((prev) => ({ ...prev, [fieldKey]: "" }));
 		} catch (error) {
 			console.error("[ContentForm] JSON parse error", error);
+			const fieldKey = field as string;
 			setJsonErrors((prev) => ({
 				...prev,
-				[field as string]: "JSONの形式が正しくありません",
+				[fieldKey]: "JSONの形式が正しくありません",
 			}));
 		}
 	};
@@ -1127,24 +1288,37 @@ export function ContentForm({
 									onClick={async () => {
 										const src = asset?.src || "";
 										// 1) API上のメディアなら削除リクエスト
-										try {
-											if (
-												src.includes("/api/cms/media") &&
-												typeof window !== "undefined"
-											) {
+										if (
+											src.includes("/api/cms/media") &&
+											typeof window !== "undefined"
+										) {
+											let cid = "";
+											let mid: string | null = null;
+											try {
 												const u = new URL(src, window.location.origin);
-												const cid =
-													u.searchParams.get("contentId") || formData.id || "";
-												const mid = u.searchParams.get("id");
-												if (cid && mid) {
+												const contentIdParam = u.searchParams.get("contentId");
+												if (contentIdParam) {
+													cid = contentIdParam;
+												} else {
+													if (formData.id) {
+														cid = formData.id;
+													}
+												}
+												mid = u.searchParams.get("id");
+											} catch {
+												/* ignore */
+											}
+
+											if (cid && mid) {
+												try {
 													await fetch(
 														`/api/cms/media?contentId=${encodeURIComponent(cid)}&id=${encodeURIComponent(mid)}`,
 														{ method: "DELETE" },
 													).catch(() => undefined);
+												} catch {
+													/* ignore */
 												}
 											}
-										} catch {
-											/* ignore */
 										}
 
 										// 2) formData から参照を削除

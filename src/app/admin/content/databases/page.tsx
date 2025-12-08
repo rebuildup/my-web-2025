@@ -107,34 +107,31 @@ export default function AdminDatabaseManager() {
 
 	const fetchStats = useCallback(
 		async (databaseId: string) => {
-			try {
-				const response = await fetch(
-					`/api/cms/databases/stats?id=${encodeURIComponent(databaseId)}`,
-				);
-				if (!response.ok) {
-					// 404エラーの場合は、データベースが存在しない可能性があるため、静かに処理
-					if (response.status === 404) {
-						// 統計情報を取得できなかったことを記録するだけ
-						// エラーをスローせず、統計情報を表示しない
-						return;
+			const response = await fetch(
+				`/api/cms/databases/stats?id=${encodeURIComponent(databaseId)}`,
+			);
+			if (!response.ok) {
+				// 404エラーの場合は、データベースが存在しない可能性があるため、静かに処理
+				if (response.status === 404) {
+					// 統計情報を取得できなかったことを記録するだけ
+					// エラーをスローせず、統計情報を表示しない
+					return;
+				}
+				let errMsg = `Failed to fetch stats: ${response.status}`;
+				try {
+					const err = await response.json();
+					if (err.error) {
+						errMsg = err.error;
 					}
-					throw new Error(`Failed to fetch stats: ${response.status}`);
+				} catch {
+					// ignore parse errors
 				}
-				const data = (await response.json()) as DatabaseStats;
-				setStatsMap((prev) => ({ ...prev, [databaseId]: data }));
-			} catch (error) {
-				// 404エラー以外のエラーのみログに記録
-				if (
-					error instanceof Error &&
-					!error.message.includes("404")
-				) {
-					console.error("[Database] stats failed", error);
-					showSnackbar(
-						error.message || "統計情報の取得に失敗しました",
-						"error",
-					);
-				}
+				console.error("[Database] stats failed", errMsg);
+				showSnackbar(errMsg, "error");
+				return;
 			}
+			const data = (await response.json()) as DatabaseStats;
+			setStatsMap((prev) => ({ ...prev, [databaseId]: data }));
 		},
 		[showSnackbar],
 	);
@@ -155,34 +152,34 @@ export default function AdminDatabaseManager() {
 	const handleCreate = useCallback(
 		async (payload: Partial<DatabaseInfo>) => {
 			setIsSubmitting(true);
-			try {
-				const response = await fetch("/api/cms/databases", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ action: "create", ...payload }),
-				});
-				if (!response.ok) {
-					const error = await response.json();
-					throw new Error(error.error || "データベースの作成に失敗しました");
+			const response = await fetch("/api/cms/databases", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ action: "create", ...payload }),
+			});
+			if (!response.ok) {
+				let errMsg = "データベースの作成に失敗しました";
+				try {
+					const err = await response.json();
+					if (err.error) {
+						errMsg = err.error;
+					}
+				} catch {
+					// ignore parse errors
 				}
-				showSnackbar("データベースを作成しました", "success");
-				setIsCreateDialogOpen(false);
-				const created = await response.json();
-				await reloadData();
-				if (created?.id) {
-					await fetchStats(created.id);
-				}
-			} catch (error) {
-				console.error("[Database] create failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "データベースの作成に失敗しました",
-					"error",
-				);
-			} finally {
+				console.error("[Database] create failed", errMsg);
+				showSnackbar(errMsg, "error");
 				setIsSubmitting(false);
+				return;
 			}
+			showSnackbar("データベースを作成しました", "success");
+			setIsCreateDialogOpen(false);
+			const created = await response.json();
+			await reloadData();
+			if (created?.id) {
+				await fetchStats(created.id);
+			}
+			setIsSubmitting(false);
 		},
 		[fetchStats, reloadData, showSnackbar],
 	);
@@ -190,96 +187,91 @@ export default function AdminDatabaseManager() {
 	const handleEdit = useCallback(
 		async (payload: Partial<DatabaseInfo>) => {
 			setIsSubmitting(true);
-			try {
-				const response = await fetch("/api/cms/databases", {
-					method: "PUT",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(payload),
-				});
-				if (!response.ok) {
-					const error = await response.json();
-					throw new Error(error.error || "データベースの更新に失敗しました");
+			const response = await fetch("/api/cms/databases", {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+			if (!response.ok) {
+				let errMsg = "データベースの更新に失敗しました";
+				try {
+					const err = await response.json();
+					if (err.error) {
+						errMsg = err.error;
+					}
+				} catch {
+					// ignore parse errors
 				}
-				showSnackbar("データベース情報を更新しました", "success");
-				setEditingDatabase(null);
-				setIsEditDialogOpen(false);
-				await reloadData();
-			} catch (error) {
-				console.error("[Database] update failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "データベースの更新に失敗しました",
-					"error",
-				);
-			} finally {
+				console.error("[Database] update failed", errMsg);
+				showSnackbar(errMsg, "error");
 				setIsSubmitting(false);
+				return;
 			}
+			showSnackbar("データベース情報を更新しました", "success");
+			setEditingDatabase(null);
+			setIsEditDialogOpen(false);
+			await reloadData();
+			setIsSubmitting(false);
 		},
 		[reloadData, showSnackbar],
 	);
 
 	const handleDelete = useCallback(
 		async (database: DatabaseInfo) => {
-			try {
-				const response = await fetch(
-					`/api/cms/databases?id=${encodeURIComponent(database.id)}`,
-					{ method: "DELETE" },
-				);
-				if (!response.ok) {
-					const error = await response.json();
-					throw new Error(
-						error.error ||
-							"データベースの削除に失敗しました（アクティブ状態を確認してください）",
-					);
+			const response = await fetch(
+				`/api/cms/databases?id=${encodeURIComponent(database.id)}`,
+				{ method: "DELETE" },
+			);
+			if (!response.ok) {
+				let errMsg = "データベースの削除に失敗しました（アクティブ状態を確認してください）";
+				try {
+					const err = await response.json();
+					if (err.error) {
+						errMsg = err.error;
+					}
+				} catch {
+					// ignore parse errors
 				}
-				showSnackbar("データベースを削除しました", "success");
-				setDeleteTarget(null);
-				setStatsMap((prev) => {
-					const updated = { ...prev };
-					delete updated[database.id];
-					return updated;
-				});
-				await reloadData();
-			} catch (error) {
-				console.error("[Database] delete failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "データベースの削除に失敗しました",
-					"error",
-				);
+				console.error("[Database] delete failed", errMsg);
+				showSnackbar(errMsg, "error");
+				return;
 			}
+			showSnackbar("データベースを削除しました", "success");
+			setDeleteTarget(null);
+			setStatsMap((prev) => {
+				const updated = { ...prev };
+				delete updated[database.id];
+				return updated;
+			});
+			await reloadData();
 		},
 		[reloadData, showSnackbar],
 	);
 
 	const handleSwitch = useCallback(
 		async (database: DatabaseInfo) => {
-			try {
-				const response = await fetch("/api/cms/databases", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ action: "switch", id: database.id }),
-				});
-				if (!response.ok) {
-					const error = await response.json();
-					throw new Error(
-						error.error || "データベースの切り替えに失敗しました",
-					);
+			const response = await fetch("/api/cms/databases", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ action: "switch", id: database.id }),
+			});
+			if (!response.ok) {
+				let errMsg = "データベースの切り替えに失敗しました";
+				try {
+					const err = await response.json();
+					if (err.error) {
+						errMsg = err.error;
+					}
+				} catch {
+					// ignore parse errors
 				}
-				showSnackbar("アクティブなデータベースを切り替えました", "success");
-				setSwitchTarget(null);
-				await reloadData();
-			} catch (error) {
-				console.error("[Database] switch failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "データベースの切り替えに失敗しました",
-					"error",
-				);
+				console.error("[Database] switch failed", errMsg);
+				showSnackbar(errMsg, "error");
+				return;
 			}
+			showSnackbar("アクティブなデータベースを切り替えました", "success");
+			setSwitchTarget(null);
+			await reloadData();
 		},
 		[reloadData, showSnackbar],
 	);

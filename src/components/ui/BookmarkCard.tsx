@@ -37,9 +37,11 @@ export function BookmarkCard({
 				const response = await fetch(
 					`/api/metadata?url=${encodeURIComponent(url)}`,
 				);
-				if (!cancelled && response.ok) {
-					const data = (await response.json()) as Metadata;
-					setMetadata(data);
+				if (!cancelled) {
+					if (response.ok) {
+						const data = (await response.json()) as Metadata;
+						setMetadata(data);
+					}
 				}
 			} catch (error) {
 				console.warn("Failed to fetch metadata:", error);

@@ -39,17 +39,22 @@ export function ContentSelector({
 	);
 
 	const loadContents = useCallback(async () => {
+		setLoading(true);
+		setError(null);
+		let completed = false;
 		try {
-			setLoading(true);
-			setError(null);
 			console.log("[ContentSelector] Loading contents...");
 			const data = await fetchContentList();
 			console.log("[ContentSelector] Contents loaded:", data);
 			setContents(data);
+			completed = true;
 		} catch (err) {
 			console.error("[ContentSelector] Failed to load contents", err);
 			setError(err instanceof Error ? err.message : "Failed to load contents");
-		} finally {
+			completed = true;
+		}
+
+		if (completed) {
 			setLoading(false);
 		}
 	}, []);

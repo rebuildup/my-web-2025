@@ -35,17 +35,17 @@ export function TagManagementUI({
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const loadTags = useCallback(async () => {
+		setIsLoading(true);
 		try {
-			setIsLoading(true);
 			console.log("Loading tags from tag manager...");
 			const tags = await tagManager.getAllTags();
 			console.log("Loaded tags:", tags);
 			setAvailableTags(tags);
+			setIsLoading(false);
 		} catch (error) {
 			console.error("Failed to load tags:", error);
 			// Show empty array on error to prevent UI issues
 			setAvailableTags([]);
-		} finally {
 			setIsLoading(false);
 		}
 	}, [tagManager]);

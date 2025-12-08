@@ -84,37 +84,53 @@ export default function SearchPage() {
 			}
 
 			setLoading(true);
+			const endpoint = searchMode === "simple" ? "simple" : "detailed";
+			const params = new URLSearchParams({
+				q: searchQuery,
+				mode: endpoint,
+			});
+
+			if (type) params.append("type", type);
+			if (category && category !== "すべて") {
+				params.append("category", category);
+			}
+
+			let response: Response;
 			try {
-				const endpoint = searchMode === "simple" ? "simple" : "detailed";
-				const params = new URLSearchParams({
-					q: searchQuery,
-					mode: endpoint,
-				});
-
-				if (type) params.append("type", type);
-				if (category && category !== "すべて")
-					params.append("category", category);
-
-				const response = await fetch(`/api/content/search?${params}`);
-				if (response.ok) {
-					const data = await response.json();
-					setResults(data.results || []);
-
-					// Track successful search
-					trackSearch(searchQuery);
-
-					// Add to search history
-					addToSearchHistory(searchQuery, data.results?.length || 0);
-					setSearchHistory(getSearchHistory());
-				} else {
-					setResults([]);
-				}
+				response = await fetch(`/api/content/search?${params}`);
 			} catch (error) {
 				console.error("Search failed:", error);
 				setResults([]);
-			} finally {
 				setLoading(false);
+				return;
 			}
+
+			if (response.ok) {
+				let data: { results?: SearchResult[] };
+				try {
+					data = await response.json();
+				} catch (error) {
+					console.error("Failed to parse response:", error);
+					setResults([]);
+					setLoading(false);
+					return;
+				}
+
+				const results = data.results || [];
+				const resultCount = data.results?.length || 0;
+
+				setResults(results);
+
+				// Track successful search
+				trackSearch(searchQuery);
+
+				// Add to search history
+				addToSearchHistory(searchQuery, resultCount);
+				setSearchHistory(getSearchHistory());
+			} else {
+				setResults([]);
+			}
+			setLoading(false);
 		},
 		[searchMode, trackSearch],
 	);
@@ -126,17 +142,29 @@ export default function SearchPage() {
 			return;
 		}
 
+		let response: Response;
 		try {
-			const response = await fetch(
+			response = await fetch(
 				`/api/search/suggestions?q=${encodeURIComponent(searchQuery)}`,
 			);
-			if (response.ok) {
-				const data = await response.json();
-				setSuggestions(data.suggestions || []);
-			}
 		} catch (error) {
 			console.error("Failed to get suggestions:", error);
 			setSuggestions([]);
+			return;
+		}
+
+		if (response.ok) {
+			let data: { suggestions?: string[] };
+			try {
+				data = await response.json();
+			} catch (error) {
+				console.error("Failed to parse suggestions response:", error);
+				setSuggestions([]);
+				return;
+			}
+
+			const suggestions = data.suggestions || [];
+			setSuggestions(suggestions);
 		}
 	}, []);
 

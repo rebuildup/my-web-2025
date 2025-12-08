@@ -68,6 +68,7 @@ export default function AdvancedCacheClearPanel() {
 
 	const handleClearCache = async () => {
 		setIsClearing(true);
+		let completed = false;
 		try {
 			const result = await clearAllBrowserCaches();
 			setClearResult(result);
@@ -83,22 +84,31 @@ export default function AdvancedCacheClearPanel() {
 					`キャッシュクリアは完了しましたが、${result.errors.length}件のエラーがありました。詳細はコンソールを確認してください。`,
 				);
 			}
+			completed = true;
 		} catch (error) {
 			console.error("Cache clear failed:", error);
 			alert("キャッシュクリアに失敗しました。コンソールを確認してください。");
-		} finally {
+			completed = true;
+		}
+
+		if (completed) {
 			setIsClearing(false);
 		}
 	};
 
 	const handleDiagnose = async () => {
 		setIsDiagnosing(true);
+		let completed = false;
 		try {
 			await diagnoseBrowserCache();
 			await loadCacheState();
+			completed = true;
 		} catch (error) {
 			console.error("Diagnosis failed:", error);
-		} finally {
+			completed = true;
+		}
+
+		if (completed) {
 			setIsDiagnosing(false);
 		}
 	};
