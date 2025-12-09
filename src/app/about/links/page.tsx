@@ -321,9 +321,13 @@ function LinkButton({ item, index }: { item: LinkItem; index: number }) {
 					? undefined
 					: "noopener noreferrer"
 			}
-			initial={{ opacity: 0, y: 10 }}
+			initial={{ opacity: 0, y: 5 }}
 			animate={{ opacity: 1, y: 0 }}
-			transition={{ delay: index * 0.05 + 0.2 }}
+			transition={{
+				delay: index * 0.03 + 0.1,
+				duration: 0.3,
+				ease: [0.4, 0, 1, 1], // 加速するイージング（easeOutCubic）
+			}}
 			className="relative group block w-full"
 		>
 			<div className="relative z-10 flex items-center px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/5 hover:bg-white/10 hover:border-white/10 transition-colors duration-200 overflow-hidden">

@@ -50,14 +50,22 @@ void main() {
 
     float dist = length(p);
 
+    // 512pxの固定幅に拡散を制限
+    // p.x *= aspect で幅方向が拡大されているため、
+    // 512pxを画面幅で割った値をaspectで割る（または直接高さで割る）
+    float maxWidth = 512.0;
+    // 正規化された座標系での512px相当の距離
+    // 幅方向がaspect倍されているので、高さ基準で計算
+    float normalizedMaxDist = maxWidth / uResolution.y;
+    
     // 時間によるゆっくりとした色の変化用のノイズ
     float time = uTime * 0.2;
     float n1 = noise(p * 2.0 + time);
     float n2 = noise(p * 3.0 - time * 1.5);
 
     // 1. 光の拡散ベース (Radial Gradient)
-    // 拡散範囲を狭めて「薄く」する (0.0, 1.2 -> 0.0, 0.9)
-    float glow = 1.0 - smoothstep(0.0, 0.9, dist);
+    // 1024pxの範囲内でのみ拡散するように制限
+    float glow = 1.0 - smoothstep(0.0, normalizedMaxDist, dist);
     
     // 2. 色の合成
     vec3 color = uColorBg;

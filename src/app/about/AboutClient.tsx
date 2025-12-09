@@ -159,10 +159,14 @@ function TerminalTimeline({
 				{items.map((item, idx) => (
 					<motion.div
 						key={idx}
-						initial={{ opacity: 0, x: -10 }}
+						initial={{ opacity: 0, x: -5 }}
 						whileInView={{ opacity: 1, x: 0 }}
 						viewport={{ once: true }}
-						transition={{ delay: idx * 0.1 }}
+						transition={{
+							delay: idx * 0.03,
+							duration: 0.3,
+							ease: [0.4, 0, 1, 1],
+						}}
 						className="relative pl-8 group"
 					>
 						{/* Node */}
@@ -303,8 +307,9 @@ export default function AboutClient({
 				<div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-16">
 					<div className="space-y-6">
 						<motion.div
-							initial={{ opacity: 0, y: 20 }}
+							initial={{ opacity: 0, y: 5 }}
 							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.3, ease: [0.4, 0, 1, 1] }}
 							className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-mono tracking-wider backdrop-blur-sm"
 						>
 							<span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
@@ -313,9 +318,13 @@ export default function AboutClient({
 
 						<div className="relative">
 							<motion.h1
-								initial={{ opacity: 0, x: -20 }}
+								initial={{ opacity: 0, x: -5 }}
 								animate={{ opacity: 1, x: 0 }}
-								transition={{ delay: 0.1 }}
+								transition={{
+									delay: 0.05,
+									duration: 0.3,
+									ease: [0.4, 0, 1, 1],
+								}}
 								className="text-5xl md:text-7xl lg:text-8xl font-display font-black tracking-tighter text-main leading-[0.85] mix-blend-overlay opacity-90"
 							>
 								WHO
@@ -326,7 +335,7 @@ export default function AboutClient({
 						<motion.p
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
-							transition={{ delay: 0.2 }}
+							transition={{ delay: 0.1, duration: 0.3, ease: [0.4, 0, 1, 1] }}
 							className="text-base md:text-lg text-main/80 leading-relaxed max-w-lg font-light drop-shadow-sm"
 						>
 							{profile.bio[lang]}
@@ -334,9 +343,9 @@ export default function AboutClient({
 					</div>
 
 					<motion.div
-						initial={{ opacity: 0, scale: 0.95 }}
+						initial={{ opacity: 0, scale: 0.98 }}
 						animate={{ opacity: 1, scale: 1 }}
-						transition={{ delay: 0.3 }}
+						transition={{ delay: 0.15, duration: 0.3, ease: [0.4, 0, 1, 1] }}
 						className="relative"
 					>
 						<CodeBlock
@@ -394,10 +403,14 @@ export default function AboutClient({
 						{skills.map((category, idx) => (
 							<motion.div
 								key={category.title}
-								initial={{ opacity: 0, y: 30 }}
+								initial={{ opacity: 0, y: 5 }}
 								whileInView={{ opacity: 1, y: 0 }}
 								viewport={{ once: true }}
-								transition={{ delay: idx * 0.1 }}
+								transition={{
+									delay: idx * 0.03,
+									duration: 0.3,
+									ease: [0.4, 0, 1, 1],
+								}}
 								className="group relative"
 							>
 								<div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-12">
