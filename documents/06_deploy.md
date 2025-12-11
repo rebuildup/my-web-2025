@@ -1093,3 +1093,147 @@ Detail: DNS problem: NXDOMAIN looking up A for 361do.yusuke-kim.com
 ## 🔄 更新履歴
 
 - 2025-12-11: 初版作成。nginx設定を必須手順として追加。各コマンドの期待される出力を追記。
+
+
+```
+# links.yusuke-kim.com
+server {
+        listen 443 ssl;
+        server_name links.yusuke-kim.com;
+
+        location = / {
+                return 301 https://$host/about/links/;
+        }
+
+        location / {
+                proxy_pass http://127.0.0.1:3000;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_cache_bypass $http_upgrade;
+        }
+
+        ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem;
+        include /etc/letsencrypt/options-ssl-nginx.conf;
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+# portfolio.yusuke-kim.com
+server {
+        listen 443 ssl;
+        server_name portfolio.yusuke-kim.com;
+
+        location = / {
+                return 301 https://$host/portfolio/;
+        }
+
+        location / {
+                proxy_pass http://127.0.0.1:3000;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_cache_bypass $http_upgrade;
+        }
+
+        ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem;
+        include /etc/letsencrypt/options-ssl-nginx.conf;
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+# pomodoro.yusuke-kim.com
+server {
+        listen 443 ssl;
+        server_name pomodoro.yusuke-kim.com;
+
+        location = / {
+                return 301 https://$host/tools/pomodoro/;
+        }
+
+        location / {
+                proxy_pass http://127.0.0.1:3000;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_cache_bypass $http_upgrade;
+        }
+
+        ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem;
+        include /etc/letsencrypt/options-ssl-nginx.conf;
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+# prototype.yusuke-kim.com
+server {
+        listen 443 ssl;
+        server_name prototype.yusuke-kim.com;
+
+        location = / {
+                return 301 https://$host/tools/ProtoType/;
+        }
+
+        location / {
+                proxy_pass http://127.0.0.1:3000;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_cache_bypass $http_upgrade;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_cache_bypass $http_upgrade;
+        }
+
+        ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem;
+        include /etc/letsencrypt/options-ssl-nginx.conf;
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+server {
+        listen 443 ssl;
+        server_name yusuke-kim.com www.yusuke-kim.com *.yusuke-kim.com;  # または IPアドレス
+
+        location / {
+                proxy_pass http://127.0.0.1:3000;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_cache_bypass $http_upgrade;
+        }
+
+        ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+server {
+        if ($host = yusuke-kim.com) {
+                return 301 https://$host$request_uri;
+        } # managed by Certbot
+
+        listen 80;
+        server_name yusuke-kim.com www.yusuke-kim.com *.yusuke-kim.com;
+        return 404; # managed by Certbot
+}
+```

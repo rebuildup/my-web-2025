@@ -5,7 +5,7 @@
 
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 // Import error tracking
@@ -51,7 +51,6 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 	const [consentGiven, setConsentGiven] = useState(false);
 	const [gaLoaded, setGaLoaded] = useState(false);
 	const pathname = usePathname();
-	const searchParams = useSearchParams();
 
 	// Initialize Google Analytics
 	useEffect(() => {
@@ -129,14 +128,15 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 		const gaId = process.env.NEXT_PUBLIC_GA_ID;
 		if (!gaId || !window.gtag) return;
 
-		const url =
-			pathname +
-			(searchParams?.toString() ? `?${searchParams.toString()}` : "");
+		// Use window.location.search instead of useSearchParams to avoid Suspense requirement
+		const searchParams =
+			typeof window !== "undefined" ? window.location.search : "";
+		const url = pathname + searchParams;
 		window.gtag("config", gaId, {
 			page_path: url,
 			page_title: document.title,
 		});
-	}, [pathname, searchParams, isInitialized, consentGiven, gaLoaded]);
+	}, [pathname, isInitialized, consentGiven, gaLoaded]);
 
 	const handleSetConsent = (consent: boolean) => {
 		setConsentGiven(consent);
