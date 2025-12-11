@@ -14,6 +14,15 @@ function isLocalhost(request: NextRequest) {
 }
 
 // サブドメインとパスのマッピング
+// デプロイ検証用マーカー（ビルド成果物内に残す）
+const SUBDOMAIN_REDIRECT_MARKER = "SUBDOMAIN_REDIRECT:links:/about/links";
+// グローバルに残してツリーシェイクされないようにする
+(
+	globalThis as typeof globalThis & {
+		__SUBDOMAIN_REDIRECT_MARKER__?: string;
+	}
+).__SUBDOMAIN_REDIRECT_MARKER__ = SUBDOMAIN_REDIRECT_MARKER;
+
 const subdomainMap: Record<string, string> = {
 	links: "/about/links",
 	portfolio: "/portfolio",
