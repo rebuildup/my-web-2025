@@ -20,7 +20,6 @@ const nextConfig: NextConfig = {
 	},
 
 	// React Compiler configuration
-	// @ts-expect-error - Next.js 16 types might not include reactCompiler yet
 	reactCompiler: true,
 
 	// Performance optimizations
