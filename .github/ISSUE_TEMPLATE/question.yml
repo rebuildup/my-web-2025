@@ -1,0 +1,74 @@
+name: ❓ 質問
+description: 使用方法や技術的な質問をする
+title: "[Question] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        質問ありがとうございます。以下の情報を記入してください。
+
+  - type: textarea
+    id: question
+    attributes:
+      label: 質問内容
+      description: 質問の内容を詳しく記入してください
+      placeholder: どのような問題や疑問がありますか？
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 背景・状況
+      description: 質問の背景や現在の状況を説明してください
+      placeholder: |
+        例: この機能を使おうとしているが、うまく動作しない
+        例: この実装方法が正しいか確認したい
+
+  - type: input
+    id: url
+    attributes:
+      label: 関連するページのURL
+      description: 質問に関連するページのURLがあれば記入してください
+      placeholder: "例: https://yusuke-kim.com/about/links"
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: 試したこと
+      description: 既に試したことや調べたことを記入してください
+      placeholder: |
+        - ドキュメントを確認した
+        - この方法を試したがうまくいかなかった
+
+  - type: textarea
+    id: code
+    attributes:
+      label: 関連するコード
+      description: 関連するコードやエラーメッセージがあれば記入してください
+      placeholder: |
+        ```typescript
+        // コードをここに貼り付け
+        ```
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: カテゴリ
+      description: 質問のカテゴリを選択してください
+      options:
+        - 使用方法
+        - 技術的な質問
+        - 設定・環境
+        - パフォーマンス
+        - その他
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 追加情報
+      description: その他、関連する情報があれば記入してください
+      placeholder: その他の情報があれば記入してください

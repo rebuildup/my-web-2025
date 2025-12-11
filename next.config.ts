@@ -19,11 +19,12 @@ const nextConfig: NextConfig = {
 		NEXT_BUILD_TIME: isProduction ? "true" : "false",
 	},
 
+	// React Compiler configuration
+	// @ts-expect-error - Next.js 16 types might not include reactCompiler yet
+	reactCompiler: true,
+
 	// Performance optimizations
 	experimental: {
-		// Enable React Compiler so marker extension can report optimization
-		// @ts-expect-error - Next.js 16 types might not include reactCompiler yet
-		reactCompiler: true,
 		...(isProduction
 			? {
 					optimizePackageImports: [
