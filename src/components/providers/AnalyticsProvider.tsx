@@ -5,6 +5,7 @@
 
 "use client";
 
+import { usePathname, useSearchParams } from "next/navigation";
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 // Import error tracking
@@ -48,9 +49,62 @@ interface AnalyticsProviderProps {
 export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 	const [isInitialized, setIsInitialized] = useState(false);
 	const [consentGiven, setConsentGiven] = useState(false);
+	const [gaLoaded, setGaLoaded] = useState(false);
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
 
+	// Initialize Google Analytics
 	useEffect(() => {
-		// Check for existing consent
+		if (typeof window === "undefined") return;
+
+		const gaId = process.env.NEXT_PUBLIC_GA_ID;
+		if (!gaId) {
+			console.warn(
+				"NEXT_PUBLIC_GA_ID is not set. Google Analytics will not be initialized.",
+			);
+			setIsInitialized(true);
+			return;
+		}
+
+		// Check if gtag is already loaded (e.g., by GTM or initProduction)
+		if (window.gtag) {
+			setGaLoaded(true);
+			setIsInitialized(true);
+			return;
+		}
+
+		// Load gtag script
+		const script = document.createElement("script");
+		script.async = true;
+		script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+		script.onload = () => {
+			// Initialize gtag
+			window.dataLayer = window.dataLayer || [];
+			function gtag(...args: unknown[]) {
+				window.dataLayer?.push(args);
+			}
+
+			gtag("js", new Date());
+			gtag("config", gaId, {
+				page_title: document.title,
+				page_location: window.location.href,
+			});
+
+			// Make gtag available globally
+			(window as unknown as { gtag: typeof gtag }).gtag = gtag;
+			setGaLoaded(true);
+			setIsInitialized(true);
+		};
+		script.onerror = () => {
+			console.error("Failed to load Google Analytics script");
+			setIsInitialized(true);
+		};
+
+		document.head.appendChild(script);
+	}, []);
+
+	// Check for existing consent
+	useEffect(() => {
 		try {
 			const savedConsent = localStorage.getItem("analytics-consent");
 
@@ -66,9 +120,23 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 				error,
 			);
 		}
-
-		setIsInitialized(true);
 	}, []);
+
+	// Track page views automatically when pathname changes
+	useEffect(() => {
+		if (!isInitialized || !consentGiven || !gaLoaded) return;
+
+		const gaId = process.env.NEXT_PUBLIC_GA_ID;
+		if (!gaId || !window.gtag) return;
+
+		const url =
+			pathname +
+			(searchParams?.toString() ? `?${searchParams.toString()}` : "");
+		window.gtag("config", gaId, {
+			page_path: url,
+			page_title: document.title,
+		});
+	}, [pathname, searchParams, isInitialized, consentGiven, gaLoaded]);
 
 	const handleSetConsent = (consent: boolean) => {
 		setConsentGiven(consent);

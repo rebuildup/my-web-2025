@@ -3,7 +3,9 @@ import "./globals.css";
 import type { Viewport } from "next";
 import Script from "next/script";
 import type { ReactNode } from "react";
+import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
+import { CookieConsent } from "@/components/ui/CookieConsent";
 
 export const viewport: Viewport = {
 	width: "device-width",
@@ -48,7 +50,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					/>
 				</noscript>
 				{/* End Google Tag Manager (noscript) */}
-				<ProductionInitializer>{children}</ProductionInitializer>
+				<ProductionInitializer>
+					<AnalyticsProvider>
+						{children}
+						<CookieConsent />
+					</AnalyticsProvider>
+				</ProductionInitializer>
 				{/* React DevTools version fix */}
 				<Script
 					id="react-devtools-fix"

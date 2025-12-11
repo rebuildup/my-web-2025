@@ -38,7 +38,14 @@ export function initProduction(): void {
 	}
 
 	// Initialize analytics
-	if (config.monitoring.analytics.enabled && config.monitoring.analytics.gaId) {
+	// Note: Google Analytics is now initialized by AnalyticsProvider
+	// Only initialize here if gtag is not already available
+	if (
+		config.monitoring.analytics.enabled &&
+		config.monitoring.analytics.gaId &&
+		typeof window !== "undefined" &&
+		!window.gtag
+	) {
 		initGoogleAnalytics(config.monitoring.analytics.gaId);
 	}
 
