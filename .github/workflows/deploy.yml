@@ -218,6 +218,16 @@ jobs:
             else
               echo "⚠️  Warning: data directory not found"
             fi
+
+            # Ensure middleware is included in standalone
+            if [ -f ".next/server/middleware.mjs" ]; then
+              mkdir -p .next/standalone/.next/server
+              cp .next/server/middleware.mjs .next/standalone/.next/server/middleware.mjs
+              echo "✅ middleware.mjs copied to standalone"
+            else
+              echo "❌ middleware.mjs not found in .next/server"
+              exit 1
+            fi
             
             echo "✅ Standalone preparation complete"
           else
