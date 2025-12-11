@@ -51,6 +51,9 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
           NODE_OPTIONS: "--max-old-space-size=4096"
+          NEXT_USE_TURBOPACK: "0"
+          TURBOPACK: "0"
+          NEXT_PRIVATE_BUILD_WITH_TURBOPACK: "0"
         run: pnpm run build
 
       - name: Fix standalone static files and CSS script tag issue
@@ -193,6 +196,9 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
           NODE_OPTIONS: "--max-old-space-size=4096"
+          NEXT_USE_TURBOPACK: "0"
+          TURBOPACK: "0"
+          NEXT_PRIVATE_BUILD_WITH_TURBOPACK: "0"
         run: pnpm run build
 
       - name: Prepare standalone deployment
