@@ -629,6 +629,22 @@ jobs:
             BUILD_ID_VALUE="$(cat .next/BUILD_ID 2>/dev/null || echo 'unknown')"
           fi
           echo "BUILD_ID: ${BUILD_ID_VALUE}"
+          
+          # 8.1 Ensure middleware is deployed (サブドメインリダイレクト用)
+          echo "=== Verifying middleware presence ==="
+          if [ -f ".next/server/middleware.mjs" ]; then
+            echo "✅ middleware.mjs found in .next/server"
+            if strings ".next/server/middleware.mjs" | grep -q "about/links"; then
+              echo "✅ middleware contains about/links mapping"
+            else
+              echo "❌ middleware does not contain expected mappings (about/links)"
+              exit 1
+            fi
+          else
+            echo "❌ middleware.mjs not found in .next/server"
+            exit 1
+          fi
+          
           echo "Deployment info:"
           if [ -f "deployment-info.json" ]; then
             cat deployment-info.json
