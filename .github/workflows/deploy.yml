@@ -220,9 +220,9 @@ jobs:
             fi
 
             # Ensure middleware (edge chunks) is included in standalone
-            if ls .next/server/edge/chunks/[root-of-the-server]*.js 1> /dev/null 2>&1; then
+            if ls .next/server/edge/chunks/*.js 1> /dev/null 2>&1; then
               mkdir -p .next/standalone/.next/server/edge/chunks
-              cp .next/server/edge/chunks/[root-of-the-server]*.js .next/standalone/.next/server/edge/chunks/
+              cp .next/server/edge/chunks/*.js .next/standalone/.next/server/edge/chunks/
               echo "✅ edge middleware chunks copied to standalone"
             else
               echo "❌ edge middleware chunks not found in .next/server/edge/chunks"
@@ -642,10 +642,11 @@ jobs:
           
           # 8.1 Ensure middleware is deployed (サブドメインリダイレクト用)
           echo "=== Verifying middleware presence ==="
-          EDGE_MW_FILE=$(ls .next/server/edge/chunks/[root-of-the-server]*.js 2>/dev/null | head -1 || true)
-          if [ -n "$EDGE_MW_FILE" ]; then
-            echo "✅ edge middleware chunk found: $EDGE_MW_FILE"
-            if strings "$EDGE_MW_FILE" | grep -q "about/links"; then
+          EDGE_MW_FILES=$(ls .next/server/edge/chunks/*.js 2>/dev/null || true)
+          if [ -n "$EDGE_MW_FILES" ]; then
+            echo "✅ edge middleware chunks found:"
+            echo "$EDGE_MW_FILES" | head -5
+            if strings .next/server/edge/chunks/*.js | grep -q "about/links"; then
               echo "✅ middleware contains about/links mapping"
             else
               echo "❌ middleware does not contain expected mappings (about/links)"
