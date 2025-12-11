@@ -7,6 +7,12 @@ body:
     attributes:
       value: |
         機能要望ありがとうございます。以下の情報を記入してください。
+  - type: input
+    id: url
+    attributes:
+      label: 関連するページのURL
+      description: 機能要望に関連するページのURLがあれば記入してください
+      placeholder: "例: https://yusuke-kim.com/about/links"
 
   - type: textarea
     id: problem
@@ -16,6 +22,7 @@ body:
       placeholder: 現在、このような問題や不便さがあります...
     validations:
       required: true
+
 
   - type: textarea
     id: solution
