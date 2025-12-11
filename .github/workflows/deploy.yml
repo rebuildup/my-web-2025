@@ -219,13 +219,13 @@ jobs:
               echo "⚠️  Warning: data directory not found"
             fi
 
-            # Ensure middleware is included in standalone
-            if [ -f ".next/server/middleware.mjs" ]; then
-              mkdir -p .next/standalone/.next/server
-              cp .next/server/middleware.mjs .next/standalone/.next/server/middleware.mjs
-              echo "✅ middleware.mjs copied to standalone"
+            # Ensure middleware (edge chunks) is included in standalone
+            if ls .next/server/edge/chunks/[root-of-the-server]*.js 1> /dev/null 2>&1; then
+              mkdir -p .next/standalone/.next/server/edge/chunks
+              cp .next/server/edge/chunks/[root-of-the-server]*.js .next/standalone/.next/server/edge/chunks/
+              echo "✅ edge middleware chunks copied to standalone"
             else
-              echo "❌ middleware.mjs not found in .next/server"
+              echo "❌ edge middleware chunks not found in .next/server/edge/chunks"
               exit 1
             fi
             
@@ -642,16 +642,17 @@ jobs:
           
           # 8.1 Ensure middleware is deployed (サブドメインリダイレクト用)
           echo "=== Verifying middleware presence ==="
-          if [ -f ".next/server/middleware.mjs" ]; then
-            echo "✅ middleware.mjs found in .next/server"
-            if strings ".next/server/middleware.mjs" | grep -q "about/links"; then
+          EDGE_MW_FILE=$(ls .next/server/edge/chunks/[root-of-the-server]*.js 2>/dev/null | head -1 || true)
+          if [ -n "$EDGE_MW_FILE" ]; then
+            echo "✅ edge middleware chunk found: $EDGE_MW_FILE"
+            if strings "$EDGE_MW_FILE" | grep -q "about/links"; then
               echo "✅ middleware contains about/links mapping"
             else
               echo "❌ middleware does not contain expected mappings (about/links)"
               exit 1
             fi
           else
-            echo "❌ middleware.mjs not found in .next/server"
+            echo "❌ edge middleware chunk not found in .next/server/edge/chunks"
             exit 1
           fi
           
