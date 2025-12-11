@@ -13,8 +13,45 @@ function isLocalhost(request: NextRequest) {
 	);
 }
 
+// サブドメインとパスのマッピング
+const subdomainMap: Record<string, string> = {
+	links: "/about/links",
+	portfolio: "/portfolio",
+	www: "/",
+	pomodoro: "/tools/pomodoro",
+	prototype: "/tools/prototype",
+	samuido: "/about/profile/handle",
+	"361do": "/about/profile/handle",
+};
+
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
+	const hostname = request.nextUrl.hostname;
+
+	// サブドメインのリダイレクト処理
+	// 例: links.yusuke-kim.com → /about/links
+	// メインドメイン（yusuke-kim.com）の場合は処理しない
+	if (hostname.includes(".") && !hostname.startsWith("www.")) {
+		const parts = hostname.split(".");
+		// サブドメインを抽出（例: links.yusuke-kim.com → links）
+		// parts.length >= 3 の場合、最初の部分がサブドメイン
+		if (parts.length >= 3) {
+			const subdomain = parts[0];
+			const mappedPath = subdomainMap[subdomain];
+
+			if (mappedPath) {
+				// サブドメインがマッピングされている場合、適切なパスにリダイレクト
+				// 既に正しいパスにいる場合はリダイレクトしない
+				if (pathname !== mappedPath && pathname !== `${mappedPath}/`) {
+					const url = new URL(mappedPath, request.url);
+					// クエリパラメータとハッシュを保持
+					url.search = request.nextUrl.search;
+					url.hash = request.nextUrl.hash;
+					return NextResponse.redirect(url, 301);
+				}
+			}
+		}
+	}
 
 	// Handle image requests with proper headers
 	if (pathname.startsWith("/images/")) {
@@ -117,9 +154,13 @@ export function middleware(request: NextRequest) {
 
 export const config = {
 	matcher: [
-		"/admin/:path*",
-		"/api/admin/:path*",
-		"/images/:path*",
-		"/portfolio/:path*",
+		/*
+		 * Match all request paths except for the ones starting with:
+		 * - api (API routes)
+		 * - _next/static (static files)
+		 * - _next/image (image optimization files)
+		 * - favicon.ico (favicon file)
+		 */
+		"/((?!api|_next/static|_next/image|favicon.ico).*)",
 	],
 };
