@@ -498,12 +498,12 @@ export default function HandleProfilePage() {
 										<span className={Global_title}>Portfolio</span>
 									</Link>
 
-									<Link
-										href="/about/links"
+									<a
+										href="https://links.yusuke-kim.com"
 										className="bg-main/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base hover:bg-main/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Links</span>
-									</Link>
+									</a>
 								</div>
 							</ScrollFloat>
 						</nav>

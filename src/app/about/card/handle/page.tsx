@@ -367,12 +367,12 @@ ${cardData.tagline}`;
 									<span className={Global_title}>Real Card</span>
 								</Link>
 
-								<Link
-									href="/about/links"
+								<a
+									href="https://links.yusuke-kim.com"
 									className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Links</span>
-								</Link>
+								</a>
 							</div>
 						</nav>
 

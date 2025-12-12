@@ -387,13 +387,13 @@ export default function AboutClient({
 								ハンドルネームプロフィール
 							</span>
 						</Link>
-						<Link
-							href="/about/links"
+						<a
+							href="https://links.yusuke-kim.com"
 							className="group flex items-baseline gap-2 text-main/60 font-bold hover:text-accent transition-colors"
 						>
 							<span className="text-[10px] font-mono text-main/30">03</span>
 							<span className="text-lg tracking-tight">Links</span>
-						</Link>
+						</a>
 					</div>
 				</section>
 

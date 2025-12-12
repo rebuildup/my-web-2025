@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import {
-	ArrowLeft,
 	Code,
 	Gamepad2,
 	Github,
@@ -20,7 +19,6 @@ import {
 	Youtube,
 } from "lucide-react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 // --- Types & Data ---
@@ -42,7 +40,7 @@ const links: LinkItem[] = [
 	{
 		id: "profile",
 		title: "Profile",
-		url: "yusuke-kim.com/about",
+		url: "https://yusuke-kim.com/about",
 		icon: User,
 		description: "About Me",
 		color: "#ffffff",
@@ -50,7 +48,7 @@ const links: LinkItem[] = [
 	{
 		id: "portfolio",
 		title: "Portfolio",
-		url: "yusuke-kim.com/portfolio",
+		url: "https://yusuke-kim.com/portfolio",
 		icon: LayoutGrid,
 		description: "All Works",
 		color: "#ffffff",
@@ -58,7 +56,7 @@ const links: LinkItem[] = [
 	{
 		id: "develop",
 		title: "Development",
-		url: "yusuke-kim.com/portfolio/gallery/develop",
+		url: "https://yusuke-kim.com/portfolio/gallery/develop",
 		icon: Code,
 		description: "develop pj",
 		color: "#00ff9d",
@@ -66,7 +64,7 @@ const links: LinkItem[] = [
 	{
 		id: "video",
 		title: "Video",
-		url: "yusuke-kim.com/portfolio/gallery/video",
+		url: "https://yusuke-kim.com/portfolio/gallery/video",
 		icon: Video,
 		description: "video pj",
 		color: "#00ccff",
@@ -74,7 +72,7 @@ const links: LinkItem[] = [
 	{
 		id: "design",
 		title: "Design",
-		url: "yusuke-kim.com/portfolio/gallery/video&design",
+		url: "https://yusuke-kim.com/portfolio/gallery/video&design",
 		icon: Palette,
 		description: "design pj",
 		color: "#ff00d4",
@@ -357,17 +355,6 @@ export default function LinksPage() {
 			<AboutBackground />
 
 			<main className="relative z-10 w-full max-w-lg mx-auto px-6 py-12 min-h-screen flex flex-col items-center">
-				{/* Top Nav */}
-				<div className="absolute top-6 left-6 z-50">
-					<Link
-						href="/about"
-						className="group flex items-center gap-2 text-main/50 hover:text-main transition-colors text-[10px] font-mono uppercase tracking-widest backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/5 bg-black/20 hover:bg-black/40"
-					>
-						<ArrowLeft className="w-3 h-3" />
-						Back
-					</Link>
-				</div>
-
 				{/* Content */}
 				<div className="w-full flex-grow flex flex-col items-center pt-6">
 					<ProfileHeader />
