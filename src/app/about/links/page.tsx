@@ -42,7 +42,7 @@ const links: LinkItem[] = [
 	{
 		id: "profile",
 		title: "Profile",
-		url: "/about",
+		url: "yusuke-kim.com/about",
 		icon: User,
 		description: "About Me",
 		color: "#ffffff",
@@ -50,7 +50,7 @@ const links: LinkItem[] = [
 	{
 		id: "portfolio",
 		title: "Portfolio",
-		url: "/portfolio",
+		url: "yusuke-kim.com/portfolio",
 		icon: LayoutGrid,
 		description: "All Works",
 		color: "#ffffff",
@@ -58,7 +58,7 @@ const links: LinkItem[] = [
 	{
 		id: "develop",
 		title: "Development",
-		url: "/portfolio/gallery/develop",
+		url: "yusuke-kim.com/portfolio/gallery/develop",
 		icon: Code,
 		description: "develop pj",
 		color: "#00ff9d",
@@ -66,7 +66,7 @@ const links: LinkItem[] = [
 	{
 		id: "video",
 		title: "Video",
-		url: "/portfolio/gallery/video",
+		url: "yusuke-kim.com/portfolio/gallery/video",
 		icon: Video,
 		description: "video pj",
 		color: "#00ccff",
@@ -74,7 +74,7 @@ const links: LinkItem[] = [
 	{
 		id: "design",
 		title: "Design",
-		url: "/portfolio/gallery/video&design",
+		url: "yusuke-kim.com/portfolio/gallery/video&design",
 		icon: Palette,
 		description: "design pj",
 		color: "#ff00d4",
