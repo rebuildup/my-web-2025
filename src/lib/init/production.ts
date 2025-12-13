@@ -160,7 +160,9 @@ function setupGlobalErrorHandling(): void {
 				// Skip logging for known development issues
 				if (
 					process.env.NODE_ENV === "development" &&
-					(resourceUrl.includes("favicon") || resourceUrl === "unknown")
+					(resourceUrl.includes("favicon") ||
+						resourceUrl.includes("/api/cms/media") ||
+						resourceUrl === "unknown")
 				) {
 					return;
 				}

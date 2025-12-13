@@ -21,30 +21,33 @@ export function DownloadInfoSection({
 		formData.append("file", file);
 		formData.append("type", "download");
 
-		try {
-			const response = await fetch("/api/admin/upload", {
-				method: "POST",
-				body: formData,
-			});
-
-			if (response.ok) {
-				await response.json();
-				const newDownloadInfo: DownloadInfo = {
-					fileName: file.name,
-					fileSize: file.size,
-					fileType: file.type || "application/octet-stream",
-					downloadCount: 0,
-					version: "1.0.0",
-				};
-				onDownloadInfoChange(newDownloadInfo);
-			} else {
-				console.error("Upload failed");
-			}
-		} catch (error) {
+		const response = await fetch("/api/admin/upload", {
+			method: "POST",
+			body: formData,
+		}).catch((error: unknown) => {
 			console.error("Upload error:", error);
-		} finally {
+			return null;
+		});
+
+		if (!response) {
 			setIsUploading(false);
+			return;
 		}
+
+		if (response.ok) {
+			await response.json();
+			const newDownloadInfo: DownloadInfo = {
+				fileName: file.name,
+				fileSize: file.size,
+				fileType: file.type || "application/octet-stream",
+				downloadCount: 0,
+				version: "1.0.0",
+			};
+			onDownloadInfoChange(newDownloadInfo);
+		} else {
+			console.error("Upload failed");
+		}
+		setIsUploading(false);
 	};
 
 	const handleInputChange = (field: keyof DownloadInfo, value: unknown) => {

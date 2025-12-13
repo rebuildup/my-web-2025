@@ -82,99 +82,120 @@ export function EnhancedFileUploadSection({
 		const uploadedImages: string[] = [];
 		const uploadedOriginals: string[] = [];
 
-		try {
-			for (const file of fileArray) {
-				try {
-					updateProgress(file.name, { progress: 10 });
-
-					// Create form data for API upload
-					const formData = new FormData();
-					formData.append("file", file);
-					formData.append("type", "portfolio");
-					formData.append("processingOptions", JSON.stringify(options));
-
-					updateProgress(file.name, { progress: 30 });
-
-					// Upload via API
-					const response = await fetch("/api/admin/upload", {
-						method: "POST",
-						body: formData,
-					});
-
-					updateProgress(file.name, { progress: 70 });
-
-					if (!response.ok) {
-						const errorData = await response.json();
-						throw new Error(errorData.error || "Upload failed");
-					}
-
-					const result = await response.json();
-
-					updateProgress(file.name, {
-						progress: 90,
-						status: "processing",
-						result: result.files?.[0],
-					});
-
-					// Handle different result types
-					const fileResult = result.files?.[0];
-					if (!fileResult) {
-						throw new Error("No file result returned");
-					}
-
-					// Add URLs to appropriate arrays
-					if (options.skipProcessing && fileResult.originalUrl) {
-						uploadedOriginals.push(fileResult.originalUrl);
-					} else {
-						if (fileResult.processedUrl) {
-							uploadedImages.push(fileResult.processedUrl);
-						} else if (fileResult.url) {
-							uploadedImages.push(fileResult.url);
-						}
-
-						if (fileResult.originalUrl && options.preserveOriginal) {
-							uploadedOriginals.push(fileResult.originalUrl);
-						}
-					}
-
-					updateProgress(file.name, {
-						progress: 100,
-						status: "complete",
-					});
-				} catch (error) {
-					updateProgress(file.name, {
-						status: "error",
-						error: error instanceof Error ? error.message : "Upload failed",
-					});
-				}
-			}
-
-			// Update state with uploaded files
-			if (uploadedImages.length > 0) {
-				const newImages = [...images, ...uploadedImages];
-				onImagesChange(newImages);
-
-				// Set first uploaded image as thumbnail if no thumbnail exists
-				if (!thumbnail && uploadedImages.length > 0) {
-					console.log(
-						"Setting first uploaded image as thumbnail:",
-						uploadedImages[0],
-					);
-					onThumbnailChange(uploadedImages[0]);
-				}
-			}
-
-			if (uploadedOriginals.length > 0 && onOriginalImagesChange) {
-				const newOriginals = [...originalImages, ...uploadedOriginals];
-				onOriginalImagesChange(newOriginals);
-			}
-		} catch (error) {
-			console.error("Upload error:", error);
-		} finally {
+		const cleanup = () => {
 			setIsUploading(false);
 			// Clear progress after a delay
 			setTimeout(() => setUploadProgress([]), 3000);
+		};
+
+		for (const file of fileArray) {
+			updateProgress(file.name, { progress: 10 });
+
+			// Create form data for API upload
+			const formData = new FormData();
+			formData.append("file", file);
+			formData.append("type", "portfolio");
+			formData.append("processingOptions", JSON.stringify(options));
+
+			updateProgress(file.name, { progress: 30 });
+
+			// Upload via API
+			const response = await fetch("/api/admin/upload", {
+				method: "POST",
+				body: formData,
+			}).catch((networkError: unknown) => {
+				console.error("Upload network error:", networkError);
+				return null;
+			});
+
+			if (!response) {
+				updateProgress(file.name, {
+					status: "error",
+					error: "Upload failed",
+				});
+				continue;
+			}
+
+			updateProgress(file.name, { progress: 70 });
+
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}));
+				const errorMessage =
+					(errorData as { error?: string }).error || "Upload failed";
+				updateProgress(file.name, {
+					status: "error",
+					error: errorMessage,
+				});
+				continue;
+			}
+
+			const result = await response.json().catch(() => null);
+			if (!result) {
+				updateProgress(file.name, {
+					status: "error",
+					error: "Failed to parse response",
+				});
+				continue;
+			}
+
+			updateProgress(file.name, {
+				progress: 90,
+				status: "processing",
+				result: result.files?.[0],
+			});
+
+			// Handle different result types
+			const fileResult = result.files?.[0];
+			if (!fileResult) {
+				updateProgress(file.name, {
+					status: "error",
+					error: "No file result returned",
+				});
+				continue;
+			}
+
+			// Add URLs to appropriate arrays
+			if (options.skipProcessing && fileResult.originalUrl) {
+				uploadedOriginals.push(fileResult.originalUrl);
+			} else {
+				if (fileResult.processedUrl) {
+					uploadedImages.push(fileResult.processedUrl);
+				} else if (fileResult.url) {
+					uploadedImages.push(fileResult.url);
+				}
+
+				if (fileResult.originalUrl && options.preserveOriginal) {
+					uploadedOriginals.push(fileResult.originalUrl);
+				}
+			}
+
+			updateProgress(file.name, {
+				progress: 100,
+				status: "complete",
+			});
 		}
+
+		// Update state with uploaded files
+		if (uploadedImages.length > 0) {
+			const newImages = [...images, ...uploadedImages];
+			onImagesChange(newImages);
+
+			// Set first uploaded image as thumbnail if no thumbnail exists
+			if (!thumbnail && uploadedImages.length > 0) {
+				console.log(
+					"Setting first uploaded image as thumbnail:",
+					uploadedImages[0],
+				);
+				onThumbnailChange(uploadedImages[0]);
+			}
+		}
+
+		if (uploadedOriginals.length > 0 && onOriginalImagesChange) {
+			const newOriginals = [...originalImages, ...uploadedOriginals];
+			onOriginalImagesChange(newOriginals);
+		}
+
+		cleanup();
 	};
 
 	const handleDrop = (e: React.DragEvent) => {

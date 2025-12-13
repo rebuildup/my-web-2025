@@ -42,7 +42,7 @@ const tools: Tool[] = [
 		title: "Pomodoro Timer",
 		description:
 			"シンプルなポモドーロタイマー。25分作業・5分休憩のサイクルで効率的な作業時間管理を実現。",
-		href: "/tools/pomodoro",
+		href: "https://pomodoro.yusuke-kim.com",
 		category: "生産性",
 		icon: Timer,
 	},
@@ -114,7 +114,7 @@ const tools: Tool[] = [
 		title: "ProtoType Typing Game",
 		description:
 			"PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。",
-		href: "/tools/ProtoType",
+		href: "https://prototype.yusuke-kim.com",
 		category: "ゲーム",
 		icon: Code,
 	},

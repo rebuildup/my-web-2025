@@ -13,16 +13,8 @@
 		"test": "jest --passWithNoTests",
 		"lint": "biome check .",
 		"format": "biome format --write .",
-		"import-portfolio": "tsx scripts/import-portfolio.ts",
-		"update-published-dates": "tsx scripts/update-published-dates.ts",
-		"recreate-portfolio": "tsx scripts/recreate-portfolio.ts",
-		"delete-portfolio": "tsx scripts/delete-portfolio.ts",
-		"thumbnails-from-youtube": "tsx scripts/thumbnails-from-youtube.ts",
-		"promote-with-thumbnails": "tsx scripts/promote-with-thumbnails.ts",
-		"create-detail-markdown": "tsx scripts/create-detail-markdown.ts",
 		"postinstall": "node scripts/install-hooks.js",
-		"prebuild": "node scripts/install-hooks.js",
-		"proto:sync": "node scripts/prototype-sync.js"
+		"prebuild": "node scripts/install-hooks.js"
 	},
 	"trustedDependencies": [
 		"better-sqlite3",
@@ -46,12 +38,6 @@
 			"three": "^0.180.0",
 			"baseline-browser-mapping": "^2.8.32"
 		},
-		"publicHoistPattern": [
-			"@chakra-ui/*",
-			"@react-three/*",
-			"ogl",
-			"@react-three/drei"
-		],
 		"ignoredBuiltDependencies": [
 			"better-sqlite3"
 		]

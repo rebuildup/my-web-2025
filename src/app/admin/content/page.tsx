@@ -190,6 +190,8 @@ export default function AdminContentPage() {
 	const [editTarget, setEditTarget] = useState<Content | null>(null);
 	const [deleteTarget, setDeleteTarget] = useState<Content | null>(null);
 	const [submitting, setSubmitting] = useState(false);
+	const [createStatus, setCreateStatus] = useState<Content["status"]>("draft");
+	const [createVisibility, setCreateVisibility] = useState<Content["visibility"]>("draft");
 
 	const handleRefresh = useCallback(() => {
 		void refreshContents();
@@ -404,17 +406,18 @@ export default function AdminContentPage() {
 
 			{/* Create Dialog */}
 			<Dialog open={isCreateOpen} onClose={() => setIsCreateOpen(false)} maxWidth="md" fullWidth>
-				{(() => {
-					const [status, setStatus] = [undefined, undefined] as unknown as [Content["status"], (v: Content["status"]) => void];
-					return null;
-				})()}
 				<DialogTitle>
 					<Stack direction="row" alignItems="center" justifyContent="space-between">
 						<Typography variant="h6">新しいコンテンツを作成</Typography>
 						<Stack direction="row" spacing={1} alignItems="center">
 							<FormControl size="small" sx={{ minWidth: 140 }}>
 								<InputLabel id="create-status">公開ステータス</InputLabel>
-								<Select labelId="create-status" label="公開ステータス" value={(undefined as unknown as string) || "draft"} onChange={() => {}}>
+								<Select
+									labelId="create-status"
+									label="公開ステータス"
+									value={createStatus}
+									onChange={(e) => setCreateStatus(e.target.value as Content["status"])}
+								>
 									<MenuItem value="draft">draft</MenuItem>
 									<MenuItem value="published">published</MenuItem>
 									<MenuItem value="archived">archived</MenuItem>
@@ -422,7 +425,12 @@ export default function AdminContentPage() {
 							</FormControl>
 							<FormControl size="small" sx={{ minWidth: 140 }}>
 								<InputLabel id="create-visibility">可視性</InputLabel>
-								<Select labelId="create-visibility" label="可視性" value={(undefined as unknown as string) || "draft"} onChange={() => {}}>
+								<Select
+									labelId="create-visibility"
+									label="可視性"
+									value={createVisibility}
+									onChange={(e) => setCreateVisibility(e.target.value as Content["visibility"])}
+								>
 									<MenuItem value="draft">draft</MenuItem>
 									<MenuItem value="public">public</MenuItem>
 									<MenuItem value="unlisted">unlisted</MenuItem>
@@ -433,7 +441,14 @@ export default function AdminContentPage() {
 					</Stack>
 				</DialogTitle>
 				<DialogContent>
-					<ContentForm mode="create" isLoading={submitting} onSubmit={handleCreate} onCancel={() => setIsCreateOpen(false)} />
+					<ContentForm
+						mode="create"
+						isLoading={submitting}
+						onSubmit={handleCreate}
+						onCancel={() => setIsCreateOpen(false)}
+						controlledStatus={createStatus}
+						controlledVisibility={createVisibility}
+					/>
 				</DialogContent>
 			</Dialog>
 

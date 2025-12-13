@@ -67,197 +67,197 @@ export function FileUploadSection({
 
 		const uploadedUrls: string[] = [];
 
-		try {
-			for (const file of fileArray) {
-				try {
-					// Validate file
-					const validation = validateFile(file, "image");
-					if (!validation.valid) {
-						updateProgress(file.name, {
-							status: "error",
-							error: validation.error,
-						});
-						continue;
-					}
-
-					updateProgress(file.name, { progress: 10 });
-
-					// Extract metadata
-					console.log("Extracting metadata for file:", file.name);
-					let metadata;
-					try {
-						metadata = await extractFileMetadata(file);
-						console.log("Metadata extracted successfully:", metadata);
-					} catch (metadataError) {
-						console.warn(
-							"Failed to extract metadata, using basic info:",
-							metadataError,
-						);
-						metadata = {
-							name: file.name,
-							size: file.size,
-							type: file.type,
-							lastModified: file.lastModified,
-							hash: "unknown",
-						};
-					}
-					updateProgress(file.name, { progress: 20 });
-
-					// Compress if needed
-					let processedFile = file;
-					if (file.size > 5 * 1024 * 1024) {
-						// 5MB
-						console.log("File is large, attempting compression:", file.size);
-						try {
-							processedFile = await compressFileIfNeeded(file);
-							console.log(
-								"File compressed successfully, new size:",
-								processedFile.size,
-							);
-						} catch (compressionError) {
-							console.warn(
-								"File compression failed, using original:",
-								compressionError,
-							);
-							processedFile = file;
-						}
-						updateProgress(file.name, { progress: 40 });
-					}
-
-					updateProgress(file.name, {
-						progress: 50,
-						status: "processing",
-					});
-
-					// Skip client-side FFmpeg processing for now
-					// Server-side Sharp processing will handle image optimization
-					console.log(
-						"Skipping client-side FFmpeg processing, will use server-side Sharp instead",
-					);
-
-					// Upload original file with processing options
-					const formData = new FormData();
-					formData.append("file", processedFile);
-					formData.append("type", "portfolio");
-					formData.append("metadata", JSON.stringify(metadata));
-					formData.append(
-						"processingOptions",
-						JSON.stringify(processingOptions),
-					);
-
-					console.log(
-						"Uploading file with processing options:",
-						processingOptions,
-					);
-					console.log("Starting upload request for file:", file.name);
-
-					try {
-						const response = await fetch("/api/admin/upload", {
-							method: "POST",
-							body: formData,
-							// Add timeout for large file uploads
-							signal: AbortSignal.timeout(60000), // 60 seconds timeout
-						});
-
-						console.log(
-							"Upload request completed, response status:",
-							response.status,
-						);
-						updateProgress(file.name, { progress: 90 });
-
-						if (response.ok) {
-							const result = await response.json();
-							console.log("Upload successful:", result);
-
-							// Use the main file URL from successful uploads
-							if (result.files && result.files.length > 0) {
-								const successfulFiles = result.files.filter(
-									(f: { success: boolean; url?: string }) => f.success && f.url,
-								);
-								if (successfulFiles.length > 0) {
-									uploadedUrls.push(successfulFiles[0].url);
-									updateProgress(file.name, {
-										progress: 100,
-										status: "complete",
-									});
-								} else {
-									const errorFile = result.files.find(
-										(f: { success: boolean; error?: string }) => !f.success,
-									);
-									updateProgress(file.name, {
-										status: "error",
-										error: errorFile?.error || "Upload processing failed",
-									});
-								}
-							} else if (result.urls && result.urls.length > 0) {
-								uploadedUrls.push(...result.urls);
-								updateProgress(file.name, {
-									progress: 100,
-									status: "complete",
-								});
-							} else {
-								updateProgress(file.name, {
-									status: "error",
-									error: "No valid file URLs returned",
-								});
-							}
-						} else {
-							const errorData = await response.json();
-							console.error("Upload failed:", {
-								status: response.status,
-								statusText: response.statusText,
-								errorData,
-								fileName: file.name,
-							});
-							updateProgress(file.name, {
-								status: "error",
-								error: errorData.error || `Upload failed (${response.status})`,
-							});
-						}
-					} catch (uploadError) {
-						console.error("Upload request failed:", {
-							error: uploadError,
-							fileName: file.name,
-							fileSize: file.size,
-							fileType: file.type,
-						});
-						updateProgress(file.name, {
-							status: "error",
-							error:
-								uploadError instanceof Error
-									? uploadError.message
-									: "Upload request failed",
-						});
-					}
-				} catch (error) {
-					updateProgress(file.name, {
-						status: "error",
-						error: error instanceof Error ? error.message : "Unknown error",
-					});
-				}
-			}
-
-			// Update images list with successfully uploaded files
-			if (uploadedUrls.length > 0) {
-				const newImages = [...images, ...uploadedUrls];
-				onImagesChange(newImages);
-
-				// Set first uploaded image as thumbnail if no thumbnail exists
-				if (!thumbnail && uploadedUrls.length > 0) {
-					console.log(
-						"Setting first uploaded image as thumbnail:",
-						uploadedUrls[0],
-					);
-					onThumbnailChange(uploadedUrls[0]);
-				}
-			}
-		} catch (error) {
-			console.error("Upload error:", error);
-		} finally {
+		const cleanup = () => {
 			setIsUploading(false);
 			// Clear progress after a delay
 			setTimeout(() => setUploadProgress([]), 3000);
+		};
+
+		for (const file of fileArray) {
+			// Validate file
+			const validation = validateFile(file, "image");
+			if (!validation.valid) {
+				updateProgress(file.name, {
+					status: "error",
+					error: validation.error,
+				});
+				continue;
+			}
+
+			updateProgress(file.name, { progress: 10 });
+
+			// Extract metadata
+			console.log("Extracting metadata for file:", file.name);
+			const metadata = await extractFileMetadata(file).catch(
+				(metadataError: unknown) => {
+					console.warn(
+						"Failed to extract metadata, using basic info:",
+						metadataError,
+					);
+					return {
+						name: file.name,
+						size: file.size,
+						type: file.type,
+						lastModified: file.lastModified,
+						hash: "unknown",
+					};
+				},
+			);
+			console.log("Metadata extracted:", metadata);
+			updateProgress(file.name, { progress: 20 });
+
+			// Compress if needed
+			let processedFile = file;
+			if (file.size > 5 * 1024 * 1024) {
+				// 5MB
+				console.log("File is large, attempting compression:", file.size);
+				processedFile = await compressFileIfNeeded(file).catch(
+					(compressionError: unknown) => {
+						console.warn(
+							"File compression failed, using original:",
+							compressionError,
+						);
+						return file;
+					},
+				);
+				console.log("Processed file size:", processedFile.size);
+				updateProgress(file.name, { progress: 40 });
+			}
+
+			updateProgress(file.name, {
+				progress: 50,
+				status: "processing",
+			});
+
+			// Skip client-side FFmpeg processing for now
+			// Server-side Sharp processing will handle image optimization
+			console.log(
+				"Skipping client-side FFmpeg processing, will use server-side Sharp instead",
+			);
+
+			// Upload original file with processing options
+			const formData = new FormData();
+			formData.append("file", processedFile);
+			formData.append("type", "portfolio");
+			formData.append("metadata", JSON.stringify(metadata));
+			formData.append(
+				"processingOptions",
+				JSON.stringify(processingOptions),
+			);
+
+			console.log(
+				"Uploading file with processing options:",
+				processingOptions,
+			);
+			console.log("Starting upload request for file:", file.name);
+
+			const response = await fetch("/api/admin/upload", {
+				method: "POST",
+				body: formData,
+				// Add timeout for large file uploads
+				signal: AbortSignal.timeout(60000), // 60 seconds timeout
+			}).catch((uploadError: unknown) => {
+				console.error("Upload request failed:", {
+					error: uploadError,
+					fileName: file.name,
+					fileSize: file.size,
+					fileType: file.type,
+				});
+				return null;
+			});
+
+			if (!response) {
+				updateProgress(file.name, {
+					status: "error",
+					error: "Upload request failed",
+				});
+				continue;
+			}
+
+			console.log(
+				"Upload request completed, response status:",
+				response.status,
+			);
+			updateProgress(file.name, { progress: 90 });
+
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}));
+				console.error("Upload failed:", {
+					status: response.status,
+					statusText: response.statusText,
+					errorData,
+					fileName: file.name,
+				});
+				updateProgress(file.name, {
+					status: "error",
+					error:
+						(errorData as { error?: string }).error ||
+						`Upload failed (${response.status})`,
+				});
+				continue;
+			}
+
+			const result = await response.json().catch(() => null);
+			if (!result) {
+				updateProgress(file.name, {
+					status: "error",
+					error: "Failed to parse response",
+				});
+				continue;
+			}
+
+			console.log("Upload successful:", result);
+
+			// Use the main file URL from successful uploads
+			if (result.files && result.files.length > 0) {
+				const successfulFiles = result.files.filter(
+					(f: { success: boolean; url?: string }) => f.success && f.url,
+				);
+				if (successfulFiles.length > 0) {
+					uploadedUrls.push(successfulFiles[0].url);
+					updateProgress(file.name, {
+						progress: 100,
+						status: "complete",
+					});
+				} else {
+					const errorFile = result.files.find(
+						(f: { success: boolean; error?: string }) => !f.success,
+					);
+					updateProgress(file.name, {
+						status: "error",
+						error: errorFile?.error || "Upload processing failed",
+					});
+				}
+			} else if (result.urls && result.urls.length > 0) {
+				uploadedUrls.push(...result.urls);
+				updateProgress(file.name, {
+					progress: 100,
+					status: "complete",
+				});
+			} else {
+				updateProgress(file.name, {
+					status: "error",
+					error: "No valid file URLs returned",
+				});
+			}
 		}
+
+		// Update images list with successfully uploaded files
+		if (uploadedUrls.length > 0) {
+			const newImages = [...images, ...uploadedUrls];
+			onImagesChange(newImages);
+
+			// Set first uploaded image as thumbnail if no thumbnail exists
+			if (!thumbnail && uploadedUrls.length > 0) {
+				console.log(
+					"Setting first uploaded image as thumbnail:",
+					uploadedUrls[0],
+				);
+				onThumbnailChange(uploadedUrls[0]);
+			}
+		}
+
+		cleanup();
 	};
 
 	const handleDrop = (e: React.DragEvent) => {

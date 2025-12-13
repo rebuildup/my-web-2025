@@ -22,15 +22,20 @@ export function ProductionInitializer({
 		// Only initialize in browser environment
 		if (typeof window === "undefined") return;
 
-		// Check production readiness
-		const readiness = checkProductionReadiness();
+		// Skip production readiness check in development
+		const isProduction = process.env.NODE_ENV === "production";
 
-		if (!readiness.ready) {
-			console.error("Production readiness issues:", readiness.issues);
-		}
+		if (isProduction) {
+			// Check production readiness
+			const readiness = checkProductionReadiness();
 
-		if (readiness.warnings.length > 0) {
-			console.warn("Production warnings:", readiness.warnings);
+			if (!readiness.ready) {
+				console.error("Production readiness issues:", readiness.issues);
+			}
+
+			if (readiness.warnings.length > 0) {
+				console.warn("Production warnings:", readiness.warnings);
+			}
 		}
 
 		// Initialize production environment

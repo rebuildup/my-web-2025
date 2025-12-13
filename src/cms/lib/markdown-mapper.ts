@@ -176,27 +176,8 @@ export function markdownPageToRow(
 export function rowToMarkdownPage(row: MarkdownPageRow): MarkdownPage {
 	let frontmatter: MarkdownFrontmatter;
 	try {
-		console.log("rowToMarkdownPage - row.slug:", row.slug);
-		console.log(
-			"rowToMarkdownPage - row.frontmatter type:",
-			typeof row.frontmatter,
-		);
-		console.log(
-			"rowToMarkdownPage - row.frontmatter length:",
-			row.frontmatter?.length,
-		);
-		console.log(
-			"rowToMarkdownPage - row.frontmatter first 50 chars:",
-			row.frontmatter?.substring(0, 50),
-		);
 		frontmatter = JSON.parse(row.frontmatter);
 	} catch (error) {
-		console.error("Failed to parse frontmatter:", error);
-		console.error("Frontmatter string:", row.frontmatter);
-		console.error(
-			"Frontmatter string (JSON):",
-			JSON.stringify(row.frontmatter),
-		);
 		throw new Error(
 			`Failed to parse frontmatter: ${error instanceof Error ? error.message : "Unknown error"}`,
 		);

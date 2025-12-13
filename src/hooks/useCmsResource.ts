@@ -26,6 +26,15 @@ export function useCmsResource<T>(
 	const [error, setError] = useState<unknown>(null);
 	const abortController = useRef<AbortController | null>(null);
 
+	// Use refs for callbacks to avoid effect dependencies
+	const parseRef = useRef(parse);
+	const onErrorRef = useRef(onError);
+
+	useEffect(() => {
+		parseRef.current = parse;
+		onErrorRef.current = onError;
+	}, [parse, onError]);
+
 	const handleRequestError = useCallback((status: number): Error => {
 		return new Error(`Request failed with status ${status}`);
 	}, []);
@@ -49,7 +58,7 @@ export function useCmsResource<T>(
 				return;
 			}
 			setError(fetchErr);
-			onError?.(fetchErr);
+			onErrorRef.current?.(fetchErr);
 			setLoading(false);
 			return;
 		}
@@ -57,7 +66,7 @@ export function useCmsResource<T>(
 		if (!response.ok) {
 			const error = handleRequestError(response.status);
 			setError(error);
-			onError?.(error);
+			onErrorRef.current?.(error);
 			setLoading(false);
 			return;
 		}
@@ -71,15 +80,15 @@ export function useCmsResource<T>(
 				return;
 			}
 			setError(err);
-			onError?.(err);
+			onErrorRef.current?.(err);
 			setLoading(false);
 			return;
 		}
 
-		const parsedData = parse ? parse(raw) : (raw as T);
+		const parsedData = parseRef.current ? parseRef.current(raw) : (raw as T);
 		setData(parsedData);
 		setLoading(false);
-	}, [endpoint, onError, parse, handleRequestError]);
+	}, [endpoint, handleRequestError]);
 
 	useEffect(() => {
 		if (!immediate) {
@@ -103,7 +112,7 @@ export function useCmsResource<T>(
 			})
 			.then((raw) => {
 				if (controller.signal.aborted) return;
-				setData(parse ? parse(raw) : (raw as T));
+				setData(parseRef.current ? parseRef.current(raw) : (raw as T));
 				if (!controller.signal.aborted) {
 					setLoading(false);
 				}
@@ -113,7 +122,7 @@ export function useCmsResource<T>(
 					return;
 				}
 				setError(err);
-				onError?.(err);
+				onErrorRef.current?.(err);
 				if (!controller.signal.aborted) {
 					setLoading(false);
 				}
@@ -122,7 +131,7 @@ export function useCmsResource<T>(
 		return () => {
 			controller.abort();
 		};
-	}, [immediate, endpoint, parse, onError]);
+	}, [immediate, endpoint]);
 
 	return { data, loading, error, refresh, setData };
 }

@@ -371,10 +371,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 						<feColorMatrix
 							in="dispRed"
 							type="matrix"
-							values="1 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0 1 0"
+							values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"
 							result="red"
 						/>
 
@@ -388,10 +385,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 						<feColorMatrix
 							in="dispGreen"
 							type="matrix"
-							values="0 0 0 0 0
-                      0 1 0 0 0
-                      0 0 0 0 0
-                      0 0 0 1 0"
+							values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0"
 							result="green"
 						/>
 
@@ -405,10 +399,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 						<feColorMatrix
 							in="dispBlue"
 							type="matrix"
-							values="0 0 0 0 0
-                      0 0 0 0 0
-                      0 0 1 0 0
-                      0 0 0 1 0"
+							values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0"
 							result="blue"
 						/>
 

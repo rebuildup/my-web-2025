@@ -1,18 +1,24 @@
 "use client";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import DarkVeil from "@/components/DarkVeil";
-import GlassSurface from "@/components/GlassSurface";
 import XProfileImage from "@/components/XProfileImage";
+
+const HomeBackground = dynamic(() => import("@/components/HomeBackground"), {
+	ssr: false,
+});
+
+const navItems = [
+	{ href: "/about", label: "About" },
+	{ href: "/portfolio", label: "Portfolio" },
+	{ href: "/workshop", label: "Workshop" },
+	{ href: "/tools", label: "Tools" },
+];
 
 export default function Home() {
 	return (
-		<div className="min-h-screen relative">
-			<div id="main-content" className="absolute inset-0">
-				<div id="bg" className="fixed inset-0">
-					<DarkVeil />
-				</div>
-			</div>
+		<div className="min-h-screen relative bg-[#020202]">
+			<HomeBackground />
 
 			<main
 				id="main-content"
@@ -63,186 +69,52 @@ export default function Home() {
 							</div>
 						</div>
 
-						<div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full sm:w-max sm:min-w-[400px] justify-items-stretch sm:justify-items-center">
-							<motion.div
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{
-									duration: 0.3,
-									ease: [0.2, 0.8, 0.2, 1],
-									delay: 0.15,
-								}}
-							>
-								{/* Mobile: full-width button */}
-								<div className="sm:hidden w-full">
-									<GlassSurface
-										className="h-8! rounded-full justify-self-stretch w-full"
-										width={"100%"}
-										height={32}
-										borderRadius={16}
+						<div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full sm:w-max sm:min-w-[400px]">
+							{navItems.map((item, index) => (
+								<motion.div
+									key={item.href}
+									initial={{ opacity: 0, y: 20 }}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{
+										duration: 0.3,
+										ease: [0.2, 0.8, 0.2, 1],
+										delay: 0.15 + index * 0.05,
+									}}
+								>
+									<Link
+										href={item.href}
+										className="group flex items-center w-full sm:w-[190px] h-10 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-accent/30 transition-all duration-300"
 									>
-										<Link
-											href="/about"
-											className="inline-flex w-full h-full items-center justify-center text-[10px] sm:text-xs px-3 sm:px-4 text-main hover:text-main whitespace-nowrap"
-										>
-											About
-										</Link>
-									</GlassSurface>
-								</div>
-								{/* Tablet/PC: fixed 200px button (unchanged) */}
-								<div className="hidden sm:block">
-									<GlassSurface
-										className="h-8! rounded-full justify-self-center"
-										width={200}
-										height={32}
-										borderRadius={16}
-									>
-										<Link
-											href="/about"
-											className="inline-flex w-full h-full items-center justify-center text-[10px] sm:text-xs px-3 sm:px-4 text-main hover:text-main whitespace-nowrap"
-										>
-											About
-										</Link>
-									</GlassSurface>
-								</div>
-							</motion.div>
-
-							<motion.div
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{
-									duration: 0.3,
-									ease: [0.2, 0.8, 0.2, 1],
-									delay: 0.2,
-								}}
-							>
-								<div className="sm:hidden w-full">
-									<GlassSurface
-										className="h-8! rounded-full justify-self-stretch w-full"
-										width={"100%"}
-										height={32}
-										borderRadius={16}
-									>
-										<Link
-											href="/portfolio"
-											className="inline-flex w-full h-full items-center justify-center text-[10px] sm:text-xs px-3 sm:px-4 text-main hover:text-main whitespace-nowrap"
-										>
-											Portfolio
-										</Link>
-									</GlassSurface>
-								</div>
-								<div className="hidden sm:block">
-									<GlassSurface
-										className="h-8! rounded-full justify-self-center"
-										width={200}
-										height={32}
-										borderRadius={16}
-									>
-										<Link
-											href="/portfolio"
-											className="inline-flex w-full h-full items-center justify-center text-[10px] sm:text-xs px-3 sm:px-4 text-main hover:text-main whitespace-nowrap"
-										>
-											Portfolio
-										</Link>
-									</GlassSurface>
-								</div>
-							</motion.div>
-
-							<motion.div
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{
-									duration: 0.3,
-									ease: [0.2, 0.8, 0.2, 1],
-									delay: 0.25,
-								}}
-							>
-								<div className="sm:hidden w-full">
-									<GlassSurface
-										className="h-8! rounded-full justify-self-stretch w-full"
-										width={"100%"}
-										height={32}
-										borderRadius={16}
-									>
-										<Link
-											href="/workshop"
-											className="inline-flex w-full h-full items-center justify-center text-[10px] sm:text-xs px-3 sm:px-4 text-main hover:text-main whitespace-nowrap"
-										>
-											Workshop
-										</Link>
-									</GlassSurface>
-								</div>
-								<div className="hidden sm:block">
-									<GlassSurface
-										className="h-8! rounded-full justify-self-center"
-										width={200}
-										height={32}
-										borderRadius={16}
-									>
-										<Link
-											href="/workshop"
-											className="inline-flex w-full h-full items-center justify-center text-[10px] sm:text-xs px-3 sm:px-4 text-main hover:text-main whitespace-nowrap"
-										>
-											Workshop
-										</Link>
-									</GlassSurface>
-								</div>
-							</motion.div>
-
-							<motion.div
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{
-									duration: 0.3,
-									ease: [0.2, 0.8, 0.2, 1],
-									delay: 0.3,
-								}}
-							>
-								<div className="sm:hidden w-full">
-									<GlassSurface
-										className="h-8! rounded-full justify-self-stretch w-full"
-										width={"100%"}
-										height={32}
-										borderRadius={16}
-									>
-										<Link
-											href="/tools"
-											className="inline-flex w-full h-full items-center justify-center text-[10px] sm:text-xs px-3 sm:px-4 text-main hover:text-main whitespace-nowrap"
-										>
-											Tools
-										</Link>
-									</GlassSurface>
-								</div>
-								<div className="hidden sm:block">
-									<GlassSurface
-										className="h-8! rounded-full justify-self-center"
-										width={200}
-										height={32}
-										borderRadius={16}
-									>
-										<Link
-											href="/tools"
-											className="inline-flex w-full h-full items-center justify-center text-[10px] sm:text-xs px-3 sm:px-4 text-main hover:text-main whitespace-nowrap"
-										>
-											Tools
-										</Link>
-									</GlassSurface>
-								</div>
-							</motion.div>
+										<span className="w-1 h-full bg-accent/60 group-hover:bg-accent transition-colors duration-300" />
+										<span className="flex-1 text-sm font-medium text-main/80 group-hover:text-main pl-4 tracking-wide transition-colors duration-300">
+											{item.label}
+										</span>
+									</Link>
+								</motion.div>
+							))}
 						</div>
+
+						<motion.footer
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{
+								duration: 0.3,
+								ease: [0.2, 0.8, 0.2, 1],
+								delay: 0.4,
+							}}
+							className="mt-16 pt-6 flex items-center justify-center gap-4 w-full sm:w-max sm:min-w-[400px]"
+						>
+							<span className="text-xs text-main/40">© 2025 361do_sleep</span>
+							<Link
+								href="/privacy-policy"
+								className="text-xs text-main/40 hover:text-main transition-colors underline underline-offset-4"
+							>
+								Privacy Policy
+							</Link>
+						</motion.footer>
 					</div>
 				</div>
 			</main>
-
-			<footer className="fixed bottom-2 left-0 right-0 z-10 flex items-center justify-center gap-4 py-3 backdrop-blur-sm">
-				<span className="text-xs text-main">© 2025 361do_sleep</span>
-				<Link
-					href="/privacy-policy"
-					className="text-xs transition underline underline-offset-4 text-main hover:text-main"
-				>
-					Privacy Policy
-				</Link>
-			</footer>
 		</div>
 	);
 }

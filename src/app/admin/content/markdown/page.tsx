@@ -164,30 +164,33 @@ export default function AdminMarkdownManager() {
 	const handleCreate = useCallback(
 		async (payload: Partial<MarkdownPage>) => {
 			setIsSubmitting(true);
-			try {
-				const response = await fetch("/api/cms/markdown", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(payload),
-				});
-				if (!response.ok) {
-					const error = await response.json();
-					throw new Error(error.error || "Markdownページの作成に失敗しました");
-				}
-				showSnackbar("Markdownページを作成しました", "success");
-				setIsCreateDialogOpen(false);
-				await refreshPages();
-			} catch (error) {
-				console.error("[Markdown] create failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "Markdownページの作成に失敗しました",
-					"error",
-				);
-			} finally {
+			const response = await fetch("/api/cms/markdown", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			}).catch((networkError: unknown) => {
+				console.error("[Markdown] create failed", networkError);
+				return null;
+			});
+			if (!response) {
+				showSnackbar("Markdownページの作成に失敗しました", "error");
 				setIsSubmitting(false);
+				return;
 			}
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}));
+				const errorMessage =
+					(errorData as { error?: string }).error ||
+					"Markdownページの作成に失敗しました";
+				console.error("[Markdown] create failed", errorMessage);
+				showSnackbar(errorMessage, "error");
+				setIsSubmitting(false);
+				return;
+			}
+			showSnackbar("Markdownページを作成しました", "success");
+			setIsCreateDialogOpen(false);
+			await refreshPages();
+			setIsSubmitting(false);
 		},
 		[refreshPages, showSnackbar],
 	);
@@ -195,56 +198,61 @@ export default function AdminMarkdownManager() {
 	const handleUpdate = useCallback(
 		async (payload: Partial<MarkdownPage>) => {
 			setIsSubmitting(true);
-			try {
-				const response = await fetch("/api/cms/markdown", {
-					method: "PUT",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(payload),
-				});
-				if (!response.ok) {
-					const error = await response.json();
-					throw new Error(error.error || "Markdownページの更新に失敗しました");
-				}
-				showSnackbar("Markdownページを更新しました", "success");
-				setEditTarget(null);
-				await refreshPages();
-			} catch (error) {
-				console.error("[Markdown] update failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "Markdownページの更新に失敗しました",
-					"error",
-				);
-			} finally {
+			const response = await fetch("/api/cms/markdown", {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			}).catch((networkError: unknown) => {
+				console.error("[Markdown] update failed", networkError);
+				return null;
+			});
+			if (!response) {
+				showSnackbar("Markdownページの更新に失敗しました", "error");
 				setIsSubmitting(false);
+				return;
 			}
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}));
+				const errorMessage =
+					(errorData as { error?: string }).error ||
+					"Markdownページの更新に失敗しました";
+				console.error("[Markdown] update failed", errorMessage);
+				showSnackbar(errorMessage, "error");
+				setIsSubmitting(false);
+				return;
+			}
+			showSnackbar("Markdownページを更新しました", "success");
+			setEditTarget(null);
+			await refreshPages();
+			setIsSubmitting(false);
 		},
 		[refreshPages, showSnackbar],
 	);
 
 	const handleDelete = useCallback(
 		async (id: string) => {
-			try {
-				const response = await fetch(`/api/cms/markdown?id=${id}`, {
-					method: "DELETE",
-				});
-				if (!response.ok) {
-					const error = await response.json();
-					throw new Error(error.error || "Markdownページの削除に失敗しました");
-				}
-				showSnackbar("Markdownページを削除しました", "success");
-				setDeleteTarget(null);
-				await refreshPages();
-			} catch (error) {
-				console.error("[Markdown] delete failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "Markdownページの削除に失敗しました",
-					"error",
-				);
+			const response = await fetch(`/api/cms/markdown?id=${id}`, {
+				method: "DELETE",
+			}).catch((networkError: unknown) => {
+				console.error("[Markdown] delete failed", networkError);
+				return null;
+			});
+			if (!response) {
+				showSnackbar("Markdownページの削除に失敗しました", "error");
+				return;
 			}
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}));
+				const errorMessage =
+					(errorData as { error?: string }).error ||
+					"Markdownページの削除に失敗しました";
+				console.error("[Markdown] delete failed", errorMessage);
+				showSnackbar(errorMessage, "error");
+				return;
+			}
+			showSnackbar("Markdownページを削除しました", "success");
+			setDeleteTarget(null);
+			await refreshPages();
 		},
 		[refreshPages, showSnackbar],
 	);
@@ -252,28 +260,31 @@ export default function AdminMarkdownManager() {
 	const handleShowStats = useCallback(
 		async (page: MarkdownPage) => {
 			setStatsDialog({ open: true, page, stats: null, loading: true });
-			try {
-				const response = await fetch("/api/cms/markdown/stats", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ body: page.body }),
-				});
-				if (!response.ok) {
-					const error = await response.json();
-					throw new Error(error.error || "統計情報の取得に失敗しました");
-				}
-				const stats = (await response.json()) as MarkdownStats;
-				setStatsDialog({ open: true, page, stats, loading: false });
-			} catch (error) {
-				console.error("[Markdown] stats failed", error);
-				showSnackbar(
-					error instanceof Error
-						? error.message
-						: "統計情報の取得に失敗しました",
-					"error",
-				);
+			const response = await fetch("/api/cms/markdown/stats", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ body: page.body }),
+			}).catch((networkError: unknown) => {
+				console.error("[Markdown] stats failed", networkError);
+				return null;
+			});
+			if (!response) {
+				showSnackbar("統計情報の取得に失敗しました", "error");
 				setStatsDialog({ open: true, page, stats: null, loading: false });
+				return;
 			}
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}));
+				const errorMessage =
+					(errorData as { error?: string }).error ||
+					"統計情報の取得に失敗しました";
+				console.error("[Markdown] stats failed", errorMessage);
+				showSnackbar(errorMessage, "error");
+				setStatsDialog({ open: true, page, stats: null, loading: false });
+				return;
+			}
+			const stats = (await response.json()) as MarkdownStats;
+			setStatsDialog({ open: true, page, stats, loading: false });
 		},
 		[showSnackbar],
 	);

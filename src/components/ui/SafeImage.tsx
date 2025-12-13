@@ -48,23 +48,19 @@ export function SafeImage({
 
 	const handleError = useCallback(
 		(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+			// Skip verbose logging for CMS media URLs in development
+			const isCmsMedia = currentSrc?.includes("/api/cms/media");
 			if (
 				process.env.NODE_ENV !== "production" &&
-				process.env.NODE_ENV !== "test"
+				process.env.NODE_ENV !== "test" &&
+				!isCmsMedia
 			) {
-				console.error("SafeImage: Image failed to load:", currentSrc);
-				console.error("SafeImage: Error details:", e);
+				console.warn("SafeImage: Image failed to load:", currentSrc);
 			}
 
 			if (!hasError) {
 				setHasError(true);
 				const fallback = fallbackSrc || "/images/placeholder.svg";
-				if (
-					process.env.NODE_ENV !== "production" &&
-					process.env.NODE_ENV !== "test"
-				) {
-					console.log("SafeImage: Using fallback:", fallback);
-				}
 				setCurrentSrc(fallback);
 			}
 

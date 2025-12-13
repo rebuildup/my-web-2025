@@ -92,7 +92,7 @@ export default function OfflinePageClient() {
 								SVG to TSX変換
 							</a>
 							<a
-								href="/tools/pomodoro"
+								href="https://pomodoro.yusuke-kim.com"
 								className="p-3 border border-gray-600 rounded hover:border-accent transition-colors"
 							>
 								ポモドーロタイマー

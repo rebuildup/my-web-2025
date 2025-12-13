@@ -1,87 +1,78 @@
-# samuido Website
+# samuido Website (2025 Edition)
 
-This is a comprehensive personal portfolio website built with [Next.js](https://nextjs.org) 15.4.3, featuring a unified content management system for blog posts, plugin distribution, and download materials.
+最新のWeb技術で構築された包括的なポートフォリオ兼コンテンツ管理プラットフォームです。高機能な管理ダッシュボード、3Dグラフィックスの統合、SQLiteを使用したローカルファーストなアーキテクチャを特徴としています。
 
-## Getting Started
+## 技術スタック (Technology Stack)
 
-First, run the development server:
+- **フレームワーク**: [Next.js](https://nextjs.org) 16 (App Router)
+- **言語**: TypeScript 5.9
+- **UI & スタイリング**: 
+  - [Tailwind CSS](https://tailwindcss.com) v4
+  - [Material UI](https://mui.com/) v7
+  - [Shadcn UI](https://ui.shadcn.com/) コンポーネント
+- **データベース**: [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) (CMS用ローカルSQLite)
+- **グラフィックス & アニメーション**:
+  - [Three.js](https://threejs.org/) / [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)
+  - [GSAP](https://gsap.com/)
+- **Lint & フォーマット**: [Biome](https://biomejs.dev/)
+
+## 機能 (Features)
+
+### 公開セクション (Public Sections)
+- **Portfolio** (`/portfolio`): 制作物やプロジェクトの展示。
+- **Tools** (`/tools`): Webベースのツールやユーティリティ。
+- **Workshop** (`/workshop`):
+  - ブログ記事
+  - プラグイン配布
+  - ダウンロード素材
+- **About** (`/about`): プロフィールとコンタクト情報。
+
+### 管理ダッシュボード (Admin Dashboard) (`/admin`)
+アプリケーションに統合された包括的なCMS機能です：
+- **コンテンツ管理** (`/admin/content`): サイト内の全コンテンツに対するCRUD操作。
+- **データマネージャー** (`/admin/data-manager`): データベースのメンテナンスと検査。
+- **メディアライブラリ**: 画像やアセットファイルの管理。
+- **Markdownエディタ**: ブログ記事やアーティクル作成専用のエディタ。
+- **タグ管理**: コンテンツのタグ付け整理。
+- **アクセス解析 (Analytics)**: サイト利用状況の可視化 (検討中)。
+
+## はじめ方 (Getting Started)
+
+### 前提条件 (Prerequisites)
+- Node.js (最新のLTS推奨)
+- pnpm (v10以上)
+
+### インストール (Installation)
 
 ```bash
+pnpm install
+```
+
+### 開発サーバの起動 (Development)
+
+TurboPackを使用して高速なHMRで開発サーバーを起動します：
+
+```bash
+pnpm dev
+# または
 npm run dev
 ```
 
-Open [http://localhost:3010](http://localhost:3010) with your browser to see the result.
+ブラウザで [http://localhost:3010](http://localhost:3010) を開いてください。
 
-## Quality Assurance
 
-This project maintains 100% test pass rates across all quality checks. Use the comprehensive test script to verify code quality:
 
-### Run All Tests (Recommended)
+## 品質保証 (Quality Assurance)
 
-```bash
-# PowerShell (Windows)
-npm run test:all
-
-# Bash (Linux/macOS)
-npm run test:all:bash
-```
-
-### Individual Test Commands
+高速なLintとフォーマットのために Biome を使用しています。
 
 ```bash
-# Linting
-npm run lint
+# Lintエラーのチェック
+pnpm lint
 
-# Type checking
-npm run type-check
+# コードのフォーマット
+pnpm format
 
-# Build verification
-npm run build
-
-# Unit tests
-npm run test
-
-# E2E tests
-npm run test:e2e
-
-# Format check
-npx prettier --check src/app/workshop/
+# テストの実行
+pnpm test
 ```
-
-## Project Structure
-
-- `/src/app/workshop/` - Unified content management system
-  - Blog posts (`/workshop/blog`)
-  - Plugin distribution (`/workshop/plugins`)
-  - Download materials (`/workshop/downloads`)
-- `/scripts/` - Quality assurance scripts
-- `/public/data/` - JSON-based content storage
-
-## Portfolio Import
-
-ポートフォリオデータをCMSにインポートするには、Playwrightを使用した自動化スクリプトを使用します：
-
-```bash
-# 開発サーバーを起動（別ターミナル）
-pnpm dev
-
-# ポートフォリオデータをインポート
-pnpm import-portfolio
-```
-
-このスクリプトは `portfolio.json` のデータを読み込み、管理ページから各コンテンツを自動的に作成します。開発サーバーが `http://localhost:3010` で起動している必要があります。
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
