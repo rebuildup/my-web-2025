@@ -326,9 +326,24 @@ export function saveFullContent(
 			.map((f) => (f === "order" ? '"order"' : f))
 			.join(", ");
 
+		// NOTE:
+		// `INSERT OR REPLACE` deletes the existing row before inserting, which can trigger
+		// `ON DELETE CASCADE` on related tables (e.g. `media`). Use an UPSERT to avoid
+		// unintended cascades while still updating the row.
+		const upsertFields = fields.filter(
+			(field) => field !== "id" && field !== "created_at",
+		);
+		const updateSet = upsertFields
+			.map((field) => {
+				const col = field === "order" ? '"order"' : field;
+				return `${col} = excluded.${col}`;
+			})
+			.join(", ");
+
 		const stmt = db.prepare(`
-      INSERT OR REPLACE INTO contents (${columns})
+      INSERT INTO contents (${columns})
       VALUES (${placeholders})
+      ON CONFLICT(id) DO UPDATE SET ${updateSet}
     `);
 		if (
 			process.env.NODE_ENV !== "production" &&
