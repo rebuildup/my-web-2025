@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { BentoCardGrid, ParticleCard } from "@/components/MagicBento";
 import { SafeImage } from "@/components/ui/SafeImage";
 
 function animateCount(
@@ -33,9 +32,7 @@ export function StatsOverview({
 	count7d,
 	count30d,
 	count365d,
-	lastUpdate,
 	items,
-	featured,
 }: {
 	total: number;
 	develop: number;
@@ -44,9 +41,14 @@ export function StatsOverview({
 	count7d: number;
 	count30d: number;
 	count365d: number;
-	lastUpdate: Date;
-	items: { id: string; title: string; thumbnail?: string }[];
-	featured?: { id: string; title: string; thumbnail?: string } | null;
+	items: {
+		id: string;
+		title: string;
+		thumbnail?: string;
+		publishedAt?: string;
+		updatedAt?: string;
+		createdAt?: string;
+	}[];
 }) {
 	const [vTotal, setVTotal] = useState(0);
 	const [vDevelop, setVDevelop] = useState(0);
@@ -82,7 +84,6 @@ export function StatsOverview({
 		return emphasis ? "text-xl" : "text-lg";
 	};
 
-	// Highlights data (deterministic pick to satisfy React Compiler)
 	const pool = useMemo(
 		() =>
 			Array.isArray(items)
@@ -91,9 +92,21 @@ export function StatsOverview({
 		[items],
 	);
 
+	const latestItem = useMemo(() => {
+		if (pool.length === 0) return null;
+		const getDate = (item: (typeof pool)[number]) =>
+			item.publishedAt || item.updatedAt || item.createdAt || "";
+		return [...pool].sort((a, b) => {
+			const aTime = new Date(getDate(a)).getTime();
+			const bTime = new Date(getDate(b)).getTime();
+			return (
+				(Number.isNaN(bTime) ? 0 : bTime) - (Number.isNaN(aTime) ? 0 : aTime)
+			);
+		})[0];
+	}, [pool]);
+
 	const deterministicPick = useMemo(() => {
 		if (pool.length === 0) return null;
-		// simple deterministic hash from ids to avoid Math.random
 		const seed = pool
 			.map((it) => it.id)
 			.join("|")
@@ -124,93 +137,125 @@ export function StatsOverview({
 		setRandomItem(deterministicPick);
 	}, [deterministicPick]);
 
-	return (
-		<section>
-			<BentoCardGrid>
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-rows-3 gap-3 md:gap-4 w-full max-w-full auto-rows-fr">
-					{/* Featured画像（左上、2×2） */}
-					{featured ? (
-						<Link
-							href={`/portfolio/${featured.id}`}
-							className="md:col-span-2 md:row-span-2 lg:col-span-2 lg:row-span-2"
-						>
-							<ParticleCard
-								className="card flex flex-col justify-between relative w-full h-full p-0 rounded-[20px] border border-solid border-main/30 font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] card--border-glow"
-								style={{
-									backgroundColor: "#060010",
-									borderColor: "#392e4e",
-									color: "#fff",
-								}}
-								enableTilt={true}
-								clickEffect={true}
-								enableMagnetism={true}
-							>
-								<div className="relative w-full h-full overflow-hidden">
-									{featured.thumbnail ? (
-										<SafeImage
-											src={featured.thumbnail}
-											alt={featured.title}
-											fill
-											className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-											style={{
-												objectPosition: "center center",
-												transformOrigin: "center center",
-											}}
-											sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-										/>
-									) : (
-										<div className="w-full h-full bg-base/30" />
-									)}
-									<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-									<div className="absolute bottom-0 left-0 right-0 p-4 md:p-5 lg:p-6 z-10">
-										<div className="noto-sans-jp-light text-xs md:text-sm text-white/90 mb-1.5">
-											Featured
-										</div>
-										<div className="zen-kaku-gothic-new text-xl md:text-3xl lg:text-4xl text-white line-clamp-2 leading-tight">
-											{featured.title}
-										</div>
-									</div>
-								</div>
-							</ParticleCard>
-						</Link>
-					) : (
-						<ParticleCard
-							className="card flex items-center justify-center relative w-full h-full min-h-[300px] md:min-h-[400px] lg:min-h-[500px] p-5 rounded-[20px] border border-solid border-main/30 font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] card--border-glow md:col-span-2 md:row-span-2 lg:col-span-2 lg:row-span-2"
-							style={{
-								backgroundColor: "#060010",
-								borderColor: "#392e4e",
-								color: "#fff",
-							}}
-						>
-							<div className="text-center">
-								<div className="noto-sans-jp-light text-sm text-main/70 mb-1.5">
-									Featured
-								</div>
-								<div className="text-xs text-main/50">該当なし</div>
-							</div>
-						</ParticleCard>
-					)}
+	const baseCard =
+		"min-w-0 rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:p-5";
 
-					{/* 種別アイテム数（右上、1×2、2×2グリッドで配置） */}
-					<div className="md:col-span-1 md:row-span-2 lg:col-span-1 lg:row-span-2 grid grid-cols-2 gap-3 md:gap-4">
-						{/* 総コンテンツ */}
-						<ParticleCard
-							className="card flex flex-col justify-between relative w-full h-full min-h-[120px] p-4 rounded-[20px] border border-solid border-main/30 font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] card--border-glow"
-							style={{
-								backgroundColor: "#060010",
-								borderColor: "#392e4e",
-								color: "#fff",
-							}}
-							enableTilt={true}
-							clickEffect={true}
-						>
-							<div className="noto-sans-jp-light text-xs mb-2 text-main/90">
+	return (
+		<section className="overflow-hidden">
+			<div className="grid grid-cols-1 gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,1.618fr)_minmax(0,1fr)] w-full max-w-full overflow-hidden">
+				<div className="grid gap-3 md:gap-4 min-w-0 max-w-full">
+					<Link
+						href={
+							latestItem
+								? `/portfolio/${latestItem.id}`
+								: "/portfolio/gallery/all"
+						}
+						className="group relative flex h-full min-h-[260px] w-full max-w-full flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-6 md:p-7"
+					>
+						<div className="absolute inset-0">
+							{latestItem?.thumbnail ? (
+								<SafeImage
+									src={latestItem.thumbnail}
+									alt={latestItem.title}
+									fill
+									className="object-cover object-center opacity-70"
+									sizes="(max-width: 1024px) 100vw, 66vw"
+								/>
+							) : (
+								<div className="absolute inset-0 bg-gradient-to-br from-[#0b0b16] via-black to-[#0b1225]" />
+							)}
+							<div className="absolute inset-0 bg-black/40" />
+							<div className="absolute inset-0 bg-gradient-to-tr from-black/70 via-[#0b0b16]/40 to-black/70" />
+							<div className="absolute right-[-15%] top-[-20%] h-64 w-64 rounded-full bg-[#2b57ff]/20 blur-3xl" />
+							<div className="absolute bottom-[-20%] left-[-10%] h-56 w-56 rounded-full bg-white/5 blur-3xl" />
+						</div>
+						<div className="relative z-10">
+							<div className="text-[10px] font-mono tracking-widest text-main/50 uppercase">
+								Latest Content
+							</div>
+							<div className="mt-6 text-2xl md:text-3xl font-display font-semibold text-main line-clamp-2">
+								{latestItem?.title || "Latest Work"}
+							</div>
+							<p className="mt-3 text-[11px] text-main/70 max-w-sm">
+								{latestItem
+									? "最新の公開コンテンツをピックアップ。"
+									: "最新のコンテンツをチェックできます。"}
+							</p>
+						</div>
+						<div className="relative z-10 mt-8 text-[10px] font-mono uppercase tracking-widest text-main/40">
+							{latestItem ? "View details →" : "View all →"}
+						</div>
+					</Link>
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 min-w-0 max-w-full">
+						<div className={baseCard}>
+							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
+								直近7日のコンテンツ
+							</div>
+							<div className="flex items-end gap-2">
+								<div
+									className={
+										"neue-haas-grotesk-display text-main leading-none " +
+										fontSizeFor(v7)
+									}
+								>
+									{v7.toLocaleString("ja-JP")}
+								</div>
+								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
+									items
+								</div>
+							</div>
+						</div>
+
+						<div className={baseCard}>
+							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
+								直近30日のコンテンツ
+							</div>
+							<div className="flex items-end gap-2">
+								<div
+									className={
+										"neue-haas-grotesk-display text-main leading-none " +
+										fontSizeFor(v30)
+									}
+								>
+									{v30.toLocaleString("ja-JP")}
+								</div>
+								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
+									items
+								</div>
+							</div>
+						</div>
+
+						<div className={baseCard}>
+							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
+								直近1年のコンテンツ
+							</div>
+							<div className="flex items-end gap-2">
+								<div
+									className={
+										"neue-haas-grotesk-display text-main leading-none " +
+										fontSizeFor(v365)
+									}
+								>
+									{v365.toLocaleString("ja-JP")}
+								</div>
+								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
+									items
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="grid gap-3 md:gap-4 min-w-0 max-w-full">
+					<div className="grid grid-cols-2 gap-3 md:gap-4 min-w-0 max-w-full">
+						<div className={baseCard}>
+							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
 								総コンテンツ
 							</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
-										"neue-haas-grotesk-display text-accent leading-none " +
+										"neue-haas-grotesk-display text-main leading-none " +
 										fontSizeFor(vTotal, true)
 									}
 								>
@@ -220,27 +265,17 @@ export function StatsOverview({
 									items
 								</div>
 							</div>
-						</ParticleCard>
+						</div>
 
-						{/* develop */}
-						<ParticleCard
-							className="card flex flex-col justify-between relative w-full h-full min-h-[120px] p-4 rounded-[20px] border border-solid border-main/30 font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] card--border-glow"
-							style={{
-								backgroundColor: "#060010",
-								borderColor: "#392e4e",
-								color: "#fff",
-							}}
-							enableTilt={true}
-							clickEffect={true}
-						>
-							<div className="noto-sans-jp-light text-xs mb-2 text-main/75">
+						<div className={baseCard}>
+							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
 								develop
 							</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
-										"neue-haas-grotesk-display text-accent leading-none " +
-										fontSizeFor(vDevelop, false)
+										"neue-haas-grotesk-display text-main leading-none " +
+										fontSizeFor(vDevelop)
 									}
 								>
 									{vDevelop.toLocaleString("ja-JP")}
@@ -249,27 +284,17 @@ export function StatsOverview({
 									items
 								</div>
 							</div>
-						</ParticleCard>
+						</div>
 
-						{/* video */}
-						<ParticleCard
-							className="card flex flex-col justify-between relative w-full h-full min-h-[120px] p-4 rounded-[20px] border border-solid border-main/30 font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] card--border-glow"
-							style={{
-								backgroundColor: "#060010",
-								borderColor: "#392e4e",
-								color: "#fff",
-							}}
-							enableTilt={true}
-							clickEffect={true}
-						>
-							<div className="noto-sans-jp-light text-xs mb-2 text-main/75">
+						<div className={baseCard}>
+							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
 								video
 							</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
-										"neue-haas-grotesk-display text-accent leading-none " +
-										fontSizeFor(vVideo, false)
+										"neue-haas-grotesk-display text-main leading-none " +
+										fontSizeFor(vVideo)
 									}
 								>
 									{vVideo.toLocaleString("ja-JP")}
@@ -278,27 +303,17 @@ export function StatsOverview({
 									items
 								</div>
 							</div>
-						</ParticleCard>
+						</div>
 
-						{/* video&design */}
-						<ParticleCard
-							className="card flex flex-col justify-between relative w-full h-full min-h-[120px] p-4 rounded-[20px] border border-solid border-main/30 font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] card--border-glow"
-							style={{
-								backgroundColor: "#060010",
-								borderColor: "#392e4e",
-								color: "#fff",
-							}}
-							enableTilt={true}
-							clickEffect={true}
-						>
-							<div className="noto-sans-jp-light text-xs mb-2 text-main/75">
+						<div className={baseCard}>
+							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
 								video&design
 							</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
-										"neue-haas-grotesk-display text-accent leading-none " +
-										fontSizeFor(vVideoDesign, false)
+										"neue-haas-grotesk-display text-main leading-none " +
+										fontSizeFor(vVideoDesign)
 									}
 								>
 									{vVideoDesign.toLocaleString("ja-JP")}
@@ -307,117 +322,17 @@ export function StatsOverview({
 									items
 								</div>
 							</div>
-						</ParticleCard>
+						</div>
 					</div>
 
-					{/* 直近コンテンツ数（左下、2×1、3つ均等に配置） */}
-					<div className="md:col-span-2 lg:col-span-2 lg:row-span-1 flex flex-row gap-3 md:gap-4">
-						{/* 直近7日 */}
-						<ParticleCard
-							className="card flex flex-col justify-between relative w-full h-full min-h-[180px] p-4 rounded-[20px] border border-solid border-main/30 font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] card--border-glow flex-1"
-							style={{
-								backgroundColor: "#060010",
-								borderColor: "#392e4e",
-								color: "#fff",
-							}}
-							enableTilt={true}
-							clickEffect={true}
-						>
-							<div className="noto-sans-jp-light text-xs mb-2 text-main/75">
-								直近7日のコンテンツ
-							</div>
-							<div className="flex items-end gap-2">
-								<div
-									className={
-										"neue-haas-grotesk-display text-accent leading-none " +
-										fontSizeFor(v7, false)
-									}
-								>
-									{v7.toLocaleString("ja-JP")}
-								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
-									items
-								</div>
-							</div>
-						</ParticleCard>
-
-						{/* 直近30日 */}
-						<ParticleCard
-							className="card flex flex-col justify-between relative w-full h-full min-h-[180px] p-4 rounded-[20px] border border-solid border-main/30 font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] card--border-glow flex-1"
-							style={{
-								backgroundColor: "#060010",
-								borderColor: "#392e4e",
-								color: "#fff",
-							}}
-							enableTilt={true}
-							clickEffect={true}
-						>
-							<div className="noto-sans-jp-light text-xs mb-2 text-main/75">
-								直近30日のコンテンツ
-							</div>
-							<div className="flex items-end gap-2">
-								<div
-									className={
-										"neue-haas-grotesk-display text-accent leading-none " +
-										fontSizeFor(v30, false)
-									}
-								>
-									{v30.toLocaleString("ja-JP")}
-								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
-									items
-								</div>
-							</div>
-						</ParticleCard>
-
-						{/* 直近1年 */}
-						<ParticleCard
-							className="card flex flex-col justify-between relative w-full h-full min-h-[180px] p-4 rounded-[20px] border border-solid border-main/30 font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] card--border-glow flex-1"
-							style={{
-								backgroundColor: "#060010",
-								borderColor: "#392e4e",
-								color: "#fff",
-							}}
-							enableTilt={true}
-							clickEffect={true}
-						>
-							<div className="noto-sans-jp-light text-xs mb-2 text-main/75">
-								直近1年のコンテンツ
-							</div>
-							<div className="flex items-end gap-2">
-								<div
-									className={
-										"neue-haas-grotesk-display text-accent leading-none " +
-										fontSizeFor(v365, false)
-									}
-								>
-									{v365.toLocaleString("ja-JP")}
-								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
-									items
-								</div>
-							</div>
-						</ParticleCard>
-					</div>
-
-					{/* Random画像（右下、1×1） */}
 					<button
 						type="button"
-						className="text-left group md:col-span-1 lg:col-span-1 lg:row-span-1"
+						className="text-left group w-full min-w-0 max-w-full"
 						onClick={rotateHighlight}
 						title="クリックで入れ替え"
 					>
-						<ParticleCard
-							className="card flex flex-col justify-between relative w-full h-full min-h-[180px] p-0 rounded-[20px] border border-solid border-main/30 font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] card--border-glow"
-							style={{
-								backgroundColor: "#060010",
-								borderColor: "#392e4e",
-								color: "#fff",
-							}}
-							enableTilt={true}
-							clickEffect={true}
-						>
-							<div className="relative w-full h-full overflow-hidden aspect-[16/9]">
+						<div className="relative h-full min-h-[220px] w-full max-w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
+							<div className="relative w-full h-full overflow-hidden">
 								{randomItem?.thumbnail ? (
 									<SafeImage
 										key={randomItem.id}
@@ -425,44 +340,44 @@ export function StatsOverview({
 										alt={randomItem.title}
 										fill
 										className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-										style={{
-											objectPosition: "center center",
-											transformOrigin: "center center",
-										}}
-										sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+										sizes="(max-width: 1024px) 100vw, 33vw"
 									/>
 								) : (
 									<div className="w-full h-full bg-base/30" />
 								)}
-								<div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
-								<div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 z-10">
-									<div className="noto-sans-jp-light text-[10px] md:text-xs text-white/90 mb-1">
-										Random Pick
-									</div>
-									{randomItem ? (
-										<div className="zen-kaku-gothic-new text-xs md:text-sm text-white line-clamp-2 mb-1">
-											{randomItem.title}
-										</div>
-									) : (
-										<div className="text-[10px] text-white/70 mb-1">
-											アイテムがありません
-										</div>
-									)}
-									{randomItem && (
-										<Link
-											href={`/portfolio/${randomItem.id}`}
-											className="text-[10px] underline underline-offset-2 text-accent/90 hover:text-white transition-colors"
-											onClick={(e) => e.stopPropagation()}
-										>
-											詳細を見る →
-										</Link>
-									)}
-								</div>
+								<div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
 							</div>
-						</ParticleCard>
+							<div className="absolute left-0 right-0 bottom-0 p-4 md:p-5">
+								<div className="flex items-center gap-3 text-[10px] uppercase tracking-widest text-main/70">
+									<span className="font-mono">Random Pick</span>
+									<span className="font-mono">Click to shuffle</span>
+								</div>
+								{randomItem ? (
+									<div className="mt-2 zen-kaku-gothic-new text-sm md:text-base text-main line-clamp-2">
+										{randomItem.title}
+									</div>
+								) : (
+									<div className="mt-2 text-[10px] text-main/60">
+										アイテムがありません
+									</div>
+								)}
+								<div className="mt-1 text-[10px] text-main/60">
+									手動で入れ替えて、思わぬ発見を。
+								</div>
+								{randomItem && (
+									<Link
+										href={`/portfolio/${randomItem.id}`}
+										className="mt-2 inline-block text-[10px] underline underline-offset-2 text-main/80 hover:text-main transition-colors"
+										onClick={(e) => e.stopPropagation()}
+									>
+										詳細を見る →
+									</Link>
+								)}
+							</div>
+						</div>
 					</button>
 				</div>
-			</BentoCardGrid>
+			</div>
 		</section>
 	);
 }

@@ -475,8 +475,7 @@ const Widget = ({
 	useEffect(() => {
 		onDragStartRef.current = onDragStart;
 		onDragEndRef.current = onDragEnd;
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	});
+	}, [onDragStart, onDragEnd]);
 
 	const startDrag = (clientX: number, clientY: number) => {
 		bringToFront();
@@ -1036,8 +1035,7 @@ export default function PomodoroTimer() {
 				BASE_WIDGET_Z,
 			) + 1;
 		zCounterRef.current = Math.max(zCounterRef.current, maxZ);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [widgets]);
 	const [isDraggingStickyWidget, setIsDraggingStickyWidget] = useState(false);
 	const [hoveredStepIndex, setHoveredStepIndex] = useState<number | null>(null);
 
@@ -1065,87 +1063,87 @@ export default function PomodoroTimer() {
 		setStatsRef.current = setStats;
 	}, [currentStep, settings, showNotification, setSessions, setStats]);
 
-	// Timer Logic with requestAnimationFrame
-	const animate = useCallback((time: number) => {
-		if (!startTimeRef.current) startTimeRef.current = time;
-		const elapsed = time - startTimeRef.current;
-		const step = currentStepRef.current;
-		const newTimeLeft = Math.max(
-			step.duration * 60 * 1000 - savedTimeRef.current - elapsed,
-			0,
-		);
-
-		setTimeLeft(newTimeLeft);
-
-		if (newTimeLeft <= 0) {
-			setIsFinished(true);
-			setIsActive(false);
-			startTimeRef.current = null;
-			savedTimeRef.current = 0;
-
-			// Play sound
-			if (settingsRef.current.notificationSound) {
-				const normalizedVolume = Math.min(
-					1,
-					Math.max(0, settingsRef.current.notificationVolume / 100),
-				);
-				playNotificationSound(normalizedVolume);
-			}
-
-			// Vibration
-			if (settingsRef.current.vibration && navigator.vibrate) {
-				navigator.vibrate([200, 100, 200]);
-			}
-
-			// Update stats
-			setStatsRef.current((prev) => {
-				const newStats = { ...prev };
-				if (step.type === "focus") {
-					newStats.completedPomodoros += 1;
-					newStats.totalWorkTime += step.duration;
-					newStats.todaysSessions += 1; // Simple increment, ideally check date
-				} else {
-					newStats.totalBreakTime += step.duration;
-				}
-				newStats.totalSessions += 1;
-				return newStats;
-			});
-
-			// Update sessions log
-			setSessionsRef.current((prev) => {
-				const completedAt = new Date();
-				return [
-					...prev,
-					{
-						id: completedAt.getTime().toString(),
-						type: step.type as PomodoroSessionType,
-						startTime: new Date(
-							completedAt.getTime() - step.duration * 60000,
-						).toISOString(),
-						endTime: completedAt.toISOString(),
-						duration: step.duration,
-						completed: true,
-						completedAt: completedAt.toISOString(),
-					},
-				];
-			});
-
-			// Show notification
-			showNotificationRef.current({
-				title: step.type === "focus" ? "Work Session Complete!" : "Break Over!",
-				body:
-					step.type === "focus"
-						? "Time to take a break."
-						: "Time to get back to work.",
-			});
-		} else {
-			requestRef.current = requestAnimationFrame(animate);
-		}
-	}, []);
-
 	useEffect(() => {
 		if (isActive) {
-			requestRef.current = requestAnimationFrame(animate);
+			const tick = (time: number) => {
+				if (!startTimeRef.current) startTimeRef.current = time;
+				const elapsed = time - startTimeRef.current;
+				const step = currentStepRef.current;
+				const newTimeLeft = Math.max(
+					step.duration * 60 * 1000 - savedTimeRef.current - elapsed,
+					0,
+				);
+
+				setTimeLeft(newTimeLeft);
+
+				if (newTimeLeft <= 0) {
+					setIsFinished(true);
+					setIsActive(false);
+					startTimeRef.current = null;
+					savedTimeRef.current = 0;
+
+					// Play sound
+					if (settingsRef.current.notificationSound) {
+						const normalizedVolume = Math.min(
+							1,
+							Math.max(0, settingsRef.current.notificationVolume / 100),
+						);
+						playNotificationSound(normalizedVolume);
+					}
+
+					// Vibration
+					if (settingsRef.current.vibration && navigator.vibrate) {
+						navigator.vibrate([200, 100, 200]);
+					}
+
+					// Update stats
+					setStatsRef.current((prev) => {
+						const newStats = { ...prev };
+						if (step.type === "focus") {
+							newStats.completedPomodoros += 1;
+							newStats.totalWorkTime += step.duration;
+							newStats.todaysSessions += 1; // Simple increment, ideally check date
+						} else {
+							newStats.totalBreakTime += step.duration;
+						}
+						newStats.totalSessions += 1;
+						return newStats;
+					});
+
+					// Update sessions log
+					setSessionsRef.current((prev) => {
+						const completedAt = new Date();
+						return [
+							...prev,
+							{
+								id: completedAt.getTime().toString(),
+								type: step.type as PomodoroSessionType,
+								startTime: new Date(
+									completedAt.getTime() - step.duration * 60000,
+								).toISOString(),
+								endTime: completedAt.toISOString(),
+								duration: step.duration,
+								completed: true,
+								completedAt: completedAt.toISOString(),
+							},
+						];
+					});
+
+					// Show notification
+					showNotificationRef.current({
+						title:
+							step.type === "focus" ? "Work Session Complete!" : "Break Over!",
+						body:
+							step.type === "focus"
+								? "Time to take a break."
+								: "Time to get back to work.",
+					});
+				} else {
+					requestRef.current = requestAnimationFrame(tick);
+				}
+			};
+
+			requestRef.current = requestAnimationFrame(tick);
 		} else {
 			if (requestRef.current) {
 				cancelAnimationFrame(requestRef.current);
@@ -1160,7 +1158,7 @@ export default function PomodoroTimer() {
 				cancelAnimationFrame(requestRef.current);
 			}
 		};
-	}, [isActive, currentStep.duration, animate, isFinished]);
+	}, [isActive, currentStep.duration, isFinished]);
 
 	// Persist timeLeft logic
 	const timeLeftRef = useRef(timeLeft);
@@ -1252,8 +1250,13 @@ export default function PomodoroTimer() {
 		if (currentStepIndex >= customSchedule.length) {
 			setCurrentStepIndex(0);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [customSchedule]);
+	}, [
+		customSchedule,
+		currentStepIndex,
+		isActive,
+		setCurrentStepIndex,
+		setTimeLeft,
+	]);
 
 	const handleTimerClick = (e: React.MouseEvent) => {
 		if ((e.target as HTMLElement).closest(".no-timer-click")) {

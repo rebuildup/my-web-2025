@@ -1,7 +1,8 @@
 import { Suspense } from "react";
-import { getContentDbStats } from "@/cms/lib/content-db-manager";
-import { getStatsSummary } from "@/lib/stats";
-import AboutClient from "./AboutClient";
+import { getAllFromIndex } from "@/cms/lib/content-db-manager";
+import { portfolioDataManager } from "@/lib/portfolio/data-manager";
+import type { PortfolioContentItem } from "@/types/portfolio";
+import AboutStitchClient from "./AboutStitchClient";
 
 // Static Data Restoration
 const educationData = [
@@ -130,71 +131,101 @@ const profileData = {
 	},
 };
 
-async function getSystemStats() {
+async function loadPortfolioItems(): Promise<PortfolioContentItem[]> {
 	try {
-		const [viewStats, contentStats] = await Promise.all([
-			getStatsSummary(),
-			getContentDbStats(),
-		]);
+		let items = await portfolioDataManager.getPortfolioData();
+		if (items && items.length > 0) return items;
 
-		return {
-			totalContents: contentStats.totalContents,
-			totalViews: viewStats.totalViews,
-			lastUpdated: new Date().toISOString(),
-			dbSize: contentStats.totalSize,
-			totalComponents: 150, // Approximate count or could be fetched dynamically if wanted
+		const rows = getAllFromIndex();
+		type ThumbnailVariant =
+			| string
+			| {
+					src?: string;
+					poster?: string;
+			  }
+			| undefined;
+		type NormalizedThumbnails = {
+			image?: ThumbnailVariant;
+			gif?: ThumbnailVariant;
+			webm?: ThumbnailVariant;
+			[key: string]: ThumbnailVariant;
 		};
+
+		return rows
+			.filter((row) => row.status === "published")
+			.map((row) => {
+				const thumbs = row.thumbnails as NormalizedThumbnails | undefined;
+				const extractSrc = (
+					variant: ThumbnailVariant,
+					key: "src" | "poster",
+				) => {
+					if (!variant) return undefined;
+					if (typeof variant === "string") return variant;
+					if (key === "src" && typeof variant.src === "string")
+						return variant.src;
+					if (key === "poster" && typeof variant.poster === "string")
+						return variant.poster;
+					return undefined;
+				};
+				const pickThumb =
+					extractSrc(thumbs?.image, "src") ||
+					extractSrc(thumbs?.gif, "src") ||
+					extractSrc(thumbs?.webm, "poster") ||
+					"/images/portfolio/default-thumb.jpg";
+
+				const tags: string[] = Array.isArray(row.tags)
+					? row.tags.filter((tag): tag is string => typeof tag === "string")
+					: [];
+				const fallbackDate =
+					row.publishedAt ||
+					row.updatedAt ||
+					row.createdAt ||
+					new Date().toISOString();
+				const description =
+					typeof row.summary === "string" && row.summary.length > 0
+						? row.summary
+						: `${row.title}の作品詳細`;
+				const rowPriority =
+					typeof (row as { priority?: unknown }).priority === "number"
+						? ((row as { priority?: number }).priority as number)
+						: 0;
+
+				return {
+					id: row.id,
+					type: "portfolio",
+					title: row.title,
+					description,
+					category: "all",
+					tags,
+					status: row.status as PortfolioContentItem["status"],
+					priority: rowPriority,
+					createdAt: row.createdAt ?? fallbackDate,
+					updatedAt: row.updatedAt ?? fallbackDate,
+					publishedAt: row.publishedAt ?? fallbackDate,
+					thumbnail: pickThumb,
+					images: [],
+					technologies: [],
+					seo: {
+						title: row.title,
+						description,
+						keywords: tags,
+						ogImage: pickThumb,
+						twitterImage: pickThumb,
+						canonical: `https://yusuke-kim.com/portfolio/${row.id}`,
+						structuredData: {},
+					},
+				} satisfies PortfolioContentItem;
+			});
 	} catch (error) {
-		console.error("Failed to fetch system stats:", error);
-		// Fallback
-		return {
-			totalContents: 0,
-			totalViews: 0,
-			lastUpdated: new Date().toISOString(),
-			dbSize: 0,
-			totalComponents: 0,
-		};
-	}
-}
-
-import { portfolioDataManager } from "@/lib/portfolio/data-manager";
-import type { PortfolioContentItem } from "@/types/portfolio";
-
-async function getLatestProject() {
-	try {
-		const items = await portfolioDataManager.getPortfolioData();
-		if (!items || items.length === 0) return null;
-
-		// Helper to get effective date
-		const getEffectiveDate = (item: PortfolioContentItem) =>
-			item.updatedAt || item.publishedAt || item.createdAt || "";
-
-		// Sort by date desc
-		const latest = [...items].sort((a, b) => {
-			const dateA = new Date(getEffectiveDate(a)).getTime();
-			const dateB = new Date(getEffectiveDate(b)).getTime();
-			return dateB - dateA;
-		})[0];
-
-		if (!latest) return null;
-
-		return {
-			id: latest.id,
-			title: latest.title,
-			date: getEffectiveDate(latest).split("T")[0], // YYYY-MM-DD
-			type: latest.category || "Project",
-		};
-	} catch (error) {
-		console.warn("Failed to fetch latest project:", error);
-		return null;
+		console.warn("Failed to load portfolio items:", error);
+		return [];
 	}
 }
 
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function AboutPage() {
-	const stats = await getSystemStats();
-	const latestProject = await getLatestProject();
+	const items = await loadPortfolioItems();
 
 	return (
 		<main>
@@ -205,13 +236,12 @@ export default async function AboutPage() {
 					</div>
 				}
 			>
-				<AboutClient
-					stats={stats}
+				<AboutStitchClient
 					profile={profileData}
 					education={educationData}
 					achievements={achievementsData}
 					skills={skillsData}
-					latestProject={latestProject}
+					portfolioItems={items}
 				/>
 			</Suspense>
 		</main>

@@ -120,9 +120,8 @@ export function useAutoSave({
 					? err.message
 					: "Failed to save changes automatically.",
 			);
-		} finally {
-			setIsSaving(false);
 		}
+		setIsSaving(false);
 	}, [contentId, pageId, markdown, enabled]);
 
 	useEffect(() => {

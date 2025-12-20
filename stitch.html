@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>361do_sleep | About | Refined Layout</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Syne:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "bg-black": "#050505",
+                        "accent-blue": "#2b57ff",
+                        "text-gray": "#888888",
+                        "text-light-gray": "#cccccc",
+                        "border-dim": "rgba(255, 255, 255, 0.1)",
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        graphic: ['Syne', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+                    },
+                    gridTemplateColumns: {
+                        '6': 'repeat(6, minmax(0, 1fr))',
+                    }
+                },
+            },
+        };
+    </script>
+<style>
+        .text-vertical {
+            writing-mode: vertical-rl;
+            text-orientation: mixed
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none
+        }
+        ::selection {
+            background-color: #2b57ff;
+            color: white
+        }
+        body {
+            background-color: #050505;
+            color: #fff
+        }
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.03;
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuDVEzb_IZzTIHr132LBq_Os4FN_D8PMlGNwimdDiABsVC9nBDBACQ0Pky0uZLljmxyTkdJ8lo7dAWaM0KvkH2ll3D0F1DKox07YhdcJXxnlMTprIhgwkEwQMrgqtScLmGwDAbSBnSwMjcWc86PqlKrZ74VW55upsdkj5aCB8PQpFscmZixWyBpfHtt74sAsFm3ZxMIu3BL7RpMOYxzj-Nlf8UyUwA0LgWHhKY0JGZOFGtj6_Nv-ZOYCOFQ-goC9U4195GRw44iEpNg)
+        }
+        .image-cover {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-accent-blue selection:text-white">
+<div class="noise-overlay"></div>
+<main class="w-full relative">
+<section class="min-h-screen w-full flex flex-col justify-between p-6 md:p-12 border-b border-border-dim relative overflow-hidden">
+<div class="absolute top-8 left-8 md:top-12 md:left-12 flex items-center gap-2 text-[10px] font-mono tracking-widest text-white/60 z-20">
+<span>HOME</span>
+<span class="text-accent-blue">/</span>
+<span class="text-white">ABOUT</span>
+</div>
+<div class="flex-grow flex flex-col justify-center max-w-7xl mx-auto w-full z-10 pt-24 md:pt-12 relative">
+<div class="grid grid-cols-1 md:grid-cols-6 gap-x-8 gap-y-12 items-center h-full relative">
+<div class="col-span-1 md:col-span-2 flex flex-col justify-center space-y-6 order-2 md:order-1 text-left relative z-10 md:pl-4">
+<div>
+<h2 class="text-xl md:text-2xl font-bold text-white mb-1">木村友亮</h2>
+<div class="flex items-center gap-2 mb-4">
+<span class="text-accent-blue text-sm font-mono tracking-wider">361do_sleep</span>
+</div>
+<p class="text-text-gray text-xs md:text-sm font-light leading-relaxed max-w-xs">
+                                KOSEN student from Yamaguchi, Japan.<br/>
+                                Engineer / Creative Coder
+                            </p>
+</div>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-col items-center justify-center order-1 md:order-2 relative z-20">
+<div class="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border border-white/10 relative group mb-8 shadow-[0_0_40px_-10px_rgba(43,87,255,0.2)]">
+<div class="absolute inset-0 bg-accent-blue/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+<img alt="Yusuke Kimura" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARMqGEYxQTr3oj_NI1iV7g2ZcdVh8ZNwxrhTLZgL0EAvN53K3KawNgbuOy0VD-PWdh8RaHFIHU8UfZqK1FC9AeXZvxayGN4mPMXgyirolLRvAOjz4tiAgAmizQnh4MqvwUeK1fd7ZwqriSXN2Ye3u5g4Y275PiqaL-mOTBbh1qjIgGP5GPwiTsMedpwwDdB6P2GYCjX-fqMRD97Yr6k8e-KhUgmtsxA7r9yuNhFD8z1s8wuVC_l4L33XTUGjcG9VpY1g5yrCQtjWY"/>
+</div>
+<div class="text-center w-full max-w-md">
+<p class="text-lg md:text-xl font-graphic font-normal text-white/90">
+                                Lost in time. 🫠 Found it nowhere.
+                            </p>
+</div>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-col justify-center order-3 relative z-0 md:text-right">
+<h1 class="text-6xl md:text-8xl lg:text-9xl font-display font-bold leading-none tracking-tighter uppercase text-white/5 md:-ml-24 select-none pointer-events-none mix-blend-overlay">
+                            PROFILE
+                        </h1>
+<h1 class="text-6xl md:text-8xl lg:text-9xl font-display font-bold leading-none tracking-tighter uppercase text-white/5 md:-ml-12 mt-[-0.5em] select-none pointer-events-none mix-blend-overlay">
+                            EXPLORE
+                        </h1>
+</div>
+</div>
+</div>
+<div class="w-full max-w-7xl mx-auto mt-auto pb-4 md:pb-0 z-20 relative">
+<div class="grid grid-cols-1 md:grid-cols-6 border-t border-border-dim">
+<a class="col-span-2 group border-r border-border-dim py-6 md:py-8 pr-6 transition-colors hover:bg-white/[0.02]" href="#">
+<div class="flex items-center justify-center md:justify-start gap-4 pl-4">
+<span class="text-xs font-mono text-text-gray group-hover:text-accent-blue transition-colors">01</span>
+<span class="text-lg md:text-xl font-display font-medium text-white group-hover:text-accent-blue transition-colors">Github</span>
+<span class="material-symbols-outlined text-sm opacity-0 -translate-x-2 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 text-accent-blue">arrow_outward</span>
+</div>
+</a>
+<a class="col-span-2 group border-r border-border-dim py-6 md:py-8 px-0 md:px-6 transition-colors hover:bg-white/[0.02]" href="#">
+<div class="flex items-center justify-center md:justify-start gap-4">
+<span class="text-xs font-mono text-text-gray group-hover:text-accent-blue transition-colors">02</span>
+<span class="text-lg md:text-xl font-display font-medium text-white group-hover:text-accent-blue transition-colors">Twitter (X)</span>
+<span class="material-symbols-outlined text-sm opacity-0 -translate-x-2 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 text-accent-blue">arrow_outward</span>
+</div>
+</a>
+<a class="col-span-2 group py-6 md:py-8 pl-0 md:pl-6 transition-colors hover:bg-white/[0.02]" href="#">
+<div class="flex items-center justify-center md:justify-start gap-4">
+<span class="text-xs font-mono text-text-gray group-hover:text-accent-blue transition-colors">03</span>
+<span class="text-lg md:text-xl font-display font-medium text-white group-hover:text-accent-blue transition-colors">Contact</span>
+<span class="material-symbols-outlined text-sm opacity-0 -translate-x-2 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 text-accent-blue">arrow_outward</span>
+</div>
+</a>
+</div>
+</div>
+</section>
+<section class="min-h-screen w-full flex items-center justify-center p-6 md:p-12 border-b border-border-dim">
+<div class="w-full max-w-7xl mx-auto h-full flex flex-col justify-center">
+<div class="grid grid-cols-1 md:grid-cols-6 gap-12 md:gap-8 h-full items-stretch">
+<div class="col-span-1 md:col-span-2 flex flex-col justify-center space-y-12 md:border-r border-border-dim md:pr-8">
+<div class="space-y-2">
+<span class="block text-xs font-mono text-text-gray uppercase tracking-widest">System Status</span>
+<span class="block text-4xl font-graphic font-bold text-white">Online <span class="text-accent-blue text-lg align-top animate-pulse">●</span></span>
+</div>
+<div class="space-y-2">
+<span class="block text-xs font-mono text-text-gray uppercase tracking-widest">Location</span>
+<span class="block text-4xl font-graphic font-bold text-white">Yamaguchi</span>
+<span class="block text-sm text-text-gray">34.178° N, 131.473° E</span>
+</div>
+<div class="space-y-2">
+<span class="block text-xs font-mono text-text-gray uppercase tracking-widest">Experience</span>
+<span class="block text-4xl font-graphic font-bold text-white">4 Years</span>
+<span class="block text-sm text-text-gray">Since 2021</span>
+</div>
+<div class="space-y-2">
+<span class="block text-xs font-mono text-text-gray uppercase tracking-widest">Current Focus</span>
+<span class="block text-4xl font-graphic font-bold text-white">WebGL</span>
+</div>
+</div>
+<div class="col-span-1 md:col-span-4 flex flex-col justify-center pl-0 md:pl-12 relative group">
+<div class="absolute -top-10 left-0 md:left-12 text-xs font-mono text-accent-blue tracking-widest uppercase">
+                            // Latest Deployment
+                        </div>
+<h2 class="text-6xl md:text-8xl lg:text-9xl font-display font-bold text-white mb-8 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-br group-hover:from-white group-hover:to-text-gray transition-all duration-500">
+                            PROJECT <br/>GENESIS
+                        </h2>
+<div class="grid grid-cols-2 gap-8 mb-12 border-t border-border-dim pt-8">
+<div>
+<span class="text-xs font-mono text-text-gray block mb-2">STACK</span>
+<span class="text-white text-sm">Next.js, Three.js, GLSL</span>
+</div>
+<div>
+<span class="text-xs font-mono text-text-gray block mb-2">YEAR</span>
+<span class="text-white text-sm">2024</span>
+</div>
+</div>
+<p class="text-text-gray max-w-lg text-lg leading-relaxed mb-10">
+                            An immersive exploration of typography in 3D space. Utilizing React Fiber to push browser performance limits while maintaining a strict monochromatic aesthetic.
+                        </p>
+<a class="inline-flex items-center gap-4 text-white hover:text-accent-blue transition-colors group/link w-fit" href="#">
+<span class="text-xl font-display font-bold uppercase">View Project</span>
+<span class="material-symbols-outlined transform group-hover/link:translate-x-2 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<section class="min-h-screen w-full flex items-center p-6 md:p-12 border-b border-border-dim bg-[#080808]">
+<div class="w-full max-w-7xl mx-auto relative h-full flex flex-col justify-center">
+<h2 class="text-[15vw] font-graphic font-bold text-white/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none z-0">CAPABILITIES</h2>
+<div class="grid grid-cols-1 md:grid-cols-6 gap-y-16 md:gap-y-0 md:gap-x-8 relative z-10">
+<div class="col-span-1 md:col-span-2 md:border-r border-border-dim md:pr-8 h-full">
+<h3 class="text-3xl font-display font-bold text-white mb-8 border-b border-accent-blue pb-4 inline-block pr-12">Engineering</h3>
+<ul class="space-y-4">
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default group flex items-center justify-between">
+<span>TypeScript / JavaScript</span>
+</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default group flex items-center justify-between">
+<span>React / Next.js</span>
+<span class="w-1.5 h-1.5 bg-accent-blue rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
+</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default group flex items-center justify-between">
+<span>Python</span>
+</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default group flex items-center justify-between">
+<span>C++ / C#</span>
+</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default group flex items-center justify-between">
+<span>Docker &amp; CI/CD</span>
+</li>
+</ul>
+</div>
+<div class="col-span-1 md:col-span-2 md:border-r border-border-dim md:px-8 h-full">
+<h3 class="text-3xl font-display font-bold text-white mb-8 border-b border-white/10 pb-4 inline-block pr-12">Creative</h3>
+<ul class="space-y-4">
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default group flex items-center justify-between">
+<span>WebGL / Three.js</span>
+<span class="w-1.5 h-1.5 bg-accent-blue rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
+</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default group flex items-center justify-between">
+<span>GLSL Shaders</span>
+</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default group flex items-center justify-between">
+<span>UI/UX Design</span>
+</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default group flex items-center justify-between">
+<span>Blender (3D)</span>
+</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default group flex items-center justify-between">
+<span>Motion Graphics</span>
+</li>
+</ul>
+</div>
+<div class="col-span-1 md:col-span-2 md:pl-8 h-full">
+<h3 class="text-3xl font-display font-bold text-white mb-8 border-b border-white/10 pb-4 inline-block pr-12">Tools</h3>
+<ul class="space-y-4">
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default">VS Code</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default">Figma</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default">Git / GitHub</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default">Notion</li>
+<li class="text-text-light-gray font-light hover:text-white transition-colors cursor-default">Unity</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section class="min-h-screen w-full flex flex-col justify-center p-6 md:p-12 border-b border-border-dim">
+<div class="w-full max-w-7xl mx-auto py-20">
+<div class="mb-20 border-l-2 border-accent-blue pl-6">
+<h2 class="text-sm font-mono tracking-widest text-text-gray mb-2">TIMELINE</h2>
+<h3 class="text-5xl md:text-6xl font-display font-bold text-white">EDUCATION</h3>
+</div>
+<div class="space-y-20">
+<div class="grid grid-cols-1 md:grid-cols-6 gap-6 group">
+<div class="col-span-1 md:col-span-2 pt-2 border-t border-border-dim group-hover:border-accent-blue transition-colors duration-300">
+<span class="font-mono text-white text-lg">2021 - Present</span>
+<div class="text-accent-blue text-xs mt-1 font-bold uppercase tracking-wider opacity-100">Ongoing</div>
+</div>
+<div class="col-span-1 md:col-span-4 pt-2 border-t border-border-dim">
+<h4 class="text-3xl font-display font-bold text-white mb-4">National Institute of Technology (KOSEN)</h4>
+<p class="text-text-gray text-base leading-relaxed max-w-2xl">
+                                Department of Control and Information Systems Engineering. <br/>
+                                Specializing in embedded systems, software architecture, and control theory.
+                            </p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-6 gap-6 group">
+<div class="col-span-1 md:col-span-2 pt-2 border-t border-border-dim group-hover:border-white transition-colors duration-300">
+<span class="font-mono text-text-gray text-lg group-hover:text-white transition-colors">2018 - 2021</span>
+</div>
+<div class="col-span-1 md:col-span-4 pt-2 border-t border-border-dim">
+<h4 class="text-2xl font-display font-bold text-white/80 group-hover:text-white transition-colors mb-4">Secondary Education</h4>
+<p class="text-text-gray text-sm leading-relaxed max-w-2xl">
+                                Foundation in mathematics and sciences. Early interest in programming logic.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="min-h-screen w-full flex flex-col justify-center relative border-b border-border-dim bg-[#080808] overflow-hidden">
+<div class="absolute left-1/2 top-0 bottom-0 w-px bg-white/10 -translate-x-1/2 hidden md:block z-0"></div>
+<div class="w-full max-w-7xl mx-auto py-24 px-6 md:px-12 relative z-10 flex flex-col justify-center h-full">
+<div class="text-center mb-24 relative z-10">
+<h2 class="text-sm font-mono tracking-[0.3em] text-accent-blue mb-4">MILESTONES</h2>
+<h3 class="text-6xl md:text-8xl font-display font-bold text-white tracking-tight">ACHIEVEMENTS</h3>
+</div>
+<div class="relative w-full">
+<div class="grid grid-cols-1 md:grid-cols-6 mb-24 md:mb-12 relative group">
+<div class="hidden md:block col-span-3"></div>
+<div class="hidden md:flex absolute left-1/2 top-8 -translate-x-1/2 w-3 h-3 bg-bg-black border border-accent-blue rounded-full z-20 group-hover:scale-150 group-hover:bg-accent-blue transition-all duration-300 items-center justify-center">
+<div class="w-1 h-1 bg-accent-blue rounded-full opacity-0 group-hover:opacity-100 group-hover:bg-white transition-all duration-300"></div>
+</div>
+<div class="col-span-1 md:col-span-3 pl-0 md:pl-16 relative">
+<div class="border-l border-white/10 md:border-none pl-6 md:pl-0">
+<div class="flex items-center gap-4 mb-4">
+<span class="font-mono text-accent-blue text-sm font-bold tracking-wider">2024</span>
+<div class="h-px w-8 bg-accent-blue/50 hidden md:block"></div>
+</div>
+<h4 class="text-3xl font-display font-bold text-white mb-3 group-hover:text-accent-blue transition-colors duration-300">Procon Challenge Finalist</h4>
+<p class="text-text-gray text-base leading-relaxed mb-6 max-w-sm">
+                                    Developed a real-time traffic visualization system. Ranked in the top 10 nationwide among KOSEN students. Demonstrating optimization of large data sets.
+                                </p>
+<div class="flex flex-wrap gap-2">
+<span class="text-[10px] font-mono text-white/60 uppercase border border-white/10 px-2 py-1 rounded-sm">Algorithm</span>
+<span class="text-[10px] font-mono text-white/60 uppercase border border-white/10 px-2 py-1 rounded-sm">Optimization</span>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-6 mb-24 md:mb-12 relative group">
+<div class="col-span-1 md:col-span-3 pr-0 md:pr-16 text-left md:text-right relative order-2 md:order-1">
+<div class="border-l border-white/10 md:border-none pl-6 md:pl-0 md:border-r md:pr-0">
+<div class="flex items-center md:justify-end gap-4 mb-4">
+<div class="h-px w-8 bg-white/20 hidden md:block group-hover:bg-accent-blue/50 transition-colors"></div>
+<span class="font-mono text-white/80 text-sm font-bold tracking-wider group-hover:text-accent-blue transition-colors">2023</span>
+</div>
+<h4 class="text-3xl font-display font-bold text-white mb-3 group-hover:text-white transition-colors duration-300">Hackathon Excellence Award</h4>
+<p class="text-text-gray text-base leading-relaxed mb-6 md:ml-auto max-w-sm">
+                                    Regional open data hackathon. Built an accessibility map for wheelchair users using OpenStreetMap data. Focused on UI clarity and utility.
+                                </p>
+<div class="flex flex-wrap gap-2 md:justify-end">
+<span class="text-[10px] font-mono text-white/60 uppercase border border-white/10 px-2 py-1 rounded-sm">Open Data</span>
+<span class="text-[10px] font-mono text-white/60 uppercase border border-white/10 px-2 py-1 rounded-sm">Civic Tech</span>
+</div>
+</div>
+</div>
+<div class="hidden md:flex absolute left-1/2 top-8 -translate-x-1/2 w-3 h-3 bg-bg-black border border-white/30 rounded-full z-20 group-hover:scale-150 group-hover:border-accent-blue group-hover:bg-accent-blue transition-all duration-300 items-center justify-center">
+<div class="w-1 h-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+</div>
+<div class="hidden md:block col-span-3 order-1 md:order-2"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-6 relative group">
+<div class="hidden md:block col-span-3"></div>
+<div class="hidden md:flex absolute left-1/2 top-8 -translate-x-1/2 w-3 h-3 bg-bg-black border border-white/30 rounded-full z-20 group-hover:scale-150 group-hover:border-accent-blue group-hover:bg-accent-blue transition-all duration-300 items-center justify-center">
+<div class="w-1 h-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+</div>
+<div class="col-span-1 md:col-span-3 pl-0 md:pl-16 relative">
+<div class="border-l border-white/10 md:border-none pl-6 md:pl-0">
+<div class="flex items-center gap-4 mb-4">
+<span class="font-mono text-white/80 text-sm font-bold tracking-wider group-hover:text-accent-blue transition-colors">2022</span>
+<div class="h-px w-8 bg-white/20 hidden md:block group-hover:bg-accent-blue/50 transition-colors"></div>
+</div>
+<h4 class="text-3xl font-display font-bold text-white mb-3 group-hover:text-white transition-colors duration-300">FE Certification</h4>
+<p class="text-text-gray text-base leading-relaxed mb-6 max-w-sm">
+                                    Obtained Fundamental Information Technology Engineer Examination certification, solidifying core CS knowledge.
+                                </p>
+<div class="flex flex-wrap gap-2">
+<span class="text-[10px] font-mono text-white/60 uppercase border border-white/10 px-2 py-1 rounded-sm">National Exam</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="min-h-screen w-full relative border-b border-border-dim overflow-hidden group">
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-neutral-900 relative">
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-neutral-800 to-bg-black opacity-80"></div>
+<div class="absolute inset-0" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 40px 40px;"></div>
+<div class="absolute top-1/4 right-1/4 font-mono text-[10px] text-accent-blue/30 leading-tight hidden md:block">
+                        const geometry = new THREE.BoxGeometry();<br/>
+                        const material = new THREE.MeshBasicMaterial();<br/>
+                        const cube = new THREE.Mesh(geometry, material);
+                     </div>
+</div>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-bg-black via-bg-black/40 to-transparent z-10"></div>
+<div class="relative z-20 w-full max-w-7xl mx-auto h-screen flex flex-col justify-end p-6 md:p-12 pb-24">
+<div class="grid grid-cols-1 md:grid-cols-6 gap-8 items-end">
+<div class="col-span-1 md:col-span-4">
+<span class="inline-block px-3 py-1 border border-accent-blue text-accent-blue text-xs font-mono tracking-widest uppercase mb-6 bg-black/50 backdrop-blur-sm">Featured Case Study</span>
+<h2 class="text-5xl md:text-8xl font-display font-bold text-white mb-4 leading-none mix-blend-screen">
+                            THREE.JS<br/>PORTFOLIO
+                        </h2>
+<p class="text-white/70 text-lg md:text-xl font-light max-w-xl">
+                            Interactive 3D web experience exploring depth and motion in the browser.
+                        </p>
+</div>
+<div class="col-span-1 md:col-span-2 md:text-right">
+<a class="inline-flex items-center justify-center md:justify-end gap-3 group/btn px-8 py-4 bg-white text-bg-black font-bold uppercase tracking-wider hover:bg-accent-blue hover:text-white transition-all duration-300" href="#">
+<span>View Case Study</span>
+<span class="material-symbols-outlined group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<div class="absolute top-12 right-12 z-20 text-white/20 font-graphic font-bold text-6xl md:text-8xl pointer-events-none opacity-50 mix-blend-overlay">
+                DEV_01
+            </div>
+</section>
+<section class="min-h-screen w-full relative border-b border-border-dim overflow-hidden group">
+<div class="absolute inset-0 z-0 bg-neutral-900">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-gray-900 via-[#111] to-black"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-white/10 group-hover:scale-150 transition-transform duration-[2s]"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] rounded-full border border-white/5 group-hover:scale-125 transition-transform duration-[3s]"></div>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-bg-black via-bg-black/40 to-transparent z-10"></div>
+<div class="relative z-20 w-full max-w-7xl mx-auto h-screen flex flex-col justify-end p-6 md:p-12 pb-24">
+<div class="grid grid-cols-1 md:grid-cols-6 gap-8 items-end">
+<div class="col-span-1 md:col-span-4">
+<span class="inline-block px-3 py-1 border border-white/30 text-white text-xs font-mono tracking-widest uppercase mb-6 bg-black/50 backdrop-blur-sm">Design System</span>
+<h2 class="text-5xl md:text-8xl font-display font-bold text-white mb-4 leading-none">
+                            MONOCHROME<br/>UI KIT
+                        </h2>
+<p class="text-white/70 text-lg md:text-xl font-light max-w-xl">
+                            A rigorous component library focused on typography and spacing.
+                        </p>
+</div>
+<div class="col-span-1 md:col-span-2 md:text-right">
+<a class="inline-flex items-center justify-center md:justify-end gap-3 group/btn px-8 py-4 border border-white text-white font-bold uppercase tracking-wider hover:bg-white hover:text-bg-black transition-all duration-300" href="#">
+<span>View Design</span>
+<span class="material-symbols-outlined group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<div class="absolute top-12 left-12 z-20 text-white/20 font-graphic font-bold text-6xl md:text-8xl pointer-events-none opacity-50 mix-blend-overlay">
+                DSGN_02
+            </div>
+</section>
+<section class="min-h-screen w-full flex flex-col justify-between p-6 md:p-12 relative overflow-hidden bg-bg-black">
+<div class="flex-grow flex flex-col items-center justify-center z-10">
+<div class="text-center">
+<p class="text-accent-blue font-mono uppercase tracking-[0.2em] mb-8 animate-pulse">Transmission End</p>
+<h2 class="text-5xl md:text-8xl lg:text-9xl font-graphic font-bold text-white mb-12 tracking-tighter">
+                        READY TO<br/>COLLABORATE?
+                    </h2>
+<div class="flex flex-col md:flex-row gap-8 md:gap-16 items-center justify-center">
+<a class="text-xl md:text-2xl text-text-gray hover:text-white hover:text-accent-blue transition-all duration-300 border-b border-transparent hover:border-accent-blue pb-1" href="#">
+                            View Full Portfolio
+                        </a>
+<a class="text-xl md:text-2xl text-text-gray hover:text-white hover:text-accent-blue transition-all duration-300 border-b border-transparent hover:border-accent-blue pb-1" href="#">
+                            Send Request
+                        </a>
+</div>
+</div>
+</div>
+<div class="w-full border-t border-border-dim pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] md:text-xs font-mono text-text-gray/60 uppercase tracking-wider">
+<span>©2025 361do_sleep</span>
+<span class="mt-2 md:mt-0">Yamaguchi, JP</span>
+</div>
+</section>
+</main>
+<script>
+        // Simple script to enforce dark mode class on html
+        document.documentElement.classList.add('dark');
+    </script>
+</body></html>

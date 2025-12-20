@@ -254,15 +254,13 @@ export function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
 		): Promise<unknown> => {
 			if (!state.isOnline) {
 				// Ensure file processing works offline
-				try {
-					return await processor(file);
-				} catch (error) {
+				return processor(file).catch((error) => {
 					setState((prev) => ({
 						...prev,
 						error: "オフラインでのファイル処理に失敗しました",
 					}));
-					throw error;
-				}
+					return Promise.reject(error);
+				});
 			}
 
 			return processor(file);
@@ -288,21 +286,28 @@ export function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
 	const optimizeComputation = useCallback(
 		async <T, R>(data: T, workerScript?: string): Promise<R> => {
 			if (workerScript && typeof Worker !== "undefined") {
-				try {
-					const workerFn = webWorkerFunctionRef.current;
-					if (!workerFn) {
-						throw new Error("Web Worker function not initialized");
-					}
-					// TypeScript now correctly infers that workerFn is not null
-					return await (workerFn as WebWorkerFn)<T, R>(workerScript, data);
-				} catch (error) {
-					console.warn("Web Worker failed, falling back to main thread", error);
-					// Fallback to main thread processing would be implemented by the caller
-					throw error;
+				const workerFn = webWorkerFunctionRef.current;
+				if (!workerFn) {
+					return Promise.reject(
+						new Error("Web Worker function not initialized"),
+					);
 				}
+				// TypeScript now correctly infers that workerFn is not null
+				return (workerFn as WebWorkerFn)<T, R>(workerScript, data).catch(
+					(error) => {
+						console.warn(
+							"Web Worker failed, falling back to main thread",
+							error,
+						);
+						// Fallback to main thread processing would be implemented by the caller
+						return Promise.reject(error);
+					},
+				);
 			}
 
-			throw new Error("Web Worker not available or script not provided");
+			return Promise.reject(
+				new Error("Web Worker not available or script not provided"),
+			);
 		},
 		[],
 	);

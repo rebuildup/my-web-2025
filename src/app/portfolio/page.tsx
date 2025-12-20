@@ -8,8 +8,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PortfolioCard } from "@/app/portfolio/gallery/all/components/PortfolioCard";
 import { getAllFromIndex } from "@/cms/lib/content-db-manager";
-import DarkVeil from "@/components/DarkVeil";
-import Plasma from "@/components/Plasma";
+import AboutBackground from "@/components/AboutBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import GlowCard from "@/components/ui/GlowCard";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
@@ -197,9 +196,6 @@ export default async function PortfolioPage() {
 			);
 		}
 
-		// Get statistics (will use cached data if available)
-		const stats = await portfolioDataManager.getPortfolioStats();
-
 		// Generate structured data (simplified to avoid loops)
 		let structuredData = null;
 		try {
@@ -293,15 +289,6 @@ export default async function PortfolioPage() {
 		const count30d = items.filter((it) => withinDays(it, 30)).length;
 		const count365d = items.filter((it) => withinDays(it, 365)).length;
 
-		// Featured: latest by updatedAt/createdAt
-		const featured = [...items].sort((a, b) => {
-			const toTime = (item: PortfolioContentItem) => {
-				const dateString = getEffectiveDateString(item);
-				return dateString ? new Date(dateString).getTime() : 0;
-			};
-			return toTime(b) - toTime(a);
-		})[0];
-
 		// Category information
 		const categories = [
 			{
@@ -356,18 +343,7 @@ export default async function PortfolioPage() {
 					</script>
 				)}
 				<div className="min-h-screen relative">
-					<div id="main-content" className="absolute inset-0">
-						<div id="bg" className="fixed inset-0">
-							<Plasma
-								color="#1a2b6b"
-								speed={1}
-								direction="forward"
-								scale={1.0}
-								opacity={0.9}
-								mouseInteractive={false}
-							/>
-						</div>
-					</div>
+					<AboutBackground />
 
 					<main
 						id="main-content"
@@ -406,21 +382,14 @@ export default async function PortfolioPage() {
 									count7d={count7d}
 									count30d={count30d}
 									count365d={count365d}
-									lastUpdate={stats.lastUpdate}
 									items={items.map((it) => ({
 										id: it.id,
 										title: it.title,
 										thumbnail: it.thumbnail,
+										publishedAt: it.publishedAt,
+										updatedAt: it.updatedAt,
+										createdAt: it.createdAt,
 									}))}
-									featured={
-										featured
-											? {
-													id: featured.id,
-													title: featured.title,
-													thumbnail: featured.thumbnail,
-												}
-											: null
-									}
 								/>
 
 								{/* Gallery Cards */}
@@ -573,11 +542,7 @@ export default async function PortfolioPage() {
 
 		return (
 			<div className="min-h-screen relative">
-				<div id="main-content" className="absolute inset-0">
-					<div id="bg" className="fixed inset-0">
-						<DarkVeil />
-					</div>
-				</div>
+				<AboutBackground />
 
 				<main
 					id="main-content"

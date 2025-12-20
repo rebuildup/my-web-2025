@@ -730,7 +730,7 @@ export default function FillGenPage() {
 				top: Math.round(rect.top + rect.height / 2),
 			});
 		},
-		[selectionRange],
+		[isWrapping, selectionRange],
 	);
 
 	// Preview side effects
