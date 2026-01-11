@@ -503,7 +503,7 @@ export default async function WorkshopPage() {
 							) : (
 								<div className="rounded-2xl bg-base/80 backdrop-blur-md shadow-[0_18px_48px_rgba(0,0,0,0.3)] p-8 text-center">
 									<p className="noto-sans-jp-light text-sm text-main/70">
-										公開済みのブログ記事はまだ登録されていません。
+										公開済みのブログ記事はまだ登録されていません.
 									</p>
 								</div>
 							)}

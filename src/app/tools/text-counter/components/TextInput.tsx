@@ -52,7 +52,7 @@ export default function TextInput({
 				aria-describedby="text-input-help"
 			/>
 			<p id="text-input-help" className="text-xs text-main opacity-70">
-				テキストを入力すると、リアルタイムで文字数や統計情報が更新されます。
+				テキストを入力すると、リアルタイムで文字数や統計情報が更新されます.
 			</p>
 		</div>
 	);

@@ -12,7 +12,7 @@ import { VideoDesignGallery } from "./components/VideoDesignGallery";
 export const metadata: Metadata = {
 	title: "Video & Design Projects - Portfolio | samuido 映像×デザイン作品集",
 	description:
-		"samuidoの映像とデザインを融合した作品集。デザインコンセプトと映像表現を組み合わせた創造的なプロジェクトを紹介。",
+		"samuidoの映像とデザインを融合した作品集.デザインコンセプトと映像表現を組み合わせた創造的なプロジェクトを紹介.",
 	keywords: [
 		"映像デザイン",
 		"デザインコンセプト",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Video & Design Projects - Portfolio | samuido 映像×デザイン作品集",
 		description:
-			"samuidoの映像とデザインを融合した作品集。デザインコンセプトと映像表現を組み合わせた創造的なプロジェクトを紹介。",
+			"samuidoの映像とデザインを融合した作品集.デザインコンセプトと映像表現を組み合わせた創造的なプロジェクトを紹介.",
 		type: "website",
 		url: "https://yusuke-kim.com/portfolio/gallery/video&design",
 		images: [
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Video & Design Projects - Portfolio | samuido 映像×デザイン作品集",
 		description:
-			"samuidoの映像とデザインを融合した作品集。デザインコンセプトと映像表現を組み合わせた創造的なプロジェクトを紹介。",
+			"samuidoの映像とデザインを融合した作品集.デザインコンセプトと映像表現を組み合わせた創造的なプロジェクトを紹介.",
 		images: [
 			"https://yusuke-kim.com/portfolio/gallery-video-design-twitter-image.jpg",
 		],

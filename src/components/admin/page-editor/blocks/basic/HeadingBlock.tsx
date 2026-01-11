@@ -13,7 +13,7 @@ export function HeadingBlock({
 	autoFocus,
 	onKeyDown,
 }: BlockComponentProps) {
-	// 先頭の # の個数から見出しレベルを自動検出（1〜6）。無ければ 2 扱い。
+	// 先頭の # の個数から見出しレベルを自動検出（1〜6）.無ければ 2 扱い.
 	const level = useMemo(() => {
 		const match = /^#{1,6}\s/.exec(block.content ?? "");
 		if (!match) return 2;

@@ -2,7 +2,7 @@
 
 ## 目的
 
-同業者向けのラフな自己紹介ページ。技術的な興味や活動を中心に紹介する。
+同業者向けのラフな自己紹介ページ.技術的な興味や活動を中心に紹介する.
 
 ## 主な要素
 
@@ -18,7 +18,7 @@
 - **ハンドルネーム**: samuido
 - **生年月日**: 2007年10月生
 - **現況**: 現役高専生(2025年7月現在)
-- **自己紹介**: グラフィックデザイン、映像制作、個人開発など幅広く活動しています。やる気になれば何でもできるのが強みです
+- **自己紹介**: グラフィックデザイン、映像制作、個人開発など幅広く活動しています.やる気になれば何でもできるのが強みです
 
 ### スキル
 
@@ -66,7 +66,7 @@
 ### SEO
 
 - **title**: "Profile - samuido | samuidoのプロフィール"
-- **description**: "フロントエンドエンジニアsamuidoのプロフィール。技術スタック、制作活動、個人開発についてご紹介。"
+- **description**: "フロントエンドエンジニアsamuidoのプロフィール.技術スタック、制作活動、個人開発についてご紹介."
 - **keywords**: "samuido, プロフィール, フロントエンド, 技術スタック, 個人開発, 制作活動"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/about/profile/handle"
@@ -74,7 +74,7 @@
 ### Open Graph
 
 - **og:title**: "Profile - samuido | samuidoのプロフィール"
-- **og:description**: "フロントエンドエンジニアsamuidoのプロフィール。技術スタック、制作活動、個人開発についてご紹介。"
+- **og:description**: "フロントエンドエンジニアsamuidoのプロフィール.技術スタック、制作活動、個人開発についてご紹介."
 - **og:type**: "profile"
 - **og:url**: "https://yusuke-kim.com/about/profile/handle"
 - **og:image**: "https://yusuke-kim.com/about/profile-handle-og-image.png"
@@ -85,7 +85,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Profile - samuido | samuidoのプロフィール"
-- **twitter:description**: "フロントエンドエンジニアsamuidoのプロフィール。技術スタック、制作活動、個人開発についてご紹介。"
+- **twitter:description**: "フロントエンドエンジニアsamuidoのプロフィール.技術スタック、制作活動、個人開発についてご紹介."
 - **twitter:image**: "https://yusuke-kim.com/about/profile-handle-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

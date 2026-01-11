@@ -126,9 +126,9 @@ function countWords(text: string): number {
 function countSentences(text: string): number {
 	if (!text.trim()) return 0;
 
-	// Japanese sentence endings: 。！？
+	// Japanese sentence endings: .！？
 	// English sentence endings: .!?
-	const sentenceEndings = /[。！？.!?]/g;
+	const sentenceEndings = /[.！？.!?]/g;
 	const matches = text.match(sentenceEndings);
 	return matches ? matches.length : 1;
 }

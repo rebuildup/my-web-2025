@@ -2,7 +2,7 @@
 
 ## 目的
 
-著者の概要を紹介し、各サブページへの入口となるハブページ。本名とハンドルネームの2つのプロフィールへの導線を提供する。
+著者の概要を紹介し、各サブページへの入口となるハブページ.本名とハンドルネームの2つのプロフィールへの導線を提供する.
 
 ## 主な要素
 
@@ -22,7 +22,7 @@
 
 - **スキル**: デザイン(Photoshop, Illustrator, AdobeXD, Figma)、プログラミング言語(C, C++, C#, HTML, JavaScript, TypeScript, CSS)、技術スタック(React, NextJS, Tailwind CSS, p5js, PIXIjs, GSAP)、映像(AfterEffects, Aviutl, PremierePro, Blender)、その他(Unity, Cubase)
 - **基本情報**: 平成19年10月生、現役高専生(2025年7月現在)
-- **自己紹介**: グラフィックデザイン、映像制作、個人開発など幅広く活動。やる気になれば何でもできるのが強み
+- **自己紹介**: グラフィックデザイン、映像制作、個人開発など幅広く活動.やる気になれば何でもできるのが強み
 
 ### 本名プロフィール専用情報
 
@@ -43,7 +43,7 @@
 ### SEO
 
 - **title**: "About - samuido | 木村友亮について"
-- **description**: "Webデザイナー・開発者の木村友亮のプロフィール。経歴、スキル、作品、連絡先情報をご紹介。"
+- **description**: "Webデザイナー・開発者の木村友亮のプロフィール.経歴、スキル、作品、連絡先情報をご紹介."
 - **keywords**: "木村友亮, プロフィール, 経歴, スキル, Webデザイナー, フロントエンド開発者"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/about"
@@ -51,7 +51,7 @@
 ### Open Graph
 
 - **og:title**: "About - samuido | 木村友亮について"
-- **og:description**: "Webデザイナー・開発者の木村友亮のプロフィール。経歴、スキル、作品、連絡先情報をご紹介。"
+- **og:description**: "Webデザイナー・開発者の木村友亮のプロフィール.経歴、スキル、作品、連絡先情報をご紹介."
 - **og:type**: "profile"
 - **og:url**: "https://yusuke-kim.com/about"
 - **og:image**: "https://yusuke-kim.com/about-og-image.png"
@@ -62,7 +62,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "About - samuido | 木村友亮について"
-- **twitter:description**: "Webデザイナー・開発者の木村友亮のプロフィール。経歴、スキル、作品、連絡先情報をご紹介。"
+- **twitter:description**: "Webデザイナー・開発者の木村友亮のプロフィール.経歴、スキル、作品、連絡先情報をご紹介."
 - **twitter:image**: "https://yusuke-kim.com/about-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

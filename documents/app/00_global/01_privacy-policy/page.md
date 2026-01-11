@@ -2,7 +2,7 @@
 
 ## 目的
 
-個人情報の取り扱いについて説明し、ユーザーのプライバシーを保護する。
+個人情報の取り扱いについて説明し、ユーザーのプライバシーを保護する.
 
 ## 主な要素
 
@@ -64,7 +64,7 @@
 ### SEO
 
 - **title**: "Privacy Policy - samuido | プライバシーポリシー"
-- **description**: "samuidoのプライバシーポリシー。個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています。"
+- **description**: "samuidoのプライバシーポリシー.個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています."
 - **keywords**: "プライバシーポリシー, 個人情報, Cookie, アクセス解析, 個人情報保護"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/privacy-policy"
@@ -72,7 +72,7 @@
 ### Open Graph
 
 - **og:title**: "Privacy Policy - samuido | プライバシーポリシー"
-- **og:description**: "samuidoのプライバシーポリシー。個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています。"
+- **og:description**: "samuidoのプライバシーポリシー.個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/privacy-policy"
 - **og:image**: "https://yusuke-kim.com/privacy-policy-og-image.png"
@@ -83,7 +83,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Privacy Policy - samuido | プライバシーポリシー"
-- **twitter:description**: "samuidoのプライバシーポリシー。個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています。"
+- **twitter:description**: "samuidoのプライバシーポリシー.個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています."
 - **twitter:image**: "https://yusuke-kim.com/privacy-policy-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

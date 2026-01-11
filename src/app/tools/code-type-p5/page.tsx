@@ -34,7 +34,7 @@ export default function CodeTypeP5Page() {
 							Code Type p5
 						</h1>
 						<p className="noto-sans-jp-light text-sm text-main/70 leading-relaxed max-w-2xl">
-							p5.jsでコードタイピング風の映像素材を作るツール。コードのカスタマイズやPNGシーケンスのエクスポートが可能です。
+							p5.jsでコードタイピング風の映像素材を作るツール.コードのカスタマイズやPNGシーケンスのエクスポートが可能です.
 						</p>
 					</header>
 				</div>

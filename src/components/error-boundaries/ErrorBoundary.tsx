@@ -101,7 +101,7 @@ export class ErrorBoundary extends Component<
 							<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-lg">
 								{appError
 									? errorHandler.createUserFriendlyMessage(appError)
-									: "このセクションで予期しないエラーが発生しました。"}
+									: "このセクションで予期しないエラーが発生しました."}
 							</p>
 						</div>
 
@@ -158,7 +158,7 @@ export const AboutErrorBoundary: React.FC<{ children: ReactNode }> = ({
 						Aboutセクションが利用できません
 					</h2>
 					<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
-						Aboutセクションは一時的に利用できません。後でもう一度お試しください。
+						Aboutセクションは一時的に利用できません.後でもう一度お試しください.
 					</p>
 					<button
 						type="button"
@@ -187,7 +187,7 @@ export const PortfolioErrorBoundary: React.FC<{ children: ReactNode }> = ({
 						Portfolioが利用できません
 					</h2>
 					<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
-						Portfolioセクションは一時的に利用できません。後でもう一度お試しください。
+						Portfolioセクションは一時的に利用できません.後でもう一度お試しください.
 					</p>
 					<div className="space-y-ratio-sm">
 						<button
@@ -225,7 +225,7 @@ export const WorkshopErrorBoundary: React.FC<{ children: ReactNode }> = ({
 						Workshopが利用できません
 					</h2>
 					<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
-						Workshopセクションは一時的に利用できません。後でもう一度お試しください。
+						Workshopセクションは一時的に利用できません.後でもう一度お試しください.
 					</p>
 					<button
 						type="button"
@@ -254,7 +254,7 @@ export const ToolsErrorBoundary: React.FC<{ children: ReactNode }> = ({
 						Toolsが利用できません
 					</h2>
 					<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
-						Toolsセクションは一時的に利用できません。後でもう一度お試しください。
+						Toolsセクションは一時的に利用できません.後でもう一度お試しください.
 					</p>
 					<div className="space-y-ratio-sm">
 						<button
@@ -292,7 +292,7 @@ export const AdminErrorBoundary: React.FC<{ children: ReactNode }> = ({
 						管理パネルエラー
 					</h2>
 					<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
-						管理パネルでエラーが発生しました。詳細はコンソールを確認してください。
+						管理パネルでエラーが発生しました.詳細はコンソールを確認してください.
 					</p>
 					<button
 						type="button"

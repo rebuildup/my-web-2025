@@ -227,7 +227,7 @@ GitHubリポジトリの Settings → Secrets and variables → Actions で以�
 | `RECAPTCHA_SECRET_KEY` | （シークレットキー） | reCAPTCHA用（任意） |
 | `NEXT_PUBLIC_SITE_URL` | `https://yusuke-kim.com` | サイトURL（必須） |
 
-**重要**: `GCP_SSH_KEY`は秘密鍵の**全文**（`-----BEGIN OPENSSH PRIVATE KEY-----`から`-----END OPENSSH PRIVATE KEY-----`まで）をコピーしてください。
+**重要**: `GCP_SSH_KEY`は秘密鍵の**全文**（`-----BEGIN OPENSSH PRIVATE KEY-----`から`-----END OPENSSH PRIVATE KEY-----`まで）をコピーしてください.
 
 ---
 
@@ -280,7 +280,7 @@ ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "curl -s http://localhost:3000/ap
 
 ## 5. nginx設定（必須）
 
-**重要**: この手順はデプロイ後、外部からアクセスできるようにするために**必須**です。
+**重要**: この手順はデプロイ後、外部からアクセスできるようにするために**必須**です.
 
 ### 5.1 nginxインストール
 
@@ -500,11 +500,11 @@ The dry run was successful.
 
 ## 7. サブドメイン設定（任意）
 
-サブドメインを使って特定のページにアクセスできるようにする設定です。
+サブドメインを使って特定のページにアクセスできるようにする設定です.
 
 ### 7.1 DNS設定
 
-**重要**: サブドメインのHTTPS証明書を取得する前に、必ずDNS設定を完了してください。
+**重要**: サブドメインのHTTPS証明書を取得する前に、必ずDNS設定を完了してください.
 
 **ネームサーバーの確認:**
 
@@ -526,7 +526,7 @@ yusuke-kim.com	nameserver = ns1.example.com
 yusuke-kim.com	nameserver = ns2.example.com
 ```
 
-**重要**: DNSレコードは、**実際に使用されているネームサーバー**の管理画面で設定する必要があります。ドメイン登録業者のデフォルトDNS設定画面では反映されません。
+**重要**: DNSレコードは、**実際に使用されているネームサーバー**の管理画面で設定する必要があります.ドメイン登録業者のデフォルトDNS設定画面では反映されません.
 
 #### Cloudflareを使用している場合
 
@@ -551,11 +551,11 @@ yusuke-kim.com	nameserver = ns2.example.com
    - **プロキシ状態**: オフ（DNSのみ、オレンジの雲アイコンをクリックしてグレーにする）
    - **TTL**: 自動
 
-   **注意**: Cloudflareのプロキシ（オレンジの雲）を有効にしている場合、certbotの認証が失敗する可能性があります。サブドメインのAレコードは必ず「DNSのみ」（グレーの雲）に設定してください。
+   **注意**: Cloudflareのプロキシ（オレンジの雲）を有効にしている場合、certbotの認証が失敗する可能性があります.サブドメインのAレコードは必ず「DNSのみ」（グレーの雲）に設定してください.
 
 #### その他のDNSプロバイダを使用している場合
 
-ドメイン管理画面で、上記と同じAレコードを追加してください。
+ドメイン管理画面で、上記と同じAレコードを追加してください.
 
 **DNS反映確認:**
 ```bash
@@ -589,12 +589,12 @@ Address: 34.146.209.224
 ```
 
 **注意**: 
-- DNS設定の反映には数分から数時間かかる場合があります。`nslookup`で確認できるようになるまで待ってから、次のステップ（証明書取得）に進んでください。
-- Cloudflareを使用している場合、プロキシ（オレンジの雲）を有効にしていると、certbotの認証が失敗する可能性があります。サブドメインのAレコードは必ず「DNSのみ」（グレーの雲）に設定してください。
+- DNS設定の反映には数分から数時間かかる場合があります.`nslookup`で確認できるようになるまで待ってから、次のステップ（証明書取得）に進んでください.
+- Cloudflareを使用している場合、プロキシ（オレンジの雲）を有効にしていると、certbotの認証が失敗する可能性があります.サブドメインのAレコードは必ず「DNSのみ」（グレーの雲）に設定してください.
 
 ### 7.2 nginx設定の更新
 
-nginx設定は既にサブドメインに対応しています（セクション5.2で`server_name`に`*.yusuke-kim.com`が含まれています）。
+nginx設定は既にサブドメインに対応しています（セクション5.2で`server_name`に`*.yusuke-kim.com`が含まれています）.
 
 設定を確認:
 ```bash
@@ -608,7 +608,7 @@ sudo cat /etc/nginx/sites-available/yusuke-kim | grep server_name
 
 ### 7.3 アプリケーション側の設定
 
-Next.jsのミドルウェア（`middleware.ts`）でサブドメインのリダイレクト処理が実装されています。
+Next.jsのミドルウェア（`middleware.ts`）でサブドメインのリダイレクト処理が実装されています.
 
 **現在のマッピング:**
 - `links.yusuke-kim.com` → `/about/links`
@@ -619,11 +619,11 @@ Next.jsのミドルウェア（`middleware.ts`）でサブドメインのリダ�
 - `samuido.yusuke-kim.com` → `/about/profile/handle`
 - `361do.yusuke-kim.com` → `/about/profile/handle`
 
-新しいサブドメインを追加する場合は、`middleware.ts`の`subdomainMap`を編集してください。
+新しいサブドメインを追加する場合は、`middleware.ts`の`subdomainMap`を編集してください.
 
 ### 7.4 HTTPS証明書の取得（サブドメイン用）
 
-**重要**: セクション7.1でDNS設定を完了し、DNS反映が確認できてから実行してください。
+**重要**: セクション7.1でDNS設定を完了し、DNS反映が確認できてから実行してください.
 
 #### 方法1: 一度にすべてのサブドメインで証明書を取得
 
@@ -633,7 +633,7 @@ Next.jsのミドルウェア（`middleware.ts`）でサブドメインのリダ�
 sudo certbot --nginx -d yusuke-kim.com -d www.yusuke-kim.com -d links.yusuke-kim.com -d portfolio.yusuke-kim.com -d pomodoro.yusuke-kim.com -d prototype.yusuke-kim.com -d samuido.yusuke-kim.com -d 361do.yusuke-kim.com
 ```
 
-**注意**: この方法で`www.yusuke-kim.com`のserver blockが見つからないエラーが発生する場合があります。その場合は方法2を使用してください。
+**注意**: この方法で`www.yusuke-kim.com`のserver blockが見つからないエラーが発生する場合があります.その場合は方法2を使用してください.
 
 #### 方法2: 証明書を取得してから手動でインストール（推奨）
 
@@ -649,7 +649,7 @@ sudo certbot install --cert-name yusuke-kim.com
 
 **方法2でエラーが発生する場合（特に数字で始まるサブドメイン）:**
 
-certbotが`361do.yusuke-kim.com`などの数字で始まるサブドメインのserver blockを見つけられない場合があります。この場合、nginx設定ファイルを手動で更新する必要があります：
+certbotが`361do.yusuke-kim.com`などの数字で始まるサブドメインのserver blockを見つけられない場合があります.この場合、nginx設定ファイルを手動で更新する必要があります：
 
 ```bash
 # 現在の設定を確認
@@ -847,7 +847,7 @@ Server: nginx/1.18.0
 
 ### 8.3 ブラウザでの確認
 
-ブラウザで `https://yusuke-kim.com` にアクセスして、サイトが正常に表示されることを確認してください。
+ブラウザで `https://yusuke-kim.com` にアクセスして、サイトが正常に表示されることを確認してください.
 
 ---
 
@@ -989,7 +989,7 @@ Could not automatically find a matching server block for 361do.yusuke-kim.com. S
 
 2. **それでも失敗する場合、nginx設定を手動で更新**
    
-   セクション7.4の「方法2」を参照して、nginx設定ファイルを手動で更新してください。
+   セクション7.4の「方法2」を参照して、nginx設定ファイルを手動で更新してください.
 
 3. **証明書が正常に取得できているか確認**
    ```bash
@@ -1006,7 +1006,7 @@ Could not automatically find a matching server block for 361do.yusuke-kim.com. S
        Private Key Path: /etc/letsencrypt/live/yusuke-kim.com/privkey.pem
    ```
 
-   証明書が正常に取得できていれば、nginx設定を手動で更新することでHTTPSを有効化できます。
+   証明書が正常に取得できていれば、nginx設定を手動で更新することでHTTPSを有効化できます.
 
 ### 9.7 certbotでDNSエラー（NXDOMAIN）が発生する
 
@@ -1092,7 +1092,7 @@ Detail: DNS problem: NXDOMAIN looking up A for 361do.yusuke-kim.com
 
 ## 🔄 更新履歴
 
-- 2025-12-11: 初版作成。nginx設定を必須手順として追加。各コマンドの期待される出力を追記。
+- 2025-12-11: 初版作成.nginx設定を必須手順として追加.各コマンドの期待される出力を追記.
 
 
 ```

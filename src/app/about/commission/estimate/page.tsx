@@ -175,7 +175,7 @@ export default function EstimatePage() {
 
 合計: ¥${result.total.toLocaleString()}
 
-※この見積もりは目安です。詳細はお問い合わせください。`;
+※この見積もりは目安です.詳細はお問い合わせください.`;
 
 		try {
 			await navigator.clipboard.writeText(text);
@@ -483,7 +483,7 @@ export default function EstimatePage() {
 
 										<div className="mt-6 bg-base border border-accent p-4">
 											<p className="noto-sans-jp-light text-sm text-accent">
-												※この見積もりは目安です。実際の料金は詳細な要件により変動する場合があります。
+												※この見積もりは目安です.実際の料金は詳細な要件により変動する場合があります.
 											</p>
 										</div>
 									</div>
@@ -504,7 +504,7 @@ export default function EstimatePage() {
 										正式なお見積もりをご希望の方
 									</h3>
 									<p className="noto-sans-jp-light text-sm text-main mb-4">
-										より詳細な見積もりや、ご不明な点がございましたらお気軽にお問い合わせください。
+										より詳細な見積もりや、ご不明な点がございましたらお気軽にお問い合わせください.
 									</p>
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-3">
 										<Link

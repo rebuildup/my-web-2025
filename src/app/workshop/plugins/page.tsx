@@ -7,7 +7,7 @@ import type { ContentItem } from "@/types/content";
 export const metadata: Metadata = {
 	title: "Plugins - Workshop | samuido",
 	description:
-		"AfterEffects・Premiere Pro プラグインの配布。動画制作を効率化するツールを無料で提供。",
+		"AfterEffects・Premiere Pro プラグインの配布.動画制作を効率化するツールを無料で提供.",
 	keywords: [
 		"AfterEffects",
 		"Premiere Pro",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Plugins - Workshop | samuido",
 		description:
-			"AfterEffects・Premiere Pro プラグインの配布。動画制作を効率化するツールを無料で提供。",
+			"AfterEffects・Premiere Pro プラグインの配布.動画制作を効率化するツールを無料で提供.",
 		type: "website",
 		url: "https://yusuke-kim.com/workshop/plugins",
 		siteName: "samuido",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Plugins - Workshop | samuido",
 		description:
-			"AfterEffects・Premiere Pro プラグインの配布。動画制作を効率化するツールを無料で提供。",
+			"AfterEffects・Premiere Pro プラグインの配布.動画制作を効率化するツールを無料で提供.",
 		creator: "@361do_sleep",
 	},
 };
@@ -94,9 +94,9 @@ export default async function PluginsPage() {
 								Plugins
 							</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
-								AfterEffects・Premiere Pro プラグインを無料で配布しています。
+								AfterEffects・Premiere Pro プラグインを無料で配布しています.
 								<br />
-								動画制作を効率化するツールをダウンロードしてご利用ください。
+								動画制作を効率化するツールをダウンロードしてご利用ください.
 							</p>
 						</header>
 

@@ -5,7 +5,7 @@
 import type Database from "better-sqlite3";
 import type { MediaRow } from "@/cms/types/database";
 import type { MediaItem } from "@/cms/types/media";
-import { getContentDb, getFromIndex } from "./content-db-manager";
+import { getContentDb } from "./content-db-manager";
 
 // ========== メディア保存 ==========
 
@@ -24,34 +24,63 @@ export function saveMedia(
 		data: Buffer;
 	},
 ): void {
+	// 入力検証
+	if (!contentId) {
+		throw new Error("[media-manager] contentId is required");
+	}
+	if (!mediaData.id) {
+		throw new Error("[media-manager] mediaData.id is required");
+	}
+	if (!mediaData.data || mediaData.data.length === 0) {
+		throw new Error(
+			"[media-manager] mediaData.data is required and must not be empty",
+		);
+	}
+
 	const db = getContentDb(contentId);
 
 	try {
-		ensureContentRow(db, contentId);
+		// トランザクションで保存の原子性を保証
+		db.exec("BEGIN TRANSACTION");
 
-		const stmt = db.prepare(`
+		try {
+			ensureContentRow(db, contentId);
+
+			const stmt = db.prepare(`
       INSERT OR REPLACE INTO media (
         id, content_id, filename, mime_type, size, width, height, alt, description, tags, data, created_at, updated_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
-		const now = new Date().toISOString();
+			const now = new Date().toISOString();
 
-		stmt.run(
-			mediaData.id,
-			contentId,
-			mediaData.filename,
-			mediaData.mimeType,
-			mediaData.size,
-			mediaData.width || null,
-			mediaData.height || null,
-			mediaData.alt || null,
-			mediaData.description || null,
-			mediaData.tags ? JSON.stringify(mediaData.tags) : null,
-			mediaData.data,
-			now,
-			now,
+			stmt.run(
+				mediaData.id,
+				contentId,
+				mediaData.filename || "unknown",
+				mediaData.mimeType || "application/octet-stream",
+				mediaData.size || mediaData.data.length,
+				mediaData.width || null,
+				mediaData.height || null,
+				mediaData.alt || null,
+				mediaData.description || null,
+				mediaData.tags ? JSON.stringify(mediaData.tags) : null,
+				mediaData.data,
+				now,
+				now,
+			);
+
+			db.exec("COMMIT");
+		} catch (error) {
+			db.exec("ROLLBACK");
+			throw error;
+		}
+	} catch (error) {
+		console.error(
+			`[media-manager] Failed to save media: contentId=${contentId}, mediaId=${mediaData.id}`,
+			error,
 		);
+		throw error;
 	} finally {
 		db.close();
 	}
@@ -60,6 +89,14 @@ export function saveMedia(
 // ========== メディア取得 ==========
 
 export function getMedia(contentId: string, mediaId: string): MediaItem | null {
+	// 入力検証
+	if (!contentId || !mediaId) {
+		console.warn(
+			`[media-manager] Invalid parameters: contentId=${contentId}, mediaId=${mediaId}`,
+		);
+		return null;
+	}
+
 	const db = getContentDb(contentId);
 
 	try {
@@ -263,19 +300,20 @@ function ensureContentRow(db: Database.Database, contentId: string) {
 		return;
 	}
 
-	const indexData = getFromIndex(contentId);
+	// 外部インデックスに依存せず、contentIdからデフォルト値を生成
+	// これによりdbファイルが完全に独立して動作可能
 	const now = new Date().toISOString();
 
 	const payload = {
 		id: contentId,
-		title: indexData?.title ?? contentId,
-		summary: indexData?.summary ?? null,
-		lang: indexData?.lang ?? "ja",
-		visibility: indexData?.visibility ?? "draft",
-		status: indexData?.status ?? "draft",
-		published_at: indexData?.publishedAt ?? null,
-		created_at: indexData?.createdAt ?? now,
-		updated_at: indexData?.updatedAt ?? now,
+		title: contentId, // contentIdを仮タイトルとして使用
+		summary: null,
+		lang: "ja",
+		visibility: "draft",
+		status: "draft",
+		published_at: null,
+		created_at: now,
+		updated_at: now,
 	};
 
 	db.prepare(

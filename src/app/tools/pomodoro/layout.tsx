@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 export const metadata: Metadata = {
 	title: "Pomodoro Timer - samuido | ポモドーロタイマー",
 	description:
-		"進歩的なポモドーロタイマー。作業時間が段階的に延長されるサイクルで、集中力を高めながら効率的な作業時間管理を実現。",
+		"進歩的なポモドーロタイマー.作業時間が段階的に延長されるサイクルで、集中力を高めながら効率的な作業時間管理を実現.",
 	keywords: [
 		"ポモドーロ",
 		"タイマー",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Pomodoro Timer - samuido | ポモドーロタイマー",
 		description:
-			"シンプルなポモドーロタイマー。25分作業・5分休憩のサイクルで効率的な作業時間管理を実現。",
+			"シンプルなポモドーロタイマー.25分作業・5分休憩のサイクルで効率的な作業時間管理を実現.",
 		type: "website",
 		url: "https://pomodoro.yusuke-kim.com",
 		siteName: "samuido",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Pomodoro Timer - samuido | ポモドーロタイマー",
 		description:
-			"シンプルなポモドーロタイマー。25分作業・5分休憩のサイクルで効率的な作業時間管理を実現。",
+			"シンプルなポモドーロタイマー.25分作業・5分休憩のサイクルで効率的な作業時間管理を実現.",
 		creator: "@361do_sleep",
 		images: ["https://yusuke-kim.com/images/twitter-image.jpg"],
 	},

@@ -73,7 +73,7 @@ export default function CacheClearPanel() {
 			completed = true;
 		} catch (error) {
 			console.error("Cache clear failed:", error);
-			alert("キャッシュクリアに失敗しました。コンソールを確認してください。");
+			alert("キャッシュクリアに失敗しました.コンソールを確認してください.");
 			completed = true;
 		}
 

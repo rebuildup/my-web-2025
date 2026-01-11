@@ -17,7 +17,7 @@ import "./styles/015_RankingLoad.css";
 export const metadata: Metadata = {
 	title: "ProtoType - samuido | タイピングゲーム",
 	description:
-		"PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。プログラミング言語のコードでタイピング練習ができます。",
+		"PIXIjsを使用したタイピングゲーム.WPMと正確性を記録し、タイピングスキルの向上を支援.プログラミング言語のコードでタイピング練習ができます.",
 	keywords: [
 		"タイピング",
 		"タイピングゲーム",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "ProtoType - samuido | タイピングゲーム",
 		description:
-			"PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。",
+			"PIXIjsを使用したタイピングゲーム.WPMと正確性を記録し、タイピングスキルの向上を支援.",
 		type: "website",
 		url: "https://prototype.yusuke-kim.com",
 		siteName: "samuido",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "ProtoType - samuido | タイピングゲーム",
 		description:
-			"PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。",
+			"PIXIjsを使用したタイピングゲーム.WPMと正確性を記録し、タイピングスキルの向上を支援.",
 		creator: "@361do_sleep",
 		images: ["https://yusuke-kim.com/images/twitter-image.jpg"],
 	},

@@ -2,7 +2,7 @@
 
 ## 目的
 
-無償配布するファイルをダウンロードできるページ。各種素材やツールを提供。
+無償配布するファイルをダウンロードできるページ.各種素材やツールを提供.
 
 ## 主な要素
 
@@ -104,7 +104,7 @@
 ### SEO
 
 - **title**: "Downloads - samuido | ファイルダウンロード"
-- **description**: "無償配布するファイルのダウンロード。素材、ツール、テンプレートなどを提供。"
+- **description**: "無償配布するファイルのダウンロード.素材、ツール、テンプレートなどを提供."
 - **keywords**: "ダウンロード, 素材, ツール, テンプレート, 無償配布, ファイル"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/workshop/downloads"
@@ -112,7 +112,7 @@
 ### Open Graph
 
 - **og:title**: "Downloads - samuido | ファイルダウンロード"
-- **og:description**: "無償配布するファイルのダウンロード。素材、ツール、テンプレートなどを提供。"
+- **og:description**: "無償配布するファイルのダウンロード.素材、ツール、テンプレートなどを提供."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/workshop/downloads"
 - **og:image**: "https://yusuke-kim.com/workshop/downloads-og-image.png"
@@ -123,7 +123,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Downloads - samuido | ファイルダウンロード"
-- **twitter:description**: "無償配布するファイルのダウンロード。素材、ツール、テンプレートなどを提供。"
+- **twitter:description**: "無償配布するファイルのダウンロード.素材、ツール、テンプレートなどを提供."
 - **twitter:image**: "https://yusuke-kim.com/workshop/downloads-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

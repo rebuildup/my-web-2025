@@ -234,7 +234,7 @@ export default function PerformanceOptimizer({
 				<div className="mb-4 bg-yellow-50 border border-yellow-200 p-3 flex items-center space-x-2">
 					<WifiOff size={16} className="text-yellow-600" />
 					<p className="text-sm text-yellow-800">
-						オフラインモードで動作中。すべての機能はローカルで処理されます。
+						オフラインモードで動作中.すべての機能はローカルで処理されます.
 					</p>
 				</div>
 			)}
@@ -260,13 +260,13 @@ export default function PerformanceOptimizer({
 						{storageUsage.percentage > 80 && (
 							<li className="text-yellow-600">
 								•
-								ストレージ使用量が高いです。データをクリアすることを検討してください
+								ストレージ使用量が高いです.データをクリアすることを検討してください
 							</li>
 						)}
 						{performanceMetrics.memoryUsage &&
 							performanceMetrics.memoryUsage.percentage > 80 && (
 								<li className="text-red-600">
-									• メモリ使用量が高いです。ページを更新することをお勧めします
+									• メモリ使用量が高いです.ページを更新することをお勧めします
 								</li>
 							)}
 					</ul>

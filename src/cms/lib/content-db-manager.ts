@@ -7,7 +7,6 @@ import type { ContentIndexRow } from "@/cms/types/database";
 
 const DATA_DIR = resolveDataDirectory();
 const CONTENT_DB_DIR = path.join(DATA_DIR, "contents");
-const TAG_CATALOG_FILE = path.join(DATA_DIR, "tag-catalog.json");
 
 ensureDirectory(DATA_DIR);
 ensureDirectory(CONTENT_DB_DIR);
@@ -645,27 +644,78 @@ export function getContentDbStats(): {
 	};
 }
 
-function readTagCatalog(): TagCatalogEntry[] {
-	try {
-		const raw = fs.readFileSync(TAG_CATALOG_FILE, "utf-8");
-		const parsed = JSON.parse(raw) as
-			| { entries?: TagCatalogEntry[] }
-			| TagCatalogEntry[];
-		if (Array.isArray(parsed)) {
-			return parsed;
-		}
-		if (parsed && Array.isArray(parsed.entries)) {
-			return parsed.entries;
-		}
-	} catch {
-		// ignore
-	}
-	return [];
-}
+/**
+ * タグを全てのコンテンツdbファイルから集約して取得
+ * tag-catalog.jsonは使用せず、各dbファイルのcontent_tagsテーブルから直接取得
+ */
+function aggregateTagsFromAllDbs(): Map<
+	string,
+	{ count: number; firstUsed: string | null; lastUsed: string | null }
+> {
+	const tagMap = new Map<
+		string,
+		{ count: number; firstUsed: string | null; lastUsed: string | null }
+	>();
+	const DatabaseCtor = getBetterSqlite3();
 
-function writeTagCatalog(entries: TagCatalogEntry[]): void {
-	const payload = JSON.stringify({ entries }, null, 2);
-	fs.writeFileSync(TAG_CATALOG_FILE, payload, "utf-8");
+	for (const file of listContentDbFiles()) {
+		const dbPath = path.join(CONTENT_DB_DIR, file);
+		let db: Database.Database | null = null;
+		try {
+			db = new DatabaseCtor(dbPath);
+			ensureSchemaUpgrades(db);
+
+			// コンテンツのタイムスタンプとタグを取得
+			const rows = db
+				.prepare(`
+				SELECT ct.tag, c.created_at, c.updated_at
+				FROM content_tags ct
+				LEFT JOIN contents c ON ct.content_id = c.id
+			`)
+				.all() as Array<{
+				tag: string;
+				created_at: string | null;
+				updated_at: string | null;
+			}>;
+
+			for (const row of rows) {
+				const tag = row.tag.trim().toLowerCase();
+				if (!tag) continue;
+
+				const timestamp =
+					row.updated_at || row.created_at || new Date().toISOString();
+				const current = tagMap.get(tag) ?? {
+					count: 0,
+					firstUsed: timestamp,
+					lastUsed: timestamp,
+				};
+
+				current.count += 1;
+
+				if (
+					!current.firstUsed ||
+					(row.created_at &&
+						new Date(row.created_at) < new Date(current.firstUsed))
+				) {
+					current.firstUsed = row.created_at || timestamp;
+				}
+				if (
+					!current.lastUsed ||
+					(timestamp && new Date(timestamp) > new Date(current.lastUsed))
+				) {
+					current.lastUsed = timestamp;
+				}
+
+				tagMap.set(tag, current);
+			}
+		} catch (error) {
+			console.warn(`[CMS] Failed to read tags from ${file}:`, error);
+		} finally {
+			db?.close();
+		}
+	}
+
+	return tagMap;
 }
 
 export interface TagCatalogEntry {
@@ -675,54 +725,56 @@ export interface TagCatalogEntry {
 	metadata: string | null;
 }
 
+/**
+ * 全てのタグをリスト - 各dbファイルから直接集約
+ */
 export function listTagCatalogEntries(): TagCatalogEntry[] {
-	return readTagCatalog();
+	const tagMap = aggregateTagsFromAllDbs();
+	const now = new Date().toISOString();
+
+	return Array.from(tagMap.entries()).map(([name, data]) => ({
+		name,
+		created_at: data.firstUsed || now,
+		last_used: data.lastUsed,
+		metadata: null,
+	}));
 }
 
-export function upsertTagCatalogEntry(entry: {
+/**
+ * タグ使用情報の更新 - 実際にはコンテンツにタグを追加/削除することで自動的に更新される
+ * この関数は互換性のために残すが、no-op
+ */
+export function upsertTagCatalogEntry(_entry: {
 	name: string;
 	createdAt?: string;
 	lastUsed?: string | null;
 	metadata?: unknown;
 }): void {
-	const normalized = entry.name.trim();
-	if (!normalized) {
-		return;
-	}
-	const entries = readTagCatalog();
-	const now = new Date().toISOString();
-	const metadataValue =
-		entry.metadata !== undefined ? JSON.stringify(entry.metadata) : null;
-	const existingIndex = entries.findIndex((item) => item.name === normalized);
-	if (existingIndex >= 0) {
-		entries[existingIndex] = {
-			name: normalized,
-			created_at: entries[existingIndex].created_at,
-			last_used: entry.lastUsed ?? entries[existingIndex].last_used ?? now,
-			metadata: metadataValue ?? entries[existingIndex].metadata ?? null,
-		};
-	} else {
-		entries.push({
-			name: normalized,
-			created_at: entry.createdAt ?? now,
-			last_used: entry.lastUsed ?? now,
-			metadata: metadataValue,
-		});
-	}
-	writeTagCatalog(entries);
+	// タグはコンテンツにタグを追加することで自動的に登録されるため、
+	// この関数は何もしない（互換性のために残す）
 }
 
+/**
+ * タグの削除 - 実際にはコンテンツからタグを削除することで自動的に削除される
+ * この関数は互換性のために残すが、タグが使用中の場合はfalseを返す
+ */
 export function removeTagCatalogEntry(name: string): boolean {
-	const normalized = name.trim();
+	const normalized = name.trim().toLowerCase();
 	if (!normalized) {
 		return false;
 	}
-	const entries = readTagCatalog();
-	const next = entries.filter((entry) => entry.name !== normalized);
-	if (next.length === entries.length) {
+
+	// タグが使用されているかチェック
+	const tagMap = aggregateTagsFromAllDbs();
+	const usage = tagMap.get(normalized);
+
+	if (usage && usage.count > 0) {
+		// タグがまだ使用されている場合は削除できない
 		return false;
 	}
-	writeTagCatalog(next);
+
+	// タグが使用されていない場合は「削除成功」として扱う
+	// （実際には何も保存されていないので、単に存在しないことを確認するだけ）
 	return true;
 }
 

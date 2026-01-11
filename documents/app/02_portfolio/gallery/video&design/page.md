@@ -2,7 +2,7 @@
 
 ## 目的
 
-サムネイル画像を縦3列のグリッドで表示し、コンテンツに応じたサイズで独特な一覧表示を実現する。
+サムネイル画像を縦3列のグリッドで表示し、コンテンツに応じたサイズで独特な一覧表示を実現する.
 
 ## 主な要素
 
@@ -59,7 +59,7 @@
 ### SEO
 
 - **title**: "Video & Design Works - samuido | 映像&デザイン作品ギャラリー"
-- **description**: "samuidoの映像&デザイン作品ギャラリー。映像とデザインを組み合わせた作品を独特なグリッドレイアウトでご覧いただけます。"
+- **description**: "samuidoの映像&デザイン作品ギャラリー.映像とデザインを組み合わせた作品を独特なグリッドレイアウトでご覧いただけます."
 - **keywords**: "映像&デザイン, 映像作品, デザイン作品, グリッドレイアウト, アスペクト比"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/portfolio/gallery/video&design"
@@ -67,7 +67,7 @@
 ### Open Graph
 
 - **og:title**: "Video & Design Works - samuido | 映像&デザイン作品ギャラリー"
-- **og:description**: "samuidoの映像&デザイン作品ギャラリー。映像とデザインを組み合わせた作品を独特なグリッドレイアウトでご覧いただけます。"
+- **og:description**: "samuidoの映像&デザイン作品ギャラリー.映像とデザインを組み合わせた作品を独特なグリッドレイアウトでご覧いただけます."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/gallery/video&design"
 - **og:image**: "https://yusuke-kim.com/portfolio/gallery-video-design-og-image.png"
@@ -78,7 +78,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Video & Design Works - samuido | 映像&デザイン作品ギャラリー"
-- **twitter:description**: "samuidoの映像&デザイン作品ギャラリー。映像とデザインを組み合わせた作品を独特なグリッドレイアウトでご覧いただけます。"
+- **twitter:description**: "samuidoの映像&デザイン作品ギャラリー.映像とデザインを組み合わせた作品を独特なグリッドレイアウトでご覧いただけます."
 - **twitter:image**: "https://yusuke-kim.com/portfolio/gallery-video-design-twitter-image.jpg"
 - **twitter:creator**: "@361do_design"
 

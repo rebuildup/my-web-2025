@@ -13,7 +13,7 @@ import {
 // Generate metadata using the new SEO utilities
 export const metadata = generateToolMetadata({
   name: "Color Palette Generator",
-  description: "色域を指定してランダムにカラーパレットを生成。デザインに活用できる美しい色の組み合わせを作成。",
+  description: "色域を指定してランダムにカラーパレットを生成.デザインに活用できる美しい色の組み合わせを作成.",
   keywords: ["カラーパレット", "色生成", "デザイン", "ランダム色", "色域設定", "CSS変数"],
   path: "/tools/color-palette",
 });

@@ -522,7 +522,7 @@ function TendenciesInit() {
       tendency: ",",
     },
     {
-      key: "。",
+      key: ".",
       tendency: ".",
     },
     {

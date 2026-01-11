@@ -5,7 +5,7 @@ import SequentialPngPreview from "./components/SequentialPngPreview";
 export const metadata: Metadata = {
 	title: "Sequential PNG Preview - samuido | 連番PNGプレビュー",
 	description:
-		"連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。",
+		"連番PNGファイルをアニメーションとしてプレビュー.複数ファイル、フォルダ、ZIPファイルに対応.",
 	keywords: [
 		"連番PNG",
 		"プレビュー",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Sequential PNG Preview - samuido | 連番PNGプレビュー",
 		description:
-			"連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。",
+			"連番PNGファイルをアニメーションとしてプレビュー.複数ファイル、フォルダ、ZIPファイルに対応.",
 		type: "website",
 		url: "https://yusuke-kim.com/tools/sequential-png-preview",
 		siteName: "samuido",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Sequential PNG Preview - samuido | 連番PNGプレビュー",
 		description:
-			"連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。",
+			"連番PNGファイルをアニメーションとしてプレビュー.複数ファイル、フォルダ、ZIPファイルに対応.",
 		creator: "@361do_sleep",
 	},
 };
@@ -53,7 +53,7 @@ export default function SequentialPngPreviewPage() {
 								Sequential PNG Preview
 							</h1>
 							<p className="noto-sans-jp-light text-sm text-main/70 leading-relaxed max-w-2xl">
-								連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。
+								連番PNGファイルをアニメーションとしてプレビュー.複数ファイル、フォルダ、ZIPファイルに対応.
 							</p>
 						</header>
 

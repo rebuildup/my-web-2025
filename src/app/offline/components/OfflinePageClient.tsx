@@ -61,9 +61,9 @@ export default function OfflinePageClient() {
 
 					{/* Description */}
 					<div className="space-y-4 mb-8 text-lg">
-						<p>インターネット接続を確認してください。</p>
+						<p>インターネット接続を確認してください.</p>
 						<p className="text-sm text-gray-400">
-							一部のツールはオフラインでも利用可能です。
+							一部のツールはオフラインでも利用可能です.
 						</p>
 					</div>
 

@@ -101,7 +101,7 @@ export class ServiceWorkerManager {
 
 	// Show update notification to user
 	private showUpdateNotification(): void {
-		if (confirm("新しいバージョンが利用可能です。更新しますか？")) {
+		if (confirm("新しいバージョンが利用可能です.更新しますか？")) {
 			this.skipWaiting();
 		}
 	}

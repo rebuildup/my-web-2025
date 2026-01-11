@@ -215,7 +215,7 @@ export default function AccessibilityTestingComponent({
 
 			// Announce results
 			announce(
-				`アクセシビリティテスト完了。スコア: ${score}点、問題: ${allIssues.length}件`,
+				`アクセシビリティテスト完了.スコア: ${score}点、問題: ${allIssues.length}件`,
 			);
 			testCompleted = true;
 		} catch (error) {

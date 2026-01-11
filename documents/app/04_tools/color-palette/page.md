@@ -2,7 +2,7 @@
 
 ## 目的
 
-色域を指定してランダムに色を生成し、デザインに活用できるカラーパレットを作成するツール。
+色域を指定してランダムに色を生成し、デザインに活用できるカラーパレットを作成するツール.
 
 ## 主な要素
 
@@ -77,7 +77,7 @@
 ### SEO
 
 - **title**: "Color Palette Generator - samuido | カラーパレット生成"
-- **description**: "色域を指定してランダムにカラーパレットを生成。デザインに活用できる美しい色の組み合わせを作成。"
+- **description**: "色域を指定してランダムにカラーパレットを生成.デザインに活用できる美しい色の組み合わせを作成."
 - **keywords**: "カラーパレット, 色生成, デザイン, ランダム色, 色域設定, CSS変数"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/tools/color-palette"
@@ -85,7 +85,7 @@
 ### Open Graph
 
 - **og:title**: "Color Palette Generator - samuido | カラーパレット生成"
-- **og:description**: "色域を指定してランダムにカラーパレットを生成。デザインに活用できる美しい色の組み合わせを作成。"
+- **og:description**: "色域を指定してランダムにカラーパレットを生成.デザインに活用できる美しい色の組み合わせを作成."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/color-palette"
 - **og:image**: "https://yusuke-kim.com/tools/color-palette-og-image.png"
@@ -96,7 +96,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Color Palette Generator - samuido | カラーパレット生成"
-- **twitter:description**: "色域を指定してランダムにカラーパレットを生成。デザインに活用できる美しい色の組み合わせを作成。"
+- **twitter:description**: "色域を指定してランダムにカラーパレットを生成.デザインに活用できる美しい色の組み合わせを作成."
 - **twitter:image**: "https://yusuke-kim.com/tools/color-palette-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

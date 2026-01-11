@@ -277,8 +277,8 @@ export function ExperimentSharing({
 					{/* Privacy Notice */}
 					<div className="text-xs text-main opacity-70 bg-base border border-main p-2 rounded">
 						<p>
-							共有リンクには実験設定とデバイス情報（性能レベル、WebGL対応状況）が含まれます。
-							個人を特定できる情報は含まれません。
+							共有リンクには実験設定とデバイス情報（性能レベル、WebGL対応状況）が含まれます.
+							個人を特定できる情報は含まれません.
 						</p>
 					</div>
 				</div>

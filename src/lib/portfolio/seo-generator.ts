@@ -54,13 +54,13 @@ export class SEOMetadataGenerator {
 		};
 
 		const descriptions = {
-			all: "samuidoの全作品を時系列・カテゴリ・技術で絞り込み表示。Web開発、ゲーム開発、映像制作、デザインの包括的なポートフォリオ。",
+			all: "samuidoの全作品を時系列・カテゴリ・技術で絞り込み表示.Web開発、ゲーム開発、映像制作、デザインの包括的なポートフォリオ.",
 			develop:
-				"Web開発・ゲーム開発・技術実装に重点を置いた作品集。React、Unity、TypeScriptなどの技術スタックと実装詳細を紹介。",
+				"Web開発・ゲーム開発・技術実装に重点を置いた作品集.React、Unity、TypeScriptなどの技術スタックと実装詳細を紹介.",
 			video:
-				"映像制作・モーショングラフィックス・アニメーション作品集。After Effects、Premiere Proを使用した制作プロセスも掲載。",
+				"映像制作・モーショングラフィックス・アニメーション作品集.After Effects、Premiere Proを使用した制作プロセスも掲載.",
 			"video&design":
-				"デザインコンセプトと映像表現を融合した作品集。ブランディング、UI/UX、モーショングラフィックスの統合的なアプローチ。",
+				"デザインコンセプトと映像表現を融合した作品集.ブランディング、UI/UX、モーショングラフィックスの統合的なアプローチ.",
 		};
 
 		const keywords = {
@@ -202,9 +202,9 @@ export class SEOMetadataGenerator {
 
 		const descriptions = {
 			design:
-				"インタラクティブデザイン実験とCSS/JavaScript実装のプレイグラウンド。アニメーション、インタラクション、UI/UXの実験的な取り組み。",
+				"インタラクティブデザイン実験とCSS/JavaScript実装のプレイグラウンド.アニメーション、インタラクション、UI/UXの実験的な取り組み.",
 			WebGL:
-				"Three.js・WebGLを使用した3Dグラフィックス・シェーダー実験のプレイグラウンド。インタラクティブな3D体験とWebGL技術の探求。",
+				"Three.js・WebGLを使用した3Dグラフィックス・シェーダー実験のプレイグラウンド.インタラクティブな3D体験とWebGL技術の探求.",
 		};
 
 		const keywords = {

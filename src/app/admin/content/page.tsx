@@ -285,7 +285,7 @@ export default function AdminContentPage() {
 			<Box sx={{ display: "grid", gap: 4 }}>
 			<PageHeader
 				title="コンテンツ管理"
-				description="コンテンツの作成・編集・公開状態を管理します。"
+				description="コンテンツの作成・編集・公開状態を管理します."
 				actions={[
 					<Button key="refresh" variant="outlined" onClick={handleRefresh} startIcon={<RefreshCcw size={16} />}>更新</Button>,
 					<Button key="create" variant="contained" startIcon={<Plus size={16} />} onClick={() => setIsCreateOpen(true)}>新規コンテンツ</Button>,
@@ -299,7 +299,7 @@ export default function AdminContentPage() {
 			</Stack>
 
 			{(contentsError || statsError) && (
-				<Alert severity="warning">データの取得に失敗しました。再読み込みしてください。</Alert>
+				<Alert severity="warning">データの取得に失敗しました.再読み込みしてください.</Alert>
 			)}
 
 			<Paper variant="outlined" sx={{ p: 0, borderColor: "divider" }}>
@@ -327,7 +327,7 @@ export default function AdminContentPage() {
 							) : (contents ?? []).length === 0 ? (
 								<TableRow>
 									<TableCell colSpan={8} align="center" sx={{ py: 6 }}>
-										<Typography variant="body2" color="text.secondary">表示するコンテンツがありません。</Typography>
+										<Typography variant="body2" color="text.secondary">表示するコンテンツがありません.</Typography>
 									</TableCell>
 								</TableRow>
 							) : (
@@ -489,7 +489,7 @@ export default function AdminContentPage() {
 			<ConfirmDialog
 				open={Boolean(deleteTarget)}
 				title="コンテンツを削除しますか？"
-				description="この操作は取り消せません。関連するDBが削除されます。"
+				description="この操作は取り消せません.関連するDBが削除されます."
 				confirmLabel="削除する"
 				onCancel={() => setDeleteTarget(null)}
 				onConfirm={() => deleteTarget && void handleDelete(deleteTarget.id)}

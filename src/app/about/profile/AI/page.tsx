@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 export const metadata: Metadata = {
 	title: "AI Profile - samuido | AIチャットプロフィール",
 	description:
-		"samuido（木村友亮）のAIチャット用プロフィール。AIとの対話で使用される性格設定、興味関心、対話スタイルなどの情報。",
+		"samuido（木村友亮）のAIチャット用プロフィール.AIとの対話で使用される性格設定、興味関心、対話スタイルなどの情報.",
 	keywords: [
 		"AI",
 		"チャット",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "AI Profile - samuido | AIチャットプロフィール",
 		description:
-			"samuido（木村友亮）のAIチャット用プロフィール。AIとの対話で使用される性格設定、興味関心、対話スタイルなどの情報。",
+			"samuido（木村友亮）のAIチャット用プロフィール.AIとの対話で使用される性格設定、興味関心、対話スタイルなどの情報.",
 		type: "profile",
 		url: "https://yusuke-kim.com/about/profile/AI",
 		images: [
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "AI Profile - samuido | AIチャットプロフィール",
 		description:
-			"samuido（木村友亮）のAIチャット用プロフィール。AIとの対話で使用される性格設定、興味関心、対話スタイルなどの情報。",
+			"samuido（木村友亮）のAIチャット用プロフィール.AIとの対話で使用される性格設定、興味関心、対話スタイルなどの情報.",
 		images: ["https://yusuke-kim.com/about/profile-ai-twitter-image.jpg"],
 		creator: "@361do_sleep",
 	},
@@ -262,12 +262,12 @@ export default function AIProfilePage() {
 										</div>
 									</div>
 									<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
-										このAIプロフィールは、samuidoの知識、経験、価値観を基に構築されています。
-										技術的な質問から創作活動まで、幅広いトピックについて対話できるよう設計されています。
+										このAIプロフィールは、samuidoの知識、経験、価値観を基に構築されています.
+										技術的な質問から創作活動まで、幅広いトピックについて対話できるよう設計されています.
 									</p>
 									<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
 										常に学習し続ける姿勢と、新しいアイデアへの開放性を持ち、
-										相手の立場に立った親身なサポートを心がけています。
+										相手の立場に立った親身なサポートを心がけています.
 									</p>
 								</div>
 							</section>

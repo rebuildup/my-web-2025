@@ -15,7 +15,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 export const metadata: Metadata = {
 	title: "映像依頼 - samuido | MV制作・アニメーション・プロモーション映像",
 	description:
-		"MV制作、リリックモーション、イラストアニメーション、プロモーション映像の制作依頼を受け付けています。AfterEffects、Premiere Proを使用した高品質な映像制作。",
+		"MV制作、リリックモーション、イラストアニメーション、プロモーション映像の制作依頼を受け付けています.AfterEffects、Premiere Proを使用した高品質な映像制作.",
 	keywords: [
 		"映像制作",
 		"MV制作",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "映像依頼 - samuido | MV制作・アニメーション・プロモーション映像",
 		description:
-			"MV制作、リリックモーション、イラストアニメーション、プロモーション映像の制作依頼を受け付けています。AfterEffects、Premiere Proを使用した高品質な映像制作。",
+			"MV制作、リリックモーション、イラストアニメーション、プロモーション映像の制作依頼を受け付けています.AfterEffects、Premiere Proを使用した高品質な映像制作.",
 		type: "website",
 		url: "https://yusuke-kim.com/about/commission/video",
 		images: [
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "映像依頼 - samuido | MV制作・アニメーション・プロモーション映像",
 		description:
-			"MV制作、リリックモーション、イラストアニメーション、プロモーション映像の制作依頼を受け付けています。AfterEffects、Premiere Proを使用した高品質な映像制作。",
+			"MV制作、リリックモーション、イラストアニメーション、プロモーション映像の制作依頼を受け付けています.AfterEffects、Premiere Proを使用した高品質な映像制作.",
 		images: ["https://yusuke-kim.com/about/commission-video-twitter-image.jpg"],
 		creator: "@361do_design",
 	},
@@ -272,7 +272,7 @@ export default function VideoCommissionPage() {
 
 								<div className="bg-base border border-accent p-4 mb-6">
 									<p className="noto-sans-jp-light text-sm text-accent">
-										※このページに記載した料金設定/依頼の流れ等はまだ検討段階であり、今後変更される可能性が高いです。
+										※このページに記載した料金設定/依頼の流れ等はまだ検討段階であり、今後変更される可能性が高いです.
 									</p>
 								</div>
 
@@ -332,9 +332,9 @@ export default function VideoCommissionPage() {
 
 								<div className="bg-base border border-accent p-4">
 									<p className="noto-sans-jp-light text-sm text-accent">
-										※料金設定は変更する場合がございます。依頼時点でここに記載されている金額が料金となります。
+										※料金設定は変更する場合がございます.依頼時点でここに記載されている金額が料金となります.
 										<br />
-										※尺や納期、料金によってはお断りする場合がございます。
+										※尺や納期、料金によってはお断りする場合がございます.
 									</p>
 								</div>
 							</section>
@@ -410,7 +410,7 @@ export default function VideoCommissionPage() {
 										</p>
 									</div>
 									<p className="noto-sans-jp-light text-sm text-accent mt-4">
-										※場合によっては、追加で音源やイラスト、曲名などを教えていただくようお願いすることがあります。
+										※場合によっては、追加で音源やイラスト、曲名などを教えていただくようお願いすることがあります.
 									</p>
 								</div>
 							</section>

@@ -2,7 +2,7 @@
 
 ## 目的
 
-採用担当者や企業向けの正式な自己紹介ページ。経歴、学歴、受賞歴を詳細に紹介する。
+採用担当者や企業向けの正式な自己紹介ページ.経歴、学歴、受賞歴を詳細に紹介する.
 
 ## 主な要素
 
@@ -18,7 +18,7 @@
 - **名前**: 木村友亮
 - **生年月日**: 平成19年10月生
 - **現況**: 現役高専生(2025年7月現在)
-- **自己紹介**: グラフィックデザイン、映像制作、個人開発など幅広く活動しています。やる気になれば何でもできるのが強みです
+- **自己紹介**: グラフィックデザイン、映像制作、個人開発など幅広く活動しています.やる気になれば何でもできるのが強みです
 
 ### スキル
 
@@ -71,7 +71,7 @@
 ### SEO
 
 - **title**: "Profile - samuido | 木村友亮の詳細プロフィール"
-- **description**: "Webデザイナー・開発者木村友亮の詳細プロフィール。学歴、職歴、スキル、受賞歴を時系列でご紹介。"
+- **description**: "Webデザイナー・開発者木村友亮の詳細プロフィール.学歴、職歴、スキル、受賞歴を時系列でご紹介."
 - **keywords**: "木村友亮, プロフィール, 経歴, 学歴, スキル, 職歴, 受賞歴, 高専生"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/about/profile/real"
@@ -79,7 +79,7 @@
 ### Open Graph
 
 - **og:title**: "Profile - samuido | 木村友亮の詳細プロフィール"
-- **og:description**: "Webデザイナー・開発者木村友亮の詳細プロフィール。学歴、職歴、スキル、受賞歴を時系列でご紹介。"
+- **og:description**: "Webデザイナー・開発者木村友亮の詳細プロフィール.学歴、職歴、スキル、受賞歴を時系列でご紹介."
 - **og:type**: "profile"
 - **og:url**: "https://yusuke-kim.com/about/profile/real"
 - **og:image**: "https://yusuke-kim.com/about/profile-real-og-image.png"
@@ -90,7 +90,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Profile - samuido | 木村友亮の詳細プロフィール"
-- **twitter:description**: "Webデザイナー・開発者木村友亮の詳細プロフィール。学歴、職歴、スキル、受賞歴を時系列でご紹介。"
+- **twitter:description**: "Webデザイナー・開発者木村友亮の詳細プロフィール.学歴、職歴、スキル、受賞歴を時系列でご紹介."
 - **twitter:image**: "https://yusuke-kim.com/about/profile-real-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

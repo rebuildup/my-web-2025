@@ -291,7 +291,7 @@ export default function AdminDatabaseManager() {
 		<Box sx={{ display: "grid", gap: 4 }}>
 			<PageHeader
 				title="データベース管理"
-				description="SQLiteベースのコンテンツデータベースをコピー・切替・編集します。アクティブなDBを切り替えることで、柔軟な運用フローを実現します。"
+				description="SQLiteベースのコンテンツデータベースをコピー・切替・編集します.アクティブなDBを切り替えることで、柔軟な運用フローを実現します."
 				
 				actions={[
 					<Button
@@ -338,7 +338,7 @@ export default function AdminDatabaseManager() {
 
 				{databaseError && (
 					<Alert severity="error">
-						データベース一覧の取得に失敗しました。再読み込みしてください。
+						データベース一覧の取得に失敗しました.再読み込みしてください.
 					</Alert>
 				)}
 
@@ -516,7 +516,7 @@ export default function AdminDatabaseManager() {
 			<ConfirmDialog
 				open={Boolean(deleteTarget)}
 				title="データベースを削除しますか？"
-				description="この操作は元に戻せません。必要に応じて事前にバックアップを取得してください。"
+				description="この操作は元に戻せません.必要に応じて事前にバックアップを取得してください."
 				confirmLabel="削除する"
 				onCancel={() => setDeleteTarget(null)}
 				onConfirm={() => deleteTarget && void handleDelete(deleteTarget)}
@@ -525,7 +525,7 @@ export default function AdminDatabaseManager() {
 			<ConfirmDialog
 				open={Boolean(switchTarget)}
 				title="アクティブなデータベースを切り替えますか？"
-				description="現在利用中のデータベースが変更されます。よろしければ実行してください。"
+				description="現在利用中のデータベースが変更されます.よろしければ実行してください."
 				confirmLabel="切り替える"
 				onCancel={() => setSwitchTarget(null)}
 				onConfirm={() => switchTarget && void handleSwitch(switchTarget)}

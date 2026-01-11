@@ -28,7 +28,7 @@ const defaultSEOConfig: SEOConfig = {
 	siteName: "samuido",
 	defaultTitle: "samuidoのサイトルート",
 	defaultDescription:
-		"フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました",
+		"フロントエンドエンジニアsamuidoの個人サイト.自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました",
 	defaultKeywords: [
 		"ポートフォリオ",
 		"Webデザイン",
@@ -285,8 +285,8 @@ export function generateSearchMetadata(
 ): Metadata {
 	const title = query ? `"${query}"の検索結果` : "サイト内検索";
 	const description = query
-		? `"${query}"に関する検索結果を表示しています。`
-		: "サイト内のコンテンツを検索できます。ポートフォリオ、ブログ、ツールなどから目的の情報を見つけてください。";
+		? `"${query}"に関する検索結果を表示しています.`
+		: "サイト内のコンテンツを検索できます.ポートフォリオ、ブログ、ツールなどから目的の情報を見つけてください.";
 
 	return generateBaseMetadata(
 		{
@@ -310,7 +310,7 @@ export function generateContactMetadata(
 		{
 			title: "お問い合わせ",
 			description:
-				"samuidoへのお問い合わせページ。開発・デザイン・動画制作に関するご相談やご依頼をお受けしています。",
+				"samuidoへのお問い合わせページ.開発・デザイン・動画制作に関するご相談やご依頼をお受けしています.",
 			keywords: [
 				...config.defaultKeywords,
 				"お問い合わせ",
@@ -340,12 +340,12 @@ export function generateAboutMetadata(
 	};
 
 	const descriptions = {
-		main: "フロントエンドエンジニアsamuidoの自己紹介ページ。スキル、経歴、制作実績などを紹介しています。",
+		main: "フロントエンドエンジニアsamuidoの自己紹介ページ.スキル、経歴、制作実績などを紹介しています.",
 		profile:
-			"samuidoの詳細なプロフィール情報。経歴、スキル、受賞歴などを掲載しています。",
+			"samuidoの詳細なプロフィール情報.経歴、スキル、受賞歴などを掲載しています.",
 		commission:
-			"制作依頼の料金体系と依頼方法について。開発・デザイン・動画制作のご相談を承ります。",
-		links: "samuidoの各種SNSアカウントや外部サイトへのリンク集です。",
+			"制作依頼の料金体系と依頼方法について.開発・デザイン・動画制作のご相談を承ります.",
+		links: "samuidoの各種SNSアカウントや外部サイトへのリンク集です.",
 	};
 
 	const paths = {
@@ -421,9 +421,9 @@ export function generateErrorMetadata(
 
 	const descriptions = {
 		"404":
-			"お探しのページは見つかりませんでした。URLをご確認いただくか、サイト内検索をご利用ください。",
+			"お探しのページは見つかりませんでした.URLをご確認いただくか、サイト内検索をご利用ください.",
 		"500":
-			"サーバーエラーが発生しました。しばらく時間をおいてから再度アクセスしてください。",
+			"サーバーエラーが発生しました.しばらく時間をおいてから再度アクセスしてください.",
 	};
 
 	return generateBaseMetadata(

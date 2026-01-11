@@ -32,7 +32,7 @@ const tools: Tool[] = [
 		id: "pi-game",
 		title: "Pi Memory Game",
 		description:
-			"円周率の桁を記憶して入力するゲーム。テンキーインターフェースで楽しく学習できます。",
+			"円周率の桁を記憶して入力するゲーム.テンキーインターフェースで楽しく学習できます.",
 		href: "/tools/pi-game",
 		category: "ゲーム",
 		icon: Gamepad2,
@@ -41,7 +41,7 @@ const tools: Tool[] = [
 		id: "pomodoro",
 		title: "Pomodoro Timer",
 		description:
-			"シンプルなポモドーロタイマー。25分作業・5分休憩のサイクルで効率的な作業時間管理を実現。",
+			"シンプルなポモドーロタイマー.25分作業・5分休憩のサイクルで効率的な作業時間管理を実現.",
 		href: "https://pomodoro.yusuke-kim.com",
 		category: "生産性",
 		icon: Timer,
@@ -50,7 +50,7 @@ const tools: Tool[] = [
 		id: "text-counter",
 		title: "Text Counter",
 		description:
-			"テキストの文字数を詳細にカウント。総文字数、単語数、行数、文字種別など豊富な統計情報を提供。",
+			"テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供.",
 		href: "/tools/text-counter",
 		category: "ユーティリティ",
 		icon: Type,
@@ -68,7 +68,7 @@ const tools: Tool[] = [
 		id: "color-palette",
 		title: "Color Palette Generator",
 		description:
-			"色域を指定してランダムにカラーパレットを生成。デザインに活用できる美しい色の組み合わせを作成。",
+			"色域を指定してランダムにカラーパレットを生成.デザインに活用できる美しい色の組み合わせを作成.",
 		href: "/tools/color-palette",
 		category: "デザイン",
 		icon: Palette,
@@ -77,7 +77,7 @@ const tools: Tool[] = [
 		id: "svg2tsx",
 		title: "SVG to TSX Converter",
 		description:
-			"SVG画像をReactコンポーネント（TSX）に変換。TypeScript対応で最適化されたコードを生成。",
+			"SVG画像をReactコンポーネント（TSX）に変換.TypeScript対応で最適化されたコードを生成.",
 		href: "/tools/svg2tsx",
 		category: "開発",
 		icon: FileCode,
@@ -86,7 +86,7 @@ const tools: Tool[] = [
 		id: "sequential-png-preview",
 		title: "Sequential PNG Preview",
 		description:
-			"連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。",
+			"連番PNGファイルをアニメーションとしてプレビュー.複数ファイル、フォルダ、ZIPファイルに対応.",
 		href: "/tools/sequential-png-preview",
 		category: "デザイン",
 		icon: Image,
@@ -95,7 +95,7 @@ const tools: Tool[] = [
 		id: "ae-expression",
 		title: "AE Expression Tool",
 		description:
-			"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。",
+			"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示.",
 		href: "/tools/ae-expression",
 		category: "デザイン",
 		icon: Zap,
@@ -104,7 +104,7 @@ const tools: Tool[] = [
 		id: "business-mail-block",
 		title: "Business Mail Block Tool",
 		description:
-			"ビジネスメールをScratch風ブロックUIで簡単作成。挨拶、本文、締め、署名を組み合わせてプロフェッショナルなメールを作成。",
+			"ビジネスメールをScratch風ブロックUIで簡単作成.挨拶、本文、締め、署名を組み合わせてプロフェッショナルなメールを作成.",
 		href: "/tools/business-mail-block",
 		category: "ビジネス",
 		icon: Mail,
@@ -113,7 +113,7 @@ const tools: Tool[] = [
 		id: "ProtoType",
 		title: "ProtoType Typing Game",
 		description:
-			"PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。",
+			"PIXIjsを使用したタイピングゲーム.WPMと正確性を記録し、タイピングスキルの向上を支援.",
 		href: "https://prototype.yusuke-kim.com",
 		category: "ゲーム",
 		icon: Code,
@@ -122,7 +122,7 @@ const tools: Tool[] = [
 		id: "code-type-p5",
 		title: "Code Type p5",
 		description:
-			"p5.jsでコードタイピング風の映像素材を作成。複数のプログラミング言語に対応し、PNGシーケンスとしてエクスポート可能。",
+			"p5.jsでコードタイピング風の映像素材を作成.複数のプログラミング言語に対応し、PNGシーケンスとしてエクスポート可能.",
 		href: "/tools/code-type-p5",
 		category: "デザイン",
 		icon: Code,
@@ -131,7 +131,7 @@ const tools: Tool[] = [
 		id: "fillgen",
 		title: "穴埋めプリントジェネレーター",
 		description:
-			"{{答え|幅}} を含むテキストから history-quiz 形式のプレビュー／HTML／React を即時生成しコピーできるエディター。",
+			"{{答え|幅}} を含むテキストから history-quiz 形式のプレビュー／HTML／React を即時生成しコピーできるエディター.",
 		href: "/tools/fillgen",
 		category: "ユーティリティ",
 		icon: ScrollText,
@@ -198,7 +198,7 @@ export default function ToolsPage() {
 								Tools
 							</h1>
 							<p className="noto-sans-jp-light text-sm text-main/70 leading-relaxed max-w-2xl">
-								便利なWebツールのコレクション。オフライン対応・アクセシビリティ準拠のツールを提供しています。
+								便利なWebツールのコレクション.オフライン対応・アクセシビリティ準拠のツールを提供しています.
 							</p>
 						</header>
 

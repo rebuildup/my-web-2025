@@ -9,7 +9,7 @@ export default function TagManagementPage() {
         <Box sx={{ display: "grid", gap: 4 }}>
             <PageHeader 
                 title="タグ管理" 
-                description="タグの一括編集と整理で分類精度を向上させます。" 
+                description="タグの一括編集と整理で分類精度を向上させます." 
                 breadcrumbs={[
                     { label: "Admin", href: "/admin" },
                     { label: "タグ管理", href: "/admin/tag-management" },
@@ -23,7 +23,7 @@ export default function TagManagementPage() {
                     Under Construction
                 </Typography>
                 <Typography color="text.secondary">
-                    この機能は現在開発中です。
+                    この機能は現在開発中です.
                 </Typography>
             </Paper>
         </Box>

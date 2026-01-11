@@ -2,7 +2,7 @@
 
 ## 目的
 
-デザインの実験や試作品を自由に展示し、デザインの可能性を探るプレイグラウンドを提供する。
+デザインの実験や試作品を自由に展示し、デザインの可能性を探るプレイグラウンドを提供する.
 
 ## 主な要素
 
@@ -57,7 +57,7 @@
 ### SEO
 
 - **title**: "Design Playground - samuido | デザインプレイグラウンド"
-- **description**: "samuidoのデザインプレイグラウンド。デザインの実験や試作品を自由に展示し、デザインの可能性を探ります。"
+- **description**: "samuidoのデザインプレイグラウンド.デザインの実験や試作品を自由に展示し、デザインの可能性を探ります."
 - **keywords**: "デザインプレイグラウンド, デザイン実験, インタラクティブ, CSS, JavaScript, WebGL"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/portfolio/playground/design"
@@ -65,7 +65,7 @@
 ### Open Graph
 
 - **og:title**: "Design Playground - samuido | デザインプレイグラウンド"
-- **og:description**: "samuidoのデザインプレイグラウンド。デザインの実験や試作品を自由に展示し、デザインの可能性を探ります。"
+- **og:description**: "samuidoのデザインプレイグラウンド.デザインの実験や試作品を自由に展示し、デザインの可能性を探ります."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/playground/design"
 - **og:image**: "https://yusuke-kim.com/portfolio/playground-design-og-image.png"
@@ -76,7 +76,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Design Playground - samuido | デザインプレイグラウンド"
-- **twitter:description**: "samuidoのデザインプレイグラウンド。デザインの実験や試作品を自由に展示し、デザインの可能性を探ります。"
+- **twitter:description**: "samuidoのデザインプレイグラウンド.デザインの実験や試作品を自由に展示し、デザインの可能性を探ります."
 - **twitter:image**: "https://yusuke-kim.com/portfolio/playground-design-twitter-image.jpg"
 - **twitter:creator**: "@361do_design"
 

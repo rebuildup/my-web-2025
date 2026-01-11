@@ -231,10 +231,10 @@ export const AccessibleExperimentWrapper: React.FC<
 			{accessibilityState.isScreenReaderActive && isActive && (
 				<div className="sr-only" aria-live="polite">
 					<p>
-						現在の実験: {experiment.title}。 カテゴリ: {experiment.category}。
-						難易度: {experiment.difficulty}。
+						現在の実験: {experiment.title}. カテゴリ: {experiment.category}.
+						難易度: {experiment.difficulty}.
 						{experiment.interactive &&
-							"スペースキーで開始・一時停止、Rキーでリセット、Escapeキーで終了できます。"}
+							"スペースキーで開始・一時停止、Rキーでリセット、Escapeキーで終了できます."}
 					</p>
 				</div>
 			)}
@@ -286,7 +286,7 @@ export const AccessibleExperimentWrapper: React.FC<
 					>
 						<Info className="w-5 h-5 text-yellow-600 mr-2" aria-hidden="true" />
 						<p className="text-sm text-yellow-800">
-							アニメーション設定により、動きが制限されています。
+							アニメーション設定により、動きが制限されています.
 						</p>
 					</div>
 				)}

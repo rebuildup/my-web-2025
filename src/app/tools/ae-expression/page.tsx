@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
 	title: "AE Expression Tool",
 	description:
-		"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。",
+		"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示.",
 	keywords:
 		"AfterEffects, エクスプレッション, アニメーション, エフェクト, Scratch, ブロックUI",
 	robots: "index, follow",
@@ -14,7 +14,7 @@ export const metadata = {
 	openGraph: {
 		title: "AE Expression Tool - samuido | AfterEffects エクスプレッション",
 		description:
-			"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。",
+			"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示.",
 		type: "website",
 		url: "https://yusuke-kim.com/tools/ae-expression",
 		siteName: "samuido",
@@ -24,7 +24,7 @@ export const metadata = {
 		card: "summary_large_image",
 		title: "AE Expression Tool - samuido | AfterEffects エクスプレッション",
 		description:
-			"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。",
+			"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示.",
 		creator: "@361do_sleep",
 	},
 };

@@ -9,7 +9,7 @@ export default function AnalyticsPage() {
         <Box sx={{ display: "grid", gap: 4 }}>
             <PageHeader 
                 title="アクセス解析" 
-                description="コンテンツのパフォーマンスと利用状況を可視化します。" 
+                description="コンテンツのパフォーマンスと利用状況を可視化します." 
                 breadcrumbs={[
                     { label: "Admin", href: "/admin" },
                     { label: "アクセス解析", href: "/admin/analytics" },
@@ -23,7 +23,7 @@ export default function AnalyticsPage() {
                     Under Construction
                 </Typography>
                 <Typography color="text.secondary">
-                    この機能は現在開発中です。
+                    この機能は現在開発中です.
                 </Typography>
             </Paper>
         </Box>

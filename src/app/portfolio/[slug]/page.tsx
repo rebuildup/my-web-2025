@@ -195,7 +195,7 @@ function ContentSection({
 
 	// Always show content section - never return null to avoid blank pages
 	const fallbackContent =
-		item.content || item.description || "詳細な説明は準備中です。";
+		item.content || item.description || "詳細な説明は準備中です.";
 
 	return (
 		<section className="space-y-8 sm:space-y-12">
@@ -431,7 +431,7 @@ export default async function PortfolioDetailPage({
 			if (!detailFromMarkdown) {
 				detailFromMarkdown = {
 					title: fallbackTitle,
-					summary: "こちらのポートフォリオ詳細は準備中です。",
+					summary: "こちらのポートフォリオ詳細は準備中です.",
 					body: "",
 				};
 			}

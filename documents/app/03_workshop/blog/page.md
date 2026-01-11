@@ -2,7 +2,7 @@
 
 ## 目的
 
-markdownファイルをhtml形式に変換してプレビューし、埋め込みコンテンツなども表示できるブログ機能。
+markdownファイルをhtml形式に変換してプレビューし、埋め込みコンテンツなども表示できるブログ機能.
 
 ## 主な要素
 
@@ -97,7 +97,7 @@ markdownファイルをhtml形式に変換してプレビューし、埋め込�
 ### SEO
 
 - **title**: "Blog - samuido | 技術ブログ"
-- **description**: "技術記事、制作過程、チュートリアルなどを掲載。Markdown対応で埋め込みコンテンツも表示。"
+- **description**: "技術記事、制作過程、チュートリアルなどを掲載.Markdown対応で埋め込みコンテンツも表示."
 - **keywords**: "技術ブログ, 開発記事, 制作過程, チュートリアル, Markdown"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/workshop/blog"
@@ -105,7 +105,7 @@ markdownファイルをhtml形式に変換してプレビューし、埋め込�
 ### Open Graph
 
 - **og:title**: "Blog - samuido | 技術ブログ"
-- **og:description**: "技術記事、制作過程、チュートリアルなどを掲載。Markdown対応で埋め込みコンテンツも表示。"
+- **og:description**: "技術記事、制作過程、チュートリアルなどを掲載.Markdown対応で埋め込みコンテンツも表示."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/workshop/blog"
 - **og:image**: "https://yusuke-kim.com/workshop/blog-og-image.png"
@@ -116,7 +116,7 @@ markdownファイルをhtml形式に変換してプレビューし、埋め込�
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Blog - samuido | 技術ブログ"
-- **twitter:description**: "技術記事、制作過程、チュートリアルなどを掲載。Markdown対応で埋め込みコンテンツも表示。"
+- **twitter:description**: "技術記事、制作過程、チュートリアルなどを掲載.Markdown対応で埋め込みコンテンツも表示."
 - **twitter:image**: "https://yusuke-kim.com/workshop/blog-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

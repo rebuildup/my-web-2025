@@ -90,7 +90,7 @@ export function SVGToTSXConverter() {
 	return (
 		<ToolWrapper
 			toolName="SVG to TSX Converter"
-			description="SVG画像をReactコンポーネント（TSX）に変換します。TypeScript対応で最適化されたコードを生成できます。"
+			description="SVG画像をReactコンポーネント（TSX）に変換します.TypeScript対応で最適化されたコードを生成できます."
 			category="development"
 		>
 			<div className="space-y-6">

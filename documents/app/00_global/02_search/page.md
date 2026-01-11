@@ -2,7 +2,7 @@
 
 ## 目的
 
-サイト内のコンテンツを検索し、ユーザーが求める情報を素早く見つけられるようにする。
+サイト内のコンテンツを検索し、ユーザーが求める情報を素早く見つけられるようにする.
 
 ## 主な要素
 
@@ -66,7 +66,7 @@
 ### SEO
 
 - **title**: "Search - samuido | サイト内検索"
-- **description**: "samuidoのサイト内検索。プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます。"
+- **description**: "samuidoのサイト内検索.プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます."
 - **keywords**: "検索, サイト内検索, ポートフォリオ, プロフィール, ツール"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/search"
@@ -74,7 +74,7 @@
 ### Open Graph
 
 - **og:title**: "Search - samuido | サイト内検索"
-- **og:description**: "samuidoのサイト内検索。プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます。"
+- **og:description**: "samuidoのサイト内検索.プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/search"
 - **og:image**: "https://yusuke-kim.com/search-og-image.png"
@@ -85,7 +85,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Search - samuido | サイト内検索"
-- **twitter:description**: "samuidoのサイト内検索。プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます。"
+- **twitter:description**: "samuidoのサイト内検索.プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます."
 - **twitter:image**: "https://yusuke-kim.com/search-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

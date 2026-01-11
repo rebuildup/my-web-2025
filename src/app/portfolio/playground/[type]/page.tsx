@@ -140,7 +140,7 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 												{playgroundInfo.title} Experiments
 											</h2>
 											<p className="noto-sans-jp-light text-sm text-main mb-8">
-												インタラクティブな実験とデモンストレーションをお楽しみください。
+												インタラクティブな実験とデモンストレーションをお楽しみください.
 											</p>
 
 											{/* Placeholder for actual playground content */}
@@ -213,7 +213,7 @@ function getPlaygroundDisplayInfo(type: string) {
 		design: {
 			title: "Design Experiments",
 			description:
-				"インタラクティブデザインとアニメーションの実験場。CSS、SVG、Canvasを使った視覚的表現の探求。",
+				"インタラクティブデザインとアニメーションの実験場.CSS、SVG、Canvasを使った視覚的表現の探求.",
 			features: [
 				"インタラクティブアニメーション",
 				"CSS実験",
@@ -224,7 +224,7 @@ function getPlaygroundDisplayInfo(type: string) {
 		WebGL: {
 			title: "WebGL Experiments",
 			description:
-				"Three.js・WebGPU実装とインタラクティブ体験。シェーダー、パーティクル、3Dグラフィックス。",
+				"Three.js・WebGPU実装とインタラクティブ体験.シェーダー、パーティクル、3Dグラフィックス.",
 			features: [
 				"3Dグラフィックス",
 				"シェーダープログラミング",

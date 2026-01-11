@@ -2,7 +2,7 @@
 
 ## 目的
 
-PIXIjsを使用したタイピングゲームを提供し、タイピングスキルの向上を支援する。
+PIXIjsを使用したタイピングゲームを提供し、タイピングスキルの向上を支援する.
 
 ## 主な要素
 
@@ -90,7 +90,7 @@ PIXIjsを使用したタイピングゲームを提供し、タイピングス�
 ### SEO
 
 - **title**: "ProtoType Typing Game - samuido | PIXIjs タイピングゲーム"
-- **description**: "PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。"
+- **description**: "PIXIjsを使用したタイピングゲーム.WPMと正確性を記録し、タイピングスキルの向上を支援."
 - **keywords**: "タイピングゲーム, PIXIjs, WPM, 正確性, スコア記録, 練習"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/tools/ProtoType"
@@ -98,7 +98,7 @@ PIXIjsを使用したタイピングゲームを提供し、タイピングス�
 ### Open Graph
 
 - **og:title**: "ProtoType Typing Game - samuido | PIXIjs タイピングゲーム"
-- **og:description**: "PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。"
+- **og:description**: "PIXIjsを使用したタイピングゲーム.WPMと正確性を記録し、タイピングスキルの向上を支援."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/ProtoType"
 - **og:image**: "https://yusuke-kim.com/tools/ProtoType-og-image.png"
@@ -109,7 +109,7 @@ PIXIjsを使用したタイピングゲームを提供し、タイピングス�
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "ProtoType Typing Game - samuido | PIXIjs タイピングゲーム"
-- **twitter:description**: "PIXIjsを使用したタイピングゲーム。WPMと正確性を記録し、タイピングスキルの向上を支援。"
+- **twitter:description**: "PIXIjsを使用したタイピングゲーム.WPMと正確性を記録し、タイピングスキルの向上を支援."
 - **twitter:image**: "https://yusuke-kim.com/tools/ProtoType-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

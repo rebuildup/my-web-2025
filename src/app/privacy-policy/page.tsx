@@ -5,7 +5,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 export const metadata: Metadata = {
 	title: "Privacy Policy - samuido | プライバシーポリシー",
 	description:
-		"samuidoのプライバシーポリシー。個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています。",
+		"samuidoのプライバシーポリシー.個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています.",
 	keywords: [
 		"プライバシーポリシー",
 		"個人情報",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Privacy Policy - samuido | プライバシーポリシー",
 		description:
-			"samuidoのプライバシーポリシー。個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています。",
+			"samuidoのプライバシーポリシー.個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています.",
 		type: "website",
 		url: "https://yusuke-kim.com/privacy-policy",
 		images: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Privacy Policy - samuido | プライバシーポリシー",
 		description:
-			"samuidoのプライバシーポリシー。個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています。",
+			"samuidoのプライバシーポリシー.個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています.",
 		images: ["https://yusuke-kim.com/privacy-policy-twitter-image.jpg"],
 		creator: "@361do_sleep",
 	},
@@ -75,9 +75,9 @@ export default function PrivacyPolicy() {
 							</h1>
 							<div className="space-y-4">
 								<p className="noto-sans-jp-light text-sm max-w leading-loose">
-									samuidoのプライバシーポリシー。
+									samuidoのプライバシーポリシー.
 									<br />
-									個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています。
+									個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています.
 								</p>
 								<div className="flex items-center gap-4 text-sm opacity-60">
 									<span className="noto-sans-jp-light">
@@ -97,10 +97,10 @@ export default function PrivacyPolicy() {
 								<h2 className={Section_title}>基本方針</h2>
 								<div className="space-y-4">
 									<p className="noto-sans-jp-light text-sm leading-loose">
-										samuido（以下「当サイト」）は、ユーザーの個人情報の保護を重要な責務と考え、個人情報保護法及び関連法令を遵守し、適切な個人情報の取り扱いを行います。
+										samuido（以下「当サイト」）は、ユーザーの個人情報の保護を重要な責務と考え、個人情報保護法及び関連法令を遵守し、適切な個人情報の取り扱いを行います.
 									</p>
 									<p className="noto-sans-jp-light text-sm leading-loose">
-										本プライバシーポリシーは、当サイトがどのような個人情報を収集し、どのように利用・保護するかについて説明するものです。
+										本プライバシーポリシーは、当サイトがどのような個人情報を収集し、どのように利用・保護するかについて説明するものです.
 									</p>
 								</div>
 							</article>
@@ -157,7 +157,7 @@ export default function PrivacyPolicy() {
 											必須Cookie
 										</h3>
 										<p className="noto-sans-jp-light text-sm leading-loose">
-											サイトの基本機能（セッション管理、セキュリティ）に必要なCookieです。これらのCookieは無効にできません。
+											サイトの基本機能（セッション管理、セキュリティ）に必要なCookieです.これらのCookieは無効にできません.
 										</p>
 									</div>
 
@@ -166,7 +166,7 @@ export default function PrivacyPolicy() {
 											分析Cookie（Google Analytics）
 										</h3>
 										<p className="noto-sans-jp-light text-sm leading-loose mb-3">
-											サイトの利用状況を分析するためのCookieです。個人を特定する情報は収集しません。
+											サイトの利用状況を分析するためのCookieです.個人を特定する情報は収集しません.
 										</p>
 										<ul className="noto-sans-jp-light text-sm leading-loose space-y-1">
 											<li>• ページビュー数</li>
@@ -181,7 +181,7 @@ export default function PrivacyPolicy() {
 											Cookie管理
 										</h3>
 										<p className="noto-sans-jp-light text-sm leading-loose">
-											ブラウザの設定でCookieを無効にすることができますが、サイトの一部機能が正常に動作しない場合があります。
+											ブラウザの設定でCookieを無効にすることができますが、サイトの一部機能が正常に動作しない場合があります.
 										</p>
 									</div>
 								</div>
@@ -251,7 +251,7 @@ export default function PrivacyPolicy() {
 							<article className={SectionStyle}>
 								<h2 className={Section_title}>プライバシーポリシーの変更</h2>
 								<p className="noto-sans-jp-light text-sm leading-loose">
-									当サイトは、必要に応じて本プライバシーポリシーを変更することがあります。重要な変更がある場合は、サイト上で通知いたします。
+									当サイトは、必要に応じて本プライバシーポリシーを変更することがあります.重要な変更がある場合は、サイト上で通知いたします.
 								</p>
 							</article>
 

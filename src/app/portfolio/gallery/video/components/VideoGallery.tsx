@@ -54,7 +54,7 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 	if (items.length === 0) {
 		return (
 			<div className="text-center py-12">
-				<p className="noto-sans-jp-light text-main">映像作品がありません。</p>
+				<p className="noto-sans-jp-light text-main">映像作品がありません.</p>
 			</div>
 		);
 	}

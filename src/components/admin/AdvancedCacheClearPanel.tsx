@@ -81,13 +81,13 @@ export default function AdvancedCacheClearPanel() {
 					result.errors,
 				);
 				alert(
-					`キャッシュクリアは完了しましたが、${result.errors.length}件のエラーがありました。詳細はコンソールを確認してください。`,
+					`キャッシュクリアは完了しましたが、${result.errors.length}件のエラーがありました.詳細はコンソールを確認してください.`,
 				);
 			}
 			completed = true;
 		} catch (error) {
 			console.error("Cache clear failed:", error);
-			alert("キャッシュクリアに失敗しました。コンソールを確認してください。");
+			alert("キャッシュクリアに失敗しました.コンソールを確認してください.");
 			completed = true;
 		}
 
@@ -114,7 +114,7 @@ export default function AdvancedCacheClearPanel() {
 	};
 
 	const handleForceReload = () => {
-		if (confirm("ページを強制リロードしますか？未保存の変更は失われます。")) {
+		if (confirm("ページを強制リロードしますか？未保存の変更は失われます.")) {
 			window.location.reload();
 		}
 	};

@@ -296,7 +296,7 @@ export class PortfolioErrorHandler {
 				id: "fallback-1",
 				title: "ポートフォリオを読み込み中...",
 				description:
-					"データの読み込みに時間がかかっています。しばらくお待ちください。",
+					"データの読み込みに時間がかかっています.しばらくお待ちください.",
 				thumbnail: "/images/portfolio/placeholder.jpg",
 				category: "システム",
 				tags: ["loading"],
@@ -313,7 +313,7 @@ export class PortfolioErrorHandler {
 			id: "fallback-item",
 			type: "portfolio",
 			title: "データを読み込み中...",
-			description: "ポートフォリオデータの読み込みに時間がかかっています。",
+			description: "ポートフォリオデータの読み込みに時間がかかっています.",
 			category: "システム",
 			tags: ["loading"],
 			status: "published",
@@ -323,7 +323,7 @@ export class PortfolioErrorHandler {
 			technologies: [],
 			seo: {
 				title: "データを読み込み中... - samuido",
-				description: "ポートフォリオデータの読み込み中です。",
+				description: "ポートフォリオデータの読み込み中です.",
 				keywords: ["loading", "portfolio"],
 				ogImage: "/images/og-default.jpg",
 				twitterImage: "/images/twitter-default.jpg",
@@ -399,7 +399,7 @@ export class PortfolioErrorHandler {
 								type: "p",
 								props: {
 									children:
-										"データの読み込み中にエラーが発生しました。ページを再読み込みしてください。",
+										"データの読み込み中にエラーが発生しました.ページを再読み込みしてください.",
 								},
 							},
 							{

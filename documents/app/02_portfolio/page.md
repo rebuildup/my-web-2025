@@ -2,7 +2,7 @@
 
 ## 目的
 
-4つのカテゴリ別ギャラリーへの導線を提供し、作品の全体像を把握できるハブページ。
+4つのカテゴリ別ギャラリーへの導線を提供し、作品の全体像を把握できるハブページ.
 
 ## 主な要素
 
@@ -114,7 +114,7 @@
 ### SEO
 
 - **title**: "Portfolio - samuido | 作品ギャラリー"
-- **description**: "Webデザイナー・開発者木村友亮の作品ポートフォリオ。Webサイト、アプリケーション、デザイン作品をカテゴリ別にご紹介。"
+- **description**: "Webデザイナー・開発者木村友亮の作品ポートフォリオ.Webサイト、アプリケーション、デザイン作品をカテゴリ別にご紹介."
 - **keywords**: "ポートフォリオ, 作品ギャラリー, Webデザイン, アプリケーション, フロントエンド, UI/UX, 映像制作"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/portfolio"
@@ -122,7 +122,7 @@
 ### Open Graph
 
 - **og:title**: "Portfolio - samuido | 作品ギャラリー"
-- **og:description**: "Webデザイナー・開発者木村友亮の作品ポートフォリオ。Webサイト、アプリケーション、デザイン作品をカテゴリ別にご紹介。"
+- **og:description**: "Webデザイナー・開発者木村友亮の作品ポートフォリオ.Webサイト、アプリケーション、デザイン作品をカテゴリ別にご紹介."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio"
 - **og:image**: "https://yusuke-kim.com/portfolio-og-image.png"
@@ -133,7 +133,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Portfolio - samuido | 作品ギャラリー"
-- **twitter:description**: "Webデザイナー・開発者木村友亮の作品ポートフォリオ。Webサイト、アプリケーション、デザイン作品をカテゴリ別にご紹介。"
+- **twitter:description**: "Webデザイナー・開発者木村友亮の作品ポートフォリオ.Webサイト、アプリケーション、デザイン作品をカテゴリ別にご紹介."
 - **twitter:image**: "https://yusuke-kim.com/portfolio-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

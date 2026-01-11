@@ -2,8 +2,8 @@
 
 ## 概要
 
-このドキュメントは、ポートフォリオシステムのコードコメントと型定義の充実について説明します。
-保守性向上とチーム開発効率化のためのコメント規約とベストプラクティスを定義します。
+このドキュメントは、ポートフォリオシステムのコードコメントと型定義の充実について説明します.
+保守性向上とチーム開発効率化のためのコメント規約とベストプラクティスを定義します.
 
 ## 目次
 
@@ -963,10 +963,10 @@ const WebGLPlayground: React.FC<WebGLPlaygroundProps> = ({
       <div className="bg-base border border-foreground p-8 text-center">
         <h3 className="text-xl font-bold text-primary mb-4">WebGL Not Supported</h3>
         <p className="text-foreground mb-4">
-          お使いのブラウザまたはデバイスはWebGLをサポートしていません。
+          お使いのブラウザまたはデバイスはWebGLをサポートしていません.
         </p>
         <p className="text-sm text-foreground opacity-70">
-          最新のブラウザでアクセスするか、WebGL対応デバイスをご利用ください。
+          最新のブラウザでアクセスするか、WebGL対応デバイスをご利用ください.
         </p>
       </div>
     );
@@ -1063,4 +1063,4 @@ export default WebGLPlayground;
 - 知識共有の促進
 - 一貫した開発スタイルの確立
 
-これらの規約を継続的に適用し、定期的に見直すことで、高品質で保守性の高いポートフォリオシステムを維持できます。
+これらの規約を継続的に適用し、定期的に見直すことで、高品質で保守性の高いポートフォリオシステムを維持できます.

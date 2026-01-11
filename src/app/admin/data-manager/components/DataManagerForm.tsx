@@ -494,7 +494,7 @@ export function DataManagerForm({
 		if (!newFilePath) {
 			console.error("Failed to migrate content to markdown");
 			alert(
-				"コンテンツのMarkdownファイルへの移行に失敗しました。もう一度お試しください。",
+				"コンテンツのMarkdownファイルへの移行に失敗しました.もう一度お試しください.",
 			);
 			return;
 		}
@@ -518,13 +518,13 @@ export function DataManagerForm({
 			if (markdownFilePath) {
 				const ok = await updateMarkdownFile(markdownFilePath, markdownContent);
 				if (!ok) {
-					alert("Markdownファイルの保存に失敗しました。もう一度お試しください。");
+					alert("Markdownファイルの保存に失敗しました.もう一度お試しください.");
 					return;
 				}
 			} else {
 				const newFilePath = await createMarkdownFile(markdownContent);
 				if (!newFilePath) {
-					alert("Markdownファイルの保存に失敗しました。もう一度お試しください。");
+					alert("Markdownファイルの保存に失敗しました.もう一度お試しください.");
 					return;
 				}
 				setMarkdownFilePath(newFilePath);
@@ -574,8 +574,8 @@ export function DataManagerForm({
 
 				if (hasOther && hasSpecificCategories) {
 					const shouldContinue = confirm(
-						"警告: 「その他」カテゴリと特定のカテゴリの両方が選択されています。" +
-							"「その他」カテゴリを含むアイテムは、他のカテゴリに関係なく「すべて」ギャラリーにのみ表示されます。" +
+						"警告: 「その他」カテゴリと特定のカテゴリの両方が選択されています." +
+							"「その他」カテゴリを含むアイテムは、他のカテゴリに関係なく「すべて」ギャラリーにのみ表示されます." +
 							"続行しますか？",
 					);
 					if (!shouldContinue) {
@@ -1176,7 +1176,7 @@ export function DataManagerForm({
 							日付管理
 						</h3>
 						<p className="noto-sans-jp-light text-xs pb-2 text-gray-400 mb-4">
-							このコンテンツアイテムの日付管理方法を制御します。自動日付管理（作成・更新時刻に基づく）または手動日付設定を選択できます。
+							このコンテンツアイテムの日付管理方法を制御します.自動日付管理（作成・更新時刻に基づく）または手動日付設定を選択できます.
 						</p>
 
 						<DatePicker

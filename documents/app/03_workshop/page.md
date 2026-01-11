@@ -2,7 +2,7 @@
 
 ## 目的
 
-プラグイン配布、素材ダウンロード、ブログ機能への導線を提供し、クリエイティブなコンテンツのハブページ。
+プラグイン配布、素材ダウンロード、ブログ機能への導線を提供し、クリエイティブなコンテンツのハブページ.
 
 ## 主な要素
 
@@ -99,7 +99,7 @@
 ### SEO
 
 - **title**: "Workshop - samuido | プラグイン・ブログ・素材配布"
-- **description**: "AfterEffectsプラグイン、技術記事、素材の配布サイト。フロントエンドエンジニアsamuidoのクリエイティブハブ。"
+- **description**: "AfterEffectsプラグイン、技術記事、素材の配布サイト.フロントエンドエンジニアsamuidoのクリエイティブハブ."
 - **keywords**: "AfterEffects, プラグイン, 技術記事, 素材配布, チュートリアル, ブログ"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/workshop"
@@ -107,7 +107,7 @@
 ### Open Graph
 
 - **og:title**: "Workshop - samuido | プラグイン・ブログ・素材配布"
-- **og:description**: "AfterEffectsプラグイン、技術記事、素材の配布サイト。フロントエンドエンジニアsamuidoのクリエイティブハブ。"
+- **og:description**: "AfterEffectsプラグイン、技術記事、素材の配布サイト.フロントエンドエンジニアsamuidoのクリエイティブハブ."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/workshop"
 - **og:image**: "https://yusuke-kim.com/workshop-og-image.png"
@@ -118,7 +118,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Workshop - samuido | プラグイン・ブログ・素材配布"
-- **twitter:description**: "AfterEffectsプラグイン、技術記事、素材の配布サイト。フロントエンドエンジニアsamuidoのクリエイティブハブ。"
+- **twitter:description**: "AfterEffectsプラグイン、技術記事、素材の配布サイト.フロントエンドエンジニアsamuidoのクリエイティブハブ."
 - **twitter:image**: "https://yusuke-kim.com/workshop-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

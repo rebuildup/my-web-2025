@@ -211,9 +211,9 @@ export default function WebGLPlaygroundPage() {
 								WebGL Playground
 							</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
-								WebGL・Three.js・WebGPU実験場です。
+								WebGL・Three.js・WebGPU実験場です.
 								<br />
-								3D表現、シェーダー、パーティクルシステム、インタラクティブ体験を実験しています。
+								3D表現、シェーダー、パーティクルシステム、インタラクティブ体験を実験しています.
 							</p>
 						</header>
 

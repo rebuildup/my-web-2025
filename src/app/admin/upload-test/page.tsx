@@ -9,7 +9,7 @@ export default function UploadTestPage() {
         <Box sx={{ display: "grid", gap: 4 }}>
             <PageHeader 
                 title="アップロードテスト" 
-                description="ファイルアップロード機能の動作確認を行います。" 
+                description="ファイルアップロード機能の動作確認を行います." 
                 breadcrumbs={[
                     { label: "Admin", href: "/admin" },
                     { label: "アップロードテスト", href: "/admin/upload-test" },
@@ -23,7 +23,7 @@ export default function UploadTestPage() {
                     Under Construction
                 </Typography>
                 <Typography color="text.secondary">
-                    この機能は現在開発中です。
+                    この機能は現在開発中です.
                 </Typography>
             </Paper>
         </Box>

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 export const metadata: Metadata = {
 	title: "Links - samuido",
 	description:
-		"samuidoの各種SNSアカウントや外部サイトへのリンク集です。X(Twitter)、GitHub、YouTube、Discord、Boothなど。",
+		"samuidoの各種SNSアカウントや外部サイトへのリンク集です.X(Twitter)、GitHub、YouTube、Discord、Boothなど.",
 	keywords: [
 		"samuido",
 		"リンク集",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Links - samuido",
 		description:
-			"samuidoの各種SNSアカウントや外部サイトへのリンク集です。X(Twitter)、GitHub、YouTube、Discord、Boothなど。",
+			"samuidoの各種SNSアカウントや外部サイトへのリンク集です.X(Twitter)、GitHub、YouTube、Discord、Boothなど.",
 		type: "website",
 		url: "https://links.yusuke-kim.com",
 		siteName: "samuido",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Links - samuido",
 		description:
-			"samuidoの各種SNSアカウントや外部サイトへのリンク集です。X(Twitter)、GitHub、YouTube、Discord、Boothなど。",
+			"samuidoの各種SNSアカウントや外部サイトへのリンク集です.X(Twitter)、GitHub、YouTube、Discord、Boothなど.",
 		creator: "@361do_sleep",
 		images: ["https://yusuke-kim.com/images/twitter-image.jpg"],
 	},

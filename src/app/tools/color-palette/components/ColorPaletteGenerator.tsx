@@ -618,7 +618,7 @@ export default function ColorPaletteGenerator() {
 	return (
 		<ToolWrapper
 			toolName="Color Palette Generator"
-			description="高度なアルゴリズムとカラーハーモニー理論を使用したカラーパレット生成ツール。アクセシビリティチェック、パレット管理、多形式エクスポートに対応。"
+			description="高度なアルゴリズムとカラーハーモニー理論を使用したカラーパレット生成ツール.アクセシビリティチェック、パレット管理、多形式エクスポートに対応."
 			category="design"
 			keyboardShortcuts={keyboardShortcuts}
 			showPerformanceInfo={true}

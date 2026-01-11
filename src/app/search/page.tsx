@@ -5,7 +5,7 @@ import SearchPage from "./components/SearchPage";
 export const metadata: Metadata = {
 	title: "Search - samuido | サイト内検索",
 	description:
-		"samuidoのサイト内検索。プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます。",
+		"samuidoのサイト内検索.プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます.",
 	keywords: [
 		"検索",
 		"サイト内検索",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Search - samuido | サイト内検索",
 		description:
-			"samuidoのサイト内検索。プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます。",
+			"samuidoのサイト内検索.プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます.",
 		type: "website",
 		url: "https://yusuke-kim.com/search",
 		images: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Search - samuido | サイト内検索",
 		description:
-			"samuidoのサイト内検索。プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます。",
+			"samuidoのサイト内検索.プロフィール、ポートフォリオ、ワークショップ、ツールから必要な情報を素早く見つけられます.",
 		images: ["https://yusuke-kim.com/search-twitter-image.jpg"],
 		creator: "@361do_sleep",
 	},
@@ -63,9 +63,9 @@ function SearchPageFallback() {
 								Search
 							</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
-								サイト内のコンテンツを検索できます。
+								サイト内のコンテンツを検索できます.
 								<br />
-								ポートフォリオ、ブログ、ツールなど、必要な情報を素早く見つけることができます。
+								ポートフォリオ、ブログ、ツールなど、必要な情報を素早く見つけることができます.
 							</p>
 						</header>
 						<div className="text-center py-16">

@@ -47,7 +47,7 @@ export default function AdminDashboard() {
 						<Chip label="MUI" color="primary" size="small" />
 					</Box>
 					<Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-						コンテンツデータ操作とページ編集に特化した管理パネルです。
+						コンテンツデータ操作とページ編集に特化した管理パネルです.
 					</Typography>
 
 					<Box

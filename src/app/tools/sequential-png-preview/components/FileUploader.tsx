@@ -95,13 +95,13 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 					const sortedFrames = sortFramesByName(frames);
 					onFilesLoaded(sortedFrames);
 				} else {
-					setError("PNGファイルまたはZIPファイルをドロップしてください。");
+					setError("PNGファイルまたはZIPファイルをドロップしてください.");
 				}
 			} catch (err) {
 				setError(
 					err instanceof Error
 						? err.message
-						: "ファイルの処理中にエラーが発生しました。",
+						: "ファイルの処理中にエラーが発生しました.",
 				);
 			} finally {
 				setIsProcessing(false);
@@ -131,7 +131,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 						const sortedFrames = sortFramesByName(frames);
 						onFilesLoaded(sortedFrames);
 					} else {
-						setError("ZIPファイルを選択してください。");
+						setError("ZIPファイルを選択してください.");
 					}
 				} else {
 					const pngFiles = fileArray.filter(
@@ -140,7 +140,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 					);
 
 					if (pngFiles.length === 0) {
-						setError("PNGファイルが見つかりませんでした。");
+						setError("PNGファイルが見つかりませんでした.");
 						return;
 					}
 
@@ -152,7 +152,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 				setError(
 					err instanceof Error
 						? err.message
-						: "ファイルの処理中にエラーが発生しました。",
+						: "ファイルの処理中にエラーが発生しました.",
 				);
 			} finally {
 				setIsProcessing(false);

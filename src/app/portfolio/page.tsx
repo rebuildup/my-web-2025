@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
 	return {
 		title: "Portfolio | samuido",
 		description:
-			"作品集・開発・映像・デザイン。4つのカテゴリ別ギャラリーへの導線を提供し、作品の全体像を把握できるハブページです。",
+			"作品集・開発・映像・デザイン.4つのカテゴリ別ギャラリーへの導線を提供し、作品の全体像を把握できるハブページです.",
 		robots: "index, follow",
 	};
 }
@@ -368,7 +368,7 @@ export default async function PortfolioPage() {
 											Portfolio
 										</h1>
 										<p className="noto-sans-jp-light text-sm max-w-2xl leading-loose">
-											これまでに制作した作品/プロジェクトをまとめたポートフォリオページです。
+											これまでに制作した作品/プロジェクトをまとめたポートフォリオページです.
 										</p>
 									</div>
 								</header>
@@ -426,7 +426,7 @@ export default async function PortfolioPage() {
 														WebGL Dome Gallery
 													</h3>
 													<p className="noto-sans-jp-light text-sm text-main/70">
-														react-bits の Dome Gallery で遊ぶサンドボックス。
+														react-bits の Dome Gallery で遊ぶサンドボックス.
 													</p>
 												</div>
 											</GlowCard>
@@ -555,7 +555,7 @@ export default async function PortfolioPage() {
 								Error
 							</h1>
 							<p className="mt-4 text-xs sm:text-xs text-main/70">
-								ポートフォリオデータの読み込みに失敗しました。
+								ポートフォリオデータの読み込みに失敗しました.
 							</p>
 							<div className="mt-8">
 								<Link

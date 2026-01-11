@@ -14,7 +14,7 @@ const educationData = [
 		},
 		subtitle: { ja: "卒業予定", en: "Graduate (Expected)" },
 		description: {
-			ja: "現在、制御情報工学科に在籍中。",
+			ja: "現在、制御情報工学科に在籍中.",
 			en: "Currently enrolled in Department of Intelligent System Engineering.",
 		},
 		tags: ["Computer Science", "Engineering"],
@@ -24,7 +24,7 @@ const educationData = [
 		title: { ja: "宇部高等専門学校 入学", en: "Enrolled in Ube Kosen" },
 		subtitle: { ja: "入学", en: "Enrolled" },
 		description: {
-			ja: "制御情報工学科での学習を開始。",
+			ja: "制御情報工学科での学習を開始.",
 			en: "Started journey in Intelligent System Engineering.",
 		},
 		tags: ["Freshman"],
@@ -34,7 +34,7 @@ const educationData = [
 		title: { ja: "公立中学校 卒業", en: "Graduated from Junior High School" },
 		subtitle: { ja: "卒業", en: "Graduated" },
 		description: {
-			ja: "義務教育課程を修了。",
+			ja: "義務教育課程を修了.",
 			en: "Completed compulsory education.",
 		},
 	},
@@ -49,7 +49,7 @@ const achievementsData = [
 		},
 		subtitle: { ja: "ゲーム部門 1位", en: "1st Place - Game Division" },
 		description: {
-			ja: "ゲーム開発部門にて優勝。",
+			ja: "ゲーム開発部門にて優勝.",
 			en: "Won first prize in the game development category.",
 		},
 		tags: ["Unity", "C#", "GameDev"],
@@ -62,7 +62,7 @@ const achievementsData = [
 		},
 		subtitle: { ja: "技術賞・企業賞", en: "Technical Award & Corporate Award" },
 		description: {
-			ja: "技術賞およびプライムゲート企業賞を受賞。",
+			ja: "技術賞およびプライムゲート企業賞を受賞.",
 			en: "Received Technical Award and PrimeGate Corporate Award.",
 		},
 		tags: ["Programming", "Contest"],
@@ -75,7 +75,7 @@ const achievementsData = [
 		},
 		subtitle: { ja: "アイデア賞", en: "Idea Award" },
 		description: {
-			ja: "ユニークな発想と創造性が評価されました。",
+			ja: "ユニークな発想と創造性が評価されました.",
 			en: "Recognized for unique concept and creativity.",
 		},
 		tags: ["Idea", "Creativity"],
@@ -85,7 +85,7 @@ const achievementsData = [
 		title: { ja: "学校美術展覧会", en: "School Art Exhibitions" },
 		subtitle: { ja: "複数回受賞", en: "Various Awards" },
 		description: {
-			ja: "市区学校美術展覧会にて入選・特選を複数回受賞。",
+			ja: "市区学校美術展覧会にて入選・特選を複数回受賞.",
 			en: "Multiple selections and special awards at city school art exhibitions.",
 		},
 		tags: ["Art", "Design"],
@@ -122,7 +122,7 @@ const profileData = {
 		en: "Student / Developer / Creator",
 	},
 	bio: {
-		ja: "Web制作/映像制作/ツール制作 などをしている高専生。日々、有意義に時間を溶かしています。",
+		ja: "Web制作/映像制作/ツール制作 などをしている高専生.日々、有意義に時間を溶かしています.",
 		en: "A technical college student engaged in web development, video production, tool creation, and more. I spend my days meaningfully melting away the hours.",
 	},
 	interests: {

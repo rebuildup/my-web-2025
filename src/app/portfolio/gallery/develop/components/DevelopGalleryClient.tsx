@@ -64,7 +64,7 @@ export function DevelopGalleryClient({
 			return hasTags || hasCategory || hasCategories;
 		}) as unknown as EnhancedContentItem[];
 
-		// 2) ソート（publishedAt最優先の降順。フォールバックはupdatedAt→createdAt）
+		// 2) ソート（publishedAt最優先の降順.フォールバックはupdatedAt→createdAt）
 		items = [...items].sort((a: any, b: any) => {
 			const aTime = new Date(
 				a.publishedAt || a.updatedAt || a.createdAt,
@@ -201,7 +201,7 @@ export function DevelopGalleryClient({
 				{initialItems.length === 0 ? (
 					<div className="text-center py-16">
 						<p className="noto-sans-jp-light text-sm text-main">
-							開発プロジェクトデータを読み込めませんでした。
+							開発プロジェクトデータを読み込めませんでした.
 						</p>
 						<p className="noto-sans-jp-light text-xs text-main/60 mt-2">
 							初期アイテム数: {initialItems.length}
@@ -357,7 +357,7 @@ export function DevelopGalleryClient({
 				) : (
 					<div className="text-center py-16">
 						<p className="noto-sans-jp-light text-sm text-main">
-							フィルター条件に一致する開発プロジェクトが見つかりませんでした。
+							フィルター条件に一致する開発プロジェクトが見つかりませんでした.
 						</p>
 						<p className="noto-sans-jp-light text-xs text-main/60 mt-2">
 							開発プロジェクト数: {filteredAndSortedItems.length}

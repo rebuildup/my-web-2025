@@ -293,7 +293,7 @@ export default function AdminMarkdownManager() {
 		<Box sx={{ display: "grid", gap: 4 }}>
 			<PageHeader
 				title="Markdownページ管理"
-				description="コンテンツに紐づくMarkdown本文を一覧・編集・分析します。検索とフィルタで対象ページを素早く特定し、統計情報から文章品質を確認できます。"
+				description="コンテンツに紐づくMarkdown本文を一覧・編集・分析します.検索とフィルタで対象ページを素早く特定し、統計情報から文章品質を確認できます."
 				actions={[
 					<Button
 						key="refresh"
@@ -381,7 +381,7 @@ export default function AdminMarkdownManager() {
 
 				{pagesError && (
 					<Alert severity="error">
-						Markdownページの取得に失敗しました。再読み込みしてください。
+						Markdownページの取得に失敗しました.再読み込みしてください.
 					</Alert>
 				)}
 
@@ -418,7 +418,7 @@ export default function AdminMarkdownManager() {
 								<TableRow>
 									<TableCell colSpan={7} align="center" sx={{ py: 6 }}>
 										<Typography variant="body2" color="text.secondary">
-											表示するMarkdownページがありません。条件を変更するか、新規作成してください。
+											表示するMarkdownページがありません.条件を変更するか、新規作成してください.
 										</Typography>
 									</TableCell>
 								</TableRow>
@@ -596,7 +596,7 @@ export default function AdminMarkdownManager() {
 						</Stack>
 					) : (
 						<Alert severity="warning">
-							統計情報の取得に失敗しました。再度お試しください。
+							統計情報の取得に失敗しました.再度お試しください.
 						</Alert>
 					)}
 				</DialogContent>
@@ -605,7 +605,7 @@ export default function AdminMarkdownManager() {
 			<ConfirmDialog
 				open={Boolean(deleteTarget)}
 				title="Markdownページを削除しますか？"
-				description="削除するとこのMarkdownファイルは復元できません。必要に応じて事前にエクスポートしてください。"
+				description="削除するとこのMarkdownファイルは復元できません.必要に応じて事前にエクスポートしてください."
 				confirmLabel="削除する"
 				onCancel={() => setDeleteTarget(null)}
 				onConfirm={() => deleteTarget && void handleDelete(deleteTarget.id)}

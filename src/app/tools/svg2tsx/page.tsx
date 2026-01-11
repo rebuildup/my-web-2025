@@ -5,13 +5,13 @@ import { SVGToTSXConverter } from "./components/SVGToTSXConverter";
 export const metadata: Metadata = {
 	title: "SVG to TSX Converter - samuido | SVG React変換",
 	description:
-		"SVG画像をReactコンポーネント（TSX）に変換。TypeScript対応で最適化されたコードを生成。",
+		"SVG画像をReactコンポーネント（TSX）に変換.TypeScript対応で最適化されたコードを生成.",
 	keywords: "SVG, TSX, React, 変換, TypeScript, コンポーネント, コード生成",
 	robots: "index, follow",
 	openGraph: {
 		title: "SVG to TSX Converter - samuido | SVG React変換",
 		description:
-			"SVG画像をReactコンポーネント（TSX）に変換。TypeScript対応で最適化されたコードを生成。",
+			"SVG画像をReactコンポーネント（TSX）に変換.TypeScript対応で最適化されたコードを生成.",
 		type: "website",
 		url: "https://yusuke-kim.com/tools/svg2tsx",
 		images: [
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "SVG to TSX Converter - samuido | SVG React変換",
 		description:
-			"SVG画像をReactコンポーネント（TSX）に変換。TypeScript対応で最適化されたコードを生成。",
+			"SVG画像をReactコンポーネント（TSX）に変換.TypeScript対応で最適化されたコードを生成.",
 		images: ["https://yusuke-kim.com/tools/svg2tsx-twitter-image.jpg"],
 		creator: "@361do_sleep",
 	},

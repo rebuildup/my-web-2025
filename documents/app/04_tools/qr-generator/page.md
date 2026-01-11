@@ -2,7 +2,7 @@
 
 ## 目的
 
-URLからQRコードを生成し、簡単にシェアできるQRコードを作成するツール。
+URLからQRコードを生成し、簡単にシェアできるQRコードを作成するツール.
 
 ## 主な要素
 
@@ -90,7 +90,7 @@ URLからQRコードを生成し、簡単にシェアできるQRコードを作�
 ### SEO
 
 - **title**: "QR Code Generator - samuido | QRコード生成"
-- **description**: "URLからQRコードを簡単生成。カスタマイズ機能付きで美しいQRコードを作成できます。"
+- **description**: "URLからQRコードを簡単生成.カスタマイズ機能付きで美しいQRコードを作成できます."
 - **keywords**: "QRコード, 生成, URL, カスタマイズ, ダウンロード, シェア"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/tools/qr-generator"
@@ -98,7 +98,7 @@ URLからQRコードを生成し、簡単にシェアできるQRコードを作�
 ### Open Graph
 
 - **og:title**: "QR Code Generator - samuido | QRコード生成"
-- **og:description**: "URLからQRコードを簡単生成。カスタマイズ機能付きで美しいQRコードを作成できます。"
+- **og:description**: "URLからQRコードを簡単生成.カスタマイズ機能付きで美しいQRコードを作成できます."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/qr-generator"
 - **og:image**: "https://yusuke-kim.com/tools/qr-generator-og-image.png"
@@ -109,7 +109,7 @@ URLからQRコードを生成し、簡単にシェアできるQRコードを作�
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "QR Code Generator - samuido | QRコード生成"
-- **twitter:description**: "URLからQRコードを簡単生成。カスタマイズ機能付きで美しいQRコードを作成できます。"
+- **twitter:description**: "URLからQRコードを簡単生成.カスタマイズ機能付きで美しいQRコードを作成できます."
 - **twitter:image**: "https://yusuke-kim.com/tools/qr-generator-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

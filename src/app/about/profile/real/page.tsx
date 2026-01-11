@@ -102,7 +102,7 @@ const structuredData = {
 	birthDate: "2007-10",
 	jobTitle: "学生・開発者・デザイナー",
 	description:
-		"高等専門学校在学中の学生。プログラミング、デザイン、映像制作に従事",
+		"高等専門学校在学中の学生.プログラミング、デザイン、映像制作に従事",
 	url: "https://yusuke-kim.com/about/profile/real",
 	sameAs: ["https://twitter.com/361do_sleep", "https://github.com/361do"],
 	alumniOf: {

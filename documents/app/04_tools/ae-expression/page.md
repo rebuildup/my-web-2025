@@ -2,7 +2,7 @@
 
 ## 目的
 
-AfterEffectsのエクスプレッションをScratchのブロック風UIで一覧表示し、引数設定をわかりやすく行えるツール。
+AfterEffectsのエクスプレッションをScratchのブロック風UIで一覧表示し、引数設定をわかりやすく行えるツール.
 
 ## 主な要素
 
@@ -74,7 +74,7 @@ AfterEffectsのエクスプレッションをScratchのブロック風UIで一�
 ### SEO
 
 - **title**: "AE Expression Tool - samuido | AfterEffects エクスプレッション"
-- **description**: "AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。"
+- **description**: "AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示."
 - **keywords**: "AfterEffects, エクスプレッション, アニメーション, エフェクト, Scratch, ブロックUI"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/tools/ae-expression"
@@ -82,7 +82,7 @@ AfterEffectsのエクスプレッションをScratchのブロック風UIで一�
 ### Open Graph
 
 - **og:title**: "AE Expression Tool - samuido | AfterEffects エクスプレッション"
-- **og:description**: "AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。"
+- **og:description**: "AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/ae-expression"
 - **og:image**: "https://yusuke-kim.com/tools/ae-expression-og-image.png"
@@ -93,7 +93,7 @@ AfterEffectsのエクスプレッションをScratchのブロック風UIで一�
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "AE Expression Tool - samuido | AfterEffects エクスプレッション"
-- **twitter:description**: "AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。"
+- **twitter:description**: "AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示."
 - **twitter:image**: "https://yusuke-kim.com/tools/ae-expression-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

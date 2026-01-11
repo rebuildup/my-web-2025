@@ -216,7 +216,7 @@ const PlayerProfilePanel: React.FC = () => {
                           fontSize: "8px",
                         }}
                       >
-                        ユーザーが見つかりませんでした。
+                        ユーザーが見つかりませんでした.
                         <br />
                         パスワードを入力してユーザーを登録します
                       </div>

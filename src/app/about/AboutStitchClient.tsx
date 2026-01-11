@@ -241,7 +241,7 @@ export default function AboutStitchClient({
 									</h2>
 									<p className="text-main/60 text-xs md:text-sm font-light max-w-xs">
 										{lang === "ja"
-											? "学歴と受賞歴のタイムライン。"
+											? "学歴と受賞歴のタイムライン."
 											: "Education and achievements timeline."}
 									</p>
 								</div>

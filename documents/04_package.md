@@ -1,6 +1,6 @@
 # ライブラリ & バージョン管理 (Packages, 2025-12 現行)
 
-`package.json` を基準に主要依存とスクリプトを整理。Lint/Format は ESLint ではなく **Biome**。
+`package.json` を基準に主要依存とスクリプトを整理.Lint/Format は ESLint ではなく **Biome**.
 
 ## コア依存
 
@@ -65,17 +65,17 @@
 }
 ```
 
-- `postinstall`/`prebuild`: `scripts/install-hooks.js` で **better-sqlite3** の自動リビルドを試行。ネットワークアクセスなし。
-- `scripts/filter-warnings.js`: baseline-browser-mapping 警告のみフィルタして stderr を出力。
-- `scripts/copy-content-data.js`: ビルド後に `data/` を `.next/standalone/data` へ複製。
+- `postinstall`/`prebuild`: `scripts/install-hooks.js` で **better-sqlite3** の自動リビルドを試行.ネットワークアクセスなし.
+- `scripts/filter-warnings.js`: baseline-browser-mapping 警告のみフィルタして stderr を出力.
+- `scripts/copy-content-data.js`: ビルド後に `data/` を `.next/standalone/data` へ複製.
 
 ## パッケージ管理ポリシー
-- パッケージマネージャ: `pnpm@10.24.0`（lockfile 必須、`--frozen-lockfile` 運用）。
-- Lint/Format: `pnpm run lint` / `pnpm run format`（Biome）。
-- ビルド: `pnpm run build` → Next standalone 出力。  
-- 追加インストール時は `pnpm add <pkg>` し、`biome format` で整形してからコミット。
+- パッケージマネージャ: `pnpm@10.24.0`（lockfile 必須、`--frozen-lockfile` 運用）.
+- Lint/Format: `pnpm run lint` / `pnpm run format`（Biome）.
+- ビルド: `pnpm run build` → Next standalone 出力.  
+- 追加インストール時は `pnpm add <pkg>` し、`biome format` で整形してからコミット.
 
 ## アップグレード指針
-- **Next/React**: minor はビルドと Jest を通した上でマージ。major は canary ブランチで検証。
-- **Tailwind v4**: PostCSS 連携は `@tailwindcss/postcss` で完結。`tailwind.config.ts` の互換性を確認。
-- **better-sqlite3**: Node メジャーアップ時は `pnpm rebuild better-sqlite3` をCI/本番で実行し動作確認。
+- **Next/React**: minor はビルドと Jest を通した上でマージ.major は canary ブランチで検証.
+- **Tailwind v4**: PostCSS 連携は `@tailwindcss/postcss` で完結.`tailwind.config.ts` の互換性を確認.
+- **better-sqlite3**: Node メジャーアップ時は `pnpm rebuild better-sqlite3` をCI/本番で実行し動作確認.

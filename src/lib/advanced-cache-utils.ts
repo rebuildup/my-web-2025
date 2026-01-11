@@ -597,25 +597,25 @@ export class AdvancedBrowserCacheManager {
 
 		if (cacheState.serviceWorkers > 0) {
 			recommendations.push(
-				"Service Workerが登録されています。完全クリアを実行してください。",
+				"Service Workerが登録されています.完全クリアを実行してください.",
 			);
 		}
 
 		if (cacheState.localStorage > 0 || cacheState.sessionStorage > 0) {
-			recommendations.push("Storageにデータが残っています。");
+			recommendations.push("Storageにデータが残っています.");
 		}
 
 		if (cacheState.caches.length > 0) {
-			recommendations.push("Cache APIにエントリが残っています。");
+			recommendations.push("Cache APIにエントリが残っています.");
 		}
 
 		if (cacheState.indexedDBs.length > 0) {
-			recommendations.push("IndexedDBにデータベースが残っています。");
+			recommendations.push("IndexedDBにデータベースが残っています.");
 		}
 
 		if (browserInfo.isIncognito) {
 			recommendations.push(
-				"シークレット/プライベートモードでは一部の機能が制限されます。",
+				"シークレット/プライベートモードでは一部の機能が制限されます.",
 			);
 		}
 

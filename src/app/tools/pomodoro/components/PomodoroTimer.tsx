@@ -103,70 +103,70 @@ let SCHEDULE = [
 		type: "focus",
 		duration: 15,
 		label: "Warm up",
-		desc: "脳のアイドリング運転。メール確認や今日の計画立てなど、軽いタスクから始めましょう。",
+		desc: "脳のアイドリング運転.メール確認や今日の計画立てなど、軽いタスクから始めましょう.",
 	},
 	{
 		id: 2,
 		type: "break",
 		duration: 3,
 		label: "Short Break",
-		desc: "深呼吸をして、画面から目を離しましょう。水分補給を忘れずに。",
+		desc: "深呼吸をして、画面から目を離しましょう.水分補給を忘れずに.",
 	},
 	{
 		id: 3,
 		type: "focus",
 		duration: 30,
 		label: "Deep Work I",
-		desc: "エンジンがかかってきました。主要なタスクの構成を練ったり、着手したりする時間です。",
+		desc: "エンジンがかかってきました.主要なタスクの構成を練ったり、着手したりする時間です.",
 	},
 	{
 		id: 4,
 		type: "break",
 		duration: 3,
 		label: "Short Break",
-		desc: "立ち上がってストレッチ。血流を良くして次の集中に備えます。",
+		desc: "立ち上がってストレッチ.血流を良くして次の集中に備えます.",
 	},
 	{
 		id: 5,
 		type: "focus",
 		duration: 45,
 		label: "Deep Work II",
-		desc: "集中力がピークに達する時間帯。クリエイティブな作業や複雑な思考を要するタスクに最適です。",
+		desc: "集中力がピークに達する時間帯.クリエイティブな作業や複雑な思考を要するタスクに最適です.",
 	},
 	{
 		id: 6,
 		type: "break",
 		duration: 3,
 		label: "Short Break",
-		desc: "短い休憩ですが、目を閉じて脳を完全に休めることを意識してください。",
+		desc: "短い休憩ですが、目を閉じて脳を完全に休めることを意識してください.",
 	},
 	{
 		id: 7,
 		type: "focus",
 		duration: 60,
 		label: "Flow State I",
-		desc: "フロー状態への没入。時間はあっという間に過ぎ去ります。通知を切りましょう。",
+		desc: "フロー状態への没入.時間はあっという間に過ぎ去ります.通知を切りましょう.",
 	},
 	{
 		id: 8,
 		type: "break",
 		duration: 5,
 		label: "Short Break",
-		desc: "最後の大きな波の前の一呼吸。糖分補給も良いかもしれません。",
+		desc: "最後の大きな波の前の一呼吸.糖分補給も良いかもしれません.",
 	},
 	{
 		id: 9,
 		type: "focus",
 		duration: 75,
 		label: "Flow State II",
-		desc: "このセッションの集大成。限界を超えて没頭する、最も生産性の高い時間です。",
+		desc: "このセッションの集大成.限界を超えて没頭する、最も生産性の高い時間です.",
 	},
 	{
 		id: 10,
 		type: "break",
 		duration: 30,
 		label: "Long Break",
-		desc: "お疲れ様でした。散歩に出るか、食事をとって完全にリフレッシュしてください。",
+		desc: "お疲れ様でした.散歩に出るか、食事をとって完全にリフレッシュしてください.",
 	},
 ];
 
@@ -2026,7 +2026,7 @@ export default function PomodoroTimer() {
 												theme === "dark" ? "text-gray-400" : "text-gray-600"
 											}`}
 										>
-											ドックに表示する項目を選択します。
+											ドックに表示する項目を選択します.
 										</p>
 										{[
 											{
@@ -2125,7 +2125,7 @@ export default function PomodoroTimer() {
 												theme === "dark" ? "text-gray-400" : "text-gray-600"
 											}`}
 										>
-											新しく追加するウィジェットの基本サイズを調整します。
+											新しく追加するウィジェットの基本サイズを調整します.
 										</p>
 										<div className="space-y-4">
 											<ElasticSlider
@@ -2186,7 +2186,7 @@ export default function PomodoroTimer() {
 												theme === "dark" ? "text-gray-400" : "text-gray-600"
 											}`}
 										>
-											全てのYouTubeウィジェットで共有する再生動作とデフォルト値です。
+											全てのYouTubeウィジェットで共有する再生動作とデフォルト値です.
 										</p>
 										<div className="space-y-3">
 											<label className="flex items-center gap-3 cursor-pointer">

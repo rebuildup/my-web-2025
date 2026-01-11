@@ -2,7 +2,7 @@
 
 ## 目的
 
-SVG画像またはSVGコードをReactコンポーネント（TSX形式）に変換し、ダウンロード可能にするツール。
+SVG画像またはSVGコードをReactコンポーネント（TSX形式）に変換し、ダウンロード可能にするツール.
 
 ## 主な要素
 
@@ -97,7 +97,7 @@ SVG画像またはSVGコードをReactコンポーネント（TSX形式）に変
 ### SEO
 
 - **title**: "SVG to TSX Converter - samuido | SVG React変換"
-- **description**: "SVG画像をReactコンポーネント（TSX）に変換。TypeScript対応で最適化されたコードを生成。"
+- **description**: "SVG画像をReactコンポーネント（TSX）に変換.TypeScript対応で最適化されたコードを生成."
 - **keywords**: "SVG, TSX, React, 変換, TypeScript, コンポーネント, コード生成"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/tools/svg2tsx"
@@ -105,7 +105,7 @@ SVG画像またはSVGコードをReactコンポーネント（TSX形式）に変
 ### Open Graph
 
 - **og:title**: "SVG to TSX Converter - samuido | SVG React変換"
-- **og:description**: "SVG画像をReactコンポーネント（TSX）に変換。TypeScript対応で最適化されたコードを生成。"
+- **og:description**: "SVG画像をReactコンポーネント（TSX）に変換.TypeScript対応で最適化されたコードを生成."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/svg2tsx"
 - **og:image**: "https://yusuke-kim.com/tools/svg2tsx-og-image.png"
@@ -116,7 +116,7 @@ SVG画像またはSVGコードをReactコンポーネント（TSX形式）に変
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "SVG to TSX Converter - samuido | SVG React変換"
-- **twitter:description**: "SVG画像をReactコンポーネント（TSX）に変換。TypeScript対応で最適化されたコードを生成。"
+- **twitter:description**: "SVG画像をReactコンポーネント（TSX）に変換.TypeScript対応で最適化されたコードを生成."
 - **twitter:image**: "https://yusuke-kim.com/tools/svg2tsx-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

@@ -78,7 +78,7 @@ export default function SettingsPanel({
 							onClick={() => {
 								if (
 									confirm(
-										"統計データとスコア履歴をリセットしますか？この操作は取り消せません。",
+										"統計データとスコア履歴をリセットしますか？この操作は取り消せません.",
 									)
 								) {
 									localStorage.removeItem("pi-game-stats");

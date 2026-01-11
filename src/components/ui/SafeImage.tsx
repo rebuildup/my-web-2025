@@ -116,8 +116,8 @@ export function SafeImage({
 		baseStyle.objectPosition = "center center";
 	}
 
-	// next/image はクエリ付きローカルURLに対して localPatterns 設定が必要。
-	// ギャラリーでは /api/cms/media?… を直接表示するため、該当ケースは <img> にフォールバック。
+	// next/image はクエリ付きローカルURLに対して localPatterns 設定が必要.
+	// ギャラリーでは /api/cms/media?… を直接表示するため、該当ケースは <img> にフォールバック.
 	const isApiMediaSrc =
 		typeof currentSrc === "string" &&
 		(currentSrc.startsWith("/api/cms/media") ||

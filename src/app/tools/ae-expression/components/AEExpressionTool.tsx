@@ -74,7 +74,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "wiggle",
 		category: "animation",
 		name: "Wiggle",
-		description: "ランダムな動きを生成します。自然な揺れやノイズ効果に最適。",
+		description: "ランダムな動きを生成します.自然な揺れやノイズ効果に最適.",
 		template: "wiggle({frequency}, {amplitude})",
 		parameters: [
 			{
@@ -102,7 +102,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		difficulty: "beginner",
 		usageCount: 0,
 		documentation:
-			"wiggle()関数は、指定された頻度と振幅でランダムな動きを生成します。第1引数は1秒間の振動回数、第2引数は振動の幅を指定します。自然な手ブレやノイズ効果を作成する際に最も使用される基本的なエクスプレッションです。",
+			"wiggle()関数は、指定された頻度と振幅でランダムな動きを生成します.第1引数は1秒間の振動回数、第2引数は振動の幅を指定します.自然な手ブレやノイズ効果を作成する際に最も使用される基本的なエクスプレッションです.",
 		tags: ["animation", "random", "movement", "noise"],
 		version: "1.0",
 		author: "Adobe",
@@ -113,7 +113,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "loopOut",
 		category: "animation",
 		name: "Loop Out",
-		description: "アニメーションをループさせます。キーフレーム後の動作を制御。",
+		description: "アニメーションをループさせます.キーフレーム後の動作を制御.",
 		template: 'loopOut("{type}", {numKeyframes})',
 		parameters: [
 			{
@@ -137,7 +137,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		difficulty: "beginner",
 		usageCount: 0,
 		documentation:
-			"loopOut()関数は、キーフレームアニメーションの最後のキーフレーム以降の動作を制御します。cycle（繰り返し）、pingpong（往復）、offset（オフセット付き繰り返し）、continue（最後の値を継続）の4つのモードがあります。",
+			"loopOut()関数は、キーフレームアニメーションの最後のキーフレーム以降の動作を制御します.cycle（繰り返し）、pingpong（往復）、offset（オフセット付き繰り返し）、continue（最後の値を継続）の4つのモードがあります.",
 		tags: ["animation", "loop", "keyframe", "cycle"],
 		version: "1.0",
 		author: "Adobe",
@@ -148,7 +148,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "time-rotation",
 		category: "animation",
 		name: "Time-based Rotation",
-		description: "時間に基づいた回転アニメーション。一定速度での回転に使用。",
+		description: "時間に基づいた回転アニメーション.一定速度での回転に使用.",
 		template: "time * {speed}",
 		parameters: [
 			{
@@ -169,7 +169,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "bounce",
 		category: "animation",
 		name: "Bounce",
-		description: "バウンス効果を作成。弾むような動きを表現。",
+		description: "バウンス効果を作成.弾むような動きを表現.",
 		template:
 			"amp = {amplitude}; freq = {frequency}; decay = {decay}; n = 0; if (numKeys > 0) { n = nearestKey(time).index; if (key(n).time > time) { n--; } } if (n == 0) { t = 0; } else { t = time - key(n).time; } if (n > 0 && t < 1) { v = velocityAtTime(key(n).time - thisComp.frameDuration/10); value + v*amp*Math.sin(freq*t*2*Math.PI)/Math.exp(decay*t); } else { value; }",
 		parameters: [
@@ -211,7 +211,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "sine-wave",
 		category: "effect",
 		name: "Sine Wave",
-		description: "サイン波を使った周期的な動き。波のような滑らかな動作。",
+		description: "サイン波を使った周期的な動き.波のような滑らかな動作.",
 		template: "Math.sin(time * {frequency}) * {amplitude} + {offset}",
 		parameters: [
 			{
@@ -252,7 +252,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "random-values",
 		category: "effect",
 		name: "Random Values",
-		description: "ランダムな値を生成。シード値で再現可能なランダム性。",
+		description: "ランダムな値を生成.シード値で再現可能なランダム性.",
 		template: "seedRandom({seed}, true); random({min}, {max})",
 		parameters: [
 			{
@@ -292,7 +292,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "scale-pulse",
 		category: "transform",
 		name: "Scale Pulse",
-		description: "脈動するスケールアニメーション。ハートビートのような効果。",
+		description: "脈動するスケールアニメーション.ハートビートのような効果.",
 		template:
 			"[{baseScale} + Math.sin(time * {frequency}) * {amplitude}, {baseScale} + Math.sin(time * {frequency}) * {amplitude}]",
 		parameters: [
@@ -334,7 +334,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "opacity-flicker",
 		category: "transform",
 		name: "Opacity Flicker",
-		description: "点滅効果。ランダムまたは規則的な明滅を作成。",
+		description: "点滅効果.ランダムまたは規則的な明滅を作成.",
 		template: "{baseOpacity} + Math.sin(time * {frequency}) * {amplitude}",
 		parameters: [
 			{
@@ -377,7 +377,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "clamp-values",
 		category: "utility",
 		name: "Clamp Values",
-		description: "値を指定範囲内に制限。最小値と最大値の間に値を収める。",
+		description: "値を指定範囲内に制限.最小値と最大値の間に値を収める.",
 		template: "clamp({value}, {min}, {max})",
 		parameters: [
 			{
@@ -409,7 +409,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		difficulty: "beginner",
 		usageCount: 0,
 		documentation:
-			"clamp()関数は値を指定された範囲内に制限します。値が最小値より小さい場合は最小値を、最大値より大きい場合は最大値を返します。アニメーションの値を安全な範囲内に保つために使用されます。",
+			"clamp()関数は値を指定された範囲内に制限します.値が最小値より小さい場合は最小値を、最大値より大きい場合は最大値を返します.アニメーションの値を安全な範囲内に保つために使用されます.",
 		tags: ["utility", "math", "limit", "range"],
 		version: "1.0",
 		author: "Adobe",
@@ -420,7 +420,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "linear-interpolation",
 		category: "utility",
 		name: "Linear Interpolation",
-		description: "線形補間。時間に基づいて値を滑らかに変化させる。",
+		description: "線形補間.時間に基づいて値を滑らかに変化させる.",
 		template: "linear(time, {startTime}, {endTime}, {startValue}, {endValue})",
 		parameters: [
 			{
@@ -466,7 +466,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		difficulty: "intermediate",
 		usageCount: 0,
 		documentation:
-			"linear()関数は線形補間を行います。指定された時間範囲内で値を滑らかに変化させることができます。アニメーションの開始値と終了値を時間に基づいて補間します。",
+			"linear()関数は線形補間を行います.指定された時間範囲内で値を滑らかに変化させることができます.アニメーションの開始値と終了値を時間に基づいて補間します.",
 		tags: ["utility", "interpolation", "time", "animation"],
 		version: "1.0",
 		author: "Adobe",
@@ -479,7 +479,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "ease-in-out",
 		category: "animation",
 		name: "Ease In Out",
-		description: "イーズイン・アウトアニメーション。滑らかな加速・減速効果。",
+		description: "イーズイン・アウトアニメーション.滑らかな加速・減速効果.",
 		template: "ease({t}, {tMin}, {tMax}, {value1}, {value2})",
 		parameters: [
 			{
@@ -531,7 +531,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		difficulty: "intermediate",
 		usageCount: 0,
 		documentation:
-			"ease()関数は滑らかなイージング効果を提供します。開始時はゆっくり加速し、終了時はゆっくり減速する自然なアニメーションカーブを作成します。",
+			"ease()関数は滑らかなイージング効果を提供します.開始時はゆっくり加速し、終了時はゆっくり減速する自然なアニメーションカーブを作成します.",
 		tags: ["animation", "easing", "smooth", "curve"],
 		version: "1.0",
 		author: "Adobe",
@@ -544,7 +544,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		category: "effect",
 		name: "Posterize Time",
 		description:
-			"時間をポスタライズ。フレームレートを下げてストップモーション効果。",
+			"時間をポスタライズ.フレームレートを下げてストップモーション効果.",
 		template: "posterizeTime({framesPerSecond}); {expression}",
 		parameters: [
 			{
@@ -568,7 +568,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		difficulty: "intermediate",
 		usageCount: 0,
 		documentation:
-			"posterizeTime()関数は時間の解像度を下げ、指定されたフレームレートでエクスプレッションを評価します。ストップモーションのような効果や、意図的にカクカクした動きを作成する際に使用します。",
+			"posterizeTime()関数は時間の解像度を下げ、指定されたフレームレートでエクスプレッションを評価します.ストップモーションのような効果や、意図的にカクカクした動きを作成する際に使用します.",
 		tags: ["effect", "time", "framerate", "stopmotion"],
 		version: "1.0",
 		author: "Adobe",
@@ -580,7 +580,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		id: "value-at-time",
 		category: "utility",
 		name: "Value At Time",
-		description: "指定時間での値を取得。過去や未来の値を参照。",
+		description: "指定時間での値を取得.過去や未来の値を参照.",
 		template: "valueAtTime(time - {offset})",
 		parameters: [
 			{
@@ -598,7 +598,7 @@ const AE_EXPRESSIONS: AEExpression[] = [
 		difficulty: "advanced",
 		usageCount: 0,
 		documentation:
-			"valueAtTime()関数は指定された時間でのプロパティ値を取得します。過去の値を参照してエコー効果を作ったり、未来の値を予測したりする際に使用します。",
+			"valueAtTime()関数は指定された時間でのプロパティ値を取得します.過去の値を参照してエコー効果を作ったり、未来の値を予測したりする際に使用します.",
 		tags: ["utility", "time", "reference", "echo"],
 		version: "1.0",
 		author: "Adobe",
@@ -990,7 +990,7 @@ ${generatedCode}`;
 	return (
 		<ToolWrapper
 			toolName="AE Expression Tool"
-			description="AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定。アニメーション、エフェクト、変形などのエクスプレッションを一覧表示。"
+			description="AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示."
 			category="Design"
 			keyboardShortcuts={[
 				{ key: "c", description: "コードをコピー" },
@@ -1581,7 +1581,7 @@ ${generatedCode}`;
 								</div>
 								<div className="text-xs text-accent noto-sans-jp-light">
 									実際のAfter
-									Effectsでは、このエクスプレッションが時間に応じて値を変化させます。
+									Effectsでは、このエクスプレッションが時間に応じて値を変化させます.
 								</div>
 							</div>
 						)}

@@ -22,7 +22,7 @@ const normalizeCommandInput = (input: string) => {
 	return withoutPrompt
 		.toLowerCase()
 		.replace(/\s+/gu, " ")
-		.replace(/[.!?…。、！？]+$/gu, "")
+		.replace(/[.!?….、！？]+$/gu, "")
 		.trim();
 };
 
@@ -1289,7 +1289,7 @@ export function CookieSettings() {
 						</span>
 					</div>
 					<p className="noto-sans-jp-light text-sm text-main/80">
-						基本的なウェブサイト機能に必要です。無効にすることはできません。
+						基本的なウェブサイト機能に必要です.無効にすることはできません.
 					</p>
 				</div>
 
@@ -1310,7 +1310,7 @@ export function CookieSettings() {
 						</label>
 					</div>
 					<p className="noto-sans-jp-light text-sm text-main/80">
-						利用パターンを分析することで、ウェブサイトの改善に役立ちます。
+						利用パターンを分析することで、ウェブサイトの改善に役立ちます.
 					</p>
 				</div>
 			</div>

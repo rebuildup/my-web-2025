@@ -53,3 +53,11 @@ cache-bust-config.json
 
 # build artifacts
 .swc/
+
+# database backup files
+data/index.db
+data/index.db.bak
+data/index.db-wal*
+data/index.db-shm*
+data/*.bak
+data/tag-catalog.json

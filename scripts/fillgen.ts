@@ -5,23 +5,23 @@
  * 入力となるテキストに「{{答え|幅}}」形式のプレースホルダを挿入すると、
  * ・単独のHTMLページ (--html)
  * ・Reactコンポーネント (--react)
- * を生成する簡易ツール。
+ * を生成する簡易ツール.
  *
  * 入力フォーマット（最小限）:
  *   # シートタイトル
  *   ## メイン見出し
  *   ### セクション見出し
- *   ここに文章。{{大東亜共栄圏|360}} のように書くと空欄に置換される。
- *   空行で段落を区切る。
+ *   ここに文章.{{大東亜共栄圏|360}} のように書くと空欄に置換される.
+ *   空行で段落を区切る.
  *
  * 追加仕様:
- *   - 幅は省略可。省略時は答えの文字数から自動計算。
+ *   - 幅は省略可.省略時は答えの文字数から自動計算.
  *   - 複数正解はスラッシュ区切り: {{ヤルタ協定/ヤルタ会談|140}}
  *   - 同じ入力からHTMLとReactを同時に生成可能:
  *       pnpm tsx scripts/fillgen.ts input.txt --html public/generated-quiz.html --react src/components/GeneratedQuiz.tsx
  *
  * プレビュー:
- *   --preview を付けると --html で指定したファイルをデフォルトブラウザで開く。
+ *   --preview を付けると --html で指定したファイルをデフォルトブラウザで開く.
  */
 
 import { execSync } from "node:child_process";
@@ -55,7 +55,7 @@ if (argv.length === 0 || argv.includes("--help")) {
 		[
 			"Usage: pnpm tsx scripts/fillgen.ts <input.txt> [--html out.html] [--react out.tsx] [--preview]",
 			"",
-			"Placeholder syntax: {{答え|幅}}  幅は省略可。複数正解はスラッシュ区切り。",
+			"Placeholder syntax: {{答え|幅}}  幅は省略可.複数正解はスラッシュ区切り.",
 		].join("\n"),
 	);
 	process.exit(0);

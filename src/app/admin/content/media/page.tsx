@@ -283,7 +283,7 @@ export default function AdminMediaManager() {
 		<Box sx={{ display: "grid", gap: 4 }}>
 			<PageHeader
 				title="メディアライブラリ"
-				description="コンテンツごとの画像・アセットを一元管理します。検索やタグフィルタで目的のメディアを素早く見つけ、詳細情報やプレビューを確認できます。"
+				description="コンテンツごとの画像・アセットを一元管理します.検索やタグフィルタで目的のメディアを素早く見つけ、詳細情報やプレビューを確認できます."
 				
 				actions={[
 					<Button
@@ -366,7 +366,7 @@ export default function AdminMediaManager() {
 
 				{contentsError && (
 					<Alert severity="error">
-						コンテンツ一覧の取得に失敗しました。再読み込みしてください。
+						コンテンツ一覧の取得に失敗しました.再読み込みしてください.
 					</Alert>
 				)}
 
@@ -432,7 +432,7 @@ export default function AdminMediaManager() {
 							メディアが見つかりません
 						</Typography>
 						<Typography variant="body2" color="text.secondary">
-							条件を変更するか、メディアをアップロードしてください。
+							条件を変更するか、メディアをアップロードしてください.
 						</Typography>
 					</Box>
 				) : (
@@ -550,7 +550,7 @@ export default function AdminMediaManager() {
 			<ConfirmDialog
 				open={Boolean(deleteTarget)}
 				title="メディアを削除しますか？"
-				description="この操作は元に戻せません。削除されたメディアはコンテンツからも参照できなくなります。"
+				description="この操作は元に戻せません.削除されたメディアはコンテンツからも参照できなくなります."
 				confirmLabel="削除する"
 				onCancel={() => setDeleteTarget(null)}
 				onConfirm={() => deleteTarget && void handleDelete(deleteTarget)}

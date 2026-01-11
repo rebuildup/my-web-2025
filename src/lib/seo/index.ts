@@ -80,7 +80,7 @@ export const SEO_CONSTANTS = {
 	BASE_URL: "https://yusuke-kim.com",
 	DEFAULT_TITLE: "samuidoのサイトルート",
 	DEFAULT_DESCRIPTION:
-		"フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました",
+		"フロントエンドエンジニアsamuidoの個人サイト.自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました",
 	DEFAULT_KEYWORDS: [
 		"ポートフォリオ",
 		"Webデザイン",

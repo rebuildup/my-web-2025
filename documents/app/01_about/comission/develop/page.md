@@ -2,7 +2,7 @@
 
 ## 目的
 
-Web開発、アプリケーション開発、プラグイン開発などの依頼について説明し、依頼の流れと料金体系を明示する。
+Web開発、アプリケーション開発、プラグイン開発などの依頼について説明し、依頼の流れと料金体系を明示する.
 
 ## 主な要素
 
@@ -70,7 +70,7 @@ Web開発、アプリケーション開発、プラグイン開発などの依�
 ### SEO
 
 - **title**: "開発依頼 - samuido | Web開発・アプリ開発・プラグイン開発"
-- **description**: "Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています。React、NextJS、AfterEffectsなど幅広い技術に対応。"
+- **description**: "Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています.React、NextJS、AfterEffectsなど幅広い技術に対応."
 - **keywords**: "Web開発, アプリ開発, プラグイン開発, React, NextJS, AfterEffects, フリーランス"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/about/comission/develop"
@@ -78,7 +78,7 @@ Web開発、アプリケーション開発、プラグイン開発などの依�
 ### Open Graph
 
 - **og:title**: "開発依頼 - samuido | Web開発・アプリ開発・プラグイン開発"
-- **og:description**: "Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています。React、NextJS、AfterEffectsなど幅広い技術に対応。"
+- **og:description**: "Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています.React、NextJS、AfterEffectsなど幅広い技術に対応."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/about/comission/develop"
 - **og:image**: "https://yusuke-kim.com/about/comission-develop-og-image.png"
@@ -89,7 +89,7 @@ Web開発、アプリケーション開発、プラグイン開発などの依�
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "開発依頼 - samuido | Web開発・アプリ開発・プラグイン開発"
-- **twitter:description**: "Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています。React、NextJS、AfterEffectsなど幅広い技術に対応。"
+- **twitter:description**: "Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています.React、NextJS、AfterEffectsなど幅広い技術に対応."
 - **twitter:image**: "https://yusuke-kim.com/about/comission-develop-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

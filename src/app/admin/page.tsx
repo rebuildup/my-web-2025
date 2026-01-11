@@ -30,42 +30,42 @@ const QuickNav = [
 	{
 		title: "コンテンツ統合管理",
 		description:
-			"コンテンツの作成・編集・公開設定、関連機能へのショートカット。",
+			"コンテンツの作成・編集・公開設定、関連機能へのショートカット.",
 		href: "/admin/content",
 		action: "コンテンツ一覧",
 		icon: FileStack,
 	},
 	{
 		title: "Markdownページ",
-		description: "コンテンツに紐づくMarkdown本文を作成・編集します。",
+		description: "コンテンツに紐づくMarkdown本文を作成・編集します.",
 		href: "/admin/content/markdown",
 		action: "Markdown管理",
 		icon: FileText,
 	},
 	{
 		title: "メディアライブラリ",
-		description: "コンテンツ毎の画像・動画・アセットを一括管理。",
+		description: "コンテンツ毎の画像・動画・アセットを一括管理.",
 		href: "/admin/content/media",
 		action: "メディア管理",
 		icon: Image,
 	},
 	{
 		title: "コンテンツDB",
-		description: "SQLiteベースのコンテンツDBを複製・切替・整理します。",
+		description: "SQLiteベースのコンテンツDBを複製・切替・整理します.",
 		href: "/admin/content/databases",
 		action: "データベース管理",
 		icon: Database,
 	},
 	{
 		title: "ブロックエディタ",
-		description: "リッチなブロックエディタで記事コンテンツを構築。",
+		description: "リッチなブロックエディタで記事コンテンツを構築.",
 		href: "/admin/content/page-editor",
 		action: "エディタを開く",
 		icon: PenSquare,
 	},
 	{
 		title: "タグ管理",
-		description: "タグの一括編集と整理で分類精度を向上。",
+		description: "タグの一括編集と整理で分類精度を向上.",
 		href: "/admin/tag-management",
 		action: "タグを整理",
 		icon: Tags,
@@ -75,21 +75,21 @@ const QuickNav = [
 const Operations = [
 	{
 		title: "データマネージャー",
-		description: "バックアップ・インポート・エクスポート操作をまとめて実行。",
+		description: "バックアップ・インポート・エクスポート操作をまとめて実行.",
 		href: "/admin/data-manager",
 		action: "データを整理",
 		icon: ServerCog,
 	},
 	{
 		title: "アクセス解析",
-		description: "計測データでコンテンツのパフォーマンスを可視化。",
+		description: "計測データでコンテンツのパフォーマンスを可視化.",
 		href: "/admin/analytics",
 		action: "分析を見る",
 		icon: BarChart3,
 	},
 	{
 		title: "アップロードテスト",
-		description: "ファイルアップロードの動作確認と検証。",
+		description: "ファイルアップロードの動作確認と検証.",
 		href: "/admin/upload-test",
 		action: "テストする",
 		icon: UploadCloud,
@@ -101,7 +101,7 @@ export default function AdminPage() {
 		<Box sx={{ display: "grid", gap: 4 }}>
 			<PageHeader
 				title="管理ダッシュボード"
-				description="コンテンツ管理と運用を効率化するための管理コンソールです。サイドバーから各機能に素早く移動できます。"
+				description="コンテンツ管理と運用を効率化するための管理コンソールです.サイドバーから各機能に素早く移動できます."
 				breadcrumbs={[{ label: "Admin", href: "/admin" }]}
 				statusChip={{ label: "開発環境", color: "info" }}
 				actions={
@@ -266,15 +266,15 @@ export default function AdminPage() {
 					</Stack>
 					<Typography variant="body2" color="text.secondary">
 						-
-						コンテンツ登録後はMarkdown本文とメディアを紐付けて公開準備を整えましょう。
+						コンテンツ登録後はMarkdown本文とメディアを紐付けて公開準備を整えましょう.
 					</Typography>
 					<Typography variant="body2" color="text.secondary">
 						-
-						バックアップ/切り替え用データベースを活用することで、安全な運用が可能です。
+						バックアップ/切り替え用データベースを活用することで、安全な運用が可能です.
 					</Typography>
 					<Typography variant="body2" color="text.secondary">
 						-
-						サイドバーから各機能へ素早く遷移し、ワークフロー全体の一貫性を保てます。
+						サイドバーから各機能へ素早く遷移し、ワークフロー全体の一貫性を保てます.
 					</Typography>
 				</CardContent>
 			</Card>

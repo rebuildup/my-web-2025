@@ -138,7 +138,7 @@ export default function OfflineSettingsManager<
 				if (!fileContent) {
 					console.error("Failed to import settings: invalid file content");
 					alert(
-						"設定ファイルの読み込みに失敗しました。ファイル形式を確認してください。",
+						"設定ファイルの読み込みに失敗しました.ファイル形式を確認してください.",
 					);
 					return;
 				}
@@ -153,12 +153,12 @@ export default function OfflineSettingsManager<
 						console.error(
 							"Invalid settings file format: missing required keys",
 						);
-						alert("設定ファイルの形式が無効です。必要なキーが不足しています。");
+						alert("設定ファイルの形式が無効です.必要なキーが不足しています.");
 					}
 				} catch (error) {
 					console.error("Failed to import settings:", error);
 					alert(
-						"設定ファイルの読み込みに失敗しました。ファイル形式を確認してください。",
+						"設定ファイルの読み込みに失敗しました.ファイル形式を確認してください.",
 					);
 				}
 			};

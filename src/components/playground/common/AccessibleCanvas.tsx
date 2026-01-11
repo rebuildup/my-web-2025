@@ -365,7 +365,7 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 				<p className="text-gray-800 font-medium mb-2">{title}</p>
 				<p className="text-gray-600 text-sm text-center">{description}</p>
 				<p className="text-gray-500 text-xs mt-2">
-					このブラウザは{canvasType.toUpperCase()}をサポートしていません。
+					このブラウザは{canvasType.toUpperCase()}をサポートしていません.
 				</p>
 			</div>
 		);
@@ -382,7 +382,7 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 				{canvasType !== "2d" && (
 					<>
 						{" "}
-						スペースキーでアニメーションの開始・停止、Enterキーでフォーカスできます。
+						スペースキーでアニメーションの開始・停止、Enterキーでフォーカスできます.
 					</>
 				)}
 			</div>
@@ -428,7 +428,7 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 			{accessibilityState.prefersReducedMotion && canvasState.isAnimating && (
 				<div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
 					<p className="text-yellow-800">
-						アニメーション設定により、動きが制限される場合があります。
+						アニメーション設定により、動きが制限される場合があります.
 					</p>
 				</div>
 			)}

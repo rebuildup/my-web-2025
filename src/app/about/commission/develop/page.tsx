@@ -15,7 +15,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 export const metadata: Metadata = {
 	title: "開発依頼 - samuido | Web開発・アプリ開発・プラグイン開発",
 	description:
-		"Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています。React、NextJS、AfterEffectsなど幅広い技術に対応。",
+		"Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています.React、NextJS、AfterEffectsなど幅広い技術に対応.",
 	keywords: [
 		"Web開発",
 		"アプリ開発",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "開発依頼 - samuido | Web開発・アプリ開発・プラグイン開発",
 		description:
-			"Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています。React、NextJS、AfterEffectsなど幅広い技術に対応。",
+			"Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています.React、NextJS、AfterEffectsなど幅広い技術に対応.",
 		type: "website",
 		url: "https://yusuke-kim.com/about/commission/develop",
 		images: [
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "開発依頼 - samuido | Web開発・アプリ開発・プラグイン開発",
 		description:
-			"Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています。React、NextJS、AfterEffectsなど幅広い技術に対応。",
+			"Web開発、アプリケーション開発、プラグイン開発の依頼を受け付けています.React、NextJS、AfterEffectsなど幅広い技術に対応.",
 		images: [
 			"https://yusuke-kim.com/about/commission-develop-twitter-image.jpg",
 		],

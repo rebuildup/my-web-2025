@@ -2,7 +2,7 @@
 
 ## 目的
 
-開発作品を2列で交互に左右に配置し、クリックで詳細パネルを表示する。
+開発作品を2列で交互に左右に配置し、クリックで詳細パネルを表示する.
 
 ## 主な要素
 
@@ -55,7 +55,7 @@
 ### SEO
 
 - **title**: "Development Works - samuido | 開発作品ギャラリー"
-- **description**: "samuidoの開発作品ギャラリー。Webアプリ、ゲーム、ツール、プラグインなどの開発作品を一覧でご覧いただけます。"
+- **description**: "samuidoの開発作品ギャラリー.Webアプリ、ゲーム、ツール、プラグインなどの開発作品を一覧でご覧いただけます."
 - **keywords**: "開発作品, Webアプリ, ゲーム開発, ツール, プラグイン, React, NextJS"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/portfolio/gallery/develop"
@@ -63,7 +63,7 @@
 ### Open Graph
 
 - **og:title**: "Development Works - samuido | 開発作品ギャラリー"
-- **og:description**: "samuidoの開発作品ギャラリー。Webアプリ、ゲーム、ツール、プラグインなどの開発作品を一覧でご覧いただけます。"
+- **og:description**: "samuidoの開発作品ギャラリー.Webアプリ、ゲーム、ツール、プラグインなどの開発作品を一覧でご覧いただけます."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/gallery/develop"
 - **og:image**: "https://yusuke-kim.com/portfolio/gallery-develop-og-image.png"
@@ -74,7 +74,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Development Works - samuido | 開発作品ギャラリー"
-- **twitter:description**: "samuidoの開発作品ギャラリー。Webアプリ、ゲーム、ツール、プラグインなどの開発作品を一覧でご覧いただけます。"
+- **twitter:description**: "samuidoの開発作品ギャラリー.Webアプリ、ゲーム、ツール、プラグインなどの開発作品を一覧でご覧いただけます."
 - **twitter:image**: "https://yusuke-kim.com/portfolio/gallery-develop-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

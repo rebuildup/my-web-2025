@@ -252,10 +252,10 @@ export default function DesignPlaygroundPage() {
 								Design Playground
 							</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
-								インタラクティブなデザイン実験とアニメーションの実験場です。
+								インタラクティブなデザイン実験とアニメーションの実験場です.
 								<br />
 								CSS、SVG、Canvas
-								を使った視覚的表現とリアルタイム更新機能を体験できます。
+								を使った視覚的表現とリアルタイム更新機能を体験できます.
 							</p>
 							<h2 className="sr-only" aria-level={2}>
 								Interactive design experiments

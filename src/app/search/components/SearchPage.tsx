@@ -276,9 +276,9 @@ export default function SearchPage() {
 								Search
 							</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
-								サイト内のコンテンツを検索できます。
+								サイト内のコンテンツを検索できます.
 								<br />
-								ポートフォリオ、ブログ、ツールなど、必要な情報を素早く見つけることができます。
+								ポートフォリオ、ブログ、ツールなど、必要な情報を素早く見つけることができます.
 							</p>
 						</header>
 

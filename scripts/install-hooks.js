@@ -27,14 +27,14 @@ try {
 	const packageJsonPath = path.join(process.cwd(), "package.json");
 
 	if (!fs.existsSync(packageJsonPath)) {
-		console.log("⚠️ package.jsonが見つかりません。スキップします。");
+		console.log("⚠️ package.jsonが見つかりません.スキップします.");
 		process.exit(0);
 	}
 
 	const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
 
 	if (packageJson.dependencies?.["better-sqlite3"]) {
-		console.log("📦 better-sqlite3が検出されました。自動ビルドを開始...");
+		console.log("📦 better-sqlite3が検出されました.自動ビルドを開始...");
 
 		try {
 			// better-sqlite3を再ビルド（複数の方法を試行）
@@ -101,7 +101,7 @@ try {
 			// エラーが発生してもプロセスを続行
 		}
 	} else {
-		console.log("ℹ️ better-sqlite3が見つかりません。スキップします。");
+		console.log("ℹ️ better-sqlite3が見つかりません.スキップします.");
 	}
 } catch (error) {
 	console.error("❌ インストールフックでエラーが発生しました:", error.message);

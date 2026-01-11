@@ -146,9 +146,9 @@ export default function YouTubePlayer({
 					onError: (event: any) => {
 						setPlaybackState("error");
 						console.error("YouTube Player Error:", event.data);
-						let msg = "再生エラーが発生しました。";
+						let msg = "再生エラーが発生しました.";
 						if (event.data === 150 || event.data === 101) {
-							msg = "この動画は埋め込み再生が許可されていません。";
+							msg = "この動画は埋め込み再生が許可されていません.";
 						}
 						setError(msg);
 					},
@@ -169,7 +169,7 @@ export default function YouTubePlayer({
 				setPlayer(null); // Will trigger re-initialization
 			}
 		} else {
-			setError("無効なURL形式です。");
+			setError("無効なURL形式です.");
 		}
 	};
 

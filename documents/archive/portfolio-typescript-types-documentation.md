@@ -2,8 +2,8 @@
 
 ## 概要
 
-このドキュメントは、ポートフォリオシステムで使用されるTypeScript型定義の包括的なガイドです。
-各型の目的、使用方法、実装例について詳述します。
+このドキュメントは、ポートフォリオシステムで使用されるTypeScript型定義の包括的なガイドです.
+各型の目的、使用方法、実装例について詳述します.
 
 ## 目次
 
@@ -18,7 +18,7 @@
 
 ### PortfolioContentItem
 
-ポートフォリオアイテムの基本型定義です。
+ポートフォリオアイテムの基本型定義です.
 
 ```typescript
 /**
@@ -77,7 +77,7 @@ const portfolioItem: PortfolioContentItem = {
 
 ### PortfolioSEOData
 
-SEO最適化のためのメタデータ型です。
+SEO最適化のためのメタデータ型です.
 
 ```typescript
 /**
@@ -140,7 +140,7 @@ const generateSEOData = (item: PortfolioContentItem): PortfolioSEOData => {
 
 ### GalleryType
 
-ギャラリーの種類を定義する型です。
+ギャラリーの種類を定義する型です.
 
 ```typescript
 /**
@@ -197,7 +197,7 @@ const galleryConfigs: Record<GalleryType, GalleryConfig> = {
 
 ### FilterOptions
 
-フィルタリング機能の型定義です。
+フィルタリング機能の型定義です.
 
 ```typescript
 /**
@@ -294,7 +294,7 @@ const DevelopGallery: React.FC = () => {
 
 ### ExperimentItem
 
-プレイグラウンド実験の基本型です。
+プレイグラウンド実験の基本型です.
 
 ```typescript
 /**
@@ -418,7 +418,7 @@ const rotatingCubeExperiment: WebGLExperiment = {
 
 ### ExperimentComponentProps
 
-実験コンポーネントのプロパティ型です。
+実験コンポーネントのプロパティ型です.
 
 ```typescript
 /**
@@ -460,7 +460,7 @@ interface WebGLExperimentProps extends ExperimentComponentProps {
 
 ### DeviceCapabilities
 
-デバイス性能検出の型定義です。
+デバイス性能検出の型定義です.
 
 ```typescript
 /**
@@ -620,7 +620,7 @@ class DeviceCapabilitiesDetector {
 
 ### 型ガード関数
 
-型安全性を確保するための型ガード関数です。
+型安全性を確保するための型ガード関数です.
 
 ```typescript
 /**
@@ -677,7 +677,7 @@ function validateDeviceCapabilities(
 
 ### 条件付き型
 
-TypeScriptの条件付き型を活用した高度な型定義です。
+TypeScriptの条件付き型を活用した高度な型定義です.
 
 ```typescript
 /**
@@ -913,7 +913,7 @@ function createQuality(value: number): Quality {
 
 ## まとめ
 
-このドキュメントでは、ポートフォリオシステムで使用される包括的なTypeScript型定義について説明しました。
+このドキュメントでは、ポートフォリオシステムで使用される包括的なTypeScript型定義について説明しました.
 
 ### 重要なポイント
 
@@ -929,4 +929,4 @@ function createQuality(value: number): Quality {
 - ジェネリック型を活用して再利用可能な型を作成
 - 条件付き型やマップ型を使用して高度な型制約を実装
 
-これらの型定義を適切に使用することで、堅牢で保守性の高いポートフォリオシステムを構築できます。
+これらの型定義を適切に使用することで、堅牢で保守性の高いポートフォリオシステムを構築できます.

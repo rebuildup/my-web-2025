@@ -2,7 +2,7 @@
 
 ## 目的
 
-作成したプラグインを一覧表示し、ダウンロードや使用方法を提供するページ。
+作成したプラグインを一覧表示し、ダウンロードや使用方法を提供するページ.
 
 ## 主な要素
 
@@ -97,7 +97,7 @@
 ### SEO
 
 - **title**: "Plugins - samuido | プラグイン一覧"
-- **description**: "作成したプラグインの一覧。AfterEffects、Premiere Pro、Web用プラグインを提供。"
+- **description**: "作成したプラグインの一覧.AfterEffects、Premiere Pro、Web用プラグインを提供."
 - **keywords**: "プラグイン, AfterEffects, Premiere Pro, エクスプレッション, エフェクト, ダウンロード"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/workshop/plugins"
@@ -105,7 +105,7 @@
 ### Open Graph
 
 - **og:title**: "Plugins - samuido | プラグイン一覧"
-- **og:description**: "作成したプラグインの一覧。AfterEffects、Premiere Pro、Web用プラグインを提供。"
+- **og:description**: "作成したプラグインの一覧.AfterEffects、Premiere Pro、Web用プラグインを提供."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/workshop/plugins"
 - **og:image**: "https://yusuke-kim.com/workshop/plugins-og-image.png"
@@ -116,7 +116,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Plugins - samuido | プラグイン一覧"
-- **twitter:description**: "作成したプラグインの一覧。AfterEffects、Premiere Pro、Web用プラグインを提供。"
+- **twitter:description**: "作成したプラグインの一覧.AfterEffects、Premiere Pro、Web用プラグインを提供."
 - **twitter:image**: "https://yusuke-kim.com/workshop/plugins-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

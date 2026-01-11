@@ -125,7 +125,7 @@ function ContentSection({
 		item?.content ||
 		item?.description ||
 		detail?.summary ||
-		"詳細な説明は準備中です。";
+		"詳細な説明は準備中です.";
 
 	return (
 		<section className="space-y-8 sm:space-y-12">

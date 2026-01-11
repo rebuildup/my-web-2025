@@ -252,7 +252,7 @@ export default function StatsPanel({
 						onClick={() => {
 							if (
 								confirm(
-									"統計データをリセットしますか？この操作は元に戻せません。",
+									"統計データをリセットしますか？この操作は元に戻せません.",
 								)
 							) {
 								// This would need to be implemented in the parent component

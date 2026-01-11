@@ -407,7 +407,7 @@ export function setupAnimationRenderer(
 					p.textAlign(p.CENTER, p.CENTER);
 					p.textSize(24);
 					p.text(
-						"アニメーション描画中にエラーが発生しました。",
+						"アニメーション描画中にエラーが発生しました.",
 						p.width / 2,
 						p.height / 2,
 					);
@@ -473,7 +473,7 @@ export function setupAnimationRenderer(
 							p.textAlign(p.CENTER, p.CENTER);
 							p.textSize(24);
 							p.text(
-								"画像の表示中にエラーが発生しました。",
+								"画像の表示中にエラーが発生しました.",
 								p.width / 2,
 								p.height / 2,
 							);
@@ -490,7 +490,7 @@ export function setupAnimationRenderer(
 					p.textAlign(p.CENTER, p.CENTER);
 					p.textSize(24);
 					p.text(
-						"画像の表示中にエラーが発生しました。",
+						"画像の表示中にエラーが発生しました.",
 						p.width / 2,
 						p.height / 2,
 					);
@@ -723,7 +723,7 @@ export function setupAnimationRenderer(
 					p.textAlign(p.CENTER, p.CENTER);
 					p.textSize(24);
 					p.text(
-						"ZIP ファイルの読み込みに失敗しました。",
+						"ZIP ファイルの読み込みに失敗しました.",
 						p.width / 2,
 						p.height / 2,
 					);

@@ -2,7 +2,7 @@
 
 ## 目的
 
-本名のデジタル名刺として、実物の名刺と同じサイズで表示し、QRコードやダウンロード機能を提供する。
+本名のデジタル名刺として、実物の名刺と同じサイズで表示し、QRコードやダウンロード機能を提供する.
 
 ## 主な要素
 
@@ -53,7 +53,7 @@
 ### SEO
 
 - **title**: "Digital Business Card - samuido | 木村友亮のデジタル名刺"
-- **description**: "Webデザイナー・開発者木村友亮のデジタル名刺。QRコード付きでダウンロード可能。"
+- **description**: "Webデザイナー・開発者木村友亮のデジタル名刺.QRコード付きでダウンロード可能."
 - **keywords**: "デジタル名刺, 木村友亮, ビジネスカード, QRコード, 連絡先"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/about/card/real"
@@ -61,7 +61,7 @@
 ### Open Graph
 
 - **og:title**: "Digital Business Card - samuido | 木村友亮のデジタル名刺"
-- **og:description**: "Webデザイナー・開発者木村友亮のデジタル名刺。QRコード付きでダウンロード可能。"
+- **og:description**: "Webデザイナー・開発者木村友亮のデジタル名刺.QRコード付きでダウンロード可能."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/about/card/real"
 - **og:image**: "https://yusuke-kim.com/about/card-real-og-image.png"
@@ -72,7 +72,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Digital Business Card - samuido | 木村友亮のデジタル名刺"
-- **twitter:description**: "Webデザイナー・開発者木村友亮のデジタル名刺。QRコード付きでダウンロード可能。"
+- **twitter:description**: "Webデザイナー・開発者木村友亮のデジタル名刺.QRコード付きでダウンロード可能."
 - **twitter:image**: "https://yusuke-kim.com/about/card-real-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

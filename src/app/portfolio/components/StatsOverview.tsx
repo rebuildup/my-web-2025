@@ -178,8 +178,8 @@ export function StatsOverview({
 							</div>
 							<p className="mt-3 text-[11px] text-main/70 max-w-sm">
 								{latestItem
-									? "最新の公開コンテンツをピックアップ。"
-									: "最新のコンテンツをチェックできます。"}
+									? "最新の公開コンテンツをピックアップ."
+									: "最新のコンテンツをチェックできます."}
 							</p>
 						</div>
 						<div className="relative z-10 mt-8 text-[10px] font-mono uppercase tracking-widest text-main/40">
@@ -362,7 +362,7 @@ export function StatsOverview({
 									</div>
 								)}
 								<div className="mt-1 text-[10px] text-main/60">
-									手動で入れ替えて、思わぬ発見を。
+									手動で入れ替えて、思わぬ発見を.
 								</div>
 								{randomItem && (
 									<Link

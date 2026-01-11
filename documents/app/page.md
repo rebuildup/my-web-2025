@@ -2,7 +2,7 @@
 
 ## 目的
 
-サイト全体のシンプルなインデックスとしてカテゴリへのリンクを提供し、すべてのページへの導線を繋ぐ。
+サイト全体のシンプルなインデックスとしてカテゴリへのリンクを提供し、すべてのページへの導線を繋ぐ.
 
 ## 主な要素
 
@@ -43,7 +43,7 @@
 ### SEO
 
 - **title**: "samuidoのサイトルート"
-- **description**: "フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました"
+- **description**: "フロントエンドエンジニアsamuidoの個人サイト.自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました"
 - **keywords**: "ポートフォリオ, Webデザイン, フロントエンド開発, ツール, プラグイン, ブログ"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/"
@@ -51,7 +51,7 @@
 ### Open Graph
 
 - **og:title**: "samuidoのサイトルート"
-- **og:description**: "フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました"
+- **og:description**: "フロントエンドエンジニアsamuidoの個人サイト.自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました"
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/"
 - **og:image**: "https://yusuke-kim.com/og-image.png"
@@ -62,7 +62,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "samuidoのサイトルート"
-- **twitter:description**: "フロントエンドエンジニアsamuidoの個人サイト。自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました"
+- **twitter:description**: "フロントエンドエンジニアsamuidoの個人サイト.自己紹介/作品ギャラリー/プラグイン配布/ツール など欲しいもの全部詰め込みました"
 - **twitter:image**: "https://yusuke-kim.com/twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

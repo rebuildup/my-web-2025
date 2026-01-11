@@ -2,7 +2,7 @@
 
 ## 目的
 
-WebGLを使った3Dグラフィックスやシェーダーの実験を自由に展示し、WebGLの可能性を探るプレイグラウンドを提供する。
+WebGLを使った3Dグラフィックスやシェーダーの実験を自由に展示し、WebGLの可能性を探るプレイグラウンドを提供する.
 
 ## 主な要素
 
@@ -64,7 +64,7 @@ WebGLを使った3Dグラフィックスやシェーダーの実験を自由に�
 ### SEO
 
 - **title**: "WebGL Playground - samuido | WebGLプレイグラウンド"
-- **description**: "samuidoのWebGLプレイグラウンド。WebGLを使った3Dグラフィックスやシェーダーの実験を自由に展示し、WebGLの可能性を探ります。"
+- **description**: "samuidoのWebGLプレイグラウンド.WebGLを使った3Dグラフィックスやシェーダーの実験を自由に展示し、WebGLの可能性を探ります."
 - **keywords**: "WebGLプレイグラウンド, 3Dグラフィックス, シェーダー, Three.js, GLSL, WebGL"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/portfolio/playground/WebGL"
@@ -72,7 +72,7 @@ WebGLを使った3Dグラフィックスやシェーダーの実験を自由に�
 ### Open Graph
 
 - **og:title**: "WebGL Playground - samuido | WebGLプレイグラウンド"
-- **og:description**: "samuidoのWebGLプレイグラウンド。WebGLを使った3Dグラフィックスやシェーダーの実験を自由に展示し、WebGLの可能性を探ります。"
+- **og:description**: "samuidoのWebGLプレイグラウンド.WebGLを使った3Dグラフィックスやシェーダーの実験を自由に展示し、WebGLの可能性を探ります."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/playground/WebGL"
 - **og:image**: "https://yusuke-kim.com/portfolio/playground-webgl-og-image.png"
@@ -83,7 +83,7 @@ WebGLを使った3Dグラフィックスやシェーダーの実験を自由に�
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "WebGL Playground - samuido | WebGLプレイグラウンド"
-- **twitter:description**: "samuidoのWebGLプレイグラウンド。WebGLを使った3Dグラフィックスやシェーダーの実験を自由に展示し、WebGLの可能性を探ります。"
+- **twitter:description**: "samuidoのWebGLプレイグラウンド.WebGLを使った3Dグラフィックスやシェーダーの実験を自由に展示し、WebGLの可能性を探ります."
 - **twitter:image**: "https://yusuke-kim.com/portfolio/playground-webgl-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

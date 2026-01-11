@@ -2,7 +2,7 @@
 
 ## 目的
 
-foriioライクな表示で映像作品をサムネイル画像とタイトルをカードとして表示し、詳細パネルで動画とスクリーンショットを表示する。
+foriioライクな表示で映像作品をサムネイル画像とタイトルをカードとして表示し、詳細パネルで動画とスクリーンショットを表示する.
 
 ## 主な要素
 
@@ -54,7 +54,7 @@ foriioライクな表示で映像作品をサムネイル画像とタイトル�
 ### SEO
 
 - **title**: "Video Works - samuido | 映像作品ギャラリー"
-- **description**: "samuidoの映像作品ギャラリー。MV、リリックモーション、アニメーション、プロモーション映像などの作品を一覧でご覧いただけます。"
+- **description**: "samuidoの映像作品ギャラリー.MV、リリックモーション、アニメーション、プロモーション映像などの作品を一覧でご覧いただけます."
 - **keywords**: "映像作品, MV, リリックモーション, アニメーション, プロモーション映像, foriio"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/portfolio/gallery/video"
@@ -62,7 +62,7 @@ foriioライクな表示で映像作品をサムネイル画像とタイトル�
 ### Open Graph
 
 - **og:title**: "Video Works - samuido | 映像作品ギャラリー"
-- **og:description**: "samuidoの映像作品ギャラリー。MV、リリックモーション、アニメーション、プロモーション映像などの作品を一覧でご覧いただけます。"
+- **og:description**: "samuidoの映像作品ギャラリー.MV、リリックモーション、アニメーション、プロモーション映像などの作品を一覧でご覧いただけます."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/gallery/video"
 - **og:image**: "https://yusuke-kim.com/portfolio/gallery-video-og-image.png"
@@ -73,7 +73,7 @@ foriioライクな表示で映像作品をサムネイル画像とタイトル�
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Video Works - samuido | 映像作品ギャラリー"
-- **twitter:description**: "samuidoの映像作品ギャラリー。MV、リリックモーション、アニメーション、プロモーション映像などの作品を一覧でご覧いただけます。"
+- **twitter:description**: "samuidoの映像作品ギャラリー.MV、リリックモーション、アニメーション、プロモーション映像などの作品を一覧でご覧いただけます."
 - **twitter:image**: "https://yusuke-kim.com/portfolio/gallery-video-twitter-image.jpg"
 - **twitter:creator**: "@361do_design"
 

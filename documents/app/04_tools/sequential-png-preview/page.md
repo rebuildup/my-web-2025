@@ -2,7 +2,7 @@
 
 ## 目的
 
-連番PNGファイルをプレビューし、アニメーションとして表示するツール。複数のプレビュー方法を提供。
+連番PNGファイルをプレビューし、アニメーションとして表示するツール.複数のプレビュー方法を提供.
 
 ## 主な要素
 
@@ -97,7 +97,7 @@
 ### SEO
 
 - **title**: "Sequential PNG Preview - samuido | 連番PNGプレビュー"
-- **description**: "連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。"
+- **description**: "連番PNGファイルをアニメーションとしてプレビュー.複数ファイル、フォルダ、ZIPファイルに対応."
 - **keywords**: "連番PNG, プレビュー, アニメーション, 画像表示, ZIP対応, フォルダ対応"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/tools/sequential-png-preview"
@@ -105,7 +105,7 @@
 ### Open Graph
 
 - **og:title**: "Sequential PNG Preview - samuido | 連番PNGプレビュー"
-- **og:description**: "連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。"
+- **og:description**: "連番PNGファイルをアニメーションとしてプレビュー.複数ファイル、フォルダ、ZIPファイルに対応."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/sequential-png-preview"
 - **og:image**: "https://yusuke-kim.com/tools/sequential-png-preview-og-image.png"
@@ -116,7 +116,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Sequential PNG Preview - samuido | 連番PNGプレビュー"
-- **twitter:description**: "連番PNGファイルをアニメーションとしてプレビュー。複数ファイル、フォルダ、ZIPファイルに対応。"
+- **twitter:description**: "連番PNGファイルをアニメーションとしてプレビュー.複数ファイル、フォルダ、ZIPファイルに対応."
 - **twitter:image**: "https://yusuke-kim.com/tools/sequential-png-preview-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

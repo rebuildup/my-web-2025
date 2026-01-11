@@ -38,4 +38,4 @@ documents/
 ## 運用メモ
 - ランタイム: Node 20 / Next 16 standalone + pm2
 - パッケージ: pnpm 10、Lint/Format: Biome
-- 詳細版や旧手順は `archive/` を参照（必要時のみ）。
+- 詳細版や旧手順は `archive/` を参照（必要時のみ）.

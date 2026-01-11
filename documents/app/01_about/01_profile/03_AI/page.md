@@ -2,7 +2,7 @@
 
 ## 目的
 
-Difyを使って学習させたAIのsamuidoとチャット形式で対話できるページ。プロフィールや作品について質問できる。
+Difyを使って学習させたAIのsamuidoとチャット形式で対話できるページ.プロフィールや作品について質問できる.
 
 ## 主な要素
 
@@ -52,7 +52,7 @@ Difyを使って学習させたAIのsamuidoとチャット形式で対話でき�
 ### SEO
 
 - **title**: "AI Chat - samuido | AIのsamuidoと対話"
-- **description**: "AIのsamuidoとチャット形式で対話。プロフィール、作品、技術について質問できます。"
+- **description**: "AIのsamuidoとチャット形式で対話.プロフィール、作品、技術について質問できます."
 - **keywords**: "AIチャット, samuido, 対話, プロフィール, 作品, 技術"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/about/profile/AI"
@@ -60,7 +60,7 @@ Difyを使って学習させたAIのsamuidoとチャット形式で対話でき�
 ### Open Graph
 
 - **og:title**: "AI Chat - samuido | AIのsamuidoと対話"
-- **og:description**: "AIのsamuidoとチャット形式で対話。プロフィール、作品、技術について質問できます。"
+- **og:description**: "AIのsamuidoとチャット形式で対話.プロフィール、作品、技術について質問できます."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/about/profile/AI"
 - **og:image**: "https://yusuke-kim.com/about/profile-AI-og-image.png"
@@ -71,7 +71,7 @@ Difyを使って学習させたAIのsamuidoとチャット形式で対話でき�
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "AI Chat - samuido | AIのsamuidoと対話"
-- **twitter:description**: "AIのsamuidoとチャット形式で対話。プロフィール、作品、技術について質問できます。"
+- **twitter:description**: "AIのsamuidoとチャット形式で対話.プロフィール、作品、技術について質問できます."
 - **twitter:image**: "https://yusuke-kim.com/about/profile-AI-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

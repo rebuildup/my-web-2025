@@ -57,7 +57,7 @@ export default function ToolWrapper({
 	// Announce tool loading
 	useEffect(() => {
 		announce(
-			`${toolName}ツールが読み込まれました。キーボードショートカットが利用可能です。`,
+			`${toolName}ツールが読み込まれました.キーボードショートカットが利用可能です.`,
 		);
 	}, [toolName, announce]);
 
@@ -90,7 +90,7 @@ export default function ToolWrapper({
 				event.preventDefault();
 				const issues = runAccessibilityChecks();
 				announce(
-					`アクセシビリティチェック完了。${issues.length}個の問題が見つかりました。`,
+					`アクセシビリティチェック完了.${issues.length}個の問題が見つかりました.`,
 				);
 				return;
 			}

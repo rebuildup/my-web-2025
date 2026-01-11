@@ -7,7 +7,7 @@ import type { ContentItem } from "@/types/content";
 export const metadata: Metadata = {
 	title: "Downloads - Workshop | samuido",
 	description:
-		"テンプレート・素材集・サンプルファイルの配布。クリエイティブ制作に役立つ素材を無料で提供。",
+		"テンプレート・素材集・サンプルファイルの配布.クリエイティブ制作に役立つ素材を無料で提供.",
 	keywords: [
 		"テンプレート",
 		"素材集",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Downloads - Workshop | samuido",
 		description:
-			"テンプレート・素材集・サンプルファイルの配布。クリエイティブ制作に役立つ素材を無料で提供。",
+			"テンプレート・素材集・サンプルファイルの配布.クリエイティブ制作に役立つ素材を無料で提供.",
 		type: "website",
 		url: "https://yusuke-kim.com/workshop/downloads",
 		siteName: "samuido",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Downloads - Workshop | samuido",
 		description:
-			"テンプレート・素材集・サンプルファイルの配布。クリエイティブ制作に役立つ素材を無料で提供。",
+			"テンプレート・素材集・サンプルファイルの配布.クリエイティブ制作に役立つ素材を無料で提供.",
 		creator: "@361do_sleep",
 	},
 };
@@ -102,9 +102,9 @@ export default async function DownloadsPage() {
 								Downloads
 							</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
-								テンプレート・素材集・サンプルファイルを無料で配布しています。
+								テンプレート・素材集・サンプルファイルを無料で配布しています.
 								<br />
-								クリエイティブ制作にお役立てください。
+								クリエイティブ制作にお役立てください.
 							</p>
 						</header>
 

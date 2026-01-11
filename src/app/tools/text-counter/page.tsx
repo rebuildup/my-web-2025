@@ -5,7 +5,7 @@ import TextCounterTool from "./components/TextCounterTool";
 export const metadata: Metadata = {
 	title: "Text Counter - samuido | 文字数カウンター",
 	description:
-		"テキストの文字数を詳細にカウント。総文字数、単語数、行数、文字種別など豊富な統計情報を提供。",
+		"テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供.",
 	keywords: [
 		"文字数カウンター",
 		"テキスト統計",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Text Counter - samuido | 文字数カウンター",
 		description:
-			"テキストの文字数を詳細にカウント。総文字数、単語数、行数、文字種別など豊富な統計情報を提供。",
+			"テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供.",
 		type: "website",
 		url: "https://yusuke-kim.com/tools/text-counter",
 		siteName: "samuido",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Text Counter - samuido | 文字数カウンター",
 		description:
-			"テキストの文字数を詳細にカウント。総文字数、単語数、行数、文字種別など豊富な統計情報を提供。",
+			"テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供.",
 		creator: "@361do_sleep",
 	},
 };
@@ -75,7 +75,7 @@ export default function TextCounterPage() {
 									Text Counter
 								</h1>
 								<p className="noto-sans-jp-light text-sm text-main/70 leading-relaxed max-w-2xl">
-									テキストの文字数を詳細にカウント。総文字数、単語数、行数、文字種別など豊富な統計情報を提供します。
+									テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供します.
 								</p>
 							</header>
 

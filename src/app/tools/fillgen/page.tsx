@@ -203,10 +203,10 @@ const _baseStyle = generateStyle(presets.default);
 const defaultInput = `# 第1回 第二次世界大戦の終焉
 ## 第二次世界大戦の終焉
 ### 枢軸国の敗北・日本の敗戦
-日本は開戦後半年間で「{{大東亜共栄圏|360}}」を唱え、1942年6月の{{ミッドウェー|120}}海戦で大敗した。
+日本は開戦後半年間で「{{大東亜共栄圏|360}}」を唱え、1942年6月の{{ミッドウェー|120}}海戦で大敗した.
 
 ### 第二次世界大戦の結果
-{{第二次世界大戦|160}}は民主主義の拡大につながり、冷戦構造（{{資本主義/社会主義|200}}）が形成された。`;
+{{第二次世界大戦|160}}は民主主義の拡大につながり、冷戦構造（{{資本主義/社会主義|200}}）が形成された.`;
 
 type Section = { title: string; paragraphs: string[] };
 type Block = { header: string; sections: Section[] };
@@ -821,7 +821,7 @@ export default function FillGenPage() {
 	const addPage = () => {
 		setPages((prev) => [
 			...prev,
-			"# 新しいページタイトル\n## 見出し\n### セクション\n本文をここに。",
+			"# 新しいページタイトル\n## 見出し\n### セクション\n本文をここに.",
 		]);
 		setActivePage((prev) => prev + 1);
 	};
@@ -1017,7 +1017,7 @@ export default function FillGenPage() {
 				</Typography>
 				<Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
 					テキストに <code>{"{{答え|幅}}"}</code> を挿入して、プレビュー / HTML
-					/ React コードを即座に生成します。
+					/ React コードを即座に生成します.
 				</Typography>
 
 				<Card sx={{ mb: 3 }}>
@@ -1162,7 +1162,7 @@ export default function FillGenPage() {
 							<Typography variant="caption" color="text.secondary">
 								記法: <code>#</code> タイトル, <code>##</code> メイン見出し,{" "}
 								<code>###</code>
-								セクション見出し, 空行で段落区切り。
+								セクション見出し, 空行で段落区切り.
 							</Typography>
 						</Stack>
 					</CardContent>

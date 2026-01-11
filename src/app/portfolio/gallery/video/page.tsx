@@ -6,7 +6,7 @@ import type { ContentItem } from "@/types";
 export const metadata: Metadata = {
 	title: "Video Projects - Portfolio | samuido 映像制作作品集",
 	description:
-		"samuidoの映像制作作品集。MV制作、モーショングラフィックス、アニメーション作品をYouTube・Vimeo埋め込みと制作プロセスと共に紹介。",
+		"samuidoの映像制作作品集.MV制作、モーショングラフィックス、アニメーション作品をYouTube・Vimeo埋め込みと制作プロセスと共に紹介.",
 	keywords: [
 		"映像制作",
 		"MV制作",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Video Projects - Portfolio | samuido 映像制作作品集",
 		description:
-			"samuidoの映像制作作品集。MV制作、モーショングラフィックス、アニメーション作品をYouTube・Vimeo埋め込みと制作プロセスと共に紹介。",
+			"samuidoの映像制作作品集.MV制作、モーショングラフィックス、アニメーション作品をYouTube・Vimeo埋め込みと制作プロセスと共に紹介.",
 		type: "website",
 		url: "https://yusuke-kim.com/portfolio/gallery/video",
 		images: [
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Video Projects - Portfolio | samuido 映像制作作品集",
 		description:
-			"samuidoの映像制作作品集。MV制作、モーショングラフィックス、アニメーション作品をYouTube・Vimeo埋め込みと制作プロセスと共に紹介。",
+			"samuidoの映像制作作品集.MV制作、モーショングラフィックス、アニメーション作品をYouTube・Vimeo埋め込みと制作プロセスと共に紹介.",
 		images: [
 			"https://yusuke-kim.com/portfolio/gallery-video-twitter-image.jpg",
 		],

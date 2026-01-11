@@ -259,16 +259,16 @@ export default function HandleProfilePage() {
 							<ScrollFloat stagger={100}>
 								<div className="bg-main/5 p-6 rounded-lg space-y-4">
 									<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
-										「samuido」は、技術とクリエイティビティの境界を探求するハンドルネームです。
-										プログラミング、デザイン、映像制作を通じて、新しい表現方法を模索しています。
+										「samuido」は、技術とクリエイティビティの境界を探求するハンドルネームです.
+										プログラミング、デザイン、映像制作を通じて、新しい表現方法を模索しています.
 									</p>
 									<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
 										コードを書くことも、デザインすることも、音楽を作ることも、
-										すべて創造的な行為として捉え、それらを組み合わせた作品作りを心がけています。
+										すべて創造的な行為として捉え、それらを組み合わせた作品作りを心がけています.
 									</p>
 									<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
 										現在は高専生として学習を続けながら、個人プロジェクトやコンテストへの参加を通じて
-										スキルアップを図っています。
+										スキルアップを図っています.
 									</p>
 								</div>
 							</ScrollFloat>
@@ -410,9 +410,9 @@ export default function HandleProfilePage() {
 											コラボレーション
 										</h3>
 										<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
-											異なる専門分野の方との協働を大切にしています。
+											異なる専門分野の方との協働を大切にしています.
 											デザイナー、エンジニア、アーティスト、音楽家など、
-											多様なバックグラウンドを持つ方々との共同制作に興味があります。
+											多様なバックグラウンドを持つ方々との共同制作に興味があります.
 										</p>
 									</div>
 								</div>

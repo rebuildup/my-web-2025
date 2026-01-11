@@ -2,7 +2,7 @@
 
 ## 目的
 
-テキストの文字数をカウントし、詳細な統計情報を提供するシンプルなツール。
+テキストの文字数をカウントし、詳細な統計情報を提供するシンプルなツール.
 
 ## 主な要素
 
@@ -98,7 +98,7 @@
 ### SEO
 
 - **title**: "Text Counter - samuido | 文字数カウンター"
-- **description**: "テキストの文字数を詳細にカウント。総文字数、単語数、行数、文字種別など豊富な統計情報を提供。"
+- **description**: "テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供."
 - **keywords**: "文字数カウンター, テキスト統計, 文字数, 単語数, 行数, 文字種別"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/tools/text-counter"
@@ -106,7 +106,7 @@
 ### Open Graph
 
 - **og:title**: "Text Counter - samuido | 文字数カウンター"
-- **og:description**: "テキストの文字数を詳細にカウント。総文字数、単語数、行数、文字種別など豊富な統計情報を提供。"
+- **og:description**: "テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/text-counter"
 - **og:image**: "https://yusuke-kim.com/tools/text-counter-og-image.png"
@@ -117,7 +117,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Text Counter - samuido | 文字数カウンター"
-- **twitter:description**: "テキストの文字数を詳細にカウント。総文字数、単語数、行数、文字種別など豊富な統計情報を提供。"
+- **twitter:description**: "テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供."
 - **twitter:image**: "https://yusuke-kim.com/tools/text-counter-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

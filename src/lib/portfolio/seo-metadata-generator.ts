@@ -67,7 +67,7 @@ export class PortfolioSEOMetadataGenerator {
 			const featuredProjects = await this.dataManager.getFeaturedProjects(3);
 
 			const title = "Portfolio - samuido | 作品集・開発・映像・デザイン";
-			const description = `samuidoの作品集。Web開発、ゲーム開発、映像制作、デザインなど幅広いクリエイティブ作品を紹介。${stats.totalProjects}件のプロジェクトを掲載中。技術スタックと制作プロセスも掲載。`;
+			const description = `samuidoの作品集.Web開発、ゲーム開発、映像制作、デザインなど幅広いクリエイティブ作品を紹介.${stats.totalProjects}件のプロジェクトを掲載中.技術スタックと制作プロセスも掲載.`;
 
 			const keywords = [
 				"ポートフォリオ",
@@ -191,7 +191,7 @@ export class PortfolioSEOMetadataGenerator {
 				category === "all"
 					? "All Projects | ポートフォリオ | samuido"
 					: `${categoryInfo.title} | ポートフォリオ | samuido`;
-			const description = `${categoryInfo.description}の作品一覧（${items.length}件）。${categoryInfo.keywords.join("、")}などの技術を使用した制作実績をご覧ください。`;
+			const description = `${categoryInfo.description}の作品一覧（${items.length}件）.${categoryInfo.keywords.join("、")}などの技術を使用した制作実績をご覧ください.`;
 
 			const metadata: Metadata = {
 				title,

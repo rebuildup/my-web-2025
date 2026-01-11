@@ -2,11 +2,11 @@
 
 ## 目的
 
-存在しないページにアクセスされた際のエラーページ。ユーザーをサイトルートに導く。
+存在しないページにアクセスされた際のエラーページ.ユーザーをサイトルートに導く.
 
 ## 概要
 
-404エラーページは、ユーザーが存在しないURLにアクセスした際に表示されます。SEOにはページが存在しないことを明示し、ユーザーをサイトのトップページに導きます。
+404エラーページは、ユーザーが存在しないURLにアクセスした際に表示されます.SEOにはページが存在しないことを明示し、ユーザーをサイトのトップページに導きます.
 
 ## 主なリンク
 
@@ -23,7 +23,7 @@
 ### SEO
 
 - **title**: "ページが見つかりません - samuido | 404 Error"
-- **description**: "お探しのページは存在しません。サイトトップページからお探しください。"
+- **description**: "お探しのページは存在しません.サイトトップページからお探しください."
 - **keywords**: "404, エラー, ページが見つかりません"
 - **robots**: "noindex, nofollow"
 - **canonical**: "https://yusuke-kim.com/404"
@@ -31,7 +31,7 @@
 ### Open Graph
 
 - **og:title**: "ページが見つかりません - samuido | 404 Error"
-- **og:description**: "お探しのページは存在しません。サイトトップページからお探しください。"
+- **og:description**: "お探しのページは存在しません.サイトトップページからお探しください."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/404"
 - **og:image**: "https://yusuke-kim.com/404-og-image.png"
@@ -42,7 +42,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "ページが見つかりません - samuido | 404 Error"
-- **twitter:description**: "お探しのページは存在しません。サイトトップページからお探しください。"
+- **twitter:description**: "お探しのページは存在しません.サイトトップページからお探しください."
 - **twitter:image**: "https://yusuke-kim.com/404-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

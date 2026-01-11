@@ -2,7 +2,7 @@
 
 ## 目的
 
-円周率を順番に押し続けるゲームを提供し、数字の記憶とタイピングスキルを向上させる。
+円周率を順番に押し続けるゲームを提供し、数字の記憶とタイピングスキルを向上させる.
 
 ## 主な要素
 
@@ -81,7 +81,7 @@
 ### SEO
 
 - **title**: "Pi Game - samuido | 円周率暗記ゲーム"
-- **description**: "円周率を順番に押し続けるゲーム。数字の記憶とタイピングスキルを向上させます。"
+- **description**: "円周率を順番に押し続けるゲーム.数字の記憶とタイピングスキルを向上させます."
 - **keywords**: "円周率, 暗記ゲーム, 数字ゲーム, タイピング, 記憶力, π"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/tools/pi-game"
@@ -89,7 +89,7 @@
 ### Open Graph
 
 - **og:title**: "Pi Game - samuido | 円周率暗記ゲーム"
-- **og:description**: "円周率を順番に押し続けるゲーム。数字の記憶とタイピングスキルを向上させます。"
+- **og:description**: "円周率を順番に押し続けるゲーム.数字の記憶とタイピングスキルを向上させます."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/tools/pi-game"
 - **og:image**: "https://yusuke-kim.com/tools/pi-game-og-image.png"
@@ -100,7 +100,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Pi Game - samuido | 円周率暗記ゲーム"
-- **twitter:description**: "円周率を順番に押し続けるゲーム。数字の記憶とタイピングスキルを向上させます。"
+- **twitter:description**: "円周率を順番に押し続けるゲーム.数字の記憶とタイピングスキルを向上させます."
 - **twitter:image**: "https://yusuke-kim.com/tools/pi-game-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

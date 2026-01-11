@@ -5,7 +5,7 @@ import PiGame from "./components/PiGame";
 export const metadata: Metadata = {
 	title: "Pi Memory Game | Tools - samuido",
 	description:
-		"円周率の桁を記憶して入力するゲーム。テンキーインターフェースで楽しく学習できます。",
+		"円周率の桁を記憶して入力するゲーム.テンキーインターフェースで楽しく学習できます.",
 	keywords: [
 		"円周率",
 		"記憶ゲーム",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Pi Memory Game | Tools - samuido",
 		description:
-			"円周率の桁を記憶して入力するゲーム。テンキーインターフェースで楽しく学習できます。",
+			"円周率の桁を記憶して入力するゲーム.テンキーインターフェースで楽しく学習できます.",
 		type: "website",
 		url: "https://yusuke-kim.com/tools/pi-game",
 		siteName: "samuido",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Pi Memory Game | Tools - samuido",
 		description:
-			"円周率の桁を記憶して入力するゲーム。テンキーインターフェースで楽しく学習できます。",
+			"円周率の桁を記憶して入力するゲーム.テンキーインターフェースで楽しく学習できます.",
 		creator: "@361do_sleep",
 	},
 };
@@ -55,9 +55,9 @@ export default function PiGamePage() {
 								Pi Memory Game
 							</h1>
 							<p className="noto-sans-jp-light text-sm text-main/70 leading-relaxed max-w-2xl">
-								円周率の桁を記憶して入力するゲームです。
+								円周率の桁を記憶して入力するゲームです.
 								<br />
-								テンキーインターフェースで楽しく学習できます。
+								テンキーインターフェースで楽しく学習できます.
 							</p>
 						</header>
 

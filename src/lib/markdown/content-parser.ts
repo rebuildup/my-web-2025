@@ -741,15 +741,15 @@ export class ContentParser implements ContentParserService {
 		type: string,
 	): string | null {
 		if (totalItems === 0) {
-			return `${type}データがありません。まず${type}を追加してください。`;
+			return `${type}データがありません.まず${type}を追加してください.`;
 		}
 
 		if (index >= totalItems) {
-			return `インデックス 0-${totalItems - 1} を使用してください。利用可能な${type}: ${totalItems}個`;
+			return `インデックス 0-${totalItems - 1} を使用してください.利用可能な${type}: ${totalItems}個`;
 		}
 
 		if (index < 0) {
-			return `インデックスは0以上である必要があります。利用可能な${type}: 0-${totalItems - 1}`;
+			return `インデックスは0以上である必要があります.利用可能な${type}: 0-${totalItems - 1}`;
 		}
 
 		return null;

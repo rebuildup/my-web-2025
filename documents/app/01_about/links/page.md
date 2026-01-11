@@ -2,7 +2,7 @@
 
 ## 目的
 
-著者が管理する外部サービス・SNSへのリンクをカテゴリ別に一覧表示し、各種サービスへの導線を提供する。
+著者が管理する外部サービス・SNSへのリンクをカテゴリ別に一覧表示し、各種サービスへの導線を提供する.
 
 ## 主な要素
 
@@ -67,7 +67,7 @@
 ### SEO
 
 - **title**: "Links - samuido | リンクマップ"
-- **description**: "木村友亮が管理するSNS、開発関連、クリエイティブ関連の外部リンク集。各種サービスへの導線を提供。"
+- **description**: "木村友亮が管理するSNS、開発関連、クリエイティブ関連の外部リンク集.各種サービスへの導線を提供."
 - **keywords**: "リンクマップ, SNS, 開発, クリエイティブ, 外部リンク, ソーシャルメディア"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/about/links"
@@ -75,7 +75,7 @@
 ### Open Graph
 
 - **og:title**: "Links - samuido | リンクマップ"
-- **og:description**: "木村友亮が管理するSNS、開発関連、クリエイティブ関連の外部リンク集。各種サービスへの導線を提供。"
+- **og:description**: "木村友亮が管理するSNS、開発関連、クリエイティブ関連の外部リンク集.各種サービスへの導線を提供."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/about/links"
 - **og:image**: "https://yusuke-kim.com/about/links-og-image.png"
@@ -86,7 +86,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Links - samuido | リンクマップ"
-- **twitter:description**: "木村友亮が管理するSNS、開発関連、クリエイティブ関連の外部リンク集。各種サービスへの導線を提供。"
+- **twitter:description**: "木村友亮が管理するSNS、開発関連、クリエイティブ関連の外部リンク集.各種サービスへの導線を提供."
 - **twitter:image**: "https://yusuke-kim.com/about/links-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

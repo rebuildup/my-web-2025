@@ -2,7 +2,7 @@
 
 ## 目的
 
-開発サーバーでのみ動作するコンテンツデータ管理ツール。動画、画像、埋め込み要素、markdownファイルなどのコンテンツデータを入力し、jsonファイルとしてpublicに保存し、プレビュー機能を提供する。
+開発サーバーでのみ動作するコンテンツデータ管理ツール.動画、画像、埋め込み要素、markdownファイルなどのコンテンツデータを入力し、jsonファイルとしてpublicに保存し、プレビュー機能を提供する.
 
 ## 主な要素
 
@@ -73,7 +73,7 @@
 ### SEO
 
 - **title**: "Data Manager - samuido | データ管理"
-- **description**: "開発サーバー専用のコンテンツデータ管理ツール。動画、画像、Markdownファイルなどを管理し、JSON出力とプレビュー機能を提供します。"
+- **description**: "開発サーバー専用のコンテンツデータ管理ツール.動画、画像、Markdownファイルなどを管理し、JSON出力とプレビュー機能を提供します."
 - **keywords**: "データ管理, コンテンツ管理, JSON, Markdown, プレビュー, 開発ツール"
 - **robots**: "noindex, nofollow"
 - **canonical**: "https://yusuke-kim.com/admin/data-manager"
@@ -81,7 +81,7 @@
 ### Open Graph
 
 - **og:title**: "Data Manager - samuido | データ管理"
-- **og:description**: "開発サーバー専用のコンテンツデータ管理ツール。動画、画像、Markdownファイルなどを管理し、JSON出力とプレビュー機能を提供します。"
+- **og:description**: "開発サーバー専用のコンテンツデータ管理ツール.動画、画像、Markdownファイルなどを管理し、JSON出力とプレビュー機能を提供します."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/admin/data-manager"
 - **og:image**: "https://yusuke-kim.com/admin/data-manager-og-image.png"
@@ -92,7 +92,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "Data Manager - samuido | データ管理"
-- **twitter:description**: "開発サーバー専用のコンテンツデータ管理ツール。動画、画像、Markdownファイルなどを管理し、JSON出力とプレビュー機能を提供します。"
+- **twitter:description**: "開発サーバー専用のコンテンツデータ管理ツール.動画、画像、Markdownファイルなどを管理し、JSON出力とプレビュー機能を提供します."
 - **twitter:image**: "https://yusuke-kim.com/admin/data-manager-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

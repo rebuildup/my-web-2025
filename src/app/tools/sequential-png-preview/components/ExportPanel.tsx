@@ -39,7 +39,7 @@ export default function ExportPanel({
 			}
 		} catch (error) {
 			console.error("Export failed:", error);
-			alert("エクスポートに失敗しました。");
+			alert("エクスポートに失敗しました.");
 		} finally {
 			setIsExporting(false);
 			setExportProgress(0);

@@ -4,7 +4,7 @@ const WEB_APP_URL = (process.env.NEXT_PUBLIC_WEB_APP_URL ??
   process.env.NEXT_PUBLIC_PROTO_WEB_APP_URL ??
   "") as string;
 
-// ローカル定義を返すだけのダミー。APIは呼ばない。
+// ローカル定義を返すだけのダミー.APIは呼ばない.
 export async function fetchTexts(): Promise<any> {
   return getLocalTexts();
 }

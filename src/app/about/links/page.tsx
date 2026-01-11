@@ -121,7 +121,7 @@ function ProfileHeader() {
 			</div>
 
 			<p className="text-sm text-main/80 max-w-sm leading-relaxed font-light">
-				Web制作・映像制作・ツール開発。
+				Web制作・映像制作・ツール開発.
 				<span className="text-xs text-main/50 mt-1 block">
 					Yamaguchi, Japan
 				</span>

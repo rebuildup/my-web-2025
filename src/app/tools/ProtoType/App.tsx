@@ -77,7 +77,7 @@ const App: React.FC = () => {
       case "Setting":
         return <Setting />;
       default:
-        return <div>タブが見つかりません。</div>;
+        return <div>タブが見つかりません.</div>;
     }
   };
 

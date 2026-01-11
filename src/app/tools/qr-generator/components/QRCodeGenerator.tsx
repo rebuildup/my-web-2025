@@ -348,7 +348,7 @@ export default function QRCodeGenerator() {
 	return (
 		<ToolWrapper
 			toolName="QR Code Generator"
-			description="URL・テキストからQRコード生成・カスタマイズ・ダウンロード機能。PNG・SVG形式でエクスポート可能。オフライン対応。"
+			description="URL・テキストからQRコード生成・カスタマイズ・ダウンロード機能.PNG・SVG形式でエクスポート可能.オフライン対応."
 			category="utility"
 			keyboardShortcuts={keyboardShortcuts}
 		>
@@ -638,9 +638,9 @@ export default function QRCodeGenerator() {
 
 						<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 							<p className="noto-sans-jp-light text-xs text-center">
-								注意: このツールは簡易的なQRコード生成機能です。
-								商用利用や重要な用途には専用ライブラリの使用を推奨します。
-								すべての処理はローカルで実行され、データは外部に送信されません。
+								注意: このツールは簡易的なQRコード生成機能です.
+								商用利用や重要な用途には専用ライブラリの使用を推奨します.
+								すべての処理はローカルで実行され、データは外部に送信されません.
 							</p>
 						</div>
 					</div>

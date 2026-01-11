@@ -282,7 +282,7 @@ export class SEOIntegration {
 
 		return {
 			title: "ポートフォリオ | samuido - 木村友亮",
-			description: `Web開発、映像制作、デザインの作品を紹介。${stats.totalProjects}件のプロジェクトを掲載中。React、Next.js、Unity、After Effectsなどを使用した多様な制作実績をご覧ください。`,
+			description: `Web開発、映像制作、デザインの作品を紹介.${stats.totalProjects}件のプロジェクトを掲載中.React、Next.js、Unity、After Effectsなどを使用した多様な制作実績をご覧ください.`,
 			keywords: [
 				"ポートフォリオ",
 				"Web開発",
@@ -332,7 +332,7 @@ export class SEOIntegration {
 
 		return {
 			title: `${categoryInfo.title} | ポートフォリオ | samuido`,
-			description: `${categoryInfo.description}の作品一覧（${items.length}件）。${categoryInfo.keywords.join("、")}などの技術を使用した制作実績をご覧ください。`,
+			description: `${categoryInfo.description}の作品一覧（${items.length}件）.${categoryInfo.keywords.join("、")}などの技術を使用した制作実績をご覧ください.`,
 			keywords: [
 				"ポートフォリオ",
 				categoryInfo.title,

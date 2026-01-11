@@ -2,7 +2,7 @@
 
 ## 概要
 
-Next.js 16 (App Router, standalone) + pnpm + PM2 で動く現行ポートフォリオサイトの技術ドキュメント。データはリポジトリ内の `data/contents/*.db` をビルド時にスタンドアロン成果物へ同梱し、外部DBは不要。
+Next.js 16 (App Router, standalone) + pnpm + PM2 で動く現行ポートフォリオサイトの技術ドキュメント.データはリポジトリ内の `data/contents/*.db` をビルド時にスタンドアロン成果物へ同梱し、外部DBは不要.
 
 ## 目次
 

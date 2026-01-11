@@ -2,7 +2,7 @@
 
 ## 目的
 
-すべての作品をサムネイル画像のカード一覧で表示し、クリックで詳細パネルを表示する。
+すべての作品をサムネイル画像のカード一覧で表示し、クリックで詳細パネルを表示する.
 
 ## 主な要素
 
@@ -55,7 +55,7 @@
 ### SEO
 
 - **title**: "All Works - samuido | 全作品ギャラリー"
-- **description**: "samuidoの全作品ギャラリー。Web開発、映像制作、デザイン作品を一覧でご覧いただけます。"
+- **description**: "samuidoの全作品ギャラリー.Web開発、映像制作、デザイン作品を一覧でご覧いただけます."
 - **keywords**: "ポートフォリオ, 作品ギャラリー, Web開発, 映像制作, デザイン, サムネイル"
 - **robots**: "index, follow"
 - **canonical**: "https://yusuke-kim.com/portfolio/gallery/all"
@@ -63,7 +63,7 @@
 ### Open Graph
 
 - **og:title**: "All Works - samuido | 全作品ギャラリー"
-- **og:description**: "samuidoの全作品ギャラリー。Web開発、映像制作、デザイン作品を一覧でご覧いただけます。"
+- **og:description**: "samuidoの全作品ギャラリー.Web開発、映像制作、デザイン作品を一覧でご覧いただけます."
 - **og:type**: "website"
 - **og:url**: "https://yusuke-kim.com/portfolio/gallery/all"
 - **og:image**: "https://yusuke-kim.com/portfolio/gallery-all-og-image.png"
@@ -74,7 +74,7 @@
 
 - **twitter:card**: "summary_large_image"
 - **twitter:title**: "All Works - samuido | 全作品ギャラリー"
-- **twitter:description**: "samuidoの全作品ギャラリー。Web開発、映像制作、デザイン作品を一覧でご覧いただけます。"
+- **twitter:description**: "samuidoの全作品ギャラリー.Web開発、映像制作、デザイン作品を一覧でご覧いただけます."
 - **twitter:image**: "https://yusuke-kim.com/portfolio/gallery-all-twitter-image.jpg"
 - **twitter:creator**: "@361do_sleep"
 

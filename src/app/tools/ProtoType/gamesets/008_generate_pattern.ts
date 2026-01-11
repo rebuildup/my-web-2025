@@ -744,7 +744,7 @@ export const KEY_CONFIGS: KeyConfigs = [
     origins: [","],
   },
   {
-    key: "。",
+    key: ".",
     origins: ["."],
   },
   {
