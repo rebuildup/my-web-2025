@@ -12,7 +12,7 @@ import {
 	Zap,
 } from "lucide-react";
 import Link from "next/link";
-import DarkVeil from "@/components/DarkVeil";
+import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 const CARD_SURFACE =
@@ -175,9 +175,7 @@ const categories = [
 export default function ToolsPage() {
 	return (
 		<div className="relative min-h-screen bg-base text-main">
-			<div className="pointer-events-none absolute inset-0">
-				<DarkVeil />
-			</div>
+			<HomeBackground />
 			<main
 				id="main-content"
 				className="relative z-10 min-h-screen py-10"

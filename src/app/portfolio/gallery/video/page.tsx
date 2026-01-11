@@ -107,7 +107,7 @@ async function getVideoPortfolioData(): Promise<ContentItem[]> {
 	}
 }
 
-import Plasma from "@/components/Plasma";
+import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import VideoGallery from "./components/VideoGallery";
 
@@ -143,16 +143,7 @@ export default async function VideoProjectsPage() {
 
 	return (
 		<>
-			<div className="fixed inset-0 -z-10">
-				<Plasma
-					color="#0f1f4d"
-					speed={1}
-					direction="forward"
-					scale={1.0}
-					opacity={0.85}
-					mouseInteractive={false}
-				/>
-			</div>
+			<HomeBackground />
 			<script type="application/ld+json">
 				{JSON.stringify(structuredData)}
 			</script>
