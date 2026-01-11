@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { findMarkdownPage } from "@/cms/server/markdown-service";
-import DarkVeil from "@/components/DarkVeilWrapper";
+import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { getContentById } from "@/lib/data";
@@ -219,9 +219,7 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 
 	return (
 		<div className="relative min-h-screen bg-base text-main">
-			<div className="pointer-events-none absolute inset-0">
-				<DarkVeil />
-			</div>
+			<HomeBackground />
 			<main
 				id="main-content"
 				className="relative z-10 min-h-screen flex items-center py-6 sm:py-10"
