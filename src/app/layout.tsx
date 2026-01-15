@@ -3,10 +3,10 @@ import "./globals.css";
 import type { Viewport } from "next";
 import Script from "next/script";
 import type { ReactNode } from "react";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
 import { CookieConsent } from "@/components/ui/CookieConsent";
-import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 
 export const viewport: Viewport = {
 	width: "device-width",
@@ -32,7 +32,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 			<body className="bg-base text-main font-sans">
 				<ProductionInitializer>
 					<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-					<AnalyticsProvider>
+					<AnalyticsProvider gaId={process.env.NEXT_PUBLIC_GA_ID}>
 						{children}
 						<CookieConsent />
 					</AnalyticsProvider>

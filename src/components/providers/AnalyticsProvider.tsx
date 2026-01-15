@@ -44,9 +44,10 @@ const AnalyticsContext = createContext<AnalyticsContextType | undefined>(
 
 interface AnalyticsProviderProps {
 	children: React.ReactNode;
+	gaId?: string;
 }
 
-export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
+export function AnalyticsProvider({ children, gaId }: AnalyticsProviderProps) {
 	// Initialize with true to enabled tracking by default (Opt-out model)
 	// This ensures analytics works for users who haven't explicitly interacted with the consent banner yet
 	const [consentGiven, setConsentGiven] = useState(true);
@@ -112,7 +113,6 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 	useEffect(() => {
 		if (!isInitialized || !consentGiven || !gaLoaded) return;
 
-		const gaId = process.env.NEXT_PUBLIC_GA_ID;
 		if (!gaId || !window.gtag) return;
 
 		// Use window.location.search instead of useSearchParams to avoid Suspense requirement
@@ -126,7 +126,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 			page_path: url,
 			page_title: document.title,
 		});
-	}, [pathname, isInitialized, consentGiven, gaLoaded]);
+	}, [pathname, isInitialized, consentGiven, gaLoaded, gaId]);
 
 	const handleSetConsent = (consent: boolean) => {
 		setConsentGiven(consent);
@@ -143,7 +143,6 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 	};
 
 	const trackPageView = (url: string, title?: string) => {
-		const gaId = process.env.NEXT_PUBLIC_GA_ID;
 		if (consentGiven && typeof window !== "undefined" && window.gtag && gaId) {
 			window.gtag("config", gaId, {
 				page_path: url,

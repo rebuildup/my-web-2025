@@ -1,7 +1,6 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect } from "react";
 
 export default function GoogleAnalytics({ gaId }: { gaId?: string }) {
 	// 環境変数が無い、または無効な場合はレンダリングしない
@@ -19,13 +18,14 @@ export default function GoogleAnalytics({ gaId }: { gaId?: string }) {
 			<Script id="google-analytics" strategy="afterInteractive">
 				{`
           window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
+          function gtag(){window.dataLayer.push(arguments);}
+          window.gtag = gtag;
           gtag('js', new Date());
 
           gtag('config', '${gaId}', {
             page_path: window.location.pathname,
             debug_mode: ${process.env.NODE_ENV === "development"},
-            send_page_view: false // Next.js handles page navigation manually in AnalyticsProvider
+            send_page_view: false
           });
         `}
 			</Script>
