@@ -54,60 +54,36 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 	const [gaLoaded, setGaLoaded] = useState(false);
 	const pathname = usePathname();
 
-	// Initialize Google Analytics
+	// Check status of GA loading (loaded by GoogleAnalytics component)
 	useEffect(() => {
 		if (typeof window === "undefined") return;
 
-		const gaId = process.env.NEXT_PUBLIC_GA_ID;
-		if (!gaId) {
-			console.warn(
-				"NEXT_PUBLIC_GA_ID is not set. Google Analytics will not be initialized.",
-			);
-			setIsInitialized(true);
-			return;
-		}
+		let attempts = 0;
+		const maxAttempts = 50; // Try for ~25 seconds
 
-		console.log(`Initializing Google Analytics with ID: ${gaId}`);
-
-		// Check if gtag is already loaded (e.g., by GTM or initProduction)
-		if (window.gtag) {
-			console.log("Google Analytics (gtag) is already loaded.");
-			setGaLoaded(true);
-			setIsInitialized(true);
-			return;
-		}
-
-		// Load gtag script
-		const script = document.createElement("script");
-		script.async = true;
-		script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
-		script.onload = () => {
-			// Initialize gtag
-			window.dataLayer = window.dataLayer || [];
-			function gtag(...args: unknown[]) {
-				window.dataLayer?.push(args);
+		const checkGtag = () => {
+			if (window.gtag) {
+				console.log(
+					"AnalyticsProvider: Google Analytics detected and initialized.",
+				);
+				setGaLoaded(true);
+				setIsInitialized(true);
+				return;
 			}
 
-			gtag("js", new Date());
-			gtag("config", gaId, {
-				page_title: document.title,
-				page_location: window.location.href,
-				send_page_view: true, // Ensure page view is sent on init
-			});
-
-			// Make gtag available globally
-			(window as unknown as { gtag: typeof gtag }).gtag = gtag;
-
-			console.log("Google Analytics initialized successfully.");
-			setGaLoaded(true);
-			setIsInitialized(true);
-		};
-		script.onerror = () => {
-			console.error("Failed to load Google Analytics script");
-			setIsInitialized(true);
+			attempts++;
+			if (attempts < maxAttempts) {
+				setTimeout(checkGtag, 500);
+			} else {
+				console.warn(
+					"AnalyticsProvider: Google Analytics failed to load within timeout.",
+				);
+				// Even if failed, we mark initialized to not block other things, but tracking won't work
+				setIsInitialized(true);
+			}
 		};
 
-		document.head.appendChild(script);
+		checkGtag();
 	}, []);
 
 	// Check for existing consent

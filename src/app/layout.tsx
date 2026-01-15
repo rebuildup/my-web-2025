@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
 import { CookieConsent } from "@/components/ui/CookieConsent";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 
 export const viewport: Viewport = {
 	width: "device-width",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 			</head>
 			<body className="bg-base text-main font-sans">
 				<ProductionInitializer>
+					<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
 					<AnalyticsProvider>
 						{children}
 						<CookieConsent />
