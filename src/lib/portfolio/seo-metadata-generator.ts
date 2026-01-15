@@ -323,6 +323,8 @@ export class PortfolioSEOMetadataGenerator {
 								(item.tags || []).join(","),
 							)}&thumbnail=${encodeURIComponent(
 								item.thumbnail || item.images?.[0] || "",
+							)}&slug=${encodeURIComponent(item.id)}&summary=${encodeURIComponent(
+								item.description || "",
 							)}`,
 							width: 1200,
 							height: 630,
@@ -347,6 +349,8 @@ export class PortfolioSEOMetadataGenerator {
 							(item.tags || []).join(","),
 						)}&thumbnail=${encodeURIComponent(
 							item.thumbnail || item.images?.[0] || "",
+						)}&slug=${encodeURIComponent(item.id)}&summary=${encodeURIComponent(
+							item.description || "",
 						)}`,
 					],
 					creator: this.config.twitterHandle,
@@ -614,7 +618,7 @@ export class PortfolioSEOMetadataGenerator {
 	private getCategoryThemeColor(category: string): string {
 		switch (category.toLowerCase()) {
 			case "develop":
-				return "#3b82f6"; // blue
+				return "#0000FF"; // Primary Blue
 			case "video":
 				return "#ef4444"; // red
 			case "design":
@@ -622,7 +626,7 @@ export class PortfolioSEOMetadataGenerator {
 			case "video&design":
 				return "#ec4899"; // pink
 			default:
-				return "#10b981"; // emerald/default
+				return "#0000FF"; // Default Primary Blue
 		}
 	}
 
