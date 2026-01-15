@@ -165,7 +165,11 @@ export async function generateMetadata({
 
 		return metadata;
 	} catch (error) {
-		console.error(`Error generating detail metadata for ${params}:`, error);
+		console.error(
+			`Error generating detail metadata for params:`,
+			await params,
+			error,
+		);
 
 		// Fallback metadata
 		return {

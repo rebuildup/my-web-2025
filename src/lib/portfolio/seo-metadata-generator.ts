@@ -49,7 +49,10 @@ export class PortfolioSEOMetadataGenerator {
 	) {
 		this.dataManager = dataManager;
 		this.config = {
-			baseUrl: "https://yusuke-kim.com",
+			baseUrl:
+				process.env.NEXT_PUBLIC_SITE_URL ||
+				process.env.NEXT_PUBLIC_BASE_URL ||
+				"https://yusuke-kim.com",
 			siteName: "samuido",
 			twitterHandle: "@361do_sleep",
 			defaultImage: "/images/portfolio-og-default.jpg",

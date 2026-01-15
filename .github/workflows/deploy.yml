@@ -197,6 +197,7 @@ jobs:
           TURBOPACK: "0"
           NEXT_PRIVATE_BUILD_WITH_TURBOPACK: "0"
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
         run: pnpm run build
 
       - name: Prepare standalone deployment
