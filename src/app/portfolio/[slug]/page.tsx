@@ -82,6 +82,14 @@ export async function generateMetadata({
 	try {
 		const { slug } = await params;
 		const baseSlug = slug;
+		console.log(
+			`[Metadata] Generating for slug: ${slug}, baseSlug: ${baseSlug}`,
+		);
+
+		const baseUrl =
+			process.env.NEXT_PUBLIC_SITE_URL ||
+			process.env.NEXT_PUBLIC_BASE_URL ||
+			"https://yusuke-kim.com";
 
 		// Get portfolio item (primary: data manager; fallback: CMS API)
 		let item = await portfolioDataManager.getItemById(baseSlug);
@@ -96,7 +104,7 @@ export async function generateMetadata({
 		if (!item) {
 			try {
 				const res = await fetch(
-					`/api/cms/contents?id=${encodeURIComponent(baseSlug)}`,
+					`${baseUrl}/api/cms/contents?id=${encodeURIComponent(baseSlug)}`,
 					{ cache: "no-store" },
 				);
 				if (res.ok) {
@@ -149,12 +157,31 @@ export async function generateMetadata({
 		if (!item) {
 			const detail = await loadMarkdownDetail(baseSlug);
 			const fallbackTitle = detail?.title ?? baseSlug;
-			return {
-				title: `${fallbackTitle} | samuido`,
+
+			// Construct pseudo-item for consistent metadata generation
+			const pseudoItem = {
+				id: baseSlug,
+				title: fallbackTitle,
 				description:
 					detail?.summary || "Portfolio project details and information",
-				robots: "index, follow",
-			};
+				category: "portfolio",
+				tags: [],
+				status: "draft",
+				priority: 0,
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString(),
+				thumbnail: undefined,
+				images: [],
+				externalLinks: [],
+				content: detail?.body || "",
+			} as unknown as PortfolioContentItem;
+
+			const seoGenerator = new PortfolioSEOMetadataGenerator(
+				portfolioDataManager,
+			);
+			const { metadata } =
+				await seoGenerator.generateDetailMetadata(pseudoItem);
+			return metadata;
 		}
 
 		// Generate metadata using SEO metadata generator
