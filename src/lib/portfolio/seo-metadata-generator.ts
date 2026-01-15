@@ -321,6 +321,8 @@ export class PortfolioSEOMetadataGenerator {
 								item.title,
 							)}&category=${encodeURIComponent(item.category)}&tags=${encodeURIComponent(
 								(item.tags || []).join(","),
+							)}&thumbnail=${encodeURIComponent(
+								item.thumbnail || item.images?.[0] || "",
 							)}`,
 							width: 1200,
 							height: 630,
@@ -343,6 +345,8 @@ export class PortfolioSEOMetadataGenerator {
 							item.title,
 						)}&category=${encodeURIComponent(item.category)}&tags=${encodeURIComponent(
 							(item.tags || []).join(","),
+						)}&thumbnail=${encodeURIComponent(
+							item.thumbnail || item.images?.[0] || "",
 						)}`,
 					],
 					creator: this.config.twitterHandle,

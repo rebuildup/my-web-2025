@@ -1166,6 +1166,14 @@ export function DataManagerForm({
 				<SEOSection
 					seo={formData.seo}
 					onSEOChange={(seo) => handleInputChange("seo", seo)}
+					title={formData.title}
+					category={
+						isEnhancedContentItem(formData)
+							? formData.categories?.[0]
+							: formData.category
+					}
+					tags={formData.tags}
+					thumbnail={formData.thumbnail || formData.images?.[0]}
 				/>
 			)}
 

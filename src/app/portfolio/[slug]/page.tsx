@@ -17,6 +17,7 @@ interface MarkdownDetail {
 	title?: string;
 	summary?: string;
 	body?: string;
+	thumbnail?: string;
 }
 
 // Normalize URLs in markdown content (replace localhost:3010 with relative paths)
@@ -48,6 +49,9 @@ async function loadMarkdownDetail(
 				(frontmatter.summary as string | undefined) ??
 				(frontmatter.description as string | undefined),
 			body,
+			thumbnail:
+				(frontmatter.thumbnail as string | undefined) ??
+				(frontmatter.image as string | undefined),
 		};
 	} catch (error) {
 		console.warn("Failed to load markdown detail for", slug, error);
@@ -170,7 +174,7 @@ export async function generateMetadata({
 				priority: 0,
 				createdAt: new Date().toISOString(),
 				updatedAt: new Date().toISOString(),
-				thumbnail: undefined,
+				thumbnail: detail?.thumbnail || undefined,
 				images: [],
 				externalLinks: [],
 				content: detail?.body || "",
@@ -358,7 +362,7 @@ function ContentSection({
 											className="border border-main/10 rounded-lg p-3 sm:p-4"
 										>
 											<div className="flex items-center space-x-3">
-												<div className="text-lg flex-shrink-0">🎥</div>
+												<div className="text-lg shrink-0">🎥</div>
 												<div className="min-w-0 flex-1">
 													<div className="font-medium text-sm sm:text-base text-main">
 														{video.title || `動画 ${index + 1}`}
@@ -395,7 +399,7 @@ function ContentSection({
 											href={link.url}
 											className="flex items-center space-x-3 p-3 sm:p-4 border border-main/10 rounded-lg hover:bg-main/5 transition-colors text-main"
 										>
-											<div className="text-lg flex-shrink-0">🔗</div>
+											<div className="text-lg shrink-0">🔗</div>
 											<div className="min-w-0 flex-1">
 												<div className="font-medium text-sm sm:text-base">
 													{link.title}

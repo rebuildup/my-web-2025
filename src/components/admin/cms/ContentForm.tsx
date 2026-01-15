@@ -1526,6 +1526,61 @@ export function ContentForm({
 				}
 				fullWidth
 			/>
+
+			{/* Dynamic Generated Mockup */}
+			<Box
+				sx={{
+					border: 1,
+					borderColor: "divider",
+					p: 2,
+					borderRadius: 1,
+					bgcolor: "action.hover",
+				}}
+			>
+				<Typography variant="subtitle2" sx={{ mb: 1, color: "text.primary" }}>
+					Dynamic Generated Mockup
+				</Typography>
+				<Typography
+					variant="caption"
+					display="block"
+					sx={{ mb: 1, color: "text.secondary" }}
+				>
+					Based on current title, category, tags, and thumbnail.
+				</Typography>
+				<Box
+					sx={{
+						border: 1,
+						borderColor: "divider",
+						borderRadius: 1,
+						overflow: "hidden",
+						maxWidth: 400,
+					}}
+				>
+					<Box sx={{ aspectRatio: "16/9", bgcolor: "background.default" }}>
+						{/* eslint-disable-next-line @next/next/no-img-element */}
+						<img
+							src={`/api/og?title=${encodeURIComponent(
+								formData.title || "Untitled",
+							)}&category=${encodeURIComponent(
+								formData.tags?.[0] || "Portfolio",
+							)}&tags=${encodeURIComponent(
+								(formData.tags || []).join(","),
+							)}&thumbnail=${encodeURIComponent(
+								formData.thumbnails?.image?.src ||
+									formData.thumbnails?.webm?.poster ||
+									"",
+							)}&slug=${encodeURIComponent(formData.id || "")}&summary=${encodeURIComponent(
+								formData.summary || "",
+							)}`}
+							alt="Dynamic OG Preview"
+							style={{ width: "100%", height: "100%", objectFit: "cover" }}
+							onError={(e) => {
+								(e.target as HTMLImageElement).style.display = "none";
+							}}
+						/>
+					</Box>
+				</Box>
+			</Box>
 		</Stack>
 	);
 	const PermissionsI18nExt = (
