@@ -47,8 +47,10 @@ interface AnalyticsProviderProps {
 }
 
 export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
+	// Initialize with true to enabled tracking by default (Opt-out model)
+	// This ensures analytics works for users who haven't explicitly interacted with the consent banner yet
+	const [consentGiven, setConsentGiven] = useState(true);
 	const [isInitialized, setIsInitialized] = useState(false);
-	const [consentGiven, setConsentGiven] = useState(false);
 	const [gaLoaded, setGaLoaded] = useState(false);
 	const pathname = usePathname();
 
@@ -65,8 +67,11 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 			return;
 		}
 
+		console.log(`Initializing Google Analytics with ID: ${gaId}`);
+
 		// Check if gtag is already loaded (e.g., by GTM or initProduction)
 		if (window.gtag) {
+			console.log("Google Analytics (gtag) is already loaded.");
 			setGaLoaded(true);
 			setIsInitialized(true);
 			return;
@@ -87,10 +92,13 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 			gtag("config", gaId, {
 				page_title: document.title,
 				page_location: window.location.href,
+				send_page_view: true, // Ensure page view is sent on init
 			});
 
 			// Make gtag available globally
 			(window as unknown as { gtag: typeof gtag }).gtag = gtag;
+
+			console.log("Google Analytics initialized successfully.");
 			setGaLoaded(true);
 			setIsInitialized(true);
 		};
@@ -111,6 +119,9 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 				setConsentGiven(true);
 			} else if (savedConsent === "false") {
 				setConsentGiven(false);
+			} else {
+				// Default to true if no preference is saved (Opt-out model)
+				setConsentGiven(true);
 			}
 		} catch (error) {
 			// Handle localStorage errors gracefully
@@ -132,6 +143,9 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 		const searchParams =
 			typeof window !== "undefined" ? window.location.search : "";
 		const url = pathname + searchParams;
+
+		console.log(`Tracking PageView: ${url}`);
+
 		window.gtag("config", gaId, {
 			page_path: url,
 			page_title: document.title,
@@ -142,6 +156,10 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
 		setConsentGiven(consent);
 		try {
 			localStorage.setItem("analytics-consent", consent.toString());
+
+			// If consent is revoked, we might want to reload or clear cookies,
+			// but simply stopping future events is the MVP approach.
+			console.log(`Analytics consent set to: ${consent}`);
 		} catch (error) {
 			// Handle localStorage errors gracefully
 			console.warn("Failed to save analytics consent to localStorage:", error);
