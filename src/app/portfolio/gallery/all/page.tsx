@@ -89,7 +89,7 @@ export default async function AllGalleryPage() {
 						{JSON.stringify(structuredData)}
 					</script>
 				)}
-				<div className="min-h-screen bg-base text-main scrollbar-auto-stable">
+				<div className="min-h-screen relative z-10 text-main scrollbar-auto-stable">
 					<main className="py-4">
 						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-10">
