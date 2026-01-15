@@ -1306,7 +1306,7 @@ export function CookieSettings() {
 								checked={analyticsEnabled}
 								onChange={(e) => setAnalyticsEnabled(e.target.checked)}
 							/>
-							<div className="w-11 h-6 bg-main/20 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-base after:border after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+							<div className="w-11 h-6 bg-main/20 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-base after:border after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
 						</label>
 					</div>
 					<p className="noto-sans-jp-light text-sm text-main/80">

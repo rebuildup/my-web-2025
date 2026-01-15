@@ -100,7 +100,9 @@ export function generateBaseMetadata(
 			url: canonical,
 			images: [
 				{
-					url: `${config.baseUrl}${ogImage}`,
+					url: ogImage.startsWith("http")
+						? ogImage
+						: `${config.baseUrl}${ogImage}`,
 					width: 1200,
 					height: 630,
 					alt: title,
@@ -138,9 +140,28 @@ export function generatePortfolioMetadata(
 		config,
 	);
 
+	// Determine theme color based on category
+	const getThemeColor = (cat: string) => {
+		switch (cat.toLowerCase()) {
+			case "develop":
+				return "#3b82f6"; // blue
+			case "video":
+				return "#ef4444"; // red
+			case "design":
+				return "#a855f7"; // purple
+			case "video&design":
+				return "#ec4899"; // pink
+			default:
+				return "#10b981"; // emerald/default
+		}
+	};
+
 	// Add portfolio-specific Open Graph properties
 	return {
 		...baseMetadata,
+		other: {
+			"theme-color": getThemeColor(item.category),
+		},
 		openGraph: {
 			...baseMetadata.openGraph,
 			type: "article",
@@ -148,7 +169,36 @@ export function generatePortfolioMetadata(
 			modifiedTime: item.updatedAt || item.createdAt,
 			authors: [config.author.name],
 			tags: item.tags,
+			images: [
+				{
+					url: item.thumbnail
+						? item.thumbnail.startsWith("http")
+							? item.thumbnail
+							: `${config.baseUrl}${item.thumbnail}`
+						: `${config.baseUrl}${config.images.ogImage}`,
+					width: 1200,
+					height: 630,
+					alt: item.title,
+				},
+			],
 		},
+		twitter: {
+			...baseMetadata.twitter,
+			card: "summary_large_image",
+			title: item.title,
+			description: item.description,
+			images: [
+				item.thumbnail
+					? item.thumbnail.startsWith("http")
+						? item.thumbnail
+						: `${config.baseUrl}${item.thumbnail}`
+					: `${config.baseUrl}${config.images.twitterImage}`,
+			],
+			// Twitter Card Custom Data (labels/data)
+			// Note: These properties might need to be added to the Metadata type definition or handled if using a custom type
+			// Standard Next.js Metadata type doesn't explicitly support these, but they render as meta tags
+			creator: config.author.twitter,
+		} as any, // Cast to any to support custom Twitter properties if strictly typed
 	};
 }
 

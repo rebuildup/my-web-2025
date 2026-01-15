@@ -314,10 +314,11 @@ export class PortfolioSEOMetadataGenerator {
 					url: `${this.config.baseUrl}/portfolio/${item.id}`,
 					images: [
 						{
-							url:
-								item.thumbnail ||
-								item.images?.[0] ||
-								`${this.config.baseUrl}${this.config.defaultImage}`,
+							url: `${this.config.baseUrl}/api/og?title=${encodeURIComponent(
+								item.title,
+							)}&category=${encodeURIComponent(item.category)}&tags=${encodeURIComponent(
+								(item.tags || []).join(","),
+							)}`,
 							width: 1200,
 							height: 630,
 							alt: item.title,
@@ -335,11 +336,22 @@ export class PortfolioSEOMetadataGenerator {
 					title: item.title,
 					description: item.description,
 					images: [
-						item.thumbnail ||
-							item.images?.[0] ||
-							`${this.config.baseUrl}${this.config.defaultImage}`,
+						`${this.config.baseUrl}/api/og?title=${encodeURIComponent(
+							item.title,
+						)}&category=${encodeURIComponent(item.category)}&tags=${encodeURIComponent(
+							(item.tags || []).join(","),
+						)}`,
 					],
 					creator: this.config.twitterHandle,
+					// Custom Twitter Data (Type assertion needed for TS)
+					// @ts-ignore
+					label1: "Category",
+					data1: item.category,
+					label2: "Top Tech",
+					data2: (item.technologies || [])[0] || (item.tags || [])[0] || "N/A",
+				},
+				other: {
+					"theme-color": this.getCategoryThemeColor(item.category),
 				},
 			};
 
@@ -479,7 +491,11 @@ export class PortfolioSEOMetadataGenerator {
 			dateCreated: item.createdAt,
 			dateModified: item.updatedAt,
 			url: `${this.config.baseUrl}/portfolio/${item.id}`,
-			image: item.thumbnail || item.images?.[0],
+			image: (() => {
+				const img = item.thumbnail || item.images?.[0];
+				if (!img) return undefined;
+				return img.startsWith("http") ? img : `${this.config.baseUrl}${img}`;
+			})(),
 			keywords: [...(item.tags || []), ...(item.technologies || [])].join(", "),
 		};
 
@@ -586,6 +602,21 @@ export class PortfolioSEOMetadataGenerator {
 		};
 
 		return categoryMap[category] || categoryMap.all;
+	}
+
+	private getCategoryThemeColor(category: string): string {
+		switch (category.toLowerCase()) {
+			case "develop":
+				return "#3b82f6"; // blue
+			case "video":
+				return "#ef4444"; // red
+			case "design":
+				return "#a855f7"; // purple
+			case "video&design":
+				return "#ec4899"; // pink
+			default:
+				return "#10b981"; // emerald/default
+		}
 	}
 
 	/**

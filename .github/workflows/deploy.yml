@@ -48,8 +48,6 @@ jobs:
 
       - name: Build project (Standalone)
         env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
           NODE_OPTIONS: "--max-old-space-size=4096"
           NEXT_USE_TURBOPACK: "0"
           TURBOPACK: "0"
@@ -194,8 +192,6 @@ jobs:
 
       - name: Build project (Standalone)
         env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
           NODE_OPTIONS: "--max-old-space-size=4096"
           NEXT_USE_TURBOPACK: "0"
           TURBOPACK: "0"
@@ -690,8 +686,6 @@ jobs:
 
           # 9. Set up environment
           cat > .env.production.local << ENV_EOF
-          RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
-          RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}
           NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
           NODE_ENV=production
           PORT=3000

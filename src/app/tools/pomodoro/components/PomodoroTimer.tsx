@@ -1389,7 +1389,7 @@ export default function PomodoroTimer() {
         ${isActive ? "opacity-100" : "opacity-60 hover:opacity-80"}
       `}
 			>
-				<span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none text-right w-auto min-w-[64px] sm:min-w-[76px] md:min-w-[92px] lg:min-w-[110px]">
+				<span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none text-right w-auto min-w-16 sm:min-w-19 md:min-w-23 lg:min-w-28">
 					{String(minutes).padStart(2, "0")}
 				</span>
 				<span
@@ -1397,10 +1397,10 @@ export default function PomodoroTimer() {
 				>
 					:
 				</span>
-				<span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none text-left w-auto min-w-[64px] sm:min-w-[76px] md:min-w-[92px] lg:min-w-[110px]">
+				<span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none text-left w-auto min-w-16 sm:min-w-19 md:min-w-23 lg:min-w-28">
 					{String(seconds).padStart(2, "0")}
 				</span>
-				<span className="text-lg sm:text-xl md:text-2xl leading-none ml-0.5 sm:ml-1 md:ml-1.5 lg:ml-2 w-10 sm:w-12 md:w-14 lg:w-16 min-w-[30px] sm:min-w-[36px] md:min-w-[42px] lg:min-w-[48px] opacity-40 font-medium self-end mb-1 sm:mb-1.5 md:mb-2">
+				<span className="text-lg sm:text-xl md:text-2xl leading-none ml-0.5 sm:ml-1 md:ml-1.5 lg:ml-2 w-10 sm:w-12 md:w-14 lg:w-16 min-w-[30px] sm:min-w-9 md:min-w-[42px] lg:min-w-12 opacity-40 font-medium self-end mb-1 sm:mb-1.5 md:mb-2">
 					.{String(milliseconds).padStart(2, "0")}
 				</span>
 			</div>
@@ -1502,7 +1502,7 @@ export default function PomodoroTimer() {
 
 			{/* Center: Main Timer with circular progress */}
 			<div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none">
-				<div className="relative flex items-center justify-center w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] md:w-[420px] md:h-[420px] lg:w-[520px] lg:h-[520px]">
+				<div className="relative flex items-center justify-center w-60 h-60 sm:w-80 sm:h-80 md:w-[420px] md:h-[420px] lg:w-[520px] lg:h-[520px]">
 					{/* Background circle */}
 					<svg
 						className="absolute inset-0 w-full h-full"
@@ -1550,7 +1550,7 @@ export default function PomodoroTimer() {
 
 			{/* Left Panel: Flow Progress Bar */}
 			<aside
-				className={`fixed left-8 top-1/2 transform -translate-y-1/2 z-[70] flex flex-col items-start gap-4 transition-opacity duration-500 no-timer-click
+				className={`fixed left-8 top-1/2 transform -translate-y-1/2 z-70 flex flex-col items-start gap-4 transition-opacity duration-500 no-timer-click
          ${isActive ? "opacity-20 hover:opacity-100" : "opacity-100"}
       `}
 			>
@@ -1632,10 +1632,10 @@ export default function PomodoroTimer() {
 									</div>
 
 									<div
-										className={`absolute top-1/2 -translate-y-1/2 w-48 p-2 rounded-lg backdrop-blur-md border transition-all duration-300 pointer-events-none shadow-xl z-[100] ${
+										className={`absolute top-1/2 -translate-y-1/2 w-48 p-2 rounded-lg backdrop-blur-md border transition-all duration-300 pointer-events-none shadow-xl z-100 ${
 											isHovered
 												? "opacity-100 translate-x-0"
-												: "opacity-0 translate-x-[-10px]"
+												: "opacity-0 -translate-x-2.5"
 										}
                     ${theme === "dark" ? "bg-[#1a1a1a]/90 border-white/10 text-gray-100" : "bg-white/90 border-black/5 text-gray-800"}
                  `}
@@ -1813,7 +1813,7 @@ export default function PomodoroTimer() {
 
 			{/* Settings Panel */}
 			{showSettingsPanel && (
-				<div className="fixed inset-0 z-[2147483647] flex items-center justify-center pointer-events-auto">
+				<div className="fixed inset-0 z-2147483647 flex items-center justify-center pointer-events-auto">
 					{/* Overlay */}
 					<div
 						className="absolute inset-0 bg-black/50 backdrop-blur-sm"

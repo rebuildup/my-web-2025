@@ -102,7 +102,11 @@ export function generatePersonStructuredData(
 		description: profileData.description,
 		url: config.author.url,
 		sameAs: config.author.sameAs,
-		image: profileData.image || `${config.baseUrl}/images/profile/main.jpg`,
+		image: profileData.image
+			? profileData.image.startsWith("http")
+				? profileData.image
+				: `${config.baseUrl}${profileData.image}`
+			: `${config.baseUrl}/images/profile/main.jpg`,
 		birthDate: profileData.birthDate,
 		nationality: profileData.nationality,
 		knowsAbout: profileData.skills,
@@ -139,7 +143,9 @@ export function generateCreativeWorkStructuredData(
 		keywords: item.tags.join(", "),
 		genre: item.category,
 		image: item.thumbnail
-			? `${config.baseUrl}${item.thumbnail}`
+			? item.thumbnail.startsWith("http")
+				? item.thumbnail
+				: `${config.baseUrl}${item.thumbnail}`
 			: `${config.baseUrl}/images/og-image.png`,
 	};
 
@@ -203,7 +209,9 @@ export function generateArticleStructuredData(
 		datePublished: item.publishedAt || item.createdAt,
 		dateModified: item.updatedAt || item.createdAt,
 		image: item.thumbnail
-			? `${config.baseUrl}${item.thumbnail}`
+			? item.thumbnail.startsWith("http")
+				? item.thumbnail
+				: `${config.baseUrl}${item.thumbnail}`
 			: `${config.baseUrl}/images/og-image.png`,
 		keywords: item.tags.join(", "),
 		articleSection: item.category,
@@ -247,7 +255,9 @@ export function generateSoftwareApplicationStructuredData(
 			? `${item.downloadInfo.fileSize} bytes`
 			: undefined,
 		image: item.thumbnail
-			? `${config.baseUrl}${item.thumbnail}`
+			? item.thumbnail.startsWith("http")
+				? item.thumbnail
+				: `${config.baseUrl}${item.thumbnail}`
 			: `${config.baseUrl}/images/og-image.png`,
 		keywords: item.tags.join(", "),
 	};
@@ -349,7 +359,9 @@ export function generateCollectionPageStructuredData(
 				name: item.title,
 				description: item.description,
 				image: item.thumbnail
-					? `${config.baseUrl}${item.thumbnail}`
+					? item.thumbnail.startsWith("http")
+						? item.thumbnail
+						: `${config.baseUrl}${item.thumbnail}`
 					: `${config.baseUrl}/images/og-image.png`,
 			})),
 		},

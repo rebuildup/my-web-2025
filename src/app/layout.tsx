@@ -1,17 +1,22 @@
 import "./app.css";
 import "./globals.css";
-import type { Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import type { ReactNode } from "react";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
 import { CookieConsent } from "@/components/ui/CookieConsent";
+import { generateBaseMetadata } from "@/lib/seo/metadata";
 
 export const viewport: Viewport = {
 	width: "device-width",
 	initialScale: 1,
 };
+
+export const metadata: Metadata = generateBaseMetadata({
+	path: "/",
+});
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
