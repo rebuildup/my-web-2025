@@ -70,13 +70,28 @@ export function loadContentsByType(type: ContentType): Content[] {
 	const filtered = allContents.filter((content) => {
 		const extType =
 			typeof content.ext?.type === "string" ? content.ext.type : undefined;
+		// ext.typeが設定されていない場合、tagsに基づいて推測
+		// 特にportfolioの場合、tagsにportfolioが含まれるか確認
+		let isTypeMatch = false;
+		if (extType === type) {
+			isTypeMatch = true;
+		} else if (!extType && Array.isArray(content.tags)) {
+			// ext.typeが設定されていない場合、tagsにtypeが含まれているか確認
+			isTypeMatch = content.tags.includes(type);
+		} else if (!extType) {
+			// ext.typeもtagsも設定されていない場合、typeが"portfolio"なら全て含める
+			// デフォルトの動作として、typeが設定されていないコンテンツはportfolioとして扱う
+			if (type === "portfolio") {
+				isTypeMatch = true;
+			}
+		}
 		// デバッグ: typeフィルタリングをログ出力
 		if (process.env.NODE_ENV !== "production") {
 			console.log(
-				`[ContentService] Filtering content: ${content.id}, type: ${extType}, requested type: ${type}`,
+				`[ContentService] Filtering content: ${content.id}, extType: ${extType}, tags: ${content.tags?.join(",")}, requested type: ${type}, isTypeMatch: ${isTypeMatch}`,
 			);
 		}
-		return extType === type;
+		return isTypeMatch;
 	});
 
 	if (process.env.NODE_ENV !== "production") {
