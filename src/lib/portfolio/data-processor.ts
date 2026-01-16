@@ -701,7 +701,10 @@ export class PortfolioDataProcessor {
 	/**
 	 * Normalize thumbnail path - convert media IDs to API URLs
 	 */
-	protected normalizeThumbnailPath(thumbnail: string | undefined, contentId: string): string {
+	protected normalizeThumbnailPath(
+		thumbnail: string | undefined,
+		contentId: string,
+	): string {
 		if (!thumbnail) {
 			return "/images/portfolio/placeholder-image.svg";
 		}

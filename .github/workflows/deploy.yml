@@ -34,7 +34,18 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run lint (Biome)
-        run: pnpm run lint
+        run: |
+          echo "=== Running Biome lint ==="
+          pnpm run lint || {
+            echo "=== Biome lint failed ==="
+            echo "Checking specific files with verbose output..."
+            pnpm biome check src/cms/lib/content-db-manager.ts --diagnostic-level=error
+            pnpm biome check src/cms/server/content-service.ts --diagnostic-level=error
+            pnpm biome check src/cms/server/markdown-service.ts --diagnostic-level=error
+            pnpm biome check src/lib/portfolio/data-processor.ts --diagnostic-level=error
+            pnpm biome check src/app/workshop/page.tsx --diagnostic-level=error
+            exit 1
+          }
 
       - name: Run type check
         run: pnpm run type-check
