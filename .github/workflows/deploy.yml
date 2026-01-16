@@ -595,7 +595,8 @@ jobs:
           # Move extracted files to /var/www/yusuke-kim
           echo "Moving extracted files to /var/www/yusuke-kim..."
           rm -rf /var/www/yusuke-kim/*
-          cp -a "$TEMP_EXTRACT_DIR"/* /var/www/yusuke-kim/
+          # Use . at the end to copy hidden files and directories (like .next)
+          cp -a "$TEMP_EXTRACT_DIR"/. /var/www/yusuke-kim/
           echo "✅ Files moved"
           
           # Clean up temporary extraction directory (always run this)
