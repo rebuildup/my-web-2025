@@ -348,10 +348,10 @@ jobs:
           echo ""
           echo "=== Cleaning /tmp directory ==="
           # Remove old deployment packages and logs
-          sudo find /tmp -name "deployment-standalone.tar.gz" -type f -mtime +1 -delete 2>/dev/null || true
-          sudo find /tmp -name "deploy-standalone-*.log" -type f -mtime +7 -delete 2>/dev/null || true
+          find /tmp -name "deployment-standalone.tar.gz" -type f -mtime +1 -delete 2>/dev/null || true
+          find /tmp -name "deploy-standalone-*.log" -type f -mtime +7 -delete 2>/dev/null || true
           # Remove any other old files in /tmp (older than 1 day)
-          sudo find /tmp -type f -mtime +1 -delete 2>/dev/null || true
+          find /tmp -type f -mtime +1 -delete 2>/dev/null || true
           
           echo "Disk space after cleanup:"
           df -h /tmp 2>/dev/null || df -h /
@@ -486,8 +486,8 @@ jobs:
           
           # Remove old deployment packages and logs from /tmp
           echo "Removing old files from /tmp..."
-          sudo find /tmp -name "deployment-standalone.tar.gz" -type f -mtime +1 -delete 2>/dev/null || true
-          sudo find /tmp -name "deploy-standalone-*.log" -type f -mtime +7 -delete 2>/dev/null || true
+          find /tmp -name "deployment-standalone.tar.gz" -type f -mtime +1 -delete 2>/dev/null || true
+          find /tmp -name "deploy-standalone-*.log" -type f -mtime +7 -delete 2>/dev/null || true
           
           echo "Disk space after cleanup:"
           df -h /tmp 2>/dev/null || df -h /
@@ -501,7 +501,7 @@ jobs:
             echo "⚠️  Warning: Low disk space in /tmp (${AVAIL_TMP_MB}MB available, need at least 250MB)"
             echo "Attempting to free more space..."
             # Remove any remaining old files
-            sudo find /tmp -type f -mtime +1 -delete 2>/dev/null || true
+            find /tmp -type f -mtime +1 -delete 2>/dev/null || true
             df -h /tmp 2>/dev/null || df -h /
           fi
            
@@ -525,8 +525,8 @@ jobs:
           echo "=== Preparing deployment directory ==="
           # Remove old backups to free space
           echo "=== Removing old backups to free disk space ==="
-          sudo find /tmp/preserved-data-* -type d -mtime +1 -exec rm -rf {} \; 2>/dev/null || true
-          sudo rm -rf /var/www/yusuke-kim/*
+          find /tmp/preserved-data-* -type d -mtime +1 -exec rm -rf {} \; 2>/dev/null || true
+          rm -rf /var/www/yusuke-kim/*
           mkdir -p /var/www/yusuke-kim
 
           # 7. Extract standalone deployment
