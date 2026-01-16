@@ -635,9 +635,39 @@ jobs:
           fi
           
 
+          # Verify file structure before deployment verification
+          echo "=== File structure verification ==="
+          echo "Current directory: $(pwd)"
+          echo "Directory contents:"
+          ls -la /var/www/yusuke-kim/
+
+          # Check for critical files
+          echo ""
+          echo "Critical file checks:"
+          if [ -f "server.js" ]; then
+            echo "✅ server.js exists ($(stat -f%z server.js 2>/dev/null || stat -c%s server.js 2>/dev/null || echo "unknown") bytes)"
+          else
+            echo "❌ server.js NOT found"
+          fi
+
+          if [ -f ".next/BUILD_ID" ]; then
+            echo "✅ .next/BUILD_ID exists"
+            echo "BUILD_ID: $(cat .next/BUILD_ID 2>/dev/null || echo "unknown")"
+          else
+            echo "❌ .next/BUILD_ID NOT found"
+          fi
+
+          if [ -d ".next" ]; then
+            echo "✅ .next directory exists"
+            echo ".next directory contents:"
+            ls -la .next/ | head -20
+          else
+            echo "❌ .next directory NOT found"
+          fi
+
           # 8. Verify deployment
           if [ ! -f "server.js" ] || [ ! -f ".next/BUILD_ID" ]; then
-            echo "❌ Deployment verification failed"
+            echo "❌ Deployment verification failed - missing critical files"
             exit 1
           fi
 
