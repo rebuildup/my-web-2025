@@ -579,7 +579,8 @@ jobs:
           
           # Move extracted files to /var/www/yusuke-kim
           echo "Moving extracted files to /var/www/yusuke-kim..."
-          rsync -a --delete "$TEMP_EXTRACT_DIR/" /var/www/yusuke-kim/
+          rm -rf /var/www/yusuke-kim/*
+          cp -a "$TEMP_EXTRACT_DIR"/* /var/www/yusuke-kim/
           echo "✅ Files moved"
           
           # Clean up temporary extraction directory
