@@ -60,21 +60,28 @@ export function listMarkdownPages(options?: {
 	const ids = getCandidateContentIds(options?.contentId);
 	const pages: MarkdownPage[] = [];
 
+	console.log(`[MarkdownService] listMarkdownPages called with contentId: ${options?.contentId}`);
+	console.log(`[MarkdownService] Candidate content IDs: ${ids.length}`);
+
 	for (const id of ids) {
 		const rows = withContentDb(
 			id,
-			(db) =>
-				db
+			(db) => {
+				console.log(`[MarkdownService] Querying markdown pages from database: ${id}`);
+				return db
 					.prepare(
 						`SELECT id, content_id, slug, frontmatter, body, html_cache, path, lang, status, version, created_at, updated_at, published_at 
            FROM markdown_pages
            ORDER BY updated_at DESC`,
 					)
-					.all() as MarkdownPageRow[],
+					.all() as MarkdownPageRow[];
+			},
 		);
+		console.log(`[MarkdownService] Found ${rows.length} markdown pages for content ID: ${id}`);
 		pages.push(...mapRows(rows, id));
 	}
 
+	console.log(`[MarkdownService] Total markdown pages loaded: ${pages.length}`);
 	return pages.sort((a, b) => {
 		const aTime = a.updatedAt || "";
 		const bTime = b.updatedAt || "";

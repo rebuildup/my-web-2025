@@ -2,7 +2,7 @@
 	"name": "my-web-2025",
 	"version": "2.1.1",
 	"private": true,
-	"packageManager": "pnpm@10.24.0",
+	"packageManager": "pnpm@10.28.0",
 	"scripts": {
 		"dev": "next dev --turbo -p 3010",
 		"build": "node scripts/check-env.js && next build && node scripts/copy-content-data.js",

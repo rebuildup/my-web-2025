@@ -119,11 +119,28 @@ export default async function PortfolioPage() {
 						return undefined;
 					};
 					const pickThumb = () => {
+						// サムネイルURLの変換処理
+						const getMediaUrl = (mediaId?: string) => {
+							if (!mediaId) return undefined;
+							// 既にURL形式の場合はそのまま返す
+							if (
+								mediaId.startsWith("http://") ||
+								mediaId.startsWith("https://") ||
+								mediaId.startsWith("/")
+							) {
+								return mediaId;
+							}
+							// メディアIDのみの場合はAPIルート形式に変換
+							return `/api/cms/media?contentId=${row.id}&id=${mediaId}&raw=1`;
+						};
+
 						const prioritized =
 							extractSrc(thumbs?.image, "src") ||
 							extractSrc(thumbs?.gif, "src") ||
 							extractSrc(thumbs?.webm, "poster");
-						return prioritized;
+
+						// APIルートURLに変換
+						return getMediaUrl(prioritized as string | undefined);
 					};
 
 					const tags: string[] = Array.isArray(row.tags)

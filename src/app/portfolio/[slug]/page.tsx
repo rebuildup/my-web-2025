@@ -115,9 +115,27 @@ export async function generateMetadata({
 					const full = await res.json();
 					const thumbs = full?.thumbnails || {};
 					const pickThumb = () => {
-						if (thumbs?.image?.src) return thumbs.image.src as string;
-						if (thumbs?.gif?.src) return thumbs.gif.src as string;
-						if (thumbs?.webm?.poster) return thumbs.webm.poster as string;
+						// サムネイルURLの変換処理
+						const getMediaUrl = (mediaId?: string) => {
+							if (!mediaId) return undefined;
+							// 既にURL形式の場合はそのまま返す
+							if (
+								mediaId.startsWith("http://") ||
+								mediaId.startsWith("https://") ||
+								mediaId.startsWith("/")
+							) {
+								return mediaId;
+							}
+							// メディアIDのみの場合はAPIルート形式に変換
+							return `${baseUrl}/api/cms/media?contentId=${full.id}&id=${mediaId}&raw=1`;
+						};
+
+						// 優先順位: image.src > gif.src > webm.poster
+						if (thumbs?.image?.src)
+							return getMediaUrl(thumbs.image.src as string);
+						if (thumbs?.gif?.src) return getMediaUrl(thumbs.gif.src as string);
+						if (thumbs?.webm?.poster)
+							return getMediaUrl(thumbs.webm.poster as string);
 						return undefined;
 					};
 					item = {

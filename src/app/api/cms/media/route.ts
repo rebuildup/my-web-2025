@@ -33,6 +33,16 @@ export async function GET(req: Request) {
 					console.error(
 						`[media-api] NODE_ENV: ${process.env.NODE_ENV}`,
 					);
+					// データディレクトリのデバッグ情報
+					console.error(
+						`[media-api] CONTENT_DATA_DIR: ${process.env.CONTENT_DATA_DIR || process.env.NEXT_CONTENT_DATA_DIR || process.env.PORTFOLIO_DATA_DIR || process.env.NEXT_PUBLIC_CONTENT_DATA_DIR || 'not set'}`,
+					);
+					// DBファイルの存在確認
+					const fs = require("fs");
+					const path = require("path");
+					const dbPath = path.join(process.cwd(), "data", "contents", `content-${contentId}.db`);
+					console.error(`[media-api] Expected DB path: ${dbPath}`);
+					console.error(`[media-api] DB exists: ${fs.existsSync(dbPath)}`);
 					return Response.json({ error: "Media not found" }, { status: 404 });
 				}
 

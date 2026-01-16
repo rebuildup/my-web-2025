@@ -20,11 +20,31 @@ function readContent(id: string): Content | null {
 export function loadAllContents(): Content[] {
 	const entries = getAllFromIndex();
 	const contents: Content[] = [];
+	
+	if (process.env.NODE_ENV !== "production") {
+		console.log(`[ContentService] Loading ${entries.length} contents from index`);
+		console.log(`[ContentService] Index entries:`, entries.map((e) => ({ id: e.id, status: e.status })));
+	}
+	
 	for (const entry of entries) {
-		const content = readContent(entry.id);
-		if (content) {
-			contents.push(content);
+		try {
+			const content = readContent(entry.id);
+			if (content) {
+				contents.push(content);
+			} else {
+				if (process.env.NODE_ENV !== "production") {
+					console.warn(`[ContentService] Failed to load content for ID: ${entry.id}`);
+				}
+			}
+		} catch (error) {
+			if (process.env.NODE_ENV !== "production") {
+				console.error(`[ContentService] Error loading content ${entry.id}:`, error);
+			}
 		}
+	}
+	
+	if (process.env.NODE_ENV !== "production") {
+		console.log(`[ContentService] Successfully loaded ${contents.length} contents`);
 	}
 	return contents;
 }
@@ -34,11 +54,22 @@ export function loadContentById(id: string): Content | null {
 }
 
 export function loadContentsByType(type: ContentType): Content[] {
-	return loadAllContents().filter((content) => {
+	const allContents = loadAllContents();
+	const filtered = allContents.filter((content) => {
 		const extType =
 			typeof content.ext?.type === "string" ? content.ext.type : undefined;
+		// デバッグ: typeフィルタリングをログ出力
+		if (process.env.NODE_ENV !== "production") {
+			console.log(`[ContentService] Filtering content: ${content.id}, type: ${extType}, requested type: ${type}`);
+		}
 		return extType === type;
 	});
+	
+	if (process.env.NODE_ENV !== "production") {
+		console.log(`[ContentService] Total contents: ${allContents.length}, Filtered for type "${type}": ${filtered.length}`);
+		console.log(`[ContentService] Filtered content IDs:`, filtered.map(c => c.id));
+	}
+	return filtered;
 }
 
 export function mapContentToContentItem(content: Content): ContentItem | null {

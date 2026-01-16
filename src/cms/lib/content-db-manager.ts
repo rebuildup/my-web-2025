@@ -20,6 +20,10 @@ function resolveDataDirectory(): string {
 		"";
 
 	const cwd = process.cwd();
+	console.log(`[CMS] Current working directory: ${cwd}`);
+	console.log(`[CMS] CONTENT_DATA_DIR: ${process.env.CONTENT_DATA_DIR || 'not set'}`);
+	console.log(`[CMS] NODE_ENV: ${process.env.NODE_ENV}`);
+
 	const candidateRoots = [
 		envDir,
 		path.join(cwd, "data"),
@@ -34,10 +38,20 @@ function resolveDataDirectory(): string {
 		path.join(process.cwd(), "data"),
 	].filter((dir): dir is string => Boolean(dir));
 
+	console.log(`[CMS] Candidate data directories: ${candidateRoots.join(", ")}`);
+
 	for (const dir of candidateRoots) {
 		try {
 			if (dir && fs.existsSync(dir)) {
-				console.log(`[CMS] Using data directory: ${dir}`);
+				const stats = fs.statSync(dir);
+				console.log(`[CMS] Found valid data directory: ${dir}`);
+				console.log(`[CMS] Directory stats: isDirectory=${stats.isDirectory()}`);
+				// データディレクトリ内のファイル数を確認
+				const contentsPath = path.join(dir, "contents");
+				if (fs.existsSync(contentsPath)) {
+					const files = fs.readdirSync(contentsPath);
+					console.log(`[CMS] Contents directory found with ${files.length} files`);
+				}
 				return dir;
 			}
 		} catch (error) {
@@ -74,12 +88,18 @@ function getBetterSqlite3(): typeof import("better-sqlite3") {
 
 function listContentDbFiles(): string[] {
 	if (!fs.existsSync(CONTENT_DB_DIR)) {
+		console.warn(`[CMS] Contents DB directory does not exist: ${CONTENT_DB_DIR}`);
 		return [];
 	}
-	return fs
-		.readdirSync(CONTENT_DB_DIR)
+	const files = fs.readdirSync(CONTENT_DB_DIR);
+	console.log(`[CMS] Found ${files.length} files in contents directory`);
+
+	const dbFiles = files
 		.filter((file) => file.endsWith(".db"))
 		.sort();
+
+	console.log(`[CMS] Found ${dbFiles.length} DB files: ${dbFiles.join(", ")}`);
+	return dbFiles;
 }
 
 function extractContentIdFromFileName(file: string): string {
@@ -101,12 +121,17 @@ export function getDataDirectory(): string {
 export function getContentDb(contentId: string): Database.Database {
 	const dbPath = getContentDbPath(contentId);
 	const isNewDb = !fs.existsSync(dbPath);
+
+	if (process.env.NODE_ENV !== "production") {
+		console.log(`[CMS] Opening database: ${dbPath}, isNewDb: ${isNewDb}`);
+	}
+
 	const DatabaseCtor = getBetterSqlite3();
 	const db = new DatabaseCtor(dbPath);
 	try {
 		db.pragma("journal_mode = WAL");
 	} catch {
-		// ignore pragma failures
+	// ignore pragma failures
 	}
 
 	if (isNewDb) {

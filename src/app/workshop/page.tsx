@@ -293,6 +293,11 @@ function getContentHref(item: ContentItem) {
 }
 
 export default async function WorkshopPage() {
+	// デバッグ情報の初期化
+	console.log("[Workshop] Starting data load...");
+	console.log("[Workshop] Current working directory:", process.cwd());
+	console.log("[Workshop] NODE_ENV:", process.env.NODE_ENV);
+
 	const [markdownPages, blogContentItems] = await Promise.all([
 		Promise.resolve(listMarkdownPages()),
 		loadContentByType("blog"),
@@ -301,8 +306,28 @@ export default async function WorkshopPage() {
 	// デバッグ: データ読み込み結果をログに出力
 	console.log("[Workshop] Markdown pages loaded:", markdownPages.length);
 	console.log("[Workshop] Blog content items loaded:", blogContentItems.length);
+	console.log(
+		"[Workshop] Markdown pages:",
+		markdownPages.map((p) => ({ id: p.id, slug: p.slug, status: p.status })),
+	);
+	console.log(
+		"[Workshop] Blog content items:",
+		blogContentItems.map((item) => ({
+			id: item.id,
+			type: item.type,
+			status: item.status,
+		})),
+	);
 
 	const contentIndexEntries = getAllFromIndex();
+	console.log("[Workshop] Content index entries:", contentIndexEntries.length);
+	console.log(
+		"[Workshop] Content index entries:",
+		contentIndexEntries.map((entry) => ({
+			id: entry.id,
+			status: entry.status,
+		})),
+	);
 	const contentIndexMap = new Map<string, ContentIndexEntry>(
 		contentIndexEntries.map((entry) => [entry.id, entry]),
 	);
@@ -313,9 +338,23 @@ export default async function WorkshopPage() {
 		(page) => (page.status ?? "draft") === "published",
 	);
 	console.log("[Workshop] Published markdown pages:", publishedMarkdown.length);
+	console.log(
+		"[Workshop] All markdown pages with status:",
+		markdownPages.map((p) => ({ slug: p.slug, status: p.status })),
+	);
 
 	const pagesForDisplay =
 		publishedMarkdown.length > 0 ? publishedMarkdown : markdownPages;
+
+	console.log("[Workshop] Pages for display:", pagesForDisplay.length);
+	console.log(
+		"[Workshop] Blog content items:",
+		blogContentItems.map((item) => ({
+			id: item.id,
+			type: item.type,
+			status: item.status,
+		})),
+	);
 
 	const displayPages = pagesForDisplay.map((page) => {
 		const content = page.contentId ? contentMap.get(page.contentId) : undefined;

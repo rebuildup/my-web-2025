@@ -205,10 +205,11 @@ export class PortfolioDataProcessor {
 				category: normalizedCategory,
 				// Ensure required fields
 				description: item.description || `${item.title}の作品詳細`,
-				thumbnail: this.normalizeImagePath(
+				thumbnail: this.normalizeThumbnailPath(
 					item.thumbnail ||
 						item.images?.[0] ||
 						"/images/portfolio/default-thumb.jpg",
+					item.id,
 				),
 				technologies: this.extractTechnologies(
 					Array.isArray(item.tags) ? item.tags : [],
@@ -698,6 +699,28 @@ export class PortfolioDataProcessor {
 	}
 
 	/**
+	 * Normalize thumbnail path - convert media IDs to API URLs
+	 */
+	protected normalizeThumbnailPath(thumbnail: string | undefined, contentId: string): string {
+		if (!thumbnail) {
+			return "/images/portfolio/placeholder-image.svg";
+		}
+
+		// Handle absolute URLs (YouTube thumbnails, etc.)
+		if (thumbnail.startsWith("http://") || thumbnail.startsWith("https://")) {
+			return thumbnail;
+		}
+
+		// Handle already-processed paths (start with /)
+		if (thumbnail.startsWith("/")) {
+			return thumbnail;
+		}
+
+		// Convert media ID to API route URL
+		return `/api/cms/media?contentId=${contentId}&id=${thumbnail}&raw=1`;
+	}
+
+	/**
 	 * Generate portfolio statistics
 	 */
 	async generatePortfolioStats(
@@ -1082,8 +1105,9 @@ export class EnhancedPortfolioDataProcessor extends PortfolioDataProcessor {
 
 			// Ensure required fields
 			description: item.description || `${item.title}の作品詳細`,
-			thumbnail: this.normalizeImagePath(
+			thumbnail: this.normalizeThumbnailPath(
 				item.thumbnail || images[0] || "/images/portfolio/default-thumb.jpg",
+				item.id,
 			),
 			technologies: this.extractTechnologies(
 				Array.isArray(item.tags) ? item.tags : [],
