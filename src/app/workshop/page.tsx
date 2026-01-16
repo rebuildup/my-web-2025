@@ -10,20 +10,71 @@ export const runtime = "nodejs";
 const CARD_SURFACE =
 	"group relative flex h-full flex-col overflow-hidden rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-0.5";
 
-function extractFirstImageFromMarkdown(markdown: string): string | undefined {
-	const imageRegex = /!\[[^\]]*]\(([^)\s]+)(?:\s+"[^"]*")?\)/;
-	const match = markdown.match(imageRegex);
-	if (match?.[1]) {
-		return match[1];
+async function fetchContentFromCMS(id: string) {
+	// ローカル開発環境ではローカルURLを使用
+	const baseUrl =
+		process.env.NODE_ENV === "development"
+			? "http://localhost:3010"
+			: process.env.NEXT_PUBLIC_SITE_URL ||
+				process.env.NEXT_PUBLIC_BASE_URL ||
+				"https://yusuke-kim.com";
+
+	try {
+		console.log(
+			`[Workshop] Fetching content from CMS API: ${baseUrl}/api/cms/contents?id=${id}`,
+		);
+		const res = await fetch(
+			`${baseUrl}/api/cms/contents?id=${encodeURIComponent(id)}`,
+			{
+				cache: "no-store",
+			},
+		);
+
+		if (!res.ok) {
+			console.log(
+				`[Workshop] CMS API response not OK: ${res.status} ${res.statusText}`,
+			);
+			return null;
+		}
+
+		const full = await res.json();
+		console.log(`[Workshop] CMS API response for ${id}:`, {
+			id: full.id,
+			title: full.title,
+			thumbnails: full.thumbnails,
+			frontmatter: full.frontmatter,
+		});
+
+		return full;
+	} catch (error) {
+		console.error(`[Workshop] Error fetching content ${id}:`, error);
+		return null;
 	}
+}
+
+function extractFirstImageFromMarkdown(markdown: string): string | undefined {
+	// 1. 標準的なMarkdown画像シンタックス: ![alt](url)
+	const markdownImgRegex = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/;
+	const markdownMatch = markdown.match(markdownImgRegex);
+	if (markdownMatch?.[2]) {
+		return markdownMatch[2];
+	}
+
+	// 2. HTMLのimgタグ: <img src="url" />
 	const htmlImgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/i;
 	const htmlMatch = markdown.match(htmlImgRegex);
 	if (htmlMatch?.[1]) {
 		return htmlMatch[1];
 	}
-	const customImageRegex = /<Image[^>]+src=["']([^"']+)["'][^>]*>/i;
-	const customMatch = markdown.match(customImageRegex);
-	return customMatch?.[1];
+
+	// 3. Next.js/Imageコンポーネント: <Image src="url" /> (大文字小文字の両方に対応)
+	const nextImageRegex = /<(?:image|Image)[^>]+src=["']([^"']+)["'][^>]*>/i;
+	const nextImageMatch = markdown.match(nextImageRegex);
+	if (nextImageMatch?.[1]) {
+		return nextImageMatch[1];
+	}
+
+	return undefined;
 }
 
 function formatDate(isoDate: string | undefined) {
@@ -64,18 +115,39 @@ function getPageTags(page: MarkdownPage): string[] {
 	return [];
 }
 
-function getThumbnail(page: MarkdownPage): string | null {
+async function getThumbnail(
+	page: MarkdownPage,
+	cmsContent: any,
+): Promise<string | null> {
 	const frontmatter = page.frontmatter ?? {};
+
+	console.log(`[Workshop] Getting thumbnail for page: ${page.slug}`);
+	console.log(`[Workshop] CMS Content:`, cmsContent);
+
+	// 1. CMS APIのサムネイルを使用
+	if (cmsContent?.thumbnails) {
+		const thumbs = cmsContent.thumbnails;
+		console.log(`[Workshop] Thumbnails from CMS:`, thumbs);
+
+		if (thumbs?.image?.src) {
+			return thumbs.image.src;
+		}
+		if (thumbs?.gif?.src) {
+			return thumbs.gif.src;
+		}
+		if (thumbs?.webm?.poster) {
+			return thumbs.webm.poster;
+		}
+	}
+
+	// 2. Frontmatterのサムネイルを使用
 	const candidates: Array<string | undefined> = [
-		typeof frontmatter.coverImage === "string"
-			? frontmatter.coverImage
-			: undefined,
-		typeof frontmatter.cover_image === "string"
-			? frontmatter.cover_image
-			: undefined,
-		typeof frontmatter.image === "string" ? frontmatter.image : undefined,
 		typeof frontmatter.thumbnail === "string"
 			? frontmatter.thumbnail
+			: undefined,
+		typeof frontmatter.image === "string" ? frontmatter.image : undefined,
+		typeof frontmatter.coverImage === "string"
+			? frontmatter.coverImage
 			: undefined,
 		typeof frontmatter.heroImage === "string"
 			? frontmatter.heroImage
@@ -84,13 +156,22 @@ function getThumbnail(page: MarkdownPage): string | null {
 			? frontmatter.hero_image
 			: undefined,
 	];
+
+	console.log(`[Workshop] Frontmatter candidates:`, candidates);
+
 	for (const candidate of candidates) {
 		if (typeof candidate === "string" && candidate.trim().length > 0) {
 			return candidate;
 		}
 	}
+
+	// 3. 本文から画像を抽出
 	const firstImage = extractFirstImageFromMarkdown(page.body);
-	return firstImage ?? null;
+	if (firstImage) {
+		return firstImage;
+	}
+
+	return null;
 }
 
 function getPageHref(page: MarkdownPage) {
@@ -150,36 +231,39 @@ export default async function WorkshopPage() {
 		return dateB - dateA;
 	});
 
-	const displayPages = sortedContent.map((page) => {
-		const title = page.frontmatter?.title || page.slug;
-		const description = page.frontmatter?.description;
-		const date = getDisplayDate(page);
-		const tags = getPageTags(page);
-		const thumbnail = getThumbnail(page);
-		const href = getPageHref(page);
-		const isExternal = /^https?:\/\//i.test(href);
+	const displayPagesWithCMS = await Promise.all(
+		sortedContent.map(async (page) => {
+			const cmsContent = await fetchContentFromCMS(page.contentId || page.slug);
+			const thumbnail = await getThumbnail(page, cmsContent);
+			const title = page.frontmatter?.title || page.slug;
+			// CMS APIから取得したdescription/summaryを優先し、なければfrontmatter.descriptionを使用
+			const description =
+				cmsContent?.summary ||
+				cmsContent?.description ||
+				page.frontmatter?.description;
+			const date = getDisplayDate(page);
+			const tags = getPageTags(page);
+			const href = getPageHref(page);
+			const isExternal = /^https?:\/\//i.test(href);
 
-		return {
-			page,
-			title,
-			description,
-			tags,
-			thumbnail,
-			date,
-			href,
-			isExternal,
-		};
-	});
+			return {
+				page,
+				title,
+				description,
+				tags,
+				thumbnail,
+				date,
+				href,
+				isExternal,
+			};
+		}),
+	);
 
 	// コンテンツがない場合のメッセージを決定
-	const hasContent = displayPages.length > 0;
-	const noContentMessage = !hasContent
-		? ""
-		: "現在、公開済みまたは下書きのコンテンツが登録されていません。";
+	const hasContent = displayPagesWithCMS.length > 0;
 
 	console.log("[Workshop] Has content:", hasContent);
-	console.log("[Workshop] Final pages count:", displayPages.length);
-	console.log("[Workshop] No content message:", noContentMessage);
+	console.log("[Workshop] Final pages count:", displayPagesWithCMS.length);
 	console.log("[Workshop] =========================================");
 
 	return (
@@ -208,7 +292,7 @@ export default async function WorkshopPage() {
 						<section className="space-y-6">
 							{hasContent ? (
 								<div className="space-y-6">
-									{displayPages.map(
+									{displayPagesWithCMS.map(
 										({
 											page,
 											title,
