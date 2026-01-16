@@ -396,18 +396,20 @@ jobs:
           ssh deploy-server "echo 'Disk space for /tmp:'; df -h /tmp 2>/dev/null || df -h /; echo ''; echo 'Disk space for home directory:'; df -h \\\$HOME 2>/dev/null || df -h /"
           
           # Get available space values
+          # Check /tmp first (preferred extraction location)
           AVAIL_TMP_KB=$(ssh deploy-server "df /tmp 2>/dev/null | tail -1 | awk '{print \$4}' || df / | tail -1 | awk '{print \$4}' || echo '0'")
           AVAIL_TMP_MB=$((AVAIL_TMP_KB / 1024))
           echo "Available space in /tmp: ${AVAIL_TMP_MB}MB"
           
+          # Also check home directory (alternative extraction location)
           AVAIL_HOME_KB=$(ssh deploy-server "df \\\$HOME 2>/dev/null | tail -1 | awk '{print \$4}' || df / | tail -1 | awk '{print \$4}' || echo '0'")
           AVAIL_HOME_MB=$((AVAIL_HOME_KB / 1024))
           echo "Available space in home: ${AVAIL_HOME_MB}MB"
           
           # Determine transfer location based on available space
-          # Need at least 250MB free space (package is 140MB, but need buffer for extraction)
+          # Need at least 500MB free space (package is 140MB, but need much more buffer for extraction)
           PACKAGE_SIZE_MB=150
-          REQUIRED_SPACE_MB=250
+          REQUIRED_SPACE_MB=500
           
           echo "Package size: ~${PACKAGE_SIZE_MB}MB"
           echo "Required free space: ${REQUIRED_SPACE_MB}MB"
