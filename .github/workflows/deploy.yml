@@ -540,6 +540,9 @@ jobs:
           TEMP_EXTRACT_DIR="/tmp/deployment-extract-$(date +%s)"
           mkdir -p "$TEMP_EXTRACT_DIR"
           
+          # Ensure cleanup on exit
+          trap 'rm -rf "$TEMP_EXTRACT_DIR" 2>/dev/null || true; echo "Cleanup triggered"' EXIT
+          
           # Prefer home directory over /tmp/ (which may be full or corrupted)
           if [ -f "$HOME/deployment-standalone.tar.gz" ]; then
             DEPLOYMENT_PACKAGE="$HOME/deployment-standalone.tar.gz"
@@ -586,7 +589,8 @@ jobs:
           cp -a "$TEMP_EXTRACT_DIR"/* /var/www/yusuke-kim/
           echo "✅ Files moved"
           
-          # Clean up temporary extraction directory
+          # Clean up temporary extraction directory (always run this)
+          echo "Cleaning up temporary extraction directory..."
           rm -rf "$TEMP_EXTRACT_DIR"
           echo "✅ Temporary directory cleaned up"
           
