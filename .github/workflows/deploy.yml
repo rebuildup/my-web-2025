@@ -538,6 +538,9 @@ jobs:
 
           # 4. Prepare deployment directory
           echo "=== Preparing deployment directory ==="
+          # Remove old backups to free space
+          echo "=== Removing old backups to free disk space ==="
+          sudo find /tmp/preserved-data-* -type d -mtime +1 -exec rm -rf {} \; 2>/dev/null || true
           # /var/www/yusuke-kim should be owned by deploy user (set up during initial VM setup)
           rm -rf /var/www/yusuke-kim/*
           mkdir -p /var/www/yusuke-kim
@@ -545,6 +548,14 @@ jobs:
 
           # 7. Extract standalone deployment
           echo "=== Extracting standalone deployment ==="
+          
+          # Force cleanup before extraction to ensure enough space
+          echo "=== Force cleanup before extraction ==="
+          sudo find /tmp -name "preserved-data-*" -type d -mtime +0 -exec rm -rf {} \; 2>/dev/null || true
+          sudo find /var/www -name "preserved-data-*" -type d -mtime +0 -exec rm -rf {} \; 2>/dev/null || true
+          df -h / 2>/dev/null | head -1
+          df -h /var/www 2>/dev/null || df -h /
+          
           DEPLOYMENT_PACKAGE=""
           
           # Prefer home directory over /tmp/ (which may be full or corrupted)
