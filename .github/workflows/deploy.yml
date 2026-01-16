@@ -209,7 +209,15 @@ jobs:
           NEXT_PRIVATE_BUILD_WITH_TURBOPACK: "0"
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
-        run: pnpm run build
+        run: |
+          echo "Setting up production environment..."
+          # Clean npm/pnpm cache to reduce package size
+          echo "Cleaning npm and pnpm caches..."
+          npm cache clean --force || true
+          rm -rf ~/.npm || true
+          rm -rf ~/.local/share/pnpm || true
+          pnpm store prune || true
+          pnpm run build
 
       - name: Prepare standalone deployment
         run: |
