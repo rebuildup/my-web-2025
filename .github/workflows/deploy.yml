@@ -526,6 +526,9 @@ jobs:
           # Remove old backups to free space
           echo "=== Removing old backups to free disk space ==="
           find /tmp/preserved-data-* -type d -mtime +1 -exec rm -rf {} \; 2>/dev/null || true
+          # Remove .next directory to free space (~70MB)
+          echo "Removing .next directory to free disk space..."
+          rm -rf /var/www/yusuke-kim/.next 2>/dev/null || true
           rm -rf /var/www/yusuke-kim/*
           mkdir -p /var/www/yusuke-kim
 
