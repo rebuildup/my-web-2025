@@ -521,42 +521,21 @@ jobs:
           pm2 stop all 2>/dev/null || echo "No PM2 processes to stop"
           pm2 delete all 2>/dev/null || echo "No PM2 processes to delete"
 
-          # 3. Preserve existing data directory (no backup needed - Git has history)
-          echo "=== Preserving existing data directory ==="
-          EXISTING_DATA_DIR=""
-          if [ -d "/var/www/yusuke-kim/data" ]; then
-            echo "Found existing data directory, will preserve it"
-            # Create temporary location for data directory
-            EXISTING_DATA_DIR="/tmp/preserved-data-$(date +%s)"
-            echo "Temporarily moving data directory to: $EXISTING_DATA_DIR"
-            mkdir -p "$EXISTING_DATA_DIR"
-            cp -r /var/www/yusuke-kim/data "$EXISTING_DATA_DIR/" || {
-              echo "⚠️  Warning: Failed to preserve data directory, continuing anyway"
-              EXISTING_DATA_DIR=""
-            }
-          fi
-
-          # 4. Prepare deployment directory
+          # 3. Prepare deployment directory (extract to /tmp first to avoid disk space issues)
           echo "=== Preparing deployment directory ==="
           # Remove old backups to free space
           echo "=== Removing old backups to free disk space ==="
           sudo find /tmp/preserved-data-* -type d -mtime +1 -exec rm -rf {} \; 2>/dev/null || true
-          # /var/www/yusuke-kim should be owned by deploy user (set up during initial VM setup)
-          rm -rf /var/www/yusuke-kim/*
+          sudo rm -rf /var/www/yusuke-kim/*
           mkdir -p /var/www/yusuke-kim
-          cd /var/www/yusuke-kim
 
           # 7. Extract standalone deployment
           echo "=== Extracting standalone deployment ==="
           
-          # Force cleanup before extraction to ensure enough space
-          echo "=== Force cleanup before extraction ==="
-          sudo find /tmp -name "preserved-data-*" -type d -mtime +0 -exec rm -rf {} \; 2>/dev/null || true
-          sudo find /var/www -name "preserved-data-*" -type d -mtime +0 -exec rm -rf {} \; 2>/dev/null || true
-          df -h / 2>/dev/null | head -1
-          df -h /var/www 2>/dev/null || df -h /
-          
+          # Extract to /tmp first to avoid disk space issues on root filesystem
           DEPLOYMENT_PACKAGE=""
+          TEMP_EXTRACT_DIR="/tmp/deployment-extract-$(date +%s)"
+          mkdir -p "$TEMP_EXTRACT_DIR"
           
           # Prefer home directory over /tmp/ (which may be full or corrupted)
           if [ -f "$HOME/deployment-standalone.tar.gz" ]; then
@@ -574,6 +553,7 @@ jobs:
           
           echo "Using package: $DEPLOYMENT_PACKAGE"
           echo "Package size: $(du -h "$DEPLOYMENT_PACKAGE" | cut -f1)"
+          echo "Extracting to: $TEMP_EXTRACT_DIR"
           
           echo "Verifying package integrity..."
           if ! tar -tzf "$DEPLOYMENT_PACKAGE" > /dev/null 2>&1; then
@@ -593,8 +573,20 @@ jobs:
             fi
           fi
           
-          echo "Extracting deployment package from $DEPLOYMENT_PACKAGE..."
-          tar -xzf "$DEPLOYMENT_PACKAGE"
+          echo "Extracting deployment package..."
+          tar -xzf "$DEPLOYMENT_PACKAGE" -C "$TEMP_EXTRACT_DIR"
+          echo "✅ Extraction completed"
+          
+          # Move extracted files to /var/www/yusuke-kim
+          echo "Moving extracted files to /var/www/yusuke-kim..."
+          rsync -a --delete "$TEMP_EXTRACT_DIR/" /var/www/yusuke-kim/
+          echo "✅ Files moved"
+          
+          # Clean up temporary extraction directory
+          rm -rf "$TEMP_EXTRACT_DIR"
+          echo "✅ Temporary directory cleaned up"
+          
+          cd /var/www/yusuke-kim
           
           # Clean up package file after extraction
           echo "Cleaning up package file..."
@@ -602,36 +594,6 @@ jobs:
           # Also clean up from /tmp if it exists there
           rm -f /tmp/deployment-standalone.tar.gz || true
 
-          # 7a. Restore preserved data directory
-          echo "=== Restoring preserved data directory ==="
-          if [ -n "$EXISTING_DATA_DIR" ] && [ -d "$EXISTING_DATA_DIR/data" ]; then
-            echo "Restoring preserved data directory from: $EXISTING_DATA_DIR"
-            if [ -d "data" ]; then
-              echo "Merging data directories..."
-              # 既存のデータベースファイルを保持しつつ、新しいファイルを追加
-              if [ -d "$EXISTING_DATA_DIR/data/contents" ]; then
-                if [ ! -d "data/contents" ]; then
-                  echo "Creating contents directory..."
-                  mkdir -p data/contents || true
-                fi
-                echo "Merging contents databases..."
-                while IFS= read -r db_file; do
-                  if [ -n "$db_file" ] && [ -f "$db_file" ]; then
-                    db_filename=$(basename "$db_file")
-                    if [ ! -f "data/contents/$db_filename" ]; then
-                      cp "$db_file" "data/contents/$db_filename" || true
-                    fi
-                  fi
-                done < <(find "$EXISTING_DATA_DIR/data/contents" -name "*.db" -type f 2>/dev/null)
-              fi
-            else
-              cp -r "$EXISTING_DATA_DIR/data" data || true
-            fi
-            # Clean up temporary data directory
-            echo "Cleaning up temporary data directory..."
-            rm -rf "$EXISTING_DATA_DIR" || true
-          fi
-          
           # Ensure data directory exists
           if [ ! -d "data" ]; then
             echo "⚠️  Warning: data directory not found in deployment package"
