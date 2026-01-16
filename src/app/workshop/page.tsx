@@ -1,158 +1,14 @@
 import Link from "next/link";
-import { getAllFromIndex } from "@/cms/lib/content-db-manager";
 import { listMarkdownPages } from "@/cms/server/markdown-service";
 import type { MarkdownPage } from "@/cms/types/markdown";
 import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { loadContentByType } from "@/lib/data";
-import type { ContentItem } from "@/types/content";
 
 export const revalidate = 300;
 export const runtime = "nodejs";
 
 const CARD_SURFACE =
 	"group relative flex h-full flex-col overflow-hidden rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-0.5";
-
-type ContentIndexEntry = ReturnType<typeof getAllFromIndex>[number];
-
-function isLikelyMediaUrl(url: string): boolean {
-	if (typeof url !== "string") return false;
-	const trimmed = url.trim();
-	if (trimmed.length === 0) return false;
-	if (!/^https?:\/\//i.test(trimmed))
-		return /\.(png|jpe?g|gif|webp|avif|svg)(\?.*)?$/i.test(trimmed);
-	if (
-		trimmed.includes("youtube.com") ||
-		trimmed.includes("youtu.be") ||
-		trimmed.includes("vimeo.com")
-	) {
-		return false;
-	}
-	return (
-		/\.(png|jpe?g|gif|webp|avif|svg)(\?.*)?$/i.test(trimmed) ||
-		trimmed.includes("/media/") ||
-		trimmed.includes("/images/")
-	);
-}
-
-function _findImageUrl(value: unknown, depth = 0): string | undefined {
-	if (depth > 3 || value == null) return undefined;
-	if (typeof value === "string") {
-		const trimmed = value.trim();
-		if (trimmed.length === 0) return undefined;
-		if (isLikelyMediaUrl(trimmed)) {
-			return trimmed;
-		}
-	}
-	if (Array.isArray(value)) {
-		for (const item of value) {
-			const found = _findImageUrl(item, depth + 1);
-			if (found) return found;
-		}
-		return undefined;
-	}
-	if (typeof value === "object") {
-		for (const key of Object.keys(value as Record<string, unknown>)) {
-			const found = _findImageUrl(
-				(value as Record<string, unknown>)[key],
-				depth + 1,
-			);
-			if (found) return found;
-		}
-	}
-	return undefined;
-}
-
-function pickIndexThumbnail(
-	thumbnails: ContentIndexEntry["thumbnails"],
-): string | undefined {
-	if (!thumbnails || typeof thumbnails !== "object") {
-		return undefined;
-	}
-	const variants = thumbnails as Record<string, unknown> & {
-		prefer?: string[];
-	};
-	const prefer = Array.isArray(variants.prefer)
-		? variants.prefer
-		: ["image", "gif", "webm"];
-	for (const key of prefer) {
-		const variant = variants[key];
-		if (!variant) continue;
-		if (typeof variant === "string" && variant.trim().length > 0) {
-			return variant;
-		}
-		if (
-			typeof (variant as { src?: unknown }).src === "string" &&
-			(variant as { src: string }).src.trim().length > 0
-		) {
-			return (variant as { src: string }).src;
-		}
-		if (
-			typeof (variant as { poster?: unknown }).poster === "string" &&
-			(variant as { poster: string }).poster.trim().length > 0
-		) {
-			return (variant as { poster: string }).poster;
-		}
-	}
-	for (const value of Object.values(variants)) {
-		if (typeof value === "string" && value.trim().length > 0) {
-			return value;
-		}
-		if (
-			value &&
-			typeof value === "object" &&
-			typeof (value as { src?: unknown }).src === "string"
-		) {
-			const src = (value as { src: string }).src.trim();
-			if (src.length > 0) {
-				return src;
-			}
-		}
-	}
-	return undefined;
-}
-
-function resolveContentThumbnail(
-	content: ContentItem | undefined,
-): string | undefined {
-	if (!content) return undefined;
-	if (
-		typeof content.thumbnail === "string" &&
-		content.thumbnail.trim().length > 0
-	) {
-		return content.thumbnail;
-	}
-	if (Array.isArray(content.images)) {
-		const fromImages = content.images.find(
-			(img) => typeof img === "string" && img.trim().length > 0,
-		);
-		if (fromImages) return fromImages;
-	}
-	if (Array.isArray(content.videos) && content.videos.length > 0) {
-		const fromVideo = content.videos.find(
-			(video) => !!video?.thumbnail,
-		)?.thumbnail;
-		if (typeof fromVideo === "string" && fromVideo.trim().length > 0) {
-			return fromVideo;
-		}
-	}
-	if (content.customFields && typeof content.customFields === "object") {
-		const cf = content.customFields as Record<string, unknown>;
-		const cfThumb = cf.thumbnail ?? cf.coverImage ?? cf.image;
-		if (typeof cfThumb === "string" && cfThumb.trim().length > 0) {
-			return cfThumb;
-		}
-	}
-	if (Array.isArray(content.externalLinks)) {
-		const mediaLink = content.externalLinks.find(
-			(link) => typeof link?.url === "string",
-		);
-		if (mediaLink?.url && mediaLink.url.trim().length > 0) {
-			return mediaLink.url;
-		}
-	}
-	return undefined;
-}
 
 function extractFirstImageFromMarkdown(markdown: string): string | undefined {
 	const imageRegex = /!\[[^\]]*]\(([^)\s]+)(?:\s+"[^"]*")?\)/;
@@ -168,23 +24,6 @@ function extractFirstImageFromMarkdown(markdown: string): string | undefined {
 	const customImageRegex = /<Image[^>]+src=["']([^"']+)["'][^>]*>/i;
 	const customMatch = markdown.match(customImageRegex);
 	return customMatch?.[1];
-}
-
-function resolveImageSrc(src: string | undefined | null): string | undefined {
-	if (!src) return undefined;
-	const trimmed = src.trim();
-	if (trimmed.length === 0) return undefined;
-	if (/^https?:\/\//i.test(trimmed)) {
-		return trimmed;
-	}
-	if (trimmed.startsWith("//")) {
-		return `https:${trimmed}`;
-	}
-	if (trimmed.startsWith("/")) {
-		return trimmed;
-	}
-	const sanitized = trimmed.replace(/^\.\/+/, "");
-	return `/${sanitized}`;
 }
 
 function formatDate(isoDate: string | undefined) {
@@ -254,14 +93,13 @@ function getThumbnail(page: MarkdownPage): string | null {
 	return firstImage ?? null;
 }
 
-function getPageHref(page: MarkdownPage): string {
+function getPageHref(page: MarkdownPage) {
 	const fm = page.frontmatter ?? {};
 	const possible: Array<string | undefined> = [
 		fm.permalink as string | undefined,
 		fm.url as string | undefined,
 		fm.slug as string | undefined,
 		page.slug,
-		page.contentId,
 	];
 	const target = possible.find(
 		(value): value is string =>
@@ -270,7 +108,7 @@ function getPageHref(page: MarkdownPage): string {
 	if (!target) {
 		return "#";
 	}
-	if (/^https?:\/\//.test(target)) {
+	if (/^https?:\/\//i.test(target)) {
 		return target;
 	}
 	if (target.startsWith("/")) {
@@ -279,131 +117,47 @@ function getPageHref(page: MarkdownPage): string {
 	return `/workshop/blog/${target}`;
 }
 
-function getContentHref(item: ContentItem) {
-	switch (item.type) {
-		case "blog":
-			return `/workshop/blog/${item.id}`;
-		case "plugin":
-			return `/workshop/plugins/${item.id}`;
-		case "download":
-			return `/workshop/downloads/${item.id}`;
-		default:
-			return "#";
-	}
-}
-
 export default async function WorkshopPage() {
-	// デバッグ情報の初期化
-	console.log("[Workshop] Starting data load...");
+	console.log("[Workshop] =========================================");
+	console.log("[Workshop] WorkshopPage initialization started");
 	console.log("[Workshop] Current working directory:", process.cwd());
 	console.log("[Workshop] NODE_ENV:", process.env.NODE_ENV);
+	console.log("[Workshop] =========================================");
 
-	const [markdownPages, blogContentItems] = await Promise.all([
-		Promise.resolve(listMarkdownPages()),
-		loadContentByType("blog"),
-	]);
+	console.log("[Workshop] Loading content from multiple sources...");
 
-	// デバッグ: データ読み込み結果をログに出力
-	console.log("[Workshop] Markdown pages loaded:", markdownPages.length);
-	console.log("[Workshop] Blog content items loaded:", blogContentItems.length);
-	console.log(
-		"[Workshop] Markdown pages:",
-		markdownPages.map((p) => ({ id: p.id, slug: p.slug, status: p.status })),
-	);
-	console.log(
-		"[Workshop] Blog content items:",
-		blogContentItems.map((item) => ({
-			id: item.id,
-			type: item.type,
-			status: item.status,
-		})),
-	);
+	const markdownPages = await Promise.resolve(listMarkdownPages());
 
-	const contentIndexEntries = getAllFromIndex();
-	console.log("[Workshop] Content index entries:", contentIndexEntries.length);
-	console.log(
-		"[Workshop] Content index entries:",
-		contentIndexEntries.map((entry) => ({
-			id: entry.id,
-			status: entry.status,
-		})),
-	);
-	const contentIndexMap = new Map<string, ContentIndexEntry>(
-		contentIndexEntries.map((entry) => [entry.id, entry]),
-	);
+	console.log("[Workshop] Data loading completed");
+	console.log("[Workshop]  - Markdown pages:", markdownPages.length);
+	console.log("[Workshop] -----------------------------------------");
 
-	const contentMap = new Map(blogContentItems.map((item) => [item.id, item]));
-
-	const publishedMarkdown = markdownPages.filter(
+	// 公開済みのコンテンツのみをフィルタリング
+	const publishedContent = markdownPages.filter(
 		(page) => (page.status ?? "draft") === "published",
 	);
-	console.log("[Workshop] Published markdown pages:", publishedMarkdown.length);
-	console.log(
-		"[Workshop] All markdown pages with status:",
-		markdownPages.map((p) => ({ slug: p.slug, status: p.status })),
-	);
 
-	const pagesForDisplay =
-		publishedMarkdown.length > 0 ? publishedMarkdown : markdownPages;
+	console.log("[Workshop] Published content count:", publishedContent.length);
 
-	console.log("[Workshop] Pages for display:", pagesForDisplay.length);
-	console.log(
-		"[Workshop] Blog content items:",
-		blogContentItems.map((item) => ({
-			id: item.id,
-			type: item.type,
-			status: item.status,
-		})),
-	);
+	// 公開済みのコンテンツを日付順で並び替え（新しい順）
+	const sortedContent = publishedContent.sort((a, b) => {
+		const dateA = getDisplayDate(a)
+			? new Date(getDisplayDate(a)!).getTime()
+			: 0;
+		const dateB = getDisplayDate(b)
+			? new Date(getDisplayDate(b)!).getTime()
+			: 0;
+		return dateB - dateA;
+	});
 
-	const displayPages = pagesForDisplay.map((page) => {
-		const content = page.contentId ? contentMap.get(page.contentId) : undefined;
-		const title = content?.title || page.frontmatter?.title || page.slug;
-		const indexEntryId = page.contentId ?? content?.id ?? page.slug;
-		const indexEntry = indexEntryId
-			? contentIndexMap.get(indexEntryId)
-			: undefined;
-		const sanitizeDescription = (value: string | undefined) =>
-			value
-				? value
-						.replace(/<[^>]*>/g, "")
-						.replace(/\s+/g, " ")
-						.trim()
-				: "";
-		const descriptionSource =
-			(typeof content?.description === "string" &&
-			content.description.length > 0
-				? content.description
-				: undefined) ??
-			(typeof indexEntry?.summary === "string" && indexEntry.summary.length > 0
-				? indexEntry.summary
-				: undefined) ??
-			(typeof page.frontmatter?.description === "string" &&
-			page.frontmatter.description.length > 0
-				? page.frontmatter.description
-				: undefined);
-		const description = sanitizeDescription(descriptionSource);
-		const tags: string[] =
-			content?.tags && content.tags.length > 0
-				? content.tags
-				: getPageTags(page);
-		const indexThumbnail = indexEntry
-			? pickIndexThumbnail(indexEntry.thumbnails)
-			: undefined;
-		const resolvedFromContent = resolveContentThumbnail(content);
-		const resolvedFromMarkdown = getThumbnail(page);
-		const thumbnail =
-			resolveImageSrc(indexThumbnail) ||
-			resolveImageSrc(resolvedFromContent) ||
-			resolveImageSrc(resolvedFromMarkdown) ||
-			null;
-		const date =
-			indexEntry?.publishedAt ||
-			content?.publishedAt ||
-			page.publishedAt ||
-			content?.updatedAt ||
-			getDisplayDate(page);
-		const href = content ? getContentHref(content) : getPageHref(page);
+	const displayPages = sortedContent.map((page) => {
+		const title = page.frontmatter?.title || page.slug;
+		const description = page.frontmatter?.description;
+		const date = getDisplayDate(page);
+		const tags = getPageTags(page);
+		const thumbnail = getThumbnail(page);
+		const href = getPageHref(page);
+		const isExternal = /^https?:\/\//i.test(href);
 
 		return {
 			page,
@@ -413,9 +167,20 @@ export default async function WorkshopPage() {
 			thumbnail,
 			date,
 			href,
-			isExternal: /^https?:\/\//.test(href),
+			isExternal,
 		};
 	});
+
+	// コンテンツがない場合のメッセージを決定
+	const hasContent = displayPages.length > 0;
+	const noContentMessage = !hasContent
+		? ""
+		: "現在、公開済みまたは下書きのコンテンツが登録されていません。";
+
+	console.log("[Workshop] Has content:", hasContent);
+	console.log("[Workshop] Final pages count:", displayPages.length);
+	console.log("[Workshop] No content message:", noContentMessage);
+	console.log("[Workshop] =========================================");
 
 	return (
 		<div className="relative min-h-screen bg-base text-main">
@@ -434,7 +199,6 @@ export default async function WorkshopPage() {
 							]}
 							className="pt-4"
 						/>
-
 						<header className="space-y-6">
 							<h1 className="neue-haas-grotesk-display text-4xl text-main sm:text-5xl lg:text-6xl">
 								Workshop
@@ -442,7 +206,7 @@ export default async function WorkshopPage() {
 						</header>
 
 						<section className="space-y-6">
-							{displayPages.length > 0 ? (
+							{hasContent ? (
 								<div className="space-y-6">
 									{displayPages.map(
 										({
@@ -457,6 +221,7 @@ export default async function WorkshopPage() {
 										}) => {
 											const card = (
 												<article
+													key={page.slug}
 													className={`${CARD_SURFACE} focus:outline-none focus:ring-2 focus:ring-accent/60 focus:ring-offset-2 focus:ring-offset-base`}
 												>
 													<div className="flex gap-4 p-4 sm:gap-5">
@@ -515,9 +280,9 @@ export default async function WorkshopPage() {
 													</div>
 												</article>
 											);
+
 											return isExternal ? (
 												<a
-													key={page.id}
 													href={href}
 													target="_blank"
 													rel="noopener noreferrer"
@@ -526,11 +291,7 @@ export default async function WorkshopPage() {
 													{card}
 												</a>
 											) : (
-												<Link
-													key={page.id}
-													href={href}
-													className="block focus:outline-none"
-												>
+												<Link href={href} className="block focus:outline-none">
 													{card}
 												</Link>
 											);
@@ -540,7 +301,7 @@ export default async function WorkshopPage() {
 							) : (
 								<div className="rounded-2xl bg-base/80 backdrop-blur-md shadow-[0_18px_48px_rgba(0,0,0,0.3)] p-8 text-center">
 									<p className="noto-sans-jp-light text-sm text-main/70">
-										公開済みのブログ記事はまだ登録されていません.
+										現在、公開済みまたは下書きのコンテンツが登録されていません。
 									</p>
 								</div>
 							)}
