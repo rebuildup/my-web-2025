@@ -166,8 +166,20 @@ const nextConfig: NextConfig = {
 
 		// Production optimizations
 		if (!dev && !isServer) {
+			// Configure module sideEffects to preserve GSAP and its plugins
+			config.module = config.module || {};
+			config.module.rules = config.module.rules || [];
+			config.module.rules.push({
+				test: /node_modules[\\/](gsap|@gsap)[\\/]/,
+				sideEffects: true,
+			});
+
 			config.optimization = {
 				...config.optimization,
+				sideEffects: [
+					'node_modules/gsap/**',
+					'node_modules/@gsap/**',
+				],
 				splitChunks: {
 					chunks: "all",
 					minSize: 20000,
@@ -220,13 +232,21 @@ const nextConfig: NextConfig = {
 							priority: 15,
 							maxSize: 100000,
 						},
+						gsap: {
+							test: /[\\/]node_modules[\\/](gsap)[\\/]/,
+							name: "gsap",
+							chunks: "all",
+							priority: 22,
+							maxSize: 150000,
+							enforce: true,
+						},
 						// New cache groups for better optimization
 						tools: {
 							test: /[\\/]src[\\/]app[\\/]tools[\\/]/,
 							name: "tools",
 							chunks: "all",
 							priority: 30,
-							maxSize: 100000,
+							maxSize: 300000,
 						},
 						admin: {
 							test: /[\\/]src[\\/]app[\\/]admin[\\/]/,
