@@ -11,7 +11,7 @@ import { CustomEase } from "gsap/all";
 // Export the GSAP module to prevent tree-shaking
 export const gsap = gsapModule;
 
-// Export plugins
+// Export plugins for registration in components
 export { PixiPlugin, CustomEase };
 
 // Module-level initialization to force inclusion

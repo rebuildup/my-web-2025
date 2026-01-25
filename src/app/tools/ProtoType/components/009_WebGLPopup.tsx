@@ -16,11 +16,12 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     let app: PIXI.Application | null = null;
 
     const initializePixi = async () => {
-      // Register GSAP plugins
+      // Register GSAP plugins and set up PIXI
       if (typeof window !== "undefined") {
         (window as any).PIXI = PIXI;
       }
-      // gsap-loader ensures gsap is available
+
+      // Register GSAP plugins - must happen after gsap is imported
       gsap.registerPlugin(PixiPlugin, CustomEase);
       PixiPlugin.registerPIXI(PIXI);
 
