@@ -1,14 +1,16 @@
 import React from "react";
+import Link from "next/link";
+
 interface HomeProps {
-  onOpenPopup: () => void;
+  onOpenPopup?: () => void;
 }
 
 const Game: React.FC<HomeProps> = ({ onOpenPopup }) => {
   return (
     <div className="home-container" style={{ zIndex: 1 }}>
-      <button onClick={onOpenPopup} className="openbtn">
+      <Link href="/tools/ProtoType/game" className="openbtn">
         Game Start
-      </button>
+      </Link>
     </div>
   );
 };
