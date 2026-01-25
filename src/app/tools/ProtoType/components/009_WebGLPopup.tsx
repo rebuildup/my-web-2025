@@ -1,16 +1,8 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
-// Import GSAP with explicit pattern to prevent tree-shaking
-import { gsap } from "gsap";
-import { PixiPlugin } from "gsap/PixiPlugin";
-import { CustomEase } from "gsap/all";
-
-// Force GSAP to be included in bundle by using it at module level
-// This prevents tree-shaking from removing it
-if (typeof window !== "undefined") {
-  (window as any).gsap = gsap;
-}
+// Import GSAP through our custom loader to prevent tree-shaking
+import { gsap, PixiPlugin, CustomEase } from "../lib/gsap-loader";
 
 import { settings } from "../SiteInterface";
 import { initializeGame, replaceHash } from "../gamesets/001_game_master";
@@ -24,14 +16,12 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     let app: PIXI.Application | null = null;
 
     const initializePixi = async () => {
-      // Register GSAP plugins (static import)
+      // Register GSAP plugins
       if (typeof window !== "undefined") {
         (window as any).PIXI = PIXI;
       }
-      // Ensure gsap is available before registering plugins
-      if (typeof gsap !== "undefined" && gsap.registerPlugin) {
-        gsap.registerPlugin(PixiPlugin, CustomEase);
-      }
+      // gsap-loader ensures gsap is available
+      gsap.registerPlugin(PixiPlugin, CustomEase);
       PixiPlugin.registerPIXI(PIXI);
 
       if (!popupRef.current) return;
