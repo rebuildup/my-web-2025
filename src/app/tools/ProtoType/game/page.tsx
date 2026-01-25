@@ -68,6 +68,8 @@ export default function GamePage() {
           backgroundColor: replaceHash(settings.colorTheme.colors.MainBG),
           resolution,
           autoDensity: true,
+          autoStart: true, // Enable ticker in PIXI v8
+          sharedTicker: false,
         });
 
         updateDebug("10. PIXI Application initialized SUCCESS");
