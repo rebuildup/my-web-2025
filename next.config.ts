@@ -230,7 +230,7 @@ const nextConfig: NextConfig = {
 							maxSize: 100000,
 						},
 						gsap: {
-							test: /[\\/]node_modules[\\/](gsap)[\\/]/,
+							test: /[\\/]node_modules[\\/](gsap|@gsap)[\\/]/,
 							name: "gsap",
 							chunks: "all",
 							priority: 22,
