@@ -1,12 +1,15 @@
-import React, { useState, useLayoutEffect } from "react";
+"use client";
+
+import React, { useState, useLayoutEffect, useEffect } from "react";
 
 import Game from "./components/004_Game";
 import PlayRecord from "./components/008_PlayRecord";
 import Ranking from "./components/005_Ranking";
 import Setting from "./components/007_Setting";
-// import WebGLPopup from "./components/009_WebGLPopup";
-import dynamic from "next/dynamic";
-const WebGLPopup = dynamic(() => import("./components/009_WebGLPopup"), { ssr: false });
+
+// Direct import - more reliable than dynamic import in Next.js 16 + Turbopack
+import WebGLPopup from "./components/009_WebGLPopup";
+
 import Header from "./components/002_Header";
 import Tab from "./components/001_Tab";
 
@@ -23,12 +26,21 @@ import { fonts } from "./components/011_FontSelector";
 
 const App: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Ensure we only render client-side components after mount
+  useEffect(() => {
+    console.log("[App] Component mounted on client");
+    setIsMounted(true);
+  }, []);
 
   const handleOpenPopup = () => {
+    console.log("[App] Opening popup, showPopup:", true);
     setShowPopup(true);
   };
 
   const handleClosePopup = () => {
+    console.log("[App] Closing popup");
     setShowPopup(false);
   };
   const [currentTab, setCurrentTab] = useState<string>("Game");
@@ -89,7 +101,12 @@ const App: React.FC = () => {
       <div className="Components" style={{ zIndex: 1 }}>
         {renderCurrentComponent()}
       </div>
-      {showPopup && <WebGLPopup onClose={handleClosePopup} />}
+      {isMounted && showPopup && (
+        <>
+          {console.log("[App] Rendering WebGLPopup, showPopup:", showPopup)}
+          <WebGLPopup onClose={handleClosePopup} />
+        </>
+      )}
       <Footer />
     </div>
   );
