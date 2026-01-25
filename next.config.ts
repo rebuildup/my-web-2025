@@ -255,7 +255,6 @@ const nextConfig: NextConfig = {
 					},
 				},
 				usedExports: true,
-				sideEffects: false,
 				// Additional optimizations
 				moduleIds: "deterministic",
 				chunkIds: "deterministic",
