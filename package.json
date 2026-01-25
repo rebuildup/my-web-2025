@@ -2,6 +2,10 @@
 	"name": "my-web-2025",
 	"version": "2.1.1",
 	"private": true,
+	"sideEffects": [
+		"node_modules/gsap/**",
+		"node_modules/@gsap/**"
+	],
 	"packageManager": "pnpm@10.24.0",
 	"scripts": {
 		"dev": "next dev --turbo -p 3010",
