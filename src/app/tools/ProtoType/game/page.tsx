@@ -4,7 +4,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import * as PIXI from "pixi.js";
-import { Ticker } from "pixi.js";
 import { gsap, PixiPlugin, CustomEase } from "../lib/gsap-loader";
 
 import { settings } from "../SiteInterface";
@@ -24,7 +23,6 @@ export default function GamePage() {
     updateDebug("1. Component mounted");
     let isMounted = true;
     let app: PIXI.Application | null = null;
-    let ticker: Ticker | null = null;
 
     const initializePixi = async () => {
       updateDebug("2. initializePixi started");
@@ -63,15 +61,14 @@ export default function GamePage() {
       app = new PIXI.Application();
 
       try {
-        updateDebug("9. Starting app.init...");
+        updateDebug("9. Starting app.init with autoStart...");
         await app.init({
           width: 720 * 2,
           height: 600 * 2,
           backgroundColor: replaceHash(settings.colorTheme.colors.MainBG),
           resolution,
           autoDensity: true,
-          // Don't use autoStart - create ticker manually
-          hello: true,
+          autoStart: true, // Let PIXI handle rendering automatically
         });
 
         updateDebug("10. PIXI Application initialized SUCCESS");
@@ -92,22 +89,11 @@ export default function GamePage() {
         canvas.style.height = '100%';
         containerRef.current.appendChild(canvas);
 
-        updateDebug("11. Canvas added to DOM");
+        updateDebug("11. Canvas added, auto-rendering enabled");
 
-        // Create and start ticker manually
-        updateDebug("12. Creating manual Ticker...");
-        ticker = new Ticker();
-        ticker.add(() => {
-          if (app && app.renderer) {
-            app.render();
-          }
-        });
-        ticker.start();
-        updateDebug("13. Manual ticker started");
-
-        updateDebug("14. Calling initializeGame...");
+        updateDebug("12. Calling initializeGame...");
         initializeGame(app);
-        updateDebug("15. Game initialized - HIDING DEBUG");
+        updateDebug("13. Game initialized - HIDING DEBUG");
         setTimeout(() => setDebugInfo(""), 2000);
       } catch (error: any) {
         updateDebug("ERROR: " + error.message);
@@ -124,10 +110,6 @@ export default function GamePage() {
 
     return () => {
       isMounted = false;
-      if (ticker) {
-        ticker.stop();
-        ticker.destroy();
-      }
       if (appRef.current) {
         appRef.current.destroy(true);
         appRef.current = null;
