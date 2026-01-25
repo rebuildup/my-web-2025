@@ -130,28 +130,31 @@ export default function GamePage() {
 
   return (
     <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 9999, background: "#000" }}>
-      <div ref={containerRef} style={{ width: "100%", height: "100%", position: "relative" }}>
-        <div
-          ref={debugRef}
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            color: "#0f0",
-            fontSize: "14px",
-            fontFamily: "monospace",
-            whiteSpace: "pre-wrap",
-            textAlign: "left",
-            background: "rgba(0,0,0,0.8)",
-            padding: "20px",
-            maxWidth: "80vw",
-            maxHeight: "80vh",
-            overflow: "auto"
-          }}
-        >
-          Starting...
-        </div>
+      {/* Debug div must come AFTER container so it renders on top */}
+      <div
+        ref={debugRef}
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 99999, // Higher than Close button (10000)
+          color: "#0f0",
+          fontSize: "14px",
+          fontFamily: "monospace",
+          whiteSpace: "pre-wrap",
+          textAlign: "left",
+          background: "rgba(0,0,0,0.8)",
+          padding: "20px",
+          maxWidth: "80vw",
+          maxHeight: "80vh",
+          overflow: "auto",
+          pointerEvents: "none"
+        }}
+      >
+        Starting...
+      </div>
+      <div ref={containerRef} style={{ width: "100%", height: "100%", position: "relative", zIndex: 1 }}>
       </div>
       <button
         onClick={handleBack}
@@ -159,7 +162,7 @@ export default function GamePage() {
           position: "absolute",
           top: "20px",
           right: "20px",
-          zIndex: 10000,
+          zIndex: 100000, // Higher than debug div
           padding: "10px 20px",
           fontSize: "16px",
           cursor: "pointer",
