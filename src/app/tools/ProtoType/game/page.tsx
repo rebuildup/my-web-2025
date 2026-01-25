@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import * as PIXI from "pixi.js";
@@ -12,69 +12,72 @@ import { initializeGame, replaceHash } from "../gamesets/001_game_master";
 export default function GamePage() {
   const router = useRouter();
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const debugRef = React.useRef<HTMLDivElement>(null);
   const appRef = React.useRef<PIXI.Application | null>(null);
-  const [debugInfo, setDebugInfo] = useState<string>("Starting...");
+
+  // Helper function to show debug info
+  const showDebug = (msg: string) => {
+    if (debugRef.current) {
+      debugRef.current.textContent += msg + "\n";
+    }
+  };
 
   useEffect(() => {
-    const updateDebug = (msg: string) => {
-      setDebugInfo((prev) => prev + "\n" + msg);
-    };
-
-    updateDebug("1. Component mounted");
+    showDebug("1. Component mounted");
     let isMounted = true;
     let app: PIXI.Application | null = null;
 
     const initializePixi = async () => {
-      updateDebug("2. initializePixi started");
+      showDebug("2. initializePixi started");
 
       // Register GSAP plugins
       if (typeof window !== "undefined") {
         (window as any).PIXI = PIXI;
-        updateDebug("3. PIXI assigned to window");
+        showDebug("3. PIXI assigned to window");
       }
 
-      updateDebug("4. Registering GSAP plugins...");
+      showDebug("4. Registering GSAP plugins...");
       try {
         gsap.registerPlugin(PixiPlugin, CustomEase);
         PixiPlugin.registerPIXI(PIXI);
-        updateDebug("5. GSAP plugins registered SUCCESS");
+        showDebug("5. GSAP plugins registered SUCCESS");
       } catch (e: any) {
-        updateDebug("5. GSAP plugins FAILED: " + e.message);
+        showDebug("5. GSAP plugins FAILED: " + e.message);
         return;
       }
 
       if (!containerRef.current) {
-        updateDebug("6. ERROR: containerRef is null");
+        showDebug("6. ERROR: containerRef is null");
         return;
       }
 
-      updateDebug("6. Removing existing canvas...");
+      showDebug("6. Removing existing canvas...");
       containerRef.current.querySelector("canvas")?.remove();
 
       let resolution = 1;
       if (window.devicePixelRatio) {
         resolution = window.devicePixelRatio;
       }
-      updateDebug("7. Resolution: " + resolution);
+      showDebug("7. Resolution: " + resolution);
 
-      updateDebug("8. Creating PIXI Application...");
+      showDebug("8. Creating PIXI Application...");
       app = new PIXI.Application();
 
       try {
-        updateDebug("9. Starting app.init with autoStart...");
+        showDebug("9. Starting app.init with autoStart...");
         await app.init({
           width: 720 * 2,
           height: 600 * 2,
           backgroundColor: replaceHash(settings.colorTheme.colors.MainBG),
           resolution,
           autoDensity: true,
-          autoStart: true, // Let PIXI handle rendering automatically
+          autoStart: true,
         });
 
-        updateDebug("10. PIXI Application initialized SUCCESS");
+        showDebug("10. PIXI Application initialized SUCCESS");
 
         if (!isMounted || !containerRef.current) {
-          updateDebug("11. ERROR: Component unmounted or ref null");
+          showDebug("11. ERROR: Component unmounted or ref null");
           return;
         }
 
@@ -89,16 +92,20 @@ export default function GamePage() {
         canvas.style.height = '100%';
         containerRef.current.appendChild(canvas);
 
-        updateDebug("11. Canvas added, auto-rendering enabled");
+        showDebug("11. Canvas added, auto-rendering enabled");
 
-        updateDebug("12. Calling initializeGame...");
+        showDebug("12. Calling initializeGame...");
         initializeGame(app);
-        updateDebug("13. Game initialized - HIDING DEBUG");
-        setTimeout(() => setDebugInfo(""), 2000);
+        showDebug("13. Game initialized - HIDING DEBUG");
+        setTimeout(() => {
+          if (debugRef.current) {
+            debugRef.current.style.display = 'none';
+          }
+        }, 2000);
       } catch (error: any) {
-        updateDebug("ERROR: " + error.message);
+        showDebug("ERROR: " + error.message);
         if (error.stack) {
-          updateDebug("Stack: " + error.stack.split("\n").slice(0, 3).join(" | "));
+          showDebug("Stack: " + error.stack.split("\n").slice(0, 3).join(" | "));
         }
         if (app) {
           app.destroy(true);
@@ -124,8 +131,9 @@ export default function GamePage() {
   return (
     <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 9999, background: "#000" }}>
       <div ref={containerRef} style={{ width: "100%", height: "100%", position: "relative" }}>
-        {debugInfo && (
-          <div style={{
+        <div
+          ref={debugRef}
+          style={{
             position: "absolute",
             top: "50%",
             left: "50%",
@@ -133,17 +141,17 @@ export default function GamePage() {
             color: "#0f0",
             fontSize: "14px",
             fontFamily: "monospace",
-            whiteSpace: "pre-line",
+            whiteSpace: "pre-wrap",
             textAlign: "left",
             background: "rgba(0,0,0,0.8)",
             padding: "20px",
             maxWidth: "80vw",
             maxHeight: "80vh",
             overflow: "auto"
-          }}>
-            {debugInfo}
-          </div>
-        )}
+          }}
+        >
+          Starting...
+        </div>
       </div>
       <button
         onClick={handleBack}
