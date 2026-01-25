@@ -73,6 +73,8 @@ export default function GamePage() {
         });
 
         updateDebug("10. PIXI Application initialized SUCCESS");
+        updateDebug("10.5. app.ticker exists: " + (app.ticker !== undefined));
+        updateDebug("10.6. app keys: " + Object.keys(app).join(", "));
 
         if (!isMounted || !containerRef.current) {
           updateDebug("11. ERROR: Component unmounted or ref null");
@@ -90,8 +92,8 @@ export default function GamePage() {
         canvas.style.height = '100%';
         containerRef.current.appendChild(canvas);
 
-        app.ticker.start();
-        updateDebug("11. Ticker started: " + app.ticker.started);
+        // Don't call ticker.start() - autoStart should handle it
+        updateDebug("11. Skipping manual ticker.start (autoStart enabled)");
 
         updateDebug("12. Calling initializeGame...");
         initializeGame(app);
