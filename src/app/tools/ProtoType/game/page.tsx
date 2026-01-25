@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import * as PIXI from "pixi.js";
@@ -9,53 +9,59 @@ import { gsap, PixiPlugin, CustomEase } from "../lib/gsap-loader";
 import { settings } from "../SiteInterface";
 import { initializeGame, replaceHash } from "../gamesets/001_game_master";
 
-console.log("[GamePage] Module loaded");
-
 export default function GamePage() {
   const router = useRouter();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const appRef = React.useRef<PIXI.Application | null>(null);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<string>("Starting...");
 
   useEffect(() => {
-    console.log("[GamePage] Component mounted, initializing...");
+    const updateDebug = (msg: string) => {
+      setDebugInfo((prev) => prev + "\n" + msg);
+    };
+
+    updateDebug("1. Component mounted");
     let isMounted = true;
     let app: PIXI.Application | null = null;
 
     const initializePixi = async () => {
-      console.log("[GamePage] initializePixi started");
+      updateDebug("2. initializePixi started");
 
       // Register GSAP plugins
       if (typeof window !== "undefined") {
         (window as any).PIXI = PIXI;
+        updateDebug("3. PIXI assigned to window");
       }
 
-      console.log("[GamePage] Registering GSAP plugins...");
+      updateDebug("4. Registering GSAP plugins...");
       try {
         gsap.registerPlugin(PixiPlugin, CustomEase);
         PixiPlugin.registerPIXI(PIXI);
-        console.log("[GamePage] GSAP plugins registered");
-      } catch (e) {
-        console.error("[GamePage] Failed to register GSAP plugins:", e);
-      }
-
-      if (!containerRef.current) {
-        console.error("[GamePage] containerRef.current is null");
+        updateDebug("5. GSAP plugins registered SUCCESS");
+      } catch (e: any) {
+        updateDebug("5. GSAP plugins FAILED: " + e.message);
         return;
       }
 
-      console.log("[GamePage] Removing existing canvas...");
+      if (!containerRef.current) {
+        updateDebug("6. ERROR: containerRef is null");
+        return;
+      }
+
+      updateDebug("6. Removing existing canvas...");
       containerRef.current.querySelector("canvas")?.remove();
 
       let resolution = 1;
       if (window.devicePixelRatio) {
         resolution = window.devicePixelRatio;
       }
+      updateDebug("7. Resolution: " + resolution);
 
-      console.log("[GamePage] Creating PIXI Application...");
+      updateDebug("8. Creating PIXI Application...");
       app = new PIXI.Application();
 
       try {
+        updateDebug("9. Starting app.init...");
         await app.init({
           width: 720 * 2,
           height: 600 * 2,
@@ -64,10 +70,10 @@ export default function GamePage() {
           autoDensity: true,
         });
 
-        console.log("[GamePage] PIXI Application initialized");
+        updateDebug("10. PIXI Application initialized SUCCESS");
 
         if (!isMounted || !containerRef.current) {
-          console.error("[GamePage] Component unmounted or ref null during init");
+          updateDebug("11. ERROR: Component unmounted or ref null");
           return;
         }
 
@@ -83,13 +89,14 @@ export default function GamePage() {
         containerRef.current.appendChild(canvas);
 
         app.ticker.start();
-        console.log("[GamePage] Ticker started:", app.ticker.started);
+        updateDebug("11. Ticker started: " + app.ticker.started);
 
-        console.log("[GamePage] Calling initializeGame...");
+        updateDebug("12. Calling initializeGame...");
         initializeGame(app);
-        setIsInitialized(true);
-      } catch (error) {
-        console.error("[GamePage] PixiJS initialization failed:", error);
+        updateDebug("13. Game initialized - HIDING DEBUG");
+        setTimeout(() => setDebugInfo(""), 2000);
+      } catch (error: any) {
+        updateDebug("ERROR: " + error.message);
         if (app) {
           app.destroy(true);
         }
@@ -112,18 +119,26 @@ export default function GamePage() {
   };
 
   return (
-    <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 9999 }}>
+    <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 9999, background: "#000" }}>
       <div ref={containerRef} style={{ width: "100%", height: "100%", position: "relative" }}>
-        {!isInitialized && (
+        {debugInfo && (
           <div style={{
             position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            color: "white",
-            fontSize: "24px"
+            color: "#0f0",
+            fontSize: "14px",
+            fontFamily: "monospace",
+            whiteSpace: "pre-line",
+            textAlign: "left",
+            background: "rgba(0,0,0,0.8)",
+            padding: "20px",
+            maxWidth: "80vw",
+            maxHeight: "80vh",
+            overflow: "auto"
           }}>
-            Loading game...
+            {debugInfo}
           </div>
         )}
       </div>
@@ -136,7 +151,9 @@ export default function GamePage() {
           zIndex: 10000,
           padding: "10px 20px",
           fontSize: "16px",
-          cursor: "pointer"
+          cursor: "pointer",
+          background: "#fff",
+          border: "2px solid #000"
         }}
       >
         Close
