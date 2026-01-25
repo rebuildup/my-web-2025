@@ -1,8 +1,5 @@
 import * as PIXI from "pixi.js";
-import gsap from "gsap";
-// import { PixiPlugin } from "gsap/PixiPlugin";
-import { CustomEase } from "gsap/all";
-// gsap.registerPlugin(PixiPlugin, CustomEase);
+import { gsap, CustomEase } from "../lib/gsap-loader";
 import { replaceHash } from "./001_game_master";
 import { gameData } from "./002_gameConfig";
 import { Keyboard, keybord_size, scale } from "./011_keybord";

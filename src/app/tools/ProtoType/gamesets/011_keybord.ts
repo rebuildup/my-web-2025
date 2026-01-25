@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { settings } from "../SiteInterface";
 import { replaceHash } from "./001_game_master";
-import gsap from "gsap";
+import { gsap } from "../lib/gsap-loader";
 import { gameData } from "./002_gameConfig";
 
 export const keybords = [

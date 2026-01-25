@@ -1,6 +1,6 @@
 // mouse_follow_container.ts
 import * as PIXI from "pixi.js";
-import gsap from "gsap";
+import { gsap } from "../lib/gsap-loader";
 
 /**
  * シーンの要素をコンテナに入れ、マウスの動きに引っ張られるようなアニメーションを実装する関数

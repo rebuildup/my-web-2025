@@ -1,15 +1,7 @@
 // game_master.ts
 import * as PIXI from "pixi.js";
-import gsap from "gsap";
-import { CustomEase } from "gsap/all";
-// import { PixiPlugin } from "gsap/PixiPlugin";
-// GSAP Registration removed from here to support SSR/Next.js
-// Registration moved to WebGLPopup.tsx
-// if (typeof window !== "undefined") {
-// 	(window as any).PIXI = PIXI;
-// }
-// gsap.registerPlugin(PixiPlugin, CustomEase);
-// PixiPlugin.registerPIXI(PIXI);
+// Import GSAP from our loader to ensure plugins are registered
+import { gsap, CustomEase } from "../lib/gsap-loader";
 
 import { game_scene } from "./003_game_scene";
 

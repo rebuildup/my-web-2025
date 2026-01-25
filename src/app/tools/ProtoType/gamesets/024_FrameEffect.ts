@@ -1,6 +1,5 @@
 // FrameEffect.ts (テーマ変更対応版)
-import gsap from "gsap";
-import { CustomEase } from "gsap/all";
+import { gsap, CustomEase } from "../lib/gsap-loader";
 import { settings } from "../SiteInterface";
 
 gsap.registerPlugin(CustomEase);
