@@ -176,10 +176,7 @@ const nextConfig: NextConfig = {
 
 			config.optimization = {
 				...config.optimization,
-				sideEffects: [
-					'node_modules/gsap/**',
-					'node_modules/@gsap/**',
-				],
+				sideEffects: ["node_modules/gsap/**", "node_modules/@gsap/**"],
 				splitChunks: {
 					chunks: "all",
 					minSize: 20000,
