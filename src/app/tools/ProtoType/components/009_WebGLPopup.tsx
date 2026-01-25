@@ -58,8 +58,11 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         canvas.style.height = '100%';
         // Ensure z-index is correct relative to other elements in popup
         popupRef.current.appendChild(canvas);
-        
-        console.log("PixiJS initialized", app.screen.width, app.screen.height);
+
+        // Explicitly start the ticker to ensure animations run
+        app.ticker.start();
+
+        console.log("PixiJS initialized", app.screen.width, app.screen.height, "ticker started:", app.ticker.started);
         initializeGame(app);
       } catch (error) {
         console.error("PixiJS initialization failed:", error);
