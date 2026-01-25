@@ -1,5 +1,9 @@
 "use client";
 import React, { useEffect, useRef } from "react";
+
+// Module-level log to verify the component is loaded
+console.log("[WebGLPopup] Module loaded");
+
 import * as PIXI from "pixi.js";
 // Import GSAP through our custom loader to prevent tree-shaking
 import { gsap, PixiPlugin, CustomEase } from "../lib/gsap-loader";
@@ -8,10 +12,12 @@ import { settings } from "../SiteInterface";
 import { initializeGame, replaceHash } from "../gamesets/001_game_master";
 
 const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  console.log("[WebGLPopup] Component rendered");
   const popupRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<PIXI.Application | null>(null);
 
   useEffect(() => {
+    console.log("[WebGLPopup] useEffect running");
     let isMounted = true;
     let app: PIXI.Application | null = null;
 
