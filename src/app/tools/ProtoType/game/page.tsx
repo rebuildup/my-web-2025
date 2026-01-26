@@ -138,6 +138,14 @@ export default function GamePage() {
 
         containerRef.current.appendChild(canvas);
 
+        // Explicitly start the ticker for PIXI v8
+        if (app.ticker && !app.ticker.started) {
+          app.ticker.start();
+          if ((window as any).gameDebug) {
+            (window as any).gameDebug("Ticker started manually");
+          }
+        }
+
         if ((window as any).gameDebug) {
           (window as any).gameDebug("11. Canvas added, auto-rendering enabled");
           (window as any).gameDebug("Canvas dimensions: " + canvas.width + "x" + canvas.height);
@@ -145,7 +153,6 @@ export default function GamePage() {
           (window as any).gameDebug("Screen size: " + app.screen.width + "x" + app.screen.height);
           (window as any).gameDebug("Stage children: " + app.stage.children.length);
           (window as any).gameDebug("Renderer type: " + (app.renderer as any)?.type);
-          // In PIXI v8, ticker might be undefined, handle gracefully
           const tickerStarted = app.ticker ? app.ticker.started : "N/A (no ticker)";
           (window as any).gameDebug("Ticker started: " + tickerStarted);
         }
