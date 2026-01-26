@@ -23,6 +23,8 @@ function createButton(text: string): PIXI.Text {
     },
   });
   btn.interactive = true;
+  // Set anchor to center for easier positioning
+  btn.anchor.set(0.5, 0.5);
   return btn;
 }
 
@@ -43,6 +45,7 @@ function animateSelectionDot(dot: PIXI.Graphics, targetY: number, delay: number,
 
 export async function game_select(app: PIXI.Application): Promise<void> {
   return new Promise<void>(async (resolve) => {
+    console.log("[game_select] Starting game_select scene");
     app.stage.removeChildren();
 
     BG_grid(app);
@@ -51,32 +54,28 @@ export async function game_select(app: PIXI.Application): Promise<void> {
     let selectedIndex = 1;
 
     const gameSelectBtn = createButton("ゲーム選択");
-    gameSelectBtn.position.set(
-      winCenter.x - gameSelectBtn.width / 2,
-      winCenter.y - gameSelectBtn.height / 2,
-    );
+    gameSelectBtn.x = winCenter.x;
+    gameSelectBtn.y = winCenter.y;
     app.stage.addChild(gameSelectBtn);
     gameSelectBtn.alpha = 1;
 
     const settingSelectBtn = createButton("ゲーム設定");
-    settingSelectBtn.position.set(
-      winCenter.x - settingSelectBtn.width / 2,
-      winCenter.y - settingSelectBtn.height / 2 + BUTTON_SPACING,
-    );
+    settingSelectBtn.x = winCenter.x;
+    settingSelectBtn.y = winCenter.y + BUTTON_SPACING;
     app.stage.addChild(settingSelectBtn);
     settingSelectBtn.alpha = 0.6;
 
     const recordBtn = createButton("プレイ記録");
-    recordBtn.position.set(
-      winCenter.x - recordBtn.width / 2,
-      winCenter.y - recordBtn.height / 2 - BUTTON_SPACING,
-    );
+    recordBtn.x = winCenter.x;
+    recordBtn.y = winCenter.y - BUTTON_SPACING;
     app.stage.addChild(recordBtn);
     recordBtn.alpha = 0.6;
+    console.log("[game_select] Buttons created");
 
     const selectDotAcc = new PIXI.Graphics();
     selectDotAcc.circle(0, 0, 8);
-    selectDotAcc.position.set(winCenter.x + (gameSelectBtn.width / 2 + 20), winCenter.y);
+    selectDotAcc.x = winCenter.x + (gameSelectBtn.width / 2 + 20);
+    selectDotAcc.y = winCenter.y;
     selectDotAcc.fill(replaceHash(settings.colorTheme.colors.MainAccent));
     selectDotAcc.stroke({
       width: 4,
@@ -92,7 +91,8 @@ export async function game_select(app: PIXI.Application): Promise<void> {
 
     const selectDotMain = new PIXI.Graphics();
     selectDotMain.circle(0, 0, 8);
-    selectDotMain.position.set(winCenter.x - (gameSelectBtn.width / 2 + 15), winCenter.y);
+    selectDotMain.x = winCenter.x - (gameSelectBtn.width / 2 + 15);
+    selectDotMain.y = winCenter.y;
     selectDotMain.fill(replaceHash(settings.colorTheme.colors.MainColor));
     selectDotMain.stroke({
       width: 4,
@@ -105,6 +105,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
       duration: 2,
       ease: "power4.out",
     });
+    console.log("[game_select] Selection dots created");
 
     let currentKeyController: AbortController | null = null;
 
@@ -201,7 +202,8 @@ export async function game_select(app: PIXI.Application): Promise<void> {
         align: "center",
       },
     });
-    hint.x = app.screen.width / 2 - hint.width / 2;
+    hint.anchor.set(0.5, 0.5);
+    hint.x = app.screen.width / 2;
     hint.y = 60;
     hint.alpha = 0;
     app.stage.addChild(hint);
@@ -215,7 +217,8 @@ export async function game_select(app: PIXI.Application): Promise<void> {
         align: "center",
       },
     });
-    hint_two.x = app.screen.width / 2 - hint_two.width / 2;
+    hint_two.anchor.set(0.5, 0.5);
+    hint_two.x = app.screen.width / 2;
     hint_two.y = app.screen.height - 60;
     hint_two.alpha = 0;
     app.stage.addChild(hint_two);
@@ -224,6 +227,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
       { alpha: 0, y: app.screen.height - 60 },
       { alpha: 0.3, y: app.screen.height - 80, duration: 5, delay: 6 },
     );
+    console.log("[game_select] Hints added, entering interaction loop");
 
     while (gameData.CurrentSceneName === "game_select") {
       currentKeyController = new AbortController();
@@ -281,6 +285,7 @@ export async function game_select(app: PIXI.Application): Promise<void> {
 }
 function game_mode_select(app: PIXI.Application): Promise<void> {
   return new Promise<void>(async (resolve) => {
+    console.log("[game_mode_select] Starting game_mode_select scene");
     app.stage.removeChildren();
     BG_grid(app);
     const winCenter = { x: app.screen.width / 2, y: app.screen.height / 2 };
@@ -294,9 +299,8 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
       color: replaceHash(settings.colorTheme.colors.MainAccent),
       alpha: 1,
     });
-    mask.position.set(winCenter.x, winCenter.y);
-    mask.y = winCenter.y;
     mask.x = winCenter.x - CIRCULAR_BUTTON_CENTER_OFFSET - 20;
+    mask.y = winCenter.y;
     app.stage.addChild(mask);
     gsap.fromTo(
       mask.scale,
@@ -324,14 +328,16 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
         width: 4,
         color: replaceHash(settings.colorTheme.colors.MainColor),
       });
-    exit_btn.position.set(winCenter.x - CIRCULAR_BUTTON_CENTER_OFFSET - 20, winCenter.y);
+    exit_btn.x = winCenter.x - CIRCULAR_BUTTON_CENTER_OFFSET - 20;
+    exit_btn.y = winCenter.y;
     exit_btn.rotation = Math.PI / 4 + Math.PI;
     exit_btn.interactive = true;
     app.stage.addChild(exit_btn);
 
     const selectDotAcc = new PIXI.Graphics();
     selectDotAcc.circle(circleRadius, 0, 8);
-    selectDotAcc.position.set(winCenter.x - CIRCULAR_BUTTON_CENTER_OFFSET - 20, winCenter.y);
+    selectDotAcc.x = winCenter.x - CIRCULAR_BUTTON_CENTER_OFFSET - 20;
+    selectDotAcc.y = winCenter.y;
     selectDotAcc.fill(replaceHash(settings.colorTheme.colors.MainAccent));
     selectDotAcc.stroke({
       width: 4,
@@ -358,7 +364,8 @@ function game_mode_select(app: PIXI.Application): Promise<void> {
         circleRadius,
         item.angle,
       );
-      btn.position.set(pos.x, pos.y);
+      btn.x = pos.x;
+      btn.y = pos.y;
       flashObj(app, btn);
       btn.on("pointerdown", async () => {
         triggerFrameEffect();
