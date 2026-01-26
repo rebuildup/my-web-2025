@@ -196,7 +196,7 @@ export default function GamePage() {
       }}>
         Starting...
       </div>
-      <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 9999, background: "#000" }}>
+      <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 9999, background: "#fff" }}>
         <div ref={containerRef} style={{ width: "100%", height: "100%", position: "relative" }}>
         </div>
       </div>
