@@ -124,6 +124,10 @@ export default function GamePage() {
 
         if ((window as any).gameDebug) {
           (window as any).gameDebug("11. Canvas added, auto-rendering enabled");
+          (window as any).gameDebug("Canvas size: " + canvas.width + "x" + canvas.height);
+          (window as any).gameDebug("Screen size: " + app.screen.width + "x" + app.screen.height);
+          (window as any).gameDebug("Stage children: " + app.stage.children.length);
+          (window as any).gameDebug("Renderer: " + (app.renderer as any)?.type);
         }
 
         if ((window as any).gameDebug) {

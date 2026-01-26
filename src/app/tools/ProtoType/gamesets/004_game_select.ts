@@ -228,6 +228,13 @@ export async function game_select(app: PIXI.Application): Promise<void> {
       { alpha: 0.3, y: app.screen.height - 80, duration: 5, delay: 6 },
     );
     console.log("[game_select] Hints added, entering interaction loop");
+    console.log("[game_select] Stage children count:", app.stage.children.length);
+    console.log("[game_select] Canvas dimensions:", app.canvas.width, "x", app.canvas.height);
+    console.log("[game_select] Screen dimensions:", app.screen.width, "x", app.screen.height);
+    console.log("[game_select] Stage position:", app.stage.x, app.stage.y);
+    console.log("[game_select] Stage scale:", app.stage.scale.x, app.stage.scale.y);
+    console.log("[game_select] gameSelectBtn position:", gameSelectBtn.x, gameSelectBtn.y, "alpha:", gameSelectBtn.alpha);
+    console.log("[game_select] Container visible:", app.stage.visible);
 
     while (gameData.CurrentSceneName === "game_select") {
       currentKeyController = new AbortController();
