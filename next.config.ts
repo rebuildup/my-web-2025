@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
 						"lucide-react",
 						"framer-motion",
 						"three",
-						"pixi.js",
+						// "pixi.js", // Removed: PIXI v8 has issues with tree-shaking
 						"fuse.js",
 						"marked",
 						"recharts",
@@ -207,7 +207,8 @@ const nextConfig: NextConfig = {
 							name: "pixi",
 							chunks: "all",
 							priority: 20,
-							maxSize: 150000,
+							// Remove maxSize to prevent PIXI v8 from being split incorrectly
+							// maxSize: 150000,
 						},
 						ui: {
 							test: /[\\/]node_modules[\\/](framer-motion|lucide-react)[\\/]/,
