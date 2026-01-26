@@ -8,8 +8,10 @@ import { closeScene } from "./014_mogura";
 
 export function opening_scene(app: PIXI.Application): Promise<void> {
   return new Promise<void>(async (resolve) => {
+    console.log("[opening_scene] Starting opening scene");
     app.stage.removeChildren();
-    playCollect();
+    // Don't play sound yet to avoid autoplay policy issues
+    // playCollect();
     BG_grid(app);
 
     const sentence_text = new PIXI.Text({
@@ -22,12 +24,16 @@ export function opening_scene(app: PIXI.Application): Promise<void> {
       },
     });
 
-    sentence_text.x = app.screen.width / 2 - sentence_text.width / 2;
-    sentence_text.y = app.screen.height / 2 - sentence_text.height / 2;
+    // Use anchor for center positioning
+    sentence_text.anchor.set(0.5, 0.5);
+    sentence_text.x = app.screen.width / 2;
+    sentence_text.y = app.screen.height / 2;
     app.stage.addChild(sentence_text);
+    console.log("[opening_scene] Welcome text added to stage");
     gameData.CurrentSceneName = "game_select";
 
     setTimeout(async () => {
+      console.log("[opening_scene] Closing scene");
       await closeScene(app, 0);
       resolve();
     }, 1000);
