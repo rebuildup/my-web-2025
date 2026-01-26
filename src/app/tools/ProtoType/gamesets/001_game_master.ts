@@ -1,7 +1,18 @@
 // game_master.ts
 import * as PIXI from "pixi.js";
 // Import GSAP from our loader to ensure plugins are registered
-import { gsap, CustomEase } from "../lib/gsap-loader";
+import { gsap, CustomEase, PixiPlugin } from "../lib/gsap-loader";
+
+// Ensure PixiPlugin is registered with GSAP
+if (typeof window !== "undefined") {
+  try {
+    gsap.registerPlugin(PixiPlugin, CustomEase);
+    PixiPlugin.registerPIXI(PIXI);
+    console.log("[game_master] GSAP plugins registered successfully");
+  } catch (e) {
+    console.error("[game_master] Failed to register GSAP plugins:", e);
+  }
+}
 
 import { game_scene } from "./003_game_scene";
 
@@ -42,10 +53,10 @@ export async function initializeGame(app: PIXI.Application) {
     },
   });
 
-  loading_text.position = {
-    x: app.screen.width / 2 - loading_text.width / 2,
-    y: app.screen.height / 2 - loading_text.height / 2,
-  };
+  // Set anchor to center for easier positioning
+  loading_text.anchor.set(0.5, 0.5);
+  loading_text.x = app.screen.width / 2;
+  loading_text.y = app.screen.height / 2;
   app.stage.addChild(loading_text);
 
   const lineWidth = 600;
@@ -60,13 +71,15 @@ export async function initializeGame(app: PIXI.Application) {
   for (let i = 0; i < 2; i++) {
     const line = new PIXI.Graphics();
     line.rect(0, 0, lineWidth, lineHeight).fill(replaceHash(settings.colorTheme.colors.MainColor));
-    line.position = { x: startX, y: startY + i * (lineHeight + spacing) };
+    line.x = startX;
+    line.y = startY + i * (lineHeight + spacing);
     app.stage.addChild(line);
     lines.push(line);
     const maskSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
     maskSprite.width = 0;
     maskSprite.height = lineHeight;
-    maskSprite.position = { x: startX, y: line.y };
+    maskSprite.x = startX;
+    maskSprite.y = line.y;
     app.stage.addChild(maskSprite);
     line.mask = maskSprite;
     masks.push(maskSprite);

@@ -21,6 +21,8 @@ export default function GamePage() {
       if (el) {
         el.textContent = el.textContent + "\n" + msg;
       }
+      // Also log to console for debugging
+      console.log("[GameDebug]", msg);
     };
   }
 
@@ -127,16 +129,22 @@ export default function GamePage() {
         if ((window as any).gameDebug) {
           (window as any).gameDebug("12. Calling initializeGame...");
         }
-        initializeGame(app);
+        // Run game initialization asynchronously without blocking
+        initializeGame(app).catch((error) => {
+          if ((window as any).gameDebug) {
+            (window as any).gameDebug("ERROR: initializeGame failed: " + error.message);
+          }
+          console.error("Game initialization error:", error);
+        });
         if ((window as any).gameDebug) {
-          (window as any).gameDebug("13. Game initialized - HIDING DEBUG");
+          (window as any).gameDebug("13. Game initialization started - HIDING DEBUG");
         }
         setTimeout(() => {
           const el = document.getElementById("game-debug");
           if (el) {
             el.style.display = 'none';
           }
-        }, 2000);
+        }, 5000); // Extended to 5 seconds for debugging
       } catch (error: any) {
         if ((window as any).gameDebug) {
           (window as any).gameDebug("ERROR: " + error.message);
@@ -180,7 +188,7 @@ export default function GamePage() {
         maxWidth: "80vw",
         maxHeight: "80vh",
         overflow: "auto",
-        pointerEvents: "none"
+        pointerEvents: "auto"
       }}>
         Starting...
       </div>

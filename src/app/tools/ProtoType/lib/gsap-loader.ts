@@ -19,6 +19,9 @@ export { PixiPlugin, CustomEase };
 if (typeof window !== "undefined") {
 	// Assign to window to prevent tree-shaking
 	(window as any).gsap = gsapModule;
+	// Also assign plugins to window to prevent tree-shaking
+	(window as any).PixiPlugin = PixiPlugin;
+	(window as any).CustomEase = CustomEase;
 }
 
 // Default export

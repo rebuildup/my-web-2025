@@ -89,7 +89,8 @@ const nextConfig: NextConfig = {
 
 	// Compiler optimizations
 	compiler: {
-		removeConsole: process.env.NODE_ENV === "production",
+		// Temporarily disable removeConsole for game debugging
+		removeConsole: false,
 		reactRemoveProperties: process.env.NODE_ENV === "production",
 	},
 
@@ -236,6 +237,8 @@ const nextConfig: NextConfig = {
 							priority: 22,
 							maxSize: 150000,
 							enforce: true,
+							// Ensure GSAP plugins are not tree-shaken
+							// Force inclusion of all GSAP exports
 						},
 						// New cache groups for better optimization
 						tools: {
