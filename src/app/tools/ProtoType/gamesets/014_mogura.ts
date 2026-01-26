@@ -412,7 +412,8 @@ export function closeScene(app: PIXI.Application, option: number): Promise<void>
       .lineTo(-arr_offset, -arr_offset)
       .fill(replaceHash(settings.colorTheme.colors.MainAccent));
     closeFirst.alpha = 0.4;
-    closeFirst.position = { x: 0, y: 0 };
+    closeFirst.x = 0;
+    closeFirst.y = 0;
     app.stage.addChild(closeFirst);
 
     const closeSecond = new PIXI.Graphics();
@@ -526,7 +527,8 @@ export function openScene(app: PIXI.Application, option: number): Promise<void> 
       .lineTo(arr_dir.left - arr_offset, app.screen.height / 2)
       .lineTo(-arr_offset, -arr_offset)
       .fill(replaceHash(settings.colorTheme.colors.MainAccent));
-    openFirst.position = { x: 0, y: 0 };
+    openFirst.x = 0;
+    openFirst.y = 0;
     openFirst.alpha = 0.4;
     app.stage.addChild(openFirst);
     const openSecond = new PIXI.Graphics();
@@ -644,7 +646,13 @@ export function openScene(app: PIXI.Application, option: number): Promise<void> 
 }
 export function flashObj(app: PIXI.Application, Obj: PIXI.Text | PIXI.Graphics) {
   const FlashMask = new PIXI.Graphics();
-  FlashMask.rect(0, 0, Obj.width, Obj.height).fill(
+
+  // Get bounds to properly size the flash mask
+  const bounds = Obj.getBounds();
+  const width = bounds.width || Obj.width || 100;
+  const height = bounds.height || Obj.height || 50;
+
+  FlashMask.rect(-width / 2, -height / 2, width, height).fill(
     replaceHash(settings.colorTheme.colors.MainAccent),
   );
   FlashMask.x = Obj.x;
