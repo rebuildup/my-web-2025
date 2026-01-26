@@ -89,8 +89,7 @@ const nextConfig: NextConfig = {
 
 	// Compiler optimizations
 	compiler: {
-		// Temporarily disable removeConsole for game debugging
-		removeConsole: false,
+		removeConsole: process.env.NODE_ENV === "production",
 		reactRemoveProperties: process.env.NODE_ENV === "production",
 	},
 

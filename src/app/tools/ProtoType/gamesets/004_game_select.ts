@@ -45,7 +45,6 @@ function animateSelectionDot(dot: PIXI.Graphics, targetY: number, delay: number,
 
 export async function game_select(app: PIXI.Application): Promise<void> {
   return new Promise<void>(async (resolve) => {
-    console.log("[game_select] Starting game_select scene");
     app.stage.removeChildren();
 
     BG_grid(app);
@@ -70,7 +69,6 @@ export async function game_select(app: PIXI.Application): Promise<void> {
     recordBtn.y = winCenter.y - BUTTON_SPACING;
     app.stage.addChild(recordBtn);
     recordBtn.alpha = 0.6;
-    console.log("[game_select] Buttons created");
 
     const selectDotAcc = new PIXI.Graphics();
     selectDotAcc.circle(0, 0, 8);
@@ -105,7 +103,6 @@ export async function game_select(app: PIXI.Application): Promise<void> {
       duration: 2,
       ease: "power4.out",
     });
-    console.log("[game_select] Selection dots created");
 
     let currentKeyController: AbortController | null = null;
 
@@ -227,14 +224,6 @@ export async function game_select(app: PIXI.Application): Promise<void> {
       { alpha: 0, y: app.screen.height - 60 },
       { alpha: 0.3, y: app.screen.height - 80, duration: 5, delay: 6 },
     );
-    console.log("[game_select] Hints added, entering interaction loop");
-    console.log("[game_select] Stage children count:", app.stage.children.length);
-    console.log("[game_select] Canvas dimensions:", app.canvas.width, "x", app.canvas.height);
-    console.log("[game_select] Screen dimensions:", app.screen.width, "x", app.screen.height);
-    console.log("[game_select] Stage position:", app.stage.x, app.stage.y);
-    console.log("[game_select] Stage scale:", app.stage.scale.x, app.stage.scale.y);
-    console.log("[game_select] gameSelectBtn position:", gameSelectBtn.x, gameSelectBtn.y, "alpha:", gameSelectBtn.alpha);
-    console.log("[game_select] Container visible:", app.stage.visible);
 
     while (gameData.CurrentSceneName === "game_select") {
       currentKeyController = new AbortController();
@@ -292,7 +281,6 @@ export async function game_select(app: PIXI.Application): Promise<void> {
 }
 function game_mode_select(app: PIXI.Application): Promise<void> {
   return new Promise<void>(async (resolve) => {
-    console.log("[game_mode_select] Starting game_mode_select scene");
     app.stage.removeChildren();
     BG_grid(app);
     const winCenter = { x: app.screen.width / 2, y: app.screen.height / 2 };

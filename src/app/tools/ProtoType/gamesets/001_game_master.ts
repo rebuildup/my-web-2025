@@ -8,7 +8,6 @@ if (typeof window !== "undefined") {
   try {
     gsap.registerPlugin(PixiPlugin, CustomEase);
     PixiPlugin.registerPIXI(PIXI);
-    console.log("[game_master] GSAP plugins registered successfully");
   } catch (e) {
     console.error("[game_master] Failed to register GSAP plugins:", e);
   }
@@ -40,11 +39,9 @@ import { ConversionTendencies } from "./008_generate_pattern";
 import { debug_repeat } from "./023_debug_repeat";
 
 export async function initializeGame(app: PIXI.Application) {
-  console.log("[game_master] initializeGame START");
   app.stage.removeChildren();
   BG_grid(app);
   loadcache_localranking();
-  console.log("[game_master] Creating loading text");
   const loading_text = new PIXI.Text({
     text: "Loading",
     style: {
@@ -60,7 +57,6 @@ export async function initializeGame(app: PIXI.Application) {
   loading_text.x = app.screen.width / 2;
   loading_text.y = app.screen.height / 2;
   app.stage.addChild(loading_text);
-  console.log("[game_master] Loading text added");
 
   const lineWidth = 600;
   const lineHeight = 4;
@@ -71,7 +67,6 @@ export async function initializeGame(app: PIXI.Application) {
   const lines = [];
   const masks = [];
 
-  console.log("[game_master] Creating loading lines");
   for (let i = 0; i < 2; i++) {
     const line = new PIXI.Graphics();
     line.rect(0, 0, lineWidth, lineHeight).fill(replaceHash(settings.colorTheme.colors.MainColor));
@@ -88,7 +83,6 @@ export async function initializeGame(app: PIXI.Application) {
     line.mask = maskSprite;
     masks.push(maskSprite);
   }
-  console.log("[game_master] Loading lines created, starting GSAP animations");
 
   masks.forEach((mask, index) => {
     gsap
@@ -107,7 +101,6 @@ export async function initializeGame(app: PIXI.Application) {
       })
       .set(mask, { x: startX });
   });
-  console.log("[game_master] GSAP animations started");
   // ローカル定義をそのまま利用
   gameData.textsData = getLocalTexts();
 
@@ -132,69 +125,44 @@ export async function initializeGame(app: PIXI.Application) {
   }
   gameData.gameselect_open = 0;
   TendenciesInit();
-  console.log("[game_master] Game data initialized, entering scene loop");
 
   while (gameData.CurrentSceneName != "exit") {
-    console.log("[game_master] Current scene:", gameData.CurrentSceneName);
     switch (gameData.CurrentSceneName) {
       case "opening":
-        console.log("[game_master] Calling opening_scene...");
         await opening_scene(app);
-        console.log("[game_master] opening_scene completed");
         break;
       case "game_scene":
-        console.log("[game_master] Calling game_scene...");
         await game_scene(app);
-        console.log("[game_master] game_scene completed");
         break;
       case "game_select":
-        console.log("[game_master] Calling game_select...");
         await game_select(app);
-        console.log("[game_master] game_select completed");
         break;
       case "setting_scene":
-        console.log("[game_master] Calling setting_scene...");
         await setting_scene(app);
-        console.log("[game_master] setting_scene completed");
         break;
       case "result_scene":
-        console.log("[game_master] Calling result_scene...");
         await result_scene(app);
-        console.log("[game_master] result_scene completed");
         break;
       case "reload_game":
-        console.log("[game_master] Calling reload_game...");
         await reload_game(app);
-        console.log("[game_master] reload_game completed");
         break;
       case "error_scene":
-        console.log("[game_master] Calling error_scene...");
         await error_scene(app);
-        console.log("[game_master] error_scene completed");
         break;
       case "record_scene":
-        console.log("[game_master] Calling record_scene...");
         await record_scene(app);
-        console.log("[game_master] record_scene completed");
         break;
       case "register_scene":
-        console.log("[game_master] Calling Player_register...");
         await Player_register(app);
-        console.log("[game_master] Player_register completed");
         break;
       case "debug_repeat":
-        console.log("[game_master] Calling debug_repeat...");
         await debug_repeat(app);
-        console.log("[game_master] debug_repeat completed");
         break;
       default:
-        console.log("[game_master] Unknown scene, exiting:", gameData.CurrentSceneName);
         gameData.CurrentSceneName = "exit";
         break;
     }
   }
-  console.log("[game_master] Scene loop ended, CurrentSceneName:", gameData.CurrentSceneName);
-  console.log("何が起こった？");
   playMiss();
 }
 export function replaceHash(color: string): string {

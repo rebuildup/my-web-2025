@@ -14,83 +14,34 @@ export default function GamePage() {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const appRef = React.useRef<PIXI.Application | null>(null);
 
-  // Create window-level debug function
-  if (typeof window !== "undefined") {
-    (window as any).gameDebug = (msg: string) => {
-      const el = document.getElementById("game-debug");
-      if (el) {
-        el.textContent = el.textContent + "\n" + msg;
-      }
-      // Also log to console for debugging
-      console.log("[GameDebug]", msg);
-    };
-  }
-
   useEffect(() => {
-    if ((window as any).gameDebug) {
-      (window as any).gameDebug("1. Component mounted");
-    }
     let isMounted = true;
     let app: PIXI.Application | null = null;
 
     const initializePixi = async () => {
-      if ((window as any).gameDebug) {
-        (window as any).gameDebug("2. initializePixi started");
-      }
-
       // Register GSAP plugins
       if (typeof window !== "undefined") {
         (window as any).PIXI = PIXI;
-        if ((window as any).gameDebug) {
-          (window as any).gameDebug("3. PIXI assigned to window");
-        }
       }
 
-      if ((window as any).gameDebug) {
-        (window as any).gameDebug("4. Registering GSAP plugins...");
-      }
       try {
         gsap.registerPlugin(PixiPlugin, CustomEase);
         PixiPlugin.registerPIXI(PIXI);
-        if ((window as any).gameDebug) {
-          (window as any).gameDebug("5. GSAP plugins registered SUCCESS");
-        }
       } catch (e: any) {
-        if ((window as any).gameDebug) {
-          (window as any).gameDebug("5. GSAP plugins FAILED: " + e.message);
-        }
+        console.error("GSAP plugins registration failed:", e);
         return;
       }
 
       if (!containerRef.current) {
-        if ((window as any).gameDebug) {
-          (window as any).gameDebug("6. ERROR: containerRef is null");
-        }
         return;
       }
 
-      if ((window as any).gameDebug) {
-        (window as any).gameDebug("6. Removing existing canvas...");
-      }
       containerRef.current.querySelector("canvas")?.remove();
 
-      let resolution = 1;
-      if (window.devicePixelRatio) {
-        resolution = window.devicePixelRatio;
-      }
-      if ((window as any).gameDebug) {
-        (window as any).gameDebug("7. Resolution: " + resolution);
-      }
-
-      if ((window as any).gameDebug) {
-        (window as any).gameDebug("8. Creating PIXI Application...");
-      }
+      const resolution = window.devicePixelRatio || 1;
       app = new PIXI.Application();
 
       try {
-        if ((window as any).gameDebug) {
-          (window as any).gameDebug("9. Starting app.init with autoStart...");
-        }
         await app.init({
           width: 720 * 2,
           height: 600 * 2,
@@ -100,14 +51,7 @@ export default function GamePage() {
           autoStart: true,
         });
 
-        if ((window as any).gameDebug) {
-          (window as any).gameDebug("10. PIXI Application initialized SUCCESS");
-        }
-
         if (!isMounted || !containerRef.current) {
-          if ((window as any).gameDebug) {
-            (window as any).gameDebug("11. ERROR: Component unmounted or ref null");
-          }
           return;
         }
 
@@ -115,20 +59,13 @@ export default function GamePage() {
         app.stage.y = 0;
         appRef.current = app;
 
-        // PIXI v8 uses canvas property
         const canvas = app.canvas as HTMLCanvasElement;
         if (!canvas) {
-          if ((window as any).gameDebug) {
-            (window as any).gameDebug("ERROR: app.canvas is null");
-          }
           return;
         }
 
-        // Set actual canvas size attributes
         canvas.width = app.screen.width;
         canvas.height = app.screen.height;
-
-        // Set CSS to fill container
         canvas.style.position = 'absolute';
         canvas.style.top = '0';
         canvas.style.left = '0';
@@ -141,52 +78,14 @@ export default function GamePage() {
         // Explicitly start the ticker for PIXI v8
         if (app.ticker && !app.ticker.started) {
           app.ticker.start();
-          if ((window as any).gameDebug) {
-            (window as any).gameDebug("Ticker started manually");
-          }
         }
 
-        if ((window as any).gameDebug) {
-          (window as any).gameDebug("11. Canvas added, auto-rendering enabled");
-          (window as any).gameDebug("Canvas dimensions: " + canvas.width + "x" + canvas.height);
-          (window as any).gameDebug("Canvas style size: " + canvas.style.width + "x" + canvas.style.height);
-          (window as any).gameDebug("Screen size: " + app.screen.width + "x" + app.screen.height);
-          (window as any).gameDebug("Stage children: " + app.stage.children.length);
-          (window as any).gameDebug("Renderer type: " + (app.renderer as any)?.type);
-          const tickerStarted = app.ticker ? app.ticker.started : "N/A (no ticker)";
-          (window as any).gameDebug("Ticker started: " + tickerStarted);
-        }
-
-        if ((window as any).gameDebug) {
-          (window as any).gameDebug("12. Calling initializeGame...");
-        }
         // Run game initialization asynchronously without blocking
-        initializeGame(app)
-          .then(() => {
-            if ((window as any).gameDebug) {
-              (window as any).gameDebug("13. initializeGame completed successfully");
-            }
-          })
-          .catch((error) => {
-            if ((window as any).gameDebug) {
-              (window as any).gameDebug("ERROR: initializeGame failed: " + error.message);
-              (window as any).gameDebug("Error stack: " + error.stack);
-            }
-            console.error("Game initialization error:", error);
-          });
-        if ((window as any).gameDebug) {
-          (window as any).gameDebug("13a. Game initialization called - HIDING DEBUG in 5 seconds");
-        }
-        setTimeout(() => {
-          const el = document.getElementById("game-debug");
-          if (el) {
-            el.style.display = 'none';
-          }
-        }, 5000); // Extended to 5 seconds for debugging
+        initializeGame(app).catch((error) => {
+          console.error("Game initialization error:", error);
+        });
       } catch (error: any) {
-        if ((window as any).gameDebug) {
-          (window as any).gameDebug("ERROR: " + error.message);
-        }
+        console.error("PIXI initialization error:", error);
         if (app) {
           app.destroy(true);
         }
@@ -210,27 +109,7 @@ export default function GamePage() {
 
   return (
     <>
-      <div id="game-debug" style={{
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        zIndex: 99999,
-        color: "#0f0",
-        fontSize: "14px",
-        fontFamily: "monospace",
-        whiteSpace: "pre-wrap",
-        textAlign: "left",
-        background: "rgba(0,0,0,0.8)",
-        padding: "20px",
-        maxWidth: "80vw",
-        maxHeight: "80vh",
-        overflow: "auto",
-        pointerEvents: "auto"
-      }}>
-        Starting...
-      </div>
-      <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 9999, background: "#fff" }}>
+      <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 9999, background: "#000" }}>
         <div ref={containerRef} style={{ width: "100%", height: "100%", position: "relative" }}>
         </div>
       </div>
