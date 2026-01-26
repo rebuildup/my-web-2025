@@ -8,7 +8,7 @@ interface HomeProps {
 const Game: React.FC<HomeProps> = ({ onOpenPopup }) => {
   return (
     <div className="home-container" style={{ zIndex: 1 }}>
-      <Link href="/tools/ProtoType/game" className="openbtn">
+      <Link href="/tools/ProtoType/Prototype" className="openbtn">
         Game Start
       </Link>
     </div>
