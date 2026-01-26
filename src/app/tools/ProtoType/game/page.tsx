@@ -111,23 +111,41 @@ export default function GamePage() {
           return;
         }
 
-        app.stage.position.set(0, 0);
+        app.stage.x = 0;
+        app.stage.y = 0;
         appRef.current = app;
 
-        const canvas = app.canvas as HTMLCanvasElement;
-        canvas.style.position = 'absolute';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        containerRef.current.appendChild(canvas);
+        // PIXI v8 uses view property instead of canvas
+        const view = app.view as HTMLCanvasElement;
+        if (!view) {
+          if ((window as any).gameDebug) {
+            (window as any).gameDebug("ERROR: app.view is null");
+          }
+          return;
+        }
+
+        // Set actual canvas size attributes
+        view.width = app.screen.width;
+        view.height = app.screen.height;
+
+        // Set CSS to fill container
+        view.style.position = 'absolute';
+        view.style.top = '0';
+        view.style.left = '0';
+        view.style.width = '100%';
+        view.style.height = '100%';
+        view.style.display = 'block';
+
+        containerRef.current.appendChild(view);
 
         if ((window as any).gameDebug) {
-          (window as any).gameDebug("11. Canvas added, auto-rendering enabled");
-          (window as any).gameDebug("Canvas size: " + canvas.width + "x" + canvas.height);
+          (window as any).gameDebug("11. View added, auto-rendering enabled");
+          (window as any).gameDebug("View dimensions: " + view.width + "x" + view.height);
+          (window as any).gameDebug("View style size: " + view.style.width + "x" + view.style.height);
           (window as any).gameDebug("Screen size: " + app.screen.width + "x" + app.screen.height);
           (window as any).gameDebug("Stage children: " + app.stage.children.length);
           (window as any).gameDebug("Renderer: " + (app.renderer as any)?.type);
+          (window as any).gameDebug("Ticker started: " + app.ticker.started);
         }
 
         if ((window as any).gameDebug) {
