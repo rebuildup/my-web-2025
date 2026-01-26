@@ -6,15 +6,10 @@ export function BG_grid(app: PIXI.Application) {
   const gridSize = 30 * 2;
   const graphics = new PIXI.Graphics();
 
-  graphics.setStrokeStyle({
-    width: 1.2,
-    color: replaceHash(settings.colorTheme.colors.MainColor),
-    alpha: 0.1,
-  });
-
   const Width = app.screen.width;
   const Height = app.screen.height;
 
+  // Draw all lines first
   for (let x = -Width; x <= Width; x += gridSize) {
     graphics.moveTo(x, -Height);
     graphics.lineTo(x, Height);
@@ -24,15 +19,23 @@ export function BG_grid(app: PIXI.Application) {
     graphics.lineTo(Width, y);
   }
 
-  graphics.stroke();
+  // Apply stroke in PIXI v8 style
+  graphics.stroke({
+    width: 1.2,
+    color: replaceHash(settings.colorTheme.colors.MainColor),
+    alpha: 0.1,
+  });
 
-  graphics.position.set(Width, Height);
+  graphics.x = Width;
+  graphics.y = Height;
   const bounds = graphics.getLocalBounds();
   // pivot をバウンディングボックスの中心に設定
-  graphics.pivot.set(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+  graphics.pivot.x = bounds.x + bounds.width / 2;
+  graphics.pivot.y = bounds.y + bounds.height / 2;
 
   // Graphics 自体をキャンバスの中心に配置
-  graphics.position.set(app.screen.width / 2, app.screen.height / 2);
+  graphics.x = app.screen.width / 2;
+  graphics.y = app.screen.height / 2;
 
   app.stage.addChild(graphics);
   return graphics;
