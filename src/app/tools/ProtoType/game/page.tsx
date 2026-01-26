@@ -115,51 +115,60 @@ export default function GamePage() {
         app.stage.y = 0;
         appRef.current = app;
 
-        // PIXI v8 uses view property instead of canvas
-        const view = app.view as HTMLCanvasElement;
-        if (!view) {
+        // PIXI v8 uses canvas property
+        const canvas = app.canvas as HTMLCanvasElement;
+        if (!canvas) {
           if ((window as any).gameDebug) {
-            (window as any).gameDebug("ERROR: app.view is null");
+            (window as any).gameDebug("ERROR: app.canvas is null");
           }
           return;
         }
 
         // Set actual canvas size attributes
-        view.width = app.screen.width;
-        view.height = app.screen.height;
+        canvas.width = app.screen.width;
+        canvas.height = app.screen.height;
 
         // Set CSS to fill container
-        view.style.position = 'absolute';
-        view.style.top = '0';
-        view.style.left = '0';
-        view.style.width = '100%';
-        view.style.height = '100%';
-        view.style.display = 'block';
+        canvas.style.position = 'absolute';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.display = 'block';
 
-        containerRef.current.appendChild(view);
+        containerRef.current.appendChild(canvas);
 
         if ((window as any).gameDebug) {
-          (window as any).gameDebug("11. View added, auto-rendering enabled");
-          (window as any).gameDebug("View dimensions: " + view.width + "x" + view.height);
-          (window as any).gameDebug("View style size: " + view.style.width + "x" + view.style.height);
+          (window as any).gameDebug("11. Canvas added, auto-rendering enabled");
+          (window as any).gameDebug("Canvas dimensions: " + canvas.width + "x" + canvas.height);
+          (window as any).gameDebug("Canvas style size: " + canvas.style.width + "x" + canvas.style.height);
           (window as any).gameDebug("Screen size: " + app.screen.width + "x" + app.screen.height);
           (window as any).gameDebug("Stage children: " + app.stage.children.length);
-          (window as any).gameDebug("Renderer: " + (app.renderer as any)?.type);
-          (window as any).gameDebug("Ticker started: " + app.ticker.started);
+          (window as any).gameDebug("Renderer type: " + (app.renderer as any)?.type);
+          // In PIXI v8, ticker might be undefined, handle gracefully
+          const tickerStarted = app.ticker ? app.ticker.started : "N/A (no ticker)";
+          (window as any).gameDebug("Ticker started: " + tickerStarted);
         }
 
         if ((window as any).gameDebug) {
           (window as any).gameDebug("12. Calling initializeGame...");
         }
         // Run game initialization asynchronously without blocking
-        initializeGame(app).catch((error) => {
-          if ((window as any).gameDebug) {
-            (window as any).gameDebug("ERROR: initializeGame failed: " + error.message);
-          }
-          console.error("Game initialization error:", error);
-        });
+        initializeGame(app)
+          .then(() => {
+            if ((window as any).gameDebug) {
+              (window as any).gameDebug("13. initializeGame completed successfully");
+            }
+          })
+          .catch((error) => {
+            if ((window as any).gameDebug) {
+              (window as any).gameDebug("ERROR: initializeGame failed: " + error.message);
+              (window as any).gameDebug("Error stack: " + error.stack);
+            }
+            console.error("Game initialization error:", error);
+          });
         if ((window as any).gameDebug) {
-          (window as any).gameDebug("13. Game initialization started - HIDING DEBUG");
+          (window as any).gameDebug("13a. Game initialization called - HIDING DEBUG in 5 seconds");
         }
         setTimeout(() => {
           const el = document.getElementById("game-debug");
