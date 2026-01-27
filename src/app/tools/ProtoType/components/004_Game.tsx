@@ -2,13 +2,12 @@ import React from "react";
 
 interface HomeProps {
   onOpenPopup?: () => void;
-  onGameStart?: () => void;
 }
 
-const Game: React.FC<HomeProps> = ({ onOpenPopup, onGameStart }) => {
+const Game: React.FC<HomeProps> = ({ onOpenPopup }) => {
   return (
     <div className="home-container" style={{ zIndex: 1 }}>
-      <button onClick={onGameStart} className="openbtn">
+      <button onClick={onOpenPopup} className="openbtn">
         Game Start
       </button>
     </div>

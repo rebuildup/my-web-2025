@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import * as PIXI from "pixi.js";
 import { gsap, PixiPlugin, CustomEase } from "../lib/gsap-loader";
 
+import "../styles/009_webglPopup.css";
 import { settings } from "../SiteInterface";
 import { initializeGame, replaceHash } from "../gamesets/001_game_master";
 
@@ -109,26 +110,9 @@ export default function GamePage() {
 
   return (
     <>
-      <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 9999, background: "#000" }}>
-        <div ref={containerRef} style={{ width: "100%", height: "100%", position: "relative" }}>
-        </div>
+      <div className="webgl-popup" ref={containerRef} style={{ zIndex: 3 }}>
+        <button onClick={handleBack}>Close</button>
       </div>
-      <button
-        onClick={handleBack}
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          zIndex: 100000,
-          padding: "10px 20px",
-          fontSize: "16px",
-          cursor: "pointer",
-          background: "#fff",
-          border: "2px solid #000"
-        }}
-      >
-        Close
-      </button>
     </>
   );
 }
