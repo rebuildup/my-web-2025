@@ -1,0 +1,25 @@
+{
+  "metrics": {
+    "lcp": null,
+    "cls": 0,
+    "fid": 0,
+    "tbt": 0,
+    "domContentLoaded": 0,
+    "loadComplete": 1,
+    "resourceCount": 48
+  },
+  "scores": {
+    "performance": 67,
+    "accessibility": 95,
+    "bestPractices": 100,
+    "seo": 95
+  },
+  "issues": {
+    "accessibility": [
+      "1 heading hierarchy issues"
+    ],
+    "seo": [
+      "Missing h1 tag"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "metrics": {
+    "lcp": null,
+    "cls": 0,
+    "fid": 0,
+    "tbt": 0,
+    "domContentLoaded": 0,
+    "loadComplete": 0,
+    "resourceCount": 44
+  },
+  "scores": {
+    "performance": 67,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100
+  },
+  "issues": {
+    "accessibility": [],
+    "seo": []
+  }
+}

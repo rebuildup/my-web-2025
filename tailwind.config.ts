@@ -11,24 +11,24 @@ const config: Config = {
 		extend: {
 			fontFamily: {
 				sans: [
-					"Noto Sans JP",
-					"Shippori Antique B1",
+					"var(--font-noto-sans-jp)",
+					"var(--font-shippori-antique-b1)",
 					"-apple-system",
 					"BlinkMacSystemFont",
 					"Segoe UI",
 					"sans-serif",
 				],
 				display: [
-					"neue-haas-grotesk-display",
+					"var(--font-shippori-antique-b1)",
+					"var(--font-noto-sans-jp)",
 					"-apple-system",
 					"BlinkMacSystemFont",
 					"Segoe UI",
-					"Arial",
 					"sans-serif",
 				],
 				accent: [
-					"Shippori Antique B1",
-					"Noto Sans JP",
+					"var(--font-shippori-antique-b1)",
+					"var(--font-noto-sans-jp)",
 					"-apple-system",
 					"BlinkMacSystemFont",
 					"Segoe UI",

@@ -3,11 +3,28 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import type { ReactNode } from "react";
+import { Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
 import { CookieConsent } from "@/components/ui/CookieConsent";
 import { generateBaseMetadata } from "@/lib/seo/metadata";
+
+// Optimized Google Fonts using next/font
+const notoSansJP = Noto_Sans_JP({
+	subsets: ["latin"],
+	variable: "--font-noto-sans-jp",
+	display: "swap",
+	adjustFontFallback: true,
+});
+
+const shipporiAntiqueB1 = Shippori_Antique_B1({
+	weight: "400",
+	subsets: ["latin"],
+	variable: "--font-shippori-antique-b1",
+	display: "swap",
+	adjustFontFallback: true,
+});
 
 export const viewport: Viewport = {
 	width: "device-width",
@@ -21,20 +38,8 @@ export const metadata: Metadata = generateBaseMetadata({
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
 		<html lang="ja" suppressHydrationWarning>
-			<head>
-				{/* Google Fonts */}
-				<link rel="preconnect" href="https://fonts.googleapis.com" />
-				<link
-					rel="preconnect"
-					href="https://fonts.gstatic.com"
-					crossOrigin="anonymous"
-				/>
-				<link
-					href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:ital,wght@0,100..900;1,100..900&family=Shippori+Antique+B1&display=swap"
-					rel="stylesheet"
-				/>
-			</head>
-			<body className="bg-base text-main font-sans">
+			<head />
+			<body className={`${notoSansJP.variable} ${shipporiAntiqueB1.variable} bg-base text-main font-sans`}>
 				<ProductionInitializer>
 					<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
 					<AnalyticsProvider gaId={process.env.NEXT_PUBLIC_GA_ID}>
