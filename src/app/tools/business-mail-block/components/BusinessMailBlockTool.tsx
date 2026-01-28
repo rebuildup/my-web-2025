@@ -1073,6 +1073,7 @@ export default function BusinessMailBlockTool() {
 												placeholder="ブロックの内容を入力... 変数は{変数名}で指定"
 												className="w-full px-3 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base resize-none"
 												rows={3}
+												aria-label="カスタムブロックの内容を入力"
 											/>
 										</div>
 									</div>

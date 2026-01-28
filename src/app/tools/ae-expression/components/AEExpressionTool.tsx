@@ -1365,6 +1365,7 @@ ${generatedCode}`;
 															)
 														}
 														className="w-full"
+														aria-label={`${param.name}（範囲）`}
 													/>
 													<input
 														type="number"
@@ -1381,6 +1382,7 @@ ${generatedCode}`;
 															)
 														}
 														className="w-full px-3 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+														aria-label={`${param.name}（数値）`}
 													/>
 												</div>
 											)}
@@ -1394,6 +1396,7 @@ ${generatedCode}`;
 														updateParameter(param.name, e.target.value)
 													}
 													className="w-full px-3 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+													aria-label={`${param.name}を選択`}
 												>
 													{param.options?.map((option) => (
 														<option key={option} value={option}>
@@ -1414,6 +1417,7 @@ ${generatedCode}`;
 															updateParameter(param.name, e.target.checked)
 														}
 														className="w-4 h-4"
+														aria-label={`${param.name}を有効にする`}
 													/>
 													<span className="text-sm noto-sans-jp-light">
 														有効
@@ -1431,6 +1435,7 @@ ${generatedCode}`;
 														updateParameter(param.name, e.target.value)
 													}
 													className="w-full px-3 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+													aria-label={`${param.name}を入力`}
 												/>
 											)}
 										</div>
