@@ -1242,16 +1242,16 @@ rtt min/avg/max/mdev = 0.098/0.109/0.123/0.012 ms`;
 									<button
 										type="button"
 										onClick={handleRejectAll}
-										className="px-2 py-1 text-red-500/80 hover:text-red-500 hover:bg-red-500/10 transition-all"
-										aria-label="すべて拒否"
+										className="px-2 py-1 text-red-400/90 hover:text-red-300 hover:bg-red-500/10 transition-all"
+										aria-label="○ reject すべて拒否"
 									>
 										○ reject
 									</button>
 									<button
 										type="button"
 										onClick={handleAcceptAll}
-										className="px-2 py-1 text-accent/80 hover:text-accent hover:bg-accent/10 transition-all"
-										aria-label="すべて受け入れる"
+										className="px-2 py-1 text-accent/90 hover:text-accent hover:bg-accent/10 transition-all"
+										aria-label="○ accept すべて受け入れる"
 									>
 										○ accept
 									</button>
