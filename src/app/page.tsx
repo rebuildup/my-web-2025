@@ -1,6 +1,8 @@
 import Link from "next/link";
+import GitHubActivitySidebar from "@/components/GitHubActivitySidebar";
 import HomeBackgroundCSS from "@/components/HomeBackgroundCSS";
 import XProfileImage from "@/components/XProfileImage";
+import YouTubeActivitySidebar from "@/components/YouTubeActivitySidebar";
 
 const navItems = [
 	{ href: "/about", label: "About" },
@@ -13,6 +15,8 @@ export default function Home() {
 	return (
 		<div className="min-h-screen relative bg-[#020202]">
 			<HomeBackgroundCSS />
+			<GitHubActivitySidebar />
+			<YouTubeActivitySidebar />
 
 			<main
 				id="main-content"

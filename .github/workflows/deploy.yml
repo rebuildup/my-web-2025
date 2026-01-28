@@ -209,6 +209,7 @@ jobs:
           NEXT_PRIVATE_BUILD_WITH_TURBOPACK: "0"
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
         run: |
           echo "Setting up production environment..."
           # Clean npm/pnpm cache to reduce package size (only delete cache files, keep binaries)
