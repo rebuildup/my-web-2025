@@ -57,6 +57,9 @@ export default function HistoryQuizPage() {
 								}
 								wrapper.appendChild(tooltip);
 
+								// Add aria-label for accessibility
+								input.setAttribute("aria-label", "答えを入力");
+
 								input.addEventListener("keydown", (e) => {
 									const keyEvent = e as KeyboardEvent;
 									if (keyEvent.key === "Enter") {
