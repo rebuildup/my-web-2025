@@ -38,7 +38,20 @@ export const metadata: Metadata = generateBaseMetadata({
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
 		<html lang="ja" suppressHydrationWarning>
-			<head />
+			<head>
+				{/* DNS prefetch and preconnect for performance */}
+				<link rel="dns-prefetch" href="https://use.typekit.net" />
+				<link
+					rel="preconnect"
+					href="https://use.typekit.net"
+					crossOrigin="anonymous"
+				/>
+				<link
+					rel="preconnect"
+					href="https://p.typekit.net"
+					crossOrigin="anonymous"
+				/>
+			</head>
 			<body
 				className={`${notoSansJP.variable} ${shipporiAntiqueB1.variable} bg-base text-main font-sans`}
 			>
@@ -84,10 +97,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 						`,
 					}}
 				/>
-				{/* Adobe Fonts (Typekit) - body内で読み込んでハイドレーションエラーを回避 */}
+				{/* Adobe Fonts (Typekit) - 遅延読み込みでパフォーマンス最適化 */}
 				<Script
 					id="adobe-fonts"
-					strategy="afterInteractive"
+					strategy="lazyOnload"
 					src="/scripts/adobe-fonts.js"
 				/>
 				{/* Twitter (X) Embed Widgets */}

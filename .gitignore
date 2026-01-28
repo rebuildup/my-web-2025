@@ -61,3 +61,5 @@ data/index.db-wal*
 data/index.db-shm*
 data/*.bak
 data/tag-catalog.json
+# Lighthouse audit results
+lighthouse-results/

@@ -5,7 +5,7 @@
 
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { chromium } from "playwright";
+import { type Browser, chromium, type Page } from "playwright";
 
 const BASE_URL = "https://yusuke-kim.com";
 const OUT_DIR = join(process.cwd(), "lighthouse-results");
@@ -24,6 +24,20 @@ interface MetricsResult {
 interface CheckResult {
 	issues: string[];
 	score: number;
+}
+
+interface AuditResult {
+	path: string;
+	performance: number;
+	accessibility: number;
+	bestPractices: number;
+	seo: number;
+	below95: string[];
+	metrics: MetricsResult;
+	issues: {
+		accessibility: string[];
+		seo: string[];
+	};
 }
 
 // Pages to audit
@@ -89,7 +103,7 @@ console.log(
 );
 console.log(`Output directory: ${OUT_DIR}\n`);
 
-const results: any[] = [];
+const results: AuditResult[] = [];
 let failedPages = 0;
 let successCount = 0;
 let errorCount = 0;
@@ -101,7 +115,7 @@ function sanitizePath(path: string): string {
 		.replace(/^-|-$/g, "");
 }
 
-async function runLighthouseAudit(page: any, url: string) {
+async function runLighthouseAudit(page: Page, url: string) {
 	// Enable Chrome DevTools Protocol
 	const cdpSession = await page.context().newCDPSession(page);
 
@@ -119,12 +133,12 @@ async function runLighthouseAudit(page: any, url: string) {
 	// Get performance metrics
 	const metrics: MetricsResult = (await page.evaluate(() => {
 		// @ts-expect-error - performance API types lost in serialization
-		const navigation = performance.getEntriesByType("navigation")[0] as any;
+		const navigation = performance.getEntriesByType("navigation")[0] as unknown;
 
 		// Get LCP
 		const lcpEntry = performance.getEntries(
 			"largest-contentful-paint",
-		)[0] as any;
+		)[0] as unknown;
 		const lcp = lcpEntry
 			? Math.round(lcpEntry.renderTime || lcpEntry.loadTime)
 			: 0;
@@ -133,10 +147,13 @@ async function runLighthouseAudit(page: any, url: string) {
 		let clsValue = 0;
 		if ("LayoutShift" in window) {
 			// @ts-expect-error
-			const clsEntries = performance.getEntriesByType("layout-shift") as any[];
+			const clsEntries = performance.getEntriesByType(
+				"layout-shift",
+			) as unknown[];
 			clsEntries.forEach((entry) => {
-				if (!entry.hadRecentInput) {
-					clsValue += entry.value;
+				const e = entry as { hadRecentInput: boolean; value: number };
+				if (!e.hadRecentInput) {
+					clsValue += e.value;
 				}
 			});
 		}
@@ -144,16 +161,18 @@ async function runLighthouseAudit(page: any, url: string) {
 
 		// Get FID (if available)
 		let fid = 0;
-		const fidEntry = performance.getEntriesByType("first-input")[0] as any;
+		const fidEntry = performance.getEntriesByType("first-input")[0] as unknown;
 		if (fidEntry) {
-			fid = Math.round(fidEntry.processingStart - fidEntry.startTime);
+			const f = fidEntry as { processingStart: number; startTime: number };
+			fid = Math.round(f.processingStart - f.startTime);
 		}
 
 		// Get TBT (Total Blocking Time) approximation
 		let tbt = 0;
-		const longTasks = performance.getEntriesByType("longtask") as any[];
+		const longTasks = performance.getEntriesByType("longtask") as unknown[];
 		longTasks.forEach((task) => {
-			tbt += task.duration - 50;
+			const t = task as { duration: number };
+			tbt += t.duration - 50;
 		});
 		tbt = Math.round(tbt);
 
@@ -231,7 +250,7 @@ async function runLighthouseAudit(page: any, url: string) {
 		const headings = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
 		let prevLevel = 0;
 		let headingIssues = 0;
-		headings.forEach((h: any) => {
+		headings.forEach((h) => {
 			const level = parseInt(h.tagName.substring(1), 10);
 			if (level > prevLevel + 1) {
 				headingIssues++;
@@ -304,7 +323,7 @@ async function runLighthouseAudit(page: any, url: string) {
 	};
 }
 
-async function auditPage(browser: any, page: string, index: number) {
+async function auditPage(browser: Browser, page: string, index: number) {
 	const url = `${BASE_URL}${page}`;
 	const safeName = sanitizePath(page);
 	const outputFile = join(OUT_DIR, `${safeName}.report.json`);
@@ -353,9 +372,10 @@ async function auditPage(browser: any, page: string, index: number) {
 			successCount++;
 			console.log(`✅ P:${perf} A:${a11y} BP:${bp} S:${seo}`);
 		}
-	} catch (error: any) {
+	} catch (error) {
 		errorCount++;
-		console.log(`⚠️  Error: ${error.message}`);
+		const err = error as { message: string };
+		console.log(`⚠️  Error: ${err.message}`);
 	}
 }
 
