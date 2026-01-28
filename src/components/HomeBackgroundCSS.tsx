@@ -1,75 +1,192 @@
 /**
- * CSS-only gradient background for instant FCP
- * This is a lightweight alternative to Three.js version that uses CSS animations
+ * Lazy-loaded starfield background
+ * CSS-only gradient for instant FCP, then canvas stars loaded in next frame
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function HomeBackgroundCSS() {
 	const [mounted, setMounted] = useState(false);
+	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const animationRef = useRef<number | undefined>(undefined);
 
+	// First, set mounted for CSS animations
 	useEffect(() => {
 		setMounted(true);
+
+		// Load canvas in next frame (after initial paint)
+		const rafId = requestAnimationFrame(() => {
+			initCanvas();
+		});
+
+		return () => {
+			cancelAnimationFrame(rafId);
+			if (animationRef.current) {
+				cancelAnimationFrame(animationRef.current);
+			}
+		};
 	}, []);
 
+	const initCanvas = () => {
+		const canvas = canvasRef.current;
+		if (!canvas) return;
+
+		const ctx = canvas.getContext("2d", { alpha: true });
+		if (!ctx) return;
+
+		// Set canvas size
+		const resizeCanvas = () => {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		};
+		resizeCanvas();
+		window.addEventListener("resize", resizeCanvas);
+
+		// Stars data
+		const stars = new Float32Array(300 * 3); // x, y, size
+		for (let i = 0; i < 300; i++) {
+			const base = i * 3;
+			stars[base] = Math.random() * canvas.width;
+			stars[base + 1] = Math.random() * canvas.height;
+			stars[base + 2] = Math.random() * 1.5 + 0.5;
+		}
+
+		// Shooting stars
+		interface ShootingStar {
+			x: number;
+			y: number;
+			vx: number;
+			vy: number;
+			length: number;
+			alpha: number;
+		}
+		const shootingStars: ShootingStar[] = [];
+
+		const spawnShootingStar = () => {
+			if (Math.random() < 0.005 && shootingStars.length < 3) {
+				shootingStars.push({
+					x: Math.random() * canvas.width,
+					y: Math.random() * canvas.height * 0.5,
+					vx: 8 + Math.random() * 4,
+					vy: 4 + Math.random() * 3,
+					length: 50 + Math.random() * 80,
+					alpha: 1,
+				});
+			}
+		};
+
+		let time = 0;
+
+		// Animation loop
+		const animate = () => {
+			time += 0.01;
+
+			// Clear canvas (transparent)
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			// Draw twinkle stars
+			for (let i = 0; i < 300; i++) {
+				const base = i * 3;
+				const x = stars[base];
+				const y = stars[base + 1];
+				const size = stars[base + 2];
+
+				// Twinkle effect
+				const twinkle = Math.sin(time * 2 + i * 0.1) * 0.3 + 0.7;
+				const alpha = size * 0.3 * twinkle;
+
+				ctx.beginPath();
+				ctx.arc(x, y, size, 0, Math.PI * 2);
+				ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+				ctx.fill();
+			}
+
+			// Spawn and update shooting stars
+			spawnShootingStar();
+
+			for (let i = shootingStars.length - 1; i >= 0; i--) {
+				const star = shootingStars[i];
+				star.x += star.vx;
+				star.y += star.vy;
+				star.alpha -= 0.01;
+
+				if (
+					star.alpha <= 0 ||
+					star.x > canvas.width ||
+					star.y > canvas.height
+				) {
+					shootingStars.splice(i, 1);
+					continue;
+				}
+
+				// Draw shooting star with trail
+				const gradient = ctx.createLinearGradient(
+					star.x,
+					star.y,
+					star.x - star.vx * (star.length / 20),
+					star.y - star.vy * (star.length / 20),
+				);
+				gradient.addColorStop(0, `rgba(255, 255, 255, ${star.alpha})`);
+				gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+				ctx.beginPath();
+				ctx.moveTo(star.x, star.y);
+				ctx.lineTo(
+					star.x - star.vx * (star.length / 20),
+					star.y - star.vy * (star.length / 20),
+				);
+				ctx.strokeStyle = gradient;
+				ctx.lineWidth = 2;
+				ctx.stroke();
+
+				// Bright head
+				ctx.beginPath();
+				ctx.arc(star.x, star.y, 1.5, 0, Math.PI * 2);
+				ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+				ctx.fill();
+			}
+
+			animationRef.current = requestAnimationFrame(animate);
+		};
+
+		animate();
+
+		return () => {
+			window.removeEventListener("resize", resizeCanvas);
+		};
+	};
+
 	return (
-		<div
-			className="fixed inset-0 bg-[#020202]"
-			style={{
-				zIndex: 0,
-				background: `
-					radial-gradient(
-						ellipse 80% 50% at 50% 50%,
-						rgba(91, 33, 182, 0.15) 0%,
-						rgba(45, 212, 191, 0.05) 50%,
-						transparent 70%
-					),
-					#020201
-				`,
-			}}
-		>
-			{/* Animated grain overlay */}
+		<div className="fixed inset-0 bg-[#020202]" style={{ zIndex: 0 }}>
+			{/* Static gradient background - always visible */}
 			<div
-				className="absolute inset-0 opacity-[0.03]"
-				style={{
-					backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-					animation: mounted ? "grain 8s steps(10) infinite" : "none",
-				}}
-			/>
-			{/* Slow color shift animation */}
-			<div
-				className="absolute inset-0 transition-opacity duration-[3000ms] ease-in-out"
+				className="absolute inset-0"
 				style={{
 					background: `radial-gradient(
-						ellipse 60% 40% at 30% 40%,
-						rgba(245, 158, 11, ${mounted ? "0.08" : "0.04"}) 0%,
-						transparent 50%
+						ellipse 80% 60% at 50% 50%,
+						rgba(30, 27, 75, 0.3) 0%,
+						rgba(2, 2, 2, 1) 70%
 					)`,
-					opacity: mounted ? 1 : 0.5,
-					animation: mounted
-						? "pulse 10s ease-in-out infinite alternate"
-						: "none",
 				}}
 			/>
-			<style>{`
-				@keyframes grain {
-					0%, 100% { transform: translate(0, 0); }
-					10% { transform: translate(-5%, -10%); }
-					20% { transform: translate(-15%, 5%); }
-					30% { transform: translate(7%, -25%); }
-					40% { transform: translate(-5%, 25%); }
-					50% { transform: translate(-15%, 10%); }
-					60% { transform: translate(15%, 0%); }
-					70% { transform: translate(0%, 15%); }
-					80% { transform: translate(3%, 35%); }
-					90% { transform: translate(-10%, 10%); }
-				}
-				@keyframes pulse {
-					0% { opacity: 0.5; }
-					100% { opacity: 1; }
-				}
-			`}</style>
+
+			{/* Canvas stars - rendered immediately in next frame */}
+			<canvas
+				ref={canvasRef}
+				className="absolute inset-0"
+				style={{ opacity: mounted ? 1 : 0, transition: "opacity 1000ms" }}
+				aria-hidden="true"
+			/>
+
+			{/* Subtle vignette */}
+			<div
+				className="absolute inset-0 pointer-events-none"
+				style={{
+					background:
+						"radial-gradient(ellipse 100% 100% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.4) 100%)",
+				}}
+			/>
 		</div>
 	);
 }
