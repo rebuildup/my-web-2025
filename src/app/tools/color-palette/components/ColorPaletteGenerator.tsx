@@ -907,7 +907,10 @@ export default function ColorPaletteGenerator() {
 							{/* Additional Settings */}
 							<div className="grid-system grid-1 sm:grid-3 gap-4">
 								<div className="space-y-2">
-									<label htmlFor="color-count" className="neue-haas-grotesk-display text-sm text-main">
+									<label
+										htmlFor="color-count"
+										className="neue-haas-grotesk-display text-sm text-main"
+									>
 										Number of Colors: {colorCount}
 									</label>
 									<input

@@ -1388,8 +1388,13 @@ export default function FillGenPage() {
 													>
 														<Box>
 															<Stack spacing={1}>
-																<label htmlFor="bg-color-picker" className="block">
-																	<Typography variant="body2">背景色</Typography>
+																<label
+																	htmlFor="bg-color-picker"
+																	className="block"
+																>
+																	<Typography variant="body2">
+																		背景色
+																	</Typography>
 																</label>
 																<input
 																	id="bg-color-picker"
@@ -1415,7 +1420,10 @@ export default function FillGenPage() {
 														</Box>
 														<Box>
 															<Stack spacing={1}>
-																<label htmlFor="text-color-picker" className="block">
+																<label
+																	htmlFor="text-color-picker"
+																	className="block"
+																>
 																	<Typography variant="body2">
 																		テキスト色
 																	</Typography>
@@ -1444,7 +1452,10 @@ export default function FillGenPage() {
 														</Box>
 														<Box>
 															<Stack spacing={1}>
-																<label htmlFor="accent-color-picker" className="block">
+																<label
+																	htmlFor="accent-color-picker"
+																	className="block"
+																>
 																	<Typography variant="body2">
 																		アクセント色
 																	</Typography>
@@ -1473,8 +1484,13 @@ export default function FillGenPage() {
 														</Box>
 														<Box>
 															<Stack spacing={1}>
-																<label htmlFor="correct-color-picker" className="block">
-																	<Typography variant="body2">正解色</Typography>
+																<label
+																	htmlFor="correct-color-picker"
+																	className="block"
+																>
+																	<Typography variant="body2">
+																		正解色
+																	</Typography>
 																</label>
 																<input
 																	id="correct-color-picker"
@@ -1500,7 +1516,10 @@ export default function FillGenPage() {
 														</Box>
 														<Box>
 															<Stack spacing={1}>
-																<label htmlFor="incorrect-color-picker" className="block">
+																<label
+																	htmlFor="incorrect-color-picker"
+																	className="block"
+																>
 																	<Typography variant="body2">
 																		不正解色
 																	</Typography>
@@ -1529,7 +1548,10 @@ export default function FillGenPage() {
 														</Box>
 														<Box>
 															<Stack spacing={1}>
-																<label htmlFor="block-bg-color-picker" className="block">
+																<label
+																	htmlFor="block-bg-color-picker"
+																	className="block"
+																>
 																	<Typography variant="body2">
 																		ブロック背景色
 																	</Typography>
