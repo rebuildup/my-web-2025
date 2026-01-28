@@ -5,7 +5,10 @@ import MeishiPhiCard from "./card";
 export default function RealCardPage() {
 	// このページは名刺表示のみを目的とするため、余分な要素は省略
 	return (
-		<div className="min-h-screen bg-white text-main">
+		<>
+			{/* Hidden h1 for SEO */}
+			<h1 className="sr-only">木村友亮のデジタル名刺 - Digital Card</h1>
+			<div className="min-h-screen bg-white text-main">
 			<main className="flex items-center justify-center py-16">
 				<div className="container-system mx-auto max-w-6xl px-6 flex items-center justify-center">
 					<MeishiPhiCard baseColor="#ffffff" mainColor="#000000" />
@@ -79,6 +82,7 @@ export default function RealCardPage() {
 				</div>
 			</div>
 		</div>
+		</>
 	);
 }
 //61.8 38.2

@@ -209,6 +209,9 @@ export default function HandleProfilePage() {
 							className="mb-8"
 						/>
 
+						{/* Hidden h1 for SEO */}
+						<h1 className="sr-only">samuidoのプロフィール - Handle Profile</h1>
+
 						{/* Header */}
 						<section className="mb-24 overflow-visible">
 							<ScrollFloat stagger={0}>

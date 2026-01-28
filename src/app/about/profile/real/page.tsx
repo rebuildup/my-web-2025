@@ -296,6 +296,9 @@ export default function RealProfilePage() {
 							className="mb-8"
 						/>
 
+						{/* Hidden h1 for SEO */}
+						<h1 className="sr-only">木村友亮のプロフィール - Real Profile</h1>
+
 						{/* Header */}
 						<section className="mb-24 overflow-visible">
 							<ScrollFloat stagger={0}>
