@@ -235,7 +235,7 @@ export default async function VideoProjectsPage() {
 
 							{/* Global Functions */}
 							<nav aria-label="Video gallery functions">
-								<h3 className="sr-only">Video Gallery機能</h3>
+								<h2 className="sr-only">Video Gallery機能</h2>
 								<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
 									<Link
 										href="/portfolio/gallery/all"

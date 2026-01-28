@@ -198,6 +198,7 @@ export function DevelopGalleryClient({
 
 			{/* Gallery Content - Alternating Layout */}
 			<section id="gallery-content" className="mt-2 md:mt-4">
+				<h2 className="sr-only">Projects List</h2>
 				{initialItems.length === 0 ? (
 					<div className="text-center py-16">
 						<p className="noto-sans-jp-light text-sm text-main">
@@ -368,7 +369,7 @@ export function DevelopGalleryClient({
 
 			{/* Navigation Links */}
 			<nav aria-label="Development gallery functions">
-				<h3 className="sr-only">Development Gallery機能</h3>
+				<h2 className="sr-only">Development Gallery機能</h2>
 				<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
 					<Link
 						href="/portfolio/gallery/all"

@@ -290,6 +290,7 @@ export default async function WorkshopPage() {
 						</header>
 
 						<section className="space-y-6">
+							<h2 className="sr-only">Workshop Contents</h2>
 							{hasContent ? (
 								<div className="space-y-6">
 									{displayPagesWithCMS.map(

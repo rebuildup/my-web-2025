@@ -378,6 +378,7 @@ export default function RealProfilePage() {
 								)}
 							</ScrollFloat>
 
+							<h2 className="sr-only">Personal Information Details</h2>
 							<ScrollFloat stagger={100}>
 								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 									<div className="flex items-start gap-2">
@@ -562,7 +563,7 @@ export default function RealProfilePage() {
 						{/* CTA */}
 						<nav aria-label="Profile navigation" className="mb-24">
 							<ScrollFloat stagger={0}>
-								<h3 className="sr-only">Profile機能</h3>
+								<h2 className="sr-only">Profile機能</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-3 gap-6">
 									<Link
 										href="/about/profile/handle"

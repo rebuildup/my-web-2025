@@ -534,12 +534,12 @@ export function VideoDesignGallery({
 				<div className="bg-red-50 border border-red-200 p-6 rounded-lg">
 					<div className="flex items-center mb-4">
 						<AlertTriangle className="w-6 h-6 text-red-600 mr-3" />
-						<h3
+						<h2
 							className="zen-kaku-gothic-new text-lg text-red-800"
 							role="alert"
 						>
 							Error Loading Gallery
-						</h3>
+						</h2>
 					</div>
 					<p
 						className="noto-sans-jp-light text-sm text-red-700 mb-4"
@@ -588,12 +588,12 @@ export function VideoDesignGallery({
 				<div className="bg-red-50 border border-red-200 p-6 rounded-lg">
 					<div className="flex items-center mb-4">
 						<AlertTriangle className="w-6 h-6 text-red-600 mr-3" />
-						<h3
+						<h2
 							className="zen-kaku-gothic-new text-lg text-red-800"
 							role="alert"
 						>
 							Error Loading Gallery
-						</h3>
+						</h2>
 					</div>
 					<p
 						className="noto-sans-jp-light text-sm text-red-700 mb-4"
@@ -625,9 +625,9 @@ export function VideoDesignGallery({
 			<div className="space-y-8">
 				<div className="bg-base/30 backdrop-blur p-4 rounded-[20px]">
 					<div className="flex items-center mb-4">
-						<h3 className="zen-kaku-gothic-new text-lg text-main">
+						<h2 className="zen-kaku-gothic-new text-lg text-main">
 							Loading...
-						</h3>
+						</h2>
 					</div>
 				</div>
 			</div>
@@ -637,10 +637,12 @@ export function VideoDesignGallery({
 	return (
 		<div className="space-y-8">
 			{/* Masonry-style Grid Layout */}
-			<div
-				className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-				style={{ gridAutoRows: "minmax(200px, auto)" }}
-			>
+			<section aria-label="Projects Grid">
+				<h2 className="sr-only">Projects Grid</h2>
+				<div
+					className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+					style={{ gridAutoRows: "minmax(200px, auto)" }}
+				>
 				{gridItems.map((item) => (
 					<GridItemComponentV2
 						key={item.id}
@@ -649,15 +651,16 @@ export function VideoDesignGallery({
 					/>
 				))}
 			</div>
+			</section>
 
 			{/* Empty State */}
 			{(!filteredItems || filteredItems.length === 0) && (
 				<div className="text-center py-12">
 					<div className="bg-base/30 backdrop-blur p-8 rounded-[20px]">
 						<Eye className="w-12 h-12 text-accent mx-auto mb-4" />
-						<h3 className="zen-kaku-gothic-new text-xl text-main mb-2">
+						<h2 className="zen-kaku-gothic-new text-xl text-main mb-2">
 							No projects found
-						</h3>
+						</h2>
 						<p className="noto-sans-jp-light text-sm text-main">
 							No video & design projects available.
 						</p>

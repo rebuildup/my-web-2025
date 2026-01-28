@@ -62,7 +62,9 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 	return (
 		<>
 			{/* foriio-like beautiful layout */}
-			<div className="mx-auto w-full px-0 sm:px-0 lg:px-0">
+			<section aria-label="Video Gallery">
+				<h2 className="sr-only">Video Gallery</h2>
+				<div className="mx-auto w-full px-0 sm:px-0 lg:px-0">
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-stretch">
 					{items.map((item) => {
 						const youtubeVideo = item.videos?.find((v) => v.type === "youtube");
@@ -163,6 +165,7 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 					})}
 				</div>
 			</div>
+			</section>
 
 			{/* Detail Panel */}
 			<VideoDetailPanel

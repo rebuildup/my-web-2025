@@ -7,7 +7,7 @@ import { contactLinks, type LinkItem, links } from "./data";
 
 // --- Components ---
 
-const AboutBackground = dynamic(() => import("@/components/AboutBackground"), {
+const AboutBackground = dynamic(() => import("@/components/AboutBackgroundCSS"), {
 	ssr: false,
 });
 
@@ -191,13 +191,13 @@ export default function LinksPage() {
 					</div>
 
 					<div className="w-full mt-8 pt-6 border-t border-white/5">
-						<motion.h3
+						<motion.h2
 							initial={{ opacity: 0 }}
 							whileInView={{ opacity: 1 }}
 							className="text-center text-[10px] font-mono text-main/30 uppercase tracking-widest mb-4"
 						>
 							Contact
-						</motion.h3>
+						</motion.h2>
 						<div className="flex flex-col gap-3 w-full">
 							{contactLinks.map((link, idx) => (
 								<LinkButton

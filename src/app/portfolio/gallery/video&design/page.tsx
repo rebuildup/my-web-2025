@@ -237,9 +237,9 @@ export default async function VideoDesignProjectsPage() {
 									) : (
 										<div className="bg-base border border-main p-8 text-center">
 											<Eye className="w-12 h-12 text-accent mx-auto mb-4" />
-											<h3 className="zen-kaku-gothic-new text-xl text-main mb-2">
+											<h2 className="zen-kaku-gothic-new text-xl text-main mb-2">
 												No video & design projects found
-											</h3>
+											</h2>
 											<p className="noto-sans-jp-light text-sm text-main">
 												Video and design projects will appear here once they are
 												published.
@@ -269,7 +269,7 @@ export default async function VideoDesignProjectsPage() {
 
 								{/* Global Functions */}
 								<nav aria-label="Video & Design gallery functions">
-									<h3 className="sr-only">Video & Design Gallery機能</h3>
+									<h2 className="sr-only">Video & Design Gallery機能</h2>
 									<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
 										<Link
 											href="/portfolio/gallery/all"

@@ -290,6 +290,7 @@ export default function HandleProfilePage() {
 								)}
 							</ScrollFloat>
 
+							<h2 className="sr-only">Creative Areas List</h2>
 							<ScrollFloat stagger={100}>
 								<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 									{creativeAreas.map((area) => (
@@ -335,6 +336,7 @@ export default function HandleProfilePage() {
 								)}
 							</ScrollFloat>
 
+							<h2 className="sr-only">Current Focus Areas</h2>
 							<ScrollFloat stagger={100}>
 								<div className="space-y-3">
 									{currentFocus.map((focus) => (
@@ -372,6 +374,7 @@ export default function HandleProfilePage() {
 								)}
 							</ScrollFloat>
 
+							<h2 className="sr-only">Work Style Details</h2>
 							<ScrollFloat stagger={100}>
 								<div className="bg-main/5 p-6 rounded-lg space-y-6">
 									<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -435,6 +438,7 @@ export default function HandleProfilePage() {
 								)}
 							</ScrollFloat>
 
+							<h2 className="sr-only">Social Media Links</h2>
 							<ScrollFloat stagger={100}>
 								<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 									<div className="bg-main/5 p-4 rounded-lg hover:bg-main/10 transition-colors">
@@ -485,7 +489,7 @@ export default function HandleProfilePage() {
 						{/* CTA */}
 						<nav aria-label="Profile navigation" className="mb-24">
 							<ScrollFloat stagger={0}>
-								<h3 className="sr-only">Profile機能</h3>
+								<h2 className="sr-only">Profile機能</h2>
 								<div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-6">
 									<Link
 										href="/about/profile/real"
