@@ -38,6 +38,7 @@ export function ConversionSettingsPanel({
 								onChange={(e) => updateSetting("componentName", e.target.value)}
 								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								placeholder="MyIcon"
+								aria-label="コンポーネント名"
 							/>
 						</div>
 
@@ -51,6 +52,7 @@ export function ConversionSettingsPanel({
 								onChange={(e) => updateSetting("propsType", e.target.value)}
 								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								placeholder="IconProps"
+								aria-label="Props型名"
 							/>
 						</div>
 					</div>

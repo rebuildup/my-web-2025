@@ -237,6 +237,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 				multiple
 				onChange={(e) => handleFileSelect(e.target.files)}
 				className="hidden"
+				aria-label="PNGファイルを選択"
 			/>
 			<input
 				ref={folderInputRef}
@@ -245,6 +246,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 				{...({ webkitdirectory: "" } as Record<string, string>)}
 				onChange={(e) => handleFileSelect(e.target.files)}
 				className="hidden"
+				aria-label="フォルダを選択"
 			/>
 			<input
 				ref={zipInputRef}
@@ -252,6 +254,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 				accept=".zip,application/zip"
 				onChange={(e) => handleFileSelect(e.target.files)}
 				className="hidden"
+				aria-label="ZIPファイルを選択"
 			/>
 
 			{/* Processing State */}

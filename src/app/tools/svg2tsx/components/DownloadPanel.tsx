@@ -61,6 +61,7 @@ export function DownloadPanel({
 							onChange={(e) => setFileName(e.target.value)}
 							className="flex-1 p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 							placeholder="Component"
+							aria-label="ファイル名"
 						/>
 						<span className="flex items-center px-2 text-sm text-main/70">
 							{settings.fileExtension}

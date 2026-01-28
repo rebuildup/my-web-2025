@@ -1072,6 +1072,7 @@ export default function FillGenPage() {
 									})
 								}
 								inputRef={textareaRef}
+								label="テキストエディタ"
 								onSelect={(e) => {
 									// 穴埋め化処理中は選択範囲を更新しない
 									if (isWrapping) return;
@@ -1406,6 +1407,7 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
+																	aria-label="背景色"
 																/>
 															</Stack>
 														</Box>
@@ -1432,6 +1434,7 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
+																	aria-label="テキスト色"
 																/>
 															</Stack>
 														</Box>
@@ -1458,6 +1461,7 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
+																	aria-label="アクセント色"
 																/>
 															</Stack>
 														</Box>
@@ -1482,6 +1486,7 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
+																	aria-label="正解色"
 																/>
 															</Stack>
 														</Box>
@@ -1508,6 +1513,7 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
+																	aria-label="不正解色"
 																/>
 															</Stack>
 														</Box>
@@ -1534,6 +1540,7 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
+																	aria-label="ブロック背景色"
 																/>
 															</Stack>
 														</Box>
@@ -1776,6 +1783,7 @@ export default function FillGenPage() {
 																	border: "1px solid #ddd",
 																	borderRadius: 4,
 																}}
+																aria-label="空欄の背景色"
 															/>
 														</Stack>
 													</Stack>

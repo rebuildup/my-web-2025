@@ -133,6 +133,7 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 							if (file) handleFileUpload(file);
 						}}
 						className="hidden"
+						aria-label="SVGファイルを選択"
 					/>
 
 					<div className="space-y-4">
@@ -161,6 +162,7 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 						onChange={(e) => handleCodeChange(e.target.value)}
 						placeholder="<svg>...</svg>"
 						className="w-full h-64 p-3 rounded-lg bg-main/10 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+						aria-label="SVGコードを入力"
 					/>
 				</div>
 			)}
@@ -176,6 +178,7 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 							onChange={(e) => setUrlInput(e.target.value)}
 							placeholder="https://example.com/image.svg"
 							className="flex-1 p-3 rounded-lg bg-main/10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+							aria-label="SVG URLを入力"
 						/>
 						<button
 							type="button"

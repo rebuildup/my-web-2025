@@ -649,6 +649,7 @@ export default function ColorPaletteGenerator() {
 							type="file"
 							accept=".json,.css,.gpl,.ase"
 							onChange={handleFileImport}
+							aria-label="インポートするファイルを選択"
 							className="hidden"
 						/>
 
