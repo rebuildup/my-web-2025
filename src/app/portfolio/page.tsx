@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PortfolioCard } from "@/app/portfolio/gallery/all/components/PortfolioCard";
 import { getAllFromIndex } from "@/cms/lib/content-db-manager";
-import AboutBackground from "@/components/AboutBackground";
+import AboutBackgroundCSS from "@/components/AboutBackgroundCSS";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import GlowCard from "@/components/ui/GlowCard";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
@@ -360,7 +360,7 @@ export default async function PortfolioPage() {
 					</script>
 				)}
 				<div className="min-h-screen relative">
-					<AboutBackground />
+					<AboutBackgroundCSS />
 
 					<main
 						id="main-content"
@@ -559,7 +559,7 @@ export default async function PortfolioPage() {
 
 		return (
 			<div className="min-h-screen relative">
-				<AboutBackground />
+				<AboutBackgroundCSS />
 
 				<main
 					id="main-content"

@@ -1574,6 +1574,7 @@ export default function FillGenPage() {
 																min={12}
 																max={24}
 																step={1}
+																aria-label="基本テキストサイズ"
 															/>
 														</Box>
 														<Box>
@@ -1594,6 +1595,7 @@ export default function FillGenPage() {
 																min={18}
 																max={36}
 																step={1}
+																aria-label="タイトルサイズ"
 															/>
 														</Box>
 														<Box>
@@ -1614,6 +1616,7 @@ export default function FillGenPage() {
 																min={14}
 																max={28}
 																step={1}
+																aria-label="見出しサイズ"
 															/>
 														</Box>
 														<Box>
@@ -1634,6 +1637,7 @@ export default function FillGenPage() {
 																min={12}
 																max={24}
 																step={1}
+																aria-label="セクションサイズ"
 															/>
 														</Box>
 														<Box>
@@ -1654,6 +1658,7 @@ export default function FillGenPage() {
 																min={12}
 																max={24}
 																step={1}
+																aria-label="空欄サイズ"
 															/>
 														</Box>
 													</Stack>
@@ -1686,6 +1691,7 @@ export default function FillGenPage() {
 																min={0}
 																max={20}
 																step={1}
+																aria-label="ボタンの角丸"
 															/>
 														</Box>
 														<Box>
@@ -1706,6 +1712,7 @@ export default function FillGenPage() {
 																min={10}
 																max={20}
 																step={1}
+																aria-label="ボタンのフォントサイズ"
 															/>
 														</Box>
 													</Stack>
@@ -1761,6 +1768,7 @@ export default function FillGenPage() {
 																min={1}
 																max={5}
 																step={1}
+																aria-label="空欄の線の太さ"
 															/>
 														</Box>
 														<Stack spacing={1}>
@@ -1816,6 +1824,7 @@ export default function FillGenPage() {
 																min={0}
 																max={30}
 																step={1}
+																aria-label="タブの角丸"
 															/>
 														</Box>
 														<Box>
@@ -1836,6 +1845,7 @@ export default function FillGenPage() {
 																min={10}
 																max={20}
 																step={1}
+																aria-label="タブのフォントサイズ"
 															/>
 														</Box>
 													</Stack>

@@ -8,14 +8,16 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
 import { CookieConsent } from "@/components/ui/CookieConsent";
+import { SkipLink } from "@/components/ui/SkipLink";
 import { generateBaseMetadata } from "@/lib/seo/metadata";
 
-// Optimized Google Fonts using next/font
+// Optimized Google Fonts with font-display: swap for instant rendering
 const notoSansJP = Noto_Sans_JP({
 	subsets: ["latin"],
 	variable: "--font-noto-sans-jp",
 	display: "swap",
 	adjustFontFallback: true,
+	preload: true,
 });
 
 const shipporiAntiqueB1 = Shippori_Antique_B1({
@@ -24,23 +26,34 @@ const shipporiAntiqueB1 = Shippori_Antique_B1({
 	variable: "--font-shippori-antique-b1",
 	display: "swap",
 	adjustFontFallback: true,
+	preload: false, // Not critical for above-fold, defer loading
 });
 
 export const viewport: Viewport = {
 	width: "device-width",
 	initialScale: 1,
+	themeColor: "#020202",
+	colorScheme: "dark",
 };
 
-export const metadata: Metadata = generateBaseMetadata({
-	path: "/",
-});
+export const metadata: Metadata = {
+	...generateBaseMetadata({
+		path: "/",
+	}),
+	other: {
+		"msapplication-TileColor": "#020202",
+	},
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
 		<html lang="ja" suppressHydrationWarning>
 			<head>
+				{/* Manifest for PWA */}
+				<link rel="manifest" href="/manifest.json" />
+				<link rel="icon" href="/favicons/favicon.ico" sizes="any" />
+				<link rel="apple-touch-icon" href="/favicons/favicon-192x192.png" />
 				{/* DNS prefetch and preconnect for performance */}
-				<link rel="dns-prefetch" href="https://use.typekit.net" />
 				<link
 					rel="preconnect"
 					href="https://use.typekit.net"
@@ -51,10 +64,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					href="https://p.typekit.net"
 					crossOrigin="anonymous"
 				/>
+				<link rel="dns-prefetch" href="https://use.typekit.net" />
 			</head>
 			<body
 				className={`${notoSansJP.variable} ${shipporiAntiqueB1.variable} bg-base text-main font-sans`}
 			>
+				<SkipLink />
 				<ProductionInitializer>
 					<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
 					<AnalyticsProvider gaId={process.env.NEXT_PUBLIC_GA_ID}>
@@ -63,40 +78,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					</AnalyticsProvider>
 				</ProductionInitializer>
 
-				{/* React DevTools version fix */}
-				<Script
-					id="react-devtools-fix"
-					strategy="beforeInteractive"
-					dangerouslySetInnerHTML={{
-						__html: `
-							(function() {
-								if (typeof window === 'undefined') return;
-								try {
-									const reactVersion = '18.2.0';
-									if (!window.__REACT_VERSION__) {
-										window.__REACT_VERSION__ = reactVersion;
-									}
-									if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
-										if (!window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers) {
-											window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers = new Map();
-										}
-										const originalRegisterRenderer = window.__REACT_DEVTOOLS_GLOBAL_HOOK__.registerRenderer;
-										if (originalRegisterRenderer) {
-											window.__REACT_DEVTOOLS_GLOBAL_HOOK__.registerRenderer = function(renderer) {
-												if (renderer && !renderer.version) {
-													renderer.version = reactVersion;
-												}
-												return originalRegisterRenderer.call(this, renderer);
-											};
-										}
-									}
-								} catch (e) {
-									console.debug('React DevTools version fix failed:', e);
-								}
-							})();
-						`,
-					}}
-				/>
 				{/* Adobe Fonts (Typekit) - 遅延読み込みでパフォーマンス最適化 */}
 				<Script
 					id="adobe-fonts"

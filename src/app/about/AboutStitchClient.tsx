@@ -40,9 +40,12 @@ interface AboutStitchClientProps {
 	portfolioItems: PortfolioContentItem[];
 }
 
-const AboutBackground = dynamic(() => import("@/components/AboutBackgroundCSS"), {
-	ssr: false,
-});
+const AboutBackground = dynamic(
+	() => import("@/components/AboutBackgroundCSS"),
+	{
+		ssr: false,
+	},
+);
 
 export default function AboutStitchClient({
 	profile,
@@ -150,10 +153,16 @@ export default function AboutStitchClient({
 							</div>
 
 							<div className="col-span-1 md:col-span-2 flex flex-col justify-center order-3 relative z-0 md:text-right">
-								<div role="presentation" className="text-4xl sm:text-5xl md:text-8xl lg:text-9xl font-display font-light leading-none tracking-tighter uppercase text-white/10 md:-ml-24 select-none pointer-events-none opacity-20 md:opacity-25">
+								<div
+									role="presentation"
+									className="text-4xl sm:text-5xl md:text-8xl lg:text-9xl font-display font-light leading-none tracking-tighter uppercase text-white/10 md:-ml-24 select-none pointer-events-none opacity-20 md:opacity-25"
+								>
 									PROFILE
 								</div>
-								<div role="presentation" className="text-4xl sm:text-5xl md:text-8xl lg:text-9xl font-display font-light leading-none tracking-tighter uppercase text-white/10 md:-ml-12 mt-[-0.5em] select-none pointer-events-none opacity-20 md:opacity-25">
+								<div
+									role="presentation"
+									className="text-4xl sm:text-5xl md:text-8xl lg:text-9xl font-display font-light leading-none tracking-tighter uppercase text-white/10 md:-ml-12 mt-[-0.5em] select-none pointer-events-none opacity-20 md:opacity-25"
+								>
 									EXPLORE
 								</div>
 							</div>

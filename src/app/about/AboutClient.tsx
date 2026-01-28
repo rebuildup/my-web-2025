@@ -245,9 +245,12 @@ function LangToggle({
 }
 
 // --- Main Client Component ---
-const AboutBackground = dynamic(() => import("@/components/AboutBackground"), {
-	ssr: false,
-});
+const AboutBackground = dynamic(
+	() => import("@/components/AboutBackgroundCSS"),
+	{
+		ssr: false,
+	},
+);
 
 export default function AboutClient({
 	stats,

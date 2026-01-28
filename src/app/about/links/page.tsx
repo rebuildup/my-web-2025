@@ -7,9 +7,12 @@ import { contactLinks, type LinkItem, links } from "./data";
 
 // --- Components ---
 
-const AboutBackground = dynamic(() => import("@/components/AboutBackgroundCSS"), {
-	ssr: false,
-});
+const AboutBackground = dynamic(
+	() => import("@/components/AboutBackgroundCSS"),
+	{
+		ssr: false,
+	},
+);
 
 const getFaviconUrl = (url: string) => {
 	try {

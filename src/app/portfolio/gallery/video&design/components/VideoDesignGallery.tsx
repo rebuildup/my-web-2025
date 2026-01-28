@@ -643,14 +643,14 @@ export function VideoDesignGallery({
 					className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
 					style={{ gridAutoRows: "minmax(200px, auto)" }}
 				>
-				{gridItems.map((item) => (
-					<GridItemComponentV2
-						key={item.id}
-						item={item as EnhancedGridItem}
-						onHover={() => {}}
-					/>
-				))}
-			</div>
+					{gridItems.map((item) => (
+						<GridItemComponentV2
+							key={item.id}
+							item={item as EnhancedGridItem}
+							onHover={() => {}}
+						/>
+					))}
+				</div>
 			</section>
 
 			{/* Empty State */}

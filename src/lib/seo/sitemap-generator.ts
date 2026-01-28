@@ -238,6 +238,16 @@ export const staticRoutes: SitemapEntry[] = [
 		priority: 0.6,
 		changeFrequency: "monthly",
 	},
+	{
+		url: "/tools/fillgen",
+		priority: 0.6,
+		changeFrequency: "monthly",
+	},
+	{
+		url: "/tools/history-quiz",
+		priority: 0.6,
+		changeFrequency: "monthly",
+	},
 
 	// Global pages
 	{
