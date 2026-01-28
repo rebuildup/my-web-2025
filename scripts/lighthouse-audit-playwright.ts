@@ -3,12 +3,28 @@
  * Run Lighthouse audits on all public pages
  */
 
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { chromium } from "playwright";
-import { writeFileSync, mkdirSync } from "fs";
-import { join } from "path";
 
 const BASE_URL = "https://yusuke-kim.com";
 const OUT_DIR = join(process.cwd(), "lighthouse-results");
+
+// Type definitions
+interface MetricsResult {
+	lcp: number;
+	cls: number;
+	fid: number;
+	tbt: number;
+	domContentLoaded: number;
+	loadComplete: number;
+	resourceCount: number;
+}
+
+interface CheckResult {
+	issues: string[];
+	score: number;
+}
 
 // Pages to audit
 const PAGES = [
@@ -68,7 +84,9 @@ const PAGES = [
 // Create output directory
 mkdirSync(OUT_DIR, { recursive: true });
 
-console.log("Starting Lighthouse audits using Playwright + Chrome DevTools Protocol...");
+console.log(
+	"Starting Lighthouse audits using Playwright + Chrome DevTools Protocol...",
+);
 console.log(`Output directory: ${OUT_DIR}\n`);
 
 const results: any[] = [];
@@ -77,7 +95,10 @@ let successCount = 0;
 let errorCount = 0;
 
 function sanitizePath(path: string): string {
-	return path.replace(/[^a-z0-9-]/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+	return path
+		.replace(/[^a-z0-9-]/gi, "-")
+		.replace(/-+/g, "-")
+		.replace(/^-|-$/g, "");
 }
 
 async function runLighthouseAudit(page: any, url: string) {
@@ -96,17 +117,22 @@ async function runLighthouseAudit(page: any, url: string) {
 	await page.waitForTimeout(2000);
 
 	// Get performance metrics
-	const metrics = await page.evaluate(() => {
+	const metrics: MetricsResult = (await page.evaluate(() => {
+		// @ts-expect-error - performance API types lost in serialization
 		const navigation = performance.getEntriesByType("navigation")[0] as any;
 
 		// Get LCP
-		const lcpEntry = performance.getEntries("largest-contentful-paint")[0] as any;
-		const lcp = lcpEntry ? Math.round(lcpEntry.renderTime || lcpEntry.loadTime) : 0;
+		const lcpEntry = performance.getEntries(
+			"largest-contentful-paint",
+		)[0] as any;
+		const lcp = lcpEntry
+			? Math.round(lcpEntry.renderTime || lcpEntry.loadTime)
+			: 0;
 
 		// Get CLS
 		let clsValue = 0;
 		if ("LayoutShift" in window) {
-			// @ts-ignore
+			// @ts-expect-error
 			const clsEntries = performance.getEntriesByType("layout-shift") as any[];
 			clsEntries.forEach((entry) => {
 				if (!entry.hadRecentInput) {
@@ -137,25 +163,36 @@ async function runLighthouseAudit(page: any, url: string) {
 			fid,
 			tbt,
 			// Navigation timing
-			domContentLoaded: Math.round(navigation?.domContentLoadedEventEnd - navigation?.domContentLoadedEventStart || 0),
-			loadComplete: Math.round(navigation?.loadEventEnd - navigation?.loadEventStart || 0),
+			domContentLoaded: Math.round(
+				navigation?.domContentLoadedEventEnd -
+					navigation?.domContentLoadedEventStart || 0,
+			),
+			loadComplete: Math.round(
+				navigation?.loadEventEnd - navigation?.loadEventStart || 0,
+			),
 			// Resource counts
 			resourceCount: performance.getEntriesByType("resource").length,
 		};
-	});
+	})) as MetricsResult;
 
 	// Get Core Web Vitals assessment
 	const vitals = { ...metrics };
 
 	// Calculate approximate scores based on thresholds
-	const getScore = (value: number, thresholds: { good: number; needsImprovement: number }) => {
+	const getScore = (
+		value: number,
+		thresholds: { good: number; needsImprovement: number },
+	) => {
 		if (value <= thresholds.good) return 100;
 		if (value <= thresholds.needsImprovement) return 50;
 		return 0;
 	};
 
 	// LCP thresholds: good <= 2.5s, needs improvement <= 4s
-	const perfScore = getScore(vitals.lcp / 1000, { good: 2.5, needsImprovement: 4 });
+	const perfScore = getScore(vitals.lcp / 1000, {
+		good: 2.5,
+		needsImprovement: 4,
+	});
 
 	// CLS thresholds: good <= 0.1, needs improvement <= 0.25
 	const clsScore = getScore(vitals.cls, { good: 0.1, needsImprovement: 0.25 });
@@ -167,7 +204,7 @@ async function runLighthouseAudit(page: any, url: string) {
 	const performance = Math.round((perfScore + clsScore + fidScore) / 3);
 
 	// Run basic accessibility checks
-	const accessibilityChecks = await page.evaluate(() => {
+	const accessibilityChecks = (await page.evaluate(() => {
 		const issues: string[] = [];
 
 		// Check for images without alt
@@ -183,7 +220,9 @@ async function runLighthouseAudit(page: any, url: string) {
 		}
 
 		// Check form labels
-		const inputsWithoutLabel = document.querySelectorAll("input:not([aria-label]):not([id])");
+		const inputsWithoutLabel = document.querySelectorAll(
+			"input:not([aria-label]):not([id])",
+		);
 		if (inputsWithoutLabel.length > 0) {
 			issues.push(`${inputsWithoutLabel.length} inputs without labels`);
 		}
@@ -193,7 +232,7 @@ async function runLighthouseAudit(page: any, url: string) {
 		let prevLevel = 0;
 		let headingIssues = 0;
 		headings.forEach((h: any) => {
-			const level = parseInt(h.tagName.substring(1));
+			const level = parseInt(h.tagName.substring(1), 10);
 			if (level > prevLevel + 1) {
 				headingIssues++;
 			}
@@ -207,10 +246,10 @@ async function runLighthouseAudit(page: any, url: string) {
 			issues,
 			score: Math.max(0, 100 - issues.length * 5),
 		};
-	});
+	})) as CheckResult;
 
 	// SEO checks
-	const seoChecks = await page.evaluate(() => {
+	const seoChecks = (await page.evaluate(() => {
 		const issues: string[] = [];
 
 		// Check for title
@@ -248,7 +287,7 @@ async function runLighthouseAudit(page: any, url: string) {
 			issues,
 			score: Math.max(0, 100 - issues.length * 5),
 		};
-	});
+	})) as CheckResult;
 
 	return {
 		metrics: vitals,
@@ -343,17 +382,20 @@ async function main() {
 		results: results.sort((a, b) => b.below95.length - a.below95.length),
 	};
 
-	writeFileSync(join(OUT_DIR, "summary.json"), JSON.stringify(summary, null, 2));
+	writeFileSync(
+		join(OUT_DIR, "summary.json"),
+		JSON.stringify(summary, null, 2),
+	);
 
 	// Console output
-	console.log("\n" + "=".repeat(60));
+	console.log(`\n${"=".repeat(60)}`);
 	console.log("LIGHTHOUSE AUDIT SUMMARY (Playwright)");
 	console.log("=".repeat(60));
 	console.log(`Total pages audited: ${PAGES.length}`);
 	console.log(`Successfully audited: ${successCount}`);
 	console.log(`Errors: ${errorCount}`);
 	console.log(`Pages below 95%: ${failedPages}`);
-	console.log("=".repeat(60) + "\n");
+	console.log(`${"=".repeat(60)}\n`);
 
 	if (failedPages > 0) {
 		console.log("PAGES NEEDING IMPROVEMENT:\n");
@@ -361,9 +403,13 @@ async function main() {
 			.filter((r) => r.below95.length > 0)
 			.forEach((r) => {
 				console.log(`🔴 ${r.path}`);
-				console.log(`   Performance: ${r.performance} | Accessibility: ${r.accessibility} | Best Practices: ${r.bestPractices} | SEO: ${r.seo}`);
+				console.log(
+					`   Performance: ${r.performance} | Accessibility: ${r.accessibility} | Best Practices: ${r.bestPractices} | SEO: ${r.seo}`,
+				);
 				if (r.metrics) {
-					console.log(`   Metrics: LCP=${r.metrics.lcp}ms CLS=${r.metrics.cls} FID=${r.metrics.fid}ms`);
+					console.log(
+						`   Metrics: LCP=${r.metrics.lcp}ms CLS=${r.metrics.cls} FID=${r.metrics.fid}ms`,
+					);
 				}
 				console.log("");
 			});

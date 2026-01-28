@@ -1,9 +1,9 @@
 import "./app.css";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
+import { Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
 import Script from "next/script";
 import type { ReactNode } from "react";
-import { Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
@@ -39,7 +39,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
 		<html lang="ja" suppressHydrationWarning>
 			<head />
-			<body className={`${notoSansJP.variable} ${shipporiAntiqueB1.variable} bg-base text-main font-sans`}>
+			<body
+				className={`${notoSansJP.variable} ${shipporiAntiqueB1.variable} bg-base text-main font-sans`}
+			>
 				<ProductionInitializer>
 					<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
 					<AnalyticsProvider gaId={process.env.NEXT_PUBLIC_GA_ID}>

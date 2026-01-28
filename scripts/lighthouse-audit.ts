@@ -4,10 +4,10 @@
  * Run Lighthouse audits on all public pages of the site.
  */
 
-import lighthouse from "lighthouse";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import * as chromeLauncher from "chrome-launcher";
-import { writeFileSync, mkdirSync } from "fs";
-import { join } from "path";
+import lighthouse from "lighthouse";
 
 const BASE_URL = "https://yusuke-kim.com";
 
@@ -78,9 +78,18 @@ interface LighthouseResult {
 	scoreBelow95: string[];
 }
 
-const chromeFlags = ["--headless", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage"];
+interface LighthouseCategory {
+	categories: Record<string, { score: number | null }>;
+}
 
-async function runLighthouse(url: string): Promise<any> {
+const chromeFlags = [
+	"--headless",
+	"--disable-gpu",
+	"--no-sandbox",
+	"--disable-dev-shm-usage",
+];
+
+async function runLighthouse(url: string): Promise<LighthouseCategory> {
 	const chrome = await chromeLauncher.launch({ chromeFlags });
 	const options = {
 		logLevel: "error" as const,
@@ -91,14 +100,19 @@ async function runLighthouse(url: string): Promise<any> {
 	const runnerResult = await lighthouse(url, options);
 	await chrome.kill();
 
-	return runnerResult.lhr;
+	// @ts-expect-error - lighthouse result has complex types
+	return runnerResult?.lhr;
 }
 
 function sanitizePath(path: string): string {
-	return path.replace(/[^a-z0-9-]/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+	return path
+		.replace(/[^a-z0-9-]/gi, "-")
+		.replace(/-+/g, "-")
+		.replace(/^-|-$/g, "");
 }
 
-function isScoreBelow95(category: any): boolean {
+// @ts-expect-error - unused utility function
+function _isScoreBelow95(category: LighthouseCategory): boolean {
 	return category.score < 0.95;
 }
 
@@ -113,9 +127,12 @@ async function auditPage(url: string, path: string): Promise<LighthouseResult> {
 	const seo = lhr.categories.seo.score * 100;
 
 	const scoreBelow95: string[] = [];
-	if (performance < 95) scoreBelow95.push(`Performance: ${performance.toFixed(0)}`);
-	if (accessibility < 95) scoreBelow95.push(`Accessibility: ${accessibility.toFixed(0)}`);
-	if (bestPractices < 95) scoreBelow95.push(`Best Practices: ${bestPractices.toFixed(0)}`);
+	if (performance < 95)
+		scoreBelow95.push(`Performance: ${performance.toFixed(0)}`);
+	if (accessibility < 95)
+		scoreBelow95.push(`Accessibility: ${accessibility.toFixed(0)}`);
+	if (bestPractices < 95)
+		scoreBelow95.push(`Best Practices: ${bestPractices.toFixed(0)}`);
 	if (seo < 95) scoreBelow95.push(`SEO: ${seo.toFixed(0)}`);
 
 	return {
@@ -151,7 +168,10 @@ async function main() {
 
 			// Save individual report
 			const lhr = await runLighthouse(url);
-			writeFileSync(join(outDir, `${sanitizedName}.report.json`), JSON.stringify(lhr, null, 2));
+			writeFileSync(
+				join(outDir, `${sanitizedName}.report.json`),
+				JSON.stringify(lhr, null, 2),
+			);
 
 			if (result.scoreBelow95.length > 0) {
 				failedPages++;
@@ -182,12 +202,12 @@ async function main() {
 	writeFileSync(join(outDir, "summary.json"), JSON.stringify(summary, null, 2));
 
 	// Console output
-	console.log("\n" + "=".repeat(60));
+	console.log(`\n${"=".repeat(60)}`);
 	console.log("LIGHTHOUSE AUDIT SUMMARY");
 	console.log("=".repeat(60));
 	console.log(`Total pages audited: ${PAGES.length}`);
 	console.log(`Pages below 95%: ${failedPages}`);
-	console.log("=".repeat(60) + "\n");
+	console.log(`${"=".repeat(60)}\n`);
 
 	if (failedPages > 0) {
 		console.log("PAGES NEEDING IMPROVEMENT:\n");
@@ -195,7 +215,7 @@ async function main() {
 			.filter((r) => r.scoreBelow95.length > 0)
 			.forEach((r) => {
 				console.log(`🔴 ${r.path}`);
-				r.scoreBelow95.forEach((s) => console.log(`   - ${s}`));
+				r.scoreBelow95.forEach((s) => void console.log(`   - ${s}`));
 				console.log("");
 			});
 	} else {

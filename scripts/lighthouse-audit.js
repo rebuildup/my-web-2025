@@ -3,9 +3,9 @@
  * Run Lighthouse audits on all public pages
  */
 
-const { execSync } = require("child_process");
-const { writeFileSync, mkdirSync, readFileSync, existsSync } = require("fs");
-const { join } = require("path");
+const { execSync } = require("node:child_process");
+const { writeFileSync, mkdirSync } = require("node:fs");
+const { join } = require("node:path");
 
 const BASE_URL = "https://yusuke-kim.com";
 const OUT_DIR = join(__dirname, "..", "lighthouse-results");
@@ -77,11 +77,14 @@ let successCount = 0;
 let errorCount = 0;
 
 function sanitizePath(path) {
-	return path.replace(/[^a-z0-9-]/gi, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+	return path
+		.replace(/[^a-z0-9-]/gi, "-")
+		.replace(/-+/g, "-")
+		.replace(/^-|-$/g, "");
 }
 
 function runLighthouse(url) {
-	const tmpFile = join(OUT_DIR, `tmp-${Date.now()}.json`);
+	const _tmpFile = join(OUT_DIR, `tmp-${Date.now()}.json`);
 
 	try {
 		// Run lighthouse and output to file
@@ -168,17 +171,20 @@ async function auditPage(page, index) {
 		results: results.sort((a, b) => b.below95.length - a.below95.length),
 	};
 
-	writeFileSync(join(OUT_DIR, "summary.json"), JSON.stringify(summary, null, 2));
+	writeFileSync(
+		join(OUT_DIR, "summary.json"),
+		JSON.stringify(summary, null, 2),
+	);
 
 	// Console output
-	console.log("\n" + "=".repeat(60));
+	console.log(`\n${"=".repeat(60)}`);
 	console.log("LIGHTHOUSE AUDIT SUMMARY");
 	console.log("=".repeat(60));
 	console.log(`Total pages audited: ${PAGES.length}`);
 	console.log(`Successfully audited: ${successCount}`);
 	console.log(`Errors: ${errorCount}`);
 	console.log(`Pages below 95%: ${failedPages}`);
-	console.log("=".repeat(60) + "\n");
+	console.log(`${"=".repeat(60)}\n`);
 
 	if (failedPages > 0) {
 		console.log("PAGES NEEDING IMPROVEMENT:\n");
@@ -186,7 +192,9 @@ async function auditPage(page, index) {
 			.filter((r) => r.below95.length > 0)
 			.forEach((r) => {
 				console.log(`🔴 ${r.path}`);
-				console.log(`   Performance: ${r.performance} | Accessibility: ${r.accessibility} | Best Practices: ${r.bestPractices} | SEO: ${r.seo}\n`);
+				console.log(
+					`   Performance: ${r.performance} | Accessibility: ${r.accessibility} | Best Practices: ${r.bestPractices} | SEO: ${r.seo}\n`,
+				);
 			});
 	}
 
