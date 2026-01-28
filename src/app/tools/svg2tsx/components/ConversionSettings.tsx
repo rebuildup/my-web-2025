@@ -61,13 +61,14 @@ export function ConversionSettingsPanel({
 						<label className="flex items-center gap-2 text-sm">
 							<input
 								type="checkbox"
+								id="include-comments"
 								checked={settings.includeComments}
 								onChange={(e) =>
 									updateSetting("includeComments", e.target.checked)
 								}
 								className="w-4 h-4"
 							/>
-							コメントを追加
+							<span>コメントを追加</span>
 						</label>
 					</div>
 				</div>
@@ -80,49 +81,53 @@ export function ConversionSettingsPanel({
 						<label className="flex items-center gap-2 text-sm">
 							<input
 								type="checkbox"
+								id="remove-attributes"
 								checked={settings.removeUnnecessaryAttributes}
 								onChange={(e) =>
 									updateSetting("removeUnnecessaryAttributes", e.target.checked)
 								}
 								className="w-4 h-4"
 							/>
-							不要属性を削除
+							<span>不要属性を削除</span>
 						</label>
 
 						<label className="flex items-center gap-2 text-sm">
 							<input
 								type="checkbox"
+								id="optimize-paths"
 								checked={settings.optimizePaths}
 								onChange={(e) =>
 									updateSetting("optimizePaths", e.target.checked)
 								}
 								className="w-4 h-4"
 							/>
-							パスを最適化
+							<span>パスを最適化</span>
 						</label>
 
 						<label className="flex items-center gap-2 text-sm">
 							<input
 								type="checkbox"
+								id="variableize-colors"
 								checked={settings.variableizeColors}
 								onChange={(e) =>
 									updateSetting("variableizeColors", e.target.checked)
 								}
 								className="w-4 h-4"
 							/>
-							色を変数化
+							<span>色を変数化</span>
 						</label>
 
 						<label className="flex items-center gap-2 text-sm">
 							<input
 								type="checkbox"
+								id="variableize-sizes"
 								checked={settings.variableizeSizes}
 								onChange={(e) =>
 									updateSetting("variableizeSizes", e.target.checked)
 								}
 								className="w-4 h-4"
 							/>
-							サイズを変数化
+							<span>サイズを変数化</span>
 						</label>
 					</div>
 				</div>

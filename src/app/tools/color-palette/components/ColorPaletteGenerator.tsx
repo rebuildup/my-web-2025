@@ -757,42 +757,48 @@ export default function ColorPaletteGenerator() {
 										Hue Range (色相): {hueRange.min}° - {hueRange.max}°
 									</label>
 									<div className="space-y-2">
-										<input
-											type="range"
-											min="0"
-											max="360"
-											value={hueRange.min}
-											onChange={(e) =>
-												setSettings((prev) => ({
-													...prev,
-													hueRange: {
-														...prev.hueRange,
-														min: parseInt(e.target.value, 10),
-													},
-												}))
-											}
-											className="w-full"
-											aria-label="Minimum hue value"
-											data-testid="hue-min"
-										/>
-										<input
-											type="range"
-											min="0"
-											max="360"
-											value={hueRange.max}
-											onChange={(e) =>
-												setSettings((prev) => ({
-													...prev,
-													hueRange: {
-														...prev.hueRange,
-														max: parseInt(e.target.value, 10),
-													},
-												}))
-											}
-											className="w-full"
-											aria-label="Maximum hue value"
-											data-testid="hue-max"
-										/>
+										<label className="block">
+											<span className="text-xs text-main/70">最小値</span>
+											<input
+												type="range"
+												min="0"
+												max="360"
+												value={hueRange.min}
+												onChange={(e) =>
+													setSettings((prev) => ({
+														...prev,
+														hueRange: {
+															...prev.hueRange,
+															min: parseInt(e.target.value, 10),
+														},
+													}))
+												}
+												className="w-full"
+												id="hue-min"
+												data-testid="hue-min"
+											/>
+										</label>
+										<label className="block">
+											<span className="text-xs text-main/70">最大値</span>
+											<input
+												type="range"
+												min="0"
+												max="360"
+												value={hueRange.max}
+												onChange={(e) =>
+													setSettings((prev) => ({
+														...prev,
+														hueRange: {
+															...prev.hueRange,
+															max: parseInt(e.target.value, 10),
+														},
+													}))
+												}
+												className="w-full"
+												id="hue-max"
+												data-testid="hue-max"
+											/>
+										</label>
 									</div>
 								</div>
 
@@ -803,42 +809,48 @@ export default function ColorPaletteGenerator() {
 										{saturationRange.max}%
 									</label>
 									<div className="space-y-2">
-										<input
-											type="range"
-											min="0"
-											max="100"
-											value={saturationRange.min}
-											onChange={(e) =>
-												setSettings((prev) => ({
-													...prev,
-													saturationRange: {
-														...prev.saturationRange,
-														min: parseInt(e.target.value, 10),
-													},
-												}))
-											}
-											className="w-full"
-											aria-label="Minimum saturation value"
-											data-testid="saturation-min"
-										/>
-										<input
-											type="range"
-											min="0"
-											max="100"
-											value={saturationRange.max}
-											onChange={(e) =>
-												setSettings((prev) => ({
-													...prev,
-													saturationRange: {
-														...prev.saturationRange,
-														max: parseInt(e.target.value, 10),
-													},
-												}))
-											}
-											className="w-full"
-											aria-label="Maximum saturation value"
-											data-testid="saturation-max"
-										/>
+										<label className="block">
+											<span className="text-xs text-main/70">最小値</span>
+											<input
+												type="range"
+												min="0"
+												max="100"
+												value={saturationRange.min}
+												onChange={(e) =>
+													setSettings((prev) => ({
+														...prev,
+														saturationRange: {
+															...prev.saturationRange,
+															min: parseInt(e.target.value, 10),
+														},
+													}))
+												}
+												className="w-full"
+												id="saturation-min"
+												data-testid="saturation-min"
+											/>
+										</label>
+										<label className="block">
+											<span className="text-xs text-main/70">最大値</span>
+											<input
+												type="range"
+												min="0"
+												max="100"
+												value={saturationRange.max}
+												onChange={(e) =>
+													setSettings((prev) => ({
+														...prev,
+														saturationRange: {
+															...prev.saturationRange,
+															max: parseInt(e.target.value, 10),
+														},
+													}))
+												}
+												className="w-full"
+												id="saturation-max"
+												data-testid="saturation-max"
+											/>
+										</label>
 									</div>
 								</div>
 
@@ -848,40 +860,46 @@ export default function ColorPaletteGenerator() {
 										Value Range (明度): {valueRange.min}% - {valueRange.max}%
 									</label>
 									<div className="space-y-2">
-										<input
-											type="range"
-											min="0"
-											max="100"
-											value={valueRange.min}
-											onChange={(e) =>
-												setSettings((prev) => ({
-													...prev,
-													valueRange: {
-														...prev.valueRange,
-														min: parseInt(e.target.value, 10),
-													},
-												}))
-											}
-											className="w-full"
-											aria-label="Minimum value/brightness"
-										/>
-										<input
-											type="range"
-											min="0"
-											max="100"
-											value={valueRange.max}
-											onChange={(e) =>
-												setSettings((prev) => ({
-													...prev,
-													valueRange: {
-														...prev.valueRange,
-														max: parseInt(e.target.value, 10),
-													},
-												}))
-											}
-											className="w-full"
-											aria-label="Maximum value/brightness"
-										/>
+										<label className="block">
+											<span className="text-xs text-main/70">最小値</span>
+											<input
+												type="range"
+												min="0"
+												max="100"
+												value={valueRange.min}
+												onChange={(e) =>
+													setSettings((prev) => ({
+														...prev,
+														valueRange: {
+															...prev.valueRange,
+															min: parseInt(e.target.value, 10),
+														},
+													}))
+												}
+												className="w-full"
+												id="value-min"
+											/>
+										</label>
+										<label className="block">
+											<span className="text-xs text-main/70">最大値</span>
+											<input
+												type="range"
+												min="0"
+												max="100"
+												value={valueRange.max}
+												onChange={(e) =>
+													setSettings((prev) => ({
+														...prev,
+														valueRange: {
+															...prev.valueRange,
+															max: parseInt(e.target.value, 10),
+														},
+													}))
+												}
+												className="w-full"
+												id="value-max"
+											/>
+										</label>
 									</div>
 								</div>
 							</div>
@@ -889,10 +907,11 @@ export default function ColorPaletteGenerator() {
 							{/* Additional Settings */}
 							<div className="grid-system grid-1 sm:grid-3 gap-4">
 								<div className="space-y-2">
-									<label className="neue-haas-grotesk-display text-sm text-main">
+									<label htmlFor="color-count" className="neue-haas-grotesk-display text-sm text-main">
 										Number of Colors: {colorCount}
 									</label>
 									<input
+										id="color-count"
 										type="range"
 										min="1"
 										max="20"
@@ -904,7 +923,6 @@ export default function ColorPaletteGenerator() {
 											}))
 										}
 										className="w-full"
-										aria-label="Number of colors to generate"
 									/>
 								</div>
 

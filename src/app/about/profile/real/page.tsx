@@ -353,9 +353,9 @@ export default function RealProfilePage() {
 											key={index}
 											className="bg-main/5 p-4 rounded-lg hover:bg-main/10 transition-colors flex flex-col"
 										>
-											<h4 className="zen-kaku-gothic-new text-base text-main mb-2">
+											<h3 className="zen-kaku-gothic-new text-base text-main mb-2">
 												{activity.ja}
-											</h4>
+											</h3>
 											<p className="noto-sans-jp-light text-xs text-main/60 leading-relaxed grow">
 												{activity.en}
 											</p>

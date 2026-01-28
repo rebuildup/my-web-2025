@@ -333,17 +333,17 @@ function renderHtml(docs: Doc[], styleSettings: StyleSettings) {
 	const sheets = docs
 		.map((doc, i) => {
 			const inner = [
-				`<h1 class="sheet-title">${doc.title}</h1>`,
+				`<h2 class="sheet-title">${doc.title}</h2>`,
 				...doc.blocks.flatMap((b) => {
 					const arr: string[] = [];
-					if (b.header) arr.push(`<h2 class="main-header">${b.header}</h2>`);
+					if (b.header) arr.push(`<h3 class="main-header">${b.header}</h3>`);
 					arr.push(
 						...b.sections.map((sec) => {
 							const paras = sec.paragraphs
 								.map((p) => `<p>${paragraphToHtml(p)}</p>`)
 								.join("\n");
 							return `<div class="quiz-section">
-  <h3>${sec.title}</h3>
+  <h4>${sec.title}</h4>
   ${paras}
   <div class="section-controls">
     <button class="btn-mini btn-check" onclick="checkSection(this)">このセクションを採点</button>
@@ -469,7 +469,7 @@ export function GeneratedQuiz({ title = "${docs[0]?.title ?? "Quiz"}" }) {
 						const blocks = doc.blocks
 							.map((b) => {
 								const header = b.header
-									? `<h2 className=\\"main-header\\">${b.header}</h2>`
+									? `<h3 className=\\"main-header\\">${b.header}</h3>`
 									: "";
 								const sections = b.sections
 									.map((sec) => {
@@ -477,7 +477,7 @@ export function GeneratedQuiz({ title = "${docs[0]?.title ?? "Quiz"}" }) {
 											.map((p) => `<p>${paragraphToHtml(p)}</p>`)
 											.join("\\n");
 										return `<div className=\\"quiz-section\\">
-  <h3>${sec.title}</h3>
+  <h4>${sec.title}</h4>
   ${paras}
   <div className=\\"section-controls\\">
     <button className=\\"btn-mini btn-check\\" onClick={(e)=>checkSection(e.currentTarget)}>このセクションを採点</button>
@@ -491,7 +491,7 @@ export function GeneratedQuiz({ title = "${docs[0]?.title ?? "Quiz"}" }) {
 							})
 							.join("\\n");
 						return `<div className=\\"sheet\\" style=\\"display:${idx === 0 ? "block" : "none"}\\">
-  <h1 className=\\"sheet-title\\">${idx === 0 ? "{title}" : doc.title}</h1>
+  <h2 className=\\"sheet-title\\">${idx === 0 ? "{title}" : doc.title}</h2>
   ${blocks}
 </div>`;
 					})
@@ -1270,15 +1270,15 @@ export default function FillGenPage() {
 											style={{ display: idx === activePage ? "block" : "none" }}
 											ref={idx === activePage ? containerRef : undefined}
 										>
-											<h1 className="sheet-title">{doc.title}</h1>
+											<h2 className="sheet-title">{doc.title}</h2>
 											{doc.blocks.map((block, i) => (
 												<div key={i}>
 													{block.header && (
-														<h2 className="main-header">{block.header}</h2>
+														<h3 className="main-header">{block.header}</h3>
 													)}
 													{block.sections.map((sec, j) => (
 														<div key={j} className="quiz-section">
-															<h3>{sec.title}</h3>
+															<h4>{sec.title}</h4>
 															{sec.paragraphs.map((p, k) => (
 																<p
 																	key={k}
@@ -1388,8 +1388,11 @@ export default function FillGenPage() {
 													>
 														<Box>
 															<Stack spacing={1}>
-																<Typography variant="body2">背景色</Typography>
+																<label htmlFor="bg-color-picker" className="block">
+																	<Typography variant="body2">背景色</Typography>
+																</label>
 																<input
+																	id="bg-color-picker"
 																	type="color"
 																	value={settings.colors.bgColor}
 																	onChange={(e) =>
@@ -1407,16 +1410,18 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
-																	aria-label="背景色"
 																/>
 															</Stack>
 														</Box>
 														<Box>
 															<Stack spacing={1}>
-																<Typography variant="body2">
-																	テキスト色
-																</Typography>
+																<label htmlFor="text-color-picker" className="block">
+																	<Typography variant="body2">
+																		テキスト色
+																	</Typography>
+																</label>
 																<input
+																	id="text-color-picker"
 																	type="color"
 																	value={settings.colors.textColor}
 																	onChange={(e) =>
@@ -1434,16 +1439,18 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
-																	aria-label="テキスト色"
 																/>
 															</Stack>
 														</Box>
 														<Box>
 															<Stack spacing={1}>
-																<Typography variant="body2">
-																	アクセント色
-																</Typography>
+																<label htmlFor="accent-color-picker" className="block">
+																	<Typography variant="body2">
+																		アクセント色
+																	</Typography>
+																</label>
 																<input
+																	id="accent-color-picker"
 																	type="color"
 																	value={settings.colors.accentColor}
 																	onChange={(e) =>
@@ -1461,14 +1468,16 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
-																	aria-label="アクセント色"
 																/>
 															</Stack>
 														</Box>
 														<Box>
 															<Stack spacing={1}>
-																<Typography variant="body2">正解色</Typography>
+																<label htmlFor="correct-color-picker" className="block">
+																	<Typography variant="body2">正解色</Typography>
+																</label>
 																<input
+																	id="correct-color-picker"
 																	type="color"
 																	value={settings.colors.correctColor}
 																	onChange={(e) =>
@@ -1486,16 +1495,18 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
-																	aria-label="正解色"
 																/>
 															</Stack>
 														</Box>
 														<Box>
 															<Stack spacing={1}>
-																<Typography variant="body2">
-																	不正解色
-																</Typography>
+																<label htmlFor="incorrect-color-picker" className="block">
+																	<Typography variant="body2">
+																		不正解色
+																	</Typography>
+																</label>
 																<input
+																	id="incorrect-color-picker"
 																	type="color"
 																	value={settings.colors.incorrectColor}
 																	onChange={(e) =>
@@ -1513,16 +1524,18 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
-																	aria-label="不正解色"
 																/>
 															</Stack>
 														</Box>
 														<Box>
 															<Stack spacing={1}>
-																<Typography variant="body2">
-																	ブロック背景色
-																</Typography>
+																<label htmlFor="block-bg-color-picker" className="block">
+																	<Typography variant="body2">
+																		ブロック背景色
+																	</Typography>
+																</label>
 																<input
+																	id="block-bg-color-picker"
 																	type="color"
 																	value={settings.colors.blockBg}
 																	onChange={(e) =>
@@ -1540,7 +1553,6 @@ export default function FillGenPage() {
 																		border: "1px solid #ddd",
 																		borderRadius: 4,
 																	}}
-																	aria-label="ブロック背景色"
 																/>
 															</Stack>
 														</Box>
