@@ -196,7 +196,11 @@ export default function HandleProfilePage() {
 					</div>
 				)}
 
-				<main className="relative z-10 min-h-screen pt-8 pb-16 px-4">
+				<main
+					id="main-content"
+					className="relative z-10 min-h-screen pt-8 pb-16 px-4"
+					tabIndex={-1}
+				>
 					<div className="container mx-auto max-w-5xl">
 						{/* Breadcrumbs */}
 						<Breadcrumbs

@@ -6,18 +6,16 @@
     "tbt": 0,
     "domContentLoaded": 0,
     "loadComplete": 0,
-    "resourceCount": 35
+    "resourceCount": 77
   },
   "scores": {
     "performance": 67,
-    "accessibility": 95,
+    "accessibility": 100,
     "bestPractices": 100,
     "seo": 95
   },
   "issues": {
-    "accessibility": [
-      "426 inputs without labels"
-    ],
+    "accessibility": [],
     "seo": [
       "Multiple h1 tags"
     ]

@@ -5,8 +5,8 @@
     "fid": 0,
     "tbt": 0,
     "domContentLoaded": 0,
-    "loadComplete": 1,
-    "resourceCount": 62
+    "loadComplete": 0,
+    "resourceCount": 64
   },
   "scores": {
     "performance": 67,

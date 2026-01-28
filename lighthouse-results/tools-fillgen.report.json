@@ -6,7 +6,7 @@
     "tbt": 0,
     "domContentLoaded": 0,
     "loadComplete": 0,
-    "resourceCount": 41
+    "resourceCount": 59
   },
   "scores": {
     "performance": 67,
@@ -16,7 +16,7 @@
   },
   "issues": {
     "accessibility": [
-      "23 inputs without labels",
+      "6 inputs without labels",
       "2 heading hierarchy issues"
     ],
     "seo": []

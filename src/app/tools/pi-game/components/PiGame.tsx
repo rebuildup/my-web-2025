@@ -163,6 +163,7 @@ export default function PiGame() {
 						type="button"
 						onClick={() => handleInput("7")}
 						className={KEY_BASE_STYLE}
+						aria-label="7"
 					>
 						7
 					</button>
@@ -170,6 +171,7 @@ export default function PiGame() {
 						type="button"
 						onClick={() => handleInput("8")}
 						className={KEY_BASE_STYLE}
+						aria-label="8"
 					>
 						8
 					</button>
@@ -177,6 +179,7 @@ export default function PiGame() {
 						type="button"
 						onClick={() => handleInput("9")}
 						className={KEY_BASE_STYLE}
+						aria-label="9"
 					>
 						9
 					</button>
@@ -186,6 +189,7 @@ export default function PiGame() {
 						type="button"
 						onClick={() => handleInput("4")}
 						className={KEY_BASE_STYLE}
+						aria-label="4"
 					>
 						4
 					</button>
@@ -193,6 +197,7 @@ export default function PiGame() {
 						type="button"
 						onClick={() => handleInput("5")}
 						className={KEY_BASE_STYLE}
+						aria-label="5"
 					>
 						5
 					</button>
@@ -200,6 +205,7 @@ export default function PiGame() {
 						type="button"
 						onClick={() => handleInput("6")}
 						className={KEY_BASE_STYLE}
+						aria-label="6"
 					>
 						6
 					</button>
@@ -209,6 +215,7 @@ export default function PiGame() {
 						type="button"
 						onClick={() => handleInput("1")}
 						className={KEY_BASE_STYLE}
+						aria-label="1"
 					>
 						1
 					</button>
@@ -216,6 +223,7 @@ export default function PiGame() {
 						type="button"
 						onClick={() => handleInput("2")}
 						className={KEY_BASE_STYLE}
+						aria-label="2"
 					>
 						2
 					</button>
@@ -227,6 +235,7 @@ export default function PiGame() {
 								? "bg-main/30 text-main hover:bg-main/40 hover:text-main active:bg-main/50 active:text-main"
 								: "bg-base/75 hover:bg-main/20 hover:text-main active:bg-main/30 active:text-main"
 						}`}
+						aria-label="3"
 					>
 						3
 					</button>
@@ -236,6 +245,7 @@ export default function PiGame() {
 						type="button"
 						onClick={() => handleInput("0")}
 						className={KEY_ZERO_STYLE}
+						aria-label="0"
 					>
 						0
 					</button>
@@ -243,6 +253,7 @@ export default function PiGame() {
 						type="button"
 						onClick={() => handleInput(".")}
 						className={KEY_BASE_STYLE}
+						aria-label="小数点"
 					>
 						.
 					</button>

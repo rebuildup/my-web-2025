@@ -1177,6 +1177,10 @@ rtt min/avg/max/mdev = 0.098/0.109/0.123/0.012 ms`;
 			aria-labelledby="cookie-consent-title"
 			aria-describedby="cookie-consent-description"
 		>
+			{/* Visually hidden title for accessibility */}
+			<h2 id="cookie-consent-title" className="sr-only">
+				クッキー同意
+			</h2>
 			<div className="max-w-4xl mx-auto p-4 sm:p-6">
 				<div className="relative rounded-lg overflow-hidden bg-[#1e1e1e]/95 backdrop-blur-md shadow-2xl border border-white/10">
 					{/* Last Output Area */}

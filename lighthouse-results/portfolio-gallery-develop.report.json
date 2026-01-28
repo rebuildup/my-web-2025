@@ -6,18 +6,16 @@
     "tbt": 0,
     "domContentLoaded": 0,
     "loadComplete": 0,
-    "resourceCount": 65
+    "resourceCount": 88
   },
   "scores": {
     "performance": 67,
-    "accessibility": 95,
+    "accessibility": 100,
     "bestPractices": 100,
     "seo": 100
   },
   "issues": {
-    "accessibility": [
-      "1 heading hierarchy issues"
-    ],
+    "accessibility": [],
     "seo": []
   }
 }

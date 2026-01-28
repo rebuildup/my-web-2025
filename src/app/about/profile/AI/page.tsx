@@ -218,7 +218,11 @@ export default function AIProfilePage() {
 			</script>
 
 			<div className="min-h-screen bg-base text-main">
-				<main className="flex items-center py-10">
+				<main
+					id="main-content"
+					className="flex items-center py-10"
+					tabIndex={-1}
+				>
 					<div className="container-system">
 						<div className="space-y-10">
 							{/* Breadcrumbs */}

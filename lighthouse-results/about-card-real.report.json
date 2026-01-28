@@ -6,18 +6,16 @@
     "tbt": 0,
     "domContentLoaded": 0,
     "loadComplete": 0,
-    "resourceCount": 30
+    "resourceCount": 32
   },
   "scores": {
     "performance": 67,
     "accessibility": 100,
     "bestPractices": 100,
-    "seo": 95
+    "seo": 100
   },
   "issues": {
     "accessibility": [],
-    "seo": [
-      "Missing h1 tag"
-    ]
+    "seo": []
   }
 }

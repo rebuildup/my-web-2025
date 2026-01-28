@@ -179,8 +179,8 @@ const nextConfig: NextConfig = {
 				sideEffects: ["node_modules/gsap/**", "node_modules/@gsap/**"],
 				splitChunks: {
 					chunks: "all",
-					minSize: 20000,
-					maxSize: 200000, // Reduced from 244000 for better loading
+					minSize: 10000,
+					maxSize: 150000, // Reduced from 200000 for better parallel loading
 					cacheGroups: {
 						default: {
 							minChunks: 2,
@@ -192,7 +192,7 @@ const nextConfig: NextConfig = {
 							name: "vendors",
 							chunks: "all",
 							priority: 10,
-							maxSize: 200000,
+							maxSize: 150000,
 						},
 						three: {
 							test: /[\\/]node_modules[\\/](three|@types\/three)[\\/]/,
@@ -214,28 +214,28 @@ const nextConfig: NextConfig = {
 							name: "ui",
 							chunks: "all",
 							priority: 15,
-							maxSize: 100000,
+							maxSize: 70000,
 						},
 						react: {
 							test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
 							name: "react",
 							chunks: "all",
 							priority: 25,
-							maxSize: 150000,
+							maxSize: 100000,
 						},
 						utils: {
 							test: /[\\/]node_modules[\\/](fuse\.js|marked|dompurify)[\\/]/,
 							name: "utils",
 							chunks: "all",
 							priority: 15,
-							maxSize: 100000,
+							maxSize: 70000,
 						},
 						gsap: {
 							test: /[\\/]node_modules[\\/](gsap|@gsap)[\\/]/,
 							name: "gsap",
 							chunks: "all",
 							priority: 22,
-							maxSize: 150000,
+							maxSize: 100000,
 							enforce: true,
 							// Ensure GSAP plugins are not tree-shaken
 							// Force inclusion of all GSAP exports
@@ -246,14 +246,14 @@ const nextConfig: NextConfig = {
 							name: "tools",
 							chunks: "all",
 							priority: 30,
-							maxSize: 300000,
+							maxSize: 150000,
 						},
 						admin: {
 							test: /[\\/]src[\\/]app[\\/]admin[\\/]/,
 							name: "admin",
 							chunks: "all",
 							priority: 30,
-							maxSize: 100000,
+							maxSize: 70000,
 						},
 					},
 				},
