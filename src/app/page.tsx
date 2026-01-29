@@ -11,7 +11,7 @@ const navItems = [
 
 export default function Home() {
 	return (
-		<div className="h-screen overflow-hidden relative bg-[#020202]">
+		<div className="h-screen overflow-hidden relative">
 			<UnifiedFloatingCards />
 
 			<main
