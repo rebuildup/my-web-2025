@@ -15,9 +15,6 @@ export async function GET(request: NextRequest) {
 
 		// Filter for published portfolio items
 		const filtered = rows
-
-		// Filter for published portfolio items
-		const filtered = rows
 			.filter((r: any) => r.status === "published")
 			.filter(
 				(r: any) =>
