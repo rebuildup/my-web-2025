@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getContentDb } from "@/cms/lib/content-db-manager";
 import { findMarkdownPage } from "@/cms/server/markdown-service";
-import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { getContentById } from "@/lib/data";
 import type { ContentItem, MarkdownContentItem } from "@/types/content";
 import { isEnhancedContentItem } from "@/types/content";
+import { ArticleSidePanel } from "../../components/ArticleSidePanel";
+import { RelatedArticles } from "../../components/RelatedArticles";
 
 export const runtime = "nodejs";
 export const revalidate = 300;
@@ -22,11 +24,26 @@ interface MarkdownDetail {
 	body?: string;
 }
 
-// Normalize URLs in markdown content (replace localhost:3010 with relative paths)
+// Get tags from database for a content item
+function getTagsFromDb(contentId: string): string[] {
+	try {
+		const db = getContentDb(contentId);
+		try {
+			const rows = db
+				.prepare("SELECT tag FROM content_tags WHERE content_id = ?")
+				.all(contentId) as Array<{ tag: string }>;
+			return rows.map((r) => r.tag);
+		} finally {
+			db.close();
+		}
+	} catch {
+		return [];
+	}
+}
+
+// Normalize URLs in markdown content
 function normalizeMarkdownUrls(content: string): string {
 	if (!content) return content;
-	// Replace http://localhost:3010 and https://localhost:3010 with relative paths
-	// Handle both markdown format and HTML img tags
 	return content
 		.replace(/https?:\/\/localhost:3010(\/api\/cms\/media[^\s"')]*)/g, "$1")
 		.replace(
@@ -35,7 +52,7 @@ function normalizeMarkdownUrls(content: string): string {
 		);
 }
 
-// portfolio/[slug]と同じ方法でマークダウンを読み込む
+// Load markdown detail
 async function loadMarkdownDetail(
 	slug: string,
 ): Promise<MarkdownDetail | null> {
@@ -59,13 +76,13 @@ async function loadMarkdownDetail(
 	}
 }
 
-// Helper function to get markdown file path for client-side rendering
+// Helper function to get markdown file path
 function getMarkdownFilePath(markdownPath: string): string {
 	return `/data/content/markdown/${markdownPath}`;
 }
 
 /**
- * Generate dynamic metadata for blog detail pages
+ * Generate dynamic metadata
  */
 export async function generateMetadata({
 	params,
@@ -89,10 +106,7 @@ export async function generateMetadata({
 			description,
 			robots: "index, follow",
 		};
-	} catch (error) {
-		console.error(`Error generating detail metadata for ${params}:`, error);
-
-		// Fallback metadata
+	} catch (_error) {
 		return {
 			title: "Blog Detail | samuido",
 			description: "Blog article details and information",
@@ -103,7 +117,6 @@ export async function generateMetadata({
 
 /**
  * Content Section Component
- * Handles markdown and fallback content display with robust error handling
  */
 function ContentSection({
 	item,
@@ -112,7 +125,6 @@ function ContentSection({
 	item: ContentItem | null;
 	detail?: MarkdownDetail | null;
 }) {
-	// Check if there's meaningful content to display
 	const hasMarkdownPath =
 		item && isEnhancedContentItem(item) && item.markdownPath;
 	const hasContent = item?.content && item.content.trim().length > 0;
@@ -120,7 +132,6 @@ function ContentSection({
 		item?.description && item.description.trim().length > 0;
 	const hasMarkdownBody = detail?.body && detail.body.trim().length > 0;
 
-	// Always show content section - never return null to avoid blank pages
 	const fallbackContent =
 		item?.content ||
 		item?.description ||
@@ -128,7 +139,7 @@ function ContentSection({
 		"詳細な説明は準備中です.";
 
 	return (
-		<section className="space-y-8 sm:space-y-12">
+		<section className="space-y-8">
 			{hasMarkdownBody ? (
 				<div className="markdown-container">
 					<MarkdownRenderer
@@ -163,7 +174,7 @@ function ContentSection({
 								fallbackContent={fallbackContent}
 								enableSanitization={true}
 								enableValidation={true}
-								showRetryButton={false} // Disable retry button in production
+								showRetryButton={false}
 								showEmptyState={true}
 							/>
 						);
@@ -172,28 +183,25 @@ function ContentSection({
 			) : detail ? (
 				<div className="space-y-3">
 					{detail.title && (
-						<h2 className="zen-kaku-gothic-new text-lg sm:text-xl text-main">
-							{detail.title}
-						</h2>
+						<h2 className="text-lg text-[#f2f2f2]">{detail.title}</h2>
 					)}
 					{detail.summary && (
-						<p className="noto-sans-jp-light text-sm sm:text-base text-main/80 leading-relaxed">
+						<p className="text-sm text-[#aaaaaa] leading-relaxed">
 							{detail.summary}
 						</p>
 					)}
 				</div>
 			) : hasContent ? (
 				<div
-					className="noto-sans-jp-light text-sm sm:text-base leading-loose whitespace-pre-wrap space-y-4 text-main"
+					className="text-sm leading-loose whitespace-pre-wrap space-y-4 text-[#f2f2f2]"
 					dangerouslySetInnerHTML={{ __html: item?.content || "" }}
 				/>
 			) : hasDescription ? (
-				<div className="noto-sans-jp-light text-sm sm:text-base leading-loose space-y-4 text-main">
+				<div className="text-sm leading-loose space-y-4 text-[#f2f2f2]">
 					{item?.description}
 				</div>
 			) : (
-				// Always show something, even if minimal
-				<div className="noto-sans-jp-light text-sm sm:text-base leading-loose space-y-4 text-main/60">
+				<div className="text-sm leading-loose space-y-4 text-[#888888]">
 					{fallbackContent}
 				</div>
 			)}
@@ -209,33 +217,38 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 		notFound();
 	}
 
-	// content_idからコンテンツデータを取得（メディアデータ用）
-	// まず、markdown_pagesテーブルからcontent_idを取得
 	const pageMatch = findMarkdownPage(slug);
 	const contentId = pageMatch?.page.contentId;
 	const content = contentId ? await getContentById("blog", contentId) : null;
 
+	// Get tags for this article
+	const articleTags = contentId ? getTagsFromDb(contentId) : [];
+
 	const title = content?.title || detailFromMarkdown.title || slug;
 
 	return (
-		<div className="relative min-h-screen bg-base text-main">
-			<HomeBackground />
-			<main
-				id="main-content"
-				className="relative z-10 min-h-screen flex items-center py-6 sm:py-10"
-				tabIndex={-1}
-			>
-				<div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-					<div className="space-y-8 sm:space-y-10">
-						<Breadcrumbs
-							items={[
-								{ label: "Home", href: "/" },
-								{ label: "Workshop", href: "/workshop" },
-								{ label: title, isCurrent: true },
-							]}
-							className="pt-4"
-						/>
-						<ContentSection item={content} detail={detailFromMarkdown} />
+		<div className="min-h-screen">
+			<main className="max-w-7xl mx-auto px-4 py-10">
+				<div className="space-y-8">
+					<Breadcrumbs
+						items={[
+							{ label: "Home", href: "/" },
+							{ label: "Workshop", href: "/workshop" },
+							{ label: title, isCurrent: true },
+						]}
+					/>
+
+					{/* Main content with side panel */}
+					<div className="flex gap-8">
+						{/* Article content */}
+						<article className="flex-1 min-w-0">
+							<ContentSection item={content} detail={detailFromMarkdown} />
+							{/* Related articles at the bottom */}
+							<RelatedArticles articleSlug={slug} tags={articleTags} />
+						</article>
+
+						{/* Side panel */}
+						<ArticleSidePanel articleSlug={slug} tags={articleTags} />
 					</div>
 				</div>
 			</main>

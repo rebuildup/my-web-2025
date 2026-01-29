@@ -36,29 +36,51 @@ interface GitHubUser {
 	updated_at: string;
 }
 
+interface GitHubUserStatus {
+	emoji?: string;
+	message?: string;
+	limited_availability?: boolean;
+}
+
 interface PinnedRepo {
 	name: string;
+	full_name?: string;
 	description?: string;
 	language?: string;
 	languageColor?: string;
 	stars: number;
 	forks: number;
 	url: string;
+	topics?: string[];
+	license?: string;
+	openIssues?: number;
+	openPullRequests?: number;
+	size?: number;
+	createdAt?: string;
+	updatedAt?: string;
+	homepage?: string;
 }
 
 interface Repository {
 	name: string;
+	full_name: string;
 	description?: string;
 	language?: string;
 	stargazers_count: number;
 	forks_count: number;
 	updated_at: string;
+	created_at: string;
 	topics?: string[];
 	fork?: boolean;
+	license?: { name: string } | null;
+	open_issues_count: number;
+	size: number;
+	homepage?: string | null;
 }
 
 interface CachedData {
 	user: GitHubUser;
+	status: GitHubUserStatus | null;
 	events: GitHubEvent[];
 	pinnedRepos: PinnedRepo[];
 	topRepos: PinnedRepo[];
@@ -71,9 +93,22 @@ interface CachedData {
 
 const cache = new Map<string, CachedData>();
 
+async function fetchUserStatus(): Promise<GitHubUserStatus | null> {
+	try {
+		const res = await fetch(
+			`https://api.github.com/users/${GITHUB_USERNAME}/status`,
+			{ next: { revalidate: CACHE_DURATION } },
+		);
+		if (!res.ok) return null;
+		const status: GitHubUserStatus = await res.json();
+		return status;
+	} catch {
+		return null;
+	}
+}
+
 async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
-	// GitHub GraphQL API for pinned repos
-	// Fallback: fetch user repos and sort by stars
+	// Fetch user repos and sort by stars
 	const reposRes = await fetch(
 		`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=pushed`,
 		{ next: { revalidate: CACHE_DURATION } },
@@ -83,18 +118,65 @@ async function fetchPinnedRepos(): Promise<PinnedRepo[]> {
 	const repos: Repository[] = await reposRes.json();
 
 	// Get top repos by stars
-	return repos
+	const topRepos = repos
 		.filter((repo) => !repo.fork)
 		.sort((a, b) => b.stargazers_count - a.stargazers_count)
-		.slice(0, 6)
-		.map((repo) => ({
-			name: repo.name,
-			description: repo.description,
-			language: repo.language,
-			stars: repo.stargazers_count,
-			forks: repo.forks_count,
-			url: `https://github.com/${GITHUB_USERNAME}/${repo.name}`,
-		}));
+		.slice(0, 10);
+
+	// Fetch additional details for each repo (PR count)
+	const reposWithDetails = await Promise.all(
+		topRepos.map(async (repo) => {
+			try {
+				// Fetch PR count
+				const prRes = await fetch(
+					`https://api.github.com/repos/${repo.full_name}/pulls?per_page=1&state=open`,
+					{ next: { revalidate: CACHE_DURATION } },
+				);
+				let openPullRequests = 0;
+				if (prRes.ok) {
+					const linkHeader = prRes.headers.get("link");
+					if (linkHeader) {
+						const match = linkHeader.match(/page=(\d+)>; rel="last"/);
+						if (match) {
+							openPullRequests = parseInt(match[1], 10);
+						} else if (prRes.headers.get("x-total-count")) {
+							openPullRequests = parseInt(prRes.headers.get("x-total-count") || "0", 10);
+						}
+					}
+				}
+
+				return {
+					name: repo.name,
+					full_name: repo.full_name,
+					description: repo.description,
+					language: repo.language,
+					stars: repo.stargazers_count,
+					forks: repo.forks_count,
+					url: `https://github.com/${GITHUB_USERNAME}/${repo.name}`,
+					topics: repo.topics,
+					license: repo.license?.name,
+					openIssues: repo.open_issues_count,
+					openPullRequests,
+					size: repo.size,
+					createdAt: repo.created_at,
+					updatedAt: repo.updated_at,
+					homepage: repo.homepage || undefined,
+				};
+			} catch {
+				return {
+					name: repo.name,
+					full_name: repo.full_name,
+					description: repo.description,
+					language: repo.language,
+					stars: repo.stargazers_count,
+					forks: repo.forks_count,
+					url: `https://github.com/${GITHUB_USERNAME}/${repo.name}`,
+				};
+			}
+		}),
+	);
+
+	return reposWithDetails;
 }
 
 async function fetchContributions(): Promise<{
@@ -146,6 +228,9 @@ async function fetchGitHubData() {
 	}
 	const user: GitHubUser = await userRes.json();
 
+	// Fetch user status
+	const status = await fetchUserStatus();
+
 	// Fetch recent events
 	const eventsRes = await fetch(
 		`https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=15`,
@@ -164,6 +249,7 @@ async function fetchGitHubData() {
 
 	const data: CachedData = {
 		user,
+		status,
 		events,
 		pinnedRepos,
 		topRepos: pinnedRepos,
@@ -273,6 +359,7 @@ export async function GET() {
 				updated_at: data.user.updated_at,
 				html_url: `https://github.com/${GITHUB_USERNAME}`,
 			},
+			status: data.status,
 			events: formattedEvents,
 			pinnedRepos: data.pinnedRepos,
 			topRepos: data.topRepos,

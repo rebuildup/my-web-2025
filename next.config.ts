@@ -85,6 +85,11 @@ const nextConfig: NextConfig = {
 				hostname: "**",
 			},
 		],
+		localPatterns: [
+			{
+				pathname: "/api/cms/media/**",
+			},
+		],
 	},
 
 	// Compiler optimizations

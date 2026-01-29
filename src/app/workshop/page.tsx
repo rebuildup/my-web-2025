@@ -1,17 +1,36 @@
+import Image from "next/image";
 import Link from "next/link";
+import { getContentDb } from "@/cms/lib/content-db-manager";
 import { listMarkdownPages } from "@/cms/server/markdown-service";
 import type { MarkdownPage } from "@/cms/types/markdown";
-import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { ArticleCard } from "./components/ArticleCard";
+import { ArticleGrid } from "./components/ArticleGrid";
+import { SearchBar } from "./components/SearchBar";
+import { TagBar } from "./components/TagBar";
+import type { ArticleData } from "./types";
 
 export const revalidate = 300;
 export const runtime = "nodejs";
 
-const CARD_SURFACE =
-	"group relative flex h-full flex-col overflow-hidden rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-0.5";
+// Helper functions
+function getTagsFromDb(contentId: string): string[] {
+	try {
+		const db = getContentDb(contentId);
+		try {
+			const rows = db
+				.prepare("SELECT tag FROM content_tags WHERE content_id = ?")
+				.all(contentId) as Array<{ tag: string }>;
+			return rows.map((r) => r.tag);
+		} finally {
+			db.close();
+		}
+	} catch {
+		return [];
+	}
+}
 
 async function fetchContentFromCMS(id: string) {
-	// ローカル開発環境ではローカルURLを使用
 	const baseUrl =
 		process.env.NODE_ENV === "development"
 			? "http://localhost:3010"
@@ -20,9 +39,6 @@ async function fetchContentFromCMS(id: string) {
 				"https://yusuke-kim.com";
 
 	try {
-		console.log(
-			`[Workshop] Fetching content from CMS API: ${baseUrl}/api/cms/contents?id=${id}`,
-		);
 		const res = await fetch(
 			`${baseUrl}/api/cms/contents?id=${encodeURIComponent(id)}`,
 			{
@@ -31,21 +47,10 @@ async function fetchContentFromCMS(id: string) {
 		);
 
 		if (!res.ok) {
-			console.log(
-				`[Workshop] CMS API response not OK: ${res.status} ${res.statusText}`,
-			);
 			return null;
 		}
 
-		const full = await res.json();
-		console.log(`[Workshop] CMS API response for ${id}:`, {
-			id: full.id,
-			title: full.title,
-			thumbnails: full.thumbnails,
-			frontmatter: full.frontmatter,
-		});
-
-		return full;
+		return await res.json();
 	} catch (error) {
 		console.error(`[Workshop] Error fetching content ${id}:`, error);
 		return null;
@@ -53,35 +58,26 @@ async function fetchContentFromCMS(id: string) {
 }
 
 function extractFirstImageFromMarkdown(markdown: string): string | undefined {
-	// 1. 標準的なMarkdown画像シンタックス: ![alt](url)
-	const markdownImgRegex = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/;
+	const markdownImgRegex = /!\[([^\]]*)\]\(([^\)\s]+)(?:\s+"[^"]*")?\)/;
 	const markdownMatch = markdown.match(markdownImgRegex);
 	if (markdownMatch?.[2]) {
 		return markdownMatch[2];
 	}
 
-	// 2. HTMLのimgタグ: <img src="url" />
 	const htmlImgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/i;
 	const htmlMatch = markdown.match(htmlImgRegex);
 	if (htmlMatch?.[1]) {
 		return htmlMatch[1];
 	}
 
-	// 3. Next.js/Imageコンポーネント: <Image src="url" /> (大文字小文字の両方に対応)
-	const nextImageRegex = /<(?:image|Image)[^>]+src=["']([^"']+)["'][^>]*>/i;
-	const nextImageMatch = markdown.match(nextImageRegex);
-	if (nextImageMatch?.[1]) {
-		return nextImageMatch[1];
-	}
-
 	return undefined;
 }
 
 function formatDate(isoDate: string | undefined) {
-	if (!isoDate) return "公開日未設定";
+	if (!isoDate) return "2025-01-01";
 	const date = new Date(isoDate);
 	return Number.isNaN(date.getTime())
-		? "公開日未設定"
+		? "2025-01-01"
 		: new Intl.DateTimeFormat("ja-JP", {
 				year: "numeric",
 				month: "2-digit",
@@ -99,36 +95,14 @@ function getDisplayDate(page: MarkdownPage) {
 	);
 }
 
-function getPageTags(page: MarkdownPage): string[] {
-	const tags = page.frontmatter?.tags;
-	if (Array.isArray(tags)) {
-		return tags.map((tag) => String(tag));
-	}
-	const fallback = (page.frontmatter as Record<string, unknown> | undefined)
-		?.tags;
-	if (typeof fallback === "string") {
-		return fallback
-			.split(",")
-			.map((tag) => tag.trim())
-			.filter(Boolean);
-	}
-	return [];
-}
-
 async function getThumbnail(
 	page: MarkdownPage,
 	cmsContent: any,
 ): Promise<string | null> {
 	const frontmatter = page.frontmatter ?? {};
 
-	console.log(`[Workshop] Getting thumbnail for page: ${page.slug}`);
-	console.log(`[Workshop] CMS Content:`, cmsContent);
-
-	// 1. CMS APIのサムネイルを使用
 	if (cmsContent?.thumbnails) {
 		const thumbs = cmsContent.thumbnails;
-		console.log(`[Workshop] Thumbnails from CMS:`, thumbs);
-
 		if (thumbs?.image?.src) {
 			return thumbs.image.src;
 		}
@@ -140,7 +114,6 @@ async function getThumbnail(
 		}
 	}
 
-	// 2. Frontmatterのサムネイルを使用
 	const candidates: Array<string | undefined> = [
 		typeof frontmatter.thumbnail === "string"
 			? frontmatter.thumbnail
@@ -157,15 +130,12 @@ async function getThumbnail(
 			: undefined,
 	];
 
-	console.log(`[Workshop] Frontmatter candidates:`, candidates);
-
 	for (const candidate of candidates) {
 		if (typeof candidate === "string" && candidate.trim().length > 0) {
 			return candidate;
 		}
 	}
 
-	// 3. 本文から画像を抽出
 	const firstImage = extractFirstImageFromMarkdown(page.body);
 	if (firstImage) {
 		return firstImage;
@@ -198,30 +168,87 @@ function getPageHref(page: MarkdownPage) {
 	return `/workshop/blog/${target}`;
 }
 
-export default async function WorkshopPage() {
-	console.log("[Workshop] =========================================");
-	console.log("[Workshop] WorkshopPage initialization started");
-	console.log("[Workshop] Current working directory:", process.cwd());
-	console.log("[Workshop] NODE_ENV:", process.env.NODE_ENV);
-	console.log("[Workshop] =========================================");
+function getAllTags(
+	pages: Array<{ tags: string[] }>,
+): Array<{ tag: string; count: number }> {
+	const tagMap = new Map<string, number>();
+	for (const page of pages) {
+		for (const tag of page.tags) {
+			tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
+		}
+	}
+	return Array.from(tagMap.entries())
+		.map(([tag, count]) => ({ tag, count }))
+		.sort((a, b) => b.count - a.count);
+}
 
-	console.log("[Workshop] Loading content from multiple sources...");
+function isNewArticle(page: MarkdownPage): boolean {
+	const date = getDisplayDate(page);
+	if (!date) return false;
+	const articleDate = new Date(date);
+	const weekAgo = new Date();
+	weekAgo.setDate(weekAgo.getDate() - 7);
+	return articleDate > weekAgo;
+}
 
+interface WorkshopPageProps {
+	searchParams: Promise<{
+		q?: string;
+		tag?: string;
+		sort?: string;
+		mode?: string;
+	}>;
+}
+
+export default async function WorkshopPage({
+	searchParams,
+}: WorkshopPageProps) {
+	const params = await searchParams;
+	const keyword = params.q ?? null;
+	const tag = params.tag ?? null;
+	const sort = params.sort ?? "newest";
+	const mode = params.mode ?? "normal";
+
+	// Fetch search results if filtering
+	let filteredSlugs: string[] | null = null;
+	if (keyword || tag || sort !== "newest") {
+		const searchUrl = new URL(
+			`${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3010"}/api/workshop/search`,
+		);
+		if (keyword) searchUrl.searchParams.set("q", keyword);
+		if (tag) searchUrl.searchParams.set("tag", tag);
+		if (sort) searchUrl.searchParams.set("sort", sort);
+		searchUrl.searchParams.set("mode", mode);
+
+		try {
+			const searchRes = await fetch(searchUrl.toString(), {
+				cache: "no-store",
+			});
+			if (searchRes.ok) {
+				const searchData = await searchRes.json();
+				filteredSlugs = searchData.slugs;
+			}
+		} catch (error) {
+			console.error("[Workshop] Search API error:", error);
+		}
+	}
+
+	// Get all markdown pages
 	const markdownPages = await Promise.resolve(listMarkdownPages());
-
-	console.log("[Workshop] Data loading completed");
-	console.log("[Workshop]  - Markdown pages:", markdownPages.length);
-	console.log("[Workshop] -----------------------------------------");
-
-	// 公開済みのコンテンツのみをフィルタリング
 	const publishedContent = markdownPages.filter(
 		(page) => (page.status ?? "draft") === "published",
 	);
 
-	console.log("[Workshop] Published content count:", publishedContent.length);
+	// Filter by search results if available
+	let pagesToDisplay = publishedContent;
+	if (filteredSlugs) {
+		pagesToDisplay = publishedContent.filter((page) =>
+			filteredSlugs?.includes(page.slug),
+		);
+	}
 
-	// 公開済みのコンテンツを日付順で並び替え（新しい順）
-	const sortedContent = publishedContent.sort((a, b) => {
+	// Sort by date
+	const sortedContent = pagesToDisplay.sort((a, b) => {
 		const dateA = getDisplayDate(a)
 			? new Date(getDisplayDate(a)!).getTime()
 			: 0;
@@ -231,20 +258,30 @@ export default async function WorkshopPage() {
 		return dateB - dateA;
 	});
 
-	const displayPagesWithCMS = await Promise.all(
+	// Build content tags map BEFORE building displayPagesWithCMS
+	const contentTagsMap = new Map<string, string[]>();
+	for (const page of sortedContent) {
+		const contentId = page.contentId || page.slug;
+		const tags = getTagsFromDb(contentId);
+		contentTagsMap.set(contentId, tags);
+	}
+
+	// Build article data
+	const displayPagesWithCMS: ArticleData[] = await Promise.all(
 		sortedContent.map(async (page) => {
 			const cmsContent = await fetchContentFromCMS(page.contentId || page.slug);
 			const thumbnail = await getThumbnail(page, cmsContent);
 			const title = page.frontmatter?.title || page.slug;
-			// CMS APIから取得したdescription/summaryを優先し、なければfrontmatter.descriptionを使用
 			const description =
 				cmsContent?.summary ||
 				cmsContent?.description ||
 				page.frontmatter?.description;
-			const date = getDisplayDate(page);
-			const tags = getPageTags(page);
+			const date = formatDate(getDisplayDate(page));
+			const contentId = page.contentId || page.slug;
+			const tags = contentTagsMap.get(contentId) || [];
 			const href = getPageHref(page);
 			const isExternal = /^https?:\/\//i.test(href);
+			const isNew = isNewArticle(page);
 
 			return {
 				page,
@@ -255,156 +292,415 @@ export default async function WorkshopPage() {
 				date,
 				href,
 				isExternal,
+				isNew,
 			};
 		}),
 	);
 
-	// コンテンツがない場合のメッセージを決定
-	const hasContent = displayPagesWithCMS.length > 0;
+	// Get trending tags and popular articles from full dataset
+	const allTags = getAllTags(
+		publishedContent.map((page) => ({
+			tags: contentTagsMap.get(page.contentId || page.slug) || [],
+		})),
+	);
+	const popularArticles = displayPagesWithCMS.slice(0, 5);
 
-	console.log("[Workshop] Has content:", hasContent);
-	console.log("[Workshop] Final pages count:", displayPagesWithCMS.length);
-	console.log("[Workshop] =========================================");
+	// Get latest article for HERO section
+	const latestArticle = displayPagesWithCMS[0] || null;
+
+	// Calculate stats
+	const totalArticles = displayPagesWithCMS.length;
+	const totalTags = allTags.length;
+	const totalViews = publishedContent.reduce((sum, page) => {
+		const views = (page.frontmatter as Record<string, unknown> | undefined)
+			?.views as number | undefined;
+		return sum + (typeof views === "number" ? views : 0);
+	}, 0);
+
+	// Group articles by tag for default view (no search/filter)
+	const articlesByTag = new Map<string, ArticleData[]>();
+	for (const article of displayPagesWithCMS) {
+		for (const tag of article.tags) {
+			if (!articlesByTag.has(tag)) {
+				articlesByTag.set(tag, []);
+			}
+			articlesByTag.get(tag)!.push(article);
+		}
+	}
+
+	// Sort tags by count and get top tags
+	const topTags = allTags.slice(0, 15);
+
+	// Check if we should show grouped view or filtered view
+	const showGroupedView = !keyword && !tag;
 
 	return (
-		<div className="relative min-h-screen bg-base text-main">
-			<HomeBackground />
-			<main
-				id="main-content"
-				className="relative z-10 min-h-screen py-10"
-				tabIndex={-1}
-			>
-				<div className="container-system">
-					<div className="mx-auto w-full max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
-						<Breadcrumbs
-							items={[
-								{ label: "Home", href: "/" },
-								{ label: "Workshop", isCurrent: true },
-							]}
-							className="pt-4"
-						/>
-						<header className="space-y-6">
-							<h1 className="neue-haas-grotesk-display text-4xl text-main sm:text-5xl lg:text-6xl">
-								Workshop
-							</h1>
-						</header>
+		<div className="min-h-screen">
+			<header className="w-full h-14 border-b border-[#333333]">
+				<div className="h-full max-w-7xl mx-auto px-4 flex items-center justify-between gap-6">
+					<Link
+						href="/workshop"
+						className="text-xl font-semibold text-white hover:underline"
+					>
+						Workshop
+					</Link>
+					<SearchBar keyword={keyword} mode={mode} />
+				</div>
+			</header>
 
-						<section className="space-y-6">
-							<h2 className="sr-only">Workshop Contents</h2>
-							{hasContent ? (
-								<div className="space-y-6">
-									{displayPagesWithCMS.map(
-										({
-											page,
-											title,
-											description,
-											tags,
-											thumbnail,
-											date,
-											href,
-											isExternal,
-										}) => {
-											const card = (
-												<article
-													key={page.slug}
-													className={`${CARD_SURFACE} focus:outline-none focus:ring-2 focus:ring-accent/60 focus:ring-offset-2 focus:ring-offset-base`}
-												>
-													<div className="flex gap-4 p-4 sm:gap-5">
-														<div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-main/5 sm:h-28 sm:w-28">
-															{thumbnail ? (
-																<img
-																	src={thumbnail}
-																	alt={title}
-																	className="h-full w-full object-cover"
-																	loading="lazy"
-																/>
-															) : (
-																<span className="flex h-full w-full items-center justify-center text-xs text-main/60">
-																	No Thumbnail
-																</span>
-															)}
-														</div>
-														<div className="flex flex-1 flex-col gap-3">
-															<time className="text-xs text-main/60">
-																{formatDate(date)}
-															</time>
-															<h3 className="neue-haas-grotesk-display text-lg leading-snug text-main sm:text-xl">
-																{title}
-															</h3>
-															{description && (
-																<p
-																	className="noto-sans-jp-light text-sm leading-relaxed text-main/80"
-																	style={{
-																		display: "-webkit-box",
-																		WebkitLineClamp: 2,
-																		WebkitBoxOrient: "vertical",
-																		overflow: "hidden",
-																	}}
-																>
-																	{description}
-																</p>
-															)}
-															{tags.length > 0 && (
-																<ul className="flex flex-wrap gap-2">
-																	{tags.slice(0, 6).map((tag: string) => (
-																		<li
-																			key={tag}
-																			className="noto-sans-jp-light rounded-full bg-main/10 px-3 py-1 text-[0.75rem] text-main"
-																		>
-																			{tag}
-																		</li>
-																	))}
-																	{tags.length > 6 && (
-																		<li className="text-[0.75rem] text-accent">
-																			+{tags.length - 6}
-																		</li>
-																	)}
-																</ul>
-															)}
-														</div>
-													</div>
-												</article>
-											);
-
-											return isExternal ? (
-												<a
-													href={href}
-													target="_blank"
-													rel="noopener noreferrer"
-													className="block focus:outline-none"
-												>
-													{card}
-												</a>
-											) : (
-												<Link href={href} className="block focus:outline-none">
-													{card}
-												</Link>
-											);
-										},
+			<main className="max-w-7xl mx-auto px-4 py-10 relative z-10">
+				<Breadcrumbs
+					items={[
+						{ label: "Home", href: "/" },
+						{ label: "Workshop", isCurrent: true },
+					]}
+				/>
+				{/* HERO Section - show only in grouped view */}
+				{showGroupedView && latestArticle && (
+					<section className="mb-16">
+						<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+							{/* Hero Content */}
+							<div className="space-y-6">
+								<div>
+									<span className="inline-block px-3 py-1 text-xs font-semibold bg-[#2b57ff] text-white rounded mb-4">
+										LATEST
+									</span>
+									<h1 className="text-3xl font-bold text-white leading-tight">
+										{latestArticle.title}
+									</h1>
+									{latestArticle.description && (
+										<p className="text-sm text-[#aaaaaa] line-clamp-3 leading-relaxed">
+											{latestArticle.description}
+										</p>
 									)}
 								</div>
-							) : (
-								<div className="rounded-2xl bg-base/80 backdrop-blur-md shadow-[0_18px_48px_rgba(0,0,0,0.3)] p-8 text-center">
-									<p className="noto-sans-jp-light text-sm text-main/70">
-										現在、公開済みまたは下書きのコンテンツが登録されていません。
-									</p>
+
+								{/* Navigation Links */}
+								<div className="flex gap-3">
+									<Link
+										href="/workshop/plugins"
+										className="px-4 py-2 text-sm font-medium text-[#f2f2f2] bg-[#1a1a1f] border border-[#333333] rounded hover:bg-[#2a2a2f] hover:border-[#444444] transition-colors"
+									>
+										Plugins
+									</Link>
+									<Link
+										href="/workshop/downloads"
+										className="px-4 py-2 text-sm font-medium text-[#f2f2f2] bg-[#1a1a1f] border border-[#333333] rounded hover:bg-[#2a2a2f] hover:border-[#444444] transition-colors"
+									>
+										Downloads
+									</Link>
 								</div>
-							)}
-						</section>
-					</div>
-				</div>
+
+								{/* Stats */}
+								<div className="grid grid-cols-3 gap-4">
+									<div>
+										<div className="text-2xl font-bold text-white">
+											{totalArticles}
+										</div>
+										<div className="text-sm text-[#888888]">記事</div>
+									</div>
+									<div>
+										<div className="text-2xl font-bold text-white">
+											{totalTags}
+										</div>
+										<div className="text-sm text-[#888888]">タグ</div>
+									</div>
+									<div>
+										<div className="text-2xl font-bold text-white">
+											{totalViews.toLocaleString()}
+										</div>
+										<div className="text-sm text-[#888888]">ビュー</div>
+									</div>
+								</div>
+							</div>
+
+							{/* Featured Article */}
+							<div className="relative group cursor-pointer">
+								<Link
+									href={latestArticle.href}
+									target={latestArticle.isExternal ? "_blank" : undefined}
+									rel={
+										latestArticle.isExternal ? "noopener noreferrer" : undefined
+									}
+									className="block"
+								>
+									<div className="relative aspect-video overflow-hidden bg-[#1a1a1f] rounded-lg">
+										{latestArticle.thumbnail ? (
+											<Image
+												src={latestArticle.thumbnail}
+												alt={latestArticle.title}
+												fill
+												className="object-cover transition-transform duration-300 group-hover:scale-105"
+												sizes="(max-width: 768px) 100vw, 50vw"
+											/>
+										) : (
+											<div className="w-full h-full flex items-center justify-center bg-[#2a2a2f]">
+												<svg
+													className="w-24 h-24 text-[#444444]"
+													fill="none"
+													stroke="currentColor"
+													viewBox="0 0 24 24"
+												>
+													<path
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														strokeWidth={1}
+														d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+													/>
+												</svg>
+											</div>
+										)}
+										{/* Overlay on hover */}
+										<div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+									</div>
+								</Link>
+							</div>
+						</div>
+					</section>
+				)}
+
+				{/* All Tags Section - show only in grouped view */}
+				{showGroupedView && (
+					<section className="mb-16">
+						<div className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide-scroll">
+							{allTags.map((tagInfo) => (
+								<Link
+									key={tagInfo.tag}
+									href={`?mode=${mode}&tag=${encodeURIComponent(tagInfo.tag)}`}
+									className="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#f2f2f2] bg-[#1a1a1f] border border-[#333333] rounded hover:bg-[#2a2a2f] hover:border-[#444444] hover:text-[#2b57ff] transition-all snap-start"
+								>
+									<span>#{tagInfo.tag} </span>
+									<span className="text-xs text-[#888888]">
+										{tagInfo.count}
+									</span>
+								</Link>
+							))}
+						</div>
+					</section>
+				)}
+
+				{/* Filter view - show when keyword or tag is selected */}
+				{!showGroupedView && (
+					<>
+						<div className="mb-8">
+							<div className="flex flex-col gap-4">
+								<div className="flex items-center justify-between">
+									<h1 className="text-2xl font-bold text-white">
+										Articles
+										<span className="ml-2 text-sm font-normal text-[#888888]">
+											({displayPagesWithCMS.length}記事)
+										</span>
+									</h1>
+									<div className="flex items-center gap-2">
+										<span className="text-sm text-[#888888]">ソート:</span>
+										<div className="flex bg-[#1a1a1f] border border-[#333333] rounded">
+											<Link
+												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=newest`}
+												className={`px-3 py-1.5 text-sm rounded-l ${
+													sort === "newest"
+														? "bg-[#2b57ff] text-white"
+														: "text-[#f2f2f2] hover:bg-[#2a2a2f]"
+												}`}
+											>
+												新着
+											</Link>
+											<Link
+												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=popular`}
+												className={`px-3 py-1.5 text-sm ${
+													sort === "popular"
+														? "bg-[#2b57ff] text-white"
+														: "text-[#f2f2f2] hover:bg-[#2a2a2f]"
+												}`}
+											>
+												人気
+											</Link>
+											<Link
+												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=alphabetical`}
+												className={`px-3 py-1.5 text-sm rounded-r ${
+													sort === "alphabetical"
+														? "bg-[#2b57ff] text-white"
+														: "text-[#f2f2f2] hover:bg-[#2a2a2f]"
+												}`}
+											>
+												名前順
+											</Link>
+										</div>
+									</div>
+								</div>
+								<TagBar tags={allTags.slice(0, 15)} selectedTag={tag} />
+							</div>
+						</div>
+
+						<div className="flex gap-8">
+							<section className="flex-1">
+								<ArticleGrid articles={displayPagesWithCMS} />
+							</section>
+
+							<aside className="w-80 space-y-5 hidden lg:block">
+								<div className="p-4 bg-[#1a1a1f] border border-[#333333] rounded">
+									<h2 className="text-base font-semibold text-[#f2f2f2] mb-4">
+										Trending Tags
+									</h2>
+									<div className="space-y-3">
+										{allTags.slice(0, 10).map((item, index) => {
+											const tagArticles = articlesByTag.get(item.tag);
+											const firstArticle = tagArticles?.[0];
+											return (
+												<Link
+													key={item.tag}
+													href={`?mode=${mode}&tag=${encodeURIComponent(item.tag)}`}
+													className="flex items-center gap-3 hover:bg-[#2a2a2f] p-2 rounded transition-colors group"
+												>
+													{/* Tag info */}
+													<div className="flex-1 min-w-0">
+														<div className="flex items-center gap-2">
+															<span
+																className={`text-sm font-semibold ${
+																	index === 0
+																		? "text-[#2b57ff]"
+																		: "text-[#f2f2f2]"
+																}`}
+															>
+																#{item.tag}
+															</span>
+														</div>
+														<span className="text-xs text-[#888888]">
+															{item.count}記事
+														</span>
+													</div>
+													{/* Thumbnail */}
+													<div className="relative w-12 h-12 shrink-0 bg-[#2a2a2f] rounded overflow-hidden">
+														{firstArticle?.thumbnail ? (
+															<Image
+																src={firstArticle.thumbnail}
+																alt={item.tag}
+																fill
+																className="object-cover transition-transform duration-300 group-hover:scale-105"
+																sizes="48px"
+															/>
+														) : (
+															<div className="w-full h-full flex items-center justify-center">
+																<svg
+																	className="w-6 h-6 text-[#444444]"
+																	fill="none"
+																	stroke="currentColor"
+																	viewBox="0 0 24 24"
+																>
+																	<path
+																		strokeLinecap="round"
+																		strokeLinejoin="round"
+																		strokeWidth={1}
+																		d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+																	/>
+																</svg>
+															</div>
+														)}
+													</div>
+												</Link>
+											);
+										})}
+									</div>
+								</div>
+
+								<div className="p-4 bg-[#1a1a1f] border border-[#333333] rounded">
+									<h2 className="text-base font-semibold text-[#f2f2f2] mb-4">
+										Popular Articles
+									</h2>
+									<div className="space-y-3">
+										{popularArticles.map((item, index) => (
+											<Link
+												key={item.page.slug}
+												href={item.href}
+												className="flex items-center gap-3 hover:bg-[#2a2a2f] p-2 rounded transition-colors group"
+											>
+												{/* Title */}
+												<div className="flex-1 min-w-0">
+													<p className="text-sm text-[#2b57ff] line-clamp-2 group-hover:underline">
+														{item.title}
+													</p>
+												</div>
+												{/* Thumbnail */}
+												<div className="relative w-12 h-12 shrink-0 bg-[#2a2a2f] rounded overflow-hidden">
+													{item.thumbnail ? (
+														<Image
+															src={item.thumbnail}
+															alt={item.title}
+															fill
+															className="object-cover transition-transform duration-300 group-hover:scale-105"
+															sizes="48px"
+														/>
+													) : (
+														<div className="w-full h-full flex items-center justify-center">
+															<svg
+																className="w-6 h-6 text-[#444444]"
+																fill="none"
+																stroke="currentColor"
+																viewBox="0 0 24 24"
+															>
+																<path
+																	strokeLinecap="round"
+																	strokeLinejoin="round"
+																	strokeWidth={1}
+																	d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+																/>
+															</svg>
+														</div>
+													)}
+												</div>
+											</Link>
+										))}
+									</div>
+								</div>
+							</aside>
+						</div>
+					</>
+				)}
+
+				{/* Grouped view - show by default */}
+				{showGroupedView && (
+					<>
+						<div className="space-y-12">
+							{topTags.map((tagInfo) => {
+								const tagArticles = articlesByTag.get(tagInfo.tag);
+								if (!tagArticles || tagArticles.length === 0) return null;
+
+								return (
+									<section key={tagInfo.tag} className="space-y-4">
+										<div className="flex items-center gap-3">
+											<Link
+												href={`?mode=${mode}&tag=${encodeURIComponent(tagInfo.tag)}`}
+												className="text-xl font-bold text-white hover:text-[#2b57ff] transition-colors"
+											>
+												#{tagInfo.tag}
+											</Link>
+											<span className="text-sm text-[#888888]">
+												{tagArticles.length}記事
+											</span>
+										</div>
+										<div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide-scroll">
+											{tagArticles.map((article) => (
+												<div className="shrink-0 w-[320px] snap-start">
+													<ArticleCard
+														key={article.page.slug}
+														title={article.title}
+														description={article.description}
+														tags={article.tags}
+														thumbnail={article.thumbnail}
+														date={article.date}
+														href={article.href}
+														isExternal={article.isExternal}
+														isNew={article.isNew}
+													/>
+												</div>
+											))}
+										</div>
+									</section>
+								);
+							})}
+						</div>
+					</>
+				)}
 			</main>
-			<footer className="border-t border-main/30 bg-base/80 py-6 text-center text-xs text-main/70">
-				<div className="container-system flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-4">
-					<span>© 2025 361do_sleep</span>
-					<Link
-						href="/privacy-policy"
-						className="underline underline-offset-4 transition hover:text-accent"
-					>
-						Privacy Policy
-					</Link>
-				</div>
-			</footer>
 		</div>
 	);
 }

@@ -169,7 +169,7 @@ export default function HomeBackgroundCSS() {
 	};
 
 	return (
-		<div className="fixed inset-0 bg-[#020202]" style={{ zIndex: 0 }}>
+		<div className="fixed inset-0 bg-[#020202]" style={{ zIndex: -1 }}>
 			{/* Canvas stars - rendered immediately in next frame */}
 			<canvas
 				ref={canvasRef}

@@ -1,0 +1,1178 @@
+{
+  "version": "2.6",
+  "children": [
+    {
+      "type": "frame",
+      "id": "X2cP0",
+      "x": 0,
+      "y": 0,
+      "name": "About Page",
+      "width": 1440,
+      "fill": "#020202",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "0rYDv",
+          "name": "Hero Section",
+          "width": "fill_container",
+          "fill": "#020202",
+          "stroke": {
+            "thickness": 1,
+            "fill": "#FFFFFF10"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 48,
+          "children": [
+            {
+              "type": "frame",
+              "id": "2E5V7",
+              "name": "Breadcrumb",
+              "width": "fill_container",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "BBUBd",
+                  "name": "Home",
+                  "fill": "#FFFFFF60",
+                  "content": "HOME",
+                  "fontFamily": "monospace",
+                  "fontSize": 10,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "wB7Bt",
+                  "name": "Slash",
+                  "fill": "#E85A4F",
+                  "content": "/",
+                  "fontFamily": "monospace",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "TsWAj",
+                  "name": "About",
+                  "fill": "#FFFFFF",
+                  "content": "ABOUT",
+                  "fontFamily": "monospace",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "HXXZ1",
+              "name": "Language Switch",
+              "fill": "#0000004D",
+              "cornerRadius": 16,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#FFFFFF10"
+              },
+              "gap": 4,
+              "padding": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "OYVda",
+                  "name": "JA",
+                  "fill": "#FFFFFF",
+                  "content": "JA",
+                  "fontFamily": "monospace",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "wrYGF",
+                  "name": "EN",
+                  "fill": "#FFFFFF60",
+                  "content": "EN",
+                  "fontFamily": "monospace",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Bo2iO",
+              "name": "Hero Content",
+              "width": "fill_container",
+              "gap": 32,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "wTnsX",
+                  "name": "Left Column",
+                  "width": 300,
+                  "layout": "vertical",
+                  "gap": 24,
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "uynqr",
+                      "name": "Profile Image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://pbs.twimg.com/profile_images/1977152336486449153/uWHA4dAC_400x400.jpg",
+                        "mode": "fill"
+                      },
+                      "width": 200,
+                      "height": 200,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#FFFFFF10"
+                      },
+                      "effect": {
+                        "type": "shadow",
+                        "shadowType": "outer",
+                        "color": "#261FA74D",
+                        "blur": 40,
+                        "spread": -10
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "loA7b",
+                      "name": "Quote",
+                      "fill": "#FFFFFFE6",
+                      "content": "Lost in time. 🫠 Found it nowhere.",
+                      "textAlign": "center",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Bfd37",
+                  "name": "Center Column",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "olITW",
+                      "name": "Name",
+                      "fill": "#FFFFFF",
+                      "content": "Yusuke Kimura",
+                      "fontFamily": "Inter",
+                      "fontSize": 32,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "liks7",
+                      "name": "Handle",
+                      "fill": "#FFFFFFB3",
+                      "content": "@361do_sleep",
+                      "fontFamily": "monospace",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "letterSpacing": 2
+                    },
+                    {
+                      "type": "text",
+                      "id": "0EmHA",
+                      "name": "Role",
+                      "fill": "#FFFFFF99",
+                      "content": "高専生 / 開発者 / クリエイター\nWeb制作/映像制作/ツール制作 などをしている高専生.",
+                      "lineHeight": 1.6,
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "vyJXd",
+                      "name": "Creative Label",
+                      "fill": "#FFFFFF66",
+                      "content": "CREATIVE CODER",
+                      "fontFamily": "monospace",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 3
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "4Ez6m",
+                  "name": "Right Column",
+                  "width": 300,
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "xveQc",
+                      "name": "PROFILE",
+                      "fill": "#FFFFFF1A",
+                      "content": "PROFILE",
+                      "fontFamily": "Inter",
+                      "fontSize": 96,
+                      "fontWeight": "300",
+                      "letterSpacing": -2
+                    },
+                    {
+                      "type": "text",
+                      "id": "KtpN0",
+                      "name": "EXPLORE",
+                      "fill": "#FFFFFF1A",
+                      "content": "EXPLORE",
+                      "fontFamily": "Inter",
+                      "fontSize": 96,
+                      "fontWeight": "300",
+                      "letterSpacing": -2
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "zEC2r",
+          "name": "Profile Detail Section",
+          "width": "fill_container",
+          "stroke": {
+            "thickness": 1,
+            "fill": "#FFFFFF10"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 48,
+          "children": [
+            {
+              "type": "frame",
+              "id": "XFtt0",
+              "name": "Profile Grid",
+              "width": "fill_container",
+              "gap": 40,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "VJoD2",
+                  "name": "Profile Left",
+                  "width": 400,
+                  "layout": "vertical",
+                  "gap": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "dhIcD",
+                      "name": "Badge",
+                      "fill": "#00000066",
+                      "cornerRadius": 4,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#2B57FF"
+                      },
+                      "padding": [
+                        4,
+                        12
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Q6q3n",
+                          "name": "Label",
+                          "fill": "#FFFFFFB3",
+                          "content": "PROFILE DETAIL",
+                          "fontFamily": "monospace",
+                          "fontSize": 12,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "UDWdN",
+                      "name": "Name",
+                      "fill": "#FFFFFF",
+                      "content": "Yusuke Kimura",
+                      "fontFamily": "Inter",
+                      "fontSize": 48,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "L1F0N",
+                      "name": "Role",
+                      "fill": "#FFFFFFB3",
+                      "content": "Student / Developer / Creator",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "p77NB",
+                      "name": "Bio",
+                      "fill": "#FFFFFF8C",
+                      "content": "A technical college student engaged in web development, video production, tool creation, and more.",
+                      "lineHeight": 1.6,
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "3armi",
+                      "name": "Interests",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Ngs0r",
+                          "name": "Label",
+                          "fill": "#FFFFFF66",
+                          "content": "INTERESTS",
+                          "fontFamily": "monospace",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        },
+                        {
+                          "type": "frame",
+                          "id": "HpUfE",
+                          "name": "Tags",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "11d2V",
+                              "name": "Web",
+                              "fill": "#FFFFFF80",
+                              "content": "WEB",
+                              "fontFamily": "monospace",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "rwJBm",
+                              "name": "Video",
+                              "fill": "#FFFFFF80",
+                              "content": "VIDEO",
+                              "fontFamily": "monospace",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "QNTzf",
+                              "name": "Design",
+                              "fill": "#FFFFFF80",
+                              "content": "DESIGN",
+                              "fontFamily": "monospace",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "oqLUO",
+                              "name": "Sleep",
+                              "fill": "#FFFFFF80",
+                              "content": "SLEEP",
+                              "fontFamily": "monospace",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "53OTQ",
+                  "name": "Skills Section",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 24,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ewPo2",
+                      "name": "Skills Label",
+                      "fill": "#FFFFFF73",
+                      "content": "SKILL SET",
+                      "fontFamily": "monospace",
+                      "fontSize": 12,
+                      "fontWeight": "normal",
+                      "letterSpacing": 4
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nsVaX",
+                      "name": "Skills List",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 16,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "9mhuH",
+                          "name": "Design",
+                          "width": "fill_container",
+                          "gap": 24,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "TgrI0",
+                              "name": "Title",
+                              "fill": "#FFFFFF",
+                              "content": "Design",
+                              "fontFamily": "Inter",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "N984j",
+                              "name": "Items",
+                              "fill": "#FFFFFF8C",
+                              "content": "/ Photoshop / Illustrator / AdobeXD / Figma",
+                              "fontFamily": "monospace",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "NA2mW",
+                          "name": "Programming",
+                          "width": "fill_container",
+                          "gap": 24,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "CzkxM",
+                              "name": "Title",
+                              "fill": "#FFFFFF",
+                              "content": "Programming",
+                              "fontFamily": "Inter",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "eMta4",
+                              "name": "Items",
+                              "fill": "#FFFFFF8C",
+                              "content": "/ C / C++ / C# / HTML / JavaScript / TypeScript / CSS",
+                              "fontFamily": "monospace",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "SCmBk",
+                          "name": "Frameworks",
+                          "width": "fill_container",
+                          "gap": 24,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "vMn5l",
+                              "name": "Title",
+                              "fill": "#FFFFFF",
+                              "content": "Frameworks & Libs",
+                              "fontFamily": "Inter",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "3VGAW",
+                              "name": "Items",
+                              "fill": "#FFFFFF8C",
+                              "content": "/ React / Next.js / Tailwind CSS / p5.js / PIXI.js / GSAP",
+                              "fontFamily": "monospace",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ZTOrw",
+                          "name": "Video 3D",
+                          "width": "fill_container",
+                          "gap": 24,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "LFOVH",
+                              "name": "Title",
+                              "fill": "#FFFFFF",
+                              "content": "Video & 3D",
+                              "fontFamily": "Inter",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "2Ahlk",
+                              "name": "Items",
+                              "fill": "#FFFFFF8C",
+                              "content": "/ After Effects / Premiere Pro / Aviutl / Blender",
+                              "fontFamily": "monospace",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "yB6DX",
+                          "name": "Tools",
+                          "width": "fill_container",
+                          "gap": 24,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "m5ftA",
+                              "name": "Title",
+                              "fill": "#FFFFFF",
+                              "content": "Tools",
+                              "fontFamily": "Inter",
+                              "fontSize": 16,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "mjjaM",
+                              "name": "Items",
+                              "fill": "#FFFFFF8C",
+                              "content": "/ Unity / Cubase / VS Code / Visual Studio / Cursor / Git",
+                              "fontFamily": "monospace",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "LOhQ9",
+          "name": "Timeline Section",
+          "width": "fill_container",
+          "stroke": {
+            "thickness": 1,
+            "fill": "#FFFFFF10"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 48,
+          "children": [
+            {
+              "type": "frame",
+              "id": "yhICM",
+              "name": "Timeline Header",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "YBt8z",
+                  "name": "Badge",
+                  "fill": "#00000066",
+                  "cornerRadius": 4,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#2B57FF"
+                  },
+                  "padding": [
+                    4,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "E9Rwj",
+                      "name": "Timeline",
+                      "fill": "#FFFFFFB3",
+                      "content": "TIMELINE",
+                      "fontFamily": "monospace",
+                      "fontSize": 12,
+                      "fontWeight": "normal",
+                      "letterSpacing": 2
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tXZlb",
+                  "name": "Header Right",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "uTG9g",
+                      "name": "Title",
+                      "fill": "#FFFFFF",
+                      "content": "TIMELINE",
+                      "fontFamily": "Inter",
+                      "fontSize": 72,
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "tO6jD",
+                      "name": "Subtitle",
+                      "fill": "#FFFFFF99",
+                      "content": "Education and achievements timeline.",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "HEQjC",
+                  "name": "Count",
+                  "fill": "#FFFFFF66",
+                  "content": "07 entries",
+                  "fontFamily": "monospace",
+                  "fontSize": 10,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "EaKjE",
+              "name": "Timeline Items",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 40,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "TKd4Y",
+                  "name": "Item 1 - 2028.03",
+                  "width": "fill_container",
+                  "gap": 40,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "aEUAi",
+                      "name": "Left",
+                      "width": 400,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "1YPEY",
+                          "name": "Date",
+                          "fill": "#FFFFFFB3",
+                          "content": "2028.03 (Exp)",
+                          "fontFamily": "monospace",
+                          "fontSize": 12,
+                          "fontWeight": "bold"
+                        },
+                        {
+                          "type": "text",
+                          "id": "y46fv",
+                          "name": "Title",
+                          "fill": "#FFFFFF",
+                          "content": "宇部高等専門学校 制御情報工学科",
+                          "fontFamily": "Inter",
+                          "fontSize": 20,
+                          "fontWeight": "bold"
+                        },
+                        {
+                          "type": "text",
+                          "id": "BvQYi",
+                          "name": "Description",
+                          "fill": "#FFFFFF8C",
+                          "content": "卒業予定 / 現在、制御情報工学科に在籍中.",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HRk7O",
+                      "name": "Right",
+                      "width": 400,
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "1xesg",
+                          "name": "Tags",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "9CZJh",
+                              "name": "CS",
+                              "fill": "#FFFFFF80",
+                              "content": "COMPUTER SCIENCE",
+                              "fontFamily": "monospace",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "UHuXk",
+                              "name": "Eng",
+                              "fill": "#FFFFFF80",
+                              "content": "ENGINEERING",
+                              "fontFamily": "monospace",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "7OhDl",
+                  "name": "Item 2 - 2024.03",
+                  "width": "fill_container",
+                  "gap": 40,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "XvgmJ",
+                      "name": "Left",
+                      "width": 400,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "pQmcG",
+                          "name": "Date",
+                          "fill": "#FFFFFFB3",
+                          "content": "2024.03",
+                          "fontFamily": "monospace",
+                          "fontSize": 12,
+                          "fontWeight": "bold"
+                        },
+                        {
+                          "type": "text",
+                          "id": "s7IoJ",
+                          "name": "Title",
+                          "fill": "#FFFFFF",
+                          "content": "中国地区高専コンピュータフェスティバル2024",
+                          "fontFamily": "Inter",
+                          "fontSize": 20,
+                          "fontWeight": "bold"
+                        },
+                        {
+                          "type": "text",
+                          "id": "UySwm",
+                          "name": "Description",
+                          "fill": "#FFFFFF8C",
+                          "content": "ゲーム部門 1位 / ゲーム開発部門にて優勝.",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "roa5q",
+                      "name": "Right",
+                      "width": 400,
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ciGnl",
+                          "name": "Tags",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "5exMH",
+                              "name": "Unity",
+                              "fill": "#FFFFFF80",
+                              "content": "UNITY",
+                              "fontFamily": "monospace",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "MikTY",
+                              "name": "C#",
+                              "fill": "#FFFFFF80",
+                              "content": "C#",
+                              "fontFamily": "monospace",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "FU5sp",
+                              "name": "GameDev",
+                              "fill": "#FFFFFF80",
+                              "content": "GAMEDEV",
+                              "fontFamily": "monospace",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "NbF4s",
+          "name": "Develop Feature",
+          "width": "fill_container",
+          "height": 500,
+          "fill": "#09090B",
+          "stroke": {
+            "thickness": 1,
+            "fill": "#FFFFFF10"
+          },
+          "layout": "vertical",
+          "gap": 24,
+          "padding": 48,
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "tvwZA",
+              "name": "Background",
+              "fill": "#000000",
+              "width": "fill_container",
+              "height": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "Fcrz8",
+              "name": "Content",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EE2hY",
+                  "name": "Badge",
+                  "fill": "#00000066",
+                  "cornerRadius": 4,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#2B57FF"
+                  },
+                  "padding": [
+                    4,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "EAF7M",
+                      "name": "Develop",
+                      "fill": "#FFFFFFB3",
+                      "content": "DEVELOP",
+                      "fontFamily": "monospace",
+                      "fontSize": 12,
+                      "fontWeight": "normal",
+                      "letterSpacing": 2
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "bGX2p",
+                  "name": "Title",
+                  "fill": "#FFFFFF",
+                  "content": "DEVELOP",
+                  "fontFamily": "Inter",
+                  "fontSize": 72,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "1Q6K1",
+                  "name": "Description",
+                  "fill": "#FFFFFF99",
+                  "content": "Selected work from the archive.",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "zcswh",
+                  "name": "View Button",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 4,
+                  "padding": [
+                    16,
+                    32
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "qCTaQ",
+                      "name": "View",
+                      "fill": "#000000",
+                      "content": "VIEW →",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "bold",
+                      "letterSpacing": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "S4MhW",
+          "name": "Design Feature",
+          "width": "fill_container",
+          "height": 500,
+          "fill": "#09090B",
+          "stroke": {
+            "thickness": 1,
+            "fill": "#FFFFFF10"
+          },
+          "layout": "vertical",
+          "gap": 24,
+          "padding": 48,
+          "children": [
+            {
+              "type": "frame",
+              "id": "h6rXU",
+              "name": "Content",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "AC5lF",
+                  "name": "Badge",
+                  "fill": "#00000066",
+                  "cornerRadius": 4,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#2B57FF"
+                  },
+                  "padding": [
+                    4,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "kBmWV",
+                      "name": "Design",
+                      "fill": "#FFFFFFB3",
+                      "content": "DESIGN",
+                      "fontFamily": "monospace",
+                      "fontSize": 12,
+                      "fontWeight": "normal",
+                      "letterSpacing": 2
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "ICA14",
+                  "name": "Title",
+                  "fill": "#FFFFFF",
+                  "content": "DESIGN",
+                  "fontFamily": "Inter",
+                  "fontSize": 72,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "86BXI",
+                  "name": "Description",
+                  "fill": "#FFFFFF99",
+                  "content": "Selected work from the archive.",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "aLOST",
+                  "name": "View Button",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 4,
+                  "padding": [
+                    16,
+                    32
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ss2v5",
+                      "name": "View",
+                      "fill": "#000000",
+                      "content": "VIEW →",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "bold",
+                      "letterSpacing": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "H18vL",
+          "name": "Links Section",
+          "width": "fill_container",
+          "height": 400,
+          "stroke": {
+            "thickness": 1,
+            "fill": "#FFFFFF10"
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": 48,
+          "children": [
+            {
+              "type": "frame",
+              "id": "o2aTl",
+              "name": "Links Content",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 32,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "FtoQE",
+                  "name": "Links Label",
+                  "fill": "#FFFFFF66",
+                  "content": "LINKS",
+                  "fontFamily": "monospace",
+                  "fontSize": 10,
+                  "fontWeight": "normal",
+                  "letterSpacing": 4
+                },
+                {
+                  "type": "text",
+                  "id": "w6XIh",
+                  "name": "Links Title",
+                  "fill": "#FFFFFF",
+                  "content": "GITHUB / X",
+                  "fontFamily": "Inter",
+                  "fontSize": 64,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "frame",
+                  "id": "mvI8L",
+                  "name": "Links Buttons",
+                  "width": "fill_container",
+                  "gap": 48,
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "4CdUt",
+                      "name": "GitHub",
+                      "fill": "#FFFFFF99",
+                      "content": "GitHub",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "jp6a8",
+                      "name": "X",
+                      "fill": "#FFFFFF99",
+                      "content": "X (Twitter)",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qXshz",
+                      "name": "More",
+                      "fill": "#FFFFFF99",
+                      "content": "More Links",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "HW7PG",
+              "name": "Footer",
+              "fill": "#FFFFFF99",
+              "content": "©2025 361do_sleep",
+              "textAlign": "center",
+              "fontFamily": "monospace",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
