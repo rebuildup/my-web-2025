@@ -170,18 +170,6 @@ export default function HomeBackgroundCSS() {
 
 	return (
 		<div className="fixed inset-0 bg-[#020202]" style={{ zIndex: 0 }}>
-			{/* Static gradient background - always visible */}
-			<div
-				className="absolute inset-0"
-				style={{
-					background: `radial-gradient(
-						ellipse 80% 60% at 50% 50%,
-						rgba(30, 27, 75, 0.3) 0%,
-						rgba(2, 2, 2, 1) 70%
-					)`,
-				}}
-			/>
-
 			{/* Canvas stars - rendered immediately in next frame */}
 			<canvas
 				ref={canvasRef}
