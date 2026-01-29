@@ -5,6 +5,7 @@ import { Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
 import Script from "next/script";
 import type { ReactNode } from "react";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import HomeBackgroundCSS from "@/components/HomeBackgroundCSS";
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
 import { CookieConsent } from "@/components/ui/CookieConsent";
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 			<body
 				className={`${notoSansJP.variable} ${shipporiAntiqueB1.variable} bg-base text-main font-sans`}
 			>
+				<HomeBackgroundCSS />
 				<SkipLink />
 				<ProductionInitializer>
 					<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />

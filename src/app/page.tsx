@@ -1,5 +1,4 @@
 import Link from "next/link";
-import HomeBackgroundCSS from "@/components/HomeBackgroundCSS";
 import UnifiedFloatingCards from "@/components/UnifiedFloatingCards";
 import XProfileImage from "@/components/XProfileImage";
 
@@ -13,7 +12,6 @@ const navItems = [
 export default function Home() {
 	return (
 		<div className="h-screen overflow-hidden relative bg-[#020202]">
-			<HomeBackgroundCSS />
 			<UnifiedFloatingCards />
 
 			<main
