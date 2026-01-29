@@ -27,6 +27,10 @@ import { useEffect, useRef, useState } from "react";
 // Format date helper
 function formatDate(dateString: string): string {
 	const date = new Date(dateString);
+	// Check for invalid date
+	if (Number.isNaN(date.getTime())) {
+		return "Unknown date";
+	}
 	const now = new Date();
 	const diffMs = now.getTime() - date.getTime();
 	const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -43,6 +47,10 @@ function formatDate(dateString: string): string {
 function formatRelativeTime(dateString?: string): string {
 	if (!dateString) return "";
 	const date = new Date(dateString);
+	// Check for invalid date
+	if (Number.isNaN(date.getTime())) {
+		return "Unknown";
+	}
 	const now = new Date();
 	const diffMs = now.getTime() - date.getTime();
 	const diffMins = Math.floor(diffMs / (1000 * 60));
