@@ -257,12 +257,16 @@ export default function UnifiedFloatingCards() {
 				const githubRes = await fetch("/api/github/activity");
 				if (githubRes.ok) {
 					setGithubData(await githubRes.json());
+				} else {
+					console.error("GitHub API failed:", githubRes.status);
 				}
 
 				// Fetch YouTube data
 				const youtubeRes = await fetch("/api/youtube/activity");
 				if (youtubeRes.ok) {
 					setYoutubeData(await youtubeRes.json());
+				} else {
+					console.error("YouTube API failed:", youtubeRes.status);
 				}
 
 				// Fetch Portfolio data
@@ -270,8 +274,13 @@ export default function UnifiedFloatingCards() {
 				if (portfolioRes.ok) {
 					const json = await portfolioRes.json();
 					if (json.success && json.data) {
+						console.log("Portfolio data loaded:", json.data.length, "items");
 						setPortfolioData(json.data);
+					} else {
+						console.error("Portfolio API returned error:", json);
 					}
+				} else {
+					console.error("Portfolio API failed:", portfolioRes.status);
 				}
 			} catch (error) {
 				console.error("Failed to fetch data:", error);
