@@ -902,3 +902,22 @@ export function removeManualDateEntry(contentId: string): boolean {
 		db.close();
 	}
 }
+
+/**
+ * Get tags for a content item from database
+ */
+export function getContentTags(contentId: string): string[] {
+	try {
+		const db = getContentDb(contentId);
+		try {
+			const rows = db
+				.prepare("SELECT tag FROM content_tags WHERE content_id = ?")
+				.all(contentId) as Array<{ tag: string }>;
+			return rows.map((r) => r.tag);
+		} finally {
+			db.close();
+		}
+	} catch {
+		return [];
+	}
+}

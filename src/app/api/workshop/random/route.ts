@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { listMarkdownPages } from "@/cms/server/markdown-service";
-import { getContentDb } from "@/cms/lib/content-db-manager";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,23 +9,6 @@ interface ArticleData {
 	title: string;
 	href: string;
 	thumbnail: string | null;
-}
-
-// Get tags from database for a content item
-function getTagsFromDb(contentId: string): string[] {
-	try {
-		const db = getContentDb(contentId);
-		try {
-			const rows = db
-				.prepare("SELECT tag FROM content_tags WHERE content_id = ?")
-				.all(contentId) as Array<{ tag: string }>;
-			return rows.map((r) => r.tag);
-		} finally {
-			db.close();
-		}
-	} catch {
-		return [];
-	}
 }
 
 // Get thumbnail from CMS content

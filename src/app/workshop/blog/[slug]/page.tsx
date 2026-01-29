@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getContentDb } from "@/cms/lib/content-db-manager";
+import { getContentTags } from "@/cms/lib/content-db-manager";
 import { findMarkdownPage } from "@/cms/server/markdown-service";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
@@ -22,23 +22,6 @@ interface MarkdownDetail {
 	title?: string;
 	summary?: string;
 	body?: string;
-}
-
-// Get tags from database for a content item
-function getTagsFromDb(contentId: string): string[] {
-	try {
-		const db = getContentDb(contentId);
-		try {
-			const rows = db
-				.prepare("SELECT tag FROM content_tags WHERE content_id = ?")
-				.all(contentId) as Array<{ tag: string }>;
-			return rows.map((r) => r.tag);
-		} finally {
-			db.close();
-		}
-	} catch {
-		return [];
-	}
 }
 
 // Normalize URLs in markdown content
@@ -222,7 +205,7 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 	const content = contentId ? await getContentById("blog", contentId) : null;
 
 	// Get tags for this article
-	const articleTags = contentId ? getTagsFromDb(contentId) : [];
+	const articleTags = contentId ? getContentTags(contentId) : [];
 
 	const title = content?.title || detailFromMarkdown.title || slug;
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { listMarkdownPages } from "@/cms/server/markdown-service";
-import { getContentDb } from "@/cms/lib/content-db-manager";
+import { getContentTags } from "@/cms/lib/content-db-manager";
 import type { MarkdownPage } from "@/cms/types/markdown";
 import Fuse from "fuse.js";
 
@@ -32,23 +32,6 @@ async function fetchDescriptionFromCMS(id: string): Promise<string | undefined> 
 	return undefined;
 }
 
-// Get tags from database for a content item
-function getTagsFromDb(contentId: string): string[] {
-	try {
-		const db = getContentDb(contentId);
-		try {
-			const rows = db
-				.prepare("SELECT tag FROM content_tags WHERE content_id = ?")
-				.all(contentId) as Array<{ tag: string }>;
-			return rows.map((r) => r.tag);
-		} finally {
-			db.close();
-		}
-	} catch {
-		return [];
-	}
-}
-
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -70,7 +53,7 @@ async function prepareArticleData(pages: MarkdownPage[]): Promise<ArticleSearchD
 			const contentId = page.contentId || page.slug;
 
 			// Get tags from database
-			const tags = getTagsFromDb(contentId);
+			const tags = getContentTags(contentId);
 
 			// Get description from CMS
 			const cmsDescription = await fetchDescriptionFromCMS(contentId);

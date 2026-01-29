@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getContentDb } from "@/cms/lib/content-db-manager";
+import { getContentTags } from "@/cms/lib/content-db-manager";
 import { listMarkdownPages } from "@/cms/server/markdown-service";
 import type { MarkdownPage } from "@/cms/types/markdown";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -12,23 +12,6 @@ import type { ArticleData } from "./types";
 
 export const revalidate = 300;
 export const runtime = "nodejs";
-
-// Helper functions
-function getTagsFromDb(contentId: string): string[] {
-	try {
-		const db = getContentDb(contentId);
-		try {
-			const rows = db
-				.prepare("SELECT tag FROM content_tags WHERE content_id = ?")
-				.all(contentId) as Array<{ tag: string }>;
-			return rows.map((r) => r.tag);
-		} finally {
-			db.close();
-		}
-	} catch {
-		return [];
-	}
-}
 
 async function fetchContentFromCMS(id: string) {
 	const baseUrl =
@@ -262,7 +245,7 @@ export default async function WorkshopPage({
 	const contentTagsMap = new Map<string, string[]>();
 	for (const page of sortedContent) {
 		const contentId = page.contentId || page.slug;
-		const tags = getTagsFromDb(contentId);
+		const tags = getContentTags(contentId);
 		contentTagsMap.set(contentId, tags);
 	}
 
