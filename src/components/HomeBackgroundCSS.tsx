@@ -10,6 +10,7 @@ export default function HomeBackgroundCSS() {
 	const [mounted, setMounted] = useState(false);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const animationRef = useRef<number | undefined>(undefined);
+	const starsRef = useRef<Float32Array | null>(null);
 
 	// First, set mounted for CSS animations
 	useEffect(() => {
@@ -35,22 +36,29 @@ export default function HomeBackgroundCSS() {
 		const ctx = canvas.getContext("2d", { alpha: true });
 		if (!ctx) return;
 
-		// Set canvas size
+		// Set canvas size and regenerate stars on resize
+		const generateStars = () => {
+			const stars = new Float32Array(300 * 3); // x, y, size
+			for (let i = 0; i < 300; i++) {
+				const base = i * 3;
+				stars[base] = Math.random() * canvas.width;
+				stars[base + 1] = Math.random() * canvas.height;
+				stars[base + 2] = Math.random() * 1.5 + 0.5;
+			}
+			return stars;
+		};
+
+		// Initialize stars
+		starsRef.current = generateStars();
+
 		const resizeCanvas = () => {
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
+			// Regenerate stars for new canvas size
+			starsRef.current = generateStars();
 		};
 		resizeCanvas();
 		window.addEventListener("resize", resizeCanvas);
-
-		// Stars data
-		const stars = new Float32Array(300 * 3); // x, y, size
-		for (let i = 0; i < 300; i++) {
-			const base = i * 3;
-			stars[base] = Math.random() * canvas.width;
-			stars[base + 1] = Math.random() * canvas.height;
-			stars[base + 2] = Math.random() * 1.5 + 0.5;
-		}
 
 		// Shooting stars
 		interface ShootingStar {
@@ -86,20 +94,23 @@ export default function HomeBackgroundCSS() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 			// Draw twinkle stars
-			for (let i = 0; i < 300; i++) {
-				const base = i * 3;
-				const x = stars[base];
-				const y = stars[base + 1];
-				const size = stars[base + 2];
+			const stars = starsRef.current;
+			if (stars) {
+				for (let i = 0; i < 300; i++) {
+					const base = i * 3;
+					const x = stars[base];
+					const y = stars[base + 1];
+					const size = stars[base + 2];
 
-				// Twinkle effect
-				const twinkle = Math.sin(time * 2 + i * 0.1) * 0.3 + 0.7;
-				const alpha = size * 0.3 * twinkle;
+					// Twinkle effect
+					const twinkle = Math.sin(time * 2 + i * 0.1) * 0.3 + 0.7;
+					const alpha = size * 0.3 * twinkle;
 
-				ctx.beginPath();
-				ctx.arc(x, y, size, 0, Math.PI * 2);
-				ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-				ctx.fill();
+					ctx.beginPath();
+					ctx.arc(x, y, size, 0, Math.PI * 2);
+					ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+					ctx.fill();
+				}
 			}
 
 			// Spawn and update shooting stars

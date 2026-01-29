@@ -1181,14 +1181,21 @@ rtt min/avg/max/mdev = 0.098/0.109/0.123/0.012 ms`;
 			<h2 id="cookie-consent-title" className="sr-only">
 				クッキー同意
 			</h2>
+			{/* Visually hidden description for accessibility */}
+			<p id="cookie-consent-description" className="sr-only">
+				ウェブサイトでクッキーを使用して、ユーザー体験を向上させます
+			</p>
+			{/* Live region for screen reader announcements */}
+			<div aria-live="polite" aria-atomic="true" className="sr-only">
+				{lastOutput
+					? "コマンド結果が表示されました"
+					: "クッキーを許可しますか？"}
+			</div>
 			<div className="max-w-4xl mx-auto p-4 sm:p-6">
 				<div className="relative rounded-lg overflow-hidden bg-[#1e1e1e]/95 backdrop-blur-md shadow-2xl border border-white/10">
 					{/* Last Output Area */}
 					{lastOutput && (
-						<div
-							id="cookie-consent-description"
-							className="p-4 min-h-[50px] max-h-[200px] overflow-y-auto custom-scrollbar bg-[#1e1e1e]"
-						>
+						<div className="p-4 min-h-[50px] max-h-[200px] overflow-y-auto custom-scrollbar bg-[#1e1e1e]">
 							<motion.div
 								key={Date.now()}
 								initial={{ opacity: 0, y: 5 }}
