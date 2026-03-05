@@ -14,16 +14,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 10.24.0
+          bun-version: "1.3.10"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "pnpm"
 
       - name: Install build tools (for better-sqlite3)
         run: |
@@ -31,27 +30,27 @@ jobs:
           sudo apt-get install -y build-essential python3
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun install
 
       - name: Run lint (Biome)
         run: |
           echo "=== Running Biome lint ==="
-          pnpm run lint || {
+          bun run lint || {
             echo "=== Biome lint failed ==="
             echo "Checking specific files with verbose output..."
-            pnpm biome check src/cms/lib/content-db-manager.ts --diagnostic-level=error
-            pnpm biome check src/cms/server/content-service.ts --diagnostic-level=error
-            pnpm biome check src/cms/server/markdown-service.ts --diagnostic-level=error
-            pnpm biome check src/lib/portfolio/data-processor.ts --diagnostic-level=error
-            pnpm biome check src/app/workshop/page.tsx --diagnostic-level=error
+            bunx biome check src/cms/lib/content-db-manager.ts --diagnostic-level=error
+            bunx biome check src/cms/server/content-service.ts --diagnostic-level=error
+            bunx biome check src/cms/server/markdown-service.ts --diagnostic-level=error
+            bunx biome check src/lib/portfolio/data-processor.ts --diagnostic-level=error
+            bunx biome check src/app/workshop/page.tsx --diagnostic-level=error
             exit 1
           }
 
       - name: Run type check
-        run: pnpm run type-check
+        run: bun run type-check
 
       - name: Run tests
-        run: pnpm run test
+        run: bun run test
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
           NODE_ENV: test
@@ -64,7 +63,7 @@ jobs:
           TURBOPACK: "0"
           NEXT_PRIVATE_BUILD_WITH_TURBOPACK: "0"
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
-        run: pnpm run build
+        run: bun run build
 
       - name: Fix standalone static files and CSS script tag issue
         run: |
@@ -179,16 +178,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 10.24.0
+          bun-version: "1.3.10"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "pnpm"
 
       - name: Install build tools (for better-sqlite3)
         run: |
@@ -196,7 +194,7 @@ jobs:
           sudo apt-get install -y build-essential python3
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun install
 
       - name: Setup production environment
         run: echo "Setting up production environment..."
@@ -212,14 +210,10 @@ jobs:
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
         run: |
           echo "Setting up production environment..."
-          # Clean npm/pnpm cache to reduce package size (only delete cache files, keep binaries)
-          echo "Cleaning npm and pnpm caches..."
-          npm cache clean --force || true
-          rm -rf ~/.npm/_cacache || true
-          rm -rf ~/.npm/_logs || true
-          rm -rf ~/.local/share/pnpm/store/_cacache || true
-          pnpm store prune || true
-          pnpm run build
+          # Clean bun cache to reduce package size
+          echo "Cleaning bun cache..."
+          bun pm cache rm || true
+          bun run build
 
       - name: Prepare standalone deployment
         run: |

@@ -3,7 +3,7 @@
 /**
  * インストールフックスクリプト
  * better-sqlite3のインストール時に自動でビルドを実行
- * postinstallフックとして実行されるため、pnpm installの後に自動的に実行される
+ * postinstallフックとして実行されるため、bun installの後に自動的に実行される
  */
 const { execSync } = require("node:child_process");
 const fs = require("node:fs");
@@ -38,11 +38,11 @@ try {
 
 		try {
 			// better-sqlite3を再ビルド（複数の方法を試行）
-			console.log("🔨 方法1: pnpm rebuild...");
+			console.log("🔨 方法1: bun rebuild...");
 			try {
-				execSync("pnpm rebuild better-sqlite3", { stdio: "inherit" });
+				execSync("bun rebuild better-sqlite3", { stdio: "inherit" });
 			} catch (_rebuildError) {
-				console.log("⚠️ pnpm rebuild failed, continuing...");
+				console.log("⚠️ bun rebuild failed, continuing...");
 			}
 
 			// 動作確認
@@ -55,11 +55,11 @@ try {
 			} catch (_requireError) {
 				console.log("🔄 方法1が失敗、方法2を試行中...");
 				try {
-					// 代替方法: npm rebuild
+					// 代替方法: bun rebuild
 					try {
-						execSync("npm rebuild better-sqlite3", { stdio: "inherit" });
-					} catch (_npmRebuildError) {
-						console.log("⚠️ npm rebuild failed, continuing...");
+						execSync("bun rebuild better-sqlite3", { stdio: "inherit" });
+					} catch (_bunRebuildError) {
+						console.log("⚠️ bun rebuild failed, continuing...");
 					}
 
 					// 動作確認
@@ -82,7 +82,7 @@ try {
 								console.error("❌ 全ての自動ビルド方法が失敗しました");
 								console.error("❌ エラー:", nodeError.message);
 								console.log(
-									"💡 手動でビルドを実行してください: pnpm rebuild better-sqlite3",
+									"💡 手動でビルドを実行してください: bun rebuild better-sqlite3",
 								);
 								// エラーが発生してもプロセスを続行（postinstallが失敗してもインストールは完了）
 							}

@@ -40,12 +40,12 @@
 
 ### 前提条件 (Prerequisites)
 - Node.js (最新のLTS推奨)
-- pnpm (v10以上)
+- Bun (v1.3以上)
 
 ### インストール (Installation)
 
 ```bash
-pnpm install
+bun install
 ```
 
 ### 開発サーバの起動 (Development)
@@ -53,9 +53,9 @@ pnpm install
 TurboPackを使用して高速なHMRで開発サーバーを起動します：
 
 ```bash
-pnpm dev
+bun dev
 # または
-npm run dev
+bun run dev
 ```
 
 ブラウザで [http://localhost:3010](http://localhost:3010) を開いてください.
@@ -68,11 +68,11 @@ npm run dev
 
 ```bash
 # Lintエラーのチェック
-pnpm lint
+bun run lint
 
 # コードのフォーマット
-pnpm format
+bun run format
 
 # テストの実行
-pnpm test
+bun run test
 ```
