@@ -217,9 +217,7 @@ export class EnhancedGalleryFilter {
 					item.title.toLowerCase().includes(searchTerm) ||
 					item.description.toLowerCase().includes(searchTerm) ||
 					// Only search legacy content field if it exists, never load markdown files
-					(item.content || "")
-						.toLowerCase()
-						.includes(searchTerm) ||
+					(item.content || "").toLowerCase().includes(searchTerm) ||
 					item.tags.some((tag) => tag.toLowerCase().includes(searchTerm)),
 			);
 		}

@@ -8,10 +8,6 @@ const nextConfig: NextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
 	},
-	// Turbopack configuration for module resolution
-	// Note: Next.js 16 Turbopack may not support resolveAlias in this format
-	// Using shamefully-hoist in .npmrc instead for pnpm compatibility
-	turbopack: {},
 	// Transpile @appletosolutions/reactbits to ensure @chakra-ui/react is resolved
 	transpilePackages: ["@appletosolutions/reactbits"],
 	// Environment variables
