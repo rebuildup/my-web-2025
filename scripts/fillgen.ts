@@ -18,7 +18,7 @@
  *   - 幅は省略可.省略時は答えの文字数から自動計算.
  *   - 複数正解はスラッシュ区切り: {{ヤルタ協定/ヤルタ会談|140}}
  *   - 同じ入力からHTMLとReactを同時に生成可能:
- *       bun tsx scripts/fillgen.ts input.txt --html public/generated-quiz.html --react src/components/GeneratedQuiz.tsx
+ *       bunx tsx scripts/fillgen.ts input.txt --html public/generated-quiz.html --react src/components/GeneratedQuiz.tsx
  *
  * プレビュー:
  *   --preview を付けると --html で指定したファイルをデフォルトブラウザで開く.
@@ -53,7 +53,7 @@ const argv = process.argv.slice(2);
 if (argv.length === 0 || argv.includes("--help")) {
 	console.log(
 		[
-			"Usage: bun tsx scripts/fillgen.ts <input.txt> [--html out.html] [--react out.tsx] [--preview]",
+			"Usage: bunx tsx scripts/fillgen.ts <input.txt> [--html out.html] [--react out.tsx] [--preview]",
 			"",
 			"Placeholder syntax: {{答え|幅}}  幅は省略可.複数正解はスラッシュ区切り.",
 		].join("\n"),

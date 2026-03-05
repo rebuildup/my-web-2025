@@ -210,9 +210,6 @@ jobs:
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
         run: |
           echo "Setting up production environment..."
-          # Clean bun cache to reduce package size
-          echo "Cleaning bun cache..."
-          bun pm cache rm || true
           bun run build
 
       - name: Prepare standalone deployment

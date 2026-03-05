@@ -1,12 +1,4 @@
 [install]
 # Suppress peer dependency warnings
 peer = false
-
-# Trusted dependencies that are allowed to run lifecycle scripts
-trustedDependencies = [
-  "better-sqlite3",
-  "@sentry/cli",
-  "sharp",
-  "msw",
-  "unrs-resolver",
-]
+# trustedDependencies are configured in package.json to keep a single source of truth.

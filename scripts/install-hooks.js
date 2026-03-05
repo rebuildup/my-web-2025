@@ -55,11 +55,11 @@ try {
 			} catch (_requireError) {
 				console.log("🔄 方法1が失敗、方法2を試行中...");
 				try {
-					// 代替方法: bun rebuild
+					// 代替方法: npm rebuild（bunが失敗した場合のフォールバック）
 					try {
-						execSync("bun rebuild better-sqlite3", { stdio: "inherit" });
-					} catch (_bunRebuildError) {
-						console.log("⚠️ bun rebuild failed, continuing...");
+						execSync("npm rebuild better-sqlite3", { stdio: "inherit" });
+					} catch (_npmRebuildError) {
+						console.log("⚠️ npm rebuild failed, continuing...");
 					}
 
 					// 動作確認

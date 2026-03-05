@@ -24,7 +24,7 @@
 ### 構成要素
 - **アプリケーション**: Next.js 16 (standalone mode)
 - **ランタイム**: Node.js 20
-- **パッケージマネージャー**: pnpm 10
+- **パッケージマネージャー**: Bun 1.3
 - **プロセス管理**: PM2 (systemd自動起動)
 - **リバースプロキシ**: nginx
 - **データベース**: SQLite (better-sqlite3)
@@ -116,7 +116,7 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 443/tcp (v6)               ALLOW       Anywhere (v6)
 ```
 
-### 2.5 Node.js / pnpm / PM2 インストール
+### 2.5 Node.js / Bun / PM2 インストール
 
 ```bash
 # deployユーザーで実行
@@ -134,19 +134,18 @@ Now using node v20.x.x (npm v10.x.x)
 ```
 
 ```bash
-curl -fsSL https://get.pnpm.io/install.sh | sh -
+curl -fsSL https://bun.sh/install | bash
 source ~/.bashrc
-pnpm setup
 ```
 
 **期待される出力:**
 ```
-✔ pnpm was installed successfully to ~/.local/share/pnpm/pnpm
+✔ bun was installed successfully to ~/.bun/bin/bun
 ...
 ```
 
 ```bash
-pnpm add -g pm2
+bun add -g pm2
 ```
 
 **期待される出力:**
@@ -159,14 +158,14 @@ Done in 2.3s
 **動作確認:**
 ```bash
 node --version
-pnpm --version
+bun --version
 pm2 --version
 ```
 
 **期待される出力:**
 ```
 v20.x.x
-10.x.x
+1.3.x
 5.x.x
 ```
 
@@ -1068,7 +1067,7 @@ Detail: DNS problem: NXDOMAIN looking up A for 361do.yusuke-kim.com
 - [ ] デプロイユーザー作成
 - [ ] SSH鍵登録
 - [ ] ファイアウォール設定
-- [ ] Node.js / pnpm / PM2 インストール
+- [ ] Node.js / Bun / PM2 インストール
 - [ ] ディレクトリ準備
 
 ### GitHub設定

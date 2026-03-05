@@ -5,7 +5,7 @@
 | `01_global.md`      | コア概念・データ配置・環境変数の最小セット |
 | `02_style.md`       | フォント/カラー/アニメーション方針の短縮版 |
 | `03_component.md`   | 主要コンポーネントの役割一覧 |
-| `04_package.md`     | 主要依存 & npm scripts（pnpm/Biome 運用） |
+| `04_package.md`     | 主要依存 & npm scripts（Bun/Biome 運用） |
 | `05_requirement.md` | 非機能要件ショートリスト |
 | `06_deploy.md`      | インフラ/CI/CD/PM2 手順 (2025-12) |
 | `07_rules.md`       | コンプライアンス・運用ルール要点 |
@@ -37,5 +37,5 @@ documents/
 
 ## 運用メモ
 - ランタイム: Node 20 / Next 16 standalone + pm2
-- パッケージ: pnpm 10、Lint/Format: Biome
+- パッケージ: Bun 1.3、Lint/Format: Biome
 - 詳細版や旧手順は `archive/` を参照（必要時のみ）.
