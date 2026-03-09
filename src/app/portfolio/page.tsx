@@ -17,6 +17,8 @@ import type { PortfolioContentItem } from "@/types/portfolio";
 import { LatestWorksSection } from "./components/LatestWorksSection";
 import { StatsOverview } from "./components/StatsOverview";
 
+export const dynamic = "force-dynamic";
+
 type ContentIndexEntry = ReturnType<typeof getAllFromIndex>[number];
 type PortfolioItemWithEnhancedFields = PortfolioContentItem & {
 	categories?: string[];
