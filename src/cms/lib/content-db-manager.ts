@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import type Database from "better-sqlite3";
 import { getFullContent, saveFullContent } from "@/cms/lib/content-mapper";
+import { openSqliteDb, type SqliteDatabase } from "@/cms/lib/sqlite";
 import type { Content } from "@/cms/types/content";
 import type { ContentIndexRow } from "@/cms/types/database";
 
@@ -86,12 +86,6 @@ function ensureDirectory(dir: string): void {
 	}
 }
 
-function getBetterSqlite3(): typeof import("better-sqlite3") {
-	// eslint-disable-next-line @typescript-eslint/no-require-imports
-	const mod = require("better-sqlite3") as typeof import("better-sqlite3");
-	return mod;
-}
-
 function listContentDbFiles(): string[] {
 	if (!fs.existsSync(CONTENT_DB_DIR)) {
 		console.warn(
@@ -124,7 +118,7 @@ export function getDataDirectory(): string {
 	return DATA_DIR;
 }
 
-export function getContentDb(contentId: string): Database.Database {
+export function getContentDb(contentId: string): SqliteDatabase {
 	const dbPath = getContentDbPath(contentId);
 	const isNewDb = !fs.existsSync(dbPath);
 
@@ -132,8 +126,7 @@ export function getContentDb(contentId: string): Database.Database {
 		console.log(`[CMS] Opening database: ${dbPath}, isNewDb: ${isNewDb}`);
 	}
 
-	const DatabaseCtor = getBetterSqlite3();
-	const db = new DatabaseCtor(dbPath);
+	const db = openSqliteDb(dbPath);
 	try {
 		db.pragma("journal_mode = WAL");
 	} catch {
@@ -149,7 +142,7 @@ export function getContentDb(contentId: string): Database.Database {
 	return db;
 }
 
-function initializeContentDbSchema(db: Database.Database): void {
+function initializeContentDbSchema(db: SqliteDatabase): void {
 	db.exec(`
     CREATE TABLE IF NOT EXISTS contents (
       id TEXT PRIMARY KEY,
@@ -309,12 +302,12 @@ function initializeContentDbSchema(db: Database.Database): void {
 	ensureMediaTable(db);
 }
 
-function ensureSchemaUpgrades(db: Database.Database): void {
+function ensureSchemaUpgrades(db: SqliteDatabase): void {
 	ensureManualDatesTable(db);
 	ensureMediaTable(db);
 }
 
-function ensureManualDatesTable(db: Database.Database): void {
+function ensureManualDatesTable(db: SqliteDatabase): void {
 	db.exec(`
     CREATE TABLE IF NOT EXISTS manual_dates (
       content_id TEXT PRIMARY KEY,
@@ -324,7 +317,7 @@ function ensureManualDatesTable(db: Database.Database): void {
   `);
 }
 
-function ensureMediaTable(db: Database.Database): void {
+function ensureMediaTable(db: SqliteDatabase): void {
 	db.exec(`
     CREATE TABLE IF NOT EXISTS media (
       id TEXT PRIMARY KEY,
@@ -350,8 +343,7 @@ function ensureMediaTable(db: Database.Database): void {
 
 function readContentRowsFromFile(file: string): ContentIndexRow[] {
 	const dbPath = path.join(CONTENT_DB_DIR, file);
-	const DatabaseCtor = getBetterSqlite3();
-	const db = new DatabaseCtor(dbPath);
+	const db = openSqliteDb(dbPath, { readonly: true });
 	try {
 		ensureSchemaUpgrades(db);
 		const rows = db
@@ -491,8 +483,7 @@ export function getFromIndex(contentId: string): {
 	if (!fs.existsSync(dbPath)) {
 		return null;
 	}
-	const DatabaseCtor = getBetterSqlite3();
-	const db = new DatabaseCtor(dbPath);
+	const db = openSqliteDb(dbPath, { readonly: true });
 	try {
 		ensureSchemaUpgrades(db);
 		const row = db
@@ -687,13 +678,11 @@ function aggregateTagsFromAllDbs(): Map<
 		string,
 		{ count: number; firstUsed: string | null; lastUsed: string | null }
 	>();
-	const DatabaseCtor = getBetterSqlite3();
-
 	for (const file of listContentDbFiles()) {
 		const dbPath = path.join(CONTENT_DB_DIR, file);
-		let db: Database.Database | null = null;
+		let db: SqliteDatabase | null = null;
 		try {
-			db = new DatabaseCtor(dbPath);
+			db = openSqliteDb(dbPath, { readonly: true });
 			ensureSchemaUpgrades(db);
 
 			// コンテンツのタイムスタンプとタグを取得
@@ -816,7 +805,7 @@ export interface ManualDateEntry {
 }
 
 function readManualDateFromDb(
-	db: Database.Database,
+	db: SqliteDatabase,
 	fallbackId: string,
 ): ManualDateEntry | null {
 	const row = db
@@ -836,7 +825,7 @@ function readManualDateFromDb(
 	};
 }
 
-function getPrimaryContentId(db: Database.Database): string | null {
+function getPrimaryContentId(db: SqliteDatabase): string | null {
 	const row = db
 		.prepare("SELECT id FROM contents ORDER BY created_at ASC LIMIT 1")
 		.get() as { id: string } | undefined;
@@ -847,8 +836,7 @@ export function listManualDateEntries(): ManualDateEntry[] {
 	const entries: ManualDateEntry[] = [];
 	for (const file of listContentDbFiles()) {
 		const dbPath = path.join(CONTENT_DB_DIR, file);
-		const DatabaseCtor = getBetterSqlite3();
-		const db = new DatabaseCtor(dbPath);
+		const db = openSqliteDb(dbPath, { readonly: true });
 		try {
 			ensureSchemaUpgrades(db);
 			const fallbackId =

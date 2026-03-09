@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
-import Database from "better-sqlite3";
 import {
 	upsertManualDateEntry,
 	upsertTagCatalogEntry,
 } from "@/cms/lib/content-db-manager";
+import { openSqliteDb } from "@/cms/lib/sqlite";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const INDEX_DB_PATH = path.join(DATA_DIR, "index.db");
@@ -24,13 +24,13 @@ function migrate(): void {
 		return;
 	}
 
-	const db = new Database(INDEX_DB_PATH, { readonly: true });
+	const db = openSqliteDb(INDEX_DB_PATH, { readonly: true });
 	let manualCount = 0;
 	let tagCount = 0;
 
 	try {
 		const manualRows = db
-			.prepare<[], { content_id: string; date: string }>(
+			.prepare<{ content_id: string; date: string }>(
 				"SELECT content_id, date FROM manual_dates",
 			)
 			.all();
@@ -42,15 +42,12 @@ function migrate(): void {
 		}
 
 		const tagRows = db
-			.prepare<
-				[],
-				{
-					name: string;
-					created_at?: string;
-					last_used?: string;
-					metadata?: string | null;
-				}
-			>("SELECT name, created_at, last_used, metadata FROM tag_catalog")
+			.prepare<{
+				name: string;
+				created_at?: string;
+				last_used?: string;
+				metadata?: string | null;
+			}>("SELECT name, created_at, last_used, metadata FROM tag_catalog")
 			.all();
 
 		for (const row of tagRows) {

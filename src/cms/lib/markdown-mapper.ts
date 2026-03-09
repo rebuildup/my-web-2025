@@ -2,7 +2,7 @@
  * Markdownページのデータベースマッパー
  */
 
-import type Database from "better-sqlite3";
+import type { SqliteDatabase } from "@/cms/lib/sqlite";
 import type {
 	MarkdownFile,
 	MarkdownFrontmatter,
@@ -202,7 +202,7 @@ export function rowToMarkdownPage(row: MarkdownPageRow): MarkdownPage {
 
 // ========== Markdownページ取得 ==========
 export function getMarkdownPage(
-	db: Database.Database,
+	db: SqliteDatabase,
 	idOrSlug: string,
 ): MarkdownPage | null {
 	// IDまたはスラッグで検索
@@ -223,7 +223,7 @@ export function getMarkdownPage(
 
 // ========== Markdownページ保存 ==========
 export function saveMarkdownPage(
-	db: Database.Database,
+	db: SqliteDatabase,
 	page: Partial<MarkdownPage>,
 ): void {
 	const row = markdownPageToRow(page);
@@ -242,7 +242,7 @@ export function saveMarkdownPage(
 	const values = fields.map((field) => row[field as keyof typeof row]);
 
 	try {
-		stmt.run(...values);
+		stmt.run(...(values as unknown[]));
 	} catch (error) {
 		console.error("Failed to save markdown page:", error);
 		console.error("Row data:", row);
@@ -260,7 +260,7 @@ export function saveMarkdownPage(
 
 // ========== Markdownページ削除 ==========
 export function deleteMarkdownPage(
-	db: Database.Database,
+	db: SqliteDatabase,
 	idOrSlug: string,
 ): boolean {
 	const result = db

@@ -2,10 +2,10 @@
  * メディア（画像）管理機能
  */
 
-import type Database from "better-sqlite3";
 import type { MediaRow } from "@/cms/types/database";
 import type { MediaItem } from "@/cms/types/media";
 import { getContentDb } from "./content-db-manager";
+import type { SqliteDatabase } from "./sqlite";
 
 // ========== メディア保存 ==========
 
@@ -288,7 +288,7 @@ function deriveMediaBuffer(source: MediaRow["data"]): Buffer | undefined {
 	}
 }
 
-function ensureContentRow(db: Database.Database, contentId: string) {
+function ensureContentRow(db: SqliteDatabase, contentId: string) {
 	if (!contentId) {
 		return;
 	}

@@ -1,10 +1,10 @@
-import type Database from "better-sqlite3";
 import { getContentDb, getFromIndex } from "@/cms/lib/content-db-manager";
 import {
 	getMarkdownPage,
 	importMarkdownFile,
 	saveMarkdownPage,
 } from "@/cms/lib/markdown-mapper";
+import type { SqliteDatabase } from "@/cms/lib/sqlite";
 import type {
 	MarkdownFile,
 	MarkdownFrontmatter,
@@ -36,7 +36,7 @@ function normalizeFrontmatter(input: unknown): MarkdownFrontmatter {
 }
 
 function ensureContentRecord(
-	db: Database.Database,
+	db: SqliteDatabase,
 	contentId: string | undefined,
 	fallback?: {
 		title?: string;

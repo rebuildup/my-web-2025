@@ -1,4 +1,4 @@
-name: Safe Build and Deploy
+name: Bun Build and Deploy
 
 on:
   push:
@@ -14,162 +14,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 10.24.0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "pnpm"
-
-      - name: Install build tools (for better-sqlite3)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential python3
+          bun-version: "1.3.10"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run lint (Biome)
-        run: |
-          echo "=== Running Biome lint ==="
-          pnpm run lint || {
-            echo "=== Biome lint failed ==="
-            echo "Checking specific files with verbose output..."
-            pnpm biome check src/cms/lib/content-db-manager.ts --diagnostic-level=error
-            pnpm biome check src/cms/server/content-service.ts --diagnostic-level=error
-            pnpm biome check src/cms/server/markdown-service.ts --diagnostic-level=error
-            pnpm biome check src/lib/portfolio/data-processor.ts --diagnostic-level=error
-            pnpm biome check src/app/workshop/page.tsx --diagnostic-level=error
-            exit 1
-          }
+        run: bun install --frozen-lockfile
 
       - name: Run type check
-        run: pnpm run type-check
+        run: bun run type-check
 
       - name: Run tests
-        run: pnpm run test
         env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
           NODE_ENV: test
           CI: true
+        run: bun run test
 
-      - name: Build project (Standalone)
+      - name: Build project
         env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
-          NEXT_USE_TURBOPACK: "0"
-          TURBOPACK: "0"
-          NEXT_PRIVATE_BUILD_WITH_TURBOPACK: "0"
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
-        run: pnpm run build
-
-      - name: Fix standalone static files and CSS script tag issue
-        run: |
-          echo "=== Fixing standalone static files and CSS script tag issue ==="
-
-          # Debug: Check current directory and build output
-          echo "Current directory: $(pwd)"
-          echo "Available files and directories:"
-          ls -la
-
-          # Check if .next directory exists
-          if [ ! -d ".next" ]; then
-            echo "❌ .next directory not found"
-            exit 1
-          fi
-
-          echo "Contents of .next directory:"
-          ls -la .next/
-
-          # Check if standalone build was created
-          if [ ! -d ".next/standalone" ]; then
-            echo "❌ Standalone build directory not found"
-            echo "This might indicate that output: 'standalone' is not properly configured in next.config.ts"
-            exit 1
-          fi
-
-          echo "✅ Standalone directory found"
-
-          # Copy static files to standalone directory
-          if [ -d ".next/static" ]; then
-            echo "Copying static files..."
-            cp -r .next/static .next/standalone/.next/static
-            echo "✅ Static files copied successfully"
-            
-            # Verify critical files
-            if ls .next/standalone/.next/static/css/*.css 1> /dev/null 2>&1; then
-              echo "✅ CSS files found"
-              echo "CSS files: $(ls .next/standalone/.next/static/css/*.css | wc -l)"
-            else
-              echo "⚠️ No CSS files found"
-            fi
-            
-            if [ -d ".next/standalone/.next/static/chunks" ]; then
-              echo "✅ JavaScript chunks directory found"
-              echo "Chunk files: $(ls .next/standalone/.next/static/chunks | wc -l)"
-            else
-              echo "⚠️ No chunks directory found"
-            fi
-
-            # Fix CSS script tag issue in HTML files
-            echo "Fixing CSS script tag issue in prerendered HTML files..."
-            
-            # Find and fix HTML files in standalone build
-            find .next/standalone/.next/server/app -name "*.html" -type f 2>/dev/null | while read -r htmlfile; do
-              if [ -f "$htmlfile" ]; then
-                # Replace CSS script tags with proper link tags
-                sed -i 's|<script src="\(/_next/static/css/[^"]*\.css\)" async=""></script>||g' "$htmlfile" 2>/dev/null || true
-                echo "Fixed CSS script tags in: $htmlfile"
-              fi
-            done
-
-            # Also fix in server-side rendered files
-            find .next/standalone/.next/server -name "*.js" -type f 2>/dev/null | while read -r jsfile; do
-              if [ -f "$jsfile" ] && grep -q "/_next/static/css.*\.css.*async" "$jsfile" 2>/dev/null; then
-                # Remove CSS script tag generation from server files
-                sed -i 's|src:"/_next/static/css/\([^"]*\.css\)",async:""|rel:"stylesheet",href:"/_next/static/css/\1"|g' "$jsfile" 2>/dev/null || true
-                echo "Fixed CSS script generation in: $jsfile"
-              fi
-            done
-
-            echo "✅ CSS script tag issue fix completed"
-            
-          else
-            echo "❌ Static files directory not found"
-            echo "Available directories in .next:"
-            ls -la .next/
-            exit 1
-          fi
-
-      - name: Verify standalone build
-        run: |
-          echo "=== Verifying standalone build ==="
-          if [ -f ".next/standalone/server.js" ]; then
-            echo "✅ server.js exists"
-          else
-            echo "❌ server.js not found"
-            exit 1
-          fi
-
-          if [ -d ".next/standalone/.next/static" ]; then
-            echo "✅ Static directory exists"
-            echo "Static files structure:"
-            find .next/standalone/.next/static -type d -name "*" | head -20
-          else
-            echo "❌ Static directory not found"
-            exit 1
-          fi
-
-          if [ -d ".next/standalone/public" ]; then
-            echo "✅ Public directory exists"
-          else
-            echo "⚠️ Public directory not found, copying..."
-            cp -r public .next/standalone/public
-            echo "✅ Public directory copied"
-          fi
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+        run: bun run build
 
   deploy:
     runs-on: ubuntu-latest
@@ -179,739 +45,93 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 10.24.0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "pnpm"
-
-      - name: Install build tools (for better-sqlite3)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential python3
+          bun-version: "1.3.10"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
-      - name: Setup production environment
-        run: echo "Setting up production environment..."
-
-      - name: Build project (Standalone)
+      - name: Build project
         env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
-          NEXT_USE_TURBOPACK: "0"
-          TURBOPACK: "0"
-          NEXT_PRIVATE_BUILD_WITH_TURBOPACK: "0"
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
-        run: |
-          echo "Setting up production environment..."
-          # Clean npm/pnpm cache to reduce package size (only delete cache files, keep binaries)
-          echo "Cleaning npm and pnpm caches..."
-          npm cache clean --force || true
-          rm -rf ~/.npm/_cacache || true
-          rm -rf ~/.npm/_logs || true
-          rm -rf ~/.local/share/pnpm/store/_cacache || true
-          pnpm store prune || true
-          pnpm run build
+        run: bun run build
 
       - name: Prepare standalone deployment
         run: |
-          echo "=== Preparing standalone deployment ==="
-
-          # Fix static files
-          if [ -d ".next/static" ] && [ -d ".next/standalone" ]; then
-            echo "Copying static files to standalone..."
-            cp -r .next/static .next/standalone/.next/static
-            
-            # Copy public directory if not exists
-            if [ ! -d ".next/standalone/public" ]; then
-              cp -r public .next/standalone/public
-            fi
-            
-            # Ensure data directory is copied to standalone (copy-content-data.js should have done this)
-            if [ -d "data" ] && [ ! -d ".next/standalone/data" ]; then
-              echo "Copying data directory to standalone..."
-              cp -r data .next/standalone/data
-            elif [ -d ".next/standalone/data" ]; then
-              echo "✅ Data directory already exists in standalone"
-            else
-              echo "⚠️  Warning: data directory not found"
-            fi
-
-            # Ensure middleware (edge chunks) is included in standalone
-            if ls .next/server/edge/chunks/*.js 1> /dev/null 2>&1; then
-              mkdir -p .next/standalone/.next/server/edge/chunks
-              cp .next/server/edge/chunks/*.js .next/standalone/.next/server/edge/chunks/
-              echo "✅ edge middleware chunks copied to standalone"
-            else
-              echo "❌ edge middleware chunks not found in .next/server/edge/chunks"
-              exit 1
-            fi
-            
-            echo "✅ Standalone preparation complete"
-          else
-            echo "❌ Build directories not found"
-            exit 1
-          fi
-
-          # Create deployment info
-          echo "{
-            \"buildId\": \"$(cat .next/BUILD_ID)\",
-            \"buildTime\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",
-            \"gitCommit\": \"${GITHUB_SHA}\",
-            \"gitBranch\": \"${GITHUB_REF_NAME}\"
-          }" > .next/standalone/deployment-info.json
-          
-          # Verify data directory exists
-          echo "=== Verifying data directory ==="
-          if [ -d ".next/standalone/data" ]; then
-            echo "✅ Data directory exists"
-            echo "Data directory contents:"
-            ls -la .next/standalone/data/ | head -20
-            if [ -d ".next/standalone/data/contents" ]; then
-              echo "✅ Contents directory exists"
-              echo "Number of content databases: $(find .next/standalone/data/contents -name '*.db' 2>/dev/null | wc -l)"
-            else
-              echo "⚠️  Warning: contents directory not found"
-            fi
-          else
-            echo "❌ Data directory not found in standalone"
-            exit 1
-          fi
-
-      - name: Create deployment package
-        run: |
-          echo "Creating standalone deployment package..."
-          cd .next/standalone
-
-          # Verify data directory exists before packaging
-          if [ ! -d "data" ]; then
-            echo "❌ Error: data directory not found in standalone"
-            echo "Current directory: $(pwd)"
-            echo "Directory contents:"
-            ls -la
-            exit 1
-          fi
-          
-          echo "Data directory verification:"
-          ls -la data/ | head -10
-          if [ -d "data/contents" ]; then
-            echo "Contents directory found with $(find data/contents -name '*.db' 2>/dev/null | wc -l) database files"
-          fi
-
-          # Create package with all necessary files
-          tar -czf ../../deployment-standalone.tar.gz \
+          cp -r .next/static .next/standalone/.next/static
+          [ -d ".next/standalone/public" ] || cp -r public .next/standalone/public
+          [ -d ".next/standalone/data" ] || cp -r data .next/standalone/data
+          tar -czf deployment-standalone.tar.gz \
+            -C .next/standalone \
             server.js \
-            .next/ \
-            public/ \
-            data/ \
-            node_modules/ \
-            package.json \
-            deployment-info.json || {
-              echo "❌ Failed to create deployment package"
-              exit 1
-            }
-
-          cd ../..
-          echo "✅ Package created successfully"
-          echo "Package size: $(du -h deployment-standalone.tar.gz)"
+            .next \
+            public \
+            data \
+            node_modules \
+            package.json
 
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-
           echo "${{ secrets.GCP_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-
           cat > ~/.ssh/config << EOF
           Host deploy-server
             HostName ${{ secrets.GCP_HOST }}
             User ${{ secrets.GCP_USER }}
             IdentityFile ~/.ssh/id_rsa
             StrictHostKeyChecking no
-            ConnectTimeout 30
-            ServerAliveInterval 60
-            LogLevel ERROR
           EOF
           chmod 600 ~/.ssh/config
 
-      - name: Test SSH connection
-        run: |
-          echo "Testing SSH connection..."
-          ssh deploy-server "echo 'SSH connection successful'; uptime; free -h"
+      - name: Transfer deployment package
+        run: scp deployment-standalone.tar.gz deploy-server:/home/${{ secrets.GCP_USER }}/deployment-standalone.tar.gz
 
-      - name: Check remote server disk space and permissions
+      - name: Deploy on server
         run: |
-          echo "Checking remote server disk space and permissions..."
-          ssh deploy-server << 'REMOTE_CHECK'
-          echo "=== Disk Space Check ==="
-          df -h /tmp /home/$USER 2>/dev/null || df -h /
-          
-          echo ""
-          echo "=== Cleaning /tmp directory ==="
-          # Remove old deployment packages and logs
-          find /tmp -name "deployment-standalone.tar.gz" -type f -mtime +1 -delete 2>/dev/null || true
-          find /tmp -name "deploy-standalone-*.log" -type f -mtime +7 -delete 2>/dev/null || true
-          # Remove any other old files in /tmp (older than 1 day)
-          find /tmp -type f -mtime +1 -delete 2>/dev/null || true
-          
-          echo "Disk space after cleanup:"
-          df -h /tmp 2>/dev/null || df -h /
-          
-          echo ""
-          echo "=== /tmp Directory Check ==="
-          ls -ld /tmp
-          AVAIL_TMP=$(df /tmp 2>/dev/null | tail -1 | awk '{print $4}' || df / | tail -1 | awk '{print $4}' || echo "0")
-          AVAIL_TMP_MB=$((AVAIL_TMP / 1024))
-          echo "Available space in /tmp: ${AVAIL_TMP_MB}MB"
-          
-          if [ "$AVAIL_TMP_MB" -lt 200 ]; then
-            echo "⚠️  Warning: Low disk space in /tmp (${AVAIL_TMP_MB}MB available, need at least 200MB)"
-          else
-            echo "✅ Sufficient space in /tmp"
-          fi
-          
-          touch /tmp/.deploy-test 2>&1 && rm -f /tmp/.deploy-test && echo "✅ /tmp is writable" || echo "❌ /tmp is not writable"
-          
-          echo ""
-          echo "=== Home Directory Check ==="
-          echo "Home directory: $HOME"
-          ls -ld "$HOME"
-          AVAIL_HOME=$(df "$HOME" 2>/dev/null | tail -1 | awk '{print $4}' || df / | tail -1 | awk '{print $4}' || echo "0")
-          AVAIL_HOME_MB=$((AVAIL_HOME / 1024))
-          echo "Available space in home: ${AVAIL_HOME_MB}MB"
-          touch "$HOME/.deploy-test" 2>&1 && rm -f "$HOME/.deploy-test" && echo "✅ Home directory is writable" || echo "❌ Home directory is not writable"
-          REMOTE_CHECK
-
-      - name: Transfer deployment files
-        run: |
-          echo "=== Transferring standalone deployment package ==="
-          echo "Package size: $(du -h deployment-standalone.tar.gz | cut -f1)"
-          echo "Package size in bytes: $(stat -f%z deployment-standalone.tar.gz 2>/dev/null || stat -c%s deployment-standalone.tar.gz 2>/dev/null || echo 'unknown')"
-          
-          # Get remote home directory path
-          REMOTE_HOME=$(ssh deploy-server "echo \$HOME")
-          echo "Remote home directory: $REMOTE_HOME"
-          
-          # Check disk space on remote server before transfer
-          echo "=== Checking remote disk space ==="
-          ssh deploy-server "echo 'Disk space for /tmp:'; df -h /tmp 2>/dev/null || df -h /; echo ''; echo 'Disk space for home directory:'; df -h \\\$HOME 2>/dev/null || df -h /"
-          
-          # Get available space values
-          # Check /tmp first (preferred extraction location)
-          AVAIL_TMP_KB=$(ssh deploy-server "df /tmp 2>/dev/null | tail -1 | awk '{print \$4}' || df / | tail -1 | awk '{print \$4}' || echo '0'")
-          AVAIL_TMP_MB=$((AVAIL_TMP_KB / 1024))
-          echo "Available space in /tmp: ${AVAIL_TMP_MB}MB"
-          
-          # Also check home directory (alternative extraction location)
-          AVAIL_HOME_KB=$(ssh deploy-server "df \\\$HOME 2>/dev/null | tail -1 | awk '{print \$4}' || df / | tail -1 | awk '{print \$4}' || echo '0'")
-          AVAIL_HOME_MB=$((AVAIL_HOME_KB / 1024))
-          echo "Available space in home: ${AVAIL_HOME_MB}MB"
-          
-          # Determine transfer location based on available space
-          # Need at least 500MB free space (package is 140MB, but need much more buffer for extraction)
-          PACKAGE_SIZE_MB=150
-          REQUIRED_SPACE_MB=500
-          
-          echo "Package size: ~${PACKAGE_SIZE_MB}MB"
-          echo "Required free space: ${REQUIRED_SPACE_MB}MB"
-          
-          # Try /tmp first if it has enough space, otherwise use home directory
-          TRANSFER_SUCCESS=false
-          DEPLOYMENT_PACKAGE_PATH=""
-          
-          if [ "$AVAIL_TMP_MB" -ge "$REQUIRED_SPACE_MB" ]; then
-            echo "Attempting to transfer to /tmp/ (${AVAIL_TMP_MB}MB available)..."
-            set +e
-            SCP_OUTPUT=$(scp deployment-standalone.tar.gz deploy-server:/tmp/deployment-standalone.tar.gz 2>&1)
-            SCP_EXIT_CODE=$?
-            set -e
-            
-            if [ $SCP_EXIT_CODE -eq 0 ]; then
-              echo "✅ Transfer to /tmp/ successful"
-              DEPLOYMENT_PACKAGE_PATH="/tmp/deployment-standalone.tar.gz"
-              TRANSFER_SUCCESS=true
-            else
-              echo "⚠️ Transfer to /tmp/ failed (exit code: $SCP_EXIT_CODE)"
-              echo "SCP output: $SCP_OUTPUT"
-            fi
-          else
-            echo "⚠️ /tmp/ has insufficient space (${AVAIL_TMP_MB}MB < ${REQUIRED_SPACE_MB}MB required)"
-          fi
-          
-          # If /tmp transfer failed or doesn't have space, use home directory
-          if [ "$TRANSFER_SUCCESS" = "false" ]; then
-            echo "Transferring to home directory instead..."
-            set +e
-            SCP_HOME_OUTPUT=$(scp deployment-standalone.tar.gz deploy-server:"${REMOTE_HOME}/deployment-standalone.tar.gz" 2>&1)
-            SCP_HOME_EXIT_CODE=$?
-            set -e
-            
-            if [ $SCP_HOME_EXIT_CODE -eq 0 ]; then
-              echo "✅ Transfer to home directory successful"
-              DEPLOYMENT_PACKAGE_PATH="${REMOTE_HOME}/deployment-standalone.tar.gz"
-              TRANSFER_SUCCESS=true
-            else
-              echo "❌ Transfer to home directory also failed (exit code: $SCP_HOME_EXIT_CODE)"
-              echo "SCP output: $SCP_HOME_OUTPUT"
-            fi
-          fi
-          
-          if [ "$TRANSFER_SUCCESS" = "false" ]; then
-            echo "❌ Transfer failed to both locations"
-            echo "Troubleshooting information:"
-            ssh deploy-server "echo '=== Troubleshooting ==='; df -h; echo ''; echo '/tmp permissions:'; ls -ld /tmp; echo ''; echo 'Home directory permissions:'; ls -ld \$HOME"
-            exit 1
-          fi
-          
-          # Verify file was transferred successfully
-          echo "Verifying transferred file..."
-          ssh deploy-server "ls -lh ${DEPLOYMENT_PACKAGE_PATH} && echo '✅ File exists on remote server at ${DEPLOYMENT_PACKAGE_PATH}'"
-
-      - name: Deploy standalone application
-        timeout-minutes: 15
-        run: |
-          ssh deploy-server 'bash -s' << 'STANDALONE_DEPLOY'
+          ssh deploy-server 'bash -s' << 'REMOTE'
           set -euo pipefail
 
-          LOG_FILE="/tmp/deploy-standalone-$(date +%Y%m%d-%H%M%S).log"
-          EXISTING_DATA_DIR=""
-          exec > >(tee -a "$LOG_FILE") 2>&1
-          trap 'echo "[deploy] ERROR at line $LINENO: command \"$BASH_COMMAND\" exited with code $?"' ERR
-
-          echo "=== Standalone Deployment Process ==="
-          
-          # 0. Clean up /tmp directory to free space
-          echo "=== Cleaning /tmp directory ==="
-          echo "Disk space before cleanup:"
-          df -h /tmp 2>/dev/null || df -h /
-          
-          # Remove old deployment packages and logs from /tmp
-          echo "Removing old files from /tmp..."
-          find /tmp -name "deployment-standalone.tar.gz" -type f -mtime +1 -delete 2>/dev/null || true
-          find /tmp -name "deploy-standalone-*.log" -type f -mtime +7 -delete 2>/dev/null || true
-          
-          echo "Disk space after cleanup:"
-          df -h /tmp 2>/dev/null || df -h /
-          
-          # Check if we have enough space in /tmp (need at least 250MB for 140MB package + extraction buffer)
-          AVAIL_TMP=$(df /tmp 2>/dev/null | tail -1 | awk '{print $4}' || df / | tail -1 | awk '{print $4}' || echo "0")
-          AVAIL_TMP_MB=$((AVAIL_TMP / 1024))
-          echo "Available space in /tmp: ${AVAIL_TMP_MB}MB"
-          
-          if [ "$AVAIL_TMP_MB" -lt 250 ]; then
-            echo "⚠️  Warning: Low disk space in /tmp (${AVAIL_TMP_MB}MB available, need at least 250MB)"
-            echo "Attempting to free more space..."
-            # Remove any remaining old files
-            find /tmp -type f -mtime +1 -delete 2>/dev/null || true
-            df -h /tmp 2>/dev/null || df -h /
-          fi
-           
-          # 1. Environment setup
+          export BUN_INSTALL="$HOME/.bun"
+          export PATH="$BUN_INSTALL/bin:$PATH"
           export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          export PNPM_HOME="$HOME/.local/share/pnpm"
-          export PATH="$PNPM_HOME:$PATH"
-          if ! command -v pm2 >/dev/null 2>&1; then
-            echo "pm2 not found; installing via pnpm..."
-            command -v pnpm >/dev/null 2>&1 || { echo "pnpm not found in PATH"; exit 1; }
-            pnpm add -g pm2
-          fi
+          [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+          [ -n "${NVM_BIN:-}" ] && export PATH="$NVM_BIN:$PATH"
 
-          # 2. Stop existing processes
-          echo "Stopping existing processes..."
-          pm2 stop all 2>/dev/null || echo "No PM2 processes to stop"
-          pm2 delete all 2>/dev/null || echo "No PM2 processes to delete"
+          command -v bun >/dev/null 2>&1 || { echo "bun not found"; exit 1; }
+          command -v pm2 >/dev/null 2>&1 || { echo "pm2 not found"; exit 1; }
 
-          # 3. Prepare deployment directory (extract to /tmp first to avoid disk space issues)
-          echo "=== Preparing deployment directory ==="
-          # Remove old backups to free space
-          echo "=== Removing old backups to free disk space ==="
-          find /tmp/preserved-data-* -type d -mtime +1 -exec rm -rf {} \; 2>/dev/null || true
-          # Remove .next directory to free space (~70MB)
-          echo "Removing .next directory to free disk space..."
-          rm -rf /var/www/yusuke-kim/.next 2>/dev/null || true
-          rm -rf /var/www/yusuke-kim/*
-          mkdir -p /var/www/yusuke-kim
+          APP_DIR="/var/www/yusuke-kim"
+          PACKAGE_PATH="$HOME/deployment-standalone.tar.gz"
+          TMP_DIR="$(mktemp -d)"
 
-          # 7. Extract standalone deployment
-          echo "=== Extracting standalone deployment ==="
-          
-          # Extract to /tmp first to avoid disk space issues on root filesystem
-          DEPLOYMENT_PACKAGE=""
-          TEMP_EXTRACT_DIR="/tmp/deployment-extract-$(date +%s)"
-          mkdir -p "$TEMP_EXTRACT_DIR"
-          
-          # Ensure cleanup on exit
-          trap 'rm -rf "$TEMP_EXTRACT_DIR" 2>/dev/null || true; echo "Cleanup triggered"' EXIT
-          
-          # Prefer home directory over /tmp/ (which may be full or corrupted)
-          if [ -f "$HOME/deployment-standalone.tar.gz" ]; then
-            DEPLOYMENT_PACKAGE="$HOME/deployment-standalone.tar.gz"
-            echo "Found package in home directory (preferred location)"
-          elif [ -f "/tmp/deployment-standalone.tar.gz" ]; then
-            DEPLOYMENT_PACKAGE="/tmp/deployment-standalone.tar.gz"
-            echo "Found package in /tmp/ (fallback)"
-          else
-            echo "❌ Deployment package not found in home directory or /tmp/"
-            echo "Searching for package..."
-            find /tmp "$HOME" -name "deployment-standalone.tar.gz" -type f 2>/dev/null | head -5 || true
-            exit 1
-          fi
-          
-          echo "Using package: $DEPLOYMENT_PACKAGE"
-          echo "Package size: $(du -h "$DEPLOYMENT_PACKAGE" | cut -f1)"
-          echo "Extracting to: $TEMP_EXTRACT_DIR"
-          
-          echo "Verifying package integrity..."
-          if ! tar -tzf "$DEPLOYMENT_PACKAGE" > /dev/null 2>&1; then
-            echo "❌ Deployment package is corrupted or invalid: $DEPLOYMENT_PACKAGE"
-            # Try alternative location if available
-            if [ "$DEPLOYMENT_PACKAGE" = "/tmp/deployment-standalone.tar.gz" ] && [ -f "$HOME/deployment-standalone.tar.gz" ]; then
-              echo "Trying alternative package in home directory..."
-              DEPLOYMENT_PACKAGE="$HOME/deployment-standalone.tar.gz"
-              if tar -tzf "$DEPLOYMENT_PACKAGE" > /dev/null 2>&1; then
-                echo "✅ Alternative package is valid, using it"
-              else
-                echo "❌ Alternative package is also corrupted"
-                exit 1
-              fi
-            else
-              exit 1
-            fi
-          fi
-          
-          echo "Extracting deployment package..."
-          tar -xzf "$DEPLOYMENT_PACKAGE" -C "$TEMP_EXTRACT_DIR"
-          echo "✅ Extraction completed"
-          
-          # Move extracted files to /var/www/yusuke-kim
-          echo "Moving extracted files to /var/www/yusuke-kim..."
-          rm -rf /var/www/yusuke-kim/*
-          # Use . at the end to copy hidden files and directories (like .next)
-          cp -a "$TEMP_EXTRACT_DIR"/. /var/www/yusuke-kim/
-          echo "✅ Files moved"
-          
-          # Clean up temporary extraction directory (always run this)
-          echo "Cleaning up temporary extraction directory..."
-          rm -rf "$TEMP_EXTRACT_DIR"
-          echo "✅ Temporary directory cleaned up"
-          
-          cd /var/www/yusuke-kim
-          
-          # Clean up package file after extraction
-          echo "Cleaning up package file..."
-          rm -f "$DEPLOYMENT_PACKAGE" || true
-          # Also clean up from /tmp if it exists there
-          rm -f /tmp/deployment-standalone.tar.gz || true
+          pm2 delete yusuke-kim 2>/dev/null || true
+          mkdir -p "$APP_DIR"
+          find "$APP_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+          tar -xzf "$PACKAGE_PATH" -C "$TMP_DIR"
+          cp -a "$TMP_DIR"/. "$APP_DIR"/
+          rm -rf "$TMP_DIR"
+          rm -f "$PACKAGE_PATH"
 
-          # Ensure data directory exists
-          if [ ! -d "data" ]; then
-            echo "⚠️  Warning: data directory not found in deployment package"
-            mkdir -p data
-          fi
-          
-          # Verify data directory contents
-          echo "=== Data directory verification ==="
-          echo "Data directory status:"
-          ls -la data/ 2>/dev/null || echo "Data directory is empty or inaccessible"
-          
-          if [ -d "data/contents" ]; then
-            echo "Contents directory found"
-            DB_COUNT=$(find data/contents -name '*.db' -type f 2>/dev/null | wc -l 2>/dev/null || printf '0')
-            echo "Number of database files: $DB_COUNT"
-            if [ "$DB_COUNT" -gt 0 ] 2>/dev/null; then
-              echo "Database files:"
-              find data/contents -name '*.db' -type f 2>/dev/null | head -10 || true
-            fi
-          else
-            echo "⚠️  Warning: contents directory not found"
-          fi
-          
-
-          # Verify file structure before deployment verification
-          echo "=== File structure verification ==="
-          echo "Current directory: $(pwd)"
-          echo "Directory contents:"
-          ls -la /var/www/yusuke-kim/
-
-          # Check for critical files
-          echo ""
-          echo "Critical file checks:"
-          if [ -f "server.js" ]; then
-            echo "✅ server.js exists ($(stat -f%z server.js 2>/dev/null || stat -c%s server.js 2>/dev/null || echo "unknown") bytes)"
-          else
-            echo "❌ server.js NOT found"
-          fi
-
-          if [ -f ".next/BUILD_ID" ]; then
-            echo "✅ .next/BUILD_ID exists"
-            echo "BUILD_ID: $(cat .next/BUILD_ID 2>/dev/null || echo "unknown")"
-          else
-            echo "❌ .next/BUILD_ID NOT found"
-          fi
-
-          if [ -d ".next" ]; then
-            echo "✅ .next directory exists"
-            echo ".next directory contents:"
-            ls -la .next/ | head -20
-          else
-            echo "❌ .next directory NOT found"
-          fi
-
-          # 8. Verify deployment
-          if [ ! -f "server.js" ] || [ ! -f ".next/BUILD_ID" ]; then
-            echo "❌ Deployment verification failed - missing critical files"
-            exit 1
-          fi
-
-          echo "✅ Files extracted successfully"
-          BUILD_ID_VALUE="unknown"
-          if [ -f ".next/BUILD_ID" ]; then
-            BUILD_ID_VALUE="$(cat .next/BUILD_ID 2>/dev/null || echo 'unknown')"
-          fi
-          echo "BUILD_ID: ${BUILD_ID_VALUE}"
-          
-          # 8.1 Ensure middleware is deployed (サブドメインリダイレクト用)
-          echo "=== Verifying middleware presence ==="
-          EDGE_MW_FILES=$(ls .next/server/edge/chunks/*.js 2>/dev/null || true)
-          if [ -n "$EDGE_MW_FILES" ]; then
-            echo "✅ edge middleware chunks found:"
-            echo "$EDGE_MW_FILES" | head -5
-            
-            # Verify file sizes (should not be empty)
-            EDGE_CHUNK_COUNT=0
-            EDGE_CHUNK_TOTAL_SIZE=0
-            for chunk_file in .next/server/edge/chunks/*.js; do
-              if [ -f "$chunk_file" ]; then
-                EDGE_CHUNK_COUNT=$((EDGE_CHUNK_COUNT + 1))
-                FILE_SIZE=$(stat -f%z "$chunk_file" 2>/dev/null || stat -c%s "$chunk_file" 2>/dev/null || echo "0")
-                EDGE_CHUNK_TOTAL_SIZE=$((EDGE_CHUNK_TOTAL_SIZE + FILE_SIZE))
-              fi
-            done
-            
-            echo "Edge chunk files: $EDGE_CHUNK_COUNT"
-            echo "Total edge chunk size: ${EDGE_CHUNK_TOTAL_SIZE} bytes"
-            
-            if [ "$EDGE_CHUNK_COUNT" -eq 0 ] || [ "$EDGE_CHUNK_TOTAL_SIZE" -eq 0 ]; then
-              echo "❌ Edge chunks are empty or missing"
-              exit 1
-            fi
-            
-            # Verify middleware by checking for any content (minified code may not contain readable strings)
-            echo "✅ Middleware edge chunks verified (files exist and contain data)"
-          else
-            echo "❌ edge middleware chunk not found in .next/server/edge/chunks"
-            exit 1
-          fi
-          
-          echo "Deployment info:"
-          if [ -f "deployment-info.json" ]; then
-            cat deployment-info.json
-          else
-            echo "⚠️  Warning: deployment-info.json not found"
-          fi
-
-          # 9. Set up environment
-          cat > .env.production.local << ENV_EOF
+          cat > "$APP_DIR/.env.production.local" << ENV_EOF
           NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_ID }}
           NODE_ENV=production
           PORT=3000
           ENV_EOF
 
-          # 10. Quick test of standalone server
-          echo "Testing standalone server..."
-          TEST_PID=""
-          if command -v timeout >/dev/null 2>&1; then
-            timeout 30 node server.js &
-            TEST_PID=$!
-          else
-            node server.js &
-            TEST_PID=$!
-          fi
-
-          sleep 15
-
-          if [ -n "$TEST_PID" ] && kill -0 "$TEST_PID" 2>/dev/null; then
-            echo "✅ Server startup successful"
-            
-            # Test endpoints
-            curl -f -s http://localhost:3000/ > /dev/null 2>&1 && echo "✅ Home page responding" || echo "⚠️  Home page not responding"
-            
-            curl -f -s http://localhost:3000/api/health > /dev/null 2>&1 && echo "✅ Health check responding" || echo "⚠️  Health check not responding"
-            
-            kill "$TEST_PID" 2>/dev/null || true
-            sleep 3
-          else
-            echo "❌ Server startup failed"
-            exit 1
-          fi
-
-          # 11. Start with PM2
-          echo "Starting application with PM2..."
-          NODE_ENV=production pm2 start server.js --name "yusuke-kim" --env production
+          cd "$APP_DIR"
+          pm2 start "$(command -v bun)" --name yusuke-kim -- server.js
           pm2 save
-          pm2 startup systemd -u $USER --hp /home/$USER || echo "PM2 startup already configured"
-
-          # 12. Final health check
           sleep 10
-
-          echo "=== Final Health Check ==="
-          if pm2 status | grep -q "yusuke-kim.*online"; then
-            echo "✅ Application is running"
-            
-            # Multiple endpoint tests
-            ENDPOINTS=("/" "/api/health" "/portfolio/gallery/all")
-            
-            for endpoint in "${ENDPOINTS[@]}"; do
-              if curl -f -s -o /dev/null -w "%{http_code}" "http://localhost:3000${endpoint}" | grep -q "200\|304"; then
-                echo "✅ ${endpoint} - OK"
-              else
-                echo "⚠️ ${endpoint} - Failed"
-              fi
-            done
-          else
-            echo "❌ Application is not running properly"
-            pm2 logs yusuke-kim --lines 50
-            exit 1
-          fi
-
-          echo "=== Deployment completed successfully ==="
-          STANDALONE_DEPLOY
+          curl -fsS http://127.0.0.1:3000/api/health
+          REMOTE
 
       - name: Verify deployment
         run: |
-          echo "Waiting for application to stabilize..."
-          sleep 15
-
-          echo "=== Server Diagnostics ==="
-          ssh deploy-server << 'DIAGNOSTICS'
-          echo "=== PM2 Status ==="
-          pm2 status || echo "PM2 not running"
-          pm2 logs yusuke-kim --lines 10 --nostream || echo "No PM2 logs"
-          
-          echo ""
-          echo "=== Port Listening Check ==="
-          sudo netstat -tlnp 2>/dev/null | grep -E ':(80|443|3000)' || ss -tlnp | grep -E ':(80|443|3000)' || echo "No ports found"
-          
-          echo ""
-          echo "=== Nginx Status ==="
-          if command -v nginx >/dev/null 2>&1; then
-            sudo systemctl status nginx --no-pager -l || echo "Nginx service check failed"
-            echo ""
-            echo "=== Nginx Configuration ==="
-            sudo nginx -t 2>&1 || echo "Nginx config test failed"
-            echo ""
-            echo "=== Active Nginx Sites ==="
-            ls -la /etc/nginx/sites-enabled/ 2>/dev/null || echo "No sites-enabled directory"
-            if [ -f /etc/nginx/sites-enabled/default ]; then
-              echo "⚠️  Warning: default site is enabled (may conflict)"
-              cat /etc/nginx/sites-enabled/default | head -20
-            fi
-            if [ -f /etc/nginx/sites-enabled/yusuke-kim ]; then
-              echo "✅ yusuke-kim site configuration:"
-              cat /etc/nginx/sites-enabled/yusuke-kim
-            else
-              echo "❌ yusuke-kim site not configured"
-            fi
-          else
-            echo "❌ Nginx is not installed"
-          fi
-          
-          echo ""
-          echo "=== Firewall Status (UFW) ==="
-          sudo ufw status verbose || echo "UFW not available"
-          
-          echo ""
-          echo "=== Application Health Check ==="
-          curl -f -s http://localhost:3000/api/health && echo "✅ App is responding on port 3000" || echo "❌ App not responding on port 3000"
-          
-          echo ""
-          echo "=== Network Interface ==="
-          ip addr show | grep -E 'inet ' | grep -v '127.0.0.1' || ifconfig | grep -E 'inet ' | grep -v '127.0.0.1' || echo "Network info not available"
-          DIAGNOSTICS
-
-          echo ""
-          echo "=== Testing service endpoints on remote host (loopback via SSH) ==="
-          ENDPOINTS=("/" "/api/health" "/portfolio/gallery/all")
-          for endpoint in "${ENDPOINTS[@]}"; do
-            HTTP_CODE=$(ssh deploy-server "curl -s -o /dev/null -w '%{http_code}' http://localhost:3000${endpoint}")
-            if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "304" ]; then
-              echo "✅ ${endpoint} - OK (HTTP $HTTP_CODE)"
-            else
-              echo "❌ ${endpoint} - Failed (HTTP $HTTP_CODE)"
-              exit 1
-            fi
-          done
-
-          echo ""
-          echo "=== Testing external endpoints (public access) ==="
-          EXTERNAL_ENDPOINTS=("/" "/api/health" "/portfolio/gallery/all")
-          EXTERNAL_ERRORS=0
-          for endpoint in "${EXTERNAL_ENDPOINTS[@]}"; do
-            URL="https://yusuke-kim.com${endpoint}"
-            # curl with timeout and error handling
-            CURL_EXIT=0
-            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 --connect-timeout 5 "${URL}" 2>&1) || CURL_EXIT=$?
-            
-            if [ "$CURL_EXIT" -ne 0 ]; then
-              echo "⚠️ ${URL} - Connection failed (curl exit code: $CURL_EXIT)"
-              EXTERNAL_ERRORS=$((EXTERNAL_ERRORS + 1))
-              continue
-            fi
-            
-            if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "304" ]; then
-              echo "✅ ${URL} - OK (HTTP $HTTP_CODE)"
-            elif [ -z "$HTTP_CODE" ] || [ "$HTTP_CODE" = "000" ]; then
-              echo "⚠️ ${URL} - No response (possible timeout or connection issue)"
-              EXTERNAL_ERRORS=$((EXTERNAL_ERRORS + 1))
-            else
-              echo "⚠️ ${URL} - Failed (HTTP $HTTP_CODE)"
-              EXTERNAL_ERRORS=$((EXTERNAL_ERRORS + 1))
-            fi
-          done
-          
-          if [ "$EXTERNAL_ERRORS" -gt 0 ]; then
-            echo ""
-            echo "⚠️ Warning: $EXTERNAL_ERRORS external endpoint(s) failed. This may be due to:"
-            echo "  - DNS propagation delay"
-            echo "  - Network connectivity issues from GitHub Actions"
-            echo "  - Firewall or security group restrictions"
-            echo "  - SSL certificate issues"
-            echo ""
-            echo "Internal endpoints are working correctly, so the deployment is likely successful."
-            echo "Please verify external access manually if needed."
-          else
-            echo ""
-            echo "✅ All external endpoints are accessible!"
-          fi
-
-      - name: Cleanup
-        if: always()
-        run: |
-          ssh deploy-server << 'CLEANUP'
-          # Remove temporary files
-          rm -f /tmp/deployment-standalone.tar.gz
-          rm -f $HOME/deployment-standalone.tar.gz
-          # Clean up any temporary preserved data directories
-          rm -rf /tmp/preserved-data-* 2>/dev/null || true
-          CLEANUP
-
-      - name: Fetch deployment log
-        if: always()
-        run: |
-          LOG_FILE=$(ssh deploy-server "ls -t /tmp/deploy-standalone-*.log 2>/dev/null | head -n 1") || true
-          if [ -n "$LOG_FILE" ]; then
-            echo "=== Remote deployment log: $LOG_FILE ==="
-            ssh deploy-server "tail -n 200 $LOG_FILE" || true
-          else
-            echo "No deployment log found on remote server"
-          fi
+          ssh deploy-server "pm2 status && curl -fsS http://127.0.0.1:3000/api/health"

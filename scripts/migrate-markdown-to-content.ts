@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import Database from "better-sqlite3";
+import { openSqliteDb } from "@/cms/lib/sqlite";
 
 interface MarkdownRow {
 	id: string;
@@ -32,10 +32,10 @@ function migrate(): void {
 		return;
 	}
 
-	const source = new Database(SOURCE_DB_PATH, { readonly: true });
+	const source = openSqliteDb(SOURCE_DB_PATH, { readonly: true });
 	source.pragma("journal_mode = OFF");
 	const rows = source
-		.prepare<[], MarkdownRow>(
+		.prepare<MarkdownRow>(
 			`SELECT id, content_id, slug, frontmatter, body, html_cache, path, lang, status, version, created_at, updated_at, published_at FROM markdown_pages`,
 		)
 		.all();
@@ -59,7 +59,7 @@ function migrate(): void {
 			continue;
 		}
 
-		const target = new Database(targetPath);
+		const target = openSqliteDb(targetPath);
 		try {
 			target
 				.prepare(

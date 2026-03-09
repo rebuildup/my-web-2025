@@ -1,7 +1,8 @@
-import Database from "better-sqlite3";
+import { expect, test } from "bun:test";
 import { saveFullContent } from "../content-mapper";
+import { openSqliteDb } from "../sqlite";
 
-function createSchema(db: Database.Database) {
+function createSchema(db: ReturnType<typeof openSqliteDb>) {
 	db.exec(`
     PRAGMA foreign_keys = ON;
 
@@ -61,53 +62,52 @@ function createSchema(db: Database.Database) {
   `);
 }
 
-describe("saveFullContent", () => {
-	test("does not delete media rows via FK cascade on update", () => {
-		const db = new Database(":memory:");
-		try {
-			createSchema(db);
+test("saveFullContent does not cascade-delete media on update", () => {
+	const db = openSqliteDb(":memory:");
+	try {
+		createSchema(db);
 
-			const contentId = "example";
-			const now = new Date().toISOString();
+		const contentId = "example";
+		const now = new Date().toISOString();
 
-			saveFullContent(db, {
-				id: contentId,
-				title: "Example",
-				status: "draft",
-				visibility: "draft",
-				createdAt: now,
-				updatedAt: now,
-			});
+		saveFullContent(db, {
+			id: contentId,
+			title: "Example",
+			status: "draft",
+			visibility: "draft",
+			createdAt: now,
+			updatedAt: now,
+		});
 
-			db.prepare(
-				"INSERT INTO media (id, content_id, filename, mime_type, size, data, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-			).run(
-				"media_1",
-				contentId,
-				"example.png",
-				"image/png",
-				3,
-				Buffer.from([1, 2, 3]),
-				now,
-				now,
-			);
+		db.prepare(
+			"INSERT INTO media (id, content_id, filename, mime_type, size, data, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+		).run(
+			"media_1",
+			contentId,
+			"example.png",
+			"image/png",
+			3,
+			Buffer.from([1, 2, 3]),
+			now,
+			now,
+		);
 
-			// Update content (previously `INSERT OR REPLACE` would delete the row first and cascade-delete media)
-			saveFullContent(db, {
-				id: contentId,
-				title: "Example Updated",
-				status: "draft",
-				visibility: "draft",
-				createdAt: now,
-				updatedAt: new Date(Date.now() + 1000).toISOString(),
-			});
+		saveFullContent(db, {
+			id: contentId,
+			title: "Example Updated",
+			status: "draft",
+			visibility: "draft",
+			createdAt: now,
+			updatedAt: new Date(Date.now() + 1000).toISOString(),
+		});
 
-			const mediaCount = db
-				.prepare("SELECT COUNT(*) as c FROM media WHERE content_id = ?")
-				.get(contentId).c as number;
-			expect(mediaCount).toBe(1);
-		} finally {
-			db.close();
-		}
-	});
+		const mediaCount = db
+			.prepare<{ c: number }>(
+				"SELECT COUNT(*) as c FROM media WHERE content_id = ?",
+			)
+			.get(contentId);
+		expect(mediaCount?.c).toBe(1);
+	} finally {
+		db.close();
+	}
 });

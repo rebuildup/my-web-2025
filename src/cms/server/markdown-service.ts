@@ -1,8 +1,8 @@
 import "server-only";
 
-import type Database from "better-sqlite3";
 import { getAllFromIndex, getContentDb } from "@/cms/lib/content-db-manager";
 import type { MarkdownPageRow } from "@/cms/lib/markdown-mapper";
+import type { SqliteDatabase } from "@/cms/lib/sqlite";
 import {
 	deleteMarkdownPage as deleteMarkdownRow,
 	getMarkdownPage as getMarkdownPageFromDb,
@@ -31,7 +31,7 @@ function getCandidateContentIds(preferredId?: string): string[] {
 
 function withContentDb<T>(
 	contentId: string,
-	fn: (db: Database.Database) => T,
+	fn: (db: SqliteDatabase) => T,
 ): T {
 	const db = getContentDb(contentId);
 	try {
