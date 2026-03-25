@@ -69,7 +69,7 @@ function ProfileHeader() {
 						<motion.img
 							whileHover={{ rotate: 360 }}
 							transition={{ duration: 2, ease: [0.9, 0, 0.1, 1] }}
-							src="https://pbs.twimg.com/profile_images/1977152336486449153/uWHA4dAC_400x400.jpg"
+							src="https://pbs.twimg.com/profile_images/2034243179176960000/ZcmwOt4U_400x400.jpg"
 							alt="samuido (Tech)"
 							className="w-full h-full object-cover"
 						/>

@@ -7,7 +7,7 @@ interface XProfileImageProps {
 
 export default function XProfileImage({ href, size = 48 }: XProfileImageProps) {
 	const imageUrl =
-		"https://pbs.twimg.com/profile_images/1977152336486449153/uWHA4dAC_400x400.jpg";
+		"https://pbs.twimg.com/profile_images/2034243179176960000/ZcmwOt4U_400x400.jpg";
 
 	return (
 		<a

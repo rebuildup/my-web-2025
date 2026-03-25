@@ -142,7 +142,7 @@ export default function AboutStitchClient({
 									<img
 										alt={profile.name}
 										className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105"
-										src="https://pbs.twimg.com/profile_images/1977152336486449153/uWHA4dAC_400x400.jpg"
+										src="https://pbs.twimg.com/profile_images/2034243179176960000/ZcmwOt4U_400x400.jpg"
 									/>
 								</div>
 								<div className="text-center w-full max-w-md">
