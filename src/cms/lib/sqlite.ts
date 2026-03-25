@@ -59,14 +59,6 @@ function getBunSqlite(): { Database: BunDatabaseCtor } {
 	_bunSqlite = require("bun:sqlite") as { Database: BunDatabaseCtor };
 	return _bunSqlite;
 }
-try {
-	return require("bun:sqlite") as { Database: BunDatabaseCtor };
-} catch {
-	throw new Error(
-		"Failed to load bun:sqlite. Make sure you're running with Bun.",
-	);
-}
-}
 
 function normalizeBindingObject(record: BindingRecord): BindingRecord {
 	const normalized: BindingRecord = {};
