@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getAllFromIndex } from "@/cms/lib/content-db-manager";
 import type { ContentItem } from "@/types";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
 	title: "Video Projects - Portfolio | samuido 映像制作作品集",
 	description:

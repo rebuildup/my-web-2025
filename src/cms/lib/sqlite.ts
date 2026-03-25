@@ -45,8 +45,27 @@ type BunDatabaseCtor = new (
 	},
 ) => BunDatabase;
 
+let _bunSqlite: { Database: BunDatabaseCtor } | null = null;
+
 function getBunSqlite(): { Database: BunDatabaseCtor } {
+	if (_bunSqlite) return _bunSqlite;
+
+	if (typeof Bun === "undefined") {
+		throw new Error(
+			"bun:sqlite is only available in Bun runtime. This code must be run with Bun.",
+		);
+	}
+
+	_bunSqlite = require("bun:sqlite") as { Database: BunDatabaseCtor };
+	return _bunSqlite;
+}
+try {
 	return require("bun:sqlite") as { Database: BunDatabaseCtor };
+} catch {
+	throw new Error(
+		"Failed to load bun:sqlite. Make sure you're running with Bun.",
+	);
+}
 }
 
 function normalizeBindingObject(record: BindingRecord): BindingRecord {

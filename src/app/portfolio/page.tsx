@@ -13,6 +13,9 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import GlowCard from "@/components/ui/GlowCard";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
+
+export const dynamic = "force-dynamic";
+
 import type { PortfolioContentItem } from "@/types/portfolio";
 import { LatestWorksSection } from "./components/LatestWorksSection";
 import { StatsOverview } from "./components/StatsOverview";

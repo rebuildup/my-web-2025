@@ -5,6 +5,9 @@ import { openSqliteDb, type SqliteDatabase } from "@/cms/lib/sqlite";
 import type { Content } from "@/cms/types/content";
 import type { ContentIndexRow } from "@/cms/types/database";
 
+return _openSqliteDb;
+}
+
 const DATA_DIR = resolveDataDirectory();
 const CONTENT_DB_DIR = path.join(DATA_DIR, "contents");
 
