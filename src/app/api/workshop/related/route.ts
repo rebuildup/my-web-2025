@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getContentTags } from "@/cms/lib/content-db-manager";
+import { getAllFromIndex, getContentTags } from "@/cms/lib/content-db-manager";
 import { listMarkdownPages } from "@/cms/server/markdown-service";
 
 export const runtime = "nodejs";
@@ -13,35 +13,17 @@ interface RelatedArticle {
 	tags: string[];
 }
 
-// Get thumbnail from CMS content
-async function getThumbnail(page: any): Promise<string | null> {
-	const contentId = page.contentId || page.slug;
-	try {
-		const baseUrl =
-			process.env.NODE_ENV === "development"
-				? "http://localhost:3010"
-				: process.env.NEXT_PUBLIC_SITE_URL ||
-					process.env.NEXT_PUBLIC_BASE_URL ||
-					"https://yusuke-kim.com";
-
-		const res = await fetch(
-			`${baseUrl}/api/cms/contents?id=${encodeURIComponent(contentId)}`,
-			{ cache: "no-store" },
-		);
-
-		if (res.ok) {
-			const cmsContent = await res.json();
-			if (cmsContent?.thumbnails) {
-				const thumbs = cmsContent.thumbnails;
-				if (thumbs?.image?.src) return thumbs.image.src;
-				if (thumbs?.gif?.src) return thumbs.gif.src;
-				if (thumbs?.webm?.poster) return thumbs.webm.poster;
-			}
-		}
-	} catch (error) {
-		console.error(`[Related API] Error fetching content ${contentId}:`, error);
+// Get thumbnail from CMS content using index (no API call)
+function getThumbnail(page: any, cmsContent: any): string | null {
+	// First try to get from CMS content (from index)
+	if (cmsContent?.thumbnails) {
+		const thumbs = cmsContent.thumbnails;
+		if (thumbs?.image?.src) return thumbs.image.src;
+		if (thumbs?.gif?.src) return thumbs.gif.src;
+		if (thumbs?.webm?.poster) return thumbs.webm.poster;
 	}
 
+	// Then check frontmatter
 	const frontmatter = page.frontmatter ?? {};
 	const candidates = [
 		typeof frontmatter.thumbnail === "string" ? frontmatter.thumbnail : undefined,
@@ -111,6 +93,10 @@ export async function GET(request: NextRequest) {
 			return NextResponse.json({ articles: [] });
 		}
 
+		// Get all index data at once (optimization for N+1 problem)
+		const allIndex = getAllFromIndex();
+		const indexMap = new Map(allIndex.map((item) => [item.id, item]));
+
 		// Build tags map for all pages
 		const articlesWithTags: Array<{
 			page: any;
@@ -134,22 +120,22 @@ export async function GET(request: NextRequest) {
 		const shuffled = related.sort(() => Math.random() - 0.5);
 		const selected = shuffled.slice(0, Math.min(limit, shuffled.length));
 
-		// Build article data
-		const articles: RelatedArticle[] = await Promise.all(
-			selected.map(async ({ page, tags }) => {
-				const thumbnail = await getThumbnail(page);
-				const title = page.frontmatter?.title || page.slug;
-				const href = getPageHref(page);
+		// Build article data using index data (no API calls)
+		const articles: RelatedArticle[] = selected.map(({ page, tags }) => {
+			const contentId = page.contentId || page.slug;
+			const cmsContent = indexMap.get(contentId);
+			const thumbnail = getThumbnail(page, cmsContent);
+			const title = page.frontmatter?.title || page.slug;
+			const href = getPageHref(page);
 
-				return {
-					slug: page.slug,
-					title,
-					href,
-					thumbnail,
-					tags,
-				};
-			}),
-		);
+			return {
+				slug: page.slug,
+				title,
+				href,
+				thumbnail,
+				tags,
+			};
+		});
 
 		return NextResponse.json({ articles });
 	} catch (error) {
