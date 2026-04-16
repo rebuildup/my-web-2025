@@ -118,7 +118,7 @@
 		"jsdom": "^27.0.1",
 		"lighthouse": "^13.0.1",
 		"playwright": "^1.48.0",
-		"shadcn": "^3.5.0",
+		"shadcn": "^4.2.0",
 		"tsx": "^4.20.6",
 		"typescript": "5.9.3"
 	},
