@@ -109,7 +109,7 @@
 		"@types/react": "^19.2.7",
 		"@types/react-dom": "^19.2.3",
 		"@types/three": "^0.180.0",
-		"@types/youtube": "^0.1.2",
+		"@types/youtube": "^0.2.0",
 		"babel-plugin-react-compiler": "^1.0.0",
 		"baseline-browser-mapping": "^2.9.19",
 		"chrome-launcher": "^1.2.1",
