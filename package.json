@@ -120,7 +120,7 @@
 		"playwright": "^1.48.0",
 		"shadcn": "^3.5.0",
 		"tsx": "^4.20.6",
-		"typescript": "5.9.3"
+		"typescript": "6.0.2"
 	},
 	"overrides": {
 		"three": "^0.180.0",
