@@ -93,13 +93,6 @@ function getThumbnail(page: MarkdownPage, cmsContent: any): string | null {
 			return thumbs.webm.poster;
 		}
 	}
-		if (thumbs?.gif?.src) {
-			return thumbs.gif.src;
-		}
-		if (thumbs?.webm?.poster) {
-			return thumbs.webm.poster;
-		}
-	}
 
 	const candidates: Array<string | undefined> = [
 		typeof frontmatter.thumbnail === "string"
@@ -312,7 +305,6 @@ export default async function WorkshopPage({
 			cmsContent?.description ||
 			page.frontmatter?.description;
 		const date = formatDate(getDisplayDate(page));
-		const contentId = page.contentId || page.slug;
 		const tags = contentTagsMap.get(contentId) || [];
 		const href = getPageHref(page);
 		const isExternal = /^https?:\/\//i.test(href);
