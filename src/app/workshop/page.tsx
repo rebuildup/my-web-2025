@@ -93,6 +93,13 @@ function getThumbnail(page: MarkdownPage, cmsContent: any): string | null {
 			return thumbs.webm.poster;
 		}
 	}
+		if (thumbs?.gif?.src) {
+			return thumbs.gif.src;
+		}
+		if (thumbs?.webm?.poster) {
+			return thumbs.webm.poster;
+		}
+	}
 
 	const candidates: Array<string | undefined> = [
 		typeof frontmatter.thumbnail === "string"
@@ -286,12 +293,19 @@ export default async function WorkshopPage({
 
 	// Batch fetch all CMS content at once (optimization for N+1 problem)
 	const contentIds = sortedContent.map((page) => page.contentId || page.slug);
+	console.log(
+		`[Workshop] Fetching content for ${contentIds.length} IDs:`,
+		contentIds.slice(0, 5),
+	);
 	const contentsMap = await fetchContentsBatch(contentIds);
+	console.log(`[Workshop] Got ${contentsMap.size} contents from API`);
 
 	// Build article data
 	const displayPagesWithCMS: ArticleData[] = sortedContent.map((page) => {
-		const cmsContent = contentsMap.get(page.contentId || page.slug);
+		const contentId = page.contentId || page.slug;
+		const cmsContent = contentsMap.get(contentId);
 		const thumbnail = getThumbnail(page, cmsContent);
+		console.log(`[Workshop] Page ${page.slug}: thumbnail = ${thumbnail}`);
 		const title = page.frontmatter?.title || page.slug;
 		const description =
 			cmsContent?.summary ||
