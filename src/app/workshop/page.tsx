@@ -10,7 +10,7 @@ import { SearchBar } from "./components/SearchBar";
 import { TagBar } from "./components/TagBar";
 import type { ArticleData } from "./types";
 
-export const revalidate = 300;
+export const revalidate = 3600;
 export const runtime = "nodejs";
 
 async function fetchContentFromCMS(id: string) {
@@ -78,10 +78,7 @@ function getDisplayDate(page: MarkdownPage) {
 	);
 }
 
-async function getThumbnail(
-	page: MarkdownPage,
-	cmsContent: any,
-): Promise<string | null> {
+function getThumbnail(page: MarkdownPage, cmsContent: any): string | null {
 	const frontmatter = page.frontmatter ?? {};
 
 	if (cmsContent?.thumbnails) {
@@ -125,6 +122,44 @@ async function getThumbnail(
 	}
 
 	return null;
+}
+
+async function fetchContentsBatch(
+	contentIds: string[],
+): Promise<Map<string, unknown>> {
+	const results = new Map<string, unknown>();
+	const baseUrl =
+		process.env.NODE_ENV === "development"
+			? "http://localhost:3010"
+			: process.env.NEXT_PUBLIC_SITE_URL ||
+				process.env.NEXT_PUBLIC_BASE_URL ||
+				"https://yusuke-kim.com";
+
+	const batchSize = 10;
+	for (let i = 0; i < contentIds.length; i += batchSize) {
+		const batch = contentIds.slice(i, i + batchSize);
+		const batchResults = await Promise.all(
+			batch.map(async (id) => {
+				try {
+					const res = await fetch(
+						`${baseUrl}/api/cms/contents?id=${encodeURIComponent(id)}`,
+						{ cache: "no-store" },
+					);
+					if (res.ok) {
+						return { id, data: await res.json() };
+					}
+				} catch (e) {
+					console.error(`[Workshop] Error fetching content ${id}:`, e);
+				}
+				return { id, data: null };
+			}),
+		);
+		batchResults.forEach(({ id, data }) => {
+			if (data) results.set(id, data);
+		});
+	}
+
+	return results;
 }
 
 function getPageHref(page: MarkdownPage) {
@@ -249,36 +284,38 @@ export default async function WorkshopPage({
 		contentTagsMap.set(contentId, tags);
 	}
 
-	// Build article data
-	const displayPagesWithCMS: ArticleData[] = await Promise.all(
-		sortedContent.map(async (page) => {
-			const cmsContent = await fetchContentFromCMS(page.contentId || page.slug);
-			const thumbnail = await getThumbnail(page, cmsContent);
-			const title = page.frontmatter?.title || page.slug;
-			const description =
-				cmsContent?.summary ||
-				cmsContent?.description ||
-				page.frontmatter?.description;
-			const date = formatDate(getDisplayDate(page));
-			const contentId = page.contentId || page.slug;
-			const tags = contentTagsMap.get(contentId) || [];
-			const href = getPageHref(page);
-			const isExternal = /^https?:\/\//i.test(href);
-			const isNew = isNewArticle(page);
+	// Batch fetch all CMS content at once (optimization for N+1 problem)
+	const contentIds = sortedContent.map((page) => page.contentId || page.slug);
+	const contentsMap = await fetchContentsBatch(contentIds);
 
-			return {
-				page,
-				title,
-				description,
-				tags,
-				thumbnail,
-				date,
-				href,
-				isExternal,
-				isNew,
-			};
-		}),
-	);
+	// Build article data
+	const displayPagesWithCMS: ArticleData[] = sortedContent.map((page) => {
+		const cmsContent = contentsMap.get(page.contentId || page.slug);
+		const thumbnail = getThumbnail(page, cmsContent);
+		const title = page.frontmatter?.title || page.slug;
+		const description =
+			cmsContent?.summary ||
+			cmsContent?.description ||
+			page.frontmatter?.description;
+		const date = formatDate(getDisplayDate(page));
+		const contentId = page.contentId || page.slug;
+		const tags = contentTagsMap.get(contentId) || [];
+		const href = getPageHref(page);
+		const isExternal = /^https?:\/\//i.test(href);
+		const isNew = isNewArticle(page);
+
+		return {
+			page,
+			title,
+			description,
+			tags,
+			thumbnail,
+			date,
+			href,
+			isExternal,
+			isNew,
+		};
+	});
 
 	// Get trending tags and popular articles from full dataset
 	const allTags = getAllTags(

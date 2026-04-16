@@ -9,9 +9,10 @@ import type { ContentItem, MarkdownContentItem } from "@/types/content";
 import { isEnhancedContentItem } from "@/types/content";
 import { ArticleSidePanel } from "../../components/ArticleSidePanel";
 import { RelatedArticles } from "../../components/RelatedArticles";
+import { contentCache } from "@/lib/server-cache";
 
 export const runtime = "nodejs";
-export const revalidate = 300;
+export const revalidate = 3600;
 export const dynamic = "force-dynamic";
 
 interface BlogPageProps {
@@ -22,6 +23,54 @@ interface MarkdownDetail {
 	title?: string;
 	summary?: string;
 	body?: string;
+}
+
+// Cached blog data loader for performance optimization
+async function loadBlogDataCached(slug: string) {
+	const cacheKey = `blog-detail-${slug}`;
+
+	const cached = contentCache.get(cacheKey) as
+		| {
+				page: {
+					frontmatter: Record<string, unknown>;
+					body: string;
+					contentId: string;
+				};
+				contentId: string;
+				content: unknown;
+		  }
+		| undefined;
+	if (cached) {
+		console.log(`[BlogDetail] Cache hit for: ${cacheKey}`);
+		return cached;
+	}
+
+	const pageMatch = findMarkdownPage(slug);
+	if (!pageMatch) {
+		return null;
+	}
+
+	const contentId = pageMatch.page.contentId;
+	let content = null;
+	if (contentId) {
+		try {
+			content = await getContentById("blog", contentId);
+		} catch {
+			content = null;
+		}
+	}
+
+	const result = {
+		page: {
+			frontmatter: pageMatch.page.frontmatter ?? {},
+			body: pageMatch.page.body ?? "",
+			contentId: pageMatch.page.contentId ?? "",
+		},
+		contentId,
+		content,
+	};
+	contentCache.set(cacheKey, result);
+	return result;
 }
 
 // Normalize URLs in markdown content
@@ -35,17 +84,17 @@ function normalizeMarkdownUrls(content: string): string {
 		);
 }
 
-// Load markdown detail
+// Load markdown detail with caching
 async function loadMarkdownDetail(
 	slug: string,
 ): Promise<MarkdownDetail | null> {
 	try {
-		const match = findMarkdownPage(slug);
-		if (!match) {
+		const data = await loadBlogDataCached(slug);
+		if (!data) {
 			return null;
 		}
-		const fm = match.page.frontmatter ?? {};
-		const body = normalizeMarkdownUrls(match.page.body ?? "");
+		const fm = data.page.frontmatter;
+		const body = normalizeMarkdownUrls(data.page.body);
 		return {
 			title: fm.title as string | undefined,
 			summary:
@@ -74,15 +123,18 @@ export async function generateMetadata({
 		const { slug } = await params;
 		const detailFromMarkdown = await loadMarkdownDetail(slug);
 
-		const pageMatch = findMarkdownPage(slug);
-		const contentId = pageMatch?.page.contentId;
-		const content = contentId ? await getContentById("blog", contentId) : null;
+		const data = await loadBlogDataCached(slug);
+		const content = data?.content;
 
-		const title = content?.title || detailFromMarkdown?.title || slug;
-		const description =
-			content?.description ||
-			detailFromMarkdown?.summary ||
-			"Blog article details and information";
+		const title = content
+			? (content as { title?: string }).title ||
+				detailFromMarkdown?.title ||
+				slug
+			: detailFromMarkdown?.title || slug;
+		const description = content
+			? (content as { description?: string }).description ||
+				detailFromMarkdown?.summary
+			: detailFromMarkdown?.summary || "Blog article details and information";
 
 		return {
 			title: `${title} | samuido`,
@@ -200,9 +252,9 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 		notFound();
 	}
 
-	const pageMatch = findMarkdownPage(slug);
-	const contentId = pageMatch?.page.contentId;
-	const content = contentId ? await getContentById("blog", contentId) : null;
+	const data = await loadBlogDataCached(slug);
+	const content = data?.content as ContentItem | null;
+	const contentId = data?.contentId || "";
 
 	// Get tags for this article
 	const articleTags = contentId ? getContentTags(contentId) : [];

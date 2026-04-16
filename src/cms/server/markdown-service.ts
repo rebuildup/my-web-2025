@@ -10,6 +10,7 @@ import {
 	saveMarkdownPage,
 } from "@/cms/lib/markdown-mapper";
 import type { MarkdownPage } from "@/cms/types/markdown";
+import { markdownCache } from "@/lib/server-cache";
 
 type MarkdownMatch = {
 	page: MarkdownPage;
@@ -29,10 +30,7 @@ function getCandidateContentIds(preferredId?: string): string[] {
 	return unique(indexEntries.map((entry) => entry.id));
 }
 
-function withContentDb<T>(
-	contentId: string,
-	fn: (db: SqliteDatabase) => T,
-): T {
+function withContentDb<T>(contentId: string, fn: (db: SqliteDatabase) => T): T {
 	const db = getContentDb(contentId);
 	try {
 		return fn(db);
@@ -57,6 +55,14 @@ function mapRows(
 export function listMarkdownPages(options?: {
 	contentId?: string;
 }): MarkdownPage[] {
+	const cacheKey = `markdown-list-${options?.contentId || "all"}`;
+
+	const cached = markdownCache.get(cacheKey) as MarkdownPage[] | undefined;
+	if (cached) {
+		console.log(`[MarkdownService] Cache hit for: ${cacheKey}`);
+		return cached;
+	}
+
 	const ids = getCandidateContentIds(options?.contentId);
 	const pages: MarkdownPage[] = [];
 
@@ -85,11 +91,14 @@ export function listMarkdownPages(options?: {
 	}
 
 	console.log(`[MarkdownService] Total markdown pages loaded: ${pages.length}`);
-	return pages.sort((a, b) => {
+	const result = pages.sort((a, b) => {
 		const aTime = a.updatedAt || "";
 		const bTime = b.updatedAt || "";
 		return bTime.localeCompare(aTime);
 	});
+
+	markdownCache.set(cacheKey, result);
+	return result;
 }
 
 function findMarkdownRow(
@@ -155,7 +164,7 @@ export function saveMarkdownPageForContent(
 	contentId: string,
 	page: Partial<MarkdownPage>,
 ): MarkdownPage {
-	return withContentDb(contentId, (db) => {
+	const result = withContentDb(contentId, (db) => {
 		saveMarkdownPage(db, { ...page, contentId });
 		const identifier = page.id || page.slug || page.contentId || contentId;
 		const saved =
@@ -169,6 +178,8 @@ export function saveMarkdownPageForContent(
 		}
 		return saved;
 	});
+	markdownCache.clear();
+	return result;
 }
 
 export function deleteMarkdownPage(
@@ -180,7 +191,9 @@ export function deleteMarkdownPage(
 		return false;
 	}
 
-	return withContentDb(target.contentId, (db) =>
+	const result = withContentDb(target.contentId, (db) =>
 		deleteMarkdownRow(db, identifier),
 	);
+	markdownCache.clear();
+	return result;
 }
