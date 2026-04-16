@@ -8,7 +8,7 @@
 	],
 	"packageManager": "bun@1.3.10",
 	"scripts": {
-		"dev": "bun x next dev --turbo -p 3010",
+		"dev": "bun x next dev -p 3010",
 		"build": "bun scripts/check-env.js && bun x next build && bun scripts/copy-content-data.js",
 		"start": "bun x next start -p 3010",
 		"dev:port": "bun x next dev -p $PORT",
@@ -74,7 +74,7 @@
 		"matter-js": "^0.20.0",
 		"motion": "^12.23.12",
 		"nanoid": "^5.1.6",
-		"next": "16.0.7",
+		"next": "^15.1.6",
 		"ogl": "^1.0.11",
 		"p5": "^2.1.1",
 		"pixi-filters": "^6.1.4",

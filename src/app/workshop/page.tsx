@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getContentTags } from "@/cms/lib/content-db-manager";
+import { getAllFromIndex, getContentTags } from "@/cms/lib/content-db-manager";
 import { listMarkdownPages } from "@/cms/server/markdown-service";
 import type { MarkdownPage } from "@/cms/types/markdown";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -128,35 +128,27 @@ async function fetchContentsBatch(
 	contentIds: string[],
 ): Promise<Map<string, unknown>> {
 	const results = new Map<string, unknown>();
-	const baseUrl =
-		process.env.NODE_ENV === "development"
-			? "http://localhost:3010"
-			: process.env.NEXT_PUBLIC_SITE_URL ||
-				process.env.NEXT_PUBLIC_BASE_URL ||
-				"https://yusuke-kim.com";
 
-	const batchSize = 10;
-	for (let i = 0; i < contentIds.length; i += batchSize) {
-		const batch = contentIds.slice(i, i + batchSize);
-		const batchResults = await Promise.all(
-			batch.map(async (id) => {
-				try {
-					const res = await fetch(
-						`${baseUrl}/api/cms/contents?id=${encodeURIComponent(id)}`,
-						{ cache: "no-store" },
-					);
-					if (res.ok) {
-						return { id, data: await res.json() };
-					}
-				} catch (e) {
-					console.error(`[Workshop] Error fetching content ${id}:`, e);
-				}
-				return { id, data: null };
-			}),
+	try {
+		const allIndex = getAllFromIndex();
+		const indexMap = new Map(allIndex.map((item) => [item.id, item]));
+
+		for (const id of contentIds) {
+			const indexData = indexMap.get(id);
+			if (indexData) {
+				results.set(id, {
+					summary: indexData.summary,
+					tags: indexData.tags,
+					thumbnails: indexData.thumbnails,
+				});
+			}
+		}
+
+		console.log(
+			`[Workshop] Fetched content for ${results.size} IDs from index`,
 		);
-		batchResults.forEach(({ id, data }) => {
-			if (data) results.set(id, data);
-		});
+	} catch (error) {
+		console.error("[Workshop] Error fetching from index:", error);
 	}
 
 	return results;

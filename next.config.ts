@@ -8,9 +8,7 @@ const nextConfig: NextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
 	},
-	// Turbopack configuration for module resolution
-	// Note: Next.js 16 Turbopack may not support resolveAlias in this format
-	// Using shamefully-hoist in .npmrc instead for pnpm compatibility
+	// Turbopack configuration
 	turbopack: {},
 	// Transpile @appletosolutions/reactbits to ensure @chakra-ui/react is resolved
 	transpilePackages: ["@appletosolutions/reactbits"],
@@ -19,34 +17,9 @@ const nextConfig: NextConfig = {
 		NEXT_BUILD_TIME: isProduction ? "true" : "false",
 	},
 
-	// React Compiler configuration
-	reactCompiler: true,
-
-	// Performance optimizations
-	experimental: {
-		...(isProduction
-			? {
-					optimizePackageImports: [
-						"lucide-react",
-						"framer-motion",
-						"three",
-						// "pixi.js", // Removed: PIXI v8 has issues with tree-shaking
-						"fuse.js",
-						"marked",
-						"recharts",
-					],
-				}
-			: {}),
-		// Development mode optimizations
-		...(isDevelopment && {
-			linkNoTouchStart: true,
-			// Disable static optimization for better HMR when not running Turbopack
-			...(isTurbopackDev
-				? {}
-				: {
-						forceSwcTransforms: true,
-					}),
-		}),
+	// Environment variables
+	env: {
+		NEXT_BUILD_TIME: isProduction ? "true" : "false",
 	},
 	outputFileTracingIncludes: {
 		"/api/cms/(.*)": ["./data/**"],
@@ -181,7 +154,7 @@ const nextConfig: NextConfig = {
 
 			config.optimization = {
 				...config.optimization,
-				sideEffects: ["node_modules/gsap/**", "node_modules/@gsap/**"],
+				sideEffects: true,
 				splitChunks: {
 					chunks: "all",
 					minSize: 10000,
