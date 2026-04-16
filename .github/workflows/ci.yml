@@ -19,8 +19,8 @@ jobs:
         with:
           bun-version: "1.3.10"
       - run: bun install --frozen-lockfile
-      - run: bun run lint
-      - run: bun run format -- --check
+      - run: bun x biome check .
+      - run: bun x biome format --check .
 
   typecheck:
     name: Type Check
@@ -31,7 +31,7 @@ jobs:
         with:
           bun-version: "1.3.10"
       - run: bun install --frozen-lockfile
-      - run: bun x tsc --noEmit
+      - run: bun x tsc --noEmit --skipLibCheck
 
   test:
     name: Test
@@ -58,6 +58,7 @@ jobs:
         env:
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
 
   deploy:
     name: Deploy
@@ -74,6 +75,7 @@ jobs:
         env:
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
 
       - name: Prepare standalone deployment

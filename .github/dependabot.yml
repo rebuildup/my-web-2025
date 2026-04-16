@@ -7,13 +7,21 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "Asia/Tokyo"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 3
     labels:
       - "dependencies"
       - "dependabot"
     commit-message:
       prefix: "deps"
       include: "scope"
+    # Group minor/patch updates to reduce PR noise
+    version-strategy: auto
+    # Allow minor updates for development dependencies
+    allow:
+      - dependency-type: "development"
+        update-types: ["minor", "patch"]
+      - dependency-type: "production"
+        update-types: ["patch"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -36,6 +44,12 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 3
     commit-message:
       prefix: "deps"
       include: "scope"
+    allow:
+      - dependency-type: "development"
+        update-types: ["minor", "patch"]
+      - dependency-type: "production"
+        update-types: ["patch"]
