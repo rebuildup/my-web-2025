@@ -13,7 +13,7 @@
         "@ffmpeg/util": "^0.12.2",
         "@hello-pangea/dnd": "^18.0.1",
         "@heroicons/react": "^2.2.0",
-        "@mui/icons-material": "^7.3.5",
+        "@mui/icons-material": "^9.0.0",
         "@mui/material": "^7.3.4",
         "@radix-ui/react-slot": "^1.2.3",
         "@react-three/drei": "^10.7.6",
@@ -499,7 +499,7 @@
 
     "@mui/core-downloads-tracker": ["@mui/core-downloads-tracker@7.3.6", "", {}, "sha512-QaYtTHlr8kDFN5mE1wbvVARRKH7Fdw1ZuOjBJcFdVpfNfRYKF3QLT4rt+WaB6CKJvpqxRsmEo0kpYinhH5GeHg=="],
 
-    "@mui/icons-material": ["@mui/icons-material@7.3.6", "", { "dependencies": { "@babel/runtime": "7.28.4" }, "optionalDependencies": { "@types/react": "19.2.7" }, "peerDependencies": { "@mui/material": "7.3.6", "react": "19.2.1" } }, "sha512-0FfkXEj22ysIq5pa41A2NbcAhJSvmcZQ/vcTIbjDsd6hlslG82k5BEBqqS0ZJprxwIL3B45qpJ+bPHwJPlF7uQ=="],
+    "@mui/icons-material": ["@mui/icons-material@9.0.0", "", { "dependencies": { "@babel/runtime": "^7.29.2" }, "peerDependencies": { "@mui/material": "^9.0.0", "@types/react": "^17.0.0 || ^18.0.0 || ^19.0.0", "react": "^17.0.0 || ^18.0.0 || ^19.0.0" }, "optionalPeers": ["@types/react"] }, "sha512-oDwyvI6LgjWRC9MBcSGvLkPud9S9ELgSBQFYxa1rYcZn6Br55dn22SyvsPDMsn0G8OndFk53iMT45W5mNqrogw=="],
 
     "@mui/material": ["@mui/material@7.3.6", "", { "dependencies": { "@babel/runtime": "7.28.4", "@mui/core-downloads-tracker": "7.3.6", "@mui/system": "7.3.6", "@mui/types": "7.4.9", "@mui/utils": "7.3.6", "@popperjs/core": "2.11.8", "@types/react-transition-group": "4.4.12", "clsx": "2.1.1", "csstype": "3.2.3", "prop-types": "15.8.1", "react-is": "19.2.1", "react-transition-group": "4.4.5" }, "optionalDependencies": { "@emotion/react": "11.14.0", "@emotion/styled": "11.14.1", "@types/react": "19.2.7" }, "peerDependencies": { "react": "19.2.1", "react-dom": "19.2.1" } }, "sha512-R4DaYF3dgCQCUAkr4wW1w26GHXcf5rCmBRHVBuuvJvaGLmZdD8EjatP80Nz5JCw0KxORAzwftnHzXVnjR8HnFw=="],
 
@@ -2590,6 +2590,8 @@
     "@istanbuljs/load-nyc-config/find-up": ["find-up@4.1.0", "", { "dependencies": { "locate-path": "5.0.0", "path-exists": "4.0.0" } }, "sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw=="],
 
     "@istanbuljs/load-nyc-config/js-yaml": ["js-yaml@3.14.2", "", { "dependencies": { "argparse": "1.0.10", "esprima": "4.0.1" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-PMSmkqxr106Xa156c2M265Z+FTrPl+oxd/rgOQy2tijQeK5TxQ43psO1ZCwhVOSdnn+RzkzlRz/eY4BgJBYVpg=="],
+
+    "@mui/icons-material/@babel/runtime": ["@babel/runtime@7.29.2", "", {}, "sha512-JiDShH45zKHWyGe4ZNVRrCjBz8Nh9TMmZG1kh4QTK8hCBTWBi8Da+i7s1fJw7/lYpM4ccepSNfqzZ/QvABBi5g=="],
 
     "@opentelemetry/core/@opentelemetry/semantic-conventions": ["@opentelemetry/semantic-conventions@1.28.0", "", {}, "sha512-lp4qAiMTD4sNWW4DbKLBkfiMZ4jbAboJIGOQr5DvciMRI494OapieI9qiODpOt0XBr1LjIDy1xAGAnVs5supTA=="],
 
