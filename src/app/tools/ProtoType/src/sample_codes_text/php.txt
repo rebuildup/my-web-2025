@@ -1,0 +1,40 @@
+<?php // PHP
+class Statistics {
+    private $data;
+    public function __construct($data) {
+        $this->data = $data;
+    }
+    public function mean() {
+        $sum = array_sum($this->data);
+        return $sum / count($this->data);
+    }
+    public function median() {
+        $arr = $this->data;
+        sort($arr);
+        $count = count($arr);
+        $mid = floor($count / 2);
+        return ($count % 2 == 0) ? ($arr[$mid - 1] + $arr[$mid]) / 2 : $arr[$mid];
+    }
+    public function summary() {
+        return array('mean' => $this->mean(), 'median' => $this->median());
+    }
+}
+$data = array(5, 3, 8, 7, 2, 9, 4);
+$stats = new Statistics($data);
+$result = $stats->summary();
+echo "Mean: " . $result['mean'] . "\n";
+echo "Median: " . $result['median'] . "\n";
+$mapped = array_map(function($x){ return $x * 2; }, $data);
+foreach($mapped as $value) {
+    echo $value . " ";
+}
+echo "\n";
+for($i = 1; $i <= 5; $i++){
+    echo "Iteration " . $i . ": " . ($i * 3) . "\n";
+}
+echo "Extra loop:\n";
+foreach($data as $v) {
+    echo "Value: " . $v . "\n";
+}
+echo "PHP demo complete.";
+?>

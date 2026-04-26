@@ -1,0 +1,32 @@
+// TypeScript
+interface Item {
+  id: number;
+  name: string;
+}
+class Collection<T extends { id: number }> {
+  private items: T[] = [];
+  add(item: T): void {
+    this.items.push(item);
+  }
+  getById(id: number): T | undefined {
+    return this.items.find((item) => item.id === id);
+  }
+  getAll(): T[] {
+    return this.items;
+  }
+}
+const coll = new Collection<Item>();
+coll.add({ id: 1, name: "Alpha" });
+coll.add({ id: 2, name: "Beta" });
+coll.add({ id: 3, name: "Gamma" });
+const item = coll.getById(2);
+if (item) console.log("Found:", item.name);
+const names = coll.getAll().map((i) => i.name.toUpperCase());
+console.log("Names:", names);
+function genericSort<T>(arr: T[]): T[] {
+  return arr.sort();
+}
+let sorted = genericSort(["delta", "alpha", "charlie", "bravo"]);
+console.log("Sorted:", sorted);
+sorted.forEach((s, i) => console.log("Index " + i + ": " + s));
+console.log("TypeScript demo complete.");

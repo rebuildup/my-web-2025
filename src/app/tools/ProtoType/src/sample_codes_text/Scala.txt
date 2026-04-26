@@ -1,0 +1,30 @@
+// Scala
+case class Item(id: Int, name: String, value: Int)
+object Demo {
+  def categorize(item: Item): String = item.value match {
+    case v if v >= 50 => "High"
+    case v if v >= 20 => "Medium"
+    case _ => "Low"
+  }
+  def main(args: Array[String]): Unit = {
+    val items = List(
+      Item(1, "Alpha", 10),
+      Item(2, "Beta", 25),
+      Item(3, "Gamma", 55),
+      Item(4, "Delta", 40),
+      Item(5, "Epsilon", 70)
+    )
+    val categories = items.map(item => (item.name, categorize(item)))
+    categories.foreach{ case (name, cat) => println(name + " -> " + cat) }
+    val total = items.map(_.value).sum
+    println("Total value: " + total)
+    for(i <- 1 to 5) {
+      println("Iteration " + i + ": " + (i * 2))
+    }
+    val filtered = items.filter(_.value > 30)
+    filtered.foreach(item => println("Filtered: " + item.name))
+    println("Extra loop:")
+    items.foreach(item => println("Item " + item.id + ": " + item.name))
+    println("Scala demo complete.")
+  }
+}

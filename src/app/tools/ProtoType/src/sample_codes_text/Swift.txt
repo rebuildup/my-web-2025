@@ -1,0 +1,31 @@
+// Swift
+struct Person {
+    let name: String
+    let age: Int
+}
+func findPerson(byName name: String, in people: [Person]) -> Person? {
+    return people.first { $0.name == name }
+}
+let people = [
+    Person(name: "Alice", age: 30),
+    Person(name: "Bob", age: 25),
+    Person(name: "Charlie", age: 35)
+]
+if let person = findPerson(byName: "Bob", in: people) {
+    print(person.name + " is " + String(person.age) + " years old")
+} else {
+    print("Not found")
+}
+let numbers = Array(1...10)
+let transformed = numbers.map { $0 * $0 }
+print("Transformed:", transformed)
+let sum = transformed.reduce(0, +)
+print("Sum:", sum)
+let filtered = transformed.filter { $0 % 2 == 0 }
+print("Filtered:", filtered)
+for i in 1...5 {
+    print("Iteration \(i): \(i * 3)")
+}
+print("Extra loop:")
+numbers.forEach { print("Number: \($0)") }
+print("Swift demo complete.")

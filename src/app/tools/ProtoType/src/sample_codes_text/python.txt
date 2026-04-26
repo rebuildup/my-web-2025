@@ -1,0 +1,29 @@
+# Python
+class Calculator:
+    def __init__(self):
+        self.operations = {
+            'add': lambda x, y: x + y,
+            'sub': lambda x, y: x - y,
+            'mul': lambda x, y: x * y,
+            'div': lambda x, y: x / y if y != 0 else None
+        }
+    def compute(self, op, x, y):
+        return self.operations.get(op, lambda a, b: None)(x, y)
+def generate_series(n):
+    return [i * i for i in range(1, n + 1)]
+def process_series(series, func):
+    return list(map(func, series))
+def main():
+    calc = Calculator()
+    result1 = calc.compute('add', 10, 5)
+    result2 = calc.compute('div', 10, 2)
+    series = generate_series(10)
+    processed = process_series(series, lambda x: calc.compute('sub', x, 5))
+    output = {'add': result1, 'div': result2, 'series': series, 'processed': processed}
+    for key, value in output.items():
+        print(key, "->", value)
+    extra = [x * 3 for x in series]
+    for num in extra:
+        print("Extra:", num)
+if __name__ == '__main__':
+    main()

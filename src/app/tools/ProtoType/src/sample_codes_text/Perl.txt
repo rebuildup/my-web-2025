@@ -1,0 +1,27 @@
+# Perl
+use strict;
+use warnings;
+sub process_text {
+    my ($text) = @_;
+    $text =~ s/(\d+)/($1 * 2)/ge;
+    return $text;
+}
+my $input = "Numbers: 1, 2, 3, 4, 5";
+my $output = process_text($input);
+print $output, "\n";
+my @words = split(/\s+/, $input);
+my @lengths = map { length($_) } @words;
+print "Word lengths: ", join(", ", @lengths), "\n";
+for(my $i = 0; $i < @words; $i++){
+    print "Word $i: $words[$i]\n";
+}
+my $joined = join("-", @words);
+print "Joined: $joined\n";
+my @nums = (10, 20, 30, 40, 50);
+my $sum = 0;
+foreach my $num (@nums) {
+    $sum += $num;
+    print "Current sum: $sum\n";
+}
+print "Total sum: $sum\n";
+print "Perl demo complete.\n";

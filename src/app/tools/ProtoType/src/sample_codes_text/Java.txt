@@ -1,0 +1,31 @@
+// Java
+interface Animal {
+    String speak();
+}
+class Dog implements Animal {
+    public String speak() { return "Bark"; }
+}
+class Cat implements Animal {
+    public String speak() { return "Meow"; }
+}
+public class Demo {
+    public static void main(String[] args) {
+        Animal[] animals = { new Dog(), new Cat(), new Dog() };
+        for(Animal a : animals) {
+            System.out.println(a.speak());
+        }
+        int sum = 0;
+        for(int i = 1; i <= 10; i++) {
+            sum += i;
+        }
+        System.out.println("Sum: " + sum);
+        for(int i = 1; i <= 5; i++) {
+            System.out.println("Iteration " + i + ": " + (i * 10));
+        }
+        System.out.println("Extra loop:");
+        for(Animal a : animals) {
+            System.out.println("Animal sound: " + a.speak());
+        }
+        System.out.println("Java demo complete.");
+    }
+}
