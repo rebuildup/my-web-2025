@@ -98,6 +98,36 @@ Located in `src/app/tools/`:
 - **Ignored paths**: Admin/API routes excluded from some checks via `!!` prefix
 - **Overrides**: Special rules for scripts and specific components
 
+### External Project Sync (Git Subtree)
+
+Some tools under `src/app/tools/` are synced from external repositories via **git subtree**:
+
+- **ProtoType**: `https://github.com/rebuildup/ProtoType` → `src/app/tools/ProtoType/`
+
+These external projects have their own `src/` directory inside the tools path. Bridge files (`page.tsx`, `layout.tsx`) at the tool root are managed by my-web-2025 and protected from subtree pulls via `.gitattributes` (`merge=ours`).
+
+**To sync an external project:**
+```bash
+# Update existing subtree
+./scripts/sync-subtree.sh <name> <repo-url> [branch] [prefix]
+
+# Example: update ProtoType
+./scripts/sync-subtree.sh ProtoType https://github.com/rebuildup/ProtoType main src/app/tools/ProtoType
+```
+
+**To add a new external project:**
+1. `./scripts/sync-subtree.sh <name> <repo-url> <branch> <prefix>` — adds the subtree
+2. Create bridge files at `<prefix>/page.tsx` and `<prefix>/layout.tsx`:
+   - `page.tsx`: `"use client"; import dynamic from "next/dynamic"; const App = dynamic(() => import("./src/App"), { ssr: false });`
+   - `layout.tsx`: CSS imports + Next.js `Metadata` export
+3. Add bridge files to `.gitattributes` with `merge=ours`
+4. Run `node scripts/merge-deps.mjs <prefix>/package.json` to check and merge dependencies
+5. Add tool to `src/app/tools/page.tsx` tools list
+
+**Scripts:**
+- `scripts/sync-subtree.sh`: Add/pull git subtrees from external repos
+- `scripts/merge-deps.mjs`: Merge dependencies from external `package.json` into root (with `--dry-run` flag)
+
 ## Important Constraints
 
 - **TypeScript build errors are ignored**: `typescript.ignoreBuildErrors = true` in `next.config.ts`
