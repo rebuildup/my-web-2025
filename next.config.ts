@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "node:path";
 
 const isProduction = process.env.NODE_ENV === "production";
 const isDevelopment = process.env.NODE_ENV === "development";
@@ -9,7 +10,11 @@ const nextConfig: NextConfig = {
 		ignoreBuildErrors: true,
 	},
 	// Turbopack configuration
-	turbopack: {},
+	turbopack: {
+		// Explicit root prevents Turbopack from misidentifying workspace root
+		// when subtree projects contain pnpm-workspace.yaml or package.json
+		root: "/Users/samuido/Desktop/my-web-2025",
+	},
 	// Transpile @appletosolutions/reactbits to ensure @chakra-ui/react is resolved
 	transpilePackages: ["@appletosolutions/reactbits"],
 	// Environment variables
@@ -258,6 +263,12 @@ const nextConfig: NextConfig = {
 		config.module.rules.push({
 			test: /\.svg$/,
 			use: ["@svgr/webpack"],
+		});
+
+		// Asset files (audio, fonts, etc.) from subtree projects
+		config.module.rules.push({
+			test: /\.(wav|mp3|ogg|flac)$/,
+			type: "asset/resource",
 		});
 
 		// Additional webpack optimizations

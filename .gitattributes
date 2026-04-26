@@ -1,3 +1,4 @@
 # Bridge files for subtree-managed tools - prevent overwriting on subtree pull
 src/app/tools/ProtoType/page.tsx merge=ours
 src/app/tools/ProtoType/layout.tsx merge=ours
+src/app/tools/ProtoType/pnpm-workspace.yaml merge=ours
