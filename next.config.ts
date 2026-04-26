@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-import path from "node:path";
 
 const isProduction = process.env.NODE_ENV === "production";
 const isDevelopment = process.env.NODE_ENV === "development";
@@ -10,11 +9,7 @@ const nextConfig: NextConfig = {
 		ignoreBuildErrors: true,
 	},
 	// Turbopack configuration
-	turbopack: {
-		// Explicit root prevents Turbopack from misidentifying workspace root
-		// when subtree projects contain pnpm-workspace.yaml or package.json
-		root: "/Users/samuido/Desktop/my-web-2025",
-	},
+	turbopack: {},
 	// Transpile @appletosolutions/reactbits to ensure @chakra-ui/react is resolved
 	transpilePackages: ["@appletosolutions/reactbits"],
 	// Environment variables

@@ -40,6 +40,7 @@ jobs:
         env:
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_BUILD_STANDALONE: "true"
         run: bun run build
 
   deploy:
@@ -63,6 +64,7 @@ jobs:
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+          NEXT_BUILD_STANDALONE: "true"
         run: bun run build
 
       - name: Prepare standalone deployment
