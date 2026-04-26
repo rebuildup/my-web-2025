@@ -1,0 +1,15 @@
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.rotating-element svg {
+  transform-origin: center center;
+}
+
+.rotating-element:hover svg {
+  animation: rotate 2s cubic-bezier(0.9, 0, 0.1, 1) infinite;
+}

@@ -1,0 +1,20 @@
+# R
+numbers <- 1:20
+squares <- numbers^2
+df <- data.frame(Number = numbers, Square = squares)
+mean_val <- mean(df$Square)
+median_val <- median(df$Square)
+df$Difference <- df$Square - mean_val
+print(df)
+print(paste("Mean:", mean_val))
+print(paste("Median:", median_val))
+df$Category <- ifelse(df$Square > median_val, "High", "Low")
+summary_df <- aggregate(Number ~ Category, data = df, FUN = length)
+print(summary_df)
+for(i in 1:5) {
+  print(paste("Iteration", i, "->", i * 10))
+}
+extra <- sapply(df$Square, function(x) x / 2)
+print("Extra transformed values:")
+print(extra)
+print("R demo complete.")

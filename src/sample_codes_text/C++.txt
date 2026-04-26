@@ -1,0 +1,48 @@
+// C++
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+#include <functional>
+#include <memory>
+struct Data
+{
+    int id;
+    int value;
+};
+int main()
+{
+    std::vector<Data> vec;
+    for (int i = 1; i <= 10; i++)
+    {
+        vec.push_back({i, i * 10});
+    }
+    std::sort(vec.begin(), vec.end(), [](const Data &a, const Data &b)
+              { return a.value > b.value; });
+    int total = std::accumulate(vec.begin(), vec.end(), 0, [](int sum, const Data &d)
+                                { return sum + d.value; });
+    for (auto &d : vec)
+    {
+        std::cout << "ID: " << d.id << " Value: " << d.value << std::endl;
+    }
+    std::cout << "Total: " << total << std::endl;
+    auto transformValue = [](int x)
+    { return x / 2; };
+    std::vector<int> results;
+    for (auto &d : vec)
+    {
+        results.push_back(transformValue(d.value));
+    }
+    for (auto r : results)
+    {
+        std::cout << r << " ";
+    }
+    std::cout << std::endl;
+    std::unique_ptr<std::vector<Data>> ptr(new std::vector<Data>(vec));
+    std::cout << "Extra output:" << std::endl;
+    std::for_each(ptr->begin(), ptr->end(), [](const Data &d)
+                  { std::cout << d.id << ":" << d.value << " "; });
+    std::cout << std::endl
+              << "C++ demo complete." << std::endl;
+    return 0;
+}

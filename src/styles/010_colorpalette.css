@@ -1,0 +1,7 @@
+.p-4 {
+  color: var(--MainColor);
+}
+button {
+  color: var(--MainColor);
+  margin: 1em;
+}

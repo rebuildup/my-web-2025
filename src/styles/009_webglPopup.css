@@ -1,0 +1,27 @@
+/* WebGLポップアップ用のスタイル */
+.webgl-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 720px;
+  height: 600px;
+  background-color: var(--MainBG);
+  /*border: 2px solid var(--MainColor);*/
+  box-shadow: -5px -5px 60px 0px rgba(128, 128, 128, 0.1), 5px 5px 60px 0px rgba(128, 128, 128, 0.1);
+}
+
+.webgl-popup canvas {
+  width: 720px !important;
+  height: 600px !important;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+.webgl-popup button {
+  position: absolute;
+  left: auto;
+  right: -10px;
+  top: -64px;
+}
