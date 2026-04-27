@@ -28,7 +28,7 @@ const subdomainMap: Record<string, string> = {
 	portfolio: "/portfolio",
 	www: "/",
 	pomodoro: "/tools/pomodoro",
-	prototype: "/tools/prototype",
+	prototype: "/tools/ProtoType",
 	samuido: "/about/profile/handle",
 	"361do": "/about/profile/handle",
 };
