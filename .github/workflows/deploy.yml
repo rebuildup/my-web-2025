@@ -110,7 +110,7 @@ jobs:
           [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
           [ -n "${NVM_BIN:-}" ] && export PATH="$NVM_BIN:$PATH"
 
-          command -v bun >/dev/null 2>&1 || { echo "bun not found"; exit 1; }
+          command -v node >/dev/null 2>&1 || { echo "node not found"; exit 1; }
           command -v pm2 >/dev/null 2>&1 || { echo "pm2 not found"; exit 1; }
 
           APP_DIR="/var/www/yusuke-kim"
@@ -133,7 +133,7 @@ jobs:
           ENV_EOF
 
           cd "$APP_DIR"
-          pm2 start "$(command -v bun)" --name yusuke-kim -- server.js
+          pm2 start server.js --name yusuke-kim --interpreter "$(command -v node)"
           pm2 save
           sleep 10
           curl -fsS http://127.0.0.1:3000/api/health

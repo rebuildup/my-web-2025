@@ -16,11 +16,6 @@ const nextConfig: NextConfig = {
 	env: {
 		NEXT_BUILD_TIME: isProduction ? "true" : "false",
 	},
-
-	// Environment variables
-	env: {
-		NEXT_BUILD_TIME: isProduction ? "true" : "false",
-	},
 	outputFileTracingIncludes: {
 		"/api/cms/(.*)": ["./data/**"],
 		"/api/admin/(.*)": ["./data/**"],
