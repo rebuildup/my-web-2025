@@ -8,6 +8,7 @@ import {
 } from "@/cms/lib/content-db-manager";
 import { getFullContent, saveFullContent } from "@/cms/lib/content-mapper";
 import type { Content } from "@/cms/types/content";
+import { requireAdminRequest } from "@/lib/server/admin-auth";
 
 export const runtime = "nodejs";
 
@@ -16,8 +17,8 @@ export async function OPTIONS() {
 	return new Response(null, {
 		status: 200,
 		headers: {
-			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+			"Access-Control-Allow-Origin": "http://localhost:3000",
+			"Access-Control-Allow-Methods": "GET, OPTIONS",
 			"Access-Control-Allow-Headers": "Content-Type, Authorization",
 		},
 	});
@@ -58,8 +59,8 @@ export async function GET(req: Request) {
 		}
 		return Response.json(contents, {
 			headers: {
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+				"Access-Control-Allow-Origin": "http://localhost:3000",
+				"Access-Control-Allow-Methods": "GET, OPTIONS",
 				"Access-Control-Allow-Headers": "Content-Type, Authorization",
 			},
 		});
@@ -74,6 +75,9 @@ export async function GET(req: Request) {
 
 // ========== POST: コンテンツ作成 ==========
 export async function POST(req: Request) {
+	const guard = requireAdminRequest(req);
+	if (!guard.ok) return guard.response;
+
 	try {
 		const data = await req.json();
 
@@ -150,6 +154,9 @@ export async function POST(req: Request) {
 
 // ========== PUT: コンテンツ更新 ==========
 export async function PUT(req: Request) {
+	const guard = requireAdminRequest(req);
+	if (!guard.ok) return guard.response;
+
 	try {
 		const data = await req.json();
 
@@ -273,6 +280,9 @@ export async function PUT(req: Request) {
 
 // ========== DELETE: コンテンツ削除 ==========
 export async function DELETE(req: Request) {
+	const guard = requireAdminRequest(req);
+	if (!guard.ok) return guard.response;
+
 	try {
 		const { searchParams } = new URL(req.url);
 		const id = searchParams.get("id");

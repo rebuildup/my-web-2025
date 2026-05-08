@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { getContentDbPath, getDataDirectory } from "@/cms/lib/content-db-manager";
+import { getDataDirectory } from "@/cms/lib/content-db-manager";
 import { getFullContent, saveFullContent } from "@/cms/lib/content-mapper";
 import { getMarkdownPage, saveMarkdownPage } from "@/cms/lib/markdown-mapper";
 import { openSqliteDb } from "@/cms/lib/sqlite";
@@ -41,7 +41,9 @@ function verifyDatabase(dbFile: string): VerificationResult {
 		}
 
 		const primary = db
-			.prepare<{ id: string }>("SELECT id FROM contents ORDER BY created_at ASC LIMIT 1")
+			.prepare<{ id: string }>(
+				"SELECT id FROM contents ORDER BY created_at ASC LIMIT 1",
+			)
 			.get();
 		if (!primary?.id) {
 			return {
@@ -64,7 +66,9 @@ function verifyDatabase(dbFile: string): VerificationResult {
 		saveFullContent(db, content);
 
 		const markdownRows = db
-			.prepare<{ id: string }>("SELECT id FROM markdown_pages ORDER BY updated_at DESC")
+			.prepare<{ id: string }>(
+				"SELECT id FROM markdown_pages ORDER BY updated_at DESC",
+			)
 			.all();
 		for (const row of markdownRows) {
 			const page = getMarkdownPage(db, row.id);
@@ -73,9 +77,9 @@ function verifyDatabase(dbFile: string): VerificationResult {
 			}
 		}
 
-		const mediaCount = db
-			.prepare<{ count: number }>("SELECT COUNT(*) as count FROM media")
-			.get()?.count ?? 0;
+		const mediaCount =
+			db.prepare<{ count: number }>("SELECT COUNT(*) as count FROM media").get()
+				?.count ?? 0;
 
 		return {
 			dbFile,
@@ -103,7 +107,9 @@ function main() {
 	for (const result of results) {
 		const label = result.status.toUpperCase().padEnd(8, " ");
 		const contentLabel = result.contentId ? ` ${result.contentId}` : "";
-		console.log(`[${label}] ${result.dbFile}${contentLabel} - ${result.message}`);
+		console.log(
+			`[${label}] ${result.dbFile}${contentLabel} - ${result.message}`,
+		);
 	}
 
 	console.log(

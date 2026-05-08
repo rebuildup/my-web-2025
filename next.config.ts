@@ -2,14 +2,9 @@ import type { NextConfig } from "next";
 
 const isProduction = process.env.NODE_ENV === "production";
 const isDevelopment = process.env.NODE_ENV === "development";
-const isTurbopackDev = isDevelopment && process.env.TURBOPACK === "1";
+const _isTurbopackDev = isDevelopment && process.env.TURBOPACK === "1";
 
 const nextConfig: NextConfig = {
-	typescript: {
-		ignoreBuildErrors: true,
-	},
-	// Turbopack configuration
-	turbopack: {},
 	// Transpile @appletosolutions/reactbits to ensure @chakra-ui/react is resolved
 	transpilePackages: ["@appletosolutions/reactbits"],
 	// Environment variables

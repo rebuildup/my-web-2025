@@ -5,11 +5,11 @@ import { findMarkdownPage } from "@/cms/server/markdown-service";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { getContentById } from "@/lib/data";
+import { contentCache } from "@/lib/server-cache";
 import type { ContentItem, MarkdownContentItem } from "@/types/content";
 import { isEnhancedContentItem } from "@/types/content";
 import { ArticleSidePanel } from "../../components/ArticleSidePanel";
 import { RelatedArticles } from "../../components/RelatedArticles";
-import { contentCache } from "@/lib/server-cache";
 
 export const runtime = "nodejs";
 export const revalidate = 3600;

@@ -1,11 +1,36 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
+import {
+	checkRateLimit,
+	normalizeIp,
+	type RateLimitOptions,
+} from "@/lib/server/rate-limit";
 
 const SEARCH_STATS_PATH = path.join(
 	process.cwd(),
 	"public/data/stats/search-stats.json",
 );
+
+const RATE_LIMIT_OPTIONS: RateLimitOptions = {
+	windowMs: 60 * 1000,
+	maxRequests: 30,
+	maxKeys: 10000,
+};
+
+const MAX_QUERY_LENGTH = 128;
+const MAX_UNIQUE_QUERIES = 1000;
+const CONTROL_CHAR_REGEX = /[\x00-\x1F\x7F]/;
+const WHITESPACE_REGEX = /\s+/g;
+
+function validateQuery(query: string): string | null {
+	if (typeof query !== "string") return null;
+	if (query.length > MAX_QUERY_LENGTH) return null;
+	// Reject control characters
+	if (CONTROL_CHAR_REGEX.test(query)) return null;
+	// Normalize whitespace
+	return query.replace(WHITESPACE_REGEX, " ").trim();
+}
 
 interface SearchStats {
 	[query: string]: number;
@@ -50,6 +75,20 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
 	try {
+		// Get client IP for rate limiting
+		const ip =
+			request.headers.get("x-forwarded-for") ||
+			request.headers.get("x-real-ip") ||
+			"unknown";
+
+		// Check rate limit
+		if (!checkRateLimit(normalizeIp(ip), RATE_LIMIT_OPTIONS)) {
+			return NextResponse.json(
+				{ error: "Rate limit exceeded. Try again later." },
+				{ status: 429 },
+			);
+		}
+
 		const body = await request.json();
 		const { query } = body;
 
@@ -60,11 +99,11 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
-		const normalizedQuery = query.toLowerCase().trim();
+		const normalizedQuery = validateQuery(query);
 
-		if (!normalizedQuery) {
+		if (normalizedQuery === null) {
 			return NextResponse.json(
-				{ error: "Query cannot be empty" },
+				{ error: "Invalid query: too long, empty, or contains control characters" },
 				{ status: 400 },
 			);
 		}
@@ -79,8 +118,13 @@ export async function POST(request: NextRequest) {
 			stats = {};
 		}
 
-		// Update query count
-		stats[normalizedQuery] = (stats[normalizedQuery] || 0) + 1;
+		// Enforce max unique queries cap
+		if (!stats[normalizedQuery] && Object.keys(stats).length >= MAX_UNIQUE_QUERIES) {
+			// Aggregate under __other__
+			stats["__other__"] = (stats["__other__"] || 0) + 1;
+		} else {
+			stats[normalizedQuery] = (stats[normalizedQuery] || 0) + 1;
+		}
 
 		// Save updated stats
 		await fs.writeFile(SEARCH_STATS_PATH, JSON.stringify(stats, null, 2));
@@ -88,7 +132,7 @@ export async function POST(request: NextRequest) {
 		return NextResponse.json({
 			success: true,
 			query: normalizedQuery,
-			count: stats[normalizedQuery],
+			count: stats[normalizedQuery] ?? stats["__other__"],
 		});
 	} catch (error) {
 		console.error("Search analytics tracking error:", error);

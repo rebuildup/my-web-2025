@@ -7,6 +7,10 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
+import {
+  checkRateLimit,
+  normalizeIp,
+} from "@/lib/server/rate-limit";
 
 interface PerformanceAlert {
 	id: string;
@@ -27,6 +31,16 @@ const ALERTS_DIR = path.join(
 	"alerts",
 );
 const MAX_ALERTS_PER_FILE = 500;
+
+// Max context size (8 KiB)
+const MAX_CONTEXT_SIZE = 8 * 1024;
+
+// Rate limit options for monitoring endpoints
+const RATE_LIMIT_OPTIONS = {
+  windowMs: 60000, // 1 minute
+  maxRequests: 60, // 60 requests per minute
+  maxKeys: 1000, // track up to 1000 unique IPs
+};
 
 /**
  * Ensure alerts directory exists
@@ -184,6 +198,32 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 				{ error: "Invalid alert format" },
 				{ status: 400 },
 			);
+		}
+
+		// Apply rate limiting with normalized IP
+		const forwardedFor = request.headers.get("x-forwarded-for") || "";
+		const ip = normalizeIp(forwardedFor) || "unknown";
+		if (!checkRateLimit(ip, RATE_LIMIT_OPTIONS)) {
+			return NextResponse.json(
+				{ error: "Rate limit exceeded" },
+				{ status: 429 },
+			);
+		}
+
+		// Validate context size (max 8 KiB)
+		if (data.context !== undefined) {
+			const contextSerialized = JSON.stringify(data.context);
+			if (contextSerialized.length > MAX_CONTEXT_SIZE) {
+				return NextResponse.json(
+					{ error: "Context exceeds maximum size of 8 KiB" },
+					{ status: 400 },
+				);
+			}
+		}
+
+		// Truncate URL to 2048 chars
+		if (data.url && data.url.length > 2048) {
+			data.url = data.url.substring(0, 2048);
 		}
 
 		await ensureAlertsDir();

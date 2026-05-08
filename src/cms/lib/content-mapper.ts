@@ -250,10 +250,7 @@ export function rowToContent(
 }
 
 // ========== 完全なコンテンツ取得（関連データも含む） ==========
-export function getFullContent(
-	db: SqliteDatabase,
-	id: string,
-): Content | null {
+export function getFullContent(db: SqliteDatabase, id: string): Content | null {
 	// メインデータ取得
 	const row = db.prepare("SELECT * FROM contents WHERE id = ?").get(id) as
 		| ContentRow

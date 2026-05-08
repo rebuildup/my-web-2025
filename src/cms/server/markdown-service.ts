@@ -2,13 +2,13 @@ import "server-only";
 
 import { getAllFromIndex, getContentDb } from "@/cms/lib/content-db-manager";
 import type { MarkdownPageRow } from "@/cms/lib/markdown-mapper";
-import type { SqliteDatabase } from "@/cms/lib/sqlite";
 import {
 	deleteMarkdownPage as deleteMarkdownRow,
 	getMarkdownPage as getMarkdownPageFromDb,
 	rowToMarkdownPage,
 	saveMarkdownPage,
 } from "@/cms/lib/markdown-mapper";
+import type { SqliteDatabase } from "@/cms/lib/sqlite";
 import type { MarkdownPage } from "@/cms/types/markdown";
 import { markdownCache } from "@/lib/server-cache";
 

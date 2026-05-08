@@ -142,10 +142,11 @@ export function middleware(request: NextRequest) {
 
 		// Add CORS headers for admin API
 		const response = NextResponse.next();
-		response.headers.set(
-			"Access-Control-Allow-Origin",
-			"http://localhost:3000",
-		);
+		// Support both port 3000 and 3010 in development
+		const allowedOrigin = isDevelopment()
+			? "http://localhost:3010"
+			: "http://localhost:3000";
+		response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
 		response.headers.set(
 			"Access-Control-Allow-Methods",
 			"GET, POST, PUT, DELETE, OPTIONS",
@@ -163,13 +164,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
 	matcher: [
-		/*
-		 * Match all request paths except for the ones starting with:
-		 * - api (API routes)
-		 * - _next/static (static files)
-		 * - _next/image (image optimization files)
-		 * - favicon.ico (favicon file)
-		 */
+		"/api/admin/:path*",
 		"/((?!api|_next/static|_next/image|favicon.ico).*)",
 	],
 };

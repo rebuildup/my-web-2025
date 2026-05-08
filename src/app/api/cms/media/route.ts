@@ -5,8 +5,40 @@ import {
 	saveMedia,
 } from "@/cms/lib/media-manager";
 import type { MediaUploadRequest } from "@/cms/types/media";
+import { requireAdminRequest } from "@/lib/server/admin-auth";
 
 export const runtime = "nodejs";
+
+const DEFAULT_MAX_MEDIA_BYTES = 5 * 1024 * 1024; // 5 MiB
+const ALLOWED_MEDIA_TYPES = new Set([
+	"image/jpeg",
+	"image/png",
+	"image/webp",
+	"image/gif",
+	"image/svg+xml",
+]);
+
+function isValidBase64(data: string): boolean {
+	try {
+		// Reject empty strings or strings with non-base64 characters (including extra '=')
+		if (!data || !/^[A-Za-z0-9+/]*={0,2}$/.test(data)) {
+			return false;
+		}
+		// Decode. Node's Buffer.from accepts both padded and unpadded base64,
+		// so we do a round-trip check to detect wrong padding.
+		const decoded = Buffer.from(data, "base64");
+		const reEncoded = decoded.toString("base64");
+		// If re-encoding differs from original, the padding was wrong.
+		// This catches cases like "aGVsbG8==" → "aGVsbG8=" (extra '=' silently ignored)
+		// and "aGVsbG8" → "aGVsbG8=" (missing padding accepted by lenient decoder)
+		if (reEncoded !== data) {
+			return false;
+		}
+		return true;
+	} catch {
+		return false;
+	}
+}
 
 // ========== GET: メディア取得・一覧 ==========
 export async function GET(req: Request) {
@@ -123,6 +155,12 @@ export async function GET(req: Request) {
 
 // ========== POST: メディアアップロード ==========
 export async function POST(req: Request) {
+	// Require admin authentication
+	const guard = requireAdminRequest(req);
+	if (!guard.ok) {
+		return guard.response;
+	}
+
 	try {
 		const data: MediaUploadRequest = await req.json();
 
@@ -138,8 +176,29 @@ export async function POST(req: Request) {
 			);
 		}
 
-		// Base64をBufferに変換
+		// Reject unknown MIME types
+		if (!ALLOWED_MEDIA_TYPES.has(data.mimeType)) {
+			return Response.json(
+				{ error: "Unsupported media type" },
+				{ status: 415 },
+			);
+		}
+
+		// Reject invalid Base64
+		if (!isValidBase64(data.base64Data)) {
+			return Response.json(
+				{ error: "Invalid base64 data" },
+				{ status: 400 },
+			);
+		}
+
+		// Check decoded size against max limit
+		const maxBytes =
+			Number(process.env.CMS_MAX_MEDIA_BYTES) || DEFAULT_MAX_MEDIA_BYTES;
 		const buffer = Buffer.from(data.base64Data, "base64");
+		if (buffer.length > maxBytes) {
+			return Response.json({ error: "Media file too large" }, { status: 413 });
+		}
 
 		const mediaId = `media_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -163,6 +222,12 @@ export async function POST(req: Request) {
 
 // ========== DELETE: メディア削除 ==========
 export async function DELETE(req: Request) {
+	// Require admin authentication
+	const guard = requireAdminRequest(req);
+	if (!guard.ok) {
+		return guard.response;
+	}
+
 	try {
 		const { searchParams } = new URL(req.url);
 		const contentId = searchParams.get("contentId");

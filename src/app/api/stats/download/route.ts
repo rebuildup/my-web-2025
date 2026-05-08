@@ -4,27 +4,27 @@ import {
 	getMostDownloadedContent,
 	updateDownloadStats,
 } from "@/lib/stats";
+import {
+	checkRateLimit,
+	normalizeIp,
+	type RateLimitOptions,
+} from "@/lib/server/rate-limit";
 
-// Rate limiting storage (in production, use Redis or similar)
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT = 5; // 5 downloads per hour per IP
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
+const RATE_LIMIT_OPTIONS: RateLimitOptions = {
+	windowMs: 60 * 1000,
+	maxRequests: 10,
+	maxKeys: 10000,
+};
 
-function checkRateLimit(ip: string): boolean {
-	const now = Date.now();
-	const userLimit = rateLimitMap.get(ip);
+const MAX_CONTENT_ID_LENGTH = 128;
+const CONTENT_ID_REGEX = /^[a-zA-Z0-9_-]+$/;
 
-	if (!userLimit || now > userLimit.resetTime) {
-		rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
-		return true;
-	}
-
-	if (userLimit.count >= RATE_LIMIT) {
-		return false;
-	}
-
-	userLimit.count++;
-	return true;
+function validateContentId(id: string): boolean {
+	return (
+		typeof id === "string" &&
+		id.length <= MAX_CONTENT_ID_LENGTH &&
+		CONTENT_ID_REGEX.test(id)
+	);
 }
 
 export async function POST(request: NextRequest) {
@@ -39,19 +39,27 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
+		// Validate content ID format
+		if (!validateContentId(id)) {
+			return NextResponse.json(
+				{ error: "Invalid content ID format" },
+				{ status: 400 },
+			);
+		}
+
 		// Get client IP for rate limiting
 		const ip =
-			request.headers.get("x-forwarded-for")?.split(",")[0] ||
+			request.headers.get("x-forwarded-for") ||
 			request.headers.get("x-real-ip") ||
 			"unknown";
 
 		// Check rate limit
-		if (!checkRateLimit(ip)) {
+		if (!checkRateLimit(normalizeIp(ip), RATE_LIMIT_OPTIONS)) {
 			return NextResponse.json(
 				{
 					error:
 						"Download rate limit exceeded. Please wait before downloading again.",
-					retryAfter: Math.ceil(RATE_LIMIT_WINDOW / 1000 / 60), // minutes
+					retryAfter: Math.ceil(RATE_LIMIT_OPTIONS.windowMs / 1000 / 60), // minutes
 				},
 				{ status: 429 },
 			);

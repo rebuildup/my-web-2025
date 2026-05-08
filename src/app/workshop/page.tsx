@@ -13,7 +13,7 @@ import type { ArticleData } from "./types";
 export const revalidate = 3600;
 export const runtime = "nodejs";
 
-async function fetchContentFromCMS(id: string) {
+async function _fetchContentFromCMS(id: string) {
 	const baseUrl =
 		process.env.NODE_ENV === "development"
 			? "http://localhost:3010"
@@ -124,10 +124,17 @@ function getThumbnail(page: MarkdownPage, cmsContent: any): string | null {
 	return null;
 }
 
+interface IndexEntry {
+	summary: string;
+	description?: string;
+	tags?: string[];
+	thumbnails?: Record<string, unknown>;
+}
+
 async function fetchContentsBatch(
 	contentIds: string[],
-): Promise<Map<string, unknown>> {
-	const results = new Map<string, unknown>();
+): Promise<Map<string, IndexEntry>> {
+	const results = new Map<string, IndexEntry>();
 
 	try {
 		const allIndex = getAllFromIndex();
@@ -295,7 +302,8 @@ export default async function WorkshopPage({
 		const description =
 			cmsContent?.summary ||
 			cmsContent?.description ||
-			page.frontmatter?.description;
+			page.frontmatter?.description ||
+			null;
 		const date = formatDate(getDisplayDate(page));
 		const tags = contentTagsMap.get(contentId) || [];
 		const href = getPageHref(page);
