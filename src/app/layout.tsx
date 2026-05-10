@@ -1,7 +1,7 @@
 import "./app.css";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
+import { Inter, Noto_Sans_JP, Shippori_Antique_B1 } from "next/font/google";
 import Script from "next/script";
 import type { ReactNode } from "react";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
@@ -13,6 +13,13 @@ import { SkipLink } from "@/components/ui/SkipLink";
 import { generateBaseMetadata } from "@/lib/seo/metadata";
 
 // Optimized Google Fonts with font-display: swap for instant rendering
+const inter = Inter({
+	subsets: ["latin"],
+	variable: "--font-inter",
+	display: "swap",
+	preload: true,
+});
+
 const notoSansJP = Noto_Sans_JP({
 	subsets: ["latin"],
 	variable: "--font-noto-sans-jp",
@@ -68,7 +75,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				<link rel="dns-prefetch" href="https://use.typekit.net" />
 			</head>
 			<body
-				className={`${notoSansJP.variable} ${shipporiAntiqueB1.variable} bg-base text-main font-sans`}
+				className={`${inter.variable} ${notoSansJP.variable} ${shipporiAntiqueB1.variable} bg-base text-main font-sans`}
 			>
 				<HomeBackgroundCSS />
 				<SkipLink />
