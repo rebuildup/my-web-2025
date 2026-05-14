@@ -61,6 +61,53 @@ export default function SettingsPanel({
 							handleCountSettingChange("includeWhitespace", checked)
 						}
 					/>
+					<CheckboxSetting
+						id="exclude-html"
+						label="HTMLタグを除外"
+						checked={settings.excludeHtml}
+						onChange={(checked) =>
+							handleCountSettingChange("excludeHtml", checked)
+						}
+					/>
+					<CheckboxSetting
+						id="exclude-urls"
+						label="URLを除外"
+						checked={settings.excludeUrls}
+						onChange={(checked) =>
+							handleCountSettingChange("excludeUrls", checked)
+						}
+					/>
+				</div>
+
+				<div className="space-y-2 mt-4">
+					<h4 className="text-sm font-medium text-main">チェック設定</h4>
+					
+					<div className="space-y-3">
+						<CheckboxSetting
+							id="check-half-kana"
+							label="半角カナを検出する"
+							checked={settings.checkHalfKana}
+							onChange={(checked) =>
+								handleCountSettingChange("checkHalfKana", checked)
+							}
+						/>
+
+						<div>
+							<label htmlFor="specific-string" className="block text-sm text-main mb-1">
+								特定文字列の出現数チェック
+							</label>
+							<input
+								type="text"
+								id="specific-string"
+								value={settings.specificString || ""}
+								onChange={(e) =>
+									handleCountSettingChange("specificString", e.target.value)
+								}
+								placeholder="検索したい文字列"
+								className="w-full p-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+							/>
+						</div>
+					</div>
 				</div>
 
 				<div className="space-y-2">

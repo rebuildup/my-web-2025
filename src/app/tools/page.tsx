@@ -12,11 +12,8 @@ import {
 	Zap,
 } from "lucide-react";
 import Link from "next/link";
-import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-
-const CARD_SURFACE =
-	"group relative flex h-full flex-col overflow-hidden rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-0.5";
+import GlowCard from "@/components/ui/GlowCard";
 
 interface Tool {
 	id: string;
@@ -138,44 +135,10 @@ const tools: Tool[] = [
 	},
 ];
 
-const categories = [
-	{ key: "all", label: "すべて", count: tools.length },
-	{
-		key: "ゲーム",
-		label: "ゲーム",
-		count: tools.filter((t) => t.category === "ゲーム").length,
-	},
-	{
-		key: "生産性",
-		label: "生産性",
-		count: tools.filter((t) => t.category === "生産性").length,
-	},
-	{
-		key: "ユーティリティ",
-		label: "ユーティリティ",
-		count: tools.filter((t) => t.category === "ユーティリティ").length,
-	},
-	{
-		key: "デザイン",
-		label: "デザイン",
-		count: tools.filter((t) => t.category === "デザイン").length,
-	},
-	{
-		key: "開発",
-		label: "開発",
-		count: tools.filter((t) => t.category === "開発").length,
-	},
-	{
-		key: "ビジネス",
-		label: "ビジネス",
-		count: tools.filter((t) => t.category === "ビジネス").length,
-	},
-];
 
 export default function ToolsPage() {
 	return (
-		<div className="relative min-h-screen bg-base text-main">
-			<HomeBackground />
+		<div className="relative min-h-screen text-main">
 			<main
 				id="main-content"
 				className="relative z-10 min-h-screen py-10"
@@ -200,27 +163,6 @@ export default function ToolsPage() {
 							</p>
 						</header>
 
-						{/* Categories */}
-						<section className="space-y-6">
-							<h2 className="neue-haas-grotesk-display text-3xl text-main">
-								Categories
-							</h2>
-							<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
-								{categories.map((category) => (
-									<div
-										key={category.key}
-										className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 text-center"
-									>
-										<div className="neue-haas-grotesk-display text-2xl text-accent mb-1">
-											{category.count}
-										</div>
-										<div className="noto-sans-jp-light text-xs text-main/80">
-											{category.label}
-										</div>
-									</div>
-								))}
-							</div>
-						</section>
 
 						{/* Tools Grid */}
 						<section className="space-y-6">
@@ -234,30 +176,28 @@ export default function ToolsPage() {
 										<Link
 											key={tool.id}
 											href={tool.href}
-											className="block focus:outline-none"
+											className="block focus:outline-none group h-full"
 										>
-											<article
-												className={`${CARD_SURFACE} focus:outline-none focus:ring-2 focus:ring-accent/60 focus:ring-offset-2 focus:ring-offset-base`}
-											>
-												<div className="flex flex-col gap-4 p-6">
-													<div className="flex items-start justify-between">
-														<div className="rounded-xl bg-main/10 p-3">
-															<Icon className="w-6 h-6 text-accent" />
-														</div>
-														<span className="noto-sans-jp-light rounded-full bg-main/10 px-3 py-1 text-[0.75rem] text-main">
-															{tool.category}
-														</span>
-													</div>
+											<GlowCard className="bg-base/30 backdrop-blur h-full flex flex-col">
+												<div className="flex flex-col p-6 h-full">
 													<div className="flex flex-1 flex-col gap-3">
-														<h3 className="neue-haas-grotesk-display text-lg leading-snug text-main sm:text-xl">
-															{tool.title}
-														</h3>
-														<p className="noto-sans-jp-light text-sm leading-relaxed text-main/80">
+														<div className="flex items-start justify-between gap-2">
+															<div className="flex items-center gap-3">
+																<Icon className="w-6 h-6 text-accent group-hover:scale-110 transition-transform duration-300 shrink-0" />
+																<h3 className="neue-haas-grotesk-display text-lg leading-snug text-main sm:text-xl group-hover:text-accent transition-colors">
+																	{tool.title}
+																</h3>
+															</div>
+															<span className="noto-sans-jp-light rounded-full bg-main/10 px-3 py-1 text-[0.75rem] text-main shrink-0">
+																{tool.category}
+															</span>
+														</div>
+														<p className="noto-sans-jp-light text-sm leading-relaxed text-main/80 mt-1">
 															{tool.description}
 														</p>
 													</div>
 												</div>
-											</article>
+											</GlowCard>
 										</Link>
 									);
 								})}

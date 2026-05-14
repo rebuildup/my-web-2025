@@ -1,15 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import useOfflinePerformance from "@/hooks/useOfflinePerformance";
 import {
-	type ColorHarmony,
 	type ColorInfo,
 	generateColorHarmony,
 	generateGoldenRatioColors,
 	generatePerceptuallyUniformColors,
 	getAccessibilityInfo,
-	hexToRgb,
 	hsvToRgb,
 	randomInRange,
 	rgbToHex,
@@ -18,11 +15,8 @@ import {
 	sortColorsByLightness,
 	sortColorsBySaturation,
 } from "@/lib/utils/color";
-import AccessibleButton from "../../components/AccessibleButton";
-import OfflineSettingsManager from "../../components/OfflineSettingsManager";
-import ToolWrapper from "../../components/ToolWrapper";
+import { RawDOMContainer } from "../../components/RawDOMContainer";
 
-// Palette management interfaces
 interface SavedPalette {
 	id: string;
 	name: string;
@@ -31,7 +25,6 @@ interface SavedPalette {
 	tags: string[];
 }
 
-// Predefined color ranges with enhanced options
 const colorRangePresets = {
 	warm: { hMin: 0, hMax: 60, sMin: 50, sMax: 100, vMin: 40, vMax: 80 },
 	cool: { hMin: 180, hMax: 240, sMin: 50, sMax: 100, vMin: 40, vMax: 80 },
@@ -43,114 +36,58 @@ const colorRangePresets = {
 	sunset: { hMin: 300, hMax: 60, sMin: 60, sMax: 100, vMin: 50, vMax: 90 },
 	forest: { hMin: 80, hMax: 140, sMin: 40, sMax: 80, vMin: 20, vMax: 60 },
 	neon: { hMin: 0, hMax: 360, sMin: 90, sMax: 100, vMin: 80, vMax: 100 },
-};
+} as const;
 
-// Generation algorithms
 const generationAlgorithms = {
 	random: "Random HSV",
 	golden: "Golden Ratio",
 	perceptual: "Perceptually Uniform",
 	harmony: "Color Harmony",
-};
+} as const;
 
-// Settings interface for offline persistence
-interface ColorPaletteSettings extends Record<string, unknown> {
+interface ColorPaletteSettings {
 	colorCount: number;
 	hueRange: { min: number; max: number };
 	saturationRange: { min: number; max: number };
 	valueRange: { min: number; max: number };
 	exportFormat: "css" | "tailwind" | "json";
-	showAccessibility: boolean;
 	generationAlgorithm: keyof typeof generationAlgorithms;
-	harmonyType: ColorHarmony["type"];
 	sortBy: "none" | "hue" | "lightness" | "saturation";
-	enableColorBlindCheck: boolean;
 	autoSave: boolean;
 }
 
-export default function ColorPaletteGenerator() {
-	// Default settings
-	const defaultSettings: ColorPaletteSettings = {
-		colorCount: 5,
-		hueRange: { min: 0, max: 360 },
-		saturationRange: { min: 50, max: 100 },
-		valueRange: { min: 50, max: 90 },
-		exportFormat: "css",
-		showAccessibility: false,
-		generationAlgorithm: "random",
-		harmonyType: "analogous",
-		sortBy: "none",
-		enableColorBlindCheck: true,
-		autoSave: false,
-	};
+const defaultSettings: ColorPaletteSettings = {
+	colorCount: 5,
+	hueRange: { min: 0, max: 360 },
+	saturationRange: { min: 50, max: 100 },
+	valueRange: { min: 50, max: 90 },
+	exportFormat: "css",
+	generationAlgorithm: "random",
+	sortBy: "none",
+	autoSave: false,
+};
 
-	// State management
-	const [settings, setSettings] =
-		useState<ColorPaletteSettings>(defaultSettings);
+export default function ColorPaletteGenerator() {
+	const [settings, setSettings] = useState<ColorPaletteSettings>(defaultSettings);
 	const [generatedColors, setGeneratedColors] = useState<ColorInfo[]>([]);
 	const [savedPalettes, setSavedPalettes] = useState<SavedPalette[]>([]);
-	const [currentHarmony, setCurrentHarmony] = useState<ColorHarmony | null>(
-		null,
-	);
-	const [selectedColor, setSelectedColor] = useState<ColorInfo | null>(null);
-	const [importedPalette, setImportedPalette] = useState<string>("");
-	const [paletteSearch, setPaletteSearch] = useState<string>("");
-	const [showPaletteManager, setShowPaletteManager] = useState(false);
-	const [notification, setNotification] = useState<string>("");
+	const [notification, setNotification] = useState("");
+
 	const paletteIdRef = useRef(1);
 
-	// Refs for file operations
-	const fileInputRef = useRef<HTMLInputElement>(null);
-
-	// Destructure settings
-	const {
-		colorCount,
-		hueRange,
-		saturationRange,
-		valueRange,
-		exportFormat,
-		showAccessibility,
-		generationAlgorithm,
-		harmonyType,
-		sortBy,
-		enableColorBlindCheck,
-		autoSave,
-	} = settings;
-
-	// Performance optimization hook
-	const { measureTime } = useOfflinePerformance({
-		toolName: "color-palette",
-		enablePerformanceMonitoring: true,
-		enableOfflineNotifications: true,
-	});
-
-	// Enhanced keyboard shortcuts
-	const keyboardShortcuts = [
-		{ key: "G", description: "新しいパレット生成" },
-		{ key: "S", description: "パレット保存" },
-		{ key: "E", description: "エクスポート" },
-		{ key: "R", description: "リセット" },
-		{ key: "A", description: "アクセシビリティ表示切替" },
-		{ key: "H", description: "ハーモニー生成" },
-		{ key: "M", description: "パレット管理" },
-		{ key: "I", description: "パレットインポート" },
-	];
-
-	// Show notification
 	const showNotification = useCallback((message: string) => {
 		setNotification(message);
 		setTimeout(() => setNotification(""), 3000);
 	}, []);
 
-	// Generate random colors (original algorithm)
 	const generateRandomColors = useCallback((): ColorInfo[] => {
 		const colors: ColorInfo[] = [];
 		const usedColors = new Set<string>();
 
-		while (colors.length < colorCount) {
-			const h = randomInRange(hueRange.min, hueRange.max);
-			const s = randomInRange(saturationRange.min, saturationRange.max);
-			const v = randomInRange(valueRange.min, valueRange.max);
+		while (colors.length < settings.colorCount) {
+			const h = randomInRange(settings.hueRange.min, settings.hueRange.max);
+			const s = randomInRange(settings.saturationRange.min, settings.saturationRange.max);
+			const v = randomInRange(settings.valueRange.min, settings.valueRange.max);
 
 			const rgb = hsvToRgb(h, s, v);
 			const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
@@ -160,23 +97,18 @@ export default function ColorPaletteGenerator() {
 				const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
 				const accessibility = getAccessibilityInfo(rgb);
 
-				colors.push({
-					hex,
-					rgb,
-					hsv: { h, s, v },
-					hsl,
-					accessibility,
-				});
+				colors.push({ hex, rgb, hsv: { h, s, v }, hsl, accessibility });
 			}
 		}
 
 		return colors;
-	}, [colorCount, hueRange, saturationRange, valueRange]);
+	}, [settings]);
 
-	// Enhanced palette saving with metadata
 	const savePalette = useCallback(
 		async (customName?: string) => {
-			if (generatedColors.length === 0) return;
+			if (generatedColors.length === 0) {
+				return;
+			}
 
 			const name = customName || `Palette ${savedPalettes.length + 1}`;
 			const newPalette: SavedPalette = {
@@ -184,7 +116,7 @@ export default function ColorPaletteGenerator() {
 				name,
 				colors: generatedColors,
 				createdAt: new Date().toISOString(),
-				tags: [generationAlgorithm, harmonyType],
+				tags: [settings.generationAlgorithm],
 			};
 
 			setSavedPalettes((prev) => [newPalette, ...prev]);
@@ -193,96 +125,56 @@ export default function ColorPaletteGenerator() {
 		[
 			generatedColors,
 			savedPalettes.length,
-			generationAlgorithm,
-			harmonyType,
+			settings.generationAlgorithm,
 			showNotification,
 		],
 	);
 
-	// Generate colors with advanced algorithms
 	const generateColors = useCallback(async () => {
-		const timedGeneration = measureTime((): ColorInfo[] => {
-			let colors: ColorInfo[] = [];
+		let colors: ColorInfo[] = [];
 
-			switch (generationAlgorithm) {
-				case "random":
-					colors = generateRandomColors();
-					break;
-				case "golden": {
-					const baseHue = randomInRange(hueRange.min, hueRange.max);
-					colors = generateGoldenRatioColors(baseHue, colorCount);
-					break;
-				}
-				case "perceptual":
-					colors = generatePerceptuallyUniformColors(colorCount);
-					break;
-				case "harmony":
-					if (selectedColor) {
-						const harmony = generateColorHarmony(
-							selectedColor.hsv,
-							harmonyType,
-						);
-						colors = harmony.colors.slice(0, colorCount);
-						setCurrentHarmony(harmony);
-					} else {
-						const baseH = randomInRange(hueRange.min, hueRange.max);
-						const baseS = randomInRange(
-							saturationRange.min,
-							saturationRange.max,
-						);
-						const baseV = randomInRange(valueRange.min, valueRange.max);
-						const harmony = generateColorHarmony(
-							{ h: baseH, s: baseS, v: baseV },
-							harmonyType,
-						);
-						colors = harmony.colors.slice(0, colorCount);
-						setCurrentHarmony(harmony);
-					}
-					break;
+		switch (settings.generationAlgorithm) {
+			case "random":
+				colors = generateRandomColors();
+				break;
+			case "golden": {
+				const baseHue = randomInRange(settings.hueRange.min, settings.hueRange.max);
+				colors = generateGoldenRatioColors(baseHue, settings.colorCount);
+				break;
 			}
-
-			// Apply sorting
-			switch (sortBy) {
-				case "hue":
-					colors = sortColorsByHue(colors);
-					break;
-				case "lightness":
-					colors = sortColorsByLightness(colors);
-					break;
-				case "saturation":
-					colors = sortColorsBySaturation(colors);
-					break;
-			}
-
-			return colors;
-		});
-
-		setGeneratedColors(timedGeneration.result as ColorInfo[]);
-
-		if (autoSave && (timedGeneration.result as ColorInfo[]).length > 0) {
-			await savePalette(`Auto-saved ${new Date().toLocaleTimeString()}`);
+			case "perceptual":
+				colors = generatePerceptuallyUniformColors(settings.colorCount);
+				break;
+			case "harmony":
+				const baseH = randomInRange(settings.hueRange.min, settings.hueRange.max);
+				const baseS = randomInRange(settings.saturationRange.min, settings.saturationRange.max);
+				const baseV = randomInRange(settings.valueRange.min, settings.valueRange.max);
+				colors = generateColorHarmony({ h: baseH, s: baseS, v: baseV }, "analogous").colors.slice(
+					0,
+					settings.colorCount,
+				);
+				break;
 		}
 
-		showNotification(
-			`${(timedGeneration.result as ColorInfo[]).length}色のパレットを生成しました`,
-		);
-	}, [
-		colorCount,
-		hueRange,
-		saturationRange,
-		valueRange,
-		generationAlgorithm,
-		harmonyType,
-		sortBy,
-		selectedColor,
-		autoSave,
-		measureTime,
-		showNotification,
-		generateRandomColors,
-		savePalette,
-	]);
+		switch (settings.sortBy) {
+			case "hue":
+				colors = sortColorsByHue(colors);
+				break;
+			case "lightness":
+				colors = sortColorsByLightness(colors);
+				break;
+			case "saturation":
+				colors = sortColorsBySaturation(colors);
+				break;
+		}
 
-	// Apply preset color range
+		setGeneratedColors(colors);
+		if (settings.autoSave && colors.length > 0) {
+			await savePalette(`Auto-saved ${new Date().toLocaleTimeString()}`);
+		}
+		showNotification(`${colors.length}色のパレットを生成しました`);
+	}, [settings, generateRandomColors, savePalette, showNotification]);
+
 	const applyPreset = (preset: keyof typeof colorRangePresets) => {
 		const range = colorRangePresets[preset];
 		setSettings((prev) => ({
@@ -294,1072 +186,355 @@ export default function ColorPaletteGenerator() {
 		showNotification(`${preset}プリセットを適用しました`);
 	};
 
-	// Load saved palette
-	const loadPalette = (palette: SavedPalette) => {
-		setGeneratedColors(palette.colors);
-		showNotification(`パレット "${palette.name}" を読み込みました`);
-	};
-
-	// Delete saved palette
-	const deletePalette = (id: string) => {
-		setSavedPalettes((prev) => prev.filter((p) => p.id !== id));
-		showNotification("パレットを削除しました");
-	};
-
-	// Enhanced export functions
 	const exportAsCSS = useCallback(() => {
-		const cssVars = generatedColors
-			.map((color, index) => `  --color-${index + 1}: ${color.hex};`)
-			.join("\n");
+		const cssVars = generatedColors.map((color, index) => `  --color-${index + 1}: ${color.hex};`).join("\n");
 		return `:root {\n${cssVars}\n}`;
 	}, [generatedColors]);
 
 	const exportAsTailwind = useCallback(() => {
-		const colors = generatedColors.reduce(
-			(acc, color, index) => {
-				acc[`color-${index + 1}`] = color.hex;
-				return acc;
-			},
-			{} as Record<string, string>,
-		);
-
-		return `module.exports = {
-  theme: {
-    extend: {
-      colors: ${JSON.stringify(colors, null, 8)}
-    }
-  }
-}`;
+		const colors = generatedColors.reduce<Record<string, string>>((acc, color, index) => {
+			acc[`color-${index + 1}`] = color.hex;
+			return acc;
+		}, {});
+		return `module.exports = { theme: { extend: { colors: ${JSON.stringify(colors, null, 2)} } } }`;
 	}, [generatedColors]);
 
 	const exportAsJSON = useCallback(() => {
-		return JSON.stringify(
-			{
-				palette: {
-					name: `Generated Palette ${new Date().toISOString()}`,
-					algorithm: generationAlgorithm,
-					harmony: currentHarmony?.type,
-					colors: generatedColors,
-					metadata: {
-						createdAt: new Date().toISOString(),
-						settings: {
-							colorCount,
-							hueRange,
-							saturationRange,
-							valueRange,
-						},
-					},
-				},
-			},
-			null,
-			2,
-		);
-	}, [
-		generatedColors,
-		generationAlgorithm,
-		currentHarmony,
-		colorCount,
-		hueRange,
-		saturationRange,
-		valueRange,
-	]);
+		return JSON.stringify({ palette: { algorithm: settings.generationAlgorithm, colors: generatedColors } }, null, 2);
+	}, [generatedColors, settings]);
 
-	// Copy to clipboard
-	const copyToClipboard = useCallback(
-		async (text: string) => {
-			try {
-				await navigator.clipboard.writeText(text);
-				showNotification("クリップボードにコピーしました");
-			} catch (err) {
-				console.error("Failed to copy to clipboard:", err);
-				showNotification("コピーに失敗しました");
-			}
-		},
-		[showNotification],
-	);
-
-	// Copy individual color
-	const copyColor = async (color: ColorInfo, format: "hex" | "rgb" | "hsl") => {
-		let text = "";
-		switch (format) {
-			case "hex":
-				text = color.hex;
-				break;
-			case "rgb":
-				text = `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`;
-				break;
-			case "hsl":
-				text = `hsl(${color.hsl.h}, ${color.hsl.s}%, ${color.hsl.l}%)`;
-				break;
+	const copyToClipboard = async (text: string) => {
+		try {
+			await navigator.clipboard.writeText(text);
+			showNotification("コピーしました");
+		} catch (err) {
+			showNotification("コピー失敗");
 		}
-		await copyToClipboard(text);
 	};
 
-	// Helper function to parse JSON palette data
-	const parseJsonPalette = useCallback((data: string): ColorInfo[] | null => {
-		const parsed = JSON.parse(data);
-
-		// Check for palette object format
-		if (parsed.palette) {
-			if (parsed.palette.colors) {
-				return parsed.palette.colors;
-			}
-		}
-
-		// Check for array format
-		if (Array.isArray(parsed)) {
-			if (parsed.length > 0) {
-				const colors: ColorInfo[] = [];
-				for (const item of parsed) {
-					if (typeof item === "string") {
-						if (item.startsWith("#")) {
-							const rgb = hexToRgb(item);
-							if (rgb) {
-								const hsv = { h: 0, s: 0, v: 0 };
-								const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-								colors.push({
-									hex: item,
-									rgb,
-									hsv,
-									hsl,
-									accessibility: getAccessibilityInfo(rgb),
-								});
-							}
-						}
-					}
-				}
-				if (colors.length > 0) {
-					return colors;
-				}
-			}
-		}
-
-		return null;
-	}, []);
-
-	// Helper function to parse hex colors from string
-	const parseHexColors = useCallback((data: string): ColorInfo[] | null => {
-		const hexColors = data.match(/#[0-9a-fA-F]{6}/g);
-		if (!hexColors) {
-			return null;
-		}
-		if (hexColors.length === 0) {
-			return null;
-		}
-
-		const colors: ColorInfo[] = [];
-		for (const hex of hexColors) {
-			const rgb = hexToRgb(hex);
-			if (rgb) {
-				const hsv = { h: 0, s: 0, v: 0 };
-				const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-				colors.push({
-					hex,
-					rgb,
-					hsv,
-					hsl,
-					accessibility: getAccessibilityInfo(rgb),
-				});
-			}
-		}
-
-		if (colors.length > 0) {
-			return colors;
-		}
-		return null;
-	}, []);
-
-	// Import palette from various formats
-	const importPalette = useCallback(
-		(data: string) => {
-			try {
-				const colors = parseJsonPalette(data);
-				if (colors) {
-					setGeneratedColors(colors);
-					showNotification("JSONパレットをインポートしました");
-					return;
-				}
-				showNotification("インポート形式が認識できません");
-			} catch {
-				const colors = parseHexColors(data);
-				if (colors) {
-					setGeneratedColors(colors);
-					showNotification(`${colors.length}色をインポートしました`);
-				} else {
-					showNotification("有効な色が見つかりません");
-				}
-			}
-		},
-		[showNotification, parseJsonPalette, parseHexColors],
-	);
-
-	// Handle file import
-	const handleFileImport = useCallback(
-		(event: React.ChangeEvent<HTMLInputElement>) => {
-			const file = event.target.files?.[0];
-			if (file) {
-				const reader = new FileReader();
-				reader.onload = (e) => {
-					const content = e.target?.result as string;
-					importPalette(content);
-				};
-				reader.readAsText(file);
-			}
-		},
-		[importPalette],
-	);
-
-	// Filter saved palettes
-	const filteredPalettes = savedPalettes.filter(
-		(palette) =>
-			palette.name.toLowerCase().includes(paletteSearch.toLowerCase()) ||
-			palette.tags.some((tag) =>
-				tag.toLowerCase().includes(paletteSearch.toLowerCase()),
-			),
-	);
-
-	// Handle keyboard shortcuts
-	useEffect(() => {
-		const handleToolShortcut = (event: CustomEvent) => {
-			switch (event.detail.key.toLowerCase()) {
-				case "g":
-					generateColors();
-					break;
-				case "s":
-					savePalette();
-					break;
-				case "e": {
-					const exportText =
-						exportFormat === "css"
-							? exportAsCSS()
-							: exportFormat === "tailwind"
-								? exportAsTailwind()
-								: exportAsJSON();
-					copyToClipboard(exportText);
-					break;
-				}
-				case "r":
-					setGeneratedColors([]);
-					setCurrentHarmony(null);
-					setSelectedColor(null);
-					break;
-				case "a":
-					setSettings((prev) => ({
-						...prev,
-						showAccessibility: !prev.showAccessibility,
-					}));
-					break;
-				case "h":
-					if (generatedColors.length > 0) {
-						setSelectedColor(generatedColors[0]);
-						setSettings((prev) => ({
-							...prev,
-							generationAlgorithm: "harmony",
-						}));
-						generateColors();
-					}
-					break;
-				case "m":
-					setShowPaletteManager(!showPaletteManager);
-					break;
-				case "i":
-					fileInputRef.current?.click();
-					break;
-			}
-		};
-
-		document.addEventListener(
-			"toolShortcut",
-			handleToolShortcut as EventListener,
-		);
-		return () =>
-			document.removeEventListener(
-				"toolShortcut",
-				handleToolShortcut as EventListener,
-			);
-	}, [
-		generateColors,
-		savePalette,
-		exportFormat,
-		exportAsCSS,
-		exportAsTailwind,
-		exportAsJSON,
-		copyToClipboard,
-		generatedColors,
-		showPaletteManager,
-	]);
-
-	// Load saved palettes from localStorage
 	useEffect(() => {
 		const saved = localStorage.getItem("color-palettes-v2");
 		if (saved) {
 			try {
 				setSavedPalettes(JSON.parse(saved));
-			} catch (err) {
-				console.error("Failed to load saved palettes:", err);
+			} catch (error) {
+				console.error(error);
 			}
 		}
 	}, []);
 
-	// Save palettes to localStorage
 	useEffect(() => {
 		localStorage.setItem("color-palettes-v2", JSON.stringify(savedPalettes));
 	}, [savedPalettes]);
 
-	// Design system classes
-	const CardStyle =
-		"rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-4";
-	const Section_title = "neue-haas-grotesk-display text-xl text-main mb-4";
-	const Input_style =
-		"rounded-lg bg-main/10 p-2 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base";
-	const Button_style =
-		"bg-accent text-main px-4 py-2 border border-accent hover:bg-base hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base";
-
 	return (
-		<ToolWrapper
-			toolName="Color Palette Generator"
-			description="高度なアルゴリズムとカラーハーモニー理論を使用したカラーパレット生成ツール.アクセシビリティチェック、パレット管理、多形式エクスポートに対応."
-			category="design"
-			keyboardShortcuts={keyboardShortcuts}
-			showPerformanceInfo={true}
-			enableOptimizations={true}
+		<RawDOMContainer
+			title="Color Palette Generator"
+			breadcrumbs={[
+				{ label: "Home", href: "/" },
+				{ label: "Tools", href: "/tools" },
+				{ label: "Color Palette Generator" },
+			]}
 		>
-			<OfflineSettingsManager
-				toolName="color-palette"
-				defaultSettings={defaultSettings}
-				settings={settings}
-				onSettingsChange={setSettings}
-				showControls={true}
-			>
-				{() => (
-					<div className="space-y-8">
-						{/* Notification */}
-						{notification && (
-							<div
-								className="bg-accent text-main p-3 border border-accent"
-								role="alert"
+			<div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+				<div style={{ flex: "1 1 360px", display: "flex", flexDirection: "column", gap: "10px" }}>
+					<fieldset style={{ border: "1px solid #ccc", padding: "8px" }}>
+						<legend>Algorithm & Limits</legend>
+						<div style={{ display: "grid", gridTemplateColumns: "80px 1fr", gap: "8px", alignItems: "center" }}>
+							<label htmlFor="algo-select" style={{ whiteSpace: "nowrap" }}>Algorithm:</label>
+							<select
+								id="algo-select"
+								style={{ all: "revert", width: "100%", padding: "4px 8px", fontSize: "13px", boxSizing: "border-box" }}
+								value={settings.generationAlgorithm}
+								onChange={(e) =>
+									setSettings((prev) => ({
+										...prev,
+										generationAlgorithm: e.target.value as keyof typeof generationAlgorithms,
+									}))
+								}
 							>
-								{notification}
-							</div>
-						)}
+								{Object.entries(generationAlgorithms).map(([key, value]) => (
+									<option key={key} value={key}>
+										{value}
+									</option>
+								))}
+							</select>
+							<label htmlFor="count-input" style={{ whiteSpace: "nowrap" }}>Count:</label>
+							<input
+								id="count-input"
+								type="number"
+								min="1"
+								max="20"
+								style={{ all: "revert", width: "100%", padding: "4px 8px", fontSize: "13px", boxSizing: "border-box" }}
+								value={settings.colorCount}
+								onChange={(e) =>
+									setSettings((prev) => ({
+										...prev,
+										colorCount: Number(e.target.value),
+									}))
+								}
+							/>
+							<label htmlFor="sort-select" style={{ whiteSpace: "nowrap" }}>Sort By:</label>
+							<select
+								id="sort-select"
+								style={{ all: "revert", width: "100%", padding: "4px 8px", fontSize: "13px", boxSizing: "border-box" }}
+								value={settings.sortBy}
+								onChange={(e) =>
+									setSettings((prev) => ({
+										...prev,
+										sortBy: e.target.value as ColorPaletteSettings["sortBy"],
+									}))
+								}
+							>
+								<option value="none">None</option>
+								<option value="hue">Hue</option>
+								<option value="lightness">Lightness</option>
+								<option value="saturation">Saturation</option>
+							</select>
+						</div>
+					</fieldset>
 
-						{/* Hidden file input for import */}
-						<input
-							ref={fileInputRef}
-							type="file"
-							accept=".json,.css,.gpl,.ase"
-							onChange={handleFileImport}
-							aria-label="インポートするファイルを選択"
-							className="hidden"
-						/>
-
-						{/* Generation Algorithm Selection */}
-						<section className={CardStyle}>
-							<h3 className={Section_title}>Generation Algorithm</h3>
-							<div className="grid-system grid-1 sm:grid-2 gap-4">
-								<div className="space-y-2">
-									<label className="neue-haas-grotesk-display text-sm text-main">
-										Algorithm
-									</label>
-									<select
-										value={generationAlgorithm}
-										onChange={(e) =>
-											setSettings((prev) => ({
-												...prev,
-												generationAlgorithm: e.target
-													.value as keyof typeof generationAlgorithms,
-											}))
-										}
-										className={Input_style}
-										aria-label="Select generation algorithm"
-									>
-										{Object.entries(generationAlgorithms).map(
-											([key, label]) => (
-												<option key={key} value={key}>
-													{label}
-												</option>
-											),
-										)}
-									</select>
+					<fieldset style={{ border: "1px solid #ccc", padding: "8px" }}>
+						<legend>Color Range</legend>
+						<div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+							<div>
+								<div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px", fontSize: "12px" }}>
+									<span>Hue:</span>
+									<span>
+										{settings.hueRange.min} - {settings.hueRange.max}
+									</span>
 								</div>
-
-								{generationAlgorithm === "harmony" && (
-									<div className="space-y-2">
-										<label className="neue-haas-grotesk-display text-sm text-main">
-											Harmony Type
-										</label>
-										<select
-											value={harmonyType}
-											onChange={(e) =>
-												setSettings((prev) => ({
-													...prev,
-													harmonyType: e.target.value as ColorHarmony["type"],
-												}))
-											}
-											className={Input_style}
-											aria-label="Select harmony type"
-										>
-											<option value="monochromatic">Monochromatic</option>
-											<option value="analogous">Analogous</option>
-											<option value="complementary">Complementary</option>
-											<option value="triadic">Triadic</option>
-											<option value="tetradic">Tetradic</option>
-											<option value="split-complementary">
-												Split Complementary
-											</option>
-										</select>
-									</div>
-								)}
-							</div>
-
-							{currentHarmony && (
-								<div className="rounded-lg bg-main/10 p-3">
-									<h4 className="neue-haas-grotesk-display text-sm text-main mb-2">
-										Current Harmony: {currentHarmony.type}
-									</h4>
-									<p className="text-xs text-main">
-										{currentHarmony.description}
-									</p>
-								</div>
-							)}
-						</section>
-
-						{/* Color Range Settings */}
-						<section className={CardStyle}>
-							<h3 className={Section_title}>Color Range Settings</h3>
-
-							{/* Preset Buttons */}
-							<div className="space-y-4">
-								<h4 className="neue-haas-grotesk-display text-lg text-main">
-									Presets
-								</h4>
-								<div className="grid-system grid-2 xs:grid-3 sm:grid-5 gap-2">
-									{Object.keys(colorRangePresets).map((preset) => (
-										<button
-											type="button"
-											key={preset}
-											onClick={() =>
-												applyPreset(preset as keyof typeof colorRangePresets)
-											}
-											className="rounded-lg bg-main/10 px-3 py-2 text-sm hover:bg-main/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base capitalize"
-										>
-											{preset}
-										</button>
-									))}
-								</div>
-							</div>
-
-							{/* Manual Range Controls */}
-							<div className="grid-system grid-1 sm:grid-3 gap-6">
-								{/* Hue Range */}
-								<div className="space-y-2">
-									<label className="neue-haas-grotesk-display text-sm text-main">
-										Hue Range (色相): {hueRange.min}° - {hueRange.max}°
-									</label>
-									<div className="space-y-2">
-										<label className="block">
-											<span className="text-xs text-main/70">最小値</span>
-											<input
-												type="range"
-												min="0"
-												max="360"
-												value={hueRange.min}
-												onChange={(e) =>
-													setSettings((prev) => ({
-														...prev,
-														hueRange: {
-															...prev.hueRange,
-															min: parseInt(e.target.value, 10),
-														},
-													}))
-												}
-												className="w-full"
-												id="hue-min"
-												data-testid="hue-min"
-											/>
-										</label>
-										<label className="block">
-											<span className="text-xs text-main/70">最大値</span>
-											<input
-												type="range"
-												min="0"
-												max="360"
-												value={hueRange.max}
-												onChange={(e) =>
-													setSettings((prev) => ({
-														...prev,
-														hueRange: {
-															...prev.hueRange,
-															max: parseInt(e.target.value, 10),
-														},
-													}))
-												}
-												className="w-full"
-												id="hue-max"
-												data-testid="hue-max"
-											/>
-										</label>
-									</div>
-								</div>
-
-								{/* Saturation Range */}
-								<div className="space-y-2">
-									<label className="neue-haas-grotesk-display text-sm text-main">
-										Saturation Range (彩度): {saturationRange.min}% -{" "}
-										{saturationRange.max}%
-									</label>
-									<div className="space-y-2">
-										<label className="block">
-											<span className="text-xs text-main/70">最小値</span>
-											<input
-												type="range"
-												min="0"
-												max="100"
-												value={saturationRange.min}
-												onChange={(e) =>
-													setSettings((prev) => ({
-														...prev,
-														saturationRange: {
-															...prev.saturationRange,
-															min: parseInt(e.target.value, 10),
-														},
-													}))
-												}
-												className="w-full"
-												id="saturation-min"
-												data-testid="saturation-min"
-											/>
-										</label>
-										<label className="block">
-											<span className="text-xs text-main/70">最大値</span>
-											<input
-												type="range"
-												min="0"
-												max="100"
-												value={saturationRange.max}
-												onChange={(e) =>
-													setSettings((prev) => ({
-														...prev,
-														saturationRange: {
-															...prev.saturationRange,
-															max: parseInt(e.target.value, 10),
-														},
-													}))
-												}
-												className="w-full"
-												id="saturation-max"
-												data-testid="saturation-max"
-											/>
-										</label>
-									</div>
-								</div>
-
-								{/* Value Range */}
-								<div className="space-y-2">
-									<label className="neue-haas-grotesk-display text-sm text-main">
-										Value Range (明度): {valueRange.min}% - {valueRange.max}%
-									</label>
-									<div className="space-y-2">
-										<label className="block">
-											<span className="text-xs text-main/70">最小値</span>
-											<input
-												type="range"
-												min="0"
-												max="100"
-												value={valueRange.min}
-												onChange={(e) =>
-													setSettings((prev) => ({
-														...prev,
-														valueRange: {
-															...prev.valueRange,
-															min: parseInt(e.target.value, 10),
-														},
-													}))
-												}
-												className="w-full"
-												id="value-min"
-											/>
-										</label>
-										<label className="block">
-											<span className="text-xs text-main/70">最大値</span>
-											<input
-												type="range"
-												min="0"
-												max="100"
-												value={valueRange.max}
-												onChange={(e) =>
-													setSettings((prev) => ({
-														...prev,
-														valueRange: {
-															...prev.valueRange,
-															max: parseInt(e.target.value, 10),
-														},
-													}))
-												}
-												className="w-full"
-												id="value-max"
-											/>
-										</label>
-									</div>
-								</div>
-							</div>
-
-							{/* Additional Settings */}
-							<div className="grid-system grid-1 sm:grid-3 gap-4">
-								<div className="space-y-2">
-									<label
-										htmlFor="color-count"
-										className="neue-haas-grotesk-display text-sm text-main"
-									>
-										Number of Colors: {colorCount}
-									</label>
+								<div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
 									<input
-										id="color-count"
 										type="range"
-										min="1"
-										max="20"
-										value={colorCount}
+										min="0"
+										max="360"
+										value={settings.hueRange.min}
 										onChange={(e) =>
 											setSettings((prev) => ({
 												...prev,
-												colorCount: parseInt(e.target.value, 10),
+												hueRange: { ...prev.hueRange, min: Number(e.target.value) },
 											}))
 										}
-										className="w-full"
+										style={{ flex: 1 }}
+									/>
+									<input
+										type="range"
+										min="0"
+										max="360"
+										value={settings.hueRange.max}
+										onChange={(e) =>
+											setSettings((prev) => ({
+												...prev,
+												hueRange: { ...prev.hueRange, max: Number(e.target.value) },
+											}))
+										}
+										style={{ flex: 1 }}
 									/>
 								</div>
-
-								<div className="space-y-2">
-									<label className="neue-haas-grotesk-display text-sm text-main">
-										Sort By
-									</label>
-									<select
-										value={sortBy}
+							</div>
+							<div>
+								<div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px", fontSize: "12px" }}>
+									<span>Sat:</span>
+									<span>
+										{settings.saturationRange.min} - {settings.saturationRange.max}
+									</span>
+								</div>
+								<div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+									<input
+										type="range"
+										min="0"
+										max="100"
+										value={settings.saturationRange.min}
 										onChange={(e) =>
 											setSettings((prev) => ({
 												...prev,
-												sortBy: e.target.value as typeof sortBy,
+												saturationRange: { ...prev.saturationRange, min: Number(e.target.value) },
 											}))
 										}
-										className={Input_style}
-										aria-label="Sort colors by"
+										style={{ flex: 1 }}
+									/>
+									<input
+										type="range"
+										min="0"
+										max="100"
+										value={settings.saturationRange.max}
+										onChange={(e) =>
+											setSettings((prev) => ({
+												...prev,
+												saturationRange: { ...prev.saturationRange, max: Number(e.target.value) },
+											}))
+										}
+										style={{ flex: 1 }}
+									/>
+								</div>
+							</div>
+							<div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "4px" }}>
+								{Object.keys(colorRangePresets).map((preset) => (
+									<button
+										key={preset}
+										type="button"
+										style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "12px", textAlign: "center" }}
+										onClick={() => applyPreset(preset as keyof typeof colorRangePresets)}
 									>
-										<option value="none">None</option>
-										<option value="hue">Hue</option>
-										<option value="lightness">Lightness</option>
-										<option value="saturation">Saturation</option>
-									</select>
-								</div>
-
-								<div className="space-y-2">
-									<label className="flex items-center space-x-2">
-										<input
-											type="checkbox"
-											checked={autoSave}
-											onChange={(e) =>
-												setSettings((prev) => ({
-													...prev,
-													autoSave: e.target.checked,
-												}))
-											}
-											className="focus:ring-2 focus:ring-accent"
-										/>
-										<span className="neue-haas-grotesk-display text-sm text-main">
-											Auto Save
-										</span>
-									</label>
-								</div>
+										{preset}
+									</button>
+								))}
 							</div>
-						</section>
+						</div>
+					</fieldset>
 
-						{/* Generation Controls */}
-						<section className={CardStyle}>
-							<div className="flex flex-wrap gap-4">
-								<AccessibleButton
-									onClick={generateColors}
-									variant="primary"
-									shortcut="G"
-									announceOnClick="新しいカラーパレットを生成しました"
-									aria-label="Generate new color palette"
-									data-testid="generate-colors"
-								>
-									Generate Colors
-								</AccessibleButton>
-								<AccessibleButton
-									onClick={() => savePalette()}
-									disabled={generatedColors.length === 0}
-									variant="secondary"
-									shortcut="S"
-									announceOnClick="パレットを保存しました"
-									aria-label="Save current palette"
-								>
-									Save Palette
-								</AccessibleButton>
-								<AccessibleButton
-									onClick={() =>
-										setSettings((prev) => ({
-											...prev,
-											showAccessibility: !prev.showAccessibility,
-										}))
-									}
-									variant="ghost"
-									shortcut="A"
-									announceOnClick={
-										showAccessibility
-											? "アクセシビリティ情報を非表示にしました"
-											: "アクセシビリティ情報を表示しました"
-									}
-									aria-label="Toggle accessibility information"
-								>
-									Accessibility
-								</AccessibleButton>
-								<AccessibleButton
-									onClick={() => setShowPaletteManager(!showPaletteManager)}
-									variant="ghost"
-									shortcut="M"
-									announceOnClick="パレット管理を開きました"
-									aria-label="Open palette manager"
-								>
-									Manage
-								</AccessibleButton>
-								<AccessibleButton
-									onClick={() => fileInputRef.current?.click()}
-									variant="ghost"
-									shortcut="I"
-									announceOnClick="パレットインポートを開始します"
-									aria-label="Import palette"
-								>
-									Import
-								</AccessibleButton>
-							</div>
-						</section>
-
-						{/* Generated Colors Display */}
-						{generatedColors.length > 0 && (
-							<section className={CardStyle}>
-								<h3 className={Section_title}>Generated Palette</h3>
-								<div className="grid-system grid-1 xs:grid-2 sm:grid-3 md:grid-5 gap-4">
-									{generatedColors.map((color, index) => (
+					<fieldset style={{ border: "1px solid #ccc", padding: "8px" }}>
+						<legend>Saved Palettes</legend>
+						<div style={{ maxHeight: "160px", overflowY: "auto", fontSize: "12px" }}>
+							{savedPalettes.length === 0
+								? "No saved palettes."
+								: savedPalettes.map((palette) => (
 										<div
-											key={index}
-											className={`space-y-2 ${
-												selectedColor === color ? "ring-2 ring-accent" : ""
-											}`}
-											role="button"
-											tabIndex={0}
-											aria-label={`Color ${index + 1}: ${color.hex}`}
-											data-testid="color-item"
-											onClick={() => setSelectedColor(color)}
-											onKeyDown={(e) => {
-												if (e.key === "Enter" || e.key === " ") {
-													e.preventDefault();
-													setSelectedColor(color);
-												}
+											key={palette.id}
+											style={{
+												display: "flex",
+												justifyContent: "space-between",
+												gap: "8px",
+												marginBottom: "4px",
+												borderBottom: "1px solid #eee",
+												paddingBottom: "4px",
 											}}
 										>
-											<div
-												className="w-full h-20 rounded-lg cursor-pointer ring-2 ring-main/20 hover:ring-main/40 transition-all"
-												style={{ backgroundColor: color.hex }}
-												onClick={() => copyColor(color, "hex")}
-												onKeyDown={(e) => {
-													if (e.key === "Enter" || e.key === " ") {
-														e.preventDefault();
-														copyColor(color, "hex");
+											<span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+												{palette.name} ({palette.colors.length}c)
+											</span>
+											<div style={{ display: "flex", gap: "4px", flexShrink: 0 }}>
+												<button
+													type="button"
+													style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "12px" }}
+													onClick={() => setGeneratedColors(palette.colors)}
+												>
+													Load
+												</button>
+												<button
+													type="button"
+													style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "12px" }}
+													onClick={() =>
+														setSavedPalettes((prev) => prev.filter((saved) => saved.id !== palette.id))
 													}
-												}}
-												title={`Click to copy ${color.hex}`}
-											/>
-											<div className="text-xs space-y-1">
-												<button
-													type="button"
-													onClick={() => copyColor(color, "hex")}
-													className="block w-full text-left hover:text-accent focus:outline-none focus:text-accent"
-													title="Click to copy HEX value"
-													data-testid="copy-hex"
 												>
-													HEX: {color.hex}
+													Del
 												</button>
-												<button
-													type="button"
-													onClick={() => copyColor(color, "rgb")}
-													className="block w-full text-left hover:text-accent focus:outline-none focus:text-accent"
-													title="Click to copy RGB value"
-												>
-													RGB: {color.rgb.r}, {color.rgb.g}, {color.rgb.b}
-												</button>
-												<button
-													type="button"
-													onClick={() => copyColor(color, "hsl")}
-													className="block w-full text-left hover:text-accent focus:outline-none focus:text-accent"
-													title="Click to copy HSL value"
-												>
-													HSL: {color.hsl.h}, {color.hsl.s}%, {color.hsl.l}%
-												</button>
+											</div>
+										</div>
+									))}
+						</div>
+					</fieldset>
+				</div>
 
-												{/* Enhanced Accessibility Information */}
-												{showAccessibility && color.accessibility && (
-													<div className="pt-2 border-t border-main/20">
-														<div className="text-xs space-y-1">
-															<div className="flex justify-between">
-																<span>vs White:</span>
-																<span
-																	className={
-																		color.accessibility.readableOnWhite
-																			? "text-green-600"
-																			: "text-red-600"
-																	}
-																>
-																	{color.accessibility.contrastWithWhite.toFixed(
-																		2,
-																	)}
-																</span>
-															</div>
-															<div className="flex justify-between">
-																<span>vs Black:</span>
-																<span
-																	className={
-																		color.accessibility.readableOnBlack
-																			? "text-green-600"
-																			: "text-red-600"
-																	}
-																>
-																	{color.accessibility.contrastWithBlack.toFixed(
-																		2,
-																	)}
-																</span>
-															</div>
-															<div className="flex justify-between">
-																<span>WCAG AA:</span>
-																<span
-																	className={
-																		color.accessibility.wcagAA
-																			? "text-green-600"
-																			: "text-red-600"
-																	}
-																>
-																	{color.accessibility.wcagAA ? "✓" : "✗"}
-																</span>
-															</div>
-															<div className="flex justify-between">
-																<span>WCAG AAA:</span>
-																<span
-																	className={
-																		color.accessibility.wcagAAA
-																			? "text-green-600"
-																			: "text-red-600"
-																	}
-																>
-																	{color.accessibility.wcagAAA ? "✓" : "✗"}
-																</span>
-															</div>
-															{enableColorBlindCheck && (
-																<div className="flex justify-between">
-																	<span>Color Blind Safe:</span>
-																	<span
-																		className={
-																			color.accessibility.colorBlindSafe
-																				? "text-green-600"
-																				: "text-yellow-600"
-																		}
-																	>
-																		{color.accessibility.colorBlindSafe
-																			? "✓"
-																			: "?"}
-																	</span>
-																</div>
-															)}
-														</div>
-													</div>
-												)}
+				<div style={{ flex: "1 1 360px", display: "flex", flexDirection: "column", gap: "10px" }}>
+					<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+						<button type="button" onClick={generateColors} style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "13px" }}>
+							Generate Colors
+						</button>
+						<button type="button" onClick={() => savePalette()} style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "13px" }}>
+							Save Palette
+						</button>
+					</div>
+
+					<fieldset style={{ border: "1px solid #ccc", padding: "8px" }}>
+						<legend>Generated Palette</legend>
+						{generatedColors.length === 0 ? (
+							<div style={{ padding: "8px", textAlign: "center", color: "#999", fontSize: "12px" }}>
+								Click "Generate Colors" to begin.
+							</div>
+						) : (
+							<>
+								<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: "6px" }}>
+									{generatedColors.map((color) => (
+										<div
+											key={color.hex}
+											style={{
+												display: "flex",
+												flexDirection: "column",
+												border: "1px solid #ccc",
+											}}
+										>
+											<div style={{ backgroundColor: color.hex, height: "80px", width: "100%" }} />
+											<div style={{ padding: "4px", fontSize: "11px", textAlign: "center" }}>
+												<div style={{ fontFamily: "monospace", marginBottom: "2px" }}>{color.hex}</div>
+												<button
+													type="button"
+													onClick={() => copyToClipboard(color.hex)}
+													style={{ all: "revert", width: "100%", padding: "4px 8px", cursor: "pointer", fontSize: "11px" }}
+												>
+													Copy
+												</button>
 											</div>
 										</div>
 									))}
 								</div>
-							</section>
-						)}
-
-						{/* Export Section */}
-						{generatedColors.length > 0 && (
-							<section className={CardStyle}>
-								<h3 className={Section_title}>Export Palette</h3>
-								<div className="space-y-4">
-									<div className="flex flex-wrap gap-4">
-										<select
-											value={exportFormat}
-											onChange={(e) =>
-												setSettings((prev) => ({
-													...prev,
-													exportFormat: e.target.value as typeof exportFormat,
-												}))
-											}
-											className={Input_style}
-											aria-label="Select export format"
-										>
-											<option value="css">CSS Variables</option>
-											<option value="tailwind">Tailwind Config</option>
-											<option value="json">JSON</option>
-										</select>
-										<button
-											type="button"
-											onClick={() => {
-												const exportText =
-													exportFormat === "css"
-														? exportAsCSS()
-														: exportFormat === "tailwind"
-															? exportAsTailwind()
-															: exportAsJSON();
-												copyToClipboard(exportText);
-											}}
-											className={Button_style}
-											aria-label="Copy export code to clipboard"
-											data-testid="export-copy"
-										>
-											Copy (E)
-										</button>
-									</div>
-
-									<div className="rounded-lg bg-main/10 p-4 overflow-x-auto">
-										<pre className="text-xs whitespace-pre-wrap">
-											{exportFormat === "css"
-												? exportAsCSS()
-												: exportFormat === "tailwind"
-													? exportAsTailwind()
-													: exportAsJSON()}
-										</pre>
-									</div>
-								</div>
-							</section>
-						)}
-
-						{/* Import Section */}
-						<section className={CardStyle}>
-							<h3 className={Section_title}>Import Palette</h3>
-							<div className="space-y-4">
-								<textarea
-									value={importedPalette}
-									onChange={(e) => setImportedPalette(e.target.value)}
-									placeholder="Paste JSON palette data, hex colors, or other supported formats..."
-									className={`${Input_style} w-full h-24 resize-none`}
-									aria-label="Import palette data"
-								/>
-								<div className="flex gap-4">
-									<button
-										type="button"
-										onClick={() => {
-											if (importedPalette.trim()) {
-												importPalette(importedPalette);
-												setImportedPalette("");
-											}
-										}}
-										disabled={!importedPalette.trim()}
-										className={Button_style}
-									>
-										Import from Text
-									</button>
-									<button
-										type="button"
-										onClick={() => fileInputRef.current?.click()}
-										className={Button_style}
-									>
-										Import from File
-									</button>
-								</div>
-							</div>
-						</section>
-
-						{/* Palette Manager */}
-						{showPaletteManager && (
-							<section className={CardStyle}>
-								<h3 className={Section_title}>
-									Saved Palettes ({savedPalettes.length})
-								</h3>
-
-								{savedPalettes.length > 0 && (
-									<div className="space-y-4">
-										<input
-											type="text"
-											value={paletteSearch}
-											onChange={(e) => setPaletteSearch(e.target.value)}
-											placeholder="Search palettes..."
-											className={Input_style}
-											aria-label="Search saved palettes"
-										/>
-
-										<div className="space-y-4 max-h-96 overflow-y-auto">
-											{filteredPalettes.map((palette) => (
-												<div
-													key={palette.id}
-													className="rounded-lg bg-main/10 p-3"
-												>
-													<div className="flex justify-between items-start mb-2">
-														<div>
-															<span className="text-sm font-medium">
-																{palette.name}
-															</span>
-															<div className="text-xs text-main opacity-70">
-																{new Date(
-																	palette.createdAt,
-																).toLocaleDateString()}{" "}
-																• {palette.colors.length} colors
-															</div>
-															{palette.tags.length > 0 && (
-																<div className="flex gap-1 mt-1">
-																	{palette.tags.map((tag, index) => (
-																		<span
-																			key={index}
-																			className="text-xs rounded-lg bg-main/10 px-2 py-1"
-																		>
-																			{tag}
-																		</span>
-																	))}
-																</div>
-															)}
-														</div>
-														<div className="space-x-2">
-															<button
-																type="button"
-																onClick={() => loadPalette(palette)}
-																className="text-xs bg-accent text-main px-2 py-1 hover:bg-base hover:text-accent border border-accent transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
-															>
-																Load
-															</button>
-															<button
-																type="button"
-																onClick={() => deletePalette(palette.id)}
-																className="text-xs rounded-lg bg-main/10 px-2 py-1 hover:bg-main/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
-															>
-																Delete
-															</button>
-														</div>
-													</div>
-													<div className="flex gap-1">
-														{palette.colors.map((color, colorIndex) => (
-															<div
-																key={colorIndex}
-																className="w-8 h-8 rounded cursor-pointer ring-2 ring-main/20 hover:ring-main/40 transition-all"
-																style={{ backgroundColor: color.hex }}
-																onClick={() => copyColor(color, "hex")}
-																title={color.hex}
-															/>
-														))}
-													</div>
-												</div>
-											))}
-										</div>
+								{notification && (
+									<div style={{ marginTop: "8px", padding: "4px 8px", background: "#f5f5f5", border: "1px solid #eee", fontSize: "12px", textAlign: "center" }}>
+										{notification}
 									</div>
 								)}
-
-								{savedPalettes.length === 0 && (
-									<p className="text-sm text-main opacity-70">
-										No saved palettes yet. Generate and save some palettes to
-										see them here.
-									</p>
-								)}
-							</section>
+							</>
 						)}
-					</div>
-				)}
-			</OfflineSettingsManager>
-		</ToolWrapper>
+					</fieldset>
+
+					<fieldset style={{ border: "1px solid #ccc", padding: "8px" }}>
+						<legend>Export</legend>
+						<div style={{ display: "flex", gap: "6px", marginBottom: "6px" }}>
+							<select
+								style={{ all: "revert", flex: 1, padding: "4px 8px", fontSize: "13px" }}
+								value={settings.exportFormat}
+								onChange={(e) =>
+									setSettings((prev) => ({
+										...prev,
+										exportFormat: e.target.value as ColorPaletteSettings["exportFormat"],
+									}))
+								}
+							>
+								<option value="css">CSS Variables</option>
+								<option value="tailwind">Tailwind Config</option>
+								<option value="json">JSON</option>
+							</select>
+							<button
+								type="button"
+								style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "13px" }}
+								onClick={() => {
+									const txt =
+										settings.exportFormat === "css"
+											? exportAsCSS()
+											: settings.exportFormat === "tailwind"
+												? exportAsTailwind()
+												: exportAsJSON();
+									copyToClipboard(txt);
+								}}
+							>
+								Copy
+							</button>
+						</div>
+						<textarea
+							readOnly
+							style={{
+								all: "revert",
+								width: "100%",
+								height: "100px",
+								fontFamily: "monospace",
+								fontSize: "11px",
+								padding: "4px 8px",
+								boxSizing: "border-box",
+								border: "1px solid #eee",
+							}}
+							value={
+								settings.exportFormat === "css"
+									? exportAsCSS()
+									: settings.exportFormat === "tailwind"
+										? exportAsTailwind()
+										: exportAsJSON()
+							}
+						/>
+					</fieldset>
+				</div>
+			</div>
+		</RawDOMContainer>
 	);
 }

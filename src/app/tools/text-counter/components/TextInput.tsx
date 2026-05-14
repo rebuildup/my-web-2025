@@ -44,7 +44,7 @@ export default function TextInput({
 				className={`
           w-full h-96 p-4 rounded-xl
           bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)]
-          focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
+          focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
           resize-none
           ${fontSizeClasses[fontSize]}
         `}

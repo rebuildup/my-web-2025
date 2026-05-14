@@ -341,7 +341,7 @@ const siteLinks = [
 	{ href: "/portfolio", label: "Portfolio", desc: "制作したもの" },
 	{ href: "/workshop", label: "Workshop", desc: "ワークショップ" },
 	{ href: "/tools", label: "Tools", desc: "ツール集" },
-	{ href: "/links", label: "Links", desc: "リンク集" },
+	{ href: "/about/links", label: "Links", desc: "リンク集" },
 	{ href: "/search", label: "Search", desc: "検索" },
 ];
 
