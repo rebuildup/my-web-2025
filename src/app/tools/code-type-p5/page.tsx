@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 const CodeTypeP5App = dynamic(() => import("./components/CodeTypeP5App"), {
 	ssr: false,
 	loading: () => (
-		<div className="flex items-center justify-center min-h-screen bg-base text-main">
+		<div className="flex items-center justify-center min-h-screen text-main">
 			<div className="text-center">
 				<div className="text-2xl mb-4">読み込み中...</div>
 				<div className="text-sm opacity-70">

@@ -689,54 +689,7 @@ export default function BusinessMailBlockTool() {
 		[templates],
 	);
 
-	// Handle keyboard shortcuts
-	useEffect(() => {
-		const handleToolShortcut = (event: CustomEvent) => {
-			switch (event.detail.key.toLowerCase()) {
-				case "c":
-					if (generatedEmail) {
-						copyToClipboard();
-					}
-					break;
-				case "d":
-					if (generatedEmail) {
-						downloadEmail();
-					}
-					break;
-				case "r":
-					setComposedBlocks([]);
-					setVariables({});
-					setSelectedTemplate("");
-					break;
-				case "t":
-					setShowTemplateLibrary(!showTemplateLibrary);
-					break;
-				case "v":
-					setShowValidation(!showValidation);
-					break;
-				case "g":
-					setShowGuidelines(!showGuidelines);
-					break;
-			}
-		};
 
-		document.addEventListener(
-			"toolShortcut",
-			handleToolShortcut as EventListener,
-		);
-		return () =>
-			document.removeEventListener(
-				"toolShortcut",
-				handleToolShortcut as EventListener,
-			);
-	}, [
-		generatedEmail,
-		copyToClipboard,
-		downloadEmail,
-		showTemplateLibrary,
-		showValidation,
-		showGuidelines,
-	]);
 
 	// Generate email when composed blocks or variables change
 	useEffect(() => {
@@ -761,14 +714,6 @@ export default function BusinessMailBlockTool() {
 			toolName="Business Mail Block Tool"
 			description="ビジネスメールをScratch風ブロックUIで簡単作成.挨拶、本文、締め、署名を組み合わせてプロフェッショナルなメールを作成.テンプレート機能とバリデーション機能付き."
 			category="Business"
-			keyboardShortcuts={[
-				{ key: "c", description: "メールをコピー" },
-				{ key: "d", description: "メールをダウンロード" },
-				{ key: "r", description: "全てリセット" },
-				{ key: "t", description: "テンプレートライブラリ表示切替" },
-				{ key: "v", description: "バリデーション表示切替" },
-				{ key: "g", description: "ガイドライン表示切替" },
-			]}
 		>
 			<DragDropContext onDragEnd={handleDragEnd}>
 				<div className="space-y-8">

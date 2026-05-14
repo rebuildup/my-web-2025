@@ -69,6 +69,7 @@
 		"gl-matrix": "^3.4.4",
 		"gsap": "^3.13.0",
 		"isomorphic-dompurify": "^2.30.1",
+		"js-tiktoken": "^1.0.21",
 		"jszip": "^3.10.1",
 		"lucide-react": "^0.548.0",
 		"marked": "^16.4.1",

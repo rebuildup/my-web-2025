@@ -11,11 +11,10 @@ const KANJI_RANGE = /[\u4E00-\u9FAF]/g;
 const ALPHANUMERIC_RANGE = /[A-Za-z0-9]/g;
 
 export function calculateTextStats(
-	text: string,
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	_settings: CountSettings,
+	rawText: string,
+	settings: CountSettings,
 ): TextStats {
-	if (!text) {
+	if (!rawText) {
 		return {
 			totalCharacters: 0,
 			charactersWithoutSpaces: 0,
@@ -36,7 +35,20 @@ export function calculateTextStats(
 			longestLineLength: 0,
 			characterDensity: 0,
 			averageWordsPerLine: 0,
+			manuscriptPages400: 0,
+			halfKanaCount: 0,
+			specificStringCount: 0,
+			byteSizeUTF8: 0,
 		};
+	}
+
+	// Apply exclusions
+	let text = rawText;
+	if (settings.excludeHtml) {
+		text = text.replace(/<[^>]*>?/gm, "");
+	}
+	if (settings.excludeUrls) {
+		text = text.replace(/https?:\/\/[^\s]+/g, "");
 	}
 
 	// Basic character counts
@@ -79,6 +91,23 @@ export function calculateTextStats(
 	const averageWordsPerLine =
 		nonEmptyLines.length > 0 ? wordCount / nonEmptyLines.length : 0;
 
+	// Advanced statistics
+	const manuscriptPages400 = Math.ceil(totalCharacters / 400);
+	const halfKanaCount = settings.checkHalfKana
+		? (text.match(/[\uFF61-\uFF9F]/g) || []).length
+		: 0;
+	
+	let specificStringCount = 0;
+	if (settings.specificString && settings.specificString.length > 0) {
+		// Escape special regex characters in the specific string
+		const escapedString = settings.specificString.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		const regex = new RegExp(escapedString, "g");
+		specificStringCount = (text.match(regex) || []).length;
+	}
+
+	// Calculate UTF-8 byte size
+	const byteSizeUTF8 = new Blob([text]).size;
+
 	return {
 		totalCharacters,
 		charactersWithoutSpaces,
@@ -93,6 +122,10 @@ export function calculateTextStats(
 		longestLineLength,
 		characterDensity,
 		averageWordsPerLine,
+		manuscriptPages400,
+		halfKanaCount,
+		specificStringCount,
+		byteSizeUTF8,
 	};
 }
 
