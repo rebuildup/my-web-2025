@@ -135,7 +135,6 @@ const tools: Tool[] = [
 	},
 ];
 
-
 export default function ToolsPage() {
 	return (
 		<div className="relative min-h-screen text-main">
@@ -162,7 +161,6 @@ export default function ToolsPage() {
 								便利なWebツールのコレクション.オフライン対応・アクセシビリティ準拠のツールを提供しています.
 							</p>
 						</header>
-
 
 						{/* Tools Grid */}
 						<section className="space-y-6">
