@@ -1,4 +1,3 @@
-import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import ColorPaletteGenerator from "./components/ColorPaletteGenerator";
 
 export const metadata = {
