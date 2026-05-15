@@ -23,9 +23,9 @@ pub enum TagError {
 impl axum::response::IntoResponse for TagError {
     fn into_response(self) -> axum::response::Response {
         let status = match &self {
-            TagError::NotFound => axum::http::Status::NOT_FOUND,
-            TagError::AlreadyExists => axum::http::Status::CONFLICT,
-            TagError::Database(_) => axum::http::Status::INTERNAL_SERVER_ERROR,
+            TagError::NotFound => axum::http::StatusCode::NOT_FOUND,
+            TagError::AlreadyExists => axum::http::StatusCode::CONFLICT,
+            TagError::Database(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
         };
         (status, Json(serde_json::json!({"error": self.to_string()}))).into_response()
     }

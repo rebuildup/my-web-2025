@@ -20,8 +20,8 @@ pub enum PreviewError {
 impl axum::response::IntoResponse for PreviewError {
     fn into_response(self) -> axum::response::Response {
         let status = match &self {
-            PreviewError::NotFound => axum::http::Status::NOT_FOUND,
-            PreviewError::Database(_) => axum::http::Status::INTERNAL_SERVER_ERROR,
+            PreviewError::NotFound => axum::http::StatusCode::NOT_FOUND,
+            PreviewError::Database(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
         };
         (status, Json(serde_json::json!({"error": self.to_string()}))).into_response()
     }

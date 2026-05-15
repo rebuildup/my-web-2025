@@ -23,9 +23,9 @@ pub enum EntryError {
 impl axum::response::IntoResponse for EntryError {
     fn into_response(self) -> axum::response::Response {
         let status = match &self {
-            EntryError::NotFound => axum::http::Status::NOT_FOUND,
-            EntryError::InvalidInput(_) => axum::http::Status::BAD_REQUEST,
-            EntryError::Database(_) => axum::http::Status::INTERNAL_SERVER_ERROR,
+            EntryError::NotFound => axum::http::StatusCode::NOT_FOUND,
+            EntryError::InvalidInput(_) => axum::http::StatusCode::BAD_REQUEST,
+            EntryError::Database(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
         };
         (status, Json(serde_json::json!({"error": self.to_string()}))).into_response()
     }

@@ -21,8 +21,8 @@ pub enum SearchError {
 impl axum::response::IntoResponse for SearchError {
     fn into_response(self) -> axum::response::Response {
         let status = match &self {
-            SearchError::MissingQuery => axum::http::Status::BAD_REQUEST,
-            SearchError::Database(_) => axum::http::Status::INTERNAL_SERVER_ERROR,
+            SearchError::MissingQuery => axum::http::StatusCode::BAD_REQUEST,
+            SearchError::Database(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
         };
         (status, Json(serde_json::json!({"error": self.to_string()}))).into_response()
     }
