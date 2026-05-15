@@ -81,7 +81,7 @@ export default function SettingsPanel({
 
 				<div className="space-y-2 mt-4">
 					<h4 className="text-sm font-medium text-main">チェック設定</h4>
-
+					
 					<div className="space-y-3">
 						<CheckboxSetting
 							id="check-half-kana"
@@ -93,10 +93,7 @@ export default function SettingsPanel({
 						/>
 
 						<div>
-							<label
-								htmlFor="specific-string"
-								className="block text-sm text-main mb-1"
-							>
+							<label htmlFor="specific-string" className="block text-sm text-main mb-1">
 								特定文字列の出現数チェック
 							</label>
 							<input
