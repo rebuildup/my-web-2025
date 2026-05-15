@@ -11,8 +11,8 @@ use crate::db::DbPool;
 
 #[derive(Error, Debug, Serialize)]
 pub enum PreviewError {
-    #[error("Database error: {0}")]
-    Database(#[from] sqlx::Error),
+    #[error("Database error")]
+    Database,
     #[error("Entry not found")]
     NotFound,
 }
@@ -21,7 +21,7 @@ impl axum::response::IntoResponse for PreviewError {
     fn into_response(self) -> axum::response::Response {
         let status = match &self {
             PreviewError::NotFound => axum::http::StatusCode::NOT_FOUND,
-            PreviewError::Database(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            PreviewError::Database => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
         };
         (status, Json(serde_json::json!({"error": self.to_string()}))).into_response()
     }
@@ -35,7 +35,7 @@ pub struct RoutePreview {
     pub entries: Vec<PreviewEntry>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, sqlx::FromRow)]
 pub struct PreviewEntry {
     pub id: String,
     pub title: String,

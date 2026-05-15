@@ -12,8 +12,8 @@ use crate::db::DbPool;
 
 #[derive(Error, Debug, Serialize)]
 pub enum TagError {
-    #[error("Database error: {0}")]
-    Database(#[from] sqlx::Error),
+    #[error("Database error")]
+    Database,
     #[error("Tag not found")]
     NotFound,
     #[error("Tag already exists")]
@@ -25,7 +25,7 @@ impl axum::response::IntoResponse for TagError {
         let status = match &self {
             TagError::NotFound => axum::http::StatusCode::NOT_FOUND,
             TagError::AlreadyExists => axum::http::StatusCode::CONFLICT,
-            TagError::Database(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            TagError::Database => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
         };
         (status, Json(serde_json::json!({"error": self.to_string()}))).into_response()
     }
@@ -84,7 +84,7 @@ async fn create_tag(
     // Check for duplicate
     let exists = sqlx::query("SELECT id FROM tags WHERE slug = ?")
         .bind(&slug)
-        .fetch_optional(&pool)
+        .fetch_optional(&*pool)
         .await?
         .is_some();
 

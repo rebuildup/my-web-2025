@@ -12,8 +12,8 @@ use crate::db::DbPool;
 
 #[derive(Error, Debug, Serialize)]
 pub enum SearchError {
-    #[error("Database error: {0}")]
-    Database(#[from] sqlx::Error),
+    #[error("Database error")]
+    Database,
     #[error("Query parameter 'q' is required")]
     MissingQuery,
 }
@@ -22,7 +22,7 @@ impl axum::response::IntoResponse for SearchError {
     fn into_response(self) -> axum::response::Response {
         let status = match &self {
             SearchError::MissingQuery => axum::http::StatusCode::BAD_REQUEST,
-            SearchError::Database(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            SearchError::Database => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
         };
         (status, Json(serde_json::json!({"error": self.to_string()}))).into_response()
     }
@@ -35,7 +35,7 @@ pub struct SearchQuery {
     pub q: String,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, sqlx::FromRow)]
 pub struct SearchResult {
     pub id: String,
     pub title: String,

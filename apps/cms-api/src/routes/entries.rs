@@ -12,8 +12,8 @@ use crate::db::DbPool;
 
 #[derive(Error, Debug, Serialize)]
 pub enum EntryError {
-    #[error("Database error: {0}")]
-    Database(#[from] sqlx::Error),
+    #[error("Database error")]
+    Database,
     #[error("Entry not found")]
     NotFound,
     #[error("Invalid input: {0}")]
@@ -25,7 +25,7 @@ impl axum::response::IntoResponse for EntryError {
         let status = match &self {
             EntryError::NotFound => axum::http::StatusCode::NOT_FOUND,
             EntryError::InvalidInput(_) => axum::http::StatusCode::BAD_REQUEST,
-            EntryError::Database(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            EntryError::Database => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
         };
         (status, Json(serde_json::json!({"error": self.to_string()}))).into_response()
     }
