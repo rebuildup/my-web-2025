@@ -70,12 +70,12 @@
 - `scripts/copy-content-data.js`: ビルド後に `data/` を `.next/standalone/data` へ複製.
 
 ## パッケージ管理ポリシー
-- パッケージマネージャ: `pnpm@10.24.0`（lockfile 必須、`--frozen-lockfile` 運用）.
-- Lint/Format: `pnpm run lint` / `pnpm run format`（Biome）.
-- ビルド: `pnpm run build` → Next standalone 出力.  
-- 追加インストール時は `pnpm add <pkg>` し、`biome format` で整形してからコミット.
+- パッケージマネージャ: `bun@1.3.10`（lockfile 必須、`--frozen-lockfile` 運用）.
+- Lint/Format: `bun run lint` / `bun run format`（Biome）.
+- ビルド: `bun run build` → Next standalone 出力.  
+- 追加インストール時は `bun add <pkg>` し、`biome format` で整形してからコミット.
 
 ## アップグレード指針
 - **Next/React**: minor はビルドと Jest を通した上でマージ.major は canary ブランチで検証.
 - **Tailwind v4**: PostCSS 連携は `@tailwindcss/postcss` で完結.`tailwind.config.ts` の互換性を確認.
-- **better-sqlite3**: Node メジャーアップ時は `pnpm rebuild better-sqlite3` をCI/本番で実行し動作確認.
+- **better-sqlite3**: Node メジャーアップ時は `bun rebuild better-sqlite3` をCI/本番で実行し動作確認.

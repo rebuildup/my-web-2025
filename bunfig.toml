@@ -1,0 +1,4 @@
+[install]
+# Suppress peer dependency warnings
+peer = false
+# trustedDependencies are configured in package.json to keep a single source of truth.

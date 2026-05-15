@@ -12,22 +12,22 @@ A comprehensive portfolio and CMS platform built with Next.js 16 (App Router), f
 
 ```bash
 # Development (with Turbopack, port 3010)
-pnpm dev
+bun dev
 
 # Production build
-pnpm build
+bun run build
 
 # Type checking
-pnpm type-check
+bun run type-check
 
 # Testing
-pnpm test
+bun run test
 
 # Linting (Biome)
-pnpm lint
+bun run lint
 
 # Formatting
-pnpm format
+bun run format
 ```
 
 **Environment**: Requires `NEXT_PUBLIC_GA_ID` to be set in `.env.local` before building.
