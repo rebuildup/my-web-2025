@@ -126,7 +126,7 @@ async fn list_entries(pool: State<DbPool>) -> Result<Json<Vec<EntryListItem>>, E
         ORDER BY created_at DESC
         "#,
     )
-    .fetch_all(&pool)
+    .fetch_all(&*pool)
     .await?;
 
     Ok(Json(entries))
@@ -157,7 +157,7 @@ async fn create_entry(
     .bind(payload.order.unwrap_or(0))
     .bind(&payload.parent_id)
     .bind(&payload.published_at)
-    .execute(&pool)
+    .execute(&*pool)
     .await?;
 
     get_entry(pool, Path(id)).await
@@ -173,7 +173,7 @@ async fn get_entry(pool: State<DbPool>, Path(id): Path<String>) -> Result<Json<E
         "#,
     )
     .bind(&id)
-    .fetch_optional(&pool)
+    .fetch_optional(&*pool)
     .await?
     .ok_or(EntryError::NotFound)?;
 
@@ -188,7 +188,7 @@ async fn update_entry(
     // Check entry exists
     let exists = sqlx::query("SELECT id FROM entries WHERE id = ? AND deleted_at IS NULL")
         .bind(&id)
-        .fetch_optional(&pool)
+        .fetch_optional(&*pool)
         .await?
         .is_some();
 
@@ -257,7 +257,7 @@ async fn update_entry(
         q = q.bind(binding);
     }
 
-    q.execute(&pool).await?;
+    q.execute(&*pool).await?;
 
     get_entry(pool, Path(id)).await
 }
@@ -268,7 +268,7 @@ async fn delete_entry(
 ) -> Result<Json<serde_json::Value>, EntryError> {
     let result = sqlx::query("UPDATE entries SET deleted_at = datetime('now') WHERE id = ? AND deleted_at IS NULL")
         .bind(&id)
-        .execute(&pool)
+        .execute(&*pool)
         .await?;
 
     if result.rows_affected() == 0 {

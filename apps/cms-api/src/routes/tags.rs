@@ -68,7 +68,7 @@ fn make_slug(name: &str) -> String {
 
 async fn list_tags(pool: State<DbPool>) -> Result<Json<Vec<Tag>>, TagError> {
     let tags = sqlx::query_as::<_, Tag>("SELECT id, name, slug, created_at FROM tags ORDER BY name")
-        .fetch_all(&pool)
+        .fetch_all(&*pool)
         .await?;
 
     Ok(Json(tags))
@@ -96,12 +96,12 @@ async fn create_tag(
         .bind(&id)
         .bind(&payload.name)
         .bind(&slug)
-        .execute(&pool)
+        .execute(&*pool)
         .await?;
 
     let tag = sqlx::query_as::<_, Tag>("SELECT id, name, slug, created_at FROM tags WHERE id = ?")
         .bind(&id)
-        .fetch_one(&pool)
+        .fetch_one(&*pool)
         .await?;
 
     Ok(Json(tag))

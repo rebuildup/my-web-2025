@@ -79,7 +79,7 @@ async fn search(pool: State<DbPool>, Query(query): Query<SearchQuery>) -> Result
         "#,
     )
     .bind(&search_term)
-    .fetch_all(&pool)
+    .fetch_all(&*pool)
     .await?;
 
     Ok(Json(results))
@@ -100,7 +100,7 @@ async fn suggestions(pool: State<DbPool>, Query(query): Query<SearchQuery>) -> R
         "#,
     )
     .bind(format!("%{}%", query.q))
-    .fetch_all(&pool)
+    .fetch_all(&*pool)
     .await?;
 
     Ok(Json(SuggestionResult { suggestions }))

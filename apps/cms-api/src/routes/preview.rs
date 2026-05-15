@@ -78,7 +78,7 @@ async fn preview_route(
         "#,
     )
     .bind(&path)
-    .fetch_all(&pool)
+    .fetch_all(&*pool)
     .await?;
 
     Ok(Json(RoutePreview { path, entries }))
@@ -103,7 +103,7 @@ async fn preview_entry(
         "#,
     )
     .bind(&id)
-    .fetch_optional(&pool)
+    .fetch_optional(&*pool)
     .await?
     .ok_or(PreviewError::NotFound)?;
 
