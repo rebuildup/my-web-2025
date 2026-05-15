@@ -1,10 +1,13 @@
-use axum::{
-    routing::get,
-    Router,
-};
+use sqlx::SqlitePool;
 use tower_http::cors::{Any, CorsLayer};
 use tracing::info;
 use tracing_subscriber::fmt::format::FmtSpan;
+
+mod db;
+mod routes;
+
+use db::create_pool;
+use routes::{entries, preview, search, tags};
 
 #[tokio::main]
 async fn main() {
@@ -13,15 +16,23 @@ async fn main() {
         .with_span_events(FmtSpan::CLOSE)
         .init();
 
+    // Create database pool (in-memory for dev)
+    let pool = create_pool("sqlite::memory:")
+        .await
+        .expect("Failed to create database pool");
+
     // Build CORS layer (permissive for dev)
     let cors = CorsLayer::new()
         .allow_origin(Any)
         .allow_methods(Any)
         .allow_headers(Any);
 
-    // Build router
-    let app = Router::new()
-        .route("/health", get(health))
+    // Build router with all routes
+    let app = routes::entries::router(pool.clone())
+        .merge(tags::router(pool.clone()))
+        .merge(search::router(pool.clone()))
+        .merge(preview::router(pool.clone()))
+        .route("/health", axum::routing::get(health))
         .layer(cors);
 
     // Start server
