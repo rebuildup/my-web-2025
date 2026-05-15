@@ -1,0 +1,1 @@
+{"rustc":11689572559507982127,"features":"[]","declared_features":"[\"no-panic\"]","target":18426369533666673425,"profile":2241668132362809309,"path":17118675034823718572,"deps":[],"local":[{"CheckDepInfo":{"dep_info":"debug\\.fingerprint\\itoa-51bffbbfa1f80671\\dep-lib-itoa","checksum":false}}],"rustflags":["-C","linker=clang.exe"],"config":8247474407144887393,"compile_kind":0}

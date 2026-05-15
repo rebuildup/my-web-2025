@@ -1,4 +1,3 @@
-import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import QRCodeGenerator from "./components/QRCodeGenerator";
 
 export const metadata = {

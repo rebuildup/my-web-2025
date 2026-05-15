@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
 	},
+	turbopack: {},
+	// Note: turbopack does not support moduleIds/chunkIds
 	// Transpile @appletosolutions/reactbits to ensure @chakra-ui/react is resolved
 	transpilePackages: ["@appletosolutions/reactbits"],
 	// Environment variables
@@ -134,6 +136,14 @@ const nextConfig: NextConfig = {
 			}
 			originalWarn(...args);
 		};
+
+		// Fix isomorphic-dompurify ESM issue
+		config.externals = config.externals || [];
+		if (Array.isArray(config.externals)) {
+			config.externals.push({
+				"isomorphic-dompurify": "commonjs isomorphic-dompurify",
+			});
+		}
 
 		// Production optimizations
 		if (!dev && !isServer) {

@@ -22,22 +22,31 @@ export default function StatisticsDisplay({
 		}
 	};
 
-	const hasLimits = settings.targetLength > 0 || settings.maxLength > 0;
+	const _hasLimits = settings.targetLength > 0 || settings.maxLength > 0;
 	// Define the max value for the bar's scale
 	const scaleMax = Math.max(
 		settings.maxLength || 0,
 		settings.targetLength || 0,
 		settings.minLength || 0,
 		stats.totalCharacters,
-		1 // Avoid division by zero
+		1, // Avoid division by zero
 	);
 
-	const progressPercent = Math.min(100, (stats.totalCharacters / scaleMax) * 100);
-	
+	const progressPercent = Math.min(
+		100,
+		(stats.totalCharacters / scaleMax) * 100,
+	);
+
 	const getStatusColor = () => {
-		if (settings.maxLength > 0 && stats.totalCharacters > settings.maxLength) return "bg-red-500";
-		if (settings.targetLength > 0 && stats.totalCharacters >= settings.targetLength) return "bg-accent";
-		if (settings.minLength > 0 && stats.totalCharacters >= settings.minLength) return "bg-green-500";
+		if (settings.maxLength > 0 && stats.totalCharacters > settings.maxLength)
+			return "bg-red-500";
+		if (
+			settings.targetLength > 0 &&
+			stats.totalCharacters >= settings.targetLength
+		)
+			return "bg-accent";
+		if (settings.minLength > 0 && stats.totalCharacters >= settings.minLength)
+			return "bg-green-500";
 		return "bg-blue-400";
 	};
 
@@ -48,38 +57,50 @@ export default function StatisticsDisplay({
 			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 space-y-6">
 				<div className="flex flex-wrap items-center gap-4 text-sm">
 					<div className="flex items-center gap-2">
-						<label htmlFor="min-length" className="text-main/80">下限:</label>
-						<input 
+						<label htmlFor="min-length" className="text-main/80">
+							下限:
+						</label>
+						<input
 							id="min-length"
-							type="number" 
+							type="number"
 							min="0"
 							className="w-20 bg-main/10 rounded px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-accent"
 							value={settings.minLength || 0}
-							onChange={(e) => updateSetting("minLength", parseInt(e.target.value) || 0)}
+							onChange={(e) =>
+								updateSetting("minLength", parseInt(e.target.value) || 0)
+							}
 							disabled={!onSettingsChange}
 						/>
 					</div>
 					<div className="flex items-center gap-2">
-						<label htmlFor="target-length" className="text-main/80">目標:</label>
-						<input 
+						<label htmlFor="target-length" className="text-main/80">
+							目標:
+						</label>
+						<input
 							id="target-length"
-							type="number" 
+							type="number"
 							min="0"
 							className="w-20 bg-main/10 rounded px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-accent"
 							value={settings.targetLength || 0}
-							onChange={(e) => updateSetting("targetLength", parseInt(e.target.value) || 0)}
+							onChange={(e) =>
+								updateSetting("targetLength", parseInt(e.target.value) || 0)
+							}
 							disabled={!onSettingsChange}
 						/>
 					</div>
 					<div className="flex items-center gap-2">
-						<label htmlFor="max-length" className="text-main/80">上限:</label>
-						<input 
+						<label htmlFor="max-length" className="text-main/80">
+							上限:
+						</label>
+						<input
 							id="max-length"
-							type="number" 
+							type="number"
 							min="0"
 							className="w-20 bg-main/10 rounded px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-accent"
 							value={settings.maxLength || 0}
-							onChange={(e) => updateSetting("maxLength", parseInt(e.target.value) || 0)}
+							onChange={(e) =>
+								updateSetting("maxLength", parseInt(e.target.value) || 0)
+							}
 							disabled={!onSettingsChange}
 						/>
 					</div>
@@ -92,14 +113,14 @@ export default function StatisticsDisplay({
 					</div>
 					<div className="relative w-full h-4 bg-main/10 rounded-full overflow-hidden">
 						{/* Progress Bar */}
-						<div 
-							className={`h-full transition-all duration-300 ease-out ${getStatusColor()}`} 
+						<div
+							className={`h-full transition-all duration-300 ease-out ${getStatusColor()}`}
 							style={{ width: `${progressPercent}%` }}
 						></div>
-						
+
 						{/* Min Marker */}
 						{settings.minLength > 0 && settings.minLength <= scaleMax && (
-							<div 
+							<div
 								className="absolute top-0 bottom-0 w-0.5 bg-main/30 z-10"
 								style={{ left: `${(settings.minLength / scaleMax) * 100}%` }}
 								title={`下限: ${settings.minLength}`}
@@ -107,7 +128,7 @@ export default function StatisticsDisplay({
 						)}
 						{/* Target Marker */}
 						{settings.targetLength > 0 && settings.targetLength <= scaleMax && (
-							<div 
+							<div
 								className="absolute top-0 bottom-0 w-1 bg-main/50 z-10"
 								style={{ left: `${(settings.targetLength / scaleMax) * 100}%` }}
 								title={`目標: ${settings.targetLength}`}
@@ -115,7 +136,7 @@ export default function StatisticsDisplay({
 						)}
 						{/* Max Marker */}
 						{settings.maxLength > 0 && settings.maxLength <= scaleMax && (
-							<div 
+							<div
 								className="absolute top-0 bottom-0 w-0.5 bg-red-500/50 z-10"
 								style={{ left: `${(settings.maxLength / scaleMax) * 100}%` }}
 								title={`上限: ${settings.maxLength}`}
@@ -145,13 +166,13 @@ export default function StatisticsDisplay({
 							label="空白除く"
 							value={stats.charactersWithoutWhitespace}
 						/>
-						<StatItem 
-							label="400字詰め原稿用紙" 
-							value={`${stats.manuscriptPages400} 枚`} 
+						<StatItem
+							label="400字詰め原稿用紙"
+							value={`${stats.manuscriptPages400} 枚`}
 						/>
-						<StatItem 
-							label="バイト数 (UTF-8)" 
-							value={`${stats.byteSizeUTF8.toLocaleString()} B`} 
+						<StatItem
+							label="バイト数 (UTF-8)"
+							value={`${stats.byteSizeUTF8.toLocaleString()} B`}
 						/>
 					</div>
 				</div>

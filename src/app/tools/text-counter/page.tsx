@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import TextCounterTool from "./components/TextCounterTool";
 
 export const metadata: Metadata = {
@@ -33,7 +32,7 @@ export const metadata: Metadata = {
 	},
 };
 
-const jsonLd = {
+const _jsonLd = {
 	"@context": "https://schema.org",
 	"@type": "WebApplication",
 	name: "Text Counter",
