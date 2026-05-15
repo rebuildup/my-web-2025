@@ -917,6 +917,8 @@ ${generatedCode}`;
 		}
 	}, [generatedCode, selectedExpression]);
 
+
+
 	// Preview animation timer
 	useEffect(() => {
 		let interval: NodeJS.Timeout;

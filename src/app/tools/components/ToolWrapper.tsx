@@ -103,7 +103,11 @@ export default function ToolWrapper({
 
 		document.addEventListener("keydown", handleKeyPress);
 		return () => document.removeEventListener("keydown", handleKeyPress);
-	}, [showAccessibilityInfo, announce, runAccessibilityChecks]);
+	}, [
+		showAccessibilityInfo,
+		announce,
+		runAccessibilityChecks,
+	]);
 
 	return (
 		<div className="min-h-screen text-main scrollbar-auto-stable">
@@ -130,6 +134,7 @@ export default function ToolWrapper({
 								</div>
 							</div>
 						</header>
+
 
 						{/* Accessibility Information Panel */}
 						{showAccessibilityInfo && (
