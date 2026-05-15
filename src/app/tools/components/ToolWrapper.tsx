@@ -10,10 +10,6 @@ interface ToolWrapperProps {
 	toolName: string;
 	description: string;
 	category: string;
-	keyboardShortcuts?: Array<{
-		key: string;
-		description: string;
-	}>;
 	showPerformanceInfo?: boolean;
 	enableOptimizations?: boolean;
 }
@@ -23,7 +19,6 @@ export default function ToolWrapper({
 	toolName,
 	description,
 	category,
-	keyboardShortcuts = [],
 	showPerformanceInfo = false,
 	enableOptimizations = true,
 }: ToolWrapperProps) {
@@ -61,7 +56,7 @@ export default function ToolWrapper({
 		);
 	}, [toolName, announce]);
 
-	// Enhanced keyboard shortcuts handler with accessibility
+	// Enhanced accessibility shortcuts handler
 	useEffect(() => {
 		const handleKeyPress = (event: KeyboardEvent) => {
 			// Only handle shortcuts when not in input fields
@@ -95,19 +90,6 @@ export default function ToolWrapper({
 				return;
 			}
 
-			keyboardShortcuts.forEach((shortcut) => {
-				if (event.key.toLowerCase() === shortcut.key.toLowerCase()) {
-					event.preventDefault();
-					// Announce shortcut activation
-					announce(`${shortcut.description}を実行しました`);
-					// Trigger custom event for tool-specific shortcuts
-					const customEvent = new CustomEvent("toolShortcut", {
-						detail: { key: shortcut.key, description: shortcut.description },
-					});
-					document.dispatchEvent(customEvent);
-				}
-			});
-
 			// Global shortcuts
 			if (event.key === "Escape") {
 				// Focus back to main content
@@ -121,15 +103,10 @@ export default function ToolWrapper({
 
 		document.addEventListener("keydown", handleKeyPress);
 		return () => document.removeEventListener("keydown", handleKeyPress);
-	}, [
-		keyboardShortcuts,
-		showAccessibilityInfo,
-		announce,
-		runAccessibilityChecks,
-	]);
+	}, [showAccessibilityInfo, announce, runAccessibilityChecks]);
 
 	return (
-		<div className="min-h-screen bg-base text-main scrollbar-auto-stable">
+		<div className="min-h-screen text-main scrollbar-auto-stable">
 			<main className="py-10" tabIndex={-1} ref={containerRef}>
 				<div className="container-system">
 					<div className="mx-auto w-full max-w-6xl space-y-10 px-4 sm:px-6 lg:px-8">
@@ -153,69 +130,6 @@ export default function ToolWrapper({
 								</div>
 							</div>
 						</header>
-
-						{/* Enhanced Keyboard Shortcuts Help */}
-						{keyboardShortcuts.length > 0 && (
-							<section
-								aria-labelledby="shortcuts-heading"
-								className="rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] p-6"
-							>
-								<h2
-									id="shortcuts-heading"
-									className="neue-haas-grotesk-display text-lg text-main mb-4"
-								>
-									Keyboard Shortcuts
-								</h2>
-								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-									{keyboardShortcuts.map((shortcut, index) => (
-										<div key={index} className="flex items-center space-x-2">
-											<kbd
-												className="text-xs rounded bg-main/10 px-2 py-1 min-w-[2rem] text-center text-main"
-												aria-label={`キー ${shortcut.key}`}
-											>
-												{shortcut.key}
-											</kbd>
-											<span className="noto-sans-jp-light text-xs text-main/80">
-												{shortcut.description}
-											</span>
-										</div>
-									))}
-									<div className="flex items-center space-x-2">
-										<kbd
-											className="text-xs rounded bg-main/10 px-2 py-1 min-w-[2rem] text-center text-main"
-											aria-label="エスケープキー"
-										>
-											Esc
-										</kbd>
-										<span className="noto-sans-jp-light text-xs text-main/80">
-											メインコンテンツにフォーカス
-										</span>
-									</div>
-									<div className="flex items-center space-x-2">
-										<kbd
-											className="text-xs rounded bg-main/10 px-2 py-1 min-w-[2rem] text-center text-main"
-											aria-label="シフト + クエスチョンマーク"
-										>
-											?
-										</kbd>
-										<span className="noto-sans-jp-light text-xs text-main/80">
-											アクセシビリティ情報表示
-										</span>
-									</div>
-									<div className="flex items-center space-x-2">
-										<kbd
-											className="text-xs rounded bg-main/10 px-2 py-1 min-w-[2rem] text-center text-main"
-											aria-label="コントロール + A"
-										>
-											Ctrl+A
-										</kbd>
-										<span className="noto-sans-jp-light text-xs text-main/80">
-											アクセシビリティチェック
-										</span>
-									</div>
-								</div>
-							</section>
-						)}
 
 						{/* Accessibility Information Panel */}
 						{showAccessibilityInfo && (
@@ -298,7 +212,7 @@ export default function ToolWrapper({
 							<div
 								role="application"
 								aria-label={`${toolName} tool`}
-								className={`focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2 focus-within:ring-offset-base ${
+								className={`${
 									state.prefersReducedMotion
 										? ""
 										: "transition-all duration-200"
@@ -314,7 +228,7 @@ export default function ToolWrapper({
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 								<Link
 									href="/tools"
-									className="rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
 								>
 									<span className="noto-sans-jp-regular text-base leading-snug text-main">
 										← Tools
@@ -322,7 +236,7 @@ export default function ToolWrapper({
 								</Link>
 								<Link
 									href="/"
-									className="rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
 								>
 									<span className="noto-sans-jp-regular text-base leading-snug text-main">
 										← Home

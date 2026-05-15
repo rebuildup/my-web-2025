@@ -1,0 +1,34 @@
+name: SSH Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ssh-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.GCP_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          cat > ~/.ssh/config << EOF
+          Host deploy-server
+            HostName ${{ secrets.GCP_HOST }}
+            User ${{ secrets.GCP_USER }}
+            IdentityFile ~/.ssh/id_rsa
+            StrictHostKeyChecking no
+          EOF
+
+      - name: PM2 Status
+        run: ssh deploy-server 'pm2 status'
+
+      - name: CPU/Memory
+        run: ssh deploy-server 'free -h && top -bn1 | head -10'
+
+      - name: Services
+        run: ssh deploy-server 'sudo systemctl status nginx'
+
+      - name: Health Check
+        run: ssh deploy-server 'curl -s http://localhost:3000/api/health'

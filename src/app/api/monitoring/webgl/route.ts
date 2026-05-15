@@ -6,41 +6,32 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getProductionConfig } from "@/lib/config/production";
 import { securityUtils } from "@/lib/utils/security";
+import {
+  checkRateLimit,
+  normalizeIp,
+} from "@/lib/server/rate-limit";
 
 interface WebGLMetric {
-	fps: number;
-	frameTime: number;
-	memoryUsage: number;
-	textureMemory: number;
-	drawCalls: number;
-	triangles: number;
-	timestamp: number;
-	url: string;
-	userAgent?: string;
+  fps: number;
+  frameTime: number;
+  memoryUsage: number;
+  textureMemory: number;
+  drawCalls: number;
+  triangles: number;
+  timestamp: number;
+  url: string;
+  userAgent?: string;
 }
 
-// Rate limiting for monitoring endpoints
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+// Rate limit options for monitoring endpoints
+const RATE_LIMIT_OPTIONS = {
+  windowMs: 60000, // 1 minute
+  maxRequests: 60, // 60 requests per minute
+  maxKeys: 1000, // track up to 1000 unique IPs
+};
 
-function checkRateLimit(ip: string): boolean {
-	const now = Date.now();
-	const windowMs = 60000; // 1 minute
-	const maxRequests = 60; // 60 requests per minute
-
-	const current = rateLimitMap.get(ip);
-
-	if (!current || now > current.resetTime) {
-		rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs });
-		return true;
-	}
-
-	if (current.count >= maxRequests) {
-		return false;
-	}
-
-	current.count++;
-	return true;
-}
+// Max file size for JSONL logs (5 MiB default)
+const WEBGL_METRICS_MAX_BYTES = 5 * 1024 * 1024;
 
 export async function POST(request: NextRequest) {
 	try {
@@ -54,12 +45,10 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
-		// Rate limiting
-		const ip =
-			request.headers.get("x-forwarded-for") ||
-			request.headers.get("x-real-ip") ||
-			"unknown";
-		if (!checkRateLimit(ip)) {
+		// Rate limiting with normalized IP
+		const forwardedFor = request.headers.get("x-forwarded-for") || "";
+		const ip = normalizeIp(forwardedFor) || "unknown";
+		if (!checkRateLimit(ip, RATE_LIMIT_OPTIONS)) {
 			return NextResponse.json(
 				{ error: "Rate limit exceeded" },
 				{ status: 429 },
@@ -137,6 +126,18 @@ async function storeWebGLMetric(metric: WebGLMetric): Promise<void> {
 
 		const today = new Date().toISOString().split("T")[0];
 		const filePath = path.join(metricsDir, `webgl-${today}.jsonl`);
+
+		// Check file size before appending
+		try {
+			const stats = await fs.stat(filePath);
+			if (stats.size >= WEBGL_METRICS_MAX_BYTES) {
+				// Skip persistence if file exceeds max size, but still return success
+				console.warn(`WebGL metrics file exceeds ${WEBGL_METRICS_MAX_BYTES} bytes, skipping append`);
+				return;
+			}
+		} catch {
+			// File doesn't exist, that's fine
+		}
 
 		const logEntry = `${JSON.stringify(metric)}\n`;
 		await fs.appendFile(filePath, logEntry);

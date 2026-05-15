@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-import "./index.css";
-import "./styles/001_tab.css";
-import "./styles/002_header.css";
-import "./styles/004_game.css";
-import "./styles/007_setting.css";
-import "./styles/009_webglPopup.css";
-import "./styles/010_colorpalette.css";
-import "./styles/011_rankingtable.css";
-import "./styles/012_footer.css";
-import "./styles/013_BGAnim.css";
-import "./styles/014_animation-setting.css";
-import "./styles/015_RankingLoad.css";
+import "./src/index.css";
+import "./src/styles/001_tab.css";
+import "./src/styles/002_header.css";
+import "./src/styles/004_game.css";
+import "./src/styles/007_setting.css";
+import "./src/styles/009_webglPopup.css";
+import "./src/styles/010_colorpalette.css";
+import "./src/styles/011_rankingtable.css";
+import "./src/styles/012_footer.css";
+import "./src/styles/013_BGAnim.css";
+import "./src/styles/014_animation-setting.css";
+import "./src/styles/015_RankingLoad.css";
 
 export const metadata: Metadata = {
 	title: "ProtoType - samuido | タイピングゲーム",

@@ -25,6 +25,12 @@ export interface TextStats {
 	longestLineLength: number;
 	characterDensity: number;
 	averageWordsPerLine: number;
+
+	// New advanced statistics
+	manuscriptPages400: number;
+	halfKanaCount: number;
+	specificStringCount: number;
+	byteSizeUTF8: number;
 }
 
 export interface CountSettings {
@@ -32,6 +38,15 @@ export interface CountSettings {
 	includeNewlines: boolean;
 	includeWhitespace: boolean;
 	countMethod: "all" | "visible" | "printable";
+
+	// New advanced settings
+	targetLength: number;
+	minLength: number;
+	maxLength: number;
+	checkHalfKana: boolean;
+	specificString: string;
+	excludeHtml: boolean;
+	excludeUrls: boolean;
 }
 
 export interface DisplaySettings {

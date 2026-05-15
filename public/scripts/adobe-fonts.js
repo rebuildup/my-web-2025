@@ -2,7 +2,7 @@
 (function loadAdobeFonts(d) {
 	const config = {
 		kitId: "blm5pmr",
-		scriptTimeout: 2000, // Reduced from 3000ms for faster fallback
+		scriptTimeout: 2000,
 		async: true,
 	};
 
@@ -12,7 +12,7 @@
 	}, config.scriptTimeout);
 
 	const tk = d.createElement("script");
-	const f = false;
+	let isLoaded = false;
 	const s = d.getElementsByTagName("script")[0];
 
 	h.className += " wf-loading";
@@ -22,8 +22,8 @@
 
 	tk.onload = tk.onreadystatechange = function () {
 		const a = this.readyState;
-		if (f || (a && a !== "complete" && a !== "loaded")) return;
-		f = true;
+		if (isLoaded || (a && a !== "complete" && a !== "loaded")) return;
+		isLoaded = true;
 		clearTimeout(t);
 		try {
 			if (window.Typekit) {

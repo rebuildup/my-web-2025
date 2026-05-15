@@ -1,10 +1,10 @@
-import type Database from "better-sqlite3";
 import { getContentDb, getFromIndex } from "@/cms/lib/content-db-manager";
 import {
 	getMarkdownPage,
 	importMarkdownFile,
 	saveMarkdownPage,
 } from "@/cms/lib/markdown-mapper";
+import type { SqliteDatabase } from "@/cms/lib/sqlite";
 import type {
 	MarkdownFile,
 	MarkdownFrontmatter,
@@ -16,6 +16,7 @@ import {
 	listMarkdownPages,
 	slugExists,
 } from "@/cms/server/markdown-service";
+import { requireAdminRequest } from "@/lib/server/admin-auth";
 
 export const runtime = "nodejs";
 
@@ -36,7 +37,7 @@ function normalizeFrontmatter(input: unknown): MarkdownFrontmatter {
 }
 
 function ensureContentRecord(
-	db: Database.Database,
+	db: SqliteDatabase,
 	contentId: string | undefined,
 	fallback?: {
 		title?: string;
@@ -180,9 +181,12 @@ export async function GET(req: Request) {
 	}
 }
 
-// ========== POST: Markdownページ作成 ========== 
+// ========== POST: Markdownページ作成 ==========
 export async function POST(req: Request) {
 	try {
+		const guard = requireAdminRequest(req);
+		if (!guard.ok) return guard.response;
+
 		const data = await req.json();
 
 		if (data.file) {
@@ -276,9 +280,12 @@ export async function POST(req: Request) {
 			{ status: 500 },
 		);
 	}
-}// ========== PUT: Markdownページ更新 ========== 
+}// ========== PUT: Markdownページ更新 ==========
 export async function PUT(req: Request) {
 	try {
+		const guard = requireAdminRequest(req);
+		if (!guard.ok) return guard.response;
+
 		const data = await req.json();
 		const identifier =
 			(typeof data.id === "string" && data.id.trim()) ||
@@ -363,9 +370,12 @@ export async function PUT(req: Request) {
 			{ status: 500 },
 		);
 	}
-}// ========== DELETE: Markdownページ削除 ========== 
+}// ========== DELETE: Markdownページ削除 ==========
 export async function DELETE(req: Request) {
 	try {
+		const guard = requireAdminRequest(req);
+		if (!guard.ok) return guard.response;
+
 		const { searchParams } = new URL(req.url);
 		const id = searchParams.get("id")?.trim();
 		const slug = searchParams.get("slug")?.trim();

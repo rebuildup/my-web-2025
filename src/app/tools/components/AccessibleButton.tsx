@@ -19,7 +19,6 @@ interface AccessibleButtonProps
 	size?: "sm" | "md" | "lg";
 	loading?: boolean;
 	loadingText?: string;
-	shortcut?: string;
 	announceOnClick?: string;
 	ensureMinimumSize?: boolean;
 	"data-testid"?: string;
@@ -33,7 +32,6 @@ const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(
 			size = "md",
 			loading = false,
 			loadingText = "読み込み中...",
-			shortcut,
 			announceOnClick,
 			ensureMinimumSize = true,
 			className = "",
@@ -69,7 +67,7 @@ const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(
 		const baseStyles = `
       inline-flex items-center justify-center
       font-medium transition-colors duration-200
-      focus:outline-none focus:ring-2 focus:ring-offset-2
+      focus:outline-none focus:ring-1
       disabled:opacity-50 disabled:cursor-not-allowed
       ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
     `;
@@ -79,22 +77,22 @@ const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(
 			primary: `
         bg-accent text-main border border-accent
         hover:bg-base hover:text-accent
-        focus:ring-accent focus:ring-offset-base
+        focus:ring-accent focus:border-accent
       `,
 			secondary: `
         bg-base text-main border border-main
         hover:bg-base
-        focus:ring-main focus:ring-offset-base
+        focus:ring-main focus:border-main
       `,
 			danger: `
         bg-red-600 text-white border border-red-600
         hover:bg-red-700
-        focus:ring-red-500 focus:ring-offset-base
+        focus:ring-red-500 focus:border-red-500
       `,
 			ghost: `
         bg-transparent text-main border border-transparent
         hover:bg-base hover:border-main
-        focus:ring-main focus:ring-offset-base
+        focus:ring-main focus:border-main
       `,
 		};
 
@@ -129,7 +127,6 @@ const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(
 				disabled={disabled || loading}
 				aria-label={loading ? loadingText : accessibleLabel}
 				aria-busy={loading}
-				data-shortcut={shortcut}
 				{...props}
 			>
 				{loading ? (
@@ -160,14 +157,6 @@ const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(
 				) : (
 					<span className="flex items-center space-x-2">
 						<span>{children}</span>
-						{shortcut && (
-							<kbd
-								className="text-xs bg-base bg-opacity-20 border border-current px-1.5 py-0.5 rounded"
-								aria-label={`ショートカット: ${shortcut}`}
-							>
-								{shortcut}
-							</kbd>
-						)}
 					</span>
 				)}
 			</button>

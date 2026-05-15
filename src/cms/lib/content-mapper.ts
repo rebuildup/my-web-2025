@@ -2,7 +2,7 @@
  * TypeScript型とSQLiteデータベースのマッピング
  */
 
-import type Database from "better-sqlite3";
+import type { SqliteDatabase } from "@/cms/lib/sqlite";
 import type { Content } from "@/cms/types/content";
 import type {
 	ContentAssetRow,
@@ -250,10 +250,7 @@ export function rowToContent(
 }
 
 // ========== 完全なコンテンツ取得（関連データも含む） ==========
-export function getFullContent(
-	db: Database.Database,
-	id: string,
-): Content | null {
+export function getFullContent(db: SqliteDatabase, id: string): Content | null {
 	// メインデータ取得
 	const row = db.prepare("SELECT * FROM contents WHERE id = ?").get(id) as
 		| ContentRow
@@ -299,7 +296,7 @@ export function getFullContent(
 
 // ========== コンテンツ保存（関連データも含む） ==========
 export function saveFullContent(
-	db: Database.Database,
+	db: SqliteDatabase,
 	content: Partial<Content>,
 ): void {
 	try {
@@ -381,7 +378,7 @@ export function saveFullContent(
     `);
 		content.assets.forEach((asset, i) => {
 			assetStmt.run(
-				content.id,
+				content.id as string,
 				asset.src,
 				asset.type || null,
 				asset.width || null,
@@ -404,7 +401,7 @@ export function saveFullContent(
     `);
 		content.links.forEach((link, i) => {
 			linkStmt.run(
-				content.id,
+				content.id as string,
 				link.href,
 				link.label || null,
 				link.rel || null,

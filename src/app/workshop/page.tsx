@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getContentTags } from "@/cms/lib/content-db-manager";
+import { getAllFromIndex, getContentTags } from "@/cms/lib/content-db-manager";
 import { listMarkdownPages } from "@/cms/server/markdown-service";
 import type { MarkdownPage } from "@/cms/types/markdown";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -10,10 +10,10 @@ import { SearchBar } from "./components/SearchBar";
 import { TagBar } from "./components/TagBar";
 import type { ArticleData } from "./types";
 
-export const revalidate = 300;
+export const revalidate = 3600;
 export const runtime = "nodejs";
 
-async function fetchContentFromCMS(id: string) {
+async function _fetchContentFromCMS(id: string) {
 	const baseUrl =
 		process.env.NODE_ENV === "development"
 			? "http://localhost:3010"
@@ -78,10 +78,7 @@ function getDisplayDate(page: MarkdownPage) {
 	);
 }
 
-async function getThumbnail(
-	page: MarkdownPage,
-	cmsContent: any,
-): Promise<string | null> {
+function getThumbnail(page: MarkdownPage, cmsContent: any): string | null {
 	const frontmatter = page.frontmatter ?? {};
 
 	if (cmsContent?.thumbnails) {
@@ -125,6 +122,43 @@ async function getThumbnail(
 	}
 
 	return null;
+}
+
+interface IndexEntry {
+	summary: string;
+	description?: string;
+	tags?: string[];
+	thumbnails?: Record<string, unknown>;
+}
+
+async function fetchContentsBatch(
+	contentIds: string[],
+): Promise<Map<string, IndexEntry>> {
+	const results = new Map<string, IndexEntry>();
+
+	try {
+		const allIndex = getAllFromIndex();
+		const indexMap = new Map(allIndex.map((item) => [item.id, item]));
+
+		for (const id of contentIds) {
+			const indexData = indexMap.get(id);
+			if (indexData) {
+				results.set(id, {
+					summary: indexData.summary,
+					tags: indexData.tags,
+					thumbnails: indexData.thumbnails,
+				});
+			}
+		}
+
+		console.log(
+			`[Workshop] Fetched content for ${results.size} IDs from index`,
+		);
+	} catch (error) {
+		console.error("[Workshop] Error fetching from index:", error);
+	}
+
+	return results;
 }
 
 function getPageHref(page: MarkdownPage) {
@@ -249,36 +283,45 @@ export default async function WorkshopPage({
 		contentTagsMap.set(contentId, tags);
 	}
 
-	// Build article data
-	const displayPagesWithCMS: ArticleData[] = await Promise.all(
-		sortedContent.map(async (page) => {
-			const cmsContent = await fetchContentFromCMS(page.contentId || page.slug);
-			const thumbnail = await getThumbnail(page, cmsContent);
-			const title = page.frontmatter?.title || page.slug;
-			const description =
-				cmsContent?.summary ||
-				cmsContent?.description ||
-				page.frontmatter?.description;
-			const date = formatDate(getDisplayDate(page));
-			const contentId = page.contentId || page.slug;
-			const tags = contentTagsMap.get(contentId) || [];
-			const href = getPageHref(page);
-			const isExternal = /^https?:\/\//i.test(href);
-			const isNew = isNewArticle(page);
-
-			return {
-				page,
-				title,
-				description,
-				tags,
-				thumbnail,
-				date,
-				href,
-				isExternal,
-				isNew,
-			};
-		}),
+	// Batch fetch all CMS content at once (optimization for N+1 problem)
+	const contentIds = sortedContent.map((page) => page.contentId || page.slug);
+	console.log(
+		`[Workshop] Fetching content for ${contentIds.length} IDs:`,
+		contentIds.slice(0, 5),
 	);
+	const contentsMap = await fetchContentsBatch(contentIds);
+	console.log(`[Workshop] Got ${contentsMap.size} contents from API`);
+
+	// Build article data
+	const displayPagesWithCMS: ArticleData[] = sortedContent.map((page) => {
+		const contentId = page.contentId || page.slug;
+		const cmsContent = contentsMap.get(contentId);
+		const thumbnail = getThumbnail(page, cmsContent);
+		console.log(`[Workshop] Page ${page.slug}: thumbnail = ${thumbnail}`);
+		const title = page.frontmatter?.title || page.slug;
+		const description =
+			cmsContent?.summary ||
+			cmsContent?.description ||
+			page.frontmatter?.description ||
+			null;
+		const date = formatDate(getDisplayDate(page));
+		const tags = contentTagsMap.get(contentId) || [];
+		const href = getPageHref(page);
+		const isExternal = /^https?:\/\//i.test(href);
+		const isNew = isNewArticle(page);
+
+		return {
+			page,
+			title,
+			description,
+			tags,
+			thumbnail,
+			date,
+			href,
+			isExternal,
+			isNew,
+		};
+	});
 
 	// Get trending tags and popular articles from full dataset
 	const allTags = getAllTags(

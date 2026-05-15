@@ -6,9 +6,13 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { markdownFileManager } from "@/lib/markdown";
 import type { ContentType } from "@/types/content";
+import { requireAdminRequest } from "@/lib/server/admin-auth";
 
 export async function POST(request: NextRequest) {
 	try {
+		const guard = requireAdminRequest(request);
+		if (!guard.ok) return guard.response;
+
 		const { action, ...params } = await request.json();
 
 		switch (action) {

@@ -1,5 +1,5 @@
 import path from "node:path";
-import Database from "better-sqlite3";
+import { openSqliteDb } from "@/cms/lib/sqlite";
 
 type RepairResult = {
 	contentId: string;
@@ -60,7 +60,7 @@ function asObject(value: unknown): Record<string, unknown> | undefined {
 
 function repairOne(contentId: string): RepairResult {
 	const dbPath = getDbPath(contentId);
-	const db = new Database(dbPath);
+	const db = openSqliteDb(dbPath);
 	try {
 		db.pragma("foreign_keys = ON");
 

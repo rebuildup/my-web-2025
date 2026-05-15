@@ -10,7 +10,7 @@
   - [Tailwind CSS](https://tailwindcss.com) v4
   - [Material UI](https://mui.com/) v7
   - [Shadcn UI](https://ui.shadcn.com/) コンポーネント
-- **データベース**: [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) (CMS用ローカルSQLite)
+- **データベース**: `bun:sqlite` (CMS用ローカルSQLite)
 - **グラフィックス & アニメーション**:
   - [Three.js](https://threejs.org/) / [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)
   - [GSAP](https://gsap.com/)
@@ -39,8 +39,8 @@
 ## はじめ方 (Getting Started)
 
 ### 前提条件 (Prerequisites)
-- Node.js (最新のLTS推奨)
-- Bun (v1.3以上)
+- Bun 1.3 以上
+- `NEXT_PUBLIC_GA_ID` を `.env.local` に設定
 
 ### インストール (Installation)
 
@@ -53,8 +53,6 @@ bun install
 TurboPackを使用して高速なHMRで開発サーバーを起動します：
 
 ```bash
-bun dev
-# または
 bun run dev
 ```
 
@@ -67,12 +65,7 @@ bun run dev
 高速なLintとフォーマットのために Biome を使用しています.
 
 ```bash
-# Lintエラーのチェック
 bun run lint
-
-# コードのフォーマット
 bun run format
-
-# テストの実行
 bun run test
 ```

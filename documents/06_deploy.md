@@ -23,11 +23,11 @@
 
 ### 構成要素
 - **アプリケーション**: Next.js 16 (standalone mode)
-- **ランタイム**: Node.js 20
-- **パッケージマネージャー**: Bun 1.3
+- **ランタイム**: Bun 1.3
+- **パッケージマネージャー**: Bun
 - **プロセス管理**: PM2 (systemd自動起動)
 - **リバースプロキシ**: nginx
-- **データベース**: SQLite (better-sqlite3)
+- **データベース**: SQLite (`bun:sqlite`)
 
 ### デプロイフロー
 1. GitHub Actionsでビルド・テスト
@@ -116,7 +116,7 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 443/tcp (v6)               ALLOW       Anywhere (v6)
 ```
 
-### 2.5 Node.js / Bun / PM2 インストール
+### 2.5 Bun / Node.js / PM2 インストール
 
 ```bash
 # deployユーザーで実行
@@ -124,48 +124,32 @@ curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bas
 source ~/.nvm/nvm.sh
 nvm install 20
 nvm alias default 20
-```
-
-**期待される出力:**
-```
-Downloading and installing node v20.x.x...
-...
-Now using node v20.x.x (npm v10.x.x)
-```
-
-```bash
 curl -fsSL https://bun.sh/install | bash
-source ~/.bashrc
-```
-
-**期待される出力:**
-```
-✔ bun was installed successfully to ~/.bun/bin/bun
-...
-```
-
-```bash
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 bun add -g pm2
 ```
 
 **期待される出力:**
 ```
-Packages: +1
+Now using node v20.x.x (npm v10.x.x)
+...
+bun was installed successfully to ~/.bun/bin/bun
 ...
 Done in 2.3s
 ```
 
 **動作確認:**
 ```bash
-node --version
 bun --version
+node --version
 pm2 --version
 ```
 
 **期待される出力:**
 ```
+bun 1.3.x
 v20.x.x
-1.3.x
 5.x.x
 ```
 
@@ -1067,7 +1051,7 @@ Detail: DNS problem: NXDOMAIN looking up A for 361do.yusuke-kim.com
 - [ ] デプロイユーザー作成
 - [ ] SSH鍵登録
 - [ ] ファイアウォール設定
-- [ ] Node.js / Bun / PM2 インストール
+- [ ] Node.js / pnpm / PM2 インストール
 - [ ] ディレクトリ準備
 
 ### GitHub設定

@@ -233,7 +233,7 @@ export async function GET(req: NextRequest) {
 										{/* User Icon */}
 										{/* eslint-disable-next-line @next/next/no-img-element */}
 										<img
-											src="https://pbs.twimg.com/profile_images/1977152336486449153/uWHA4dAC_400x400.jpg"
+											src="https://pbs.twimg.com/profile_images/2034243179176960000/ZcmwOt4U_400x400.jpg"
 											alt="samuido"
 											width="80"
 											height="80"

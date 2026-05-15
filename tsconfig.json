@@ -11,7 +11,7 @@
 		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
-		"jsx": "react-jsx",
+		"jsx": "preserve",
 		"types": ["react", "react-dom", "node"],
 		"typeRoots": ["./node_modules/@types"],
 		"incremental": true,
@@ -57,6 +57,7 @@
 		"templates/**/*",
 		"src/test-utils/**/*",
 		"src/app/admin/**/*",
-		"scripts/**/*"
+		"scripts/**/*",
+		"src/app/tools/ProtoType/**/*"
 	]
 }

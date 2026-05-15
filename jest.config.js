@@ -12,6 +12,7 @@ module.exports = createJestConfig({
 		"/node_modules/",
 		"/.next/",
 		"/scripts/.*\\.spec\\.ts$", // Playwright spec files
+		"\\.bun\\.test\\.ts$",
 	],
 	moduleNameMapper: {
 		"^@/(.*)$": "<rootDir>/src/$1",

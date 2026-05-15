@@ -917,63 +917,6 @@ ${generatedCode}`;
 		}
 	}, [generatedCode, selectedExpression]);
 
-	// Handle keyboard shortcuts
-	useEffect(() => {
-		const handleToolShortcut = (event: CustomEvent) => {
-			switch (event.detail.key.toLowerCase()) {
-				case "c":
-					if (generatedCode) {
-						copyToClipboard();
-					}
-					break;
-				case "p":
-					setIsPreviewPlaying(!isPreviewPlaying);
-					break;
-				case "r":
-					setPreviewTime(0);
-					setIsPreviewPlaying(false);
-					break;
-				case "s":
-					if (selectedExpression && generatedCode) {
-						saveExpression();
-					}
-					break;
-				case "d":
-					setShowDocumentation(!showDocumentation);
-					break;
-				case "e":
-					if (generatedCode) {
-						exportExpression();
-					}
-					break;
-				case "f":
-					if (selectedExpression) {
-						toggleFavorite(selectedExpression.id);
-					}
-					break;
-			}
-		};
-
-		document.addEventListener(
-			"toolShortcut",
-			handleToolShortcut as EventListener,
-		);
-		return () =>
-			document.removeEventListener(
-				"toolShortcut",
-				handleToolShortcut as EventListener,
-			);
-	}, [
-		generatedCode,
-		isPreviewPlaying,
-		copyToClipboard,
-		saveExpression,
-		showDocumentation,
-		exportExpression,
-		selectedExpression,
-		toggleFavorite,
-	]);
-
 	// Preview animation timer
 	useEffect(() => {
 		let interval: NodeJS.Timeout;
@@ -992,15 +935,6 @@ ${generatedCode}`;
 			toolName="AE Expression Tool"
 			description="AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示."
 			category="Design"
-			keyboardShortcuts={[
-				{ key: "c", description: "コードをコピー" },
-				{ key: "p", description: "プレビュー再生/停止" },
-				{ key: "r", description: "プレビューリセット" },
-				{ key: "s", description: "エクスプレッションを保存" },
-				{ key: "d", description: "ドキュメント表示切替" },
-				{ key: "e", description: "エクスプレッションをエクスポート" },
-				{ key: "f", description: "お気に入り切替" },
-			]}
 		>
 			<div className="space-y-8">
 				{/* Controls */}

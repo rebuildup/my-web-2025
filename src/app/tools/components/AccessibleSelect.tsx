@@ -80,12 +80,12 @@ const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectProps>(
 		// Base styles with accessibility considerations
 		const baseSelectStyles = `
       w-full bg-base border text-main
-      focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
+      focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
       disabled:opacity-50 disabled:cursor-not-allowed
       appearance-none cursor-pointer
       ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
       ${error ? "border-red-500" : "border-main/20"}
-      ${isFocused ? "ring-2 ring-accent ring-offset-2 ring-offset-base" : ""}
+      ${isFocused ? "ring-1 ring-accent border-accent" : ""}
     `;
 
 		// Variant styles

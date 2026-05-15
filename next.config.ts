@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const isProduction = process.env.NODE_ENV === "production";
 const isDevelopment = process.env.NODE_ENV === "development";
-const isTurbopackDev = isDevelopment && process.env.TURBOPACK === "1";
+const _isTurbopackDev = isDevelopment && process.env.TURBOPACK === "1";
 
 const nextConfig: NextConfig = {
 	typescript: {
@@ -13,36 +13,6 @@ const nextConfig: NextConfig = {
 	// Environment variables
 	env: {
 		NEXT_BUILD_TIME: isProduction ? "true" : "false",
-	},
-
-	// React Compiler configuration
-	reactCompiler: true,
-
-	// Performance optimizations
-	experimental: {
-		...(isProduction
-			? {
-					optimizePackageImports: [
-						"lucide-react",
-						"framer-motion",
-						"three",
-						// "pixi.js", // Removed: PIXI v8 has issues with tree-shaking
-						"fuse.js",
-						"marked",
-						"recharts",
-					],
-				}
-			: {}),
-		// Development mode optimizations
-		...(isDevelopment && {
-			linkNoTouchStart: true,
-			// Disable static optimization for better HMR when not running Turbopack
-			...(isTurbopackDev
-				? {}
-				: {
-						forceSwcTransforms: true,
-					}),
-		}),
 	},
 	outputFileTracingIncludes: {
 		"/api/cms/(.*)": ["./data/**"],
@@ -177,7 +147,7 @@ const nextConfig: NextConfig = {
 
 			config.optimization = {
 				...config.optimization,
-				sideEffects: ["node_modules/gsap/**", "node_modules/@gsap/**"],
+				sideEffects: true,
 				splitChunks: {
 					chunks: "all",
 					minSize: 10000,
@@ -281,6 +251,12 @@ const nextConfig: NextConfig = {
 		config.module.rules.push({
 			test: /\.svg$/,
 			use: ["@svgr/webpack"],
+		});
+
+		// Asset files (audio, fonts, etc.) from subtree projects
+		config.module.rules.push({
+			test: /\.(wav|mp3|ogg|flac)$/,
+			type: "asset/resource",
 		});
 
 		// Additional webpack optimizations
