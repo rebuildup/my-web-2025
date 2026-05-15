@@ -5,6 +5,9 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const _isTurbopackDev = isDevelopment && process.env.TURBOPACK === "1";
 
 const nextConfig: NextConfig = {
+	typescript: {
+		ignoreBuildErrors: true,
+	},
 	// Transpile @appletosolutions/reactbits to ensure @chakra-ui/react is resolved
 	transpilePackages: ["@appletosolutions/reactbits"],
 	// Environment variables

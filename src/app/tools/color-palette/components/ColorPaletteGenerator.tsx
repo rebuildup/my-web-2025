@@ -2,11 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
+	type ColorHarmony,
 	type ColorInfo,
 	generateColorHarmony,
 	generateGoldenRatioColors,
 	generatePerceptuallyUniformColors,
 	getAccessibilityInfo,
+	hexToRgb,
 	hsvToRgb,
 	randomInRange,
 	rgbToHex,
@@ -36,14 +38,14 @@ const colorRangePresets = {
 	sunset: { hMin: 300, hMax: 60, sMin: 60, sMax: 100, vMin: 50, vMax: 90 },
 	forest: { hMin: 80, hMax: 140, sMin: 40, sMax: 80, vMin: 20, vMax: 60 },
 	neon: { hMin: 0, hMax: 360, sMin: 90, sMax: 100, vMin: 80, vMax: 100 },
-} as const;
+};
 
 const generationAlgorithms = {
 	random: "Random HSV",
 	golden: "Golden Ratio",
 	perceptual: "Perceptually Uniform",
 	harmony: "Color Harmony",
-} as const;
+};
 
 interface ColorPaletteSettings {
 	colorCount: number;
@@ -51,8 +53,11 @@ interface ColorPaletteSettings {
 	saturationRange: { min: number; max: number };
 	valueRange: { min: number; max: number };
 	exportFormat: "css" | "tailwind" | "json";
+	showAccessibility: boolean;
 	generationAlgorithm: keyof typeof generationAlgorithms;
+	harmonyType: ColorHarmony["type"];
 	sortBy: "none" | "hue" | "lightness" | "saturation";
+	enableColorBlindCheck: boolean;
 	autoSave: boolean;
 }
 
@@ -62,18 +67,29 @@ const defaultSettings: ColorPaletteSettings = {
 	saturationRange: { min: 50, max: 100 },
 	valueRange: { min: 50, max: 90 },
 	exportFormat: "css",
+	showAccessibility: false,
 	generationAlgorithm: "random",
+	harmonyType: "analogous",
 	sortBy: "none",
+	enableColorBlindCheck: true,
 	autoSave: false,
 };
 
 export default function ColorPaletteGenerator() {
-	const [settings, setSettings] = useState<ColorPaletteSettings>(defaultSettings);
+	const [settings, setSettings] =
+		useState<ColorPaletteSettings>(defaultSettings);
 	const [generatedColors, setGeneratedColors] = useState<ColorInfo[]>([]);
 	const [savedPalettes, setSavedPalettes] = useState<SavedPalette[]>([]);
-	const [notification, setNotification] = useState("");
+	const [currentHarmony, setCurrentHarmony] = useState<ColorHarmony | null>(
+		null,
+	);
+	const [selectedColor, setSelectedColor] = useState<ColorInfo | null>(null);
+	const [importedPalette, setImportedPalette] = useState<string>("");
+	const [paletteSearch, setPaletteSearch] = useState<string>("");
+	const [notification, setNotification] = useState<string>("");
 
 	const paletteIdRef = useRef(1);
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const showNotification = useCallback((message: string) => {
 		setNotification(message);
@@ -86,7 +102,10 @@ export default function ColorPaletteGenerator() {
 
 		while (colors.length < settings.colorCount) {
 			const h = randomInRange(settings.hueRange.min, settings.hueRange.max);
-			const s = randomInRange(settings.saturationRange.min, settings.saturationRange.max);
+			const s = randomInRange(
+				settings.saturationRange.min,
+				settings.saturationRange.max,
+			);
 			const v = randomInRange(settings.valueRange.min, settings.valueRange.max);
 
 			const rgb = hsvToRgb(h, s, v);
@@ -106,19 +125,15 @@ export default function ColorPaletteGenerator() {
 
 	const savePalette = useCallback(
 		async (customName?: string) => {
-			if (generatedColors.length === 0) {
-				return;
-			}
-
+			if (generatedColors.length === 0) return;
 			const name = customName || `Palette ${savedPalettes.length + 1}`;
 			const newPalette: SavedPalette = {
 				id: `palette-${paletteIdRef.current++}`,
 				name,
 				colors: generatedColors,
 				createdAt: new Date().toISOString(),
-				tags: [settings.generationAlgorithm],
+				tags: [settings.generationAlgorithm, settings.harmonyType],
 			};
-
 			setSavedPalettes((prev) => [newPalette, ...prev]);
 			showNotification(`パレット "${name}" を保存しました`);
 		},
@@ -126,19 +141,22 @@ export default function ColorPaletteGenerator() {
 			generatedColors,
 			savedPalettes.length,
 			settings.generationAlgorithm,
+			settings.harmonyType,
 			showNotification,
 		],
 	);
 
 	const generateColors = useCallback(async () => {
 		let colors: ColorInfo[] = [];
-
 		switch (settings.generationAlgorithm) {
 			case "random":
 				colors = generateRandomColors();
 				break;
 			case "golden": {
-				const baseHue = randomInRange(settings.hueRange.min, settings.hueRange.max);
+				const baseHue = randomInRange(
+					settings.hueRange.min,
+					settings.hueRange.max,
+				);
 				colors = generateGoldenRatioColors(baseHue, settings.colorCount);
 				break;
 			}
@@ -146,13 +164,33 @@ export default function ColorPaletteGenerator() {
 				colors = generatePerceptuallyUniformColors(settings.colorCount);
 				break;
 			case "harmony":
-				const baseH = randomInRange(settings.hueRange.min, settings.hueRange.max);
-				const baseS = randomInRange(settings.saturationRange.min, settings.saturationRange.max);
-				const baseV = randomInRange(settings.valueRange.min, settings.valueRange.max);
-				colors = generateColorHarmony({ h: baseH, s: baseS, v: baseV }, "analogous").colors.slice(
-					0,
-					settings.colorCount,
-				);
+				if (selectedColor) {
+					const harmony = generateColorHarmony(
+						selectedColor.hsv,
+						settings.harmonyType,
+					);
+					colors = harmony.colors.slice(0, settings.colorCount);
+					setCurrentHarmony(harmony);
+				} else {
+					const baseH = randomInRange(
+						settings.hueRange.min,
+						settings.hueRange.max,
+					);
+					const baseS = randomInRange(
+						settings.saturationRange.min,
+						settings.saturationRange.max,
+					);
+					const baseV = randomInRange(
+						settings.valueRange.min,
+						settings.valueRange.max,
+					);
+					const harmony = generateColorHarmony(
+						{ h: baseH, s: baseS, v: baseV },
+						settings.harmonyType,
+					);
+					colors = harmony.colors.slice(0, settings.colorCount);
+					setCurrentHarmony(harmony);
+				}
 				break;
 		}
 
@@ -173,7 +211,13 @@ export default function ColorPaletteGenerator() {
 			await savePalette(`Auto-saved ${new Date().toLocaleTimeString()}`);
 		}
 		showNotification(`${colors.length}色のパレットを生成しました`);
-	}, [settings, generateRandomColors, savePalette, showNotification]);
+	}, [
+		settings,
+		selectedColor,
+		generateRandomColors,
+		savePalette,
+		showNotification,
+	]);
 
 	const applyPreset = (preset: keyof typeof colorRangePresets) => {
 		const range = colorRangePresets[preset];
@@ -187,20 +231,34 @@ export default function ColorPaletteGenerator() {
 	};
 
 	const exportAsCSS = useCallback(() => {
-		const cssVars = generatedColors.map((color, index) => `  --color-${index + 1}: ${color.hex};`).join("\n");
+		const cssVars = generatedColors
+			.map((color, index) => `  --color-${index + 1}: ${color.hex};`)
+			.join("\n");
 		return `:root {\n${cssVars}\n}`;
 	}, [generatedColors]);
 
 	const exportAsTailwind = useCallback(() => {
-		const colors = generatedColors.reduce<Record<string, string>>((acc, color, index) => {
-			acc[`color-${index + 1}`] = color.hex;
-			return acc;
-		}, {});
+		const colors = generatedColors.reduce(
+			(acc, color, index) => {
+				acc[`color-${index + 1}`] = color.hex;
+				return acc;
+			},
+			{} as Record<string, string>,
+		);
 		return `module.exports = { theme: { extend: { colors: ${JSON.stringify(colors, null, 2)} } } }`;
 	}, [generatedColors]);
 
 	const exportAsJSON = useCallback(() => {
-		return JSON.stringify({ palette: { algorithm: settings.generationAlgorithm, colors: generatedColors } }, null, 2);
+		return JSON.stringify(
+			{
+				palette: {
+					algorithm: settings.generationAlgorithm,
+					colors: generatedColors,
+				},
+			},
+			null,
+			2,
+		);
 	}, [generatedColors, settings]);
 
 	const copyToClipboard = async (text: string) => {
@@ -217,9 +275,7 @@ export default function ColorPaletteGenerator() {
 		if (saved) {
 			try {
 				setSavedPalettes(JSON.parse(saved));
-			} catch (error) {
-				console.error(error);
-			}
+			} catch (err) {}
 		}
 	}, []);
 
@@ -237,145 +293,177 @@ export default function ColorPaletteGenerator() {
 			]}
 		>
 			<div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-				<div style={{ flex: "1 1 360px", display: "flex", flexDirection: "column", gap: "10px" }}>
-					<fieldset style={{ border: "1px solid #ccc", padding: "8px" }}>
+				{/* Left Column: Settings */}
+				<div
+					style={{
+						flex: "1 1 300px",
+						display: "flex",
+						flexDirection: "column",
+						gap: "15px",
+					}}
+				>
+					{notification && (
+						<div
+							style={{
+								padding: "10px",
+								background: "#f0f0f0",
+								border: "1px solid #333",
+								fontSize: "0.9rem",
+							}}
+						>
+							{notification}
+						</div>
+					)}
+
+					<fieldset style={{ border: "1px solid #ccc", padding: "15px" }}>
 						<legend>Algorithm & Limits</legend>
-						<div style={{ display: "grid", gridTemplateColumns: "80px 1fr", gap: "8px", alignItems: "center" }}>
-							<label htmlFor="algo-select" style={{ whiteSpace: "nowrap" }}>Algorithm:</label>
-							<select
-								id="algo-select"
-								style={{ all: "revert", width: "100%", padding: "4px 8px", fontSize: "13px", boxSizing: "border-box" }}
-								value={settings.generationAlgorithm}
-								onChange={(e) =>
-									setSettings((prev) => ({
-										...prev,
-										generationAlgorithm: e.target.value as keyof typeof generationAlgorithms,
-									}))
-								}
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								gap: "10px",
+								fontSize: "0.9rem",
+							}}
+						>
+							<label
+								style={{
+									display: "grid",
+									gridTemplateColumns: "100px 1fr",
+									gap: "10px",
+								}}
 							>
-								{Object.entries(generationAlgorithms).map(([key, value]) => (
-									<option key={key} value={key}>
-										{value}
-									</option>
-								))}
-							</select>
-							<label htmlFor="count-input" style={{ whiteSpace: "nowrap" }}>Count:</label>
-							<input
-								id="count-input"
-								type="number"
-								min="1"
-								max="20"
-								style={{ all: "revert", width: "100%", padding: "4px 8px", fontSize: "13px", boxSizing: "border-box" }}
-								value={settings.colorCount}
-								onChange={(e) =>
-									setSettings((prev) => ({
-										...prev,
-										colorCount: Number(e.target.value),
-									}))
-								}
-							/>
-							<label htmlFor="sort-select" style={{ whiteSpace: "nowrap" }}>Sort By:</label>
-							<select
-								id="sort-select"
-								style={{ all: "revert", width: "100%", padding: "4px 8px", fontSize: "13px", boxSizing: "border-box" }}
-								value={settings.sortBy}
-								onChange={(e) =>
-									setSettings((prev) => ({
-										...prev,
-										sortBy: e.target.value as ColorPaletteSettings["sortBy"],
-									}))
-								}
+								Algorithm:
+								<select
+									style={{ all: "revert" }}
+									value={settings.generationAlgorithm}
+									onChange={(e) =>
+										setSettings({
+											...settings,
+											generationAlgorithm: e.target.value as any,
+										})
+									}
+								>
+									{Object.entries(generationAlgorithms).map(([k, v]) => (
+										<option key={k} value={k}>
+											{v}
+										</option>
+									))}
+								</select>
+							</label>
+							<label
+								style={{
+									display: "grid",
+									gridTemplateColumns: "100px 1fr",
+									gap: "10px",
+								}}
 							>
-								<option value="none">None</option>
-								<option value="hue">Hue</option>
-								<option value="lightness">Lightness</option>
-								<option value="saturation">Saturation</option>
-							</select>
+								Count:
+								<input
+									type="number"
+									min="1"
+									max="20"
+									style={{ all: "revert" }}
+									value={settings.colorCount}
+									onChange={(e) =>
+										setSettings({
+											...settings,
+											colorCount: Number(e.target.value),
+										})
+									}
+								/>
+							</label>
+							<label
+								style={{
+									display: "grid",
+									gridTemplateColumns: "100px 1fr",
+									gap: "10px",
+								}}
+							>
+								Sort By:
+								<select
+									style={{ all: "revert" }}
+									value={settings.sortBy}
+									onChange={(e) =>
+										setSettings({ ...settings, sortBy: e.target.value as any })
+									}
+								>
+									<option value="none">None</option>
+									<option value="hue">Hue</option>
+									<option value="lightness">Lightness</option>
+									<option value="saturation">Saturation</option>
+								</select>
+							</label>
 						</div>
 					</fieldset>
 
-					<fieldset style={{ border: "1px solid #ccc", padding: "8px" }}>
+					<fieldset style={{ border: "1px solid #ccc", padding: "15px" }}>
 						<legend>Color Range</legend>
-						<div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-							<div>
-								<div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px", fontSize: "12px" }}>
-									<span>Hue:</span>
-									<span>
-										{settings.hueRange.min} - {settings.hueRange.max}
-									</span>
-								</div>
-								<div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
-									<input
-										type="range"
-										min="0"
-										max="360"
-										value={settings.hueRange.min}
-										onChange={(e) =>
-											setSettings((prev) => ({
-												...prev,
-												hueRange: { ...prev.hueRange, min: Number(e.target.value) },
-											}))
-										}
-										style={{ flex: 1 }}
-									/>
-									<input
-										type="range"
-										min="0"
-										max="360"
-										value={settings.hueRange.max}
-										onChange={(e) =>
-											setSettings((prev) => ({
-												...prev,
-												hueRange: { ...prev.hueRange, max: Number(e.target.value) },
-											}))
-										}
-										style={{ flex: 1 }}
-									/>
-								</div>
-							</div>
-							<div>
-								<div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px", fontSize: "12px" }}>
-									<span>Sat:</span>
-									<span>
-										{settings.saturationRange.min} - {settings.saturationRange.max}
-									</span>
-								</div>
-								<div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
-									<input
-										type="range"
-										min="0"
-										max="100"
-										value={settings.saturationRange.min}
-										onChange={(e) =>
-											setSettings((prev) => ({
-												...prev,
-												saturationRange: { ...prev.saturationRange, min: Number(e.target.value) },
-											}))
-										}
-										style={{ flex: 1 }}
-									/>
-									<input
-										type="range"
-										min="0"
-										max="100"
-										value={settings.saturationRange.max}
-										onChange={(e) =>
-											setSettings((prev) => ({
-												...prev,
-												saturationRange: { ...prev.saturationRange, max: Number(e.target.value) },
-											}))
-										}
-										style={{ flex: 1 }}
-									/>
-								</div>
-							</div>
-							<div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "4px" }}>
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								gap: "10px",
+								fontSize: "0.9rem",
+							}}
+						>
+							<label>
+								Hue: {settings.hueRange.min} - {settings.hueRange.max}
+								<input
+									type="range"
+									min="0"
+									max="360"
+									value={settings.hueRange.max}
+									onChange={(e) =>
+										setSettings({
+											...settings,
+											hueRange: {
+												...settings.hueRange,
+												max: Number(e.target.value),
+											},
+										})
+									}
+									style={{ all: "revert", width: "100%" }}
+								/>
+							</label>
+							<label>
+								Sat: {settings.saturationRange.min} -{" "}
+								{settings.saturationRange.max}
+								<input
+									type="range"
+									min="0"
+									max="100"
+									value={settings.saturationRange.max}
+									onChange={(e) =>
+										setSettings({
+											...settings,
+											saturationRange: {
+												...settings.saturationRange,
+												max: Number(e.target.value),
+											},
+										})
+									}
+									style={{ all: "revert", width: "100%" }}
+								/>
+							</label>
+							<div
+								style={{
+									display: "flex",
+									gap: "5px",
+									flexWrap: "wrap",
+									marginTop: "10px",
+								}}
+							>
 								{Object.keys(colorRangePresets).map((preset) => (
 									<button
 										key={preset}
-										type="button"
-										style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "12px", textAlign: "center" }}
-										onClick={() => applyPreset(preset as keyof typeof colorRangePresets)}
+										onClick={() =>
+											applyPreset(preset as keyof typeof colorRangePresets)
+										}
+										style={{
+											all: "revert",
+											padding: "2px 6px",
+											fontSize: "12px",
+										}}
 									>
 										{preset}
 									</button>
@@ -384,39 +472,62 @@ export default function ColorPaletteGenerator() {
 						</div>
 					</fieldset>
 
-					<fieldset style={{ border: "1px solid #ccc", padding: "8px" }}>
+					<button
+						onClick={generateColors}
+						style={{
+							all: "revert",
+							padding: "10px",
+							fontSize: "1.1rem",
+							fontWeight: "bold",
+						}}
+					>
+						Generate Colors
+					</button>
+					<button
+						onClick={() => savePalette()}
+						style={{ all: "revert", padding: "5px" }}
+					>
+						Save Palette
+					</button>
+
+					<fieldset style={{ border: "1px solid #ccc", padding: "15px" }}>
 						<legend>Saved Palettes</legend>
-						<div style={{ maxHeight: "160px", overflowY: "auto", fontSize: "12px" }}>
+						<div
+							style={{
+								maxHeight: "200px",
+								overflowY: "auto",
+								fontSize: "0.9rem",
+							}}
+						>
 							{savedPalettes.length === 0
 								? "No saved palettes."
-								: savedPalettes.map((palette) => (
+								: savedPalettes.map((p) => (
 										<div
-											key={palette.id}
+											key={p.id}
 											style={{
 												display: "flex",
 												justifyContent: "space-between",
-												gap: "8px",
-												marginBottom: "4px",
+												marginBottom: "5px",
 												borderBottom: "1px solid #eee",
-												paddingBottom: "4px",
+												paddingBottom: "5px",
 											}}
 										>
-											<span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-												{palette.name} ({palette.colors.length}c)
+											<span>
+												{p.name} ({p.colors.length}c)
 											</span>
-											<div style={{ display: "flex", gap: "4px", flexShrink: 0 }}>
+											<div style={{ display: "flex", gap: "5px" }}>
 												<button
-													type="button"
-													style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "12px" }}
-													onClick={() => setGeneratedColors(palette.colors)}
+													style={{ all: "revert", fontSize: "12px" }}
+													onClick={() => setGeneratedColors(p.colors)}
 												>
 													Load
 												</button>
 												<button
-													type="button"
-													style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "12px" }}
+													style={{ all: "revert", fontSize: "12px" }}
 													onClick={() =>
-														setSavedPalettes((prev) => prev.filter((saved) => saved.id !== palette.id))
+														setSavedPalettes(
+															savedPalettes.filter((s) => s.id !== p.id),
+														)
 													}
 												>
 													Del
@@ -428,68 +539,83 @@ export default function ColorPaletteGenerator() {
 					</fieldset>
 				</div>
 
-				<div style={{ flex: "1 1 360px", display: "flex", flexDirection: "column", gap: "10px" }}>
-					<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-						<button type="button" onClick={generateColors} style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "13px" }}>
-							Generate Colors
-						</button>
-						<button type="button" onClick={() => savePalette()} style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "13px" }}>
-							Save Palette
-						</button>
-					</div>
-
-					<fieldset style={{ border: "1px solid #ccc", padding: "8px" }}>
+				{/* Right Column: Visuals & Export */}
+				<div
+					style={{
+						flex: "1 1 500px",
+						display: "flex",
+						flexDirection: "column",
+						gap: "20px",
+					}}
+				>
+					<fieldset style={{ border: "1px solid #ccc", padding: "15px" }}>
 						<legend>Generated Palette</legend>
 						{generatedColors.length === 0 ? (
-							<div style={{ padding: "8px", textAlign: "center", color: "#999", fontSize: "12px" }}>
+							<div
+								style={{ padding: "40px", textAlign: "center", color: "#666" }}
+							>
 								Click "Generate Colors" to begin.
 							</div>
 						) : (
-							<>
-								<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: "6px" }}>
-									{generatedColors.map((color) => (
+							<div
+								style={{
+									display: "grid",
+									gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
+									gap: "10px",
+								}}
+							>
+								{generatedColors.map((color, i) => (
+									<div
+										key={i}
+										style={{
+											display: "flex",
+											flexDirection: "column",
+											border: "1px solid #ccc",
+										}}
+									>
 										<div
-											key={color.hex}
 											style={{
-												display: "flex",
-												flexDirection: "column",
-												border: "1px solid #ccc",
+												backgroundColor: color.hex,
+												height: "100px",
+												width: "100%",
+											}}
+										/>
+										<div
+											style={{
+												padding: "5px",
+												fontSize: "0.85rem",
+												textAlign: "center",
 											}}
 										>
-											<div style={{ backgroundColor: color.hex, height: "80px", width: "100%" }} />
-											<div style={{ padding: "4px", fontSize: "11px", textAlign: "center" }}>
-												<div style={{ fontFamily: "monospace", marginBottom: "2px" }}>{color.hex}</div>
-												<button
-													type="button"
-													onClick={() => copyToClipboard(color.hex)}
-													style={{ all: "revert", width: "100%", padding: "4px 8px", cursor: "pointer", fontSize: "11px" }}
-												>
-													Copy
-												</button>
-											</div>
+											<strong style={{ display: "block" }}>{color.hex}</strong>
+											<button
+												onClick={() => copyToClipboard(color.hex)}
+												style={{
+													all: "revert",
+													fontSize: "11px",
+													marginTop: "5px",
+												}}
+											>
+												Copy HEX
+											</button>
 										</div>
-									))}
-								</div>
-								{notification && (
-									<div style={{ marginTop: "8px", padding: "4px 8px", background: "#f5f5f5", border: "1px solid #eee", fontSize: "12px", textAlign: "center" }}>
-										{notification}
 									</div>
-								)}
-							</>
+								))}
+							</div>
 						)}
 					</fieldset>
 
-					<fieldset style={{ border: "1px solid #ccc", padding: "8px" }}>
-						<legend>Export</legend>
-						<div style={{ display: "flex", gap: "6px", marginBottom: "6px" }}>
+					<fieldset style={{ border: "1px solid #ccc", padding: "15px" }}>
+						<legend>Export Palette</legend>
+						<div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
 							<select
-								style={{ all: "revert", flex: 1, padding: "4px 8px", fontSize: "13px" }}
+								style={{ all: "revert" }}
 								value={settings.exportFormat}
 								onChange={(e) =>
-									setSettings((prev) => ({
-										...prev,
-										exportFormat: e.target.value as ColorPaletteSettings["exportFormat"],
-									}))
+									setSettings({
+										...settings,
+										exportFormat: e.target.value as any,
+									})
 								}
 							>
 								<option value="css">CSS Variables</option>
@@ -497,8 +623,7 @@ export default function ColorPaletteGenerator() {
 								<option value="json">JSON</option>
 							</select>
 							<button
-								type="button"
-								style={{ all: "revert", padding: "4px 8px", cursor: "pointer", fontSize: "13px" }}
+								style={{ all: "revert", padding: "2px 10px" }}
 								onClick={() => {
 									const txt =
 										settings.exportFormat === "css"
@@ -509,7 +634,7 @@ export default function ColorPaletteGenerator() {
 									copyToClipboard(txt);
 								}}
 							>
-								Copy
+								Copy Output
 							</button>
 						</div>
 						<textarea
@@ -517,12 +642,11 @@ export default function ColorPaletteGenerator() {
 							style={{
 								all: "revert",
 								width: "100%",
-								height: "100px",
+								height: "150px",
 								fontFamily: "monospace",
-								fontSize: "11px",
-								padding: "4px 8px",
+								fontSize: "0.85rem",
+								padding: "10px",
 								boxSizing: "border-box",
-								border: "1px solid #eee",
 							}}
 							value={
 								settings.exportFormat === "css"

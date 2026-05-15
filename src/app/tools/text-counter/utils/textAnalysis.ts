@@ -96,11 +96,14 @@ export function calculateTextStats(
 	const halfKanaCount = settings.checkHalfKana
 		? (text.match(/[\uFF61-\uFF9F]/g) || []).length
 		: 0;
-	
+
 	let specificStringCount = 0;
 	if (settings.specificString && settings.specificString.length > 0) {
 		// Escape special regex characters in the specific string
-		const escapedString = settings.specificString.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		const escapedString = settings.specificString.replace(
+			/[.*+?^${}()|[\]\\]/g,
+			"\\$&",
+		);
 		const regex = new RegExp(escapedString, "g");
 		specificStringCount = (text.match(regex) || []).length;
 	}
