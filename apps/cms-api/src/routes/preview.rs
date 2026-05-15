@@ -27,6 +27,12 @@ impl axum::response::IntoResponse for PreviewError {
     }
 }
 
+impl From<sqlx::Error> for PreviewError {
+    fn from(_: sqlx::Error) -> Self {
+        PreviewError::Database
+    }
+}
+
 // ============ Types ============
 
 #[derive(Debug, Serialize)]

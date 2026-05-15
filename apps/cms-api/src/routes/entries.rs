@@ -31,6 +31,12 @@ impl axum::response::IntoResponse for EntryError {
     }
 }
 
+impl From<sqlx::Error> for EntryError {
+    fn from(_: sqlx::Error) -> Self {
+        EntryError::Database
+    }
+}
+
 // ============ Request/Response Types ============
 
 #[derive(Debug, Deserialize)]

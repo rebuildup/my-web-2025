@@ -28,6 +28,12 @@ impl axum::response::IntoResponse for SearchError {
     }
 }
 
+impl From<sqlx::Error> for SearchError {
+    fn from(_: sqlx::Error) -> Self {
+        SearchError::Database
+    }
+}
+
 // ============ Types ============
 
 #[derive(Debug, Deserialize)]

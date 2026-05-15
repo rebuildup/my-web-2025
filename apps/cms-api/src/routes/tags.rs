@@ -31,6 +31,12 @@ impl axum::response::IntoResponse for TagError {
     }
 }
 
+impl From<sqlx::Error> for TagError {
+    fn from(_: sqlx::Error) -> Self {
+        TagError::Database
+    }
+}
+
 // ============ Types ============
 
 #[derive(Debug, Serialize, sqlx::FromRow)]
