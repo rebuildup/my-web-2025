@@ -689,8 +689,6 @@ export default function BusinessMailBlockTool() {
 		[templates],
 	);
 
-
-
 	// Generate email when composed blocks or variables change
 	useEffect(() => {
 		generateEmail();

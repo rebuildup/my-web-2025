@@ -38,7 +38,7 @@ export interface CountSettings {
 	includeNewlines: boolean;
 	includeWhitespace: boolean;
 	countMethod: "all" | "visible" | "printable";
-	
+
 	// New advanced settings
 	targetLength: number;
 	minLength: number;
