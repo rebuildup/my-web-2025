@@ -79,6 +79,7 @@ jobs:
           ssh deploy-server 'bash -s' << 'REMOTE'
           set -euo pipefail
 
+          export PATH="$HOME/.cargo/bin:$PATH"
           cd /var/www/yusuke-kim/apps/cms-api
           cargo build --release 2>/dev/null || cargo build
           REMOTE
@@ -119,8 +120,8 @@ jobs:
 
           cd "$APP_DIR"
           pm2 start "$(command -v bun)" --name yusuke-kim -- server.js
-          pm2 start "$APP_DIR/apps/cms-api/target/debug/cms-api" --name cms-api -- --port 3001 || \
-            pm2 start "$APP_DIR/apps/cms-api/target/release/cms-api" --name cms-api -- --port 3001
+          cd "$APP_DIR/apps/cms-api"
+          pm2 start target/release/cms-api --name cms-api
           pm2 save
           for attempt in {1..10}; do
             curl -fsS http://127.0.0.1:3000/api/health && exit 0
