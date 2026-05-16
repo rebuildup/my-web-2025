@@ -18,12 +18,22 @@ import { ADMIN_CONSTANTS, AdminError, adminUtils } from "./utils";
 
 // Content processing configuration
 const CONTENT_CONFIG = {
-	MARKDOWN_DIR: path.join(/* turbopackIgnore: true */ process.cwd(), "public/content/markdown"),
-	OGP_IMAGES_DIR: path.join(/* turbopackIgnore: true */ process.cwd(),
+	MARKDOWN_DIR: path.join(
+		/* turbopackIgnore: true */ process.cwd(),
+		"public/content/markdown",
+	),
+	OGP_IMAGES_DIR: path.join(
+		/* turbopackIgnore: true */ process.cwd(),
 		ADMIN_CONSTANTS.DIRECTORIES.OG_IMAGES,
 	),
-	FAVICONS_DIR: path.join(/* turbopackIgnore: true */ process.cwd(), ADMIN_CONSTANTS.DIRECTORIES.FAVICONS),
-	BACKUP_DIR: path.join(/* turbopackIgnore: true */ process.cwd(), "public/data/backups"),
+	FAVICONS_DIR: path.join(
+		/* turbopackIgnore: true */ process.cwd(),
+		ADMIN_CONSTANTS.DIRECTORIES.FAVICONS,
+	),
+	BACKUP_DIR: path.join(
+		/* turbopackIgnore: true */ process.cwd(),
+		"public/data/backups",
+	),
 } as const;
 
 export interface ContentProcessingOptions {

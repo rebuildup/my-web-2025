@@ -10,7 +10,10 @@ import { ADMIN_CONSTANTS, AdminError, adminUtils } from "./utils";
 
 // Favicon configuration
 const FAVICON_CONFIG = {
-	FAVICONS_DIR: path.join(/* turbopackIgnore: true */ process.cwd(), ADMIN_CONSTANTS.DIRECTORIES.FAVICONS),
+	FAVICONS_DIR: path.join(
+		/* turbopackIgnore: true */ process.cwd(),
+		ADMIN_CONSTANTS.DIRECTORIES.FAVICONS,
+	),
 	SUPPORTED_FORMATS: {
 		ico: {
 			extension: ".ico",

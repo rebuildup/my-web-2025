@@ -93,12 +93,15 @@ export function MediaManager({
 	return (
 		<Paper elevation={0} sx={{ bgcolor: "background.paper", borderRadius: 0 }}>
 			<Stack
-				direction="row"
-				alignItems="center"
-				justifyContent="space-between"
-				sx={{ px: 0, py: 1.5 }}
+				sx={{
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
+					px: 0,
+					py: 1.5,
+				}}
 			>
-				<Typography variant="subtitle1" fontWeight={600}>
+				<Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
 					Media
 				</Typography>
 				<Button
@@ -168,8 +171,8 @@ export function MediaManager({
 										>
 											<Typography
 												variant="subtitle2"
-												fontWeight={600}
 												sx={{
+													fontWeight: 600,
 													whiteSpace: "nowrap",
 													overflow: "hidden",
 													textOverflow: "ellipsis",

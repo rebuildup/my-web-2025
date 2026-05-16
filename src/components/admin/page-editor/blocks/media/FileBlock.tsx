@@ -155,7 +155,7 @@ export function FileBlock({
 					}}
 				>
 					{/* Row 1: Upload (full width) */}
-					<Stack direction="row" spacing={1.5} alignItems="center">
+					<Stack spacing={1.5} sx={{ alignItems: "center" }}>
 						<Button
 							variant="outlined"
 							fullWidth
@@ -180,12 +180,7 @@ export function FileBlock({
 					)}
 
 					{/* Row 2: Name + URL */}
-					<Stack
-						direction="row"
-						spacing={1.5}
-						alignItems="center"
-						sx={{ mt: 1.5 }}
-					>
+					<Stack spacing={1.5} sx={{ alignItems: "center", mt: 1.5 }}>
 						<TextField
 							label="File name"
 							fullWidth

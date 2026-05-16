@@ -63,7 +63,7 @@ export function SpacerBlock({
 				<TextField
 					size="small"
 					type="number"
-					inputProps={{ min: 0, max: 50 }}
+					slotProps={{ htmlInput: { min: 0, max: 50 } }}
 					value={Number.isNaN(lines) ? 0 : lines}
 					onChange={(e) => {
 						const v = Math.max(

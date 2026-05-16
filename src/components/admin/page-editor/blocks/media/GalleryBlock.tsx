@@ -231,10 +231,8 @@ export function GalleryBlock({
 							{/* Add media (shown when hovering add tile) */}
 							{!readOnly && addHovered && (
 								<Stack
-									direction="row"
 									spacing={1}
-									alignItems="center"
-									justifyContent="center"
+									sx={{ alignItems: "center", justifyContent: "center" }}
 								>
 									<Button
 										size="small"
@@ -290,12 +288,15 @@ export function GalleryBlock({
 							<Stack
 								direction={{ xs: "column", sm: "row" }}
 								spacing={1.5}
-								alignItems={{ xs: "stretch", sm: "center" }}
+								sx={{
+									flexDirection: { xs: "column", sm: "row" },
+									alignItems: { xs: "stretch", sm: "center" },
+								}}
 							>
 								<TextField
 									label="Columns"
 									type="number"
-									inputProps={{ min: 1, max: 6 }}
+									slotProps={{ htmlInput: { min: 1, max: 6 } }}
 									sx={{ width: 140 }}
 									value={columns}
 									onChange={(e) =>
@@ -310,7 +311,7 @@ export function GalleryBlock({
 								<TextField
 									label="Max rows"
 									type="number"
-									inputProps={{ min: 0, max: 20 }}
+									slotProps={{ htmlInput: { min: 0, max: 20 } }}
 									sx={{ width: 140 }}
 									value={maxRows}
 									onChange={(e) =>
@@ -322,7 +323,7 @@ export function GalleryBlock({
 										})
 									}
 								/>
-								<Stack direction="row" spacing={1}>
+								<Stack spacing={1}>
 									<Button
 										size="small"
 										variant="outlined"
@@ -379,7 +380,10 @@ export function GalleryBlock({
 								<Stack
 									direction={{ xs: "column", sm: "row" }}
 									spacing={1.5}
-									alignItems={{ xs: "stretch", sm: "center" }}
+									sx={{
+										flexDirection: { xs: "column", sm: "row" },
+										alignItems: { xs: "stretch", sm: "center" },
+									}}
 								>
 									{items[selected].kind === "image" && (
 										<>

@@ -15,7 +15,10 @@ export function CalendarBlock({ block }: BlockComponentProps) {
 			}}
 		>
 			<Stack spacing={1}>
-				<Stack direction="row" spacing={1.5} alignItems="center">
+				<Stack
+					spacing={1.5}
+					sx={{ flexDirection: "row", alignItems: "center" }}
+				>
 					<EventAvailableRoundedIcon color="primary" />
 					<Typography variant="subtitle2">Calendar block</Typography>
 				</Stack>

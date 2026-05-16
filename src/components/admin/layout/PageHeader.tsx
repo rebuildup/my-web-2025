@@ -62,8 +62,7 @@ export function PageHeader({
 							return (
 								<Typography
 									key={crumb.label}
-									color="text.primary"
-									fontSize={13}
+									sx={{ fontSize: 13, color: "text.primary" }}
 								>
 									{crumb.label}
 								</Typography>
@@ -71,12 +70,14 @@ export function PageHeader({
 						})}
 					</Breadcrumbs>
 				)}
-				<Stack direction="row" alignItems="center" spacing={1.5}>
+				<Stack
+					sx={{ flexDirection: "row", alignItems: "center" }}
+					spacing={1.5}
+				>
 					<Typography
 						variant="h4"
 						component="h1"
-						fontWeight={700}
-						sx={{ lineHeight: 1.2 }}
+						sx={{ fontWeight: 700, lineHeight: 1.2 }}
 					>
 						{title}
 					</Typography>

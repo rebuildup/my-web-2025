@@ -77,12 +77,15 @@ export function ContentSelector({
 	return (
 		<Box>
 			<Stack
-				direction="row"
-				alignItems="center"
-				justifyContent="space-between"
-				sx={{ px: 0, py: 1.5 }}
+				sx={{
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between",
+					px: 0,
+					py: 1.5,
+				}}
 			>
-				<Typography variant="subtitle1" fontWeight={600}>
+				<Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
 					Content
 				</Typography>
 				<Button
@@ -96,7 +99,10 @@ export function ContentSelector({
 			</Stack>
 			<Box sx={{ px: 0, py: 0 }}>
 				{loading && (
-					<Stack direction="row" spacing={1.5} alignItems="center">
+					<Stack
+						spacing={1.5}
+						sx={{ flexDirection: "row", alignItems: "center" }}
+					>
 						<CircularProgress size={18} />
 						<Typography variant="body2" color="text.secondary">
 							Loading content list...
@@ -119,11 +125,6 @@ export function ContentSelector({
 										event.target.value,
 									);
 									onSelect(event.target.value);
-								}}
-								MenuProps={{
-									PaperProps: {
-										sx: { bgcolor: "background.paper" },
-									},
 								}}
 							>
 								<MenuItem value="">

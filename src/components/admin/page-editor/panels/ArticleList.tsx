@@ -51,12 +51,15 @@ export function ArticleList({
 	return (
 		<Box>
 			<Stack
-				direction="row"
-				alignItems="center"
-				justifyContent="space-between"
-				sx={{ px: 0, py: 1.5 }}
+				sx={{
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
+					px: 0,
+					py: 1.5,
+				}}
 			>
-				<Typography variant="subtitle1" fontWeight={600}>
+				<Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
 					Pages
 				</Typography>
 				<Button size="small" variant="outlined" onClick={onCreate}>
@@ -105,14 +108,12 @@ export function ArticleList({
 											primary={
 												<Typography
 													variant="body1"
-													fontWeight={600}
 													component="div"
-													sx={{ lineHeight: 1.4 }}
+													sx={{ fontWeight: 600, lineHeight: 1.4 }}
 												>
 													{page.frontmatter.title || "Untitled page"}
 												</Typography>
 											}
-											primaryTypographyProps={{ component: "div" }}
 											secondary={
 												<Box>
 													<Typography
@@ -131,7 +132,6 @@ export function ArticleList({
 													</Typography>
 												</Box>
 											}
-											secondaryTypographyProps={{ component: "div" }}
 										/>
 										<Button
 											size="small"

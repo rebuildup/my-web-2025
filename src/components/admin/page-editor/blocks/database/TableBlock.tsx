@@ -20,7 +20,10 @@ export function TableBlock({
 			}}
 		>
 			<Stack spacing={1.5}>
-				<Stack direction="row" spacing={1.5} alignItems="center">
+				<Stack
+					spacing={1.5}
+					sx={{ flexDirection: "row", alignItems: "center" }}
+				>
 					<TableChartRoundedIcon color="primary" />
 					<Typography variant="subtitle2">
 						Table (Markdown-compatible)

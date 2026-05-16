@@ -188,7 +188,7 @@ export function MarkdownForm({
 							}
 							onChange={(e) => updateFrontmatter("date", e.target.value)}
 							disabled={isLoading}
-							InputLabelProps={{ shrink: true }}
+							slotProps={{ inputLabel: { shrink: true } }}
 						/>
 
 						<TextField
@@ -301,7 +301,7 @@ export function MarkdownForm({
 									version: parseInt(e.target.value, 10) || 1,
 								})
 							}
-							inputProps={{ min: 1 }}
+							slotProps={{ htmlInput: { min: 1 } }}
 							disabled={isLoading}
 						/>
 					</Box>

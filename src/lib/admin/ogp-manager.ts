@@ -11,7 +11,7 @@ import { ADMIN_CONSTANTS, AdminError, adminUtils } from "./utils";
 
 // OGP configuration
 const OGP_CONFIG = {
-	IMAGES_DIR: path.join(/* turbopackIgnore: true */ process.cwd(), ADMIN_CONSTANTS.DIRECTORIES.OG_IMAGES),
+	IMAGES_DIR: path.join(process.cwd(), ADMIN_CONSTANTS.DIRECTORIES.OG_IMAGES),
 	DEFAULT_WIDTH: 1200,
 	DEFAULT_HEIGHT: 630,
 	SUPPORTED_FORMATS: [".jpg", ".jpeg", ".png", ".webp"],
@@ -86,7 +86,10 @@ export class OGPManager {
 
 			// Generate unique filename
 			const uniqueFileName = await this.generateUniqueFileName(fileName);
-			const filePath = path.join(/* turbopackIgnore: true */ OGP_CONFIG.IMAGES_DIR, uniqueFileName);
+			const filePath = path.join(
+				/* turbopackIgnore: true */ OGP_CONFIG.IMAGES_DIR,
+				uniqueFileName,
+			);
 
 			// Save file
 			let fileBuffer: Buffer;
@@ -401,7 +404,11 @@ export class OGPManager {
 	 */
 	private async loadImageRegistry(): Promise<OGPImageInfo[]> {
 		try {
-			const registryPath = path.join(/* turbopackIgnore: true */ OGP_CONFIG.IMAGES_DIR, "registry.json");
+			const registryPath = path.join(
+				process.cwd(),
+				OGP_CONFIG.IMAGES_DIR,
+				"registry.json",
+			);
 			const data = await fs.readFile(registryPath, "utf-8");
 			return JSON.parse(data);
 		} catch {
@@ -413,7 +420,11 @@ export class OGPManager {
 	 * Save image registry
 	 */
 	private async saveImageRegistry(registry: OGPImageInfo[]): Promise<void> {
-		const registryPath = path.join(/* turbopackIgnore: true */ OGP_CONFIG.IMAGES_DIR, "registry.json");
+		const registryPath = path.join(
+			process.cwd(),
+			OGP_CONFIG.IMAGES_DIR,
+			"registry.json",
+		);
 		await fs.writeFile(
 			registryPath,
 			JSON.stringify(registry, null, 2),

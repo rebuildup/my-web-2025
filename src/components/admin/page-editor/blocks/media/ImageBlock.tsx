@@ -123,10 +123,13 @@ export function ImageBlock({
 					/>
 				) : (
 					<Stack
-						alignItems="center"
-						justifyContent="center"
+						sx={{
+							alignItems: "center",
+							justifyContent: "center",
+							py: 6,
+							color: "text.secondary",
+						}}
 						spacing={1}
-						sx={{ py: 6, color: "text.secondary" }}
 					>
 						<ImageRoundedIcon fontSize="large" color="primary" />
 						<Typography variant="body2">Paste an image URL</Typography>
@@ -156,12 +159,15 @@ export function ImageBlock({
 						<Stack
 							direction={{ xs: "column", sm: "row" }}
 							spacing={1.5}
-							alignItems={{ xs: "stretch", sm: "center" }}
+							sx={{
+								flexDirection: { xs: "column", sm: "row" },
+								alignItems: { xs: "stretch", sm: "center" },
+							}}
 						>
 							<TextField
 								label="Width (%)"
 								type="number"
-								inputProps={{ min: 0, max: 100 }}
+								slotProps={{ htmlInput: { min: 0, max: 100 } }}
 								sx={{ width: 140 }}
 								value={imageBoxWidth}
 								onChange={(e) =>
@@ -176,7 +182,7 @@ export function ImageBlock({
 							<TextField
 								label="Height (px)"
 								type="number"
-								inputProps={{ min: 0, max: 4000 }}
+								slotProps={{ htmlInput: { min: 0, max: 4000 } }}
 								sx={{ width: 160 }}
 								value={heightPx ?? ""}
 								onChange={(e) => {
@@ -218,7 +224,7 @@ export function ImageBlock({
 						}}
 					>
 						{/* Row 1: Upload button only (full width) */}
-						<Stack direction="row" spacing={1.5} alignItems="center">
+						<Stack spacing={1.5} sx={{ alignItems: "center" }}>
 							<Button
 								variant="outlined"
 								fullWidth
@@ -254,12 +260,7 @@ export function ImageBlock({
 						)}
 
 						{/* Row 2: URL + Alt */}
-						<Stack
-							direction="row"
-							spacing={1.5}
-							alignItems="center"
-							sx={{ mt: 1.5 }}
-						>
+						<Stack spacing={1.5} sx={{ alignItems: "center", mt: 1.5 }}>
 							<TextField
 								label="URL"
 								fullWidth

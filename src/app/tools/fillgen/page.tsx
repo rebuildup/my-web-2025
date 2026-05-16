@@ -1012,7 +1012,7 @@ export default function FillGenPage() {
 					className="mb-3"
 				/>
 
-				<Typography variant="h4" fontWeight={700} sx={{ mb: 1 }}>
+				<Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
 					穴埋めプリントジェネレーター
 				</Typography>
 				<Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
@@ -1026,8 +1026,7 @@ export default function FillGenPage() {
 							<Stack
 								direction="row"
 								spacing={1}
-								alignItems="center"
-								sx={{ flexWrap: "wrap", gap: 1 }}
+								sx={{ flexWrap: "wrap", gap: 1, alignItems: "center" }}
 							>
 								<Tabs
 									value={activePage}
@@ -1040,7 +1039,7 @@ export default function FillGenPage() {
 										<Tab key={i} value={i} label={`ページ ${i + 1}`} />
 									))}
 								</Tabs>
-								<Stack direction="row" spacing={1}>
+								<Stack sx={{ flexDirection: "row" }} spacing={1}>
 									<Button
 										variant="contained"
 										startIcon={<Add />}
@@ -1172,7 +1171,10 @@ export default function FillGenPage() {
 				<Card>
 					<CardContent>
 						<Stack spacing={2}>
-							<Stack direction="row" alignItems="center" spacing={2}>
+							<Stack
+								sx={{ flexDirection: "row", alignItems: "center" }}
+								spacing={2}
+							>
 								<Tabs
 									value={tab}
 									onChange={(_, value) =>
@@ -1185,7 +1187,7 @@ export default function FillGenPage() {
 								</Tabs>
 								<Box sx={{ flexGrow: 1 }} />
 								{tab !== "preview" && (
-									<Stack direction="row" spacing={1}>
+									<Stack sx={{ flexDirection: "row" }} spacing={1}>
 										<Button
 											variant="outlined"
 											startIcon={<Download />}
@@ -1324,10 +1326,12 @@ export default function FillGenPage() {
 										<Stack spacing={2}>
 											<Stack
 												direction="row"
-												alignItems="center"
-												justifyContent="space-between"
+												sx={{
+													alignItems: "center",
+													justifyContent: "space-between",
+												}}
 											>
-												<Typography variant="h6" fontWeight={700}>
+												<Typography variant="h6" sx={{ fontWeight: 700 }}>
 													スタイル設定
 												</Typography>
 												<FormControl size="small" sx={{ minWidth: 200 }}>
@@ -1373,7 +1377,9 @@ export default function FillGenPage() {
 
 											<Accordion defaultExpanded>
 												<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-													<Typography fontWeight={600}>色設定</Typography>
+													<Typography sx={{ fontWeight: 600 }}>
+														色設定
+													</Typography>
 												</AccordionSummary>
 												<AccordionDetails>
 													<Box
@@ -1584,7 +1590,7 @@ export default function FillGenPage() {
 
 											<Accordion>
 												<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-													<Typography fontWeight={600}>
+													<Typography sx={{ fontWeight: 600 }}>
 														テキストサイズ
 													</Typography>
 												</AccordionSummary>
@@ -1701,7 +1707,7 @@ export default function FillGenPage() {
 
 											<Accordion>
 												<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-													<Typography fontWeight={600}>
+													<Typography sx={{ fontWeight: 600 }}>
 														ボタンスタイル
 													</Typography>
 												</AccordionSummary>
@@ -1755,7 +1761,9 @@ export default function FillGenPage() {
 
 											<Accordion>
 												<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-													<Typography fontWeight={600}>空欄スタイル</Typography>
+													<Typography sx={{ fontWeight: 600 }}>
+														空欄スタイル
+													</Typography>
 												</AccordionSummary>
 												<AccordionDetails>
 													<Stack spacing={3}>
@@ -1834,7 +1842,7 @@ export default function FillGenPage() {
 
 											<Accordion>
 												<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-													<Typography fontWeight={600}>
+													<Typography sx={{ fontWeight: 600 }}>
 														ページ切り替えタブスタイル
 													</Typography>
 												</AccordionSummary>

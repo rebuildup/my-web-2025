@@ -305,9 +305,14 @@ export class WebGLMemoryManager {
 	 * Dispose texture and update memory usage
 	 */
 	disposeTexture(texture: THREE.Texture, cacheKey?: string): void {
+		const image = texture.image as
+			| HTMLImageElement
+			| HTMLCanvasElement
+			| ImageData
+			| undefined;
 		const memoryUsage = this.estimateTextureMemory(
-			texture.image?.width || 256,
-			texture.image?.height || 256,
+			image?.width || 256,
+			image?.height || 256,
 			texture.format as THREE.PixelFormat,
 		);
 

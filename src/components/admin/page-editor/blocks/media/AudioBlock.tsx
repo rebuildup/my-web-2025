@@ -102,7 +102,7 @@ export function AudioBlock({
 				>
 					<Stack spacing={1.5}>
 						{/* Row 1: Upload full width */}
-						<Stack direction="row" spacing={1.5} alignItems="center">
+						<Stack spacing={1.5} sx={{ alignItems: "center" }}>
 							<Button
 								variant="outlined"
 								fullWidth
@@ -139,7 +139,7 @@ export function AudioBlock({
 						/>
 
 						{/* Row 3: toggles */}
-						<Stack direction="row" spacing={2} alignItems="center">
+						<Stack spacing={2} sx={{ alignItems: "center" }}>
 							<FormControlLabel
 								control={
 									<Switch
@@ -180,10 +180,13 @@ export function AudioBlock({
 					</audio>
 				) : (
 					<Stack
-						alignItems="center"
-						justifyContent="center"
+						sx={{
+							alignItems: "center",
+							justifyContent: "center",
+							py: 4,
+							color: "text.secondary",
+						}}
 						spacing={1}
-						sx={{ py: 4, color: "text.secondary" }}
 					>
 						<GraphicEqRoundedIcon color="primary" />
 						<Typography variant="body2">Paste an audio URL</Typography>

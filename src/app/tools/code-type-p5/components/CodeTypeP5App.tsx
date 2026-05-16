@@ -420,11 +420,13 @@ export default function CodeTypeP5App() {
 							anchor="right"
 							open={isDrawerOpen}
 							onClose={() => setIsDrawerOpen(false)}
-							PaperProps={{
-								sx: {
-									width: 400,
-									p: 3,
-									backgroundColor: "rgba(30, 30, 30, 0.95)",
+							slotProps={{
+								paper: {
+									sx: {
+										width: 400,
+										p: 3,
+										backgroundColor: "rgba(30, 30, 30, 0.95)",
+									},
 								},
 							}}
 						>
@@ -436,7 +438,7 @@ export default function CodeTypeP5App() {
 									mb: 3,
 								}}
 							>
-								<Typography variant="h5" fontWeight="bold">
+								<Typography variant="h5" sx={{ fontWeight: "bold" }}>
 									Configuration
 								</Typography>
 								<IconButton onClick={() => setIsDrawerOpen(false)}>
@@ -572,7 +574,7 @@ export default function CodeTypeP5App() {
 												type="number"
 												fullWidth
 												size="small"
-												inputProps={{ min: 0, max: 255 }}
+												slotProps={{ htmlInput: { min: 0, max: 255 } }}
 												value={config.backgroundColor.r}
 												onChange={(e) =>
 													setConfig({
@@ -591,7 +593,7 @@ export default function CodeTypeP5App() {
 												type="number"
 												fullWidth
 												size="small"
-												inputProps={{ min: 0, max: 255 }}
+												slotProps={{ htmlInput: { min: 0, max: 255 } }}
 												value={config.backgroundColor.g}
 												onChange={(e) =>
 													setConfig({
@@ -610,7 +612,7 @@ export default function CodeTypeP5App() {
 												type="number"
 												fullWidth
 												size="small"
-												inputProps={{ min: 0, max: 255 }}
+												slotProps={{ htmlInput: { min: 0, max: 255 } }}
 												value={config.backgroundColor.b}
 												onChange={(e) =>
 													setConfig({

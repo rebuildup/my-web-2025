@@ -15,7 +15,10 @@ export function BoardBlock({ block }: BlockComponentProps) {
 			}}
 		>
 			<Stack spacing={1}>
-				<Stack direction="row" spacing={1.5} alignItems="center">
+				<Stack
+					spacing={1.5}
+					sx={{ flexDirection: "row", alignItems: "center" }}
+				>
 					<DashboardRoundedIcon color="primary" />
 					<Typography variant="subtitle2">Board block</Typography>
 				</Stack>

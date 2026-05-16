@@ -17,9 +17,9 @@ export function TableOfContentsBlock(_: BlockComponentProps) {
 				gap: 1,
 			}}
 		>
-			<Stack direction="row" spacing={1.5} alignItems="center">
+			<Stack sx={{ flexDirection: "row", alignItems: "center" }} spacing={1.5}>
 				<TocRoundedIcon color="primary" />
-				<Typography variant="subtitle2" fontWeight={600}>
+				<Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
 					Table of contents
 				</Typography>
 			</Stack>

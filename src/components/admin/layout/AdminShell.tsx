@@ -96,9 +96,8 @@ export function AdminShell({ children }: AdminShellProps) {
 				>
 					<Typography
 						variant="subtitle1"
-						fontWeight={600}
 						noWrap
-						sx={{ pl: 2 }}
+						sx={{ fontWeight: 600, pl: 2 }}
 					>
 						Content Management
 					</Typography>

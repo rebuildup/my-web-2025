@@ -47,7 +47,7 @@ export function ListBlock({
 	};
 
 	return (
-		<Stack direction="row" spacing={1} alignItems="flex-start">
+		<Stack sx={{ flexDirection: "row", alignItems: "flex-start" }} spacing={1}>
 			{renderMarker()}
 			<Box sx={{ flex: 1 }}>
 				<EditableText

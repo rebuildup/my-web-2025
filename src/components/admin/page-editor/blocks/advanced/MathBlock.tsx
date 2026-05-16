@@ -20,7 +20,10 @@ export function MathBlock({
 			}}
 		>
 			<Stack spacing={2}>
-				<Stack direction="row" spacing={1.5} alignItems="center">
+				<Stack
+					sx={{ flexDirection: "row", alignItems: "center" }}
+					spacing={1.5}
+				>
 					<FunctionsRoundedIcon color="primary" />
 					<Typography variant="subtitle2">TeX Expression</Typography>
 				</Stack>

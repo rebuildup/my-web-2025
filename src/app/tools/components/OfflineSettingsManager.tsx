@@ -223,7 +223,6 @@ export default function OfflineSettingsManager<
 									onClick={manualSave}
 									variant="primary"
 									size="sm"
-									shortcut="Ctrl+S"
 									announceOnClick="設定を保存しました"
 								>
 									<Save size={14} />

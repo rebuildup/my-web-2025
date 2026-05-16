@@ -191,7 +191,7 @@ export function WebBookmarkBlock({
 					<Box sx={{ width: 0 }} />
 				)}
 				<CardContent sx={{ flex: 1 }}>
-					<Typography variant="subtitle1" fontWeight={600}>
+					<Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
 						{displayTitle}
 					</Typography>
 					{description && (

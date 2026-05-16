@@ -47,11 +47,15 @@ export function BlockToolbar({
 			<Stack
 				direction={{ xs: "column", md: "row" }}
 				spacing={2}
-				alignItems={{ xs: "flex-start", md: "center" }}
-				justifyContent="space-between"
-				sx={{ maxWidth: 768, mx: "auto", width: "100%" }}
+				sx={{
+					maxWidth: 768,
+					mx: "auto",
+					width: "100%",
+					justifyContent: "space-between",
+					alignItems: { xs: "flex-start", md: "center" },
+				}}
 			>
-				<Stack direction="row" spacing={2} alignItems="center">
+				<Stack spacing={2} sx={{ flexDirection: "row", alignItems: "center" }}>
 					{isSaving ? (
 						<CircularProgress size={20} />
 					) : (

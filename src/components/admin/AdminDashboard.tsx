@@ -41,7 +41,7 @@ export default function AdminDashboard() {
 			<Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
 				<Container maxWidth="lg" sx={{ py: 6 }}>
 					<Box sx={{ display: "flex", alignItems: "center", mb: 3, gap: 2 }}>
-						<Typography variant="h4" component="h1" fontWeight={700}>
+						<Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
 							Admin Dashboard
 						</Typography>
 						<Chip label="MUI" color="primary" size="small" />

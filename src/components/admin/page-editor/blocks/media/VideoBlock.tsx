@@ -116,10 +116,13 @@ export function VideoBlock({
 					/>
 				) : (
 					<Stack
-						alignItems="center"
-						justifyContent="center"
+						sx={{
+							alignItems: "center",
+							justifyContent: "center",
+							py: 6,
+							color: "text.secondary",
+						}}
 						spacing={1}
-						sx={{ py: 6, color: "text.secondary" }}
 					>
 						<MovieCreationRoundedIcon fontSize="large" color="primary" />
 						<Typography variant="body2">Paste a video URL</Typography>
@@ -148,12 +151,15 @@ export function VideoBlock({
 						<Stack
 							direction={{ xs: "column", sm: "row" }}
 							spacing={1.5}
-							alignItems={{ xs: "stretch", sm: "center" }}
+							sx={{
+								flexDirection: { xs: "column", sm: "row" },
+								alignItems: { xs: "stretch", sm: "center" },
+							}}
 						>
 							<TextField
 								label="Width (%)"
 								type="number"
-								inputProps={{ min: 0, max: 100 }}
+								slotProps={{ htmlInput: { min: 0, max: 100 } }}
 								sx={{ width: 140 }}
 								value={boxWidth}
 								onChange={(e) =>
@@ -168,7 +174,7 @@ export function VideoBlock({
 							<TextField
 								label="Height (px)"
 								type="number"
-								inputProps={{ min: 0, max: 4000 }}
+								slotProps={{ htmlInput: { min: 0, max: 4000 } }}
 								sx={{ width: 160 }}
 								value={heightPx ?? ""}
 								onChange={(e) => {
@@ -231,7 +237,7 @@ export function VideoBlock({
 						}}
 					>
 						{/* Row 1: Upload full width */}
-						<Stack direction="row" spacing={1.5} alignItems="center">
+						<Stack spacing={1.5} sx={{ alignItems: "center" }}>
 							<Button
 								variant="outlined"
 								fullWidth
@@ -267,12 +273,7 @@ export function VideoBlock({
 						)}
 
 						{/* Row 2: URL + Poster */}
-						<Stack
-							direction="row"
-							spacing={1.5}
-							alignItems="center"
-							sx={{ mt: 1.5 }}
-						>
+						<Stack spacing={1.5} sx={{ alignItems: "center", mt: 1.5 }}>
 							<TextField
 								label="URL"
 								fullWidth

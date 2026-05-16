@@ -749,7 +749,7 @@ export function ContentForm({
 	const Essentials = (
 		<Stack spacing={2}>
 			{/* First row: Title + ID */}
-			<Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+			<Stack sx={{ flexDirection: { xs: "column", md: "row" } }} spacing={2}>
 				<Box sx={{ flex: 1 }}>
 					<TextField
 						fullWidth
@@ -798,7 +798,7 @@ export function ContentForm({
 							publishedAt: newValue,
 						}));
 					}}
-					InputLabelProps={{ shrink: true }}
+					slotProps={{ inputLabel: { shrink: true } }}
 				/>
 			</Box>
 
@@ -856,11 +856,8 @@ export function ContentForm({
 			{/* Tag list row */}
 			<Box>
 				<Stack
-					direction="row"
+					sx={{ flexDirection: "row", flexWrap: "wrap", width: 1 }}
 					spacing={0.5}
-					flexWrap="wrap"
-					useFlexGap
-					sx={{ width: 1 }}
 				>
 					{(formData.tags ?? []).map((tag) => (
 						<Chip key={tag} label={tag} onDelete={() => removeTag(tag)} />
@@ -916,7 +913,7 @@ export function ContentForm({
 					}}
 				/>
 			)}
-			<Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+			<Stack sx={{ flexDirection: { xs: "column", sm: "row" } }} spacing={1}>
 				<Button
 					variant="outlined"
 					size="small"
@@ -1012,7 +1009,7 @@ export function ContentForm({
 					}))
 				}
 			/>
-			<Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+			<Stack sx={{ flexDirection: { xs: "column", sm: "row" } }} spacing={1}>
 				<Button
 					variant="outlined"
 					size="small"
@@ -1060,7 +1057,7 @@ export function ContentForm({
 					}))
 				}
 			/>
-			<Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+			<Stack sx={{ flexDirection: { xs: "column", sm: "row" } }} spacing={1}>
 				<Button
 					variant="outlined"
 					size="small"
@@ -1108,7 +1105,7 @@ export function ContentForm({
 				}
 				fullWidth
 			/>
-			<Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+			<Stack sx={{ flexDirection: { xs: "column", md: "row" } }} spacing={2}>
 				<TextField
 					label="深さ (depth)"
 					type="number"
@@ -1157,7 +1154,7 @@ export function ContentForm({
 						key={idx}
 						direction={{ xs: "column", md: "row" }}
 						spacing={1}
-						alignItems={{ md: "center" }}
+						sx={{ alignItems: { md: "center" } }}
 					>
 						<TextField
 							label="ラベル"
@@ -1246,7 +1243,7 @@ export function ContentForm({
 								key={`${asset.src}-${idx}`}
 								direction="row"
 								spacing={1}
-								alignItems="center"
+								sx={{ alignItems: "center" }}
 							>
 								{(asset?.type || "").startsWith("image/") ? (
 									<Box
@@ -1277,8 +1274,8 @@ export function ContentForm({
 								)}
 								<Typography
 									variant="body2"
-									sx={{ flex: 1, minWidth: 0 }}
 									noWrap
+									sx={{ flex: 1, minWidth: 0 }}
 								>
 									{asset?.src}
 								</Typography>
@@ -1542,8 +1539,7 @@ export function ContentForm({
 				</Typography>
 				<Typography
 					variant="caption"
-					display="block"
-					sx={{ mb: 1, color: "text.secondary" }}
+					sx={{ display: "block", mb: 1, color: "text.secondary" }}
 				>
 					Based on current title, category, tags, and thumbnail.
 				</Typography>
@@ -1699,7 +1695,7 @@ export function ContentForm({
 					key={idx}
 					direction={{ xs: "column", md: "row" }}
 					spacing={1}
-					alignItems={{ md: "center" }}
+					sx={{ alignItems: { md: "center" } }}
 				>
 					<TextField
 						label="ターゲットID"
@@ -1880,7 +1876,11 @@ export function ContentForm({
 					mt: 0,
 				}}
 			>
-				<Stack direction="row" justifyContent="flex-end" spacing={1.5}>
+				<Stack
+					direction="row"
+					spacing={1.5}
+					sx={{ justifyContent: "flex-end" }}
+				>
 					<Button variant="outlined" onClick={onCancel} disabled={isLoading}>
 						キャンセル
 					</Button>
