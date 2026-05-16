@@ -81,7 +81,7 @@ jobs:
 
           export PATH="$HOME/.cargo/bin:$PATH"
           cd /var/www/yusuke-kim/apps/cms-api
-          cargo build --release 2>/dev/null || cargo build
+          cargo build --release
           REMOTE
 
       - name: Deploy on server
