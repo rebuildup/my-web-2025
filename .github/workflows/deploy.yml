@@ -45,6 +45,7 @@ jobs:
           cp -r .next/static .next/standalone/.next/static
           [ -d ".next/standalone/public" ] || cp -r public .next/standalone/public
           [ -d ".next/standalone/data" ] || cp -r data .next/standalone/data
+          [ -d ".next/standalone/apps" ] || cp -r apps .next/standalone/apps
           tar -czf deployment-standalone.tar.gz \
             -C .next/standalone \
             server.js \
