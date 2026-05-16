@@ -52,7 +52,8 @@ jobs:
             public \
             data \
             node_modules \
-            package.json
+            package.json \
+            apps/
 
       - name: Setup SSH
         run: |
@@ -71,6 +72,15 @@ jobs:
 
       - name: Transfer deployment package
         run: scp deployment-standalone.tar.gz deploy-server:/home/${{ secrets.GCP_USER }}/deployment-standalone.tar.gz
+
+      - name: Build Rust CMS API
+        run: |
+          ssh deploy-server 'bash -s' << 'REMOTE'
+          set -euo pipefail
+
+          cd /var/www/yusuke-kim/apps/cms-api
+          cargo build --release 2>/dev/null || cargo build
+          REMOTE
 
       - name: Deploy on server
         run: |
@@ -91,6 +101,7 @@ jobs:
           TMP_DIR="$(mktemp -d)"
 
           pm2 delete yusuke-kim 2>/dev/null || true
+          pm2 delete cms-api 2>/dev/null || true
           mkdir -p "$APP_DIR"
           find "$APP_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
           tar -xzf "$PACKAGE_PATH" -C "$TMP_DIR"
@@ -107,6 +118,8 @@ jobs:
 
           cd "$APP_DIR"
           pm2 start "$(command -v bun)" --name yusuke-kim -- server.js
+          pm2 start "$APP_DIR/apps/cms-api/target/debug/cms-api" --name cms-api -- --port 3001 || \
+            pm2 start "$APP_DIR/apps/cms-api/target/release/cms-api" --name cms-api -- --port 3001
           pm2 save
           for attempt in {1..10}; do
             curl -fsS http://127.0.0.1:3000/api/health && exit 0

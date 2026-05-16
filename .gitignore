@@ -64,8 +64,10 @@ data/tag-catalog.json
 # Lighthouse audit results
 lighthouse-results/
 
+# Rust build artifacts
+apps/cms-api/target/
+apps/cms-api/.cargo/
+apps/cms-api/Cargo.lock
+
 # Subtree lockfiles - prevent Turbopack from detecting wrong workspace root
 src/app/tools/*/pnpm-lock.yaml
-src/app/tools/*/package-lock.json
-src/app/tools/*/yarn.lock
-src/app/tools/*/pnpm-workspace.yaml
