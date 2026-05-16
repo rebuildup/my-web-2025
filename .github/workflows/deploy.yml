@@ -114,6 +114,8 @@ jobs:
           tar -xzf "$PACKAGE_PATH" -C "$TMP_DIR"
           cp -a "$TMP_DIR"/. "$APP_DIR"/
           tar -xzf "$CMS_API_PATH" -C "$APP_DIR/apps/cms-api/target/release/"
+          mkdir -p "$APP_DIR/apps/cms-api/target/release"
+          tar -xzf "$CMS_API_PATH" -C "$APP_DIR/apps/cms-api/target/release/"
           rm -rf "$TMP_DIR"
           rm -f "$PACKAGE_PATH"
           rm -f "$CMS_API_PATH"
