@@ -46,15 +46,6 @@ jobs:
           [ -d ".next/standalone/public" ] || cp -r public .next/standalone/public
           [ -d ".next/standalone/data" ] || cp -r data .next/standalone/data
           [ -d ".next/standalone/apps" ] || cp -r apps .next/standalone/apps
-          tar -czf deployment-standalone.tar.gz \
-            -C .next/standalone \
-            server.js \
-            .next \
-            public \
-            data \
-            node_modules \
-            package.json \
-            apps/
 
       - name: Setup SSH
         run: |
@@ -71,18 +62,30 @@ jobs:
           EOF
           chmod 600 ~/.ssh/config
 
-      - name: Transfer deployment package
-        run: scp deployment-standalone.tar.gz deploy-server:/home/${{ secrets.GCP_USER }}/deployment-standalone.tar.gz
+      - name: Setup Rust
+        uses: dtolnay/rust-action@stable
+        with:
+          version: stable
 
       - name: Build Rust CMS API
         run: |
-          ssh deploy-server 'bash -s' << 'REMOTE'
-          set -euo pipefail
-
-          export PATH="$HOME/.cargo/bin:$PATH"
-          cd /var/www/yusuke-kim/apps/cms-api
+          cd apps/cms-api
           cargo build --release
-          REMOTE
+          tar -czf cms-api-binary.tar.gz -C target/release cms-api
+
+      - name: Transfer deployment package
+        run: |
+          tar -czf deployment-standalone.tar.gz \
+            -C .next/standalone \
+            server.js \
+            .next \
+            public \
+            data \
+            node_modules \
+            package.json \
+            apps/
+          scp deployment-standalone.tar.gz deploy-server:/home/${{ secrets.GCP_USER }}/deployment-standalone.tar.gz
+          scp apps/cms-api/cms-api-binary.tar.gz deploy-server:/home/${{ secrets.GCP_USER }}/cms-api-binary.tar.gz
 
       - name: Deploy on server
         run: |
@@ -100,6 +103,7 @@ jobs:
 
           APP_DIR="/var/www/yusuke-kim"
           PACKAGE_PATH="$HOME/deployment-standalone.tar.gz"
+          CMS_API_PATH="$HOME/cms-api-binary.tar.gz"
           TMP_DIR="$(mktemp -d)"
 
           pm2 delete yusuke-kim 2>/dev/null || true
@@ -108,8 +112,10 @@ jobs:
           find "$APP_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
           tar -xzf "$PACKAGE_PATH" -C "$TMP_DIR"
           cp -a "$TMP_DIR"/. "$APP_DIR"/
+          tar -xzf "$CMS_API_PATH" -C "$APP_DIR/apps/cms-api/target/release/"
           rm -rf "$TMP_DIR"
           rm -f "$PACKAGE_PATH"
+          rm -f "$CMS_API_PATH"
 
           cat > "$APP_DIR/.env.production.local" << ENV_EOF
           NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
