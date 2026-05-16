@@ -63,14 +63,15 @@ jobs:
           chmod 600 ~/.ssh/config
 
       - name: Setup Rust
-        uses: dtolnay/rust-action@stable
-        with:
-          version: stable
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          source "$HOME/.cargo/env"
 
       - name: Build Rust CMS API
         run: |
           cd apps/cms-api
-          cargo build --release
+          cargo build --release --manifest-path Cargo.toml
           tar -czf cms-api-binary.tar.gz -C target/release cms-api
 
       - name: Transfer deployment package
