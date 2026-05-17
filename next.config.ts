@@ -8,7 +8,13 @@ const nextConfig: NextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
 	},
-	turbopack: {},
+	turbopack: {
+		rules: {
+			"*.{wav,mp3,ogg,flac}": {
+				type: "asset",
+			},
+		},
+	},
 	// Note: turbopack does not support moduleIds/chunkIds
 	// Transpile @appletosolutions/reactbits to ensure @chakra-ui/react is resolved
 	transpilePackages: ["@appletosolutions/reactbits"],

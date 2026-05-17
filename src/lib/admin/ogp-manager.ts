@@ -6,12 +6,12 @@
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import type { ContentItem } from "@/types";
-import { ADMIN_CONSTANTS, AdminError, adminUtils } from "./utils";
+import type { ContentItem } from "@/types/content";
+import { AdminError, adminUtils } from "./utils";
 
 // OGP configuration
 const OGP_CONFIG = {
-	IMAGES_DIR: path.join(process.cwd(), ADMIN_CONSTANTS.DIRECTORIES.OG_IMAGES),
+	IMAGES_DIR: path.join(process.cwd(), "public", "images", "og-images"),
 	DEFAULT_WIDTH: 1200,
 	DEFAULT_HEIGHT: 630,
 	SUPPORTED_FORMATS: [".jpg", ".jpeg", ".png", ".webp"],
