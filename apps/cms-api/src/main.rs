@@ -28,10 +28,11 @@ async fn main() {
         .allow_headers(Any);
 
     // Build router with all routes
-    let app = routes::entries::router(pool.clone())
-        .merge(tags::router(pool.clone()))
-        .merge(search::router(pool.clone()))
-        .merge(preview::router(pool.clone()))
+    let app = axum::Router::new()
+        .nest("/entries", entries::router(pool.clone()))
+        .nest("/tags", tags::router(pool.clone()))
+        .nest("/search", search::router(pool.clone()))
+        .nest("/preview", preview::router(pool.clone()))
         .route("/health", axum::routing::get(health))
         .layer(cors);
 
