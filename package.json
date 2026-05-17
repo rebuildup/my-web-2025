@@ -10,9 +10,9 @@
 	"scripts": {
 		"dev": "bun --bun next dev -p 3010",
 		"build": "bun scripts/check-env.js && bun x next build && bun scripts/copy-content-data.js",
-		"start": "bun x next start -p 3010",
+		"start": "bun --bun next start -p 3010",
 		"dev:port": "bun x next dev -p $PORT",
-		"start:port": "bun x next start -p $PORT",
+		"start:port": "bun --bun next start -p $PORT",
 		"type-check": "tsc --noEmit",
 		"test": "bun test",
 		"lint": "biome check .",

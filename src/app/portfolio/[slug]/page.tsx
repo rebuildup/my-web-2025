@@ -37,7 +37,7 @@ async function loadMarkdownDetail(
 	slug: string,
 ): Promise<MarkdownDetail | null> {
 	try {
-		const match = findMarkdownPage(slug);
+		const match = findMarkdownPage(slug, { contentId: slug });
 		if (!match) {
 			return null;
 		}

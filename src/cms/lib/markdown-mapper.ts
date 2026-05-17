@@ -205,7 +205,7 @@ export function getMarkdownPage(
 	db: SqliteDatabase,
 	idOrSlug: string,
 ): MarkdownPage | null {
-	// IDまたはスラッグで検索
+	// ID、スラッグ、または紐づくコンテンツIDで検索
 	let row = db
 		.prepare("SELECT * FROM markdown_pages WHERE id = ?")
 		.get(idOrSlug) as MarkdownPageRow | undefined;
@@ -213,6 +213,12 @@ export function getMarkdownPage(
 	if (!row) {
 		row = db
 			.prepare("SELECT * FROM markdown_pages WHERE slug = ?")
+			.get(idOrSlug) as MarkdownPageRow | undefined;
+	}
+
+	if (!row) {
+		row = db
+			.prepare("SELECT * FROM markdown_pages WHERE content_id = ?")
 			.get(idOrSlug) as MarkdownPageRow | undefined;
 	}
 

@@ -27,6 +27,11 @@ const EMBED_PATTERNS = {
 	LINK: /\[link:(\d+)(?:\s+"([^"]*)")?(?:\s+class="([^"]*)")?\]/g,
 	IFRAME: /<iframe[^>]*>.*?<\/iframe>/gi,
 } as const;
+const CMS_IMAGE_TAG_PATTERN = /<Image\b([^>]*)\/?>/gi;
+const CMS_IMAGE_CLOSE_TAG_PATTERN = /<\/Image>/gi;
+const CMS_HTML_TAG_PATTERN = /<\/?Html>/gi;
+const HTML_ATTR_PATTERN =
+	/([a-zA-Z_:][\w:.-]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/g;
 
 // Enhanced content parser service interface with Tailwind CSS support
 export interface ContentParserService {
@@ -104,20 +109,22 @@ export class ContentParser implements ContentParserService {
 	}
 
 	async parseMarkdown(content: string, mediaData: MediaData): Promise<string> {
+		const normalizedContent = this.normalizeCmsComponentTags(content);
+
 		// First validate the content
-		const validation = this.validateEmbedSyntax(content, mediaData);
+		const validation = this.validateEmbedSyntax(normalizedContent, mediaData);
 		if (!validation.isValid) {
 			console.warn("Embed validation errors found:", validation.errors);
 		}
 
 		// Resolve embed references to markdown format for parseMarkdown
-		const resolved = this.resolveEmbedReferences(content, mediaData);
+		const resolved = this.resolveEmbedReferences(normalizedContent, mediaData);
 		return this.transformBookmarkTags(resolved);
 	}
 
 	// New method for HTML generation (used by MarkdownRenderer)
 	resolveEmbedReferencesToHTML(content: string, mediaData: MediaData): string {
-		let processedContent = content;
+		let processedContent = this.normalizeCmsComponentTags(content);
 
 		// Create resolution map for efficient lookups
 		const resolutionMap = this.createEmbedResolutionMap(mediaData);
@@ -440,8 +447,9 @@ export class ContentParser implements ContentParserService {
 	}
 
 	validateEmbedSyntax(content: string, mediaData: MediaData): ValidationResult {
+		const normalizedContent = this.normalizeCmsComponentTags(content);
 		const errors: EmbedError[] = [];
-		const lines = content.split("\n");
+		const lines = normalizedContent.split("\n");
 
 		// Handle null or undefined media data gracefully
 		if (!mediaData) {
@@ -453,7 +461,7 @@ export class ContentParser implements ContentParserService {
 		}
 
 		// Extract all embed references for validation
-		const embedRefs = this.extractEmbedReferences(content);
+		const embedRefs = this.extractEmbedReferences(normalizedContent);
 
 		embedRefs.forEach((ref) => {
 			const { type, index, cssClasses } = ref;
@@ -479,7 +487,7 @@ export class ContentParser implements ContentParserService {
 
 				if (!isValid) {
 					// Find line number for error reporting
-					const lineNumber = this.findLineNumber(content, ref, lines);
+					const lineNumber = this.findLineNumber(normalizedContent, ref, lines);
 
 					const suggestion = this.generateDetailedIndexSuggestion(
 						index,
@@ -508,7 +516,7 @@ export class ContentParser implements ContentParserService {
 					this.classSuggestionEngine.validateClasses(classArray);
 
 				if (validation.invalid.length > 0) {
-					const lineNumber = this.findLineNumber(content, ref, lines);
+					const lineNumber = this.findLineNumber(normalizedContent, ref, lines);
 
 					validation.invalid.forEach((invalidClass) => {
 						const classSuggestions =
@@ -532,11 +540,15 @@ export class ContentParser implements ContentParserService {
 		});
 
 		// Validate iframe syntax
-		const iframes = content.match(EMBED_PATTERNS.IFRAME);
+		const iframes = normalizedContent.match(EMBED_PATTERNS.IFRAME);
 		if (iframes) {
 			iframes.forEach((iframe) => {
 				if (!this.validateIframeSyntax(iframe)) {
-					const lineNumber = this.findIframeLineNumber(content, iframe, lines);
+					const lineNumber = this.findIframeLineNumber(
+						normalizedContent,
+						iframe,
+						lines,
+					);
 					errors.push({
 						type: "MALFORMED_SYNTAX",
 						line: lineNumber,
@@ -558,11 +570,12 @@ export class ContentParser implements ContentParserService {
 	}
 
 	extractEmbedReferences(content: string): EmbedReference[] {
+		const normalizedContent = this.normalizeCmsComponentTags(content);
 		const references: EmbedReference[] = [];
 
 		// Extract image references with Tailwind CSS classes
 		const imagePattern = new RegExp(EMBED_PATTERNS.IMAGE.source, "g");
-		for (const m of content.matchAll(imagePattern)) {
+		for (const m of normalizedContent.matchAll(imagePattern)) {
 			references.push({
 				type: "image",
 				index: parseInt(m[1] as string, 10),
@@ -576,7 +589,7 @@ export class ContentParser implements ContentParserService {
 
 		// Extract video references with Tailwind CSS classes
 		const videoPattern = new RegExp(EMBED_PATTERNS.VIDEO.source, "g");
-		for (const m of content.matchAll(videoPattern)) {
+		for (const m of normalizedContent.matchAll(videoPattern)) {
 			references.push({
 				type: "video",
 				index: parseInt(m[1] as string, 10),
@@ -590,7 +603,7 @@ export class ContentParser implements ContentParserService {
 
 		// Extract link references with Tailwind CSS classes
 		const linkPattern = new RegExp(EMBED_PATTERNS.LINK.source, "g");
-		for (const m of content.matchAll(linkPattern)) {
+		for (const m of normalizedContent.matchAll(linkPattern)) {
 			references.push({
 				type: "link",
 				index: parseInt(m[1] as string, 10),
@@ -604,7 +617,7 @@ export class ContentParser implements ContentParserService {
 
 		// Extract iframe references
 		const iframePattern = new RegExp(EMBED_PATTERNS.IFRAME.source, "gi");
-		for (const m of content.matchAll(iframePattern)) {
+		for (const m of normalizedContent.matchAll(iframePattern)) {
 			try {
 				const parsed = this.embedSyntaxParser.parseIframeEmbed(m[0] as string);
 				references.push({
@@ -967,6 +980,65 @@ export class ContentParser implements ContentParserService {
 
 	private stripHtml(value: string): string {
 		return value.replace(/<[^>]*>/g, "");
+	}
+
+	private normalizeCmsComponentTags(content: string): string {
+		return content
+			.replace(CMS_IMAGE_TAG_PATTERN, (_match, attrSource: string) => {
+				const attrs = this.parseHtmlAttributes(attrSource);
+				const src = attrs.get("src");
+				if (!src) {
+					return "";
+				}
+
+				const allowedAttrs = [
+					"src",
+					"alt",
+					"width",
+					"height",
+					"class",
+					"loading",
+				];
+				const htmlAttrs = allowedAttrs
+					.map((name) => {
+						const value =
+							name === "loading" ? attrs.get(name) || "lazy" : attrs.get(name);
+						return value ? `${name}="${this.escapeAttribute(value)}"` : "";
+					})
+					.filter(Boolean)
+					.join(" ");
+
+				return `<img ${htmlAttrs} />`;
+			})
+			.replace(CMS_IMAGE_CLOSE_TAG_PATTERN, "")
+			.replace(CMS_HTML_TAG_PATTERN, "");
+	}
+
+	private parseHtmlAttributes(source: string): Map<string, string> {
+		const attrs = new Map<string, string>();
+		HTML_ATTR_PATTERN.lastIndex = 0;
+
+		for (const match of source.matchAll(HTML_ATTR_PATTERN)) {
+			const [, name, doubleQuoted, singleQuoted, unquoted] = match;
+			if (name) {
+				attrs.set(name, doubleQuoted ?? singleQuoted ?? unquoted ?? "");
+			}
+		}
+
+		return attrs;
+	}
+
+	private escapeAttribute(value: string): string {
+		return value.replace(/[&<>"']/g, (char) => {
+			const map: Record<string, string> = {
+				"&": "&amp;",
+				"<": "&lt;",
+				">": "&gt;",
+				'"': "&quot;",
+				"'": "&#39;",
+			};
+			return map[char] ?? char;
+		});
 	}
 
 	// Helper methods for video URL processing

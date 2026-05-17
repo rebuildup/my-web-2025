@@ -6,7 +6,6 @@
 
 "use client";
 
-import DOMPurify from "isomorphic-dompurify";
 import { marked } from "marked";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -394,6 +393,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
 				// Sanitize HTML if enabled
 				if (enableSanitization) {
+					const { default: DOMPurify } = await import("dompurify");
 					const resetTargetHook = (node: Element) => {
 						if (node.tagName === "A") {
 							node.removeAttribute("target");

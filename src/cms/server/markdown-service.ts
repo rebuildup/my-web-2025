@@ -116,9 +116,9 @@ function findMarkdownRow(
 			}
 			return db
 				.prepare(
-					"SELECT * FROM markdown_pages WHERE id = ? OR slug = ? LIMIT 1",
+					"SELECT * FROM markdown_pages WHERE id = ? OR slug = ? OR content_id = ? LIMIT 1",
 				)
-				.get(identifier, identifier) as MarkdownPageRow | undefined;
+				.get(identifier, identifier, identifier) as MarkdownPageRow | undefined;
 		}) as MarkdownPageRow | undefined;
 
 		if (row) {
