@@ -72,7 +72,7 @@
 		"js-tiktoken": "^1.0.21",
 		"jszip": "^3.10.1",
 		"lucide-react": "^0.548.0",
-		"marked": "^16.4.1",
+		"marked": "^18.0.3",
 		"matter-js": "^0.20.0",
 		"motion": "^12.23.12",
 		"nanoid": "^5.1.6",
