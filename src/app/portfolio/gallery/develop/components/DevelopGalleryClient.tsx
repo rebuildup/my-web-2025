@@ -12,7 +12,7 @@
  * - Maintain consistent performance with large datasets
  */
 
-import { Calendar, Code, ExternalLink, Github } from "lucide-react";
+import { Calendar, Code, ExternalLink, GitBranch } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import GlowCard from "@/components/ui/GlowCard";
@@ -321,7 +321,7 @@ export function DevelopGalleryClient({
 													rel="noopener noreferrer"
 													className="flex items-center px-3 py-1.5 rounded-[8px] bg-base/30 hover:bg-base/50 transition-colors ring-1 ring-main/20"
 												>
-													<Github className="w-5 h-5 mr-2" />
+													<GitBranch className="w-5 h-5 mr-2" />
 													<span className="noto-sans-jp-light text-sm">
 														Repository
 													</span>

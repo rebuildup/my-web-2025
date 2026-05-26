@@ -4,7 +4,7 @@
  */
 "use client";
 
-import { Github, Loader2 } from "lucide-react";
+import { GitBranch, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface GitHubUser {
@@ -94,7 +94,7 @@ export default function GitHubActivity() {
 				rel="noopener noreferrer"
 				className="flex items-center gap-3 text-main/60 hover:text-main transition-colors group"
 			>
-				<Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
+				<GitBranch className="w-5 h-5 group-hover:scale-110 transition-transform" />
 				<div className="flex items-center gap-3">
 					<span className="text-sm font-medium">{data.user.login}</span>
 					<span className="text-xs text-main/40">

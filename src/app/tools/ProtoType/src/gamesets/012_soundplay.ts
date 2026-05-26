@@ -1,5 +1,5 @@
-import collect_Sound from "../assets/SE/collect.wav";
-import miss_Sound from "../assets/SE/miss.wav";
+const collect_Sound = "/tools/prototype/se/collect.wav";
+const miss_Sound = "/tools/prototype/se/miss.wav";
 
 export function playAudio(url: string, volume: number = 1.0): Promise<void> {
   return new Promise((resolve, reject) => {

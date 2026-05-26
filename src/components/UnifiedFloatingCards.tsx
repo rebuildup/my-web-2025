@@ -14,13 +14,12 @@ import {
 	GitBranch,
 	GitCommit,
 	GitFork,
-	Github,
 	MessageSquare,
 	Rocket,
 	Sparkles,
 	Star,
 	Trash2,
-	Youtube,
+	Video,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -552,7 +551,7 @@ function GitHubRepoCard({
 			>
 				{/* Title with language and icon */}
 				<div className="flex items-center gap-2 mb-2">
-					<Github className="w-4 h-4 text-main/40 flex-shrink-0" />
+					<GitBranch className="w-4 h-4 text-main/40 flex-shrink-0" />
 					<span className="text-sm font-semibold text-main/90 flex-1 truncate">
 						{repo.name}
 					</span>
@@ -670,7 +669,7 @@ function YouTubeCard({
 						</div>
 					)}
 					<div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
-						<Youtube className="w-12 h-12 text-white drop-shadow-lg" />
+						<Video className="w-12 h-12 text-white drop-shadow-lg" />
 					</div>
 					<div className="mt-2 max-w-[224px]">
 						<p className="text-xs text-main/80 line-clamp-3 leading-snug font-medium mb-2">
