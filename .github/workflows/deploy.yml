@@ -98,11 +98,16 @@ jobs:
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
           [ -n "${NVM_BIN:-}" ] && export PATH="$NVM_BIN:$PATH"
+          export CMS_API_HOST=127.0.0.1
+          export CMS_API_PORT=3001
+          export CMS_API_BASE_URL=http://127.0.0.1:3001
+          export CMS_USE_RUST_API=1
 
           command -v bun >/dev/null 2>&1 || { echo "bun not found"; exit 1; }
           command -v pm2 >/dev/null 2>&1 || { echo "pm2 not found"; exit 1; }
 
           APP_DIR="/var/www/yusuke-kim"
+          export CMS_API_DATA_DIR="$APP_DIR/data/db"
           PACKAGE_PATH="$HOME/deployment-standalone.tar.gz"
           CMS_API_PATH="$HOME/cms-api-binary.tar.gz"
           TMP_DIR="$(mktemp -d)"
@@ -122,6 +127,9 @@ jobs:
           cat > "$APP_DIR/.env.production.local" << ENV_EOF
           NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
           NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_ID }}
+          CMS_API_BASE_URL=http://127.0.0.1:3001
+          CMS_API_DATA_DIR=$APP_DIR/data/db
+          CMS_USE_RUST_API=1
           NODE_ENV=production
           PORT=3000
           ENV_EOF
