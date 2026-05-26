@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllFromIndex, getContentTags } from "@/cms/lib/content-db-manager";
-import { listMarkdownPages } from "@/cms/server/markdown-service";
+import {
+	fetchCmsContentIndex,
+	fetchCmsContentTags,
+	fetchMarkdownPages,
+} from "@/lib/cms-api/server-data";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -83,7 +86,7 @@ export async function GET(request: NextRequest) {
 
 	try {
 		// Get all published markdown pages
-		const markdownPages = await Promise.resolve(listMarkdownPages());
+		const markdownPages = await fetchMarkdownPages();
 		const publishedContent = markdownPages.filter(
 			(page) =>
 				(page.status ?? "draft") === "published" && page.slug !== slug,
@@ -94,7 +97,7 @@ export async function GET(request: NextRequest) {
 		}
 
 		// Get all index data at once (optimization for N+1 problem)
-		const allIndex = getAllFromIndex();
+		const allIndex = await fetchCmsContentIndex();
 		const indexMap = new Map(allIndex.map((item) => [item.id, item]));
 
 		// Build tags map for all pages
@@ -105,7 +108,7 @@ export async function GET(request: NextRequest) {
 
 		for (const page of publishedContent) {
 			const contentId = page.contentId || page.slug;
-			const tags = getContentTags(contentId);
+			const tags = await fetchCmsContentTags(contentId);
 			articlesWithTags.push({ page, tags });
 		}
 

@@ -1,71 +1,246 @@
-import {
-	addToIndex,
-	copyContentDb,
-	deleteContentDb,
-	getAllFromIndex,
-	getContentDb,
-	getFromIndex,
-} from "@/cms/lib/content-db-manager";
-import { getFullContent, saveFullContent } from "@/cms/lib/content-mapper";
 import type { Content } from "@/cms/types/content";
+import type { ContentIndexItem } from "@/cms/types/content";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
+import { cmsApiFetch } from "@/lib/cms-api/server-client";
 import { requireAdminRequest } from "@/lib/server/admin-auth";
 
 export const runtime = "nodejs";
 
-// ========== OPTIONS: CORS preflight ==========
+type RustEntryListItem = {
+	id: string;
+	entry_type: string;
+	status: string;
+	visibility: string;
+	title: string;
+	summary?: string | null;
+	lang: string;
+	published_at?: string | null;
+	created_at: string;
+	updated_at: string;
+	slug?: string | null;
+	thumbnail?: string | null;
+	tags?: string | null;
+};
+
+type RustEntryDetail = {
+	id: string;
+	entry_type: string;
+	status: string;
+	visibility: string;
+	title: string;
+	summary?: string | null;
+	lang: string;
+	path?: string | null;
+	depth: number;
+	order: number;
+	parent_id?: string | null;
+	published_at?: string | null;
+	created_at: string;
+	updated_at: string;
+	slug?: string | null;
+	public_url?: string | null;
+	thumbnails?: Content["thumbnails"];
+	assets?: Content["assets"];
+	links?: Content["links"];
+	searchable?: Content["searchable"];
+	seo?: Content["seo"];
+	relations?: Content["relations"];
+	ext?: Record<string, unknown> | null;
+};
+
+type RustEntryWritePayload = {
+	id: string;
+	entry_type: string;
+	slug?: string;
+	status?: Content["status"];
+	visibility?: Content["visibility"];
+	title: string;
+	summary?: string;
+	lang?: string;
+	path?: string;
+	depth?: number;
+	order?: number;
+	parent_id?: string;
+	published_at?: string;
+	tags?: string[];
+	thumbnail?: string;
+	public_url?: string;
+	thumbnails?: Content["thumbnails"];
+	assets?: Content["assets"];
+	links?: Content["links"];
+	searchable?: Content["searchable"];
+	seo?: Content["seo"];
+	relations?: Content["relations"];
+	ext?: Record<string, unknown>;
+};
+
+function deriveThumbnail(content: Partial<Content>): string | undefined {
+	const image = content.thumbnails?.image?.src;
+	if (typeof image === "string" && image) return image;
+	const gif = content.thumbnails?.gif?.src;
+	if (typeof gif === "string" && gif) return gif;
+	const webmPoster = content.thumbnails?.webm?.poster;
+	if (typeof webmPoster === "string" && webmPoster) return webmPoster;
+	const firstAsset = content.assets?.find(
+		(asset) => typeof asset.src === "string" && asset.src,
+	);
+	return firstAsset?.src;
+}
+
+function toRustEntryWritePayload(content: Partial<Content>): RustEntryWritePayload {
+	return {
+		id: content.id ?? "",
+		entry_type:
+			typeof content.ext?.type === "string" ? content.ext.type : "portfolio",
+		slug:
+			typeof content.ext?.slug === "string" ? content.ext.slug : content.id,
+		status: content.status,
+		visibility: content.visibility,
+		title: content.title ?? "",
+		summary: content.summary,
+		lang: content.lang,
+		path: content.path,
+		depth: content.depth,
+		order: content.order,
+		parent_id: content.parentId,
+		published_at: content.publishedAt,
+		tags: content.tags,
+		thumbnail: deriveThumbnail(content),
+		public_url: content.publicUrl,
+		thumbnails: content.thumbnails,
+		assets: content.assets,
+		links: content.links,
+		searchable: content.searchable,
+		seo: content.seo,
+		relations: content.relations,
+		ext: content.ext,
+	};
+}
+
+async function writeRustEntry(
+	method: "POST" | "PATCH",
+	payload: RustEntryWritePayload,
+	targetId?: string,
+): Promise<void> {
+	const path =
+		method === "POST"
+			? "/entries"
+			: `/entries/${encodeURIComponent(targetId || payload.id)}`;
+	const response = await fetch(`${getCmsApiBaseUrl()}${path}`, {
+		method,
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+		body: JSON.stringify(payload),
+	});
+
+	if (!response.ok) {
+		throw new Error(await response.text());
+	}
+}
+
+async function deleteRustEntry(id: string): Promise<void> {
+	const response = await fetch(
+		`${getCmsApiBaseUrl()}/entries/${encodeURIComponent(id)}`,
+		{
+			method: "DELETE",
+			headers: { Accept: "application/json" },
+		},
+	);
+
+	if (!response.ok && response.status !== 404) {
+		throw new Error(await response.text());
+	}
+}
+
+function mapRustListItemToContentIndexItem(
+	item: RustEntryListItem,
+): ContentIndexItem & Pick<Content, "thumbnails"> {
+	return {
+		id: item.id,
+		title: item.title,
+		summary: item.summary ?? undefined,
+		lang: item.lang,
+		status: item.status as ContentIndexItem["status"],
+		visibility: item.visibility as ContentIndexItem["visibility"],
+		createdAt: item.created_at,
+		updatedAt: item.updated_at,
+		publishedAt: item.published_at ?? null,
+		tags: item.tags
+			? item.tags.split(",").map((tag) => tag.trim()).filter(Boolean)
+			: [],
+		thumbnails: item.thumbnail ? { image: { src: item.thumbnail } } : undefined,
+	};
+}
+
+function mapRustDetailToContent(detail: RustEntryDetail): Content {
+	return {
+		id: detail.id,
+		title: detail.title,
+		summary: detail.summary ?? undefined,
+		lang: detail.lang,
+		status: detail.status as Content["status"],
+		visibility: detail.visibility as Content["visibility"],
+		path: detail.path ?? undefined,
+		depth: detail.depth,
+		order: detail.order,
+		parentId: detail.parent_id ?? undefined,
+		publishedAt: detail.published_at ?? undefined,
+		publicUrl: detail.public_url ?? undefined,
+		createdAt: detail.created_at,
+		updatedAt: detail.updated_at,
+		thumbnails:
+			detail.thumbnails ??
+			(detail.ext?.thumbnail && typeof detail.ext.thumbnail === "object"
+				? (detail.ext.thumbnail as Content["thumbnails"])
+				: undefined),
+		assets: detail.assets ?? [],
+		links: detail.links ?? [],
+		searchable: detail.searchable,
+		seo: detail.seo,
+		relations: detail.relations,
+		ext: {
+			...(detail.ext ?? {}),
+			type:
+				typeof detail.ext?.type === "string"
+					? detail.ext.type
+					: detail.entry_type,
+			slug:
+				typeof detail.ext?.slug === "string"
+					? detail.ext.slug
+					: (detail.slug ?? undefined),
+		},
+	};
+}
+
 export async function OPTIONS() {
 	return new Response(null, {
 		status: 200,
 		headers: {
 			"Access-Control-Allow-Origin": "http://localhost:3000",
-			"Access-Control-Allow-Methods": "GET, OPTIONS",
+			"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
 			"Access-Control-Allow-Headers": "Content-Type, Authorization",
 		},
 	});
 }
 
-// ========== GET: コンテンツ一覧取得 ==========
 export async function GET(req: Request) {
 	try {
 		const { searchParams } = new URL(req.url);
 		const id = searchParams.get("id");
 
-		// 特定のコンテンツを取得
 		if (id) {
-			const indexData = getFromIndex(id);
-			if (!indexData) {
-				return Response.json({ error: "Content not found" }, { status: 404 });
-			}
-
-			const db = getContentDb(id);
-			const fullContent = getFullContent(db, id);
-			db.close();
-
-			if (!fullContent) {
-				return Response.json({ error: "Content not found" }, { status: 404 });
-			}
-
-			return Response.json(fullContent);
+			const detail = await cmsApiFetch<RustEntryDetail>(
+				`/entries/${encodeURIComponent(id)}`,
+			);
+			return Response.json(mapRustDetailToContent(detail));
 		}
 
-		// 全コンテンツの一覧を取得（インデックスから）
-		let contents: unknown[] = [];
-		try {
-			contents = getAllFromIndex();
-		} catch (e) {
-			// DB が利用できない環境では空配列で応答（サーバーエラーを避ける）
-			console.warn("Index DB not available, returning empty contents list", e);
-			contents = [];
-		}
-		return Response.json(contents, {
-			headers: {
-				"Access-Control-Allow-Origin": "http://localhost:3000",
-				"Access-Control-Allow-Methods": "GET, OPTIONS",
-				"Access-Control-Allow-Headers": "Content-Type, Authorization",
-			},
-		});
+		const entries = await cmsApiFetch<RustEntryListItem[]>("/entries");
+		return Response.json(entries.map(mapRustListItemToContentIndexItem));
 	} catch (error) {
-		console.error("GET /api/contents error:", error);
+		console.error("GET /api/cms/contents error:", error);
 		return Response.json(
 			{ error: "Failed to fetch contents" },
 			{ status: 500 },
@@ -73,14 +248,12 @@ export async function GET(req: Request) {
 	}
 }
 
-// ========== POST: コンテンツ作成 ==========
 export async function POST(req: Request) {
 	const guard = requireAdminRequest(req);
 	if (!guard.ok) return guard.response;
 
 	try {
 		const data = await req.json();
-
 		if (!data.id || !data.title) {
 			return Response.json(
 				{ error: "ID and title are required" },
@@ -88,63 +261,22 @@ export async function POST(req: Request) {
 			);
 		}
 
+		const now = new Date().toISOString();
 		const content: Partial<Content> = {
+			...data,
 			id: data.id,
 			title: data.title,
-			summary: data.summary,
-			tags: data.tags,
 			lang: data.lang || "ja",
 			status: data.status || "draft",
 			visibility: data.visibility || "draft",
-			publishedAt: data.publishedAt,
-			unpublishedAt: data.unpublishedAt,
-			thumbnails: data.thumbnails,
-			assets: data.assets,
-			links: data.links,
-			seo: data.seo,
-			searchable: data.searchable || {
-				fullText: `${data.title} ${data.summary || ""} ${(data.tags || []).join(" ")}`,
-			},
-			createdAt: new Date().toISOString(),
-			updatedAt: new Date().toISOString(),
+			createdAt: data.createdAt || now,
+			updatedAt: now,
 		};
 
-		// コンテンツ専用のデータベースを作成・取得
-		const db = getContentDb(data.id);
-
-		try {
-			// コンテンツデータを保存
-			saveFullContent(db, content);
-
-			// インデックスに追加
-			if (
-				content.id &&
-				content.title &&
-				content.createdAt &&
-				content.updatedAt
-			) {
-				addToIndex({
-					id: content.id,
-					title: content.title,
-					summary: content.summary,
-					lang: content.lang,
-					status: content.status,
-					visibility: content.visibility,
-					createdAt: content.createdAt,
-					updatedAt: content.updatedAt,
-					publishedAt: content.publishedAt,
-					tags: content.tags,
-					thumbnails: content.thumbnails as Record<string, unknown> | undefined,
-					seo: content.seo as Record<string, unknown> | undefined,
-				});
-			}
-
-			return Response.json({ ok: true, id: content.id });
-		} finally {
-			db.close();
-		}
+		await writeRustEntry("POST", toRustEntryWritePayload(content));
+		return Response.json({ ok: true, id: content.id });
 	} catch (error) {
-		console.error("POST /api/contents error:", error);
+		console.error("POST /api/cms/contents error:", error);
 		return Response.json(
 			{ error: "Failed to create content" },
 			{ status: 500 },
@@ -152,125 +284,40 @@ export async function POST(req: Request) {
 	}
 }
 
-// ========== PUT: コンテンツ更新 ==========
 export async function PUT(req: Request) {
 	const guard = requireAdminRequest(req);
 	if (!guard.ok) return guard.response;
 
 	try {
 		const data = await req.json();
-
 		if (!data.id) {
 			return Response.json({ error: "ID is required" }, { status: 400 });
 		}
 
-		// 古いIDを取得（編集時にoldIdが送られてくる場合）
-		const oldId = (data as any).oldId;
+		const oldId = (data as { oldId?: string }).oldId;
 		const newId = data.id;
+		const now = new Date().toISOString();
+		const content: Partial<Content> = {
+			...data,
+			id: newId,
+			title: data.title ?? "",
+			lang: data.lang || "ja",
+			status: data.status || "draft",
+			visibility: data.visibility || "draft",
+			createdAt: data.createdAt || now,
+			updatedAt: now,
+		};
 
-		// IDが変更されている場合（oldIdが指定され、oldIdとnewIdが異なる場合）
-		let existingContent: Content | null = null;
-		
 		if (oldId && oldId !== newId) {
-			// 古いIDで存在確認
-			const indexData = getFromIndex(oldId);
-			if (!indexData) {
-				return Response.json({ error: "Content not found" }, { status: 404 });
-			}
-
-			// 既存のコンテンツを取得（リネーム前に）
-			const oldDb = getContentDb(oldId);
-			try {
-				existingContent = getFullContent(oldDb, oldId);
-				if (!existingContent) {
-					return Response.json(
-						{ error: "Content not found in database" },
-						{ status: 404 },
-					);
-				}
-			} finally {
-				oldDb.close();
-			}
-
-			// 新しいDBファイルを作成してデータをコピー（既存の接続を閉じた後）
-			const copySuccess = copyContentDb(oldId, newId);
-			if (!copySuccess) {
-				return Response.json(
-					{ error: "Failed to copy content database" },
-					{ status: 500 },
-				);
-			}
+			await deleteRustEntry(oldId);
+			await writeRustEntry("POST", toRustEntryWritePayload(content));
 		} else {
-			// IDが変更されていない場合、通常の更新処理
-			const indexData = getFromIndex(newId);
-			if (!indexData) {
-				return Response.json({ error: "Content not found" }, { status: 404 });
-			}
+			await writeRustEntry("PATCH", toRustEntryWritePayload(content), newId);
 		}
 
-		// コンテンツ専用のデータベースを取得（新しいIDで）
-		const db = getContentDb(newId);
-
-		try {
-			// 既存のコンテンツを取得（リネームした場合は既に取得済み）
-			let existing = existingContent;
-			if (!existing) {
-				existing = getFullContent(db, newId);
-				if (!existing) {
-					return Response.json(
-						{ error: "Content not found in database" },
-						{ status: 404 },
-					);
-				}
-			}
-
-			// 更新データをマージ
-			const content: Partial<Content> = {
-				...existing,
-				...data,
-				id: newId, // 新しいIDを使用
-				updatedAt: new Date().toISOString(),
-				// publishedAtが明示的に送信されている場合は更新、undefinedの場合は既存の値を保持
-				// ただし、dataにpublishedAtプロパティが存在する場合は、その値を使用（undefinedでも）
-				publishedAt: Object.prototype.hasOwnProperty.call(data, 'publishedAt') ? data.publishedAt : existing.publishedAt,
-				unpublishedAt: Object.prototype.hasOwnProperty.call(data, 'unpublishedAt') ? data.unpublishedAt : existing.unpublishedAt,
-				searchable: data.searchable || {
-					fullText: `${data.title || existing.title} ${data.summary || existing.summary || ""} ${(data.tags || existing.tags || []).join(" ")}`,
-				},
-			};
-
-			// コンテンツデータを更新
-			saveFullContent(db, content);
-
-			// インデックスを更新
-			if (
-				content.id &&
-				content.title &&
-				content.createdAt &&
-				content.updatedAt
-			) {
-				addToIndex({
-					id: content.id,
-					title: content.title,
-					summary: content.summary,
-					lang: content.lang,
-					status: content.status,
-					visibility: content.visibility,
-					createdAt: content.createdAt,
-					updatedAt: content.updatedAt,
-					publishedAt: content.publishedAt,
-					tags: content.tags,
-					thumbnails: content.thumbnails as Record<string, unknown> | undefined,
-					seo: content.seo as Record<string, unknown> | undefined,
-				});
-			}
-
-			return Response.json({ ok: true });
-		} finally {
-			db.close();
-		}
+		return Response.json({ ok: true });
 	} catch (error) {
-		console.error("PUT /api/contents error:", error);
+		console.error("PUT /api/cms/contents error:", error);
 		return Response.json(
 			{ error: "Failed to update content" },
 			{ status: 500 },
@@ -278,7 +325,6 @@ export async function PUT(req: Request) {
 	}
 }
 
-// ========== DELETE: コンテンツ削除 ==========
 export async function DELETE(req: Request) {
 	const guard = requireAdminRequest(req);
 	if (!guard.ok) return guard.response;
@@ -286,21 +332,14 @@ export async function DELETE(req: Request) {
 	try {
 		const { searchParams } = new URL(req.url);
 		const id = searchParams.get("id");
-
 		if (!id) {
 			return Response.json({ error: "ID is required" }, { status: 400 });
 		}
 
-		// コンテンツデータベースごと削除
-		const success = deleteContentDb(id);
-
-		if (!success) {
-			return Response.json({ error: "Content not found" }, { status: 404 });
-		}
-
+		await deleteRustEntry(id);
 		return Response.json({ ok: true });
 	} catch (error) {
-		console.error("DELETE /api/contents error:", error);
+		console.error("DELETE /api/cms/contents error:", error);
 		return Response.json(
 			{ error: "Failed to delete content" },
 			{ status: 500 },

@@ -1,36 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { listMarkdownPages } from "@/cms/server/markdown-service";
-import { getContentTags } from "@/cms/lib/content-db-manager";
 import type { MarkdownPage } from "@/cms/types/markdown";
+import {
+	fetchCmsContentById,
+	fetchCmsContentTags,
+	fetchMarkdownPages,
+} from "@/lib/cms-api/server-data";
 import Fuse from "fuse.js";
-
-// Fetch description from CMS
-async function fetchDescriptionFromCMS(id: string): Promise<string | undefined> {
-	const baseUrl =
-		process.env.NODE_ENV === "development"
-			? "http://localhost:3010"
-			: process.env.NEXT_PUBLIC_SITE_URL ||
-				process.env.NEXT_PUBLIC_BASE_URL ||
-				"https://yusuke-kim.com";
-
-	try {
-		const res = await fetch(
-			`${baseUrl}/api/cms/contents?id=${encodeURIComponent(id)}`,
-			{
-				cache: "no-store",
-			},
-		);
-
-		if (res.ok) {
-			const cmsContent = await res.json();
-			return cmsContent?.summary || cmsContent?.description;
-		}
-	} catch (error) {
-		console.error(`[Search API] Error fetching content ${id}:`, error);
-	}
-
-	return undefined;
-}
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -52,13 +27,12 @@ async function prepareArticleData(pages: MarkdownPage[]): Promise<ArticleSearchD
 			const frontmatter = page.frontmatter ?? ({} as Record<string, unknown>);
 			const contentId = page.contentId || page.slug;
 
-			// Get tags from database
-			const tags = getContentTags(contentId);
-
-			// Get description from CMS
-			const cmsDescription = await fetchDescriptionFromCMS(contentId);
+			const [tags, cmsContent] = await Promise.all([
+				fetchCmsContentTags(contentId),
+				fetchCmsContentById(contentId),
+			]);
 			const description =
-				cmsDescription ||
+				cmsContent?.summary ||
 				(frontmatter.description as string | undefined) ||
 				(frontmatter.summary as string | undefined);
 
@@ -86,7 +60,7 @@ export async function GET(request: NextRequest) {
 
 	try {
 		// Get all markdown pages
-		const markdownPages = await Promise.resolve(listMarkdownPages());
+		const markdownPages = await fetchMarkdownPages();
 		const publishedPages = markdownPages.filter(
 			(page) => (page.status ?? "draft") === "published",
 		);

@@ -1,9 +1,9 @@
 import { Eye } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllFromIndex } from "@/cms/lib/content-db-manager";
 import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import type { PortfolioContentItem } from "@/types/portfolio";
@@ -70,7 +70,7 @@ export default async function VideoDesignProjectsPage() {
 			console.log("Fetching portfolio data...");
 		}
 		// 管理ページと同じ経路（インデックスDB）から取得
-		const rows = getAllFromIndex();
+		const rows = await fetchCmsContentIndex();
 		// タグのみで design or video を含むもの（video&designの要件: video または design）
 		const videoDesignItems = rows
 			.filter((r: any) => r.status === "published")

@@ -1,9 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getAllFromIndex, getContentTags } from "@/cms/lib/content-db-manager";
-import { listMarkdownPages } from "@/cms/server/markdown-service";
 import type { MarkdownPage } from "@/cms/types/markdown";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import {
+	fetchCmsContentIndex,
+	fetchCmsContentTags,
+	fetchMarkdownPages,
+} from "@/lib/cms-api/server-data";
 import { ArticleCard } from "./components/ArticleCard";
 import { ArticleGrid } from "./components/ArticleGrid";
 import { SearchBar } from "./components/SearchBar";
@@ -125,7 +128,7 @@ function getThumbnail(page: MarkdownPage, cmsContent: any): string | null {
 }
 
 interface IndexEntry {
-	summary: string;
+	summary?: string;
 	description?: string;
 	tags?: string[];
 	thumbnails?: Record<string, unknown>;
@@ -137,7 +140,7 @@ async function fetchContentsBatch(
 	const results = new Map<string, IndexEntry>();
 
 	try {
-		const allIndex = getAllFromIndex();
+		const allIndex = await fetchCmsContentIndex();
 		const indexMap = new Map(allIndex.map((item) => [item.id, item]));
 
 		for (const id of contentIds) {
@@ -251,7 +254,7 @@ export default async function WorkshopPage({
 	}
 
 	// Get all markdown pages
-	const markdownPages = await Promise.resolve(listMarkdownPages());
+	const markdownPages = await fetchMarkdownPages();
 	const publishedContent = markdownPages.filter(
 		(page) => (page.status ?? "draft") === "published",
 	);
@@ -279,7 +282,7 @@ export default async function WorkshopPage({
 	const contentTagsMap = new Map<string, string[]>();
 	for (const page of sortedContent) {
 		const contentId = page.contentId || page.slug;
-		const tags = getContentTags(contentId);
+		const tags = await fetchCmsContentTags(contentId);
 		contentTagsMap.set(contentId, tags);
 	}
 

@@ -7,10 +7,13 @@ import { ArrowRight, Code, Film, Palette } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PortfolioCard } from "@/app/portfolio/gallery/all/components/PortfolioCard";
-import { getAllFromIndex } from "@/cms/lib/content-db-manager";
 import AboutBackgroundCSS from "@/components/AboutBackgroundCSS";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import GlowCard from "@/components/ui/GlowCard";
+import {
+	type CmsContentIndexEntry,
+	fetchCmsContentIndex,
+} from "@/lib/cms-api/server-data";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import type { PortfolioContentItem } from "@/types/portfolio";
@@ -19,7 +22,6 @@ import { StatsOverview } from "./components/StatsOverview";
 
 export const dynamic = "force-dynamic";
 
-type ContentIndexEntry = ReturnType<typeof getAllFromIndex>[number];
 type PortfolioItemWithEnhancedFields = PortfolioContentItem & {
 	categories?: string[];
 	effectiveDate?: string;
@@ -89,10 +91,10 @@ export default async function PortfolioPage() {
 		}
 
 		if (!items || items.length === 0) {
-			const rows = getAllFromIndex();
+			const rows = await fetchCmsContentIndex();
 			items = rows
 				.filter((row) => row.status === "published")
-				.map((row: ContentIndexEntry) => {
+				.map((row: CmsContentIndexEntry) => {
 					type ThumbnailVariant =
 						| string
 						| {
@@ -146,7 +148,9 @@ export default async function PortfolioPage() {
 					};
 
 					const tags: string[] = Array.isArray(row.tags)
-						? row.tags.filter((tag): tag is string => typeof tag === "string")
+						? row.tags.filter(
+								(tag: string): tag is string => typeof tag === "string",
+						  )
 						: [];
 					const normalizedTags = tags.map((tag) => tag.toLowerCase());
 					const hasVideo = normalizedTags.includes("video");

@@ -3,9 +3,9 @@
  */
 
 import { Suspense } from "react";
-import { getAllFromIndex } from "@/cms/lib/content-db-manager";
 import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import { AllGalleryClient } from "./components/AllGalleryClient";
@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
 export default async function AllGalleryPage() {
 	try {
 		// 管理ページと同じインデックスDBから取得し、published + 指定タグのみ
-		const rows = getAllFromIndex();
+		const rows = await fetchCmsContentIndex();
 		const filtered = rows
 			.filter((r: any) => r.status === "published")
 			.filter(

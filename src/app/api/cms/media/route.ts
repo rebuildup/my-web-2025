@@ -1,15 +1,10 @@
-import {
-	deleteMedia,
-	getMedia,
-	listMedia,
-	saveMedia,
-} from "@/cms/lib/media-manager";
-import type { MediaUploadRequest } from "@/cms/types/media";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
+import { CmsApiProxyError, cmsApiFetch } from "@/lib/cms-api/server-client";
 import { requireAdminRequest } from "@/lib/server/admin-auth";
 
 export const runtime = "nodejs";
 
-const DEFAULT_MAX_MEDIA_BYTES = 5 * 1024 * 1024; // 5 MiB
+const DEFAULT_MAX_MEDIA_BYTES = 5 * 1024 * 1024;
 const ALLOWED_MEDIA_TYPES = new Set([
 	"image/jpeg",
 	"image/png",
@@ -20,27 +15,16 @@ const ALLOWED_MEDIA_TYPES = new Set([
 
 function isValidBase64(data: string): boolean {
 	try {
-		// Reject empty strings or strings with non-base64 characters (including extra '=')
 		if (!data || !/^[A-Za-z0-9+/]*={0,2}$/.test(data)) {
 			return false;
 		}
-		// Decode. Node's Buffer.from accepts both padded and unpadded base64,
-		// so we do a round-trip check to detect wrong padding.
 		const decoded = Buffer.from(data, "base64");
-		const reEncoded = decoded.toString("base64");
-		// If re-encoding differs from original, the padding was wrong.
-		// This catches cases like "aGVsbG8==" → "aGVsbG8=" (extra '=' silently ignored)
-		// and "aGVsbG8" → "aGVsbG8=" (missing padding accepted by lenient decoder)
-		if (reEncoded !== data) {
-			return false;
-		}
-		return true;
+		return decoded.toString("base64") === data;
 	} catch {
 		return false;
 	}
 }
 
-// ========== GET: メディア取得・一覧 ==========
 export async function GET(req: Request) {
 	try {
 		const { searchParams } = new URL(req.url);
@@ -51,118 +35,55 @@ export async function GET(req: Request) {
 			return Response.json({ error: "contentId is required" }, { status: 400 });
 		}
 
-        // 特定のメディアを取得
-		if (mediaId) {
-			try {
-				const media = getMedia(contentId, mediaId);
-				if (!media) {
-					console.error(
-						`[media-api] Media not found: contentId=${contentId}, mediaId=${mediaId}`,
-					);
-					console.error(
-						`[media-api] Current working directory: ${process.cwd()}`,
-					);
-					console.error(
-						`[media-api] NODE_ENV: ${process.env.NODE_ENV}`,
-					);
-					// データディレクトリのデバッグ情報
-					console.error(
-						`[media-api] CONTENT_DATA_DIR: ${process.env.CONTENT_DATA_DIR || process.env.NEXT_CONTENT_DATA_DIR || process.env.PORTFOLIO_DATA_DIR || process.env.NEXT_PUBLIC_CONTENT_DATA_DIR || 'not set'}`,
-					);
-					// DBファイルの存在確認
-					const fs = require("fs");
-					const path = require("path");
-					const dbPath = path.join(process.cwd(), "data", "contents", `content-${contentId}.db`);
-					console.error(`[media-api] Expected DB path: ${dbPath}`);
-					console.error(`[media-api] DB exists: ${fs.existsSync(dbPath)}`);
-					return Response.json({ error: "Media not found" }, { status: 404 });
-				}
+		const rustParams = new URLSearchParams({ contentId });
+		if (mediaId) rustParams.set("id", mediaId);
+		const raw = searchParams.get("raw");
+		if (raw) rustParams.set("raw", raw);
 
-            // 生バイナリで返す（<img src> などで直接参照したい場合）
-            const raw = searchParams.get("raw");
-            if (raw === "1" || raw === "true") {
-                if (!media.data) {
-                    console.error(`[media-api] Media data not found for contentId=${contentId}, mediaId=${mediaId}`);
-                    return new Response("Media data not found", { status: 404 });
-                }
-                // Bufferを明示的にUint8Arrayに変換（デプロイ環境での互換性のため）
-                let body: Uint8Array;
-                try {
-                    if (Buffer.isBuffer(media.data)) {
-                        body = new Uint8Array(media.data);
-                    } else {
-                        // Buffer以外の型の場合はBufferに変換してからUint8Arrayに変換
-                        let buffer: Buffer;
-                        if (typeof media.data === "string") {
-                            buffer = Buffer.from(media.data);
-                        } else if (typeof media.data === "object" && media.data !== null && "byteLength" in media.data && !("byteOffset" in media.data)) {
-                            // ArrayBufferのような型
-                            buffer = Buffer.from(new Uint8Array(media.data as unknown as ArrayBuffer));
-                        } else {
-                            buffer = Buffer.from(media.data as unknown as ArrayLike<number>);
-                        }
-                        body = new Uint8Array(buffer);
-                    }
-                } catch (error) {
-                    console.error(`[media-api] Failed to convert media data to Uint8Array:`, error);
-                    return new Response("Failed to process media data", { status: 500 });
-                }
-                return new Response(body as BodyInit, {
-                    headers: {
-                        "Content-Type": media.mimeType || "application/octet-stream",
-                        "Cache-Control": "public, max-age=31536000, immutable",
-                        "Content-Length": body.length.toString(),
-                    },
-                });
-            }
-
-            // バイナリデータをBase64に変換
-			const base64 = media.data?.toString("base64");
-			return Response.json(
-				{
-					...media,
-					data: undefined,
-					base64,
-				},
-				{
-					headers: {
-						"Access-Control-Allow-Origin": "*",
-						"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-						"Access-Control-Allow-Headers": "Content-Type, Authorization",
-					},
-				},
+		if (mediaId && (raw === "1" || raw === "true")) {
+			const response = await fetch(
+				`${getCmsApiBaseUrl()}/media?${rustParams.toString()}`,
+				{ cache: "no-store" },
 			);
-			} catch (error) {
-				console.error(`[media-api] Error getting media: contentId=${contentId}, mediaId=${mediaId}`, error);
-				return Response.json({ error: "Failed to fetch media" }, { status: 500 });
+			if (!response.ok) {
+				throw new CmsApiProxyError(
+					`CMS API media raw request failed with status ${response.status}`,
+					response.status,
+				);
 			}
+
+			const body = await response.arrayBuffer();
+			return new Response(body, {
+				status: response.status,
+				headers: {
+					"Content-Type":
+						response.headers.get("content-type") ||
+						"application/octet-stream",
+					"Cache-Control":
+						response.headers.get("cache-control") ||
+						"public, max-age=31536000, immutable",
+				},
+			});
 		}
 
-		// メディア一覧を取得（バイナリデータは含めない）
-		const mediaList = listMedia(contentId);
-		return Response.json(mediaList, {
-			headers: {
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-				"Access-Control-Allow-Headers": "Content-Type, Authorization",
-			},
-		});
+		const rustResponse = await cmsApiFetch<unknown>(
+			`/media?${rustParams.toString()}`,
+		);
+		return Response.json(rustResponse);
 	} catch (error) {
-		console.error("GET /api/media error:", error);
+		console.error("GET /api/cms/media error:", error);
 		return Response.json({ error: "Failed to fetch media" }, { status: 500 });
 	}
 }
 
-// ========== POST: メディアアップロード ==========
 export async function POST(req: Request) {
-	// Require admin authentication
 	const guard = requireAdminRequest(req);
 	if (!guard.ok) {
 		return guard.response;
 	}
 
 	try {
-		const data: MediaUploadRequest = await req.json();
+		const data = await req.json();
 
 		if (
 			!data.contentId ||
@@ -176,7 +97,6 @@ export async function POST(req: Request) {
 			);
 		}
 
-		// Reject unknown MIME types
 		if (!ALLOWED_MEDIA_TYPES.has(data.mimeType)) {
 			return Response.json(
 				{ error: "Unsupported media type" },
@@ -184,15 +104,10 @@ export async function POST(req: Request) {
 			);
 		}
 
-		// Reject invalid Base64
 		if (!isValidBase64(data.base64Data)) {
-			return Response.json(
-				{ error: "Invalid base64 data" },
-				{ status: 400 },
-			);
+			return Response.json({ error: "Invalid base64 data" }, { status: 400 });
 		}
 
-		// Check decoded size against max limit
 		const maxBytes =
 			Number(process.env.CMS_MAX_MEDIA_BYTES) || DEFAULT_MAX_MEDIA_BYTES;
 		const buffer = Buffer.from(data.base64Data, "base64");
@@ -200,29 +115,31 @@ export async function POST(req: Request) {
 			return Response.json({ error: "Media file too large" }, { status: 413 });
 		}
 
-		const mediaId = `media_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-		saveMedia(data.contentId, {
-			id: mediaId,
-			filename: data.filename,
-			mimeType: data.mimeType,
-			size: buffer.length,
-			alt: data.alt,
-			description: data.description,
-			tags: data.tags,
-			data: buffer,
+		const response = await fetch(`${getCmsApiBaseUrl()}/media`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
+			body: JSON.stringify(data),
 		});
 
-		return Response.json({ ok: true, id: mediaId });
+		if (!response.ok) {
+			const errorBody = await response.text();
+			return Response.json(
+				{ error: "Failed to upload media", details: errorBody },
+				{ status: response.status },
+			);
+		}
+
+		return Response.json(await response.json());
 	} catch (error) {
-		console.error("POST /api/media error:", error);
+		console.error("POST /api/cms/media error:", error);
 		return Response.json({ error: "Failed to upload media" }, { status: 500 });
 	}
 }
 
-// ========== DELETE: メディア削除 ==========
 export async function DELETE(req: Request) {
-	// Require admin authentication
 	const guard = requireAdminRequest(req);
 	if (!guard.ok) {
 		return guard.response;
@@ -240,14 +157,26 @@ export async function DELETE(req: Request) {
 			);
 		}
 
-		const success = deleteMedia(contentId, mediaId);
-		if (!success) {
-			return Response.json({ error: "Media not found" }, { status: 404 });
+		const rustParams = new URLSearchParams({ contentId, id: mediaId });
+		const response = await fetch(
+			`${getCmsApiBaseUrl()}/media?${rustParams.toString()}`,
+			{
+				method: "DELETE",
+				headers: { Accept: "application/json" },
+			},
+		);
+
+		if (!response.ok) {
+			const errorBody = await response.text();
+			return Response.json(
+				{ error: "Failed to delete media", details: errorBody },
+				{ status: response.status },
+			);
 		}
 
 		return Response.json({ ok: true });
 	} catch (error) {
-		console.error("DELETE /api/media error:", error);
+		console.error("DELETE /api/cms/media error:", error);
 		return Response.json({ error: "Failed to delete media" }, { status: 500 });
 	}
 }

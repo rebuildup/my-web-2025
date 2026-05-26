@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllFromIndex } from "@/cms/lib/content-db-manager";
+import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import type { ContentItem } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
 // Fetch video portfolio data via index DB (same path as admin)
 async function getVideoPortfolioData(): Promise<ContentItem[]> {
 	try {
-		const rows = getAllFromIndex();
+		const rows = await fetchCmsContentIndex();
 		const items = rows
 			.filter((r: any) => r.status === "published")
 			// 厳密: video タグを持つもののみ表示（design単独は除外）
@@ -200,37 +200,7 @@ export default async function VideoProjectsPage() {
 								{process.env.NODE_ENV !== "production" &&
 									videoItems.length === 0 && (
 										<div className="mt-4 text-xs text-red-900/80 border border-main p-3">
-											{(() => {
-												try {
-													const rows = getAllFromIndex();
-													const published = rows.filter(
-														(r: any) => r.status === "published",
-													);
-													const withTags = rows.filter((r: any) =>
-														Array.isArray(r?.tags),
-													);
-													const videoOrDesign = published.filter(
-														(r: any) =>
-															Array.isArray(r?.tags) &&
-															(r.tags.includes("video") ||
-																r.tags.includes("design")),
-													);
-													return (
-														<ul className="list-disc pl-5 space-y-0.5">
-															<li>Loaded items (all): {rows.length}</li>
-															<li>
-																Loaded items (published): {published.length}
-															</li>
-															<li>Items with tags: {withTags.length}</li>
-															<li>
-																Filtered (video/design): {videoOrDesign.length}
-															</li>
-														</ul>
-													);
-												} catch {
-													return <span>Failed to compute diagnostics.</span>;
-												}
-											})()}
+											<span>No published video items returned from CMS API.</span>
 										</div>
 									)}
 							</section>

@@ -66,6 +66,7 @@ lighthouse-results/
 
 # Rust build artifacts
 apps/cms-api/target/
+data/db/
 apps/cms-api/.cargo/
 apps/cms-api/Cargo.lock
 

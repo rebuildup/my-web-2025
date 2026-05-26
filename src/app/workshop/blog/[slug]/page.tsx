@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getContentTags } from "@/cms/lib/content-db-manager";
-import { findMarkdownPage } from "@/cms/server/markdown-service";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
-import { getContentById } from "@/lib/data";
+import {
+	fetchCmsContentById,
+	fetchCmsContentTags,
+	fetchMarkdownPageBySlug,
+} from "@/lib/cms-api/server-data";
 import { contentCache } from "@/lib/server-cache";
 import type { ContentItem, MarkdownContentItem } from "@/types/content";
 import { isEnhancedContentItem } from "@/types/content";
@@ -45,16 +47,16 @@ async function loadBlogDataCached(slug: string) {
 		return cached;
 	}
 
-	const pageMatch = findMarkdownPage(slug);
+	const pageMatch = await fetchMarkdownPageBySlug(slug);
 	if (!pageMatch) {
 		return null;
 	}
 
-	const contentId = pageMatch.page.contentId;
+	const contentId = pageMatch.contentId;
 	let content = null;
 	if (contentId) {
 		try {
-			content = await getContentById("blog", contentId);
+			content = await fetchCmsContentById(contentId);
 		} catch {
 			content = null;
 		}
@@ -62,9 +64,9 @@ async function loadBlogDataCached(slug: string) {
 
 	const result = {
 		page: {
-			frontmatter: pageMatch.page.frontmatter ?? {},
-			body: pageMatch.page.body ?? "",
-			contentId: pageMatch.page.contentId ?? "",
+			frontmatter: pageMatch.frontmatter ?? {},
+			body: pageMatch.body ?? "",
+			contentId: pageMatch.contentId ?? "",
 		},
 		contentId,
 		content,
@@ -257,7 +259,7 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 	const contentId = data?.contentId || "";
 
 	// Get tags for this article
-	const articleTags = contentId ? getContentTags(contentId) : [];
+	const articleTags = contentId ? await fetchCmsContentTags(contentId) : [];
 
 	const title = content?.title || detailFromMarkdown.title || slug;
 

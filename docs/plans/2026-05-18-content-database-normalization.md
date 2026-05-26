@@ -1,224 +1,375 @@
-# Content Database Normalization Implementation Plan
+# Content Database Re-Architecture Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Replace the current per-content SQLite file layout with a Git-reviewable normalized content source that can be built into an efficient SQLite database for runtime reads.
+**Goal:** Replace the current per-content SQLite layout with a database-first architecture that keeps SQLite as the canonical source of truth, enforces all database access through the Rust CMS API, scales to roughly 1000 fully populated content items, and remains practical for Git-based development.
 
-**Architecture:** Use sharded text files under `data/content-source/` as the canonical source of truth, then compile them into `.generated/content.db` for runtime. Normalize reusable entities into relational files, keep opaque JSON only for truly open-ended metadata, and provide a compatibility repository so pages can migrate without a big-bang rewrite.
+**Absolute Requirements:**
 
-**Tech Stack:** Next.js App Router, Bun runtime, SQLite/Bun SQLite adapter, Rust CMS API, GitHub Actions deploy.
+- Canonical content must live in database files, not JSON source files.
+- The database system must function independently as databases, without requiring generated JSON indexes as the source of truth.
+- Git-based development must remain practical, with bounded canonical database sizes and no uncontrolled binary growth.
+- Next.js must not access databases directly.
+- During development, Next.js may access content only through the Rust REST API.
+- During production/public runtime, Next.js must not touch canonical databases.
+- The CMS integration path used by the site must be migrated in the same delivery wave as the database re-architecture, so the old direct Next.js-side CMS database access does not linger as a parallel system.
+- Non-Linux local development for the Rust backend should default to Docker-based execution so macOS and Windows environments do not depend on host-native Rust setup details.
+
+**Architecture Direction:** Use multiple SQLite databases split by change pattern, size characteristics, and runtime responsibility. Keep canonical structured content in small Git-manageable SQLite files. Keep large media binaries out of canonical databases. Generate search and publish-time read artifacts from Rust.
+
+**Tech Stack:** Rust CMS API, SQLite, SQLx, Next.js App Router, Bun, GitHub Actions deploy.
+
+---
+
+## Why The Previous Plan Was Rejected
+
+The earlier normalization plan used:
+
+- `data/content-source/**/*.json` as the canonical source
+- `.generated/content.db` as a build artifact
+
+That approach conflicts with the current non-negotiable requirements:
+
+- It makes JSON, not SQLite, the true source of truth.
+- It reintroduces coupling between canonical text files and derived database state.
+- It weakens the database-first model that motivated the current system in the first place.
+
+The revised direction is therefore:
+
+- SQLite remains canonical.
+- Rust is the only database authority.
+- Generated artifacts are allowed only for derived read concerns such as search indexes and publish bundles.
 
 ---
 
 ## Current Findings
 
-- `data/contents/content-*.db` has 63 SQLite files, but only 61 content rows.
-- Listing flows call `getAllFromIndex()`, which scans every DB file and opens each file to build an index.
-- Detail flows then call `getContentDb(id)` and open a second per-content DB.
-- `markdown-service.ts` repeats the same per-file scan for markdown pages.
-- Actual data counts: 61 contents, 61 markdown pages, 193 tag rows, 44 asset rows, 110 link rows, 126 media rows, 0 relation rows, 0 manual date rows.
-- `contents.ext` currently only contains `thumbnail` in 44 rows.
-- `contents` has many unused or derived columns: tree fields, permissions, versioning, cache, private data, manual date table, relation table.
-- The site still maps DB rows through older `ContentItem`/portfolio processors, so database independence exists only partially.
+- `data/contents/` currently totals about `128MB`.
+- Embedded media BLOBs account for about `108MB` of that size.
+- The current architecture scales poorly because listing and markdown lookup scan many per-content DB files.
+- The schema includes several low-value or currently unused areas:
+  - `manual_dates`
+  - `content_relations`
+  - several tree-oriented fields
+  - thumbnail JSON blobs
+  - mixed storage of structured fields and opaque JSON
+- Per-content DB isolation avoided the old JSON-plus-index coupling, but it also created runtime fan-out, repeated schema duplication, and growth pain.
 
-## Corrected Storage Model
+Implication:
 
-The canonical content data must remain Git-manageable. A single SQLite file is not acceptable as the source of truth because it is binary, hard to review, hard to merge, and opaque in history.
+- The problem is not "SQLite".
+- The problem is "one SQLite file per content item, each mixing metadata, body, and large binary payloads".
 
-Target split:
+---
 
-- Canonical source: `data/content-source/**/*.json`
-- Generated runtime database: `.generated/content.db`
-- Deployed artifact: generated `content.db` plus media payloads if needed
+## Capacity Planning Assumption
 
-The SQLite database is a build product, not the canonical data store. It may be deleted and regenerated from the text source.
+The target design must remain viable for approximately:
 
-## Target Source Tree
+- `1000` content items
+- full schema population
+- meaningful markdown bodies and metadata on most entries
+- multiple tags, links, and media references per entry
+- large media assets associated with many entries
+
+Design decisions must be made for that target state, not the current 61-item dataset.
+
+---
+
+## Revised Architecture
+
+### Canonical Databases
+
+Canonical data is stored in multiple SQLite files under `data/db/`.
 
 ```text
 data/
-  content-source/
-    schema.json
-    contents/
-      portfolio/
-        kosen-fes-2025.json
-        my-web-2025.json
-      workshop/
-        ...
-    markdown/
-      kosen-fes-2025.md
-      my-web-2025.md
-    media/
-      manifest.json
-      kosen-fes-2025/
-        media_1762426498159_ye3gp823c.webp
-    tags.json
-    links.json
+  db/
+    catalog.db
+    body.db
+    taxonomy.db
+    media-index.db
+  media/
+    <content-id>/
+      <asset files>
+  generated/
+    search.db
+    publish/
+      content-read.db
+      manifests/
 ```
 
-Rules:
+### Role Of Each Database
 
-- One content item per JSON file.
-- One markdown body per `.md` file.
-- Media binary files are split by content id to keep Git diffs and history localized.
-- Shared catalogs such as `tags.json` are text and sorted deterministically.
-- Generated SQLite and generated indexes are ignored by Git.
-- Runtime never scans every JSON file. Runtime reads generated SQLite.
+#### `catalog.db`
 
-## Canonical Text Schemas
+Holds lightweight content identity and publishing metadata:
 
-`contents/<type>/<id>.json`:
+- content id
+- slug
+- type
+- category
+- title
+- summary
+- visibility
+- status
+- published dates
+- SEO summary fields
+- thumbnail asset reference
 
-```json
-{
-  "id": "kosen-fes-2025",
-  "slug": "kosen-fes-2025",
-  "title": "宇部高専祭ウェブサイト2025",
-  "summary": "2025年 宇部高専祭ウェブサイトを制作しました",
-  "type": "portfolio",
-  "category": "develop",
-  "status": "published",
-  "visibility": "public",
-  "priority": 0,
-  "lang": "ja",
-  "publicUrl": "https://www2.ube-k.ac.jp/fes2025/",
-  "tags": ["develop", "React", "Vite", "Web"],
-  "thumbnail": "media_1762426498159_ye3gp823c",
-  "links": [
-    {
-      "href": "https://github.com/rebuildup/kosen-fes-2025",
-      "label": "GitHub",
-      "rel": "github",
-      "primary": true
-    }
-  ],
-  "seo": {
-    "title": "宇部高専祭ウェブサイト2025",
-    "description": "2025年 宇部高専祭ウェブサイトを制作しました"
-  },
-  "createdAt": "2025-11-06T10:52:47.555Z",
-  "updatedAt": "2025-11-08T15:23:12.498Z",
-  "publishedAt": "2025-11-06T10:52:47.555Z"
-}
-```
+This is the primary listing and routing database.
 
-`media/manifest.json`:
+#### `body.db`
 
-```json
-{
-  "assets": [
-    {
-      "id": "media_1762426498159_ye3gp823c",
-      "contentId": "kosen-fes-2025",
-      "role": "thumbnail",
-      "kind": "image",
-      "storage": "path",
-      "path": "media/kosen-fes-2025/media_1762426498159_ye3gp823c.webp",
-      "mimeType": "image/webp",
-      "width": 1200,
-      "height": 630,
-      "alt": ""
-    }
-  ]
-}
-```
+Holds heavier authoring content:
 
-Markdown files use regular Markdown with the existing CMS component tags normalized by the compiler:
+- markdown body
+- normalized page blocks if still needed
+- revisions/history
+- optional frontmatter-like structured page metadata
 
-```md
-# 宇部高専祭ウェブサイト2025
+This database grows with content depth, but not with media binary size.
 
-2025年 宇部高専祭ウェブサイトを制作しました
+#### `taxonomy.db`
 
-<Image src="media_1762426498159_ye3gp823c" alt="" />
-```
+Holds relational structures that change independently from body text:
 
-## Runtime Schema
+- tags
+- content_tags
+- links
+- relations
+- optional collections or cross-content groupings
 
-Generated file:
+This keeps reusable classifications and associations small and composable.
 
-- `.generated/content.db`
+#### `media-index.db`
+
+Holds only media metadata:
+
+- asset id
+- content id
+- role
+- file path
+- mime type
+- dimensions
+- file size
+- hash/checksum
+- alt text
+- sort order
+
+This database never stores media BLOBs in canonical form.
+
+### Non-Canonical Derived Databases
+
+#### `generated/search.db`
+
+Derived from canonical DBs. Contains:
+
+- FTS tables
+- search projections
+- autocomplete data
+
+Safe to regenerate. Not canonical.
+
+#### `generated/publish/content-read.db`
+
+Optional publish-time bundled read database used to feed public build/export flows.
+
+Safe to regenerate. Not canonical.
+
+---
+
+## Why This Split Is Better
+
+This split is based on change behavior and size behavior, not only feature labels.
+
+- `catalog.db` changes often but stays small.
+- `body.db` changes often and can grow moderately.
+- `taxonomy.db` changes independently and stays small.
+- `media-index.db` changes with uploads but stays metadata-only.
+- search and public read projections can be regenerated and should not pollute canonical history.
+
+This is more scalable than:
+
+- a single giant SQLite file containing everything
+- one database per content item
+- canonical JSON plus generated SQLite
+
+---
+
+## Media Strategy
+
+This is the critical rule:
+
+**Large media files must not be stored as BLOBs in canonical SQLite databases.**
+
+Canonical storage model:
+
+- media binaries live as files under `data/media/<content-id>/`
+- canonical DB stores only metadata and references
+- asset integrity is tracked by hash, size, mime type, width, height, and path
+
+Why:
+
+- media BLOBs cause large binary churn in Git
+- BLOB-heavy canonical DBs stop being reviewable and mergeable
+- a single changed image can force a large DB binary diff
+
+Allowed exceptions:
+
+- tiny generated placeholders
+- tiny icons or low-risk embedded binary fields under a strict size cap
+
+Default rule:
+
+- if it is user-authored media, it is file-backed, not DB-BLOB-backed
+
+---
+
+## Rust / Next.js Responsibility Boundary
+
+### Rust CMS API
+
+Rust is the only component allowed to:
+
+- open canonical databases
+- run migrations
+- validate cross-database consistency
+- write content
+- write media metadata
+- generate search DBs
+- generate publish-time read bundles
+
+Rust also owns compatibility and build tooling.
+
+### Local Development Runtime Rule
+
+For the Rust CMS API:
+
+- Linux may run the backend directly with local `cargo run`.
+- macOS and Windows should run the backend through Docker by default.
+- development scripts should auto-select the Docker path on non-Linux hosts unless explicitly overridden.
+
+### Site CMS Integration Rule
+
+The site-side CMS connection must be switched in the same migration phase as the canonical database cutover.
+
+This means:
+
+- do not finish the new canonical database layer while leaving the site CMS bound to legacy `src/cms/lib/content-db-manager.ts` reads and writes
+- do not introduce a long-lived period where both the legacy per-content DB path and the Rust API path are considered active CMS backends
+- when development CMS editing is validated on the new Rust-backed path, the site integration should move at the same time
+
+Short overlap for rollout safety is acceptable behind an explicit flag, but the plan should treat DB migration plus CMS connection migration as one coordinated cutover, not two unrelated projects.
+
+### Next.js In Development
+
+Next.js may:
+
+- call Rust REST endpoints during local development
+- fetch previews, lists, detail records, and rendered content via HTTP
+
+Next.js may not:
+
+- open SQLite files directly
+- run schema logic
+- perform fallback DB reads
+
+### Next.js In Production
+
+Public runtime must not touch canonical DBs.
+
+Production options:
+
+1. Build static pages from Rust-generated publish artifacts.
+2. Build server routes that read only from a generated read bundle produced during deploy.
+
+Preferred rule:
+
+- canonical DBs are private to Rust and build/deploy workflows
+- public app serves generated outputs only
+
+---
+
+## Recommended Canonical Schemas
+
+### `catalog.db`
 
 Core tables:
 
 ```sql
-CREATE TABLE schema_migrations (
-  version INTEGER PRIMARY KEY,
-  name TEXT NOT NULL,
-  applied_at TEXT NOT NULL
-);
-
 CREATE TABLE contents (
   id TEXT PRIMARY KEY,
   slug TEXT NOT NULL UNIQUE,
-  title TEXT NOT NULL,
-  summary TEXT NOT NULL DEFAULT '',
-  type TEXT NOT NULL DEFAULT 'portfolio',
+  type TEXT NOT NULL,
   category TEXT,
   status TEXT NOT NULL CHECK(status IN ('draft', 'published', 'archived')),
   visibility TEXT NOT NULL CHECK(visibility IN ('public', 'unlisted', 'private')),
-  priority INTEGER NOT NULL DEFAULT 0,
+  title TEXT NOT NULL,
+  summary TEXT NOT NULL DEFAULT '',
   lang TEXT NOT NULL DEFAULT 'ja',
+  priority INTEGER NOT NULL DEFAULT 0,
   public_url TEXT,
+  thumbnail_asset_id TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,
   published_at TEXT,
-  archived_at TEXT,
-  CHECK(length(id) > 0),
-  CHECK(length(slug) > 0)
+  archived_at TEXT
 );
 
+CREATE TABLE seo_metadata (
+  content_id TEXT PRIMARY KEY REFERENCES contents(id) ON DELETE CASCADE,
+  seo_title TEXT,
+  seo_description TEXT,
+  og_image_asset_id TEXT,
+  json_ld TEXT
+);
+```
+
+### `body.db`
+
+```sql
+CREATE TABLE markdown_pages (
+  content_id TEXT PRIMARY KEY,
+  body TEXT NOT NULL,
+  body_format TEXT NOT NULL DEFAULT 'markdown',
+  rendered_cache TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE content_revisions (
+  id TEXT PRIMARY KEY,
+  content_id TEXT NOT NULL,
+  revision_number INTEGER NOT NULL,
+  body TEXT NOT NULL,
+  metadata_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL
+);
+```
+
+If blocks are still a product requirement, use a separate blocks table in `body.db`. If not, remove them entirely.
+
+### `taxonomy.db`
+
+```sql
 CREATE TABLE tags (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL UNIQUE,
-  display_name TEXT NOT NULL,
+  id TEXT PRIMARY KEY,
+  slug TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
   created_at TEXT NOT NULL
 );
 
 CREATE TABLE content_tags (
-  content_id TEXT NOT NULL REFERENCES contents(id) ON DELETE CASCADE,
-  tag_id INTEGER NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
+  content_id TEXT NOT NULL,
+  tag_id TEXT NOT NULL,
   sort_order INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (content_id, tag_id)
 );
 
-CREATE TABLE markdown_pages (
-  id TEXT PRIMARY KEY,
-  content_id TEXT NOT NULL UNIQUE REFERENCES contents(id) ON DELETE CASCADE,
-  body TEXT NOT NULL,
-  frontmatter_json TEXT NOT NULL DEFAULT '{}',
-  html_cache TEXT,
-  status TEXT NOT NULL CHECK(status IN ('draft', 'published', 'archived')),
-  lang TEXT NOT NULL DEFAULT 'ja',
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  published_at TEXT
-);
-
-CREATE TABLE media_assets (
-  id TEXT PRIMARY KEY,
-  content_id TEXT REFERENCES contents(id) ON DELETE CASCADE,
-  role TEXT NOT NULL CHECK(role IN ('thumbnail', 'gallery', 'download', 'embed', 'source')),
-  kind TEXT NOT NULL CHECK(kind IN ('image', 'gif', 'video', 'audio', 'document', 'external')),
-  storage TEXT NOT NULL CHECK(storage IN ('blob', 'url', 'path')),
-  url TEXT,
-  data BLOB,
-  filename TEXT,
-  mime_type TEXT,
-  size INTEGER,
-  width INTEGER,
-  height INTEGER,
-  alt TEXT,
-  description TEXT,
-  sort_order INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  CHECK((storage = 'blob' AND data IS NOT NULL) OR (storage IN ('url', 'path') AND url IS NOT NULL))
-);
-
 CREATE TABLE content_links (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  content_id TEXT NOT NULL REFERENCES contents(id) ON DELETE CASCADE,
+  id TEXT PRIMARY KEY,
+  content_id TEXT NOT NULL,
   href TEXT NOT NULL,
   label TEXT NOT NULL DEFAULT '',
   rel TEXT NOT NULL DEFAULT 'other',
@@ -227,431 +378,328 @@ CREATE TABLE content_links (
   sort_order INTEGER NOT NULL DEFAULT 0
 );
 
-CREATE TABLE seo_metadata (
-  content_id TEXT PRIMARY KEY REFERENCES contents(id) ON DELETE CASCADE,
-  title TEXT,
-  description TEXT,
-  image_asset_id TEXT REFERENCES media_assets(id) ON DELETE SET NULL,
-  json_ld TEXT
-);
-
-CREATE TABLE content_search (
-  content_id TEXT PRIMARY KEY REFERENCES contents(id) ON DELETE CASCADE,
-  full_text TEXT NOT NULL,
-  tokens_json TEXT NOT NULL DEFAULT '[]'
-);
-
-CREATE VIRTUAL TABLE content_fts USING fts5(
-  content_id UNINDEXED,
-  title,
-  summary,
-  body,
-  tags,
-  content=''
+CREATE TABLE content_relations (
+  source_content_id TEXT NOT NULL,
+  target_content_id TEXT NOT NULL,
+  relation_type TEXT NOT NULL,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (source_content_id, target_content_id, relation_type)
 );
 ```
 
-Indexes:
+### `media-index.db`
 
 ```sql
-CREATE INDEX idx_contents_status_type_published ON contents(status, type, published_at DESC);
-CREATE INDEX idx_contents_category_published ON contents(category, published_at DESC);
-CREATE INDEX idx_content_tags_tag ON content_tags(tag_id);
-CREATE INDEX idx_media_assets_content_role ON media_assets(content_id, role, sort_order);
-CREATE INDEX idx_content_links_content ON content_links(content_id, sort_order);
-CREATE INDEX idx_markdown_pages_content ON markdown_pages(content_id);
+CREATE TABLE media_assets (
+  id TEXT PRIMARY KEY,
+  content_id TEXT NOT NULL,
+  role TEXT NOT NULL,
+  storage_kind TEXT NOT NULL CHECK(storage_kind IN ('file', 'external')),
+  file_path TEXT,
+  external_url TEXT,
+  mime_type TEXT,
+  file_size INTEGER,
+  width INTEGER,
+  height INTEGER,
+  checksum TEXT,
+  alt_text TEXT,
+  description TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  CHECK(
+    (storage_kind = 'file' AND file_path IS NOT NULL AND external_url IS NULL) OR
+    (storage_kind = 'external' AND external_url IS NOT NULL AND file_path IS NULL)
+  )
+);
 ```
 
-Deliberately not in v1:
+---
 
-- `content_relations`, until related content is actually productized.
-- tree columns: `parent_id`, `ancestor_ids`, `path`, `depth`, `child_count`, until nested content exists.
-- permissions tables, because production CMS editing is dev-only and there is no multi-user model.
-- persistent cache columns. Derived cache belongs in runtime cache or FTS, not canonical content data.
-- `manual_dates`, because actual rows are zero.
+## Explicitly Remove Or Defer
 
-## Compiler Contract
+Remove from the canonical v1 plan unless a real product requirement appears:
 
-Create a deterministic compiler:
+- `manual_dates`
+- tree structure fields such as `depth`, `path`, `parent_id`
+- embedded thumbnail JSON
+- canonical media BLOB storage
+- opaque mixed metadata fields without ownership rules
 
-```bash
-bun scripts/build-content-db.ts --source data/content-source --out .generated/content.db
-bun scripts/check-content-source.ts --source data/content-source
-```
+Defer unless proven necessary:
 
-Compiler responsibilities:
+- arbitrary block editor storage
+- revision history beyond a minimal audit/version table
 
-- Validate JSON source against Zod schemas.
-- Validate unique ids, slugs, tag names, media ids.
-- Validate every markdown file has a matching content item.
-- Validate every media reference exists.
-- Sort inserts deterministically.
-- Build SQLite tables and FTS indexes.
-- Fail CI if generated DB would differ from source.
+---
 
-The compiler is the boundary between Git-friendly content and RDB-friendly runtime.
+## Consistency Model
 
-## Compatibility Contract
+Because canonical data is split across multiple SQLite files, Rust must own consistency checks.
 
-Keep these public functions initially, but back them with `content.db`:
+Required guarantees:
 
-- `getAllFromIndex()`
-- `getFromIndex(contentId)`
-- `getContentDb(contentId)` only as deprecated wrapper or remove after callers migrate
-- `getFullContent(db, id)`
-- `saveFullContent(db, content)`
-- `listMarkdownPages()`
-- `findMarkdownPage()`
-- media manager APIs
+- every content id in `body.db`, `taxonomy.db`, and `media-index.db` must exist in `catalog.db`
+- every thumbnail asset id in `catalog.db` must exist in `media-index.db`
+- every tag relation must reference an existing tag
+- every media file path in `media-index.db` must exist on disk unless explicitly marked external
 
-New internal API:
+Rust must provide:
 
-- `src/cms/lib/content-repository.ts`
-  - `listContentSummaries(filters)`
-  - `getContentDetail(id)`
-  - `saveContentDetail(input)` writes canonical JSON/Markdown, then regenerates DB in dev
-  - `deleteContent(id)`
-  - `getMarkdownPageByContentId(id)`
-  - `saveMarkdownPage(input)`
-  - `getMediaAsset(id)`
-  - `listMediaAssets(contentId, role?)`
+- `cargo` or CLI validation command
+- consistency check on write
+- consistency check in CI
+- repair and diagnostics output for broken references
 
-## Task 1: Add Canonical Source Schemas
+---
+
+## Git Management Rules
+
+Canonical Git-tracked assets:
+
+- `data/db/catalog.db`
+- `data/db/body.db`
+- `data/db/taxonomy.db`
+- `data/db/media-index.db`
+- `data/media/...` only if repository policy allows the actual files to remain in Git
+
+Not Git-tracked:
+
+- `data/generated/search.db`
+- `data/generated/publish/content-read.db`
+- WAL/SHM files
+- temporary migration output
+
+Repository hygiene rules:
+
+- enable WAL locally, but never commit `-wal` or `-shm`
+- normalize vacuum/checkpoint behavior in maintenance commands
+- keep search and cache DBs fully disposable
+
+---
+
+## 1000-Item Scale Expectations
+
+Assuming around 1000 items with full metadata:
+
+- `catalog.db` should remain comparatively small
+- `taxonomy.db` should remain comparatively small
+- `body.db` will grow with markdown and revision depth, but still be manageable if revision retention is bounded
+- `media-index.db` stays manageable because it stores metadata only
+- total canonical DB size should remain far smaller than a BLOB-backed monolith
+
+The design remains viable at 1000 items because growth is dominated by file-backed media, not DB-backed media.
+
+The main scaling risks are:
+
+- uncontrolled revision retention in `body.db`
+- overly large rendered caches stored canonically
+- keeping generated search data under version control
+
+Mitigations:
+
+- cap revision retention or archive old revisions
+- make rendered cache non-canonical
+- regenerate search artifacts
+
+---
+
+## Migration Strategy
+
+## Phase 1: Define Canonical Multi-DB Schema
 
 **Files:**
-- Create: `src/cms/source/content-source-schema.ts`
-- Create: `src/cms/source/content-source-loader.ts`
-- Test: `src/cms/source/__tests__/content-source-loader.bun.test.ts`
 
-**Step 1: Write failing tests**
+- Modify: `apps/cms-api/src/db/schema.sql`
+- Modify: `apps/cms-api/src/db/migrations/001_init.sql`
+- Modify: `apps/cms-api/src/db/mod.rs`
+- Create: `docs/plans/db-boundaries.md`
 
-Test that source JSON, markdown, media manifest, and tags load into a normalized in-memory model.
+**Objectives:**
 
-Run:
+- replace the current single-schema write model with explicit multi-DB boundaries
+- add real migration tracking
+- remove direct dependence on rerunning raw schema files blindly
 
-```bash
-bun test src/cms/source/__tests__/content-source-loader.bun.test.ts
-```
+**Must Have:**
 
-Expected: fails because files do not exist.
+- one migration chain per canonical DB
+- idempotent initialization
+- version tracking tables
 
-**Step 2: Implement source schemas**
+---
 
-Use Zod or explicit TypeScript validators. Keep canonical fields strict and reject unknown root-level fields unless they are under `metadata`.
-
-**Step 3: Verify**
-
-Run:
-
-```bash
-bun test src/cms/source/__tests__/content-source-loader.bun.test.ts
-bun run type-check
-```
-
-Expected: pass.
-
-**Step 4: Commit**
-
-```bash
-git add src/cms/source/content-source-schema.ts src/cms/source/content-source-loader.ts src/cms/source/__tests__/content-source-loader.bun.test.ts
-git commit -m "feat(cms): add git-friendly content source schema"
-```
-
-## Task 2: Export Legacy DBs To Canonical Source
+## Phase 2: Add Rust Database Boundary Layer
 
 **Files:**
-- Create: `scripts/export-content-source.ts`
-- Create: `src/cms/source/__tests__/export-content-source.bun.test.ts`
-- Modify: `package.json`
 
-**Step 1: Write failing migration test**
+- Create: `apps/cms-api/src/db/catalog.rs`
+- Create: `apps/cms-api/src/db/body.rs`
+- Create: `apps/cms-api/src/db/taxonomy.rs`
+- Create: `apps/cms-api/src/db/media_index.rs`
+- Create: `apps/cms-api/src/db/consistency.rs`
 
-Create a temp `data/contents/content-example.db` with current schema subset, run export into temp `content-source`, assert:
+**Objectives:**
 
-- one deterministic `contents/portfolio/example.json`
-- one `markdown/example.md`
-- media manifest includes thumbnail and BLOB media
-- tags are sorted and deduplicated
-- links are embedded in the content JSON in stable order
+- each DB gets an explicit repository/service layer
+- cross-database operations happen only through Rust orchestration
+- no shared ad hoc SQL from Next.js
 
-**Step 2: Implement migration script**
+---
 
-Script behavior:
-
-```bash
-bun scripts/export-content-source.ts --from data/contents --to data/content-source --dry-run
-bun scripts/export-content-source.ts --from data/contents --to data/content-source
-```
-
-Rules:
-
-- Never delete old DBs.
-- Refuse to overwrite existing source files unless `--force`.
-- Lowercase tag identity in `tags.name`, preserve original label in `display_name`.
-- Generate missing `slug` from `contents.id`.
-- Choose `contents.type` from known category tags: `develop`, `video`, `design`, `video&design`, otherwise `portfolio`.
-- Convert `thumbnails` JSON into source `thumbnail` references and `media/manifest.json`.
-- Convert `content_assets` into media manifest entries.
-- Convert `media` rows into media files plus media manifest entries.
-
-**Step 3: Verify**
-
-Run:
-
-```bash
-bun test src/cms/source/__tests__/export-content-source.bun.test.ts
-bun scripts/export-content-source.ts --from data/contents --to data/content-source --dry-run
-```
-
-Expected: dry run reports 61 content JSON files, 61 markdown files, 193 tag assignments, 126 media assets.
-
-**Step 4: Commit**
-
-```bash
-git add scripts/export-content-source.ts src/cms/source/__tests__/export-content-source.bun.test.ts package.json data/content-source
-git commit -m "feat(cms): export content into normalized source files"
-```
-
-## Task 3: Add Generated SQLite Builder
+## Phase 3: Extract Data From Per-Content DBs
 
 **Files:**
-- Create: `src/cms/lib/content-schema.ts`
-- Create: `src/cms/lib/content-database.ts`
-- Create: `scripts/build-content-db.ts`
-- Test: `src/cms/lib/__tests__/content-database-builder.bun.test.ts`
 
-**Step 1: Write failing tests**
+- Create: `scripts/migrate-legacy-content-dbs.rs` or Bun wrapper that invokes Rust
+- Create: migration tests and fixtures
 
-Load temp canonical source and assert generated SQLite has all target rows, FTS rows, and indexes.
+**Rules:**
 
-**Step 2: Implement builder**
+- keep legacy `data/contents/*.db` untouched during first migration
+- read media BLOBs out of old DBs
+- write media binaries to `data/media/<content-id>/...`
+- write media metadata into `media-index.db`
+- write content metadata into canonical DBs by ownership
 
-Builder reads `data/content-source`, validates it, then writes `.generated/content.db` atomically via temp file rename.
+**Output:**
 
-**Step 3: Verify**
+- `catalog.db`
+- `body.db`
+- `taxonomy.db`
+- `media-index.db`
+- extracted media files
 
-Run:
+---
 
-```bash
-bun test src/cms/lib/__tests__/content-database-builder.bun.test.ts
-bun scripts/build-content-db.ts --source data/content-source --out .generated/content.db
-```
-
-**Step 4: Commit**
-
-```bash
-git add src/cms/lib/content-schema.ts src/cms/lib/content-database.ts scripts/build-content-db.ts src/cms/lib/__tests__/content-database-builder.bun.test.ts
-git commit -m "feat(cms): build runtime database from content source"
-```
-
-## Task 4: Add Repository Layer
+## Phase 4: Generate Derived Databases
 
 **Files:**
-- Create: `src/cms/lib/content-repository.ts`
-- Test: `src/cms/lib/__tests__/content-repository.bun.test.ts`
 
-**Step 1: Write repository tests**
+- Create: `apps/cms-api/src/search/build_search_db.rs`
+- Create: `apps/cms-api/src/publish/build_publish_bundle.rs`
 
-Cover:
+**Derived Outputs:**
 
-- list published portfolio summaries without scanning files
-- get one content detail with tags, links, markdown, media
-- filter by type/category/status
-- full-text search uses `content_fts`
+- `data/generated/search.db`
+- `data/generated/publish/content-read.db`
+- optional JSON manifests for build orchestration only
 
-**Step 2: Implement repository**
+Generated artifacts must never become the source of truth.
 
-Use one database connection per operation. Keep return shapes close to existing `Content` and `ContentItem`.
+---
 
-**Step 3: Verify**
-
-Run:
-
-```bash
-bun test src/cms/lib/__tests__/content-repository.bun.test.ts
-bun run type-check
-```
-
-**Step 4: Commit**
-
-```bash
-git add src/cms/lib/content-repository.ts src/cms/lib/__tests__/content-repository.bun.test.ts
-git commit -m "feat(cms): add normalized content repository"
-```
-
-## Task 5: Move Read Paths To Repository
+## Phase 5: Route Next.js Through Rust In Development
 
 **Files:**
+
+- Modify: Next.js content fetchers
+- Modify: local dev startup scripts
+
+**Rules:**
+
+- development: Next.js uses REST calls to Rust CMS API
+- production/public runtime: Next.js serves generated output only
+- remove all direct SQLite access from `src/cms/lib/content-db-manager.ts` and adjacent services
+
+**Additional CMS Requirement:**
+
+- admin CMS screens, content editing flows, markdown editing flows, media flows, and preview flows must all switch to the Rust API in this same phase
+- the integration layer used by the site CMS should be treated as part of the migration critical path, not as follow-up cleanup
+
+**Expected Deliverables:**
+
+- a Rust-backed CMS client layer for Next.js admin screens
+- replacement of direct server-side DB utility usage in CMS routes and services
+- preview behavior verified against Rust responses before legacy DB reads are disabled
+
+---
+
+## Phase 6: Remove Legacy Runtime Dependency
+
+**Files:**
+
+- Modify: `src/cms/lib/content-db-manager.ts`
 - Modify: `src/cms/server/content-service.ts`
 - Modify: `src/cms/server/markdown-service.ts`
-- Modify: `src/cms/lib/content-db-manager.ts`
-- Modify: `src/app/api/content/portfolio/route.ts`
-- Modify: portfolio/gallery pages that call `getAllFromIndex()`
-- Test: existing route and mapper tests
+- Modify: build/deploy scripts
 
-**Step 1: Add compatibility tests**
+**Goal:**
 
-Assert existing public APIs still return the same counts and fields from generated `.generated/content.db`.
+- legacy per-content DBs are no longer read at runtime
+- only Rust canonical DBs plus generated publish artifacts remain in the active architecture
+- the site CMS is no longer coupled to legacy local DB helpers
 
-**Step 2: Replace internals**
+---
 
-`getAllFromIndex()` should call `contentRepository.listContentSummaries()`.
+## API Contract
 
-`loadAllContents()` should call repository directly, not loop over files.
+Rust development API must support:
 
-`findMarkdownPage()` should query `markdown_pages` directly by id/slug/content_id.
+- list content summaries
+- get content detail
+- get markdown body
+- search content
+- list tags
+- list relations
+- list media metadata
+- create/update content
+- create/update markdown
+- create/update link/tag relations
+- upload media and register metadata
 
-**Step 3: Verify**
+Public runtime must not expose canonical database semantics directly.
 
-Run:
+---
+
+## Verification Plan
+
+Local verification must include:
 
 ```bash
-bun test
-bun run type-check
+cd apps/cms-api && cargo test
+cd apps/cms-api && cargo run --bin consistency-check
 bun run build
+bun --bun next dev -p 3010
 ```
 
-**Step 4: Commit**
+Checks:
 
-```bash
-git add src/cms/server src/cms/lib src/app/api/content/portfolio src/app/portfolio
-git commit -m "refactor(cms): read content from normalized database"
-```
+- Rust can open all canonical DBs
+- consistency checks pass
+- dev Next.js reads through REST only
+- public build completes without canonical DB access
+- search DB can be regenerated deterministically
 
-## Task 6: Move Write Paths To Canonical Source
+Scale verification must include synthetic tests for about 1000 items with:
 
-**Files:**
-- Modify: `src/app/api/cms/contents/route.ts`
-- Modify: `src/app/api/cms/markdown/route.ts`
-- Modify: `src/app/api/cms/media/route.ts`
-- Modify: `src/cms/lib/media-manager.ts`
-- Test: existing API route tests plus new save/update tests
+- realistic markdown volume
+- realistic tag/link counts
+- realistic media metadata counts
+- no BLOB-backed canonical media
 
-**Step 1: Write tests**
-
-Cover:
-
-- content create/update writes one `contents` row
-- tag changes update join table
-- markdown save updates `markdown_pages`
-- media upload writes `media_assets`
-- media delete removes only the requested asset
-
-**Step 2: Implement writes**
-
-Writes update canonical JSON/Markdown/media source files in development, then regenerate `.generated/content.db`. Production CMS writes remain disabled as today.
-
-**Step 3: Verify**
-
-Run:
-
-```bash
-bun test src/app/api/cms/contents/route.test.ts src/app/api/cms/media/route.test.ts
-bun test
-```
-
-**Step 4: Commit**
-
-```bash
-git add src/app/api/cms src/cms/lib
-git commit -m "refactor(cms): write content through normalized repository"
-```
-
-## Task 7: Remove Per-Content DB Runtime Dependency
-
-**Files:**
-- Modify: `scripts/copy-content-data.js`
-- Modify: `.github/workflows/deploy.yml`
-- Modify: `src/cms/lib/content-db-manager.ts`
-- Modify: docs in `documents/`
-
-**Step 1: Update copy script tests manually**
-
-Run:
-
-```bash
-bun run build
-```
-
-Expected:
-
-- `.next/server/data/content.db` exists as a generated artifact
-- `.next/data/content.db` exists as a generated artifact
-- canonical `data/content-source` remains Git-tracked
-- no requirement for `.next/**/data/contents/*.db`
-
-**Step 2: Update deploy packaging**
-
-Package generated `.generated/content.db`. Do not treat it as canonical.
-
-**Step 3: Keep legacy DBs temporarily**
-
-Do not delete `data/contents` in the same commit. Mark them legacy and stop reading them at runtime.
-
-**Step 4: Commit**
-
-```bash
-git add scripts/copy-content-data.js .github/workflows/deploy.yml src/cms/lib/content-db-manager.ts documents
-git commit -m "chore(cms): package normalized content database"
-```
-
-## Task 8: Production Verification
-
-**Files:**
-- Modify only if verification finds defects.
-
-**Step 1: Local checks**
-
-Run:
-
-```bash
-bun test
-bun run type-check
-bun run build
-bun --bun next start -p 3013
-```
-
-Verify:
-
-```bash
-curl http://127.0.0.1:3013/api/cms/contents
-curl "http://127.0.0.1:3013/api/cms/markdown?id=kosen-fes-2025&contentId=kosen-fes-2025"
-```
-
-Use Playwright to verify `/portfolio/kosen-fes-2025` renders markdown body and images.
-
-**Step 2: Deploy**
-
-Push branch and watch GitHub Actions:
-
-```bash
-gh run watch <run-id> --exit-status
-```
-
-Expected:
-
-- build succeeds
-- Rust CMS API health succeeds
-- Next app health succeeds
-- portfolio page renders markdown content
-
-**Step 3: Commit fixes if needed**
-
-Small targeted commits only.
+---
 
 ## Rollback Plan
 
-- Keep `data/contents/*.db` untouched during initial migration.
-- Repository can be gated by `CMS_USE_NORMALIZED_DB=1` for first release.
-- If production fails, unset flag and fall back to legacy readers.
-- After one successful deployment and verification, remove fallback in a follow-up cleanup.
+- keep `data/contents/*.db` as legacy read-only fallback during the first rollout
+- gate new Rust-backed flow with an environment flag
+- if migration fails, return to legacy readers temporarily
+- do not delete legacy DBs until:
+  - canonical multi-DB migration passes
+  - generated publish flow passes
+  - local and deployed verification passes
+
+---
 
 ## Acceptance Criteria
 
-- The canonical content source is Git-reviewable text split by content/media ownership.
-- The generated runtime SQLite DB is reproducible from source and is not the source of truth.
-- Listing content does not scan or open 63 SQLite files.
-- Markdown lookup is a direct indexed query, not a file loop.
-- Tags, links, markdown, media, and SEO have relational ownership and foreign keys.
-- Existing portfolio/gallery/workshop pages render the same public content.
-- `bun test`, `bun run type-check`, `bun run build`, and GitHub Actions deploy pass.
+- SQLite remains the canonical source of truth.
+- Canonical source is not JSON.
+- No canonical DB stores large media BLOBs by default.
+- Rust is the only database access layer.
+- Next.js uses REST in development and generated outputs in public runtime.
+- Search and publish bundles are generated artifacts, not canonical data.
+- The design remains viable for about 1000 fully populated content items.
+- Git-managed canonical DB sizes remain bounded because media binaries are file-backed and search data is disposable.
+- Legacy per-content DB scanning is fully removed from active runtime paths.

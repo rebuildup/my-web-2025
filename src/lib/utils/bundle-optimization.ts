@@ -397,8 +397,12 @@ export const useBundleOptimization = () => {
 	const optimizer = BundleOptimizer.getInstance();
 
 	return {
-		loadComponent: optimizer.loadComponent.bind(optimizer),
-		getBundleInfo: optimizer.getBundleInfo.bind(optimizer),
-		preloadCriticalChunks: optimizer.preloadCriticalChunks.bind(optimizer),
+		loadComponent: <T>(
+			importFn: () => Promise<{ default: T }>,
+			componentName: string,
+		): Promise<T> => optimizer.loadComponent(importFn, componentName),
+		getBundleInfo: (): BundleInfo => optimizer.getBundleInfo(),
+		preloadCriticalChunks: (chunkNames: string[]): void =>
+			optimizer.preloadCriticalChunks(chunkNames),
 	};
 };

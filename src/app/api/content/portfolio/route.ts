@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getAllFromIndex } from "@/cms/lib/content-db-manager";
+import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 
 export async function GET(request: NextRequest) {
 	try {
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 		console.log("[Portfolio API] Request received:", { limit, id });
 
 		// Get all content from index (same as portfolio page)
-		const rows = getAllFromIndex();
+		const rows = await fetchCmsContentIndex();
 		console.log("[Portfolio API] Found rows:", rows.length);
 
 		// Filter for published portfolio items

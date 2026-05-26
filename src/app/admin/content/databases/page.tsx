@@ -291,7 +291,7 @@ export default function AdminDatabaseManager() {
 		<Box sx={{ display: "grid", gap: 4 }}>
 			<PageHeader
 				title="データベース管理"
-				description="SQLiteベースのコンテンツデータベースをコピー・切替・編集します.アクティブなDBを切り替えることで、柔軟な運用フローを実現します."
+				description="現在 Rust CMS API が利用している SQLite データベースを確認します. Next.js 側では参照とメタ情報編集のみ行い、実行時の切替や削除は Rust 側で管理します."
 				
 				actions={[
 					<Button
@@ -301,14 +301,6 @@ export default function AdminDatabaseManager() {
 						onClick={reloadData}
 					>
 						更新
-					</Button>,
-					<Button
-						key="create"
-						variant="contained"
-						startIcon={<UploadCloud size={18} />}
-						onClick={() => setIsCreateDialogOpen(true)}
-					>
-						新しいDB
 					</Button>,
 				]}
 			/>
@@ -437,26 +429,6 @@ export default function AdminDatabaseManager() {
 											>
 												情報を編集
 											</Button>
-											{!isActive && (
-												<Button
-													size="small"
-													variant="contained"
-													onClick={() => setSwitchTarget(database)}
-												>
-													アクティブにする
-												</Button>
-											)}
-											{!isActive && (
-												<Button
-													size="small"
-													variant="outlined"
-													color="error"
-													startIcon={<Trash2 size={14} />}
-													onClick={() => setDeleteTarget(database)}
-												>
-													削除
-												</Button>
-											)}
 										</Stack>
 									</CardContent>
 								</Card>
@@ -471,22 +443,6 @@ export default function AdminDatabaseManager() {
 					</Typography>
 				)}
 			</Paper>
-
-			<Dialog
-				open={isCreateDialogOpen}
-				onClose={() => setIsCreateDialogOpen(false)}
-				maxWidth="sm"
-				fullWidth
-			>
-				<DialogTitle>新しいデータベース</DialogTitle>
-				<DialogContent>
-					<DatabaseForm
-						onSubmit={handleCreate}
-						onCancel={() => setIsCreateDialogOpen(false)}
-						isLoading={isSubmitting}
-					/>
-				</DialogContent>
-			</Dialog>
 
 			<Dialog
 				open={isEditDialogOpen}
@@ -512,24 +468,6 @@ export default function AdminDatabaseManager() {
 					)}
 				</DialogContent>
 			</Dialog>
-
-			<ConfirmDialog
-				open={Boolean(deleteTarget)}
-				title="データベースを削除しますか？"
-				description="この操作は元に戻せません.必要に応じて事前にバックアップを取得してください."
-				confirmLabel="削除する"
-				onCancel={() => setDeleteTarget(null)}
-				onConfirm={() => deleteTarget && void handleDelete(deleteTarget)}
-			/>
-
-			<ConfirmDialog
-				open={Boolean(switchTarget)}
-				title="アクティブなデータベースを切り替えますか？"
-				description="現在利用中のデータベースが変更されます.よろしければ実行してください."
-				confirmLabel="切り替える"
-				onCancel={() => setSwitchTarget(null)}
-				onConfirm={() => switchTarget && void handleSwitch(switchTarget)}
-			/>
 
 			<Snackbar
 				open={snackbar.open}

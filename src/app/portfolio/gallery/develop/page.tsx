@@ -2,9 +2,9 @@
  * Development Projects Gallery Page
  */
 
-import { getAllFromIndex } from "@/cms/lib/content-db-manager";
 import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import { DevelopGalleryClient } from "./components/DevelopGalleryClient";
@@ -28,7 +28,7 @@ export default async function DevelopGalleryPage() {
 			console.log("Fetching portfolio data...");
 		}
 		// 管理ページと同じデータ取得経路（インデックスDB）を使用
-		const indexRows = getAllFromIndex();
+		const indexRows = await fetchCmsContentIndex();
 		const items = indexRows
 			.filter((r: any) => r.status === "published")
 			.map((r: any) => {

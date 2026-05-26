@@ -5,9 +5,12 @@
 
 import type { Metadata } from "next";
 import Image from "next/image";
-import { findMarkdownPage } from "@/cms/server/markdown-service";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
+import {
+	fetchCmsContentById,
+	fetchMarkdownPageBySlug,
+} from "@/lib/cms-api/server-data";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import type { MarkdownContentItem } from "@/types/content";
@@ -18,6 +21,34 @@ interface MarkdownDetail {
 	summary?: string;
 	body?: string;
 	thumbnail?: string;
+}
+
+function isRenderableImageUrl(value: string | undefined): value is string {
+	if (!value) {
+		return false;
+	}
+
+	if (value.startsWith("/api/cms/media")) {
+		return true;
+	}
+
+	if (value.startsWith("/")) {
+		return /\.(avif|gif|jpe?g|png|svg|webp)$/i.test(value);
+	}
+
+	try {
+		const url = new URL(value);
+		if (
+			url.hostname.includes("youtube.com") ||
+			url.hostname.includes("youtu.be")
+		) {
+			return false;
+		}
+
+		return /\.(avif|gif|jpe?g|png|svg|webp)$/i.test(url.pathname);
+	} catch {
+		return false;
+	}
 }
 
 // Normalize URLs in markdown content (replace localhost:3010 with relative paths)
@@ -37,12 +68,12 @@ async function loadMarkdownDetail(
 	slug: string,
 ): Promise<MarkdownDetail | null> {
 	try {
-		const match = findMarkdownPage(slug, { contentId: slug });
+		const match = await fetchMarkdownPageBySlug(slug, { contentId: slug });
 		if (!match) {
 			return null;
 		}
-		const frontmatter = match.page.frontmatter ?? {};
-		const body = normalizeMarkdownUrls(match.page.body ?? "");
+		const frontmatter = match.frontmatter ?? {};
+		const body = normalizeMarkdownUrls(match.body ?? "");
 		return {
 			title: frontmatter.title as string | undefined,
 			summary:
@@ -107,36 +138,19 @@ export async function generateMetadata({
 		}
 		if (!item) {
 			try {
-				const res = await fetch(
-					`${baseUrl}/api/cms/contents?id=${encodeURIComponent(baseSlug)}`,
-					{ cache: "no-store" },
-				);
-				if (res.ok) {
-					const full = await res.json();
-					const thumbs = full?.thumbnails || {};
+				const full = await fetchCmsContentById(baseSlug);
+				if (full) {
 					const pickThumb = () => {
-						// サムネイルURLの変換処理
-						const getMediaUrl = (mediaId?: string) => {
-							if (!mediaId) return undefined;
-							// 既にURL形式の場合はそのまま返す
-							if (
-								mediaId.startsWith("http://") ||
-								mediaId.startsWith("https://") ||
-								mediaId.startsWith("/")
-							) {
-								return mediaId;
-							}
-							// メディアIDのみの場合はAPIルート形式に変換
-							return `${baseUrl}/api/cms/media?contentId=${full.id}&id=${mediaId}&raw=1`;
-						};
-
-						// 優先順位: image.src > gif.src > webm.poster
-						if (thumbs?.image?.src)
-							return getMediaUrl(thumbs.image.src as string);
-						if (thumbs?.gif?.src) return getMediaUrl(thumbs.gif.src as string);
-						if (thumbs?.webm?.poster)
-							return getMediaUrl(thumbs.webm.poster as string);
-						return undefined;
+						const mediaId = full.thumbnail;
+						if (!mediaId) return undefined;
+						if (
+							mediaId.startsWith("http://") ||
+							mediaId.startsWith("https://") ||
+							mediaId.startsWith("/")
+						) {
+							return mediaId;
+						}
+						return `${baseUrl}/api/cms/media?contentId=${full.id}&id=${mediaId}&raw=1`;
 					};
 					item = {
 						id: full.id,
@@ -240,6 +254,8 @@ function ContentSection({
 	item: PortfolioContentItem;
 	detail?: MarkdownDetail | null;
 }) {
+	const relatedImages = (item.images || []).filter(isRenderableImageUrl);
+
 	// Check if there's meaningful content to display
 	const hasMarkdownPath = isEnhancedContentItem(item) && item.markdownPath;
 	const hasContent = item.content && item.content.trim().length > 0;
@@ -335,19 +351,19 @@ function ContentSection({
 			)}
 
 			{/* Show basic item information as additional context */}
-			{((item.images?.length ?? 0) > 0 ||
+			{(relatedImages.length > 0 ||
 				(item.videos?.length ?? 0) > 0 ||
 				(item.externalLinks?.length ?? 0) > 0) && (
 				<div className="pt-6 sm:pt-8 border-t border-main/10">
 					<div className="space-y-6 sm:space-y-8">
 						{/* Images */}
-						{item.images && item.images.length > 0 && (
+						{relatedImages.length > 0 && (
 							<div>
 								<h3 className="text-sm sm:text-base font-medium text-main mb-3 sm:mb-4">
 									関連画像
 								</h3>
 								<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-									{item.images.slice(0, 4).map((image, index) => (
+									{relatedImages.slice(0, 4).map((image, index) => (
 										<div
 											key={`${item.id}-image-${image}-${index}`}
 											className="relative aspect-video bg-main/5 rounded-lg overflow-hidden"

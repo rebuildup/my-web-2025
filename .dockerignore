@@ -1,0 +1,9 @@
+.git
+.next
+node_modules
+apps/cms-api/target
+dist
+build
+coverage
+tmp
+temp
