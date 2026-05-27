@@ -24,8 +24,11 @@ export const dynamic = "force-dynamic";
 
 type PortfolioItemWithEnhancedFields = PortfolioContentItem & {
 	categories?: string[];
-	effectiveDate?: string;
 };
+
+function getPortfolioDisplayDate(item: PortfolioContentItem) {
+	return item.publishedAt || item.createdAt || "";
+}
 
 /**
  * Generate metadata for portfolio top page
@@ -150,7 +153,7 @@ export default async function PortfolioPage() {
 					const tags: string[] = Array.isArray(row.tags)
 						? row.tags.filter(
 								(tag: string): tag is string => typeof tag === "string",
-						  )
+							)
 						: [];
 					const normalizedTags = tags.map((tag) => tag.toLowerCase());
 					const hasVideo = normalizedTags.includes("video");
@@ -211,7 +214,6 @@ export default async function PortfolioPage() {
 
 					fallbackItem.categories =
 						categories.length > 0 ? categories : [primaryCategory];
-					fallbackItem.effectiveDate = fallbackDate;
 					return fallbackItem;
 				});
 			console.warn(
@@ -291,15 +293,7 @@ export default async function PortfolioPage() {
 		const now = Date.now();
 		const msDay = 24 * 60 * 60 * 1000;
 		const getEffectiveDateString = (item: PortfolioContentItem) => {
-			const enhancedItem = item as PortfolioContentItem & {
-				effectiveDate?: string;
-			};
-			return (
-				enhancedItem.effectiveDate ||
-				item.publishedAt ||
-				item.updatedAt ||
-				item.createdAt
-			);
+			return getPortfolioDisplayDate(item) || item.createdAt;
 		};
 		const withinDays = (item: PortfolioContentItem, days: number) => {
 			const dateString = getEffectiveDateString(item);
@@ -348,13 +342,13 @@ export default async function PortfolioPage() {
 			},
 		];
 
-		// Helper: sort by effective date desc and take top N
+		// Helper: sort by published/effective date desc and take top N
 		const topN = (list: PortfolioContentItem[], n: number) =>
 			[...list]
 				.sort(
 					(a, b) =>
-						new Date(b.updatedAt || b.createdAt).getTime() -
-						new Date(a.updatedAt || a.createdAt).getTime(),
+						new Date(getPortfolioDisplayDate(b)).getTime() -
+						new Date(getPortfolioDisplayDate(a)).getTime(),
 				)
 				.slice(0, n);
 
