@@ -111,6 +111,17 @@ jobs:
           PACKAGE_PATH="$HOME/deployment-standalone.tar.gz"
           CMS_API_PATH="$HOME/cms-api-binary.tar.gz"
           TMP_DIR="$(mktemp -d)"
+          DB_BACKUP_DIR="$HOME/cms-db-backup"
+
+          # Preserve CMS DB across deploys to avoid wiping production content
+          rm -rf "$DB_BACKUP_DIR"
+          if [ -d "$APP_DIR/data/db" ] && [ -n "$(ls -A "$APP_DIR/data/db" 2>/dev/null || true)" ]; then
+            mkdir -p "$DB_BACKUP_DIR"
+            cp -a "$APP_DIR/data/db/." "$DB_BACKUP_DIR/"
+            echo "Backed up CMS DB to $DB_BACKUP_DIR"
+          else
+            echo "No existing CMS DB backup source found"
+          fi
 
           pm2 delete yusuke-kim 2>/dev/null || true
           pm2 delete cms-api 2>/dev/null || true
@@ -120,9 +131,19 @@ jobs:
           cp -a "$TMP_DIR"/. "$APP_DIR"/
           mkdir -p "$APP_DIR/apps/cms-api/target/release"
           tar -xzf "$CMS_API_PATH" -C "$APP_DIR/apps/cms-api/target/release/"
+
+          # Restore preserved CMS DB after deployment package extraction
+          if [ -d "$DB_BACKUP_DIR" ] && [ -n "$(ls -A "$DB_BACKUP_DIR" 2>/dev/null || true)" ]; then
+            mkdir -p "$APP_DIR/data/db"
+            rm -rf "$APP_DIR/data/db"/*
+            cp -a "$DB_BACKUP_DIR/." "$APP_DIR/data/db/"
+            echo "Restored CMS DB from backup"
+          fi
+
           rm -rf "$TMP_DIR"
           rm -f "$PACKAGE_PATH"
           rm -f "$CMS_API_PATH"
+          rm -rf "$DB_BACKUP_DIR"
 
           cat > "$APP_DIR/.env.production.local" << ENV_EOF
           NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
@@ -141,15 +162,31 @@ jobs:
           pm2 start "$APP_DIR/apps/cms-api/target/release/cms-api" --name cms-api --cwd "$APP_DIR/apps/cms-api"
           pm2 save
 
+          HEALTH_OK=0
           for attempt in {1..10}; do
             if curl -fsS http://127.0.0.1:3000/api/health && curl -fsS http://127.0.0.1:3001/health; then
-              exit 0
+              HEALTH_OK=1
+              break
             fi
             sleep 1
           done
 
-          pm2 status
-          pm2 logs yusuke-kim --lines 50 --nostream
-          pm2 logs cms-api --lines 50 --nostream
-          exit 1
+          if [ "$HEALTH_OK" -ne 1 ]; then
+            echo "Health check failed for Next.js or CMS API"
+            pm2 status
+            pm2 logs yusuke-kim --lines 80 --nostream
+            pm2 logs cms-api --lines 80 --nostream
+            exit 1
+          fi
+
+          CMS_CONTENTS_JSON="$(curl -fsS http://127.0.0.1:3000/api/cms/contents || echo '[]')"
+          if [ "$CMS_CONTENTS_JSON" = "[]" ]; then
+            echo "CMS content integrity check failed: /api/cms/contents returned empty list"
+            pm2 status
+            pm2 logs yusuke-kim --lines 80 --nostream
+            pm2 logs cms-api --lines 80 --nostream
+            exit 1
+          fi
+
+          exit 0
           REMOTE
