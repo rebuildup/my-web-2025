@@ -1,7 +1,6 @@
 import { Eye } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
@@ -193,7 +192,6 @@ export default async function VideoDesignProjectsPage() {
 
 		return (
 			<>
-				<HomeBackground />
 				{structuredData && (
 					<script type="application/ld+json">
 						{JSON.stringify(structuredData)}

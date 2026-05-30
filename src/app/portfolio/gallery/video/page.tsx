@@ -127,7 +127,6 @@ async function getVideoPortfolioData(): Promise<ContentItem[]> {
 	}
 }
 
-import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import VideoGallery from "./components/VideoGallery";
 
@@ -163,7 +162,6 @@ export default async function VideoProjectsPage() {
 
 	return (
 		<>
-			<HomeBackground />
 			<script type="application/ld+json">
 				{JSON.stringify(structuredData)}
 			</script>
@@ -200,7 +198,9 @@ export default async function VideoProjectsPage() {
 								{process.env.NODE_ENV !== "production" &&
 									videoItems.length === 0 && (
 										<div className="mt-4 text-xs text-red-900/80 border border-main p-3">
-											<span>No published video items returned from CMS API.</span>
+											<span>
+												No published video items returned from CMS API.
+											</span>
 										</div>
 									)}
 							</section>

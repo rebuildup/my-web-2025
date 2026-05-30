@@ -2,7 +2,6 @@
  * Development Projects Gallery Page
  */
 
-import HomeBackground from "@/components/HomeBackground";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
@@ -122,7 +121,6 @@ export default async function DevelopGalleryPage() {
 
 		return (
 			<>
-				<HomeBackground />
 				{structuredData && (
 					<script type="application/ld+json">
 						{JSON.stringify(structuredData)}
