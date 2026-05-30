@@ -4,13 +4,16 @@
  */
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 export default function HomeBackgroundCSS() {
 	const [mounted, setMounted] = useState(false);
+	const pathname = usePathname();
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const animationRef = useRef<number | undefined>(undefined);
 	const starsRef = useRef<Float32Array | null>(null);
+	const isGalleryPage = pathname?.startsWith("/portfolio/gallery");
 
 	// First, set mounted for CSS animations
 	useEffect(() => {
@@ -170,22 +173,25 @@ export default function HomeBackgroundCSS() {
 
 	return (
 		<div className="fixed inset-0 bg-[#020202]" style={{ zIndex: -1 }}>
-			{/* Canvas stars - rendered immediately in next frame */}
-			<canvas
-				ref={canvasRef}
-				className="absolute inset-0"
-				style={{ opacity: mounted ? 1 : 0, transition: "opacity 1000ms" }}
-				aria-hidden="true"
-			/>
-
-			{/* Subtle vignette */}
-			<div
-				className="absolute inset-0 pointer-events-none"
-				style={{
-					background:
-						"radial-gradient(ellipse 100% 100% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.4) 100%)",
-				}}
-			/>
+			{!isGalleryPage && (
+				<>
+					{/* Canvas stars - rendered immediately in next frame */}
+					<canvas
+						ref={canvasRef}
+						className="absolute inset-0"
+						style={{ opacity: mounted ? 1 : 0, transition: "opacity 1000ms" }}
+						aria-hidden="true"
+					/>
+					{/* Subtle vignette */}
+					<div
+						className="absolute inset-0 pointer-events-none"
+						style={{
+							background:
+								"radial-gradient(ellipse 100% 100% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.4) 100%)",
+						}}
+					/>
+				</>
+			)}
 		</div>
 	);
 }
