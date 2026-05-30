@@ -82,11 +82,10 @@ void main() {
     // 強度を0.8から0.4に下げて「薄く」する
     color += lightColor * glow * 0.4; 
 
-    // 3. ざらつき (Grain) の付与
-    float grain = random(st * time * 0.01 + st); 
-    float grainStrength = 0.12;
-    
-    color += (grain - 0.5) * grainStrength;
+    // 3. ざらつき (Grain) の付与 - disabled for cleaner background
+    // float grain = random(st * time * 0.01 + st); 
+    // float grainStrength = 0.12;
+    // color += (grain - 0.5) * grainStrength;
 
     // 4. ヴィネット
     float vignette = 1.0 - smoothstep(0.5, 1.5, length(st - 0.5));
