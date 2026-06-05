@@ -658,6 +658,14 @@ export function ContentForm({
 			formData.id !== originalId
 		) {
 			(submitData as any).oldId = originalId;
+			const currentSlug = (submitData.ext as Record<string, unknown> | undefined)
+				?.slug;
+			if (!currentSlug || currentSlug === originalId) {
+				submitData.ext = {
+					...(submitData.ext || {}),
+					slug: formData.id,
+				};
+			}
 		}
 		// publishedAtがundefinedでも明示的に送信する（nullに変換）
 		if (!Object.hasOwn(submitData, "publishedAt")) {
@@ -788,14 +796,14 @@ export function ContentForm({
 					onChange={(e) => {
 						const newValue = e.target.value
 							? new Date(`${e.target.value}T12:00:00`).toISOString()
-							: undefined;
+							: null;
 						console.log("[ContentForm] publishedAt onChange:", {
 							inputValue: e.target.value,
 							newPublishedAt: newValue,
 						});
 						setFormData((prev) => ({
 							...prev,
-							publishedAt: newValue,
+							publishedAt: newValue as Content["publishedAt"],
 						}));
 					}}
 					slotProps={{ inputLabel: { shrink: true } }}
@@ -1609,6 +1617,7 @@ export function ContentForm({
 			/>
 			<Typography variant="body2">翻訳（lang:id を改行区切り）</Typography>
 			<TextField
+				label="翻訳（lang:id を改行区切り）"
 				multiline
 				minRows={3}
 				value={Object.entries(formData.i18n?.translations || {})

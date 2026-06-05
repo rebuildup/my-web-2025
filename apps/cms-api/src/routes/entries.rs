@@ -84,7 +84,7 @@ pub struct UpdateEntryRequest {
     pub depth: Option<i32>,
     pub order: Option<i32>,
     pub parent_id: Option<String>,
-    pub published_at: Option<String>,
+    pub published_at: Option<Option<String>>,
     pub tags: Option<Vec<String>>,
     pub thumbnail: Option<String>,
     pub public_url: Option<String>,
@@ -407,6 +407,10 @@ async fn create_entry(
     Json(payload): Json<CreateEntryRequest>,
 ) -> Result<Json<EntryDetail>, EntryError> {
     let id = payload.id.clone().unwrap_or_else(|| Uuid::new_v4().to_string());
+    let parent_id = payload
+        .parent_id
+        .as_deref()
+        .filter(|value| !value.trim().is_empty());
     let mut tx = pool.begin().await?;
 
     sqlx::query(
@@ -426,7 +430,7 @@ async fn create_entry(
     .bind(&payload.path)
     .bind(payload.depth.unwrap_or(0))
     .bind(payload.order.unwrap_or(0))
-    .bind(&payload.parent_id)
+    .bind(parent_id)
     .bind(&payload.published_at)
     .bind(chrono::Utc::now().to_rfc3339())
     .execute(&mut *tx)
@@ -553,8 +557,12 @@ async fn update_entry(
         }
     }
     if let Some(ref v) = payload.published_at {
-        query.push_str(", published_at = ?");
-        bindings.push(v.clone());
+        if let Some(value) = v {
+            query.push_str(", published_at = ?");
+            bindings.push(value.clone());
+        } else {
+            query.push_str(", published_at = NULL");
+        }
     }
 
     query.push_str(" WHERE id = ?");
@@ -691,5 +699,72 @@ mod tests {
 
         assert_eq!(updated.title, "Updated child");
         assert_eq!(updated.parent_id, None);
+    }
+
+    #[tokio::test]
+    async fn create_entry_treats_empty_parent_id_as_no_parent() {
+        let pool = test_pool().await;
+
+        let created = create_entry(
+            State(pool.clone()),
+            Json(CreateEntryRequest {
+                parent_id: Some(String::new()),
+                ..create_payload("rootish", "Rootish")
+            }),
+        )
+        .await
+        .unwrap()
+        .0;
+
+        assert_eq!(created.title, "Rootish");
+        assert_eq!(created.parent_id, None);
+    }
+
+    #[tokio::test]
+    async fn update_entry_clears_published_at_when_null() {
+        let pool = test_pool().await;
+        let _ = create_entry(
+            State(pool.clone()),
+            Json(CreateEntryRequest {
+                published_at: Some("2026-01-01T00:00:00.000Z".to_string()),
+                ..create_payload("dated", "Dated")
+            }),
+        )
+        .await
+        .unwrap();
+
+        let updated = update_entry(
+            State(pool.clone()),
+            Path("dated".to_string()),
+            Json(UpdateEntryRequest {
+                entry_type: None,
+                slug: None,
+                status: None,
+                visibility: None,
+                title: None,
+                summary: None,
+                lang: None,
+                path: None,
+                depth: None,
+                order: None,
+                parent_id: None,
+                published_at: Some(None),
+                tags: None,
+                thumbnail: None,
+                public_url: None,
+                thumbnails: None,
+                assets: None,
+                links: None,
+                searchable: None,
+                seo: None,
+                relations: None,
+                ext: None,
+            }),
+        )
+        .await
+        .unwrap()
+        .0;
+
+        assert_eq!(updated.published_at, None);
     }
 }

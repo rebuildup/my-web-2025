@@ -61,7 +61,7 @@ type RustEntryWritePayload = {
 	depth?: number;
 	order?: number;
 	parent_id?: string;
-	published_at?: string;
+	published_at?: string | null;
 	tags?: string[];
 	thumbnail?: string;
 	public_url?: string;
@@ -103,7 +103,9 @@ function toRustEntryWritePayload(content: Partial<Content>): RustEntryWritePaylo
 		depth: content.depth,
 		order: content.order,
 		parent_id: content.parentId,
-		published_at: content.publishedAt,
+		published_at: Object.hasOwn(content, "publishedAt")
+			? (content.publishedAt ?? null)
+			: undefined,
 		tags: content.tags,
 		thumbnail: deriveThumbnail(content),
 		public_url: content.publicUrl,
