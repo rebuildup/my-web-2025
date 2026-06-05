@@ -1,6 +1,16 @@
-import { expect, test, describe } from "bun:test";
+import { afterEach, expect, test, describe, mock } from "bun:test";
 import { NextRequest } from "next/server";
 import { requireAdminRequest } from "@/lib/server/admin-auth";
+
+mock.module("server-only", () => ({}));
+
+const originalFetch = globalThis.fetch;
+const originalEnv = { ...process.env };
+
+afterEach(() => {
+	globalThis.fetch = originalFetch;
+	process.env = { ...originalEnv };
+});
 
 function makeRequest(url: string, headers: Record<string, string> = {}): NextRequest {
 	return new NextRequest(url, {
@@ -199,5 +209,77 @@ describe("GET guard (public)", () => {
 			const guard = requireAdminRequest(req);
 			expect(guard).toEqual({ ok: true });
 		});
+	});
+});
+
+describe("GET detail mapping", () => {
+	test("detail response keeps tags and list thumbnail for the edit modal", async () => {
+		process.env.CMS_API_BASE_URL = "http://cms-api.test";
+		const requestedUrls: string[] = [];
+		globalThis.fetch = (async (input: RequestInfo | URL) => {
+			const url = input.toString();
+			requestedUrls.push(url);
+			if (url === "http://cms-api.test/entries/LiteGlow") {
+				return Response.json({
+					id: "LiteGlow",
+					entry_type: "portfolio",
+					status: "published",
+					visibility: "public",
+					title: "LiteGlow",
+					summary: "summary",
+					lang: "ja",
+					path: null,
+					depth: 0,
+					order: 0,
+					parent_id: null,
+					published_at: null,
+					created_at: "2026-01-01T00:00:00.000Z",
+					updated_at: "2026-01-01T00:00:00.000Z",
+					slug: "LiteGlow",
+					public_url: null,
+					thumbnails: null,
+					assets: [],
+					links: [],
+					searchable: null,
+					seo: null,
+					relations: null,
+					ext: { type: "portfolio", slug: "LiteGlow" },
+				});
+			}
+			if (url === "http://cms-api.test/entries") {
+				return Response.json([
+					{
+						id: "LiteGlow",
+						entry_type: "portfolio",
+						status: "published",
+						visibility: "public",
+						title: "LiteGlow",
+						summary: "summary",
+						lang: "ja",
+						published_at: null,
+						created_at: "2026-01-01T00:00:00.000Z",
+						updated_at: "2026-01-01T00:00:00.000Z",
+						slug: "LiteGlow",
+						thumbnail: "/thumb.png",
+						tags: "plugin, ae",
+					},
+				]);
+			}
+			return Response.json({ error: "unexpected url" }, { status: 500 });
+		}) as typeof fetch;
+
+		const { GET } = await import("./route");
+		const response = await GET(
+			makeRequest("http://localhost:3000/api/cms/contents?id=LiteGlow"),
+		);
+		const body = await response.json();
+
+		expect(response.status).toBe(200);
+		expect(body.tags).toEqual(["plugin", "ae"]);
+		expect(body.thumbnails).toEqual({ image: { src: "/thumb.png" } });
+		expect(requestedUrls).toEqual([
+			"http://cms-api.test/entries/LiteGlow",
+			"http://cms-api.test/entries",
+		]);
 	});
 });

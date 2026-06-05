@@ -289,15 +289,15 @@ export function ContentForm({
 		(async () => {
 			if (mode !== "edit") return;
 			if (!formData.id) return;
-			// すでに十分なデータがある場合はスキップ
-			const hasDetails = Boolean(
+			const hasDetailMetadata = Boolean(
 				formData.assets ||
 					formData.links ||
-					(formData.ext as any)?.thumbnail ||
+					formData.relations ||
 					formData.seo ||
-					formData.searchable,
+					formData.searchable ||
+					formData.ext,
 			);
-			if (hasDetails) return;
+			if (hasDetailMetadata) return;
 			let full: any = null;
 			try {
 				const res = await fetch(
@@ -1134,12 +1134,8 @@ export function ContentForm({
 					label="childCount"
 					type="number"
 					value={formData.childCount ?? 0}
-					onChange={(e) =>
-						setFormData((prev) => ({
-							...prev,
-							childCount: Number(e.target.value) || 0,
-						}))
-					}
+					disabled
+					helperText="現在のRust API保存対象外です"
 					fullWidth
 				/>
 			</Stack>
@@ -1585,61 +1581,30 @@ export function ContentForm({
 			<TextField
 				label="オーナー"
 				value={formData.permissions?.owner || ""}
-				onChange={(e) =>
-					setFormData({
-						...formData,
-						permissions: {
-							...(formData.permissions || {}),
-							owner: e.target.value,
-						},
-					})
-				}
+				disabled
+				helperText="現在のRust API保存対象外です"
 				fullWidth
 			/>
 			<TextField
 				label="閲覧権限（カンマ区切り）"
 				value={(formData.permissions?.readers || []).join(", ")}
-				onChange={(e) =>
-					setFormData({
-						...formData,
-						permissions: {
-							...(formData.permissions || {}),
-							readers: e.target.value
-								.split(",")
-								.map((s) => s.trim())
-								.filter(Boolean),
-						},
-					})
-				}
+				disabled
+				helperText="現在のRust API保存対象外です"
 				fullWidth
 			/>
 			<TextField
 				label="編集権限（カンマ区切り）"
 				value={(formData.permissions?.editors || []).join(", ")}
-				onChange={(e) =>
-					setFormData({
-						...formData,
-						permissions: {
-							...(formData.permissions || {}),
-							editors: e.target.value
-								.split(",")
-								.map((s) => s.trim())
-								.filter(Boolean),
-						},
-					})
-				}
+				disabled
+				helperText="現在のRust API保存対象外です"
 				fullWidth
 			/>
 			<Typography variant="subtitle2">多言語</Typography>
 			<TextField
 				label="デフォルト言語"
 				value={formData.i18n?.defaultLang || formData.lang || "ja"}
-				onChange={(e) =>
-					setFormData({
-						...formData,
-						i18n: { ...(formData.i18n || {}), defaultLang: e.target.value },
-					})
-				}
+				disabled
+				helperText="現在のRust API保存対象外です"
 				fullWidth
 			/>
 			<Typography variant="body2">翻訳（lang:id を改行区切り）</Typography>
@@ -1649,23 +1614,8 @@ export function ContentForm({
 				value={Object.entries(formData.i18n?.translations || {})
 					.map(([k, v]) => `${k}:${v}`)
 					.join("\n")}
-				onChange={(e) => {
-					const map: Record<string, string> = {};
-					e.target.value.split(/\n+/).forEach((line) => {
-						const [k, ...rest] = line.split(":");
-						if (k && rest.length) {
-							map[k.trim()] = rest.join(":").trim();
-						}
-					});
-					setFormData({
-						...formData,
-						i18n: {
-							...(formData.i18n || {}),
-							translations: map,
-							defaultLang: formData.i18n?.defaultLang || formData.lang || "ja",
-						},
-					});
-				}}
+				disabled
+				helperText="現在のRust API保存対象外です"
 				fullWidth
 			/>
 			<Typography variant="subtitle2">拡張</Typography>

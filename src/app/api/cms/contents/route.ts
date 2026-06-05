@@ -214,6 +214,27 @@ function mapRustDetailToContent(detail: RustEntryDetail): Content {
 	};
 }
 
+function mapRustDetailToContentWithIndex(
+	detail: RustEntryDetail,
+	indexItem?: RustEntryListItem,
+): Content {
+	const content = mapRustDetailToContent(detail);
+	const indexThumbnail = indexItem?.thumbnail
+		? { image: { src: indexItem.thumbnail } }
+		: undefined;
+
+	return {
+		...content,
+		tags: indexItem?.tags
+			? indexItem.tags
+					.split(",")
+					.map((tag) => tag.trim())
+					.filter(Boolean)
+			: content.tags,
+		thumbnails: content.thumbnails ?? indexThumbnail,
+	};
+}
+
 export async function OPTIONS() {
 	return new Response(null, {
 		status: 200,
@@ -231,10 +252,16 @@ export async function GET(req: Request) {
 		const id = searchParams.get("id");
 
 		if (id) {
-			const detail = await cmsApiFetch<RustEntryDetail>(
-				`/entries/${encodeURIComponent(id)}`,
+			const [detail, entries] = await Promise.all([
+				cmsApiFetch<RustEntryDetail>(`/entries/${encodeURIComponent(id)}`),
+				cmsApiFetch<RustEntryListItem[]>("/entries"),
+			]);
+			return Response.json(
+				mapRustDetailToContentWithIndex(
+					detail,
+					entries.find((entry) => entry.id === id),
+				),
 			);
-			return Response.json(mapRustDetailToContent(detail));
 		}
 
 		const entries = await cmsApiFetch<RustEntryListItem[]>("/entries");
