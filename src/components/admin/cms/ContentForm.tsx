@@ -1485,6 +1485,30 @@ export function ContentForm({
 				}
 				fullWidth
 			/>
+			{formData.seo?.openGraph?.image && (
+				<Box
+					sx={{
+						border: 1,
+						borderColor: "divider",
+						borderRadius: 1,
+						overflow: "hidden",
+						maxWidth: 400,
+						bgcolor: "background.default",
+					}}
+				>
+					<Box
+						component="img"
+						src={formData.seo.openGraph.image}
+						alt="OGP image preview"
+						sx={{
+							display: "block",
+							width: "100%",
+							aspectRatio: "1200 / 630",
+							objectFit: "cover",
+						}}
+					/>
+				</Box>
+			)}
 			<TextField
 				label="Canonical"
 				value={formData.seo?.meta?.canonical || ""}
