@@ -196,6 +196,45 @@ export function ContentForm({
 		return base;
 	});
 
+	const generatedOgImageUrl = useMemo(() => {
+		const params = new URLSearchParams({
+			title:
+				formData.seo?.openGraph?.title || formData.title || "Untitled",
+			category: formData.tags?.[0] || "Portfolio",
+			tags: (formData.tags || []).join(","),
+			thumbnail:
+				formData.thumbnails?.image?.src ||
+				formData.thumbnails?.webm?.poster ||
+				"",
+			slug: formData.id || "",
+			summary:
+				formData.seo?.openGraph?.description || formData.summary || "",
+		});
+		return `/api/og?${params.toString()}`;
+	}, [
+		formData.id,
+		formData.seo?.openGraph?.description,
+		formData.seo?.openGraph?.title,
+		formData.summary,
+		formData.tags,
+		formData.thumbnails?.image?.src,
+		formData.thumbnails?.webm?.poster,
+		formData.title,
+	]);
+
+	const applyGeneratedOgImageUrl = useCallback(() => {
+		setFormData((prev) => ({
+			...prev,
+			seo: {
+				...(prev.seo || {}),
+				openGraph: {
+					...(prev.seo?.openGraph || {}),
+					image: generatedOgImageUrl,
+				},
+			},
+		}));
+	}, [generatedOgImageUrl]);
+
 	// Track previous id to detect changes
 	const prevIdRef = useRef<string | undefined>(formData.id);
 
@@ -1485,6 +1524,14 @@ export function ContentForm({
 				}
 				fullWidth
 			/>
+			<Button
+				variant="outlined"
+				size="small"
+				onClick={applyGeneratedOgImageUrl}
+				sx={{ alignSelf: "flex-start" }}
+			>
+				生成OGPを設定
+			</Button>
 			{formData.seo?.openGraph?.image && (
 				<Box
 					sx={{
@@ -1499,7 +1546,7 @@ export function ContentForm({
 					<Box
 						component="img"
 						src={formData.seo.openGraph.image}
-						alt="OGP image preview"
+						alt="設定中のOGP画像プレビュー"
 						sx={{
 							display: "block",
 							width: "100%",
@@ -1563,13 +1610,13 @@ export function ContentForm({
 				}}
 			>
 				<Typography variant="subtitle2" sx={{ mb: 1, color: "text.primary" }}>
-					Dynamic Generated Mockup
+					生成OGPプレビュー
 				</Typography>
 				<Typography
 					variant="caption"
 					sx={{ display: "block", mb: 1, color: "text.secondary" }}
 				>
-					Based on current title, category, tags, and thumbnail.
+					現在のタイトル、説明、タグ、サムネイルから生成します。
 				</Typography>
 				<Box
 					sx={{
@@ -1583,20 +1630,8 @@ export function ContentForm({
 					<Box sx={{ aspectRatio: "16/9", bgcolor: "background.default" }}>
 						{/* eslint-disable-next-line @next/next/no-img-element */}
 						<img
-							src={`/api/og?title=${encodeURIComponent(
-								formData.title || "Untitled",
-							)}&category=${encodeURIComponent(
-								formData.tags?.[0] || "Portfolio",
-							)}&tags=${encodeURIComponent(
-								(formData.tags || []).join(","),
-							)}&thumbnail=${encodeURIComponent(
-								formData.thumbnails?.image?.src ||
-									formData.thumbnails?.webm?.poster ||
-									"",
-							)}&slug=${encodeURIComponent(formData.id || "")}&summary=${encodeURIComponent(
-								formData.summary || "",
-							)}`}
-							alt="Dynamic OG Preview"
+							src={generatedOgImageUrl}
+							alt="生成OGPプレビュー"
 							style={{ width: "100%", height: "100%", objectFit: "cover" }}
 							onError={(e) => {
 								(e.target as HTMLImageElement).style.display = "none";

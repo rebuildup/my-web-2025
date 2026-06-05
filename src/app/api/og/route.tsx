@@ -1,22 +1,34 @@
+import { readFile } from "node:fs/promises";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
+
+let notoSansJpFontPromise: Promise<ArrayBuffer | null> | null = null;
+
+async function loadNotoSansJpFont() {
+	notoSansJpFontPromise ??= readFile(
+		new URL("../../../../public/fonts/noto-sans-jp-700.ttf", import.meta.url),
+	)
+		.then((buffer) => buffer.buffer.slice(
+			buffer.byteOffset,
+			buffer.byteOffset + buffer.byteLength,
+		))
+		.catch(() => null);
+	return notoSansJpFontPromise;
+}
 
 export async function GET(req: NextRequest) {
 	try {
 		const { searchParams } = new URL(req.url);
 
 		// Get dynamic params
-		// Get dynamic params
 		const title = searchParams.get("title")?.slice(0, 100) || "Portfolio";
 		const category = searchParams.get("category") || "portfolio";
-		const tags = searchParams.get("tags")?.split(",") || [];
+		const tags = searchParams.get("tags")?.split(",").filter(Boolean) || [];
 		const thumbnail = searchParams.get("thumbnail");
 		const slug = searchParams.get("slug") || "";
 		const displayTags = tags.slice(0, 3);
-// ... existing font loading code ...
-
 
 		// Theme colors
 		const backgroundColor = "#050505"; // Dark background
@@ -37,19 +49,10 @@ export async function GET(req: NextRequest) {
 			}
 		}
 
-		// Load font
-		const fontData = await fetch(
-			new URL("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap"),
-		).then(async (res) => {
-			const css = await res.text();
-			const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
-			if (resource) {
-				return fetch(resource[1]).then((res) => res.arrayBuffer());
-			}
-			return fetch("https://fonts.gstatic.com/s/notosansjp/v52/-F6jfjtqLzI2JPCgQBnw7HFYzSD-AsugKSg.ttf").then(res => res.arrayBuffer())
-		}).catch(() => null);
-		
-		const summary = searchParams.get("summary")?.slice(0, 80) + (searchParams.get("summary")?.length && searchParams.get("summary")!.length > 80 ? "..." : "") || "";
+		const fontData = await loadNotoSansJpFont();
+		const summaryParam = searchParams.get("summary") || "";
+		const summary =
+			summaryParam.slice(0, 80) + (summaryParam.length > 80 ? "..." : "");
 
 		return new ImageResponse(
 			(
@@ -211,7 +214,44 @@ export async function GET(req: NextRequest) {
 									gap: "20px",
 								}}
 							>
-								{/* User Profile & URL - NO TAGS */}
+								<div
+									style={{
+										display: "flex",
+										gap: "12px",
+										flexWrap: "wrap",
+									}}
+								>
+									<span
+										style={{
+											display: "flex",
+											alignItems: "center",
+											border: `2px solid ${accentColor}`,
+											color: textColor,
+											fontSize: "22px",
+											fontWeight: 700,
+											padding: "8px 16px",
+										}}
+									>
+										{category}
+									</span>
+									{displayTags.map((tag) => (
+										<span
+											key={tag}
+											style={{
+												display: "flex",
+												alignItems: "center",
+												backgroundColor: "rgba(255, 255, 255, 0.12)",
+												color: secondaryColor,
+												fontSize: "20px",
+												fontWeight: 700,
+												padding: "8px 14px",
+											}}
+										>
+											#{tag}
+										</span>
+									))}
+								</div>
+								{/* User Profile & URL */}
 								<div
 									style={{
 										display: "flex",
@@ -226,23 +266,16 @@ export async function GET(req: NextRequest) {
 											height: "80px",
 											borderRadius: "50%",
 											overflow: "hidden",
-											// Removed border
 											display: "flex",
+											alignItems: "center",
+											justifyContent: "center",
+											backgroundColor: accentColor,
+											color: textColor,
+											fontSize: "28px",
+											fontWeight: 700,
 										}}
 									>
-										{/* User Icon */}
-										{/* eslint-disable-next-line @next/next/no-img-element */}
-										<img
-											src="https://pbs.twimg.com/profile_images/2034243179176960000/ZcmwOt4U_400x400.jpg"
-											alt="samuido"
-											width="80"
-											height="80"
-											style={{
-												width: "100%",
-												height: "100%",
-												objectFit: "cover",
-											}}
-										/>
+										S
 									</div>
 									<div
 										style={{
