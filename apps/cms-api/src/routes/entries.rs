@@ -545,8 +545,12 @@ async fn update_entry(
         bindings.push(v.to_string());
     }
     if let Some(ref v) = payload.parent_id {
-        query.push_str(", parent_id = ?");
-        bindings.push(v.clone());
+        if v.trim().is_empty() {
+            query.push_str(", parent_id = NULL");
+        } else {
+            query.push_str(", parent_id = ?");
+            bindings.push(v.clone());
+        }
     }
     if let Some(ref v) = payload.published_at {
         query.push_str(", published_at = ?");
@@ -604,4 +608,88 @@ async fn delete_entry(
     }
 
     Ok(Json(serde_json::json!({"message": "Entry deleted"})))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::extract::{Path, State};
+
+    async fn test_pool() -> DbPool {
+        crate::db::create_pool("sqlite::memory:").await.unwrap()
+    }
+
+    fn create_payload(id: &str, title: &str) -> CreateEntryRequest {
+        CreateEntryRequest {
+            id: Some(id.to_string()),
+            entry_type: "portfolio".to_string(),
+            slug: Some(id.to_string()),
+            status: Some("draft".to_string()),
+            visibility: Some("draft".to_string()),
+            title: Some(title.to_string()),
+            summary: None,
+            lang: Some("ja".to_string()),
+            path: None,
+            depth: None,
+            order: None,
+            parent_id: None,
+            published_at: None,
+            tags: None,
+            thumbnail: None,
+            public_url: None,
+            thumbnails: None,
+            assets: None,
+            links: None,
+            searchable: None,
+            seo: None,
+            relations: None,
+            ext: None,
+        }
+    }
+
+    #[tokio::test]
+    async fn update_entry_treats_empty_parent_id_as_no_parent() {
+        let pool = test_pool().await;
+        let _ = create_entry(State(pool.clone()), Json(create_payload("parent", "Parent")))
+            .await
+            .unwrap();
+        let _ = create_entry(State(pool.clone()), Json(create_payload("child", "Child")))
+            .await
+            .unwrap();
+
+        let updated = update_entry(
+            State(pool.clone()),
+            Path("child".to_string()),
+            Json(UpdateEntryRequest {
+                entry_type: None,
+                slug: None,
+                status: None,
+                visibility: None,
+                title: Some("Updated child".to_string()),
+                summary: None,
+                lang: None,
+                path: None,
+                depth: None,
+                order: None,
+                parent_id: Some(String::new()),
+                published_at: None,
+                tags: None,
+                thumbnail: None,
+                public_url: None,
+                thumbnails: None,
+                assets: None,
+                links: None,
+                searchable: None,
+                seo: None,
+                relations: None,
+                ext: None,
+            }),
+        )
+        .await
+        .unwrap()
+        .0;
+
+        assert_eq!(updated.title, "Updated child");
+        assert_eq!(updated.parent_id, None);
+    }
 }
