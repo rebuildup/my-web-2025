@@ -1,8 +1,13 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
+import { cmsApiFetch } from "@/lib/cms-api/server-client";
 
 export const runtime = "nodejs";
+
+type RustEntryListItem = {
+	id: string;
+	title: string;
+};
 
 function getDataDir(): string {
 	return process.env.CMS_API_DATA_DIR
@@ -12,7 +17,7 @@ function getDataDir(): string {
 
 export async function GET() {
 	try {
-		const entries = await fetchCmsContentIndex();
+		const entries = await cmsApiFetch<RustEntryListItem[]>("/entries");
 		const contentsList = entries.map((entry) => ({
 			id: entry.id,
 			title: entry.title,
