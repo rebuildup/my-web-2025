@@ -1,6 +1,65 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { cmsApiFetch } from "@/lib/cms-api/server-client";
 import { detailedSearch, searchContent, simpleSearch } from "@/lib/search";
 import type { ContentType } from "@/types";
+
+type RustSearchResult = {
+	id: string;
+	title: string;
+	summary?: string | null;
+	entry_type: ContentType;
+	status: string;
+	thumbnail?: string | null;
+	tags?: string | null;
+};
+
+function contentUrl(type: ContentType, id: string): string {
+	const baseUrls: Record<ContentType, string> = {
+		portfolio: "/portfolio",
+		blog: "/workshop/blog",
+		plugin: "/workshop/plugins",
+		download: "/workshop/downloads",
+		tool: "/tools",
+		profile: "/about/profile",
+		page: "",
+		asset: "",
+		other: "",
+	};
+
+	const baseUrl = baseUrls[type] || "";
+	return `${baseUrl}/${id}`;
+}
+
+async function searchWithRustApi(
+	query: string,
+	options: {
+		type?: ContentType;
+		limit: number;
+	},
+) {
+	const params = new URLSearchParams({
+		q: query,
+		status: "published",
+		limit: String(options.limit),
+	});
+	if (options.type) {
+		params.set("entry_type", options.type);
+	}
+
+	const rows = await cmsApiFetch<RustSearchResult[]>(
+		`/search?${params.toString()}`,
+	);
+
+	return rows.map((row, index) => ({
+		id: row.id,
+		type: row.entry_type,
+		title: row.title,
+		description: row.summary ?? "",
+		url: contentUrl(row.entry_type, row.id),
+		score: 1 - index / Math.max(rows.length, 1),
+		highlights: [row.title, row.summary ?? ""].filter(Boolean),
+	}));
+}
 
 export async function GET(request: NextRequest) {
 	try {
@@ -27,14 +86,20 @@ export async function GET(request: NextRequest) {
 		};
 
 		let results;
-
-		if (mode === "detailed") {
-			results = await detailedSearch(query, searchOptions);
-		} else if (mode === "simple") {
-			results = await simpleSearch(query, searchOptions);
-		} else {
-			// Custom search with specific options
-			results = await searchContent(query, searchOptions);
+		try {
+			results = await searchWithRustApi(query, {
+				type: type || undefined,
+				limit,
+			});
+		} catch (error) {
+			console.warn("Rust content search failed; falling back to Next search:", error);
+			if (mode === "detailed") {
+				results = await detailedSearch(query, searchOptions);
+			} else if (mode === "simple") {
+				results = await simpleSearch(query, searchOptions);
+			} else {
+				results = await searchContent(query, searchOptions);
+			}
 		}
 
 		// Set cache headers for performance
@@ -83,13 +148,22 @@ export async function POST(request: NextRequest) {
 		}
 
 		// Support for batch search or advanced search options
-		const results = await searchContent(query, {
-			type: options.type,
-			category: options.category,
-			limit: options.limit || 10,
-			includeContent: options.includeContent || false,
-			threshold: options.threshold || 0.3,
-		});
+		let results;
+		try {
+			results = await searchWithRustApi(query, {
+				type: options.type,
+				limit: options.limit || 10,
+			});
+		} catch (error) {
+			console.warn("Rust content search failed; falling back to Next search:", error);
+			results = await searchContent(query, {
+				type: options.type,
+				category: options.category,
+				limit: options.limit || 10,
+				includeContent: options.includeContent || false,
+				threshold: options.threshold || 0.3,
+			});
+		}
 
 		return NextResponse.json({
 			query,

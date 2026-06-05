@@ -5,7 +5,6 @@ use axum::{
 };
 use serde::Deserialize;
 use serde::Serialize;
-use sqlx::SqlitePool;
 use thiserror::Error;
 
 use crate::db::DbPool;
@@ -39,6 +38,9 @@ impl From<sqlx::Error> for SearchError {
 #[derive(Debug, Deserialize)]
 pub struct SearchQuery {
     pub q: String,
+    pub entry_type: Option<String>,
+    pub status: Option<String>,
+    pub limit: Option<i64>,
 }
 
 #[derive(Debug, Serialize, sqlx::FromRow)]
@@ -66,34 +68,55 @@ pub fn router(pool: DbPool) -> Router {
         .with_state(pool)
 }
 
-async fn search(pool: State<DbPool>, Query(query): Query<SearchQuery>) -> Result<Json<Vec<SearchResult>>, SearchError> {
+async fn search(
+    pool: State<DbPool>,
+    Query(query): Query<SearchQuery>,
+) -> Result<Json<Vec<SearchResult>>, SearchError> {
     if query.q.trim().is_empty() {
         return Err(SearchError::MissingQuery);
     }
 
-    // Escape FTS5 special characters and prepare query
-    let search_term = query.q.split_whitespace().collect::<Vec<_>>().join(" OR ");
+    let like_query = format!("%{}%", query.q.trim());
+    let entry_type = query.entry_type.as_deref();
+    let status = query.status.as_deref().unwrap_or("published");
+    let limit = query.limit.unwrap_or(50).clamp(1, 100);
 
     let results = sqlx::query_as::<_, SearchResult>(
         r#"
-        SELECT e.id, e.title, e.summary, e.type, e.status, e.thumbnail, e.tags
-        FROM search_index s
-        JOIN list_index e ON s.id = e.id
-        WHERE search_index MATCH ?
-        ORDER BY rank
-        LIMIT 50
+        SELECT id, title, summary, type AS entry_type, status, thumbnail, tags
+        FROM list_index
+        WHERE status = ?
+          AND (? IS NULL OR type = ?)
+          AND (
+            title LIKE ?
+            OR summary LIKE ?
+            OR tags LIKE ?
+          )
+        ORDER BY COALESCE(published_at, updated_at, created_at) DESC
+        LIMIT ?
         "#,
     )
-    .bind(&search_term)
+    .bind(status)
+    .bind(entry_type)
+    .bind(entry_type)
+    .bind(&like_query)
+    .bind(&like_query)
+    .bind(&like_query)
+    .bind(limit)
     .fetch_all(&*pool)
     .await?;
 
     Ok(Json(results))
 }
 
-async fn suggestions(pool: State<DbPool>, Query(query): Query<SearchQuery>) -> Result<Json<SuggestionResult>, SearchError> {
+async fn suggestions(
+    pool: State<DbPool>,
+    Query(query): Query<SearchQuery>,
+) -> Result<Json<SuggestionResult>, SearchError> {
     if query.q.trim().is_empty() {
-        return Ok(Json(SuggestionResult { suggestions: vec![] }));
+        return Ok(Json(SuggestionResult {
+            suggestions: vec![],
+        }));
     }
 
     // Get title matches as suggestions
