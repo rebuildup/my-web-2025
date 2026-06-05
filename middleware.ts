@@ -7,10 +7,40 @@ function isDevelopment() {
 
 // Check if request is from localhost
 function isLocalhost(request: NextRequest) {
-	const hostname = request.nextUrl.hostname;
+	const hostname = getRequestHostname(request);
 	return (
 		hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1"
 	);
+}
+
+function getFirstHeaderValue(value: string | null): string | null {
+	return value?.split(",")[0]?.trim() || null;
+}
+
+function stripPort(hostname: string): string {
+	if (hostname.startsWith("[") && hostname.includes("]")) {
+		return hostname.slice(1, hostname.indexOf("]"));
+	}
+	return hostname.split(":")[0].toLowerCase();
+}
+
+function getRequestHost(request: NextRequest): string {
+	return (
+		getFirstHeaderValue(request.headers.get("x-forwarded-host")) ||
+		getFirstHeaderValue(request.headers.get("host")) ||
+		request.nextUrl.host
+	);
+}
+
+function getRequestHostname(request: NextRequest): string {
+	return stripPort(getRequestHost(request));
+}
+
+function getRequestProtocol(request: NextRequest): string {
+	const forwardedProto = getFirstHeaderValue(
+		request.headers.get("x-forwarded-proto"),
+	);
+	return forwardedProto || request.nextUrl.protocol.replace(/:$/, "");
 }
 
 // サブドメインとパスのマッピング
@@ -35,7 +65,7 @@ const subdomainMap: Record<string, string> = {
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
-	const hostname = request.nextUrl.hostname;
+	const hostname = getRequestHostname(request);
 
 	// サブドメインのリダイレクト処理
 	// 例: links.yusuke-kim.com → /about/links
@@ -53,6 +83,11 @@ export function middleware(request: NextRequest) {
 				// 既に正しいパスにいる場合はリダイレクトしない
 				if (pathname !== mappedPath && pathname !== `${mappedPath}/`) {
 					const url = new URL(mappedPath, request.url);
+					url.protocol = `${getRequestProtocol(request)}:`;
+					url.host = getRequestHost(request);
+					if (!getRequestHost(request).includes(":")) {
+						url.port = "";
+					}
 					// クエリパラメータとハッシュを保持
 					url.search = request.nextUrl.search;
 					url.hash = request.nextUrl.hash;
