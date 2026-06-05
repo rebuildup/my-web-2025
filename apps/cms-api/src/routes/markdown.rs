@@ -228,20 +228,10 @@ async fn create_markdown(
 
 async fn update_markdown(
     pool: State<DbPool>,
-    Path(id): Path<String>,
+    Path(identifier): Path<String>,
     Json(payload): Json<UpsertMarkdownRequest>,
 ) -> Result<Json<MarkdownPage>, MarkdownError> {
-    let exists = sqlx::query_scalar::<_, String>(
-        "SELECT id FROM markdown_pages WHERE id = ? LIMIT 1",
-    )
-    .bind(&id)
-    .fetch_optional(&*pool)
-    .await?
-    .is_some();
-
-    if !exists {
-        return Err(MarkdownError::NotFound);
-    }
+    let id = resolve_markdown_id(&pool, &identifier).await?;
 
     upsert_markdown_record(&pool, &id, payload).await?;
     get_markdown_by_id(&pool, &id).await.map(Json)
@@ -249,8 +239,9 @@ async fn update_markdown(
 
 async fn delete_markdown(
     pool: State<DbPool>,
-    Path(id): Path<String>,
+    Path(identifier): Path<String>,
 ) -> Result<Json<Value>, MarkdownError> {
+    let id = resolve_markdown_id(&pool, &identifier).await?;
     let result = sqlx::query("DELETE FROM markdown_pages WHERE id = ?")
         .bind(&id)
         .execute(&*pool)
@@ -261,6 +252,23 @@ async fn delete_markdown(
     }
 
     Ok(Json(serde_json::json!({ "ok": true, "id": id })))
+}
+
+async fn resolve_markdown_id(pool: &DbPool, identifier: &str) -> Result<String, MarkdownError> {
+    sqlx::query_scalar::<_, String>(
+        r#"
+        SELECT id
+        FROM markdown_pages
+        WHERE id = ? OR slug = ?
+        ORDER BY updated_at DESC
+        LIMIT 1
+        "#,
+    )
+    .bind(identifier)
+    .bind(identifier)
+    .fetch_optional(pool)
+    .await?
+    .ok_or(MarkdownError::NotFound)
 }
 
 async fn upsert_markdown_record(
@@ -279,6 +287,18 @@ async fn upsert_markdown_record(
     let frontmatter = normalize_frontmatter(payload.frontmatter);
     let frontmatter_json =
         serde_json::to_string(&frontmatter).map_err(|_| MarkdownError::Database)?;
+    let existing_created_at = sqlx::query_scalar::<_, String>(
+        "SELECT created_at FROM markdown_pages WHERE id = ? LIMIT 1",
+    )
+    .bind(id)
+    .fetch_optional(pool)
+    .await?;
+    let now = chrono::Utc::now().to_rfc3339();
+    let created_at = payload
+        .created_at
+        .or(existing_created_at)
+        .unwrap_or_else(|| now.clone());
+    let updated_at = payload.updated_at.unwrap_or(now);
 
     sqlx::query(
         r#"
@@ -301,16 +321,8 @@ async fn upsert_markdown_record(
     .bind(normalize_visibility(payload.visibility.as_deref()))
     .bind(payload.version.unwrap_or(1))
     .bind(payload.published_at)
-    .bind(
-        payload
-            .created_at
-            .unwrap_or_else(|| chrono::Utc::now().to_rfc3339()),
-    )
-    .bind(
-        payload
-            .updated_at
-            .unwrap_or_else(|| chrono::Utc::now().to_rfc3339()),
-    )
+    .bind(created_at)
+    .bind(updated_at)
     .execute(pool)
     .await?;
 
@@ -345,4 +357,107 @@ async fn get_markdown_by_id(pool: &DbPool, id: &str) -> Result<MarkdownPage, Mar
     .await?
     .map(MarkdownPage::normalize)
     .ok_or(MarkdownError::NotFound)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::extract::{Path, State};
+
+    async fn test_pool() -> DbPool {
+        let pool = crate::db::create_pool("sqlite::memory:").await.unwrap();
+        sqlx::query(
+            r#"
+            INSERT INTO entries (id, type, slug, status, visibility, title)
+            VALUES ('entry-1', 'blog', 'entry-1', 'published', 'public', 'Entry 1')
+            "#,
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+        pool
+    }
+
+    fn markdown_payload(body: &str) -> UpsertMarkdownRequest {
+        UpsertMarkdownRequest {
+            id: Some("page-1".to_string()),
+            content_id: "entry-1".to_string(),
+            slug: "page-slug".to_string(),
+            frontmatter: Value::Object(Map::new()),
+            body: body.to_string(),
+            html_cache: None,
+            path: None,
+            lang: Some("ja".to_string()),
+            status: Some("published".to_string()),
+            visibility: Some("public".to_string()),
+            version: Some(1),
+            published_at: None,
+            created_at: None,
+            updated_at: None,
+        }
+    }
+
+    #[tokio::test]
+    async fn update_markdown_accepts_slug_identifier() {
+        let pool = test_pool().await;
+        let _ = create_markdown(State(pool.clone()), Json(markdown_payload("before")))
+            .await
+            .unwrap();
+
+        let updated = update_markdown(
+            State(pool),
+            Path("page-slug".to_string()),
+            Json(markdown_payload("after")),
+        )
+        .await
+        .unwrap()
+        .0;
+
+        assert_eq!(updated.id, "page-1");
+        assert_eq!(updated.slug, "page-slug");
+        assert_eq!(updated.body, "after");
+    }
+
+    #[tokio::test]
+    async fn delete_markdown_accepts_slug_identifier() {
+        let pool = test_pool().await;
+        let _ = create_markdown(State(pool.clone()), Json(markdown_payload("body")))
+            .await
+            .unwrap();
+
+        let _ = delete_markdown(State(pool.clone()), Path("page-slug".to_string()))
+            .await
+            .unwrap();
+
+        let remaining = sqlx::query_scalar::<_, i64>(
+            "SELECT COUNT(*) FROM markdown_pages WHERE slug = 'page-slug'",
+        )
+        .fetch_one(&pool)
+        .await
+        .unwrap();
+
+        assert_eq!(remaining, 0);
+    }
+
+    #[tokio::test]
+    async fn update_markdown_preserves_created_at_when_omitted() {
+        let pool = test_pool().await;
+        let mut initial = markdown_payload("before");
+        initial.created_at = Some("2026-01-01T00:00:00Z".to_string());
+        let _ = create_markdown(State(pool.clone()), Json(initial))
+            .await
+            .unwrap();
+
+        let updated = update_markdown(
+            State(pool),
+            Path("page-1".to_string()),
+            Json(markdown_payload("after")),
+        )
+        .await
+        .unwrap()
+        .0;
+
+        assert_eq!(updated.body, "after");
+        assert_eq!(updated.created_at, "2026-01-01T00:00:00Z");
+    }
 }
