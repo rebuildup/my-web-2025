@@ -96,7 +96,7 @@
 		"react-google-recaptcha": "^3.1.0",
 		"recharts": "^3.3.0",
 		"resend": "^6.3.0",
-		"sharp": "^0.34.4",
+		"sharp": "^0.35.1",
 		"styled-components": "^6.1.19",
 		"tailwind-merge": "^3.3.1",
 		"tailwindcss": "^4.1.16",
