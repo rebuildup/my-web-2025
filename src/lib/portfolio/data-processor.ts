@@ -18,6 +18,7 @@ import {
 	mixedDataFormatProcessor,
 } from "./data-migration";
 import { portfolioDateManager } from "./date-management";
+
 // Remove circular import - DataIntegrityIssue is defined in this file
 
 // Re-export types for backward compatibility
@@ -1686,4 +1687,4 @@ export const enhancedPortfolioDataProcessor =
 	new EnhancedPortfolioDataProcessor();
 
 // For backward compatibility, also export the enhanced processor as the main processor
-export const dataProcessor = enhancedPortfolioDataProcessor;
+const dataProcessor = enhancedPortfolioDataProcessor;

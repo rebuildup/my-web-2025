@@ -1,6 +1,7 @@
 import type { Content } from "@/cms/types/content";
 import type { ContentIndexItem } from "@/cms/types/content";
-import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
+import { getAllFromIndex, getFromIndex } from "@/cms/lib/content-db-manager";
+import { getCmsApiBaseUrl, shouldUseRustCmsApi } from "@/lib/cms-api/config";
 import { cmsApiFetch } from "@/lib/cms-api/server-client";
 import { requireAdminRequest } from "@/lib/server/admin-auth";
 
@@ -248,10 +249,59 @@ export async function OPTIONS() {
 	});
 }
 
+function mapDbIndexToContentIndexItem(
+	row: ReturnType<typeof getAllFromIndex>[number],
+): ContentIndexItem & Pick<Content, "thumbnails"> {
+	return {
+		id: row.id,
+		title: row.title,
+		summary: row.summary || undefined,
+		lang: row.lang,
+		status: row.status as ContentIndexItem["status"],
+		visibility: row.visibility as ContentIndexItem["visibility"],
+		createdAt: row.createdAt,
+		updatedAt: row.updatedAt,
+		publishedAt: row.publishedAt ?? null,
+		tags: row.tags ?? [],
+		thumbnails: row.thumbnails,
+	};
+}
+
+function mapDbRowToContent(row: ReturnType<typeof getFromIndex> & {}): Content {
+	return {
+		id: row.id,
+		title: row.title,
+		summary: row.summary || undefined,
+		lang: row.lang,
+		status: row.status as Content["status"],
+		visibility: row.visibility as Content["visibility"],
+		createdAt: row.createdAt,
+		updatedAt: row.updatedAt,
+		publishedAt: row.publishedAt ?? undefined,
+		thumbnails: row.thumbnails as Content["thumbnails"],
+		assets: [],
+		links: [],
+		ext: row.seo ?? {},
+	};
+}
+
 export async function GET(req: Request) {
 	try {
 		const { searchParams } = new URL(req.url);
 		const id = searchParams.get("id");
+
+		if (!shouldUseRustCmsApi()) {
+			if (id) {
+				const row = getFromIndex(id);
+				if (!row) {
+					return Response.json({ error: "Not found" }, { status: 404 });
+				}
+				return Response.json(mapDbRowToContent(row));
+			}
+
+			const entries = getAllFromIndex();
+			return Response.json(entries.map(mapDbIndexToContentIndexItem));
+		}
 
 		if (id) {
 			const [detail, entries] = await Promise.all([

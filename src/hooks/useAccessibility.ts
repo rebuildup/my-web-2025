@@ -470,6 +470,3 @@ export const meetsContrastRequirement = (
 	const ratio = getContrastRatio(color1, color2);
 	return level === "AA" ? ratio >= 4.5 : ratio >= 7;
 };
-
-// Alias for tools compatibility
-export const useToolAccessibility = useAccessibility;

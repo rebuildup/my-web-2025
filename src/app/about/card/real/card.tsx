@@ -82,7 +82,7 @@ export interface ImprovedMeishiProps {
 	url?: string;
 }
 
-export const ImprovedMeishiPhi: React.FC<ImprovedMeishiProps> = ({
+const ImprovedMeishiPhi: React.FC<ImprovedMeishiProps> = ({
 	baseColor = "#FFFFFF",
 	mainColor = "#231815",
 	textColor,

@@ -6,7 +6,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useToolAccessibility } from "@/hooks/useAccessibility";
+import { useAccessibility } from "@/hooks/useAccessibility";
 import { AccessibilityTester } from "@/lib/accessibility";
 
 interface AccessibilityTesterProps {
@@ -35,7 +35,7 @@ export default function AccessibilityTestingComponent({
 	const [report, setReport] = useState<AccessibilityReport | null>(null);
 	const [isRunning, setIsRunning] = useState(false);
 	const [isVisible, setIsVisible] = useState(showResults);
-	const { announce } = useToolAccessibility();
+	const { announce } = useAccessibility();
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
 	const getSuggestion = useCallback((issue: string): string => {

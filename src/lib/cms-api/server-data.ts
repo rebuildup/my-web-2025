@@ -1,7 +1,8 @@
 import "server-only";
 
+import { getAllFromIndex, getFromIndex } from "@/cms/lib/content-db-manager";
 import type { MarkdownPage } from "@/cms/types/markdown";
-import { getCmsApiBaseUrl, shouldUseRustCmsApi } from "./config";
+import { shouldUseRustCmsApi } from "./config";
 import { cmsApiFetch } from "./server-client";
 
 export type CmsContentIndexEntry = {
@@ -86,22 +87,29 @@ function mapRustEntryListItem(item: RustEntryListItem): CmsContentIndexEntry {
 		publishedAt: item.published_at ?? null,
 		tags: parseTags(item.tags),
 		thumbnail: item.thumbnail ?? undefined,
-		thumbnails: item.thumbnail
-			? { image: { src: item.thumbnail } }
-			: undefined,
+		thumbnails: item.thumbnail ? { image: { src: item.thumbnail } } : undefined,
 	};
 }
 
 export async function fetchCmsContentIndex(): Promise<CmsContentIndexEntry[]> {
 	if (!shouldUseRustCmsApi()) {
-		const response = await fetch(
-			`${getCmsApiBaseUrl().replace(":3001", ":3011")}/api/cms/contents`,
-			{ cache: "no-store" },
-		);
-		if (!response.ok) {
-			throw new Error(await response.text());
-		}
-		return (await response.json()) as CmsContentIndexEntry[];
+		const rows = getAllFromIndex();
+		return rows.map((row) => ({
+			id: row.id,
+			title: row.title,
+			summary: row.summary || undefined,
+			lang: row.lang,
+			status: row.status,
+			visibility: row.visibility,
+			createdAt: row.createdAt,
+			updatedAt: row.updatedAt,
+			publishedAt: row.publishedAt ?? null,
+			tags: row.tags ?? [],
+			thumbnail: row.thumbnails?.image
+				? (row.thumbnails.image as { src?: string })?.src
+				: undefined,
+			thumbnails: row.thumbnails,
+		}));
 	}
 
 	const entries = await cmsApiFetch<RustEntryListItem[]>("/entries");
@@ -111,6 +119,27 @@ export async function fetchCmsContentIndex(): Promise<CmsContentIndexEntry[]> {
 export async function fetchCmsContentById(
 	id: string,
 ): Promise<CmsContentDetail | null> {
+	if (!shouldUseRustCmsApi()) {
+		const row = getFromIndex(id);
+		if (!row) return null;
+		return {
+			id: row.id,
+			title: row.title,
+			summary: row.summary || undefined,
+			lang: row.lang,
+			status: row.status,
+			visibility: row.visibility,
+			createdAt: row.createdAt,
+			updatedAt: row.updatedAt,
+			publishedAt: row.publishedAt ?? null,
+			tags: row.tags ?? [],
+			thumbnail: row.thumbnails?.image
+				? (row.thumbnails.image as { src?: string })?.src
+				: undefined,
+			thumbnails: row.thumbnails,
+		};
+	}
+
 	const [detail, index] = await Promise.all([
 		cmsApiFetch<RustEntryDetail>(`/entries/${encodeURIComponent(id)}`),
 		fetchCmsContentIndex(),
@@ -143,7 +172,9 @@ export async function fetchCmsContentById(
 	};
 }
 
-export async function fetchCmsContentTags(contentId: string): Promise<string[]> {
+export async function fetchCmsContentTags(
+	contentId: string,
+): Promise<string[]> {
 	const entries = await fetchCmsContentIndex();
 	return entries.find((item) => item.id === contentId)?.tags ?? [];
 }

@@ -35,7 +35,7 @@ interface UseOfflinePerformanceOptions {
 	processingChunkSize?: number;
 }
 
-export function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
+function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
 	const {
 		toolName,
 		enablePerformanceMonitoring = true,

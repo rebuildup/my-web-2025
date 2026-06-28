@@ -125,7 +125,7 @@ export function FilterBar({
 			<div className="flex items-center space-x-4">
 				{/* Search Input */}
 				<div className="flex-1 relative">
-					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-main/60" />
+					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-main" />
 					<input
 						type="text"
 						placeholder="Search projects..."
@@ -150,7 +150,7 @@ export function FilterBar({
 					<Filter className="w-4 h-4" />
 					<span className="text-sm">Filters</span>
 					{hasActiveFilters && (
-						<span className="bg-accent text-main text-xs px-2 py-1 rounded-full">
+						<span className="bg-accent text-main text-xs px-2 py-1">
 							{
 								[
 									filters.category,

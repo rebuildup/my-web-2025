@@ -11,7 +11,7 @@ import {
 	useEffect,
 	useRef,
 } from "react";
-import { useToolAccessibility } from "@/hooks/useAccessibility";
+import { useAccessibility } from "@/hooks/useAccessibility";
 
 interface AccessibleButtonProps
 	extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -42,8 +42,7 @@ const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(
 		ref,
 	) => {
 		const buttonRef = useRef<HTMLButtonElement>(null);
-		const { announce, ensureMinimumTouchTarget, state } =
-			useToolAccessibility();
+		const { announce, ensureMinimumTouchTarget, state } = useAccessibility();
 
 		// Ensure minimum touch target size
 		useEffect(() => {

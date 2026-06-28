@@ -88,5 +88,3 @@ void main() {
 		updatedAt: "2025-01-01",
 	},
 ];
-
-export default webglExperiments;

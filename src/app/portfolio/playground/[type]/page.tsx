@@ -16,7 +16,7 @@ interface PlaygroundPageProps {
 }
 
 // Valid playground types
-const validTypes = ["design", "WebGL"];
+const validTypes = ["design"];
 
 /**
  * Generate dynamic metadata for playground pages
@@ -221,17 +221,6 @@ function getPlaygroundDisplayInfo(type: string) {
 				"Canvas描画",
 			],
 		},
-		WebGL: {
-			title: "WebGL Experiments",
-			description:
-				"Three.js・WebGPU実装とインタラクティブ体験.シェーダー、パーティクル、3Dグラフィックス.",
-			features: [
-				"3Dグラフィックス",
-				"シェーダープログラミング",
-				"パーティクルシステム",
-				"インタラクティブ3D",
-			],
-		},
 	};
 
 	return playgroundMap[type] || playgroundMap.design;
@@ -247,10 +236,6 @@ function getFeatureDescription(feature: string): string {
 		CSS実験: "最新のCSS機能を使った視覚効果の実験",
 		SVGアニメーション: "ベクターグラフィックスを使った滑らかなアニメーション",
 		Canvas描画: "HTML5 Canvasを使ったリアルタイム描画",
-		"3Dグラフィックス": "WebGLを使った立体的な視覚表現",
-		シェーダープログラミング: "GPU上で動作するカスタムシェーダー",
-		パーティクルシステム: "大量の粒子を使った動的な表現",
-		インタラクティブ3D: "ユーザー操作に反応する3D体験",
 	};
 
 	return descriptions[feature] || "実験的な機能の実装";

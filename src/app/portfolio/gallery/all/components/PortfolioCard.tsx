@@ -50,7 +50,7 @@ export function PortfolioCard({
 	const CardRoot = ({ children }: { children: React.ReactNode }) => {
 		if (variant === "glow") {
 			return (
-				<GlowCard className="group cursor-pointer text-left bg-base/30 backdrop-blur flex flex-col">
+				<GlowCard className="group cursor-pointer text-left bg-base flex flex-col">
 					{children}
 				</GlowCard>
 			);
@@ -70,7 +70,7 @@ export function PortfolioCard({
 	return (
 		<CardRoot>
 			{/* Thumbnail */}
-			<div className="aspect-video bg-base overflow-hidden relative rounded-md">
+			<div className="aspect-video bg-base overflow-hidden relative">
 				{item.thumbnail ? (
 					<SafeImage
 						src={item.thumbnail}
@@ -96,7 +96,7 @@ export function PortfolioCard({
 					/>
 				) : (
 					<div className="w-full h-full flex items-center justify-center bg-base">
-						<span className="noto-sans-jp-light text-xs text-main/60">
+						<span className="noto-sans-jp-light text-xs text-main">
 							{item.title}
 						</span>
 					</div>
@@ -105,7 +105,7 @@ export function PortfolioCard({
 				{/* Subtle indicator for items with detailed markdown content (Requirement 6.5) */}
 				{hasDetailedContent && showMarkdownIndicator && (
 					<div
-						className="absolute top-2 right-2 bg-main/80 text-white p-1.5 rounded-full shadow-sm backdrop-blur-sm"
+						className="absolute top-2 right-2 bg-main text-white p-1.5 shadow-sm"
 						title="View detailed content"
 						aria-hidden="true"
 					>
@@ -134,14 +134,14 @@ export function PortfolioCard({
 							.map((tech, index) => (
 								<span
 									key={`${tech}-${index}`}
-									className="noto-sans-jp-light text-xs text-main/90 px-3 py-1 bg-main/10 rounded-full whitespace-nowrap shrink-0"
+									className="noto-sans-jp-light text-xs text-main px-3 py-1 bg-base whitespace-nowrap shrink-0"
 								>
 									{tech}
 								</span>
 							))}
 						{((item as PortfolioContentItem).technologies || item.tags || [])
 							.length > 3 && (
-							<span className="noto-sans-jp-light text-xs tag-overflow-indicator px-3 py-1 bg-main/10 rounded-full text-main/90 whitespace-nowrap shrink-0">
+							<span className="noto-sans-jp-light text-xs tag-overflow-indicator px-3 py-1 bg-base text-main whitespace-nowrap shrink-0">
 								+
 								{(
 									(item as PortfolioContentItem).technologies ||
@@ -151,7 +151,7 @@ export function PortfolioCard({
 							</span>
 						)}
 					</div>
-					<span className="noto-sans-jp-light text-xs text-main/60 whitespace-nowrap">
+					<span className="noto-sans-jp-light text-xs text-main whitespace-nowrap">
 						{(() => {
 							const effective =
 								(item as any).publishedAt || item.updatedAt || item.createdAt;

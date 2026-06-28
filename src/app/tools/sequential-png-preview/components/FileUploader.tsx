@@ -1,6 +1,5 @@
 "use client";
 
-import { Archive, File, Folder, Upload, X } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import type { FrameData, UploadMethod } from "../types";
 import {
@@ -28,21 +27,21 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 		{
 			type: "files",
 			label: "複数ファイル選択",
-			description: "複数のPNGファイルを選択してアップロード",
+			description: "複数のPNGファイルを選択",
 			accept: "image/png",
 			multiple: true,
 		},
 		{
 			type: "folder",
 			label: "フォルダ選択",
-			description: "フォルダ内のPNGファイルを一括選択",
+			description: "フォルダ内のPNGを一括選択",
 			accept: "image/png",
 			webkitdirectory: true,
 		},
 		{
 			type: "zip",
 			label: "ZIPファイル",
-			description: "ZIPファイル内のPNGファイルを展開",
+			description: "ZIP内のPNGを展開",
 			accept: ".zip,application/zip",
 		},
 	];
@@ -138,12 +137,10 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 						(f) =>
 							f.type === "image/png" || f.name.toLowerCase().endsWith(".png"),
 					);
-
 					if (pngFiles.length === 0) {
 						setError("PNGファイルが見つかりませんでした.");
 						return;
 					}
-
 					const frames = await processFiles(pngFiles);
 					const sortedFrames = sortFramesByName(frames);
 					onFilesLoaded(sortedFrames);
@@ -171,72 +168,75 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 		inputRef.current?.click();
 	}, [selectedMethod]);
 
-	const clearError = useCallback(() => {
-		setError(null);
-	}, []);
-
 	return (
-		<div className="space-y-4">
-			{/* Upload Method Selection */}
-			<div className="grid grid-3 gap-4">
+		<div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+			<div
+				style={{
+					display: "grid",
+					gridTemplateColumns: "1fr 1fr 1fr",
+					gap: "8px",
+				}}
+			>
 				{uploadMethods.map((method) => (
 					<button
 						type="button"
 						key={method.type}
 						onClick={() => setSelectedMethod(method.type)}
-						className={`p-4 rounded-lg text-left transition-colors ${
-							selectedMethod === method.type
-								? "bg-main/20"
-								: "bg-main/10 hover:bg-main/15"
-						}`}
+						style={{
+							all: "revert",
+							padding: "10px",
+							textAlign: "left",
+							border:
+								selectedMethod === method.type
+									? "2px solid #000"
+									: "1px solid #ccc",
+							fontSize: "13px",
+							cursor: "pointer",
+						}}
 					>
-						<div className="flex items-center gap-2 mb-2">
-							{method.type === "files" && <File size={20} />}
-							{method.type === "folder" && <Folder size={20} />}
-							{method.type === "zip" && <Archive size={20} />}
-							<span className="font-medium">{method.label}</span>
+						<div style={{ fontWeight: "bold", marginBottom: "3px" }}>
+							{method.label}
 						</div>
-						<p className="text-sm text-main">{method.description}</p>
+						<div style={{ fontSize: "11px", color: "#666" }}>
+							{method.description}
+						</div>
 					</button>
 				))}
 			</div>
 
-			{/* Drop Zone */}
 			<div
 				onDragOver={handleDragOver}
 				onDragLeave={handleDragLeave}
 				onDrop={handleDrop}
 				onClick={triggerFileSelect}
-				className={`border-2 border-dashed border-main/20 rounded-lg p-8 text-center cursor-pointer transition-colors ${
-					isDragging
-						? "border-accent bg-main/10"
-						: "hover:border-main/40 hover:bg-main/5"
-				}`}
+				style={{
+					border: isDragging ? "2px dashed #000" : "2px dashed #ccc",
+					padding: "40px",
+					textAlign: "center",
+					cursor: "pointer",
+					background: isDragging ? "#f5f5f5" : "transparent",
+				}}
 			>
-				<Upload size={48} className="mx-auto mb-4 text-main/50" />
-				<div className="space-y-2">
-					<p className="text-lg font-medium">
-						{selectedMethod === "files" && "ファイルを選択またはドロップ"}
-						{selectedMethod === "folder" && "フォルダを選択またはドロップ"}
-						{selectedMethod === "zip" && "ZIPファイルを選択またはドロップ"}
-					</p>
-					<p className="text-sm text-main">
-						{selectedMethod === "files" && "複数のPNGファイルを選択できます"}
-						{selectedMethod === "folder" &&
-							"フォルダ内のPNGファイルを自動検出します"}
-						{selectedMethod === "zip" && "ZIP内のPNGファイルを展開します"}
-					</p>
-				</div>
+				<p style={{ marginBottom: "8px" }}>
+					{selectedMethod === "files" && "ファイルを選択またはドロップ"}
+					{selectedMethod === "folder" && "フォルダを選択またはドロップ"}
+					{selectedMethod === "zip" && "ZIPファイルを選択またはドロップ"}
+				</p>
+				<p style={{ fontSize: "12px", color: "#666" }}>
+					{selectedMethod === "files" && "複数のPNGファイルを選択できます"}
+					{selectedMethod === "folder" &&
+						"フォルダ内のPNGファイルを自動検出します"}
+					{selectedMethod === "zip" && "ZIP内のPNGファイルを展開します"}
+				</p>
 			</div>
 
-			{/* Hidden File Inputs */}
 			<input
 				ref={fileInputRef}
 				type="file"
 				accept="image/png"
 				multiple
 				onChange={(e) => handleFileSelect(e.target.files)}
-				className="hidden"
+				style={{ display: "none" }}
 				aria-label="PNGファイルを選択"
 			/>
 			<input
@@ -245,7 +245,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 				accept="image/png"
 				{...({ webkitdirectory: "" } as Record<string, string>)}
 				onChange={(e) => handleFileSelect(e.target.files)}
-				className="hidden"
+				style={{ display: "none" }}
 				aria-label="フォルダを選択"
 			/>
 			<input
@@ -253,36 +253,33 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 				type="file"
 				accept=".zip,application/zip"
 				onChange={(e) => handleFileSelect(e.target.files)}
-				className="hidden"
+				style={{ display: "none" }}
 				aria-label="ZIPファイルを選択"
 			/>
 
-			{/* Processing State */}
 			{isProcessing && (
-				<div className="text-center py-4">
-					<div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
-					<p className="mt-2 text-sm text-main">ファイルを処理中...</p>
+				<div
+					style={{
+						textAlign: "center",
+						padding: "15px",
+						fontSize: "13px",
+						color: "#666",
+					}}
+				>
+					ファイルを処理中...
 				</div>
 			)}
 
-			{/* Error Display */}
 			{error && (
-				<div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start justify-between">
-					<div className="flex items-start gap-2">
-						<X size={20} className="text-red-500 mt-0.5" />
-						<div>
-							<p className="font-medium text-red-800">エラー</p>
-							<p className="text-sm text-red-600">{error}</p>
-						</div>
-					</div>
-					<button
-						type="button"
-						onClick={clearError}
-						className="text-red-500 hover:text-red-700"
-						aria-label="エラーを閉じる"
-					>
-						<X size={16} />
-					</button>
+				<div
+					style={{
+						border: "1px solid #cc0000",
+						padding: "10px",
+						color: "#cc0000",
+						fontSize: "13px",
+					}}
+				>
+					<strong>エラー:</strong> {error}
 				</div>
 			)}
 		</div>

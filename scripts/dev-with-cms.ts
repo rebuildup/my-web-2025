@@ -32,7 +32,9 @@ async function findAvailablePort(startPort: number): Promise<number> {
 		}
 	}
 
-	throw new Error(`No available port found from ${startPort} to ${startPort + 19}`);
+	throw new Error(
+		`No available port found from ${startPort} to ${startPort + 19}`,
+	);
 }
 
 function startProcess(spec: ProcSpec) {
@@ -55,9 +57,7 @@ function startProcess(spec: ProcSpec) {
 		if (shuttingDown) {
 			return;
 		}
-		console.error(
-			`[dev-with-cms] ${spec.name} exited with code ${code ?? 0}`,
-		);
+		console.error(`[dev-with-cms] ${spec.name} exited with code ${code ?? 0}`);
 		shutdown(code ?? 1);
 	});
 

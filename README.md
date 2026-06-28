@@ -40,6 +40,7 @@
 
 ### 前提条件 (Prerequisites)
 - Bun 1.3 以上
+- Docker Desktop (CMS API の起動に必要)
 - `NEXT_PUBLIC_GA_ID` を `.env.local` に設定
 
 ### インストール (Installation)
@@ -50,13 +51,44 @@ bun install
 
 ### 開発サーバの起動 (Development)
 
-TurboPackを使用して高速なHMRで開発サーバーを起動します：
+**Web サイト (Next.js)**
 
 ```bash
 bun run dev
 ```
 
 ブラウザで [http://localhost:3010](http://localhost:3010) を開いてください.
+
+**CMS API (Rust / Docker)**
+
+CMS API は Rust 製で Docker コンテナ内で動作します. 初回はイメージのビルドが必要です.
+
+```bash
+# Docker イメージをビルド (初回のみ, 約1分)
+docker build -t my-web-2025-cms-api:latest -f apps/cms-api/Dockerfile .
+
+# CMS API を起動
+bun run dev:cms-api
+```
+
+API は [http://localhost:3001](http://localhost:3001) で動作します.
+
+**両方を同時に起動する場合**
+
+```bash
+# Web サイトをバックグラウンドで起動
+Start-Process bun -ArgumentList "--bun next dev -p 3010"
+
+# CMS API を起動
+bun run dev:cms-api
+```
+
+### 停止 (Stop)
+
+```bash
+# CMS API の停止
+docker compose -f docker-compose.cms-api.yml down
+```
 
 
 

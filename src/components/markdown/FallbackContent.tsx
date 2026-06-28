@@ -19,7 +19,7 @@ export interface FallbackContentProps {
 	showErrorDetails?: boolean;
 }
 
-export const FallbackContent: React.FC<FallbackContentProps> = ({
+const FallbackContent: React.FC<FallbackContentProps> = ({
 	error,
 	fallbackContent,
 	contentId,

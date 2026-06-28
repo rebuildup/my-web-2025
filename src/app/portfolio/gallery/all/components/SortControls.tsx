@@ -48,7 +48,7 @@ export function SortControls({ sort, onSortChange }: SortControlsProps) {
 	return (
 		<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 overflow-hidden">
 			<div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
-				<span className="text-sm text-main/70">Sort by:</span>
+				<span className="text-sm text-main">Sort by:</span>
 
 				{/* Sort By Dropdown */}
 				<Select
@@ -75,7 +75,7 @@ export function SortControls({ sort, onSortChange }: SortControlsProps) {
 			</div>
 
 			{/* Sort Description */}
-			<div className="hidden sm:block text-xs sm:text-sm text-main/60 shrink-0">
+			<div className="hidden sm:block text-xs sm:text-sm text-main shrink-0">
 				Sorted by {getSortLabel(sort.sortBy)} (
 				{sort.sortOrder === "asc" ? "ascending" : "descending"})
 			</div>

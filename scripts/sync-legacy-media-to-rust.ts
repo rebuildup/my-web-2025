@@ -31,7 +31,10 @@ async function fetchExistingMediaIds(contentId: string): Promise<Set<string>> {
 	return new Set(items.map((item) => item.id));
 }
 
-async function uploadMedia(mediaId: string, payload: RustMediaPayload): Promise<void> {
+async function uploadMedia(
+	mediaId: string,
+	payload: RustMediaPayload,
+): Promise<void> {
 	const response = await fetch(`${cmsApiBaseUrl}/media`, {
 		method: "POST",
 		headers: {
@@ -61,7 +64,7 @@ async function main() {
 				continue;
 			}
 
-			const raw = media.data ?? Buffer.from(media.base64 || "", "base64");
+			const _raw = media.data ?? Buffer.from(media.base64 || "", "base64");
 			const full = getMedia(entry.id, media.id);
 			if (!full?.data) {
 				console.warn(

@@ -21,164 +21,184 @@ export default function FrameGrid({
 	);
 	const [showInfo, setShowInfo] = useState(true);
 
-	const gridSizeClasses = {
-		small: "grid-cols-8 gap-2",
-		medium: "grid-cols-6 gap-3",
-		large: "grid-cols-4 gap-4",
+	const gridCols = {
+		small: "repeat(8, 1fr)",
+		medium: "repeat(6, 1fr)",
+		large: "repeat(4, 1fr)",
 	};
-
-	const thumbnailSizeClasses = {
-		small: "h-16",
-		medium: "h-24",
-		large: "h-32",
-	};
+	const thumbHeight = { small: "64px", medium: "96px", large: "128px" };
 
 	if (frames.length === 0) {
 		return (
-			<div className="flex items-center justify-center h-96 text-main">
+			<div style={{ padding: "40px", textAlign: "center", color: "#666" }}>
 				フレームが読み込まれていません
 			</div>
 		);
 	}
 
 	return (
-		<div className="p-4 space-y-4">
-			{/* Controls */}
-			<div className="flex items-center justify-between">
-				<h3 className="text-lg font-semibold text-main">
+		<div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+				}}
+			>
+				<h3 style={{ fontSize: "14px", fontWeight: "bold", margin: 0 }}>
 					フレームグリッド ({frames.length} フレーム)
 				</h3>
-
-				<div className="flex items-center gap-4">
-					<div className="flex items-center gap-2">
-						<label className="text-sm font-medium">表示サイズ:</label>
+				<div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
+					<div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+						<label style={{ fontSize: "12px" }}>表示サイズ:</label>
 						<select
 							value={gridSize}
 							onChange={(e) =>
 								setGridSize(e.target.value as "small" | "medium" | "large")
 							}
-							className="px-2 py-1 rounded-lg bg-main/10 text-sm"
+							style={{
+								all: "revert",
+								border: "none",
+								padding: "2px 4px",
+								fontSize: "12px",
+							}}
 						>
 							<option value="small">小</option>
 							<option value="medium">中</option>
 							<option value="large">大</option>
 						</select>
 					</div>
-
-					<label className="flex items-center gap-2 text-sm">
+					<label
+						style={{
+							display: "flex",
+							alignItems: "center",
+							gap: "5px",
+							fontSize: "12px",
+							cursor: "pointer",
+						}}
+					>
 						<input
 							type="checkbox"
 							checked={showInfo}
 							onChange={(e) => setShowInfo(e.target.checked)}
+							style={{ all: "revert", border: "none" }}
 						/>
 						詳細情報を表示
 					</label>
 				</div>
 			</div>
 
-			{/* Grid */}
-			<div className={`grid ${gridSizeClasses[gridSize]}`}>
+			<div
+				style={{
+					display: "grid",
+					gridTemplateColumns: gridCols[gridSize],
+					gap: "8px",
+				}}
+			>
 				{frames.map((frame, index) => (
 					<div
 						key={frame.dataUrl}
-						className={`relative group cursor-pointer rounded-lg overflow-hidden transition-all ${
-							index === currentFrame
-								? "bg-main/20 shadow-lg scale-105 ring-2 ring-accent"
-								: "bg-main/5 hover:bg-main/10 hover:scale-102"
-						}`}
 						onClick={() => onFrameSelect(index)}
+						style={{
+							cursor: "pointer",
+							border:
+								index === currentFrame ? "2px solid #000" : "1px solid #ddd",
+							overflow: "hidden",
+							background: index === currentFrame ? "#f0f0f0" : "#fff",
+						}}
 					>
-						{/* Thumbnail */}
 						<div
-							className={`relative ${thumbnailSizeClasses[gridSize]} bg-base`}
+							style={{
+								position: "relative",
+								height: thumbHeight[gridSize],
+								background: "#fafafa",
+							}}
 						>
 							<Image
 								src={frame.dataUrl}
 								alt={`Frame ${index + 1}`}
 								width={frame.width}
 								height={frame.height}
-								className="w-full h-full object-contain"
+								style={{ width: "100%", height: "100%", objectFit: "contain" }}
 								loading="lazy"
 								unoptimized={true}
 							/>
-
-							{/* Frame Number Overlay */}
-							<div className="absolute top-1 left-1 bg-black/70 text-white text-xs px-1 py-0.5 rounded">
+							<div
+								style={{
+									position: "absolute",
+									top: "2px",
+									left: "2px",
+									background: "rgba(0,0,0,0.7)",
+									color: "#fff",
+									padding: "1px 3px",
+									fontSize: "10px",
+								}}
+							>
 								{index + 1}
 							</div>
-
-							{/* Current Frame Indicator */}
-							{index === currentFrame && (
-								<div className="absolute inset-0 bg-main/20 flex items-center justify-center">
-									<div className="bg-main text-white px-2 py-1 rounded text-sm font-medium">
-										現在のフレーム
-									</div>
-								</div>
-							)}
 						</div>
-
-						{/* Frame Info */}
 						{showInfo && (
-							<div className="p-2 bg-main/5 border-t border-main/10">
-								<div className="text-xs space-y-1">
-									<div className="font-medium truncate" title={frame.name}>
-										{frame.name}
-									</div>
-									<div className="text-main/70">
-										{frame.width} × {frame.height}px
-									</div>
-									<div className="text-main/70">
-										{formatFileSize(frame.size)}
-									</div>
+							<div
+								style={{
+									padding: "4px",
+									fontSize: "10px",
+									borderTop: "1px solid #eee",
+								}}
+							>
+								<div
+									style={{
+										overflow: "hidden",
+										textOverflow: "ellipsis",
+										whiteSpace: "nowrap",
+									}}
+									title={frame.name}
+								>
+									{frame.name}
+								</div>
+								<div style={{ color: "#666" }}>
+									{frame.width} × {frame.height}px
+								</div>
+								<div style={{ color: "#666" }}>
+									{formatFileSize(frame.size)}
 								</div>
 							</div>
 						)}
-
-						{/* Hover Overlay */}
-						<div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
 					</div>
 				))}
 			</div>
 
-			{/* Grid Statistics */}
-			<div className="mt-6 p-4 rounded-lg bg-main/5">
-				<h4 className="font-medium mb-2 text-main">統計情報</h4>
-				<div className="grid grid-2 gap-4 text-sm">
+			<fieldset
+				style={{ border: "1px solid #eee", padding: "10px", fontSize: "12px" }}
+			>
+				<legend>統計情報</legend>
+				<div
+					style={{
+						display: "grid",
+						gridTemplateColumns: "1fr 1fr",
+						gap: "5px",
+					}}
+				>
+					<div>総フレーム数: {frames.length}</div>
 					<div>
-						<span className="text-main/70">総フレーム数:</span>
-						<span className="ml-2 font-medium">{frames.length}</span>
+						総ファイルサイズ:{" "}
+						{formatFileSize(frames.reduce((t, f) => t + f.size, 0))}
 					</div>
 					<div>
-						<span className="text-main/70">総ファイルサイズ:</span>
-						<span className="ml-2 font-medium">
-							{formatFileSize(
-								frames.reduce((total, frame) => total + frame.size, 0),
-							)}
-						</span>
+						平均解像度:{" "}
+						{Math.round(
+							frames.reduce((t, f) => t + f.width, 0) / frames.length,
+						)}{" "}
+						×{" "}
+						{Math.round(
+							frames.reduce((t, f) => t + f.height, 0) / frames.length,
+						)}
+						px
 					</div>
 					<div>
-						<span className="text-main/70">平均解像度:</span>
-						<span className="ml-2 font-medium">
-							{Math.round(
-								frames.reduce((total, frame) => total + frame.width, 0) /
-									frames.length,
-							)}{" "}
-							×{" "}
-							{Math.round(
-								frames.reduce((total, frame) => total + frame.height, 0) /
-									frames.length,
-							)}
-							px
-						</span>
-					</div>
-					<div>
-						<span className="text-main/70">現在のフレーム:</span>
-						<span className="ml-2 font-medium">
-							{currentFrame + 1} / {frames.length}
-						</span>
+						現在のフレーム: {currentFrame + 1} / {frames.length}
 					</div>
 				</div>
-			</div>
+			</fieldset>
 		</div>
 	);
 }

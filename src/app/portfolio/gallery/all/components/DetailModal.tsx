@@ -80,7 +80,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 
 	return (
 		<div
-			className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+			className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
 			onClick={handleBackdropClick}
 			onKeyDown={handleBackdropKeyDown}
 			tabIndex={-1}
@@ -104,7 +104,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 						type="button"
 						ref={closeButtonRef}
 						onClick={onClose}
-						className="p-2 hover:bg-main/10 transition-colors"
+						className="p-2 transition-colors"
 						aria-label="Close modal"
 					>
 						<X className="w-5 h-5" />
@@ -136,7 +136,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 							return (
 								<div className="flex items-center space-x-2">
 									<Calendar className="w-4 h-4 text-accent" />
-									<span className="text-main/70">Published:</span>
+									<span className="text-main">Published:</span>
 									<time dateTime={effective}>
 										{new Date(effective).toLocaleDateString("ja-JP")}
 									</time>
@@ -146,7 +146,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 
 						<div className="flex items-center space-x-2">
 							<Tag className="w-4 h-4 text-accent" />
-							<span className="text-main/70">Category:</span>
+							<span className="text-main">Category:</span>
 							<span>
 								{(item as EnhancedContentItem).categories
 									? (item as EnhancedContentItem).categories.join(", ")

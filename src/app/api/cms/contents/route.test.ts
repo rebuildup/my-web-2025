@@ -215,6 +215,7 @@ describe("GET guard (public)", () => {
 describe("GET detail mapping", () => {
 	test("detail response keeps tags and list thumbnail for the edit modal", async () => {
 		process.env.CMS_API_BASE_URL = "http://cms-api.test";
+		process.env.CMS_USE_RUST_API = "1";
 		const requestedUrls: string[] = [];
 		globalThis.fetch = (async (input: RequestInfo | URL) => {
 			const url = input.toString();

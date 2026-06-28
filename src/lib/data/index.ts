@@ -118,7 +118,9 @@ export async function deleteContentItem(
 	return false;
 }
 
-export async function loadAllContent(): Promise<Record<ContentType, ContentItem[]>> {
+export async function loadAllContent(): Promise<
+	Record<ContentType, ContentItem[]>
+> {
 	const entries = await fetchCmsContentIndex();
 	return entries.reduce(
 		(acc, entry) => {

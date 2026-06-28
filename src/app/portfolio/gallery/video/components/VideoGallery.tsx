@@ -82,8 +82,8 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 									onClick={() => handleItemClick(item)}
 								>
 									{/* Video Thumbnail */}
-									<GlowCard className="group cursor-pointer text-left block bg-base/30 backdrop-blur overflow-hidden mb-4">
-										<div className="aspect-video relative overflow-hidden rounded-md">
+									<GlowCard className="group cursor-pointer text-left block bg-base overflow-hidden mb-4">
+										<div className="aspect-video relative overflow-hidden">
 											{item.thumbnail ? (
 												<SafeImage
 													src={item.thumbnail}
@@ -104,7 +104,7 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 												/>
 											) : (
 												<div className="w-full h-full flex items-center justify-center">
-													<VideoIcon className="w-12 h-12 text-main opacity-50" />
+													<VideoIcon className="w-12 h-12 text-main" />
 												</div>
 											)}
 
@@ -114,7 +114,7 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 												aria-hidden="true"
 											>
 												<div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-													<Play className="w-12 h-12 text-white drop-shadow-lg" />
+													<Play className="w-12 h-12 text-white" />
 												</div>
 											</div>
 										</div>
@@ -138,13 +138,13 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 													{item.tags.slice(0, 3).map((tag) => (
 														<span
 															key={tag}
-															className="noto-sans-jp-light text-xs text-main/90 px-3 py-1 bg-main/10 rounded-full whitespace-nowrap shrink-0"
+															className="noto-sans-jp-light text-xs text-main px-3 py-1 bg-base whitespace-nowrap shrink-0"
 														>
 															{tag}
 														</span>
 													))}
 													{item.tags.length > 3 && (
-														<span className="noto-sans-jp-light text-xs text-main/90 px-3 py-1 bg-main/10 rounded-full tag-overflow-indicator">
+														<span className="noto-sans-jp-light text-xs text-main px-3 py-1 bg-base tag-overflow-indicator">
 															+{item.tags.length - 3}
 														</span>
 													)}

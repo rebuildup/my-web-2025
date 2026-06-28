@@ -1,6 +1,5 @@
 "use client";
 
-import { Download, FileImage, Film, Image, X } from "lucide-react";
 import { useState } from "react";
 import type { AnimationSettings, ExportSettings, FrameData } from "../types";
 
@@ -33,9 +32,9 @@ export default function ExportPanel({
 			if (exportSettings.format === "frames") {
 				await exportFrames();
 			} else if (exportSettings.format === "gif") {
-				await exportGif();
+				alert("GIF export is not yet implemented.");
 			} else if (exportSettings.format === "mp4") {
-				await exportMp4();
+				alert("MP4 export is not yet implemented.");
 			}
 		} catch (error) {
 			console.error("Export failed:", error);
@@ -57,39 +56,7 @@ export default function ExportPanel({
 			document.body.removeChild(link);
 
 			setExportProgress(((i + 1) / frames.length) * 100);
-
-			// Small delay to prevent browser blocking
 			await new Promise((resolve) => setTimeout(resolve, 100));
-		}
-	};
-
-	const exportGif = async () => {
-		// This is a placeholder implementation
-		// In a real application, you would use a library like gif.js
-		alert(
-			"GIF export is not yet implemented. This would require a GIF encoding library.",
-		);
-	};
-
-	const exportMp4 = async () => {
-		// This is a placeholder implementation
-		// In a real application, you would use a library like ffmpeg.wasm
-		alert(
-			"MP4 export is not yet implemented. This would require video encoding capabilities.",
-		);
-	};
-
-	const estimatedFileSize = () => {
-		const avgFrameSize =
-			frames.reduce((total, frame) => total + frame.size, 0) / frames.length;
-		const qualityMultiplier = exportSettings.quality / 100;
-
-		if (exportSettings.format === "frames") {
-			return avgFrameSize * frames.length;
-		} else if (exportSettings.format === "gif") {
-			return avgFrameSize * frames.length * qualityMultiplier * 0.3; // GIF compression estimate
-		} else {
-			return avgFrameSize * frames.length * qualityMultiplier * 0.1; // MP4 compression estimate
 		}
 	};
 
@@ -101,89 +68,86 @@ export default function ExportPanel({
 		return `${parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
 	};
 
-	return (
-		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
-			<div className="flex items-center justify-between mb-6">
-				<h3 className="text-lg font-semibold text-main">エクスポート設定</h3>
-				<button
-					type="button"
-					onClick={onClose}
-					className="text-main hover:text-main transition-colors"
-					aria-label="閉じる"
-				>
-					<X size={20} />
-				</button>
-			</div>
+	const estimatedFileSize = () => {
+		const avgFrameSize =
+			frames.reduce((total, frame) => total + frame.size, 0) / frames.length;
+		const qualityMultiplier = exportSettings.quality / 100;
+		if (exportSettings.format === "frames") {
+			return avgFrameSize * frames.length;
+		} else if (exportSettings.format === "gif") {
+			return avgFrameSize * frames.length * qualityMultiplier * 0.3;
+		} else {
+			return avgFrameSize * frames.length * qualityMultiplier * 0.1;
+		}
+	};
 
-			<div className="space-y-6">
-				{/* Format Selection */}
+	return (
+		<fieldset style={{ border: "1px solid #ccc", padding: "15px" }}>
+			<legend>エクスポート設定</legend>
+
+			<div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
 				<div>
-					<label className="block text-sm font-medium mb-3">
+					<label
+						style={{ display: "block", fontSize: "12px", marginBottom: "5px" }}
+					>
 						エクスポート形式
 					</label>
-					<div className="grid grid-3 gap-3">
-						<button
-							type="button"
-							onClick={() =>
-								setExportSettings((prev) => ({ ...prev, format: "frames" }))
-							}
-							className={`p-4 rounded-lg text-left transition-colors ${
-								exportSettings.format === "frames"
-									? "bg-main/20"
-									: "bg-main/10 hover:bg-main/15"
-							}`}
-						>
-							<div className="flex items-center gap-2 mb-2">
-								<FileImage size={20} />
-								<span className="font-medium">個別フレーム</span>
-							</div>
-							<p className="text-sm text-main">
-								各フレームをPNGファイルとして出力
-							</p>
-						</button>
-
-						<button
-							type="button"
-							onClick={() =>
-								setExportSettings((prev) => ({ ...prev, format: "gif" }))
-							}
-							className={`p-4 rounded-lg text-left transition-colors ${
-								exportSettings.format === "gif"
-									? "bg-main/20"
-									: "bg-main/10 hover:bg-main/15"
-							}`}
-						>
-							<div className="flex items-center gap-2 mb-2">
-								<Image size={20} aria-label="GIF icon" />
-								<span className="font-medium">アニメーションGIF</span>
-							</div>
-							<p className="text-sm text-main">アニメーションGIFとして出力</p>
-						</button>
-
-						<button
-							type="button"
-							onClick={() =>
-								setExportSettings((prev) => ({ ...prev, format: "mp4" }))
-							}
-							className={`p-4 rounded-lg text-left transition-colors ${
-								exportSettings.format === "mp4"
-									? "bg-main/20"
-									: "bg-main/10 hover:bg-main/15"
-							}`}
-						>
-							<div className="flex items-center gap-2 mb-2">
-								<Film size={20} />
-								<span className="font-medium">MP4動画</span>
-							</div>
-							<p className="text-sm text-main">MP4動画として出力</p>
-						</button>
+					<div
+						style={{
+							display: "grid",
+							gridTemplateColumns: "1fr 1fr 1fr",
+							gap: "8px",
+						}}
+					>
+						{[
+							{
+								key: "frames" as const,
+								label: "個別フレーム",
+								desc: "各フレームをPNGとして出力",
+							},
+							{
+								key: "gif" as const,
+								label: "アニメーションGIF",
+								desc: "GIFとして出力",
+							},
+							{ key: "mp4" as const, label: "MP4動画", desc: "MP4として出力" },
+						].map(({ key, label, desc }) => (
+							<button
+								type="button"
+								key={key}
+								onClick={() =>
+									setExportSettings((prev) => ({ ...prev, format: key }))
+								}
+								style={{
+									all: "revert",
+									padding: "10px",
+									textAlign: "left",
+									border:
+										exportSettings.format === key
+											? "2px solid #000"
+											: "1px solid #ccc",
+									fontSize: "13px",
+									cursor: "pointer",
+								}}
+							>
+								<div style={{ fontWeight: "bold", marginBottom: "3px" }}>
+									{label}
+								</div>
+								<div style={{ fontSize: "11px", color: "#666" }}>{desc}</div>
+							</button>
+						))}
 					</div>
 				</div>
 
-				{/* Quality Settings */}
 				{exportSettings.format !== "frames" && (
 					<div>
-						<label className="block text-sm font-medium mb-2">
+						<label
+							style={{
+								display: "block",
+								fontSize: "12px",
+								marginBottom: "3px",
+							}}
+						>
 							品質: {exportSettings.quality}%
 						</label>
 						<input
@@ -198,20 +162,29 @@ export default function ExportPanel({
 									quality: parseInt(e.target.value, 10),
 								}))
 							}
-							className="w-full"
+							style={{ width: "100%" }}
 						/>
-						<div className="flex justify-between text-xs text-main mt-1">
-							<span>低品質</span>
-							<span>高品質</span>
-						</div>
 					</div>
 				)}
 
-				{/* Dimension Settings */}
 				{exportSettings.format !== "frames" && (
-					<div className="grid grid-2 gap-4">
+					<div
+						style={{
+							display: "grid",
+							gridTemplateColumns: "1fr 1fr",
+							gap: "10px",
+						}}
+					>
 						<div>
-							<label className="block text-sm font-medium mb-2">幅 (px)</label>
+							<label
+								style={{
+									display: "block",
+									fontSize: "12px",
+									marginBottom: "3px",
+								}}
+							>
+								幅 (px)
+							</label>
 							<input
 								type="number"
 								min="100"
@@ -223,11 +196,23 @@ export default function ExportPanel({
 										width: parseInt(e.target.value, 10) || 800,
 									}))
 								}
-								className="w-full p-2 rounded-lg bg-main/10"
+								style={{
+									all: "revert",
+									width: "100%",
+									padding: "4px 8px",
+									fontSize: "13px",
+									boxSizing: "border-box",
+								}}
 							/>
 						</div>
 						<div>
-							<label className="block text-sm font-medium mb-2">
+							<label
+								style={{
+									display: "block",
+									fontSize: "12px",
+									marginBottom: "3px",
+								}}
+							>
 								高さ (px)
 							</label>
 							<input
@@ -241,94 +226,72 @@ export default function ExportPanel({
 										height: parseInt(e.target.value, 10) || 600,
 									}))
 								}
-								className="w-full p-2 rounded-lg bg-main/10"
+								style={{
+									all: "revert",
+									width: "100%",
+									padding: "4px 8px",
+									fontSize: "13px",
+									boxSizing: "border-box",
+								}}
 							/>
 						</div>
 					</div>
 				)}
 
-				{/* Frame Rate Settings */}
-				{exportSettings.format !== "frames" && (
-					<div>
-						<label className="block text-sm font-medium mb-2">
-							フレームレート: {exportSettings.frameRate}fps
-						</label>
-						<input
-							type="range"
-							min="1"
-							max="60"
-							value={exportSettings.frameRate}
-							onChange={(e) =>
-								setExportSettings((prev) => ({
-									...prev,
-									frameRate: parseInt(e.target.value, 10),
-								}))
-							}
-							className="w-full"
-						/>
-						<div className="flex justify-between text-xs text-main mt-1">
-							<span>1fps</span>
-							<span>60fps</span>
-						</div>
-					</div>
-				)}
-
-				{/* Export Info */}
-				<div className="p-4 rounded-lg bg-main/5">
-					<h4 className="font-medium mb-2 text-main">エクスポート情報</h4>
-					<div className="space-y-1 text-sm">
-						<div className="flex justify-between">
-							<span className="text-main/70">フレーム数:</span>
-							<span>{frames.length}</span>
-						</div>
-						<div className="flex justify-between">
-							<span className="text-main/70">推定ファイルサイズ:</span>
-							<span>{formatFileSize(estimatedFileSize())}</span>
-						</div>
-						{exportSettings.format !== "frames" && (
-							<>
-								<div className="flex justify-between">
-									<span className="text-main/70">出力解像度:</span>
-									<span>
-										{exportSettings.width} × {exportSettings.height}px
-									</span>
-								</div>
-								<div className="flex justify-between">
-									<span className="text-main/70">フレームレート:</span>
-									<span>{exportSettings.frameRate}fps</span>
-								</div>
-							</>
-						)}
-					</div>
+				<div style={{ fontSize: "12px", color: "#666" }}>
+					<div>フレーム数: {frames.length}</div>
+					<div>推定ファイルサイズ: {formatFileSize(estimatedFileSize())}</div>
 				</div>
 
-				{/* Export Progress */}
 				{isExporting && (
-					<div className="space-y-2">
-						<div className="flex justify-between text-sm">
+					<div>
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "space-between",
+								fontSize: "12px",
+								marginBottom: "3px",
+							}}
+						>
 							<span>エクスポート中...</span>
 							<span>{Math.round(exportProgress)}%</span>
 						</div>
-						<div className="w-full bg-main/20 rounded-full h-2">
-							<div
-								className="bg-main h-2 rounded-full transition-all duration-300"
-								style={{ width: `${exportProgress}%` }}
-							/>
-						</div>
+						<progress
+							value={exportProgress}
+							max={100}
+							style={{ width: "100%", height: "15px" }}
+						/>
 					</div>
 				)}
 
-				{/* Export Button */}
-				<button
-					type="button"
-					onClick={handleExport}
-					disabled={isExporting || frames.length === 0}
-					className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-				>
-					<Download size={20} />
-					{isExporting ? "エクスポート中..." : "エクスポート開始"}
-				</button>
+				<div style={{ display: "flex", gap: "8px" }}>
+					<button
+						type="button"
+						onClick={handleExport}
+						disabled={isExporting || frames.length === 0}
+						style={{
+							all: "revert",
+							border: "none",
+							padding: "4px 12px",
+							fontSize: "13px",
+						}}
+					>
+						{isExporting ? "エクスポート中..." : "エクスポート開始"}
+					</button>
+					<button
+						type="button"
+						onClick={onClose}
+						style={{
+							all: "revert",
+							border: "none",
+							padding: "4px 12px",
+							fontSize: "13px",
+						}}
+					>
+						閉じる
+					</button>
+				</div>
 			</div>
-		</div>
+		</fieldset>
 	);
 }

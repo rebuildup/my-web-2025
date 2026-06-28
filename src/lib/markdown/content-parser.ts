@@ -1194,6 +1194,3 @@ export const createContentParser = (
 ): ContentParserService => {
 	return new ContentParser(mediaResolver);
 };
-
-// Default export
-export default ContentParser;

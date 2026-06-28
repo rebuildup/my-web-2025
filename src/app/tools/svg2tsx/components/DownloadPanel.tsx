@@ -1,6 +1,5 @@
 "use client";
 
-import { CheckCircle, Copy, Download, XCircle } from "lucide-react";
 import { useState } from "react";
 import type { ConversionResult, ConversionSettings } from "../types";
 
@@ -47,91 +46,82 @@ export function DownloadPanel({
 	const isDisabled = !conversionResult?.success || !conversionResult.tsxCode;
 
 	return (
-		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
-			<h3 className="text-lg font-medium mb-4">ダウンロード</h3>
+		<fieldset style={{ border: "1px solid #ccc", padding: "15px" }}>
+			<legend>ダウンロード</legend>
 
-			<div className="space-y-4">
-				{/* File Name Setting */}
+			<div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
 				<div>
-					<label className="block text-sm font-medium mb-1">ファイル名</label>
-					<div className="flex gap-2">
+					<label
+						style={{ display: "block", fontSize: "12px", marginBottom: "3px" }}
+					>
+						ファイル名
+					</label>
+					<div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
 						<input
 							type="text"
 							value={fileName}
 							onChange={(e) => setFileName(e.target.value)}
-							className="flex-1 p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+							style={{
+								all: "revert",
+								flex: 1,
+								padding: "4px 8px",
+								fontSize: "13px",
+							}}
 							placeholder="Component"
-							aria-label="ファイル名"
 						/>
-						<span className="flex items-center px-2 text-sm text-main/70">
+						<span style={{ fontSize: "13px", color: "#666" }}>
 							{settings.fileExtension}
 						</span>
 					</div>
 				</div>
 
-				{/* Action Buttons */}
-				<div className="flex flex-col sm:flex-row gap-2">
+				<div
+					style={{
+						display: "grid",
+						gridTemplateColumns: "1fr 1fr",
+						gap: "8px",
+					}}
+				>
 					<button
 						type="button"
 						onClick={handleDownload}
 						disabled={isDisabled}
-						className="flex-1 bg-main text-white px-4 py-2 hover:bg-main/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+						style={{ all: "revert", padding: "4px 12px", fontSize: "13px" }}
 					>
-						<Download className="w-4 h-4 mr-2" />
 						ファイルをダウンロード
 					</button>
-
 					<button
 						type="button"
 						onClick={handleCopy}
 						disabled={isDisabled}
-						className={`flex-1 rounded-lg bg-main/10 hover:bg-main/20 px-4 py-2 transition-colors ${
-							copySuccess
-								? "bg-green-100 text-green-700 border-green-500"
-								: "hover:bg-main/10"
-						}`}
+						style={{ all: "revert", padding: "4px 12px", fontSize: "13px" }}
 					>
-						{copySuccess ? (
-							<>
-								<CheckCircle className="w-4 h-4 mr-2" />
-								コピー完了
-							</>
-						) : (
-							<>
-								<Copy className="w-4 h-4 mr-2" />
-								クリップボードにコピー
-							</>
-						)}
+						{copySuccess ? "コピー完了" : "クリップボードにコピー"}
 					</button>
 				</div>
 
-				{/* Status */}
 				{conversionResult && (
-					<div className="text-sm">
+					<div style={{ fontSize: "13px" }}>
 						{conversionResult.success ? (
-							<div className="text-green-600">
-								<CheckCircle className="w-4 h-4 inline mr-1" />
+							<span style={{ color: "#006600" }}>
 								変換完了 ({conversionResult.tsxCode.split("\n").length} 行)
-							</div>
+							</span>
 						) : (
-							<div className="text-red-600">
-								<XCircle className="w-4 h-4 inline mr-1" />
+							<span style={{ color: "#cc0000" }}>
 								変換エラー: {conversionResult.error}
-							</div>
+							</span>
 						)}
 					</div>
 				)}
 
-				{/* Usage Instructions */}
-				<div className="text-xs text-main/70 space-y-1">
+				<div style={{ fontSize: "11px", color: "#666" }}>
 					<p>
 						<strong>使用方法:</strong>
 					</p>
 					<p>1. 生成されたコンポーネントをプロジェクトにコピー</p>
 					<p>2. 必要に応じてpropsを渡して使用</p>
-					<p>3. className, style, width, height等のpropsが利用可能</p>
 				</div>
 			</div>
-		</div>
+		</fieldset>
 	);
 }

@@ -91,14 +91,14 @@ export default function VideoDetailPanel({
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-			<div className="rounded-[20px] w-[92vw] max-w-[1100px] max-h-[90vh] overflow-hidden backdrop-blur bg-gradient-to-b from-black/50 to-base/20 shadow-[0_12px_40px_rgba(0,0,0,0.45)]">
+			<div className="w-[92vw] max-w-[1100px] max-h-[90vh] overflow-hidden bg-base">
 				{/* Header removed to reduce top whitespace */}
 
 				<div className="p-6">
 					<div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 						{/* Video Player (left 2/3) */}
 						<div className="lg:col-span-2 xl:col-span-3 space-y-4">
-							<div className="aspect-video bg-base/30 rounded-[12px] overflow-hidden relative">
+							<div className="aspect-video bg-base/30 overflow-hidden relative">
 								{!isVideoLoaded ? (
 									<>
 										{/* Background Thumbnail */}
@@ -130,7 +130,7 @@ export default function VideoDetailPanel({
 											<button
 												type="button"
 												onClick={() => setIsVideoLoaded(true)}
-												className="flex items-center gap-2 text-black px-6 py-3 rounded-lg transition-all duration-300"
+												className="flex items-center gap-2 text-black px-6 py-3 transition-all duration-300"
 												style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
 												onMouseEnter={(e) => {
 													e.currentTarget.style.backgroundColor =
@@ -183,7 +183,7 @@ export default function VideoDetailPanel({
 									<button
 										type="button"
 										onClick={onClose}
-										className="p-1.5 rounded-md hover:bg-base/40 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 cursor-pointer"
+										className="p-1.5 hover:bg-base/40 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 cursor-pointer"
 										aria-label="Close panel"
 									>
 										<X className="w-4 h-4" />
@@ -199,7 +199,7 @@ export default function VideoDetailPanel({
 										</span>
 									</div>
 									<div className="flex items-center gap-2">
-										<span className="noto-sans-jp-light text-xs text-accent bg-accent/10 px-2 py-1 rounded-full ring-1 ring-accent/20">
+										<span className="noto-sans-jp-light text-xs text-accent bg-accent/10 px-2 py-1 ring-1 ring-accent/20">
 											{item.category}
 										</span>
 									</div>
@@ -236,7 +236,7 @@ export default function VideoDetailPanel({
 													href={link.href}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="inline-flex items-center gap-1 text-accent hover:text-main transition-colors max-w-full overflow-hidden px-1 py-0.5 rounded-[4px]"
+													className="inline-flex items-center gap-1 text-accent hover:text-main transition-colors max-w-full overflow-hidden px-1 py-0.5"
 												>
 													<ExternalLink className="w-3.5 h-3.5" />
 													<span className="noto-sans-jp-light text-xs truncate max-w-[220px] sm:max-w-[280px] md:max-w-[340px]">
@@ -282,7 +282,7 @@ export default function VideoDetailPanel({
 													href={`/portfolio/${item.id}`}
 													className="block w-full group"
 												>
-													<div className="relative aspect-video w-full rounded-[10px] overflow-hidden bg-base/30">
+													<div className="relative aspect-video w-full overflow-hidden bg-base/30">
 														{thumbSrc ? (
 															<SafeImage
 																src={thumbSrc}
@@ -310,7 +310,7 @@ export default function VideoDetailPanel({
 							<div className="flex flex-col gap-1.5 pt-2 mt-auto">
 								<Link
 									href={`/portfolio/${item.id}`}
-									className="bg-main text-sm px-3 py-1.5 rounded-[8px] hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 w-full text-left"
+									className="bg-main text-sm px-3 py-1.5 hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 w-full text-left"
 								>
 									<span className="noto-sans-jp-light text-xs">
 										詳細ページを見る
@@ -321,7 +321,7 @@ export default function VideoDetailPanel({
 										href={youTubeUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="px-3 py-1.5 rounded-[8px] bg-base/30 hover:bg-base/50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 w-full text-left text-sm"
+										className="px-3 py-1.5 bg-base/30 hover:bg-base/50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 w-full text-left text-sm"
 									>
 										<span className="noto-sans-jp-light text-xs">
 											YouTubeで見る

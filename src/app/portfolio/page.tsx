@@ -61,18 +61,18 @@ function CategoryCard({
 }) {
 	return (
 		<Link href={href} className="block">
-			<GlowCard className="p-6 bg-base/30 backdrop-blur">
+			<GlowCard className="p-6 bg-base">
 				<div className="flex items-start justify-between">
 					<div className="space-y-2 flex-1">
 						<div className="flex items-center gap-3">
 							<Icon className="w-6 h-6 text-accent" />
 							<h3 className="zen-kaku-gothic-new text-xl text-main">{title}</h3>
 						</div>
-						<p className="noto-sans-jp-light text-sm text-main/70 leading-relaxed">
+						<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
 							{description}
 						</p>
 					</div>
-					<ArrowRight className="w-5 h-5 text-main/40 group-hover:text-accent group-hover:translate-x-1 transition-all" />
+					<ArrowRight className="w-5 h-5 text-main group-hover:text-accent group-hover:translate-x-1 transition-all" />
 				</div>
 			</GlowCard>
 		</Link>
@@ -437,12 +437,12 @@ export default async function PortfolioPage() {
 									</h2>
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 										<Link href="/portfolio/playground/WebGL" className="block">
-											<GlowCard className="p-6 bg-base/30 backdrop-blur">
+											<GlowCard className="p-6 bg-base">
 												<div className="space-y-2">
 													<h3 className="zen-kaku-gothic-new text-xl text-main">
 														WebGL Dome Gallery
 													</h3>
-													<p className="noto-sans-jp-light text-sm text-main/70">
+													<p className="noto-sans-jp-light text-sm text-main">
 														react-bits の Dome Gallery で遊ぶサンドボックス.
 													</p>
 												</div>
@@ -571,13 +571,13 @@ export default async function PortfolioPage() {
 							<h1 className="text-4xl sm:text-4xl font-bold italic tracking-tight text-main">
 								Error
 							</h1>
-							<p className="mt-4 text-xs sm:text-xs text-main/70">
+							<p className="mt-4 text-xs sm:text-xs text-main">
 								ポートフォリオデータの読み込みに失敗しました.
 							</p>
 							<div className="mt-8">
 								<Link
 									href="/"
-									className="text-xs sm:text-sm text-main/70 hover:text-main transition-colors underline underline-offset-4"
+									className="text-xs sm:text-sm text-main hover:text-main transition-colors underline underline-offset-4"
 								>
 									ホームに戻る
 								</Link>

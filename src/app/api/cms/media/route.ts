@@ -1,6 +1,7 @@
-import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
+import { getCmsApiBaseUrl, shouldUseRustCmsApi } from "@/lib/cms-api/config";
 import { CmsApiProxyError, cmsApiFetch } from "@/lib/cms-api/server-client";
 import { requireAdminRequest } from "@/lib/server/admin-auth";
+import { getMedia } from "@/cms/lib/media-manager";
 
 export const runtime = "nodejs";
 
@@ -33,6 +34,23 @@ export async function GET(req: Request) {
 
 		if (!contentId) {
 			return Response.json({ error: "contentId is required" }, { status: 400 });
+		}
+
+		if (!shouldUseRustCmsApi()) {
+			if (!mediaId) {
+				return Response.json({ error: "id is required" }, { status: 400 });
+			}
+			const media = getMedia(contentId, mediaId);
+			if (!media || !media.data) {
+				return Response.json({ error: "Media not found" }, { status: 404 });
+			}
+			return new Response(new Uint8Array(media.data), {
+				status: 200,
+				headers: {
+					"Content-Type": media.mimeType || "application/octet-stream",
+					"Cache-Control": "public, max-age=31536000, immutable",
+				},
+			});
 		}
 
 		const rustParams = new URLSearchParams({ contentId });

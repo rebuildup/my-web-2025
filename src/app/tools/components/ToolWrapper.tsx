@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useToolAccessibility } from "@/hooks/useAccessibility";
+import { useAccessibility } from "@/hooks/useAccessibility";
 import PerformanceOptimizer from "./PerformanceOptimizer";
 
 interface ToolWrapperProps {
@@ -24,7 +24,7 @@ export default function ToolWrapper({
 }: ToolWrapperProps) {
 	const [showAccessibilityInfo, setShowAccessibilityInfo] = useState(false);
 	const { containerRef, state, announce, runAccessibilityChecks } =
-		useToolAccessibility();
+		useAccessibility();
 
 	// Track tool usage
 	useEffect(() => {

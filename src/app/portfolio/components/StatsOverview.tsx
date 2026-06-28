@@ -137,8 +137,7 @@ export function StatsOverview({
 		setRandomItem(deterministicPick);
 	}, [deterministicPick]);
 
-	const baseCard =
-		"min-w-0 rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:p-5";
+	const baseCard = "min-w-0 border border-white/10 p-4 md:p-5";
 
 	return (
 		<section className="overflow-hidden">
@@ -150,7 +149,7 @@ export function StatsOverview({
 								? `/portfolio/${latestItem.id}`
 								: "/portfolio/gallery/all"
 						}
-						className="group relative flex h-full min-h-[260px] w-full max-w-full flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-6 md:p-7"
+						className="group relative flex h-full min-h-[260px] w-full max-w-full flex-col justify-between overflow-hidden border border-white/10 bg-black p-6 md:p-7"
 					>
 						<div className="absolute inset-0">
 							{latestItem?.thumbnail ? (
@@ -162,33 +161,30 @@ export function StatsOverview({
 									sizes="(max-width: 1024px) 100vw, 66vw"
 								/>
 							) : (
-								<div className="absolute inset-0 bg-gradient-to-br from-[#0b0b16] via-black to-[#0b1225]" />
+								<div className="absolute inset-0 bg-black" />
 							)}
-							<div className="absolute inset-0 bg-black/40" />
-							<div className="absolute inset-0 bg-gradient-to-tr from-black/70 via-[#0b0b16]/40 to-black/70" />
-							<div className="absolute right-[-15%] top-[-20%] h-64 w-64 rounded-full bg-[#2b57ff]/20 blur-3xl" />
-							<div className="absolute bottom-[-20%] left-[-10%] h-56 w-56 rounded-full bg-white/5 blur-3xl" />
+							<div className="absolute inset-0 bg-black" />
 						</div>
 						<div className="relative z-10">
-							<div className="text-[10px] font-mono tracking-widest text-main/50 uppercase">
+							<div className="text-[10px] font-mono tracking-widest text-main uppercase">
 								Latest Content
 							</div>
 							<div className="mt-6 text-2xl md:text-3xl font-display font-semibold text-main line-clamp-2">
 								{latestItem?.title || "Latest Work"}
 							</div>
-							<p className="mt-3 text-[11px] text-main/70 max-w-sm">
+							<p className="mt-3 text-[11px] text-main max-w-sm">
 								{latestItem
 									? "最新の公開コンテンツをピックアップ."
 									: "最新のコンテンツをチェックできます."}
 							</p>
 						</div>
-						<div className="relative z-10 mt-8 text-[10px] font-mono uppercase tracking-widest text-main/40">
+						<div className="relative z-10 mt-8 text-[10px] font-mono uppercase tracking-widest text-main">
 							{latestItem ? "View details →" : "View all →"}
 						</div>
 					</Link>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 min-w-0 max-w-full">
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
+							<div className="noto-sans-jp-light text-xs text-main mb-2">
 								直近7日のコンテンツ
 							</div>
 							<div className="flex items-end gap-2">
@@ -200,14 +196,14 @@ export function StatsOverview({
 								>
 									{v7.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
+								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
 									items
 								</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
+							<div className="noto-sans-jp-light text-xs text-main mb-2">
 								直近30日のコンテンツ
 							</div>
 							<div className="flex items-end gap-2">
@@ -219,14 +215,14 @@ export function StatsOverview({
 								>
 									{v30.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
+								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
 									items
 								</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
+							<div className="noto-sans-jp-light text-xs text-main mb-2">
 								直近1年のコンテンツ
 							</div>
 							<div className="flex items-end gap-2">
@@ -238,7 +234,7 @@ export function StatsOverview({
 								>
 									{v365.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
+								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
 									items
 								</div>
 							</div>
@@ -249,7 +245,7 @@ export function StatsOverview({
 				<div className="grid gap-3 md:gap-4 min-w-0 max-w-full">
 					<div className="grid grid-cols-2 gap-3 md:gap-4 min-w-0 max-w-full">
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
+							<div className="noto-sans-jp-light text-xs text-main mb-2">
 								総コンテンツ
 							</div>
 							<div className="flex items-end gap-2">
@@ -261,14 +257,14 @@ export function StatsOverview({
 								>
 									{vTotal.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
+								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
 									items
 								</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
+							<div className="noto-sans-jp-light text-xs text-main mb-2">
 								develop
 							</div>
 							<div className="flex items-end gap-2">
@@ -280,14 +276,14 @@ export function StatsOverview({
 								>
 									{vDevelop.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
+								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
 									items
 								</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
+							<div className="noto-sans-jp-light text-xs text-main mb-2">
 								video
 							</div>
 							<div className="flex items-end gap-2">
@@ -299,14 +295,14 @@ export function StatsOverview({
 								>
 									{vVideo.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
+								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
 									items
 								</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main/70 mb-2">
+							<div className="noto-sans-jp-light text-xs text-main mb-2">
 								video&design
 							</div>
 							<div className="flex items-end gap-2">
@@ -318,7 +314,7 @@ export function StatsOverview({
 								>
 									{vVideoDesign.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main/50 mb-1">
+								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
 									items
 								</div>
 							</div>
@@ -331,7 +327,7 @@ export function StatsOverview({
 						onClick={rotateHighlight}
 						title="クリックで入れ替え"
 					>
-						<div className="relative h-full min-h-[220px] w-full max-w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
+						<div className="relative h-full min-h-[220px] w-full max-w-full overflow-hidden border border-white/10">
 							<div className="relative w-full h-full overflow-hidden">
 								{randomItem?.thumbnail ? (
 									<SafeImage
@@ -343,12 +339,12 @@ export function StatsOverview({
 										sizes="(max-width: 1024px) 100vw, 33vw"
 									/>
 								) : (
-									<div className="w-full h-full bg-base/30" />
+									<div className="w-full h-full bg-base" />
 								)}
-								<div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
+								<div className="absolute inset-0 bg-black" />
 							</div>
 							<div className="absolute left-0 right-0 bottom-0 p-4 md:p-5">
-								<div className="flex items-center gap-3 text-[10px] uppercase tracking-widest text-main/70">
+								<div className="flex items-center gap-3 text-[10px] uppercase tracking-widest text-main">
 									<span className="font-mono">Random Pick</span>
 									<span className="font-mono">Click to shuffle</span>
 								</div>
@@ -357,17 +353,17 @@ export function StatsOverview({
 										{randomItem.title}
 									</div>
 								) : (
-									<div className="mt-2 text-[10px] text-main/60">
+									<div className="mt-2 text-[10px] text-main">
 										アイテムがありません
 									</div>
 								)}
-								<div className="mt-1 text-[10px] text-main/60">
+								<div className="mt-1 text-[10px] text-main">
 									手動で入れ替えて、思わぬ発見を.
 								</div>
 								{randomItem && (
 									<Link
 										href={`/portfolio/${randomItem.id}`}
-										className="mt-2 inline-block text-[10px] underline underline-offset-2 text-main/80 hover:text-main transition-colors"
+										className="mt-2 inline-block text-[10px] underline underline-offset-2 text-main hover:text-main transition-colors"
 										onClick={(e) => e.stopPropagation()}
 									>
 										詳細を見る →

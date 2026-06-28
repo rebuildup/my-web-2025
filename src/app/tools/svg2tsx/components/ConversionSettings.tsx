@@ -19,126 +19,172 @@ export function ConversionSettingsPanel({
 	};
 
 	return (
-		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
-			<h3 className="text-lg font-medium mb-4">変換設定</h3>
+		<fieldset style={{ border: "1px solid #ccc", padding: "15px" }}>
+			<legend>変換設定</legend>
 
-			<div className="space-y-6">
-				{/* Basic Settings */}
-				<div className="space-y-4">
-					<h4 className="font-medium text-sm text-main/80">基本設定</h4>
-
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+				<div>
+					<h4
+						style={{
+							fontSize: "13px",
+							fontWeight: "bold",
+							marginBottom: "8px",
+						}}
+					>
+						基本設定
+					</h4>
+					<div
+						style={{
+							display: "grid",
+							gridTemplateColumns: "1fr 1fr",
+							gap: "10px",
+						}}
+					>
 						<div>
-							<label className="block text-sm font-medium mb-1">
+							<label
+								style={{
+									display: "block",
+									fontSize: "12px",
+									marginBottom: "3px",
+								}}
+							>
 								コンポーネント名
 							</label>
 							<input
 								type="text"
 								value={settings.componentName}
 								onChange={(e) => updateSetting("componentName", e.target.value)}
-								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+								style={{
+									all: "revert",
+									width: "100%",
+									padding: "4px 8px",
+									fontSize: "13px",
+									boxSizing: "border-box",
+								}}
 								placeholder="MyIcon"
-								aria-label="コンポーネント名"
 							/>
 						</div>
-
 						<div>
-							<label className="block text-sm font-medium mb-1">
+							<label
+								style={{
+									display: "block",
+									fontSize: "12px",
+									marginBottom: "3px",
+								}}
+							>
 								Props型名
 							</label>
 							<input
 								type="text"
 								value={settings.propsType}
 								onChange={(e) => updateSetting("propsType", e.target.value)}
-								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+								style={{
+									all: "revert",
+									width: "100%",
+									padding: "4px 8px",
+									fontSize: "13px",
+									boxSizing: "border-box",
+								}}
 								placeholder="IconProps"
-								aria-label="Props型名"
 							/>
 						</div>
 					</div>
-
-					<div className="flex flex-wrap gap-4">
-						<label className="flex items-center gap-2 text-sm">
+					<div style={{ marginTop: "8px" }}>
+						<label
+							style={{
+								display: "flex",
+								alignItems: "center",
+								gap: "5px",
+								fontSize: "13px",
+								cursor: "pointer",
+							}}
+						>
 							<input
 								type="checkbox"
-								id="include-comments"
 								checked={settings.includeComments}
 								onChange={(e) =>
 									updateSetting("includeComments", e.target.checked)
 								}
-								className="w-4 h-4"
+								style={{ all: "revert" }}
 							/>
-							<span>コメントを追加</span>
+							コメントを追加
 						</label>
 					</div>
 				</div>
 
-				{/* Optimization Settings */}
-				<div className="space-y-4">
-					<h4 className="font-medium text-sm text-main/80">最適化設定</h4>
-
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<label className="flex items-center gap-2 text-sm">
-							<input
-								type="checkbox"
-								id="remove-attributes"
-								checked={settings.removeUnnecessaryAttributes}
-								onChange={(e) =>
-									updateSetting("removeUnnecessaryAttributes", e.target.checked)
-								}
-								className="w-4 h-4"
-							/>
-							<span>不要属性を削除</span>
-						</label>
-
-						<label className="flex items-center gap-2 text-sm">
-							<input
-								type="checkbox"
-								id="optimize-paths"
-								checked={settings.optimizePaths}
-								onChange={(e) =>
-									updateSetting("optimizePaths", e.target.checked)
-								}
-								className="w-4 h-4"
-							/>
-							<span>パスを最適化</span>
-						</label>
-
-						<label className="flex items-center gap-2 text-sm">
-							<input
-								type="checkbox"
-								id="variableize-colors"
-								checked={settings.variableizeColors}
-								onChange={(e) =>
-									updateSetting("variableizeColors", e.target.checked)
-								}
-								className="w-4 h-4"
-							/>
-							<span>色を変数化</span>
-						</label>
-
-						<label className="flex items-center gap-2 text-sm">
-							<input
-								type="checkbox"
-								id="variableize-sizes"
-								checked={settings.variableizeSizes}
-								onChange={(e) =>
-									updateSetting("variableizeSizes", e.target.checked)
-								}
-								className="w-4 h-4"
-							/>
-							<span>サイズを変数化</span>
-						</label>
+				<div>
+					<h4
+						style={{
+							fontSize: "13px",
+							fontWeight: "bold",
+							marginBottom: "8px",
+						}}
+					>
+						最適化設定
+					</h4>
+					<div
+						style={{
+							display: "grid",
+							gridTemplateColumns: "1fr 1fr",
+							gap: "6px",
+						}}
+					>
+						{[
+							{
+								key: "removeUnnecessaryAttributes" as const,
+								label: "不要属性を削除",
+							},
+							{ key: "optimizePaths" as const, label: "パスを最適化" },
+							{ key: "variableizeColors" as const, label: "色を変数化" },
+							{ key: "variableizeSizes" as const, label: "サイズを変数化" },
+						].map(({ key, label }) => (
+							<label
+								key={key}
+								style={{
+									display: "flex",
+									alignItems: "center",
+									gap: "5px",
+									fontSize: "13px",
+									cursor: "pointer",
+								}}
+							>
+								<input
+									type="checkbox"
+									checked={settings[key]}
+									onChange={(e) => updateSetting(key, e.target.checked)}
+									style={{ all: "revert" }}
+								/>
+								{label}
+							</label>
+						))}
 					</div>
 				</div>
 
-				{/* Output Settings */}
-				<div className="space-y-4">
-					<h4 className="font-medium text-sm text-main/80">出力設定</h4>
-
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<div>
+					<h4
+						style={{
+							fontSize: "13px",
+							fontWeight: "bold",
+							marginBottom: "8px",
+						}}
+					>
+						出力設定
+					</h4>
+					<div
+						style={{
+							display: "grid",
+							gridTemplateColumns: "1fr 1fr",
+							gap: "10px",
+						}}
+					>
 						<div>
-							<label className="block text-sm font-medium mb-1">
+							<label
+								style={{
+									display: "block",
+									fontSize: "12px",
+									marginBottom: "3px",
+								}}
+							>
 								インデント
 							</label>
 							<select
@@ -146,30 +192,54 @@ export function ConversionSettingsPanel({
 								onChange={(e) =>
 									updateSetting("indentSize", parseInt(e.target.value, 10))
 								}
-								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+								style={{
+									all: "revert",
+									width: "100%",
+									padding: "4px 8px",
+									fontSize: "13px",
+									boxSizing: "border-box",
+								}}
 							>
 								<option value={2}>2スペース</option>
 								<option value={4}>4スペース</option>
 								<option value={8}>8スペース</option>
 							</select>
 						</div>
-
 						<div>
-							<label className="block text-sm font-medium mb-1">改行設定</label>
+							<label
+								style={{
+									display: "block",
+									fontSize: "12px",
+									marginBottom: "3px",
+								}}
+							>
+								改行設定
+							</label>
 							<select
 								value={settings.lineBreaks}
 								onChange={(e) =>
 									updateSetting("lineBreaks", e.target.value as "lf" | "crlf")
 								}
-								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+								style={{
+									all: "revert",
+									width: "100%",
+									padding: "4px 8px",
+									fontSize: "13px",
+									boxSizing: "border-box",
+								}}
 							>
 								<option value="lf">LF (Unix)</option>
 								<option value="crlf">CRLF (Windows)</option>
 							</select>
 						</div>
-
 						<div>
-							<label className="block text-sm font-medium mb-1">
+							<label
+								style={{
+									display: "block",
+									fontSize: "12px",
+									marginBottom: "3px",
+								}}
+							>
 								エクスポート形式
 							</label>
 							<select
@@ -180,15 +250,26 @@ export function ConversionSettingsPanel({
 										e.target.value as "default" | "named",
 									)
 								}
-								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+								style={{
+									all: "revert",
+									width: "100%",
+									padding: "4px 8px",
+									fontSize: "13px",
+									boxSizing: "border-box",
+								}}
 							>
 								<option value="default">デフォルトエクスポート</option>
 								<option value="named">名前付きエクスポート</option>
 							</select>
 						</div>
-
 						<div>
-							<label className="block text-sm font-medium mb-1">
+							<label
+								style={{
+									display: "block",
+									fontSize: "12px",
+									marginBottom: "3px",
+								}}
+							>
 								ファイル拡張子
 							</label>
 							<select
@@ -199,7 +280,13 @@ export function ConversionSettingsPanel({
 										e.target.value as ConversionSettings["fileExtension"],
 									)
 								}
-								className="w-full p-2 rounded-lg bg-main/10 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+								style={{
+									all: "revert",
+									width: "100%",
+									padding: "4px 8px",
+									fontSize: "13px",
+									boxSizing: "border-box",
+								}}
 							>
 								<option value=".tsx">.tsx (TypeScript JSX)</option>
 								<option value=".ts">.ts (TypeScript)</option>
@@ -210,6 +297,6 @@ export function ConversionSettingsPanel({
 					</div>
 				</div>
 			</div>
-		</div>
+		</fieldset>
 	);
 }

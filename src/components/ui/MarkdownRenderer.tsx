@@ -203,7 +203,7 @@ const configureMarked = () => {
 // Initialize marked configuration
 configureMarked();
 
-export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
+const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 	filePath,
 	content,
 	mediaData,

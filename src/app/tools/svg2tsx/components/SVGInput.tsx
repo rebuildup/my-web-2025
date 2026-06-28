@@ -1,6 +1,5 @@
 "use client";
 
-import { Folder } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import type { SVGInputData } from "../types";
 
@@ -84,11 +83,17 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 	}, [urlInput, onSVGChange]);
 
 	return (
-		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
-			<h3 className="text-lg font-medium mb-4">SVG入力</h3>
+		<fieldset style={{ border: "1px solid #ccc", padding: "15px" }}>
+			<legend>SVG入力</legend>
 
-			{/* Tab Navigation */}
-			<div className="flex border-b border-main/20 mb-4">
+			<div
+				style={{
+					display: "flex",
+					gap: "0",
+					borderBottom: "1px solid #ccc",
+					marginBottom: "15px",
+				}}
+			>
 				{[
 					{ key: "file", label: "ファイル" },
 					{ key: "code", label: "コード" },
@@ -98,25 +103,30 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 						type="button"
 						key={key}
 						onClick={() => setActiveTab(key as typeof activeTab)}
-						className={`px-4 py-2 border-b-2 transition-colors ${
-							activeTab === key
-								? "border-accent text-main"
-								: "border-transparent hover:border-main/40"
-						}`}
+						style={{
+							all: "revert",
+							padding: "8px 16px",
+							border: "none",
+							borderBottom:
+								activeTab === key ? "2px solid #000" : "2px solid transparent",
+							background: "none",
+							cursor: "pointer",
+							fontSize: "14px",
+						}}
 					>
 						{label}
 					</button>
 				))}
 			</div>
 
-			{/* File Upload */}
 			{activeTab === "file" && (
 				<div
-					className={`border-2 border-dashed border-main/20 p-8 text-center transition-colors rounded-lg ${
-						dragOver
-							? "border-accent bg-main/10"
-							: "hover:border-main/40 hover:bg-main/5"
-					}`}
+					style={{
+						border: dragOver ? "2px dashed #000" : "2px dashed #ccc",
+						padding: "40px",
+						textAlign: "center",
+						background: dragOver ? "#f5f5f5" : "transparent",
+					}}
 					onDrop={handleDrop}
 					onDragOver={(e) => {
 						e.preventDefault();
@@ -132,65 +142,81 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 							const file = e.target.files?.[0];
 							if (file) handleFileUpload(file);
 						}}
-						className="hidden"
+						style={{ display: "none" }}
 						aria-label="SVGファイルを選択"
 					/>
-
-					<div className="space-y-4">
-						<Folder className="w-12 h-12 mx-auto text-main/50" />
-						<div>
-							<p className="text-lg mb-2">SVGファイルをドラッグ&ドロップ</p>
-							<p className="text-sm text-main/70 mb-4">または</p>
-							<button
-								type="button"
-								onClick={() => fileInputRef.current?.click()}
-								className="bg-main text-white px-4 py-2 hover:bg-main/90 transition-colors"
-							>
-								ファイルを選択
-							</button>
-						</div>
-					</div>
+					<p style={{ marginBottom: "10px" }}>SVGファイルをドラッグ&ドロップ</p>
+					<p style={{ marginBottom: "10px", fontSize: "12px", color: "#666" }}>
+						または
+					</p>
+					<button
+						type="button"
+						onClick={() => fileInputRef.current?.click()}
+						style={{ all: "revert", padding: "4px 12px", fontSize: "13px" }}
+					>
+						ファイルを選択
+					</button>
 				</div>
 			)}
 
-			{/* Code Input */}
 			{activeTab === "code" && (
-				<div className="space-y-4">
-					<label className="block text-sm font-medium">SVGコード</label>
+				<div>
+					<label
+						style={{ display: "block", marginBottom: "5px", fontSize: "13px" }}
+					>
+						SVGコード
+					</label>
 					<textarea
 						value={codeInput}
 						onChange={(e) => handleCodeChange(e.target.value)}
 						placeholder="<svg>...</svg>"
-						className="w-full h-64 p-3 rounded-lg bg-main/10 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+						style={{
+							all: "revert",
+							width: "100%",
+							height: "250px",
+							padding: "8px",
+							fontFamily: "monospace",
+							fontSize: "13px",
+							boxSizing: "border-box",
+							resize: "vertical",
+						}}
 						aria-label="SVGコードを入力"
 					/>
 				</div>
 			)}
 
-			{/* URL Input */}
 			{activeTab === "url" && (
-				<div className="space-y-4">
-					<label className="block text-sm font-medium">SVG URL</label>
-					<div className="flex gap-2">
+				<div>
+					<label
+						style={{ display: "block", marginBottom: "5px", fontSize: "13px" }}
+					>
+						SVG URL
+					</label>
+					<div style={{ display: "flex", gap: "8px" }}>
 						<input
 							type="url"
 							value={urlInput}
 							onChange={(e) => setUrlInput(e.target.value)}
 							placeholder="https://example.com/image.svg"
-							className="flex-1 p-3 rounded-lg bg-main/10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+							style={{
+								all: "revert",
+								flex: 1,
+								padding: "4px 8px",
+								fontSize: "13px",
+							}}
 							aria-label="SVG URLを入力"
 						/>
 						<button
 							type="button"
 							onClick={handleUrlLoad}
 							disabled={!urlInput}
-							className="bg-main text-white px-4 py-2 hover:bg-main/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+							style={{ all: "revert", padding: "4px 12px", fontSize: "13px" }}
 						>
 							読み込み
 						</button>
 					</div>
 				</div>
 			)}
-		</div>
+		</fieldset>
 	);
 }

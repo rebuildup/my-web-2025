@@ -211,21 +211,21 @@ export default async function VideoProjectsPage() {
 								<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
 									<Link
 										href="/portfolio/gallery/all"
-										className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
+										className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
 									>
 										<span className={Global_title}>All Projects</span>
 									</Link>
 
 									<Link
 										href="/portfolio/gallery/develop"
-										className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
+										className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
 									>
 										<span className={Global_title}>Development</span>
 									</Link>
 
 									<Link
 										href="/about/commission/video"
-										className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
+										className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
 									>
 										<span className={Global_title}>Commission</span>
 									</Link>

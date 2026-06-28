@@ -32,7 +32,8 @@ export class PortfolioDateManager implements DateManagementSystem {
 			const manual = new Date(item.manualDate);
 			if (!Number.isNaN(manual.getTime())) return manual;
 		}
-		const cachedDate = this.dateCache.get(item.id) || runtimeManualDates.get(item.id);
+		const cachedDate =
+			this.dateCache.get(item.id) || runtimeManualDates.get(item.id);
 		if (cachedDate) {
 			const parsed = new Date(cachedDate);
 			if (!Number.isNaN(parsed.getTime())) return parsed;

@@ -1,16 +1,7 @@
 "use client";
 
-import {
-	Download,
-	Grid,
-	List,
-	Pause,
-	Play,
-	RotateCcw,
-	Settings,
-} from "lucide-react";
-import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { RawDOMContainer } from "../../components/RawDOMContainer";
 import type { AnimationSettings, FrameData, PreviewMode } from "../types";
 import AnimationPlayer from "./AnimationPlayer";
 import ExportPanel from "./ExportPanel";
@@ -22,7 +13,7 @@ export default function SequentialPngPreview() {
 	const [currentFrame, setCurrentFrame] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [previewMode, setPreviewMode] = useState<PreviewMode>("animation");
-	const [showSettings, setShowSettings] = useState(false);
+	const [showSettings, _setShowSettings] = useState(false);
 	const [showExport, setShowExport] = useState(false);
 	const [settings, setSettings] = useState<AnimationSettings>({
 		frameRate: 12,
@@ -65,7 +56,6 @@ export default function SequentialPngPreview() {
 						: prev
 					: prev - 1;
 			} else {
-				// ping-pong mode would be implemented here
 				return prev >= frames.length - 1
 					? settings.loop
 						? 0
@@ -75,7 +65,6 @@ export default function SequentialPngPreview() {
 		});
 	}, [frames.length, settings.direction, settings.loop]);
 
-	// Animation loop
 	useEffect(() => {
 		if (isPlaying && frames.length > 0) {
 			intervalRef.current = setInterval(() => {
@@ -101,221 +90,201 @@ export default function SequentialPngPreview() {
 	}, []);
 
 	return (
-		<div className="space-y-6">
-			{/* File Upload Section */}
-			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
-				<h2 className="text-xl font-semibold mb-4 text-main">ファイル選択</h2>
-				<FileUploader onFilesLoaded={handleFilesLoaded} />
-			</div>
-
-			{frames.length > 0 && (
-				<>
-					{/* Controls */}
-					<div className="rounded-lg bg-main/10 p-4">
-						<div className="flex flex-wrap items-center justify-between gap-4">
-							<div className="flex items-center gap-2">
+		<RawDOMContainer
+			title="Sequential PNG Preview"
+			breadcrumbs={[
+				{ label: "Home", href: "/" },
+				{ label: "Tools", href: "/tools" },
+				{ label: "Sequential PNG Preview" },
+			]}
+		>
+			<div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+				{frames.length === 0 ? (
+					<FileUploader onFilesLoaded={handleFilesLoaded} />
+				) : (
+					<>
+						{/* Controls */}
+						<fieldset style={{ border: "1px solid #ccc", padding: "10px" }}>
+							<legend>操作</legend>
+							<div
+								style={{
+									display: "flex",
+									gap: "8px",
+									flexWrap: "wrap",
+									alignItems: "center",
+								}}
+							>
 								<button
 									type="button"
 									onClick={togglePlayback}
-									className="flex items-center gap-2 px-4 py-2 bg-main text-white rounded hover:bg-main/80 transition-colors"
-									aria-label={isPlaying ? "停止" : "再生"}
+									style={{
+										all: "revert",
+										border: "none",
+										padding: "4px 12px",
+										fontSize: "13px",
+									}}
 								>
-									{isPlaying ? <Pause size={16} /> : <Play size={16} />}
-									{isPlaying ? "停止" : "再生"}
+									{isPlaying ? "一時停止" : "再生"}
 								</button>
-
 								<button
 									type="button"
 									onClick={resetAnimation}
-									className="flex items-center gap-2 px-4 py-2 rounded-lg bg-main/10 hover:bg-main/20 transition-colors"
-									aria-label="リセット"
+									style={{
+										all: "revert",
+										border: "none",
+										padding: "4px 12px",
+										fontSize: "13px",
+									}}
 								>
-									<RotateCcw size={16} />
 									リセット
 								</button>
-							</div>
-
-							<div className="flex items-center gap-2">
-								<div className="flex rounded-lg bg-main/10 overflow-hidden">
-									<button
-										type="button"
-										onClick={() => setPreviewMode("animation")}
-										className={`px-3 py-2 flex items-center gap-2 transition-colors ${
-											previewMode === "animation"
-												? "bg-main text-white"
-												: "hover:bg-main/10"
-										}`}
-										aria-label="アニメーション表示"
-									>
-										<Play size={16} />
-										アニメーション
-									</button>
-									<button
-										type="button"
-										onClick={() => setPreviewMode("grid")}
-										className={`px-3 py-2 flex items-center gap-2 transition-colors ${
-											previewMode === "grid"
-												? "bg-main text-white"
-												: "hover:bg-main/10"
-										}`}
-										aria-label="グリッド表示"
-									>
-										<Grid size={16} />
-										グリッド
-									</button>
-									<button
-										type="button"
-										onClick={() => setPreviewMode("list")}
-										className={`px-3 py-2 flex items-center gap-2 transition-colors ${
-											previewMode === "list"
-												? "bg-main text-white"
-												: "hover:bg-main/10"
-										}`}
-										aria-label="リスト表示"
-									>
-										<List size={16} />
-										リスト
-									</button>
-								</div>
-
-								<button
-									type="button"
-									onClick={() => setShowSettings(!showSettings)}
-									className="flex items-center gap-2 px-4 py-2 rounded-lg bg-main/10 hover:bg-main/20 transition-colors"
-									aria-label="設定"
-								>
-									<Settings size={16} />
-									設定
-								</button>
-
 								<button
 									type="button"
 									onClick={() => setShowExport(!showExport)}
-									className="flex items-center gap-2 px-4 py-2 bg-accent text-white rounded hover:bg-accent/80 transition-colors"
-									aria-label="エクスポート"
+									style={{
+										all: "revert",
+										border: "none",
+										padding: "4px 12px",
+										fontSize: "13px",
+									}}
 								>
-									<Download size={16} />
-									エクスポート
+									{showExport ? "エクスポートを閉じる" : "エクスポート"}
 								</button>
+								<button
+									type="button"
+									onClick={() =>
+										setPreviewMode(
+											previewMode === "animation" ? "grid" : "animation",
+										)
+									}
+									style={{
+										all: "revert",
+										border: "none",
+										padding: "4px 12px",
+										fontSize: "13px",
+									}}
+								>
+									{previewMode === "animation"
+										? "グリッド表示"
+										: "アニメーション表示"}
+								</button>
+								<span style={{ fontSize: "12px", color: "#666" }}>
+									{currentFrame + 1} / {frames.length} フレーム
+								</span>
 							</div>
-						</div>
+						</fieldset>
 
-						{/* Frame Info */}
-						<div className="mt-4 text-sm text-main">
-							フレーム: {currentFrame + 1} / {frames.length} | フレームレート:{" "}
-							{settings.frameRate}fps | ループ: {settings.loop ? "ON" : "OFF"}
-						</div>
-					</div>
-
-					{/* Settings Panel */}
-					{showSettings && (
-						<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
-							<h3 className="text-lg font-semibold mb-4 text-main">
-								アニメーション設定
-							</h3>
-							<div className="grid grid-2 gap-4">
-								<div>
-									<label className="block text-sm font-medium mb-2">
-										フレームレート: {settings.frameRate}fps
-									</label>
-									<input
-										type="range"
-										min="1"
-										max="60"
-										value={settings.frameRate}
-										onChange={(e) =>
-											setSettings((prev) => ({
-												...prev,
-												frameRate: parseInt(e.target.value, 10),
-											}))
-										}
-										className="w-full"
-									/>
-								</div>
-
-								<div>
-									<label className="block text-sm font-medium mb-2">
-										再生方向
-									</label>
-									<select
-										value={settings.direction}
-										onChange={(e) =>
-											setSettings((prev) => ({
-												...prev,
-												direction: e.target.value as
-													| "forward"
-													| "backward"
-													| "pingpong",
-											}))
-										}
-										className="w-full p-2 rounded-lg bg-main/10"
-									>
-										<option value="forward">順再生</option>
-										<option value="backward">逆再生</option>
-										<option value="pingpong">往復再生</option>
-									</select>
-								</div>
-
-								<div>
-									<label className="flex items-center gap-2">
+						{/* Settings */}
+						{showSettings && (
+							<fieldset style={{ border: "1px solid #ccc", padding: "10px" }}>
+								<legend>設定</legend>
+								<div
+									style={{
+										display: "grid",
+										gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+										gap: "10px",
+									}}
+								>
+									<div>
+										<label
+											style={{
+												display: "block",
+												fontSize: "12px",
+												marginBottom: "3px",
+											}}
+										>
+											フレームレート: {settings.frameRate}fps
+										</label>
 										<input
-											type="checkbox"
-											checked={settings.loop}
+											type="range"
+											min="1"
+											max="60"
+											value={settings.frameRate}
 											onChange={(e) =>
 												setSettings((prev) => ({
 													...prev,
-													loop: e.target.checked,
+													frameRate: parseInt(e.target.value, 10),
 												}))
 											}
+											style={{ width: "100%" }}
 										/>
-										ループ再生
-									</label>
+									</div>
+									<div>
+										<label
+											style={{
+												display: "block",
+												fontSize: "12px",
+												marginBottom: "3px",
+											}}
+										>
+											ループ
+										</label>
+										<label
+											style={{
+												display: "flex",
+												alignItems: "center",
+												gap: "5px",
+												fontSize: "13px",
+												cursor: "pointer",
+											}}
+										>
+											<input
+												type="checkbox"
+												checked={settings.loop}
+												onChange={(e) =>
+													setSettings((prev) => ({
+														...prev,
+														loop: e.target.checked,
+													}))
+												}
+												style={{ all: "revert", border: "none" }}
+											/>
+											有効
+										</label>
+									</div>
+									<div>
+										<label
+											style={{
+												display: "block",
+												fontSize: "12px",
+												marginBottom: "3px",
+											}}
+										>
+											方向
+										</label>
+										<select
+											value={settings.direction}
+											onChange={(e) =>
+												setSettings((prev) => ({
+													...prev,
+													direction: e.target
+														.value as AnimationSettings["direction"],
+												}))
+											}
+											style={{
+												all: "revert",
+												width: "100%",
+												padding: "4px 8px",
+												fontSize: "13px",
+											}}
+										>
+											<option value="forward">順方向</option>
+											<option value="backward">逆方向</option>
+										</select>
+									</div>
 								</div>
+							</fieldset>
+						)}
 
-								<div>
-									<label className="block text-sm font-medium mb-2">
-										プレビュー品質
-									</label>
-									<select
-										value={settings.quality}
-										onChange={(e) =>
-											setSettings((prev) => ({
-												...prev,
-												quality: e.target.value as "low" | "medium" | "high",
-											}))
-										}
-										className="w-full p-2 rounded-lg bg-main/10"
-									>
-										<option value="low">低品質</option>
-										<option value="medium">中品質</option>
-										<option value="high">高品質</option>
-									</select>
-								</div>
-							</div>
-						</div>
-					)}
-
-					{/* Export Panel */}
-					{showExport && (
-						<ExportPanel
-							frames={frames}
-							settings={settings}
-							onClose={() => setShowExport(false)}
-						/>
-					)}
-
-					{/* Preview Area */}
-					<div className="rounded-lg bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] overflow-hidden">
-						{previewMode === "animation" && (
+						{/* Main Content */}
+						{previewMode === "animation" ? (
 							<AnimationPlayer
 								frames={frames}
 								currentFrame={currentFrame}
 								onFrameSelect={handleFrameSelect}
 								settings={settings}
 							/>
-						)}
-
-						{previewMode === "grid" && (
+						) : (
 							<FrameGrid
 								frames={frames}
 								currentFrame={currentFrame}
@@ -323,45 +292,20 @@ export default function SequentialPngPreview() {
 							/>
 						)}
 
-						{previewMode === "list" && (
-							<div className="p-4">
-								<h3 className="text-lg font-semibold mb-4 text-main">
-									フレーム一覧
-								</h3>
-								<div className="space-y-2">
-									{frames.map((frame, index) => (
-										<div
-											key={frame.dataUrl}
-											className={`flex items-center gap-4 p-3 rounded cursor-pointer transition-colors ${
-												index === currentFrame
-													? "bg-main/20"
-													: "hover:bg-main/5"
-											}`}
-											onClick={() => handleFrameSelect(index)}
-										>
-											<Image
-												src={frame.dataUrl}
-												alt={`Frame ${index + 1}`}
-												width={64}
-												height={64}
-												className="w-16 h-16 object-contain rounded bg-main/5"
-												unoptimized={true}
-											/>
-											<div>
-												<div className="font-medium">フレーム {index + 1}</div>
-												<div className="text-sm text-main">{frame.name}</div>
-												<div className="text-xs text-main/70">
-													{frame.width} × {frame.height}px
-												</div>
-											</div>
-										</div>
-									))}
-								</div>
-							</div>
+						{/* Export Panel */}
+						{showExport && (
+							<ExportPanel
+								frames={frames}
+								settings={settings}
+								onClose={() => setShowExport(false)}
+							/>
 						)}
-					</div>
-				</>
-			)}
-		</div>
+
+						{/* Load More */}
+						<FileUploader onFilesLoaded={handleFilesLoaded} />
+					</>
+				)}
+			</div>
+		</RawDOMContainer>
 	);
 }

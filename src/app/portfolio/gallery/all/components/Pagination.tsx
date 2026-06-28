@@ -86,7 +86,7 @@ export function Pagination({
 				type="button"
 				onClick={handlePrevious}
 				disabled={currentPage === 1}
-				className="flex items-center space-x-1 px-4 py-1.5 rounded-full bg-base/40 text-main/90 hover:bg-base/60 hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+				className="flex items-center space-x-1 px-4 py-1.5 bg-base text-main disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
 				aria-label="Go to previous page"
 			>
 				<ChevronLeft className="w-4 h-4" />
@@ -119,10 +119,10 @@ export function Pagination({
 							type="button"
 							key={pageNumber}
 							onClick={() => handlePageClick(pageNumber)}
-							className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
+							className={`px-3 py-1.5 text-sm transition-colors ${
 								isCurrentPage
 									? "bg-accent text-main"
-									: "bg-base/40 text-main/90 hover:bg-base/60 hover:text-accent"
+									: "bg-base text-main hover:text-accent"
 							}`}
 							aria-label={`Go to page ${pageNumber}`}
 							aria-current={isCurrentPage ? "page" : undefined}
@@ -138,7 +138,7 @@ export function Pagination({
 				type="button"
 				onClick={handleNext}
 				disabled={currentPage === totalPages}
-				className="flex items-center space-x-1 px-4 py-1.5 rounded-full bg-base/40 text-main/90 hover:bg-base/60 hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+				className="flex items-center space-x-1 px-4 py-1.5 bg-base text-main disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
 				aria-label="Go to next page"
 				data-testid="next-page"
 			>
@@ -147,7 +147,7 @@ export function Pagination({
 			</button>
 
 			{/* Page Info */}
-			<div className="ml-4 text-sm text-main/60">
+			<div className="ml-4 text-sm text-main">
 				Page {currentPage} of {totalPages}
 			</div>
 		</nav>

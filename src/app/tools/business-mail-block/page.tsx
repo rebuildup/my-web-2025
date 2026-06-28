@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import BusinessMailBlockTool from "./components/BusinessMailBlockTool";
 
@@ -28,6 +29,7 @@ export const metadata = {
 };
 
 export default function BusinessMailBlockPage() {
+	notFound();
 	return (
 		<>
 			<div className="relative min-h-screen text-main">

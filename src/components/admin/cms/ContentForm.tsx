@@ -198,8 +198,7 @@ export function ContentForm({
 
 	const generatedOgImageUrl = useMemo(() => {
 		const params = new URLSearchParams({
-			title:
-				formData.seo?.openGraph?.title || formData.title || "Untitled",
+			title: formData.seo?.openGraph?.title || formData.title || "Untitled",
 			category: formData.tags?.[0] || "Portfolio",
 			tags: (formData.tags || []).join(","),
 			thumbnail:
@@ -207,8 +206,7 @@ export function ContentForm({
 				formData.thumbnails?.webm?.poster ||
 				"",
 			slug: formData.id || "",
-			summary:
-				formData.seo?.openGraph?.description || formData.summary || "",
+			summary: formData.seo?.openGraph?.description || formData.summary || "",
 		});
 		return `/api/og?${params.toString()}`;
 	}, [
@@ -697,8 +695,9 @@ export function ContentForm({
 			formData.id !== originalId
 		) {
 			(submitData as any).oldId = originalId;
-			const currentSlug = (submitData.ext as Record<string, unknown> | undefined)
-				?.slug;
+			const currentSlug = (
+				submitData.ext as Record<string, unknown> | undefined
+			)?.slug;
 			if (!currentSlug || currentSlug === originalId) {
 				submitData.ext = {
 					...(submitData.ext || {}),

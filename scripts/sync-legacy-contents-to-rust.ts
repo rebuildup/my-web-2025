@@ -1,4 +1,4 @@
-import { getContentDb, getAllFromIndex } from "@/cms/lib/content-db-manager";
+import { getAllFromIndex, getContentDb } from "@/cms/lib/content-db-manager";
 import { getFullContent } from "@/cms/lib/content-mapper";
 import type { Content } from "@/cms/types/content";
 
@@ -47,7 +47,9 @@ function deriveThumbnail(content: Content): string | undefined {
 	if (variants?.webm?.poster) return variants.webm.poster;
 
 	if (Array.isArray(content.assets) && content.assets.length > 0) {
-		const firstAsset = content.assets.find((asset) => typeof asset.src === "string");
+		const firstAsset = content.assets.find(
+			(asset) => typeof asset.src === "string",
+		);
 		if (firstAsset?.src) {
 			return firstAsset.src;
 		}
@@ -115,7 +117,9 @@ async function main() {
 	for (const indexEntry of indexEntries) {
 		const content = readFullContent(indexEntry.id);
 		if (!content) {
-			console.warn(`[sync-legacy-contents-to-rust] Skipping missing content: ${indexEntry.id}`);
+			console.warn(
+				`[sync-legacy-contents-to-rust] Skipping missing content: ${indexEntry.id}`,
+			);
 			continue;
 		}
 

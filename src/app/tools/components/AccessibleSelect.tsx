@@ -6,7 +6,7 @@
 "use client";
 
 import { forwardRef, type SelectHTMLAttributes, useId, useState } from "react";
-import { useToolAccessibility } from "@/hooks/useAccessibility";
+import { useAccessibility } from "@/hooks/useAccessibility";
 
 interface AccessibleSelectProps
 	extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "id"> {
@@ -45,7 +45,7 @@ const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectProps>(
 		},
 		ref,
 	) => {
-		const { announce, state } = useToolAccessibility();
+		const { announce, state } = useAccessibility();
 		const [isFocused, setIsFocused] = useState(false);
 
 		const selectId = useId();

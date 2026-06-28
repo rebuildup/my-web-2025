@@ -4,16 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { getPiDigit } from "../utils/piDigits";
 
 export default function PiGame() {
-	// サイズ定数（1.5倍）
-	const KEY_SIZE = "w-30 h-30"; // キーのサイズ（120px x 120px）
-	const GAP_SIZE = "gap-2"; // キー間の余白
-	const DISPLAY_HEIGHT = "h-30"; // 入力枠の高さ（キーと同じ）
-
-	// キーの共通スタイル
-	const KEY_BASE_STYLE = `${KEY_SIZE} rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] flex items-center justify-center text-2xl neue-haas-grotesk-display cursor-pointer select-none transition-all duration-150 hover:bg-main/20 hover:shadow-[0_12px_32px_rgba(0,0,0,0.35)] active:bg-main/30 active:text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base`;
-	const KEY_ZERO_STYLE = `col-span-2 h-30 w-[calc(2*7.5rem+0.5rem)] rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] flex items-center justify-center text-2xl neue-haas-grotesk-display cursor-pointer select-none transition-all duration-150 hover:bg-main/20 hover:shadow-[0_12px_32px_rgba(0,0,0,0.35)] active:bg-main/30 active:text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base`;
-
-	const [currentPosition, setCurrentPosition] = useState(-1); // -1: 小数点待ち, 0以上: 小数点以下の桁
+	const [currentPosition, setCurrentPosition] = useState(-1);
 	const [inputSequence, setInputSequence] = useState("3");
 	const [isGameStarted, setIsGameStarted] = useState(false);
 	const [isGameOver, setIsGameOver] = useState(false);
@@ -23,11 +14,10 @@ export default function PiGame() {
 	const handleInput = useCallback(
 		(digit: string) => {
 			if (isGameOver) {
-				// リトライ処理（3のみ受け付け）- 3を入力済みの状態で次のゲーム開始
 				if (digit === "3") {
 					setCurrentPosition(-1);
 					setInputSequence("3");
-					setIsGameStarted(true); // 直接ゲーム開始状態に
+					setIsGameStarted(true);
 					setIsGameOver(false);
 					setCorrectAnswer(null);
 					setHighlightThree(false);
@@ -36,7 +26,6 @@ export default function PiGame() {
 			}
 
 			if (!isGameStarted) {
-				// ゲーム開始（3のみ受け付け）
 				if (digit === "3") {
 					setIsGameStarted(true);
 					setInputSequence("3");
@@ -44,13 +33,11 @@ export default function PiGame() {
 				return;
 			}
 
-			// 小数点の処理
 			if (currentPosition === -1) {
 				if (digit === ".") {
 					setCurrentPosition(0);
 					setInputSequence((prev) => `${prev}.`);
 				} else {
-					// 小数点以外は間違い
 					setCorrectAnswer(".");
 					setIsGameOver(true);
 					setHighlightThree(true);
@@ -61,11 +48,9 @@ export default function PiGame() {
 			const correctDigit = getPiDigit(currentPosition);
 
 			if (digit === correctDigit) {
-				// 正解
 				setCurrentPosition((prev) => prev + 1);
 				setInputSequence((prev) => prev + digit);
 			} else {
-				// 間違い
 				setCorrectAnswer(correctDigit);
 				setIsGameOver(true);
 				setHighlightThree(true);
@@ -74,11 +59,9 @@ export default function PiGame() {
 		[currentPosition, isGameStarted, isGameOver],
 	);
 
-	// キーボード入力の処理
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			const digit = event.key;
-			// 数字キーまたはテンキーの小数点を検出
 			if (
 				/^[0-9]$/.test(digit) ||
 				digit === "." ||
@@ -95,11 +78,9 @@ export default function PiGame() {
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, [handleInput]);
 
-	// ミス時の表示用の正しいシーケンスを生成
 	const getCorrectSequenceWithError = () => {
 		if (!isGameOver || !correctAnswer) return inputSequence;
 
-		// 現在の位置までの正しいシーケンスを生成
 		let correctSequence = "3.";
 		for (let i = 0; i < currentPosition; i++) {
 			correctSequence += getPiDigit(i);
@@ -107,22 +88,59 @@ export default function PiGame() {
 		return correctSequence + correctAnswer;
 	};
 
+	const KEY_STYLE: React.CSSProperties = {
+		all: "revert",
+		width: 120,
+		height: 120,
+		fontSize: 20,
+		fontFamily: "inherit",
+		cursor: "pointer",
+	};
+
 	return (
-		<div className="flex flex-col items-center justify-start pt-8 p-4 space-y-3">
-			{/* 数字表示エリア - キーと同じ高さ、テンキーと同じ横幅 */}
-			<div className="flex justify-center">
+		<div
+			style={{
+				display: "flex",
+				flexDirection: "column",
+				alignItems: "center",
+				justifyContent: "flex-start",
+				paddingTop: 32,
+				paddingLeft: 16,
+				paddingRight: 16,
+				gap: 12,
+			}}
+		>
+			{/* 数字表示エリア */}
+			<div style={{ display: "flex", justifyContent: "center" }}>
 				<div
-					className={`${DISPLAY_HEIGHT} w-[calc(3*7.5rem+2*0.5rem)] rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] flex items-center justify-center`}
+					style={{
+						height: 120,
+						width: 360,
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+						border: "1px solid #ccc",
+						borderRadius: 4,
+					}}
 				>
-					<div className="font-mono text-3xl text-center overflow-hidden px-4">
+					<div
+						style={{
+							fontFamily: "monospace",
+							fontSize: 28,
+							textAlign: "center",
+							overflow: "hidden",
+							paddingLeft: 16,
+							paddingRight: 16,
+						}}
+					>
 						{!isGameStarted ? (
-							<span className="text-accent">3 to Start</span>
+							<span style={{ color: "#0066cc" }}>3 to Start</span>
 						) : isGameOver ? (
-							<div className="space-y-1">
-								<div className="text-sm text-accent">
+							<div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+								<div style={{ fontSize: 14, color: "#0066cc" }}>
 									結果 : {currentPosition >= 0 ? currentPosition + 1 : 0}桁
 								</div>
-								<div className="whitespace-nowrap">
+								<div style={{ whiteSpace: "nowrap" }}>
 									{(() => {
 										const sequence = getCorrectSequenceWithError();
 										return sequence.length > 12
@@ -135,17 +153,20 @@ export default function PiGame() {
 											return (
 												<span
 													key={index}
-													className={isLastChar ? "text-red-500 font-bold" : ""}
+													style={{
+														color: isLastChar ? "#cc0000" : "#000",
+														fontWeight: isLastChar ? 700 : 400,
+													}}
 												>
 													{char}
 												</span>
 											);
 										})}
 								</div>
-								<div className="text-sm text-accent">3 to Retry</div>
+								<div style={{ fontSize: 14, color: "#0066cc" }}>3 to Retry</div>
 							</div>
 						) : (
-							<div className="whitespace-nowrap">
+							<div style={{ whiteSpace: "nowrap" }}>
 								{inputSequence.length > 12
 									? inputSequence.slice(-12)
 									: inputSequence}
@@ -156,13 +177,19 @@ export default function PiGame() {
 			</div>
 
 			{/* テンキー */}
-			<div className="flex justify-center">
-				<div className={`grid grid-cols-3 ${GAP_SIZE}`}>
+			<div style={{ display: "flex", justifyContent: "center" }}>
+				<div
+					style={{
+						display: "grid",
+						gridTemplateColumns: "repeat(3, 1fr)",
+						gap: 8,
+					}}
+				>
 					{/* Row 1: 7, 8, 9 */}
 					<button
 						type="button"
 						onClick={() => handleInput("7")}
-						className={KEY_BASE_STYLE}
+						style={KEY_STYLE}
 						aria-label="7"
 					>
 						7
@@ -170,7 +197,7 @@ export default function PiGame() {
 					<button
 						type="button"
 						onClick={() => handleInput("8")}
-						className={KEY_BASE_STYLE}
+						style={KEY_STYLE}
 						aria-label="8"
 					>
 						8
@@ -178,7 +205,7 @@ export default function PiGame() {
 					<button
 						type="button"
 						onClick={() => handleInput("9")}
-						className={KEY_BASE_STYLE}
+						style={KEY_STYLE}
 						aria-label="9"
 					>
 						9
@@ -188,7 +215,7 @@ export default function PiGame() {
 					<button
 						type="button"
 						onClick={() => handleInput("4")}
-						className={KEY_BASE_STYLE}
+						style={KEY_STYLE}
 						aria-label="4"
 					>
 						4
@@ -196,7 +223,7 @@ export default function PiGame() {
 					<button
 						type="button"
 						onClick={() => handleInput("5")}
-						className={KEY_BASE_STYLE}
+						style={KEY_STYLE}
 						aria-label="5"
 					>
 						5
@@ -204,7 +231,7 @@ export default function PiGame() {
 					<button
 						type="button"
 						onClick={() => handleInput("6")}
-						className={KEY_BASE_STYLE}
+						style={KEY_STYLE}
 						aria-label="6"
 					>
 						6
@@ -214,7 +241,7 @@ export default function PiGame() {
 					<button
 						type="button"
 						onClick={() => handleInput("1")}
-						className={KEY_BASE_STYLE}
+						style={KEY_STYLE}
 						aria-label="1"
 					>
 						1
@@ -222,7 +249,7 @@ export default function PiGame() {
 					<button
 						type="button"
 						onClick={() => handleInput("2")}
-						className={KEY_BASE_STYLE}
+						style={KEY_STYLE}
 						aria-label="2"
 					>
 						2
@@ -230,21 +257,25 @@ export default function PiGame() {
 					<button
 						type="button"
 						onClick={() => handleInput("3")}
-						className={`${KEY_SIZE} rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] flex items-center justify-center text-2xl neue-haas-grotesk-display cursor-pointer select-none transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base ${
-							highlightThree
-								? "bg-main/30 text-main hover:bg-main/40 hover:text-main active:bg-main/50 active:text-main"
-								: "bg-base/75 hover:bg-main/20 hover:text-main active:bg-main/30 active:text-main"
-						}`}
+						style={{
+							...KEY_STYLE,
+							backgroundColor: highlightThree ? "#e0e0ff" : undefined,
+							color: highlightThree ? "#0066cc" : undefined,
+						}}
 						aria-label="3"
 					>
 						3
 					</button>
 
-					{/* Row 4: 0 (2倍幅、同じ高さ) と . */}
+					{/* Row 4: 0 (2倍幅) と . */}
 					<button
 						type="button"
 						onClick={() => handleInput("0")}
-						className={KEY_ZERO_STYLE}
+						style={{
+							...KEY_STYLE,
+							width: 248,
+							gridColumn: "span 2",
+						}}
 						aria-label="0"
 					>
 						0
@@ -252,7 +283,7 @@ export default function PiGame() {
 					<button
 						type="button"
 						onClick={() => handleInput(".")}
-						className={KEY_BASE_STYLE}
+						style={KEY_STYLE}
 						aria-label="小数点"
 					>
 						.

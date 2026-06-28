@@ -4,12 +4,7 @@ const host = process.env.CMS_API_HOST || "127.0.0.1";
 const port = process.env.CMS_API_PORT || "3001";
 const dataDir = process.env.CMS_API_DATA_DIR || "./data/db";
 const command = "docker";
-const args = [
-	"compose",
-	"-f",
-	"docker-compose.cms-api.yml",
-	"up",
-];
+const args = ["compose", "-f", "docker-compose.cms-api.yml", "up"];
 
 const child = spawn(command, args, {
 	cwd: ".",

@@ -7,7 +7,6 @@
     "@sentry/nextjs",
     "@tanstack/react-table",
     "axios",
-    "dompurify",
     "pixi-filters",
     "react-google-recaptcha",
     "recharts",
@@ -25,13 +24,19 @@
     "shadcn",
     "tsx",
     "@next/bundle-analyzer",
-    "vite",
-    "@vitejs/plugin-react",
-    "gray-matter",
     "server-only",
     "cannon-es",
     "ammo.js",
-    "@emotion/cache"
+    "@emotion/cache",
+    "isomorphic-dompurify",
+    "sharp"
   ],
-  "treatConfigHintsAsErrors": false
+  "treatConfigHintsAsErrors": true,
+  "rules": {
+    "files": "off",
+    "exports": "off",
+    "types": "off",
+    "nsExports": "off",
+    "nsTypes": "off"
+  }
 }

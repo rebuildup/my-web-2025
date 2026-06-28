@@ -12,7 +12,7 @@ import {
 	useId,
 	useState,
 } from "react";
-import { useToolAccessibility } from "@/hooks/useAccessibility";
+import { useAccessibility } from "@/hooks/useAccessibility";
 
 interface BaseAccessibleInputProps {
 	label: string;
@@ -61,7 +61,7 @@ const AccessibleInput = forwardRef<
 		},
 		ref,
 	) => {
-		const { announce, state } = useToolAccessibility();
+		const { announce, state } = useAccessibility();
 		const [isFocused, setIsFocused] = useState(false);
 
 		const inputId = useId();

@@ -622,6 +622,3 @@ export const createEmbedSyntaxParser = (
 ): EmbedSyntaxParser => {
 	return new EnhancedEmbedSyntaxParser(classSuggestionEngine);
 };
-
-// Default exports
-export default TailwindClassSuggestionEngine;

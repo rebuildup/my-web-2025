@@ -3,17 +3,13 @@ import {
 	FileCode,
 	Gamepad2,
 	Image,
-	Mail,
 	Palette,
 	QrCode,
 	ScrollText,
 	Timer,
 	Type,
-	Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import GlowCard from "@/components/ui/GlowCard";
 
 interface Tool {
 	id: string;
@@ -21,7 +17,10 @@ interface Tool {
 	description: string;
 	href: string;
 	category: string;
-	icon: React.ComponentType<{ className?: string }>;
+	icon: React.ComponentType<{
+		className?: string;
+		style?: React.CSSProperties;
+	}>;
 }
 
 const tools: Tool[] = [
@@ -89,24 +88,6 @@ const tools: Tool[] = [
 		icon: Image,
 	},
 	{
-		id: "ae-expression",
-		title: "AE Expression Tool",
-		description:
-			"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示.",
-		href: "/tools/ae-expression",
-		category: "デザイン",
-		icon: Zap,
-	},
-	{
-		id: "business-mail-block",
-		title: "Business Mail Block Tool",
-		description:
-			"ビジネスメールをScratch風ブロックUIで簡単作成.挨拶、本文、締め、署名を組み合わせてプロフェッショナルなメールを作成.",
-		href: "/tools/business-mail-block",
-		category: "ビジネス",
-		icon: Mail,
-	},
-	{
 		id: "ProtoType",
 		title: "ProtoType Typing Game",
 		description:
@@ -137,84 +118,131 @@ const tools: Tool[] = [
 
 export default function ToolsPage() {
 	return (
-		<div className="relative min-h-screen text-main">
-			<main
-				id="main-content"
-				className="relative z-10 min-h-screen py-10"
-				tabIndex={-1}
+		<div
+			style={{
+				position: "fixed",
+				top: 0,
+				left: 0,
+				width: "100vw",
+				height: "100vh",
+				zIndex: 9999,
+				backgroundColor: "#ffffff",
+				color: "#000000",
+				colorScheme: "light",
+				fontFamily: "sans-serif",
+				overflowY: "auto",
+				padding: "2rem",
+				boxSizing: "border-box",
+			}}
+		>
+			<div
+				style={{
+					maxWidth: "1100px",
+					margin: "0 auto",
+					paddingBottom: "4rem",
+				}}
 			>
-				<div className="container-system">
-					<div className="mx-auto w-full max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
-						<Breadcrumbs
-							items={[
-								{ label: "Home", href: "/" },
-								{ label: "Tools", isCurrent: true },
-							]}
-							className="pt-4"
-						/>
+				<nav
+					style={{
+						fontSize: "0.85rem",
+						marginBottom: "1rem",
+						color: "#666",
+					}}
+				>
+					<a href="/" style={{ color: "#0066cc", textDecoration: "none" }}>
+						Home
+					</a>
+					<span style={{ margin: "0 8px" }}>/</span>
+					<span style={{ color: "#000" }}>Tools</span>
+				</nav>
 
-						<header className="space-y-6">
-							<h1 className="neue-haas-grotesk-display text-4xl text-main sm:text-5xl lg:text-6xl">
-								Tools
-							</h1>
-							<p className="noto-sans-jp-light text-sm text-main/70 leading-relaxed max-w-2xl">
-								便利なWebツールのコレクション.オフライン対応・アクセシビリティ準拠のツールを提供しています.
-							</p>
-						</header>
+				<h1
+					style={{
+						borderBottom: "1px solid #ccc",
+						paddingBottom: "10px",
+						marginBottom: "20px",
+						fontSize: "1.5rem",
+						fontWeight: "normal",
+					}}
+				>
+					Tools
+				</h1>
+				<p
+					style={{
+						fontSize: "0.875rem",
+						color: "#666",
+						marginBottom: "40px",
+						marginTop: 0,
+					}}
+				>
+					便利なWebツールのコレクション.
+				</p>
 
-						{/* Tools Grid */}
-						<section className="space-y-6">
-							<h2 className="neue-haas-grotesk-display text-3xl text-main">
-								All Tools
-							</h2>
-							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-								{tools.map((tool) => {
-									const Icon = tool.icon;
-									return (
-										<Link
-											key={tool.id}
-											href={tool.href}
-											className="block focus:outline-none group h-full"
+				<div
+					style={{
+						display: "grid",
+						gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+						gap: "12px",
+					}}
+				>
+					{tools.map((tool) => {
+						const Icon = tool.icon;
+						return (
+							<Link
+								key={tool.id}
+								href={tool.href}
+								style={{ textDecoration: "none", color: "inherit" }}
+							>
+								<div
+									style={{
+										border: "1px solid #ddd",
+										borderRadius: "6px",
+										padding: "16px",
+										height: "100%",
+										cursor: "pointer",
+									}}
+								>
+									<div
+										style={{
+											display: "flex",
+											alignItems: "center",
+											gap: "8px",
+											marginBottom: "6px",
+										}}
+									>
+										<Icon style={{ width: 18, height: 18, flexShrink: 0 }} />
+										<span style={{ fontSize: "0.95rem", fontWeight: 600 }}>
+											{tool.title}
+										</span>
+										<span
+											style={{
+												marginLeft: "auto",
+												fontSize: "0.7rem",
+												background: "#f0f0f0",
+												padding: "2px 8px",
+												borderRadius: "10px",
+												flexShrink: 0,
+											}}
 										>
-											<GlowCard className="bg-base/30 backdrop-blur h-full flex flex-col">
-												<div className="flex flex-col p-6 h-full">
-													<div className="flex flex-1 flex-col gap-3">
-														<div className="flex items-start justify-between gap-2">
-															<div className="flex items-center gap-3">
-																<Icon className="w-6 h-6 text-accent group-hover:scale-110 transition-transform duration-300 shrink-0" />
-																<h3 className="neue-haas-grotesk-display text-lg leading-snug text-main sm:text-xl group-hover:text-accent transition-colors">
-																	{tool.title}
-																</h3>
-															</div>
-															<span className="noto-sans-jp-light rounded-full bg-main/10 px-3 py-1 text-[0.75rem] text-main shrink-0">
-																{tool.category}
-															</span>
-														</div>
-														<p className="noto-sans-jp-light text-sm leading-relaxed text-main/80 mt-1">
-															{tool.description}
-														</p>
-													</div>
-												</div>
-											</GlowCard>
-										</Link>
-									);
-								})}
-							</div>
-						</section>
-					</div>
+											{tool.category}
+										</span>
+									</div>
+									<p
+										style={{
+											fontSize: "0.8rem",
+											color: "#555",
+											margin: 0,
+											lineHeight: 1.5,
+										}}
+									>
+										{tool.description}
+									</p>
+								</div>
+							</Link>
+						);
+					})}
 				</div>
-			</main>
-			<footer className="border-t border-main/30 bg-base/80 py-6 text-center text-xs text-main/70">
-				<div className="container-system flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-4">
-					<span>© 2025 361do_sleep</span>
-					<Link
-						href="/privacy-policy"
-						className="underline underline-offset-4 transition hover:text-accent"
-					>
-						Privacy Policy
-					</Link>
-				</div>
-			</footer>
+			</div>
 		</div>
 	);
 }

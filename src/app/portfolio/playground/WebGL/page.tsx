@@ -2,6 +2,7 @@
 
 import { ChevronDown, ChevronUp, Monitor, Settings, Zap } from "lucide-react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import DomeGallery from "@/components/DomeGallery";
 import {
@@ -21,6 +22,7 @@ import type {
 } from "@/types/playground";
 
 export default function WebGLPlaygroundPage() {
+	notFound();
 	const Global_title = "noto-sans-jp-regular text-base leading-snug";
 	const responsive = useResponsive();
 
@@ -139,9 +141,10 @@ export default function WebGLPlaygroundPage() {
 
 	// Experiment switching with swipe gestures
 	const experimentIds = filteredExperiments.map((exp) => exp.id);
-	const currentExperimentIndex = activeExperiment
-		? experimentIds.indexOf(activeExperiment)
-		: -1;
+	const currentExperimentIndex =
+		activeExperiment !== null
+			? experimentIds.indexOf(activeExperiment as string)
+			: -1;
 
 	const handleExperimentSwipe = useCallback(
 		(newIndex: number) => {
@@ -161,14 +164,15 @@ export default function WebGLPlaygroundPage() {
 	// Render experiment component
 	const renderExperiment = (experimentId: string) => {
 		const experiment = webglExperiments.find((exp) => exp.id === experimentId);
-		if (!experiment || !deviceCapabilities) return null;
+		const caps = deviceCapabilities;
+		if (!experiment || !caps) return null;
 
 		const ExperimentComponent = experiment.component;
 
 		return (
 			<ExperimentComponent
 				isActive={activeExperiment === experimentId}
-				deviceCapabilities={deviceCapabilities}
+				deviceCapabilities={caps}
 				performanceSettings={performanceSettings}
 				onPerformanceUpdate={handlePerformanceUpdate}
 				onError={(error) => console.error("Experiment error:", error)}
@@ -249,7 +253,7 @@ export default function WebGLPlaygroundPage() {
 													WebGL Support:
 												</span>
 												<div className="text-accent">
-													{deviceCapabilities.webglSupport ? "Yes" : "No"}
+													{deviceCapabilities?.webglSupport ? "Yes" : "No"}
 												</div>
 											</div>
 											<div>
@@ -257,7 +261,7 @@ export default function WebGLPlaygroundPage() {
 													WebGL2 Support:
 												</span>
 												<div className="text-accent">
-													{deviceCapabilities.webgl2Support ? "Yes" : "No"}
+													{deviceCapabilities?.webgl2Support ? "Yes" : "No"}
 												</div>
 											</div>
 											<div>
@@ -265,7 +269,7 @@ export default function WebGLPlaygroundPage() {
 													Performance Level:
 												</span>
 												<div className="text-accent">
-													{deviceCapabilities.performanceLevel}
+													{deviceCapabilities?.performanceLevel}
 												</div>
 											</div>
 											<div>
@@ -273,7 +277,7 @@ export default function WebGLPlaygroundPage() {
 													Max Texture Size:
 												</span>
 												<div className="text-accent">
-													{deviceCapabilities.maxTextureSize}px
+													{deviceCapabilities?.maxTextureSize}px
 												</div>
 											</div>
 										</div>
@@ -435,7 +439,8 @@ export default function WebGLPlaygroundPage() {
 									)}
 								</div>
 
-								{renderExperiment(activeExperiment)}
+								{activeExperiment !== null &&
+									renderExperiment(activeExperiment as string)}
 							</div>
 						)}
 

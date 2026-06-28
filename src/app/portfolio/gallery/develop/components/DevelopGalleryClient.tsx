@@ -304,7 +304,7 @@ export function DevelopGalleryClient({
 												{project.technologies.map((tech: string) => (
 													<span
 														key={tech}
-														className="noto-sans-jp-light text-xs text-main/90 px-3 py-1 bg-main/10 rounded-full"
+														className="noto-sans-jp-light text-xs text-main/90 px-3 py-1 bg-main/10"
 													>
 														{tech}
 													</span>
@@ -319,7 +319,7 @@ export function DevelopGalleryClient({
 													href={project.githubUrl}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center px-3 py-1.5 rounded-[8px] bg-base/30 hover:bg-base/50 transition-colors ring-1 ring-main/20"
+													className="flex items-center px-3 py-1.5 bg-base/30 hover:bg-base/50 transition-colors ring-1 ring-main/20"
 												>
 													<GitBranch className="w-5 h-5 mr-2" />
 													<span className="noto-sans-jp-light text-sm">
@@ -332,7 +332,7 @@ export function DevelopGalleryClient({
 													href={project.liveUrl}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center px-3 py-1.5 rounded-[8px] bg-base/30 hover:bg-base/50 transition-colors ring-1 ring-main/20"
+													className="flex items-center px-3 py-1.5 bg-base/30 hover:bg-base/50 transition-colors ring-1 ring-main/20"
 												>
 													<ExternalLink className="w-5 h-5 mr-2" />
 													<span className="noto-sans-jp-light text-sm">
@@ -373,7 +373,7 @@ export function DevelopGalleryClient({
 				<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
 					<Link
 						href="/portfolio/gallery/all"
-						className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
+						className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
 					>
 						<span className="noto-sans-jp-regular text-base leading-snug">
 							All Projects
@@ -382,7 +382,7 @@ export function DevelopGalleryClient({
 
 					<Link
 						href="/portfolio/gallery/video"
-						className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
+						className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
 					>
 						<span className="noto-sans-jp-regular text-base leading-snug">
 							Video Projects
@@ -391,7 +391,7 @@ export function DevelopGalleryClient({
 
 					<Link
 						href="/about/commission/develop"
-						className="bg-base/30 backdrop-blur text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors rounded-[20px]"
+						className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
 					>
 						<span className="noto-sans-jp-regular text-base leading-snug">
 							Commission

@@ -53,10 +53,16 @@ function aggregateContentTags(items: ContentItem[]): Map<string, TagAggregate> {
 				lastUsed: timestamp,
 			};
 			current.count += 1;
-			if (!current.firstUsed || new Date(timestamp) < new Date(current.firstUsed)) {
+			if (
+				!current.firstUsed ||
+				new Date(timestamp) < new Date(current.firstUsed)
+			) {
 				current.firstUsed = timestamp;
 			}
-			if (!current.lastUsed || new Date(timestamp) > new Date(current.lastUsed)) {
+			if (
+				!current.lastUsed ||
+				new Date(timestamp) > new Date(current.lastUsed)
+			) {
 				current.lastUsed = timestamp;
 			}
 			map.set(tag, current);
@@ -114,7 +120,11 @@ export class PortfolioTagManager implements TagManagementSystem {
 		});
 		const items = await loadContentByType("portfolio");
 		const usage = aggregateContentTags(items).get(normalizedName);
-		return mergeTagInfo(normalizedName, usage, runtimeTagCatalog.get(normalizedName));
+		return mergeTagInfo(
+			normalizedName,
+			usage,
+			runtimeTagCatalog.get(normalizedName),
+		);
 	}
 
 	async updateTagUsage(name: string): Promise<void> {

@@ -30,6 +30,7 @@ export function RawDOMContainer({
 				zIndex: 9999,
 				backgroundColor: "#ffffff",
 				color: "#000000",
+				colorScheme: "light",
 				fontFamily: "sans-serif",
 				overflowY: "auto",
 				padding: "2rem",

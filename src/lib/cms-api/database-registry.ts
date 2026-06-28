@@ -70,7 +70,9 @@ export async function listCmsDatabases(): Promise<CmsDatabaseInfo[]> {
 		.sort();
 
 	const activeFile = getActiveDatabaseFilename();
-	const allFiles = dbFiles.includes(activeFile) ? dbFiles : [...dbFiles, activeFile];
+	const allFiles = dbFiles.includes(activeFile)
+		? dbFiles
+		: [...dbFiles, activeFile];
 
 	const results = await Promise.all(
 		allFiles.map(async (file) => {
