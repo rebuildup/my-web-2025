@@ -101,7 +101,7 @@
 		"tailwind-merge": "^3.3.1",
 		"tailwindcss": "^4.1.16",
 		"tailwindcss-animate": "^1.0.7",
-		"three": "^0.180.0",
+		"three": "^0.185.0",
 		"web-vitals": "^5.1.0",
 		"zod": "^4.1.12"
 	},
@@ -131,7 +131,7 @@
 		"typescript": "5.9.3"
 	},
 	"overrides": {
-		"three": "^0.180.0",
+		"three": "^0.185.0",
 		"baseline-browser-mapping": "^2.8.32"
 	}
 }
