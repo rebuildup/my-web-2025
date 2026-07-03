@@ -407,13 +407,7 @@ export function MarkdownEditor({
 									type="button"
 									onClick={handleSave}
 									disabled={isSaving}
-									className={`${buttonStyle} ${
-										saveStatus === "success"
-											? "  "
-											: saveStatus === "error"
-												? "  "
-												: ""
-									}`}
+									className={`${buttonStyle} ${saveStatus === "success" ? " " : saveStatus === "error" ? " " : ""}`}
 									title="Save File (Ctrl+S)"
 								>
 									{saveStatus === "saving" && "Saving..."}
@@ -470,7 +464,7 @@ export function MarkdownEditor({
 							value={editorContent}
 							onChange={(e) => handleContentChange(e.target.value)}
 							onKeyDown={handleKeyDown}
-							className="w-full min-h-[500px] p-4 pl-12 font-mono text-sm resize-none   focus:  leading-5 "
+							className="w-full min-h-[500px] p-4 pl-12 font-mono text-sm resize-none leading-5"
 							placeholder="Enter your markdown content here..."
 							spellCheck={false}
 						/>
@@ -500,11 +494,7 @@ export function MarkdownEditor({
 						}
 					</span>
 					{embedSupport && (
-						<span
-							className={
-								validationErrors.length > 0 ? "" : ""
-							}
-						>
+						<span className={validationErrors.length > 0 ? "" : ""}>
 							Embeds:{" "}
 							{validationErrors.length > 0
 								? `${validationErrors.length} errors`
@@ -514,14 +504,10 @@ export function MarkdownEditor({
 				</div>
 
 				<div className="flex gap-4 items-center">
-					{error && (
-						<div className=" font-medium">Error: {error}</div>
-					)}
+					{error && <div className=" font-medium">Error: {error}</div>}
 
 					{filePath && (
-						<div className="">
-							File: {filePath.split("/").pop()}
-						</div>
+						<div className="">File: {filePath.split("/").pop()}</div>
 					)}
 				</div>
 			</div>

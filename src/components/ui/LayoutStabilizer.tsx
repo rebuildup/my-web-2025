@@ -381,9 +381,7 @@ export const LayoutShiftDetector: React.FC = () => {
 
 	return (
 		<div className="fixed top-4 right-4    rounded-lg p-3 text-sm max-w-sm z-50">
-			<h4 className="font-semibold  mb-2">
-				Layout Shifts Detected
-			</h4>
+			<h4 className="font-semibold  mb-2">Layout Shifts Detected</h4>
 			<div className="space-y-1 max-h-32 overflow-y-auto">
 				{shifts.map((shift, index) => {
 					const shiftKey = `${shift.timestamp ?? Date.now()}-${index}`;

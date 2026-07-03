@@ -57,7 +57,6 @@ export default function FrameGrid({
 								setGridSize(e.target.value as "small" | "medium" | "large")
 							}
 							style={{
-								all: "revert",
 								border: "none",
 								padding: "2px 4px",
 								fontSize: "12px",
@@ -81,7 +80,7 @@ export default function FrameGrid({
 							type="checkbox"
 							checked={showInfo}
 							onChange={(e) => setShowInfo(e.target.checked)}
-							style={{ all: "revert", border: "none" }}
+							style={{ border: "none" }}
 						/>
 						詳細情報を表示
 					</label>

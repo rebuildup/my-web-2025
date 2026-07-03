@@ -148,9 +148,7 @@ export default async function DevelopGalleryPage() {
 									/>
 								) : (
 									<div className=" p-4 rounded">
-										<p className="">
-											No development projects found.
-										</p>
+										<p className="">No development projects found.</p>
 										{process.env.NODE_ENV !== "production" && (
 											<div className="mt-2 text-xs  space-y-1">
 												<p>Diagnostics:</p>

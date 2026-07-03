@@ -253,7 +253,7 @@ export function FileManagerPanel({
 				{selectedFiles.size > 0 && (
 					<button type="button"
 						onClick={handleBulkDelete}
-						className="  px-3 py-2 text-sm  transition-colors"
+						className="px-3 py-2 text-sm"
 					>
 						Delete Selected ({selectedFiles.size})
 					</button>
@@ -268,7 +268,7 @@ export function FileManagerPanel({
 							key={file.id}
 							className={` rounded-lg p-3  transition-shadow cursor-pointer ${
 								selectedFiles.has(file.id)
-									? " /5"
+									? ""
 									: ""
 							}`}
 							onClick={() => handleFileSelect(file)}
@@ -323,7 +323,7 @@ export function FileManagerPanel({
 										}
 										setSelectedFiles(newSet);
 									}}
-									className="rounded "
+									className=""
 								/>
 
 								<div className="flex space-x-1">
@@ -369,7 +369,7 @@ export function FileManagerPanel({
 							key={file.id}
 							className={` rounded-lg p-3  transition-shadow cursor-pointer ${
 								selectedFiles.has(file.id)
-									? " /5"
+									? ""
 									: ""
 							}`}
 							onClick={() => handleFileSelect(file)}
@@ -389,7 +389,7 @@ export function FileManagerPanel({
 											}
 											setSelectedFiles(newSet);
 										}}
-										className="rounded "
+										className=""
 									/>
 
 									{getFileIcon(file.type)}
@@ -416,7 +416,7 @@ export function FileManagerPanel({
 												e.stopPropagation();
 												window.open(file.url, "_blank");
 											}}
-											className="  p-1"
+											className="p-1"
 											title="View"
 										>
 											<Eye className="w-4 h-4" />
@@ -426,7 +426,7 @@ export function FileManagerPanel({
 												e.stopPropagation();
 												navigator.clipboard.writeText(file.url);
 											}}
-											className="  p-1"
+											className="p-1"
 											title="Copy URL"
 										>
 											<Copy className="w-4 h-4" />
@@ -436,7 +436,7 @@ export function FileManagerPanel({
 												e.stopPropagation();
 												handleFileDelete(file.id);
 											}}
-											className="  p-1"
+											className="p-1"
 											title="Delete"
 										>
 											<Trash2 className="w-4 h-4" />

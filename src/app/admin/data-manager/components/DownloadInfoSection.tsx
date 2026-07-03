@@ -118,7 +118,7 @@ export function DownloadInfoSection({
 								<button
 									type="button"
 									onClick={() => fileInputRef.current?.click()}
-									className=" hover:/80 font-medium"
+									className="font-medium"
 								>
 									Click to upload file
 								</button>
@@ -226,7 +226,7 @@ export function DownloadInfoSection({
 						<button
 							type="button"
 							onClick={() => onDownloadInfoChange(undefined)}
-							className={`${buttonStyle}    `}
+							className={`${buttonStyle}`}
 						>
 							Remove File
 						</button>

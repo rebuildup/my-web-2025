@@ -26,7 +26,7 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
 			aria-label="Breadcrumb"
 			className={`text-xs md:text-sm mb-4 ${className}`}
 		>
-			<ol className="flex items-baseline space-x-1 md:space-x-2 noto-sans-jp-light">
+			<ol className="flex items-baseline space-x-1 md:space-x-2 noto-sans-jp-light p-0 list-none m-0">
 				{items.map((item, index) => {
 					const isLast = index === items.length - 1;
 					const isCurrent = item.isCurrent || isLast;
@@ -38,9 +38,7 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
 						>
 							{/* Separator */}
 							{index > 0 && (
-								<span className="mx-2 select-none leading-none">
-									/
-								</span>
+								<span className="mx-2 select-none leading-none">/</span>
 							)}
 
 							{/* Breadcrumb item */}
@@ -54,7 +52,7 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
 							) : (
 								<Link
 									href={item.href}
-									className=" hover:text-accent transition-colors duration-200 hover:underline leading-none"
+									className="  transition-colors duration-200 hover:underline leading-none"
 								>
 									{item.label}
 								</Link>

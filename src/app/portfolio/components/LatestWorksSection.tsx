@@ -29,12 +29,10 @@ export function LatestWorksSection({
 	return (
 		<section className="space-y-6">
 			<div className="flex items-center justify-between">
-				<h2 className="neue-haas-grotesk-display text-3xl ">
-					Latest Works
-				</h2>
+				<h2 className="neue-haas-grotesk-display text-3xl ">Latest Works</h2>
 				<Link
 					href="/portfolio/gallery/all"
-					className="noto-sans-jp-light text-sm /70 hover:text-accent transition-colors flex items-center gap-2"
+					className="noto-sans-jp-light text-sm  transition-colors flex items-center gap-2"
 				>
 					すべて見る
 					<ArrowRight className="w-4 h-4" />
@@ -42,18 +40,14 @@ export function LatestWorksSection({
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{latestItems.map((item) => (
-					<Link
+					<PortfolioCard
 						key={item.id}
+						item={item}
 						href={`/portfolio/${item.id}`}
 						target="_blank"
-						rel="noopener noreferrer"
-					>
-						<PortfolioCard
-							item={item}
-							showMarkdownIndicator={true}
-							variant="glow"
-						/>
-					</Link>
+						showMarkdownIndicator={true}
+						variant="glow"
+					/>
 				))}
 			</div>
 		</section>

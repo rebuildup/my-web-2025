@@ -270,14 +270,14 @@ export default function CodeTypeP5App() {
 						<button
 							type="button"
 							onClick={togglePlayback}
-							style={{ all: "revert", padding: "4px 12px", fontSize: "13px" }}
+							style={{ padding: "4px 12px", fontSize: "13px" }}
 						>
 							{isPlaying ? "Pause" : "Play"}
 						</button>
 						<button
 							type="button"
 							onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-							style={{ all: "revert", padding: "4px 12px", fontSize: "13px" }}
+							style={{ padding: "4px 12px", fontSize: "13px" }}
 						>
 							{isDrawerOpen ? "設定を閉じる" : "Edit Code"}
 						</button>
@@ -343,7 +343,6 @@ export default function CodeTypeP5App() {
 										setConfig({ ...config, language: e.target.value })
 									}
 									style={{
-										all: "revert",
 										width: "100%",
 										padding: "4px 8px",
 										fontSize: "13px",
@@ -386,7 +385,6 @@ export default function CodeTypeP5App() {
 											setConfig({ ...config, width: Number(e.target.value) })
 										}
 										style={{
-											all: "revert",
 											width: "100%",
 											padding: "4px 8px",
 											fontSize: "13px",
@@ -411,7 +409,6 @@ export default function CodeTypeP5App() {
 											setConfig({ ...config, height: Number(e.target.value) })
 										}
 										style={{
-											all: "revert",
 											width: "100%",
 											padding: "4px 8px",
 											fontSize: "13px",
@@ -446,7 +443,6 @@ export default function CodeTypeP5App() {
 											setConfig({ ...config, fontSize: Number(e.target.value) })
 										}
 										style={{
-											all: "revert",
 											width: "100%",
 											padding: "4px 8px",
 											fontSize: "13px",
@@ -474,7 +470,6 @@ export default function CodeTypeP5App() {
 											})
 										}
 										style={{
-											all: "revert",
 											width: "100%",
 											padding: "4px 8px",
 											fontSize: "13px",
@@ -499,7 +494,6 @@ export default function CodeTypeP5App() {
 											setConfig({ ...config, fps: Number(e.target.value) })
 										}
 										style={{
-											all: "revert",
 											width: "100%",
 											padding: "4px 8px",
 											fontSize: "13px",
@@ -524,7 +518,6 @@ export default function CodeTypeP5App() {
 											setConfig({ ...config, duration: Number(e.target.value) })
 										}
 										style={{
-											all: "revert",
 											width: "100%",
 											padding: "4px 8px",
 											fontSize: "13px",
@@ -564,7 +557,6 @@ export default function CodeTypeP5App() {
 												backgroundTransparent: e.target.checked,
 											})
 										}
-										style={{ all: "revert" }}
 									/>
 									Transparent Background
 								</label>
@@ -591,7 +583,6 @@ export default function CodeTypeP5App() {
 												})
 											}
 											style={{
-												all: "revert",
 												width: "60px",
 												padding: "4px 8px",
 												fontSize: "13px",
@@ -613,7 +604,6 @@ export default function CodeTypeP5App() {
 												})
 											}
 											style={{
-												all: "revert",
 												width: "60px",
 												padding: "4px 8px",
 												fontSize: "13px",
@@ -635,7 +625,6 @@ export default function CodeTypeP5App() {
 												})
 											}
 											style={{
-												all: "revert",
 												width: "60px",
 												padding: "4px 8px",
 												fontSize: "13px",
@@ -657,7 +646,6 @@ export default function CodeTypeP5App() {
 												});
 											}}
 											style={{
-												all: "revert",
 												width: "40px",
 												height: "30px",
 												padding: 0,
@@ -685,7 +673,6 @@ export default function CodeTypeP5App() {
 									rows={15}
 									spellCheck={false}
 									style={{
-										all: "revert",
 										width: "100%",
 										fontFamily: "monospace",
 										fontSize: "12px",
@@ -704,7 +691,6 @@ export default function CodeTypeP5App() {
 									type="button"
 									onClick={handleApply}
 									style={{
-										all: "revert",
 										padding: "8px 16px",
 										fontSize: "14px",
 										width: "100%",
@@ -716,7 +702,6 @@ export default function CodeTypeP5App() {
 									type="button"
 									onClick={handleExportZip}
 									style={{
-										all: "revert",
 										padding: "8px 16px",
 										fontSize: "14px",
 										width: "100%",

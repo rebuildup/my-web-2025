@@ -104,7 +104,6 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 						key={key}
 						onClick={() => setActiveTab(key as typeof activeTab)}
 						style={{
-							all: "revert",
 							padding: "8px 16px",
 							border: "none",
 							borderBottom:
@@ -152,7 +151,7 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 					<button
 						type="button"
 						onClick={() => fileInputRef.current?.click()}
-						style={{ all: "revert", padding: "4px 12px", fontSize: "13px" }}
+						style={{ padding: "4px 12px", fontSize: "13px" }}
 					>
 						ファイルを選択
 					</button>
@@ -171,7 +170,6 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 						onChange={(e) => handleCodeChange(e.target.value)}
 						placeholder="<svg>...</svg>"
 						style={{
-							all: "revert",
 							width: "100%",
 							height: "250px",
 							padding: "8px",
@@ -199,7 +197,6 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 							onChange={(e) => setUrlInput(e.target.value)}
 							placeholder="https://example.com/image.svg"
 							style={{
-								all: "revert",
 								flex: 1,
 								padding: "4px 8px",
 								fontSize: "13px",
@@ -210,7 +207,7 @@ export function SVGInput({ onSVGChange, currentInput }: SVGInputProps) {
 							type="button"
 							onClick={handleUrlLoad}
 							disabled={!urlInput}
-							style={{ all: "revert", padding: "4px 12px", fontSize: "13px" }}
+							style={{ padding: "4px 12px", fontSize: "13px" }}
 						>
 							読み込み
 						</button>

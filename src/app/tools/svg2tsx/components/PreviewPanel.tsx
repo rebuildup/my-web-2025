@@ -35,7 +35,6 @@ export function PreviewPanel({
 						key={key}
 						onClick={() => setActiveTab(key as typeof activeTab)}
 						style={{
-							all: "revert",
 							padding: "8px 16px",
 							border: "none",
 							borderBottom:

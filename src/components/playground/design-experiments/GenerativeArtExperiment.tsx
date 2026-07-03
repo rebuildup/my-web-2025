@@ -11,7 +11,7 @@ export function GenerativeArtExperiment({}: ExperimentProps) {
 	return (
 		<div className="aspect-video  flex items-center justify-center">
 			<div className="text-center space-y-2">
-				<div className="text-lg text-accent">Generative Art Experiment</div>
+				<div className="text-lg ">Generative Art Experiment</div>
 				<p className="text-sm ">Coming soon...</p>
 			</div>
 		</div>

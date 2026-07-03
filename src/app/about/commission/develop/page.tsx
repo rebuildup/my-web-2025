@@ -145,10 +145,8 @@ export default function DevelopCommissionPage() {
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
 									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
-											<Globe className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg ">
-												Web開発
-											</h3>
+											<Globe className="w-6 h-6  mr-3" />
+											<h3 className="zen-kaku-gothic-new text-lg ">Web開発</h3>
 										</div>
 										<div className="space-y-2">
 											<div className="noto-sans-jp-light text-sm ">
@@ -165,7 +163,7 @@ export default function DevelopCommissionPage() {
 
 									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
-											<Gamepad2 className="w-6 h-6 text-accent mr-3" />
+											<Gamepad2 className="w-6 h-6  mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
 												アプリケーション開発
 											</h3>
@@ -185,7 +183,7 @@ export default function DevelopCommissionPage() {
 
 									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
-											<Code className="w-6 h-6 text-accent mr-3" />
+											<Code className="w-6 h-6  mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
 												プラグイン開発
 											</h3>
@@ -202,7 +200,7 @@ export default function DevelopCommissionPage() {
 
 									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
-											<Wrench className="w-6 h-6 text-accent mr-3" />
+											<Wrench className="w-6 h-6  mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
 												技術サポート
 											</h3>
@@ -265,15 +263,13 @@ export default function DevelopCommissionPage() {
 									].map(({ step, title, description, icon: Icon }) => (
 										<div key={step} className="  p-4">
 											<div className="flex items-start">
-												<div className="flex-shrink-0 w-8 h-8 bg-accent flex items-center justify-center font-bold mr-4 text-sm">
+												<div className="flex-shrink-0 w-8 h-8  flex items-center justify-center font-bold mr-4 text-sm">
 													{step}
 												</div>
 												<div className="flex-grow">
 													<div className="flex items-center mb-2">
-														<Icon className="w-5 h-5 text-accent mr-2" />
-														<h3 className="zen-kaku-gothic-new ">
-															{title}
-														</h3>
+														<Icon className="w-5 h-5  mr-2" />
+														<h3 className="zen-kaku-gothic-new ">{title}</h3>
 													</div>
 													<p className="noto-sans-jp-light text-sm ">
 														{description}
@@ -356,9 +352,7 @@ export default function DevelopCommissionPage() {
 									</div>
 
 									<div className="  p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg ">
-											ゲーム開発
-										</h3>
+										<h3 className="zen-kaku-gothic-new text-lg ">ゲーム開発</h3>
 										<div className="space-y-2">
 											{["p5js", "PIXIjs", "Unity"].map((skill) => (
 												<div
@@ -388,9 +382,7 @@ export default function DevelopCommissionPage() {
 									</div>
 
 									<div className="  p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg ">
-											その他
-										</h3>
+										<h3 className="zen-kaku-gothic-new text-lg ">その他</h3>
 										<div className="space-y-2">
 											{["C", "C++", "C#", "Python"].map((skill) => (
 												<div
@@ -414,17 +406,15 @@ export default function DevelopCommissionPage() {
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 										<div>
 											<div className="flex items-center mb-3">
-												<Mail className="w-5 h-5 text-accent mr-2" />
-												<h3 className="zen-kaku-gothic-new text-lg ">
-													メール
-												</h3>
+												<Mail className="w-5 h-5  mr-2" />
+												<h3 className="zen-kaku-gothic-new text-lg ">メール</h3>
 											</div>
 											<p className="noto-sans-jp-light text-sm mb-4">
 												rebuild.up.up(at)gmail.com
 											</p>
 
 											<div className="flex items-center mb-3">
-												<MessageCircle className="w-5 h-5 text-accent mr-2" />
+												<MessageCircle className="w-5 h-5  mr-2" />
 												<h3 className="zen-kaku-gothic-new text-lg ">
 													X (Twitter)
 												</h3>
@@ -435,7 +425,7 @@ export default function DevelopCommissionPage() {
 										</div>
 										<div>
 											<div className="flex items-center mb-3">
-												<Clock className="w-5 h-5 text-accent mr-2" />
+												<Clock className="w-5 h-5  mr-2" />
 												<h3 className="zen-kaku-gothic-new text-lg ">
 													対応時間
 												</h3>
@@ -447,9 +437,7 @@ export default function DevelopCommissionPage() {
 											<h3 className="zen-kaku-gothic-new text-lg mb-3">
 												返信時間
 											</h3>
-											<p className="noto-sans-jp-light text-sm ">
-												24時間以内
-											</p>
+											<p className="noto-sans-jp-light text-sm ">24時間以内</p>
 										</div>
 									</div>
 								</div>

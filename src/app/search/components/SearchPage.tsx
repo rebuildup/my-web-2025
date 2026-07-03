@@ -272,9 +272,7 @@ export default function SearchPage() {
 						</div>
 						{/* Page Header */}
 						<header className="space-y-12">
-							<h1 className="neue-haas-grotesk-display text-6xl ">
-								Search
-							</h1>
+							<h1 className="neue-haas-grotesk-display text-6xl ">Search</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
 								サイト内のコンテンツを検索できます.
 								<br />
@@ -307,7 +305,7 @@ export default function SearchPage() {
 											}, 200)
 										}
 										placeholder="検索キーワードを入力..."
-										className="w-full pl-12 pr-4 py-4  placeholder-main/60   focus: focus:ring-offset-2 focus:ring-offset-base"
+										className="w-full pl-12 pr-4 py-4 placeholder-main/60"
 										aria-label="検索キーワード"
 										data-testid="search-input"
 									/>
@@ -321,7 +319,7 @@ export default function SearchPage() {
 												type="button"
 												key={index}
 												onClick={() => handleSuggestionClick(suggestion)}
-												className="w-full px-4 py-3 text-left hover: hover: transition-colors noto-sans-jp-light text-sm flex items-center gap-2"
+												className="w-full px-4 py-3 text-left noto-sans-jp-light text-sm flex items-center gap-2"
 											>
 												<Search className="w-4 h-4 " />
 												{suggestion}
@@ -341,7 +339,7 @@ export default function SearchPage() {
 												<button
 													type="button"
 													onClick={handleClearHistory}
-													className="text-xs hover:underline flex items-center gap-1"
+													className="text-xs flex items-center gap-1"
 												>
 													<Trash2 className="w-3 h-3" />
 													クリア
@@ -353,7 +351,7 @@ export default function SearchPage() {
 												type="button"
 												key={index}
 												onClick={() => handleHistoryClick(historyItem)}
-												className="w-full px-4 py-3 text-left hover: hover: transition-colors noto-sans-jp-light text-sm flex items-center justify-between group"
+												className="w-full px-4 py-3 text-left noto-sans-jp-light text-sm flex items-center justify-between group"
 											>
 												<div className="flex items-center gap-2">
 													<Clock className="w-4 h-4 " />
@@ -367,7 +365,7 @@ export default function SearchPage() {
 													onClick={(e) =>
 														handleRemoveHistoryItem(historyItem.query, e)
 													}
-													className="  transition-opacity p-1 hover: hover: rounded"
+													className="p-1"
 												>
 													<X className="w-3 h-3" />
 												</button>
@@ -383,11 +381,7 @@ export default function SearchPage() {
 								<button
 									type="button"
 									onClick={() => setSearchMode("simple")}
-									className={`px-4 py-2 text-sm  transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base ${
-										searchMode === "simple"
-											? " "
-											: " hover: hover:"
-									}`}
+									className={`px-4 py-2 text-sm ${searchMode === "simple" ? " " : " "}`}
 									data-testid="search-button"
 								>
 									シンプル
@@ -395,11 +389,7 @@ export default function SearchPage() {
 								<button
 									type="button"
 									onClick={() => setSearchMode("detailed")}
-									className={`px-4 py-2 text-sm  transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base ${
-										searchMode === "detailed"
-											? " "
-											: " hover: hover:"
-									}`}
+									className={`px-4 py-2 text-sm ${searchMode === "detailed" ? " " : " "}`}
 								>
 									詳細
 								</button>
@@ -409,7 +399,7 @@ export default function SearchPage() {
 							<button
 								type="button"
 								onClick={() => setShowFilters(!showFilters)}
-								className="flex items-center gap-2 px-4 py-2  hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+								className="flex items-center gap-2 px-4 py-2"
 							>
 								<Filter className="w-4 h-4" />
 								<span className={Global_title}>フィルター</span>
@@ -433,7 +423,7 @@ export default function SearchPage() {
 												onChange={(e) =>
 													handleTypeChange(e.target.value as ContentType)
 												}
-												className="w-full px-4 py-2    focus: focus:ring-offset-2 focus:ring-offset-base"
+												className="w-full px-4 py-2"
 											>
 												<option value="">すべて</option>
 												{Object.entries(CONTENT_TYPE_LABELS).map(
@@ -458,7 +448,7 @@ export default function SearchPage() {
 												id="search-category"
 												value={selectedCategory}
 												onChange={(e) => handleCategoryChange(e.target.value)}
-												className="w-full px-4 py-2    focus: focus:ring-offset-2 focus:ring-offset-base"
+												className="w-full px-4 py-2"
 											>
 												{CATEGORIES.map((category) => (
 													<option
@@ -481,7 +471,7 @@ export default function SearchPage() {
 												setSelectedCategory("");
 												performSearch(query);
 											}}
-											className="flex items-center gap-2 px-4 py-2 text-sm hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+											className="flex items-center gap-2 px-4 py-2 text-sm"
 										>
 											<X className="w-4 h-4" />
 											フィルターをクリア
@@ -539,10 +529,7 @@ export default function SearchPage() {
 														{result.highlights
 															.slice(0, 3)
 															.map((highlight, index) => (
-																<span
-																	key={index}
-																	className="px-2 py-1 text-xs"
-																>
+																<span key={index} className="px-2 py-1 text-xs">
 																	{highlight}
 																</span>
 															))}

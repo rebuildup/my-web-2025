@@ -108,7 +108,7 @@ export function MultiCategorySelector({
 					<button
 						type="button"
 						onClick={() => setShowHelp(!showHelp)}
-						className="  transition-colors"
+						className=""
 						aria-label="Show category help"
 					>
 						<HelpCircle className="w-4 h-4" />
@@ -128,9 +128,7 @@ export function MultiCategorySelector({
 					<div className="flex items-start gap-2">
 						<Info className="w-4 h-4  mt-0.5 flex-shrink-0" />
 						<div className="space-y-2">
-							<h4 className="text-sm font-medium ">
-								Category Guidelines
-							</h4>
+							<h4 className="text-sm font-medium ">Category Guidelines</h4>
 							<ul className="text-xs  space-y-1">
 								<li>
 									• Default is &quot;Other&quot; - items appear only in All
@@ -159,16 +157,7 @@ export function MultiCategorySelector({
 							type="button"
 							onClick={() => handleCategoryToggle(category)}
 							disabled={disabled || (!canSelectMore && !isSelected)}
-							className={`
- px-4 py-2 text-sm font-medium  transition-all duration-200   focus: focus:ring-offset-2 focus:ring-offset-base
- ${
-									isSelected
-										? " "
-										: " hover: hover:bg-opacity-10"
-								}
- ${disabled ? " cursor-not-allowed" : ""}
- ${!canSelectMore && !isSelected ? "" : ""}
- `}
+							className={`px-4 py-2 text-sm font-medium ${isSelected ? " " : " "} ${disabled ? " cursor-not-allowed" : ""} ${!canSelectMore && !isSelected ? "" : ""}`}
 						>
 							{categoryInfo.label}
 							{isSelected && <Check className="w-3 h-3 ml-2 inline" />}
@@ -192,9 +181,7 @@ export function MultiCategorySelector({
 			{/* Selection summary */}
 			{selectedCategories.length > 0 && (
 				<div className="  rounded-lg p-3">
-					<h4 className="text-sm font-medium mb-2">
-						Selected Categories
-					</h4>
+					<h4 className="text-sm font-medium mb-2">Selected Categories</h4>
 					<div className="flex flex-wrap gap-2">
 						{selectedCategories.map((category) => {
 							const categoryInfo = CATEGORY_INFO[category];
@@ -210,7 +197,7 @@ export function MultiCategorySelector({
 											e.stopPropagation();
 											handleCategoryToggle(category);
 										}}
-										className="ml-1  hover:bg-opacity-10 rounded-full p-0.5 transition-colors"
+										className="ml-1 p-0.5"
 										aria-label={`Remove ${categoryInfo.label} category`}
 										disabled={disabled}
 									>
@@ -230,9 +217,7 @@ export function MultiCategorySelector({
 							{hasOtherSelected ||
 							selectedCategories.filter((cat) => cat !== "other").length ===
 								0 ? (
-								<span className="">
-									All gallery only (Other category)
-								</span>
+								<span className="">All gallery only (Other category)</span>
 							) : (
 								<>
 									<span>All</span>

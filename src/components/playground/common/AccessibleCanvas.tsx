@@ -346,13 +346,11 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 			return (
 				<div className="flex flex-col items-center justify-center p-8    rounded">
 					<p className=" font-medium mb-2">キャンバスエラー</p>
-					<p className=" text-sm text-center">
-						{canvasState.errorMessage}
-					</p>
+					<p className=" text-sm text-center">{canvasState.errorMessage}</p>
 					<button
 						type="button"
 						onClick={initializeCanvas}
-						className="mt-4 px-4 py-2   rounded    "
+						className="mt-4 px-4 py-2"
 					>
 						再試行
 					</button>
@@ -413,14 +411,9 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 			{/* Keyboard shortcuts help */}
 			{accessibilityState.keyboardNavigation && canvasType !== "2d" && (
 				<div className="mt-2 text-xs ">
-					<kbd className="px-1 py-0.5 rounded text-xs">
-						Space
-					</kbd>{" "}
+					<kbd className="px-1 py-0.5 rounded text-xs">Space</kbd>{" "}
 					アニメーション切り替え{" "}
-					<kbd className="px-1 py-0.5 rounded text-xs">
-						Enter
-					</kbd>{" "}
-					フォーカス
+					<kbd className="px-1 py-0.5 rounded text-xs">Enter</kbd> フォーカス
 				</div>
 			)}
 

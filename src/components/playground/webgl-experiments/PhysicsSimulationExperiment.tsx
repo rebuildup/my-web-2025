@@ -610,7 +610,7 @@ export function PhysicsSimulationExperiment({
 
 			{/* Instructions */}
 			<div className="text-center">
-				<p className="noto-sans-jp-light text-sm text-accent">
+				<p className="noto-sans-jp-light text-sm ">
 					オブジェクトをクリックして衝撃を与えてください
 				</p>
 			</div>
@@ -727,7 +727,7 @@ export function PhysicsSimulationExperiment({
 					<button
 						type="button"
 						onClick={resetSimulation}
-						className="w-full  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="w-full px-4 py-2"
 					>
 						<span className="noto-sans-jp-light text-sm">Reset Simulation</span>
 					</button>

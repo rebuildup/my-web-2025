@@ -291,7 +291,6 @@ export default function ColorPaletteGenerator() {
 							<select
 								id="algo-select"
 								style={{
-									all: "revert",
 									width: "100%",
 									padding: "4px 8px",
 									fontSize: "13px",
@@ -321,7 +320,6 @@ export default function ColorPaletteGenerator() {
 								min="1"
 								max="20"
 								style={{
-									all: "revert",
 									width: "100%",
 									padding: "4px 8px",
 									fontSize: "13px",
@@ -341,7 +339,6 @@ export default function ColorPaletteGenerator() {
 							<select
 								id="sort-select"
 								style={{
-									all: "revert",
 									width: "100%",
 									padding: "4px 8px",
 									fontSize: "13px",
@@ -483,7 +480,6 @@ export default function ColorPaletteGenerator() {
 										key={preset}
 										type="button"
 										style={{
-											all: "revert",
 											padding: "4px 8px",
 											cursor: "pointer",
 											fontSize: "12px",
@@ -539,7 +535,6 @@ export default function ColorPaletteGenerator() {
 												<button
 													type="button"
 													style={{
-														all: "revert",
 														padding: "4px 8px",
 														cursor: "pointer",
 														fontSize: "12px",
@@ -551,7 +546,6 @@ export default function ColorPaletteGenerator() {
 												<button
 													type="button"
 													style={{
-														all: "revert",
 														padding: "4px 8px",
 														cursor: "pointer",
 														fontSize: "12px",
@@ -590,7 +584,6 @@ export default function ColorPaletteGenerator() {
 							type="button"
 							onClick={generateColors}
 							style={{
-								all: "revert",
 								padding: "4px 8px",
 								cursor: "pointer",
 								fontSize: "13px",
@@ -602,7 +595,6 @@ export default function ColorPaletteGenerator() {
 							type="button"
 							onClick={() => savePalette()}
 							style={{
-								all: "revert",
 								padding: "4px 8px",
 								cursor: "pointer",
 								fontSize: "13px",
@@ -669,7 +661,6 @@ export default function ColorPaletteGenerator() {
 													type="button"
 													onClick={() => copyToClipboard(color.hex)}
 													style={{
-														all: "revert",
 														width: "100%",
 														padding: "4px 8px",
 														cursor: "pointer",
@@ -705,7 +696,6 @@ export default function ColorPaletteGenerator() {
 						<div style={{ display: "flex", gap: "6px", marginBottom: "6px" }}>
 							<select
 								style={{
-									all: "revert",
 									flex: 1,
 									padding: "4px 8px",
 									fontSize: "13px",
@@ -726,7 +716,6 @@ export default function ColorPaletteGenerator() {
 							<button
 								type="button"
 								style={{
-									all: "revert",
 									padding: "4px 8px",
 									cursor: "pointer",
 									fontSize: "13px",
@@ -747,7 +736,6 @@ export default function ColorPaletteGenerator() {
 						<textarea
 							readOnly
 							style={{
-								all: "revert",
 								width: "100%",
 								height: "100px",
 								fontFamily: "monospace",

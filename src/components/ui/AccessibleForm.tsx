@@ -48,10 +48,7 @@ export const AccessibleFormField: React.FC<AccessibleFormFieldProps> = ({
 
 	return (
 		<div className={`form-field ${className}`}>
-			<label
-				htmlFor={fieldId}
-				className="block text-sm font-medium mb-2"
-			>
+			<label htmlFor={fieldId} className="block text-sm font-medium mb-2">
 				{label}
 				{required && (
 					<span className=" ml-1" aria-label="必須項目">
@@ -103,7 +100,7 @@ export const AccessibleInput = forwardRef<
 			>
 				<input
 					ref={ref}
-					className={`w-full px-3 py-2  ${error ? "" : ""} rounded-md   focus:ring-accent focus:border-accent ${props.disabled ? "" : ""} ${className}`}
+					className={`w-full px-3 py-2 ${error ? "" : ""} ${props.disabled ? "" : ""} ${className}`}
 					{...props}
 				/>
 			</AccessibleFormField>
@@ -113,7 +110,7 @@ export const AccessibleInput = forwardRef<
 	return (
 		<input
 			ref={ref}
-			className={`w-full px-3 py-2  ${error ? "" : ""} rounded-md   focus:ring-accent focus:border-accent ${props.disabled ? "" : ""} ${className}`}
+			className={`w-full px-3 py-2 ${error ? "" : ""} ${props.disabled ? "" : ""} ${className}`}
 			{...props}
 		/>
 	);
@@ -142,7 +139,7 @@ export const AccessibleTextarea = forwardRef<
 			>
 				<textarea
 					ref={ref}
-					className={`w-full px-3 py-2  ${error ? "" : ""} rounded-md   focus:ring-accent focus:border-accent resize-y ${className}`}
+					className={`w-full px-3 py-2 ${error ? "" : ""} resize-y ${className}`}
 					{...props}
 				/>
 			</AccessibleFormField>
@@ -152,7 +149,7 @@ export const AccessibleTextarea = forwardRef<
 	return (
 		<textarea
 			ref={ref}
-			className={`w-full px-3 py-2  ${error ? "" : ""} rounded-md   focus:ring-accent focus:border-accent resize-y ${className}`}
+			className={`w-full px-3 py-2 ${error ? "" : ""} resize-y ${className}`}
 			{...props}
 		/>
 	);
@@ -189,7 +186,7 @@ export const AccessibleSelect = forwardRef<
 		const selectElement = (
 			<select
 				ref={ref}
-				className={`w-full px-3 py-2  ${error ? "" : ""} rounded-md   focus:ring-accent focus:border-accent ${className}`}
+				className={`w-full px-3 py-2 ${error ? "" : ""} ${className}`}
 				{...props}
 			>
 				{placeholder && (
@@ -265,14 +262,10 @@ export const AccessibleButton = forwardRef<
 			"inline-flex items-center justify-center font-medium transition-colors duration-200   focus:ring-offset-2  disabled:cursor-not-allowed";
 
 		const variantStyles = {
-			primary:
-				"     ",
-			secondary:
-				"  hover: focus:",
-			danger:
-				"     ",
-			ghost:
-				"   hover: hover: focus:",
+			primary: "     ",
+			secondary: "  hover: focus:",
+			danger: "     ",
+			ghost: "   hover: hover: focus:",
 			blue: "     ",
 		};
 

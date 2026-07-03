@@ -80,7 +80,7 @@ export default async function DownloadsPage() {
 		"  block p-4 space-y-4   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const Card_title = "neue-haas-grotesk-display text-xl leading-snug";
 	const Card_description = "noto-sans-jp-light text-xs pb-2";
-	const Card_meta = "noto-sans-jp-light text-xs text-accent";
+	const Card_meta = "noto-sans-jp-light text-xs ";
 
 	return (
 		<div className="min-h-screen ">
@@ -98,9 +98,7 @@ export default async function DownloadsPage() {
 							/>
 						</div>
 						<header className="space-y-6">
-							<h1 className="neue-haas-grotesk-display text-4xl ">
-								Downloads
-							</h1>
+							<h1 className="neue-haas-grotesk-display text-4xl ">Downloads</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
 								テンプレート・素材集・サンプルファイルを無料で配布しています.
 								<br />
@@ -113,7 +111,7 @@ export default async function DownloadsPage() {
 								統計情報
 							</h2>
 							<div className="  p-4 text-center">
-								<div className="neue-haas-grotesk-display text-2xl text-accent">
+								<div className="neue-haas-grotesk-display text-2xl ">
 									{publishedDownloads.length}
 								</div>
 								<div className="noto-sans-jp-light text-xs">素材</div>

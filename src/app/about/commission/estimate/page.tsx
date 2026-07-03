@@ -225,7 +225,7 @@ export default function EstimatePage() {
 										<button
 											type="button"
 											onClick={resetForm}
-											className="flex items-center text-accent  border-accent px-2 py-1 text-sm noto-sans-jp-light"
+											className="flex items-center px-2 py-1 text-sm noto-sans-jp-light"
 										>
 											<RefreshCw className="w-4 h-4 mr-1" />
 											リセット
@@ -249,7 +249,7 @@ export default function EstimatePage() {
 													videoType: e.target.value,
 												}))
 											}
-											className="w-full p-3  noto-sans-jp-light text-sm"
+											className="w-full p-3 noto-sans-jp-light text-sm"
 											required
 										>
 											<option value="">選択してください</option>
@@ -279,7 +279,7 @@ export default function EstimatePage() {
 													duration: e.target.value,
 												}))
 											}
-											className="w-full p-3  noto-sans-jp-light text-sm"
+											className="w-full p-3 noto-sans-jp-light text-sm"
 											required
 										>
 											<option value="">選択してください</option>
@@ -373,7 +373,7 @@ export default function EstimatePage() {
 													deadline: e.target.value,
 												}))
 											}
-											className="w-full p-3  noto-sans-jp-light text-sm"
+											className="w-full p-3 noto-sans-jp-light text-sm"
 										>
 											{DEADLINES.map((deadline) => (
 												<option key={deadline.value} value={deadline.value}>
@@ -395,16 +395,16 @@ export default function EstimatePage() {
 											<h2 className="neue-haas-grotesk-display text-3xl ">
 												見積もり結果
 											</h2>
-											<Calculator className="w-6 h-6 text-accent" />
+											<Calculator className="w-6 h-6 " />
 										</div>
 
 										{/* Total */}
-										<div className="  border-accent p-4 mb-4">
+										<div className="   p-4 mb-4">
 											<div className="text-center">
 												<p className="noto-sans-jp-light text-sm mb-1">
 													合計金額
 												</p>
-												<p className="neue-haas-grotesk-display text-4xl text-accent">
+												<p className="neue-haas-grotesk-display text-4xl ">
 													¥{result.total.toLocaleString()}
 												</p>
 											</div>
@@ -412,9 +412,7 @@ export default function EstimatePage() {
 
 										{/* Breakdown */}
 										<div className="space-y-3 mb-6">
-											<h3 className="zen-kaku-gothic-new text-lg ">
-												料金内訳
-											</h3>
+											<h3 className="zen-kaku-gothic-new text-lg ">料金内訳</h3>
 
 											<div className="flex justify-between">
 												<span className="noto-sans-jp-light text-sm ">
@@ -460,10 +458,8 @@ export default function EstimatePage() {
 
 											<hr className=" my-2" />
 											<div className="flex justify-between">
+												<span className="zen-kaku-gothic-new ">合計</span>
 												<span className="zen-kaku-gothic-new ">
-													合計
-												</span>
-												<span className="zen-kaku-gothic-new text-accent">
 													¥{result.total.toLocaleString()}
 												</span>
 											</div>
@@ -474,15 +470,15 @@ export default function EstimatePage() {
 											<button
 												type="button"
 												onClick={copyResult}
-												className="flex items-center justify-center  text-center p-4 noto-sans-jp-regular leading-snug"
+												className="flex items-center justify-center text-center p-4 noto-sans-jp-regular leading-snug"
 											>
 												<Copy className="w-4 h-4 mr-2" />
 												コピー
 											</button>
 										</div>
 
-										<div className="mt-6  border-accent p-4">
-											<p className="noto-sans-jp-light text-sm text-accent">
+										<div className="mt-6   p-4">
+											<p className="noto-sans-jp-light text-sm ">
 												※この見積もりは目安です.実際の料金は詳細な要件により変動する場合があります.
 											</p>
 										</div>

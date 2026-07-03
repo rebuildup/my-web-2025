@@ -55,7 +55,7 @@ function SearchBarInner({ keyword, mode }: SearchBarProps) {
 						value={inputValue}
 						onChange={(e) => setInputValue(e.target.value)}
 						placeholder="Search articles..."
-						className="flex-1  text-sm    min-w-0"
+						className="flex-1 text-sm min-w-0"
 					/>
 					{inputValue && (
 						<button
@@ -67,7 +67,7 @@ function SearchBarInner({ keyword, mode }: SearchBarProps) {
 								params.delete("page");
 								router.push(`/workshop?${params.toString()}`);
 							}}
-							className="  transition-colors"
+							className=""
 						>
 							<svg
 								className="w-4 h-4"
@@ -93,22 +93,14 @@ function SearchBarInner({ keyword, mode }: SearchBarProps) {
 					<button
 						type="button"
 						onClick={() => handleModeChange("normal")}
-						className={`px-3 py-1.5 rounded transition-colors ${
-							currentMode === "normal"
-								? " "
-								: " "
-						}`}
+						className={`px-3 py-1.5 ${currentMode === "normal" ? " " : " "}`}
 					>
 						通常
 					</button>
 					<button
 						type="button"
 						onClick={() => handleModeChange("detailed")}
-						className={`px-3 py-1.5 rounded transition-colors ${
-							currentMode === "detailed"
-								? " "
-								: " "
-						}`}
+						className={`px-3 py-1.5 ${currentMode === "detailed" ? " " : " "}`}
 					>
 						詳細
 					</button>

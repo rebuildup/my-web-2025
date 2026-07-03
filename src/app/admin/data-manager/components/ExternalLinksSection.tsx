@@ -90,7 +90,7 @@ export function ExternalLinksSection({
 					<button
 						type="button"
 						onClick={() => setShowAddForm(true)}
-						className={`${buttonStyle}  hover:/80`}
+						className={`${buttonStyle}`}
 					>
 						+ Add Link
 					</button>
@@ -174,7 +174,7 @@ export function ExternalLinksSection({
 						<button
 							type="button"
 							onClick={addLink}
-							className={`${buttonStyle}  hover:/80`}
+							className={`${buttonStyle}`}
 							disabled={!newLink.url.trim() || !newLink.title.trim()}
 						>
 							Add Link
@@ -254,7 +254,7 @@ export function ExternalLinksSection({
 								<button
 									type="button"
 									onClick={() => removeLink(index)}
-									className="ml-4   text-sm"
+									className="ml-4 text-sm"
 									title="Remove link"
 								>
 									Remove

@@ -154,10 +154,8 @@ export default function VideoCommissionPage() {
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
 									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
-											<Music className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg ">
-												MV制作
-											</h3>
+											<Music className="w-6 h-6  mr-3" />
+											<h3 className="zen-kaku-gothic-new text-lg ">MV制作</h3>
 										</div>
 										<p className="noto-sans-jp-light text-sm ">
 											ミュージックビデオの制作
@@ -166,7 +164,7 @@ export default function VideoCommissionPage() {
 
 									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
-											<Video className="w-6 h-6 text-accent mr-3" />
+											<Video className="w-6 h-6  mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
 												リリックモーション
 											</h3>
@@ -178,7 +176,7 @@ export default function VideoCommissionPage() {
 
 									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
-											<Palette className="w-6 h-6 text-accent mr-3" />
+											<Palette className="w-6 h-6  mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
 												イラストアニメーション
 											</h3>
@@ -190,7 +188,7 @@ export default function VideoCommissionPage() {
 
 									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
-											<Megaphone className="w-6 h-6 text-accent mr-3" />
+											<Megaphone className="w-6 h-6  mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
 												プロモーション映像
 											</h3>
@@ -248,15 +246,13 @@ export default function VideoCommissionPage() {
 									].map(({ step, title, description, icon: Icon }) => (
 										<div key={step} className="  p-4">
 											<div className="flex items-start">
-												<div className="flex-shrink-0 w-8 h-8 bg-accent flex items-center justify-center font-bold mr-4 text-sm">
+												<div className="flex-shrink-0 w-8 h-8  flex items-center justify-center font-bold mr-4 text-sm">
 													{step}
 												</div>
 												<div className="flex-grow">
 													<div className="flex items-center mb-2">
-														<Icon className="w-5 h-5 text-accent mr-2" />
-														<h3 className="zen-kaku-gothic-new ">
-															{title}
-														</h3>
+														<Icon className="w-5 h-5  mr-2" />
+														<h3 className="zen-kaku-gothic-new ">{title}</h3>
 													</div>
 													<p className="noto-sans-jp-light text-sm ">
 														{description}
@@ -274,23 +270,21 @@ export default function VideoCommissionPage() {
 									料金体系
 								</h2>
 
-								<div className="  border-accent p-4 mb-6">
-									<p className="noto-sans-jp-light text-sm text-accent">
+								<div className="   p-4 mb-6">
+									<p className="noto-sans-jp-light text-sm ">
 										※このページに記載した料金設定/依頼の流れ等はまだ検討段階であり、今後変更される可能性が高いです.
 									</p>
 								</div>
 
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6 mb-8">
 									<div className="  p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg ">
-											料金例
-										</h3>
+										<h3 className="zen-kaku-gothic-new text-lg ">料金例</h3>
 										<div className="space-y-3">
 											<div className="flex justify-between">
 												<span className="noto-sans-jp-light text-sm ">
 													歌ってみたMV制作
 												</span>
-												<span className="zen-kaku-gothic-new text-sm text-accent">
+												<span className="zen-kaku-gothic-new text-sm ">
 													5,000円〜
 												</span>
 											</div>
@@ -298,7 +292,7 @@ export default function VideoCommissionPage() {
 												<span className="noto-sans-jp-light text-sm ">
 													オリジナルMV制作
 												</span>
-												<span className="zen-kaku-gothic-new text-sm text-accent">
+												<span className="zen-kaku-gothic-new text-sm ">
 													6,000円〜
 												</span>
 											</div>
@@ -306,7 +300,7 @@ export default function VideoCommissionPage() {
 												<span className="noto-sans-jp-light text-sm ">
 													OP/ED/トランジション（20秒以内）
 												</span>
-												<span className="zen-kaku-gothic-new text-sm text-accent">
+												<span className="zen-kaku-gothic-new text-sm ">
 													1,000円〜
 												</span>
 											</div>
@@ -334,8 +328,8 @@ export default function VideoCommissionPage() {
 									</div>
 								</div>
 
-								<div className="  border-accent p-4">
-									<p className="noto-sans-jp-light text-sm text-accent">
+								<div className="   p-4">
+									<p className="noto-sans-jp-light text-sm ">
 										※料金設定は変更する場合がございます.依頼時点でここに記載されている金額が料金となります.
 										<br />
 										※尺や納期、料金によってはお断りする場合がございます.
@@ -350,9 +344,7 @@ export default function VideoCommissionPage() {
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 									<div className="  p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg ">
-											映像制作
-										</h3>
+										<h3 className="zen-kaku-gothic-new text-lg ">映像制作</h3>
 										<div className="space-y-2">
 											{["AfterEffects", "Premiere Pro", "Blender"].map(
 												(software) => (
@@ -402,9 +394,7 @@ export default function VideoCommissionPage() {
 										<p className="noto-sans-jp-light text-sm ">
 											• 納期（目安は1ヶ月です）
 										</p>
-										<p className="noto-sans-jp-light text-sm ">
-											• 予算
-										</p>
+										<p className="noto-sans-jp-light text-sm ">• 予算</p>
 										<p className="noto-sans-jp-light text-sm ">
 											• 作る映像の尺または楽曲名
 										</p>
@@ -413,7 +403,7 @@ export default function VideoCommissionPage() {
 											イメージ（指標となる作例や、箇条書き、絵コンテ、なんでもOK!）
 										</p>
 									</div>
-									<p className="noto-sans-jp-light text-sm text-accent mt-4">
+									<p className="noto-sans-jp-light text-sm  mt-4">
 										※場合によっては、追加で音源やイラスト、曲名などを教えていただくようお願いすることがあります.
 									</p>
 								</div>
@@ -428,17 +418,15 @@ export default function VideoCommissionPage() {
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 										<div>
 											<div className="flex items-center mb-3">
-												<Mail className="w-5 h-5 text-accent mr-2" />
-												<h3 className="zen-kaku-gothic-new text-lg ">
-													メール
-												</h3>
+												<Mail className="w-5 h-5  mr-2" />
+												<h3 className="zen-kaku-gothic-new text-lg ">メール</h3>
 											</div>
 											<p className="noto-sans-jp-light text-sm mb-4">
 												361do.sleep(at)gmail.com
 											</p>
 
 											<div className="flex items-center mb-3">
-												<MessageCircle className="w-5 h-5 text-accent mr-2" />
+												<MessageCircle className="w-5 h-5  mr-2" />
 												<h3 className="zen-kaku-gothic-new text-lg ">
 													X (Twitter)
 												</h3>
@@ -449,7 +437,7 @@ export default function VideoCommissionPage() {
 										</div>
 										<div>
 											<div className="flex items-center mb-3">
-												<Clock className="w-5 h-5 text-accent mr-2" />
+												<Clock className="w-5 h-5  mr-2" />
 												<h3 className="zen-kaku-gothic-new text-lg ">
 													対応時間
 												</h3>
@@ -461,14 +449,12 @@ export default function VideoCommissionPage() {
 											<h3 className="zen-kaku-gothic-new text-lg mb-3">
 												返信時間
 											</h3>
-											<p className="noto-sans-jp-light text-sm ">
-												24時間以内
-											</p>
+											<p className="noto-sans-jp-light text-sm ">24時間以内</p>
 										</div>
 									</div>
 
-									<div className="mt-6  border-accent p-4">
-										<p className="noto-sans-jp-light text-sm text-accent">
+									<div className="mt-6   p-4">
+										<p className="noto-sans-jp-light text-sm ">
 											通話などでのミーティングの対応は致しかねます
 										</p>
 									</div>

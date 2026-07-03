@@ -23,7 +23,7 @@ export default function TimerDisplay({
 			case "work":
 				return "";
 			case "shortBreak":
-				return "bg-accent";
+				return "";
 			case "longBreak":
 				return "";
 			default:
@@ -36,7 +36,7 @@ export default function TimerDisplay({
 			case "work":
 				return "/10";
 			case "shortBreak":
-				return "bg-accent/10";
+				return "";
 			case "longBreak":
 				return "";
 			default:
@@ -57,9 +57,7 @@ export default function TimerDisplay({
 						{String(minutes).padStart(2, "0")}:
 						{String(seconds).padStart(2, "0")}
 					</div>
-					<div className="text-sm mt-2">
-						{isRunning ? "実行中" : "停止中"}
-					</div>
+					<div className="text-sm mt-2">{isRunning ? "実行中" : "停止中"}</div>
 				</div>
 			</div>
 
@@ -69,7 +67,7 @@ export default function TimerDisplay({
 					<span>進捗</span>
 					<span>{Math.round(progress)}%</span>
 				</div>
-				<div className="w-full /20 rounded-full h-3 overflow-hidden">
+				<div className="w-full rounded-full h-3 overflow-hidden">
 					<div
 						className={`h-full ${getProgressColor()} transition-all duration-1000 ease-linear`}
 						style={{ width: `${progress}%` }}
@@ -80,18 +78,14 @@ export default function TimerDisplay({
 			{/* Session Info */}
 			<div className="grid grid-3 gap-4 text-center text-sm">
 				<div
-					className={`p-3 rounded-lg ${
-						sessionType === "work" ? "/20" : "/5"
-					}`}
+					className={`p-3 rounded-lg ${sessionType === "work" ? "/20" : "/5"}`}
 				>
 					<div className="font-medium">作業</div>
 					<div className="text-xs ">25分</div>
 				</div>
 				<div
 					className={`p-3 rounded-lg ${
-						sessionType === "shortBreak"
-							? "bg-accent/20  border-accent"
-							: "/5"
+						sessionType === "shortBreak" ? "  " : "/5"
 					}`}
 				>
 					<div className="font-medium">短い休憩</div>
@@ -99,9 +93,7 @@ export default function TimerDisplay({
 				</div>
 				<div
 					className={`p-3 rounded-lg ${
-						sessionType === "longBreak"
-							? "  "
-							: "/5"
+						sessionType === "longBreak" ? "  " : "/5"
 					}`}
 				>
 					<div className="font-medium">長い休憩</div>

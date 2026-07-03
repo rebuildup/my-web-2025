@@ -40,7 +40,7 @@ async function loadBlogDataCached(slug: string) {
 				};
 				contentId: string;
 				content: unknown;
-		 }
+		  }
 		| undefined;
 	if (cached) {
 		console.log(`[BlogDetail] Cache hit for: ${cacheKey}`);
@@ -219,13 +219,9 @@ function ContentSection({
 				</div>
 			) : detail ? (
 				<div className="space-y-3">
-					{detail.title && (
-						<h2 className="text-lg ">{detail.title}</h2>
-					)}
+					{detail.title && <h2 className="text-lg ">{detail.title}</h2>}
 					{detail.summary && (
-						<p className="text-sm  leading-relaxed">
-							{detail.summary}
-						</p>
+						<p className="text-sm  leading-relaxed">{detail.summary}</p>
 					)}
 				</div>
 			) : hasContent ? (

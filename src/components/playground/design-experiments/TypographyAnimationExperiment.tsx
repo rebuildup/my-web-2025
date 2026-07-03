@@ -256,7 +256,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={toggleAnimation}
-						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center px-4 py-2"
 					>
 						{isAnimating ? (
 							<Pause className="w-4 h-4 mr-2" />
@@ -271,7 +271,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetAnimation}
-						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center px-4 py-2"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset</span>
@@ -300,7 +300,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									type: e.target.value as AnimationConfig["type"],
 								}))
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							{animationTypes.map((type) => (
 								<option key={type.value} value={type.value}>
@@ -354,9 +354,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Easing */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Easing
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Easing</label>
 						<select
 							value={animationConfig.easing}
 							onChange={(e) =>
@@ -365,7 +363,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									easing: e.target.value,
 								}))
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							{easingTypes.map((easing) => (
 								<option key={easing.value} value={easing.value}>
@@ -399,7 +397,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 							value={customText}
 							onChange={(e) => setCustomText(e.target.value)}
 							placeholder="Enter your custom text"
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						/>
 					)}
 				</div>
@@ -418,11 +416,9 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									onChange={(e) =>
 										setGradientColors((prev) => [e.target.value, prev[1]])
 									}
-									className="w-12 h-8  "
+									className="w-12 h-8"
 								/>
-								<span className="noto-sans-jp-light text-sm ">
-									Start
-								</span>
+								<span className="noto-sans-jp-light text-sm ">Start</span>
 							</div>
 							<div className="flex items-center space-x-2">
 								<input
@@ -431,11 +427,9 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									onChange={(e) =>
 										setGradientColors((prev) => [prev[0], e.target.value])
 									}
-									className="w-12 h-8  "
+									className="w-12 h-8"
 								/>
-								<span className="noto-sans-jp-light text-sm ">
-									End
-								</span>
+								<span className="noto-sans-jp-light text-sm ">End</span>
 							</div>
 						</div>
 					</div>

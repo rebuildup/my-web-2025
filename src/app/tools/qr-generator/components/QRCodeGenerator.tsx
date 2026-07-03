@@ -229,7 +229,6 @@ export default function QRCodeGenerator() {
 									id="inputType"
 									value={inputType}
 									onChange={(e) => setInputType(e.target.value as any)}
-									style={{ all: "revert" }}
 								>
 									<option value="url">URL</option>
 									<option value="text">Text</option>
@@ -254,7 +253,6 @@ export default function QRCodeGenerator() {
 											type="radio"
 											checked={!isBulkMode}
 											onChange={() => setIsBulkMode(false)}
-											style={{ all: "revert" }}
 										/>
 										Single
 									</label>
@@ -270,7 +268,6 @@ export default function QRCodeGenerator() {
 											type="radio"
 											checked={isBulkMode}
 											onChange={() => setIsBulkMode(true)}
-											style={{ all: "revert" }}
 										/>
 										Bulk
 									</label>
@@ -293,7 +290,6 @@ export default function QRCodeGenerator() {
 										placeholder="Enter content here (1 line = 1 QR)..."
 										rows={4}
 										style={{
-											all: "revert",
 											padding: "4px",
 											width: "100%",
 											boxSizing: "border-box",
@@ -308,7 +304,6 @@ export default function QRCodeGenerator() {
 										onChange={(e) => setInputText(e.target.value)}
 										placeholder="Enter content here..."
 										style={{
-											all: "revert",
 											padding: "2px 4px",
 											width: "100%",
 											boxSizing: "border-box",
@@ -346,7 +341,7 @@ export default function QRCodeGenerator() {
 										step="32"
 										value={size}
 										onChange={(e) => setSize(Number(e.target.value))}
-										style={{ all: "revert", flex: 1 }}
+										style={{ flex: 1 }}
 									/>
 									<span style={{ width: "50px", textAlign: "right" }}>
 										{size}px
@@ -365,7 +360,7 @@ export default function QRCodeGenerator() {
 										step="1"
 										value={margin}
 										onChange={(e) => setMargin(Number(e.target.value))}
-										style={{ all: "revert", flex: 1 }}
+										style={{ flex: 1 }}
 									/>
 									<span style={{ width: "50px", textAlign: "right" }}>
 										{margin}
@@ -377,7 +372,6 @@ export default function QRCodeGenerator() {
 									id="errorLevel"
 									value={errorLevel}
 									onChange={(e) => setErrorLevel(e.target.value as any)}
-									style={{ all: "revert" }}
 								>
 									<option value="L">Low (7%)</option>
 									<option value="M">Medium (15%)</option>
@@ -406,13 +400,12 @@ export default function QRCodeGenerator() {
 										type="color"
 										value={foregroundColor}
 										onChange={(e) => setForegroundColor(e.target.value)}
-										style={{ all: "revert" }}
 									/>
 									<input
 										type="text"
 										value={foregroundColor}
 										onChange={(e) => setForegroundColor(e.target.value)}
-										style={{ all: "revert", flex: 1, padding: "2px 4px" }}
+										style={{ flex: 1, padding: "2px 4px" }}
 									/>
 								</div>
 
@@ -425,13 +418,12 @@ export default function QRCodeGenerator() {
 										type="color"
 										value={backgroundColor}
 										onChange={(e) => setBackgroundColor(e.target.value)}
-										style={{ all: "revert" }}
 									/>
 									<input
 										type="text"
 										value={backgroundColor}
 										onChange={(e) => setBackgroundColor(e.target.value)}
-										style={{ all: "revert", flex: 1, padding: "2px 4px" }}
+										style={{ flex: 1, padding: "2px 4px" }}
 									/>
 								</div>
 							</div>
@@ -549,7 +541,6 @@ export default function QRCodeGenerator() {
 									onClick={downloadPNG}
 									disabled={!hasValidInput}
 									style={{
-										all: "revert",
 										fontSize: "13px",
 										padding: "4px 8px",
 									}}
@@ -560,7 +551,6 @@ export default function QRCodeGenerator() {
 									onClick={downloadSVG}
 									disabled={!hasValidInput}
 									style={{
-										all: "revert",
 										fontSize: "13px",
 										padding: "4px 8px",
 									}}
@@ -572,7 +562,6 @@ export default function QRCodeGenerator() {
 										onClick={testQRCode}
 										disabled={!hasValidInput}
 										style={{
-											all: "revert",
 											fontSize: "13px",
 											padding: "4px 8px",
 										}}
@@ -583,7 +572,6 @@ export default function QRCodeGenerator() {
 								<button
 									onClick={resetForm}
 									style={{
-										all: "revert",
 										fontSize: "13px",
 										padding: "4px 8px",
 									}}

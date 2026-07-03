@@ -59,9 +59,7 @@ function SearchPageFallback() {
 				<div className="container-system">
 					<div className="space-y-10">
 						<header className="space-y-12">
-							<h1 className="neue-haas-grotesk-display text-6xl ">
-								Search
-							</h1>
+							<h1 className="neue-haas-grotesk-display text-6xl ">Search</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
 								サイト内のコンテンツを検索できます.
 								<br />

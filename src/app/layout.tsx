@@ -39,8 +39,6 @@ const shipporiAntiqueB1 = Shippori_Antique_B1({
 export const viewport: Viewport = {
 	width: "device-width",
 	initialScale: 1,
-	themeColor: "#ffffff",
-	colorScheme: "light",
 };
 
 export const metadata: Metadata = {

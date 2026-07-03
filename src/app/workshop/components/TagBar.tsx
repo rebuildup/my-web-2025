@@ -29,9 +29,7 @@ function TagBarInner({ tags, selectedTag }: TagBarProps) {
 				<Link
 					href={createUrl(null)}
 					className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
-						selectedTag === null
-							? " "
-							: "    "
+						selectedTag === null ? " " : "    "
 					}`}
 				>
 					全て ({tags.reduce((sum, t) => sum + t.count, 0)})
@@ -41,9 +39,7 @@ function TagBarInner({ tags, selectedTag }: TagBarProps) {
 						key={tag}
 						href={createUrl(tag)}
 						className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
-							selectedTag === tag
-								? " "
-								: "    "
+							selectedTag === tag ? " " : "    "
 						}`}
 					>
 						{tag} ({count})

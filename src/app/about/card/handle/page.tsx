@@ -131,15 +131,15 @@ ${cardData.tagline}`;
 						<div className="grid-system grid-1 lg:grid-2 gap-8">
 							{/* デジタル名刺 */}
 							<div>
-								<div ref={cardRef} className="  border-accent p-8">
+								<div ref={cardRef} className="   p-8">
 									{/* ヘッダー部分 */}
-									<div className=" border-accent pb-6 mb-6">
+									<div className="  pb-6 mb-6">
 										<div className="flex items-start justify-between">
 											<div>
 												<h2 className="neue-haas-grotesk-display text-3xl mb-2">
 													{cardData.name}
 												</h2>
-												<p className="zen-kaku-gothic-new text-lg text-accent mb-2">
+												<p className="zen-kaku-gothic-new text-lg  mb-2">
 													{cardData.title}
 												</p>
 												<p className="noto-sans-jp-light text-sm italic">
@@ -155,7 +155,7 @@ ${cardData.tagline}`;
 											<span className="noto-sans-jp-light text-sm ">
 												Website:
 											</span>
-											<span className="noto-sans-jp-light text-sm text-accent">
+											<span className="noto-sans-jp-light text-sm ">
 												{cardData.website}
 											</span>
 										</div>
@@ -164,7 +164,7 @@ ${cardData.tagline}`;
 												<span className="noto-sans-jp-light text-sm ">
 													Email:
 												</span>
-												<div className="noto-sans-jp-light text-sm text-accent">
+												<div className="noto-sans-jp-light text-sm ">
 													<div>Tech: {cardData.email.tech}</div>
 													<div>Design: {cardData.email.design}</div>
 												</div>
@@ -173,7 +173,7 @@ ${cardData.tagline}`;
 												<span className="noto-sans-jp-light text-sm ">
 													Twitter:
 												</span>
-												<div className="noto-sans-jp-light text-sm text-accent">
+												<div className="noto-sans-jp-light text-sm ">
 													<div>{cardData.social.tech} (技術)</div>
 													<div>{cardData.social.design} (デザイン)</div>
 												</div>
@@ -183,9 +183,7 @@ ${cardData.tagline}`;
 
 									{/* スキル */}
 									<div className="mb-6">
-										<h3 className="zen-kaku-gothic-new mb-2">
-											できること
-										</h3>
+										<h3 className="zen-kaku-gothic-new mb-2">できること</h3>
 										<div className="space-y-1">
 											{cardData.skills.map((skill) => (
 												<div
@@ -200,9 +198,7 @@ ${cardData.tagline}`;
 
 									{/* 性格 */}
 									<div className="mb-6">
-										<h3 className="zen-kaku-gothic-new mb-2">
-											性格
-										</h3>
+										<h3 className="zen-kaku-gothic-new mb-2">性格</h3>
 										<div className="space-y-1">
 											{cardData.personality.map((trait) => (
 												<div
@@ -216,10 +212,10 @@ ${cardData.tagline}`;
 									</div>
 
 									{/* QRコード */}
-									<div className="flex justify-center pt-4  border-accent">
+									<div className="flex justify-center pt-4  ">
 										{qrCodeUrl && (
 											<div className="text-center">
-												<div className=" p-2  border-accent">
+												<div className=" p-2  ">
 													<Image
 														src={qrCodeUrl}
 														alt="連絡先QRコード"
@@ -240,15 +236,13 @@ ${cardData.tagline}`;
 							<div className="space-y-6">
 								{/* QRコード詳細 */}
 								<div className="  p-4">
-									<h3 className="zen-kaku-gothic-new text-lg mb-4">
-										QRコード
-									</h3>
+									<h3 className="zen-kaku-gothic-new text-lg mb-4">QRコード</h3>
 									<p className="noto-sans-jp-light text-sm mb-4">
 										スマートフォンでスキャンして連絡先を保存
 									</p>
 									{qrCodeUrl && (
 										<div className="text-center">
-											<div className=" p-4  border-accent inline-block">
+											<div className=" p-4   inline-block">
 												<Image
 													src={qrCodeUrl}
 													alt="連絡先QRコード"
@@ -282,7 +276,7 @@ ${cardData.tagline}`;
 										<button
 											type="button"
 											onClick={() => downloadCard("png")}
-											className="w-full  border-accent text-center p-4 flex items-center justify-center   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+											className="w-full text-center p-4 flex items-center justify-center"
 										>
 											<span className={Global_title}>
 												PNG形式でダウンロード
@@ -291,7 +285,7 @@ ${cardData.tagline}`;
 										<button
 											type="button"
 											onClick={() => downloadCard("pdf")}
-											className="w-full  text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
+											className="w-full text-center p-4 flex items-center justify-center"
 										>
 											<span className={Global_title}>
 												PDF形式でダウンロード
@@ -311,7 +305,7 @@ ${cardData.tagline}`;
 									<div className="space-y-2">
 										{cardData.currentProjects.map((project) => (
 											<div key={project} className="flex items-center gap-2">
-												<div className="w-2 h-2 bg-accent"></div>
+												<div className="w-2 h-2 "></div>
 												<span className="noto-sans-jp-light text-sm ">
 													{project}
 												</span>
@@ -322,9 +316,7 @@ ${cardData.tagline}`;
 
 								{/* 使用方法 */}
 								<div className="  p-4">
-									<h3 className="zen-kaku-gothic-new text-lg mb-4">
-										使用方法
-									</h3>
+									<h3 className="zen-kaku-gothic-new text-lg mb-4">使用方法</h3>
 									<div className="space-y-3 noto-sans-jp-light text-sm ">
 										<div>
 											<h4 className="zen-kaku-gothic-new ">
@@ -333,15 +325,11 @@ ${cardData.tagline}`;
 											<p>同業者やクリエイター同士の交流に最適</p>
 										</div>
 										<div>
-											<h4 className="zen-kaku-gothic-new ">
-												SNS共有
-											</h4>
+											<h4 className="zen-kaku-gothic-new ">SNS共有</h4>
 											<p>TwitterやInstagramでの自己紹介に</p>
 										</div>
 										<div>
-											<h4 className="zen-kaku-gothic-new ">
-												イベント利用
-											</h4>
+											<h4 className="zen-kaku-gothic-new ">イベント利用</h4>
 											<p>勉強会やコミュニティイベントで活用</p>
 										</div>
 									</div>

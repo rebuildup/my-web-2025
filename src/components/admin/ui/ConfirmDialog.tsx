@@ -24,11 +24,26 @@ export function ConfirmDialog({
 	if (!open) return null;
 	return (
 		<div
-			style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}
-			onClick={(e) => { if (e.target === e.currentTarget) onCancel(); }}
+			style={{
+				position: "fixed",
+				inset: 0,
+				zIndex: 1000,
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "center",
+			}}
+			onClick={(e) => {
+				if (e.target === e.currentTarget) onCancel();
+			}}
 		>
 			<div style={{ padding: 20, minWidth: 320, maxWidth: 420 }}>
-				<div style={{ fontSize: 15, fontWeight: 700, marginBottom: description ? 8 : 16 }}>
+				<div
+					style={{
+						fontSize: 15,
+						fontWeight: 700,
+						marginBottom: description ? 8 : 16,
+					}}
+				>
 					{title}
 				</div>
 				{description && (
@@ -37,10 +52,23 @@ export function ConfirmDialog({
 					</div>
 				)}
 				<div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
-					<button onClick={onCancel} disabled={isLoading} style={{ padding: "6px 14px", fontSize: 13, cursor: "pointer" }}>
+					<button
+						onClick={onCancel}
+						disabled={isLoading}
+						style={{ padding: "6px 14px", fontSize: 13, cursor: "pointer" }}
+					>
 						{cancelLabel}
 					</button>
-					<button onClick={onConfirm} disabled={isLoading} style={{ padding: "6px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+					<button
+						onClick={onConfirm}
+						disabled={isLoading}
+						style={{
+							padding: "6px 14px",
+							fontSize: 13,
+							fontWeight: 600,
+							cursor: "pointer",
+						}}
+					>
 						{confirmLabel}
 					</button>
 				</div>

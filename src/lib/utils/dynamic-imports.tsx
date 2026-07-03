@@ -41,11 +41,7 @@ export const LazyErrorBoundary: React.FC<{
 			</svg>
 			<p className="text-sm">コンポーネントの読み込みに失敗しました</p>
 		</div>
-		<button
-			type="button"
-			onClick={retry}
-			className="px-4 py-2   rounded  transition-colors"
-		>
+		<button type="button" onClick={retry} className="px-4 py-2">
 			再試行
 		</button>
 	</div>

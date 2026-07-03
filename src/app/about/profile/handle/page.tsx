@@ -303,7 +303,7 @@ export default function HandleProfilePage() {
 											className="/5 p-4 rounded-lg hover:/10 transition-colors flex flex-col"
 										>
 											<div className="flex items-center mb-2">
-												<area.icon className="w-6 h-6 text-accent mr-3 shrink-0" />
+												<area.icon className="w-6 h-6  mr-3 shrink-0" />
 												<h3 className="zen-kaku-gothic-new text-lg ">
 													{area.title}
 												</h3>
@@ -315,7 +315,7 @@ export default function HandleProfilePage() {
 												{area.projects.map((project) => (
 													<div
 														key={project}
-														className="noto-sans-jp-light text-xs /60"
+														className="noto-sans-jp-light text-xs"
 													>
 														• {project}
 													</div>
@@ -349,10 +349,8 @@ export default function HandleProfilePage() {
 											className="/5 p-4 rounded-lg hover:/10 transition-colors"
 										>
 											<div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-												<h3 className="zen-kaku-gothic-new ">
-													{focus.area}
-												</h3>
-												<span className="noto-sans-jp-light text-xs text-accent  border-accent px-2 py-1 inline-block w-fit">
+												<h3 className="zen-kaku-gothic-new ">{focus.area}</h3>
+												<span className="noto-sans-jp-light text-xs    px-2 py-1 inline-block w-fit">
 													{focus.status}
 												</span>
 											</div>
@@ -383,9 +381,7 @@ export default function HandleProfilePage() {
 								<div className="/5 p-6 rounded-lg space-y-6">
 									<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 										<div className="space-y-3">
-											<h3 className="zen-kaku-gothic-new text-lg ">
-												開発環境
-											</h3>
+											<h3 className="zen-kaku-gothic-new text-lg ">開発環境</h3>
 											<div className="space-y-2">
 												{workStyle.development.map((item, index) => (
 													<p

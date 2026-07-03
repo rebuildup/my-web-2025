@@ -118,7 +118,6 @@ export default function SequentialPngPreview() {
 									type="button"
 									onClick={togglePlayback}
 									style={{
-										all: "revert",
 										border: "none",
 										padding: "4px 12px",
 										fontSize: "13px",
@@ -130,7 +129,6 @@ export default function SequentialPngPreview() {
 									type="button"
 									onClick={resetAnimation}
 									style={{
-										all: "revert",
 										border: "none",
 										padding: "4px 12px",
 										fontSize: "13px",
@@ -142,7 +140,6 @@ export default function SequentialPngPreview() {
 									type="button"
 									onClick={() => setShowExport(!showExport)}
 									style={{
-										all: "revert",
 										border: "none",
 										padding: "4px 12px",
 										fontSize: "13px",
@@ -158,7 +155,6 @@ export default function SequentialPngPreview() {
 										)
 									}
 									style={{
-										all: "revert",
 										border: "none",
 										padding: "4px 12px",
 										fontSize: "13px",
@@ -237,7 +233,7 @@ export default function SequentialPngPreview() {
 														loop: e.target.checked,
 													}))
 												}
-												style={{ all: "revert", border: "none" }}
+												style={{ border: "none" }}
 											/>
 											有効
 										</label>
@@ -262,7 +258,6 @@ export default function SequentialPngPreview() {
 												}))
 											}
 											style={{
-												all: "revert",
 												width: "100%",
 												padding: "4px 8px",
 												fontSize: "13px",

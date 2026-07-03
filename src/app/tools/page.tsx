@@ -191,14 +191,19 @@ export default function ToolsPage() {
 							<Link
 								key={tool.id}
 								href={tool.href}
-								style={{ textDecoration: "none", color: "inherit" }}
+								style={{
+									textDecoration: "none",
+									color: "inherit",
+									display: "flex",
+									height: "100%",
+								}}
 							>
 								<div
 									style={{
 										border: "1px solid #ddd",
 										borderRadius: "6px",
 										padding: "16px",
-										height: "100%",
+										width: "100%",
 										cursor: "pointer",
 									}}
 								>

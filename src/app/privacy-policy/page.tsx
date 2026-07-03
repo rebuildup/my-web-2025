@@ -50,8 +50,7 @@ export default function PrivacyPolicy() {
 
 	// Style variables matching root page
 	const SectionStyle = "space-y-4";
-	const Section_title =
-		"neue-haas-grotesk-display text-4xl leading-snug mb-6";
+	const Section_title = "neue-haas-grotesk-display text-4xl leading-snug mb-6";
 	const Global_title = "noto-sans-jp-regular leading-snug";
 
 	return (
@@ -122,9 +121,7 @@ export default function PrivacyPolicy() {
 									</div>
 
 									<div>
-										<h3 className={`${Global_title} mb-3`}>
-											アクセスログ
-										</h3>
+										<h3 className={`${Global_title} mb-3`}>アクセスログ</h3>
 										<ul className="noto-sans-jp-light text-sm leading-loose space-y-1">
 											<li>• IPアドレス</li>
 											<li>• アクセス日時</li>
@@ -153,9 +150,7 @@ export default function PrivacyPolicy() {
 								<h2 className={Section_title}>Cookieの使用</h2>
 								<div className="space-y-6">
 									<div>
-										<h3 className={`${Global_title} mb-3`}>
-											必須Cookie
-										</h3>
+										<h3 className={`${Global_title} mb-3`}>必須Cookie</h3>
 										<p className="noto-sans-jp-light text-sm leading-loose">
 											サイトの基本機能（セッション管理、セキュリティ）に必要なCookieです.これらのCookieは無効にできません.
 										</p>
@@ -177,9 +172,7 @@ export default function PrivacyPolicy() {
 									</div>
 
 									<div>
-										<h3 className={`${Global_title} mb-3`}>
-											Cookie管理
-										</h3>
+										<h3 className={`${Global_title} mb-3`}>Cookie管理</h3>
 										<p className="noto-sans-jp-light text-sm leading-loose">
 											ブラウザの設定でCookieを無効にすることができますが、サイトの一部機能が正常に動作しない場合があります.
 										</p>

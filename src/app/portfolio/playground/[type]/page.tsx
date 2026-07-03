@@ -123,7 +123,7 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 											{playgroundInfo.features.map((feature) => (
 												<span
 													key={feature}
-													className="noto-sans-jp-light text-xs text-accent  border-accent px-2 py-1"
+													className="noto-sans-jp-light text-xs    px-2 py-1"
 												>
 													{feature}
 												</span>
@@ -163,16 +163,11 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 									</h2>
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
 										{playgroundInfo.features.map((feature, index) => (
-											<div
-												key={feature}
-												className="  p-4 space-y-2"
-											>
-												<div className="text-accent text-lg font-bold">
+											<div key={feature} className="  p-4 space-y-2">
+												<div className=" text-lg font-bold">
 													{String(index + 1).padStart(2, "0")}
 												</div>
-												<h3 className="zen-kaku-gothic-new ">
-													{feature}
-												</h3>
+												<h3 className="zen-kaku-gothic-new ">{feature}</h3>
 												<p className="noto-sans-jp-light text-sm ">
 													{getFeatureDescription(feature)}
 												</p>
@@ -193,9 +188,7 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 			<div className="min-h-screen flex items-center justify-center">
 				<div className="text-center">
 					<h1 className="text-2xl mb-4">Playground Error</h1>
-					<p className="">
-						Sorry, there was an error loading the playground.
-					</p>
+					<p className="">Sorry, there was an error loading the playground.</p>
 				</div>
 			</div>
 		);

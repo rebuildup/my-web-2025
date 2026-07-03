@@ -1,6 +1,7 @@
 import Link from "next/link";
 import UnifiedFloatingCards from "@/components/UnifiedFloatingCards";
 import XProfileImage from "@/components/XProfileImage";
+import HomeNavButton from "./_components/HomeNavButton";
 
 const navItems = [
 	{ href: "/about", label: "About" },
@@ -39,18 +40,12 @@ export default function Home() {
 
 						<div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full sm:w-max sm:min-w-[400px]">
 							{navItems.map((item, index) => (
-								<Link
+								<HomeNavButton
 									key={item.href}
 									href={item.href}
-									className="flex items-center w-full sm:w-[190px] h-10 animate-fade-in-up"
-									style={{
-										animationDelay: `${150 + index * 50}ms`,
-									}}
-								>
-									<span className="flex-1 text-sm font-medium">
-										{item.label}
-									</span>
-								</Link>
+									label={item.label}
+									animationDelay={150 + index * 50}
+								/>
 							))}
 						</div>
 

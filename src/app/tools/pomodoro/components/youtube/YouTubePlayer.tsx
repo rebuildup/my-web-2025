@@ -277,13 +277,13 @@ export default function YouTubePlayer({
 							setSettings({ ...settings, isMinimized: newState });
 							onToggleMinimize?.(newState);
 						}}
-						className="p-1.5 rounded  transition-colors"
+						className="p-1.5"
 					>
 						{isMinimized ? <Maximize2 size={14} /> : <Minimize2 size={14} />}
 					</button>
 					<button
 						onClick={() => setShowSettings(!showSettings)}
-						className={`p-1.5 rounded  transition-colors ${showSettings ? "" : ""}`}
+						className={`p-1.5 ${showSettings ? "" : ""}`}
 					>
 						<Settings size={14} />
 					</button>
@@ -315,22 +315,14 @@ export default function YouTubePlayer({
 							{isPlaylist && (
 								<button
 									onClick={handlePrevious}
-									className={`p-2 rounded-full ${
-										theme === "dark"
-											? " "
-											: " "
-									}`}
+									className={`p-2 ${theme === "dark" ? " " : " "}`}
 								>
 									<SkipBack size={16} fill="currentColor" />
 								</button>
 							)}
 							<button
 								onClick={togglePlay}
-								className={`p-2 rounded-full ${
-									theme === "dark"
-										? "  "
-										: "  "
-								}`}
+								className={`p-2 ${theme === "dark" ? " " : " "}`}
 							>
 								{playbackState === "playing" ? (
 									<Pause size={16} fill="currentColor" />
@@ -341,11 +333,7 @@ export default function YouTubePlayer({
 							{isPlaylist && (
 								<button
 									onClick={handleNext}
-									className={`p-2 rounded-full ${
-										theme === "dark"
-											? " "
-											: " "
-									}`}
+									className={`p-2 ${theme === "dark" ? " " : " "}`}
 								>
 									<SkipForward size={16} fill="currentColor" />
 								</button>
@@ -353,10 +341,7 @@ export default function YouTubePlayer({
 						</div>
 
 						<div className="flex items-center gap-2 flex-1 mx-4">
-							<button
-								onClick={toggleMute}
-								className="  dark:"
-							>
+							<button onClick={toggleMute} className="dark:">
 								{isMuted || volume === 0 ? (
 									<VolumeX size={16} />
 								) : (
@@ -382,30 +367,18 @@ export default function YouTubePlayer({
 
 					{/* Settings / URL Input */}
 					{showSettings && (
-						<div
-							className={`pt-3  space-y-3 ${
-								theme === "dark" ? "" : ""
-							}`}
-						>
+						<div className={`pt-3  space-y-3 ${theme === "dark" ? "" : ""}`}>
 							<div className="flex gap-2">
 								<input
 									type="text"
 									value={inputUrl}
 									onChange={(e) => setInputUrl(e.target.value)}
 									placeholder="YouTube URL..."
-									className={`flex-1 px-2 py-1.5 text-xs rounded    ${
-										theme === "dark"
-											? " "
-											: " "
-									}`}
+									className={`flex-1 px-2 py-1.5 text-xs ${theme === "dark" ? " " : " "}`}
 								/>
 								<button
 									onClick={handleSaveUrl}
-									className={`p-1.5 rounded  ${
-										theme === "dark"
-											? " "
-											: " "
-									}`}
+									className={`p-1.5 ${theme === "dark" ? " " : " "}`}
 								>
 									<Save size={14} />
 								</button>

@@ -184,10 +184,8 @@ export default function WebGLPlaygroundPage() {
 		return (
 			<div className="min-h-screen flex items-center justify-center">
 				<div className="text-center">
-					<div className="animate-spin w-8 h-8  border-accent border-t-transparent rounded-full mx-auto mb-4"></div>
-					<p className="noto-sans-jp-light text-sm ">
-						デバイス性能を検出中...
-					</p>
+					<div className="animate-spin w-8 h-8   border-t-transparent rounded-full mx-auto mb-4"></div>
+					<p className="noto-sans-jp-light text-sm ">デバイス性能を検出中...</p>
 				</div>
 			</div>
 		);
@@ -252,7 +250,7 @@ export default function WebGLPlaygroundPage() {
 												<span className="noto-sans-jp-light ">
 													WebGL Support:
 												</span>
-												<div className="text-accent">
+												<div className="">
 													{deviceCapabilities?.webglSupport ? "Yes" : "No"}
 												</div>
 											</div>
@@ -260,7 +258,7 @@ export default function WebGLPlaygroundPage() {
 												<span className="noto-sans-jp-light ">
 													WebGL2 Support:
 												</span>
-												<div className="text-accent">
+												<div className="">
 													{deviceCapabilities?.webgl2Support ? "Yes" : "No"}
 												</div>
 											</div>
@@ -268,7 +266,7 @@ export default function WebGLPlaygroundPage() {
 												<span className="noto-sans-jp-light ">
 													Performance Level:
 												</span>
-												<div className="text-accent">
+												<div className="">
 													{deviceCapabilities?.performanceLevel}
 												</div>
 											</div>
@@ -276,7 +274,7 @@ export default function WebGLPlaygroundPage() {
 												<span className="noto-sans-jp-light ">
 													Max Texture Size:
 												</span>
-												<div className="text-accent">
+												<div className="">
 													{deviceCapabilities?.maxTextureSize}px
 												</div>
 											</div>
@@ -300,7 +298,7 @@ export default function WebGLPlaygroundPage() {
 															.value as PerformanceSettings["qualityLevel"],
 													}))
 												}
-												className="w-full  p-2 text-sm"
+												className="w-full p-2 text-sm"
 											>
 												<option value="low">Low (30 FPS)</option>
 												<option value="medium">Medium (60 FPS)</option>
@@ -355,26 +353,22 @@ export default function WebGLPlaygroundPage() {
 								{showPerformance && (
 									<div className="grid grid-cols-3 gap-4 text-sm">
 										<div className="text-center">
-											<div className="text-2xl font-bold text-accent">
+											<div className="text-2xl font-bold ">
 												{performanceMetrics.fps}
 											</div>
 											<div className="noto-sans-jp-light ">FPS</div>
 										</div>
 										<div className="text-center">
-											<div className="text-2xl font-bold text-accent">
+											<div className="text-2xl font-bold ">
 												{performanceMetrics.frameTime.toFixed(1)}
 											</div>
-											<div className="noto-sans-jp-light ">
-												Frame Time (ms)
-											</div>
+											<div className="noto-sans-jp-light ">Frame Time (ms)</div>
 										</div>
 										<div className="text-center">
-											<div className="text-2xl font-bold text-accent">
+											<div className="text-2xl font-bold ">
 												{performanceMetrics.memoryUsage}
 											</div>
-											<div className="noto-sans-jp-light ">
-												Memory (MB)
-											</div>
+											<div className="noto-sans-jp-light ">Memory (MB)</div>
 										</div>
 									</div>
 								)}
@@ -452,7 +446,7 @@ export default function WebGLPlaygroundPage() {
 							<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 								<div className="  p-4 space-y-4">
 									<div className="flex items-center">
-										<Zap className="w-6 h-6 text-accent mr-3" />
+										<Zap className="w-6 h-6  mr-3" />
 										<h3 className="zen-kaku-gothic-new text-lg ">
 											Performance Optimization
 										</h3>
@@ -475,7 +469,7 @@ export default function WebGLPlaygroundPage() {
 
 								<div className="  p-4 space-y-4">
 									<div className="flex items-center">
-										<Settings className="w-6 h-6 text-accent mr-3" />
+										<Settings className="w-6 h-6  mr-3" />
 										<h3 className="zen-kaku-gothic-new text-lg ">
 											WebGL Features
 										</h3>

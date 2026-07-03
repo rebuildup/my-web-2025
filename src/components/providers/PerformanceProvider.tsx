@@ -204,7 +204,7 @@ const PerformanceIndicators: React.FC = () => {
 			<button
 				type="button"
 				onClick={() => setIsVisible(!isVisible)}
-				className="  p-2 rounded-full   transition-colors"
+				className="p-2"
 				title="Performance Monitor"
 			>
 				📊
@@ -219,11 +219,7 @@ const PerformanceIndicators: React.FC = () => {
 							<span>Score:</span>
 							<span
 								className={
-									performanceScore >= 80
-										? ""
-										: performanceScore >= 60
-											? ""
-											: ""
+									performanceScore >= 80 ? "" : performanceScore >= 60 ? "" : ""
 								}
 							>
 								{performanceScore}/100
@@ -233,13 +229,7 @@ const PerformanceIndicators: React.FC = () => {
 						<div className="flex justify-between">
 							<span>Memory:</span>
 							<span
-								className={
-									memoryUsage < 70
-										? ""
-										: memoryUsage < 85
-											? ""
-											: ""
-								}
+								className={memoryUsage < 70 ? "" : memoryUsage < 85 ? "" : ""}
 							>
 								{memoryUsage.toFixed(1)}%
 							</span>
@@ -268,9 +258,7 @@ const PerformanceIndicators: React.FC = () => {
 									<span>LCP:</span>
 									<span
 										className={
-											coreWebVitals.lcp && coreWebVitals.lcp <= 2500
-												? ""
-												: ""
+											coreWebVitals.lcp && coreWebVitals.lcp <= 2500 ? "" : ""
 										}
 									>
 										{coreWebVitals.lcp
@@ -282,9 +270,7 @@ const PerformanceIndicators: React.FC = () => {
 									<span>FID:</span>
 									<span
 										className={
-											coreWebVitals.fid && coreWebVitals.fid <= 100
-												? ""
-												: ""
+											coreWebVitals.fid && coreWebVitals.fid <= 100 ? "" : ""
 										}
 									>
 										{coreWebVitals.fid
@@ -296,9 +282,7 @@ const PerformanceIndicators: React.FC = () => {
 									<span>CLS:</span>
 									<span
 										className={
-											coreWebVitals.cls && coreWebVitals.cls <= 0.1
-												? ""
-												: ""
+											coreWebVitals.cls && coreWebVitals.cls <= 0.1 ? "" : ""
 										}
 									>
 										{coreWebVitals.cls ? coreWebVitals.cls.toFixed(3) : "N/A"}
@@ -312,7 +296,7 @@ const PerformanceIndicators: React.FC = () => {
 							<button
 								type="button"
 								onClick={runPerformanceTest}
-								className="w-full px-2 py-1   text-xs rounded  transition-colors"
+								className="w-full px-2 py-1 text-xs"
 							>
 								Run Performance Test
 							</button>
@@ -325,10 +309,7 @@ const PerformanceIndicators: React.FC = () => {
 								</div>
 								<div className="max-h-20 overflow-y-auto">
 									{alerts.slice(-3).map((alert) => (
-										<div
-											key={alert.id}
-											className="text-xs  truncate"
-										>
+										<div key={alert.id} className="text-xs  truncate">
 											{alert.message}
 										</div>
 									))}

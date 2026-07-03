@@ -119,7 +119,6 @@ export default function ExportPanel({
 									setExportSettings((prev) => ({ ...prev, format: key }))
 								}
 								style={{
-									all: "revert",
 									padding: "10px",
 									textAlign: "left",
 									border:
@@ -197,7 +196,6 @@ export default function ExportPanel({
 									}))
 								}
 								style={{
-									all: "revert",
 									width: "100%",
 									padding: "4px 8px",
 									fontSize: "13px",
@@ -227,7 +225,6 @@ export default function ExportPanel({
 									}))
 								}
 								style={{
-									all: "revert",
 									width: "100%",
 									padding: "4px 8px",
 									fontSize: "13px",
@@ -270,7 +267,6 @@ export default function ExportPanel({
 						onClick={handleExport}
 						disabled={isExporting || frames.length === 0}
 						style={{
-							all: "revert",
 							border: "none",
 							padding: "4px 12px",
 							fontSize: "13px",
@@ -282,7 +278,6 @@ export default function ExportPanel({
 						type="button"
 						onClick={onClose}
 						style={{
-							all: "revert",
 							border: "none",
 							padding: "4px 12px",
 							fontSize: "13px",

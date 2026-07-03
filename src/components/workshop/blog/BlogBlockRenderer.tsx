@@ -98,7 +98,7 @@ function BlockRenderer({ block }: { block: Block }) {
 function ParagraphBlock({ content }: { content: string }) {
 	if (!content.trim()) return null;
 	return (
-		<p className="noto-sans-jp-light leading-relaxed /85 whitespace-pre-wrap">
+		<p className="noto-sans-jp-light leading-relaxed whitespace-pre-wrap">
 			{content}
 		</p>
 	);
@@ -162,7 +162,7 @@ function ListBlock({
 	const children = items.map((item) => (
 		<li
 			key={item.id}
-			className="noto-sans-jp-light leading-relaxed /85 whitespace-pre-wrap"
+			className="noto-sans-jp-light leading-relaxed whitespace-pre-wrap"
 		>
 			{item.content}
 		</li>
@@ -175,11 +175,7 @@ function ListBlock({
 }
 
 function QuoteBlock({ content }: { content: string }) {
-	return (
-		<blockquote className=" border-accent/70 pl-4 italic /80">
-			{content}
-		</blockquote>
-	);
+	return <blockquote className="  pl-4 italic">{content}</blockquote>;
 }
 
 function CalloutBlock({
@@ -197,7 +193,7 @@ function CalloutBlock({
 			<div className="text-2xl" aria-hidden>
 				{icon}
 			</div>
-			<p className="noto-sans-jp-light leading-relaxed /85 whitespace-pre-wrap">
+			<p className="noto-sans-jp-light leading-relaxed whitespace-pre-wrap">
 				{content}
 			</p>
 		</div>
@@ -214,12 +210,12 @@ function getCalloutToneClass(tone: string) {
 		case "success":
 			return "   ";
 		default:
-			return "/10  /20";
+			return "/10";
 	}
 }
 
 function DividerBlock() {
-	return <div className="h-px w-full /30" />;
+	return <div className="h-px w-full" />;
 }
 
 function ImageBlock({
@@ -237,7 +233,7 @@ function ImageBlock({
 	const caption = content?.trim();
 	if (!src) return null;
 	return (
-		<figure className="overflow-hidden rounded-3xl  /20 /5">
+		<figure className="overflow-hidden rounded-3xl">
 			<SafeImage
 				src={src}
 				alt={alt}
@@ -246,7 +242,7 @@ function ImageBlock({
 				height={height}
 			/>
 			{caption && (
-				<figcaption className="noto-sans-jp-light px-6 py-4 text-sm /70">
+				<figcaption className="noto-sans-jp-light px-6 py-4 text-sm">
 					{caption}
 				</figcaption>
 			)}
@@ -266,7 +262,7 @@ function VideoBlock({
 		typeof attributes.poster === "string" ? attributes.poster : undefined;
 	if (!src) return null;
 	return (
-		<div className="overflow-hidden rounded-3xl  /20 /5">
+		<div className="overflow-hidden rounded-3xl">
 			<video controls poster={poster} className="h-full w-full" src={src}>
 				{content && (
 					<track kind="captions" label="caption" srcLang="ja" src={content} />
@@ -280,7 +276,7 @@ function AudioBlock({ attributes }: { attributes: Record<string, unknown> }) {
 	const src = typeof attributes.src === "string" ? attributes.src : undefined;
 	if (!src) return null;
 	return (
-		<div className="rounded-2xl  /20 /5 p-4">
+		<div className="rounded-2xl p-4">
 			<audio controls className="w-full" src={src} />
 		</div>
 	);
@@ -305,12 +301,10 @@ function FileBlock({
 			href={href}
 			target={attributes.target === "_blank" ? "_blank" : undefined}
 			rel={attributes.target === "_blank" ? "noopener noreferrer" : undefined}
-			className="group flex items-center justify-between rounded-2xl  /30 /5 px-6 py-4 transition hover:border-accent/60 hover:bg-accent/5"
+			className="group flex items-center justify-between rounded-2xl px-6 py-4 transition  "
 		>
-			<span className="noto-sans-jp-light text-sm /85">{label}</span>
-			<span className="text-xs uppercase tracking-[0.2em] text-accent/80">
-				Download
-			</span>
+			<span className="noto-sans-jp-light text-sm">{label}</span>
+			<span className="text-xs uppercase tracking-[0.2em] ">Download</span>
 		</Link>
 	);
 }
@@ -340,15 +334,13 @@ function BookmarkBlock({
 			href={href}
 			target="_blank"
 			rel="noopener noreferrer"
-			className="block rounded-2xl  /30 /5 p-6 transition hover:border-accent/60 hover:bg-accent/5"
+			className="block rounded-2xl p-6 transition  "
 		>
 			<h3 className="neue-haas-grotesk-display text-lg ">{title}</h3>
 			{description && (
-				<p className="mt-2 text-sm /70 line-clamp-3">{description}</p>
+				<p className="mt-2 text-sm line-clamp-3">{description}</p>
 			)}
-			<p className="mt-3 text-xs uppercase tracking-[0.2em] text-accent/70">
-				Open link
-			</p>
+			<p className="mt-3 text-xs uppercase tracking-[0.2em] ">Open link</p>
 		</Link>
 	);
 }
@@ -361,7 +353,7 @@ function CodeBlock({
 	language: string;
 }) {
 	return (
-		<pre className="overflow-x-auto rounded-2xl  /20 /5 p-4 text-sm /85">
+		<pre className="overflow-x-auto rounded-2xl p-4 text-sm">
 			<code
 				className={cn(
 					language ? `language-${language}` : undefined,
@@ -376,9 +368,7 @@ function CodeBlock({
 
 function MathBlock({ content }: { content: string }) {
 	return (
-		<pre className="overflow-x-auto rounded-2xl  /20 /5 p-4 font-mono /85">
-			{content}
-		</pre>
+		<pre className="overflow-x-auto rounded-2xl p-4 font-mono">{content}</pre>
 	);
 }
 
@@ -386,7 +376,7 @@ function ToggleBlock({ block }: { block: Block }) {
 	const summary = String(block.attributes?.summary ?? "詳細を表示");
 	const children = Array.isArray(block.children) ? block.children : [];
 	return (
-		<details className="group rounded-2xl  /20 /5 p-6">
+		<details className="group rounded-2xl p-6">
 			<summary className="cursor-pointer text-lg font-semibold ">
 				{summary}
 			</summary>
@@ -421,7 +411,7 @@ function HtmlBlock({ content }: { content: string }) {
 	);
 	return (
 		<div
-			className="prose prose-invert max-w-none prose-a:text-accent prose-strong:"
+			className="prose prose-invert max-w-none prose-a: prose-strong:"
 			dangerouslySetInnerHTML={{ __html: sanitized }}
 		/>
 	);
@@ -434,7 +424,7 @@ function SpacerBlock({ attributes }: { attributes: Record<string, unknown> }) {
 
 function UnsupportedBlock({ type }: { type: string }) {
 	return (
-		<div className="rounded-2xl   /30 /5 p-4 text-sm /60">
+		<div className="rounded-2xl p-4 text-sm">
 			Unsupported block type: {type}
 		</div>
 	);

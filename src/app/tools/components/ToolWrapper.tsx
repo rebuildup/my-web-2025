@@ -121,10 +121,10 @@ export default function ToolWrapper({
 								</p>
 
 								<div className="flex flex-wrap gap-4 items-center">
-									<span className="noto-sans-jp-light rounded-full /10 px-3 py-1 text-[0.75rem] ">
+									<span className="noto-sans-jp-light rounded-full px-3 py-1 text-[0.75rem] ">
 										{category}
 									</span>
-									<span className="noto-sans-jp-light text-xs /60">
+									<span className="noto-sans-jp-light text-xs">
 										オフライン対応・アクセシビリティ準拠
 									</span>
 								</div>
@@ -135,7 +135,7 @@ export default function ToolWrapper({
 						{showAccessibilityInfo && (
 							<section
 								aria-labelledby="accessibility-info-heading"
-								className="rounded-2xl /75  shadow-[0_24px_60px_rgba(0,0,0,0.35)] p-6"
+								className="rounded-2xl  shadow-[0_24px_60px_rgba(0,0,0,0.35)] p-6"
 							>
 								<h2
 									id="accessibility-info-heading"
@@ -145,10 +145,8 @@ export default function ToolWrapper({
 								</h2>
 								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 									<div className="space-y-2">
-										<h3 className="neue-haas-grotesk-display ">
-											現在の設定
-										</h3>
-										<ul className="noto-sans-jp-light text-sm space-y-1 /80">
+										<h3 className="neue-haas-grotesk-display ">現在の設定</h3>
+										<ul className="noto-sans-jp-light text-sm space-y-1">
 											<li>
 												• モーション設定:{" "}
 												{state.prefersReducedMotion ? "軽減" : "通常"}
@@ -168,10 +166,8 @@ export default function ToolWrapper({
 										</ul>
 									</div>
 									<div className="space-y-2">
-										<h3 className="neue-haas-grotesk-display ">
-											対応機能
-										</h3>
-										<ul className="noto-sans-jp-light text-sm space-y-1 /80">
+										<h3 className="neue-haas-grotesk-display ">対応機能</h3>
+										<ul className="noto-sans-jp-light text-sm space-y-1">
 											<li>• スクリーンリーダー対応</li>
 											<li>• キーボードナビゲーション</li>
 											<li>• WCAG 2.1 AA準拠</li>
@@ -181,11 +177,11 @@ export default function ToolWrapper({
 									</div>
 								</div>
 								{state.accessibilityIssues.length > 0 && (
-									<div className="mt-4 p-3 rounded-lg /5">
+									<div className="mt-4 p-3 rounded-lg">
 										<h4 className="neue-haas-grotesk-display text-sm mb-2 ">
 											検出された問題:
 										</h4>
-										<ul className="noto-sans-jp-light text-xs space-y-1 /70">
+										<ul className="noto-sans-jp-light text-xs space-y-1">
 											{state.accessibilityIssues.map((issue, index) => (
 												<li key={index}>• {issue}</li>
 											))}
@@ -195,7 +191,7 @@ export default function ToolWrapper({
 								<button
 									type="button"
 									onClick={() => setShowAccessibilityInfo(false)}
-									className="mt-4 rounded-lg /10 px-3 py-1 hover:/20 transition-colors   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="mt-4 px-3 py-1"
 									aria-label="アクセシビリティ情報を閉じる"
 								>
 									閉じる
@@ -228,7 +224,7 @@ export default function ToolWrapper({
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 								<Link
 									href="/tools"
-									className="rounded-2xl /75  shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5   focus:ring-accent focus:border-accent"
+									className="rounded-2xl  shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5    "
 								>
 									<span className="noto-sans-jp-regular leading-snug ">
 										← Tools
@@ -236,7 +232,7 @@ export default function ToolWrapper({
 								</Link>
 								<Link
 									href="/"
-									className="rounded-2xl /75  shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5   focus:ring-accent focus:border-accent"
+									className="rounded-2xl  shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5    "
 								>
 									<span className="noto-sans-jp-regular leading-snug ">
 										← Home

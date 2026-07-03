@@ -122,7 +122,7 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 
 									{/* Video Info */}
 									<div className="space-y-3">
-										<h3 className="zen-kaku-gothic-new text-lg group-hover:text-accent transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
+										<h3 className="zen-kaku-gothic-new text-lg  transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
 											{item.title}
 										</h3>
 
@@ -150,8 +150,8 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 													)}
 												</div>
 												<div className="flex items-center gap-2 text-xs">
-													<Calendar className="w-4 h-4 /70" />
-													<span className="noto-sans-jp-light /70">
+													<Calendar className="w-4 h-4" />
+													<span className="noto-sans-jp-light">
 														{new Date(
 															(item as any).publishedAt ||
 																item.updatedAt ||

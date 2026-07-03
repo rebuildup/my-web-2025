@@ -549,15 +549,13 @@ export function ShaderExperiment({
 			{/* Shader Error */}
 			{shaderError && (
 				<div className="   p-3 rounded">
-					<div className=" text-sm font-mono">
-						Shader Error: {shaderError}
-					</div>
+					<div className=" text-sm font-mono">Shader Error: {shaderError}</div>
 				</div>
 			)}
 
 			{/* Instructions */}
 			<div className="text-center">
-				<p className="noto-sans-jp-light text-sm text-accent">
+				<p className="noto-sans-jp-light text-sm ">
 					マウスを動かしてシェーダーとインタラクションしてください
 				</p>
 			</div>
@@ -567,9 +565,7 @@ export function ShaderExperiment({
 				{/* Preset Selection */}
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Preset Shader
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Preset Shader</label>
 						<select
 							value={controls.presetShader}
 							onChange={(e) =>
@@ -579,7 +575,7 @@ export function ShaderExperiment({
 										.value as ShaderControls["presetShader"],
 								}))
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							<option value="rainbow">Rainbow</option>
 							<option value="noise">Noise</option>
@@ -593,7 +589,7 @@ export function ShaderExperiment({
 						<button
 							type="button"
 							onClick={() => setShowCode(!showCode)}
-							className=" px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+							className="px-4 py-2"
 						>
 							<span className="noto-sans-jp-light text-sm">
 								{showCode ? "Hide Code" : "Show Code"}
@@ -613,7 +609,7 @@ export function ShaderExperiment({
 								<button
 									type="button"
 									onClick={compileCustomShader}
-									className=" border-accent text-accent px-3 py-1 text-sm hover:bg-accent hover: transition-colors   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="px-3 py-1 text-sm"
 								>
 									Compile
 								</button>
@@ -627,7 +623,7 @@ export function ShaderExperiment({
 									customCode: e.target.value,
 								}))
 							}
-							className="w-full h-64  p-3 text-sm font-mono resize-none"
+							className="w-full h-64 p-3 text-sm font-mono resize-none"
 							placeholder="Enter your GLSL fragment shader code here..."
 							disabled={controls.presetShader !== "custom"}
 						/>
@@ -640,17 +636,17 @@ export function ShaderExperiment({
 				{/* Shader Info */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
 					<div className="  p-3">
-						<div className="text-accent font-medium">Time</div>
+						<div className=" font-medium">Time</div>
 						<div className="">{elapsedTime.toFixed(2)}s</div>
 					</div>
 					<div className="  p-3">
-						<div className="text-accent font-medium">Resolution</div>
+						<div className=" font-medium">Resolution</div>
 						<div className="">
 							{controls.resolution[0]} × {controls.resolution[1]}
 						</div>
 					</div>
 					<div className="  p-3">
-						<div className="text-accent font-medium">Mouse</div>
+						<div className=" font-medium">Mouse</div>
 						<div className="">
 							{controls.mouse[0].toFixed(2)}, {controls.mouse[1].toFixed(2)}
 						</div>

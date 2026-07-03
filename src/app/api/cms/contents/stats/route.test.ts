@@ -10,8 +10,8 @@ afterEach(() => {
 	process.env = { ...originalEnv };
 });
 
-test("stats fetches entries from Rust API even when CMS_USE_RUST_API is unset", async () => {
-	delete process.env.CMS_USE_RUST_API;
+test("stats fetches entries from Rust API when CMS_USE_RUST_API is enabled", async () => {
+	process.env.CMS_USE_RUST_API = "1";
 	process.env.CMS_API_BASE_URL = "http://cms-api.test";
 
 	const requestedUrls: string[] = [];

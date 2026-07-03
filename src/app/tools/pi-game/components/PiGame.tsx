@@ -89,7 +89,6 @@ export default function PiGame() {
 	};
 
 	const KEY_STYLE: React.CSSProperties = {
-		all: "revert",
 		width: 120,
 		height: 120,
 		fontSize: 20,

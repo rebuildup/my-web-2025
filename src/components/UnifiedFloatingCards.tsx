@@ -543,20 +543,20 @@ function GitHubRepoCard({
 			className="absolute"
 			style={{ left: `${card.x}px`, top: `${card.displayY}px`, opacity }}
 		>
-			<a
-				href={repo.url}
-				target="_blank"
-				rel="noopener noreferrer"
-				className="pointer-events-auto block p-4  border  rounded-lg  max-w-[340px] "
-			>
+			<div className="pointer-events-auto block p-4 rounded-lg max-w-[340px]">
 				{/* Title with language and icon */}
 				<div className="flex items-center gap-2 mb-2">
-					<GitBranch className="w-4 h-4 /40 flex-shrink-0" />
-					<span className="text-sm font-semibold /90 flex-1 truncate">
+					<GitBranch className="w-4 h-4 flex-shrink-0" />
+					<a
+						href={repo.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-sm font-semibold flex-1 truncate"
+					>
 						{repo.name}
-					</span>
+					</a>
 					{repo.language && (
-						<span className="text-xs /50 flex-shrink-0 flex items-center gap-1">
+						<span className="text-xs flex-shrink-0 flex items-center gap-1">
 							<span className="w-2 h-2 rounded-full " />
 							{repo.language}
 						</span>
@@ -565,13 +565,13 @@ function GitHubRepoCard({
 
 				{/* Description - more compact */}
 				{repo.description && (
-					<p className="text-xs /60 mb-2 line-clamp-2 leading-snug">
+					<p className="text-xs mb-2 line-clamp-2 leading-snug">
 						{repo.description}
 					</p>
 				)}
 
 				{/* Stats, topics, and date all on one line */}
-				<div className="flex items-center gap-2 text-[10px] /30 flex-wrap">
+				<div className="flex items-center gap-2 text-[10px] flex-wrap">
 					<span className="flex items-center gap-1">
 						<Star className="w-3 h-3" />
 						{repo.stars}
@@ -585,7 +585,7 @@ function GitHubRepoCard({
 						repo.topics.slice(0, 2).map((topic) => (
 							<span
 								key={topic}
-								className="px-1.5 py-0.5 bg-accent/10 text-accent/70 rounded whitespace-nowrap"
+								className="px-1.5 py-0.5   rounded whitespace-nowrap"
 							>
 								{topic}
 							</span>
@@ -595,7 +595,7 @@ function GitHubRepoCard({
 						{formatDate(repo.createdAt!)}
 					</span>
 				</div>
-			</a>
+			</div>
 		</div>
 	);
 }
@@ -613,25 +613,22 @@ function GitHubEventCard({
 			className="absolute"
 			style={{ left: `${card.x}px`, top: `${card.displayY}px`, opacity }}
 		>
-			<a
-				href={event.link}
-				target="_blank"
-				rel="noopener noreferrer"
-				className="pointer-events-auto block p-4  border  rounded-lg  max-w-[320px] "
-			>
+			<div className="pointer-events-auto block p-4 rounded-lg max-w-[320px]">
 				<div className="flex items-start gap-3">
 					<div className="/60 mt-0.5">{getEventIcon(event.type)}</div>
 					<div className="flex-1 min-w-0">
-						<p className="text-xs /70 leading-snug line-clamp-4 mb-2">
-							{event.message}
+						<p className="text-xs leading-snug line-clamp-4 mb-2">
+							<a href={event.link} target="_blank" rel="noopener noreferrer">
+								{event.message}
+							</a>
 						</p>
-						<div className="flex items-center gap-1 text-[10px] /30">
+						<div className="flex items-center gap-1 text-[10px]">
 							<Clock className="w-3 h-3" />
 							<span>{formatRelativeTime(event.timestamp)}</span>
 						</div>
 					</div>
 				</div>
-			</a>
+			</div>
 		</div>
 	);
 }
@@ -649,12 +646,7 @@ function YouTubeCard({
 			className="absolute"
 			style={{ left: `${card.x}px`, top: `${card.displayY}px`, opacity }}
 		>
-			<a
-				href={video.url}
-				target="_blank"
-				rel="noopener noreferrer"
-				className="pointer-events-auto block"
-			>
+			<div className="pointer-events-auto block">
 				<div className="relative group">
 					{video.thumbnail && (
 						<div className="relative">
@@ -672,16 +664,18 @@ function YouTubeCard({
 						<Video className="w-12 h-12  " />
 					</div>
 					<div className="mt-2 max-w-[224px]">
-						<p className="text-xs /80 line-clamp-3 leading-snug font-medium mb-2">
-							{video.title}
+						<p className="text-xs line-clamp-3 leading-snug font-medium mb-2">
+							<a href={video.url} target="_blank" rel="noopener noreferrer">
+								{video.title}
+							</a>
 						</p>
-						<div className="flex items-center gap-2 text-[10px] /30">
+						<div className="flex items-center gap-2 text-[10px]">
 							<Calendar className="w-3 h-3" />
 							<span>{formatDate(video.published)}</span>
 						</div>
 					</div>
 				</div>
-			</a>
+			</div>
 		</div>
 	);
 }
@@ -703,10 +697,7 @@ function PortfolioCard({
 			className="absolute"
 			style={{ left: `${card.x}px`, top: `${card.displayY}px`, opacity }}
 		>
-			<a
-				href={`/portfolio/${content.slug || content.id}`}
-				className="pointer-events-auto block p-4  border  rounded-lg  max-w-[280px] "
-			>
+			<div className="pointer-events-auto block p-4 rounded-lg max-w-[280px]">
 				<div className="aspect-video overflow-hidden relative rounded-md mb-3">
 					{content.thumbnail ? (
 						<img
@@ -716,37 +707,36 @@ function PortfolioCard({
 						/>
 					) : (
 						<div className="w-full h-full flex items-center justify-center ">
-							<FileText className="w-8 h-8 /30" />
+							<FileText className="w-8 h-8" />
 						</div>
 					)}
 				</div>
-				<h3 className="text-sm font-semibold /90 leading-tight line-clamp-2 mb-2">
-					{content.title}
+				<h3 className="text-sm font-semibold leading-tight line-clamp-2 mb-2">
+					<a href={`/portfolio/${content.slug || content.id}`}>
+						{content.title}
+					</a>
 				</h3>
 				{content.description && (
-					<p className="text-xs /60 leading-snug line-clamp-3 mb-3">
+					<p className="text-xs leading-snug line-clamp-3 mb-3">
 						{content.description}
 					</p>
 				)}
 				{technologies.length > 0 && (
 					<div className="flex flex-wrap gap-1 mb-3">
 						{technologies.slice(0, 4).map((tech) => (
-							<span
-								key={tech}
-								className="text-xs px-2 py-0.5 bg-accent/10 text-accent/70 rounded-full"
-							>
+							<span key={tech} className="text-xs px-2 py-0.5   rounded-full">
 								{tech}
 							</span>
 						))}
 					</div>
 				)}
 				{effectiveDate && (
-					<div className="flex items-center gap-1 text-[10px] /30 pt-2  ">
+					<div className="flex items-center gap-1 text-[10px] pt-2  ">
 						<Calendar className="w-3 h-3" />
 						<span>{formatDate(effectiveDate)}</span>
 					</div>
 				)}
-			</a>
+			</div>
 		</div>
 	);
 }
@@ -763,12 +753,7 @@ function LinkCard({ card, opacity }: { card: UnifiedCard; opacity: number }) {
 			className="absolute"
 			style={{ left: `${card.x}px`, top: `${card.displayY}px`, opacity }}
 		>
-			<a
-				href={link.url}
-				target="_blank"
-				rel="noopener noreferrer"
-				className="pointer-events-auto block p-4  border  rounded-lg  max-w-[220px] "
-			>
+			<div className="pointer-events-auto block p-4 rounded-lg max-w-[220px]">
 				<div className="flex items-center gap-2 mb-1">
 					{link.favicon && (
 						<img
@@ -780,19 +765,19 @@ function LinkCard({ card, opacity }: { card: UnifiedCard; opacity: number }) {
 							}}
 						/>
 					)}
-					<h3 className="text-xs font-semibold /90 leading-tight line-clamp-1">
-						{link.title}
+					<h3 className="text-xs font-semibold leading-tight line-clamp-1">
+						<a href={link.url} target="_blank" rel="noopener noreferrer">
+							{link.title}
+						</a>
 					</h3>
 					{link.description && (
-						<span className="text-[10px] /50 ml-2">
-							· {link.description}
-						</span>
+						<span className="text-[10px] ml-2">· {link.description}</span>
 					)}
 				</div>
-				<div className="text-[9px] /30 truncate">
+				<div className="text-[9px] truncate">
 					{link.url.replace(/^https?:\/\//, "")}
 				</div>
-			</a>
+			</div>
 		</div>
 	);
 }

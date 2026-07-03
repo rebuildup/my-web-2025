@@ -226,7 +226,7 @@ export const AccessibleConfirmModal: React.FC<AccessibleConfirmModalProps> = ({
 					<button
 						type="button"
 						onClick={onClose}
-						className="px-4 py-2 text-sm font-medium  rounded-md hover:   focus:"
+						className="px-4 py-2 text-sm font-medium"
 					>
 						{cancelLabel || cancelText}
 					</button>
@@ -235,11 +235,7 @@ export const AccessibleConfirmModal: React.FC<AccessibleConfirmModalProps> = ({
 						ref={confirmButtonRef}
 						onClick={handleConfirm}
 						disabled={loading}
-						className={`px-4 py-2 text-sm font-medium rounded-md   ${
-							buttonVariant === "danger"
-								? "     "
-								: " bg-accent  border-accent hover: hover:text-accent focus:ring-accent"
-						} ${loading ? " cursor-not-allowed" : ""}`}
+						className={`px-4 py-2 text-sm font-medium ${buttonVariant === "danger" ? " " : " "} ${loading ? " cursor-not-allowed" : ""}`}
 					>
 						{confirmLabel || confirmText}
 					</button>

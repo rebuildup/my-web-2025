@@ -30,7 +30,7 @@ export default function SettingsPanel({
 	};
 
 	return (
-		<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-6">
+		<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-6">
 			<h3 className="font-medium ">設定</h3>
 
 			{/* Count Settings */}
@@ -93,10 +93,7 @@ export default function SettingsPanel({
 						/>
 
 						<div>
-							<label
-								htmlFor="specific-string"
-								className="block text-sm mb-1"
-							>
+							<label htmlFor="specific-string" className="block text-sm mb-1">
 								特定文字列の出現数チェック
 							</label>
 							<input
@@ -107,7 +104,7 @@ export default function SettingsPanel({
 									handleCountSettingChange("specificString", e.target.value)
 								}
 								placeholder="検索したい文字列"
-								className="w-full p-2 rounded-lg /10   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+								className="w-full p-2"
 							/>
 						</div>
 					</div>
@@ -123,7 +120,7 @@ export default function SettingsPanel({
 						onChange={(e) =>
 							handleCountSettingChange("countMethod", e.target.value)
 						}
-						className="w-full p-2 rounded-lg /10   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+						className="w-full p-2"
 					>
 						<option value="all">すべての文字</option>
 						<option value="visible">表示可能文字のみ</option>
@@ -180,7 +177,7 @@ export default function SettingsPanel({
 						onChange={(e) =>
 							handleDisplaySettingChange("fontSize", e.target.value)
 						}
-						className="w-full p-2 rounded-lg /10   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+						className="w-full p-2"
 					>
 						<option value="small">小</option>
 						<option value="medium">中</option>
@@ -212,7 +209,7 @@ function CheckboxSetting({
 				id={id}
 				checked={checked}
 				onChange={(e) => onChange(e.target.checked)}
-				className="w-4 h-4 rounded /10  focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+				className="w-4 h-4"
 			/>
 			<label htmlFor={id} className="text-sm cursor-pointer">
 				{label}

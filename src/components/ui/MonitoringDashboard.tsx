@@ -168,9 +168,7 @@ export function MonitoringDashboard({
 		<div className={` rounded-lg   ${className}`}>
 			{/* Header */}
 			<div className="  p-4">
-				<h2 className="text-xl font-semibold ">
-					Monitoring Dashboard
-				</h2>
+				<h2 className="text-xl font-semibold ">Monitoring Dashboard</h2>
 				<p className="text-sm  mt-1">
 					Real-time error tracking and performance monitoring
 				</p>
@@ -198,11 +196,7 @@ export function MonitoringDashboard({
 							onClick={() =>
 								setActiveTab(tab.id as "errors" | "performance" | "alerts")
 							}
-							className={`py-2 px-1  font-medium text-sm ${
-								activeTab === tab.id
-									? " "
-									: "   "
-							}`}
+							className={`py-2 px-1 font-medium text-sm ${activeTab === tab.id ? " " : " "}`}
 						>
 							{tab.name}
 							{tab.count > 0 && (
@@ -220,9 +214,7 @@ export function MonitoringDashboard({
 				{isLoading ? (
 					<div className="flex items-center justify-center py-8">
 						<div className="animate-spin rounded-full h-8 w-8  "></div>
-						<span className="ml-2 ">
-							Loading monitoring data...
-						</span>
+						<span className="ml-2 ">Loading monitoring data...</span>
 					</div>
 				) : (
 					<>
@@ -232,48 +224,32 @@ export function MonitoringDashboard({
 								{/* Error Statistics */}
 								<div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
 									<div className=" p-4 rounded-lg">
-										<h3 className="text-sm font-medium ">
-											Total Errors
-										</h3>
-										<p className="text-2xl font-bold ">
-											{errorStats.total}
-										</p>
+										<h3 className="text-sm font-medium ">Total Errors</h3>
+										<p className="text-2xl font-bold ">{errorStats.total}</p>
 									</div>
 									<div className=" p-4 rounded-lg">
-										<h3 className="text-sm font-medium ">
-											Critical
-										</h3>
+										<h3 className="text-sm font-medium ">Critical</h3>
 										<p className="text-2xl font-bold ">
 											{errorStats.bySeverity.critical}
 										</p>
 									</div>
 									<div className=" p-4 rounded-lg">
-										<h3 className="text-sm font-medium ">
-											High
-										</h3>
+										<h3 className="text-sm font-medium ">High</h3>
 										<p className="text-2xl font-bold ">
 											{errorStats.bySeverity.high}
 										</p>
 									</div>
 									<div className=" p-4 rounded-lg">
-										<h3 className="text-sm font-medium ">
-											Resolved
-										</h3>
-										<p className="text-2xl font-bold ">
-											{errorStats.resolved}
-										</p>
+										<h3 className="text-sm font-medium ">Resolved</h3>
+										<p className="text-2xl font-bold ">{errorStats.resolved}</p>
 									</div>
 								</div>
 
 								{/* Error List */}
 								<div className="space-y-4">
-									<h3 className="text-lg font-medium ">
-										Recent Errors
-									</h3>
+									<h3 className="text-lg font-medium ">Recent Errors</h3>
 									{errors.length === 0 ? (
-										<p className=" text-center py-8">
-											No errors recorded
-										</p>
+										<p className=" text-center py-8">No errors recorded</p>
 									) : (
 										<div className="space-y-2">
 											{errors.slice(0, 10).map((error, index) => (
@@ -299,9 +275,7 @@ export function MonitoringDashboard({
 															<h4 className="font-medium  mb-1">
 																{error.message}
 															</h4>
-															<p className="text-sm ">
-																{error.url}
-															</p>
+															<p className="text-sm ">{error.url}</p>
 															{error.stack && (
 																<details className="mt-2">
 																	<summary className="text-sm  cursor-pointer">
@@ -360,9 +334,7 @@ export function MonitoringDashboard({
 
 								{/* Performance Issues */}
 								<div className="space-y-4">
-									<h3 className="text-lg font-medium ">
-										Performance Issues
-									</h3>
+									<h3 className="text-lg font-medium ">Performance Issues</h3>
 									{performanceIssues.length === 0 ? (
 										<p className=" text-center py-8">
 											No performance issues detected
@@ -390,9 +362,7 @@ export function MonitoringDashboard({
 																{issue.type.toUpperCase()}: {issue.value}ms
 																(threshold: {issue.threshold}ms)
 															</h4>
-															<p className="text-sm ">
-																{issue.url}
-															</p>
+															<p className="text-sm ">{issue.url}</p>
 														</div>
 													</div>
 												</div>
@@ -406,13 +376,9 @@ export function MonitoringDashboard({
 						{/* Alerts Tab */}
 						{activeTab === "alerts" && (
 							<div>
-								<h3 className="text-lg font-medium  mb-4">
-									System Alerts
-								</h3>
+								<h3 className="text-lg font-medium  mb-4">System Alerts</h3>
 								{performanceSummary.alerts.length === 0 ? (
-									<p className=" text-center py-8">
-										No active alerts
-									</p>
+									<p className=" text-center py-8">No active alerts</p>
 								) : (
 									<div className="space-y-2">
 										{performanceSummary.alerts
@@ -438,9 +404,7 @@ export function MonitoringDashboard({
 																{alert.metric}: {alert.value} (threshold:{" "}
 																{alert.threshold})
 															</h4>
-															<p className="text-sm ">
-																{alert.url}
-															</p>
+															<p className="text-sm ">{alert.url}</p>
 														</div>
 													</div>
 												</div>
@@ -457,11 +421,7 @@ export function MonitoringDashboard({
 			<div className="  p-4 ">
 				<div className="flex items-center justify-between text-sm ">
 					<span>Last updated: {new Date().toLocaleTimeString()}</span>
-					<button
-						type="button"
-						onClick={loadData}
-						className=" "
-					>
+					<button type="button" onClick={loadData} className=" ">
 						Refresh
 					</button>
 				</div>

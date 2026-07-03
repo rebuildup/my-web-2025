@@ -260,9 +260,7 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
 
 		return (
 			<div className={`flex items-center space-x-2 ${className}`}>
-				<div
-					className={`w-3 h-3 rounded-full ${allGood ? "" : ""}`}
-				/>
+				<div className={`w-3 h-3 rounded-full ${allGood ? "" : ""}`} />
 				<span className="text-sm ">
 					Core Web Vitals: {allGood ? "Good" : "Needs Improvement"}
 				</span>
@@ -278,7 +276,7 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
 					<button
 						type="button"
 						onClick={runPerformanceTest}
-						className="px-3 py-1   text-sm rounded  transition-colors"
+						className="px-3 py-1 text-sm"
 					>
 						Run Test
 					</button>
@@ -355,11 +353,7 @@ const PerformanceReport: React.FC<PerformanceReportProps> = ({ detector }) => {
 				<h4 className="text-md font-medium ">Performance Score</h4>
 				<div
 					className={`text-2xl font-bold ${
-						score >= 90
-							? ""
-							: score >= 70
-								? ""
-								: ""
+						score >= 90 ? "" : score >= 70 ? "" : ""
 					}`}
 				>
 					{score}/100
@@ -454,7 +448,7 @@ export const PerformanceDevPanel: React.FC = () => {
 			<button
 				type="button"
 				onClick={() => setIsVisible(!isVisible)}
-				className="  p-2 rounded-full   transition-colors"
+				className="p-2"
 				title="Performance Monitor"
 			>
 				⚡

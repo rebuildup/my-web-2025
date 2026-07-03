@@ -127,7 +127,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 				<button
 					type="button"
 					onClick={() => setIsOpen(!isOpen)}
-					className="fixed bottom-4 right-4 z-50 bg-accent p-3 rounded-full  hover:bg-accent/90   focus:ring-accent focus:ring-offset-2"
+					className="fixed bottom-4 right-4 z-50 p-3"
 					aria-label="アクセシビリティテスターを開く"
 					title="Accessibility Tester"
 				>
@@ -154,14 +154,14 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 								type="button"
 								onClick={runAudit}
 								disabled={isRunning}
-								className="px-3 py-1 text-sm bg-accent rounded hover:bg-accent/90 "
+								className="px-3 py-1 text-sm"
 							>
 								{isRunning ? "Running..." : "Run Audit"}
 							</button>
 							<button
 								type="button"
 								onClick={() => setIsOpen(false)}
-								className=" hover:text-accent"
+								className=" "
 								aria-label="閉じる"
 							>
 								<X className="h-4 w-4" />
@@ -171,7 +171,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 
 					<div className="p-4 overflow-y-auto max-h-80">
 						{!report ? (
-							<div className="text-center /60">
+							<div className="text-center">
 								<p>Click &quot;Run Audit&quot; to check accessibility</p>
 							</div>
 						) : (
@@ -180,9 +180,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 								<div className="grid grid-cols-2 gap-2 text-sm">
 									<div className="   p-2 rounded">
 										<div className=" font-medium">Violations</div>
-										<div className=" text-lg">
-											{report.summary.errors || 0}
-										</div>
+										<div className=" text-lg">{report.summary.errors || 0}</div>
 									</div>
 									<div className="   p-2 rounded">
 										<div className=" font-medium">Warnings</div>
@@ -198,7 +196,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 										<button
 											type="button"
 											onClick={runAutoFix}
-											className="px-3 py-1 text-sm   rounded "
+											className="px-3 py-1 text-sm"
 										>
 											Auto-fix Issues
 										</button>
@@ -215,9 +213,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 									<div className="   p-3 rounded">
 										<div className="flex items-center space-x-2 mb-2">
 											<CheckCircle className="h-4 w-4 " />
-											<span className=" font-medium">
-												Passed Checks
-											</span>
+											<span className=" font-medium">Passed Checks</span>
 										</div>
 										<div className="text-sm ">
 											{report.passedChecks.join(", ")}
@@ -252,7 +248,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 												);
 											})}
 										{(report.issues || []).length > 10 && (
-											<div className="text-sm /60 text-center">
+											<div className="text-sm text-center">
 												... and {(report.issues || []).length - 10} more issues
 											</div>
 										)}

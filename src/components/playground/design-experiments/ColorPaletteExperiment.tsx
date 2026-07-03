@@ -261,7 +261,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 							onChange={(e) =>
 								setSelectedHarmony(e.target.value as ColorPalette["harmony"])
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							<option value="random">Random</option>
 							<option value="monochromatic">Monochromatic</option>
@@ -273,10 +273,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Base Hue */}
 					<div className="space-y-2">
-						<label
-							htmlFor="hue-slider"
-							className="noto-sans-jp-light text-sm "
-						>
+						<label htmlFor="hue-slider" className="noto-sans-jp-light text-sm ">
 							Base Hue: {baseHue}°
 						</label>
 						<input
@@ -339,7 +336,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 						type="button"
 						onClick={generatePalette}
 						tabIndex={0}
-						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center px-4 py-2"
 					>
 						<RefreshCw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Generate New</span>
@@ -349,7 +346,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 						type="button"
 						onClick={downloadPalette}
 						tabIndex={0}
-						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center px-4 py-2"
 					>
 						<Download className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Download JSON</span>
@@ -359,9 +356,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 
 			{/* Color Palette Display */}
 			<div className="  p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg ">
-					{palette.name}
-				</h3>
+				<h3 className="zen-kaku-gothic-new text-lg ">{palette.name}</h3>
 
 				<div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
 					{palette.colors.map((color, index) => (
@@ -379,11 +374,9 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 							</div>
 
 							<div className="absolute bottom-0 left-0 right-0 bg-opacity-90 p-2 text-center transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-								<span className="noto-sans-jp-light text-xs ">
-									{color}
-								</span>
+								<span className="noto-sans-jp-light text-xs ">{color}</span>
 								{copiedColor === color && (
-									<div className="text-xs text-accent mt-1">Copied!</div>
+									<div className="text-xs  mt-1">Copied!</div>
 								)}
 							</div>
 						</div>

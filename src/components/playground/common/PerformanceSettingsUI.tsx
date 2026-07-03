@@ -101,9 +101,7 @@ export function PerformanceSettingsUI({
 
 					{/* Quality Level */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Quality Level
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Quality Level</label>
 						<select
 							value={performanceSettings.qualityLevel}
 							onChange={(e) =>
@@ -112,7 +110,7 @@ export function PerformanceSettingsUI({
 									e.target.value as PerformanceSettings["qualityLevel"],
 								)
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							<option value="low">Low (30 FPS, 最小品質)</option>
 							<option value="medium">Medium (60 FPS, 標準品質)</option>
@@ -203,7 +201,7 @@ export function PerformanceSettingsUI({
 														.value as PerformanceSettings["textureQuality"],
 												)
 											}
-											className="w-full  p-2 text-sm"
+											className="w-full p-2 text-sm"
 										>
 											<option value="low">Low (512px)</option>
 											<option value="medium">Medium (1024px)</option>
@@ -224,7 +222,7 @@ export function PerformanceSettingsUI({
 														.value as PerformanceSettings["shadowQuality"],
 												)
 											}
-											className="w-full  p-2 text-sm"
+											className="w-full p-2 text-sm"
 										>
 											<option value="off">Off</option>
 											<option value="low">Low</option>
@@ -261,37 +259,37 @@ export function PerformanceSettingsUI({
 								<div className="grid grid-cols-2 gap-2 text-xs">
 									<div>
 										<span className=" ">WebGL:</span>
-										<span className="ml-1 text-accent">
+										<span className="ml-1 ">
 											{deviceCapabilities.webglSupport ? "Yes" : "No"}
 										</span>
 									</div>
 									<div>
 										<span className=" ">WebGL2:</span>
-										<span className="ml-1 text-accent">
+										<span className="ml-1 ">
 											{deviceCapabilities.webgl2Support ? "Yes" : "No"}
 										</span>
 									</div>
 									<div>
 										<span className=" ">Touch:</span>
-										<span className="ml-1 text-accent">
+										<span className="ml-1 ">
 											{deviceCapabilities.touchSupport ? "Yes" : "No"}
 										</span>
 									</div>
 									<div>
 										<span className=" ">Cores:</span>
-										<span className="ml-1 text-accent">
+										<span className="ml-1 ">
 											{deviceCapabilities.hardwareConcurrency}
 										</span>
 									</div>
 									<div>
 										<span className=" ">DPR:</span>
-										<span className="ml-1 text-accent">
+										<span className="ml-1 ">
 											{deviceCapabilities.devicePixelRatio}x
 										</span>
 									</div>
 									<div>
 										<span className=" ">Max Texture:</span>
-										<span className="ml-1 text-accent">
+										<span className="ml-1 ">
 											{deviceCapabilities.maxTextureSize}px
 										</span>
 									</div>
@@ -324,7 +322,7 @@ export function PerformanceSettingsUI({
 							{/* Metrics Display */}
 							<div className="grid grid-cols-3 gap-4 text-sm">
 								<div className="text-center">
-									<div className="text-2xl font-bold text-accent">
+									<div className="text-2xl font-bold ">
 										{performanceMetrics.fps}
 									</div>
 									<div className="noto-sans-jp-light ">FPS</div>
@@ -333,23 +331,19 @@ export function PerformanceSettingsUI({
 									</div>
 								</div>
 								<div className="text-center">
-									<div className="text-2xl font-bold text-accent">
+									<div className="text-2xl font-bold ">
 										{performanceMetrics.frameTime.toFixed(1)}
 									</div>
-									<div className="noto-sans-jp-light ">
-										Frame Time (ms)
-									</div>
+									<div className="noto-sans-jp-light ">Frame Time (ms)</div>
 									<div className="text-xs ">
 										Target: {(1000 / performanceSettings.targetFPS).toFixed(1)}
 									</div>
 								</div>
 								<div className="text-center">
-									<div className="text-2xl font-bold text-accent">
+									<div className="text-2xl font-bold ">
 										{performanceMetrics.memoryUsage}
 									</div>
-									<div className="noto-sans-jp-light ">
-										Memory (MB)
-									</div>
+									<div className="noto-sans-jp-light ">Memory (MB)</div>
 									<div className="text-xs ">
 										Limit: {deviceCapabilities.memoryLimit || "N/A"}
 									</div>
@@ -360,20 +354,16 @@ export function PerformanceSettingsUI({
 							{performanceMetrics.gpuUsage !== undefined && (
 								<div className="grid grid-cols-2 gap-4 text-sm">
 									<div className="text-center">
-										<div className="text-lg font-bold text-accent">
+										<div className="text-lg font-bold ">
 											{performanceMetrics.gpuUsage}%
 										</div>
-										<div className="noto-sans-jp-light ">
-											GPU Usage
-										</div>
+										<div className="noto-sans-jp-light ">GPU Usage</div>
 									</div>
 									<div className="text-center">
-										<div className="text-lg font-bold text-accent">
+										<div className="text-lg font-bold ">
 											{performanceMetrics.drawCalls || 0}
 										</div>
-										<div className="noto-sans-jp-light ">
-											Draw Calls
-										</div>
+										<div className="noto-sans-jp-light ">Draw Calls</div>
 									</div>
 								</div>
 							)}
@@ -414,7 +404,7 @@ export function PerformanceSettingsUI({
 									maxParticles: 500,
 								})
 							}
-							className="px-3 py-2  text-sm hover:border-accent hover:text-accent transition-colors"
+							className="px-3 py-2 text-sm"
 						>
 							Battery Saver
 						</button>
@@ -430,7 +420,7 @@ export function PerformanceSettingsUI({
 									maxParticles: 2000,
 								})
 							}
-							className="px-3 py-2  text-sm hover:border-accent hover:text-accent transition-colors"
+							className="px-3 py-2 text-sm"
 						>
 							Balanced
 						</button>
@@ -446,7 +436,7 @@ export function PerformanceSettingsUI({
 									maxParticles: 5000,
 								})
 							}
-							className="px-3 py-2  text-sm hover:border-accent hover:text-accent transition-colors"
+							className="px-3 py-2 text-sm"
 						>
 							Max Quality
 						</button>

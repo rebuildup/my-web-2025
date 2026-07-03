@@ -255,12 +255,12 @@ export default function AIProfilePage() {
 								</h2>
 								<div className="  p-4 space-y-4">
 									<div className="flex items-center">
-										<Bot className="w-8 h-8 text-accent mr-4" />
+										<Bot className="w-8 h-8  mr-4" />
 										<div>
 											<h3 className="zen-kaku-gothic-new text-lg ">
 												samuido AI Assistant
 											</h3>
-											<p className="noto-sans-jp-light text-xs text-accent">
+											<p className="noto-sans-jp-light text-xs ">
 												技術とクリエイティビティの融合を目指すAIペルソナ
 											</p>
 										</div>
@@ -283,12 +283,9 @@ export default function AIProfilePage() {
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 									{personalityTraits.map((trait) => (
-										<div
-											key={trait.trait}
-											className="  p-4 space-y-4"
-										>
+										<div key={trait.trait} className="  p-4 space-y-4">
 											<div className="flex items-center">
-												<trait.icon className="w-6 h-6 text-accent mr-3" />
+												<trait.icon className="w-6 h-6  mr-3" />
 												<h3 className="zen-kaku-gothic-new text-lg ">
 													{trait.trait}
 												</h3>
@@ -300,7 +297,7 @@ export default function AIProfilePage() {
 												{trait.examples.map((example) => (
 													<div
 														key={example}
-														className="noto-sans-jp-light text-xs text-accent"
+														className="noto-sans-jp-light text-xs "
 													>
 														• {example}
 													</div>
@@ -318,10 +315,7 @@ export default function AIProfilePage() {
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 									{Object.entries(interests).map(([key, category]) => (
-										<div
-											key={key}
-											className="  p-4 space-y-4"
-										>
+										<div key={key} className="  p-4 space-y-4">
 											<h3 className="zen-kaku-gothic-new text-lg ">
 												{category.title}
 											</h3>
@@ -347,13 +341,8 @@ export default function AIProfilePage() {
 								</h2>
 								<div className="space-y-4">
 									{conversationStyle.map((style) => (
-										<div
-											key={style.aspect}
-											className="  p-4 space-y-3"
-										>
-											<h3 className="zen-kaku-gothic-new ">
-												{style.aspect}
-											</h3>
+										<div key={style.aspect} className="  p-4 space-y-3">
+											<h3 className="zen-kaku-gothic-new ">{style.aspect}</h3>
 											<p className="noto-sans-jp-light text-sm ">
 												{style.description}
 											</p>
@@ -361,7 +350,7 @@ export default function AIProfilePage() {
 												{style.examples.map((example) => (
 													<span
 														key={example}
-														className="noto-sans-jp-light text-xs text-accent  border-accent px-2 py-1"
+														className="noto-sans-jp-light text-xs    px-2 py-1"
 													>
 														{example}
 													</span>
@@ -379,12 +368,9 @@ export default function AIProfilePage() {
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 									{aiCapabilities.map((capability) => (
-										<div
-											key={capability.category}
-											className="  p-4 space-y-4"
-										>
+										<div key={capability.category} className="  p-4 space-y-4">
 											<div className="flex items-center">
-												<Zap className="w-6 h-6 text-accent mr-3" />
+												<Zap className="w-6 h-6  mr-3" />
 												<h3 className="zen-kaku-gothic-new text-lg ">
 													{capability.category}
 												</h3>
@@ -412,7 +398,7 @@ export default function AIProfilePage() {
 								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									Usage Guidelines
 								</h2>
-								<div className="  border-accent p-4 space-y-4">
+								<div className="   p-4 space-y-4">
 									<h3 className="zen-kaku-gothic-new text-lg ">
 										このAIプロフィールの使用について
 									</h3>

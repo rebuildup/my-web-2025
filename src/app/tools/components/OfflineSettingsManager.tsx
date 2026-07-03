@@ -192,7 +192,7 @@ export default function OfflineSettingsManager<
 		<div className="space-y-4">
 			{/* Settings Controls */}
 			{showControls && (
-				<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+				<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 					<div className="flex items-center justify-between mb-4">
 						<div className="flex items-center space-x-2">
 							<Settings size={16} className="" />
@@ -200,15 +200,13 @@ export default function OfflineSettingsManager<
 								Settings Manager
 							</h3>
 							{!isOnline && (
-								<span className="text-xs   px-2 py-1 rounded">
-									Offline
-								</span>
+								<span className="text-xs   px-2 py-1 rounded">Offline</span>
 							)}
 						</div>
 						<button
 							type="button"
 							onClick={() => setIsExpanded(!isExpanded)}
-							className="text-xs text-accent hover:   focus:ring-accent"
+							className="text-xs"
 							aria-label="Toggle settings controls"
 						>
 							{isExpanded ? "Hide" : "Show"} Controls
@@ -250,7 +248,7 @@ export default function OfflineSettingsManager<
 								</AccessibleButton>
 
 								<label className="inline-flex">
-									<span className="inline-flex items-center justify-center font-medium transition-colors duration-200   focus:ring-offset-2  disabled:cursor-not-allowed rounded-lg /10 hover:/20 focus:ring-accent focus:ring-offset-base px-3 py-1.5 text-sm min-h-[32px] cursor-pointer">
+									<span className="inline-flex items-center justify-center font-medium transition-colors duration-200   focus:ring-offset-2  disabled:cursor-not-allowed rounded-lg hover:/20  focus:ring-offset-base px-3 py-1.5 text-sm min-h-[32px] cursor-pointer">
 										<Upload size={14} />
 										Import
 									</span>
@@ -272,20 +270,18 @@ export default function OfflineSettingsManager<
 								</div>
 								<div className="flex justify-between">
 									<span>Storage:</span>
-									<span className="text-accent">Local Storage</span>
+									<span className="">Local Storage</span>
 								</div>
 								{lastSaved && (
 									<div className="flex justify-between">
 										<span>Last saved:</span>
-										<span className="text-accent">
-											{lastSaved.toLocaleTimeString()}
-										</span>
+										<span className="">{lastSaved.toLocaleTimeString()}</span>
 									</div>
 								)}
 							</div>
 
 							{/* Settings Info */}
-							<div className="pt-2  /20">
+							<div className="pt-2">
 								<h4 className="text-xs font-medium mb-2">
 									Settings Information
 								</h4>

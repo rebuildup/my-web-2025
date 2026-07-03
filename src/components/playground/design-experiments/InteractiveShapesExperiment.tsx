@@ -362,7 +362,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Mouse cursor indicator */}
 					<div
-						className="absolute pointer-events-none  border-accent rounded-full "
+						className="absolute pointer-events-none   rounded-full "
 						style={{
 							left: mousePosition.x - config.interactionRadius,
 							top: mousePosition.y - config.interactionRadius,
@@ -374,7 +374,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Mouse position dot */}
 					<div
-						className="absolute w-2 h-2 bg-accent rounded-full pointer-events-none"
+						className="absolute w-2 h-2  rounded-full pointer-events-none"
 						style={{
 							left: mousePosition.x - 4,
 							top: mousePosition.y - 4,
@@ -386,7 +386,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetShapes}
-						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center px-4 py-2"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset Shapes</span>
@@ -467,9 +467,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					{/* Response Type */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Response Type
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Response Type</label>
 						<select
 							value={config.responseType}
 							onChange={(e) =>
@@ -479,7 +477,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 										.value as InteractionConfig["responseType"],
 								}))
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							<option value="hover">Hover</option>
 							<option value="click">Click</option>
@@ -490,9 +488,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Color Mode */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Color Mode
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Color Mode</label>
 						<select
 							value={config.colorMode}
 							onChange={(e) =>
@@ -501,7 +497,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 									colorMode: e.target.value as InteractionConfig["colorMode"],
 								}))
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							<option value="static">Static</option>
 							<option value="dynamic">Dynamic</option>
@@ -511,9 +507,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Physics */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Physics
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Physics</label>
 						<div className="flex items-center">
 							<input
 								type="checkbox"

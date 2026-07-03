@@ -131,7 +131,7 @@ export function FilterBar({
 						placeholder="Search projects..."
 						value={searchTerm}
 						onChange={(e) => handleSearchChange(e.target.value)}
-						className="w-full pl-10 pr-4 py-2  placeholder-main/60  focus:border-accent"
+						className="w-full pl-10 pr-4 py-2 placeholder-main/60"
 					/>
 				</div>
 
@@ -139,18 +139,14 @@ export function FilterBar({
 				<button
 					type="button"
 					onClick={() => setIsExpanded(!isExpanded)}
-					className={`flex items-center space-x-2 px-4 py-2  transition-colors ${
-						isExpanded || hasActiveFilters
-							? "border-accent text-accent"
-							: " hover:border-accent hover:text-accent"
-					}`}
+					className={`flex items-center space-x-2 px-4 py-2 ${isExpanded || hasActiveFilters ? " " : " "}`}
 					aria-expanded={isExpanded}
 					aria-controls="filter-panel"
 				>
 					<Filter className="w-4 h-4" />
 					<span className="text-sm">Filters</span>
 					{hasActiveFilters && (
-						<span className="bg-accent text-xs px-2 py-1">
+						<span className=" text-xs px-2 py-1">
 							{
 								[
 									filters.category,
@@ -169,7 +165,7 @@ export function FilterBar({
 					<button
 						type="button"
 						onClick={handleClearFilters}
-						className="flex items-center space-x-2 px-4 py-2  hover:border-accent hover:text-accent transition-colors"
+						className="flex items-center space-x-2 px-4 py-2"
 					>
 						<X className="w-4 h-4" />
 						<span className="text-sm">Clear</span>
@@ -179,10 +175,7 @@ export function FilterBar({
 
 			{/* Expanded Filter Panel */}
 			{isExpanded && (
-				<div
-					id="filter-panel"
-					className=" p-6 space-y-6"
-				>
+				<div id="filter-panel" className=" p-6 space-y-6">
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 						{/* Category Filter */}
 						<div className="space-y-3">
@@ -195,7 +188,7 @@ export function FilterBar({
 										value="all"
 										checked={!filters.category}
 										onChange={() => handleCategoryChange("all")}
-										className="text-accent focus:ring-accent"
+										className=" "
 									/>
 									<span className="text-sm">All Categories</span>
 								</label>
@@ -210,7 +203,7 @@ export function FilterBar({
 											value={category.value}
 											checked={filters.category === category.value}
 											onChange={() => handleCategoryChange(category.value)}
-											className="text-accent focus:ring-accent"
+											className=" "
 										/>
 										<span className="text-sm">
 											{category.label} ({category.count})
@@ -236,7 +229,7 @@ export function FilterBar({
 													tech.value,
 												)}
 												onChange={() => handleTechnologyToggle(tech.value)}
-												className="text-accent focus:ring-accent"
+												className=" "
 											/>
 											<span className="text-sm">
 												{tech.label} ({tech.count})
@@ -259,7 +252,7 @@ export function FilterBar({
 											value="all"
 											checked={!filters.year}
 											onChange={() => handleYearChange("all")}
-											className="text-accent focus:ring-accent"
+											className=" "
 										/>
 										<span className="text-sm">All Years</span>
 									</label>
@@ -274,7 +267,7 @@ export function FilterBar({
 												value={year.value}
 												checked={filters.year === year.value}
 												onChange={() => handleYearChange(year.value)}
-												className="text-accent focus:ring-accent"
+												className=" "
 											/>
 											<span className="text-sm">
 												{year.label} ({year.count})
@@ -299,7 +292,7 @@ export function FilterBar({
 												type="checkbox"
 												checked={(filters.tags || []).includes(tag.value)}
 												onChange={() => handleTagToggle(tag.value)}
-												className="text-accent focus:ring-accent"
+												className=" "
 											/>
 											<span className="text-sm">
 												{tag.label} ({tag.count})

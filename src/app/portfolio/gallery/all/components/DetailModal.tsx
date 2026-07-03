@@ -94,17 +94,14 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 			>
 				{/* Header */}
 				<header className="flex items-center justify-between p-6  ">
-					<h1
-						id="modal-title"
-						className="zen-kaku-gothic-new text-xl "
-					>
+					<h1 id="modal-title" className="zen-kaku-gothic-new text-xl ">
 						{item.title}
 					</h1>
 					<button
 						type="button"
 						ref={closeButtonRef}
 						onClick={onClose}
-						className="p-2 transition-colors"
+						className="p-2"
 						aria-label="Close modal"
 					>
 						<X className="w-5 h-5" />
@@ -135,7 +132,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 							const effective = (item as any).publishedAt || item.createdAt;
 							return (
 								<div className="flex items-center space-x-2">
-									<Calendar className="w-4 h-4 text-accent" />
+									<Calendar className="w-4 h-4 " />
 									<span className="">Published:</span>
 									<time dateTime={effective}>
 										{new Date(effective).toLocaleDateString("ja-JP")}
@@ -145,7 +142,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 						})()}
 
 						<div className="flex items-center space-x-2">
-							<Tag className="w-4 h-4 text-accent" />
+							<Tag className="w-4 h-4 " />
 							<span className="">Category:</span>
 							<span>
 								{(item as EnhancedContentItem).categories
@@ -157,9 +154,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 
 					{/* Description */}
 					<div className="space-y-2">
-						<h2 className="zen-kaku-gothic-new text-lg ">
-							Description
-						</h2>
+						<h2 className="zen-kaku-gothic-new text-lg ">Description</h2>
 						<p className="noto-sans-jp-light text-sm leading-relaxed">
 							{item.description}
 						</p>
@@ -170,7 +165,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 				<footer className="p-6  ">
 					<Link
 						href={`/portfolio/${item.id}`}
-						className="flex items-center space-x-2 text-accent hover: transition-colors"
+						className="flex items-center space-x-2  hover: transition-colors"
 					>
 						<ExternalLink className="w-4 h-4" />
 						<span className="text-sm">View Full Page</span>

@@ -103,7 +103,7 @@ export function ContentList({
 								e.stopPropagation();
 								onDeleteItem(item.id);
 							}}
-							className="  text-xs ml-2    focus:ring-offset-2 focus:ring-offset-base rounded"
+							className="text-xs ml-2"
 							title="Delete item"
 						>
 							×

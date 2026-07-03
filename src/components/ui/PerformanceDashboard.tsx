@@ -55,7 +55,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 			<button
 				type="button"
 				onClick={() => setIsVisible(!isVisible)}
-				className="  p-3 rounded-full   transition-colors"
+				className="p-3"
 				title="Performance Dashboard"
 			>
 				📊
@@ -68,33 +68,21 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 						<button
 							type="button"
 							onClick={() => setActiveTab("vitals")}
-							className={`flex-1 px-4 py-2 text-sm font-medium ${
-								activeTab === "vitals"
-									? " "
-									: "  "
-							}`}
+							className={`flex-1 px-4 py-2 text-sm font-medium ${activeTab === "vitals" ? " " : " "}`}
 						>
 							Core Web Vitals
 						</button>
 						<button
 							type="button"
 							onClick={() => setActiveTab("bundle")}
-							className={`flex-1 px-4 py-2 text-sm font-medium ${
-								activeTab === "bundle"
-									? " "
-									: "  "
-							}`}
+							className={`flex-1 px-4 py-2 text-sm font-medium ${activeTab === "bundle" ? " " : " "}`}
 						>
 							Bundle Info
 						</button>
 						<button
 							type="button"
 							onClick={() => setActiveTab("regression")}
-							className={`flex-1 px-4 py-2 text-sm font-medium ${
-								activeTab === "regression"
-									? " "
-									: "  "
-							}`}
+							className={`flex-1 px-4 py-2 text-sm font-medium ${activeTab === "regression" ? " " : " "}`}
 						>
 							Regressions
 						</button>
@@ -186,9 +174,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 								{regressionStatus.regressions.length === 0 ? (
 									<div className="text-center py-8">
 										<div className=" text-2xl mb-2">✓</div>
-										<p className="text-sm ">
-											No regressions detected
-										</p>
+										<p className="text-sm ">No regressions detected</p>
 									</div>
 								) : (
 									<div className="space-y-3">

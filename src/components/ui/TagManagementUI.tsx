@@ -213,7 +213,7 @@ export function TagManagementUI({
 						<button
 							type="button"
 							onClick={() => handleTagRemove(tag)}
-							className="ml-1 hover: hover:bg-opacity-20 rounded-full p-0.5 transition-colors"
+							className="ml-1 p-0.5"
 							aria-label={`Remove ${tag} tag`}
 						>
 							<X className="w-3 h-3" />
@@ -237,12 +237,7 @@ export function TagManagementUI({
 							canAddMoreTags ? placeholder : `Maximum ${maxTags} tags selected`
 						}
 						disabled={!canAddMoreTags}
-						className={`
- w-full pl-10 pr-4 py-2  
-  focus: focus:ring-offset-2 focus:ring-offset-base 
-  disabled:cursor-not-allowed
- ${!canAddMoreTags ? "" : ""}
- `}
+						className={`w-full pl-10 pr-4 py-2 ${!canAddMoreTags ? "" : ""}`}
 					/>
 				</div>
 
@@ -254,9 +249,7 @@ export function TagManagementUI({
 						style={{ backgroundColor: "#181818", zIndex: 9999 }}
 					>
 						{isLoading ? (
-							<div className="px-4 py-3 text-center">
-								Loading tags...
-							</div>
+							<div className="px-4 py-3 text-center">Loading tags...</div>
 						) : (
 							<>
 								{/* Create new tag option */}
@@ -264,7 +257,7 @@ export function TagManagementUI({
 									<button
 										type="button"
 										onClick={handleCreateNewTag}
-										className="w-full px-4 py-3 text-left hover: hover:bg-opacity-10  flex items-center gap-2 "
+										className="w-full px-4 py-3 text-left flex items-center gap-2"
 									>
 										<Plus className="w-4 h-4" />
 										Create &quot;{newTagInput}&quot;
@@ -278,7 +271,7 @@ export function TagManagementUI({
 											key={tag.name}
 											type="button"
 											onClick={() => handleTagSelect(tag.name)}
-											className="w-full px-4 py-3 text-left hover: hover:bg-opacity-10 flex items-center justify-between group   "
+											className="w-full px-4 py-3 text-left flex items-center justify-between group"
 										>
 											<div className="flex items-center gap-2">
 												<TagIcon className="w-4 h-4 " />
@@ -307,9 +300,7 @@ export function TagManagementUI({
 										<div className=" mb-2">
 											All available tags are already selected
 										</div>
-										<div className="text-xs ">
-											Type to create a new tag
-										</div>
+										<div className="text-xs ">Type to create a new tag</div>
 									</div>
 								) : null}
 

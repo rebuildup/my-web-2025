@@ -827,7 +827,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 						<button
 							type="button"
 							onClick={loadContent}
-							className="mt-2 px-4 py-2   rounded "
+							className="mt-2 px-4 py-2"
 						>
 							Retry
 						</button>

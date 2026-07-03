@@ -72,7 +72,7 @@ export default function StatsPanel({
 			case "work":
 				return "/20 ";
 			case "shortBreak":
-				return "bg-accent/20 text-accent";
+				return " ";
 			case "longBreak":
 				return " ";
 			default:
@@ -81,13 +81,13 @@ export default function StatsPanel({
 	};
 
 	return (
-		<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
+		<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
 			<div className="flex items-center justify-between mb-6">
 				<h3 className="text-lg font-semibold ">統計情報</h3>
 				<button
 					type="button"
 					onClick={onClose}
-					className=" hover: transition-colors"
+					className=""
 					aria-label="統計を閉じる"
 				>
 					<X size={20} />
@@ -97,7 +97,7 @@ export default function StatsPanel({
 			<div className="space-y-6">
 				{/* Overview Stats */}
 				<div className="grid grid-2 gap-4">
-					<div className="rounded-lg /5 p-4 text-center">
+					<div className="rounded-lg p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
 							<Target className="" size={20} />
 							<span className="text-sm font-medium">完了ポモドーロ</span>
@@ -107,34 +107,30 @@ export default function StatsPanel({
 						</div>
 					</div>
 
-					<div className="rounded-lg /5 p-4 text-center">
+					<div className="rounded-lg p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
-							<Clock className="text-accent" size={20} />
+							<Clock className="" size={20} />
 							<span className="text-sm font-medium">総作業時間</span>
 						</div>
-						<div className="text-2xl font-bold text-accent">
+						<div className="text-2xl font-bold ">
 							{formatTime(stats.totalWorkTime)}
 						</div>
 					</div>
 
-					<div className="rounded-lg /5 p-4 text-center">
+					<div className="rounded-lg p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
 							<Zap className="" size={20} />
 							<span className="text-sm font-medium">現在の連続記録</span>
 						</div>
-						<div className="text-2xl font-bold ">
-							{stats.currentStreak}
-						</div>
+						<div className="text-2xl font-bold ">{stats.currentStreak}</div>
 					</div>
 
-					<div className="rounded-lg /5 p-4 text-center">
+					<div className="rounded-lg p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
 							<Calendar className="" size={20} />
 							<span className="text-sm font-medium">今日のセッション</span>
 						</div>
-						<div className="text-2xl font-bold ">
-							{getTodaysSessions()}
-						</div>
+						<div className="text-2xl font-bold ">{getTodaysSessions()}</div>
 					</div>
 				</div>
 
@@ -173,7 +169,7 @@ export default function StatsPanel({
 							getRecentSessions().map((session) => (
 								<div
 									key={session.id}
-									className="flex items-center justify-between p-3 rounded-lg /5"
+									className="flex items-center justify-between p-3 rounded-lg"
 								>
 									<div className="flex items-center gap-3">
 										<span
@@ -196,9 +192,7 @@ export default function StatsPanel({
 								</div>
 							))
 						) : (
-							<div className="text-center /70 py-8">
-								まだセッションがありません
-							</div>
+							<div className="text-center py-8">まだセッションがありません</div>
 						)}
 					</div>
 				</div>
@@ -208,7 +202,7 @@ export default function StatsPanel({
 					<div className="space-y-4">
 						<h4 className="font-medium ">生産性の洞察</h4>
 
-						<div className="rounded-lg /5 p-4">
+						<div className="rounded-lg p-4">
 							<div className="space-y-2 text-sm">
 								<div className="flex justify-between">
 									<span className="">平均セッション時間:</span>
@@ -246,7 +240,7 @@ export default function StatsPanel({
 				)}
 
 				{/* Reset Stats */}
-				<div className="pt-4  /20">
+				<div className="pt-4">
 					<button
 						type="button"
 						onClick={() => {
@@ -259,7 +253,7 @@ export default function StatsPanel({
 								console.log("Reset stats requested");
 							}
 						}}
-						className="w-full px-4 py-2    rounded  transition-colors text-sm"
+						className="w-full px-4 py-2 text-sm"
 					>
 						統計データをリセット
 					</button>

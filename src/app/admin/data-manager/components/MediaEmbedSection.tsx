@@ -129,7 +129,7 @@ export function MediaEmbedSection({
 					<button
 						type="button"
 						onClick={() => setShowAddForm(true)}
-						className={`${buttonStyle}  hover:/80`}
+						className={`${buttonStyle}`}
 					>
 						+ Add Media
 					</button>
@@ -247,7 +247,7 @@ export function MediaEmbedSection({
 						<button
 							type="button"
 							onClick={addVideo}
-							className={`${buttonStyle}  hover:/80`}
+							className={`${buttonStyle}`}
 							disabled={!newVideo.url.trim()}
 						>
 							Add Media
@@ -364,7 +364,7 @@ export function MediaEmbedSection({
 								<button
 									type="button"
 									onClick={() => removeVideo(index)}
-									className="ml-4   text-sm"
+									className="ml-4 text-sm"
 									title="Remove media"
 								>
 									Remove

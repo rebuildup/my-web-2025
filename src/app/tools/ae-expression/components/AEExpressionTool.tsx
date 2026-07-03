@@ -942,21 +942,21 @@ ${generatedCode}`;
 					{/* Main Controls */}
 					<div className="flex flex-wrap gap-4 items-center">
 						<div className="relative flex-1 min-w-64">
-							<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-accent" />
+							<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 " />
 							<input
 								type="text"
 								placeholder="エクスプレッション、タグ、テンプレートを検索..."
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
 								aria-label="エクスプレッション、タグ、テンプレートを検索"
-								className="w-full pl-10 pr-4 py-2 rounded-lg /10   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+								className="w-full pl-10 pr-4 py-2"
 							/>
 						</div>
 
 						<select
 							value={selectedCategory}
 							onChange={(e) => setSelectedCategory(e.target.value)}
-							className="px-4 py-2 rounded-lg /10 hover:/20   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+							className="px-4 py-2"
 						>
 							<option value="all">全カテゴリ</option>
 							<option value="animation">アニメーション</option>
@@ -968,7 +968,7 @@ ${generatedCode}`;
 						<select
 							value={selectedDifficulty}
 							onChange={(e) => setSelectedDifficulty(e.target.value)}
-							className="px-4 py-2 rounded-lg /10 hover:/20   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+							className="px-4 py-2"
 						>
 							<option value="all">全難易度</option>
 							<option value="beginner">初級</option>
@@ -979,9 +979,7 @@ ${generatedCode}`;
 						<button
 							type="button"
 							onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-							className={`px-4 py-2 rounded-lg /10 hover:/20 flex items-center gap-2   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
-								showFavoritesOnly ? "bg-accent " : " "
-							}`}
+							className={`px-4 py-2 flex items-center gap-2 noto-sans-jp-light ${showFavoritesOnly ? " " : " "}`}
 						>
 							<Heart className="w-4 h-4" />
 							お気に入りのみ
@@ -990,7 +988,7 @@ ${generatedCode}`;
 						<button
 							type="button"
 							onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
-							className="px-4 py-2 rounded-lg /10 hover:/20   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-light"
+							className="px-4 py-2 flex items-center gap-2 noto-sans-jp-light"
 						>
 							<Settings className="w-4 h-4" />
 							詳細設定
@@ -999,7 +997,7 @@ ${generatedCode}`;
 
 					{/* Advanced Settings Panel */}
 					{showAdvancedSettings && (
-						<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-4">
+						<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-4">
 							<h3 className="text-lg noto-sans-jp-regular font-medium">
 								詳細設定
 							</h3>
@@ -1018,7 +1016,7 @@ ${generatedCode}`;
 										onChange={(e) =>
 											setExportFormat(e.target.value as "jsx" | "txt" | "json")
 										}
-										className="w-full px-3 py-2 rounded-lg /10   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+										className="w-full px-3 py-2"
 									>
 										<option value="txt">テキスト (.txt)</option>
 										<option value="jsx">JSX (.jsx)</option>
@@ -1034,11 +1032,7 @@ ${generatedCode}`;
 										<button
 											type="button"
 											onClick={() => setShowDocumentation(!showDocumentation)}
-											className={`px-3 py-2 rounded-lg /10 hover:/20 flex items-center gap-2   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
-												showDocumentation
-													? "bg-accent "
-													: " "
-											}`}
+											className={`px-3 py-2 flex items-center gap-2 noto-sans-jp-light ${showDocumentation ? " " : " "}`}
 										>
 											<BookOpen className="w-4 h-4" />
 											ドキュメント
@@ -1053,11 +1047,11 @@ ${generatedCode}`;
 									<h4 className="text-sm noto-sans-jp-regular">
 										保存済みエクスプレッション
 									</h4>
-									<div className="max-h-32 overflow-y-auto rounded-lg /10 p-2 space-y-1">
+									<div className="max-h-32 overflow-y-auto rounded-lg p-2 space-y-1">
 										{savedExpressions.map((saved) => (
 											<div
 												key={saved.id}
-												className="flex items-center justify-between p-2 rounded-lg /10"
+												className="flex items-center justify-between p-2 rounded-lg"
 											>
 												<span className="text-sm noto-sans-jp-light truncate">
 													{saved.name}
@@ -1077,7 +1071,7 @@ ${generatedCode}`;
 															),
 														);
 													}}
-													className="text-accent hover:"
+													className=""
 												>
 													<Trash2 className="w-4 h-4" />
 												</button>
@@ -1097,14 +1091,12 @@ ${generatedCode}`;
 							エクスプレッション一覧
 						</h2>
 
-						<div className="space-y-3 max-h-96 overflow-y-auto rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+						<div className="space-y-3 max-h-96 overflow-y-auto rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 							{filteredExpressions.map((expr) => (
 								<div
 									key={expr.id}
-									className={`p-3 rounded-lg /10 cursor-pointer hover:/20 transition-colors ${
-										selectedExpression?.id === expr.id
-											? "bg-accent "
-											: " "
+									className={`p-3 rounded-lg cursor-pointer hover:/20 transition-colors ${
+										selectedExpression?.id === expr.id ? " " : " "
 									}`}
 								>
 									<div className="flex items-start justify-between mb-2">
@@ -1121,7 +1113,7 @@ ${generatedCode}`;
 											}}
 										>
 											<div className="flex items-center gap-2 mb-1">
-												<span className="text-xs rounded-lg /10 px-2 py-1 noto-sans-jp-light">
+												<span className="text-xs rounded-lg px-2 py-1 noto-sans-jp-light">
 													{CATEGORY_NAMES[expr.category]}
 												</span>
 												<span
@@ -1137,9 +1129,7 @@ ${generatedCode}`;
 											</div>
 											<h3 className="text-sm noto-sans-jp-regular font-medium flex items-center gap-2">
 												{expr.name}
-												{expr.isFavorite && (
-													<Star className="w-3 h-3  " />
-												)}
+												{expr.isFavorite && <Star className="w-3 h-3  " />}
 											</h3>
 											<p className="text-xs noto-sans-jp-light leading-relaxed mt-1">
 												{expr.description}
@@ -1155,7 +1145,7 @@ ${generatedCode}`;
 														</span>
 													))}
 													{expr.tags.length > 3 && (
-														<span className="text-xs text-accent">
+														<span className="text-xs ">
 															+{expr.tags.length - 3}
 														</span>
 													)}
@@ -1168,7 +1158,7 @@ ${generatedCode}`;
 												e.stopPropagation();
 												toggleFavorite(expr.id);
 											}}
-											className="ml-2 p-1 hover: hover: rounded"
+											className="ml-2 p-1"
 										>
 											<Heart
 												className={`w-4 h-4 ${expr.isFavorite ? " " : ""}`}
@@ -1178,7 +1168,7 @@ ${generatedCode}`;
 								</div>
 							))}
 							{filteredExpressions.length === 0 && (
-								<div className="text-center py-8 text-accent noto-sans-jp-light">
+								<div className="text-center py-8  noto-sans-jp-light">
 									<Search className="w-8 h-8 mx-auto mb-2 " />
 									<p>条件に一致するエクスプレッションが見つかりません</p>
 								</div>
@@ -1193,7 +1183,7 @@ ${generatedCode}`;
 						</h2>
 
 						{selectedExpression ? (
-							<div className="space-y-4 rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+							<div className="space-y-4 rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 								<div className="mb-4">
 									<div className="flex items-center justify-between mb-2">
 										<h3 className="text-lg noto-sans-jp-regular font-medium flex items-center gap-2">
@@ -1206,7 +1196,7 @@ ${generatedCode}`;
 											<button
 												type="button"
 												onClick={() => toggleFavorite(selectedExpression.id)}
-												className="p-2 rounded-lg /10 hover:/20   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+												className="p-2"
 											>
 												<Heart
 													className={`w-4 h-4 ${selectedExpression.isFavorite ? " " : ""}`}
@@ -1215,16 +1205,16 @@ ${generatedCode}`;
 											<button
 												type="button"
 												onClick={() => setShowDocumentation(!showDocumentation)}
-												className="p-2 rounded-lg /10 hover:/20   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+												className="p-2"
 											>
 												<Info className="w-4 h-4" />
 											</button>
 										</div>
 									</div>
-									<p className="text-sm noto-sans-jp-light text-accent mb-2">
+									<p className="text-sm noto-sans-jp-light  mb-2">
 										{selectedExpression.description}
 									</p>
-									<div className="flex items-center gap-4 text-xs text-accent noto-sans-jp-light">
+									<div className="flex items-center gap-4 text-xs  noto-sans-jp-light">
 										<span>
 											難易度: {DIFFICULTY_NAMES[selectedExpression.difficulty]}
 										</span>
@@ -1239,7 +1229,7 @@ ${generatedCode}`;
 
 								{/* Documentation Panel */}
 								{showDocumentation && selectedExpression.documentation && (
-									<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 mb-4">
+									<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 mb-4">
 										<h4 className="text-sm noto-sans-jp-regular font-medium mb-2 flex items-center gap-2">
 											<BookOpen className="w-4 h-4" />
 											詳細ドキュメント
@@ -1273,12 +1263,10 @@ ${generatedCode}`;
 											<label className="text-sm noto-sans-jp-regular flex items-center gap-2">
 												{param.name}
 												{param.unit && (
-													<span className="text-xs text-accent">
-														({param.unit})
-													</span>
+													<span className="text-xs ">({param.unit})</span>
 												)}
 											</label>
-											<p className="text-xs text-accent noto-sans-jp-light">
+											<p className="text-xs  noto-sans-jp-light">
 												{param.description}
 											</p>
 
@@ -1315,7 +1303,7 @@ ${generatedCode}`;
 																parseFloat(e.target.value),
 															)
 														}
-														className="w-full px-3 py-2 rounded-lg /10   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+														className="w-full px-3 py-2"
 														aria-label={`${param.name}（数値）`}
 													/>
 												</div>
@@ -1329,7 +1317,7 @@ ${generatedCode}`;
 													onChange={(e) =>
 														updateParameter(param.name, e.target.value)
 													}
-													className="w-full px-3 py-2 rounded-lg /10   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+													className="w-full px-3 py-2"
 													aria-label={`${param.name}を選択`}
 												>
 													{param.options?.map((option) => (
@@ -1368,7 +1356,7 @@ ${generatedCode}`;
 													onChange={(e) =>
 														updateParameter(param.name, e.target.value)
 													}
-													className="w-full px-3 py-2 rounded-lg /10   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+													className="w-full px-3 py-2"
 													aria-label={`${param.name}を入力`}
 												/>
 											)}
@@ -1377,8 +1365,8 @@ ${generatedCode}`;
 								</div>
 							</div>
 						) : (
-							<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-8 text-center">
-								<p className="text-accent noto-sans-jp-light">
+							<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-8 text-center">
+								<p className=" noto-sans-jp-light">
 									左側からエクスプレッションを選択してください
 								</p>
 							</div>
@@ -1395,7 +1383,7 @@ ${generatedCode}`;
 								<button
 									type="button"
 									onClick={() => setIsPreviewPlaying(!isPreviewPlaying)}
-									className="px-3 py-2 rounded-lg /10 hover:/20   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-light"
+									className="px-3 py-2 flex items-center gap-2 noto-sans-jp-light"
 								>
 									{isPreviewPlaying ? (
 										<Pause className="w-4 h-4" />
@@ -1410,7 +1398,7 @@ ${generatedCode}`;
 										setPreviewTime(0);
 										setIsPreviewPlaying(false);
 									}}
-									className="px-3 py-2 rounded-lg /10 hover:/20   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-light"
+									className="px-3 py-2 flex items-center gap-2 noto-sans-jp-light"
 								>
 									<RotateCcw className="w-4 h-4" />
 									リセット
@@ -1419,7 +1407,7 @@ ${generatedCode}`;
 									type="button"
 									onClick={saveExpression}
 									disabled={!selectedExpression || !generatedCode}
-									className="px-3 py-2 rounded-lg /10 hover:/20  disabled:cursor-not-allowed   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-light"
+									className="px-3 py-2 flex items-center gap-2 noto-sans-jp-light"
 								>
 									<Save className="w-4 h-4" />
 									保存
@@ -1428,7 +1416,7 @@ ${generatedCode}`;
 									type="button"
 									onClick={exportExpression}
 									disabled={!generatedCode}
-									className="px-3 py-2 rounded-lg /10 hover:/20  disabled:cursor-not-allowed   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-light"
+									className="px-3 py-2 flex items-center gap-2 noto-sans-jp-light"
 								>
 									<Download className="w-4 h-4" />
 									エクスポート
@@ -1437,11 +1425,7 @@ ${generatedCode}`;
 									type="button"
 									onClick={copyToClipboard}
 									disabled={!generatedCode}
-									className={`px-4 py-2 rounded-lg /10 hover:/20  disabled:cursor-not-allowed   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-regular ${
-										copySuccess
-											? "  "
-											: " "
-									}`}
+									className={`px-4 py-2 flex items-center gap-2 noto-sans-jp-regular ${copySuccess ? " " : " "}`}
 								>
 									{copySuccess ? (
 										<CheckCircle className="w-4 h-4" />
@@ -1502,7 +1486,7 @@ ${generatedCode}`;
 							</div>
 						)}
 
-						<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 min-h-32">
+						<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 min-h-32">
 							<pre className="whitespace-pre-wrap text-sm noto-sans-jp-light leading-relaxed font-mono">
 								{generatedCode || "エクスプレッションを選択してください..."}
 							</pre>
@@ -1510,7 +1494,7 @@ ${generatedCode}`;
 
 						{/* Preview Time Display */}
 						{selectedExpression && (
-							<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+							<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 								<div className="flex items-center justify-between mb-2">
 									<span className="text-sm noto-sans-jp-regular">
 										プレビュー時間
@@ -1519,7 +1503,7 @@ ${generatedCode}`;
 										{previewTime.toFixed(1)}s
 									</span>
 								</div>
-								<div className="text-xs text-accent noto-sans-jp-light">
+								<div className="text-xs  noto-sans-jp-light">
 									実際のAfter
 									Effectsでは、このエクスプレッションが時間に応じて値を変化させます.
 								</div>
@@ -1528,9 +1512,9 @@ ${generatedCode}`;
 
 						{/* Example Display */}
 						{selectedExpression && (
-							<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+							<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 								<h3 className="text-sm noto-sans-jp-regular mb-2">使用例</h3>
-								<pre className="text-xs text-accent noto-sans-jp-light font-mono">
+								<pre className="text-xs  noto-sans-jp-light font-mono">
 									{selectedExpression.example}
 								</pre>
 							</div>

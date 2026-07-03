@@ -44,7 +44,7 @@ export default function StatisticsDisplay({
 			settings.targetLength > 0 &&
 			stats.totalCharacters >= settings.targetLength
 		)
-			return "bg-accent";
+			return "";
 		if (settings.minLength > 0 && stats.totalCharacters >= settings.minLength)
 			return "";
 		return "";
@@ -54,7 +54,7 @@ export default function StatisticsDisplay({
 		<div className="space-y-6">
 			<h2 className="text-xl font-semibold ">統計情報</h2>
 
-			<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 space-y-6">
+			<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 space-y-6">
 				<div className="flex flex-wrap items-center gap-4 text-sm">
 					<div className="flex items-center gap-2">
 						<label htmlFor="min-length" className="/80">
@@ -64,7 +64,7 @@ export default function StatisticsDisplay({
 							id="min-length"
 							type="number"
 							min="0"
-							className="w-20 /10 rounded px-2 py-1 text-center font-mono   focus:ring-accent"
+							className="w-20 px-2 py-1 text-center font-mono"
 							value={settings.minLength || 0}
 							onChange={(e) =>
 								updateSetting("minLength", parseInt(e.target.value) || 0)
@@ -80,7 +80,7 @@ export default function StatisticsDisplay({
 							id="target-length"
 							type="number"
 							min="0"
-							className="w-20 /10 rounded px-2 py-1 text-center font-mono   focus:ring-accent"
+							className="w-20 px-2 py-1 text-center font-mono"
 							value={settings.targetLength || 0}
 							onChange={(e) =>
 								updateSetting("targetLength", parseInt(e.target.value) || 0)
@@ -96,7 +96,7 @@ export default function StatisticsDisplay({
 							id="max-length"
 							type="number"
 							min="0"
-							className="w-20 /10 rounded px-2 py-1 text-center font-mono   focus:ring-accent"
+							className="w-20 px-2 py-1 text-center font-mono"
 							value={settings.maxLength || 0}
 							onChange={(e) =>
 								updateSetting("maxLength", parseInt(e.target.value) || 0)
@@ -111,7 +111,7 @@ export default function StatisticsDisplay({
 						<span>0</span>
 						<span>{scaleMax.toLocaleString()} 文字</span>
 					</div>
-					<div className="relative w-full h-4 /10 rounded-full overflow-hidden">
+					<div className="relative w-full h-4 rounded-full overflow-hidden">
 						{/* Progress Bar */}
 						<div
 							className={`h-full transition-all duration-300 ease-out ${getStatusColor()}`}
@@ -121,7 +121,7 @@ export default function StatisticsDisplay({
 						{/* Min Marker */}
 						{settings.minLength > 0 && settings.minLength <= scaleMax && (
 							<div
-								className="absolute top-0 bottom-0 w-0.5 /30 z-10"
+								className="absolute top-0 bottom-0 w-0.5 z-10"
 								style={{ left: `${(settings.minLength / scaleMax) * 100}%` }}
 								title={`下限: ${settings.minLength}`}
 							></div>
@@ -129,7 +129,7 @@ export default function StatisticsDisplay({
 						{/* Target Marker */}
 						{settings.targetLength > 0 && settings.targetLength <= scaleMax && (
 							<div
-								className="absolute top-0 bottom-0 w-1 /50 z-10"
+								className="absolute top-0 bottom-0 w-1 z-10"
 								style={{ left: `${(settings.targetLength / scaleMax) * 100}%` }}
 								title={`目標: ${settings.targetLength}`}
 							></div>
@@ -150,7 +150,7 @@ export default function StatisticsDisplay({
 			</div>
 
 			{displaySettings.showBasicStats && (
-				<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
+				<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
 					<h3 className="font-medium ">基本統計</h3>
 					<div className="grid grid-cols-2 gap-4">
 						<StatItem label="総文字数" value={stats.totalCharacters} />
@@ -179,7 +179,7 @@ export default function StatisticsDisplay({
 			)}
 
 			{displaySettings.showStructureStats && (
-				<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
+				<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
 					<h3 className="font-medium ">構造統計</h3>
 					<div className="grid grid-cols-2 gap-4">
 						<StatItem label="単語数" value={stats.wordCount} />
@@ -191,7 +191,7 @@ export default function StatisticsDisplay({
 			)}
 
 			{displaySettings.showCharacterTypes && (
-				<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
+				<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
 					<h3 className="font-medium ">文字種別</h3>
 					<div className="grid grid-cols-2 gap-4">
 						<StatItem label="ひらがな" value={stats.characterTypes.hiragana} />
@@ -216,7 +216,7 @@ export default function StatisticsDisplay({
 			)}
 
 			{displaySettings.showDetailedStats && (
-				<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
+				<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
 					<h3 className="font-medium ">詳細統計</h3>
 					<div className="space-y-2">
 						<StatItem

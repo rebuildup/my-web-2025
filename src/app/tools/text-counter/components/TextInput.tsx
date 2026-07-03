@@ -30,10 +30,7 @@ export default function TextInput({
 
 	return (
 		<div className="space-y-2">
-			<label
-				htmlFor="text-input"
-				className="block text-sm font-medium "
-			>
+			<label htmlFor="text-input" className="block text-sm font-medium ">
 				テキスト入力
 			</label>
 			<textarea
@@ -41,13 +38,7 @@ export default function TextInput({
 				value={value}
 				onChange={handleChange}
 				placeholder={placeholder}
-				className={`
- w-full h-96 p-4 rounded-xl
- /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)]
-   focus:ring-accent focus:border-accent
- resize-none
- ${fontSizeClasses[fontSize]}
- `}
+				className={`w-full h-96 p-4 resize-none ${fontSizeClasses[fontSize]}`}
 				aria-label="テキスト入力エリア"
 				aria-describedby="text-input-help"
 			/>

@@ -169,18 +169,13 @@ export const AccessiblePlaygroundNav: React.FC<
 	const getLinkClasses = (item: NavItem, index: number) => {
 		const baseClasses = `
  block px-4 py-3 text-sm transition-colors duration-200
-   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
- ${responsive.touch.isTouchDevice ? "active:bg-accent active:" : "hover:bg-accent hover:"}
+    focus:ring-offset-2 focus:ring-offset-base
+ ${responsive.touch.isTouchDevice ? " active:" : " hover:"}
  `;
 
-		const stateClasses = item.isActive
-			? "bg-accent font-medium"
-			: "";
+		const stateClasses = item.isActive ? " font-medium" : "";
 
-		const focusClasses =
-			focusedIndex === index
-				? "bg-accent bg-opacity-20  ring-accent"
-				: "";
+		const focusClasses = focusedIndex === index ? " bg-opacity-20  " : "";
 
 		return `${baseClasses} ${stateClasses} ${focusClasses}`;
 	};
@@ -190,11 +185,7 @@ export const AccessiblePlaygroundNav: React.FC<
 		<button
 			type="button"
 			onClick={toggleMenu}
-			className={`
- md:hidden flex items-center px-3 py-2  
- hover:border-accent hover:text-accent transition-colors
-   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
- `}
+			className={`md:hidden flex items-center px-3 py-2`}
 			aria-expanded={isMenuOpen}
 			aria-controls="playground-navigation-menu"
 			aria-label={
@@ -217,7 +208,7 @@ export const AccessiblePlaygroundNav: React.FC<
 			{/* Skip link */}
 			<a
 				href="#main-content"
-				className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 z-50 bg-accent px-4 py-2 text-sm font-medium"
+				className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 z-50  px-4 py-2 text-sm font-medium"
 			>
 				メインコンテンツにスキップ
 			</a>
@@ -243,12 +234,12 @@ export const AccessiblePlaygroundNav: React.FC<
 					id="playground-navigation-menu"
 					className={`
  ${
-							responsive.isMobile
-								? `absolute top-full left-0 right-0 z-40   ${
-										isMenuOpen ? "block" : "hidden"
-									}`
-								: "block"
-						}
+		responsive.isMobile
+			? `absolute top-full left-0 right-0 z-40   ${
+					isMenuOpen ? "block" : "hidden"
+				}`
+			: "block"
+}
  `}
 					role="menu"
 					aria-orientation="vertical"
@@ -286,10 +277,7 @@ export const AccessiblePlaygroundNav: React.FC<
 									)}
 								</div>
 								{item.description && (
-									<div
-										id={`nav-desc-${index}`}
-										className="text-xs  mt-1"
-									>
+									<div id={`nav-desc-${index}`} className="text-xs  mt-1">
 										{item.description}
 									</div>
 								)}
@@ -314,27 +302,17 @@ export const AccessiblePlaygroundNav: React.FC<
 					<h3 className="font-medium mb-2">キーボードナビゲーション</h3>
 					<ul className="space-y-1 ">
 						<li>
-							<kbd className="px-1 py-0.5 rounded text-xs">
-								↑↓
-							</kbd>{" "}
-							項目移動
+							<kbd className="px-1 py-0.5 rounded text-xs">↑↓</kbd> 項目移動
 						</li>
 						<li>
-							<kbd className="px-1 py-0.5 rounded text-xs">
-								Enter
-							</kbd>{" "}
-							選択
+							<kbd className="px-1 py-0.5 rounded text-xs">Enter</kbd> 選択
 						</li>
 						<li>
-							<kbd className="px-1 py-0.5 rounded text-xs">
-								Esc
-							</kbd>{" "}
+							<kbd className="px-1 py-0.5 rounded text-xs">Esc</kbd>{" "}
 							メニューを閉じる
 						</li>
 						<li>
-							<kbd className="px-1 py-0.5 rounded text-xs">
-								Home/End
-							</kbd>{" "}
+							<kbd className="px-1 py-0.5 rounded text-xs">Home/End</kbd>{" "}
 							最初/最後の項目
 						</li>
 					</ul>

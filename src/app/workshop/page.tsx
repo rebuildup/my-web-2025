@@ -423,15 +423,11 @@ export default async function WorkshopPage({
 								{/* Stats */}
 								<div className="grid grid-cols-3 gap-4">
 									<div>
-										<div className="text-2xl font-bold ">
-											{totalArticles}
-										</div>
+										<div className="text-2xl font-bold ">{totalArticles}</div>
 										<div className="text-sm ">記事</div>
 									</div>
 									<div>
-										<div className="text-2xl font-bold ">
-											{totalTags}
-										</div>
+										<div className="text-2xl font-bold ">{totalTags}</div>
 										<div className="text-sm ">タグ</div>
 									</div>
 									<div>
@@ -499,9 +495,7 @@ export default async function WorkshopPage({
 									className="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium     rounded    transition-all snap-start"
 								>
 									<span>#{tagInfo.tag} </span>
-									<span className="text-xs ">
-										{tagInfo.count}
-									</span>
+									<span className="text-xs ">{tagInfo.count}</span>
 								</Link>
 							))}
 						</div>
@@ -526,9 +520,7 @@ export default async function WorkshopPage({
 											<Link
 												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=newest`}
 												className={`px-3 py-1.5 text-sm rounded-l ${
-													sort === "newest"
-														? " "
-														: " "
+													sort === "newest" ? " " : " "
 												}`}
 											>
 												新着
@@ -536,9 +528,7 @@ export default async function WorkshopPage({
 											<Link
 												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=popular`}
 												className={`px-3 py-1.5 text-sm ${
-													sort === "popular"
-														? " "
-														: " "
+													sort === "popular" ? " " : " "
 												}`}
 											>
 												人気
@@ -546,9 +536,7 @@ export default async function WorkshopPage({
 											<Link
 												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=alphabetical`}
 												className={`px-3 py-1.5 text-sm rounded-r ${
-													sort === "alphabetical"
-														? " "
-														: " "
+													sort === "alphabetical" ? " " : " "
 												}`}
 											>
 												名前順
@@ -567,9 +555,7 @@ export default async function WorkshopPage({
 
 							<aside className="w-80 space-y-5 hidden lg:block">
 								<div className="p-4    rounded">
-									<h2 className=" font-semibold  mb-4">
-										Trending Tags
-									</h2>
+									<h2 className=" font-semibold  mb-4">Trending Tags</h2>
 									<div className="space-y-3">
 										{allTags.slice(0, 10).map((item, index) => {
 											const tagArticles = articlesByTag.get(item.tag);
@@ -585,17 +571,13 @@ export default async function WorkshopPage({
 														<div className="flex items-center gap-2">
 															<span
 																className={`text-sm font-semibold ${
-																	index === 0
-																		? ""
-																		: ""
+																	index === 0 ? "" : ""
 																}`}
 															>
 																#{item.tag}
 															</span>
 														</div>
-														<span className="text-xs ">
-															{item.count}記事
-														</span>
+														<span className="text-xs ">{item.count}記事</span>
 													</div>
 													{/* Thumbnail */}
 													<div className="relative w-12 h-12 shrink-0  rounded overflow-hidden">
@@ -632,9 +614,7 @@ export default async function WorkshopPage({
 								</div>
 
 								<div className="p-4    rounded">
-									<h2 className=" font-semibold  mb-4">
-										Popular Articles
-									</h2>
+									<h2 className=" font-semibold  mb-4">Popular Articles</h2>
 									<div className="space-y-3">
 										{popularArticles.map((item, index) => (
 											<Link
@@ -702,9 +682,7 @@ export default async function WorkshopPage({
 											>
 												#{tagInfo.tag}
 											</Link>
-											<span className="text-sm ">
-												{tagArticles.length}記事
-											</span>
+											<span className="text-sm ">{tagArticles.length}記事</span>
 										</div>
 										<div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide-scroll">
 											{tagArticles.map((article) => (

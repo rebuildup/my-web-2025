@@ -99,7 +99,6 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
 						type="button"
 						onClick={handleReject}
 						style={{
-							all: "revert",
 							padding: "8px 16px",
 							fontSize: "0.875rem",
 							cursor: "pointer",
@@ -111,7 +110,6 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
 						type="button"
 						onClick={handleAccept}
 						style={{
-							all: "revert",
 							padding: "8px 16px",
 							fontSize: "0.875rem",
 							cursor: "pointer",
@@ -228,7 +226,6 @@ export function CookieSettings() {
 							type="checkbox"
 							checked={analyticsEnabled}
 							onChange={(e) => setAnalyticsEnabled(e.target.checked)}
-							style={{ all: "revert" }}
 						/>
 					</div>
 					<p style={{ fontSize: "0.875rem", color: "#555", margin: 0 }}>
@@ -248,7 +245,6 @@ export function CookieSettings() {
 					type="button"
 					onClick={handleSave}
 					style={{
-						all: "revert",
 						padding: "8px 16px",
 						fontSize: "0.875rem",
 						cursor: "pointer",

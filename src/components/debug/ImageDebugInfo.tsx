@@ -46,11 +46,7 @@ export function ImageDebugInfo({ src, alt }: ImageDebugInfoProps) {
 				Status:{" "}
 				<span
 					className={`font-bold ${
-						imageStatus === "loaded"
-							? ""
-							: imageStatus === "error"
-								? ""
-								: ""
+						imageStatus === "loaded" ? "" : imageStatus === "error" ? "" : ""
 					}`}
 				>
 					{imageStatus}

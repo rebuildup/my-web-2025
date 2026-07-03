@@ -11,7 +11,7 @@ export function CSSAnimationExperiment({}: ExperimentProps) {
 	return (
 		<div className="aspect-video  flex items-center justify-center">
 			<div className="text-center space-y-2">
-				<div className="text-lg text-accent">CSS Animation Experiment</div>
+				<div className="text-lg ">CSS Animation Experiment</div>
 				<p className="text-sm ">Coming soon...</p>
 			</div>
 		</div>

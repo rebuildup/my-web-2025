@@ -3,14 +3,13 @@ import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-	"inline-flex items-center rounded-full  px-2.5 py-0.5 text-xs font-semibold transition-colors   focus:ring-accent focus:ring-offset-2",
+	"inline-flex items-center rounded-full  px-2.5 py-0.5 text-xs font-semibold transition-colors    focus:ring-offset-2",
 	{
 		variants: {
 			variant: {
 				default: " hover:/80",
 				secondary: "/20 hover:/90",
-				destructive:
-					"   ",
+				destructive: "   ",
 				outline: "/40 ",
 			},
 		},

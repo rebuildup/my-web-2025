@@ -204,13 +204,13 @@ export function DevelopGalleryClient({
 						<p className="noto-sans-jp-light text-sm ">
 							開発プロジェクトデータを読み込めませんでした.
 						</p>
-						<p className="noto-sans-jp-light text-xs /60 mt-2">
+						<p className="noto-sans-jp-light text-xs mt-2">
 							初期アイテム数: {initialItems.length}
 						</p>
 						<button
 							type="button"
 							onClick={() => window.location.reload()}
-							className="mt-4 text-accent hover: transition-colors"
+							className="mt-4"
 						>
 							ページを再読み込み
 						</button>
@@ -229,7 +229,7 @@ export function DevelopGalleryClient({
 										className={`lg:w-1/2 ${index % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}
 									>
 										<Link href={`/portfolio/${project.id}`}>
-											<GlowCard className="group cursor-pointer text-left block /30 backdrop-blur overflow-hidden">
+											<GlowCard className="group cursor-pointer text-left block backdrop-blur overflow-hidden">
 												<div className="aspect-video overflow-hidden relative">
 													{project.thumbnail &&
 													project.thumbnail !==
@@ -249,7 +249,7 @@ export function DevelopGalleryClient({
 													) : (
 														<div className="w-full h-full flex items-center justify-center ">
 															<div className="text-center">
-																<Code className="w-12 h-12 text-accent mx-auto mb-2" />
+																<Code className="w-12 h-12  mx-auto mb-2" />
 																<span className="noto-sans-jp-light text-sm ">
 																	{project.title}
 																</span>
@@ -268,16 +268,16 @@ export function DevelopGalleryClient({
 										{/* Title row with dev icon and date */}
 										<div className="flex items-center justify-between">
 											<div className="flex items-center gap-2">
-												<Code className="w-5 h-5 text-accent" />
+												<Code className="w-5 h-5 " />
 												<Link href={`/portfolio/${project.id}`}>
-													<h3 className="zen-kaku-gothic-new text-2xl hover:text-accent transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
+													<h3 className="zen-kaku-gothic-new text-2xl  transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
 														{project.title}
 													</h3>
 												</Link>
 											</div>
 											<div className="flex items-center">
-												<Calendar className="w-4 h-4 /70 mr-2" />
-												<span className="noto-sans-jp-light text-sm /70 whitespace-nowrap">
+												<Calendar className="w-4 h-4 mr-2" />
+												<span className="noto-sans-jp-light text-sm whitespace-nowrap">
 													{project.date}
 												</span>
 											</div>
@@ -304,7 +304,7 @@ export function DevelopGalleryClient({
 												{project.technologies.map((tech: string) => (
 													<span
 														key={tech}
-														className="noto-sans-jp-light text-xs /90 px-3 py-1 /10"
+														className="noto-sans-jp-light text-xs px-3 py-1"
 													>
 														{tech}
 													</span>
@@ -319,7 +319,7 @@ export function DevelopGalleryClient({
 													href={project.githubUrl}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center px-3 py-1.5 /30 hover:/50 transition-colors  /20"
+													className="flex items-center px-3 py-1.5 hover:/50 transition-colors"
 												>
 													<GitBranch className="w-5 h-5 mr-2" />
 													<span className="noto-sans-jp-light text-sm">
@@ -332,7 +332,7 @@ export function DevelopGalleryClient({
 													href={project.liveUrl}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center px-3 py-1.5 /30 hover:/50 transition-colors  /20"
+													className="flex items-center px-3 py-1.5 hover:/50 transition-colors"
 												>
 													<ExternalLink className="w-5 h-5 mr-2" />
 													<span className="noto-sans-jp-light text-sm">
@@ -360,7 +360,7 @@ export function DevelopGalleryClient({
 						<p className="noto-sans-jp-light text-sm ">
 							フィルター条件に一致する開発プロジェクトが見つかりませんでした.
 						</p>
-						<p className="noto-sans-jp-light text-xs /60 mt-2">
+						<p className="noto-sans-jp-light text-xs mt-2">
 							開発プロジェクト数: {filteredAndSortedItems.length}
 						</p>
 					</div>

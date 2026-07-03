@@ -388,9 +388,7 @@ export function BasicGeometryExperiment({
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 				{/* Geometry Type */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm ">
-						Geometry Type
-					</label>
+					<label className="noto-sans-jp-light text-sm ">Geometry Type</label>
 					<select
 						value={controls.geometryType}
 						onChange={(e) =>
@@ -400,7 +398,7 @@ export function BasicGeometryExperiment({
 									.value as GeometryControls["geometryType"],
 							}))
 						}
-						className="w-full  p-2 text-sm"
+						className="w-full p-2 text-sm"
 					>
 						<option value="box">Box</option>
 						<option value="sphere">Sphere</option>
@@ -411,9 +409,7 @@ export function BasicGeometryExperiment({
 
 				{/* Material Type */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm ">
-						Material Type
-					</label>
+					<label className="noto-sans-jp-light text-sm ">Material Type</label>
 					<select
 						value={controls.materialType}
 						onChange={(e) =>
@@ -423,7 +419,7 @@ export function BasicGeometryExperiment({
 									.value as GeometryControls["materialType"],
 							}))
 						}
-						className="w-full  p-2 text-sm"
+						className="w-full p-2 text-sm"
 					>
 						<option value="basic">Basic</option>
 						<option value="lambert">Lambert</option>
@@ -489,10 +485,7 @@ export function BasicGeometryExperiment({
 					}
 					className="w-4 h-4"
 				/>
-				<label
-					htmlFor="wireframe"
-					className="noto-sans-jp-light text-sm "
-				>
+				<label htmlFor="wireframe" className="noto-sans-jp-light text-sm ">
 					Wireframe Mode
 				</label>
 			</div>

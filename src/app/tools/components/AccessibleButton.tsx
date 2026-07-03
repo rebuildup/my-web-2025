@@ -74,9 +74,9 @@ const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(
 		// Variant styles
 		const variantStyles = {
 			primary: `
- bg-accent  border-accent
- hover: hover:text-accent
- focus:ring-accent focus:border-accent
+   
+ hover: 
+  
  `,
 			secondary: `
   

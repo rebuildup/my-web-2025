@@ -90,7 +90,6 @@ export default function TextCounterTool() {
 						onChange={handleTextChange}
 						placeholder="Enter text here..."
 						style={{
-							all: "revert",
 							width: "100%",
 							height: "400px",
 							padding: "10px",
@@ -108,7 +107,6 @@ export default function TextCounterTool() {
 						<button
 							onClick={handleClear}
 							style={{
-								all: "revert",
 								padding: "4px 12px",
 								fontSize: "13px",
 								width: "100%",
@@ -120,7 +118,6 @@ export default function TextCounterTool() {
 						<button
 							onClick={handleCopyText}
 							style={{
-								all: "revert",
 								padding: "4px 12px",
 								fontSize: "13px",
 								width: "100%",
@@ -156,7 +153,6 @@ export default function TextCounterTool() {
 									onChange={(e) =>
 										handleSettingChange("includeSpaces", e.target.checked)
 									}
-									style={{ all: "revert" }}
 								/>
 								Include Spaces
 							</label>
@@ -174,7 +170,6 @@ export default function TextCounterTool() {
 									onChange={(e) =>
 										handleSettingChange("includeNewlines", e.target.checked)
 									}
-									style={{ all: "revert" }}
 								/>
 								Include Newlines
 							</label>
@@ -192,7 +187,6 @@ export default function TextCounterTool() {
 									onChange={(e) =>
 										handleSettingChange("checkHalfKana", e.target.checked)
 									}
-									style={{ all: "revert" }}
 								/>
 								Check Half-width Kana
 							</label>
@@ -210,7 +204,6 @@ export default function TextCounterTool() {
 									onChange={(e) =>
 										handleSettingChange("excludeHtml", e.target.checked)
 									}
-									style={{ all: "revert" }}
 								/>
 								Exclude HTML
 							</label>
@@ -228,7 +221,6 @@ export default function TextCounterTool() {
 									onChange={(e) =>
 										handleSettingChange("excludeUrls", e.target.checked)
 									}
-									style={{ all: "revert" }}
 								/>
 								Exclude URLs
 							</label>
@@ -251,7 +243,7 @@ export default function TextCounterTool() {
 								onChange={(e) =>
 									handleSettingChange("specificString", e.target.value)
 								}
-								style={{ all: "revert", padding: "2px 4px" }}
+								style={{ padding: "2px 4px" }}
 								placeholder="Count occurrences..."
 							/>
 						</div>
@@ -273,7 +265,7 @@ export default function TextCounterTool() {
 								onChange={(e) =>
 									handleSettingChange("targetLength", Number(e.target.value))
 								}
-								style={{ all: "revert", padding: "2px 4px" }}
+								style={{ padding: "2px 4px" }}
 							/>
 						</div>
 						<div
@@ -294,7 +286,7 @@ export default function TextCounterTool() {
 								onChange={(e) =>
 									handleSettingChange("maxLength", Number(e.target.value))
 								}
-								style={{ all: "revert", padding: "2px 4px" }}
+								style={{ padding: "2px 4px" }}
 							/>
 						</div>
 					</fieldset>
@@ -332,7 +324,7 @@ export default function TextCounterTool() {
 								<progress
 									value={stats.totalCharacters}
 									max={settings.targetLength}
-									style={{ all: "revert", width: "100%", height: "15px" }}
+									style={{ width: "100%", height: "15px" }}
 								/>
 							</div>
 
@@ -353,7 +345,7 @@ export default function TextCounterTool() {
 								<progress
 									value={stats.totalCharacters}
 									max={settings.maxLength}
-									style={{ all: "revert", width: "100%", height: "15px" }}
+									style={{ width: "100%", height: "15px" }}
 								/>
 							</div>
 						</div>

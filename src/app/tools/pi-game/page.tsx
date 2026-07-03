@@ -54,7 +54,7 @@ export default function PiGamePage() {
 							<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl">
 								Pi Memory Game
 							</h1>
-							<p className="noto-sans-jp-light text-sm /70 leading-relaxed max-w-2xl">
+							<p className="noto-sans-jp-light text-sm leading-relaxed max-w-2xl">
 								円周率の桁を記憶して入力するゲームです.
 								<br />
 								テンキーインターフェースで楽しく学習できます.

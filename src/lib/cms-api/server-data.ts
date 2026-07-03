@@ -1,6 +1,10 @@
 import "server-only";
 
-import { getAllFromIndex, getFromIndex } from "@/cms/lib/content-db-manager";
+import {
+	getAllFromIndex,
+	getAllMarkdownPagesFromLocal,
+	getFromIndex,
+} from "@/cms/lib/content-db-manager";
 import type { MarkdownPage } from "@/cms/types/markdown";
 import { shouldUseRustCmsApi } from "./config";
 import { cmsApiFetch } from "./server-client";
@@ -186,15 +190,41 @@ export async function fetchMarkdownPages(options?: {
 	if (options?.contentId) {
 		params.set("contentId", options.contentId);
 	}
-	return await cmsApiFetch<MarkdownPage[]>(
-		`/markdown${params.size > 0 ? `?${params.toString()}` : ""}`,
-	);
+	if (!shouldUseRustCmsApi()) {
+		return getAllMarkdownPagesFromLocal(
+			options?.contentId ? { contentId: options.contentId } : undefined,
+		);
+	}
+	try {
+		return await cmsApiFetch<MarkdownPage[]>(
+			`/markdown${params.size > 0 ? `?${params.toString()}` : ""}`,
+		);
+	} catch (error) {
+		console.error(
+			"[CMS] fetchMarkdownPages Rust CMS unreachable; falling back to local SQLite",
+			error,
+		);
+		return getAllMarkdownPagesFromLocal(
+			options?.contentId ? { contentId: options.contentId } : undefined,
+		);
+	}
 }
 
 export async function fetchMarkdownPageBySlug(
 	slug: string,
 	options?: { contentId?: string },
 ): Promise<MarkdownPage | null> {
+	const localFallback = () => {
+		const pages = getAllMarkdownPagesFromLocal(
+			options?.contentId ? { contentId: options.contentId } : undefined,
+		);
+		return pages.find((p) => p.slug === slug) ?? null;
+	};
+
+	if (!shouldUseRustCmsApi()) {
+		return localFallback();
+	}
+
 	const params = new URLSearchParams({ slug });
 	if (options?.contentId) {
 		params.set("contentId", options.contentId);
@@ -202,7 +232,11 @@ export async function fetchMarkdownPageBySlug(
 
 	try {
 		return await cmsApiFetch<MarkdownPage>(`/markdown?${params.toString()}`);
-	} catch {
-		return null;
+	} catch (error) {
+		console.error(
+			"[CMS] fetchMarkdownPageBySlug Rust CMS unreachable; falling back to local SQLite",
+			error,
+		);
+		return localFallback();
 	}
 }

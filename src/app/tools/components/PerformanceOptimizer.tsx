@@ -59,7 +59,7 @@ export default function PerformanceOptimizer({
 		<div className="relative">
 			{/* Performance Status Bar */}
 			{showPerformanceInfo && (
-				<div className="mb-4 rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
+				<div className="mb-4 rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
 					<div className="flex items-center justify-between mb-2">
 						<h3 className="neue-haas-grotesk-display text-sm ">
 							Performance Status
@@ -67,7 +67,7 @@ export default function PerformanceOptimizer({
 						<button
 							type="button"
 							onClick={() => setShowDetails(!showDetails)}
-							className="text-xs text-accent hover:   focus:ring-accent"
+							className="text-xs"
 							aria-label="Toggle performance details"
 						>
 							{showDetails ? "Hide" : "Show"} Details
@@ -87,10 +87,7 @@ export default function PerformanceOptimizer({
 
 						{/* Processing Status */}
 						<div className="flex items-center space-x-2">
-							<Activity
-								size={14}
-								className={isProcessing ? "" : ""}
-							/>
+							<Activity size={14} className={isProcessing ? "" : ""} />
 							<span>
 								{isProcessing ? `${processingProgress.toFixed(0)}%` : "Ready"}
 							</span>
@@ -115,7 +112,7 @@ export default function PerformanceOptimizer({
 
 					{/* Detailed Information */}
 					{showDetails && (
-						<div className="mt-4 pt-4  /20 space-y-3">
+						<div className="mt-4 pt-4 space-y-3">
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
 								<div>
 									<h4 className="font-medium mb-2">Storage Information</h4>
@@ -124,9 +121,9 @@ export default function PerformanceOptimizer({
 										<div>
 											Available: {(storageUsage.available / 1024).toFixed(1)} KB
 										</div>
-										<div className="w-full rounded-full /10 h-2">
+										<div className="w-full rounded-full h-2">
 											<div
-												className="h-full bg-accent transition-all duration-300"
+												className="h-full  transition-all duration-300"
 												style={{
 													width: `${Math.min(100, storageUsage.percentage)}%`,
 												}}
@@ -174,14 +171,14 @@ export default function PerformanceOptimizer({
 								<button
 									type="button"
 									onClick={clearData}
-									className="text-xs rounded-lg /10 px-3 py-1 hover:/20 transition-colors   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="text-xs px-3 py-1"
 								>
 									Clear Tool Data
 								</button>
 								<button
 									type="button"
 									onClick={() => window.location.reload()}
-									className="text-xs rounded-lg /10 px-3 py-1 hover:/20 transition-colors   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="text-xs px-3 py-1"
 								>
 									Refresh Tool
 								</button>
@@ -193,16 +190,14 @@ export default function PerformanceOptimizer({
 
 			{/* Processing Progress Bar */}
 			{isProcessing && (
-				<div className="mb-4 rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
+				<div className="mb-4 rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
 					<div className="flex items-center justify-between mb-2">
 						<span className="text-sm ">Processing...</span>
-						<span className="text-sm text-accent">
-							{processingProgress.toFixed(0)}%
-						</span>
+						<span className="text-sm ">{processingProgress.toFixed(0)}%</span>
 					</div>
-					<div className="w-full rounded-full /10 h-2">
+					<div className="w-full rounded-full h-2">
 						<div
-							className="h-full bg-accent transition-all duration-300"
+							className="h-full  transition-all duration-300"
 							style={{ width: `${processingProgress}%` }}
 						/>
 					</div>
@@ -212,17 +207,10 @@ export default function PerformanceOptimizer({
 			{/* Error Display */}
 			{error && (
 				<div className="mb-4    p-3 flex items-start space-x-2">
-					<AlertCircle
-						size={16}
-						className=" mt-0.5 flex-shrink-0"
-					/>
+					<AlertCircle size={16} className=" mt-0.5 flex-shrink-0" />
 					<div className="flex-1">
 						<p className="text-sm ">{error}</p>
-						<button
-							type="button"
-							onClick={clearError}
-							className="text-xs   mt-1  focus:underline"
-						>
+						<button type="button" onClick={clearError} className="text-xs mt-1">
 							Dismiss
 						</button>
 					</div>
@@ -248,7 +236,7 @@ export default function PerformanceOptimizer({
 
 			{/* Performance Optimization Tips */}
 			{showPerformanceInfo && enableOptimizations && (
-				<div className="mt-6 rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+				<div className="mt-6 rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 					<h3 className="neue-haas-grotesk-display text-sm mb-3">
 						Performance Tips
 					</h3>

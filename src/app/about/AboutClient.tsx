@@ -102,7 +102,7 @@ function CodeBlock({
 			</div>
 
 			{/* Glow Effect */}
-			<div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-accent/5    transition-opacity duration-500" />
+			<div className="absolute inset-0 pointer-events-none bg-gradient-to-tr     transition-opacity duration-500" />
 		</div>
 	);
 }
@@ -116,16 +116,16 @@ function SystemMetricsList({
 	lang: "ja" | "en";
 }) {
 	return (
-		<div className="hidden md:flex items-center gap-6 text-[10px] font-mono tracking-widest /40 uppercase">
+		<div className="hidden md:flex items-center gap-6 text-[10px] font-mono tracking-widest uppercase">
 			<div className="flex items-center gap-2">
-				<span className="w-1.5 h-1.5 bg-accent/50 rounded-full animate-pulse" />
+				<span className="w-1.5 h-1.5  rounded-full animate-pulse" />
 				<span>Total Content: {stats.totalContents}</span>
 			</div>
-			<div className="w-[1px] h-3 /10" />
+			<div className="w-[1px] h-3" />
 			<div>
 				<span>Total Views: {stats.totalViews.toLocaleString()}</span>
 			</div>
-			<div className="w-[1px] h-3 /10" />
+			<div className="w-[1px] h-3" />
 			<div>
 				<span>System Ver: 2.5.0</span>
 			</div>
@@ -146,15 +146,15 @@ function TerminalTimeline({
 		<div className="space-y-6">
 			<h3 className="text-xl font-bold font-display flex items-center gap-3">
 				<span className="flex gap-1">
-					<span className="w-1.5 h-1.5 rounded-full bg-accent" />
-					<span className="w-1.5 h-1.5 rounded-full bg-accent/50" />
-					<span className="w-1.5 h-1.5 rounded-full bg-accent/20" />
+					<span className="w-1.5 h-1.5 rounded-full " />
+					<span className="w-1.5 h-1.5 rounded-full " />
+					<span className="w-1.5 h-1.5 rounded-full " />
 				</span>
 				{title}
 			</h3>
 			<div className="relative pl-4 space-y-10">
 				{/* Timeline Line */}
-				<div className="absolute left-[7px] top-4 bottom-0 w-[1px] bg-gradient-to-b from-accent/30 via-accent/10 " />
+				<div className="absolute left-[7px] top-4 bottom-0 w-[1px] bg-gradient-to-b   " />
 
 				{items.map((item, idx) => (
 					<motion.div
@@ -170,13 +170,13 @@ function TerminalTimeline({
 						className="relative pl-8 group"
 					>
 						{/* Node */}
-						<span className="absolute left-[3px] top-2.5 w-[9px] h-[9px] rounded-full  border-accent z-10 group-hover:scale-125 group-hover:bg-accent transition-all duration-300" />
+						<span className="absolute left-[3px] top-2.5 w-[9px] h-[9px] rounded-full   z-10 group-hover:scale-125  transition-all duration-300" />
 
 						<div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1.5">
-							<span className="font-mono text-accent text-[10px] py-0.5 px-2 bg-accent/10 rounded">
+							<span className="font-mono  text-[10px] py-0.5 px-2  rounded">
 								{item.date}
 							</span>
-							<h4 className="text-lg font-bold leading-tight group-hover:text-accent transition-colors">
+							<h4 className="text-lg font-bold leading-tight  transition-colors">
 								{item.title[lang]}
 							</h4>
 						</div>
@@ -186,14 +186,14 @@ function TerminalTimeline({
 						</p>
 
 						{(item.description || item.tags) && (
-							<div className="text-xs md:text-sm /60 space-y-2 pl-4  /10 group-hover:border-accent/30 transition-colors">
+							<div className="text-xs md:text-sm space-y-2 pl-4  transition-colors">
 								{item.description && <p>{item.description[lang]}</p>}
 								{item.tags && (
 									<div className="flex flex-wrap gap-2">
 										{item.tags.map((tag) => (
 											<span
 												key={tag}
-												className="text-[10px] font-mono /50 px-2 py-0.5 /5 rounded hover:bg-accent/10 hover:text-accent transition-colors cursor-default"
+												className="text-[10px] font-mono px-2 py-0.5 rounded   transition-colors cursor-default"
 											>
 												{tag}
 											</span>
@@ -217,14 +217,12 @@ function LangToggle({
 	setLang: (l: "ja" | "en") => void;
 }) {
 	return (
-		<div className="flex items-center /50  rounded-full p-1 border /10">
+		<div className="flex items-center  rounded-full p-1 border">
 			<button
 				onClick={() => setLang("ja")}
 				className={cn(
 					"px-3 py-1 rounded-full text-[10px] font-bold transition-all duration-300",
-					lang === "ja"
-						? "  scale-105"
-						: "/40 hover:/80",
+					lang === "ja" ? "  scale-105" : "/40 hover:/80",
 				)}
 			>
 				JP
@@ -233,9 +231,7 @@ function LangToggle({
 				onClick={() => setLang("en")}
 				className={cn(
 					"px-3 py-1 rounded-full text-[10px] font-bold transition-all duration-300",
-					lang === "en"
-						? "  scale-105"
-						: "/40 hover:/80",
+					lang === "en" ? "  scale-105" : "/40 hover:/80",
 				)}
 			>
 				EN
@@ -276,18 +272,18 @@ export default function AboutClient({
 	return (
 		<div
 			ref={containerRef}
-			className="min-h-screen relative  selection:bg-accent/30 overflow-hidden"
+			className="min-h-screen relative  selection: overflow-hidden"
 		>
 			<AboutBackground />
 
 			{/* Progress Bar */}
 			<motion.div
 				style={{ scaleX }}
-				className="fixed top-0 left-0 right-0 h-0.5 bg-accent z-50 origin-left"
+				className="fixed top-0 left-0 right-0 h-0.5  z-50 origin-left"
 			/>
 
 			{/* Top Navigation Bar */}
-			<div className="fixed top-0 left-0 right-0 z-40 /80    transition-all">
+			<div className="fixed top-0 left-0 right-0 z-40    transition-all">
 				<div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex justify-between items-center">
 					<div className=" ">
 						<Breadcrumbs
@@ -313,9 +309,9 @@ export default function AboutClient({
 							initial={{ opacity: 0, y: 5 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.3, ease: [0.4, 0, 1, 1] }}
-							className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-mono tracking-wider "
+							className="inline-flex items-center gap-2 px-3 py-1 rounded-full  border   text-[10px] font-mono tracking-wider "
 						>
-							<span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+							<span className="w-1.5 h-1.5 rounded-full  animate-pulse" />
 							SYSTEM_OPERATIONAL
 						</motion.div>
 
@@ -339,7 +335,7 @@ export default function AboutClient({
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							transition={{ delay: 0.1, duration: 0.3, ease: [0.4, 0, 1, 1] }}
-							className=" md:text-lg /80 leading-relaxed max-w-lg font-light "
+							className=" md:text-lg leading-relaxed max-w-lg font-light "
 						>
 							{profile.bio[lang]}
 						</motion.p>
@@ -369,32 +365,32 @@ export default function AboutClient({
 				</div>
 
 				{/* --- Links Section --- */}
-				<section className="mb-24  /5 pt-6">
+				<section className="mb-24 pt-6">
 					<div className="flex flex-wrap gap-8 md:gap-16">
 						<Link
 							href="/about/profile/real"
-							className="group flex items-baseline gap-2 font-bold hover:text-accent transition-colors"
+							className="group flex items-baseline gap-2 font-bold  transition-colors"
 						>
-							<span className="text-[10px] font-mono /40">01</span>
+							<span className="text-[10px] font-mono">01</span>
 							<span className="text-lg tracking-tight whitespace-nowrap">
 								{lang === "ja" ? "本名プロフィール" : "Real Profile"}
 							</span>
-							<span className="block h-[1px] w-8 group-hover:w-24 bg-accent transition-all duration-300 ml-2" />
+							<span className="block h-[1px] w-8 group-hover:w-24  transition-all duration-300 ml-2" />
 						</Link>
 						<Link
 							href="/about/profile/handle"
-							className="group flex items-baseline gap-2 /60 font-bold hover:text-accent transition-colors"
+							className="group flex items-baseline gap-2 font-bold  transition-colors"
 						>
-							<span className="text-[10px] font-mono /30">02</span>
+							<span className="text-[10px] font-mono">02</span>
 							<span className="text-lg tracking-tight">
 								ハンドルネームプロフィール
 							</span>
 						</Link>
 						<a
 							href="https://links.yusuke-kim.com"
-							className="group flex items-baseline gap-2 /60 font-bold hover:text-accent transition-colors"
+							className="group flex items-baseline gap-2 font-bold  transition-colors"
 						>
-							<span className="text-[10px] font-mono /30">03</span>
+							<span className="text-[10px] font-mono">03</span>
 							<span className="text-lg tracking-tight">Links</span>
 						</a>
 					</div>
@@ -424,9 +420,9 @@ export default function AboutClient({
 										{category.items.map((item, i) => (
 											<span
 												key={item}
-												className=" md:text-lg font-medium /50 hover:text-accent transition-colors duration-300 cursor-default"
+												className=" md:text-lg font-medium  transition-colors duration-300 cursor-default"
 											>
-												<span className="text-accent/40 mr-1">/</span>
+												<span className=" mr-1">/</span>
 												{item}
 											</span>
 										))}
@@ -452,7 +448,7 @@ export default function AboutClient({
 				</section>
 
 				{/* Footer Info */}
-				<div className="mt-24 pt-8  /5 flex justify-end text-[10px] font-mono /20">
+				<div className="mt-24 pt-8 flex justify-end text-[10px] font-mono">
 					<span>
 						LAST_UPDATE:{" "}
 						{new Date(stats.lastUpdated).toLocaleString(

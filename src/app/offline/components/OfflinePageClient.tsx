@@ -39,7 +39,7 @@ export default function OfflinePageClient() {
 					{/* Offline icon */}
 					<div className="mb-8">
 						<svg
-							className="w-24 h-24 mx-auto text-accent"
+							className="w-24 h-24 mx-auto "
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
@@ -55,7 +55,7 @@ export default function OfflinePageClient() {
 					</div>
 
 					{/* Title */}
-					<h1 className="neue-haas-grotesk-display text-4xl mb-6 text-accent">
+					<h1 className="neue-haas-grotesk-display text-4xl mb-6 ">
 						オフライン
 					</h1>
 
@@ -75,37 +75,37 @@ export default function OfflinePageClient() {
 						<div className="grid grid-cols-2 gap-4 text-sm">
 							<a
 								href="/tools/color-palette"
-								className="p-3   rounded hover:border-accent transition-colors"
+								className="p-3   rounded  transition-colors"
 							>
 								カラーパレット生成
 							</a>
 							<a
 								href="/tools/text-counter"
-								className="p-3   rounded hover:border-accent transition-colors"
+								className="p-3   rounded  transition-colors"
 							>
 								文字数カウンター
 							</a>
 							<a
 								href="/tools/svg2tsx"
-								className="p-3   rounded hover:border-accent transition-colors"
+								className="p-3   rounded  transition-colors"
 							>
 								SVG to TSX変換
 							</a>
 							<a
 								href="https://pomodoro.yusuke-kim.com"
-								className="p-3   rounded hover:border-accent transition-colors"
+								className="p-3   rounded  transition-colors"
 							>
 								ポモドーロタイマー
 							</a>
 							<a
 								href="/tools/pi-game"
-								className="p-3   rounded hover:border-accent transition-colors"
+								className="p-3   rounded  transition-colors"
 							>
 								円周率ゲーム
 							</a>
 							<a
 								href="/tools/business-mail-block"
-								className="p-3   rounded hover:border-accent transition-colors"
+								className="p-3   rounded  transition-colors"
 							>
 								ビジネスメール作成
 							</a>
@@ -117,7 +117,7 @@ export default function OfflinePageClient() {
 						<button
 							type="button"
 							onClick={() => window.location.reload()}
-							className="w-full bg-accent  py-3 px-6 rounded  transition-colors"
+							className="w-full py-3 px-6"
 						>
 							再試行
 						</button>
@@ -127,7 +127,7 @@ export default function OfflinePageClient() {
 							onClick={() => {
 								window.location.href = "/";
 							}}
-							className="block w-full  border-accent text-accent py-3 px-6 rounded hover:bg-accent  transition-colors"
+							className="block w-full py-3 px-6"
 						>
 							ホームに戻る
 						</button>

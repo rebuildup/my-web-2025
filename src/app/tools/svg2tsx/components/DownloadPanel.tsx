@@ -62,7 +62,6 @@ export function DownloadPanel({
 							value={fileName}
 							onChange={(e) => setFileName(e.target.value)}
 							style={{
-								all: "revert",
 								flex: 1,
 								padding: "4px 8px",
 								fontSize: "13px",
@@ -86,7 +85,7 @@ export function DownloadPanel({
 						type="button"
 						onClick={handleDownload}
 						disabled={isDisabled}
-						style={{ all: "revert", padding: "4px 12px", fontSize: "13px" }}
+						style={{ padding: "4px 12px", fontSize: "13px" }}
 					>
 						ファイルをダウンロード
 					</button>
@@ -94,7 +93,7 @@ export function DownloadPanel({
 						type="button"
 						onClick={handleCopy}
 						disabled={isDisabled}
-						style={{ all: "revert", padding: "4px 12px", fontSize: "13px" }}
+						style={{ padding: "4px 12px", fontSize: "13px" }}
 					>
 						{copySuccess ? "コピー完了" : "クリップボードにコピー"}
 					</button>

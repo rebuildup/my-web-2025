@@ -1,109 +1,81 @@
-@import "tailwindcss";
+/*
+ * Tailwind v4 is split-imported to skip preflight.css. Preflight resets
+ * DOM-default styling on form elements (e.g. `button { background-color:
+ * transparent }`), which is exactly the over-application this project
+ * avoids. Without preflight, browsers render UA-default chrome (button
+ * borders, input fields, etc.) naturally.
+ *
+ * No styles are applied to DOM elements at this layer — utilities (added
+ * via classes on individual elements) still work, but the bare element
+ * shows its UA-default styling.
+ */
+@import "tailwindcss/theme.css";
+@import "tailwindcss/utilities.css";
 
-@layer base {
-  :root {
-    color-scheme: light;
-  }
+/* Global font styles */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family:
+		"neue-haas-grotesk-display", -apple-system, BlinkMacSystemFont, "Segoe UI",
+		Arial, sans-serif;
+	font-weight: 700;
+	font-style: italic;
+}
 
-  html {
-    font-size: 16px;
-    scroll-behavior: smooth;
-  }
+p {
+	font-family:
+		"Noto Sans JP", "Shippori Antique B1", -apple-system, BlinkMacSystemFont,
+		"Segoe UI", sans-serif;
+	font-weight: 300;
+}
 
-  body {
-    @apply min-h-screen antialiased;
-    font-family: "Noto Sans JP", "Shippori Antique B1", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: "neue-haas-grotesk-display", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-    font-weight: 700;
-    font-style: italic;
-  }
-
-  p {
-    font-family: "Noto Sans JP", "Shippori Antique B1", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-weight: 300;
-  }
-
-  footer {
-    font-family: "Shippori Antique B1", "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
-
-  /* Accessibility: Focus visible styles */
-  *:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-  }
-
-  /* Accessibility: Skip link hidden by default */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-
-  .not-sr-only {
-    position: static;
-    width: auto;
-    height: auto;
-    padding: 0;
-    margin: 0;
-    overflow: visible;
-    clip: auto;
-    white-space: normal;
-  }
+footer {
+	font-family:
+		"Shippori Antique B1", "Noto Sans JP", -apple-system, BlinkMacSystemFont,
+		"Segoe UI", sans-serif;
 }
 
 @keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-50%);
+	}
 }
 
 .animate-scroll {
-  animation: scroll 20s linear infinite;
+	animation: scroll 20s linear infinite;
 }
 
 @keyframes scroll-horizontal {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-50%);
+	}
 }
 
 .animate-scroll-horizontal {
-  animation: scroll-horizontal 30s linear infinite;
-  display: flex;
-  width: fit-content;
+	animation: scroll-horizontal 30s linear infinite;
+	display: flex;
+	width: fit-content;
 }
 
 .animate-scroll-horizontal:hover {
-  animation-play-state: paused;
+	animation-play-state: paused;
 }
 
 @keyframes logo-loop-scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-50%);
+	}
 }
-

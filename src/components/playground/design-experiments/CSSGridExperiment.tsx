@@ -302,13 +302,11 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					{/* Layout Type */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Layout Type
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Layout Type</label>
 						<select
 							value={selectedLayout}
 							onChange={(e) => setSelectedLayout(e.target.value)}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							{gridLayouts.map((layout) => (
 								<option key={layout.value} value={layout.value}>
@@ -320,9 +318,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Gap Size */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Gap: {gap}px
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Gap: {gap}px</label>
 						<input
 							type="range"
 							min="0"
@@ -356,7 +352,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={shuffleItems}
-						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center px-4 py-2"
 					>
 						<Shuffle className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Shuffle</span>
@@ -365,7 +361,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetGrid}
-						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center px-4 py-2"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset</span>
@@ -379,10 +375,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 					{gridLayouts.find((l) => l.value === selectedLayout)?.name} Layout
 				</h3>
 
-				<div
-					style={getGridStyles()}
-					className="min-h-[400px]  p-4"
-				>
+				<div style={getGridStyles()} className="min-h-[400px]  p-4">
 					{gridItems.map((item, index) => (
 						<div
 							key={item.id}
@@ -396,9 +389,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 							}}
 						>
 							<div className="text-center">
-								<div className=" font-bold text-lg mb-1">
-									{item.content}
-								</div>
+								<div className=" font-bold text-lg mb-1">{item.content}</div>
 								<div className=" text-xs ">
 									{item.size} • {item.color}
 								</div>
@@ -410,9 +401,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 
 			{/* Layout Information */}
 			<div className="  p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg ">
-					Layout Properties
-				</h3>
+				<h3 className="zen-kaku-gothic-new text-lg ">Layout Properties</h3>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="space-y-2">
@@ -434,9 +423,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 					</div>
 
 					<div className="space-y-2">
-						<h4 className="noto-sans-jp-light text-sm font-bold ">
-							Features:
-						</h4>
+						<h4 className="noto-sans-jp-light text-sm font-bold ">Features:</h4>
 						<div className="noto-sans-jp-light text-xs space-y-1">
 							<div>• Responsive grid system</div>
 							<div>• Interactive hover effects</div>

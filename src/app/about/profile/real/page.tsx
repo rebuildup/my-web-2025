@@ -356,7 +356,7 @@ export default function RealProfilePage() {
 											<h3 className="zen-kaku-gothic-new mb-2">
 												{activity.ja}
 											</h3>
-											<p className="noto-sans-jp-light text-xs /60 leading-relaxed grow">
+											<p className="noto-sans-jp-light text-xs leading-relaxed grow">
 												{activity.en}
 											</p>
 										</div>
@@ -382,9 +382,9 @@ export default function RealProfilePage() {
 							<ScrollFloat stagger={100}>
 								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 									<div className="flex items-start gap-2">
-										<Calendar className="w-5 h-5 text-accent shrink-0 mt-1" />
+										<Calendar className="w-5 h-5  shrink-0 mt-1" />
 										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm /60 mb-1">
+											<h3 className="zen-kaku-gothic-new text-sm mb-1">
 												生年月日・年齢
 											</h3>
 											<p className="noto-sans-jp-light text-sm ">
@@ -394,9 +394,9 @@ export default function RealProfilePage() {
 									</div>
 
 									<div className="flex items-start gap-2">
-										<MapPin className="w-5 h-5 text-accent shrink-0 mt-1" />
+										<MapPin className="w-5 h-5  shrink-0 mt-1" />
 										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm /60 mb-1">
+											<h3 className="zen-kaku-gothic-new text-sm mb-1">
 												居住地
 											</h3>
 											<p className="noto-sans-jp-light text-sm ">
@@ -406,15 +406,15 @@ export default function RealProfilePage() {
 									</div>
 
 									<div className="flex items-start gap-2">
-										<GraduationCap className="w-5 h-5 text-accent shrink-0 mt-1" />
+										<GraduationCap className="w-5 h-5  shrink-0 mt-1" />
 										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm /60 mb-1">
+											<h3 className="zen-kaku-gothic-new text-sm mb-1">
 												現在の状況
 											</h3>
 											<p className="noto-sans-jp-light text-sm ">
 												{personalInfo.status}
 											</p>
-											<p className="noto-sans-jp-light text-xs text-accent">
+											<p className="noto-sans-jp-light text-xs ">
 												卒業予定: {personalInfo.graduationYear}
 											</p>
 										</div>
@@ -422,13 +422,11 @@ export default function RealProfilePage() {
 
 									<div className="flex items-start gap-2">
 										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm /60 mb-1">
-												名前
-											</h3>
+											<h3 className="zen-kaku-gothic-new text-sm mb-1">名前</h3>
 											<p className="noto-sans-jp-light text-sm ">
 												{personalInfo.name}（{personalInfo.nameReading}）
 											</p>
-											<p className="noto-sans-jp-light text-xs text-accent">
+											<p className="noto-sans-jp-light text-xs ">
 												ハンドルネーム: {personalInfo.handleName}
 											</p>
 										</div>
@@ -453,20 +451,18 @@ export default function RealProfilePage() {
 							<ScrollFloat stagger={100}>
 								<div className="relative pl-8 timeline-container">
 									{/* タイムラインの縦線 */}
-									<div className="absolute left-0 top-0 bottom-0 w-0.5 /20 timeline-line"></div>
+									<div className="absolute left-0 top-0 bottom-0 w-0.5 timeline-line"></div>
 
 									{education.map((edu, index) => (
 										<div key={index} className="relative mb-8 timeline-item">
 											{/* タイムラインノード（点） */}
-											<div className="absolute w-3 h-3 rounded-full /60  timeline-node"></div>
+											<div className="absolute w-3 h-3 rounded-full  timeline-node"></div>
 
 											<div className="">
-												<div className="text-sm md: font-bold /60 mb-2">
+												<div className="text-sm md: font-bold mb-2">
 													{edu.date}
 												</div>
-												<div className=" md:text-lg mb-1">
-													{edu.contentJa}
-												</div>
+												<div className=" md:text-lg mb-1">{edu.contentJa}</div>
 												<div className="/60 text-[10px] md:text-xs leading-relaxed">
 													{edu.contentEn}
 												</div>
@@ -497,9 +493,7 @@ export default function RealProfilePage() {
 											key={index}
 											className="/5 p-3 rounded-lg hover:/10 transition-colors"
 										>
-											<p className="noto-sans-jp-light text-sm ">
-												{skill}
-											</p>
+											<p className="noto-sans-jp-light text-sm ">{skill}</p>
 										</div>
 									))}
 								</div>
@@ -524,7 +518,7 @@ export default function RealProfilePage() {
 									{achievements.map((achievement, index) => (
 										<div key={index} className="text-left">
 											<div className="">
-												<div className="text-sm md: font-bold /60 mb-2">
+												<div className="text-sm md: font-bold mb-2">
 													{achievement.date}
 												</div>
 												<div className=" md:text-lg mb-1">

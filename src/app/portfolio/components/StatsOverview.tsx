@@ -137,21 +137,19 @@ export function StatsOverview({
 		setRandomItem(deterministicPick);
 	}, [deterministicPick]);
 
-	const baseCard = "min-w-0   p-4 md:p-5";
+	const baseCard = "min-w-0 border border-current  p-4 md:p-5";
+
+	const latestHref = latestItem
+		? `/portfolio/${latestItem.id}`
+		: "/portfolio/gallery/all";
 
 	return (
 		<section className="overflow-hidden">
 			<div className="grid grid-cols-1 gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,1.618fr)_minmax(0,1fr)] w-full max-w-full overflow-hidden">
+				{/* Left column: Latest Content + 7d/30d/365d */}
 				<div className="grid gap-3 md:gap-4 min-w-0 max-w-full">
-					<Link
-						href={
-							latestItem
-								? `/portfolio/${latestItem.id}`
-								: "/portfolio/gallery/all"
-						}
-						className="group relative flex h-full min-h-[260px] w-full max-w-full flex-col justify-between overflow-hidden    p-6 md:p-7"
-					>
-						<div className="absolute inset-0">
+					<div className="group relative h-full min-h-[260px] w-full max-w-full overflow-hidden border border-current">
+						<div className="absolute inset-0 overflow-hidden">
 							{latestItem?.thumbnail ? (
 								<SafeImage
 									src={latestItem.thumbnail}
@@ -165,23 +163,28 @@ export function StatsOverview({
 							)}
 							<div className="absolute inset-0 " />
 						</div>
-						<div className="relative z-10">
-							<div className="text-[10px] font-mono tracking-widest uppercase">
-								Latest Content
+						<div className="relative z-10 p-6 md:p-7 flex flex-col justify-between h-full">
+							<div>
+								<div className="text-[10px] font-mono tracking-widest uppercase">
+									Latest Content
+								</div>
+								<h3 className="mt-6 text-2xl md:text-3xl font-display font-semibold line-clamp-2">
+									<Link href={latestHref}>
+										{latestItem?.title || "Latest Work"}
+									</Link>
+								</h3>
+								<p className="mt-3 text-[11px] max-w-sm">
+									{latestItem
+										? "最新の公開コンテンツをピックアップ."
+										: "最新のコンテンツをチェックできます."}
+								</p>
 							</div>
-							<div className="mt-6 text-2xl md:text-3xl font-display font-semibold line-clamp-2">
-								{latestItem?.title || "Latest Work"}
+							<div className="text-[10px] font-mono uppercase tracking-widest ">
+								View details →
 							</div>
-							<p className="mt-3 text-[11px] max-w-sm">
-								{latestItem
-									? "最新の公開コンテンツをピックアップ."
-									: "最新のコンテンツをチェックできます."}
-							</p>
 						</div>
-						<div className="relative z-10 mt-8 text-[10px] font-mono uppercase tracking-widest ">
-							{latestItem ? "View details →" : "View all →"}
-						</div>
-					</Link>
+					</div>
+
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 min-w-0 max-w-full">
 						<div className={baseCard}>
 							<div className="noto-sans-jp-light text-xs mb-2">
@@ -189,16 +192,11 @@ export function StatsOverview({
 							</div>
 							<div className="flex items-end gap-2">
 								<div
-									className={
-										"neue-haas-grotesk-display leading-none " +
-										fontSizeFor(v7)
-									}
+									className={`neue-haas-grotesk-display leading-none ${fontSizeFor(v7)}`}
 								>
 									{v7.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] mb-1">
-									items
-								</div>
+								<div className="noto-sans-jp-light text-[10px] mb-1">items</div>
 							</div>
 						</div>
 
@@ -208,16 +206,11 @@ export function StatsOverview({
 							</div>
 							<div className="flex items-end gap-2">
 								<div
-									className={
-										"neue-haas-grotesk-display leading-none " +
-										fontSizeFor(v30)
-									}
+									className={`neue-haas-grotesk-display leading-none ${fontSizeFor(v30)}`}
 								>
 									{v30.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] mb-1">
-									items
-								</div>
+								<div className="noto-sans-jp-light text-[10px] mb-1">items</div>
 							</div>
 						</div>
 
@@ -234,14 +227,13 @@ export function StatsOverview({
 								>
 									{v365.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] mb-1">
-									items
-								</div>
+								<div className="noto-sans-jp-light text-[10px] mb-1">items</div>
 							</div>
 						</div>
 					</div>
 				</div>
 
+				{/* Right column: 2x2 stats + Random Pick */}
 				<div className="grid gap-3 md:gap-4 min-w-0 max-w-full">
 					<div className="grid grid-cols-2 gap-3 md:gap-4 min-w-0 max-w-full">
 						<div className={baseCard}>
@@ -257,16 +249,12 @@ export function StatsOverview({
 								>
 									{vTotal.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] mb-1">
-									items
-								</div>
+								<div className="noto-sans-jp-light text-[10px] mb-1">items</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs mb-2">
-								develop
-							</div>
+							<div className="noto-sans-jp-light text-xs mb-2">develop</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
@@ -276,16 +264,12 @@ export function StatsOverview({
 								>
 									{vDevelop.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] mb-1">
-									items
-								</div>
+								<div className="noto-sans-jp-light text-[10px] mb-1">items</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs mb-2">
-								video
-							</div>
+							<div className="noto-sans-jp-light text-xs mb-2">video</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
@@ -295,9 +279,7 @@ export function StatsOverview({
 								>
 									{vVideo.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] mb-1">
-									items
-								</div>
+								<div className="noto-sans-jp-light text-[10px] mb-1">items</div>
 							</div>
 						</div>
 
@@ -314,20 +296,18 @@ export function StatsOverview({
 								>
 									{vVideoDesign.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] mb-1">
-									items
-								</div>
+								<div className="noto-sans-jp-light text-[10px] mb-1">items</div>
 							</div>
 						</div>
 					</div>
 
 					<button
 						type="button"
-						className="text-left group w-full min-w-0 max-w-full"
+						className="text-left group w-full min-w-0 max-w-full border-0 p-0 bg-transparent cursor-pointer"
 						onClick={rotateHighlight}
 						title="クリックで入れ替え"
 					>
-						<div className="relative h-full min-h-[220px] w-full max-w-full overflow-hidden  ">
+						<div className="relative h-full min-h-[220px] w-full max-w-full overflow-hidden border border-current ">
 							<div className="relative w-full h-full overflow-hidden">
 								{randomItem?.thumbnail ? (
 									<SafeImage
@@ -349,13 +329,11 @@ export function StatsOverview({
 									<span className="font-mono">Click to shuffle</span>
 								</div>
 								{randomItem ? (
-									<div className="mt-2 zen-kaku-gothic-new text-sm md: line-clamp-2">
+									<h3 className="mt-2 zen-kaku-gothic-new text-sm md: line-clamp-2">
 										{randomItem.title}
-									</div>
+									</h3>
 								) : (
-									<div className="mt-2 text-[10px] ">
-										アイテムがありません
-									</div>
+									<div className="mt-2 text-[10px] ">アイテムがありません</div>
 								)}
 								<div className="mt-1 text-[10px] ">
 									手動で入れ替えて、思わぬ発見を.

@@ -38,13 +38,13 @@ export default function SettingsPanel({
 	};
 
 	return (
-		<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 select-text">
+		<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 select-text">
 			<div className="flex items-center justify-between mb-6">
 				<h3 className="text-lg font-semibold ">タイマー設定</h3>
 				<button
 					type="button"
 					onClick={onClose}
-					className=" hover: transition-colors"
+					className=""
 					aria-label="設定を閉じる"
 				>
 					<X size={20} />
@@ -53,16 +53,12 @@ export default function SettingsPanel({
 
 			<div className="space-y-6">
 				{/* Tab Buttons */}
-				<div className="flex gap-2 flex-wrap  /10 pb-2">
+				<div className="flex gap-2 flex-wrap pb-2">
 					{tabs.map((tab) => (
 						<button
 							key={tab.key}
 							onClick={() => setActiveTab(tab.key)}
-							className={`px-4 py-2 text-sm rounded-lg transition-colors ${
-								activeTab === tab.key
-									? "/20 font-semibold"
-									: " /60 hover:"
-							}`}
+							className={`px-4 py-2 text-sm ${activeTab === tab.key ? "/20 font-semibold" : " "}`}
 						>
 							{tab.label}
 						</button>
@@ -229,7 +225,7 @@ export default function SettingsPanel({
 								onChange={(e) =>
 									updateSetting("theme", e.target.value as "light" | "dark")
 								}
-								className="w-full p-2 rounded-lg /10"
+								className="w-full p-2"
 							>
 								<option value="light">ライト</option>
 								<option value="dark">ダーク</option>
@@ -246,7 +242,7 @@ export default function SettingsPanel({
 									onChange={(e) =>
 										updateSetting("highlightColor", e.target.value)
 									}
-									className="w-12 h-10 rounded  /20  cursor-pointer"
+									className="w-12 h-10 cursor-pointer"
 								/>
 								<div className="flex gap-2">
 									{["#3b82f6", "#06b6d4", "#ec4899", "#f97316", "#22c55e"].map(
@@ -255,11 +251,7 @@ export default function SettingsPanel({
 												key={color}
 												type="button"
 												onClick={() => updateSetting("highlightColor", color)}
-												className={`w-8 h-8 rounded-full  ${
-													settings.highlightColor === color
-														? ""
-														: ""
-												}`}
+												className={`w-8 h-8 ${settings.highlightColor === color ? "" : ""}`}
 												style={{ backgroundColor: color }}
 												aria-label={`ハイライトカラー ${color}`}
 											/>
@@ -272,7 +264,7 @@ export default function SettingsPanel({
 				)}
 
 				{/* Reset Button */}
-				<div className="pt-4  /20">
+				<div className="pt-4">
 					<button
 						type="button"
 						onClick={() => {
@@ -293,7 +285,7 @@ export default function SettingsPanel({
 							};
 							onSettingsChange(defaultSettings);
 						}}
-						className="w-full px-4 py-2 rounded-lg /10 hover:/20 transition-colors text-sm"
+						className="w-full px-4 py-2 text-sm"
 					>
 						設定をリセット
 					</button>

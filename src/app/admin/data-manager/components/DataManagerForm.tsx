@@ -977,14 +977,14 @@ export function DataManagerForm({
 										<button
 											type="button"
 											onClick={migrateContentToMarkdown}
-											className="px-3 py-1   text-sm rounded  transition-colors"
+											className="px-3 py-1 text-sm"
 										>
 											Migrate to Markdown File
 										</button>
 										<button
 											type="button"
 											onClick={() => setNeedsMarkdownMigration(false)}
-											className="px-3 py-1    text-sm rounded  transition-colors"
+											className="px-3 py-1 text-sm"
 										>
 											Keep as Text
 										</button>
@@ -1095,7 +1095,7 @@ export function DataManagerForm({
 												<button
 													type="button"
 													onClick={migrateContentToMarkdown}
-													className="px-3 py-1   text-sm rounded  transition-colors"
+													className="px-3 py-1 text-sm"
 												>
 													Migrate to Markdown File
 												</button>
@@ -1279,9 +1279,7 @@ export function DataManagerForm({
 				</button>
 				<button
 					type="submit"
-					className={`${buttonStyle}  ${
-						saveStatus === "success" ? " " : ""
-					} ${saveStatus === "error" ? " " : ""}`}
+					className={`${buttonStyle} ${ saveStatus === "success" ? " " : "" } ${saveStatus === "error" ? " " : ""}`}
 					disabled={isLoading}
 				>
 					{saveStatus === "saving" && (isClient ? "保存中..." : "Saving...")}

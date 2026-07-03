@@ -203,9 +203,7 @@ export function ArticleSidePanel({
 										<a
 											href={`#${heading.id}`}
 											className={`text-sm leading-tight transition-colors ${
-												activeId === heading.id
-													? " font-medium"
-													: " "
+												activeId === heading.id ? " font-medium" : " "
 											}`}
 											onClick={(e) => {
 												e.preventDefault();
@@ -245,9 +243,7 @@ export function ArticleSidePanel({
 				{/* Random Articles - Promo Style */}
 				{randomArticles.length > 0 && (
 					<div className="p-4    rounded">
-						<h3 className="text-sm font-semibold  mb-3">
-							おすすめ記事
-						</h3>
+						<h3 className="text-sm font-semibold  mb-3">おすすめ記事</h3>
 						<div className="space-y-3">
 							{randomArticles.map((article, index) => (
 								<Link

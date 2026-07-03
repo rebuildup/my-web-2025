@@ -22,8 +22,16 @@ export function ArticleCard({
 	isExternal,
 	isNew = false,
 }: ArticleCardProps) {
-	const cardContent = (
-		<>
+	const titleNode = isExternal ? (
+		<a href={href} target="_blank" rel="noopener noreferrer">
+			{title}
+		</a>
+	) : (
+		<Link href={href}>{title}</Link>
+	);
+
+	return (
+		<div className="group block">
 			{/* Thumbnail - Top half */}
 			<div className="relative w-full aspect-[2/1] overflow-hidden ">
 				{thumbnail ? (
@@ -61,7 +69,7 @@ export function ArticleCard({
 				{/* Title and NEW badge */}
 				<div className="flex items-start gap-2">
 					<h3 className="flex-1 text-lg font-semibold  line-clamp-1">
-						{title}
+						{titleNode}
 					</h3>
 					{isNew && (
 						<span className="shrink-0 px-2 py-0.5 text-xs font-semibold   rounded">
@@ -72,9 +80,7 @@ export function ArticleCard({
 
 				{/* Description - Show first few lines */}
 				{description && (
-					<p className="text-sm  line-clamp-3 leading-relaxed">
-						{description}
-					</p>
+					<p className="text-sm  line-clamp-3 leading-relaxed">{description}</p>
 				)}
 
 				{/* Spacer to push date/tags to bottom */}
@@ -97,25 +103,6 @@ export function ArticleCard({
 					)}
 				</div>
 			</div>
-		</>
-	);
-
-	if (isExternal) {
-		return (
-			<a
-				href={href}
-				target="_blank"
-				rel="noopener noreferrer"
-				className="group block cursor-pointer"
-			>
-				{cardContent}
-			</a>
-		);
-	}
-
-	return (
-		<Link href={href} className="group block cursor-pointer">
-			{cardContent}
-		</Link>
+		</div>
 	);
 }

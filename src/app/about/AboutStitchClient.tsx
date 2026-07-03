@@ -38,7 +38,6 @@ function SectionHeader({
 					className="text-[16px] leading-tight"
 					style={{
 						fontFamily: "var(--font-inter), Inter, sans-serif",
-						color: "#f4f4f5",
 					}}
 				>
 					{title}
@@ -47,7 +46,6 @@ function SectionHeader({
 					className="text-[12px] leading-tight"
 					style={{
 						fontFamily: "var(--font-inter), Inter, sans-serif",
-						color: "#a1a1aa",
 					}}
 				>
 					{subtitle}
@@ -56,7 +54,7 @@ function SectionHeader({
 			<div className="flex-1  " />
 			<span
 				className="text-[12px] leading-tight shrink-0 pl-3"
-				style={{ fontFamily: "var(--font-noto-sans-jp)", color: "#f4f4f5" }}
+				style={{ fontFamily: "var(--font-noto-sans-jp)" }}
 			>
 				{comment}
 			</span>
@@ -82,7 +80,7 @@ function SectionFooter({
 			</div>
 			<p
 				className="col-span-3 text-[12px] whitespace-pre-line"
-				style={{ fontFamily: "var(--font-noto-sans-jp)", color: "#f4f4f5" }}
+				style={{ fontFamily: "var(--font-noto-sans-jp)" }}
 			>
 				{text}
 			</p>
@@ -161,11 +159,11 @@ function Breadcrumb() {
 			className="text-[12px]"
 			style={{ fontFamily: "var(--font-noto-sans-jp)" }}
 		>
-			<Link href="/" className="hover:underline" style={{ color: "#f4f4f5" }}>
+			<Link href="/" className="hover:underline">
 				Home
 			</Link>
-			<span style={{ color: "#a1a1aa" }}> / </span>
-			<span style={{ color: "#f4f4f5" }}>About</span>
+			<span> / </span>
+			<span>About</span>
 		</span>
 	);
 }
@@ -225,15 +223,12 @@ function TimelineRow({ entry }: { entry: (typeof historyData)[number] }) {
 		return <div className="w-full   my-1" />;
 	}
 
-	const textColor = entry.muted ? "#a1a1aa" : "#f4f4f5";
-
 	return (
 		<div className="flex gap-2 w-full" style={{ minHeight: 19 }}>
 			<span
 				className="text-[12px] shrink-0 text-right"
 				style={{
 					fontFamily: "var(--font-noto-sans-jp)",
-					color: textColor,
 					width: "7ch",
 				}}
 			>
@@ -243,7 +238,6 @@ function TimelineRow({ entry }: { entry: (typeof historyData)[number] }) {
 				className="text-[12px] shrink-0"
 				style={{
 					fontFamily: "var(--font-noto-sans-jp)",
-					color: textColor,
 					width: 200,
 				}}
 			>
@@ -253,7 +247,6 @@ function TimelineRow({ entry }: { entry: (typeof historyData)[number] }) {
 				className="text-[12px] flex-1"
 				style={{
 					fontFamily: "var(--font-noto-sans-jp)",
-					color: textColor,
 				}}
 			>
 				{entry.description}
@@ -302,16 +295,10 @@ function ExpandToggle({
 		<button
 			type="button"
 			onClick={onToggle}
-			className="flex items-center gap-2 w-full py-1 group"
+			className="flex items-center gap-2 w-full py-1 group border-0 bg-transparent cursor-pointer"
 		>
-			<div className="flex-1 h-px" style={{ backgroundColor: "#27272a" }} />
-			<span
-				className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center transition-all"
-				style={{
-					border: "1px solid #27272a",
-					color: "#52525b",
-				}}
-			>
+			<div className="flex-1 h-px" />
+			<span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center transition-all">
 				<svg
 					width="10"
 					height="10"
@@ -331,7 +318,7 @@ function ExpandToggle({
 					/>
 				</svg>
 			</span>
-			<div className="flex-1 h-px" style={{ backgroundColor: "#27272a" }} />
+			<div className="flex-1 h-px" />
 		</button>
 	);
 }
@@ -528,7 +515,6 @@ export default function AboutStitchClient() {
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "center",
-					background: "#09090b",
 				}}
 			>
 				{/* Icon wrapper: starts at scale(0) via CSS class */}
@@ -551,7 +537,6 @@ export default function AboutStitchClient() {
 						className="text-[16px] text-center"
 						style={{
 							fontFamily: "var(--font-noto-sans-jp)",
-							color: "#f4f4f5",
 							opacity: 0,
 						}}
 					>
@@ -561,7 +546,6 @@ export default function AboutStitchClient() {
 						className="text-[12px] text-center"
 						style={{
 							fontFamily: "var(--font-noto-sans-jp)",
-							color: "#a1a1aa",
 							opacity: 0,
 						}}
 					>
@@ -572,17 +556,18 @@ export default function AboutStitchClient() {
 						style={{ opacity: 0 }}
 					>
 						{quickLinks.map((link) => (
-							<a
+							<button
 								key={link.id}
-								href={link.href}
-								target="_blank"
-								rel="noopener noreferrer"
+								type="button"
+								onClick={() =>
+									window.open(link.href, "_blank", "noopener,noreferrer")
+								}
 								title={link.label}
-								className="w-8 h-8 flex items-center justify-center rounded-full   transition-colors p-1.5"
-								style={{ color: "#a1a1aa" }}
+								aria-label={link.label}
+								className="w-8 h-8 flex items-center justify-center rounded-full border-0 bg-transparent p-1.5 transition-colors cursor-pointer"
 							>
 								<ServiceIcon id={link.id} />
-							</a>
+							</button>
 						))}
 					</div>
 				</div>
@@ -599,7 +584,7 @@ export default function AboutStitchClient() {
 			>
 				<p
 					className="text-[16px] text-center"
-					style={{ fontFamily: "var(--font-noto-sans-jp)", color: "#f4f4f5" }}
+					style={{ fontFamily: "var(--font-noto-sans-jp)" }}
 				>
 					Web制作/映像制作/ツール制作などをしている高専生です
 				</p>
@@ -683,10 +668,7 @@ export default function AboutStitchClient() {
 								</div>
 								<span
 									className="text-[12px] leading-tight truncate block mt-1.5"
-									style={{
-										fontFamily: "var(--font-noto-sans-jp)",
-										color: "#f4f4f5",
-									}}
+									style={{ fontFamily: "var(--font-noto-sans-jp)" }}
 								>
 									{item.title}
 								</span>
@@ -696,7 +678,7 @@ export default function AboutStitchClient() {
 				) : (
 					<p
 						className="text-[12px] w-full"
-						style={{ fontFamily: "var(--font-noto-sans-jp)", color: "#a1a1aa" }}
+						style={{ fontFamily: "var(--font-noto-sans-jp)" }}
 					>
 						まだ制作物がありません
 					</p>
@@ -705,7 +687,7 @@ export default function AboutStitchClient() {
 					<Link
 						href="/portfolio"
 						className="col-start-2 flex items-center justify-center px-3 py-2.5 rounded     transition-all"
-						style={{ fontFamily: "var(--font-noto-sans-jp)", color: "#f4f4f5" }}
+						style={{ fontFamily: "var(--font-noto-sans-jp)" }}
 					>
 						<span className="text-[12px] leading-tight">もっと見る</span>
 					</Link>
@@ -723,27 +705,21 @@ export default function AboutStitchClient() {
 			>
 				<div className="grid grid-cols-2 gap-2 w-full px-8">
 					{siteLinks.map((link) => (
-						<Link
+						<div
 							key={link.href}
-							href={link.href}
-							className="flex items-center justify-between px-3 py-2.5 rounded     transition-all group"
+							className="relative flex items-center justify-between px-3 py-2.5 rounded border border-current transition-all group"
 						>
 							<div className="flex flex-col">
-								<span
-									className="text-[12px] font-medium"
-									style={{
-										fontFamily: "var(--font-inter), Inter, sans-serif",
-										color: "#f4f4f5",
-									}}
+								<Link
+									href={link.href}
+									className="text-[12px] font-medium before:absolute before:inset-0 before:z-10"
+									style={{ fontFamily: "var(--font-inter), Inter, sans-serif" }}
 								>
 									{link.label}
-								</span>
+								</Link>
 								<span
 									className="text-[10px]"
-									style={{
-										fontFamily: "var(--font-noto-sans-jp)",
-										color: "#52525b",
-									}}
+									style={{ fontFamily: "var(--font-noto-sans-jp)" }}
 								>
 									{link.desc}
 								</span>
@@ -754,7 +730,6 @@ export default function AboutStitchClient() {
 								viewBox="0 0 12 12"
 								fill="none"
 								className="shrink-0 ml-2 transition-transform group-hover:translate-x-0.5"
-								style={{ color: "#52525b" }}
 							>
 								<path
 									d="M4.5 2L8.5 6L4.5 10"
@@ -764,7 +739,7 @@ export default function AboutStitchClient() {
 									strokeLinejoin="round"
 								/>
 							</svg>
-						</Link>
+						</div>
 					))}
 				</div>
 			</Section>

@@ -236,7 +236,7 @@ export default async function VideoDesignProjectsPage() {
 										/>
 									) : (
 										<div className="  p-8 text-center">
-											<Eye className="w-12 h-12 text-accent mx-auto mb-4" />
+											<Eye className="w-12 h-12  mx-auto mb-4" />
 											<h2 className="zen-kaku-gothic-new text-xl mb-2">
 												No video & design projects found
 											</h2>
@@ -245,7 +245,7 @@ export default async function VideoDesignProjectsPage() {
 												published.
 											</p>
 											{process.env.NODE_ENV !== "production" && (
-												<div className="mt-2 text-xs /70 space-y-1">
+												<div className="mt-2 text-xs space-y-1">
 													<p>Diagnostics:</p>
 													<ul className="list-disc pl-5 space-y-0.5">
 														<li>Loaded items: {rows.length}</li>

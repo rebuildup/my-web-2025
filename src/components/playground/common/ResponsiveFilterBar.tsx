@@ -90,7 +90,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 				<button
 					type="button"
 					onClick={() => setIsExpanded(true)}
-					className="flex items-center justify-between w-full text-left   focus: focus:ring-offset-2 focus:ring-offset-base"
+					className="flex items-center justify-between w-full text-left"
 					aria-expanded={isExpanded}
 					aria-controls="filter-content"
 				>
@@ -98,9 +98,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 						<Filter className="w-5 h-5 mr-2" />
 						<h3 className="zen-kaku-gothic-new text-lg ">Filters</h3>
 						{hasActiveFilters && (
-							<span className="ml-2 px-2 py-1 bg-accent text-xs rounded">
-								Active
-							</span>
+							<span className="ml-2 px-2 py-1  text-xs rounded">Active</span>
 						)}
 					</div>
 					<ChevronDown className="w-4 h-4" />
@@ -115,7 +113,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 						<button
 							type="button"
 							onClick={clearFilters}
-							className="flex items-center text-xs text-accent hover:   focus: focus:ring-offset-2 focus:ring-offset-base"
+							className="flex items-center text-xs"
 						>
 							<X className="w-3 h-3 mr-1" />
 							Clear
@@ -132,9 +130,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 			<div className="flex items-center justify-between">
 				<div className="flex items-center">
 					<Filter className="w-5 h-5 mr-2" />
-					<h3 className="zen-kaku-gothic-new text-lg ">
-						Experiment Filter
-					</h3>
+					<h3 className="zen-kaku-gothic-new text-lg ">Experiment Filter</h3>
 				</div>
 
 				<div className="flex items-center space-x-2">
@@ -142,7 +138,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 						<button
 							type="button"
 							onClick={clearFilters}
-							className="flex items-center text-sm text-accent hover:   focus: focus:ring-offset-2 focus:ring-offset-base"
+							className="flex items-center text-sm"
 						>
 							<X className="w-4 h-4 mr-1" />
 							Clear All
@@ -153,7 +149,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 						<button
 							type="button"
 							onClick={() => setIsExpanded(false)}
-							className="p-1   focus: focus:ring-offset-2 focus:ring-offset-base"
+							className="p-1"
 							aria-label="Collapse filters"
 						>
 							<ChevronUp className="w-4 h-4" />
@@ -337,7 +333,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 							return (
 								<span
 									key={key}
-									className="inline-flex items-center px-2 py-1 bg-accent bg-opacity-20  border-accent text-accent text-xs rounded"
+									className="inline-flex items-center px-2 py-1  bg-opacity-20    text-xs rounded"
 								>
 									{key}: {value.toString()}
 									<button
@@ -345,7 +341,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 										onClick={() =>
 											updateFilter(key as keyof ExperimentFilter, undefined)
 										}
-										className="ml-1 hover: "
+										className="ml-1"
 										aria-label={`Remove ${key} filter`}
 									>
 										<X className="w-3 h-3" />

@@ -434,26 +434,26 @@ export function GeneratedQuiz({ title = "${docs[0]?.title ?? "Quiz"}" }) {
  {${docs.length > 1 ? "true" : "false"} && (
  <div className="nav-bar">
  ${docs
-							.map(
-								(_, i) =>
-									`<button className=\\"nav-btn\\" onClick={() => setPage(${i})}>第${i + 1}回</button>`,
-							)
-							.join("")}
+		.map(
+			(_, i) =>
+				`<button className=\\"nav-btn\\" onClick={() => setPage(${i})}>第${i + 1}回</button>`,
+		)
+		.join("")}
  </div>
  )}
  ${docs
-					.map((doc, idx) => {
-						const blocks = doc.blocks
-							.map((b) => {
-								const header = b.header
-									? `<h3 className=\\"main-header\\">${b.header}</h3>`
-									: "";
-								const sections = b.sections
-									.map((sec) => {
-										const paras = sec.paragraphs
-											.map((p) => `<p>${paragraphToHtml(p)}</p>`)
-											.join("\\n");
-										return `<div className=\\"quiz-section\\">
+		.map((doc, idx) => {
+			const blocks = doc.blocks
+				.map((b) => {
+					const header = b.header
+						? `<h3 className=\\"main-header\\">${b.header}</h3>`
+						: "";
+					const sections = b.sections
+						.map((sec) => {
+							const paras = sec.paragraphs
+								.map((p) => `<p>${paragraphToHtml(p)}</p>`)
+								.join("\\n");
+							return `<div className=\\"quiz-section\\">
  <h4>${sec.title}</h4>
  ${paras}
  <div className=\\"section-controls\\">
@@ -462,17 +462,17 @@ export function GeneratedQuiz({ title = "${docs[0]?.title ?? "Quiz"}" }) {
  <button className=\\"btn-mini btn-reset\\" onClick={(e)=>resetSection(e.currentTarget)}>リセット</button>
  </div>
 </div>`;
-									})
-									.join("\\n");
-								return `${header}${sections}`;
-							})
-							.join("\\n");
-						return `<div className=\\"sheet\\" style=\\"display:${idx === 0 ? "block" : "none"}\\">
+						})
+						.join("\\n");
+					return `${header}${sections}`;
+				})
+				.join("\\n");
+			return `<div className=\\"sheet\\" style=\\"display:${idx === 0 ? "block" : "none"}\\">
  <h2 className=\\"sheet-title\\">${idx === 0 ? "{title}" : doc.title}</h2>
  ${blocks}
 </div>`;
-					})
-					.join("")}
+		})
+		.join("")}
  </div>
  </>
  );
@@ -1000,7 +1000,6 @@ export default function FillGenTool() {
 
 				<h1
 					style={{
-						all: "revert",
 						fontWeight: 700,
 						marginBottom: 4,
 						fontSize: 32,
@@ -1008,14 +1007,13 @@ export default function FillGenTool() {
 				>
 					穴埋めプリントジェネレーター
 				</h1>
-				<p style={{ all: "revert", color: "#666", marginBottom: 16 }}>
+				<p style={{ color: "#666", marginBottom: 16 }}>
 					テキストに <code>{"{{答え|幅}}"}</code> を挿入して、プレビュー / HTML
 					/ React コードを即座に生成します.
 				</p>
 
 				<fieldset
 					style={{
-						all: "revert",
 						border: "1px solid #ccc",
 						padding: 16,
 						marginBottom: 24,
@@ -1047,7 +1045,6 @@ export default function FillGenTool() {
 										type="button"
 										onClick={() => setActivePage(i)}
 										style={{
-											all: "revert",
 											padding: "8px 16px",
 											border: "none",
 											borderBottom:
@@ -1069,7 +1066,6 @@ export default function FillGenTool() {
 									type="button"
 									onClick={addPage}
 									style={{
-										all: "revert",
 										padding: "8px 16px",
 										fontSize: 14,
 										cursor: "pointer",
@@ -1082,7 +1078,6 @@ export default function FillGenTool() {
 									onClick={removePage}
 									disabled={pages.length === 1}
 									style={{
-										all: "revert",
 										padding: "8px 16px",
 										fontSize: 14,
 										cursor: pages.length === 1 ? "not-allowed" : "pointer",
@@ -1185,7 +1180,6 @@ export default function FillGenTool() {
 							rows={14}
 							placeholder="# タイトル&#10;## 見出し&#10;### セクション&#10;本文を入力"
 							style={{
-								all: "revert",
 								width: "100%",
 								fontFamily: "Menlo, monospace",
 								fontSize: 14,
@@ -1196,7 +1190,7 @@ export default function FillGenTool() {
 								boxSizing: "border-box",
 							}}
 						/>
-						<p style={{ all: "revert", color: "#666", fontSize: 13 }}>
+						<p style={{ color: "#666", fontSize: 13 }}>
 							記法: <code>#</code> タイトル, <code>##</code> メイン見出し,{" "}
 							<code>###</code>
 							セクション見出し, 空行で段落区切り.
@@ -1204,9 +1198,7 @@ export default function FillGenTool() {
 					</div>
 				</fieldset>
 
-				<fieldset
-					style={{ all: "revert", border: "1px solid #ccc", padding: 16 }}
-				>
+				<fieldset style={{ border: "1px solid #ccc", padding: 16 }}>
 					<legend>出力</legend>
 					<div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 						<div style={{ display: "flex", alignItems: "center", gap: 16 }}>
@@ -1227,7 +1219,6 @@ export default function FillGenTool() {
 										type="button"
 										onClick={() => setTab(key)}
 										style={{
-											all: "revert",
 											padding: "8px 16px",
 											border: "none",
 											borderBottom:
@@ -1259,7 +1250,6 @@ export default function FillGenTool() {
 											downloadFile(content, filename);
 										}}
 										style={{
-											all: "revert",
 											padding: "8px 16px",
 											fontSize: 14,
 											cursor: "pointer",
@@ -1276,7 +1266,6 @@ export default function FillGenTool() {
 											alert(ok ? "コピーしました" : "コピー失敗");
 										}}
 										style={{
-											all: "revert",
 											padding: "8px 16px",
 											fontSize: 14,
 											cursor: "pointer",
@@ -1291,7 +1280,6 @@ export default function FillGenTool() {
 						{tab === "preview" && (
 							<div
 								style={{
-									all: "revert",
 									padding: 16,
 									background: "#fafafa",
 									borderRadius: 8,
@@ -1391,7 +1379,6 @@ export default function FillGenTool() {
 						{tab === "preview" && (
 							<fieldset
 								style={{
-									all: "revert",
 									border: "1px solid #ccc",
 									padding: 16,
 									marginTop: 16,
@@ -1412,7 +1399,6 @@ export default function FillGenTool() {
 									>
 										<h2
 											style={{
-												all: "revert",
 												fontWeight: 700,
 												fontSize: 20,
 												margin: 0,
@@ -1423,9 +1409,7 @@ export default function FillGenTool() {
 										<div
 											style={{ display: "flex", alignItems: "center", gap: 8 }}
 										>
-											<label style={{ all: "revert", fontSize: 14 }}>
-												プリセット:
-											</label>
+											<label style={{ fontSize: 14 }}>プリセット:</label>
 											<select
 												value={
 													Object.keys(presets).find(
@@ -1441,7 +1425,6 @@ export default function FillGenTool() {
 													}
 												}}
 												style={{
-													all: "revert",
 													padding: "4px 8px",
 													fontSize: 14,
 													minWidth: 140,
@@ -1467,16 +1450,14 @@ export default function FillGenTool() {
 
 									<hr
 										style={{
-											all: "revert",
 											border: "none",
 											borderTop: "1px solid #eee",
 										}}
 									/>
 
-									<details open style={{ all: "revert" }}>
+									<details open>
 										<summary
 											style={{
-												all: "revert",
 												fontWeight: 600,
 												fontSize: 16,
 												cursor: "pointer",
@@ -1497,7 +1478,6 @@ export default function FillGenTool() {
 											<div>
 												<label
 													style={{
-														all: "revert",
 														display: "block",
 														fontSize: 14,
 														marginBottom: 4,
@@ -1518,7 +1498,6 @@ export default function FillGenTool() {
 														})
 													}
 													style={{
-														all: "revert",
 														width: "100%",
 														height: 40,
 														border: "1px solid #ddd",
@@ -1529,7 +1508,6 @@ export default function FillGenTool() {
 											<div>
 												<label
 													style={{
-														all: "revert",
 														display: "block",
 														fontSize: 14,
 														marginBottom: 4,
@@ -1550,7 +1528,6 @@ export default function FillGenTool() {
 														})
 													}
 													style={{
-														all: "revert",
 														width: "100%",
 														height: 40,
 														border: "1px solid #ddd",
@@ -1561,7 +1538,6 @@ export default function FillGenTool() {
 											<div>
 												<label
 													style={{
-														all: "revert",
 														display: "block",
 														fontSize: 14,
 														marginBottom: 4,
@@ -1582,7 +1558,6 @@ export default function FillGenTool() {
 														})
 													}
 													style={{
-														all: "revert",
 														width: "100%",
 														height: 40,
 														border: "1px solid #ddd",
@@ -1593,7 +1568,6 @@ export default function FillGenTool() {
 											<div>
 												<label
 													style={{
-														all: "revert",
 														display: "block",
 														fontSize: 14,
 														marginBottom: 4,
@@ -1614,7 +1588,6 @@ export default function FillGenTool() {
 														})
 													}
 													style={{
-														all: "revert",
 														width: "100%",
 														height: 40,
 														border: "1px solid #ddd",
@@ -1625,7 +1598,6 @@ export default function FillGenTool() {
 											<div>
 												<label
 													style={{
-														all: "revert",
 														display: "block",
 														fontSize: 14,
 														marginBottom: 4,
@@ -1646,7 +1618,6 @@ export default function FillGenTool() {
 														})
 													}
 													style={{
-														all: "revert",
 														width: "100%",
 														height: 40,
 														border: "1px solid #ddd",
@@ -1657,7 +1628,6 @@ export default function FillGenTool() {
 											<div>
 												<label
 													style={{
-														all: "revert",
 														display: "block",
 														fontSize: 14,
 														marginBottom: 4,
@@ -1678,7 +1648,6 @@ export default function FillGenTool() {
 														})
 													}
 													style={{
-														all: "revert",
 														width: "100%",
 														height: 40,
 														border: "1px solid #ddd",
@@ -1689,10 +1658,9 @@ export default function FillGenTool() {
 										</div>
 									</details>
 
-									<details style={{ all: "revert" }}>
+									<details>
 										<summary
 											style={{
-												all: "revert",
 												fontWeight: 600,
 												fontSize: 16,
 												cursor: "pointer",
@@ -1710,7 +1678,7 @@ export default function FillGenTool() {
 											}}
 										>
 											<div>
-												<p style={{ all: "revert", marginBottom: 4 }}>
+												<p style={{ marginBottom: 4 }}>
 													基本サイズ: {settings.textSize.base}px
 												</p>
 												<input
@@ -1729,11 +1697,11 @@ export default function FillGenTool() {
 														})
 													}
 													aria-label="基本テキストサイズ"
-													style={{ all: "revert", width: "100%" }}
+													style={{ width: "100%" }}
 												/>
 											</div>
 											<div>
-												<p style={{ all: "revert", marginBottom: 4 }}>
+												<p style={{ marginBottom: 4 }}>
 													タイトルサイズ: {settings.textSize.title}px
 												</p>
 												<input
@@ -1752,11 +1720,11 @@ export default function FillGenTool() {
 														})
 													}
 													aria-label="タイトルサイズ"
-													style={{ all: "revert", width: "100%" }}
+													style={{ width: "100%" }}
 												/>
 											</div>
 											<div>
-												<p style={{ all: "revert", marginBottom: 4 }}>
+												<p style={{ marginBottom: 4 }}>
 													見出しサイズ: {settings.textSize.header}px
 												</p>
 												<input
@@ -1775,11 +1743,11 @@ export default function FillGenTool() {
 														})
 													}
 													aria-label="見出しサイズ"
-													style={{ all: "revert", width: "100%" }}
+													style={{ width: "100%" }}
 												/>
 											</div>
 											<div>
-												<p style={{ all: "revert", marginBottom: 4 }}>
+												<p style={{ marginBottom: 4 }}>
 													セクションサイズ: {settings.textSize.section}px
 												</p>
 												<input
@@ -1798,11 +1766,11 @@ export default function FillGenTool() {
 														})
 													}
 													aria-label="セクションサイズ"
-													style={{ all: "revert", width: "100%" }}
+													style={{ width: "100%" }}
 												/>
 											</div>
 											<div>
-												<p style={{ all: "revert", marginBottom: 4 }}>
+												<p style={{ marginBottom: 4 }}>
 													空欄サイズ: {settings.textSize.blank}px
 												</p>
 												<input
@@ -1821,16 +1789,15 @@ export default function FillGenTool() {
 														})
 													}
 													aria-label="空欄サイズ"
-													style={{ all: "revert", width: "100%" }}
+													style={{ width: "100%" }}
 												/>
 											</div>
 										</div>
 									</details>
 
-									<details style={{ all: "revert" }}>
+									<details>
 										<summary
 											style={{
-												all: "revert",
 												fontWeight: 600,
 												fontSize: 16,
 												cursor: "pointer",
@@ -1848,7 +1815,7 @@ export default function FillGenTool() {
 											}}
 										>
 											<div>
-												<p style={{ all: "revert", marginBottom: 4 }}>
+												<p style={{ marginBottom: 4 }}>
 													角丸: {settings.button.borderRadius}px
 												</p>
 												<input
@@ -1867,11 +1834,11 @@ export default function FillGenTool() {
 														})
 													}
 													aria-label="ボタンの角丸"
-													style={{ all: "revert", width: "100%" }}
+													style={{ width: "100%" }}
 												/>
 											</div>
 											<div>
-												<p style={{ all: "revert", marginBottom: 4 }}>
+												<p style={{ marginBottom: 4 }}>
 													フォントサイズ: {settings.button.fontSize}px
 												</p>
 												<input
@@ -1890,16 +1857,15 @@ export default function FillGenTool() {
 														})
 													}
 													aria-label="ボタンのフォントサイズ"
-													style={{ all: "revert", width: "100%" }}
+													style={{ width: "100%" }}
 												/>
 											</div>
 										</div>
 									</details>
 
-									<details style={{ all: "revert" }}>
+									<details>
 										<summary
 											style={{
-												all: "revert",
 												fontWeight: 600,
 												fontSize: 16,
 												cursor: "pointer",
@@ -1919,7 +1885,6 @@ export default function FillGenTool() {
 											<div>
 												<label
 													style={{
-														all: "revert",
 														display: "block",
 														fontSize: 14,
 														marginBottom: 4,
@@ -1943,7 +1908,6 @@ export default function FillGenTool() {
 														})
 													}
 													style={{
-														all: "revert",
 														width: "100%",
 														padding: "4px 8px",
 														fontSize: 14,
@@ -1956,7 +1920,7 @@ export default function FillGenTool() {
 												</select>
 											</div>
 											<div>
-												<p style={{ all: "revert", marginBottom: 4 }}>
+												<p style={{ marginBottom: 4 }}>
 													線の太さ: {settings.blank.borderWidth}px
 												</p>
 												<input
@@ -1975,13 +1939,12 @@ export default function FillGenTool() {
 														})
 													}
 													aria-label="空欄の線の太さ"
-													style={{ all: "revert", width: "100%" }}
+													style={{ width: "100%" }}
 												/>
 											</div>
 											<div>
 												<label
 													style={{
-														all: "revert",
 														display: "block",
 														fontSize: 14,
 														marginBottom: 4,
@@ -2002,7 +1965,6 @@ export default function FillGenTool() {
 														})
 													}
 													style={{
-														all: "revert",
 														width: "100%",
 														height: 40,
 														border: "1px solid #ddd",
@@ -2014,10 +1976,9 @@ export default function FillGenTool() {
 										</div>
 									</details>
 
-									<details style={{ all: "revert" }}>
+									<details>
 										<summary
 											style={{
-												all: "revert",
 												fontWeight: 600,
 												fontSize: 16,
 												cursor: "pointer",
@@ -2035,7 +1996,7 @@ export default function FillGenTool() {
 											}}
 										>
 											<div>
-												<p style={{ all: "revert", marginBottom: 4 }}>
+												<p style={{ marginBottom: 4 }}>
 													角丸: {settings.navTab.borderRadius}px
 												</p>
 												<input
@@ -2054,11 +2015,11 @@ export default function FillGenTool() {
 														})
 													}
 													aria-label="タブの角丸"
-													style={{ all: "revert", width: "100%" }}
+													style={{ width: "100%" }}
 												/>
 											</div>
 											<div>
-												<p style={{ all: "revert", marginBottom: 4 }}>
+												<p style={{ marginBottom: 4 }}>
 													フォントサイズ: {settings.navTab.fontSize}px
 												</p>
 												<input
@@ -2077,7 +2038,7 @@ export default function FillGenTool() {
 														})
 													}
 													aria-label="タブのフォントサイズ"
-													style={{ all: "revert", width: "100%" }}
+													style={{ width: "100%" }}
 												/>
 											</div>
 										</div>
@@ -2089,7 +2050,6 @@ export default function FillGenTool() {
 						{tab === "html" && (
 							<pre
 								style={{
-									all: "revert",
 									whiteSpace: "pre-wrap",
 									wordBreak: "break-word",
 									background: "#0b1021",
@@ -2109,7 +2069,6 @@ export default function FillGenTool() {
 						{tab === "react" && (
 							<pre
 								style={{
-									all: "revert",
 									whiteSpace: "pre-wrap",
 									wordBreak: "break-word",
 									background: "#0b1021",

@@ -16,9 +16,7 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
 
 	if (total === 0) {
 		return (
-			<div className="text-center text-sm  py-4">
-				文字が入力されていません
-			</div>
+			<div className="text-center text-sm  py-4">文字が入力されていません</div>
 		);
 	}
 
@@ -46,7 +44,7 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
 									{item.count} ({percentage.toFixed(1)}%)
 								</span>
 							</div>
-							<div className="w-full rounded-full /10 h-2">
+							<div className="w-full rounded-full h-2">
 								<div
 									className="h-full transition-all duration-300"
 									style={{

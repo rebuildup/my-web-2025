@@ -91,14 +91,17 @@ export default function VideoDetailPanel({
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center p-4 ">
-			<div className="w-[92vw] max-w-[1100px] max-h-[90vh] overflow-hidden ">
+			<div
+				className="w-[92vw] max-w-[1100px] max-h-[90vh] overflow-hidden rounded-lg"
+				style={{ backgroundColor: "var(--page-bg)" }}
+			>
 				{/* Header removed to reduce top whitespace */}
 
 				<div className="p-6">
 					<div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 						{/* Video Player (left 2/3) */}
 						<div className="lg:col-span-2 xl:col-span-3 space-y-4">
-							<div className="aspect-video /30 overflow-hidden relative">
+							<div className="aspect-video overflow-hidden relative">
 								{!isVideoLoaded ? (
 									<>
 										{/* Background Thumbnail */}
@@ -130,7 +133,7 @@ export default function VideoDetailPanel({
 											<button
 												type="button"
 												onClick={() => setIsVideoLoaded(true)}
-												className="flex items-center gap-2  px-6 py-3 transition-all duration-300"
+												className="flex items-center gap-2 px-6 py-3"
 												style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
 												onMouseEnter={(e) => {
 													e.currentTarget.style.backgroundColor =
@@ -171,19 +174,17 @@ export default function VideoDetailPanel({
 						</div>
 						{/* Right column: close + info + actions */}
 						<div
-							className="lg:col-span-1 flex flex-col gap-4 overflow-y-auto pr-2"
+							className="lg:col-span-1 flex flex-col gap-4 overflow-y-auto overflow-x-hidden pr-2"
 							style={{ maxHeight: "calc(90vh - 48px)" }}
 						>
 							{/* 作品情報 */}
 							<div>
 								<div className="flex items-center justify-between mb-2">
-									<h3 className="zen-kaku-gothic-new text-lg ">
-										作品情報
-									</h3>
+									<h3 className="zen-kaku-gothic-new text-lg ">作品情報</h3>
 									<button
 										type="button"
 										onClick={onClose}
-										className="p-1.5 hover:/40 transition-colors   focus:ring-accent/50 cursor-pointer"
+										className="p-1.5 cursor-pointer"
 										aria-label="Close panel"
 									>
 										<X className="w-4 h-4" />
@@ -199,7 +200,7 @@ export default function VideoDetailPanel({
 										</span>
 									</div>
 									<div className="flex items-center gap-2">
-										<span className="noto-sans-jp-light text-xs text-accent bg-accent/10 px-2 py-1  ring-accent/20">
+										<span className="noto-sans-jp-light text-xs   px-2 py-1  ">
 											{item.category}
 										</span>
 									</div>
@@ -211,9 +212,7 @@ export default function VideoDetailPanel({
 							{(item.externalLinks && item.externalLinks.length > 0) ||
 							(Array.isArray(full?.links) && full!.links!.length > 0) ? (
 								<div>
-									<h3 className="zen-kaku-gothic-new text-lg mb-2">
-										リンク
-									</h3>
+									<h3 className="zen-kaku-gothic-new text-lg mb-2">リンク</h3>
 									<div className="flex flex-wrap gap-2">
 										{[
 											...(item.externalLinks || []).map((l: any) => ({
@@ -236,7 +235,7 @@ export default function VideoDetailPanel({
 													href={link.href}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="inline-flex items-center gap-1 text-accent hover: transition-colors max-w-full overflow-hidden px-1 py-0.5"
+													className="inline-flex items-center gap-1  hover: transition-colors max-w-full overflow-hidden px-1 py-0.5"
 												>
 													<ExternalLink className="w-3.5 h-3.5" />
 													<span className="noto-sans-jp-light text-xs truncate max-w-[220px] sm:max-w-[280px] md:max-w-[340px]">
@@ -282,7 +281,7 @@ export default function VideoDetailPanel({
 													href={`/portfolio/${item.id}`}
 													className="block w-full group"
 												>
-													<div className="relative aspect-video w-full overflow-hidden /30">
+													<div className="relative aspect-video w-full overflow-hidden">
 														{thumbSrc ? (
 															<SafeImage
 																src={thumbSrc}
@@ -292,7 +291,7 @@ export default function VideoDetailPanel({
 																style={{ objectPosition: "center center" }}
 															/>
 														) : (
-															<div className="w-full h-full flex items-center justify-center /70">
+															<div className="w-full h-full flex items-center justify-center">
 																<span className="noto-sans-jp-light text-xs">
 																	{type || "media"}
 																</span>
@@ -310,7 +309,7 @@ export default function VideoDetailPanel({
 							<div className="flex flex-col gap-1.5 pt-2 mt-auto">
 								<Link
 									href={`/portfolio/${item.id}`}
-									className=" text-sm px-3 py-1.5 hover:bg-accent transition-colors   focus:ring-accent/50 w-full text-left"
+									className=" text-sm px-3 py-1.5  transition-colors    w-full text-left"
 								>
 									<span className="noto-sans-jp-light text-xs">
 										詳細ページを見る
@@ -321,7 +320,7 @@ export default function VideoDetailPanel({
 										href={youTubeUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="px-3 py-1.5 /30 hover:/50 transition-colors   focus:ring-accent/50 w-full text-left text-sm"
+										className="px-3 py-1.5 hover:/50 transition-colors    w-full text-left text-sm"
 									>
 										<span className="noto-sans-jp-light text-xs">
 											YouTubeで見る

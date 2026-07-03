@@ -131,7 +131,7 @@ export const AccessibleExperimentWrapper: React.FC<
  `;
 
 		if (variant === "primary") {
-			return `${baseClasses} bg-accent hover:bg-accent/80 focus:ring-accent`;
+			return `${baseClasses}   `;
 		}
 
 		return `${baseClasses}  hover: hover: focus:`;
@@ -147,7 +147,7 @@ export const AccessibleExperimentWrapper: React.FC<
 			{accessibilityState.keyboardNavigation && isActive && (
 				<a
 					href={`#experiment-${experiment.id}-content`}
-					className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 z-50 bg-accent px-4 py-2 text-sm font-medium"
+					className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 z-50  px-4 py-2 text-sm font-medium"
 				>
 					実験コンテンツにスキップ
 				</a>
@@ -156,9 +156,7 @@ export const AccessibleExperimentWrapper: React.FC<
 			{/* Experiment header with controls */}
 			<div className="flex items-center justify-between mb-4">
 				<div>
-					<h3 className="zen-kaku-gothic-new text-lg ">
-						{experiment.title}
-					</h3>
+					<h3 className="zen-kaku-gothic-new text-lg ">{experiment.title}</h3>
 					<p
 						id={`experiment-${experiment.id}-description`}
 						className="noto-sans-jp-light text-sm mt-1"
@@ -216,10 +214,7 @@ export const AccessibleExperimentWrapper: React.FC<
 					role="alert"
 					aria-live="assertive"
 				>
-					<AlertCircle
-						className="w-5 h-5  mr-2"
-						aria-hidden="true"
-					/>
+					<AlertCircle className="w-5 h-5  mr-2" aria-hidden="true" />
 					<div>
 						<h4 className="text-sm font-medium ">実験エラー</h4>
 						<p className="text-sm  mt-1">{errorMessage}</p>
@@ -249,28 +244,18 @@ export const AccessibleExperimentWrapper: React.FC<
 					<ul className="text-xs space-y-1">
 						{experiment.interactive && (
 							<li>
-								<kbd className="px-1 py-0.5 rounded text-xs">
-									Space
-								</kbd>{" "}
+								<kbd className="px-1 py-0.5 rounded text-xs">Space</kbd>{" "}
 								開始・一時停止
 							</li>
 						)}
 						<li>
-							<kbd className="px-1 py-0.5 rounded text-xs">
-								Ctrl+R
-							</kbd>{" "}
-							リセット
+							<kbd className="px-1 py-0.5 rounded text-xs">Ctrl+R</kbd> リセット
 						</li>
 						<li>
-							<kbd className="px-1 py-0.5 rounded text-xs">
-								Esc
-							</kbd>{" "}
-							終了
+							<kbd className="px-1 py-0.5 rounded text-xs">Esc</kbd> 終了
 						</li>
 						<li>
-							<kbd className="px-1 py-0.5 rounded text-xs">
-								Tab
-							</kbd>{" "}
+							<kbd className="px-1 py-0.5 rounded text-xs">Tab</kbd>{" "}
 							フォーカス移動
 						</li>
 					</ul>
@@ -280,10 +265,7 @@ export const AccessibleExperimentWrapper: React.FC<
 			{/* Reduced motion warning */}
 			{accessibilityState.prefersReducedMotion &&
 				experiment.category === "animation" && (
-					<div
-						className="flex items-center p-3 mb-4    rounded"
-						role="note"
-					>
+					<div className="flex items-center p-3 mb-4    rounded" role="note">
 						<Info className="w-5 h-5  mr-2" aria-hidden="true" />
 						<p className="text-sm ">
 							アニメーション設定により、動きが制限されています.

@@ -19,7 +19,7 @@ export function TagHelpText({ className = "" }: TagHelpTextProps) {
 					<button
 						type="button"
 						onClick={() => setIsExpanded(!isExpanded)}
-						className="  underline"
+						className="underline"
 					>
 						{isExpanded ? "Show less" : "Learn more"}
 					</button>

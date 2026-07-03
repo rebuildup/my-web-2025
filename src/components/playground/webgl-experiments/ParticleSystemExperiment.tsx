@@ -568,7 +568,7 @@ export function ParticleSystemExperiment({
 
 			{/* Instructions */}
 			<div className="text-center">
-				<p className="noto-sans-jp-light text-sm text-accent">
+				<p className="noto-sans-jp-light text-sm ">
 					マウスを動かしてパーティクルを引き寄せてください
 				</p>
 			</div>
@@ -644,9 +644,7 @@ export function ParticleSystemExperiment({
 
 				{/* Color Mode */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm ">
-						Color Mode
-					</label>
+					<label className="noto-sans-jp-light text-sm ">Color Mode</label>
 					<select
 						value={controls.colorMode}
 						onChange={(e) =>
@@ -655,7 +653,7 @@ export function ParticleSystemExperiment({
 								colorMode: e.target.value as ParticleControls["colorMode"],
 							}))
 						}
-						className="w-full  p-2 text-sm"
+						className="w-full p-2 text-sm"
 					>
 						<option value="rainbow">Rainbow</option>
 						<option value="blue">Blue</option>

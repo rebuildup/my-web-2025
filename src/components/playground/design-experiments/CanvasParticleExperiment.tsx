@@ -473,7 +473,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={isAnimating ? stopAnimation : startAnimation}
-						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center px-4 py-2"
 					>
 						{isAnimating ? (
 							<Pause className="w-4 h-4 mr-2" />
@@ -488,7 +488,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetParticles}
-						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center px-4 py-2"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset</span>
@@ -588,9 +588,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 					{/* Physics Mode */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Physics
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Physics</label>
 						<select
 							value={config.physics}
 							onChange={(e) =>
@@ -599,7 +597,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 									physics: e.target.value as ParticleConfig["physics"],
 								}))
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							<option value="bounce">Bounce</option>
 							<option value="flow">Flow</option>
@@ -610,9 +608,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Color Mode */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Colors
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Colors</label>
 						<select
 							value={config.colorMode}
 							onChange={(e) =>
@@ -621,7 +617,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 									colorMode: e.target.value as ParticleConfig["colorMode"],
 								}))
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							<option value="rainbow">Rainbow</option>
 							<option value="monochrome">Monochrome</option>
@@ -631,9 +627,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Shape */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Shape
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Shape</label>
 						<select
 							value={config.shape}
 							onChange={(e) =>
@@ -642,7 +636,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 									shape: e.target.value as ParticleConfig["shape"],
 								}))
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							<option value="mixed">Mixed</option>
 							<option value="circle">Circle</option>
@@ -676,9 +670,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 
 			{/* Instructions */}
 			<div className="  p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg ">
-					Interaction Guide
-				</h3>
+				<h3 className="zen-kaku-gothic-new text-lg ">Interaction Guide</h3>
 
 				<div className="noto-sans-jp-light text-sm space-y-2">
 					<p>• マウスを動かしてパーティクルとインタラクション</p>

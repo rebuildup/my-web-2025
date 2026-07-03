@@ -334,7 +334,7 @@ function ContentSection({
 						</h2>
 					)}
 					{detail.summary && (
-						<p className="noto-sans-jp-light text-sm sm: /80 leading-relaxed">
+						<p className="noto-sans-jp-light text-sm sm: leading-relaxed">
 							{detail.summary}
 						</p>
 					)}
@@ -345,7 +345,7 @@ function ContentSection({
 				</div>
 			) : (
 				// Always show something, even if minimal
-				<div className="noto-sans-jp-light text-sm sm: leading-loose space-y-4 /60">
+				<div className="noto-sans-jp-light text-sm sm: leading-loose space-y-4">
 					{fallbackContent}
 				</div>
 			)}
@@ -354,7 +354,7 @@ function ContentSection({
 			{(relatedImages.length > 0 ||
 				(item.videos?.length ?? 0) > 0 ||
 				(item.externalLinks?.length ?? 0) > 0) && (
-				<div className="pt-6 sm:pt-8  /10">
+				<div className="pt-6 sm:pt-8">
 					<div className="space-y-6 sm:space-y-8">
 						{/* Images */}
 						{relatedImages.length > 0 && (
@@ -366,7 +366,7 @@ function ContentSection({
 									{relatedImages.slice(0, 4).map((image, index) => (
 										<div
 											key={`${item.id}-image-${image}-${index}`}
-											className="relative aspect-video /5 rounded-lg overflow-hidden"
+											className="relative aspect-video rounded-lg overflow-hidden"
 										>
 											<Image
 												src={image}
@@ -393,7 +393,7 @@ function ContentSection({
 									{item.videos.slice(0, 2).map((video, index) => (
 										<div
 											key={`${item.id}-video-${video.url ?? index}`}
-											className=" /10 rounded-lg p-3 sm:p-4"
+											className=" rounded-lg p-3 sm:p-4"
 										>
 											<div className="flex items-center space-x-3">
 												<div className="text-lg shrink-0">🎥</div>
@@ -402,13 +402,13 @@ function ContentSection({
 														{video.title || `動画 ${index + 1}`}
 													</div>
 													{video.description && (
-														<div className="text-xs sm:text-sm /60 mt-1">
+														<div className="text-xs sm:text-sm mt-1">
 															{video.description}
 														</div>
 													)}
 													<a
 														href={video.url}
-														className="text-xs sm:text-sm text-accent hover:underline mt-1 inline-block"
+														className="text-xs sm:text-sm  hover:underline mt-1 inline-block"
 													>
 														動画を見る →
 													</a>
@@ -431,7 +431,7 @@ function ContentSection({
 										<a
 											key={`${item.id}-link-${link.url ?? index}`}
 											href={link.url}
-											className="flex items-center space-x-3 p-3 sm:p-4  /10 rounded-lg hover:/5 transition-colors "
+											className="flex items-center space-x-3 p-3 sm:p-4 rounded-lg hover:/5 transition-colors "
 										>
 											<div className="text-lg shrink-0">🔗</div>
 											<div className="min-w-0 flex-1">
@@ -439,7 +439,7 @@ function ContentSection({
 													{link.title}
 												</div>
 												{link.description && (
-													<div className="text-xs sm:text-sm /60 mt-1">
+													<div className="text-xs sm:text-sm mt-1">
 														{link.description}
 													</div>
 												)}

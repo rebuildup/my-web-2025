@@ -55,7 +55,6 @@ export function ConversionSettingsPanel({
 								value={settings.componentName}
 								onChange={(e) => updateSetting("componentName", e.target.value)}
 								style={{
-									all: "revert",
 									width: "100%",
 									padding: "4px 8px",
 									fontSize: "13px",
@@ -79,7 +78,6 @@ export function ConversionSettingsPanel({
 								value={settings.propsType}
 								onChange={(e) => updateSetting("propsType", e.target.value)}
 								style={{
-									all: "revert",
 									width: "100%",
 									padding: "4px 8px",
 									fontSize: "13px",
@@ -105,7 +103,6 @@ export function ConversionSettingsPanel({
 								onChange={(e) =>
 									updateSetting("includeComments", e.target.checked)
 								}
-								style={{ all: "revert" }}
 							/>
 							コメントを追加
 						</label>
@@ -152,7 +149,6 @@ export function ConversionSettingsPanel({
 									type="checkbox"
 									checked={settings[key]}
 									onChange={(e) => updateSetting(key, e.target.checked)}
-									style={{ all: "revert" }}
 								/>
 								{label}
 							</label>
@@ -193,7 +189,6 @@ export function ConversionSettingsPanel({
 									updateSetting("indentSize", parseInt(e.target.value, 10))
 								}
 								style={{
-									all: "revert",
 									width: "100%",
 									padding: "4px 8px",
 									fontSize: "13px",
@@ -221,7 +216,6 @@ export function ConversionSettingsPanel({
 									updateSetting("lineBreaks", e.target.value as "lf" | "crlf")
 								}
 								style={{
-									all: "revert",
 									width: "100%",
 									padding: "4px 8px",
 									fontSize: "13px",
@@ -251,7 +245,6 @@ export function ConversionSettingsPanel({
 									)
 								}
 								style={{
-									all: "revert",
 									width: "100%",
 									padding: "4px 8px",
 									fontSize: "13px",
@@ -281,7 +274,6 @@ export function ConversionSettingsPanel({
 									)
 								}
 								style={{
-									all: "revert",
 									width: "100%",
 									padding: "4px 8px",
 									fontSize: "13px",

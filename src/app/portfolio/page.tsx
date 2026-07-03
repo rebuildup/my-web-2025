@@ -9,7 +9,6 @@ import Link from "next/link";
 import { PortfolioCard } from "@/app/portfolio/gallery/all/components/PortfolioCard";
 import AboutBackgroundCSS from "@/components/AboutBackgroundCSS";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import GlowCard from "@/components/ui/GlowCard";
 import {
 	type CmsContentIndexEntry,
 	fetchCmsContentIndex,
@@ -60,22 +59,27 @@ function CategoryCard({
 	icon: React.ComponentType<{ className?: string }>;
 }) {
 	return (
-		<Link href={href} className="block">
-			<GlowCard className="p-6 ">
-				<div className="flex items-start justify-between">
-					<div className="space-y-2 flex-1">
-						<div className="flex items-center gap-3">
-							<Icon className="w-6 h-6 text-accent" />
-							<h3 className="zen-kaku-gothic-new text-xl ">{title}</h3>
-						</div>
-						<p className="noto-sans-jp-light text-sm leading-relaxed">
-							{description}
-						</p>
+		<div className="border border-current relative">
+			<div className="p-5 flex items-start justify-between gap-4">
+				<div className="flex-1 min-w-0">
+					<div className="flex items-center gap-3">
+						<Icon className="w-6 h-6 shrink-0 " />
+						<h3 className="zen-kaku-gothic-new text-xl ">
+							<Link
+								href={href}
+								className="before:absolute before:inset-0 before:z-10"
+							>
+								{title}
+							</Link>
+						</h3>
 					</div>
-					<ArrowRight className="w-5 h-5 group-hover:text-accent group-hover:translate-x-1 transition-all" />
+					<p className="noto-sans-jp-light text-sm leading-snug mt-2">
+						{description}
+					</p>
 				</div>
-			</GlowCard>
-		</Link>
+				<ArrowRight className="w-5 h-5 shrink-0  group-hover:translate-x-1 transition-all" />
+			</div>
+		</div>
 	);
 }
 
@@ -103,7 +107,7 @@ export default async function PortfolioPage() {
 						| {
 								src?: string;
 								poster?: string;
-						 }
+						  }
 						| undefined;
 					type NormalizedThumbnails = {
 						image?: ThumbnailVariant;
@@ -414,7 +418,7 @@ export default async function PortfolioPage() {
 									<h2 className="neue-haas-grotesk-display text-3xl ">
 										Gallery
 									</h2>
-									<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+									<div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 										{categories.map((category) => (
 											<CategoryCard
 												key={category.key}
@@ -429,27 +433,6 @@ export default async function PortfolioPage() {
 								</section>
 
 								{/* Highlights are integrated into Overview */}
-
-								{/* Playground CTA */}
-								<section className="space-y-6">
-									<h2 className="neue-haas-grotesk-display text-3xl ">
-										Playground
-									</h2>
-									<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-										<Link href="/portfolio/playground/WebGL" className="block">
-											<GlowCard className="p-6 ">
-												<div className="space-y-2">
-													<h3 className="zen-kaku-gothic-new text-xl ">
-														WebGL Dome Gallery
-													</h3>
-													<p className="noto-sans-jp-light text-sm ">
-														react-bits の Dome Gallery で遊ぶサンドボックス.
-													</p>
-												</div>
-											</GlowCard>
-										</Link>
-									</div>
-								</section>
 
 								{/* Latest Works */}
 								<LatestWorksSection items={items} />
@@ -467,26 +450,20 @@ export default async function PortfolioPage() {
 											),
 											3,
 										).map((item) => (
-											<Link
+											<PortfolioCard
+												key={item.id}
+												item={item}
 												href={`/portfolio/${item.id}`}
 												target="_blank"
-												rel="noopener noreferrer"
-												key={item.id}
-											>
-												<PortfolioCard
-													item={item}
-													showMarkdownIndicator={true}
-													variant="glow"
-												/>
-											</Link>
+												showMarkdownIndicator={true}
+												variant="glow"
+											/>
 										))}
 									</div>
 								</section>
 
 								<section className="space-y-6">
-									<h2 className="neue-haas-grotesk-display text-3xl ">
-										Video
-									</h2>
+									<h2 className="neue-haas-grotesk-display text-3xl ">Video</h2>
 									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 										{topN(
 											items.filter(
@@ -495,18 +472,14 @@ export default async function PortfolioPage() {
 											),
 											3,
 										).map((item) => (
-											<Link
+											<PortfolioCard
+												key={item.id}
+												item={item}
 												href={`/portfolio/${item.id}`}
 												target="_blank"
-												rel="noopener noreferrer"
-												key={item.id}
-											>
-												<PortfolioCard
-													item={item}
-													showMarkdownIndicator={true}
-													variant="glow"
-												/>
-											</Link>
+												showMarkdownIndicator={true}
+												variant="glow"
+											/>
 										))}
 									</div>
 								</section>
@@ -523,18 +496,14 @@ export default async function PortfolioPage() {
 											),
 											3,
 										).map((item) => (
-											<Link
+											<PortfolioCard
+												key={item.id}
+												item={item}
 												href={`/portfolio/${item.id}`}
 												target="_blank"
-												rel="noopener noreferrer"
-												key={item.id}
-											>
-												<PortfolioCard
-													item={item}
-													showMarkdownIndicator={true}
-													variant="glow"
-												/>
-											</Link>
+												showMarkdownIndicator={true}
+												variant="glow"
+											/>
 										))}
 									</div>
 								</section>

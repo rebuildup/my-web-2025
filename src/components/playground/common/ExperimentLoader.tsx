@@ -144,11 +144,9 @@ export function ExperimentLoader({
 		return (
 			<div className={`flex items-center justify-center py-12 ${className}`}>
 				<div className="text-center space-y-4">
-					<Loader2 className="w-8 h-8 animate-spin text-accent mx-auto" />
+					<Loader2 className="w-8 h-8 animate-spin  mx-auto" />
 					<div className="space-y-2">
-						<p className="noto-sans-jp-light text-sm ">
-							実験を読み込み中...
-						</p>
+						<p className="noto-sans-jp-light text-sm ">実験を読み込み中...</p>
 						<p className="text-xs ">{experimentId}</p>
 					</div>
 				</div>
@@ -176,15 +174,13 @@ export function ExperimentLoader({
 				<div className="text-center space-y-4">
 					<AlertTriangle className="w-8 h-8  mx-auto" />
 					<div className="space-y-2">
-						<p className="noto-sans-jp-light text-sm ">
-							実験が見つかりません
-						</p>
+						<p className="noto-sans-jp-light text-sm ">実験が見つかりません</p>
 						<p className="text-xs ">ID: {experimentId}</p>
 					</div>
 					<button
 						type="button"
 						onClick={handleRetry}
-						className="px-4 py-2  hover:border-accent hover:text-accent transition-colors text-sm"
+						className="px-4 py-2 text-sm"
 					>
 						再試行
 					</button>
@@ -257,9 +253,7 @@ export function ExperimentPreloader({
 	return (
 		<div className="fixed bottom-4 right-4  p-3 rounded-lg  z-50">
 			<div className="flex items-center space-x-3">
-				{isPreloading && (
-					<Loader2 className="w-4 h-4 animate-spin text-accent" />
-				)}
+				{isPreloading && <Loader2 className="w-4 h-4 animate-spin " />}
 				<div className="text-sm">
 					<div className="">
 						{isPreloading ? "Preloading experiments..." : "Preload complete"}
@@ -272,7 +266,7 @@ export function ExperimentPreloader({
 			{isPreloading && (
 				<div className="mt-2 w-32 h-1  rounded-full overflow-hidden">
 					<div
-						className="h-full bg-accent transition-all duration-300"
+						className="h-full  transition-all duration-300"
 						style={{
 							width: `${(loadedCount / experimentIds.length) * 100}%`,
 						}}

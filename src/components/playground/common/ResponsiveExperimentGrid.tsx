@@ -80,9 +80,7 @@ export const ResponsiveExperimentGrid: React.FC<
  ${responsive.touch.isTouchDevice ? "active:scale-95" : "hover:scale-105"}
  `;
 
-		const stateClasses = isActive
-			? "border-accent bg-accent bg-opacity-10 "
-			: " hover:border-accent";
+		const stateClasses = isActive ? "  bg-opacity-10 " : " ";
 
 		const sizeClasses = responsive.isMobile
 			? "min-h-[120px]"
@@ -105,8 +103,8 @@ export const ResponsiveExperimentGrid: React.FC<
 			? "noto-sans-jp-light text-xs  px-1 py-0.5"
 			: "noto-sans-jp-light text-xs  px-2 py-1",
 		tech: responsive.isMobile
-			? "noto-sans-jp-light text-xs text-accent"
-			: "noto-sans-jp-light text-xs text-accent",
+			? "noto-sans-jp-light text-xs "
+			: "noto-sans-jp-light text-xs ",
 	});
 
 	const textClasses = getTextClasses();
@@ -131,7 +129,7 @@ export const ResponsiveExperimentGrid: React.FC<
 								<button
 									type="button"
 									onClick={goToPrevPage}
-									className="p-1  hover:border-accent   focus:"
+									className="p-1"
 									aria-label="Previous page"
 								>
 									<ChevronLeft className="w-4 h-4" />
@@ -139,7 +137,7 @@ export const ResponsiveExperimentGrid: React.FC<
 								<button
 									type="button"
 									onClick={goToNextPage}
-									className="p-1  hover:border-accent   focus:"
+									className="p-1"
 									aria-label="Next page"
 								>
 									<ChevronRight className="w-4 h-4" />
@@ -216,11 +214,7 @@ export const ResponsiveExperimentGrid: React.FC<
 										</span>
 									)}
 									{experiment.interactive && (
-										<span
-											className={`${textClasses.tag} border-accent text-accent`}
-										>
-											Interactive
-										</span>
+										<span className={`${textClasses.tag}  `}>Interactive</span>
 									)}
 								</div>
 
@@ -258,9 +252,7 @@ export const ResponsiveExperimentGrid: React.FC<
 								type="button"
 								key={pageNumber}
 								onClick={() => setCurrentPage(index)}
-								className={`w-2 h-2 rounded-full transition-colors ${
-									index === currentPage ? "bg-accent" : " "
-								}`}
+								className={`w-2 h-2 ${index === currentPage ? "" : " "}`}
 								aria-label={`Go to page ${pageNumber}`}
 							/>
 						);

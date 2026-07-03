@@ -10,9 +10,7 @@ interface ArticleGridProps {
 export function ArticleGrid({ articles }: ArticleGridProps) {
 	if (articles.length === 0) {
 		return (
-			<div className="p-8 text-center ">
-				該当する記事が見つかりませんでした
-			</div>
+			<div className="p-8 text-center ">該当する記事が見つかりませんでした</div>
 		);
 	}
 

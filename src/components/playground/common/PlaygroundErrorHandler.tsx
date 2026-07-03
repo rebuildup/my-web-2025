@@ -131,7 +131,7 @@ export function PlaygroundErrorHandler({
 					<button
 						type="button"
 						onClick={onDismiss}
-						className="  transition-colors"
+						className=""
 						aria-label="Dismiss error"
 					>
 						<X className="w-5 h-5" />
@@ -159,7 +159,7 @@ export function PlaygroundErrorHandler({
 						type="button"
 						onClick={handleRetry}
 						disabled={isRetrying}
-						className="flex items-center space-x-2 px-3 py-1  bg-opacity-50   rounded hover:bg-opacity-75 transition-colors  disabled:cursor-not-allowed"
+						className="flex items-center space-x-2 px-3 py-1"
 					>
 						<RefreshCw
 							className={`w-4 h-4 ${isRetrying ? "animate-spin" : ""}`}
@@ -173,7 +173,7 @@ export function PlaygroundErrorHandler({
 				<button
 					type="button"
 					onClick={() => window.location.reload()}
-					className="flex items-center space-x-2 px-3 py-1  bg-opacity-50   rounded hover:bg-opacity-75 transition-colors"
+					className="flex items-center space-x-2 px-3 py-1"
 				>
 					<RefreshCw className="w-4 h-4" />
 					<span className="text-sm">ページ再読み込み</span>

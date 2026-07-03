@@ -273,7 +273,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={toggleAnimation}
-						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center px-4 py-2"
 					>
 						{isAnimating ? (
 							<Pause className="w-4 h-4 mr-2" />
@@ -288,7 +288,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetAnimation}
-						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center px-4 py-2"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset</span>
@@ -317,7 +317,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 									type: e.target.value as SVGAnimationConfig["type"],
 								}))
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							{animationTypes.map((type) => (
 								<option key={type.value} value={type.value}>
@@ -350,9 +350,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Easing */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm ">
-							Easing
-						</label>
+						<label className="noto-sans-jp-light text-sm ">Easing</label>
 						<select
 							value={animationConfig.easing}
 							onChange={(e) =>
@@ -361,7 +359,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 									easing: e.target.value,
 								}))
 							}
-							className="w-full  p-2 text-sm"
+							className="w-full p-2 text-sm"
 						>
 							{easingTypes.map((easing) => (
 								<option key={easing.value} value={easing.value}>
@@ -397,9 +395,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 
 				{/* Color Controls */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm ">
-						Color Palette
-					</label>
+					<label className="noto-sans-jp-light text-sm ">Color Palette</label>
 					<div className="flex gap-4">
 						{colors.map((color, index) => (
 							<div key={index} className="flex items-center space-x-2">
@@ -413,7 +409,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 											return newColors;
 										})
 									}
-									className="w-12 h-8  "
+									className="w-12 h-8"
 								/>
 								<span className="noto-sans-jp-light text-sm ">
 									Color {index + 1}
@@ -426,9 +422,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 
 			{/* Animation Information */}
 			<div className="  p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg ">
-					SVG Animation Features
-				</h3>
+				<h3 className="zen-kaku-gothic-new text-lg ">SVG Animation Features</h3>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="space-y-2">

@@ -5,7 +5,6 @@
 
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { PortfolioContentItem } from "@/lib/portfolio/data-processor";
 import type { SearchFilter } from "@/lib/portfolio/search-index";
@@ -65,9 +64,7 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
 			{/* Header */}
 			<div>
 				<header className="space-y-4">
-					<h1 className="neue-haas-grotesk-display text-6xl ">
-						All Projects
-					</h1>
+					<h1 className="neue-haas-grotesk-display text-6xl ">All Projects</h1>
 					<p className="noto-sans-jp-light text-sm max-w leading-loose">
 						全ての制作物をまとめたギャラリーです
 					</p>
@@ -78,21 +75,16 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
 			<div className="mt-2 md:mt-4">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{filteredAndSortedItems.map((item) => (
-						<Link
+						<PortfolioCard
 							key={item.id}
+							item={item as PortfolioContentItem | EnhancedContentItem}
 							href={`/portfolio/${item.id}`}
 							target="_blank"
-							rel="noopener noreferrer"
 							data-testid="portfolio-item"
 							data-category={item.category}
-							className=""
-						>
-							<PortfolioCard
-								item={item as PortfolioContentItem | EnhancedContentItem}
-								showMarkdownIndicator={true}
-								variant="glow"
-							/>
-						</Link>
+							showMarkdownIndicator={true}
+							variant="glow"
+						/>
 					))}
 				</div>
 

@@ -261,7 +261,7 @@ export function SEOSection({
 					<button
 						type="button"
 						onClick={() => onSEOChange(undefined)}
-						className="  text-sm"
+						className="text-sm"
 					>
 						Clear all SEO data
 					</button>

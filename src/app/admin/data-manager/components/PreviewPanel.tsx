@@ -373,7 +373,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 									<h3 className="font-medium ">Videos</h3>
 									<button type="button"
 										onClick={() => setShowVideoEmbeds(!showVideoEmbeds)}
-										className="text-xs   px-2 py-1   rounded  transition-colors"
+										className="text-xs px-2 py-1"
 									>
 										{showVideoEmbeds ? "Hide Embeds" : "Show Embeds"}
 									</button>

@@ -10,9 +10,12 @@
  * - ONLY show: title, description, thumbnail, category, tags, metadata
  * - Show subtle indicator for items with markdown content
  * - Maintain consistent layout regardless of content type
+ *
+ * Only the title is a link. Thumbnail, description, tags, date are non-interactive.
  */
 
 import { FileText } from "lucide-react";
+import Link from "next/link";
 import GlowCard from "@/components/ui/GlowCard";
 import { SafeImage } from "@/components/ui/SafeImage";
 import type { PortfolioContentItem } from "@/lib/portfolio/data-processor";
@@ -21,7 +24,8 @@ import { isEnhancedContentItem } from "@/types/enhanced-content";
 
 interface PortfolioCardProps {
 	item: PortfolioContentItem | EnhancedContentItem;
-	onClick?: () => void;
+	href?: string;
+	target?: string;
 	// Gallery cards should NEVER display markdown content (Requirement 6.1)
 	// Only display: title, description, thumbnail, category, tags (Requirement 6.2)
 	showMarkdownIndicator?: boolean; // Default: true
@@ -31,37 +35,21 @@ interface PortfolioCardProps {
 
 export function PortfolioCard({
 	item,
-	onClick,
+	href,
+	target,
 	showMarkdownIndicator = true,
 	variant = "default",
 }: PortfolioCardProps) {
-	const handleKeyDown = (e: React.KeyboardEvent) => {
-		if (!onClick) return;
-		if (e.key === "Enter" || e.key === " ") {
-			e.preventDefault();
-			onClick();
-		}
-	};
-
 	// Check if item has detailed markdown content (Requirements 6.5)
 	// Only check for markdown content, not legacy content field
 	const hasDetailedContent = isEnhancedContentItem(item) && item.markdownPath;
 
 	const CardRoot = ({ children }: { children: React.ReactNode }) => {
 		if (variant === "glow") {
-			return (
-				<GlowCard className="group cursor-pointer text-left flex flex-col">
-					{children}
-				</GlowCard>
-			);
+			return <GlowCard className="group flex flex-col">{children}</GlowCard>;
 		}
 		return (
-			<article
-				className="  hover:border-accent transition-colors cursor-pointer group flex flex-col"
-				onClick={onClick}
-				onKeyDown={handleKeyDown}
-				aria-label={`View details for ${item.title}`}
-			>
+			<article className="   transition-colors group flex flex-col">
 				{children}
 			</article>
 		);
@@ -96,9 +84,7 @@ export function PortfolioCard({
 					/>
 				) : (
 					<div className="w-full h-full flex items-center justify-center ">
-						<span className="noto-sans-jp-light text-xs ">
-							{item.title}
-						</span>
+						<span className="noto-sans-jp-light text-xs ">{item.title}</span>
 					</div>
 				)}
 
@@ -117,13 +103,23 @@ export function PortfolioCard({
 			{/* Content */}
 			<div className="p-4 space-y-3 flex flex-col">
 				{/* Title (1-line) */}
-				<h2 className="zen-kaku-gothic-new group-hover:text-accent transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
-					{item.title}
+				<h2 className="zen-kaku-gothic-new  transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
+					{href ? (
+						<Link
+							href={href}
+							target={target}
+							rel={target === "_blank" ? "noopener noreferrer" : undefined}
+						>
+							{item.title}
+						</Link>
+					) : (
+						item.title
+					)}
 				</h2>
 
 				{/* Description (1-line) */}
 				<p className="noto-sans-jp-light text-sm whitespace-nowrap overflow-hidden text-ellipsis">
-					{item.description || "\u00A0"}
+					{item.description || " "}
 				</p>
 
 				{/* Tags (left) + Date (right) */}

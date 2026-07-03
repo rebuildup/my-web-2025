@@ -80,12 +80,12 @@ const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectProps>(
 		// Base styles with accessibility considerations
 		const baseSelectStyles = `
  w-full  
-   focus:ring-accent focus:border-accent
+    
   disabled:cursor-not-allowed
  appearance-none cursor-pointer
  ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
  ${error ? "" : "/20"}
- ${isFocused ? " ring-accent border-accent" : ""}
+ ${isFocused ? "  " : ""}
  `;
 
 		// Variant styles
@@ -126,10 +126,7 @@ const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectProps>(
 
 				{/* Description */}
 				{description && (
-					<p
-						id={descriptionId}
-						className="noto-sans-jp-light text-sm "
-					>
+					<p id={descriptionId} className="noto-sans-jp-light text-sm ">
 						{description}
 					</p>
 				)}
@@ -188,22 +185,14 @@ const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectProps>(
 
 				{/* Error message */}
 				{error && (
-					<p
-						id={errorId}
-						className=" text-sm"
-						role="alert"
-						aria-live="polite"
-					>
+					<p id={errorId} className=" text-sm" role="alert" aria-live="polite">
 						{error}
 					</p>
 				)}
 
 				{/* Help text */}
 				{helpText && (
-					<p
-						id={helpTextId}
-						className="noto-sans-jp-light text-xs "
-					>
+					<p id={helpTextId} className="noto-sans-jp-light text-xs ">
 						{helpText}
 					</p>
 				)}

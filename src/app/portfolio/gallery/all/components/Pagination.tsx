@@ -86,7 +86,7 @@ export function Pagination({
 				type="button"
 				onClick={handlePrevious}
 				disabled={currentPage === 1}
-				className="flex items-center space-x-1 px-4 py-1.5  disabled:cursor-not-allowed transition-colors"
+				className="flex items-center space-x-1 px-4 py-1.5"
 				aria-label="Go to previous page"
 			>
 				<ChevronLeft className="w-4 h-4" />
@@ -101,11 +101,7 @@ export function Pagination({
 						const next = visiblePages[index + 1];
 						const dotsKey = `dots-${typeof previous === "number" ? previous : `start-${index}`}-${typeof next === "number" ? next : `end-${index}`}`;
 						return (
-							<span
-								key={dotsKey}
-								className="px-3 py-2 /60"
-								aria-hidden="true"
-							>
+							<span key={dotsKey} className="px-3 py-2" aria-hidden="true">
 								<MoreHorizontal className="w-4 h-4" />
 							</span>
 						);
@@ -119,11 +115,7 @@ export function Pagination({
 							type="button"
 							key={pageNumber}
 							onClick={() => handlePageClick(pageNumber)}
-							className={`px-3 py-1.5 text-sm transition-colors ${
-								isCurrentPage
-									? "bg-accent "
-									: " hover:text-accent"
-							}`}
+							className={`px-3 py-1.5 text-sm ${isCurrentPage ? " " : " "}`}
 							aria-label={`Go to page ${pageNumber}`}
 							aria-current={isCurrentPage ? "page" : undefined}
 						>
@@ -138,7 +130,7 @@ export function Pagination({
 				type="button"
 				onClick={handleNext}
 				disabled={currentPage === totalPages}
-				className="flex items-center space-x-1 px-4 py-1.5  disabled:cursor-not-allowed transition-colors"
+				className="flex items-center space-x-1 px-4 py-1.5"
 				aria-label="Go to next page"
 				data-testid="next-page"
 			>

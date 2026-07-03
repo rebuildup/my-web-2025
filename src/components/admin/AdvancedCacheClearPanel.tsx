@@ -222,9 +222,7 @@ export default function AdvancedCacheClearPanel() {
 			{/* ブラウザ情報 */}
 			{browserInfo && (
 				<div className="mb-6 p-4  dark: rounded-lg">
-					<h3 className="font-semibold  dark: mb-3">
-						🌐 ブラウザ情報
-					</h3>
+					<h3 className="font-semibold  dark: mb-3">🌐 ブラウザ情報</h3>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
 						<div>
 							<p>
@@ -242,9 +240,7 @@ export default function AdvancedCacheClearPanel() {
 						<div>
 							{browserInfo.issues.length > 0 && (
 								<div className="mb-2">
-									<p className="font-medium  dark:">
-										既知の問題:
-									</p>
+									<p className="font-medium  dark:">既知の問題:</p>
 									<ul className=" dark: ml-4 text-xs">
 										{browserInfo.issues.slice(0, 3).map((issue) => (
 											<li key={`issue-${issue}`} className="list-disc">
@@ -259,9 +255,7 @@ export default function AdvancedCacheClearPanel() {
 
 					{browserInfo.solutions.length > 0 && (
 						<div className="mt-3 p-3  dark: rounded">
-							<p className="font-medium  dark: mb-1">
-								推奨解決策:
-							</p>
+							<p className="font-medium  dark: mb-1">推奨解決策:</p>
 							<ul className=" dark: ml-4 text-xs">
 								{browserInfo.solutions.slice(0, 4).map((solution) => (
 									<li key={`solution-${solution}`} className="list-disc">
@@ -277,62 +271,44 @@ export default function AdvancedCacheClearPanel() {
 			{/* キャッシュ状態詳細 */}
 			{cacheState && (
 				<div className="mb-6 p-4  dark: rounded-lg">
-					<h3 className="font-semibold  dark: mb-3">
-						📊 詳細キャッシュ状態
-					</h3>
+					<h3 className="font-semibold  dark: mb-3">📊 詳細キャッシュ状態</h3>
 					<div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
 						<div className=" dark: p-3 rounded ">
-							<p className="font-medium  dark:">
-								Service Workers
-							</p>
+							<p className="font-medium  dark:">Service Workers</p>
 							<p className="text-2xl font-bold  dark:">
 								{cacheState.serviceWorkers}
 							</p>
 						</div>
 						<div className=" dark: p-3 rounded ">
-							<p className="font-medium  dark:">
-								Local Storage
-							</p>
+							<p className="font-medium  dark:">Local Storage</p>
 							<p className="text-2xl font-bold  dark:">
 								{cacheState.localStorage}
 							</p>
 						</div>
 						<div className=" dark: p-3 rounded ">
-							<p className="font-medium  dark:">
-								Session Storage
-							</p>
+							<p className="font-medium  dark:">Session Storage</p>
 							<p className="text-2xl font-bold  dark:">
 								{cacheState.sessionStorage}
 							</p>
 						</div>
 						<div className=" dark: p-3 rounded ">
-							<p className="font-medium  dark:">
-								Cache API
-							</p>
+							<p className="font-medium  dark:">Cache API</p>
 							<p className="text-2xl font-bold  dark:">
 								{cacheState.caches.length}
 							</p>
 						</div>
 						<div className=" dark: p-3 rounded ">
-							<p className="font-medium  dark:">
-								IndexedDB
-							</p>
+							<p className="font-medium  dark:">IndexedDB</p>
 							<p className="text-2xl font-bold  dark:">
 								{cacheState.indexedDBs.length}
 							</p>
 						</div>
 						<div className=" dark: p-3 rounded ">
-							<p className="font-medium  dark:">
-								Cookies
-							</p>
-							<p className="text-2xl font-bold  dark:">
-								{cacheState.cookies}
-							</p>
+							<p className="font-medium  dark:">Cookies</p>
+							<p className="text-2xl font-bold  dark:">{cacheState.cookies}</p>
 						</div>
 						<div className=" dark: p-3 rounded ">
-							<p className="font-medium  dark:">
-								Performance
-							</p>
+							<p className="font-medium  dark:">Performance</p>
 							<p className="text-2xl font-bold  dark:">
 								{cacheState.performance ? "✓" : "✗"}
 							</p>
@@ -350,9 +326,7 @@ export default function AdvancedCacheClearPanel() {
 			{/* 推奨事項 */}
 			{recommendations.length > 0 && (
 				<div className="mb-6 p-4  dark: rounded-lg">
-					<h4 className="font-semibold  dark: mb-2">
-						💡 推奨事項
-					</h4>
+					<h4 className="font-semibold  dark: mb-2">💡 推奨事項</h4>
 					<ul className=" dark: text-sm space-y-1">
 						{recommendations.map((rec) => (
 							<li key={`recommendation-${rec}`} className="flex items-start">
@@ -371,7 +345,7 @@ export default function AdvancedCacheClearPanel() {
 						type="button"
 						onClick={handleClearCache}
 						disabled={isClearing}
-						className="px-6 py-3     font-semibold rounded-lg transition-colors flex items-center gap-2 "
+						className="px-6 py-3 font-semibold flex items-center gap-2"
 					>
 						{isClearing ? (
 							<>
@@ -387,7 +361,7 @@ export default function AdvancedCacheClearPanel() {
 						type="button"
 						onClick={handleDiagnose}
 						disabled={isDiagnosing}
-						className="px-6 py-3     font-semibold rounded-lg transition-colors flex items-center gap-2 "
+						className="px-6 py-3 font-semibold flex items-center gap-2"
 					>
 						{isDiagnosing ? (
 							<>
@@ -402,7 +376,7 @@ export default function AdvancedCacheClearPanel() {
 					<button
 						type="button"
 						onClick={handleForceReload}
-						className="px-6 py-3    font-semibold rounded-lg transition-colors "
+						className="px-6 py-3 font-semibold"
 					>
 						🔄 強制リロード
 					</button>
@@ -410,7 +384,7 @@ export default function AdvancedCacheClearPanel() {
 					<button
 						type="button"
 						onClick={loadCacheState}
-						className="px-6 py-3    font-semibold rounded-lg transition-colors "
+						className="px-6 py-3 font-semibold"
 					>
 						📊 状態更新
 					</button>
@@ -427,9 +401,7 @@ export default function AdvancedCacheClearPanel() {
 
 				{clearResult && (
 					<div className="p-4  dark: rounded-lg">
-						<h4 className="font-semibold  dark: mb-2">
-							📋 クリア結果詳細
-						</h4>
+						<h4 className="font-semibold  dark: mb-2">📋 クリア結果詳細</h4>
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
 							<div>Service Workers: {clearResult.serviceWorkers}</div>
 							<div>Local Storage: {clearResult.localStorage ? "✓" : "✗"}</div>
@@ -444,9 +416,7 @@ export default function AdvancedCacheClearPanel() {
 						</div>
 						{clearResult.errors.length > 0 && (
 							<div className="mt-2 p-2  dark: rounded">
-								<p className=" dark: font-medium">
-									エラー:
-								</p>
+								<p className=" dark: font-medium">エラー:</p>
 								<ul className=" dark: text-xs ml-4">
 									{clearResult.errors.map((error) => (
 										<li key={`clear-error-${error}`} className="list-disc">
@@ -464,9 +434,7 @@ export default function AdvancedCacheClearPanel() {
 			{cacheState &&
 				(cacheState.caches.length > 0 || cacheState.indexedDBs.length > 0) && (
 					<div className="mt-6 p-4  dark: rounded-lg">
-						<h4 className="font-semibold  dark: mb-2">
-							📋 詳細情報
-						</h4>
+						<h4 className="font-semibold  dark: mb-2">📋 詳細情報</h4>
 						{cacheState.caches.length > 0 && (
 							<div className="mb-2">
 								<p className="text-sm font-medium  dark:">
@@ -505,9 +473,7 @@ export default function AdvancedCacheClearPanel() {
 
 			{/* 使用方法 */}
 			<div className="mt-6 p-4  dark: rounded-lg">
-				<h4 className="font-semibold  dark: mb-2">
-					💡 使用方法
-				</h4>
+				<h4 className="font-semibold  dark: mb-2">💡 使用方法</h4>
 				<ol className="text-sm  dark: space-y-1">
 					<li>1. 「詳細診断」でキャッシュ状態とブラウザ情報を確認</li>
 					<li>2. 「完全キャッシュクリア」で全てのブラウザキャッシュを削除</li>
@@ -521,9 +487,7 @@ export default function AdvancedCacheClearPanel() {
 
 			{/* コマンドライン情報 */}
 			<div className="mt-6 p-4  dark: rounded-lg">
-				<h4 className="font-semibold  dark: mb-2">
-					⚡ コマンドライン版
-				</h4>
+				<h4 className="font-semibold  dark: mb-2">⚡ コマンドライン版</h4>
 				<div className="text-sm  dark: space-y-1">
 					<p>より強力なキャッシュクリアが必要な場合:</p>
 					<code className="block  dark: p-2 rounded text-xs">

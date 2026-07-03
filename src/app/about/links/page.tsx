@@ -62,7 +62,7 @@ function ProfileHeader() {
 					href="https://x.com/361do_sleep"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="w-20 h-20 rounded-full bg-gradient-to-tr from-accent p-[2px]  z-10 cursor-pointer group"
+					className="w-20 h-20 rounded-full bg-gradient-to-tr  p-[2px]  z-10 cursor-pointer group"
 					title="Tech Account (@361do_sleep)"
 				>
 					<div className="w-full h-full rounded-full overflow-hidden relative">
@@ -116,18 +116,16 @@ function ProfileHeader() {
 							href={link.url}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="w-8 h-8 flex items-center justify-center rounded-full   /60 hover:text-accent transition-colors overflow-hidden p-1.5"
+							className="w-8 h-8 flex items-center justify-center rounded-full  transition-colors overflow-hidden p-1.5"
 						>
 							<LinkIcon item={link} className="w-full h-full" />
 						</a>
 					))}
 			</div>
 
-			<p className="text-sm /80 max-w-sm leading-relaxed font-light">
+			<p className="text-sm max-w-sm leading-relaxed font-light">
 				Web制作・映像制作・ツール開発.
-				<span className="text-xs /50 mt-1 block">
-					Yamaguchi, Japan
-				</span>
+				<span className="text-xs mt-1 block">Yamaguchi, Japan</span>
 			</p>
 		</motion.div>
 	);
@@ -158,7 +156,7 @@ function LinkButton({ item, index }: { item: LinkItem; index: number }) {
 		>
 			<div className="relative z-10 flex items-center px-4 py-3 rounded-xl       transition-colors duration-200 overflow-hidden">
 				{/* Icon container */}
-				<div className="flex-shrink-0 w-8 h-8 rounded-md /50 flex items-center justify-center   overflow-hidden p-[5px]">
+				<div className="flex-shrink-0 w-8 h-8 rounded-md flex items-center justify-center   overflow-hidden p-[5px]">
 					<LinkIcon item={item} className="w-full h-full" />
 				</div>
 
@@ -178,7 +176,7 @@ function LinkButton({ item, index }: { item: LinkItem; index: number }) {
 
 export default function LinksPage() {
 	return (
-		<div className="min-h-screen relative  overflow-x-hidden selection:bg-accent/30 ">
+		<div className="min-h-screen relative  overflow-x-hidden selection: ">
 			{/* Shared Background */}
 			<AboutBackground />
 
@@ -197,7 +195,7 @@ export default function LinksPage() {
 						<motion.h2
 							initial={{ opacity: 0 }}
 							whileInView={{ opacity: 1 }}
-							className="text-center text-[10px] font-mono /30 uppercase tracking-widest mb-4"
+							className="text-center text-[10px] font-mono uppercase tracking-widest mb-4"
 						>
 							Contact
 						</motion.h2>
@@ -218,7 +216,7 @@ export default function LinksPage() {
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ delay: 0.8 }}
-					className="text-center mt-12 /20 text-[10px] font-mono"
+					className="text-center mt-12 text-[10px] font-mono"
 				>
 					© 2025 361do_sleep
 				</motion.footer>

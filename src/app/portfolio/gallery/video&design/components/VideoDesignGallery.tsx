@@ -534,23 +534,17 @@ export function VideoDesignGallery({
 				<div className="   p-6 rounded-lg">
 					<div className="flex items-center mb-4">
 						<AlertTriangle className="w-6 h-6  mr-3" />
-						<h2
-							className="zen-kaku-gothic-new text-lg "
-							role="alert"
-						>
+						<h2 className="zen-kaku-gothic-new text-lg " role="alert">
 							Error Loading Gallery
 						</h2>
 					</div>
-					<p
-						className="noto-sans-jp-light text-sm  mb-4"
-						role="alert"
-					>
+					<p className="noto-sans-jp-light text-sm  mb-4" role="alert">
 						{!items ? "No items provided to gallery" : "Invalid items format"}
 					</p>
 					<button
 						type="button"
 						onClick={() => window.location.reload()}
-						className="flex items-center space-x-2   px-4 py-2 rounded  transition-colors"
+						className="flex items-center space-x-2 px-4 py-2"
 					>
 						<RefreshCw className="w-4 h-4" />
 						<span>Retry</span>
@@ -588,17 +582,11 @@ export function VideoDesignGallery({
 				<div className="   p-6 rounded-lg">
 					<div className="flex items-center mb-4">
 						<AlertTriangle className="w-6 h-6  mr-3" />
-						<h2
-							className="zen-kaku-gothic-new text-lg "
-							role="alert"
-						>
+						<h2 className="zen-kaku-gothic-new text-lg " role="alert">
 							Error Loading Gallery
 						</h2>
 					</div>
-					<p
-						className="noto-sans-jp-light text-sm  mb-4"
-						role="alert"
-					>
+					<p className="noto-sans-jp-light text-sm  mb-4" role="alert">
 						{errorState.error?.message ||
 							"An unexpected error occurred while loading the gallery."}
 					</p>
@@ -609,7 +597,7 @@ export function VideoDesignGallery({
 							// Clear cache to force refresh
 							cacheRef.current.clear();
 						}}
-						className="flex items-center space-x-2   px-4 py-2 rounded  transition-colors"
+						className="flex items-center space-x-2 px-4 py-2"
 					>
 						<RefreshCw className="w-4 h-4" />
 						<span>Retry</span>
@@ -625,9 +613,7 @@ export function VideoDesignGallery({
 			<div className="space-y-8">
 				<div className="/30 p-4">
 					<div className="flex items-center mb-4">
-						<h2 className="zen-kaku-gothic-new text-lg ">
-							Loading...
-						</h2>
+						<h2 className="zen-kaku-gothic-new text-lg ">Loading...</h2>
 					</div>
 				</div>
 			</div>
@@ -657,7 +643,7 @@ export function VideoDesignGallery({
 			{(!filteredItems || filteredItems.length === 0) && (
 				<div className="text-center py-12">
 					<div className="/30 p-8">
-						<Eye className="w-12 h-12 text-accent mx-auto mb-4" />
+						<Eye className="w-12 h-12  mx-auto mb-4" />
 						<h2 className="zen-kaku-gothic-new text-xl mb-2">
 							No projects found
 						</h2>
@@ -734,7 +720,7 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 	if (isPlaceholder) {
 		return (
 			<div
-				className={`${gridClasses} ${minHeightClass} /30 min-h-[200px] `}
+				className={`${gridClasses} ${minHeightClass} min-h-[200px] `}
 				style={{
 					display: "block",
 					position: "relative",
@@ -747,7 +733,7 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 		<Link
 			href={item.url}
 			// isolation keeps the overlay and image within the same stacking context
-			className={`${gridClasses} ${minHeightClass} video-design-gallery-item group block relative  overflow-hidden hover:/50 transition-colors   focus:ring-accent min-h-[200px]  isolate`}
+			className={`${gridClasses} ${minHeightClass} video-design-gallery-item group block relative  overflow-hidden hover:/50 transition-colors    min-h-[200px]  isolate`}
 			onMouseEnter={() => onHover(item.id)}
 			onMouseLeave={() => onHover(null)}
 			onFocus={() => onHover(item.id)}

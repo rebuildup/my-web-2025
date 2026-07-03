@@ -293,14 +293,7 @@ export function DatePicker({
 				<button
 					type="button"
 					onClick={handleToggleManualDate}
-					className={`
- flex items-center gap-2 px-3 py-1 text-sm font-medium transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base
- ${
-							useManualDate
-								? " hover:bg-opacity-80"
-								: " hover: hover:bg-opacity-10 border "
-						}
- `}
+					className={`flex items-center gap-2 px-3 py-1 text-sm font-medium ${useManualDate ? " " : " border "}`}
 					aria-label={`Switch to ${useManualDate ? "automatic" : "manual"} date mode`}
 				>
 					{useManualDate ? (
@@ -324,23 +317,13 @@ export function DatePicker({
 						onBlur={handleInputBlur}
 						placeholder={useManualDate ? placeholder : "Auto (current date)"}
 						disabled={!useManualDate}
-						className={`
- w-full pl-10 pr-12 py-2 border 
-  focus: focus:ring-offset-2 focus:ring-offset-base 
- disabled: disabled:cursor-not-allowed
- ${
-								state.validationError
-									? " "
-									: ""
-							}
- ${!useManualDate ? "" : ""}
- `}
+						className={`w-full pl-10 pr-12 py-2 border ${state.validationError ? " " : ""} ${!useManualDate ? "" : ""}`}
 					/>
 					{useManualDate && (
 						<button
 							type="button"
 							onClick={handleCalendarToggle}
-							className="absolute right-3 top-1/2 transform -translate-y-1/2   transition-colors"
+							className="absolute right-3 top-1/2 transform -translate-y-1/2"
 							aria-label="Open calendar"
 						>
 							<Calendar className="w-4 h-4" />
@@ -397,10 +380,7 @@ export function DatePicker({
 					{/* Calendar Grid */}
 					<div className="grid grid-cols-7 gap-1 mb-2">
 						{["日", "月", "火", "水", "木", "金", "土"].map((day) => (
-							<div
-								key={day}
-								className="text-center text-sm font-medium  py-2"
-							>
+							<div key={day} className="text-center text-sm font-medium  py-2">
 								{day}
 							</div>
 						))}
@@ -414,18 +394,7 @@ export function DatePicker({
 									key={dayKey}
 									type="button"
 									onClick={() => handleDateSelect(date)}
-									className={`
- p-2 text-sm transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base
- ${
-										isSelected(date)
-											? " "
-											: isToday(date)
-												? " font-medium"
-												: isCurrentMonth(date)
-													? " hover: hover:bg-opacity-10"
-													: " hover: hover:bg-opacity-5"
-									}
- `}
+									className={`p-2 text-sm ${isSelected(date) ? " " : isToday(date) ? " font-medium" : isCurrentMonth(date) ? " " : " "}`}
 								>
 									{date.getDate()}
 								</button>

@@ -263,9 +263,9 @@ export default function AccessibilityTestingComponent({
 
 	return (
 		<div className="fixed bottom-4 right-4 z-50 max-w-md">
-			<div className="rounded-xl /75  shadow-[0_24px_60px_rgba(0,0,0,0.35)] overflow-hidden">
+			<div className="rounded-xl  shadow-[0_24px_60px_rgba(0,0,0,0.35)] overflow-hidden">
 				{/* Header */}
-				<div className="bg-accent p-3 flex justify-between items-center">
+				<div className=" p-3 flex justify-between items-center">
 					<h3 className="neue-haas-grotesk-display text-sm font-medium">
 						アクセシビリティテスト
 					</h3>
@@ -274,7 +274,7 @@ export default function AccessibilityTestingComponent({
 							type="button"
 							onClick={runTest}
 							disabled={isRunning}
-							className=" text-accent px-2 py-1 text-xs rounded hover:bg-opacity-90 "
+							className="px-2 py-1 text-xs"
 							aria-label="テストを実行"
 						>
 							{isRunning ? "実行中..." : "実行"}
@@ -282,7 +282,7 @@ export default function AccessibilityTestingComponent({
 						<button
 							type="button"
 							onClick={() => setIsVisible(!isVisible)}
-							className=" text-accent px-2 py-1 text-xs rounded hover:bg-opacity-90"
+							className="px-2 py-1 text-xs"
 							aria-label="パネルを閉じる"
 						>
 							×
@@ -300,11 +300,7 @@ export default function AccessibilityTestingComponent({
 									<span className="text-sm">スコア:</span>
 									<span
 										className={`text-lg font-bold ${
-											report.score >= 80
-												? ""
-												: report.score >= 60
-													? ""
-													: ""
+											report.score >= 80 ? "" : report.score >= 60 ? "" : ""
 										}`}
 									>
 										{report.score}/100
@@ -335,9 +331,7 @@ export default function AccessibilityTestingComponent({
 												>
 													<div className="font-medium">{issue.message}</div>
 													{issue.suggestion && (
-														<div className="mt-1 ">
-															{issue.suggestion}
-														</div>
+														<div className="mt-1 ">{issue.suggestion}</div>
 													)}
 												</div>
 											))}
@@ -353,9 +347,7 @@ export default function AccessibilityTestingComponent({
 							</div>
 						) : (
 							<div className="text-center py-4">
-								<p className="text-sm ">
-									テストを実行してください
-								</p>
+								<p className="text-sm ">テストを実行してください</p>
 							</div>
 						)}
 					</div>

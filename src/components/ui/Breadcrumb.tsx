@@ -100,13 +100,10 @@ export function Breadcrumb() {
 					<li key={crumb.href} className="flex items-center space-x-2">
 						{index === breadcrumbs.length - 1 ? (
 							// 最後の項目は現在のページなのでリンクにしない
-							<span className="text-accent">{crumb.name}</span>
+							<span className="">{crumb.name}</span>
 						) : (
 							<>
-								<Link
-									href={crumb.href}
-									className=" hover:text-accent transition-colors"
-								>
+								<Link href={crumb.href} className="  transition-colors">
 									{crumb.name}
 								</Link>
 								<span className="">/</span>

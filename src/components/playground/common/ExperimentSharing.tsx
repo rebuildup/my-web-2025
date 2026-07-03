@@ -118,11 +118,7 @@ export function ExperimentSharing({
 						<Share2 className="w-5 h-5 mr-2" />
 						Share Experiment
 					</h3>
-					<button
-						type="button"
-						onClick={onClose}
-						className=" hover:text-accent transition-colors"
-					>
+					<button type="button" onClick={onClose} className="">
 						<X className="w-5 h-5" />
 					</button>
 				</div>
@@ -148,27 +144,23 @@ export function ExperimentSharing({
 					{/* Share URL */}
 					{isGenerating ? (
 						<div className="flex items-center justify-center py-8">
-							<div className="animate-spin w-6 h-6  border-accent border-t-transparent rounded-full"></div>
-							<span className="ml-2 text-sm ">
-								Generating share link...
-							</span>
+							<div className="animate-spin w-6 h-6   border-t-transparent rounded-full"></div>
+							<span className="ml-2 text-sm ">Generating share link...</span>
 						</div>
 					) : shareURL ? (
 						<div className="space-y-3">
-							<label className="noto-sans-jp-light text-sm ">
-								Share Link
-							</label>
+							<label className="noto-sans-jp-light text-sm ">Share Link</label>
 							<div className="flex items-center space-x-2">
 								<input
 									type="text"
 									value={shareURL}
 									readOnly
-									className="flex-1  p-2 text-sm rounded"
+									className="flex-1 p-2 text-sm"
 								/>
 								<button
 									type="button"
 									onClick={copyToClipboard}
-									className="flex items-center space-x-1 px-3 py-2  hover:border-accent hover:text-accent transition-colors rounded"
+									className="flex items-center space-x-1 px-3 py-2"
 								>
 									{copied ? (
 										<Check className="w-4 h-4 " />
@@ -188,25 +180,23 @@ export function ExperimentSharing({
 							<div className="grid grid-cols-2 gap-2 text-sm">
 								<div>
 									<span className=" ">Quality:</span>
-									<span className="ml-1 text-accent">
+									<span className="ml-1 ">
 										{shareData.settings.qualityLevel}
 									</span>
 								</div>
 								<div>
 									<span className=" ">Target FPS:</span>
-									<span className="ml-1 text-accent">
-										{shareData.settings.targetFPS}
-									</span>
+									<span className="ml-1 ">{shareData.settings.targetFPS}</span>
 								</div>
 								<div>
 									<span className=" ">Optimizations:</span>
-									<span className="ml-1 text-accent">
+									<span className="ml-1 ">
 										{shareData.settings.enableOptimizations ? "On" : "Off"}
 									</span>
 								</div>
 								<div>
 									<span className=" ">Device:</span>
-									<span className="ml-1 text-accent">
+									<span className="ml-1 ">
 										{shareData.deviceInfo.performanceLevel}
 									</span>
 								</div>
@@ -220,7 +210,7 @@ export function ExperimentSharing({
 							type="button"
 							onClick={shareViaWebAPI}
 							disabled={!shareURL}
-							className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-accent hover:bg-accent/80 transition-colors  disabled:cursor-not-allowed rounded"
+							className="flex-1 flex items-center justify-center space-x-2 px-4 py-2"
 						>
 							<Share2 className="w-4 h-4" />
 							<span className="text-sm">Share</span>
@@ -230,7 +220,7 @@ export function ExperimentSharing({
 							type="button"
 							onClick={copyToClipboard}
 							disabled={!shareURL}
-							className="flex items-center space-x-2 px-4 py-2  hover:border-accent hover:text-accent transition-colors  disabled:cursor-not-allowed rounded"
+							className="flex items-center space-x-2 px-4 py-2"
 						>
 							<Link className="w-4 h-4" />
 							<span className="text-sm">Copy Link</span>
@@ -307,7 +297,7 @@ export function ShareButton({
 			<button
 				type="button"
 				onClick={() => setIsOpen(true)}
-				className={`flex items-center space-x-2 px-3 py-2  hover:border-accent hover:text-accent transition-colors ${className}`}
+				className={`flex items-center space-x-2 px-3 py-2 ${className}`}
 			>
 				<Share2 className="w-4 h-4" />
 				<span className="text-sm">Share</span>

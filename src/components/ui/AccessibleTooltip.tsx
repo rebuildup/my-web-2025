@@ -129,8 +129,7 @@ export const AccessibleIconButton: React.FC<AccessibleIconButtonProps> = ({
 	};
 
 	const variantClasses = {
-		primary:
-			"bg-accent  border-accent hover: hover:text-accent",
+		primary: "   hover: ",
 		secondary: "  hover:",
 		ghost: " hover:",
 		danger: " ",
@@ -139,7 +138,7 @@ export const AccessibleIconButton: React.FC<AccessibleIconButtonProps> = ({
 	const button = (
 		<button
 			type="button"
-			className={`inline-flex items-center justify-center rounded-md transition-colors duration-200   focus:ring-accent focus:ring-offset-2  disabled:cursor-not-allowed ${sizeClasses[size]} ${variantClasses[variant]} ${props.disabled ? "" : ""} ${className}`}
+			className={`inline-flex items-center justify-center ${sizeClasses[size]} ${variantClasses[variant]} ${props.disabled ? "" : ""} ${className}`}
 			aria-label={label}
 			onKeyDown={(e) => {
 				if (e.key === "Enter" || e.key === " ") {

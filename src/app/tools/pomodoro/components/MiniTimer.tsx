@@ -204,7 +204,7 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 							setIsActive(false);
 							setMode(mode === "timer" ? "stopwatch" : "timer");
 						}}
-						className="p-1.5 rounded  transition-colors  "
+						className="p-1.5"
 						title={mode === "timer" ? "Switch to Stopwatch" : "Switch to Timer"}
 					>
 						{mode === "timer" ? <Watch size={14} /> : <Timer size={14} />}
@@ -220,20 +220,14 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 
 				{/* Controls */}
 				<div className="flex items-center gap-4">
-					<button
-						onClick={toggleTimer}
-						className="p-3 rounded-full transition-all     active:scale-95"
-					>
+					<button onClick={toggleTimer} className="p-3">
 						{isActive ? (
 							<Pause size={20} fill="currentColor" />
 						) : (
 							<Play size={20} fill="currentColor" />
 						)}
 					</button>
-					<button
-						onClick={resetTimer}
-						className="p-3 rounded-full transition-all    active:scale-95"
-					>
+					<button onClick={resetTimer} className="p-3">
 						<RotateCcw size={20} />
 					</button>
 				</div>
@@ -249,7 +243,7 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 									max="999"
 									value={Math.floor(savedDuration / 60000)}
 									onChange={(e) => handleDurationChange("min", e.target.value)}
-									className="w-14 px-1 py-1 text-center rounded       transition-colors text-sm"
+									className="w-14 px-1 py-1 text-center text-sm"
 								/>
 								<span className="text-xs  font-medium">m</span>
 							</div>
@@ -260,7 +254,7 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 									max="59"
 									value={Math.floor((savedDuration % 60000) / 1000)}
 									onChange={(e) => handleDurationChange("sec", e.target.value)}
-									className="w-14 px-1 py-1 text-center rounded       transition-colors text-sm"
+									className="w-14 px-1 py-1 text-center text-sm"
 								/>
 								<span className="text-xs  font-medium">s</span>
 							</div>

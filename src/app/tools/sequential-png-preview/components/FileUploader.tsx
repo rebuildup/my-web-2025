@@ -183,7 +183,6 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 						key={method.type}
 						onClick={() => setSelectedMethod(method.type)}
 						style={{
-							all: "revert",
 							padding: "10px",
 							textAlign: "left",
 							border:

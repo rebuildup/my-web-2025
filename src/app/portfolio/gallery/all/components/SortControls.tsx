@@ -67,7 +67,7 @@ export function SortControls({ sort, onSortChange }: SortControlsProps) {
 				<button
 					type="button"
 					onClick={handleSortOrderToggle}
-					className="flex items-center justify-center px-2 sm:px-3 py-2  hover:border-accent hover:text-accent transition-colors"
+					className="flex items-center justify-center px-2 sm:px-3 py-2"
 					aria-label={`Sort ${sort.sortOrder === "asc" ? "ascending" : "descending"}`}
 				>
 					{getSortIcon()}

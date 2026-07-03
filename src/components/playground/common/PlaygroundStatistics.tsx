@@ -51,27 +51,19 @@ export function PlaygroundStatistics({
 				{/* Overview Stats */}
 				<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 					<div className="text-center">
-						<div className="text-2xl font-bold text-accent">
-							{stats.totalExperiments}
-						</div>
+						<div className="text-2xl font-bold ">{stats.totalExperiments}</div>
 						<div className="text-sm ">Total Experiments</div>
 					</div>
 					<div className="text-center">
-						<div className="text-2xl font-bold text-accent">
-							{stats.designExperiments}
-						</div>
+						<div className="text-2xl font-bold ">{stats.designExperiments}</div>
 						<div className="text-sm ">Design</div>
 					</div>
 					<div className="text-center">
-						<div className="text-2xl font-bold text-accent">
-							{stats.webglExperiments}
-						</div>
+						<div className="text-2xl font-bold ">{stats.webglExperiments}</div>
 						<div className="text-sm ">WebGL</div>
 					</div>
 					<div className="text-center">
-						<div className="text-2xl font-bold text-accent">
-							{stats.requiresWebGL}
-						</div>
+						<div className="text-2xl font-bold ">{stats.requiresWebGL}</div>
 						<div className="text-sm ">Requires WebGL</div>
 					</div>
 				</div>
@@ -89,13 +81,13 @@ export function PlaygroundStatistics({
 								<div className="flex items-center space-x-2">
 									<div className="w-20 h-2  rounded-full overflow-hidden">
 										<div
-											className="h-full bg-accent"
+											className="h-full "
 											style={{
 												width: `${(count / stats.totalExperiments) * 100}%`,
 											}}
 										/>
 									</div>
-									<span className="text-sm text-accent font-medium w-6 text-right">
+									<span className="text-sm  font-medium w-6 text-right">
 										{count}
 									</span>
 								</div>
@@ -116,9 +108,7 @@ export function PlaygroundStatistics({
 								key={difficulty}
 								className="flex items-center justify-between"
 							>
-								<span className="text-sm capitalize">
-									{difficulty}
-								</span>
+								<span className="text-sm capitalize">{difficulty}</span>
 								<div className="flex items-center space-x-2">
 									<div className="w-20 h-2  rounded-full overflow-hidden">
 										<div
@@ -134,7 +124,7 @@ export function PlaygroundStatistics({
 											}}
 										/>
 									</div>
-									<span className="text-sm text-accent font-medium w-6 text-right">
+									<span className="text-sm  font-medium w-6 text-right">
 										{count}
 									</span>
 								</div>
@@ -149,13 +139,13 @@ export function PlaygroundStatistics({
 					<div className="grid grid-cols-2 gap-4 text-sm">
 						<div>
 							<span className=" ">WebGL Required:</span>
-							<span className="ml-2 text-accent font-medium">
+							<span className="ml-2  font-medium">
 								{stats.requiresWebGL} / {stats.totalExperiments}
 							</span>
 						</div>
 						<div>
 							<span className=" ">WebGL2 Required:</span>
-							<span className="ml-2 text-accent font-medium">
+							<span className="ml-2  font-medium">
 								{stats.requiresWebGL2} / {stats.totalExperiments}
 							</span>
 						</div>
@@ -172,21 +162,19 @@ export function PlaygroundStatistics({
 					<div className="grid grid-cols-2 gap-2 text-sm">
 						<div className="flex justify-between">
 							<span className="">Three.js</span>
-							<span className="text-accent">{stats.webglExperiments}</span>
+							<span className="">{stats.webglExperiments}</span>
 						</div>
 						<div className="flex justify-between">
 							<span className="">Canvas</span>
-							<span className="text-accent">
-								{stats.byCategory.canvas || 0}
-							</span>
+							<span className="">{stats.byCategory.canvas || 0}</span>
 						</div>
 						<div className="flex justify-between">
 							<span className="">SVG</span>
-							<span className="text-accent">{stats.byCategory.svg || 0}</span>
+							<span className="">{stats.byCategory.svg || 0}</span>
 						</div>
 						<div className="flex justify-between">
 							<span className="">CSS</span>
-							<span className="text-accent">{stats.byCategory.css || 0}</span>
+							<span className="">{stats.byCategory.css || 0}</span>
 						</div>
 					</div>
 				</div>

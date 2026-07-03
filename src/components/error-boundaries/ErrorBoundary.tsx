@@ -109,7 +109,7 @@ export class ErrorBoundary extends Component<
 							<button
 								type="button"
 								onClick={this.handleRetry}
-								className="w-full px-ratio-sm py-ratio-xs hover: transition-colors noto-sans-jp-regular text-ratio-base"
+								className="w-full px-ratio-sm py-ratio-xs noto-sans-jp-regular text-ratio-base"
 							>
 								再試行
 							</button>
@@ -119,7 +119,7 @@ export class ErrorBoundary extends Component<
 									type="button"
 									key={action.label}
 									onClick={action.action}
-									className="w-full px-ratio-sm py-ratio-xs  hover: hover: transition-colors noto-sans-jp-regular text-ratio-base"
+									className="w-full px-ratio-sm py-ratio-xs noto-sans-jp-regular text-ratio-base"
 								>
 									{action.label}
 								</button>
@@ -163,7 +163,7 @@ export const AboutErrorBoundary: React.FC<{ children: ReactNode }> = ({
 					<button
 						type="button"
 						onClick={() => (window.location.href = "/")}
-						className="px-ratio-sm py-ratio-xs hover: transition-colors noto-sans-jp-regular text-ratio-base"
+						className="px-ratio-sm py-ratio-xs noto-sans-jp-regular text-ratio-base"
 					>
 						ホームに戻る
 					</button>
@@ -193,14 +193,14 @@ export const PortfolioErrorBoundary: React.FC<{ children: ReactNode }> = ({
 						<button
 							type="button"
 							onClick={() => window.location.reload()}
-							className="block w-full px-ratio-sm py-ratio-xs hover: transition-colors noto-sans-jp-regular text-ratio-base"
+							className="block w-full px-ratio-sm py-ratio-xs noto-sans-jp-regular text-ratio-base"
 						>
 							再読み込み
 						</button>
 						<button
 							type="button"
 							onClick={() => (window.location.href = "/")}
-							className="block w-full px-ratio-sm py-ratio-xs  hover: hover: transition-colors noto-sans-jp-regular text-ratio-base"
+							className="block w-full px-ratio-sm py-ratio-xs noto-sans-jp-regular text-ratio-base"
 						>
 							ホームに戻る
 						</button>
@@ -230,7 +230,7 @@ export const WorkshopErrorBoundary: React.FC<{ children: ReactNode }> = ({
 					<button
 						type="button"
 						onClick={() => (window.location.href = "/")}
-						className="px-ratio-sm py-ratio-xs hover: transition-colors noto-sans-jp-regular text-ratio-base"
+						className="px-ratio-sm py-ratio-xs noto-sans-jp-regular text-ratio-base"
 					>
 						ホームに戻る
 					</button>
@@ -260,14 +260,14 @@ export const ToolsErrorBoundary: React.FC<{ children: ReactNode }> = ({
 						<button
 							type="button"
 							onClick={() => window.location.reload()}
-							className="block w-full px-ratio-sm py-ratio-xs hover: transition-colors noto-sans-jp-regular text-ratio-base"
+							className="block w-full px-ratio-sm py-ratio-xs noto-sans-jp-regular text-ratio-base"
 						>
 							再読み込み
 						</button>
 						<button
 							type="button"
 							onClick={() => (window.location.href = "/")}
-							className="block w-full px-ratio-sm py-ratio-xs  hover: hover: transition-colors noto-sans-jp-regular text-ratio-base"
+							className="block w-full px-ratio-sm py-ratio-xs noto-sans-jp-regular text-ratio-base"
 						>
 							ホームに戻る
 						</button>
@@ -297,7 +297,7 @@ export const AdminErrorBoundary: React.FC<{ children: ReactNode }> = ({
 					<button
 						type="button"
 						onClick={() => window.location.reload()}
-						className="px-ratio-sm py-ratio-xs hover: transition-colors noto-sans-jp-regular text-ratio-base"
+						className="px-ratio-sm py-ratio-xs noto-sans-jp-regular text-ratio-base"
 					>
 						管理パネルを再読み込み
 					</button>

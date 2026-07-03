@@ -909,3 +909,85 @@ export function getContentTags(contentId: string): string[] {
 		return [];
 	}
 }
+
+type MarkdownPageRow = {
+	id: string;
+	content_id: string | null;
+	slug: string;
+	frontmatter: string;
+	body: string;
+	html_cache: string | null;
+	path: string | null;
+	lang: string | null;
+	status: string | null;
+	version: number | null;
+	created_at: string;
+	updated_at: string;
+	published_at: string | null;
+};
+
+function readMarkdownPagesFromFile(file: string): MarkdownPageRow[] {
+	const dbPath = path.join(CONTENT_DB_DIR, file);
+	const db = openSqliteDb(dbPath, { readonly: true });
+	try {
+		ensureSchemaUpgrades(db);
+		return db
+			.prepare(
+				`SELECT id, content_id, slug, frontmatter, body, html_cache, path, lang,
+          COALESCE(status, 'draft') AS status, COALESCE(version, 1) AS version,
+          created_at, updated_at, published_at
+        FROM markdown_pages ORDER BY created_at DESC`,
+			)
+			.all() as MarkdownPageRow[];
+	} catch (error) {
+		console.warn(`[CMS] Failed to read markdown_pages from ${file}:`, error);
+		return [];
+	} finally {
+		db.close();
+	}
+}
+
+export function getAllMarkdownPagesFromLocal(options?: {
+	contentId?: string;
+}): Array<{
+	id: string;
+	contentId: string;
+	slug: string;
+	frontmatter: Record<string, unknown>;
+	body: string;
+	htmlCache?: string;
+	path?: string;
+	lang?: string;
+	status: "draft" | "published" | "archived";
+	version: number;
+	createdAt: string;
+	updatedAt: string;
+	publishedAt?: string;
+}> {
+	const files = options?.contentId
+		? [`content-${options.contentId}.db`]
+		: listContentDbFiles();
+
+	const result = files.flatMap((file) => {
+		if (!fs.existsSync(path.join(CONTENT_DB_DIR, file))) return [];
+		const rows = readMarkdownPagesFromFile(file);
+		const contentId = options?.contentId ?? extractContentIdFromFileName(file);
+		return rows.map((row) => ({
+			id: row.id,
+			contentId: row.content_id ?? contentId,
+			slug: row.slug,
+			frontmatter: parseJson<Record<string, unknown>>(row.frontmatter) ?? {},
+			body: row.body,
+			htmlCache: row.html_cache ?? undefined,
+			path: row.path ?? undefined,
+			lang: row.lang ?? undefined,
+			status: (row.status ?? "draft") as "draft" | "published" | "archived",
+			version: row.version ?? 1,
+			createdAt: row.created_at,
+			updatedAt: row.updated_at,
+			publishedAt: row.published_at ?? undefined,
+		}));
+	});
+
+	return result.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}

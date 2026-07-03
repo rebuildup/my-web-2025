@@ -175,7 +175,6 @@ export default function AnimationPlayer({
 						type="button"
 						onClick={() => onFrameSelect(0)}
 						style={{
-							all: "revert",
 							background: "none",
 							border: "none",
 							cursor: "pointer",
@@ -188,7 +187,6 @@ export default function AnimationPlayer({
 						type="button"
 						onClick={() => onFrameSelect(Math.floor(frames.length / 4))}
 						style={{
-							all: "revert",
 							background: "none",
 							border: "none",
 							cursor: "pointer",
@@ -201,7 +199,6 @@ export default function AnimationPlayer({
 						type="button"
 						onClick={() => onFrameSelect(Math.floor(frames.length / 2))}
 						style={{
-							all: "revert",
 							background: "none",
 							border: "none",
 							cursor: "pointer",
@@ -214,7 +211,6 @@ export default function AnimationPlayer({
 						type="button"
 						onClick={() => onFrameSelect(Math.floor((frames.length * 3) / 4))}
 						style={{
-							all: "revert",
 							background: "none",
 							border: "none",
 							cursor: "pointer",
@@ -227,7 +223,6 @@ export default function AnimationPlayer({
 						type="button"
 						onClick={() => onFrameSelect(frames.length - 1)}
 						style={{
-							all: "revert",
 							background: "none",
 							border: "none",
 							cursor: "pointer",

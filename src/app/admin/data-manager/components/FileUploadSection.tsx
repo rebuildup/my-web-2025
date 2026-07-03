@@ -315,7 +315,7 @@ export function FileUploadSection({
 									generateThumbnail: e.target.checked,
 								}))
 							}
-							className="rounded "
+							className=""
 						/>
 						<span className="text-sm ">Generate Thumbnails</span>
 					</label>
@@ -330,7 +330,7 @@ export function FileUploadSection({
 									optimizeImage: e.target.checked,
 								}))
 							}
-							className="rounded "
+							className=""
 						/>
 						<span className="text-sm ">Optimize Images</span>
 					</label>
@@ -345,7 +345,7 @@ export function FileUploadSection({
 									convertToWebP: e.target.checked,
 								}))
 							}
-							className="rounded "
+							className=""
 						/>
 						<span className="text-sm ">Convert to WebP</span>
 					</label>
@@ -459,7 +459,7 @@ export function FileUploadSection({
 							<button
 								type="button"
 								onClick={() => fileInputRef.current?.click()}
-								className=" hover:/80 font-medium"
+								className="font-medium"
 							>
 								Click to upload
 							</button>
@@ -522,7 +522,7 @@ export function FileUploadSection({
 									<button
 										type="button"
 										onClick={() => setAsThumbnail(image)}
-										className="  px-2 py-1 text-xs rounded "
+										className="px-2 py-1 text-xs"
 										title="Set as thumbnail"
 									>
 										Thumb
@@ -530,7 +530,7 @@ export function FileUploadSection({
 									<button
 										type="button"
 										onClick={() => removeImage(index)}
-										className="  px-2 py-1 text-xs rounded "
+										className="px-2 py-1 text-xs"
 										title="Remove image"
 									>
 										Remove

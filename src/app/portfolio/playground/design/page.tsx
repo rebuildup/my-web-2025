@@ -218,10 +218,8 @@ export default function DesignPlaygroundPage() {
 		return (
 			<div className="min-h-screen flex items-center justify-center">
 				<div className="text-center">
-					<div className="animate-spin w-8 h-8  border-accent border-t-transparent rounded-full mx-auto mb-4"></div>
-					<p className="noto-sans-jp-light text-sm ">
-						デバイス性能を検出中...
-					</p>
+					<div className="animate-spin w-8 h-8   border-t-transparent rounded-full mx-auto mb-4"></div>
+					<p className="noto-sans-jp-light text-sm ">デバイス性能を検出中...</p>
 				</div>
 			</div>
 		);
@@ -290,7 +288,7 @@ export default function DesignPlaygroundPage() {
 												<span className="noto-sans-jp-light ">
 													Performance Level:
 												</span>
-												<div className="text-accent">
+												<div className="">
 													{deviceCapabilities.performanceLevel}
 												</div>
 											</div>
@@ -298,7 +296,7 @@ export default function DesignPlaygroundPage() {
 												<span className="noto-sans-jp-light ">
 													Touch Support:
 												</span>
-												<div className="text-accent">
+												<div className="">
 													{deviceCapabilities.touchSupport ? "Yes" : "No"}
 												</div>
 											</div>
@@ -306,15 +304,13 @@ export default function DesignPlaygroundPage() {
 												<span className="noto-sans-jp-light ">
 													Device Pixel Ratio:
 												</span>
-												<div className="text-accent">
+												<div className="">
 													{deviceCapabilities.devicePixelRatio}x
 												</div>
 											</div>
 											<div>
-												<span className="noto-sans-jp-light ">
-													CPU Cores:
-												</span>
-												<div className="text-accent">
+												<span className="noto-sans-jp-light ">CPU Cores:</span>
+												<div className="">
 													{deviceCapabilities.hardwareConcurrency}
 												</div>
 											</div>
@@ -338,7 +334,7 @@ export default function DesignPlaygroundPage() {
 															.value as PerformanceSettings["qualityLevel"],
 													}))
 												}
-												className="w-full  p-2 text-sm"
+												className="w-full p-2 text-sm"
 												data-testid="quality-select"
 											>
 												<option value="low">Low (30 FPS)</option>
@@ -392,26 +388,22 @@ export default function DesignPlaygroundPage() {
 								{showPerformance && (
 									<div className="grid grid-cols-3 gap-4 text-sm">
 										<div className="text-center">
-											<div className="text-2xl font-bold text-accent">
+											<div className="text-2xl font-bold ">
 												{performanceMetrics.fps}
 											</div>
 											<div className="noto-sans-jp-light ">FPS</div>
 										</div>
 										<div className="text-center">
-											<div className="text-2xl font-bold text-accent">
+											<div className="text-2xl font-bold ">
 												{performanceMetrics.frameTime.toFixed(1)}
 											</div>
-											<div className="noto-sans-jp-light ">
-												Frame Time (ms)
-											</div>
+											<div className="noto-sans-jp-light ">Frame Time (ms)</div>
 										</div>
 										<div className="text-center">
-											<div className="text-2xl font-bold text-accent">
+											<div className="text-2xl font-bold ">
 												{performanceMetrics.memoryUsage}
 											</div>
-											<div className="noto-sans-jp-light ">
-												Memory (MB)
-											</div>
+											<div className="noto-sans-jp-light ">Memory (MB)</div>
 										</div>
 									</div>
 								)}
@@ -504,21 +496,21 @@ export default function DesignPlaygroundPage() {
 							<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
 								<Link
 									href="/portfolio/playground/WebGL"
-									className=" text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center   transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>WebGL Playground</span>
 								</Link>
 
 								<Link
 									href="/portfolio"
-									className=" text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center   transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Portfolio Home</span>
 								</Link>
 
 								<Link
 									href="/tools"
-									className=" text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center   transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Tools</span>
 								</Link>

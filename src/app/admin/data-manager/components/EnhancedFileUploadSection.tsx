@@ -255,7 +255,7 @@ export function EnhancedFileUploadSection({
 							onChange={(e) =>
 								handleOptionsChange({ skipProcessing: e.target.checked })
 							}
-							className="rounded "
+							className=""
 						/>
 						<span className="text-sm ">Skip Processing</span>
 					</label>
@@ -267,7 +267,7 @@ export function EnhancedFileUploadSection({
 							onChange={(e) =>
 								handleOptionsChange({ preserveOriginal: e.target.checked })
 							}
-							className="rounded "
+							className=""
 						/>
 						<span className="text-sm ">Preserve Original</span>
 					</label>
@@ -279,7 +279,7 @@ export function EnhancedFileUploadSection({
 							onChange={(e) =>
 								handleOptionsChange({ generateVariants: e.target.checked })
 							}
-							className="rounded "
+							className=""
 						/>
 						<span className="text-sm ">Generate Variants</span>
 					</label>
@@ -334,7 +334,7 @@ export function EnhancedFileUploadSection({
 											},
 										})
 									}
-									className="rounded "
+									className=""
 								/>
 								<span className="text-sm ">Add Watermark</span>
 							</label>
@@ -493,7 +493,7 @@ export function EnhancedFileUploadSection({
 							<button
 								type="button"
 								onClick={() => fileInputRef.current?.click()}
-								className=" hover:/80 font-medium"
+								className="font-medium"
 							>
 								Click to upload
 							</button>
@@ -572,7 +572,7 @@ export function EnhancedFileUploadSection({
 									<button
 										type="button"
 										onClick={() => setAsThumbnail(image)}
-										className="  px-2 py-1 text-xs rounded "
+										className="px-2 py-1 text-xs"
 										title="Set as thumbnail"
 									>
 										Thumb
@@ -580,7 +580,7 @@ export function EnhancedFileUploadSection({
 									<button
 										type="button"
 										onClick={() => removeImage(index)}
-										className="  px-2 py-1 text-xs rounded "
+										className="px-2 py-1 text-xs"
 										title="Remove image"
 									>
 										Remove
@@ -631,7 +631,7 @@ export function EnhancedFileUploadSection({
 									<button
 										type="button"
 										onClick={() => setAsThumbnail(image)}
-										className="  px-2 py-1 text-xs rounded "
+										className="px-2 py-1 text-xs"
 										title="Set as thumbnail"
 									>
 										Thumb
@@ -639,7 +639,7 @@ export function EnhancedFileUploadSection({
 									<button
 										type="button"
 										onClick={() => removeImage(index, true)}
-										className="  px-2 py-1 text-xs rounded "
+										className="px-2 py-1 text-xs"
 										title="Remove image"
 									>
 										Remove

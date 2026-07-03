@@ -66,9 +66,7 @@ export function GADebug() {
 				<div>Consent: {gaStatus.consent ? "✅" : "❌"}</div>
 				<div>Events: {gaStatus.eventCount}</div>
 				{gaStatus.lastEvent && (
-					<div className="text-xs  truncate">
-						Last: {gaStatus.lastEvent}
-					</div>
+					<div className="text-xs  truncate">Last: {gaStatus.lastEvent}</div>
 				)}
 			</div>
 		</div>
