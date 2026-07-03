@@ -146,7 +146,7 @@ export const AccessibleModal: React.FC<AccessibleModalProps> = ({
 				className={`modal-content ${sizeClasses[size]} ${className}`}
 			>
 				<div className="flex items-center justify-between mb-4">
-					<h2 id="modal-title" className="text-xl font-semibold text-main">
+					<h2 id="modal-title" className="text-xl font-semibold ">
 						{title}
 					</h2>
 					<button
@@ -220,13 +220,13 @@ export const AccessibleConfirmModal: React.FC<AccessibleConfirmModalProps> = ({
 			size="sm"
 		>
 			<div className="space-y-4">
-				<p className={`text-base ${variantStyles[variant]}`}>{message}</p>
+				<p className={` ${variantStyles[variant]}`}>{message}</p>
 
 				<div className="flex space-x-3 justify-end">
 					<button
 						type="button"
 						onClick={onClose}
-						className="px-4 py-2 text-sm font-medium text-main bg-base border border-main rounded-md hover:bg-base focus:outline-none focus:ring-2 focus:ring-main"
+						className="px-4 py-2 text-sm font-medium border rounded-md hover: focus:outline-none focus:ring-2 focus:"
 					>
 						{cancelLabel || cancelText}
 					</button>
@@ -238,7 +238,7 @@ export const AccessibleConfirmModal: React.FC<AccessibleConfirmModalProps> = ({
 						className={`px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 ${
 							buttonVariant === "danger"
 								? "text-white bg-red-600 border border-red-600 hover:bg-red-700 focus:ring-red-500"
-								: "text-base bg-accent border border-accent hover:bg-base hover:text-accent focus:ring-accent"
+								: " bg-accent border border-accent hover: hover:text-accent focus:ring-accent"
 						} ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
 					>
 						{confirmLabel || confirmText}

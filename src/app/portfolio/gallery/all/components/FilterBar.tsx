@@ -125,13 +125,13 @@ export function FilterBar({
 			<div className="flex items-center space-x-4">
 				{/* Search Input */}
 				<div className="flex-1 relative">
-					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-main" />
+					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 " />
 					<input
 						type="text"
 						placeholder="Search projects..."
 						value={searchTerm}
 						onChange={(e) => handleSearchChange(e.target.value)}
-						className="w-full pl-10 pr-4 py-2 border border-main bg-base text-main placeholder-main/60 focus:outline-none focus:border-accent"
+						className="w-full pl-10 pr-4 py-2 border placeholder-main/60 focus:outline-none focus:border-accent"
 					/>
 				</div>
 
@@ -142,7 +142,7 @@ export function FilterBar({
 					className={`flex items-center space-x-2 px-4 py-2 border transition-colors ${
 						isExpanded || hasActiveFilters
 							? "border-accent text-accent"
-							: "border-main text-main hover:border-accent hover:text-accent"
+							: " hover:border-accent hover:text-accent"
 					}`}
 					aria-expanded={isExpanded}
 					aria-controls="filter-panel"
@@ -150,7 +150,7 @@ export function FilterBar({
 					<Filter className="w-4 h-4" />
 					<span className="text-sm">Filters</span>
 					{hasActiveFilters && (
-						<span className="bg-accent text-main text-xs px-2 py-1">
+						<span className="bg-accent text-xs px-2 py-1">
 							{
 								[
 									filters.category,
@@ -169,7 +169,7 @@ export function FilterBar({
 					<button
 						type="button"
 						onClick={handleClearFilters}
-						className="flex items-center space-x-2 px-4 py-2 border border-main text-main hover:border-accent hover:text-accent transition-colors"
+						className="flex items-center space-x-2 px-4 py-2 border hover:border-accent hover:text-accent transition-colors"
 					>
 						<X className="w-4 h-4" />
 						<span className="text-sm">Clear</span>
@@ -181,12 +181,12 @@ export function FilterBar({
 			{isExpanded && (
 				<div
 					id="filter-panel"
-					className="border border-main bg-base p-6 space-y-6"
+					className="border p-6 space-y-6"
 				>
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 						{/* Category Filter */}
 						<div className="space-y-3">
-							<h3 className="text-sm font-medium text-main">Category</h3>
+							<h3 className="text-sm font-medium ">Category</h3>
 							<div className="space-y-2">
 								<label className="flex items-center space-x-2">
 									<input
@@ -223,7 +223,7 @@ export function FilterBar({
 						{/* Technology Filter */}
 						{technologies.length > 0 && (
 							<div className="space-y-3">
-								<h3 className="text-sm font-medium text-main">Technologies</h3>
+								<h3 className="text-sm font-medium ">Technologies</h3>
 								<div className="space-y-2 max-h-40 overflow-y-auto">
 									{technologies.map((tech) => (
 										<label
@@ -250,7 +250,7 @@ export function FilterBar({
 						{/* Year Filter */}
 						{years.length > 0 && (
 							<div className="space-y-3">
-								<h3 className="text-sm font-medium text-main">Year</h3>
+								<h3 className="text-sm font-medium ">Year</h3>
 								<div className="space-y-2">
 									<label className="flex items-center space-x-2">
 										<input
@@ -288,7 +288,7 @@ export function FilterBar({
 						{/* Tags Filter */}
 						{tags.length > 0 && (
 							<div className="space-y-3">
-								<h3 className="text-sm font-medium text-main">Tags</h3>
+								<h3 className="text-sm font-medium ">Tags</h3>
 								<div className="space-y-2 max-h-40 overflow-y-auto">
 									{tags.map((tag) => (
 										<label

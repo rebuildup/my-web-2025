@@ -697,16 +697,16 @@ export function DataManagerForm({
 	};
 
 	const inputStyle =
-		"w-full border border-main px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	const labelStyle =
-		"block noto-sans-jp-regular text-sm font-medium text-main mb-1";
+		"block noto-sans-jp-regular text-sm font-medium mb-1";
 	const buttonStyle =
-		"border border-main px-4 py-2 text-sm hover:bg-main hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"border px-4 py-2 text-sm hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 	const activeTabStyle =
-		"border border-main px-4 py-2 text-sm bg-main text-base focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 	const tabStyle =
-		"border border-main px-4 py-2 text-sm hover:bg-main hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"border px-4 py-2 text-sm hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6">
@@ -855,14 +855,14 @@ export function DataManagerForm({
 						isEnhancedContentItem(formData) &&
 						formData.categories &&
 						formData.categories.length > 0 && (
-							<div className="bg-base border border-main rounded-lg p-4">
-								<h4 className="noto-sans-jp-regular text-sm font-medium text-main mb-3">
+							<div className=" border rounded-lg p-4">
+								<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 									Gallery Visibility Summary
 								</h4>
 								<div className="space-y-2 text-sm">
 									<div className="flex items-center gap-2">
 										<span className="w-2 h-2 bg-green-500 rounded-full"></span>
-										<span className="font-medium text-main">
+										<span className="font-medium ">
 											Will appear in:
 										</span>
 										<span className="text-gray-400">
@@ -998,9 +998,9 @@ export function DataManagerForm({
 						<label className={labelStyle}>Content (Markdown)</label>
 						{enhanced ? (
 							isLoadingMarkdown ? (
-								<div className="border border-main rounded-lg p-8 text-center">
+								<div className="border rounded-lg p-8 text-center">
 									<div className="flex items-center justify-center gap-2">
-										<div className="w-4 h-4 border-2 border-main border-t-transparent rounded-full animate-spin"></div>
+										<div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin"></div>
 										<span className="text-sm text-gray-600">
 											Loading markdown content...
 										</span>
@@ -1179,8 +1179,8 @@ export function DataManagerForm({
 
 			{activeTab === "dates" && enhanced && (
 				<div className="space-y-6">
-					<div className="bg-base border border-main p-4 rounded-lg">
-						<h3 className="neue-haas-grotesk-display text-xl text-main leading-snug mb-4">
+					<div className=" border p-4 rounded-lg">
+						<h3 className="neue-haas-grotesk-display text-xl leading-snug mb-4">
 							日付管理
 						</h3>
 						<p className="noto-sans-jp-light text-xs pb-2 text-gray-400 mb-4">
@@ -1196,11 +1196,11 @@ export function DataManagerForm({
 						/>
 					</div>
 
-					<div className="bg-base border border-main p-4 rounded-lg">
-						<h4 className="noto-sans-jp-regular text-sm font-medium text-main mb-2">
+					<div className=" border p-4 rounded-lg">
+						<h4 className="noto-sans-jp-regular text-sm font-medium mb-2">
 							現在の日付情報
 						</h4>
-						<div className="space-y-2 text-sm text-main">
+						<div className="space-y-2 text-sm ">
 							<div>
 								<span className="font-medium">作成日:</span>{" "}
 								{new Date(formData.createdAt).toLocaleDateString("ja-JP", {
@@ -1255,8 +1255,8 @@ export function DataManagerForm({
 						</div>
 					</div>
 
-					<div className="bg-base border border-main p-4 rounded-lg">
-						<h4 className="noto-sans-jp-regular text-sm font-medium text-main mb-2">
+					<div className=" border p-4 rounded-lg">
+						<h4 className="noto-sans-jp-regular text-sm font-medium mb-2">
 							Date History
 						</h4>
 						<p className="noto-sans-jp-light text-xs text-gray-400">
@@ -1279,7 +1279,7 @@ export function DataManagerForm({
 				</button>
 				<button
 					type="submit"
-					className={`${buttonStyle} bg-main text-base hover:bg-gray-700 ${
+					className={`${buttonStyle} hover:bg-gray-700 ${
 						saveStatus === "success" ? "bg-green-600 border-green-600" : ""
 					} ${saveStatus === "error" ? "bg-red-600 border-red-600" : ""}`}
 					disabled={isLoading}

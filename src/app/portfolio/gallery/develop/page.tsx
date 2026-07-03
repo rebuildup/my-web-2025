@@ -126,7 +126,7 @@ export default async function DevelopGalleryPage() {
 						{JSON.stringify(structuredData)}
 					</script>
 				)}
-				<div className="min-h-screen relative z-10 text-main scrollbar-auto-stable">
+				<div className="min-h-screen relative z-10 scrollbar-auto-stable">
 					<main className="py-4">
 						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-10">
@@ -180,7 +180,7 @@ export default async function DevelopGalleryPage() {
 		console.error("Error in DevelopGalleryPage:", error);
 
 		return (
-			<div className="min-h-screen bg-base text-main scrollbar-auto-stable">
+			<div className="min-h-screen scrollbar-auto-stable">
 				<main className="py-10">
 					<div className="container mx-auto px-4">
 						<div className="bg-red-100 p-4 rounded">

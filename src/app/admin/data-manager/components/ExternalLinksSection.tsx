@@ -74,23 +74,23 @@ export function ExternalLinksSection({
 	};
 
 	const inputStyle =
-		"w-full border border-main px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 	const labelStyle =
-		"block noto-sans-jp-regular text-sm font-medium text-main mb-1";
+		"block noto-sans-jp-regular text-sm font-medium mb-1";
 	const buttonStyle =
-		"border border-main px-3 py-1 text-xs hover:bg-main hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"border px-3 py-1 text-xs hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
 		<div className="space-y-4">
 			<div className="flex justify-between items-center">
-				<h3 className="neue-haas-grotesk-display text-xl text-main leading-snug">
+				<h3 className="neue-haas-grotesk-display text-xl leading-snug">
 					External Links
 				</h3>
 				{!showAddForm && (
 					<button
 						type="button"
 						onClick={() => setShowAddForm(true)}
-						className={`${buttonStyle} bg-main text-white border-main hover:bg-main/80`}
+						className={`${buttonStyle} text-white hover:/80`}
 					>
 						+ Add Link
 					</button>
@@ -100,7 +100,7 @@ export function ExternalLinksSection({
 			{/* Add New Link Form - 条件付きで表示 */}
 			{showAddForm && (
 				<div className="border border-gray-200 p-4 rounded space-y-3">
-					<h4 className="noto-sans-jp-regular text-sm font-medium text-main">
+					<h4 className="noto-sans-jp-regular text-sm font-medium ">
 						Add New Link
 					</h4>
 
@@ -174,7 +174,7 @@ export function ExternalLinksSection({
 						<button
 							type="button"
 							onClick={addLink}
-							className={`${buttonStyle} bg-main text-white border-main hover:bg-main/80`}
+							className={`${buttonStyle} text-white hover:/80`}
 							disabled={!newLink.url.trim() || !newLink.title.trim()}
 						>
 							Add Link
@@ -186,7 +186,7 @@ export function ExternalLinksSection({
 			{/* Existing Links */}
 			{links.length > 0 && (
 				<div className="space-y-3">
-					<h4 className="noto-sans-jp-regular text-sm font-medium text-main">
+					<h4 className="noto-sans-jp-regular text-sm font-medium ">
 						Current Links ({links.length})
 					</h4>
 
@@ -297,7 +297,7 @@ export function ExternalLinksSection({
 			{/* Quick Add Common Links - Add Linkフォームが表示されていない時のみ表示 */}
 			{!showAddForm && (
 				<div className="border border-gray-200 p-4 rounded">
-					<h4 className="noto-sans-jp-regular text-sm font-medium text-main mb-3">
+					<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 						Quick Add
 					</h4>
 					<div className="grid grid-cols-2 md:grid-cols-4 gap-2">

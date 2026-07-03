@@ -90,13 +90,13 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 		>
 			<div
 				ref={modalRef}
-				className="bg-base border border-main max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+				className=" border max-w-4xl w-full max-h-[90vh] overflow-y-auto"
 			>
 				{/* Header */}
-				<header className="flex items-center justify-between p-6 border-b border-main">
+				<header className="flex items-center justify-between p-6 border-b ">
 					<h1
 						id="modal-title"
-						className="zen-kaku-gothic-new text-xl text-main"
+						className="zen-kaku-gothic-new text-xl "
 					>
 						{item.title}
 					</h1>
@@ -115,7 +115,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 				<div className="p-6 space-y-6">
 					{/* Main Image */}
 					{item.thumbnail && (
-						<div className="aspect-video bg-base border border-main overflow-hidden">
+						<div className="aspect-video border overflow-hidden">
 							<Image
 								src={item.thumbnail}
 								alt={item.title}
@@ -136,7 +136,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 							return (
 								<div className="flex items-center space-x-2">
 									<Calendar className="w-4 h-4 text-accent" />
-									<span className="text-main">Published:</span>
+									<span className="">Published:</span>
 									<time dateTime={effective}>
 										{new Date(effective).toLocaleDateString("ja-JP")}
 									</time>
@@ -146,7 +146,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 
 						<div className="flex items-center space-x-2">
 							<Tag className="w-4 h-4 text-accent" />
-							<span className="text-main">Category:</span>
+							<span className="">Category:</span>
 							<span>
 								{(item as EnhancedContentItem).categories
 									? (item as EnhancedContentItem).categories.join(", ")
@@ -157,20 +157,20 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 
 					{/* Description */}
 					<div className="space-y-2">
-						<h2 className="zen-kaku-gothic-new text-lg text-main">
+						<h2 className="zen-kaku-gothic-new text-lg ">
 							Description
 						</h2>
-						<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
+						<p className="noto-sans-jp-light text-sm leading-relaxed">
 							{item.description}
 						</p>
 					</div>
 				</div>
 
 				{/* Footer */}
-				<footer className="p-6 border-t border-main">
+				<footer className="p-6 border-t ">
 					<Link
 						href={`/portfolio/${item.id}`}
-						className="flex items-center space-x-2 text-accent hover:text-main transition-colors"
+						className="flex items-center space-x-2 text-accent hover: transition-colors"
 					>
 						<ExternalLink className="w-4 h-4" />
 						<span className="text-sm">View Full Page</span>

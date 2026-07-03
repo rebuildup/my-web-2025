@@ -92,7 +92,7 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 					{JSON.stringify(structuredData)}
 				</script>
 
-				<div className="min-h-screen bg-base text-main">
+				<div className="min-h-screen ">
 					<main id="main-content" className="flex items-center py-10">
 						<div className="container-system">
 							<div className="space-y-10">
@@ -113,7 +113,7 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 								{/* Header */}
 								<header className="space-y-8">
 									<div className="space-y-4">
-										<h1 className="neue-haas-grotesk-display text-6xl text-main">
+										<h1 className="neue-haas-grotesk-display text-6xl ">
 											{playgroundInfo.title}
 										</h1>
 										<p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -134,20 +134,20 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 
 								{/* Playground Content */}
 								<section>
-									<div className="bg-base border border-main p-8">
+									<div className=" border p-8">
 										<div className="text-center py-16">
-											<h2 className="neue-haas-grotesk-display text-3xl text-main mb-4">
+											<h2 className="neue-haas-grotesk-display text-3xl mb-4">
 												{playgroundInfo.title} Experiments
 											</h2>
-											<p className="noto-sans-jp-light text-sm text-main mb-8">
+											<p className="noto-sans-jp-light text-sm mb-8">
 												インタラクティブな実験とデモンストレーションをお楽しみください.
 											</p>
 
 											{/* Placeholder for actual playground content */}
-											<div className="aspect-video bg-base border border-main flex items-center justify-center">
+											<div className="aspect-video border flex items-center justify-center">
 												<div className="text-center">
 													<div className="text-4xl mb-4">🚧</div>
-													<p className="noto-sans-jp-light text-sm text-main">
+													<p className="noto-sans-jp-light text-sm ">
 														{playgroundInfo.title} experiments coming soon...
 													</p>
 												</div>
@@ -158,22 +158,22 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 
 								{/* Features */}
 								<section>
-									<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+									<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 										Features
 									</h2>
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
 										{playgroundInfo.features.map((feature, index) => (
 											<div
 												key={feature}
-												className="bg-base border border-main p-4 space-y-2"
+												className=" border p-4 space-y-2"
 											>
 												<div className="text-accent text-lg font-bold">
 													{String(index + 1).padStart(2, "0")}
 												</div>
-												<h3 className="zen-kaku-gothic-new text-base text-main">
+												<h3 className="zen-kaku-gothic-new ">
 													{feature}
 												</h3>
-												<p className="noto-sans-jp-light text-sm text-main">
+												<p className="noto-sans-jp-light text-sm ">
 													{getFeatureDescription(feature)}
 												</p>
 											</div>
@@ -190,10 +190,10 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 		console.error(`Error rendering playground page for ${type}:`, error);
 
 		return (
-			<div className="min-h-screen bg-base text-main flex items-center justify-center">
+			<div className="min-h-screen flex items-center justify-center">
 				<div className="text-center">
-					<h1 className="text-2xl text-main mb-4">Playground Error</h1>
-					<p className="text-main">
+					<h1 className="text-2xl mb-4">Playground Error</h1>
+					<p className="">
 						Sorry, there was an error loading the playground.
 					</p>
 				</div>

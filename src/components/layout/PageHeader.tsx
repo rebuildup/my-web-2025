@@ -28,8 +28,8 @@ export function PageHeader({
 			{/* Page Title */}
 			{title && (
 				<div className="mb-4">
-					<h1 className="text-3xl font-bold text-main mb-2">{title}</h1>
-					{description && <p className="text-main/70">{description}</p>}
+					<h1 className="text-3xl font-bold mb-2">{title}</h1>
+					{description && <p className="/70">{description}</p>}
 				</div>
 			)}
 		</div>

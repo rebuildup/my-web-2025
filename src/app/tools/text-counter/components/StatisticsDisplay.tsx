@@ -52,19 +52,19 @@ export default function StatisticsDisplay({
 
 	return (
 		<div className="space-y-6">
-			<h2 className="text-xl font-semibold text-main">統計情報</h2>
+			<h2 className="text-xl font-semibold ">統計情報</h2>
 
-			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 space-y-6">
+			<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 space-y-6">
 				<div className="flex flex-wrap items-center gap-4 text-sm">
 					<div className="flex items-center gap-2">
-						<label htmlFor="min-length" className="text-main/80">
+						<label htmlFor="min-length" className="/80">
 							下限:
 						</label>
 						<input
 							id="min-length"
 							type="number"
 							min="0"
-							className="w-20 bg-main/10 rounded px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-accent"
+							className="w-20 /10 rounded px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-accent"
 							value={settings.minLength || 0}
 							onChange={(e) =>
 								updateSetting("minLength", parseInt(e.target.value) || 0)
@@ -73,14 +73,14 @@ export default function StatisticsDisplay({
 						/>
 					</div>
 					<div className="flex items-center gap-2">
-						<label htmlFor="target-length" className="text-main/80">
+						<label htmlFor="target-length" className="/80">
 							目標:
 						</label>
 						<input
 							id="target-length"
 							type="number"
 							min="0"
-							className="w-20 bg-main/10 rounded px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-accent"
+							className="w-20 /10 rounded px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-accent"
 							value={settings.targetLength || 0}
 							onChange={(e) =>
 								updateSetting("targetLength", parseInt(e.target.value) || 0)
@@ -89,14 +89,14 @@ export default function StatisticsDisplay({
 						/>
 					</div>
 					<div className="flex items-center gap-2">
-						<label htmlFor="max-length" className="text-main/80">
+						<label htmlFor="max-length" className="/80">
 							上限:
 						</label>
 						<input
 							id="max-length"
 							type="number"
 							min="0"
-							className="w-20 bg-main/10 rounded px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-accent"
+							className="w-20 /10 rounded px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-accent"
 							value={settings.maxLength || 0}
 							onChange={(e) =>
 								updateSetting("maxLength", parseInt(e.target.value) || 0)
@@ -107,11 +107,11 @@ export default function StatisticsDisplay({
 				</div>
 
 				<div className="space-y-2">
-					<div className="flex justify-between text-sm font-medium text-main">
+					<div className="flex justify-between text-sm font-medium ">
 						<span>0</span>
 						<span>{scaleMax.toLocaleString()} 文字</span>
 					</div>
-					<div className="relative w-full h-4 bg-main/10 rounded-full overflow-hidden">
+					<div className="relative w-full h-4 /10 rounded-full overflow-hidden">
 						{/* Progress Bar */}
 						<div
 							className={`h-full transition-all duration-300 ease-out ${getStatusColor()}`}
@@ -121,7 +121,7 @@ export default function StatisticsDisplay({
 						{/* Min Marker */}
 						{settings.minLength > 0 && settings.minLength <= scaleMax && (
 							<div
-								className="absolute top-0 bottom-0 w-0.5 bg-main/30 z-10"
+								className="absolute top-0 bottom-0 w-0.5 /30 z-10"
 								style={{ left: `${(settings.minLength / scaleMax) * 100}%` }}
 								title={`下限: ${settings.minLength}`}
 							></div>
@@ -129,7 +129,7 @@ export default function StatisticsDisplay({
 						{/* Target Marker */}
 						{settings.targetLength > 0 && settings.targetLength <= scaleMax && (
 							<div
-								className="absolute top-0 bottom-0 w-1 bg-main/50 z-10"
+								className="absolute top-0 bottom-0 w-1 /50 z-10"
 								style={{ left: `${(settings.targetLength / scaleMax) * 100}%` }}
 								title={`目標: ${settings.targetLength}`}
 							></div>
@@ -143,15 +143,15 @@ export default function StatisticsDisplay({
 							></div>
 						)}
 					</div>
-					<div className="text-right text-sm font-bold text-main">
+					<div className="text-right text-sm font-bold ">
 						現在: {stats.totalCharacters.toLocaleString()} 文字
 					</div>
 				</div>
 			</div>
 
 			{displaySettings.showBasicStats && (
-				<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
-					<h3 className="font-medium text-main">基本統計</h3>
+				<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
+					<h3 className="font-medium ">基本統計</h3>
 					<div className="grid grid-cols-2 gap-4">
 						<StatItem label="総文字数" value={stats.totalCharacters} />
 						<StatItem
@@ -179,8 +179,8 @@ export default function StatisticsDisplay({
 			)}
 
 			{displaySettings.showStructureStats && (
-				<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
-					<h3 className="font-medium text-main">構造統計</h3>
+				<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
+					<h3 className="font-medium ">構造統計</h3>
 					<div className="grid grid-cols-2 gap-4">
 						<StatItem label="単語数" value={stats.wordCount} />
 						<StatItem label="行数" value={stats.lineCount} />
@@ -191,8 +191,8 @@ export default function StatisticsDisplay({
 			)}
 
 			{displaySettings.showCharacterTypes && (
-				<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
-					<h3 className="font-medium text-main">文字種別</h3>
+				<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
+					<h3 className="font-medium ">文字種別</h3>
 					<div className="grid grid-cols-2 gap-4">
 						<StatItem label="ひらがな" value={stats.characterTypes.hiragana} />
 						<StatItem label="カタカナ" value={stats.characterTypes.katakana} />
@@ -216,8 +216,8 @@ export default function StatisticsDisplay({
 			)}
 
 			{displaySettings.showDetailedStats && (
-				<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
-					<h3 className="font-medium text-main">詳細統計</h3>
+				<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
+					<h3 className="font-medium ">詳細統計</h3>
 					<div className="space-y-2">
 						<StatItem
 							label="平均行文字数"
@@ -253,8 +253,8 @@ interface StatItemProps {
 function StatItem({ label, value }: StatItemProps) {
 	return (
 		<div className="flex justify-between items-center py-1">
-			<span className="text-sm text-main">{label}</span>
-			<span className="font-mono text-sm font-medium text-main">
+			<span className="text-sm ">{label}</span>
+			<span className="font-mono text-sm font-medium ">
 				{typeof value === "number" ? value.toLocaleString() : value}
 			</span>
 		</div>

@@ -68,15 +68,15 @@ export function DownloadInfoSection({
 	};
 
 	const inputStyle =
-		"w-full border border-main px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 	const labelStyle =
-		"block noto-sans-jp-regular text-sm font-medium text-main mb-1";
+		"block noto-sans-jp-regular text-sm font-medium mb-1";
 	const buttonStyle =
-		"border border-main px-3 py-1 text-xs hover:bg-main hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"border px-3 py-1 text-xs hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
 		<div className="space-y-4">
-			<h3 className="neue-haas-grotesk-display text-xl text-main leading-snug">
+			<h3 className="neue-haas-grotesk-display text-xl leading-snug">
 				Download Information
 			</h3>
 
@@ -94,7 +94,7 @@ export function DownloadInfoSection({
 
 					{isUploading ? (
 						<div className="space-y-2">
-							<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-main mx-auto"></div>
+							<div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto"></div>
 							<p className="text-sm text-gray-600">Uploading file...</p>
 						</div>
 					) : (
@@ -118,7 +118,7 @@ export function DownloadInfoSection({
 								<button
 									type="button"
 									onClick={() => fileInputRef.current?.click()}
-									className="text-main hover:text-main/80 font-medium"
+									className=" hover:/80 font-medium"
 								>
 									Click to upload file
 								</button>
@@ -132,7 +132,7 @@ export function DownloadInfoSection({
 				<div className="space-y-4">
 					{/* File Information */}
 					<div className="bg-gray-50 border border-gray-200 p-4 rounded">
-						<h4 className="noto-sans-jp-regular text-sm font-medium text-main mb-2">
+						<h4 className="noto-sans-jp-regular text-sm font-medium mb-2">
 							File Information
 						</h4>
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
@@ -189,7 +189,7 @@ export function DownloadInfoSection({
 
 					{/* Statistics (Read-only) */}
 					<div className="bg-gray-50 border border-gray-200 p-4 rounded">
-						<h4 className="noto-sans-jp-regular text-sm font-medium text-main mb-2">
+						<h4 className="noto-sans-jp-regular text-sm font-medium mb-2">
 							Download Statistics
 						</h4>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -255,7 +255,7 @@ export function DownloadInfoSection({
 			{/* Manual Download Info Entry */}
 			{!downloadInfo && (
 				<div className="border border-gray-200 p-4 rounded">
-					<h4 className="noto-sans-jp-regular text-sm font-medium text-main mb-3">
+					<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 						Or Enter Manually
 					</h4>
 					<div className="space-y-3">

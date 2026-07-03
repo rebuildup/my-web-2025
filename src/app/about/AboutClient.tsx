@@ -116,16 +116,16 @@ function SystemMetricsList({
 	lang: "ja" | "en";
 }) {
 	return (
-		<div className="hidden md:flex items-center gap-6 text-[10px] font-mono tracking-widest text-main/40 uppercase">
+		<div className="hidden md:flex items-center gap-6 text-[10px] font-mono tracking-widest /40 uppercase">
 			<div className="flex items-center gap-2">
 				<span className="w-1.5 h-1.5 bg-accent/50 rounded-full animate-pulse" />
 				<span>Total Content: {stats.totalContents}</span>
 			</div>
-			<div className="w-[1px] h-3 bg-main/10" />
+			<div className="w-[1px] h-3 /10" />
 			<div>
 				<span>Total Views: {stats.totalViews.toLocaleString()}</span>
 			</div>
-			<div className="w-[1px] h-3 bg-main/10" />
+			<div className="w-[1px] h-3 /10" />
 			<div>
 				<span>System Ver: 2.5.0</span>
 			</div>
@@ -144,7 +144,7 @@ function TerminalTimeline({
 }) {
 	return (
 		<div className="space-y-6">
-			<h3 className="text-xl font-bold font-display text-main flex items-center gap-3">
+			<h3 className="text-xl font-bold font-display flex items-center gap-3">
 				<span className="flex gap-1">
 					<span className="w-1.5 h-1.5 rounded-full bg-accent" />
 					<span className="w-1.5 h-1.5 rounded-full bg-accent/50" />
@@ -170,30 +170,30 @@ function TerminalTimeline({
 						className="relative pl-8 group"
 					>
 						{/* Node */}
-						<span className="absolute left-[3px] top-2.5 w-[9px] h-[9px] rounded-full bg-base border-2 border-accent z-10 group-hover:scale-125 group-hover:bg-accent transition-all duration-300" />
+						<span className="absolute left-[3px] top-2.5 w-[9px] h-[9px] rounded-full border-2 border-accent z-10 group-hover:scale-125 group-hover:bg-accent transition-all duration-300" />
 
 						<div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1.5">
 							<span className="font-mono text-accent text-[10px] py-0.5 px-2 bg-accent/10 rounded">
 								{item.date}
 							</span>
-							<h4 className="text-lg font-bold text-main leading-tight group-hover:text-accent transition-colors">
+							<h4 className="text-lg font-bold leading-tight group-hover:text-accent transition-colors">
 								{item.title[lang]}
 							</h4>
 						</div>
 
-						<p className="text-main/80 text-sm mb-3 font-light leading-relaxed">
+						<p className="/80 text-sm mb-3 font-light leading-relaxed">
 							{item.subtitle[lang]}
 						</p>
 
 						{(item.description || item.tags) && (
-							<div className="text-xs md:text-sm text-main/60 space-y-2 pl-4 border-l border-main/10 group-hover:border-accent/30 transition-colors">
+							<div className="text-xs md:text-sm /60 space-y-2 pl-4 border-l /10 group-hover:border-accent/30 transition-colors">
 								{item.description && <p>{item.description[lang]}</p>}
 								{item.tags && (
 									<div className="flex flex-wrap gap-2">
 										{item.tags.map((tag) => (
 											<span
 												key={tag}
-												className="text-[10px] font-mono text-main/50 px-2 py-0.5 bg-main/5 rounded hover:bg-accent/10 hover:text-accent transition-colors cursor-default"
+												className="text-[10px] font-mono /50 px-2 py-0.5 /5 rounded hover:bg-accent/10 hover:text-accent transition-colors cursor-default"
 											>
 												{tag}
 											</span>
@@ -217,14 +217,14 @@ function LangToggle({
 	setLang: (l: "ja" | "en") => void;
 }) {
 	return (
-		<div className="flex items-center bg-base/50 backdrop-blur-md rounded-full p-1 border border-main/10">
+		<div className="flex items-center /50 backdrop-blur-md rounded-full p-1 border /10">
 			<button
 				onClick={() => setLang("ja")}
 				className={cn(
 					"px-3 py-1 rounded-full text-[10px] font-bold transition-all duration-300",
 					lang === "ja"
-						? "bg-main text-base shadow-lg scale-105"
-						: "text-main/40 hover:text-main/80",
+						? " shadow-lg scale-105"
+						: "/40 hover:/80",
 				)}
 			>
 				JP
@@ -234,8 +234,8 @@ function LangToggle({
 				className={cn(
 					"px-3 py-1 rounded-full text-[10px] font-bold transition-all duration-300",
 					lang === "en"
-						? "bg-main text-base shadow-lg scale-105"
-						: "text-main/40 hover:text-main/80",
+						? " shadow-lg scale-105"
+						: "/40 hover:/80",
 				)}
 			>
 				EN
@@ -276,7 +276,7 @@ export default function AboutClient({
 	return (
 		<div
 			ref={containerRef}
-			className="min-h-screen relative bg-transparent text-main selection:bg-accent/30 overflow-hidden"
+			className="min-h-screen relative bg-transparent selection:bg-accent/30 overflow-hidden"
 		>
 			<AboutBackground />
 
@@ -287,9 +287,9 @@ export default function AboutClient({
 			/>
 
 			{/* Top Navigation Bar */}
-			<div className="fixed top-0 left-0 right-0 z-40 bg-base/80 backdrop-blur-md border-b border-white/5 transition-all">
+			<div className="fixed top-0 left-0 right-0 z-40 /80 backdrop-blur-md border-b border-white/5 transition-all">
 				<div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex justify-between items-center">
-					<div className="mix-blend-difference text-main">
+					<div className="mix-blend-difference ">
 						<Breadcrumbs
 							items={[
 								{ label: "Home", href: "/" },
@@ -328,7 +328,7 @@ export default function AboutClient({
 									duration: 0.3,
 									ease: [0.4, 0, 1, 1],
 								}}
-								className="text-5xl md:text-7xl lg:text-8xl font-display font-black tracking-tighter text-main leading-[0.85] mix-blend-overlay opacity-90"
+								className="text-5xl md:text-7xl lg:text-8xl font-display font-black tracking-tighter leading-[0.85] mix-blend-overlay opacity-90"
 							>
 								WHO
 								<br />I AM
@@ -339,7 +339,7 @@ export default function AboutClient({
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							transition={{ delay: 0.1, duration: 0.3, ease: [0.4, 0, 1, 1] }}
-							className="text-base md:text-lg text-main/80 leading-relaxed max-w-lg font-light drop-shadow-sm"
+							className=" md:text-lg /80 leading-relaxed max-w-lg font-light drop-shadow-sm"
 						>
 							{profile.bio[lang]}
 						</motion.p>
@@ -369,13 +369,13 @@ export default function AboutClient({
 				</div>
 
 				{/* --- Links Section --- */}
-				<section className="mb-24 border-t border-main/5 pt-6">
+				<section className="mb-24 border-t /5 pt-6">
 					<div className="flex flex-wrap gap-8 md:gap-16">
 						<Link
 							href="/about/profile/real"
-							className="group flex items-baseline gap-2 text-main font-bold hover:text-accent transition-colors"
+							className="group flex items-baseline gap-2 font-bold hover:text-accent transition-colors"
 						>
-							<span className="text-[10px] font-mono text-main/40">01</span>
+							<span className="text-[10px] font-mono /40">01</span>
 							<span className="text-lg tracking-tight whitespace-nowrap">
 								{lang === "ja" ? "本名プロフィール" : "Real Profile"}
 							</span>
@@ -383,18 +383,18 @@ export default function AboutClient({
 						</Link>
 						<Link
 							href="/about/profile/handle"
-							className="group flex items-baseline gap-2 text-main/60 font-bold hover:text-accent transition-colors"
+							className="group flex items-baseline gap-2 /60 font-bold hover:text-accent transition-colors"
 						>
-							<span className="text-[10px] font-mono text-main/30">02</span>
+							<span className="text-[10px] font-mono /30">02</span>
 							<span className="text-lg tracking-tight">
 								ハンドルネームプロフィール
 							</span>
 						</Link>
 						<a
 							href="https://links.yusuke-kim.com"
-							className="group flex items-baseline gap-2 text-main/60 font-bold hover:text-accent transition-colors"
+							className="group flex items-baseline gap-2 /60 font-bold hover:text-accent transition-colors"
 						>
-							<span className="text-[10px] font-mono text-main/30">03</span>
+							<span className="text-[10px] font-mono /30">03</span>
 							<span className="text-lg tracking-tight">Links</span>
 						</a>
 					</div>
@@ -417,14 +417,14 @@ export default function AboutClient({
 								className="group relative"
 							>
 								<div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-12">
-									<h3 className="text-xl md:text-2xl font-black font-display text-main min-w-[180px]">
+									<h3 className="text-xl md:text-2xl font-black font-display min-w-[180px]">
 										{category.title}
 									</h3>
 									<div className="flex flex-wrap gap-x-4 gap-y-2">
 										{category.items.map((item, i) => (
 											<span
 												key={item}
-												className="text-base md:text-lg font-medium text-main/50 hover:text-accent transition-colors duration-300 cursor-default"
+												className=" md:text-lg font-medium /50 hover:text-accent transition-colors duration-300 cursor-default"
 											>
 												<span className="text-accent/40 mr-1">/</span>
 												{item}
@@ -452,7 +452,7 @@ export default function AboutClient({
 				</section>
 
 				{/* Footer Info */}
-				<div className="mt-24 pt-8 border-t border-main/5 flex justify-end text-[10px] font-mono text-main/20">
+				<div className="mt-24 pt-8 border-t /5 flex justify-end text-[10px] font-mono /20">
 					<span>
 						LAST_UPDATE:{" "}
 						{new Date(stats.lastUpdated).toLocaleString(

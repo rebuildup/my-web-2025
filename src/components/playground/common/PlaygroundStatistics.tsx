@@ -28,20 +28,20 @@ export function PlaygroundStatistics({
 
 	if (!stats) {
 		return (
-			<div className={`bg-base border border-main p-4 ${className}`}>
+			<div className={` border p-4 ${className}`}>
 				<div className="animate-pulse">
-					<div className="h-4 bg-main opacity-20 rounded mb-2"></div>
-					<div className="h-8 bg-main opacity-20 rounded"></div>
+					<div className="h-4 opacity-20 rounded mb-2"></div>
+					<div className="h-8 opacity-20 rounded"></div>
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className={`bg-base border border-main ${className}`}>
+		<div className={` border ${className}`}>
 			{/* Header */}
-			<div className="p-4 border-b border-main">
-				<h3 className="zen-kaku-gothic-new text-lg text-main flex items-center">
+			<div className="p-4 border-b ">
+				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<BarChart3 className="w-5 h-5 mr-2" />
 					Playground Statistics
 				</h3>
@@ -54,40 +54,40 @@ export function PlaygroundStatistics({
 						<div className="text-2xl font-bold text-accent">
 							{stats.totalExperiments}
 						</div>
-						<div className="text-sm text-main">Total Experiments</div>
+						<div className="text-sm ">Total Experiments</div>
 					</div>
 					<div className="text-center">
 						<div className="text-2xl font-bold text-accent">
 							{stats.designExperiments}
 						</div>
-						<div className="text-sm text-main">Design</div>
+						<div className="text-sm ">Design</div>
 					</div>
 					<div className="text-center">
 						<div className="text-2xl font-bold text-accent">
 							{stats.webglExperiments}
 						</div>
-						<div className="text-sm text-main">WebGL</div>
+						<div className="text-sm ">WebGL</div>
 					</div>
 					<div className="text-center">
 						<div className="text-2xl font-bold text-accent">
 							{stats.requiresWebGL}
 						</div>
-						<div className="text-sm text-main">Requires WebGL</div>
+						<div className="text-sm ">Requires WebGL</div>
 					</div>
 				</div>
 
 				{/* Category Breakdown */}
 				<div className="space-y-3">
-					<h4 className="font-medium text-main flex items-center">
+					<h4 className="font-medium flex items-center">
 						<TrendingUp className="w-4 h-4 mr-2" />
 						By Category
 					</h4>
 					<div className="space-y-2">
 						{Object.entries(stats.byCategory).map(([category, count]) => (
 							<div key={category} className="flex items-center justify-between">
-								<span className="text-sm text-main capitalize">{category}</span>
+								<span className="text-sm capitalize">{category}</span>
 								<div className="flex items-center space-x-2">
-									<div className="w-20 h-2 bg-base border border-main rounded-full overflow-hidden">
+									<div className="w-20 h-2 border rounded-full overflow-hidden">
 										<div
 											className="h-full bg-accent"
 											style={{
@@ -106,7 +106,7 @@ export function PlaygroundStatistics({
 
 				{/* Difficulty Breakdown */}
 				<div className="space-y-3">
-					<h4 className="font-medium text-main flex items-center">
+					<h4 className="font-medium flex items-center">
 						<Zap className="w-4 h-4 mr-2" />
 						By Difficulty
 					</h4>
@@ -116,11 +116,11 @@ export function PlaygroundStatistics({
 								key={difficulty}
 								className="flex items-center justify-between"
 							>
-								<span className="text-sm text-main capitalize">
+								<span className="text-sm capitalize">
 									{difficulty}
 								</span>
 								<div className="flex items-center space-x-2">
-									<div className="w-20 h-2 bg-base border border-main rounded-full overflow-hidden">
+									<div className="w-20 h-2 border rounded-full overflow-hidden">
 										<div
 											className={`h-full ${
 												difficulty === "beginner"
@@ -144,23 +144,23 @@ export function PlaygroundStatistics({
 				</div>
 
 				{/* WebGL Requirements */}
-				<div className="bg-base border border-main p-3 rounded">
-					<h4 className="font-medium text-main mb-2">WebGL Requirements</h4>
+				<div className=" border p-3 rounded">
+					<h4 className="font-medium mb-2">WebGL Requirements</h4>
 					<div className="grid grid-cols-2 gap-4 text-sm">
 						<div>
-							<span className="text-main opacity-70">WebGL Required:</span>
+							<span className=" opacity-70">WebGL Required:</span>
 							<span className="ml-2 text-accent font-medium">
 								{stats.requiresWebGL} / {stats.totalExperiments}
 							</span>
 						</div>
 						<div>
-							<span className="text-main opacity-70">WebGL2 Required:</span>
+							<span className=" opacity-70">WebGL2 Required:</span>
 							<span className="ml-2 text-accent font-medium">
 								{stats.requiresWebGL2} / {stats.totalExperiments}
 							</span>
 						</div>
 					</div>
-					<div className="mt-2 text-xs text-main opacity-70">
+					<div className="mt-2 text-xs opacity-70">
 						{((stats.requiresWebGL / stats.totalExperiments) * 100).toFixed(1)}%
 						of experiments require WebGL support
 					</div>
@@ -168,24 +168,24 @@ export function PlaygroundStatistics({
 
 				{/* Technology Distribution */}
 				<div className="space-y-3">
-					<h4 className="font-medium text-main">Popular Technologies</h4>
+					<h4 className="font-medium ">Popular Technologies</h4>
 					<div className="grid grid-cols-2 gap-2 text-sm">
 						<div className="flex justify-between">
-							<span className="text-main">Three.js</span>
+							<span className="">Three.js</span>
 							<span className="text-accent">{stats.webglExperiments}</span>
 						</div>
 						<div className="flex justify-between">
-							<span className="text-main">Canvas</span>
+							<span className="">Canvas</span>
 							<span className="text-accent">
 								{stats.byCategory.canvas || 0}
 							</span>
 						</div>
 						<div className="flex justify-between">
-							<span className="text-main">SVG</span>
+							<span className="">SVG</span>
 							<span className="text-accent">{stats.byCategory.svg || 0}</span>
 						</div>
 						<div className="flex justify-between">
-							<span className="text-main">CSS</span>
+							<span className="">CSS</span>
 							<span className="text-accent">{stats.byCategory.css || 0}</span>
 						</div>
 					</div>

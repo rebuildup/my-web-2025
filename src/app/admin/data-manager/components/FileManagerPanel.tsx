@@ -166,14 +166,14 @@ export function FileManagerPanel({
 	};
 
 	const inputStyle =
-		"border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-main focus:border-transparent";
+		"border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:border-transparent";
 	const buttonStyle =
-		"border border-main px-3 py-1 text-xs hover:bg-main hover:text-base transition-colors";
+		"border px-3 py-1 text-xs hover: hover: transition-colors";
 
 	if (loading) {
 		return (
 			<div className="flex items-center justify-center h-64">
-				<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-main"></div>
+				<div className="animate-spin rounded-full h-8 w-8 border-b-2 "></div>
 			</div>
 		);
 	}
@@ -213,18 +213,18 @@ export function FileManagerPanel({
 				<select
 					value={filterType}
 					onChange={(e) => setFilterType(e.target.value)}
-					className={`${inputStyle} bg-base text-main`}
+					className={`${inputStyle} `}
 				>
-					<option value="all" className="bg-base text-main">
+					<option value="all" className=" ">
 						All Types
 					</option>
-					<option value="image" className="bg-base text-main">
+					<option value="image" className=" ">
 						Images
 					</option>
-					<option value="video" className="bg-base text-main">
+					<option value="video" className=" ">
 						Videos
 					</option>
-					<option value="application" className="bg-base text-main">
+					<option value="application" className=" ">
 						Documents
 					</option>
 				</select>
@@ -234,18 +234,18 @@ export function FileManagerPanel({
 					onChange={(e) =>
 						setSortBy(e.target.value as "name" | "date" | "size" | "type")
 					}
-					className={`${inputStyle} bg-base text-main`}
+					className={`${inputStyle} `}
 				>
-					<option value="date" className="bg-base text-main">
+					<option value="date" className=" ">
 						Sort by Date
 					</option>
-					<option value="name" className="bg-base text-main">
+					<option value="name" className=" ">
 						Sort by Name
 					</option>
-					<option value="size" className="bg-base text-main">
+					<option value="size" className=" ">
 						Sort by Size
 					</option>
-					<option value="type" className="bg-base text-main">
+					<option value="type" className=" ">
 						Sort by Type
 					</option>
 				</select>
@@ -268,7 +268,7 @@ export function FileManagerPanel({
 							key={file.id}
 							className={`border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer ${
 								selectedFiles.has(file.id)
-									? "border-main bg-main/5"
+									? " /5"
 									: "border-gray-200"
 							}`}
 							onClick={() => handleFileSelect(file)}
@@ -369,7 +369,7 @@ export function FileManagerPanel({
 							key={file.id}
 							className={`border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer ${
 								selectedFiles.has(file.id)
-									? "border-main bg-main/5"
+									? " /5"
 									: "border-gray-200"
 							}`}
 							onClick={() => handleFileSelect(file)}

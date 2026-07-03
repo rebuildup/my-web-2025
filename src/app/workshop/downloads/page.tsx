@@ -77,13 +77,13 @@ export default async function DownloadsPage() {
 	);
 
 	const CardStyle =
-		"bg-base border border-main block p-4 space-y-4 focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
-	const Card_title = "neue-haas-grotesk-display text-xl text-main leading-snug";
+		" border block p-4 space-y-4 focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+	const Card_title = "neue-haas-grotesk-display text-xl leading-snug";
 	const Card_description = "noto-sans-jp-light text-xs pb-2";
 	const Card_meta = "noto-sans-jp-light text-xs text-accent";
 
 	return (
-		<div className="min-h-screen bg-base text-main">
+		<div className="min-h-screen ">
 			<main className="py-10">
 				<div className="container-system">
 					<div className="space-y-10">
@@ -98,7 +98,7 @@ export default async function DownloadsPage() {
 							/>
 						</div>
 						<header className="space-y-6">
-							<h1 className="neue-haas-grotesk-display text-4xl text-main">
+							<h1 className="neue-haas-grotesk-display text-4xl ">
 								Downloads
 							</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -112,7 +112,7 @@ export default async function DownloadsPage() {
 							<h2 id="stats-heading" className="sr-only">
 								統計情報
 							</h2>
-							<div className="bg-base border border-main p-4 text-center">
+							<div className=" border p-4 text-center">
 								<div className="neue-haas-grotesk-display text-2xl text-accent">
 									{publishedDownloads.length}
 								</div>
@@ -123,7 +123,7 @@ export default async function DownloadsPage() {
 						<section aria-labelledby="downloads-heading">
 							<h2
 								id="downloads-heading"
-								className="neue-haas-grotesk-display text-2xl text-main mb-6"
+								className="neue-haas-grotesk-display text-2xl mb-6"
 							>
 								素材一覧
 							</h2>
@@ -138,7 +138,7 @@ export default async function DownloadsPage() {
 											aria-describedby={`download-${download.id}-description`}
 										>
 											{download.thumbnail && (
-												<div className="aspect-video bg-base border border-main relative">
+												<div className="aspect-video border relative">
 													<Image
 														src={download.thumbnail}
 														alt={download.title}
@@ -172,7 +172,7 @@ export default async function DownloadsPage() {
 														{download.tags.map((tag) => (
 															<span
 																key={tag}
-																className="bg-base border border-main px-2 py-1 text-xs noto-sans-jp-light"
+																className=" border px-2 py-1 text-xs noto-sans-jp-light"
 															>
 																{tag}
 															</span>
@@ -184,7 +184,7 @@ export default async function DownloadsPage() {
 									))}
 								</div>
 							) : (
-								<div className="bg-base border border-main p-6">
+								<div className=" border p-6">
 									<p className="noto-sans-jp-light text-sm text-center">
 										素材はまだ公開されていません
 									</p>
@@ -195,9 +195,9 @@ export default async function DownloadsPage() {
 						<nav aria-label="Site navigation">
 							<Link
 								href="/workshop"
-								className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+								className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 							>
-								<span className="noto-sans-jp-regular text-base leading-snug">
+								<span className="noto-sans-jp-regular leading-snug">
 									← Workshop
 								</span>
 							</Link>

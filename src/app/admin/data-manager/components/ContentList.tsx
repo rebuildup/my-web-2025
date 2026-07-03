@@ -80,10 +80,10 @@ export function ContentList({
 			{items.map((item) => (
 				<div
 					key={item.id}
-					className={`border p-3 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base ${
+					className={`border p-3 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base ${
 						selectedItem?.id === item.id
-							? "border-main bg-main bg-opacity-10"
-							: "border-main hover:border-main"
+							? " bg-opacity-10"
+							: " hover:"
 					}`}
 					onClick={() => onSelectItem(item)}
 					tabIndex={0}
@@ -95,7 +95,7 @@ export function ContentList({
 					}}
 				>
 					<div className="flex justify-between items-start mb-2">
-						<h4 className="neue-haas-grotesk-display text-sm text-main font-medium truncate flex-1">
+						<h4 className="neue-haas-grotesk-display text-sm font-medium truncate flex-1">
 							{item.title || "Untitled"}
 						</h4>
 						<button type="button"

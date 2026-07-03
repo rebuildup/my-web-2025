@@ -168,14 +168,14 @@ export const AccessiblePlaygroundNav: React.FC<
 	// Get navigation link classes
 	const getLinkClasses = (item: NavItem, index: number) => {
 		const baseClasses = `
-      block px-4 py-3 text-sm transition-colors duration-200
-      focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
-      ${responsive.touch.isTouchDevice ? "active:bg-accent active:text-main" : "hover:bg-accent hover:text-main"}
-    `;
+ block px-4 py-3 text-sm transition-colors duration-200
+ focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
+ ${responsive.touch.isTouchDevice ? "active:bg-accent active:" : "hover:bg-accent hover:"}
+ `;
 
 		const stateClasses = item.isActive
-			? "bg-accent text-main font-medium"
-			: "text-main";
+			? "bg-accent font-medium"
+			: "";
 
 		const focusClasses =
 			focusedIndex === index
@@ -191,10 +191,10 @@ export const AccessiblePlaygroundNav: React.FC<
 			type="button"
 			onClick={toggleMenu}
 			className={`
-        md:hidden flex items-center px-3 py-2 border border-main text-main
-        hover:border-accent hover:text-accent transition-colors
-        focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
-      `}
+ md:hidden flex items-center px-3 py-2 border 
+ hover:border-accent hover:text-accent transition-colors
+ focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
+ `}
 			aria-expanded={isMenuOpen}
 			aria-controls="playground-navigation-menu"
 			aria-label={
@@ -217,7 +217,7 @@ export const AccessiblePlaygroundNav: React.FC<
 			{/* Skip link */}
 			<a
 				href="#main-content"
-				className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 z-50 bg-accent text-main px-4 py-2 text-sm font-medium"
+				className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 z-50 bg-accent px-4 py-2 text-sm font-medium"
 			>
 				メインコンテンツにスキップ
 			</a>
@@ -230,7 +230,7 @@ export const AccessiblePlaygroundNav: React.FC<
 			>
 				{/* Mobile menu button */}
 				<div className="flex justify-between items-center md:hidden mb-4">
-					<h2 className="text-lg font-medium text-main">
+					<h2 className="text-lg font-medium ">
 						{currentPage === "design"
 							? "Design Playground"
 							: "WebGL Playground"}
@@ -242,14 +242,14 @@ export const AccessiblePlaygroundNav: React.FC<
 				<div
 					id="playground-navigation-menu"
 					className={`
-            ${
+ ${
 							responsive.isMobile
-								? `absolute top-full left-0 right-0 z-40 bg-base border border-main shadow-lg ${
+								? `absolute top-full left-0 right-0 z-40 border shadow-lg ${
 										isMenuOpen ? "block" : "hidden"
 									}`
 								: "block"
 						}
-          `}
+ `}
 					role="menu"
 					aria-orientation="vertical"
 				>
@@ -310,29 +310,29 @@ export const AccessiblePlaygroundNav: React.FC<
 
 			{/* Keyboard shortcuts help */}
 			{accessibilityState.keyboardNavigation && (
-				<div className="mt-4 p-3 bg-base border border-main rounded text-xs">
+				<div className="mt-4 p-3 border rounded text-xs">
 					<h3 className="font-medium mb-2">キーボードナビゲーション</h3>
-					<ul className="space-y-1 text-main">
+					<ul className="space-y-1 ">
 						<li>
-							<kbd className="px-1 py-0.5 bg-main text-base rounded text-xs">
+							<kbd className="px-1 py-0.5 rounded text-xs">
 								↑↓
 							</kbd>{" "}
 							項目移動
 						</li>
 						<li>
-							<kbd className="px-1 py-0.5 bg-main text-base rounded text-xs">
+							<kbd className="px-1 py-0.5 rounded text-xs">
 								Enter
 							</kbd>{" "}
 							選択
 						</li>
 						<li>
-							<kbd className="px-1 py-0.5 bg-main text-base rounded text-xs">
+							<kbd className="px-1 py-0.5 rounded text-xs">
 								Esc
 							</kbd>{" "}
 							メニューを閉じる
 						</li>
 						<li>
-							<kbd className="px-1 py-0.5 bg-main text-base rounded text-xs">
+							<kbd className="px-1 py-0.5 rounded text-xs">
 								Home/End
 							</kbd>{" "}
 							最初/最後の項目

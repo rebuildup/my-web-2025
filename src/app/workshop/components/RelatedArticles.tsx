@@ -102,7 +102,7 @@ export function RelatedArticles({ articleSlug, tags }: RelatedArticlesProps) {
 							</div>
 
 							{/* Title */}
-							<h3 className="text-base font-semibold text-white line-clamp-2 leading-relaxed">
+							<h3 className=" font-semibold text-white line-clamp-2 leading-relaxed">
 								{article.title}
 							</h3>
 

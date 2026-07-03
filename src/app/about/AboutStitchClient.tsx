@@ -10,12 +10,12 @@ import { historyData, skillIconIds } from "./data";
 // Minimal CSS to ensure icon starts hidden before JS kicks in
 const INITIAL_CSS = `
 .about-icon-wrapper {
-  transform: scale(0);
-  display: inline-flex;
-  transform-origin: center center;
+ transform: scale(0);
+ display: inline-flex;
+ transform-origin: center center;
 }
 .about-hidden {
-  opacity: 0 !important;
+ opacity: 0 !important;
 }
 `;
 
@@ -419,7 +419,7 @@ export default function AboutStitchClient() {
 	}, []);
 
 	// Refs:
-	// overlayRef  = fixed full-screen div (position:fixed in JSX, not set by JS)
+	// overlayRef = fixed full-screen div (position:fixed in JSX, not set by JS)
 	// iconWrapperRef = div inside overlay — we scale this (not the SVG directly)
 	// homePlaceholderRef = invisible placeholder at hero position
 	// breadcrumbRef = breadcrumb element

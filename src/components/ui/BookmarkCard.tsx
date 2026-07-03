@@ -116,7 +116,7 @@ export function BookmarkCard({
 					)}
 					<div className="flex flex-col gap-1 flex-1 min-w-0 [&_*]:!no-underline [&_*]:!decoration-none">
 						<div
-							className="text-base font-bold leading-[1.3] text-[rgba(242,242,242,0.95)] m-0 !no-underline !decoration-none tracking-[-0.01em]"
+							className=" font-bold leading-[1.3] text-[rgba(242,242,242,0.95)] m-0 !no-underline !decoration-none tracking-[-0.01em]"
 							style={{ textDecoration: "none" }}
 						>
 							{displayTitle}

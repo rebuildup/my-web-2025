@@ -308,23 +308,23 @@ export default function DataManagerPage() {
 
 	// Design system classes matching root page
 	const CardStyle =
-		"bg-base border border-main block p-4 space-y-4 focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		" border block p-4 space-y-4 focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 	const Card_title =
-		"neue-haas-grotesk-display text-xl text-main leading-snug";
+		"neue-haas-grotesk-display text-xl leading-snug";
 
 	const ButtonStyle =
-		"border border-main px-4 py-2 text-sm hover:bg-main hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"border px-4 py-2 text-sm hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 	const ActiveButtonStyle =
-		"border border-main px-4 py-2 text-sm bg-main text-base focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
-		<div className="min-h-screen bg-base text-main">
+		<div className="min-h-screen ">
 			<main className="py-10">
 				<div className="container-system">
 					<div className="space-y-8">
 						{/* Header */}
 						<header className="space-y-6">
-							<h1 className="neue-haas-grotesk-display text-4xl text-main">
+							<h1 className="neue-haas-grotesk-display text-4xl ">
 								Data Manager
 							</h1>
 							<p className="noto-sans-jp-light text-sm max-w-2xl leading-loose">
@@ -493,7 +493,7 @@ export default function DataManagerPage() {
 						{/* Loading Overlay */}
 						{isLoading && (
 							<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-								<div className="bg-base border border-main p-6 rounded">
+								<div className=" border p-6 rounded">
 									<p className="noto-sans-jp-regular text-sm">
 										{isClient ? "処理中..." : "Processing..."}
 									</p>

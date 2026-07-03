@@ -74,15 +74,15 @@ export const ResponsiveExperimentGrid: React.FC<
 	// Experiment card classes based on responsive state
 	const getCardClasses = (isActive: boolean) => {
 		const baseClasses = `
-      text-left p-4 border transition-all duration-200 
-      focus:outline-none focus:ring-2 focus:ring-main 
-      focus:ring-offset-2 focus:ring-offset-base
-      ${responsive.touch.isTouchDevice ? "active:scale-95" : "hover:scale-105"}
-    `;
+ text-left p-4 border transition-all duration-200 
+ focus:outline-none focus:ring-2 focus: 
+ focus:ring-offset-2 focus:ring-offset-base
+ ${responsive.touch.isTouchDevice ? "active:scale-95" : "hover:scale-105"}
+ `;
 
 		const stateClasses = isActive
 			? "border-accent bg-accent bg-opacity-10 shadow-lg"
-			: "border-main hover:border-accent";
+			: " hover:border-accent";
 
 		const sizeClasses = responsive.isMobile
 			? "min-h-[120px]"
@@ -96,14 +96,14 @@ export const ResponsiveExperimentGrid: React.FC<
 	// Text size classes based on responsive state
 	const getTextClasses = () => ({
 		title: responsive.isMobile
-			? "zen-kaku-gothic-new text-sm text-main"
-			: "zen-kaku-gothic-new text-base text-main",
+			? "zen-kaku-gothic-new text-sm "
+			: "zen-kaku-gothic-new ",
 		description: responsive.isMobile
-			? "noto-sans-jp-light text-xs text-main line-clamp-2"
-			: "noto-sans-jp-light text-sm text-main line-clamp-3",
+			? "noto-sans-jp-light text-xs line-clamp-2"
+			: "noto-sans-jp-light text-sm line-clamp-3",
 		tag: responsive.isMobile
-			? "noto-sans-jp-light text-xs border border-main px-1 py-0.5"
-			: "noto-sans-jp-light text-xs border border-main px-2 py-1",
+			? "noto-sans-jp-light text-xs border px-1 py-0.5"
+			: "noto-sans-jp-light text-xs border px-2 py-1",
 		tech: responsive.isMobile
 			? "noto-sans-jp-light text-xs text-accent"
 			: "noto-sans-jp-light text-xs text-accent",
@@ -115,13 +115,13 @@ export const ResponsiveExperimentGrid: React.FC<
 		<div className={`space-y-4 ${className}`}>
 			{/* Header with pagination info */}
 			<div className="flex items-center justify-between">
-				<h3 className="zen-kaku-gothic-new text-lg text-main">
+				<h3 className="zen-kaku-gothic-new text-lg ">
 					Available Experiments ({experiments.length})
 				</h3>
 
 				{totalPages > 1 && (
 					<div className="flex items-center space-x-2">
-						<span className="noto-sans-jp-light text-sm text-main">
+						<span className="noto-sans-jp-light text-sm ">
 							{currentPage + 1} / {totalPages}
 						</span>
 
@@ -131,7 +131,7 @@ export const ResponsiveExperimentGrid: React.FC<
 								<button
 									type="button"
 									onClick={goToPrevPage}
-									className="p-1 border border-main hover:border-accent focus:outline-none focus:ring-2 focus:ring-main"
+									className="p-1 border hover:border-accent focus:outline-none focus:ring-2 focus:"
 									aria-label="Previous page"
 								>
 									<ChevronLeft className="w-4 h-4" />
@@ -139,7 +139,7 @@ export const ResponsiveExperimentGrid: React.FC<
 								<button
 									type="button"
 									onClick={goToNextPage}
-									className="p-1 border border-main hover:border-accent focus:outline-none focus:ring-2 focus:ring-main"
+									className="p-1 border hover:border-accent focus:outline-none focus:ring-2 focus:"
 									aria-label="Next page"
 								>
 									<ChevronRight className="w-4 h-4" />
@@ -152,7 +152,7 @@ export const ResponsiveExperimentGrid: React.FC<
 
 			{/* Mobile swipe instruction */}
 			{responsive.isMobile && totalPages > 1 && (
-				<p className="noto-sans-jp-light text-xs text-main opacity-70">
+				<p className="noto-sans-jp-light text-xs opacity-70">
 					スワイプで実験を切り替えできます
 				</p>
 			)}
@@ -259,7 +259,7 @@ export const ResponsiveExperimentGrid: React.FC<
 								key={pageNumber}
 								onClick={() => setCurrentPage(index)}
 								className={`w-2 h-2 rounded-full transition-colors ${
-									index === currentPage ? "bg-accent" : "bg-main opacity-30"
+									index === currentPage ? "bg-accent" : " opacity-30"
 								}`}
 								aria-label={`Go to page ${pageNumber}`}
 							/>

@@ -551,12 +551,12 @@ function GitHubRepoCard({
 			>
 				{/* Title with language and icon */}
 				<div className="flex items-center gap-2 mb-2">
-					<GitBranch className="w-4 h-4 text-main/40 flex-shrink-0" />
-					<span className="text-sm font-semibold text-main/90 flex-1 truncate">
+					<GitBranch className="w-4 h-4 /40 flex-shrink-0" />
+					<span className="text-sm font-semibold /90 flex-1 truncate">
 						{repo.name}
 					</span>
 					{repo.language && (
-						<span className="text-xs text-main/50 flex-shrink-0 flex items-center gap-1">
+						<span className="text-xs /50 flex-shrink-0 flex items-center gap-1">
 							<span className="w-2 h-2 rounded-full bg-blue-400" />
 							{repo.language}
 						</span>
@@ -565,13 +565,13 @@ function GitHubRepoCard({
 
 				{/* Description - more compact */}
 				{repo.description && (
-					<p className="text-xs text-main/60 mb-2 line-clamp-2 leading-snug">
+					<p className="text-xs /60 mb-2 line-clamp-2 leading-snug">
 						{repo.description}
 					</p>
 				)}
 
 				{/* Stats, topics, and date all on one line */}
-				<div className="flex items-center gap-2 text-[10px] text-main/30 flex-wrap">
+				<div className="flex items-center gap-2 text-[10px] /30 flex-wrap">
 					<span className="flex items-center gap-1">
 						<Star className="w-3 h-3" />
 						{repo.stars}
@@ -620,12 +620,12 @@ function GitHubEventCard({
 				className="pointer-events-auto block p-4 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 max-w-[320px] backdrop-blur-sm"
 			>
 				<div className="flex items-start gap-3">
-					<div className="text-main/60 mt-0.5">{getEventIcon(event.type)}</div>
+					<div className="/60 mt-0.5">{getEventIcon(event.type)}</div>
 					<div className="flex-1 min-w-0">
-						<p className="text-xs text-main/70 leading-snug line-clamp-4 mb-2">
+						<p className="text-xs /70 leading-snug line-clamp-4 mb-2">
 							{event.message}
 						</p>
-						<div className="flex items-center gap-1 text-[10px] text-main/30">
+						<div className="flex items-center gap-1 text-[10px] /30">
 							<Clock className="w-3 h-3" />
 							<span>{formatRelativeTime(event.timestamp)}</span>
 						</div>
@@ -672,10 +672,10 @@ function YouTubeCard({
 						<Video className="w-12 h-12 text-white drop-shadow-lg" />
 					</div>
 					<div className="mt-2 max-w-[224px]">
-						<p className="text-xs text-main/80 line-clamp-3 leading-snug font-medium mb-2">
+						<p className="text-xs /80 line-clamp-3 leading-snug font-medium mb-2">
 							{video.title}
 						</p>
-						<div className="flex items-center gap-2 text-[10px] text-main/30">
+						<div className="flex items-center gap-2 text-[10px] /30">
 							<Calendar className="w-3 h-3" />
 							<span>{formatDate(video.published)}</span>
 						</div>
@@ -707,7 +707,7 @@ function PortfolioCard({
 				href={`/portfolio/${content.slug || content.id}`}
 				className="pointer-events-auto block p-4 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 max-w-[280px] backdrop-blur-sm"
 			>
-				<div className="aspect-video bg-base overflow-hidden relative rounded-md mb-3">
+				<div className="aspect-video overflow-hidden relative rounded-md mb-3">
 					{content.thumbnail ? (
 						<img
 							src={content.thumbnail}
@@ -715,16 +715,16 @@ function PortfolioCard({
 							className="w-full h-full object-cover"
 						/>
 					) : (
-						<div className="w-full h-full flex items-center justify-center bg-base">
-							<FileText className="w-8 h-8 text-main/30" />
+						<div className="w-full h-full flex items-center justify-center ">
+							<FileText className="w-8 h-8 /30" />
 						</div>
 					)}
 				</div>
-				<h3 className="text-sm font-semibold text-main/90 leading-tight line-clamp-2 mb-2">
+				<h3 className="text-sm font-semibold /90 leading-tight line-clamp-2 mb-2">
 					{content.title}
 				</h3>
 				{content.description && (
-					<p className="text-xs text-main/60 leading-snug line-clamp-3 mb-3">
+					<p className="text-xs /60 leading-snug line-clamp-3 mb-3">
 						{content.description}
 					</p>
 				)}
@@ -741,7 +741,7 @@ function PortfolioCard({
 					</div>
 				)}
 				{effectiveDate && (
-					<div className="flex items-center gap-1 text-[10px] text-main/30 pt-2 border-t border-white/5">
+					<div className="flex items-center gap-1 text-[10px] /30 pt-2 border-t border-white/5">
 						<Calendar className="w-3 h-3" />
 						<span>{formatDate(effectiveDate)}</span>
 					</div>
@@ -780,16 +780,16 @@ function LinkCard({ card, opacity }: { card: UnifiedCard; opacity: number }) {
 							}}
 						/>
 					)}
-					<h3 className="text-xs font-semibold text-main/90 leading-tight line-clamp-1">
+					<h3 className="text-xs font-semibold /90 leading-tight line-clamp-1">
 						{link.title}
 					</h3>
 					{link.description && (
-						<span className="text-[10px] text-main/50 ml-2">
+						<span className="text-[10px] /50 ml-2">
 							· {link.description}
 						</span>
 					)}
 				</div>
-				<div className="text-[9px] text-main/30 truncate">
+				<div className="text-[9px] /30 truncate">
 					{link.url.replace(/^https?:\/\//, "")}
 				</div>
 			</a>

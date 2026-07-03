@@ -187,7 +187,7 @@ export function DevelopGalleryClient({
 			{/* Header */}
 			<header className="space-y-8">
 				<div className="space-y-4">
-					<h1 className="neue-haas-grotesk-display text-6xl text-main">
+					<h1 className="neue-haas-grotesk-display text-6xl ">
 						Development Projects
 					</h1>
 					<p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -201,16 +201,16 @@ export function DevelopGalleryClient({
 				<h2 className="sr-only">Projects List</h2>
 				{initialItems.length === 0 ? (
 					<div className="text-center py-16">
-						<p className="noto-sans-jp-light text-sm text-main">
+						<p className="noto-sans-jp-light text-sm ">
 							開発プロジェクトデータを読み込めませんでした.
 						</p>
-						<p className="noto-sans-jp-light text-xs text-main/60 mt-2">
+						<p className="noto-sans-jp-light text-xs /60 mt-2">
 							初期アイテム数: {initialItems.length}
 						</p>
 						<button
 							type="button"
 							onClick={() => window.location.reload()}
-							className="mt-4 text-accent hover:text-main transition-colors"
+							className="mt-4 text-accent hover: transition-colors"
 						>
 							ページを再読み込み
 						</button>
@@ -229,8 +229,8 @@ export function DevelopGalleryClient({
 										className={`lg:w-1/2 ${index % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}
 									>
 										<Link href={`/portfolio/${project.id}`}>
-											<GlowCard className="group cursor-pointer text-left block bg-base/30 backdrop-blur overflow-hidden">
-												<div className="aspect-video bg-base overflow-hidden relative">
+											<GlowCard className="group cursor-pointer text-left block /30 backdrop-blur overflow-hidden">
+												<div className="aspect-video overflow-hidden relative">
 													{project.thumbnail &&
 													project.thumbnail !==
 														"/images/default-project.png" ? (
@@ -247,10 +247,10 @@ export function DevelopGalleryClient({
 															showDebug={false}
 														/>
 													) : (
-														<div className="w-full h-full flex items-center justify-center bg-base">
+														<div className="w-full h-full flex items-center justify-center ">
 															<div className="text-center">
 																<Code className="w-12 h-12 text-accent mx-auto mb-2" />
-																<span className="noto-sans-jp-light text-sm text-main">
+																<span className="noto-sans-jp-light text-sm ">
 																	{project.title}
 																</span>
 															</div>
@@ -270,14 +270,14 @@ export function DevelopGalleryClient({
 											<div className="flex items-center gap-2">
 												<Code className="w-5 h-5 text-accent" />
 												<Link href={`/portfolio/${project.id}`}>
-													<h3 className="zen-kaku-gothic-new text-2xl text-main hover:text-accent transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
+													<h3 className="zen-kaku-gothic-new text-2xl hover:text-accent transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
 														{project.title}
 													</h3>
 												</Link>
 											</div>
 											<div className="flex items-center">
-												<Calendar className="w-4 h-4 text-main/70 mr-2" />
-												<span className="noto-sans-jp-light text-sm text-main/70 whitespace-nowrap">
+												<Calendar className="w-4 h-4 /70 mr-2" />
+												<span className="noto-sans-jp-light text-sm /70 whitespace-nowrap">
 													{project.date}
 												</span>
 											</div>
@@ -286,7 +286,7 @@ export function DevelopGalleryClient({
 										{/* Description - fixed 3 lines */}
 										<div className="h-[72px] overflow-hidden">
 											<p
-												className="noto-sans-jp-light text-base text-main leading-6"
+												className="noto-sans-jp-light leading-6"
 												style={{
 													display: "-webkit-box",
 													WebkitLineClamp: 3,
@@ -304,7 +304,7 @@ export function DevelopGalleryClient({
 												{project.technologies.map((tech: string) => (
 													<span
 														key={tech}
-														className="noto-sans-jp-light text-xs text-main/90 px-3 py-1 bg-main/10"
+														className="noto-sans-jp-light text-xs /90 px-3 py-1 /10"
 													>
 														{tech}
 													</span>
@@ -319,7 +319,7 @@ export function DevelopGalleryClient({
 													href={project.githubUrl}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center px-3 py-1.5 bg-base/30 hover:bg-base/50 transition-colors ring-1 ring-main/20"
+													className="flex items-center px-3 py-1.5 /30 hover:/50 transition-colors ring-1 /20"
 												>
 													<GitBranch className="w-5 h-5 mr-2" />
 													<span className="noto-sans-jp-light text-sm">
@@ -332,7 +332,7 @@ export function DevelopGalleryClient({
 													href={project.liveUrl}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center px-3 py-1.5 bg-base/30 hover:bg-base/50 transition-colors ring-1 ring-main/20"
+													className="flex items-center px-3 py-1.5 /30 hover:/50 transition-colors ring-1 /20"
 												>
 													<ExternalLink className="w-5 h-5 mr-2" />
 													<span className="noto-sans-jp-light text-sm">
@@ -357,10 +357,10 @@ export function DevelopGalleryClient({
 					</div>
 				) : (
 					<div className="text-center py-16">
-						<p className="noto-sans-jp-light text-sm text-main">
+						<p className="noto-sans-jp-light text-sm ">
 							フィルター条件に一致する開発プロジェクトが見つかりませんでした.
 						</p>
-						<p className="noto-sans-jp-light text-xs text-main/60 mt-2">
+						<p className="noto-sans-jp-light text-xs /60 mt-2">
 							開発プロジェクト数: {filteredAndSortedItems.length}
 						</p>
 					</div>
@@ -373,27 +373,27 @@ export function DevelopGalleryClient({
 				<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
 					<Link
 						href="/portfolio/gallery/all"
-						className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
+						className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
 					>
-						<span className="noto-sans-jp-regular text-base leading-snug">
+						<span className="noto-sans-jp-regular leading-snug">
 							All Projects
 						</span>
 					</Link>
 
 					<Link
 						href="/portfolio/gallery/video"
-						className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
+						className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
 					>
-						<span className="noto-sans-jp-regular text-base leading-snug">
+						<span className="noto-sans-jp-regular leading-snug">
 							Video Projects
 						</span>
 					</Link>
 
 					<Link
 						href="/about/commission/develop"
-						className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
+						className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
 					>
-						<span className="noto-sans-jp-regular text-base leading-snug">
+						<span className="noto-sans-jp-regular leading-snug">
 							Commission
 						</span>
 					</Link>

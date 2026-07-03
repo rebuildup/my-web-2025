@@ -107,7 +107,7 @@ const structuredData = {
 };
 
 export default function VideoCommissionPage() {
-	const Global_title = "noto-sans-jp-regular text-base leading-snug";
+	const Global_title = "noto-sans-jp-regular leading-snug";
 
 	return (
 		<>
@@ -115,7 +115,7 @@ export default function VideoCommissionPage() {
 				{JSON.stringify(structuredData)}
 			</script>
 
-			<div className="min-h-screen bg-base text-main">
+			<div className="min-h-screen ">
 				<main
 					id="main-content"
 					className="flex items-center py-10"
@@ -136,7 +136,7 @@ export default function VideoCommissionPage() {
 
 							{/* Header */}
 							<header className="space-y-12">
-								<h1 className="neue-haas-grotesk-display text-6xl text-main">
+								<h1 className="neue-haas-grotesk-display text-6xl ">
 									映像依頼
 								</h1>
 								<p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -148,54 +148,54 @@ export default function VideoCommissionPage() {
 
 							{/* Services Overview */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									映像制作サービス概要
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
-									<div className="bg-base border border-main p-4 space-y-4">
+									<div className=" border p-4 space-y-4">
 										<div className="flex items-center">
 											<Music className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												MV制作
 											</h3>
 										</div>
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											ミュージックビデオの制作
 										</p>
 									</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
+									<div className=" border p-4 space-y-4">
 										<div className="flex items-center">
 											<Video className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												リリックモーション
 											</h3>
 										</div>
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											歌詞に合わせたアニメーション
 										</p>
 									</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
+									<div className=" border p-4 space-y-4">
 										<div className="flex items-center">
 											<Palette className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												イラストアニメーション
 											</h3>
 										</div>
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											イラストを使ったアニメーション
 										</p>
 									</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
+									<div className=" border p-4 space-y-4">
 										<div className="flex items-center">
 											<Megaphone className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												プロモーション映像
 											</h3>
 										</div>
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											商品・サービスのプロモーション映像
 										</p>
 									</div>
@@ -204,7 +204,7 @@ export default function VideoCommissionPage() {
 
 							{/* Process */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									依頼の流れ
 								</h2>
 								<div className="space-y-4">
@@ -246,19 +246,19 @@ export default function VideoCommissionPage() {
 											icon: CheckCircle,
 										},
 									].map(({ step, title, description, icon: Icon }) => (
-										<div key={step} className="bg-base border border-main p-4">
+										<div key={step} className=" border p-4">
 											<div className="flex items-start">
-												<div className="flex-shrink-0 w-8 h-8 bg-accent text-main flex items-center justify-center font-bold mr-4 text-sm">
+												<div className="flex-shrink-0 w-8 h-8 bg-accent flex items-center justify-center font-bold mr-4 text-sm">
 													{step}
 												</div>
 												<div className="flex-grow">
 													<div className="flex items-center mb-2">
 														<Icon className="w-5 h-5 text-accent mr-2" />
-														<h3 className="zen-kaku-gothic-new text-base text-main">
+														<h3 className="zen-kaku-gothic-new ">
 															{title}
 														</h3>
 													</div>
-													<p className="noto-sans-jp-light text-sm text-main">
+													<p className="noto-sans-jp-light text-sm ">
 														{description}
 													</p>
 												</div>
@@ -270,24 +270,24 @@ export default function VideoCommissionPage() {
 
 							{/* Pricing */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									料金体系
 								</h2>
 
-								<div className="bg-base border border-accent p-4 mb-6">
+								<div className=" border border-accent p-4 mb-6">
 									<p className="noto-sans-jp-light text-sm text-accent">
 										※このページに記載した料金設定/依頼の流れ等はまだ検討段階であり、今後変更される可能性が高いです.
 									</p>
 								</div>
 
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6 mb-8">
-									<div className="bg-base border border-main p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg text-main">
+									<div className=" border p-4 space-y-4">
+										<h3 className="zen-kaku-gothic-new text-lg ">
 											料金例
 										</h3>
 										<div className="space-y-3">
 											<div className="flex justify-between">
-												<span className="noto-sans-jp-light text-sm text-main">
+												<span className="noto-sans-jp-light text-sm ">
 													歌ってみたMV制作
 												</span>
 												<span className="zen-kaku-gothic-new text-sm text-accent">
@@ -295,7 +295,7 @@ export default function VideoCommissionPage() {
 												</span>
 											</div>
 											<div className="flex justify-between">
-												<span className="noto-sans-jp-light text-sm text-main">
+												<span className="noto-sans-jp-light text-sm ">
 													オリジナルMV制作
 												</span>
 												<span className="zen-kaku-gothic-new text-sm text-accent">
@@ -303,7 +303,7 @@ export default function VideoCommissionPage() {
 												</span>
 											</div>
 											<div className="flex justify-between">
-												<span className="noto-sans-jp-light text-sm text-main">
+												<span className="noto-sans-jp-light text-sm ">
 													OP/ED/トランジション（20秒以内）
 												</span>
 												<span className="zen-kaku-gothic-new text-sm text-accent">
@@ -313,28 +313,28 @@ export default function VideoCommissionPage() {
 										</div>
 									</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg text-main">
+									<div className=" border p-4 space-y-4">
+										<h3 className="zen-kaku-gothic-new text-lg ">
 											支払い・キャンセル
 										</h3>
 										<div className="space-y-2">
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												• 納品確認から30日以内にお支払い
 											</p>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												• 銀行振込、PayPay、Amazonギフト対応
 											</p>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												• 制作開始後のキャンセル料：本来料金の50%
 											</p>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												• リテイク：無料3回まで、4回目以降は料金の半額
 											</p>
 										</div>
 									</div>
 								</div>
 
-								<div className="bg-base border border-accent p-4">
+								<div className=" border border-accent p-4">
 									<p className="noto-sans-jp-light text-sm text-accent">
 										※料金設定は変更する場合がございます.依頼時点でここに記載されている金額が料金となります.
 										<br />
@@ -345,12 +345,12 @@ export default function VideoCommissionPage() {
 
 							{/* Software */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									使用ソフトウェア
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
-									<div className="bg-base border border-main p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg text-main">
+									<div className=" border p-4 space-y-4">
+										<h3 className="zen-kaku-gothic-new text-lg ">
 											映像制作
 										</h3>
 										<div className="space-y-2">
@@ -358,7 +358,7 @@ export default function VideoCommissionPage() {
 												(software) => (
 													<div
 														key={software}
-														className="noto-sans-jp-light text-sm text-main"
+														className="noto-sans-jp-light text-sm "
 													>
 														{software}
 													</div>
@@ -367,15 +367,15 @@ export default function VideoCommissionPage() {
 										</div>
 									</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg text-main">
+									<div className=" border p-4 space-y-4">
+										<h3 className="zen-kaku-gothic-new text-lg ">
 											グラフィック
 										</h3>
 										<div className="space-y-2">
 											{["Photoshop", "Illustrator"].map((software) => (
 												<div
 													key={software}
-													className="noto-sans-jp-light text-sm text-main"
+													className="noto-sans-jp-light text-sm "
 												>
 													{software}
 												</div>
@@ -387,28 +387,28 @@ export default function VideoCommissionPage() {
 
 							{/* Requirements */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									見積もりに必要な情報
 								</h2>
-								<div className="bg-base border border-main p-4">
-									<p className="noto-sans-jp-light text-sm text-main mb-4">
+								<div className=" border p-4">
+									<p className="noto-sans-jp-light text-sm mb-4">
 										361do.sleep(at)gmail.com
 										またはXのDMにて以下の内容をお教えください：
 									</p>
 									<div className="space-y-2">
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											• 何を作るか（歌ってみたのMV制作など）
 										</p>
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											• 納期（目安は1ヶ月です）
 										</p>
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											• 予算
 										</p>
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											• 作る映像の尺または楽曲名
 										</p>
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											•
 											イメージ（指標となる作例や、箇条書き、絵コンテ、なんでもOK!）
 										</p>
@@ -421,53 +421,53 @@ export default function VideoCommissionPage() {
 
 							{/* Contact */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									連絡方法
 								</h2>
-								<div className="bg-base border border-main p-4">
+								<div className=" border p-4">
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 										<div>
 											<div className="flex items-center mb-3">
 												<Mail className="w-5 h-5 text-accent mr-2" />
-												<h3 className="zen-kaku-gothic-new text-lg text-main">
+												<h3 className="zen-kaku-gothic-new text-lg ">
 													メール
 												</h3>
 											</div>
-											<p className="noto-sans-jp-light text-sm text-main mb-4">
+											<p className="noto-sans-jp-light text-sm mb-4">
 												361do.sleep(at)gmail.com
 											</p>
 
 											<div className="flex items-center mb-3">
 												<MessageCircle className="w-5 h-5 text-accent mr-2" />
-												<h3 className="zen-kaku-gothic-new text-lg text-main">
+												<h3 className="zen-kaku-gothic-new text-lg ">
 													X (Twitter)
 												</h3>
 											</div>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												@361do_design
 											</p>
 										</div>
 										<div>
 											<div className="flex items-center mb-3">
 												<Clock className="w-5 h-5 text-accent mr-2" />
-												<h3 className="zen-kaku-gothic-new text-lg text-main">
+												<h3 className="zen-kaku-gothic-new text-lg ">
 													対応時間
 												</h3>
 											</div>
-											<p className="noto-sans-jp-light text-sm text-main mb-4">
+											<p className="noto-sans-jp-light text-sm mb-4">
 												平日 9:00-18:00
 											</p>
 
-											<h3 className="zen-kaku-gothic-new text-lg text-main mb-3">
+											<h3 className="zen-kaku-gothic-new text-lg mb-3">
 												返信時間
 											</h3>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												24時間以内
 											</p>
 										</div>
 									</div>
 
-									<div className="mt-6 bg-base border border-accent p-4">
+									<div className="mt-6 border border-accent p-4">
 										<p className="noto-sans-jp-light text-sm text-accent">
 											通話などでのミーティングの対応は致しかねます
 										</p>
@@ -481,14 +481,14 @@ export default function VideoCommissionPage() {
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 									<Link
 										href="/contact"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>お問い合わせフォーム</span>
 									</Link>
 
 									<Link
 										href="/about/commission/estimate"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>料金計算機</span>
 									</Link>
@@ -496,7 +496,7 @@ export default function VideoCommissionPage() {
 							</nav>
 
 							{/* Footer */}
-							<footer className="pt-4 border-t border-main">
+							<footer className="pt-4 border-t ">
 								<div className="text-center">
 									<p className="shippori-antique-b1-regular text-sm inline-block">
 										© 2025 samuido - Video Commission

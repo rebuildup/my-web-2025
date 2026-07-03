@@ -57,7 +57,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 
 	// Get responsive classes
 	const getContainerClasses = () => {
-		const baseClasses = "bg-base border border-main p-4 space-y-4";
+		const baseClasses = " border p-4 space-y-4";
 		return `${baseClasses} ${className}`;
 	};
 
@@ -73,14 +73,14 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 
 	const getInputClasses = () => {
 		const baseClasses =
-			"w-full border border-main bg-base text-main p-2 text-sm focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+			"w-full border p-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 		return baseClasses;
 	};
 
 	const getLabelClasses = () => {
 		return responsive.isMobile
-			? "noto-sans-jp-light text-sm text-main font-medium"
-			: "noto-sans-jp-light text-sm text-main";
+			? "noto-sans-jp-light text-sm font-medium"
+			: "noto-sans-jp-light text-sm ";
 	};
 
 	// Mobile collapsed view
@@ -90,15 +90,15 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 				<button
 					type="button"
 					onClick={() => setIsExpanded(true)}
-					className="flex items-center justify-between w-full text-left focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+					className="flex items-center justify-between w-full text-left focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 					aria-expanded={isExpanded}
 					aria-controls="filter-content"
 				>
 					<div className="flex items-center">
 						<Filter className="w-5 h-5 mr-2" />
-						<h3 className="zen-kaku-gothic-new text-lg text-main">Filters</h3>
+						<h3 className="zen-kaku-gothic-new text-lg ">Filters</h3>
 						{hasActiveFilters && (
-							<span className="ml-2 px-2 py-1 bg-accent text-main text-xs rounded">
+							<span className="ml-2 px-2 py-1 bg-accent text-xs rounded">
 								Active
 							</span>
 						)}
@@ -108,14 +108,14 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 
 				{hasActiveFilters && (
 					<div className="flex items-center justify-between">
-						<span className="noto-sans-jp-light text-xs text-main">
+						<span className="noto-sans-jp-light text-xs ">
 							{Object.values(filter).filter((v) => v !== undefined).length}{" "}
 							filters active
 						</span>
 						<button
 							type="button"
 							onClick={clearFilters}
-							className="flex items-center text-xs text-accent hover:text-main focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+							className="flex items-center text-xs text-accent hover: focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 						>
 							<X className="w-3 h-3 mr-1" />
 							Clear
@@ -132,7 +132,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 			<div className="flex items-center justify-between">
 				<div className="flex items-center">
 					<Filter className="w-5 h-5 mr-2" />
-					<h3 className="zen-kaku-gothic-new text-lg text-main">
+					<h3 className="zen-kaku-gothic-new text-lg ">
 						Experiment Filter
 					</h3>
 				</div>
@@ -142,7 +142,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 						<button
 							type="button"
 							onClick={clearFilters}
-							className="flex items-center text-sm text-accent hover:text-main focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+							className="flex items-center text-sm text-accent hover: focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 						>
 							<X className="w-4 h-4 mr-1" />
 							Clear All
@@ -153,7 +153,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 						<button
 							type="button"
 							onClick={() => setIsExpanded(false)}
-							className="p-1 focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+							className="p-1 focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 							aria-label="Collapse filters"
 						>
 							<ChevronUp className="w-4 h-4" />
@@ -280,7 +280,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 
 			{/* Mobile additional filters */}
 			{responsive.isMobile && (
-				<div className="grid grid-cols-2 gap-4 pt-4 border-t border-main">
+				<div className="grid grid-cols-2 gap-4 pt-4 border-t ">
 					<div className="space-y-2">
 						<label className={getLabelClasses()}>Performance</label>
 						<select
@@ -329,7 +329,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 
 			{/* Active filters summary */}
 			{hasActiveFilters && (
-				<div className="pt-4 border-t border-main">
+				<div className="pt-4 border-t ">
 					<div className="flex flex-wrap gap-2">
 						{Object.entries(filter).map(([key, value]) => {
 							if (value === undefined) return null;
@@ -345,7 +345,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 										onClick={() =>
 											updateFilter(key as keyof ExperimentFilter, undefined)
 										}
-										className="ml-1 hover:text-main focus:outline-none"
+										className="ml-1 hover: focus:outline-none"
 										aria-label={`Remove ${key} filter`}
 									>
 										<X className="w-3 h-3" />

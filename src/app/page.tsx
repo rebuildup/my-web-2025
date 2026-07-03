@@ -23,10 +23,10 @@ export default function Home() {
 					<div className="max-w-3xl mx-auto flex flex-col items-center">
 						<div className="flex items-start w-full justify-between sm:w-max sm:min-w-[410px] sm:justify-normal">
 							<div className="flex flex-col items-start animate-fade-in-up">
-								<h1 className="text-4xl sm:text-4xl font-bold italic tracking-tight text-main">
+								<h1 className="text-4xl sm:text-4xl font-bold italic tracking-tight ">
 									yusuke-kim.com
 								</h1>
-								<p className="mt-3 text-xs sm:text-xs text-main/70 leading-relaxed animate-fade-in-up animation-delay-100">
+								<p className="mt-3 text-xs sm:text-xs /70 leading-relaxed animate-fade-in-up animation-delay-100">
 									高専生 木村友亮のウェブサイト
 									<br />
 									普段はsamuidoという名前で活動しています
@@ -48,7 +48,7 @@ export default function Home() {
 									}}
 								>
 									<span className="w-1 h-full bg-accent/60 group-hover:bg-accent transition-colors duration-300" />
-									<span className="flex-1 text-sm font-medium text-main/80 group-hover:text-main pl-4 tracking-wide transition-colors duration-300">
+									<span className="flex-1 text-sm font-medium /80 group-hover: pl-4 tracking-wide transition-colors duration-300">
 										{item.label}
 									</span>
 								</Link>
@@ -56,10 +56,10 @@ export default function Home() {
 						</div>
 
 						<footer className="mt-16 pt-6 flex items-center justify-center gap-4 w-full sm:w-max sm:min-w-[400px] animate-fade-in animation-delay-400">
-							<span className="text-xs text-main/40">© 2025 361do_sleep</span>
+							<span className="text-xs /40">© 2025 361do_sleep</span>
 							<Link
 								href="/privacy-policy"
-								className="text-xs text-main/40 hover:text-main transition-colors underline underline-offset-4"
+								className="text-xs /40 hover: transition-colors underline underline-offset-4"
 							>
 								Privacy Policy
 							</Link>

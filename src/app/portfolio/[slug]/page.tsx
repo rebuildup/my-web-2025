@@ -329,23 +329,23 @@ function ContentSection({
 			) : detail ? (
 				<div className="space-y-3">
 					{detail.title && (
-						<h2 className="zen-kaku-gothic-new text-lg sm:text-xl text-main">
+						<h2 className="zen-kaku-gothic-new text-lg sm:text-xl ">
 							{detail.title}
 						</h2>
 					)}
 					{detail.summary && (
-						<p className="noto-sans-jp-light text-sm sm:text-base text-main/80 leading-relaxed">
+						<p className="noto-sans-jp-light text-sm sm: /80 leading-relaxed">
 							{detail.summary}
 						</p>
 					)}
 				</div>
 			) : hasDescription ? (
-				<div className="noto-sans-jp-light text-sm sm:text-base leading-loose space-y-4 text-main">
+				<div className="noto-sans-jp-light text-sm sm: leading-loose space-y-4 ">
 					{item.description}
 				</div>
 			) : (
 				// Always show something, even if minimal
-				<div className="noto-sans-jp-light text-sm sm:text-base leading-loose space-y-4 text-main/60">
+				<div className="noto-sans-jp-light text-sm sm: leading-loose space-y-4 /60">
 					{fallbackContent}
 				</div>
 			)}
@@ -354,19 +354,19 @@ function ContentSection({
 			{(relatedImages.length > 0 ||
 				(item.videos?.length ?? 0) > 0 ||
 				(item.externalLinks?.length ?? 0) > 0) && (
-				<div className="pt-6 sm:pt-8 border-t border-main/10">
+				<div className="pt-6 sm:pt-8 border-t /10">
 					<div className="space-y-6 sm:space-y-8">
 						{/* Images */}
 						{relatedImages.length > 0 && (
 							<div>
-								<h3 className="text-sm sm:text-base font-medium text-main mb-3 sm:mb-4">
+								<h3 className="text-sm sm: font-medium mb-3 sm:mb-4">
 									関連画像
 								</h3>
 								<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
 									{relatedImages.slice(0, 4).map((image, index) => (
 										<div
 											key={`${item.id}-image-${image}-${index}`}
-											className="relative aspect-video bg-main/5 rounded-lg overflow-hidden"
+											className="relative aspect-video /5 rounded-lg overflow-hidden"
 										>
 											<Image
 												src={image}
@@ -386,23 +386,23 @@ function ContentSection({
 						{/* Videos */}
 						{item.videos && item.videos.length > 0 && (
 							<div>
-								<h3 className="text-sm sm:text-base font-medium text-main mb-3 sm:mb-4">
+								<h3 className="text-sm sm: font-medium mb-3 sm:mb-4">
 									関連動画
 								</h3>
 								<div className="space-y-3">
 									{item.videos.slice(0, 2).map((video, index) => (
 										<div
 											key={`${item.id}-video-${video.url ?? index}`}
-											className="border border-main/10 rounded-lg p-3 sm:p-4"
+											className="border /10 rounded-lg p-3 sm:p-4"
 										>
 											<div className="flex items-center space-x-3">
 												<div className="text-lg shrink-0">🎥</div>
 												<div className="min-w-0 flex-1">
-													<div className="font-medium text-sm sm:text-base text-main">
+													<div className="font-medium text-sm sm: ">
 														{video.title || `動画 ${index + 1}`}
 													</div>
 													{video.description && (
-														<div className="text-xs sm:text-sm text-main/60 mt-1">
+														<div className="text-xs sm:text-sm /60 mt-1">
 															{video.description}
 														</div>
 													)}
@@ -423,7 +423,7 @@ function ContentSection({
 						{/* External Links */}
 						{item.externalLinks && item.externalLinks.length > 0 && (
 							<div>
-								<h3 className="text-sm sm:text-base font-medium text-main mb-3 sm:mb-4">
+								<h3 className="text-sm sm: font-medium mb-3 sm:mb-4">
 									関連リンク
 								</h3>
 								<div className="space-y-2 sm:space-y-3">
@@ -431,15 +431,15 @@ function ContentSection({
 										<a
 											key={`${item.id}-link-${link.url ?? index}`}
 											href={link.url}
-											className="flex items-center space-x-3 p-3 sm:p-4 border border-main/10 rounded-lg hover:bg-main/5 transition-colors text-main"
+											className="flex items-center space-x-3 p-3 sm:p-4 border /10 rounded-lg hover:/5 transition-colors "
 										>
 											<div className="text-lg shrink-0">🔗</div>
 											<div className="min-w-0 flex-1">
-												<div className="font-medium text-sm sm:text-base">
+												<div className="font-medium text-sm sm:">
 													{link.title}
 												</div>
 												{link.description && (
-													<div className="text-xs sm:text-sm text-main/60 mt-1">
+													<div className="text-xs sm:text-sm /60 mt-1">
 														{link.description}
 													</div>
 												)}
@@ -541,7 +541,7 @@ export default async function PortfolioDetailPage({
 					{JSON.stringify(structuredData)}
 				</script>
 
-				<div className="min-h-screen bg-base text-main">
+				<div className="min-h-screen">
 					<main id="main-content" className="flex items-center py-6 sm:py-10">
 						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-8 sm:space-y-10">
@@ -567,10 +567,10 @@ export default async function PortfolioDetailPage({
 		console.error(`Error rendering portfolio detail page for ${slug}:`, error);
 
 		return (
-			<div className="min-h-screen bg-base text-main flex items-center justify-center">
+			<div className="min-h-screen flex items-center justify-center">
 				<div className="text-center">
-					<h1 className="text-2xl text-main mb-4">Portfolio Error</h1>
-					<p className="text-main">
+					<h1 className="text-2xl mb-4">Portfolio Error</h1>
+					<p className="">
 						Sorry, there was an error loading this portfolio item.
 					</p>
 				</div>

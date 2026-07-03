@@ -87,7 +87,7 @@ export const AccessibleTooltip: React.FC<AccessibleTooltipProps> = ({
 
 			{isVisible && (
 				<div
-					className={`tooltip-content absolute z-50 px-2 py-1 text-sm bg-base text-main border border-main rounded shadow-lg ${positionClasses[position]} ${className}`}
+					className={`tooltip-content absolute z-50 px-2 py-1 text-sm border rounded shadow-lg ${positionClasses[position]} ${className}`}
 				>
 					<div id={tooltipId} role="tooltip">
 						{content}
@@ -130,9 +130,9 @@ export const AccessibleIconButton: React.FC<AccessibleIconButtonProps> = ({
 
 	const variantClasses = {
 		primary:
-			"bg-accent text-main border border-accent hover:bg-base hover:text-accent",
-		secondary: "bg-base text-main border border-main hover:bg-base",
-		ghost: "bg-transparent text-main hover:bg-base",
+			"bg-accent border border-accent hover: hover:text-accent",
+		secondary: " border hover:",
+		ghost: "bg-transparent hover:",
 		danger: "text-red-600 hover:bg-red-50",
 	};
 

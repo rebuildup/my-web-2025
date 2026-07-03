@@ -50,7 +50,7 @@ export const AccessibleFormField: React.FC<AccessibleFormFieldProps> = ({
 		<div className={`form-field ${className}`}>
 			<label
 				htmlFor={fieldId}
-				className="block text-sm font-medium text-main mb-2"
+				className="block text-sm font-medium mb-2"
 			>
 				{label}
 				{required && (
@@ -103,7 +103,7 @@ export const AccessibleInput = forwardRef<
 			>
 				<input
 					ref={ref}
-					className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : "border-main"} bg-base text-main rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${props.disabled ? "opacity-50" : ""} ${className}`}
+					className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : ""} rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${props.disabled ? "opacity-50" : ""} ${className}`}
 					{...props}
 				/>
 			</AccessibleFormField>
@@ -113,7 +113,7 @@ export const AccessibleInput = forwardRef<
 	return (
 		<input
 			ref={ref}
-			className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : "border-main"} bg-base text-main rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${props.disabled ? "opacity-50" : ""} ${className}`}
+			className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : ""} rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${props.disabled ? "opacity-50" : ""} ${className}`}
 			{...props}
 		/>
 	);
@@ -142,7 +142,7 @@ export const AccessibleTextarea = forwardRef<
 			>
 				<textarea
 					ref={ref}
-					className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : "border-main"} bg-base text-main rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent resize-y ${className}`}
+					className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : ""} rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent resize-y ${className}`}
 					{...props}
 				/>
 			</AccessibleFormField>
@@ -152,7 +152,7 @@ export const AccessibleTextarea = forwardRef<
 	return (
 		<textarea
 			ref={ref}
-			className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : "border-main"} bg-base text-main rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent resize-y ${className}`}
+			className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : ""} rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent resize-y ${className}`}
 			{...props}
 		/>
 	);
@@ -189,7 +189,7 @@ export const AccessibleSelect = forwardRef<
 		const selectElement = (
 			<select
 				ref={ref}
-				className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : "border-main"} bg-base text-main rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${className}`}
+				className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : ""} rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${className}`}
 				{...props}
 			>
 				{placeholder && (
@@ -268,17 +268,17 @@ export const AccessibleButton = forwardRef<
 			primary:
 				"bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 focus:ring-blue-500",
 			secondary:
-				"bg-base text-main border border-main hover:bg-base focus:ring-main",
+				" border hover: focus:",
 			danger:
 				"bg-red-600 text-white border border-red-600 hover:bg-red-700 focus:ring-red-500",
 			ghost:
-				"bg-transparent text-main border border-transparent hover:bg-base hover:border-main focus:ring-main",
+				"bg-transparent border border-transparent hover: hover: focus:",
 			blue: "bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 focus:ring-blue-500",
 		};
 
 		const sizeStyles = {
 			sm: "px-3 py-1.5 text-sm min-h-[32px]",
-			md: "px-4 py-2 text-base min-h-[44px]",
+			md: "px-4 py-2 min-h-[44px]",
 			lg: "px-6 py-3 text-lg min-h-[48px]",
 		};
 

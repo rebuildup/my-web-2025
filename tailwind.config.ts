@@ -35,11 +35,9 @@ const config: Config = {
 					"sans-serif",
 				],
 			},
-			colors: {
-				base: "#020202",
-				main: "#f2f2f2",
-				accent: "#261fa7",
-			},
+		colors: {
+			accent: "#261fa7",
+		},
 		},
 		screens: {
 			sm: "480px",

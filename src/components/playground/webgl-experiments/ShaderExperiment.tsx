@@ -30,9 +30,9 @@ uniform vec2 resolution;
 uniform vec2 mouse;
 
 void main() {
-  vec2 uv = gl_FragCoord.xy / resolution.xy;
-  vec3 color = 0.5 + 0.5 * cos(time + uv.xyx + vec3(0, 2, 4));
-  gl_FragColor = vec4(color, 1.0);
+ vec2 uv = gl_FragCoord.xy / resolution.xy;
+ vec3 color = 0.5 + 0.5 * cos(time + uv.xyx + vec3(0, 2, 4));
+ gl_FragColor = vec4(color, 1.0);
 }`,
 	noise: `
 precision mediump float;
@@ -41,31 +41,31 @@ uniform vec2 resolution;
 uniform vec2 mouse;
 
 float random(vec2 st) {
-  return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+ return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
 }
 
 float noise(vec2 st) {
-  vec2 i = floor(st);
-  vec2 f = fract(st);
-  
-  float a = random(i);
-  float b = random(i + vec2(1.0, 0.0));
-  float c = random(i + vec2(0.0, 1.0));
-  float d = random(i + vec2(1.0, 1.0));
-  
-  vec2 u = f * f * (3.0 - 2.0 * f);
-  
-  return mix(a, b, u.x) + (c - a)* u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+ vec2 i = floor(st);
+ vec2 f = fract(st);
+ 
+ float a = random(i);
+ float b = random(i + vec2(1.0, 0.0));
+ float c = random(i + vec2(0.0, 1.0));
+ float d = random(i + vec2(1.0, 1.0));
+ 
+ vec2 u = f * f * (3.0 - 2.0 * f);
+ 
+ return mix(a, b, u.x) + (c - a)* u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
 }
 
 void main() {
-  vec2 uv = gl_FragCoord.xy / resolution.xy;
-  vec2 pos = uv * 8.0 + time * 0.5;
-  
-  float n = noise(pos);
-  vec3 color = vec3(n);
-  
-  gl_FragColor = vec4(color, 1.0);
+ vec2 uv = gl_FragCoord.xy / resolution.xy;
+ vec2 pos = uv * 8.0 + time * 0.5;
+ 
+ float n = noise(pos);
+ vec3 color = vec3(n);
+ 
+ gl_FragColor = vec4(color, 1.0);
 }`,
 	waves: `
 precision mediump float;
@@ -74,14 +74,14 @@ uniform vec2 resolution;
 uniform vec2 mouse;
 
 void main() {
-  vec2 uv = gl_FragCoord.xy / resolution.xy;
-  vec2 center = vec2(0.5, 0.5);
-  
-  float dist = distance(uv, center);
-  float wave = sin(dist * 20.0 - time * 3.0) * 0.5 + 0.5;
-  
-  vec3 color = vec3(wave * 0.2, wave * 0.8, wave);
-  gl_FragColor = vec4(color, 1.0);
+ vec2 uv = gl_FragCoord.xy / resolution.xy;
+ vec2 center = vec2(0.5, 0.5);
+ 
+ float dist = distance(uv, center);
+ float wave = sin(dist * 20.0 - time * 3.0) * 0.5 + 0.5;
+ 
+ vec3 color = vec3(wave * 0.2, wave * 0.8, wave);
+ gl_FragColor = vec4(color, 1.0);
 }`,
 	mandelbrot: `
 precision mediump float;
@@ -90,28 +90,28 @@ uniform vec2 resolution;
 uniform vec2 mouse;
 
 vec2 complexMul(vec2 a, vec2 b) {
-  return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
+ return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
 }
 
 void main() {
-  vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / min(resolution.x, resolution.y);
-  uv *= 2.0;
-  uv += vec2(-0.5, 0.0);
-  
-  vec2 z = vec2(0.0);
-  vec2 c = uv + mouse * 0.5;
-  
-  int iterations = 0;
-  for(int i = 0; i < 100; i++) {
-    if(length(z) > 2.0) break;
-    z = complexMul(z, z) + c;
-    iterations++;
-  }
-  
-  float color = float(iterations) / 100.0;
-  vec3 rgb = vec3(color * 2.0, color * 0.5, 1.0 - color);
-  
-  gl_FragColor = vec4(rgb, 1.0);
+ vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / min(resolution.x, resolution.y);
+ uv *= 2.0;
+ uv += vec2(-0.5, 0.0);
+ 
+ vec2 z = vec2(0.0);
+ vec2 c = uv + mouse * 0.5;
+ 
+ int iterations = 0;
+ for(int i = 0; i < 100; i++) {
+ if(length(z) > 2.0) break;
+ z = complexMul(z, z) + c;
+ iterations++;
+ }
+ 
+ float color = float(iterations) / 100.0;
+ vec3 rgb = vec3(color * 2.0, color * 0.5, 1.0 - color);
+ 
+ gl_FragColor = vec4(rgb, 1.0);
 }`,
 };
 
@@ -267,11 +267,11 @@ export function ShaderExperiment({
 
 			// Vertex shader (simple passthrough)
 			const vertexShader = `
-        attribute vec3 position;
-        void main() {
-          gl_Position = vec4(position, 1.0);
-        }
-      `;
+ attribute vec3 position;
+ void main() {
+ gl_Position = vec4(position, 1.0);
+ }
+ `;
 
 			// Get fragment shader code
 			let fragmentShader: string;
@@ -528,10 +528,10 @@ export function ShaderExperiment({
 
 	if (error) {
 		return (
-			<div className="aspect-video bg-base border border-red-500 flex items-center justify-center">
+			<div className="aspect-video border border-red-500 flex items-center justify-center">
 				<div className="text-center space-y-2">
 					<div className="text-red-500 text-lg">⚠️ WebGL Error</div>
-					<p className="text-sm text-main">{error}</p>
+					<p className="text-sm ">{error}</p>
 				</div>
 			</div>
 		);
@@ -542,7 +542,7 @@ export function ShaderExperiment({
 			{/* 3D Canvas */}
 			<div
 				ref={mountRef}
-				className="aspect-video bg-base border border-main overflow-hidden cursor-crosshair"
+				className="aspect-video border overflow-hidden cursor-crosshair"
 				style={{ minHeight: "400px" }}
 			/>
 
@@ -567,7 +567,7 @@ export function ShaderExperiment({
 				{/* Preset Selection */}
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Preset Shader
 						</label>
 						<select
@@ -579,7 +579,7 @@ export function ShaderExperiment({
 										.value as ShaderControls["presetShader"],
 								}))
 							}
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						>
 							<option value="rainbow">Rainbow</option>
 							<option value="noise">Noise</option>
@@ -593,7 +593,7 @@ export function ShaderExperiment({
 						<button
 							type="button"
 							onClick={() => setShowCode(!showCode)}
-							className="border border-main px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+							className="border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 						>
 							<span className="noto-sans-jp-light text-sm">
 								{showCode ? "Hide Code" : "Show Code"}
@@ -606,14 +606,14 @@ export function ShaderExperiment({
 				{showCode && (
 					<div className="space-y-2">
 						<div className="flex justify-between items-center">
-							<label className="noto-sans-jp-light text-sm text-main">
+							<label className="noto-sans-jp-light text-sm ">
 								Fragment Shader Code
 							</label>
 							{controls.presetShader === "custom" && (
 								<button
 									type="button"
 									onClick={compileCustomShader}
-									className="border border-accent text-accent px-3 py-1 text-sm hover:bg-accent hover:text-main transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="border border-accent text-accent px-3 py-1 text-sm hover:bg-accent hover: transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								>
 									Compile
 								</button>
@@ -627,11 +627,11 @@ export function ShaderExperiment({
 									customCode: e.target.value,
 								}))
 							}
-							className="w-full h-64 border border-main bg-base text-main p-3 text-sm font-mono resize-none"
+							className="w-full h-64 border p-3 text-sm font-mono resize-none"
 							placeholder="Enter your GLSL fragment shader code here..."
 							disabled={controls.presetShader !== "custom"}
 						/>
-						<div className="text-xs text-main opacity-70">
+						<div className="text-xs opacity-70">
 							Available uniforms: time (float), resolution (vec2), mouse (vec2)
 						</div>
 					</div>
@@ -639,19 +639,19 @@ export function ShaderExperiment({
 
 				{/* Shader Info */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-					<div className="bg-base border border-main p-3">
+					<div className=" border p-3">
 						<div className="text-accent font-medium">Time</div>
-						<div className="text-main">{elapsedTime.toFixed(2)}s</div>
+						<div className="">{elapsedTime.toFixed(2)}s</div>
 					</div>
-					<div className="bg-base border border-main p-3">
+					<div className=" border p-3">
 						<div className="text-accent font-medium">Resolution</div>
-						<div className="text-main">
+						<div className="">
 							{controls.resolution[0]} × {controls.resolution[1]}
 						</div>
 					</div>
-					<div className="bg-base border border-main p-3">
+					<div className=" border p-3">
 						<div className="text-accent font-medium">Mouse</div>
-						<div className="text-main">
+						<div className="">
 							{controls.mouse[0].toFixed(2)}, {controls.mouse[1].toFixed(2)}
 						</div>
 					</div>

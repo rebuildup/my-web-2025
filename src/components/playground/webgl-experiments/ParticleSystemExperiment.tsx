@@ -185,26 +185,26 @@ export function ParticleSystemExperiment({
 				pointTexture: { value: createParticleTexture() },
 			},
 			vertexShader: `
-        attribute float size;
-        varying vec3 vColor;
-        
-        void main() {
-          vColor = color;
-          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = size * (300.0 / -mvPosition.z);
-          gl_Position = projectionMatrix * mvPosition;
-        }
-      `,
+ attribute float size;
+ varying vec3 vColor;
+ 
+ void main() {
+ vColor = color;
+ vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+ gl_PointSize = size * (300.0 / -mvPosition.z);
+ gl_Position = projectionMatrix * mvPosition;
+ }
+ `,
 			fragmentShader: `
-        uniform sampler2D pointTexture;
-        varying vec3 vColor;
-        
-        void main() {
-          gl_FragColor = vec4(vColor, 1.0);
-          gl_FragColor = gl_FragColor * texture2D(pointTexture, gl_PointCoord);
-          if (gl_FragColor.a < 0.1) discard;
-        }
-      `,
+ uniform sampler2D pointTexture;
+ varying vec3 vColor;
+ 
+ void main() {
+ gl_FragColor = vec4(vColor, 1.0);
+ gl_FragColor = gl_FragColor * texture2D(pointTexture, gl_PointCoord);
+ if (gl_FragColor.a < 0.1) discard;
+ }
+ `,
 			blending: THREE.AdditiveBlending,
 			depthTest: false,
 			transparent: true,
@@ -548,10 +548,10 @@ export function ParticleSystemExperiment({
 
 	if (error) {
 		return (
-			<div className="aspect-video bg-base border border-red-500 flex items-center justify-center">
+			<div className="aspect-video border border-red-500 flex items-center justify-center">
 				<div className="text-center space-y-2">
 					<div className="text-red-500 text-lg">⚠️ WebGL Error</div>
-					<p className="text-sm text-main">{error}</p>
+					<p className="text-sm ">{error}</p>
 				</div>
 			</div>
 		);
@@ -562,7 +562,7 @@ export function ParticleSystemExperiment({
 			{/* 3D Canvas */}
 			<div
 				ref={mountRef}
-				className="aspect-video bg-base border border-main overflow-hidden cursor-crosshair"
+				className="aspect-video border overflow-hidden cursor-crosshair"
 				style={{ minHeight: "400px" }}
 			/>
 
@@ -577,7 +577,7 @@ export function ParticleSystemExperiment({
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{/* Particle Count */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Particle Count: {controls.particleCount}
 					</label>
 					<input
@@ -602,7 +602,7 @@ export function ParticleSystemExperiment({
 
 				{/* Speed */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Speed: {controls.speed.toFixed(1)}
 					</label>
 					<input
@@ -623,7 +623,7 @@ export function ParticleSystemExperiment({
 
 				{/* Size */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Size: {controls.size.toFixed(1)}
 					</label>
 					<input
@@ -644,7 +644,7 @@ export function ParticleSystemExperiment({
 
 				{/* Color Mode */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Color Mode
 					</label>
 					<select
@@ -655,7 +655,7 @@ export function ParticleSystemExperiment({
 								colorMode: e.target.value as ParticleControls["colorMode"],
 							}))
 						}
-						className="w-full border border-main bg-base text-main p-2 text-sm"
+						className="w-full border p-2 text-sm"
 					>
 						<option value="rainbow">Rainbow</option>
 						<option value="blue">Blue</option>
@@ -666,7 +666,7 @@ export function ParticleSystemExperiment({
 
 				{/* Attractor Strength */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Attractor: {controls.attractorStrength.toFixed(1)}
 					</label>
 					<input
@@ -687,7 +687,7 @@ export function ParticleSystemExperiment({
 
 				{/* Noise Strength */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Noise: {controls.noiseStrength.toFixed(1)}
 					</label>
 					<input

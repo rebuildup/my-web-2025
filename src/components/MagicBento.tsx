@@ -78,17 +78,17 @@ const createParticleElement = (
 	const el = document.createElement("div");
 	el.className = "particle";
 	el.style.cssText = `
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: rgba(${color}, 1);
-    box-shadow: 0 0 6px rgba(${color}, 0.6);
-    pointer-events: none;
-    z-index: 100;
-    left: ${x}px;
-    top: ${y}px;
-  `;
+ position: absolute;
+ width: 4px;
+ height: 4px;
+ border-radius: 50%;
+ background: rgba(${color}, 1);
+ box-shadow: 0 0 6px rgba(${color}, 0.6);
+ pointer-events: none;
+ z-index: 100;
+ left: ${x}px;
+ top: ${y}px;
+ `;
 	return el;
 };
 
@@ -314,16 +314,16 @@ export const ParticleCard: React.FC<{
 
 			const ripple = document.createElement("div");
 			ripple.style.cssText = `
-        position: absolute;
-        width: ${maxDistance * 2}px;
-        height: ${maxDistance * 2}px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(${glowColor}, 0.4) 0%, rgba(${glowColor}, 0.2) 30%, transparent 70%);
-        left: ${x - maxDistance}px;
-        top: ${y - maxDistance}px;
-        pointer-events: none;
-        z-index: 1000;
-      `;
+ position: absolute;
+ width: ${maxDistance * 2}px;
+ height: ${maxDistance * 2}px;
+ border-radius: 50%;
+ background: radial-gradient(circle, rgba(${glowColor}, 0.4) 0%, rgba(${glowColor}, 0.2) 30%, transparent 70%);
+ left: ${x - maxDistance}px;
+ top: ${y - maxDistance}px;
+ pointer-events: none;
+ z-index: 1000;
+ `;
 
 			element.appendChild(ripple);
 
@@ -399,24 +399,24 @@ const GlobalSpotlight: React.FC<{
 		const spotlight = document.createElement("div");
 		spotlight.className = "global-spotlight";
 		spotlight.style.cssText = `
-      position: fixed;
-      width: 800px;
-      height: 800px;
-      border-radius: 50%;
-      pointer-events: none;
-      background: radial-gradient(circle,
-        rgba(${glowColor}, 0.15) 0%,
-        rgba(${glowColor}, 0.08) 15%,
-        rgba(${glowColor}, 0.04) 25%,
-        rgba(${glowColor}, 0.02) 40%,
-        rgba(${glowColor}, 0.01) 65%,
-        transparent 70%
-      );
-      z-index: 200;
-      opacity: 0;
-      transform: translate(-50%, -50%);
-      mix-blend-mode: screen;
-    `;
+ position: fixed;
+ width: 800px;
+ height: 800px;
+ border-radius: 50%;
+ pointer-events: none;
+ background: radial-gradient(circle,
+ rgba(${glowColor}, 0.15) 0%,
+ rgba(${glowColor}, 0.08) 15%,
+ rgba(${glowColor}, 0.04) 25%,
+ rgba(${glowColor}, 0.02) 40%,
+ rgba(${glowColor}, 0.01) 65%,
+ transparent 70%
+ );
+ z-index: 200;
+ opacity: 0;
+ transform: translate(-50%, -50%);
+ mix-blend-mode: screen;
+ `;
 		document.body.appendChild(spotlight);
 		spotlightRef.current = spotlight;
 
@@ -579,129 +579,129 @@ const MagicBento: React.FC<BentoProps> = ({
 		<>
 			<style>
 				{`
-          .bento-section {
-            --glow-x: 50%;
-            --glow-y: 50%;
-            --glow-intensity: 0;
-            --glow-radius: 200px;
-            --glow-color: ${glowColor};
-            --border-color: #392e4e;
-            --background-dark: #060010;
-            --white: hsl(0, 0%, 100%);
-            --purple-primary: rgba(132, 0, 255, 1);
-            --purple-glow: rgba(132, 0, 255, 0.2);
-            --purple-border: rgba(132, 0, 255, 0.8);
-          }
-          
-          .card-responsive {
-            grid-template-columns: 1fr;
-            width: 90%;
-            margin: 0 auto;
-            padding: 0.5rem;
-          }
-          
-          @media (min-width: 600px) {
-            .card-responsive {
-              grid-template-columns: repeat(2, 1fr);
-            }
-          }
-          
-          @media (min-width: 1024px) {
-            .card-responsive {
-              grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .card-responsive .card:nth-child(3) {
-              grid-column: span 2;
-              grid-row: span 2;
-            }
-            
-            .card-responsive .card:nth-child(4) {
-              grid-column: 1 / span 2;
-              grid-row: 2 / span 2;
-            }
-            
-            .card-responsive .card:nth-child(6) {
-              grid-column: 4;
-              grid-row: 3;
-            }
-          }
-          
-          .card--border-glow::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            padding: 6px;
-            background: radial-gradient(var(--glow-radius) circle at var(--glow-x) var(--glow-y),
-                rgba(${glowColor}, calc(var(--glow-intensity) * 0.8)) 0%,
-                rgba(${glowColor}, calc(var(--glow-intensity) * 0.4)) 30%,
-                transparent 60%);
-            border-radius: inherit;
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: subtract;
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 1;
-          }
-          
-          .card--border-glow:hover::after {
-            opacity: 1;
-          }
-          
-          .card--border-glow:hover {
-            box-shadow: 0 4px 20px rgba(46, 24, 78, 0.4), 0 0 30px rgba(${glowColor}, 0.2);
-          }
-          
-          .particle::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: rgba(${glowColor}, 0.2);
-            border-radius: 50%;
-            z-index: -1;
-          }
-          
-          .particle-container:hover {
-            box-shadow: 0 4px 20px rgba(46, 24, 78, 0.2), 0 0 30px rgba(${glowColor}, 0.2);
-          }
-          
-          .text-clamp-1 {
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 1;
-            line-clamp: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-          
-          .text-clamp-2 {
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-          
-          @media (max-width: 599px) {
-            .card-responsive {
-              grid-template-columns: 1fr;
-              width: 90%;
-              margin: 0 auto;
-              padding: 0.5rem;
-            }
-            
-            .card-responsive .card {
-              width: 100%;
-              min-height: 180px;
-            }
-          }
-        `}
+ .bento-section {
+ --glow-x: 50%;
+ --glow-y: 50%;
+ --glow-intensity: 0;
+ --glow-radius: 200px;
+ --glow-color: ${glowColor};
+ --border-color: #392e4e;
+ --background-dark: #060010;
+ --white: hsl(0, 0%, 100%);
+ --purple-primary: rgba(132, 0, 255, 1);
+ --purple-glow: rgba(132, 0, 255, 0.2);
+ --purple-border: rgba(132, 0, 255, 0.8);
+ }
+ 
+ .card-responsive {
+ grid-template-columns: 1fr;
+ width: 90%;
+ margin: 0 auto;
+ padding: 0.5rem;
+ }
+ 
+ @media (min-width: 600px) {
+ .card-responsive {
+ grid-template-columns: repeat(2, 1fr);
+ }
+ }
+ 
+ @media (min-width: 1024px) {
+ .card-responsive {
+ grid-template-columns: repeat(4, 1fr);
+ }
+ 
+ .card-responsive .card:nth-child(3) {
+ grid-column: span 2;
+ grid-row: span 2;
+ }
+ 
+ .card-responsive .card:nth-child(4) {
+ grid-column: 1 / span 2;
+ grid-row: 2 / span 2;
+ }
+ 
+ .card-responsive .card:nth-child(6) {
+ grid-column: 4;
+ grid-row: 3;
+ }
+ }
+ 
+ .card--border-glow::after {
+ content: '';
+ position: absolute;
+ inset: 0;
+ padding: 6px;
+ background: radial-gradient(var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+ rgba(${glowColor}, calc(var(--glow-intensity) * 0.8)) 0%,
+ rgba(${glowColor}, calc(var(--glow-intensity) * 0.4)) 30%,
+ transparent 60%);
+ border-radius: inherit;
+ mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+ mask-composite: subtract;
+ -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+ -webkit-mask-composite: xor;
+ pointer-events: none;
+ transition: opacity 0.3s ease;
+ z-index: 1;
+ }
+ 
+ .card--border-glow:hover::after {
+ opacity: 1;
+ }
+ 
+ .card--border-glow:hover {
+ box-shadow: 0 4px 20px rgba(46, 24, 78, 0.4), 0 0 30px rgba(${glowColor}, 0.2);
+ }
+ 
+ .particle::before {
+ content: '';
+ position: absolute;
+ top: -2px;
+ left: -2px;
+ right: -2px;
+ bottom: -2px;
+ background: rgba(${glowColor}, 0.2);
+ border-radius: 50%;
+ z-index: -1;
+ }
+ 
+ .particle-container:hover {
+ box-shadow: 0 4px 20px rgba(46, 24, 78, 0.2), 0 0 30px rgba(${glowColor}, 0.2);
+ }
+ 
+ .text-clamp-1 {
+ display: -webkit-box;
+ -webkit-box-orient: vertical;
+ -webkit-line-clamp: 1;
+ line-clamp: 1;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ }
+ 
+ .text-clamp-2 {
+ display: -webkit-box;
+ -webkit-box-orient: vertical;
+ -webkit-line-clamp: 2;
+ line-clamp: 2;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ }
+ 
+ @media (max-width: 599px) {
+ .card-responsive {
+ grid-template-columns: 1fr;
+ width: 90%;
+ margin: 0 auto;
+ padding: 0.5rem;
+ }
+ 
+ .card-responsive .card {
+ width: 100%;
+ min-height: 180px;
+ }
+ }
+ `}
 			</style>
 
 			{enableSpotlight && (
@@ -746,11 +746,11 @@ const MagicBento: React.FC<BentoProps> = ({
 									enableMagnetism={enableMagnetism}
 								>
 									<div className="card__header flex justify-between gap-3 relative text-white">
-										<span className="card__label text-base">{card.label}</span>
+										<span className="card__label ">{card.label}</span>
 									</div>
 									<div className="card__content flex flex-col relative text-white">
 										<h3
-											className={`card__title font-normal text-base m-0 mb-1 ${textAutoHide ? "text-clamp-1" : ""}`}
+											className={`card__title font-normal m-0 mb-1 ${textAutoHide ? "text-clamp-1" : ""}`}
 										>
 											{card.title}
 										</h3>
@@ -845,16 +845,16 @@ const MagicBento: React.FC<BentoProps> = ({
 
 										const ripple = document.createElement("div");
 										ripple.style.cssText = `
-                      position: absolute;
-                      width: ${maxDistance * 2}px;
-                      height: ${maxDistance * 2}px;
-                      border-radius: 50%;
-                      background: radial-gradient(circle, rgba(${glowColor}, 0.4) 0%, rgba(${glowColor}, 0.2) 30%, transparent 70%);
-                      left: ${x - maxDistance}px;
-                      top: ${y - maxDistance}px;
-                      pointer-events: none;
-                      z-index: 1000;
-                    `;
+ position: absolute;
+ width: ${maxDistance * 2}px;
+ height: ${maxDistance * 2}px;
+ border-radius: 50%;
+ background: radial-gradient(circle, rgba(${glowColor}, 0.4) 0%, rgba(${glowColor}, 0.2) 30%, transparent 70%);
+ left: ${x - maxDistance}px;
+ top: ${y - maxDistance}px;
+ pointer-events: none;
+ z-index: 1000;
+ `;
 
 										el.appendChild(ripple);
 
@@ -880,11 +880,11 @@ const MagicBento: React.FC<BentoProps> = ({
 								}}
 							>
 								<div className="card__header flex justify-between gap-3 relative text-white">
-									<span className="card__label text-base">{card.label}</span>
+									<span className="card__label ">{card.label}</span>
 								</div>
 								<div className="card__content flex flex-col relative text-white">
 									<h3
-										className={`card__title font-normal text-base m-0 mb-1 ${textAutoHide ? "text-clamp-1" : ""}`}
+										className={`card__title font-normal m-0 mb-1 ${textAutoHide ? "text-clamp-1" : ""}`}
 									>
 										{card.title}
 									</h3>

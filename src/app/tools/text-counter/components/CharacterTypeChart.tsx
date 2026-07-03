@@ -16,7 +16,7 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
 
 	if (total === 0) {
 		return (
-			<div className="text-center text-sm text-main opacity-70 py-4">
+			<div className="text-center text-sm opacity-70 py-4">
 				文字が入力されていません
 			</div>
 		);
@@ -32,7 +32,7 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
 
 	return (
 		<div className="space-y-3">
-			<h4 className="text-sm font-medium text-main">文字種別分布</h4>
+			<h4 className="text-sm font-medium ">文字種別分布</h4>
 
 			{/* Bar Chart */}
 			<div className="space-y-2">
@@ -41,12 +41,12 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
 					return (
 						<div key={item.label} className="space-y-1">
 							<div className="flex justify-between text-xs">
-								<span className="text-main">{item.label}</span>
-								<span className="font-mono text-main">
+								<span className="">{item.label}</span>
+								<span className="font-mono ">
 									{item.count} ({percentage.toFixed(1)}%)
 								</span>
 							</div>
-							<div className="w-full rounded-full bg-main/10 h-2">
+							<div className="w-full rounded-full /10 h-2">
 								<div
 									className="h-full transition-all duration-300"
 									style={{
@@ -117,7 +117,7 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
 							className="w-3 h-3 rounded"
 							style={{ backgroundColor: item.color }}
 						/>
-						<span className="text-main">{item.label}</span>
+						<span className="">{item.label}</span>
 					</div>
 				))}
 			</div>

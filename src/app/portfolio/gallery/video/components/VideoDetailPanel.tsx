@@ -91,14 +91,14 @@ export default function VideoDetailPanel({
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-			<div className="w-[92vw] max-w-[1100px] max-h-[90vh] overflow-hidden bg-base">
+			<div className="w-[92vw] max-w-[1100px] max-h-[90vh] overflow-hidden ">
 				{/* Header removed to reduce top whitespace */}
 
 				<div className="p-6">
 					<div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 						{/* Video Player (left 2/3) */}
 						<div className="lg:col-span-2 xl:col-span-3 space-y-4">
-							<div className="aspect-video bg-base/30 overflow-hidden relative">
+							<div className="aspect-video /30 overflow-hidden relative">
 								{!isVideoLoaded ? (
 									<>
 										{/* Background Thumbnail */}
@@ -159,12 +159,12 @@ export default function VideoDetailPanel({
 								)}
 							</div>
 							{/* Title under the video (YouTube-like) */}
-							<h2 className="zen-kaku-gothic-new text-2xl text-main mt-6 mb-4">
+							<h2 className="zen-kaku-gothic-new text-2xl mt-6 mb-4">
 								{item.title}
 							</h2>
 							{/* Description moved under the title */}
 							{item.description && (
-								<p className="noto-sans-jp-light text-sm text-main leading-relaxed mb-2">
+								<p className="noto-sans-jp-light text-sm leading-relaxed mb-2">
 									{item.description}
 								</p>
 							)}
@@ -177,13 +177,13 @@ export default function VideoDetailPanel({
 							{/* 作品情報 */}
 							<div>
 								<div className="flex items-center justify-between mb-2">
-									<h3 className="zen-kaku-gothic-new text-lg text-main">
+									<h3 className="zen-kaku-gothic-new text-lg ">
 										作品情報
 									</h3>
 									<button
 										type="button"
 										onClick={onClose}
-										className="p-1.5 hover:bg-base/40 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 cursor-pointer"
+										className="p-1.5 hover:/40 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 cursor-pointer"
 										aria-label="Close panel"
 									>
 										<X className="w-4 h-4" />
@@ -191,8 +191,8 @@ export default function VideoDetailPanel({
 								</div>
 								<div className="flex items-center gap-4">
 									<div className="flex items-center gap-2">
-										<Calendar className="w-4 h-4 text-main" />
-										<span className="noto-sans-jp-light text-sm text-main">
+										<Calendar className="w-4 h-4 " />
+										<span className="noto-sans-jp-light text-sm ">
 											{new Date(
 												item.updatedAt || item.createdAt,
 											).toLocaleDateString("ja-JP")}
@@ -211,7 +211,7 @@ export default function VideoDetailPanel({
 							{(item.externalLinks && item.externalLinks.length > 0) ||
 							(Array.isArray(full?.links) && full!.links!.length > 0) ? (
 								<div>
-									<h3 className="zen-kaku-gothic-new text-lg text-main mb-2">
+									<h3 className="zen-kaku-gothic-new text-lg mb-2">
 										リンク
 									</h3>
 									<div className="flex flex-wrap gap-2">
@@ -236,7 +236,7 @@ export default function VideoDetailPanel({
 													href={link.href}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="inline-flex items-center gap-1 text-accent hover:text-main transition-colors max-w-full overflow-hidden px-1 py-0.5"
+													className="inline-flex items-center gap-1 text-accent hover: transition-colors max-w-full overflow-hidden px-1 py-0.5"
 												>
 													<ExternalLink className="w-3.5 h-3.5" />
 													<span className="noto-sans-jp-light text-xs truncate max-w-[220px] sm:max-w-[280px] md:max-w-[340px]">
@@ -251,7 +251,7 @@ export default function VideoDetailPanel({
 							{/* 関連メディア */}
 							{Array.isArray(full?.assets) && full!.assets!.length > 0 && (
 								<div>
-									<h3 className="zen-kaku-gothic-new text-lg text-main mb-2">
+									<h3 className="zen-kaku-gothic-new text-lg mb-2">
 										関連メディア
 									</h3>
 									<div className="grid grid-cols-1 gap-3">
@@ -282,7 +282,7 @@ export default function VideoDetailPanel({
 													href={`/portfolio/${item.id}`}
 													className="block w-full group"
 												>
-													<div className="relative aspect-video w-full overflow-hidden bg-base/30">
+													<div className="relative aspect-video w-full overflow-hidden /30">
 														{thumbSrc ? (
 															<SafeImage
 																src={thumbSrc}
@@ -292,7 +292,7 @@ export default function VideoDetailPanel({
 																style={{ objectPosition: "center center" }}
 															/>
 														) : (
-															<div className="w-full h-full flex items-center justify-center text-main/70">
+															<div className="w-full h-full flex items-center justify-center /70">
 																<span className="noto-sans-jp-light text-xs">
 																	{type || "media"}
 																</span>
@@ -310,7 +310,7 @@ export default function VideoDetailPanel({
 							<div className="flex flex-col gap-1.5 pt-2 mt-auto">
 								<Link
 									href={`/portfolio/${item.id}`}
-									className="bg-main text-sm px-3 py-1.5 hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 w-full text-left"
+									className=" text-sm px-3 py-1.5 hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 w-full text-left"
 								>
 									<span className="noto-sans-jp-light text-xs">
 										詳細ページを見る
@@ -321,7 +321,7 @@ export default function VideoDetailPanel({
 										href={youTubeUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="px-3 py-1.5 bg-base/30 hover:bg-base/50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 w-full text-left text-sm"
+										className="px-3 py-1.5 /30 hover:/50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 w-full text-left text-sm"
 									>
 										<span className="noto-sans-jp-light text-xs">
 											YouTubeで見る

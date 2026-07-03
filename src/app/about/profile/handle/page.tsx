@@ -177,7 +177,7 @@ export default function HandleProfilePage() {
 		setMounted(true);
 	}, []);
 
-	const Global_title = "noto-sans-jp-regular text-base leading-snug";
+	const Global_title = "noto-sans-jp-regular leading-snug";
 
 	return (
 		<>
@@ -191,7 +191,7 @@ export default function HandleProfilePage() {
 					<div className="fixed top-20 right-10 z-5 pointer-events-none hidden lg:block">
 						<ScrollVelocity
 							text="Handle Handle Handle "
-							className="text-main/10 text-6xl"
+							className="/10 text-6xl"
 						/>
 					</div>
 				)}
@@ -223,25 +223,25 @@ export default function HandleProfilePage() {
 									<div className="-mb-8">
 										<TypingText
 											text="「面白い」を見つけて、探求する"
-											className="text-main text-base md:text-lg mb-2 -ml-2"
+											className=" md:text-lg mb-2 -ml-2"
 											speed={15}
 											delay={800}
 										/>
 										<TypingText
 											text="こんにちは samuidoです"
-											className="text-main text-base md:text-lg mb-4"
+											className=" md:text-lg mb-4"
 											speed={15}
 											delay={1000}
 										/>
 										<TypingText
 											text="Discovering and exploring what's interesting"
-											className="text-main/60 text-[10px] md:text-xs leading-relaxed"
+											className="/60 text-[10px] md:text-xs leading-relaxed"
 											speed={5}
 											delay={1200}
 										/>
 										<TypingText
 											text="Hello, I'm samuido."
-											className="text-main/60 text-[10px] md:text-xs leading-relaxed"
+											className="/60 text-[10px] md:text-xs leading-relaxed"
 											speed={5}
 											delay={1400}
 										/>
@@ -257,23 +257,23 @@ export default function HandleProfilePage() {
 									<div className="mb-8">
 										<ScrollVelocity
 											text="About About About "
-											className="text-3xl md:text-4xl text-main"
+											className="text-3xl md:text-4xl "
 										/>
 									</div>
 								)}
 							</ScrollFloat>
 
 							<ScrollFloat stagger={100}>
-								<div className="bg-main/5 p-6 rounded-lg space-y-4">
-									<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
+								<div className="/5 p-6 rounded-lg space-y-4">
+									<p className="noto-sans-jp-light text-sm leading-relaxed">
 										「samuido」は、技術とクリエイティビティの境界を探求するハンドルネームです.
 										プログラミング、デザイン、映像制作を通じて、新しい表現方法を模索しています.
 									</p>
-									<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
+									<p className="noto-sans-jp-light text-sm leading-relaxed">
 										コードを書くことも、デザインすることも、音楽を作ることも、
 										すべて創造的な行為として捉え、それらを組み合わせた作品作りを心がけています.
 									</p>
-									<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
+									<p className="noto-sans-jp-light text-sm leading-relaxed">
 										現在は高専生として学習を続けながら、個人プロジェクトやコンテストへの参加を通じて
 										スキルアップを図っています.
 									</p>
@@ -288,7 +288,7 @@ export default function HandleProfilePage() {
 									<div className="mb-8">
 										<ScrollVelocity
 											text="Creative Areas Creative Areas Creative Areas "
-											className="text-3xl md:text-4xl text-main"
+											className="text-3xl md:text-4xl "
 										/>
 									</div>
 								)}
@@ -300,22 +300,22 @@ export default function HandleProfilePage() {
 									{creativeAreas.map((area) => (
 										<div
 											key={area.title}
-											className="bg-main/5 p-4 rounded-lg hover:bg-main/10 transition-colors flex flex-col"
+											className="/5 p-4 rounded-lg hover:/10 transition-colors flex flex-col"
 										>
 											<div className="flex items-center mb-2">
 												<area.icon className="w-6 h-6 text-accent mr-3 shrink-0" />
-												<h3 className="zen-kaku-gothic-new text-lg text-main">
+												<h3 className="zen-kaku-gothic-new text-lg ">
 													{area.title}
 												</h3>
 											</div>
-											<p className="noto-sans-jp-light text-sm text-main mb-3">
+											<p className="noto-sans-jp-light text-sm mb-3">
 												{area.description}
 											</p>
 											<div className="space-y-1 grow">
 												{area.projects.map((project) => (
 													<div
 														key={project}
-														className="noto-sans-jp-light text-xs text-main/60"
+														className="noto-sans-jp-light text-xs /60"
 													>
 														• {project}
 													</div>
@@ -334,7 +334,7 @@ export default function HandleProfilePage() {
 									<div className="mb-8">
 										<ScrollVelocity
 											text="Current Focus Current Focus "
-											className="text-3xl md:text-4xl text-main"
+											className="text-3xl md:text-4xl "
 										/>
 									</div>
 								)}
@@ -346,17 +346,17 @@ export default function HandleProfilePage() {
 									{currentFocus.map((focus) => (
 										<div
 											key={focus.area}
-											className="bg-main/5 p-4 rounded-lg hover:bg-main/10 transition-colors"
+											className="/5 p-4 rounded-lg hover:/10 transition-colors"
 										>
 											<div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-												<h3 className="zen-kaku-gothic-new text-base text-main">
+												<h3 className="zen-kaku-gothic-new ">
 													{focus.area}
 												</h3>
 												<span className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1 inline-block w-fit">
 													{focus.status}
 												</span>
 											</div>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												{focus.description}
 											</p>
 										</div>
@@ -372,7 +372,7 @@ export default function HandleProfilePage() {
 									<div className="mb-8">
 										<ScrollVelocity
 											text="Work Style Work Style Work Style "
-											className="text-3xl md:text-4xl text-main"
+											className="text-3xl md:text-4xl "
 										/>
 									</div>
 								)}
@@ -380,17 +380,17 @@ export default function HandleProfilePage() {
 
 							<h2 className="sr-only">Work Style Details</h2>
 							<ScrollFloat stagger={100}>
-								<div className="bg-main/5 p-6 rounded-lg space-y-6">
+								<div className="/5 p-6 rounded-lg space-y-6">
 									<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 										<div className="space-y-3">
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												開発環境
 											</h3>
 											<div className="space-y-2">
 												{workStyle.development.map((item, index) => (
 													<p
 														key={index}
-														className="noto-sans-jp-light text-sm text-main"
+														className="noto-sans-jp-light text-sm "
 													>
 														• {item}
 													</p>
@@ -399,14 +399,14 @@ export default function HandleProfilePage() {
 										</div>
 
 										<div className="space-y-3">
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												ワークフロー
 											</h3>
 											<div className="space-y-2">
 												{workStyle.workflow.map((item, index) => (
 													<p
 														key={index}
-														className="noto-sans-jp-light text-sm text-main"
+														className="noto-sans-jp-light text-sm "
 													>
 														• {item}
 													</p>
@@ -416,10 +416,10 @@ export default function HandleProfilePage() {
 									</div>
 
 									<div className="pt-4 mt-4">
-										<h3 className="zen-kaku-gothic-new text-lg text-main mb-3">
+										<h3 className="zen-kaku-gothic-new text-lg mb-3">
 											コラボレーション
 										</h3>
-										<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
+										<p className="noto-sans-jp-light text-sm leading-relaxed">
 											異なる専門分野の方との協働を大切にしています.
 											デザイナー、エンジニア、アーティスト、音楽家など、
 											多様なバックグラウンドを持つ方々との共同制作に興味があります.
@@ -436,7 +436,7 @@ export default function HandleProfilePage() {
 									<div className="mb-8">
 										<ScrollVelocity
 											text="Connect Connect Connect "
-											className="text-3xl md:text-4xl text-main"
+											className="text-3xl md:text-4xl "
 										/>
 									</div>
 								)}
@@ -445,43 +445,43 @@ export default function HandleProfilePage() {
 							<h2 className="sr-only">Social Media Links</h2>
 							<ScrollFloat stagger={100}>
 								<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-									<div className="bg-main/5 p-4 rounded-lg hover:bg-main/10 transition-colors">
-										<h3 className="zen-kaku-gothic-new text-lg text-main mb-3">
+									<div className="/5 p-4 rounded-lg hover:/10 transition-colors">
+										<h3 className="zen-kaku-gothic-new text-lg mb-3">
 											技術・開発
 										</h3>
 										<div className="space-y-2">
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												Twitter: @361do_sleep
 											</p>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												GitHub: @361do
 											</p>
 										</div>
 									</div>
 
-									<div className="bg-main/5 p-4 rounded-lg hover:bg-main/10 transition-colors">
-										<h3 className="zen-kaku-gothic-new text-lg text-main mb-3">
+									<div className="/5 p-4 rounded-lg hover:/10 transition-colors">
+										<h3 className="zen-kaku-gothic-new text-lg mb-3">
 											映像・デザイン
 										</h3>
 										<div className="space-y-2">
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												Twitter: @361do_design
 											</p>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												Instagram: @361do_sleep
 											</p>
 										</div>
 									</div>
 
-									<div className="bg-main/5 p-4 rounded-lg hover:bg-main/10 transition-colors">
-										<h3 className="zen-kaku-gothic-new text-lg text-main mb-3">
+									<div className="/5 p-4 rounded-lg hover:/10 transition-colors">
+										<h3 className="zen-kaku-gothic-new text-lg mb-3">
 											作品・ポートフォリオ
 										</h3>
 										<div className="space-y-2">
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												YouTube: @361do
 											</p>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												このサイト: /portfolio
 											</p>
 										</div>
@@ -497,21 +497,21 @@ export default function HandleProfilePage() {
 								<div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-6">
 									<Link
 										href="/about/profile/real"
-										className="bg-main/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base hover:bg-main/10 transition-colors rounded-lg"
+										className="/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Real Profile</span>
 									</Link>
 
 									<Link
 										href="/portfolio"
-										className="bg-main/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base hover:bg-main/10 transition-colors rounded-lg"
+										className="/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Portfolio</span>
 									</Link>
 
 									<a
 										href="https://links.yusuke-kim.com"
-										className="bg-main/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base hover:bg-main/10 transition-colors rounded-lg"
+										className="/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Links</span>
 									</a>
@@ -522,7 +522,7 @@ export default function HandleProfilePage() {
 						<div className="p-40" />
 						{/* Footer */}
 						<footer className="left-0 right-0 z-10 flex items-center justify-center">
-							<span className="text-xs text-main">© 2025 361do_sleep</span>
+							<span className="text-xs ">© 2025 361do_sleep</span>
 						</footer>
 					</div>
 				</main>

@@ -188,7 +188,7 @@ export default async function VideoDesignProjectsPage() {
 			console.error("SEO generation error:", seoError);
 		}
 
-		const Global_title = "noto-sans-jp-regular text-base leading-snug";
+		const Global_title = "noto-sans-jp-regular leading-snug";
 
 		return (
 			<>
@@ -198,7 +198,7 @@ export default async function VideoDesignProjectsPage() {
 					</script>
 				)}
 
-				<div className="min-h-screen relative z-10 text-main scrollbar-auto-stable">
+				<div className="min-h-screen relative z-10 scrollbar-auto-stable">
 					<main className="py-4">
 						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-10">
@@ -215,7 +215,7 @@ export default async function VideoDesignProjectsPage() {
 
 								{/* Header */}
 								<header className="space-y-4">
-									<h1 className="neue-haas-grotesk-display text-6xl text-main">
+									<h1 className="neue-haas-grotesk-display text-6xl ">
 										Video & Design
 									</h1>
 									<p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -235,17 +235,17 @@ export default async function VideoDesignProjectsPage() {
 											enableCaching={true}
 										/>
 									) : (
-										<div className="bg-base border border-main p-8 text-center">
+										<div className=" border p-8 text-center">
 											<Eye className="w-12 h-12 text-accent mx-auto mb-4" />
-											<h2 className="zen-kaku-gothic-new text-xl text-main mb-2">
+											<h2 className="zen-kaku-gothic-new text-xl mb-2">
 												No video & design projects found
 											</h2>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												Video and design projects will appear here once they are
 												published.
 											</p>
 											{process.env.NODE_ENV !== "production" && (
-												<div className="mt-2 text-xs text-main/70 space-y-1">
+												<div className="mt-2 text-xs /70 space-y-1">
 													<p>Diagnostics:</p>
 													<ul className="list-disc pl-5 space-y-0.5">
 														<li>Loaded items: {rows.length}</li>
@@ -273,21 +273,21 @@ export default async function VideoDesignProjectsPage() {
 									<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
 										<Link
 											href="/portfolio/gallery/all"
-											className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
+											className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
 										>
 											<span className={Global_title}>All Projects</span>
 										</Link>
 
 										<Link
 											href="/portfolio/gallery/video"
-											className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
+											className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
 										>
 											<span className={Global_title}>Video Only</span>
 										</Link>
 
 										<Link
 											href="/about/commission/video"
-											className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
+											className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
 										>
 											<span className={Global_title}>Commission</span>
 										</Link>
@@ -312,7 +312,7 @@ export default async function VideoDesignProjectsPage() {
 		console.error("Error in VideoDesignProjectsPage:", error);
 
 		return (
-			<div className="min-h-screen bg-base text-main scrollbar-auto-stable">
+			<div className="min-h-screen scrollbar-auto-stable">
 				<main className="py-10">
 					<div className="container-system">
 						<div className="bg-red-100 p-4 rounded">

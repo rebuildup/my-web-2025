@@ -30,7 +30,7 @@ import type {
 } from "@/types/playground";
 
 export default function DesignPlaygroundPage() {
-	const Global_title = "noto-sans-jp-regular text-base leading-snug";
+	const Global_title = "noto-sans-jp-regular leading-snug";
 	const responsive = useResponsive();
 
 	// State management
@@ -186,10 +186,10 @@ export default function DesignPlaygroundPage() {
 
 		if (!ExperimentComponent) {
 			return (
-				<div className="aspect-video bg-base border border-red-500 flex items-center justify-center">
+				<div className="aspect-video border border-red-500 flex items-center justify-center">
 					<div className="text-center space-y-2">
 						<div className="text-red-500 text-lg">⚠️ Loading Error</div>
-						<p className="text-sm text-main">
+						<p className="text-sm ">
 							Failed to load experiment: {experimentId}
 						</p>
 					</div>
@@ -216,10 +216,10 @@ export default function DesignPlaygroundPage() {
 
 	if (!deviceCapabilities) {
 		return (
-			<div className="min-h-screen bg-base text-main flex items-center justify-center">
+			<div className="min-h-screen flex items-center justify-center">
 				<div className="text-center">
 					<div className="animate-spin w-8 h-8 border-2 border-accent border-t-transparent rounded-full mx-auto mb-4"></div>
-					<p className="noto-sans-jp-light text-sm text-main">
+					<p className="noto-sans-jp-light text-sm ">
 						デバイス性能を検出中...
 					</p>
 				</div>
@@ -228,7 +228,7 @@ export default function DesignPlaygroundPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-base text-main scrollbar-auto-stable">
+		<div className="min-h-screen scrollbar-auto-stable">
 			<main aria-label="Design playground" className="flex items-center py-10">
 				<div className="container-system">
 					<div className="space-y-10">
@@ -246,7 +246,7 @@ export default function DesignPlaygroundPage() {
 						{/* Header */}
 						<header className="space-y-12">
 							<h1
-								className="neue-haas-grotesk-display text-6xl text-main"
+								className="neue-haas-grotesk-display text-6xl "
 								aria-level={1}
 							>
 								Design Playground
@@ -265,14 +265,14 @@ export default function DesignPlaygroundPage() {
 						{/* Device Info & Performance */}
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							{/* Device Capabilities */}
-							<div className="bg-base border border-main p-4 space-y-4">
+							<div className=" border p-4 space-y-4">
 								<button
 									type="button"
 									onClick={() => setShowSettings(!showSettings)}
 									className="flex items-center justify-between w-full text-left"
 									aria-label="Settings"
 								>
-									<h3 className="zen-kaku-gothic-new text-lg text-main flex items-center">
+									<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 										<Settings className="w-5 h-5 mr-2" />
 										Device & Settings
 									</h3>
@@ -287,7 +287,7 @@ export default function DesignPlaygroundPage() {
 									<div className="space-y-4">
 										<div className="grid grid-cols-2 gap-4 text-sm">
 											<div>
-												<span className="noto-sans-jp-light text-main">
+												<span className="noto-sans-jp-light ">
 													Performance Level:
 												</span>
 												<div className="text-accent">
@@ -295,7 +295,7 @@ export default function DesignPlaygroundPage() {
 												</div>
 											</div>
 											<div>
-												<span className="noto-sans-jp-light text-main">
+												<span className="noto-sans-jp-light ">
 													Touch Support:
 												</span>
 												<div className="text-accent">
@@ -303,7 +303,7 @@ export default function DesignPlaygroundPage() {
 												</div>
 											</div>
 											<div>
-												<span className="noto-sans-jp-light text-main">
+												<span className="noto-sans-jp-light ">
 													Device Pixel Ratio:
 												</span>
 												<div className="text-accent">
@@ -311,7 +311,7 @@ export default function DesignPlaygroundPage() {
 												</div>
 											</div>
 											<div>
-												<span className="noto-sans-jp-light text-main">
+												<span className="noto-sans-jp-light ">
 													CPU Cores:
 												</span>
 												<div className="text-accent">
@@ -324,7 +324,7 @@ export default function DesignPlaygroundPage() {
 										<div className="space-y-2">
 											<label
 												htmlFor="qualityLevel"
-												className="noto-sans-jp-light text-sm text-main"
+												className="noto-sans-jp-light text-sm "
 											>
 												Quality Level
 											</label>
@@ -338,7 +338,7 @@ export default function DesignPlaygroundPage() {
 															.value as PerformanceSettings["qualityLevel"],
 													}))
 												}
-												className="w-full border border-main bg-base text-main p-2 text-sm"
+												className="w-full border p-2 text-sm"
 												data-testid="quality-select"
 											>
 												<option value="low">Low (30 FPS)</option>
@@ -362,7 +362,7 @@ export default function DesignPlaygroundPage() {
 											/>
 											<label
 												htmlFor="optimizations"
-												className="noto-sans-jp-light text-sm text-main"
+												className="noto-sans-jp-light text-sm "
 											>
 												Auto Performance Optimization
 											</label>
@@ -372,13 +372,13 @@ export default function DesignPlaygroundPage() {
 							</div>
 
 							{/* Performance Monitor */}
-							<div className="bg-base border border-main p-4 space-y-4">
+							<div className=" border p-4 space-y-4">
 								<button
 									type="button"
 									onClick={() => setShowPerformance(!showPerformance)}
 									className="flex items-center justify-between w-full text-left"
 								>
-									<h3 className="zen-kaku-gothic-new text-lg text-main flex items-center">
+									<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 										<Monitor className="w-5 h-5 mr-2" />
 										Performance Monitor
 									</h3>
@@ -395,13 +395,13 @@ export default function DesignPlaygroundPage() {
 											<div className="text-2xl font-bold text-accent">
 												{performanceMetrics.fps}
 											</div>
-											<div className="noto-sans-jp-light text-main">FPS</div>
+											<div className="noto-sans-jp-light ">FPS</div>
 										</div>
 										<div className="text-center">
 											<div className="text-2xl font-bold text-accent">
 												{performanceMetrics.frameTime.toFixed(1)}
 											</div>
-											<div className="noto-sans-jp-light text-main">
+											<div className="noto-sans-jp-light ">
 												Frame Time (ms)
 											</div>
 										</div>
@@ -409,7 +409,7 @@ export default function DesignPlaygroundPage() {
 											<div className="text-2xl font-bold text-accent">
 												{performanceMetrics.memoryUsage}
 											</div>
-											<div className="noto-sans-jp-light text-main">
+											<div className="noto-sans-jp-light ">
 												Memory (MB)
 											</div>
 										</div>
@@ -453,7 +453,7 @@ export default function DesignPlaygroundPage() {
 						{/* Active Experiment */}
 						{activeExperiment && (
 							<div
-								className="bg-base border border-main p-4 space-y-4"
+								className=" border p-4 space-y-4"
 								onTouchStart={
 									responsive.touch.isTouchDevice
 										? swipeHandlers.onTouchStart
@@ -472,7 +472,7 @@ export default function DesignPlaygroundPage() {
 								aria-live="polite"
 							>
 								<div className="flex items-center justify-between">
-									<h3 className="zen-kaku-gothic-new text-lg text-main">
+									<h3 className="zen-kaku-gothic-new text-lg ">
 										Active Experiment:{" "}
 										{
 											designExperiments.find(
@@ -484,10 +484,10 @@ export default function DesignPlaygroundPage() {
 									{/* Mobile experiment navigation */}
 									{responsive.isMobile && experimentIds.length > 1 && (
 										<div className="flex items-center space-x-2">
-											<span className="noto-sans-jp-light text-xs text-main">
+											<span className="noto-sans-jp-light text-xs ">
 												{currentExperimentIndex + 1} / {experimentIds.length}
 											</span>
-											<span className="noto-sans-jp-light text-xs text-main opacity-70">
+											<span className="noto-sans-jp-light text-xs opacity-70">
 												スワイプで切り替え
 											</span>
 										</div>
@@ -504,21 +504,21 @@ export default function DesignPlaygroundPage() {
 							<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
 								<Link
 									href="/portfolio/playground/WebGL"
-									className="border border-main text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+									className="border text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>WebGL Playground</span>
 								</Link>
 
 								<Link
 									href="/portfolio"
-									className="border border-main text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+									className="border text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Portfolio Home</span>
 								</Link>
 
 								<Link
 									href="/tools"
-									className="border border-main text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+									className="border text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Tools</span>
 								</Link>
@@ -526,7 +526,7 @@ export default function DesignPlaygroundPage() {
 						</nav>
 
 						{/* Footer */}
-						<footer className="pt-4 border-t border-main">
+						<footer className="pt-4 border-t ">
 							<div className="text-center">
 								<p className="shippori-antique-b1-regular text-sm inline-block">
 									© 2025 samuido - Design Playground

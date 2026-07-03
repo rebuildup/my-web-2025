@@ -166,75 +166,75 @@ export function StatsOverview({
 							<div className="absolute inset-0 bg-black" />
 						</div>
 						<div className="relative z-10">
-							<div className="text-[10px] font-mono tracking-widest text-main uppercase">
+							<div className="text-[10px] font-mono tracking-widest uppercase">
 								Latest Content
 							</div>
-							<div className="mt-6 text-2xl md:text-3xl font-display font-semibold text-main line-clamp-2">
+							<div className="mt-6 text-2xl md:text-3xl font-display font-semibold line-clamp-2">
 								{latestItem?.title || "Latest Work"}
 							</div>
-							<p className="mt-3 text-[11px] text-main max-w-sm">
+							<p className="mt-3 text-[11px] max-w-sm">
 								{latestItem
 									? "最新の公開コンテンツをピックアップ."
 									: "最新のコンテンツをチェックできます."}
 							</p>
 						</div>
-						<div className="relative z-10 mt-8 text-[10px] font-mono uppercase tracking-widest text-main">
+						<div className="relative z-10 mt-8 text-[10px] font-mono uppercase tracking-widest ">
 							{latestItem ? "View details →" : "View all →"}
 						</div>
 					</Link>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 min-w-0 max-w-full">
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main mb-2">
+							<div className="noto-sans-jp-light text-xs mb-2">
 								直近7日のコンテンツ
 							</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
-										"neue-haas-grotesk-display text-main leading-none " +
+										"neue-haas-grotesk-display leading-none " +
 										fontSizeFor(v7)
 									}
 								>
 									{v7.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
+								<div className="noto-sans-jp-light text-[10px] mb-1">
 									items
 								</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main mb-2">
+							<div className="noto-sans-jp-light text-xs mb-2">
 								直近30日のコンテンツ
 							</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
-										"neue-haas-grotesk-display text-main leading-none " +
+										"neue-haas-grotesk-display leading-none " +
 										fontSizeFor(v30)
 									}
 								>
 									{v30.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
+								<div className="noto-sans-jp-light text-[10px] mb-1">
 									items
 								</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main mb-2">
+							<div className="noto-sans-jp-light text-xs mb-2">
 								直近1年のコンテンツ
 							</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
-										"neue-haas-grotesk-display text-main leading-none " +
+										"neue-haas-grotesk-display leading-none " +
 										fontSizeFor(v365)
 									}
 								>
 									{v365.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
+								<div className="noto-sans-jp-light text-[10px] mb-1">
 									items
 								</div>
 							</div>
@@ -245,76 +245,76 @@ export function StatsOverview({
 				<div className="grid gap-3 md:gap-4 min-w-0 max-w-full">
 					<div className="grid grid-cols-2 gap-3 md:gap-4 min-w-0 max-w-full">
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main mb-2">
+							<div className="noto-sans-jp-light text-xs mb-2">
 								総コンテンツ
 							</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
-										"neue-haas-grotesk-display text-main leading-none " +
+										"neue-haas-grotesk-display leading-none " +
 										fontSizeFor(vTotal, true)
 									}
 								>
 									{vTotal.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
+								<div className="noto-sans-jp-light text-[10px] mb-1">
 									items
 								</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main mb-2">
+							<div className="noto-sans-jp-light text-xs mb-2">
 								develop
 							</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
-										"neue-haas-grotesk-display text-main leading-none " +
+										"neue-haas-grotesk-display leading-none " +
 										fontSizeFor(vDevelop)
 									}
 								>
 									{vDevelop.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
+								<div className="noto-sans-jp-light text-[10px] mb-1">
 									items
 								</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main mb-2">
+							<div className="noto-sans-jp-light text-xs mb-2">
 								video
 							</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
-										"neue-haas-grotesk-display text-main leading-none " +
+										"neue-haas-grotesk-display leading-none " +
 										fontSizeFor(vVideo)
 									}
 								>
 									{vVideo.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
+								<div className="noto-sans-jp-light text-[10px] mb-1">
 									items
 								</div>
 							</div>
 						</div>
 
 						<div className={baseCard}>
-							<div className="noto-sans-jp-light text-xs text-main mb-2">
+							<div className="noto-sans-jp-light text-xs mb-2">
 								video&design
 							</div>
 							<div className="flex items-end gap-2">
 								<div
 									className={
-										"neue-haas-grotesk-display text-main leading-none " +
+										"neue-haas-grotesk-display leading-none " +
 										fontSizeFor(vVideoDesign)
 									}
 								>
 									{vVideoDesign.toLocaleString("ja-JP")}
 								</div>
-								<div className="noto-sans-jp-light text-[10px] text-main mb-1">
+								<div className="noto-sans-jp-light text-[10px] mb-1">
 									items
 								</div>
 							</div>
@@ -339,31 +339,31 @@ export function StatsOverview({
 										sizes="(max-width: 1024px) 100vw, 33vw"
 									/>
 								) : (
-									<div className="w-full h-full bg-base" />
+									<div className="w-full h-full " />
 								)}
 								<div className="absolute inset-0 bg-black" />
 							</div>
 							<div className="absolute left-0 right-0 bottom-0 p-4 md:p-5">
-								<div className="flex items-center gap-3 text-[10px] uppercase tracking-widest text-main">
+								<div className="flex items-center gap-3 text-[10px] uppercase tracking-widest ">
 									<span className="font-mono">Random Pick</span>
 									<span className="font-mono">Click to shuffle</span>
 								</div>
 								{randomItem ? (
-									<div className="mt-2 zen-kaku-gothic-new text-sm md:text-base text-main line-clamp-2">
+									<div className="mt-2 zen-kaku-gothic-new text-sm md: line-clamp-2">
 										{randomItem.title}
 									</div>
 								) : (
-									<div className="mt-2 text-[10px] text-main">
+									<div className="mt-2 text-[10px] ">
 										アイテムがありません
 									</div>
 								)}
-								<div className="mt-1 text-[10px] text-main">
+								<div className="mt-1 text-[10px] ">
 									手動で入れ替えて、思わぬ発見を.
 								</div>
 								{randomItem && (
 									<Link
 										href={`/portfolio/${randomItem.id}`}
-										className="mt-2 inline-block text-[10px] underline underline-offset-2 text-main hover:text-main transition-colors"
+										className="mt-2 inline-block text-[10px] underline underline-offset-2 hover: transition-colors"
 										onClick={(e) => e.stopPropagation()}
 									>
 										詳細を見る →

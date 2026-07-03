@@ -263,9 +263,9 @@ export default function AccessibilityTestingComponent({
 
 	return (
 		<div className="fixed bottom-4 right-4 z-50 max-w-md">
-			<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] overflow-hidden">
+			<div className="rounded-xl /75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] overflow-hidden">
 				{/* Header */}
-				<div className="bg-accent text-main p-3 flex justify-between items-center">
+				<div className="bg-accent p-3 flex justify-between items-center">
 					<h3 className="neue-haas-grotesk-display text-sm font-medium">
 						アクセシビリティテスト
 					</h3>
@@ -274,7 +274,7 @@ export default function AccessibilityTestingComponent({
 							type="button"
 							onClick={runTest}
 							disabled={isRunning}
-							className="bg-base text-accent px-2 py-1 text-xs rounded hover:bg-opacity-90 disabled:opacity-50"
+							className=" text-accent px-2 py-1 text-xs rounded hover:bg-opacity-90 disabled:opacity-50"
 							aria-label="テストを実行"
 						>
 							{isRunning ? "実行中..." : "実行"}
@@ -282,7 +282,7 @@ export default function AccessibilityTestingComponent({
 						<button
 							type="button"
 							onClick={() => setIsVisible(!isVisible)}
-							className="bg-base text-accent px-2 py-1 text-xs rounded hover:bg-opacity-90"
+							className=" text-accent px-2 py-1 text-xs rounded hover:bg-opacity-90"
 							aria-label="パネルを閉じる"
 						>
 							×
@@ -353,7 +353,7 @@ export default function AccessibilityTestingComponent({
 							</div>
 						) : (
 							<div className="text-center py-4">
-								<p className="text-sm text-main opacity-75">
+								<p className="text-sm opacity-75">
 									テストを実行してください
 								</p>
 							</div>

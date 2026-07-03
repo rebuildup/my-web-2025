@@ -106,14 +106,14 @@ export default function ToolWrapper({
 	}, [showAccessibilityInfo, announce, runAccessibilityChecks]);
 
 	return (
-		<div className="min-h-screen text-main scrollbar-auto-stable">
+		<div className="min-h-screen scrollbar-auto-stable">
 			<main className="py-10" tabIndex={-1} ref={containerRef}>
 				<div className="container-system">
 					<div className="mx-auto w-full max-w-6xl space-y-10 px-4 sm:px-6 lg:px-8">
 						{/* Header */}
 						<header className="space-y-6">
 							<div className="space-y-4">
-								<h1 className="neue-haas-grotesk-display text-4xl text-main sm:text-5xl lg:text-6xl">
+								<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl">
 									{toolName}
 								</h1>
 								<p className="noto-sans-jp-light text-sm leading-loose max-w-2xl">
@@ -121,10 +121,10 @@ export default function ToolWrapper({
 								</p>
 
 								<div className="flex flex-wrap gap-4 items-center">
-									<span className="noto-sans-jp-light rounded-full bg-main/10 px-3 py-1 text-[0.75rem] text-main">
+									<span className="noto-sans-jp-light rounded-full /10 px-3 py-1 text-[0.75rem] ">
 										{category}
 									</span>
-									<span className="noto-sans-jp-light text-xs text-main/60">
+									<span className="noto-sans-jp-light text-xs /60">
 										オフライン対応・アクセシビリティ準拠
 									</span>
 								</div>
@@ -135,20 +135,20 @@ export default function ToolWrapper({
 						{showAccessibilityInfo && (
 							<section
 								aria-labelledby="accessibility-info-heading"
-								className="rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] p-6"
+								className="rounded-2xl /75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] p-6"
 							>
 								<h2
 									id="accessibility-info-heading"
-									className="neue-haas-grotesk-display text-lg mb-4 text-main"
+									className="neue-haas-grotesk-display text-lg mb-4 "
 								>
 									アクセシビリティ情報
 								</h2>
 								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 									<div className="space-y-2">
-										<h3 className="neue-haas-grotesk-display text-base text-main">
+										<h3 className="neue-haas-grotesk-display ">
 											現在の設定
 										</h3>
-										<ul className="noto-sans-jp-light text-sm space-y-1 text-main/80">
+										<ul className="noto-sans-jp-light text-sm space-y-1 /80">
 											<li>
 												• モーション設定:{" "}
 												{state.prefersReducedMotion ? "軽減" : "通常"}
@@ -168,10 +168,10 @@ export default function ToolWrapper({
 										</ul>
 									</div>
 									<div className="space-y-2">
-										<h3 className="neue-haas-grotesk-display text-base text-main">
+										<h3 className="neue-haas-grotesk-display ">
 											対応機能
 										</h3>
-										<ul className="noto-sans-jp-light text-sm space-y-1 text-main/80">
+										<ul className="noto-sans-jp-light text-sm space-y-1 /80">
 											<li>• スクリーンリーダー対応</li>
 											<li>• キーボードナビゲーション</li>
 											<li>• WCAG 2.1 AA準拠</li>
@@ -181,11 +181,11 @@ export default function ToolWrapper({
 									</div>
 								</div>
 								{state.accessibilityIssues.length > 0 && (
-									<div className="mt-4 p-3 rounded-lg bg-main/5">
-										<h4 className="neue-haas-grotesk-display text-sm mb-2 text-main">
+									<div className="mt-4 p-3 rounded-lg /5">
+										<h4 className="neue-haas-grotesk-display text-sm mb-2 ">
 											検出された問題:
 										</h4>
-										<ul className="noto-sans-jp-light text-xs space-y-1 text-main/70">
+										<ul className="noto-sans-jp-light text-xs space-y-1 /70">
 											{state.accessibilityIssues.map((issue, index) => (
 												<li key={index}>• {issue}</li>
 											))}
@@ -195,7 +195,7 @@ export default function ToolWrapper({
 								<button
 									type="button"
 									onClick={() => setShowAccessibilityInfo(false)}
-									className="mt-4 rounded-lg bg-main/10 text-main px-3 py-1 hover:bg-main/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="mt-4 rounded-lg /10 px-3 py-1 hover:/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 									aria-label="アクセシビリティ情報を閉じる"
 								>
 									閉じる
@@ -228,17 +228,17 @@ export default function ToolWrapper({
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 								<Link
 									href="/tools"
-									className="rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+									className="rounded-2xl /75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
 								>
-									<span className="noto-sans-jp-regular text-base leading-snug text-main">
+									<span className="noto-sans-jp-regular leading-snug ">
 										← Tools
 									</span>
 								</Link>
 								<Link
 									href="/"
-									className="rounded-2xl bg-base/75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+									className="rounded-2xl /75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
 								>
-									<span className="noto-sans-jp-regular text-base leading-snug text-main">
+									<span className="noto-sans-jp-regular leading-snug ">
 										← Home
 									</span>
 								</Link>

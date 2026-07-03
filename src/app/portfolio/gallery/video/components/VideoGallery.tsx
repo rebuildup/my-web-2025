@@ -54,7 +54,7 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 	if (items.length === 0) {
 		return (
 			<div className="text-center py-12">
-				<p className="noto-sans-jp-light text-main">映像作品がありません.</p>
+				<p className="noto-sans-jp-light ">映像作品がありません.</p>
 			</div>
 		);
 	}
@@ -82,7 +82,7 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 									onClick={() => handleItemClick(item)}
 								>
 									{/* Video Thumbnail */}
-									<GlowCard className="group cursor-pointer text-left block bg-base overflow-hidden mb-4">
+									<GlowCard className="group cursor-pointer text-left block overflow-hidden mb-4">
 										<div className="aspect-video relative overflow-hidden">
 											{item.thumbnail ? (
 												<SafeImage
@@ -104,7 +104,7 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 												/>
 											) : (
 												<div className="w-full h-full flex items-center justify-center">
-													<VideoIcon className="w-12 h-12 text-main" />
+													<VideoIcon className="w-12 h-12 " />
 												</div>
 											)}
 
@@ -122,12 +122,12 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 
 									{/* Video Info */}
 									<div className="space-y-3">
-										<h3 className="zen-kaku-gothic-new text-lg text-main group-hover:text-accent transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
+										<h3 className="zen-kaku-gothic-new text-lg group-hover:text-accent transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
 											{item.title}
 										</h3>
 
 										{/* Description - 1-line truncation */}
-										<p className="noto-sans-jp-light text-sm text-main whitespace-nowrap overflow-hidden text-ellipsis leading-relaxed">
+										<p className="noto-sans-jp-light text-sm whitespace-nowrap overflow-hidden text-ellipsis leading-relaxed">
 											{item.description}
 										</p>
 
@@ -138,20 +138,20 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 													{item.tags.slice(0, 3).map((tag) => (
 														<span
 															key={tag}
-															className="noto-sans-jp-light text-xs text-main px-3 py-1 bg-base whitespace-nowrap shrink-0"
+															className="noto-sans-jp-light text-xs px-3 py-1 whitespace-nowrap shrink-0"
 														>
 															{tag}
 														</span>
 													))}
 													{item.tags.length > 3 && (
-														<span className="noto-sans-jp-light text-xs text-main px-3 py-1 bg-base tag-overflow-indicator">
+														<span className="noto-sans-jp-light text-xs px-3 py-1 tag-overflow-indicator">
 															+{item.tags.length - 3}
 														</span>
 													)}
 												</div>
 												<div className="flex items-center gap-2 text-xs">
-													<Calendar className="w-4 h-4 text-main/70" />
-													<span className="noto-sans-jp-light text-main/70">
+													<Calendar className="w-4 h-4 /70" />
+													<span className="noto-sans-jp-light /70">
 														{new Date(
 															(item as any).publishedAt ||
 																item.updatedAt ||

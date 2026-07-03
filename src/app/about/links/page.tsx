@@ -65,7 +65,7 @@ function ProfileHeader() {
 					className="w-20 h-20 rounded-full bg-gradient-to-tr from-accent p-[2px] shadow-2xl z-10 cursor-pointer group"
 					title="Tech Account (@361do_sleep)"
 				>
-					<div className="w-full h-full rounded-full overflow-hidden bg-base relative">
+					<div className="w-full h-full rounded-full overflow-hidden relative">
 						<motion.img
 							whileHover={{ rotate: 360 }}
 							transition={{ duration: 2, ease: [0.9, 0, 0.1, 1] }}
@@ -84,7 +84,7 @@ function ProfileHeader() {
 					className="w-20 h-20 rounded-full bg-gradient-to-tr p-[2px] shadow-xl z-10 cursor-pointer group"
 					title="Design Account (@361do_design)"
 				>
-					<div className="w-full h-full rounded-full overflow-hidden bg-base relative">
+					<div className="w-full h-full rounded-full overflow-hidden relative">
 						<motion.img
 							whileHover={{ rotate: 360 }}
 							transition={{ duration: 2, ease: [0.9, 0, 0.1, 1] }}
@@ -96,10 +96,10 @@ function ProfileHeader() {
 				</a>
 			</div>
 
-			<h1 className="text-3xl font-display font-black text-main tracking-tight mb-2">
+			<h1 className="text-3xl font-display font-black tracking-tight mb-2">
 				samuido
 			</h1>
-			<p className="text-main/60 font-mono text-xs tracking-widest uppercase">
+			<p className="/60 font-mono text-xs tracking-widest uppercase">
 				Developer / Creator
 			</p>
 
@@ -116,16 +116,16 @@ function ProfileHeader() {
 							href={link.url}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-main/60 hover:text-accent transition-colors overflow-hidden p-1.5"
+							className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 /60 hover:text-accent transition-colors overflow-hidden p-1.5"
 						>
 							<LinkIcon item={link} className="w-full h-full" />
 						</a>
 					))}
 			</div>
 
-			<p className="text-sm text-main/80 max-w-sm leading-relaxed font-light">
+			<p className="text-sm /80 max-w-sm leading-relaxed font-light">
 				Web制作・映像制作・ツール開発.
-				<span className="text-xs text-main/50 mt-1 block">
+				<span className="text-xs /50 mt-1 block">
 					Yamaguchi, Japan
 				</span>
 			</p>
@@ -158,16 +158,16 @@ function LinkButton({ item, index }: { item: LinkItem; index: number }) {
 		>
 			<div className="relative z-10 flex items-center px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/5 hover:bg-white/10 hover:border-white/10 transition-colors duration-200 overflow-hidden">
 				{/* Icon container */}
-				<div className="flex-shrink-0 w-8 h-8 rounded-md bg-base/50 flex items-center justify-center border border-white/5 overflow-hidden p-[5px]">
+				<div className="flex-shrink-0 w-8 h-8 rounded-md /50 flex items-center justify-center border border-white/5 overflow-hidden p-[5px]">
 					<LinkIcon item={item} className="w-full h-full" />
 				</div>
 
 				{/* Text content */}
 				<div className="flex-grow px-4 text-left min-w-0 flex items-baseline justify-between">
-					<span className="text-main font-bold text-sm tracking-tight truncate">
+					<span className=" font-bold text-sm tracking-tight truncate">
 						{item.title}
 					</span>
-					<span className="text-main/40 text-xs font-mono ml-2 flex-shrink-0 truncate max-w-[120px]">
+					<span className="/40 text-xs font-mono ml-2 flex-shrink-0 truncate max-w-[120px]">
 						{item.description}
 					</span>
 				</div>
@@ -178,7 +178,7 @@ function LinkButton({ item, index }: { item: LinkItem; index: number }) {
 
 export default function LinksPage() {
 	return (
-		<div className="min-h-screen relative bg-transparent overflow-x-hidden selection:bg-accent/30 text-main">
+		<div className="min-h-screen relative bg-transparent overflow-x-hidden selection:bg-accent/30 ">
 			{/* Shared Background */}
 			<AboutBackground />
 
@@ -197,7 +197,7 @@ export default function LinksPage() {
 						<motion.h2
 							initial={{ opacity: 0 }}
 							whileInView={{ opacity: 1 }}
-							className="text-center text-[10px] font-mono text-main/30 uppercase tracking-widest mb-4"
+							className="text-center text-[10px] font-mono /30 uppercase tracking-widest mb-4"
 						>
 							Contact
 						</motion.h2>
@@ -218,7 +218,7 @@ export default function LinksPage() {
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ delay: 0.8 }}
-					className="text-center mt-12 text-main/20 text-[10px] font-mono"
+					className="text-center mt-12 /20 text-[10px] font-mono"
 				>
 					© 2025 361do_sleep
 				</motion.footer>

@@ -74,7 +74,7 @@ You can still use regular markdown:
 
 \`\`\`javascript
 function example() {
-  console.log("This is a code block");
+ console.log("This is a code block");
 }
 \`\`\`
 

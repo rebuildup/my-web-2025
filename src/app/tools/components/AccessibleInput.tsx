@@ -105,26 +105,26 @@ const AccessibleInput = forwardRef<
 
 		// Base styles with accessibility considerations
 		const baseInputStyles = `
-      w-full bg-base border text-main
-      focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
-      disabled:opacity-50 disabled:cursor-not-allowed
-      ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
-      ${error ? "border-red-500" : "border-main/20"}
-      ${isFocused ? "ring-1 ring-accent border-accent" : ""}
-    `;
+ w-full border 
+ focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
+ disabled:opacity-50 disabled:cursor-not-allowed
+ ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
+ ${error ? "border-red-500" : "/20"}
+ ${isFocused ? "ring-1 ring-accent border-accent" : ""}
+ `;
 
 		// Variant styles
 		const variantStyles = {
-			default: "p-2 text-base",
+			default: "p-2 ",
 			large: "p-3 text-lg",
 		};
 
 		// Combine styles
 		const inputClassName = `
-      ${baseInputStyles}
-      ${variantStyles[variant]}
-      ${className}
-    `
+ ${baseInputStyles}
+ ${variantStyles[variant]}
+ ${className}
+ `
 			.trim()
 			.replace(/\s+/g, " ");
 
@@ -151,7 +151,7 @@ const AccessibleInput = forwardRef<
 				{/* Label */}
 				<label
 					htmlFor={inputId}
-					className="neue-haas-grotesk-display text-sm text-main block"
+					className="neue-haas-grotesk-display text-sm block"
 				>
 					{label}
 					{required && showRequiredIndicator && (
@@ -165,7 +165,7 @@ const AccessibleInput = forwardRef<
 				{description && (
 					<p
 						id={descriptionId}
-						className="noto-sans-jp-light text-sm text-main"
+						className="noto-sans-jp-light text-sm "
 					>
 						{description}
 					</p>
@@ -207,7 +207,7 @@ const AccessibleInput = forwardRef<
 				{helpText && (
 					<p
 						id={helpTextId}
-						className="noto-sans-jp-light text-xs text-main opacity-75"
+						className="noto-sans-jp-light text-xs opacity-75"
 					>
 						{helpText}
 					</p>

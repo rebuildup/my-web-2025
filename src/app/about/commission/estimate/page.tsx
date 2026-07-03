@@ -187,7 +187,7 @@ export default function EstimatePage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-base text-main">
+		<div className="min-h-screen ">
 			<main className="flex items-center py-10">
 				<div className="container-system">
 					<div className="space-y-10">
@@ -204,7 +204,7 @@ export default function EstimatePage() {
 
 						{/* Header */}
 						<header className="space-y-12">
-							<h1 className="neue-haas-grotesk-display text-6xl text-main">
+							<h1 className="neue-haas-grotesk-display text-6xl ">
 								映像制作見積もり計算機
 							</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -217,9 +217,9 @@ export default function EstimatePage() {
 						<div className="grid-system grid-1 lg:grid-2 gap-8">
 							{/* Form */}
 							<div className="space-y-6">
-								<div className="bg-base border border-main p-4">
+								<div className=" border p-4">
 									<div className="flex items-center justify-between mb-4">
-										<h2 className="neue-haas-grotesk-display text-3xl text-main">
+										<h2 className="neue-haas-grotesk-display text-3xl ">
 											見積もりフォーム
 										</h2>
 										<button
@@ -236,7 +236,7 @@ export default function EstimatePage() {
 									<div className="mb-6">
 										<label
 											htmlFor="videoType"
-											className="block zen-kaku-gothic-new text-lg text-main mb-2"
+											className="block zen-kaku-gothic-new text-lg mb-2"
 										>
 											映像の種類 *
 										</label>
@@ -249,7 +249,7 @@ export default function EstimatePage() {
 													videoType: e.target.value,
 												}))
 											}
-											className="w-full p-3 bg-base border border-main text-main noto-sans-jp-light text-sm"
+											className="w-full p-3 border noto-sans-jp-light text-sm"
 											required
 										>
 											<option value="">選択してください</option>
@@ -266,7 +266,7 @@ export default function EstimatePage() {
 									<div className="mb-6">
 										<label
 											htmlFor="duration"
-											className="block zen-kaku-gothic-new text-lg text-main mb-2"
+											className="block zen-kaku-gothic-new text-lg mb-2"
 										>
 											映像の長さ *
 										</label>
@@ -279,7 +279,7 @@ export default function EstimatePage() {
 													duration: e.target.value,
 												}))
 											}
-											className="w-full p-3 bg-base border border-main text-main noto-sans-jp-light text-sm"
+											className="w-full p-3 border noto-sans-jp-light text-sm"
 											required
 										>
 											<option value="">選択してください</option>
@@ -293,7 +293,7 @@ export default function EstimatePage() {
 
 									{/* Quality */}
 									<div className="mb-6">
-										<p className="block zen-kaku-gothic-new text-lg text-main mb-2">
+										<p className="block zen-kaku-gothic-new text-lg mb-2">
 											品質レベル
 										</p>
 										<div className="space-y-2">
@@ -315,7 +315,7 @@ export default function EstimatePage() {
 														}
 														className="mr-2"
 													/>
-													<span className="noto-sans-jp-light text-sm text-main">
+													<span className="noto-sans-jp-light text-sm ">
 														{quality.label} (×{quality.multiplier})
 													</span>
 												</label>
@@ -325,7 +325,7 @@ export default function EstimatePage() {
 
 									{/* Editing */}
 									<div className="mb-6">
-										<p className="block zen-kaku-gothic-new text-lg text-main mb-2">
+										<p className="block zen-kaku-gothic-new text-lg mb-2">
 											編集内容
 										</p>
 										<div className="space-y-2">
@@ -346,7 +346,7 @@ export default function EstimatePage() {
 														disabled={editing.value === "basic"}
 														className="mr-2"
 													/>
-													<span className="noto-sans-jp-light text-sm text-main">
+													<span className="noto-sans-jp-light text-sm ">
 														{editing.label}
 														{editing.price > 0 &&
 															` (+¥${editing.price.toLocaleString()})`}
@@ -360,7 +360,7 @@ export default function EstimatePage() {
 									<div className="mb-6">
 										<label
 											htmlFor="deadline"
-											className="block zen-kaku-gothic-new text-lg text-main mb-2"
+											className="block zen-kaku-gothic-new text-lg mb-2"
 										>
 											納期
 										</label>
@@ -373,7 +373,7 @@ export default function EstimatePage() {
 													deadline: e.target.value,
 												}))
 											}
-											className="w-full p-3 bg-base border border-main text-main noto-sans-jp-light text-sm"
+											className="w-full p-3 border noto-sans-jp-light text-sm"
 										>
 											{DEADLINES.map((deadline) => (
 												<option key={deadline.value} value={deadline.value}>
@@ -390,18 +390,18 @@ export default function EstimatePage() {
 							{/* Result */}
 							<div className="space-y-6">
 								{result && result.total > 0 ? (
-									<div className="bg-base border border-main p-4">
+									<div className=" border p-4">
 										<div className="flex items-center justify-between mb-4">
-											<h2 className="neue-haas-grotesk-display text-3xl text-main">
+											<h2 className="neue-haas-grotesk-display text-3xl ">
 												見積もり結果
 											</h2>
 											<Calculator className="w-6 h-6 text-accent" />
 										</div>
 
 										{/* Total */}
-										<div className="bg-base border border-accent p-4 mb-4">
+										<div className=" border border-accent p-4 mb-4">
 											<div className="text-center">
-												<p className="noto-sans-jp-light text-sm text-main mb-1">
+												<p className="noto-sans-jp-light text-sm mb-1">
 													合計金額
 												</p>
 												<p className="neue-haas-grotesk-display text-4xl text-accent">
@@ -412,25 +412,25 @@ export default function EstimatePage() {
 
 										{/* Breakdown */}
 										<div className="space-y-3 mb-6">
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												料金内訳
 											</h3>
 
 											<div className="flex justify-between">
-												<span className="noto-sans-jp-light text-sm text-main">
+												<span className="noto-sans-jp-light text-sm ">
 													基本料金
 												</span>
-												<span className="noto-sans-jp-light text-sm text-main">
+												<span className="noto-sans-jp-light text-sm ">
 													¥{result.breakdown.base.toLocaleString()}
 												</span>
 											</div>
 
 											{result.breakdown.quality > 0 && (
 												<div className="flex justify-between">
-													<span className="noto-sans-jp-light text-sm text-main">
+													<span className="noto-sans-jp-light text-sm ">
 														品質料金
 													</span>
-													<span className="noto-sans-jp-light text-sm text-main">
+													<span className="noto-sans-jp-light text-sm ">
 														¥{result.breakdown.quality.toLocaleString()}
 													</span>
 												</div>
@@ -438,10 +438,10 @@ export default function EstimatePage() {
 
 											{result.breakdown.editing > 0 && (
 												<div className="flex justify-between">
-													<span className="noto-sans-jp-light text-sm text-main">
+													<span className="noto-sans-jp-light text-sm ">
 														編集料金
 													</span>
-													<span className="noto-sans-jp-light text-sm text-main">
+													<span className="noto-sans-jp-light text-sm ">
 														¥{result.breakdown.editing.toLocaleString()}
 													</span>
 												</div>
@@ -449,21 +449,21 @@ export default function EstimatePage() {
 
 											{result.breakdown.deadline > 0 && (
 												<div className="flex justify-between">
-													<span className="noto-sans-jp-light text-sm text-main">
+													<span className="noto-sans-jp-light text-sm ">
 														納期料金
 													</span>
-													<span className="noto-sans-jp-light text-sm text-main">
+													<span className="noto-sans-jp-light text-sm ">
 														¥{result.breakdown.deadline.toLocaleString()}
 													</span>
 												</div>
 											)}
 
-											<hr className="border-main my-2" />
+											<hr className=" my-2" />
 											<div className="flex justify-between">
-												<span className="zen-kaku-gothic-new text-base text-main">
+												<span className="zen-kaku-gothic-new ">
 													合計
 												</span>
-												<span className="zen-kaku-gothic-new text-base text-accent">
+												<span className="zen-kaku-gothic-new text-accent">
 													¥{result.total.toLocaleString()}
 												</span>
 											</div>
@@ -474,23 +474,23 @@ export default function EstimatePage() {
 											<button
 												type="button"
 												onClick={copyResult}
-												className="flex items-center justify-center border border-main text-center p-4 noto-sans-jp-regular text-base leading-snug"
+												className="flex items-center justify-center border text-center p-4 noto-sans-jp-regular leading-snug"
 											>
 												<Copy className="w-4 h-4 mr-2" />
 												コピー
 											</button>
 										</div>
 
-										<div className="mt-6 bg-base border border-accent p-4">
+										<div className="mt-6 border border-accent p-4">
 											<p className="noto-sans-jp-light text-sm text-accent">
 												※この見積もりは目安です.実際の料金は詳細な要件により変動する場合があります.
 											</p>
 										</div>
 									</div>
 								) : (
-									<div className="bg-base border border-main p-4 text-center">
-										<Calculator className="w-12 h-12 text-main mx-auto mb-4" />
-										<p className="noto-sans-jp-light text-sm text-main">
+									<div className=" border p-4 text-center">
+										<Calculator className="w-12 h-12 mx-auto mb-4" />
+										<p className="noto-sans-jp-light text-sm ">
 											映像の種類と長さを選択すると
 											<br />
 											見積もりが表示されます
@@ -499,27 +499,27 @@ export default function EstimatePage() {
 								)}
 
 								{/* Contact CTA */}
-								<div className="bg-base border border-main p-4">
-									<h3 className="zen-kaku-gothic-new text-lg text-main mb-3">
+								<div className=" border p-4">
+									<h3 className="zen-kaku-gothic-new text-lg mb-3">
 										正式なお見積もりをご希望の方
 									</h3>
-									<p className="noto-sans-jp-light text-sm text-main mb-4">
+									<p className="noto-sans-jp-light text-sm mb-4">
 										より詳細な見積もりや、ご不明な点がございましたらお気軽にお問い合わせください.
 									</p>
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-3">
 										<Link
 											href="/contact"
-											className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+											className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 										>
-											<span className="noto-sans-jp-regular text-base leading-snug">
+											<span className="noto-sans-jp-regular leading-snug">
 												お問い合わせ
 											</span>
 										</Link>
 										<Link
 											href="/about/commission/video"
-											className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+											className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 										>
-											<span className="noto-sans-jp-regular text-base leading-snug">
+											<span className="noto-sans-jp-regular leading-snug">
 												映像依頼について
 											</span>
 										</Link>
@@ -529,7 +529,7 @@ export default function EstimatePage() {
 						</div>
 
 						{/* Footer */}
-						<footer className="pt-4 border-t border-main">
+						<footer className="pt-4 border-t ">
 							<div className="text-center">
 								<p className="shippori-antique-b1-regular text-sm inline-block">
 									© 2025 samuido - Estimate Calculator

@@ -204,7 +204,7 @@ export default function ColorPaletteGenerator() {
 
 	const exportAsCSS = useCallback(() => {
 		const cssVars = generatedColors
-			.map((color, index) => `  --color-${index + 1}: ${color.hex};`)
+			.map((color, index) => ` --color-${index + 1}: ${color.hex};`)
 			.join("\n");
 		return `:root {\n${cssVars}\n}`;
 	}, [generatedColors]);

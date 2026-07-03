@@ -222,10 +222,10 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 	return (
 		<div className="space-y-6">
 			{/* Animation Display */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<div className="aspect-video bg-base border border-main flex items-center justify-center relative overflow-hidden">
+			<div className=" border p-4 space-y-4">
+				<div className="aspect-video border flex items-center justify-center relative overflow-hidden">
 					<div
-						className="neue-haas-grotesk-display text-4xl text-main text-center px-4"
+						className="neue-haas-grotesk-display text-4xl text-center px-4"
 						style={getAnimationStyles()}
 					>
 						{getCurrentText()}
@@ -256,7 +256,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={toggleAnimation}
-						className="flex items-center border border-main px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						{isAnimating ? (
 							<Pause className="w-4 h-4 mr-2" />
@@ -271,7 +271,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetAnimation}
-						className="flex items-center border border-main px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset</span>
@@ -280,8 +280,8 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Animation Controls */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg text-main flex items-center">
+			<div className=" border p-4 space-y-4">
+				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<Type className="w-5 h-5 mr-2" />
 					Animation Controls
 				</h3>
@@ -289,7 +289,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 					{/* Animation Type */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Animation Type
 						</label>
 						<select
@@ -300,7 +300,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									type: e.target.value as AnimationConfig["type"],
 								}))
 							}
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						>
 							{animationTypes.map((type) => (
 								<option key={type.value} value={type.value}>
@@ -312,7 +312,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Duration */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Duration: {animationConfig.duration}ms
 						</label>
 						<input
@@ -333,7 +333,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Delay */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Delay: {animationConfig.delay}ms
 						</label>
 						<input
@@ -354,7 +354,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Easing */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Easing
 						</label>
 						<select
@@ -365,7 +365,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									easing: e.target.value,
 								}))
 							}
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						>
 							{easingTypes.map((easing) => (
 								<option key={easing.value} value={easing.value}>
@@ -388,7 +388,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 						/>
 						<label
 							htmlFor="useCustomText"
-							className="noto-sans-jp-light text-sm text-main"
+							className="noto-sans-jp-light text-sm "
 						>
 							Use Custom Text
 						</label>
@@ -399,7 +399,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 							value={customText}
 							onChange={(e) => setCustomText(e.target.value)}
 							placeholder="Enter your custom text"
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						/>
 					)}
 				</div>
@@ -407,7 +407,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 				{/* Gradient Colors (for gradient animation) */}
 				{animationConfig.type === "gradient" && (
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Gradient Colors
 						</label>
 						<div className="flex gap-4">
@@ -418,9 +418,9 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									onChange={(e) =>
 										setGradientColors((prev) => [e.target.value, prev[1]])
 									}
-									className="w-12 h-8 border border-main"
+									className="w-12 h-8 border "
 								/>
-								<span className="noto-sans-jp-light text-sm text-main">
+								<span className="noto-sans-jp-light text-sm ">
 									Start
 								</span>
 							</div>
@@ -431,9 +431,9 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									onChange={(e) =>
 										setGradientColors((prev) => [prev[0], e.target.value])
 									}
-									className="w-12 h-8 border border-main"
+									className="w-12 h-8 border "
 								/>
-								<span className="noto-sans-jp-light text-sm text-main">
+								<span className="noto-sans-jp-light text-sm ">
 									End
 								</span>
 							</div>
@@ -444,18 +444,18 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 
 			{/* CSS Keyframes for gradient animation */}
 			<style jsx>{`
-        @keyframes gradientShift {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-      `}</style>
+ @keyframes gradientShift {
+ 0% {
+ background-position: 0% 50%;
+ }
+ 50% {
+ background-position: 100% 50%;
+ }
+ 100% {
+ background-position: 0% 50%;
+ }
+ }
+ `}</style>
 		</div>
 	);
 };

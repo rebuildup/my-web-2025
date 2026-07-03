@@ -105,11 +105,11 @@ export function Breadcrumb() {
 							<>
 								<Link
 									href={crumb.href}
-									className="text-main hover:text-accent transition-colors"
+									className=" hover:text-accent transition-colors"
 								>
 									{crumb.name}
 								</Link>
-								<span className="text-main">/</span>
+								<span className="">/</span>
 							</>
 						)}
 					</li>

@@ -125,16 +125,16 @@ export const AccessibleExperimentWrapper: React.FC<
 		variant: "primary" | "secondary" = "secondary",
 	) => {
 		const baseClasses = `
-      inline-flex items-center px-3 py-2 text-sm font-medium rounded
-      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-base
-      transition-colors duration-200
-    `;
+ inline-flex items-center px-3 py-2 text-sm font-medium rounded
+ focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-base
+ transition-colors duration-200
+ `;
 
 		if (variant === "primary") {
-			return `${baseClasses} bg-accent text-main hover:bg-accent/80 focus:ring-accent`;
+			return `${baseClasses} bg-accent hover:bg-accent/80 focus:ring-accent`;
 		}
 
-		return `${baseClasses} border border-main text-main hover:bg-main hover:text-base focus:ring-main`;
+		return `${baseClasses} border hover: hover: focus:`;
 	};
 
 	return (
@@ -147,7 +147,7 @@ export const AccessibleExperimentWrapper: React.FC<
 			{accessibilityState.keyboardNavigation && isActive && (
 				<a
 					href={`#experiment-${experiment.id}-content`}
-					className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 z-50 bg-accent text-main px-4 py-2 text-sm font-medium"
+					className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 z-50 bg-accent px-4 py-2 text-sm font-medium"
 				>
 					実験コンテンツにスキップ
 				</a>
@@ -156,12 +156,12 @@ export const AccessibleExperimentWrapper: React.FC<
 			{/* Experiment header with controls */}
 			<div className="flex items-center justify-between mb-4">
 				<div>
-					<h3 className="zen-kaku-gothic-new text-lg text-main">
+					<h3 className="zen-kaku-gothic-new text-lg ">
 						{experiment.title}
 					</h3>
 					<p
 						id={`experiment-${experiment.id}-description`}
-						className="noto-sans-jp-light text-sm text-main mt-1"
+						className="noto-sans-jp-light text-sm mt-1"
 					>
 						{experiment.description}
 					</p>
@@ -241,34 +241,34 @@ export const AccessibleExperimentWrapper: React.FC<
 
 			{/* Keyboard shortcuts help */}
 			{accessibilityState.keyboardNavigation && isActive && (
-				<div className="mb-4 p-3 bg-base border border-main rounded">
+				<div className="mb-4 p-3 border rounded">
 					<div className="flex items-center mb-2">
 						<Info className="w-4 h-4 mr-2" aria-hidden="true" />
 						<h4 className="text-sm font-medium">キーボードショートカット</h4>
 					</div>
-					<ul className="text-xs text-main space-y-1">
+					<ul className="text-xs space-y-1">
 						{experiment.interactive && (
 							<li>
-								<kbd className="px-1 py-0.5 bg-main text-base rounded text-xs">
+								<kbd className="px-1 py-0.5 rounded text-xs">
 									Space
 								</kbd>{" "}
 								開始・一時停止
 							</li>
 						)}
 						<li>
-							<kbd className="px-1 py-0.5 bg-main text-base rounded text-xs">
+							<kbd className="px-1 py-0.5 rounded text-xs">
 								Ctrl+R
 							</kbd>{" "}
 							リセット
 						</li>
 						<li>
-							<kbd className="px-1 py-0.5 bg-main text-base rounded text-xs">
+							<kbd className="px-1 py-0.5 rounded text-xs">
 								Esc
 							</kbd>{" "}
 							終了
 						</li>
 						<li>
-							<kbd className="px-1 py-0.5 bg-main text-base rounded text-xs">
+							<kbd className="px-1 py-0.5 rounded text-xs">
 								Tab
 							</kbd>{" "}
 							フォーカス移動
@@ -304,11 +304,11 @@ export const AccessibleExperimentWrapper: React.FC<
 			{/* Focus indicator for keyboard navigation */}
 			{accessibilityState.focusVisible && (
 				<style jsx>{`
-          div:focus {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-          }
-        `}</style>
+ div:focus {
+ outline: 2px solid var(--accent);
+ outline-offset: 2px;
+ }
+ `}</style>
 			)}
 
 			{/* Live region for announcements */}

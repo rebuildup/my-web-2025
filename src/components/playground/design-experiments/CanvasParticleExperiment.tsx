@@ -457,8 +457,8 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 	return (
 		<div className="space-y-6">
 			{/* Canvas Display */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<div className="border border-main overflow-hidden">
+			<div className=" border p-4 space-y-4">
+				<div className="border overflow-hidden">
 					<canvas
 						ref={canvasRef}
 						className="block w-full h-auto cursor-crosshair"
@@ -473,7 +473,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={isAnimating ? stopAnimation : startAnimation}
-						className="flex items-center border border-main px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						{isAnimating ? (
 							<Pause className="w-4 h-4 mr-2" />
@@ -488,7 +488,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetParticles}
-						className="flex items-center border border-main px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset</span>
@@ -497,8 +497,8 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Particle Controls */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg text-main flex items-center">
+			<div className=" border p-4 space-y-4">
+				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<Settings className="w-5 h-5 mr-2" />
 					Particle System Controls
 				</h3>
@@ -506,7 +506,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 					{/* Particle Count */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Count: {config.count}
 						</label>
 						<input
@@ -527,7 +527,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Speed */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Speed: {config.speed.toFixed(1)}
 						</label>
 						<input
@@ -548,7 +548,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Size */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Size: {config.size}
 						</label>
 						<input
@@ -565,7 +565,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Gravity */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Gravity: {config.gravity.toFixed(2)}
 						</label>
 						<input
@@ -588,7 +588,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 					{/* Physics Mode */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Physics
 						</label>
 						<select
@@ -599,7 +599,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 									physics: e.target.value as ParticleConfig["physics"],
 								}))
 							}
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						>
 							<option value="bounce">Bounce</option>
 							<option value="flow">Flow</option>
@@ -610,7 +610,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Color Mode */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Colors
 						</label>
 						<select
@@ -621,7 +621,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 									colorMode: e.target.value as ParticleConfig["colorMode"],
 								}))
 							}
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						>
 							<option value="rainbow">Rainbow</option>
 							<option value="monochrome">Monochrome</option>
@@ -631,7 +631,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Shape */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Shape
 						</label>
 						<select
@@ -642,7 +642,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 									shape: e.target.value as ParticleConfig["shape"],
 								}))
 							}
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						>
 							<option value="mixed">Mixed</option>
 							<option value="circle">Circle</option>
@@ -653,7 +653,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Friction */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Friction: {config.friction.toFixed(2)}
 						</label>
 						<input
@@ -675,12 +675,12 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Instructions */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg text-main">
+			<div className=" border p-4 space-y-4">
+				<h3 className="zen-kaku-gothic-new text-lg ">
 					Interaction Guide
 				</h3>
 
-				<div className="noto-sans-jp-light text-sm text-main space-y-2">
+				<div className="noto-sans-jp-light text-sm space-y-2">
 					<p>• マウスを動かしてパーティクルとインタラクション</p>
 					<p>• Attract/Repel モードでマウスの影響を体験</p>
 					<p>• 異なる物理モードで様々な動作を確認</p>

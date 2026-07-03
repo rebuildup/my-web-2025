@@ -230,19 +230,19 @@ export function EnhancedFileUploadSection({
 	};
 
 	const inputStyle =
-		"w-full border border-main px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base bg-base text-main";
+		"w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base ";
 	const labelStyle =
-		"block noto-sans-jp-regular text-sm font-medium text-main mb-1";
+		"block noto-sans-jp-regular text-sm font-medium mb-1";
 	const buttonStyle =
-		"border border-main px-3 py-1 text-xs hover:bg-main hover:text-base transition-colors";
+		"border px-3 py-1 text-xs hover: hover: transition-colors";
 
 	return (
 		<div className="space-y-4">
 			<h3 className="font-medium text-gray-700">Enhanced File Upload</h3>
 
 			{/* Enhanced Processing Options */}
-			<div className="bg-base border border-main p-4 rounded-lg">
-				<h4 className="noto-sans-jp-regular text-sm font-medium text-main mb-3">
+			<div className=" border p-4 rounded-lg">
+				<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 					Upload Options
 				</h4>
 
@@ -255,9 +255,9 @@ export function EnhancedFileUploadSection({
 							onChange={(e) =>
 								handleOptionsChange({ skipProcessing: e.target.checked })
 							}
-							className="rounded border-main"
+							className="rounded "
 						/>
-						<span className="text-sm text-main">Skip Processing</span>
+						<span className="text-sm ">Skip Processing</span>
 					</label>
 
 					<label className="flex items-center space-x-2">
@@ -267,9 +267,9 @@ export function EnhancedFileUploadSection({
 							onChange={(e) =>
 								handleOptionsChange({ preserveOriginal: e.target.checked })
 							}
-							className="rounded border-main"
+							className="rounded "
 						/>
-						<span className="text-sm text-main">Preserve Original</span>
+						<span className="text-sm ">Preserve Original</span>
 					</label>
 
 					<label className="flex items-center space-x-2">
@@ -279,16 +279,16 @@ export function EnhancedFileUploadSection({
 							onChange={(e) =>
 								handleOptionsChange({ generateVariants: e.target.checked })
 							}
-							className="rounded border-main"
+							className="rounded "
 						/>
-						<span className="text-sm text-main">Generate Variants</span>
+						<span className="text-sm ">Generate Variants</span>
 					</label>
 				</div>
 
 				{/* Custom Processing Options */}
 				{!options.skipProcessing && (
-					<div className="border-t border-main pt-4">
-						<h5 className="noto-sans-jp-regular text-sm font-medium text-main mb-2">
+					<div className="border-t pt-4">
+						<h5 className="noto-sans-jp-regular text-sm font-medium mb-2">
 							Custom Processing
 						</h5>
 
@@ -334,9 +334,9 @@ export function EnhancedFileUploadSection({
 											},
 										})
 									}
-									className="rounded border-main"
+									className="rounded "
 								/>
-								<span className="text-sm text-main">Add Watermark</span>
+								<span className="text-sm ">Add Watermark</span>
 							</label>
 
 							{/* Resize Options */}
@@ -469,7 +469,7 @@ export function EnhancedFileUploadSection({
 
 				{isUploading ? (
 					<div className="space-y-2">
-						<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-main mx-auto"></div>
+						<div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto"></div>
 						<p className="text-sm text-gray-600">Uploading...</p>
 					</div>
 				) : (
@@ -493,7 +493,7 @@ export function EnhancedFileUploadSection({
 							<button
 								type="button"
 								onClick={() => fileInputRef.current?.click()}
-								className="text-main hover:text-main/80 font-medium"
+								className=" hover:/80 font-medium"
 							>
 								Click to upload
 							</button>
@@ -518,16 +518,16 @@ export function EnhancedFileUploadSection({
 						id="thumbnail-select"
 						value={thumbnail || ""}
 						onChange={(e) => onThumbnailChange(e.target.value || undefined)}
-						className={`${inputStyle} bg-base text-main`}
+						className={`${inputStyle} `}
 					>
-						<option value="" className="bg-base text-main">
+						<option value="" className=" ">
 							Select thumbnail...
 						</option>
 						{images.map((image, index) => (
 							<option
 								key={image}
 								value={image}
-								className="bg-base text-main"
+								className=" "
 							>
 								Processed Image {index + 1}
 							</option>
@@ -536,7 +536,7 @@ export function EnhancedFileUploadSection({
 							<option
 								key={`original-${image}`}
 								value={image}
-								className="bg-base text-main"
+								className=" "
 							>
 								Original Image {index + 1}
 							</option>
@@ -589,7 +589,7 @@ export function EnhancedFileUploadSection({
 
 								{/* Thumbnail Indicator */}
 								{thumbnail === image && (
-									<div className="absolute top-1 left-1 bg-main text-white px-2 py-1 text-xs rounded">
+									<div className="absolute top-1 left-1 text-white px-2 py-1 text-xs rounded">
 										Thumbnail
 									</div>
 								)}
@@ -648,7 +648,7 @@ export function EnhancedFileUploadSection({
 
 								{/* Thumbnail Indicator */}
 								{thumbnail === image && (
-									<div className="absolute top-1 left-1 bg-main text-white px-2 py-1 text-xs rounded">
+									<div className="absolute top-1 left-1 text-white px-2 py-1 text-xs rounded">
 										Thumbnail
 									</div>
 								)}

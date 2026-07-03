@@ -8,7 +8,7 @@ function BackButton() {
 		<button
 			type="button"
 			onClick={() => window.history.back()}
-			className="flex items-center gap-3 text-main noto-sans-jp-regular text-base leading-loose focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base px-6 py-4"
+			className="flex items-center gap-3 noto-sans-jp-regular leading-loose focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base px-6 py-4"
 		>
 			<ArrowLeft className="w-5 h-5" />
 			Back
@@ -18,15 +18,15 @@ function BackButton() {
 
 export default function NotFound() {
 	return (
-		<div className="min-h-screen bg-base text-main">
+		<div className="min-h-screen ">
 			<main className="min-h-screen flex items-center justify-center py-20">
 				<div className="container-system text-center">
 					<div className="space-y-4">
 						<header>
-							<h1 className="neue-haas-grotesk-display text-8xl text-main leading-relaxed px-6">
+							<h1 className="neue-haas-grotesk-display text-8xl leading-relaxed px-6">
 								404
 							</h1>
-							<h2 className="zen-kaku-gothic-new text-3xl text-main leading-loose px-4 py-3">
+							<h2 className="zen-kaku-gothic-new text-3xl leading-loose px-4 py-3">
 								ページが見つかりません
 							</h2>
 							<p className="noto-sans-jp-light text-sm leading-loose max-w mx-auto px-6">
@@ -39,7 +39,7 @@ export default function NotFound() {
 							<BackButton />
 							<Link
 								href="/"
-								className="flex items-center gap-3 text-main noto-sans-jp-regular text-base leading-loose focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base px-6 py-4"
+								className="flex items-center gap-3 noto-sans-jp-regular leading-loose focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base px-6 py-4"
 							>
 								<Home className="w-5 h-5" />
 								Home

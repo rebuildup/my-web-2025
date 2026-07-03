@@ -79,27 +79,27 @@ const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectProps>(
 
 		// Base styles with accessibility considerations
 		const baseSelectStyles = `
-      w-full bg-base border text-main
-      focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
-      disabled:opacity-50 disabled:cursor-not-allowed
-      appearance-none cursor-pointer
-      ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
-      ${error ? "border-red-500" : "border-main/20"}
-      ${isFocused ? "ring-1 ring-accent border-accent" : ""}
-    `;
+ w-full border 
+ focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
+ disabled:opacity-50 disabled:cursor-not-allowed
+ appearance-none cursor-pointer
+ ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
+ ${error ? "border-red-500" : "/20"}
+ ${isFocused ? "ring-1 ring-accent border-accent" : ""}
+ `;
 
 		// Variant styles
 		const variantStyles = {
-			default: "p-2 text-base pr-8",
+			default: "p-2 pr-8",
 			large: "p-3 text-lg pr-10",
 		};
 
 		// Combine styles
 		const selectClassName = `
-      ${baseSelectStyles}
-      ${variantStyles[variant]}
-      ${className}
-    `
+ ${baseSelectStyles}
+ ${variantStyles[variant]}
+ ${className}
+ `
 			.trim()
 			.replace(/\s+/g, " ");
 
@@ -114,7 +114,7 @@ const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectProps>(
 				{/* Label */}
 				<label
 					htmlFor={selectId}
-					className="neue-haas-grotesk-display text-sm text-main block"
+					className="neue-haas-grotesk-display text-sm block"
 				>
 					{label}
 					{required && showRequiredIndicator && (
@@ -128,7 +128,7 @@ const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectProps>(
 				{description && (
 					<p
 						id={descriptionId}
-						className="noto-sans-jp-light text-sm text-main"
+						className="noto-sans-jp-light text-sm "
 					>
 						{description}
 					</p>
@@ -170,7 +170,7 @@ const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectProps>(
 						aria-hidden="true"
 					>
 						<svg
-							className="w-4 h-4 text-main"
+							className="w-4 h-4 "
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
@@ -202,7 +202,7 @@ const AccessibleSelect = forwardRef<HTMLSelectElement, AccessibleSelectProps>(
 				{helpText && (
 					<p
 						id={helpTextId}
-						className="noto-sans-jp-light text-xs text-main opacity-75"
+						className="noto-sans-jp-light text-xs opacity-75"
 					>
 						{helpText}
 					</p>

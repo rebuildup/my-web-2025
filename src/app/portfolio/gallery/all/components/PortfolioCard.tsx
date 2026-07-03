@@ -50,14 +50,14 @@ export function PortfolioCard({
 	const CardRoot = ({ children }: { children: React.ReactNode }) => {
 		if (variant === "glow") {
 			return (
-				<GlowCard className="group cursor-pointer text-left bg-base flex flex-col">
+				<GlowCard className="group cursor-pointer text-left flex flex-col">
 					{children}
 				</GlowCard>
 			);
 		}
 		return (
 			<article
-				className="bg-base border border-main hover:border-accent transition-colors cursor-pointer group flex flex-col"
+				className=" border hover:border-accent transition-colors cursor-pointer group flex flex-col"
 				onClick={onClick}
 				onKeyDown={handleKeyDown}
 				aria-label={`View details for ${item.title}`}
@@ -70,7 +70,7 @@ export function PortfolioCard({
 	return (
 		<CardRoot>
 			{/* Thumbnail */}
-			<div className="aspect-video bg-base overflow-hidden relative">
+			<div className="aspect-video overflow-hidden relative">
 				{item.thumbnail ? (
 					<SafeImage
 						src={item.thumbnail}
@@ -95,8 +95,8 @@ export function PortfolioCard({
 						}}
 					/>
 				) : (
-					<div className="w-full h-full flex items-center justify-center bg-base">
-						<span className="noto-sans-jp-light text-xs text-main">
+					<div className="w-full h-full flex items-center justify-center ">
+						<span className="noto-sans-jp-light text-xs ">
 							{item.title}
 						</span>
 					</div>
@@ -105,7 +105,7 @@ export function PortfolioCard({
 				{/* Subtle indicator for items with detailed markdown content (Requirement 6.5) */}
 				{hasDetailedContent && showMarkdownIndicator && (
 					<div
-						className="absolute top-2 right-2 bg-main text-white p-1.5 shadow-sm"
+						className="absolute top-2 right-2 text-white p-1.5 shadow-sm"
 						title="View detailed content"
 						aria-hidden="true"
 					>
@@ -117,12 +117,12 @@ export function PortfolioCard({
 			{/* Content */}
 			<div className="p-4 space-y-3 flex flex-col">
 				{/* Title (1-line) */}
-				<h2 className="zen-kaku-gothic-new text-base text-main group-hover:text-accent transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
+				<h2 className="zen-kaku-gothic-new group-hover:text-accent transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
 					{item.title}
 				</h2>
 
 				{/* Description (1-line) */}
-				<p className="noto-sans-jp-light text-sm text-main whitespace-nowrap overflow-hidden text-ellipsis">
+				<p className="noto-sans-jp-light text-sm whitespace-nowrap overflow-hidden text-ellipsis">
 					{item.description || "\u00A0"}
 				</p>
 
@@ -134,14 +134,14 @@ export function PortfolioCard({
 							.map((tech, index) => (
 								<span
 									key={`${tech}-${index}`}
-									className="noto-sans-jp-light text-xs text-main px-3 py-1 bg-base whitespace-nowrap shrink-0"
+									className="noto-sans-jp-light text-xs px-3 py-1 whitespace-nowrap shrink-0"
 								>
 									{tech}
 								</span>
 							))}
 						{((item as PortfolioContentItem).technologies || item.tags || [])
 							.length > 3 && (
-							<span className="noto-sans-jp-light text-xs tag-overflow-indicator px-3 py-1 bg-base text-main whitespace-nowrap shrink-0">
+							<span className="noto-sans-jp-light text-xs tag-overflow-indicator px-3 py-1 whitespace-nowrap shrink-0">
 								+
 								{(
 									(item as PortfolioContentItem).technologies ||
@@ -151,7 +151,7 @@ export function PortfolioCard({
 							</span>
 						)}
 					</div>
-					<span className="noto-sans-jp-light text-xs text-main whitespace-nowrap">
+					<span className="noto-sans-jp-light text-xs whitespace-nowrap">
 						{(() => {
 							const effective =
 								(item as any).publishedAt || item.updatedAt || item.createdAt;

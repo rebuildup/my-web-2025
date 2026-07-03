@@ -192,11 +192,11 @@ export default function OfflineSettingsManager<
 		<div className="space-y-4">
 			{/* Settings Controls */}
 			{showControls && (
-				<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+				<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 					<div className="flex items-center justify-between mb-4">
 						<div className="flex items-center space-x-2">
-							<Settings size={16} className="text-main" />
-							<h3 className="neue-haas-grotesk-display text-sm text-main">
+							<Settings size={16} className="" />
+							<h3 className="neue-haas-grotesk-display text-sm ">
 								Settings Manager
 							</h3>
 							{!isOnline && (
@@ -208,7 +208,7 @@ export default function OfflineSettingsManager<
 						<button
 							type="button"
 							onClick={() => setIsExpanded(!isExpanded)}
-							className="text-xs text-accent hover:text-main focus:outline-none focus:ring-1 focus:ring-accent"
+							className="text-xs text-accent hover: focus:outline-none focus:ring-1 focus:ring-accent"
 							aria-label="Toggle settings controls"
 						>
 							{isExpanded ? "Hide" : "Show"} Controls
@@ -250,7 +250,7 @@ export default function OfflineSettingsManager<
 								</AccessibleButton>
 
 								<label className="inline-flex">
-									<span className="inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg bg-main/10 text-main hover:bg-main/20 focus:ring-accent focus:ring-offset-base px-3 py-1.5 text-sm min-h-[32px] cursor-pointer">
+									<span className="inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg /10 hover:/20 focus:ring-accent focus:ring-offset-base px-3 py-1.5 text-sm min-h-[32px] cursor-pointer">
 										<Upload size={14} />
 										Import
 									</span>
@@ -265,7 +265,7 @@ export default function OfflineSettingsManager<
 							</div>
 
 							{/* Status Information */}
-							<div className="text-xs text-main space-y-1">
+							<div className="text-xs space-y-1">
 								<div className="flex justify-between">
 									<span>Auto-save:</span>
 									<span className="text-green-600">Enabled</span>
@@ -285,11 +285,11 @@ export default function OfflineSettingsManager<
 							</div>
 
 							{/* Settings Info */}
-							<div className="pt-2 border-t border-main/20">
+							<div className="pt-2 border-t /20">
 								<h4 className="text-xs font-medium mb-2">
 									Settings Information
 								</h4>
-								<ul className="text-xs space-y-1 text-main">
+								<ul className="text-xs space-y-1 ">
 									<li>• 設定は自動的にローカルストレージに保存されます</li>
 									<li>• オフラインでも設定の変更・保存が可能です</li>
 									<li>• JSON形式でエクスポート・インポートできます</li>

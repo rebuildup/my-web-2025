@@ -623,9 +623,9 @@ export function VideoDesignGallery({
 	if (!isClient) {
 		return (
 			<div className="space-y-8">
-				<div className="bg-base/30 p-4">
+				<div className="/30 p-4">
 					<div className="flex items-center mb-4">
-						<h2 className="zen-kaku-gothic-new text-lg text-main">
+						<h2 className="zen-kaku-gothic-new text-lg ">
 							Loading...
 						</h2>
 					</div>
@@ -656,12 +656,12 @@ export function VideoDesignGallery({
 			{/* Empty State */}
 			{(!filteredItems || filteredItems.length === 0) && (
 				<div className="text-center py-12">
-					<div className="bg-base/30 p-8">
+					<div className="/30 p-8">
 						<Eye className="w-12 h-12 text-accent mx-auto mb-4" />
-						<h2 className="zen-kaku-gothic-new text-xl text-main mb-2">
+						<h2 className="zen-kaku-gothic-new text-xl mb-2">
 							No projects found
 						</h2>
-						<p className="noto-sans-jp-light text-sm text-main">
+						<p className="noto-sans-jp-light text-sm ">
 							No video & design projects available.
 						</p>
 					</div>
@@ -734,7 +734,7 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 	if (isPlaceholder) {
 		return (
 			<div
-				className={`${gridClasses} ${minHeightClass} bg-base/30 min-h-[200px] border-0`}
+				className={`${gridClasses} ${minHeightClass} /30 min-h-[200px] border-0`}
 				style={{
 					display: "block",
 					position: "relative",
@@ -747,7 +747,7 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 		<Link
 			href={item.url}
 			// isolation keeps the overlay and image within the same stacking context
-			className={`${gridClasses} ${minHeightClass} video-design-gallery-item group block relative bg-transparent overflow-hidden hover:bg-base/50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent min-h-[200px] border-0 isolate`}
+			className={`${gridClasses} ${minHeightClass} video-design-gallery-item group block relative bg-transparent overflow-hidden hover:/50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent min-h-[200px] border-0 isolate`}
 			onMouseEnter={() => onHover(item.id)}
 			onMouseLeave={() => onHover(null)}
 			onFocus={() => onHover(item.id)}

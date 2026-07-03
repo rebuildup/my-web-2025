@@ -7,16 +7,16 @@ const PHI = (1 + Math.sqrt(5)) / 2;
 /*
  * This component reproduces the original Illustrator-based business card
  * using explicit golden‑ratio splits in both the horizontal and vertical
- * directions.  The proportions mirror the original SVG closely: the
+ * directions. The proportions mirror the original SVG closely: the
  * white text area occupies 1/φ of the card’s width; the wide belt,
  * inter‑belt gap, narrow belt and right margin consume the same
- * absolute proportions as measured from the original artwork.  The
+ * absolute proportions as measured from the original artwork. The
  * vertical layout likewise follows the φ‑grid: a top margin of
  * H/φ⁴, a school/department/club block ending at H/φ³, a
  * name/intro block, a 3‑row info block plus QR, and a bottom area
- * reserved for colour codes.  Within the school block the first two
+ * reserved for colour codes. Within the school block the first two
  * lines are left‑aligned while the club is right‑aligned to match the
- * original placement.  The colour codes are centred symmetrically
+ * original placement. The colour codes are centred symmetrically
  * around the wide belt’s left edge by giving the white area equal
  * left and right padding.
  */
@@ -29,18 +29,18 @@ const CARD_H = 156.43;
 /*
  * To simplify the layout and more closely follow the user’s request, we
  * split the card vertically into three golden‑ratio sections instead of
- * the earlier 5‑split φ‑grid.  First we divide the height into a
+ * the earlier 5‑split φ‑grid. First we divide the height into a
  * “text” region and a “blank” region with the golden ratio 1.618:1.
- * Then we subdivide the blank region again with the same ratio.  This
+ * Then we subdivide the blank region again with the same ratio. This
  * yields three vertical bands whose heights are proportional to:
- *   topAreaRatio  = φ/(φ+1)    ≈ 0.618 (for all text content)
- *   midAreaRatio  = (1/(φ+1))·(φ/(φ+1)) ≈ 0.236 (for the contact info + QR)
- *   bottomRatio   = (1/(φ+1))² ≈ 0.146 (for margins and colour codes)
+ * topAreaRatio = φ/(φ+1) ≈ 0.618 (for all text content)
+ * midAreaRatio = (1/(φ+1))·(φ/(φ+1)) ≈ 0.236 (for the contact info + QR)
+ * bottomRatio = (1/(φ+1))² ≈ 0.146 (for margins and colour codes)
  *
  * The bottomRatio governs the cross‑proportional margins: the bottom
  * band’s height (≈14.6% of the card height) serves as the baseline
  * length that determines the top padding within the text area and the
- * horizontal padding inside the white area.  We convert this length
+ * horizontal padding inside the white area. We convert this length
  * into a width fraction via the card’s aspect ratio to compute the
  * left/right padding as a percentage of the white area’s width.
  */
@@ -51,15 +51,15 @@ const midAreaRatio = rightRatio * leftRatio; // ≈0.236
 const bottomRatio = rightRatio * rightRatio; // ≈0.146
 
 // Convert the bottomRatio (a height fraction) to a horizontal padding for
-// the left area.  The cross‑proportional left margin is defined as
+// the left area. The cross‑proportional left margin is defined as
 // bottomRatio × (card height / card width), giving a fraction of the
-// card’s width.  To express this padding relative to the white area’s
-// width we divide by leftRatio.  The result is used as a percentage.
+// card’s width. To express this padding relative to the white area’s
+// width we divide by leftRatio. The result is used as a percentage.
 const leftMarginRatio = bottomRatio * (CARD_H / CARD_W);
 const sidePadPercent = (leftMarginRatio / leftRatio) * 100; // ≈14.3%
 
 // The same bottomRatio also defines the vertical top padding within the
-// top text area.  This top margin is bottomRatio of the total height;
+// top text area. This top margin is bottomRatio of the total height;
 // relative to the top area’s height it becomes bottomRatio/topAreaRatio.
 const topPadPercent = (bottomRatio / topAreaRatio) * 100; // ≈23.6%
 

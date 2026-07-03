@@ -335,9 +335,9 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 	return (
 		<div className="space-y-6">
 			{/* Interactive Area */}
-			<div className="bg-base border border-main p-4 space-y-4">
+			<div className=" border p-4 space-y-4">
 				<div
-					className="relative bg-base border border-main overflow-hidden cursor-crosshair"
+					className="relative border overflow-hidden cursor-crosshair"
 					style={{ width: "100%", height: "500px" }}
 					onMouseMove={handleMouseMove}
 					onMouseDown={handleMouseDown}
@@ -386,7 +386,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetShapes}
-						className="flex items-center border border-main px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset Shapes</span>
@@ -395,8 +395,8 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Controls */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg text-main flex items-center">
+			<div className=" border p-4 space-y-4">
+				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<Shapes className="w-5 h-5 mr-2" />
 					Interaction Controls
 				</h3>
@@ -404,7 +404,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 					{/* Shape Count */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Shape Count: {config.shapeCount}
 						</label>
 						<input
@@ -424,7 +424,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Interaction Radius */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Interaction Radius: {config.interactionRadius}px
 						</label>
 						<input
@@ -444,7 +444,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Animation Speed */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Animation Speed: {config.animationSpeed.toFixed(1)}
 						</label>
 						<input
@@ -467,7 +467,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					{/* Response Type */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Response Type
 						</label>
 						<select
@@ -479,7 +479,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 										.value as InteractionConfig["responseType"],
 								}))
 							}
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						>
 							<option value="hover">Hover</option>
 							<option value="click">Click</option>
@@ -490,7 +490,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Color Mode */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Color Mode
 						</label>
 						<select
@@ -501,7 +501,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 									colorMode: e.target.value as InteractionConfig["colorMode"],
 								}))
 							}
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						>
 							<option value="static">Static</option>
 							<option value="dynamic">Dynamic</option>
@@ -511,7 +511,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Physics */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Physics
 						</label>
 						<div className="flex items-center">
@@ -523,7 +523,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 								}
 								className="w-4 h-4 mr-2"
 							/>
-							<span className="noto-sans-jp-light text-sm text-main">
+							<span className="noto-sans-jp-light text-sm ">
 								{config.physics ? "Enabled" : "Disabled"}
 							</span>
 						</div>
@@ -532,18 +532,18 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Instructions */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg text-main flex items-center">
+			<div className=" border p-4 space-y-4">
+				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<MousePointer className="w-5 h-5 mr-2" />
 					Interaction Guide
 				</h3>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="space-y-2">
-						<h4 className="noto-sans-jp-light text-sm font-bold text-main">
+						<h4 className="noto-sans-jp-light text-sm font-bold ">
 							Mouse Controls:
 						</h4>
-						<div className="noto-sans-jp-light text-xs text-main space-y-1">
+						<div className="noto-sans-jp-light text-xs space-y-1">
 							<div>• Move: マウスを動かして図形とインタラクション</div>
 							<div>• Click: クリックして図形を押す（Clickモード）</div>
 							<div>• Drag: 図形をドラッグして移動（Dragモード）</div>
@@ -551,10 +551,10 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 					</div>
 
 					<div className="space-y-2">
-						<h4 className="noto-sans-jp-light text-sm font-bold text-main">
+						<h4 className="noto-sans-jp-light text-sm font-bold ">
 							Touch Controls:
 						</h4>
-						<div className="noto-sans-jp-light text-xs text-main space-y-1">
+						<div className="noto-sans-jp-light text-xs space-y-1">
 							<div>• Touch: タッチして図形とインタラクション</div>
 							<div>• Drag: 指で図形をドラッグして移動</div>
 							<div>• Multi-touch: 複数の指で同時操作可能</div>

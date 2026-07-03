@@ -29,7 +29,7 @@ export function ElasticSlider({
 	return (
 		<div className="space-y-2">
 			{(label || valueLabel) && (
-				<div className="flex items-center justify-between text-xs text-main">
+				<div className="flex items-center justify-between text-xs ">
 					{label && <div>{label}</div>}
 					{valueLabel && <div className="opacity-70">{valueLabel}</div>}
 				</div>

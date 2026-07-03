@@ -22,77 +22,77 @@ import BGAnim from "./components/015_BGAnim.tsx";
 import { fonts } from "./components/011_FontSelector.tsx";
 
 const App: React.FC = () => {
-  const [showPopup, setShowPopup] = useState(false);
+ const [showPopup, setShowPopup] = useState(false);
 
-  const handleOpenPopup = () => {
-    setShowPopup(true);
-  };
+ const handleOpenPopup = () => {
+ setShowPopup(true);
+ };
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
-  const [currentTab, setCurrentTab] = useState<string>("Game");
+ const handleClosePopup = () => {
+ setShowPopup(false);
+ };
+ const [currentTab, setCurrentTab] = useState<string>("Game");
 
-  useLayoutEffect(() => {
-    const cachedTheme = loadFromCache<(typeof themes)[0]>("colorTheme", themes[0]);
-    let colorIndex = 0;
-    for (let i = 0; i < themes.length; i++) {
-      if (themes[i].name == cachedTheme.name) colorIndex = i;
-    }
-    Object.entries(themes[colorIndex].colors).forEach(([key, value]) => {
-      document.documentElement.style.setProperty(key, value);
-    });
-    updateSetting("colorTheme", {
-      name: cachedTheme.name,
-      colors: {
-        MainBG: themes[colorIndex].colors["--MainBG"],
-        MainColor: themes[colorIndex].colors["--MainColor"],
-        MainAccent: themes[colorIndex].colors["--MainAccent"],
-        SecondAccent: themes[colorIndex].colors["--SecondAccent"],
-      },
-    });
+ useLayoutEffect(() => {
+ const cachedTheme = loadFromCache<(typeof themes)[0]>("colorTheme", themes[0]);
+ let colorIndex = 0;
+ for (let i = 0; i < themes.length; i++) {
+ if (themes[i].name == cachedTheme.name) colorIndex = i;
+ }
+ Object.entries(themes[colorIndex].colors).forEach(([key, value]) => {
+ document.documentElement.style.setProperty(key, value);
+ });
+ updateSetting("colorTheme", {
+ name: cachedTheme.name,
+ colors: {
+ MainBG: themes[colorIndex].colors["--MainBG"],
+ MainColor: themes[colorIndex].colors["--MainColor"],
+ MainAccent: themes[colorIndex].colors["--MainAccent"],
+ SecondAccent: themes[colorIndex].colors["--SecondAccent"],
+ },
+ });
 
-    const cachedFont = loadFromCache<{ fontFamily: string }>("fontTheme", {
-      fontFamily: fonts[0].value,
-    });
-    document.documentElement.style.setProperty("--First-font", cachedFont.fontFamily);
-    updateSetting("fontTheme", {
-      fontFamily: cachedFont.fontFamily,
-      fontSize: 16,
-    });
-    const cachedLayout = loadFromCache<string>("keyLayout", "QWERTY");
-    updateSetting("keyLayout", cachedLayout);
-    initializeFrameEffect();
-    initializeSquareEffect();
-  }, []);
+ const cachedFont = loadFromCache<{ fontFamily: string }>("fontTheme", {
+ fontFamily: fonts[0].value,
+ });
+ document.documentElement.style.setProperty("--First-font", cachedFont.fontFamily);
+ updateSetting("fontTheme", {
+ fontFamily: cachedFont.fontFamily,
+ fontSize: 16,
+ });
+ const cachedLayout = loadFromCache<string>("keyLayout", "QWERTY");
+ updateSetting("keyLayout", cachedLayout);
+ initializeFrameEffect();
+ initializeSquareEffect();
+ }, []);
 
-  const renderCurrentComponent = () => {
-    switch (currentTab) {
-      case "Game":
-        return <Game onOpenPopup={handleOpenPopup} />;
-      case "PlayRecord":
-        return <PlayRecord />;
-      case "Ranking":
-        return <Ranking />;
-      case "Setting":
-        return <Setting />;
-      default:
-        return <div>タブが見つかりません。</div>;
-    }
-  };
+ const renderCurrentComponent = () => {
+ switch (currentTab) {
+ case "Game":
+ return <Game onOpenPopup={handleOpenPopup} />;
+ case "PlayRecord":
+ return <PlayRecord />;
+ case "Ranking":
+ return <Ranking />;
+ case "Setting":
+ return <Setting />;
+ default:
+ return <div>タブが見つかりません。</div>;
+ }
+ };
 
-  return (
-    <div>
-      <BGAnim />
-      <Header />
-      <Tab onTabChange={setCurrentTab} />
-      <div className="Components" style={{ zIndex: 1 }}>
-        {renderCurrentComponent()}
-      </div>
-      {showPopup && <WebGLPopup onClose={handleClosePopup} />}
-      <Footer />
-    </div>
-  );
+ return (
+ <div>
+ <BGAnim />
+ <Header />
+ <Tab onTabChange={setCurrentTab} />
+ <div className="Components" style={{ zIndex: 1 }}>
+ {renderCurrentComponent()}
+ </div>
+ {showPopup && <WebGLPopup onClose={handleClosePopup} />}
+ <Footer />
+ </div>
+ );
 };
 
 export default App;

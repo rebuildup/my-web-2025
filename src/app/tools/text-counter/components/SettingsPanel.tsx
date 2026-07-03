@@ -30,12 +30,12 @@ export default function SettingsPanel({
 	};
 
 	return (
-		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-6">
-			<h3 className="font-medium text-main">設定</h3>
+		<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-6">
+			<h3 className="font-medium ">設定</h3>
 
 			{/* Count Settings */}
 			<div className="space-y-3">
-				<h4 className="text-sm font-medium text-main">カウント設定</h4>
+				<h4 className="text-sm font-medium ">カウント設定</h4>
 				<div className="space-y-2">
 					<CheckboxSetting
 						id="include-spaces"
@@ -80,7 +80,7 @@ export default function SettingsPanel({
 				</div>
 
 				<div className="space-y-2 mt-4">
-					<h4 className="text-sm font-medium text-main">チェック設定</h4>
+					<h4 className="text-sm font-medium ">チェック設定</h4>
 
 					<div className="space-y-3">
 						<CheckboxSetting
@@ -95,7 +95,7 @@ export default function SettingsPanel({
 						<div>
 							<label
 								htmlFor="specific-string"
-								className="block text-sm text-main mb-1"
+								className="block text-sm mb-1"
 							>
 								特定文字列の出現数チェック
 							</label>
@@ -107,14 +107,14 @@ export default function SettingsPanel({
 									handleCountSettingChange("specificString", e.target.value)
 								}
 								placeholder="検索したい文字列"
-								className="w-full p-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+								className="w-full p-2 rounded-lg /10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 							/>
 						</div>
 					</div>
 				</div>
 
 				<div className="space-y-2">
-					<label htmlFor="count-method" className="block text-sm text-main">
+					<label htmlFor="count-method" className="block text-sm ">
 						カウント方法
 					</label>
 					<select
@@ -123,7 +123,7 @@ export default function SettingsPanel({
 						onChange={(e) =>
 							handleCountSettingChange("countMethod", e.target.value)
 						}
-						className="w-full p-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+						className="w-full p-2 rounded-lg /10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<option value="all">すべての文字</option>
 						<option value="visible">表示可能文字のみ</option>
@@ -134,7 +134,7 @@ export default function SettingsPanel({
 
 			{/* Display Settings */}
 			<div className="space-y-3">
-				<h4 className="text-sm font-medium text-main">表示設定</h4>
+				<h4 className="text-sm font-medium ">表示設定</h4>
 				<div className="space-y-2">
 					<CheckboxSetting
 						id="show-basic-stats"
@@ -171,7 +171,7 @@ export default function SettingsPanel({
 				</div>
 
 				<div className="space-y-2">
-					<label htmlFor="font-size" className="block text-sm text-main">
+					<label htmlFor="font-size" className="block text-sm ">
 						フォントサイズ
 					</label>
 					<select
@@ -180,7 +180,7 @@ export default function SettingsPanel({
 						onChange={(e) =>
 							handleDisplaySettingChange("fontSize", e.target.value)
 						}
-						className="w-full p-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+						className="w-full p-2 rounded-lg /10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<option value="small">小</option>
 						<option value="medium">中</option>
@@ -212,9 +212,9 @@ function CheckboxSetting({
 				id={id}
 				checked={checked}
 				onChange={(e) => onChange(e.target.checked)}
-				className="w-4 h-4 text-main rounded bg-main/10 focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+				className="w-4 h-4 rounded /10 focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 			/>
-			<label htmlFor={id} className="text-sm text-main cursor-pointer">
+			<label htmlFor={id} className="text-sm cursor-pointer">
 				{label}
 			</label>
 		</div>

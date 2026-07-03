@@ -127,7 +127,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 				<button
 					type="button"
 					onClick={() => setIsOpen(!isOpen)}
-					className="fixed bottom-4 right-4 z-50 bg-accent text-main p-3 rounded-full shadow-lg hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+					className="fixed bottom-4 right-4 z-50 bg-accent p-3 rounded-full shadow-lg hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
 					aria-label="アクセシビリティテスターを開く"
 					title="Accessibility Tester"
 				>
@@ -146,22 +146,22 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 
 			{/* Accessibility Panel */}
 			{isOpen && (
-				<div className="fixed bottom-20 right-4 z-50 bg-base border-2 border-main shadow-xl rounded-lg w-96 max-h-96 overflow-hidden">
-					<div className="flex items-center justify-between p-4 border-b border-main">
-						<h3 className="font-semibold text-main">Accessibility Tester</h3>
+				<div className="fixed bottom-20 right-4 z-50 border-2 shadow-xl rounded-lg w-96 max-h-96 overflow-hidden">
+					<div className="flex items-center justify-between p-4 border-b ">
+						<h3 className="font-semibold ">Accessibility Tester</h3>
 						<div className="flex items-center space-x-2">
 							<button
 								type="button"
 								onClick={runAudit}
 								disabled={isRunning}
-								className="px-3 py-1 text-sm bg-accent text-main rounded hover:bg-accent/90 disabled:opacity-50"
+								className="px-3 py-1 text-sm bg-accent rounded hover:bg-accent/90 disabled:opacity-50"
 							>
 								{isRunning ? "Running..." : "Run Audit"}
 							</button>
 							<button
 								type="button"
 								onClick={() => setIsOpen(false)}
-								className="text-main hover:text-accent"
+								className=" hover:text-accent"
 								aria-label="閉じる"
 							>
 								<X className="h-4 w-4" />
@@ -171,7 +171,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 
 					<div className="p-4 overflow-y-auto max-h-80">
 						{!report ? (
-							<div className="text-center text-main/60">
+							<div className="text-center /60">
 								<p>Click &quot;Run Audit&quot; to check accessibility</p>
 							</div>
 						) : (
@@ -228,7 +228,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 								{/* Issues/Violations */}
 								{(report.issues || []).length > 0 && (
 									<div className="space-y-2">
-										<h4 className="font-medium text-main">Issues:</h4>
+										<h4 className="font-medium ">Issues:</h4>
 										{(report.issues || [])
 											.slice(0, 10)
 											.map((issue, index: number) => {
@@ -252,7 +252,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 												);
 											})}
 										{(report.issues || []).length > 10 && (
-											<div className="text-sm text-main/60 text-center">
+											<div className="text-sm /60 text-center">
 												... and {(report.issues || []).length - 10} more issues
 											</div>
 										)}

@@ -240,8 +240,8 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 	return (
 		<div className="space-y-6">
 			{/* Controls */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg text-main flex items-center">
+			<div className=" border p-4 space-y-4">
+				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<Palette className="w-5 h-5 mr-2" />
 					Color Harmony Controls
 				</h3>
@@ -251,7 +251,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 					<div className="space-y-2">
 						<label
 							htmlFor="harmony-select"
-							className="noto-sans-jp-light text-sm text-main"
+							className="noto-sans-jp-light text-sm "
 						>
 							Color Harmony
 						</label>
@@ -261,7 +261,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 							onChange={(e) =>
 								setSelectedHarmony(e.target.value as ColorPalette["harmony"])
 							}
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						>
 							<option value="random">Random</option>
 							<option value="monochromatic">Monochromatic</option>
@@ -275,7 +275,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 					<div className="space-y-2">
 						<label
 							htmlFor="hue-slider"
-							className="noto-sans-jp-light text-sm text-main"
+							className="noto-sans-jp-light text-sm "
 						>
 							Base Hue: {baseHue}°
 						</label>
@@ -289,8 +289,8 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 							className="w-full"
 							style={{
 								background: `linear-gradient(to right, 
-                  hsl(0, 70%, 50%), hsl(60, 70%, 50%), hsl(120, 70%, 50%), 
-                  hsl(180, 70%, 50%), hsl(240, 70%, 50%), hsl(300, 70%, 50%), hsl(360, 70%, 50%))`,
+ hsl(0, 70%, 50%), hsl(60, 70%, 50%), hsl(120, 70%, 50%), 
+ hsl(180, 70%, 50%), hsl(240, 70%, 50%), hsl(300, 70%, 50%), hsl(360, 70%, 50%))`,
 							}}
 						/>
 					</div>
@@ -299,7 +299,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 					<div className="space-y-2">
 						<label
 							htmlFor="saturation-slider"
-							className="noto-sans-jp-light text-sm text-main"
+							className="noto-sans-jp-light text-sm "
 						>
 							Saturation: {saturation}%
 						</label>
@@ -318,7 +318,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 					<div className="space-y-2">
 						<label
 							htmlFor="lightness-slider"
-							className="noto-sans-jp-light text-sm text-main"
+							className="noto-sans-jp-light text-sm "
 						>
 							Lightness: {lightness}%
 						</label>
@@ -339,7 +339,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 						type="button"
 						onClick={generatePalette}
 						tabIndex={0}
-						className="flex items-center border border-main px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<RefreshCw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Generate New</span>
@@ -349,7 +349,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 						type="button"
 						onClick={downloadPalette}
 						tabIndex={0}
-						className="flex items-center border border-main px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<Download className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Download JSON</span>
@@ -358,8 +358,8 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Color Palette Display */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg text-main">
+			<div className=" border p-4 space-y-4">
+				<h3 className="zen-kaku-gothic-new text-lg ">
 					{palette.name}
 				</h3>
 
@@ -367,7 +367,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 					{palette.colors.map((color, index) => (
 						<div
 							key={`${color}-${index}`}
-							className={`group relative aspect-square border border-main cursor-pointer transition-all duration-300 ${
+							className={`group relative aspect-square border cursor-pointer transition-all duration-300 ${
 								isAnimating ? "animate-pulse scale-105" : "hover:scale-105"
 							}`}
 							style={{ backgroundColor: color }}
@@ -378,8 +378,8 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 								<Copy className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 							</div>
 
-							<div className="absolute bottom-0 left-0 right-0 bg-base bg-opacity-90 p-2 text-center transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-								<span className="noto-sans-jp-light text-xs text-main">
+							<div className="absolute bottom-0 left-0 right-0 bg-opacity-90 p-2 text-center transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+								<span className="noto-sans-jp-light text-xs ">
 									{color}
 								</span>
 								{copiedColor === color && (
@@ -391,20 +391,20 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 				</div>
 
 				<div className="text-center">
-					<p className="noto-sans-jp-light text-sm text-main">
+					<p className="noto-sans-jp-light text-sm ">
 						カラーをクリックしてクリップボードにコピー
 					</p>
 				</div>
 			</div>
 
 			{/* Color Theory Information */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg text-main">
+			<div className=" border p-4 space-y-4">
+				<h3 className="zen-kaku-gothic-new text-lg ">
 					Color Theory:{" "}
 					{selectedHarmony.charAt(0).toUpperCase() + selectedHarmony.slice(1)}
 				</h3>
 
-				<div className="noto-sans-jp-light text-sm text-main space-y-2">
+				<div className="noto-sans-jp-light text-sm space-y-2">
 					{selectedHarmony === "monochromatic" && (
 						<p>
 							単色調和：同じ色相で彩度と明度を変化させた配色.統一感があり、落ち着いた印象を与えます.

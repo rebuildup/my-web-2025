@@ -108,23 +108,23 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 		const edgeSize = Math.min(actualWidth, actualHeight) * (borderWidth * 0.5);
 
 		const svgContent = `
-      <svg viewBox="0 0 ${actualWidth} ${actualHeight}" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="${redGradId}" x1="100%" y1="0%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="#0000"/>
-            <stop offset="100%" stop-color="red"/>
-          </linearGradient>
-          <linearGradient id="${blueGradId}" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#0000"/>
-            <stop offset="100%" stop-color="blue"/>
-          </linearGradient>
-        </defs>
-        <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" fill="black"></rect>
-        <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${redGradId})" />
-        <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${blueGradId})" style="mix-blend-mode: ${mixBlendMode}" />
-        <rect x="${edgeSize}" y="${edgeSize}" width="${actualWidth - edgeSize * 2}" height="${actualHeight - edgeSize * 2}" rx="${borderRadius}" fill="hsl(0 0% ${brightness}% / ${opacity})" style="filter:blur(${blur}px)" />
-      </svg>
-    `;
+ <svg viewBox="0 0 ${actualWidth} ${actualHeight}" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+ <linearGradient id="${redGradId}" x1="100%" y1="0%" x2="0%" y2="0%">
+ <stop offset="0%" stop-color="#0000"/>
+ <stop offset="100%" stop-color="red"/>
+ </linearGradient>
+ <linearGradient id="${blueGradId}" x1="0%" y1="0%" x2="0%" y2="100%">
+ <stop offset="0%" stop-color="#0000"/>
+ <stop offset="100%" stop-color="blue"/>
+ </linearGradient>
+ </defs>
+ <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" fill="black"></rect>
+ <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${redGradId})" />
+ <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${blueGradId})" style="mix-blend-mode: ${mixBlendMode}" />
+ <rect x="${edgeSize}" y="${edgeSize}" width="${actualWidth - edgeSize * 2}" height="${actualHeight - edgeSize * 2}" rx="${borderRadius}" fill="hsl(0 0% ${brightness}% / ${opacity})" style="filter:blur(${blur}px)" />
+ </svg>
+ `;
 
 		return `data:image/svg+xml,${encodeURIComponent(svgContent)}`;
 	};
@@ -239,13 +239,13 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 				background: `hsl(0 0% 100% / ${backgroundOpacity})`,
 				backdropFilter: `url(#${filterId}) saturate(${saturation})`,
 				boxShadow: `0 0 2px 1px color-mix(in oklch, black, transparent 85%) inset,
-             0 0 10px 4px color-mix(in oklch, black, transparent 90%) inset,
-             0px 4px 16px rgba(17, 17, 26, 0.05),
-             0px 8px 24px rgba(17, 17, 26, 0.05),
-             0px 16px 56px rgba(17, 17, 26, 0.05),
-             0px 4px 16px rgba(17, 17, 26, 0.05) inset,
-             0px 8px 24px rgba(17, 17, 26, 0.05) inset,
-             0px 16px 56px rgba(17, 17, 26, 0.05) inset`,
+ 0 0 10px 4px color-mix(in oklch, black, transparent 90%) inset,
+ 0px 4px 16px rgba(17, 17, 26, 0.05),
+ 0px 8px 24px rgba(17, 17, 26, 0.05),
+ 0px 16px 56px rgba(17, 17, 26, 0.05),
+ 0px 4px 16px rgba(17, 17, 26, 0.05) inset,
+ 0px 8px 24px rgba(17, 17, 26, 0.05) inset,
+ 0px 16px 56px rgba(17, 17, 26, 0.05) inset`,
 			};
 		}
 
@@ -261,21 +261,21 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 				backdropFilter: `url(#${filterId}) saturate(${saturation})`,
 				boxShadow: isDarkMode
 					? `0 0 2px 1px color-mix(in oklch, white, transparent 65%) inset,
-             0 0 10px 4px color-mix(in oklch, white, transparent 85%) inset,
-             0px 4px 16px rgba(17, 17, 26, 0.05),
-             0px 8px 24px rgba(17, 17, 26, 0.05),
-             0px 16px 56px rgba(17, 17, 26, 0.05),
-             0px 4px 16px rgba(17, 17, 26, 0.05) inset,
-             0px 8px 24px rgba(17, 17, 26, 0.05) inset,
-             0px 16px 56px rgba(17, 17, 26, 0.05) inset`
+ 0 0 10px 4px color-mix(in oklch, white, transparent 85%) inset,
+ 0px 4px 16px rgba(17, 17, 26, 0.05),
+ 0px 8px 24px rgba(17, 17, 26, 0.05),
+ 0px 16px 56px rgba(17, 17, 26, 0.05),
+ 0px 4px 16px rgba(17, 17, 26, 0.05) inset,
+ 0px 8px 24px rgba(17, 17, 26, 0.05) inset,
+ 0px 16px 56px rgba(17, 17, 26, 0.05) inset`
 					: `0 0 2px 1px color-mix(in oklch, black, transparent 85%) inset,
-             0 0 10px 4px color-mix(in oklch, black, transparent 90%) inset,
-             0px 4px 16px rgba(17, 17, 26, 0.05),
-             0px 8px 24px rgba(17, 17, 26, 0.05),
-             0px 16px 56px rgba(17, 17, 26, 0.05),
-             0px 4px 16px rgba(17, 17, 26, 0.05) inset,
-             0px 8px 24px rgba(17, 17, 26, 0.05) inset,
-             0px 16px 56px rgba(17, 17, 26, 0.05) inset`,
+ 0 0 10px 4px color-mix(in oklch, black, transparent 90%) inset,
+ 0px 4px 16px rgba(17, 17, 26, 0.05),
+ 0px 8px 24px rgba(17, 17, 26, 0.05),
+ 0px 16px 56px rgba(17, 17, 26, 0.05),
+ 0px 4px 16px rgba(17, 17, 26, 0.05) inset,
+ 0px 8px 24px rgba(17, 17, 26, 0.05) inset,
+ 0px 16px 56px rgba(17, 17, 26, 0.05) inset`,
 			};
 		} else {
 			if (isDarkMode) {
@@ -285,7 +285,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 						background: "rgba(0, 0, 0, 0.4)",
 						border: "1px solid rgba(255, 255, 255, 0.2)",
 						boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.1)`,
+ inset 0 -1px 0 0 rgba(255, 255, 255, 0.1)`,
 					};
 				} else {
 					return {
@@ -295,7 +295,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 						WebkitBackdropFilter: "blur(12px) saturate(1.8) brightness(1.2)",
 						border: "1px solid rgba(255, 255, 255, 0.2)",
 						boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.1)`,
+ inset 0 -1px 0 0 rgba(255, 255, 255, 0.1)`,
 					};
 				}
 			} else {
@@ -305,7 +305,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 						background: "rgba(255, 255, 255, 0.4)",
 						border: "1px solid rgba(255, 255, 255, 0.3)",
 						boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.3)`,
+ inset 0 -1px 0 0 rgba(255, 255, 255, 0.3)`,
 					};
 				} else {
 					return {
@@ -315,9 +315,9 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 						WebkitBackdropFilter: "blur(12px) saturate(1.8) brightness(1.1)",
 						border: "1px solid rgba(255, 255, 255, 0.3)",
 						boxShadow: `0 8px 32px 0 rgba(31, 38, 135, 0.2),
-                        0 2px 16px 0 rgba(31, 38, 135, 0.1),
-                        inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.2)`,
+ 0 2px 16px 0 rgba(31, 38, 135, 0.1),
+ inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+ inset 0 -1px 0 0 rgba(255, 255, 255, 0.2)`,
 					};
 				}
 			}

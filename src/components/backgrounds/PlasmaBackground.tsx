@@ -31,18 +31,18 @@ export default function PlasmaBackground() {
 				}}
 			/>
 			<style>{`
-        @keyframes plasma-shift {
-          0% {
-            background-position: 10% 10%, 90% 15%, 15% 90%, 85% 85%;
-          }
-          50% {
-            background-position: 20% 30%, 80% 25%, 30% 80%, 75% 70%;
-          }
-          100% {
-            background-position: 30% 20%, 70% 35%, 25% 70%, 65% 80%;
-          }
-        }
-      `}</style>
+ @keyframes plasma-shift {
+ 0% {
+ background-position: 10% 10%, 90% 15%, 15% 90%, 85% 85%;
+ }
+ 50% {
+ background-position: 20% 30%, 80% 25%, 30% 80%, 75% 70%;
+ }
+ 100% {
+ background-position: 30% 20%, 70% 35%, 25% 70%, 65% 80%;
+ }
+ }
+ `}</style>
 		</div>
 	);
 }

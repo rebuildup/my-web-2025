@@ -91,16 +91,16 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 
 	// Enhanced features state (commented out for now)
 	// const [uploadOptions, setUploadOptions] = useState<EnhancedFileUploadOptions>(
-	//   {
-	//     skipProcessing: false,
-	//     preserveOriginal: true,
-	//     generateVariants: false,
-	//     customProcessing: {
-	//       resize: { width: 1920, height: 1080 },
-	//       format: "jpeg",
-	//       watermark: false,
-	//     },
-	//   }
+	// {
+	// skipProcessing: false,
+	// preserveOriginal: true,
+	// generateVariants: false,
+	// customProcessing: {
+	// resize: { width: 1920, height: 1080 },
+	// format: "jpeg",
+	// watermark: false,
+	// },
+	// }
 	// );
 
 	// Tab configuration

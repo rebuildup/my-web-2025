@@ -40,7 +40,7 @@ async function loadBlogDataCached(slug: string) {
 				};
 				contentId: string;
 				content: unknown;
-		  }
+		 }
 		| undefined;
 	if (cached) {
 		console.log(`[BlogDetail] Cache hit for: ${cacheKey}`);

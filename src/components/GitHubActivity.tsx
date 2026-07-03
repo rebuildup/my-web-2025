@@ -59,7 +59,7 @@ export default function GitHubActivity() {
 	if (loading) {
 		return (
 			<div className="mt-8 w-full sm:w-max sm:min-w-[400px] space-y-3">
-				<div className="flex items-center gap-2 text-main/40 text-sm">
+				<div className="flex items-center gap-2 /40 text-sm">
 					<Loader2 className="w-4 h-4 animate-spin" />
 					<span>Loading GitHub activity...</span>
 				</div>
@@ -92,12 +92,12 @@ export default function GitHubActivity() {
 				href={data.user.html_url}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="flex items-center gap-3 text-main/60 hover:text-main transition-colors group"
+				className="flex items-center gap-3 /60 hover: transition-colors group"
 			>
 				<GitBranch className="w-5 h-5 group-hover:scale-110 transition-transform" />
 				<div className="flex items-center gap-3">
 					<span className="text-sm font-medium">{data.user.login}</span>
-					<span className="text-xs text-main/40">
+					<span className="text-xs /40">
 						{data.user.public_repos} repos · {data.user.followers} followers
 					</span>
 				</div>
@@ -117,10 +117,10 @@ export default function GitHubActivity() {
 							<div className="flex items-start gap-3">
 								<span className="text-lg">{event.icon}</span>
 								<div className="flex-1 min-w-0">
-									<p className="text-xs text-main/70 leading-relaxed line-clamp-2">
+									<p className="text-xs /70 leading-relaxed line-clamp-2">
 										{event.message}
 									</p>
-									<span className="text-xs text-main/40 mt-1 block">
+									<span className="text-xs /40 mt-1 block">
 										{formatTimestamp(event.timestamp)}
 									</span>
 								</div>

@@ -158,7 +158,7 @@ export default async function VideoProjectsPage() {
 			numberOfItems: videoItems.length,
 		},
 	};
-	const Global_title = "noto-sans-jp-regular text-base leading-snug";
+	const Global_title = "noto-sans-jp-regular leading-snug";
 
 	return (
 		<>
@@ -166,7 +166,7 @@ export default async function VideoProjectsPage() {
 				{JSON.stringify(structuredData)}
 			</script>
 
-			<div className="min-h-screen relative z-10 text-main scrollbar-auto-stable">
+			<div className="min-h-screen relative z-10 scrollbar-auto-stable">
 				<main className="py-4">
 					<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 						<div className="space-y-10">
@@ -183,7 +183,7 @@ export default async function VideoProjectsPage() {
 
 							{/* Header */}
 							<header className="space-y-4">
-								<h1 className="neue-haas-grotesk-display text-6xl text-main">
+								<h1 className="neue-haas-grotesk-display text-6xl ">
 									Video Projects
 								</h1>
 								<p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -197,7 +197,7 @@ export default async function VideoProjectsPage() {
 
 								{process.env.NODE_ENV !== "production" &&
 									videoItems.length === 0 && (
-										<div className="mt-4 text-xs text-red-900/80 border border-main p-3">
+										<div className="mt-4 text-xs text-red-900/80 border p-3">
 											<span>
 												No published video items returned from CMS API.
 											</span>
@@ -211,21 +211,21 @@ export default async function VideoProjectsPage() {
 								<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
 									<Link
 										href="/portfolio/gallery/all"
-										className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
+										className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
 									>
 										<span className={Global_title}>All Projects</span>
 									</Link>
 
 									<Link
 										href="/portfolio/gallery/develop"
-										className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
+										className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
 									>
 										<span className={Global_title}>Development</span>
 									</Link>
 
 									<Link
 										href="/about/commission/video"
-										className="bg-base/30 text-center p-4 flex items-center justify-center hover:bg-base/50 transition-colors"
+										className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
 									>
 										<span className={Global_title}>Commission</span>
 									</Link>

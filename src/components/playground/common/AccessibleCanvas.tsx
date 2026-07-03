@@ -391,7 +391,7 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 			<canvas
 				ref={canvasRef}
 				{...getCanvasAriaAttributes()}
-				className="block max-w-full h-auto border border-main"
+				className="block max-w-full h-auto border "
 				style={{
 					width: dimensions.displayWidth,
 					height: dimensions.displayHeight,
@@ -412,12 +412,12 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 
 			{/* Keyboard shortcuts help */}
 			{accessibilityState.keyboardNavigation && canvasType !== "2d" && (
-				<div className="mt-2 text-xs text-main opacity-70">
-					<kbd className="px-1 py-0.5 bg-main text-base rounded text-xs">
+				<div className="mt-2 text-xs opacity-70">
+					<kbd className="px-1 py-0.5 rounded text-xs">
 						Space
 					</kbd>{" "}
 					アニメーション切り替え{" "}
-					<kbd className="px-1 py-0.5 bg-main text-base rounded text-xs">
+					<kbd className="px-1 py-0.5 rounded text-xs">
 						Enter
 					</kbd>{" "}
 					フォーカス

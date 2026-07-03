@@ -59,15 +59,15 @@ export default function PerformanceOptimizer({
 		<div className="relative">
 			{/* Performance Status Bar */}
 			{showPerformanceInfo && (
-				<div className="mb-4 rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
+				<div className="mb-4 rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
 					<div className="flex items-center justify-between mb-2">
-						<h3 className="neue-haas-grotesk-display text-sm text-main">
+						<h3 className="neue-haas-grotesk-display text-sm ">
 							Performance Status
 						</h3>
 						<button
 							type="button"
 							onClick={() => setShowDetails(!showDetails)}
-							className="text-xs text-accent hover:text-main focus:outline-none focus:ring-1 focus:ring-accent"
+							className="text-xs text-accent hover: focus:outline-none focus:ring-1 focus:ring-accent"
 							aria-label="Toggle performance details"
 						>
 							{showDetails ? "Hide" : "Show"} Details
@@ -115,7 +115,7 @@ export default function PerformanceOptimizer({
 
 					{/* Detailed Information */}
 					{showDetails && (
-						<div className="mt-4 pt-4 border-t border-main/20 space-y-3">
+						<div className="mt-4 pt-4 border-t /20 space-y-3">
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
 								<div>
 									<h4 className="font-medium mb-2">Storage Information</h4>
@@ -124,7 +124,7 @@ export default function PerformanceOptimizer({
 										<div>
 											Available: {(storageUsage.available / 1024).toFixed(1)} KB
 										</div>
-										<div className="w-full rounded-full bg-main/10 h-2">
+										<div className="w-full rounded-full /10 h-2">
 											<div
 												className="h-full bg-accent transition-all duration-300"
 												style={{
@@ -174,14 +174,14 @@ export default function PerformanceOptimizer({
 								<button
 									type="button"
 									onClick={clearData}
-									className="text-xs rounded-lg bg-main/10 px-3 py-1 hover:bg-main/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="text-xs rounded-lg /10 px-3 py-1 hover:/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								>
 									Clear Tool Data
 								</button>
 								<button
 									type="button"
 									onClick={() => window.location.reload()}
-									className="text-xs rounded-lg bg-main/10 px-3 py-1 hover:bg-main/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="text-xs rounded-lg /10 px-3 py-1 hover:/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								>
 									Refresh Tool
 								</button>
@@ -193,14 +193,14 @@ export default function PerformanceOptimizer({
 
 			{/* Processing Progress Bar */}
 			{isProcessing && (
-				<div className="mb-4 rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
+				<div className="mb-4 rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
 					<div className="flex items-center justify-between mb-2">
-						<span className="text-sm text-main">Processing...</span>
+						<span className="text-sm ">Processing...</span>
 						<span className="text-sm text-accent">
 							{processingProgress.toFixed(0)}%
 						</span>
 					</div>
-					<div className="w-full rounded-full bg-main/10 h-2">
+					<div className="w-full rounded-full /10 h-2">
 						<div
 							className="h-full bg-accent transition-all duration-300"
 							style={{ width: `${processingProgress}%` }}
@@ -248,11 +248,11 @@ export default function PerformanceOptimizer({
 
 			{/* Performance Optimization Tips */}
 			{showPerformanceInfo && enableOptimizations && (
-				<div className="mt-6 rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
-					<h3 className="neue-haas-grotesk-display text-sm text-main mb-3">
+				<div className="mt-6 rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+					<h3 className="neue-haas-grotesk-display text-sm mb-3">
 						Performance Tips
 					</h3>
-					<ul className="text-xs space-y-2 text-main">
+					<ul className="text-xs space-y-2 ">
 						<li>• このツールは完全にオフラインで動作します</li>
 						<li>• 大きなファイルは自動的にチャンク処理されます</li>
 						<li>• 設定は自動的にローカルに保存されます</li>

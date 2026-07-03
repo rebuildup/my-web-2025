@@ -39,8 +39,8 @@ const shipporiAntiqueB1 = Shippori_Antique_B1({
 export const viewport: Viewport = {
 	width: "device-width",
 	initialScale: 1,
-	themeColor: "#020202",
-	colorScheme: "dark",
+	themeColor: "#ffffff",
+	colorScheme: "light",
 };
 
 export const metadata: Metadata = {
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
 		path: "/",
 	}),
 	other: {
-		"msapplication-TileColor": "#020202",
+		"msapplication-TileColor": "#ffffff",
 	},
 };
 
@@ -74,7 +74,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				<link rel="dns-prefetch" href="https://use.typekit.net" />
 			</head>
 			<body
-				className={`${inter.variable} ${notoSansJP.variable} ${shipporiAntiqueB1.variable} bg-base text-main font-sans`}
+				className={`${inter.variable} ${notoSansJP.variable} ${shipporiAntiqueB1.variable} font-sans`}
 			>
 				<SkipLink />
 				<ProductionInitializer>

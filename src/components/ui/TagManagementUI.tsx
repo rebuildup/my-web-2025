@@ -206,14 +206,14 @@ export function TagManagementUI({
 				{selectedTags.map((tag) => (
 					<span
 						key={tag}
-						className="inline-flex items-center gap-1 px-3 py-1 bg-main text-base rounded-full text-sm font-medium"
+						className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium"
 					>
 						<TagIcon className="w-3 h-3" />
 						{tag}
 						<button
 							type="button"
 							onClick={() => handleTagRemove(tag)}
-							className="ml-1 hover:bg-base hover:bg-opacity-20 rounded-full p-0.5 transition-colors"
+							className="ml-1 hover: hover:bg-opacity-20 rounded-full p-0.5 transition-colors"
 							aria-label={`Remove ${tag} tag`}
 						>
 							<X className="w-3 h-3" />
@@ -238,11 +238,11 @@ export function TagManagementUI({
 						}
 						disabled={!canAddMoreTags}
 						className={`
-              w-full pl-10 pr-4 py-2 border border-main bg-base text-main
-              focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base focus:border-transparent
-              disabled:bg-gray-100 disabled:cursor-not-allowed
-              ${!canAddMoreTags ? "opacity-60" : ""}
-            `}
+ w-full pl-10 pr-4 py-2 border 
+ focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base focus:border-transparent
+ disabled:bg-gray-100 disabled:cursor-not-allowed
+ ${!canAddMoreTags ? "opacity-60" : ""}
+ `}
 					/>
 				</div>
 
@@ -250,11 +250,11 @@ export function TagManagementUI({
 				{isDropdownOpen && canAddMoreTags && (
 					<div
 						ref={dropdownRef}
-						className="absolute z-[9999] w-full mt-1 border border-main rounded-lg shadow-xl max-h-60 overflow-y-auto"
+						className="absolute z-[9999] w-full mt-1 border rounded-lg shadow-xl max-h-60 overflow-y-auto"
 						style={{ backgroundColor: "#181818", zIndex: 9999 }}
 					>
 						{isLoading ? (
-							<div className="px-4 py-3 text-main text-center">
+							<div className="px-4 py-3 text-center">
 								Loading tags...
 							</div>
 						) : (
@@ -264,7 +264,7 @@ export function TagManagementUI({
 									<button
 										type="button"
 										onClick={handleCreateNewTag}
-										className="w-full px-4 py-3 text-left hover:bg-main hover:bg-opacity-10 border-b border-main flex items-center gap-2 text-green-600"
+										className="w-full px-4 py-3 text-left hover: hover:bg-opacity-10 border-b flex items-center gap-2 text-green-600"
 									>
 										<Plus className="w-4 h-4" />
 										Create &quot;{newTagInput}&quot;
@@ -278,21 +278,21 @@ export function TagManagementUI({
 											key={tag.name}
 											type="button"
 											onClick={() => handleTagSelect(tag.name)}
-											className="w-full px-4 py-3 text-left hover:bg-main hover:bg-opacity-10 flex items-center justify-between group text-main border-b border-gray-100 last:border-b-0"
+											className="w-full px-4 py-3 text-left hover: hover:bg-opacity-10 flex items-center justify-between group border-b border-gray-100 last:border-b-0"
 										>
 											<div className="flex items-center gap-2">
 												<TagIcon className="w-4 h-4 text-gray-400" />
 												<span className="font-medium">{tag.name}</span>
 											</div>
 											<div className="flex items-center gap-2 text-xs text-gray-400">
-												<span className="bg-main bg-opacity-10 px-2 py-1 rounded">
+												<span className=" bg-opacity-10 px-2 py-1 rounded">
 													{tag.count} use{tag.count !== 1 ? "s" : ""}
 												</span>
 											</div>
 										</button>
 									))
 								) : searchQuery && !showCreateOption ? (
-									<div className="px-4 py-3 text-main text-center">
+									<div className="px-4 py-3 text-center">
 										<div className="text-gray-500 mb-2">
 											No existing tags found for &quot;{searchQuery}&quot;
 										</div>
@@ -303,7 +303,7 @@ export function TagManagementUI({
 										)}
 									</div>
 								) : !searchQuery && filteredTags.length === 0 ? (
-									<div className="px-4 py-3 text-main text-center">
+									<div className="px-4 py-3 text-center">
 										<div className="text-gray-500 mb-2">
 											All available tags are already selected
 										</div>

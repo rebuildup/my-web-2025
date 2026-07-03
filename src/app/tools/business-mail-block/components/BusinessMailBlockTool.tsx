@@ -717,15 +717,15 @@ export default function BusinessMailBlockTool() {
 				<div className="space-y-8">
 					{/* Template Library */}
 					{showTemplateLibrary && (
-						<div className="space-y-4 rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+						<div className="space-y-4 rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 							<div className="flex items-center justify-between">
-								<h2 className="neue-haas-grotesk-display text-xl text-main">
+								<h2 className="neue-haas-grotesk-display text-xl ">
 									テンプレートライブラリ
 								</h2>
 								<button
 									type="button"
 									onClick={() => setShowTemplateLibrary(false)}
-									className="text-accent hover:text-main"
+									className="text-accent hover:"
 								>
 									×
 								</button>
@@ -735,10 +735,10 @@ export default function BusinessMailBlockTool() {
 								{templates.map((template) => (
 									<div
 										key={template.id}
-										className={`rounded-lg bg-main/10 p-3 hover:bg-main/20 transition-colors ${
+										className={`rounded-lg /10 p-3 hover:/20 transition-colors ${
 											selectedTemplate === template.id
-												? "bg-accent text-main"
-												: "bg-base"
+												? "bg-accent "
+												: ""
 										}`}
 									>
 										<div className="space-y-2">
@@ -761,7 +761,7 @@ export default function BusinessMailBlockTool() {
 												{template.blocks.map((block) => (
 													<span
 														key={`${template.id}-${block.id}`}
-														className="text-xs px-2 py-1 rounded-lg bg-main/10"
+														className="text-xs px-2 py-1 rounded-lg /10"
 													>
 														{CATEGORY_NAMES[block.category]}
 													</span>
@@ -771,14 +771,14 @@ export default function BusinessMailBlockTool() {
 												<button
 													type="button"
 													onClick={() => loadTemplate(template.id)}
-													className="text-xs px-3 py-1 rounded-lg bg-main/10 hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+													className="text-xs px-3 py-1 rounded-lg /10 hover:/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 												>
 													読み込み
 												</button>
 												<button
 													type="button"
 													onClick={() => exportTemplate(template.id)}
-													className="text-xs px-3 py-1 rounded-lg bg-main/10 hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+													className="text-xs px-3 py-1 rounded-lg /10 hover:/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 												>
 													エクスポート
 												</button>
@@ -801,15 +801,15 @@ export default function BusinessMailBlockTool() {
 
 					{/* Professional Guidelines */}
 					{showGuidelines && (
-						<div className="space-y-4 rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+						<div className="space-y-4 rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 							<div className="flex items-center justify-between">
-								<h2 className="neue-haas-grotesk-display text-xl text-main">
+								<h2 className="neue-haas-grotesk-display text-xl ">
 									プロフェッショナルメールガイドライン
 								</h2>
 								<button
 									type="button"
 									onClick={() => setShowGuidelines(false)}
-									className="text-accent hover:text-main"
+									className="text-accent hover:"
 								>
 									×
 								</button>
@@ -817,7 +817,7 @@ export default function BusinessMailBlockTool() {
 
 							<div className="grid-system grid-1 sm:grid-3 gap-6">
 								<div className="space-y-3">
-									<h3 className="neue-haas-grotesk-display text-lg text-main">
+									<h3 className="neue-haas-grotesk-display text-lg ">
 										構造
 									</h3>
 									<ul className="space-y-1">
@@ -834,7 +834,7 @@ export default function BusinessMailBlockTool() {
 								</div>
 
 								<div className="space-y-3">
-									<h3 className="neue-haas-grotesk-display text-lg text-main">
+									<h3 className="neue-haas-grotesk-display text-lg ">
 										トーン
 									</h3>
 									<ul className="space-y-1">
@@ -851,7 +851,7 @@ export default function BusinessMailBlockTool() {
 								</div>
 
 								<div className="space-y-3">
-									<h3 className="neue-haas-grotesk-display text-lg text-main">
+									<h3 className="neue-haas-grotesk-display text-lg ">
 										フォーマット
 									</h3>
 									<ul className="space-y-1">
@@ -883,14 +883,14 @@ export default function BusinessMailBlockTool() {
 										value={searchTerm}
 										onChange={(e) => setSearchTerm(e.target.value)}
 										aria-label="メールブロックを検索"
-										className="w-full pl-10 pr-4 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+										className="w-full pl-10 pr-4 py-2 rounded-lg /10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 									/>
 								</div>
 
 								<select
 									value={selectedCategory}
 									onChange={(e) => setSelectedCategory(e.target.value)}
-									className="px-4 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="px-4 py-2 rounded-lg /10 hover:/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<option value="all">全カテゴリ</option>
 									<option value="greeting">挨拶</option>
@@ -902,10 +902,10 @@ export default function BusinessMailBlockTool() {
 								<button
 									type="button"
 									onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-									className={`px-4 py-2 rounded-lg bg-main/10 hover:bg-main/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
+									className={`px-4 py-2 rounded-lg /10 hover:/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
 										showFavoritesOnly
-											? "bg-accent text-main"
-											: "bg-base text-main"
+											? "bg-accent "
+											: " "
 									}`}
 								>
 									<Heart className="w-4 h-4" />
@@ -918,10 +918,10 @@ export default function BusinessMailBlockTool() {
 								<button
 									type="button"
 									onClick={() => setShowTemplateLibrary(!showTemplateLibrary)}
-									className={`px-3 py-2 text-sm rounded-lg bg-main/10 hover:bg-main/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
+									className={`px-3 py-2 text-sm rounded-lg /10 hover:/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
 										showTemplateLibrary
-											? "bg-accent text-main"
-											: "bg-base text-main hover:bg-accent hover:text-main"
+											? "bg-accent "
+											: " hover:bg-accent hover:"
 									}`}
 								>
 									<FileText className="w-4 h-4" />
@@ -931,10 +931,10 @@ export default function BusinessMailBlockTool() {
 								<button
 									type="button"
 									onClick={() => setShowValidation(!showValidation)}
-									className={`px-3 py-2 text-sm rounded-lg bg-main/10 hover:bg-main/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
+									className={`px-3 py-2 text-sm rounded-lg /10 hover:/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
 										showValidation
-											? "bg-accent text-main"
-											: "bg-base text-main hover:bg-accent hover:text-main"
+											? "bg-accent "
+											: " hover:bg-accent hover:"
 									}`}
 								>
 									<CheckCircle className="w-4 h-4" />
@@ -944,10 +944,10 @@ export default function BusinessMailBlockTool() {
 								<button
 									type="button"
 									onClick={() => setShowGuidelines(!showGuidelines)}
-									className={`px-3 py-2 text-sm rounded-lg bg-main/10 hover:bg-main/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
+									className={`px-3 py-2 text-sm rounded-lg /10 hover:/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
 										showGuidelines
-											? "bg-accent text-main"
-											: "bg-base text-main hover:bg-accent hover:text-main"
+											? "bg-accent "
+											: " hover:bg-accent hover:"
 									}`}
 								>
 									<BookOpen className="w-4 h-4" />
@@ -957,10 +957,10 @@ export default function BusinessMailBlockTool() {
 								<button
 									type="button"
 									onClick={() => setShowCustomBlockForm(!showCustomBlockForm)}
-									className={`px-3 py-2 text-sm rounded-lg bg-main/10 hover:bg-main/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
+									className={`px-3 py-2 text-sm rounded-lg /10 hover:/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-light ${
 										showCustomBlockForm
-											? "bg-accent text-main"
-											: "bg-base text-main hover:bg-accent hover:text-main"
+											? "bg-accent "
+											: " hover:bg-accent hover:"
 									}`}
 								>
 									<Plus className="w-4 h-4" />
@@ -970,15 +970,15 @@ export default function BusinessMailBlockTool() {
 
 							{/* Custom Block Form */}
 							{showCustomBlockForm && (
-								<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
-									<h3 className="neue-haas-grotesk-display text-lg text-main">
+								<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-3">
+									<h3 className="neue-haas-grotesk-display text-lg ">
 										カスタムブロック作成
 									</h3>
 									<div className="grid-system grid-1 sm:grid-2 gap-4">
 										<div className="space-y-2">
 											<label
 												htmlFor="customBlockCategory"
-												className="text-sm text-main noto-sans-jp-regular"
+												className="text-sm noto-sans-jp-regular"
 											>
 												カテゴリ
 											</label>
@@ -994,7 +994,7 @@ export default function BusinessMailBlockTool() {
 															| "signature",
 													)
 												}
-												className="w-full px-3 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+												className="w-full px-3 py-2 rounded-lg /10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 											>
 												<option value="greeting">挨拶</option>
 												<option value="body">本文</option>
@@ -1005,7 +1005,7 @@ export default function BusinessMailBlockTool() {
 										<div className="space-y-2">
 											<label
 												htmlFor="customBlockContent"
-												className="text-sm text-main noto-sans-jp-regular"
+												className="text-sm noto-sans-jp-regular"
 											>
 												内容
 											</label>
@@ -1014,7 +1014,7 @@ export default function BusinessMailBlockTool() {
 												value={customBlockContent}
 												onChange={(e) => setCustomBlockContent(e.target.value)}
 												placeholder="ブロックの内容を入力... 変数は{変数名}で指定"
-												className="w-full px-3 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base resize-none"
+												className="w-full px-3 py-2 rounded-lg /10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base resize-none"
 												rows={3}
 												aria-label="カスタムブロックの内容を入力"
 											/>
@@ -1025,14 +1025,14 @@ export default function BusinessMailBlockTool() {
 											type="button"
 											onClick={addCustomBlock}
 											disabled={!customBlockContent.trim()}
-											className="px-4 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-regular"
+											className="px-4 py-2 rounded-lg /10 hover:/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-regular"
 										>
 											追加
 										</button>
 										<button
 											type="button"
 											onClick={() => setShowCustomBlockForm(false)}
-											className="px-4 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-regular"
+											className="px-4 py-2 rounded-lg /10 hover:/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base noto-sans-jp-regular"
 										>
 											キャンセル
 										</button>
@@ -1045,7 +1045,7 @@ export default function BusinessMailBlockTool() {
 					<div className="grid-system grid-1 lg:grid-2 gap-8">
 						{/* Available Blocks */}
 						<div className="space-y-4">
-							<h2 className="neue-haas-grotesk-display text-xl text-main">
+							<h2 className="neue-haas-grotesk-display text-xl ">
 								利用可能なブロック
 							</h2>
 
@@ -1054,7 +1054,7 @@ export default function BusinessMailBlockTool() {
 									<div
 										ref={provided.innerRef}
 										{...provided.droppableProps}
-										className="space-y-3 min-h-96 max-h-96 overflow-y-auto rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4"
+										className="space-y-3 min-h-96 max-h-96 overflow-y-auto rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4"
 									>
 										{filteredBlocks.map((block, index) => (
 											<Draggable
@@ -1067,14 +1067,14 @@ export default function BusinessMailBlockTool() {
 														ref={provided.innerRef}
 														{...provided.draggableProps}
 														{...provided.dragHandleProps}
-														className={`p-3 rounded-lg bg-main/10 cursor-move hover:bg-main/20 transition-colors ${
+														className={`p-3 rounded-lg /10 cursor-move hover:/20 transition-colors ${
 															CATEGORY_COLORS[block.category]
 														} ${snapshot.isDragging ? "opacity-50" : ""}`}
 													>
 														<div className="flex items-start justify-between">
 															<div className="flex-1">
 																<div className="flex items-center gap-2 mb-1">
-																	<span className="text-xs rounded-lg bg-main/10 px-2 py-1 noto-sans-jp-light">
+																	<span className="text-xs rounded-lg /10 px-2 py-1 noto-sans-jp-light">
 																		{CATEGORY_NAMES[block.category]}
 																	</span>
 																	<span className="text-sm noto-sans-jp-regular">
@@ -1118,7 +1118,7 @@ export default function BusinessMailBlockTool() {
 																		{block.variables.map((variable) => (
 																			<span
 																				key={variable}
-																				className="text-xs px-2 py-1 bg-base text-accent border border-accent noto-sans-jp-light"
+																				className="text-xs px-2 py-1 text-accent border border-accent noto-sans-jp-light"
 																			>
 																				{variable}
 																			</span>
@@ -1130,7 +1130,7 @@ export default function BusinessMailBlockTool() {
 																<button
 																	type="button"
 																	onClick={() => toggleFavorite(block.id)}
-																	className="p-1 rounded-lg bg-main/10 hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+																	className="p-1 rounded-lg /10 hover:/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 																>
 																	<Heart
 																		className={`w-4 h-4 ${
@@ -1166,13 +1166,13 @@ export default function BusinessMailBlockTool() {
 						{/* Composed Email */}
 						<div className="space-y-4">
 							<div className="flex items-center justify-between">
-								<h2 className="neue-haas-grotesk-display text-xl text-main">
+								<h2 className="neue-haas-grotesk-display text-xl ">
 									メール作成エリア
 								</h2>
 								<button
 									type="button"
 									onClick={() => setComposedBlocks([])}
-									className="px-3 py-1 text-xs rounded-lg bg-main/10 hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-1 noto-sans-jp-light"
+									className="px-3 py-1 text-xs rounded-lg /10 hover:/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-1 noto-sans-jp-light"
 									title="全てリセット"
 								>
 									<Trash2 className="w-4 h-4" />
@@ -1185,7 +1185,7 @@ export default function BusinessMailBlockTool() {
 									<div
 										ref={provided.innerRef}
 										{...provided.droppableProps}
-										className="space-y-3 min-h-96 max-h-96 overflow-y-auto rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4"
+										className="space-y-3 min-h-96 max-h-96 overflow-y-auto rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4"
 									>
 										{composedBlocks.length === 0 && (
 											<div className="text-center text-accent py-8">
@@ -1206,14 +1206,14 @@ export default function BusinessMailBlockTool() {
 														ref={provided.innerRef}
 														{...provided.draggableProps}
 														{...provided.dragHandleProps}
-														className={`p-3 rounded-lg bg-main/10 hover:bg-main/20 transition-colors ${
+														className={`p-3 rounded-lg /10 hover:/20 transition-colors ${
 															CATEGORY_COLORS[block.category]
 														} ${snapshot.isDragging ? "opacity-50" : ""}`}
 													>
 														<div className="flex items-start justify-between">
 															<div className="flex-1">
 																<div className="flex items-center gap-2 mb-1">
-																	<span className="text-xs rounded-lg bg-main/10 px-2 py-1 noto-sans-jp-light">
+																	<span className="text-xs rounded-lg /10 px-2 py-1 noto-sans-jp-light">
 																		{CATEGORY_NAMES[block.category]}
 																	</span>
 																	<span className="text-sm noto-sans-jp-regular">
@@ -1227,7 +1227,7 @@ export default function BusinessMailBlockTool() {
 															<button
 																type="button"
 																onClick={() => removeComposedBlock(block.id)}
-																className="ml-2 p-1 rounded-lg bg-main/10 hover:bg-main/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+																className="ml-2 p-1 rounded-lg /10 hover:/20 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 															>
 																<Trash2 className="w-4 h-4" />
 															</button>
@@ -1246,7 +1246,7 @@ export default function BusinessMailBlockTool() {
 					{/* Variables Input */}
 					{allVariables.length > 0 && (
 						<div className="space-y-4">
-							<h3 className="neue-haas-grotesk-display text-lg text-main">
+							<h3 className="neue-haas-grotesk-display text-lg ">
 								変数設定
 							</h3>
 							<div className="grid-system grid-1 sm:grid-2 lg:grid-3 gap-4">
@@ -1254,7 +1254,7 @@ export default function BusinessMailBlockTool() {
 									<div key={variable} className="space-y-1">
 										<label
 											htmlFor={`var-${variable}`}
-											className="text-sm text-main noto-sans-jp-regular"
+											className="text-sm noto-sans-jp-regular"
 										>
 											{variable}
 										</label>
@@ -1264,7 +1264,7 @@ export default function BusinessMailBlockTool() {
 											value={variables[variable] || ""}
 											onChange={(e) => updateVariable(variable, e.target.value)}
 											placeholder={`${variable}を入力...`}
-											className="w-full px-3 py-2 rounded-lg bg-main/10 text-main focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+											className="w-full px-3 py-2 rounded-lg /10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 										/>
 									</div>
 								))}
@@ -1275,7 +1275,7 @@ export default function BusinessMailBlockTool() {
 					{/* Email Validation */}
 					{showValidation && (
 						<div className="space-y-4">
-							<h3 className="neue-haas-grotesk-display text-lg text-main">
+							<h3 className="neue-haas-grotesk-display text-lg ">
 								メールバリデーション
 							</h3>
 
@@ -1366,7 +1366,7 @@ export default function BusinessMailBlockTool() {
 					{/* Generated Email Preview */}
 					<div className="space-y-4">
 						<div className="flex items-center justify-between">
-							<h3 className="neue-haas-grotesk-display text-lg text-main">
+							<h3 className="neue-haas-grotesk-display text-lg ">
 								生成されたメール
 							</h3>
 							<div className="flex gap-2">
@@ -1374,7 +1374,7 @@ export default function BusinessMailBlockTool() {
 									type="button"
 									onClick={copyToClipboard}
 									disabled={!generatedEmail}
-									className="px-4 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-regular"
+									className="px-4 py-2 rounded-lg /10 hover:/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-regular"
 								>
 									<Copy className="w-4 h-4" />
 									コピー
@@ -1383,7 +1383,7 @@ export default function BusinessMailBlockTool() {
 									type="button"
 									onClick={downloadEmail}
 									disabled={!generatedEmail}
-									className="px-4 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-regular"
+									className="px-4 py-2 rounded-lg /10 hover:/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-regular"
 								>
 									<Download className="w-4 h-4" />
 									ダウンロード
@@ -1399,7 +1399,7 @@ export default function BusinessMailBlockTool() {
 										}
 									}}
 									disabled={composedBlocks.length === 0}
-									className="px-4 py-2 rounded-lg bg-main/10 text-main hover:bg-main/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-regular"
+									className="px-4 py-2 rounded-lg /10 hover:/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base flex items-center gap-2 noto-sans-jp-regular"
 								>
 									<Save className="w-4 h-4" />
 									テンプレート保存
@@ -1407,8 +1407,8 @@ export default function BusinessMailBlockTool() {
 							</div>
 						</div>
 
-						<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 min-h-32">
-							<pre className="whitespace-pre-wrap text-sm text-main noto-sans-jp-light leading-relaxed">
+						<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 min-h-32">
+							<pre className="whitespace-pre-wrap text-sm noto-sans-jp-light leading-relaxed">
 								{generatedEmail || "メールブロックを追加してください..."}
 							</pre>
 						</div>

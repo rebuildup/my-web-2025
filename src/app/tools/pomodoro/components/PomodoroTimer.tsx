@@ -224,8 +224,8 @@ const Dock = ({
 	return (
 		<div
 			className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-60 px-4 h-16 rounded-2xl border backdrop-blur-xl shadow-2xl flex items-end gap-2 transition-all duration-300 no-timer-click
-         ${theme === "dark" ? "bg-[#111]/80 border-white/10" : "bg-white/80 border-black/5"}
-      `}
+ ${theme === "dark" ? "bg-[#111]/80 border-white/10" : "bg-white/80 border-black/5"}
+ `}
 			onMouseMove={handleMouseMove}
 			onMouseLeave={handleMouseLeave}
 			onTouchMove={handleTouchMove}
@@ -316,9 +316,9 @@ const DockButton = ({
 			onFocus={() => setIsHovered(true)}
 			onBlur={() => setIsHovered(false)}
 			className={`w-full h-full rounded-full flex items-center justify-center shadow-md transition-colors relative group
-      ${theme === "dark" ? "bg-white/10 hover:bg-white/20" : "bg-black/5 hover:bg-black/10"}
-      ${colorClass || ""}
-    `}
+ ${theme === "dark" ? "bg-white/10 hover:bg-white/20" : "bg-black/5 hover:bg-black/10"}
+ ${colorClass || ""}
+ `}
 			style={accentStyle}
 		>
 			<Icon
@@ -329,8 +329,8 @@ const DockButton = ({
 			/>
 			<span
 				className={`absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none
-       ${theme === "dark" ? "bg-[#333] text-white" : "bg-white text-black shadow-sm"}
-    `}
+ ${theme === "dark" ? "bg-[#333] text-white" : "bg-white text-black shadow-sm"}
+ `}
 			>
 				{label}
 			</span>
@@ -1385,9 +1385,9 @@ export default function PomodoroTimer() {
 		return (
 			<div
 				className={`flex items-baseline justify-center tabular-nums tracking-[-0.15em] select-none cursor-pointer font-mono font-bold transition-opacity duration-300
-        ${theme === "dark" ? "text-neutral-100" : "text-slate-900"}
-        ${isActive ? "opacity-100" : "opacity-60 hover:opacity-80"}
-      `}
+ ${theme === "dark" ? "text-neutral-100" : "text-slate-900"}
+ ${isActive ? "opacity-100" : "opacity-60 hover:opacity-80"}
+ `}
 			>
 				<span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none text-right w-auto min-w-16 sm:min-w-19 md:min-w-23 lg:min-w-28">
 					{String(minutes).padStart(2, "0")}
@@ -1494,8 +1494,8 @@ export default function PomodoroTimer() {
 			{/* Top: Current Step Label - Fixed */}
 			<div
 				className={`fixed top-8 left-1/2 -translate-x-1/2 z-30 text-sm tracking-[0.4em] uppercase font-bold opacity-30 pointer-events-none
-           ${theme === "dark" ? "text-white" : "text-black"}
-        `}
+ ${theme === "dark" ? "text-white" : "text-black"}
+ `}
 			>
 				{currentStep.label}
 			</div>
@@ -1551,8 +1551,8 @@ export default function PomodoroTimer() {
 			{/* Left Panel: Flow Progress Bar */}
 			<aside
 				className={`fixed left-8 top-1/2 transform -translate-y-1/2 z-70 flex flex-col items-start gap-4 transition-opacity duration-500 no-timer-click
-         ${isActive ? "opacity-20 hover:opacity-100" : "opacity-100"}
-      `}
+ ${isActive ? "opacity-20 hover:opacity-100" : "opacity-100"}
+ `}
 			>
 				<div
 					className="relative h-[60vh] w-1.5 rounded-full bg-opacity-20 backdrop-blur-sm transition-all duration-300 hover:w-2"
@@ -1637,8 +1637,8 @@ export default function PomodoroTimer() {
 												? "opacity-100 translate-x-0"
 												: "opacity-0 -translate-x-2.5"
 										}
-                    ${theme === "dark" ? "bg-[#1a1a1a]/90 border-white/10 text-gray-100" : "bg-white/90 border-black/5 text-gray-800"}
-                 `}
+ ${theme === "dark" ? "bg-[#1a1a1a]/90 border-white/10 text-gray-100" : "bg-white/90 border-black/5 text-gray-800"}
+ `}
 										style={{
 											left: `calc(50% + ${hoverPaddingRight}px)`,
 										}}

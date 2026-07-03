@@ -99,7 +99,7 @@ export function MultiCategorySelector({
 			{/* Header with help toggle */}
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
-					<label className="block noto-sans-jp-regular text-sm font-medium text-main">
+					<label className="block noto-sans-jp-regular text-sm font-medium ">
 						Categories
 						{maxSelections && (
 							<span className="text-gray-400 ml-1">(max {maxSelections})</span>
@@ -160,15 +160,15 @@ export function MultiCategorySelector({
 							onClick={() => handleCategoryToggle(category)}
 							disabled={disabled || (!canSelectMore && !isSelected)}
 							className={`
-                px-4 py-2 text-sm font-medium border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base
-                ${
+ px-4 py-2 text-sm font-medium border transition-all duration-200 focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base
+ ${
 									isSelected
-										? "bg-main text-base border-main"
-										: "bg-base text-main border-main hover:bg-main hover:bg-opacity-10"
+										? " "
+										: " hover: hover:bg-opacity-10"
 								}
-                ${disabled ? "opacity-50 cursor-not-allowed" : ""}
-                ${!canSelectMore && !isSelected ? "opacity-60" : ""}
-              `}
+ ${disabled ? "opacity-50 cursor-not-allowed" : ""}
+ ${!canSelectMore && !isSelected ? "opacity-60" : ""}
+ `}
 						>
 							{categoryInfo.label}
 							{isSelected && <Check className="w-3 h-3 ml-2 inline" />}
@@ -191,8 +191,8 @@ export function MultiCategorySelector({
 
 			{/* Selection summary */}
 			{selectedCategories.length > 0 && (
-				<div className="bg-base border border-main rounded-lg p-3">
-					<h4 className="text-sm font-medium text-main mb-2">
+				<div className=" border rounded-lg p-3">
+					<h4 className="text-sm font-medium mb-2">
 						Selected Categories
 					</h4>
 					<div className="flex flex-wrap gap-2">
@@ -201,7 +201,7 @@ export function MultiCategorySelector({
 							return (
 								<span
 									key={category}
-									className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-main text-base"
+									className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium "
 								>
 									{categoryInfo.label}
 									<button
@@ -222,8 +222,8 @@ export function MultiCategorySelector({
 					</div>
 
 					{/* Gallery visibility info */}
-					<div className="mt-3 pt-3 border-t border-main">
-						<h5 className="text-xs font-medium text-main mb-1">
+					<div className="mt-3 pt-3 border-t ">
+						<h5 className="text-xs font-medium mb-1">
 							Will appear in galleries:
 						</h5>
 						<div className="text-xs text-gray-400">

@@ -28,31 +28,31 @@ export function Select({
 	variant = "default",
 }: SelectProps) {
 	const baseStyles =
-		"border focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base focus:border-transparent cursor-pointer appearance-none bg-no-repeat bg-right transition-colors";
+		"border focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base focus:border-transparent cursor-pointer appearance-none bg-no-repeat bg-right transition-colors";
 
 	const sizeStyles = {
 		sm: "px-2 py-1 text-xs pr-6 bg-[length:10px]",
 		md: "px-3 py-2 text-sm pr-8 bg-[length:12px]",
-		lg: "px-4 py-3 text-base pr-10 bg-[length:14px]",
+		lg: "px-4 py-3 pr-10 bg-[length:14px]",
 	};
 
 	const variantStyles = {
 		default:
-			'bg-base border-main text-main hover:border-accent bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
+			' hover:border-accent bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
 		admin:
-			'bg-base border-main text-main hover:border-main bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23ffffff" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
+			' hover: bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23ffffff" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
 	};
 
 	const disabledStyles = "opacity-50 cursor-not-allowed";
 
 	const selectClassName = `
-    w-full
-    ${baseStyles}
-    ${sizeStyles[size]}
-    ${variantStyles[variant]}
-    ${disabled ? disabledStyles : ""}
-    ${className}
-  `
+ w-full
+ ${baseStyles}
+ ${sizeStyles[size]}
+ ${variantStyles[variant]}
+ ${disabled ? disabledStyles : ""}
+ ${className}
+ `
 		.trim()
 		.replace(/\s+/g, " ");
 
@@ -64,7 +64,7 @@ export function Select({
 			className={selectClassName}
 		>
 			{placeholder && (
-				<option value="" disabled className="text-main/60">
+				<option value="" disabled className="/60">
 					{placeholder}
 				</option>
 			)}
@@ -73,7 +73,7 @@ export function Select({
 					key={option.value}
 					value={option.value}
 					disabled={option.disabled}
-					className="text-main bg-base"
+					className=" "
 				>
 					{option.label}
 				</option>
@@ -91,7 +91,7 @@ export interface OptionProps {
 
 export function Option({ value, label, disabled = false }: OptionProps) {
 	return (
-		<option value={value} disabled={disabled} className="text-main bg-base">
+		<option value={value} disabled={disabled} className=" ">
 			{label}
 		</option>
 	);

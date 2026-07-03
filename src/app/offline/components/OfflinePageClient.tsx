@@ -33,7 +33,7 @@ export default function OfflinePageClient() {
 	}, []);
 
 	return (
-		<div className="min-h-screen bg-base text-main flex items-center justify-center">
+		<div className="min-h-screen flex items-center justify-center">
 			<div className="container-system text-center">
 				<div className="max-w-md mx-auto">
 					{/* Offline icon */}

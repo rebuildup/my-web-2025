@@ -590,10 +590,10 @@ export function PhysicsSimulationExperiment({
 
 	if (error) {
 		return (
-			<div className="aspect-video bg-base border border-red-500 flex items-center justify-center">
+			<div className="aspect-video border border-red-500 flex items-center justify-center">
 				<div className="text-center space-y-2">
 					<div className="text-red-500 text-lg">⚠️ WebGL Error</div>
-					<p className="text-sm text-main">{error}</p>
+					<p className="text-sm ">{error}</p>
 				</div>
 			</div>
 		);
@@ -604,7 +604,7 @@ export function PhysicsSimulationExperiment({
 			{/* 3D Canvas */}
 			<div
 				ref={mountRef}
-				className="aspect-video bg-base border border-main overflow-hidden cursor-pointer"
+				className="aspect-video border overflow-hidden cursor-pointer"
 				style={{ minHeight: "400px" }}
 			/>
 
@@ -619,7 +619,7 @@ export function PhysicsSimulationExperiment({
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{/* Gravity */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Gravity: {controls.gravity.toFixed(1)}
 					</label>
 					<input
@@ -640,7 +640,7 @@ export function PhysicsSimulationExperiment({
 
 				{/* Bounce Strength */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Bounce: {controls.bounceStrength.toFixed(2)}
 					</label>
 					<input
@@ -661,7 +661,7 @@ export function PhysicsSimulationExperiment({
 
 				{/* Friction */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Friction: {(1 - controls.friction).toFixed(3)}
 					</label>
 					<input
@@ -682,7 +682,7 @@ export function PhysicsSimulationExperiment({
 
 				{/* Object Count */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Objects: {controls.objectCount}
 					</label>
 					<input
@@ -703,7 +703,7 @@ export function PhysicsSimulationExperiment({
 
 				{/* Object Size */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Size: {controls.objectSize.toFixed(1)}
 					</label>
 					<input
@@ -727,7 +727,7 @@ export function PhysicsSimulationExperiment({
 					<button
 						type="button"
 						onClick={resetSimulation}
-						className="w-full border border-main px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="w-full border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<span className="noto-sans-jp-light text-sm">Reset Simulation</span>
 					</button>

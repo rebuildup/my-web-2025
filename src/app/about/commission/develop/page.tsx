@@ -102,7 +102,7 @@ const structuredData = {
 };
 
 export default function DevelopCommissionPage() {
-	const Global_title = "noto-sans-jp-regular text-base leading-snug";
+	const Global_title = "noto-sans-jp-regular leading-snug";
 
 	return (
 		<>
@@ -110,7 +110,7 @@ export default function DevelopCommissionPage() {
 				{JSON.stringify(structuredData)}
 			</script>
 
-			<div className="min-h-screen bg-base text-main">
+			<div className="min-h-screen ">
 				<main className="flex items-center py-10">
 					<div className="container-system">
 						<div className="space-y-10">
@@ -127,7 +127,7 @@ export default function DevelopCommissionPage() {
 
 							{/* Header */}
 							<header className="space-y-12">
-								<h1 className="neue-haas-grotesk-display text-6xl text-main">
+								<h1 className="neue-haas-grotesk-display text-6xl ">
 									開発依頼
 								</h1>
 								<p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -139,79 +139,79 @@ export default function DevelopCommissionPage() {
 
 							{/* Services Overview */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									開発サービス概要
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
-									<div className="bg-base border border-main p-4 space-y-4">
+									<div className=" border p-4 space-y-4">
 										<div className="flex items-center">
 											<Globe className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												Web開発
 											</h3>
 										</div>
 										<div className="space-y-2">
-											<div className="noto-sans-jp-light text-sm text-main">
+											<div className="noto-sans-jp-light text-sm ">
 												• ポートフォリオサイト
 											</div>
-											<div className="noto-sans-jp-light text-sm text-main">
+											<div className="noto-sans-jp-light text-sm ">
 												• コーポレートサイト
 											</div>
-											<div className="noto-sans-jp-light text-sm text-main">
+											<div className="noto-sans-jp-light text-sm ">
 												• ECサイト
 											</div>
 										</div>
 									</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
+									<div className=" border p-4 space-y-4">
 										<div className="flex items-center">
 											<Gamepad2 className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												アプリケーション開発
 											</h3>
 										</div>
 										<div className="space-y-2">
-											<div className="noto-sans-jp-light text-sm text-main">
+											<div className="noto-sans-jp-light text-sm ">
 												• Webアプリ
 											</div>
-											<div className="noto-sans-jp-light text-sm text-main">
+											<div className="noto-sans-jp-light text-sm ">
 												• ゲーム
 											</div>
-											<div className="noto-sans-jp-light text-sm text-main">
+											<div className="noto-sans-jp-light text-sm ">
 												• ツール
 											</div>
 										</div>
 									</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
+									<div className=" border p-4 space-y-4">
 										<div className="flex items-center">
 											<Code className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												プラグイン開発
 											</h3>
 										</div>
 										<div className="space-y-2">
-											<div className="noto-sans-jp-light text-sm text-main">
+											<div className="noto-sans-jp-light text-sm ">
 												• AfterEffectsプラグイン
 											</div>
-											<div className="noto-sans-jp-light text-sm text-main">
+											<div className="noto-sans-jp-light text-sm ">
 												• Premiere Proプラグイン
 											</div>
 										</div>
 									</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
+									<div className=" border p-4 space-y-4">
 										<div className="flex items-center">
 											<Wrench className="w-6 h-6 text-accent mr-3" />
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												技術サポート
 											</h3>
 										</div>
 										<div className="space-y-2">
-											<div className="noto-sans-jp-light text-sm text-main">
+											<div className="noto-sans-jp-light text-sm ">
 												• 既存システムの改善
 											</div>
-											<div className="noto-sans-jp-light text-sm text-main">
+											<div className="noto-sans-jp-light text-sm ">
 												• バグ修正
 											</div>
 										</div>
@@ -221,7 +221,7 @@ export default function DevelopCommissionPage() {
 
 							{/* Process */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									依頼の流れ
 								</h2>
 								<div className="space-y-4">
@@ -263,19 +263,19 @@ export default function DevelopCommissionPage() {
 											icon: CheckCircle,
 										},
 									].map(({ step, title, description, icon: Icon }) => (
-										<div key={step} className="bg-base border border-main p-4">
+										<div key={step} className=" border p-4">
 											<div className="flex items-start">
-												<div className="flex-shrink-0 w-8 h-8 bg-accent text-main flex items-center justify-center font-bold mr-4 text-sm">
+												<div className="flex-shrink-0 w-8 h-8 bg-accent flex items-center justify-center font-bold mr-4 text-sm">
 													{step}
 												</div>
 												<div className="flex-grow">
 													<div className="flex items-center mb-2">
 														<Icon className="w-5 h-5 text-accent mr-2" />
-														<h3 className="zen-kaku-gothic-new text-base text-main">
+														<h3 className="zen-kaku-gothic-new ">
 															{title}
 														</h3>
 													</div>
-													<p className="noto-sans-jp-light text-sm text-main">
+													<p className="noto-sans-jp-light text-sm ">
 														{description}
 													</p>
 												</div>
@@ -287,38 +287,38 @@ export default function DevelopCommissionPage() {
 
 							{/* Pricing */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									料金体系
 								</h2>
-								<div className="bg-base border border-main p-4">
+								<div className=" border p-4">
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 										<div>
-											<h3 className="zen-kaku-gothic-new text-lg text-main mb-4">
+											<h3 className="zen-kaku-gothic-new text-lg mb-4">
 												基本料金
 											</h3>
-											<p className="noto-sans-jp-light text-sm text-main mb-4">
+											<p className="noto-sans-jp-light text-sm mb-4">
 												プロジェクト規模に応じた基本料金
 											</p>
 
-											<h3 className="zen-kaku-gothic-new text-lg text-main mb-4">
+											<h3 className="zen-kaku-gothic-new text-lg mb-4">
 												追加料金
 											</h3>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												機能追加、修正、サポート費用
 											</p>
 										</div>
 										<div>
-											<h3 className="zen-kaku-gothic-new text-lg text-main mb-4">
+											<h3 className="zen-kaku-gothic-new text-lg mb-4">
 												支払い方法
 											</h3>
-											<p className="noto-sans-jp-light text-sm text-main mb-4">
+											<p className="noto-sans-jp-light text-sm mb-4">
 												前払い、分割払い対応
 											</p>
 
-											<h3 className="zen-kaku-gothic-new text-lg text-main mb-4">
+											<h3 className="zen-kaku-gothic-new text-lg mb-4">
 												保証期間
 											</h3>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												納品後の保証期間
 											</p>
 										</div>
@@ -328,12 +328,12 @@ export default function DevelopCommissionPage() {
 
 							{/* Skills */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									技術スキル
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
-									<div className="bg-base border border-main p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg text-main">
+									<div className=" border p-4 space-y-4">
+										<h3 className="zen-kaku-gothic-new text-lg ">
 											フロントエンド
 										</h3>
 										<div className="space-y-2">
@@ -347,7 +347,7 @@ export default function DevelopCommissionPage() {
 											].map((skill) => (
 												<div
 													key={skill}
-													className="noto-sans-jp-light text-sm text-main"
+													className="noto-sans-jp-light text-sm "
 												>
 													{skill}
 												</div>
@@ -355,15 +355,15 @@ export default function DevelopCommissionPage() {
 										</div>
 									</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg text-main">
+									<div className=" border p-4 space-y-4">
+										<h3 className="zen-kaku-gothic-new text-lg ">
 											ゲーム開発
 										</h3>
 										<div className="space-y-2">
 											{["p5js", "PIXIjs", "Unity"].map((skill) => (
 												<div
 													key={skill}
-													className="noto-sans-jp-light text-sm text-main"
+													className="noto-sans-jp-light text-sm "
 												>
 													{skill}
 												</div>
@@ -371,15 +371,15 @@ export default function DevelopCommissionPage() {
 										</div>
 									</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg text-main">
+									<div className=" border p-4 space-y-4">
+										<h3 className="zen-kaku-gothic-new text-lg ">
 											プラグイン開発
 										</h3>
 										<div className="space-y-2">
 											{["AfterEffects", "Premiere Pro"].map((skill) => (
 												<div
 													key={skill}
-													className="noto-sans-jp-light text-sm text-main"
+													className="noto-sans-jp-light text-sm "
 												>
 													{skill}
 												</div>
@@ -387,15 +387,15 @@ export default function DevelopCommissionPage() {
 										</div>
 									</div>
 
-									<div className="bg-base border border-main p-4 space-y-4">
-										<h3 className="zen-kaku-gothic-new text-lg text-main">
+									<div className=" border p-4 space-y-4">
+										<h3 className="zen-kaku-gothic-new text-lg ">
 											その他
 										</h3>
 										<div className="space-y-2">
 											{["C", "C++", "C#", "Python"].map((skill) => (
 												<div
 													key={skill}
-													className="noto-sans-jp-light text-sm text-main"
+													className="noto-sans-jp-light text-sm "
 												>
 													{skill}
 												</div>
@@ -407,47 +407,47 @@ export default function DevelopCommissionPage() {
 
 							{/* Contact */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									連絡方法
 								</h2>
-								<div className="bg-base border border-main p-4">
+								<div className=" border p-4">
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 										<div>
 											<div className="flex items-center mb-3">
 												<Mail className="w-5 h-5 text-accent mr-2" />
-												<h3 className="zen-kaku-gothic-new text-lg text-main">
+												<h3 className="zen-kaku-gothic-new text-lg ">
 													メール
 												</h3>
 											</div>
-											<p className="noto-sans-jp-light text-sm text-main mb-4">
+											<p className="noto-sans-jp-light text-sm mb-4">
 												rebuild.up.up(at)gmail.com
 											</p>
 
 											<div className="flex items-center mb-3">
 												<MessageCircle className="w-5 h-5 text-accent mr-2" />
-												<h3 className="zen-kaku-gothic-new text-lg text-main">
+												<h3 className="zen-kaku-gothic-new text-lg ">
 													X (Twitter)
 												</h3>
 											</div>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												@361do_sleep
 											</p>
 										</div>
 										<div>
 											<div className="flex items-center mb-3">
 												<Clock className="w-5 h-5 text-accent mr-2" />
-												<h3 className="zen-kaku-gothic-new text-lg text-main">
+												<h3 className="zen-kaku-gothic-new text-lg ">
 													対応時間
 												</h3>
 											</div>
-											<p className="noto-sans-jp-light text-sm text-main mb-4">
+											<p className="noto-sans-jp-light text-sm mb-4">
 												平日 9:00-18:00
 											</p>
 
-											<h3 className="zen-kaku-gothic-new text-lg text-main mb-3">
+											<h3 className="zen-kaku-gothic-new text-lg mb-3">
 												返信時間
 											</h3>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												24時間以内
 											</p>
 										</div>
@@ -461,14 +461,14 @@ export default function DevelopCommissionPage() {
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 									<Link
 										href="/contact"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>お問い合わせフォーム</span>
 									</Link>
 
 									<Link
 										href="/about/commission/estimate"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>料金計算機</span>
 									</Link>
@@ -476,7 +476,7 @@ export default function DevelopCommissionPage() {
 							</nav>
 
 							{/* Footer */}
-							<footer className="pt-4 border-t border-main">
+							<footer className="pt-4 border-t ">
 								<div className="text-center">
 									<p className="shippori-antique-b1-regular text-sm inline-block">
 										© 2025 samuido - Development Commission

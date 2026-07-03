@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 
 export default function PiGamePage() {
 	return (
-		<div className="relative min-h-screen text-main">
+		<div className="relative min-h-screen ">
 			<main className="relative z-10 min-h-screen py-10" tabIndex={-1}>
 				<div className="container-system">
 					<div className="mx-auto w-full max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
@@ -51,10 +51,10 @@ export default function PiGamePage() {
 						/>
 
 						<header className="space-y-6">
-							<h1 className="neue-haas-grotesk-display text-4xl text-main sm:text-5xl lg:text-6xl">
+							<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl">
 								Pi Memory Game
 							</h1>
-							<p className="noto-sans-jp-light text-sm text-main/70 leading-relaxed max-w-2xl">
+							<p className="noto-sans-jp-light text-sm /70 leading-relaxed max-w-2xl">
 								円周率の桁を記憶して入力するゲームです.
 								<br />
 								テンキーインターフェースで楽しく学習できます.

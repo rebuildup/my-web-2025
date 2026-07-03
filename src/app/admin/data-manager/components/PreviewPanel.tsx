@@ -209,9 +209,9 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 	};
 
 	const buttonStyle =
-		"border border-main px-3 py-1 text-xs hover:bg-main hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"border px-3 py-1 text-xs hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 	const activeButtonStyle =
-		"border border-main px-3 py-1 text-xs bg-main text-base focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"border px-3 py-1 text-xs focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
 		<div className="space-y-6">
@@ -267,7 +267,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 						{/* Title and Status */}
 						<div className="space-y-2">
 							<div className="flex justify-between items-start">
-								<h1 className="neue-haas-grotesk-display text-2xl text-main leading-snug">
+								<h1 className="neue-haas-grotesk-display text-2xl leading-snug">
 									{item.title || "Untitled"}
 								</h1>
 								<span
@@ -288,7 +288,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
 							{item.category && (
 								<div>
-									<span className="noto-sans-jp-regular font-medium text-main">
+									<span className="noto-sans-jp-regular font-medium ">
 										Category:
 									</span>
 									<span className="ml-2 text-gray-600">{item.category}</span>
@@ -296,14 +296,14 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 							)}
 
 							<div>
-								<span className="noto-sans-jp-regular font-medium text-main">
+								<span className="noto-sans-jp-regular font-medium ">
 									Priority:
 								</span>
 								<span className="ml-2 text-gray-600">{item.priority}/100</span>
 							</div>
 
 							<div>
-								<span className="noto-sans-jp-regular font-medium text-main">
+								<span className="noto-sans-jp-regular font-medium ">
 									Created:
 								</span>
 								<span className="ml-2 text-gray-600">
@@ -313,7 +313,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 
 							{item.updatedAt && (
 								<div>
-									<span className="noto-sans-jp-regular font-medium text-main">
+									<span className="noto-sans-jp-regular font-medium ">
 										Updated:
 									</span>
 									<span className="ml-2 text-gray-600">

@@ -166,8 +166,8 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 	return (
 		<div className="space-y-6">
 			{/* SVG Display */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<div className="aspect-square bg-base border border-main flex items-center justify-center">
+			<div className=" border p-4 space-y-4">
+				<div className="aspect-square border flex items-center justify-center">
 					<svg
 						width="300"
 						height="300"
@@ -273,7 +273,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={toggleAnimation}
-						className="flex items-center border border-main px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						{isAnimating ? (
 							<Pause className="w-4 h-4 mr-2" />
@@ -288,7 +288,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetAnimation}
-						className="flex items-center border border-main px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset</span>
@@ -297,8 +297,8 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Animation Controls */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg text-main flex items-center">
+			<div className=" border p-4 space-y-4">
+				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<Zap className="w-5 h-5 mr-2" />
 					SVG Animation Controls
 				</h3>
@@ -306,7 +306,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 					{/* Animation Type */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Animation Type
 						</label>
 						<select
@@ -317,7 +317,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 									type: e.target.value as SVGAnimationConfig["type"],
 								}))
 							}
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						>
 							{animationTypes.map((type) => (
 								<option key={type.value} value={type.value}>
@@ -329,7 +329,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Duration */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Duration: {animationConfig.duration}ms
 						</label>
 						<input
@@ -350,7 +350,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Easing */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Easing
 						</label>
 						<select
@@ -361,7 +361,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 									easing: e.target.value,
 								}))
 							}
-							className="w-full border border-main bg-base text-main p-2 text-sm"
+							className="w-full border p-2 text-sm"
 						>
 							{easingTypes.map((easing) => (
 								<option key={easing.value} value={easing.value}>
@@ -373,7 +373,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Loop */}
 					<div className="space-y-2">
-						<label className="noto-sans-jp-light text-sm text-main">
+						<label className="noto-sans-jp-light text-sm ">
 							Loop Animation
 						</label>
 						<div className="flex items-center">
@@ -388,7 +388,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 								}
 								className="w-4 h-4 mr-2"
 							/>
-							<span className="noto-sans-jp-light text-sm text-main">
+							<span className="noto-sans-jp-light text-sm ">
 								{animationConfig.loop ? "Enabled" : "Disabled"}
 							</span>
 						</div>
@@ -397,7 +397,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 
 				{/* Color Controls */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Color Palette
 					</label>
 					<div className="flex gap-4">
@@ -413,9 +413,9 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 											return newColors;
 										})
 									}
-									className="w-12 h-8 border border-main"
+									className="w-12 h-8 border "
 								/>
-								<span className="noto-sans-jp-light text-sm text-main">
+								<span className="noto-sans-jp-light text-sm ">
 									Color {index + 1}
 								</span>
 							</div>
@@ -425,17 +425,17 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Animation Information */}
-			<div className="bg-base border border-main p-4 space-y-4">
-				<h3 className="zen-kaku-gothic-new text-lg text-main">
+			<div className=" border p-4 space-y-4">
+				<h3 className="zen-kaku-gothic-new text-lg ">
 					SVG Animation Features
 				</h3>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="space-y-2">
-						<h4 className="noto-sans-jp-light text-sm font-bold text-main">
+						<h4 className="noto-sans-jp-light text-sm font-bold ">
 							Current Animation:
 						</h4>
-						<div className="noto-sans-jp-light text-xs text-main space-y-1">
+						<div className="noto-sans-jp-light text-xs space-y-1">
 							<div>
 								Type:{" "}
 								{
@@ -450,10 +450,10 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 					</div>
 
 					<div className="space-y-2">
-						<h4 className="noto-sans-jp-light text-sm font-bold text-main">
+						<h4 className="noto-sans-jp-light text-sm font-bold ">
 							SVG Benefits:
 						</h4>
-						<div className="noto-sans-jp-light text-xs text-main space-y-1">
+						<div className="noto-sans-jp-light text-xs space-y-1">
 							<div>• Scalable vector graphics</div>
 							<div>• Smooth animations</div>
 							<div>• Small file sizes</div>
@@ -466,40 +466,40 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 
 			{/* CSS Keyframes */}
 			<style jsx>{`
-        @keyframes svgRotate {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
+ @keyframes svgRotate {
+ from {
+ transform: rotate(0deg);
+ }
+ to {
+ transform: rotate(360deg);
+ }
+ }
 
-        @keyframes svgScale {
-          0% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.2);
-          }
-          100% {
-            transform: scale(1);
-          }
-        }
+ @keyframes svgScale {
+ 0% {
+ transform: scale(1);
+ }
+ 50% {
+ transform: scale(1.2);
+ }
+ 100% {
+ transform: scale(1);
+ }
+ }
 
-        @keyframes svgColor {
-          0% {
-            filter: hue-rotate(0deg);
-          }
-          100% {
-            filter: hue-rotate(360deg);
-          }
-        }
+ @keyframes svgColor {
+ 0% {
+ filter: hue-rotate(0deg);
+ }
+ 100% {
+ filter: hue-rotate(360deg);
+ }
+ }
 
-        .orbit-group {
-          animation: svgRotate 4s linear infinite;
-        }
-      `}</style>
+ .orbit-group {
+ animation: svgRotate 4s linear infinite;
+ }
+ `}</style>
 		</div>
 	);
 };

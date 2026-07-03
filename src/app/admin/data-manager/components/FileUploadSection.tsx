@@ -287,21 +287,21 @@ export function FileUploadSection({
 	};
 
 	const inputStyle =
-		"w-full border border-main px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 	const labelStyle =
-		"block noto-sans-jp-regular text-sm font-medium text-main mb-1";
+		"block noto-sans-jp-regular text-sm font-medium mb-1";
 	const buttonStyle =
-		"border border-main px-3 py-1 text-xs hover:bg-main hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"border px-3 py-1 text-xs hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
 		<div className="space-y-4">
-			<h3 className="neue-haas-grotesk-display text-xl text-main leading-snug">
+			<h3 className="neue-haas-grotesk-display text-xl leading-snug">
 				Images & Files
 			</h3>
 
 			{/* Processing Options */}
-			<div className="bg-base border border-main p-4 rounded-lg">
-				<h4 className="noto-sans-jp-regular text-sm font-medium text-main mb-3">
+			<div className=" border p-4 rounded-lg">
+				<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 					Processing Options
 				</h4>
 				<div className="grid grid-cols-2 gap-4">
@@ -374,15 +374,15 @@ export function FileUploadSection({
 
 			{/* Upload Progress */}
 			{uploadProgress.length > 0 && (
-				<div className="bg-base border border-main p-4 rounded-lg">
-					<h4 className="noto-sans-jp-regular text-sm font-medium text-main mb-3">
+				<div className=" border p-4 rounded-lg">
+					<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 						Upload Progress
 					</h4>
 					<div className="space-y-2">
 						{uploadProgress.map((progress) => (
 							<div key={progress.filename} className="space-y-1">
 								<div className="flex justify-between items-center">
-									<span className="text-sm text-main truncate flex-1">
+									<span className="text-sm truncate flex-1">
 										{progress.filename}
 									</span>
 									<span className="text-xs text-gray-400 ml-2">
@@ -395,7 +395,7 @@ export function FileUploadSection({
 													: `${progress.progress}%`}
 									</span>
 								</div>
-								<div className="w-full bg-base border border-main rounded-full h-2">
+								<div className="w-full border rounded-full h-2">
 									<div
 										className={`h-2 rounded-full transition-all duration-300 ${
 											progress.status === "complete"
@@ -435,7 +435,7 @@ export function FileUploadSection({
 
 				{isUploading ? (
 					<div className="space-y-2">
-						<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-main mx-auto"></div>
+						<div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto"></div>
 						<p className="text-sm text-gray-600">Uploading...</p>
 					</div>
 				) : (
@@ -459,7 +459,7 @@ export function FileUploadSection({
 							<button
 								type="button"
 								onClick={() => fileInputRef.current?.click()}
-								className="text-main hover:text-main/80 font-medium"
+								className=" hover:/80 font-medium"
 							>
 								Click to upload
 							</button>
@@ -477,16 +477,16 @@ export function FileUploadSection({
 					<select
 						value={thumbnail || ""}
 						onChange={(e) => onThumbnailChange(e.target.value || undefined)}
-						className={`${inputStyle} bg-base text-main`}
+						className={`${inputStyle} `}
 					>
-						<option value="" className="bg-base text-main">
+						<option value="" className=" ">
 							Select thumbnail...
 						</option>
 						{images.map((image, index) => (
 							<option
 								key={image}
 								value={image}
-								className="bg-base text-main"
+								className=" "
 							>
 								Image {index + 1}
 							</option>
@@ -539,7 +539,7 @@ export function FileUploadSection({
 
 								{/* Thumbnail Indicator */}
 								{thumbnail === image && (
-									<div className="absolute top-1 left-1 bg-main text-white px-2 py-1 text-xs rounded">
+									<div className="absolute top-1 left-1 text-white px-2 py-1 text-xs rounded">
 										Thumbnail
 									</div>
 								)}

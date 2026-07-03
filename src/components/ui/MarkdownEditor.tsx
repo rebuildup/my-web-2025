@@ -276,30 +276,30 @@ export function MarkdownEditor({
 
 	// Insert markdown syntax at cursor position (currently unused but kept for future use)
 	// const insertMarkdown = useCallback(
-	//   (before: string, after: string = "") => {
-	//     const textarea = textareaRef.current;
-	//     if (!textarea) return;
+	// (before: string, after: string = "") => {
+	// const textarea = textareaRef.current;
+	// if (!textarea) return;
 
-	//     const start = textarea.selectionStart;
-	//     const end = textarea.selectionEnd;
-	//     const selectedText = editorContent.substring(start, end);
-	//     const newContent =
-	//       editorContent.substring(0, start) +
-	//       before +
-	//       selectedText +
-	//       after +
-	//       editorContent.substring(end);
+	// const start = textarea.selectionStart;
+	// const end = textarea.selectionEnd;
+	// const selectedText = editorContent.substring(start, end);
+	// const newContent =
+	// editorContent.substring(0, start) +
+	// before +
+	// selectedText +
+	// after +
+	// editorContent.substring(end);
 
-	//     handleContentChange(newContent);
+	// handleContentChange(newContent);
 
-	//     // Restore cursor position
-	//     setTimeout(() => {
-	//       textarea.focus();
-	//       const newCursorPos = start + before.length + selectedText.length;
-	//       textarea.setSelectionRange(newCursorPos, newCursorPos);
-	//     }, 0);
-	//   },
-	//   [editorContent, handleContentChange],
+	// // Restore cursor position
+	// setTimeout(() => {
+	// textarea.focus();
+	// const newCursorPos = start + before.length + selectedText.length;
+	// textarea.setSelectionRange(newCursorPos, newCursorPos);
+	// }, 0);
+	// },
+	// [editorContent, handleContentChange],
 	// );
 
 	// Toolbar actions and embed actions removed for simplified interface
@@ -377,15 +377,15 @@ export function MarkdownEditor({
 	}, [editorContent, embedSupport, resolveEmbedReferences]);
 
 	const buttonStyle =
-		"px-3 py-1 text-sm border border-main rounded hover:bg-main hover:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"px-3 py-1 text-sm border rounded hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 	const activeButtonStyle =
-		"px-3 py-1 text-sm border border-main bg-main text-base rounded focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base";
+		"px-3 py-1 text-sm border rounded focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
-		<div className="border border-main rounded-lg overflow-hidden bg-base shadow-sm">
+		<div className="border rounded-lg overflow-hidden shadow-sm">
 			{/* Toolbar */}
 			{toolbar && (
-				<div className="bg-base border-b border-main p-2">
+				<div className=" border-b p-2">
 					<div className="flex flex-wrap gap-1 items-center">
 						{/* Preview toggle */}
 						{preview && (
@@ -402,7 +402,7 @@ export function MarkdownEditor({
 						{/* Save button */}
 						{typeof onSave === "function" && filePath && (
 							<>
-								<div className="w-px h-6 bg-main mx-2" />
+								<div className="w-px h-6 mx-2" />
 								<button
 									type="button"
 									onClick={handleSave}
@@ -459,7 +459,7 @@ export function MarkdownEditor({
 			<div className="relative">
 				{isPreviewMode && preview ? (
 					/* Preview Mode */
-					<div className="p-4 min-h-[500px] prose prose-sm max-w-none bg-base text-main">
+					<div className="p-4 min-h-[500px] prose prose-sm max-w-none ">
 						<div dangerouslySetInnerHTML={renderPreview()} />
 					</div>
 				) : (
@@ -470,13 +470,13 @@ export function MarkdownEditor({
 							value={editorContent}
 							onChange={(e) => handleContentChange(e.target.value)}
 							onKeyDown={handleKeyDown}
-							className="w-full min-h-[500px] p-4 pl-12 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-main focus:ring-inset leading-5 bg-base text-main"
+							className="w-full min-h-[500px] p-4 pl-12 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus: focus:ring-inset leading-5 "
 							placeholder="Enter your markdown content here..."
 							spellCheck={false}
 						/>
 
 						{/* Line numbers */}
-						<div className="absolute left-0 top-0 p-4 pr-2 text-gray-400 text-sm font-mono pointer-events-none select-none bg-base border-r border-main">
+						<div className="absolute left-0 top-0 p-4 pr-2 text-gray-400 text-sm font-mono pointer-events-none select-none border-r ">
 							{lineMarkers.map((marker) => (
 								<div key={marker.id} className="leading-5 text-right">
 									{marker.number}
@@ -488,7 +488,7 @@ export function MarkdownEditor({
 			</div>
 
 			{/* Status Bar */}
-			<div className="bg-base border-t border-main px-4 py-2 text-xs text-gray-400 flex justify-between items-center">
+			<div className=" border-t px-4 py-2 text-xs text-gray-400 flex justify-between items-center">
 				<div className="flex gap-4">
 					<span>Lines: {editorContent.split("\n").length}</span>
 					<span>Characters: {editorContent.length}</span>

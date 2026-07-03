@@ -61,18 +61,18 @@ function CategoryCard({
 }) {
 	return (
 		<Link href={href} className="block">
-			<GlowCard className="p-6 bg-base">
+			<GlowCard className="p-6 ">
 				<div className="flex items-start justify-between">
 					<div className="space-y-2 flex-1">
 						<div className="flex items-center gap-3">
 							<Icon className="w-6 h-6 text-accent" />
-							<h3 className="zen-kaku-gothic-new text-xl text-main">{title}</h3>
+							<h3 className="zen-kaku-gothic-new text-xl ">{title}</h3>
 						</div>
-						<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
+						<p className="noto-sans-jp-light text-sm leading-relaxed">
 							{description}
 						</p>
 					</div>
-					<ArrowRight className="w-5 h-5 text-main group-hover:text-accent group-hover:translate-x-1 transition-all" />
+					<ArrowRight className="w-5 h-5 group-hover:text-accent group-hover:translate-x-1 transition-all" />
 				</div>
 			</GlowCard>
 		</Link>
@@ -103,7 +103,7 @@ export default async function PortfolioPage() {
 						| {
 								src?: string;
 								poster?: string;
-						  }
+						 }
 						| undefined;
 					type NormalizedThumbnails = {
 						image?: ThumbnailVariant;
@@ -381,7 +381,7 @@ export default async function PortfolioPage() {
 								{/* Hero Header */}
 								<header className="space-y-8">
 									<div className="space-y-4">
-										<h1 className="neue-haas-grotesk-display text-6xl text-main">
+										<h1 className="neue-haas-grotesk-display text-6xl ">
 											Portfolio
 										</h1>
 										<p className="noto-sans-jp-light text-sm max-w-2xl leading-loose">
@@ -411,7 +411,7 @@ export default async function PortfolioPage() {
 
 								{/* Gallery Cards */}
 								<section className="space-y-6">
-									<h2 className="neue-haas-grotesk-display text-3xl text-main">
+									<h2 className="neue-haas-grotesk-display text-3xl ">
 										Gallery
 									</h2>
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -432,17 +432,17 @@ export default async function PortfolioPage() {
 
 								{/* Playground CTA */}
 								<section className="space-y-6">
-									<h2 className="neue-haas-grotesk-display text-3xl text-main">
+									<h2 className="neue-haas-grotesk-display text-3xl ">
 										Playground
 									</h2>
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 										<Link href="/portfolio/playground/WebGL" className="block">
-											<GlowCard className="p-6 bg-base">
+											<GlowCard className="p-6 ">
 												<div className="space-y-2">
-													<h3 className="zen-kaku-gothic-new text-xl text-main">
+													<h3 className="zen-kaku-gothic-new text-xl ">
 														WebGL Dome Gallery
 													</h3>
-													<p className="noto-sans-jp-light text-sm text-main">
+													<p className="noto-sans-jp-light text-sm ">
 														react-bits の Dome Gallery で遊ぶサンドボックス.
 													</p>
 												</div>
@@ -456,7 +456,7 @@ export default async function PortfolioPage() {
 
 								{/* Tag galleries */}
 								<section className="space-y-6">
-									<h2 className="neue-haas-grotesk-display text-3xl text-main">
+									<h2 className="neue-haas-grotesk-display text-3xl ">
 										Develop
 									</h2>
 									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -484,7 +484,7 @@ export default async function PortfolioPage() {
 								</section>
 
 								<section className="space-y-6">
-									<h2 className="neue-haas-grotesk-display text-3xl text-main">
+									<h2 className="neue-haas-grotesk-display text-3xl ">
 										Video
 									</h2>
 									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -512,7 +512,7 @@ export default async function PortfolioPage() {
 								</section>
 
 								<section className="space-y-6">
-									<h2 className="neue-haas-grotesk-display text-3xl text-main">
+									<h2 className="neue-haas-grotesk-display text-3xl ">
 										Design
 									</h2>
 									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -543,10 +543,10 @@ export default async function PortfolioPage() {
 					</main>
 
 					<footer className="fixed bottom-2 left-0 right-0 z-10 flex items-center justify-center gap-4 py-3 backdrop-blur-sm">
-						<span className="text-xs text-main">© 2025 361do_sleep</span>
+						<span className="text-xs ">© 2025 361do_sleep</span>
 						<Link
 							href="/privacy-policy"
-							className="text-xs transition underline underline-offset-4 text-main"
+							className="text-xs transition underline underline-offset-4 "
 						>
 							Privacy Policy
 						</Link>
@@ -568,16 +568,16 @@ export default async function PortfolioPage() {
 				>
 					<div className="container mx-auto px-4">
 						<div className="max-w-3xl mx-auto text-center">
-							<h1 className="text-4xl sm:text-4xl font-bold italic tracking-tight text-main">
+							<h1 className="text-4xl sm:text-4xl font-bold italic tracking-tight ">
 								Error
 							</h1>
-							<p className="mt-4 text-xs sm:text-xs text-main">
+							<p className="mt-4 text-xs sm:text-xs ">
 								ポートフォリオデータの読み込みに失敗しました.
 							</p>
 							<div className="mt-8">
 								<Link
 									href="/"
-									className="text-xs sm:text-sm text-main hover:text-main transition-colors underline underline-offset-4"
+									className="text-xs sm:text-sm hover: transition-colors underline underline-offset-4"
 								>
 									ホームに戻る
 								</Link>

@@ -520,21 +520,21 @@ export default function DomeGallery({
 			const animatingOverlay = document.createElement("div");
 			animatingOverlay.className = "enlarge-closing";
 			animatingOverlay.style.cssText = `
-        position: absolute;
-        left: ${overlayRelativeToRoot.left}px;
-        top: ${overlayRelativeToRoot.top}px;
-        width: ${overlayRelativeToRoot.width}px;
-        height: ${overlayRelativeToRoot.height}px;
-        z-index: 9999;
-        border-radius: ${openedImageBorderRadius};
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,.35);
-        transition: all ${enlargeTransitionMs}ms ease-out;
-        pointer-events: none;
-        margin: 0;
-        transform: none;
-        filter: ${grayscale ? "grayscale(1)" : "none"};
-      `;
+ position: absolute;
+ left: ${overlayRelativeToRoot.left}px;
+ top: ${overlayRelativeToRoot.top}px;
+ width: ${overlayRelativeToRoot.width}px;
+ height: ${overlayRelativeToRoot.height}px;
+ z-index: 9999;
+ border-radius: ${openedImageBorderRadius};
+ overflow: hidden;
+ box-shadow: 0 10px 30px rgba(0,0,0,.35);
+ transition: all ${enlargeTransitionMs}ms ease-out;
+ pointer-events: none;
+ margin: 0;
+ transform: none;
+ filter: ${grayscale ? "grayscale(1)" : "none"};
+ `;
 
 			const originalImg = overlay.querySelector("img");
 			if (originalImg) {
@@ -743,95 +743,95 @@ export default function DomeGallery({
 	}, []);
 
 	const cssStyles = `
-    .sphere-root {
-      --radius: 520px;
-      --viewer-pad: 72px;
-      --circ: calc(var(--radius) * 3.14);
-      --rot-y: calc((360deg / var(--segments-x)) / 2);
-      --rot-x: calc((360deg / var(--segments-y)) / 2);
-      --item-width: calc(var(--circ) / var(--segments-x));
-      --item-height: calc(var(--circ) / var(--segments-y));
-    }
-    
-    .sphere-root * { box-sizing: border-box; }
-    .sphere, .sphere-item, .item__image { transform-style: preserve-3d; }
-    
-    .stage {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      place-items: center;
-      position: absolute;
-      inset: 0;
-      margin: auto;
-      perspective: calc(var(--radius) * 2);
-      perspective-origin: 50% 50%;
-    }
-    
-    .sphere {
-      transform: translateZ(calc(var(--radius) * -1));
-      will-change: transform;
-      position: absolute;
-    }
-    
-    .sphere-item {
-      width: calc(var(--item-width) * var(--item-size-x));
-      height: calc(var(--item-height) * var(--item-size-y));
-      position: absolute;
-      top: -999px;
-      bottom: -999px;
-      left: -999px;
-      right: -999px;
-      margin: auto;
-      transform-origin: 50% 50%;
-      backface-visibility: hidden;
-      transition: transform 300ms;
-      transform: rotateY(calc(var(--rot-y) * (var(--offset-x) + ((var(--item-size-x) - 1) / 2)) + var(--rot-y-delta, 0deg))) 
-                 rotateX(calc(var(--rot-x) * (var(--offset-y) - ((var(--item-size-y) - 1) / 2)) + var(--rot-x-delta, 0deg))) 
-                 translateZ(var(--radius));
-    }
-    
-    .sphere-root[data-enlarging="true"] .scrim {
-      opacity: 1 !important;
-      pointer-events: all !important;
-    }
-    
-    @media (max-aspect-ratio: 1/1) {
-      .viewer-frame {
-        height: auto !important;
-        width: 100% !important;
-      }
-    }
-    
-    // body.dg-scroll-lock {
-    //   position: fixed !important;
-    //   top: 0;
-    //   left: 0;
-    //   width: 100% !important;
-    //   height: 100% !important;
-    //   overflow: hidden !important;
-    //   touch-action: none !important;
-    //   overscroll-behavior: contain !important;
-    // }
-    .item__image {
-      position: absolute;
-      inset: 10px;
-      border-radius: var(--tile-radius, 12px);
-      overflow: hidden;
-      cursor: pointer;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      transition: transform 300ms;
-      pointer-events: auto;
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-    }
-    .item__image--reference {
-      position: absolute;
-      inset: 10px;
-      pointer-events: none;
-    }
-  `;
+ .sphere-root {
+ --radius: 520px;
+ --viewer-pad: 72px;
+ --circ: calc(var(--radius) * 3.14);
+ --rot-y: calc((360deg / var(--segments-x)) / 2);
+ --rot-x: calc((360deg / var(--segments-y)) / 2);
+ --item-width: calc(var(--circ) / var(--segments-x));
+ --item-height: calc(var(--circ) / var(--segments-y));
+ }
+ 
+ .sphere-root * { box-sizing: border-box; }
+ .sphere, .sphere-item, .item__image { transform-style: preserve-3d; }
+ 
+ .stage {
+ width: 100%;
+ height: 100%;
+ display: grid;
+ place-items: center;
+ position: absolute;
+ inset: 0;
+ margin: auto;
+ perspective: calc(var(--radius) * 2);
+ perspective-origin: 50% 50%;
+ }
+ 
+ .sphere {
+ transform: translateZ(calc(var(--radius) * -1));
+ will-change: transform;
+ position: absolute;
+ }
+ 
+ .sphere-item {
+ width: calc(var(--item-width) * var(--item-size-x));
+ height: calc(var(--item-height) * var(--item-size-y));
+ position: absolute;
+ top: -999px;
+ bottom: -999px;
+ left: -999px;
+ right: -999px;
+ margin: auto;
+ transform-origin: 50% 50%;
+ backface-visibility: hidden;
+ transition: transform 300ms;
+ transform: rotateY(calc(var(--rot-y) * (var(--offset-x) + ((var(--item-size-x) - 1) / 2)) + var(--rot-y-delta, 0deg))) 
+ rotateX(calc(var(--rot-x) * (var(--offset-y) - ((var(--item-size-y) - 1) / 2)) + var(--rot-x-delta, 0deg))) 
+ translateZ(var(--radius));
+ }
+ 
+ .sphere-root[data-enlarging="true"] .scrim {
+ opacity: 1 !important;
+ pointer-events: all !important;
+ }
+ 
+ @media (max-aspect-ratio: 1/1) {
+ .viewer-frame {
+ height: auto !important;
+ width: 100% !important;
+ }
+ }
+ 
+ // body.dg-scroll-lock {
+ // position: fixed !important;
+ // top: 0;
+ // left: 0;
+ // width: 100% !important;
+ // height: 100% !important;
+ // overflow: hidden !important;
+ // touch-action: none !important;
+ // overscroll-behavior: contain !important;
+ // }
+ .item__image {
+ position: absolute;
+ inset: 10px;
+ border-radius: var(--tile-radius, 12px);
+ overflow: hidden;
+ cursor: pointer;
+ backface-visibility: hidden;
+ -webkit-backface-visibility: hidden;
+ transition: transform 300ms;
+ pointer-events: auto;
+ -webkit-transform: translateZ(0);
+ transform: translateZ(0);
+ }
+ .item__image--reference {
+ position: absolute;
+ inset: 10px;
+ pointer-events: none;
+ }
+ `;
 
 	return (
 		<>

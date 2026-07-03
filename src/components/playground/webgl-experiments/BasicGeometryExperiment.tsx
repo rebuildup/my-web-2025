@@ -366,10 +366,10 @@ export function BasicGeometryExperiment({
 
 	if (error) {
 		return (
-			<div className="aspect-video bg-base border border-red-500 flex items-center justify-center">
+			<div className="aspect-video border border-red-500 flex items-center justify-center">
 				<div className="text-center space-y-2">
 					<div className="text-red-500 text-lg">⚠️ WebGL Error</div>
-					<p className="text-sm text-main">{error}</p>
+					<p className="text-sm ">{error}</p>
 				</div>
 			</div>
 		);
@@ -380,7 +380,7 @@ export function BasicGeometryExperiment({
 			{/* 3D Canvas */}
 			<div
 				ref={mountRef}
-				className="aspect-video bg-base border border-main overflow-hidden"
+				className="aspect-video border overflow-hidden"
 				style={{ minHeight: "400px" }}
 			/>
 
@@ -388,7 +388,7 @@ export function BasicGeometryExperiment({
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 				{/* Geometry Type */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Geometry Type
 					</label>
 					<select
@@ -400,7 +400,7 @@ export function BasicGeometryExperiment({
 									.value as GeometryControls["geometryType"],
 							}))
 						}
-						className="w-full border border-main bg-base text-main p-2 text-sm"
+						className="w-full border p-2 text-sm"
 					>
 						<option value="box">Box</option>
 						<option value="sphere">Sphere</option>
@@ -411,7 +411,7 @@ export function BasicGeometryExperiment({
 
 				{/* Material Type */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Material Type
 					</label>
 					<select
@@ -423,7 +423,7 @@ export function BasicGeometryExperiment({
 									.value as GeometryControls["materialType"],
 							}))
 						}
-						className="w-full border border-main bg-base text-main p-2 text-sm"
+						className="w-full border p-2 text-sm"
 					>
 						<option value="basic">Basic</option>
 						<option value="lambert">Lambert</option>
@@ -434,7 +434,7 @@ export function BasicGeometryExperiment({
 
 				{/* Rotation Speed */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Rotation Speed: {controls.rotationSpeed.toFixed(1)}
 					</label>
 					<input
@@ -455,7 +455,7 @@ export function BasicGeometryExperiment({
 
 				{/* Light Intensity */}
 				<div className="space-y-2">
-					<label className="noto-sans-jp-light text-sm text-main">
+					<label className="noto-sans-jp-light text-sm ">
 						Light Intensity: {controls.lightIntensity.toFixed(1)}
 					</label>
 					<input
@@ -491,7 +491,7 @@ export function BasicGeometryExperiment({
 				/>
 				<label
 					htmlFor="wireframe"
-					className="noto-sans-jp-light text-sm text-main"
+					className="noto-sans-jp-light text-sm "
 				>
 					Wireframe Mode
 				</label>

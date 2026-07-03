@@ -209,7 +209,7 @@ const aiCapabilities = [
 ];
 
 export default function AIProfilePage() {
-	const Global_title = "noto-sans-jp-regular text-base leading-snug";
+	const Global_title = "noto-sans-jp-regular leading-snug";
 
 	return (
 		<>
@@ -217,7 +217,7 @@ export default function AIProfilePage() {
 				{JSON.stringify(structuredData)}
 			</script>
 
-			<div className="min-h-screen bg-base text-main">
+			<div className="min-h-screen ">
 				<main
 					id="main-content"
 					className="flex items-center py-10"
@@ -238,7 +238,7 @@ export default function AIProfilePage() {
 
 							{/* Header */}
 							<header className="space-y-12">
-								<h1 className="neue-haas-grotesk-display text-6xl text-main">
+								<h1 className="neue-haas-grotesk-display text-6xl ">
 									AI Profile
 								</h1>
 								<p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -250,14 +250,14 @@ export default function AIProfilePage() {
 
 							{/* Introduction */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									AI Persona Overview
 								</h2>
-								<div className="bg-base border border-main p-4 space-y-4">
+								<div className=" border p-4 space-y-4">
 									<div className="flex items-center">
 										<Bot className="w-8 h-8 text-accent mr-4" />
 										<div>
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												samuido AI Assistant
 											</h3>
 											<p className="noto-sans-jp-light text-xs text-accent">
@@ -265,11 +265,11 @@ export default function AIProfilePage() {
 											</p>
 										</div>
 									</div>
-									<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
+									<p className="noto-sans-jp-light text-sm leading-relaxed">
 										このAIプロフィールは、samuidoの知識、経験、価値観を基に構築されています.
 										技術的な質問から創作活動まで、幅広いトピックについて対話できるよう設計されています.
 									</p>
-									<p className="noto-sans-jp-light text-sm text-main leading-relaxed">
+									<p className="noto-sans-jp-light text-sm leading-relaxed">
 										常に学習し続ける姿勢と、新しいアイデアへの開放性を持ち、
 										相手の立場に立った親身なサポートを心がけています.
 									</p>
@@ -278,22 +278,22 @@ export default function AIProfilePage() {
 
 							{/* Personality Traits */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									Personality Traits
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 									{personalityTraits.map((trait) => (
 										<div
 											key={trait.trait}
-											className="bg-base border border-main p-4 space-y-4"
+											className=" border p-4 space-y-4"
 										>
 											<div className="flex items-center">
 												<trait.icon className="w-6 h-6 text-accent mr-3" />
-												<h3 className="zen-kaku-gothic-new text-lg text-main">
+												<h3 className="zen-kaku-gothic-new text-lg ">
 													{trait.trait}
 												</h3>
 											</div>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												{trait.description}
 											</p>
 											<div className="space-y-1">
@@ -313,23 +313,23 @@ export default function AIProfilePage() {
 
 							{/* Interests */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									Interests & Knowledge Areas
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 									{Object.entries(interests).map(([key, category]) => (
 										<div
 											key={key}
-											className="bg-base border border-main p-4 space-y-4"
+											className=" border p-4 space-y-4"
 										>
-											<h3 className="zen-kaku-gothic-new text-lg text-main">
+											<h3 className="zen-kaku-gothic-new text-lg ">
 												{category.title}
 											</h3>
 											<div className="space-y-2">
 												{category.items.map((item) => (
 													<div
 														key={item}
-														className="noto-sans-jp-light text-sm text-main"
+														className="noto-sans-jp-light text-sm "
 													>
 														• {item}
 													</div>
@@ -342,19 +342,19 @@ export default function AIProfilePage() {
 
 							{/* Conversation Style */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									Conversation Style
 								</h2>
 								<div className="space-y-4">
 									{conversationStyle.map((style) => (
 										<div
 											key={style.aspect}
-											className="bg-base border border-main p-4 space-y-3"
+											className=" border p-4 space-y-3"
 										>
-											<h3 className="zen-kaku-gothic-new text-base text-main">
+											<h3 className="zen-kaku-gothic-new ">
 												{style.aspect}
 											</h3>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												{style.description}
 											</p>
 											<div className="flex flex-wrap gap-2">
@@ -374,29 +374,29 @@ export default function AIProfilePage() {
 
 							{/* AI Capabilities */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									AI Capabilities
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 									{aiCapabilities.map((capability) => (
 										<div
 											key={capability.category}
-											className="bg-base border border-main p-4 space-y-4"
+											className=" border p-4 space-y-4"
 										>
 											<div className="flex items-center">
 												<Zap className="w-6 h-6 text-accent mr-3" />
-												<h3 className="zen-kaku-gothic-new text-lg text-main">
+												<h3 className="zen-kaku-gothic-new text-lg ">
 													{capability.category}
 												</h3>
 											</div>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												{capability.description}
 											</p>
 											<div className="flex flex-wrap gap-2">
 												{capability.topics.map((topic) => (
 													<span
 														key={topic}
-														className="noto-sans-jp-light text-xs text-main border border-main px-2 py-1"
+														className="noto-sans-jp-light text-xs border px-2 py-1"
 													>
 														{topic}
 													</span>
@@ -409,27 +409,27 @@ export default function AIProfilePage() {
 
 							{/* Usage Guidelines */}
 							<section>
-								<h2 className="neue-haas-grotesk-display text-3xl text-main mb-8">
+								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									Usage Guidelines
 								</h2>
-								<div className="bg-base border border-accent p-4 space-y-4">
-									<h3 className="zen-kaku-gothic-new text-lg text-main">
+								<div className=" border border-accent p-4 space-y-4">
+									<h3 className="zen-kaku-gothic-new text-lg ">
 										このAIプロフィールの使用について
 									</h3>
 									<div className="space-y-3">
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											•
 											このプロフィールは、AIチャットボットやアシスタントの性格設定として使用できます
 										</p>
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											•
 											技術的な質問、創作活動のサポート、学習支援などに活用してください
 										</p>
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											•
 											常に建設的で親身な対話を心がけ、相手の成長をサポートします
 										</p>
-										<p className="noto-sans-jp-light text-sm text-main">
+										<p className="noto-sans-jp-light text-sm ">
 											•
 											不確実な情報については正直に伝え、適切なリソースを紹介します
 										</p>
@@ -443,21 +443,21 @@ export default function AIProfilePage() {
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-3 gap-6">
 									<Link
 										href="/about/profile/real"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>Real Profile</span>
 									</Link>
 
 									<Link
 										href="/about/profile/handle"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>Handle Profile</span>
 									</Link>
 
 									<Link
 										href="/contact"
-										className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base"
+										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>Contact</span>
 									</Link>
@@ -465,7 +465,7 @@ export default function AIProfilePage() {
 							</nav>
 
 							{/* Footer */}
-							<footer className="pt-4 border-t border-main">
+							<footer className="pt-4 border-t ">
 								<div className="text-center">
 									<p className="shippori-antique-b1-regular text-sm inline-block">
 										© 2025 samuido - AI Profile

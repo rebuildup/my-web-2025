@@ -38,13 +38,13 @@ export default function SettingsPanel({
 	};
 
 	return (
-		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 select-text">
+		<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 select-text">
 			<div className="flex items-center justify-between mb-6">
-				<h3 className="text-lg font-semibold text-main">タイマー設定</h3>
+				<h3 className="text-lg font-semibold ">タイマー設定</h3>
 				<button
 					type="button"
 					onClick={onClose}
-					className="text-main hover:text-main transition-colors"
+					className=" hover: transition-colors"
 					aria-label="設定を閉じる"
 				>
 					<X size={20} />
@@ -53,15 +53,15 @@ export default function SettingsPanel({
 
 			<div className="space-y-6">
 				{/* Tab Buttons */}
-				<div className="flex gap-2 flex-wrap border-b border-main/10 pb-2">
+				<div className="flex gap-2 flex-wrap border-b /10 pb-2">
 					{tabs.map((tab) => (
 						<button
 							key={tab.key}
 							onClick={() => setActiveTab(tab.key)}
 							className={`px-4 py-2 text-sm rounded-lg transition-colors ${
 								activeTab === tab.key
-									? "bg-main/20 text-main font-semibold"
-									: "bg-transparent text-main/60 hover:text-main"
+									? "/20 font-semibold"
+									: "bg-transparent /60 hover:"
 							}`}
 						>
 							{tab.label}
@@ -72,7 +72,7 @@ export default function SettingsPanel({
 				{/* Time Settings */}
 				{activeTab === "time" && (
 					<div className="space-y-4">
-						<h4 className="font-medium text-main">時間設定</h4>
+						<h4 className="font-medium ">時間設定</h4>
 
 						<div className="grid grid-2 gap-4">
 							<ElasticSlider
@@ -122,7 +122,7 @@ export default function SettingsPanel({
 				{/* YouTube Settings */}
 				{activeTab === "youtube" && (
 					<div className="space-y-4">
-						<h4 className="font-medium text-main">YouTubeプレイヤー設定</h4>
+						<h4 className="font-medium ">YouTubeプレイヤー設定</h4>
 						<div className="space-y-3">
 							<label className="flex items-center gap-3">
 								<input
@@ -176,7 +176,7 @@ export default function SettingsPanel({
 				{/* Notification Settings */}
 				{activeTab === "notification" && (
 					<div className="space-y-4">
-						<h4 className="font-medium text-main">通知設定</h4>
+						<h4 className="font-medium ">通知設定</h4>
 						<div className="space-y-3">
 							<label className="flex items-center gap-3">
 								<input
@@ -221,7 +221,7 @@ export default function SettingsPanel({
 				{/* Theme Settings */}
 				{activeTab === "display" && (
 					<div className="space-y-4">
-						<h4 className="font-medium text-main">表示設定</h4>
+						<h4 className="font-medium ">表示設定</h4>
 						<div>
 							<label className="block text-sm font-medium mb-2">テーマ</label>
 							<select
@@ -229,7 +229,7 @@ export default function SettingsPanel({
 								onChange={(e) =>
 									updateSetting("theme", e.target.value as "light" | "dark")
 								}
-								className="w-full p-2 rounded-lg bg-main/10"
+								className="w-full p-2 rounded-lg /10"
 							>
 								<option value="light">ライト</option>
 								<option value="dark">ダーク</option>
@@ -246,7 +246,7 @@ export default function SettingsPanel({
 									onChange={(e) =>
 										updateSetting("highlightColor", e.target.value)
 									}
-									className="w-12 h-10 rounded border border-main/20 bg-transparent cursor-pointer"
+									className="w-12 h-10 rounded border /20 bg-transparent cursor-pointer"
 								/>
 								<div className="flex gap-2">
 									{["#3b82f6", "#06b6d4", "#ec4899", "#f97316", "#22c55e"].map(
@@ -257,7 +257,7 @@ export default function SettingsPanel({
 												onClick={() => updateSetting("highlightColor", color)}
 												className={`w-8 h-8 rounded-full border ${
 													settings.highlightColor === color
-														? "border-main"
+														? ""
 														: "border-transparent"
 												}`}
 												style={{ backgroundColor: color }}
@@ -272,7 +272,7 @@ export default function SettingsPanel({
 				)}
 
 				{/* Reset Button */}
-				<div className="pt-4 border-t border-main/20">
+				<div className="pt-4 border-t /20">
 					<button
 						type="button"
 						onClick={() => {
@@ -293,7 +293,7 @@ export default function SettingsPanel({
 							};
 							onSettingsChange(defaultSettings);
 						}}
-						className="w-full px-4 py-2 rounded-lg bg-main/10 hover:bg-main/20 transition-colors text-sm"
+						className="w-full px-4 py-2 rounded-lg /10 hover:/20 transition-colors text-sm"
 					>
 						設定をリセット
 					</button>

@@ -54,12 +54,12 @@ export default function Search() {
 
 function SearchPageFallback() {
 	return (
-		<div className="min-h-screen bg-base text-main scrollbar-auto-stable">
+		<div className="min-h-screen scrollbar-auto-stable">
 			<main className="flex items-center py-10">
 				<div className="container-system">
 					<div className="space-y-10">
 						<header className="space-y-12">
-							<h1 className="neue-haas-grotesk-display text-6xl text-main">
+							<h1 className="neue-haas-grotesk-display text-6xl ">
 								Search
 							</h1>
 							<p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -69,7 +69,7 @@ function SearchPageFallback() {
 							</p>
 						</header>
 						<div className="text-center py-16">
-							<div className="inline-block w-8 h-8 border-2 border-main border-t-transparent rounded-full animate-spin"></div>
+							<div className="inline-block w-8 h-8 border-2 border-t-transparent rounded-full animate-spin"></div>
 							<p className="mt-4 noto-sans-jp-light text-sm">読み込み中...</p>
 						</div>
 					</div>

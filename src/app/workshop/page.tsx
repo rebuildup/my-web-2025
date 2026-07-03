@@ -567,7 +567,7 @@ export default async function WorkshopPage({
 
 							<aside className="w-80 space-y-5 hidden lg:block">
 								<div className="p-4 bg-[#1a1a1f] border border-[#333333] rounded">
-									<h2 className="text-base font-semibold text-[#f2f2f2] mb-4">
+									<h2 className=" font-semibold text-[#f2f2f2] mb-4">
 										Trending Tags
 									</h2>
 									<div className="space-y-3">
@@ -632,7 +632,7 @@ export default async function WorkshopPage({
 								</div>
 
 								<div className="p-4 bg-[#1a1a1f] border border-[#333333] rounded">
-									<h2 className="text-base font-semibold text-[#f2f2f2] mb-4">
+									<h2 className=" font-semibold text-[#f2f2f2] mb-4">
 										Popular Articles
 									</h2>
 									<div className="space-y-3">

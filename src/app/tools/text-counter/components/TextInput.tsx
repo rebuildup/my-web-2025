@@ -11,7 +11,7 @@ interface TextInputProps {
 
 const fontSizeClasses = {
 	small: "text-sm",
-	medium: "text-base",
+	medium: "",
 	large: "text-lg",
 };
 
@@ -32,7 +32,7 @@ export default function TextInput({
 		<div className="space-y-2">
 			<label
 				htmlFor="text-input"
-				className="block text-sm font-medium text-main"
+				className="block text-sm font-medium "
 			>
 				テキスト入力
 			</label>
@@ -42,16 +42,16 @@ export default function TextInput({
 				onChange={handleChange}
 				placeholder={placeholder}
 				className={`
-          w-full h-96 p-4 rounded-xl
-          bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)]
-          focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
-          resize-none
-          ${fontSizeClasses[fontSize]}
-        `}
+ w-full h-96 p-4 rounded-xl
+ /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)]
+ focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
+ resize-none
+ ${fontSizeClasses[fontSize]}
+ `}
 				aria-label="テキスト入力エリア"
 				aria-describedby="text-input-help"
 			/>
-			<p id="text-input-help" className="text-xs text-main opacity-70">
+			<p id="text-input-help" className="text-xs opacity-70">
 				テキストを入力すると、リアルタイムで文字数や統計情報が更新されます.
 			</p>
 		</div>

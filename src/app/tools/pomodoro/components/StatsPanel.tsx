@@ -70,24 +70,24 @@ export default function StatsPanel({
 	const getSessionTypeColor = (type: string) => {
 		switch (type) {
 			case "work":
-				return "bg-main/20 text-main";
+				return "/20 ";
 			case "shortBreak":
 				return "bg-accent/20 text-accent";
 			case "longBreak":
 				return "bg-green-500/20 text-green-700";
 			default:
-				return "bg-main/20 text-main";
+				return "/20 ";
 		}
 	};
 
 	return (
-		<div className="rounded-xl bg-base/75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
+		<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
 			<div className="flex items-center justify-between mb-6">
-				<h3 className="text-lg font-semibold text-main">統計情報</h3>
+				<h3 className="text-lg font-semibold ">統計情報</h3>
 				<button
 					type="button"
 					onClick={onClose}
-					className="text-main hover:text-main transition-colors"
+					className=" hover: transition-colors"
 					aria-label="統計を閉じる"
 				>
 					<X size={20} />
@@ -97,17 +97,17 @@ export default function StatsPanel({
 			<div className="space-y-6">
 				{/* Overview Stats */}
 				<div className="grid grid-2 gap-4">
-					<div className="rounded-lg bg-main/5 p-4 text-center">
+					<div className="rounded-lg /5 p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
-							<Target className="text-main" size={20} />
+							<Target className="" size={20} />
 							<span className="text-sm font-medium">完了ポモドーロ</span>
 						</div>
-						<div className="text-2xl font-bold text-main">
+						<div className="text-2xl font-bold ">
 							{stats.completedPomodoros}
 						</div>
 					</div>
 
-					<div className="rounded-lg bg-main/5 p-4 text-center">
+					<div className="rounded-lg /5 p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
 							<Clock className="text-accent" size={20} />
 							<span className="text-sm font-medium">総作業時間</span>
@@ -117,7 +117,7 @@ export default function StatsPanel({
 						</div>
 					</div>
 
-					<div className="rounded-lg bg-main/5 p-4 text-center">
+					<div className="rounded-lg /5 p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
 							<Zap className="text-green-600" size={20} />
 							<span className="text-sm font-medium">現在の連続記録</span>
@@ -127,7 +127,7 @@ export default function StatsPanel({
 						</div>
 					</div>
 
-					<div className="rounded-lg bg-main/5 p-4 text-center">
+					<div className="rounded-lg /5 p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
 							<Calendar className="text-purple-600" size={20} />
 							<span className="text-sm font-medium">今日のセッション</span>
@@ -140,25 +140,25 @@ export default function StatsPanel({
 
 				{/* Detailed Stats */}
 				<div className="space-y-4">
-					<h4 className="font-medium text-main">詳細統計</h4>
+					<h4 className="font-medium ">詳細統計</h4>
 
 					<div className="grid grid-2 gap-4 text-sm">
 						<div className="flex justify-between">
-							<span className="text-main">総セッション数:</span>
+							<span className="">総セッション数:</span>
 							<span className="font-medium">{stats.totalSessions}</span>
 						</div>
 						<div className="flex justify-between">
-							<span className="text-main">総休憩時間:</span>
+							<span className="">総休憩時間:</span>
 							<span className="font-medium">
 								{formatTime(stats.totalBreakTime)}
 							</span>
 						</div>
 						<div className="flex justify-between">
-							<span className="text-main">最長連続記録:</span>
+							<span className="">最長連続記録:</span>
 							<span className="font-medium">{stats.longestStreak}</span>
 						</div>
 						<div className="flex justify-between">
-							<span className="text-main">今週のセッション:</span>
+							<span className="">今週のセッション:</span>
 							<span className="font-medium">{getThisWeekSessions()}</span>
 						</div>
 					</div>
@@ -166,14 +166,14 @@ export default function StatsPanel({
 
 				{/* Recent Sessions */}
 				<div className="space-y-4">
-					<h4 className="font-medium text-main">最近のセッション</h4>
+					<h4 className="font-medium ">最近のセッション</h4>
 
 					<div className="space-y-2 max-h-64 overflow-y-auto">
 						{getRecentSessions().length > 0 ? (
 							getRecentSessions().map((session) => (
 								<div
 									key={session.id}
-									className="flex items-center justify-between p-3 rounded-lg bg-main/5"
+									className="flex items-center justify-between p-3 rounded-lg /5"
 								>
 									<div className="flex items-center gap-3">
 										<span
@@ -181,11 +181,11 @@ export default function StatsPanel({
 										>
 											{getSessionTypeLabel(session.type)}
 										</span>
-										<span className="text-sm text-main">
+										<span className="text-sm ">
 											{formatTime(session.duration)}
 										</span>
 									</div>
-									<div className="text-xs text-main">
+									<div className="text-xs ">
 										{session.completedAt.toLocaleString("ja-JP", {
 											month: "short",
 											day: "numeric",
@@ -196,7 +196,7 @@ export default function StatsPanel({
 								</div>
 							))
 						) : (
-							<div className="text-center text-main/70 py-8">
+							<div className="text-center /70 py-8">
 								まだセッションがありません
 							</div>
 						)}
@@ -206,12 +206,12 @@ export default function StatsPanel({
 				{/* Productivity Insights */}
 				{stats.completedPomodoros > 0 && (
 					<div className="space-y-4">
-						<h4 className="font-medium text-main">生産性の洞察</h4>
+						<h4 className="font-medium ">生産性の洞察</h4>
 
-						<div className="rounded-lg bg-main/5 p-4">
+						<div className="rounded-lg /5 p-4">
 							<div className="space-y-2 text-sm">
 								<div className="flex justify-between">
-									<span className="text-main">平均セッション時間:</span>
+									<span className="">平均セッション時間:</span>
 									<span className="font-medium">
 										{formatTime(
 											Math.round(
@@ -221,7 +221,7 @@ export default function StatsPanel({
 									</span>
 								</div>
 								<div className="flex justify-between">
-									<span className="text-main">作業効率:</span>
+									<span className="">作業効率:</span>
 									<span className="font-medium">
 										{Math.round(
 											(stats.totalWorkTime /
@@ -232,7 +232,7 @@ export default function StatsPanel({
 									</span>
 								</div>
 								<div className="flex justify-between">
-									<span className="text-main">1日平均ポモドーロ:</span>
+									<span className="">1日平均ポモドーロ:</span>
 									<span className="font-medium">
 										{Math.round(
 											stats.completedPomodoros /
@@ -246,7 +246,7 @@ export default function StatsPanel({
 				)}
 
 				{/* Reset Stats */}
-				<div className="pt-4 border-t border-main/20">
+				<div className="pt-4 border-t /20">
 					<button
 						type="button"
 						onClick={() => {

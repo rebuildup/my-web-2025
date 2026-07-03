@@ -320,13 +320,13 @@ function renderHtml(docs: Doc[], styleSettings: StyleSettings) {
 								.map((p) => `<p>${paragraphToHtml(p)}</p>`)
 								.join("\n");
 							return `<div class="quiz-section">
-  <h4>${sec.title}</h4>
-  ${paras}
-  <div class="section-controls">
-    <button class="btn-mini btn-check" onclick="checkSection(this)">このセクションを採点</button>
-    <button class="btn-mini btn-ans" onclick="showSectionAns(this)">答えを見る</button>
-    <button class="btn-mini btn-reset" onclick="resetSection(this)">リセット</button>
-  </div>
+ <h4>${sec.title}</h4>
+ ${paras}
+ <div class="section-controls">
+ <button class="btn-mini btn-check" onclick="checkSection(this)">このセクションを採点</button>
+ <button class="btn-mini btn-ans" onclick="showSectionAns(this)">答えを見る</button>
+ <button class="btn-mini btn-reset" onclick="resetSection(this)">リセット</button>
+ </div>
 </div>`;
 						}),
 					);
@@ -351,97 +351,97 @@ function renderReact(docs: Doc[], styleSettings: StyleSettings) {
 const style = \`${escapedStyle}\`;
 
 export function GeneratedQuiz({ title = "${docs[0]?.title ?? "Quiz"}" }) {
-  const ref = useRef(null);
-  const [page, setPage] = useState(0);
+ const ref = useRef(null);
+ const [page, setPage] = useState(0);
 
-  useEffect(() => {
-    const root = ref.current;
-    if (!root) return;
-    const resizeInput = (input) => {
-      const base = parseInt(input.dataset.baseWidth || "0", 10) || 80;
-      const dynamic = Math.min(500, Math.max(base, (input.value.length + 1) * 12));
-      input.style.width = dynamic + "px";
-    };
-    const inputs = root.querySelectorAll('input.blank');
-    inputs.forEach((input) => {
-      const wrapper = document.createElement('span');
-      wrapper.className = 'input-wrapper';
-      input.parentNode?.insertBefore(wrapper, input);
-      wrapper.appendChild(input);
-      const tooltip = document.createElement('div');
-      tooltip.className = 'ans-tooltip';
-      tooltip.innerText = (input.dataset.ans || '').split('|')[0];
-      wrapper.appendChild(tooltip);
-      resizeInput(input);
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const section = input.closest('.quiz-section');
-          if (!section) return;
-          const arr = Array.from(section.querySelectorAll('input.blank'));
-          const idx = arr.indexOf(input);
-          if (idx >= 0 && idx < arr.length - 1) arr[idx + 1].focus();
-        }
-      });
-      input.addEventListener('input', () => {
-        input.classList.remove('correct', 'incorrect');
-        wrapper.classList.remove('show-ans');
-        resizeInput(input);
-      });
-    });
-  }, []);
+ useEffect(() => {
+ const root = ref.current;
+ if (!root) return;
+ const resizeInput = (input) => {
+ const base = parseInt(input.dataset.baseWidth || "0", 10) || 80;
+ const dynamic = Math.min(500, Math.max(base, (input.value.length + 1) * 12));
+ input.style.width = dynamic + "px";
+ };
+ const inputs = root.querySelectorAll('input.blank');
+ inputs.forEach((input) => {
+ const wrapper = document.createElement('span');
+ wrapper.className = 'input-wrapper';
+ input.parentNode?.insertBefore(wrapper, input);
+ wrapper.appendChild(input);
+ const tooltip = document.createElement('div');
+ tooltip.className = 'ans-tooltip';
+ tooltip.innerText = (input.dataset.ans || '').split('|')[0];
+ wrapper.appendChild(tooltip);
+ resizeInput(input);
+ input.addEventListener('keydown', (e) => {
+ if (e.key === 'Enter') {
+ e.preventDefault();
+ const section = input.closest('.quiz-section');
+ if (!section) return;
+ const arr = Array.from(section.querySelectorAll('input.blank'));
+ const idx = arr.indexOf(input);
+ if (idx >= 0 && idx < arr.length - 1) arr[idx + 1].focus();
+ }
+ });
+ input.addEventListener('input', () => {
+ input.classList.remove('correct', 'incorrect');
+ wrapper.classList.remove('show-ans');
+ resizeInput(input);
+ });
+ });
+ }, []);
 
-  const checkSection = (btn) => {
-    const section = btn.closest('.quiz-section');
-    if (!section) return;
-    section.querySelectorAll('input.blank').forEach((input) => {
-      const val = input.value.trim().replace(/\\s+/g, '');
-      const answers = (input.dataset.ans || '').split('|');
-      const ok = answers.some((a) => val === a || val === a.replace(/・/g, ''));
-      if (ok) { input.classList.add('correct'); input.classList.remove('incorrect'); input.parentElement?.classList.remove('show-ans'); }
-      else { input.classList.add('incorrect'); input.classList.remove('correct'); }
-    });
-  };
+ const checkSection = (btn) => {
+ const section = btn.closest('.quiz-section');
+ if (!section) return;
+ section.querySelectorAll('input.blank').forEach((input) => {
+ const val = input.value.trim().replace(/\\s+/g, '');
+ const answers = (input.dataset.ans || '').split('|');
+ const ok = answers.some((a) => val === a || val === a.replace(/・/g, ''));
+ if (ok) { input.classList.add('correct'); input.classList.remove('incorrect'); input.parentElement?.classList.remove('show-ans'); }
+ else { input.classList.add('incorrect'); input.classList.remove('correct'); }
+ });
+ };
 
-  const showSectionAns = (btn) => {
-    const section = btn.closest('.quiz-section');
-    if (!section) return;
-    section.querySelectorAll('input.blank').forEach((input) => {
-      if (!input.classList.contains('correct')) {
-        input.parentElement?.classList.add('show-ans');
-        input.classList.add('incorrect');
-      }
-    });
-  };
+ const showSectionAns = (btn) => {
+ const section = btn.closest('.quiz-section');
+ if (!section) return;
+ section.querySelectorAll('input.blank').forEach((input) => {
+ if (!input.classList.contains('correct')) {
+ input.parentElement?.classList.add('show-ans');
+ input.classList.add('incorrect');
+ }
+ });
+ };
 
-  const resetSection = (btn) => {
-    const section = btn.closest('.quiz-section');
-    if (!section) return;
-    section.querySelectorAll('input.blank').forEach((input) => {
-      input.value = '';
-      input.classList.remove('correct', 'incorrect');
-      input.parentElement?.classList.remove('show-ans');
-      const base = parseInt(input.dataset.baseWidth || "0", 10) || 80;
-      const dynamic = Math.min(500, Math.max(base, (input.value.length + 1) * 12));
-      input.style.width = dynamic + "px";
-    });
-  };
+ const resetSection = (btn) => {
+ const section = btn.closest('.quiz-section');
+ if (!section) return;
+ section.querySelectorAll('input.blank').forEach((input) => {
+ input.value = '';
+ input.classList.remove('correct', 'incorrect');
+ input.parentElement?.classList.remove('show-ans');
+ const base = parseInt(input.dataset.baseWidth || "0", 10) || 80;
+ const dynamic = Math.min(500, Math.max(base, (input.value.length + 1) * 12));
+ input.style.width = dynamic + "px";
+ });
+ };
 
-  return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: style }} />
-      <div className="container" ref={ref}>
-        {${docs.length > 1 ? "true" : "false"} && (
-          <div className="nav-bar">
-            ${docs
+ return (
+ <>
+ <style dangerouslySetInnerHTML={{ __html: style }} />
+ <div className="container" ref={ref}>
+ {${docs.length > 1 ? "true" : "false"} && (
+ <div className="nav-bar">
+ ${docs
 							.map(
 								(_, i) =>
 									`<button className=\\"nav-btn\\" onClick={() => setPage(${i})}>第${i + 1}回</button>`,
 							)
 							.join("")}
-          </div>
-        )}
-        ${docs
+ </div>
+ )}
+ ${docs
 					.map((doc, idx) => {
 						const blocks = doc.blocks
 							.map((b) => {
@@ -454,13 +454,13 @@ export function GeneratedQuiz({ title = "${docs[0]?.title ?? "Quiz"}" }) {
 											.map((p) => `<p>${paragraphToHtml(p)}</p>`)
 											.join("\\n");
 										return `<div className=\\"quiz-section\\">
-  <h4>${sec.title}</h4>
-  ${paras}
-  <div className=\\"section-controls\\">
-    <button className=\\"btn-mini btn-check\\" onClick={(e)=>checkSection(e.currentTarget)}>このセクションを採点</button>
-    <button className=\\"btn-mini btn-ans\\" onClick={(e)=>showSectionAns(e.currentTarget)}>答えを見る</button>
-    <button className=\\"btn-mini btn-reset\\" onClick={(e)=>resetSection(e.currentTarget)}>リセット</button>
-  </div>
+ <h4>${sec.title}</h4>
+ ${paras}
+ <div className=\\"section-controls\\">
+ <button className=\\"btn-mini btn-check\\" onClick={(e)=>checkSection(e.currentTarget)}>このセクションを採点</button>
+ <button className=\\"btn-mini btn-ans\\" onClick={(e)=>showSectionAns(e.currentTarget)}>答えを見る</button>
+ <button className=\\"btn-mini btn-reset\\" onClick={(e)=>resetSection(e.currentTarget)}>リセット</button>
+ </div>
 </div>`;
 									})
 									.join("\\n");
@@ -468,14 +468,14 @@ export function GeneratedQuiz({ title = "${docs[0]?.title ?? "Quiz"}" }) {
 							})
 							.join("\\n");
 						return `<div className=\\"sheet\\" style=\\"display:${idx === 0 ? "block" : "none"}\\">
-  <h2 className=\\"sheet-title\\">${idx === 0 ? "{title}" : doc.title}</h2>
-  ${blocks}
+ <h2 className=\\"sheet-title\\">${idx === 0 ? "{title}" : doc.title}</h2>
+ ${blocks}
 </div>`;
 					})
 					.join("")}
-      </div>
-    </>
-  );
+ </div>
+ </>
+ );
 }
 `;
 }

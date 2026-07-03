@@ -29,12 +29,12 @@ export function LatestWorksSection({
 	return (
 		<section className="space-y-6">
 			<div className="flex items-center justify-between">
-				<h2 className="neue-haas-grotesk-display text-3xl text-main">
+				<h2 className="neue-haas-grotesk-display text-3xl ">
 					Latest Works
 				</h2>
 				<Link
 					href="/portfolio/gallery/all"
-					className="noto-sans-jp-light text-sm text-main/70 hover:text-accent transition-colors flex items-center gap-2"
+					className="noto-sans-jp-light text-sm /70 hover:text-accent transition-colors flex items-center gap-2"
 				>
 					すべて見る
 					<ArrowRight className="w-4 h-4" />

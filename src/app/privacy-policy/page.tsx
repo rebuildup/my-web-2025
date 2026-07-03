@@ -51,11 +51,11 @@ export default function PrivacyPolicy() {
 	// Style variables matching root page
 	const SectionStyle = "space-y-4";
 	const Section_title =
-		"neue-haas-grotesk-display text-4xl text-main leading-snug mb-6";
-	const Global_title = "noto-sans-jp-regular text-base leading-snug";
+		"neue-haas-grotesk-display text-4xl leading-snug mb-6";
+	const Global_title = "noto-sans-jp-regular leading-snug";
 
 	return (
-		<div className="min-h-screen bg-base text-main">
+		<div className="min-h-screen ">
 			<main className="flex items-center py-10">
 				<div className="container-system">
 					<div className="space-y-10">
@@ -70,7 +70,7 @@ export default function PrivacyPolicy() {
 						</div>
 						{/* Page Header */}
 						<header className="space-y-12">
-							<h1 className="neue-haas-grotesk-display text-6xl text-main">
+							<h1 className="neue-haas-grotesk-display text-6xl ">
 								Privacy Policy
 							</h1>
 							<div className="space-y-4">
@@ -110,7 +110,7 @@ export default function PrivacyPolicy() {
 								<h2 className={Section_title}>収集する情報</h2>
 								<div className="space-y-6">
 									<div>
-										<h3 className={`${Global_title} text-main mb-3`}>
+										<h3 className={`${Global_title} mb-3`}>
 											お問い合わせフォーム
 										</h3>
 										<ul className="noto-sans-jp-light text-sm leading-loose space-y-1">
@@ -122,7 +122,7 @@ export default function PrivacyPolicy() {
 									</div>
 
 									<div>
-										<h3 className={`${Global_title} text-main mb-3`}>
+										<h3 className={`${Global_title} mb-3`}>
 											アクセスログ
 										</h3>
 										<ul className="noto-sans-jp-light text-sm leading-loose space-y-1">
@@ -153,7 +153,7 @@ export default function PrivacyPolicy() {
 								<h2 className={Section_title}>Cookieの使用</h2>
 								<div className="space-y-6">
 									<div>
-										<h3 className={`${Global_title} text-main mb-3`}>
+										<h3 className={`${Global_title} mb-3`}>
 											必須Cookie
 										</h3>
 										<p className="noto-sans-jp-light text-sm leading-loose">
@@ -162,7 +162,7 @@ export default function PrivacyPolicy() {
 									</div>
 
 									<div>
-										<h3 className={`${Global_title} text-main mb-3`}>
+										<h3 className={`${Global_title} mb-3`}>
 											分析Cookie（Google Analytics）
 										</h3>
 										<p className="noto-sans-jp-light text-sm leading-loose mb-3">
@@ -177,7 +177,7 @@ export default function PrivacyPolicy() {
 									</div>
 
 									<div>
-										<h3 className={`${Global_title} text-main mb-3`}>
+										<h3 className={`${Global_title} mb-3`}>
 											Cookie管理
 										</h3>
 										<p className="noto-sans-jp-light text-sm leading-loose">
@@ -262,7 +262,7 @@ export default function PrivacyPolicy() {
 									<p className="noto-sans-jp-light text-sm leading-loose">
 										本プライバシーポリシーに関するお問い合わせは、以下までご連絡ください：
 									</p>
-									<div className="p-4 bg-base">
+									<div className="p-4 ">
 										<p className={`${Global_title} mb-2`}>
 											<strong>連絡先:</strong> 361do.sleep(at)gmail.com
 										</p>
@@ -281,13 +281,13 @@ export default function PrivacyPolicy() {
 						<nav aria-label="Navigation">
 							<Link
 								href="/"
-								className="border border-main text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base hover:bg-main hover:text-base transition-colors"
+								className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover: hover: transition-colors"
 							>
 								<span className={Global_title}>← ホームに戻る</span>
 							</Link>
 						</nav>
 
-						<footer className="pt-4 border-t border-main">
+						<footer className="pt-4 border-t ">
 							<div className="text-center">
 								<p className="shippori-antique-b1-regular text-sm inline-block">
 									© 2025 361do_sleep - Creative Portfolio & Tools

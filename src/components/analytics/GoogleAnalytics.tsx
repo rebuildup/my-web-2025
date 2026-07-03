@@ -17,17 +17,17 @@ export default function GoogleAnalytics({ gaId }: { gaId?: string }) {
 			/>
 			<Script id="google-analytics" strategy="afterInteractive">
 				{`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){window.dataLayer.push(arguments);}
-          window.gtag = gtag;
-          gtag('js', new Date());
+ window.dataLayer = window.dataLayer || [];
+ function gtag(){window.dataLayer.push(arguments);}
+ window.gtag = gtag;
+ gtag('js', new Date());
 
-          gtag('config', '${gaId}', {
-            page_path: window.location.pathname,
-            debug_mode: ${process.env.NODE_ENV === "development"},
-            send_page_view: false
-          });
-        `}
+ gtag('config', '${gaId}', {
+ page_path: window.location.pathname,
+ debug_mode: ${process.env.NODE_ENV === "development"},
+ send_page_view: false
+ });
+ `}
 			</Script>
 		</>
 	);

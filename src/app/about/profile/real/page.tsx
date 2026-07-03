@@ -34,8 +34,8 @@ function RandomPersonalityList({ items }: { items: string[] }) {
 	return (
 		<div className="space-y-3">
 			{selectedItems.map((item, index) => (
-				<SpotlightCard key={index} className="bg-main/5 p-3 rounded-lg">
-					<p className="noto-sans-jp-light text-sm text-main">{item}</p>
+				<SpotlightCard key={index} className="/5 p-3 rounded-lg">
+					<p className="noto-sans-jp-light text-sm ">{item}</p>
 				</SpotlightCard>
 			))}
 		</div>
@@ -264,7 +264,7 @@ export default function RealProfilePage() {
 		setMounted(true);
 	}, []);
 
-	const Global_title = "noto-sans-jp-regular text-base leading-snug";
+	const Global_title = "noto-sans-jp-regular leading-snug";
 
 	return (
 		<>
@@ -278,7 +278,7 @@ export default function RealProfilePage() {
 					<div className="fixed top-20 right-10 z-5 pointer-events-none hidden lg:block">
 						<ScrollVelocity
 							text="Profile Profile Profile "
-							className="text-main/10 text-6xl"
+							className="/10 text-6xl"
 						/>
 					</div>
 				)}
@@ -306,25 +306,25 @@ export default function RealProfilePage() {
 									<div className="-mb-8">
 										<TypingText
 											text="「面白い」を見つけて、探求する"
-											className="text-main text-base md:text-lg mb-2 -ml-2"
+											className=" md:text-lg mb-2 -ml-2"
 											speed={15}
 											delay={800}
 										/>
 										<TypingText
 											text="こんにちは 木村友亮です"
-											className="text-main text-base md:text-lg mb-4"
+											className=" md:text-lg mb-4"
 											speed={15}
 											delay={1000}
 										/>
 										<TypingText
 											text="Discovering and exploring what's interesting"
-											className="text-main/60 text-[10px] md:text-xs leading-relaxed"
+											className="/60 text-[10px] md:text-xs leading-relaxed"
 											speed={5}
 											delay={1200}
 										/>
 										<TypingText
 											text="Hello, I'm Yusuke Kimura."
-											className="text-main/60 text-[10px] md:text-xs leading-relaxed"
+											className="/60 text-[10px] md:text-xs leading-relaxed"
 											speed={5}
 											delay={1400}
 										/>
@@ -340,7 +340,7 @@ export default function RealProfilePage() {
 									<div className="mb-8">
 										<ScrollVelocity
 											text="Activities Activities Activities "
-											className="text-3xl md:text-4xl text-main"
+											className="text-3xl md:text-4xl "
 										/>
 									</div>
 								)}
@@ -351,12 +351,12 @@ export default function RealProfilePage() {
 									{activities.map((activity, index) => (
 										<div
 											key={index}
-											className="bg-main/5 p-4 rounded-lg hover:bg-main/10 transition-colors flex flex-col"
+											className="/5 p-4 rounded-lg hover:/10 transition-colors flex flex-col"
 										>
-											<h3 className="zen-kaku-gothic-new text-base text-main mb-2">
+											<h3 className="zen-kaku-gothic-new mb-2">
 												{activity.ja}
 											</h3>
-											<p className="noto-sans-jp-light text-xs text-main/60 leading-relaxed grow">
+											<p className="noto-sans-jp-light text-xs /60 leading-relaxed grow">
 												{activity.en}
 											</p>
 										</div>
@@ -372,7 +372,7 @@ export default function RealProfilePage() {
 									<div className="mb-8">
 										<ScrollVelocity
 											text="Personal Information Personal Information "
-											className="text-3xl md:text-4xl text-main"
+											className="text-3xl md:text-4xl "
 										/>
 									</div>
 								)}
@@ -384,10 +384,10 @@ export default function RealProfilePage() {
 									<div className="flex items-start gap-2">
 										<Calendar className="w-5 h-5 text-accent shrink-0 mt-1" />
 										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm text-main/60 mb-1">
+											<h3 className="zen-kaku-gothic-new text-sm /60 mb-1">
 												生年月日・年齢
 											</h3>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												{personalInfo.birthDate}生まれ（{personalInfo.age}）
 											</p>
 										</div>
@@ -396,10 +396,10 @@ export default function RealProfilePage() {
 									<div className="flex items-start gap-2">
 										<MapPin className="w-5 h-5 text-accent shrink-0 mt-1" />
 										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm text-main/60 mb-1">
+											<h3 className="zen-kaku-gothic-new text-sm /60 mb-1">
 												居住地
 											</h3>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												{personalInfo.location}
 											</p>
 										</div>
@@ -408,10 +408,10 @@ export default function RealProfilePage() {
 									<div className="flex items-start gap-2">
 										<GraduationCap className="w-5 h-5 text-accent shrink-0 mt-1" />
 										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm text-main/60 mb-1">
+											<h3 className="zen-kaku-gothic-new text-sm /60 mb-1">
 												現在の状況
 											</h3>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												{personalInfo.status}
 											</p>
 											<p className="noto-sans-jp-light text-xs text-accent">
@@ -422,10 +422,10 @@ export default function RealProfilePage() {
 
 									<div className="flex items-start gap-2">
 										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm text-main/60 mb-1">
+											<h3 className="zen-kaku-gothic-new text-sm /60 mb-1">
 												名前
 											</h3>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												{personalInfo.name}（{personalInfo.nameReading}）
 											</p>
 											<p className="noto-sans-jp-light text-xs text-accent">
@@ -444,7 +444,7 @@ export default function RealProfilePage() {
 									<div className="mb-8">
 										<ScrollVelocity
 											text="Education Education Education "
-											className="text-3xl md:text-4xl text-main"
+											className="text-3xl md:text-4xl "
 										/>
 									</div>
 								)}
@@ -453,21 +453,21 @@ export default function RealProfilePage() {
 							<ScrollFloat stagger={100}>
 								<div className="relative pl-8 timeline-container">
 									{/* タイムラインの縦線 */}
-									<div className="absolute left-0 top-0 bottom-0 w-0.5 bg-main/20 timeline-line"></div>
+									<div className="absolute left-0 top-0 bottom-0 w-0.5 /20 timeline-line"></div>
 
 									{education.map((edu, index) => (
 										<div key={index} className="relative mb-8 timeline-item">
 											{/* タイムラインノード（点） */}
-											<div className="absolute w-3 h-3 rounded-full bg-main/60 border-2 border-main timeline-node"></div>
+											<div className="absolute w-3 h-3 rounded-full /60 border-2 timeline-node"></div>
 
-											<div className="text-main">
-												<div className="text-sm md:text-base font-bold text-main/60 mb-2">
+											<div className="">
+												<div className="text-sm md: font-bold /60 mb-2">
 													{edu.date}
 												</div>
-												<div className="text-base md:text-lg text-main mb-1">
+												<div className=" md:text-lg mb-1">
 													{edu.contentJa}
 												</div>
-												<div className="text-main/60 text-[10px] md:text-xs leading-relaxed">
+												<div className="/60 text-[10px] md:text-xs leading-relaxed">
 													{edu.contentEn}
 												</div>
 											</div>
@@ -484,7 +484,7 @@ export default function RealProfilePage() {
 									<div className="mb-8">
 										<ScrollVelocity
 											text="Skills Skills Skills "
-											className="text-3xl md:text-4xl text-main"
+											className="text-3xl md:text-4xl "
 										/>
 									</div>
 								)}
@@ -495,9 +495,9 @@ export default function RealProfilePage() {
 									{skillsDetail.map((skill, index) => (
 										<div
 											key={index}
-											className="bg-main/5 p-3 rounded-lg hover:bg-main/10 transition-colors"
+											className="/5 p-3 rounded-lg hover:/10 transition-colors"
 										>
-											<p className="noto-sans-jp-light text-sm text-main">
+											<p className="noto-sans-jp-light text-sm ">
 												{skill}
 											</p>
 										</div>
@@ -513,7 +513,7 @@ export default function RealProfilePage() {
 									<div className="mb-8">
 										<ScrollVelocity
 											text="Achievements Achievements Achievements "
-											className="text-3xl md:text-4xl text-main"
+											className="text-3xl md:text-4xl "
 										/>
 									</div>
 								)}
@@ -523,14 +523,14 @@ export default function RealProfilePage() {
 								<div className="space-y-12 pt-40">
 									{achievements.map((achievement, index) => (
 										<div key={index} className="text-left">
-											<div className="text-main">
-												<div className="text-sm md:text-base font-bold text-main/60 mb-2">
+											<div className="">
+												<div className="text-sm md: font-bold /60 mb-2">
 													{achievement.date}
 												</div>
-												<div className="text-base md:text-lg text-main mb-1">
+												<div className=" md:text-lg mb-1">
 													{achievement.contentJa}
 												</div>
-												<div className="text-main/60 text-[10px] md:text-xs leading-relaxed">
+												<div className="/60 text-[10px] md:text-xs leading-relaxed">
 													{achievement.contentEn}
 												</div>
 											</div>
@@ -547,7 +547,7 @@ export default function RealProfilePage() {
 									<div className="mb-8">
 										<ScrollVelocity
 											text="About Me About Me About Me "
-											className="text-3xl md:text-4xl text-main"
+											className="text-3xl md:text-4xl "
 										/>
 									</div>
 								)}
@@ -567,14 +567,14 @@ export default function RealProfilePage() {
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-3 gap-6">
 									<Link
 										href="/about/profile/handle"
-										className="bg-main/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base hover:bg-main/10 transition-colors rounded-lg"
+										className="/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Handle Profile</span>
 									</Link>
 
 									<Link
 										href="/about/card/real"
-										className="bg-main/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 focus:ring-offset-base hover:bg-main/10 transition-colors rounded-lg"
+										className="/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Digital Card</span>
 									</Link>
@@ -585,7 +585,7 @@ export default function RealProfilePage() {
 						<div className="p-40" />
 						{/* Footer */}
 						<footer className="left-0 right-0 z-10 flex items-center justify-center">
-							<span className="text-xs text-main">© 2025 361do_sleep</span>
+							<span className="text-xs ">© 2025 361do_sleep</span>
 						</footer>
 					</div>
 				</main>

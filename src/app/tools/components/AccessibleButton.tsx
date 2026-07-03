@@ -64,51 +64,51 @@ const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(
 
 		// Base styles with accessibility considerations
 		const baseStyles = `
-      inline-flex items-center justify-center
-      font-medium transition-colors duration-200
-      focus:outline-none focus:ring-1
-      disabled:opacity-50 disabled:cursor-not-allowed
-      ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
-    `;
+ inline-flex items-center justify-center
+ font-medium transition-colors duration-200
+ focus:outline-none focus:ring-1
+ disabled:opacity-50 disabled:cursor-not-allowed
+ ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
+ `;
 
 		// Variant styles
 		const variantStyles = {
 			primary: `
-        bg-accent text-main border border-accent
-        hover:bg-base hover:text-accent
-        focus:ring-accent focus:border-accent
-      `,
+ bg-accent border border-accent
+ hover: hover:text-accent
+ focus:ring-accent focus:border-accent
+ `,
 			secondary: `
-        bg-base text-main border border-main
-        hover:bg-base
-        focus:ring-main focus:border-main
-      `,
+ border 
+ hover:
+ focus: focus:
+ `,
 			danger: `
-        bg-red-600 text-white border border-red-600
-        hover:bg-red-700
-        focus:ring-red-500 focus:border-red-500
-      `,
+ bg-red-600 text-white border border-red-600
+ hover:bg-red-700
+ focus:ring-red-500 focus:border-red-500
+ `,
 			ghost: `
-        bg-transparent text-main border border-transparent
-        hover:bg-base hover:border-main
-        focus:ring-main focus:border-main
-      `,
+ bg-transparent border border-transparent
+ hover: hover:
+ focus: focus:
+ `,
 		};
 
 		// Size styles
 		const sizeStyles = {
 			sm: "px-3 py-1.5 text-sm min-h-[32px]",
-			md: "px-4 py-2 text-base min-h-[40px]",
+			md: "px-4 py-2 min-h-[40px]",
 			lg: "px-6 py-3 text-lg min-h-[48px]",
 		};
 
 		// Combine all styles
 		const combinedClassName = `
-      ${baseStyles}
-      ${variantStyles[variant]}
-      ${sizeStyles[size]}
-      ${className}
-    `
+ ${baseStyles}
+ ${variantStyles[variant]}
+ ${sizeStyles[size]}
+ ${className}
+ `
 			.trim()
 			.replace(/\s+/g, " ");
 

@@ -65,7 +65,7 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
 			{/* Header */}
 			<div>
 				<header className="space-y-4">
-					<h1 className="neue-haas-grotesk-display text-6xl text-main">
+					<h1 className="neue-haas-grotesk-display text-6xl ">
 						All Projects
 					</h1>
 					<p className="noto-sans-jp-light text-sm max-w leading-loose">
@@ -99,7 +99,7 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
 				{/* Empty State */}
 				{filteredAndSortedItems.length === 0 && (
 					<div className="text-center py-12">
-						<p className="noto-sans-jp-light text-sm text-main">
+						<p className="noto-sans-jp-light text-sm ">
 							No items match the current filters.
 						</p>
 					</div>

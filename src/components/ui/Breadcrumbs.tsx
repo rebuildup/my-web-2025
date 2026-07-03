@@ -38,7 +38,7 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
 						>
 							{/* Separator */}
 							{index > 0 && (
-								<span className="mx-2 text-main select-none leading-none">
+								<span className="mx-2 select-none leading-none">
 									/
 								</span>
 							)}
@@ -46,7 +46,7 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
 							{/* Breadcrumb item */}
 							{isCurrent || !item.href ? (
 								<span
-									className="text-main leading-none"
+									className=" leading-none"
 									aria-current={isCurrent ? "page" : undefined}
 								>
 									{item.label}
@@ -54,7 +54,7 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
 							) : (
 								<Link
 									href={item.href}
-									className="text-main hover:text-accent transition-colors duration-200 hover:underline leading-none"
+									className=" hover:text-accent transition-colors duration-200 hover:underline leading-none"
 								>
 									{item.label}
 								</Link>

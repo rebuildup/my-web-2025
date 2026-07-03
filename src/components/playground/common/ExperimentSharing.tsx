@@ -111,17 +111,17 @@ export function ExperimentSharing({
 
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-			<div className="bg-base border border-main max-w-md w-full mx-4 rounded-lg">
+			<div className=" border max-w-md w-full mx-4 rounded-lg">
 				{/* Header */}
-				<div className="flex items-center justify-between p-4 border-b border-main">
-					<h3 className="zen-kaku-gothic-new text-lg text-main flex items-center">
+				<div className="flex items-center justify-between p-4 border-b ">
+					<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 						<Share2 className="w-5 h-5 mr-2" />
 						Share Experiment
 					</h3>
 					<button
 						type="button"
 						onClick={onClose}
-						className="text-main hover:text-accent transition-colors"
+						className=" hover:text-accent transition-colors"
 					>
 						<X className="w-5 h-5" />
 					</button>
@@ -129,17 +129,17 @@ export function ExperimentSharing({
 
 				<div className="p-4 space-y-4">
 					{/* Experiment Info */}
-					<div className="bg-base border border-main p-3 rounded">
-						<h4 className="font-medium text-main">{experiment.title}</h4>
-						<p className="text-sm text-main mt-1">{experiment.description}</p>
+					<div className=" border p-3 rounded">
+						<h4 className="font-medium ">{experiment.title}</h4>
+						<p className="text-sm mt-1">{experiment.description}</p>
 						<div className="flex flex-wrap gap-1 mt-2">
-							<span className="text-xs border border-main px-2 py-1 rounded">
+							<span className="text-xs border px-2 py-1 rounded">
 								{experiment.category}
 							</span>
-							<span className="text-xs border border-main px-2 py-1 rounded">
+							<span className="text-xs border px-2 py-1 rounded">
 								{experiment.difficulty}
 							</span>
-							<span className="text-xs border border-main px-2 py-1 rounded">
+							<span className="text-xs border px-2 py-1 rounded">
 								{performanceSettings.qualityLevel} quality
 							</span>
 						</div>
@@ -149,13 +149,13 @@ export function ExperimentSharing({
 					{isGenerating ? (
 						<div className="flex items-center justify-center py-8">
 							<div className="animate-spin w-6 h-6 border-2 border-accent border-t-transparent rounded-full"></div>
-							<span className="ml-2 text-sm text-main">
+							<span className="ml-2 text-sm ">
 								Generating share link...
 							</span>
 						</div>
 					) : shareURL ? (
 						<div className="space-y-3">
-							<label className="noto-sans-jp-light text-sm text-main">
+							<label className="noto-sans-jp-light text-sm ">
 								Share Link
 							</label>
 							<div className="flex items-center space-x-2">
@@ -163,12 +163,12 @@ export function ExperimentSharing({
 									type="text"
 									value={shareURL}
 									readOnly
-									className="flex-1 border border-main bg-base text-main p-2 text-sm rounded"
+									className="flex-1 border p-2 text-sm rounded"
 								/>
 								<button
 									type="button"
 									onClick={copyToClipboard}
-									className="flex items-center space-x-1 px-3 py-2 border border-main hover:border-accent hover:text-accent transition-colors rounded"
+									className="flex items-center space-x-1 px-3 py-2 border hover:border-accent hover:text-accent transition-colors rounded"
 								>
 									{copied ? (
 										<Check className="w-4 h-4 text-green-500" />
@@ -183,29 +183,29 @@ export function ExperimentSharing({
 
 					{/* Share Settings Summary */}
 					{shareData && (
-						<div className="bg-base border border-main p-3 rounded">
-							<h5 className="font-medium text-main mb-2">Shared Settings</h5>
+						<div className=" border p-3 rounded">
+							<h5 className="font-medium mb-2">Shared Settings</h5>
 							<div className="grid grid-cols-2 gap-2 text-sm">
 								<div>
-									<span className="text-main opacity-70">Quality:</span>
+									<span className=" opacity-70">Quality:</span>
 									<span className="ml-1 text-accent">
 										{shareData.settings.qualityLevel}
 									</span>
 								</div>
 								<div>
-									<span className="text-main opacity-70">Target FPS:</span>
+									<span className=" opacity-70">Target FPS:</span>
 									<span className="ml-1 text-accent">
 										{shareData.settings.targetFPS}
 									</span>
 								</div>
 								<div>
-									<span className="text-main opacity-70">Optimizations:</span>
+									<span className=" opacity-70">Optimizations:</span>
 									<span className="ml-1 text-accent">
 										{shareData.settings.enableOptimizations ? "On" : "Off"}
 									</span>
 								</div>
 								<div>
-									<span className="text-main opacity-70">Device:</span>
+									<span className=" opacity-70">Device:</span>
 									<span className="ml-1 text-accent">
 										{shareData.deviceInfo.performanceLevel}
 									</span>
@@ -220,7 +220,7 @@ export function ExperimentSharing({
 							type="button"
 							onClick={shareViaWebAPI}
 							disabled={!shareURL}
-							className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-accent text-main hover:bg-accent/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded"
+							className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-accent hover:bg-accent/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded"
 						>
 							<Share2 className="w-4 h-4" />
 							<span className="text-sm">Share</span>
@@ -230,7 +230,7 @@ export function ExperimentSharing({
 							type="button"
 							onClick={copyToClipboard}
 							disabled={!shareURL}
-							className="flex items-center space-x-2 px-4 py-2 border border-main hover:border-accent hover:text-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded"
+							className="flex items-center space-x-2 px-4 py-2 border hover:border-accent hover:text-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded"
 						>
 							<Link className="w-4 h-4" />
 							<span className="text-sm">Copy Link</span>
@@ -240,7 +240,7 @@ export function ExperimentSharing({
 					{/* Social Share Buttons */}
 					{shareURL && (
 						<div className="space-y-2">
-							<label className="noto-sans-jp-light text-sm text-main">
+							<label className="noto-sans-jp-light text-sm ">
 								Share on Social Media
 							</label>
 							<div className="grid grid-cols-3 gap-2">
@@ -275,7 +275,7 @@ export function ExperimentSharing({
 					)}
 
 					{/* Privacy Notice */}
-					<div className="text-xs text-main opacity-70 bg-base border border-main p-2 rounded">
+					<div className="text-xs opacity-70 border p-2 rounded">
 						<p>
 							共有リンクには実験設定とデバイス情報（性能レベル、WebGL対応状況）が含まれます.
 							個人を特定できる情報は含まれません.
@@ -307,7 +307,7 @@ export function ShareButton({
 			<button
 				type="button"
 				onClick={() => setIsOpen(true)}
-				className={`flex items-center space-x-2 px-3 py-2 border border-main hover:border-accent hover:text-accent transition-colors ${className}`}
+				className={`flex items-center space-x-2 px-3 py-2 border hover:border-accent hover:text-accent transition-colors ${className}`}
 			>
 				<Share2 className="w-4 h-4" />
 				<span className="text-sm">Share</span>
