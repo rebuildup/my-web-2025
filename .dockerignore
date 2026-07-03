@@ -1,5 +1,4 @@
 .next
 .git
 node_modules
-data/contents/*.db
 *.log
