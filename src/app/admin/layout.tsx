@@ -20,9 +20,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 				width: "100vw",
 				height: "100vh",
 				zIndex: 9999,
-				backgroundColor: "#fff",
-				color: "#000",
-				colorScheme: "light",
 				fontFamily: "sans-serif",
 				display: "flex",
 				flexDirection: "column",
@@ -31,7 +28,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 		>
 			<header
 				style={{
-					borderBottom: "1px solid #ddd",
 					padding: "0 16px",
 					display: "flex",
 					alignItems: "center",
@@ -41,9 +37,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 				}}
 			>
 				<span style={{ fontSize: "0.9rem", fontWeight: 600, whiteSpace: "nowrap" }}>
-					<a href="/admin" style={{ color: "#000", textDecoration: "none" }}>
-						Admin
-					</a>
+					<a href="/admin">Admin</a>
 				</span>
 				<nav style={{ display: "flex", gap: 4, overflowX: "auto", flex: 1 }}>
 					{NAV_TABS.map((tab) => (
@@ -53,10 +47,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 							style={{
 								fontSize: "0.8rem",
 								padding: "4px 10px",
-								borderRadius: 4,
 								textDecoration: "none",
-								color: "#333",
-								background: "#f5f5f5",
 								whiteSpace: "nowrap",
 							}}
 						>
