@@ -1,174 +1,98 @@
-
 "use client";
 
-import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-    Alert,
-    AlertColor,
-    Autocomplete,
-    Avatar,
-    Box,
-    Button,
-    Chip,
-    CircularProgress,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Divider,
-    IconButton,
-    InputAdornment,
-    Paper,
-    Snackbar,
-    Stack,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TextField,
-    ToggleButton,
-    ToggleButtonGroup,
-    Tooltip,
-    Typography,
-    NoSsr,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-} from "@mui/material";
-import {
-    CalendarClock,
-    Edit2,
-    ExternalLink,
-    FilterX,
-    FolderOpen,
-    Plus,
-    RefreshCcw,
-    Search,
-    Tag as TagIcon,
-    Trash2,
-} from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Edit2, Plus, RefreshCcw, Trash2 } from "lucide-react";
 import type { Content } from "@/cms/types/content";
-import { ContentForm } from "@/components/admin/cms";
-import { PageHeader } from "@/components/admin/layout";
-import { ConfirmDialog } from "@/components/admin/ui";
 import { useCmsResource } from "@/hooks/useCmsResource";
 
 interface DbStats {
-    totalContents: number;
-    totalDbFiles: number;
-    totalSize: number;
-    contentsList: Array<{
-        id: string;
-        title: string;
-        dbFile: string;
-        size: number;
-    }>;
+	totalContents: number;
+	totalDbFiles: number;
+	totalSize: number;
 }
 
 type StatusFilter = "all" | "draft" | "published" | "archived";
-type VisibilityFilter = "all" | "public" | "unlisted" | "private" | "draft";
-type SortField = "updatedAt" | "createdAt" | "publishedAt" | "title";
-
-type SnackbarState = {
-    open: boolean;
-    message: string;
-    severity: AlertColor;
-};
 
 const STATUS_OPTIONS: StatusFilter[] = ["all", "published", "draft", "archived"];
-const VISIBILITY_OPTIONS: VisibilityFilter[] = ["all", "public", "unlisted", "private", "draft"];
-
 const STATUS_LABEL: Record<StatusFilter, string> = {
-    all: "全ステータス",
-    published: "公開",
-    draft: "下書き",
-    archived: "アーカイブ",
-};
-
-const VISIBILITY_LABEL: Record<VisibilityFilter, string> = {
-    all: "公開範囲:すべて",
-    public: "公開",
-    unlisted: "限定公開",
-    private: "非公開",
-    draft: "下書き",
-};
-
-const SORT_LABEL: Record<SortField, string> = {
-    updatedAt: "更新日",
-    createdAt: "作成日",
-    publishedAt: "公開日",
-    title: "タイトル",
+	all: "すべて",
+	published: "公開",
+	draft: "下書き",
+	archived: "アーカイブ",
 };
 
 const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
+	year: "numeric",
+	month: "short",
+	day: "numeric",
+	hour: "2-digit",
+	minute: "2-digit",
 });
 
 function formatDate(value?: string | null) {
-    if (!value) return "-";
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value;
-    return dateFormatter.format(date);
+	if (!value) return "-";
+	const date = new Date(value);
+	if (Number.isNaN(date.getTime())) return value;
+	return dateFormatter.format(date);
 }
 
 function formatBytes(bytes: number) {
-    if (!bytes) return "0 B";
-    const units = ["B", "KB", "MB", "GB"];
-    let value = bytes;
-    let index = 0;
-    while (value >= 1024 && index < units.length - 1) {
-        value /= 1024;
-        index += 1;
-    }
-    return value.toFixed(value >= 10 || index === 0 ? 0 : 1) + " " + units[index];
+	if (!bytes) return "0 B";
+	const units = ["B", "KB", "MB", "GB"];
+	let value = bytes;
+	let index = 0;
+	while (value >= 1024 && index < units.length - 1) {
+		value /= 1024;
+		index += 1;
+	}
+	return value.toFixed(value >= 10 || index === 0 ? 0 : 1) + " " + units[index];
 }
 
 function getThumbnailUrl(content: Content) {
-    const variants = content.thumbnails;
-    if (!variants) return null;
-    const prefer = variants.prefer || ["webm", "gif", "image"];
-    for (const key of prefer) {
-        if (key === "image" && variants.image?.src) return variants.image.src;
-        if (key === "gif" && variants.gif?.src) return variants.gif.src;
-        if (key === "webm" && variants.webm?.poster) return variants.webm.poster;
-    }
-    if (variants.image?.src) return variants.image.src;
-    if (variants.gif?.src) return variants.gif?.src;
-    if (variants.webm?.poster) return variants.webm.poster;
-    return null;
+	const variants = content.thumbnails;
+	if (!variants) return null;
+	const prefer = variants.prefer || ["webm", "gif", "image"];
+	for (const key of prefer) {
+		if (key === "image" && variants.image?.src) return variants.image.src;
+		if (key === "gif" && variants.gif?.src) return variants.gif.src;
+		if (key === "webm" && variants.webm?.poster) return variants.webm.poster;
+	}
+	if (variants.image?.src) return variants.image.src;
+	if (variants.gif?.src) return variants.gif?.src;
+	if (variants.webm?.poster) return variants.webm.poster;
+	return null;
 }
 
-function StatCard({ title, value, loading }: { title: string; value: string | number; loading?: boolean }) {
-    return (
-        <Paper
-            variant="outlined"
-            sx={{
-                flex: 1,
-                minWidth: 200,
-                borderColor: "divider",
-                px: 3,
-                py: 2.5,
-                display: "flex",
-                flexDirection: "column",
-                gap: 1,
-            }}
-        >
-            <Typography variant="subtitle2" color="text.secondary">
-                {title}
-            </Typography>
-            <Typography variant="h5" fontWeight={700} sx={{ minHeight: 40, display: "flex", alignItems: "center" }}>
-                {loading ? "…" : value}
-            </Typography>
-        </Paper>
-    );
-}
+const s = {
+	page: { maxWidth: 960, margin: "0 auto", paddingBottom: 64 } as React.CSSProperties,
+	breadcrumb: { fontSize: "0.8rem", marginBottom: 12, color: "#666" } as React.CSSProperties,
+	title: { fontSize: "1.4rem", fontWeight: "normal", borderBottom: "1px solid #ccc", paddingBottom: 8, marginBottom: 8 } as React.CSSProperties,
+	subtitle: { fontSize: "0.85rem", color: "#666", marginTop: 0, marginBottom: 24 } as React.CSSProperties,
+	statsRow: { display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" } as React.CSSProperties,
+	statCard: { border: "1px solid #ddd", borderRadius: 6, padding: "12px 16px", flex: 1, minWidth: 160 } as React.CSSProperties,
+	statLabel: { fontSize: "0.75rem", color: "#888", marginBottom: 4 } as React.CSSProperties,
+	statValue: { fontSize: "1.2rem", fontWeight: 700 } as React.CSSProperties,
+	toolbar: { display: "flex", gap: 8, marginBottom: 16, alignItems: "center", flexWrap: "wrap" } as React.CSSProperties,
+	btn: { display: "inline-flex", alignItems: "center", gap: 4, border: "1px solid #ccc", borderRadius: 4, padding: "5px 12px", fontSize: "0.8rem", background: "#fff", color: "#000", cursor: "pointer" } as React.CSSProperties,
+	btnPrimary: { display: "inline-flex", alignItems: "center", gap: 4, border: "1px solid #000", borderRadius: 4, padding: "5px 12px", fontSize: "0.8rem", background: "#000", color: "#fff", cursor: "pointer" } as React.CSSProperties,
+	table: { width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" } as React.CSSProperties,
+	th: { textAlign: "left", borderBottom: "2px solid #ddd", padding: "8px 10px", fontSize: "0.75rem", color: "#666", fontWeight: 600, whiteSpace: "nowrap" } as React.CSSProperties,
+	td: { borderBottom: "1px solid #eee", padding: "8px 10px", verticalAlign: "middle" } as React.CSSProperties,
+	thumb: { width: 40, height: 40, borderRadius: 4, objectFit: "cover" as const, border: "1px solid #eee" } as React.CSSProperties,
+	thumbPlaceholder: { width: 40, height: 40, borderRadius: 4, border: "1px solid #eee", background: "#f5f5f5" } as React.CSSProperties,
+	chip: { display: "inline-block", fontSize: "0.7rem", padding: "2px 8px", borderRadius: 10, background: "#f0f0f0" } as React.CSSProperties,
+	idText: { fontSize: "0.75rem", color: "#999", fontFamily: "monospace" } as React.CSSProperties,
+	iconBtn: { background: "none", border: "none", cursor: "pointer", padding: 4, color: "#555" } as React.CSSProperties,
+	iconBtnDanger: { background: "none", border: "none", cursor: "pointer", padding: 4, color: "#c00" } as React.CSSProperties,
+	overlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center" } as React.CSSProperties,
+	dialog: { background: "#fff", borderRadius: 8, border: "1px solid #ddd", width: "90%", maxWidth: 720, maxHeight: "85vh", overflow: "auto", padding: 24 } as React.CSSProperties,
+	dialogTitle: { fontSize: "1rem", fontWeight: 600, marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" } as React.CSSProperties,
+	select: { border: "1px solid #ccc", borderRadius: 4, padding: "4px 8px", fontSize: "0.8rem", background: "#fff" } as React.CSSProperties,
+	input: { border: "1px solid #ccc", borderRadius: 4, padding: "6px 10px", fontSize: "0.85rem", width: "100%", boxSizing: "border-box" as const } as React.CSSProperties,
+	label: { fontSize: "0.75rem", color: "#666", marginBottom: 4, display: "block" } as React.CSSProperties,
+	formGroup: { marginBottom: 12 } as React.CSSProperties,
+	alert: { border: "1px solid #e0c000", background: "#fffbe6", borderRadius: 4, padding: "8px 12px", fontSize: "0.8rem", marginBottom: 16, color: "#665500" } as React.CSSProperties,
+};
 
 export default function AdminContentPage() {
 	const {
@@ -186,315 +110,329 @@ export default function AdminContentPage() {
 		refresh: refreshStats,
 	} = useCmsResource<DbStats>("/api/cms/contents/stats");
 
+	const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+	const [searchQuery, setSearchQuery] = useState("");
 	const [isCreateOpen, setIsCreateOpen] = useState(false);
 	const [editTarget, setEditTarget] = useState<Content | null>(null);
 	const [deleteTarget, setDeleteTarget] = useState<Content | null>(null);
 	const [submitting, setSubmitting] = useState(false);
+	const [createTitle, setCreateTitle] = useState("");
 	const [createStatus, setCreateStatus] = useState<Content["status"]>("draft");
-	const [createVisibility, setCreateVisibility] = useState<Content["visibility"]>("draft");
 
 	const handleRefresh = useCallback(() => {
 		void refreshContents();
 		void refreshStats();
 	}, [refreshContents, refreshStats]);
 
-	const handleCreate = useCallback(
-		async (payload: Partial<Content>) => {
-			setSubmitting(true);
-			const res = await fetch("/api/cms/contents", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(payload),
-			});
-			if (!res.ok) {
-				let errMsg = "作成に失敗しました";
-				try {
-					const err = await res.json();
-					if (err.error) {
-						errMsg = err.error;
-					}
-				} catch {
-					// ignore parse errors
-				}
-				console.error("[content] create failed", errMsg);
-				setSubmitting(false);
-				return;
-			}
-			setIsCreateOpen(false);
-			await handleRefresh();
-			setSubmitting(false);
-		},
-		[handleRefresh],
-	);
+	const filteredContents = (contents ?? []).filter((c) => {
+		if (statusFilter !== "all" && c.status !== statusFilter) return false;
+		if (searchQuery) {
+			const q = searchQuery.toLowerCase();
+			return (
+				c.title.toLowerCase().includes(q) ||
+				c.id.toLowerCase().includes(q) ||
+				(c.summary ?? "").toLowerCase().includes(q)
+			);
+		}
+		return true;
+	});
 
-	const handleUpdate = useCallback(
-		async (payload: Partial<Content>) => {
-			setSubmitting(true);
-			const res = await fetch("/api/cms/contents", {
-				method: "PUT",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(payload),
-			});
-			if (!res.ok) {
-				let errMsg = "更新に失敗しました";
-				try {
-					const err = await res.json();
-					if (err.error) {
-						errMsg = err.error;
-					}
-				} catch {
-					// ignore parse errors
-				}
-				console.error("[content] update failed", errMsg);
-				setSubmitting(false);
-				return;
-			}
+	const handleCreate = useCallback(async () => {
+		if (!createTitle.trim()) return;
+		setSubmitting(true);
+		const id = `content-${Date.now()}`;
+		const res = await fetch("/api/cms/contents", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				id,
+				title: createTitle.trim(),
+				status: createStatus,
+				visibility: createStatus === "published" ? "public" : "draft",
+			}),
+		});
+		setSubmitting(false);
+		if (res.ok) {
+			setIsCreateOpen(false);
+			setCreateTitle("");
+			setCreateStatus("draft");
+			await handleRefresh();
+		}
+	}, [createTitle, createStatus, handleRefresh]);
+
+	const handleUpdate = useCallback(async () => {
+		if (!editTarget) return;
+		setSubmitting(true);
+		const res = await fetch("/api/cms/contents", {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(editTarget),
+		});
+		setSubmitting(false);
+		if (res.ok) {
 			setEditTarget(null);
 			await handleRefresh();
-			setSubmitting(false);
-		},
-		[handleRefresh],
-	);
+		}
+	}, [editTarget, handleRefresh]);
 
-	const handleDelete = useCallback(
-		async (id: string) => {
-			const res = await fetch(`/api/cms/contents?id=${encodeURIComponent(id)}`, {
-				method: "DELETE",
-			});
-			if (!res.ok) {
-				let errMsg = "削除に失敗しました";
-				try {
-					const err = await res.json();
-					if (err.error) {
-						errMsg = err.error;
-					}
-				} catch {
-					// ignore parse errors
-				}
-				console.error("[content] delete failed", errMsg);
-				return;
-			}
+	const handleDelete = useCallback(async (id: string) => {
+		const res = await fetch(`/api/cms/contents?id=${encodeURIComponent(id)}`, {
+			method: "DELETE",
+		});
+		if (res.ok) {
 			setDeleteTarget(null);
 			await handleRefresh();
-		},
-		[handleRefresh],
-	);
+		}
+	}, [handleRefresh]);
 
 	return (
-		<NoSsr>
-			<Box sx={{ display: "grid", gap: 4 }}>
-			<PageHeader
-				title="コンテンツ管理"
-				description="コンテンツの作成・編集・公開状態を管理します."
-				actions={[
-					<Button key="refresh" variant="outlined" onClick={handleRefresh} startIcon={<RefreshCcw size={16} />}>更新</Button>,
-					<Button key="create" variant="contained" startIcon={<Plus size={16} />} onClick={() => setIsCreateOpen(true)}>新規コンテンツ</Button>,
-				]}
-			/>
+		<div style={s.page}>
+			<nav style={s.breadcrumb}>
+				<a href="/admin" style={{ color: "#0066cc", textDecoration: "none" }}>Admin</a>
+				<span style={{ margin: "0 6px" }}>/</span>
+				<span style={{ color: "#000" }}>コンテンツ管理</span>
+			</nav>
 
-			<Stack direction={{ xs: "column", sm: "row" }} spacing={2} flexWrap="wrap">
-				<StatCard title="登録コンテンツ" value={contents?.length ?? 0} loading={contentsLoading} />
-				<StatCard title="コンテンツDB" value={stats?.totalDbFiles ?? 0} loading={statsLoading} />
-				<StatCard title="総容量" value={stats ? formatBytes(stats.totalSize) : "-"} loading={statsLoading} />
-			</Stack>
+			<h1 style={s.title}>コンテンツ管理</h1>
+			<p style={s.subtitle}>コンテンツの作成・編集・公開状態を管理します.</p>
+
+			<div style={s.statsRow}>
+				<div style={s.statCard}>
+					<div style={s.statLabel}>登録コンテンツ</div>
+					<div style={s.statValue}>{contentsLoading ? "…" : contents?.length ?? 0}</div>
+				</div>
+				<div style={s.statCard}>
+					<div style={s.statLabel}>コンテンツDB</div>
+					<div style={s.statValue}>{statsLoading ? "…" : stats?.totalDbFiles ?? 0}</div>
+				</div>
+				<div style={s.statCard}>
+					<div style={s.statLabel}>総容量</div>
+					<div style={s.statValue}>{stats ? formatBytes(stats.totalSize) : statsLoading ? "…" : "-"}</div>
+				</div>
+			</div>
 
 			{(contentsError || statsError) && (
-				<Alert severity="warning">データの取得に失敗しました.再読み込みしてください.</Alert>
+				<div style={s.alert}>データの取得に失敗しました.再読み込みしてください.</div>
 			)}
 
-			<Paper variant="outlined" sx={{ p: 0, borderColor: "divider" }}>
-				<TableContainer sx={{ maxHeight: 560 }}>
-					<Table stickyHeader size="small">
-						<TableHead>
-							<TableRow>
-								<TableCell sx={{ width: 32 }} />
-								<TableCell sx={{ width: 80 }}>サムネイル</TableCell>
-								<TableCell>タイトル</TableCell>
-								<TableCell sx={{ width: 120 }}>ステータス</TableCell>
-								<TableCell sx={{ width: 130 }}>可視性</TableCell>
-								<TableCell sx={{ width: 170 }}>更新日</TableCell>
-								<TableCell sx={{ width: 160 }}>ID</TableCell>
-								<TableCell sx={{ width: 120 }} align="right">操作</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{contentsLoading ? (
-								<TableRow>
-									<TableCell colSpan={8} align="center" sx={{ py: 6 }}>
-										<CircularProgress size={28} />
-									</TableCell>
-								</TableRow>
-							) : (contents ?? []).length === 0 ? (
-								<TableRow>
-									<TableCell colSpan={8} align="center" sx={{ py: 6 }}>
-										<Typography variant="body2" color="text.secondary">表示するコンテンツがありません.</Typography>
-									</TableCell>
-								</TableRow>
-							) : (
-								(contents ?? []).map((content) => {
-									const thumb = getThumbnailUrl(content);
-									return (
-										<TableRow hover key={content.id}>
-											<TableCell>🌐</TableCell>
-											<TableCell>
-												{thumb ? (
-													<Box component="img" src={thumb} alt={content.title} sx={{ width: 48, height: 48, objectFit: "cover", borderRadius: 1, border: 1, borderColor: "divider" }} />
-												) : (
-													<Box sx={{ width: 48, height: 48, borderRadius: 1, border: 1, borderColor: "divider", bgcolor: "action.hover" }} />
-												)}
-											</TableCell>
-											<TableCell>
-												<Stack spacing={0.5}>
-													<Typography variant="body2" fontWeight={600}>{content.title}</Typography>
-													{content.summary && (
-														<Typography variant="caption" color="text.secondary">{content.summary}</Typography>
-													)}
-												</Stack>
-											</TableCell>
-											<TableCell>
-												<Chip size="small" label={content.status ?? "draft"} />
-											</TableCell>
-											<TableCell>
-												<Chip size="small" variant="outlined" label={content.visibility ?? "draft"} />
-											</TableCell>
-											<TableCell>{formatDate(content.updatedAt as string)}</TableCell>
-											<TableCell>
-												<Typography variant="caption" color="text.secondary">{content.id}</Typography>
-											</TableCell>
-											<TableCell align="right">
-												<Stack direction="row" spacing={0.5} justifyContent="flex-end">
-													<Tooltip title="編集">
-														<IconButton
-															size="small"
-															onClick={async () => {
-																// 完全なコンテンツデータを取得
-																try {
-																	const res = await fetch(
-																		`/api/cms/contents?id=${encodeURIComponent(content.id)}`,
-																	);
-																	if (res.ok) {
-																		const fullContent = await res.json();
-																		setEditTarget(fullContent);
-																	} else {
-																		// フォールバック: 一覧データを使用
-																		setEditTarget(content);
-																	}
-																} catch (error) {
-																	// エラー時は一覧データを使用
-																	setEditTarget(content);
-																}
-															}}
-														>
-															<Edit2 size={16} />
-														</IconButton>
-													</Tooltip>
-													<Tooltip title="削除">
-														<IconButton size="small" color="error" onClick={() => setDeleteTarget(content)}>
-															<Trash2 size={16} />
-														</IconButton>
-													</Tooltip>
-												</Stack>
-											</TableCell>
-										</TableRow>
-									);
-								})
-							)}
-						</TableBody>
-					</Table>
-				</TableContainer>
-			</Paper>
+			<div style={s.toolbar}>
+				<button style={s.btn} onClick={handleRefresh}>
+					<RefreshCcw size={14} /> 更新
+				</button>
+				<button style={s.btnPrimary} onClick={() => setIsCreateOpen(true)}>
+					<Plus size={14} /> 新規コンテンツ
+				</button>
+				<select
+					style={s.select}
+					value={statusFilter}
+					onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+				>
+					{STATUS_OPTIONS.map((opt) => (
+						<option key={opt} value={opt}>{STATUS_LABEL[opt]}</option>
+					))}
+				</select>
+				<input
+					style={{ ...s.input, maxWidth: 220 }}
+					placeholder="検索..."
+					value={searchQuery}
+					onChange={(e) => setSearchQuery(e.target.value)}
+				/>
+			</div>
+
+			<div style={{ overflowX: "auto" }}>
+				<table style={s.table}>
+					<thead>
+						<tr>
+							<th style={s.th}></th>
+							<th style={s.th}>サムネイル</th>
+							<th style={s.th}>タイトル</th>
+							<th style={s.th}>ステータス</th>
+							<th style={s.th}>更新日</th>
+							<th style={s.th}>ID</th>
+							<th style={{ ...s.th, textAlign: "right" }}>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{contentsLoading ? (
+							<tr><td colSpan={7} style={{ ...s.td, textAlign: "center", padding: 40, color: "#999" }}>読み込み中...</td></tr>
+						) : filteredContents.length === 0 ? (
+							<tr><td colSpan={7} style={{ ...s.td, textAlign: "center", padding: 40, color: "#999" }}>表示するコンテンツがありません.</td></tr>
+						) : (
+							filteredContents.map((content) => {
+								const thumb = getThumbnailUrl(content);
+								return (
+									<tr key={content.id}>
+										<td style={s.td}>🌐</td>
+										<td style={s.td}>
+											{thumb ? (
+												<img src={thumb} alt={content.title} style={s.thumb} />
+											) : (
+												<div style={s.thumbPlaceholder} />
+											)}
+										</td>
+										<td style={s.td}>
+											<div style={{ fontWeight: 600, fontSize: "0.85rem" }}>{content.title}</div>
+											{content.summary && (
+												<div style={{ fontSize: "0.75rem", color: "#888", marginTop: 2 }}>{content.summary}</div>
+											)}
+										</td>
+										<td style={s.td}>
+											<span style={s.chip}>{content.status ?? "draft"}</span>
+										</td>
+										<td style={{ ...s.td, fontSize: "0.8rem", color: "#666" }}>{formatDate(content.updatedAt as string)}</td>
+										<td style={s.td}><span style={s.idText}>{content.id}</span></td>
+										<td style={{ ...s.td, textAlign: "right" }}>
+											<button
+												style={s.iconBtn}
+												title="編集"
+												onClick={async () => {
+													try {
+														const res = await fetch(`/api/cms/contents?id=${encodeURIComponent(content.id)}`);
+														if (res.ok) {
+															setEditTarget(await res.json());
+														} else {
+															setEditTarget(content);
+														}
+													} catch {
+														setEditTarget(content);
+													}
+												}}
+											>
+												<Edit2 size={15} />
+											</button>
+											<button style={s.iconBtnDanger} title="削除" onClick={() => setDeleteTarget(content)}>
+												<Trash2 size={15} />
+											</button>
+										</td>
+									</tr>
+								);
+							})
+						)}
+					</tbody>
+				</table>
+			</div>
 
 			{/* Create Dialog */}
-			<Dialog open={isCreateOpen} onClose={() => setIsCreateOpen(false)} maxWidth="md" fullWidth>
-				<DialogTitle>
-					<Stack direction="row" alignItems="center" justifyContent="space-between">
-						<Typography variant="h6">新しいコンテンツを作成</Typography>
-						<Stack direction="row" spacing={1} alignItems="center">
-							<FormControl size="small" sx={{ minWidth: 140 }}>
-								<InputLabel id="create-status">公開ステータス</InputLabel>
-								<Select
-									labelId="create-status"
-									label="公開ステータス"
-									value={createStatus}
-									onChange={(e) => setCreateStatus(e.target.value as Content["status"])}
-								>
-									<MenuItem value="draft">draft</MenuItem>
-									<MenuItem value="published">published</MenuItem>
-									<MenuItem value="archived">archived</MenuItem>
-								</Select>
-							</FormControl>
-							<FormControl size="small" sx={{ minWidth: 140 }}>
-								<InputLabel id="create-visibility">可視性</InputLabel>
-								<Select
-									labelId="create-visibility"
-									label="可視性"
-									value={createVisibility}
-									onChange={(e) => setCreateVisibility(e.target.value as Content["visibility"])}
-								>
-									<MenuItem value="draft">draft</MenuItem>
-									<MenuItem value="public">public</MenuItem>
-									<MenuItem value="unlisted">unlisted</MenuItem>
-									<MenuItem value="private">private</MenuItem>
-								</Select>
-							</FormControl>
-						</Stack>
-					</Stack>
-				</DialogTitle>
-				<DialogContent>
-					<ContentForm
-						mode="create"
-						isLoading={submitting}
-						onSubmit={handleCreate}
-						onCancel={() => setIsCreateOpen(false)}
-						controlledStatus={createStatus}
-						controlledVisibility={createVisibility}
-					/>
-				</DialogContent>
-			</Dialog>
+			{isCreateOpen && (
+				<div style={s.overlay} onClick={() => setIsCreateOpen(false)}>
+					<div style={s.dialog} onClick={(e) => e.stopPropagation()}>
+						<div style={s.dialogTitle}>
+							<span>新しいコンテンツを作成</span>
+							<button style={s.btn} onClick={() => setIsCreateOpen(false)}>×</button>
+						</div>
+						<div style={s.formGroup}>
+							<label style={s.label}>タイトル</label>
+							<input
+								style={s.input}
+								value={createTitle}
+								onChange={(e) => setCreateTitle(e.target.value)}
+								placeholder="コンテンツタイトル"
+								autoFocus
+							/>
+						</div>
+						<div style={s.formGroup}>
+							<label style={s.label}>公開ステータス</label>
+							<select
+								style={s.select}
+								value={createStatus}
+								onChange={(e) => setCreateStatus(e.target.value as Content["status"])}
+							>
+								<option value="draft">draft</option>
+								<option value="published">published</option>
+								<option value="archived">archived</option>
+							</select>
+						</div>
+						<div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+							<button style={s.btnPrimary} onClick={handleCreate} disabled={submitting || !createTitle.trim()}>
+								{submitting ? "作成中..." : "作成"}
+							</button>
+							<button style={s.btn} onClick={() => setIsCreateOpen(false)}>キャンセル</button>
+						</div>
+					</div>
+				</div>
+			)}
 
 			{/* Edit Dialog */}
-			<Dialog open={Boolean(editTarget)} onClose={() => setEditTarget(null)} maxWidth="md" fullWidth>
-				<DialogTitle>
-					<Stack direction="row" alignItems="center" justifyContent="space-between">
-						<Typography variant="h6">コンテンツを編集</Typography>
-						<Stack direction="row" spacing={1} alignItems="center">
-							<FormControl size="small" sx={{ minWidth: 140 }}>
-								<InputLabel id="edit-status">公開ステータス</InputLabel>
-								<Select labelId="edit-status" label="公開ステータス" value={editTarget?.status ?? "draft"} onChange={(e) => setEditTarget((prev: any) => prev ? { ...prev, status: e.target.value } : prev)}>
-									<MenuItem value="draft">draft</MenuItem>
-									<MenuItem value="published">published</MenuItem>
-									<MenuItem value="archived">archived</MenuItem>
-								</Select>
-							</FormControl>
-							<FormControl size="small" sx={{ minWidth: 140 }}>
-								<InputLabel id="edit-visibility">可視性</InputLabel>
-								<Select labelId="edit-visibility" label="可視性" value={editTarget?.visibility ?? "draft"} onChange={(e) => setEditTarget((prev: any) => prev ? { ...prev, visibility: e.target.value } : prev)}>
-									<MenuItem value="draft">draft</MenuItem>
-									<MenuItem value="public">public</MenuItem>
-									<MenuItem value="unlisted">unlisted</MenuItem>
-									<MenuItem value="private">private</MenuItem>
-								</Select>
-							</FormControl>
-						</Stack>
-					</Stack>
-				</DialogTitle>
-				<DialogContent>
-					{editTarget && (
-						<ContentForm mode="edit" initialData={editTarget} isLoading={submitting} onSubmit={handleUpdate} onCancel={() => setEditTarget(null)} controlledStatus={editTarget.status} controlledVisibility={editTarget.visibility} />
-					)}
-				</DialogContent>
-			</Dialog>
+			{editTarget && (
+				<div style={s.overlay} onClick={() => setEditTarget(null)}>
+					<div style={s.dialog} onClick={(e) => e.stopPropagation()}>
+						<div style={s.dialogTitle}>
+							<span>コンテンツを編集</span>
+							<button style={s.btn} onClick={() => setEditTarget(null)}>×</button>
+						</div>
+						<div style={s.formGroup}>
+							<label style={s.label}>タイトル</label>
+							<input
+								style={s.input}
+								value={editTarget.title}
+								onChange={(e) => setEditTarget({ ...editTarget, title: e.target.value })}
+							/>
+						</div>
+						<div style={s.formGroup}>
+							<label style={s.label}>概要</label>
+							<input
+								style={s.input}
+								value={editTarget.summary ?? ""}
+								onChange={(e) => setEditTarget({ ...editTarget, summary: e.target.value })}
+							/>
+						</div>
+						<div style={{ display: "flex", gap: 16 }}>
+							<div style={{ ...s.formGroup, flex: 1 }}>
+								<label style={s.label}>ステータス</label>
+								<select
+									style={s.select}
+									value={editTarget.status ?? "draft"}
+									onChange={(e) => setEditTarget({ ...editTarget, status: e.target.value as Content["status"] })}
+								>
+									<option value="draft">draft</option>
+									<option value="published">published</option>
+									<option value="archived">archived</option>
+								</select>
+							</div>
+							<div style={{ ...s.formGroup, flex: 1 }}>
+								<label style={s.label}>可視性</label>
+								<select
+									style={s.select}
+									value={editTarget.visibility ?? "draft"}
+									onChange={(e) => setEditTarget({ ...editTarget, visibility: e.target.value as Content["visibility"] })}
+								>
+									<option value="draft">draft</option>
+									<option value="public">public</option>
+									<option value="unlisted">unlisted</option>
+									<option value="private">private</option>
+								</select>
+							</div>
+						</div>
+						<div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+							<button style={s.btnPrimary} onClick={handleUpdate} disabled={submitting}>
+								{submitting ? "保存中..." : "保存"}
+							</button>
+							<button style={s.btn} onClick={() => setEditTarget(null)}>キャンセル</button>
+						</div>
+					</div>
+				</div>
+			)}
 
 			{/* Delete Confirm */}
-			<ConfirmDialog
-				open={Boolean(deleteTarget)}
-				title="コンテンツを削除しますか？"
-				description="この操作は取り消せません.関連するDBが削除されます."
-				confirmLabel="削除する"
-				onCancel={() => setDeleteTarget(null)}
-				onConfirm={() => deleteTarget && void handleDelete(deleteTarget.id)}
-			/>
-			</Box>
-		</NoSsr>
+			{deleteTarget && (
+				<div style={s.overlay} onClick={() => setDeleteTarget(null)}>
+					<div style={{ ...s.dialog, maxWidth: 400 }} onClick={(e) => e.stopPropagation()}>
+						<div style={s.dialogTitle}>コンテンツを削除しますか？</div>
+						<p style={{ fontSize: "0.85rem", color: "#555", margin: "0 0 16px" }}>
+							この操作は取り消せません.関連するDBが削除されます.
+						</p>
+						<div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+							<button style={s.btn} onClick={() => setDeleteTarget(null)}>キャンセル</button>
+							<button
+								style={{ ...s.btnPrimary, background: "#c00", borderColor: "#c00" }}
+								onClick={() => void handleDelete(deleteTarget.id)}
+							>
+								削除する
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
+		</div>
 	);
 }
