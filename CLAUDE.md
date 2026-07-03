@@ -32,6 +32,25 @@ bun run format
 
 **Environment**: Requires `NEXT_PUBLIC_GA_ID` to be set in `.env.local` before building.
 
+### WSLc (Container Development)
+
+```bash
+# Build image
+wslc build -t my-web-2025 .
+
+# Run dev server (port 3010)
+wslc run -d --name my-web-2025-dev -p 3010:3010 my-web-2025
+
+# Check logs
+wslc logs my-web-2025-dev
+
+# Stop / remove
+wslc stop my-web-2025-dev
+wslc remove my-web-2025-dev
+```
+
+Access at `http://localhost:3010`. The container uses `bun --bun next dev -p 3010` internally.
+
 ## Architecture
 
 ### Content Management System (CMS)

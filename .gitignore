@@ -72,3 +72,6 @@ apps/cms-api/Cargo.lock
 
 # Subtree lockfiles - prevent Turbopack from detecting wrong workspace root
 src/app/tools/*/pnpm-lock.yaml
+
+# WSLc / Docker
+docker-compose.override.yml

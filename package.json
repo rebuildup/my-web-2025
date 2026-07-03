@@ -23,7 +23,12 @@
 		"test": "bun test",
 		"lint": "biome check .",
 		"format": "biome format --write .",
-		"migration:add-indexes": "bun src/cms/lib/migrations/add-indexes.ts"
+		"migration:add-indexes": "bun src/cms/lib/migrations/add-indexes.ts",
+		"wslc:build": "wslc build -t my-web-2025 .",
+		"wslc:run": "wslc run -d --name my-web-2025-dev -p 3010:3010 my-web-2025",
+		"wslc:logs": "wslc logs my-web-2025-dev",
+		"wslc:stop": "wslc stop my-web-2025-dev",
+		"wslc:remove": "wslc remove my-web-2025-dev"
 	},
 	"trustedDependencies": [
 		"@sentry/cli",
