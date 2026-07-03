@@ -1685,6 +1685,3 @@ export class EnhancedPortfolioDataProcessor extends PortfolioDataProcessor {
 export const portfolioDataProcessor = new PortfolioDataProcessor();
 export const enhancedPortfolioDataProcessor =
 	new EnhancedPortfolioDataProcessor();
-
-// For backward compatibility, also export the enhanced processor as the main processor
-const dataProcessor = enhancedPortfolioDataProcessor;

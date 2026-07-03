@@ -13,7 +13,7 @@
 - During development, Next.js may access content only through the Rust REST API.
 - During production/public runtime, Next.js must not touch canonical databases.
 - The CMS integration path used by the site must be migrated in the same delivery wave as the database re-architecture, so the old direct Next.js-side CMS database access does not linger as a parallel system.
-- Non-Linux local development for the Rust backend should default to Docker-based execution so macOS and Windows environments do not depend on host-native Rust setup details.
+- Non-Linux local development for the Rust backend should default to direct cargo execution.
 
 **Architecture Direction:** Use multiple SQLite databases split by change pattern, size characteristics, and runtime responsibility. Keep canonical structured content in small Git-manageable SQLite files. Keep large media binaries out of canonical databases. Generate search and publish-time read artifacts from Rust.
 
@@ -246,9 +246,8 @@ Rust also owns compatibility and build tooling.
 
 For the Rust CMS API:
 
-- Linux may run the backend directly with local `cargo run`.
-- macOS and Windows should run the backend through Docker by default.
-- development scripts should auto-select the Docker path on non-Linux hosts unless explicitly overridden.
+- All platforms (Linux, macOS, Windows) run the backend directly with local `cargo run`.
+- development scripts should use direct cargo execution.
 
 ### Site CMS Integration Rule
 

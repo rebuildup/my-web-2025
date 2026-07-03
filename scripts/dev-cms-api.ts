@@ -3,11 +3,12 @@ import { spawn } from "node:child_process";
 const host = process.env.CMS_API_HOST || "127.0.0.1";
 const port = process.env.CMS_API_PORT || "3001";
 const dataDir = process.env.CMS_API_DATA_DIR || "./data/db";
-const command = "docker";
-const args = ["compose", "-f", "docker-compose.cms-api.yml", "up"];
+
+const command = "cargo";
+const args = ["run"];
 
 const child = spawn(command, args, {
-	cwd: ".",
+	cwd: "./apps/cms-api",
 	stdio: "inherit",
 	env: {
 		...process.env,
@@ -19,7 +20,7 @@ const child = spawn(command, args, {
 
 child.on("error", (error) => {
 	console.error(
-		"[dev-cms-api] Failed to start Rust CMS API with Docker. Install Docker Desktop or Docker Engine and try again.",
+		"[dev-cms-api] Failed to start Rust CMS API. Install Rust and Cargo, then try again.",
 	);
 	console.error(error);
 	process.exit(1);
