@@ -84,88 +84,18 @@ function toYouTubeEmbed(url: string): string | null {
 }
 
 const s = {
-	row: { display: "flex", flexDirection: "row" as const, gap: 8 },
-	col: { display: "flex", flexDirection: "column" as const, gap: 8 },
-	col2: { display: "flex", flexDirection: "column" as const, gap: 16 },
-	label: {
-		fontSize: 12,
-		fontWeight: 600 as const,
-		color: "#9ca3af",
-		textTransform: "uppercase" as const,
-		letterSpacing: "0.05em",
-		marginBottom: 4,
-	},
-	input: {
-		width: "100%",
-		padding: "6px 10px",
-		borderRadius: 6,
-		border: "1px solid #333",
-		background: "#111",
-		color: "#fff",
-		fontSize: 13,
-		outline: "none",
-	},
-	textarea: {
-		width: "100%",
-		padding: "6px 10px",
-		borderRadius: 6,
-		border: "1px solid #333",
-		background: "#111",
-		color: "#fff",
-		fontSize: 13,
-		outline: "none",
-		resize: "vertical" as const,
-		fontFamily: "inherit",
-	},
-	btn: {
-		padding: "5px 12px",
-		borderRadius: 6,
-		border: "1px solid #333",
-		background: "transparent",
-		color: "#ccc",
-		fontSize: 12,
-		cursor: "pointer",
-	},
-	btnPrimary: {
-		padding: "5px 14px",
-		borderRadius: 6,
-		border: "none",
-		background: "#3b82f6",
-		color: "#fff",
-		fontSize: 12,
-		cursor: "pointer",
-		fontWeight: 600,
-	},
-	btnDanger: {
-		padding: "4px 8px",
-		borderRadius: 6,
-		border: "none",
-		background: "transparent",
-		color: "#ef4444",
-		cursor: "pointer",
-		display: "inline-flex",
-		alignItems: "center",
-	},
-	chip: {
-		display: "inline-flex",
-		alignItems: "center",
-		gap: 4,
-		padding: "2px 8px",
-		borderRadius: 999,
-		border: "1px solid #333",
-		background: "#1a1a2e",
-		color: "#ccc",
-		fontSize: 12,
-	},
-	sectionTitle: {
-		fontSize: 13,
-		fontWeight: 700,
-		color: "#e5e7eb",
-		marginBottom: 4,
-	},
-	helper: { fontSize: 11, color: "#6b7280", marginTop: 2 },
-	error: { fontSize: 11, color: "#ef4444", marginTop: 2 },
-	divider: { height: 1, background: "#222", margin: "8px 0" },
+	col2: { display: "flex", flexDirection: "column" as const, gap: 12 },
+	label: { marginBottom: 3 },
+	input: { width: "100%", padding: "5px 8px", fontSize: 13, outline: "none" },
+	textarea: { width: "100%", padding: "5px 8px", fontSize: 13, outline: "none", resize: "vertical" as const, fontFamily: "inherit" },
+	btn: { padding: "4px 10px", fontSize: 12, cursor: "pointer" },
+	btnPrimary: { padding: "4px 10px", fontSize: 12, cursor: "pointer", fontWeight: 600 as const },
+	btnDanger: { padding: "2px 6px", cursor: "pointer", display: "inline-flex", alignItems: "center" },
+	chip: { display: "inline-flex", alignItems: "center", gap: 4, padding: "2px 8px" },
+	sectionTitle: { fontSize: 13, fontWeight: 600 as const, marginBottom: 4 },
+	helper: { fontSize: 11, marginTop: 2 },
+	error: { fontSize: 11, marginTop: 2 },
+	divider: { height: 1, margin: "8px 0" },
 };
 
 export function ContentForm({
@@ -601,7 +531,7 @@ export function ContentForm({
 				<InputField label="画像URL" value={formData.thumbnails?.image?.src || ""} onChange={(v) => setFormData((p) => ({ ...p, thumbnails: { ...(p.thumbnails || {}), image: { ...(p.thumbnails?.image || {}), src: v } } }))} />
 				{formData.thumbnails?.image?.src && (
 					<div style={{ marginTop: 8 }}>
-						<img src={formData.thumbnails.image.src} alt="thumbnail" style={{ maxWidth: "100%", maxHeight: 200, borderRadius: 6, border: "1px solid #333" }} />
+						<img src={formData.thumbnails.image.src} alt="thumbnail" style={{ maxWidth: "100%", maxHeight: 200 }} />
 					</div>
 				)}
 				<button type="button" style={{ ...s.btn, marginTop: 6 }} onClick={() => imageInputRef.current?.click()}>ファイルから埋め込み</button>
@@ -620,7 +550,7 @@ export function ContentForm({
 					const ytUrl = (formData.ext as any)?.thumbnail?.youtube;
 					const embedUrl = ytUrl ? toYouTubeEmbed(ytUrl) : null;
 					return embedUrl ? (
-						<div style={{ marginTop: 8, position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: 6, border: "1px solid #333" }}>
+						<div style={{ marginTop: 8, position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden" }}>
 							<iframe src={embedUrl} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }} allowFullScreen />
 						</div>
 					) : null;
@@ -640,7 +570,7 @@ export function ContentForm({
 				<input ref={webmInputRef} type="file" accept="video/webm" style={{ display: "none" }} onChange={handleWebmFileChange} />
 				{formData.thumbnails?.webm?.src && (
 					<div style={{ marginTop: 8 }}>
-						<video src={formData.thumbnails.webm.src} poster={formData.thumbnails.webm.poster} controls style={{ maxWidth: "100%", maxHeight: 200, borderRadius: 6, border: "1px solid #333" }} />
+						<video src={formData.thumbnails.webm.src} poster={formData.thumbnails.webm.poster} controls style={{ maxWidth: "100%", maxHeight: 200 }} />
 					</div>
 				)}
 			</div>
@@ -687,13 +617,13 @@ export function ContentForm({
 					addItem(formData.thumbnails?.webm?.src);
 					addItem(formData.thumbnails?.webm?.poster);
 					return mediaItems.map((m) => (
-						<div key={m.src} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, padding: "4px 8px", borderRadius: 6, border: "1px solid #222" }}>
+						<div key={m.src} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, padding: "4px 8px" }}>
 							{m.src && m.src.match(/\.(png|jpe?g|gif|webp|svg)/i) ? (
-								<img src={m.src} alt="" style={{ width: 40, height: 40, objectFit: "cover", borderRadius: 4 }} />
+								<img src={m.src} alt="" style={{ width: 40, height: 40, objectFit: "cover" }} />
 							) : m.src && m.src.match(/\.(mp4|webm|ogv)/i) ? (
-								<video src={m.src} style={{ width: 40, height: 40, borderRadius: 4 }} muted />
+								<video src={m.src} style={{ width: 40, height: 40 }} muted />
 							) : null}
-							<span style={{ flex: 1, fontSize: 11, color: "#9ca3af", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.src}</span>
+							<span style={{ flex: 1, fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.src}</span>
 						</div>
 					));
 				})()}
@@ -716,7 +646,7 @@ export function ContentForm({
 			</div>
 			{formData.seo?.openGraph?.image && (
 				<div style={{ marginTop: 8 }}>
-					<img src={formData.seo.openGraph.image} alt="OG" style={{ maxWidth: "100%", maxHeight: 200, borderRadius: 6, border: "1px solid #333" }} />
+					<img src={formData.seo.openGraph.image} alt="OG" style={{ maxWidth: "100%", maxHeight: 200 }} />
 				</div>
 			)}
 			<div style={s.divider} />
@@ -725,7 +655,7 @@ export function ContentForm({
 			<InputField label="Keywords" value={((formData.seo as any)?.keywords || []).join(", ")} onChange={(v) => setFormData((p) => ({ ...p, seo: { ...(p.seo || {}), keywords: v.split(",").map((t) => t.trim()).filter(Boolean) } as any }))} />
 			<div style={{ marginTop: 8 }}>
 				<div style={s.label}>OG画像プレビュー</div>
-				<img src={generatedOgImageUrl} alt="generated OG" style={{ maxWidth: "100%", maxHeight: 200, borderRadius: 6, border: "1px solid #333" }} />
+				<img src={generatedOgImageUrl} alt="generated OG" style={{ maxWidth: "100%", maxHeight: 200 }} />
 			</div>
 		</div>
 	);
@@ -757,7 +687,7 @@ export function ContentForm({
 						rels[i] = { ...rels[i], type: e.target.value };
 						setFormData((p) => ({ ...p, relations: rels }));
 					}} />
-					<label style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "#9ca3af", width: 140 }}>
+					<label style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, width: 140 }}>
 						<input type="checkbox" checked={rel.bidirectional || false} onChange={(e) => {
 							const rels = [...(formData.relations || [])];
 							rels[i] = { ...rels[i], bidirectional: e.target.checked };
@@ -815,16 +745,12 @@ export function ContentForm({
 							key={label}
 							type="button"
 							onClick={() => setSectionIndex(i)}
-							style={{
-								padding: "4px 10px",
-								borderRadius: 6,
-								border: sectionIndex === i ? "1px solid #3b82f6" : "1px solid #333",
-								background: sectionIndex === i ? "#1e3a5f" : "transparent",
-								color: sectionIndex === i ? "#93c5fd" : "#9ca3af",
-								fontSize: 12,
-								cursor: "pointer",
-								whiteSpace: "nowrap",
-							}}
+						style={{
+							padding: "4px 10px",
+							fontSize: 12,
+							cursor: "pointer",
+							whiteSpace: "nowrap",
+						}}
 						>
 							{label}
 						</button>
@@ -832,7 +758,7 @@ export function ContentForm({
 				</div>
 				<div style={{ display: "flex", gap: 24 }}>
 					{/* Desktop sidebar */}
-					<nav style={{ display: "none", flexDirection: "column", gap: 2, width: 180, borderRight: "1px solid #222", paddingRight: 12, minHeight: 400 }} className="md-visible-nav">
+					<nav style={{ display: "none", flexDirection: "column", gap: 2, width: 180, paddingRight: 12, minHeight: 400 }} className="md-visible-nav">
 						{sections.map((label, i) => (
 							<button
 								key={label}
@@ -842,10 +768,6 @@ export function ContentForm({
 									textAlign: "left",
 									justifyContent: "flex-start",
 									padding: "6px 10px",
-									borderRadius: 6,
-									border: "none",
-									background: sectionIndex === i ? "#1e3a5f" : "transparent",
-									color: sectionIndex === i ? "#93c5fd" : "#9ca3af",
 									fontSize: 13,
 									cursor: "pointer",
 									fontWeight: sectionIndex === i ? 600 : 400,
@@ -858,19 +780,16 @@ export function ContentForm({
 					{/* Content */}
 					<div style={{ flex: 1, maxHeight: 500, overflowY: "auto", paddingRight: 4, minWidth: 0, scrollbarWidth: "thin" }}>
 						{feedback && (
-							<div style={{
-								padding: "8px 12px",
-								borderRadius: 6,
-								background: feedback.type === "success" ? "#064e3b" : "#7f1d1d",
-								color: feedback.type === "success" ? "#6ee7b7" : "#fca5a5",
-								marginBottom: 12,
-								display: "flex",
-								justifyContent: "space-between",
-								alignItems: "center",
-								fontSize: 13,
-							}}>
+						<div style={{
+							padding: "8px 12px",
+							marginBottom: 12,
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+							fontSize: 13,
+						}}>
 								{feedback.message}
-								<button type="button" style={{ ...s.btnDanger, color: "inherit" }} onClick={() => setFeedback(null)}>×</button>
+								<button type="button" style={s.btnDanger} onClick={() => setFeedback(null)}>×</button>
 							</div>
 						)}
 						{renderSection()}
@@ -878,7 +797,7 @@ export function ContentForm({
 				</div>
 			</div>
 			{/* Footer */}
-			<div style={{ display: "flex", justifyContent: "flex-end", gap: 8, borderTop: "1px solid #222", paddingTop: 8 }}>
+			<div style={{ display: "flex", justifyContent: "flex-end", gap: 8, paddingTop: 8 }}>
 				<button type="button" style={s.btn} onClick={onCancel} disabled={isLoading}>キャンセル</button>
 				<button
 					type="submit"
