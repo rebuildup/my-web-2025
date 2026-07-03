@@ -74,11 +74,11 @@ export function ExternalLinksSection({
 	};
 
 	const inputStyle =
-		"w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		"w-full  px-3 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const labelStyle =
 		"block noto-sans-jp-regular text-sm font-medium mb-1";
 	const buttonStyle =
-		"border px-3 py-1 text-xs hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		" px-3 py-1 text-xs hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
 		<div className="space-y-4">
@@ -90,7 +90,7 @@ export function ExternalLinksSection({
 					<button
 						type="button"
 						onClick={() => setShowAddForm(true)}
-						className={`${buttonStyle} text-white hover:/80`}
+						className={`${buttonStyle}  hover:/80`}
 					>
 						+ Add Link
 					</button>
@@ -99,7 +99,7 @@ export function ExternalLinksSection({
 
 			{/* Add New Link Form - 条件付きで表示 */}
 			{showAddForm && (
-				<div className="border border-gray-200 p-4 rounded space-y-3">
+				<div className="  p-4 rounded space-y-3">
 					<h4 className="noto-sans-jp-regular text-sm font-medium ">
 						Add New Link
 					</h4>
@@ -174,7 +174,7 @@ export function ExternalLinksSection({
 						<button
 							type="button"
 							onClick={addLink}
-							className={`${buttonStyle} text-white hover:/80`}
+							className={`${buttonStyle}  hover:/80`}
 							disabled={!newLink.url.trim() || !newLink.title.trim()}
 						>
 							Add Link
@@ -193,7 +193,7 @@ export function ExternalLinksSection({
 					{links.map((link, index) => (
 						<div
 							key={link.url || `external-link-${index}`}
-							className="border border-gray-200 p-4 rounded space-y-3"
+							className="  p-4 rounded space-y-3"
 						>
 							<div className="flex justify-between items-start">
 								<div className="flex-1 space-y-3">
@@ -254,7 +254,7 @@ export function ExternalLinksSection({
 								<button
 									type="button"
 									onClick={() => removeLink(index)}
-									className="ml-4 text-red-500 hover:text-red-700 text-sm"
+									className="ml-4   text-sm"
 									title="Remove link"
 								>
 									Remove
@@ -262,13 +262,13 @@ export function ExternalLinksSection({
 							</div>
 
 							{/* Preview */}
-							<div className="mt-3 p-3 bg-gray-50 rounded">
-								<p className="text-xs text-gray-600 mb-2">Preview:</p>
+							<div className="mt-3 p-3  rounded">
+								<p className="text-xs  mb-2">Preview:</p>
 								<div className="flex items-center gap-2">
 									<span className="text-lg">{getLinkIcon(link.type)}</span>
 									<div className="flex-1">
 										<div className="flex items-center gap-2 mb-1">
-											<span className="bg-gray-200 text-gray-700 px-2 py-1 text-xs rounded">
+											<span className="  px-2 py-1 text-xs rounded">
 												{link.type}
 											</span>
 											<span className="font-medium text-sm">{link.title}</span>
@@ -277,12 +277,12 @@ export function ExternalLinksSection({
 											href={link.url}
 											target="_blank"
 											rel="noopener noreferrer"
-											className="text-xs text-blue-600 hover:underline break-all"
+											className="text-xs  hover:underline break-all"
 										>
 											{link.url}
 										</a>
 										{link.description && (
-											<p className="text-xs text-gray-600 mt-1">
+											<p className="text-xs  mt-1">
 												{link.description}
 											</p>
 										)}
@@ -296,7 +296,7 @@ export function ExternalLinksSection({
 
 			{/* Quick Add Common Links - Add Linkフォームが表示されていない時のみ表示 */}
 			{!showAddForm && (
-				<div className="border border-gray-200 p-4 rounded">
+				<div className="  p-4 rounded">
 					<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 						Quick Add
 					</h4>

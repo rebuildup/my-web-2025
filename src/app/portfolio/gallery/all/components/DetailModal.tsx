@@ -80,7 +80,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 
 	return (
 		<div
-			className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4"
+			className="fixed inset-0  flex items-center justify-center z-50 p-4"
 			onClick={handleBackdropClick}
 			onKeyDown={handleBackdropKeyDown}
 			tabIndex={-1}
@@ -90,10 +90,10 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 		>
 			<div
 				ref={modalRef}
-				className=" border max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+				className="  max-w-4xl w-full max-h-[90vh] overflow-y-auto"
 			>
 				{/* Header */}
-				<header className="flex items-center justify-between p-6 border-b ">
+				<header className="flex items-center justify-between p-6  ">
 					<h1
 						id="modal-title"
 						className="zen-kaku-gothic-new text-xl "
@@ -115,7 +115,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 				<div className="p-6 space-y-6">
 					{/* Main Image */}
 					{item.thumbnail && (
-						<div className="aspect-video border overflow-hidden">
+						<div className="aspect-video  overflow-hidden">
 							<Image
 								src={item.thumbnail}
 								alt={item.title}
@@ -167,7 +167,7 @@ export function DetailModal({ item, onClose }: DetailModalProps) {
 				</div>
 
 				{/* Footer */}
-				<footer className="p-6 border-t ">
+				<footer className="p-6  ">
 					<Link
 						href={`/portfolio/${item.id}`}
 						className="flex items-center space-x-2 text-accent hover: transition-colors"

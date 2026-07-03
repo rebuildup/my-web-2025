@@ -149,7 +149,7 @@ export function ExperimentLoader({
 						<p className="noto-sans-jp-light text-sm ">
 							実験を読み込み中...
 						</p>
-						<p className="text-xs opacity-70">{experimentId}</p>
+						<p className="text-xs ">{experimentId}</p>
 					</div>
 				</div>
 			</div>
@@ -174,17 +174,17 @@ export function ExperimentLoader({
 		return (
 			<div className={`flex items-center justify-center py-12 ${className}`}>
 				<div className="text-center space-y-4">
-					<AlertTriangle className="w-8 h-8 text-yellow-500 mx-auto" />
+					<AlertTriangle className="w-8 h-8  mx-auto" />
 					<div className="space-y-2">
 						<p className="noto-sans-jp-light text-sm ">
 							実験が見つかりません
 						</p>
-						<p className="text-xs opacity-70">ID: {experimentId}</p>
+						<p className="text-xs ">ID: {experimentId}</p>
 					</div>
 					<button
 						type="button"
 						onClick={handleRetry}
-						className="px-4 py-2 border hover:border-accent hover:text-accent transition-colors text-sm"
+						className="px-4 py-2  hover:border-accent hover:text-accent transition-colors text-sm"
 					>
 						再試行
 					</button>
@@ -255,7 +255,7 @@ export function ExperimentPreloader({
 	}
 
 	return (
-		<div className="fixed bottom-4 right-4 border p-3 rounded-lg shadow-lg z-50">
+		<div className="fixed bottom-4 right-4  p-3 rounded-lg  z-50">
 			<div className="flex items-center space-x-3">
 				{isPreloading && (
 					<Loader2 className="w-4 h-4 animate-spin text-accent" />
@@ -264,13 +264,13 @@ export function ExperimentPreloader({
 					<div className="">
 						{isPreloading ? "Preloading experiments..." : "Preload complete"}
 					</div>
-					<div className="text-xs opacity-70">
+					<div className="text-xs ">
 						{loadedCount} / {experimentIds.length}
 					</div>
 				</div>
 			</div>
 			{isPreloading && (
-				<div className="mt-2 w-32 h-1 border rounded-full overflow-hidden">
+				<div className="mt-2 w-32 h-1  rounded-full overflow-hidden">
 					<div
 						className="h-full bg-accent transition-all duration-300"
 						style={{

@@ -267,7 +267,7 @@ export class ContentParser implements ContentParserService {
 				}
 
 				const linkText = customText || link.title || `Link ${index}`;
-				let classes = "text-blue-500 hover:underline"; // Default link styling
+				let classes = " hover:underline"; // Default link styling
 
 				if (classString) {
 					const classArray = classString
@@ -700,11 +700,11 @@ export class ContentParser implements ContentParserService {
 		);
 		const fallbackAlt = altText || `画像 ${index}`;
 
-		return `<div class="embed-fallback bg-gray-50 border border-gray-200 rounded-lg p-3 text-center text-gray-600 my-4">
+		return `<div class="embed-fallback    rounded-lg p-3 text-center  my-4">
       <div class="text-lg mb-1">🖼️</div>
-      <div class="font-medium text-gray-700 text-sm">画像が見つかりません</div>
-      <div class="text-xs text-gray-500 mt-1">インデックス ${index} (${fallbackAlt})</div>
-      ${suggestions ? `<div class="text-xs text-blue-600 mt-2">${suggestions}</div>` : ""}
+      <div class="font-medium  text-sm">画像が見つかりません</div>
+      <div class="text-xs  mt-1">インデックス ${index} (${fallbackAlt})</div>
+      ${suggestions ? `<div class="text-xs  mt-2">${suggestions}</div>` : ""}
     </div>`;
 	}
 
@@ -720,11 +720,11 @@ export class ContentParser implements ContentParserService {
 		);
 		const fallbackTitle = title || `動画 ${index}`;
 
-		return `<div class="embed-fallback bg-gray-50 border border-gray-200 rounded-lg p-3 text-center text-gray-600 my-4">
+		return `<div class="embed-fallback    rounded-lg p-3 text-center  my-4">
       <div class="text-lg mb-1">🎥</div>
-      <div class="font-medium text-gray-700 text-sm">動画が見つかりません</div>
-      <div class="text-xs text-gray-500 mt-1">インデックス ${index} (${fallbackTitle})</div>
-      ${suggestions ? `<div class="text-xs text-blue-600 mt-2">${suggestions}</div>` : ""}
+      <div class="font-medium  text-sm">動画が見つかりません</div>
+      <div class="text-xs  mt-1">インデックス ${index} (${fallbackTitle})</div>
+      ${suggestions ? `<div class="text-xs  mt-2">${suggestions}</div>` : ""}
     </div>`;
 	}
 
@@ -740,11 +740,11 @@ export class ContentParser implements ContentParserService {
 		);
 		const fallbackText = customText || `リンク ${index}`;
 
-		return `<span class="embed-fallback inline-block bg-red-50 border border-red-200 rounded px-2 py-1 text-red-700 text-sm">
+		return `<span class="embed-fallback inline-block    rounded px-2 py-1  text-sm">
       <span class="mr-1">🔗</span>
       <span class="font-medium">リンクが見つかりません:</span>
       <span class="ml-1">インデックス ${index} (${fallbackText})</span>
-      ${suggestions ? `<span class="block text-xs text-blue-600 mt-1">${suggestions}</span>` : ""}
+      ${suggestions ? `<span class="block text-xs  mt-1">${suggestions}</span>` : ""}
     </span>`;
 	}
 
@@ -819,12 +819,12 @@ export class ContentParser implements ContentParserService {
 			}
 		}
 
-		return `<div class="embed-fallback bg-yellow-50 border-2 border-dashed border-yellow-300 rounded-lg p-4 text-center text-yellow-800">
+		return `<div class="embed-fallback     rounded-lg p-4 text-center ">
       <div class="text-lg mb-2">⚠️</div>
-      <div class="font-medium text-yellow-900">Iframe blocked</div>
-      <div class="text-sm text-yellow-700 mt-1">${reason}</div>
-      <div class="text-xs text-blue-600 mt-2">${suggestion}</div>
-      <div class="text-xs text-gray-600 mt-1">Allowed: ${allowedDomains.slice(0, 3).join(", ")}, etc.</div>
+      <div class="font-medium ">Iframe blocked</div>
+      <div class="text-sm  mt-1">${reason}</div>
+      <div class="text-xs  mt-2">${suggestion}</div>
+      <div class="text-xs  mt-1">Allowed: ${allowedDomains.slice(0, 3).join(", ")}, etc.</div>
     </div>`;
 	}
 
@@ -833,17 +833,17 @@ export class ContentParser implements ContentParserService {
 		title: string,
 		platform: string,
 	): string {
-		return `<div class="embed-fallback bg-blue-50 border border-blue-200 rounded-lg p-3 text-blue-800">
+		return `<div class="embed-fallback    rounded-lg p-3 ">
       <div class="flex items-center mb-2">
         <span class="text-lg mr-2">🎥</span>
         <span class="font-medium">Video embed failed</span>
       </div>
       <div class="text-sm mb-2">${platform} URL could not be processed</div>
       <a href="${url}" target="_blank" rel="noopener noreferrer" 
-         class="inline-block bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors">
+         class="inline-block   px-3 py-1 rounded text-sm  transition-colors">
         ${title} →
       </a>
-      <div class="text-xs text-blue-600 mt-2">
+      <div class="text-xs  mt-2">
         Check that the ${platform} URL is valid and publicly accessible
       </div>
     </div>`;
@@ -854,17 +854,17 @@ export class ContentParser implements ContentParserService {
 		title: string,
 		type: string,
 	): string {
-		return `<div class="embed-fallback bg-purple-50 border border-purple-200 rounded-lg p-3 text-purple-800">
+		return `<div class="embed-fallback    rounded-lg p-3 ">
       <div class="flex items-center mb-2">
         <span class="text-lg mr-2">🎬</span>
         <span class="font-medium">Unsupported video type</span>
       </div>
       <div class="text-sm mb-2">Video type "${type}" is not supported for embedding</div>
       <a href="${url}" target="_blank" rel="noopener noreferrer" 
-         class="inline-block bg-purple-500 text-white px-3 py-1 rounded text-sm hover:bg-purple-600 transition-colors">
+         class="inline-block   px-3 py-1 rounded text-sm  transition-colors">
         ${title} →
       </a>
-      <div class="text-xs text-purple-600 mt-2">
+      <div class="text-xs  mt-2">
         Supported types: youtube, vimeo. Use iframe for other video platforms.
       </div>
     </div>`;
@@ -872,7 +872,7 @@ export class ContentParser implements ContentParserService {
 
 	generateValidationFeedback(errors: EmbedError[]): string {
 		if (errors.length === 0) {
-			return '<div class="validation-success text-green-600 text-sm">✅ All embeds are valid</div>';
+			return '<div class="validation-success  text-sm">✅ All embeds are valid</div>';
 		}
 
 		// Group errors by type for potential future use
@@ -893,13 +893,13 @@ export class ContentParser implements ContentParserService {
 
 		if (criticalErrors.length > 0) {
 			feedback += `<div class="validation-errors">
-        <div class="text-red-600 font-medium text-sm mb-1">❌ ${criticalErrors.length} Error${criticalErrors.length > 1 ? "s" : ""}</div>
-        <ul class="text-red-600 text-xs space-y-1 ml-4">`;
+        <div class=" font-medium text-sm mb-1">❌ ${criticalErrors.length} Error${criticalErrors.length > 1 ? "s" : ""}</div>
+        <ul class=" text-xs space-y-1 ml-4">`;
 
 			criticalErrors.forEach((error) => {
 				feedback += `<li>Line ${error.line}: ${error.message}`;
 				if (error.suggestion) {
-					feedback += ` <span class="text-blue-600">(${error.suggestion})</span>`;
+					feedback += ` <span class="">(${error.suggestion})</span>`;
 				}
 				feedback += "</li>";
 			});
@@ -909,13 +909,13 @@ export class ContentParser implements ContentParserService {
 
 		if (warnings.length > 0) {
 			feedback += `<div class="validation-warnings">
-        <div class="text-yellow-600 font-medium text-sm mb-1">⚠️ ${warnings.length} Warning${warnings.length > 1 ? "s" : ""}</div>
-        <ul class="text-yellow-600 text-xs space-y-1 ml-4">`;
+        <div class=" font-medium text-sm mb-1">⚠️ ${warnings.length} Warning${warnings.length > 1 ? "s" : ""}</div>
+        <ul class=" text-xs space-y-1 ml-4">`;
 
 			warnings.forEach((error) => {
 				feedback += `<li>Line ${error.line}: ${error.message}`;
 				if (error.suggestion) {
-					feedback += ` <span class="text-blue-600">(${error.suggestion})</span>`;
+					feedback += ` <span class="">(${error.suggestion})</span>`;
 				}
 				feedback += "</li>";
 			});

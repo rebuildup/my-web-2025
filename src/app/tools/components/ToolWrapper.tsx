@@ -135,7 +135,7 @@ export default function ToolWrapper({
 						{showAccessibilityInfo && (
 							<section
 								aria-labelledby="accessibility-info-heading"
-								className="rounded-2xl /75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] p-6"
+								className="rounded-2xl /75  shadow-[0_24px_60px_rgba(0,0,0,0.35)] p-6"
 							>
 								<h2
 									id="accessibility-info-heading"
@@ -195,7 +195,7 @@ export default function ToolWrapper({
 								<button
 									type="button"
 									onClick={() => setShowAccessibilityInfo(false)}
-									className="mt-4 rounded-lg /10 px-3 py-1 hover:/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="mt-4 rounded-lg /10 px-3 py-1 hover:/20 transition-colors   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 									aria-label="アクセシビリティ情報を閉じる"
 								>
 									閉じる
@@ -228,7 +228,7 @@ export default function ToolWrapper({
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 								<Link
 									href="/tools"
-									className="rounded-2xl /75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+									className="rounded-2xl /75  shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5   focus:ring-accent focus:border-accent"
 								>
 									<span className="noto-sans-jp-regular leading-snug ">
 										← Tools
@@ -236,7 +236,7 @@ export default function ToolWrapper({
 								</Link>
 								<Link
 									href="/"
-									className="rounded-2xl /75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+									className="rounded-2xl /75  shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5   focus:ring-accent focus:border-accent"
 								>
 									<span className="noto-sans-jp-regular leading-snug ">
 										← Home

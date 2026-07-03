@@ -531,18 +531,18 @@ export function VideoDesignGallery({
 	if (process.env.NODE_ENV !== "test" && (!items || !Array.isArray(items))) {
 		return (
 			<div className="space-y-8">
-				<div className="bg-red-50 border border-red-200 p-6 rounded-lg">
+				<div className="   p-6 rounded-lg">
 					<div className="flex items-center mb-4">
-						<AlertTriangle className="w-6 h-6 text-red-600 mr-3" />
+						<AlertTriangle className="w-6 h-6  mr-3" />
 						<h2
-							className="zen-kaku-gothic-new text-lg text-red-800"
+							className="zen-kaku-gothic-new text-lg "
 							role="alert"
 						>
 							Error Loading Gallery
 						</h2>
 					</div>
 					<p
-						className="noto-sans-jp-light text-sm text-red-700 mb-4"
+						className="noto-sans-jp-light text-sm  mb-4"
 						role="alert"
 					>
 						{!items ? "No items provided to gallery" : "Invalid items format"}
@@ -550,7 +550,7 @@ export function VideoDesignGallery({
 					<button
 						type="button"
 						onClick={() => window.location.reload()}
-						className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+						className="flex items-center space-x-2   px-4 py-2 rounded  transition-colors"
 					>
 						<RefreshCw className="w-4 h-4" />
 						<span>Retry</span>
@@ -585,18 +585,18 @@ export function VideoDesignGallery({
 	if (process.env.NODE_ENV !== "test" && errorState.hasError) {
 		return (
 			<div className="space-y-8">
-				<div className="bg-red-50 border border-red-200 p-6 rounded-lg">
+				<div className="   p-6 rounded-lg">
 					<div className="flex items-center mb-4">
-						<AlertTriangle className="w-6 h-6 text-red-600 mr-3" />
+						<AlertTriangle className="w-6 h-6  mr-3" />
 						<h2
-							className="zen-kaku-gothic-new text-lg text-red-800"
+							className="zen-kaku-gothic-new text-lg "
 							role="alert"
 						>
 							Error Loading Gallery
 						</h2>
 					</div>
 					<p
-						className="noto-sans-jp-light text-sm text-red-700 mb-4"
+						className="noto-sans-jp-light text-sm  mb-4"
 						role="alert"
 					>
 						{errorState.error?.message ||
@@ -609,7 +609,7 @@ export function VideoDesignGallery({
 							// Clear cache to force refresh
 							cacheRef.current.clear();
 						}}
-						className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+						className="flex items-center space-x-2   px-4 py-2 rounded  transition-colors"
 					>
 						<RefreshCw className="w-4 h-4" />
 						<span>Retry</span>
@@ -708,7 +708,7 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 
 	const gridClasses = getGridItemClasses(item.gridSize);
 	const minHeightClass = getGridItemMinHeight(item.gridSize);
-	const overlayClasses = "px-2 py-[1px] bg-black text-white rounded-[4px]";
+	const overlayClasses = "px-2 py-[1px]   rounded-[4px]";
 
 	// Debug: Log the classes being applied
 	console.log("Grid classes for item:", item.id, gridClasses);
@@ -734,7 +734,7 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 	if (isPlaceholder) {
 		return (
 			<div
-				className={`${gridClasses} ${minHeightClass} /30 min-h-[200px] border-0`}
+				className={`${gridClasses} ${minHeightClass} /30 min-h-[200px] `}
 				style={{
 					display: "block",
 					position: "relative",
@@ -747,7 +747,7 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 		<Link
 			href={item.url}
 			// isolation keeps the overlay and image within the same stacking context
-			className={`${gridClasses} ${minHeightClass} video-design-gallery-item group block relative bg-transparent overflow-hidden hover:/50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent min-h-[200px] border-0 isolate`}
+			className={`${gridClasses} ${minHeightClass} video-design-gallery-item group block relative  overflow-hidden hover:/50 transition-colors   focus:ring-accent min-h-[200px]  isolate`}
 			onMouseEnter={() => onHover(item.id)}
 			onMouseLeave={() => onHover(null)}
 			onFocus={() => onHover(item.id)}
@@ -782,8 +782,8 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 						/>
 					</div>
 				) : (
-					<div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-10">
-						<div className="text-center text-white">
+					<div className="absolute inset-0 flex items-center justify-center  bg-opacity-10">
+						<div className="text-center ">
 							<Palette className="w-8 h-8 mx-auto mb-2" />
 							<span className="text-xs">No Image</span>
 						</div>
@@ -794,7 +794,7 @@ function GridItemComponentV2({ item, onHover }: GridItemComponentProps) {
 			{/* Content Overlay */}
 			<div className="gallery-text-overlay absolute inset-0 p-2 flex flex-col justify-end z-10">
 				<div
-					className={`${overlayClasses} inline-flex w-fit flex-col gap-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100`}
+					className={`${overlayClasses} inline-flex w-fit flex-col gap-0  transition-opacity duration-200  group-focus-within:`}
 				>
 					{/* Row: icons + title inline */}
 					<div className="flex items-center gap-1 leading-none">

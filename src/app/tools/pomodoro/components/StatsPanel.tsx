@@ -74,14 +74,14 @@ export default function StatsPanel({
 			case "shortBreak":
 				return "bg-accent/20 text-accent";
 			case "longBreak":
-				return "bg-green-500/20 text-green-700";
+				return " ";
 			default:
 				return "/20 ";
 		}
 	};
 
 	return (
-		<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
+		<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6">
 			<div className="flex items-center justify-between mb-6">
 				<h3 className="text-lg font-semibold ">統計情報</h3>
 				<button
@@ -119,20 +119,20 @@ export default function StatsPanel({
 
 					<div className="rounded-lg /5 p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
-							<Zap className="text-green-600" size={20} />
+							<Zap className="" size={20} />
 							<span className="text-sm font-medium">現在の連続記録</span>
 						</div>
-						<div className="text-2xl font-bold text-green-600">
+						<div className="text-2xl font-bold ">
 							{stats.currentStreak}
 						</div>
 					</div>
 
 					<div className="rounded-lg /5 p-4 text-center">
 						<div className="flex items-center justify-center gap-2 mb-2">
-							<Calendar className="text-purple-600" size={20} />
+							<Calendar className="" size={20} />
 							<span className="text-sm font-medium">今日のセッション</span>
 						</div>
-						<div className="text-2xl font-bold text-purple-600">
+						<div className="text-2xl font-bold ">
 							{getTodaysSessions()}
 						</div>
 					</div>
@@ -246,7 +246,7 @@ export default function StatsPanel({
 				)}
 
 				{/* Reset Stats */}
-				<div className="pt-4 border-t /20">
+				<div className="pt-4  /20">
 					<button
 						type="button"
 						onClick={() => {
@@ -259,7 +259,7 @@ export default function StatsPanel({
 								console.log("Reset stats requested");
 							}
 						}}
-						className="w-full px-4 py-2 border border-red-300 text-red-600 rounded hover:bg-red-50 transition-colors text-sm"
+						className="w-full px-4 py-2    rounded  transition-colors text-sm"
 					>
 						統計データをリセット
 					</button>

@@ -365,11 +365,11 @@ export default async function WorkshopPage({
 
 	return (
 		<div className="min-h-screen">
-			<header className="w-full h-14 border-b border-[#333333]">
+			<header className="w-full h-14  ">
 				<div className="h-full max-w-7xl mx-auto px-4 flex items-center justify-between gap-6">
 					<Link
 						href="/workshop"
-						className="text-xl font-semibold text-white hover:underline"
+						className="text-xl font-semibold  hover:underline"
 					>
 						Workshop
 					</Link>
@@ -391,14 +391,14 @@ export default async function WorkshopPage({
 							{/* Hero Content */}
 							<div className="space-y-6">
 								<div>
-									<span className="inline-block px-3 py-1 text-xs font-semibold bg-[#2b57ff] text-white rounded mb-4">
+									<span className="inline-block px-3 py-1 text-xs font-semibold   rounded mb-4">
 										LATEST
 									</span>
-									<h1 className="text-3xl font-bold text-white leading-tight">
+									<h1 className="text-3xl font-bold  leading-tight">
 										{latestArticle.title}
 									</h1>
 									{latestArticle.description && (
-										<p className="text-sm text-[#aaaaaa] line-clamp-3 leading-relaxed">
+										<p className="text-sm  line-clamp-3 leading-relaxed">
 											{latestArticle.description}
 										</p>
 									)}
@@ -408,13 +408,13 @@ export default async function WorkshopPage({
 								<div className="flex gap-3">
 									<Link
 										href="/workshop/plugins"
-										className="px-4 py-2 text-sm font-medium text-[#f2f2f2] bg-[#1a1a1f] border border-[#333333] rounded hover:bg-[#2a2a2f] hover:border-[#444444] transition-colors"
+										className="px-4 py-2 text-sm font-medium     rounded   transition-colors"
 									>
 										Plugins
 									</Link>
 									<Link
 										href="/workshop/downloads"
-										className="px-4 py-2 text-sm font-medium text-[#f2f2f2] bg-[#1a1a1f] border border-[#333333] rounded hover:bg-[#2a2a2f] hover:border-[#444444] transition-colors"
+										className="px-4 py-2 text-sm font-medium     rounded   transition-colors"
 									>
 										Downloads
 									</Link>
@@ -423,22 +423,22 @@ export default async function WorkshopPage({
 								{/* Stats */}
 								<div className="grid grid-cols-3 gap-4">
 									<div>
-										<div className="text-2xl font-bold text-white">
+										<div className="text-2xl font-bold ">
 											{totalArticles}
 										</div>
-										<div className="text-sm text-[#888888]">記事</div>
+										<div className="text-sm ">記事</div>
 									</div>
 									<div>
-										<div className="text-2xl font-bold text-white">
+										<div className="text-2xl font-bold ">
 											{totalTags}
 										</div>
-										<div className="text-sm text-[#888888]">タグ</div>
+										<div className="text-sm ">タグ</div>
 									</div>
 									<div>
-										<div className="text-2xl font-bold text-white">
+										<div className="text-2xl font-bold ">
 											{totalViews.toLocaleString()}
 										</div>
-										<div className="text-sm text-[#888888]">ビュー</div>
+										<div className="text-sm ">ビュー</div>
 									</div>
 								</div>
 							</div>
@@ -453,7 +453,7 @@ export default async function WorkshopPage({
 									}
 									className="block"
 								>
-									<div className="relative aspect-video overflow-hidden bg-[#1a1a1f] rounded-lg">
+									<div className="relative aspect-video overflow-hidden  rounded-lg">
 										{latestArticle.thumbnail ? (
 											<Image
 												src={latestArticle.thumbnail}
@@ -463,9 +463,9 @@ export default async function WorkshopPage({
 												sizes="(max-width: 768px) 100vw, 50vw"
 											/>
 										) : (
-											<div className="w-full h-full flex items-center justify-center bg-[#2a2a2f]">
+											<div className="w-full h-full flex items-center justify-center ">
 												<svg
-													className="w-24 h-24 text-[#444444]"
+													className="w-24 h-24 "
 													fill="none"
 													stroke="currentColor"
 													viewBox="0 0 24 24"
@@ -480,7 +480,7 @@ export default async function WorkshopPage({
 											</div>
 										)}
 										{/* Overlay on hover */}
-										<div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+										<div className="absolute inset-0   transition-colors duration-300" />
 									</div>
 								</Link>
 							</div>
@@ -496,10 +496,10 @@ export default async function WorkshopPage({
 								<Link
 									key={tagInfo.tag}
 									href={`?mode=${mode}&tag=${encodeURIComponent(tagInfo.tag)}`}
-									className="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#f2f2f2] bg-[#1a1a1f] border border-[#333333] rounded hover:bg-[#2a2a2f] hover:border-[#444444] hover:text-[#2b57ff] transition-all snap-start"
+									className="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium     rounded    transition-all snap-start"
 								>
 									<span>#{tagInfo.tag} </span>
-									<span className="text-xs text-[#888888]">
+									<span className="text-xs ">
 										{tagInfo.count}
 									</span>
 								</Link>
@@ -514,21 +514,21 @@ export default async function WorkshopPage({
 						<div className="mb-8">
 							<div className="flex flex-col gap-4">
 								<div className="flex items-center justify-between">
-									<h1 className="text-2xl font-bold text-white">
+									<h1 className="text-2xl font-bold ">
 										Articles
-										<span className="ml-2 text-sm font-normal text-[#888888]">
+										<span className="ml-2 text-sm font-normal ">
 											({displayPagesWithCMS.length}記事)
 										</span>
 									</h1>
 									<div className="flex items-center gap-2">
-										<span className="text-sm text-[#888888]">ソート:</span>
-										<div className="flex bg-[#1a1a1f] border border-[#333333] rounded">
+										<span className="text-sm ">ソート:</span>
+										<div className="flex    rounded">
 											<Link
 												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=newest`}
 												className={`px-3 py-1.5 text-sm rounded-l ${
 													sort === "newest"
-														? "bg-[#2b57ff] text-white"
-														: "text-[#f2f2f2] hover:bg-[#2a2a2f]"
+														? " "
+														: " "
 												}`}
 											>
 												新着
@@ -537,8 +537,8 @@ export default async function WorkshopPage({
 												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=popular`}
 												className={`px-3 py-1.5 text-sm ${
 													sort === "popular"
-														? "bg-[#2b57ff] text-white"
-														: "text-[#f2f2f2] hover:bg-[#2a2a2f]"
+														? " "
+														: " "
 												}`}
 											>
 												人気
@@ -547,8 +547,8 @@ export default async function WorkshopPage({
 												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=alphabetical`}
 												className={`px-3 py-1.5 text-sm rounded-r ${
 													sort === "alphabetical"
-														? "bg-[#2b57ff] text-white"
-														: "text-[#f2f2f2] hover:bg-[#2a2a2f]"
+														? " "
+														: " "
 												}`}
 											>
 												名前順
@@ -566,8 +566,8 @@ export default async function WorkshopPage({
 							</section>
 
 							<aside className="w-80 space-y-5 hidden lg:block">
-								<div className="p-4 bg-[#1a1a1f] border border-[#333333] rounded">
-									<h2 className=" font-semibold text-[#f2f2f2] mb-4">
+								<div className="p-4    rounded">
+									<h2 className=" font-semibold  mb-4">
 										Trending Tags
 									</h2>
 									<div className="space-y-3">
@@ -578,7 +578,7 @@ export default async function WorkshopPage({
 												<Link
 													key={item.tag}
 													href={`?mode=${mode}&tag=${encodeURIComponent(item.tag)}`}
-													className="flex items-center gap-3 hover:bg-[#2a2a2f] p-2 rounded transition-colors group"
+													className="flex items-center gap-3  p-2 rounded transition-colors group"
 												>
 													{/* Tag info */}
 													<div className="flex-1 min-w-0">
@@ -586,19 +586,19 @@ export default async function WorkshopPage({
 															<span
 																className={`text-sm font-semibold ${
 																	index === 0
-																		? "text-[#2b57ff]"
-																		: "text-[#f2f2f2]"
+																		? ""
+																		: ""
 																}`}
 															>
 																#{item.tag}
 															</span>
 														</div>
-														<span className="text-xs text-[#888888]">
+														<span className="text-xs ">
 															{item.count}記事
 														</span>
 													</div>
 													{/* Thumbnail */}
-													<div className="relative w-12 h-12 shrink-0 bg-[#2a2a2f] rounded overflow-hidden">
+													<div className="relative w-12 h-12 shrink-0  rounded overflow-hidden">
 														{firstArticle?.thumbnail ? (
 															<Image
 																src={firstArticle.thumbnail}
@@ -610,7 +610,7 @@ export default async function WorkshopPage({
 														) : (
 															<div className="w-full h-full flex items-center justify-center">
 																<svg
-																	className="w-6 h-6 text-[#444444]"
+																	className="w-6 h-6 "
 																	fill="none"
 																	stroke="currentColor"
 																	viewBox="0 0 24 24"
@@ -631,8 +631,8 @@ export default async function WorkshopPage({
 									</div>
 								</div>
 
-								<div className="p-4 bg-[#1a1a1f] border border-[#333333] rounded">
-									<h2 className=" font-semibold text-[#f2f2f2] mb-4">
+								<div className="p-4    rounded">
+									<h2 className=" font-semibold  mb-4">
 										Popular Articles
 									</h2>
 									<div className="space-y-3">
@@ -640,16 +640,16 @@ export default async function WorkshopPage({
 											<Link
 												key={item.page.slug}
 												href={item.href}
-												className="flex items-center gap-3 hover:bg-[#2a2a2f] p-2 rounded transition-colors group"
+												className="flex items-center gap-3  p-2 rounded transition-colors group"
 											>
 												{/* Title */}
 												<div className="flex-1 min-w-0">
-													<p className="text-sm text-[#2b57ff] line-clamp-2 group-hover:underline">
+													<p className="text-sm  line-clamp-2 group-hover:underline">
 														{item.title}
 													</p>
 												</div>
 												{/* Thumbnail */}
-												<div className="relative w-12 h-12 shrink-0 bg-[#2a2a2f] rounded overflow-hidden">
+												<div className="relative w-12 h-12 shrink-0  rounded overflow-hidden">
 													{item.thumbnail ? (
 														<Image
 															src={item.thumbnail}
@@ -661,7 +661,7 @@ export default async function WorkshopPage({
 													) : (
 														<div className="w-full h-full flex items-center justify-center">
 															<svg
-																className="w-6 h-6 text-[#444444]"
+																className="w-6 h-6 "
 																fill="none"
 																stroke="currentColor"
 																viewBox="0 0 24 24"
@@ -698,11 +698,11 @@ export default async function WorkshopPage({
 										<div className="flex items-center gap-3">
 											<Link
 												href={`?mode=${mode}&tag=${encodeURIComponent(tagInfo.tag)}`}
-												className="text-xl font-bold text-white hover:text-[#2b57ff] transition-colors"
+												className="text-xl font-bold   transition-colors"
 											>
 												#{tagInfo.tag}
 											</Link>
-											<span className="text-sm text-[#888888]">
+											<span className="text-sm ">
 												{tagArticles.length}記事
 											</span>
 										</div>

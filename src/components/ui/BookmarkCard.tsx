@@ -70,10 +70,10 @@ export function BookmarkCard({
 	const hasImage = displayImage && displayImage.length > 0;
 
 	return (
-		<div className="my-4 w-full max-w-full border border-white/8 rounded-lg overflow-hidden bg-gradient-to-br from-[rgba(20,22,32,0.6)] to-[rgba(29,31,45,0.4)] shadow-[0_2px_8px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.08)] backdrop-blur-sm [&_*]:!no-underline [&_*]:!decoration-none">
+		<div className="my-4 w-full max-w-full   rounded-lg overflow-hidden bg-gradient-to-br   shadow-[0_2px_8px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.08)]  [&_*]:!no-underline [&_*]:!decoration-none">
 			<a
 				href={url}
-				className="block px-3 py-2.5 text-inherit !no-underline !decoration-none border-none outline-none bg-transparent [&_*]:!no-underline [&_*]:!decoration-none"
+				className="block px-3 py-2.5  !no-underline !decoration-none    [&_*]:!no-underline [&_*]:!decoration-none"
 				target="_blank"
 				rel="noreferrer"
 				style={{ textDecoration: "none" }}
@@ -116,14 +116,14 @@ export function BookmarkCard({
 					)}
 					<div className="flex flex-col gap-1 flex-1 min-w-0 [&_*]:!no-underline [&_*]:!decoration-none">
 						<div
-							className=" font-bold leading-[1.3] text-[rgba(242,242,242,0.95)] m-0 !no-underline !decoration-none tracking-[-0.01em]"
+							className=" font-bold leading-[1.3]  m-0 !no-underline !decoration-none tracking-[-0.01em]"
 							style={{ textDecoration: "none" }}
 						>
 							{displayTitle}
 						</div>
 						{displayDescription && (
 							<div
-								className="text-xs leading-[1.5] text-[rgba(242,242,242,0.65)] m-0 line-clamp-2 overflow-hidden !no-underline !decoration-none"
+								className="text-xs leading-[1.5]  m-0 line-clamp-2 overflow-hidden !no-underline !decoration-none"
 								style={{ textDecoration: "none" }}
 							>
 								{displayDescription}
@@ -131,7 +131,7 @@ export function BookmarkCard({
 						)}
 						{linkText && (
 							<div
-								className="text-[10px] leading-[1.3] text-[rgba(156,244,255,0.7)] mt-0.5 font-medium tracking-[0.02em] !no-underline !decoration-none"
+								className="text-[10px] leading-[1.3]  mt-0.5 font-medium tracking-[0.02em] !no-underline !decoration-none"
 								style={{ textDecoration: "none" }}
 							>
 								{linkText}

@@ -204,9 +204,9 @@ export const AccessibleConfirmModal: React.FC<AccessibleConfirmModalProps> = ({
 	};
 
 	const variantStyles = {
-		danger: "text-red-600",
-		warning: "text-yellow-600",
-		info: "text-blue-600",
+		danger: "",
+		warning: "",
+		info: "",
 	};
 
 	const buttonVariant = variant === "danger" ? "danger" : "primary";
@@ -226,7 +226,7 @@ export const AccessibleConfirmModal: React.FC<AccessibleConfirmModalProps> = ({
 					<button
 						type="button"
 						onClick={onClose}
-						className="px-4 py-2 text-sm font-medium border rounded-md hover: focus:outline-none focus:ring-2 focus:"
+						className="px-4 py-2 text-sm font-medium  rounded-md hover:   focus:"
 					>
 						{cancelLabel || cancelText}
 					</button>
@@ -235,11 +235,11 @@ export const AccessibleConfirmModal: React.FC<AccessibleConfirmModalProps> = ({
 						ref={confirmButtonRef}
 						onClick={handleConfirm}
 						disabled={loading}
-						className={`px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 ${
+						className={`px-4 py-2 text-sm font-medium rounded-md   ${
 							buttonVariant === "danger"
-								? "text-white bg-red-600 border border-red-600 hover:bg-red-700 focus:ring-red-500"
-								: " bg-accent border border-accent hover: hover:text-accent focus:ring-accent"
-						} ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+								? "     "
+								: " bg-accent  border-accent hover: hover:text-accent focus:ring-accent"
+						} ${loading ? " cursor-not-allowed" : ""}`}
 					>
 						{confirmLabel || confirmText}
 					</button>

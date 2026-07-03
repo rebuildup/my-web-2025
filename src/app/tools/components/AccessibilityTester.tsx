@@ -263,7 +263,7 @@ export default function AccessibilityTestingComponent({
 
 	return (
 		<div className="fixed bottom-4 right-4 z-50 max-w-md">
-			<div className="rounded-xl /75 backdrop-blur-md shadow-[0_24px_60px_rgba(0,0,0,0.35)] overflow-hidden">
+			<div className="rounded-xl /75  shadow-[0_24px_60px_rgba(0,0,0,0.35)] overflow-hidden">
 				{/* Header */}
 				<div className="bg-accent p-3 flex justify-between items-center">
 					<h3 className="neue-haas-grotesk-display text-sm font-medium">
@@ -274,7 +274,7 @@ export default function AccessibilityTestingComponent({
 							type="button"
 							onClick={runTest}
 							disabled={isRunning}
-							className=" text-accent px-2 py-1 text-xs rounded hover:bg-opacity-90 disabled:opacity-50"
+							className=" text-accent px-2 py-1 text-xs rounded hover:bg-opacity-90 "
 							aria-label="テストを実行"
 						>
 							{isRunning ? "実行中..." : "実行"}
@@ -301,10 +301,10 @@ export default function AccessibilityTestingComponent({
 									<span
 										className={`text-lg font-bold ${
 											report.score >= 80
-												? "text-green-600"
+												? ""
 												: report.score >= 60
-													? "text-yellow-600"
-													: "text-red-600"
+													? ""
+													: ""
 										}`}
 									>
 										{report.score}/100
@@ -325,17 +325,17 @@ export default function AccessibilityTestingComponent({
 											{report.issues.map((issue, index) => (
 												<div
 													key={index}
-													className={`p-2 rounded text-xs border-l-4 ${
+													className={`p-2 rounded text-xs  ${
 														issue.type === "error"
-															? "border-red-500 bg-red-50"
+															? " "
 															: issue.type === "warning"
-																? "border-yellow-500 bg-yellow-50"
-																: "border-blue-500 bg-blue-50"
+																? " "
+																: " "
 													}`}
 												>
 													<div className="font-medium">{issue.message}</div>
 													{issue.suggestion && (
-														<div className="mt-1 opacity-75">
+														<div className="mt-1 ">
 															{issue.suggestion}
 														</div>
 													)}
@@ -346,14 +346,14 @@ export default function AccessibilityTestingComponent({
 								)}
 
 								{/* Timestamp */}
-								<div className="text-xs opacity-50">
+								<div className="text-xs ">
 									最終実行:{" "}
 									{new Date(report.timestamp).toLocaleTimeString("ja-JP")}
 								</div>
 							</div>
 						) : (
 							<div className="text-center py-4">
-								<p className="text-sm opacity-75">
+								<p className="text-sm ">
 									テストを実行してください
 								</p>
 							</div>

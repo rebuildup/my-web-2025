@@ -240,7 +240,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 	return (
 		<div className="space-y-6">
 			{/* Controls */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<Palette className="w-5 h-5 mr-2" />
 					Color Harmony Controls
@@ -261,7 +261,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 							onChange={(e) =>
 								setSelectedHarmony(e.target.value as ColorPalette["harmony"])
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							<option value="random">Random</option>
 							<option value="monochromatic">Monochromatic</option>
@@ -339,7 +339,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 						type="button"
 						onClick={generatePalette}
 						tabIndex={0}
-						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<RefreshCw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Generate New</span>
@@ -349,7 +349,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 						type="button"
 						onClick={downloadPalette}
 						tabIndex={0}
-						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<Download className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Download JSON</span>
@@ -358,7 +358,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Color Palette Display */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg ">
 					{palette.name}
 				</h3>
@@ -367,15 +367,15 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 					{palette.colors.map((color, index) => (
 						<div
 							key={`${color}-${index}`}
-							className={`group relative aspect-square border cursor-pointer transition-all duration-300 ${
+							className={`group relative aspect-square  cursor-pointer transition-all duration-300 ${
 								isAnimating ? "animate-pulse scale-105" : "hover:scale-105"
 							}`}
 							style={{ backgroundColor: color }}
 							onClick={() => copyColor(color)}
 							title={`Click to copy: ${color}`}
 						>
-							<div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-								<Copy className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+							<div className="absolute inset-0  bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+								<Copy className="w-6 h-6    transition-opacity duration-300" />
 							</div>
 
 							<div className="absolute bottom-0 left-0 right-0 bg-opacity-90 p-2 text-center transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
@@ -398,7 +398,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Color Theory Information */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg ">
 					Color Theory:{" "}
 					{selectedHarmony.charAt(0).toUpperCase() + selectedHarmony.slice(1)}

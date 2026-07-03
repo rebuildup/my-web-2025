@@ -390,27 +390,27 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 		<div className="space-y-6">
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+					<label className="block text-sm font-medium  mb-2">
 						Title *
 					</label>
 					<input
 						type="text"
 						value={formData.title}
 						onChange={(e) => handleFieldChange("title", e.target.value)}
-						className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-							validationErrors.title ? "border-red-500" : "border-gray-300"
+						className={`w-full px-3 py-2  rounded-md    ${
+							validationErrors.title ? "" : ""
 						}`}
 						placeholder="Enter item title"
 					/>
 					{validationErrors.title && (
-						<p className="text-red-500 text-sm mt-1">
+						<p className=" text-sm mt-1">
 							{validationErrors.title}
 						</p>
 					)}
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+					<label className="block text-sm font-medium  mb-2">
 						Type
 					</label>
 					<Select
@@ -427,27 +427,27 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
+				<label className="block text-sm font-medium  mb-2">
 					Description *
 				</label>
 				<textarea
 					value={formData.description}
 					onChange={(e) => handleFieldChange("description", e.target.value)}
 					rows={3}
-					className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-						validationErrors.description ? "border-red-500" : "border-gray-300"
+					className={`w-full px-3 py-2  rounded-md    ${
+						validationErrors.description ? "" : ""
 					}`}
 					placeholder="Enter item description"
 				/>
 				{validationErrors.description && (
-					<p className="text-red-500 text-sm mt-1">
+					<p className=" text-sm mt-1">
 						{validationErrors.description}
 					</p>
 				)}
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
+				<label className="block text-sm font-medium  mb-2">
 					Categories *
 				</label>
 				<MultiCategorySelector
@@ -463,14 +463,14 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 					showOtherOption={true}
 				/>
 				{validationErrors.categories && (
-					<p className="text-red-500 text-sm mt-1">
+					<p className=" text-sm mt-1">
 						{validationErrors.categories}
 					</p>
 				)}
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
+				<label className="block text-sm font-medium  mb-2">
 					Tags
 				</label>
 				<TagManagementUI
@@ -484,7 +484,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+					<label className="block text-sm font-medium  mb-2">
 						Status
 					</label>
 					<Select
@@ -504,7 +504,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 				</div>
 
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+					<label className="block text-sm font-medium  mb-2">
 						Priority
 					</label>
 					<input
@@ -515,7 +515,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 						onChange={(e) =>
 							handleFieldChange("priority", parseInt(e.target.value, 10) || 0)
 						}
-						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className="w-full px-3 py-2   rounded-md   "
 					/>
 				</div>
 			</div>
@@ -526,7 +526,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 	const renderContentTab = () => (
 		<div className="space-y-6">
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
+				<label className="block text-sm font-medium  mb-2">
 					Content
 				</label>
 				<MarkdownEditor
@@ -543,15 +543,15 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 	const renderMediaTab = () => (
 		<div className="space-y-6">
 			<div>
-				<h3 className="text-lg font-medium text-gray-900 mb-4">
+				<h3 className="text-lg font-medium  mb-4">
 					Image Management
 				</h3>
-				<div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+				<div className="   rounded-lg p-6">
 					<div className="text-center">
-						<p className="text-gray-500 mb-4">
+						<p className=" mb-4">
 							Enhanced file upload functionality will be implemented here
 						</p>
-						<p className="text-sm text-gray-400">
+						<p className="text-sm ">
 							Features: Original/Processed separation, Skip processing option,
 							Multiple variants
 						</p>
@@ -560,7 +560,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 			</div>
 
 			<div>
-				<h3 className="text-lg font-medium text-gray-900 mb-4">
+				<h3 className="text-lg font-medium  mb-4">
 					Video Management
 				</h3>
 				<div className="space-y-3">
@@ -576,7 +576,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 										newVideos[index] = { ...video, url: e.target.value };
 										handleFieldChange("videos", newVideos);
 									}}
-									className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+									className="flex-1 px-3 py-2   rounded-md   "
 									placeholder="Video URL"
 								/>
 								<button
@@ -587,7 +587,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 										);
 										handleFieldChange("videos", newVideos || []);
 									}}
-									className="px-3 py-2 text-red-600 hover:text-red-800"
+									className="px-3 py-2  "
 								>
 									Remove
 								</button>
@@ -603,7 +603,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 							];
 							handleFieldChange("videos", newVideos);
 						}}
-						className="px-4 py-2 text-blue-600 hover:text-blue-800 border border-blue-300 rounded-md"
+						className="px-4 py-2     rounded-md"
 					>
 						Add Video
 					</button>
@@ -616,7 +616,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 	const renderLinksTab = () => (
 		<div className="space-y-6">
 			<div>
-				<h3 className="text-lg font-medium text-gray-900 mb-4">
+				<h3 className="text-lg font-medium  mb-4">
 					External Links
 				</h3>
 				<div className="space-y-3">
@@ -638,7 +638,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 										};
 										handleFieldChange("externalLinks", newLinks);
 									}}
-									className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+									className="px-3 py-2   rounded-md   "
 									placeholder="Link title"
 								/>
 								<div className="flex space-x-2">
@@ -653,7 +653,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 											};
 											handleFieldChange("externalLinks", newLinks);
 										}}
-										className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+										className="flex-1 px-3 py-2   rounded-md   "
 										placeholder="https://..."
 									/>
 									<button
@@ -664,7 +664,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 											);
 											handleFieldChange("externalLinks", newLinks || []);
 										}}
-										className="px-3 py-2 text-red-600 hover:text-red-800"
+										className="px-3 py-2  "
 									>
 										Remove
 									</button>
@@ -681,7 +681,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 							];
 							handleFieldChange("externalLinks", newLinks);
 						}}
-						className="px-4 py-2 text-blue-600 hover:text-blue-800 border border-blue-300 rounded-md"
+						className="px-4 py-2     rounded-md"
 					>
 						Add Link
 					</button>
@@ -694,7 +694,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 	const renderDatesTab = () => (
 		<div className="space-y-6">
 			<div>
-				<h3 className="text-lg font-medium text-gray-900 mb-4">
+				<h3 className="text-lg font-medium  mb-4">
 					Date Management
 				</h3>
 				<DatePicker
@@ -706,9 +706,9 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 				/>
 			</div>
 
-			<div className="bg-gray-50 p-4 rounded-lg">
-				<h4 className="font-medium text-gray-900 mb-2">Date Information</h4>
-				<div className="space-y-2 text-sm text-gray-600">
+			<div className=" p-4 rounded-lg">
+				<h4 className="font-medium  mb-2">Date Information</h4>
+				<div className="space-y-2 text-sm ">
 					<p>
 						<strong>Created:</strong>{" "}
 						{new Date(formData.createdAt).toLocaleString()}
@@ -734,47 +734,47 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 	const renderDownloadTab = () => (
 		<div className="space-y-6">
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
+				<label className="block text-sm font-medium  mb-2">
 					Download URL *
 				</label>
 				<input
 					type="url"
 					value={formData.downloadUrl || ""}
 					onChange={(e) => handleFieldChange("downloadUrl", e.target.value)}
-					className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-						validationErrors.downloadUrl ? "border-red-500" : "border-gray-300"
+					className={`w-full px-3 py-2  rounded-md    ${
+						validationErrors.downloadUrl ? "" : ""
 					}`}
 					placeholder="https://..."
 				/>
 				{validationErrors.downloadUrl && (
-					<p className="text-red-500 text-sm mt-1">
+					<p className=" text-sm mt-1">
 						{validationErrors.downloadUrl}
 					</p>
 				)}
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
+				<label className="block text-sm font-medium  mb-2">
 					File Size
 				</label>
 				<input
 					type="text"
 					value={formData.fileSize || ""}
 					onChange={(e) => handleFieldChange("fileSize", e.target.value)}
-					className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					className="w-full px-3 py-2   rounded-md   "
 					placeholder="e.g., 2.5 MB"
 				/>
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
+				<label className="block text-sm font-medium  mb-2">
 					File Format
 				</label>
 				<input
 					type="text"
 					value={formData.fileFormat || ""}
 					onChange={(e) => handleFieldChange("fileFormat", e.target.value)}
-					className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					className="w-full px-3 py-2   rounded-md   "
 					placeholder="e.g., PDF, ZIP, etc."
 				/>
 			</div>
@@ -785,40 +785,40 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 	const renderSeoTab = () => (
 		<div className="space-y-6">
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
+				<label className="block text-sm font-medium  mb-2">
 					SEO Title
 				</label>
 				<input
 					type="text"
 					value={formData.seoTitle || ""}
 					onChange={(e) => handleFieldChange("seoTitle", e.target.value)}
-					className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					className="w-full px-3 py-2   rounded-md   "
 					placeholder="SEO optimized title"
 				/>
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
+				<label className="block text-sm font-medium  mb-2">
 					SEO Description
 				</label>
 				<textarea
 					value={formData.seoDescription || ""}
 					onChange={(e) => handleFieldChange("seoDescription", e.target.value)}
 					rows={3}
-					className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					className="w-full px-3 py-2   rounded-md   "
 					placeholder="SEO meta description"
 				/>
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
+				<label className="block text-sm font-medium  mb-2">
 					SEO Keywords
 				</label>
 				<input
 					type="text"
 					value={formData.seoKeywords || ""}
 					onChange={(e) => handleFieldChange("seoKeywords", e.target.value)}
-					className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+					className="w-full px-3 py-2   rounded-md   "
 					placeholder="keyword1, keyword2, keyword3"
 				/>
 			</div>
@@ -829,25 +829,25 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 	const renderAdvancedTab = () => (
 		<div className="space-y-6">
 			<div>
-				<h3 className="text-lg font-medium text-gray-900 mb-4">
+				<h3 className="text-lg font-medium  mb-4">
 					Advanced Settings
 				</h3>
 
 				<div className="space-y-4">
 					<div>
-						<label className="block text-sm font-medium text-gray-700 mb-2">
+						<label className="block text-sm font-medium  mb-2">
 							Custom ID
 						</label>
 						<input
 							type="text"
 							value={formData.id}
 							onChange={(e) => handleFieldChange("id", e.target.value)}
-							className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+							className="w-full px-3 py-2   rounded-md   "
 							placeholder="Custom identifier"
 							disabled={mode === "edit"}
 						/>
 						{mode === "edit" && (
-							<p className="text-sm text-gray-500 mt-1">
+							<p className="text-sm  mt-1">
 								ID cannot be changed after creation
 							</p>
 						)}
@@ -861,13 +861,13 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 								onChange={(e) =>
 									handleFieldChange("isOtherCategory", e.target.checked)
 								}
-								className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+								className="rounded   "
 							/>
-							<span className="text-sm font-medium text-gray-700">
+							<span className="text-sm font-medium ">
 								Other Category Item
 							</span>
 						</label>
-						<p className="text-sm text-gray-500 mt-1">
+						<p className="text-sm  mt-1">
 							Items marked as &quot;Other&quot; will only appear in the All
 							gallery
 						</p>
@@ -875,11 +875,11 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 				</div>
 			</div>
 
-			<div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-				<h4 className="font-medium text-yellow-800 mb-2">
+			<div className="   rounded-lg p-4">
+				<h4 className="font-medium  mb-2">
 					⚠ Advanced Features
 				</h4>
-				<p className="text-sm text-yellow-700">
+				<p className="text-sm ">
 					These settings affect how the item appears across the portfolio.
 					Changes may impact SEO and user experience.
 				</p>
@@ -888,15 +888,15 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 	);
 
 	return (
-		<div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+		<div className="max-w-6xl mx-auto   rounded-lg overflow-hidden">
 			{/* Header */}
-			<div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+			<div className=" px-6 py-4  ">
 				<div className="flex items-center justify-between">
 					<div>
-						<h2 className="text-xl font-semibold text-gray-900">
+						<h2 className="text-xl font-semibold ">
 							{mode === "create" ? "Create New Item" : "Edit Item"}
 						</h2>
-						<p className="text-sm text-gray-600 mt-1">
+						<p className="text-sm  mt-1">
 							{mode === "create"
 								? "Add a new item to your portfolio"
 								: `Editing: ${formData.title || "Untitled"}`}
@@ -909,7 +909,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 								type="button"
 								onClick={undo}
 								disabled={!canUndo}
-								className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+								className="p-1    disabled:cursor-not-allowed"
 								title="Undo (Ctrl+Z)"
 							>
 								↶
@@ -918,7 +918,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 								type="button"
 								onClick={redo}
 								disabled={!canRedo}
-								className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+								className="p-1    disabled:cursor-not-allowed"
 								title="Redo (Ctrl+Y)"
 							>
 								↷
@@ -927,7 +927,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 								type="button"
 								onClick={resetChanges}
 								disabled={!hasUnsavedChanges}
-								className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-xs"
+								className="p-1    disabled:cursor-not-allowed text-xs"
 								title="Reset all changes"
 							>
 								⟲
@@ -936,33 +936,33 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 
 						{/* Status Indicators */}
 						{isAutoSaving && (
-							<span className="text-sm text-blue-600 bg-blue-100 px-2 py-1 rounded flex items-center">
+							<span className="text-sm   px-2 py-1 rounded flex items-center">
 								<span className="animate-spin mr-1">⟳</span>
 								Auto-saving...
 							</span>
 						)}
 						{hasUnsavedChanges && !isAutoSaving && (
-							<span className="text-sm text-amber-600 bg-amber-100 px-2 py-1 rounded">
+							<span className="text-sm   px-2 py-1 rounded">
 								Unsaved changes
 							</span>
 						)}
 						{saveStatus === "saving" && (
-							<span className="text-sm text-blue-600 bg-blue-100 px-2 py-1 rounded">
+							<span className="text-sm   px-2 py-1 rounded">
 								Saving...
 							</span>
 						)}
 						{saveStatus === "success" && (
-							<span className="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
+							<span className="text-sm   px-2 py-1 rounded">
 								Saved
 							</span>
 						)}
 						{saveStatus === "error" && (
-							<span className="text-sm text-red-600 bg-red-100 px-2 py-1 rounded">
+							<span className="text-sm   px-2 py-1 rounded">
 								Save failed
 							</span>
 						)}
 						{lastSaved && !hasUnsavedChanges && (
-							<span className="text-xs text-gray-500">
+							<span className="text-xs ">
 								Last saved: {lastSaved.toLocaleTimeString()}
 							</span>
 						)}
@@ -971,23 +971,23 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 			</div>
 
 			{/* Mobile tab menu toggle */}
-			<div className="md:hidden bg-white border-b border-gray-200 px-6 py-3">
+			<div className="md:hidden    px-6 py-3">
 				<button
 					type="button"
 					onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
 					className="flex items-center justify-between w-full text-left"
 				>
-					<span className="font-medium text-gray-900">
+					<span className="font-medium ">
 						{visibleTabs.find((tab) => tab.id === activeTab)?.label}
 					</span>
-					<span className="text-gray-500">{isMobileMenuOpen ? "▲" : "▼"}</span>
+					<span className="">{isMobileMenuOpen ? "▲" : "▼"}</span>
 				</button>
 			</div>
 
 			<div className="flex flex-col md:flex-row">
 				{/* Tab Navigation */}
 				<div
-					className={`md:w-64 bg-gray-50 border-r border-gray-200 ${
+					className={`md:w-64    ${
 						isMobileMenuOpen ? "block" : "hidden md:block"
 					}`}
 				>
@@ -1002,15 +1002,15 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 								}}
 								className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${
 									activeTab === tab.id
-										? "bg-blue-100 text-blue-700 border-l-4 border-blue-500"
-										: "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+										? "   "
+										: "  "
 								}`}
 							>
 								<div className="flex items-center space-x-3">
 									<span className="text-lg">{tab.icon}</span>
 									<div>
 										<div className="font-medium">{tab.label}</div>
-										<div className="text-xs text-gray-500 mt-1">
+										<div className="text-xs  mt-1">
 											{tab.description}
 										</div>
 									</div>
@@ -1039,11 +1039,11 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 			</div>
 
 			{/* Footer Actions */}
-			<div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+			<div className=" px-6 py-4  ">
 				<div className="flex items-center justify-between">
-					<div className="text-sm text-gray-500">
+					<div className="text-sm ">
 						{Object.keys(validationErrors).length > 0 && (
-							<span className="text-red-600">
+							<span className="">
 								Please fix {Object.keys(validationErrors).length} validation
 								error(s)
 							</span>
@@ -1054,7 +1054,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 							type="button"
 							onClick={handleCancel}
 							disabled={isLoading}
-							className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+							className="px-4 py-2     rounded-md     "
 						>
 							Cancel
 						</button>
@@ -1062,7 +1062,7 @@ export const EnhancedDataManager = memo(function EnhancedDataManager({
 							type="button"
 							onClick={handleSave}
 							disabled={isLoading || Object.keys(validationErrors).length > 0}
-							className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+							className="px-4 py-2   rounded-md     "
 						>
 							{isLoading ? "Saving..." : mode === "create" ? "Create" : "Save"}
 						</button>

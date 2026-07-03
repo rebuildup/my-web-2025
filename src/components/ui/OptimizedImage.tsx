@@ -117,11 +117,11 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 		return (
 			<div
 				ref={imgRef}
-				className={`bg-gray-200 flex items-center justify-center ${className}`}
+				className={` flex items-center justify-center ${className}`}
 				style={{ width, height }}
 			>
 				<svg
-					className="w-8 h-8 text-gray-400"
+					className="w-8 h-8 "
 					fill="none"
 					stroke="currentColor"
 					viewBox="0 0 24 24"
@@ -142,7 +142,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 		return (
 			<div
 				ref={imgRef}
-				className={`bg-gray-100 animate-pulse ${className}`}
+				className={` animate-pulse ${className}`}
 				style={{ width, height }}
 				aria-label={`Loading ${alt}`}
 			/>
@@ -168,7 +168,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 				onLoad={handleLoad}
 				onError={handleError}
 				className={`transition-opacity duration-300 ${
-					isLoaded ? "opacity-100" : "opacity-0"
+					isLoaded ? "" : ""
 				} ${fill ? "object-cover" : ""}`}
 				style={{
 					maxWidth: "100%",
@@ -178,8 +178,8 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
 			{/* Loading overlay */}
 			{!isLoaded && (
-				<div className="absolute inset-0 bg-gray-100 animate-pulse flex items-center justify-center">
-					<div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+				<div className="absolute inset-0  animate-pulse flex items-center justify-center">
+					<div className="w-6 h-6   border-t-transparent rounded-full animate-spin" />
 				</div>
 			)}
 		</div>
@@ -257,7 +257,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 					priority={priority}
 					quality={20}
 					className={`absolute inset-0 transition-opacity duration-500 ${
-						highQualityLoaded ? "opacity-0" : "opacity-100"
+						highQualityLoaded ? "" : ""
 					}`}
 				/>
 			)}
@@ -271,7 +271,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 				priority={priority}
 				quality={90}
 				className={`transition-opacity duration-500 ${
-					highQualityLoaded ? "opacity-100" : "opacity-0"
+					highQualityLoaded ? "" : ""
 				}`}
 				onLoad={() => setHighQualityLoaded(true)}
 			/>

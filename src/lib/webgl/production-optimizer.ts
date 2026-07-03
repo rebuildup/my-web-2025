@@ -230,7 +230,7 @@ export class WebGLProductionOptimizer {
 			settings.particleCount = Math.max(50, settings.particleCount * 0.7);
 		}
 
-		// Reduce shadow quality
+		// Reduce  quality
 		if (settings.shadowQuality === "high") {
 			settings.shadowQuality = "medium";
 		} else if (settings.shadowQuality === "medium") {

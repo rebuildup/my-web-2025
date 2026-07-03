@@ -230,18 +230,18 @@ export function EnhancedFileUploadSection({
 	};
 
 	const inputStyle =
-		"w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base ";
+		"w-full  px-3 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base ";
 	const labelStyle =
 		"block noto-sans-jp-regular text-sm font-medium mb-1";
 	const buttonStyle =
-		"border px-3 py-1 text-xs hover: hover: transition-colors";
+		" px-3 py-1 text-xs hover: hover: transition-colors";
 
 	return (
 		<div className="space-y-4">
-			<h3 className="font-medium text-gray-700">Enhanced File Upload</h3>
+			<h3 className="font-medium ">Enhanced File Upload</h3>
 
 			{/* Enhanced Processing Options */}
-			<div className=" border p-4 rounded-lg">
+			<div className="  p-4 rounded-lg">
 				<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 					Upload Options
 				</h4>
@@ -287,7 +287,7 @@ export function EnhancedFileUploadSection({
 
 				{/* Custom Processing Options */}
 				{!options.skipProcessing && (
-					<div className="border-t pt-4">
+					<div className=" pt-4">
 						<h5 className="noto-sans-jp-regular text-sm font-medium mb-2">
 							Custom Processing
 						</h5>
@@ -399,18 +399,18 @@ export function EnhancedFileUploadSection({
 
 			{/* Upload Progress */}
 			{uploadProgress.length > 0 && (
-				<div className="bg-blue-50 p-4 rounded-lg">
-					<h4 className="text-sm font-medium text-gray-700 mb-3">
+				<div className=" p-4 rounded-lg">
+					<h4 className="text-sm font-medium  mb-3">
 						Upload Progress
 					</h4>
 					<div className="space-y-2">
 						{uploadProgress.map((progress) => (
 							<div key={progress.filename} className="space-y-1">
 								<div className="flex justify-between items-center">
-									<span className="text-sm text-gray-600 truncate flex-1">
+									<span className="text-sm  truncate flex-1">
 										{progress.filename}
 									</span>
-									<span className="text-xs text-gray-500 ml-2">
+									<span className="text-xs  ml-2">
 										{progress.status === "complete"
 											? "Complete"
 											: progress.status === "error"
@@ -420,25 +420,25 @@ export function EnhancedFileUploadSection({
 													: `${progress.progress}%`}
 									</span>
 								</div>
-								<div className="w-full bg-gray-200 rounded-full h-2">
+								<div className="w-full  rounded-full h-2">
 									<div
 										className={`h-2 rounded-full transition-all duration-300 ${
 											progress.status === "complete"
-												? "bg-green-500"
+												? ""
 												: progress.status === "error"
-													? "bg-red-500"
+													? ""
 													: progress.status === "processing"
-														? "bg-blue-500"
-														: "bg-blue-400"
+														? ""
+														: ""
 										}`}
 										style={{ width: `${progress.progress}%` }}
 									/>
 								</div>
 								{progress.error && (
-									<p className="text-xs text-red-600">{progress.error}</p>
+									<p className="text-xs ">{progress.error}</p>
 								)}
 								{progress.result && progress.status === "complete" && (
-									<div className="text-xs text-green-600">
+									<div className="text-xs ">
 										{progress.result.isDuplicate && "Duplicate detected - "}
 										{progress.result.originalUrl && "Original saved"}
 										{progress.result.processedUrl && " • Processed saved"}
@@ -456,7 +456,7 @@ export function EnhancedFileUploadSection({
 			<div
 				onDrop={handleDrop}
 				onDragOver={handleDragOver}
-				className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors"
+				className="   rounded-lg p-6 text-center  transition-colors"
 			>
 				<input
 					ref={fileInputRef}
@@ -469,12 +469,12 @@ export function EnhancedFileUploadSection({
 
 				{isUploading ? (
 					<div className="space-y-2">
-						<div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto"></div>
-						<p className="text-sm text-gray-600">Uploading...</p>
+						<div className="animate-spin rounded-full h-8 w-8  mx-auto"></div>
+						<p className="text-sm ">Uploading...</p>
 					</div>
 				) : (
 					<div className="space-y-2">
-						<div className="text-gray-400">
+						<div className="">
 							<svg
 								className="mx-auto h-12 w-12"
 								stroke="currentColor"
@@ -497,9 +497,9 @@ export function EnhancedFileUploadSection({
 							>
 								Click to upload
 							</button>
-							<span className="text-gray-600"> or drag and drop</span>
+							<span className=""> or drag and drop</span>
 						</div>
-						<p className="text-xs text-gray-500">
+						<p className="text-xs ">
 							{options.skipProcessing
 								? "Files will be uploaded without processing"
 								: "Images will be processed according to your settings"}
@@ -548,13 +548,13 @@ export function EnhancedFileUploadSection({
 			{/* Processed Images Gallery */}
 			{images.length > 0 && (
 				<div>
-					<h4 className="text-sm font-medium text-gray-700 mb-2">
+					<h4 className="text-sm font-medium  mb-2">
 						Processed Images ({images.length})
 					</h4>
 					<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 						{images.map((image, index) => (
 							<div key={image} className="relative group">
-								<div className="aspect-square bg-gray-100 border border-gray-200 rounded overflow-hidden">
+								<div className="aspect-square    rounded overflow-hidden">
 									{/* eslint-disable-next-line @next/next/no-img-element */}
 									<img
 										src={image}
@@ -568,11 +568,11 @@ export function EnhancedFileUploadSection({
 								</div>
 
 								{/* Image Controls */}
-								<div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
+								<div className="absolute inset-0  bg-opacity-50   transition-opacity flex items-center justify-center space-x-2">
 									<button
 										type="button"
 										onClick={() => setAsThumbnail(image)}
-										className="bg-white text-black px-2 py-1 text-xs rounded hover:bg-gray-100"
+										className="  px-2 py-1 text-xs rounded "
 										title="Set as thumbnail"
 									>
 										Thumb
@@ -580,7 +580,7 @@ export function EnhancedFileUploadSection({
 									<button
 										type="button"
 										onClick={() => removeImage(index)}
-										className="bg-red-500 text-white px-2 py-1 text-xs rounded hover:bg-red-600"
+										className="  px-2 py-1 text-xs rounded "
 										title="Remove image"
 									>
 										Remove
@@ -589,13 +589,13 @@ export function EnhancedFileUploadSection({
 
 								{/* Thumbnail Indicator */}
 								{thumbnail === image && (
-									<div className="absolute top-1 left-1 text-white px-2 py-1 text-xs rounded">
+									<div className="absolute top-1 left-1  px-2 py-1 text-xs rounded">
 										Thumbnail
 									</div>
 								)}
 
 								{/* Processed Indicator */}
-								<div className="absolute top-1 right-1 bg-blue-500 text-white px-2 py-1 text-xs rounded">
+								<div className="absolute top-1 right-1   px-2 py-1 text-xs rounded">
 									Processed
 								</div>
 							</div>
@@ -607,13 +607,13 @@ export function EnhancedFileUploadSection({
 			{/* Original Images Gallery */}
 			{originalImages.length > 0 && options.preserveOriginal && (
 				<div>
-					<h4 className="text-sm font-medium text-gray-700 mb-2">
+					<h4 className="text-sm font-medium  mb-2">
 						Original Images ({originalImages.length})
 					</h4>
 					<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 						{originalImages.map((image, index) => (
 							<div key={`${image}-original`} className="relative group">
-								<div className="aspect-square bg-gray-100 border border-gray-200 rounded overflow-hidden">
+								<div className="aspect-square    rounded overflow-hidden">
 									{/* eslint-disable-next-line @next/next/no-img-element */}
 									<img
 										src={image}
@@ -627,11 +627,11 @@ export function EnhancedFileUploadSection({
 								</div>
 
 								{/* Image Controls */}
-								<div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
+								<div className="absolute inset-0  bg-opacity-50   transition-opacity flex items-center justify-center space-x-2">
 									<button
 										type="button"
 										onClick={() => setAsThumbnail(image)}
-										className="bg-white text-black px-2 py-1 text-xs rounded hover:bg-gray-100"
+										className="  px-2 py-1 text-xs rounded "
 										title="Set as thumbnail"
 									>
 										Thumb
@@ -639,7 +639,7 @@ export function EnhancedFileUploadSection({
 									<button
 										type="button"
 										onClick={() => removeImage(index, true)}
-										className="bg-red-500 text-white px-2 py-1 text-xs rounded hover:bg-red-600"
+										className="  px-2 py-1 text-xs rounded "
 										title="Remove image"
 									>
 										Remove
@@ -648,13 +648,13 @@ export function EnhancedFileUploadSection({
 
 								{/* Thumbnail Indicator */}
 								{thumbnail === image && (
-									<div className="absolute top-1 left-1 text-white px-2 py-1 text-xs rounded">
+									<div className="absolute top-1 left-1  px-2 py-1 text-xs rounded">
 										Thumbnail
 									</div>
 								)}
 
 								{/* Original Indicator */}
-								<div className="absolute top-1 right-1 bg-green-500 text-white px-2 py-1 text-xs rounded">
+								<div className="absolute top-1 right-1   px-2 py-1 text-xs rounded">
 									Original
 								</div>
 							</div>

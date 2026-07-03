@@ -256,17 +256,17 @@ export default function YouTubePlayer({
 	return (
 		<div
 			className={`flex flex-col w-full h-full overflow-hidden ${
-				theme === "dark" ? "text-white" : "text-gray-900"
+				theme === "dark" ? "" : ""
 			}`}
 		>
 			{/* Header */}
 			<div
-				className={`flex items-center justify-between p-2 border-b ${
-					theme === "dark" ? "border-white/10" : "border-black/5"
+				className={`flex items-center justify-between p-2  ${
+					theme === "dark" ? "" : ""
 				}`}
 			>
 				<div className="flex items-center gap-2">
-					<span className="text-xs font-bold uppercase tracking-wider opacity-70">
+					<span className="text-xs font-bold uppercase tracking-wider ">
 						YouTube Player
 					</span>
 				</div>
@@ -277,13 +277,13 @@ export default function YouTubePlayer({
 							setSettings({ ...settings, isMinimized: newState });
 							onToggleMinimize?.(newState);
 						}}
-						className="p-1.5 rounded hover:bg-gray-500/20 transition-colors"
+						className="p-1.5 rounded  transition-colors"
 					>
 						{isMinimized ? <Maximize2 size={14} /> : <Minimize2 size={14} />}
 					</button>
 					<button
 						onClick={() => setShowSettings(!showSettings)}
-						className={`p-1.5 rounded hover:bg-gray-500/20 transition-colors ${showSettings ? "bg-gray-500/20" : ""}`}
+						className={`p-1.5 rounded  transition-colors ${showSettings ? "" : ""}`}
 					>
 						<Settings size={14} />
 					</button>
@@ -291,16 +291,16 @@ export default function YouTubePlayer({
 			</div>
 
 			{/* Main Content */}
-			<div className="flex-1 relative bg-black">
+			<div className="flex-1 relative ">
 				{!source ? (
-					<div className="absolute inset-0 flex items-center justify-center text-gray-500 text-xs p-4 text-center">
+					<div className="absolute inset-0 flex items-center justify-center  text-xs p-4 text-center">
 						URLを設定してください
 					</div>
 				) : uniqueId ? (
 					<div id={uniqueId} className="w-full h-full" />
 				) : null}
 				{error && (
-					<div className="absolute inset-0 flex items-center justify-center bg-black/80 text-red-400 text-xs p-4 text-center z-10">
+					<div className="absolute inset-0 flex items-center justify-center   text-xs p-4 text-center z-10">
 						{error}
 					</div>
 				)}
@@ -308,7 +308,7 @@ export default function YouTubePlayer({
 
 			{/* Controls */}
 			{!isMinimized && (
-				<div className="p-3 space-y-3 bg-transparent">
+				<div className="p-3 space-y-3 ">
 					{/* Playback Controls */}
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-2">
@@ -317,8 +317,8 @@ export default function YouTubePlayer({
 									onClick={handlePrevious}
 									className={`p-2 rounded-full ${
 										theme === "dark"
-											? "hover:bg-gray-800 text-gray-300"
-											: "hover:bg-gray-200 text-gray-700"
+											? " "
+											: " "
 									}`}
 								>
 									<SkipBack size={16} fill="currentColor" />
@@ -328,8 +328,8 @@ export default function YouTubePlayer({
 								onClick={togglePlay}
 								className={`p-2 rounded-full ${
 									theme === "dark"
-										? "bg-white text-black hover:bg-gray-200"
-										: "bg-black text-white hover:bg-gray-800"
+										? "  "
+										: "  "
 								}`}
 							>
 								{playbackState === "playing" ? (
@@ -343,8 +343,8 @@ export default function YouTubePlayer({
 									onClick={handleNext}
 									className={`p-2 rounded-full ${
 										theme === "dark"
-											? "hover:bg-gray-800 text-gray-300"
-											: "hover:bg-gray-200 text-gray-700"
+											? " "
+											: " "
 									}`}
 								>
 									<SkipForward size={16} fill="currentColor" />
@@ -355,7 +355,7 @@ export default function YouTubePlayer({
 						<div className="flex items-center gap-2 flex-1 mx-4">
 							<button
 								onClick={toggleMute}
-								className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+								className="  dark:"
 							>
 								{isMuted || volume === 0 ? (
 									<VolumeX size={16} />
@@ -383,8 +383,8 @@ export default function YouTubePlayer({
 					{/* Settings / URL Input */}
 					{showSettings && (
 						<div
-							className={`pt-3 border-t space-y-3 ${
-								theme === "dark" ? "border-white/10" : "border-black/5"
+							className={`pt-3  space-y-3 ${
+								theme === "dark" ? "" : ""
 							}`}
 						>
 							<div className="flex gap-2">
@@ -393,18 +393,18 @@ export default function YouTubePlayer({
 									value={inputUrl}
 									onChange={(e) => setInputUrl(e.target.value)}
 									placeholder="YouTube URL..."
-									className={`flex-1 px-2 py-1.5 text-xs rounded border bg-transparent outline-none ${
+									className={`flex-1 px-2 py-1.5 text-xs rounded    ${
 										theme === "dark"
-											? "border-white/20 focus:border-white/50"
-											: "border-black/20 focus:border-black/50"
+											? " "
+											: " "
 									}`}
 								/>
 								<button
 									onClick={handleSaveUrl}
-									className={`p-1.5 rounded border ${
+									className={`p-1.5 rounded  ${
 										theme === "dark"
-											? "border-white/20 hover:bg-white/10"
-											: "border-black/20 hover:bg-black/5"
+											? " "
+											: " "
 									}`}
 								>
 									<Save size={14} />

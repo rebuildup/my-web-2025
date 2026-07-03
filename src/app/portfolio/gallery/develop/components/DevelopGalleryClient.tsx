@@ -319,7 +319,7 @@ export function DevelopGalleryClient({
 													href={project.githubUrl}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center px-3 py-1.5 /30 hover:/50 transition-colors ring-1 /20"
+													className="flex items-center px-3 py-1.5 /30 hover:/50 transition-colors  /20"
 												>
 													<GitBranch className="w-5 h-5 mr-2" />
 													<span className="noto-sans-jp-light text-sm">
@@ -332,7 +332,7 @@ export function DevelopGalleryClient({
 													href={project.liveUrl}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center px-3 py-1.5 /30 hover:/50 transition-colors ring-1 /20"
+													className="flex items-center px-3 py-1.5 /30 hover:/50 transition-colors  /20"
 												>
 													<ExternalLink className="w-5 h-5 mr-2" />
 													<span className="noto-sans-jp-light text-sm">

@@ -95,11 +95,11 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 	const getIssueIcon = (type: string) => {
 		switch (type) {
 			case "error":
-				return <AlertTriangle className="h-4 w-4 text-red-500" />;
+				return <AlertTriangle className="h-4 w-4 " />;
 			case "warning":
-				return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+				return <AlertTriangle className="h-4 w-4 " />;
 			case "info":
-				return <Info className="h-4 w-4 text-blue-500" />;
+				return <Info className="h-4 w-4 " />;
 			default:
 				return <Info className="h-4 w-4" />;
 		}
@@ -108,15 +108,15 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 	const getSeverityColor = (severity: string) => {
 		switch (severity) {
 			case "critical":
-				return "text-red-600 bg-red-50 border-red-200";
+				return "  ";
 			case "serious":
-				return "text-red-500 bg-red-50 border-red-200";
+				return "  ";
 			case "moderate":
-				return "text-yellow-600 bg-yellow-50 border-yellow-200";
+				return "  ";
 			case "minor":
-				return "text-blue-600 bg-blue-50 border-blue-200";
+				return "  ";
 			default:
-				return "text-gray-600 bg-gray-50 border-gray-200";
+				return "  ";
 		}
 	};
 
@@ -127,7 +127,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 				<button
 					type="button"
 					onClick={() => setIsOpen(!isOpen)}
-					className="fixed bottom-4 right-4 z-50 bg-accent p-3 rounded-full shadow-lg hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+					className="fixed bottom-4 right-4 z-50 bg-accent p-3 rounded-full  hover:bg-accent/90   focus:ring-accent focus:ring-offset-2"
 					aria-label="アクセシビリティテスターを開く"
 					title="Accessibility Tester"
 				>
@@ -137,7 +137,7 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 						<Eye className="h-5 w-5" />
 					)}
 					{report?.summary && (report.summary.total || 0) > 0 && (
-						<span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">
+						<span className="absolute -top-2 -right-2   text-xs rounded-full h-6 w-6 flex items-center justify-center">
 							{report.summary.total || 0}
 						</span>
 					)}
@@ -146,15 +146,15 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 
 			{/* Accessibility Panel */}
 			{isOpen && (
-				<div className="fixed bottom-20 right-4 z-50 border-2 shadow-xl rounded-lg w-96 max-h-96 overflow-hidden">
-					<div className="flex items-center justify-between p-4 border-b ">
+				<div className="fixed bottom-20 right-4 z-50   rounded-lg w-96 max-h-96 overflow-hidden">
+					<div className="flex items-center justify-between p-4  ">
 						<h3 className="font-semibold ">Accessibility Tester</h3>
 						<div className="flex items-center space-x-2">
 							<button
 								type="button"
 								onClick={runAudit}
 								disabled={isRunning}
-								className="px-3 py-1 text-sm bg-accent rounded hover:bg-accent/90 disabled:opacity-50"
+								className="px-3 py-1 text-sm bg-accent rounded hover:bg-accent/90 "
 							>
 								{isRunning ? "Running..." : "Run Audit"}
 							</button>
@@ -178,15 +178,15 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 							<div className="space-y-4">
 								{/* Summary */}
 								<div className="grid grid-cols-2 gap-2 text-sm">
-									<div className="bg-red-50 border border-red-200 p-2 rounded">
-										<div className="text-red-600 font-medium">Violations</div>
-										<div className="text-red-800 text-lg">
+									<div className="   p-2 rounded">
+										<div className=" font-medium">Violations</div>
+										<div className=" text-lg">
 											{report.summary.errors || 0}
 										</div>
 									</div>
-									<div className="bg-yellow-50 border border-yellow-200 p-2 rounded">
-										<div className="text-yellow-600 font-medium">Warnings</div>
-										<div className="text-yellow-800 text-lg">
+									<div className="   p-2 rounded">
+										<div className=" font-medium">Warnings</div>
+										<div className=" text-lg">
 											{report.summary.warnings || 0}
 										</div>
 									</div>
@@ -198,12 +198,12 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 										<button
 											type="button"
 											onClick={runAutoFix}
-											className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700"
+											className="px-3 py-1 text-sm   rounded "
 										>
 											Auto-fix Issues
 										</button>
 										{autoFixCount > 0 && (
-											<span className="text-sm text-green-600">
+											<span className="text-sm ">
 												Fixed {autoFixCount} issues
 											</span>
 										)}
@@ -212,14 +212,14 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 
 								{/* Passed Checks */}
 								{report.passedChecks.length > 0 && (
-									<div className="bg-green-50 border border-green-200 p-3 rounded">
+									<div className="   p-3 rounded">
 										<div className="flex items-center space-x-2 mb-2">
-											<CheckCircle className="h-4 w-4 text-green-500" />
-											<span className="text-green-700 font-medium">
+											<CheckCircle className="h-4 w-4 " />
+											<span className=" font-medium">
 												Passed Checks
 											</span>
 										</div>
-										<div className="text-sm text-green-600">
+										<div className="text-sm ">
 											{report.passedChecks.join(", ")}
 										</div>
 									</div>
@@ -236,14 +236,14 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 												return (
 													<div
 														key={issueKey}
-														className={`p-3 rounded border text-sm ${getSeverityColor(issue.severity)}`}
+														className={`p-3 rounded  text-sm ${getSeverityColor(issue.severity)}`}
 													>
 														<div className="flex items-start space-x-2">
 															{getIssueIcon(issue.type)}
 															<div className="flex-1">
 																<div className="font-medium">{issue.rule}</div>
 																<div className="mt-1">{issue.message}</div>
-																<div className="mt-1 text-xs opacity-75">
+																<div className="mt-1 text-xs ">
 																	Severity: {issue.severity}
 																</div>
 															</div>
@@ -260,12 +260,12 @@ export const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 								)}
 
 								{(report.issues || []).length === 0 && (
-									<div className="bg-green-50 border border-green-200 p-4 rounded text-center">
-										<CheckCircle className="h-8 w-8 text-green-500 mx-auto mb-2" />
-										<div className="text-green-700 font-medium">
+									<div className="   p-4 rounded text-center">
+										<CheckCircle className="h-8 w-8  mx-auto mb-2" />
+										<div className=" font-medium">
 											No accessibility issues found!
 										</div>
-										<div className="text-green-600 text-sm mt-1">
+										<div className=" text-sm mt-1">
 											Your page meets WCAG 2.1 AA standards
 										</div>
 									</div>

@@ -50,12 +50,12 @@ const MiniBars = ({ data }: { data: ChartDatum[] }) => {
 			{data.map((d) => (
 				<div key={d.label} className="flex-1 flex flex-col items-center gap-1">
 					<div
-						className="w-full rounded-full bg-blue-500"
+						className="w-full rounded-full "
 						style={{
 							height: `${Math.max(6, (d.value / max) * 42)}px`,
 						}}
 					/>
-					<span className="text-[10px] opacity-60">{d.label}</span>
+					<span className="text-[10px] ">{d.label}</span>
 				</div>
 			))}
 		</div>
@@ -239,11 +239,11 @@ export default function StatsWidget({
 	})();
 
 	return (
-		<div className="relative p-2 sm:p-3 h-full w-full text-sm text-black overflow-visible">
+		<div className="relative p-2 sm:p-3 h-full w-full text-sm  overflow-visible">
 			<select
 				value={metric}
 				onChange={(e) => setMetric(e.target.value as (typeof metrics)[number])}
-				className="pointer-events-auto absolute -top-2 left-1/2 -translate-x-1/2 border border-black/20 rounded px-3 py-2 bg-transparent text-sm min-w-[150px] max-w-[220px] text-center shadow-sm"
+				className="pointer-events-auto absolute -top-2 left-1/2 -translate-x-1/2   rounded px-3 py-2  text-sm min-w-[150px] max-w-[220px] text-center "
 			>
 				{metrics.map((m) => (
 					<option value={m} key={m}>
@@ -252,7 +252,7 @@ export default function StatsWidget({
 				))}
 			</select>
 			<div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 text-center">
-				<div className="text-xs uppercase tracking-wider opacity-60 leading-tight px-2">
+				<div className="text-xs uppercase tracking-wider  leading-tight px-2">
 					{metricContent.label}
 				</div>
 				<div className="text-3xl font-bold leading-none">

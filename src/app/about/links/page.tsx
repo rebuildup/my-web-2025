@@ -33,7 +33,7 @@ function LinkIcon({ item, className }: { item: LinkItem; className?: string }) {
 				src={favicon}
 				alt={item.title}
 				className={cn(
-					"object-contain opacity-90 hover:opacity-100 transition-opacity rounded-sm",
+					"object-contain   transition-opacity rounded-sm",
 					className,
 				)}
 			/>
@@ -62,7 +62,7 @@ function ProfileHeader() {
 					href="https://x.com/361do_sleep"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="w-20 h-20 rounded-full bg-gradient-to-tr from-accent p-[2px] shadow-2xl z-10 cursor-pointer group"
+					className="w-20 h-20 rounded-full bg-gradient-to-tr from-accent p-[2px]  z-10 cursor-pointer group"
 					title="Tech Account (@361do_sleep)"
 				>
 					<div className="w-full h-full rounded-full overflow-hidden relative">
@@ -81,7 +81,7 @@ function ProfileHeader() {
 					href="https://x.com/361do_design"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="w-20 h-20 rounded-full bg-gradient-to-tr p-[2px] shadow-xl z-10 cursor-pointer group"
+					className="w-20 h-20 rounded-full bg-gradient-to-tr p-[2px]  z-10 cursor-pointer group"
 					title="Design Account (@361do_design)"
 				>
 					<div className="w-full h-full rounded-full overflow-hidden relative">
@@ -116,7 +116,7 @@ function ProfileHeader() {
 							href={link.url}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 /60 hover:text-accent transition-colors overflow-hidden p-1.5"
+							className="w-8 h-8 flex items-center justify-center rounded-full   /60 hover:text-accent transition-colors overflow-hidden p-1.5"
 						>
 							<LinkIcon item={link} className="w-full h-full" />
 						</a>
@@ -156,9 +156,9 @@ function LinkButton({ item, index }: { item: LinkItem; index: number }) {
 			}}
 			className="relative group block w-full"
 		>
-			<div className="relative z-10 flex items-center px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/5 hover:bg-white/10 hover:border-white/10 transition-colors duration-200 overflow-hidden">
+			<div className="relative z-10 flex items-center px-4 py-3 rounded-xl       transition-colors duration-200 overflow-hidden">
 				{/* Icon container */}
-				<div className="flex-shrink-0 w-8 h-8 rounded-md /50 flex items-center justify-center border border-white/5 overflow-hidden p-[5px]">
+				<div className="flex-shrink-0 w-8 h-8 rounded-md /50 flex items-center justify-center   overflow-hidden p-[5px]">
 					<LinkIcon item={item} className="w-full h-full" />
 				</div>
 
@@ -178,7 +178,7 @@ function LinkButton({ item, index }: { item: LinkItem; index: number }) {
 
 export default function LinksPage() {
 	return (
-		<div className="min-h-screen relative bg-transparent overflow-x-hidden selection:bg-accent/30 ">
+		<div className="min-h-screen relative  overflow-x-hidden selection:bg-accent/30 ">
 			{/* Shared Background */}
 			<AboutBackground />
 
@@ -193,7 +193,7 @@ export default function LinksPage() {
 						))}
 					</div>
 
-					<div className="w-full mt-8 pt-6 border-t border-white/5">
+					<div className="w-full mt-8 pt-6  ">
 						<motion.h2
 							initial={{ opacity: 0 }}
 							whileInView={{ opacity: 1 }}

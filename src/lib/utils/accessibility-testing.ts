@@ -437,7 +437,7 @@ export function autoFixAccessibilityIssues(
 	interactiveElements.forEach((element) => {
 		if (!checkFocusIndicator(element)) {
 			element.classList.add(
-				"focus-visible:outline-2",
+				"",
 				"focus-visible:outline-accent",
 			);
 			fixedCount++;

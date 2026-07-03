@@ -53,7 +53,7 @@ function SectionHeader({
 					{subtitle}
 				</span>
 			</div>
-			<div className="flex-1 border-b border-white/10" />
+			<div className="flex-1  " />
 			<span
 				className="text-[12px] leading-tight shrink-0 pl-3"
 				style={{ fontFamily: "var(--font-noto-sans-jp)", color: "#f4f4f5" }}
@@ -222,7 +222,7 @@ function ServiceIcon({ id }: { id: string }) {
 
 function TimelineRow({ entry }: { entry: (typeof historyData)[number] }) {
 	if (entry.separator) {
-		return <div className="w-full border-t border-white/5 my-1" />;
+		return <div className="w-full   my-1" />;
 	}
 
 	const textColor = entry.muted ? "#a1a1aa" : "#f4f4f5";
@@ -578,7 +578,7 @@ export default function AboutStitchClient() {
 								target="_blank"
 								rel="noopener noreferrer"
 								title={link.label}
-								className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors p-1.5"
+								className="w-8 h-8 flex items-center justify-center rounded-full   transition-colors p-1.5"
 								style={{ color: "#a1a1aa" }}
 							>
 								<ServiceIcon id={link.id} />
@@ -704,7 +704,7 @@ export default function AboutStitchClient() {
 				<div className="grid grid-cols-3 gap-3 w-full px-6 mt-2">
 					<Link
 						href="/portfolio"
-						className="col-start-2 flex items-center justify-center px-3 py-2.5 rounded border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all"
+						className="col-start-2 flex items-center justify-center px-3 py-2.5 rounded     transition-all"
 						style={{ fontFamily: "var(--font-noto-sans-jp)", color: "#f4f4f5" }}
 					>
 						<span className="text-[12px] leading-tight">もっと見る</span>
@@ -726,7 +726,7 @@ export default function AboutStitchClient() {
 						<Link
 							key={link.href}
 							href={link.href}
-							className="flex items-center justify-between px-3 py-2.5 rounded border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all group"
+							className="flex items-center justify-between px-3 py-2.5 rounded     transition-all group"
 						>
 							<div className="flex flex-col">
 								<span

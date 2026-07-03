@@ -57,7 +57,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 
 	// Get responsive classes
 	const getContainerClasses = () => {
-		const baseClasses = " border p-4 space-y-4";
+		const baseClasses = "  p-4 space-y-4";
 		return `${baseClasses} ${className}`;
 	};
 
@@ -73,7 +73,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 
 	const getInputClasses = () => {
 		const baseClasses =
-			"w-full border p-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+			"w-full  p-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
 		return baseClasses;
 	};
 
@@ -90,7 +90,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 				<button
 					type="button"
 					onClick={() => setIsExpanded(true)}
-					className="flex items-center justify-between w-full text-left focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+					className="flex items-center justify-between w-full text-left   focus: focus:ring-offset-2 focus:ring-offset-base"
 					aria-expanded={isExpanded}
 					aria-controls="filter-content"
 				>
@@ -115,7 +115,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 						<button
 							type="button"
 							onClick={clearFilters}
-							className="flex items-center text-xs text-accent hover: focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+							className="flex items-center text-xs text-accent hover:   focus: focus:ring-offset-2 focus:ring-offset-base"
 						>
 							<X className="w-3 h-3 mr-1" />
 							Clear
@@ -142,7 +142,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 						<button
 							type="button"
 							onClick={clearFilters}
-							className="flex items-center text-sm text-accent hover: focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+							className="flex items-center text-sm text-accent hover:   focus: focus:ring-offset-2 focus:ring-offset-base"
 						>
 							<X className="w-4 h-4 mr-1" />
 							Clear All
@@ -153,7 +153,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 						<button
 							type="button"
 							onClick={() => setIsExpanded(false)}
-							className="p-1 focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+							className="p-1   focus: focus:ring-offset-2 focus:ring-offset-base"
 							aria-label="Collapse filters"
 						>
 							<ChevronUp className="w-4 h-4" />
@@ -280,7 +280,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 
 			{/* Mobile additional filters */}
 			{responsive.isMobile && (
-				<div className="grid grid-cols-2 gap-4 pt-4 border-t ">
+				<div className="grid grid-cols-2 gap-4 pt-4  ">
 					<div className="space-y-2">
 						<label className={getLabelClasses()}>Performance</label>
 						<select
@@ -329,7 +329,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 
 			{/* Active filters summary */}
 			{hasActiveFilters && (
-				<div className="pt-4 border-t ">
+				<div className="pt-4  ">
 					<div className="flex flex-wrap gap-2">
 						{Object.entries(filter).map(([key, value]) => {
 							if (value === undefined) return null;
@@ -337,7 +337,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 							return (
 								<span
 									key={key}
-									className="inline-flex items-center px-2 py-1 bg-accent bg-opacity-20 border border-accent text-accent text-xs rounded"
+									className="inline-flex items-center px-2 py-1 bg-accent bg-opacity-20  border-accent text-accent text-xs rounded"
 								>
 									{key}: {value.toString()}
 									<button
@@ -345,7 +345,7 @@ export const ResponsiveFilterBar: React.FC<ResponsiveFilterBarProps> = ({
 										onClick={() =>
 											updateFilter(key as keyof ExperimentFilter, undefined)
 										}
-										className="ml-1 hover: focus:outline-none"
+										className="ml-1 hover: "
 										aria-label={`Remove ${key} filter`}
 									>
 										<X className="w-3 h-3" />

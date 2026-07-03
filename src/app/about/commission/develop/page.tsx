@@ -143,7 +143,7 @@ export default function DevelopCommissionPage() {
 									開発サービス概要
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
 											<Globe className="w-6 h-6 text-accent mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
@@ -163,7 +163,7 @@ export default function DevelopCommissionPage() {
 										</div>
 									</div>
 
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
 											<Gamepad2 className="w-6 h-6 text-accent mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
@@ -183,7 +183,7 @@ export default function DevelopCommissionPage() {
 										</div>
 									</div>
 
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
 											<Code className="w-6 h-6 text-accent mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
@@ -200,7 +200,7 @@ export default function DevelopCommissionPage() {
 										</div>
 									</div>
 
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
 											<Wrench className="w-6 h-6 text-accent mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
@@ -263,7 +263,7 @@ export default function DevelopCommissionPage() {
 											icon: CheckCircle,
 										},
 									].map(({ step, title, description, icon: Icon }) => (
-										<div key={step} className=" border p-4">
+										<div key={step} className="  p-4">
 											<div className="flex items-start">
 												<div className="flex-shrink-0 w-8 h-8 bg-accent flex items-center justify-center font-bold mr-4 text-sm">
 													{step}
@@ -290,7 +290,7 @@ export default function DevelopCommissionPage() {
 								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									料金体系
 								</h2>
-								<div className=" border p-4">
+								<div className="  p-4">
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 										<div>
 											<h3 className="zen-kaku-gothic-new text-lg mb-4">
@@ -332,7 +332,7 @@ export default function DevelopCommissionPage() {
 									技術スキル
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<h3 className="zen-kaku-gothic-new text-lg ">
 											フロントエンド
 										</h3>
@@ -355,7 +355,7 @@ export default function DevelopCommissionPage() {
 										</div>
 									</div>
 
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<h3 className="zen-kaku-gothic-new text-lg ">
 											ゲーム開発
 										</h3>
@@ -371,7 +371,7 @@ export default function DevelopCommissionPage() {
 										</div>
 									</div>
 
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<h3 className="zen-kaku-gothic-new text-lg ">
 											プラグイン開発
 										</h3>
@@ -387,7 +387,7 @@ export default function DevelopCommissionPage() {
 										</div>
 									</div>
 
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<h3 className="zen-kaku-gothic-new text-lg ">
 											その他
 										</h3>
@@ -410,7 +410,7 @@ export default function DevelopCommissionPage() {
 								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									連絡方法
 								</h2>
-								<div className=" border p-4">
+								<div className="  p-4">
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 										<div>
 											<div className="flex items-center mb-3">
@@ -461,14 +461,14 @@ export default function DevelopCommissionPage() {
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 									<Link
 										href="/contact"
-										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+										className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>お問い合わせフォーム</span>
 									</Link>
 
 									<Link
 										href="/about/commission/estimate"
-										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+										className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>料金計算機</span>
 									</Link>
@@ -476,7 +476,7 @@ export default function DevelopCommissionPage() {
 							</nav>
 
 							{/* Footer */}
-							<footer className="pt-4 border-t ">
+							<footer className="pt-4  ">
 								<div className="text-center">
 									<p className="shippori-antique-b1-regular text-sm inline-block">
 										© 2025 samuido - Development Commission

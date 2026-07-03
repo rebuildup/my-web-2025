@@ -8,7 +8,7 @@ function BackButton() {
 		<button
 			type="button"
 			onClick={() => window.history.back()}
-			className="flex items-center gap-3 noto-sans-jp-regular leading-loose focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base px-6 py-4"
+			className="flex items-center gap-3 noto-sans-jp-regular leading-loose   focus: focus:ring-offset-2 focus:ring-offset-base px-6 py-4"
 		>
 			<ArrowLeft className="w-5 h-5" />
 			Back
@@ -39,7 +39,7 @@ export default function NotFound() {
 							<BackButton />
 							<Link
 								href="/"
-								className="flex items-center gap-3 noto-sans-jp-regular leading-loose focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base px-6 py-4"
+								className="flex items-center gap-3 noto-sans-jp-regular leading-loose   focus: focus:ring-offset-2 focus:ring-offset-base px-6 py-4"
 							>
 								<Home className="w-5 h-5" />
 								Home

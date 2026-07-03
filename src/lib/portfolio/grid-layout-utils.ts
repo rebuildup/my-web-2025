@@ -205,7 +205,7 @@ export function generateGridLayout(items: PortfolioContentItem[]): GridItem[] {
  * Get CSS classes for grid item based on size
  */
 export function getGridItemClasses(gridSize: GridSize): string {
-	const baseClasses = "relative border border-main";
+	const baseClasses = "relative  border-main";
 
 	switch (gridSize) {
 		case "1x1":

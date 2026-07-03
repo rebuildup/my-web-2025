@@ -1,33 +1,53 @@
-// Test strip-visual-styles regex patterns
+// Inline copy of strip-visual-styles.mjs regexes for quick testing
+const NB = "(?<![\\w-])";
+const NE = "(?![\\w-])";
 const NO_SHADE = "white|black|transparent|current|inherit|currentcolor";
-const SHADED = "slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose";
-const COLOR_PROPS = "bg|text|border|ring|outline|from|via|to|divide|placeholder|caret|fill|stroke|accent|decoration|backdrop";
-const ARBITRARY_COLOR = "\\[(?:#[0-9a-fA-F]+|[a-z-]+\\([^)]+\\)|var\\([^)]+\\))\\]";
-const STATE = "(?:(?:hover|focus|active|disabled|group-hover|group-focus|focus-within|focus-visible|visited|first|last|odd|even|placeholder|md|sm|lg|xl|2xl):+)*";
+const SHADED =
+	"slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose";
+const COLOR_PROPS =
+	"bg|text|border|ring|outline|from|via|to|divide|placeholder|caret|fill|stroke|accent|decoration|backdrop";
+const ARB_COLOR =
+	"\\[(?:#[0-9a-fA-F]+|#[0-9a-fA-F]{3,8}|(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\\([^)]+\\)|var\\([^)]+\\))\\]";
+const STATE =
+	"(?:(?:hover|focus|focus-within|focus-visible|active|visited|disabled|group-hover|group-focus|first|last|odd|even|placeholder|md|sm|lg|xl|2xl):+)*";
 
 const COLOR_CLASS = new RegExp(
-	`\\b${STATE}(?:${COLOR_PROPS})-` +
+	`${NB}${STATE}(?:${COLOR_PROPS})-` +
 		`(?:` +
-		`(?:${NO_SHADE})(?:\\/(?:\\d+|${ARBITRARY_COLOR}))?` +
-		`|(?:${SHADED})(?:-[0-9]+)?(?:\\/(?:\\d+|${ARBITRARY_COLOR}))?` +
-		`|${ARBITRARY_COLOR}` +
-		`)\\b`,
+		`(?:${NO_SHADE})(?:\\/(?:\\d+|${ARB_COLOR}))?` +
+		`|(?:${SHADED})(?:-[0-9]+)?(?:\\/(?:\\d+|${ARB_COLOR}))?` +
+		`|${ARB_COLOR}` +
+		`)${NE}`,
 	"g",
 );
 const SHADOW_CLASS = new RegExp(
-	`\\b${STATE}(?:shadow(?:-(?:sm|md|lg|xl|2xl|inner|none|${ARBITRARY_COLOR}))?|drop-shadow(?:-(?:sm|md|lg|xl|2xl|none|${ARBITRARY_COLOR}))?)\\b`,
+	`${NB}${STATE}(?:shadow(?:-(?:sm|md|lg|xl|2xl|inner|none))?|drop-shadow(?:-(?:sm|md|lg|xl|2xl|none))?)${NE}`,
 	"g",
 );
-const OPACITY_CLASS = new RegExp(`\\b${STATE}opacity-(?:[0-9]+|\\[.+\\])\\b`, "g");
+const OPACITY_CLASS = new RegExp(`${NB}${STATE}opacity-(?:[0-9]+)${NE}`, "g");
 const MIX_BLEND = new RegExp(
-	`\\b${STATE}mix-blend-(?:normal|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|hard-light|soft-light|difference|exclusion|hue|saturation|color|luminosity)\\b`,
+	`${NB}${STATE}mix-blend-(?:normal|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|hard-light|soft-light|difference|exclusion|hue|saturation|color|luminosity)${NE}`,
 	"g",
 );
-const BACKDROP_FILTER = new RegExp(`\\b${STATE}backdrop-(?:blur|brightness|contrast|grayscale|hue-rotate|invert|opacity|saturate|sepia)-\\S+`, "g");
-const BORDER_PLAIN = new RegExp(`\\b${STATE}border(?:-(?:[0-9]+|t|r|b|l|x|y|solid|dashed|dotted|double|hidden|none|collapse|separate|spacing|t-[0-9]+|r-[0-9]+|b-[0-9]+|l-[0-9]+|x-[0-9]+|y-[0-9]+))?\\b`, "g");
-const DIVIDE_PLAIN = new RegExp(`\\b${STATE}divide(?:-(?:x|y|[0-9]+|x-[0-9]+|y-[0-9]+|reverse))?\\b`, "g");
-const OUTLINE_PLAIN = new RegExp(`\\b${STATE}outline(?:-(?:[0-9]+|solid|dashed|dotted|double|hidden|none|offset-[0-9]+))?\\b`, "g");
-const RING_PLAIN = new RegExp(`\\b${STATE}ring(?:-(?:[0-9]+|inset))?\\b`, "g");
+const BACKDROP_FILTER = new RegExp(
+	`${NB}${STATE}backdrop-(?:blur|brightness|contrast|grayscale|hue-rotate|invert|opacity|saturate|sepia)-\\S+${NE}`,
+	"g",
+);
+const ARBITRARY = "\\[.+\\]";
+
+const BORDER_PLAIN = new RegExp(
+	`${NB}${STATE}border(?!-(?:spacing|collapse|separate)\\b)(?:-${ARBITRARY}|-(?:[0-9]+|t|r|b|l|x|y|solid|dashed|dotted|double|hidden|none)(?:-(?:[0-9]+|t|r|b|l|x|y|solid|dashed|dotted|double|hidden|none|${ARBITRARY}))?)?${NE}`,
+	"g",
+);
+const DIVIDE_PLAIN = new RegExp(
+	`${NB}${STATE}divide(?:-(?:x|y|[0-9]+|x-[0-9]+|y-[0-9]+|reverse|${ARBITRARY}))?${NE}`,
+	"g",
+);
+const OUTLINE_PLAIN = new RegExp(
+	`${NB}${STATE}outline(?:-(?:[0-9]+|solid|dashed|dotted|double|hidden|none|offset-[0-9]+|${ARBITRARY}))?${NE}`,
+	"g",
+);
+const RING_PLAIN = new RegExp(`${NB}${STATE}ring(?:-(?:[0-9]+|inset|${ARBITRARY}))?${NE}`, "g");
 
 function process(input) {
 	let r = input;
@@ -76,7 +96,7 @@ const tests = [
 	["text-[9px]", "text-[9px]"],
 	["text-[#aaaaaa]", ""],
 	["bg-[#020202]", ""],
-	["border-[1px]", "border-[1px]"],
+	["border-[1px]", ""],
 	["border-[#333]", ""],
 	["text-xs", "text-xs"],
 	["text-4xl", "text-4xl"],
@@ -89,11 +109,11 @@ const tests = [
 	["text-[length:14px]", "text-[length:14px]"],
 	["text-[1.5em]", "text-[1.5em]"],
 	["border-spacing-2", "border-spacing-2"],
-	["border-t-[2px]", "border-t-[2px]"],
+	["border-t-[2px]", ""],
 	["flex flex-col items-center", "flex flex-col items-center"],
 	["mt-3 text-xs sm:text-xs leading-relaxed", "mt-3 text-xs sm:text-xs leading-relaxed"],
-	["text-4xl sm:text-4xl font-bold italic tracking-tight", "4xl sm:4xl font-bold italic tracking-tight"],
-	["text-4xl sm:text-4xl font-bold italic tracking-tight ".trim(), "4xl sm:4xl font-bold italic tracking-tight"],
+	["text-4xl sm:text-4xl font-bold italic tracking-tight", "text-4xl sm:text-4xl font-bold italic tracking-tight"],
+	["hover:bg-[#abc] focus:border-2 active:shadow-md", ""],
 ];
 
 let pass = 0, fail = 0;
@@ -105,4 +125,3 @@ for (const [input, expected] of tests) {
 	console.log(`${ok ? "PASS" : "FAIL"}: "${input}" -> "${out}"${ok ? "" : ` (expected: "${expected}")`}`);
 }
 console.log(`\n=== ${pass} passed, ${fail} failed ===`);
-process.exit(fail > 0 ? 1 : 0);

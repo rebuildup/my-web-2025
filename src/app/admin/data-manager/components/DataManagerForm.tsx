@@ -697,21 +697,21 @@ export function DataManagerForm({
 	};
 
 	const inputStyle =
-		"w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		"w-full  px-3 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	const labelStyle =
 		"block noto-sans-jp-regular text-sm font-medium mb-1";
 	const buttonStyle =
-		"border px-4 py-2 text-sm hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		" px-4 py-2 text-sm hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const activeTabStyle =
-		"border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		" px-4 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const tabStyle =
-		"border px-4 py-2 text-sm hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		" px-4 py-2 text-sm hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6">
 			{/* Tab Navigation */}
-			<div className="flex flex-wrap gap-2 border-b border-gray-200 pb-4">
+			<div className="flex flex-wrap gap-2   pb-4">
 				<button
 					type="button"
 					onClick={() => setActiveTab("basic")}
@@ -855,17 +855,17 @@ export function DataManagerForm({
 						isEnhancedContentItem(formData) &&
 						formData.categories &&
 						formData.categories.length > 0 && (
-							<div className=" border rounded-lg p-4">
+							<div className="  rounded-lg p-4">
 								<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 									Gallery Visibility Summary
 								</h4>
 								<div className="space-y-2 text-sm">
 									<div className="flex items-center gap-2">
-										<span className="w-2 h-2 bg-green-500 rounded-full"></span>
+										<span className="w-2 h-2  rounded-full"></span>
 										<span className="font-medium ">
 											Will appear in:
 										</span>
-										<span className="text-gray-400">
+										<span className="">
 											{formData.categories.includes("other") ||
 											formData.categories.length === 0
 												? "All gallery only"
@@ -888,8 +888,8 @@ export function DataManagerForm({
 									{formData.categories.includes("other") &&
 										formData.categories.length > 1 && (
 											<div className="flex items-center gap-2">
-												<span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-												<span className="text-yellow-700 text-xs">
+												<span className="w-2 h-2  rounded-full"></span>
+												<span className=" text-xs">
 													Note: Other category overrides specific categories -
 													item will only appear in All gallery
 												</span>
@@ -898,8 +898,8 @@ export function DataManagerForm({
 
 									{formData.categories.length > 2 && (
 										<div className="flex items-center gap-2">
-											<span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-											<span className="text-blue-700 text-xs">
+											<span className="w-2 h-2  rounded-full"></span>
+											<span className=" text-xs">
 												Multiple categories selected - item may appear in
 												multiple galleries
 											</span>
@@ -921,17 +921,17 @@ export function DataManagerForm({
 								placeholder="既存のタグを検索するか、新しいタグを作成してください..."
 								className="mt-1"
 							/>
-							<div className="flex items-center justify-between text-xs text-gray-500">
+							<div className="flex items-center justify-between text-xs ">
 								<span>
 									{formData.tags && formData.tags.length > 0
 										? `${formData.tags.length}個のタグが選択されています`
 										: "タグが選択されていません"}
 								</span>
-								<span className="text-gray-400">最大15個</span>
+								<span className="">最大15個</span>
 							</div>
-							<div className="text-xs text-gray-500 bg-gray-50 p-3 rounded border">
+							<div className="text-xs   p-3 rounded ">
 								<div className="flex items-start gap-2">
-									<span className="text-blue-600 mt-0.5">💡</span>
+									<span className=" mt-0.5">💡</span>
 									<div>
 										<strong>Tag Tips:</strong> Type to search existing tags or
 										create new ones. Tags help categorize content and improve
@@ -959,16 +959,16 @@ export function DataManagerForm({
 
 					{/* Markdown Migration Helper */}
 					{enhanced && needsMarkdownMigration && (
-						<div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+						<div className="   rounded-lg p-4">
 							<div className="flex items-start gap-3">
-								<div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-									<span className="text-white text-sm">📝</span>
+								<div className="w-6 h-6  rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+									<span className=" text-sm">📝</span>
 								</div>
 								<div className="flex-1">
-									<h4 className="text-sm font-medium text-blue-900 mb-2">
+									<h4 className="text-sm font-medium  mb-2">
 										Migrate to Markdown File System
 									</h4>
-									<p className="text-sm text-blue-800 mb-3">
+									<p className="text-sm  mb-3">
 										This content is currently stored as text. Migrate it to a
 										markdown file to enable enhanced features like embed syntax
 										and better content management.
@@ -977,14 +977,14 @@ export function DataManagerForm({
 										<button
 											type="button"
 											onClick={migrateContentToMarkdown}
-											className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+											className="px-3 py-1   text-sm rounded  transition-colors"
 										>
 											Migrate to Markdown File
 										</button>
 										<button
 											type="button"
 											onClick={() => setNeedsMarkdownMigration(false)}
-											className="px-3 py-1 border border-blue-600 text-blue-600 text-sm rounded hover:bg-blue-50 transition-colors"
+											className="px-3 py-1    text-sm rounded  transition-colors"
 										>
 											Keep as Text
 										</button>
@@ -998,17 +998,17 @@ export function DataManagerForm({
 						<label className={labelStyle}>Content (Markdown)</label>
 						{enhanced ? (
 							isLoadingMarkdown ? (
-								<div className="border rounded-lg p-8 text-center">
+								<div className=" rounded-lg p-8 text-center">
 									<div className="flex items-center justify-center gap-2">
-										<div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin"></div>
-										<span className="text-sm text-gray-600">
+										<div className="w-4 h-4  border-t-transparent rounded-full animate-spin"></div>
+										<span className="text-sm ">
 											Loading markdown content...
 										</span>
 									</div>
 								</div>
 							) : (
 								<div>
-									<div className="mb-2 text-xs text-gray-500 bg-yellow-50 p-2 border border-yellow-200 rounded">
+									<div className="mb-2 text-xs   p-2   rounded">
 										<div>Debug: Content length: {markdownContent.length}</div>
 										<div>FilePath: {markdownFilePath || "none"}</div>
 										<div>
@@ -1050,25 +1050,25 @@ export function DataManagerForm({
 						{/* Markdown File Status and Migration */}
 						{enhanced && (
 							<div className="mt-2 space-y-2">
-								<div className="text-xs text-gray-500 space-y-1">
+								<div className="text-xs  space-y-1">
 									<div className="flex items-center gap-2">
 										{markdownLoadError ? (
 											<>
-												<span className="w-2 h-2 bg-red-500 rounded-full"></span>
-												<span className="text-red-600">
+												<span className="w-2 h-2  rounded-full"></span>
+												<span className="">
 													Error loading markdown: {markdownLoadError}
 												</span>
 											</>
 										) : markdownFilePath ? (
 											<>
-												<span className="w-2 h-2 bg-green-500 rounded-full"></span>
+												<span className="w-2 h-2  rounded-full"></span>
 												<span>
 													Markdown file: {markdownFilePath.split("/").pop()}
 												</span>
 											</>
 										) : (
 											<>
-												<span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+												<span className="w-2 h-2  rounded-full"></span>
 												<span>
 													Content stored as text (consider migrating to markdown
 													file)
@@ -1076,7 +1076,7 @@ export function DataManagerForm({
 											</>
 										)}
 									</div>
-									<div className="text-gray-400">
+									<div className="">
 										Content length: {markdownContent.length} characters
 										{isLoadingMarkdown && " (Loading...)"}
 									</div>
@@ -1084,18 +1084,18 @@ export function DataManagerForm({
 
 								{/* Migration Helper */}
 								{needsMarkdownMigration && (
-									<div className="bg-blue-50 border border-blue-200 rounded p-3">
+									<div className="   rounded p-3">
 										<div className="flex items-start gap-2">
-											<span className="text-blue-600 mt-0.5">💡</span>
+											<span className=" mt-0.5">💡</span>
 											<div className="flex-1">
-												<p className="text-sm text-blue-800 mb-2">
+												<p className="text-sm  mb-2">
 													This item has content stored as text. Migrate it to a
 													markdown file for better organization and features.
 												</p>
 												<button
 													type="button"
 													onClick={migrateContentToMarkdown}
-													className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+													className="px-3 py-1   text-sm rounded  transition-colors"
 												>
 													Migrate to Markdown File
 												</button>
@@ -1179,11 +1179,11 @@ export function DataManagerForm({
 
 			{activeTab === "dates" && enhanced && (
 				<div className="space-y-6">
-					<div className=" border p-4 rounded-lg">
+					<div className="  p-4 rounded-lg">
 						<h3 className="neue-haas-grotesk-display text-xl leading-snug mb-4">
 							日付管理
 						</h3>
-						<p className="noto-sans-jp-light text-xs pb-2 text-gray-400 mb-4">
+						<p className="noto-sans-jp-light text-xs pb-2  mb-4">
 							このコンテンツアイテムの日付管理方法を制御します.自動日付管理（作成・更新時刻に基づく）または手動日付設定を選択できます.
 						</p>
 
@@ -1196,7 +1196,7 @@ export function DataManagerForm({
 						/>
 					</div>
 
-					<div className=" border p-4 rounded-lg">
+					<div className="  p-4 rounded-lg">
 						<h4 className="noto-sans-jp-regular text-sm font-medium mb-2">
 							現在の日付情報
 						</h4>
@@ -1255,11 +1255,11 @@ export function DataManagerForm({
 						</div>
 					</div>
 
-					<div className=" border p-4 rounded-lg">
+					<div className="  p-4 rounded-lg">
 						<h4 className="noto-sans-jp-regular text-sm font-medium mb-2">
 							Date History
 						</h4>
-						<p className="noto-sans-jp-light text-xs text-gray-400">
+						<p className="noto-sans-jp-light text-xs ">
 							Date changes are automatically tracked. The effective date will be
 							used for sorting and display purposes throughout the application.
 						</p>
@@ -1268,7 +1268,7 @@ export function DataManagerForm({
 			)}
 
 			{/* Form Actions */}
-			<div className="flex justify-end gap-4 pt-6 border-t border-gray-200">
+			<div className="flex justify-end gap-4 pt-6  ">
 				<button
 					type="button"
 					onClick={onCancel}
@@ -1279,9 +1279,9 @@ export function DataManagerForm({
 				</button>
 				<button
 					type="submit"
-					className={`${buttonStyle} hover:bg-gray-700 ${
-						saveStatus === "success" ? "bg-green-600 border-green-600" : ""
-					} ${saveStatus === "error" ? "bg-red-600 border-red-600" : ""}`}
+					className={`${buttonStyle}  ${
+						saveStatus === "success" ? " " : ""
+					} ${saveStatus === "error" ? " " : ""}`}
 					disabled={isLoading}
 				>
 					{saveStatus === "saving" && (isClient ? "保存中..." : "Saving...")}

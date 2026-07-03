@@ -455,7 +455,7 @@ export class CLSOptimizer {
 		// Add skeleton screens for loading states
 		const loadingElements = document.querySelectorAll('[data-loading="true"]');
 		loadingElements.forEach((element) => {
-			element.classList.add("animate-pulse", "bg-gray-200");
+			element.classList.add("animate-pulse", "");
 		});
 	}
 

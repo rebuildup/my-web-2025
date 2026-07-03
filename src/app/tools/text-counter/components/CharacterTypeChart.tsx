@@ -16,7 +16,7 @@ export default function CharacterTypeChart({ stats }: CharacterTypeChartProps) {
 
 	if (total === 0) {
 		return (
-			<div className="text-center text-sm opacity-70 py-4">
+			<div className="text-center text-sm  py-4">
 				文字が入力されていません
 			</div>
 		);

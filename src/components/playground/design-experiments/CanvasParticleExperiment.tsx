@@ -457,8 +457,8 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 	return (
 		<div className="space-y-6">
 			{/* Canvas Display */}
-			<div className=" border p-4 space-y-4">
-				<div className="border overflow-hidden">
+			<div className="  p-4 space-y-4">
+				<div className=" overflow-hidden">
 					<canvas
 						ref={canvasRef}
 						className="block w-full h-auto cursor-crosshair"
@@ -473,7 +473,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={isAnimating ? stopAnimation : startAnimation}
-						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						{isAnimating ? (
 							<Pause className="w-4 h-4 mr-2" />
@@ -488,7 +488,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetParticles}
-						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset</span>
@@ -497,7 +497,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Particle Controls */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<Settings className="w-5 h-5 mr-2" />
 					Particle System Controls
@@ -599,7 +599,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 									physics: e.target.value as ParticleConfig["physics"],
 								}))
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							<option value="bounce">Bounce</option>
 							<option value="flow">Flow</option>
@@ -621,7 +621,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 									colorMode: e.target.value as ParticleConfig["colorMode"],
 								}))
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							<option value="rainbow">Rainbow</option>
 							<option value="monochrome">Monochrome</option>
@@ -642,7 +642,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 									shape: e.target.value as ParticleConfig["shape"],
 								}))
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							<option value="mixed">Mixed</option>
 							<option value="circle">Circle</option>
@@ -675,7 +675,7 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Instructions */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg ">
 					Interaction Guide
 				</h3>

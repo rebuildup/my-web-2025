@@ -198,7 +198,7 @@ export async function GET(req: NextRequest) {
 											textOverflow: "ellipsis",
 											display: "-webkit-box",
 											// WebkitLineClamp: 2,
-											paddingLeft: "44px", // Align with title text (12px border + 32px padding)
+											paddingLeft: "44px", // Align with title text (12px  + 32px padding)
 										}}
 									>
 										{summary}

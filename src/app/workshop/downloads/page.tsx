@@ -77,7 +77,7 @@ export default async function DownloadsPage() {
 	);
 
 	const CardStyle =
-		" border block p-4 space-y-4 focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		"  block p-4 space-y-4   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const Card_title = "neue-haas-grotesk-display text-xl leading-snug";
 	const Card_description = "noto-sans-jp-light text-xs pb-2";
 	const Card_meta = "noto-sans-jp-light text-xs text-accent";
@@ -112,7 +112,7 @@ export default async function DownloadsPage() {
 							<h2 id="stats-heading" className="sr-only">
 								統計情報
 							</h2>
-							<div className=" border p-4 text-center">
+							<div className="  p-4 text-center">
 								<div className="neue-haas-grotesk-display text-2xl text-accent">
 									{publishedDownloads.length}
 								</div>
@@ -138,7 +138,7 @@ export default async function DownloadsPage() {
 											aria-describedby={`download-${download.id}-description`}
 										>
 											{download.thumbnail && (
-												<div className="aspect-video border relative">
+												<div className="aspect-video  relative">
 													<Image
 														src={download.thumbnail}
 														alt={download.title}
@@ -172,7 +172,7 @@ export default async function DownloadsPage() {
 														{download.tags.map((tag) => (
 															<span
 																key={tag}
-																className=" border px-2 py-1 text-xs noto-sans-jp-light"
+																className="  px-2 py-1 text-xs noto-sans-jp-light"
 															>
 																{tag}
 															</span>
@@ -184,7 +184,7 @@ export default async function DownloadsPage() {
 									))}
 								</div>
 							) : (
-								<div className=" border p-6">
+								<div className="  p-6">
 									<p className="noto-sans-jp-light text-sm text-center">
 										素材はまだ公開されていません
 									</p>
@@ -195,7 +195,7 @@ export default async function DownloadsPage() {
 						<nav aria-label="Site navigation">
 							<Link
 								href="/workshop"
-								className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+								className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 							>
 								<span className="noto-sans-jp-regular leading-snug">
 									← Workshop

@@ -90,7 +90,7 @@ export default function VideoDetailPanel({
 	const videoId = youTubeUrl ? getYouTubeVideoId(youTubeUrl) : null;
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+		<div className="fixed inset-0 z-50 flex items-center justify-center p-4 ">
 			<div className="w-[92vw] max-w-[1100px] max-h-[90vh] overflow-hidden ">
 				{/* Header removed to reduce top whitespace */}
 
@@ -130,7 +130,7 @@ export default function VideoDetailPanel({
 											<button
 												type="button"
 												onClick={() => setIsVideoLoaded(true)}
-												className="flex items-center gap-2 text-black px-6 py-3 transition-all duration-300"
+												className="flex items-center gap-2  px-6 py-3 transition-all duration-300"
 												style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
 												onMouseEnter={(e) => {
 													e.currentTarget.style.backgroundColor =
@@ -183,7 +183,7 @@ export default function VideoDetailPanel({
 									<button
 										type="button"
 										onClick={onClose}
-										className="p-1.5 hover:/40 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 cursor-pointer"
+										className="p-1.5 hover:/40 transition-colors   focus:ring-accent/50 cursor-pointer"
 										aria-label="Close panel"
 									>
 										<X className="w-4 h-4" />
@@ -199,7 +199,7 @@ export default function VideoDetailPanel({
 										</span>
 									</div>
 									<div className="flex items-center gap-2">
-										<span className="noto-sans-jp-light text-xs text-accent bg-accent/10 px-2 py-1 ring-1 ring-accent/20">
+										<span className="noto-sans-jp-light text-xs text-accent bg-accent/10 px-2 py-1  ring-accent/20">
 											{item.category}
 										</span>
 									</div>
@@ -310,7 +310,7 @@ export default function VideoDetailPanel({
 							<div className="flex flex-col gap-1.5 pt-2 mt-auto">
 								<Link
 									href={`/portfolio/${item.id}`}
-									className=" text-sm px-3 py-1.5 hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 w-full text-left"
+									className=" text-sm px-3 py-1.5 hover:bg-accent transition-colors   focus:ring-accent/50 w-full text-left"
 								>
 									<span className="noto-sans-jp-light text-xs">
 										詳細ページを見る
@@ -321,7 +321,7 @@ export default function VideoDetailPanel({
 										href={youTubeUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="px-3 py-1.5 /30 hover:/50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 w-full text-left text-sm"
+										className="px-3 py-1.5 /30 hover:/50 transition-colors   focus:ring-accent/50 w-full text-left text-sm"
 									>
 										<span className="noto-sans-jp-light text-xs">
 											YouTubeで見る

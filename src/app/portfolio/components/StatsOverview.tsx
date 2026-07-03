@@ -137,7 +137,7 @@ export function StatsOverview({
 		setRandomItem(deterministicPick);
 	}, [deterministicPick]);
 
-	const baseCard = "min-w-0 border border-white/10 p-4 md:p-5";
+	const baseCard = "min-w-0   p-4 md:p-5";
 
 	return (
 		<section className="overflow-hidden">
@@ -149,7 +149,7 @@ export function StatsOverview({
 								? `/portfolio/${latestItem.id}`
 								: "/portfolio/gallery/all"
 						}
-						className="group relative flex h-full min-h-[260px] w-full max-w-full flex-col justify-between overflow-hidden border border-white/10 bg-black p-6 md:p-7"
+						className="group relative flex h-full min-h-[260px] w-full max-w-full flex-col justify-between overflow-hidden    p-6 md:p-7"
 					>
 						<div className="absolute inset-0">
 							{latestItem?.thumbnail ? (
@@ -157,13 +157,13 @@ export function StatsOverview({
 									src={latestItem.thumbnail}
 									alt={latestItem.title}
 									fill
-									className="object-cover object-center opacity-70"
+									className="object-cover object-center "
 									sizes="(max-width: 1024px) 100vw, 66vw"
 								/>
 							) : (
-								<div className="absolute inset-0 bg-black" />
+								<div className="absolute inset-0 " />
 							)}
-							<div className="absolute inset-0 bg-black" />
+							<div className="absolute inset-0 " />
 						</div>
 						<div className="relative z-10">
 							<div className="text-[10px] font-mono tracking-widest uppercase">
@@ -327,7 +327,7 @@ export function StatsOverview({
 						onClick={rotateHighlight}
 						title="クリックで入れ替え"
 					>
-						<div className="relative h-full min-h-[220px] w-full max-w-full overflow-hidden border border-white/10">
+						<div className="relative h-full min-h-[220px] w-full max-w-full overflow-hidden  ">
 							<div className="relative w-full h-full overflow-hidden">
 								{randomItem?.thumbnail ? (
 									<SafeImage
@@ -341,7 +341,7 @@ export function StatsOverview({
 								) : (
 									<div className="w-full h-full " />
 								)}
-								<div className="absolute inset-0 bg-black" />
+								<div className="absolute inset-0 " />
 							</div>
 							<div className="absolute left-0 right-0 bottom-0 p-4 md:p-5">
 								<div className="flex items-center gap-3 text-[10px] uppercase tracking-widest ">

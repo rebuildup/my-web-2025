@@ -79,7 +79,7 @@ export default function PrivacyPolicy() {
 									<br />
 									個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています.
 								</p>
-								<div className="flex items-center gap-4 text-sm opacity-60">
+								<div className="flex items-center gap-4 text-sm ">
 									<span className="noto-sans-jp-light">
 										最終更新日: {lastUpdated}
 									</span>
@@ -281,13 +281,13 @@ export default function PrivacyPolicy() {
 						<nav aria-label="Navigation">
 							<Link
 								href="/"
-								className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover: hover: transition-colors"
+								className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base hover: hover: transition-colors"
 							>
 								<span className={Global_title}>← ホームに戻る</span>
 							</Link>
 						</nav>
 
-						<footer className="pt-4 border-t ">
+						<footer className="pt-4  ">
 							<div className="text-center">
 								<p className="shippori-antique-b1-regular text-sm inline-block">
 									© 2025 361do_sleep - Creative Portfolio & Tools

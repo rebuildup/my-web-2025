@@ -308,14 +308,14 @@ export default function DataManagerPage() {
 
 	// Design system classes matching root page
 	const CardStyle =
-		" border block p-4 space-y-4 focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		"  block p-4 space-y-4   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const Card_title =
 		"neue-haas-grotesk-display text-xl leading-snug";
 
 	const ButtonStyle =
-		"border px-4 py-2 text-sm hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		" px-4 py-2 text-sm hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const ActiveButtonStyle =
-		"border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		" px-4 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
 		<div className="min-h-screen ">
@@ -439,17 +439,17 @@ export default function DataManagerPage() {
 											{saveStatus !== "idle" && (
 												<div className="flex items-center gap-2">
 													{saveStatus === "saving" && (
-														<span className="text-blue-600 text-sm">
+														<span className=" text-sm">
 															{isClient ? "保存中..." : "Saving..."}
 														</span>
 													)}
 													{saveStatus === "success" && (
-														<span className="text-green-600 text-sm">
+														<span className=" text-sm">
 															{isClient ? "✓ 保存完了" : "✓ Saved"}
 														</span>
 													)}
 													{saveStatus === "error" && (
-														<span className="text-red-600 text-sm">
+														<span className=" text-sm">
 															{isClient ? "✗ エラー" : "✗ Error"}
 														</span>
 													)}
@@ -479,7 +479,7 @@ export default function DataManagerPage() {
 								) : (
 									<div className={CardStyle}>
 										<div className="text-center py-12">
-											<p className="noto-sans-jp-light text-sm text-gray-500">
+											<p className="noto-sans-jp-light text-sm ">
 												{isClient
 													? "編集するアイテムを選択するか、新しいアイテムを作成してください"
 													: "Select an item to edit or create a new one"}
@@ -492,8 +492,8 @@ export default function DataManagerPage() {
 
 						{/* Loading Overlay */}
 						{isLoading && (
-							<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-								<div className=" border p-6 rounded">
+							<div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
+								<div className="  p-6 rounded">
 									<p className="noto-sans-jp-regular text-sm">
 										{isClient ? "処理中..." : "Processing..."}
 									</p>

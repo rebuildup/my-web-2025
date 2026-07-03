@@ -56,15 +56,15 @@ export function PlaygroundErrorHandler({
 	const getErrorColor = () => {
 		switch (error.type) {
 			case "webgl":
-				return "border-blue-500 bg-blue-50 text-blue-900";
+				return "  ";
 			case "performance":
-				return "border-yellow-500 bg-yellow-50 text-yellow-900";
+				return "  ";
 			case "compatibility":
-				return "border-orange-500 bg-orange-50 text-orange-900";
+				return "  ";
 			case "runtime":
-				return "border-red-500 bg-red-50 text-red-900";
+				return "  ";
 			default:
-				return "border-gray-500 bg-gray-50 text-gray-900";
+				return "  ";
 		}
 	};
 
@@ -102,7 +102,7 @@ export function PlaygroundErrorHandler({
 	};
 
 	return (
-		<div className={`border-2 rounded-lg p-4 ${getErrorColor()} ${className}`}>
+		<div className={` rounded-lg p-4 ${getErrorColor()} ${className}`}>
 			<div className="flex items-start justify-between">
 				<div className="flex items-start space-x-3">
 					<div className="text-2xl">{getErrorIcon()}</div>
@@ -119,7 +119,7 @@ export function PlaygroundErrorHandler({
 								<summary className="text-sm cursor-pointer hover:underline">
 									Technical Details
 								</summary>
-								<pre className="mt-1 text-xs bg-black bg-opacity-10 p-2 rounded overflow-x-auto">
+								<pre className="mt-1 text-xs  bg-opacity-10 p-2 rounded overflow-x-auto">
 									{error.details}
 								</pre>
 							</details>
@@ -131,7 +131,7 @@ export function PlaygroundErrorHandler({
 					<button
 						type="button"
 						onClick={onDismiss}
-						className="text-gray-500 hover:text-gray-700 transition-colors"
+						className="  transition-colors"
 						aria-label="Dismiss error"
 					>
 						<X className="w-5 h-5" />
@@ -159,7 +159,7 @@ export function PlaygroundErrorHandler({
 						type="button"
 						onClick={handleRetry}
 						disabled={isRetrying}
-						className="flex items-center space-x-2 px-3 py-1 bg-white bg-opacity-50 border border-current rounded hover:bg-opacity-75 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+						className="flex items-center space-x-2 px-3 py-1  bg-opacity-50   rounded hover:bg-opacity-75 transition-colors  disabled:cursor-not-allowed"
 					>
 						<RefreshCw
 							className={`w-4 h-4 ${isRetrying ? "animate-spin" : ""}`}
@@ -173,7 +173,7 @@ export function PlaygroundErrorHandler({
 				<button
 					type="button"
 					onClick={() => window.location.reload()}
-					className="flex items-center space-x-2 px-3 py-1 bg-white bg-opacity-50 border border-current rounded hover:bg-opacity-75 transition-colors"
+					className="flex items-center space-x-2 px-3 py-1  bg-opacity-50   rounded hover:bg-opacity-75 transition-colors"
 				>
 					<RefreshCw className="w-4 h-4" />
 					<span className="text-sm">ページ再読み込み</span>

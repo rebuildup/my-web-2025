@@ -223,8 +223,8 @@ const Dock = ({
 
 	return (
 		<div
-			className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-60 px-4 h-16 rounded-2xl border backdrop-blur-xl shadow-2xl flex items-end gap-2 transition-all duration-300 no-timer-click
- ${theme === "dark" ? "bg-[#111]/80 border-white/10" : "bg-white/80 border-black/5"}
+			className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-60 px-4 h-16 rounded-2xl border   flex items-end gap-2 transition-all duration-300 no-timer-click
+ ${theme === "dark" ? "bg-[#111]/80 " : " "}
  `}
 			onMouseMove={handleMouseMove}
 			onMouseLeave={handleMouseLeave}
@@ -315,21 +315,21 @@ const DockButton = ({
 			onMouseLeave={() => setIsHovered(false)}
 			onFocus={() => setIsHovered(true)}
 			onBlur={() => setIsHovered(false)}
-			className={`w-full h-full rounded-full flex items-center justify-center shadow-md transition-colors relative group
- ${theme === "dark" ? "bg-white/10 hover:bg-white/20" : "bg-black/5 hover:bg-black/10"}
+			className={`w-full h-full rounded-full flex items-center justify-center  transition-colors relative group
+ ${theme === "dark" ? " " : " "}
  ${colorClass || ""}
  `}
 			style={accentStyle}
 		>
 			<Icon
 				className={`pointer-events-none ${
-					theme === "dark" ? "text-white" : "text-gray-900"
+					theme === "dark" ? "" : ""
 				}`}
 				style={accentColor && isHovered ? { color: accentColor } : undefined}
 			/>
 			<span
-				className={`absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none
- ${theme === "dark" ? "bg-[#333] text-white" : "bg-white text-black shadow-sm"}
+				className={`absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider   transition-opacity whitespace-nowrap pointer-events-none
+ ${theme === "dark" ? " " : "  "}
  `}
 			>
 				{label}
@@ -347,17 +347,17 @@ const MarkdownViewer = ({
 	theme: string;
 }) => {
 	if (!content)
-		return <div className="text-gray-500 opacity-80 italic">Empty note...</div>;
+		return <div className="  italic">Empty note...</div>;
 
 	const lines = content.split("\n");
 	return (
-		<div className={`space-y-1 text-sm text-gray-900`}>
+		<div className={`space-y-1 text-sm `}>
 			{lines.map((line, i) => {
 				if (line.startsWith("# "))
 					return (
 						<h1
 							key={i}
-							className="text-xl font-bold border-b border-gray-500/20 pb-1 mb-2"
+							className="text-xl font-bold   pb-1 mb-2"
 						>
 							{line.slice(2)}
 						</h1>
@@ -384,10 +384,10 @@ const MarkdownViewer = ({
 				if (line.startsWith("[x] "))
 					return (
 						<div key={i} className="flex items-center gap-2">
-							<div className="w-3 h-3 border bg-blue-500 rounded flex items-center justify-center text-[8px] text-white">
+							<div className="w-3 h-3 border  rounded flex items-center justify-center text-[8px] ">
 								✓
 							</div>
-							<span className="line-through opacity-50">{line.slice(4)}</span>
+							<span className="line-through ">{line.slice(4)}</span>
 						</div>
 					);
 
@@ -529,17 +529,17 @@ const Widget = ({
 				if (indicator && icon) {
 					if (isOver) {
 						indicator.className =
-							"w-64 h-24 rounded-2xl border-4 border-dashed flex items-center justify-center transition-all duration-200 bg-transparent border-gray-400/50";
+							"w-64 h-24 rounded-2xl   flex items-center justify-center transition-all duration-200  ";
 						icon.setAttribute(
 							"class",
-							"lucide lucide-trash2 text-red-500 transition-all duration-200 scale-150",
+							"lucide lucide-trash2  transition-all duration-200 scale-150",
 						);
 					} else {
 						indicator.className =
-							"w-64 h-24 rounded-2xl border-4 border-dashed flex items-center justify-center transition-all duration-200 bg-transparent border-gray-400/30";
+							"w-64 h-24 rounded-2xl   flex items-center justify-center transition-all duration-200  ";
 						icon.setAttribute(
 							"class",
-							"lucide lucide-trash2 text-gray-600 opacity-30 transition-all duration-200 scale-100",
+							"lucide lucide-trash2   transition-all duration-200 scale-100",
 						);
 					}
 				}
@@ -638,7 +638,7 @@ const Widget = ({
 	const tapeOffset = isImageSticky ? -10 : -14;
 	const stickyContentWrapperClass = isImageSticky
 		? "flex-1 w-full h-full no-drag select-text flex items-center justify-center overflow-hidden"
-		: "flex-1 w-full h-full no-drag select-text [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent";
+		: "flex-1 w-full h-full no-drag select-text [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-track]:";
 	const nonStickyContentWrapperClass = `p-4 overflow-auto no-drag select-text ${
 		widget.type === "music" ? "p-0" : ""
 	}`;
@@ -677,33 +677,33 @@ const Widget = ({
 
 	let bgClass = "";
 	if (isNote) {
-		bgClass = "shadow-[0_4px_8px_rgba(0,0,0,0.2)] border border-black/5";
+		bgClass = "shadow-[0_4px_8px_rgba(0,0,0,0.2)] border ";
 	} else if (isImageSticky) {
 		if (isImageLoaded) {
 			bgClass = "";
 		} else {
 			bgClass =
-				"shadow-[0_6px_12px_rgba(0,0,0,0.2)] border border-transparent bg-transparent";
+				"shadow-[0_6px_12px_rgba(0,0,0,0.2)] border  ";
 		}
 	} else if (isTimer) {
-		bgClass = "bg-white/95 border-black/5 shadow-[0_8px_32px_rgba(0,0,0,0.1)]";
+		bgClass = "  shadow-[0_8px_32px_rgba(0,0,0,0.1)]";
 	} else if (isYouTube) {
 		bgClass =
 			theme === "dark"
-				? "bg-[#1a1a1a]/95 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
-				: "bg-white/95 border-black/5 shadow-[0_8px_32px_rgba(0,0,0,0.1)]";
+				? "bg-[#1a1a1a]/95  shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+				: "  shadow-[0_8px_32px_rgba(0,0,0,0.1)]";
 	} else {
 		bgClass =
 			theme === "dark"
-				? "bg-[#1a1a1a]/90 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
-				: "bg-white/90 border-black/5 shadow-[0_8px_32px_rgba(0,0,0,0.1)]";
+				? "bg-[#1a1a1a]/90  shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+				: "  shadow-[0_8px_32px_rgba(0,0,0,0.1)]";
 	}
 
 	const textClass = isSticky
-		? "text-gray-900"
+		? ""
 		: theme === "dark"
-			? "text-gray-200"
-			: "text-gray-800";
+			? ""
+			: "";
 
 	return (
 		<div
@@ -734,8 +734,8 @@ const Widget = ({
 					? "rounded-lg"
 					: isImageLoaded
 						? ""
-						: "rounded-xl border backdrop-blur-md"
-			} ${isOverDeleteZone ? "opacity-50 scale-95" : ""}`}
+						: "rounded-xl border "
+			} ${isOverDeleteZone ? " scale-95" : ""}`}
 		>
 			{/* メモ帳の場合はテープ風のハンドル */}
 			{isSticky && (
@@ -760,10 +760,10 @@ const Widget = ({
 			{!isSticky && (
 				<div
 					onPointerDown={handlePointerDown}
-					className={`h-8 flex items-center justify-between px-2 cursor-grab border-b ${theme === "dark" ? "border-white/5" : "border-black/5"}`}
+					className={`h-8 flex items-center justify-between px-2 cursor-grab  ${theme === "dark" ? "" : ""}`}
 					style={{ touchAction: "none" }}
 				>
-					<div className="flex items-center gap-2 opacity-50">
+					<div className="flex items-center gap-2 ">
 						{widget.type === "image" && <ImageIcon size={14} />}
 						{widget.type === "music" && <Music size={14} />}
 						<span className="text-xs font-bold uppercase tracking-wider">
@@ -773,7 +773,7 @@ const Widget = ({
 					<div className="flex items-center gap-1 no-drag">
 						<button
 							onClick={() => removeWidget(widget.id)}
-							className="p-1 rounded hover:bg-red-500/20 text-red-500 hover:text-red-600 transition-colors"
+							className="p-1 rounded    transition-colors"
 						>
 							<X size={12} />
 						</button>
@@ -786,7 +786,7 @@ const Widget = ({
 					(isEditing ? (
 						<textarea
 							ref={textareaRef}
-							className={`w-full h-full bg-transparent resize-none outline-none font-mono text-sm select-text ${textClass} [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent`}
+							className={`w-full h-full  resize-none  font-mono text-sm select-text ${textClass} [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-track]:`}
 							placeholder="# Title&#10;- List item&#10;**Bold text**"
 							value={widget.content || ""}
 							onChange={(e) =>
@@ -810,19 +810,19 @@ const Widget = ({
 					<div className="flex flex-col gap-4 w-full h-full items-center justify-center p-4">
 						{!widget.content ? (
 							<div
-								className={`w-full flex flex-col gap-3 p-6 rounded-xl backdrop-blur-md shadow-lg ${
+								className={`w-full flex flex-col gap-3 p-6 rounded-xl   ${
 									theme === "dark"
-										? "bg-[#222]/90 border border-white/10"
-										: "bg-white/90 border border-black/5"
+										? "bg-[#222]/90 border "
+										: " border "
 								}`}
 							>
 								<input
 									type="text"
 									placeholder="Paste image URL..."
-									className={`w-full bg-transparent border-b p-2 text-sm outline-none transition-colors ${
+									className={`w-full   p-2 text-sm  transition-colors ${
 										theme === "dark"
-											? "border-white/20 text-white placeholder-white/50 focus:border-white/80"
-											: "border-black/20 text-black placeholder-black/50 focus:border-black/80"
+											? "   "
+											: "   "
 									}`}
 									onKeyDown={(e) => {
 										if (e.key === "Enter")
@@ -833,16 +833,16 @@ const Widget = ({
 								/>
 								<div
 									className={`text-center text-[10px] font-bold uppercase tracking-widest ${
-										theme === "dark" ? "text-white/40" : "text-black/40"
+										theme === "dark" ? "" : ""
 									}`}
 								>
 									OR
 								</div>
 								<label
-									className={`cursor-pointer flex items-center justify-center gap-2 p-3 rounded-lg border border-dashed transition-all ${
+									className={`cursor-pointer flex items-center justify-center gap-2 p-3 rounded-lg border  transition-all ${
 										theme === "dark"
-											? "border-white/30 hover:bg-white/10 text-gray-200"
-											: "border-black/30 hover:bg-black/5 text-gray-800"
+											? "  "
+											: "  "
 									}`}
 								>
 									<Upload size={16} />
@@ -880,7 +880,7 @@ const Widget = ({
 								/>
 								<button
 									onClick={() => updateWidget(widget.id, { content: "" })}
-									className="absolute top-2 right-2 p-2 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
+									className="absolute top-2 right-2 p-2   rounded-full   transition-opacity "
 								>
 									<Edit3 size={14} />
 								</button>
@@ -903,7 +903,7 @@ const Widget = ({
 							<input
 								type="text"
 								placeholder="YouTube Video ID"
-								className={`text-[10px] text-center bg-transparent opacity-30 hover:opacity-100 outline-none transition-opacity ${textClass}`}
+								className={`text-[10px] text-center     transition-opacity ${textClass}`}
 								onKeyDown={(e) => {
 									if (e.key === "Enter")
 										updateWidget(widget.id, {
@@ -1385,22 +1385,22 @@ export default function PomodoroTimer() {
 		return (
 			<div
 				className={`flex items-baseline justify-center tabular-nums tracking-[-0.15em] select-none cursor-pointer font-mono font-bold transition-opacity duration-300
- ${theme === "dark" ? "text-neutral-100" : "text-slate-900"}
- ${isActive ? "opacity-100" : "opacity-60 hover:opacity-80"}
+ ${theme === "dark" ? "" : ""}
+ ${isActive ? "" : " "}
  `}
 			>
 				<span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none text-right w-auto min-w-16 sm:min-w-19 md:min-w-23 lg:min-w-28">
 					{String(minutes).padStart(2, "0")}
 				</span>
 				<span
-					className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none -mx-1.25 -translate-y-0.75 ${isActive ? "animate-pulse" : "opacity-50"}`}
+					className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none -mx-1.25 -translate-y-0.75 ${isActive ? "animate-pulse" : ""}`}
 				>
 					:
 				</span>
 				<span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none text-left w-auto min-w-16 sm:min-w-19 md:min-w-23 lg:min-w-28">
 					{String(seconds).padStart(2, "0")}
 				</span>
-				<span className="text-lg sm:text-xl md:text-2xl leading-none ml-0.5 sm:ml-1 md:ml-1.5 lg:ml-2 w-10 sm:w-12 md:w-14 lg:w-16 min-w-[30px] sm:min-w-9 md:min-w-[42px] lg:min-w-12 opacity-40 font-medium self-end mb-1 sm:mb-1.5 md:mb-2">
+				<span className="text-lg sm:text-xl md:text-2xl leading-none ml-0.5 sm:ml-1 md:ml-1.5 lg:ml-2 w-10 sm:w-12 md:w-14 lg:w-16 min-w-[30px] sm:min-w-9 md:min-w-[42px] lg:min-w-12  font-medium self-end mb-1 sm:mb-1.5 md:mb-2">
 					.{String(milliseconds).padStart(2, "0")}
 				</span>
 			</div>
@@ -1453,8 +1453,8 @@ export default function PomodoroTimer() {
 		<div
 			className={`relative w-full h-screen overflow-hidden transition-colors duration-500 select-none ${
 				theme === "dark"
-					? "bg-[#050505] text-gray-100"
-					: "bg-[#f5f5f7] text-gray-900"
+					? " "
+					: " "
 			}`}
 			style={{
 				backgroundImage:
@@ -1493,8 +1493,8 @@ export default function PomodoroTimer() {
 
 			{/* Top: Current Step Label - Fixed */}
 			<div
-				className={`fixed top-8 left-1/2 -translate-x-1/2 z-30 text-sm tracking-[0.4em] uppercase font-bold opacity-30 pointer-events-none
- ${theme === "dark" ? "text-white" : "text-black"}
+				className={`fixed top-8 left-1/2 -translate-x-1/2 z-30 text-sm tracking-[0.4em] uppercase font-bold  pointer-events-none
+ ${theme === "dark" ? "" : ""}
  `}
 			>
 				{currentStep.label}
@@ -1540,7 +1540,7 @@ export default function PomodoroTimer() {
 					</svg>
 					<button
 						onClick={handleTimerClick}
-						className="relative group pointer-events-auto focus:outline-none"
+						className="relative group pointer-events-auto "
 						style={{ zIndex: 50 }}
 					>
 						{formatTime(timeLeft)}
@@ -1551,11 +1551,11 @@ export default function PomodoroTimer() {
 			{/* Left Panel: Flow Progress Bar */}
 			<aside
 				className={`fixed left-8 top-1/2 transform -translate-y-1/2 z-70 flex flex-col items-start gap-4 transition-opacity duration-500 no-timer-click
- ${isActive ? "opacity-20 hover:opacity-100" : "opacity-100"}
+ ${isActive ? " " : ""}
  `}
 			>
 				<div
-					className="relative h-[60vh] w-1.5 rounded-full bg-opacity-20 backdrop-blur-sm transition-all duration-300 hover:w-2"
+					className="relative h-[60vh] w-1.5 rounded-full bg-opacity-20  transition-all duration-300 hover:w-2"
 					style={{
 						backgroundColor:
 							theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
@@ -1588,7 +1588,7 @@ export default function PomodoroTimer() {
 							return (
 								<div
 									key={step.id}
-									className="relative w-full border-b border-transparent last:border-0"
+									className="relative w-full   "
 									style={{ height: `${heightPercent}%` }}
 								>
 									<div
@@ -1614,8 +1614,8 @@ export default function PomodoroTimer() {
 
 											{/* ホバー時に灰色で明るく表示 */}
 											<div
-												className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${isHovered ? "opacity-30" : "opacity-0"} ${
-													theme === "dark" ? "bg-gray-400/30" : "bg-gray-600/20"
+												className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${isHovered ? "" : ""} ${
+													theme === "dark" ? "" : ""
 												}`}
 											/>
 
@@ -1632,12 +1632,12 @@ export default function PomodoroTimer() {
 									</div>
 
 									<div
-										className={`absolute top-1/2 -translate-y-1/2 w-48 p-2 rounded-lg backdrop-blur-md border transition-all duration-300 pointer-events-none shadow-xl z-100 ${
+										className={`absolute top-1/2 -translate-y-1/2 w-48 p-2 rounded-lg  border transition-all duration-300 pointer-events-none  z-100 ${
 											isHovered
-												? "opacity-100 translate-x-0"
-												: "opacity-0 -translate-x-2.5"
+												? " translate-x-0"
+												: " -translate-x-2.5"
 										}
- ${theme === "dark" ? "bg-[#1a1a1a]/90 border-white/10 text-gray-100" : "bg-white/90 border-black/5 text-gray-800"}
+ ${theme === "dark" ? "bg-[#1a1a1a]/90  " : "  "}
  `}
 										style={{
 											left: `calc(50% + ${hoverPaddingRight}px)`,
@@ -1645,11 +1645,11 @@ export default function PomodoroTimer() {
 									>
 										<div className="flex items-center justify-between">
 											<span
-												className={`text-xs font-bold uppercase tracking-wider ${step.type === "focus" ? "text-blue-400" : "text-sky-400"}`}
+												className={`text-xs font-bold uppercase tracking-wider ${step.type === "focus" ? "" : ""}`}
 											>
 												{step.label}
 											</span>
-											<span className="text-[10px] font-mono opacity-50">
+											<span className="text-[10px] font-mono ">
 												{step.duration} min
 											</span>
 										</div>
@@ -1666,12 +1666,12 @@ export default function PomodoroTimer() {
 				<div className="delete-zone fixed bottom-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
 					<div
 						id="delete-zone-indicator"
-						className="w-64 h-24 rounded-2xl border-4 border-dashed flex items-center justify-center transition-all duration-200 bg-transparent border-gray-400/30"
+						className="w-64 h-24 rounded-2xl   flex items-center justify-center transition-all duration-200  "
 					>
 						<Trash2
 							id="delete-zone-icon"
 							size={32}
-							className="text-gray-600 opacity-30 transition-all duration-200 scale-100"
+							className="  transition-all duration-200 scale-100"
 						/>
 					</div>
 				</div>
@@ -1682,23 +1682,23 @@ export default function PomodoroTimer() {
 				<div className="fixed inset-0 z-100 flex items-center justify-center pointer-events-auto">
 					{/* Overlay */}
 					<div
-						className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+						className="absolute inset-0  "
 						onClick={() => setShowStopDialog(false)}
 					/>
 					{/* Dialog */}
 					<div
-						className={`relative z-10 rounded-2xl border backdrop-blur-xl shadow-2xl p-6 max-w-md w-full mx-4 ${
+						className={`relative z-10 rounded-2xl border   p-6 max-w-md w-full mx-4 ${
 							theme === "dark"
-								? "bg-[#1a1a1a]/95 border-white/10"
-								: "bg-white/95 border-black/5"
+								? "bg-[#1a1a1a]/95 "
+								: " "
 						}`}
 					>
 						<button
 							onClick={() => setShowStopDialog(false)}
 							className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${
 								theme === "dark"
-									? "hover:bg-white/10 text-gray-400 hover:text-white"
-									: "hover:bg-black/5 text-gray-500 hover:text-black"
+									? "  "
+									: "  "
 							}`}
 						>
 							<X size={20} />
@@ -1706,7 +1706,7 @@ export default function PomodoroTimer() {
 
 						<h3
 							className={`text-xl font-bold mb-4 ${
-								theme === "dark" ? "text-white" : "text-black"
+								theme === "dark" ? "" : ""
 							}`}
 						>
 							タイマーを停止しますか？
@@ -1714,21 +1714,21 @@ export default function PomodoroTimer() {
 						<div className="grid grid-cols-3 gap-3">
 							<button
 								onClick={handleReset}
-								className="px-2 py-4 rounded-xl font-medium transition-all flex flex-col items-center justify-center gap-2 bg-gray-200 text-gray-800 hover:bg-gray-300"
+								className="px-2 py-4 rounded-xl font-medium transition-all flex flex-col items-center justify-center gap-2   "
 							>
 								<RotateCcw size={24} />
 								<span className="text-xs">リセット</span>
 							</button>
 							<button
 								onClick={handleStop}
-								className="px-2 py-4 rounded-xl font-medium transition-all flex flex-col items-center justify-center gap-2 bg-gray-200 text-gray-800 hover:bg-gray-300"
+								className="px-2 py-4 rounded-xl font-medium transition-all flex flex-col items-center justify-center gap-2   "
 							>
 								<Pause size={24} />
 								<span className="text-xs">一時停止</span>
 							</button>
 							<button
 								onClick={handleSkip}
-								className="px-2 py-4 rounded-xl font-medium transition-all flex flex-col items-center justify-center gap-2 bg-gray-200 text-gray-800 hover:bg-gray-300"
+								className="px-2 py-4 rounded-xl font-medium transition-all flex flex-col items-center justify-center gap-2   "
 							>
 								<SkipForward size={24} />
 								<span className="text-xs">スキップ</span>
@@ -1746,7 +1746,7 @@ export default function PomodoroTimer() {
 						icon={StickyNote}
 						label="Note"
 						theme={theme}
-						colorClass="hover:text-blue-500"
+						colorClass=""
 					/>
 				)}
 				{dockVisibility.image && (
@@ -1755,7 +1755,7 @@ export default function PomodoroTimer() {
 						icon={ImageIcon}
 						label="Image"
 						theme={theme}
-						colorClass="hover:text-sky-500"
+						colorClass=""
 					/>
 				)}
 				{dockVisibility.music && (
@@ -1764,7 +1764,7 @@ export default function PomodoroTimer() {
 						icon={Music}
 						label="YouTube"
 						theme={theme}
-						colorClass="hover:text-red-500"
+						colorClass=""
 					/>
 				)}
 				{dockVisibility.timer && (
@@ -1773,7 +1773,7 @@ export default function PomodoroTimer() {
 						icon={Timer}
 						label="Timer"
 						theme={theme}
-						colorClass="hover:text-green-500"
+						colorClass=""
 					/>
 				)}
 				{dockVisibility.stats && (
@@ -1782,7 +1782,7 @@ export default function PomodoroTimer() {
 						icon={BarChart2}
 						label="Stats"
 						theme={theme}
-						colorClass="hover:text-amber-500"
+						colorClass=""
 					/>
 				)}
 
@@ -1790,7 +1790,7 @@ export default function PomodoroTimer() {
 					dockVisibility.image ||
 					dockVisibility.music) &&
 					(dockVisibility.theme || true) && (
-						<div className="w-px h-8 bg-current opacity-10 mx-1 self-center" />
+						<div className="w-px h-8   mx-1 self-center" />
 					)}
 
 				{dockVisibility.theme && (
@@ -1799,7 +1799,7 @@ export default function PomodoroTimer() {
 						icon={theme === "dark" ? Sun : Moon}
 						label="Theme"
 						theme={theme}
-						colorClass="hover:text-yellow-500"
+						colorClass=""
 					/>
 				)}
 				<DockButton
@@ -1816,31 +1816,31 @@ export default function PomodoroTimer() {
 				<div className="fixed inset-0 z-2147483647 flex items-center justify-center pointer-events-auto">
 					{/* Overlay */}
 					<div
-						className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+						className="absolute inset-0  "
 						onClick={() => setShowSettingsPanel(false)}
 					/>
 					{/* Panel */}
 					<div
-						className={`relative z-10 rounded-2xl border backdrop-blur-xl shadow-2xl max-w-6xl w-full mx-4 h-[calc(100vh-2rem)] md:h-[600px] overflow-hidden flex flex-col md:flex-row ${
+						className={`relative z-10 rounded-2xl border   max-w-6xl w-full mx-4 h-[calc(100vh-2rem)] md:h-[600px] overflow-hidden flex flex-col md:flex-row ${
 							theme === "dark"
-								? "bg-[#1a1a1a]/95 border-white/10"
-								: "bg-white/95 border-black/5"
+								? "bg-[#1a1a1a]/95 "
+								: " "
 						}`}
 					>
 						{/* Tabs - Top on mobile, Left on desktop */}
 						<div
-							className={`md:w-64 border-b md:border-b-0 md:border-r flex flex-row md:flex-col shrink-0 ${
-								theme === "dark" ? "border-white/10" : "border-black/5"
+							className={`md:w-64    flex flex-row md:flex-col shrink-0 ${
+								theme === "dark" ? "" : ""
 							}`}
 						>
 							<div
-								className={`flex items-center justify-between p-4 border-b md:border-b shrink-0 ${
-									theme === "dark" ? "border-white/10" : "border-black/5"
+								className={`flex items-center justify-between p-4   shrink-0 ${
+									theme === "dark" ? "" : ""
 								}`}
 							>
 								<h2
 									className={`text-xl font-bold ${
-										theme === "dark" ? "text-white" : "text-black"
+										theme === "dark" ? "" : ""
 									}`}
 								>
 									設定
@@ -1849,14 +1849,14 @@ export default function PomodoroTimer() {
 									onClick={() => setShowSettingsPanel(false)}
 									className={`p-2 rounded-lg transition-colors ${
 										theme === "dark"
-											? "hover:bg-white/10 text-gray-300"
-											: "hover:bg-gray-100 text-gray-700"
+											? " "
+											: " "
 									}`}
 								>
 									<X size={20} />
 								</button>
 							</div>
-							<div className="flex flex-row md:flex-col flex-1 overflow-x-auto md:overflow-y-auto p-2 min-h-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent">
+							<div className="flex flex-row md:flex-col flex-1 overflow-x-auto md:overflow-y-auto p-2 min-h-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-track]:">
 								{[
 									{ key: "workflow", label: "ワークフロー" },
 									{ key: "dock", label: "ドック" },
@@ -1871,11 +1871,11 @@ export default function PomodoroTimer() {
 										className={`whitespace-nowrap text-left px-4 py-3 rounded-lg transition-colors md:w-full ${
 											settingsTab === tab.key
 												? theme === "dark"
-													? "bg-white/10 text-white"
-													: "bg-gray-100 text-black"
+													? " "
+													: " "
 												: theme === "dark"
-													? "hover:bg-white/5 text-gray-300"
-													: "hover:bg-gray-50 text-gray-700"
+													? " "
+													: " "
 										} ${tab.key === "workflow" ? "md:mb-1" : ""}`}
 									>
 										{tab.label}
@@ -1885,12 +1885,12 @@ export default function PomodoroTimer() {
 						</div>
 
 						{/* Content */}
-						<div className="flex-1 overflow-y-auto p-4 md:p-6 min-h-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-500/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500/30 [&::-webkit-scrollbar-track]:bg-transparent">
+						<div className="flex-1 overflow-y-auto p-4 md:p-6 min-h-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-track]:">
 							{settingsTab === "workflow" && (
 								<div>
 									<h3
 										className={`text-lg font-semibold mb-4 ${
-											theme === "dark" ? "text-white" : "text-black"
+											theme === "dark" ? "" : ""
 										}`}
 									>
 										ワークフローの編集
@@ -1901,8 +1901,8 @@ export default function PomodoroTimer() {
 												key={step.id}
 												className={`flex items-center gap-2 p-2 rounded border ${
 													theme === "dark"
-														? "bg-white/5 border-white/10"
-														: "bg-gray-50 border-gray-200"
+														? " "
+														: " "
 												}`}
 											>
 												<input
@@ -1916,10 +1916,10 @@ export default function PomodoroTimer() {
 														};
 														setCustomSchedule(newSchedule);
 													}}
-													className={`flex-1 px-2 py-1.5 rounded bg-transparent border text-sm ${
+													className={`flex-1 px-2 py-1.5 rounded  border text-sm ${
 														theme === "dark"
-															? "border-white/20 text-white"
-															: "border-gray-300 text-black"
+															? " "
+															: " "
 													}`}
 													placeholder="ラベル"
 												/>
@@ -1935,15 +1935,15 @@ export default function PomodoroTimer() {
 														};
 														setCustomSchedule(newSchedule);
 													}}
-													className={`w-16 px-2 py-1.5 rounded bg-transparent border text-sm ${
+													className={`w-16 px-2 py-1.5 rounded  border text-sm ${
 														theme === "dark"
-															? "border-white/20 text-white"
-															: "border-gray-300 text-black"
+															? " "
+															: " "
 													}`}
 												/>
 												<span
 													className={`text-xs ${
-														theme === "dark" ? "text-gray-400" : "text-gray-600"
+														theme === "dark" ? "" : ""
 													}`}
 												>
 													分
@@ -1958,10 +1958,10 @@ export default function PomodoroTimer() {
 														};
 														setCustomSchedule(newSchedule);
 													}}
-													className={`px-2 py-1.5 rounded bg-transparent border text-sm appearance-none cursor-pointer ${
+													className={`px-2 py-1.5 rounded  border text-sm appearance-none cursor-pointer ${
 														theme === "dark"
-															? "border-white/20 text-white bg-[#1a1a1a]"
-															: "border-gray-300 text-black bg-white"
+															? "  "
+															: "  "
 													}`}
 													style={{
 														backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='${theme === "dark" ? "white" : "black"}' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
@@ -1980,7 +1980,7 @@ export default function PomodoroTimer() {
 														);
 														setCustomSchedule(newSchedule);
 													}}
-													className="p-1 text-red-500 hover:bg-red-500/20 rounded transition-colors shrink-0"
+													className="p-1   rounded transition-colors shrink-0"
 												>
 													<X size={14} />
 												</button>
@@ -1997,10 +1997,10 @@ export default function PomodoroTimer() {
 												};
 												setCustomSchedule([...customSchedule, newStep]);
 											}}
-											className={`w-full py-3 rounded-lg border border-dashed transition-colors ${
+											className={`w-full py-3 rounded-lg border  transition-colors ${
 												theme === "dark"
-													? "border-white/20 hover:bg-white/5 text-gray-300"
-													: "border-gray-300 hover:bg-gray-50 text-gray-700"
+													? "  "
+													: "  "
 											}`}
 										>
 											+ ステップを追加
@@ -2013,7 +2013,7 @@ export default function PomodoroTimer() {
 								<div className="space-y-6">
 									<h3
 										className={`text-lg font-semibold ${
-											theme === "dark" ? "text-white" : "text-black"
+											theme === "dark" ? "" : ""
 										}`}
 									>
 										ドックとウィジェット設定
@@ -2023,7 +2023,7 @@ export default function PomodoroTimer() {
 									<div className="space-y-2">
 										<p
 											className={`text-sm ${
-												theme === "dark" ? "text-gray-400" : "text-gray-600"
+												theme === "dark" ? "" : ""
 											}`}
 										>
 											ドックに表示する項目を選択します.
@@ -2064,27 +2064,27 @@ export default function PomodoroTimer() {
 												key={key}
 												className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors ${
 													theme === "dark"
-														? "bg-white/5 border-white/10"
-														: "bg-gray-50 border-gray-200"
+														? " "
+														: " "
 												} ${
 													theme === "dark"
-														? "hover:bg-white/10"
-														: "hover:bg-gray-100"
+														? ""
+														: ""
 												}`}
 											>
 												<Icon
 													size={16}
 													className={`shrink-0 ${
-														theme === "dark" ? "text-white" : "text-black"
+														theme === "dark" ? "" : ""
 													} ${
 														dockVisibility[key as keyof typeof dockVisibility]
-															? "opacity-100"
-															: "opacity-50"
+															? ""
+															: ""
 													}`}
 												/>
 												<span
 													className={`flex-1 text-sm ${
-														theme === "dark" ? "text-gray-300" : "text-gray-700"
+														theme === "dark" ? "" : ""
 													}`}
 												>
 													{name}
@@ -2115,14 +2115,14 @@ export default function PomodoroTimer() {
 									<div>
 										<h3
 											className={`text-lg font-semibold mb-2 ${
-												theme === "dark" ? "text-white" : "text-black"
+												theme === "dark" ? "" : ""
 											}`}
 										>
 											ウィジェットサイズ
 										</h3>
 										<p
 											className={`text-sm mb-4 ${
-												theme === "dark" ? "text-gray-400" : "text-gray-600"
+												theme === "dark" ? "" : ""
 											}`}
 										>
 											新しく追加するウィジェットの基本サイズを調整します.
@@ -2141,7 +2141,7 @@ export default function PomodoroTimer() {
 												}
 												accentColor={highlightColor}
 												label={
-													<span className="block text-xs font-medium text-gray-400">
+													<span className="block text-xs font-medium ">
 														メモ / 画像 / タイマー / 統計
 													</span>
 												}
@@ -2160,7 +2160,7 @@ export default function PomodoroTimer() {
 												}
 												accentColor={highlightColor}
 												label={
-													<span className="block text-xs font-medium text-gray-400">
+													<span className="block text-xs font-medium ">
 														YouTubeウィジェットの幅
 													</span>
 												}
@@ -2176,14 +2176,14 @@ export default function PomodoroTimer() {
 									<div>
 										<h3
 											className={`text-lg font-semibold mb-2 ${
-												theme === "dark" ? "text-white" : "text-black"
+												theme === "dark" ? "" : ""
 											}`}
 										>
 											YouTubeプレイヤー設定
 										</h3>
 										<p
 											className={`text-sm mb-4 ${
-												theme === "dark" ? "text-gray-400" : "text-gray-600"
+												theme === "dark" ? "" : ""
 											}`}
 										>
 											全てのYouTubeウィジェットで共有する再生動作とデフォルト値です.
@@ -2251,7 +2251,7 @@ export default function PomodoroTimer() {
 													}
 													accentColor={highlightColor}
 													label={
-														<span className="block text-xs font-medium text-gray-400">
+														<span className="block text-xs font-medium ">
 															デフォルト音量
 														</span>
 													}

@@ -69,7 +69,7 @@ export default async function PluginsPage() {
 	);
 
 	const CardStyle =
-		" border block p-4 space-y-4 focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		"  block p-4 space-y-4   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const Card_title = "neue-haas-grotesk-display text-xl leading-snug";
 	const Card_description = "noto-sans-jp-light text-xs pb-2";
 	const Card_meta = "noto-sans-jp-light text-xs text-accent";
@@ -104,7 +104,7 @@ export default async function PluginsPage() {
 							<h2 id="stats-heading" className="sr-only">
 								統計情報
 							</h2>
-							<div className=" border p-4 text-center">
+							<div className="  p-4 text-center">
 								<div className="neue-haas-grotesk-display text-2xl text-accent">
 									{publishedPlugins.length}
 								</div>
@@ -130,7 +130,7 @@ export default async function PluginsPage() {
 											aria-describedby={`plugin-${plugin.id}-description`}
 										>
 											{plugin.thumbnail && (
-												<div className="aspect-video border relative">
+												<div className="aspect-video  relative">
 													<Image
 														src={plugin.thumbnail}
 														alt={plugin.title}
@@ -163,7 +163,7 @@ export default async function PluginsPage() {
 														{plugin.tags.map((tag) => (
 															<span
 																key={tag}
-																className=" border px-2 py-1 text-xs noto-sans-jp-light"
+																className="  px-2 py-1 text-xs noto-sans-jp-light"
 															>
 																{tag}
 															</span>
@@ -175,7 +175,7 @@ export default async function PluginsPage() {
 									))}
 								</div>
 							) : (
-								<div className=" border p-6">
+								<div className="  p-6">
 									<p className="noto-sans-jp-light text-sm text-center">
 										プラグインはまだ公開されていません
 									</p>
@@ -186,7 +186,7 @@ export default async function PluginsPage() {
 						<nav aria-label="Site navigation">
 							<Link
 								href="/workshop"
-								className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+								className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 							>
 								<span className="noto-sans-jp-regular leading-snug">
 									← Workshop

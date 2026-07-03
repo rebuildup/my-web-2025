@@ -37,7 +37,7 @@ export function SEOSection({
 	};
 
 	const inputStyle =
-		"w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		"w-full  px-3 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const labelStyle =
 		"block noto-sans-jp-regular text-sm font-medium mb-1";
 	const checkboxStyle =
@@ -61,7 +61,7 @@ export function SEOSection({
 						 placeholder="Custom title for search engines"
 						 maxLength={60}
 					 />
-					 <p className="text-xs text-gray-500 mt-1">
+					 <p className="text-xs  mt-1">
 						 {(seo?.title || "").length}/60 characters (recommended)
 					 </p>
 				 </div>
@@ -75,7 +75,7 @@ export function SEOSection({
 						 maxLength={160}
 						 rows={3}
 					 />
-					 <p className="text-xs text-gray-500 mt-1">
+					 <p className="text-xs  mt-1">
 						 {(seo?.description || "").length}/160 characters (recommended)
 					 </p>
 				 </div>
@@ -88,7 +88,7 @@ export function SEOSection({
 						 className={inputStyle}
 						 placeholder="keyword1, keyword2, keyword3"
 					 />
-					 <p className="text-xs text-gray-500 mt-1">
+					 <p className="text-xs  mt-1">
 						 Separate keywords with commas. Focus on 3-5 relevant keywords.
 					 </p>
 				 </div>
@@ -108,7 +108,7 @@ export function SEOSection({
 						 className={inputStyle}
 						 placeholder="https://example.com/og-image.png"
 					 />
-					 <p className="text-xs text-gray-500 mt-1">
+					 <p className="text-xs  mt-1">
 						 Recommended size: 1200x630px. Used for Facebook, LinkedIn, etc.
 					 </p>
 				 </div>
@@ -121,7 +121,7 @@ export function SEOSection({
 						 className={inputStyle}
 						 placeholder="https://example.com/twitter-image.jpg"
 					 />
-					 <p className="text-xs text-gray-500 mt-1">
+					 <p className="text-xs  mt-1">
 						 Recommended size: 1200x600px. Used for Twitter cards.
 					 </p>
 				 </div>
@@ -141,7 +141,7 @@ export function SEOSection({
 						 className={inputStyle}
 						 placeholder="https://example.com/canonical-url"
 					 />
-					 <p className="text-xs text-gray-500 mt-1">
+					 <p className="text-xs  mt-1">
 						 Specify the canonical URL to avoid duplicate content issues.
 					 </p>
 				 </div>
@@ -154,7 +154,7 @@ export function SEOSection({
 							 onChange={(e) => handleInputChange("noindex", e.target.checked)}
 							 className={checkboxStyle}
 						 />
-						 <label htmlFor="noindex" className="ml-2 text-sm text-gray-700">
+						 <label htmlFor="noindex" className="ml-2 text-sm ">
 							 No Index (prevent search engines from indexing this page)
 						 </label>
 					 </div>
@@ -166,7 +166,7 @@ export function SEOSection({
 							 onChange={(e) => handleInputChange("nofollow", e.target.checked)}
 							 className={checkboxStyle}
 						 />
-						 <label htmlFor="nofollow" className="ml-2 text-sm text-gray-700">
+						 <label htmlFor="nofollow" className="ml-2 text-sm ">
 							 No Follow (prevent search engines from following links on this
 							 page)
 						 </label>
@@ -176,18 +176,18 @@ export function SEOSection({
 
 			 {/* SEO Preview */}
 			 {(seo?.title || seo?.description) && (
-				 <div className="border border-gray-200 p-4 rounded">
+				 <div className="  p-4 rounded">
 					 <h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 						 Search Engine Preview
 					 </h4>
 					 <div className="space-y-2">
-						 <div className="text-blue-600 text-lg hover:underline cursor-pointer">
+						 <div className=" text-lg hover:underline cursor-pointer">
 							 {seo?.title || "Page Title"}
 						 </div>
-						 <div className="text-green-700 text-sm">
+						 <div className=" text-sm">
 							 https://yusuke-kim.com/example-url
 						 </div>
-						 <div className="text-gray-600 text-sm">
+						 <div className=" text-sm">
 							 {seo?.description || "Page description will appear here..."}
 						 </div>
 					 </div>
@@ -195,13 +195,13 @@ export function SEOSection({
 			 )}
 			 {/* Social Media Preview */}
 			 {(seo?.title || seo?.description || seo?.ogImage) && (
-				 <div className="border border-gray-200 p-4 rounded">
+				 <div className="  p-4 rounded">
 					 <h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 						 Social Media Preview
 					 </h4>
-					 <div className="border border-gray-300 rounded overflow-hidden max-w-md">
+					 <div className="  rounded overflow-hidden max-w-md">
 						 {seo?.ogImage && (
-							 <div className="aspect-video bg-gray-100">
+							 <div className="aspect-video ">
 								 {/* eslint-disable-next-line @next/next/no-img-element */}
 								 <img
 									 src={seo.ogImage}
@@ -213,29 +213,29 @@ export function SEOSection({
 								 />
 							 </div>
 						 )}
-						 <div className="p-3 bg-white">
-							 <div className="text-sm font-medium text-gray-900 mb-1">
+						 <div className="p-3 ">
+							 <div className="text-sm font-medium  mb-1">
 								 {seo?.title || "Page Title"}
 							 </div>
-							 <div className="text-xs text-gray-600 mb-1">
+							 <div className="text-xs  mb-1">
 								 {seo?.description || "Page description will appear here..."}
 							 </div>
-							 <div className="text-xs text-gray-500">yusuke-kim.com</div>
+							 <div className="text-xs ">yusuke-kim.com</div>
 						 </div>
 					 </div>
 				 </div>
 			 )}
 
 			{/* Dynamic OG Image Preview */}
-			<div className="border border-gray-200 p-4 rounded bg-gray-50">
+			<div className="  p-4 rounded ">
 				<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 					Dynamic Generated Mockup
 				</h4>
-				<p className="text-xs text-gray-500 mb-2">
+				<p className="text-xs  mb-2">
 					Based on current title, category, tags, and thumbnail.
 				</p>
-				<div className="border border-gray-300 rounded overflow-hidden max-w-md">
-					<div className="aspect-video bg-gray-100">
+				<div className="  rounded overflow-hidden max-w-md">
+					<div className="aspect-video ">
 						{/* eslint-disable-next-line @next/next/no-img-element */}
 						<img
 							src={`/api/og?title=${encodeURIComponent(
@@ -257,11 +257,11 @@ export function SEOSection({
 
 			{/* Clear SEO Data */}
 			{seo && Object.keys(seo).length > 0 && (
-				<div className="pt-4 border-t border-gray-200">
+				<div className="pt-4  ">
 					<button
 						type="button"
 						onClick={() => onSEOChange(undefined)}
-						className="text-red-600 hover:text-red-800 text-sm"
+						className="  text-sm"
 					>
 						Clear all SEO data
 					</button>

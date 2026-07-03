@@ -220,25 +220,25 @@ function ContentSection({
 			) : detail ? (
 				<div className="space-y-3">
 					{detail.title && (
-						<h2 className="text-lg text-[#f2f2f2]">{detail.title}</h2>
+						<h2 className="text-lg ">{detail.title}</h2>
 					)}
 					{detail.summary && (
-						<p className="text-sm text-[#aaaaaa] leading-relaxed">
+						<p className="text-sm  leading-relaxed">
 							{detail.summary}
 						</p>
 					)}
 				</div>
 			) : hasContent ? (
 				<div
-					className="text-sm leading-loose whitespace-pre-wrap space-y-4 text-[#f2f2f2]"
+					className="text-sm leading-loose whitespace-pre-wrap space-y-4 "
 					dangerouslySetInnerHTML={{ __html: item?.content || "" }}
 				/>
 			) : hasDescription ? (
-				<div className="text-sm leading-loose space-y-4 text-[#f2f2f2]">
+				<div className="text-sm leading-loose space-y-4 ">
 					{item?.description}
 				</div>
 			) : (
-				<div className="text-sm leading-loose space-y-4 text-[#888888]">
+				<div className="text-sm leading-loose space-y-4 ">
 					{fallbackContent}
 				</div>
 			)}

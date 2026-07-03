@@ -160,13 +160,13 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
 	const getRatingColor = (rating: PerformanceRating): string => {
 		switch (rating) {
 			case "good":
-				return "text-green-500";
+				return "";
 			case "needs-improvement":
-				return "text-yellow-500";
+				return "";
 			case "poor":
-				return "text-red-500";
+				return "";
 			default:
-				return "text-gray-500";
+				return "";
 		}
 	};
 
@@ -261,9 +261,9 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
 		return (
 			<div className={`flex items-center space-x-2 ${className}`}>
 				<div
-					className={`w-3 h-3 rounded-full ${allGood ? "bg-green-500" : "bg-yellow-500"}`}
+					className={`w-3 h-3 rounded-full ${allGood ? "" : ""}`}
 				/>
-				<span className="text-sm text-gray-600">
+				<span className="text-sm ">
 					Core Web Vitals: {allGood ? "Good" : "Needs Improvement"}
 				</span>
 			</div>
@@ -271,14 +271,14 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
 	}
 
 	return (
-		<div className={`bg-white rounded-lg shadow-lg p-6 ${className}`}>
+		<div className={` rounded-lg  p-6 ${className}`}>
 			<div className="flex items-center justify-between mb-4">
-				<h3 className="text-lg font-semibold text-gray-900">Core Web Vitals</h3>
+				<h3 className="text-lg font-semibold ">Core Web Vitals</h3>
 				{process.env.NODE_ENV === "development" && (
 					<button
 						type="button"
 						onClick={runPerformanceTest}
-						className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
+						className="px-3 py-1   text-sm rounded  transition-colors"
 					>
 						Run Test
 					</button>
@@ -292,18 +292,18 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
 					const colorClass = getRatingColor(rating);
 
 					return (
-						<div key={metric} className="bg-gray-50 rounded-lg p-4">
+						<div key={metric} className=" rounded-lg p-4">
 							<div className="flex items-center justify-between mb-2">
-								<span className="text-sm font-medium text-gray-700">
+								<span className="text-sm font-medium ">
 									{getMetricName(metricKey)}
 								</span>
 								<div
 									className={`w-2 h-2 rounded-full ${
 										rating === "good"
-											? "bg-green-500"
+											? ""
 											: rating === "needs-improvement"
-												? "bg-yellow-500"
-												: "bg-red-500"
+												? ""
+												: ""
 									}`}
 								/>
 							</div>
@@ -312,7 +312,7 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
 								{formatMetricValue(metricKey, value)}
 							</div>
 
-							<div className="text-xs text-gray-500 mt-1">
+							<div className="text-xs  mt-1">
 								{getMetricDescription(metricKey)}
 							</div>
 						</div>
@@ -350,16 +350,16 @@ const PerformanceReport: React.FC<PerformanceReportProps> = ({ detector }) => {
 			: Math.max(0, 100 - status.regressions.length * 20);
 
 	return (
-		<div className="border-t pt-4">
+		<div className=" pt-4">
 			<div className="flex items-center justify-between mb-3">
-				<h4 className="text-md font-medium text-gray-800">Performance Score</h4>
+				<h4 className="text-md font-medium ">Performance Score</h4>
 				<div
 					className={`text-2xl font-bold ${
 						score >= 90
-							? "text-green-500"
+							? ""
 							: score >= 70
-								? "text-yellow-500"
-								: "text-red-500"
+								? ""
+								: ""
 					}`}
 				>
 					{score}/100
@@ -367,11 +367,11 @@ const PerformanceReport: React.FC<PerformanceReportProps> = ({ detector }) => {
 			</div>
 
 			{status.regressions.length > 0 && (
-				<div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-					<h5 className="text-sm font-medium text-yellow-800 mb-2">
+				<div className="   rounded-lg p-3">
+					<h5 className="text-sm font-medium  mb-2">
 						Performance Issues ({status.regressions.length})
 					</h5>
-					<ul className="text-sm text-yellow-700 space-y-1">
+					<ul className="text-sm  space-y-1">
 						{status.regressions.map((regression) => {
 							const regressionKey = `${regression.metric}-${regression.regression.toFixed(1)}`;
 							return (
@@ -428,10 +428,10 @@ export const PerformanceBudgetIndicator: React.FC<PerformanceBudgetProps> = ({
 		<div className={`flex items-center space-x-2 ${className}`}>
 			<div
 				className={`w-3 h-3 rounded-full ${
-					budgetStatus.withinBudget ? "bg-green-500" : "bg-red-500"
+					budgetStatus.withinBudget ? "" : ""
 				}`}
 			/>
-			<span className="text-sm text-gray-600">
+			<span className="text-sm ">
 				Performance Budget:{" "}
 				{budgetStatus.withinBudget
 					? "Within Limits"
@@ -454,7 +454,7 @@ export const PerformanceDevPanel: React.FC = () => {
 			<button
 				type="button"
 				onClick={() => setIsVisible(!isVisible)}
-				className="bg-blue-500 text-white p-2 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+				className="  p-2 rounded-full   transition-colors"
 				title="Performance Monitor"
 			>
 				⚡

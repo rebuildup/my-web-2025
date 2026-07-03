@@ -69,7 +69,7 @@ function SearchPageFallback() {
 							</p>
 						</header>
 						<div className="text-center py-16">
-							<div className="inline-block w-8 h-8 border-2 border-t-transparent rounded-full animate-spin"></div>
+							<div className="inline-block w-8 h-8  border-t-transparent rounded-full animate-spin"></div>
 							<p className="mt-4 noto-sans-jp-light text-sm">読み込み中...</p>
 						</div>
 					</div>

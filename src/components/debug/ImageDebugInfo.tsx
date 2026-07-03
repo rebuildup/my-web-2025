@@ -41,16 +41,16 @@ export function ImageDebugInfo({ src, alt }: ImageDebugInfoProps) {
 	}
 
 	return (
-		<div className="absolute top-0 left-0 bg-black bg-opacity-75 text-white text-xs p-2 z-50 max-w-full overflow-hidden">
+		<div className="absolute top-0 left-0  bg-opacity-75  text-xs p-2 z-50 max-w-full overflow-hidden">
 			<div>
 				Status:{" "}
 				<span
 					className={`font-bold ${
 						imageStatus === "loaded"
-							? "text-green-400"
+							? ""
 							: imageStatus === "error"
-								? "text-red-400"
-								: "text-yellow-400"
+								? ""
+								: ""
 					}`}
 				>
 					{imageStatus}

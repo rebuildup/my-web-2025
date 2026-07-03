@@ -640,7 +640,7 @@ export default function DomeGallery({
 		parent.style.setProperty("--rot-y-delta", `${rotY}deg`);
 		parent.style.setProperty("--rot-x-delta", `${rotX}deg`);
 		const refDiv = document.createElement("div");
-		refDiv.className = "item__image item__image--reference opacity-0";
+		refDiv.className = "item__image item__image--reference ";
 		refDiv.style.transform = `rotateX(${-parentRot.rotateX}deg) rotateY(${-parentRot.rotateY}deg)`;
 		parent.appendChild(refDiv);
 
@@ -854,7 +854,7 @@ export default function DomeGallery({
 			>
 				<main
 					ref={mainRef}
-					className="absolute inset-0 grid place-items-center overflow-hidden select-none bg-transparent"
+					className="absolute inset-0 grid place-items-center overflow-hidden select-none "
 					style={{
 						touchAction: "none",
 						WebkitUserSelect: "none",
@@ -888,7 +888,7 @@ export default function DomeGallery({
 									}
 								>
 									<div
-										className="item__image absolute block overflow-hidden cursor-pointer bg-gray-200 transition-transform duration-300"
+										className="item__image absolute block overflow-hidden cursor-pointer  transition-transform duration-300"
 										role="button"
 										tabIndex={0}
 										aria-label={it.alt || "Open image"}
@@ -970,7 +970,7 @@ export default function DomeGallery({
 					>
 						<div
 							ref={scrimRef}
-							className="scrim absolute inset-0 z-10 pointer-events-none opacity-0 transition-opacity duration-500"
+							className="scrim absolute inset-0 z-10 pointer-events-none  transition-opacity duration-500"
 							style={{
 								background: "rgba(0, 0, 0, 0.4)",
 								backdropFilter: "blur(3px)",

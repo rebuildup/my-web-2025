@@ -36,9 +36,9 @@ function SearchBarInner({ keyword, mode }: SearchBarProps) {
 	return (
 		<div className="flex items-center gap-4">
 			<form onSubmit={handleSubmit} className="relative w-60 h-9">
-				<div className="relative w-full h-full bg-[#0a0a0f] border border-[#333333] rounded px-3 flex items-center gap-2">
+				<div className="relative w-full h-full    rounded px-3 flex items-center gap-2">
 					<svg
-						className="w-4 h-4 text-[#888888] shrink-0"
+						className="w-4 h-4  shrink-0"
 						fill="none"
 						stroke="currentColor"
 						viewBox="0 0 24 24"
@@ -55,7 +55,7 @@ function SearchBarInner({ keyword, mode }: SearchBarProps) {
 						value={inputValue}
 						onChange={(e) => setInputValue(e.target.value)}
 						placeholder="Search articles..."
-						className="flex-1 bg-transparent text-sm text-[#f2f2f2] placeholder-[#f2f2f240] outline-none min-w-0"
+						className="flex-1  text-sm    min-w-0"
 					/>
 					{inputValue && (
 						<button
@@ -67,7 +67,7 @@ function SearchBarInner({ keyword, mode }: SearchBarProps) {
 								params.delete("page");
 								router.push(`/workshop?${params.toString()}`);
 							}}
-							className="text-[#888888] hover:text-[#f2f2f2] transition-colors"
+							className="  transition-colors"
 						>
 							<svg
 								className="w-4 h-4"
@@ -89,14 +89,14 @@ function SearchBarInner({ keyword, mode }: SearchBarProps) {
 
 			{/* Search Mode Selector - only show when there's a search query */}
 			{keyword && (
-				<div className="flex bg-[#1a1a1f] border border-[#333333] rounded text-xs">
+				<div className="flex    rounded text-xs">
 					<button
 						type="button"
 						onClick={() => handleModeChange("normal")}
 						className={`px-3 py-1.5 rounded transition-colors ${
 							currentMode === "normal"
-								? "bg-[#2b57ff] text-white"
-								: "text-[#f2f2f2] hover:bg-[#2a2a2f]"
+								? " "
+								: " "
 						}`}
 					>
 						通常
@@ -106,8 +106,8 @@ function SearchBarInner({ keyword, mode }: SearchBarProps) {
 						onClick={() => handleModeChange("detailed")}
 						className={`px-3 py-1.5 rounded transition-colors ${
 							currentMode === "detailed"
-								? "bg-[#2b57ff] text-white"
-								: "text-[#f2f2f2] hover:bg-[#2a2a2f]"
+								? " "
+								: " "
 						}`}
 					>
 						詳細
@@ -129,9 +129,9 @@ export function SearchBar(props: SearchBarProps) {
 function SearchBarFallback() {
 	return (
 		<div className="relative w-60 h-9">
-			<div className="relative w-full h-full bg-[#0a0a0f] border border-[#333333] rounded px-3 flex items-center gap-2">
+			<div className="relative w-full h-full    rounded px-3 flex items-center gap-2">
 				<svg
-					className="w-4 h-4 text-[#888888] shrink-0"
+					className="w-4 h-4  shrink-0"
 					fill="none"
 					stroke="currentColor"
 					viewBox="0 0 24 24"
@@ -143,7 +143,7 @@ function SearchBarFallback() {
 						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
 					/>
 				</svg>
-				<div className="flex-1 h-4 bg-[#f2f2f240] rounded animate-pulse" />
+				<div className="flex-1 h-4  rounded animate-pulse" />
 			</div>
 		</div>
 	);

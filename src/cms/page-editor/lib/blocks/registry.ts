@@ -139,7 +139,7 @@ const DEFINITIONS: BlockDefinition[] = [
 	{
 		type: "tableOfContents",
 		label: "Table of Contents",
-		description: "Auto-generated outline from headings.",
+		description: "Auto-generated  from headings.",
 		icon: "☰",
 		group: "advanced",
 	},

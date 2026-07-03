@@ -166,8 +166,8 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 	return (
 		<div className="space-y-6">
 			{/* SVG Display */}
-			<div className=" border p-4 space-y-4">
-				<div className="aspect-square border flex items-center justify-center">
+			<div className="  p-4 space-y-4">
+				<div className="aspect-square  flex items-center justify-center">
 					<svg
 						width="300"
 						height="300"
@@ -273,7 +273,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={toggleAnimation}
-						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						{isAnimating ? (
 							<Pause className="w-4 h-4 mr-2" />
@@ -288,7 +288,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetAnimation}
-						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset</span>
@@ -297,7 +297,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Animation Controls */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<Zap className="w-5 h-5 mr-2" />
 					SVG Animation Controls
@@ -317,7 +317,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 									type: e.target.value as SVGAnimationConfig["type"],
 								}))
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							{animationTypes.map((type) => (
 								<option key={type.value} value={type.value}>
@@ -361,7 +361,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 									easing: e.target.value,
 								}))
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							{easingTypes.map((easing) => (
 								<option key={easing.value} value={easing.value}>
@@ -413,7 +413,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 											return newColors;
 										})
 									}
-									className="w-12 h-8 border "
+									className="w-12 h-8  "
 								/>
 								<span className="noto-sans-jp-light text-sm ">
 									Color {index + 1}
@@ -425,7 +425,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Animation Information */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg ">
 					SVG Animation Features
 				</h3>

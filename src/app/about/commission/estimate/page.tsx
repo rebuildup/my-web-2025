@@ -217,7 +217,7 @@ export default function EstimatePage() {
 						<div className="grid-system grid-1 lg:grid-2 gap-8">
 							{/* Form */}
 							<div className="space-y-6">
-								<div className=" border p-4">
+								<div className="  p-4">
 									<div className="flex items-center justify-between mb-4">
 										<h2 className="neue-haas-grotesk-display text-3xl ">
 											見積もりフォーム
@@ -225,7 +225,7 @@ export default function EstimatePage() {
 										<button
 											type="button"
 											onClick={resetForm}
-											className="flex items-center text-accent border border-accent px-2 py-1 text-sm noto-sans-jp-light"
+											className="flex items-center text-accent  border-accent px-2 py-1 text-sm noto-sans-jp-light"
 										>
 											<RefreshCw className="w-4 h-4 mr-1" />
 											リセット
@@ -249,7 +249,7 @@ export default function EstimatePage() {
 													videoType: e.target.value,
 												}))
 											}
-											className="w-full p-3 border noto-sans-jp-light text-sm"
+											className="w-full p-3  noto-sans-jp-light text-sm"
 											required
 										>
 											<option value="">選択してください</option>
@@ -279,7 +279,7 @@ export default function EstimatePage() {
 													duration: e.target.value,
 												}))
 											}
-											className="w-full p-3 border noto-sans-jp-light text-sm"
+											className="w-full p-3  noto-sans-jp-light text-sm"
 											required
 										>
 											<option value="">選択してください</option>
@@ -373,7 +373,7 @@ export default function EstimatePage() {
 													deadline: e.target.value,
 												}))
 											}
-											className="w-full p-3 border noto-sans-jp-light text-sm"
+											className="w-full p-3  noto-sans-jp-light text-sm"
 										>
 											{DEADLINES.map((deadline) => (
 												<option key={deadline.value} value={deadline.value}>
@@ -390,7 +390,7 @@ export default function EstimatePage() {
 							{/* Result */}
 							<div className="space-y-6">
 								{result && result.total > 0 ? (
-									<div className=" border p-4">
+									<div className="  p-4">
 										<div className="flex items-center justify-between mb-4">
 											<h2 className="neue-haas-grotesk-display text-3xl ">
 												見積もり結果
@@ -399,7 +399,7 @@ export default function EstimatePage() {
 										</div>
 
 										{/* Total */}
-										<div className=" border border-accent p-4 mb-4">
+										<div className="  border-accent p-4 mb-4">
 											<div className="text-center">
 												<p className="noto-sans-jp-light text-sm mb-1">
 													合計金額
@@ -474,21 +474,21 @@ export default function EstimatePage() {
 											<button
 												type="button"
 												onClick={copyResult}
-												className="flex items-center justify-center border text-center p-4 noto-sans-jp-regular leading-snug"
+												className="flex items-center justify-center  text-center p-4 noto-sans-jp-regular leading-snug"
 											>
 												<Copy className="w-4 h-4 mr-2" />
 												コピー
 											</button>
 										</div>
 
-										<div className="mt-6 border border-accent p-4">
+										<div className="mt-6  border-accent p-4">
 											<p className="noto-sans-jp-light text-sm text-accent">
 												※この見積もりは目安です.実際の料金は詳細な要件により変動する場合があります.
 											</p>
 										</div>
 									</div>
 								) : (
-									<div className=" border p-4 text-center">
+									<div className="  p-4 text-center">
 										<Calculator className="w-12 h-12 mx-auto mb-4" />
 										<p className="noto-sans-jp-light text-sm ">
 											映像の種類と長さを選択すると
@@ -499,7 +499,7 @@ export default function EstimatePage() {
 								)}
 
 								{/* Contact CTA */}
-								<div className=" border p-4">
+								<div className="  p-4">
 									<h3 className="zen-kaku-gothic-new text-lg mb-3">
 										正式なお見積もりをご希望の方
 									</h3>
@@ -509,7 +509,7 @@ export default function EstimatePage() {
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-3">
 										<Link
 											href="/contact"
-											className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+											className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 										>
 											<span className="noto-sans-jp-regular leading-snug">
 												お問い合わせ
@@ -517,7 +517,7 @@ export default function EstimatePage() {
 										</Link>
 										<Link
 											href="/about/commission/video"
-											className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+											className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 										>
 											<span className="noto-sans-jp-regular leading-snug">
 												映像依頼について
@@ -529,7 +529,7 @@ export default function EstimatePage() {
 						</div>
 
 						{/* Footer */}
-						<footer className="pt-4 border-t ">
+						<footer className="pt-4  ">
 							<div className="text-center">
 								<p className="shippori-antique-b1-regular text-sm inline-block">
 									© 2025 samuido - Estimate Calculator

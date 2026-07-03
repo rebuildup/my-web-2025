@@ -87,13 +87,13 @@ export const AccessibleTooltip: React.FC<AccessibleTooltipProps> = ({
 
 			{isVisible && (
 				<div
-					className={`tooltip-content absolute z-50 px-2 py-1 text-sm border rounded shadow-lg ${positionClasses[position]} ${className}`}
+					className={`tooltip-content absolute z-50 px-2 py-1 text-sm  rounded  ${positionClasses[position]} ${className}`}
 				>
 					<div id={tooltipId} role="tooltip">
 						{content}
 					</div>
 					<div
-						className={`absolute w-0 h-0 border-4 ${arrowClasses[position]}`}
+						className={`absolute w-0 h-0  ${arrowClasses[position]}`}
 						aria-hidden="true"
 					/>
 				</div>
@@ -130,16 +130,16 @@ export const AccessibleIconButton: React.FC<AccessibleIconButtonProps> = ({
 
 	const variantClasses = {
 		primary:
-			"bg-accent border border-accent hover: hover:text-accent",
-		secondary: " border hover:",
-		ghost: "bg-transparent hover:",
-		danger: "text-red-600 hover:bg-red-50",
+			"bg-accent  border-accent hover: hover:text-accent",
+		secondary: "  hover:",
+		ghost: " hover:",
+		danger: " ",
 	};
 
 	const button = (
 		<button
 			type="button"
-			className={`inline-flex items-center justify-center rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses[size]} ${variantClasses[variant]} ${props.disabled ? "opacity-50" : ""} ${className}`}
+			className={`inline-flex items-center justify-center rounded-md transition-colors duration-200   focus:ring-accent focus:ring-offset-2  disabled:cursor-not-allowed ${sizeClasses[size]} ${variantClasses[variant]} ${props.disabled ? "" : ""} ${className}`}
 			aria-label={label}
 			onKeyDown={(e) => {
 				if (e.key === "Enter" || e.key === " ") {

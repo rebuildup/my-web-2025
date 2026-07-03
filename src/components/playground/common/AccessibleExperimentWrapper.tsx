@@ -126,7 +126,7 @@ export const AccessibleExperimentWrapper: React.FC<
 	) => {
 		const baseClasses = `
  inline-flex items-center px-3 py-2 text-sm font-medium rounded
- focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-base
+   focus:ring-offset-2 focus:ring-offset-base
  transition-colors duration-200
  `;
 
@@ -134,7 +134,7 @@ export const AccessibleExperimentWrapper: React.FC<
 			return `${baseClasses} bg-accent hover:bg-accent/80 focus:ring-accent`;
 		}
 
-		return `${baseClasses} border hover: hover: focus:`;
+		return `${baseClasses}  hover: hover: focus:`;
 	};
 
 	return (
@@ -212,17 +212,17 @@ export const AccessibleExperimentWrapper: React.FC<
 			{/* Error display */}
 			{hasError && (
 				<div
-					className="flex items-center p-3 mb-4 bg-red-50 border border-red-200 rounded"
+					className="flex items-center p-3 mb-4    rounded"
 					role="alert"
 					aria-live="assertive"
 				>
 					<AlertCircle
-						className="w-5 h-5 text-red-600 mr-2"
+						className="w-5 h-5  mr-2"
 						aria-hidden="true"
 					/>
 					<div>
-						<h4 className="text-sm font-medium text-red-800">実験エラー</h4>
-						<p className="text-sm text-red-700 mt-1">{errorMessage}</p>
+						<h4 className="text-sm font-medium ">実験エラー</h4>
+						<p className="text-sm  mt-1">{errorMessage}</p>
 					</div>
 				</div>
 			)}
@@ -241,7 +241,7 @@ export const AccessibleExperimentWrapper: React.FC<
 
 			{/* Keyboard shortcuts help */}
 			{accessibilityState.keyboardNavigation && isActive && (
-				<div className="mb-4 p-3 border rounded">
+				<div className="mb-4 p-3  rounded">
 					<div className="flex items-center mb-2">
 						<Info className="w-4 h-4 mr-2" aria-hidden="true" />
 						<h4 className="text-sm font-medium">キーボードショートカット</h4>
@@ -281,11 +281,11 @@ export const AccessibleExperimentWrapper: React.FC<
 			{accessibilityState.prefersReducedMotion &&
 				experiment.category === "animation" && (
 					<div
-						className="flex items-center p-3 mb-4 bg-yellow-50 border border-yellow-200 rounded"
+						className="flex items-center p-3 mb-4    rounded"
 						role="note"
 					>
-						<Info className="w-5 h-5 text-yellow-600 mr-2" aria-hidden="true" />
-						<p className="text-sm text-yellow-800">
+						<Info className="w-5 h-5  mr-2" aria-hidden="true" />
+						<p className="text-sm ">
 							アニメーション設定により、動きが制限されています.
 						</p>
 					</div>

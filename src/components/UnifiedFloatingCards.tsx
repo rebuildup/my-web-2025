@@ -547,7 +547,7 @@ function GitHubRepoCard({
 				href={repo.url}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="pointer-events-auto block p-4 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 max-w-[340px] backdrop-blur-sm"
+				className="pointer-events-auto block p-4  border  rounded-lg  max-w-[340px] "
 			>
 				{/* Title with language and icon */}
 				<div className="flex items-center gap-2 mb-2">
@@ -557,7 +557,7 @@ function GitHubRepoCard({
 					</span>
 					{repo.language && (
 						<span className="text-xs /50 flex-shrink-0 flex items-center gap-1">
-							<span className="w-2 h-2 rounded-full bg-blue-400" />
+							<span className="w-2 h-2 rounded-full " />
 							{repo.language}
 						</span>
 					)}
@@ -617,7 +617,7 @@ function GitHubEventCard({
 				href={event.link}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="pointer-events-auto block p-4 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 max-w-[320px] backdrop-blur-sm"
+				className="pointer-events-auto block p-4  border  rounded-lg  max-w-[320px] "
 			>
 				<div className="flex items-start gap-3">
 					<div className="/60 mt-0.5">{getEventIcon(event.type)}</div>
@@ -663,13 +663,13 @@ function YouTubeCard({
 								alt={video.title}
 								className="w-56 h-auto object-cover rounded-lg"
 							/>
-							<div className="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded">
+							<div className="absolute bottom-2 right-2   text-[10px] px-1.5 py-0.5 rounded">
 								YT
 							</div>
 						</div>
 					)}
-					<div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
-						<Video className="w-12 h-12 text-white drop-shadow-lg" />
+					<div className="absolute inset-0   transition-colors rounded-lg flex items-center justify-center  ">
+						<Video className="w-12 h-12  " />
 					</div>
 					<div className="mt-2 max-w-[224px]">
 						<p className="text-xs /80 line-clamp-3 leading-snug font-medium mb-2">
@@ -705,7 +705,7 @@ function PortfolioCard({
 		>
 			<a
 				href={`/portfolio/${content.slug || content.id}`}
-				className="pointer-events-auto block p-4 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 max-w-[280px] backdrop-blur-sm"
+				className="pointer-events-auto block p-4  border  rounded-lg  max-w-[280px] "
 			>
 				<div className="aspect-video overflow-hidden relative rounded-md mb-3">
 					{content.thumbnail ? (
@@ -741,7 +741,7 @@ function PortfolioCard({
 					</div>
 				)}
 				{effectiveDate && (
-					<div className="flex items-center gap-1 text-[10px] /30 pt-2 border-t border-white/5">
+					<div className="flex items-center gap-1 text-[10px] /30 pt-2  ">
 						<Calendar className="w-3 h-3" />
 						<span>{formatDate(effectiveDate)}</span>
 					</div>
@@ -767,7 +767,7 @@ function LinkCard({ card, opacity }: { card: UnifiedCard; opacity: number }) {
 				href={link.url}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="pointer-events-auto block p-4 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 max-w-[220px] backdrop-blur-sm"
+				className="pointer-events-auto block p-4  border  rounded-lg  max-w-[220px] "
 			>
 				<div className="flex items-center gap-2 mb-1">
 					{link.favicon && (

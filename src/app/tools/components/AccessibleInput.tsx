@@ -105,12 +105,12 @@ const AccessibleInput = forwardRef<
 
 		// Base styles with accessibility considerations
 		const baseInputStyles = `
- w-full border 
- focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
- disabled:opacity-50 disabled:cursor-not-allowed
+ w-full  
+   focus:ring-accent focus:border-accent
+  disabled:cursor-not-allowed
  ${state.prefersReducedMotion ? "" : "transition-all duration-200"}
- ${error ? "border-red-500" : "/20"}
- ${isFocused ? "ring-1 ring-accent border-accent" : ""}
+ ${error ? "" : "/20"}
+ ${isFocused ? " ring-accent border-accent" : ""}
  `;
 
 		// Variant styles
@@ -155,7 +155,7 @@ const AccessibleInput = forwardRef<
 				>
 					{label}
 					{required && showRequiredIndicator && (
-						<span className="text-red-500 ml-1" aria-hidden="true">
+						<span className=" ml-1" aria-hidden="true">
 							*
 						</span>
 					)}
@@ -195,7 +195,7 @@ const AccessibleInput = forwardRef<
 				{error && (
 					<p
 						id={errorId}
-						className="text-red-500 text-sm"
+						className=" text-sm"
 						role="alert"
 						aria-live="polite"
 					>
@@ -207,7 +207,7 @@ const AccessibleInput = forwardRef<
 				{helpText && (
 					<p
 						id={helpTextId}
-						className="noto-sans-jp-light text-xs opacity-75"
+						className="noto-sans-jp-light text-xs "
 					>
 						{helpText}
 					</p>

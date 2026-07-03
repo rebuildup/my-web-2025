@@ -352,7 +352,7 @@ export default function HandleProfilePage() {
 												<h3 className="zen-kaku-gothic-new ">
 													{focus.area}
 												</h3>
-												<span className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1 inline-block w-fit">
+												<span className="noto-sans-jp-light text-xs text-accent  border-accent px-2 py-1 inline-block w-fit">
 													{focus.status}
 												</span>
 											</div>
@@ -497,21 +497,21 @@ export default function HandleProfilePage() {
 								<div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-6">
 									<Link
 										href="/about/profile/real"
-										className="/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
+										className="/5 text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Real Profile</span>
 									</Link>
 
 									<Link
 										href="/portfolio"
-										className="/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
+										className="/5 text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Portfolio</span>
 									</Link>
 
 									<a
 										href="https://links.yusuke-kim.com"
-										className="/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
+										className="/5 text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Links</span>
 									</a>

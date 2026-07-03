@@ -139,7 +139,7 @@ function GradientBackground() {
 
 export default function AboutBackground() {
 	return (
-		<div className="fixed inset-0 -z-10 bg-[#020202]">
+		<div className="fixed inset-0 -z-10 ">
 			<Canvas
 				camera={{ position: [0, 0, 1], fov: 75 }}
 				dpr={[1, 1.5]}

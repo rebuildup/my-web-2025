@@ -137,7 +137,7 @@ function GradientBackground() {
 
 export default function HomeBackground() {
 	return (
-		<div className="fixed inset-0 bg-[#020202]" style={{ zIndex: 0 }}>
+		<div className="fixed inset-0 " style={{ zIndex: 0 }}>
 			<Canvas
 				camera={{ position: [0, 0, 1], fov: 75 }}
 				dpr={[1, 1.5]}

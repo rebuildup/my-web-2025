@@ -184,7 +184,7 @@ export default function WebGLPlaygroundPage() {
 		return (
 			<div className="min-h-screen flex items-center justify-center">
 				<div className="text-center">
-					<div className="animate-spin w-8 h-8 border-2 border-accent border-t-transparent rounded-full mx-auto mb-4"></div>
+					<div className="animate-spin w-8 h-8  border-accent border-t-transparent rounded-full mx-auto mb-4"></div>
 					<p className="noto-sans-jp-light text-sm ">
 						デバイス性能を検出中...
 					</p>
@@ -224,11 +224,11 @@ export default function WebGLPlaygroundPage() {
 						{/* Device Info & Performance */}
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							{/* Dome Gallery quick demo */}
-							<div className=" border p-0 overflow-hidden">
+							<div className="  p-0 overflow-hidden">
 								<DomeGallery />
 							</div>
 							{/* Device Capabilities */}
-							<div className=" border p-4 space-y-4">
+							<div className="  p-4 space-y-4">
 								<button
 									type="button"
 									onClick={() => setShowSettings(!showSettings)}
@@ -300,7 +300,7 @@ export default function WebGLPlaygroundPage() {
 															.value as PerformanceSettings["qualityLevel"],
 													}))
 												}
-												className="w-full border p-2 text-sm"
+												className="w-full  p-2 text-sm"
 											>
 												<option value="low">Low (30 FPS)</option>
 												<option value="medium">Medium (60 FPS)</option>
@@ -335,7 +335,7 @@ export default function WebGLPlaygroundPage() {
 							</div>
 
 							{/* Performance Monitor */}
-							<div className=" border p-4 space-y-4">
+							<div className="  p-4 space-y-4">
 								<button
 									type="button"
 									onClick={() => setShowPerformance(!showPerformance)}
@@ -399,7 +399,7 @@ export default function WebGLPlaygroundPage() {
 						{/* Active Experiment */}
 						{activeExperiment && (
 							<div
-								className=" border p-4 space-y-4"
+								className="  p-4 space-y-4"
 								onTouchStart={
 									responsive.touch.isTouchDevice
 										? swipeHandlers.onTouchStart
@@ -432,7 +432,7 @@ export default function WebGLPlaygroundPage() {
 											<span className="noto-sans-jp-light text-xs ">
 												{currentExperimentIndex + 1} / {experimentIds.length}
 											</span>
-											<span className="noto-sans-jp-light text-xs opacity-70">
+											<span className="noto-sans-jp-light text-xs ">
 												スワイプで切り替え
 											</span>
 										</div>
@@ -450,7 +450,7 @@ export default function WebGLPlaygroundPage() {
 								Technical Notes
 							</h2>
 							<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
-								<div className=" border p-4 space-y-4">
+								<div className="  p-4 space-y-4">
 									<div className="flex items-center">
 										<Zap className="w-6 h-6 text-accent mr-3" />
 										<h3 className="zen-kaku-gothic-new text-lg ">
@@ -473,7 +473,7 @@ export default function WebGLPlaygroundPage() {
 									</div>
 								</div>
 
-								<div className=" border p-4 space-y-4">
+								<div className="  p-4 space-y-4">
 									<div className="flex items-center">
 										<Settings className="w-6 h-6 text-accent mr-3" />
 										<h3 className="zen-kaku-gothic-new text-lg ">
@@ -504,21 +504,21 @@ export default function WebGLPlaygroundPage() {
 							<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
 								<Link
 									href="/portfolio/playground/design"
-									className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Design Playground</span>
 								</Link>
 
 								<Link
 									href="/portfolio"
-									className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Portfolio Home</span>
 								</Link>
 
 								<Link
 									href="/tools"
-									className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Tools</span>
 								</Link>
@@ -526,7 +526,7 @@ export default function WebGLPlaygroundPage() {
 						</nav>
 
 						{/* Footer */}
-						<footer className="pt-4 border-t ">
+						<footer className="pt-4  ">
 							<div className="text-center">
 								<p className="shippori-antique-b1-regular text-sm inline-block">
 									© 2025 samuido - WebGL Playground

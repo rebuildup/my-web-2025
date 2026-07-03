@@ -235,7 +235,7 @@ export default async function VideoDesignProjectsPage() {
 											enableCaching={true}
 										/>
 									) : (
-										<div className=" border p-8 text-center">
+										<div className="  p-8 text-center">
 											<Eye className="w-12 h-12 text-accent mx-auto mb-4" />
 											<h2 className="zen-kaku-gothic-new text-xl mb-2">
 												No video & design projects found
@@ -315,8 +315,8 @@ export default async function VideoDesignProjectsPage() {
 			<div className="min-h-screen scrollbar-auto-stable">
 				<main className="py-10">
 					<div className="container-system">
-						<div className="bg-red-100 p-4 rounded">
-							<p className="text-red-800">
+						<div className=" p-4 rounded">
+							<p className="">
 								Error loading video & design gallery:{" "}
 								{error instanceof Error ? error.message : "Unknown error"}
 							</p>

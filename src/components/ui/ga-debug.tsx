@@ -56,7 +56,7 @@ export function GADebug() {
 	}
 
 	return (
-		<div className="fixed bottom-4 left-4 bg-black/80 text-white p-4 rounded-lg text-xs z-50 max-w-xs">
+		<div className="fixed bottom-4 left-4   p-4 rounded-lg text-xs z-50 max-w-xs">
 			<h3 className="font-bold mb-2">Google Analytics Debug</h3>
 			<div className="space-y-1">
 				<div>GA ID: {gaStatus.gaId}</div>
@@ -66,7 +66,7 @@ export function GADebug() {
 				<div>Consent: {gaStatus.consent ? "✅" : "❌"}</div>
 				<div>Events: {gaStatus.eventCount}</div>
 				{gaStatus.lastEvent && (
-					<div className="text-xs opacity-75 truncate">
+					<div className="text-xs  truncate">
 						Last: {gaStatus.lastEvent}
 					</div>
 				)}

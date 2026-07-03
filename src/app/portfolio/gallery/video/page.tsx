@@ -197,7 +197,7 @@ export default async function VideoProjectsPage() {
 
 								{process.env.NODE_ENV !== "production" &&
 									videoItems.length === 0 && (
-										<div className="mt-4 text-xs text-red-900/80 border p-3">
+										<div className="mt-4 text-xs   p-3">
 											<span>
 												No published video items returned from CMS API.
 											</span>

@@ -55,23 +55,23 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 			<button
 				type="button"
 				onClick={() => setIsVisible(!isVisible)}
-				className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+				className="  p-3 rounded-full   transition-colors"
 				title="Performance Dashboard"
 			>
 				📊
 			</button>
 
 			{isVisible && (
-				<div className="absolute bottom-16 right-0 w-96 max-h-96 bg-white rounded-lg shadow-xl border overflow-hidden">
+				<div className="absolute bottom-16 right-0 w-96 max-h-96  rounded-lg   overflow-hidden">
 					{/* Tab Navigation */}
-					<div className="flex border-b">
+					<div className="flex ">
 						<button
 							type="button"
 							onClick={() => setActiveTab("vitals")}
 							className={`flex-1 px-4 py-2 text-sm font-medium ${
 								activeTab === "vitals"
-									? "bg-blue-500 text-white"
-									: "bg-gray-100 text-gray-700 hover:bg-gray-200"
+									? " "
+									: "  "
 							}`}
 						>
 							Core Web Vitals
@@ -81,8 +81,8 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 							onClick={() => setActiveTab("bundle")}
 							className={`flex-1 px-4 py-2 text-sm font-medium ${
 								activeTab === "bundle"
-									? "bg-blue-500 text-white"
-									: "bg-gray-100 text-gray-700 hover:bg-gray-200"
+									? " "
+									: "  "
 							}`}
 						>
 							Bundle Info
@@ -92,8 +92,8 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 							onClick={() => setActiveTab("regression")}
 							className={`flex-1 px-4 py-2 text-sm font-medium ${
 								activeTab === "regression"
-									? "bg-blue-500 text-white"
-									: "bg-gray-100 text-gray-700 hover:bg-gray-200"
+									? " "
+									: "  "
 							}`}
 						>
 							Regressions
@@ -123,14 +123,14 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 										</span>
 									</div>
 
-									<div className="w-full bg-gray-200 rounded-full h-2">
+									<div className="w-full  rounded-full h-2">
 										<div
 											className={`h-2 rounded-full ${
 												bundleInfo.totalSize > 2 * 1024 * 1024
-													? "bg-red-500"
+													? ""
 													: bundleInfo.totalSize > 1 * 1024 * 1024
-														? "bg-yellow-500"
-														: "bg-green-500"
+														? ""
+														: ""
 											}`}
 											style={{
 												width: `${Math.min((bundleInfo.totalSize / (3 * 1024 * 1024)) * 100, 100)}%`,
@@ -185,8 +185,8 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 
 								{regressionStatus.regressions.length === 0 ? (
 									<div className="text-center py-8">
-										<div className="text-green-500 text-2xl mb-2">✓</div>
-										<p className="text-sm text-gray-600">
+										<div className=" text-2xl mb-2">✓</div>
+										<p className="text-sm ">
 											No regressions detected
 										</p>
 									</div>
@@ -200,14 +200,14 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 											return (
 												<div
 													key={regressionKey}
-													className={`p-3 rounded-lg border ${
+													className={`p-3 rounded-lg  ${
 														regression.severity === "critical"
-															? "bg-red-50 border-red-200"
+															? " "
 															: regression.severity === "high"
-																? "bg-orange-50 border-orange-200"
+																? " "
 																: regression.severity === "medium"
-																	? "bg-yellow-50 border-yellow-200"
-																	: "bg-blue-50 border-blue-200"
+																	? " "
+																	: " "
 													}`}
 												>
 													<div className="flex justify-between items-center mb-2">
@@ -217,19 +217,19 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 														<span
 															className={`text-xs px-2 py-1 rounded ${
 																regression.severity === "critical"
-																	? "bg-red-100 text-red-800"
+																	? " "
 																	: regression.severity === "high"
-																		? "bg-orange-100 text-orange-800"
+																		? " "
 																		: regression.severity === "medium"
-																			? "bg-yellow-100 text-yellow-800"
-																			: "bg-blue-100 text-blue-800"
+																			? " "
+																			: " "
 															}`}
 														>
 															{regression.severity}
 														</span>
 													</div>
 
-													<div className="text-xs text-gray-600 mb-2">
+													<div className="text-xs  mb-2">
 														Current: {Math.round(regression.current)} |
 														Baseline: {Math.round(regression.baseline)} |
 														Regression: +{regression.regression.toFixed(1)}%
@@ -258,9 +258,9 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 								)}
 
 								{regressionStatus.baseline && (
-									<div className="mt-4 pt-4 border-t">
+									<div className="mt-4 pt-4 ">
 										<h4 className="text-sm font-medium mb-2">Baseline Info:</h4>
-										<p className="text-xs text-gray-600">
+										<p className="text-xs ">
 											Last updated:{" "}
 											{new Date(
 												regressionStatus.baseline.timestamp,

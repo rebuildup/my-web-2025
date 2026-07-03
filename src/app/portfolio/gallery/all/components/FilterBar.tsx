@@ -131,7 +131,7 @@ export function FilterBar({
 						placeholder="Search projects..."
 						value={searchTerm}
 						onChange={(e) => handleSearchChange(e.target.value)}
-						className="w-full pl-10 pr-4 py-2 border placeholder-main/60 focus:outline-none focus:border-accent"
+						className="w-full pl-10 pr-4 py-2  placeholder-main/60  focus:border-accent"
 					/>
 				</div>
 
@@ -139,7 +139,7 @@ export function FilterBar({
 				<button
 					type="button"
 					onClick={() => setIsExpanded(!isExpanded)}
-					className={`flex items-center space-x-2 px-4 py-2 border transition-colors ${
+					className={`flex items-center space-x-2 px-4 py-2  transition-colors ${
 						isExpanded || hasActiveFilters
 							? "border-accent text-accent"
 							: " hover:border-accent hover:text-accent"
@@ -169,7 +169,7 @@ export function FilterBar({
 					<button
 						type="button"
 						onClick={handleClearFilters}
-						className="flex items-center space-x-2 px-4 py-2 border hover:border-accent hover:text-accent transition-colors"
+						className="flex items-center space-x-2 px-4 py-2  hover:border-accent hover:text-accent transition-colors"
 					>
 						<X className="w-4 h-4" />
 						<span className="text-sm">Clear</span>
@@ -181,7 +181,7 @@ export function FilterBar({
 			{isExpanded && (
 				<div
 					id="filter-panel"
-					className="border p-6 space-y-6"
+					className=" p-6 space-y-6"
 				>
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 						{/* Category Filter */}

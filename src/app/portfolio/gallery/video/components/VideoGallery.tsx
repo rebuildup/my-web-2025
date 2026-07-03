@@ -113,8 +113,8 @@ export default function VideoGallery({ items }: VideoGalleryProps) {
 												className="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
 												aria-hidden="true"
 											>
-												<div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-													<Play className="w-12 h-12 text-white" />
+												<div className="  transition-opacity duration-300">
+													<Play className="w-12 h-12 " />
 												</div>
 											</div>
 										</div>

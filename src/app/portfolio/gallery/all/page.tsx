@@ -126,12 +126,12 @@ export default async function AllGalleryPage() {
 									<Suspense
 										fallback={
 											<div className="animate-pulse">
-												<div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+												<div className="h-8  rounded w-1/4 mb-4"></div>
 												<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 													{[...Array(6)].map((_, i) => (
 														<div
 															key={i}
-															className="bg-gray-200 h-64 rounded"
+															className=" h-64 rounded"
 														></div>
 													))}
 												</div>
@@ -144,12 +144,12 @@ export default async function AllGalleryPage() {
 												searchFilters={searchFilters}
 											/>
 										) : (
-											<div className="bg-red-100 p-4 rounded">
-												<p className="text-red-800">
+											<div className=" p-4 rounded">
+												<p className="">
 													No portfolio items found.
 												</p>
 												{process.env.NODE_ENV !== "production" && (
-													<div className="mt-2 text-xs text-red-900/80 space-y-1">
+													<div className="mt-2 text-xs  space-y-1">
 														<p>Diagnostics:</p>
 														<ul className="list-disc pl-5 space-y-0.5">
 															<li>Loaded items (all): {rows.length}</li>
@@ -185,8 +185,8 @@ export default async function AllGalleryPage() {
 			<div className="min-h-screen scrollbar-auto-stable">
 				<main className="py-10">
 					<div className="container mx-auto px-4">
-						<div className="bg-red-100 p-4 rounded">
-							<p className="text-red-800">
+						<div className=" p-4 rounded">
+							<p className="">
 								Error loading portfolio:{" "}
 								{error instanceof Error ? error.message : "Unknown error"}
 							</p>

@@ -29,7 +29,7 @@ const CARD_H = 156.43;
 /*
  * To simplify the layout and more closely follow the user’s request, we
  * split the card vertically into three golden‑ratio sections instead of
- * the earlier 5‑split φ‑grid. First we divide the height into a
+ * the earlier 5‑split φ‑grid. First we  the height into a
  * “text” region and a “blank” region with the golden ratio 1.618:1.
  * Then we subdivide the blank region again with the same ratio. This
  * yields three vertical bands whose heights are proportional to:
@@ -54,7 +54,7 @@ const bottomRatio = rightRatio * rightRatio; // ≈0.146
 // the left area. The cross‑proportional left margin is defined as
 // bottomRatio × (card height / card width), giving a fraction of the
 // card’s width. To express this padding relative to the white area’s
-// width we divide by leftRatio. The result is used as a percentage.
+// width we  by leftRatio. The result is used as a percentage.
 const leftMarginRatio = bottomRatio * (CARD_H / CARD_W);
 const sidePadPercent = (leftMarginRatio / leftRatio) * 100; // ≈14.3%
 

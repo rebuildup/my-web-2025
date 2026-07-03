@@ -717,7 +717,7 @@ const MagicBento: React.FC<BentoProps> = ({
 			<BentoCardGrid gridRef={gridRef}>
 				<div className="card-responsive grid gap-2">
 					{cardData.map((card, index) => {
-						const baseClassName = `card flex flex-col justify-between relative aspect-[4/3] min-h-[200px] w-full max-w-full p-5 rounded-[20px] border border-solid font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] ${
+						const baseClassName = `card flex flex-col justify-between relative aspect-[4/3] min-h-[200px] w-full max-w-full p-5 rounded-[20px]   font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] ${
 							enableBorderGlow ? "card--border-glow" : ""
 						}`;
 						const cardKey = card.id ?? card.title ?? `card-${index}`;
@@ -745,17 +745,17 @@ const MagicBento: React.FC<BentoProps> = ({
 									clickEffect={clickEffect}
 									enableMagnetism={enableMagnetism}
 								>
-									<div className="card__header flex justify-between gap-3 relative text-white">
+									<div className="card__header flex justify-between gap-3 relative ">
 										<span className="card__label ">{card.label}</span>
 									</div>
-									<div className="card__content flex flex-col relative text-white">
+									<div className="card__content flex flex-col relative ">
 										<h3
 											className={`card__title font-normal m-0 mb-1 ${textAutoHide ? "text-clamp-1" : ""}`}
 										>
 											{card.title}
 										</h3>
 										<p
-											className={`card__description text-xs leading-5 opacity-90 ${textAutoHide ? "text-clamp-2" : ""}`}
+											className={`card__description text-xs leading-5  ${textAutoHide ? "text-clamp-2" : ""}`}
 										>
 											{card.description}
 										</p>
@@ -879,17 +879,17 @@ const MagicBento: React.FC<BentoProps> = ({
 									el.addEventListener("click", handleClick);
 								}}
 							>
-								<div className="card__header flex justify-between gap-3 relative text-white">
+								<div className="card__header flex justify-between gap-3 relative ">
 									<span className="card__label ">{card.label}</span>
 								</div>
-								<div className="card__content flex flex-col relative text-white">
+								<div className="card__content flex flex-col relative ">
 									<h3
 										className={`card__title font-normal m-0 mb-1 ${textAutoHide ? "text-clamp-1" : ""}`}
 									>
 										{card.title}
 									</h3>
 									<p
-										className={`card__description text-xs leading-5 opacity-90 ${textAutoHide ? "text-clamp-2" : ""}`}
+										className={`card__description text-xs leading-5  ${textAutoHide ? "text-clamp-2" : ""}`}
 									>
 										{card.description}
 									</p>

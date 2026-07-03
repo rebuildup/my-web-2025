@@ -293,7 +293,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 	return (
 		<div className="space-y-6">
 			{/* Controls */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<Grid className="w-5 h-5 mr-2" />
 					Grid Layout Controls
@@ -308,7 +308,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 						<select
 							value={selectedLayout}
 							onChange={(e) => setSelectedLayout(e.target.value)}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							{gridLayouts.map((layout) => (
 								<option key={layout.value} value={layout.value}>
@@ -356,7 +356,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={shuffleItems}
-						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<Shuffle className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Shuffle</span>
@@ -365,7 +365,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetGrid}
-						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset</span>
@@ -374,14 +374,14 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Grid Display */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg ">
 					{gridLayouts.find((l) => l.value === selectedLayout)?.name} Layout
 				</h3>
 
 				<div
 					style={getGridStyles()}
-					className="min-h-[400px] border p-4"
+					className="min-h-[400px]  p-4"
 				>
 					{gridItems.map((item, index) => (
 						<div
@@ -396,10 +396,10 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 							}}
 						>
 							<div className="text-center">
-								<div className="text-white font-bold text-lg mb-1">
+								<div className=" font-bold text-lg mb-1">
 									{item.content}
 								</div>
-								<div className="text-white text-xs opacity-75">
+								<div className=" text-xs ">
 									{item.size} • {item.color}
 								</div>
 							</div>
@@ -409,7 +409,7 @@ export const CSSGridExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Layout Information */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg ">
 					Layout Properties
 				</h3>

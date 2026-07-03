@@ -294,7 +294,7 @@ export function DatePicker({
 					type="button"
 					onClick={handleToggleManualDate}
 					className={`
- flex items-center gap-2 px-3 py-1 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base
+ flex items-center gap-2 px-3 py-1 text-sm font-medium transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base
  ${
 							useManualDate
 								? " hover:bg-opacity-80"
@@ -315,7 +315,7 @@ export function DatePicker({
 			{/* Date Input */}
 			<div className="relative">
 				<div className="relative">
-					<Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+					<Clock className="absolute left-3 top-1/2 transform -translate-y-1/2  w-4 h-4" />
 					<input
 						ref={inputRef}
 						type="text"
@@ -326,21 +326,21 @@ export function DatePicker({
 						disabled={!useManualDate}
 						className={`
  w-full pl-10 pr-12 py-2 border 
- focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base focus:border-transparent
+  focus: focus:ring-offset-2 focus:ring-offset-base 
  disabled: disabled:cursor-not-allowed
  ${
 								state.validationError
-									? "border-red-500 focus:ring-red-500"
+									? " "
 									: ""
 							}
- ${!useManualDate ? "opacity-60" : ""}
+ ${!useManualDate ? "" : ""}
  `}
 					/>
 					{useManualDate && (
 						<button
 							type="button"
 							onClick={handleCalendarToggle}
-							className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+							className="absolute right-3 top-1/2 transform -translate-y-1/2   transition-colors"
 							aria-label="Open calendar"
 						>
 							<Calendar className="w-4 h-4" />
@@ -350,12 +350,12 @@ export function DatePicker({
 
 				{/* Validation Error */}
 				{state.validationError && (
-					<p className="mt-1 text-sm text-red-600">{state.validationError}</p>
+					<p className="mt-1 text-sm ">{state.validationError}</p>
 				)}
 
 				{/* Date Display */}
 				{state.selectedDate && !state.validationError && (
-					<p className="mt-1 text-sm text-gray-400">
+					<p className="mt-1 text-sm ">
 						{formatDateForDisplay(state.selectedDate)}
 					</p>
 				)}
@@ -365,7 +365,7 @@ export function DatePicker({
 			{state.isCalendarOpen && useManualDate && (
 				<div
 					ref={calendarRef}
-					className="absolute z-[9999] mt-1 border rounded-lg shadow-xl p-4 w-80"
+					className="absolute z-[9999] mt-1 border rounded-lg  p-4 w-80"
 					style={{ backgroundColor: "#181818", zIndex: 9999 }}
 				>
 					{/* Calendar Header */}
@@ -399,7 +399,7 @@ export function DatePicker({
 						{["日", "月", "火", "水", "木", "金", "土"].map((day) => (
 							<div
 								key={day}
-								className="text-center text-sm font-medium text-gray-400 py-2"
+								className="text-center text-sm font-medium  py-2"
 							>
 								{day}
 							</div>
@@ -415,7 +415,7 @@ export function DatePicker({
 									type="button"
 									onClick={() => handleDateSelect(date)}
 									className={`
- p-2 text-sm transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base
+ p-2 text-sm transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base
  ${
 										isSelected(date)
 											? " "
@@ -423,7 +423,7 @@ export function DatePicker({
 												? " font-medium"
 												: isCurrentMonth(date)
 													? " hover: hover:bg-opacity-10"
-													: "text-gray-400 hover: hover:bg-opacity-5"
+													: " hover: hover:bg-opacity-5"
 									}
  `}
 								>
@@ -434,7 +434,7 @@ export function DatePicker({
 					</div>
 
 					{/* Quick Actions */}
-					<div className="flex gap-2 mt-4 pt-4 border-t ">
+					<div className="flex gap-2 mt-4 pt-4  ">
 						<Button
 							type="button"
 							variant="outline"

@@ -344,15 +344,15 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 	const renderFallbackContent = () => {
 		if (canvasState.hasError) {
 			return (
-				<div className="flex flex-col items-center justify-center p-8 bg-red-50 border border-red-200 rounded">
-					<p className="text-red-800 font-medium mb-2">キャンバスエラー</p>
-					<p className="text-red-600 text-sm text-center">
+				<div className="flex flex-col items-center justify-center p-8    rounded">
+					<p className=" font-medium mb-2">キャンバスエラー</p>
+					<p className=" text-sm text-center">
 						{canvasState.errorMessage}
 					</p>
 					<button
 						type="button"
 						onClick={initializeCanvas}
-						className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+						className="mt-4 px-4 py-2   rounded    "
 					>
 						再試行
 					</button>
@@ -361,10 +361,10 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 		}
 
 		return (
-			<div className="flex flex-col items-center justify-center p-8 bg-gray-50 border border-gray-200 rounded">
-				<p className="text-gray-800 font-medium mb-2">{title}</p>
-				<p className="text-gray-600 text-sm text-center">{description}</p>
-				<p className="text-gray-500 text-xs mt-2">
+			<div className="flex flex-col items-center justify-center p-8    rounded">
+				<p className=" font-medium mb-2">{title}</p>
+				<p className=" text-sm text-center">{description}</p>
+				<p className=" text-xs mt-2">
 					このブラウザは{canvasType.toUpperCase()}をサポートしていません.
 				</p>
 			</div>
@@ -391,7 +391,7 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 			<canvas
 				ref={canvasRef}
 				{...getCanvasAriaAttributes()}
-				className="block max-w-full h-auto border "
+				className="block max-w-full h-auto  "
 				style={{
 					width: dimensions.displayWidth,
 					height: dimensions.displayHeight,
@@ -412,7 +412,7 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 
 			{/* Keyboard shortcuts help */}
 			{accessibilityState.keyboardNavigation && canvasType !== "2d" && (
-				<div className="mt-2 text-xs opacity-70">
+				<div className="mt-2 text-xs ">
 					<kbd className="px-1 py-0.5 rounded text-xs">
 						Space
 					</kbd>{" "}
@@ -426,8 +426,8 @@ export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 
 			{/* Reduced motion indicator */}
 			{accessibilityState.prefersReducedMotion && canvasState.isAnimating && (
-				<div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
-					<p className="text-yellow-800">
+				<div className="mt-2 p-2    rounded text-xs">
+					<p className="">
 						アニメーション設定により、動きが制限される場合があります.
 					</p>
 				</div>

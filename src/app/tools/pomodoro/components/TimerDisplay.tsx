@@ -25,7 +25,7 @@ export default function TimerDisplay({
 			case "shortBreak":
 				return "bg-accent";
 			case "longBreak":
-				return "bg-green-500";
+				return "";
 			default:
 				return "";
 		}
@@ -38,7 +38,7 @@ export default function TimerDisplay({
 			case "shortBreak":
 				return "bg-accent/10";
 			case "longBreak":
-				return "bg-green-500/10";
+				return "";
 			default:
 				return "/10";
 		}
@@ -48,7 +48,7 @@ export default function TimerDisplay({
 		<div className="space-y-6">
 			{/* Time Display */}
 			<div
-				className={`relative p-8 rounded-full ${getBackgroundColor()} border-4 ${
+				className={`relative p-8 rounded-full ${getBackgroundColor()}  ${
 					isRunning ? " animate-pulse" : "/20"
 				} transition-all duration-300`}
 			>
@@ -90,7 +90,7 @@ export default function TimerDisplay({
 				<div
 					className={`p-3 rounded-lg ${
 						sessionType === "shortBreak"
-							? "bg-accent/20 border border-accent"
+							? "bg-accent/20  border-accent"
 							: "/5"
 					}`}
 				>
@@ -100,7 +100,7 @@ export default function TimerDisplay({
 				<div
 					className={`p-3 rounded-lg ${
 						sessionType === "longBreak"
-							? "bg-green-500/20 border border-green-500"
+							? "  "
 							: "/5"
 					}`}
 				>

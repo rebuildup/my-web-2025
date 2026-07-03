@@ -59,7 +59,7 @@ export default function PerformanceOptimizer({
 		<div className="relative">
 			{/* Performance Status Bar */}
 			{showPerformanceInfo && (
-				<div className="mb-4 rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
+				<div className="mb-4 rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
 					<div className="flex items-center justify-between mb-2">
 						<h3 className="neue-haas-grotesk-display text-sm ">
 							Performance Status
@@ -67,7 +67,7 @@ export default function PerformanceOptimizer({
 						<button
 							type="button"
 							onClick={() => setShowDetails(!showDetails)}
-							className="text-xs text-accent hover: focus:outline-none focus:ring-1 focus:ring-accent"
+							className="text-xs text-accent hover:   focus:ring-accent"
 							aria-label="Toggle performance details"
 						>
 							{showDetails ? "Hide" : "Show"} Details
@@ -78,9 +78,9 @@ export default function PerformanceOptimizer({
 						{/* Connection Status */}
 						<div className="flex items-center space-x-2">
 							{isOnline ? (
-								<Wifi size={14} className="text-green-600" />
+								<Wifi size={14} className="" />
 							) : (
-								<WifiOff size={14} className="text-yellow-600" />
+								<WifiOff size={14} className="" />
 							)}
 							<span>{isOnline ? "Online" : "Offline"}</span>
 						</div>
@@ -89,7 +89,7 @@ export default function PerformanceOptimizer({
 						<div className="flex items-center space-x-2">
 							<Activity
 								size={14}
-								className={isProcessing ? "text-blue-600" : "text-gray-400"}
+								className={isProcessing ? "" : ""}
 							/>
 							<span>
 								{isProcessing ? `${processingProgress.toFixed(0)}%` : "Ready"}
@@ -98,13 +98,13 @@ export default function PerformanceOptimizer({
 
 						{/* Storage Usage */}
 						<div className="flex items-center space-x-2">
-							<HardDrive size={14} className="text-purple-600" />
+							<HardDrive size={14} className="" />
 							<span>{storageUsage.percentage.toFixed(1)}% used</span>
 						</div>
 
 						{/* Memory Usage */}
 						<div className="flex items-center space-x-2">
-							<Zap size={14} className="text-orange-600" />
+							<Zap size={14} className="" />
 							<span>
 								{performanceMetrics.memoryUsage
 									? `${(performanceMetrics.memoryUsage.used / 1024 / 1024).toFixed(1)}MB`
@@ -115,7 +115,7 @@ export default function PerformanceOptimizer({
 
 					{/* Detailed Information */}
 					{showDetails && (
-						<div className="mt-4 pt-4 border-t /20 space-y-3">
+						<div className="mt-4 pt-4  /20 space-y-3">
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
 								<div>
 									<h4 className="font-medium mb-2">Storage Information</h4>
@@ -174,14 +174,14 @@ export default function PerformanceOptimizer({
 								<button
 									type="button"
 									onClick={clearData}
-									className="text-xs rounded-lg /10 px-3 py-1 hover:/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="text-xs rounded-lg /10 px-3 py-1 hover:/20 transition-colors   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								>
 									Clear Tool Data
 								</button>
 								<button
 									type="button"
 									onClick={() => window.location.reload()}
-									className="text-xs rounded-lg /10 px-3 py-1 hover:/20 transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className="text-xs rounded-lg /10 px-3 py-1 hover:/20 transition-colors   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								>
 									Refresh Tool
 								</button>
@@ -193,7 +193,7 @@ export default function PerformanceOptimizer({
 
 			{/* Processing Progress Bar */}
 			{isProcessing && (
-				<div className="mb-4 rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
+				<div className="mb-4 rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-3">
 					<div className="flex items-center justify-between mb-2">
 						<span className="text-sm ">Processing...</span>
 						<span className="text-sm text-accent">
@@ -211,17 +211,17 @@ export default function PerformanceOptimizer({
 
 			{/* Error Display */}
 			{error && (
-				<div className="mb-4 bg-red-50 border border-red-200 p-3 flex items-start space-x-2">
+				<div className="mb-4    p-3 flex items-start space-x-2">
 					<AlertCircle
 						size={16}
-						className="text-red-600 mt-0.5 flex-shrink-0"
+						className=" mt-0.5 flex-shrink-0"
 					/>
 					<div className="flex-1">
-						<p className="text-sm text-red-800">{error}</p>
+						<p className="text-sm ">{error}</p>
 						<button
 							type="button"
 							onClick={clearError}
-							className="text-xs text-red-600 hover:text-red-800 mt-1 focus:outline-none focus:underline"
+							className="text-xs   mt-1  focus:underline"
 						>
 							Dismiss
 						</button>
@@ -231,9 +231,9 @@ export default function PerformanceOptimizer({
 
 			{/* Offline Mode Indicator */}
 			{!isOnline && (
-				<div className="mb-4 bg-yellow-50 border border-yellow-200 p-3 flex items-center space-x-2">
-					<WifiOff size={16} className="text-yellow-600" />
-					<p className="text-sm text-yellow-800">
+				<div className="mb-4    p-3 flex items-center space-x-2">
+					<WifiOff size={16} className="" />
+					<p className="text-sm ">
 						オフラインモードで動作中.すべての機能はローカルで処理されます.
 					</p>
 				</div>
@@ -241,14 +241,14 @@ export default function PerformanceOptimizer({
 
 			{/* Tool Content */}
 			<div
-				className={`${isProcessing ? "opacity-75 pointer-events-none" : ""} transition-opacity duration-200`}
+				className={`${isProcessing ? " pointer-events-none" : ""} transition-opacity duration-200`}
 			>
 				{children}
 			</div>
 
 			{/* Performance Optimization Tips */}
 			{showPerformanceInfo && enableOptimizations && (
-				<div className="mt-6 rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+				<div className="mt-6 rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
 					<h3 className="neue-haas-grotesk-display text-sm mb-3">
 						Performance Tips
 					</h3>
@@ -258,14 +258,14 @@ export default function PerformanceOptimizer({
 						<li>• 設定は自動的にローカルに保存されます</li>
 						<li>• メモリ使用量が高い場合は、ページを更新してください</li>
 						{storageUsage.percentage > 80 && (
-							<li className="text-yellow-600">
+							<li className="">
 								•
 								ストレージ使用量が高いです.データをクリアすることを検討してください
 							</li>
 						)}
 						{performanceMetrics.memoryUsage &&
 							performanceMetrics.memoryUsage.percentage > 80 && (
-								<li className="text-red-600">
+								<li className="">
 									• メモリ使用量が高いです.ページを更新することをお勧めします
 								</li>
 							)}

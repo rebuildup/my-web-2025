@@ -29,15 +29,15 @@ export function ContentList({
 	const getStatusColor = (status: string) => {
 		switch (status) {
 			case "published":
-				return "text-green-600";
+				return "";
 			case "draft":
-				return "text-yellow-600";
+				return "";
 			case "archived":
-				return "text-gray-500";
+				return "";
 			case "scheduled":
-				return "text-blue-600";
+				return "";
 			default:
-				return "text-gray-500";
+				return "";
 		}
 	};
 
@@ -45,9 +45,9 @@ export function ContentList({
 		return (
 			<div className="space-y-2">
 				{[...Array(3)].map((_, i) => (
-					<div key={i} className="border border-gray-300 p-3 animate-pulse">
-						<div className="h-4 bg-gray-300 rounded mb-2"></div>
-						<div className="h-3 bg-gray-200 rounded w-3/4"></div>
+					<div key={i} className="  p-3 animate-pulse">
+						<div className="h-4  rounded mb-2"></div>
+						<div className="h-3  rounded w-3/4"></div>
 					</div>
 				))}
 			</div>
@@ -58,7 +58,7 @@ export function ContentList({
 	if (!Array.isArray(items)) {
 		return (
 			<div className="text-center py-8">
-				<p className="noto-sans-jp-light text-sm text-red-500">
+				<p className="noto-sans-jp-light text-sm ">
 					Error: Invalid data format
 				</p>
 			</div>
@@ -68,7 +68,7 @@ export function ContentList({
 	if (items.length === 0) {
 		return (
 			<div className="text-center py-8">
-				<p className="noto-sans-jp-light text-xs text-gray-500">
+				<p className="noto-sans-jp-light text-xs ">
 					No items found. Create your first item!
 				</p>
 			</div>
@@ -80,7 +80,7 @@ export function ContentList({
 			{items.map((item) => (
 				<div
 					key={item.id}
-					className={`border p-3 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base ${
+					className={` p-3 cursor-pointer transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base ${
 						selectedItem?.id === item.id
 							? " bg-opacity-10"
 							: " hover:"
@@ -103,7 +103,7 @@ export function ContentList({
 								e.stopPropagation();
 								onDeleteItem(item.id);
 							}}
-							className="text-red-500 hover:text-red-700 text-xs ml-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-base rounded"
+							className="  text-xs ml-2    focus:ring-offset-2 focus:ring-offset-base rounded"
 							title="Delete item"
 						>
 							×
@@ -111,7 +111,7 @@ export function ContentList({
 					</div>
 
 					<div className="space-y-1">
-						<p className="noto-sans-jp-light text-xs text-gray-600 truncate">
+						<p className="noto-sans-jp-light text-xs  truncate">
 							{item.description || "No description"}
 						</p>
 
@@ -119,13 +119,13 @@ export function ContentList({
 							<span className={`${getStatusColor(item.status)} font-medium`}>
 								{item.status}
 							</span>
-							<span className="text-gray-500">
+							<span className="">
 								{formatDate(item.createdAt)}
 							</span>
 						</div>
 
 						{item.category && (
-							<div className="text-xs text-gray-500">
+							<div className="text-xs ">
 								Category: {item.category}
 							</div>
 						)}
@@ -135,13 +135,13 @@ export function ContentList({
 								{item.tags.slice(0, 3).map((tag) => (
 									<span
 										key={`${item.id}-${tag}`}
-										className="text-xs bg-gray-200 text-gray-700 px-1 rounded"
+										className="text-xs   px-1 rounded"
 									>
 										{tag}
 									</span>
 								))}
 								{item.tags.length > 3 && (
-									<span className="text-xs text-gray-500">
+									<span className="text-xs ">
 										+{item.tags.length - 3}
 									</span>
 								)}

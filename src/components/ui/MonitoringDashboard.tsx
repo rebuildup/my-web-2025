@@ -139,25 +139,25 @@ export function MonitoringDashboard({
 	const getSeverityColor = (severity: string) => {
 		switch (severity) {
 			case "critical":
-				return "text-red-600 bg-red-50";
+				return " ";
 			case "high":
-				return "text-orange-600 bg-orange-50";
+				return " ";
 			case "warning":
-				return "text-yellow-600 bg-yellow-50";
+				return " ";
 			case "medium":
-				return "text-blue-600 bg-blue-50";
+				return " ";
 			case "low":
-				return "text-gray-600 bg-gray-50";
+				return " ";
 			default:
-				return "text-gray-600 bg-gray-50";
+				return " ";
 		}
 	};
 
 	// Only show in development
 	if (process.env.NODE_ENV !== "development") {
 		return (
-			<div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-				<p className="text-red-800">
+			<div className="p-4    rounded-lg">
+				<p className="">
 					Monitoring dashboard is only available in development mode.
 				</p>
 			</div>
@@ -165,19 +165,19 @@ export function MonitoringDashboard({
 	}
 
 	return (
-		<div className={`bg-white rounded-lg border border-gray-200 ${className}`}>
+		<div className={` rounded-lg   ${className}`}>
 			{/* Header */}
-			<div className="border-b border-gray-200 p-4">
-				<h2 className="text-xl font-semibold text-gray-900">
+			<div className="  p-4">
+				<h2 className="text-xl font-semibold ">
 					Monitoring Dashboard
 				</h2>
-				<p className="text-sm text-gray-600 mt-1">
+				<p className="text-sm  mt-1">
 					Real-time error tracking and performance monitoring
 				</p>
 			</div>
 
 			{/* Tabs */}
-			<div className="border-b border-gray-200">
+			<div className=" ">
 				<nav className="flex space-x-8 px-4" aria-label="Tabs">
 					{[
 						{ id: "errors", name: "Errors", count: errors.length },
@@ -198,15 +198,15 @@ export function MonitoringDashboard({
 							onClick={() =>
 								setActiveTab(tab.id as "errors" | "performance" | "alerts")
 							}
-							className={`py-2 px-1 border-b-2 font-medium text-sm ${
+							className={`py-2 px-1  font-medium text-sm ${
 								activeTab === tab.id
-									? "border-blue-500 text-blue-600"
-									: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+									? " "
+									: "   "
 							}`}
 						>
 							{tab.name}
 							{tab.count > 0 && (
-								<span className="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2 rounded-full text-xs">
+								<span className="ml-2   py-0.5 px-2 rounded-full text-xs">
 									{tab.count}
 								</span>
 							)}
@@ -219,8 +219,8 @@ export function MonitoringDashboard({
 			<div className="p-4">
 				{isLoading ? (
 					<div className="flex items-center justify-center py-8">
-						<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-						<span className="ml-2 text-gray-600">
+						<div className="animate-spin rounded-full h-8 w-8  "></div>
+						<span className="ml-2 ">
 							Loading monitoring data...
 						</span>
 					</div>
@@ -231,35 +231,35 @@ export function MonitoringDashboard({
 							<div>
 								{/* Error Statistics */}
 								<div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-									<div className="bg-gray-50 p-4 rounded-lg">
-										<h3 className="text-sm font-medium text-gray-500">
+									<div className=" p-4 rounded-lg">
+										<h3 className="text-sm font-medium ">
 											Total Errors
 										</h3>
-										<p className="text-2xl font-bold text-gray-900">
+										<p className="text-2xl font-bold ">
 											{errorStats.total}
 										</p>
 									</div>
-									<div className="bg-red-50 p-4 rounded-lg">
-										<h3 className="text-sm font-medium text-red-500">
+									<div className=" p-4 rounded-lg">
+										<h3 className="text-sm font-medium ">
 											Critical
 										</h3>
-										<p className="text-2xl font-bold text-red-600">
+										<p className="text-2xl font-bold ">
 											{errorStats.bySeverity.critical}
 										</p>
 									</div>
-									<div className="bg-orange-50 p-4 rounded-lg">
-										<h3 className="text-sm font-medium text-orange-500">
+									<div className=" p-4 rounded-lg">
+										<h3 className="text-sm font-medium ">
 											High
 										</h3>
-										<p className="text-2xl font-bold text-orange-600">
+										<p className="text-2xl font-bold ">
 											{errorStats.bySeverity.high}
 										</p>
 									</div>
-									<div className="bg-green-50 p-4 rounded-lg">
-										<h3 className="text-sm font-medium text-green-500">
+									<div className=" p-4 rounded-lg">
+										<h3 className="text-sm font-medium ">
 											Resolved
 										</h3>
-										<p className="text-2xl font-bold text-green-600">
+										<p className="text-2xl font-bold ">
 											{errorStats.resolved}
 										</p>
 									</div>
@@ -267,11 +267,11 @@ export function MonitoringDashboard({
 
 								{/* Error List */}
 								<div className="space-y-4">
-									<h3 className="text-lg font-medium text-gray-900">
+									<h3 className="text-lg font-medium ">
 										Recent Errors
 									</h3>
 									{errors.length === 0 ? (
-										<p className="text-gray-500 text-center py-8">
+										<p className=" text-center py-8">
 											No errors recorded
 										</p>
 									) : (
@@ -279,7 +279,7 @@ export function MonitoringDashboard({
 											{errors.slice(0, 10).map((error, index) => (
 												<div
 													key={error.id || index}
-													className="border border-gray-200 rounded-lg p-4"
+													className="  rounded-lg p-4"
 												>
 													<div className="flex items-start justify-between">
 														<div className="flex-1">
@@ -289,25 +289,25 @@ export function MonitoringDashboard({
 																>
 																	{error.severity}
 																</span>
-																<span className="text-xs text-gray-500">
+																<span className="text-xs ">
 																	{error.category}
 																</span>
-																<span className="text-xs text-gray-500">
+																<span className="text-xs ">
 																	{formatTimestamp(error.timestamp)}
 																</span>
 															</div>
-															<h4 className="font-medium text-gray-900 mb-1">
+															<h4 className="font-medium  mb-1">
 																{error.message}
 															</h4>
-															<p className="text-sm text-gray-600">
+															<p className="text-sm ">
 																{error.url}
 															</p>
 															{error.stack && (
 																<details className="mt-2">
-																	<summary className="text-sm text-blue-600 cursor-pointer">
+																	<summary className="text-sm  cursor-pointer">
 																		Stack trace
 																	</summary>
-																	<pre className="text-xs text-gray-500 mt-1 bg-gray-50 p-2 rounded overflow-x-auto">
+																	<pre className="text-xs  mt-1  p-2 rounded overflow-x-auto">
 																		{error.stack.substring(0, 500)}...
 																	</pre>
 																</details>
@@ -333,22 +333,22 @@ export function MonitoringDashboard({
 												key={metric}
 												className={`p-4 rounded-lg ${
 													status === "pass"
-														? "bg-green-50"
+														? ""
 														: status === "warning"
-															? "bg-yellow-50"
-															: "bg-red-50"
+															? ""
+															: ""
 												}`}
 											>
-												<h3 className="text-sm font-medium text-gray-500">
+												<h3 className="text-sm font-medium ">
 													{metric.toUpperCase()}
 												</h3>
 												<p
 													className={`text-lg font-bold ${
 														status === "pass"
-															? "text-green-600"
+															? ""
 															: status === "warning"
-																? "text-yellow-600"
-																: "text-red-600"
+																? ""
+																: ""
 													}`}
 												>
 													{status}
@@ -360,11 +360,11 @@ export function MonitoringDashboard({
 
 								{/* Performance Issues */}
 								<div className="space-y-4">
-									<h3 className="text-lg font-medium text-gray-900">
+									<h3 className="text-lg font-medium ">
 										Performance Issues
 									</h3>
 									{performanceIssues.length === 0 ? (
-										<p className="text-gray-500 text-center py-8">
+										<p className=" text-center py-8">
 											No performance issues detected
 										</p>
 									) : (
@@ -372,7 +372,7 @@ export function MonitoringDashboard({
 											{performanceIssues.slice(0, 10).map((issue, index) => (
 												<div
 													key={issue.id || index}
-													className="border border-gray-200 rounded-lg p-4"
+													className="  rounded-lg p-4"
 												>
 													<div className="flex items-start justify-between">
 														<div className="flex-1">
@@ -382,15 +382,15 @@ export function MonitoringDashboard({
 																>
 																	{issue.severity}
 																</span>
-																<span className="text-xs text-gray-500">
+																<span className="text-xs ">
 																	{formatTimestamp(issue.timestamp)}
 																</span>
 															</div>
-															<h4 className="font-medium text-gray-900 mb-1">
+															<h4 className="font-medium  mb-1">
 																{issue.type.toUpperCase()}: {issue.value}ms
 																(threshold: {issue.threshold}ms)
 															</h4>
-															<p className="text-sm text-gray-600">
+															<p className="text-sm ">
 																{issue.url}
 															</p>
 														</div>
@@ -406,11 +406,11 @@ export function MonitoringDashboard({
 						{/* Alerts Tab */}
 						{activeTab === "alerts" && (
 							<div>
-								<h3 className="text-lg font-medium text-gray-900 mb-4">
+								<h3 className="text-lg font-medium  mb-4">
 									System Alerts
 								</h3>
 								{performanceSummary.alerts.length === 0 ? (
-									<p className="text-gray-500 text-center py-8">
+									<p className=" text-center py-8">
 										No active alerts
 									</p>
 								) : (
@@ -420,7 +420,7 @@ export function MonitoringDashboard({
 											.map((alert, index: number) => (
 												<div
 													key={alert.id || index}
-													className="border border-gray-200 rounded-lg p-4"
+													className="  rounded-lg p-4"
 												>
 													<div className="flex items-start justify-between">
 														<div className="flex-1">
@@ -430,15 +430,15 @@ export function MonitoringDashboard({
 																>
 																	{alert.severity}
 																</span>
-																<span className="text-xs text-gray-500">
+																<span className="text-xs ">
 																	{formatTimestamp(alert.timestamp)}
 																</span>
 															</div>
-															<h4 className="font-medium text-gray-900 mb-1">
+															<h4 className="font-medium  mb-1">
 																{alert.metric}: {alert.value} (threshold:{" "}
 																{alert.threshold})
 															</h4>
-															<p className="text-sm text-gray-600">
+															<p className="text-sm ">
 																{alert.url}
 															</p>
 														</div>
@@ -454,13 +454,13 @@ export function MonitoringDashboard({
 			</div>
 
 			{/* Footer */}
-			<div className="border-t border-gray-200 p-4 bg-gray-50">
-				<div className="flex items-center justify-between text-sm text-gray-600">
+			<div className="  p-4 ">
+				<div className="flex items-center justify-between text-sm ">
 					<span>Last updated: {new Date().toLocaleTimeString()}</span>
 					<button
 						type="button"
 						onClick={loadData}
-						className="text-blue-600 hover:text-blue-800"
+						className=" "
 					>
 						Refresh
 					</button>

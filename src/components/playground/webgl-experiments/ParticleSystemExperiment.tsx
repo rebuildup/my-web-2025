@@ -548,9 +548,9 @@ export function ParticleSystemExperiment({
 
 	if (error) {
 		return (
-			<div className="aspect-video border border-red-500 flex items-center justify-center">
+			<div className="aspect-video   flex items-center justify-center">
 				<div className="text-center space-y-2">
-					<div className="text-red-500 text-lg">⚠️ WebGL Error</div>
+					<div className=" text-lg">⚠️ WebGL Error</div>
 					<p className="text-sm ">{error}</p>
 				</div>
 			</div>
@@ -562,7 +562,7 @@ export function ParticleSystemExperiment({
 			{/* 3D Canvas */}
 			<div
 				ref={mountRef}
-				className="aspect-video border overflow-hidden cursor-crosshair"
+				className="aspect-video  overflow-hidden cursor-crosshair"
 				style={{ minHeight: "400px" }}
 			/>
 
@@ -655,7 +655,7 @@ export function ParticleSystemExperiment({
 								colorMode: e.target.value as ParticleControls["colorMode"],
 							}))
 						}
-						className="w-full border p-2 text-sm"
+						className="w-full  p-2 text-sm"
 					>
 						<option value="rainbow">Rainbow</option>
 						<option value="blue">Blue</option>

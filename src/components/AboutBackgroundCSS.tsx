@@ -5,7 +5,7 @@
 export default function AboutBackgroundCSS() {
 	return (
 		<div
-			className="fixed inset-0 -z-10 bg-[#020201]"
+			className="fixed inset-0 -z-10 "
 			style={{
 				background: `
 					radial-gradient(

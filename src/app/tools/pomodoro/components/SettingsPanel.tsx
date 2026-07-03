@@ -38,7 +38,7 @@ export default function SettingsPanel({
 	};
 
 	return (
-		<div className="rounded-xl /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 select-text">
+		<div className="rounded-xl /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-6 select-text">
 			<div className="flex items-center justify-between mb-6">
 				<h3 className="text-lg font-semibold ">タイマー設定</h3>
 				<button
@@ -53,7 +53,7 @@ export default function SettingsPanel({
 
 			<div className="space-y-6">
 				{/* Tab Buttons */}
-				<div className="flex gap-2 flex-wrap border-b /10 pb-2">
+				<div className="flex gap-2 flex-wrap  /10 pb-2">
 					{tabs.map((tab) => (
 						<button
 							key={tab.key}
@@ -61,7 +61,7 @@ export default function SettingsPanel({
 							className={`px-4 py-2 text-sm rounded-lg transition-colors ${
 								activeTab === tab.key
 									? "/20 font-semibold"
-									: "bg-transparent /60 hover:"
+									: " /60 hover:"
 							}`}
 						>
 							{tab.label}
@@ -246,7 +246,7 @@ export default function SettingsPanel({
 									onChange={(e) =>
 										updateSetting("highlightColor", e.target.value)
 									}
-									className="w-12 h-10 rounded border /20 bg-transparent cursor-pointer"
+									className="w-12 h-10 rounded  /20  cursor-pointer"
 								/>
 								<div className="flex gap-2">
 									{["#3b82f6", "#06b6d4", "#ec4899", "#f97316", "#22c55e"].map(
@@ -255,10 +255,10 @@ export default function SettingsPanel({
 												key={color}
 												type="button"
 												onClick={() => updateSetting("highlightColor", color)}
-												className={`w-8 h-8 rounded-full border ${
+												className={`w-8 h-8 rounded-full  ${
 													settings.highlightColor === color
 														? ""
-														: "border-transparent"
+														: ""
 												}`}
 												style={{ backgroundColor: color }}
 												aria-label={`ハイライトカラー ${color}`}
@@ -272,7 +272,7 @@ export default function SettingsPanel({
 				)}
 
 				{/* Reset Button */}
-				<div className="pt-4 border-t /20">
+				<div className="pt-4  /20">
 					<button
 						type="button"
 						onClick={() => {

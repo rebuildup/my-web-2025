@@ -1,14 +1,24 @@
 #!/usr/bin/env node
 /**
- * Strip color/border/shadow/opacity visual classes from src/.
- * Uses word-boundary anchored regex to avoid accidental matches on
- * typography classes (text-xs, text-4xl, etc.).
+ * Strip visual style classes (color, border, shadow, opacity, ring, outline,
+ * divide) from src/ TypeScript files.
+ *
+ * Uses lookbehind/lookahead anchors (?![\w-]) instead of \b to handle
+ * non-word endings like `]` from arbitrary values correctly.
+ *
+ * Preserves layout (display, flex, grid, padding, margin, width, height,
+ * position, gap), typography (font-*, italic, tracking, leading, text-size),
+ * and spacing utility classes.
  */
 import { readFileSync, writeFileSync, statSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const ROOT = process.argv[2] || "src";
 const PROJECT_ROOT = process.cwd();
+
+const NB = "(?<![\\w-])"; // boundary: not preceded by word/hyphen
+const NE = "(?=$|[\\s\"'`>])"; // boundary: end of string, whitespace, quote, backtick, or HTML close
+const NE_STRICT = "(?=$|[\\s\"'`])"; // stricter: no HTML close, used for prop-only keywords like outline/border/ring/divide
 
 const NO_SHADE = "white|black|transparent|current|inherit|currentcolor";
 const SHADED =
@@ -17,92 +27,98 @@ const SHADED =
 const COLOR_PROPS =
 	"bg|text|border|ring|outline|from|via|to|divide|placeholder|caret|fill|stroke|accent|decoration|backdrop";
 
-const ARBITRARY_COLOR = "\\[(?:#[0-9a-fA-F]+|[a-z-]+\\([^)]+\\)|var\\([^)]+\\))\\]";
+// Arbitrary color values: #hex, rgb(...), rgba(...), hsl(...), hsla(...), var(--...)
+const ARB_COLOR =
+	"\\[(?:#[0-9a-fA-F]+|#[0-9a-fA-F]{3,8}|(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\\([^)]+\\)|var\\([^)]+\\))\\]";
 
+// Optional Tailwind state prefix on classes (hover:, focus:, md:, sm:, etc.)
 const STATE =
-	"(?:(?:hover|focus|active|disabled|group-hover|group-focus|focus-within|focus-visible|visited|first|last|odd|even|placeholder|md|sm|lg|xl|2xl):+)*";
+	"(?:(?:hover|focus|focus-within|focus-visible|active|visited|disabled|group-hover|group-focus|first|last|odd|even|placeholder|md|sm|lg|xl|2xl):+)*";
 
-function strip(content, regex, note) {
-	return content.replace(regex, () => {
-		return "";
-	});
-}
-
-// 1. Color setter classes. The value must look like a color, otherwise no match.
-//    `text-` is special: only match if value is a color (do not match text-xs etc.).
+// 1. Color setter classes (bg-red-500, text-white, from-blue-300, divide-gray-200, etc.)
+//    For `text-` we must be careful: text-xs/4xl/sm are typography, NOT colors.
+//    The regex requires the value to look like a color.
 const COLOR_CLASS = new RegExp(
-	`\\b${STATE}(?:${COLOR_PROPS})-` +
+	`${NB}${STATE}(?:${COLOR_PROPS})-` +
 		`(?:` +
-		`(?:${NO_SHADE})(?:\\/(?:\\d+|${ARBITRARY_COLOR}))?` +
-		`|(?:${SHADED})(?:-[0-9]+)?(?:\\/(?:\\d+|${ARBITRARY_COLOR}))?` +
-		`|${ARBITRARY_COLOR}` +
-		`)\\b`,
+		`(?:${NO_SHADE})(?:\\/(?:\\d+|${ARB_COLOR}))?` +
+		`|(?:${SHADED})(?:-[0-9]+)?(?:\\/(?:\\d+|${ARB_COLOR}))?` +
+		`|${ARB_COLOR}` +
+		`)${NE}`,
 	"g",
 );
 
 // 2. Shadow / drop-shadow (any variant)
 const SHADOW_CLASS = new RegExp(
-	`\\b${STATE}(?:shadow(?:-(?:sm|md|lg|xl|2xl|inner|none|${ARBITRARY_COLOR}))?|drop-shadow(?:-(?:sm|md|lg|xl|2xl|none|${ARBITRARY_COLOR}))?)\\b`,
+	`${NB}${STATE}(?:shadow(?:-(?:sm|md|lg|xl|2xl|inner|none))?|drop-shadow(?:-(?:sm|md|lg|xl|2xl|none))?)${NE}`,
 	"g",
 );
 
 // 3. Opacity
 const OPACITY_CLASS = new RegExp(
-	`\\b${STATE}opacity-(?:[0-9]+|\\[.+\\])\\b`,
+	`${NB}${STATE}opacity-(?:[0-9]+)${NE}`,
 	"g",
 );
 
-// 4. Mix-blend-mode (visual blend effects)
+// 4. Mix-blend-mode
 const MIX_BLEND = new RegExp(
-	`\\b${STATE}mix-blend-(?:normal|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|hard-light|soft-light|difference|exclusion|hue|saturation|color|luminosity)\\b`,
+	`${NB}${STATE}mix-blend-(?:normal|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|hard-light|soft-light|difference|exclusion|hue|saturation|color|luminosity)${NE}`,
 	"g",
 );
 
-// 5. Backdrop-filter visual effects (color/visual filters on background)
+// 5. Backdrop-filter (visual effects on backdrop)
+//    Use (?:\\[[^\\]]+\\]|[\\w-]+) instead of \\S+ to avoid eating trailing quotes
 const BACKDROP_FILTER = new RegExp(
-	`\\b${STATE}backdrop-(?:blur|brightness|contrast|grayscale|hue-rotate|invert|opacity|saturate|sepia)-\\S+`,
+	`${NB}${STATE}backdrop-(?:blur|brightness|contrast|grayscale|hue-rotate|invert|opacity|saturate|sepia)-(?:\\[[^\\]]+\\]|[\\w-]+)${NE}`,
 	"g",
 );
 
-// 6. Plain border (no color), border-{n} (width), border-{side} (side), border-{style}
+// 6. Plain border (no color), border-{n} (width), border-{side}, border-{style}
+//    Excludes border-spacing, border-collapse, border-separate (CSS table props)
+//    REQUIRES a `-modifier` so that bare `border` doesn't match JS variable names
+//    (`const border = ...`) or CSS property strings (`getPropertyValue("border")`).
+const ARBITRARY = "\\[.+\\]";
 const BORDER_PLAIN = new RegExp(
-	`\\b${STATE}border(?:-(?:[0-9]+|t|r|b|l|x|y|solid|dashed|dotted|double|hidden|none|collapse|separate|spacing|t-[0-9]+|r-[0-9]+|b-[0-9]+|l-[0-9]+|x-[0-9]+|y-[0-9]+))?\\b`,
+	`${NB}${STATE}border` +
+		`(?!-(?:spacing|collapse|separate)\\b)` +
+		`(?:-${ARBITRARY}` +
+		`|-(?:[0-9]+|t|r|b|l|x|y|solid|dashed|dotted|double|hidden|none)` +
+		`(?:-(?:[0-9]+|t|r|b|l|x|y|solid|dashed|dotted|double|hidden|none|${ARBITRARY}))?` +
+		`)` +
+		`${NE_STRICT}`,
 	"g",
 );
 
-// 7. Divide plain (sets border between children)
+// 7. Divide plain (border between siblings) — REQUIRES `-x|y|n|...` modifier
 const DIVIDE_PLAIN = new RegExp(
-	`\\b${STATE}divide(?:-(?:x|y|[0-9]+|x-[0-9]+|y-[0-9]+|reverse))?\\b`,
+	`${NB}${STATE}divide-(?:x|y|[0-9]+|x-[0-9]+|y-[0-9]+|reverse|${ARBITRARY})${NE_STRICT}`,
 	"g",
 );
 
-// 8. Outline plain (width, style)
+// 8. Outline plain (width, style) — REQUIRES `-modifier` to avoid matching JS vars
 const OUTLINE_PLAIN = new RegExp(
-	`\\b${STATE}outline(?:-(?:[0-9]+|solid|dashed|dotted|double|hidden|none|offset-[0-9]+))?\\b`,
+	`${NB}${STATE}outline-(?:[0-9]+|solid|dashed|dotted|double|hidden|none|offset-[0-9]+|${ARBITRARY})${NE_STRICT}`,
 	"g",
 );
 
-// 9. Ring plain (width, inset)
+// 9. Ring plain (width, inset) — REQUIRES `-modifier` to avoid matching JS vars
 const RING_PLAIN = new RegExp(
-	`\\b${STATE}ring(?:-(?:[0-9]+|inset))?\\b`,
+	`${NB}${STATE}ring-(?:[0-9]+|inset|${ARBITRARY})${NE_STRICT}`,
 	"g",
 );
 
-function processContent(content) {
-	let result = content;
-	result = strip(result, COLOR_CLASS, "color");
-	result = strip(result, SHADOW_CLASS, "shadow");
-	result = strip(result, OPACITY_CLASS, "opacity");
-	result = strip(result, MIX_BLEND, "mix-blend");
-	result = strip(result, BACKDROP_FILTER, "backdrop");
-	result = strip(result, BORDER_PLAIN, "border-plain");
-	result = strip(result, DIVIDE_PLAIN, "divide-plain");
-	result = strip(result, OUTLINE_PLAIN, "outline-plain");
-	result = strip(result, RING_PLAIN, "ring-plain");
-	// Collapse runs of whitespace inside className strings
-	result = result.replace(/(['"`])([ \t]+)/g, "$1 ");
-	result = result.replace(/([ \t]+)(['"`])/g, " $1");
-	return result;
+function strip(content) {
+	let r = content;
+	r = r.replace(COLOR_CLASS, "");
+	r = r.replace(SHADOW_CLASS, "");
+	r = r.replace(OPACITY_CLASS, "");
+	r = r.replace(MIX_BLEND, "");
+	r = r.replace(BACKDROP_FILTER, "");
+	r = r.replace(BORDER_PLAIN, "");
+	r = r.replace(DIVIDE_PLAIN, "");
+	r = r.replace(OUTLINE_PLAIN, "");
+	r = r.replace(RING_PLAIN, "");
+	return r;
 }
 
 function* walk(dir) {
@@ -119,8 +135,7 @@ function* walk(dir) {
 }
 
 let filesTouched = 0;
-let totalRemoved = 0;
-let totalLines = 0;
+let bytesRemoved = 0;
 
 const SKIP_PATH_PATTERNS = [/tools\/ProtoType\//];
 
@@ -128,16 +143,13 @@ for (const file of walk(join(PROJECT_ROOT, ROOT))) {
 	const rel = relative(PROJECT_ROOT, file);
 	if (SKIP_PATH_PATTERNS.some((p) => p.test(rel))) continue;
 	const before = readFileSync(file, "utf8");
-	const after = processContent(before);
+	const after = strip(before);
 	if (after !== before) {
 		writeFileSync(file, after, "utf8");
 		filesTouched++;
-		const beforeLines = before.length;
-		const afterLen = after.length;
-		totalRemoved += beforeLines - afterLen;
-		totalLines++;
+		bytesRemoved += before.length - after.length;
 	}
 }
 
 console.log(`Files modified: ${filesTouched}`);
-console.log(`Total bytes removed: ${totalRemoved}`);
+console.log(`Bytes removed: ${bytesRemoved}`);

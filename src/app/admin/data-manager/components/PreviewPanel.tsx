@@ -82,8 +82,8 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 				const videoId = extractYouTubeId(video.url);
 				if (!videoId) {
 					return (
-						<div className="bg-red-50 border border-red-200 p-4 rounded">
-							<p className="text-red-600 text-sm">
+						<div className="   p-4 rounded">
+							<p className=" text-sm">
 								Invalid YouTube URL: {video.url}
 							</p>
 						</div>
@@ -91,7 +91,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 				}
 
 				return (
-					<div className={`${aspectRatio} bg-black rounded overflow-hidden`}>
+					<div className={`${aspectRatio}  rounded overflow-hidden`}>
 						<iframe
 							src={`https://www.youtube.com/embed/${videoId}`}
 							title={video.title || `YouTube Video ${index + 1}`}
@@ -108,8 +108,8 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 				const videoId = extractVimeoId(video.url);
 				if (!videoId) {
 					return (
-						<div className="bg-red-50 border border-red-200 p-4 rounded">
-							<p className="text-red-600 text-sm">
+						<div className="   p-4 rounded">
+							<p className=" text-sm">
 								Invalid Vimeo URL: {video.url}
 							</p>
 						</div>
@@ -117,7 +117,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 				}
 
 				return (
-					<div className={`${aspectRatio} bg-black rounded overflow-hidden`}>
+					<div className={`${aspectRatio}  rounded overflow-hidden`}>
 						<iframe
 							src={`https://player.vimeo.com/video/${videoId}`}
 							title={video.title || `Vimeo Video ${index + 1}`}
@@ -132,7 +132,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 
 			case "iframe": {
 				return (
-					<div className={`${aspectRatio} bg-gray-100 rounded overflow-hidden`}>
+					<div className={`${aspectRatio}  rounded overflow-hidden`}>
 						<iframe
 							src={video.url}
 							title={video.title || `Embedded Content ${index + 1}`}
@@ -146,12 +146,12 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 
 			default: {
 				return (
-					<div className="bg-gray-50 border border-gray-200 p-4 rounded">
+					<div className="   p-4 rounded">
 						<div className="flex justify-between items-start mb-2">
 							<span className="font-medium text-sm">
 								{video.title || "Untitled Video"}
 							</span>
-							<span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+							<span className="text-xs   px-2 py-1 rounded">
 								{video.type}
 							</span>
 						</div>
@@ -159,12 +159,12 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 							href={video.url}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="text-xs text-blue-600 hover:underline block mb-2"
+							className="text-xs  hover:underline block mb-2"
 						>
 							{video.url}
 						</a>
 						{video.description && (
-							<p className="text-xs text-gray-600">{video.description}</p>
+							<p className="text-xs ">{video.description}</p>
 						)}
 					</div>
 				);
@@ -185,15 +185,15 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 	const getStatusColor = (status: string) => {
 		switch (status) {
 			case "published":
-				return "bg-green-100 text-green-800";
+				return " ";
 			case "draft":
-				return "bg-yellow-100 text-yellow-800";
+				return " ";
 			case "archived":
-				return "bg-gray-100 text-gray-800";
+				return " ";
 			case "scheduled":
-				return "bg-blue-100 text-blue-800";
+				return " ";
 			default:
-				return "bg-gray-100 text-gray-800";
+				return " ";
 		}
 	};
 
@@ -209,9 +209,9 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 	};
 
 	const buttonStyle =
-		"border px-3 py-1 text-xs hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		" px-3 py-1 text-xs hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const activeButtonStyle =
-		"border px-3 py-1 text-xs focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		" px-3 py-1 text-xs   focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
 		<div className="space-y-6">
@@ -253,10 +253,10 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 			<div
 				className={`mx-auto ${getPreviewWidth()} transition-all duration-300`}
 			>
-				<div className="border border-gray-300 bg-white shadow-lg">
+				<div className="   ">
 					{/* Preview Header */}
-					<div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-						<div className="flex justify-between items-center text-xs text-gray-600">
+					<div className=" px-4 py-2  ">
+						<div className="flex justify-between items-center text-xs ">
 							<span>Preview Mode: {previewMode}</span>
 							<span>Type: {item.type}</span>
 						</div>
@@ -278,7 +278,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 							</div>
 
 							{item.description && (
-								<p className="noto-sans-jp-light text-xs pb-2 text-gray-600 leading-relaxed">
+								<p className="noto-sans-jp-light text-xs pb-2  leading-relaxed">
 									{item.description}
 								</p>
 							)}
@@ -291,7 +291,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 									<span className="noto-sans-jp-regular font-medium ">
 										Category:
 									</span>
-									<span className="ml-2 text-gray-600">{item.category}</span>
+									<span className="ml-2 ">{item.category}</span>
 								</div>
 							)}
 
@@ -299,14 +299,14 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 								<span className="noto-sans-jp-regular font-medium ">
 									Priority:
 								</span>
-								<span className="ml-2 text-gray-600">{item.priority}/100</span>
+								<span className="ml-2 ">{item.priority}/100</span>
 							</div>
 
 							<div>
 								<span className="noto-sans-jp-regular font-medium ">
 									Created:
 								</span>
-								<span className="ml-2 text-gray-600">
+								<span className="ml-2 ">
 									{formatDate(item.createdAt)}
 								</span>
 							</div>
@@ -316,7 +316,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 									<span className="noto-sans-jp-regular font-medium ">
 										Updated:
 									</span>
-									<span className="ml-2 text-gray-600">
+									<span className="ml-2 ">
 										{formatDate(item.updatedAt)}
 									</span>
 								</div>
@@ -326,12 +326,12 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 						{/* Tags */}
 						{item.tags.length > 0 && (
 							<div>
-								<h3 className="font-medium text-gray-700 mb-2">Tags</h3>
+								<h3 className="font-medium  mb-2">Tags</h3>
 								<div className="flex flex-wrap gap-2">
 									{item.tags.map((tag) => (
 										<span
 											key={`${item.id}-tag-${tag}`}
-											className="bg-blue-100 text-blue-800 px-2 py-1 text-xs rounded"
+											className="  px-2 py-1 text-xs rounded"
 										>
 											{tag}
 										</span>
@@ -343,12 +343,12 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 						{/* Images */}
 						{item.images && item.images.length > 0 && (
 							<div>
-								<h3 className="font-medium text-gray-700 mb-2">Images</h3>
+								<h3 className="font-medium  mb-2">Images</h3>
 								<div className="grid grid-cols-2 md:grid-cols-3 gap-2">
 									{item.images.map((image, index) => (
 										<div
 											key={image}
-											className="aspect-square bg-gray-100 border border-gray-200 rounded overflow-hidden"
+											className="aspect-square    rounded overflow-hidden"
 										>
 											{/* eslint-disable-next-line @next/next/no-img-element */}
 											<img
@@ -370,10 +370,10 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 						{item.videos && item.videos.length > 0 && (
 							<div>
 								<div className="flex justify-between items-center mb-4">
-									<h3 className="font-medium text-gray-700">Videos</h3>
+									<h3 className="font-medium ">Videos</h3>
 									<button type="button"
 										onClick={() => setShowVideoEmbeds(!showVideoEmbeds)}
-										className="text-xs text-blue-600 hover:text-blue-800 px-2 py-1 border border-blue-200 rounded hover:bg-blue-50 transition-colors"
+										className="text-xs   px-2 py-1   rounded  transition-colors"
 									>
 										{showVideoEmbeds ? "Hide Embeds" : "Show Embeds"}
 									</button>
@@ -382,29 +382,29 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 									{item.videos.map((video, index) => (
 										<div
 											key={video.url || `video-${index}`}
-											className="border border-gray-200 rounded-lg p-4 space-y-3"
+											className="  rounded-lg p-4 space-y-3"
 										>
 											{/* Video Header */}
 											<div className="flex justify-between items-start">
 												<div className="flex-1">
-													<h4 className="font-medium text-sm text-gray-800 mb-1">
+													<h4 className="font-medium text-sm  mb-1">
 														{video.title || `Video ${index + 1}`}
 													</h4>
 													{video.description && (
-														<p className="text-xs text-gray-600 mb-2">
+														<p className="text-xs  mb-2">
 															{video.description}
 														</p>
 													)}
 												</div>
 												<div className="flex items-center gap-2 ml-4">
-													<span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+													<span className="text-xs   px-2 py-1 rounded">
 														{video.type}
 													</span>
 													<a
 														href={video.url}
 														target="_blank"
 														rel="noopener noreferrer"
-														className="text-xs text-blue-600 hover:text-blue-800 px-2 py-1 border border-blue-200 rounded hover:bg-blue-50 transition-colors"
+														className="text-xs   px-2 py-1   rounded  transition-colors"
 														title="Open in new tab"
 													>
 														↗
@@ -418,7 +418,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 													renderVideoEmbed(video, index)
 												) : (
 													<div
-														className="aspect-video bg-gray-100 border border-gray-200 rounded overflow-hidden relative group cursor-pointer"
+														className="aspect-video    rounded overflow-hidden relative group cursor-pointer"
 														onClick={() => toggleIndividualVideo(index)}
 													>
 														{getVideoThumbnail(video) ? (
@@ -434,8 +434,8 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 																		).style.display = "none";
 																	}}
 																/>
-																<div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-																	<div className="text-white text-center">
+																<div className="absolute inset-0  bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+																	<div className=" text-center">
 																		<svg
 																			className="w-16 h-16 mx-auto mb-2"
 																			fill="currentColor"
@@ -456,7 +456,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 														) : (
 															<div className="flex items-center justify-center h-full">
 																<div className="text-center">
-																	<div className="text-gray-400 mb-2">
+																	<div className=" mb-2">
 																		<svg
 																			className="w-12 h-12 mx-auto"
 																			fill="currentColor"
@@ -469,10 +469,10 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 																			/>
 																		</svg>
 																	</div>
-																	<p className="text-xs text-gray-500 mb-1">
+																	<p className="text-xs  mb-1">
 																		Video embed hidden
 																	</p>
-																	<p className="text-xs text-blue-600 hover:underline">
+																	<p className="text-xs  hover:underline">
 																		Click to show embed
 																	</p>
 																</div>
@@ -483,7 +483,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 											</div>
 
 											{/* Video URL */}
-											<div className="text-xs text-gray-500 truncate">
+											<div className="text-xs  truncate">
 												<span className="font-medium">URL: </span>
 												<span>{video.url}</span>
 											</div>
@@ -496,20 +496,20 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 						{/* External Links */}
 						{item.externalLinks && item.externalLinks.length > 0 && (
 							<div>
-								<h3 className="font-medium text-gray-700 mb-2">
+								<h3 className="font-medium  mb-2">
 									External Links
 								</h3>
 								<div className="space-y-2">
 									{item.externalLinks.map((link, index) => (
 										<div
 											key={link.url || `external-link-${index}`}
-											className="border border-gray-200 p-3 rounded"
+											className="  p-3 rounded"
 										>
 											<div className="flex justify-between items-start mb-1">
 												<span className="font-medium text-sm">
 													{link.title}
 												</span>
-												<span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+												<span className="text-xs   px-2 py-1 rounded">
 													{link.type}
 												</span>
 											</div>
@@ -517,12 +517,12 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 												href={link.url}
 												target="_blank"
 												rel="noopener noreferrer"
-												className="text-xs text-blue-600 hover:underline block mb-1"
+												className="text-xs  hover:underline block mb-1"
 											>
 												{link.url}
 											</a>
 											{link.description && (
-												<p className="text-xs text-gray-600">
+												<p className="text-xs ">
 													{link.description}
 												</p>
 											)}
@@ -536,8 +536,8 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 						{(item.content ||
 							(isEnhancedContentItem(item) && item.markdownPath)) && (
 							<div>
-								<h3 className="font-medium text-gray-700 mb-2">Content</h3>
-								<div className="bg-gray-50 border border-gray-200 p-4 rounded">
+								<h3 className="font-medium  mb-2">Content</h3>
+								<div className="   p-4 rounded">
 									{isEnhancedContentItem(item) && item.markdownPath ? (
 										<MarkdownRenderer
 											filePath={item.markdownPath}
@@ -549,11 +549,11 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 												})),
 												externalLinks: item.externalLinks || [],
 											}}
-											className="prose prose-sm max-w-none text-gray-700"
+											className="prose prose-sm max-w-none "
 											fallbackContent={item.content || "Content not available"}
 										/>
 									) : item.content ? (
-										<pre className="text-sm text-gray-700 whitespace-pre-wrap font-mono">
+										<pre className="text-sm  whitespace-pre-wrap font-mono">
 											{item.content}
 										</pre>
 									) : null}
@@ -564,10 +564,10 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 						{/* Download Info */}
 						{item.downloadInfo && (
 							<div>
-								<h3 className="font-medium text-gray-700 mb-2">
+								<h3 className="font-medium  mb-2">
 									Download Information
 								</h3>
-								<div className="bg-gray-50 border border-gray-200 p-4 rounded space-y-2">
+								<div className="   p-4 rounded space-y-2">
 									<div className="grid grid-cols-2 gap-4 text-sm">
 										<div>
 											<span className="font-medium">File:</span>
@@ -598,10 +598,10 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 						{/* SEO Information */}
 						{item.seo && (
 							<div>
-								<h3 className="font-medium text-gray-700 mb-2">
+								<h3 className="font-medium  mb-2">
 									SEO Information
 								</h3>
-								<div className="bg-gray-50 border border-gray-200 p-4 rounded space-y-2">
+								<div className="   p-4 rounded space-y-2">
 									{item.seo.title && (
 										<div>
 											<span className="font-medium text-sm">Title:</span>

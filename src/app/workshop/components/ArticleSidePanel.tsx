@@ -188,10 +188,10 @@ export function ArticleSidePanel({
 		<aside className="w-80 hidden lg:block">
 			<div className="sticky top-20 space-y-6">
 				{/* Table of Contents */}
-				<div className="p-4 bg-[#1a1a1f] border border-[#333333] rounded">
-					<h3 className="text-sm font-semibold text-[#f2f2f2] mb-3">目次</h3>
+				<div className="p-4    rounded">
+					<h3 className="text-sm font-semibold  mb-3">目次</h3>
 					{!headingsLoaded ? (
-						<p className="text-xs text-[#888888]">読み込み中...</p>
+						<p className="text-xs ">読み込み中...</p>
 					) : headings.length > 0 ? (
 						<nav>
 							<ol className="space-y-2">
@@ -204,8 +204,8 @@ export function ArticleSidePanel({
 											href={`#${heading.id}`}
 											className={`text-sm leading-tight transition-colors ${
 												activeId === heading.id
-													? "text-[#2b57ff] font-medium"
-													: "text-[#888888] hover:text-[#f2f2f2]"
+													? " font-medium"
+													: " "
 											}`}
 											onClick={(e) => {
 												e.preventDefault();
@@ -221,19 +221,19 @@ export function ArticleSidePanel({
 							</ol>
 						</nav>
 					) : (
-						<p className="text-xs text-[#888888]">目次がありません</p>
+						<p className="text-xs ">目次がありません</p>
 					)}
 				</div>
 
 				{/* Tags */}
 				{topTags.length > 0 && (
-					<div className="p-4 bg-[#1a1a1f] border border-[#333333] rounded">
-						<h3 className="text-sm font-semibold text-[#f2f2f2] mb-3">タグ</h3>
+					<div className="p-4    rounded">
+						<h3 className="text-sm font-semibold  mb-3">タグ</h3>
 						<div className="flex flex-wrap gap-2">
 							{topTags.map((tag) => (
 								<span
 									key={tag}
-									className="px-2 py-1 text-xs font-medium text-[#f2f2f2] bg-[#2a2a2f] border border-[#444444] rounded"
+									className="px-2 py-1 text-xs font-medium     rounded"
 								>
 									#{tag}
 								</span>
@@ -244,8 +244,8 @@ export function ArticleSidePanel({
 
 				{/* Random Articles - Promo Style */}
 				{randomArticles.length > 0 && (
-					<div className="p-4 bg-[#1a1a1f] border border-[#333333] rounded">
-						<h3 className="text-sm font-semibold text-[#f2f2f2] mb-3">
+					<div className="p-4    rounded">
+						<h3 className="text-sm font-semibold  mb-3">
 							おすすめ記事
 						</h3>
 						<div className="space-y-3">
@@ -257,7 +257,7 @@ export function ArticleSidePanel({
 								>
 									<div className="space-y-2">
 										{article.thumbnail && (
-											<div className="relative aspect-video overflow-hidden bg-[#2a2a2f] rounded">
+											<div className="relative aspect-video overflow-hidden  rounded">
 												<Image
 													src={article.thumbnail}
 													alt={article.title}
@@ -267,7 +267,7 @@ export function ArticleSidePanel({
 												/>
 											</div>
 										)}
-										<p className="text-xs text-[#f2f2f2] line-clamp-2 leading-relaxed">
+										<p className="text-xs  line-clamp-2 leading-relaxed">
 											{article.title}
 										</p>
 									</div>

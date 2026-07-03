@@ -169,7 +169,7 @@ export const AccessiblePlaygroundNav: React.FC<
 	const getLinkClasses = (item: NavItem, index: number) => {
 		const baseClasses = `
  block px-4 py-3 text-sm transition-colors duration-200
- focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
+   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
  ${responsive.touch.isTouchDevice ? "active:bg-accent active:" : "hover:bg-accent hover:"}
  `;
 
@@ -179,7 +179,7 @@ export const AccessiblePlaygroundNav: React.FC<
 
 		const focusClasses =
 			focusedIndex === index
-				? "bg-accent bg-opacity-20 ring-2 ring-accent"
+				? "bg-accent bg-opacity-20  ring-accent"
 				: "";
 
 		return `${baseClasses} ${stateClasses} ${focusClasses}`;
@@ -191,9 +191,9 @@ export const AccessiblePlaygroundNav: React.FC<
 			type="button"
 			onClick={toggleMenu}
 			className={`
- md:hidden flex items-center px-3 py-2 border 
+ md:hidden flex items-center px-3 py-2  
  hover:border-accent hover:text-accent transition-colors
- focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
+   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base
  `}
 			aria-expanded={isMenuOpen}
 			aria-controls="playground-navigation-menu"
@@ -244,7 +244,7 @@ export const AccessiblePlaygroundNav: React.FC<
 					className={`
  ${
 							responsive.isMobile
-								? `absolute top-full left-0 right-0 z-40 border shadow-lg ${
+								? `absolute top-full left-0 right-0 z-40   ${
 										isMenuOpen ? "block" : "hidden"
 									}`
 								: "block"
@@ -288,7 +288,7 @@ export const AccessiblePlaygroundNav: React.FC<
 								{item.description && (
 									<div
 										id={`nav-desc-${index}`}
-										className="text-xs opacity-75 mt-1"
+										className="text-xs  mt-1"
 									>
 										{item.description}
 									</div>
@@ -301,7 +301,7 @@ export const AccessiblePlaygroundNav: React.FC<
 				{/* Mobile menu overlay */}
 				{responsive.isMobile && isMenuOpen && (
 					<div
-						className="fixed inset-0 bg-black bg-opacity-25 z-30"
+						className="fixed inset-0  bg-opacity-25 z-30"
 						onClick={toggleMenu}
 						aria-hidden="true"
 					/>
@@ -310,7 +310,7 @@ export const AccessiblePlaygroundNav: React.FC<
 
 			{/* Keyboard shortcuts help */}
 			{accessibilityState.keyboardNavigation && (
-				<div className="mt-4 p-3 border rounded text-xs">
+				<div className="mt-4 p-3  rounded text-xs">
 					<h3 className="font-medium mb-2">キーボードナビゲーション</h3>
 					<ul className="space-y-1 ">
 						<li>

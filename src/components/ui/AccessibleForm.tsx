@@ -54,14 +54,14 @@ export const AccessibleFormField: React.FC<AccessibleFormFieldProps> = ({
 			>
 				{label}
 				{required && (
-					<span className="text-red-500 ml-1" aria-label="必須項目">
+					<span className=" ml-1" aria-label="必須項目">
 						*
 					</span>
 				)}
 			</label>
 
 			{hint && (
-				<div id={hintId} className="text-sm text-gray-600 mb-2">
+				<div id={hintId} className="text-sm  mb-2">
 					{hint}
 				</div>
 			)}
@@ -71,7 +71,7 @@ export const AccessibleFormField: React.FC<AccessibleFormFieldProps> = ({
 			{error && (
 				<div
 					id={errorId}
-					className="error-message text-red-600 text-sm mt-1"
+					className="error-message  text-sm mt-1"
 					role="alert"
 					aria-live="polite"
 				>
@@ -103,7 +103,7 @@ export const AccessibleInput = forwardRef<
 			>
 				<input
 					ref={ref}
-					className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : ""} rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${props.disabled ? "opacity-50" : ""} ${className}`}
+					className={`w-full px-3 py-2  ${error ? "" : ""} rounded-md   focus:ring-accent focus:border-accent ${props.disabled ? "" : ""} ${className}`}
 					{...props}
 				/>
 			</AccessibleFormField>
@@ -113,7 +113,7 @@ export const AccessibleInput = forwardRef<
 	return (
 		<input
 			ref={ref}
-			className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : ""} rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${props.disabled ? "opacity-50" : ""} ${className}`}
+			className={`w-full px-3 py-2  ${error ? "" : ""} rounded-md   focus:ring-accent focus:border-accent ${props.disabled ? "" : ""} ${className}`}
 			{...props}
 		/>
 	);
@@ -142,7 +142,7 @@ export const AccessibleTextarea = forwardRef<
 			>
 				<textarea
 					ref={ref}
-					className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : ""} rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent resize-y ${className}`}
+					className={`w-full px-3 py-2  ${error ? "" : ""} rounded-md   focus:ring-accent focus:border-accent resize-y ${className}`}
 					{...props}
 				/>
 			</AccessibleFormField>
@@ -152,7 +152,7 @@ export const AccessibleTextarea = forwardRef<
 	return (
 		<textarea
 			ref={ref}
-			className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : ""} rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent resize-y ${className}`}
+			className={`w-full px-3 py-2  ${error ? "" : ""} rounded-md   focus:ring-accent focus:border-accent resize-y ${className}`}
 			{...props}
 		/>
 	);
@@ -189,7 +189,7 @@ export const AccessibleSelect = forwardRef<
 		const selectElement = (
 			<select
 				ref={ref}
-				className={`w-full px-3 py-2 border-2 ${error ? "border-red-500" : ""} rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent ${className}`}
+				className={`w-full px-3 py-2  ${error ? "" : ""} rounded-md   focus:ring-accent focus:border-accent ${className}`}
 				{...props}
 			>
 				{placeholder && (
@@ -262,18 +262,18 @@ export const AccessibleButton = forwardRef<
 		const { announceToScreenReader } = useAccessibilityContext();
 
 		const baseStyles =
-			"inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+			"inline-flex items-center justify-center font-medium transition-colors duration-200   focus:ring-offset-2  disabled:cursor-not-allowed";
 
 		const variantStyles = {
 			primary:
-				"bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 focus:ring-blue-500",
+				"     ",
 			secondary:
-				" border hover: focus:",
+				"  hover: focus:",
 			danger:
-				"bg-red-600 text-white border border-red-600 hover:bg-red-700 focus:ring-red-500",
+				"     ",
 			ghost:
-				"bg-transparent border border-transparent hover: hover: focus:",
-			blue: "bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 focus:ring-blue-500",
+				"   hover: hover: focus:",
+			blue: "     ",
 		};
 
 		const sizeStyles = {
@@ -317,7 +317,7 @@ export const AccessibleButton = forwardRef<
 		return (
 			<ComponentAny
 				ref={ref}
-				className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${disabled || loading ? "opacity-50" : ""} ${className}`}
+				className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${disabled || loading ? "" : ""} ${className}`}
 				disabled={disabled || loading}
 				aria-busy={loading}
 				onClick={handleClick}
@@ -334,7 +334,7 @@ export const AccessibleButton = forwardRef<
 							aria-hidden="true"
 						>
 							<circle
-								className="opacity-25"
+								className=""
 								cx="12"
 								cy="12"
 								r="10"
@@ -342,7 +342,7 @@ export const AccessibleButton = forwardRef<
 								strokeWidth="4"
 							/>
 							<path
-								className="opacity-75"
+								className=""
 								fill="currentColor"
 								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 							/>

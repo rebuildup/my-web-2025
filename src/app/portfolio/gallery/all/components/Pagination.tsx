@@ -86,7 +86,7 @@ export function Pagination({
 				type="button"
 				onClick={handlePrevious}
 				disabled={currentPage === 1}
-				className="flex items-center space-x-1 px-4 py-1.5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+				className="flex items-center space-x-1 px-4 py-1.5  disabled:cursor-not-allowed transition-colors"
 				aria-label="Go to previous page"
 			>
 				<ChevronLeft className="w-4 h-4" />
@@ -138,7 +138,7 @@ export function Pagination({
 				type="button"
 				onClick={handleNext}
 				disabled={currentPage === totalPages}
-				className="flex items-center space-x-1 px-4 py-1.5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+				className="flex items-center space-x-1 px-4 py-1.5  disabled:cursor-not-allowed transition-colors"
 				aria-label="Go to next page"
 				data-testid="next-page"
 			>

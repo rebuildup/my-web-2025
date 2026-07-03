@@ -21,7 +21,7 @@ export default function XProfileImage({ href, size = 48 }: XProfileImageProps) {
 				alt="X (Twitter) プロフィール"
 				width={size}
 				height={size}
-				className="rounded-full border-2 /20 hover:/40 transition-colors"
+				className="rounded-full  /20 hover:/40 transition-colors"
 				unoptimized
 			/>
 		</a>

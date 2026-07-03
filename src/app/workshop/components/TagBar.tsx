@@ -30,8 +30,8 @@ function TagBarInner({ tags, selectedTag }: TagBarProps) {
 					href={createUrl(null)}
 					className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
 						selectedTag === null
-							? "bg-[#2b57ff] text-white"
-							: "bg-[#1a1a1f] text-[#f2f2f2] hover:bg-[#2a2a2f] border border-[#333333]"
+							? " "
+							: "    "
 					}`}
 				>
 					全て ({tags.reduce((sum, t) => sum + t.count, 0)})
@@ -42,8 +42,8 @@ function TagBarInner({ tags, selectedTag }: TagBarProps) {
 						href={createUrl(tag)}
 						className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
 							selectedTag === tag
-								? "bg-[#2b57ff] text-white"
-								: "bg-[#1a1a1f] text-[#f2f2f2] hover:bg-[#2a2a2f] border border-[#333333]"
+								? " "
+								: "    "
 						}`}
 					>
 						{tag} ({count})
@@ -66,10 +66,10 @@ function TagBarFallback() {
 	return (
 		<div className="w-full overflow-x-auto scrollbar-hide-scroll">
 			<div className="flex gap-2 px-1 min-w-max">
-				<div className="h-8 w-20 bg-[#1a1a1f] rounded animate-pulse" />
-				<div className="h-8 w-24 bg-[#1a1a1f] rounded animate-pulse" />
-				<div className="h-8 w-20 bg-[#1a1a1f] rounded animate-pulse" />
-				<div className="h-8 w-28 bg-[#1a1a1f] rounded animate-pulse" />
+				<div className="h-8 w-20  rounded animate-pulse" />
+				<div className="h-8 w-24  rounded animate-pulse" />
+				<div className="h-8 w-20  rounded animate-pulse" />
+				<div className="h-8 w-28  rounded animate-pulse" />
 			</div>
 		</div>
 	);

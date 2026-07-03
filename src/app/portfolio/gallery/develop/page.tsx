@@ -147,12 +147,12 @@ export default async function DevelopGalleryPage() {
 										searchFilters={searchFilters}
 									/>
 								) : (
-									<div className="bg-red-100 p-4 rounded">
-										<p className="text-red-800">
+									<div className=" p-4 rounded">
+										<p className="">
 											No development projects found.
 										</p>
 										{process.env.NODE_ENV !== "production" && (
-											<div className="mt-2 text-xs text-red-900/80 space-y-1">
+											<div className="mt-2 text-xs  space-y-1">
 												<p>Diagnostics:</p>
 												<ul className="list-disc pl-5 space-y-0.5">
 													<li>Loaded items (published): {items.length}</li>
@@ -183,8 +183,8 @@ export default async function DevelopGalleryPage() {
 			<div className="min-h-screen scrollbar-auto-stable">
 				<main className="py-10">
 					<div className="container mx-auto px-4">
-						<div className="bg-red-100 p-4 rounded">
-							<p className="text-red-800">
+						<div className=" p-4 rounded">
+							<p className="">
 								Error loading development projects:{" "}
 								{error instanceof Error ? error.message : "Unknown error"}
 							</p>

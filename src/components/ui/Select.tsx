@@ -28,7 +28,7 @@ export function Select({
 	variant = "default",
 }: SelectProps) {
 	const baseStyles =
-		"border focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base focus:border-transparent cursor-pointer appearance-none bg-no-repeat bg-right transition-colors";
+		"   focus: focus:ring-offset-2 focus:ring-offset-base  cursor-pointer appearance-none bg-no-repeat bg-right transition-colors";
 
 	const sizeStyles = {
 		sm: "px-2 py-1 text-xs pr-6 bg-[length:10px]",
@@ -43,7 +43,7 @@ export function Select({
 			' hover: bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23ffffff" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
 	};
 
-	const disabledStyles = "opacity-50 cursor-not-allowed";
+	const disabledStyles = " cursor-not-allowed";
 
 	const selectClassName = `
  w-full

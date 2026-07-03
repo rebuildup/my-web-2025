@@ -80,7 +80,7 @@ export class ErrorBoundary extends Component<
 				<div className="min-h-[400px] flex items-center justify-center p-ratio-lg">
 					<div className="max-w-md w-full text-center">
 						<div className="mb-ratio-lg">
-							<div className="w-16 h-16 mx-auto mb-ratio-base border-2 flex items-center justify-center">
+							<div className="w-16 h-16 mx-auto mb-ratio-base  flex items-center justify-center">
 								<svg
 									className="w-8 h-8 "
 									fill="none"
@@ -98,7 +98,7 @@ export class ErrorBoundary extends Component<
 							<h2 className="zen-kaku-gothic-new text-ratio-lg mb-ratio-sm">
 								エラーが発生しました
 							</h2>
-							<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-lg">
+							<p className="noto-sans-jp-light text-ratio-base  mb-ratio-lg">
 								{appError
 									? errorHandler.createUserFriendlyMessage(appError)
 									: "このセクションで予期しないエラーが発生しました."}
@@ -119,7 +119,7 @@ export class ErrorBoundary extends Component<
 									type="button"
 									key={action.label}
 									onClick={action.action}
-									className="w-full px-ratio-sm py-ratio-xs border hover: hover: transition-colors noto-sans-jp-regular text-ratio-base"
+									className="w-full px-ratio-sm py-ratio-xs  hover: hover: transition-colors noto-sans-jp-regular text-ratio-base"
 								>
 									{action.label}
 								</button>
@@ -128,10 +128,10 @@ export class ErrorBoundary extends Component<
 
 						{process.env.NODE_ENV === "development" && this.state.error && (
 							<details className="mt-ratio-lg text-left">
-								<summary className="cursor-pointer text-ratio-sm opacity-60 hover:opacity-80 noto-sans-jp-light">
+								<summary className="cursor-pointer text-ratio-sm   noto-sans-jp-light">
 									エラー詳細 (開発環境)
 								</summary>
-								<pre className="mt-ratio-sm p-ratio-sm border text-ratio-xs overflow-auto noto-sans-jp-light">
+								<pre className="mt-ratio-sm p-ratio-sm  text-ratio-xs overflow-auto noto-sans-jp-light">
 									{this.state.error.stack}
 								</pre>
 							</details>
@@ -157,7 +157,7 @@ export const AboutErrorBoundary: React.FC<{ children: ReactNode }> = ({
 					<h2 className="zen-kaku-gothic-new text-ratio-lg mb-ratio-sm">
 						Aboutセクションが利用できません
 					</h2>
-					<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
+					<p className="noto-sans-jp-light text-ratio-base  mb-ratio-base">
 						Aboutセクションは一時的に利用できません.後でもう一度お試しください.
 					</p>
 					<button
@@ -186,7 +186,7 @@ export const PortfolioErrorBoundary: React.FC<{ children: ReactNode }> = ({
 					<h2 className="zen-kaku-gothic-new text-ratio-lg mb-ratio-sm">
 						Portfolioが利用できません
 					</h2>
-					<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
+					<p className="noto-sans-jp-light text-ratio-base  mb-ratio-base">
 						Portfolioセクションは一時的に利用できません.後でもう一度お試しください.
 					</p>
 					<div className="space-y-ratio-sm">
@@ -200,7 +200,7 @@ export const PortfolioErrorBoundary: React.FC<{ children: ReactNode }> = ({
 						<button
 							type="button"
 							onClick={() => (window.location.href = "/")}
-							className="block w-full px-ratio-sm py-ratio-xs border hover: hover: transition-colors noto-sans-jp-regular text-ratio-base"
+							className="block w-full px-ratio-sm py-ratio-xs  hover: hover: transition-colors noto-sans-jp-regular text-ratio-base"
 						>
 							ホームに戻る
 						</button>
@@ -224,7 +224,7 @@ export const WorkshopErrorBoundary: React.FC<{ children: ReactNode }> = ({
 					<h2 className="zen-kaku-gothic-new text-ratio-lg mb-ratio-sm">
 						Workshopが利用できません
 					</h2>
-					<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
+					<p className="noto-sans-jp-light text-ratio-base  mb-ratio-base">
 						Workshopセクションは一時的に利用できません.後でもう一度お試しください.
 					</p>
 					<button
@@ -253,7 +253,7 @@ export const ToolsErrorBoundary: React.FC<{ children: ReactNode }> = ({
 					<h2 className="zen-kaku-gothic-new text-ratio-lg mb-ratio-sm">
 						Toolsが利用できません
 					</h2>
-					<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
+					<p className="noto-sans-jp-light text-ratio-base  mb-ratio-base">
 						Toolsセクションは一時的に利用できません.後でもう一度お試しください.
 					</p>
 					<div className="space-y-ratio-sm">
@@ -267,7 +267,7 @@ export const ToolsErrorBoundary: React.FC<{ children: ReactNode }> = ({
 						<button
 							type="button"
 							onClick={() => (window.location.href = "/")}
-							className="block w-full px-ratio-sm py-ratio-xs border hover: hover: transition-colors noto-sans-jp-regular text-ratio-base"
+							className="block w-full px-ratio-sm py-ratio-xs  hover: hover: transition-colors noto-sans-jp-regular text-ratio-base"
 						>
 							ホームに戻る
 						</button>
@@ -291,7 +291,7 @@ export const AdminErrorBoundary: React.FC<{ children: ReactNode }> = ({
 					<h2 className="zen-kaku-gothic-new text-ratio-lg mb-ratio-sm">
 						管理パネルエラー
 					</h2>
-					<p className="noto-sans-jp-light text-ratio-base opacity-80 mb-ratio-base">
+					<p className="noto-sans-jp-light text-ratio-base  mb-ratio-base">
 						管理パネルでエラーが発生しました.詳細はコンソールを確認してください.
 					</p>
 					<button

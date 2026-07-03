@@ -57,7 +57,7 @@ export function PortfolioCard({
 		}
 		return (
 			<article
-				className=" border hover:border-accent transition-colors cursor-pointer group flex flex-col"
+				className="  hover:border-accent transition-colors cursor-pointer group flex flex-col"
 				onClick={onClick}
 				onKeyDown={handleKeyDown}
 				aria-label={`View details for ${item.title}`}
@@ -105,7 +105,7 @@ export function PortfolioCard({
 				{/* Subtle indicator for items with detailed markdown content (Requirement 6.5) */}
 				{hasDetailedContent && showMarkdownIndicator && (
 					<div
-						className="absolute top-2 right-2 text-white p-1.5 shadow-sm"
+						className="absolute top-2 right-2  p-1.5 "
 						title="View detailed content"
 						aria-hidden="true"
 					>

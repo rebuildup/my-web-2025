@@ -112,7 +112,7 @@ export default function GitHubActivity() {
 							href={event.link}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="block p-3 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-accent/30 transition-all duration-300 group"
+							className="block p-3     hover:border-accent/30 transition-all duration-300 group"
 						>
 							<div className="flex items-start gap-3">
 								<span className="text-lg">{event.icon}</span>

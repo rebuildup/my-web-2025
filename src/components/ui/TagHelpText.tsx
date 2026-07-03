@@ -11,7 +11,7 @@ export function TagHelpText({ className = "" }: TagHelpTextProps) {
 	const [isExpanded, setIsExpanded] = useState(false);
 
 	return (
-		<div className={`text-xs text-gray-500 ${className}`}>
+		<div className={`text-xs  ${className}`}>
 			<div className="flex items-center gap-2">
 				<Info className="w-3 h-3" />
 				<span>
@@ -19,7 +19,7 @@ export function TagHelpText({ className = "" }: TagHelpTextProps) {
 					<button
 						type="button"
 						onClick={() => setIsExpanded(!isExpanded)}
-						className="text-blue-600 hover:text-blue-800 underline"
+						className="  underline"
 					>
 						{isExpanded ? "Show less" : "Learn more"}
 					</button>
@@ -27,7 +27,7 @@ export function TagHelpText({ className = "" }: TagHelpTextProps) {
 			</div>
 
 			{isExpanded && (
-				<div className="mt-2 pl-5 space-y-2 text-gray-600">
+				<div className="mt-2 pl-5 space-y-2 ">
 					<div>
 						<strong>How to use tags:</strong>
 					</div>

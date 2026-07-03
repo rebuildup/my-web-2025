@@ -17,7 +17,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 	className = "",
 	variant = "rectangular",
 }) => {
-	const baseClasses = "animate-pulse bg-gray-200";
+	const baseClasses = "animate-pulse ";
 
 	const variantClasses = {
 		text: "rounded",
@@ -132,9 +132,9 @@ export const AspectRatioImage: React.FC<AspectRatioImageProps> = ({
 			)}
 
 			{hasError ? (
-				<div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+				<div className="absolute inset-0  flex items-center justify-center">
 					<svg
-						className="w-8 h-8 text-gray-400"
+						className="w-8 h-8 "
 						fill="none"
 						stroke="currentColor"
 						viewBox="0 0 24 24"
@@ -154,7 +154,7 @@ export const AspectRatioImage: React.FC<AspectRatioImageProps> = ({
 						src={src}
 						alt={alt}
 						className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-							isLoaded ? "opacity-100" : "opacity-0"
+							isLoaded ? "" : ""
 						}`}
 						onLoad={handleLoad}
 						onError={handleError}
@@ -265,10 +265,10 @@ export const DynamicContent: React.FC<DynamicContentProps> = ({
 	);
 
 	const defaultErrorFallback = (
-		<div className="flex items-center justify-center text-gray-500">
+		<div className="flex items-center justify-center ">
 			<div className="text-center">
 				<svg
-					className="w-12 h-12 mx-auto mb-4 text-gray-400"
+					className="w-12 h-12 mx-auto mb-4 "
 					fill="none"
 					stroke="currentColor"
 					viewBox="0 0 24 24"
@@ -380,18 +380,18 @@ export const LayoutShiftDetector: React.FC = () => {
 	}
 
 	return (
-		<div className="fixed top-4 right-4 bg-red-50 border border-red-400 rounded-lg p-3 text-sm max-w-sm z-50">
-			<h4 className="font-semibold text-red-900 mb-2">
+		<div className="fixed top-4 right-4    rounded-lg p-3 text-sm max-w-sm z-50">
+			<h4 className="font-semibold  mb-2">
 				Layout Shifts Detected
 			</h4>
 			<div className="space-y-1 max-h-32 overflow-y-auto">
 				{shifts.map((shift, index) => {
 					const shiftKey = `${shift.timestamp ?? Date.now()}-${index}`;
 					return (
-						<div key={shiftKey} className="text-red-800">
+						<div key={shiftKey} className="">
 							<div>Value: {shift.value.toFixed(4)}</div>
 							{shift.sources.length > 0 && (
-								<div className="text-xs text-red-700">
+								<div className="text-xs ">
 									Sources: {shift.sources.join(", ")}
 								</div>
 							)}

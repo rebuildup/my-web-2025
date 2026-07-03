@@ -186,9 +186,9 @@ export default function DesignPlaygroundPage() {
 
 		if (!ExperimentComponent) {
 			return (
-				<div className="aspect-video border border-red-500 flex items-center justify-center">
+				<div className="aspect-video   flex items-center justify-center">
 					<div className="text-center space-y-2">
-						<div className="text-red-500 text-lg">⚠️ Loading Error</div>
+						<div className=" text-lg">⚠️ Loading Error</div>
 						<p className="text-sm ">
 							Failed to load experiment: {experimentId}
 						</p>
@@ -218,7 +218,7 @@ export default function DesignPlaygroundPage() {
 		return (
 			<div className="min-h-screen flex items-center justify-center">
 				<div className="text-center">
-					<div className="animate-spin w-8 h-8 border-2 border-accent border-t-transparent rounded-full mx-auto mb-4"></div>
+					<div className="animate-spin w-8 h-8  border-accent border-t-transparent rounded-full mx-auto mb-4"></div>
 					<p className="noto-sans-jp-light text-sm ">
 						デバイス性能を検出中...
 					</p>
@@ -265,7 +265,7 @@ export default function DesignPlaygroundPage() {
 						{/* Device Info & Performance */}
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							{/* Device Capabilities */}
-							<div className=" border p-4 space-y-4">
+							<div className="  p-4 space-y-4">
 								<button
 									type="button"
 									onClick={() => setShowSettings(!showSettings)}
@@ -338,7 +338,7 @@ export default function DesignPlaygroundPage() {
 															.value as PerformanceSettings["qualityLevel"],
 													}))
 												}
-												className="w-full border p-2 text-sm"
+												className="w-full  p-2 text-sm"
 												data-testid="quality-select"
 											>
 												<option value="low">Low (30 FPS)</option>
@@ -372,7 +372,7 @@ export default function DesignPlaygroundPage() {
 							</div>
 
 							{/* Performance Monitor */}
-							<div className=" border p-4 space-y-4">
+							<div className="  p-4 space-y-4">
 								<button
 									type="button"
 									onClick={() => setShowPerformance(!showPerformance)}
@@ -438,7 +438,7 @@ export default function DesignPlaygroundPage() {
 
 						{/* Error Message */}
 						{experimentError && (
-							<div className="bg-red-100 border border-red-500 text-red-700 p-4 rounded">
+							<div className="    p-4 rounded">
 								<p>{experimentError}</p>
 								<button
 									type="button"
@@ -453,7 +453,7 @@ export default function DesignPlaygroundPage() {
 						{/* Active Experiment */}
 						{activeExperiment && (
 							<div
-								className=" border p-4 space-y-4"
+								className="  p-4 space-y-4"
 								onTouchStart={
 									responsive.touch.isTouchDevice
 										? swipeHandlers.onTouchStart
@@ -487,7 +487,7 @@ export default function DesignPlaygroundPage() {
 											<span className="noto-sans-jp-light text-xs ">
 												{currentExperimentIndex + 1} / {experimentIds.length}
 											</span>
-											<span className="noto-sans-jp-light text-xs opacity-70">
+											<span className="noto-sans-jp-light text-xs ">
 												スワイプで切り替え
 											</span>
 										</div>
@@ -504,21 +504,21 @@ export default function DesignPlaygroundPage() {
 							<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
 								<Link
 									href="/portfolio/playground/WebGL"
-									className="border text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>WebGL Playground</span>
 								</Link>
 
 								<Link
 									href="/portfolio"
-									className="border text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Portfolio Home</span>
 								</Link>
 
 								<Link
 									href="/tools"
-									className="border text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Tools</span>
 								</Link>
@@ -526,7 +526,7 @@ export default function DesignPlaygroundPage() {
 						</nav>
 
 						{/* Footer */}
-						<footer className="pt-4 border-t ">
+						<footer className="pt-4  ">
 							<div className="text-center">
 								<p className="shippori-antique-b1-regular text-sm inline-block">
 									© 2025 samuido - Design Playground

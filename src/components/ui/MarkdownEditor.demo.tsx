@@ -94,15 +94,15 @@ export function MarkdownEditorDemo() {
 				<h1 className="text-3xl font-bold mb-2">
 					Enhanced Markdown Editor Demo
 				</h1>
-				<p className="text-gray-600">
+				<p className="">
 					Demonstrates embed syntax support, live preview, toolbar helpers, and
 					validation
 				</p>
 			</div>
 
-			<div className="bg-white rounded-lg shadow-lg p-6">
+			<div className=" rounded-lg  p-6">
 				<h2 className="text-xl font-semibold mb-4">Features Demonstrated:</h2>
-				<ul className="list-disc list-inside space-y-2 text-gray-700 mb-6">
+				<ul className="list-disc list-inside space-y-2  mb-6">
 					<li>
 						✅ Embed syntax support for images, videos, and links using index
 						references
@@ -124,7 +124,7 @@ export function MarkdownEditorDemo() {
 				/>
 			</div>
 
-			<div className="bg-gray-50 rounded-lg p-6">
+			<div className=" rounded-lg p-6">
 				<h2 className="text-xl font-semibold mb-4">
 					Available Media for Embedding:
 				</h2>
@@ -174,9 +174,9 @@ export function MarkdownEditorDemo() {
 				</div>
 			</div>
 
-			<div className="bg-blue-50 rounded-lg p-6">
+			<div className=" rounded-lg p-6">
 				<h2 className="text-xl font-semibold mb-4">How to Use:</h2>
-				<ol className="list-decimal list-inside space-y-2 text-gray-700">
+				<ol className="list-decimal list-inside space-y-2 ">
 					<li>Use the toolbar buttons to insert embed syntax</li>
 					<li>Click the &quot;?&quot; button to show the embed helper panel</li>
 					<li>Toggle between Edit and Preview modes to see resolved embeds</li>

@@ -43,15 +43,15 @@ export default function TextInput({
 				placeholder={placeholder}
 				className={`
  w-full h-96 p-4 rounded-xl
- /75 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.25)]
- focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent
+ /75  shadow-[0_8px_24px_rgba(0,0,0,0.25)]
+   focus:ring-accent focus:border-accent
  resize-none
  ${fontSizeClasses[fontSize]}
  `}
 				aria-label="テキスト入力エリア"
 				aria-describedby="text-input-help"
 			/>
-			<p id="text-input-help" className="text-xs opacity-70">
+			<p id="text-input-help" className="text-xs ">
 				テキストを入力すると、リアルタイムで文字数や統計情報が更新されます.
 			</p>
 		</div>

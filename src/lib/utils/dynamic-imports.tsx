@@ -14,7 +14,7 @@ import { type ComponentType, lazy } from "react";
 // Loading component for lazy-loaded components
 export const LoadingSpinner: React.FC = () => (
 	<div className="flex items-center justify-center p-8">
-		<div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+		<div className="w-8 h-8   border-t-transparent rounded-full animate-spin" />
 	</div>
 );
 
@@ -24,7 +24,7 @@ export const LazyErrorBoundary: React.FC<{
 	retry: () => void;
 }> = ({ retry }) => (
 	<div className="flex flex-col items-center justify-center p-8 text-center">
-		<div className="text-red-500 mb-4">
+		<div className=" mb-4">
 			<svg
 				className="w-12 h-12 mx-auto mb-2"
 				fill="none"
@@ -44,7 +44,7 @@ export const LazyErrorBoundary: React.FC<{
 		<button
 			type="button"
 			onClick={retry}
-			className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+			className="px-4 py-2   rounded  transition-colors"
 		>
 			再試行
 		</button>

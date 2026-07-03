@@ -354,7 +354,7 @@ function ContentSection({
 			{(relatedImages.length > 0 ||
 				(item.videos?.length ?? 0) > 0 ||
 				(item.externalLinks?.length ?? 0) > 0) && (
-				<div className="pt-6 sm:pt-8 border-t /10">
+				<div className="pt-6 sm:pt-8  /10">
 					<div className="space-y-6 sm:space-y-8">
 						{/* Images */}
 						{relatedImages.length > 0 && (
@@ -393,7 +393,7 @@ function ContentSection({
 									{item.videos.slice(0, 2).map((video, index) => (
 										<div
 											key={`${item.id}-video-${video.url ?? index}`}
-											className="border /10 rounded-lg p-3 sm:p-4"
+											className=" /10 rounded-lg p-3 sm:p-4"
 										>
 											<div className="flex items-center space-x-3">
 												<div className="text-lg shrink-0">🎥</div>
@@ -431,7 +431,7 @@ function ContentSection({
 										<a
 											key={`${item.id}-link-${link.url ?? index}`}
 											href={link.url}
-											className="flex items-center space-x-3 p-3 sm:p-4 border /10 rounded-lg hover:/5 transition-colors "
+											className="flex items-center space-x-3 p-3 sm:p-4  /10 rounded-lg hover:/5 transition-colors "
 										>
 											<div className="text-lg shrink-0">🔗</div>
 											<div className="min-w-0 flex-1">

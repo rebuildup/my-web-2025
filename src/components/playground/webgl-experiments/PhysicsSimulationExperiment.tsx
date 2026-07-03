@@ -590,9 +590,9 @@ export function PhysicsSimulationExperiment({
 
 	if (error) {
 		return (
-			<div className="aspect-video border border-red-500 flex items-center justify-center">
+			<div className="aspect-video   flex items-center justify-center">
 				<div className="text-center space-y-2">
-					<div className="text-red-500 text-lg">⚠️ WebGL Error</div>
+					<div className=" text-lg">⚠️ WebGL Error</div>
 					<p className="text-sm ">{error}</p>
 				</div>
 			</div>
@@ -604,7 +604,7 @@ export function PhysicsSimulationExperiment({
 			{/* 3D Canvas */}
 			<div
 				ref={mountRef}
-				className="aspect-video border overflow-hidden cursor-pointer"
+				className="aspect-video  overflow-hidden cursor-pointer"
 				style={{ minHeight: "400px" }}
 			/>
 
@@ -727,7 +727,7 @@ export function PhysicsSimulationExperiment({
 					<button
 						type="button"
 						onClick={resetSimulation}
-						className="w-full border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="w-full  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<span className="noto-sans-jp-light text-sm">Reset Simulation</span>
 					</button>

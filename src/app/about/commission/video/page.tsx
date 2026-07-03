@@ -152,7 +152,7 @@ export default function VideoCommissionPage() {
 									映像制作サービス概要
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
 											<Music className="w-6 h-6 text-accent mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
@@ -164,7 +164,7 @@ export default function VideoCommissionPage() {
 										</p>
 									</div>
 
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
 											<Video className="w-6 h-6 text-accent mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
@@ -176,7 +176,7 @@ export default function VideoCommissionPage() {
 										</p>
 									</div>
 
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
 											<Palette className="w-6 h-6 text-accent mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
@@ -188,7 +188,7 @@ export default function VideoCommissionPage() {
 										</p>
 									</div>
 
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<div className="flex items-center">
 											<Megaphone className="w-6 h-6 text-accent mr-3" />
 											<h3 className="zen-kaku-gothic-new text-lg ">
@@ -246,7 +246,7 @@ export default function VideoCommissionPage() {
 											icon: CheckCircle,
 										},
 									].map(({ step, title, description, icon: Icon }) => (
-										<div key={step} className=" border p-4">
+										<div key={step} className="  p-4">
 											<div className="flex items-start">
 												<div className="flex-shrink-0 w-8 h-8 bg-accent flex items-center justify-center font-bold mr-4 text-sm">
 													{step}
@@ -274,14 +274,14 @@ export default function VideoCommissionPage() {
 									料金体系
 								</h2>
 
-								<div className=" border border-accent p-4 mb-6">
+								<div className="  border-accent p-4 mb-6">
 									<p className="noto-sans-jp-light text-sm text-accent">
 										※このページに記載した料金設定/依頼の流れ等はまだ検討段階であり、今後変更される可能性が高いです.
 									</p>
 								</div>
 
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6 mb-8">
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<h3 className="zen-kaku-gothic-new text-lg ">
 											料金例
 										</h3>
@@ -313,7 +313,7 @@ export default function VideoCommissionPage() {
 										</div>
 									</div>
 
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<h3 className="zen-kaku-gothic-new text-lg ">
 											支払い・キャンセル
 										</h3>
@@ -334,7 +334,7 @@ export default function VideoCommissionPage() {
 									</div>
 								</div>
 
-								<div className=" border border-accent p-4">
+								<div className="  border-accent p-4">
 									<p className="noto-sans-jp-light text-sm text-accent">
 										※料金設定は変更する場合がございます.依頼時点でここに記載されている金額が料金となります.
 										<br />
@@ -349,7 +349,7 @@ export default function VideoCommissionPage() {
 									使用ソフトウェア
 								</h2>
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<h3 className="zen-kaku-gothic-new text-lg ">
 											映像制作
 										</h3>
@@ -367,7 +367,7 @@ export default function VideoCommissionPage() {
 										</div>
 									</div>
 
-									<div className=" border p-4 space-y-4">
+									<div className="  p-4 space-y-4">
 										<h3 className="zen-kaku-gothic-new text-lg ">
 											グラフィック
 										</h3>
@@ -390,7 +390,7 @@ export default function VideoCommissionPage() {
 								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									見積もりに必要な情報
 								</h2>
-								<div className=" border p-4">
+								<div className="  p-4">
 									<p className="noto-sans-jp-light text-sm mb-4">
 										361do.sleep(at)gmail.com
 										またはXのDMにて以下の内容をお教えください：
@@ -424,7 +424,7 @@ export default function VideoCommissionPage() {
 								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									連絡方法
 								</h2>
-								<div className=" border p-4">
+								<div className="  p-4">
 									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 										<div>
 											<div className="flex items-center mb-3">
@@ -467,7 +467,7 @@ export default function VideoCommissionPage() {
 										</div>
 									</div>
 
-									<div className="mt-6 border border-accent p-4">
+									<div className="mt-6  border-accent p-4">
 										<p className="noto-sans-jp-light text-sm text-accent">
 											通話などでのミーティングの対応は致しかねます
 										</p>
@@ -481,14 +481,14 @@ export default function VideoCommissionPage() {
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
 									<Link
 										href="/contact"
-										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+										className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>お問い合わせフォーム</span>
 									</Link>
 
 									<Link
 										href="/about/commission/estimate"
-										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+										className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>料金計算機</span>
 									</Link>
@@ -496,7 +496,7 @@ export default function VideoCommissionPage() {
 							</nav>
 
 							{/* Footer */}
-							<footer className="pt-4 border-t ">
+							<footer className="pt-4  ">
 								<div className="text-center">
 									<p className="shippori-antique-b1-regular text-sm inline-block">
 										© 2025 samuido - Video Commission

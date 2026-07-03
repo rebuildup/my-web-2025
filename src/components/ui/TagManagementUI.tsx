@@ -225,7 +225,7 @@ export function TagManagementUI({
 			{/* Input Field */}
 			<div className="relative">
 				<div className="relative">
-					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2  w-4 h-4" />
 					<input
 						ref={inputRef}
 						type="text"
@@ -238,10 +238,10 @@ export function TagManagementUI({
 						}
 						disabled={!canAddMoreTags}
 						className={`
- w-full pl-10 pr-4 py-2 border 
- focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base focus:border-transparent
- disabled:bg-gray-100 disabled:cursor-not-allowed
- ${!canAddMoreTags ? "opacity-60" : ""}
+ w-full pl-10 pr-4 py-2  
+  focus: focus:ring-offset-2 focus:ring-offset-base 
+  disabled:cursor-not-allowed
+ ${!canAddMoreTags ? "" : ""}
  `}
 					/>
 				</div>
@@ -250,7 +250,7 @@ export function TagManagementUI({
 				{isDropdownOpen && canAddMoreTags && (
 					<div
 						ref={dropdownRef}
-						className="absolute z-[9999] w-full mt-1 border rounded-lg shadow-xl max-h-60 overflow-y-auto"
+						className="absolute z-[9999] w-full mt-1  rounded-lg  max-h-60 overflow-y-auto"
 						style={{ backgroundColor: "#181818", zIndex: 9999 }}
 					>
 						{isLoading ? (
@@ -264,7 +264,7 @@ export function TagManagementUI({
 									<button
 										type="button"
 										onClick={handleCreateNewTag}
-										className="w-full px-4 py-3 text-left hover: hover:bg-opacity-10 border-b flex items-center gap-2 text-green-600"
+										className="w-full px-4 py-3 text-left hover: hover:bg-opacity-10  flex items-center gap-2 "
 									>
 										<Plus className="w-4 h-4" />
 										Create &quot;{newTagInput}&quot;
@@ -278,13 +278,13 @@ export function TagManagementUI({
 											key={tag.name}
 											type="button"
 											onClick={() => handleTagSelect(tag.name)}
-											className="w-full px-4 py-3 text-left hover: hover:bg-opacity-10 flex items-center justify-between group border-b border-gray-100 last:border-b-0"
+											className="w-full px-4 py-3 text-left hover: hover:bg-opacity-10 flex items-center justify-between group   "
 										>
 											<div className="flex items-center gap-2">
-												<TagIcon className="w-4 h-4 text-gray-400" />
+												<TagIcon className="w-4 h-4 " />
 												<span className="font-medium">{tag.name}</span>
 											</div>
-											<div className="flex items-center gap-2 text-xs text-gray-400">
+											<div className="flex items-center gap-2 text-xs ">
 												<span className=" bg-opacity-10 px-2 py-1 rounded">
 													{tag.count} use{tag.count !== 1 ? "s" : ""}
 												</span>
@@ -293,21 +293,21 @@ export function TagManagementUI({
 									))
 								) : searchQuery && !showCreateOption ? (
 									<div className="px-4 py-3 text-center">
-										<div className="text-gray-500 mb-2">
+										<div className=" mb-2">
 											No existing tags found for &quot;{searchQuery}&quot;
 										</div>
 										{allowNewTags && (
-											<div className="text-xs text-gray-400">
+											<div className="text-xs ">
 												Press Enter to create a new tag
 											</div>
 										)}
 									</div>
 								) : !searchQuery && filteredTags.length === 0 ? (
 									<div className="px-4 py-3 text-center">
-										<div className="text-gray-500 mb-2">
+										<div className=" mb-2">
 											All available tags are already selected
 										</div>
-										<div className="text-xs text-gray-400">
+										<div className="text-xs ">
 											Type to create a new tag
 										</div>
 									</div>
@@ -315,7 +315,7 @@ export function TagManagementUI({
 
 								{/* Show more indicator if there are more tags */}
 								{filteredTags.length > 20 && (
-									<div className="px-4 py-2 text-xs text-gray-400 text-center border-t border-gray-100">
+									<div className="px-4 py-2 text-xs  text-center  ">
 										... and {filteredTags.length - 20} more tags. Keep typing to
 										narrow down results.
 									</div>
@@ -328,7 +328,7 @@ export function TagManagementUI({
 
 			{/* Tag count indicator */}
 			{maxTags && (
-				<div className="mt-2 text-xs text-gray-500">
+				<div className="mt-2 text-xs ">
 					{selectedTags.length} / {maxTags} tags selected
 				</div>
 			)}

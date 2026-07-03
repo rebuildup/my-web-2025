@@ -57,11 +57,11 @@ export function RelatedArticles({ articleSlug, tags }: RelatedArticlesProps) {
 	}
 
 	return (
-		<section className="mt-16 pt-8 border-t border-[#333333]">
-			<h2 className="text-xl font-bold text-white mb-6">
+		<section className="mt-16 pt-8  ">
+			<h2 className="text-xl font-bold  mb-6">
 				関連記事
 				{topTags.length > 0 && (
-					<span className="ml-2 text-sm font-normal text-[#888888]">
+					<span className="ml-2 text-sm font-normal ">
 						{topTags.map((tag) => `#${tag}`).join(" ")}
 					</span>
 				)}
@@ -72,7 +72,7 @@ export function RelatedArticles({ articleSlug, tags }: RelatedArticlesProps) {
 					<Link key={article.href} href={article.href} className="group block">
 						<div className="space-y-3">
 							{/* Thumbnail */}
-							<div className="relative aspect-video overflow-hidden bg-[#1a1a1f] rounded">
+							<div className="relative aspect-video overflow-hidden  rounded">
 								{article.thumbnail ? (
 									<Image
 										src={article.thumbnail}
@@ -82,9 +82,9 @@ export function RelatedArticles({ articleSlug, tags }: RelatedArticlesProps) {
 										sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
 									/>
 								) : (
-									<div className="w-full h-full flex items-center justify-center bg-[#2a2a2f]">
+									<div className="w-full h-full flex items-center justify-center ">
 										<svg
-											className="w-16 h-16 text-[#444444]"
+											className="w-16 h-16 "
 											fill="none"
 											stroke="currentColor"
 											viewBox="0 0 24 24"
@@ -98,11 +98,11 @@ export function RelatedArticles({ articleSlug, tags }: RelatedArticlesProps) {
 										</svg>
 									</div>
 								)}
-								<div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+								<div className="absolute inset-0   transition-colors duration-300" />
 							</div>
 
 							{/* Title */}
-							<h3 className=" font-semibold text-white line-clamp-2 leading-relaxed">
+							<h3 className=" font-semibold  line-clamp-2 leading-relaxed">
 								{article.title}
 							</h3>
 
@@ -112,7 +112,7 @@ export function RelatedArticles({ articleSlug, tags }: RelatedArticlesProps) {
 									{article.tags.slice(0, 2).map((tag) => (
 										<span
 											key={tag}
-											className="px-2 py-0.5 text-xs font-medium text-[#f2f2f2] bg-[#1a1a1f] rounded"
+											className="px-2 py-0.5 text-xs font-medium   rounded"
 										>
 											#{tag}
 										</span>

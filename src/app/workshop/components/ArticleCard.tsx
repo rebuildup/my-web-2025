@@ -25,7 +25,7 @@ export function ArticleCard({
 	const cardContent = (
 		<>
 			{/* Thumbnail - Top half */}
-			<div className="relative w-full aspect-[2/1] overflow-hidden bg-[#1a1a1f]">
+			<div className="relative w-full aspect-[2/1] overflow-hidden ">
 				{thumbnail ? (
 					<Image
 						src={thumbnail}
@@ -36,9 +36,9 @@ export function ArticleCard({
 						loading="lazy"
 					/>
 				) : (
-					<div className="w-full h-full flex items-center justify-center bg-[#2a2a2f]">
+					<div className="w-full h-full flex items-center justify-center ">
 						<svg
-							className="w-16 h-16 text-[#444444]"
+							className="w-16 h-16 "
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
@@ -53,18 +53,18 @@ export function ArticleCard({
 					</div>
 				)}
 				{/* Overlay on hover */}
-				<div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+				<div className="absolute inset-0   transition-colors duration-300" />
 			</div>
 
 			{/* Content - Bottom half */}
 			<div className="p-4 flex flex-col min-h-[180px]">
 				{/* Title and NEW badge */}
 				<div className="flex items-start gap-2">
-					<h3 className="flex-1 text-lg font-semibold text-white line-clamp-1">
+					<h3 className="flex-1 text-lg font-semibold  line-clamp-1">
 						{title}
 					</h3>
 					{isNew && (
-						<span className="shrink-0 px-2 py-0.5 text-xs font-semibold bg-[#ff6b35] text-white rounded">
+						<span className="shrink-0 px-2 py-0.5 text-xs font-semibold   rounded">
 							NEW
 						</span>
 					)}
@@ -72,7 +72,7 @@ export function ArticleCard({
 
 				{/* Description - Show first few lines */}
 				{description && (
-					<p className="text-sm text-[#aaaaaa] line-clamp-3 leading-relaxed">
+					<p className="text-sm  line-clamp-3 leading-relaxed">
 						{description}
 					</p>
 				)}
@@ -82,13 +82,13 @@ export function ArticleCard({
 
 				{/* Metadata - Date and Tags */}
 				<div className="flex items-center justify-between gap-2 text-sm pt-1">
-					<span className="text-[#888888]">{date}</span>
+					<span className="">{date}</span>
 					{tags.length > 0 && (
 						<div className="flex gap-1">
 							{tags.slice(0, 2).map((tag) => (
 								<span
 									key={tag}
-									className="px-2 py-0.5 text-xs font-medium text-[#f2f2f2] bg-[#1a1a1f] rounded"
+									className="px-2 py-0.5 text-xs font-medium   rounded"
 								>
 									#{tag}
 								</span>

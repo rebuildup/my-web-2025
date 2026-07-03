@@ -329,8 +329,8 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 
 	const focusVisibleClasses =
 		mounted && isDarkMode
-			? "focus-visible:outline-2 focus-visible:outline-[#0A84FF] focus-visible:outline-offset-2"
-			: "focus-visible:outline-2 focus-visible:outline-[#007AFF] focus-visible:outline-offset-2";
+			? "  "
+			: "  ";
 
 	return (
 		<div
@@ -339,7 +339,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 			style={getContainerStyles()}
 		>
 			<svg
-				className="w-full h-full pointer-events-none absolute inset-0 opacity-0 -z-10"
+				className="w-full h-full pointer-events-none absolute inset-0  -z-10"
 				xmlns="http://www.w3.org/2000/svg"
 			>
 				<defs>

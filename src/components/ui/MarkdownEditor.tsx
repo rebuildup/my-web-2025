@@ -377,15 +377,15 @@ export function MarkdownEditor({
 	}, [editorContent, embedSupport, resolveEmbedReferences]);
 
 	const buttonStyle =
-		"px-3 py-1 text-sm border rounded hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		"px-3 py-1 text-sm  rounded hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const activeButtonStyle =
-		"px-3 py-1 text-sm border rounded focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		"px-3 py-1 text-sm  rounded   focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
-		<div className="border rounded-lg overflow-hidden shadow-sm">
+		<div className=" rounded-lg overflow-hidden ">
 			{/* Toolbar */}
 			{toolbar && (
-				<div className=" border-b p-2">
+				<div className="  p-2">
 					<div className="flex flex-wrap gap-1 items-center">
 						{/* Preview toggle */}
 						{preview && (
@@ -409,9 +409,9 @@ export function MarkdownEditor({
 									disabled={isSaving}
 									className={`${buttonStyle} ${
 										saveStatus === "success"
-											? "border-green-500 bg-green-50 text-green-700"
+											? "  "
 											: saveStatus === "error"
-												? "border-red-500 bg-red-50 text-red-700"
+												? "  "
 												: ""
 									}`}
 									title="Save File (Ctrl+S)"
@@ -429,22 +429,22 @@ export function MarkdownEditor({
 
 			{/* Validation Errors */}
 			{embedSupport && validationErrors.length > 0 && (
-				<div className="bg-red-50 border-b border-red-200 p-3">
+				<div className="   p-3">
 					<div className="flex items-center gap-2 mb-2">
-						<span className="text-red-600">⚠</span>
-						<h4 className="font-medium text-red-900">Embed Syntax Errors</h4>
+						<span className="">⚠</span>
+						<h4 className="font-medium ">Embed Syntax Errors</h4>
 					</div>
 					<div className="space-y-1 text-sm">
 						{validationErrors.map((error) => {
 							const errorKey = `${error.type}-${error.line}-${error.column}-${error.message}`;
 							return (
-								<div key={errorKey} className="text-red-700">
-									<span className="font-mono text-xs bg-red-100 px-1 rounded">
+								<div key={errorKey} className="">
+									<span className="font-mono text-xs  px-1 rounded">
 										Line {error.line}:{error.column}
 									</span>{" "}
 									{error.message}
 									{error.suggestion && (
-										<div className="text-red-600 text-xs mt-1 ml-4">
+										<div className=" text-xs mt-1 ml-4">
 											💡 {error.suggestion}
 										</div>
 									)}
@@ -470,13 +470,13 @@ export function MarkdownEditor({
 							value={editorContent}
 							onChange={(e) => handleContentChange(e.target.value)}
 							onKeyDown={handleKeyDown}
-							className="w-full min-h-[500px] p-4 pl-12 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus: focus:ring-inset leading-5 "
+							className="w-full min-h-[500px] p-4 pl-12 font-mono text-sm resize-none   focus:  leading-5 "
 							placeholder="Enter your markdown content here..."
 							spellCheck={false}
 						/>
 
 						{/* Line numbers */}
-						<div className="absolute left-0 top-0 p-4 pr-2 text-gray-400 text-sm font-mono pointer-events-none select-none border-r ">
+						<div className="absolute left-0 top-0 p-4 pr-2  text-sm font-mono pointer-events-none select-none  ">
 							{lineMarkers.map((marker) => (
 								<div key={marker.id} className="leading-5 text-right">
 									{marker.number}
@@ -488,7 +488,7 @@ export function MarkdownEditor({
 			</div>
 
 			{/* Status Bar */}
-			<div className=" border-t px-4 py-2 text-xs text-gray-400 flex justify-between items-center">
+			<div className="  px-4 py-2 text-xs  flex justify-between items-center">
 				<div className="flex gap-4">
 					<span>Lines: {editorContent.split("\n").length}</span>
 					<span>Characters: {editorContent.length}</span>
@@ -502,7 +502,7 @@ export function MarkdownEditor({
 					{embedSupport && (
 						<span
 							className={
-								validationErrors.length > 0 ? "text-red-600" : "text-green-600"
+								validationErrors.length > 0 ? "" : ""
 							}
 						>
 							Embeds:{" "}
@@ -515,11 +515,11 @@ export function MarkdownEditor({
 
 				<div className="flex gap-4 items-center">
 					{error && (
-						<div className="text-red-600 font-medium">Error: {error}</div>
+						<div className=" font-medium">Error: {error}</div>
 					)}
 
 					{filePath && (
-						<div className="text-gray-500">
+						<div className="">
 							File: {filePath.split("/").pop()}
 						</div>
 					)}

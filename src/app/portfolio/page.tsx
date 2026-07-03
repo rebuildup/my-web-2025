@@ -542,7 +542,7 @@ export default async function PortfolioPage() {
 						</div>
 					</main>
 
-					<footer className="fixed bottom-2 left-0 right-0 z-10 flex items-center justify-center gap-4 py-3 backdrop-blur-sm">
+					<footer className="fixed bottom-2 left-0 right-0 z-10 flex items-center justify-center gap-4 py-3 ">
 						<span className="text-xs ">© 2025 361do_sleep</span>
 						<Link
 							href="/privacy-policy"

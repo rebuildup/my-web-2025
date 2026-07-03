@@ -528,9 +528,9 @@ export function ShaderExperiment({
 
 	if (error) {
 		return (
-			<div className="aspect-video border border-red-500 flex items-center justify-center">
+			<div className="aspect-video   flex items-center justify-center">
 				<div className="text-center space-y-2">
-					<div className="text-red-500 text-lg">⚠️ WebGL Error</div>
+					<div className=" text-lg">⚠️ WebGL Error</div>
 					<p className="text-sm ">{error}</p>
 				</div>
 			</div>
@@ -542,14 +542,14 @@ export function ShaderExperiment({
 			{/* 3D Canvas */}
 			<div
 				ref={mountRef}
-				className="aspect-video border overflow-hidden cursor-crosshair"
+				className="aspect-video  overflow-hidden cursor-crosshair"
 				style={{ minHeight: "400px" }}
 			/>
 
 			{/* Shader Error */}
 			{shaderError && (
-				<div className="bg-red-900 border border-red-500 p-3 rounded">
-					<div className="text-red-300 text-sm font-mono">
+				<div className="   p-3 rounded">
+					<div className=" text-sm font-mono">
 						Shader Error: {shaderError}
 					</div>
 				</div>
@@ -579,7 +579,7 @@ export function ShaderExperiment({
 										.value as ShaderControls["presetShader"],
 								}))
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							<option value="rainbow">Rainbow</option>
 							<option value="noise">Noise</option>
@@ -593,7 +593,7 @@ export function ShaderExperiment({
 						<button
 							type="button"
 							onClick={() => setShowCode(!showCode)}
-							className="border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+							className=" px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 						>
 							<span className="noto-sans-jp-light text-sm">
 								{showCode ? "Hide Code" : "Show Code"}
@@ -613,7 +613,7 @@ export function ShaderExperiment({
 								<button
 									type="button"
 									onClick={compileCustomShader}
-									className="border border-accent text-accent px-3 py-1 text-sm hover:bg-accent hover: transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+									className=" border-accent text-accent px-3 py-1 text-sm hover:bg-accent hover: transition-colors   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 								>
 									Compile
 								</button>
@@ -627,11 +627,11 @@ export function ShaderExperiment({
 									customCode: e.target.value,
 								}))
 							}
-							className="w-full h-64 border p-3 text-sm font-mono resize-none"
+							className="w-full h-64  p-3 text-sm font-mono resize-none"
 							placeholder="Enter your GLSL fragment shader code here..."
 							disabled={controls.presetShader !== "custom"}
 						/>
-						<div className="text-xs opacity-70">
+						<div className="text-xs ">
 							Available uniforms: time (float), resolution (vec2), mouse (vec2)
 						</div>
 					</div>
@@ -639,17 +639,17 @@ export function ShaderExperiment({
 
 				{/* Shader Info */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-					<div className=" border p-3">
+					<div className="  p-3">
 						<div className="text-accent font-medium">Time</div>
 						<div className="">{elapsedTime.toFixed(2)}s</div>
 					</div>
-					<div className=" border p-3">
+					<div className="  p-3">
 						<div className="text-accent font-medium">Resolution</div>
 						<div className="">
 							{controls.resolution[0]} × {controls.resolution[1]}
 						</div>
 					</div>
-					<div className=" border p-3">
+					<div className="  p-3">
 						<div className="text-accent font-medium">Mouse</div>
 						<div className="">
 							{controls.mouse[0].toFixed(2)}, {controls.mouse[1].toFixed(2)}

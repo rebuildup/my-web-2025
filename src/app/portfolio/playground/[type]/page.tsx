@@ -123,7 +123,7 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 											{playgroundInfo.features.map((feature) => (
 												<span
 													key={feature}
-													className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1"
+													className="noto-sans-jp-light text-xs text-accent  border-accent px-2 py-1"
 												>
 													{feature}
 												</span>
@@ -134,7 +134,7 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 
 								{/* Playground Content */}
 								<section>
-									<div className=" border p-8">
+									<div className="  p-8">
 										<div className="text-center py-16">
 											<h2 className="neue-haas-grotesk-display text-3xl mb-4">
 												{playgroundInfo.title} Experiments
@@ -144,7 +144,7 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 											</p>
 
 											{/* Placeholder for actual playground content */}
-											<div className="aspect-video border flex items-center justify-center">
+											<div className="aspect-video  flex items-center justify-center">
 												<div className="text-center">
 													<div className="text-4xl mb-4">🚧</div>
 													<p className="noto-sans-jp-light text-sm ">
@@ -165,7 +165,7 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 										{playgroundInfo.features.map((feature, index) => (
 											<div
 												key={feature}
-												className=" border p-4 space-y-2"
+												className="  p-4 space-y-2"
 											>
 												<div className="text-accent text-lg font-bold">
 													{String(index + 1).padStart(2, "0")}

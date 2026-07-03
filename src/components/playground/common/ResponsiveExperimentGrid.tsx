@@ -74,14 +74,14 @@ export const ResponsiveExperimentGrid: React.FC<
 	// Experiment card classes based on responsive state
 	const getCardClasses = (isActive: boolean) => {
 		const baseClasses = `
- text-left p-4 border transition-all duration-200 
- focus:outline-none focus:ring-2 focus: 
+ text-left p-4  transition-all duration-200 
+   focus: 
  focus:ring-offset-2 focus:ring-offset-base
  ${responsive.touch.isTouchDevice ? "active:scale-95" : "hover:scale-105"}
  `;
 
 		const stateClasses = isActive
-			? "border-accent bg-accent bg-opacity-10 shadow-lg"
+			? "border-accent bg-accent bg-opacity-10 "
 			: " hover:border-accent";
 
 		const sizeClasses = responsive.isMobile
@@ -102,8 +102,8 @@ export const ResponsiveExperimentGrid: React.FC<
 			? "noto-sans-jp-light text-xs line-clamp-2"
 			: "noto-sans-jp-light text-sm line-clamp-3",
 		tag: responsive.isMobile
-			? "noto-sans-jp-light text-xs border px-1 py-0.5"
-			: "noto-sans-jp-light text-xs border px-2 py-1",
+			? "noto-sans-jp-light text-xs  px-1 py-0.5"
+			: "noto-sans-jp-light text-xs  px-2 py-1",
 		tech: responsive.isMobile
 			? "noto-sans-jp-light text-xs text-accent"
 			: "noto-sans-jp-light text-xs text-accent",
@@ -131,7 +131,7 @@ export const ResponsiveExperimentGrid: React.FC<
 								<button
 									type="button"
 									onClick={goToPrevPage}
-									className="p-1 border hover:border-accent focus:outline-none focus:ring-2 focus:"
+									className="p-1  hover:border-accent   focus:"
 									aria-label="Previous page"
 								>
 									<ChevronLeft className="w-4 h-4" />
@@ -139,7 +139,7 @@ export const ResponsiveExperimentGrid: React.FC<
 								<button
 									type="button"
 									onClick={goToNextPage}
-									className="p-1 border hover:border-accent focus:outline-none focus:ring-2 focus:"
+									className="p-1  hover:border-accent   focus:"
 									aria-label="Next page"
 								>
 									<ChevronRight className="w-4 h-4" />
@@ -152,7 +152,7 @@ export const ResponsiveExperimentGrid: React.FC<
 
 			{/* Mobile swipe instruction */}
 			{responsive.isMobile && totalPages > 1 && (
-				<p className="noto-sans-jp-light text-xs opacity-70">
+				<p className="noto-sans-jp-light text-xs ">
 					スワイプで実験を切り替えできます
 				</p>
 			)}
@@ -259,7 +259,7 @@ export const ResponsiveExperimentGrid: React.FC<
 								key={pageNumber}
 								onClick={() => setCurrentPage(index)}
 								className={`w-2 h-2 rounded-full transition-colors ${
-									index === currentPage ? "bg-accent" : " opacity-30"
+									index === currentPage ? "bg-accent" : " "
 								}`}
 								aria-label={`Go to page ${pageNumber}`}
 							/>

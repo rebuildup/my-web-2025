@@ -28,19 +28,19 @@ export function PlaygroundStatistics({
 
 	if (!stats) {
 		return (
-			<div className={` border p-4 ${className}`}>
+			<div className={`  p-4 ${className}`}>
 				<div className="animate-pulse">
-					<div className="h-4 opacity-20 rounded mb-2"></div>
-					<div className="h-8 opacity-20 rounded"></div>
+					<div className="h-4  rounded mb-2"></div>
+					<div className="h-8  rounded"></div>
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className={` border ${className}`}>
+		<div className={`  ${className}`}>
 			{/* Header */}
-			<div className="p-4 border-b ">
+			<div className="p-4  ">
 				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<BarChart3 className="w-5 h-5 mr-2" />
 					Playground Statistics
@@ -87,7 +87,7 @@ export function PlaygroundStatistics({
 							<div key={category} className="flex items-center justify-between">
 								<span className="text-sm capitalize">{category}</span>
 								<div className="flex items-center space-x-2">
-									<div className="w-20 h-2 border rounded-full overflow-hidden">
+									<div className="w-20 h-2  rounded-full overflow-hidden">
 										<div
 											className="h-full bg-accent"
 											style={{
@@ -120,14 +120,14 @@ export function PlaygroundStatistics({
 									{difficulty}
 								</span>
 								<div className="flex items-center space-x-2">
-									<div className="w-20 h-2 border rounded-full overflow-hidden">
+									<div className="w-20 h-2  rounded-full overflow-hidden">
 										<div
 											className={`h-full ${
 												difficulty === "beginner"
-													? "bg-green-500"
+													? ""
 													: difficulty === "intermediate"
-														? "bg-yellow-500"
-														: "bg-red-500"
+														? ""
+														: ""
 											}`}
 											style={{
 												width: `${(count / stats.totalExperiments) * 100}%`,
@@ -144,23 +144,23 @@ export function PlaygroundStatistics({
 				</div>
 
 				{/* WebGL Requirements */}
-				<div className=" border p-3 rounded">
+				<div className="  p-3 rounded">
 					<h4 className="font-medium mb-2">WebGL Requirements</h4>
 					<div className="grid grid-cols-2 gap-4 text-sm">
 						<div>
-							<span className=" opacity-70">WebGL Required:</span>
+							<span className=" ">WebGL Required:</span>
 							<span className="ml-2 text-accent font-medium">
 								{stats.requiresWebGL} / {stats.totalExperiments}
 							</span>
 						</div>
 						<div>
-							<span className=" opacity-70">WebGL2 Required:</span>
+							<span className=" ">WebGL2 Required:</span>
 							<span className="ml-2 text-accent font-medium">
 								{stats.requiresWebGL2} / {stats.totalExperiments}
 							</span>
 						</div>
 					</div>
-					<div className="mt-2 text-xs opacity-70">
+					<div className="mt-2 text-xs ">
 						{((stats.requiresWebGL / stats.totalExperiments) * 100).toFixed(1)}%
 						of experiments require WebGL support
 					</div>

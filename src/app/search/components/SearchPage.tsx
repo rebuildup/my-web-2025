@@ -53,7 +53,7 @@ export default function SearchPage() {
 
 	// Style variables matching root page
 	const CardStyle =
-		" border block p-4 space-y-4 focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		"  block p-4 space-y-4   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const Card_title = "neue-haas-grotesk-display text-xl leading-snug";
 	const Card_description = "noto-sans-jp-light text-xs pb-2";
 	const Global_title = "noto-sans-jp-regular leading-snug";
@@ -286,7 +286,7 @@ export default function SearchPage() {
 						<section className="space-y-6">
 							<div className="relative">
 								<div className="relative">
-									<Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-60" />
+									<Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 " />
 									<input
 										type="text"
 										value={query}
@@ -307,7 +307,7 @@ export default function SearchPage() {
 											}, 200)
 										}
 										placeholder="検索キーワードを入力..."
-										className="w-full pl-12 pr-4 py-4 border placeholder-main/60 focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+										className="w-full pl-12 pr-4 py-4  placeholder-main/60   focus: focus:ring-offset-2 focus:ring-offset-base"
 										aria-label="検索キーワード"
 										data-testid="search-input"
 									/>
@@ -315,7 +315,7 @@ export default function SearchPage() {
 
 								{/* Search Suggestions */}
 								{showSuggestions && suggestions.length > 0 && (
-									<div className="absolute top-full left-0 right-0 border border-t-0 z-10">
+									<div className="absolute top-full left-0 right-0   z-10">
 										{suggestions.map((suggestion, index) => (
 											<button
 												type="button"
@@ -323,7 +323,7 @@ export default function SearchPage() {
 												onClick={() => handleSuggestionClick(suggestion)}
 												className="w-full px-4 py-3 text-left hover: hover: transition-colors noto-sans-jp-light text-sm flex items-center gap-2"
 											>
-												<Search className="w-4 h-4 opacity-60" />
+												<Search className="w-4 h-4 " />
 												{suggestion}
 											</button>
 										))}
@@ -332,8 +332,8 @@ export default function SearchPage() {
 
 								{/* Search History */}
 								{showHistory && searchHistory.length > 0 && (
-									<div className="absolute top-full left-0 right-0 border border-t-0 z-10">
-										<div className="px-4 py-2 border-b ">
+									<div className="absolute top-full left-0 right-0   z-10">
+										<div className="px-4 py-2  ">
 											<div className="flex items-center justify-between">
 												<span className="noto-sans-jp-light text-xs">
 													最近の検索
@@ -356,9 +356,9 @@ export default function SearchPage() {
 												className="w-full px-4 py-3 text-left hover: hover: transition-colors noto-sans-jp-light text-sm flex items-center justify-between group"
 											>
 												<div className="flex items-center gap-2">
-													<Clock className="w-4 h-4 opacity-60" />
+													<Clock className="w-4 h-4 " />
 													<span>{historyItem.query}</span>
-													<span className="text-xs opacity-60">
+													<span className="text-xs ">
 														({historyItem.resultCount}件)
 													</span>
 												</div>
@@ -367,7 +367,7 @@ export default function SearchPage() {
 													onClick={(e) =>
 														handleRemoveHistoryItem(historyItem.query, e)
 													}
-													className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover: hover: rounded"
+													className="  transition-opacity p-1 hover: hover: rounded"
 												>
 													<X className="w-3 h-3" />
 												</button>
@@ -383,7 +383,7 @@ export default function SearchPage() {
 								<button
 									type="button"
 									onClick={() => setSearchMode("simple")}
-									className={`px-4 py-2 text-sm border transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base ${
+									className={`px-4 py-2 text-sm  transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base ${
 										searchMode === "simple"
 											? " "
 											: " hover: hover:"
@@ -395,7 +395,7 @@ export default function SearchPage() {
 								<button
 									type="button"
 									onClick={() => setSearchMode("detailed")}
-									className={`px-4 py-2 text-sm border transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base ${
+									className={`px-4 py-2 text-sm  transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base ${
 										searchMode === "detailed"
 											? " "
 											: " hover: hover:"
@@ -409,7 +409,7 @@ export default function SearchPage() {
 							<button
 								type="button"
 								onClick={() => setShowFilters(!showFilters)}
-								className="flex items-center gap-2 px-4 py-2 border hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+								className="flex items-center gap-2 px-4 py-2  hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 							>
 								<Filter className="w-4 h-4" />
 								<span className={Global_title}>フィルター</span>
@@ -417,7 +417,7 @@ export default function SearchPage() {
 
 							{/* Filters */}
 							{showFilters && (
-								<section className="p-4 border space-y-4">
+								<section className="p-4  space-y-4">
 									<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 										{/* Content Type Filter */}
 										<div>
@@ -433,7 +433,7 @@ export default function SearchPage() {
 												onChange={(e) =>
 													handleTypeChange(e.target.value as ContentType)
 												}
-												className="w-full px-4 py-2 border focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+												className="w-full px-4 py-2    focus: focus:ring-offset-2 focus:ring-offset-base"
 											>
 												<option value="">すべて</option>
 												{Object.entries(CONTENT_TYPE_LABELS).map(
@@ -458,7 +458,7 @@ export default function SearchPage() {
 												id="search-category"
 												value={selectedCategory}
 												onChange={(e) => handleCategoryChange(e.target.value)}
-												className="w-full px-4 py-2 border focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+												className="w-full px-4 py-2    focus: focus:ring-offset-2 focus:ring-offset-base"
 											>
 												{CATEGORIES.map((category) => (
 													<option
@@ -481,7 +481,7 @@ export default function SearchPage() {
 												setSelectedCategory("");
 												performSearch(query);
 											}}
-											className="flex items-center gap-2 px-4 py-2 text-sm hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+											className="flex items-center gap-2 px-4 py-2 text-sm hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 										>
 											<X className="w-4 h-4" />
 											フィルターをクリア
@@ -495,14 +495,14 @@ export default function SearchPage() {
 						<section>
 							{loading && (
 								<div className="text-center py-16">
-									<div className="inline-block w-8 h-8 border-2 border-t-transparent rounded-full animate-spin"></div>
+									<div className="inline-block w-8 h-8  border-t-transparent rounded-full animate-spin"></div>
 									<p className="mt-4 noto-sans-jp-light text-sm">検索中...</p>
 								</div>
 							)}
 
 							{!loading && query && results.length === 0 && (
 								<div className="text-center py-16" data-testid="no-results">
-									<p className="noto-sans-jp-light opacity-80">
+									<p className="noto-sans-jp-light ">
 										「{query}」に一致する結果が見つかりませんでした
 									</p>
 								</div>
@@ -510,7 +510,7 @@ export default function SearchPage() {
 
 							{!loading && results.length > 0 && (
 								<div className="space-y-6">
-									<p className="noto-sans-jp-light text-sm opacity-80">
+									<p className="noto-sans-jp-light text-sm ">
 										{results.length}件の結果が見つかりました
 									</p>
 
@@ -525,12 +525,12 @@ export default function SearchPage() {
 													<Link href={result.url} className={Card_title}>
 														{result.title}
 													</Link>
-													<span className="noto-sans-jp-light text-xs opacity-60 ml-4">
+													<span className="noto-sans-jp-light text-xs  ml-4">
 														{CONTENT_TYPE_LABELS[result.type]}
 													</span>
 												</div>
 
-												<p className={`${Card_description} opacity-80`}>
+												<p className={`${Card_description} `}>
 													{result.description}
 												</p>
 
@@ -556,7 +556,7 @@ export default function SearchPage() {
 													>
 														{result.url}
 													</Link>
-													<span className="noto-sans-jp-light opacity-60">
+													<span className="noto-sans-jp-light ">
 														関連度: {Math.round(result.score * 100)}%
 													</span>
 												</div>
@@ -568,14 +568,14 @@ export default function SearchPage() {
 
 							{!query && (
 								<div className="text-center py-16">
-									<p className="noto-sans-jp-light opacity-80">
+									<p className="noto-sans-jp-light ">
 										検索キーワードを入力してください
 									</p>
 								</div>
 							)}
 						</section>
 
-						<footer className="pt-4 border-t ">
+						<footer className="pt-4  ">
 							<div className="text-center">
 								<p className="shippori-antique-b1-regular text-sm inline-block">
 									© 2025 samuido - Creative Portfolio & Tools

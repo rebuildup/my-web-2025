@@ -69,31 +69,31 @@ function CodeBlock({
 	return (
 		<div
 			className={cn(
-				"relative group rounded-xl overflow-hidden bg-[#1e1e1e]/90 backdrop-blur-md shadow-2xl transition-all hover:shadow-accent/10 border border-white/5",
+				"relative group rounded-xl overflow-hidden bg-[#1e1e1e]/90   transition-all hover:shadow-accent/10 border ",
 				className,
 			)}
 		>
 			{/* Editor Header */}
-			<div className="flex items-center justify-between px-4 py-2 bg-[#252526] border-b border-black/50">
+			<div className="flex items-center justify-between px-4 py-2   ">
 				<div className="flex gap-2">
-					<div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-					<div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-					<div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+					<div className="w-2.5 h-2.5 rounded-full " />
+					<div className="w-2.5 h-2.5 rounded-full " />
+					<div className="w-2.5 h-2.5 rounded-full " />
 				</div>
-				<span className="text-[10px] font-mono text-white/50">{title}</span>
+				<span className="text-[10px] font-mono ">{title}</span>
 			</div>
 
 			{/* Code Content */}
-			<div className="p-4 overflow-x-auto custom-scrollbar bg-[#1e1e1e]">
+			<div className="p-4 overflow-x-auto custom-scrollbar ">
 				<div className="flex font-mono text-xs md:text-sm leading-relaxed">
 					{/* Line Numbers */}
-					<div className="flex flex-col text-right text-white/20 select-none mr-3 pr-3 border-r border-white/10 font-mono">
+					<div className="flex flex-col text-right  select-none mr-3 pr-3   font-mono">
 						{Array.from({ length: 12 }, (_, i) => (
 							<span key={i}>{i + 1}</span>
 						))}
 					</div>
 					{/* Code - Simplified rendering for stability */}
-					<pre className="text-[#d4d4d4] whitespace-pre-wrap font-mono">
+					<pre className=" whitespace-pre-wrap font-mono">
 						{
 							JSON.stringify(data, null, 2).replace(/"([^"]+)":/g, "$1:") // Remove quotes from keys for cleaner look
 						}
@@ -102,7 +102,7 @@ function CodeBlock({
 			</div>
 
 			{/* Glow Effect */}
-			<div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+			<div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-accent/5    transition-opacity duration-500" />
 		</div>
 	);
 }
@@ -154,7 +154,7 @@ function TerminalTimeline({
 			</h3>
 			<div className="relative pl-4 space-y-10">
 				{/* Timeline Line */}
-				<div className="absolute left-[7px] top-4 bottom-0 w-[1px] bg-gradient-to-b from-accent/30 via-accent/10 to-transparent" />
+				<div className="absolute left-[7px] top-4 bottom-0 w-[1px] bg-gradient-to-b from-accent/30 via-accent/10 " />
 
 				{items.map((item, idx) => (
 					<motion.div
@@ -170,7 +170,7 @@ function TerminalTimeline({
 						className="relative pl-8 group"
 					>
 						{/* Node */}
-						<span className="absolute left-[3px] top-2.5 w-[9px] h-[9px] rounded-full border-2 border-accent z-10 group-hover:scale-125 group-hover:bg-accent transition-all duration-300" />
+						<span className="absolute left-[3px] top-2.5 w-[9px] h-[9px] rounded-full  border-accent z-10 group-hover:scale-125 group-hover:bg-accent transition-all duration-300" />
 
 						<div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1.5">
 							<span className="font-mono text-accent text-[10px] py-0.5 px-2 bg-accent/10 rounded">
@@ -186,7 +186,7 @@ function TerminalTimeline({
 						</p>
 
 						{(item.description || item.tags) && (
-							<div className="text-xs md:text-sm /60 space-y-2 pl-4 border-l /10 group-hover:border-accent/30 transition-colors">
+							<div className="text-xs md:text-sm /60 space-y-2 pl-4  /10 group-hover:border-accent/30 transition-colors">
 								{item.description && <p>{item.description[lang]}</p>}
 								{item.tags && (
 									<div className="flex flex-wrap gap-2">
@@ -217,13 +217,13 @@ function LangToggle({
 	setLang: (l: "ja" | "en") => void;
 }) {
 	return (
-		<div className="flex items-center /50 backdrop-blur-md rounded-full p-1 border /10">
+		<div className="flex items-center /50  rounded-full p-1 border /10">
 			<button
 				onClick={() => setLang("ja")}
 				className={cn(
 					"px-3 py-1 rounded-full text-[10px] font-bold transition-all duration-300",
 					lang === "ja"
-						? " shadow-lg scale-105"
+						? "  scale-105"
 						: "/40 hover:/80",
 				)}
 			>
@@ -234,7 +234,7 @@ function LangToggle({
 				className={cn(
 					"px-3 py-1 rounded-full text-[10px] font-bold transition-all duration-300",
 					lang === "en"
-						? " shadow-lg scale-105"
+						? "  scale-105"
 						: "/40 hover:/80",
 				)}
 			>
@@ -276,7 +276,7 @@ export default function AboutClient({
 	return (
 		<div
 			ref={containerRef}
-			className="min-h-screen relative bg-transparent selection:bg-accent/30 overflow-hidden"
+			className="min-h-screen relative  selection:bg-accent/30 overflow-hidden"
 		>
 			<AboutBackground />
 
@@ -287,9 +287,9 @@ export default function AboutClient({
 			/>
 
 			{/* Top Navigation Bar */}
-			<div className="fixed top-0 left-0 right-0 z-40 /80 backdrop-blur-md border-b border-white/5 transition-all">
+			<div className="fixed top-0 left-0 right-0 z-40 /80    transition-all">
 				<div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex justify-between items-center">
-					<div className="mix-blend-difference ">
+					<div className=" ">
 						<Breadcrumbs
 							items={[
 								{ label: "Home", href: "/" },
@@ -313,7 +313,7 @@ export default function AboutClient({
 							initial={{ opacity: 0, y: 5 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.3, ease: [0.4, 0, 1, 1] }}
-							className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-mono tracking-wider backdrop-blur-sm"
+							className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-mono tracking-wider "
 						>
 							<span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
 							SYSTEM_OPERATIONAL
@@ -328,7 +328,7 @@ export default function AboutClient({
 									duration: 0.3,
 									ease: [0.4, 0, 1, 1],
 								}}
-								className="text-5xl md:text-7xl lg:text-8xl font-display font-black tracking-tighter leading-[0.85] mix-blend-overlay opacity-90"
+								className="text-5xl md:text-7xl lg:text-8xl font-display font-black tracking-tighter leading-[0.85]  "
 							>
 								WHO
 								<br />I AM
@@ -339,7 +339,7 @@ export default function AboutClient({
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							transition={{ delay: 0.1, duration: 0.3, ease: [0.4, 0, 1, 1] }}
-							className=" md:text-lg /80 leading-relaxed max-w-lg font-light drop-shadow-sm"
+							className=" md:text-lg /80 leading-relaxed max-w-lg font-light "
 						>
 							{profile.bio[lang]}
 						</motion.p>
@@ -363,13 +363,13 @@ export default function AboutClient({
 									? `${latestProject.title} (${latestProject.date})`
 									: "Loading...",
 							}}
-							className="w-full shadow-2xl shadow-black/50"
+							className="w-full  shadow-black/50"
 						/>
 					</motion.div>
 				</div>
 
 				{/* --- Links Section --- */}
-				<section className="mb-24 border-t /5 pt-6">
+				<section className="mb-24  /5 pt-6">
 					<div className="flex flex-wrap gap-8 md:gap-16">
 						<Link
 							href="/about/profile/real"
@@ -433,7 +433,7 @@ export default function AboutClient({
 									</div>
 								</div>
 								{/* Decor Line */}
-								<div className="absolute -bottom-6 left-0 right-0 h-[1px] bg-gradient-to-r from-main/10 via-main/5 to-transparent w-full" />
+								<div className="absolute -bottom-6 left-0 right-0 h-[1px] bg-gradient-to-r from-main/10 via-main/5  w-full" />
 							</motion.div>
 						))}
 					</div>
@@ -452,7 +452,7 @@ export default function AboutClient({
 				</section>
 
 				{/* Footer Info */}
-				<div className="mt-24 pt-8 border-t /5 flex justify-end text-[10px] font-mono /20">
+				<div className="mt-24 pt-8  /5 flex justify-end text-[10px] font-mono /20">
 					<span>
 						LAST_UPDATE:{" "}
 						{new Date(stats.lastUpdated).toLocaleString(

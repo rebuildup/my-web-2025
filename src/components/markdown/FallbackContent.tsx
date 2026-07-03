@@ -37,8 +37,8 @@ const FallbackContent: React.FC<FallbackContentProps> = ({
 			return (
 				<div className={`fallback-content ${className}`}>
 					<div className="fallback-header">
-						<FileText className="w-4 h-4 text-yellow-500" />
-						<span className="text-sm text-gray-600">
+						<FileText className="w-4 h-4 " />
+						<span className="text-sm ">
 							Displaying cached content
 						</span>
 					</div>
@@ -59,7 +59,7 @@ const FallbackContent: React.FC<FallbackContentProps> = ({
 							<button
 								type="button"
 								onClick={onRetry}
-								className="inline-flex items-center gap-2 px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition-colors"
+								className="inline-flex items-center gap-2 px-3 py-1 text-sm   rounded-md  transition-colors"
 							>
 								<RefreshCw className="w-3 h-3" />
 								Try loading markdown
@@ -73,19 +73,19 @@ const FallbackContent: React.FC<FallbackContentProps> = ({
 		return (
 			<div className={`fallback-content-empty ${className}`}>
 				<div className="fallback-header">
-					<AlertTriangle className="w-4 h-4 text-orange-500" />
-					<span className="text-sm text-gray-600">
+					<AlertTriangle className="w-4 h-4 " />
+					<span className="text-sm ">
 						Content temporarily unavailable
 					</span>
 				</div>
 				<div className="fallback-body mt-3">
-					<p className="text-sm text-gray-500">{getErrorMessage()}</p>
+					<p className="text-sm ">{getErrorMessage()}</p>
 					{showErrorDetails && (
 						<details className="mt-2">
-							<summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-600">
+							<summary className="text-xs  cursor-pointer ">
 								Technical details
 							</summary>
-							<pre className="mt-1 text-xs text-gray-400 bg-gray-50 p-2 rounded overflow-x-auto">
+							<pre className="mt-1 text-xs   p-2 rounded overflow-x-auto">
 								{contentId && `Content ID: ${contentId}\n`}
 								{error
 									? `Error: ${error.message}`
@@ -99,7 +99,7 @@ const FallbackContent: React.FC<FallbackContentProps> = ({
 						<button
 							type="button"
 							onClick={onRetry}
-							className="inline-flex items-center gap-2 px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition-colors"
+							className="inline-flex items-center gap-2 px-3 py-1 text-sm   rounded-md  transition-colors"
 						>
 							<RefreshCw className="w-3 h-3" />
 							Retry
@@ -134,7 +134,7 @@ const FallbackContent: React.FC<FallbackContentProps> = ({
 	};
 
 	return (
-		<div className="markdown-fallback border border-gray-200 rounded-lg p-4 bg-gray-50">
+		<div className="markdown-fallback   rounded-lg p-4 ">
 			{getFallbackDisplay()}
 		</div>
 	);
@@ -149,14 +149,14 @@ export const InlineFallback: React.FC<{
 	onRetry?: () => void;
 }> = ({ fallbackText, onRetry }) => {
 	return (
-		<span className="inline-fallback inline-flex items-center gap-1 px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-sm">
+		<span className="inline-fallback inline-flex items-center gap-1 px-2 py-1   rounded text-sm">
 			<AlertTriangle className="w-3 h-3" />
 			{fallbackText || "Content unavailable"}
 			{onRetry && (
 				<button
 					type="button"
 					onClick={onRetry}
-					className="ml-1 text-yellow-600 hover:text-yellow-800"
+					className="ml-1  "
 					title="Retry loading content"
 				>
 					<RefreshCw className="w-3 h-3" />

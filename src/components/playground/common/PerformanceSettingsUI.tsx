@@ -46,11 +46,11 @@ export function PerformanceSettingsUI({
 		const { fps } = performanceMetrics;
 
 		if (fps >= performanceSettings.targetFPS * 0.9) {
-			return { status: "excellent", color: "text-green-600", icon: "🟢" };
+			return { status: "excellent", color: "", icon: "🟢" };
 		} else if (fps >= performanceSettings.targetFPS * 0.7) {
-			return { status: "good", color: "text-yellow-600", icon: "🟡" };
+			return { status: "good", color: "", icon: "🟡" };
 		} else {
-			return { status: "poor", color: "text-red-600", icon: "🔴" };
+			return { status: "poor", color: "", icon: "🔴" };
 		}
 	};
 
@@ -78,9 +78,9 @@ export function PerformanceSettingsUI({
 	const recommendations = getRecommendations();
 
 	return (
-		<div className={` border ${className}`}>
+		<div className={`  ${className}`}>
 			{/* Header */}
-			<div className="p-4 border-b ">
+			<div className="p-4  ">
 				<div className="flex items-center justify-between">
 					<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 						<Settings className="w-5 h-5 mr-2" />
@@ -112,13 +112,13 @@ export function PerformanceSettingsUI({
 									e.target.value as PerformanceSettings["qualityLevel"],
 								)
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							<option value="low">Low (30 FPS, 最小品質)</option>
 							<option value="medium">Medium (60 FPS, 標準品質)</option>
 							<option value="high">High (60+ FPS, 最高品質)</option>
 						</select>
-						<p className="text-xs opacity-70">
+						<p className="text-xs ">
 							デバイス性能: {deviceCapabilities.performanceLevel}
 						</p>
 					</div>
@@ -139,7 +139,7 @@ export function PerformanceSettingsUI({
 							}
 							className="w-full"
 						/>
-						<div className="flex justify-between text-xs opacity-70">
+						<div className="flex justify-between text-xs ">
 							<span>15</span>
 							<span>30</span>
 							<span>60</span>
@@ -203,7 +203,7 @@ export function PerformanceSettingsUI({
 														.value as PerformanceSettings["textureQuality"],
 												)
 											}
-											className="w-full border p-2 text-sm"
+											className="w-full  p-2 text-sm"
 										>
 											<option value="low">Low (512px)</option>
 											<option value="medium">Medium (1024px)</option>
@@ -224,7 +224,7 @@ export function PerformanceSettingsUI({
 														.value as PerformanceSettings["shadowQuality"],
 												)
 											}
-											className="w-full border p-2 text-sm"
+											className="w-full  p-2 text-sm"
 										>
 											<option value="off">Off</option>
 											<option value="low">Low</option>
@@ -256,41 +256,41 @@ export function PerformanceSettingsUI({
 							)}
 
 							{/* Device Info */}
-							<div className=" border p-3 rounded text-sm">
+							<div className="  p-3 rounded text-sm">
 								<h5 className="font-medium mb-2">Device Info</h5>
 								<div className="grid grid-cols-2 gap-2 text-xs">
 									<div>
-										<span className=" opacity-70">WebGL:</span>
+										<span className=" ">WebGL:</span>
 										<span className="ml-1 text-accent">
 											{deviceCapabilities.webglSupport ? "Yes" : "No"}
 										</span>
 									</div>
 									<div>
-										<span className=" opacity-70">WebGL2:</span>
+										<span className=" ">WebGL2:</span>
 										<span className="ml-1 text-accent">
 											{deviceCapabilities.webgl2Support ? "Yes" : "No"}
 										</span>
 									</div>
 									<div>
-										<span className=" opacity-70">Touch:</span>
+										<span className=" ">Touch:</span>
 										<span className="ml-1 text-accent">
 											{deviceCapabilities.touchSupport ? "Yes" : "No"}
 										</span>
 									</div>
 									<div>
-										<span className=" opacity-70">Cores:</span>
+										<span className=" ">Cores:</span>
 										<span className="ml-1 text-accent">
 											{deviceCapabilities.hardwareConcurrency}
 										</span>
 									</div>
 									<div>
-										<span className=" opacity-70">DPR:</span>
+										<span className=" ">DPR:</span>
 										<span className="ml-1 text-accent">
 											{deviceCapabilities.devicePixelRatio}x
 										</span>
 									</div>
 									<div>
-										<span className=" opacity-70">Max Texture:</span>
+										<span className=" ">Max Texture:</span>
 										<span className="ml-1 text-accent">
 											{deviceCapabilities.maxTextureSize}px
 										</span>
@@ -328,7 +328,7 @@ export function PerformanceSettingsUI({
 										{performanceMetrics.fps}
 									</div>
 									<div className="noto-sans-jp-light ">FPS</div>
-									<div className="text-xs opacity-70">
+									<div className="text-xs ">
 										Target: {performanceSettings.targetFPS}
 									</div>
 								</div>
@@ -339,7 +339,7 @@ export function PerformanceSettingsUI({
 									<div className="noto-sans-jp-light ">
 										Frame Time (ms)
 									</div>
-									<div className="text-xs opacity-70">
+									<div className="text-xs ">
 										Target: {(1000 / performanceSettings.targetFPS).toFixed(1)}
 									</div>
 								</div>
@@ -350,7 +350,7 @@ export function PerformanceSettingsUI({
 									<div className="noto-sans-jp-light ">
 										Memory (MB)
 									</div>
-									<div className="text-xs opacity-70">
+									<div className="text-xs ">
 										Limit: {deviceCapabilities.memoryLimit || "N/A"}
 									</div>
 								</div>
@@ -380,11 +380,11 @@ export function PerformanceSettingsUI({
 
 							{/* Recommendations */}
 							{recommendations.length > 0 && (
-								<div className="bg-yellow-50 border border-yellow-200 p-3 rounded">
-									<h5 className="font-medium text-yellow-800 mb-2">
+								<div className="   p-3 rounded">
+									<h5 className="font-medium  mb-2">
 										Performance Recommendations
 									</h5>
-									<ul className="text-sm text-yellow-700 space-y-1">
+									<ul className="text-sm  space-y-1">
 										{recommendations.map((rec, index) => (
 											<li key={index} className="flex items-start space-x-2">
 												<span className="text-xs mt-1">•</span>
@@ -414,7 +414,7 @@ export function PerformanceSettingsUI({
 									maxParticles: 500,
 								})
 							}
-							className="px-3 py-2 border text-sm hover:border-accent hover:text-accent transition-colors"
+							className="px-3 py-2  text-sm hover:border-accent hover:text-accent transition-colors"
 						>
 							Battery Saver
 						</button>
@@ -430,7 +430,7 @@ export function PerformanceSettingsUI({
 									maxParticles: 2000,
 								})
 							}
-							className="px-3 py-2 border text-sm hover:border-accent hover:text-accent transition-colors"
+							className="px-3 py-2  text-sm hover:border-accent hover:text-accent transition-colors"
 						>
 							Balanced
 						</button>
@@ -446,7 +446,7 @@ export function PerformanceSettingsUI({
 									maxParticles: 5000,
 								})
 							}
-							className="px-3 py-2 border text-sm hover:border-accent hover:text-accent transition-colors"
+							className="px-3 py-2  text-sm hover:border-accent hover:text-accent transition-colors"
 						>
 							Max Quality
 						</button>

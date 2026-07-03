@@ -335,9 +335,9 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 	return (
 		<div className="space-y-6">
 			{/* Interactive Area */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<div
-					className="relative border overflow-hidden cursor-crosshair"
+					className="relative  overflow-hidden cursor-crosshair"
 					style={{ width: "100%", height: "500px" }}
 					onMouseMove={handleMouseMove}
 					onMouseDown={handleMouseDown}
@@ -362,7 +362,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 
 					{/* Mouse cursor indicator */}
 					<div
-						className="absolute pointer-events-none border-2 border-accent rounded-full opacity-30"
+						className="absolute pointer-events-none  border-accent rounded-full "
 						style={{
 							left: mousePosition.x - config.interactionRadius,
 							top: mousePosition.y - config.interactionRadius,
@@ -386,7 +386,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetShapes}
-						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset Shapes</span>
@@ -395,7 +395,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Controls */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<Shapes className="w-5 h-5 mr-2" />
 					Interaction Controls
@@ -479,7 +479,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 										.value as InteractionConfig["responseType"],
 								}))
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							<option value="hover">Hover</option>
 							<option value="click">Click</option>
@@ -501,7 +501,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 									colorMode: e.target.value as InteractionConfig["colorMode"],
 								}))
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							<option value="static">Static</option>
 							<option value="dynamic">Dynamic</option>
@@ -532,7 +532,7 @@ export const InteractiveShapesExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Instructions */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<MousePointer className="w-5 h-5 mr-2" />
 					Interaction Guide

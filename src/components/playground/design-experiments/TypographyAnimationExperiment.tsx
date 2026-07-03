@@ -222,8 +222,8 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 	return (
 		<div className="space-y-6">
 			{/* Animation Display */}
-			<div className=" border p-4 space-y-4">
-				<div className="aspect-video border flex items-center justify-center relative overflow-hidden">
+			<div className="  p-4 space-y-4">
+				<div className="aspect-video  flex items-center justify-center relative overflow-hidden">
 					<div
 						className="neue-haas-grotesk-display text-4xl text-center px-4"
 						style={getAnimationStyles()}
@@ -256,7 +256,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={toggleAnimation}
-						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						{isAnimating ? (
 							<Pause className="w-4 h-4 mr-2" />
@@ -271,7 +271,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 					<button
 						type="button"
 						onClick={resetAnimation}
-						className="flex items-center border px-4 py-2 hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+						className="flex items-center  px-4 py-2 hover:border-accent hover:text-accent transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"
 					>
 						<RotateCcw className="w-4 h-4 mr-2" />
 						<span className="noto-sans-jp-light text-sm">Reset</span>
@@ -280,7 +280,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 			</div>
 
 			{/* Animation Controls */}
-			<div className=" border p-4 space-y-4">
+			<div className="  p-4 space-y-4">
 				<h3 className="zen-kaku-gothic-new text-lg flex items-center">
 					<Type className="w-5 h-5 mr-2" />
 					Animation Controls
@@ -300,7 +300,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									type: e.target.value as AnimationConfig["type"],
 								}))
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							{animationTypes.map((type) => (
 								<option key={type.value} value={type.value}>
@@ -365,7 +365,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									easing: e.target.value,
 								}))
 							}
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						>
 							{easingTypes.map((easing) => (
 								<option key={easing.value} value={easing.value}>
@@ -399,7 +399,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 							value={customText}
 							onChange={(e) => setCustomText(e.target.value)}
 							placeholder="Enter your custom text"
-							className="w-full border p-2 text-sm"
+							className="w-full  p-2 text-sm"
 						/>
 					)}
 				</div>
@@ -418,7 +418,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									onChange={(e) =>
 										setGradientColors((prev) => [e.target.value, prev[1]])
 									}
-									className="w-12 h-8 border "
+									className="w-12 h-8  "
 								/>
 								<span className="noto-sans-jp-light text-sm ">
 									Start
@@ -431,7 +431,7 @@ export const TypographyAnimationExperiment: React.FC<ExperimentProps> = ({
 									onChange={(e) =>
 										setGradientColors((prev) => [prev[0], e.target.value])
 									}
-									className="w-12 h-8 border "
+									className="w-12 h-8  "
 								/>
 								<span className="noto-sans-jp-light text-sm ">
 									End

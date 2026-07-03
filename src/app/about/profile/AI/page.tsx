@@ -253,7 +253,7 @@ export default function AIProfilePage() {
 								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									AI Persona Overview
 								</h2>
-								<div className=" border p-4 space-y-4">
+								<div className="  p-4 space-y-4">
 									<div className="flex items-center">
 										<Bot className="w-8 h-8 text-accent mr-4" />
 										<div>
@@ -285,7 +285,7 @@ export default function AIProfilePage() {
 									{personalityTraits.map((trait) => (
 										<div
 											key={trait.trait}
-											className=" border p-4 space-y-4"
+											className="  p-4 space-y-4"
 										>
 											<div className="flex items-center">
 												<trait.icon className="w-6 h-6 text-accent mr-3" />
@@ -320,7 +320,7 @@ export default function AIProfilePage() {
 									{Object.entries(interests).map(([key, category]) => (
 										<div
 											key={key}
-											className=" border p-4 space-y-4"
+											className="  p-4 space-y-4"
 										>
 											<h3 className="zen-kaku-gothic-new text-lg ">
 												{category.title}
@@ -349,7 +349,7 @@ export default function AIProfilePage() {
 									{conversationStyle.map((style) => (
 										<div
 											key={style.aspect}
-											className=" border p-4 space-y-3"
+											className="  p-4 space-y-3"
 										>
 											<h3 className="zen-kaku-gothic-new ">
 												{style.aspect}
@@ -361,7 +361,7 @@ export default function AIProfilePage() {
 												{style.examples.map((example) => (
 													<span
 														key={example}
-														className="noto-sans-jp-light text-xs text-accent border border-accent px-2 py-1"
+														className="noto-sans-jp-light text-xs text-accent  border-accent px-2 py-1"
 													>
 														{example}
 													</span>
@@ -381,7 +381,7 @@ export default function AIProfilePage() {
 									{aiCapabilities.map((capability) => (
 										<div
 											key={capability.category}
-											className=" border p-4 space-y-4"
+											className="  p-4 space-y-4"
 										>
 											<div className="flex items-center">
 												<Zap className="w-6 h-6 text-accent mr-3" />
@@ -396,7 +396,7 @@ export default function AIProfilePage() {
 												{capability.topics.map((topic) => (
 													<span
 														key={topic}
-														className="noto-sans-jp-light text-xs border px-2 py-1"
+														className="noto-sans-jp-light text-xs  px-2 py-1"
 													>
 														{topic}
 													</span>
@@ -412,7 +412,7 @@ export default function AIProfilePage() {
 								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									Usage Guidelines
 								</h2>
-								<div className=" border border-accent p-4 space-y-4">
+								<div className="  border-accent p-4 space-y-4">
 									<h3 className="zen-kaku-gothic-new text-lg ">
 										このAIプロフィールの使用について
 									</h3>
@@ -443,21 +443,21 @@ export default function AIProfilePage() {
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-3 gap-6">
 									<Link
 										href="/about/profile/real"
-										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+										className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>Real Profile</span>
 									</Link>
 
 									<Link
 										href="/about/profile/handle"
-										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+										className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>Handle Profile</span>
 									</Link>
 
 									<Link
 										href="/contact"
-										className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+										className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 									>
 										<span className={Global_title}>Contact</span>
 									</Link>
@@ -465,7 +465,7 @@ export default function AIProfilePage() {
 							</nav>
 
 							{/* Footer */}
-							<footer className="pt-4 border-t ">
+							<footer className="pt-4  ">
 								<div className="text-center">
 									<p className="shippori-antique-b1-regular text-sm inline-block">
 										© 2025 samuido - AI Profile

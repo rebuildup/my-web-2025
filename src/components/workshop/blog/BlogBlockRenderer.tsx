@@ -176,7 +176,7 @@ function ListBlock({
 
 function QuoteBlock({ content }: { content: string }) {
 	return (
-		<blockquote className="border-l-4 border-accent/70 pl-4 italic /80">
+		<blockquote className=" border-accent/70 pl-4 italic /80">
 			{content}
 		</blockquote>
 	);
@@ -207,14 +207,14 @@ function CalloutBlock({
 function getCalloutToneClass(tone: string) {
 	switch (tone) {
 		case "warning":
-			return "bg-amber-500/10 text-amber-100 border border-amber-400/40";
+			return "   ";
 		case "danger":
 		case "error":
-			return "bg-rose-500/10 text-rose-100 border border-rose-400/40";
+			return "   ";
 		case "success":
-			return "bg-emerald-500/10 text-emerald-100 border border-emerald-400/40";
+			return "   ";
 		default:
-			return "/10 border /20";
+			return "/10  /20";
 	}
 }
 
@@ -237,7 +237,7 @@ function ImageBlock({
 	const caption = content?.trim();
 	if (!src) return null;
 	return (
-		<figure className="overflow-hidden rounded-3xl border /20 /5">
+		<figure className="overflow-hidden rounded-3xl  /20 /5">
 			<SafeImage
 				src={src}
 				alt={alt}
@@ -266,7 +266,7 @@ function VideoBlock({
 		typeof attributes.poster === "string" ? attributes.poster : undefined;
 	if (!src) return null;
 	return (
-		<div className="overflow-hidden rounded-3xl border /20 /5">
+		<div className="overflow-hidden rounded-3xl  /20 /5">
 			<video controls poster={poster} className="h-full w-full" src={src}>
 				{content && (
 					<track kind="captions" label="caption" srcLang="ja" src={content} />
@@ -280,7 +280,7 @@ function AudioBlock({ attributes }: { attributes: Record<string, unknown> }) {
 	const src = typeof attributes.src === "string" ? attributes.src : undefined;
 	if (!src) return null;
 	return (
-		<div className="rounded-2xl border /20 /5 p-4">
+		<div className="rounded-2xl  /20 /5 p-4">
 			<audio controls className="w-full" src={src} />
 		</div>
 	);
@@ -305,7 +305,7 @@ function FileBlock({
 			href={href}
 			target={attributes.target === "_blank" ? "_blank" : undefined}
 			rel={attributes.target === "_blank" ? "noopener noreferrer" : undefined}
-			className="group flex items-center justify-between rounded-2xl border /30 /5 px-6 py-4 transition hover:border-accent/60 hover:bg-accent/5"
+			className="group flex items-center justify-between rounded-2xl  /30 /5 px-6 py-4 transition hover:border-accent/60 hover:bg-accent/5"
 		>
 			<span className="noto-sans-jp-light text-sm /85">{label}</span>
 			<span className="text-xs uppercase tracking-[0.2em] text-accent/80">
@@ -340,7 +340,7 @@ function BookmarkBlock({
 			href={href}
 			target="_blank"
 			rel="noopener noreferrer"
-			className="block rounded-2xl border /30 /5 p-6 transition hover:border-accent/60 hover:bg-accent/5"
+			className="block rounded-2xl  /30 /5 p-6 transition hover:border-accent/60 hover:bg-accent/5"
 		>
 			<h3 className="neue-haas-grotesk-display text-lg ">{title}</h3>
 			{description && (
@@ -361,7 +361,7 @@ function CodeBlock({
 	language: string;
 }) {
 	return (
-		<pre className="overflow-x-auto rounded-2xl border /20 /5 p-4 text-sm /85">
+		<pre className="overflow-x-auto rounded-2xl  /20 /5 p-4 text-sm /85">
 			<code
 				className={cn(
 					language ? `language-${language}` : undefined,
@@ -376,7 +376,7 @@ function CodeBlock({
 
 function MathBlock({ content }: { content: string }) {
 	return (
-		<pre className="overflow-x-auto rounded-2xl border /20 /5 p-4 font-mono /85">
+		<pre className="overflow-x-auto rounded-2xl  /20 /5 p-4 font-mono /85">
 			{content}
 		</pre>
 	);
@@ -386,7 +386,7 @@ function ToggleBlock({ block }: { block: Block }) {
 	const summary = String(block.attributes?.summary ?? "詳細を表示");
 	const children = Array.isArray(block.children) ? block.children : [];
 	return (
-		<details className="group rounded-2xl border /20 /5 p-6">
+		<details className="group rounded-2xl  /20 /5 p-6">
 			<summary className="cursor-pointer text-lg font-semibold ">
 				{summary}
 			</summary>
@@ -434,7 +434,7 @@ function SpacerBlock({ attributes }: { attributes: Record<string, unknown> }) {
 
 function UnsupportedBlock({ type }: { type: string }) {
 	return (
-		<div className="rounded-2xl border border-dashed /30 /5 p-4 text-sm /60">
+		<div className="rounded-2xl   /30 /5 p-4 text-sm /60">
 			Unsupported block type: {type}
 		</div>
 	);

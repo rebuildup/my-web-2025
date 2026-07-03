@@ -68,11 +68,11 @@ export function DownloadInfoSection({
 	};
 
 	const inputStyle =
-		"w-full border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		"w-full  px-3 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
 	const labelStyle =
 		"block noto-sans-jp-regular text-sm font-medium mb-1";
 	const buttonStyle =
-		"border px-3 py-1 text-xs hover: hover: transition-colors focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base";
+		" px-3 py-1 text-xs hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
 		<div className="space-y-4">
@@ -82,7 +82,7 @@ export function DownloadInfoSection({
 
 			{!downloadInfo ? (
 				/* File Upload Area */
-				<div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+				<div className="   rounded-lg p-6 text-center">
 					<input
 						ref={fileInputRef}
 						type="file"
@@ -94,12 +94,12 @@ export function DownloadInfoSection({
 
 					{isUploading ? (
 						<div className="space-y-2">
-							<div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto"></div>
-							<p className="text-sm text-gray-600">Uploading file...</p>
+							<div className="animate-spin rounded-full h-8 w-8  mx-auto"></div>
+							<p className="text-sm ">Uploading file...</p>
 						</div>
 					) : (
 						<div className="space-y-2">
-							<div className="text-gray-400">
+							<div className="">
 								<svg
 									className="mx-auto h-12 w-12"
 									stroke="currentColor"
@@ -123,7 +123,7 @@ export function DownloadInfoSection({
 									Click to upload file
 								</button>
 							</div>
-							<p className="text-xs text-gray-500">Any file type up to 100MB</p>
+							<p className="text-xs ">Any file type up to 100MB</p>
 						</div>
 					)}
 				</div>
@@ -131,26 +131,26 @@ export function DownloadInfoSection({
 				/* Download Info Form */
 				<div className="space-y-4">
 					{/* File Information */}
-					<div className="bg-gray-50 border border-gray-200 p-4 rounded">
+					<div className="   p-4 rounded">
 						<h4 className="noto-sans-jp-regular text-sm font-medium mb-2">
 							File Information
 						</h4>
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
 							<div>
-								<span className="font-medium text-gray-600">File Name:</span>
-								<p className="text-gray-800 break-all">
+								<span className="font-medium ">File Name:</span>
+								<p className=" break-all">
 									{downloadInfo.fileName}
 								</p>
 							</div>
 							<div>
-								<span className="font-medium text-gray-600">File Size:</span>
-								<p className="text-gray-800">
+								<span className="font-medium ">File Size:</span>
+								<p className="">
 									{formatFileSize(downloadInfo.fileSize)}
 								</p>
 							</div>
 							<div>
-								<span className="font-medium text-gray-600">File Type:</span>
-								<p className="text-gray-800">{downloadInfo.fileType}</p>
+								<span className="font-medium ">File Type:</span>
+								<p className="">{downloadInfo.fileType}</p>
 							</div>
 						</div>
 					</div>
@@ -188,23 +188,23 @@ export function DownloadInfoSection({
 					</div>
 
 					{/* Statistics (Read-only) */}
-					<div className="bg-gray-50 border border-gray-200 p-4 rounded">
+					<div className="   p-4 rounded">
 						<h4 className="noto-sans-jp-regular text-sm font-medium mb-2">
 							Download Statistics
 						</h4>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
 							<div>
-								<span className="font-medium text-gray-600">
+								<span className="font-medium ">
 									Download Count:
 								</span>
-								<p className="text-gray-800">{downloadInfo.downloadCount}</p>
+								<p className="">{downloadInfo.downloadCount}</p>
 							</div>
 							{downloadInfo.lastDownloaded && (
 								<div>
-									<span className="font-medium text-gray-600">
+									<span className="font-medium ">
 										Last Downloaded:
 									</span>
-									<p className="text-gray-800">
+									<p className="">
 										{new Date(downloadInfo.lastDownloaded).toLocaleDateString(
 											"ja-JP",
 											{
@@ -226,7 +226,7 @@ export function DownloadInfoSection({
 						<button
 							type="button"
 							onClick={() => onDownloadInfoChange(undefined)}
-							className={`${buttonStyle} text-red-600 border-red-600 hover:bg-red-600 hover:text-white`}
+							className={`${buttonStyle}    `}
 						>
 							Remove File
 						</button>
@@ -254,7 +254,7 @@ export function DownloadInfoSection({
 
 			{/* Manual Download Info Entry */}
 			{!downloadInfo && (
-				<div className="border border-gray-200 p-4 rounded">
+				<div className="  p-4 rounded">
 					<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 						Or Enter Manually
 					</h4>
@@ -282,7 +282,7 @@ export function DownloadInfoSection({
 								className={inputStyle}
 							/>
 						</div>
-						<p className="text-xs text-gray-500">
+						<p className="text-xs ">
 							Enter file information manually if you don&apos;t want to upload
 							the actual file
 						</p>

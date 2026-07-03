@@ -178,7 +178,7 @@ export const PerformanceProvider: React.FC<PerformanceProviderProps> = ({
 			{!isOnline && (
 				<div
 					id="offline-indicator"
-					className="fixed top-0 left-0 right-0 bg-yellow-500 text-black text-center py-2 z-50"
+					className="fixed top-0 left-0 right-0   text-center py-2 z-50"
 				>
 					オフラインモード - 一部の機能が制限されています
 				</div>
@@ -204,14 +204,14 @@ const PerformanceIndicators: React.FC = () => {
 			<button
 				type="button"
 				onClick={() => setIsVisible(!isVisible)}
-				className="bg-blue-500 text-white p-2 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+				className="  p-2 rounded-full   transition-colors"
 				title="Performance Monitor"
 			>
 				📊
 			</button>
 
 			{isVisible && (
-				<div className="absolute bottom-12 right-0 bg-white text-black p-4 rounded-lg shadow-xl min-w-64 max-w-80">
+				<div className="absolute bottom-12 right-0   p-4 rounded-lg  min-w-64 max-w-80">
 					<h3 className="font-bold mb-2">Performance Monitor</h3>
 
 					<div className="space-y-2 text-sm">
@@ -220,10 +220,10 @@ const PerformanceIndicators: React.FC = () => {
 							<span
 								className={
 									performanceScore >= 80
-										? "text-green-600"
+										? ""
 										: performanceScore >= 60
-											? "text-yellow-600"
-											: "text-red-600"
+											? ""
+											: ""
 								}
 							>
 								{performanceScore}/100
@@ -235,10 +235,10 @@ const PerformanceIndicators: React.FC = () => {
 							<span
 								className={
 									memoryUsage < 70
-										? "text-green-600"
+										? ""
 										: memoryUsage < 85
-											? "text-yellow-600"
-											: "text-red-600"
+											? ""
+											: ""
 								}
 							>
 								{memoryUsage.toFixed(1)}%
@@ -250,10 +250,10 @@ const PerformanceIndicators: React.FC = () => {
 							<span
 								className={
 									serviceWorkerStatus === "ready"
-										? "text-green-600"
+										? ""
 										: serviceWorkerStatus === "loading"
-											? "text-yellow-600"
-											: "text-red-600"
+											? ""
+											: ""
 								}
 							>
 								{serviceWorkerStatus}
@@ -261,7 +261,7 @@ const PerformanceIndicators: React.FC = () => {
 						</div>
 
 						{/* Core Web Vitals */}
-						<div className="pt-2 border-t">
+						<div className="pt-2 ">
 							<div className="text-xs font-semibold mb-1">Core Web Vitals</div>
 							<div className="space-y-1 text-xs">
 								<div className="flex justify-between">
@@ -269,8 +269,8 @@ const PerformanceIndicators: React.FC = () => {
 									<span
 										className={
 											coreWebVitals.lcp && coreWebVitals.lcp <= 2500
-												? "text-green-600"
-												: "text-red-600"
+												? ""
+												: ""
 										}
 									>
 										{coreWebVitals.lcp
@@ -283,8 +283,8 @@ const PerformanceIndicators: React.FC = () => {
 									<span
 										className={
 											coreWebVitals.fid && coreWebVitals.fid <= 100
-												? "text-green-600"
-												: "text-red-600"
+												? ""
+												: ""
 										}
 									>
 										{coreWebVitals.fid
@@ -297,8 +297,8 @@ const PerformanceIndicators: React.FC = () => {
 									<span
 										className={
 											coreWebVitals.cls && coreWebVitals.cls <= 0.1
-												? "text-green-600"
-												: "text-red-600"
+												? ""
+												: ""
 										}
 									>
 										{coreWebVitals.cls ? coreWebVitals.cls.toFixed(3) : "N/A"}
@@ -308,26 +308,26 @@ const PerformanceIndicators: React.FC = () => {
 						</div>
 
 						{/* Performance Test Button */}
-						<div className="pt-2 border-t">
+						<div className="pt-2 ">
 							<button
 								type="button"
 								onClick={runPerformanceTest}
-								className="w-full px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors"
+								className="w-full px-2 py-1   text-xs rounded  transition-colors"
 							>
 								Run Performance Test
 							</button>
 						</div>
 
 						{alerts.length > 0 && (
-							<div className="mt-2 pt-2 border-t">
-								<div className="text-xs text-red-600">
+							<div className="mt-2 pt-2 ">
+								<div className="text-xs ">
 									{alerts.length} alert{alerts.length !== 1 ? "s" : ""}
 								</div>
 								<div className="max-h-20 overflow-y-auto">
 									{alerts.slice(-3).map((alert) => (
 										<div
 											key={alert.id}
-											className="text-xs text-gray-600 truncate"
+											className="text-xs  truncate"
 										>
 											{alert.message}
 										</div>

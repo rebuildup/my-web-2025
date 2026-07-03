@@ -166,14 +166,14 @@ export function FileManagerPanel({
 	};
 
 	const inputStyle =
-		"border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus: focus:border-transparent";
+		"  px-3 py-2 text-sm   focus: ";
 	const buttonStyle =
-		"border px-3 py-1 text-xs hover: hover: transition-colors";
+		" px-3 py-1 text-xs hover: hover: transition-colors";
 
 	if (loading) {
 		return (
 			<div className="flex items-center justify-center h-64">
-				<div className="animate-spin rounded-full h-8 w-8 border-b-2 "></div>
+				<div className="animate-spin rounded-full h-8 w-8  "></div>
 			</div>
 		);
 	}
@@ -182,7 +182,7 @@ export function FileManagerPanel({
 		<div className="space-y-4">
 			{/* Header */}
 			<div className="flex justify-between items-center">
-				<h3 className="font-medium text-gray-700">File Manager</h3>
+				<h3 className="font-medium ">File Manager</h3>
 				<div className="flex items-center space-x-2">
 					<button type="button"
 						onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
@@ -253,7 +253,7 @@ export function FileManagerPanel({
 				{selectedFiles.size > 0 && (
 					<button type="button"
 						onClick={handleBulkDelete}
-						className="bg-red-500 text-white px-3 py-2 text-sm hover:bg-red-600 transition-colors"
+						className="  px-3 py-2 text-sm  transition-colors"
 					>
 						Delete Selected ({selectedFiles.size})
 					</button>
@@ -266,14 +266,14 @@ export function FileManagerPanel({
 					{filteredFiles.map((file) => (
 						<div
 							key={file.id}
-							className={`border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer ${
+							className={` rounded-lg p-3  transition-shadow cursor-pointer ${
 								selectedFiles.has(file.id)
 									? " /5"
-									: "border-gray-200"
+									: ""
 							}`}
 							onClick={() => handleFileSelect(file)}
 						>
-							<div className="aspect-square bg-gray-100 rounded mb-2 flex items-center justify-center overflow-hidden relative">
+							<div className="aspect-square  rounded mb-2 flex items-center justify-center overflow-hidden relative">
 								{file.type.startsWith("image/") ? (
 									<Image
 										src={file.url}
@@ -289,7 +289,7 @@ export function FileManagerPanel({
 									/>
 								) : null}
 								<div
-									className={`${file.type.startsWith("image/") ? "hidden" : ""} text-gray-400`}
+									className={`${file.type.startsWith("image/") ? "hidden" : ""} `}
 								>
 									{getFileIcon(file.type)}
 								</div>
@@ -299,11 +299,11 @@ export function FileManagerPanel({
 								<p className="text-xs font-medium truncate" title={file.name}>
 									{file.name}
 								</p>
-								<p className="text-xs text-gray-500">
+								<p className="text-xs ">
 									{formatFileSize(file.size)}
 								</p>
 								{file.versions && (
-									<p className="text-xs text-blue-600">
+									<p className="text-xs ">
 										{file.versions.length} versions
 									</p>
 								)}
@@ -323,7 +323,7 @@ export function FileManagerPanel({
 										}
 										setSelectedFiles(newSet);
 									}}
-									className="rounded border-gray-300"
+									className="rounded "
 								/>
 
 								<div className="flex space-x-1">
@@ -332,7 +332,7 @@ export function FileManagerPanel({
 											e.stopPropagation();
 											window.open(file.url, "_blank");
 										}}
-										className="text-gray-400 hover:text-gray-600"
+										className=" "
 										title="View"
 									>
 										<Eye className="w-3 h-3" />
@@ -342,7 +342,7 @@ export function FileManagerPanel({
 											e.stopPropagation();
 											navigator.clipboard.writeText(file.url);
 										}}
-										className="text-gray-400 hover:text-gray-600"
+										className=" "
 										title="Copy URL"
 									>
 										<Copy className="w-3 h-3" />
@@ -352,7 +352,7 @@ export function FileManagerPanel({
 											e.stopPropagation();
 											handleFileDelete(file.id);
 										}}
-										className="text-gray-400 hover:text-red-600"
+										className=" "
 										title="Delete"
 									>
 										<Trash2 className="w-3 h-3" />
@@ -367,10 +367,10 @@ export function FileManagerPanel({
 					{filteredFiles.map((file) => (
 						<div
 							key={file.id}
-							className={`border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer ${
+							className={` rounded-lg p-3  transition-shadow cursor-pointer ${
 								selectedFiles.has(file.id)
 									? " /5"
-									: "border-gray-200"
+									: ""
 							}`}
 							onClick={() => handleFileSelect(file)}
 						>
@@ -389,14 +389,14 @@ export function FileManagerPanel({
 											}
 											setSelectedFiles(newSet);
 										}}
-										className="rounded border-gray-300"
+										className="rounded "
 									/>
 
 									{getFileIcon(file.type)}
 
 									<div>
 										<p className="font-medium text-sm">{file.name}</p>
-										<p className="text-xs text-gray-500">
+										<p className="text-xs ">
 											{formatFileSize(file.size)} •{" "}
 											{new Date(file.createdAt).toLocaleDateString()}
 										</p>
@@ -405,7 +405,7 @@ export function FileManagerPanel({
 
 								<div className="flex items-center space-x-2">
 									{file.versions && (
-										<span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+										<span className="text-xs   px-2 py-1 rounded">
 											{file.versions.length} versions
 										</span>
 									)}
@@ -416,7 +416,7 @@ export function FileManagerPanel({
 												e.stopPropagation();
 												window.open(file.url, "_blank");
 											}}
-											className="text-gray-400 hover:text-gray-600 p-1"
+											className="  p-1"
 											title="View"
 										>
 											<Eye className="w-4 h-4" />
@@ -426,7 +426,7 @@ export function FileManagerPanel({
 												e.stopPropagation();
 												navigator.clipboard.writeText(file.url);
 											}}
-											className="text-gray-400 hover:text-gray-600 p-1"
+											className="  p-1"
 											title="Copy URL"
 										>
 											<Copy className="w-4 h-4" />
@@ -436,7 +436,7 @@ export function FileManagerPanel({
 												e.stopPropagation();
 												handleFileDelete(file.id);
 											}}
-											className="text-gray-400 hover:text-red-600 p-1"
+											className="  p-1"
 											title="Delete"
 										>
 											<Trash2 className="w-4 h-4" />
@@ -450,8 +450,8 @@ export function FileManagerPanel({
 			)}
 
 			{filteredFiles.length === 0 && (
-				<div className="text-center py-12 text-gray-500">
-					<FileText className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+				<div className="text-center py-12 ">
+					<FileText className="w-12 h-12 mx-auto mb-4 " />
 					<p>No files found</p>
 					{searchQuery && (
 						<p className="text-sm">Try adjusting your search or filters</p>

@@ -131,9 +131,9 @@ ${cardData.tagline}`;
 						<div className="grid-system grid-1 lg:grid-2 gap-8">
 							{/* デジタル名刺 */}
 							<div>
-								<div ref={cardRef} className=" border border-accent p-8">
+								<div ref={cardRef} className="  border-accent p-8">
 									{/* ヘッダー部分 */}
-									<div className="border-b border-accent pb-6 mb-6">
+									<div className=" border-accent pb-6 mb-6">
 										<div className="flex items-start justify-between">
 											<div>
 												<h2 className="neue-haas-grotesk-display text-3xl mb-2">
@@ -216,10 +216,10 @@ ${cardData.tagline}`;
 									</div>
 
 									{/* QRコード */}
-									<div className="flex justify-center pt-4 border-t border-accent">
+									<div className="flex justify-center pt-4  border-accent">
 										{qrCodeUrl && (
 											<div className="text-center">
-												<div className=" p-2 border border-accent">
+												<div className=" p-2  border-accent">
 													<Image
 														src={qrCodeUrl}
 														alt="連絡先QRコード"
@@ -239,7 +239,7 @@ ${cardData.tagline}`;
 							{/* 操作パネル */}
 							<div className="space-y-6">
 								{/* QRコード詳細 */}
-								<div className=" border p-4">
+								<div className="  p-4">
 									<h3 className="zen-kaku-gothic-new text-lg mb-4">
 										QRコード
 									</h3>
@@ -248,7 +248,7 @@ ${cardData.tagline}`;
 									</p>
 									{qrCodeUrl && (
 										<div className="text-center">
-											<div className=" p-4 border border-accent inline-block">
+											<div className=" p-4  border-accent inline-block">
 												<Image
 													src={qrCodeUrl}
 													alt="連絡先QRコード"
@@ -271,7 +271,7 @@ ${cardData.tagline}`;
 								</div>
 
 								{/* ダウンロード */}
-								<div className=" border p-4">
+								<div className="  p-4">
 									<h3 className="zen-kaku-gothic-new text-lg mb-4">
 										ダウンロード
 									</h3>
@@ -282,7 +282,7 @@ ${cardData.tagline}`;
 										<button
 											type="button"
 											onClick={() => downloadCard("png")}
-											className="w-full border border-accent text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+											className="w-full  border-accent text-center p-4 flex items-center justify-center   focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
 										>
 											<span className={Global_title}>
 												PNG形式でダウンロード
@@ -291,7 +291,7 @@ ${cardData.tagline}`;
 										<button
 											type="button"
 											onClick={() => downloadCard("pdf")}
-											className="w-full border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+											className="w-full  text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 										>
 											<span className={Global_title}>
 												PDF形式でダウンロード
@@ -304,7 +304,7 @@ ${cardData.tagline}`;
 								</div>
 
 								{/* 現在の取り組み */}
-								<div className=" border p-4">
+								<div className="  p-4">
 									<h3 className="zen-kaku-gothic-new text-lg mb-4">
 										現在の取り組み
 									</h3>
@@ -321,7 +321,7 @@ ${cardData.tagline}`;
 								</div>
 
 								{/* 使用方法 */}
-								<div className=" border p-4">
+								<div className="  p-4">
 									<h3 className="zen-kaku-gothic-new text-lg mb-4">
 										使用方法
 									</h3>
@@ -355,21 +355,21 @@ ${cardData.tagline}`;
 							<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
 								<Link
 									href="/about/profile/handle"
-									className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Profile</span>
 								</Link>
 
 								<Link
 									href="/about/card/real"
-									className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Real Card</span>
 								</Link>
 
 								<a
 									href="https://links.yusuke-kim.com"
-									className="border text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base"
+									className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
 								>
 									<span className={Global_title}>Links</span>
 								</a>
@@ -377,7 +377,7 @@ ${cardData.tagline}`;
 						</nav>
 
 						{/* フッター */}
-						<footer className="pt-4 border-t ">
+						<footer className="pt-4  ">
 							<div className="text-center">
 								<p className="shippori-antique-b1-regular text-sm inline-block">
 									© 2025 samuido - Handle Digital Card

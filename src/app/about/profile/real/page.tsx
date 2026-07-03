@@ -458,7 +458,7 @@ export default function RealProfilePage() {
 									{education.map((edu, index) => (
 										<div key={index} className="relative mb-8 timeline-item">
 											{/* タイムラインノード（点） */}
-											<div className="absolute w-3 h-3 rounded-full /60 border-2 timeline-node"></div>
+											<div className="absolute w-3 h-3 rounded-full /60  timeline-node"></div>
 
 											<div className="">
 												<div className="text-sm md: font-bold /60 mb-2">
@@ -567,14 +567,14 @@ export default function RealProfilePage() {
 								<div className="grid-system grid-1 xs:grid-2 sm:grid-3 gap-6">
 									<Link
 										href="/about/profile/handle"
-										className="/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
+										className="/5 text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Handle Profile</span>
 									</Link>
 
 									<Link
 										href="/about/card/real"
-										className="/5 text-center p-4 flex items-center justify-center focus:outline-none focus:ring-2 focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
+										className="/5 text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
 									>
 										<span className={Global_title}>Digital Card</span>
 									</Link>
