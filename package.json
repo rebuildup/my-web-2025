@@ -10,7 +10,6 @@
 	"scripts": {
 		"dev": "bun --bun next dev -p 3010",
 		"dev:cms-api": "bun ./scripts/dev-cms-api.ts",
-		"dev:cms-api:down": "docker compose -f docker-compose.cms-api.yml down",
 		"dev:full": "bun ./scripts/dev-with-cms.ts",
 		"sync:cms-entries": "bun ./scripts/sync-legacy-contents-to-rust.ts",
 		"sync:cms-markdown": "bun ./scripts/sync-legacy-markdown-to-rust.ts",
@@ -24,8 +23,8 @@
 		"lint": "biome check .",
 		"format": "biome format --write .",
 		"migration:add-indexes": "bun src/cms/lib/migrations/add-indexes.ts",
-		"wslc:build": "wslc build -t my-web-2025 .",
-		"wslc:run": "wslc run -d --name my-web-2025-dev -p 3010:3010 my-web-2025",
+		"wslc:pull": "wslc pull oven/bun:1.3.10-debian",
+		"wslc:run": "wslc run -d --name my-web-2025-dev -p 3010:3010 -v .:/workspace -v my-web-2025-node_modules:/workspace/node_modules -w /workspace oven/bun:1.3.10-debian sh -lc \"bun install --frozen-lockfile && bun --bun next dev -p 3010\"",
 		"wslc:logs": "wslc logs my-web-2025-dev",
 		"wslc:stop": "wslc stop my-web-2025-dev",
 		"wslc:remove": "wslc remove my-web-2025-dev"
@@ -131,7 +130,6 @@
 		"jsdom": "^27.0.1",
 		"lighthouse": "^13.0.1",
 		"playwright": "^1.48.0",
-		"shadcn": "^4.8.0",
 		"tsx": "^4.20.6",
 		"typescript": "5.9.3"
 	},

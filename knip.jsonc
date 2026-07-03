@@ -21,7 +21,6 @@
     "baseline-browser-mapping",
     "jsdom",
     "playwright",
-    "shadcn",
     "tsx",
     "@next/bundle-analyzer",
     "server-only",
