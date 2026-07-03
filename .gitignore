@@ -1,7 +1,8 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# my-web-2025 .gitignore — cleaned and organized
+# See https://help.github.com/articles/ignoring-files/ for details
 
-# dependencies
-/node_modules
+# Node / dependencies
+/node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -10,68 +11,76 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
+# Bun / caches
+/.bun/
+/.cache/bun/
 
-# next.js
+# Build outputs
 /.next/
 /out/
+/build/
+/dist/
+/.next-build-id
+/.swc/
 
-# production
-/build
+# Turbopack / cache
+/.turbo/
 
-# misc
-.DS_Store
-*.pem
+# Framework / hosting
+.vercel/
+.vercel_build_output/
 
-# debug
+# Coverage and test artifacts
+/coverage/
+coverage-*.json
+.jest-cache/
+.jest-cache-coverage/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment files (keep example files if present)
+.env*
+!.env.example
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# OS files
+.DS_Store
+Thumbs.db
 
-# vercel
-.vercel
+# IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# temporary files and generated reports
+# Temporary / misc
+*.pem
 test-api-debug.js
 missing-images-report.json
-coverage-*.json
 cache-bust-config.json
-.next-build-id
 
-# jest cache
-.jest-cache/
-.jest-cache-coverage/
-
-# build artifacts
-.swc/
-
-# database backup files
-data/index.db
-data/index.db.bak
-data/index.db-wal*
-data/index.db-shm*
-data/*.bak
+# Data generator outputs (keep these ignored)
 data/tag-catalog.json
+
 # Lighthouse audit results
 lighthouse-results/
 
 # Rust build artifacts
 apps/cms-api/target/
-data/db/
 apps/cms-api/.cargo/
 apps/cms-api/Cargo.lock
 
 # Subtree lockfiles - prevent Turbopack from detecting wrong workspace root
 src/app/tools/*/pnpm-lock.yaml
 
-# WSLc / Docker
+# WSLc / Docker overrides
 docker-compose.override.yml
