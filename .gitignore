@@ -75,7 +75,7 @@ data/tag-catalog.json
 lighthouse-results/
 
 # Rust build artifacts
-apps/cms-api/target/
+apps/cms-api/target/*
 apps/cms-api/.cargo/
 apps/cms-api/Cargo.lock
 
