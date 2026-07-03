@@ -10,7 +10,7 @@
  * position, gap), typography (font-*, italic, tracking, leading, text-size),
  * and spacing utility classes.
  */
-import { readFileSync, writeFileSync, statSync, readdirSync } from "node:fs";
+import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const ROOT = process.argv[2] || "src";
@@ -23,6 +23,9 @@ const NE_STRICT = "(?=$|[\\s\"'`])"; // stricter: no HTML close, used for prop-o
 const NO_SHADE = "white|black|transparent|current|inherit|currentcolor";
 const SHADED =
 	"slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose";
+
+// Custom color names defined in tailwind.config.ts (currently just `accent`).
+const CUSTOM_COLORS = "accent";
 
 const COLOR_PROPS =
 	"bg|text|border|ring|outline|from|via|to|divide|placeholder|caret|fill|stroke|accent|decoration|backdrop";
@@ -38,11 +41,14 @@ const STATE =
 // 1. Color setter classes (bg-red-500, text-white, from-blue-300, divide-gray-200, etc.)
 //    For `text-` we must be careful: text-xs/4xl/sm are typography, NOT colors.
 //    The regex requires the value to look like a color.
+//    CUSTOM_COLORS (e.g. `accent`) is a project-specific color name that lives
+//    in tailwind.config.ts but is not in the NO_SHADE/SHADED lists.
 const COLOR_CLASS = new RegExp(
 	`${NB}${STATE}(?:${COLOR_PROPS})-` +
 		`(?:` +
 		`(?:${NO_SHADE})(?:\\/(?:\\d+|${ARB_COLOR}))?` +
 		`|(?:${SHADED})(?:-[0-9]+)?(?:\\/(?:\\d+|${ARB_COLOR}))?` +
+		`|(?:${CUSTOM_COLORS})(?:\\/(?:\\d+|${ARB_COLOR}))?` +
 		`|${ARB_COLOR}` +
 		`)${NE}`,
 	"g",
@@ -55,10 +61,7 @@ const SHADOW_CLASS = new RegExp(
 );
 
 // 3. Opacity
-const OPACITY_CLASS = new RegExp(
-	`${NB}${STATE}opacity-(?:[0-9]+)${NE}`,
-	"g",
-);
+const OPACITY_CLASS = new RegExp(`${NB}${STATE}opacity-(?:[0-9]+)${NE}`, "g");
 
 // 4. Mix-blend-mode
 const MIX_BLEND = new RegExp(
@@ -107,6 +110,18 @@ const RING_PLAIN = new RegExp(
 	"g",
 );
 
+// 10. Orphan opacity modifiers left behind when a color class is stripped
+//     but the `/N` (or `/[arb]`) suffix survives.
+//     Example: `bg-white/40` becomes ` /40` after the color pass.
+//     Safety:
+//       - requires whitespace BEFORE the slash (so `2/3` or `path/to/40` don't match)
+//       - requires the slash to be IMMEDIATELY followed by digits or `[...]` (no space),
+//         which is the only way Tailwind opacity modifiers are written; this excludes
+//         JS expressions like `a / 3`
+//       - requires whitespace/end/quote/HTML-close AFTER, so we don't bite into
+//         an identifier that just happens to follow
+const ORPHAN_OPACITY = /\s+\/(?:\[[^\]\s]+\]|\d+)(?=$|[\s"'>])/g;
+
 function strip(content) {
 	let r = content;
 	r = r.replace(COLOR_CLASS, "");
@@ -118,6 +133,7 @@ function strip(content) {
 	r = r.replace(DIVIDE_PLAIN, "");
 	r = r.replace(OUTLINE_PLAIN, "");
 	r = r.replace(RING_PLAIN, "");
+	r = r.replace(ORPHAN_OPACITY, "");
 	return r;
 }
 

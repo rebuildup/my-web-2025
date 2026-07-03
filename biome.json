@@ -1,17 +1,17 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.5.2/schema.json",
 	"formatter": {
 		"enabled": true
 	},
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": false,
+			"preset": "none",
 			"suspicious": {
 				"noArrayIndexKey": "off"
 			},
 			"a11y": {
-				"recommended": false
+				"preset": "none"
 			},
 			"complexity": {
 				"noStaticOnlyClass": "off"
@@ -32,7 +32,7 @@
 			"includes": ["scripts/**/*"],
 			"linter": {
 				"rules": {
-					"recommended": true,
+					"preset": "recommended",
 					"style": {
 						"noNonNullAssertion": "error"
 					}

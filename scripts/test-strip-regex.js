@@ -1,9 +1,11 @@
 // Inline copy of strip-visual-styles.mjs regexes for quick testing
 const NB = "(?<![\\w-])";
-const NE = "(?![\\w-])";
+const NE = "(?=$|[\\s\"'`>])";
+const NE_STRICT = "(?=$|[\\s\"'`])";
 const NO_SHADE = "white|black|transparent|current|inherit|currentcolor";
 const SHADED =
 	"slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose";
+const CUSTOM_COLORS = "accent";
 const COLOR_PROPS =
 	"bg|text|border|ring|outline|from|via|to|divide|placeholder|caret|fill|stroke|accent|decoration|backdrop";
 const ARB_COLOR =
@@ -16,6 +18,7 @@ const COLOR_CLASS = new RegExp(
 		`(?:` +
 		`(?:${NO_SHADE})(?:\\/(?:\\d+|${ARB_COLOR}))?` +
 		`|(?:${SHADED})(?:-[0-9]+)?(?:\\/(?:\\d+|${ARB_COLOR}))?` +
+		`|(?:${CUSTOM_COLORS})(?:\\/(?:\\d+|${ARB_COLOR}))?` +
 		`|${ARB_COLOR}` +
 		`)${NE}`,
 	"g",
@@ -30,24 +33,34 @@ const MIX_BLEND = new RegExp(
 	"g",
 );
 const BACKDROP_FILTER = new RegExp(
-	`${NB}${STATE}backdrop-(?:blur|brightness|contrast|grayscale|hue-rotate|invert|opacity|saturate|sepia)-\\S+${NE}`,
+	`${NB}${STATE}backdrop-(?:blur|brightness|contrast|grayscale|hue-rotate|invert|opacity|saturate|sepia)-(?:\\[[^\\]]+\\]|[\\w-]+)${NE}`,
 	"g",
 );
 const ARBITRARY = "\\[.+\\]";
 
 const BORDER_PLAIN = new RegExp(
-	`${NB}${STATE}border(?!-(?:spacing|collapse|separate)\\b)(?:-${ARBITRARY}|-(?:[0-9]+|t|r|b|l|x|y|solid|dashed|dotted|double|hidden|none)(?:-(?:[0-9]+|t|r|b|l|x|y|solid|dashed|dotted|double|hidden|none|${ARBITRARY}))?)?${NE}`,
+	`${NB}${STATE}border` +
+		`(?!-(?:spacing|collapse|separate)\\b)` +
+		`(?:-${ARBITRARY}` +
+		`|-(?:[0-9]+|t|r|b|l|x|y|solid|dashed|dotted|double|hidden|none)` +
+		`(?:-(?:[0-9]+|t|r|b|l|x|y|solid|dashed|dotted|double|hidden|none|${ARBITRARY}))?` +
+		`)` +
+		`${NE_STRICT}`,
 	"g",
 );
 const DIVIDE_PLAIN = new RegExp(
-	`${NB}${STATE}divide(?:-(?:x|y|[0-9]+|x-[0-9]+|y-[0-9]+|reverse|${ARBITRARY}))?${NE}`,
+	`${NB}${STATE}divide-(?:x|y|[0-9]+|x-[0-9]+|y-[0-9]+|reverse|${ARBITRARY})${NE_STRICT}`,
 	"g",
 );
 const OUTLINE_PLAIN = new RegExp(
-	`${NB}${STATE}outline(?:-(?:[0-9]+|solid|dashed|dotted|double|hidden|none|offset-[0-9]+|${ARBITRARY}))?${NE}`,
+	`${NB}${STATE}outline-(?:[0-9]+|solid|dashed|dotted|double|hidden|none|offset-[0-9]+|${ARBITRARY})${NE_STRICT}`,
 	"g",
 );
-const RING_PLAIN = new RegExp(`${NB}${STATE}ring(?:-(?:[0-9]+|inset|${ARBITRARY}))?${NE}`, "g");
+const RING_PLAIN = new RegExp(
+	`${NB}${STATE}ring-(?:[0-9]+|inset|${ARBITRARY})${NE_STRICT}`,
+	"g",
+);
+const ORPHAN_OPACITY = /\s+\/(?:\[[^\]\s]+\]|\d+)(?=$|[\s"'>])/g;
 
 function process(input) {
 	let r = input;
@@ -60,8 +73,7 @@ function process(input) {
 	r = r.replace(DIVIDE_PLAIN, "");
 	r = r.replace(OUTLINE_PLAIN, "");
 	r = r.replace(RING_PLAIN, "");
-	r = r.replace(/(['"`])([ \t]+)/g, "$1 ");
-	r = r.replace(/([ \t]+)(['"`])/g, " $1");
+	r = r.replace(ORPHAN_OPACITY, "");
 	return r;
 }
 
@@ -82,11 +94,11 @@ const tests = [
 	["bg-[rgba(0,0,0,0.5)]", ""],
 	["outline-red-500", ""],
 	["from-blue-500 via-red-500 to-green-500", ""],
-	["border", ""],
+	["border", "border"],
 	["border-2", ""],
 	["border-t", ""],
 	["ring-2", ""],
-	["ring", ""],
+	["ring", "ring"],
 	["divide-x", ""],
 	["divide-y-2", ""],
 	["outline-none", ""],
@@ -111,17 +123,54 @@ const tests = [
 	["border-spacing-2", "border-spacing-2"],
 	["border-t-[2px]", ""],
 	["flex flex-col items-center", "flex flex-col items-center"],
-	["mt-3 text-xs sm:text-xs leading-relaxed", "mt-3 text-xs sm:text-xs leading-relaxed"],
-	["text-4xl sm:text-4xl font-bold italic tracking-tight", "text-4xl sm:text-4xl font-bold italic tracking-tight"],
+	[
+		"mt-3 text-xs sm:text-xs leading-relaxed",
+		"mt-3 text-xs sm:text-xs leading-relaxed",
+	],
+	[
+		"text-4xl sm:text-4xl font-bold italic tracking-tight",
+		"text-4xl sm:text-4xl font-bold italic tracking-tight",
+	],
 	["hover:bg-[#abc] focus:border-2 active:shadow-md", ""],
+	// accent (custom color in tailwind.config.ts)
+	["bg-accent", ""],
+	["text-accent", ""],
+	["border-accent", ""],
+	["from-accent via-accent to-accent", ""],
+	["bg-accent/30", ""],
+	["text-accent/50", ""],
+	["hover:text-accent", ""],
+	["hover:bg-accent/10", ""],
+	["divide-accent", ""],
+	["placeholder-accent", ""],
+	["caret-accent", ""],
+	["accent-accent", ""],
+	// orphans left after color strip
+	["text-[10px] font-mono /40 uppercase", "text-[10px] font-mono uppercase"],
+	["bg-white /80", ""],
+	["flex /60", "flex"],
+	[
+		"text-[10px] font-mono /50 px-2 py-0.5 /5 rounded",
+		"text-[10px] font-mono px-2 py-0.5 rounded",
+	],
+	["rounded /[0.5]", "rounded"],
+	["leading-relaxed /40 tracking-tight", "leading-relaxed tracking-tight"],
+	// negative: must NOT touch JS arithmetic / paths
+	["const x = a / 3;", "const x = a / 3;"],
+	['const path = "/api/40";', 'const path = "/api/40";'],
+	["// comment /40", "// comment"],
+	["2/3", "2/3"],
 ];
 
-let pass = 0, fail = 0;
+let pass = 0,
+	fail = 0;
 for (const [input, expected] of tests) {
 	const out = process(input).trim();
 	const ok = out === expected;
 	if (ok) pass++;
 	else fail++;
-	console.log(`${ok ? "PASS" : "FAIL"}: "${input}" -> "${out}"${ok ? "" : ` (expected: "${expected}")`}`);
+	console.log(
+		`${ok ? "PASS" : "FAIL"}: "${input}" -> "${out}"${ok ? "" : ` (expected: "${expected}")`}`,
+	);
 }
 console.log(`\n=== ${pass} passed, ${fail} failed ===`);

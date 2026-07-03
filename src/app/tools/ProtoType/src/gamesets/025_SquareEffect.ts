@@ -63,10 +63,10 @@ class SquareEffectManager {
     const accentColor = settings.colorTheme.colors.MainAccent;
 
     // 背景正方形（MainColor）
-    this.squareElements.background.style. = `4px solid ${mainColor}`;
+    this.squareElements.background.style.border = `4px solid ${mainColor}`;
 
     // 前景正方形（MainAccent）
-    this.squareElements.foreground.style. = `2px solid ${accentColor}`;
+    this.squareElements.foreground.style.border = `2px solid ${accentColor}`;
 
     if (this.debugMode) {
       console.log("SquareEffect: 色を更新しました", { mainColor, accentColor });
@@ -98,7 +98,7 @@ class SquareEffectManager {
       this.squareElements.background.style.width = "50px";
       this.squareElements.background.style.height = "50px";
       this.squareElements.background.style.boxSizing = "border-box";
-      this.squareElements.background.style. = `4px solid ${mainColor}`;
+      this.squareElements.background.style.border = `4px solid ${mainColor}`;
       this.squareElements.background.style.transform = "translate(-50%, -50%) rotate(45deg)";
       this.squareElements.background.style.opacity = "0";
       this.squareElements.background.style.pointerEvents = "none";
@@ -112,7 +112,7 @@ class SquareEffectManager {
       this.squareElements.foreground.style.width = "50px";
       this.squareElements.foreground.style.height = "50px";
       this.squareElements.foreground.style.boxSizing = "border-box";
-      this.squareElements.foreground.style. = `2px solid ${accentColor}`;
+      this.squareElements.foreground.style.border = `2px solid ${accentColor}`;
       this.squareElements.foreground.style.transform = "translate(-50%, -50%) rotate(45deg)";
       this.squareElements.foreground.style.opacity = "0";
       this.squareElements.foreground.style.pointerEvents = "none";

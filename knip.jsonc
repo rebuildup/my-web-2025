@@ -25,10 +25,10 @@
     "@next/bundle-analyzer",
     "server-only",
 
-    "@emotion/cache",
     "isomorphic-dompurify",
     "sharp"
   ],
+  "ignoreBinaries": ["wslc"],
   "treatConfigHintsAsErrors": true,
   "rules": {
     "files": "off",
