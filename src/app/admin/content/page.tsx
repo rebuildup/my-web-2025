@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Edit2, Plus, RefreshCcw, Trash2 } from "lucide-react";
 import type { Content } from "@/cms/types/content";
+import { ContentForm } from "@/components/admin/cms";
 import { useCmsResource } from "@/hooks/useCmsResource";
 
 interface DbStats {
@@ -85,12 +86,11 @@ const s = {
 	iconBtn: { background: "none", border: "none", cursor: "pointer", padding: 4, color: "#555" } as React.CSSProperties,
 	iconBtnDanger: { background: "none", border: "none", cursor: "pointer", padding: 4, color: "#c00" } as React.CSSProperties,
 	overlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center" } as React.CSSProperties,
-	dialog: { background: "#fff", borderRadius: 8, border: "1px solid #ddd", width: "90%", maxWidth: 720, maxHeight: "85vh", overflow: "auto", padding: 24 } as React.CSSProperties,
-	dialogTitle: { fontSize: "1rem", fontWeight: 600, marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" } as React.CSSProperties,
+	dialog: { background: "#fff", borderRadius: 8, border: "1px solid #ddd", width: "92%", maxWidth: 800, maxHeight: "90vh", overflow: "auto", padding: 0 } as React.CSSProperties,
+	dialogHeader: { padding: "16px 20px", borderBottom: "1px solid #ddd", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky" as const, top: 0, background: "#fff", zIndex: 1 } as React.CSSProperties,
+	dialogBody: { padding: "16px 20px" } as React.CSSProperties,
 	select: { border: "1px solid #ccc", borderRadius: 4, padding: "4px 8px", fontSize: "0.8rem", background: "#fff" } as React.CSSProperties,
 	input: { border: "1px solid #ccc", borderRadius: 4, padding: "6px 10px", fontSize: "0.85rem", width: "100%", boxSizing: "border-box" as const } as React.CSSProperties,
-	label: { fontSize: "0.75rem", color: "#666", marginBottom: 4, display: "block" } as React.CSSProperties,
-	formGroup: { marginBottom: 12 } as React.CSSProperties,
 	alert: { border: "1px solid #e0c000", background: "#fffbe6", borderRadius: 4, padding: "8px 12px", fontSize: "0.8rem", marginBottom: 16, color: "#665500" } as React.CSSProperties,
 };
 
@@ -116,8 +116,8 @@ export default function AdminContentPage() {
 	const [editTarget, setEditTarget] = useState<Content | null>(null);
 	const [deleteTarget, setDeleteTarget] = useState<Content | null>(null);
 	const [submitting, setSubmitting] = useState(false);
-	const [createTitle, setCreateTitle] = useState("");
 	const [createStatus, setCreateStatus] = useState<Content["status"]>("draft");
+	const [createVisibility, setCreateVisibility] = useState<Content["visibility"]>("draft");
 
 	const handleRefresh = useCallback(() => {
 		void refreshContents();
@@ -137,43 +137,33 @@ export default function AdminContentPage() {
 		return true;
 	});
 
-	const handleCreate = useCallback(async () => {
-		if (!createTitle.trim()) return;
+	const handleCreate = useCallback(async (payload: Partial<Content>) => {
 		setSubmitting(true);
-		const id = `content-${Date.now()}`;
 		const res = await fetch("/api/cms/contents", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				id,
-				title: createTitle.trim(),
-				status: createStatus,
-				visibility: createStatus === "published" ? "public" : "draft",
-			}),
+			body: JSON.stringify(payload),
 		});
 		setSubmitting(false);
 		if (res.ok) {
 			setIsCreateOpen(false);
-			setCreateTitle("");
-			setCreateStatus("draft");
 			await handleRefresh();
 		}
-	}, [createTitle, createStatus, handleRefresh]);
+	}, [handleRefresh]);
 
-	const handleUpdate = useCallback(async () => {
-		if (!editTarget) return;
+	const handleUpdate = useCallback(async (payload: Partial<Content>) => {
 		setSubmitting(true);
 		const res = await fetch("/api/cms/contents", {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(editTarget),
+			body: JSON.stringify(payload),
 		});
 		setSubmitting(false);
 		if (res.ok) {
 			setEditTarget(null);
 			await handleRefresh();
 		}
-	}, [editTarget, handleRefresh]);
+	}, [handleRefresh]);
 
 	const handleDelete = useCallback(async (id: string) => {
 		const res = await fetch(`/api/cms/contents?id=${encodeURIComponent(id)}`, {
@@ -316,37 +306,40 @@ export default function AdminContentPage() {
 			{isCreateOpen && (
 				<div style={s.overlay} onClick={() => setIsCreateOpen(false)}>
 					<div style={s.dialog} onClick={(e) => e.stopPropagation()}>
-						<div style={s.dialogTitle}>
-							<span>新しいコンテンツを作成</span>
-							<button style={s.btn} onClick={() => setIsCreateOpen(false)}>×</button>
+						<div style={s.dialogHeader}>
+							<span style={{ fontWeight: 600 }}>新しいコンテンツを作成</span>
+							<div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+								<select
+									style={s.select}
+									value={createStatus}
+									onChange={(e) => setCreateStatus(e.target.value as Content["status"])}
+								>
+									<option value="draft">draft</option>
+									<option value="published">published</option>
+									<option value="archived">archived</option>
+								</select>
+								<select
+									style={s.select}
+									value={createVisibility}
+									onChange={(e) => setCreateVisibility(e.target.value as Content["visibility"])}
+								>
+									<option value="draft">draft</option>
+									<option value="public">public</option>
+									<option value="unlisted">unlisted</option>
+									<option value="private">private</option>
+								</select>
+								<button style={s.btn} onClick={() => setIsCreateOpen(false)}>×</button>
+							</div>
 						</div>
-						<div style={s.formGroup}>
-							<label style={s.label}>タイトル</label>
-							<input
-								style={s.input}
-								value={createTitle}
-								onChange={(e) => setCreateTitle(e.target.value)}
-								placeholder="コンテンツタイトル"
-								autoFocus
+						<div style={s.dialogBody}>
+							<ContentForm
+								mode="create"
+								isLoading={submitting}
+								onSubmit={handleCreate}
+								onCancel={() => setIsCreateOpen(false)}
+								controlledStatus={createStatus}
+								controlledVisibility={createVisibility}
 							/>
-						</div>
-						<div style={s.formGroup}>
-							<label style={s.label}>公開ステータス</label>
-							<select
-								style={s.select}
-								value={createStatus}
-								onChange={(e) => setCreateStatus(e.target.value as Content["status"])}
-							>
-								<option value="draft">draft</option>
-								<option value="published">published</option>
-								<option value="archived">archived</option>
-							</select>
-						</div>
-						<div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-							<button style={s.btnPrimary} onClick={handleCreate} disabled={submitting || !createTitle.trim()}>
-								{submitting ? "作成中..." : "作成"}
-							</button>
-							<button style={s.btn} onClick={() => setIsCreateOpen(false)}>キャンセル</button>
 						</div>
 					</div>
 				</div>
@@ -356,29 +349,9 @@ export default function AdminContentPage() {
 			{editTarget && (
 				<div style={s.overlay} onClick={() => setEditTarget(null)}>
 					<div style={s.dialog} onClick={(e) => e.stopPropagation()}>
-						<div style={s.dialogTitle}>
-							<span>コンテンツを編集</span>
-							<button style={s.btn} onClick={() => setEditTarget(null)}>×</button>
-						</div>
-						<div style={s.formGroup}>
-							<label style={s.label}>タイトル</label>
-							<input
-								style={s.input}
-								value={editTarget.title}
-								onChange={(e) => setEditTarget({ ...editTarget, title: e.target.value })}
-							/>
-						</div>
-						<div style={s.formGroup}>
-							<label style={s.label}>概要</label>
-							<input
-								style={s.input}
-								value={editTarget.summary ?? ""}
-								onChange={(e) => setEditTarget({ ...editTarget, summary: e.target.value })}
-							/>
-						</div>
-						<div style={{ display: "flex", gap: 16 }}>
-							<div style={{ ...s.formGroup, flex: 1 }}>
-								<label style={s.label}>ステータス</label>
+						<div style={s.dialogHeader}>
+							<span style={{ fontWeight: 600 }}>コンテンツを編集</span>
+							<div style={{ display: "flex", gap: 8, alignItems: "center" }}>
 								<select
 									style={s.select}
 									value={editTarget.status ?? "draft"}
@@ -388,9 +361,6 @@ export default function AdminContentPage() {
 									<option value="published">published</option>
 									<option value="archived">archived</option>
 								</select>
-							</div>
-							<div style={{ ...s.formGroup, flex: 1 }}>
-								<label style={s.label}>可視性</label>
 								<select
 									style={s.select}
 									value={editTarget.visibility ?? "draft"}
@@ -401,13 +371,19 @@ export default function AdminContentPage() {
 									<option value="unlisted">unlisted</option>
 									<option value="private">private</option>
 								</select>
+								<button style={s.btn} onClick={() => setEditTarget(null)}>×</button>
 							</div>
 						</div>
-						<div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-							<button style={s.btnPrimary} onClick={handleUpdate} disabled={submitting}>
-								{submitting ? "保存中..." : "保存"}
-							</button>
-							<button style={s.btn} onClick={() => setEditTarget(null)}>キャンセル</button>
+						<div style={s.dialogBody}>
+							<ContentForm
+								mode="edit"
+								initialData={editTarget}
+								isLoading={submitting}
+								onSubmit={handleUpdate}
+								onCancel={() => setEditTarget(null)}
+								controlledStatus={editTarget.status}
+								controlledVisibility={editTarget.visibility}
+							/>
 						</div>
 					</div>
 				</div>
@@ -417,18 +393,22 @@ export default function AdminContentPage() {
 			{deleteTarget && (
 				<div style={s.overlay} onClick={() => setDeleteTarget(null)}>
 					<div style={{ ...s.dialog, maxWidth: 400 }} onClick={(e) => e.stopPropagation()}>
-						<div style={s.dialogTitle}>コンテンツを削除しますか？</div>
-						<p style={{ fontSize: "0.85rem", color: "#555", margin: "0 0 16px" }}>
-							この操作は取り消せません.関連するDBが削除されます.
-						</p>
-						<div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-							<button style={s.btn} onClick={() => setDeleteTarget(null)}>キャンセル</button>
-							<button
-								style={{ ...s.btnPrimary, background: "#c00", borderColor: "#c00" }}
-								onClick={() => void handleDelete(deleteTarget.id)}
-							>
-								削除する
-							</button>
+						<div style={{ ...s.dialogHeader, borderBottom: "none", paddingBottom: 0 }}>
+							<span style={{ fontWeight: 600 }}>コンテンツを削除しますか？</span>
+						</div>
+						<div style={{ padding: "0 20px 20px" }}>
+							<p style={{ fontSize: "0.85rem", color: "#555", margin: "0 0 16px" }}>
+								この操作は取り消せません.関連するDBが削除されます.
+							</p>
+							<div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+								<button style={s.btn} onClick={() => setDeleteTarget(null)}>キャンセル</button>
+								<button
+									style={{ ...s.btnPrimary, background: "#c00", borderColor: "#c00" }}
+									onClick={() => void handleDelete(deleteTarget.id)}
+								>
+									削除する
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
