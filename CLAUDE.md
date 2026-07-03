@@ -35,11 +35,11 @@ bun run format
 ### WSLc (Container Development)
 
 ```bash
-# Build image
-wslc build -t my-web-2025 .
+# Pull Linux Bun image
+wslc pull oven/bun:1.3.10-debian
 
 # Run dev server (port 3010)
-wslc run -d --name my-web-2025-dev -p 3010:3010 my-web-2025
+wslc run -d --name my-web-2025-dev -p 3010:3010 -v .:/workspace -v my-web-2025-node_modules:/workspace/node_modules -w /workspace oven/bun:1.3.10-debian sh -lc "bun install --frozen-lockfile && bun --bun next dev -p 3010"
 
 # Check logs
 wslc logs my-web-2025-dev
@@ -49,7 +49,7 @@ wslc stop my-web-2025-dev
 wslc remove my-web-2025-dev
 ```
 
-Access at `http://localhost:3010`. The container uses `bun --bun next dev -p 3010` internally.
+Access at `http://localhost:3010`. Dev runs directly on a WSLc Linux Bun image with bind mounts (no Dockerfile build step).
 
 ## Architecture
 
