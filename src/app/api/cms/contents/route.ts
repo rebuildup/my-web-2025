@@ -1,6 +1,7 @@
 import type { Content } from "@/cms/types/content";
 import type { ContentIndexItem } from "@/cms/types/content";
-import { getAllFromIndex, getFromIndex } from "@/cms/lib/content-db-manager";
+import { getAllFromIndex, getFromIndex, getContentDb, deleteContentDb } from "@/cms/lib/content-db-manager";
+import { saveFullContent } from "@/cms/lib/content-mapper";
 import { getCmsApiBaseUrl, shouldUseRustCmsApi } from "@/lib/cms-api/config";
 import { cmsApiFetch } from "@/lib/cms-api/server-client";
 import { requireAdminRequest } from "@/lib/server/admin-auth";
@@ -352,6 +353,16 @@ export async function POST(req: Request) {
 			updatedAt: now,
 		};
 
+		if (!shouldUseRustCmsApi()) {
+			const db = getContentDb(content.id!);
+			try {
+				saveFullContent(db, content);
+			} finally {
+				db.close();
+			}
+			return Response.json({ ok: true, id: content.id });
+		}
+
 		await writeRustEntry("POST", toRustEntryWritePayload(content));
 		return Response.json({ ok: true, id: content.id });
 	} catch (error) {
@@ -387,6 +398,16 @@ export async function PUT(req: Request) {
 			updatedAt: now,
 		};
 
+		if (!shouldUseRustCmsApi()) {
+			const db = getContentDb(content.id!);
+			try {
+				saveFullContent(db, content);
+			} finally {
+				db.close();
+			}
+			return Response.json({ ok: true });
+		}
+
 		if (oldId && oldId !== newId) {
 			await deleteRustEntry(oldId);
 			await writeRustEntry("POST", toRustEntryWritePayload(content));
@@ -413,6 +434,17 @@ export async function DELETE(req: Request) {
 		const id = searchParams.get("id");
 		if (!id) {
 			return Response.json({ error: "ID is required" }, { status: 400 });
+		}
+
+		if (!shouldUseRustCmsApi()) {
+			const deleted = deleteContentDb(id);
+			if (!deleted) {
+				return Response.json(
+					{ error: `Content with id ${id} not found` },
+					{ status: 404 },
+				);
+			}
+			return Response.json({ ok: true });
 		}
 
 		await deleteRustEntry(id);
