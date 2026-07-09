@@ -8,6 +8,7 @@
         "@appletosolutions/reactbits": "^1.0.3",
         "@chakra-ui/react": "^3.28.0",
         "@emotion/react": "^11.14.0",
+        "@emotion/styled": "^11.14.1",
         "@ffmpeg/ffmpeg": "^0.12.15",
         "@ffmpeg/util": "^0.12.2",
         "@hello-pangea/dnd": "^18.0.1",
