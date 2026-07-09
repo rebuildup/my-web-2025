@@ -82,7 +82,7 @@
 		"react-dropzone": "^14.3.8",
 		"recharts": "^3.3.0",
 		"resend": "^6.3.0",
-		"sharp": "^0.34.4",
+		"sharp": "^0.35.3",
 		"tailwind-merge": "^3.3.1",
 		"tailwindcss": "^4.1.16",
 		"three": "^0.180.0",
