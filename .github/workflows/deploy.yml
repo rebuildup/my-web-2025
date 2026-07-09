@@ -38,6 +38,7 @@ jobs:
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
           NEXT_BUILD_STANDALONE: "true"
+          CMS_USE_RUST_API: "1"
         run: bun run build
 
       - name: Prepare standalone deployment

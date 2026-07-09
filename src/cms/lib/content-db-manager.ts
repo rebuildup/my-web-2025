@@ -343,8 +343,9 @@ function ensureMediaTable(db: SqliteDatabase): void {
 
 function readContentRowsFromFile(file: string): ContentIndexRow[] {
 	const dbPath = path.join(CONTENT_DB_DIR, file);
-	const db = openSqliteDb(dbPath, { readonly: true });
+	let db: SqliteDatabase | null = null;
 	try {
+		db = openSqliteDb(dbPath, { readonly: true });
 		ensureSchemaUpgrades(db);
 		const rows = db
 			.prepare(
@@ -394,7 +395,7 @@ function readContentRowsFromFile(file: string): ContentIndexRow[] {
 		console.warn(`[CMS] Failed to read index data from ${file}:`, error);
 		return [];
 	} finally {
-		db.close();
+		db?.close();
 	}
 }
 

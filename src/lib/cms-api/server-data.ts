@@ -116,8 +116,16 @@ export async function fetchCmsContentIndex(): Promise<CmsContentIndexEntry[]> {
 		}));
 	}
 
-	const entries = await cmsApiFetch<RustEntryListItem[]>("/entries");
-	return entries.map(mapRustEntryListItem);
+	try {
+		const entries = await cmsApiFetch<RustEntryListItem[]>("/entries");
+		return entries.map(mapRustEntryListItem);
+	} catch (error) {
+		console.warn(
+			"[CMS] Rust CMS API unavailable; returning empty index",
+			error,
+		);
+		return [];
+	}
 }
 
 export async function fetchCmsContentById(
@@ -144,36 +152,44 @@ export async function fetchCmsContentById(
 		};
 	}
 
-	const [detail, index] = await Promise.all([
-		cmsApiFetch<RustEntryDetail>(`/entries/${encodeURIComponent(id)}`),
-		fetchCmsContentIndex(),
-	]);
-	const indexEntry = index.find((item) => item.id === id);
-	return {
-		...indexEntry,
-		id: detail.id,
-		title: detail.title,
-		summary: detail.summary ?? indexEntry?.summary,
-		lang: detail.lang,
-		status: detail.status,
-		visibility: detail.visibility,
-		createdAt: detail.created_at,
-		updatedAt: detail.updated_at,
-		publishedAt: detail.published_at ?? null,
-		path: detail.path ?? undefined,
-		depth: detail.depth,
-		order: detail.order,
-		parentId: detail.parent_id ?? undefined,
-		ext: {
-			type: detail.entry_type,
-			slug: detail.slug ?? undefined,
-		},
-		tags: indexEntry?.tags ?? [],
-		thumbnail: indexEntry?.thumbnail,
-		thumbnails: indexEntry?.thumbnail
-			? { image: { src: indexEntry.thumbnail } }
-			: undefined,
-	};
+	try {
+		const [detail, index] = await Promise.all([
+			cmsApiFetch<RustEntryDetail>(`/entries/${encodeURIComponent(id)}`),
+			fetchCmsContentIndex(),
+		]);
+		const indexEntry = index.find((item) => item.id === id);
+		return {
+			...indexEntry,
+			id: detail.id,
+			title: detail.title,
+			summary: detail.summary ?? indexEntry?.summary,
+			lang: detail.lang,
+			status: detail.status,
+			visibility: detail.visibility,
+			createdAt: detail.created_at,
+			updatedAt: detail.updated_at,
+			publishedAt: detail.published_at ?? null,
+			path: detail.path ?? undefined,
+			depth: detail.depth,
+			order: detail.order,
+			parentId: detail.parent_id ?? undefined,
+			ext: {
+				type: detail.entry_type,
+				slug: detail.slug ?? undefined,
+			},
+			tags: indexEntry?.tags ?? [],
+			thumbnail: indexEntry?.thumbnail,
+			thumbnails: indexEntry?.thumbnail
+				? { image: { src: indexEntry.thumbnail } }
+				: undefined,
+		};
+	} catch (error) {
+		console.warn(
+			`[CMS] Rust CMS API unavailable for content ${id}; returning null`,
+			error,
+		);
+		return null;
+	}
 }
 
 export async function fetchCmsContentTags(
