@@ -3,16 +3,9 @@
   "ignoreDependencies": [
     "chrome-launcher",
     "lighthouse",
-    "@heroicons/react",
-    "@sentry/nextjs",
-    "@tanstack/react-table",
-    "axios",
     "pixi-filters",
-    "react-google-recaptcha",
     "recharts",
     "resend",
-    "styled-components",
-    "tailwindcss-animate",
     "web-vitals",
     "@jest/globals",
     "@testing-library/react",
@@ -22,9 +15,6 @@
     "jsdom",
     "playwright",
     "tsx",
-    "@next/bundle-analyzer",
-    "server-only",
-
     "isomorphic-dompurify",
     "sharp"
   ],
