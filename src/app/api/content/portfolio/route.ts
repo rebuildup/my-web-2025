@@ -83,11 +83,18 @@ export async function GET(request: NextRequest) {
 		const limited =
 			Number.isFinite(limit) && limit > 0 ? filtered.slice(0, limit) : filtered;
 
-		return NextResponse.json({
-			success: true,
-			data: limited,
-			total: filtered.length,
-		});
+		return NextResponse.json(
+			{
+				success: true,
+				data: limited,
+				total: filtered.length,
+			},
+			{
+				headers: {
+					"Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+				},
+			},
+		);
 	} catch (error) {
 		console.error("Portfolio API error:", error);
 		return NextResponse.json(

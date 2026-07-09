@@ -21,6 +21,7 @@ const inter = Inter({
 
 const notoSansJP = Noto_Sans_JP({
 	subsets: ["latin"],
+	weight: ["400", "700"],
 	variable: "--font-noto-sans-jp",
 	display: "swap",
 	adjustFontFallback: true,

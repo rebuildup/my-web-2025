@@ -15,7 +15,6 @@ import { RelatedArticles } from "../../components/RelatedArticles";
 
 export const runtime = "nodejs";
 export const revalidate = 3600;
-export const dynamic = "force-dynamic";
 
 interface BlogPageProps {
 	params: Promise<{ slug: string }>;

@@ -340,31 +340,38 @@ export async function GET() {
 			};
 		});
 
-		return NextResponse.json({
-			user: {
-				login: data.user.login,
-				name: data.user.name,
-				bio: data.user.bio,
-				blog: data.user.blog,
-				location: data.user.location,
-				avatar_url: data.user.avatar_url,
-				followers: data.user.followers,
-				following: data.user.following,
-				public_repos: data.user.public_repos,
-				company: data.user.company,
-				email: data.user.email,
-				hireable: data.user.hireable,
-				twitter_username: data.user.twitter_username,
-				created_at: data.user.created_at,
-				updated_at: data.user.updated_at,
-				html_url: `https://github.com/${GITHUB_USERNAME}`,
+		return NextResponse.json(
+			{
+				user: {
+					login: data.user.login,
+					name: data.user.name,
+					bio: data.user.bio,
+					blog: data.user.blog,
+					location: data.user.location,
+					avatar_url: data.user.avatar_url,
+					followers: data.user.followers,
+					following: data.user.following,
+					public_repos: data.user.public_repos,
+					company: data.user.company,
+					email: data.user.email,
+					hireable: data.user.hireable,
+					twitter_username: data.user.twitter_username,
+					created_at: data.user.created_at,
+					updated_at: data.user.updated_at,
+					html_url: `https://github.com/${GITHUB_USERNAME}`,
+				},
+				status: data.status,
+				events: formattedEvents,
+				pinnedRepos: data.pinnedRepos,
+				topRepos: data.topRepos,
+				contributions: data.contributions,
 			},
-			status: data.status,
-			events: formattedEvents,
-			pinnedRepos: data.pinnedRepos,
-			topRepos: data.topRepos,
-			contributions: data.contributions,
-		});
+			{
+				headers: {
+					"Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+				},
+			},
+		);
 	} catch (error) {
 		console.error("GitHub API error:", error);
 		return NextResponse.json(

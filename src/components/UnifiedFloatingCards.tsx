@@ -256,41 +256,33 @@ export default function UnifiedFloatingCards() {
 	const portfolioIndexRef = useRef(0);
 	const linkIndexRef = useRef(0);
 
-	// Fetch all data
+	// Fetch all data in parallel
 	useEffect(() => {
 		const fetchAllData = async () => {
-			try {
-				// Fetch GitHub data
-				const githubRes = await fetch("/api/github/activity");
-				if (githubRes.ok) {
-					setGithubData(await githubRes.json());
-				} else {
-					console.error("GitHub API failed:", githubRes.status);
-				}
+			const [githubResult, youtubeResult, portfolioResult] =
+				await Promise.allSettled([
+					fetch("/api/github/activity").then((res) =>
+						res.ok ? res.json() : null,
+					),
+					fetch("/api/youtube/activity").then((res) =>
+						res.ok ? res.json() : null,
+					),
+					fetch("/api/content/portfolio?limit=50").then((res) =>
+						res.ok ? res.json() : null,
+					),
+				]);
 
-				// Fetch YouTube data
-				const youtubeRes = await fetch("/api/youtube/activity");
-				if (youtubeRes.ok) {
-					setYoutubeData(await youtubeRes.json());
-				} else {
-					console.error("YouTube API failed:", youtubeRes.status);
+			if (githubResult.status === "fulfilled" && githubResult.value) {
+				setGithubData(githubResult.value);
+			}
+			if (youtubeResult.status === "fulfilled" && youtubeResult.value) {
+				setYoutubeData(youtubeResult.value);
+			}
+			if (portfolioResult.status === "fulfilled" && portfolioResult.value) {
+				const json = portfolioResult.value;
+				if (json.success && json.data) {
+					setPortfolioData(json.data);
 				}
-
-				// Fetch Portfolio data
-				const portfolioRes = await fetch("/api/content/portfolio?limit=50");
-				if (portfolioRes.ok) {
-					const json = await portfolioRes.json();
-					if (json.success && json.data) {
-						console.log("Portfolio data loaded:", json.data.length, "items");
-						setPortfolioData(json.data);
-					} else {
-						console.error("Portfolio API returned error:", json);
-					}
-				} else {
-					console.error("Portfolio API failed:", portfolioRes.status);
-				}
-			} catch (error) {
-				console.error("Failed to fetch data:", error);
 			}
 		};
 

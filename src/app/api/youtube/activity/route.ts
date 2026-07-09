@@ -128,10 +128,17 @@ export async function GET() {
 	try {
 		const data = await fetchYouTubeRSS();
 
-		return NextResponse.json({
-			channelTitle: data.channelTitle,
-			videos: data.videos.slice(0, 5), // Latest 5 videos
-		});
+		return NextResponse.json(
+			{
+				channelTitle: data.channelTitle,
+				videos: data.videos.slice(0, 5), // Latest 5 videos
+			},
+			{
+				headers: {
+					"Cache-Control": "public, s-maxage=600, stale-while-revalidate=1800",
+				},
+			},
+		);
 	} catch (error) {
 		console.error("YouTube RSS error:", error);
 		return NextResponse.json(
