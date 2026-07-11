@@ -10,6 +10,24 @@ export default function PiGame() {
 	const [isGameOver, setIsGameOver] = useState(false);
 	const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
 	const [highlightThree, setHighlightThree] = useState(false);
+	const [isFullscreen, setIsFullscreen] = useState(false);
+
+	useEffect(() => {
+		const onFullscreenChange = () => {
+			setIsFullscreen(!!document.fullscreenElement);
+		};
+		document.addEventListener("fullscreenchange", onFullscreenChange);
+		return () =>
+			document.removeEventListener("fullscreenchange", onFullscreenChange);
+	}, []);
+
+	const toggleFullscreen = useCallback(() => {
+		if (!document.fullscreenElement) {
+			document.documentElement.requestFullscreen().catch(() => {});
+		} else {
+			document.exitFullscreen().catch(() => {});
+		}
+	}, []);
 
 	const handleInput = useCallback(
 		(digit: string) => {
@@ -89,9 +107,9 @@ export default function PiGame() {
 	};
 
 	const KEY_STYLE: React.CSSProperties = {
-		width: 120,
-		height: 120,
-		fontSize: 20,
+		width: isFullscreen ? 160 : 120,
+		height: isFullscreen ? 160 : 120,
+		fontSize: isFullscreen ? 28 : 20,
 		fontFamily: "inherit",
 		cursor: "pointer",
 	};
@@ -103,18 +121,41 @@ export default function PiGame() {
 				flexDirection: "column",
 				alignItems: "center",
 				justifyContent: "flex-start",
-				paddingTop: 32,
+				paddingTop: isFullscreen ? 64 : 32,
 				paddingLeft: 16,
 				paddingRight: 16,
-				gap: 12,
+				gap: isFullscreen ? 20 : 12,
+				minHeight: isFullscreen ? "100vh" : undefined,
+				backgroundColor: isFullscreen ? "#fff" : undefined,
 			}}
 		>
+			{/* 全画面ボタン */}
+			<button
+				type="button"
+				onClick={toggleFullscreen}
+				style={{
+					position: isFullscreen ? "fixed" : "relative",
+					top: isFullscreen ? 16 : undefined,
+					right: isFullscreen ? 16 : undefined,
+					zIndex: isFullscreen ? 10 : undefined,
+					padding: "8px 16px",
+					fontSize: 14,
+					fontFamily: "inherit",
+					cursor: "pointer",
+					border: "1px solid #ccc",
+					borderRadius: 4,
+					backgroundColor: "#f5f5f5",
+					alignSelf: "flex-end",
+				}}
+			>
+				{isFullscreen ? "終了" : "全画面"}
+			</button>
 			{/* 数字表示エリア */}
 			<div style={{ display: "flex", justifyContent: "center" }}>
 				<div
 					style={{
-						height: 120,
-						width: 360,
+						height: isFullscreen ? 160 : 120,
+						width: isFullscreen ? 480 : 360,
 						display: "flex",
 						alignItems: "center",
 						justifyContent: "center",
@@ -125,7 +166,7 @@ export default function PiGame() {
 					<div
 						style={{
 							fontFamily: "monospace",
-							fontSize: 28,
+							fontSize: isFullscreen ? 40 : 28,
 							textAlign: "center",
 							overflow: "hidden",
 							paddingLeft: 16,
@@ -136,7 +177,9 @@ export default function PiGame() {
 							<span style={{ color: "#0066cc" }}>3 to Start</span>
 						) : isGameOver ? (
 							<div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-								<div style={{ fontSize: 14, color: "#0066cc" }}>
+								<div
+									style={{ fontSize: isFullscreen ? 18 : 14, color: "#0066cc" }}
+								>
 									結果 : {currentPosition >= 0 ? currentPosition + 1 : 0}桁
 								</div>
 								<div style={{ whiteSpace: "nowrap" }}>
@@ -162,7 +205,11 @@ export default function PiGame() {
 											);
 										})}
 								</div>
-								<div style={{ fontSize: 14, color: "#0066cc" }}>3 to Retry</div>
+								<div
+									style={{ fontSize: isFullscreen ? 18 : 14, color: "#0066cc" }}
+								>
+									3 to Retry
+								</div>
 							</div>
 						) : (
 							<div style={{ whiteSpace: "nowrap" }}>
@@ -181,7 +228,7 @@ export default function PiGame() {
 					style={{
 						display: "grid",
 						gridTemplateColumns: "repeat(3, 1fr)",
-						gap: 8,
+						gap: isFullscreen ? 12 : 8,
 					}}
 				>
 					{/* Row 1: 7, 8, 9 */}
@@ -272,7 +319,7 @@ export default function PiGame() {
 						onClick={() => handleInput("0")}
 						style={{
 							...KEY_STYLE,
-							width: 248,
+							width: isFullscreen ? 332 : 248,
 							gridColumn: "span 2",
 						}}
 						aria-label="0"
