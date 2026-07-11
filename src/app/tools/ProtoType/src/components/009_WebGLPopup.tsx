@@ -34,7 +34,7 @@ const WebGLPopup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
  appRef.current = app;
  popupRef.current.appendChild(app.canvas);
- initializeGame(app);
+ await initializeGame(app);
  } catch (error) {
  console.error("PixiJS initialization failed:", error);
  app?.destroy(true);

@@ -30,7 +30,7 @@ import { loadcache_localranking } from "./020_cacheControl";
 export async function initializeGame(app: PIXI.Application) {
   app.stage.removeChildren();
   BG_grid(app);
-  loadcache_localranking();
+  await loadcache_localranking();
   const loading_text = new PIXI.Text({
     text: "Loading",
     style: {
@@ -154,8 +154,11 @@ export async function initializeGame(app: PIXI.Application) {
   playMiss();
 }
 export function replaceHash(color: string): string {
-  if (typeof color !== "string") return "";
-  return color.startsWith("#") ? color.replace("#", "0x") : color;
+  if (typeof color !== "string") return "#000000";
+  if (color.startsWith("0x")) {
+    return `#${color.slice(2)}`;
+  }
+  return color.startsWith("#") ? color : `#${color}`;
 }
 import { ConversionTendencies } from "./008_generate_pattern";
 import { debug_repeat } from "./023_debug_repeat";
