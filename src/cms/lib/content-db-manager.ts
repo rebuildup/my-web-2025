@@ -369,7 +369,7 @@ function readContentRowsFromFile(file: string): ContentIndexRow[] {
 		}>;
 
 		return rows.map((row) => {
-			const tags = db
+			const tags = db!
 				.prepare("SELECT tag FROM content_tags WHERE content_id = ?")
 				.all(row.id) as Array<{ tag: string }>;
 			return {

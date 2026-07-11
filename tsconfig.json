@@ -16,7 +16,6 @@
 		"typeRoots": ["./node_modules/@types"],
 		"incremental": true,
 		"assumeChangesOnlyAffectDirectDependencies": true,
-		"baseUrl": ".",
 		"plugins": [
 			{
 				"name": "next"

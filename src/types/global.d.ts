@@ -47,13 +47,6 @@ declare global {
 		};
 	}
 
-	// Scheduler API
-	interface Window {
-		scheduler?: {
-			postTask: (fn: () => void, options: { priority: string }) => void;
-		};
-	}
-
 	// Next.js specific types
 	namespace NodeJS {
 		interface ProcessEnv {

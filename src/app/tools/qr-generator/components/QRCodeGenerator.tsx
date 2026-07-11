@@ -1,6 +1,6 @@
 "use client";
 
-import QRCode from "qrcode";
+import * as QRCode from "qrcode";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function QRCodeGenerator() {

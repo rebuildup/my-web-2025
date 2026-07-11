@@ -9,13 +9,6 @@ interface FrameImage {
 	image: any;
 }
 
-declare global {
-	interface Window {
-		p5: any;
-		animationFunctions: any;
-	}
-}
-
 export function setupAnimationRenderer(
 	editorManager: EditorManager,
 	containerElement?: HTMLElement | string,
@@ -744,7 +737,7 @@ export function setupAnimationRenderer(
 
 			let currentBackgroundColor = CANVAS_CONFIG.BACKGROUND_COLOR;
 
-			window.animationFunctions = {
+			(window as any).animationFunctions = {
 				drawCurrentAnimation: (buffer: any, frameIndex: number) => {
 					animations.forEach((animation) =>
 						animation.drawToBuffer(buffer, frameIndex),

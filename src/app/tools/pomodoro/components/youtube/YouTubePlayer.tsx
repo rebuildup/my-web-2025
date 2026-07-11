@@ -19,13 +19,6 @@ import {
 } from "./types";
 import { parseYouTubeUrl } from "./utils";
 
-declare global {
-	interface Window {
-		onYouTubeIframeAPIReady: () => void;
-		YT: any;
-	}
-}
-
 interface YouTubePlayerProps {
 	pomodoroState: {
 		isActive: boolean;
@@ -88,13 +81,13 @@ export default function YouTubePlayer({
 
 	// Load IFrame API
 	useEffect(() => {
-		if (!window.YT) {
+		if (!(window as any).YT) {
 			const tag = document.createElement("script");
 			tag.src = "https://www.youtube.com/iframe_api";
 			const firstScriptTag = document.getElementsByTagName("script")[0];
 			firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
 
-			window.onYouTubeIframeAPIReady = () => {
+			(window as any).onYouTubeIframeAPIReady = () => {
 				setIsApiReady(true);
 			};
 		} else {
@@ -105,7 +98,7 @@ export default function YouTubePlayer({
 	// Initialize Player
 	useEffect(() => {
 		if (isApiReady && source && !player) {
-			const newPlayer = new window.YT.Player(uniqueId, {
+			const newPlayer = new (window as any).YT.Player(uniqueId, {
 				height: "100%",
 				width: "100%",
 				videoId:
