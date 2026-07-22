@@ -1,7 +1,6 @@
 export * from "./editor/BlockEditor";
 export * from "./editor/BlockToolbar";
 export * from "./editor/EditableText";
-export * from "./editor/InlineToolbar";
 export * from "./layout/EditorLayout";
 export * from "./layout/Sidebar";
 export * from "./panels/ArticleList";
