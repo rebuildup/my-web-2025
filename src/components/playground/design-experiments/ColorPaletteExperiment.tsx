@@ -361,7 +361,7 @@ export const ColorPaletteExperiment: React.FC<ExperimentProps> = ({
 				<div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
 					{palette.colors.map((color, index) => (
 						<div
-							key={`${color}-${index}`}
+							key={color}
 							className={`group relative aspect-square  cursor-pointer transition-all duration-300 ${
 								isAnimating ? "animate-pulse scale-105" : "hover:scale-105"
 							}`}

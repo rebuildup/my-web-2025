@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 import { contactLinks, type LinkItem, links } from "./data";
@@ -50,7 +50,7 @@ function LinkIcon({ item, className }: { item: LinkItem; className?: string }) {
 
 function ProfileHeader() {
 	return (
-		<motion.div
+		<m.div
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.6 }}
@@ -62,11 +62,11 @@ function ProfileHeader() {
 					href="https://x.com/361do_sleep"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="w-20 h-20 rounded-full bg-gradient-to-tr  p-[2px]  z-10 cursor-pointer group"
+					className="w-20 h-20 rounded-full bg-linear-to-tr  p-[2px]  z-10 cursor-pointer group"
 					title="Tech Account (@361do_sleep)"
 				>
 					<div className="w-full h-full rounded-full overflow-hidden relative">
-						<motion.img
+						<m.img
 							whileHover={{ rotate: 360 }}
 							transition={{ duration: 2, ease: [0.9, 0, 0.1, 1] }}
 							src="https://pbs.twimg.com/profile_images/2034243179176960000/ZcmwOt4U_400x400.jpg"
@@ -81,11 +81,11 @@ function ProfileHeader() {
 					href="https://x.com/361do_design"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="w-20 h-20 rounded-full bg-gradient-to-tr p-[2px]  z-10 cursor-pointer group"
+					className="w-20 h-20 rounded-full bg-linear-to-tr p-[2px]  z-10 cursor-pointer group"
 					title="Design Account (@361do_design)"
 				>
 					<div className="w-full h-full rounded-full overflow-hidden relative">
-						<motion.img
+						<m.img
 							whileHover={{ rotate: 360 }}
 							transition={{ duration: 2, ease: [0.9, 0, 0.1, 1] }}
 							src="https://pbs.twimg.com/profile_images/1932016030551048192/xWwBlKiB_400x400.jpg"
@@ -127,13 +127,13 @@ function ProfileHeader() {
 				Web制作・映像制作・ツール開発.
 				<span className="text-xs mt-1 block">Yamaguchi, Japan</span>
 			</p>
-		</motion.div>
+		</m.div>
 	);
 }
 
 function LinkButton({ item, index }: { item: LinkItem; index: number }) {
 	return (
-		<motion.a
+		<m.a
 			href={item.url}
 			target={
 				item.url.startsWith("mailto") || item.url.startsWith("/")
@@ -156,21 +156,21 @@ function LinkButton({ item, index }: { item: LinkItem; index: number }) {
 		>
 			<div className="relative z-10 flex items-center px-4 py-3 rounded-xl       transition-colors duration-200 overflow-hidden">
 				{/* Icon container */}
-				<div className="flex-shrink-0 w-8 h-8 rounded-md flex items-center justify-center   overflow-hidden p-[5px]">
+				<div className="shrink-0 w-8 h-8 rounded-md flex items-center justify-center   overflow-hidden p-[5px]">
 					<LinkIcon item={item} className="w-full h-full" />
 				</div>
 
 				{/* Text content */}
-				<div className="flex-grow px-4 text-left min-w-0 flex items-baseline justify-between">
+				<div className="grow px-4 text-left min-w-0 flex items-baseline justify-between">
 					<span className=" font-bold text-sm tracking-tight truncate">
 						{item.title}
 					</span>
-					<span className="/40 text-xs font-mono ml-2 flex-shrink-0 truncate max-w-[120px]">
+					<span className="/40 text-xs font-mono ml-2 shrink-0 truncate max-w-[120px]">
 						{item.description}
 					</span>
 				</div>
 			</div>
-		</motion.a>
+		</m.a>
 	);
 }
 
@@ -182,7 +182,7 @@ export default function LinksPage() {
 
 			<main className="relative z-10 w-full max-w-lg mx-auto px-6 py-12 min-h-screen flex flex-col items-center">
 				{/* Content */}
-				<div className="w-full flex-grow flex flex-col items-center pt-6">
+				<div className="w-full grow flex flex-col items-center pt-6">
 					<ProfileHeader />
 
 					<div className="w-full flex flex-col gap-3">
@@ -192,13 +192,13 @@ export default function LinksPage() {
 					</div>
 
 					<div className="w-full mt-8 pt-6  ">
-						<motion.h2
+						<m.h2
 							initial={{ opacity: 0 }}
 							whileInView={{ opacity: 1 }}
 							className="text-center text-[10px] font-mono uppercase tracking-widest mb-4"
 						>
 							Contact
-						</motion.h2>
+						</m.h2>
 						<div className="flex flex-col gap-3 w-full">
 							{contactLinks.map((link, idx) => (
 								<LinkButton
@@ -212,14 +212,14 @@ export default function LinksPage() {
 				</div>
 
 				{/* Footer */}
-				<motion.footer
+				<m.footer
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ delay: 0.8 }}
 					className="text-center mt-12 text-[10px] font-mono"
 				>
 					© 2025 361do_sleep
-				</motion.footer>
+				</m.footer>
 			</main>
 		</div>
 	);

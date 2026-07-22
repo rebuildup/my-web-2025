@@ -43,8 +43,8 @@ export function RawDOMContainer({
 				<nav
 					style={{ fontSize: "0.85rem", marginBottom: "1rem", color: "#666" }}
 				>
-					{breadcrumbs.map((item, index) => (
-						<React.Fragment key={index}>
+					{breadcrumbs.map((item, idx) => (
+						<React.Fragment key={item.label}>
 							{item.href ? (
 								<a
 									href={item.href}
@@ -55,7 +55,7 @@ export function RawDOMContainer({
 							) : (
 								<span style={{ color: "#000" }}>{item.label}</span>
 							)}
-							{index < breadcrumbs.length - 1 && (
+							{idx < breadcrumbs.length - 1 && (
 								<span style={{ margin: "0 8px" }}>/</span>
 							)}
 						</React.Fragment>

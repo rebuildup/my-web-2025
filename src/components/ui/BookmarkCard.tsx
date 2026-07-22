@@ -70,7 +70,7 @@ export function BookmarkCard({
 	const hasImage = displayImage && displayImage.length > 0;
 
 	return (
-		<div className="my-4 w-full max-w-full   rounded-lg overflow-hidden bg-gradient-to-br   shadow-[0_2px_8px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.08)]  [&_*]:!no-underline [&_*]:!decoration-none">
+		<div className="my-4 w-full max-w-full   rounded-lg overflow-hidden bg-linear-to-br   shadow-[0_2px_8px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.08)]  [&_*]:!no-underline [&_*]:!decoration-none">
 			<a
 				href={url}
 				className="block px-3 py-2.5  !no-underline !decoration-none    [&_*]:!no-underline [&_*]:!decoration-none"
@@ -81,7 +81,7 @@ export function BookmarkCard({
 				<div className="flex flex-col gap-2.5 md:flex-row md:items-center md:gap-3">
 					{hasImage && (
 						<div
-							className="flex-shrink-0 rounded overflow-hidden"
+							className="shrink-0 rounded overflow-hidden"
 							style={{
 								maxWidth: "140px",
 								maxHeight: "140px",

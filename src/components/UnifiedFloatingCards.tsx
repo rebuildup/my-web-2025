@@ -538,7 +538,7 @@ function GitHubRepoCard({
 			<div className="pointer-events-auto block p-4 rounded-lg max-w-[340px]">
 				{/* Title with language and icon */}
 				<div className="flex items-center gap-2 mb-2">
-					<GitBranch className="w-4 h-4 flex-shrink-0" />
+					<GitBranch className="w-4 h-4 shrink-0" />
 					<a
 						href={repo.url}
 						target="_blank"
@@ -548,7 +548,7 @@ function GitHubRepoCard({
 						{repo.name}
 					</a>
 					{repo.language && (
-						<span className="text-xs flex-shrink-0 flex items-center gap-1">
+						<span className="text-xs shrink-0 flex items-center gap-1">
 							<span className="w-2 h-2 rounded-full " />
 							{repo.language}
 						</span>
@@ -751,7 +751,7 @@ function LinkCard({ card, opacity }: { card: UnifiedCard; opacity: number }) {
 						<img
 							src={link.favicon}
 							alt=""
-							className="w-4 h-4 rounded flex-shrink-0"
+							className="w-4 h-4 rounded shrink-0"
 							onError={(e) => {
 								e.currentTarget.style.display = "none";
 							}}

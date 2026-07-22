@@ -182,8 +182,8 @@ export default function ToolWrapper({
 											検出された問題:
 										</h4>
 										<ul className="noto-sans-jp-light text-xs space-y-1">
-											{state.accessibilityIssues.map((issue, index) => (
-												<li key={index}>• {issue}</li>
+											{state.accessibilityIssues.map((issue) => (
+												<li key={issue}>• {issue}</li>
 											))}
 										</ul>
 									</div>

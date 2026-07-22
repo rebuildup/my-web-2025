@@ -961,7 +961,7 @@ export function DataManagerForm({
 					{enhanced && needsMarkdownMigration && (
 						<div className="   rounded-lg p-4">
 							<div className="flex items-start gap-3">
-								<div className="w-6 h-6  rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+								<div className="w-6 h-6  rounded-full flex items-center justify-center shrink-0 mt-0.5">
 									<span className=" text-sm">📝</span>
 								</div>
 								<div className="flex-1">

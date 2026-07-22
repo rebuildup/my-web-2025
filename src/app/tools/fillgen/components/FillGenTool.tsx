@@ -1039,9 +1039,9 @@ export default function FillGenTool() {
 									overflow: "auto",
 								}}
 							>
-								{pages.map((_, i) => (
+								{pages.map((page, i) => (
 									<button
-										key={i}
+										key={page}
 										type="button"
 										onClick={() => setActivePage(i)}
 										style={{
@@ -1300,9 +1300,9 @@ export default function FillGenTool() {
 											zIndex: 5,
 										}}
 									>
-										{docs.map((_, i) => (
+										{docs.map((doc, i) => (
 											<button
-												key={i}
+												key={doc.title}
 												className={`nav-btn ${i === activePage ? "active" : ""}`}
 												onClick={() => setActivePage(i)}
 												style={{
@@ -1325,23 +1325,23 @@ export default function FillGenTool() {
 
 								{docs.map((doc, idx) => (
 									<div
-										key={idx}
+										key={doc.title}
 										className={`sheet ${idx === activePage ? "active" : ""}`}
 										style={{ display: idx === activePage ? "block" : "none" }}
 										ref={idx === activePage ? containerRef : undefined}
 									>
 										<h2 className="sheet-title">{doc.title}</h2>
-										{doc.blocks.map((block, i) => (
-											<div key={i}>
+										{doc.blocks.map((block) => (
+											<div key={block.header ?? `${doc.title}-block`}>
 												{block.header && (
 													<h3 className="main-header">{block.header}</h3>
 												)}
 												{block.sections.map((sec, j) => (
-													<div key={j} className="quiz-section">
+													<div key={sec.title ?? `sec-${j}`} className="quiz-section">
 														<h4>{sec.title}</h4>
 														{sec.paragraphs.map((p, k) => (
 															<p
-																key={k}
+																key={`p-${k}`}
 																dangerouslySetInnerHTML={{
 																	__html: paragraphToHtml(p),
 																}}

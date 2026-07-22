@@ -383,9 +383,9 @@ export default function HandleProfilePage() {
 										<div className="space-y-3">
 											<h3 className="zen-kaku-gothic-new text-lg ">開発環境</h3>
 											<div className="space-y-2">
-												{workStyle.development.map((item, index) => (
+												{workStyle.development.map((item) => (
 													<p
-														key={index}
+														key={item}
 														className="noto-sans-jp-light text-sm "
 													>
 														• {item}
@@ -399,9 +399,9 @@ export default function HandleProfilePage() {
 												ワークフロー
 											</h3>
 											<div className="space-y-2">
-												{workStyle.workflow.map((item, index) => (
+												{workStyle.workflow.map((item) => (
 													<p
-														key={index}
+														key={item}
 														className="noto-sans-jp-light text-sm "
 													>
 														• {item}

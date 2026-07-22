@@ -398,7 +398,7 @@ export const SVGAnimationExperiment: React.FC<ExperimentProps> = ({
 					<label className="noto-sans-jp-light text-sm ">Color Palette</label>
 					<div className="flex gap-4">
 						{colors.map((color, index) => (
-							<div key={index} className="flex items-center space-x-2">
+							<div key={color} className="flex items-center space-x-2">
 								<input
 									type="color"
 									value={color}

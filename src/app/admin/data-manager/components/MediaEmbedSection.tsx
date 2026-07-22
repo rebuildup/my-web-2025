@@ -265,7 +265,7 @@ export function MediaEmbedSection({
 
 					{videos.map((video, index) => (
 						<div
-							key={video.url || `media-${index}`}
+							key={video.url}
 							className="  p-4 rounded space-y-3"
 						>
 							<div className="flex justify-between items-start">

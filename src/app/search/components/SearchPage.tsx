@@ -314,10 +314,10 @@ export default function SearchPage() {
 								{/* Search Suggestions */}
 								{showSuggestions && suggestions.length > 0 && (
 									<div className="absolute top-full left-0 right-0   z-10">
-										{suggestions.map((suggestion, index) => (
+										{suggestions.map((suggestion) => (
 											<button
 												type="button"
-												key={index}
+												key={suggestion}
 												onClick={() => handleSuggestionClick(suggestion)}
 												className="w-full px-4 py-3 text-left noto-sans-jp-light text-sm flex items-center gap-2"
 											>
@@ -346,10 +346,10 @@ export default function SearchPage() {
 												</button>
 											</div>
 										</div>
-										{searchHistory.slice(0, 5).map((historyItem, index) => (
+										{searchHistory.slice(0, 5).map((historyItem) => (
 											<button
 												type="button"
-												key={index}
+												key={`${historyItem.query}-${historyItem.timestamp}`}
 												onClick={() => handleHistoryClick(historyItem)}
 												className="w-full px-4 py-3 text-left noto-sans-jp-light text-sm flex items-center justify-between group"
 											>
@@ -529,7 +529,7 @@ export default function SearchPage() {
 														{result.highlights
 															.slice(0, 3)
 															.map((highlight, index) => (
-																<span key={index} className="px-2 py-1 text-xs">
+																<span key={highlight} className="px-2 py-1 text-xs">
 																	{highlight}
 																</span>
 															))}

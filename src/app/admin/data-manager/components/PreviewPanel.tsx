@@ -381,7 +381,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 								<div className="space-y-6">
 									{item.videos.map((video, index) => (
 										<div
-											key={video.url || `video-${index}`}
+											key={video.url}
 											className="  rounded-lg p-4 space-y-3"
 										>
 											{/* Video Header */}
@@ -500,9 +500,9 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 									External Links
 								</h3>
 								<div className="space-y-2">
-									{item.externalLinks.map((link, index) => (
+									{item.externalLinks.map((link) => (
 										<div
-											key={link.url || `external-link-${index}`}
+											key={link.url}
 											className="  p-3 rounded"
 										>
 											<div className="flex justify-between items-start mb-1">

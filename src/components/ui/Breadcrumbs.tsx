@@ -33,7 +33,7 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
 
 					return (
 						<li
-							key={`${item.href || item.label}-${index}`}
+							key={item.href || item.label}
 							className="flex items-baseline"
 						>
 							{/* Separator */}

@@ -144,7 +144,7 @@ export function PlaygroundErrorHandler({
 				<h4 className="font-medium text-sm mb-2">解決方法:</h4>
 				<ul className="text-sm space-y-1">
 					{getSuggestions().map((suggestion, index) => (
-						<li key={index} className="flex items-start space-x-2">
+						<li key={suggestion} className="flex items-start space-x-2">
 							<span className="text-xs mt-1">•</span>
 							<span>{suggestion}</span>
 						</li>

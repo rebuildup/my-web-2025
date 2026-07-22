@@ -263,10 +263,10 @@ export default function DevelopCommissionPage() {
 									].map(({ step, title, description, icon: Icon }) => (
 										<div key={step} className="  p-4">
 											<div className="flex items-start">
-												<div className="flex-shrink-0 w-8 h-8  flex items-center justify-center font-bold mr-4 text-sm">
+												<div className="shrink-0 w-8 h-8  flex items-center justify-center font-bold mr-4 text-sm">
 													{step}
 												</div>
-												<div className="flex-grow">
+												<div className="grow">
 													<div className="flex items-center mb-2">
 														<Icon className="w-5 h-5  mr-2" />
 														<h3 className="zen-kaku-gothic-new ">{title}</h3>

@@ -185,16 +185,17 @@ export default function PiGame() {
 								<div style={{ whiteSpace: "nowrap" }}>
 									{(() => {
 										const sequence = getCorrectSequenceWithError();
-										return sequence.length > 12
-											? sequence.slice(-12)
-											: sequence;
-									})()
-										.split("")
-										.map((char, index, array) => {
+										const startIndex =
+											sequence.length > 12 ? sequence.length - 12 : 0;
+										const visible = sequence
+											.slice(startIndex)
+											.split("");
+										return visible.map((char, index, array) => {
 											const isLastChar = index === array.length - 1;
+											const absIndex = startIndex + index;
 											return (
 												<span
-													key={index}
+													key={absIndex}
 													style={{
 														color: isLastChar ? "#cc0000" : "#000",
 														fontWeight: isLastChar ? 700 : 400,
@@ -203,7 +204,8 @@ export default function PiGame() {
 													{char}
 												</span>
 											);
-										})}
+										});
+									})()}
 								</div>
 								<div
 									style={{ fontSize: isFullscreen ? 18 : 14, color: "#0066cc" }}

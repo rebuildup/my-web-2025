@@ -977,7 +977,7 @@ export function ContentForm({
 				<div style={s.sectionTitle}>リンク</div>
 				{(formData.links || []).map((link, i) => (
 					<div
-						key={i}
+						key={`${link.href}-${link.label ?? ""}`}
 						style={{
 							display: "flex",
 							gap: 8,
@@ -1315,7 +1315,7 @@ export function ContentForm({
 		<div style={s.col2}>
 			{(formData.relations || []).map((rel, i) => (
 				<div
-					key={i}
+					key={`${rel.targetId}-${rel.type}`}
 					style={{
 						display: "flex",
 						gap: 8,

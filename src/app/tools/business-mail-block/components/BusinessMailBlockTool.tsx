@@ -820,7 +820,7 @@ export default function BusinessMailBlockTool() {
 												key={`structure-${item}`}
 												className="text-sm noto-sans-jp-light flex items-start gap-2"
 											>
-												<CheckCircle className="w-4 h-4  mt-0.5 flex-shrink-0" />
+												<CheckCircle className="w-4 h-4  mt-0.5 shrink-0" />
 												{item}
 											</li>
 										))}
@@ -835,7 +835,7 @@ export default function BusinessMailBlockTool() {
 												key={`tone-${item}`}
 												className="text-sm noto-sans-jp-light flex items-start gap-2"
 											>
-												<CheckCircle className="w-4 h-4  mt-0.5 flex-shrink-0" />
+												<CheckCircle className="w-4 h-4  mt-0.5 shrink-0" />
 												{item}
 											</li>
 										))}
@@ -852,7 +852,7 @@ export default function BusinessMailBlockTool() {
 												key={`formatting-${item}`}
 												className="text-sm noto-sans-jp-light flex items-start gap-2"
 											>
-												<CheckCircle className="w-4 h-4  mt-0.5 flex-shrink-0" />
+												<CheckCircle className="w-4 h-4  mt-0.5 shrink-0" />
 												{item}
 											</li>
 										))}

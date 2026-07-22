@@ -376,7 +376,7 @@ export function PerformanceSettingsUI({
 									</h5>
 									<ul className="text-sm  space-y-1">
 										{recommendations.map((rec, index) => (
-											<li key={index} className="flex items-start space-x-2">
+											<li key={rec} className="flex items-start space-x-2">
 												<span className="text-xs mt-1">•</span>
 												<span>{rec}</span>
 											</li>

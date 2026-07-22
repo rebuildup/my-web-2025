@@ -486,7 +486,7 @@ export default function QRCodeGenerator() {
 								{processedTexts.length > 0 ? (
 									processedTexts.map((text, index) => (
 										<div
-											key={index}
+											key={text}
 											style={{
 												display: "flex",
 												flexDirection: "column",

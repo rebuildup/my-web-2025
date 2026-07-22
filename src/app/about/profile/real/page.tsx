@@ -33,8 +33,8 @@ function RandomPersonalityList({ items }: { items: string[] }) {
 
 	return (
 		<div className="space-y-3">
-			{selectedItems.map((item, index) => (
-				<SpotlightCard key={index} className="/5 p-3 rounded-lg">
+			{selectedItems.map((item) => (
+				<SpotlightCard key={item} className="/5 p-3 rounded-lg">
 					<p className="noto-sans-jp-light text-sm ">{item}</p>
 				</SpotlightCard>
 			))}
@@ -348,9 +348,9 @@ export default function RealProfilePage() {
 
 							<ScrollFloat stagger={100}>
 								<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-									{activities.map((activity, index) => (
+									{activities.map((activity) => (
 										<div
-											key={index}
+											key={activity.ja}
 											className="/5 p-4 rounded-lg hover:/10 transition-colors flex flex-col"
 										>
 											<h3 className="zen-kaku-gothic-new mb-2">
@@ -453,8 +453,8 @@ export default function RealProfilePage() {
 									{/* タイムラインの縦線 */}
 									<div className="absolute left-0 top-0 bottom-0 w-0.5 timeline-line"></div>
 
-									{education.map((edu, index) => (
-										<div key={index} className="relative mb-8 timeline-item">
+									{education.map((edu) => (
+										<div key={edu.date} className="relative mb-8 timeline-item">
 											{/* タイムラインノード（点） */}
 											<div className="absolute w-3 h-3 rounded-full  timeline-node"></div>
 
@@ -488,9 +488,9 @@ export default function RealProfilePage() {
 
 							<ScrollFloat stagger={100}>
 								<div className="space-y-3">
-									{skillsDetail.map((skill, index) => (
+									{skillsDetail.map((skill) => (
 										<div
-											key={index}
+											key={skill}
 											className="/5 p-3 rounded-lg hover:/10 transition-colors"
 										>
 											<p className="noto-sans-jp-light text-sm ">{skill}</p>
@@ -515,8 +515,11 @@ export default function RealProfilePage() {
 
 							<ScrollFloat stagger={100}>
 								<div className="space-y-12 pt-40">
-									{achievements.map((achievement, index) => (
-										<div key={index} className="text-left">
+									{achievements.map((achievement) => (
+										<div
+											key={`${achievement.date}-${achievement.contentJa}`}
+											className="text-left"
+										>
 											<div className="">
 												<div className="text-sm md: font-bold mb-2">
 													{achievement.date}

@@ -207,7 +207,7 @@ export default function PerformanceOptimizer({
 			{/* Error Display */}
 			{error && (
 				<div className="mb-4    p-3 flex items-start space-x-2">
-					<AlertCircle size={16} className=" mt-0.5 flex-shrink-0" />
+					<AlertCircle size={16} className=" mt-0.5 shrink-0" />
 					<div className="flex-1">
 						<p className="text-sm ">{error}</p>
 						<button type="button" onClick={clearError} className="text-xs mt-1">

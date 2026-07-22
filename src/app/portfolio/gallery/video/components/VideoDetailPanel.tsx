@@ -229,9 +229,9 @@ export default function VideoDetailPanel({
 													v?.href &&
 													arr.findIndex((x) => x.href === v.href) === i,
 											)
-											.map((link, index) => (
+											.map((link) => (
 												<a
-													key={index}
+													key={link.href}
 													href={link.href}
 													target="_blank"
 													rel="noopener noreferrer"
@@ -277,7 +277,7 @@ export default function VideoDetailPanel({
 
 											return (
 												<Link
-													key={idx}
+													key={asset?.src ?? item.id}
 													href={`/portfolio/${item.id}`}
 													className="block w-full group"
 												>

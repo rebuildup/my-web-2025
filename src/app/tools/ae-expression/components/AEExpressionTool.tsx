@@ -1449,8 +1449,8 @@ ${generatedCode}`;
 											</span>
 										</div>
 										<ul className="text-sm noto-sans-jp-light  space-y-1">
-											{validationResult.errors.map((error, index) => (
-												<li key={index}>• {error}</li>
+											{validationResult.errors.map((error) => (
+												<li key={error}>• {error}</li>
 											))}
 										</ul>
 									</div>
@@ -1465,8 +1465,8 @@ ${generatedCode}`;
 											</span>
 										</div>
 										<ul className="text-sm noto-sans-jp-light  space-y-1">
-											{validationResult.warnings.map((warning, index) => (
-												<li key={index}>• {warning}</li>
+											{validationResult.warnings.map((warning) => (
+												<li key={warning}>• {warning}</li>
 											))}
 										</ul>
 									</div>

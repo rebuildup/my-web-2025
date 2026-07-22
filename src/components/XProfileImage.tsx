@@ -14,7 +14,7 @@ export default function XProfileImage({ href, size = 48 }: XProfileImageProps) {
 			href={href}
 			target="_blank"
 			rel="noopener noreferrer"
-			className="flex-shrink-0"
+			className="shrink-0"
 		>
 			<Image
 				src={imageUrl}

@@ -192,7 +192,7 @@ export function ExternalLinksSection({
 
 					{links.map((link, index) => (
 						<div
-							key={link.url || `external-link-${index}`}
+							key={link.title}
 							className="  p-4 rounded space-y-3"
 						>
 							<div className="flex justify-between items-start">

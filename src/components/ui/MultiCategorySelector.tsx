@@ -126,7 +126,7 @@ export function MultiCategorySelector({
 			{showHelp && (
 				<div className="   rounded-lg p-4">
 					<div className="flex items-start gap-2">
-						<Info className="w-4 h-4  mt-0.5 flex-shrink-0" />
+						<Info className="w-4 h-4  mt-0.5 shrink-0" />
 						<div className="space-y-2">
 							<h4 className="text-sm font-medium ">Category Guidelines</h4>
 							<ul className="text-xs  space-y-1">
