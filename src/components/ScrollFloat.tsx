@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { m, useInView } from "framer-motion";
 import { type ReactNode, useRef } from "react";
 
 interface ScrollFloatProps {
@@ -19,7 +19,7 @@ export function ScrollFloat({
 	const isInView = useInView(ref, { once: true, amount: 0.3, initial: false });
 
 	return (
-		<motion.div
+		<m.div
 			ref={ref}
 			initial={{ opacity: 0, y: 50 }}
 			animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
@@ -32,6 +32,6 @@ export function ScrollFloat({
 			suppressHydrationWarning
 		>
 			{children}
-		</motion.div>
+		</m.div>
 	);
 }

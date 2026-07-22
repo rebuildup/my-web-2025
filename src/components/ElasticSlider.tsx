@@ -1,6 +1,6 @@
 import {
 	animate,
-	motion,
+	m,
 	useMotionValue,
 	useMotionValueEvent,
 	useTransform,
@@ -143,7 +143,7 @@ const Slider: React.FC<SliderProps> = ({
 
 	return (
 		<>
-			<motion.div
+			<m.div
 				onHoverStart={() => animate(scale, 1.06)}
 				onHoverEnd={() => animate(scale, 1)}
 				onTouchStart={() => animate(scale, 1.06)}
@@ -154,7 +154,7 @@ const Slider: React.FC<SliderProps> = ({
 				}}
 				className="flex w-full touch-none select-none items-center justify-center gap-4"
 			>
-				<motion.div
+				<m.div
 					animate={{
 						scale: region === "left" ? [1, 1.4, 1] : 1,
 						transition: { duration: 0.25 },
@@ -166,16 +166,16 @@ const Slider: React.FC<SliderProps> = ({
 					}}
 				>
 					{leftIcon}
-				</motion.div>
+				</m.div>
 
 				<div
 					ref={sliderRef}
-					className="relative flex w-full max-w-xs flex-grow cursor-grab touch-none select-none items-center py-4"
+					className="relative flex w-full max-w-xs grow cursor-grab touch-none select-none items-center py-4"
 					onPointerMove={handlePointerMove}
 					onPointerDown={handlePointerDown}
 					onPointerUp={handlePointerUp}
 				>
-					<motion.div
+					<m.div
 						style={{
 							scaleX: useTransform(() => {
 								if (sliderRef.current) {
@@ -197,18 +197,18 @@ const Slider: React.FC<SliderProps> = ({
 							marginTop: useTransform(scale, [1, 1.06], [0, -2]),
 							marginBottom: useTransform(scale, [1, 1.06], [0, -2]),
 						}}
-						className="flex flex-grow"
+						className="flex grow"
 					>
-						<div className="relative h-full flex-grow overflow-hidden rounded-full ">
+						<div className="relative h-full grow overflow-hidden rounded-full ">
 							<div
 								className="absolute h-full  rounded-full"
 								style={{ width: `${getRangePercentage()}%` }}
 							/>
 						</div>
-					</motion.div>
+					</m.div>
 				</div>
 
-				<motion.div
+				<m.div
 					animate={{
 						scale: region === "right" ? [1, 1.4, 1] : 1,
 						transition: { duration: 0.25 },
@@ -220,8 +220,8 @@ const Slider: React.FC<SliderProps> = ({
 					}}
 				>
 					{rightIcon}
-				</motion.div>
-			</motion.div>
+				</m.div>
+			</m.div>
 			{showValue && (
 				<p className="absolute  transform -translate-y-4 text-xs font-medium tracking-wide">
 					{Math.round(value)}

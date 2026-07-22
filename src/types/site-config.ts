@@ -73,10 +73,6 @@ export interface IntegrationConfig {
 		enabled: boolean;
 		siteKey: string;
 	};
-	resend: {
-		enabled: boolean;
-		apiKey: string;
-	};
 }
 
 export interface GlobalSEOConfig {

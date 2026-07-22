@@ -864,7 +864,7 @@ export default function DomeGallery({
 						<div ref={sphereRef} className="sphere">
 							{items.map((it, i) => (
 								<div
-									key={`${it.x},${it.y},${i}`}
+									key={`${it.x},${it.y}`}
 									className="sphere-item absolute m-auto"
 									data-src={it.src}
 									data-alt={it.alt}

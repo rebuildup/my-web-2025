@@ -5,8 +5,6 @@
     "lighthouse",
     "pixi-filters",
     "recharts",
-    "resend",
-    "web-vitals",
     "@jest/globals",
     "@testing-library/react",
     "@types/p5",

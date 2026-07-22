@@ -620,18 +620,29 @@ export default function AboutStitchClient() {
 				<div className="flex flex-col gap-0.5 w-full overflow-x-auto px-6">
 					{segments.map((seg, idx) => {
 						if (seg.type === "highlighted") {
-							return <TimelineRow key={`h-${idx}`} entry={seg.entry} />;
+							return (
+								<TimelineRow
+									key={`h-${seg.entry.date}-${seg.entry.title}`}
+									entry={seg.entry}
+								/>
+							);
 						}
 						const isExpanded = expandedGroups.has(idx);
 						return (
-							<div key={`mg-${idx}`} className="flex flex-col gap-0.5">
+							<div
+								key={`mg-${seg.entries[0]?.date}-${seg.entries[0]?.title}`}
+								className="flex flex-col gap-0.5"
+							>
 								<ExpandToggle
 									expanded={isExpanded}
 									onToggle={() => toggleGroup(idx)}
 								/>
 								{isExpanded &&
-									seg.entries.map((entry, eIdx) => (
-										<TimelineRow key={`m-${idx}-${eIdx}`} entry={entry} />
+									seg.entries.map((entry) => (
+										<TimelineRow
+											key={`m-${entry.date}-${entry.title}`}
+											entry={entry}
+										/>
 									))}
 							</div>
 						);

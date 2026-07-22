@@ -6,6 +6,7 @@ import Script from "next/script";
 import type { ReactNode } from "react";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
+import { MotionProvider } from "@/components/providers/MotionProvider";
 import { ProductionInitializer } from "@/components/providers/ProductionInitializer";
 import { CookieConsent } from "@/components/ui/CookieConsent";
 import { SkipLink } from "@/components/ui/SkipLink";
@@ -76,13 +77,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				className={`${inter.variable} ${notoSansJP.variable} ${shipporiAntiqueB1.variable} font-sans`}
 			>
 				<SkipLink />
-				<ProductionInitializer>
-					<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-					<AnalyticsProvider gaId={process.env.NEXT_PUBLIC_GA_ID}>
-						{children}
-						<CookieConsent />
-					</AnalyticsProvider>
-				</ProductionInitializer>
+				<MotionProvider>
+					<ProductionInitializer>
+						<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+						<AnalyticsProvider gaId={process.env.NEXT_PUBLIC_GA_ID}>
+							{children}
+							<CookieConsent />
+						</AnalyticsProvider>
+					</ProductionInitializer>
+				</MotionProvider>
 
 				{/* Adobe Fonts (Typekit) - 遅延読み込みでパフォーマンス最適化 */}
 				<Script

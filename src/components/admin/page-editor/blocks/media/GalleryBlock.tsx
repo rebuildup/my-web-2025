@@ -129,7 +129,7 @@ export function GalleryBlock({
 											? "col-span-1 sm:col-span-1 md:col-span-1"
 											: "col-span-1";
 						return (
-							<div key={`${item.kind}-${idx}`} className={colSpanClass}>
+							<div key={`${item.kind}-${item.url}`} className={colSpanClass}>
 								<Box
 									onClick={() => setSelected(idx)}
 									sx={{

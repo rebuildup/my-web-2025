@@ -5,7 +5,7 @@
 
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useAnalytics } from "@/components/providers/AnalyticsProvider";
 
@@ -46,7 +46,7 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
 	}
 
 	return (
-		<motion.div
+		<m.div
 			initial={{ y: 100, opacity: 0 }}
 			animate={{ y: 0, opacity: 1 }}
 			exit={{ y: 100, opacity: 0 }}
@@ -119,7 +119,7 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
 					</button>
 				</div>
 			</div>
-		</motion.div>
+		</m.div>
 	);
 }
 
