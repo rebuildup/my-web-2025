@@ -19,7 +19,7 @@ interface AccessibleExperimentWrapperProps {
 	className?: string;
 }
 
-export const AccessibleExperimentWrapper: React.FC<
+const AccessibleExperimentWrapper: React.FC<
 	AccessibleExperimentWrapperProps
 > = ({ experiment, isActive, children, onToggle, onReset, className = "" }) => {
 	const containerRef = useRef<HTMLDivElement>(null);

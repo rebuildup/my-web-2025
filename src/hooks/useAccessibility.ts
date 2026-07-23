@@ -431,7 +431,7 @@ export const useFocusManagement = (
 };
 
 // Skip link functionality
-export const useSkipLinks = () => {
+const useSkipLinks = () => {
 	const skipToContent = useCallback((targetId: string) => {
 		const target = document.getElementById(targetId);
 		if (target) {
@@ -462,7 +462,7 @@ export const getContrastRatio = (color1: string, color2: string): number => {
 	return (lighter + 0.05) / (darker + 0.05);
 };
 
-export const meetsContrastRequirement = (
+const meetsContrastRequirement = (
 	color1: string,
 	color2: string,
 	level: "AA" | "AAA" = "AA",

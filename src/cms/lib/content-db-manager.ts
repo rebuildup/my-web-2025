@@ -399,7 +399,7 @@ function readContentRowsFromFile(file: string): ContentIndexRow[] {
 	}
 }
 
-export function addToIndex(_contentData: {
+function addToIndex(_contentData: {
 	id: string;
 	title: string;
 	summary?: string;
@@ -416,7 +416,7 @@ export function addToIndex(_contentData: {
 	// Index entries are derived directly from per-content databases, so no-op.
 }
 
-export function removeFromIndex(_contentId: string): void {
+function removeFromIndex(_contentId: string): void {
 	// No aggregate index to update.
 }
 
@@ -749,7 +749,7 @@ export interface TagCatalogEntry {
 /**
  * 全てのタグをリスト - 各dbファイルから直接集約
  */
-export function listTagCatalogEntries(): TagCatalogEntry[] {
+function listTagCatalogEntries(): TagCatalogEntry[] {
 	const tagMap = aggregateTagsFromAllDbs();
 	const now = new Date().toISOString();
 
@@ -779,7 +779,7 @@ export function upsertTagCatalogEntry(_entry: {
  * タグの削除 - 実際にはコンテンツからタグを削除することで自動的に削除される
  * この関数は互換性のために残すが、タグが使用中の場合はfalseを返す
  */
-export function removeTagCatalogEntry(name: string): boolean {
+function removeTagCatalogEntry(name: string): boolean {
 	const normalized = name.trim().toLowerCase();
 	if (!normalized) {
 		return false;
@@ -833,7 +833,7 @@ function getPrimaryContentId(db: SqliteDatabase): string | null {
 	return row?.id ?? null;
 }
 
-export function listManualDateEntries(): ManualDateEntry[] {
+function listManualDateEntries(): ManualDateEntry[] {
 	const entries: ManualDateEntry[] = [];
 	for (const file of listContentDbFiles()) {
 		const dbPath = path.join(CONTENT_DB_DIR, file);
@@ -858,7 +858,7 @@ export function listManualDateEntries(): ManualDateEntry[] {
 	return entries;
 }
 
-export function getManualDateEntry(contentId: string): ManualDateEntry | null {
+function getManualDateEntry(contentId: string): ManualDateEntry | null {
 	const db = getContentDb(contentId);
 	try {
 		return readManualDateFromDb(db, contentId);
@@ -880,7 +880,7 @@ export function upsertManualDateEntry(contentId: string, date: string): void {
 	}
 }
 
-export function removeManualDateEntry(contentId: string): boolean {
+function removeManualDateEntry(contentId: string): boolean {
 	const db = getContentDb(contentId);
 	try {
 		const result = db
@@ -895,7 +895,7 @@ export function removeManualDateEntry(contentId: string): boolean {
 /**
  * Get tags for a content item from database
  */
-export function getContentTags(contentId: string): string[] {
+function getContentTags(contentId: string): string[] {
 	try {
 		const db = getContentDb(contentId);
 		try {

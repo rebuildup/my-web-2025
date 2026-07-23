@@ -111,7 +111,7 @@ export const loadWebGLUtils = async () => {
 };
 
 // Advanced WebGL libraries (loaded only when needed)
-export const loadAdvancedWebGL = async () => {
+const loadAdvancedWebGL = async () => {
 	const [
 		{ OrbitControls },
 		{ EffectComposer },
@@ -276,7 +276,7 @@ export async function preloadExperimentDependencies(
 /**
  * Get bundle size information
  */
-export function getBundleSizeInfo(): {
+function getBundleSizeInfo(): {
 	totalExperiments: number;
 	totalBundleSize: number;
 	designBundleSize: number;
@@ -330,7 +330,7 @@ export async function preloadCriticalExperiments(): Promise<void> {
 /**
  * Load experiment with error handling
  */
-export async function loadExperimentSafely(experimentId: string): Promise<{
+async function loadExperimentSafely(experimentId: string): Promise<{
 	component: ExperimentComponent | null;
 	error: string | null;
 }> {
@@ -363,7 +363,7 @@ export async function loadExperimentSafely(experimentId: string): Promise<{
 /**
  * Get experiments by category with lazy loading
  */
-export function getExperimentsByCategory(category: "design" | "webgl"): {
+function getExperimentsByCategory(category: "design" | "webgl"): {
 	[key: string]: ExperimentComponent;
 } {
 	const result: { [key: string]: ExperimentComponent } = {};
@@ -380,7 +380,7 @@ export function getExperimentsByCategory(category: "design" | "webgl"): {
 /**
  * Check if experiment requires WebGL
  */
-export function experimentRequiresWebGL(experimentId: string): boolean {
+function experimentRequiresWebGL(experimentId: string): boolean {
 	const experiment = experimentRegistry[experimentId];
 	return experiment?.category === "webgl" || false;
 }
@@ -388,7 +388,7 @@ export function experimentRequiresWebGL(experimentId: string): boolean {
 /**
  * Get estimated load time for experiment
  */
-export function getEstimatedLoadTime(
+function getEstimatedLoadTime(
 	experimentId: string,
 	connectionSpeed: "slow" | "fast" = "fast",
 ): number {
@@ -405,7 +405,7 @@ export function getEstimatedLoadTime(
 /**
  * Cleanup experiment resources
  */
-export function cleanupExperimentResources(experimentId: string): void {
+function cleanupExperimentResources(experimentId: string): void {
 	// This would be called when switching experiments to free up memory
 	const experiment = experimentRegistry[experimentId];
 	if (!experiment) return;

@@ -124,7 +124,7 @@ export function generateBaseMetadata(
 /**
  * Generate metadata for portfolio pages
  */
-export function generatePortfolioMetadata(
+function generatePortfolioMetadata(
 	item: ContentItem,
 	config: SEOConfig = defaultSEOConfig,
 ): Metadata {
@@ -205,7 +205,7 @@ export function generatePortfolioMetadata(
 /**
  * Generate metadata for blog posts
  */
-export function generateBlogMetadata(
+function generateBlogMetadata(
 	item: ContentItem,
 	config: SEOConfig = defaultSEOConfig,
 ): Metadata {
@@ -238,7 +238,7 @@ export function generateBlogMetadata(
 /**
  * Generate metadata for plugin pages
  */
-export function generatePluginMetadata(
+function generatePluginMetadata(
 	item: ContentItem,
 	config: SEOConfig = defaultSEOConfig,
 ): Metadata {
@@ -272,7 +272,7 @@ export function generatePluginMetadata(
 /**
  * Generate metadata for tool pages
  */
-export function generateToolMetadata(
+function generateToolMetadata(
 	toolData: {
 		name: string;
 		description: string;
@@ -300,7 +300,7 @@ export function generateToolMetadata(
 /**
  * Generate metadata for gallery pages
  */
-export function generateGalleryMetadata(
+function generateGalleryMetadata(
 	galleryData: {
 		title: string;
 		description: string;
@@ -329,7 +329,7 @@ export function generateGalleryMetadata(
 /**
  * Generate metadata for search pages
  */
-export function generateSearchMetadata(
+function generateSearchMetadata(
 	query?: string,
 	config: SEOConfig = defaultSEOConfig,
 ): Metadata {
@@ -353,7 +353,7 @@ export function generateSearchMetadata(
 /**
  * Generate metadata for contact page
  */
-export function generateContactMetadata(
+function generateContactMetadata(
 	config: SEOConfig = defaultSEOConfig,
 ): Metadata {
 	return generateBaseMetadata(
@@ -377,7 +377,7 @@ export function generateContactMetadata(
 /**
  * Generate metadata for about pages
  */
-export function generateAboutMetadata(
+function generateAboutMetadata(
 	pageType: "main" | "profile" | "commission" | "links",
 	subType?: string,
 	config: SEOConfig = defaultSEOConfig,
@@ -425,7 +425,7 @@ export function generateAboutMetadata(
 /**
  * Generate metadata for admin pages (development only)
  */
-export function generateAdminMetadata(
+function generateAdminMetadata(
 	pageType: "main" | "data-manager",
 	config: SEOConfig = defaultSEOConfig,
 ): Metadata {
@@ -460,7 +460,7 @@ export function generateAdminMetadata(
 /**
  * Generate metadata for error pages
  */
-export function generateErrorMetadata(
+function generateErrorMetadata(
 	errorType: "404" | "500",
 	config: SEOConfig = defaultSEOConfig,
 ): Metadata {

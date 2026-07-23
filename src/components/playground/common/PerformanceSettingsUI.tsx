@@ -22,7 +22,7 @@ interface PerformanceSettingsUIProps {
 	className?: string;
 }
 
-export function PerformanceSettingsUI({
+function PerformanceSettingsUI({
 	deviceCapabilities,
 	performanceSettings,
 	performanceMetrics,

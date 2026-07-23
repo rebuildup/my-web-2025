@@ -213,7 +213,7 @@ export const useResponsive = (): ResponsiveState => {
 };
 
 // Canvas size calculation utilities
-export const getOptimalCanvasSize = (
+const getOptimalCanvasSize = (
 	viewport: ViewportDimensions,
 	containerElement?: HTMLElement,
 ): { width: number; height: number } => {
@@ -246,7 +246,7 @@ export const getOptimalCanvasSize = (
 };
 
 // Touch gesture utilities
-export const useTouchGestures = () => {
+const useTouchGestures = () => {
 	const [gestureState, setGestureState] = useState({
 		isSwipeEnabled: false,
 		swipeDirection: null as "left" | "right" | "up" | "down" | null,

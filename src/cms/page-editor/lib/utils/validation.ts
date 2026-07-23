@@ -8,12 +8,12 @@ export const slugSchema = z
 	.max(120, "Slug must be 120 characters or fewer")
 	.regex(slugRegex, "Use lowercase letters, numbers, and hyphens only");
 
-export const titleSchema = z
+const titleSchema = z
 	.string()
 	.min(1, "Title is required")
 	.max(180, "Title must be 180 characters or fewer");
 
-export function validateSlug(slug: string) {
+function validateSlug(slug: string) {
 	return slugSchema.safeParse(slug);
 }
 

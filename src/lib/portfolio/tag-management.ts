@@ -206,7 +206,7 @@ export class PortfolioTagManager implements TagManagementSystem {
 	}
 }
 
-export function createTagManager(): PortfolioTagManager {
+function createTagManager(): PortfolioTagManager {
 	return new PortfolioTagManager();
 }
 

@@ -283,7 +283,7 @@ export const isValidEnhancedPortfolioCategory = (
 };
 
 // Helper function to get enhanced portfolio category options for forms
-export const getEnhancedPortfolioCategoryOptions = () => {
+const getEnhancedPortfolioCategoryOptions = () => {
 	return Object.entries(ENHANCED_PORTFOLIO_CATEGORY_LABELS).map(
 		([value, label]) => ({
 			value,
@@ -298,7 +298,7 @@ export const hasOtherCategory = (item: EnhancedContentItem): boolean => {
 };
 
 // Helper function to check if an item should be excluded from specific galleries
-export const shouldExcludeFromGallery = (
+const shouldExcludeFromGallery = (
 	item: EnhancedContentItem,
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	_galleryType: "develop" | "video" | "design" | "video&design",
@@ -308,7 +308,7 @@ export const shouldExcludeFromGallery = (
 
 // Helper function to get effective date (for enhanced content items only)
 // Note: Use the flexible getEffectiveDate from @/types for general use
-export const getEnhancedEffectiveDate = (item: EnhancedContentItem): Date => {
+const getEnhancedEffectiveDate = (item: EnhancedContentItem): Date => {
 	// Always prioritize manual date if available, regardless of useManualDate flag
 	if (item.manualDate) {
 		return new Date(item.manualDate);

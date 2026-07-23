@@ -124,7 +124,7 @@ export function CookieConsent({ className = "" }: CookieConsentProps) {
 }
 
 // Cookie settings component for privacy policy page
-export function CookieSettings() {
+function CookieSettings() {
 	const { consentGiven, setConsent } = useAnalytics();
 	const [analyticsEnabled, setAnalyticsEnabled] = useState(consentGiven);
 

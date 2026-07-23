@@ -54,7 +54,7 @@ export function playNotificationSound(volume: number = 0.5) {
 	}
 }
 
-export function playBreakStartSound(volume: number = 0.3) {
+function playBreakStartSound(volume: number = 0.3) {
 	try {
 		const ctx = getAudioContext();
 		const oscillator = ctx.createOscillator();

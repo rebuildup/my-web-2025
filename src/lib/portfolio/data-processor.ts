@@ -1683,5 +1683,4 @@ export class EnhancedPortfolioDataProcessor extends PortfolioDataProcessor {
 
 // Export singleton instances
 export const portfolioDataProcessor = new PortfolioDataProcessor();
-export const enhancedPortfolioDataProcessor =
-	new EnhancedPortfolioDataProcessor();
+const enhancedPortfolioDataProcessor = new EnhancedPortfolioDataProcessor();

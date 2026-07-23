@@ -131,19 +131,19 @@ export type AsyncState<T> =
 	| { status: "error"; error: string };
 
 // Type guards for async states
-export function isLoadingState<T>(
+function isLoadingState<T>(
 	state: AsyncState<T>,
 ): state is { status: "loading" } {
 	return state.status === "loading";
 }
 
-export function isSuccessState<T>(
+function isSuccessState<T>(
 	state: AsyncState<T>,
 ): state is { status: "success"; data: T } {
 	return state.status === "success";
 }
 
-export function isErrorState<T>(
+function isErrorState<T>(
 	state: AsyncState<T>,
 ): state is { status: "error"; error: string } {
 	return state.status === "error";
@@ -182,14 +182,12 @@ export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export type RequiredBy<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
 // Exhaustive check helper
-export function assertNever(value: never): never {
+function assertNever(value: never): never {
 	throw new Error(`Unexpected value: ${value}`);
 }
 
 // Type-safe object keys
-export function getKeys<T extends Record<string, unknown>>(
-	obj: T,
-): (keyof T)[] {
+function getKeys<T extends Record<string, unknown>>(obj: T): (keyof T)[] {
 	return Object.keys(obj) as (keyof T)[];
 }
 
@@ -200,7 +198,7 @@ export interface EnvironmentVariables {
 	// Add other environment variables as needed
 }
 
-export function getEnvVar<K extends keyof EnvironmentVariables>(
+function getEnvVar<K extends keyof EnvironmentVariables>(
 	key: K,
 ): EnvironmentVariables[K] {
 	const value = process.env[key];

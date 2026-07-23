@@ -191,7 +191,7 @@ export const performanceMonitor = PerformanceMonitor.getInstance();
 /**
  * React hook for performance monitoring
  */
-export function usePerformanceMonitor(
+function usePerformanceMonitor(
 	isActive: boolean,
 	targetFPS: number = 60,
 ): {

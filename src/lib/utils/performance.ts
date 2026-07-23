@@ -522,7 +522,7 @@ export class BundleMonitor {
 }
 
 // Performance optimization hooks
-export const usePerformanceOptimization = () => {
+const usePerformanceOptimization = () => {
 	const performanceMonitor = new PerformanceMonitor();
 	const memoryManager = MemoryManager.getInstance();
 
@@ -666,7 +666,7 @@ export const performanceMonitoring = {
 };
 
 // Initialize performance monitoring
-export const initializePerformanceMonitoring = (): PerformanceMonitor => {
+const initializePerformanceMonitoring = (): PerformanceMonitor => {
 	const monitor = new PerformanceMonitor();
 
 	// Initialize regression detection

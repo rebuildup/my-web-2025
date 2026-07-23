@@ -189,7 +189,7 @@ interface PlaygroundErrorBoundaryProps {
 	onError?: (error: PlaygroundError) => void;
 }
 
-export function PlaygroundErrorBoundary({
+function PlaygroundErrorBoundary({
 	children,
 	fallback,
 	onError,

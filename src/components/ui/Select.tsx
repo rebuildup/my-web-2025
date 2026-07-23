@@ -92,7 +92,7 @@ export interface OptionProps {
 	disabled?: boolean;
 }
 
-export function Option({ value, label, disabled = false }: OptionProps) {
+function Option({ value, label, disabled = false }: OptionProps) {
 	return (
 		<option value={value} disabled={disabled} className=" ">
 			{label}

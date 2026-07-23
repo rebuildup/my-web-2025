@@ -14,9 +14,7 @@ interface PlaygroundStatisticsProps {
 	className?: string;
 }
 
-export function PlaygroundStatistics({
-	className = "",
-}: PlaygroundStatisticsProps) {
+function PlaygroundStatistics({ className = "" }: PlaygroundStatisticsProps) {
 	const [stats, setStats] = useState<ReturnType<
 		typeof playgroundManager.getStatistics
 	> | null>(null);

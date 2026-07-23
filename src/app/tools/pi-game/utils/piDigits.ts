@@ -9,19 +9,19 @@ export function getPiDigit(position: number): string {
 	return PI_DIGITS[position];
 }
 
-export function getPiSequence(start: number, length: number): string {
+function getPiSequence(start: number, length: number): string {
 	if (start < 0 || start >= PI_DIGITS.length) {
 		return "";
 	}
 	return PI_DIGITS.slice(start, start + length);
 }
 
-export function validatePiInput(position: number, input: string): boolean {
+function validatePiInput(position: number, input: string): boolean {
 	const expected = getPiDigit(position);
 	return expected === input;
 }
 
-export function getFormattedPi(
+function getFormattedPi(
 	position: number,
 	context: number = 10,
 ): {

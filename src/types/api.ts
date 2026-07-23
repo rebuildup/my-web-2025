@@ -102,7 +102,7 @@ export interface AppError {
 	timestamp: string;
 }
 
-export class ContentError extends Error {
+class ContentError extends Error {
 	constructor(
 		message: string,
 		public code: string,

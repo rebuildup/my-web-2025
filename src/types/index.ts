@@ -177,7 +177,7 @@ export const isContentType = (value: string): value is ContentType => {
 	].includes(value);
 };
 
-export const isFormFieldType = (value: string): value is FormFieldType => {
+const isFormFieldType = (value: string): value is FormFieldType => {
 	return [
 		"text",
 		"email",
@@ -213,7 +213,7 @@ export const validateContentItem = (item: unknown): item is ContentItem => {
 import type { MarkdownContentItem } from "./content";
 
 // Markdown content item validation
-export const validateMarkdownContentItem = (
+const validateMarkdownContentItem = (
 	item: unknown,
 ): item is MarkdownContentItem => {
 	return (
@@ -226,7 +226,7 @@ export const validateMarkdownContentItem = (
 };
 
 // Type guard to check if an item has markdown support
-export const isMarkdownContentItem = (
+const isMarkdownContentItem = (
 	item: ContentItem,
 ): item is MarkdownContentItem => {
 	return "markdownPath" in item || "markdownMigrated" in item;
@@ -241,7 +241,7 @@ export const isEnhancedCategoryType = (
 	);
 };
 
-export const validateEnhancedContentItem = (
+const validateEnhancedContentItem = (
 	item: unknown,
 ): item is EnhancedContentItem => {
 	return (
@@ -274,7 +274,7 @@ export const isEnhancedContentItem = (
 };
 
 // Constants for easy reference
-export const CONTENT_TYPES = [
+const CONTENT_TYPES = [
 	"portfolio",
 	"plugin",
 	"blog",
@@ -285,7 +285,7 @@ export const CONTENT_TYPES = [
 	"download",
 ] as const;
 
-export const FORM_FIELD_TYPES = [
+const FORM_FIELD_TYPES = [
 	"text",
 	"email",
 	"textarea",
@@ -296,14 +296,14 @@ export const FORM_FIELD_TYPES = [
 	"calculator",
 ] as const;
 
-export const CONTENT_STATUS_OPTIONS = [
+const CONTENT_STATUS_OPTIONS = [
 	"published",
 	"draft",
 	"archived",
 	"scheduled",
 ] as const;
 
-export const ENHANCED_PORTFOLIO_CATEGORIES = [
+const ENHANCED_PORTFOLIO_CATEGORIES = [
 	"develop",
 	"video",
 	"design",

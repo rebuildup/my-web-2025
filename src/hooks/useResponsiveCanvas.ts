@@ -302,7 +302,7 @@ export const useResponsiveCanvas = (
 };
 
 // Hook for managing canvas resize events
-export const useCanvasResize = (
+const useCanvasResize = (
 	canvasRef: React.RefObject<HTMLCanvasElement>,
 	onResize?: (dimensions: CanvasDimensions) => void,
 ) => {
@@ -330,7 +330,7 @@ export const useCanvasResize = (
 };
 
 // Utility for responsive text sizing
-export const getResponsiveTextSize = (
+const getResponsiveTextSize = (
 	baseSize: number,
 	responsive: ReturnType<typeof useResponsive>,
 ): number => {
@@ -343,7 +343,7 @@ export const getResponsiveTextSize = (
 };
 
 // Utility for responsive spacing
-export const getResponsiveSpacing = (
+const getResponsiveSpacing = (
 	baseSpacing: number,
 	responsive: ReturnType<typeof useResponsive>,
 ): number => {

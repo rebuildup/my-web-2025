@@ -283,7 +283,7 @@ export const skillRows: SkillItem[][] = [
 	],
 ];
 
-export const allSkills = skillRows.flat();
+const allSkills = skillRows.flat();
 
 export const skillIconIds = [
 	"ae",

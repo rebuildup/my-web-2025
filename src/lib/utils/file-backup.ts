@@ -210,7 +210,7 @@ export async function deleteBackupVersion(versionId: string): Promise<void> {
 /**
  * Clean up old backups based on age or size
  */
-export async function cleanupOldBackups(
+async function cleanupOldBackups(
 	options: {
 		maxAge?: number; // days
 		maxSize?: number; // bytes
@@ -333,7 +333,7 @@ async function fileExists(filePath: string): Promise<boolean> {
 /**
  * Export backup data
  */
-export async function exportBackupData(): Promise<{
+async function exportBackupData(): Promise<{
 	manifest: BackupManifest;
 	files: Array<{ path: string; data: Buffer }>;
 }> {
@@ -358,7 +358,7 @@ export async function exportBackupData(): Promise<{
 /**
  * Import backup data
  */
-export async function importBackupData(data: {
+async function importBackupData(data: {
 	manifest: BackupManifest;
 	files: Array<{ path: string; data: Buffer }>;
 }): Promise<void> {

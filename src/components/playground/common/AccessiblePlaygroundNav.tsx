@@ -47,9 +47,10 @@ const navigationItems: NavItem[] = [
 	},
 ];
 
-export const AccessiblePlaygroundNav: React.FC<
-	AccessiblePlaygroundNavProps
-> = ({ currentPage, className = "" }) => {
+const AccessiblePlaygroundNav: React.FC<AccessiblePlaygroundNavProps> = ({
+	currentPage,
+	className = "",
+}) => {
 	const pathname = usePathname();
 	const responsive = useResponsive();
 	const { state: accessibilityState, announce } = useAccessibility();

@@ -81,7 +81,7 @@ function getImageDimensions(
 	});
 }
 
-export function validatePngFile(file: File): boolean {
+function validatePngFile(file: File): boolean {
 	return file.type === "image/png" || file.name.toLowerCase().endsWith(".png");
 }
 

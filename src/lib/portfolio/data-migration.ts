@@ -644,6 +644,6 @@ export class MixedDataFormatProcessor {
 }
 
 // Export singleton instances
-export const contentItemMigrator = new ContentItemMigrator();
-export const migrationErrorHandler = new MigrationErrorHandler();
+const contentItemMigrator = new ContentItemMigrator();
+const migrationErrorHandler = new MigrationErrorHandler();
 export const mixedDataFormatProcessor = new MixedDataFormatProcessor();

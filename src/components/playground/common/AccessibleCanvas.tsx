@@ -34,7 +34,7 @@ interface AccessibleCanvasProps {
 	maintainAspectRatio?: boolean;
 }
 
-export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
+const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 	title,
 	description,
 	canvasType,

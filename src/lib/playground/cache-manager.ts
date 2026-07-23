@@ -503,7 +503,7 @@ export const cacheManager = CacheManager.getInstance();
 /**
  * CDN Cache Headers Utility
  */
-export class CDNCacheHeaders {
+class CDNCacheHeaders {
 	/**
 	 * Get cache headers for static assets
 	 */
@@ -563,7 +563,7 @@ export class CDNCacheHeaders {
 /**
  * Service Worker Cache Strategy
  */
-export class ServiceWorkerCache {
+class ServiceWorkerCache {
 	/**
 	 * Register service worker for playground caching
 	 */

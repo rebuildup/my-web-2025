@@ -82,7 +82,7 @@ export async function saveContentByType(
 	return false;
 }
 
-export async function getContentById(
+async function getContentById(
 	type: ContentType,
 	id: string,
 ): Promise<ContentItem | null> {
@@ -94,7 +94,7 @@ export async function getContentById(
 	return item.type === type ? item : null;
 }
 
-export async function addContentItem(
+async function addContentItem(
 	_type?: ContentType,
 	_item?: ContentItem,
 ): Promise<boolean> {
@@ -102,7 +102,7 @@ export async function addContentItem(
 	return false;
 }
 
-export async function updateContentItem(
+async function updateContentItem(
 	_type?: ContentType,
 	_item?: ContentItem,
 ): Promise<boolean> {
@@ -110,7 +110,7 @@ export async function updateContentItem(
 	return false;
 }
 
-export async function deleteContentItem(
+async function deleteContentItem(
 	_type?: ContentType,
 	_id?: string,
 ): Promise<boolean> {
@@ -132,7 +132,7 @@ export async function loadAllContent(): Promise<
 	);
 }
 
-export async function searchContent(
+async function searchContent(
 	query: string,
 	options: {
 		type?: ContentType;
@@ -202,6 +202,6 @@ export function generateContentId(type: ContentType): string {
 	return `${type}_${timestamp}_${random}`;
 }
 
-export async function ensureDataDirectories(): Promise<void> {
+async function ensureDataDirectories(): Promise<void> {
 	return;
 }

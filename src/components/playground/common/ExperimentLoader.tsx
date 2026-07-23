@@ -28,7 +28,7 @@ interface ExperimentLoaderProps {
 	className?: string;
 }
 
-export function ExperimentLoader({
+function ExperimentLoader({
 	experimentId,
 	deviceCapabilities,
 	performanceSettings,
@@ -208,7 +208,7 @@ interface ExperimentPreloaderProps {
 	onPreloadComplete?: (loadedCount: number, totalCount: number) => void;
 }
 
-export function ExperimentPreloader({
+function ExperimentPreloader({
 	experimentIds,
 	onPreloadComplete,
 }: ExperimentPreloaderProps) {

@@ -177,7 +177,7 @@ export function getBlockDefinitions(group?: BlockDefinition["group"]) {
 	return DEFINITIONS.filter((definition) => definition.group === group);
 }
 
-export function findBlockDefinition(type: BlockType) {
+function findBlockDefinition(type: BlockType) {
 	return blockRegistry.get(type);
 }
 

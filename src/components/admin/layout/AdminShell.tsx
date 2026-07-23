@@ -42,7 +42,7 @@ function getTabIndex(pathname: string): number {
 	return best !== -1 ? best : 0;
 }
 
-export function AdminShell({ children }: AdminShellProps) {
+function AdminShell({ children }: AdminShellProps) {
 	const pathname = usePathname();
 	const router = useRouter();
 	const [_mobileOpen, _setMobileOpen] = useState(false);

@@ -182,7 +182,7 @@ export function rgbToHsl(r: number, g: number, b: number): HSLColor {
 	};
 }
 
-export function hslToRgb(h: number, s: number, l: number): RGBColor {
+function hslToRgb(h: number, s: number, l: number): RGBColor {
 	h /= 360;
 	s /= 100;
 	l /= 100;
@@ -215,7 +215,7 @@ export function hslToRgb(h: number, s: number, l: number): RGBColor {
 	};
 }
 
-export function rgbToLab(r: number, g: number, b: number): LABColor {
+function rgbToLab(r: number, g: number, b: number): LABColor {
 	// Convert RGB to XYZ
 	let x = r / 255;
 	let y = g / 255;
@@ -261,7 +261,7 @@ export function rgbToHex(r: number, g: number, b: number): string {
 	);
 }
 
-export function hexToRgb(hex: string): RGBColor | null {
+function hexToRgb(hex: string): RGBColor | null {
 	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	return result
 		? {
@@ -551,15 +551,11 @@ export function randomInRange(min: number, max: number): number {
 	return Math.random() * (max - min) + min;
 }
 
-export function clampColor(
-	value: number,
-	min: number = 0,
-	max: number = 255,
-): number {
+function clampColor(value: number, min: number = 0, max: number = 255): number {
 	return Math.max(min, Math.min(max, Math.round(value)));
 }
 
-export function deltaE(lab1: LABColor, lab2: LABColor): number {
+function deltaE(lab1: LABColor, lab2: LABColor): number {
 	// Calculate Delta E (color difference) in LAB space
 	const deltaL = lab1.l - lab2.l;
 	const deltaA = lab1.a - lab2.a;

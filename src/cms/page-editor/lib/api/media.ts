@@ -7,7 +7,7 @@ export async function fetchMediaList(contentId: string): Promise<MediaItem[]> {
 	});
 }
 
-export async function fetchMedia(
+async function fetchMedia(
 	contentId: string,
 	id: string,
 ): Promise<MediaItem> {

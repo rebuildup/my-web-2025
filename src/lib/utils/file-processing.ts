@@ -136,7 +136,7 @@ export function validateFile(
 /**
  * Generate unique filename with timestamp and random string
  */
-export function generateUniqueFilename(originalName: string): string {
+function generateUniqueFilename(originalName: string): string {
 	const timestamp = Date.now();
 	const random = Math.random().toString(36).substring(2, 8);
 	const extension = originalName.split(".").pop()?.toLowerCase() || "";
@@ -178,7 +178,7 @@ export function getImageDimensions(
 /**
  * Process image file with FFmpeg
  */
-export async function processImageWithFFmpeg(
+async function processImageWithFFmpeg(
 	file: File,
 	options: FileProcessingOptions = {},
 ): Promise<{
@@ -291,7 +291,7 @@ export async function processImageWithFFmpeg(
 /**
  * Create file backup with versioning
  */
-export function createFileBackup(filename: string): string {
+function createFileBackup(filename: string): string {
 	const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
 	const extension = filename.split(".").pop();
 	const baseName = filename.split(".").slice(0, -1).join(".");
@@ -302,7 +302,7 @@ export function createFileBackup(filename: string): string {
 /**
  * Organize files into appropriate directories
  */
-export function getFileDirectory(type: string, category?: string): string {
+function getFileDirectory(type: string, category?: string): string {
 	switch (type) {
 		case "thumbnail":
 			return "images/thumbnails";
@@ -324,7 +324,7 @@ export function getFileDirectory(type: string, category?: string): string {
 /**
  * Calculate file hash for duplicate detection
  */
-export async function calculateFileHash(file: File): Promise<string> {
+async function calculateFileHash(file: File): Promise<string> {
 	const buffer = await file.arrayBuffer();
 	const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
 	const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -466,7 +466,7 @@ export async function extractFileMetadata(file: File): Promise<{
 /**
  * Clean up temporary files and resources
  */
-export function cleanupResources(): void {
+function cleanupResources(): void {
 	// Clean up FFmpeg instance if needed
 	if (ffmpegInstance && isFFmpegLoaded) {
 		// FFmpeg cleanup would go here if needed

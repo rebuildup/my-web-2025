@@ -23,7 +23,7 @@ interface ExperimentSharingProps {
 	onClose: () => void;
 }
 
-export function ExperimentSharing({
+function ExperimentSharing({
 	experimentId,
 	performanceSettings,
 	deviceCapabilities,
@@ -284,7 +284,7 @@ interface ShareButtonProps {
 	className?: string;
 }
 
-export function ShareButton({
+function ShareButton({
 	experimentId,
 	performanceSettings,
 	deviceCapabilities,
