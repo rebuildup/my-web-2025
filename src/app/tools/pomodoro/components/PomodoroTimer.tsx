@@ -33,6 +33,7 @@ export default function PomodoroTimer() {
 		currentStep,
 		totalDuration,
 		start,
+		pause,
 		reset,
 		skipToNext,
 		updateSchedule,
@@ -97,6 +98,7 @@ export default function PomodoroTimer() {
 	};
 
 	const handleStop = () => {
+		pause();
 		setShowStopDialog(false);
 	};
 

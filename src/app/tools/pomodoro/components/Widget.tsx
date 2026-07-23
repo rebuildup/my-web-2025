@@ -10,12 +10,17 @@ import type {
 } from "../types";
 import {
 	BASE_WIDGET_Z,
-	STICKY_NOTE_SIZE,
 	getStickyColorById,
 	isStickyWidgetType,
 } from "../utils/pomodoro-constants";
 import MiniTimer from "./MiniTimer";
 import StatsWidget from "./StatsWidget";
+import {
+	getContentWrapperLayout,
+	getStickyColorForWidget,
+	getWidgetBgClass,
+	getWidgetSize,
+} from "./widgets/widgetStyles";
 import { WidgetImageContent } from "./widgets/WidgetImageContent";
 import { WidgetMusicContent } from "./widgets/WidgetMusicContent";
 import { WidgetNoteContent } from "./widgets/WidgetNoteContent";
@@ -63,10 +68,6 @@ export function Widget({
 	stats,
 	sessions,
 }: WidgetProps) {
-	const isNote = widget.type === "note";
-	const isImageSticky = widget.type === "image";
-	const isYouTube = widget.type === "youtube";
-	const isTimer = widget.type === "timer";
 	const isSticky = isStickyWidgetType(widget.type);
 	const widgetZIndex = widget.zIndex ?? BASE_WIDGET_Z;
 	const isImageLoaded = widget.type === "image" && widget.content;
@@ -95,85 +96,31 @@ export function Widget({
 		}
 	}, [isSticky, updateWidget, widget.color, widget.id]);
 
-	const fallbackStickyColor = useMemo(
-		() => getStickyColorById(widget.id),
-		[widget.id],
+	const stickyColor = useMemo(
+		() => getStickyColorForWidget(widget),
+		[widget.color, widget.id],
 	);
-	const stickyColor = widget.color ?? fallbackStickyColor;
 
-	const computedWidth =
-		typeof widget.w === "number"
-			? widget.w
-			: isNote || isTimer
-				? STICKY_NOTE_SIZE
-				: isImageSticky
-					? 480
-					: 300;
+	const { computedWidth, computedHeight, tapeWidth, tapeOffset } = useMemo(
+		() => getWidgetSize(widget),
+		[widget.w, widget.h, widget.type],
+	);
 
-	const computedHeight =
-		typeof widget.h === "number"
-			? widget.h
-			: isSticky
-				? STICKY_NOTE_SIZE
-				: "auto";
+	const bgClass = useMemo(
+		() => getWidgetBgClass({ widget, theme, isImageLoaded }),
+		[widget.type, theme, isImageLoaded],
+	);
 
-	const numericWidth =
-		typeof computedWidth === "number" ? computedWidth : STICKY_NOTE_SIZE;
-	const tapeWidth = numericWidth + 40;
-	const tapeOffset = isImageSticky ? -10 : -14;
-
-	const stickyContentWrapperClass = isImageSticky
-		? "flex-1 w-full h-full no-drag select-text flex items-center justify-center overflow-hidden"
-		: "flex-1 w-full h-full no-drag select-text [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-track]:";
-
-	const nonStickyContentWrapperClass = `p-4 overflow-auto no-drag select-text ${
-		widget.type === "music" ? "p-0" : ""
-	}`;
-
-	const contentWrapperClass = isSticky
-		? stickyContentWrapperClass
-		: nonStickyContentWrapperClass;
-
-	const contentWrapperStyle = isSticky
-		? {
-				flex: 1,
-				width: "100%",
-				height: "100%",
-				boxSizing: "border-box" as const,
-				padding: isImageSticky || isYouTube || isTimer ? 0 : 16,
-				marginTop: isImageSticky || isYouTube || isTimer ? 0 : 12,
-				overflow: isImageSticky || isYouTube || isTimer ? "hidden" : "auto",
-			}
-		: {
-				minHeight: 100,
-				maxHeight: 400,
-				height: "auto",
-			};
-
-	let bgClass = "";
-	if (isNote) {
-		bgClass = "shadow-[0_4px_8px_rgba(0,0,0,0.2)] border ";
-	} else if (isImageSticky) {
-		if (isImageLoaded) {
-			bgClass = "";
-		} else {
-			bgClass = "shadow-[0_6px_12px_rgba(0,0,0,0.2)] border  ";
-		}
-	} else if (isTimer) {
-		bgClass = "  shadow-[0_8px_32px_rgba(0,0,0,0.1)]";
-	} else if (isYouTube) {
-		bgClass =
-			theme === "dark"
-				? "bg-[#1a1a1a]/95  shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
-				: "  shadow-[0_8px_32px_rgba(0,0,0,0.1)]";
-	} else {
-		bgClass =
-			theme === "dark"
-				? "bg-[#1a1a1a]/90  shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
-				: "  shadow-[0_8px_32px_rgba(0,0,0,0.1)]";
-	}
+	const { className: contentWrapperClass, style: contentWrapperStyle } =
+		useMemo(
+			() => getContentWrapperLayout({ widget, theme, isImageLoaded }),
+			[widget.type, theme, isImageLoaded],
+		);
 
 	const textClass = isSticky ? "" : theme === "dark" ? "" : "";
+
+	const isStickyVisible =
+		isSticky && widget.type !== "image" && widget.type !== "youtube";
 
 	return (
 		<div
@@ -188,7 +135,7 @@ export function Widget({
 				touchAction: "none",
 				backgroundColor: isImageLoaded
 					? "transparent"
-					: isSticky && widget.type !== "image" && widget.type !== "youtube"
+					: isStickyVisible
 						? stickyColor
 						: undefined,
 				borderColor: isSticky ? "transparent" : undefined,
@@ -200,7 +147,7 @@ export function Widget({
 			className={`absolute flex flex-col transition-shadow duration-200 ${bgClass} ${
 				isDragging ? "cursor-grabbing" : ""
 			} ${
-				isSticky && widget.type !== "image" && widget.type !== "youtube"
+				isStickyVisible
 					? "rounded-lg"
 					: isImageLoaded
 						? ""
