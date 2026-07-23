@@ -43,6 +43,249 @@ interface DevelopGalleryClientProps {
 
 const ITEMS_PER_PAGE = 12;
 
+interface DevelopProject {
+	id: string;
+	title: string;
+	description: string;
+	technologies: string[];
+	githubUrl?: string;
+	liveUrl?: string;
+	date: string;
+	status: string;
+	featured: boolean;
+	thumbnail: string;
+	hasVideo: boolean;
+	videoUrl?: string;
+}
+
+function DevelopGalleryHeader() {
+	return (
+		<header className="space-y-8">
+			<div className="space-y-4">
+				<h1 className="neue-haas-grotesk-display text-6xl ">
+					Development Projects
+				</h1>
+				<p className="noto-sans-jp-light text-sm max-w leading-loose">
+					開発系プロジェクトをまとめたギャラリーです
+				</p>
+			</div>
+		</header>
+	);
+}
+
+function DevelopEmptyState({
+	initialItemsLength,
+}: {
+	initialItemsLength: number;
+}) {
+	return (
+		<div className="text-center py-16">
+			<p className="noto-sans-jp-light text-sm ">
+				開発プロジェクトデータを読み込めませんでした.
+			</p>
+			<p className="noto-sans-jp-light text-xs mt-2">
+				初期アイテム数: {initialItemsLength}
+			</p>
+			<button
+				type="button"
+				onClick={() => window.location.reload()}
+				className="mt-4"
+			>
+				ページを再読み込み
+			</button>
+		</div>
+	);
+}
+
+function DevelopNoProjectsState({ filteredCount }: { filteredCount: number }) {
+	return (
+		<div className="text-center py-16">
+			<p className="noto-sans-jp-light text-sm ">
+				フィルター条件に一致する開発プロジェクトが見つかりませんでした.
+			</p>
+			<p className="noto-sans-jp-light text-xs mt-2">
+				開発プロジェクト数: {filteredCount}
+			</p>
+		</div>
+	);
+}
+
+function DevelopProjectCard({
+	project,
+	index,
+}: {
+	project: DevelopProject;
+	index: number;
+}) {
+	return (
+		<div className="flex flex-col lg:flex-row lg:items-center gap-8">
+			{/* Project Thumbnail - Left on even, Right on odd */}
+			<div
+				className={`lg:w-1/2 ${index % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}
+			>
+				<Link href={`/portfolio/${project.id}`}>
+					<GlowCard className="group cursor-pointer text-left block backdrop-blur overflow-hidden">
+						<div className="aspect-video overflow-hidden relative">
+							{project.thumbnail &&
+							project.thumbnail !== "/images/default-project.png" ? (
+								<SafeImage
+									src={project.thumbnail}
+									alt={project.title}
+									fill
+									className="object-cover object-center group-hover:scale-105 transition-transform duration-300"
+									style={{
+										objectPosition: "center center",
+										transformOrigin: "center center",
+									}}
+									sizes="(max-width: 768px) 100vw, 50vw"
+									showDebug={false}
+								/>
+							) : (
+								<div className="w-full h-full flex items-center justify-center ">
+									<div className="text-center">
+										<Code className="w-12 h-12  mx-auto mb-2" />
+										<span className="noto-sans-jp-light text-sm ">
+											{project.title}
+										</span>
+									</div>
+								</div>
+							)}
+						</div>
+					</GlowCard>
+				</Link>
+			</div>
+
+			{/* Project Info - Right on even, Left on odd */}
+			<div
+				className={`lg:w-1/2 space-y-4 ${index % 2 === 1 ? "lg:order-1" : "lg:order-2"}`}
+			>
+				{/* Title row with dev icon and date */}
+				<div className="flex items-center justify-between">
+					<div className="flex items-center gap-2">
+						<Code className="w-5 h-5 " />
+						<Link href={`/portfolio/${project.id}`}>
+							<h3 className="zen-kaku-gothic-new text-2xl  transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
+								{project.title}
+							</h3>
+						</Link>
+					</div>
+					<div className="flex items-center">
+						<Calendar className="w-4 h-4 mr-2" />
+						<span className="noto-sans-jp-light text-sm whitespace-nowrap">
+							{project.date}
+						</span>
+					</div>
+				</div>
+
+				{/* Description - fixed 3 lines */}
+				<div className="h-[72px] overflow-hidden">
+					<p
+						className="noto-sans-jp-light leading-6"
+						style={{
+							display: "-webkit-box",
+							WebkitLineClamp: 3,
+							WebkitBoxOrient: "vertical",
+							overflow: "hidden",
+						}}
+					>
+						{project.description}
+					</p>
+				</div>
+
+				{/* Technologies (no heading) */}
+				<div className="space-y-2">
+					<div className="flex flex-wrap gap-1.5">
+						{project.technologies.map((tech: string) => (
+							<span key={tech} className="noto-sans-jp-light text-xs px-3 py-1">
+								{tech}
+							</span>
+						))}
+					</div>
+				</div>
+
+				{/* Repository and Live Links */}
+				<div className="flex items-center gap-3 pt-2">
+					{project.githubUrl && (
+						<a
+							href={project.githubUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center px-3 py-1.5 hover:/50 transition-colors"
+						>
+							<GitBranch className="w-5 h-5 mr-2" />
+							<span className="noto-sans-jp-light text-sm">Repository</span>
+						</a>
+					)}
+					{project.liveUrl && (
+						<a
+							href={project.liveUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center px-3 py-1.5 hover:/50 transition-colors"
+						>
+							<ExternalLink className="w-5 h-5 mr-2" />
+							<span className="noto-sans-jp-light text-sm">Live Demo</span>
+						</a>
+					)}
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function DevelopPagination({
+	currentPage,
+	totalPages,
+	onPageChange,
+}: {
+	currentPage: number;
+	totalPages: number;
+	onPageChange: (page: number) => void;
+}) {
+	if (totalPages <= 1) return null;
+	return (
+		<Pagination
+			currentPage={currentPage}
+			totalPages={totalPages}
+			onPageChange={onPageChange}
+		/>
+	);
+}
+
+function DevelopNavigation() {
+	return (
+		<nav aria-label="Development gallery functions">
+			<h2 className="sr-only">Development Gallery機能</h2>
+			<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
+				<Link
+					href="/portfolio/gallery/all"
+					className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
+				>
+					<span className="noto-sans-jp-regular leading-snug">
+						All Projects
+					</span>
+				</Link>
+
+				<Link
+					href="/portfolio/gallery/video"
+					className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
+				>
+					<span className="noto-sans-jp-regular leading-snug">
+						Video Projects
+					</span>
+				</Link>
+
+				<Link
+					href="/about/commission/develop"
+					className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
+				>
+					<span className="noto-sans-jp-regular leading-snug">Commission</span>
+				</Link>
+			</div>
+		</nav>
+	);
+}
+
 export function DevelopGalleryClient({
 	initialItems,
 }: DevelopGalleryClientProps) {
@@ -184,221 +427,40 @@ export function DevelopGalleryClient({
 
 	return (
 		<div className="space-y-10">
-			{/* Header */}
-			<header className="space-y-8">
-				<div className="space-y-4">
-					<h1 className="neue-haas-grotesk-display text-6xl ">
-						Development Projects
-					</h1>
-					<p className="noto-sans-jp-light text-sm max-w leading-loose">
-						開発系プロジェクトをまとめたギャラリーです
-					</p>
-				</div>
-			</header>
+			<DevelopGalleryHeader />
 
 			{/* Gallery Content - Alternating Layout */}
 			<section id="gallery-content" className="mt-2 md:mt-4">
 				<h2 className="sr-only">Projects List</h2>
 				{initialItems.length === 0 ? (
-					<div className="text-center py-16">
-						<p className="noto-sans-jp-light text-sm ">
-							開発プロジェクトデータを読み込めませんでした.
-						</p>
-						<p className="noto-sans-jp-light text-xs mt-2">
-							初期アイテム数: {initialItems.length}
-						</p>
-						<button
-							type="button"
-							onClick={() => window.location.reload()}
-							className="mt-4"
-						>
-							ページを再読み込み
-						</button>
-					</div>
+					<DevelopEmptyState initialItemsLength={initialItems.length} />
 				) : developProjects.length > 0 ? (
 					<div className="space-y-8">
 						{/* All Projects - Single Row Alternating Layout */}
 						<div className="space-y-12">
 							{developProjects.map((project, index) => (
-								<div
+								<DevelopProjectCard
 									key={project.id}
-									className="flex flex-col lg:flex-row lg:items-center gap-8"
-								>
-									{/* Project Thumbnail - Left on even, Right on odd */}
-									<div
-										className={`lg:w-1/2 ${index % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}
-									>
-										<Link href={`/portfolio/${project.id}`}>
-											<GlowCard className="group cursor-pointer text-left block backdrop-blur overflow-hidden">
-												<div className="aspect-video overflow-hidden relative">
-													{project.thumbnail &&
-													project.thumbnail !==
-														"/images/default-project.png" ? (
-														<SafeImage
-															src={project.thumbnail}
-															alt={project.title}
-															fill
-															className="object-cover object-center group-hover:scale-105 transition-transform duration-300"
-															style={{
-																objectPosition: "center center",
-																transformOrigin: "center center",
-															}}
-															sizes="(max-width: 768px) 100vw, 50vw"
-															showDebug={false}
-														/>
-													) : (
-														<div className="w-full h-full flex items-center justify-center ">
-															<div className="text-center">
-																<Code className="w-12 h-12  mx-auto mb-2" />
-																<span className="noto-sans-jp-light text-sm ">
-																	{project.title}
-																</span>
-															</div>
-														</div>
-													)}
-												</div>
-											</GlowCard>
-										</Link>
-									</div>
-
-									{/* Project Info - Right on even, Left on odd */}
-									<div
-										className={`lg:w-1/2 space-y-4 ${index % 2 === 1 ? "lg:order-1" : "lg:order-2"}`}
-									>
-										{/* Title row with dev icon and date */}
-										<div className="flex items-center justify-between">
-											<div className="flex items-center gap-2">
-												<Code className="w-5 h-5 " />
-												<Link href={`/portfolio/${project.id}`}>
-													<h3 className="zen-kaku-gothic-new text-2xl  transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
-														{project.title}
-													</h3>
-												</Link>
-											</div>
-											<div className="flex items-center">
-												<Calendar className="w-4 h-4 mr-2" />
-												<span className="noto-sans-jp-light text-sm whitespace-nowrap">
-													{project.date}
-												</span>
-											</div>
-										</div>
-
-										{/* Description - fixed 3 lines */}
-										<div className="h-[72px] overflow-hidden">
-											<p
-												className="noto-sans-jp-light leading-6"
-												style={{
-													display: "-webkit-box",
-													WebkitLineClamp: 3,
-													WebkitBoxOrient: "vertical",
-													overflow: "hidden",
-												}}
-											>
-												{project.description}
-											</p>
-										</div>
-
-										{/* Technologies (no heading) */}
-										<div className="space-y-2">
-											<div className="flex flex-wrap gap-1.5">
-												{project.technologies.map((tech: string) => (
-													<span
-														key={tech}
-														className="noto-sans-jp-light text-xs px-3 py-1"
-													>
-														{tech}
-													</span>
-												))}
-											</div>
-										</div>
-
-										{/* Repository and Live Links */}
-										<div className="flex items-center gap-3 pt-2">
-											{project.githubUrl && (
-												<a
-													href={project.githubUrl}
-													target="_blank"
-													rel="noopener noreferrer"
-													className="flex items-center px-3 py-1.5 hover:/50 transition-colors"
-												>
-													<GitBranch className="w-5 h-5 mr-2" />
-													<span className="noto-sans-jp-light text-sm">
-														Repository
-													</span>
-												</a>
-											)}
-											{project.liveUrl && (
-												<a
-													href={project.liveUrl}
-													target="_blank"
-													rel="noopener noreferrer"
-													className="flex items-center px-3 py-1.5 hover:/50 transition-colors"
-												>
-													<ExternalLink className="w-5 h-5 mr-2" />
-													<span className="noto-sans-jp-light text-sm">
-														Live Demo
-													</span>
-												</a>
-											)}
-										</div>
-									</div>
-								</div>
+									project={project}
+									index={index}
+								/>
 							))}
 						</div>
 
-						{/* Pagination */}
-						{totalPages > 1 && (
-							<Pagination
-								currentPage={currentPage}
-								totalPages={totalPages}
-								onPageChange={handlePageChange}
-							/>
-						)}
+						<DevelopPagination
+							currentPage={currentPage}
+							totalPages={totalPages}
+							onPageChange={handlePageChange}
+						/>
 					</div>
 				) : (
-					<div className="text-center py-16">
-						<p className="noto-sans-jp-light text-sm ">
-							フィルター条件に一致する開発プロジェクトが見つかりませんでした.
-						</p>
-						<p className="noto-sans-jp-light text-xs mt-2">
-							開発プロジェクト数: {filteredAndSortedItems.length}
-						</p>
-					</div>
+					<DevelopNoProjectsState
+						filteredCount={filteredAndSortedItems.length}
+					/>
 				)}
 			</section>
 
-			{/* Navigation Links */}
-			<nav aria-label="Development gallery functions">
-				<h2 className="sr-only">Development Gallery機能</h2>
-				<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
-					<Link
-						href="/portfolio/gallery/all"
-						className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
-					>
-						<span className="noto-sans-jp-regular leading-snug">
-							All Projects
-						</span>
-					</Link>
-
-					<Link
-						href="/portfolio/gallery/video"
-						className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
-					>
-						<span className="noto-sans-jp-regular leading-snug">
-							Video Projects
-						</span>
-					</Link>
-
-					<Link
-						href="/about/commission/develop"
-						className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
-					>
-						<span className="noto-sans-jp-regular leading-snug">
-							Commission
-						</span>
-					</Link>
-				</div>
-			</nav>
+			<DevelopNavigation />
 
 			{/* Detail Modal */}
 			{selectedItem && (

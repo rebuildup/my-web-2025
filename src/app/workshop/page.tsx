@@ -211,6 +211,442 @@ function isNewArticle(page: MarkdownPage): boolean {
 	return articleDate > weekAgo;
 }
 
+// --- Subcomponents extracted from WorkshopPage ---
+
+function WorkshopHeader({
+	keyword,
+	mode,
+}: {
+	keyword: string | null;
+	mode: string;
+}) {
+	return (
+		<header className="w-full h-14  ">
+			<div className="h-full max-w-7xl mx-auto px-4 flex items-center justify-between gap-6">
+				<Link
+					href="/workshop"
+					className="text-xl font-semibold  hover:underline"
+				>
+					Workshop
+				</Link>
+				<SearchBar keyword={keyword} mode={mode} />
+			</div>
+		</header>
+	);
+}
+
+function HeroSection({
+	latestArticle,
+	totalArticles,
+	totalTags,
+	totalViews,
+}: {
+	latestArticle: ArticleData;
+	totalArticles: number;
+	totalTags: number;
+	totalViews: number;
+}) {
+	return (
+		<section className="mb-16">
+			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+				{/* Hero Content */}
+				<div className="space-y-6">
+					<div>
+						<span className="inline-block px-3 py-1 text-xs font-semibold   rounded mb-4">
+							LATEST
+						</span>
+						<h1 className="text-3xl font-bold  leading-tight">
+							{latestArticle.title}
+						</h1>
+						{latestArticle.description && (
+							<p className="text-sm  line-clamp-3 leading-relaxed">
+								{latestArticle.description}
+							</p>
+						)}
+					</div>
+
+					{/* Navigation Links */}
+					<div className="flex gap-3">
+						<Link
+							href="/workshop/plugins"
+							className="px-4 py-2 text-sm font-medium     rounded   transition-colors"
+						>
+							Plugins
+						</Link>
+						<Link
+							href="/workshop/downloads"
+							className="px-4 py-2 text-sm font-medium     rounded   transition-colors"
+						>
+							Downloads
+						</Link>
+					</div>
+
+					{/* Stats */}
+					<div className="grid grid-cols-3 gap-4">
+						<div>
+							<div className="text-2xl font-bold ">{totalArticles}</div>
+							<div className="text-sm ">記事</div>
+						</div>
+						<div>
+							<div className="text-2xl font-bold ">{totalTags}</div>
+							<div className="text-sm ">タグ</div>
+						</div>
+						<div>
+							<div className="text-2xl font-bold ">
+								{totalViews.toLocaleString()}
+							</div>
+							<div className="text-sm ">ビュー</div>
+						</div>
+					</div>
+				</div>
+
+				{/* Featured Article */}
+				<div className="relative group cursor-pointer">
+					<Link
+						href={latestArticle.href}
+						target={latestArticle.isExternal ? "_blank" : undefined}
+						rel={latestArticle.isExternal ? "noopener noreferrer" : undefined}
+						className="block"
+					>
+						<div className="relative aspect-video overflow-hidden  rounded-lg">
+							{latestArticle.thumbnail ? (
+								<Image
+									src={latestArticle.thumbnail}
+									alt={latestArticle.title}
+									fill
+									className="object-cover transition-transform duration-300 group-hover:scale-105"
+									sizes="(max-width: 768px) 100vw, 50vw"
+								/>
+							) : (
+								<div className="w-full h-full flex items-center justify-center ">
+									<svg
+										className="w-24 h-24 "
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={1}
+											d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+										/>
+									</svg>
+								</div>
+							)}
+							{/* Overlay on hover */}
+							<div className="absolute inset-0   transition-colors duration-300" />
+						</div>
+					</Link>
+				</div>
+			</div>
+		</section>
+	);
+}
+
+function AllTagsBar({
+	allTags,
+	mode,
+}: {
+	allTags: Array<{ tag: string; count: number }>;
+	mode: string;
+}) {
+	return (
+		<section className="mb-16">
+			<div className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide-scroll">
+				{allTags.map((tagInfo) => (
+					<Link
+						key={tagInfo.tag}
+						href={`?mode=${mode}&tag=${encodeURIComponent(tagInfo.tag)}`}
+						className="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium     rounded    transition-colors snap-start"
+					>
+						<span>#{tagInfo.tag} </span>
+						<span className="text-xs ">{tagInfo.count}</span>
+					</Link>
+				))}
+			</div>
+		</section>
+	);
+}
+
+function ArticlesFilterHeader({
+	keyword,
+	tag,
+	sort,
+	mode,
+	articleCount,
+	allTags,
+}: {
+	keyword: string | null;
+	tag: string | null;
+	sort: string;
+	mode: string;
+	articleCount: number;
+	allTags: Array<{ tag: string; count: number }>;
+}) {
+	return (
+		<div className="mb-8">
+			<div className="flex flex-col gap-4">
+				<div className="flex items-center justify-between">
+					<h1 className="text-2xl font-bold ">
+						Articles
+						<span className="ml-2 text-sm font-normal ">
+							({articleCount}記事)
+						</span>
+					</h1>
+					<div className="flex items-center gap-2">
+						<span className="text-sm ">ソート:</span>
+						<div className="flex    rounded">
+							<Link
+								href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=newest`}
+								className={`px-3 py-1.5 text-sm rounded-l ${
+									sort === "newest" ? " " : " "
+								}`}
+							>
+								新着
+							</Link>
+							<Link
+								href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=popular`}
+								className={`px-3 py-1.5 text-sm ${
+									sort === "popular" ? " " : " "
+								}`}
+							>
+								人気
+							</Link>
+							<Link
+								href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=alphabetical`}
+								className={`px-3 py-1.5 text-sm rounded-r ${
+									sort === "alphabetical" ? " " : " "
+								}`}
+							>
+								名前順
+							</Link>
+						</div>
+					</div>
+				</div>
+				<TagBar tags={allTags.slice(0, 15)} selectedTag={tag} />
+			</div>
+		</div>
+	);
+}
+
+function TrendingTagItem({
+	tagInfo,
+	index,
+	mode,
+	firstArticle,
+}: {
+	tagInfo: { tag: string; count: number };
+	index: number;
+	mode: string;
+	firstArticle?: ArticleData;
+}) {
+	return (
+		<Link
+			href={`?mode=${mode}&tag=${encodeURIComponent(tagInfo.tag)}`}
+			className="flex items-center gap-3  p-2 rounded transition-colors group"
+		>
+			{/* Tag info */}
+			<div className="flex-1 min-w-0">
+				<div className="flex items-center gap-2">
+					<span className={`text-sm font-semibold ${index === 0 ? "" : ""}`}>
+						#{tagInfo.tag}
+					</span>
+				</div>
+				<span className="text-xs ">{tagInfo.count}記事</span>
+			</div>
+			{/* Thumbnail */}
+			<div className="relative w-12 h-12 shrink-0  rounded overflow-hidden">
+				{firstArticle?.thumbnail ? (
+					<Image
+						src={firstArticle.thumbnail}
+						alt={tagInfo.tag}
+						fill
+						className="object-cover transition-transform duration-300 group-hover:scale-105"
+						sizes="48px"
+					/>
+				) : (
+					<div className="w-full h-full flex items-center justify-center">
+						<svg
+							className="w-6 h-6 "
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={1}
+								d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+							/>
+						</svg>
+					</div>
+				)}
+			</div>
+		</Link>
+	);
+}
+
+function PopularArticleItem({ article }: { article: ArticleData }) {
+	return (
+		<Link
+			href={article.href}
+			className="flex items-center gap-3  p-2 rounded transition-colors group"
+		>
+			{/* Title */}
+			<div className="flex-1 min-w-0">
+				<p className="text-sm  line-clamp-2 group-hover:underline">
+					{article.title}
+				</p>
+			</div>
+			{/* Thumbnail */}
+			<div className="relative w-12 h-12 shrink-0  rounded overflow-hidden">
+				{article.thumbnail ? (
+					<Image
+						src={article.thumbnail}
+						alt={article.title}
+						fill
+						className="object-cover transition-transform duration-300 group-hover:scale-105"
+						sizes="48px"
+					/>
+				) : (
+					<div className="w-full h-full flex items-center justify-center">
+						<svg
+							className="w-6 h-6 "
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={1}
+								d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+							/>
+						</svg>
+					</div>
+				)}
+			</div>
+		</Link>
+	);
+}
+
+function WorkshopSidebar({
+	allTags,
+	mode,
+	articlesByTag,
+	popularArticles,
+}: {
+	allTags: Array<{ tag: string; count: number }>;
+	mode: string;
+	articlesByTag: Map<string, ArticleData[]>;
+	popularArticles: ArticleData[];
+}) {
+	return (
+		<aside className="w-80 space-y-5 hidden lg:block">
+			<div className="p-4    rounded">
+				<h2 className=" font-semibold  mb-4">Trending Tags</h2>
+				<div className="space-y-3">
+					{allTags.slice(0, 10).map((item, index) => {
+						const tagArticles = articlesByTag.get(item.tag);
+						const firstArticle = tagArticles?.[0];
+						return (
+							<TrendingTagItem
+								key={item.tag}
+								tagInfo={item}
+								index={index}
+								mode={mode}
+								firstArticle={firstArticle}
+							/>
+						);
+					})}
+				</div>
+			</div>
+
+			<div className="p-4    rounded">
+				<h2 className=" font-semibold  mb-4">Popular Articles</h2>
+				<div className="space-y-3">
+					{popularArticles.map((item) => (
+						<PopularArticleItem key={item.page.slug} article={item} />
+					))}
+				</div>
+			</div>
+		</aside>
+	);
+}
+
+function GroupedTagSection({
+	tagInfo,
+	tagArticles,
+	mode,
+}: {
+	tagInfo: { tag: string; count: number };
+	tagArticles: ArticleData[];
+	mode: string;
+}) {
+	return (
+		<section className="space-y-4">
+			<div className="flex items-center gap-3">
+				<Link
+					href={`?mode=${mode}&tag=${encodeURIComponent(tagInfo.tag)}`}
+					className="text-xl font-bold   transition-colors"
+				>
+					#{tagInfo.tag}
+				</Link>
+				<span className="text-sm ">{tagArticles.length}記事</span>
+			</div>
+			<div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide-scroll">
+				{tagArticles.map((article) => (
+					<div
+						key={article.page.slug}
+						className="shrink-0 w-[320px] snap-start"
+					>
+						<ArticleCard
+							title={article.title}
+							description={article.description}
+							tags={article.tags}
+							thumbnail={article.thumbnail}
+							date={article.date}
+							href={article.href}
+							isExternal={article.isExternal}
+							isNew={article.isNew}
+						/>
+					</div>
+				))}
+			</div>
+		</section>
+	);
+}
+
+function GroupedTagsView({
+	topTags,
+	articlesByTag,
+	mode,
+}: {
+	topTags: Array<{ tag: string; count: number }>;
+	articlesByTag: Map<string, ArticleData[]>;
+	mode: string;
+}) {
+	return (
+		<div className="space-y-12">
+			{topTags.map((tagInfo) => {
+				const tagArticles = articlesByTag.get(tagInfo.tag);
+				if (!tagArticles || tagArticles.length === 0) return null;
+				return (
+					<GroupedTagSection
+						key={tagInfo.tag}
+						tagInfo={tagInfo}
+						tagArticles={tagArticles}
+						mode={mode}
+					/>
+				);
+			})}
+		</div>
+	);
+}
+
+// --- Main component ---
+
 interface WorkshopPageProps {
 	searchParams: Promise<{
 		q?: string;
@@ -365,17 +801,7 @@ export default async function WorkshopPage({
 
 	return (
 		<div className="min-h-dvh">
-			<header className="w-full h-14  ">
-				<div className="h-full max-w-7xl mx-auto px-4 flex items-center justify-between gap-6">
-					<Link
-						href="/workshop"
-						className="text-xl font-semibold  hover:underline"
-					>
-						Workshop
-					</Link>
-					<SearchBar keyword={keyword} mode={mode} />
-				</div>
-			</header>
+			<WorkshopHeader keyword={keyword} mode={mode} />
 
 			<main className="max-w-7xl mx-auto px-4 py-10 relative z-10">
 				<Breadcrumbs
@@ -386,326 +812,51 @@ export default async function WorkshopPage({
 				/>
 				{/* HERO Section - show only in grouped view */}
 				{showGroupedView && latestArticle && (
-					<section className="mb-16">
-						<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-							{/* Hero Content */}
-							<div className="space-y-6">
-								<div>
-									<span className="inline-block px-3 py-1 text-xs font-semibold   rounded mb-4">
-										LATEST
-									</span>
-									<h1 className="text-3xl font-bold  leading-tight">
-										{latestArticle.title}
-									</h1>
-									{latestArticle.description && (
-										<p className="text-sm  line-clamp-3 leading-relaxed">
-											{latestArticle.description}
-										</p>
-									)}
-								</div>
-
-								{/* Navigation Links */}
-								<div className="flex gap-3">
-									<Link
-										href="/workshop/plugins"
-										className="px-4 py-2 text-sm font-medium     rounded   transition-colors"
-									>
-										Plugins
-									</Link>
-									<Link
-										href="/workshop/downloads"
-										className="px-4 py-2 text-sm font-medium     rounded   transition-colors"
-									>
-										Downloads
-									</Link>
-								</div>
-
-								{/* Stats */}
-								<div className="grid grid-cols-3 gap-4">
-									<div>
-										<div className="text-2xl font-bold ">{totalArticles}</div>
-										<div className="text-sm ">記事</div>
-									</div>
-									<div>
-										<div className="text-2xl font-bold ">{totalTags}</div>
-										<div className="text-sm ">タグ</div>
-									</div>
-									<div>
-										<div className="text-2xl font-bold ">
-											{totalViews.toLocaleString()}
-										</div>
-										<div className="text-sm ">ビュー</div>
-									</div>
-								</div>
-							</div>
-
-							{/* Featured Article */}
-							<div className="relative group cursor-pointer">
-								<Link
-									href={latestArticle.href}
-									target={latestArticle.isExternal ? "_blank" : undefined}
-									rel={
-										latestArticle.isExternal ? "noopener noreferrer" : undefined
-									}
-									className="block"
-								>
-									<div className="relative aspect-video overflow-hidden  rounded-lg">
-										{latestArticle.thumbnail ? (
-											<Image
-												src={latestArticle.thumbnail}
-												alt={latestArticle.title}
-												fill
-												className="object-cover transition-transform duration-300 group-hover:scale-105"
-												sizes="(max-width: 768px) 100vw, 50vw"
-											/>
-										) : (
-											<div className="w-full h-full flex items-center justify-center ">
-												<svg
-													className="w-24 h-24 "
-													fill="none"
-													stroke="currentColor"
-													viewBox="0 0 24 24"
-												>
-													<path
-														strokeLinecap="round"
-														strokeLinejoin="round"
-														strokeWidth={1}
-														d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-													/>
-												</svg>
-											</div>
-										)}
-										{/* Overlay on hover */}
-										<div className="absolute inset-0   transition-colors duration-300" />
-									</div>
-								</Link>
-							</div>
-						</div>
-					</section>
+					<HeroSection
+						latestArticle={latestArticle}
+						totalArticles={totalArticles}
+						totalTags={totalTags}
+						totalViews={totalViews}
+					/>
 				)}
 
 				{/* All Tags Section - show only in grouped view */}
-				{showGroupedView && (
-					<section className="mb-16">
-						<div className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide-scroll">
-							{allTags.map((tagInfo) => (
-								<Link
-									key={tagInfo.tag}
-									href={`?mode=${mode}&tag=${encodeURIComponent(tagInfo.tag)}`}
-									className="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium     rounded    transition-colors snap-start"
-								>
-									<span>#{tagInfo.tag} </span>
-									<span className="text-xs ">{tagInfo.count}</span>
-								</Link>
-							))}
-						</div>
-					</section>
-				)}
+				{showGroupedView && <AllTagsBar allTags={allTags} mode={mode} />}
 
 				{/* Filter view - show when keyword or tag is selected */}
 				{!showGroupedView && (
 					<>
-						<div className="mb-8">
-							<div className="flex flex-col gap-4">
-								<div className="flex items-center justify-between">
-									<h1 className="text-2xl font-bold ">
-										Articles
-										<span className="ml-2 text-sm font-normal ">
-											({displayPagesWithCMS.length}記事)
-										</span>
-									</h1>
-									<div className="flex items-center gap-2">
-										<span className="text-sm ">ソート:</span>
-										<div className="flex    rounded">
-											<Link
-												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=newest`}
-												className={`px-3 py-1.5 text-sm rounded-l ${
-													sort === "newest" ? " " : " "
-												}`}
-											>
-												新着
-											</Link>
-											<Link
-												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=popular`}
-												className={`px-3 py-1.5 text-sm ${
-													sort === "popular" ? " " : " "
-												}`}
-											>
-												人気
-											</Link>
-											<Link
-												href={`?mode=${mode}&q=${keyword || ""}&tag=${tag || ""}&sort=alphabetical`}
-												className={`px-3 py-1.5 text-sm rounded-r ${
-													sort === "alphabetical" ? " " : " "
-												}`}
-											>
-												名前順
-											</Link>
-										</div>
-									</div>
-								</div>
-								<TagBar tags={allTags.slice(0, 15)} selectedTag={tag} />
-							</div>
-						</div>
+						<ArticlesFilterHeader
+							keyword={keyword}
+							tag={tag}
+							sort={sort}
+							mode={mode}
+							articleCount={displayPagesWithCMS.length}
+							allTags={allTags}
+						/>
 
 						<div className="flex gap-8">
 							<section className="flex-1">
 								<ArticleGrid articles={displayPagesWithCMS} />
 							</section>
 
-							<aside className="w-80 space-y-5 hidden lg:block">
-								<div className="p-4    rounded">
-									<h2 className=" font-semibold  mb-4">Trending Tags</h2>
-									<div className="space-y-3">
-										{allTags.slice(0, 10).map((item, index) => {
-											const tagArticles = articlesByTag.get(item.tag);
-											const firstArticle = tagArticles?.[0];
-											return (
-												<Link
-													key={item.tag}
-													href={`?mode=${mode}&tag=${encodeURIComponent(item.tag)}`}
-													className="flex items-center gap-3  p-2 rounded transition-colors group"
-												>
-													{/* Tag info */}
-													<div className="flex-1 min-w-0">
-														<div className="flex items-center gap-2">
-															<span
-																className={`text-sm font-semibold ${
-																	index === 0 ? "" : ""
-																}`}
-															>
-																#{item.tag}
-															</span>
-														</div>
-														<span className="text-xs ">{item.count}記事</span>
-													</div>
-													{/* Thumbnail */}
-													<div className="relative w-12 h-12 shrink-0  rounded overflow-hidden">
-														{firstArticle?.thumbnail ? (
-															<Image
-																src={firstArticle.thumbnail}
-																alt={item.tag}
-																fill
-																className="object-cover transition-transform duration-300 group-hover:scale-105"
-																sizes="48px"
-															/>
-														) : (
-															<div className="w-full h-full flex items-center justify-center">
-																<svg
-																	className="w-6 h-6 "
-																	fill="none"
-																	stroke="currentColor"
-																	viewBox="0 0 24 24"
-																>
-																	<path
-																		strokeLinecap="round"
-																		strokeLinejoin="round"
-																		strokeWidth={1}
-																		d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-																	/>
-																</svg>
-															</div>
-														)}
-													</div>
-												</Link>
-											);
-										})}
-									</div>
-								</div>
-
-								<div className="p-4    rounded">
-									<h2 className=" font-semibold  mb-4">Popular Articles</h2>
-									<div className="space-y-3">
-										{popularArticles.map((item, index) => (
-											<Link
-												key={item.page.slug}
-												href={item.href}
-												className="flex items-center gap-3  p-2 rounded transition-colors group"
-											>
-												{/* Title */}
-												<div className="flex-1 min-w-0">
-													<p className="text-sm  line-clamp-2 group-hover:underline">
-														{item.title}
-													</p>
-												</div>
-												{/* Thumbnail */}
-												<div className="relative w-12 h-12 shrink-0  rounded overflow-hidden">
-													{item.thumbnail ? (
-														<Image
-															src={item.thumbnail}
-															alt={item.title}
-															fill
-															className="object-cover transition-transform duration-300 group-hover:scale-105"
-															sizes="48px"
-														/>
-													) : (
-														<div className="w-full h-full flex items-center justify-center">
-															<svg
-																className="w-6 h-6 "
-																fill="none"
-																stroke="currentColor"
-																viewBox="0 0 24 24"
-															>
-																<path
-																	strokeLinecap="round"
-																	strokeLinejoin="round"
-																	strokeWidth={1}
-																	d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-																/>
-															</svg>
-														</div>
-													)}
-												</div>
-											</Link>
-										))}
-									</div>
-								</div>
-							</aside>
+							<WorkshopSidebar
+								allTags={allTags}
+								mode={mode}
+								articlesByTag={articlesByTag}
+								popularArticles={popularArticles}
+							/>
 						</div>
 					</>
 				)}
 
 				{/* Grouped view - show by default */}
 				{showGroupedView && (
-					<>
-						<div className="space-y-12">
-							{topTags.map((tagInfo) => {
-								const tagArticles = articlesByTag.get(tagInfo.tag);
-								if (!tagArticles || tagArticles.length === 0) return null;
-
-								return (
-									<section key={tagInfo.tag} className="space-y-4">
-										<div className="flex items-center gap-3">
-											<Link
-												href={`?mode=${mode}&tag=${encodeURIComponent(tagInfo.tag)}`}
-												className="text-xl font-bold   transition-colors"
-											>
-												#{tagInfo.tag}
-											</Link>
-											<span className="text-sm ">{tagArticles.length}記事</span>
-										</div>
-										<div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide-scroll">
-											{tagArticles.map((article) => (
-												<div className="shrink-0 w-[320px] snap-start">
-													<ArticleCard
-														key={article.page.slug}
-														title={article.title}
-														description={article.description}
-														tags={article.tags}
-														thumbnail={article.thumbnail}
-														date={article.date}
-														href={article.href}
-														isExternal={article.isExternal}
-														isNew={article.isNew}
-													/>
-												</div>
-											))}
-										</div>
-									</section>
-								);
-							})}
-						</div>
-					</>
+					<GroupedTagsView
+						topTags={topTags}
+						articlesByTag={articlesByTag}
+						mode={mode}
+					/>
 				)}
 			</main>
 		</div>

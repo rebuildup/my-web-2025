@@ -5,9 +5,7 @@ export async function fetchContentList(): Promise<ContentIndexItem[]> {
 	return apiRequest<ContentIndexItem[]>("/api/cms/contents");
 }
 
-async function fetchContent(
-	id: string,
-): Promise<ContentIndexItem | null> {
+async function fetchContent(id: string): Promise<ContentIndexItem | null> {
 	return apiRequest<ContentIndexItem | null>("/api/cms/contents", {
 		query: { id },
 	});

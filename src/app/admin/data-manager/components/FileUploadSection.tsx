@@ -23,6 +23,375 @@ interface UploadProgress {
 	error?: string;
 }
 
+const inputStyle =
+	"w-full  px-3 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
+const labelStyle =
+	"block noto-sans-jp-regular text-sm font-medium mb-1";
+const buttonStyle =
+	" px-3 py-1 text-xs hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
+
+function FileUploadSectionHeader() {
+	return (
+		<h3 className="neue-haas-grotesk-display text-xl leading-snug">
+			Images & Files
+		</h3>
+	);
+}
+
+interface ProcessingOptionsPanelProps {
+	options: FileProcessingOptions;
+	onChange: React.Dispatch<React.SetStateAction<FileProcessingOptions>>;
+}
+
+function ProcessingOptionsPanel({
+	options,
+	onChange,
+}: ProcessingOptionsPanelProps) {
+	return (
+		<div className="  p-4 rounded-lg">
+			<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
+				Processing Options
+			</h4>
+			<div className="grid grid-cols-2 gap-4">
+				<label className="flex items-center space-x-2">
+					<input
+						type="checkbox"
+						checked={options.generateThumbnail}
+						onChange={(e) =>
+							onChange((prev) => ({
+								...prev,
+								generateThumbnail: e.target.checked,
+							}))
+						}
+						className=""
+					/>
+					<span className="text-sm ">Generate Thumbnails</span>
+				</label>
+
+				<label className="flex items-center space-x-2">
+					<input
+						type="checkbox"
+						checked={options.optimizeImage}
+						onChange={(e) =>
+							onChange((prev) => ({
+								...prev,
+								optimizeImage: e.target.checked,
+							}))
+						}
+						className=""
+					/>
+					<span className="text-sm ">Optimize Images</span>
+				</label>
+
+				<label className="flex items-center space-x-2">
+					<input
+						type="checkbox"
+						checked={options.convertToWebP}
+						onChange={(e) =>
+							onChange((prev) => ({
+								...prev,
+								convertToWebP: e.target.checked,
+							}))
+						}
+						className=""
+					/>
+					<span className="text-sm ">Convert to WebP</span>
+				</label>
+
+				<div className="flex items-center space-x-2">
+					<label className="text-sm ">Quality:</label>
+					<input
+						type="range"
+						min="20"
+						max="100"
+						value={options.quality}
+						aria-label="Quality"
+						onChange={(e) =>
+							onChange((prev) => ({
+								...prev,
+								quality: parseInt(e.target.value),
+							}))
+						}
+						className="flex-1"
+					/>
+					<span className="text-xs  w-8">
+						{options.quality}%
+					</span>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+interface UploadProgressListProps {
+	items: UploadProgress[];
+}
+
+function UploadProgressList({ items }: UploadProgressListProps) {
+	if (items.length === 0) return null;
+	return (
+		<div className="  p-4 rounded-lg">
+			<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
+				Upload Progress
+			</h4>
+			<div className="space-y-2">
+				{items.map((progress) => (
+					<div key={progress.filename} className="space-y-1">
+						<div className="flex justify-between items-center">
+							<span className="text-sm truncate flex-1">
+								{progress.filename}
+							</span>
+							<span className="text-xs  ml-2">
+								{progress.status === "complete"
+									? "Complete"
+									: progress.status === "error"
+										? "Error"
+										: progress.status === "processing"
+											? "Processing"
+											: `${progress.progress}%`}
+							</span>
+						</div>
+						<div className="w-full  rounded-full h-2">
+							<div
+								className={`h-2 rounded-full transition-all duration-300 ${
+									progress.status === "complete"
+										? ""
+										: progress.status === "error"
+											? ""
+											: progress.status === "processing"
+												? ""
+												: ""
+								}`}
+								style={{ width: `${progress.progress}%` }}
+							/>
+						</div>
+						{progress.error && (
+							<p className="text-xs ">{progress.error}</p>
+						)}
+					</div>
+				))}
+			</div>
+		</div>
+	);
+}
+
+interface FileDropzoneProps {
+	isUploading: boolean;
+	inputRef: React.RefObject<HTMLInputElement>;
+	onDrop: (e: React.DragEvent) => void;
+	onDragOver: (e: React.DragEvent) => void;
+	onFileChange: (files: FileList) => void;
+}
+
+function FileDropzone({
+	isUploading,
+	inputRef,
+	onDrop,
+	onDragOver,
+	onFileChange,
+}: FileDropzoneProps) {
+	return (
+		<div
+			onDrop={onDrop}
+			onDragOver={onDragOver}
+			className="   rounded-lg p-6 text-center  transition-colors"
+		>
+			<input
+				ref={inputRef}
+				type="file"
+				multiple
+				accept="image/*"
+				onChange={(e) => e.target.files && onFileChange(e.target.files)}
+				className="hidden"
+			/>
+
+			{isUploading ? (
+				<div className="space-y-2">
+					<div className="animate-spin rounded-full h-8 w-8  mx-auto"></div>
+					<p className="text-sm ">Uploading...</p>
+				</div>
+			) : (
+				<div className="space-y-2">
+					<div className="">
+						<svg
+							className="mx-auto h-12 w-12"
+							stroke="currentColor"
+							fill="none"
+							viewBox="0 0 48 48"
+						>
+							<path
+								d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+								strokeWidth={2}
+								strokeLinecap="round"
+								strokeLinejoin="round"
+							/>
+						</svg>
+					</div>
+					<div>
+						<button
+							type="button"
+							onClick={() => inputRef.current?.click()}
+							className="font-medium"
+						>
+							Click to upload
+						</button>
+						<span className=""> or drag and drop</span>
+					</div>
+					<p className="text-xs ">PNG, JPG, GIF up to 10MB</p>
+				</div>
+			)}
+		</div>
+	);
+}
+
+interface ThumbnailSelectorProps {
+	images: string[];
+	thumbnail?: string;
+	onChange: (thumbnail: string | undefined) => void;
+}
+
+function ThumbnailSelector({
+	images,
+	thumbnail,
+	onChange,
+}: ThumbnailSelectorProps) {
+	if (images.length === 0) return null;
+	return (
+		<div>
+			<label className={labelStyle}>Thumbnail</label>
+			<select
+				value={thumbnail || ""}
+				onChange={(e) => onChange(e.target.value || undefined)}
+				className={`${inputStyle} `}
+				aria-label="Thumbnail"
+			>
+				<option value="" className=" ">
+					Select thumbnail...
+				</option>
+				{images.map((image, index) => (
+					<option
+						key={image}
+						value={image}
+						className=" "
+					>
+						Image {index + 1}
+					</option>
+				))}
+			</select>
+		</div>
+	);
+}
+
+interface ImageGalleryProps {
+	images: string[];
+	thumbnail?: string;
+	onRemove: (index: number) => void;
+	onSetThumbnail: (url: string) => void;
+}
+
+function ImageGallery({
+	images,
+	thumbnail,
+	onRemove,
+	onSetThumbnail,
+}: ImageGalleryProps) {
+	if (images.length === 0) return null;
+	return (
+		<div>
+			<h4 className="text-sm font-medium  mb-2">
+				Uploaded Images ({images.length})
+			</h4>
+			<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+				{images.map((image, index) => (
+					<div key={image} className="relative group">
+						<div className="aspect-square    rounded overflow-hidden">
+							{/* eslint-disable-next-line @next/next/no-img-element */}
+							<Image
+								src={image} width={200} height={200} unoptimized
+								alt={`Upload ${index + 1}`}
+								className="w-full h-full object-cover"
+								onError={(e) => {
+									(e.target as HTMLImageElement).src =
+										"/images/placeholder.svg";
+								}}
+							/>
+						</div>
+
+						{/* Image Controls */}
+						<div className="absolute inset-0  bg-opacity-50   transition-opacity flex items-center justify-center space-x-2">
+							<button
+								type="button"
+								onClick={() => onSetThumbnail(image)}
+								className="px-2 py-1 text-xs"
+								title="Set as thumbnail"
+							>
+								Thumb
+							</button>
+							<button
+								type="button"
+								onClick={() => onRemove(index)}
+								className="px-2 py-1 text-xs"
+								title="Remove image"
+							>
+								Remove
+							</button>
+						</div>
+
+						{/* Thumbnail Indicator */}
+						{thumbnail === image && (
+							<div className="absolute top-1 left-1  px-2 py-1 text-xs rounded">
+								Thumbnail
+							</div>
+						)}
+					</div>
+				))}
+			</div>
+		</div>
+	);
+}
+
+interface ManualUrlInputProps {
+	onAdd: (url: string) => void;
+}
+
+function ManualUrlInput({ onAdd }: ManualUrlInputProps) {
+	return (
+		<div>
+			<label className={labelStyle}>Add Image URL</label>
+			<div className="flex gap-2">
+				<input
+					type="url"
+					placeholder="https://example.com/image.jpg"
+					className={`${inputStyle} flex-1`}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							const input = e.target as HTMLInputElement;
+							if (input.value.trim()) {
+								onAdd(input.value.trim());
+								input.value = "";
+							}
+						}
+					}}
+				/>
+				<button
+					type="button"
+					onClick={(e) => {
+						const input = (e.target as HTMLButtonElement)
+							.previousElementSibling as HTMLInputElement;
+						if (input.value.trim()) {
+							onAdd(input.value.trim());
+							input.value = "";
+						}
+					}}
+					className={buttonStyle}
+				>
+					Add
+				</button>
+			</div>
+		</div>
+	);
+}
+
 export function FileUploadSection({
 	images,
 	thumbnail,
@@ -287,305 +656,39 @@ export function FileUploadSection({
 		onThumbnailChange(imageUrl);
 	};
 
-	const inputStyle =
-		"w-full  px-3 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
-	const labelStyle =
-		"block noto-sans-jp-regular text-sm font-medium mb-1";
-	const buttonStyle =
-		" px-3 py-1 text-xs hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
-
 	return (
 		<div className="space-y-4">
-			<h3 className="neue-haas-grotesk-display text-xl leading-snug">
-				Images & Files
-			</h3>
+			<FileUploadSectionHeader />
 
-			{/* Processing Options */}
-			<div className="  p-4 rounded-lg">
-				<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
-					Processing Options
-				</h4>
-				<div className="grid grid-cols-2 gap-4">
-					<label className="flex items-center space-x-2">
-						<input
-							type="checkbox"
-							checked={processingOptions.generateThumbnail}
-							onChange={(e) =>
-								setProcessingOptions((prev) => ({
-									...prev,
-									generateThumbnail: e.target.checked,
-								}))
-							}
-							className=""
-						/>
-						<span className="text-sm ">Generate Thumbnails</span>
-					</label>
+			<ProcessingOptionsPanel
+				options={processingOptions}
+				onChange={setProcessingOptions}
+			/>
 
-					<label className="flex items-center space-x-2">
-						<input
-							type="checkbox"
-							checked={processingOptions.optimizeImage}
-							onChange={(e) =>
-								setProcessingOptions((prev) => ({
-									...prev,
-									optimizeImage: e.target.checked,
-								}))
-							}
-							className=""
-						/>
-						<span className="text-sm ">Optimize Images</span>
-					</label>
+			<UploadProgressList items={uploadProgress} />
 
-					<label className="flex items-center space-x-2">
-						<input
-							type="checkbox"
-							checked={processingOptions.convertToWebP}
-							onChange={(e) =>
-								setProcessingOptions((prev) => ({
-									...prev,
-									convertToWebP: e.target.checked,
-								}))
-							}
-							className=""
-						/>
-						<span className="text-sm ">Convert to WebP</span>
-					</label>
-
-					<div className="flex items-center space-x-2">
-						<label className="text-sm ">Quality:</label>
-						<input
-							type="range"
-							min="20"
-							max="100"
-							value={processingOptions.quality}
-							aria-label="Quality"
-							onChange={(e) =>
-								setProcessingOptions((prev) => ({
-									...prev,
-									quality: parseInt(e.target.value),
-								}))
-							}
-							className="flex-1"
-						/>
-						<span className="text-xs  w-8">
-							{processingOptions.quality}%
-						</span>
-					</div>
-				</div>
-			</div>
-
-			{/* Upload Progress */}
-			{uploadProgress.length > 0 && (
-				<div className="  p-4 rounded-lg">
-					<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
-						Upload Progress
-					</h4>
-					<div className="space-y-2">
-						{uploadProgress.map((progress) => (
-							<div key={progress.filename} className="space-y-1">
-								<div className="flex justify-between items-center">
-									<span className="text-sm truncate flex-1">
-										{progress.filename}
-									</span>
-									<span className="text-xs  ml-2">
-										{progress.status === "complete"
-											? "Complete"
-											: progress.status === "error"
-												? "Error"
-												: progress.status === "processing"
-													? "Processing"
-													: `${progress.progress}%`}
-									</span>
-								</div>
-								<div className="w-full  rounded-full h-2">
-									<div
-										className={`h-2 rounded-full transition-all duration-300 ${
-											progress.status === "complete"
-												? ""
-												: progress.status === "error"
-													? ""
-													: progress.status === "processing"
-														? ""
-														: ""
-										}`}
-										style={{ width: `${progress.progress}%` }}
-									/>
-								</div>
-								{progress.error && (
-									<p className="text-xs ">{progress.error}</p>
-								)}
-							</div>
-						))}
-					</div>
-				</div>
-			)}
-
-			{/* File Upload Area */}
-			<div
+			<FileDropzone
+				isUploading={isUploading}
+				inputRef={fileInputRef}
 				onDrop={handleDrop}
 				onDragOver={handleDragOver}
-				className="   rounded-lg p-6 text-center  transition-colors"
-			>
-				<input
-					ref={fileInputRef}
-					type="file"
-					multiple
-					accept="image/*"
-					onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
-					className="hidden"
-				/>
+				onFileChange={handleFileUpload}
+			/>
 
-				{isUploading ? (
-					<div className="space-y-2">
-						<div className="animate-spin rounded-full h-8 w-8  mx-auto"></div>
-						<p className="text-sm ">Uploading...</p>
-					</div>
-				) : (
-					<div className="space-y-2">
-						<div className="">
-							<svg
-								className="mx-auto h-12 w-12"
-								stroke="currentColor"
-								fill="none"
-								viewBox="0 0 48 48"
-							>
-								<path
-									d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-									strokeWidth={2}
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								/>
-							</svg>
-						</div>
-						<div>
-							<button
-								type="button"
-								onClick={() => fileInputRef.current?.click()}
-								className="font-medium"
-							>
-								Click to upload
-							</button>
-							<span className=""> or drag and drop</span>
-						</div>
-						<p className="text-xs ">PNG, JPG, GIF up to 10MB</p>
-					</div>
-				)}
-			</div>
+			<ThumbnailSelector
+				images={images}
+				thumbnail={thumbnail}
+				onChange={onThumbnailChange}
+			/>
 
-			{/* Thumbnail Selection */}
-			{images.length > 0 && (
-				<div>
-					<label className={labelStyle}>Thumbnail</label>
-					<select
-						value={thumbnail || ""}
-						onChange={(e) => onThumbnailChange(e.target.value || undefined)}
-						className={`${inputStyle} `}
-						aria-label="Thumbnail"
-					>
-						<option value="" className=" ">
-							Select thumbnail...
-						</option>
-						{images.map((image, index) => (
-							<option
-								key={image}
-								value={image}
-								className=" "
-							>
-								Image {index + 1}
-							</option>
-						))}
-					</select>
-				</div>
-			)}
+			<ImageGallery
+				images={images}
+				thumbnail={thumbnail}
+				onRemove={removeImage}
+				onSetThumbnail={setAsThumbnail}
+			/>
 
-			{/* Image Gallery */}
-			{images.length > 0 && (
-				<div>
-					<h4 className="text-sm font-medium  mb-2">
-						Uploaded Images ({images.length})
-					</h4>
-					<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-						{images.map((image, index) => (
-							<div key={image} className="relative group">
-								<div className="aspect-square    rounded overflow-hidden">
-									{/* eslint-disable-next-line @next/next/no-img-element */}
-									<Image
-										src={image} width={200} height={200} unoptimized
-										alt={`Upload ${index + 1}`}
-										className="w-full h-full object-cover"
-										onError={(e) => {
-											(e.target as HTMLImageElement).src =
-												"/images/placeholder.svg";
-										}}
-									/>
-								</div>
-
-								{/* Image Controls */}
-								<div className="absolute inset-0  bg-opacity-50   transition-opacity flex items-center justify-center space-x-2">
-									<button
-										type="button"
-										onClick={() => setAsThumbnail(image)}
-										className="px-2 py-1 text-xs"
-										title="Set as thumbnail"
-									>
-										Thumb
-									</button>
-									<button
-										type="button"
-										onClick={() => removeImage(index)}
-										className="px-2 py-1 text-xs"
-										title="Remove image"
-									>
-										Remove
-									</button>
-								</div>
-
-								{/* Thumbnail Indicator */}
-								{thumbnail === image && (
-									<div className="absolute top-1 left-1  px-2 py-1 text-xs rounded">
-										Thumbnail
-									</div>
-								)}
-							</div>
-						))}
-					</div>
-				</div>
-			)}
-
-			{/* Manual URL Input */}
-			<div>
-				<label className={labelStyle}>Add Image URL</label>
-				<div className="flex gap-2">
-					<input
-						type="url"
-						placeholder="https://example.com/image.jpg"
-						className={`${inputStyle} flex-1`}
-						onKeyDown={(e) => {
-							if (e.key === "Enter") {
-								const input = e.target as HTMLInputElement;
-								if (input.value.trim()) {
-									onImagesChange([...images, input.value.trim()]);
-									input.value = "";
-								}
-							}
-						}}
-					/>
-					<button
-						type="button"
-						onClick={(e) => {
-							const input = (e.target as HTMLButtonElement)
-								.previousElementSibling as HTMLInputElement;
-							if (input.value.trim()) {
-								onImagesChange([...images, input.value.trim()]);
-								input.value = "";
-							}
-						}}
-						className={buttonStyle}
-					>
-						Add
-					</button>
-				</div>
-			</div>
+			<ManualUrlInput onAdd={(url) => onImagesChange([...images, url])} />
 		</div>
 	);
 }

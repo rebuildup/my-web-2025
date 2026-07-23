@@ -89,7 +89,7 @@ function TypingText({
 
 	return (
 		<p className={className} style={{ minHeight: "1.5em" }}>
-			{displayedText || "\u00A0"}
+			{displayedText || " "}
 		</p>
 	);
 }
@@ -248,6 +248,348 @@ const personality = [
 	"コンビニで弁当買って部屋で食べる人",
 ];
 
+// Profile header with animated typing text
+function ProfileHeader({ mounted }: { mounted: boolean }) {
+	return (
+		<section className="mb-24 overflow-visible">
+			<ScrollFloat stagger={0}>
+				{mounted && (
+					<div className="-mb-8">
+						<TypingText
+							text="「面白い」を見つけて、探求する"
+							className=" md:text-lg mb-2 -ml-2"
+							speed={15}
+							delay={800}
+						/>
+						<TypingText
+							text="こんにちは 木村友亮です"
+							className=" md:text-lg mb-4"
+							speed={15}
+							delay={1000}
+						/>
+						<TypingText
+							text="Discovering and exploring what's interesting"
+							className="/60 text-[10px] md:text-xs leading-relaxed"
+							speed={5}
+							delay={1200}
+						/>
+						<TypingText
+							text="Hello, I'm Yusuke Kimura."
+							className="/60 text-[10px] md:text-xs leading-relaxed"
+							speed={5}
+							delay={1400}
+						/>
+					</div>
+				)}
+			</ScrollFloat>
+		</section>
+	);
+}
+
+// Activities grid section
+function ActivitiesSection({ mounted }: { mounted: boolean }) {
+	return (
+		<section className="mb-24">
+			<ScrollFloat stagger={0}>
+				{mounted && (
+					<div className="mb-8">
+						<ScrollVelocity
+							text="Activities Activities Activities "
+							className="text-3xl md:text-4xl "
+						/>
+					</div>
+				)}
+			</ScrollFloat>
+
+			<ScrollFloat stagger={100}>
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+					{activities.map((activity) => (
+						<div
+							key={activity.ja}
+							className="/5 p-4 rounded-lg hover:/10 transition-colors flex flex-col"
+						>
+							<h3 className="zen-kaku-gothic-new mb-2">{activity.ja}</h3>
+							<p className="noto-sans-jp-light text-xs leading-relaxed grow">
+								{activity.en}
+							</p>
+						</div>
+					))}
+				</div>
+			</ScrollFloat>
+		</section>
+	);
+}
+
+// Personal information grid (birth, location, status, name)
+function PersonalInfoSection({
+	mounted,
+	sectionRef,
+}: {
+	mounted: boolean;
+	sectionRef: React.RefObject<HTMLElement | null>;
+}) {
+	return (
+		<section ref={sectionRef} className="mb-24">
+			<ScrollFloat stagger={0}>
+				{mounted && (
+					<div className="mb-8">
+						<ScrollVelocity
+							text="Personal Information Personal Information "
+							className="text-3xl md:text-4xl "
+						/>
+					</div>
+				)}
+			</ScrollFloat>
+
+			<h2 className="sr-only">Personal Information Details</h2>
+			<ScrollFloat stagger={100}>
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+					<div className="flex items-start gap-2">
+						<Calendar className="w-5 h-5  shrink-0 mt-1" />
+						<div className="flex-1">
+							<h3 className="zen-kaku-gothic-new text-sm mb-1">
+								生年月日・年齢
+							</h3>
+							<p className="noto-sans-jp-light text-sm ">
+								{personalInfo.birthDate}生まれ（{personalInfo.age}）
+							</p>
+						</div>
+					</div>
+
+					<div className="flex items-start gap-2">
+						<MapPin className="w-5 h-5  shrink-0 mt-1" />
+						<div className="flex-1">
+							<h3 className="zen-kaku-gothic-new text-sm mb-1">居住地</h3>
+							<p className="noto-sans-jp-light text-sm ">
+								{personalInfo.location}
+							</p>
+						</div>
+					</div>
+
+					<div className="flex items-start gap-2">
+						<GraduationCap className="w-5 h-5  shrink-0 mt-1" />
+						<div className="flex-1">
+							<h3 className="zen-kaku-gothic-new text-sm mb-1">現在の状況</h3>
+							<p className="noto-sans-jp-light text-sm ">
+								{personalInfo.status}
+							</p>
+							<p className="noto-sans-jp-light text-xs ">
+								卒業予定: {personalInfo.graduationYear}
+							</p>
+						</div>
+					</div>
+
+					<div className="flex items-start gap-2">
+						<div className="flex-1">
+							<h3 className="zen-kaku-gothic-new text-sm mb-1">名前</h3>
+							<p className="noto-sans-jp-light text-sm ">
+								{personalInfo.name}（{personalInfo.nameReading}）
+							</p>
+							<p className="noto-sans-jp-light text-xs ">
+								ハンドルネーム: {personalInfo.handleName}
+							</p>
+						</div>
+					</div>
+				</div>
+			</ScrollFloat>
+		</section>
+	);
+}
+
+// Education timeline
+function EducationSection({
+	mounted,
+	sectionRef,
+}: {
+	mounted: boolean;
+	sectionRef: React.RefObject<HTMLElement | null>;
+}) {
+	return (
+		<section ref={sectionRef} className="mb-24">
+			<ScrollFloat stagger={0}>
+				{mounted && (
+					<div className="mb-8">
+						<ScrollVelocity
+							text="Education Education Education "
+							className="text-3xl md:text-4xl "
+						/>
+					</div>
+				)}
+			</ScrollFloat>
+
+			<ScrollFloat stagger={100}>
+				<div className="relative pl-8 timeline-container">
+					{/* タイムラインの縦線 */}
+					<div className="absolute left-0 top-0 bottom-0 w-0.5 timeline-line"></div>
+
+					{education.map((edu) => (
+						<div key={edu.date} className="relative mb-8 timeline-item">
+							{/* タイムラインノード（点） */}
+							<div className="absolute w-3 h-3 rounded-full  timeline-node"></div>
+
+							<div className="">
+								<div className="text-sm md: font-bold mb-2">{edu.date}</div>
+								<div className=" md:text-lg mb-1">{edu.contentJa}</div>
+								<div className="/60 text-[10px] md:text-xs leading-relaxed">
+									{edu.contentEn}
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
+			</ScrollFloat>
+		</section>
+	);
+}
+
+// Technical skills list
+function SkillsSection({
+	mounted,
+	sectionRef,
+}: {
+	mounted: boolean;
+	sectionRef: React.RefObject<HTMLElement | null>;
+}) {
+	return (
+		<section ref={sectionRef} className="mb-24">
+			<ScrollFloat stagger={0}>
+				{mounted && (
+					<div className="mb-8">
+						<ScrollVelocity
+							text="Skills Skills Skills "
+							className="text-3xl md:text-4xl "
+						/>
+					</div>
+				)}
+			</ScrollFloat>
+
+			<ScrollFloat stagger={100}>
+				<div className="space-y-3">
+					{skillsDetail.map((skill) => (
+						<div
+							key={skill}
+							className="/5 p-3 rounded-lg hover:/10 transition-colors"
+						>
+							<p className="noto-sans-jp-light text-sm ">{skill}</p>
+						</div>
+					))}
+				</div>
+			</ScrollFloat>
+		</section>
+	);
+}
+
+// Achievements timeline
+function AchievementsSection({
+	mounted,
+	sectionRef,
+}: {
+	mounted: boolean;
+	sectionRef: React.RefObject<HTMLElement | null>;
+}) {
+	return (
+		<section ref={sectionRef} className="mb-24">
+			<ScrollFloat stagger={0}>
+				{mounted && (
+					<div className="mb-8">
+						<ScrollVelocity
+							text="Achievements Achievements Achievements "
+							className="text-3xl md:text-4xl "
+						/>
+					</div>
+				)}
+			</ScrollFloat>
+
+			<ScrollFloat stagger={100}>
+				<div className="space-y-12 pt-40">
+					{achievements.map((achievement) => (
+						<div
+							key={`${achievement.date}-${achievement.contentJa}`}
+							className="text-left"
+						>
+							<div className="">
+								<div className="text-sm md: font-bold mb-2">
+									{achievement.date}
+								</div>
+								<div className=" md:text-lg mb-1">{achievement.contentJa}</div>
+								<div className="/60 text-[10px] md:text-xs leading-relaxed">
+									{achievement.contentEn}
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
+			</ScrollFloat>
+		</section>
+	);
+}
+
+// Personality section with shuffled subset
+function PersonalitySection({
+	mounted,
+	shuffledPersonality,
+}: {
+	mounted: boolean;
+	shuffledPersonality: string[];
+}) {
+	return (
+		<section className="mb-24">
+			<ScrollFloat stagger={0}>
+				{mounted && (
+					<div className="mb-8">
+						<ScrollVelocity
+							text="About Me About Me About Me "
+							className="text-3xl md:text-4xl "
+						/>
+					</div>
+				)}
+			</ScrollFloat>
+
+			<ScrollFloat stagger={100}>
+				{mounted && shuffledPersonality.length > 0 && (
+					<RandomPersonalityList items={shuffledPersonality} />
+				)}
+			</ScrollFloat>
+		</section>
+	);
+}
+
+// Profile navigation CTA
+function ProfileNavigation() {
+	const Global_title = "noto-sans-jp-regular leading-snug";
+	return (
+		<nav aria-label="Profile navigation" className="mb-24">
+			<ScrollFloat stagger={0}>
+				<h2 className="sr-only">Profile機能</h2>
+				<div className="grid-system grid-1 xs:grid-2 sm:grid-3 gap-6">
+					<Link
+						href="/about/profile/handle"
+						className="/5 text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
+					>
+						<span className={Global_title}>Handle Profile</span>
+					</Link>
+
+					<Link
+						href="/about/card/real"
+						className="/5 text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
+					>
+						<span className={Global_title}>Digital Card</span>
+					</Link>
+				</div>
+			</ScrollFloat>
+		</nav>
+	);
+}
+
+// Page footer
+function ProfileFooter() {
+	return (
+		<footer className="left-0 right-0 z-10 flex items-center justify-center">
+			<span className="text-xs ">© 2025 361do_sleep</span>
+		</footer>
+	);
+}
+
 export default function RealProfilePage() {
 	const [mounted, setMounted] = useState(false);
 	const shuffledPersonality = useMemo(
@@ -263,8 +605,6 @@ export default function RealProfilePage() {
 	useEffect(() => {
 		setMounted(true);
 	}, []);
-
-	const Global_title = "noto-sans-jp-regular leading-snug";
 
 	return (
 		<>
@@ -299,291 +639,33 @@ export default function RealProfilePage() {
 						{/* Hidden h1 for SEO */}
 						<h1 className="sr-only">木村友亮のプロフィール - Real Profile</h1>
 
-						{/* Header */}
-						<section className="mb-24 overflow-visible">
-							<ScrollFloat stagger={0}>
-								{mounted && (
-									<div className="-mb-8">
-										<TypingText
-											text="「面白い」を見つけて、探求する"
-											className=" md:text-lg mb-2 -ml-2"
-											speed={15}
-											delay={800}
-										/>
-										<TypingText
-											text="こんにちは 木村友亮です"
-											className=" md:text-lg mb-4"
-											speed={15}
-											delay={1000}
-										/>
-										<TypingText
-											text="Discovering and exploring what's interesting"
-											className="/60 text-[10px] md:text-xs leading-relaxed"
-											speed={5}
-											delay={1200}
-										/>
-										<TypingText
-											text="Hello, I'm Yusuke Kimura."
-											className="/60 text-[10px] md:text-xs leading-relaxed"
-											speed={5}
-											delay={1400}
-										/>
-									</div>
-								)}
-							</ScrollFloat>
-						</section>
+						<ProfileHeader mounted={mounted} />
 
-						{/* Activities & Achievements */}
-						<section className="mb-24">
-							<ScrollFloat stagger={0}>
-								{mounted && (
-									<div className="mb-8">
-										<ScrollVelocity
-											text="Activities Activities Activities "
-											className="text-3xl md:text-4xl "
-										/>
-									</div>
-								)}
-							</ScrollFloat>
+						<ActivitiesSection mounted={mounted} />
 
-							<ScrollFloat stagger={100}>
-								<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-									{activities.map((activity) => (
-										<div
-											key={activity.ja}
-											className="/5 p-4 rounded-lg hover:/10 transition-colors flex flex-col"
-										>
-											<h3 className="zen-kaku-gothic-new mb-2">
-												{activity.ja}
-											</h3>
-											<p className="noto-sans-jp-light text-xs leading-relaxed grow">
-												{activity.en}
-											</p>
-										</div>
-									))}
-								</div>
-							</ScrollFloat>
-						</section>
+						<PersonalInfoSection
+							mounted={mounted}
+							sectionRef={personalInfoRef}
+						/>
 
-						{/* Personal Information */}
-						<section ref={personalInfoRef} className="mb-24">
-							<ScrollFloat stagger={0}>
-								{mounted && (
-									<div className="mb-8">
-										<ScrollVelocity
-											text="Personal Information Personal Information "
-											className="text-3xl md:text-4xl "
-										/>
-									</div>
-								)}
-							</ScrollFloat>
+						<EducationSection mounted={mounted} sectionRef={educationRef} />
 
-							<h2 className="sr-only">Personal Information Details</h2>
-							<ScrollFloat stagger={100}>
-								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-									<div className="flex items-start gap-2">
-										<Calendar className="w-5 h-5  shrink-0 mt-1" />
-										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm mb-1">
-												生年月日・年齢
-											</h3>
-											<p className="noto-sans-jp-light text-sm ">
-												{personalInfo.birthDate}生まれ（{personalInfo.age}）
-											</p>
-										</div>
-									</div>
+						<SkillsSection mounted={mounted} sectionRef={skillsRef} />
 
-									<div className="flex items-start gap-2">
-										<MapPin className="w-5 h-5  shrink-0 mt-1" />
-										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm mb-1">
-												居住地
-											</h3>
-											<p className="noto-sans-jp-light text-sm ">
-												{personalInfo.location}
-											</p>
-										</div>
-									</div>
+						<AchievementsSection
+							mounted={mounted}
+							sectionRef={achievementsRef}
+						/>
 
-									<div className="flex items-start gap-2">
-										<GraduationCap className="w-5 h-5  shrink-0 mt-1" />
-										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm mb-1">
-												現在の状況
-											</h3>
-											<p className="noto-sans-jp-light text-sm ">
-												{personalInfo.status}
-											</p>
-											<p className="noto-sans-jp-light text-xs ">
-												卒業予定: {personalInfo.graduationYear}
-											</p>
-										</div>
-									</div>
+						<PersonalitySection
+							mounted={mounted}
+							shuffledPersonality={shuffledPersonality}
+						/>
 
-									<div className="flex items-start gap-2">
-										<div className="flex-1">
-											<h3 className="zen-kaku-gothic-new text-sm mb-1">名前</h3>
-											<p className="noto-sans-jp-light text-sm ">
-												{personalInfo.name}（{personalInfo.nameReading}）
-											</p>
-											<p className="noto-sans-jp-light text-xs ">
-												ハンドルネーム: {personalInfo.handleName}
-											</p>
-										</div>
-									</div>
-								</div>
-							</ScrollFloat>
-						</section>
-
-						{/* Education */}
-						<section ref={educationRef} className="mb-24">
-							<ScrollFloat stagger={0}>
-								{mounted && (
-									<div className="mb-8">
-										<ScrollVelocity
-											text="Education Education Education "
-											className="text-3xl md:text-4xl "
-										/>
-									</div>
-								)}
-							</ScrollFloat>
-
-							<ScrollFloat stagger={100}>
-								<div className="relative pl-8 timeline-container">
-									{/* タイムラインの縦線 */}
-									<div className="absolute left-0 top-0 bottom-0 w-0.5 timeline-line"></div>
-
-									{education.map((edu) => (
-										<div key={edu.date} className="relative mb-8 timeline-item">
-											{/* タイムラインノード（点） */}
-											<div className="absolute w-3 h-3 rounded-full  timeline-node"></div>
-
-											<div className="">
-												<div className="text-sm md: font-bold mb-2">
-													{edu.date}
-												</div>
-												<div className=" md:text-lg mb-1">{edu.contentJa}</div>
-												<div className="/60 text-[10px] md:text-xs leading-relaxed">
-													{edu.contentEn}
-												</div>
-											</div>
-										</div>
-									))}
-								</div>
-							</ScrollFloat>
-						</section>
-
-						{/* Technical Skills */}
-						<section ref={skillsRef} className="mb-24">
-							<ScrollFloat stagger={0}>
-								{mounted && (
-									<div className="mb-8">
-										<ScrollVelocity
-											text="Skills Skills Skills "
-											className="text-3xl md:text-4xl "
-										/>
-									</div>
-								)}
-							</ScrollFloat>
-
-							<ScrollFloat stagger={100}>
-								<div className="space-y-3">
-									{skillsDetail.map((skill) => (
-										<div
-											key={skill}
-											className="/5 p-3 rounded-lg hover:/10 transition-colors"
-										>
-											<p className="noto-sans-jp-light text-sm ">{skill}</p>
-										</div>
-									))}
-								</div>
-							</ScrollFloat>
-						</section>
-
-						{/* Achievements */}
-						<section ref={achievementsRef} className="mb-24">
-							<ScrollFloat stagger={0}>
-								{mounted && (
-									<div className="mb-8">
-										<ScrollVelocity
-											text="Achievements Achievements Achievements "
-											className="text-3xl md:text-4xl "
-										/>
-									</div>
-								)}
-							</ScrollFloat>
-
-							<ScrollFloat stagger={100}>
-								<div className="space-y-12 pt-40">
-									{achievements.map((achievement) => (
-										<div
-											key={`${achievement.date}-${achievement.contentJa}`}
-											className="text-left"
-										>
-											<div className="">
-												<div className="text-sm md: font-bold mb-2">
-													{achievement.date}
-												</div>
-												<div className=" md:text-lg mb-1">
-													{achievement.contentJa}
-												</div>
-												<div className="/60 text-[10px] md:text-xs leading-relaxed">
-													{achievement.contentEn}
-												</div>
-											</div>
-										</div>
-									))}
-								</div>
-							</ScrollFloat>
-						</section>
-
-						{/* Personality */}
-						<section className="mb-24">
-							<ScrollFloat stagger={0}>
-								{mounted && (
-									<div className="mb-8">
-										<ScrollVelocity
-											text="About Me About Me About Me "
-											className="text-3xl md:text-4xl "
-										/>
-									</div>
-								)}
-							</ScrollFloat>
-
-							<ScrollFloat stagger={100}>
-								{mounted && shuffledPersonality.length > 0 && (
-									<RandomPersonalityList items={shuffledPersonality} />
-								)}
-							</ScrollFloat>
-						</section>
-
-						{/* CTA */}
-						<nav aria-label="Profile navigation" className="mb-24">
-							<ScrollFloat stagger={0}>
-								<h2 className="sr-only">Profile機能</h2>
-								<div className="grid-system grid-1 xs:grid-2 sm:grid-3 gap-6">
-									<Link
-										href="/about/profile/handle"
-										className="/5 text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
-									>
-										<span className={Global_title}>Handle Profile</span>
-									</Link>
-
-									<Link
-										href="/about/card/real"
-										className="/5 text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
-									>
-										<span className={Global_title}>Digital Card</span>
-									</Link>
-								</div>
-							</ScrollFloat>
-						</nav>
+						<ProfileNavigation />
 
 						<div className="p-40" />
-						{/* Footer */}
-						<footer className="left-0 right-0 z-10 flex items-center justify-center">
-							<span className="text-xs ">© 2025 361do_sleep</span>
-						</footer>
+						<ProfileFooter />
 					</div>
 				</main>
 			</div>

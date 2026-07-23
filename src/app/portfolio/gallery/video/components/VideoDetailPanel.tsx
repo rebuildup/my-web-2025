@@ -32,6 +32,267 @@ type FullContent = ContentItem & {
 	links?: Array<{ href: string; label?: string; rel?: string }>;
 };
 
+interface VideoInfoSectionProps {
+	item: ContentItem | EnhancedContentItem;
+	videoId: string | null;
+	isVideoLoaded: boolean;
+	onPlay: () => void;
+}
+
+function VideoInfoSection({
+	item,
+	videoId,
+	isVideoLoaded,
+	onPlay,
+}: VideoInfoSectionProps) {
+	return (
+		<div className="lg:col-span-2 xl:col-span-3 space-y-4">
+			<div className="aspect-video overflow-hidden relative">
+				{!isVideoLoaded ? (
+					<>
+						{/* Background Thumbnail */}
+						{item.thumbnail ? (
+							<SafeImage
+								src={item.thumbnail}
+								alt={item.title}
+								fill
+								sizes="(max-width: 768px) 100vw, 100vw"
+								className="object-cover object-center"
+								style={{ objectPosition: "center center" }}
+							/>
+						) : (
+							<SafeImage
+								src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+								alt={item.title}
+								fill
+								sizes="(max-width: 768px) 100vw, 100vw"
+								className="object-cover object-center"
+								style={{ objectPosition: "center center" }}
+								fallbackSrc={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+							/>
+						)}
+						{/* Play Button Overlay */}
+						<div
+							className="absolute inset-0 flex items-center justify-center"
+							style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}
+						>
+							<button
+								type="button"
+								onClick={onPlay}
+								className="flex items-center gap-2 px-6 py-3"
+								style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+								onMouseEnter={(e) => {
+									e.currentTarget.style.backgroundColor =
+										"rgba(255, 255, 255, 1)";
+								}}
+								onMouseLeave={(e) => {
+									e.currentTarget.style.backgroundColor =
+										"rgba(255, 255, 255, 0.9)";
+								}}
+							>
+								<Play className="w-6 h-6" />
+								<span className="noto-sans-jp-light text-sm font-medium">
+									動画を再生
+								</span>
+							</button>
+						</div>
+					</>
+				) : (
+					<iframe
+						src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`}
+						title={item.title}
+						className="w-full h-full"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowFullScreen
+					/>
+				)}
+			</div>
+			{/* Title under the video (YouTube-like) */}
+			<h2 className="zen-kaku-gothic-new text-2xl mt-6 mb-4">{item.title}</h2>
+			{/* Description moved under the title */}
+			{item.description && (
+				<p className="noto-sans-jp-light text-sm leading-relaxed mb-2">
+					{item.description}
+				</p>
+			)}
+		</div>
+	);
+}
+
+interface HeaderSectionProps {
+	item: ContentItem | EnhancedContentItem;
+	onClose: () => void;
+}
+
+function HeaderSection({ item, onClose }: HeaderSectionProps) {
+	return (
+		<div>
+			<div className="flex items-center justify-between mb-2">
+				<h3 className="zen-kaku-gothic-new text-lg ">作品情報</h3>
+				<button
+					type="button"
+					onClick={onClose}
+					className="p-1.5 cursor-pointer"
+					aria-label="Close panel"
+				>
+					<X className="w-4 h-4" />
+				</button>
+			</div>
+			<div className="flex items-center gap-4">
+				<div className="flex items-center gap-2">
+					<Calendar className="w-4 h-4 " />
+					<span className="noto-sans-jp-light text-sm ">
+						{new Date(item.updatedAt || item.createdAt).toLocaleDateString(
+							"ja-JP",
+						)}
+					</span>
+				</div>
+				<div className="flex items-center gap-2">
+					<span className="noto-sans-jp-light text-xs   px-2 py-1  ">
+						{item.category}
+					</span>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+interface RelatedVideosSectionProps {
+	item: ContentItem | EnhancedContentItem;
+	full: FullContent | null;
+}
+
+function RelatedVideosSection({ item, full }: RelatedVideosSectionProps) {
+	const hasLinks =
+		(item.externalLinks && item.externalLinks.length > 0) ||
+		(Array.isArray(full?.links) && full.links.length > 0);
+
+	return (
+		<>
+			{/* 関連リンク */}
+			{hasLinks ? (
+				<div>
+					<h3 className="zen-kaku-gothic-new text-lg mb-2">リンク</h3>
+					<div className="flex flex-wrap gap-2">
+						{[
+							...(item.externalLinks || []).map((l: any) => ({
+								href: l.url,
+								label: l.title,
+							})),
+							...(full?.links || []).map((l: any) => ({
+								href: l.href,
+								label: l.label || l.href,
+							})),
+						]
+							.filter(
+								(v, i, arr) =>
+									v?.href && arr.findIndex((x) => x.href === v.href) === i,
+							)
+							.map((link) => (
+								<a
+									key={link.href}
+									href={link.href}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="inline-flex items-center gap-1  hover: transition-colors max-w-full overflow-hidden px-1 py-0.5"
+								>
+									<ExternalLink className="w-3.5 h-3.5" />
+									<span className="noto-sans-jp-light text-xs truncate max-w-[220px] sm:max-w-[280px] md:max-w-[340px]">
+										{link.label}
+									</span>
+								</a>
+							))}
+					</div>
+				</div>
+			) : null}
+
+			{/* 関連メディア */}
+			{Array.isArray(full?.assets) && full.assets.length > 0 && (
+				<div>
+					<h3 className="zen-kaku-gothic-new text-lg mb-2">関連メディア</h3>
+					<div className="grid grid-cols-1 gap-3">
+						{full.assets.map((asset, idx) => {
+							const href = asset?.src || "";
+							const type = String(asset?.type || "");
+							const isImage =
+								/image\//.test(type) ||
+								/\.(png|jpe?g|gif|webp|avif)$/i.test(href);
+
+							// Derive a thumbnail when YouTube link is provided
+							let thumbSrc: string | null = null;
+							if (isImage) {
+								thumbSrc = href;
+							} else if (
+								type === "video/youtube" ||
+								/youtu(\.be|be\.com)/.test(href)
+							) {
+								const vid = getYouTubeVideoId(href);
+								if (vid) {
+									thumbSrc = `https://img.youtube.com/vi/${vid}/hqdefault.jpg`;
+								}
+							}
+
+							return (
+								<Link
+									key={asset?.src ?? item.id}
+									href={`/portfolio/${item.id}`}
+									className="block w-full group"
+								>
+									<div className="relative aspect-video w-full overflow-hidden">
+										{thumbSrc ? (
+											<SafeImage
+												src={thumbSrc}
+												alt={`asset-${idx}`}
+												fill
+												className="object-cover object-center group-hover:scale-[1.02] transition-transform"
+												style={{ objectPosition: "center center" }}
+											/>
+										) : (
+											<div className="w-full h-full flex items-center justify-center">
+												<span className="noto-sans-jp-light text-xs">
+													{type || "media"}
+												</span>
+											</div>
+										)}
+									</div>
+								</Link>
+							);
+						})}
+					</div>
+				</div>
+			)}
+		</>
+	);
+}
+
+interface ActionPanelProps {
+	item: ContentItem | EnhancedContentItem;
+	youTubeUrl: string | null;
+}
+
+function ActionPanel({ item, youTubeUrl }: ActionPanelProps) {
+	return (
+		<div className="flex flex-col gap-1.5 pt-2 mt-auto">
+			<Link
+				href={`/portfolio/${item.id}`}
+				className=" text-sm px-3 py-1.5  transition-colors    w-full text-left"
+			>
+				<span className="noto-sans-jp-light text-xs">詳細ページを見る</span>
+			</Link>
+			{youTubeUrl && (
+				<a
+					href={youTubeUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					className="px-3 py-1.5 hover:/50 transition-colors    w-full text-left text-sm"
+				>
+					<span className="noto-sans-jp-light text-xs">YouTubeで見る</span>
+				</a>
+			)}
+		</div>
+	);
+}
+
 export default function VideoDetailPanel({
 	item,
 	isOpen,
@@ -89,6 +350,7 @@ export default function VideoDetailPanel({
 	if (!isOpen || !item) return null;
 
 	const videoId = youTubeUrl ? getYouTubeVideoId(youTubeUrl) : null;
+	const handlePlayVideo = () => setIsVideoLoaded(true);
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center p-4 ">
@@ -100,235 +362,20 @@ export default function VideoDetailPanel({
 
 				<div className="p-6">
 					<div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-						{/* Video Player (left 2/3) */}
-						<div className="lg:col-span-2 xl:col-span-3 space-y-4">
-							<div className="aspect-video overflow-hidden relative">
-								{!isVideoLoaded ? (
-									<>
-										{/* Background Thumbnail */}
-										{item.thumbnail ? (
-											<SafeImage
-												src={item.thumbnail}
-												alt={item.title}
-												fill
-												sizes="(max-width: 768px) 100vw, 100vw"
-												className="object-cover object-center"
-												style={{ objectPosition: "center center" }}
-											/>
-										) : (
-											<SafeImage
-												src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
-												alt={item.title}
-												fill
-												sizes="(max-width: 768px) 100vw, 100vw"
-												className="object-cover object-center"
-												style={{ objectPosition: "center center" }}
-												fallbackSrc={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-											/>
-										)}
-										{/* Play Button Overlay */}
-										<div
-											className="absolute inset-0 flex items-center justify-center"
-											style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}
-										>
-											<button
-												type="button"
-												onClick={() => setIsVideoLoaded(true)}
-												className="flex items-center gap-2 px-6 py-3"
-												style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
-												onMouseEnter={(e) => {
-													e.currentTarget.style.backgroundColor =
-														"rgba(255, 255, 255, 1)";
-												}}
-												onMouseLeave={(e) => {
-													e.currentTarget.style.backgroundColor =
-														"rgba(255, 255, 255, 0.9)";
-												}}
-											>
-												<Play className="w-6 h-6" />
-												<span className="noto-sans-jp-light text-sm font-medium">
-													動画を再生
-												</span>
-											</button>
-										</div>
-									</>
-								) : (
-									<iframe
-										src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`}
-										title={item.title}
-										className="w-full h-full"
-										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-										allowFullScreen
-									/>
-								)}
-							</div>
-							{/* Title under the video (YouTube-like) */}
-							<h2 className="zen-kaku-gothic-new text-2xl mt-6 mb-4">
-								{item.title}
-							</h2>
-							{/* Description moved under the title */}
-							{item.description && (
-								<p className="noto-sans-jp-light text-sm leading-relaxed mb-2">
-									{item.description}
-								</p>
-							)}
-						</div>
+						<VideoInfoSection
+							item={item}
+							videoId={videoId}
+							isVideoLoaded={isVideoLoaded}
+							onPlay={handlePlayVideo}
+						/>
 						{/* Right column: close + info + actions */}
 						<div
 							className="lg:col-span-1 flex flex-col gap-4 overflow-y-auto overflow-x-hidden pr-2"
 							style={{ maxHeight: "calc(90vh - 48px)" }}
 						>
-							{/* 作品情報 */}
-							<div>
-								<div className="flex items-center justify-between mb-2">
-									<h3 className="zen-kaku-gothic-new text-lg ">作品情報</h3>
-									<button
-										type="button"
-										onClick={onClose}
-										className="p-1.5 cursor-pointer"
-										aria-label="Close panel"
-									>
-										<X className="w-4 h-4" />
-									</button>
-								</div>
-								<div className="flex items-center gap-4">
-									<div className="flex items-center gap-2">
-										<Calendar className="w-4 h-4 " />
-										<span className="noto-sans-jp-light text-sm ">
-											{new Date(
-												item.updatedAt || item.createdAt,
-											).toLocaleDateString("ja-JP")}
-										</span>
-									</div>
-									<div className="flex items-center gap-2">
-										<span className="noto-sans-jp-light text-xs   px-2 py-1  ">
-											{item.category}
-										</span>
-									</div>
-								</div>
-							</div>
-							{/* 説明（左に移動したため削除） */}
-
-							{/* 関連リンク */}
-							{(item.externalLinks && item.externalLinks.length > 0) ||
-							(Array.isArray(full?.links) && full!.links!.length > 0) ? (
-								<div>
-									<h3 className="zen-kaku-gothic-new text-lg mb-2">リンク</h3>
-									<div className="flex flex-wrap gap-2">
-										{[
-											...(item.externalLinks || []).map((l: any) => ({
-												href: l.url,
-												label: l.title,
-											})),
-											...((full?.links || []) as any[]).map((l: any) => ({
-												href: l.href,
-												label: l.label || l.href,
-											})),
-										]
-											.filter(
-												(v, i, arr) =>
-													v?.href &&
-													arr.findIndex((x) => x.href === v.href) === i,
-											)
-											.map((link) => (
-												<a
-													key={link.href}
-													href={link.href}
-													target="_blank"
-													rel="noopener noreferrer"
-													className="inline-flex items-center gap-1  hover: transition-colors max-w-full overflow-hidden px-1 py-0.5"
-												>
-													<ExternalLink className="w-3.5 h-3.5" />
-													<span className="noto-sans-jp-light text-xs truncate max-w-[220px] sm:max-w-[280px] md:max-w-[340px]">
-														{link.label}
-													</span>
-												</a>
-											))}
-									</div>
-								</div>
-							) : null}
-
-							{/* 関連メディア */}
-							{Array.isArray(full?.assets) && full!.assets!.length > 0 && (
-								<div>
-									<h3 className="zen-kaku-gothic-new text-lg mb-2">
-										関連メディア
-									</h3>
-									<div className="grid grid-cols-1 gap-3">
-										{(full!.assets as any[]).map((asset, idx) => {
-											const href = asset?.src || "";
-											const type = String(asset?.type || "");
-											const isImage =
-												/image\//.test(type) ||
-												/\.(png|jpe?g|gif|webp|avif)$/i.test(href);
-
-											// Derive a thumbnail when YouTube link is provided
-											let thumbSrc: string | null = null;
-											if (isImage) {
-												thumbSrc = href;
-											} else if (
-												type === "video/youtube" ||
-												/youtu(\.be|be\.com)/.test(href)
-											) {
-												const vid = getYouTubeVideoId(href);
-												if (vid) {
-													thumbSrc = `https://img.youtube.com/vi/${vid}/hqdefault.jpg`;
-												}
-											}
-
-											return (
-												<Link
-													key={asset?.src ?? item.id}
-													href={`/portfolio/${item.id}`}
-													className="block w-full group"
-												>
-													<div className="relative aspect-video w-full overflow-hidden">
-														{thumbSrc ? (
-															<SafeImage
-																src={thumbSrc}
-																alt={`asset-${idx}`}
-																fill
-																className="object-cover object-center group-hover:scale-[1.02] transition-transform"
-																style={{ objectPosition: "center center" }}
-															/>
-														) : (
-															<div className="w-full h-full flex items-center justify-center">
-																<span className="noto-sans-jp-light text-xs">
-																	{type || "media"}
-																</span>
-															</div>
-														)}
-													</div>
-												</Link>
-											);
-										})}
-									</div>
-								</div>
-							)}
-
-							{/* Action Buttons */}
-							<div className="flex flex-col gap-1.5 pt-2 mt-auto">
-								<Link
-									href={`/portfolio/${item.id}`}
-									className=" text-sm px-3 py-1.5  transition-colors    w-full text-left"
-								>
-									<span className="noto-sans-jp-light text-xs">
-										詳細ページを見る
-									</span>
-								</Link>
-								{youTubeUrl && (
-									<a
-										href={youTubeUrl}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="px-3 py-1.5 hover:/50 transition-colors    w-full text-left text-sm"
-									>
-										<span className="noto-sans-jp-light text-xs">
-											YouTubeで見る
-										</span>
-									</a>
-								)}
-							</div>
+							<HeaderSection item={item} onClose={onClose} />
+							<RelatedVideosSection item={item} full={full} />
+							<ActionPanel item={item} youTubeUrl={youTubeUrl} />
 						</div>
 					</div>
 				</div>

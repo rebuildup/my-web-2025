@@ -46,6 +46,87 @@ interface ErrorState {
 	errorBoundary?: boolean;
 }
 
+interface ErrorStateViewProps {
+	message: string;
+	onRetry: () => void;
+}
+
+interface GalleryGridSectionProps {
+	gridItems: EnhancedGridItem[];
+}
+
+// ---- Subcomponents (extracted from VideoDesignGallery) ----
+
+function ErrorStateView({ message, onRetry }: ErrorStateViewProps) {
+	return (
+		<div className="space-y-8">
+			<div className="   p-6 rounded-lg">
+				<div className="flex items-center mb-4">
+					<AlertTriangle className="w-6 h-6  mr-3" />
+					<h2 className="zen-kaku-gothic-new text-lg " role="alert">
+						Error Loading Gallery
+					</h2>
+				</div>
+				<p className="noto-sans-jp-light text-sm  mb-4" role="alert">
+					{message}
+				</p>
+				<button
+					type="button"
+					onClick={onRetry}
+					className="flex items-center space-x-2 px-4 py-2"
+				>
+					<RefreshCw className="w-4 h-4" />
+					<span>Retry</span>
+				</button>
+			</div>
+		</div>
+	);
+}
+
+function LoadingView() {
+	return (
+		<div className="space-y-8">
+			<div className="/30 p-4">
+				<div className="flex items-center mb-4">
+					<h2 className="zen-kaku-gothic-new text-lg ">Loading...</h2>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function EmptyStateView() {
+	return (
+		<div className="text-center py-12">
+			<div className="/30 p-8">
+				<Eye className="w-12 h-12  mx-auto mb-4" />
+				<h2 className="zen-kaku-gothic-new text-xl mb-2">No projects found</h2>
+				<p className="noto-sans-jp-light text-sm ">
+					No video & design projects available.
+				</p>
+			</div>
+		</div>
+	);
+}
+
+function GalleryGridSection({ gridItems }: GalleryGridSectionProps) {
+	return (
+		<section aria-label="Projects Grid">
+			<h2 className="sr-only">Projects Grid</h2>
+			<div
+				className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+				style={{ gridAutoRows: "minmax(200px, auto)" }}
+			>
+				{gridItems.map((item) => (
+					<GridItemComponentV2 key={item.id} item={item} onHover={() => {}} />
+				))}
+			</div>
+		</section>
+	);
+}
+
+// ---- Main component ----
+
 export function VideoDesignGallery({
 	items,
 	showVideoItems = true,
@@ -530,27 +611,12 @@ export function VideoDesignGallery({
 	// Skip early validation in test environment to allow proper testing
 	if (process.env.NODE_ENV !== "test" && (!items || !Array.isArray(items))) {
 		return (
-			<div className="space-y-8">
-				<div className="   p-6 rounded-lg">
-					<div className="flex items-center mb-4">
-						<AlertTriangle className="w-6 h-6  mr-3" />
-						<h2 className="zen-kaku-gothic-new text-lg " role="alert">
-							Error Loading Gallery
-						</h2>
-					</div>
-					<p className="noto-sans-jp-light text-sm  mb-4" role="alert">
-						{!items ? "No items provided to gallery" : "Invalid items format"}
-					</p>
-					<button
-						type="button"
-						onClick={() => window.location.reload()}
-						className="flex items-center space-x-2 px-4 py-2"
-					>
-						<RefreshCw className="w-4 h-4" />
-						<span>Retry</span>
-					</button>
-				</div>
-			</div>
+			<ErrorStateView
+				message={
+					!items ? "No items provided to gallery" : "Invalid items format"
+				}
+				onRetry={() => window.location.reload()}
+			/>
 		);
 	}
 
@@ -578,81 +644,32 @@ export function VideoDesignGallery({
 	// Error boundary - show error state if there's an error (skip in test environment)
 	if (process.env.NODE_ENV !== "test" && errorState.hasError) {
 		return (
-			<div className="space-y-8">
-				<div className="   p-6 rounded-lg">
-					<div className="flex items-center mb-4">
-						<AlertTriangle className="w-6 h-6  mr-3" />
-						<h2 className="zen-kaku-gothic-new text-lg " role="alert">
-							Error Loading Gallery
-						</h2>
-					</div>
-					<p className="noto-sans-jp-light text-sm  mb-4" role="alert">
-						{errorState.error?.message ||
-							"An unexpected error occurred while loading the gallery."}
-					</p>
-					<button
-						type="button"
-						onClick={() => {
-							setErrorState({ hasError: false });
-							// Clear cache to force refresh
-							cacheRef.current.clear();
-						}}
-						className="flex items-center space-x-2 px-4 py-2"
-					>
-						<RefreshCw className="w-4 h-4" />
-						<span>Retry</span>
-					</button>
-				</div>
-			</div>
+			<ErrorStateView
+				message={
+					errorState.error?.message ||
+					"An unexpected error occurred while loading the gallery."
+				}
+				onRetry={() => {
+					setErrorState({ hasError: false });
+					// Clear cache to force refresh
+					cacheRef.current.clear();
+				}}
+			/>
 		);
 	}
 
 	// Don't render anything until client is ready to avoid hydration mismatch
 	if (!isClient) {
-		return (
-			<div className="space-y-8">
-				<div className="/30 p-4">
-					<div className="flex items-center mb-4">
-						<h2 className="zen-kaku-gothic-new text-lg ">Loading...</h2>
-					</div>
-				</div>
-			</div>
-		);
+		return <LoadingView />;
 	}
 
 	return (
 		<div className="space-y-8">
 			{/* Masonry-style Grid Layout */}
-			<section aria-label="Projects Grid">
-				<h2 className="sr-only">Projects Grid</h2>
-				<div
-					className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-					style={{ gridAutoRows: "minmax(200px, auto)" }}
-				>
-					{gridItems.map((item) => (
-						<GridItemComponentV2
-							key={item.id}
-							item={item as EnhancedGridItem}
-							onHover={() => {}}
-						/>
-					))}
-				</div>
-			</section>
+			<GalleryGridSection gridItems={gridItems as EnhancedGridItem[]} />
 
 			{/* Empty State */}
-			{(!filteredItems || filteredItems.length === 0) && (
-				<div className="text-center py-12">
-					<div className="/30 p-8">
-						<Eye className="w-12 h-12  mx-auto mb-4" />
-						<h2 className="zen-kaku-gothic-new text-xl mb-2">
-							No projects found
-						</h2>
-						<p className="noto-sans-jp-light text-sm ">
-							No video & design projects available.
-						</p>
-					</div>
-				</div>
-			)}
+			{(!filteredItems || filteredItems.length === 0) && <EmptyStateView />}
 		</div>
 	);
 }

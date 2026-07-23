@@ -2,42 +2,27 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// Types for media data and embed resolution
-interface MediaData {
-	images: string[];
-	videos: Array<{
-		type: string;
-		url: string;
-		title: string;
-		description?: string;
-		thumbnail?: string;
-	}>;
-	externalLinks: Array<{
-		type: string;
-		url: string;
-		title: string;
-		description?: string;
-	}>;
-}
+import { validateEmbedSyntax } from "./markdown-editor/embed-validator";
+import { resolveEmbedReferences } from "./markdown-editor/embed-resolver";
+import { MarkdownEditorPreview } from "./markdown-editor/MarkdownEditorPreview";
+import { MarkdownEditorStatusBar } from "./markdown-editor/MarkdownEditorStatusBar";
+import { MarkdownEditorTextArea } from "./markdown-editor/MarkdownEditorTextArea";
+import { MarkdownEditorToolbar } from "./markdown-editor/MarkdownEditorToolbar";
+import { renderMarkdownPreview } from "./markdown-editor/markdown-preview";
+import type {
+	EmbedValidationError,
+	EnhancedMarkdownEditorProps,
+	SaveStatus,
+} from "./markdown-editor/types";
+import { ValidationErrorsPanel } from "./markdown-editor/ValidationErrorsPanel";
 
-interface EmbedValidationError {
-	line: number;
-	column: number;
-	type: "INVALID_INDEX" | "MISSING_MEDIA" | "MALFORMED_SYNTAX";
-	message: string;
-	suggestion?: string;
-}
-
-interface EnhancedMarkdownEditorProps {
-	content: string;
-	filePath?: string;
-	onChange: (content: string) => void;
-	onSave?: (content: string, filePath: string) => Promise<void>;
-	preview?: boolean;
-	toolbar?: boolean;
-	mediaData?: MediaData;
-	embedSupport?: boolean;
-}
+// Re-export types so existing imports of `MarkdownEditor` types continue to work.
+export type {
+	EmbedValidationError,
+	EnhancedMarkdownEditorProps,
+	MediaData,
+	SaveStatus,
+} from "./markdown-editor/types";
 
 /**
  * Enhanced MarkdownEditor Component
@@ -57,19 +42,13 @@ export function MarkdownEditor({
 	const [editorContent, setEditorContent] = useState(content);
 	const [isPreviewMode, setIsPreviewMode] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
-	const [saveStatus, setSaveStatus] = useState<
-		"idle" | "saving" | "success" | "error"
-	>("idle");
+	const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
 	const [error, setError] = useState<string | null>(null);
 	const [validationErrors, setValidationErrors] = useState<
 		EmbedValidationError[]
 	>([]);
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const lineMarkers = editorContent.split("\n").map((line, position) => ({
-		id: `${line}-${position + 1}`,
-		number: position + 1,
-	}));
 
 	// Update editor content when prop changes
 	useEffect(() => {
@@ -85,154 +64,6 @@ export function MarkdownEditor({
 		setEditorContent(content);
 	}, [content]);
 
-	// Validate embed syntax
-	const validateEmbedSyntax = useCallback(
-		(content: string): EmbedValidationError[] => {
-			if (!embedSupport || !mediaData) return [];
-
-			const errors: EmbedValidationError[] = [];
-			const lines = content.split("\n");
-
-			// Regex patterns for embed syntax
-			const imagePattern = /!\[image:(\d+)(?:\s+"([^"]*)")?\]/g;
-			const videoPattern = /!\[video:(\d+)(?:\s+"([^"]*)")?\]/g;
-			const linkPattern = /\[link:(\d+)(?:\s+"([^"]*)")?\]/g;
-
-			lines.forEach((line, lineIndex) => {
-				// Validate image embeds
-				let match;
-				while ((match = imagePattern.exec(line)) !== null) {
-					const index = parseInt(match[1], 10);
-					if (index >= mediaData.images.length) {
-						errors.push({
-							line: lineIndex + 1,
-							column: match.index + 1,
-							type: "INVALID_INDEX",
-							message: `Image index ${index} is out of range. Available images: 0-${mediaData.images.length - 1}`,
-							suggestion: `Use an index between 0 and ${mediaData.images.length - 1}`,
-						});
-					}
-				}
-
-				// Validate video embeds
-				while ((match = videoPattern.exec(line)) !== null) {
-					const index = parseInt(match[1], 10);
-					if (index >= mediaData.videos.length) {
-						errors.push({
-							line: lineIndex + 1,
-							column: match.index + 1,
-							type: "INVALID_INDEX",
-							message: `Video index ${index} is out of range. Available videos: 0-${mediaData.videos.length - 1}`,
-							suggestion: `Use an index between 0 and ${mediaData.videos.length - 1}`,
-						});
-					}
-				}
-
-				// Validate link embeds
-				while ((match = linkPattern.exec(line)) !== null) {
-					const index = parseInt(match[1], 10);
-					if (index >= mediaData.externalLinks.length) {
-						errors.push({
-							line: lineIndex + 1,
-							column: match.index + 1,
-							type: "INVALID_INDEX",
-							message: `Link index ${index} is out of range. Available links: 0-${mediaData.externalLinks.length - 1}`,
-							suggestion: `Use an index between 0 and ${mediaData.externalLinks.length - 1}`,
-						});
-					}
-				}
-
-				// Check for malformed syntax
-				const malformedPatterns = [
-					/!\[image:\D/g, // Non-numeric image index
-					/!\[video:\D/g, // Non-numeric video index
-					/\[link:\D/g, // Non-numeric link index
-				];
-
-				malformedPatterns.forEach((pattern) => {
-					while ((match = pattern.exec(line)) !== null) {
-						errors.push({
-							line: lineIndex + 1,
-							column: match.index + 1,
-							type: "MALFORMED_SYNTAX",
-							message: "Embed syntax requires a numeric index",
-							suggestion: "Use format like ![image:0] or [link:1]",
-						});
-					}
-				});
-			});
-
-			return errors;
-		},
-		[embedSupport, mediaData],
-	);
-
-	// Resolve embed references for preview
-	const resolveEmbedReferences = useCallback(
-		(content: string): string => {
-			if (!embedSupport || !mediaData) return content;
-
-			let resolvedContent = content;
-
-			// Resolve image embeds
-			resolvedContent = resolvedContent.replace(
-				/!\[image:(\d+)(?:\s+"([^"]*)")?\]/g,
-				(match, indexStr, altText) => {
-					const index = parseInt(indexStr, 10);
-					if (index < mediaData.images.length) {
-						const imageUrl = mediaData.images[index];
-						const alt = altText || `Image ${index}`;
-						return `![${alt}](${imageUrl})`;
-					}
-					return `**[Invalid image reference: ${match}]**`;
-				},
-			);
-
-			// Resolve video embeds
-			resolvedContent = resolvedContent.replace(
-				/!\[video:(\d+)(?:\s+"([^"]*)")?\]/g,
-				(match, indexStr, title) => {
-					const index = parseInt(indexStr, 10);
-					if (index < mediaData.videos.length) {
-						const video = mediaData.videos[index];
-						const videoTitle = title || video.title || `Video ${index}`;
-
-						// Create video embed based on type
-						if (video.type === "youtube") {
-							const videoId = video.url.match(
-								/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
-							)?.[1];
-							if (videoId) {
-								return `<div class="video-embed"><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" title="${videoTitle}" frameborder="0" allowfullscreen></iframe></div>`;
-							}
-						}
-
-						// Fallback to link
-						return `[${videoTitle}](${video.url})`;
-					}
-					return `**[Invalid video reference: ${match}]**`;
-				},
-			);
-
-			// Resolve link embeds
-			resolvedContent = resolvedContent.replace(
-				/\[link:(\d+)(?:\s+"([^"]*)")?\]/g,
-				(match, indexStr, customText) => {
-					const index = parseInt(indexStr, 10);
-					if (index < mediaData.externalLinks.length) {
-						const link = mediaData.externalLinks[index];
-						const linkText = customText || link.title || `Link ${index}`;
-						return `[${linkText}](${link.url})`;
-					}
-					return `**[Invalid link reference: ${match}]**`;
-				},
-			);
-
-			return resolvedContent;
-		},
-		[embedSupport, mediaData],
-	);
-
 	// Handle content change
 	const handleContentChange = useCallback(
 		(newContent: string) => {
@@ -242,11 +73,12 @@ export function MarkdownEditor({
 
 			// Validate embed syntax if enabled
 			if (embedSupport) {
-				const errors = validateEmbedSyntax(newContent);
-				setValidationErrors(errors);
+				setValidationErrors(
+					validateEmbedSyntax(newContent, embedSupport, mediaData),
+				);
 			}
 		},
-		[onChange, embedSupport, validateEmbedSyntax],
+		[onChange, embedSupport, mediaData],
 	);
 
 	// Handle save operation
@@ -274,36 +106,6 @@ export function MarkdownEditor({
 		}
 	}, [editorContent, filePath, onSave]);
 
-	// Insert markdown syntax at cursor position (currently unused but kept for future use)
-	// const insertMarkdown = useCallback(
-	// (before: string, after: string = "") => {
-	// const textarea = textareaRef.current;
-	// if (!textarea) return;
-
-	// const start = textarea.selectionStart;
-	// const end = textarea.selectionEnd;
-	// const selectedText = editorContent.substring(start, end);
-	// const newContent =
-	// editorContent.substring(0, start) +
-	// before +
-	// selectedText +
-	// after +
-	// editorContent.substring(end);
-
-	// handleContentChange(newContent);
-
-	// // Restore cursor position
-	// setTimeout(() => {
-	// textarea.focus();
-	// const newCursorPos = start + before.length + selectedText.length;
-	// textarea.setSelectionRange(newCursorPos, newCursorPos);
-	// }, 0);
-	// },
-	// [editorContent, handleContentChange],
-	// );
-
-	// Toolbar actions and embed actions removed for simplified interface
-
 	// Handle keyboard shortcuts - simplified to only save
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent) => {
@@ -319,198 +121,50 @@ export function MarkdownEditor({
 		[handleSave],
 	);
 
-	// Render markdown preview
-	const renderPreview = useCallback(() => {
-		// Resolve embed references first if embed support is enabled
-		const contentToRender = embedSupport
-			? resolveEmbedReferences(editorContent)
-			: editorContent;
-
-		// Simple markdown to HTML conversion for preview
-		// In a real implementation, you might want to use a library like marked or remark
-		const lines = contentToRender.split("\n");
-		let html = "";
-
-		for (let i = 0; i < lines.length; i++) {
-			let line = lines[i];
-
-			// Headers
-			if (line.startsWith("### ")) {
-				html += `<h3>${line.substring(4)}</h3>`;
-			} else if (line.startsWith("## ")) {
-				html += `<h2>${line.substring(3)}</h2>`;
-			} else if (line.startsWith("# ")) {
-				html += `<h1>${line.substring(2)}</h1>`;
-			} else if (line.trim() === "") {
-				html += "<br>";
-			} else {
-				// Process inline formatting
-				line = line
-					.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-					.replace(/\*(.*?)\*/g, "<em>$1</em>")
-					.replace(/`(.*?)`/g, "<code>$1</code>")
-					.replace(
-						/!\[([^\]]*)\]\(([^)]+)\)/g,
-						'<img alt="$1" src="$2" style="max-width: 100%; height: auto;" />',
-					)
-					.replace(
-						/\[([^\]]+)\]\(([^)]+)\)/g,
-						'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>',
-					);
-
-				// Handle video embeds and other HTML content
-				if (
-					line.includes('<div class="video-embed">') ||
-					line.includes("<iframe")
-				) {
-					html += line;
-				} else if (line.trim().startsWith("<") && line.trim().endsWith(">")) {
-					// Handle other HTML tags
-					html += line;
-				} else {
-					html += `<p>${line}</p>`;
-				}
-			}
-		}
-
-		return { __html: html };
-	}, [editorContent, embedSupport, resolveEmbedReferences]);
-
-	const buttonStyle =
-		"px-3 py-1 text-sm  rounded hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
-	const activeButtonStyle =
-		"px-3 py-1 text-sm  rounded   focus: focus:ring-offset-2 focus:ring-offset-base";
+	// Resolve embed references for preview
+	const resolvedContent = resolveEmbedReferences(
+		editorContent,
+		embedSupport,
+		mediaData,
+	);
+	const previewHtml = renderMarkdownPreview(resolvedContent);
 
 	return (
 		<div className=" rounded-lg overflow-hidden ">
-			{/* Toolbar */}
-			{toolbar && (
-				<div className="  p-2">
-					<div className="flex flex-wrap gap-1 items-center">
-						{/* Preview toggle */}
-						{preview && (
-							<button
-								type="button"
-								onClick={() => setIsPreviewMode(!isPreviewMode)}
-								className={isPreviewMode ? activeButtonStyle : buttonStyle}
-								title="Toggle Preview"
-							>
-								{isPreviewMode ? "Edit" : "Preview"}
-							</button>
-						)}
+			<MarkdownEditorToolbar
+				preview={preview}
+				toolbar={toolbar}
+				isPreviewMode={isPreviewMode}
+				isSaving={isSaving}
+				saveStatus={saveStatus}
+				canSave={typeof onSave === "function" && Boolean(filePath)}
+				onTogglePreview={() => setIsPreviewMode(!isPreviewMode)}
+				onSave={handleSave}
+			/>
 
-						{/* Save button */}
-						{typeof onSave === "function" && filePath && (
-							<>
-								<div className="w-px h-6 mx-2" />
-								<button
-									type="button"
-									onClick={handleSave}
-									disabled={isSaving}
-									className={`${buttonStyle} ${saveStatus === "success" ? " " : saveStatus === "error" ? " " : ""}`}
-									title="Save File (Ctrl+S)"
-								>
-									{saveStatus === "saving" && "Saving..."}
-									{saveStatus === "success" && "✓ Saved"}
-									{saveStatus === "error" && "✗ Error"}
-									{saveStatus === "idle" && "Save"}
-								</button>
-							</>
-						)}
-					</div>
-				</div>
-			)}
-
-			{/* Validation Errors */}
-			{embedSupport && validationErrors.length > 0 && (
-				<div className="   p-3">
-					<div className="flex items-center gap-2 mb-2">
-						<span className="">⚠</span>
-						<h4 className="font-medium ">Embed Syntax Errors</h4>
-					</div>
-					<div className="space-y-1 text-sm">
-						{validationErrors.map((error) => {
-							const errorKey = `${error.type}-${error.line}-${error.column}-${error.message}`;
-							return (
-								<div key={errorKey} className="">
-									<span className="font-mono text-xs  px-1 rounded">
-										Line {error.line}:{error.column}
-									</span>{" "}
-									{error.message}
-									{error.suggestion && (
-										<div className=" text-xs mt-1 ml-4">
-											💡 {error.suggestion}
-										</div>
-									)}
-								</div>
-							);
-						})}
-					</div>
-				</div>
-			)}
+			{embedSupport && <ValidationErrorsPanel errors={validationErrors} />}
 
 			{/* Editor/Preview Area */}
 			<div className="relative">
 				{isPreviewMode && preview ? (
-					/* Preview Mode */
-					<div className="p-4 min-h-[500px] prose prose-sm max-w-none ">
-						<div dangerouslySetInnerHTML={renderPreview()} />
-					</div>
+					<MarkdownEditorPreview html={previewHtml} />
 				) : (
-					/* Editor Mode */
-					<div className="relative">
-						<textarea
-							ref={textareaRef}
-							value={editorContent}
-							onChange={(e) => handleContentChange(e.target.value)}
-							onKeyDown={handleKeyDown}
-							className="w-full min-h-[500px] p-4 pl-12 font-mono text-sm resize-none leading-5"
-							placeholder="Enter your markdown content here..."
-							spellCheck={false}
-						/>
-
-						{/* Line numbers */}
-						<div className="absolute left-0 top-0 p-4 pr-2  text-sm font-mono pointer-events-none select-none  ">
-							{lineMarkers.map((marker) => (
-								<div key={marker.id} className="leading-5 text-right">
-									{marker.number}
-								</div>
-							))}
-						</div>
-					</div>
+					<MarkdownEditorTextArea
+						textareaRef={textareaRef}
+						value={editorContent}
+						onChange={handleContentChange}
+						onKeyDown={handleKeyDown}
+					/>
 				)}
 			</div>
 
-			{/* Status Bar */}
-			<div className="  px-4 py-2 text-xs  flex justify-between items-center">
-				<div className="flex gap-4">
-					<span>Lines: {editorContent.split("\n").length}</span>
-					<span>Characters: {editorContent.length}</span>
-					<span>
-						Words:{" "}
-						{
-							editorContent.split(/\s+/).filter((word) => word.length > 0)
-								.length
-						}
-					</span>
-					{embedSupport && (
-						<span className={validationErrors.length > 0 ? "" : ""}>
-							Embeds:{" "}
-							{validationErrors.length > 0
-								? `${validationErrors.length} errors`
-								: "Valid"}
-						</span>
-					)}
-				</div>
-
-				<div className="flex gap-4 items-center">
-					{error && <div className=" font-medium">Error: {error}</div>}
-
-					{filePath && (
-						<div className="">File: {filePath.split("/").pop()}</div>
-					)}
-				</div>
-			</div>
+			<MarkdownEditorStatusBar
+				content={editorContent}
+				validationErrorCount={validationErrors.length}
+				embedSupport={embedSupport}
+				error={error}
+				filePath={filePath}
+			/>
 		</div>
 	);
 }

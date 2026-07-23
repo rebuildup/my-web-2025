@@ -7,10 +7,7 @@ export async function fetchMediaList(contentId: string): Promise<MediaItem[]> {
 	});
 }
 
-async function fetchMedia(
-	contentId: string,
-	id: string,
-): Promise<MediaItem> {
+async function fetchMedia(contentId: string, id: string): Promise<MediaItem> {
 	return apiRequest<MediaItem>("/api/cms/media", {
 		query: { contentId, id },
 	});

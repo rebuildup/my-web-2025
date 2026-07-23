@@ -8,6 +8,252 @@ import { ContentList } from "./components/ContentList";
 import { DataManagerForm } from "./components/DataManagerForm";
 import { PreviewPanel } from "./components/PreviewPanel";
 
+type ManagedContentItem = ContentItem | EnhancedContentItem;
+type PreviewMode = "form" | "preview";
+type SaveStatus = "idle" | "saving" | "success" | "error";
+
+const CardStyle =
+	"  block p-4 space-y-4   focus: focus:ring-offset-2 focus:ring-offset-base";
+const Card_title = "neue-haas-grotesk-display text-xl leading-snug";
+const ButtonStyle =
+	" px-4 py-2 text-sm hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
+const ActiveButtonStyle =
+	" px-4 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
+
+function DataManagerHeader() {
+	return (
+		<header className="space-y-6">
+			<h1 className="neue-haas-grotesk-display text-4xl ">Data Manager</h1>
+			<p className="noto-sans-jp-light text-sm max-w-2xl leading-loose">
+				コンテンツデータの作成・編集・管理を行います.
+				<br />
+				動画、画像、埋め込み要素、Markdownファイルなどを統合管理できます.
+			</p>
+		</header>
+	);
+}
+
+interface ContentTypeTabsProps {
+	selectedContentType: ContentType;
+	isLoading: boolean;
+	onSelectContentType: (type: ContentType) => void;
+}
+
+function ContentTypeTabs({
+	selectedContentType,
+	isLoading,
+	onSelectContentType,
+}: ContentTypeTabsProps) {
+	return (
+		<section className="space-y-4">
+			<h2 className={Card_title}>Content Type</h2>
+			<div className="flex flex-wrap gap-2">
+				{(
+					[
+						"portfolio",
+						"blog",
+						"plugin",
+						"download",
+						"tool",
+						"profile",
+					] as ContentType[]
+				).map((type) => (
+					<button type="button"
+						key={type}
+						onClick={() => onSelectContentType(type)}
+						className={
+							selectedContentType === type
+								? ActiveButtonStyle
+								: ButtonStyle
+						}
+						disabled={isLoading}
+					>
+						{type.charAt(0).toUpperCase() + type.slice(1)}
+					</button>
+				))}
+			</div>
+		</section>
+	);
+}
+
+interface DataManagerContentPanelProps {
+	selectedContentType: ContentType;
+	contentItems: ContentItem[];
+	selectedItem: ManagedContentItem | null;
+	isClient: boolean;
+	isLoading: boolean;
+	previewMode: PreviewMode;
+	saveStatus: SaveStatus;
+	onFixThumbnails: () => Promise<void>;
+	onCreateNew: () => void;
+	onEditItem: (item: ManagedContentItem) => void;
+	onDeleteItem: (id: string) => Promise<void>;
+	onPreviewModeChange: (mode: PreviewMode) => void;
+	onSaveItem: (item: ManagedContentItem) => Promise<void>;
+	onCancel: () => void;
+}
+
+function DataManagerContentPanel({
+	selectedContentType,
+	contentItems,
+	selectedItem,
+	isClient,
+	isLoading,
+	previewMode,
+	saveStatus,
+	onFixThumbnails,
+	onCreateNew,
+	onEditItem,
+	onDeleteItem,
+	onPreviewModeChange,
+	onSaveItem,
+	onCancel,
+}: DataManagerContentPanelProps) {
+	return (
+		<div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+			<div className="lg:col-span-2">
+				<div className={CardStyle}>
+					<div className="flex justify-between items-center">
+						<h3 className={Card_title}>
+							{selectedContentType.charAt(0).toUpperCase() +
+								selectedContentType.slice(1)}{" "}
+							Items
+						</h3>
+						<div className="flex gap-2">
+							{selectedContentType === "portfolio" && (
+								<button type="button"
+									onClick={onFixThumbnails}
+									className={ButtonStyle}
+									disabled={isLoading}
+									title="Fix missing thumbnails for portfolio items"
+								>
+									{isClient ? "🔧 サムネイル修復" : "🔧 Fix Thumbnails"}
+								</button>
+							)}
+							<button type="button"
+								onClick={onCreateNew}
+								className={ButtonStyle}
+								disabled={isLoading}
+							>
+								{isClient ? "+ 新規作成" : "+ New"}
+							</button>
+						</div>
+					</div>
+
+					<ContentList
+						items={contentItems}
+						selectedItem={selectedItem}
+						onSelectItem={onEditItem}
+						onDeleteItem={onDeleteItem}
+						isLoading={isLoading}
+					/>
+				</div>
+			</div>
+
+			<div className="lg:col-span-3">
+				{selectedItem ? (
+					<div className="space-y-4">
+						<div className="flex justify-between items-center">
+							<div className="flex gap-2">
+								<button type="button"
+									onClick={() => onPreviewModeChange("form")}
+									className={
+										previewMode === "form"
+											? ActiveButtonStyle
+											: ButtonStyle
+									}
+								>
+									{isClient ? "編集フォーム" : "Edit Form"}
+								</button>
+								<button type="button"
+									onClick={() => onPreviewModeChange("preview")}
+									className={
+										previewMode === "preview"
+											? ActiveButtonStyle
+											: ButtonStyle
+									}
+								>
+									{isClient ? "プレビュー" : "Preview"}
+								</button>
+							</div>
+
+							{saveStatus !== "idle" && (
+								<div className="flex items-center gap-2">
+									{saveStatus === "saving" && (
+										<span className=" text-sm">
+											{isClient ? "保存中..." : "Saving..."}
+										</span>
+									)}
+									{saveStatus === "success" && (
+										<span className=" text-sm">
+											{isClient ? "✓ 保存完了" : "✓ Saved"}
+										</span>
+									)}
+									{saveStatus === "error" && (
+										<span className=" text-sm">
+											{isClient ? "✗ エラー" : "✗ Error"}
+										</span>
+									)}
+								</div>
+							)}
+						</div>
+
+						<div className={CardStyle}>
+							{previewMode === "form" ? (
+								<DataManagerForm
+									item={selectedItem}
+									onSave={onSaveItem}
+									onCancel={onCancel}
+									isLoading={isLoading}
+									saveStatus={saveStatus}
+									enhanced={true}
+								/>
+							) : (
+								<PreviewPanel
+									item={selectedItem}
+									onEdit={() => onPreviewModeChange("form")}
+								/>
+							)}
+						</div>
+					</div>
+				) : (
+					<div className={CardStyle}>
+						<div className="text-center py-12">
+							<p className="noto-sans-jp-light text-sm ">
+								{isClient
+									? "編集するアイテムを選択するか、新しいアイテムを作成してください"
+									: "Select an item to edit or create a new one"}
+							</p>
+						</div>
+					</div>
+				)}
+			</div>
+		</div>
+	);
+}
+
+interface DataManagerFooterProps {
+	isLoading: boolean;
+	isClient: boolean;
+}
+
+function DataManagerFooter({
+	isLoading,
+	isClient,
+}: DataManagerFooterProps) {
+	if (!isLoading) return null;
+
+	return (
+		<div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
+			<div className="  p-6 rounded">
+				<p className="noto-sans-jp-regular text-sm">
+					{isClient ? "処理中..." : "Processing..."}
+				</p>
+			</div>
+		</div>
+	);
+}
+
 export default function DataManagerPage() {
 	const router = useRouter();
 	const [isClient, setIsClient] = useState(false);
@@ -306,200 +552,39 @@ export default function DataManagerPage() {
 		setIsLoading(false);
 	};
 
-	// Design system classes matching root page
-	const CardStyle =
-		"  block p-4 space-y-4   focus: focus:ring-offset-2 focus:ring-offset-base";
-	const Card_title =
-		"neue-haas-grotesk-display text-xl leading-snug";
-
-	const ButtonStyle =
-		" px-4 py-2 text-sm hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
-	const ActiveButtonStyle =
-		" px-4 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
-
 	return (
 		<div className="min-h-dvh ">
 			<main className="py-10">
 				<div className="container-system">
 					<div className="space-y-8">
 						{/* Header */}
-						<header className="space-y-6">
-							<h1 className="neue-haas-grotesk-display text-4xl ">
-								Data Manager
-							</h1>
-							<p className="noto-sans-jp-light text-sm max-w-2xl leading-loose">
-								コンテンツデータの作成・編集・管理を行います.
-								<br />
-								動画、画像、埋め込み要素、Markdownファイルなどを統合管理できます.
-							</p>
-						</header>
+						<DataManagerHeader />
 
 						{/* Content Type Selector */}
-						<section className="space-y-4">
-							<h2 className={Card_title}>Content Type</h2>
-							<div className="flex flex-wrap gap-2">
-								{(
-									[
-										"portfolio",
-										"blog",
-										"plugin",
-										"download",
-										"tool",
-										"profile",
-									] as ContentType[]
-								).map((type) => (
-									<button type="button"
-										key={type}
-										onClick={() => setSelectedContentType(type)}
-										className={
-											selectedContentType === type
-												? ActiveButtonStyle
-												: ButtonStyle
-										}
-										disabled={isLoading}
-									>
-										{type.charAt(0).toUpperCase() + type.slice(1)}
-									</button>
-								))}
-							</div>
-						</section>
+						<ContentTypeTabs
+							selectedContentType={selectedContentType}
+							isLoading={isLoading}
+							onSelectContentType={setSelectedContentType}
+						/>
 
-						{/* Main Content Area */}
-						<div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-							{/* Content List */}
-							<div className="lg:col-span-2">
-								<div className={CardStyle}>
-									<div className="flex justify-between items-center">
-										<h3 className={Card_title}>
-											{selectedContentType.charAt(0).toUpperCase() +
-												selectedContentType.slice(1)}{" "}
-											Items
-										</h3>
-										<div className="flex gap-2">
-											{selectedContentType === "portfolio" && (
-												<button type="button"
-													onClick={handleFixThumbnails}
-													className={ButtonStyle}
-													disabled={isLoading}
-													title="Fix missing thumbnails for portfolio items"
-												>
-													{isClient ? "🔧 サムネイル修復" : "🔧 Fix Thumbnails"}
-												</button>
-											)}
-											<button type="button"
-												onClick={handleCreateNew}
-												className={ButtonStyle}
-												disabled={isLoading}
-											>
-												{isClient ? "+ 新規作成" : "+ New"}
-											</button>
-										</div>
-									</div>
+						<DataManagerContentPanel
+							selectedContentType={selectedContentType}
+							contentItems={contentItems}
+							selectedItem={selectedItem}
+							isClient={isClient}
+							isLoading={isLoading}
+							previewMode={previewMode}
+							saveStatus={saveStatus}
+							onFixThumbnails={handleFixThumbnails}
+							onCreateNew={handleCreateNew}
+							onEditItem={handleEditItem}
+							onDeleteItem={handleDeleteItem}
+							onPreviewModeChange={setPreviewMode}
+							onSaveItem={handleSaveItem}
+							onCancel={handleCancel}
+						/>
 
-									<ContentList
-										items={contentItems}
-										selectedItem={selectedItem}
-										onSelectItem={handleEditItem}
-										onDeleteItem={handleDeleteItem}
-										isLoading={isLoading}
-									/>
-								</div>
-							</div>
-
-							{/* Form/Preview Area */}
-							<div className="lg:col-span-3">
-								{selectedItem ? (
-									<div className="space-y-4">
-										{/* Form/Preview Toggle and Status */}
-										<div className="flex justify-between items-center">
-											<div className="flex gap-2">
-												<button type="button"
-													onClick={() => setPreviewMode("form")}
-													className={
-														previewMode === "form"
-															? ActiveButtonStyle
-															: ButtonStyle
-													}
-												>
-													{isClient ? "編集フォーム" : "Edit Form"}
-												</button>
-												<button type="button"
-													onClick={() => setPreviewMode("preview")}
-													className={
-														previewMode === "preview"
-															? ActiveButtonStyle
-															: ButtonStyle
-													}
-												>
-													{isClient ? "プレビュー" : "Preview"}
-												</button>
-											</div>
-
-											{/* Save Status */}
-											{saveStatus !== "idle" && (
-												<div className="flex items-center gap-2">
-													{saveStatus === "saving" && (
-														<span className=" text-sm">
-															{isClient ? "保存中..." : "Saving..."}
-														</span>
-													)}
-													{saveStatus === "success" && (
-														<span className=" text-sm">
-															{isClient ? "✓ 保存完了" : "✓ Saved"}
-														</span>
-													)}
-													{saveStatus === "error" && (
-														<span className=" text-sm">
-															{isClient ? "✗ エラー" : "✗ Error"}
-														</span>
-													)}
-												</div>
-											)}
-										</div>
-
-										{/* Content */}
-										<div className={CardStyle}>
-											{previewMode === "form" ? (
-												<DataManagerForm
-													item={selectedItem}
-													onSave={handleSaveItem}
-													onCancel={handleCancel}
-													isLoading={isLoading}
-													saveStatus={saveStatus}
-													enhanced={true} // Enable enhanced features
-												/>
-											) : (
-												<PreviewPanel
-													item={selectedItem}
-													onEdit={() => setPreviewMode("form")}
-												/>
-											)}
-										</div>
-									</div>
-								) : (
-									<div className={CardStyle}>
-										<div className="text-center py-12">
-											<p className="noto-sans-jp-light text-sm ">
-												{isClient
-													? "編集するアイテムを選択するか、新しいアイテムを作成してください"
-													: "Select an item to edit or create a new one"}
-											</p>
-										</div>
-									</div>
-								)}
-							</div>
-						</div>
-
-						{/* Loading Overlay */}
-						{isLoading && (
-							<div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
-								<div className="  p-6 rounded">
-									<p className="noto-sans-jp-regular text-sm">
-										{isClient ? "処理中..." : "Processing..."}
-									</p>
-								</div>
-							</div>
-						)}
+						<DataManagerFooter isLoading={isLoading} isClient={isClient} />
 					</div>
 				</div>
 			</main>

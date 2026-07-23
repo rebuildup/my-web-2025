@@ -83,6 +83,188 @@ function CategoryCard({
 	);
 }
 
+type PortfolioCategory = {
+	key: string;
+	href: string;
+	title: string;
+	description: string;
+	count: number;
+	icon: React.ComponentType<{ className?: string }>;
+};
+
+function PortfolioHero() {
+	return (
+		<>
+			<Breadcrumbs
+				items={[
+					{ label: "Home", href: "/" },
+					{ label: "Portfolio", isCurrent: true },
+				]}
+				className="pt-4"
+			/>
+			<header className="space-y-8">
+				<div className="space-y-4">
+					<h1 className="neue-haas-grotesk-display text-6xl ">Portfolio</h1>
+					<p className="noto-sans-jp-light text-sm max-w-2xl leading-loose">
+						これまでに制作した作品/プロジェクトをまとめたポートフォリオページです.
+					</p>
+				</div>
+			</header>
+		</>
+	);
+}
+
+function GallerySection({ categories }: { categories: PortfolioCategory[] }) {
+	return (
+		<section className="space-y-6">
+			<h2 className="neue-haas-grotesk-display text-3xl ">Gallery</h2>
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+				{categories.map((category) => (
+					<CategoryCard
+						key={category.key}
+						href={category.href}
+						title={category.title}
+						description={category.description}
+						count={category.count}
+						icon={category.icon}
+					/>
+				))}
+			</div>
+		</section>
+	);
+}
+
+function TagGallerySection({
+	title,
+	items,
+}: {
+	title: string;
+	items: PortfolioContentItem[];
+}) {
+	return (
+		<section className="space-y-6">
+			<h2 className="neue-haas-grotesk-display text-3xl ">{title}</h2>
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{items.map((item) => (
+					<PortfolioCard
+						key={item.id}
+						item={item}
+						href={`/portfolio/${item.id}`}
+						target="_blank"
+						showMarkdownIndicator={true}
+						variant="glow"
+					/>
+				))}
+			</div>
+		</section>
+	);
+}
+
+function PortfolioFooter() {
+	return (
+		<footer className="fixed bottom-2 left-0 right-0 z-10 flex items-center justify-center gap-4 py-3 ">
+			<span className="text-xs ">© 2025 361do_sleep</span>
+			<Link
+				href="/privacy-policy"
+				className="text-xs transition underline underline-offset-4 "
+			>
+				Privacy Policy
+			</Link>
+		</footer>
+	);
+}
+
+function PortfolioError() {
+	return (
+		<div className="min-h-dvh relative">
+			<AboutBackgroundCSS />
+			<main
+				id="main-content"
+				className="relative z-10 flex min-h-dvh items-center justify-center"
+				tabIndex={-1}
+			>
+				<div className="container mx-auto px-4">
+					<div className="max-w-3xl mx-auto text-center">
+						<h1 className="text-4xl sm:text-4xl font-bold italic tracking-tight ">
+							Error
+						</h1>
+						<p className="mt-4 text-xs sm:text-xs ">
+							ポートフォリオデータの読み込みに失敗しました.
+						</p>
+						<div className="mt-8">
+							<Link
+								href="/"
+								className="text-xs sm:text-sm hover: transition-colors underline underline-offset-4"
+							>
+								ホームに戻る
+							</Link>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+	);
+}
+
+function getPortfolioMetrics(items: PortfolioContentItem[]) {
+	const categoryCounts: Record<string, number> = {};
+	const getItemCategories = (item: PortfolioContentItem): string[] => {
+		const enhancedCategories = (item as { categories?: string[] }).categories;
+		if (Array.isArray(enhancedCategories) && enhancedCategories.length > 0) {
+			return enhancedCategories
+				.filter((category): category is string => typeof category === "string")
+				.map((category) => category.toLowerCase());
+		}
+		return item.category ? [item.category.toLowerCase()] : [];
+	};
+	const incrementCategory = (category: string) => {
+		categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+	};
+	const videoDesignEligibleIds = new Set<string>();
+
+	items.forEach((item) => {
+		const categories = getItemCategories(item);
+		if (categories.length === 0) return;
+
+		categories.forEach((category) => incrementCategory(category));
+		const normalizedTags = Array.isArray(item.tags)
+			? item.tags
+					.filter((tag): tag is string => typeof tag === "string")
+					.map((tag) => tag.toLowerCase())
+			: [];
+		const matchesVideoDesign =
+			categories.some((category) =>
+				["video", "design", "video&design"].includes(category),
+			) ||
+			normalizedTags.some((tag) =>
+				["video", "design", "video&design"].includes(tag),
+			);
+		if (matchesVideoDesign) videoDesignEligibleIds.add(item.id);
+	});
+
+	categoryCounts["video&design"] = videoDesignEligibleIds.size;
+	["develop", "video", "design", "video&design"].forEach((key) => {
+		if (typeof categoryCounts[key] !== "number") categoryCounts[key] = 0;
+	});
+
+	const now = Date.now();
+	const msDay = 24 * 60 * 60 * 1000;
+	const withinDays = (item: PortfolioContentItem, days: number) => {
+		const dateString = getPortfolioDisplayDate(item) || item.createdAt;
+		if (!dateString) return false;
+		const time = new Date(dateString).getTime();
+		if (Number.isNaN(time)) return false;
+		return now - time <= days * msDay;
+	};
+
+	return {
+		categoryCounts,
+		count7d: items.filter((item) => withinDays(item, 7)).length,
+		count30d: items.filter((item) => withinDays(item, 30)).length,
+		count365d: items.filter((item) => withinDays(item, 365)).length,
+	};
+}
+
 /**
  * Portfolio top page component
  */
@@ -239,76 +421,8 @@ export default async function PortfolioPage() {
 			// Continue without structured data
 		}
 
-		// Calculate category counts (supports multi-category items + video&design union)
-		const categoryCounts: Record<string, number> = {};
-		const getItemCategories = (item: PortfolioContentItem): string[] => {
-			const enhancedCategories = (
-				item as {
-					categories?: string[];
-				}
-			).categories;
-			if (Array.isArray(enhancedCategories) && enhancedCategories.length > 0) {
-				return enhancedCategories
-					.filter(
-						(category): category is string => typeof category === "string",
-					)
-					.map((category) => category.toLowerCase());
-			}
-			return item.category ? [item.category.toLowerCase()] : [];
-		};
-		const incrementCategory = (category: string) => {
-			categoryCounts[category] = (categoryCounts[category] || 0) + 1;
-		};
-		const videoDesignEligibleIds = new Set<string>();
-
-		items.forEach((item) => {
-			const categories = getItemCategories(item);
-			if (categories.length === 0) {
-				return;
-			}
-
-			categories.forEach((category) => incrementCategory(category));
-
-			const normalizedTags = Array.isArray(item.tags)
-				? item.tags
-						.filter((tag): tag is string => typeof tag === "string")
-						.map((tag) => tag.toLowerCase())
-				: [];
-			const matchesVideoDesign =
-				categories.some((category) =>
-					["video", "design", "video&design"].includes(category),
-				) ||
-				normalizedTags.some((tag) =>
-					["video", "design", "video&design"].includes(tag),
-				);
-			if (matchesVideoDesign) {
-				videoDesignEligibleIds.add(item.id);
-			}
-		});
-
-		categoryCounts["video&design"] = videoDesignEligibleIds.size;
-		["develop", "video", "design", "video&design"].forEach((key) => {
-			if (typeof categoryCounts[key] !== "number") {
-				categoryCounts[key] = 0;
-			}
-		});
-
-		// Time window counts
-		const now = Date.now();
-		const msDay = 24 * 60 * 60 * 1000;
-		const getEffectiveDateString = (item: PortfolioContentItem) => {
-			return getPortfolioDisplayDate(item) || item.createdAt;
-		};
-		const withinDays = (item: PortfolioContentItem, days: number) => {
-			const dateString = getEffectiveDateString(item);
-			if (!dateString) return false;
-			const t = new Date(dateString).getTime();
-			if (Number.isNaN(t)) return false;
-			return now - t <= days * msDay;
-		};
-		const count7d = items.filter((it) => withinDays(it, 7)).length;
-		const count30d = items.filter((it) => withinDays(it, 30)).length;
-		const count365d = items.filter((it) => withinDays(it, 365)).length;
+		const { categoryCounts, count7d, count30d, count365d } =
+			getPortfolioMetrics(items);
 
 		// Category information
 		const categories = [
@@ -373,26 +487,7 @@ export default async function PortfolioPage() {
 					>
 						<div className="container-system">
 							<div className="space-y-16 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-								{/* Breadcrumbs */}
-								<Breadcrumbs
-									items={[
-										{ label: "Home", href: "/" },
-										{ label: "Portfolio", isCurrent: true },
-									]}
-									className="pt-4"
-								/>
-
-								{/* Hero Header */}
-								<header className="space-y-8">
-									<div className="space-y-4">
-										<h1 className="neue-haas-grotesk-display text-6xl ">
-											Portfolio
-										</h1>
-										<p className="noto-sans-jp-light text-sm max-w-2xl leading-loose">
-											これまでに制作した作品/プロジェクトをまとめたポートフォリオページです.
-										</p>
-									</div>
-								</header>
+								<PortfolioHero />
 
 								{/* Overview (combined stats + highlights) */}
 								<StatsOverview
@@ -413,148 +508,56 @@ export default async function PortfolioPage() {
 									}))}
 								/>
 
-								{/* Gallery Cards */}
-								<section className="space-y-6">
-									<h2 className="neue-haas-grotesk-display text-3xl ">
-										Gallery
-									</h2>
-									<div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-										{categories.map((category) => (
-											<CategoryCard
-												key={category.key}
-												href={category.href}
-												title={category.title}
-												description={category.description}
-												count={category.count}
-												icon={category.icon}
-											/>
-										))}
-									</div>
-								</section>
+								<GallerySection categories={categories} />
 
 								{/* Highlights are integrated into Overview */}
 
 								{/* Latest Works */}
 								<LatestWorksSection items={items} />
 
-								{/* Tag galleries */}
-								<section className="space-y-6">
-									<h2 className="neue-haas-grotesk-display text-3xl ">
-										Develop
-									</h2>
-									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-										{topN(
-											items.filter(
-												(it) =>
-													Array.isArray(it.tags) && it.tags.includes("develop"),
-											),
-											3,
-										).map((item) => (
-											<PortfolioCard
-												key={item.id}
-												item={item}
-												href={`/portfolio/${item.id}`}
-												target="_blank"
-												showMarkdownIndicator={true}
-												variant="glow"
-											/>
-										))}
-									</div>
-								</section>
+								<TagGallerySection
+									title="Develop"
+									items={topN(
+										items.filter(
+											(it) =>
+												Array.isArray(it.tags) && it.tags.includes("develop"),
+										),
+										3,
+									)}
+								/>
 
-								<section className="space-y-6">
-									<h2 className="neue-haas-grotesk-display text-3xl ">Video</h2>
-									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-										{topN(
-											items.filter(
-												(it) =>
-													Array.isArray(it.tags) && it.tags.includes("video"),
-											),
-											3,
-										).map((item) => (
-											<PortfolioCard
-												key={item.id}
-												item={item}
-												href={`/portfolio/${item.id}`}
-												target="_blank"
-												showMarkdownIndicator={true}
-												variant="glow"
-											/>
-										))}
-									</div>
-								</section>
+								<TagGallerySection
+									title="Video"
+									items={topN(
+										items.filter(
+											(it) =>
+												Array.isArray(it.tags) && it.tags.includes("video"),
+										),
+										3,
+									)}
+								/>
 
-								<section className="space-y-6">
-									<h2 className="neue-haas-grotesk-display text-3xl ">
-										Design
-									</h2>
-									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-										{topN(
-											items.filter(
-												(it) =>
-													Array.isArray(it.tags) && it.tags.includes("design"),
-											),
-											3,
-										).map((item) => (
-											<PortfolioCard
-												key={item.id}
-												item={item}
-												href={`/portfolio/${item.id}`}
-												target="_blank"
-												showMarkdownIndicator={true}
-												variant="glow"
-											/>
-										))}
-									</div>
-								</section>
+								<TagGallerySection
+									title="Design"
+									items={topN(
+										items.filter(
+											(it) =>
+												Array.isArray(it.tags) && it.tags.includes("design"),
+										),
+										3,
+									)}
+								/>
 							</div>
 						</div>
 					</main>
 
-					<footer className="fixed bottom-2 left-0 right-0 z-10 flex items-center justify-center gap-4 py-3 ">
-						<span className="text-xs ">© 2025 361do_sleep</span>
-						<Link
-							href="/privacy-policy"
-							className="text-xs transition underline underline-offset-4 "
-						>
-							Privacy Policy
-						</Link>
-					</footer>
+					<PortfolioFooter />
 				</div>
 			</>
 		);
 	} catch (error) {
 		console.error("Error in PortfolioPage:", error);
 
-		return (
-			<div className="min-h-dvh relative">
-				<AboutBackgroundCSS />
-
-				<main
-					id="main-content"
-					className="relative z-10 flex min-h-dvh items-center justify-center"
-					tabIndex={-1}
-				>
-					<div className="container mx-auto px-4">
-						<div className="max-w-3xl mx-auto text-center">
-							<h1 className="text-4xl sm:text-4xl font-bold italic tracking-tight ">
-								Error
-							</h1>
-							<p className="mt-4 text-xs sm:text-xs ">
-								ポートフォリオデータの読み込みに失敗しました.
-							</p>
-							<div className="mt-8">
-								<Link
-									href="/"
-									className="text-xs sm:text-sm hover: transition-colors underline underline-offset-4"
-								>
-									ホームに戻る
-								</Link>
-							</div>
-						</div>
-					</div>
-				</main>
-			</div>
-		);
+		return <PortfolioError />;
 	}
 }

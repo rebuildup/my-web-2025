@@ -42,6 +42,127 @@ interface ToastMessage {
  text: string;
 }
 
+interface EditorSidebarProps {
+ selectedContentId: string;
+ onSelectContent: (contentId: string) => void;
+ pages: MarkdownPage[];
+ selectedPage: MarkdownPage | null;
+ pagesLoading: boolean;
+ onSelectPage: (page: MarkdownPage) => void;
+ onEditMeta: (page: MarkdownPage) => void;
+ onCreatePage: () => void;
+ media: MediaItem[];
+ mediaLoading: boolean;
+ onRefreshMedia: () => void;
+ onDeletePage: (page: MarkdownPage) => void;
+}
+
+function EditorSidebar({
+ selectedContentId,
+ onSelectContent,
+ pages,
+ selectedPage,
+ pagesLoading,
+ onSelectPage,
+ onEditMeta,
+ onCreatePage,
+ media,
+ mediaLoading,
+ onRefreshMedia,
+ onDeletePage,
+}: EditorSidebarProps) {
+ return (
+ <Sidebar title="Content">
+ <ContentSelector
+ selectedContentId={selectedContentId}
+ onSelect={onSelectContent}
+ />
+ <ArticleList
+ articles={pages}
+ selectedId={selectedPage?.id}
+ isLoading={pagesLoading}
+ onSelect={onSelectPage}
+ onEditMeta={onEditMeta}
+ onCreate={onCreatePage}
+ />
+ <MediaManager
+ contentId={selectedContentId}
+ media={media}
+ isLoading={mediaLoading}
+ onRefresh={onRefreshMedia}
+ />
+ {selectedPage && (
+ <Button
+ variant="outlined"
+ color="error"
+ onClick={() => onDeletePage(selectedPage)}
+ >
+ Delete page
+ </Button>
+ )}
+ </Sidebar>
+ );
+}
+
+interface EditorCanvasProps {
+ editorId: string;
+ blocks: Block[];
+ applyBlocks: (updater: (blocks: Block[]) => Block[]) => void;
+ onSelectBlock: (blockId: string | null) => void;
+ contentId: string;
+}
+
+function EditorCanvas({
+ editorId,
+ blocks,
+ applyBlocks,
+ onSelectBlock,
+ contentId,
+}: EditorCanvasProps) {
+ return (
+ <BlockEditor
+ editorId={editorId}
+ blocks={blocks}
+ applyBlocks={applyBlocks}
+ readOnly={false}
+ onSelectBlock={onSelectBlock}
+ contentId={contentId}
+ />
+ );
+}
+
+interface EditorToolbarProps {
+ onSave: () => void;
+ isSaving: boolean;
+ lastSaved: Date | null;
+ hasUnsavedChanges: boolean;
+ toast: ToastMessage | null;
+}
+
+function EditorToolbar({
+ onSave,
+ isSaving,
+ lastSaved,
+ hasUnsavedChanges,
+ toast,
+}: EditorToolbarProps) {
+ return (
+ <Stack spacing={2}>
+ <BlockToolbar
+ onSave={onSave}
+ isSaving={isSaving}
+ lastSaved={lastSaved}
+ hasUnsavedChanges={hasUnsavedChanges}
+ />
+ {toast && (
+ <Alert severity={toast.type} variant="outlined">
+ {toast.text}
+ </Alert>
+ )}
+ </Stack>
+ );
+}
+
 export default function PageEditorHome() {
  const [selectedContentId, setSelectedContentId] = useState("");
  const [pages, setPages] = useState<MarkdownPage[]>([]);
@@ -352,68 +473,46 @@ export default function PageEditorHome() {
  return (
  <EditorLayout
  sidebar={
- <Sidebar title="Content">
- <ContentSelector
+ <EditorSidebar
  selectedContentId={selectedContentId}
- onSelect={(value) => {
+ onSelectContent={(value) => {
  setSelectedContentId(value);
  resetEditor();
  }}
- />
- <ArticleList
- articles={pages}
- selectedId={page?.id}
- isLoading={pagesLoading}
- onSelect={handleSelectPage}
+ pages={pages}
+ selectedPage={page}
+ pagesLoading={pagesLoading}
+ onSelectPage={handleSelectPage}
  onEditMeta={handleEditMeta}
- onCreate={handleCreatePage}
- />
- <MediaManager
- contentId={selectedContentId}
+ onCreatePage={handleCreatePage}
  media={media}
- isLoading={mediaLoading}
- onRefresh={() => {
+ mediaLoading={mediaLoading}
+ onRefreshMedia={() => {
  if (selectedContentId) {
  void loadMedia(selectedContentId);
  }
  }}
+ onDeletePage={handleDeletePage}
  />
- {page && (
- <Button
- variant="outlined"
- color="error"
- onClick={() => handleDeletePage(page)}
- >
- Delete page
- </Button>
- )}
- </Sidebar>
  }
  editor={
- <BlockEditor
+ <EditorCanvas
  editorId={editorId}
  blocks={blocks}
  applyBlocks={applyBlocks}
- readOnly={false}
  onSelectBlock={setActiveBlockId}
  contentId={selectedContentId}
  />
  }
  rightPanel={<BlockLibrary onInsertBlock={handleInsertBlock} />}
  toolbar={
- <Stack spacing={2}>
- <BlockToolbar
+ <EditorToolbar
  onSave={handleManualSave}
  isSaving={toolbarState.isSaving}
  lastSaved={toolbarState.lastSaved}
  hasUnsavedChanges={toolbarState.hasUnsavedChanges}
+ toast={toast}
  />
- {toast && (
- <Alert severity={toast.type} variant="outlined">
- {toast.text}
- </Alert>
- )}
- </Stack>
  }
  />
  );

@@ -2,7 +2,13 @@
 
 import { Calculator, Copy, RefreshCw } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import {
+	useCallback,
+	useEffect,
+	useState,
+	type Dispatch,
+	type SetStateAction,
+} from "react";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 interface EstimateForm {
@@ -75,6 +81,352 @@ const DEADLINES = [
 	{ value: "2months", label: "2ヶ月", multiplier: 0.9 },
 	{ value: "flexible", label: "その他", multiplier: 1.0 },
 ];
+
+function PageHeader() {
+	return (
+		<>
+			<Breadcrumbs
+				items={[
+					{ label: "Home", href: "/" },
+					{ label: "About", href: "/about" },
+					{ label: "Commission", href: "/about/commission" },
+					{ label: "Estimate", isCurrent: true },
+				]}
+				className="pt-4"
+			/>
+
+			<header className="space-y-12">
+				<h1 className="neue-haas-grotesk-display text-6xl ">
+					映像制作見積もり計算機
+				</h1>
+				<p className="noto-sans-jp-light text-sm max-w leading-loose">
+					映像制作の見積もりを自動計算します.
+					<br />
+					料金の目安を事前に確認できます.
+				</p>
+			</header>
+		</>
+	);
+}
+
+interface EstimateFormSectionProps {
+	form: EstimateForm;
+	setForm: Dispatch<SetStateAction<EstimateForm>>;
+	onEditingChange: (value: string, checked: boolean) => void;
+	onReset: () => void;
+}
+
+function EstimateFormSection({
+	form,
+	setForm,
+	onEditingChange,
+	onReset,
+}: EstimateFormSectionProps) {
+	return (
+		<div className="space-y-6">
+			<div className="  p-4">
+				<div className="flex items-center justify-between mb-4">
+					<h2 className="neue-haas-grotesk-display text-3xl ">
+						見積もりフォーム
+					</h2>
+					<button
+						type="button"
+						onClick={onReset}
+						className="flex items-center px-2 py-1 text-sm noto-sans-jp-light"
+					>
+						<RefreshCw className="w-4 h-4 mr-1" />
+						リセット
+					</button>
+				</div>
+
+				{/* Video Type */}
+				<div className="mb-6">
+					<label
+						htmlFor="videoType"
+						className="block zen-kaku-gothic-new text-lg mb-2"
+					>
+						映像の種類 *
+					</label>
+					<select
+						id="videoType"
+						value={form.videoType}
+						onChange={(e) =>
+							setForm((prev) => ({
+								...prev,
+								videoType: e.target.value,
+							}))
+						}
+						className="w-full p-3 noto-sans-jp-light text-sm"
+						required
+					>
+						<option value="">選択してください</option>
+						{VIDEO_TYPES.map((type) => (
+							<option key={type.value} value={type.value}>
+								{type.label} (基本料金: ¥{type.basePrice.toLocaleString()})
+							</option>
+						))}
+					</select>
+				</div>
+
+				{/* Duration */}
+				<div className="mb-6">
+					<label
+						htmlFor="duration"
+						className="block zen-kaku-gothic-new text-lg mb-2"
+					>
+						映像の長さ *
+					</label>
+					<select
+						id="duration"
+						value={form.duration}
+						onChange={(e) =>
+							setForm((prev) => ({
+								...prev,
+								duration: e.target.value,
+							}))
+						}
+						className="w-full p-3 noto-sans-jp-light text-sm"
+						required
+					>
+						<option value="">選択してください</option>
+						{DURATIONS.map((duration) => (
+							<option key={duration.value} value={duration.value}>
+								{duration.label}
+							</option>
+						))}
+					</select>
+				</div>
+
+				{/* Quality */}
+				<div className="mb-6">
+					<p className="block zen-kaku-gothic-new text-lg mb-2">品質レベル</p>
+					<div className="space-y-2">
+						{QUALITY_LEVELS.map((quality) => (
+							<label key={quality.value} className="flex items-center">
+								<input
+									type="radio"
+									name="quality"
+									value={quality.value}
+									checked={form.quality === quality.value}
+									onChange={(e) =>
+										setForm((prev) => ({
+											...prev,
+											quality: e.target.value,
+										}))
+									}
+									className="mr-2"
+								/>
+								<span className="noto-sans-jp-light text-sm ">
+									{quality.label} (×{quality.multiplier})
+								</span>
+							</label>
+						))}
+					</div>
+				</div>
+
+				{/* Editing */}
+				<div className="mb-6">
+					<p className="block zen-kaku-gothic-new text-lg mb-2">編集内容</p>
+					<div className="space-y-2">
+						{EDITING_OPTIONS.map((editing) => (
+							<label key={editing.value} className="flex items-center">
+								<input
+									type="checkbox"
+									checked={form.editing.includes(editing.value)}
+									onChange={(e) =>
+										onEditingChange(editing.value, e.target.checked)
+									}
+									disabled={editing.value === "basic"}
+									className="mr-2"
+								/>
+								<span className="noto-sans-jp-light text-sm ">
+									{editing.label}
+									{editing.price > 0 &&
+										` (+¥${editing.price.toLocaleString()})`}
+								</span>
+							</label>
+						))}
+					</div>
+				</div>
+
+				{/* Deadline */}
+				<div className="mb-6">
+					<label
+						htmlFor="deadline"
+						className="block zen-kaku-gothic-new text-lg mb-2"
+					>
+						納期
+					</label>
+					<select
+						id="deadline"
+						value={form.deadline}
+						onChange={(e) =>
+							setForm((prev) => ({
+								...prev,
+								deadline: e.target.value,
+							}))
+						}
+						className="w-full p-3 noto-sans-jp-light text-sm"
+					>
+						{DEADLINES.map((deadline) => (
+							<option key={deadline.value} value={deadline.value}>
+								{deadline.label}{" "}
+								{deadline.multiplier !== 1.0 && `(×${deadline.multiplier})`}
+							</option>
+						))}
+					</select>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+interface EstimateResultProps {
+	result: PricingResult;
+	onCopy: () => void;
+}
+
+function EstimateResult({ result, onCopy }: EstimateResultProps) {
+	return (
+		<div className="  p-4">
+			<div className="flex items-center justify-between mb-4">
+				<h2 className="neue-haas-grotesk-display text-3xl ">見積もり結果</h2>
+				<Calculator className="w-6 h-6 " />
+			</div>
+
+			{/* Total */}
+			<div className="   p-4 mb-4">
+				<div className="text-center">
+					<p className="noto-sans-jp-light text-sm mb-1">合計金額</p>
+					<p className="neue-haas-grotesk-display text-4xl ">
+						¥{result.total.toLocaleString()}
+					</p>
+				</div>
+			</div>
+
+			{/* Breakdown */}
+			<div className="space-y-3 mb-6">
+				<h3 className="zen-kaku-gothic-new text-lg ">料金内訳</h3>
+
+				<div className="flex justify-between">
+					<span className="noto-sans-jp-light text-sm ">基本料金</span>
+					<span className="noto-sans-jp-light text-sm ">
+						¥{result.breakdown.base.toLocaleString()}
+					</span>
+				</div>
+
+				{result.breakdown.quality > 0 && (
+					<div className="flex justify-between">
+						<span className="noto-sans-jp-light text-sm ">品質料金</span>
+						<span className="noto-sans-jp-light text-sm ">
+							¥{result.breakdown.quality.toLocaleString()}
+						</span>
+					</div>
+				)}
+
+				{result.breakdown.editing > 0 && (
+					<div className="flex justify-between">
+						<span className="noto-sans-jp-light text-sm ">編集料金</span>
+						<span className="noto-sans-jp-light text-sm ">
+							¥{result.breakdown.editing.toLocaleString()}
+						</span>
+					</div>
+				)}
+
+				{result.breakdown.deadline > 0 && (
+					<div className="flex justify-between">
+						<span className="noto-sans-jp-light text-sm ">納期料金</span>
+						<span className="noto-sans-jp-light text-sm ">
+							¥{result.breakdown.deadline.toLocaleString()}
+						</span>
+					</div>
+				)}
+
+				<hr className=" my-2" />
+				<div className="flex justify-between">
+					<span className="zen-kaku-gothic-new ">合計</span>
+					<span className="zen-kaku-gothic-new ">
+						¥{result.total.toLocaleString()}
+					</span>
+				</div>
+			</div>
+
+			{/* Actions */}
+			<div className="flex flex-col sm:flex-row gap-3">
+				<button
+					type="button"
+					onClick={onCopy}
+					className="flex items-center justify-center text-center p-4 noto-sans-jp-regular leading-snug"
+				>
+					<Copy className="w-4 h-4 mr-2" />
+					コピー
+				</button>
+			</div>
+
+			<div className="mt-6   p-4">
+				<p className="noto-sans-jp-light text-sm ">
+					※この見積もりは目安です.実際の料金は詳細な要件により変動する場合があります.
+				</p>
+			</div>
+		</div>
+	);
+}
+
+function ResultPlaceholder() {
+	return (
+		<div className="  p-4 text-center">
+			<Calculator className="w-12 h-12 mx-auto mb-4" />
+			<p className="noto-sans-jp-light text-sm ">
+				映像の種類と長さを選択すると
+				<br />
+				見積もりが表示されます
+			</p>
+		</div>
+	);
+}
+
+function ContactCTA() {
+	return (
+		<div className="  p-4">
+			<h3 className="zen-kaku-gothic-new text-lg mb-3">
+				正式なお見積もりをご希望の方
+			</h3>
+			<p className="noto-sans-jp-light text-sm mb-4">
+				より詳細な見積もりや、ご不明な点がございましたらお気軽にお問い合わせください.
+			</p>
+			<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-3">
+				<Link
+					href="/contact"
+					className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
+				>
+					<span className="noto-sans-jp-regular leading-snug">
+						お問い合わせ
+					</span>
+				</Link>
+				<Link
+					href="/about/commission/video"
+					className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
+				>
+					<span className="noto-sans-jp-regular leading-snug">
+						映像依頼について
+					</span>
+				</Link>
+			</div>
+		</div>
+	);
+}
+
+function PageFooter() {
+	return (
+		<footer className="pt-4  ">
+			<div className="text-center">
+				<p className="shippori-antique-b1-regular text-sm inline-block">
+					© 2025 samuido - Estimate Calculator
+				</p>
+			</div>
+		</footer>
+	);
+}
 
 export default function EstimatePage() {
 	const [form, setForm] = useState<EstimateForm>({
@@ -191,347 +543,27 @@ export default function EstimatePage() {
 			<main className="flex items-center py-10">
 				<div className="container-system">
 					<div className="space-y-10">
-						{/* Breadcrumbs */}
-						<Breadcrumbs
-							items={[
-								{ label: "Home", href: "/" },
-								{ label: "About", href: "/about" },
-								{ label: "Commission", href: "/about/commission" },
-								{ label: "Estimate", isCurrent: true },
-							]}
-							className="pt-4"
-						/>
-
-						{/* Header */}
-						<header className="space-y-12">
-							<h1 className="neue-haas-grotesk-display text-6xl ">
-								映像制作見積もり計算機
-							</h1>
-							<p className="noto-sans-jp-light text-sm max-w leading-loose">
-								映像制作の見積もりを自動計算します.
-								<br />
-								料金の目安を事前に確認できます.
-							</p>
-						</header>
+						<PageHeader />
 
 						<div className="grid-system grid-1 lg:grid-2 gap-8">
-							{/* Form */}
-							<div className="space-y-6">
-								<div className="  p-4">
-									<div className="flex items-center justify-between mb-4">
-										<h2 className="neue-haas-grotesk-display text-3xl ">
-											見積もりフォーム
-										</h2>
-										<button
-											type="button"
-											onClick={resetForm}
-											className="flex items-center px-2 py-1 text-sm noto-sans-jp-light"
-										>
-											<RefreshCw className="w-4 h-4 mr-1" />
-											リセット
-										</button>
-									</div>
+							<EstimateFormSection
+								form={form}
+								setForm={setForm}
+								onEditingChange={handleEditingChange}
+								onReset={resetForm}
+							/>
 
-									{/* Video Type */}
-									<div className="mb-6">
-										<label
-											htmlFor="videoType"
-											className="block zen-kaku-gothic-new text-lg mb-2"
-										>
-											映像の種類 *
-										</label>
-										<select
-											id="videoType"
-											value={form.videoType}
-											onChange={(e) =>
-												setForm((prev) => ({
-													...prev,
-													videoType: e.target.value,
-												}))
-											}
-											className="w-full p-3 noto-sans-jp-light text-sm"
-											required
-										>
-											<option value="">選択してください</option>
-											{VIDEO_TYPES.map((type) => (
-												<option key={type.value} value={type.value}>
-													{type.label} (基本料金: ¥
-													{type.basePrice.toLocaleString()})
-												</option>
-											))}
-										</select>
-									</div>
-
-									{/* Duration */}
-									<div className="mb-6">
-										<label
-											htmlFor="duration"
-											className="block zen-kaku-gothic-new text-lg mb-2"
-										>
-											映像の長さ *
-										</label>
-										<select
-											id="duration"
-											value={form.duration}
-											onChange={(e) =>
-												setForm((prev) => ({
-													...prev,
-													duration: e.target.value,
-												}))
-											}
-											className="w-full p-3 noto-sans-jp-light text-sm"
-											required
-										>
-											<option value="">選択してください</option>
-											{DURATIONS.map((duration) => (
-												<option key={duration.value} value={duration.value}>
-													{duration.label}
-												</option>
-											))}
-										</select>
-									</div>
-
-									{/* Quality */}
-									<div className="mb-6">
-										<p className="block zen-kaku-gothic-new text-lg mb-2">
-											品質レベル
-										</p>
-										<div className="space-y-2">
-											{QUALITY_LEVELS.map((quality) => (
-												<label
-													key={quality.value}
-													className="flex items-center"
-												>
-													<input
-														type="radio"
-														name="quality"
-														value={quality.value}
-														checked={form.quality === quality.value}
-														onChange={(e) =>
-															setForm((prev) => ({
-																...prev,
-																quality: e.target.value,
-															}))
-														}
-														className="mr-2"
-													/>
-													<span className="noto-sans-jp-light text-sm ">
-														{quality.label} (×{quality.multiplier})
-													</span>
-												</label>
-											))}
-										</div>
-									</div>
-
-									{/* Editing */}
-									<div className="mb-6">
-										<p className="block zen-kaku-gothic-new text-lg mb-2">
-											編集内容
-										</p>
-										<div className="space-y-2">
-											{EDITING_OPTIONS.map((editing) => (
-												<label
-													key={editing.value}
-													className="flex items-center"
-												>
-													<input
-														type="checkbox"
-														checked={form.editing.includes(editing.value)}
-														onChange={(e) =>
-															handleEditingChange(
-																editing.value,
-																e.target.checked,
-															)
-														}
-														disabled={editing.value === "basic"}
-														className="mr-2"
-													/>
-													<span className="noto-sans-jp-light text-sm ">
-														{editing.label}
-														{editing.price > 0 &&
-															` (+¥${editing.price.toLocaleString()})`}
-													</span>
-												</label>
-											))}
-										</div>
-									</div>
-
-									{/* Deadline */}
-									<div className="mb-6">
-										<label
-											htmlFor="deadline"
-											className="block zen-kaku-gothic-new text-lg mb-2"
-										>
-											納期
-										</label>
-										<select
-											id="deadline"
-											value={form.deadline}
-											onChange={(e) =>
-												setForm((prev) => ({
-													...prev,
-													deadline: e.target.value,
-												}))
-											}
-											className="w-full p-3 noto-sans-jp-light text-sm"
-										>
-											{DEADLINES.map((deadline) => (
-												<option key={deadline.value} value={deadline.value}>
-													{deadline.label}{" "}
-													{deadline.multiplier !== 1.0 &&
-														`(×${deadline.multiplier})`}
-												</option>
-											))}
-										</select>
-									</div>
-								</div>
-							</div>
-
-							{/* Result */}
 							<div className="space-y-6">
 								{result && result.total > 0 ? (
-									<div className="  p-4">
-										<div className="flex items-center justify-between mb-4">
-											<h2 className="neue-haas-grotesk-display text-3xl ">
-												見積もり結果
-											</h2>
-											<Calculator className="w-6 h-6 " />
-										</div>
-
-										{/* Total */}
-										<div className="   p-4 mb-4">
-											<div className="text-center">
-												<p className="noto-sans-jp-light text-sm mb-1">
-													合計金額
-												</p>
-												<p className="neue-haas-grotesk-display text-4xl ">
-													¥{result.total.toLocaleString()}
-												</p>
-											</div>
-										</div>
-
-										{/* Breakdown */}
-										<div className="space-y-3 mb-6">
-											<h3 className="zen-kaku-gothic-new text-lg ">料金内訳</h3>
-
-											<div className="flex justify-between">
-												<span className="noto-sans-jp-light text-sm ">
-													基本料金
-												</span>
-												<span className="noto-sans-jp-light text-sm ">
-													¥{result.breakdown.base.toLocaleString()}
-												</span>
-											</div>
-
-											{result.breakdown.quality > 0 && (
-												<div className="flex justify-between">
-													<span className="noto-sans-jp-light text-sm ">
-														品質料金
-													</span>
-													<span className="noto-sans-jp-light text-sm ">
-														¥{result.breakdown.quality.toLocaleString()}
-													</span>
-												</div>
-											)}
-
-											{result.breakdown.editing > 0 && (
-												<div className="flex justify-between">
-													<span className="noto-sans-jp-light text-sm ">
-														編集料金
-													</span>
-													<span className="noto-sans-jp-light text-sm ">
-														¥{result.breakdown.editing.toLocaleString()}
-													</span>
-												</div>
-											)}
-
-											{result.breakdown.deadline > 0 && (
-												<div className="flex justify-between">
-													<span className="noto-sans-jp-light text-sm ">
-														納期料金
-													</span>
-													<span className="noto-sans-jp-light text-sm ">
-														¥{result.breakdown.deadline.toLocaleString()}
-													</span>
-												</div>
-											)}
-
-											<hr className=" my-2" />
-											<div className="flex justify-between">
-												<span className="zen-kaku-gothic-new ">合計</span>
-												<span className="zen-kaku-gothic-new ">
-													¥{result.total.toLocaleString()}
-												</span>
-											</div>
-										</div>
-
-										{/* Actions */}
-										<div className="flex flex-col sm:flex-row gap-3">
-											<button
-												type="button"
-												onClick={copyResult}
-												className="flex items-center justify-center text-center p-4 noto-sans-jp-regular leading-snug"
-											>
-												<Copy className="w-4 h-4 mr-2" />
-												コピー
-											</button>
-										</div>
-
-										<div className="mt-6   p-4">
-											<p className="noto-sans-jp-light text-sm ">
-												※この見積もりは目安です.実際の料金は詳細な要件により変動する場合があります.
-											</p>
-										</div>
-									</div>
+									<EstimateResult result={result} onCopy={copyResult} />
 								) : (
-									<div className="  p-4 text-center">
-										<Calculator className="w-12 h-12 mx-auto mb-4" />
-										<p className="noto-sans-jp-light text-sm ">
-											映像の種類と長さを選択すると
-											<br />
-											見積もりが表示されます
-										</p>
-									</div>
+									<ResultPlaceholder />
 								)}
-
-								{/* Contact CTA */}
-								<div className="  p-4">
-									<h3 className="zen-kaku-gothic-new text-lg mb-3">
-										正式なお見積もりをご希望の方
-									</h3>
-									<p className="noto-sans-jp-light text-sm mb-4">
-										より詳細な見積もりや、ご不明な点がございましたらお気軽にお問い合わせください.
-									</p>
-									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-3">
-										<Link
-											href="/contact"
-											className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
-										>
-											<span className="noto-sans-jp-regular leading-snug">
-												お問い合わせ
-											</span>
-										</Link>
-										<Link
-											href="/about/commission/video"
-											className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
-										>
-											<span className="noto-sans-jp-regular leading-snug">
-												映像依頼について
-											</span>
-										</Link>
-									</div>
-								</div>
+								<ContactCTA />
 							</div>
 						</div>
 
-						{/* Footer */}
-						<footer className="pt-4  ">
-							<div className="text-center">
-								<p className="shippori-antique-b1-regular text-sm inline-block">
-									© 2025 samuido - Estimate Calculator
-								</p>
-							</div>
-						</footer>
+						<PageFooter />
 					</div>
 				</div>
 			</main>

@@ -65,6 +65,274 @@ interface SnackbarState {
 	severity: AlertColor;
 }
 
+interface DatabaseSummary {
+	total: number;
+	activeName: string;
+	totalSize: number;
+}
+
+function DatabaseHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
+	return (
+		<PageHeader
+			title="データベース管理"
+			description="現在 Rust CMS API が利用している SQLite データベースを確認します. Next.js 側では参照とメタ情報編集のみ行い、実行時の切替や削除は Rust 側で管理します."
+			actions={[
+				<Button
+					key="refresh"
+					variant="outlined"
+					startIcon={<RefreshCcw size={16} />}
+					onClick={onRefresh}
+				>
+					更新
+				</Button>,
+			]}
+		/>
+	);
+}
+
+function DatabaseActionPanel({
+	database,
+	onRefreshStats,
+	onEdit,
+}: {
+	database: DatabaseInfo;
+	onRefreshStats: (databaseId: string) => Promise<void>;
+	onEdit: (database: DatabaseInfo) => void;
+}) {
+	return (
+		<Stack direction="row" spacing={1} flexWrap="wrap">
+			<Button
+				size="small"
+				variant="outlined"
+				startIcon={<RefreshCcw size={14} />}
+				onClick={() => void onRefreshStats(database.id)}
+			>
+				統計を更新
+			</Button>
+			<Button
+				size="small"
+				variant="outlined"
+				startIcon={<ServerCog size={14} />}
+				onClick={() => onEdit(database)}
+			>
+				情報を編集
+			</Button>
+		</Stack>
+	);
+}
+
+function DatabaseCard({
+	database,
+	stats,
+	onRefreshStats,
+	onEdit,
+}: {
+	database: DatabaseInfo;
+	stats?: DatabaseStats;
+	onRefreshStats: (databaseId: string) => Promise<void>;
+	onEdit: (database: DatabaseInfo) => void;
+}) {
+	const isActive = database.isActive;
+
+	return (
+		<Grid item xs={12} md={6} key={database.id}>
+			<Card
+				variant="outlined"
+				sx={{
+					height: "100%",
+					borderColor: isActive ? "primary.main" : "divider",
+					bgcolor: isActive ? "action.hover" : "background.paper",
+				}}
+			>
+				<CardContent sx={{ display: "grid", gap: 2 }}>
+					<Stack
+						direction="row"
+						spacing={2}
+						justifyContent="space-between"
+						alignItems="flex-start"
+					>
+						<Box>
+							<Typography variant="h6" fontWeight={600}>
+								{database.name || database.id}
+							</Typography>
+							<Typography variant="body2" color="text.secondary">
+								{database.description || "説明が設定されていません"}
+							</Typography>
+						</Box>
+						<Chip
+							label={isActive ? "アクティブ" : "バックアップ"}
+							color={isActive ? "primary" : "default"}
+							size="small"
+						/>
+					</Stack>
+
+					<Stack direction="row" spacing={1.5} flexWrap="wrap">
+						<InfoPill
+							icon={<HardDrive size={16} />}
+							label="更新日"
+							value={new Date(database.updatedAt).toLocaleString("ja-JP")}
+						/>
+						<InfoPill
+							icon={<Database size={16} />}
+							label="サイズ"
+							value={formatBytes(database.size)}
+						/>
+					</Stack>
+
+					<Divider />
+
+					{stats ? (
+						<Stack direction="row" spacing={1.5} flexWrap="wrap">
+							<StatBadge
+								label="コンテンツ"
+								value={stats.contentsCount}
+							/>
+							<StatBadge
+								label="Markdown"
+								value={stats.markdownPagesCount}
+							/>
+							<StatBadge label="タグ" value={stats.tagsCount} />
+							<StatBadge
+								label="合計サイズ"
+								value={formatBytes(stats.fileSize)}
+							/>
+						</Stack>
+					) : (
+						<Typography variant="caption" color="text.secondary">
+							統計情報を取得しています...
+						</Typography>
+					)}
+
+					<DatabaseActionPanel
+						database={database}
+						onRefreshStats={onRefreshStats}
+						onEdit={onEdit}
+					/>
+				</CardContent>
+			</Card>
+		</Grid>
+	);
+}
+
+function DatabaseListSection({
+	databaseList,
+	statsMap,
+	summary,
+	databaseError,
+	loadingDatabases,
+	onRefreshStats,
+	onEdit,
+}: {
+	databaseList: DatabaseInfo[] | null | undefined;
+	statsMap: Record<string, DatabaseStats>;
+	summary: DatabaseSummary;
+	databaseError: unknown;
+	loadingDatabases: boolean;
+	onRefreshStats: (databaseId: string) => Promise<void>;
+	onEdit: (database: DatabaseInfo) => void;
+}) {
+	return (
+		<Paper
+			variant="outlined"
+			sx={{ p: 3, borderColor: "divider", display: "grid", gap: 3 }}
+		>
+			<Stack
+				direction={{ xs: "column", sm: "row" }}
+				spacing={2}
+				justifyContent="space-between"
+				alignItems={{ xs: "flex-start", sm: "center" }}
+			>
+				<Box>
+					<Typography variant="subtitle2" color="text.secondary">
+						アクティブデータベース
+					</Typography>
+					<Typography variant="h6" fontWeight={700}>
+						{summary.activeName}
+					</Typography>
+					<Typography variant="caption" color="text.secondary">
+						合計 {summary.total} 件 ・ 総容量 {formatBytes(summary.totalSize)}
+					</Typography>
+				</Box>
+			</Stack>
+
+			{databaseError && (
+				<Alert severity="error">
+					データベース一覧の取得に失敗しました.再読み込みしてください.
+				</Alert>
+			)}
+
+			<Grid container spacing={2.5}>
+				{(databaseList ?? []).map((database) => (
+					<DatabaseCard
+						database={database}
+						stats={statsMap[database.id]}
+						onRefreshStats={onRefreshStats}
+						onEdit={onEdit}
+						key={database.id}
+					/>
+				))}
+			</Grid>
+
+			{loadingDatabases && (
+				<Typography variant="body2" color="text.secondary">
+					データベース情報を読み込んでいます...
+				</Typography>
+			)}
+		</Paper>
+	);
+}
+
+function DatabaseModals({
+	isEditDialogOpen,
+	editingDatabase,
+	onClose,
+	onSubmit,
+	isSubmitting,
+}: {
+	isEditDialogOpen: boolean;
+	editingDatabase: DatabaseInfo | null;
+	onClose: () => void;
+	onSubmit: (payload: Partial<DatabaseInfo>) => void | Promise<void>;
+	isSubmitting: boolean;
+}) {
+	return (
+		<Dialog open={isEditDialogOpen} onClose={onClose} maxWidth="sm" fullWidth>
+			<DialogTitle>データベース情報を編集</DialogTitle>
+			<DialogContent>
+				{editingDatabase && (
+					<DatabaseForm
+						initialData={editingDatabase}
+						onSubmit={onSubmit}
+						onCancel={onClose}
+						isLoading={isSubmitting}
+					/>
+				)}
+			</DialogContent>
+		</Dialog>
+	);
+}
+
+function DatabaseFooter({
+	snackbar,
+	onClose,
+}: {
+	snackbar: SnackbarState;
+	onClose: () => void;
+}) {
+	return (
+		<Snackbar
+			open={snackbar.open}
+			autoHideDuration={3200}
+			onClose={onClose}
+			anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+		>
+			<Alert onClose={onClose} severity={snackbar.severity} variant="filled">
+				{snackbar.message}
+			</Alert>
+		</Snackbar>
+	);
+}
+
 export default function AdminDatabaseManager() {
 	const {
 		data: databaseList,
@@ -276,6 +544,16 @@ export default function AdminDatabaseManager() {
 		[reloadData, showSnackbar],
 	);
 
+	const openEditDialog = useCallback((database: DatabaseInfo) => {
+		setEditingDatabase(database);
+		setIsEditDialogOpen(true);
+	}, []);
+
+	const closeEditDialog = useCallback(() => {
+		setIsEditDialogOpen(false);
+		setEditingDatabase(null);
+	}, []);
+
 	const summary = useMemo(() => {
 		const list = databaseList ?? [];
 		const active = list.find((db) => db.isActive);
@@ -289,200 +567,24 @@ export default function AdminDatabaseManager() {
 
 	return (
 		<Box sx={{ display: "grid", gap: 4 }}>
-			<PageHeader
-				title="データベース管理"
-				description="現在 Rust CMS API が利用している SQLite データベースを確認します. Next.js 側では参照とメタ情報編集のみ行い、実行時の切替や削除は Rust 側で管理します."
-				
-				actions={[
-					<Button
-						key="refresh"
-						variant="outlined"
-						startIcon={<RefreshCcw size={16} />}
-						onClick={reloadData}
-					>
-						更新
-					</Button>,
-				]}
+			<DatabaseHeader onRefresh={reloadData} />
+			<DatabaseListSection
+				databaseList={databaseList}
+				statsMap={statsMap}
+				summary={summary}
+				databaseError={databaseError}
+				loadingDatabases={loadingDatabases}
+				onRefreshStats={fetchStats}
+				onEdit={openEditDialog}
 			/>
-
-			<Paper
-				variant="outlined"
-				sx={{ p: 3, borderColor: "divider", display: "grid", gap: 3 }}
-			>
-				<Stack
-					direction={{ xs: "column", sm: "row" }}
-					spacing={2}
-					justifyContent="space-between"
-					alignItems={{ xs: "flex-start", sm: "center" }}
-				>
-					<Box>
-						<Typography variant="subtitle2" color="text.secondary">
-							アクティブデータベース
-						</Typography>
-						<Typography variant="h6" fontWeight={700}>
-							{summary.activeName}
-						</Typography>
-						<Typography variant="caption" color="text.secondary">
-							合計 {summary.total} 件 ・ 総容量 {formatBytes(summary.totalSize)}
-						</Typography>
-					</Box>
-				</Stack>
-
-				{databaseError && (
-					<Alert severity="error">
-						データベース一覧の取得に失敗しました.再読み込みしてください.
-					</Alert>
-				)}
-
-				<Grid container spacing={2.5}>
-					{(databaseList ?? []).map((database) => {
-						const stats = statsMap[database.id];
-						const isActive = database.isActive;
-						return (
-							<Grid item xs={12} md={6} key={database.id}>
-								<Card
-									variant="outlined"
-									sx={{
-										height: "100%",
-										borderColor: isActive ? "primary.main" : "divider",
-										bgcolor: isActive ? "action.hover" : "background.paper",
-									}}
-								>
-									<CardContent sx={{ display: "grid", gap: 2 }}>
-										<Stack
-											direction="row"
-											spacing={2}
-											justifyContent="space-between"
-											alignItems="flex-start"
-										>
-											<Box>
-												<Typography variant="h6" fontWeight={600}>
-													{database.name || database.id}
-												</Typography>
-												<Typography variant="body2" color="text.secondary">
-													{database.description || "説明が設定されていません"}
-												</Typography>
-											</Box>
-											<Chip
-												label={isActive ? "アクティブ" : "バックアップ"}
-												color={isActive ? "primary" : "default"}
-												size="small"
-											/>
-										</Stack>
-
-										<Stack direction="row" spacing={1.5} flexWrap="wrap">
-											<InfoPill
-												icon={<HardDrive size={16} />}
-												label="更新日"
-												value={new Date(database.updatedAt).toLocaleString(
-													"ja-JP",
-												)}
-											/>
-											<InfoPill
-												icon={<Database size={16} />}
-												label="サイズ"
-												value={formatBytes(database.size)}
-											/>
-										</Stack>
-
-										<Divider />
-
-										{stats ? (
-											<Stack direction="row" spacing={1.5} flexWrap="wrap">
-												<StatBadge
-													label="コンテンツ"
-													value={stats.contentsCount}
-												/>
-												<StatBadge
-													label="Markdown"
-													value={stats.markdownPagesCount}
-												/>
-												<StatBadge label="タグ" value={stats.tagsCount} />
-												<StatBadge
-													label="合計サイズ"
-													value={formatBytes(stats.fileSize)}
-												/>
-											</Stack>
-										) : (
-											<Typography variant="caption" color="text.secondary">
-												統計情報を取得しています...
-											</Typography>
-										)}
-
-										<Stack direction="row" spacing={1} flexWrap="wrap">
-											<Button
-												size="small"
-												variant="outlined"
-												startIcon={<RefreshCcw size={14} />}
-												onClick={() => void fetchStats(database.id)}
-											>
-												統計を更新
-											</Button>
-											<Button
-												size="small"
-												variant="outlined"
-												startIcon={<ServerCog size={14} />}
-												onClick={() => {
-													setEditingDatabase(database);
-													setIsEditDialogOpen(true);
-												}}
-											>
-												情報を編集
-											</Button>
-										</Stack>
-									</CardContent>
-								</Card>
-							</Grid>
-						);
-					})}
-				</Grid>
-
-				{loadingDatabases && (
-					<Typography variant="body2" color="text.secondary">
-						データベース情報を読み込んでいます...
-					</Typography>
-				)}
-			</Paper>
-
-			<Dialog
-				open={isEditDialogOpen}
-				onClose={() => {
-					setIsEditDialogOpen(false);
-					setEditingDatabase(null);
-				}}
-				maxWidth="sm"
-				fullWidth
-			>
-				<DialogTitle>データベース情報を編集</DialogTitle>
-				<DialogContent>
-					{editingDatabase && (
-						<DatabaseForm
-							initialData={editingDatabase}
-							onSubmit={handleEdit}
-							onCancel={() => {
-								setIsEditDialogOpen(false);
-								setEditingDatabase(null);
-							}}
-							isLoading={isSubmitting}
-						/>
-					)}
-				</DialogContent>
-			</Dialog>
-
-			<Snackbar
-				open={snackbar.open}
-				autoHideDuration={3200}
-				onClose={closeSnackbar}
-				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-			>
-				<Alert
-					onClose={closeSnackbar}
-					severity={snackbar.severity}
-					variant="filled"
-				>
-					{snackbar.message}
-				</Alert>
-			</Snackbar>
+			<DatabaseModals
+				isEditDialogOpen={isEditDialogOpen}
+				editingDatabase={editingDatabase}
+				onClose={closeEditDialog}
+				onSubmit={handleEdit}
+				isSubmitting={isSubmitting}
+			/>
+			<DatabaseFooter snackbar={snackbar} onClose={closeSnackbar} />
 		</Box>
 	);
 }

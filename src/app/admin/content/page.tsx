@@ -95,6 +95,350 @@ const s = {
 	alert: { border: "1px solid #e0c000", background: "#fffbe6", borderRadius: 4, padding: "8px 12px", fontSize: "0.8rem", marginBottom: 16, color: "#665500" } as React.CSSProperties,
 };
 
+function ContentPageHeader({
+	contentsLoading,
+	contents,
+	statsLoading,
+	stats,
+	contentsError,
+	statsError,
+}: {
+	contentsLoading: boolean;
+	contents: Content[] | null | undefined;
+	statsLoading: boolean;
+	stats: DbStats | null | undefined;
+	contentsError: unknown;
+	statsError: unknown;
+}) {
+	return (
+		<>
+			<nav style={s.breadcrumb}>
+				<a href="/admin" style={{ color: "#0066cc", textDecoration: "none" }}>Admin</a>
+				<span style={{ margin: "0 6px" }}>/</span>
+				<span style={{ color: "#000" }}>コンテンツ管理</span>
+			</nav>
+
+			<h1 style={s.title}>コンテンツ管理</h1>
+			<p style={s.subtitle}>コンテンツの作成・編集・公開状態を管理します.</p>
+
+			<div style={s.statsRow}>
+				<div style={s.statCard}>
+					<div style={s.statLabel}>登録コンテンツ</div>
+					<div style={s.statValue}>{contentsLoading ? "…" : contents?.length ?? 0}</div>
+				</div>
+				<div style={s.statCard}>
+					<div style={s.statLabel}>コンテンツDB</div>
+					<div style={s.statValue}>{statsLoading ? "…" : stats?.totalDbFiles ?? 0}</div>
+				</div>
+				<div style={s.statCard}>
+					<div style={s.statLabel}>総容量</div>
+					<div style={s.statValue}>{stats ? formatBytes(stats.totalSize) : statsLoading ? "…" : "-"}</div>
+				</div>
+			</div>
+
+			{(contentsError || statsError) && (
+				<div style={s.alert}>データの取得に失敗しました.再読み込みしてください.</div>
+			)}
+		</>
+	);
+}
+
+function ContentPageToolbar({
+	statusFilter,
+	setStatusFilter,
+	searchQuery,
+	setSearchQuery,
+	onRefresh,
+	onCreate,
+}: {
+	statusFilter: StatusFilter;
+	setStatusFilter: (v: StatusFilter) => void;
+	searchQuery: string;
+	setSearchQuery: (v: string) => void;
+	onRefresh: () => void;
+	onCreate: () => void;
+}) {
+	return (
+		<div style={s.toolbar}>
+			<button style={s.btn} onClick={onRefresh}>
+				<RefreshCcw size={14} /> 更新
+			</button>
+			<button style={s.btnPrimary} onClick={onCreate}>
+				<Plus size={14} /> 新規コンテンツ
+			</button>
+			<select
+				style={s.select}
+				value={statusFilter}
+				onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+				aria-label="ステータスでフィルター"
+			>
+				{STATUS_OPTIONS.map((opt) => (
+					<option key={opt} value={opt}>{STATUS_LABEL[opt]}</option>
+				))}
+			</select>
+			<input
+				style={{ ...s.input, maxWidth: 220 }}
+				placeholder="検索..."
+				value={searchQuery}
+				onChange={(e) => setSearchQuery(e.target.value)}
+			/>
+		</div>
+	);
+}
+
+function ContentTableRow({
+	content,
+	onEdit,
+	onDelete,
+}: {
+	content: Content;
+	onEdit: (content: Content) => void;
+	onDelete: (content: Content) => void;
+}) {
+	const thumb = getThumbnailUrl(content);
+	return (
+		<tr>
+			<td style={s.td}>🌐</td>
+			<td style={s.td}>
+				{thumb ? (
+					<Image src={thumb} alt={content.title} style={s.thumb} width={64} height={64} unoptimized />
+				) : (
+					<div style={s.thumbPlaceholder} />
+				)}
+			</td>
+			<td style={s.td}>
+				<div style={{ fontWeight: 600, fontSize: "0.85rem" }}>{content.title}</div>
+				{content.summary && (
+					<div style={{ fontSize: "0.75rem", color: "#888", marginTop: 2 }}>{content.summary}</div>
+				)}
+			</td>
+			<td style={s.td}>
+				<span style={s.chip}>{content.status ?? "draft"}</span>
+			</td>
+			<td style={{ ...s.td, fontSize: "0.8rem", color: "#666" }}>{formatDate(content.updatedAt as string)}</td>
+			<td style={s.td}><span style={s.idText}>{content.id}</span></td>
+			<td style={{ ...s.td, textAlign: "right" }}>
+				<button
+					style={s.iconBtn}
+					title="編集"
+					onClick={() => void onEdit(content)}
+				>
+					<Edit2 size={15} />
+				</button>
+				<button style={s.iconBtnDanger} title="削除" onClick={() => onDelete(content)}>
+					<Trash2 size={15} />
+				</button>
+			</td>
+		</tr>
+	);
+}
+
+function ContentTable({
+	contentsLoading,
+	filteredContents,
+	onEdit,
+	onDelete,
+}: {
+	contentsLoading: boolean;
+	filteredContents: Content[];
+	onEdit: (content: Content) => void;
+	onDelete: (content: Content) => void;
+}) {
+	return (
+		<div style={{ overflowX: "auto" }}>
+			<table style={s.table}>
+				<thead>
+					<tr>
+						<th style={s.th}></th>
+						<th style={s.th}>サムネイル</th>
+						<th style={s.th}>タイトル</th>
+						<th style={s.th}>ステータス</th>
+						<th style={s.th}>更新日</th>
+						<th style={s.th}>ID</th>
+						<th style={{ ...s.th, textAlign: "right" }}>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{contentsLoading ? (
+						<tr><td colSpan={7} style={{ ...s.td, textAlign: "center", padding: 40, color: "#999" }}>読み込み中...</td></tr>
+					) : filteredContents.length === 0 ? (
+						<tr><td colSpan={7} style={{ ...s.td, textAlign: "center", padding: 40, color: "#999" }}>表示するコンテンツがありません.</td></tr>
+					) : (
+						filteredContents.map((content) => (
+							<ContentTableRow
+								key={content.id}
+								content={content}
+								onEdit={onEdit}
+								onDelete={onDelete}
+							/>
+						))
+					)}
+				</tbody>
+			</table>
+		</div>
+	);
+}
+
+function CreateContentDialog({
+	open,
+	submitting,
+	createStatus,
+	setCreateStatus,
+	createVisibility,
+	setCreateVisibility,
+	onClose,
+	onSubmit,
+}: {
+	open: boolean;
+	submitting: boolean;
+	createStatus: Content["status"];
+	setCreateStatus: (v: Content["status"]) => void;
+	createVisibility: Content["visibility"];
+	setCreateVisibility: (v: Content["visibility"]) => void;
+	onClose: () => void;
+	onSubmit: (payload: Partial<Content>) => Promise<void>;
+}) {
+	if (!open) return null;
+	return (
+		<div style={s.overlay} onClick={onClose}>
+			<div style={s.dialog} onClick={(e) => e.stopPropagation()}>
+				<div style={s.dialogHeader}>
+					<span style={{ fontWeight: 600 }}>新しいコンテンツを作成</span>
+					<div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+						<select
+							style={s.select}
+							value={createStatus}
+							onChange={(e) => setCreateStatus(e.target.value as Content["status"])}
+							aria-label="ステータス"
+						>
+							<option value="draft">draft</option>
+							<option value="published">published</option>
+							<option value="archived">archived</option>
+						</select>
+						<select
+							style={s.select}
+							value={createVisibility}
+							onChange={(e) => setCreateVisibility(e.target.value as Content["visibility"])}
+							aria-label="公開設定"
+						>
+							<option value="draft">draft</option>
+							<option value="public">public</option>
+							<option value="unlisted">unlisted</option>
+							<option value="private">private</option>
+						</select>
+						<button style={s.btn} onClick={onClose}>×</button>
+					</div>
+				</div>
+				<div style={s.dialogBody}>
+					<ContentForm
+						mode="create"
+						isLoading={submitting}
+						onSubmit={onSubmit}
+						onCancel={onClose}
+						controlledStatus={createStatus}
+						controlledVisibility={createVisibility}
+					/>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function EditContentDialog({
+	target,
+	submitting,
+	onClose,
+	onChangeTarget,
+	onSubmit,
+}: {
+	target: Content | null;
+	submitting: boolean;
+	onClose: () => void;
+	onChangeTarget: (target: Content) => void;
+	onSubmit: (payload: Partial<Content>) => Promise<void>;
+}) {
+	if (!target) return null;
+	return (
+		<div style={s.overlay} onClick={onClose}>
+			<div style={s.dialog} onClick={(e) => e.stopPropagation()}>
+				<div style={s.dialogHeader}>
+					<span style={{ fontWeight: 600 }}>コンテンツを編集</span>
+					<div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+						<select
+							style={s.select}
+							value={target.status ?? "draft"}
+							onChange={(e) => onChangeTarget({ ...target, status: e.target.value as Content["status"] })}
+							aria-label="ステータス"
+						>
+							<option value="draft">draft</option>
+							<option value="published">published</option>
+							<option value="archived">archived</option>
+						</select>
+						<select
+							style={s.select}
+							value={target.visibility ?? "draft"}
+							onChange={(e) => onChangeTarget({ ...target, visibility: e.target.value as Content["visibility"] })}
+							aria-label="公開設定"
+						>
+							<option value="draft">draft</option>
+							<option value="public">public</option>
+							<option value="unlisted">unlisted</option>
+							<option value="private">private</option>
+						</select>
+						<button style={s.btn} onClick={onClose}>×</button>
+					</div>
+				</div>
+				<div style={s.dialogBody}>
+					<ContentForm
+						mode="edit"
+						initialData={target}
+						isLoading={submitting}
+						onSubmit={onSubmit}
+						onCancel={onClose}
+						controlledStatus={target.status}
+						controlledVisibility={target.visibility}
+					/>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function DeleteContentDialog({
+	target,
+	onClose,
+	onConfirm,
+}: {
+	target: Content | null;
+	onClose: () => void;
+	onConfirm: (id: string) => Promise<void>;
+}) {
+	if (!target) return null;
+	return (
+		<div style={s.overlay} onClick={onClose}>
+			<div style={{ ...s.dialog, maxWidth: 400 }} onClick={(e) => e.stopPropagation()}>
+				<div style={{ ...s.dialogHeader, borderBottom: "none", paddingBottom: 0 }}>
+					<span style={{ fontWeight: 600 }}>コンテンツを削除しますか？</span>
+				</div>
+				<div style={{ padding: "0 20px 20px" }}>
+					<p style={{ fontSize: "0.85rem", color: "#555", margin: "0 0 16px" }}>
+						この操作は取り消せません.関連するDBが削除されます.
+					</p>
+					<div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+						<button style={s.btn} onClick={onClose}>キャンセル</button>
+						<button
+							style={{ ...s.btnPrimary, background: "#c00", borderColor: "#c00" }}
+							onClick={() => void onConfirm(target.id)}
+						>
+							削除する
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
 export default function AdminContentPage() {
 	const {
 		data: contents,
@@ -176,249 +520,70 @@ export default function AdminContentPage() {
 		}
 	}, [handleRefresh]);
 
+	const handleEdit = useCallback(async (content: Content) => {
+		try {
+			const res = await fetch(`/api/cms/contents?id=${encodeURIComponent(content.id)}`);
+			if (res.ok) {
+				setEditTarget(await res.json());
+			} else {
+				setEditTarget(content);
+			}
+		} catch {
+			setEditTarget(content);
+		}
+	}, []);
+
 	return (
 		<div style={s.page}>
-			<nav style={s.breadcrumb}>
-				<a href="/admin" style={{ color: "#0066cc", textDecoration: "none" }}>Admin</a>
-				<span style={{ margin: "0 6px" }}>/</span>
-				<span style={{ color: "#000" }}>コンテンツ管理</span>
-			</nav>
+			<ContentPageHeader
+				contentsLoading={contentsLoading}
+				contents={contents}
+				statsLoading={statsLoading}
+				stats={stats}
+				contentsError={contentsError}
+				statsError={statsError}
+			/>
 
-			<h1 style={s.title}>コンテンツ管理</h1>
-			<p style={s.subtitle}>コンテンツの作成・編集・公開状態を管理します.</p>
+			<ContentPageToolbar
+				statusFilter={statusFilter}
+				setStatusFilter={setStatusFilter}
+				searchQuery={searchQuery}
+				setSearchQuery={setSearchQuery}
+				onRefresh={handleRefresh}
+				onCreate={() => setIsCreateOpen(true)}
+			/>
 
-			<div style={s.statsRow}>
-				<div style={s.statCard}>
-					<div style={s.statLabel}>登録コンテンツ</div>
-					<div style={s.statValue}>{contentsLoading ? "…" : contents?.length ?? 0}</div>
-				</div>
-				<div style={s.statCard}>
-					<div style={s.statLabel}>コンテンツDB</div>
-					<div style={s.statValue}>{statsLoading ? "…" : stats?.totalDbFiles ?? 0}</div>
-				</div>
-				<div style={s.statCard}>
-					<div style={s.statLabel}>総容量</div>
-					<div style={s.statValue}>{stats ? formatBytes(stats.totalSize) : statsLoading ? "…" : "-"}</div>
-				</div>
-			</div>
+			<ContentTable
+				contentsLoading={contentsLoading}
+				filteredContents={filteredContents}
+				onEdit={handleEdit}
+				onDelete={(c) => setDeleteTarget(c)}
+			/>
 
-			{(contentsError || statsError) && (
-				<div style={s.alert}>データの取得に失敗しました.再読み込みしてください.</div>
-			)}
+			<CreateContentDialog
+				open={isCreateOpen}
+				submitting={submitting}
+				createStatus={createStatus}
+				setCreateStatus={setCreateStatus}
+				createVisibility={createVisibility}
+				setCreateVisibility={setCreateVisibility}
+				onClose={() => setIsCreateOpen(false)}
+				onSubmit={handleCreate}
+			/>
 
-			<div style={s.toolbar}>
-				<button style={s.btn} onClick={handleRefresh}>
-					<RefreshCcw size={14} /> 更新
-				</button>
-				<button style={s.btnPrimary} onClick={() => setIsCreateOpen(true)}>
-					<Plus size={14} /> 新規コンテンツ
-				</button>
-				<select
-					style={s.select}
-					value={statusFilter}
-					onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-					aria-label="ステータスでフィルター"
-				>
-					{STATUS_OPTIONS.map((opt) => (
-						<option key={opt} value={opt}>{STATUS_LABEL[opt]}</option>
-					))}
-				</select>
-				<input
-					style={{ ...s.input, maxWidth: 220 }}
-					placeholder="検索..."
-					value={searchQuery}
-					onChange={(e) => setSearchQuery(e.target.value)}
-				/>
-			</div>
+			<EditContentDialog
+				target={editTarget}
+				submitting={submitting}
+				onClose={() => setEditTarget(null)}
+				onChangeTarget={setEditTarget}
+				onSubmit={handleUpdate}
+			/>
 
-			<div style={{ overflowX: "auto" }}>
-				<table style={s.table}>
-					<thead>
-						<tr>
-							<th style={s.th}></th>
-							<th style={s.th}>サムネイル</th>
-							<th style={s.th}>タイトル</th>
-							<th style={s.th}>ステータス</th>
-							<th style={s.th}>更新日</th>
-							<th style={s.th}>ID</th>
-							<th style={{ ...s.th, textAlign: "right" }}>操作</th>
-						</tr>
-					</thead>
-					<tbody>
-						{contentsLoading ? (
-							<tr><td colSpan={7} style={{ ...s.td, textAlign: "center", padding: 40, color: "#999" }}>読み込み中...</td></tr>
-						) : filteredContents.length === 0 ? (
-							<tr><td colSpan={7} style={{ ...s.td, textAlign: "center", padding: 40, color: "#999" }}>表示するコンテンツがありません.</td></tr>
-						) : (
-							filteredContents.map((content) => {
-								const thumb = getThumbnailUrl(content);
-								return (
-									<tr key={content.id}>
-										<td style={s.td}>🌐</td>
-										<td style={s.td}>
-											{thumb ? (
-												<Image src={thumb} alt={content.title} style={s.thumb} width={64} height={64} unoptimized />
-											) : (
-												<div style={s.thumbPlaceholder} />
-											)}
-										</td>
-										<td style={s.td}>
-											<div style={{ fontWeight: 600, fontSize: "0.85rem" }}>{content.title}</div>
-											{content.summary && (
-												<div style={{ fontSize: "0.75rem", color: "#888", marginTop: 2 }}>{content.summary}</div>
-											)}
-										</td>
-										<td style={s.td}>
-											<span style={s.chip}>{content.status ?? "draft"}</span>
-										</td>
-										<td style={{ ...s.td, fontSize: "0.8rem", color: "#666" }}>{formatDate(content.updatedAt as string)}</td>
-										<td style={s.td}><span style={s.idText}>{content.id}</span></td>
-										<td style={{ ...s.td, textAlign: "right" }}>
-											<button
-												style={s.iconBtn}
-												title="編集"
-												onClick={async () => {
-													try {
-														const res = await fetch(`/api/cms/contents?id=${encodeURIComponent(content.id)}`);
-														if (res.ok) {
-															setEditTarget(await res.json());
-														} else {
-															setEditTarget(content);
-														}
-													} catch {
-														setEditTarget(content);
-													}
-												}}
-											>
-												<Edit2 size={15} />
-											</button>
-											<button style={s.iconBtnDanger} title="削除" onClick={() => setDeleteTarget(content)}>
-												<Trash2 size={15} />
-											</button>
-										</td>
-									</tr>
-								);
-							})
-						)}
-					</tbody>
-				</table>
-			</div>
-
-			{/* Create Dialog */}
-			{isCreateOpen && (
-				<div style={s.overlay} onClick={() => setIsCreateOpen(false)}>
-					<div style={s.dialog} onClick={(e) => e.stopPropagation()}>
-						<div style={s.dialogHeader}>
-							<span style={{ fontWeight: 600 }}>新しいコンテンツを作成</span>
-							<div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-								<select
-									style={s.select}
-									value={createStatus}
-									onChange={(e) => setCreateStatus(e.target.value as Content["status"])}
-									aria-label="ステータス"
-								>
-									<option value="draft">draft</option>
-									<option value="published">published</option>
-									<option value="archived">archived</option>
-								</select>
-								<select
-									style={s.select}
-									value={createVisibility}
-									onChange={(e) => setCreateVisibility(e.target.value as Content["visibility"])}
-									aria-label="公開設定"
-								>
-									<option value="draft">draft</option>
-									<option value="public">public</option>
-									<option value="unlisted">unlisted</option>
-									<option value="private">private</option>
-								</select>
-								<button style={s.btn} onClick={() => setIsCreateOpen(false)}>×</button>
-							</div>
-						</div>
-						<div style={s.dialogBody}>
-							<ContentForm
-								mode="create"
-								isLoading={submitting}
-								onSubmit={handleCreate}
-								onCancel={() => setIsCreateOpen(false)}
-								controlledStatus={createStatus}
-								controlledVisibility={createVisibility}
-							/>
-						</div>
-					</div>
-				</div>
-			)}
-
-			{/* Edit Dialog */}
-			{editTarget && (
-				<div style={s.overlay} onClick={() => setEditTarget(null)}>
-					<div style={s.dialog} onClick={(e) => e.stopPropagation()}>
-						<div style={s.dialogHeader}>
-							<span style={{ fontWeight: 600 }}>コンテンツを編集</span>
-							<div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-								<select
-									style={s.select}
-									value={editTarget.status ?? "draft"}
-									onChange={(e) => setEditTarget({ ...editTarget, status: e.target.value as Content["status"] })}
-									aria-label="ステータス"
-								>
-									<option value="draft">draft</option>
-									<option value="published">published</option>
-									<option value="archived">archived</option>
-								</select>
-								<select
-									style={s.select}
-									value={editTarget.visibility ?? "draft"}
-									onChange={(e) => setEditTarget({ ...editTarget, visibility: e.target.value as Content["visibility"] })}
-									aria-label="公開設定"
-								>
-									<option value="draft">draft</option>
-									<option value="public">public</option>
-									<option value="unlisted">unlisted</option>
-									<option value="private">private</option>
-								</select>
-								<button style={s.btn} onClick={() => setEditTarget(null)}>×</button>
-							</div>
-						</div>
-						<div style={s.dialogBody}>
-							<ContentForm
-								mode="edit"
-								initialData={editTarget}
-								isLoading={submitting}
-								onSubmit={handleUpdate}
-								onCancel={() => setEditTarget(null)}
-								controlledStatus={editTarget.status}
-								controlledVisibility={editTarget.visibility}
-							/>
-						</div>
-					</div>
-				</div>
-			)}
-
-			{/* Delete Confirm */}
-			{deleteTarget && (
-				<div style={s.overlay} onClick={() => setDeleteTarget(null)}>
-					<div style={{ ...s.dialog, maxWidth: 400 }} onClick={(e) => e.stopPropagation()}>
-						<div style={{ ...s.dialogHeader, borderBottom: "none", paddingBottom: 0 }}>
-							<span style={{ fontWeight: 600 }}>コンテンツを削除しますか？</span>
-						</div>
-						<div style={{ padding: "0 20px 20px" }}>
-							<p style={{ fontSize: "0.85rem", color: "#555", margin: "0 0 16px" }}>
-								この操作は取り消せません.関連するDBが削除されます.
-							</p>
-							<div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-								<button style={s.btn} onClick={() => setDeleteTarget(null)}>キャンセル</button>
-								<button
-									style={{ ...s.btnPrimary, background: "#c00", borderColor: "#c00" }}
-									onClick={() => void handleDelete(deleteTarget.id)}
-								>
-									削除する
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			)}
+			<DeleteContentDialog
+				target={deleteTarget}
+				onClose={() => setDeleteTarget(null)}
+				onConfirm={handleDelete}
+			/>
 		</div>
 	);
 }

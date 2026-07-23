@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -29,9 +28,6 @@ import {
 	CircularProgress,
 } from "@mui/material";
 import {
-	Database,
-	FileText,
-	FolderOpen,
 	Image as ImageIcon,
 	RefreshCcw,
 	Search,
@@ -65,6 +61,373 @@ function formatBytes(bytes: number) {
 		index += 1;
 	}
 	return `${value.toFixed(value >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
+}
+
+interface MediaHeaderProps {
+	selectedContentId: string;
+	onRefresh: () => void;
+	onOpenUpload: () => void;
+}
+
+function MediaHeader({
+	selectedContentId,
+	onRefresh,
+	onOpenUpload,
+}: MediaHeaderProps) {
+	return (
+		<PageHeader
+			title="メディアライブラリ"
+			description="コンテンツごとの画像・アセットを一元管理します.検索やタグフィルタで目的のメディアを素早く見つけ、詳細情報やプレビューを確認できます."
+			actions={[
+				<Button
+					key="refresh"
+					variant="outlined"
+					startIcon={<RefreshCcw size={16} />}
+					onClick={onRefresh}
+				>
+					更新
+				</Button>,
+				<Button
+					key="upload"
+					variant="contained"
+					startIcon={<UploadCloud size={18} />}
+					onClick={onOpenUpload}
+					disabled={!selectedContentId}
+				>
+					メディアを追加
+				</Button>,
+			]}
+		/>
+	);
+}
+
+interface MediaFiltersProps {
+	contents: Content[] | undefined;
+	contentsLoading: boolean;
+	selectedContentId: string;
+	searchQuery: string;
+	tagFilter: string;
+	uniqueTags: string[];
+	onSelectContent: (contentId: string) => void;
+	onSearch: (query: string) => void;
+	onFilterTag: (tag: string) => void;
+}
+
+function MediaFilters({
+	contents,
+	contentsLoading,
+	selectedContentId,
+	searchQuery,
+	tagFilter,
+	uniqueTags,
+	onSelectContent,
+	onSearch,
+	onFilterTag,
+}: MediaFiltersProps) {
+	return (
+		<Stack
+			direction={{ xs: "column", md: "row" }}
+			spacing={2}
+			alignItems={{ xs: "stretch", md: "center" }}
+		>
+			<FormControl fullWidth>
+				<InputLabel id="media-content-select-label">コンテンツ</InputLabel>
+				<Select
+					labelId="media-content-select-label"
+					value={selectedContentId}
+					label="コンテンツ"
+					onChange={(event) => onSelectContent(event.target.value)}
+					disabled={contentsLoading || (contents?.length ?? 0) === 0}
+				>
+					{contents?.map((content) => (
+						<MenuItem key={content.id} value={content.id}>
+							{content.title} ({content.id})
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			<TextField
+				placeholder="ファイル名・タグ・説明で検索"
+				value={searchQuery}
+				onChange={(event) => onSearch(event.target.value)}
+				InputProps={{
+					startAdornment: (
+						<InputAdornment position="start">
+							<Search size={16} />
+						</InputAdornment>
+					),
+				}}
+				sx={{ flex: 1 }}
+			/>
+			<FormControl size="small" sx={{ minWidth: 160 }}>
+				<InputLabel id="media-tag-filter-label">タグ</InputLabel>
+				<Select
+					labelId="media-tag-filter-label"
+					value={tagFilter}
+					label="タグ"
+					onChange={(event) => onFilterTag(event.target.value)}
+				>
+					<MenuItem value="all">すべて</MenuItem>
+					{uniqueTags.map((tag) => (
+						<MenuItem key={tag} value={tag}>
+							{tag}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+		</Stack>
+	);
+}
+
+interface SelectedContentSummaryProps {
+	selectedContent: Content;
+	mediaCount: number;
+	totalSize: number;
+}
+
+function SelectedContentSummary({
+	selectedContent,
+	mediaCount,
+	totalSize,
+}: SelectedContentSummaryProps) {
+	return (
+		<Paper
+			variant="outlined"
+			sx={{
+				p: 2.5,
+				borderColor: "divider",
+				bgcolor: "background.default",
+			}}
+		>
+			<Stack
+				direction={{ xs: "column", sm: "row" }}
+				spacing={2}
+				justifyContent="space-between"
+			>
+				<Box>
+					<Typography variant="subtitle2" color="text.secondary">
+						選択中のコンテンツ
+					</Typography>
+					<Typography variant="body1" fontWeight={600}>
+						{selectedContent.title}
+					</Typography>
+					{selectedContent.summary && (
+						<Typography variant="caption" color="text.secondary">
+							{selectedContent.summary}
+						</Typography>
+					)}
+				</Box>
+				<Stack direction="row" spacing={1.5}>
+					<StatItem label="メディア数" value={mediaCount} />
+					<StatItem label="合計サイズ" value={formatBytes(totalSize)} />
+				</Stack>
+			</Stack>
+		</Paper>
+	);
+}
+
+interface MediaGridProps {
+	mediaLoading: boolean;
+	filteredMedia: MediaWithPreview[];
+	onDelete: (media: MediaWithPreview) => void;
+}
+
+function MediaGrid({ mediaLoading, filteredMedia, onDelete }: MediaGridProps) {
+	if (mediaLoading) {
+		return (
+			<Box
+				sx={{
+					py: 10,
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
+				<CircularProgress size={32} />
+			</Box>
+		);
+	}
+
+	if (filteredMedia.length === 0) {
+		return (
+			<Box
+				sx={{
+					py: 10,
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+					gap: 1.5,
+					textAlign: "center",
+				}}
+			>
+				<ImageIcon size={40} color="#9ca3af" />
+				<Typography variant="body1" fontWeight={600}>
+					メディアが見つかりません
+				</Typography>
+				<Typography variant="body2" color="text.secondary">
+					条件を変更するか、メディアをアップロードしてください.
+				</Typography>
+			</Box>
+		);
+	}
+
+	return (
+		<Box
+			sx={{
+				display: "grid",
+				gridTemplateColumns: {
+					xs: "repeat(auto-fill, minmax(220px, 1fr))",
+					md: "repeat(auto-fill, minmax(260px, 1fr))",
+				},
+				gap: 3,
+			}}
+		>
+			{filteredMedia.map((media) => (
+				<MediaCard key={media.id} media={media} onDelete={onDelete} />
+			))}
+		</Box>
+	);
+}
+
+interface MediaCardProps {
+	media: MediaWithPreview;
+	onDelete: (media: MediaWithPreview) => void;
+}
+
+function MediaCard({ media, onDelete }: MediaCardProps) {
+	return (
+		<Card variant="outlined" sx={{ overflow: "hidden" }}>
+			<Box
+				sx={{
+					position: "relative",
+					height: 180,
+					bgcolor: "grey.900",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
+				{media.preview ? (
+					<Image
+						src={media.preview}
+						alt={media.alt || media.filename}
+						fill
+						sizes="320px"
+						style={{ objectFit: "cover" }}
+					/>
+				) : (
+					<ImageIcon size={32} color="#9ca3af" />
+				)}
+			</Box>
+			<CardContent sx={{ display: "grid", gap: 1 }}>
+				<Typography variant="subtitle2" fontWeight={600}>
+					{media.filename}
+				</Typography>
+				<Typography variant="caption" color="text.secondary">
+					{media.mimeType} ・ {formatBytes(media.size)}
+				</Typography>
+				{media.alt && (
+					<Typography variant="caption" color="text.secondary">
+						Alt: {media.alt}
+					</Typography>
+				)}
+				{media.description && (
+					<Typography variant="body2" color="text.secondary">
+						{media.description}
+					</Typography>
+				)}
+				{media.tags && media.tags.length > 0 && (
+					<Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+						{media.tags.map((tag) => (
+							<Chip key={tag} label={tag} size="small" variant="outlined" />
+						))}
+					</Stack>
+				)}
+				<Stack direction="row" spacing={0.5} justifyContent="flex-end">
+					<Tooltip title="メディアを削除">
+						<IconButton
+							size="small"
+							color="error"
+							onClick={() => onDelete(media)}
+						>
+							<Trash2 size={16} />
+						</IconButton>
+					</Tooltip>
+				</Stack>
+			</CardContent>
+		</Card>
+	);
+}
+
+interface MediaDialogsProps {
+	isUploadDialogOpen: boolean;
+	isUploading: boolean;
+	selectedContentId: string;
+	deleteTarget: MediaWithPreview | null;
+	snackbar: SnackbarState;
+	onCloseUpload: () => void;
+	onUpload: (formData: FormData) => Promise<void>;
+	onCancelDelete: () => void;
+	onConfirmDelete: () => void;
+	onCloseSnackbar: () => void;
+}
+
+function MediaDialogs({
+	isUploadDialogOpen,
+	isUploading,
+	selectedContentId,
+	deleteTarget,
+	snackbar,
+	onCloseUpload,
+	onUpload,
+	onCancelDelete,
+	onConfirmDelete,
+	onCloseSnackbar,
+}: MediaDialogsProps) {
+	return (
+		<>
+			<Dialog
+				open={isUploadDialogOpen}
+				onClose={onCloseUpload}
+				maxWidth="sm"
+				fullWidth
+			>
+				<DialogTitle>メディアをアップロード</DialogTitle>
+				<DialogContent>
+					<MediaUploadForm
+						onSubmit={onUpload}
+						onCancel={onCloseUpload}
+						isLoading={isUploading}
+						contentId={selectedContentId}
+					/>
+				</DialogContent>
+			</Dialog>
+
+			<ConfirmDialog
+				open={Boolean(deleteTarget)}
+				title="メディアを削除しますか？"
+				description="この操作は元に戻せません.削除されたメディアはコンテンツからも参照できなくなります."
+				confirmLabel="削除する"
+				onCancel={onCancelDelete}
+				onConfirm={onConfirmDelete}
+			/>
+
+			<Snackbar
+				open={snackbar.open}
+				autoHideDuration={3200}
+				onClose={onCloseSnackbar}
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+			>
+				<Alert
+					onClose={onCloseSnackbar}
+					severity={snackbar.severity}
+					variant="filled"
+				>
+					{snackbar.message}
+				</Alert>
+			</Snackbar>
+		</>
+	);
 }
 
 export default function AdminMediaManager() {
@@ -281,88 +644,29 @@ export default function AdminMediaManager() {
 
 	return (
 		<Box sx={{ display: "grid", gap: 4 }}>
-			<PageHeader
-				title="メディアライブラリ"
-				description="コンテンツごとの画像・アセットを一元管理します.検索やタグフィルタで目的のメディアを素早く見つけ、詳細情報やプレビューを確認できます."
-				
-				actions={[
-					<Button
-						key="refresh"
-						variant="outlined"
-						startIcon={<RefreshCcw size={16} />}
-						onClick={() =>
-							selectedContentId && void fetchMedia(selectedContentId)
-						}
-					>
-						更新
-					</Button>,
-					<Button
-						key="upload"
-						variant="contained"
-						startIcon={<UploadCloud size={18} />}
-						onClick={() => setIsUploadDialogOpen(true)}
-						disabled={!selectedContentId}
-					>
-						メディアを追加
-					</Button>,
-				]}
+			<MediaHeader
+				selectedContentId={selectedContentId}
+				onRefresh={() =>
+					selectedContentId && void fetchMedia(selectedContentId)
+				}
+				onOpenUpload={() => setIsUploadDialogOpen(true)}
 			/>
 
 			<Paper
 				variant="outlined"
 				sx={{ p: 3, display: "grid", gap: 2.5, borderColor: "divider" }}
 			>
-				<Stack
-					direction={{ xs: "column", md: "row" }}
-					spacing={2}
-					alignItems={{ xs: "stretch", md: "center" }}
-				>
-					<FormControl fullWidth>
-						<InputLabel id="media-content-select-label">コンテンツ</InputLabel>
-						<Select
-							labelId="media-content-select-label"
-							value={selectedContentId}
-							label="コンテンツ"
-							onChange={(event) => setSelectedContentId(event.target.value)}
-							disabled={contentsLoading || (contents?.length ?? 0) === 0}
-						>
-							{contents?.map((content) => (
-								<MenuItem key={content.id} value={content.id}>
-									{content.title} ({content.id})
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
-					<TextField
-						placeholder="ファイル名・タグ・説明で検索"
-						value={searchQuery}
-						onChange={(event) => setSearchQuery(event.target.value)}
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<Search size={16} />
-								</InputAdornment>
-							),
-						}}
-						sx={{ flex: 1 }}
-					/>
-					<FormControl size="small" sx={{ minWidth: 160 }}>
-						<InputLabel id="media-tag-filter-label">タグ</InputLabel>
-						<Select
-							labelId="media-tag-filter-label"
-							value={tagFilter}
-							label="タグ"
-							onChange={(event) => setTagFilter(event.target.value)}
-						>
-							<MenuItem value="all">すべて</MenuItem>
-							{uniqueTags.map((tag) => (
-								<MenuItem key={tag} value={tag}>
-									{tag}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
-				</Stack>
+				<MediaFilters
+					contents={contents}
+					contentsLoading={contentsLoading}
+					selectedContentId={selectedContentId}
+					searchQuery={searchQuery}
+					tagFilter={tagFilter}
+					uniqueTags={uniqueTags}
+					onSelectContent={setSelectedContentId}
+					onSearch={setSearchQuery}
+					onFilterTag={setTagFilter}
+				/>
 
 				{contentsError && (
 					<Alert severity="error">
@@ -371,205 +675,34 @@ export default function AdminMediaManager() {
 				)}
 
 				{selectedContent && (
-					<Paper
-						variant="outlined"
-						sx={{
-							p: 2.5,
-							borderColor: "divider",
-							bgcolor: "background.default",
-						}}
-					>
-						<Stack
-							direction={{ xs: "column", sm: "row" }}
-							spacing={2}
-							justifyContent="space-between"
-						>
-							<Box>
-								<Typography variant="subtitle2" color="text.secondary">
-									選択中のコンテンツ
-								</Typography>
-								<Typography variant="body1" fontWeight={600}>
-									{selectedContent.title}
-								</Typography>
-								{selectedContent.summary && (
-									<Typography variant="caption" color="text.secondary">
-										{selectedContent.summary}
-									</Typography>
-								)}
-							</Box>
-							<Stack direction="row" spacing={1.5}>
-								<StatItem label="メディア数" value={mediaItems.length} />
-								<StatItem label="合計サイズ" value={formatBytes(totalSize)} />
-							</Stack>
-						</Stack>
-					</Paper>
+					<SelectedContentSummary
+						selectedContent={selectedContent}
+						mediaCount={mediaItems.length}
+						totalSize={totalSize}
+					/>
 				)}
 
-				{mediaLoading ? (
-					<Box
-						sx={{
-							py: 10,
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-						}}
-					>
-						<CircularProgress size={32} />
-					</Box>
-				) : filteredMedia.length === 0 ? (
-					<Box
-						sx={{
-							py: 10,
-							display: "flex",
-							flexDirection: "column",
-							alignItems: "center",
-							gap: 1.5,
-							textAlign: "center",
-						}}
-					>
-						<ImageIcon size={40} color="#9ca3af" />
-						<Typography variant="body1" fontWeight={600}>
-							メディアが見つかりません
-						</Typography>
-						<Typography variant="body2" color="text.secondary">
-							条件を変更するか、メディアをアップロードしてください.
-						</Typography>
-					</Box>
-				) : (
-					<Box
-						sx={{
-							display: "grid",
-							gridTemplateColumns: {
-								xs: "repeat(auto-fill, minmax(220px, 1fr))",
-								md: "repeat(auto-fill, minmax(260px, 1fr))",
-							},
-							gap: 3,
-						}}
-					>
-						{filteredMedia.map((media) => (
-							<Card
-								key={media.id}
-								variant="outlined"
-								sx={{ overflow: "hidden" }}
-							>
-								<Box
-									sx={{
-										position: "relative",
-										height: 180,
-										bgcolor: "grey.900",
-										display: "flex",
-										alignItems: "center",
-										justifyContent: "center",
-									}}
-								>
-									{media.preview ? (
-										<Image
-											src={media.preview}
-											alt={media.alt || media.filename}
-											fill
-											sizes="320px"
-											style={{ objectFit: "cover" }}
-										/>
-									) : (
-										<ImageIcon size={32} color="#9ca3af" />
-									)}
-								</Box>
-								<CardContent sx={{ display: "grid", gap: 1 }}>
-									<Typography variant="subtitle2" fontWeight={600}>
-										{media.filename}
-									</Typography>
-									<Typography variant="caption" color="text.secondary">
-										{media.mimeType} ・ {formatBytes(media.size)}
-									</Typography>
-									{media.alt && (
-										<Typography variant="caption" color="text.secondary">
-											Alt: {media.alt}
-										</Typography>
-									)}
-									{media.description && (
-										<Typography variant="body2" color="text.secondary">
-											{media.description}
-										</Typography>
-									)}
-									{media.tags && media.tags.length > 0 && (
-										<Stack
-											direction="row"
-											spacing={0.5}
-											flexWrap="wrap"
-											useFlexGap
-										>
-											{media.tags.map((tag) => (
-												<Chip
-													key={tag}
-													label={tag}
-													size="small"
-													variant="outlined"
-												/>
-											))}
-										</Stack>
-									)}
-									<Stack
-										direction="row"
-										spacing={0.5}
-										justifyContent="flex-end"
-									>
-										<Tooltip title="メディアを削除">
-											<IconButton
-												size="small"
-												color="error"
-												onClick={() => setDeleteTarget(media)}
-											>
-												<Trash2 size={16} />
-											</IconButton>
-										</Tooltip>
-									</Stack>
-								</CardContent>
-							</Card>
-						))}
-					</Box>
-				)}
+				<MediaGrid
+					mediaLoading={mediaLoading}
+					filteredMedia={filteredMedia}
+					onDelete={setDeleteTarget}
+				/>
 			</Paper>
 
-			<Dialog
-				open={isUploadDialogOpen}
-				onClose={() => setIsUploadDialogOpen(false)}
-				maxWidth="sm"
-				fullWidth
-			>
-				<DialogTitle>メディアをアップロード</DialogTitle>
-				<DialogContent>
-					<MediaUploadForm
-						onSubmit={handleUpload}
-						onCancel={() => setIsUploadDialogOpen(false)}
-						isLoading={isUploading}
-						contentId={selectedContentId}
-					/>
-				</DialogContent>
-			</Dialog>
-
-			<ConfirmDialog
-				open={Boolean(deleteTarget)}
-				title="メディアを削除しますか？"
-				description="この操作は元に戻せません.削除されたメディアはコンテンツからも参照できなくなります."
-				confirmLabel="削除する"
-				onCancel={() => setDeleteTarget(null)}
-				onConfirm={() => deleteTarget && void handleDelete(deleteTarget)}
+			<MediaDialogs
+				isUploadDialogOpen={isUploadDialogOpen}
+				isUploading={isUploading}
+				selectedContentId={selectedContentId}
+				deleteTarget={deleteTarget}
+				snackbar={snackbar}
+				onCloseUpload={() => setIsUploadDialogOpen(false)}
+				onUpload={handleUpload}
+				onCancelDelete={() => setDeleteTarget(null)}
+				onConfirmDelete={() =>
+					deleteTarget && void handleDelete(deleteTarget)
+				}
+				onCloseSnackbar={closeSnackbar}
 			/>
-
-			<Snackbar
-				open={snackbar.open}
-				autoHideDuration={3200}
-				onClose={closeSnackbar}
-				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-			>
-				<Alert
-					onClose={closeSnackbar}
-					severity={snackbar.severity}
-					variant="filled"
-				>
-					{snackbar.message}
-				</Alert>
-			</Snackbar>
 		</Box>
 	);
 }
