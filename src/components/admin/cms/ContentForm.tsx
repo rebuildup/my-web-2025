@@ -1,6 +1,7 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
+import Image from "next/image";
 import {
 	type ChangeEvent,
 	useCallback,
@@ -815,8 +816,11 @@ export function ContentForm({
 				/>
 				{formData.thumbnails?.image?.src && (
 					<div style={{ marginTop: 8 }}>
-						<img
+						<Image
 							src={formData.thumbnails.image.src}
+							width={400}
+							height={200}
+							unoptimized
 							alt="thumbnail"
 							style={{ maxWidth: "100%", maxHeight: 200 }}
 						/>
@@ -1067,9 +1071,12 @@ export function ContentForm({
 							}}
 						>
 							{m.src && m.src.match(/\.(png|jpe?g|gif|webp|svg)/i) ? (
-								<img
+								<Image
 									src={m.src}
 									alt=""
+									width={40}
+									height={40}
+									unoptimized
 									style={{ width: 40, height: 40, objectFit: "cover" }}
 								/>
 							) : m.src && m.src.match(/\.(mp4|webm|ogv)/i) ? (
@@ -1200,8 +1207,11 @@ export function ContentForm({
 			</div>
 			{formData.seo?.openGraph?.image && (
 				<div style={{ marginTop: 8 }}>
-					<img
+					<Image
 						src={formData.seo.openGraph.image}
+						width={400}
+						height={200}
+						unoptimized
 						alt="OG"
 						style={{ maxWidth: "100%", maxHeight: 200 }}
 					/>
@@ -1252,8 +1262,11 @@ export function ContentForm({
 			/>
 			<div style={{ marginTop: 8 }}>
 				<div style={s.label}>OG画像プレビュー</div>
-				<img
+				<Image
 					src={generatedOgImageUrl}
+					width={400}
+					height={200}
+					unoptimized
 					alt="generated OG"
 					style={{ maxWidth: "100%", maxHeight: 200 }}
 				/>

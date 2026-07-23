@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { isEnhancedContentItem } from "@/types";
 import { ContentItem, MediaEmbed } from "@/types/content";
@@ -351,8 +352,8 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 											className="aspect-square    rounded overflow-hidden"
 										>
 											{/* eslint-disable-next-line @next/next/no-img-element */}
-											<img
-												src={image}
+											<Image
+												src={image} width={200} height={200} unoptimized
 												alt={`Image ${index + 1}`}
 												className="w-full h-full object-cover"
 												onError={(e) => {
@@ -424,8 +425,8 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 														{getVideoThumbnail(video) ? (
 															<div className="relative w-full h-full">
 																{/* eslint-disable-next-line @next/next/no-img-element */}
-																<img
-																	src={getVideoThumbnail(video)!}
+																<Image
+																	src={getVideoThumbnail(video)!} width={200} height={200} unoptimized
 																	alt={video.title || "Video thumbnail"}
 																	className="w-full h-full object-cover"
 																	onError={(e) => {

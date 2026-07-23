@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { EnhancedFileUploadOptions, FileUploadResult } from "@/types";
 import { useCallback, useRef, useState } from "react";
 
@@ -556,8 +557,8 @@ export function EnhancedFileUploadSection({
 							<div key={image} className="relative group">
 								<div className="aspect-square    rounded overflow-hidden">
 									{/* eslint-disable-next-line @next/next/no-img-element */}
-									<img
-										src={image}
+									<Image
+										src={image} width={200} height={200} unoptimized
 										alt={`Processed ${index + 1}`}
 										className="w-full h-full object-cover"
 										onError={(e) => {
@@ -615,8 +616,8 @@ export function EnhancedFileUploadSection({
 							<div key={`${image}-original`} className="relative group">
 								<div className="aspect-square    rounded overflow-hidden">
 									{/* eslint-disable-next-line @next/next/no-img-element */}
-									<img
-										src={image}
+									<Image
+										src={image} width={200} height={200} unoptimized
 										alt={`Original ${index + 1}`}
 										className="w-full h-full object-cover"
 										onError={(e) => {

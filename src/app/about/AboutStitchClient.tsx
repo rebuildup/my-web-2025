@@ -2,6 +2,7 @@
 
 import { animate, stagger } from "animejs";
 import Link from "next/link";
+import Image from "next/image";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import SamuidoIcon from "@/components/icons/SamuidoIcon";
 import { type PortfolioContentItem } from "@/types/portfolio";
@@ -458,8 +459,10 @@ function WorksSection({ items }: { items: PortfolioContentItem[] }) {
 					<div className="aspect-video rounded overflow-hidden">
 						{item.thumbnail && (
 							// eslint-disable-next-line @next/next/no-img-element
-							<img
+							<Image
 								src={item.thumbnail}
+								width={320}
+								height={320}
 								alt={item.title}
 								className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
 							/>
@@ -746,8 +749,11 @@ export default function AboutStitchClient() {
 				}
 			>
 				{/* eslint-disable-next-line @next/next/no-img-element */}
-				<img
+				<Image
 					src={`https://skillicons.dev/icons?i=${skillIconIds}&perline=12`}
+					width={520}
+					height={80}
+					unoptimized
 					alt="skills"
 					className="w-full max-w-[520px]"
 					loading="lazy"

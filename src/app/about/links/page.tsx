@@ -2,6 +2,7 @@
 
 import { m } from "framer-motion";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { contactLinks, type LinkItem, links } from "./data";
 
@@ -29,8 +30,11 @@ function LinkIcon({ item, className }: { item: LinkItem; className?: string }) {
 
 	if (isExternal && favicon) {
 		return (
-			<img
+			<Image
 				src={favicon}
+				width={32}
+				height={32}
+				unoptimized
 				alt={item.title}
 				className={cn(
 					"object-contain   transition-opacity rounded-sm",

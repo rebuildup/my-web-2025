@@ -1,4 +1,5 @@
 import { useGesture } from "@use-gesture/react";
+import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
 type ImageItem = string | { src: string; alt?: string };
@@ -918,8 +919,10 @@ export default function DomeGallery({
 											backfaceVisibility: "hidden",
 										}}
 									>
-										<img
+										<Image
 											src={it.src}
+											width={600}
+											height={600}
 											draggable={false}
 											alt={it.alt}
 											className="w-full h-full object-cover pointer-events-none"

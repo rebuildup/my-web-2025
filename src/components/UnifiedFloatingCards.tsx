@@ -21,6 +21,7 @@ import {
 	Trash2,
 	Video,
 } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 // Format date helper
@@ -647,8 +648,10 @@ function YouTubeCard({
 				<div className="relative group">
 					{video.thumbnail && (
 						<div className="relative">
-							<img
+							<Image
 								src={video.thumbnail}
+								width={224}
+								height={126}
 								alt={video.title}
 								className="w-56 h-auto object-cover rounded-lg"
 							/>
@@ -697,8 +700,10 @@ function PortfolioCard({
 			<div className="pointer-events-auto block p-4 rounded-lg max-w-[280px]">
 				<div className="aspect-video overflow-hidden relative rounded-md mb-3">
 					{content.thumbnail ? (
-						<img
+						<Image
 							src={content.thumbnail}
+							width={320}
+							height={320}
 							alt={content.title}
 							className="w-full h-full object-cover"
 						/>
@@ -753,8 +758,11 @@ function LinkCard({ card, opacity }: { card: UnifiedCard; opacity: number }) {
 			<div className="pointer-events-auto block p-4 rounded-lg max-w-[220px]">
 				<div className="flex items-center gap-2 mb-1">
 					{link.favicon && (
-						<img
+						<Image
 							src={link.favicon}
+							width={16}
+							height={16}
+							unoptimized
 							alt=""
 							className="w-4 h-4 rounded shrink-0"
 							onError={(e) => {

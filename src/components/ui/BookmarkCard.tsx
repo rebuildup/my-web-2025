@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface BookmarkCardProps {
@@ -81,8 +82,10 @@ export function BookmarkCard({
 				<div className="flex flex-col gap-2.5 md:flex-row md:items-center md:gap-3">
 					{hasImage && (
 						<div className="shrink-0 rounded overflow-hidden max-w-[140px] max-h-[140px] w-[140px] h-[140px] flex items-center justify-center relative">
-							<img
+							<Image
 								src={displayImage}
+								width={140}
+								height={140}
 								alt=""
 								loading="lazy"
 								className="rounded"

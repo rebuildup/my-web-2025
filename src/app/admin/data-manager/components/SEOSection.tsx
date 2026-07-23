@@ -2,6 +2,7 @@
 // Forced HMR Update
 
 
+import Image from "next/image";
 import { SEOData } from "@/types/content";
 
 interface SEOSectionProps {
@@ -203,8 +204,8 @@ export function SEOSection({
 						 {seo?.ogImage && (
 							 <div className="aspect-video ">
 								 {/* eslint-disable-next-line @next/next/no-img-element */}
-								 <img
-									 src={seo.ogImage}
+								 <Image
+									 src={seo.ogImage} width={1200} height={630} unoptimized
 									 alt="OG Preview"
 									 className="w-full h-full object-cover"
 									 onError={(e) => {
@@ -237,7 +238,7 @@ export function SEOSection({
 				<div className="  rounded overflow-hidden max-w-md">
 					<div className="aspect-video ">
 						{/* eslint-disable-next-line @next/next/no-img-element */}
-						<img
+						<Image
 							src={`/api/og?title=${encodeURIComponent(
 								title || "Untitled",
 							)}&category=${encodeURIComponent(
@@ -245,7 +246,7 @@ export function SEOSection({
 							)}&tags=${encodeURIComponent(
 								(tags || []).join(","),
 							)}&thumbnail=${encodeURIComponent(thumbnail || "")}`}
-							alt="Dynamic OG Preview"
+							width={1200} height={630} unoptimized alt="Dynamic OG Preview"
 							className="w-full h-full object-cover"
 							onError={(e) => {
 								(e.target as HTMLImageElement).style.display = "none";

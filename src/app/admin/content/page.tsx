@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { Edit2, Plus, RefreshCcw, Trash2 } from "lucide-react";
+import Image from "next/image";
 import type { Content } from "@/cms/types/content";
 import { ContentForm } from "@/components/admin/cms";
 import { useCmsResource } from "@/hooks/useCmsResource";
@@ -256,7 +257,7 @@ export default function AdminContentPage() {
 										<td style={s.td}>🌐</td>
 										<td style={s.td}>
 											{thumb ? (
-												<img src={thumb} alt={content.title} style={s.thumb} />
+												<Image src={thumb} alt={content.title} style={s.thumb} width={64} height={64} unoptimized />
 											) : (
 												<div style={s.thumbPlaceholder} />
 											)}

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
 	compressFileIfNeeded,
 	extractFileMetadata,
@@ -508,8 +509,8 @@ export function FileUploadSection({
 							<div key={image} className="relative group">
 								<div className="aspect-square    rounded overflow-hidden">
 									{/* eslint-disable-next-line @next/next/no-img-element */}
-									<img
-										src={image}
+									<Image
+										src={image} width={200} height={200} unoptimized
 										alt={`Upload ${index + 1}`}
 										className="w-full h-full object-cover"
 										onError={(e) => {

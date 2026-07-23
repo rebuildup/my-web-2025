@@ -17,6 +17,7 @@ import {
 	Upload,
 	X,
 } from "lucide-react";
+import Image from "next/image";
 import React, {
 	useCallback,
 	useEffect,
@@ -857,8 +858,11 @@ const Widget = ({
 							</div>
 						) : (
 							<div className="relative group w-full h-full flex items-center justify-center">
-								<img
+								<Image
 									src={widget.content}
+									width={300}
+									height={300}
+									unoptimized
 									alt="Widget"
 									className="w-full h-full object-contain pointer-events-none select-none rounded-lg"
 									onLoad={handleImageLoad}
