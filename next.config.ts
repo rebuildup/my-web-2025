@@ -38,11 +38,6 @@ const nextConfig: NextConfig = {
 		contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
 		// Fix: Enable unoptimized only for standalone builds
 		unoptimized: process.env.NEXT_BUILD_STANDALONE === "true",
-		loader: process.env.NEXT_BUILD_STANDALONE === "true" ? "custom" : "default",
-		loaderFile:
-			process.env.NEXT_BUILD_STANDALONE === "true"
-				? "./src/lib/utils/image-loader.ts"
-				: undefined,
 		remotePatterns: [
 			{
 				protocol: "https",
