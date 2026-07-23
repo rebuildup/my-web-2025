@@ -474,3 +474,401 @@ const Widget = ({
 		</div>
 	);
 };
+
+export default function PomodoroTimer() {
+	const [settings, setSettings] = useLocalStorage(
+		"pomodoro-settings",
+		DEFAULT_SETTINGS,
+	);
+	const [_stats, setStats] = useLocalStorage("pomodoro-stats", DEFAULT_STATS);
+	const [_sessions, setSessions] = useLocalStorage<PomodoroSession[]>(
+		"pomodoro-sessions",
+		[],
+	);
+
+	const [customSchedule, setCustomSchedule] = useState<ScheduleStep[]>(
+		SCHEDULE.map((s) => ({ ...s })),
+	);
+	const [theme, setTheme] = useState(settings.theme || "dark");
+	const [showStopDialog, setShowStopDialog] = useState(false);
+	const [showSettingsPanel, setShowSettingsPanel] = useState(false);
+	const [settingsTab, setSettingsTab] = useState<
+		"workflow" | "dock" | "widgets" | "youtube"
+	>("workflow");
+	const [dockVisibility, setDockVisibility] = useState({
+		note: true,
+		image: false,
+		music: true,
+		timer: true,
+		stats: false,
+		theme: true,
+		settings: true,
+	});
+	const [widgets, setWidgets] = useLocalStorage<Widget[]>(
+		"pomodoro-widgets",
+		[],
+	);
+
+	const zCounterRef = useRef(BASE_WIDGET_Z);
+	const nextZ = useCallback(() => {
+		zCounterRef.current = (zCounterRef.current || BASE_WIDGET_Z) + 1;
+		return zCounterRef.current;
+	}, []);
+	useEffect(() => {
+		const maxZ =
+			widgets.reduce(
+				(acc, w) => Math.max(acc, w.zIndex ?? BASE_WIDGET_Z),
+				BASE_WIDGET_Z,
+			) + 1;
+		zCounterRef.current = Math.max(zCounterRef.current, maxZ);
+	}, [widgets]);
+
+	const [isDraggingStickyWidget, setIsDraggingStickyWidget] = useState(false);
+	const [hoveredStepIndex, setHoveredStepIndex] = useState<number | null>(null);
+
+	const { requestPermission, showNotification } = useNotifications();
+
+	const seedRef = useRef(123456789);
+	const nextSeed = useCallback(() => {
+		seedRef.current = (seedRef.current * 1664525 + 1013904223) >>> 0;
+		return seedRef.current;
+	}, []);
+	const nextJitter = useCallback(
+		(range: number) => {
+			const value = nextSeed() / 0xffffffff;
+			return (value - 0.5) * range * 2;
+		},
+		[nextSeed],
+	);
+	const nextId = useCallback(() => nextSeed(), [nextSeed]);
+	const getDeterministicStickyColor = useCallback(() => {
+		const index = nextSeed() % STICKY_NOTE_COLORS.length;
+		return STICKY_NOTE_COLORS[index];
+	}, [nextSeed]);
+
+	const {
+		currentStep,
+		totalDuration,
+		timeLeft,
+		isActive,
+		isFinished,
+		start,
+		pause,
+		reset,
+		goToNext,
+	} = useTimerEngine({
+		schedule: customSchedule,
+		settings,
+		showNotification,
+		requestPermission,
+		onStatsUpdate: setStats,
+		onSessionsUpdate: setSessions,
+	});
+
+	const highlightColor = settings.highlightColor ?? DEFAULT_HIGHLIGHT_COLOR;
+
+	const handleTimerClick = (e: React.MouseEvent) => {
+		if ((e.target as HTMLElement).closest(".no-timer-click")) {
+			return;
+		}
+
+		if (isFinished) {
+			goToNext();
+		} else if (isActive) {
+			setShowStopDialog(true);
+		} else {
+			requestPermission();
+			start();
+		}
+	};
+
+	const handleStop = () => {
+		pause();
+		setShowStopDialog(false);
+	};
+
+	const handleReset = () => {
+		reset();
+		setShowStopDialog(false);
+	};
+
+	const handleSkip = () => {
+		pause();
+		setIsFinished(false);
+		goToNext();
+		setShowStopDialog(false);
+	};
+
+	const toggleTheme = () =>
+		setTheme((prev) => (prev === "light" ? "dark" : "light"));
+
+	const addWidget = (type: string) => {
+		const currentSettings = settings;
+		const stickySize = currentSettings.stickyWidgetSize ?? STICKY_NOTE_SIZE;
+		const youtubeWidth = currentSettings.youtubeWidgetWidth ?? 400;
+
+		if (type === "music") {
+			const id = nextId();
+			const newWidget: Widget = {
+				id,
+				type: "youtube",
+				x: window.innerWidth / 2 - youtubeWidth / 2 + nextJitter(40),
+				y: window.innerHeight / 2 - 150 + nextJitter(40),
+				content: "",
+				w: youtubeWidth,
+				h: "auto",
+				zIndex: nextZ(),
+			};
+			setWidgets([...widgets, newWidget]);
+			return;
+		}
+		if (type === "stats") {
+			const id = nextId();
+			const newWidget: Widget = {
+				id,
+				type: "stats",
+				x: window.innerWidth / 2 - 180 + nextJitter(40),
+				y: window.innerHeight / 2 - 120 + nextJitter(40),
+				content: "",
+				w: stickySize,
+				h: stickySize,
+				zIndex: nextZ(),
+				color: getDeterministicStickyColor(),
+			};
+			setWidgets([...widgets, newWidget]);
+			return;
+		}
+		const id = nextId();
+		const content = "";
+		const shouldHaveStickyStyle =
+			type === "note" || type === "image" || type === "timer";
+		const initialSize = shouldHaveStickyStyle ? stickySize : undefined;
+		const newWidget: Widget = {
+			id,
+			type,
+			x: window.innerWidth / 2 - 150 + nextJitter(40),
+			y: window.innerHeight / 2 - 100 + nextJitter(40),
+			content,
+			w: initialSize,
+			h: initialSize,
+			color: shouldHaveStickyStyle ? getDeterministicStickyColor() : undefined,
+			zIndex: nextZ(),
+		};
+		setWidgets([...widgets, newWidget]);
+	};
+
+	const updateWidget = (id: number, newData: Partial<Widget>) => {
+		setWidgets(widgets.map((w) => (w.id === id ? { ...w, ...newData } : w)));
+	};
+
+	const removeWidget = (id: number) => {
+		setWidgets(widgets.filter((w) => w.id !== id));
+	};
+
+	const currentStepProgressPercent = useMemo(() => {
+		const durationMs = currentStep.duration * 60 * 1000;
+		if (durationMs <= 0) return 0;
+		const progress = ((durationMs - timeLeft) / durationMs) * 100;
+		return Math.min(100, Math.max(0, progress));
+	}, [currentStep.duration, timeLeft]);
+
+	const updateSchedule = (index: number, updates: Partial<ScheduleStep>) => {
+		const newSchedule = [...customSchedule];
+		newSchedule[index] = { ...newSchedule[index], ...updates };
+		setCustomSchedule(newSchedule);
+	};
+
+	const addStep = () => {
+		const newStep: ScheduleStep = {
+			id: nextId(),
+			type: "focus",
+			duration: 25,
+			label: "New Step",
+			desc: "",
+		};
+		setCustomSchedule([...customSchedule, newStep]);
+	};
+
+	const removeStep = (index: number) => {
+		setCustomSchedule(customSchedule.filter((_, i) => i !== index));
+	};
+
+	const updateDockVisibility = (
+		key: keyof typeof dockVisibility,
+		visible: boolean,
+	) => {
+		setDockVisibility((prev) => ({ ...prev, [key]: visible }));
+	};
+
+	const updateSettings = (updates: Partial<PomodoroSettings>) => {
+		setSettings({ ...settings, ...updates });
+	};
+
+	return (
+		<div
+			className={`relative w-full h-screen overflow-hidden transition-colors duration-500 select-none ${
+				theme === "dark" ? " " : " "
+			}`}
+			style={{
+				backgroundImage:
+					theme === "light"
+						? "radial-gradient(rgba(0,0,0,0.12) 1px, transparent 1px)"
+						: "radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px)",
+				backgroundSize: "24px 24px",
+			}}
+		>
+			{widgets.map((widget) => (
+				<Widget
+					key={widget.id}
+					widget={widget}
+					updateWidget={updateWidget}
+					removeWidget={removeWidget}
+					theme={theme}
+					bringToFront={() => updateWidget(widget.id, { zIndex: nextZ() })}
+					onDragStart={() => {
+						if (isStickyWidgetType(widget.type)) {
+							setIsDraggingStickyWidget(true);
+						}
+					}}
+					onDragEnd={() => {
+						setIsDraggingStickyWidget(false);
+					}}
+					pomodoroState={{
+						isActive,
+						sessionType:
+							currentStep.type === "focus" ? "work" : ("shortBreak" as any),
+					}}
+					stats={_stats}
+					sessions={_sessions}
+				/>
+			))}
+
+			<CurrentStepLabel label={currentStep.label} theme={theme} />
+
+			<CircularTimer
+				timeLeft={timeLeft}
+				isActive={isActive}
+				theme={theme}
+				sessionType={currentStep.type}
+				durationMinutes={currentStep.duration}
+				onClick={handleTimerClick}
+			/>
+
+			<WorkflowProgressBar
+				schedule={customSchedule}
+				currentStepIndex={0}
+				currentStepDuration={currentStep.duration}
+				currentStepProgressPercent={currentStepProgressPercent}
+				totalDuration={totalDuration}
+				highlightColor={highlightColor}
+				isActive={isActive}
+				theme={theme}
+				hoveredStepIndex={hoveredStepIndex}
+				onHover={setHoveredStepIndex}
+			/>
+
+			{isDraggingStickyWidget && <DeleteZone />}
+
+			{showStopDialog && (
+				<StopDialog
+					theme={theme}
+					onClose={() => setShowStopDialog(false)}
+					onReset={handleReset}
+					onStop={handleStop}
+					onSkip={handleSkip}
+				/>
+			)}
+
+			<Dock theme={theme}>
+				{dockVisibility.note && (
+					<DockButton
+						onClick={() => addWidget("note")}
+						icon={StickyNote}
+						label="Note"
+						theme={theme}
+						colorClass=""
+					/>
+				)}
+				{dockVisibility.image && (
+					<DockButton
+						onClick={() => addWidget("image")}
+						icon={ImageIcon}
+						label="Image"
+						theme={theme}
+						colorClass=""
+					/>
+				)}
+				{dockVisibility.music && (
+					<DockButton
+						onClick={() => addWidget("music")}
+						icon={Music}
+						label="YouTube"
+						theme={theme}
+						colorClass=""
+					/>
+				)}
+				{dockVisibility.timer && (
+					<DockButton
+						onClick={() => addWidget("timer")}
+						icon={Timer}
+						label="Timer"
+						theme={theme}
+						colorClass=""
+					/>
+				)}
+				{dockVisibility.stats && (
+					<DockButton
+						onClick={() => addWidget("stats")}
+						icon={BarChart2}
+						label="Stats"
+						theme={theme}
+						colorClass=""
+					/>
+				)}
+
+				{(dockVisibility.note ||
+					dockVisibility.image ||
+					dockVisibility.music) &&
+					(dockVisibility.theme || true) && (
+						<div className="w-px h-8   mx-1 self-center" />
+					)}
+
+				{dockVisibility.theme && (
+					<DockButton
+						onClick={toggleTheme}
+						icon={theme === "dark" ? Sun : Moon}
+						label="Theme"
+						theme={theme}
+						colorClass=""
+					/>
+				)}
+				<DockButton
+					onClick={() => setShowSettingsPanel(true)}
+					icon={Settings}
+					label="Settings"
+					theme={theme}
+					accentColor={highlightColor}
+				/>
+			</Dock>
+
+			{showSettingsPanel && (
+				<SettingsPanel
+					theme={theme}
+					settings={settings}
+					settingsTab={settingsTab}
+					customSchedule={customSchedule}
+					dockVisibility={dockVisibility}
+					highlightColor={highlightColor}
+					onTabChange={setSettingsTab}
+					onClose={() => setShowSettingsPanel(false)}
+					onUpdateSchedule={updateSchedule}
+					onAddStep={addStep}
+					onRemoveStep={removeStep}
+					onUpdateDockVisibility={updateDockVisibility}
+					onUpdateSettings={updateSettings}
+					nextId={nextId}
+				/>
+			)}
+		</div>
+	);
+}
