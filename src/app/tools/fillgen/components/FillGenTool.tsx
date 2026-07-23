@@ -37,15 +37,13 @@ export default function FillGenTool() {
 	const { pushHistory } = useUndoHistory(textareaRef, setPages, [defaultInput]);
 	const {
 		menuPos,
-		selectionRange,
 		isWrapping,
 		setSelectionRange,
 		openCaretMenu,
 		wrapSelectionAsBlank,
-	} = useSelectionMenu(textareaRef, menuRef, setPages, {
+	} = useSelectionMenu(textareaRef, menuRef, setPages, pushHistory, {
 		pages,
 		activePage,
-		historyIndex: 0,
 	});
 
 	usePreviewSync(containerRef, docs, activePage, tab);

@@ -22,17 +22,17 @@ export type SelectionMenuApi = {
 	wrapSelectionAsBlank: () => void;
 };
 
-type WrapHistoryDeps = {
+type WrapDeps = {
 	pages: string[];
 	activePage: number;
-	historyIndex: number;
 };
 
 export function useSelectionMenu(
 	textareaRef: RefObject<HTMLTextAreaElement | null>,
 	menuRef: RefObject<HTMLDivElement | null>,
 	setPages: (updater: (prev: string[]) => string[]) => void,
-	{ pages, activePage, historyIndex }: WrapHistoryDeps,
+	pushHistory: (pages: string[]) => void,
+	{ pages, activePage }: WrapDeps,
 ): SelectionMenuApi {
 	const [menuPos, setMenuPos] = useState<MenuPos | null>(null);
 	const [selectionRange, setSelectionRange] = useState<SelectionRange | null>(
@@ -146,6 +146,13 @@ export function useSelectionMenu(
 			next[activePage] = wrapped;
 			return next;
 		});
+		pushHistory(
+			(() => {
+				const next = [...pages];
+				next[activePage] = wrapped;
+				return next;
+			})(),
+		);
 
 		requestAnimationFrame(() => {
 			if (!textareaRef.current) return;
@@ -179,7 +186,7 @@ export function useSelectionMenu(
 				}, 0);
 			});
 		});
-	}, [activePage, selectionRange, pages, historyIndex, textareaRef, setPages]);
+	}, [activePage, selectionRange, pages, textareaRef, setPages, pushHistory]);
 
 	useEffect(() => {
 		if (isWrapping && !selectionRange) {
