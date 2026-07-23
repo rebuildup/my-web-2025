@@ -28,17 +28,246 @@ const cardData = {
 	],
 };
 
+const Global_title = "noto-sans-jp-regular leading-snug";
+
+function BusinessCard({
+	cardRef,
+	qrCodeUrl,
+}: {
+	cardRef: React.RefObject<HTMLDivElement | null>;
+	qrCodeUrl: string;
+}) {
+	return (
+		<div>
+			<div ref={cardRef} className="   p-8">
+				{/* ヘッダー部分 */}
+				<div className="  pb-6 mb-6">
+					<div className="flex items-start justify-between">
+						<div>
+							<h2 className="neue-haas-grotesk-display text-3xl mb-2">
+								{cardData.name}
+							</h2>
+							<p className="zen-kaku-gothic-new text-lg  mb-2">
+								{cardData.title}
+							</p>
+							<p className="noto-sans-jp-light text-sm italic">
+								{cardData.tagline}
+							</p>
+						</div>
+					</div>
+				</div>
+
+				{/* 連絡先情報 */}
+				<div className="space-y-3 mb-6">
+					<div className="flex items-center gap-3">
+						<span className="noto-sans-jp-light text-sm ">Website:</span>
+						<span className="noto-sans-jp-light text-sm ">
+							{cardData.website}
+						</span>
+					</div>
+					<div className="grid grid-cols-1 gap-2">
+						<div className="flex items-center gap-3">
+							<span className="noto-sans-jp-light text-sm ">Email:</span>
+							<div className="noto-sans-jp-light text-sm ">
+								<div>Tech: {cardData.email.tech}</div>
+								<div>Design: {cardData.email.design}</div>
+							</div>
+						</div>
+						<div className="flex items-center gap-3">
+							<span className="noto-sans-jp-light text-sm ">Twitter:</span>
+							<div className="noto-sans-jp-light text-sm ">
+								<div>{cardData.social.tech} (技術)</div>
+								<div>{cardData.social.design} (デザイン)</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{/* スキル */}
+				<div className="mb-6">
+					<h3 className="zen-kaku-gothic-new mb-2">できること</h3>
+					<div className="space-y-1">
+						{cardData.skills.map((skill) => (
+							<div key={skill} className="noto-sans-jp-light text-xs ">
+								• {skill}
+							</div>
+						))}
+					</div>
+				</div>
+
+				{/* 性格 */}
+				<div className="mb-6">
+					<h3 className="zen-kaku-gothic-new mb-2">性格</h3>
+					<div className="space-y-1">
+						{cardData.personality.map((trait) => (
+							<div key={trait} className="noto-sans-jp-light text-xs ">
+								• {trait}
+							</div>
+						))}
+					</div>
+				</div>
+
+				{/* QRコード */}
+				<div className="flex justify-center pt-4  ">
+					{qrCodeUrl && (
+						<div className="text-center">
+							<div className=" p-2  ">
+								<Image
+									src={qrCodeUrl}
+									alt="連絡先QRコード"
+									width={64}
+									height={64}
+								/>
+							</div>
+							<p className="noto-sans-jp-light text-xs mt-2">連絡先情報</p>
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function OperationPanel({
+	qrCodeUrl,
+	onDownload,
+}: {
+	qrCodeUrl: string;
+	onDownload: (format: "png" | "pdf") => void;
+}) {
+	return (
+		<div className="space-y-6">
+			{/* QRコード詳細 */}
+			<div className="  p-4">
+				<h3 className="zen-kaku-gothic-new text-lg mb-4">QRコード</h3>
+				<p className="noto-sans-jp-light text-sm mb-4">
+					スマートフォンでスキャンして連絡先を保存
+				</p>
+				{qrCodeUrl && (
+					<div className="text-center">
+						<div className=" p-4   inline-block">
+							<Image
+								src={qrCodeUrl}
+								alt="連絡先QRコード"
+								width={192}
+								height={192}
+							/>
+						</div>
+						<p className="noto-sans-jp-light text-sm mt-4">
+							このQRコードには以下の情報が含まれています：
+						</p>
+						<div className="noto-sans-jp-light text-xs mt-2 space-y-1">
+							<div>• ハンドルネーム・肩書き</div>
+							<div>• 技術・デザイン用メールアドレス</div>
+							<div>• SNSアカウント</div>
+							<div>• ウェブサイト</div>
+							<div>• スキル・専門分野</div>
+						</div>
+					</div>
+				)}
+			</div>
+
+			{/* ダウンロード */}
+			<div className="  p-4">
+				<h3 className="zen-kaku-gothic-new text-lg mb-4">ダウンロード</h3>
+				<p className="noto-sans-jp-light text-sm mb-4">
+					名刺を画像ファイルとして保存
+				</p>
+				<div className="space-y-3">
+					<button
+						type="button"
+						onClick={() => onDownload("png")}
+						className="w-full text-center p-4 flex items-center justify-center"
+					>
+						<span className={Global_title}>PNG形式でダウンロード</span>
+					</button>
+					<button
+						type="button"
+						onClick={() => onDownload("pdf")}
+						className="w-full text-center p-4 flex items-center justify-center"
+					>
+						<span className={Global_title}>PDF形式でダウンロード</span>
+					</button>
+					<p className="noto-sans-jp-light text-xs text-center">
+						※ クリエイティブデザイン
+					</p>
+				</div>
+			</div>
+
+			{/* 現在の取り組み */}
+			<div className="  p-4">
+				<h3 className="zen-kaku-gothic-new text-lg mb-4">現在の取り組み</h3>
+				<div className="space-y-2">
+					{cardData.currentProjects.map((project) => (
+						<div key={project} className="flex items-center gap-2">
+							<div className="w-2 h-2 "></div>
+							<span className="noto-sans-jp-light text-sm ">{project}</span>
+						</div>
+					))}
+				</div>
+			</div>
+
+			{/* 使用方法 */}
+			<div className="  p-4">
+				<h3 className="zen-kaku-gothic-new text-lg mb-4">使用方法</h3>
+				<div className="space-y-3 noto-sans-jp-light text-sm ">
+					<div>
+						<h4 className="zen-kaku-gothic-new ">クリエイティブ交流</h4>
+						<p>同業者やクリエイター同士の交流に最適</p>
+					</div>
+					<div>
+						<h4 className="zen-kaku-gothic-new ">SNS共有</h4>
+						<p>TwitterやInstagramでの自己紹介に</p>
+					</div>
+					<div>
+						<h4 className="zen-kaku-gothic-new ">イベント利用</h4>
+						<p>勉強会やコミュニティイベントで活用</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function CardActions() {
+	return (
+		<nav aria-label="Card actions">
+			<h3 className="sr-only">名刺関連アクション</h3>
+			<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
+				<Link
+					href="/about/profile/handle"
+					className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
+				>
+					<span className={Global_title}>Profile</span>
+				</Link>
+
+				<Link
+					href="/about/card/real"
+					className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
+				>
+					<span className={Global_title}>Real Card</span>
+				</Link>
+
+				<a
+					href="https://links.yusuke-kim.com"
+					className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
+				>
+					<span className={Global_title}>Links</span>
+				</a>
+			</div>
+		</nav>
+	);
+}
+
 export default function HandleCardPage() {
 	const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
 	const cardRef = useRef<HTMLDivElement>(null);
-
-	const Global_title = "noto-sans-jp-regular leading-snug";
 
 	useEffect(() => {
 		const generateQRCode = async () => {
 			try {
 				const contactInfo = `samuido - クリエイティブ・デベロッパー
- 
+
 Website: ${cardData.website}
 Tech: ${cardData.email.tech} | ${cardData.social.tech}
 Design: ${cardData.email.design} | ${cardData.social.design}
@@ -130,239 +359,14 @@ ${cardData.tagline}`;
 
 						<div className="grid-system grid-1 lg:grid-2 gap-8">
 							{/* デジタル名刺 */}
-							<div>
-								<div ref={cardRef} className="   p-8">
-									{/* ヘッダー部分 */}
-									<div className="  pb-6 mb-6">
-										<div className="flex items-start justify-between">
-											<div>
-												<h2 className="neue-haas-grotesk-display text-3xl mb-2">
-													{cardData.name}
-												</h2>
-												<p className="zen-kaku-gothic-new text-lg  mb-2">
-													{cardData.title}
-												</p>
-												<p className="noto-sans-jp-light text-sm italic">
-													{cardData.tagline}
-												</p>
-											</div>
-										</div>
-									</div>
-
-									{/* 連絡先情報 */}
-									<div className="space-y-3 mb-6">
-										<div className="flex items-center gap-3">
-											<span className="noto-sans-jp-light text-sm ">
-												Website:
-											</span>
-											<span className="noto-sans-jp-light text-sm ">
-												{cardData.website}
-											</span>
-										</div>
-										<div className="grid grid-cols-1 gap-2">
-											<div className="flex items-center gap-3">
-												<span className="noto-sans-jp-light text-sm ">
-													Email:
-												</span>
-												<div className="noto-sans-jp-light text-sm ">
-													<div>Tech: {cardData.email.tech}</div>
-													<div>Design: {cardData.email.design}</div>
-												</div>
-											</div>
-											<div className="flex items-center gap-3">
-												<span className="noto-sans-jp-light text-sm ">
-													Twitter:
-												</span>
-												<div className="noto-sans-jp-light text-sm ">
-													<div>{cardData.social.tech} (技術)</div>
-													<div>{cardData.social.design} (デザイン)</div>
-												</div>
-											</div>
-										</div>
-									</div>
-
-									{/* スキル */}
-									<div className="mb-6">
-										<h3 className="zen-kaku-gothic-new mb-2">できること</h3>
-										<div className="space-y-1">
-											{cardData.skills.map((skill) => (
-												<div
-													key={skill}
-													className="noto-sans-jp-light text-xs "
-												>
-													• {skill}
-												</div>
-											))}
-										</div>
-									</div>
-
-									{/* 性格 */}
-									<div className="mb-6">
-										<h3 className="zen-kaku-gothic-new mb-2">性格</h3>
-										<div className="space-y-1">
-											{cardData.personality.map((trait) => (
-												<div
-													key={trait}
-													className="noto-sans-jp-light text-xs "
-												>
-													• {trait}
-												</div>
-											))}
-										</div>
-									</div>
-
-									{/* QRコード */}
-									<div className="flex justify-center pt-4  ">
-										{qrCodeUrl && (
-											<div className="text-center">
-												<div className=" p-2  ">
-													<Image
-														src={qrCodeUrl}
-														alt="連絡先QRコード"
-														width={64}
-														height={64}
-													/>
-												</div>
-												<p className="noto-sans-jp-light text-xs mt-2">
-													連絡先情報
-												</p>
-											</div>
-										)}
-									</div>
-								</div>
-							</div>
+							<BusinessCard cardRef={cardRef} qrCodeUrl={qrCodeUrl} />
 
 							{/* 操作パネル */}
-							<div className="space-y-6">
-								{/* QRコード詳細 */}
-								<div className="  p-4">
-									<h3 className="zen-kaku-gothic-new text-lg mb-4">QRコード</h3>
-									<p className="noto-sans-jp-light text-sm mb-4">
-										スマートフォンでスキャンして連絡先を保存
-									</p>
-									{qrCodeUrl && (
-										<div className="text-center">
-											<div className=" p-4   inline-block">
-												<Image
-													src={qrCodeUrl}
-													alt="連絡先QRコード"
-													width={192}
-													height={192}
-												/>
-											</div>
-											<p className="noto-sans-jp-light text-sm mt-4">
-												このQRコードには以下の情報が含まれています：
-											</p>
-											<div className="noto-sans-jp-light text-xs mt-2 space-y-1">
-												<div>• ハンドルネーム・肩書き</div>
-												<div>• 技術・デザイン用メールアドレス</div>
-												<div>• SNSアカウント</div>
-												<div>• ウェブサイト</div>
-												<div>• スキル・専門分野</div>
-											</div>
-										</div>
-									)}
-								</div>
-
-								{/* ダウンロード */}
-								<div className="  p-4">
-									<h3 className="zen-kaku-gothic-new text-lg mb-4">
-										ダウンロード
-									</h3>
-									<p className="noto-sans-jp-light text-sm mb-4">
-										名刺を画像ファイルとして保存
-									</p>
-									<div className="space-y-3">
-										<button
-											type="button"
-											onClick={() => downloadCard("png")}
-											className="w-full text-center p-4 flex items-center justify-center"
-										>
-											<span className={Global_title}>
-												PNG形式でダウンロード
-											</span>
-										</button>
-										<button
-											type="button"
-											onClick={() => downloadCard("pdf")}
-											className="w-full text-center p-4 flex items-center justify-center"
-										>
-											<span className={Global_title}>
-												PDF形式でダウンロード
-											</span>
-										</button>
-										<p className="noto-sans-jp-light text-xs text-center">
-											※ クリエイティブデザイン
-										</p>
-									</div>
-								</div>
-
-								{/* 現在の取り組み */}
-								<div className="  p-4">
-									<h3 className="zen-kaku-gothic-new text-lg mb-4">
-										現在の取り組み
-									</h3>
-									<div className="space-y-2">
-										{cardData.currentProjects.map((project) => (
-											<div key={project} className="flex items-center gap-2">
-												<div className="w-2 h-2 "></div>
-												<span className="noto-sans-jp-light text-sm ">
-													{project}
-												</span>
-											</div>
-										))}
-									</div>
-								</div>
-
-								{/* 使用方法 */}
-								<div className="  p-4">
-									<h3 className="zen-kaku-gothic-new text-lg mb-4">使用方法</h3>
-									<div className="space-y-3 noto-sans-jp-light text-sm ">
-										<div>
-											<h4 className="zen-kaku-gothic-new ">
-												クリエイティブ交流
-											</h4>
-											<p>同業者やクリエイター同士の交流に最適</p>
-										</div>
-										<div>
-											<h4 className="zen-kaku-gothic-new ">SNS共有</h4>
-											<p>TwitterやInstagramでの自己紹介に</p>
-										</div>
-										<div>
-											<h4 className="zen-kaku-gothic-new ">イベント利用</h4>
-											<p>勉強会やコミュニティイベントで活用</p>
-										</div>
-									</div>
-								</div>
-							</div>
+							<OperationPanel qrCodeUrl={qrCodeUrl} onDownload={downloadCard} />
 						</div>
 
 						{/* アクション */}
-						<nav aria-label="Card actions">
-							<h3 className="sr-only">名刺関連アクション</h3>
-							<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
-								<Link
-									href="/about/profile/handle"
-									className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
-								>
-									<span className={Global_title}>Profile</span>
-								</Link>
-
-								<Link
-									href="/about/card/real"
-									className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
-								>
-									<span className={Global_title}>Real Card</span>
-								</Link>
-
-								<a
-									href="https://links.yusuke-kim.com"
-									className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
-								>
-									<span className={Global_title}>Links</span>
-								</a>
-							</div>
-						</nav>
+						<CardActions />
 
 						{/* フッター */}
 						<footer className="pt-4  ">

@@ -147,20 +147,25 @@ export function SafeImage({
 		const { style: _style, ...restProps } = props as Record<string, unknown> & {
 			style?: React.CSSProperties;
 		};
+		// next/image を unoptimized で使い、ローダー(remote/localPatterns 検証)を
+		// バイパスして元URLをそのまま描画する。寸法不明時は fill、既知なら width/height.
+		const fallbackDimProps = shouldUseFill
+			? ({ fill: true } as const)
+			: { width, height };
 		return (
 			<div
 				className={`relative ${fill || shouldUseFill ? "w-full h-full" : ""}`}
 			>
-				<img
+				<Image
 					src={currentSrc}
 					alt={alt}
+					unoptimized
 					className={className}
 					loading={loading}
 					onError={handleError}
 					onLoad={handleLoad}
-					width={width}
-					height={height}
 					style={imgStyle}
+					{...fallbackDimProps}
 					{...restProps}
 				/>
 				{shouldShowDebug && <ImageDebugInfo src={currentSrc} alt={alt} />}
