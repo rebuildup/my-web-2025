@@ -1,7 +1,6 @@
 "use client";
 
 import { Maximize2, Minimize2, Settings } from "lucide-react";
-import React from "react";
 
 interface YouTubePlayerHeaderProps {
 	theme: "light" | "dark";

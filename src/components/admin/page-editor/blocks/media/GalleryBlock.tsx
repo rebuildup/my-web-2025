@@ -1,60 +1,16 @@
 "use client";
 
-import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { useMemo, useState } from "react";
 import type { BlockComponentProps } from "../types";
-
-type MediaKind = "image" | "video" | "audio" | "file";
-
-interface ParsedItem {
-	kind: MediaKind;
-	url: string;
-	label?: string;
-}
-
-function parseGalleryContent(text: string): ParsedItem[] {
-	const lines = text
-		.split(/\r?\n/)
-		.map((l) => l.trim())
-		.filter(Boolean);
-	const items: ParsedItem[] = [];
-
-	for (const line of lines) {
-		// Format 1: [image] https://...
-		const m1 = line.match(/^\[(image|video|audio|file)\]\s+(.+)$/i);
-		if (m1) {
-			items.push({ kind: m1[1].toLowerCase() as MediaKind, url: m1[2] });
-			continue;
-		}
-
-		// Format 2: label | kind | url
-		const m2 = line.match(
-			/^([^|]+)\|\s*(image|video|audio|file)\s*\|\s*(.+)$/i,
-		);
-		if (m2) {
-			items.push({
-				kind: m2[2].toLowerCase() as MediaKind,
-				url: m2[3],
-				label: m2[1].trim(),
-			});
-			continue;
-		}
-
-		// Fallback: infer from extension
-		const lower = line.toLowerCase();
-		if (/(\.png|\.jpg|\.jpeg|\.gif|\.webp)(\?.*)?$/.test(lower)) {
-			items.push({ kind: "image", url: line });
-		} else if (/(\.mp4|\.webm|\.mov)(\?.*)?$/.test(lower)) {
-			items.push({ kind: "video", url: line });
-		} else if (/(\.mp3|\.wav|\.ogg)(\?.*)?$/.test(lower)) {
-			items.push({ kind: "audio", url: line });
-		} else {
-			items.push({ kind: "file", url: line });
-		}
-	}
-
-	return items;
-}
+import { GalleryAddControls } from "./GalleryAddControls";
+import { GallerySelectedItemControls } from "./GallerySelectedItemControls";
+import { GallerySettings } from "./GallerySettings";
+import { GalleryTiles } from "./GalleryTiles";
+import {
+	getVisibleGalleryItemCount,
+	parseGalleryContent,
+} from "./gallery-utils";
 
 export function GalleryBlock({
 	block,
@@ -69,20 +25,14 @@ export function GalleryBlock({
 	const [selected, setSelected] = useState<number | null>(null);
 	const [addHovered, setAddHovered] = useState(false);
 	const columns = Number(block.attributes.columns ?? 3);
-	const maxRows = Number(block.attributes.maxRows ?? 0); // 0: no limit
-	// use 12 columns on md breakpoint for layout calculations
-
-	const visibleCount = useMemo(() => {
-		if (!maxRows || maxRows <= 0) return items.length;
-		const totalMd = 12;
-		const colPerItemMd = Math.floor(totalMd / columns) || 3; // each tile span
-		const perRow = Math.floor(totalMd / colPerItemMd) || columns;
-		return Math.min(items.length, perRow * maxRows);
-	}, [items.length, maxRows, columns]);
+	const maxRows = Number(block.attributes.maxRows ?? 0);
+	const visibleCount = useMemo(
+		() => getVisibleGalleryItemCount(items.length, maxRows, columns),
+		[items.length, maxRows, columns],
+	);
 
 	return (
 		<Stack spacing={1.5}>
-			{/* wrapper that expands on hover to reveal controls */}
 			<Box
 				sx={{
 					position: "relative",
@@ -91,122 +41,15 @@ export function GalleryBlock({
 					"&:hover": { pb: 14 },
 				}}
 			>
-				{/* tiles */}
-				<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-					{/* Add tile */}
-					{!readOnly && (
-						<div className="col-span-1 sm:col-span-1 md:col-span-1">
-							<Box
-								onMouseEnter={() => setAddHovered(true)}
-								onMouseLeave={() => setAddHovered(false)}
-								sx={{
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "center",
-									border: (theme) => `1px dashed ${theme.palette.primary.main}`,
-									bgcolor: "rgba(59,130,246,0.06)",
-									color: "primary.main",
-									borderRadius: 1.5,
-									aspectRatio: "1 / 1",
-									minHeight: 160,
-									cursor: "pointer",
-								}}
-							>
-								<Typography variant="body2">+ Add media</Typography>
-							</Box>
-						</div>
-					)}
-					{items.slice(0, visibleCount).map((item, idx) => {
-						const colSpan = Math.floor(12 / columns);
-						const colSpanClass =
-							colSpan === 12
-								? "col-span-2"
-								: colSpan === 6
-									? "col-span-1 sm:col-span-1"
-									: colSpan === 4
-										? "col-span-1 sm:col-span-1 md:col-span-1"
-										: colSpan === 3
-											? "col-span-1 sm:col-span-1 md:col-span-1"
-											: "col-span-1";
-						return (
-							<div key={`${item.kind}-${item.url}`} className={colSpanClass}>
-								<Box
-									onClick={() => setSelected(idx)}
-									sx={{
-										border: (theme) =>
-											`1px solid ${selected === idx ? theme.palette.primary.main : theme.palette.divider}`,
-										boxShadow:
-											selected === idx
-												? (theme) =>
-														`0 0 0 2px ${theme.palette.primary.main}33 inset`
-												: undefined,
-										cursor: "pointer",
-										borderRadius: 1.5,
-										overflow: "hidden",
-										bgcolor: "rgba(255,255,255,0.03)",
-									}}
-								>
-									{item.kind === "image" && (
-										<Box
-											component="img"
-											src={item.url}
-											alt={item.label ?? ""}
-											sx={{
-												display: "block",
-												width: "100%",
-												height: 140,
-												objectFit: "cover",
-											}}
-										/>
-									)}
-									{item.kind === "video" && (
-										<Box
-											component="video"
-											src={item.url}
-											controls
-											sx={{
-												display: "block",
-												width: "100%",
-												height: 140,
-												objectFit: "cover",
-											}}
-										/>
-									)}
-									{item.kind === "audio" && (
-										<Box sx={{ p: 1 }}>
-											<audio src={item.url} controls style={{ width: "100%" }}>
-												<track kind="captions" />
-											</audio>
-										</Box>
-									)}
-									{item.kind === "file" && (
-										<Box sx={{ p: 1 }}>
-											<Typography variant="caption" color="text.secondary">
-												File
-											</Typography>
-											<Link
-												href={item.url}
-												target="_blank"
-												rel="noreferrer"
-												underline="hover"
-												sx={{
-													display: "block",
-													overflow: "hidden",
-													textOverflow: "ellipsis",
-													whiteSpace: "nowrap",
-												}}
-											>
-												{item.label ?? item.url}
-											</Link>
-										</Box>
-									)}
-								</Box>
-							</div>
-						);
-					})}
-				</div>
-
-				{/* hover controls overlay (bottom): item controls or gallery settings */}
+				<GalleryTiles
+					items={items}
+					visibleCount={visibleCount}
+					columns={columns}
+					selected={selected}
+					readOnly={readOnly}
+					onSelect={setSelected}
+					onAddHoverChange={setAddHovered}
+				/>
 				<Box
 					className="gallery-controls"
 					sx={{
@@ -228,245 +71,29 @@ export function GalleryBlock({
 						}}
 					>
 						<Stack spacing={1.5}>
-							{/* Add media (shown when hovering add tile) */}
 							{!readOnly && addHovered && (
-								<Stack
-									spacing={1}
-									sx={{ alignItems: "center", justifyContent: "center" }}
-								>
-									<Button
-										size="small"
-										variant="outlined"
-										onClick={() => {
-											onContentChange?.(
-												`${block.content ? `${block.content}\n` : ""}[image] `,
-											);
-											setSelected(items.length);
-										}}
-									>
-										Image
-									</Button>
-									<Button
-										size="small"
-										variant="outlined"
-										onClick={() => {
-											onContentChange?.(
-												`${block.content ? `${block.content}\n` : ""}[video] `,
-											);
-											setSelected(items.length);
-										}}
-									>
-										Video
-									</Button>
-									<Button
-										size="small"
-										variant="outlined"
-										onClick={() => {
-											onContentChange?.(
-												`${block.content ? `${block.content}\n` : ""}[audio] `,
-											);
-											setSelected(items.length);
-										}}
-									>
-										Audio
-									</Button>
-									<Button
-										size="small"
-										variant="outlined"
-										onClick={() => {
-											onContentChange?.(
-												`${block.content ? `${block.content}\n` : ""}[file] `,
-											);
-											setSelected(items.length);
-										}}
-									>
-										File
-									</Button>
-								</Stack>
+								<GalleryAddControls
+									content={block.content}
+									itemCount={items.length}
+									onContentChange={onContentChange}
+									onSelect={setSelected}
+								/>
 							)}
-							{/* Gallery settings */}
-							<Stack
-								direction={{ xs: "column", sm: "row" }}
-								spacing={1.5}
-								sx={{
-									flexDirection: { xs: "column", sm: "row" },
-									alignItems: { xs: "stretch", sm: "center" },
-								}}
-							>
-								<TextField
-									label="Columns"
-									type="number"
-									slotProps={{ htmlInput: { min: 1, max: 6 } }}
-									sx={{ width: 140 }}
-									value={columns}
-									onChange={(e) =>
-										onAttributesChange?.({
-											columns: Math.max(
-												1,
-												Math.min(6, Number(e.target.value ?? 3)),
-											),
-										})
-									}
-								/>
-								<TextField
-									label="Max rows"
-									type="number"
-									slotProps={{ htmlInput: { min: 0, max: 20 } }}
-									sx={{ width: 140 }}
-									value={maxRows}
-									onChange={(e) =>
-										onAttributesChange?.({
-											maxRows: Math.max(
-												0,
-												Math.min(20, Number(e.target.value ?? 0)),
-											),
-										})
-									}
-								/>
-								<Stack spacing={1}>
-									<Button
-										size="small"
-										variant="outlined"
-										onClick={() =>
-											onContentChange?.(
-												`${block.content ? `${block.content}\n` : ""}[image] `,
-											)
-										}
-										disabled={readOnly}
-									>
-										+ Image
-									</Button>
-									<Button
-										size="small"
-										variant="outlined"
-										onClick={() =>
-											onContentChange?.(
-												`${block.content ? `${block.content}\n` : ""}[video] `,
-											)
-										}
-										disabled={readOnly}
-									>
-										+ Video
-									</Button>
-									<Button
-										size="small"
-										variant="outlined"
-										onClick={() =>
-											onContentChange?.(
-												`${block.content ? `${block.content}\n` : ""}[audio] `,
-											)
-										}
-										disabled={readOnly}
-									>
-										+ Audio
-									</Button>
-									<Button
-										size="small"
-										variant="outlined"
-										onClick={() =>
-											onContentChange?.(
-												`${block.content ? `${block.content}\n` : ""}[file] `,
-											)
-										}
-										disabled={readOnly}
-									>
-										+ File
-									</Button>
-								</Stack>
-							</Stack>
-
-							{/* Selected tile controls */}
+							<GallerySettings
+								content={block.content}
+								columns={columns}
+								maxRows={maxRows}
+								readOnly={readOnly}
+								onContentChange={onContentChange}
+								onAttributesChange={onAttributesChange}
+							/>
 							{selected !== null && items[selected] && (
-								<Stack
-									direction={{ xs: "column", sm: "row" }}
-									spacing={1.5}
-									sx={{
-										flexDirection: { xs: "column", sm: "row" },
-										alignItems: { xs: "stretch", sm: "center" },
-									}}
-								>
-									{items[selected].kind === "image" && (
-										<>
-											<TextField
-												label="URL"
-												fullWidth
-												defaultValue={items[selected].url}
-												onBlur={(e) => {
-													if (selected === null) return;
-													const lines = (block.content ?? "").split(/\r?\n/);
-													lines[selected] = `[image] ${e.target.value}`;
-													onContentChange?.(lines.join("\n"));
-												}}
-											/>
-											<TextField
-												label="Alt (label)"
-												fullWidth
-												defaultValue={items[selected].label ?? ""}
-												onBlur={(e) => {
-													if (selected === null) return;
-													const lines = (block.content ?? "").split(/\r?\n/);
-													lines[selected] =
-														`${e.target.value || items[selected].url} | image | ${items[selected].url}`;
-													onContentChange?.(lines.join("\n"));
-												}}
-											/>
-										</>
-									)}
-									{items[selected].kind === "video" && (
-										<TextField
-											label="URL"
-											fullWidth
-											defaultValue={items[selected].url}
-											onBlur={(e) => {
-												if (selected === null) return;
-												const lines = (block.content ?? "").split(/\r?\n/);
-												lines[selected] = `[video] ${e.target.value}`;
-												onContentChange?.(lines.join("\n"));
-											}}
-										/>
-									)}
-									{items[selected].kind === "audio" && (
-										<TextField
-											label="URL"
-											fullWidth
-											defaultValue={items[selected].url}
-											onBlur={(e) => {
-												if (selected === null) return;
-												const lines = (block.content ?? "").split(/\r?\n/);
-												lines[selected] = `[audio] ${e.target.value}`;
-												onContentChange?.(lines.join("\n"));
-											}}
-										/>
-									)}
-									{items[selected].kind === "file" && (
-										<>
-											<TextField
-												label="Name"
-												fullWidth
-												defaultValue={items[selected].label ?? ""}
-												onBlur={(e) => {
-													if (selected === null) return;
-													const lines = (block.content ?? "").split(/\r?\n/);
-													lines[selected] =
-														`${e.target.value || items[selected].url} | file | ${items[selected].url}`;
-													onContentChange?.(lines.join("\n"));
-												}}
-											/>
-											<TextField
-												label="URL"
-												fullWidth
-												defaultValue={items[selected].url}
-												onBlur={(e) => {
-													if (selected === null) return;
-													const lines = (block.content ?? "").split(/\r?\n/);
-													lines[selected] =
-														`${items[selected].label ?? ""} | file | ${e.target.value}`.trim();
-													onContentChange?.(lines.join("\n"));
-												}}
-											/>
-										</>
-									)}
-								</Stack>
+								<GallerySelectedItemControls
+									content={block.content}
+									item={items[selected]}
+									selected={selected}
+									onContentChange={onContentChange}
+								/>
 							)}
 						</Stack>
 					</Box>

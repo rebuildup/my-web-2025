@@ -18,8 +18,6 @@ export default function YouTubePlayer(props: YouTubePlayerProps) {
 		isPlaylist,
 		playbackState,
 		setInputUrl,
-		setSettings,
-		setShowSettings,
 		showSettings,
 		source,
 		toggleMinimize,

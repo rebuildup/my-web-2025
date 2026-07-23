@@ -6,14 +6,10 @@ import {
 	Image as ImageIcon,
 	Moon,
 	Music,
-	Pause,
-	RotateCcw,
 	Settings,
-	SkipForward,
 	StickyNote,
 	Sun,
 	Timer,
-	Trash2,
 	Upload,
 	X,
 } from "lucide-react";
@@ -35,383 +31,41 @@ import type {
 	PomodoroStats,
 } from "../types";
 import { DEFAULT_HIGHLIGHT_COLOR } from "../types";
+import {
+	BASE_WIDGET_Z,
+	DEFAULT_SETTINGS,
+	DEFAULT_STATS,
+	SCHEDULE,
+	STICKY_NOTE_COLORS,
+	STICKY_NOTE_SIZE,
+	getStickyColorById,
+	getTotalDuration,
+	isStickyWidgetType,
+	type ScheduleStep,
+} from "../utils/pomodoro-constants";
 import { playNotificationSound } from "../utils/soundPlayer";
-import { ElasticSlider } from "./ElasticSlider";
+import { Dock, DockButton } from "./Dock";
+import { MarkdownViewer } from "./MarkdownViewer";
 import MiniTimer from "./MiniTimer";
 import StatsWidget from "./StatsWidget";
+import { SettingsPanel } from "./settings/SettingsPanel";
+import { CircularTimer } from "./widgets/CircularTimer";
+import { CurrentStepLabel } from "./widgets/CurrentStepLabel";
+import { DeleteZone } from "./widgets/DeleteZone";
+import { StopDialog } from "./widgets/StopDialog";
+import { WorkflowProgressBar } from "./widgets/WorkflowProgressBar";
 import YouTubePlayer from "./youtube/YouTubePlayer";
 
-const STICKY_NOTE_COLORS = [
-	"#FFF8B1", // Soft Yellow
-	"#FFEFA1", // Vivid Yellow (softer)
-	"#FFD9E8", // Pink
-	"#FFC9DA", // Tropical Pink
-	"#CAE8FF", // Blue
-	"#BBDDF8", // Blue Paradise
-	"#DAF5C4", // Green
-	"#E9FFAF", // Acid Lime
-	"#FFD7AA", // Vital Orange
-];
-
-const STICKY_NOTE_SIZE = 240;
-
-const STICKY_IMAGE_MAX_WIDTH = 480;
-const STICKY_WIDGET_TYPES = new Set([
-	"note",
-	"image",
-	"youtube",
-	"timer",
-	"stats",
-]);
-const BASE_WIDGET_Z = 60;
-
-const isStickyWidgetType = (type: string) => STICKY_WIDGET_TYPES.has(type);
-const getStickyColorById = (id: number) =>
-	STICKY_NOTE_COLORS[Math.abs(id) % STICKY_NOTE_COLORS.length];
-
-const DEFAULT_SETTINGS: PomodoroSettings = {
-	workDuration: 25,
-	shortBreakDuration: 3,
-	longBreakDuration: 15,
-	sessionsUntilLongBreak: 4,
-	notificationSound: true,
-	notificationVolume: 50,
-	vibration: true,
-	theme: "dark",
-	autoPlayOnFocusSession: true,
-	pauseOnBreak: true,
-	youtubeDefaultVolume: 30,
-	stickyWidgetSize: STICKY_NOTE_SIZE,
-	youtubeWidgetWidth: 400,
-	youtubeLoop: false,
-	highlightColor: DEFAULT_HIGHLIGHT_COLOR,
-};
-
-const DEFAULT_STATS: PomodoroStats = {
-	totalSessions: 0,
-	totalWorkTime: 0,
-	totalBreakTime: 0,
-	completedPomodoros: 0,
-	currentStreak: 0,
-	longestStreak: 0,
-	todaysSessions: 0,
-};
-
-// Schedule based on progressive cycle - can be customized
-let SCHEDULE = [
-	{
-		id: 1,
-		type: "focus",
-		duration: 15,
-		label: "Warm up",
-		desc: "脳のアイドリング運転.メール確認や今日の計画立てなど、軽いタスクから始めましょう.",
-	},
-	{
-		id: 2,
-		type: "break",
-		duration: 3,
-		label: "Short Break",
-		desc: "深呼吸をして、画面から目を離しましょう.水分補給を忘れずに.",
-	},
-	{
-		id: 3,
-		type: "focus",
-		duration: 30,
-		label: "Deep Work I",
-		desc: "エンジンがかかってきました.主要なタスクの構成を練ったり、着手したりする時間です.",
-	},
-	{
-		id: 4,
-		type: "break",
-		duration: 3,
-		label: "Short Break",
-		desc: "立ち上がってストレッチ.血流を良くして次の集中に備えます.",
-	},
-	{
-		id: 5,
-		type: "focus",
-		duration: 45,
-		label: "Deep Work II",
-		desc: "集中力がピークに達する時間帯.クリエイティブな作業や複雑な思考を要するタスクに最適です.",
-	},
-	{
-		id: 6,
-		type: "break",
-		duration: 3,
-		label: "Short Break",
-		desc: "短い休憩ですが、目を閉じて脳を完全に休めることを意識してください.",
-	},
-	{
-		id: 7,
-		type: "focus",
-		duration: 60,
-		label: "Flow State I",
-		desc: "フロー状態への没入.時間はあっという間に過ぎ去ります.通知を切りましょう.",
-	},
-	{
-		id: 8,
-		type: "break",
-		duration: 5,
-		label: "Short Break",
-		desc: "最後の大きな波の前の一呼吸.糖分補給も良いかもしれません.",
-	},
-	{
-		id: 9,
-		type: "focus",
-		duration: 75,
-		label: "Flow State II",
-		desc: "このセッションの集大成.限界を超えて没頭する、最も生産性の高い時間です.",
-	},
-	{
-		id: 10,
-		type: "break",
-		duration: 30,
-		label: "Long Break",
-		desc: "お疲れ様でした.散歩に出るか、食事をとって完全にリフレッシュしてください.",
-	},
-];
-
-const getTotalDuration = (schedule: typeof SCHEDULE) =>
-	schedule.reduce((acc, step) => acc + step.duration, 0);
-
-const hexToRgba = (hex: string, alpha = 1) => {
-	const sanitized = hex.replace("#", "");
-	const value =
-		sanitized.length === 3
-			? sanitized
-					.split("")
-					.map((c) => c + c)
-					.join("")
-			: sanitized.padEnd(6, "0");
-	const intVal = parseInt(value, 16);
-	const r = (intVal >> 16) & 255;
-	const g = (intVal >> 8) & 255;
-	const b = intVal & 255;
-	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-};
-
-// Dock Component
-const Dock = ({
-	children,
-	theme,
-}: {
-	children: React.ReactNode;
-	theme: string;
-}) => {
-	const [mouseX, setMouseX] = useState<number | null>(null);
-	const dockRef = useRef<HTMLDivElement>(null);
-
-	const handleMouseMove = (e: React.MouseEvent) => {
-		if (dockRef.current) {
-			const rect = dockRef.current.getBoundingClientRect();
-			setMouseX(e.clientX - rect.left);
-		}
-	};
-
-	const handleTouchMove = (e: React.TouchEvent) => {
-		if (!dockRef.current || !e.touches[0]) return;
-		const rect = dockRef.current.getBoundingClientRect();
-		setMouseX(e.touches[0].clientX - rect.left);
-	};
-
-	const handleMouseLeave = () => {
-		setMouseX(null);
-	};
-
-	const handleTouchEnd = () => {
-		setMouseX(null);
-	};
-
-	return (
-		<div
-			className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-60 px-4 h-16 rounded-2xl border   flex items-end gap-2 transition-all duration-300 no-timer-click
- ${theme === "dark" ? "bg-[#111]/80 " : " "}
- `}
-			onMouseMove={handleMouseMove}
-			onMouseLeave={handleMouseLeave}
-			onTouchMove={handleTouchMove}
-			onTouchEnd={handleTouchEnd}
-			ref={dockRef}
-		>
-			{React.Children.map(children, (child) => {
-				if (React.isValidElement(child)) {
-					return (
-						<DockItem mouseX={mouseX} theme={theme}>
-							{child}
-						</DockItem>
-					);
-				}
-				return null;
-			})}
-		</div>
-	);
-};
-
-const DockItem = ({
-	mouseX,
-	children,
-	theme,
-}: {
-	mouseX: number | null;
-	children: React.ReactElement;
-	theme: string;
-}) => {
-	const ref = useRef<HTMLDivElement>(null);
-	const [width, setWidth] = useState(40);
-
-	useEffect(() => {
-		if (mouseX !== null && ref.current) {
-			const iconCenterX = ref.current.offsetLeft + ref.current.offsetWidth / 2;
-			const distance = Math.abs(mouseX - iconCenterX);
-
-			const scale = Math.max(1, 2 - distance / 100);
-			const newWidth = Math.min(64, Math.max(40, 40 * scale));
-
-			setWidth(newWidth);
-		} else {
-			setWidth(40);
-		}
-	}, [mouseX]);
-
-	return (
-		<div
-			ref={ref}
-			style={{ width: `${width}px`, height: `${width}px` }}
-			className="relative flex items-center justify-center mb-2 transition-[width,height] duration-100 ease-out will-change-[width,height] rounded-full overflow-hidden"
-		>
-			{React.cloneElement(children as any, {
-				size: width * 0.5,
-			})}
-		</div>
-	);
-};
-
-const DockButton = ({
-	onClick,
-	icon: Icon,
-	label,
-	theme,
-	colorClass,
-	accentColor,
-}: {
-	onClick: () => void;
-	icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-	label: string;
-	theme: string;
-	colorClass?: string;
-	accentColor?: string;
-}) => {
-	const [isHovered, setIsHovered] = useState(false);
-	const accentStyle =
-		accentColor && isHovered
-			? {
-					boxShadow: `0 0 18px ${hexToRgba(accentColor, 0.45)}`,
-				}
-			: undefined;
-
-	return (
-		<button
-			onClick={onClick}
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={() => setIsHovered(false)}
-			onFocus={() => setIsHovered(true)}
-			onBlur={() => setIsHovered(false)}
-			className={`w-full h-full flex items-center justify-center relative group ${theme === "dark" ? " " : " "} ${colorClass || ""}`}
-			style={accentStyle}
-		>
-			<Icon
-				className={`pointer-events-none ${theme === "dark" ? "" : ""}`}
-				style={accentColor && isHovered ? { color: accentColor } : undefined}
-			/>
-			<span
-				className={`absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider   transition-opacity whitespace-nowrap pointer-events-none
- ${theme === "dark" ? " " : "  "}
- `}
-			>
-				{label}
-			</span>
-		</button>
-	);
-};
-
-// Markdown Viewer
-const MarkdownViewer = ({
-	content,
-	theme,
-}: {
+type Widget = {
+	id: number;
+	type: string;
+	x: number;
+	y: number;
 	content: string;
-	theme: string;
-}) => {
-	const lines = useMemo(() => (content ? content.split("\n") : []), [content]);
-	const lineKeys = useMemo(() => {
-		const seen = new Map<string, number>();
-		return lines.map((line) => {
-			const base = line.length === 0 ? "<empty>" : line;
-			const n = seen.get(base) ?? 0;
-			seen.set(base, n + 1);
-			return `${base}#${n}`;
-		});
-	}, [lines]);
-	if (!content) return <div className="  italic">Empty note...</div>;
-
-	return (
-		<div className={`space-y-1 text-sm `}>
-			{lines.map((line, i) => {
-				const key = lineKeys[i];
-				if (line.startsWith("# "))
-					return (
-						<h1 key={key} className="text-xl font-bold   pb-1 mb-2">
-							{line.slice(2)}
-						</h1>
-					);
-				if (line.startsWith("## "))
-					return (
-						<h2 key={key} className="text-lg font-bold mb-1">
-							{line.slice(3)}
-						</h2>
-					);
-				if (line.startsWith("- "))
-					return (
-						<li key={key} className="ml-4 list-disc">
-							{line.slice(2)}
-						</li>
-					);
-				if (line.startsWith("[ ] "))
-					return (
-						<div key={key} className="flex items-center gap-2">
-							<div className="w-3 h-3 border rounded"></div>
-							{line.slice(4)}
-						</div>
-					);
-				if (line.startsWith("[x] "))
-					return (
-						<div key={key} className="flex items-center gap-2">
-							<div className="w-3 h-3 border  rounded flex items-center justify-center text-[8px] ">
-								✓
-							</div>
-							<span className="line-through ">{line.slice(4)}</span>
-						</div>
-					);
-
-				const boldParts = line.split(/\*\*(.*?)\*\*/g);
-				if (boldParts.length > 1) {
-					return (
-						<p key={key}>
-							{boldParts.map((part, j) =>
-								j % 2 === 1 ? <strong key={j}>{part}</strong> : part,
-							)}
-						</p>
-					);
-				}
-
-				return (
-					<p key={key} className="min-h-[1em]">
-						{line}
-					</p>
-				);
-			})}
-		</div>
-	);
+	zIndex?: number;
+	w?: number;
+	h?: number | string;
+	color?: string;
 };
 
 // Widget Component
@@ -428,18 +82,8 @@ const Widget = ({
 	stats,
 	sessions,
 }: {
-	widget: {
-		id: number;
-		type: string;
-		x: number;
-		y: number;
-		content: string;
-		zIndex?: number;
-		w?: number;
-		h?: number | string;
-		color?: string;
-	};
-	updateWidget: (id: number, data: Partial<typeof widget>) => void;
+	widget: Widget;
+	updateWidget: (id: number, data: Partial<Widget>) => void;
 	removeWidget: (id: number) => void;
 	theme: string;
 	bringToFront: () => void;
@@ -624,7 +268,7 @@ const Widget = ({
 			: isNote || isTimer
 				? STICKY_NOTE_SIZE
 				: isImageSticky
-					? STICKY_IMAGE_MAX_WIDTH
+					? 480
 					: 300;
 
 	const computedHeight =
@@ -667,7 +311,7 @@ const Widget = ({
 		(e: React.SyntheticEvent<HTMLImageElement>) => {
 			const { naturalWidth, naturalHeight } = e.currentTarget;
 			if (!naturalWidth || !naturalHeight) return;
-			const scale = Math.min(STICKY_IMAGE_MAX_WIDTH / naturalWidth, 1);
+			const scale = Math.min(480 / naturalWidth, 1);
 			const width = Math.round(naturalWidth * scale);
 			const height = Math.round(naturalHeight * scale);
 			updateWidget(widget.id, { w: width, h: height });
@@ -734,7 +378,6 @@ const Widget = ({
 						: "rounded-xl border "
 			} ${isOverDeleteZone ? " scale-95" : ""}`}
 		>
-			{/* メモ帳の場合はテープ風のハンドル */}
 			{isSticky && (
 				<div
 					onPointerDown={handlePointerDown}
@@ -753,7 +396,6 @@ const Widget = ({
 				</div>
 			)}
 
-			{/* 他のウィジェットタイプのヘッダー */}
 			{!isSticky && (
 				<div
 					onPointerDown={handlePointerDown}
@@ -791,7 +433,6 @@ const Widget = ({
 								updateWidget(widget.id, { content: e.target.value })
 							}
 							onBlur={() => {
-								// キャレットが外れたときに自動でプレビュー表示に
 								setIsEditing(false);
 							}}
 							autoFocus
@@ -928,7 +569,6 @@ const Widget = ({
 								updateWidget(widget.id, { w: 400, h: 350 });
 							}
 						}}
-						// Pass new settings
 						autoPlayOnFocusSession={settings?.autoPlayOnFocusSession ?? true}
 						pauseOnBreak={settings?.pauseOnBreak ?? true}
 						defaultVolume={settings?.youtubeDefaultVolume ?? 30}
@@ -954,7 +594,6 @@ export default function PomodoroTimer() {
 	// Deterministic pseudo-random generator for React Compiler compatibility
 	const seedRef = useRef(123456789);
 	const nextSeed = useCallback(() => {
-		// Linear congruential generator (LCG) for stable pseudo-random values
 		seedRef.current = (seedRef.current * 1664525 + 1013904223) >>> 0;
 		return seedRef.current;
 	}, []);
@@ -981,7 +620,9 @@ export default function PomodoroTimer() {
 		"pomodoro-current-step",
 		0,
 	);
-	const [customSchedule, setCustomSchedule] = useState(SCHEDULE);
+	const [customSchedule, setCustomSchedule] = useState<ScheduleStep[]>(
+		SCHEDULE.map((s) => ({ ...s })),
+	);
 	const [savedTime, setSavedTime] = useSessionStorage("pomodoro-time-left", -1);
 	const [timeLeft, setTimeLeft] = useState(() => {
 		if (savedTime !== -1) return savedTime;
@@ -1004,19 +645,10 @@ export default function PomodoroTimer() {
 		theme: true,
 		settings: true,
 	});
-	const [widgets, setWidgets] = useLocalStorage<
-		Array<{
-			id: number;
-			type: string;
-			x: number;
-			y: number;
-			content: string;
-			zIndex?: number;
-			w?: number;
-			h?: number | string;
-			color?: string;
-		}>
-	>("pomodoro-widgets", []);
+	const [widgets, setWidgets] = useLocalStorage<Widget[]>(
+		"pomodoro-widgets",
+		[],
+	);
 	const zCounterRef = useRef(BASE_WIDGET_Z);
 	const nextZ = useCallback(() => {
 		zCounterRef.current = (zCounterRef.current || BASE_WIDGET_Z) + 1;
@@ -1048,7 +680,6 @@ export default function PomodoroTimer() {
 	const autoStartNextRef = useRef(false);
 	const hasQueuedAutoAdvanceRef = useRef(false);
 
-	// Keep refs up to date
 	useEffect(() => {
 		currentStepRef.current = currentStep;
 		settingsRef.current = settings;
@@ -1076,7 +707,6 @@ export default function PomodoroTimer() {
 					startTimeRef.current = null;
 					savedTimeRef.current = 0;
 
-					// Play sound
 					if (settingsRef.current.notificationSound) {
 						const normalizedVolume = Math.min(
 							1,
@@ -1085,18 +715,16 @@ export default function PomodoroTimer() {
 						playNotificationSound(normalizedVolume);
 					}
 
-					// Vibration
 					if (settingsRef.current.vibration && navigator.vibrate) {
 						navigator.vibrate([200, 100, 200]);
 					}
 
-					// Update stats
 					setStatsRef.current((prev) => {
 						const newStats = { ...prev };
 						if (step.type === "focus") {
 							newStats.completedPomodoros += 1;
 							newStats.totalWorkTime += step.duration;
-							newStats.todaysSessions += 1; // Simple increment, ideally check date
+							newStats.todaysSessions += 1;
 						} else {
 							newStats.totalBreakTime += step.duration;
 						}
@@ -1104,7 +732,6 @@ export default function PomodoroTimer() {
 						return newStats;
 					});
 
-					// Update sessions log
 					setSessionsRef.current((prev) => {
 						const completedAt = new Date();
 						return [
@@ -1123,7 +750,6 @@ export default function PomodoroTimer() {
 						];
 					});
 
-					// Show notification
 					showNotificationRef.current({
 						title:
 							step.type === "focus" ? "Work Session Complete!" : "Break Over!",
@@ -1154,7 +780,6 @@ export default function PomodoroTimer() {
 		};
 	}, [isActive, currentStep.duration, isFinished]);
 
-	// Persist timeLeft logic
 	const timeLeftRef = useRef(timeLeft);
 	const prevStepIndexRef = useRef(currentStepIndex);
 
@@ -1162,24 +787,20 @@ export default function PomodoroTimer() {
 		timeLeftRef.current = timeLeft;
 	}, [timeLeft]);
 
-	// Save time periodically
 	useEffect(() => {
-		// Save immediately when pausing or finishing
 		if (!isActive) {
 			setSavedTime(timeLeft);
 			return;
 		}
 
-		// Save every second while active
 		const interval = setInterval(() => {
 			setSavedTime(timeLeftRef.current);
 		}, 1000);
 
 		return () => clearInterval(interval);
-	}, [isActive, setSavedTime, timeLeft]); // timeLeft dependency for pause case
+	}, [isActive, setSavedTime, timeLeft]);
 
 	useEffect(() => {
-		// Only reset time if step actually changed
 		if (prevStepIndexRef.current !== currentStepIndex) {
 			const newDuration = customSchedule[currentStepIndex].duration * 60 * 1000;
 			const shouldAutoStart = autoStartNextRef.current;
@@ -1190,7 +811,6 @@ export default function PomodoroTimer() {
 			startTimeRef.current = null;
 			setIsFinished(false);
 
-			// Reset saved time in storage when step changes
 			setSavedTime(newDuration);
 
 			if (requestRef.current) {
@@ -1209,7 +829,6 @@ export default function PomodoroTimer() {
 			return;
 		}
 
-		// Prevent double-queuing when currentStepIndex changes while we're still marked finished
 		if (hasQueuedAutoAdvanceRef.current) {
 			return;
 		}
@@ -1218,10 +837,8 @@ export default function PomodoroTimer() {
 		const nextIndex =
 			currentStepIndex < customSchedule.length - 1 ? currentStepIndex + 1 : 0;
 
-		// Set autoStartNextRef to true BEFORE changing the step
 		autoStartNextRef.current = true;
 
-		// Use setTimeout to ensure the ref is set before the step change triggers
 		const timeoutId = window.setTimeout(() => {
 			setCurrentStepIndex(nextIndex);
 		}, 0);
@@ -1234,7 +851,6 @@ export default function PomodoroTimer() {
 		setCurrentStepIndex,
 	]);
 
-	// ワークフロー変更時に自動適用（タイマーが停止中の場合のみ）
 	useEffect(() => {
 		if (!isActive && currentStepIndex < customSchedule.length) {
 			const newDuration = customSchedule[currentStepIndex].duration * 60 * 1000;
@@ -1260,10 +876,8 @@ export default function PomodoroTimer() {
 		if (isFinished) {
 			handleNext();
 		} else if (isActive) {
-			// 実行中は停止ダイアログを表示
 			setShowStopDialog(true);
 		} else {
-			// 停止中は開始
 			requestPermission();
 			setIsActive(true);
 		}
@@ -1313,7 +927,7 @@ export default function PomodoroTimer() {
 
 		if (type === "music") {
 			const id = nextId();
-			const newWidget = {
+			const newWidget: Widget = {
 				id,
 				type: "youtube",
 				x: window.innerWidth / 2 - youtubeWidth / 2 + nextJitter(40),
@@ -1328,7 +942,7 @@ export default function PomodoroTimer() {
 		}
 		if (type === "stats") {
 			const id = nextId();
-			const newWidget = {
+			const newWidget: Widget = {
 				id,
 				type: "stats",
 				x: window.innerWidth / 2 - 180 + nextJitter(40),
@@ -1347,7 +961,7 @@ export default function PomodoroTimer() {
 		const shouldHaveStickyStyle =
 			type === "note" || type === "image" || type === "timer";
 		const initialSize = shouldHaveStickyStyle ? stickySize : undefined;
-		const newWidget = {
+		const newWidget: Widget = {
 			id,
 			type,
 			x: window.innerWidth / 2 - 150 + nextJitter(40),
@@ -1361,53 +975,13 @@ export default function PomodoroTimer() {
 		setWidgets([...widgets, newWidget]);
 	};
 
-	const updateWidget = (id: number, newData: Partial<(typeof widgets)[0]>) => {
+	const updateWidget = (id: number, newData: Partial<Widget>) => {
 		setWidgets(widgets.map((w) => (w.id === id ? { ...w, ...newData } : w)));
 	};
 
 	const removeWidget = (id: number) => {
 		setWidgets(widgets.filter((w) => w.id !== id));
 	};
-
-	// Time Formatter
-	const formatTime = (ms: number) => {
-		const totalSeconds = Math.floor(ms / 1000);
-		const minutes = Math.floor(totalSeconds / 60);
-		const seconds = totalSeconds % 60;
-		const milliseconds = Math.floor((ms % 1000) / 10);
-
-		return (
-			<div
-				className={`flex items-baseline justify-center tabular-nums tracking-[-0.15em] select-none cursor-pointer font-mono font-bold transition-opacity duration-300
- ${theme === "dark" ? "" : ""}
- ${isActive ? "" : " "}
- `}
-			>
-				<span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none text-right w-auto min-w-16 sm:min-w-19 md:min-w-23 lg:min-w-28">
-					{String(minutes).padStart(2, "0")}
-				</span>
-				<span
-					className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none -mx-1.25 -translate-y-0.75 ${isActive ? "animate-pulse" : ""}`}
-				>
-					:
-				</span>
-				<span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none text-left w-auto min-w-16 sm:min-w-19 md:min-w-23 lg:min-w-28">
-					{String(seconds).padStart(2, "0")}
-				</span>
-				<span className="text-lg sm:text-xl md:text-2xl leading-none ml-0.5 sm:ml-1 md:ml-1.5 lg:ml-2 w-10 sm:w-12 md:w-14 lg:w-16 min-w-[30px] sm:min-w-9 md:min-w-[42px] lg:min-w-12  font-medium self-end mb-1 sm:mb-1.5 md:mb-2">
-					.{String(milliseconds).padStart(2, "0")}
-				</span>
-			</div>
-		);
-	};
-
-	const progressPercent = useMemo(() => {
-		const totalDuration = currentStep.duration * 60 * 1000;
-		return Math.min(
-			100,
-			Math.max(0, ((totalDuration - timeLeft) / totalDuration) * 100),
-		);
-	}, [timeLeft, currentStep.duration]);
 
 	const currentStepProgressPercent = useMemo(() => {
 		const durationMs = currentStep.duration * 60 * 1000;
@@ -1416,32 +990,37 @@ export default function PomodoroTimer() {
 		return Math.min(100, Math.max(0, progress));
 	}, [currentStep.duration, timeLeft]);
 
-	const workflowProgressPercent = useMemo(() => {
-		if (!customSchedule.length || totalDuration <= 0) return 0;
-		const completedMinutes = customSchedule
-			.slice(0, currentStepIndex)
-			.reduce((acc, step) => acc + step.duration, 0);
-		const currentStepMinutes =
-			(currentStep.duration * currentStepProgressPercent) / 100;
-		const rawPercent =
-			((completedMinutes + currentStepMinutes) / totalDuration) * 100;
-		return Math.min(100, Math.max(0, rawPercent));
-	}, [
-		customSchedule,
-		currentStep.duration,
-		currentStepIndex,
-		currentStepProgressPercent,
-		totalDuration,
-	]);
+	const updateSchedule = (index: number, updates: Partial<ScheduleStep>) => {
+		const newSchedule = [...customSchedule];
+		newSchedule[index] = { ...newSchedule[index], ...updates };
+		setCustomSchedule(newSchedule);
+	};
 
-	const workflowFillStyle = useMemo(() => {
-		const startAlpha = theme === "dark" ? 0.45 : 0.5;
-		const endAlpha = theme === "dark" ? 0.25 : 0.3;
-		return `linear-gradient(180deg, ${hexToRgba(
-			highlightColor,
-			startAlpha,
-		)}, ${hexToRgba(highlightColor, endAlpha)})`;
-	}, [highlightColor, theme]);
+	const addStep = () => {
+		const newStep: ScheduleStep = {
+			id: nextId(),
+			type: "focus",
+			duration: 25,
+			label: "New Step",
+			desc: "",
+		};
+		setCustomSchedule([...customSchedule, newStep]);
+	};
+
+	const removeStep = (index: number) => {
+		setCustomSchedule(customSchedule.filter((_, i) => i !== index));
+	};
+
+	const updateDockVisibility = (
+		key: keyof typeof dockVisibility,
+		visible: boolean,
+	) => {
+		setDockVisibility((prev) => ({ ...prev, [key]: visible }));
+	};
+
+	const updateSettings = (updates: Partial<PomodoroSettings>) => {
+		setSettings({ ...settings, ...updates });
+	};
 
 	return (
 		<div
@@ -1456,7 +1035,6 @@ export default function PomodoroTimer() {
 				backgroundSize: "24px 24px",
 			}}
 		>
-			{/* Widgets */}
 			{widgets.map((widget) => (
 				<Widget
 					key={widget.id}
@@ -1483,245 +1061,42 @@ export default function PomodoroTimer() {
 				/>
 			))}
 
-			{/* Top: Current Step Label - Fixed */}
-			<div
-				className={`fixed top-8 left-1/2 -translate-x-1/2 z-30 text-sm tracking-[0.4em] uppercase font-bold  pointer-events-none
- ${theme === "dark" ? "" : ""}
- `}
-			>
-				{currentStep.label}
-			</div>
+			<CurrentStepLabel label={currentStep.label} theme={theme} />
 
-			{/* Center: Main Timer with circular progress */}
-			<div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none">
-				<div className="relative flex items-center justify-center w-60 h-60 sm:w-80 sm:h-80 md:w-[420px] md:h-[420px] lg:w-[520px] lg:h-[520px]">
-					{/* Background circle */}
-					<svg
-						className="absolute inset-0 w-full h-full"
-						viewBox="0 0 100 100"
-						aria-hidden="true"
-						style={{ transform: "rotate(90deg) scaleX(-1)" }}
-					>
-						<circle
-							cx="50"
-							cy="50"
-							r="45"
-							stroke={theme === "dark" ? "#555" : "#ddd"}
-							strokeWidth="3"
-							fill="none"
-						/>
-						<circle
-							cx="50"
-							cy="50"
-							r="45"
-							stroke={
-								currentStep.type === "focus"
-									? theme === "dark"
-										? "rgba(255, 255, 255, 0.5)"
-										: "rgba(0, 0, 0, 0.5)"
-									: theme === "dark"
-										? "rgba(14, 165, 233, 0.5)"
-										: "rgba(59, 130, 246, 0.5)"
-							}
-							strokeWidth="3"
-							fill="none"
-							strokeDasharray={Math.PI * 2 * 45}
-							strokeDashoffset={Math.PI * 2 * 45 * (progressPercent / 100)}
-							strokeLinecap="butt"
-						/>
-					</svg>
-					<button
-						onClick={handleTimerClick}
-						className="relative group pointer-events-auto "
-						style={{ zIndex: 50 }}
-					>
-						{formatTime(timeLeft)}
-					</button>
-				</div>
-			</div>
+			<CircularTimer
+				timeLeft={timeLeft}
+				isActive={isActive}
+				theme={theme}
+				sessionType={currentStep.type}
+				durationMinutes={currentStep.duration}
+				onClick={handleTimerClick}
+			/>
 
-			{/* Left Panel: Flow Progress Bar */}
-			<aside
-				className={`fixed left-8 top-1/2 transform -translate-y-1/2 z-70 flex flex-col items-start gap-4 transition-opacity duration-500 no-timer-click
- ${isActive ? " " : ""}
- `}
-			>
-				<div
-					className="relative h-[60vh] w-1.5 rounded-full bg-opacity-20  transition-[width] duration-300 hover:w-2"
-					style={{
-						backgroundColor:
-							theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
-					}}
-				>
-					<div
-						className="pointer-events-none absolute inset-0 z-10"
-						aria-hidden="true"
-					>
-						<div
-							className="absolute left-0 right-0 top-0"
-							style={{
-								height: `${workflowProgressPercent}%`,
-								backgroundImage: workflowFillStyle,
-								borderRadius: "9999px",
-							}}
-						/>
-					</div>
-					<div className="relative flex flex-col items-center h-full w-full z-20">
-						{customSchedule.map((step, index) => {
-							const heightPercent = (step.duration / totalDuration) * 100;
-							const isHovered = hoveredStepIndex === index;
-							const barColor = highlightColor;
-							const stepFillPercent = 0; // remove per-step fill
-							const highlightOpacity = isHovered ? 0.35 : 0;
+			<WorkflowProgressBar
+				schedule={customSchedule}
+				currentStepIndex={currentStepIndex}
+				currentStepDuration={currentStep.duration}
+				currentStepProgressPercent={currentStepProgressPercent}
+				totalDuration={totalDuration}
+				highlightColor={highlightColor}
+				isActive={isActive}
+				theme={theme}
+				hoveredStepIndex={hoveredStepIndex}
+				onHover={setHoveredStepIndex}
+			/>
 
-							const hoverPaddingLeft = 28;
-							const hoverPaddingRight = 24;
+			{isDraggingStickyWidget && <DeleteZone />}
 
-							return (
-								<div
-									key={step.id}
-									className="relative w-full   "
-									style={{ height: `${heightPercent}%` }}
-								>
-									<div
-										className="absolute inset-y-0"
-										style={{
-											left: -hoverPaddingLeft,
-											right: -hoverPaddingRight,
-										}}
-									>
-										<div
-											className="w-full h-full cursor-pointer"
-											onMouseEnter={() => setHoveredStepIndex(index)}
-											onMouseLeave={() =>
-												setHoveredStepIndex((prev) =>
-													prev === index ? null : prev,
-												)
-											}
-										/>
-									</div>
-									<div className="absolute inset-0 flex justify-center pointer-events-none">
-										<div className="relative w-full h-full">
-											{/* 一定の色で表示（過去のステップ） */}
-
-											{/* ホバー時に灰色で明るく表示 */}
-											<div
-												className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${isHovered ? "" : ""} ${
-													theme === "dark" ? "" : ""
-												}`}
-											/>
-
-											<div
-												className="absolute bottom-0 left-0 w-full transition-[height] duration-100 ease-linear"
-												style={{
-													height: `${stepFillPercent}%`,
-													background: `linear-gradient(180deg, ${barColor}33, ${barColor})`,
-													opacity: highlightOpacity,
-													borderRadius: "9999px",
-												}}
-											/>
-										</div>
-									</div>
-
-									<div
-										className={`absolute top-1/2 -translate-y-1/2 w-48 p-2 rounded-lg  border transition-all duration-300 pointer-events-none  z-100 ${
-											isHovered ? " translate-x-0" : " -translate-x-2.5"
-										}
- ${theme === "dark" ? "bg-[#1a1a1a]/90  " : "  "}
- `}
-										style={{
-											left: `calc(50% + ${hoverPaddingRight}px)`,
-										}}
-									>
-										<div className="flex items-center justify-between">
-											<span
-												className={`text-xs font-bold uppercase tracking-wider ${step.type === "focus" ? "" : ""}`}
-											>
-												{step.label}
-											</span>
-											<span className="text-[10px] font-mono ">
-												{step.duration} min
-											</span>
-										</div>
-									</div>
-								</div>
-							);
-						})}
-					</div>
-				</div>
-			</aside>
-
-			{/* Delete Zone - ドックの上、ドラッグ中のみ表示 */}
-			{isDraggingStickyWidget && (
-				<div className="delete-zone fixed bottom-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
-					<div
-						id="delete-zone-indicator"
-						className="w-64 h-24 rounded-2xl   flex items-center justify-center transition-transform duration-200  "
-					>
-						<Trash2
-							id="delete-zone-icon"
-							size={32}
-							className="  transition-transform duration-200 scale-100"
-						/>
-					</div>
-				</div>
-			)}
-
-			{/* Stop Dialog */}
 			{showStopDialog && (
-				<div className="fixed inset-0 z-100 flex items-center justify-center pointer-events-auto">
-					{/* Overlay */}
-					<div
-						className="absolute inset-0  "
-						onClick={() => setShowStopDialog(false)}
-					/>
-					{/* Dialog */}
-					<div
-						className={`relative z-10 rounded-2xl border   p-6 max-w-md w-full mx-4 ${
-							theme === "dark" ? "bg-[#1a1a1a]/95 " : " "
-						}`}
-					>
-						<button
-							onClick={() => setShowStopDialog(false)}
-							className={`absolute top-4 right-4 p-2 ${theme === "dark" ? " " : " "}`}
-							aria-label="ダイアログを閉じる"
-						>
-							<X size={20} />
-						</button>
-
-						<h3
-							className={`text-xl font-bold mb-4 ${theme === "dark" ? "" : ""}`}
-						>
-							タイマーを停止しますか？
-						</h3>
-						<div className="grid grid-cols-3 gap-3">
-							<button
-								onClick={handleReset}
-								className="px-2 py-4 font-medium flex flex-col items-center justify-center gap-2"
-							>
-								<RotateCcw size={24} />
-								<span className="text-xs">リセット</span>
-							</button>
-							<button
-								onClick={handleStop}
-								className="px-2 py-4 font-medium flex flex-col items-center justify-center gap-2"
-							>
-								<Pause size={24} />
-								<span className="text-xs">一時停止</span>
-							</button>
-							<button
-								onClick={handleSkip}
-								className="px-2 py-4 font-medium flex flex-col items-center justify-center gap-2"
-							>
-								<SkipForward size={24} />
-								<span className="text-xs">スキップ</span>
-							</button>
-						</div>
-					</div>
-				</div>
+				<StopDialog
+					theme={theme}
+					onClose={() => setShowStopDialog(false)}
+					onReset={handleReset}
+					onStop={handleStop}
+					onSkip={handleSkip}
+				/>
 			)}
 
-			{/* Bottom Dock */}
 			<Dock theme={theme}>
 				{dockVisibility.note && (
 					<DockButton
@@ -1794,409 +1169,23 @@ export default function PomodoroTimer() {
 				/>
 			</Dock>
 
-			{/* Settings Panel */}
 			{showSettingsPanel && (
-				<div className="fixed inset-0 z-2147483647 flex items-center justify-center pointer-events-auto">
-					{/* Overlay */}
-					<div
-						className="absolute inset-0  "
-						onClick={() => setShowSettingsPanel(false)}
-					/>
-					{/* Panel */}
-					<div
-						className={`relative z-10 rounded-2xl border   max-w-6xl w-full mx-4 h-[calc(100vh-2rem)] md:h-[600px] overflow-hidden flex flex-col md:flex-row ${
-							theme === "dark" ? "bg-[#1a1a1a]/95 " : " "
-						}`}
-					>
-						{/* Tabs - Top on mobile, Left on desktop */}
-						<div
-							className={`md:w-64    flex flex-row md:flex-col shrink-0 ${
-								theme === "dark" ? "" : ""
-							}`}
-						>
-							<div
-								className={`flex items-center justify-between p-4   shrink-0 ${
-									theme === "dark" ? "" : ""
-								}`}
-							>
-								<h2
-									className={`text-xl font-bold ${theme === "dark" ? "" : ""}`}
-								>
-									設定
-								</h2>
-								<button
-									onClick={() => setShowSettingsPanel(false)}
-									className={`p-2 ${theme === "dark" ? " " : " "}`}
-									aria-label="設定パネルを閉じる"
-								>
-									<X size={20} />
-								</button>
-							</div>
-							<div className="flex flex-row md:flex-col flex-1 overflow-x-auto md:overflow-y-auto p-2 min-h-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-track]:">
-								{[
-									{ key: "workflow", label: "ワークフロー" },
-									{ key: "dock", label: "ドック" },
-									{ key: "widgets", label: "ウィジェット" },
-									{ key: "youtube", label: "YouTube" },
-								].map((tab) => (
-									<button
-										key={tab.key}
-										onClick={() =>
-											setSettingsTab(tab.key as typeof settingsTab)
-										}
-										className={`whitespace-nowrap text-left px-4 py-3 md:w-full ${settingsTab === tab.key ? (theme === "dark" ? " " : " ") : theme === "dark" ? " " : " "} ${tab.key === "workflow" ? "md:mb-1" : ""}`}
-									>
-										{tab.label}
-									</button>
-								))}
-							</div>
-						</div>
-
-						{/* Content */}
-						<div className="flex-1 overflow-y-auto p-4 md:p-6 min-h-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-track]:">
-							{settingsTab === "workflow" && (
-								<div>
-									<h3
-										className={`text-lg font-semibold mb-4 ${
-											theme === "dark" ? "" : ""
-										}`}
-									>
-										ワークフローの編集
-									</h3>
-									<div className="space-y-2">
-										{customSchedule.map((step, index) => (
-											<div
-												key={step.id}
-												className={`flex items-center gap-2 p-2 rounded border ${
-													theme === "dark" ? " " : " "
-												}`}
-											>
-												<input
-													type="text"
-													value={step.label}
-													onChange={(e) => {
-														const newSchedule = [...customSchedule];
-														newSchedule[index] = {
-															...step,
-															label: e.target.value,
-														};
-														setCustomSchedule(newSchedule);
-													}}
-													className={`flex-1 px-2 py-1.5 border text-sm ${theme === "dark" ? " " : " "}`}
-													placeholder="ラベル"
-													aria-label="ステップラベル"
-												/>
-												<input
-													type="number"
-													min="1"
-													value={step.duration}
-													onChange={(e) => {
-														const newSchedule = [...customSchedule];
-														newSchedule[index] = {
-															...step,
-															duration: parseInt(e.target.value) || 1,
-														};
-														setCustomSchedule(newSchedule);
-													}}
-													className={`w-16 px-2 py-1.5 border text-sm ${theme === "dark" ? " " : " "}`}
-													aria-label="分数"
-												/>
-												<span
-													className={`text-xs ${theme === "dark" ? "" : ""}`}
-												>
-													分
-												</span>
-												<select
-													value={step.type}
-													onChange={(e) => {
-														const newSchedule = [...customSchedule];
-														newSchedule[index] = {
-															...step,
-															type: e.target.value as "focus" | "break",
-														};
-														setCustomSchedule(newSchedule);
-													}}
-													aria-label="ステップ種別"
-													className={`px-2 py-1.5 border text-sm appearance-none cursor-pointer ${theme === "dark" ? " " : " "}`}
-													style={{
-														backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='${theme === "dark" ? "white" : "black"}' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
-														backgroundRepeat: "no-repeat",
-														backgroundPosition: "right 0.5rem center",
-														paddingRight: "2rem",
-													}}
-												>
-													<option value="focus">作業</option>
-													<option value="break">休憩</option>
-												</select>
-												<button
-													onClick={() => {
-														const newSchedule = customSchedule.filter(
-															(_, i) => i !== index,
-														);
-														setCustomSchedule(newSchedule);
-													}}
-													className="p-1 shrink-0"
-													aria-label="ステップを削除"
-												>
-													<X size={14} />
-												</button>
-											</div>
-										))}
-										<button
-											onClick={() => {
-												const newStep = {
-													id: nextId(),
-													type: "focus" as const,
-													duration: 25,
-													label: "New Step",
-													desc: "",
-												};
-												setCustomSchedule([...customSchedule, newStep]);
-											}}
-											className={`w-full py-3 border ${theme === "dark" ? " " : " "}`}
-										>
-											+ ステップを追加
-										</button>
-									</div>
-								</div>
-							)}
-
-							{settingsTab === "dock" && (
-								<div className="space-y-6">
-									<h3
-										className={`text-lg font-semibold ${
-											theme === "dark" ? "" : ""
-										}`}
-									>
-										ドックとウィジェット設定
-									</h3>
-
-									{/* Dock visibility */}
-									<div className="space-y-2">
-										<p className={`text-sm ${theme === "dark" ? "" : ""}`}>
-											ドックに表示する項目を選択します.
-										</p>
-										{[
-											{
-												key: "note",
-												icon: StickyNote,
-												name: "メモ",
-											},
-											{
-												key: "image",
-												icon: ImageIcon,
-												name: "画像",
-											},
-											{
-												key: "music",
-												icon: Music,
-												name: "YouTube",
-											},
-											{
-												key: "timer",
-												icon: Timer,
-												name: "タイマー",
-											},
-											{
-												key: "stats",
-												icon: BarChart2,
-												name: "統計",
-											},
-											{
-												key: "theme",
-												icon: theme === "dark" ? Sun : Moon,
-												name: "テーマ",
-											},
-										].map(({ key, icon: Icon, name }) => (
-											<label
-												key={key}
-												className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors ${
-													theme === "dark" ? " " : " "
-												} ${theme === "dark" ? "" : ""}`}
-											>
-												<Icon
-													size={16}
-													className={`shrink-0 ${theme === "dark" ? "" : ""} ${
-														dockVisibility[key as keyof typeof dockVisibility]
-															? ""
-															: ""
-													}`}
-												/>
-												<span
-													className={`flex-1 text-sm ${
-														theme === "dark" ? "" : ""
-													}`}
-												>
-													{name}
-												</span>
-												<input
-													type="checkbox"
-													checked={
-														dockVisibility[
-															key as keyof typeof dockVisibility
-														] as boolean
-													}
-													onChange={(e) =>
-														setDockVisibility((prev) => ({
-															...prev,
-															[key]: e.target.checked,
-														}))
-													}
-													className="w-4 h-4 shrink-0 cursor-pointer"
-												/>
-											</label>
-										))}
-									</div>
-								</div>
-							)}
-
-							{settingsTab === "widgets" && (
-								<div className="space-y-6">
-									<div>
-										<h3
-											className={`text-lg font-semibold mb-2 ${
-												theme === "dark" ? "" : ""
-											}`}
-										>
-											ウィジェットサイズ
-										</h3>
-										<p className={`text-sm mb-4 ${theme === "dark" ? "" : ""}`}>
-											新しく追加するウィジェットの基本サイズを調整します.
-										</p>
-										<div className="space-y-4">
-											<ElasticSlider
-												min={160}
-												max={360}
-												step={10}
-												value={settings.stickyWidgetSize ?? STICKY_NOTE_SIZE}
-												onChange={(v) =>
-													setSettings({
-														...settings,
-														stickyWidgetSize: v,
-													})
-												}
-												accentColor={highlightColor}
-												label={
-													<span className="block text-xs font-medium ">
-														メモ / 画像 / タイマー / 統計
-													</span>
-												}
-												valueLabel={`${settings.stickyWidgetSize ?? STICKY_NOTE_SIZE}px`}
-											/>
-											<ElasticSlider
-												min={320}
-												max={640}
-												step={20}
-												value={settings.youtubeWidgetWidth ?? 400}
-												onChange={(v) =>
-													setSettings({
-														...settings,
-														youtubeWidgetWidth: v,
-													})
-												}
-												accentColor={highlightColor}
-												label={
-													<span className="block text-xs font-medium ">
-														YouTubeウィジェットの幅
-													</span>
-												}
-												valueLabel={`${settings.youtubeWidgetWidth ?? 400}px`}
-											/>
-										</div>
-									</div>
-								</div>
-							)}
-
-							{settingsTab === "youtube" && (
-								<div className="space-y-6">
-									<div>
-										<h3
-											className={`text-lg font-semibold mb-2 ${
-												theme === "dark" ? "" : ""
-											}`}
-										>
-											YouTubeプレイヤー設定
-										</h3>
-										<p className={`text-sm mb-4 ${theme === "dark" ? "" : ""}`}>
-											全てのYouTubeウィジェットで共有する再生動作とデフォルト値です.
-										</p>
-										<div className="space-y-3">
-											<label className="flex items-center gap-3 cursor-pointer">
-												<input
-													type="checkbox"
-													checked={settings.autoPlayOnFocusSession ?? true}
-													onChange={(e) =>
-														setSettings({
-															...settings,
-															autoPlayOnFocusSession: e.target.checked,
-														})
-													}
-													className="w-4 h-4"
-												/>
-												<span className="text-sm">
-													集中開始時に自動再生する
-												</span>
-											</label>
-
-											<label className="flex items-center gap-3 cursor-pointer">
-												<input
-													type="checkbox"
-													checked={settings.pauseOnBreak ?? true}
-													onChange={(e) =>
-														setSettings({
-															...settings,
-															pauseOnBreak: e.target.checked,
-														})
-													}
-													className="w-4 h-4"
-												/>
-												<span className="text-sm">
-													休憩が始まったら自動で一時停止する
-												</span>
-											</label>
-
-											<label className="flex items-center gap-3 cursor-pointer">
-												<input
-													type="checkbox"
-													checked={settings.youtubeLoop ?? false}
-													onChange={(e) =>
-														setSettings({
-															...settings,
-															youtubeLoop: e.target.checked,
-														})
-													}
-													className="w-4 h-4"
-												/>
-												<span className="text-sm">ループ再生を有効にする</span>
-											</label>
-
-											<div className="pt-2">
-												<ElasticSlider
-													min={0}
-													max={100}
-													value={settings.youtubeDefaultVolume ?? 30}
-													onChange={(v) =>
-														setSettings({
-															...settings,
-															youtubeDefaultVolume: v,
-														})
-													}
-													accentColor={highlightColor}
-													label={
-														<span className="block text-xs font-medium ">
-															デフォルト音量
-														</span>
-													}
-													valueLabel={`${settings.youtubeDefaultVolume ?? 30}%`}
-												/>
-											</div>
-										</div>
-									</div>
-								</div>
-							)}
-						</div>
-					</div>
-				</div>
+				<SettingsPanel
+					theme={theme}
+					settings={settings}
+					settingsTab={settingsTab}
+					customSchedule={customSchedule}
+					dockVisibility={dockVisibility}
+					highlightColor={highlightColor}
+					onTabChange={setSettingsTab}
+					onClose={() => setShowSettingsPanel(false)}
+					onUpdateSchedule={updateSchedule}
+					onAddStep={addStep}
+					onRemoveStep={removeStep}
+					onUpdateDockVisibility={updateDockVisibility}
+					onUpdateSettings={updateSettings}
+					nextId={nextId}
+				/>
 			)}
 		</div>
 	);

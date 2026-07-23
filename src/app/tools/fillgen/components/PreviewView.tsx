@@ -3,6 +3,11 @@
 import type { RefObject } from "react";
 import type { Doc } from "./types";
 import { paragraphToHtml } from "./parser";
+import {
+	checkSection,
+	showSectionAns,
+	resetSection,
+} from "./useQuizSectionHandlers";
 
 type Props = {
 	docs: Doc[];
@@ -10,9 +15,6 @@ type Props = {
 	activePage: number;
 	setActivePage: (i: number) => void;
 	containerRef: RefObject<HTMLDivElement | null>;
-	checkSection: (btn: HTMLButtonElement) => void;
-	showSectionAns: (btn: HTMLButtonElement) => void;
-	resetSection: (btn: HTMLButtonElement) => void;
 };
 
 export function PreviewView({
@@ -21,9 +23,6 @@ export function PreviewView({
 	activePage,
 	setActivePage,
 	containerRef,
-	checkSection,
-	showSectionAns,
-	resetSection,
 }: Props) {
 	return (
 		<div

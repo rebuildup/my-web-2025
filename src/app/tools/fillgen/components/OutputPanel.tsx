@@ -20,9 +20,6 @@ type Props = {
 	activePage: number;
 	setActivePage: (i: number) => void;
 	containerRef: RefObject<HTMLDivElement | null>;
-	checkSection: (btn: HTMLButtonElement) => void;
-	showSectionAns: (btn: HTMLButtonElement) => void;
-	resetSection: (btn: HTMLButtonElement) => void;
 };
 
 const TABS: { key: Tab; label: string }[] = [
@@ -43,9 +40,6 @@ export function OutputPanel({
 	activePage,
 	setActivePage,
 	containerRef,
-	checkSection,
-	showSectionAns,
-	resetSection,
 }: Props) {
 	return (
 		<fieldset style={{ border: "1px solid #ccc", padding: 16 }}>
@@ -129,9 +123,6 @@ export function OutputPanel({
 							activePage={activePage}
 							setActivePage={setActivePage}
 							containerRef={containerRef}
-							checkSection={checkSection}
-							showSectionAns={showSectionAns}
-							resetSection={resetSection}
 						/>
 						<StyleSettingsPanel settings={settings} setSettings={setSettings} />
 					</>

@@ -26,12 +26,3 @@ export interface ColorPaletteSettings {
 	sortBy: SortBy;
 	autoSave: boolean;
 }
-
-export type ColorRangePreset = {
-	hMin: number;
-	hMax: number;
-	sMin: number;
-	sMax: number;
-	vMin: number;
-	vMax: number;
-};
