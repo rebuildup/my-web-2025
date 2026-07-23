@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.5.2/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.5.5/schema.json",
 	"formatter": {
 		"enabled": true
 	},
@@ -77,6 +77,7 @@
 			"!!coverage",
 			"!!biome-report.json",
 			"!!biome-output.txt",
+			"!!next-env.d.ts",
 			"!!src/app/admin",
 			"!!src/app/api",
 			"!!src/test-utils",
@@ -84,7 +85,8 @@
 			"!!src/app/app.css",
 			"!!src/app/tools/ProtoType/prototype-src/styles/009_webglPopup.css",
 			"!!src/app/tools/ProtoType/prototype-src/styles/styles/009_webglPopup.css",
-			"!!src/app/tools/ProtoType"
+			"!!src/app/tools/ProtoType",
+			"!!.claude/worktrees/**"
 		],
 		"ignoreUnknown": true
 	},
