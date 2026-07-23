@@ -1,250 +1,34 @@
-import {
-	Maximize2,
-	Minimize2,
-	Pause,
-	Play,
-	Save,
-	Settings,
-	SkipBack,
-	SkipForward,
-	Volume2,
-	VolumeX,
-} from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
-import { ElasticSlider } from "../ElasticSlider";
-import {
-	DEFAULT_YOUTUBE_SETTINGS,
-	YouTubePlaybackState,
-	YouTubeSettings,
-} from "./types";
-import { parseYouTubeUrl } from "./utils";
+import { YouTubePlayerContent } from "./YouTubePlayerContent";
+import { YouTubePlayerControls } from "./YouTubePlayerControls";
+import { YouTubePlayerHeader } from "./YouTubePlayerHeader";
+import type { YouTubePlayerProps } from "./YouTubePlayer.types";
+import { useYouTubePlayer } from "./useYouTubePlayer";
 
-interface YouTubePlayerProps {
-	pomodoroState: {
-		isActive: boolean;
-		sessionType: "work" | "shortBreak" | "longBreak";
-	};
-	theme: "light" | "dark";
-	url: string;
-	onUrlChange: (url: string) => void;
-	onToggleMinimize?: (isMinimized: boolean) => void;
-	autoPlayOnFocusSession: boolean;
-	pauseOnBreak: boolean;
-	defaultVolume: number;
-	loopEnabled: boolean;
-}
-
-export default function YouTubePlayer({
-	pomodoroState,
-	theme,
-	url,
-	onUrlChange,
-	onToggleMinimize,
-	autoPlayOnFocusSession,
-	pauseOnBreak,
-	defaultVolume,
-	loopEnabled,
-}: YouTubePlayerProps) {
-	const [settings, setSettings] = useState<YouTubeSettings>(
-		DEFAULT_YOUTUBE_SETTINGS,
-	);
-
-	useEffect(() => {
-		setSettings((prev) => ({ ...prev, loop: loopEnabled }));
-	}, [loopEnabled]);
-
-	const source = useMemo(() => parseYouTubeUrl(url), [url]);
-
-	const [playbackState, setPlaybackState] =
-		useState<YouTubePlaybackState>("idle");
-	const [player, setPlayer] = useState<any>(null);
-	const [isApiReady, setIsApiReady] = useState(false);
-	const [inputUrl, setInputUrl] = useState(url);
-	const [error, setError] = useState<string | null>(null);
-	const [volume, setVolume] = useState(defaultVolume);
-	const [isMuted, setIsMuted] = useState(false);
-	const [showSettings, setShowSettings] = useState(false);
-
-	const [uniqueId, setUniqueId] = useState("");
-
-	useEffect(() => {
-		setUniqueId(`youtube-player-${Math.random().toString(36).substr(2, 9)}`);
-	}, []);
-
-	// Update volume when defaultVolume changes
-	useEffect(() => {
-		setVolume(defaultVolume);
-		if (player && player.setVolume) {
-			player.setVolume(defaultVolume);
-		}
-	}, [defaultVolume, player]);
-
-	// Load IFrame API
-	useEffect(() => {
-		if (!(window as any).YT) {
-			const tag = document.createElement("script");
-			tag.src = "https://www.youtube.com/iframe_api";
-			const firstScriptTag = document.getElementsByTagName("script")[0];
-			firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-
-			(window as any).onYouTubeIframeAPIReady = () => {
-				setIsApiReady(true);
-			};
-		} else {
-			setIsApiReady(true);
-		}
-	}, []);
-
-	// Initialize Player
-	useEffect(() => {
-		if (isApiReady && source && !player) {
-			const newPlayer = new (window as any).YT.Player(uniqueId, {
-				height: "100%",
-				width: "100%",
-				videoId:
-					source.type === "video" || source.type === "mixed"
-						? source.videoId
-						: undefined,
-				playerVars: {
-					listType:
-						source.type === "playlist" || source.type === "mixed"
-							? "playlist"
-							: undefined,
-					list:
-						source.type === "playlist" || source.type === "mixed"
-							? source.playlistId
-							: settings.loop && source.videoId
-								? source.videoId
-								: undefined,
-					index: source.index,
-					autoplay: 0,
-					controls: 1,
-					modestbranding: 1,
-					rel: 0,
-					loop: settings.loop ? 1 : 0,
-				},
-				events: {
-					onReady: (event: any) => {
-						event.target.setVolume(volume);
-						setPlaybackState("idle");
-					},
-					onStateChange: (event: any) => {
-						// -1: unstarted, 0: ended, 1: playing, 2: paused, 3: buffering, 5: video cued
-						if (event.data === 1) setPlaybackState("playing");
-						if (event.data === 2) setPlaybackState("paused");
-						if (event.data === 0 && settings.loop) {
-							event.target.playVideo();
-						}
-					},
-					onError: (event: any) => {
-						setPlaybackState("error");
-						console.error("YouTube Player Error:", event.data);
-						let msg = "再生エラーが発生しました.";
-						if (event.data === 150 || event.data === 101) {
-							msg = "この動画は埋め込み再生が許可されていません.";
-						}
-						setError(msg);
-					},
-				},
-			});
-			setPlayer(newPlayer);
-		}
-	}, [isApiReady, source, player, uniqueId, volume]);
-
-	// Handle Source Change
-	const handleSaveUrl = () => {
-		const newSource = parseYouTubeUrl(inputUrl);
-		if (newSource) {
-			onUrlChange(inputUrl);
-			setError(null);
-			if (player) {
-				player.destroy();
-				setPlayer(null); // Will trigger re-initialization
-			}
-		} else {
-			setError("無効なURL形式です.");
-		}
-	};
-
-	// Recreate player when loop setting changes to apply IFrame params
-	useEffect(() => {
-		if (player) {
-			player.destroy();
-			setPlayer(null);
-		}
-	}, [settings.loop, source]);
-
-	// Pomodoro Integration
-	useEffect(() => {
-		if (!player || !player.playVideo) return;
-
-		if (pomodoroState.isActive && pomodoroState.sessionType === "work") {
-			if (autoPlayOnFocusSession) {
-				player.playVideo();
-			}
-		} else if (
-			pomodoroState.isActive &&
-			(pomodoroState.sessionType === "shortBreak" ||
-				pomodoroState.sessionType === "longBreak")
-		) {
-			if (pauseOnBreak) {
-				player.pauseVideo();
-			}
-		}
-	}, [
-		pomodoroState.isActive,
-		pomodoroState.sessionType,
-		autoPlayOnFocusSession,
-		pauseOnBreak,
-	]);
-
-	// Volume Control
-	const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const newVol = parseInt(e.target.value);
-		setVolume(newVol);
-		// setSettings({ ...settings, defaultVolume: newVol }); // Removed local setting update
-		if (player && player.setVolume) {
-			player.setVolume(newVol);
-		}
-	};
-
-	const toggleMute = () => {
-		if (player && player.isMuted) {
-			if (player.isMuted()) {
-				player.unMute();
-				setIsMuted(false);
-			} else {
-				player.mute();
-				setIsMuted(true);
-			}
-		}
-	};
-
-	const togglePlay = () => {
-		if (player && player.getPlayerState) {
-			const state = player.getPlayerState();
-			if (state === 1) {
-				player.pauseVideo();
-			} else {
-				player.playVideo();
-			}
-		}
-	};
-
-	const handleNext = () => {
-		if (player && player.nextVideo) {
-			player.nextVideo();
-		}
-	};
-
-	const handlePrevious = () => {
-		if (player && player.previousVideo) {
-			player.previousVideo();
-		}
-	};
-
-	const isMinimized = settings.isMinimized;
-	const isPlaylist = source?.type === "playlist" || source?.type === "mixed";
+export default function YouTubePlayer(props: YouTubePlayerProps) {
+	const { theme } = props;
+	const {
+		error,
+		handleNext,
+		handlePrevious,
+		handleSaveUrl,
+		handleVolumeChange,
+		inputUrl,
+		isMinimized,
+		isMuted,
+		isPlaylist,
+		playbackState,
+		setInputUrl,
+		setSettings,
+		setShowSettings,
+		showSettings,
+		source,
+		toggleMinimize,
+		toggleMute,
+		togglePlay,
+		toggleSettings,
+		uniqueId,
+		volume,
+	} = useYouTubePlayer(props);
 
 	return (
 		<div
@@ -252,146 +36,37 @@ export default function YouTubePlayer({
 				theme === "dark" ? "" : ""
 			}`}
 		>
-			{/* Header */}
-			<div
-				className={`flex items-center justify-between p-2  ${
-					theme === "dark" ? "" : ""
-				}`}
-			>
-				<div className="flex items-center gap-2">
-					<span className="text-xs font-bold uppercase tracking-wider ">
-						YouTube Player
-					</span>
-				</div>
-				<div className="flex items-center gap-1">
-					<button
-						onClick={() => {
-							const newState = !isMinimized;
-							setSettings({ ...settings, isMinimized: newState });
-							onToggleMinimize?.(newState);
-						}}
-						className="p-1.5"
-						aria-label={isMinimized ? "最大化" : "最小化"}
-					>
-						{isMinimized ? <Maximize2 size={14} /> : <Minimize2 size={14} />}
-					</button>
-					<button
-						onClick={() => setShowSettings(!showSettings)}
-						className={`p-1.5 ${showSettings ? "" : ""}`}
-						aria-label="設定"
-					>
-						<Settings size={14} />
-					</button>
-				</div>
-			</div>
+			<YouTubePlayerHeader
+				theme={theme}
+				isMinimized={isMinimized}
+				showSettings={showSettings}
+				onToggleMinimize={toggleMinimize}
+				onToggleSettings={toggleSettings}
+			/>
 
-			{/* Main Content */}
-			<div className="flex-1 relative ">
-				{!source ? (
-					<div className="absolute inset-0 flex items-center justify-center  text-xs p-4 text-center">
-						URLを設定してください
-					</div>
-				) : uniqueId ? (
-					<div id={uniqueId} className="w-full h-full" />
-				) : null}
-				{error && (
-					<div className="absolute inset-0 flex items-center justify-center   text-xs p-4 text-center z-10">
-						{error}
-					</div>
-				)}
-			</div>
+			<YouTubePlayerContent
+				hasSource={Boolean(source)}
+				uniqueId={uniqueId}
+				error={error}
+			/>
 
-			{/* Controls */}
-			{!isMinimized && (
-				<div className="p-3 space-y-3 ">
-					{/* Playback Controls */}
-					<div className="flex items-center justify-between">
-						<div className="flex items-center gap-2">
-							{isPlaylist && (
-								<button
-									onClick={handlePrevious}
-									className={`p-2 ${theme === "dark" ? " " : " "}`}
-									aria-label="前の動画"
-								>
-									<SkipBack size={16} fill="currentColor" />
-								</button>
-							)}
-							<button
-								onClick={togglePlay}
-								className={`p-2 ${theme === "dark" ? " " : " "}`}
-								aria-label={playbackState === "playing" ? "一時停止" : "再生"}
-							>
-								{playbackState === "playing" ? (
-									<Pause size={16} fill="currentColor" />
-								) : (
-									<Play size={16} fill="currentColor" />
-								)}
-							</button>
-							{isPlaylist && (
-								<button
-									onClick={handleNext}
-									className={`p-2 ${theme === "dark" ? " " : " "}`}
-									aria-label="次の動画"
-								>
-									<SkipForward size={16} fill="currentColor" />
-								</button>
-							)}
-						</div>
-
-						<div className="flex items-center gap-2 flex-1 mx-4">
-							<button
-								onClick={toggleMute}
-								className="dark:"
-								aria-label={
-									isMuted || volume === 0 ? "ミュート解除" : "ミュート"
-								}
-							>
-								{isMuted || volume === 0 ? (
-									<VolumeX size={16} />
-								) : (
-									<Volume2 size={16} />
-								)}
-							</button>
-							<div className="flex-1">
-								<ElasticSlider
-									min={0}
-									max={100}
-									value={volume}
-									onChange={(v) =>
-										handleVolumeChange({
-											target: { value: String(v) },
-										} as React.ChangeEvent<HTMLInputElement>)
-									}
-									accentColor="#3b82f6"
-									ariaLabel="YouTube volume"
-								/>
-							</div>
-						</div>
-					</div>
-
-					{/* Settings / URL Input */}
-					{showSettings && (
-						<div className={`pt-3  space-y-3 ${theme === "dark" ? "" : ""}`}>
-							<div className="flex gap-2">
-								<input
-									type="text"
-									value={inputUrl}
-									onChange={(e) => setInputUrl(e.target.value)}
-									placeholder="YouTube URL..."
-									className={`flex-1 px-2 py-1.5 text-xs ${theme === "dark" ? " " : " "}`}
-								/>
-								<button
-									onClick={handleSaveUrl}
-									className={`p-1.5 ${theme === "dark" ? " " : " "}`}
-									aria-label="URLを保存"
-								>
-									<Save size={14} />
-								</button>
-							</div>
-						</div>
-					)}
-				</div>
-			)}
+			<YouTubePlayerControls
+				theme={theme}
+				isMinimized={isMinimized}
+				isPlaylist={isPlaylist}
+				playbackState={playbackState}
+				isMuted={isMuted}
+				volume={volume}
+				inputUrl={inputUrl}
+				showSettings={showSettings}
+				onPrevious={handlePrevious}
+				onTogglePlay={togglePlay}
+				onNext={handleNext}
+				onToggleMute={toggleMute}
+				onVolumeChange={handleVolumeChange}
+				onInputUrlChange={setInputUrl}
+				onSaveUrl={handleSaveUrl}
+			/>
 		</div>
 	);
 }

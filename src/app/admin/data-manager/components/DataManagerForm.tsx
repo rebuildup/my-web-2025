@@ -117,6 +117,480 @@ function FormHeader({
 	);
 }
 
+interface TitleDescriptionFieldsProps {
+	formData: FormData;
+	inputStyle: string;
+	labelStyle: string;
+	handleInputChange: InputChangeHandler;
+}
+
+function TitleDescriptionFields({
+	formData,
+	inputStyle,
+	labelStyle,
+	handleInputChange,
+}: TitleDescriptionFieldsProps) {
+	return (
+		<>
+			<div>
+				<label className={labelStyle}>タイトル *</label>
+				<input
+					type="text"
+					value={formData.title}
+					onChange={(e) => handleInputChange("title", e.target.value)}
+					className={inputStyle}
+					placeholder="コンテンツのタイトルを入力してください"
+				/>
+			</div>
+
+			<div>
+				<label className={labelStyle}>説明</label>
+				<textarea
+					value={formData.description}
+					onChange={(e) => handleInputChange("description", e.target.value)}
+					className={`${inputStyle} h-24 resize-vertical`}
+					rows={3}
+					placeholder="コンテンツの説明を入力してください"
+				/>
+			</div>
+		</>
+	);
+}
+
+interface CategoryStatusFieldsProps {
+	formData: FormData;
+	enhanced: boolean;
+	inputStyle: string;
+	labelStyle: string;
+	handleInputChange: InputChangeHandler;
+	handleCategoriesChange: (categories: EnhancedCategoryType[]) => void;
+}
+
+function CategoryStatusFields({
+	formData,
+	enhanced,
+	inputStyle,
+	labelStyle,
+	handleInputChange,
+	handleCategoriesChange,
+}: CategoryStatusFieldsProps) {
+	return (
+		<div className="space-y-4">
+			<div>
+				{formData.type === "portfolio" && enhanced ? (
+					<MultiCategorySelector
+						selectedCategories={
+							isEnhancedContentItem(formData)
+								? formData.categories || []
+								: formData.category
+									? [formData.category as EnhancedCategoryType]
+									: []
+						}
+						onChange={handleCategoriesChange}
+						availableCategories={["develop", "video", "design"]}
+						maxSelections={3}
+						showOtherOption={true}
+					/>
+				) : formData.type === "portfolio" ? (
+					<div>
+						<label className={labelStyle}>カテゴリ</label>
+						<Select
+							value={formData.category || ""}
+							onChange={(value) => handleInputChange("category", value)}
+							options={getPortfolioCategoryOptions()}
+							placeholder="カテゴリを選択してください"
+							variant="admin"
+						/>
+					</div>
+				) : (
+					<div>
+						<label className={labelStyle}>カテゴリ</label>
+						<input
+							type="text"
+							value={formData.category}
+							onChange={(e) =>
+								handleInputChange("category", e.target.value)
+							}
+							className={inputStyle}
+							placeholder="カテゴリを入力してください"
+						/>
+					</div>
+				)}
+			</div>
+
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<div>
+					<label className={labelStyle}>ステータス</label>
+					<Select
+						value={formData.status}
+						onChange={(value) => handleInputChange("status", value)}
+						options={[
+							{ value: "draft", label: "下書き" },
+							{ value: "published", label: "公開済み" },
+							{ value: "archived", label: "アーカイブ" },
+							{ value: "scheduled", label: "予約投稿" },
+						]}
+						variant="admin"
+					/>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+interface GalleryVisibilitySummaryProps {
+	formData: FormData;
+	enhanced: boolean;
+}
+
+function GalleryVisibilitySummary({
+	formData,
+	enhanced,
+}: GalleryVisibilitySummaryProps) {
+	if (
+		!(
+			enhanced &&
+			formData.type === "portfolio" &&
+			isEnhancedContentItem(formData) &&
+			formData.categories &&
+			formData.categories.length > 0
+		)
+	) {
+		return null;
+	}
+
+	return (
+		<div className="  rounded-lg p-4">
+			<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
+				Gallery Visibility Summary
+			</h4>
+			<div className="space-y-2 text-sm">
+				<div className="flex items-center gap-2">
+					<span className="w-2 h-2  rounded-full"></span>
+					<span className="font-medium ">Will appear in:</span>
+					<span className="">
+						{formData.categories.includes("other") ||
+						formData.categories.length === 0
+							? "All gallery only"
+							: `All, ${formData.categories
+									.filter((cat) => cat !== "other")
+									.map((cat) =>
+										cat === "develop"
+											? "Development"
+											: cat === "video"
+												? "Video"
+												: cat === "design"
+													? "Design"
+													: cat.charAt(0).toUpperCase() +
+														cat.slice(1),
+									)
+									.join(", ")} galleries`}
+					</span>
+				</div>
+
+				{formData.categories.includes("other") &&
+					formData.categories.length > 1 && (
+						<div className="flex items-center gap-2">
+							<span className="w-2 h-2  rounded-full"></span>
+							<span className=" text-xs">
+								Note: Other category overrides specific categories - item
+								will only appear in All gallery
+							</span>
+						</div>
+					)}
+
+				{formData.categories.length > 2 && (
+					<div className="flex items-center gap-2">
+						<span className="w-2 h-2  rounded-full"></span>
+						<span className=" text-xs">
+							Multiple categories selected - item may appear in multiple
+							galleries
+						</span>
+					</div>
+				)}
+			</div>
+		</div>
+	);
+}
+
+interface TagsFieldProps {
+	formData: FormData;
+	handleTagsChange: (tags: string[]) => void;
+}
+
+function TagsField({ formData, handleTagsChange }: TagsFieldProps) {
+	return (
+		<div>
+			<label className="block noto-sans-jp-regular text-sm font-medium mb-1">
+				タグ
+			</label>
+			<div className="space-y-2">
+				<TagManagementUI
+					selectedTags={formData.tags || []}
+					onChange={handleTagsChange}
+					tagManager={clientTagManager}
+					allowNewTags={true}
+					maxTags={15}
+					placeholder="既存のタグを検索するか、新しいタグを作成してください..."
+					className="mt-1"
+				/>
+				<div className="flex items-center justify-between text-xs ">
+					<span>
+						{formData.tags && formData.tags.length > 0
+							? `${formData.tags.length}個のタグが選択されています`
+							: "タグが選択されていません"}
+					</span>
+					<span className="">最大15個</span>
+				</div>
+				<div className="text-xs   p-3 rounded ">
+					<div className="flex items-start gap-2">
+						<span className=" mt-0.5">💡</span>
+						<div>
+							<strong>Tag Tips:</strong> Type to search existing tags or
+							create new ones. Tags help categorize content and improve
+							searchability. Use descriptive terms like &quot;react&quot;,
+							&quot;design&quot;, &quot;video&quot;, etc.
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+interface PriorityFieldProps {
+	formData: FormData;
+	inputStyle: string;
+	labelStyle: string;
+	handleInputChange: InputChangeHandler;
+}
+
+function PriorityField({
+	formData,
+	inputStyle,
+	labelStyle,
+	handleInputChange,
+}: PriorityFieldProps) {
+	return (
+		<div>
+			<label className={labelStyle} htmlFor="priority-input">
+				Priority (0-100)
+			</label>
+			<input
+				id="priority-input"
+				type="number"
+				min="0"
+				max="100"
+				value={formData.priority}
+				onChange={(e) =>
+					handleInputChange("priority", parseInt(e.target.value))
+				}
+				className={inputStyle}
+			/>
+		</div>
+	);
+}
+
+interface MarkdownMigrationNoticeProps {
+	enhanced: boolean;
+	needsMarkdownMigration: boolean;
+	migrateContentToMarkdown: () => Promise<void>;
+	setNeedsMarkdownMigration: (value: boolean) => void;
+}
+
+function MarkdownMigrationNotice({
+	enhanced,
+	needsMarkdownMigration,
+	migrateContentToMarkdown,
+	setNeedsMarkdownMigration,
+}: MarkdownMigrationNoticeProps) {
+	if (!enhanced || !needsMarkdownMigration) {
+		return null;
+	}
+
+	return (
+		<div className="   rounded-lg p-4">
+			<div className="flex items-start gap-3">
+				<div className="w-6 h-6  rounded-full flex items-center justify-center shrink-0 mt-0.5">
+					<span className=" text-sm">📝</span>
+				</div>
+				<div className="flex-1">
+					<h4 className="text-sm font-medium  mb-2">
+						Migrate to Markdown File System
+					</h4>
+					<p className="text-sm  mb-3">
+						This content is currently stored as text. Migrate it to a
+						markdown file to enable enhanced features like embed syntax
+						and better content management.
+					</p>
+					<div className="flex gap-2">
+						<button
+							type="button"
+							onClick={migrateContentToMarkdown}
+							className="px-3 py-1 text-sm"
+						>
+							Migrate to Markdown File
+						</button>
+						<button
+							type="button"
+							onClick={() => setNeedsMarkdownMigration(false)}
+							className="px-3 py-1 text-sm"
+						>
+							Keep as Text
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+interface MarkdownEditorFieldProps {
+	formData: FormData;
+	enhanced: boolean;
+	inputStyle: string;
+	markdownFilePath: string | undefined;
+	markdownContent: string;
+	needsMarkdownMigration: boolean;
+	isLoadingMarkdown: boolean;
+	markdownLoadError: string | null;
+	handleInputChange: InputChangeHandler;
+	handleMarkdownContentChange: (content: string) => void;
+	handleMarkdownSave: (
+		content: string,
+		filePath: string,
+	) => Promise<void>;
+	migrateContentToMarkdown: () => Promise<void>;
+}
+
+function MarkdownEditorField({
+	formData,
+	enhanced,
+	inputStyle,
+	markdownFilePath,
+	markdownContent,
+	needsMarkdownMigration,
+	isLoadingMarkdown,
+	markdownLoadError,
+	handleInputChange,
+	handleMarkdownContentChange,
+	handleMarkdownSave,
+	migrateContentToMarkdown,
+}: MarkdownEditorFieldProps) {
+	return (
+		<div>
+			<label className="block noto-sans-jp-regular text-sm font-medium mb-1">
+				Content (Markdown)
+			</label>
+			{enhanced ? (
+				isLoadingMarkdown ? (
+					<div className=" rounded-lg p-8 text-center">
+						<div className="flex items-center justify-center gap-2">
+							<div className="w-4 h-4  border-t-transparent rounded-full animate-spin"></div>
+							<span className="text-sm ">Loading markdown content...</span>
+						</div>
+					</div>
+				) : (
+					<div>
+						<div className="mb-2 text-xs   p-2   rounded">
+							<div>Debug: Content length: {markdownContent.length}</div>
+							<div>FilePath: {markdownFilePath || "none"}</div>
+							<div>
+								Content preview:{" "}
+								{markdownContent.substring(0, 100) || "empty"}
+							</div>
+							<div>Loading: {isLoadingMarkdown ? "true" : "false"}</div>
+							<div>Error: {markdownLoadError || "none"}</div>
+						</div>
+						<MarkdownEditor
+							content={markdownContent}
+							filePath={markdownFilePath}
+							onChange={handleMarkdownContentChange}
+							onSave={handleMarkdownSave}
+							preview={true}
+							toolbar={true}
+							embedSupport={true}
+							mediaData={{
+								images: formData.images || [],
+								videos: (formData.videos || []).map((video) => ({
+									...video,
+									title: video.title || `Video ${video.url}`,
+								})),
+								externalLinks: formData.externalLinks || [],
+							}}
+						/>
+					</div>
+				)
+			) : (
+				<textarea
+					value={formData.content || ""}
+					onChange={(e) => handleInputChange("content", e.target.value)}
+					className={`${inputStyle} h-96 resize-vertical font-mono`}
+					rows={20}
+					placeholder="Markdownコンテンツを入力してください..."
+				/>
+			)}
+
+			{enhanced && (
+				<div className="mt-2 space-y-2">
+					<div className="text-xs  space-y-1">
+						<div className="flex items-center gap-2">
+							{markdownLoadError ? (
+								<>
+									<span className="w-2 h-2  rounded-full"></span>
+									<span className="">
+										Error loading markdown: {markdownLoadError}
+									</span>
+								</>
+							) : markdownFilePath ? (
+								<>
+									<span className="w-2 h-2  rounded-full"></span>
+									<span>
+										Markdown file: {markdownFilePath.split("/").pop()}
+									</span>
+								</>
+							) : (
+								<>
+									<span className="w-2 h-2  rounded-full"></span>
+									<span>
+										Content stored as text (consider migrating to markdown
+										file)
+									</span>
+								</>
+							)}
+						</div>
+						<div className="">
+							Content length: {markdownContent.length} characters
+							{isLoadingMarkdown && " (Loading...)"}
+						</div>
+					</div>
+
+					{needsMarkdownMigration && (
+						<div className="   rounded p-3">
+							<div className="flex items-start gap-2">
+								<span className=" mt-0.5">💡</span>
+								<div className="flex-1">
+									<p className="text-sm  mb-2">
+										This item has content stored as text. Migrate it to a
+										markdown file for better organization and features.
+									</p>
+									<button
+										type="button"
+										onClick={migrateContentToMarkdown}
+										className="px-3 py-1 text-sm"
+									>
+										Migrate to Markdown File
+									</button>
+								</div>
+							</div>
+						</div>
+					)}
+				</div>
+			)}
+		</div>
+	);
+}
+
 interface BasicFieldsProps {
 	formData: FormData;
 	enhanced: boolean;
@@ -139,7 +613,74 @@ interface BasicFieldsProps {
 	setNeedsMarkdownMigration: (value: boolean) => void;
 }
 
-function BasicFields({
+function BasicFields(props: BasicFieldsProps) {
+	const {
+		formData,
+		enhanced,
+		inputStyle,
+		labelStyle,
+		markdownFilePath,
+		markdownContent,
+		needsMarkdownMigration,
+		isLoadingMarkdown,
+		markdownLoadError,
+		handleInputChange,
+		handleCategoriesChange,
+		handleTagsChange,
+		handleMarkdownContentChange,
+		handleMarkdownSave,
+		migrateContentToMarkdown,
+		setNeedsMarkdownMigration,
+	} = props;
+	return (
+		<div className="space-y-4">
+			<TitleDescriptionFields
+				formData={formData}
+				inputStyle={inputStyle}
+				labelStyle={labelStyle}
+				handleInputChange={handleInputChange}
+			/>
+			<CategoryStatusFields
+				formData={formData}
+				enhanced={enhanced}
+				inputStyle={inputStyle}
+				labelStyle={labelStyle}
+				handleInputChange={handleInputChange}
+				handleCategoriesChange={handleCategoriesChange}
+			/>
+			<GalleryVisibilitySummary formData={formData} enhanced={enhanced} />
+			<TagsField formData={formData} handleTagsChange={handleTagsChange} />
+			<PriorityField
+				formData={formData}
+				inputStyle={inputStyle}
+				labelStyle={labelStyle}
+				handleInputChange={handleInputChange}
+			/>
+			<MarkdownMigrationNotice
+				enhanced={enhanced}
+				needsMarkdownMigration={needsMarkdownMigration}
+				migrateContentToMarkdown={migrateContentToMarkdown}
+				setNeedsMarkdownMigration={setNeedsMarkdownMigration}
+			/>
+			<MarkdownEditorField
+				formData={formData}
+				enhanced={enhanced}
+				inputStyle={inputStyle}
+				markdownFilePath={markdownFilePath}
+				markdownContent={markdownContent}
+				needsMarkdownMigration={needsMarkdownMigration}
+				isLoadingMarkdown={isLoadingMarkdown}
+				markdownLoadError={markdownLoadError}
+				handleInputChange={handleInputChange}
+				handleMarkdownContentChange={handleMarkdownContentChange}
+				handleMarkdownSave={handleMarkdownSave}
+				migrateContentToMarkdown={migrateContentToMarkdown}
+			/>
+		</div>
+	);
+}
+
+function BasicFieldsLegacy({
 	formData,
 	enhanced,
 	inputStyle,

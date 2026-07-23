@@ -2,6 +2,7 @@
 
 import JSZip from "jszip";
 import p5 from "p5";
+import type { Dispatch, SetStateAction } from "react";
 import { useCallback, useEffect, useRef } from "react";
 import type { EditorManager } from "../lib/001_Editors/001_EditorManager";
 import { setupAnimationRenderer } from "../lib/001_Editors/002_AnimationRenderer";
@@ -18,10 +19,10 @@ declare global {
 
 interface UseP5LifecycleArgs {
 	containerRef: React.RefObject<HTMLDivElement | null>;
-	setCode: (code: string) => void;
-	setConfig: (config: AppConfig) => void;
-	setIsPlaying: (playing: boolean) => void;
-	setIsLoaded: (loaded: boolean) => void;
+	setCode: Dispatch<SetStateAction<string>>;
+	setConfig: Dispatch<SetStateAction<AppConfig>>;
+	setIsPlaying: Dispatch<SetStateAction<boolean>>;
+	setIsLoaded: Dispatch<SetStateAction<boolean>>;
 }
 
 export function useP5Lifecycle({
