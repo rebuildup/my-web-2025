@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import type { StyleSettings } from "./types";
 import { presets, defaultInput } from "./presets";
@@ -52,24 +52,23 @@ export default function FillGenTool() {
 		setMounted(true);
 	}, []);
 
-	const addPage = () => {
-		const newPages = [
-			...pages,
+	const addPage = useCallback(() => {
+		setPages((prev) => [
+			...prev,
 			"# 新しいページタイトル\n## 見出し\n### セクション\n本文をここに.",
-		];
-		setPages(newPages);
+		]);
 		setActivePage((prev) => prev + 1);
-		pushHistory(newPages);
-	};
+	}, []);
 
-	const removePage = () => {
-		if (pages.length === 1) return;
-		const next = [...pages];
-		next.splice(activePage, 1);
-		setPages(next);
+	const removePage = useCallback(() => {
+		setPages((prev) => {
+			if (prev.length === 1) return prev;
+			const next = [...prev];
+			next.splice(activePage, 1);
+			return next;
+		});
 		setActivePage((prev) => Math.max(0, prev - 1));
-		pushHistory(next);
-	};
+	}, [activePage]);
 
 	if (!mounted) {
 		return null;
