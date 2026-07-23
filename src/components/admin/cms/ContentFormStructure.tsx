@@ -18,9 +18,7 @@ export function ContentFormStructure({
 			<ContentFormInputField
 				label="パス"
 				value={formData.path || ""}
-				onChange={(value) =>
-					setFormData((prev) => ({ ...prev, path: value }))
-				}
+				onChange={(value) => setFormData((prev) => ({ ...prev, path: value }))}
 			/>
 			<div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
 				<div style={{ flex: 1, minWidth: 120 }}>
