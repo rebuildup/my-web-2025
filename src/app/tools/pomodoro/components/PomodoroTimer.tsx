@@ -2,7 +2,6 @@
 
 import {
 	BarChart2,
-	Edit3,
 	Image as ImageIcon,
 	Moon,
 	Music,
@@ -10,10 +9,8 @@ import {
 	StickyNote,
 	Sun,
 	Timer,
-	Upload,
 	X,
 } from "lucide-react";
-import Image from "next/image";
 import React, {
 	useCallback,
 	useEffect,
@@ -23,10 +20,9 @@ import React, {
 } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useNotifications } from "../hooks/useNotifications";
-import { useSessionStorage } from "../hooks/useSessionStorage";
+import { useTimerEngine } from "../hooks/useTimerEngine";
 import type {
 	PomodoroSession,
-	PomodoroSessionType,
 	PomodoroSettings,
 	PomodoroStats,
 } from "../types";
@@ -39,13 +35,13 @@ import {
 	STICKY_NOTE_COLORS,
 	STICKY_NOTE_SIZE,
 	getStickyColorById,
-	getTotalDuration,
 	isStickyWidgetType,
 	type ScheduleStep,
 } from "../utils/pomodoro-constants";
-import { playNotificationSound } from "../utils/soundPlayer";
 import { Dock, DockButton } from "./Dock";
-import { MarkdownViewer } from "./MarkdownViewer";
+import { ImageWidget } from "./widgets/ImageWidget";
+import { MusicWidget } from "./widgets/MusicWidget";
+import { NoteWidget } from "./widgets/NoteWidget";
 import MiniTimer from "./MiniTimer";
 import StatsWidget from "./StatsWidget";
 import { SettingsPanel } from "./settings/SettingsPanel";
@@ -99,9 +95,6 @@ const Widget = ({
 }) => {
 	const [isDragging, setIsDragging] = useState(false);
 	const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-	const [isEditing, setIsEditing] = useState(
-		widget.type === "note" && !widget.content,
-	);
 	const [isOverDeleteZone, setIsOverDeleteZone] = useState(false);
 
 	const isNote = widget.type === "note";
@@ -112,12 +105,10 @@ const Widget = ({
 	const widgetZIndex = widget.zIndex ?? BASE_WIDGET_Z;
 
 	const widgetRef = useRef<HTMLDivElement>(null);
-	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const onDragStartRef = useRef<(() => void) | undefined>(undefined);
 	const onDragEndRef = useRef<(() => void) | undefined>(undefined);
 	const lastPointerId = useRef<number | null>(null);
 
-	// Update refs when props change
 	useEffect(() => {
 		onDragStartRef.current = onDragStart;
 		onDragEndRef.current = onDragEnd;
@@ -422,132 +413,30 @@ const Widget = ({
 			)}
 
 			<div className={contentWrapperClass} style={contentWrapperStyle}>
-				{widget.type === "note" &&
-					(isEditing ? (
-						<textarea
-							ref={textareaRef}
-							className={`w-full h-full resize-none font-mono text-sm select-text ${textClass} [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-track]:`}
-							placeholder="# Title&#10;- List item&#10;**Bold text**"
-							value={widget.content || ""}
-							onChange={(e) =>
-								updateWidget(widget.id, { content: e.target.value })
-							}
-							onBlur={() => {
-								setIsEditing(false);
-							}}
-							autoFocus
-						/>
-					) : (
-						<div
-							className="h-full cursor-text select-text"
-							onClick={() => setIsEditing(true)}
-						>
-							<MarkdownViewer content={widget.content} theme={theme} />
-						</div>
-					))}
+				{widget.type === "note" && (
+					<NoteWidget
+						content={widget.content}
+						theme={theme}
+						textClass={textClass}
+						onChange={(c) => updateWidget(widget.id, { content: c })}
+					/>
+				)}
 				{widget.type === "image" && (
 					<div className="flex flex-col gap-4 w-full h-full items-center justify-center p-4">
-						{!widget.content ? (
-							<div
-								className={`w-full flex flex-col gap-3 p-6 rounded-xl   ${
-									theme === "dark" ? "bg-[#222]/90 border " : " border "
-								}`}
-							>
-								<input
-									type="text"
-									placeholder="Paste image URL..."
-									className={`w-full p-2 text-sm ${theme === "dark" ? " " : " "}`}
-									onKeyDown={(e) => {
-										if (e.key === "Enter")
-											updateWidget(widget.id, {
-												content: e.currentTarget.value,
-											});
-									}}
-								/>
-								<div
-									className={`text-center text-[10px] font-bold uppercase tracking-widest ${
-										theme === "dark" ? "" : ""
-									}`}
-								>
-									OR
-								</div>
-								<label
-									className={`cursor-pointer flex items-center justify-center gap-2 p-3 rounded-lg border  transition-all ${
-										theme === "dark" ? "  " : "  "
-									}`}
-								>
-									<Upload size={16} />
-									<span className="text-xs font-medium">Upload File</span>
-									<input
-										type="file"
-										accept="image/*"
-										className="hidden"
-										onChange={(e) => {
-											const file = e.target.files?.[0];
-											if (file) {
-												const reader = new FileReader();
-												reader.onloadend = () => {
-													updateWidget(widget.id, {
-														content: reader.result as string,
-													});
-												};
-												reader.readAsDataURL(file);
-											}
-										}}
-									/>
-								</label>
-							</div>
-						) : (
-							<div className="relative group w-full h-full flex items-center justify-center">
-								<Image
-									src={widget.content}
-									width={300}
-									height={300}
-									unoptimized
-									alt="Widget"
-									className="w-full h-full object-contain pointer-events-none select-none rounded-lg"
-									onLoad={handleImageLoad}
-									onError={(e) => {
-										(e.target as HTMLImageElement).src =
-											"https://via.placeholder.com/300?text=Image+Error";
-									}}
-								/>
-								<button
-									onClick={() => updateWidget(widget.id, { content: "" })}
-									className="absolute top-2 right-2 p-2"
-									aria-label="編集"
-								>
-									<Edit3 size={14} />
-								</button>
-							</div>
-						)}
+						<ImageWidget
+							content={widget.content}
+							theme={theme}
+							onChange={(c) => updateWidget(widget.id, { content: c })}
+							onLoad={handleImageLoad}
+						/>
 					</div>
 				)}
 				{widget.type === "music" && (
-					<div className="w-full h-[152px] overflow-hidden rounded-b-xl">
-						<iframe
-							width="100%"
-							height="100%"
-							src={`https://www.youtube.com/embed/${widget.content || "jfKfPfyJRdk"}?controls=0&autoplay=0`}
-							title="Music Player"
-							frameBorder="0"
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-							allowFullScreen
-						></iframe>
-						<div className="p-2 flex gap-2 justify-center no-drag">
-							<input
-								type="text"
-								placeholder="YouTube Video ID"
-								className={`text-[10px] text-center ${textClass}`}
-								onKeyDown={(e) => {
-									if (e.key === "Enter")
-										updateWidget(widget.id, {
-											content: e.currentTarget.value,
-										});
-								}}
-							/>
-						</div>
-					</div>
+					<MusicWidget
+						content={widget.content}
+						textClass={textClass}
+						onChange={(c) => updateWidget(widget.id, { content: c })}
+					/>
 				)}
 				{widget.type === "youtube" && (
 					<YouTubePlayer
@@ -585,608 +474,3 @@ const Widget = ({
 		</div>
 	);
 };
-
-export default function PomodoroTimer() {
-	const [settings, setSettings] = useLocalStorage(
-		"pomodoro-settings",
-		DEFAULT_SETTINGS,
-	);
-	// Deterministic pseudo-random generator for React Compiler compatibility
-	const seedRef = useRef(123456789);
-	const nextSeed = useCallback(() => {
-		seedRef.current = (seedRef.current * 1664525 + 1013904223) >>> 0;
-		return seedRef.current;
-	}, []);
-	const nextJitter = useCallback(
-		(range: number) => {
-			const value = nextSeed() / 0xffffffff;
-			return (value - 0.5) * range * 2;
-		},
-		[nextSeed],
-	);
-	const nextId = useCallback(() => nextSeed(), [nextSeed]);
-	const getDeterministicStickyColor = useCallback(() => {
-		const index = nextSeed() % STICKY_NOTE_COLORS.length;
-		return STICKY_NOTE_COLORS[index];
-	}, [nextSeed]);
-	const highlightColor = settings.highlightColor ?? DEFAULT_HIGHLIGHT_COLOR;
-	const [_stats, setStats] = useLocalStorage("pomodoro-stats", DEFAULT_STATS);
-	const [_sessions, setSessions] = useLocalStorage<PomodoroSession[]>(
-		"pomodoro-sessions",
-		[],
-	);
-
-	const [currentStepIndex, setCurrentStepIndex] = useSessionStorage(
-		"pomodoro-current-step",
-		0,
-	);
-	const [customSchedule, setCustomSchedule] = useState<ScheduleStep[]>(
-		SCHEDULE.map((s) => ({ ...s })),
-	);
-	const [savedTime, setSavedTime] = useSessionStorage("pomodoro-time-left", -1);
-	const [timeLeft, setTimeLeft] = useState(() => {
-		if (savedTime !== -1) return savedTime;
-		return customSchedule[0].duration * 60 * 1000;
-	});
-	const [isActive, setIsActive] = useState(false);
-	const [isFinished, setIsFinished] = useState(false);
-	const [theme, setTheme] = useState(settings.theme || "dark");
-	const [showStopDialog, setShowStopDialog] = useState(false);
-	const [showSettingsPanel, setShowSettingsPanel] = useState(false);
-	const [settingsTab, setSettingsTab] = useState<
-		"workflow" | "dock" | "widgets" | "youtube"
-	>("workflow");
-	const [dockVisibility, setDockVisibility] = useState({
-		note: true,
-		image: false,
-		music: true,
-		timer: true,
-		stats: false,
-		theme: true,
-		settings: true,
-	});
-	const [widgets, setWidgets] = useLocalStorage<Widget[]>(
-		"pomodoro-widgets",
-		[],
-	);
-	const zCounterRef = useRef(BASE_WIDGET_Z);
-	const nextZ = useCallback(() => {
-		zCounterRef.current = (zCounterRef.current || BASE_WIDGET_Z) + 1;
-		return zCounterRef.current;
-	}, []);
-	useEffect(() => {
-		const maxZ =
-			widgets.reduce(
-				(acc, w) => Math.max(acc, w.zIndex ?? BASE_WIDGET_Z),
-				BASE_WIDGET_Z,
-			) + 1;
-		zCounterRef.current = Math.max(zCounterRef.current, maxZ);
-	}, [widgets]);
-	const [isDraggingStickyWidget, setIsDraggingStickyWidget] = useState(false);
-	const [hoveredStepIndex, setHoveredStepIndex] = useState<number | null>(null);
-
-	const startTimeRef = useRef<number | null>(null);
-	const savedTimeRef = useRef(0);
-	const requestRef = useRef<number | null>(null);
-	const { requestPermission, showNotification } = useNotifications();
-
-	const currentStep = customSchedule[currentStepIndex];
-	const totalDuration = getTotalDuration(customSchedule);
-	const currentStepRef = useRef(currentStep);
-	const settingsRef = useRef(settings);
-	const showNotificationRef = useRef(showNotification);
-	const setSessionsRef = useRef(setSessions);
-	const setStatsRef = useRef(setStats);
-	const autoStartNextRef = useRef(false);
-	const hasQueuedAutoAdvanceRef = useRef(false);
-
-	useEffect(() => {
-		currentStepRef.current = currentStep;
-		settingsRef.current = settings;
-		showNotificationRef.current = showNotification;
-		setSessionsRef.current = setSessions;
-		setStatsRef.current = setStats;
-	}, [currentStep, settings, showNotification, setSessions, setStats]);
-
-	useEffect(() => {
-		if (isActive) {
-			const tick = (time: number) => {
-				if (!startTimeRef.current) startTimeRef.current = time;
-				const elapsed = time - startTimeRef.current;
-				const step = currentStepRef.current;
-				const newTimeLeft = Math.max(
-					step.duration * 60 * 1000 - savedTimeRef.current - elapsed,
-					0,
-				);
-
-				setTimeLeft(newTimeLeft);
-
-				if (newTimeLeft <= 0) {
-					setIsFinished(true);
-					setIsActive(false);
-					startTimeRef.current = null;
-					savedTimeRef.current = 0;
-
-					if (settingsRef.current.notificationSound) {
-						const normalizedVolume = Math.min(
-							1,
-							Math.max(0, settingsRef.current.notificationVolume / 100),
-						);
-						playNotificationSound(normalizedVolume);
-					}
-
-					if (settingsRef.current.vibration && navigator.vibrate) {
-						navigator.vibrate([200, 100, 200]);
-					}
-
-					setStatsRef.current((prev) => {
-						const newStats = { ...prev };
-						if (step.type === "focus") {
-							newStats.completedPomodoros += 1;
-							newStats.totalWorkTime += step.duration;
-							newStats.todaysSessions += 1;
-						} else {
-							newStats.totalBreakTime += step.duration;
-						}
-						newStats.totalSessions += 1;
-						return newStats;
-					});
-
-					setSessionsRef.current((prev) => {
-						const completedAt = new Date();
-						return [
-							...prev,
-							{
-								id: completedAt.getTime().toString(),
-								type: step.type as PomodoroSessionType,
-								startTime: new Date(
-									completedAt.getTime() - step.duration * 60000,
-								).toISOString(),
-								endTime: completedAt.toISOString(),
-								duration: step.duration,
-								completed: true,
-								completedAt: completedAt.toISOString(),
-							},
-						];
-					});
-
-					showNotificationRef.current({
-						title:
-							step.type === "focus" ? "Work Session Complete!" : "Break Over!",
-						body:
-							step.type === "focus"
-								? "Time to take a break."
-								: "Time to get back to work.",
-					});
-				} else {
-					requestRef.current = requestAnimationFrame(tick);
-				}
-			};
-
-			requestRef.current = requestAnimationFrame(tick);
-		} else {
-			if (requestRef.current) {
-				cancelAnimationFrame(requestRef.current);
-			}
-			startTimeRef.current = null;
-			if (!isFinished) {
-				savedTimeRef.current = currentStep.duration * 60 * 1000 - timeLeft;
-			}
-		}
-		return () => {
-			if (requestRef.current) {
-				cancelAnimationFrame(requestRef.current);
-			}
-		};
-	}, [isActive, currentStep.duration, isFinished]);
-
-	const timeLeftRef = useRef(timeLeft);
-	const prevStepIndexRef = useRef(currentStepIndex);
-
-	useEffect(() => {
-		timeLeftRef.current = timeLeft;
-	}, [timeLeft]);
-
-	useEffect(() => {
-		if (!isActive) {
-			setSavedTime(timeLeft);
-			return;
-		}
-
-		const interval = setInterval(() => {
-			setSavedTime(timeLeftRef.current);
-		}, 1000);
-
-		return () => clearInterval(interval);
-	}, [isActive, setSavedTime, timeLeft]);
-
-	useEffect(() => {
-		if (prevStepIndexRef.current !== currentStepIndex) {
-			const newDuration = customSchedule[currentStepIndex].duration * 60 * 1000;
-			const shouldAutoStart = autoStartNextRef.current;
-			autoStartNextRef.current = false;
-
-			setTimeLeft(newDuration);
-			savedTimeRef.current = 0;
-			startTimeRef.current = null;
-			setIsFinished(false);
-
-			setSavedTime(newDuration);
-
-			if (requestRef.current) {
-				cancelAnimationFrame(requestRef.current);
-				requestRef.current = null;
-			}
-
-			setIsActive(shouldAutoStart);
-			prevStepIndexRef.current = currentStepIndex;
-		}
-	}, [currentStepIndex, customSchedule, setSavedTime]);
-
-	useEffect(() => {
-		if (!isFinished || customSchedule.length === 0) {
-			hasQueuedAutoAdvanceRef.current = false;
-			return;
-		}
-
-		if (hasQueuedAutoAdvanceRef.current) {
-			return;
-		}
-		hasQueuedAutoAdvanceRef.current = true;
-
-		const nextIndex =
-			currentStepIndex < customSchedule.length - 1 ? currentStepIndex + 1 : 0;
-
-		autoStartNextRef.current = true;
-
-		const timeoutId = window.setTimeout(() => {
-			setCurrentStepIndex(nextIndex);
-		}, 0);
-
-		return () => clearTimeout(timeoutId);
-	}, [
-		isFinished,
-		currentStepIndex,
-		customSchedule.length,
-		setCurrentStepIndex,
-	]);
-
-	useEffect(() => {
-		if (!isActive && currentStepIndex < customSchedule.length) {
-			const newDuration = customSchedule[currentStepIndex].duration * 60 * 1000;
-			setTimeLeft(newDuration);
-			savedTimeRef.current = 0;
-		}
-		if (currentStepIndex >= customSchedule.length) {
-			setCurrentStepIndex(0);
-		}
-	}, [
-		customSchedule,
-		currentStepIndex,
-		isActive,
-		setCurrentStepIndex,
-		setTimeLeft,
-	]);
-
-	const handleTimerClick = (e: React.MouseEvent) => {
-		if ((e.target as HTMLElement).closest(".no-timer-click")) {
-			return;
-		}
-
-		if (isFinished) {
-			handleNext();
-		} else if (isActive) {
-			setShowStopDialog(true);
-		} else {
-			requestPermission();
-			setIsActive(true);
-		}
-	};
-
-	const handleStop = () => {
-		setIsActive(false);
-		setShowStopDialog(false);
-	};
-
-	const handleReset = () => {
-		setIsActive(false);
-		setIsFinished(false);
-		setCurrentStepIndex(0);
-		setTimeLeft(customSchedule[0].duration * 60 * 1000);
-		savedTimeRef.current = 0;
-		startTimeRef.current = null;
-		if (requestRef.current) {
-			cancelAnimationFrame(requestRef.current);
-			requestRef.current = null;
-		}
-		setShowStopDialog(false);
-	};
-
-	const handleSkip = () => {
-		setIsActive(false);
-		setIsFinished(false);
-		handleNext();
-		setShowStopDialog(false);
-	};
-
-	const handleNext = () => {
-		if (currentStepIndex < customSchedule.length - 1) {
-			setCurrentStepIndex((prev) => prev + 1);
-		} else {
-			setCurrentStepIndex(0);
-		}
-	};
-
-	const toggleTheme = () =>
-		setTheme((prev) => (prev === "light" ? "dark" : "light"));
-
-	const addWidget = (type: string) => {
-		const currentSettings = settingsRef.current || DEFAULT_SETTINGS;
-		const stickySize = currentSettings.stickyWidgetSize ?? STICKY_NOTE_SIZE;
-		const youtubeWidth = currentSettings.youtubeWidgetWidth ?? 400;
-
-		if (type === "music") {
-			const id = nextId();
-			const newWidget: Widget = {
-				id,
-				type: "youtube",
-				x: window.innerWidth / 2 - youtubeWidth / 2 + nextJitter(40),
-				y: window.innerHeight / 2 - 150 + nextJitter(40),
-				content: "",
-				w: youtubeWidth,
-				h: "auto",
-				zIndex: nextZ(),
-			};
-			setWidgets([...widgets, newWidget]);
-			return;
-		}
-		if (type === "stats") {
-			const id = nextId();
-			const newWidget: Widget = {
-				id,
-				type: "stats",
-				x: window.innerWidth / 2 - 180 + nextJitter(40),
-				y: window.innerHeight / 2 - 120 + nextJitter(40),
-				content: "",
-				w: stickySize,
-				h: stickySize,
-				zIndex: nextZ(),
-				color: getDeterministicStickyColor(),
-			};
-			setWidgets([...widgets, newWidget]);
-			return;
-		}
-		const id = nextId();
-		const content = "";
-		const shouldHaveStickyStyle =
-			type === "note" || type === "image" || type === "timer";
-		const initialSize = shouldHaveStickyStyle ? stickySize : undefined;
-		const newWidget: Widget = {
-			id,
-			type,
-			x: window.innerWidth / 2 - 150 + nextJitter(40),
-			y: window.innerHeight / 2 - 100 + nextJitter(40),
-			content,
-			w: initialSize,
-			h: initialSize,
-			color: shouldHaveStickyStyle ? getDeterministicStickyColor() : undefined,
-			zIndex: nextZ(),
-		};
-		setWidgets([...widgets, newWidget]);
-	};
-
-	const updateWidget = (id: number, newData: Partial<Widget>) => {
-		setWidgets(widgets.map((w) => (w.id === id ? { ...w, ...newData } : w)));
-	};
-
-	const removeWidget = (id: number) => {
-		setWidgets(widgets.filter((w) => w.id !== id));
-	};
-
-	const currentStepProgressPercent = useMemo(() => {
-		const durationMs = currentStep.duration * 60 * 1000;
-		if (durationMs <= 0) return 0;
-		const progress = ((durationMs - timeLeft) / durationMs) * 100;
-		return Math.min(100, Math.max(0, progress));
-	}, [currentStep.duration, timeLeft]);
-
-	const updateSchedule = (index: number, updates: Partial<ScheduleStep>) => {
-		const newSchedule = [...customSchedule];
-		newSchedule[index] = { ...newSchedule[index], ...updates };
-		setCustomSchedule(newSchedule);
-	};
-
-	const addStep = () => {
-		const newStep: ScheduleStep = {
-			id: nextId(),
-			type: "focus",
-			duration: 25,
-			label: "New Step",
-			desc: "",
-		};
-		setCustomSchedule([...customSchedule, newStep]);
-	};
-
-	const removeStep = (index: number) => {
-		setCustomSchedule(customSchedule.filter((_, i) => i !== index));
-	};
-
-	const updateDockVisibility = (
-		key: keyof typeof dockVisibility,
-		visible: boolean,
-	) => {
-		setDockVisibility((prev) => ({ ...prev, [key]: visible }));
-	};
-
-	const updateSettings = (updates: Partial<PomodoroSettings>) => {
-		setSettings({ ...settings, ...updates });
-	};
-
-	return (
-		<div
-			className={`relative w-full h-screen overflow-hidden transition-colors duration-500 select-none ${
-				theme === "dark" ? " " : " "
-			}`}
-			style={{
-				backgroundImage:
-					theme === "light"
-						? "radial-gradient(rgba(0,0,0,0.12) 1px, transparent 1px)"
-						: "radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px)",
-				backgroundSize: "24px 24px",
-			}}
-		>
-			{widgets.map((widget) => (
-				<Widget
-					key={widget.id}
-					widget={widget}
-					updateWidget={updateWidget}
-					removeWidget={removeWidget}
-					theme={theme}
-					bringToFront={() => updateWidget(widget.id, { zIndex: nextZ() })}
-					onDragStart={() => {
-						if (isStickyWidgetType(widget.type)) {
-							setIsDraggingStickyWidget(true);
-						}
-					}}
-					onDragEnd={() => {
-						setIsDraggingStickyWidget(false);
-					}}
-					pomodoroState={{
-						isActive,
-						sessionType:
-							currentStep.type === "focus" ? "work" : ("shortBreak" as any),
-					}}
-					stats={_stats}
-					sessions={_sessions}
-				/>
-			))}
-
-			<CurrentStepLabel label={currentStep.label} theme={theme} />
-
-			<CircularTimer
-				timeLeft={timeLeft}
-				isActive={isActive}
-				theme={theme}
-				sessionType={currentStep.type}
-				durationMinutes={currentStep.duration}
-				onClick={handleTimerClick}
-			/>
-
-			<WorkflowProgressBar
-				schedule={customSchedule}
-				currentStepIndex={currentStepIndex}
-				currentStepDuration={currentStep.duration}
-				currentStepProgressPercent={currentStepProgressPercent}
-				totalDuration={totalDuration}
-				highlightColor={highlightColor}
-				isActive={isActive}
-				theme={theme}
-				hoveredStepIndex={hoveredStepIndex}
-				onHover={setHoveredStepIndex}
-			/>
-
-			{isDraggingStickyWidget && <DeleteZone />}
-
-			{showStopDialog && (
-				<StopDialog
-					theme={theme}
-					onClose={() => setShowStopDialog(false)}
-					onReset={handleReset}
-					onStop={handleStop}
-					onSkip={handleSkip}
-				/>
-			)}
-
-			<Dock theme={theme}>
-				{dockVisibility.note && (
-					<DockButton
-						onClick={() => addWidget("note")}
-						icon={StickyNote}
-						label="Note"
-						theme={theme}
-						colorClass=""
-					/>
-				)}
-				{dockVisibility.image && (
-					<DockButton
-						onClick={() => addWidget("image")}
-						icon={ImageIcon}
-						label="Image"
-						theme={theme}
-						colorClass=""
-					/>
-				)}
-				{dockVisibility.music && (
-					<DockButton
-						onClick={() => addWidget("music")}
-						icon={Music}
-						label="YouTube"
-						theme={theme}
-						colorClass=""
-					/>
-				)}
-				{dockVisibility.timer && (
-					<DockButton
-						onClick={() => addWidget("timer")}
-						icon={Timer}
-						label="Timer"
-						theme={theme}
-						colorClass=""
-					/>
-				)}
-				{dockVisibility.stats && (
-					<DockButton
-						onClick={() => addWidget("stats")}
-						icon={BarChart2}
-						label="Stats"
-						theme={theme}
-						colorClass=""
-					/>
-				)}
-
-				{(dockVisibility.note ||
-					dockVisibility.image ||
-					dockVisibility.music) &&
-					(dockVisibility.theme || true) && (
-						<div className="w-px h-8   mx-1 self-center" />
-					)}
-
-				{dockVisibility.theme && (
-					<DockButton
-						onClick={toggleTheme}
-						icon={theme === "dark" ? Sun : Moon}
-						label="Theme"
-						theme={theme}
-						colorClass=""
-					/>
-				)}
-				<DockButton
-					onClick={() => setShowSettingsPanel(true)}
-					icon={Settings}
-					label="Settings"
-					theme={theme}
-					accentColor={highlightColor}
-				/>
-			</Dock>
-
-			{showSettingsPanel && (
-				<SettingsPanel
-					theme={theme}
-					settings={settings}
-					settingsTab={settingsTab}
-					customSchedule={customSchedule}
-					dockVisibility={dockVisibility}
-					highlightColor={highlightColor}
-					onTabChange={setSettingsTab}
-					onClose={() => setShowSettingsPanel(false)}
-					onUpdateSchedule={updateSchedule}
-					onAddStep={addStep}
-					onRemoveStep={removeStep}
-					onUpdateDockVisibility={updateDockVisibility}
-					onUpdateSettings={updateSettings}
-					nextId={nextId}
-				/>
-			)}
-		</div>
-	);
-}
