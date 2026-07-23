@@ -1,15 +1,6 @@
 "use client";
 
-import {
-	BarChart2,
-	Image as ImageIcon,
-	Moon,
-	Music,
-	Settings,
-	StickyNote,
-	Sun,
-	Timer,
-} from "lucide-react";
+import { Moon, Settings, Sun } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { usePomodoroTimer } from "../hooks/usePomodoroTimer";
 import { usePomodoroWidgetStore } from "../hooks/usePomodoroWidgetStore";
@@ -18,6 +9,7 @@ import { isStickyWidgetType } from "../utils/pomodoro-constants";
 import { Dock, DockButton } from "./Dock";
 import { SettingsPanel } from "./settings/SettingsPanel";
 import { Widget } from "./Widget";
+import { WidgetDockActions } from "./WidgetDockActions";
 import { CircularTimer } from "./widgets/CircularTimer";
 import { CurrentStepLabel } from "./widgets/CurrentStepLabel";
 import { DeleteZone } from "./widgets/DeleteZone";
@@ -208,51 +200,11 @@ export default function PomodoroTimer() {
 			)}
 
 			<Dock theme={theme}>
-				{dockVisibility.note && (
-					<DockButton
-						onClick={() => addWidget("note")}
-						icon={StickyNote}
-						label="Note"
-						theme={theme}
-						colorClass=""
-					/>
-				)}
-				{dockVisibility.image && (
-					<DockButton
-						onClick={() => addWidget("image")}
-						icon={ImageIcon}
-						label="Image"
-						theme={theme}
-						colorClass=""
-					/>
-				)}
-				{dockVisibility.music && (
-					<DockButton
-						onClick={() => addWidget("music")}
-						icon={Music}
-						label="YouTube"
-						theme={theme}
-						colorClass=""
-					/>
-				)}
-				{dockVisibility.timer && (
-					<DockButton
-						onClick={() => addWidget("timer")}
-						icon={Timer}
-						label="Timer"
-						theme={theme}
-						colorClass=""
-					/>
-				)}
-				{dockVisibility.stats && (
-					<DockButton
-						onClick={() => addWidget("stats")}
-						icon={BarChart2}
-						label="Stats"
-						theme={theme}
-						colorClass=""
-					/>
-				)}
+				<WidgetDockActions
+					dockVisibility={dockVisibility}
+					theme={theme}
+					onAdd={addWidget}
+				/>
 
 				{(dockVisibility.note ||
 					dockVisibility.image ||

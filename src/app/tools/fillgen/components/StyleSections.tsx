@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import type { StyleSettings } from "./types";
 import { BorderStyleSelect, ColorField, RangeField } from "./StyleFields";
 
@@ -21,13 +21,7 @@ const contentStyle = {
 	marginTop: 12,
 } as const;
 
-function Section({
-	title,
-	children,
-}: {
-	title: string;
-	children: React.ReactNode;
-}) {
+function Section({ title, children }: { title: string; children: ReactNode }) {
 	return (
 		<details>
 			<summary style={sectionStyle}>{title}</summary>
