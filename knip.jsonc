@@ -4,8 +4,6 @@
     "chrome-launcher",
     "lighthouse",
     "pixi-filters",
-    "recharts",
-    "@jest/globals",
     "@testing-library/react",
     "@types/p5",
     "@types/youtube",
@@ -13,8 +11,7 @@
     "jsdom",
     "playwright",
     "tsx",
-    "isomorphic-dompurify",
-    "sharp"
+    "isomorphic-dompurify"
   ],
   "ignoreBinaries": ["wslc"],
   "treatConfigHintsAsErrors": true,

@@ -106,8 +106,11 @@ export function ExternalLinksSection({
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 						<div>
-							<label className={labelStyle}>Type</label>
+							<label className={labelStyle} htmlFor="new-link-type">
+								Type
+							</label>
 							<select
+								id="new-link-type"
 								value={newLink.type}
 								onChange={(e) =>
 									setNewLink((prev) => ({
@@ -199,8 +202,11 @@ export function ExternalLinksSection({
 								<div className="flex-1 space-y-3">
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 										<div>
-											<label className={labelStyle}>Type</label>
+											<label className={labelStyle} htmlFor={`link-${index}-type`}>
+												Type
+											</label>
 											<select
+												id={`link-${index}-type`}
 												value={link.type}
 												onChange={(e) =>
 													updateLink(index, "type", e.target.value)
@@ -216,8 +222,11 @@ export function ExternalLinksSection({
 										</div>
 
 										<div>
-											<label className={labelStyle}>Title</label>
+											<label className={labelStyle} htmlFor={`link-${index}-title`}>
+												Title
+											</label>
 											<input
+												id={`link-${index}-title`}
 												type="text"
 												value={link.title}
 												onChange={(e) =>
@@ -229,8 +238,11 @@ export function ExternalLinksSection({
 									</div>
 
 									<div>
-										<label className={labelStyle}>URL</label>
+										<label className={labelStyle} htmlFor={`link-${index}-url`}>
+											URL
+										</label>
 										<input
+											id={`link-${index}-url`}
 											type="url"
 											value={link.url}
 											onChange={(e) => updateLink(index, "url", e.target.value)}
@@ -239,8 +251,11 @@ export function ExternalLinksSection({
 									</div>
 
 									<div>
-										<label className={labelStyle}>Description</label>
+										<label className={labelStyle} htmlFor={`link-${index}-description`}>
+											Description
+										</label>
 										<textarea
+											id={`link-${index}-description`}
 											value={link.description || ""}
 											onChange={(e) =>
 												updateLink(index, "description", e.target.value)

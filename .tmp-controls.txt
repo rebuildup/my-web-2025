@@ -1,0 +1,1251 @@
+========================================
+FILE: src/app/about/AboutStitchClient.tsx  (1 sites)
+========================================
+
+--- line 295, col 3 (length 150) ---
+    292: 	onToggle: () => void;
+    293: }) {
+    294: 	return (
+>>  295: 		<button
+    296: 			type="button"
+    297: 			onClick={onToggle}
+    298: 			className="flex items-center gap-2 w-full py-1 group border-0 bg-transparent cursor-pointer"
+    299: 		>
+    300: 			<div className="flex-1 h-px" />
+    301: 			<span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center transition-all">
+========================================
+FILE: src/app/about/links/page.tsx  (1 sites)
+========================================
+
+--- line 114, col 7 (length 230) ---
+    111: 						),
+    112: 					)
+    113: 					.map((link) => (
+>>  114: 						<a
+    115: 							key={link.id}
+    116: 							href={link.url}
+    117: 							target="_blank"
+    118: 							rel="noopener noreferrer"
+    119: 							className="w-8 h-8 flex items-center justify-center rounded-full  transition-colors overflow-hidden p-1.5"
+    120: 						>
+========================================
+FILE: src/app/admin/content/page.tsx  (5 sites)
+========================================
+
+--- line 215, col 5 (length 136) ---
+    212: 				<button style={s.btnPrimary} onClick={() => setIsCreateOpen(true)}>
+    213: 					<Plus size={14} /> 新規コンテンツ
+    214: 				</button>
+>>  215: 				<select
+    216: 					style={s.select}
+    217: 					value={statusFilter}
+    218: 					onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+    219: 				>
+    220: 					{STATUS_OPTIONS.map((opt) => (
+    221: 						<option key={opt} value={opt}>{STATUS_LABEL[opt]}</option>
+
+--- line 312, col 9 (length 157) ---
+    309: 						<div style={s.dialogHeader}>
+    310: 							<span style={{ fontWeight: 600 }}>新しいコンテンツを作成</span>
+    311: 							<div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+>>  312: 								<select
+    313: 									style={s.select}
+    314: 									value={createStatus}
+    315: 									onChange={(e) => setCreateStatus(e.target.value as Content["status"])}
+    316: 								>
+    317: 									<option value="draft">draft</option>
+    318: 									<option value="published">published</option>
+
+--- line 321, col 9 (length 169) ---
+    318: 									<option value="published">published</option>
+    319: 									<option value="archived">archived</option>
+    320: 								</select>
+>>  321: 								<select
+    322: 									style={s.select}
+    323: 									value={createVisibility}
+    324: 									onChange={(e) => setCreateVisibility(e.target.value as Content["visibility"])}
+    325: 								>
+    326: 									<option value="draft">draft</option>
+    327: 									<option value="public">public</option>
+
+--- line 355, col 9 (length 198) ---
+    352: 						<div style={s.dialogHeader}>
+    353: 							<span style={{ fontWeight: 600 }}>コンテンツを編集</span>
+    354: 							<div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+>>  355: 								<select
+    356: 									style={s.select}
+    357: 									value={editTarget.status ?? "draft"}
+    358: 									onChange={(e) => setEditTarget({ ...editTarget, status: e.target.value as Content["status"] })}
+    359: 								>
+    360: 									<option value="draft">draft</option>
+    361: 									<option value="published">published</option>
+
+--- line 364, col 9 (length 210) ---
+    361: 									<option value="published">published</option>
+    362: 									<option value="archived">archived</option>
+    363: 								</select>
+>>  364: 								<select
+    365: 									style={s.select}
+    366: 									value={editTarget.visibility ?? "draft"}
+    367: 									onChange={(e) => setEditTarget({ ...editTarget, visibility: e.target.value as Content["visibility"] })}
+    368: 								>
+    369: 									<option value="draft">draft</option>
+    370: 									<option value="public">public</option>
+========================================
+FILE: src/app/admin/data-manager/components/DataManagerForm.tsx  (1 sites)
+========================================
+
+--- line 948, col 7 (length 237) ---
+    945: 
+    946: 					<div>
+    947: 						<label className={labelStyle}>Priority (0-100)</label>
+>>  948: 						<input
+    949: 							type="number"
+    950: 							min="0"
+    951: 							max="100"
+    952: 							value={formData.priority}
+    953: 							onChange={(e) =>
+    954: 								handleInputChange("priority", parseInt(e.target.value))
+========================================
+FILE: src/app/admin/data-manager/components/ExternalLinksSection.tsx  (5 sites)
+========================================
+
+--- line 110, col 8 (length 241) ---
+    107: 					<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    108: 						<div>
+    109: 							<label className={labelStyle}>Type</label>
+>>  110: 							<select
+    111: 								value={newLink.type}
+    112: 								onChange={(e) =>
+    113: 									setNewLink((prev) => ({
+    114: 										...prev,
+    115: 										type: e.target.value as ExternalLink["type"],
+    116: 									}))
+
+--- line 203, col 12 (length 189) ---
+    200: 									<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    201: 										<div>
+    202: 											<label className={labelStyle}>Type</label>
+>>  203: 											<select
+    204: 												value={link.type}
+    205: 												onChange={(e) =>
+    206: 													updateLink(index, "type", e.target.value)
+    207: 												}
+    208: 												className={inputStyle}
+    209: 											>
+
+--- line 220, col 12 (length 216) ---
+    217: 
+    218: 										<div>
+    219: 											<label className={labelStyle}>Title</label>
+>>  220: 											<input
+    221: 												type="text"
+    222: 												value={link.title}
+    223: 												onChange={(e) =>
+    224: 													updateLink(index, "title", e.target.value)
+    225: 												}
+    226: 												className={inputStyle}
+
+--- line 233, col 11 (length 178) ---
+    230: 
+    231: 									<div>
+    232: 										<label className={labelStyle}>URL</label>
+>>  233: 										<input
+    234: 											type="url"
+    235: 											value={link.url}
+    236: 											onChange={(e) => updateLink(index, "url", e.target.value)}
+    237: 											className={inputStyle}
+    238: 										/>
+    239: 									</div>
+
+--- line 243, col 11 (length 253) ---
+    240: 
+    241: 									<div>
+    242: 										<label className={labelStyle}>Description</label>
+>>  243: 										<textarea
+    244: 											value={link.description || ""}
+    245: 											onChange={(e) =>
+    246: 												updateLink(index, "description", e.target.value)
+    247: 											}
+    248: 											className={`${inputStyle} h-16 resize-vertical`}
+    249: 											rows={2}
+========================================
+FILE: src/app/admin/data-manager/components/FileUploadSection.tsx  (2 sites)
+========================================
+
+--- line 355, col 7 (length 296) ---
+    352: 
+    353: 					<div className="flex items-center space-x-2">
+    354: 						<label className="text-sm ">Quality:</label>
+>>  355: 						<input
+    356: 							type="range"
+    357: 							min="20"
+    358: 							max="100"
+    359: 							value={processingOptions.quality}
+    360: 							onChange={(e) =>
+    361: 								setProcessingOptions((prev) => ({
+
+--- line 477, col 6 (length 154) ---
+    474: 			{images.length > 0 && (
+    475: 				<div>
+    476: 					<label className={labelStyle}>Thumbnail</label>
+>>  477: 					<select
+    478: 						value={thumbnail || ""}
+    479: 						onChange={(e) => onThumbnailChange(e.target.value || undefined)}
+    480: 						className={`${inputStyle} `}
+    481: 					>
+    482: 						<option value="" className=" ">
+    483: 							Select thumbnail...
+========================================
+FILE: src/app/admin/data-manager/components/MediaEmbedSection.tsx  (7 sites)
+========================================
+
+--- line 149, col 8 (length 241) ---
+    146: 					<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    147: 						<div>
+    148: 							<label className={labelStyle}>Type</label>
+>>  149: 							<select
+    150: 								value={newVideo.type}
+    151: 								onChange={(e) =>
+    152: 									setNewVideo((prev) => ({
+    153: 										...prev,
+    154: 										type: e.target.value as MediaEmbed["type"],
+    155: 									}))
+
+--- line 276, col 12 (length 191) ---
+    273: 									<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    274: 										<div>
+    275: 											<label className={labelStyle}>Type</label>
+>>  276: 											<select
+    277: 												value={video.type}
+    278: 												onChange={(e) =>
+    279: 													updateVideo(index, "type", e.target.value)
+    280: 												}
+    281: 												className={inputStyle}
+    282: 											>
+
+--- line 293, col 12 (length 224) ---
+    290: 
+    291: 										<div>
+    292: 											<label className={labelStyle}>Title</label>
+>>  293: 											<input
+    294: 												type="text"
+    295: 												value={video.title || ""}
+    296: 												onChange={(e) =>
+    297: 													updateVideo(index, "title", e.target.value)
+    298: 												}
+    299: 												className={inputStyle}
+
+--- line 306, col 11 (length 206) ---
+    303: 
+    304: 									<div>
+    305: 										<label className={labelStyle}>URL</label>
+>>  306: 										<input
+    307: 											type="url"
+    308: 											value={video.url}
+    309: 											onChange={(e) =>
+    310: 												updateVideo(index, "url", e.target.value)
+    311: 											}
+    312: 											className={inputStyle}
+
+--- line 318, col 11 (length 255) ---
+    315: 
+    316: 									<div>
+    317: 										<label className={labelStyle}>Description</label>
+>>  318: 										<textarea
+    319: 											value={video.description || ""}
+    320: 											onChange={(e) =>
+    321: 												updateVideo(index, "description", e.target.value)
+    322: 											}
+    323: 											className={`${inputStyle} h-16 resize-vertical`}
+    324: 											rows={2}
+
+--- line 332, col 13 (length 322) ---
+    329: 										<div className="grid grid-cols-2 gap-3">
+    330: 											<div>
+    331: 												<label className={labelStyle}>Width</label>
+>>  332: 												<input
+    333: 													type="number"
+    334: 													value={video.width || ""}
+    335: 													onChange={(e) =>
+    336: 														updateVideo(
+    337: 															index,
+    338: 															"width",
+
+--- line 347, col 13 (length 324) ---
+    344: 											</div>
+    345: 											<div>
+    346: 												<label className={labelStyle}>Height</label>
+>>  347: 												<input
+    348: 													type="number"
+    349: 													value={video.height || ""}
+    350: 													onChange={(e) =>
+    351: 														updateVideo(
+    352: 															index,
+    353: 															"height",
+========================================
+FILE: src/app/search/components/SearchPage.tsx  (1 sites)
+========================================
+
+--- line 363, col 13 (length 187) ---
+    360: 														({historyItem.resultCount}件)
+    361: 													</span>
+    362: 												</div>
+>>  363: 												<button
+    364: 													type="button"
+    365: 													onClick={(e) =>
+    366: 														handleRemoveHistoryItem(historyItem.query, e)
+    367: 													}
+    368: 													className="p-1"
+    369: 												>
+========================================
+FILE: src/app/tools/ae-expression/components/AEExpressionTool.tsx  (6 sites)
+========================================
+
+--- line 956, col 7 (length 141) ---
+    953: 							/>
+    954: 						</div>
+    955: 
+>>  956: 						<select
+    957: 							value={selectedCategory}
+    958: 							onChange={(e) => setSelectedCategory(e.target.value)}
+    959: 							className="px-4 py-2"
+    960: 						>
+    961: 							<option value="all">全カテゴリ</option>
+    962: 							<option value="animation">アニメーション</option>
+
+--- line 968, col 7 (length 145) ---
+    965: 							<option value="utility">ユーティリティ</option>
+    966: 						</select>
+    967: 
+>>  968: 						<select
+    969: 							value={selectedDifficulty}
+    970: 							onChange={(e) => setSelectedDifficulty(e.target.value)}
+    971: 							className="px-4 py-2"
+    972: 						>
+    973: 							<option value="all">全難易度</option>
+    974: 							<option value="beginner">初級</option>
+
+--- line 1059, col 13 (length 495) ---
+   1056: 												<span className="text-sm noto-sans-jp-light truncate">
+   1057: 													{saved.name}
+   1058: 												</span>
+>> 1059: 												<button
+   1060: 													type="button"
+   1061: 													onClick={() => {
+   1062: 														setSavedExpressions((prev) =>
+   1063: 															prev.filter((s) => s.id !== saved.id),
+   1064: 														);
+   1065: 														localStorage.setItem(
+
+--- line 1155, col 11 (length 196) ---
+   1152: 												</div>
+   1153: 											)}
+   1154: 										</div>
+>> 1155: 										<button
+   1156: 											type="button"
+   1157: 											onClick={(e) => {
+   1158: 												e.stopPropagation();
+   1159: 												toggleFavorite(expr.id);
+   1160: 											}}
+   1161: 											className="ml-2 p-1"
+
+--- line 1196, col 12 (length 144) ---
+   1193: 											)}
+   1194: 										</h3>
+   1195: 										<div className="flex gap-2">
+>> 1196: 											<button
+   1197: 												type="button"
+   1198: 												onClick={() => toggleFavorite(selectedExpression.id)}
+   1199: 												className="p-2"
+   1200: 											>
+   1201: 												<Heart
+   1202: 													className={`w-4 h-4 ${selectedExpression.isFavorite ? " " : ""}`}
+
+--- line 1205, col 12 (length 147) ---
+   1202: 													className={`w-4 h-4 ${selectedExpression.isFavorite ? " " : ""}`}
+   1203: 												/>
+   1204: 											</button>
+>> 1205: 											<button
+   1206: 												type="button"
+   1207: 												onClick={() => setShowDocumentation(!showDocumentation)}
+   1208: 												className="p-2"
+   1209: 											>
+   1210: 												<Info className="w-4 h-4" />
+   1211: 											</button>
+========================================
+FILE: src/app/tools/business-mail-block/components/BusinessMailBlockTool.tsx  (4 sites)
+========================================
+
+--- line 882, col 9 (length 149) ---
+    879: 									/>
+    880: 								</div>
+    881: 
+>>  882: 								<select
+    883: 									value={selectedCategory}
+    884: 									onChange={(e) => setSelectedCategory(e.target.value)}
+    885: 									className="px-4 py-2"
+    886: 								>
+    887: 									<option value="all">全カテゴリ</option>
+    888: 									<option value="greeting">挨拶</option>
+
+--- line 1102, col 17 (length 151) ---
+   1099: 																)}
+   1100: 															</div>
+   1101: 															<div className="flex flex-col gap-1 ml-2">
+>> 1102: 																<button
+   1103: 																	type="button"
+   1104: 																	onClick={() => toggleFavorite(block.id)}
+   1105: 																	className="p-1"
+   1106: 																>
+   1107: 																	<Heart
+   1108: 																		className={`w-4 h-4 ${
+
+--- line 1114, col 18 (length 285) ---
+   1111: 																	/>
+   1112: 																</button>
+   1113: 																{block.isCustom && (
+>> 1114: 																	<button
+   1115: 																		type="button"
+   1116: 																		onClick={() => {
+   1117: 																			setAvailableBlocks((prev) =>
+   1118: 																				prev.filter((b) => b.id !== block.id),
+   1119: 																			);
+   1120: 																		}}
+
+--- line 1199, col 16 (length 157) ---
+   1196: 																	{block.content}
+   1197: 																</p>
+   1198: 															</div>
+>> 1199: 															<button
+   1200: 																type="button"
+   1201: 																onClick={() => removeComposedBlock(block.id)}
+   1202: 																className="ml-2 p-1"
+   1203: 															>
+   1204: 																<Trash2 className="w-4 h-4" />
+   1205: 															</button>
+========================================
+FILE: src/app/tools/code-type-p5/components/CodeTypeP5App.tsx  (9 sites)
+========================================
+
+--- line 340, col 9 (length 307) ---
+    337: 								>
+    338: 									Language
+    339: 								</label>
+>>  340: 								<select
+    341: 									value={config.language}
+    342: 									onChange={(e) =>
+    343: 										setConfig({ ...config, language: e.target.value })
+    344: 									}
+    345: 									style={{
+    346: 										width: "100%",
+
+--- line 381, col 10 (length 345) ---
+    378: 									>
+    379: 										Width
+    380: 									</label>
+>>  381: 									<input
+    382: 										type="number"
+    383: 										value={config.width}
+    384: 										onChange={(e) =>
+    385: 											setConfig({ ...config, width: Number(e.target.value) })
+    386: 										}
+    387: 										style={{
+
+--- line 405, col 10 (length 347) ---
+    402: 									>
+    403: 										Height
+    404: 									</label>
+>>  405: 									<input
+    406: 										type="number"
+    407: 										value={config.height}
+    408: 										onChange={(e) =>
+    409: 											setConfig({ ...config, height: Number(e.target.value) })
+    410: 										}
+    411: 										style={{
+
+--- line 439, col 10 (length 351) ---
+    436: 									>
+    437: 										Font Size
+    438: 									</label>
+>>  439: 									<input
+    440: 										type="number"
+    441: 										value={config.fontSize}
+    442: 										onChange={(e) =>
+    443: 											setConfig({ ...config, fontSize: Number(e.target.value) })
+    444: 										}
+    445: 										style={{
+
+--- line 463, col 10 (length 394) ---
+    460: 									>
+    461: 										Line Height
+    462: 									</label>
+>>  463: 									<input
+    464: 										type="number"
+    465: 										value={config.lineHeight}
+    466: 										onChange={(e) =>
+    467: 											setConfig({
+    468: 												...config,
+    469: 												lineHeight: Number(e.target.value),
+
+--- line 490, col 10 (length 341) ---
+    487: 									>
+    488: 										FPS
+    489: 									</label>
+>>  490: 									<input
+    491: 										type="number"
+    492: 										value={config.fps}
+    493: 										onChange={(e) =>
+    494: 											setConfig({ ...config, fps: Number(e.target.value) })
+    495: 										}
+    496: 										style={{
+
+--- line 514, col 10 (length 351) ---
+    511: 									>
+    512: 										Duration (s)
+    513: 									</label>
+>>  514: 									<input
+    515: 										type="number"
+    516: 										value={config.duration}
+    517: 										onChange={(e) =>
+    518: 											setConfig({ ...config, duration: Number(e.target.value) })
+    519: 										}
+    520: 										style={{
+
+--- line 634, col 11 (length 770) ---
+    631: 											}}
+    632: 											placeholder="B"
+    633: 										/>
+>>  634: 										<input
+    635: 											type="color"
+    636: 											value={`#${config.backgroundColor.r.toString(16).padStart(2, "0")}${config.backgroundColor.g.toString(16).padStart(2, "0")}${config.backgroundColor.b.toString(16).padStart(2, "0")}`}
+    637: 											onChange={(e) => {
+    638: 												const hex = e.target.value.replace("#", "");
+    639: 												setConfig({
+    640: 													...config,
+
+--- line 670, col 9 (length 362) ---
+    667: 								>
+    668: 									Code
+    669: 								</h4>
+>>  670: 								<textarea
+    671: 									value={code}
+    672: 									onChange={(e) => setCode(e.target.value)}
+    673: 									rows={15}
+    674: 									spellCheck={false}
+    675: 									style={{
+    676: 										width: "100%",
+========================================
+FILE: src/app/tools/color-palette/components/ColorPaletteGenerator.tsx  (6 sites)
+========================================
+
+--- line 385, col 10 (length 387) ---
+    382: 								<div
+    383: 									style={{ display: "flex", gap: "4px", alignItems: "center" }}
+    384: 								>
+>>  385: 									<input
+    386: 										type="range"
+    387: 										min="0"
+    388: 										max="360"
+    389: 										value={settings.hueRange.min}
+    390: 										onChange={(e) =>
+    391: 											setSettings((prev) => ({
+
+--- line 401, col 10 (length 387) ---
+    398: 										}
+    399: 										style={{ flex: 1 }}
+    400: 									/>
+>>  401: 									<input
+    402: 										type="range"
+    403: 										min="0"
+    404: 										max="360"
+    405: 										value={settings.hueRange.max}
+    406: 										onChange={(e) =>
+    407: 											setSettings((prev) => ({
+
+--- line 437, col 10 (length 408) ---
+    434: 								<div
+    435: 									style={{ display: "flex", gap: "4px", alignItems: "center" }}
+    436: 								>
+>>  437: 									<input
+    438: 										type="range"
+    439: 										min="0"
+    440: 										max="100"
+    441: 										value={settings.saturationRange.min}
+    442: 										onChange={(e) =>
+    443: 											setSettings((prev) => ({
+
+--- line 453, col 10 (length 408) ---
+    450: 										}
+    451: 										style={{ flex: 1 }}
+    452: 									/>
+>>  453: 									<input
+    454: 										type="range"
+    455: 										min="0"
+    456: 										max="100"
+    457: 										value={settings.saturationRange.max}
+    458: 										onChange={(e) =>
+    459: 											setSettings((prev) => ({
+
+--- line 697, col 8 (length 363) ---
+    694: 					<fieldset style={{ border: "1px solid #ccc", padding: "8px" }}>
+    695: 						<legend>Export</legend>
+    696: 						<div style={{ display: "flex", gap: "6px", marginBottom: "6px" }}>
+>>  697: 							<select
+    698: 								style={{
+    699: 									flex: 1,
+    700: 									padding: "4px 8px",
+    701: 									fontSize: "13px",
+    702: 								}}
+    703: 								value={settings.exportFormat}
+
+--- line 736, col 7 (length 475) ---
+    733: 								Copy
+    734: 							</button>
+    735: 						</div>
+>>  736: 						<textarea
+    737: 							readOnly
+    738: 							style={{
+    739: 								width: "100%",
+    740: 								height: "100px",
+    741: 								fontFamily: "monospace",
+    742: 								fontSize: "11px",
+========================================
+FILE: src/app/tools/fillgen/components/FillGenTool.tsx  (8 sites)
+========================================
+
+--- line 1413, col 12 (length 600) ---
+   1410: 											style={{ display: "flex", alignItems: "center", gap: 8 }}
+   1411: 										>
+   1412: 											<label style={{ fontSize: 14 }}>プリセット:</label>
+>> 1413: 											<select
+   1414: 												value={
+   1415: 													Object.keys(presets).find(
+   1416: 														(key) =>
+   1417: 															JSON.stringify(presets[key]) ===
+   1418: 															JSON.stringify(settings),
+   1419: 													) ?? "custom"
+
+--- line 1488, col 13 (length 512) ---
+   1485: 												>
+   1486: 													背景色
+   1487: 												</label>
+>> 1488: 												<input
+   1489: 													type="color"
+   1490: 													value={settings.colors.bgColor}
+   1491: 													onChange={(e) =>
+   1492: 														setSettings({
+   1493: 															...settings,
+   1494: 															colors: {
+
+--- line 1518, col 13 (length 516) ---
+   1515: 												>
+   1516: 													テキスト色
+   1517: 												</label>
+>> 1518: 												<input
+   1519: 													type="color"
+   1520: 													value={settings.colors.textColor}
+   1521: 													onChange={(e) =>
+   1522: 														setSettings({
+   1523: 															...settings,
+   1524: 															colors: {
+
+--- line 1548, col 13 (length 520) ---
+   1545: 												>
+   1546: 													アクセント色
+   1547: 												</label>
+>> 1548: 												<input
+   1549: 													type="color"
+   1550: 													value={settings.colors.accentColor}
+   1551: 													onChange={(e) =>
+   1552: 														setSettings({
+   1553: 															...settings,
+   1554: 															colors: {
+
+--- line 1578, col 13 (length 522) ---
+   1575: 												>
+   1576: 													正解色
+   1577: 												</label>
+>> 1578: 												<input
+   1579: 													type="color"
+   1580: 													value={settings.colors.correctColor}
+   1581: 													onChange={(e) =>
+   1582: 														setSettings({
+   1583: 															...settings,
+   1584: 															colors: {
+
+--- line 1608, col 13 (length 526) ---
+   1605: 												>
+   1606: 													不正解色
+   1607: 												</label>
+>> 1608: 												<input
+   1609: 													type="color"
+   1610: 													value={settings.colors.incorrectColor}
+   1611: 													onChange={(e) =>
+   1612: 														setSettings({
+   1613: 															...settings,
+   1614: 															colors: {
+
+--- line 1638, col 13 (length 512) ---
+   1635: 												>
+   1636: 													ブロック背景色
+   1637: 												</label>
+>> 1638: 												<input
+   1639: 													type="color"
+   1640: 													value={settings.colors.blockBg}
+   1641: 													onChange={(e) =>
+   1642: 														setSettings({
+   1643: 															...settings,
+   1644: 															colors: {
+
+--- line 1895, col 13 (length 572) ---
+   1892: 												>
+   1893: 													線のスタイル
+   1894: 												</label>
+>> 1895: 												<select
+   1896: 													value={settings.blank.borderStyle}
+   1897: 													onChange={(e) =>
+   1898: 														setSettings({
+   1899: 															...settings,
+   1900: 															blank: {
+   1901: 																...settings.blank,
+========================================
+FILE: src/app/tools/pomodoro/components/MiniTimer.tsx  (4 sites)
+========================================
+
+--- line 223, col 6 (length 46) ---
+    220: 
+    221: 				{/* Controls */}
+    222: 				<div className="flex items-center gap-4">
+>>  223: 					<button onClick={toggleTimer} className="p-3">
+    224: 						{isActive ? (
+    225: 							<Pause size={20} fill="currentColor" />
+    226: 						) : (
+    227: 							<Play size={20} fill="currentColor" />
+    228: 						)}
+    229: 					</button>
+
+--- line 230, col 6 (length 45) ---
+    227: 							<Play size={20} fill="currentColor" />
+    228: 						)}
+    229: 					</button>
+>>  230: 					<button onClick={resetTimer} className="p-3">
+    231: 						<RotateCcw size={20} />
+    232: 					</button>
+    233: 				</div>
+    234: 
+    235: 				{/* Settings (Timer Mode Only) */}
+    236: 				<div className="h-8 flex items-center justify-center w-full">
+
+--- line 240, col 9 (length 261) ---
+    237: 					{mode === "timer" && !isActive && (
+    238: 						<div className="flex items-center justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
+    239: 							<div className="flex items-center gap-1">
+>>  240: 								<input
+    241: 									type="number"
+    242: 									min="0"
+    243: 									max="999"
+    244: 									value={Math.floor(savedDuration / 60000)}
+    245: 									onChange={(e) => handleDurationChange("min", e.target.value)}
+    246: 									className="w-14 px-1 py-1 text-center text-sm"
+
+--- line 251, col 9 (length 269) ---
+    248: 								<span className="text-xs  font-medium">m</span>
+    249: 							</div>
+    250: 							<div className="flex items-center gap-1">
+>>  251: 								<input
+    252: 									type="number"
+    253: 									min="0"
+    254: 									max="59"
+    255: 									value={Math.floor((savedDuration % 60000) / 1000)}
+    256: 									onChange={(e) => handleDurationChange("sec", e.target.value)}
+    257: 									className="w-14 px-1 py-1 text-center text-sm"
+========================================
+FILE: src/app/tools/pomodoro/components/PomodoroTimer.tsx  (7 sites)
+========================================
+
+--- line 776, col 7 (length 64) ---
+    773: 						</span>
+    774: 					</div>
+    775: 					<div className="flex items-center gap-1 no-drag">
+>>  776: 						<button onClick={() => removeWidget(widget.id)} className="p-1">
+    777: 							<X size={12} />
+    778: 						</button>
+    779: 					</div>
+    780: 				</div>
+    781: 			)}
+    782: 
+
+--- line 872, col 9 (length 134) ---
+    869: 											"https://via.placeholder.com/300?text=Image+Error";
+    870: 									}}
+    871: 								/>
+>>  872: 								<button
+    873: 									onClick={() => updateWidget(widget.id, { content: "" })}
+    874: 									className="absolute top-2 right-2 p-2"
+    875: 								>
+    876: 									<Edit3 size={14} />
+    877: 								</button>
+    878: 							</div>
+
+--- line 1681, col 7 (length 146) ---
+   1678: 							theme === "dark" ? "bg-[#1a1a1a]/95 " : " "
+   1679: 						}`}
+   1680: 					>
+>> 1681: 						<button
+   1682: 							onClick={() => setShowStopDialog(false)}
+   1683: 							className={`absolute top-4 right-4 p-2 ${theme === "dark" ? " " : " "}`}
+   1684: 						>
+   1685: 							<X size={20} />
+   1686: 						</button>
+   1687: 
+
+--- line 1823, col 9 (length 132) ---
+   1820: 								>
+   1821: 									設定
+   1822: 								</h2>
+>> 1823: 								<button
+   1824: 									onClick={() => setShowSettingsPanel(false)}
+   1825: 									className={`p-2 ${theme === "dark" ? " " : " "}`}
+   1826: 								>
+   1827: 									<X size={20} />
+   1828: 								</button>
+   1829: 							</div>
+
+--- line 1883, col 13 (length 491) ---
+   1880: 													className={`flex-1 px-2 py-1.5 border text-sm ${theme === "dark" ? " " : " "}`}
+   1881: 													placeholder="ラベル"
+   1882: 												/>
+>> 1883: 												<input
+   1884: 													type="number"
+   1885: 													min="1"
+   1886: 													value={step.duration}
+   1887: 													onChange={(e) => {
+   1888: 														const newSchedule = [...customSchedule];
+   1889: 														newSchedule[index] = {
+
+--- line 1902, col 13 (length 880) ---
+   1899: 												>
+   1900: 													分
+   1901: 												</span>
+>> 1902: 												<select
+   1903: 													value={step.type}
+   1904: 													onChange={(e) => {
+   1905: 														const newSchedule = [...customSchedule];
+   1906: 														newSchedule[index] = {
+   1907: 															...step,
+   1908: 															type: e.target.value as "focus" | "break",
+
+--- line 1923, col 13 (length 271) ---
+   1920: 													<option value="focus">作業</option>
+   1921: 													<option value="break">休憩</option>
+   1922: 												</select>
+>> 1923: 												<button
+   1924: 													onClick={() => {
+   1925: 														const newSchedule = customSchedule.filter(
+   1926: 															(_, i) => i !== index,
+   1927: 														);
+   1928: 														setCustomSchedule(newSchedule);
+   1929: 													}}
+========================================
+FILE: src/app/tools/pomodoro/components/StatsWidget.tsx  (1 sites)
+========================================
+
+--- line 243, col 4 (length 247) ---
+    240: 
+    241: 	return (
+    242: 		<div className="relative p-2 sm:p-3 h-full w-full text-sm  overflow-visible">
+>>  243: 			<select
+    244: 				value={metric}
+    245: 				onChange={(e) => setMetric(e.target.value as (typeof metrics)[number])}
+    246: 				className="pointer-events-auto absolute -top-2 left-1/2 -translate-x-1/2 px-3 py-2 text-sm min-w-[150px] max-w-[220px] text-center"
+    247: 			>
+    248: 				{metrics.map((m) => (
+    249: 					<option value={m} key={m}>
+========================================
+FILE: src/app/tools/pomodoro/components/youtube/YouTubePlayer.tsx  (7 sites)
+========================================
+
+--- line 267, col 6 (length 212) ---
+    264: 					</span>
+    265: 				</div>
+    266: 				<div className="flex items-center gap-1">
+>>  267: 					<button
+    268: 						onClick={() => {
+    269: 							const newState = !isMinimized;
+    270: 							setSettings({ ...settings, isMinimized: newState });
+    271: 							onToggleMinimize?.(newState);
+    272: 						}}
+    273: 						className="p-1.5"
+
+--- line 277, col 6 (length 122) ---
+    274: 					>
+    275: 						{isMinimized ? <Maximize2 size={14} /> : <Minimize2 size={14} />}
+    276: 					</button>
+>>  277: 					<button
+    278: 						onClick={() => setShowSettings(!showSettings)}
+    279: 						className={`p-1.5 ${showSettings ? "" : ""}`}
+    280: 					>
+    281: 						<Settings size={14} />
+    282: 					</button>
+    283: 				</div>
+
+--- line 309, col 9 (length 113) ---
+    306: 					<div className="flex items-center justify-between">
+    307: 						<div className="flex items-center gap-2">
+    308: 							{isPlaylist && (
+>>  309: 								<button
+    310: 									onClick={handlePrevious}
+    311: 									className={`p-2 ${theme === "dark" ? " " : " "}`}
+    312: 								>
+    313: 									<SkipBack size={16} fill="currentColor" />
+    314: 								</button>
+    315: 							)}
+
+--- line 316, col 8 (length 106) ---
+    313: 									<SkipBack size={16} fill="currentColor" />
+    314: 								</button>
+    315: 							)}
+>>  316: 							<button
+    317: 								onClick={togglePlay}
+    318: 								className={`p-2 ${theme === "dark" ? " " : " "}`}
+    319: 							>
+    320: 								{playbackState === "playing" ? (
+    321: 									<Pause size={16} fill="currentColor" />
+    322: 								) : (
+
+--- line 327, col 9 (length 109) ---
+    324: 								)}
+    325: 							</button>
+    326: 							{isPlaylist && (
+>>  327: 								<button
+    328: 									onClick={handleNext}
+    329: 									className={`p-2 ${theme === "dark" ? " " : " "}`}
+    330: 								>
+    331: 									<SkipForward size={16} fill="currentColor" />
+    332: 								</button>
+    333: 							)}
+
+--- line 337, col 8 (length 47) ---
+    334: 						</div>
+    335: 
+    336: 						<div className="flex items-center gap-2 flex-1 mx-4">
+>>  337: 							<button onClick={toggleMute} className="dark:">
+    338: 								{isMuted || volume === 0 ? (
+    339: 									<VolumeX size={16} />
+    340: 								) : (
+    341: 									<Volume2 size={16} />
+    342: 								)}
+    343: 							</button>
+
+--- line 372, col 9 (length 114) ---
+    369: 									placeholder="YouTube URL..."
+    370: 									className={`flex-1 px-2 py-1.5 text-xs ${theme === "dark" ? " " : " "}`}
+    371: 								/>
+>>  372: 								<button
+    373: 									onClick={handleSaveUrl}
+    374: 									className={`p-1.5 ${theme === "dark" ? " " : " "}`}
+    375: 								>
+    376: 									<Save size={14} />
+    377: 								</button>
+    378: 							</div>
+========================================
+FILE: src/app/tools/ProtoType/src/components/003_footer.tsx  (2 sites)
+========================================
+
+--- line 14, col 2 (length 132) ---
+     11:  >
+     12:  yusuke-kim.com
+     13:  </a>
+>>   14:  <a
+     15:  className="GithubLink rotating-element"
+     16:  href="https://github.com/rebuildup"
+     17:  target="_blank"
+     18:  rel="noopener noreferrer"
+     19:  >
+     20:  <svg
+
+--- line 46, col 2 (length 124) ---
+     43:  </g>
+     44:  </svg>
+     45:  </a>
+>>   46:  <a
+     47:  className="XLink rotating-element"
+     48:  href="https://x.com/361do_sleep"
+     49:  target="_blank"
+     50:  rel="noopener noreferrer"
+     51:  >
+     52:  <svg
+========================================
+FILE: src/app/tools/ProtoType/src/components/016_AnimationSettings.tsx  (2 sites)
+========================================
+
+--- line 34, col 2 (length 80) ---
+     31: 
+     32:  <div className="toggle-container">
+     33:  <label className="toggle-switch">
+>>   34:  <input type="checkbox" checked={animEnabled} onChange={handleAnimationToggle} />
+     35:  <span className="toggle-slider"></span>
+     36:  </label>
+     37:  <span className="toggle-label">背景アニメーションを表示</span>
+     38:  </div>
+     39: 
+     40:  {animEnabled && (
+
+--- line 43, col 2 (length 86) ---
+     40:  {animEnabled && (
+     41:  <div className="toggle-container">
+     42:  <label className="toggle-switch">
+>>   43:  <input type="checkbox" checked={reducedMotion} onChange={handleReducedMotionToggle} />
+     44:  <span className="toggle-slider"></span>
+     45:  </label>
+     46:  <span className="toggle-label">パフォーマンスモード (アニメーション簡略化)</span>
+     47:  </div>
+     48:  )}
+     49: 
+========================================
+FILE: src/app/tools/qr-generator/components/QRCodeGenerator.tsx  (2 sites)
+========================================
+
+--- line 404, col 10 (length 192) ---
+    401: 										value={foregroundColor}
+    402: 										onChange={(e) => setForegroundColor(e.target.value)}
+    403: 									/>
+>>  404: 									<input
+    405: 										type="text"
+    406: 										value={foregroundColor}
+    407: 										onChange={(e) => setForegroundColor(e.target.value)}
+    408: 										style={{ flex: 1, padding: "2px 4px" }}
+    409: 									/>
+    410: 								</div>
+
+--- line 422, col 10 (length 192) ---
+    419: 										value={backgroundColor}
+    420: 										onChange={(e) => setBackgroundColor(e.target.value)}
+    421: 									/>
+>>  422: 									<input
+    423: 										type="text"
+    424: 										value={backgroundColor}
+    425: 										onChange={(e) => setBackgroundColor(e.target.value)}
+    426: 										style={{ flex: 1, padding: "2px 4px" }}
+    427: 									/>
+    428: 								</div>
+========================================
+FILE: src/app/tools/sequential-png-preview/components/AnimationPlayer.tsx  (1 sites)
+========================================
+
+--- line 159, col 5 (length 204) ---
+    156: 						{currentFrame + 1} / {frames.length}
+    157: 					</span>
+    158: 				</div>
+>>  159: 				<input
+    160: 					type="range"
+    161: 					min="0"
+    162: 					max={frames.length - 1}
+    163: 					value={currentFrame}
+    164: 					onChange={(e) => onFrameSelect(parseInt(e.target.value, 10))}
+    165: 					style={{ width: "100%" }}
+========================================
+FILE: src/app/tools/sequential-png-preview/components/ExportPanel.tsx  (3 sites)
+========================================
+
+--- line 152, col 7 (length 319) ---
+    149: 						>
+    150: 							品質: {exportSettings.quality}%
+    151: 						</label>
+>>  152: 						<input
+    153: 							type="range"
+    154: 							min="10"
+    155: 							max="100"
+    156: 							step="10"
+    157: 							value={exportSettings.quality}
+    158: 							onChange={(e) =>
+
+--- line 187, col 8 (length 432) ---
+    184: 							>
+    185: 								幅 (px)
+    186: 							</label>
+>>  187: 							<input
+    188: 								type="number"
+    189: 								min="100"
+    190: 								max="4000"
+    191: 								value={exportSettings.width}
+    192: 								onChange={(e) =>
+    193: 									setExportSettings((prev) => ({
+
+--- line 216, col 8 (length 434) ---
+    213: 							>
+    214: 								高さ (px)
+    215: 							</label>
+>>  216: 							<input
+    217: 								type="number"
+    218: 								min="100"
+    219: 								max="4000"
+    220: 								value={exportSettings.height}
+    221: 								onChange={(e) =>
+    222: 									setExportSettings((prev) => ({
+========================================
+FILE: src/app/tools/sequential-png-preview/components/FrameGrid.tsx  (1 sites)
+========================================
+
+--- line 54, col 7 (length 254) ---
+     51: 				<div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
+     52: 					<div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+     53: 						<label style={{ fontSize: "12px" }}>表示サイズ:</label>
+>>   54: 						<select
+     55: 							value={gridSize}
+     56: 							onChange={(e) =>
+     57: 								setGridSize(e.target.value as "small" | "medium" | "large")
+     58: 							}
+     59: 							style={{
+     60: 								border: "none",
+========================================
+FILE: src/app/tools/sequential-png-preview/components/SequentialPngPreview.tsx  (2 sites)
+========================================
+
+--- line 194, col 11 (length 339) ---
+    191: 										>
+    192: 											フレームレート: {settings.frameRate}fps
+    193: 										</label>
+>>  194: 										<input
+    195: 											type="range"
+    196: 											min="1"
+    197: 											max="60"
+    198: 											value={settings.frameRate}
+    199: 											onChange={(e) =>
+    200: 												setSettings((prev) => ({
+
+--- line 251, col 11 (length 399) ---
+    248: 										>
+    249: 											方向
+    250: 										</label>
+>>  251: 										<select
+    252: 											value={settings.direction}
+    253: 											onChange={(e) =>
+    254: 												setSettings((prev) => ({
+    255: 													...prev,
+    256: 													direction: e.target
+    257: 														.value as AnimationSettings["direction"],
+========================================
+FILE: src/app/tools/svg2tsx/components/ConversionSettings.tsx  (4 sites)
+========================================
+
+--- line 186, col 8 (length 307) ---
+    183: 							>
+    184: 								インデント
+    185: 							</label>
+>>  186: 							<select
+    187: 								value={settings.indentSize}
+    188: 								onChange={(e) =>
+    189: 									updateSetting("indentSize", parseInt(e.target.value, 10))
+    190: 								}
+    191: 								style={{
+    192: 									width: "100%",
+
+--- line 213, col 8 (length 310) ---
+    210: 							>
+    211: 								改行設定
+    212: 							</label>
+>>  213: 							<select
+    214: 								value={settings.lineBreaks}
+    215: 								onChange={(e) =>
+    216: 									updateSetting("lineBreaks", e.target.value as "lf" | "crlf")
+    217: 								}
+    218: 								style={{
+    219: 									width: "100%",
+
+--- line 239, col 8 (length 351) ---
+    236: 							>
+    237: 								エクスポート形式
+    238: 							</label>
+>>  239: 							<select
+    240: 								value={settings.exportType}
+    241: 								onChange={(e) =>
+    242: 									updateSetting(
+    243: 										"exportType",
+    244: 										e.target.value as "default" | "named",
+    245: 									)
+
+--- line 268, col 8 (length 373) ---
+    265: 							>
+    266: 								ファイル拡張子
+    267: 							</label>
+>>  268: 							<select
+    269: 								value={settings.fileExtension}
+    270: 								onChange={(e) =>
+    271: 									updateSetting(
+    272: 										"fileExtension",
+    273: 										e.target.value as ConversionSettings["fileExtension"],
+    274: 									)
+========================================
+FILE: src/app/workshop/components/SearchBar.tsx  (1 sites)
+========================================
+
+--- line 61, col 7 (length 310) ---
+     58: 						className="flex-1 text-sm min-w-0"
+     59: 					/>
+     60: 					{inputValue && (
+>>   61: 						<button
+     62: 							type="button"
+     63: 							onClick={() => {
+     64: 								setInputValue("");
+     65: 								const params = new URLSearchParams(searchParams.toString());
+     66: 								params.delete("q");
+     67: 								params.delete("page");
+========================================
+FILE: src/components/admin/cms/ContentForm.tsx  (2 sites)
+========================================
+
+--- line 1008, col 7 (length 223) ---
+   1005: 								setFormData((p) => ({ ...p, links }));
+   1006: 							}}
+   1007: 						/>
+>> 1008: 						<button
+   1009: 							type="button"
+   1010: 							style={s.btnDanger}
+   1011: 							onClick={() => {
+   1012: 								setFormData((p) => ({
+   1013: 									...p,
+   1014: 									links: (p.links || []).filter((_, j) => j !== i),
+
+--- line 1366, col 6 (length 218) ---
+   1363: 						/>
+   1364: 						双方向
+   1365: 					</label>
+>> 1366: 					<button
+   1367: 						type="button"
+   1368: 						style={s.btnDanger}
+   1369: 						onClick={() =>
+   1370: 							setFormData((p) => ({
+   1371: 								...p,
+   1372: 								relations: (p.relations || []).filter((_, j) => j !== i),
+========================================
+FILE: src/components/ui/CookieConsent.tsx  (1 sites)
+========================================
+
+--- line 225, col 7 (length 139) ---
+    222: 						>
+    223: 							分析クッキー
+    224: 						</h3>
+>>  225: 						<input
+    226: 							type="checkbox"
+    227: 							checked={analyticsEnabled}
+    228: 							onChange={(e) => setAnalyticsEnabled(e.target.checked)}
+    229: 						/>
+    230: 					</div>
+    231: 					<p style={{ fontSize: "0.875rem", color: "#555", margin: 0 }}>
+========================================
+FILE: src/components/ui/Select.tsx  (1 sites)
+========================================
+
+--- line 60, col 3 (length 133) ---
+     57: 		.replace(/\s+/g, " ");
+     58: 
+     59: 	return (
+>>   60: 		<select
+     61: 			value={value}
+     62: 			onChange={(e) => onChange(e.target.value)}
+     63: 			disabled={disabled}
+     64: 			className={selectClassName}
+     65: 		>
+     66: 			{placeholder && (

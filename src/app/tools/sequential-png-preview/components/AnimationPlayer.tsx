@@ -163,6 +163,7 @@ export default function AnimationPlayer({
 					value={currentFrame}
 					onChange={(e) => onFrameSelect(parseInt(e.target.value, 10))}
 					style={{ width: "100%" }}
+					aria-label="フレーム"
 				/>
 				<div
 					style={{

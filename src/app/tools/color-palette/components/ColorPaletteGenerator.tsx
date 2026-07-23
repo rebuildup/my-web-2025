@@ -397,6 +397,7 @@ export default function ColorPaletteGenerator() {
 											}))
 										}
 										style={{ flex: 1 }}
+										aria-label="色相の最小値"
 									/>
 									<input
 										type="range"
@@ -413,6 +414,7 @@ export default function ColorPaletteGenerator() {
 											}))
 										}
 										style={{ flex: 1 }}
+										aria-label="色相の最大値"
 									/>
 								</div>
 							</div>
@@ -449,6 +451,7 @@ export default function ColorPaletteGenerator() {
 											}))
 										}
 										style={{ flex: 1 }}
+										aria-label="彩度の最小値"
 									/>
 									<input
 										type="range"
@@ -465,6 +468,7 @@ export default function ColorPaletteGenerator() {
 											}))
 										}
 										style={{ flex: 1 }}
+										aria-label="彩度の最大値"
 									/>
 								</div>
 							</div>
@@ -708,6 +712,7 @@ export default function ColorPaletteGenerator() {
 											.value as ColorPaletteSettings["exportFormat"],
 									}))
 								}
+								aria-label="エクスポート形式"
 							>
 								<option value="css">CSS Variables</option>
 								<option value="tailwind">Tailwind Config</option>
@@ -751,6 +756,7 @@ export default function ColorPaletteGenerator() {
 										? exportAsTailwind()
 										: exportAsJSON()
 							}
+							aria-label="エクスポート出力"
 						/>
 					</fieldset>
 				</div>

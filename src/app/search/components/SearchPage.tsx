@@ -257,7 +257,7 @@ export default function SearchPage() {
 	}, [searchParams, performSearch]);
 
 	return (
-		<div className="min-h-screen scrollbar-auto-stable">
+		<div className="min-h-dvh scrollbar-auto-stable">
 			<main className="flex items-center py-10">
 				<div className="container-system">
 					<div className="space-y-10">
@@ -366,6 +366,7 @@ export default function SearchPage() {
 														handleRemoveHistoryItem(historyItem.query, e)
 													}
 													className="p-1"
+													aria-label={`履歴から「${historyItem.query}」を削除`}
 												>
 													<X className="w-3 h-3" />
 												</button>
@@ -529,7 +530,10 @@ export default function SearchPage() {
 														{result.highlights
 															.slice(0, 3)
 															.map((highlight, index) => (
-																<span key={highlight} className="px-2 py-1 text-xs">
+																<span
+																	key={highlight}
+																	className="px-2 py-1 text-xs"
+																>
 																	{highlight}
 																</span>
 															))}

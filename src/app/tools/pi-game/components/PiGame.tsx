@@ -116,16 +116,11 @@ export default function PiGame() {
 
 	return (
 		<div
+			className="flex flex-col items-center justify-start px-4"
 			style={{
-				display: "flex",
-				flexDirection: "column",
-				alignItems: "center",
-				justifyContent: "flex-start",
 				paddingTop: isFullscreen ? 64 : 32,
-				paddingLeft: 16,
-				paddingRight: 16,
 				gap: isFullscreen ? 20 : 12,
-				minHeight: isFullscreen ? "100vh" : undefined,
+				minHeight: isFullscreen ? "100dvh" : undefined,
 				backgroundColor: isFullscreen ? "#fff" : undefined,
 			}}
 		>
@@ -133,19 +128,12 @@ export default function PiGame() {
 			<button
 				type="button"
 				onClick={toggleFullscreen}
+				className="px-4 py-2 text-sm font-inherit cursor-pointer border border-gray-300 rounded bg-[#f5f5f5] self-end"
 				style={{
 					position: isFullscreen ? "fixed" : "relative",
 					top: isFullscreen ? 16 : undefined,
 					right: isFullscreen ? 16 : undefined,
 					zIndex: isFullscreen ? 10 : undefined,
-					padding: "8px 16px",
-					fontSize: 14,
-					fontFamily: "inherit",
-					cursor: "pointer",
-					border: "1px solid #ccc",
-					borderRadius: 4,
-					backgroundColor: "#f5f5f5",
-					alignSelf: "flex-end",
 				}}
 			>
 				{isFullscreen ? "終了" : "全画面"}
@@ -187,9 +175,7 @@ export default function PiGame() {
 										const sequence = getCorrectSequenceWithError();
 										const startIndex =
 											sequence.length > 12 ? sequence.length - 12 : 0;
-										const visible = sequence
-											.slice(startIndex)
-											.split("");
+										const visible = sequence.slice(startIndex).split("");
 										return visible.map((char, index, array) => {
 											const isLastChar = index === array.length - 1;
 											const absIndex = startIndex + index;

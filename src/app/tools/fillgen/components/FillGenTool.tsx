@@ -1179,16 +1179,7 @@ export default function FillGenTool() {
 							}}
 							rows={14}
 							placeholder="# タイトル&#10;## 見出し&#10;### セクション&#10;本文を入力"
-							style={{
-								width: "100%",
-								fontFamily: "Menlo, monospace",
-								fontSize: 14,
-								padding: "8px",
-								border: "1px solid #ccc",
-								borderRadius: 4,
-								resize: "vertical",
-								boxSizing: "border-box",
-							}}
+							className="w-full font-mono text-sm p-2 border border-gray-300 rounded resize-y box-border"
 						/>
 						<p style={{ color: "#666", fontSize: 13 }}>
 							記法: <code>#</code> タイトル, <code>##</code> メイン見出し,{" "}
@@ -1337,7 +1328,10 @@ export default function FillGenTool() {
 													<h3 className="main-header">{block.header}</h3>
 												)}
 												{block.sections.map((sec, j) => (
-													<div key={sec.title ?? `sec-${j}`} className="quiz-section">
+													<div
+														key={sec.title ?? `sec-${j}`}
+														className="quiz-section"
+													>
 														<h4>{sec.title}</h4>
 														{sec.paragraphs.map((p, k) => (
 															<p
@@ -1429,6 +1423,7 @@ export default function FillGenTool() {
 													fontSize: 14,
 													minWidth: 140,
 												}}
+												aria-label="プリセット"
 											>
 												{Object.keys(presets).map((key) => (
 													<option key={key} value={key}>
@@ -1503,6 +1498,7 @@ export default function FillGenTool() {
 														border: "1px solid #ddd",
 														borderRadius: 4,
 													}}
+													aria-label="背景色"
 												/>
 											</div>
 											<div>
@@ -1533,6 +1529,7 @@ export default function FillGenTool() {
 														border: "1px solid #ddd",
 														borderRadius: 4,
 													}}
+													aria-label="テキスト色"
 												/>
 											</div>
 											<div>
@@ -1563,6 +1560,7 @@ export default function FillGenTool() {
 														border: "1px solid #ddd",
 														borderRadius: 4,
 													}}
+													aria-label="アクセント色"
 												/>
 											</div>
 											<div>
@@ -1593,6 +1591,7 @@ export default function FillGenTool() {
 														border: "1px solid #ddd",
 														borderRadius: 4,
 													}}
+													aria-label="正解色"
 												/>
 											</div>
 											<div>
@@ -1623,6 +1622,7 @@ export default function FillGenTool() {
 														border: "1px solid #ddd",
 														borderRadius: 4,
 													}}
+													aria-label="不正解色"
 												/>
 											</div>
 											<div>
@@ -1653,6 +1653,7 @@ export default function FillGenTool() {
 														border: "1px solid #ddd",
 														borderRadius: 4,
 													}}
+													aria-label="ブロック背景色"
 												/>
 											</div>
 										</div>
@@ -1907,6 +1908,7 @@ export default function FillGenTool() {
 															},
 														})
 													}
+													aria-label="線のスタイル"
 													style={{
 														width: "100%",
 														padding: "4px 8px",
@@ -2048,39 +2050,13 @@ export default function FillGenTool() {
 						)}
 
 						{tab === "html" && (
-							<pre
-								style={{
-									whiteSpace: "pre-wrap",
-									wordBreak: "break-word",
-									background: "#0b1021",
-									color: "#e6e6e6",
-									padding: 16,
-									borderRadius: 8,
-									border: "1px solid #333",
-									maxHeight: "80vh",
-									overflow: "auto",
-									fontSize: 13,
-								}}
-							>
+							<pre className="whitespace-pre-wrap break-words bg-[#0b1021] text-[#e6e6e6] p-4 rounded-lg border border-[#333] max-h-[80vh] overflow-auto text-[13px]">
 								{htmlCode}
 							</pre>
 						)}
 
 						{tab === "react" && (
-							<pre
-								style={{
-									whiteSpace: "pre-wrap",
-									wordBreak: "break-word",
-									background: "#0b1021",
-									color: "#e6e6e6",
-									padding: 16,
-									borderRadius: 8,
-									border: "1px solid #333",
-									maxHeight: "80vh",
-									overflow: "auto",
-									fontSize: 13,
-								}}
-							>
+							<pre className="whitespace-pre-wrap break-words bg-[#0b1021] text-[#e6e6e6] p-4 rounded-lg border border-[#333] max-h-[80vh] overflow-auto text-[13px]">
 								{reactCode}
 							</pre>
 						)}
@@ -2090,18 +2066,10 @@ export default function FillGenTool() {
 				{menuPos && !isWrapping && (
 					<div
 						ref={menuRef}
+						className="fixed -translate-x-1/2 translate-y-2 bg-white border border-[#ddd] rounded-lg shadow-[0_4px_16px_rgba(0,0,0,0.12)] z-[2000] p-1 min-w-[160px]"
 						style={{
-							position: "fixed",
 							top: Math.round(menuPos.top),
 							left: Math.round(menuPos.left),
-							transform: "translate(-50%, 8px)",
-							background: "#fff",
-							border: "1px solid #ddd",
-							borderRadius: 8,
-							boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
-							zIndex: 2000,
-							padding: 4,
-							minWidth: 160,
 						}}
 						onMouseDown={(e) => {
 							// 選択状態を維持するためフォーカス移動を阻止

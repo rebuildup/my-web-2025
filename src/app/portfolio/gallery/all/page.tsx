@@ -107,7 +107,7 @@ export default async function AllGalleryPage() {
 						{JSON.stringify(structuredData)}
 					</script>
 				)}
-				<div className="min-h-screen relative z-10 scrollbar-auto-stable">
+				<div className="min-h-dvh relative z-10 scrollbar-auto-stable">
 					<main className="py-4">
 						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-10">
@@ -177,7 +177,7 @@ export default async function AllGalleryPage() {
 		console.error("Error in AllGalleryPage:", error);
 
 		return (
-			<div className="min-h-screen scrollbar-auto-stable">
+			<div className="min-h-dvh scrollbar-auto-stable">
 				<main className="py-10">
 					<div className="container mx-auto px-4">
 						<div className=" p-4 rounded">

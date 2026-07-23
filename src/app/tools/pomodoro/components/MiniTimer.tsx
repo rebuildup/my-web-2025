@@ -220,14 +220,18 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 
 				{/* Controls */}
 				<div className="flex items-center gap-4">
-					<button onClick={toggleTimer} className="p-3">
+					<button
+						onClick={toggleTimer}
+						className="p-3"
+						aria-label={isActive ? "一時停止" : "開始"}
+					>
 						{isActive ? (
 							<Pause size={20} fill="currentColor" />
 						) : (
 							<Play size={20} fill="currentColor" />
 						)}
 					</button>
-					<button onClick={resetTimer} className="p-3">
+					<button onClick={resetTimer} className="p-3" aria-label="リセット">
 						<RotateCcw size={20} />
 					</button>
 				</div>
@@ -244,6 +248,7 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 									value={Math.floor(savedDuration / 60000)}
 									onChange={(e) => handleDurationChange("min", e.target.value)}
 									className="w-14 px-1 py-1 text-center text-sm"
+									aria-label="分"
 								/>
 								<span className="text-xs  font-medium">m</span>
 							</div>
@@ -255,6 +260,7 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 									value={Math.floor((savedDuration % 60000) / 1000)}
 									onChange={(e) => handleDurationChange("sec", e.target.value)}
 									className="w-14 px-1 py-1 text-center text-sm"
+									aria-label="秒"
 								/>
 								<span className="text-xs  font-medium">s</span>
 							</div>

@@ -12,12 +12,12 @@ const navItems = [
 
 export default function Home() {
 	return (
-		<div className="h-screen overflow-hidden relative">
+		<div className="h-dvh overflow-hidden relative">
 			<UnifiedFloatingCards />
 
 			<main
 				id="main-content"
-				className="relative z-10 flex min-h-screen items-center justify-center"
+				className="relative z-10 flex min-h-dvh items-center justify-center"
 				tabIndex={-1}
 			>
 				<div className="container mx-auto px-4">

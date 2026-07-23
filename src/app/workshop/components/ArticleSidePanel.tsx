@@ -155,24 +155,27 @@ export function ArticleSidePanel({
 
 	// Fetch random articles for promo panel
 	useEffect(() => {
-		const fetchRandomArticles = async () => {
+		const controller = new AbortController();
+		(async () => {
 			try {
 				const res = await fetch(
 					`/api/workshop/random?exclude=${articleSlug || ""}`,
 					{
 						cache: "no-store",
+						signal: controller.signal,
 					},
 				);
+				if (controller.signal.aborted) return;
 				if (res.ok) {
 					const data = await res.json();
 					setRandomArticles(data.articles || []);
 				}
 			} catch (error) {
+				if ((error as Error).name === "AbortError") return;
 				console.error("Failed to fetch random articles:", error);
 			}
-		};
-
-		fetchRandomArticles();
+		})();
+		return () => controller.abort();
 	}, [articleSlug]);
 
 	// Always show panel when we have recommendations or content

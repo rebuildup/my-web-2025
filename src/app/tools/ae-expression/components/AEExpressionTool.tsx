@@ -957,6 +957,7 @@ ${generatedCode}`;
 							value={selectedCategory}
 							onChange={(e) => setSelectedCategory(e.target.value)}
 							className="px-4 py-2"
+							aria-label="カテゴリで絞り込み"
 						>
 							<option value="all">全カテゴリ</option>
 							<option value="animation">アニメーション</option>
@@ -969,6 +970,7 @@ ${generatedCode}`;
 							value={selectedDifficulty}
 							onChange={(e) => setSelectedDifficulty(e.target.value)}
 							className="px-4 py-2"
+							aria-label="難易度で絞り込み"
 						>
 							<option value="all">全難易度</option>
 							<option value="beginner">初級</option>
@@ -1072,6 +1074,7 @@ ${generatedCode}`;
 														);
 													}}
 													className=""
+													aria-label={`保存済み「${saved.name}」を削除`}
 												>
 													<Trash2 className="w-4 h-4" />
 												</button>
@@ -1159,6 +1162,11 @@ ${generatedCode}`;
 												toggleFavorite(expr.id);
 											}}
 											className="ml-2 p-1"
+											aria-label={
+												expr.isFavorite
+													? "お気に入りから削除"
+													: "お気に入りに追加"
+											}
 										>
 											<Heart
 												className={`w-4 h-4 ${expr.isFavorite ? " " : ""}`}
@@ -1197,6 +1205,11 @@ ${generatedCode}`;
 												type="button"
 												onClick={() => toggleFavorite(selectedExpression.id)}
 												className="p-2"
+												aria-label={
+													selectedExpression.isFavorite
+														? "お気に入りから削除"
+														: "お気に入りに追加"
+												}
 											>
 												<Heart
 													className={`w-4 h-4 ${selectedExpression.isFavorite ? " " : ""}`}
@@ -1206,6 +1219,11 @@ ${generatedCode}`;
 												type="button"
 												onClick={() => setShowDocumentation(!showDocumentation)}
 												className="p-2"
+												aria-label={
+													showDocumentation
+														? "ドキュメントを隠す"
+														: "ドキュメントを表示"
+												}
 											>
 												<Info className="w-4 h-4" />
 											</button>

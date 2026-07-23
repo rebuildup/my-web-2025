@@ -145,8 +145,11 @@ export function MediaEmbedSection({
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 						<div>
-							<label className={labelStyle}>Type</label>
+							<label className={labelStyle} htmlFor="new-video-type">
+								Type
+							</label>
 							<select
+								id="new-video-type"
 								value={newVideo.type}
 								onChange={(e) =>
 									setNewVideo((prev) => ({
@@ -272,8 +275,11 @@ export function MediaEmbedSection({
 								<div className="flex-1 space-y-3">
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 										<div>
-											<label className={labelStyle}>Type</label>
+											<label className={labelStyle} htmlFor={`video-${index}-type`}>
+												Type
+											</label>
 											<select
+												id={`video-${index}-type`}
 												value={video.type}
 												onChange={(e) =>
 													updateVideo(index, "type", e.target.value)
@@ -289,8 +295,14 @@ export function MediaEmbedSection({
 										</div>
 
 										<div>
-											<label className={labelStyle}>Title</label>
+											<label
+												className={labelStyle}
+												htmlFor={`video-${index}-title`}
+											>
+												Title
+											</label>
 											<input
+												id={`video-${index}-title`}
 												type="text"
 												value={video.title || ""}
 												onChange={(e) =>
@@ -302,8 +314,11 @@ export function MediaEmbedSection({
 									</div>
 
 									<div>
-										<label className={labelStyle}>URL</label>
+										<label className={labelStyle} htmlFor={`video-${index}-url`}>
+											URL
+										</label>
 										<input
+											id={`video-${index}-url`}
 											type="url"
 											value={video.url}
 											onChange={(e) =>
@@ -314,8 +329,14 @@ export function MediaEmbedSection({
 									</div>
 
 									<div>
-										<label className={labelStyle}>Description</label>
+										<label
+											className={labelStyle}
+											htmlFor={`video-${index}-description`}
+										>
+											Description
+										</label>
 										<textarea
+											id={`video-${index}-description`}
 											value={video.description || ""}
 											onChange={(e) =>
 												updateVideo(index, "description", e.target.value)
@@ -328,8 +349,14 @@ export function MediaEmbedSection({
 									{video.type === "iframe" && (
 										<div className="grid grid-cols-2 gap-3">
 											<div>
-												<label className={labelStyle}>Width</label>
+												<label
+													className={labelStyle}
+													htmlFor={`video-${index}-width`}
+												>
+													Width
+												</label>
 												<input
+													id={`video-${index}-width`}
 													type="number"
 													value={video.width || ""}
 													onChange={(e) =>
@@ -343,8 +370,14 @@ export function MediaEmbedSection({
 												/>
 											</div>
 											<div>
-												<label className={labelStyle}>Height</label>
+												<label
+													className={labelStyle}
+													htmlFor={`video-${index}-height`}
+												>
+													Height
+												</label>
 												<input
+													id={`video-${index}-height`}
 													type="number"
 													value={video.height || ""}
 													onChange={(e) =>

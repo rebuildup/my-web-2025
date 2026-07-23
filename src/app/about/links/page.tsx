@@ -116,6 +116,7 @@ function ProfileHeader() {
 							href={link.url}
 							target="_blank"
 							rel="noopener noreferrer"
+							aria-label={link.title}
 							className="w-8 h-8 flex items-center justify-center rounded-full  transition-colors overflow-hidden p-1.5"
 						>
 							<LinkIcon item={link} className="w-full h-full" />
@@ -176,11 +177,11 @@ function LinkButton({ item, index }: { item: LinkItem; index: number }) {
 
 export default function LinksPage() {
 	return (
-		<div className="min-h-screen relative  overflow-x-hidden selection: ">
+		<div className="min-h-dvh relative  overflow-x-hidden selection: ">
 			{/* Shared Background */}
 			<AboutBackground />
 
-			<main className="relative z-10 w-full max-w-lg mx-auto px-6 py-12 min-h-screen flex flex-col items-center">
+			<main className="relative z-10 w-full max-w-lg mx-auto px-6 py-12 min-h-dvh flex flex-col items-center">
 				{/* Content */}
 				<div className="w-full grow flex flex-col items-center pt-6">
 					<ProfileHeader />

@@ -434,7 +434,7 @@ export function PreviewPanel({ item, onEdit }: PreviewPanelProps) {
 																		).style.display = "none";
 																	}}
 																/>
-																<div className="absolute inset-0  bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+																<div className="absolute inset-0  bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-30 transition-opacity">
 																	<div className=" text-center">
 																		<svg
 																			className="w-16 h-16 mx-auto mb-2"

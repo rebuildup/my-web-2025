@@ -28,24 +28,21 @@ export default function ToolWrapper({
 
 	// Track tool usage
 	useEffect(() => {
-		const trackToolUsage = async () => {
+		const timer = setTimeout(() => {
+			const payload = JSON.stringify({
+				contentId: `tool-${toolName.toLowerCase().replace(/\s+/g, "-")}`,
+			});
 			try {
-				await fetch("/api/stats/view", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						contentId: `tool-${toolName.toLowerCase().replace(/\s+/g, "-")}`,
-					}),
-				});
+				if (typeof navigator !== "undefined" && "sendBeacon" in navigator) {
+					navigator.sendBeacon(
+						"/api/stats/view",
+						new Blob([payload], { type: "application/json" }),
+					);
+				}
 			} catch (error) {
 				console.error("Error tracking tool usage:", error);
 			}
-		};
-
-		// Track usage after a short delay to ensure user is actually using the tool
-		const timer = setTimeout(trackToolUsage, 3000);
+		}, 3000);
 		return () => clearTimeout(timer);
 	}, [toolName]);
 
@@ -106,7 +103,7 @@ export default function ToolWrapper({
 	}, [showAccessibilityInfo, announce, runAccessibilityChecks]);
 
 	return (
-		<div className="min-h-screen scrollbar-auto-stable">
+		<div className="min-h-dvh scrollbar-auto-stable">
 			<main className="py-10" tabIndex={-1} ref={containerRef}>
 				<div className="container-system">
 					<div className="mx-auto w-full max-w-6xl space-y-10 px-4 sm:px-6 lg:px-8">

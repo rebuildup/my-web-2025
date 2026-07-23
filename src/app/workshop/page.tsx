@@ -364,7 +364,7 @@ export default async function WorkshopPage({
 	const showGroupedView = !keyword && !tag;
 
 	return (
-		<div className="min-h-screen">
+		<div className="min-h-dvh">
 			<header className="w-full h-14  ">
 				<div className="h-full max-w-7xl mx-auto px-4 flex items-center justify-between gap-6">
 					<Link
@@ -492,7 +492,7 @@ export default async function WorkshopPage({
 								<Link
 									key={tagInfo.tag}
 									href={`?mode=${mode}&tag=${encodeURIComponent(tagInfo.tag)}`}
-									className="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium     rounded    transition-all snap-start"
+									className="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium     rounded    transition-colors snap-start"
 								>
 									<span>#{tagInfo.tag} </span>
 									<span className="text-xs ">{tagInfo.count}</span>

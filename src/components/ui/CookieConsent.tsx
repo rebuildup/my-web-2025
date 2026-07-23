@@ -226,6 +226,7 @@ export function CookieSettings() {
 							type="checkbox"
 							checked={analyticsEnabled}
 							onChange={(e) => setAnalyticsEnabled(e.target.checked)}
+							aria-label="分析クッキー"
 						/>
 					</div>
 					<p style={{ fontSize: "0.875rem", color: "#555", margin: 0 }}>

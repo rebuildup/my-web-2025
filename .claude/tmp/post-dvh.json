@@ -1,0 +1,504 @@
+{
+  "schemaVersion": 3,
+  "mode": "full",
+  "reactDetected": true,
+  "version": "0.9.0",
+  "ok": true,
+  "directory": "D:\\0_inbox\\my-web-2025",
+  "diff": null,
+  "projects": [
+    {
+      "directory": "D:\\0_inbox\\my-web-2025",
+      "packageRoot": "D:\\0_inbox\\my-web-2025",
+      "framework": "nextjs",
+      "project": {
+        "rootDirectory": "D:\\0_inbox\\my-web-2025",
+        "projectName": "my-web-2025",
+        "reactVersion": "^19.2.1",
+        "reactMajorVersion": 19,
+        "tailwindVersion": "^4.1.16",
+        "zodVersion": "^4.1.12",
+        "zodMajorVersion": 4,
+        "mobxVersion": null,
+        "mobxMajorVersion": null,
+        "hasMobxReact": false,
+        "mobxReactVersion": null,
+        "hasMobxReactLite": false,
+        "mobxReactLiteVersion": null,
+        "hasMobxStateTree": false,
+        "hasMobxReactObserver": false,
+        "zustandVersion": null,
+        "zustandMajorVersion": null,
+        "framework": "nextjs",
+        "hasTypeScript": true,
+        "hasReactCompiler": false,
+        "hasReactCompilerLintPlugin": false,
+        "hasTanStackQuery": false,
+        "hasI18nLibrary": false,
+        "tanstackQueryVersion": null,
+        "styledComponentsVersion": null,
+        "valtioVersion": null,
+        "valtioMajorVersion": null,
+        "hasRemotion": false,
+        "remotionVersion": null,
+        "remotionMajorVersion": null,
+        "hasThree": true,
+        "threeVersion": "^0.185.1",
+        "threeRelease": 185,
+        "hasReactThreeFiber": true,
+        "reactThreeFiberVersion": "^9.4.2",
+        "reactThreeFiberMajorVersion": 9,
+        "hasSsrDependency": false,
+        "preactVersion": null,
+        "preactMajorVersion": null,
+        "hasReactNativeWorkspace": false,
+        "nextjsVersion": "canary",
+        "nextjsMajorVersion": null,
+        "reactRouterVersion": null,
+        "hasReactRouterFramework": false,
+        "expoVersion": null,
+        "shopifyFlashListVersion": null,
+        "shopifyFlashListMajorVersion": null,
+        "hasReanimated": false,
+        "reanimatedVersion": null,
+        "isPreES2023Target": true,
+        "isStaticExport": false,
+        "sourceFileCount": 526
+      },
+      "diagnostics": [
+        {
+          "filePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/app/api/metadata/route.ts",
+          "plugin": "react-doctor",
+          "rule": "untrusted-redirect-following",
+          "severity": "warning",
+          "title": "Server fetch follows redirects for caller-shaped URL",
+          "message": "Server-side fetch code appears to follow redirects for a URL shaped like caller-controlled input.",
+          "help": "Use `redirect: \"manual\"` or equivalent and re-validate every redirect target before following it to avoid SSRF redirect bypasses.",
+          "line": 115,
+          "column": 4,
+          "category": "Security",
+          "id": ".claude/worktrees/agent-ab02463b7bbc8f733/src/app/api/metadata/route.ts::115:4::react-doctor/untrusted-redirect-following::877a73aeea58a5957ebefb826ca4380ab69a33e2f4599c9806a9d3d0db4f1546",
+          "normalizedFilePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/app/api/metadata/route.ts",
+          "tags": [
+            "security-scan"
+          ]
+        },
+        {
+          "filePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/markdown/path-utils.ts",
+          "plugin": "react-doctor",
+          "rule": "path-traversal-risk",
+          "severity": "warning",
+          "title": "Filesystem path uses caller input",
+          "message": "Filesystem access appears to use request, query, params, or body data as part of the path.",
+          "help": "Resolve paths against a fixed base directory, reject traversal after normalization, and map user-visible identifiers to server-owned paths.",
+          "line": 277,
+          "column": 10,
+          "category": "Security",
+          "id": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/markdown/path-utils.ts::277:10::react-doctor/path-traversal-risk::0471c4a8c7da3a69d66300caadfd133160701a3506843b28faed9a4db9ecde67",
+          "normalizedFilePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/markdown/path-utils.ts",
+          "tags": [
+            "security-scan"
+          ]
+        },
+        {
+          "filePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/utils/security.ts",
+          "plugin": "react-doctor",
+          "rule": "insecure-crypto-risk",
+          "severity": "warning",
+          "title": "Weak cryptography in security context",
+          "message": "Code uses weak hashes, deprecated ciphers, timing-unsafe comparisons, or Math.random in a security-shaped context.",
+          "help": "Use modern primitives, `crypto.randomBytes` / Web Crypto randomness, and timing-safe comparisons for signatures, digests, tokens, and auth material.",
+          "line": 332,
+          "column": 8,
+          "category": "Security",
+          "id": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/utils/security.ts::332:8::react-doctor/insecure-crypto-risk::347602e799fdab25b6bfcd96594172448267a0ce79f3cc67a9a91c2d725734fe",
+          "normalizedFilePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/utils/security.ts",
+          "tags": [
+            "security-scan"
+          ]
+        },
+        {
+          "filePath": "src/app/api/metadata/route.ts",
+          "plugin": "react-doctor",
+          "rule": "untrusted-redirect-following",
+          "severity": "warning",
+          "title": "Server fetch follows redirects for caller-shaped URL",
+          "message": "Server-side fetch code appears to follow redirects for a URL shaped like caller-controlled input.",
+          "help": "Use `redirect: \"manual\"` or equivalent and re-validate every redirect target before following it to avoid SSRF redirect bypasses.",
+          "line": 115,
+          "column": 4,
+          "category": "Security",
+          "id": "src/app/api/metadata/route.ts::115:4::react-doctor/untrusted-redirect-following::877a73aeea58a5957ebefb826ca4380ab69a33e2f4599c9806a9d3d0db4f1546",
+          "normalizedFilePath": "src/app/api/metadata/route.ts",
+          "tags": [
+            "security-scan"
+          ]
+        },
+        {
+          "filePath": "src/app/tools/fillgen/components/FillGenTool.tsx",
+          "plugin": "react-doctor",
+          "rule": "dangerous-html-sink",
+          "severity": "warning",
+          "title": "HTML injection sink with dynamic content",
+          "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+          "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+          "line": 1348,
+          "column": 17,
+          "category": "Security",
+          "id": "src/app/tools/fillgen/components/FillGenTool.tsx::1348:17::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+          "normalizedFilePath": "src/app/tools/fillgen/components/FillGenTool.tsx",
+          "tags": [
+            "security-scan"
+          ]
+        },
+        {
+          "filePath": "src/app/tools/svg2tsx/components/PreviewPanel.tsx",
+          "plugin": "react-doctor",
+          "rule": "dangerous-html-sink",
+          "severity": "warning",
+          "title": "HTML injection sink with dynamic content",
+          "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+          "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+          "line": 63,
+          "column": 9,
+          "category": "Security",
+          "id": "src/app/tools/svg2tsx/components/PreviewPanel.tsx::63:9::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+          "normalizedFilePath": "src/app/tools/svg2tsx/components/PreviewPanel.tsx",
+          "tags": [
+            "security-scan"
+          ]
+        },
+        {
+          "filePath": "src/app/workshop/blog/[slug]/page.tsx",
+          "plugin": "react-doctor",
+          "rule": "dangerous-html-sink",
+          "severity": "warning",
+          "title": "HTML injection sink with dynamic content",
+          "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+          "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+          "line": 229,
+          "column": 6,
+          "category": "Security",
+          "id": "src/app/workshop/blog/[slug]/page.tsx::229:6::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+          "normalizedFilePath": "src/app/workshop/blog/[slug]/page.tsx",
+          "tags": [
+            "security-scan"
+          ]
+        },
+        {
+          "filePath": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx",
+          "plugin": "react-doctor",
+          "rule": "dangerous-html-sink",
+          "severity": "warning",
+          "title": "HTML injection sink with dynamic content",
+          "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+          "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+          "line": 254,
+          "column": 8,
+          "category": "Security",
+          "id": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx::254:8::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+          "normalizedFilePath": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx",
+          "tags": [
+            "security-scan"
+          ]
+        },
+        {
+          "filePath": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx",
+          "plugin": "react-doctor",
+          "rule": "dangerous-html-sink",
+          "severity": "warning",
+          "title": "HTML injection sink with dynamic content",
+          "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+          "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+          "line": 317,
+          "column": 10,
+          "category": "Security",
+          "id": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx::317:10::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+          "normalizedFilePath": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx",
+          "tags": [
+            "security-scan"
+          ]
+        },
+        {
+          "filePath": "src/components/ui/MarkdownRenderer.tsx",
+          "plugin": "react-doctor",
+          "rule": "dangerous-html-sink",
+          "severity": "warning",
+          "title": "HTML injection sink with dynamic content",
+          "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+          "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+          "line": 852,
+          "column": 4,
+          "category": "Security",
+          "id": "src/components/ui/MarkdownRenderer.tsx::852:4::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+          "normalizedFilePath": "src/components/ui/MarkdownRenderer.tsx",
+          "tags": [
+            "security-scan"
+          ]
+        },
+        {
+          "filePath": "src/lib/markdown/path-utils.ts",
+          "plugin": "react-doctor",
+          "rule": "path-traversal-risk",
+          "severity": "warning",
+          "title": "Filesystem path uses caller input",
+          "message": "Filesystem access appears to use request, query, params, or body data as part of the path.",
+          "help": "Resolve paths against a fixed base directory, reject traversal after normalization, and map user-visible identifiers to server-owned paths.",
+          "line": 277,
+          "column": 10,
+          "category": "Security",
+          "id": "src/lib/markdown/path-utils.ts::277:10::react-doctor/path-traversal-risk::0471c4a8c7da3a69d66300caadfd133160701a3506843b28faed9a4db9ecde67",
+          "normalizedFilePath": "src/lib/markdown/path-utils.ts",
+          "tags": [
+            "security-scan"
+          ]
+        },
+        {
+          "filePath": "src/lib/utils/security.ts",
+          "plugin": "react-doctor",
+          "rule": "insecure-crypto-risk",
+          "severity": "warning",
+          "title": "Weak cryptography in security context",
+          "message": "Code uses weak hashes, deprecated ciphers, timing-unsafe comparisons, or Math.random in a security-shaped context.",
+          "help": "Use modern primitives, `crypto.randomBytes` / Web Crypto randomness, and timing-safe comparisons for signatures, digests, tokens, and auth material.",
+          "line": 332,
+          "column": 8,
+          "category": "Security",
+          "id": "src/lib/utils/security.ts::332:8::react-doctor/insecure-crypto-risk::347602e799fdab25b6bfcd96594172448267a0ce79f3cc67a9a91c2d725734fe",
+          "normalizedFilePath": "src/lib/utils/security.ts",
+          "tags": [
+            "security-scan"
+          ]
+        }
+      ],
+      "score": null,
+      "skippedChecks": [
+        "lint"
+      ],
+      "skippedCheckReasons": {
+        "lint": "Failed to run oxlint: Error: Resolving dependencies\nerror: \"git fetch\" for \"@C:/Users/rebui/AppData/Local/Temp/bunx-2528587117-react-doctor@latest/node_modules/oxlint/bin/oxlint\" failed\n\nerror: \"git fetch\" for \"@C:/Users/rebui/AppData/Local/Temp/bunx-2528587117-react-doctor@latest/node_modules/oxlint/bin/oxlint\" failed\nResolved, downloaded and extracted [1]\nerror: InstallFailed cloning repository for @C:/Users/rebui/AppData/Local/Temp/bunx-2528587117-react-doctor@latest/node_modules/oxlint/bin/oxlint\nerror: @C:/Users/rebui/AppData/Local/Temp/bunx-2528587117-react-doctor@latest/node_modules/oxlint/bin/oxlint failed to resolve\n    at causePrettyError (C:\\Users\\rebui\\AppData\\Local\\Temp\\bunx-2528587117-react-doctor@latest\\node_modules\\react-doctor\\dist\\cli.js:9611:32)"
+      },
+      "analyzedFiles": [],
+      "analyzedFileCount": 0,
+      "complete": false,
+      "scannedFileCount": 526,
+      "elapsedMilliseconds": 30787.2997
+    }
+  ],
+  "diagnostics": [
+    {
+      "filePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/app/api/metadata/route.ts",
+      "plugin": "react-doctor",
+      "rule": "untrusted-redirect-following",
+      "severity": "warning",
+      "title": "Server fetch follows redirects for caller-shaped URL",
+      "message": "Server-side fetch code appears to follow redirects for a URL shaped like caller-controlled input.",
+      "help": "Use `redirect: \"manual\"` or equivalent and re-validate every redirect target before following it to avoid SSRF redirect bypasses.",
+      "line": 115,
+      "column": 4,
+      "category": "Security",
+      "id": ".claude/worktrees/agent-ab02463b7bbc8f733/src/app/api/metadata/route.ts::115:4::react-doctor/untrusted-redirect-following::877a73aeea58a5957ebefb826ca4380ab69a33e2f4599c9806a9d3d0db4f1546",
+      "normalizedFilePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/app/api/metadata/route.ts",
+      "tags": [
+        "security-scan"
+      ]
+    },
+    {
+      "filePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/markdown/path-utils.ts",
+      "plugin": "react-doctor",
+      "rule": "path-traversal-risk",
+      "severity": "warning",
+      "title": "Filesystem path uses caller input",
+      "message": "Filesystem access appears to use request, query, params, or body data as part of the path.",
+      "help": "Resolve paths against a fixed base directory, reject traversal after normalization, and map user-visible identifiers to server-owned paths.",
+      "line": 277,
+      "column": 10,
+      "category": "Security",
+      "id": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/markdown/path-utils.ts::277:10::react-doctor/path-traversal-risk::0471c4a8c7da3a69d66300caadfd133160701a3506843b28faed9a4db9ecde67",
+      "normalizedFilePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/markdown/path-utils.ts",
+      "tags": [
+        "security-scan"
+      ]
+    },
+    {
+      "filePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/utils/security.ts",
+      "plugin": "react-doctor",
+      "rule": "insecure-crypto-risk",
+      "severity": "warning",
+      "title": "Weak cryptography in security context",
+      "message": "Code uses weak hashes, deprecated ciphers, timing-unsafe comparisons, or Math.random in a security-shaped context.",
+      "help": "Use modern primitives, `crypto.randomBytes` / Web Crypto randomness, and timing-safe comparisons for signatures, digests, tokens, and auth material.",
+      "line": 332,
+      "column": 8,
+      "category": "Security",
+      "id": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/utils/security.ts::332:8::react-doctor/insecure-crypto-risk::347602e799fdab25b6bfcd96594172448267a0ce79f3cc67a9a91c2d725734fe",
+      "normalizedFilePath": ".claude/worktrees/agent-ab02463b7bbc8f733/src/lib/utils/security.ts",
+      "tags": [
+        "security-scan"
+      ]
+    },
+    {
+      "filePath": "src/app/api/metadata/route.ts",
+      "plugin": "react-doctor",
+      "rule": "untrusted-redirect-following",
+      "severity": "warning",
+      "title": "Server fetch follows redirects for caller-shaped URL",
+      "message": "Server-side fetch code appears to follow redirects for a URL shaped like caller-controlled input.",
+      "help": "Use `redirect: \"manual\"` or equivalent and re-validate every redirect target before following it to avoid SSRF redirect bypasses.",
+      "line": 115,
+      "column": 4,
+      "category": "Security",
+      "id": "src/app/api/metadata/route.ts::115:4::react-doctor/untrusted-redirect-following::877a73aeea58a5957ebefb826ca4380ab69a33e2f4599c9806a9d3d0db4f1546",
+      "normalizedFilePath": "src/app/api/metadata/route.ts",
+      "tags": [
+        "security-scan"
+      ]
+    },
+    {
+      "filePath": "src/app/tools/fillgen/components/FillGenTool.tsx",
+      "plugin": "react-doctor",
+      "rule": "dangerous-html-sink",
+      "severity": "warning",
+      "title": "HTML injection sink with dynamic content",
+      "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+      "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+      "line": 1348,
+      "column": 17,
+      "category": "Security",
+      "id": "src/app/tools/fillgen/components/FillGenTool.tsx::1348:17::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+      "normalizedFilePath": "src/app/tools/fillgen/components/FillGenTool.tsx",
+      "tags": [
+        "security-scan"
+      ]
+    },
+    {
+      "filePath": "src/app/tools/svg2tsx/components/PreviewPanel.tsx",
+      "plugin": "react-doctor",
+      "rule": "dangerous-html-sink",
+      "severity": "warning",
+      "title": "HTML injection sink with dynamic content",
+      "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+      "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+      "line": 63,
+      "column": 9,
+      "category": "Security",
+      "id": "src/app/tools/svg2tsx/components/PreviewPanel.tsx::63:9::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+      "normalizedFilePath": "src/app/tools/svg2tsx/components/PreviewPanel.tsx",
+      "tags": [
+        "security-scan"
+      ]
+    },
+    {
+      "filePath": "src/app/workshop/blog/[slug]/page.tsx",
+      "plugin": "react-doctor",
+      "rule": "dangerous-html-sink",
+      "severity": "warning",
+      "title": "HTML injection sink with dynamic content",
+      "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+      "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+      "line": 229,
+      "column": 6,
+      "category": "Security",
+      "id": "src/app/workshop/blog/[slug]/page.tsx::229:6::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+      "normalizedFilePath": "src/app/workshop/blog/[slug]/page.tsx",
+      "tags": [
+        "security-scan"
+      ]
+    },
+    {
+      "filePath": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx",
+      "plugin": "react-doctor",
+      "rule": "dangerous-html-sink",
+      "severity": "warning",
+      "title": "HTML injection sink with dynamic content",
+      "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+      "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+      "line": 254,
+      "column": 8,
+      "category": "Security",
+      "id": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx::254:8::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+      "normalizedFilePath": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx",
+      "tags": [
+        "security-scan"
+      ]
+    },
+    {
+      "filePath": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx",
+      "plugin": "react-doctor",
+      "rule": "dangerous-html-sink",
+      "severity": "warning",
+      "title": "HTML injection sink with dynamic content",
+      "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+      "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+      "line": 317,
+      "column": 10,
+      "category": "Security",
+      "id": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx::317:10::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+      "normalizedFilePath": "src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx",
+      "tags": [
+        "security-scan"
+      ]
+    },
+    {
+      "filePath": "src/components/ui/MarkdownRenderer.tsx",
+      "plugin": "react-doctor",
+      "rule": "dangerous-html-sink",
+      "severity": "warning",
+      "title": "HTML injection sink with dynamic content",
+      "message": "HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.",
+      "help": "Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.",
+      "line": 852,
+      "column": 4,
+      "category": "Security",
+      "id": "src/components/ui/MarkdownRenderer.tsx::852:4::react-doctor/dangerous-html-sink::c0df1007dc36ba45257bba33e1b38730beba0f9cd302fadbda51c5ed9b54b4b5",
+      "normalizedFilePath": "src/components/ui/MarkdownRenderer.tsx",
+      "tags": [
+        "security-scan"
+      ]
+    },
+    {
+      "filePath": "src/lib/markdown/path-utils.ts",
+      "plugin": "react-doctor",
+      "rule": "path-traversal-risk",
+      "severity": "warning",
+      "title": "Filesystem path uses caller input",
+      "message": "Filesystem access appears to use request, query, params, or body data as part of the path.",
+      "help": "Resolve paths against a fixed base directory, reject traversal after normalization, and map user-visible identifiers to server-owned paths.",
+      "line": 277,
+      "column": 10,
+      "category": "Security",
+      "id": "src/lib/markdown/path-utils.ts::277:10::react-doctor/path-traversal-risk::0471c4a8c7da3a69d66300caadfd133160701a3506843b28faed9a4db9ecde67",
+      "normalizedFilePath": "src/lib/markdown/path-utils.ts",
+      "tags": [
+        "security-scan"
+      ]
+    },
+    {
+      "filePath": "src/lib/utils/security.ts",
+      "plugin": "react-doctor",
+      "rule": "insecure-crypto-risk",
+      "severity": "warning",
+      "title": "Weak cryptography in security context",
+      "message": "Code uses weak hashes, deprecated ciphers, timing-unsafe comparisons, or Math.random in a security-shaped context.",
+      "help": "Use modern primitives, `crypto.randomBytes` / Web Crypto randomness, and timing-safe comparisons for signatures, digests, tokens, and auth material.",
+      "line": 332,
+      "column": 8,
+      "category": "Security",
+      "id": "src/lib/utils/security.ts::332:8::react-doctor/insecure-crypto-risk::347602e799fdab25b6bfcd96594172448267a0ce79f3cc67a9a91c2d725734fe",
+      "normalizedFilePath": "src/lib/utils/security.ts",
+      "tags": [
+        "security-scan"
+      ]
+    }
+  ],
+  "summary": {
+    "errorCount": 0,
+    "warningCount": 12,
+    "affectedFileCount": 11,
+    "totalDiagnosticCount": 12,
+    "score": null,
+    "scoreLabel": null
+  },
+  "elapsedMilliseconds": 30814.0834,
+  "error": null
+}

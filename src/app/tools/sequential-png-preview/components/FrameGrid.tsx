@@ -61,6 +61,7 @@ export default function FrameGrid({
 								padding: "2px 4px",
 								fontSize: "12px",
 							}}
+							aria-label="表示サイズ"
 						>
 							<option value="small">小</option>
 							<option value="medium">中</option>

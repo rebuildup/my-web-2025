@@ -123,7 +123,7 @@ export default function PerformanceOptimizer({
 										</div>
 										<div className="w-full rounded-full h-2">
 											<div
-												className="h-full  transition-all duration-300"
+												className="h-full  transition-[width] duration-300"
 												style={{
 													width: `${Math.min(100, storageUsage.percentage)}%`,
 												}}
@@ -197,7 +197,7 @@ export default function PerformanceOptimizer({
 					</div>
 					<div className="w-full rounded-full h-2">
 						<div
-							className="h-full  transition-all duration-300"
+							className="h-full  transition-[width] duration-300"
 							style={{ width: `${processingProgress}%` }}
 						/>
 					</div>

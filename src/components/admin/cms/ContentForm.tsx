@@ -286,7 +286,7 @@ export function ContentForm({
 	}, [formData.id]);
 
 	useEffect(() => {
-		let cancelled = false;
+		const controller = new AbortController();
 		(async () => {
 			if (mode !== "edit" || !formData.id) return;
 			const hasDetailMetadata = Boolean(
@@ -302,12 +302,15 @@ export function ContentForm({
 			try {
 				const res = await fetch(
 					`/api/cms/contents?id=${encodeURIComponent(formData.id)}`,
-					{ cache: "no-store" },
+					{ cache: "no-store", signal: controller.signal },
 				);
 				if (!res.ok) return;
 				full = await res.json();
-			} catch {}
-			if (cancelled || !full) return;
+			} catch (err) {
+				if ((err as Error).name === "AbortError") return;
+				return;
+			}
+			if (controller.signal.aborted || !full) return;
 			setFormData((prev) => {
 				const updated: Partial<Content> = { ...prev };
 				if (!prev.assets && full.assets) updated.assets = full.assets;
@@ -326,7 +329,7 @@ export function ContentForm({
 			});
 		})();
 		return () => {
-			cancelled = true;
+			controller.abort();
 		};
 	}, [mode, formData.id]);
 
@@ -1014,6 +1017,7 @@ export function ContentForm({
 									links: (p.links || []).filter((_, j) => j !== i),
 								}));
 							}}
+							aria-label="リンクを削除"
 						>
 							<Trash2 size={16} />
 						</button>
@@ -1372,6 +1376,7 @@ export function ContentForm({
 								relations: (p.relations || []).filter((_, j) => j !== i),
 							}))
 						}
+						aria-label="リレーションを削除"
 					>
 						<Trash2 size={16} />
 					</button>

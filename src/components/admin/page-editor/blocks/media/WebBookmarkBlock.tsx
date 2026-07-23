@@ -52,7 +52,7 @@ export function WebBookmarkBlock({
 	}, [onAttributesChange]);
 
 	useEffect(() => {
-		let cancelled = false;
+		const controller = new AbortController();
 		const fetchOg = async () => {
 			if (!safeUrl) {
 				if (image) {
@@ -69,21 +69,23 @@ export function WebBookmarkBlock({
 			try {
 				const res = await fetch(
 					`/api/metadata?url=${encodeURIComponent(safeUrl)}`,
+					{ signal: controller.signal },
 				);
 				data = (await res.json()) as {
 					image?: string;
 					title?: string;
 					description?: string;
 				};
-			} catch {
-				if (!cancelled && image) {
+			} catch (err) {
+				if ((err as Error).name === "AbortError") return;
+				if (!controller.signal.aborted && image) {
 					onAttributesChangeRef.current({ image: "" });
 				}
 				return;
 			}
 
 			// Process data outside try/catch block
-			if (!cancelled && data) {
+			if (!controller.signal.aborted && data) {
 				const next: Record<string, string> = {};
 
 				// Compare and set image
@@ -114,7 +116,7 @@ export function WebBookmarkBlock({
 		};
 		void fetchOg();
 		return () => {
-			cancelled = true;
+			controller.abort();
 		};
 	}, [safeUrl, image, title, description]);
 

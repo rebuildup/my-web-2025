@@ -18,8 +18,8 @@ function BackButton() {
 
 export default function NotFound() {
 	return (
-		<div className="min-h-screen ">
-			<main className="min-h-screen flex items-center justify-center py-20">
+		<div className="min-h-dvh ">
+			<main className="min-h-dvh flex items-center justify-center py-20">
 				<div className="container-system text-center">
 					<div className="space-y-4">
 						<header>

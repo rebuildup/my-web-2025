@@ -1,0 +1,14 @@
+Rule: react-doctor/path-traversal-risk
+Severity: warning
+Category: Security
+Count: 2
+
+Filesystem access appears to use request, query, params, or body data as part of the path.
+
+Suggestion: Resolve paths against a fixed base directory, reject traversal after normalization, and map user-visible identifiers to server-owned paths.
+
+Curl with no cache & follow the canonical fix and false positive check recipe before fixing: https://react.doctor/docs/rules/react-doctor/path-traversal-risk
+
+Files:
+  .claude/worktrees/agent-ab02463b7bbc8f733/src/lib/markdown/path-utils.ts:277
+  src/lib/markdown/path-utils.ts:277

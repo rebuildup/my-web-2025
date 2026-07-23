@@ -348,6 +348,7 @@ export default function CodeTypeP5App() {
 										fontSize: "13px",
 										boxSizing: "border-box",
 									}}
+									aria-label="Language"
 								>
 									<option value="rust">Rust</option>
 									<option value="typescript">TypeScript</option>
@@ -390,6 +391,7 @@ export default function CodeTypeP5App() {
 											fontSize: "13px",
 											boxSizing: "border-box",
 										}}
+										aria-label="Width"
 									/>
 								</div>
 								<div>
@@ -414,6 +416,7 @@ export default function CodeTypeP5App() {
 											fontSize: "13px",
 											boxSizing: "border-box",
 										}}
+										aria-label="Height"
 									/>
 								</div>
 							</div>
@@ -448,6 +451,7 @@ export default function CodeTypeP5App() {
 											fontSize: "13px",
 											boxSizing: "border-box",
 										}}
+										aria-label="Font Size"
 									/>
 								</div>
 								<div>
@@ -475,6 +479,7 @@ export default function CodeTypeP5App() {
 											fontSize: "13px",
 											boxSizing: "border-box",
 										}}
+										aria-label="Line Height"
 									/>
 								</div>
 								<div>
@@ -499,6 +504,7 @@ export default function CodeTypeP5App() {
 											fontSize: "13px",
 											boxSizing: "border-box",
 										}}
+										aria-label="FPS"
 									/>
 								</div>
 								<div>
@@ -523,6 +529,7 @@ export default function CodeTypeP5App() {
 											fontSize: "13px",
 											boxSizing: "border-box",
 										}}
+										aria-label="Duration (s)"
 									/>
 								</div>
 							</div>
@@ -651,6 +658,7 @@ export default function CodeTypeP5App() {
 												padding: 0,
 												cursor: "pointer",
 											}}
+											aria-label="背景色"
 										/>
 									</div>
 								)}
@@ -680,6 +688,7 @@ export default function CodeTypeP5App() {
 										boxSizing: "border-box",
 										resize: "vertical",
 									}}
+									aria-label="Code"
 								/>
 							</div>
 

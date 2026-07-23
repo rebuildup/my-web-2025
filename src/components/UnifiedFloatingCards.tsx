@@ -258,20 +258,20 @@ export default function UnifiedFloatingCards() {
 
 	// Fetch all data in parallel
 	useEffect(() => {
-		const fetchAllData = async () => {
+		const controller = new AbortController();
+		const fetchJson = (url: string) =>
+			fetch(url, { signal: controller.signal }).then((res) =>
+				res.ok ? res.json() : null,
+			);
+		(async () => {
 			const [githubResult, youtubeResult, portfolioResult] =
 				await Promise.allSettled([
-					fetch("/api/github/activity").then((res) =>
-						res.ok ? res.json() : null,
-					),
-					fetch("/api/youtube/activity").then((res) =>
-						res.ok ? res.json() : null,
-					),
-					fetch("/api/content/portfolio?limit=50").then((res) =>
-						res.ok ? res.json() : null,
-					),
+					fetchJson("/api/github/activity"),
+					fetchJson("/api/youtube/activity"),
+					fetchJson("/api/content/portfolio?limit=50"),
 				]);
 
+			if (controller.signal.aborted) return;
 			if (githubResult.status === "fulfilled" && githubResult.value) {
 				setGithubData(githubResult.value);
 			}
@@ -279,14 +279,19 @@ export default function UnifiedFloatingCards() {
 				setYoutubeData(youtubeResult.value);
 			}
 			if (portfolioResult.status === "fulfilled" && portfolioResult.value) {
-				const json = portfolioResult.value;
+				const json = portfolioResult.value as {
+					success: boolean;
+					data: unknown;
+				};
 				if (json.success && json.data) {
-					setPortfolioData(json.data);
+					setPortfolioData(json.data as never);
 				}
 			}
-		};
+		})().catch((err: unknown) => {
+			if ((err as Error).name === "AbortError") return;
+		});
 
-		fetchAllData();
+		return () => controller.abort();
 	}, []);
 
 	// Unified scroll handler

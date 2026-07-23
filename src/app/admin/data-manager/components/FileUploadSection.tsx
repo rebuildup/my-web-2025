@@ -357,6 +357,7 @@ export function FileUploadSection({
 							min="20"
 							max="100"
 							value={processingOptions.quality}
+							aria-label="Quality"
 							onChange={(e) =>
 								setProcessingOptions((prev) => ({
 									...prev,
@@ -478,6 +479,7 @@ export function FileUploadSection({
 						value={thumbnail || ""}
 						onChange={(e) => onThumbnailChange(e.target.value || undefined)}
 						className={`${inputStyle} `}
+						aria-label="Thumbnail"
 					>
 						<option value="" className=" ">
 							Select thumbnail...

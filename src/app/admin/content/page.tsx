@@ -216,6 +216,7 @@ export default function AdminContentPage() {
 					style={s.select}
 					value={statusFilter}
 					onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+					aria-label="ステータスでフィルター"
 				>
 					{STATUS_OPTIONS.map((opt) => (
 						<option key={opt} value={opt}>{STATUS_LABEL[opt]}</option>
@@ -313,6 +314,7 @@ export default function AdminContentPage() {
 									style={s.select}
 									value={createStatus}
 									onChange={(e) => setCreateStatus(e.target.value as Content["status"])}
+									aria-label="ステータス"
 								>
 									<option value="draft">draft</option>
 									<option value="published">published</option>
@@ -322,6 +324,7 @@ export default function AdminContentPage() {
 									style={s.select}
 									value={createVisibility}
 									onChange={(e) => setCreateVisibility(e.target.value as Content["visibility"])}
+									aria-label="公開設定"
 								>
 									<option value="draft">draft</option>
 									<option value="public">public</option>
@@ -356,6 +359,7 @@ export default function AdminContentPage() {
 									style={s.select}
 									value={editTarget.status ?? "draft"}
 									onChange={(e) => setEditTarget({ ...editTarget, status: e.target.value as Content["status"] })}
+									aria-label="ステータス"
 								>
 									<option value="draft">draft</option>
 									<option value="published">published</option>
@@ -365,6 +369,7 @@ export default function AdminContentPage() {
 									style={s.select}
 									value={editTarget.visibility ?? "draft"}
 									onChange={(e) => setEditTarget({ ...editTarget, visibility: e.target.value as Content["visibility"] })}
+									aria-label="公開設定"
 								>
 									<option value="draft">draft</option>
 									<option value="public">public</option>

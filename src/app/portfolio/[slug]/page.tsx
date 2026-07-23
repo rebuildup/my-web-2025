@@ -541,7 +541,7 @@ export default async function PortfolioDetailPage({
 					{JSON.stringify(structuredData)}
 				</script>
 
-				<div className="min-h-screen">
+				<div className="min-h-dvh">
 					<main id="main-content" className="flex items-center py-6 sm:py-10">
 						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-8 sm:space-y-10">
@@ -567,7 +567,7 @@ export default async function PortfolioDetailPage({
 		console.error(`Error rendering portfolio detail page for ${slug}:`, error);
 
 		return (
-			<div className="min-h-screen flex items-center justify-center">
+			<div className="min-h-dvh flex items-center justify-center">
 				<div className="text-center">
 					<h1 className="text-2xl mb-4">Portfolio Error</h1>
 					<p className="">

@@ -127,6 +127,7 @@ export function DataManagerForm({
 		}
 
 		// Load markdown content if markdownPath exists
+		const controller = new AbortController();
 		const loadMarkdownContent = async () => {
 			if (enhanced && (item as EnhancedContentItem).markdownPath) {
 				setIsLoadingMarkdown(true);
@@ -136,11 +137,14 @@ export function DataManagerForm({
 
 			const existsResponse = await fetch(
 				`/api/markdown?action=fileExists&filePath=${encodeURIComponent(markdownPath)}`,
+				{ signal: controller.signal },
 			).catch((error) => {
+				if ((error as Error).name === "AbortError") return null;
 				console.warn("ファイル存在確認でエラーが発生しました:", error);
 				return null;
 			});
 
+			if (controller.signal.aborted) return;
 			if (existsResponse && existsResponse.ok) {
 				const existsData = await existsResponse.json().catch(() => null);
 				console.log("ファイル存在確認結果:", existsData);
@@ -158,11 +162,14 @@ export function DataManagerForm({
 
 			const contentResponse = await fetch(
 				`/api/markdown?action=getMarkdownContent&filePath=${encodeURIComponent(markdownPath)}`,
+				{ signal: controller.signal },
 			).catch((error) => {
+				if ((error as Error).name === "AbortError") return null;
 				console.error("Markdownコンテンツ取得でエラー:", error);
 				return null;
 			});
 
+			if (controller.signal.aborted) return;
 			if (contentResponse && contentResponse.ok) {
 				const contentData = await contentResponse.json().catch(() => null);
 				if (contentData && contentData.content !== undefined) {
@@ -184,6 +191,7 @@ export function DataManagerForm({
 				);
 			}
 
+			if (controller.signal.aborted) return;
 			setMarkdownLoadError("Markdownファイルの読み込みに失敗しました");
 			console.log(
 				"Markdownファイル読み込み失敗、item.contentを使用:",
@@ -204,6 +212,7 @@ export function DataManagerForm({
 		};
 
 		loadMarkdownContent();
+		return () => controller.abort();
 	}, [item, enhanced]);
 
 	const handleInputChange = (
@@ -944,8 +953,11 @@ export function DataManagerForm({
 					</div>
 
 					<div>
-						<label className={labelStyle}>Priority (0-100)</label>
+						<label className={labelStyle} htmlFor="priority-input">
+							Priority (0-100)
+						</label>
 						<input
+							id="priority-input"
 							type="number"
 							min="0"
 							max="100"

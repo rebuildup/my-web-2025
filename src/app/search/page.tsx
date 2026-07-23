@@ -54,7 +54,7 @@ export default function Search() {
 
 function SearchPageFallback() {
 	return (
-		<div className="min-h-screen scrollbar-auto-stable">
+		<div className="min-h-dvh scrollbar-auto-stable">
 			<main className="flex items-center py-10">
 				<div className="container-system">
 					<div className="space-y-10">

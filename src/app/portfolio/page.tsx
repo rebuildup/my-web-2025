@@ -77,7 +77,7 @@ function CategoryCard({
 						{description}
 					</p>
 				</div>
-				<ArrowRight className="w-5 h-5 shrink-0  group-hover:translate-x-1 transition-all" />
+				<ArrowRight className="w-5 h-5 shrink-0  group-hover:translate-x-1 transition-transform" />
 			</div>
 		</div>
 	);
@@ -363,12 +363,12 @@ export default async function PortfolioPage() {
 						{JSON.stringify(structuredData)}
 					</script>
 				)}
-				<div className="min-h-screen relative">
+				<div className="min-h-dvh relative">
 					<AboutBackgroundCSS />
 
 					<main
 						id="main-content"
-						className="relative z-10 min-h-screen py-10"
+						className="relative z-10 min-h-dvh py-10"
 						tabIndex={-1}
 					>
 						<div className="container-system">
@@ -527,12 +527,12 @@ export default async function PortfolioPage() {
 		console.error("Error in PortfolioPage:", error);
 
 		return (
-			<div className="min-h-screen relative">
+			<div className="min-h-dvh relative">
 				<AboutBackgroundCSS />
 
 				<main
 					id="main-content"
-					className="relative z-10 flex min-h-screen items-center justify-center"
+					className="relative z-10 flex min-h-dvh items-center justify-center"
 					tabIndex={-1}
 				>
 					<div className="container mx-auto px-4">

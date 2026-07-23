@@ -162,6 +162,7 @@ export default function ExportPanel({
 								}))
 							}
 							style={{ width: "100%" }}
+							aria-label="品質"
 						/>
 					</div>
 				)}
@@ -201,6 +202,7 @@ export default function ExportPanel({
 									fontSize: "13px",
 									boxSizing: "border-box",
 								}}
+								aria-label="幅 (px)"
 							/>
 						</div>
 						<div>
@@ -224,6 +226,7 @@ export default function ExportPanel({
 										height: parseInt(e.target.value, 10) || 600,
 									}))
 								}
+								aria-label="高さ (px)"
 								style={{
 									width: "100%",
 									padding: "4px 8px",

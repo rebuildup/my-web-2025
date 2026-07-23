@@ -54,7 +54,7 @@ export default function PrivacyPolicy() {
 	const Global_title = "noto-sans-jp-regular leading-snug";
 
 	return (
-		<div className="min-h-screen ">
+		<div className="min-h-dvh ">
 			<main className="flex items-center py-10">
 				<div className="container-system">
 					<div className="space-y-10">

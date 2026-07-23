@@ -341,22 +341,16 @@ const MarkdownViewer = ({
 	content: string;
 	theme: string;
 }) => {
-	const lines = useMemo(
-		() => (content ? content.split("\n") : []),
-		[content],
-	);
-	const lineKeys = useMemo(
-		() => {
-			const seen = new Map<string, number>();
-			return lines.map((line) => {
-				const base = line.length === 0 ? "<empty>" : line;
-				const n = seen.get(base) ?? 0;
-				seen.set(base, n + 1);
-				return `${base}#${n}`;
-			});
-		},
-		[lines],
-	);
+	const lines = useMemo(() => (content ? content.split("\n") : []), [content]);
+	const lineKeys = useMemo(() => {
+		const seen = new Map<string, number>();
+		return lines.map((line) => {
+			const base = line.length === 0 ? "<empty>" : line;
+			const n = seen.get(base) ?? 0;
+			seen.set(base, n + 1);
+			return `${base}#${n}`;
+		});
+	}, [lines]);
 	if (!content) return <div className="  italic">Empty note...</div>;
 
 	return (
@@ -773,7 +767,11 @@ const Widget = ({
 						</span>
 					</div>
 					<div className="flex items-center gap-1 no-drag">
-						<button onClick={() => removeWidget(widget.id)} className="p-1">
+						<button
+							onClick={() => removeWidget(widget.id)}
+							className="p-1"
+							aria-label="ウィジェットを削除"
+						>
 							<X size={12} />
 						</button>
 					</div>
@@ -872,6 +870,7 @@ const Widget = ({
 								<button
 									onClick={() => updateWidget(widget.id, { content: "" })}
 									className="absolute top-2 right-2 p-2"
+									aria-label="編集"
 								>
 									<Edit3 size={14} />
 								</button>
@@ -1544,7 +1543,7 @@ export default function PomodoroTimer() {
  `}
 			>
 				<div
-					className="relative h-[60vh] w-1.5 rounded-full bg-opacity-20  transition-all duration-300 hover:w-2"
+					className="relative h-[60vh] w-1.5 rounded-full bg-opacity-20  transition-[width] duration-300 hover:w-2"
 					style={{
 						backgroundColor:
 							theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
@@ -1609,7 +1608,7 @@ export default function PomodoroTimer() {
 											/>
 
 											<div
-												className="absolute bottom-0 left-0 w-full transition-all duration-100 ease-linear"
+												className="absolute bottom-0 left-0 w-full transition-[height] duration-100 ease-linear"
 												style={{
 													height: `${stepFillPercent}%`,
 													background: `linear-gradient(180deg, ${barColor}33, ${barColor})`,
@@ -1653,12 +1652,12 @@ export default function PomodoroTimer() {
 				<div className="delete-zone fixed bottom-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
 					<div
 						id="delete-zone-indicator"
-						className="w-64 h-24 rounded-2xl   flex items-center justify-center transition-all duration-200  "
+						className="w-64 h-24 rounded-2xl   flex items-center justify-center transition-transform duration-200  "
 					>
 						<Trash2
 							id="delete-zone-icon"
 							size={32}
-							className="  transition-all duration-200 scale-100"
+							className="  transition-transform duration-200 scale-100"
 						/>
 					</div>
 				</div>
@@ -1681,6 +1680,7 @@ export default function PomodoroTimer() {
 						<button
 							onClick={() => setShowStopDialog(false)}
 							className={`absolute top-4 right-4 p-2 ${theme === "dark" ? " " : " "}`}
+							aria-label="ダイアログを閉じる"
 						>
 							<X size={20} />
 						</button>
@@ -1823,6 +1823,7 @@ export default function PomodoroTimer() {
 								<button
 									onClick={() => setShowSettingsPanel(false)}
 									className={`p-2 ${theme === "dark" ? " " : " "}`}
+									aria-label="設定パネルを閉じる"
 								>
 									<X size={20} />
 								</button>
@@ -1879,6 +1880,7 @@ export default function PomodoroTimer() {
 													}}
 													className={`flex-1 px-2 py-1.5 border text-sm ${theme === "dark" ? " " : " "}`}
 													placeholder="ラベル"
+													aria-label="ステップラベル"
 												/>
 												<input
 													type="number"
@@ -1893,6 +1895,7 @@ export default function PomodoroTimer() {
 														setCustomSchedule(newSchedule);
 													}}
 													className={`w-16 px-2 py-1.5 border text-sm ${theme === "dark" ? " " : " "}`}
+													aria-label="分数"
 												/>
 												<span
 													className={`text-xs ${theme === "dark" ? "" : ""}`}
@@ -1909,6 +1912,7 @@ export default function PomodoroTimer() {
 														};
 														setCustomSchedule(newSchedule);
 													}}
+													aria-label="ステップ種別"
 													className={`px-2 py-1.5 border text-sm appearance-none cursor-pointer ${theme === "dark" ? " " : " "}`}
 													style={{
 														backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='${theme === "dark" ? "white" : "black"}' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
@@ -1928,6 +1932,7 @@ export default function PomodoroTimer() {
 														setCustomSchedule(newSchedule);
 													}}
 													className="p-1 shrink-0"
+													aria-label="ステップを削除"
 												>
 													<X size={14} />
 												</button>

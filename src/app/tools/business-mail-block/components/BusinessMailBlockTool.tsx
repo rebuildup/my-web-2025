@@ -883,6 +883,7 @@ export default function BusinessMailBlockTool() {
 									value={selectedCategory}
 									onChange={(e) => setSelectedCategory(e.target.value)}
 									className="px-4 py-2"
+									aria-label="カテゴリで絞り込み"
 								>
 									<option value="all">全カテゴリ</option>
 									<option value="greeting">挨拶</option>
@@ -1103,6 +1104,11 @@ export default function BusinessMailBlockTool() {
 																	type="button"
 																	onClick={() => toggleFavorite(block.id)}
 																	className="p-1"
+																	aria-label={
+																		block.isFavorite
+																			? "お気に入りから削除"
+																			: "お気に入りに追加"
+																	}
 																>
 																	<Heart
 																		className={`w-4 h-4 ${
@@ -1119,6 +1125,7 @@ export default function BusinessMailBlockTool() {
 																			);
 																		}}
 																		className="p-1"
+																		aria-label="カスタムブロックを削除"
 																	>
 																		<Trash2 className="w-4 h-4" />
 																	</button>
@@ -1200,6 +1207,7 @@ export default function BusinessMailBlockTool() {
 																type="button"
 																onClick={() => removeComposedBlock(block.id)}
 																className="ml-2 p-1"
+																aria-label={`「${block.title}」を構成から削除`}
 															>
 																<Trash2 className="w-4 h-4" />
 															</button>

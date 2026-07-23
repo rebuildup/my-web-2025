@@ -1,0 +1,14 @@
+Rule: react-doctor/insecure-crypto-risk
+Severity: warning
+Category: Security
+Count: 2
+
+Code uses weak hashes, deprecated ciphers, timing-unsafe comparisons, or Math.random in a security-shaped context.
+
+Suggestion: Use modern primitives, `crypto.randomBytes` / Web Crypto randomness, and timing-safe comparisons for signatures, digests, tokens, and auth material.
+
+Curl with no cache & follow the canonical fix and false positive check recipe before fixing: https://react.doctor/docs/rules/react-doctor/insecure-crypto-risk
+
+Files:
+  .claude/worktrees/agent-ab02463b7bbc8f733/src/lib/utils/security.ts:332
+  src/lib/utils/security.ts:332

@@ -20,23 +20,7 @@ export function RawDOMContainer({
 	children,
 }: RawDOMContainerProps) {
 	return (
-		<div
-			style={{
-				position: "fixed",
-				top: 0,
-				left: 0,
-				width: "100vw",
-				height: "100vh",
-				zIndex: 9999,
-				backgroundColor: "#ffffff",
-				color: "#000000",
-				colorScheme: "light",
-				fontFamily: "sans-serif",
-				overflowY: "auto",
-				padding: "2rem",
-				boxSizing: "border-box",
-			}}
-		>
+		<div className="fixed inset-0 w-screen h-dvh z-[9999] bg-white text-black scheme-light font-sans overflow-y-auto p-8 box-border">
 			<div
 				style={{ maxWidth: "900px", margin: "0 auto", paddingBottom: "4rem" }}
 			>

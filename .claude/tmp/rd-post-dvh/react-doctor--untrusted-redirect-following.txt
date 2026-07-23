@@ -1,0 +1,14 @@
+Rule: react-doctor/untrusted-redirect-following
+Severity: warning
+Category: Security
+Count: 2
+
+Server-side fetch code appears to follow redirects for a URL shaped like caller-controlled input.
+
+Suggestion: Use `redirect: "manual"` or equivalent and re-validate every redirect target before following it to avoid SSRF redirect bypasses.
+
+Curl with no cache & follow the canonical fix and false positive check recipe before fixing: https://react.doctor/docs/rules/react-doctor/untrusted-redirect-following
+
+Files:
+  .claude/worktrees/agent-ab02463b7bbc8f733/src/app/api/metadata/route.ts:115
+  src/app/api/metadata/route.ts:115

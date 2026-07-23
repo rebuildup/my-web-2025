@@ -272,7 +272,7 @@ export default function RealProfilePage() {
 				{JSON.stringify(structuredData)}
 			</script>
 
-			<div className="min-h-screen relative">
+			<div className="min-h-dvh relative">
 				{/* Decorative ScrollVelocity */}
 				{mounted && (
 					<div className="fixed top-20 right-10 z-5 pointer-events-none hidden lg:block">
@@ -283,7 +283,7 @@ export default function RealProfilePage() {
 					</div>
 				)}
 
-				<main className="relative z-10 min-h-screen pt-8 pb-16 px-4">
+				<main className="relative z-10 min-h-dvh pt-8 pb-16 px-4">
 					<div className="container mx-auto max-w-5xl">
 						{/* Breadcrumbs */}
 						<Breadcrumbs

@@ -259,7 +259,7 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 	const title = content?.title || detailFromMarkdown.title || slug;
 
 	return (
-		<div className="min-h-screen">
+		<div className="min-h-dvh">
 			<main className="max-w-7xl mx-auto px-4 py-10">
 				<div className="space-y-8">
 					<Breadcrumbs

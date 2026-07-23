@@ -271,12 +271,14 @@ export default function YouTubePlayer({
 							onToggleMinimize?.(newState);
 						}}
 						className="p-1.5"
+						aria-label={isMinimized ? "最大化" : "最小化"}
 					>
 						{isMinimized ? <Maximize2 size={14} /> : <Minimize2 size={14} />}
 					</button>
 					<button
 						onClick={() => setShowSettings(!showSettings)}
 						className={`p-1.5 ${showSettings ? "" : ""}`}
+						aria-label="設定"
 					>
 						<Settings size={14} />
 					</button>
@@ -309,6 +311,7 @@ export default function YouTubePlayer({
 								<button
 									onClick={handlePrevious}
 									className={`p-2 ${theme === "dark" ? " " : " "}`}
+									aria-label="前の動画"
 								>
 									<SkipBack size={16} fill="currentColor" />
 								</button>
@@ -316,6 +319,7 @@ export default function YouTubePlayer({
 							<button
 								onClick={togglePlay}
 								className={`p-2 ${theme === "dark" ? " " : " "}`}
+								aria-label={playbackState === "playing" ? "一時停止" : "再生"}
 							>
 								{playbackState === "playing" ? (
 									<Pause size={16} fill="currentColor" />
@@ -327,6 +331,7 @@ export default function YouTubePlayer({
 								<button
 									onClick={handleNext}
 									className={`p-2 ${theme === "dark" ? " " : " "}`}
+									aria-label="次の動画"
 								>
 									<SkipForward size={16} fill="currentColor" />
 								</button>
@@ -334,7 +339,13 @@ export default function YouTubePlayer({
 						</div>
 
 						<div className="flex items-center gap-2 flex-1 mx-4">
-							<button onClick={toggleMute} className="dark:">
+							<button
+								onClick={toggleMute}
+								className="dark:"
+								aria-label={
+									isMuted || volume === 0 ? "ミュート解除" : "ミュート"
+								}
+							>
 								{isMuted || volume === 0 ? (
 									<VolumeX size={16} />
 								) : (
@@ -372,6 +383,7 @@ export default function YouTubePlayer({
 								<button
 									onClick={handleSaveUrl}
 									className={`p-1.5 ${theme === "dark" ? " " : " "}`}
+									aria-label="URLを保存"
 								>
 									<Save size={14} />
 								</button>

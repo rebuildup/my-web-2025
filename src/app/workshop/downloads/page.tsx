@@ -83,7 +83,7 @@ export default async function DownloadsPage() {
 	const Card_meta = "noto-sans-jp-light text-xs ";
 
 	return (
-		<div className="min-h-screen ">
+		<div className="min-h-dvh ">
 			<main className="py-10">
 				<div className="container-system">
 					<div className="space-y-10">

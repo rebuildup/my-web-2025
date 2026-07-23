@@ -46,20 +46,21 @@ export default function VideoDetailPanel({
 			setFull(null);
 			return;
 		}
-		let aborted = false;
+		const controller = new AbortController();
 		fetch(`/api/cms/contents?id=${encodeURIComponent(item.id)}`, {
 			cache: "no-store",
+			signal: controller.signal,
 		})
 			.then((r) => (r.ok ? r.json() : null))
 			.then((data) => {
-				if (aborted) return;
+				if (controller.signal.aborted) return;
 				setFull(data as FullContent);
 			})
-			.finally(() => {
-				// no-op
+			.catch(() => {
+				/* aborted or failed — swallow */
 			});
 		return () => {
-			aborted = true;
+			controller.abort();
 		};
 	}, [isOpen, item?.id]);
 

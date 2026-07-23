@@ -15,6 +15,7 @@ interface SelectProps {
 	className?: string;
 	size?: "sm" | "md" | "lg";
 	variant?: "default" | "admin";
+	"aria-label": string;
 }
 
 export function Select({
@@ -26,6 +27,7 @@ export function Select({
 	className = "",
 	size = "md",
 	variant = "default",
+	"aria-label": ariaLabel,
 }: SelectProps) {
 	const baseStyles =
 		"   focus: focus:ring-offset-2 focus:ring-offset-base  cursor-pointer appearance-none bg-no-repeat bg-right transition-colors";
@@ -62,6 +64,7 @@ export function Select({
 			onChange={(e) => onChange(e.target.value)}
 			disabled={disabled}
 			className={selectClassName}
+			aria-label={ariaLabel}
 		>
 			{placeholder && (
 				<option value="" disabled className="/60">

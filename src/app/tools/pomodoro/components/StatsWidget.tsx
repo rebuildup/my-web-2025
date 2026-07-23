@@ -244,6 +244,7 @@ export default function StatsWidget({
 				value={metric}
 				onChange={(e) => setMetric(e.target.value as (typeof metrics)[number])}
 				className="pointer-events-auto absolute -top-2 left-1/2 -translate-x-1/2 px-3 py-2 text-sm min-w-[150px] max-w-[220px] text-center"
+				aria-label="指標"
 			>
 				{metrics.map((m) => (
 					<option value={m} key={m}>

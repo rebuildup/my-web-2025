@@ -1,0 +1,18 @@
+Rule: react-doctor/dangerous-html-sink
+Severity: warning
+Category: Security
+Count: 6
+
+HTML is injected from a dynamic-looking source, which can become XSS if the value is user-controlled or unsanitized.
+
+Suggestion: Prefer rendering structured React nodes. If HTML is required, sanitize with a well-reviewed sanitizer and keep the trust boundary close to the sink.
+
+Curl with no cache & follow the canonical fix and false positive check recipe before fixing: https://react.doctor/docs/rules/react-doctor/dangerous-html-sink
+
+Files:
+  src/app/tools/fillgen/components/FillGenTool.tsx:1348
+  src/app/tools/svg2tsx/components/PreviewPanel.tsx:63
+  src/app/workshop/blog/[slug]/page.tsx:229
+  src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx:254
+  src/components/admin/page-editor/blocks/advanced/CodeBlock.tsx:317
+  src/components/ui/MarkdownRenderer.tsx:852

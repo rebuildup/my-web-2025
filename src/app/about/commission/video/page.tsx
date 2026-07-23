@@ -115,7 +115,7 @@ export default function VideoCommissionPage() {
 				{JSON.stringify(structuredData)}
 			</script>
 
-			<div className="min-h-screen ">
+			<div className="min-h-dvh ">
 				<main
 					id="main-content"
 					className="flex items-center py-10"

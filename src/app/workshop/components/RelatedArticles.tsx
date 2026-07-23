@@ -31,25 +31,30 @@ export function RelatedArticles({ articleSlug, tags }: RelatedArticlesProps) {
 			return;
 		}
 
-		const fetchRelatedArticles = async () => {
+		const controller = new AbortController();
+		const tagsParam = topTags.join(",");
+		(async () => {
 			try {
-				const tagsParam = topTags.join(",");
 				const res = await fetch(
 					`/api/workshop/related?slug=${encodeURIComponent(articleSlug)}&tags=${encodeURIComponent(tagsParam)}&limit=6`,
-					{ cache: "no-store" },
+					{ cache: "no-store", signal: controller.signal },
 				);
+				if (controller.signal.aborted) return;
 				if (res.ok) {
 					const data = await res.json();
 					setArticles(data.articles || []);
 				}
 			} catch (error) {
+				if ((error as Error).name === "AbortError") return;
 				console.error("Failed to fetch related articles:", error);
 			} finally {
-				setLoading(false);
+				if (!controller.signal.aborted) {
+					setLoading(false);
+				}
 			}
-		};
+		})();
 
-		fetchRelatedArticles();
+		return () => controller.abort();
 	}, [articleSlug, tagsString]);
 
 	if (loading || articles.length === 0) {

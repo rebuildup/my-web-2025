@@ -185,7 +185,7 @@ export default function HandleProfilePage() {
 				{JSON.stringify(structuredData)}
 			</script>
 
-			<div className="min-h-screen relative">
+			<div className="min-h-dvh relative">
 				{/* Decorative ScrollVelocity */}
 				{mounted && (
 					<div className="fixed top-20 right-10 z-5 pointer-events-none hidden lg:block">
@@ -198,7 +198,7 @@ export default function HandleProfilePage() {
 
 				<main
 					id="main-content"
-					className="relative z-10 min-h-screen pt-8 pb-16 px-4"
+					className="relative z-10 min-h-dvh pt-8 pb-16 px-4"
 					tabIndex={-1}
 				>
 					<div className="container mx-auto max-w-5xl">
@@ -384,10 +384,7 @@ export default function HandleProfilePage() {
 											<h3 className="zen-kaku-gothic-new text-lg ">開発環境</h3>
 											<div className="space-y-2">
 												{workStyle.development.map((item) => (
-													<p
-														key={item}
-														className="noto-sans-jp-light text-sm "
-													>
+													<p key={item} className="noto-sans-jp-light text-sm ">
 														• {item}
 													</p>
 												))}
@@ -400,10 +397,7 @@ export default function HandleProfilePage() {
 											</h3>
 											<div className="space-y-2">
 												{workStyle.workflow.map((item) => (
-													<p
-														key={item}
-														className="noto-sans-jp-light text-sm "
-													>
+													<p key={item} className="noto-sans-jp-light text-sm ">
 														• {item}
 													</p>
 												))}

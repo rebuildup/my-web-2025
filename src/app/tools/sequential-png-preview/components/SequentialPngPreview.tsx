@@ -203,6 +203,7 @@ export default function SequentialPngPreview() {
 												}))
 											}
 											style={{ width: "100%" }}
+											aria-label="フレームレート"
 										/>
 									</div>
 									<div>
@@ -240,6 +241,7 @@ export default function SequentialPngPreview() {
 									</div>
 									<div>
 										<label
+											htmlFor="direction"
 											style={{
 												display: "block",
 												fontSize: "12px",
@@ -249,6 +251,7 @@ export default function SequentialPngPreview() {
 											方向
 										</label>
 										<select
+											id="direction"
 											value={settings.direction}
 											onChange={(e) =>
 												setSettings((prev) => ({

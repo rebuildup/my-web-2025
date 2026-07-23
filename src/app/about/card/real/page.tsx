@@ -8,25 +8,14 @@ export default function RealCardPage() {
 		<>
 			{/* Hidden h1 for SEO */}
 			<h1 className="sr-only">木村友亮のデジタル名刺 - Digital Card</h1>
-			<div className="min-h-screen  ">
+			<div className="min-h-dvh  ">
 				<main className="flex items-center justify-center py-16">
 					<div className="container-system mx-auto max-w-6xl px-6 flex items-center justify-center">
 						<MeishiPhiCard baseColor="#ffffff" mainColor="#000000" />
 					</div>
 				</main>
 				<MeishiPhiCard baseColor="#ffffff" mainColor="#000000" />
-				<div
-					style={{
-						width: "910px",
-						height: "550px",
-						left: "4rem",
-						right: "auto",
-						position: "absolute",
-						marginTop: "4rem",
-						backgroundColor: "black",
-						boxShadow: "0 10px 36px rgba(0,0,0,0.5)",
-					}}
-				>
+				<div className="w-[910px] h-[550px] left-16 right-auto absolute mt-16 bg-black shadow-[0_10px_36px_rgba(0,0,0,0.5)]">
 					<div
 						style={{
 							width: "482.1218px",

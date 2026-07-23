@@ -218,6 +218,27 @@ function ServiceIcon({ id }: { id: string }) {
 	}
 }
 
+function QuickLinks() {
+	return (
+		<div className="flex justify-center gap-4 mt-2" style={{ opacity: 0 }}>
+			{quickLinks.map((link) => (
+				<button
+					key={link.id}
+					type="button"
+					onClick={() =>
+						window.open(link.href, "_blank", "noopener,noreferrer")
+					}
+					title={link.label}
+					aria-label={link.label}
+					className="w-8 h-8 flex items-center justify-center rounded-full border-0 bg-transparent p-1.5 transition-colors cursor-pointer"
+				>
+					<ServiceIcon id={link.id} />
+				</button>
+			))}
+		</div>
+	);
+}
+
 function TimelineRow({ entry }: { entry: (typeof historyData)[number] }) {
 	if (entry.separator) {
 		return <div className="w-full   my-1" />;
@@ -282,7 +303,7 @@ function buildHistorySegments(
 	return segments;
 }
 
-const segments = buildHistorySegments(historyData);
+const historySegments = buildHistorySegments(historyData);
 
 function ExpandToggle({
 	expanded,
@@ -295,10 +316,11 @@ function ExpandToggle({
 		<button
 			type="button"
 			onClick={onToggle}
+			aria-label={expanded ? "Collapse details" : "Expand details"}
 			className="flex items-center gap-2 w-full py-1 group border-0 bg-transparent cursor-pointer"
 		>
 			<div className="flex-1 h-px" />
-			<span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center transition-all">
+			<span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center transition-transform">
 				<svg
 					width="10"
 					height="10"
@@ -323,6 +345,48 @@ function ExpandToggle({
 	);
 }
 
+function HistorySection({
+	expandedGroups,
+	onToggle,
+}: {
+	expandedGroups: Set<number>;
+	onToggle: (index: number) => void;
+}) {
+	return (
+		<div className="flex flex-col gap-0.5 w-full overflow-x-auto px-6">
+			{historySegments.map((seg, idx) => {
+				if (seg.type === "highlighted") {
+					return (
+						<TimelineRow
+							key={`h-${seg.entry.date}-${seg.entry.title}`}
+							entry={seg.entry}
+						/>
+					);
+				}
+				const isExpanded = expandedGroups.has(idx);
+				return (
+					<div
+						key={`mg-${seg.entries[0]?.date}-${seg.entries[0]?.title}`}
+						className="flex flex-col gap-0.5"
+					>
+						<ExpandToggle
+							expanded={isExpanded}
+							onToggle={() => onToggle(idx)}
+						/>
+						{isExpanded &&
+							seg.entries.map((entry) => (
+								<TimelineRow
+									key={`m-${entry.date}-${entry.title}`}
+									entry={entry}
+								/>
+							))}
+					</div>
+				);
+			})}
+		</div>
+	);
+}
+
 const siteLinks = [
 	{ href: "/", label: "Home", desc: "トップページ" },
 	{ href: "/portfolio", label: "Portfolio", desc: "制作したもの" },
@@ -332,27 +396,119 @@ const siteLinks = [
 	{ href: "/search", label: "Search", desc: "検索" },
 ];
 
-export default function AboutStitchClient() {
-	const [expandedGroups, setExpandedGroups] = useState<Set<number>>(new Set());
-	const [heroReady, setHeroReady] = useState(false);
+function SiteLinksSection() {
+	return (
+		<div className="grid grid-cols-2 gap-2 w-full px-8">
+			{siteLinks.map((link) => (
+				<div
+					key={link.href}
+					className="relative flex items-center justify-between px-3 py-2.5 rounded border border-current transition-colors group"
+				>
+					<div className="flex flex-col">
+						<Link
+							href={link.href}
+							className="text-[12px] font-medium before:absolute before:inset-0 before:z-10"
+							style={{ fontFamily: "var(--font-inter), Inter, sans-serif" }}
+						>
+							{link.label}
+						</Link>
+						<span
+							className="text-[10px]"
+							style={{ fontFamily: "var(--font-noto-sans-jp)" }}
+						>
+							{link.desc}
+						</span>
+					</div>
+					<svg
+						width="12"
+						height="12"
+						viewBox="0 0 12 12"
+						fill="none"
+						className="shrink-0 ml-2 transition-transform group-hover:translate-x-0.5"
+					>
+						<path
+							d="M4.5 2L8.5 6L4.5 10"
+							stroke="currentColor"
+							strokeWidth="1.5"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						/>
+					</svg>
+				</div>
+			))}
+		</div>
+	);
+}
+
+function WorksSection({ items }: { items: PortfolioContentItem[] }) {
+	if (items.length === 0) {
+		return (
+			<p
+				className="text-[12px] w-full"
+				style={{ fontFamily: "var(--font-noto-sans-jp)" }}
+			>
+				まだ制作物がありません
+			</p>
+		);
+	}
+	return (
+		<div className="grid grid-cols-3 gap-3 w-full px-6">
+			{items.map((item) => (
+				<Link key={item.id} href={`/portfolio/${item.id}`} className="group">
+					<div className="aspect-video rounded overflow-hidden">
+						{item.thumbnail && (
+							// eslint-disable-next-line @next/next/no-img-element
+							<img
+								src={item.thumbnail}
+								alt={item.title}
+								className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+							/>
+						)}
+					</div>
+					<span
+						className="text-[12px] leading-tight truncate block mt-1.5"
+						style={{ fontFamily: "var(--font-noto-sans-jp)" }}
+					>
+						{item.title}
+					</span>
+				</Link>
+			))}
+		</div>
+	);
+}
+
+function HeroOverlay({
+	overlayRef,
+	iconWrapperRef,
+}: {
+	overlayRef: React.RefObject<HTMLDivElement | null>;
+	iconWrapperRef: React.RefObject<HTMLDivElement | null>;
+}) {
+	return (
+		<div
+			ref={overlayRef}
+			className="fixed inset-0 w-screen h-dvh z-50 pointer-events-none flex items-center justify-center"
+		>
+			{/* Icon wrapper: starts at scale(0) via CSS class */}
+			<div ref={iconWrapperRef} className="about-icon-wrapper">
+				<SamuidoIcon size={239} color="yellow" />
+			</div>
+		</div>
+	);
+}
+
+// Lazy-loads portfolio items for the "works" section.
+function usePortfolioItems(): PortfolioContentItem[] {
 	const [portfolioItems, setPortfolioItems] = useState<PortfolioContentItem[]>(
 		[],
 	);
-
-	const toggleGroup = (index: number) => {
-		setExpandedGroups((prev) => {
-			const next = new Set(prev);
-			if (next.has(index)) next.delete(index);
-			else next.add(index);
-			return next;
-		});
-	};
-
-	// Lazy load portfolio items
 	useEffect(() => {
-		async function fetchItems() {
+		const controller = new AbortController();
+		(async () => {
 			try {
-				const res = await fetch("/api/content/portfolio");
+				const res = await fetch("/api/content/portfolio", {
+					signal: controller.signal,
+				});
 				if (!res.ok) return;
 				const json = (await res.json()) as {
 					success: boolean;
@@ -368,6 +524,7 @@ export default function AboutStitchClient() {
 						publishedAt?: string;
 					}>;
 				};
+				if (controller.signal.aborted) return;
 				if (!json.success || !Array.isArray(json.data)) return;
 				const items: PortfolioContentItem[] = json.data
 					.filter((item) => item.thumbnail)
@@ -398,23 +555,26 @@ export default function AboutStitchClient() {
 						},
 					}));
 				setPortfolioItems(items);
-			} catch {
+			} catch (err) {
+				if ((err as Error).name === "AbortError") return;
 				// ignore
 			}
-		}
-		fetchItems();
+		})();
+		return () => controller.abort();
 	}, []);
+	return portfolioItems;
+}
 
-	// Refs:
-	// overlayRef = fixed full-screen div (position:fixed in JSX, not set by JS)
-	// iconWrapperRef = div inside overlay — we scale this (not the SVG directly)
-	// homePlaceholderRef = invisible placeholder at hero position
-	// breadcrumbRef = breadcrumb element
+// Drives the hero animation: scale-in the icon, move it to the home placeholder,
+// then fade in breadcrumb + hero text. Returns the refs the overlay/hero JSX needs.
+function useHeroAnimation() {
 	const overlayRef = useRef<HTMLDivElement>(null);
 	const iconWrapperRef = useRef<HTMLDivElement>(null);
 	const homePlaceholderRef = useRef<HTMLDivElement>(null);
 	const breadcrumbRef = useRef<HTMLDivElement>(null);
+	const [heroReady, setHeroReady] = useState(false);
 
+	// Phase 1+2: scale icon in, then move it to the home placeholder.
 	useEffect(() => {
 		const overlay = overlayRef.current;
 		const iconWrapper = iconWrapperRef.current;
@@ -490,6 +650,29 @@ export default function AboutStitchClient() {
 		});
 	}, [heroReady]);
 
+	return {
+		overlayRef,
+		iconWrapperRef,
+		homePlaceholderRef,
+		breadcrumbRef,
+	};
+}
+
+export default function AboutStitchClient() {
+	const [expandedGroups, setExpandedGroups] = useState<Set<number>>(new Set());
+	const portfolioItems = usePortfolioItems();
+	const { overlayRef, iconWrapperRef, homePlaceholderRef, breadcrumbRef } =
+		useHeroAnimation();
+
+	const toggleGroup = (index: number) => {
+		setExpandedGroups((prev) => {
+			const next = new Set(prev);
+			if (next.has(index)) next.delete(index);
+			else next.add(index);
+			return next;
+		});
+	};
+
 	return (
 		<main className="w-full px-4 mx-auto" style={{ maxWidth: 680 }}>
 			{/* Minimal CSS: ensure icon starts hidden, breadcrumb starts invisible */}
@@ -502,26 +685,7 @@ export default function AboutStitchClient() {
 			</div>
 
 			{/* Fixed overlay: covers screen during animation, hides page behind icon */}
-			<div
-				ref={overlayRef}
-				style={{
-					position: "fixed",
-					top: 0,
-					left: 0,
-					width: "100vw",
-					height: "100vh",
-					zIndex: 50,
-					pointerEvents: "none",
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "center",
-				}}
-			>
-				{/* Icon wrapper: starts at scale(0) via CSS class */}
-				<div ref={iconWrapperRef} className="about-icon-wrapper">
-					<SamuidoIcon size={239} color="yellow" />
-				</div>
-			</div>
+			<HeroOverlay overlayRef={overlayRef} iconWrapperRef={iconWrapperRef} />
 
 			{/* Hero */}
 			<section className="w-full flex flex-col items-center py-16 gap-4">
@@ -551,25 +715,7 @@ export default function AboutStitchClient() {
 					>
 						Lost in time. 🫠 Found it nowhere.
 					</p>
-					<div
-						className="flex justify-center gap-4 mt-2"
-						style={{ opacity: 0 }}
-					>
-						{quickLinks.map((link) => (
-							<button
-								key={link.id}
-								type="button"
-								onClick={() =>
-									window.open(link.href, "_blank", "noopener,noreferrer")
-								}
-								title={link.label}
-								aria-label={link.label}
-								className="w-8 h-8 flex items-center justify-center rounded-full border-0 bg-transparent p-1.5 transition-colors cursor-pointer"
-							>
-								<ServiceIcon id={link.id} />
-							</button>
-						))}
-					</div>
+					<QuickLinks />
 				</div>
 			</section>
 
@@ -617,37 +763,10 @@ export default function AboutStitchClient() {
 					"華々しい経歴はありませんが、一応年表にまとめました。\n深いことは書いてないです。気になったらトグルを開いてみてください。"
 				}
 			>
-				<div className="flex flex-col gap-0.5 w-full overflow-x-auto px-6">
-					{segments.map((seg, idx) => {
-						if (seg.type === "highlighted") {
-							return (
-								<TimelineRow
-									key={`h-${seg.entry.date}-${seg.entry.title}`}
-									entry={seg.entry}
-								/>
-							);
-						}
-						const isExpanded = expandedGroups.has(idx);
-						return (
-							<div
-								key={`mg-${seg.entries[0]?.date}-${seg.entries[0]?.title}`}
-								className="flex flex-col gap-0.5"
-							>
-								<ExpandToggle
-									expanded={isExpanded}
-									onToggle={() => toggleGroup(idx)}
-								/>
-								{isExpanded &&
-									seg.entries.map((entry) => (
-										<TimelineRow
-											key={`m-${entry.date}-${entry.title}`}
-											entry={entry}
-										/>
-									))}
-							</div>
-						);
-					})}
-				</div>
+				<HistorySection
+					expandedGroups={expandedGroups}
+					onToggle={toggleGroup}
+				/>
 			</Section>
 
 			<Section
@@ -659,45 +778,11 @@ export default function AboutStitchClient() {
 					"これまでに作ったものたちです。\nWebサイト、映像、ツールなど様々です。他にも色々あるので、ぜひ見ていってください。"
 				}
 			>
-				{portfolioItems.length > 0 ? (
-					<div className="grid grid-cols-3 gap-3 w-full px-6">
-						{portfolioItems.map((item) => (
-							<Link
-								key={item.id}
-								href={`/portfolio/${item.id}`}
-								className="group"
-							>
-								<div className="aspect-video rounded overflow-hidden">
-									{item.thumbnail && (
-										// eslint-disable-next-line @next/next/no-img-element
-										<img
-											src={item.thumbnail}
-											alt={item.title}
-											className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-										/>
-									)}
-								</div>
-								<span
-									className="text-[12px] leading-tight truncate block mt-1.5"
-									style={{ fontFamily: "var(--font-noto-sans-jp)" }}
-								>
-									{item.title}
-								</span>
-							</Link>
-						))}
-					</div>
-				) : (
-					<p
-						className="text-[12px] w-full"
-						style={{ fontFamily: "var(--font-noto-sans-jp)" }}
-					>
-						まだ制作物がありません
-					</p>
-				)}
+				<WorksSection items={portfolioItems} />
 				<div className="grid grid-cols-3 gap-3 w-full px-6 mt-2">
 					<Link
 						href="/portfolio"
-						className="col-start-2 flex items-center justify-center px-3 py-2.5 rounded     transition-all"
+						className="col-start-2 flex items-center justify-center px-3 py-2.5 rounded     transition-colors"
 						style={{ fontFamily: "var(--font-noto-sans-jp)" }}
 					>
 						<span className="text-[12px] leading-tight">もっと見る</span>
@@ -714,45 +799,7 @@ export default function AboutStitchClient() {
 					"私のポートフォリオサイトの各ページへのリンクです。\n制作したものやツールなどがあります。\nぜひ覗いてみてください。"
 				}
 			>
-				<div className="grid grid-cols-2 gap-2 w-full px-8">
-					{siteLinks.map((link) => (
-						<div
-							key={link.href}
-							className="relative flex items-center justify-between px-3 py-2.5 rounded border border-current transition-all group"
-						>
-							<div className="flex flex-col">
-								<Link
-									href={link.href}
-									className="text-[12px] font-medium before:absolute before:inset-0 before:z-10"
-									style={{ fontFamily: "var(--font-inter), Inter, sans-serif" }}
-								>
-									{link.label}
-								</Link>
-								<span
-									className="text-[10px]"
-									style={{ fontFamily: "var(--font-noto-sans-jp)" }}
-								>
-									{link.desc}
-								</span>
-							</div>
-							<svg
-								width="12"
-								height="12"
-								viewBox="0 0 12 12"
-								fill="none"
-								className="shrink-0 ml-2 transition-transform group-hover:translate-x-0.5"
-							>
-								<path
-									d="M4.5 2L8.5 6L4.5 10"
-									stroke="currentColor"
-									strokeWidth="1.5"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								/>
-							</svg>
-						</div>
-					))}
-				</div>
+				<SiteLinksSection />
 			</Section>
 
 			<div className="w-full pb-16" />

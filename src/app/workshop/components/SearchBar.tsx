@@ -68,6 +68,7 @@ function SearchBarInner({ keyword, mode }: SearchBarProps) {
 								router.push(`/workshop?${params.toString()}`);
 							}}
 							className=""
+							aria-label="検索をクリア"
 						>
 							<svg
 								className="w-4 h-4"

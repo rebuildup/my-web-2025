@@ -156,21 +156,7 @@ export default function QRCodeGenerator() {
 	const hasValidInput = processedTexts.length > 0;
 
 	return (
-		<div
-			style={{
-				position: "fixed",
-				top: 0,
-				left: 0,
-				width: "100vw",
-				height: "100vh",
-				zIndex: 9999,
-				backgroundColor: "#ffffff",
-				color: "#000000",
-				fontFamily: "sans-serif",
-				overflowY: "auto",
-				padding: "2rem",
-			}}
-		>
+		<div className="fixed inset-0 w-screen h-dvh z-[9999] bg-white text-black font-sans overflow-y-auto p-8">
 			<div style={{ maxWidth: "900px", margin: "0 auto" }}>
 				<nav
 					style={{ fontSize: "0.85rem", marginBottom: "1rem", color: "#666" }}
@@ -406,6 +392,7 @@ export default function QRCodeGenerator() {
 										value={foregroundColor}
 										onChange={(e) => setForegroundColor(e.target.value)}
 										style={{ flex: 1, padding: "2px 4px" }}
+										aria-label="Foreground"
 									/>
 								</div>
 
@@ -424,6 +411,7 @@ export default function QRCodeGenerator() {
 										value={backgroundColor}
 										onChange={(e) => setBackgroundColor(e.target.value)}
 										style={{ flex: 1, padding: "2px 4px" }}
+										aria-label="Background"
 									/>
 								</div>
 							</div>
@@ -466,37 +454,12 @@ export default function QRCodeGenerator() {
 								)}
 							</div>
 
-							<div
-								style={{
-									width: "100%",
-									backgroundColor: "#f9f9f9",
-									border: "1px solid #eee",
-									display: "flex",
-									flexWrap: "wrap",
-									gap: "20px",
-									alignItems: "center",
-									justifyContent: "center",
-									padding: "20px",
-									boxSizing: "border-box",
-									minHeight: "300px",
-									overflowY: "auto",
-									flex: 1,
-								}}
-							>
+							<div className="w-full bg-[#f9f9f9] border border-[#eee] flex flex-wrap gap-5 items-center justify-center p-5 box-border min-h-[300px] overflow-y-auto flex-1">
 								{processedTexts.length > 0 ? (
 									processedTexts.map((text, index) => (
 										<div
 											key={text}
-											style={{
-												display: "flex",
-												flexDirection: "column",
-												alignItems: "center",
-												gap: "10px",
-												background: "#fff",
-												padding: "10px",
-												border: "1px solid #ddd",
-												boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-											}}
+											className="flex flex-col items-center gap-2.5 bg-white p-2.5 border border-[#ddd] shadow-[0_2px_4px_rgba(0,0,0,0.05)]"
 										>
 											<canvas
 												ref={(el) => {

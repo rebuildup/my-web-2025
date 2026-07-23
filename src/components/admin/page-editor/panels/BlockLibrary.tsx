@@ -123,19 +123,7 @@ export function BlockLibrary({ onInsertBlock }: BlockLibraryProps) {
 									key={item.type}
 									onClick={() => onInsertBlock?.(item.type)}
 									type="button"
-									style={{
-										display: "flex",
-										alignItems: "center",
-										justifyContent: "flex-start",
-										gap: 8,
-										padding: "4px 6px",
-										borderRadius: 6,
-										cursor: "pointer",
-										border: "none",
-										background: "transparent",
-										outline: "none",
-										textAlign: "left",
-									}}
+									className="flex items-center justify-start gap-2 px-1.5 py-1 rounded-md cursor-pointer border-0 bg-transparent outline-none text-left"
 									onMouseEnter={(e) => {
 										(e.currentTarget as HTMLButtonElement).style.background =
 											"rgba(255,255,255,0.06)";
@@ -145,22 +133,7 @@ export function BlockLibrary({ onInsertBlock }: BlockLibraryProps) {
 											"transparent";
 									}}
 								>
-									<div
-										style={{
-											width: 28,
-											height: 28,
-											display: "inline-flex",
-											alignItems: "center",
-											justifyContent: "center",
-											borderRadius: 6,
-											background: "#3b82f6",
-											color: "#fff",
-											fontWeight: 700,
-											fontSize: 11,
-											flexShrink: 0,
-											marginLeft: -6,
-										}}
-									>
+									<div className="w-7 h-7 inline-flex items-center justify-center rounded-md bg-blue-500 text-white font-bold text-[11px] shrink-0 -ml-1.5">
 										{String(item.icon ?? "?")}
 									</div>
 									<div

@@ -80,19 +80,7 @@ export function BookmarkCard({
 			>
 				<div className="flex flex-col gap-2.5 md:flex-row md:items-center md:gap-3">
 					{hasImage && (
-						<div
-							className="shrink-0 rounded overflow-hidden"
-							style={{
-								maxWidth: "140px",
-								maxHeight: "140px",
-								width: "140px",
-								height: "140px",
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "center",
-								position: "relative",
-							}}
-						>
+						<div className="shrink-0 rounded overflow-hidden max-w-[140px] max-h-[140px] w-[140px] h-[140px] flex items-center justify-center relative">
 							<img
 								src={displayImage}
 								alt=""

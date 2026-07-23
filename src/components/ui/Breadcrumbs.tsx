@@ -32,10 +32,7 @@ export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
 					const isCurrent = item.isCurrent || isLast;
 
 					return (
-						<li
-							key={item.href || item.label}
-							className="flex items-baseline"
-						>
+						<li key={item.href || item.label} className="flex items-baseline">
 							{/* Separator */}
 							{index > 0 && (
 								<span className="mx-2 select-none leading-none">/</span>

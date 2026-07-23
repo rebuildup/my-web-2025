@@ -318,7 +318,7 @@ export default function DataManagerPage() {
 		" px-4 py-2 text-sm   focus: focus:ring-offset-2 focus:ring-offset-base";
 
 	return (
-		<div className="min-h-screen ">
+		<div className="min-h-dvh ">
 			<main className="py-10">
 				<div className="container-system">
 					<div className="space-y-8">

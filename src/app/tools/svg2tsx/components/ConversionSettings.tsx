@@ -194,6 +194,7 @@ export function ConversionSettingsPanel({
 									fontSize: "13px",
 									boxSizing: "border-box",
 								}}
+								aria-label="インデント"
 							>
 								<option value={2}>2スペース</option>
 								<option value={4}>4スペース</option>
@@ -221,6 +222,7 @@ export function ConversionSettingsPanel({
 									fontSize: "13px",
 									boxSizing: "border-box",
 								}}
+								aria-label="改行設定"
 							>
 								<option value="lf">LF (Unix)</option>
 								<option value="crlf">CRLF (Windows)</option>
@@ -250,6 +252,7 @@ export function ConversionSettingsPanel({
 									fontSize: "13px",
 									boxSizing: "border-box",
 								}}
+								aria-label="エクスポート形式"
 							>
 								<option value="default">デフォルトエクスポート</option>
 								<option value="named">名前付きエクスポート</option>
@@ -279,6 +282,7 @@ export function ConversionSettingsPanel({
 									fontSize: "13px",
 									boxSizing: "border-box",
 								}}
+								aria-label="ファイル拡張子"
 							>
 								<option value=".tsx">.tsx (TypeScript JSX)</option>
 								<option value=".ts">.ts (TypeScript)</option>
