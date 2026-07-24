@@ -59,9 +59,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "=== Static export contents ==="
-          find out -maxdepth 3 -type f | sort | head -100
-
           if [ ! -d out ]; then
             echo "Static export directory does not exist: out"
             exit 1
@@ -74,10 +71,17 @@ jobs:
             exit 1
           fi
 
+          echo "=== Static export contents ==="
+          find out -maxdepth 3 -type f | sort | sed -n '1,100p'
+
           tar -czf deployment-static.tar.gz -C out .
 
           echo "=== Static archive contents ==="
-          tar -tzf deployment-static.tar.gz | head -100
+          tar -tzf deployment-static.tar.gz > /tmp/deployment-static-files.txt
+          sed -n '1,100p' /tmp/deployment-static-files.txt
+
+          echo "Archive file count: $(wc -l < /tmp/deployment-static-files.txt)"
+          ls -lh deployment-static.tar.gz
 
       - name: Setup Rust toolchain
         uses: dtolnay/rust-toolchain@v1
