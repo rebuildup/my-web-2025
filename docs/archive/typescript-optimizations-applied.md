@@ -108,7 +108,7 @@ Based on the TypeScript Type-Checking Efficiency Guide, the following optimizati
 ### 1. TypeScript 7.0 Native Preview (Available Now)
 
 ```bash
-npm install --save-dev @typescript/native-preview
+bun install --save-dev @typescript/native-preview
 ```
 
 - Expected 10x performance improvement
@@ -136,11 +136,11 @@ tsc --extendedDiagnostics
 
 1. VS Code will automatically format and fix issues on save
 2. Pre-commit hooks ensure code quality before commits
-3. Use `npm run type-check:fast` for quick validation during development
+3. Use `bun run type-check:fast` for quick validation during development
 
 ### Quality Assurance
 
-1. Run `npm run type-coverage` to check type safety
+1. Run `bun run type-coverage` to check type safety
 2. CI/CD pipeline automatically validates all changes
 3. Build process includes comprehensive type checking
 

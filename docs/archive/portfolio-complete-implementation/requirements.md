@@ -138,7 +138,7 @@
 
 #### Acceptance Criteria
 
-1. WHEN npm run test:all を実行する時 THEN 全てのテストが成功し、エラーや警告が発生しない SHALL
+1. WHEN bun run test:all を実行する時 THEN 全てのテストが成功し、エラーや警告が発生しない SHALL
 2. WHEN テストカバレッジを確認する時 THEN ポートフォリオ関連の全ての機能が100%カバーされている SHALL
 3. WHEN E2Eテストを実行する時 THEN ポートフォリオの主要なユーザージャーニーが全て成功する SHALL
 4. WHEN 単体テストを実行する時 THEN 全てのコンポーネント・関数・クラスがテストされている SHALL

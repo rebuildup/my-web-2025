@@ -132,7 +132,7 @@ bun add -g pm2
 
 **期待される出力:**
 ```
-Now using node v20.x.x (npm v10.x.x)
+Now using node v20.x.x (bun)
 ...
 bun was installed successfully to ~/.bun/bin/bun
 ...
@@ -201,14 +201,14 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... deploy@my-web-2025
 
 GitHubリポジトリの Settings → Secrets and variables → Actions で以下を登録:
 
-| Secret名 | 値 | 説明 |
-|---------|-----|------|
-| `GCP_SSH_KEY` | `~/.ssh/gcp_deploy` の**全文**（秘密鍵） | SSH接続用 |
-| `GCP_HOST` | `34.146.209.224` | VMのIPアドレス |
-| `GCP_USER` | `deploy` | SSH接続ユーザー名 |
-| `RESEND_API_KEY` | （APIキー） | メール送信用（任意） |
-| `RECAPTCHA_SECRET_KEY` | （シークレットキー） | reCAPTCHA用（任意） |
-| `NEXT_PUBLIC_SITE_URL` | `https://yusuke-kim.com` | サイトURL（必須） |
+| Secret名               | 値                                       | 説明                 |
+| ---------------------- | ---------------------------------------- | -------------------- |
+| `GCP_SSH_KEY`          | `~/.ssh/gcp_deploy` の**全文**（秘密鍵） | SSH接続用            |
+| `GCP_HOST`             | `34.146.209.224`                         | VMのIPアドレス       |
+| `GCP_USER`             | `deploy`                                 | SSH接続ユーザー名    |
+| `RESEND_API_KEY`       | （APIキー）                              | メール送信用（任意） |
+| `RECAPTCHA_SECRET_KEY` | （シークレットキー）                     | reCAPTCHA用（任意）  |
+| `NEXT_PUBLIC_SITE_URL` | `https://yusuke-kim.com`                 | サイトURL（必須）    |
 
 **重要**: `GCP_SSH_KEY`は秘密鍵の**全文**（`-----BEGIN OPENSSH PRIVATE KEY-----`から`-----END OPENSSH PRIVATE KEY-----`まで）をコピーしてください.
 
@@ -528,14 +528,14 @@ yusuke-kim.com	nameserver = ns2.example.com
 3. 左メニューから「DNS」→「レコード」を選択
 4. 以下のAレコードを追加（「レコードを追加」ボタンをクリック）：
 
-| サブドメイン | タイプ | 値 | 説明 |
-|------------|--------|-----|------|
-| `links` | A | `34.146.209.224` | `links.yusuke-kim.com` → `/about/links` |
-| `portfolio` | A | `34.146.209.224` | `portfolio.yusuke-kim.com` → `/portfolio` |
-| `pomodoro` | A | `34.146.209.224` | `pomodoro.yusuke-kim.com` → `/tools/pomodoro` |
-| `prototype` | A | `34.146.209.224` | `prototype.yusuke-kim.com` → `/tools/prototype` |
-| `samuido` | A | `34.146.209.224` | `samuido.yusuke-kim.com` → `/about/profile/handle` |
-| `361do` | A | `34.146.209.224` | `361do.yusuke-kim.com` → `/about/profile/handle` |
+| サブドメイン | タイプ | 値               | 説明                                               |
+| ------------ | ------ | ---------------- | -------------------------------------------------- |
+| `links`      | A      | `34.146.209.224` | `links.yusuke-kim.com` → `/about/links`            |
+| `portfolio`  | A      | `34.146.209.224` | `portfolio.yusuke-kim.com` → `/portfolio`          |
+| `pomodoro`   | A      | `34.146.209.224` | `pomodoro.yusuke-kim.com` → `/tools/pomodoro`      |
+| `prototype`  | A      | `34.146.209.224` | `prototype.yusuke-kim.com` → `/tools/prototype`    |
+| `samuido`    | A      | `34.146.209.224` | `samuido.yusuke-kim.com` → `/about/profile/handle` |
+| `361do`      | A      | `34.146.209.224` | `361do.yusuke-kim.com` → `/about/profile/handle`   |
 
    **設定例（Cloudflare）:**
    - **タイプ**: A
@@ -1045,12 +1045,12 @@ Detail: DNS problem: NXDOMAIN looking up A for 361do.yusuke-kim.com
 
 ### 9.8 よくあるエラーと解決方法
 
-| エラー | 原因 | 解決方法 |
-|--------|------|----------|
-| `502 Bad Gateway` | PM2が起動していない | `pm2 restart yusuke-kim` |
-| `Connection refused` | ポートが開いていない | ファイアウォール設定を確認 |
-| `nginx: command not found` | nginxがインストールされていない | セクション5.1を実行 |
-| `certbot: command not found` | certbotがインストールされていない | セクション6.2を実行 |
+| エラー                       | 原因                              | 解決方法                   |
+| ---------------------------- | --------------------------------- | -------------------------- |
+| `502 Bad Gateway`            | PM2が起動していない               | `pm2 restart yusuke-kim`   |
+| `Connection refused`         | ポートが開いていない              | ファイアウォール設定を確認 |
+| `nginx: command not found`   | nginxがインストールされていない   | セクション5.1を実行        |
+| `certbot: command not found` | certbotがインストールされていない | セクション6.2を実行        |
 
 ---
 
@@ -1061,7 +1061,7 @@ Detail: DNS problem: NXDOMAIN looking up A for 361do.yusuke-kim.com
 - [ ] デプロイユーザー作成
 - [ ] SSH鍵登録
 - [ ] ファイアウォール設定
-- [ ] Node.js / pnpm / PM2 インストール
+- [ ] Node.js / bun / PM2 インストール
 - [ ] ディレクトリ準備
 
 ### GitHub設定

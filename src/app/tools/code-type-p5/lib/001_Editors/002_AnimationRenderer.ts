@@ -33,7 +33,7 @@ export function setupAnimationRenderer(
 
 	console.log("Creating p5 instance with container:", container);
 	// Create p5 instance with container element
-	// p5.js npm package: new p5(sketch, node) where node is the parent element
+	// p5.js bun package: new p5(sketch, node) where node is the parent element
 	// Store p5 instance reference globally for cleanup
 	if (!(window as any).p5Instances) {
 		(window as any).p5Instances = [];

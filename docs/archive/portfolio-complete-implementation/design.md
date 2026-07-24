@@ -363,20 +363,20 @@ interface ErrorDisplayProps {
 
 ## Testing Strategy ❌ **要実装**
 
-### npm run test:all 実行戦略
+### bun run test:all 実行戦略
 
-全てのタスクで `npm run test:all` を実行し、エラーや警告を完全に解決する戦略：
+全てのタスクで `bun run test:all` を実行し、エラーや警告を完全に解決する戦略：
 
 #### 1. テスト実行フロー
 
 ```bash
 # test:all の内容（scripts/run-all-tests.ps1）
-npm run type-check     # TypeScript型チェック
-npm run lint          # ESLint
-npm run format:check  # Prettier
-npm run test          # Jest単体テスト
-npm run test:e2e      # Playwright E2Eテスト
-npm run lighthouse    # Lighthouse性能テスト
+bun run type-check     # TypeScript型チェック
+bun run lint          # ESLint
+bun run format:check  # Prettier
+bun run test          # Jest単体テスト
+bun run test:e2e      # Playwright E2Eテスト
+bun run lighthouse    # Lighthouse性能テスト
 ```
 
 #### 2. 各テストレベルでの対応

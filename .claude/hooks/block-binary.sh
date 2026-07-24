@@ -11,7 +11,7 @@ case "$path" in
     echo "Edit via the admin API at /api/admin/content or content-service.ts instead." >&2
     exit 2
     ;;
-  *bun.lock|*bun.lockb|*package-lock.json|*yarn.lock|*pnpm-lock.yaml)
+  *bun.lock|*bun.lockb)
     echo "Refusing to edit lockfile: $path" >&2
     echo "Use the package manager CLI (bun install / add) instead." >&2
     exit 2

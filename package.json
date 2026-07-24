@@ -28,25 +28,12 @@
 		"wslc:logs": "wslc logs my-web-2025-dev",
 		"wslc:stop": "wslc stop my-web-2025-dev",
 		"wslc:remove": "wslc remove my-web-2025-dev",
-		"doctor": "npx react-doctor@latest"
+		"doctor": "bunx react-doctor@latest"
 	},
 	"trustedDependencies": [
 		"msw",
 		"unrs-resolver"
 	],
-	"pnpm": {
-		"peerDependencyRules": {
-			"allowedVersions": {
-				"three": "^0.180.0 || ^0.181.0 || ^0.185.0"
-			},
-			"ignoreMissing": [
-				"@react-three/drei",
-				"@react-three/fiber",
-				"@react-three/postprocessing"
-			]
-		},
-		"ignoredBuiltDependencies": []
-	},
 	"dependencies": {
 		"@appletosolutions/reactbits": "^1.0.3",
 		"@chakra-ui/react": "^3.36.1",
@@ -96,6 +83,7 @@
 		"tailwind-merge": "^3.6.0",
 		"tailwindcss": "^4.3.3",
 		"three": "^0.185.1",
+		"typescript": "^6",
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {
@@ -118,8 +106,7 @@
 		"jsdom": "^29.1.1",
 		"lighthouse": "^13.4.1",
 		"playwright": "^1.61.1",
-		"tsx": "^4.23.1",
-		"typescript": "^7.0.2"
+		"tsx": "^4.23.1"
 	},
 	"overrides": {
 		"three": "^0.185.1"

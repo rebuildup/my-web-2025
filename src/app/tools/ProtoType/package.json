@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "typecheck": "tsc -b",
     "lint": "biome check .",
-    "test": "pnpm lint && pnpm run build",
+    "test": "bun run lint && bun run build",
     "format": "biome format . --write",
     "preview": "vite preview",
     "preinstall": "node preinstall.js"

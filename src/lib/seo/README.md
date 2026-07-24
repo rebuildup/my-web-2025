@@ -242,7 +242,7 @@ export const SEO_CONSTANTS = {
 ### Running Tests
 
 ```bash
-npm test -- src/lib/seo/__tests__/
+bun test -- src/lib/seo/__tests__/
 ```
 
 ### Test Coverage

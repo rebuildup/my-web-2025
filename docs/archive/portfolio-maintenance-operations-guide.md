@@ -447,7 +447,7 @@ const performWeeklyOptimization = async () => {
 # weekly-security-scan.sh
 
 # 依存関係の脆弱性チェック
-npm audit
+bun audit
 
 # セキュリティヘッダーの確認
 curl -I https://yusuke-kim.com/portfolio | grep -E "(Content-Security-Policy|X-Frame-Options|X-Content-Type-Options)"
@@ -581,10 +581,10 @@ cp $BACKUP_DIR/package.json .
 cp $BACKUP_DIR/tailwind.config.ts .
 
 # 依存関係の再インストール
-npm install
+bun install
 
 # アプリケーションの再起動
-npm run build
+bun run build
 pm2 restart portfolio-app
 ```
 
@@ -694,16 +694,16 @@ const monitorCSPViolations = () => {
 # security-update.sh
 
 # セキュリティ監査
-npm audit
+bun audit
 
 # 高・中リスクの脆弱性を自動修正
-npm audit fix
+bun audit fix
 
 # 手動確認が必要な脆弱性の報告
-npm audit --audit-level moderate
+bun audit --audit-level moderate
 
 # 更新後のテスト実行
-npm run test:all
+bun run test:all
 ```
 
 #### 2. セキュリティヘッダーの確認
@@ -922,7 +922,7 @@ const emergencyResponse = async (incidentType: string) => {
 
 # 1. 開発環境でのテスト
 echo "Running tests in development..."
-npm run test:all
+bun run test:all
 
 if [ $? -ne 0 ]; then
     echo "Tests failed in development"
@@ -935,7 +935,7 @@ vercel --prod --scope staging
 
 # 3. ステージング環境でのテスト
 echo "Running tests in staging..."
-npm run test:e2e:staging
+bun run test:e2e:staging
 
 if [ $? -ne 0 ]; then
     echo "Tests failed in staging"
@@ -948,7 +948,7 @@ vercel --prod
 
 # 5. 本番環境での動作確認
 echo "Running health checks in production..."
-npm run health-check:production
+bun run health-check:production
 ```
 
 #### 2. ロールバック手順
@@ -970,7 +970,7 @@ echo "Rolling back to version: $PREVIOUS_VERSION"
 vercel rollback $PREVIOUS_VERSION
 
 # 2. 動作確認
-npm run health-check:production
+bun run health-check:production
 
 if [ $? -eq 0 ]; then
     echo "Rollback successful"

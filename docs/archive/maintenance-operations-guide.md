@@ -883,8 +883,8 @@ class VulnerabilityScanner:
     def scan_dependencies(self):
         """依存関係の脆弱性スキャン"""
         try:
-            # npm audit
-            result = subprocess.run(['npm', 'audit', '--json'],
+            # bun audit
+            result = subprocess.run(['bun', 'audit', '--json'],
                                   capture_output=True, text=True, cwd='/var/www/portfolio')
 
             if result.returncode != 0:
@@ -1245,8 +1245,8 @@ echo "Creating full system backup..."
 # 2. 依存関係更新
 echo "Updating dependencies..."
 cd /var/www/portfolio
-npm audit fix
-npm update
+bun audit fix
+bun update
 
 # 3. セキュリティ監査
 echo "Running security audit..."

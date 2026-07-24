@@ -395,7 +395,7 @@ export async function searchEntries(query: string) {
 
 **Step 3: Verify build**
 
-Run: `pnpm dev:cms` (background), then `pnpm dev:web`
+Run: `bun dev:cms` (background), then `bun dev:web`
 Expected: Both compile without errors
 
 **Step 4: Commit**
@@ -444,13 +444,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
+          cache: 'bun'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun i --frozen-lockfile
 
       - name: Build Next.js
-        run: pnpm build
+        run: bun build
 
   deploy:
     needs: build
@@ -473,13 +473,13 @@ git commit -m "ci: add unified build workflow for Rust API + Next.js"
 
 ## Summary
 
-| Phase | Task | Files | Status |
-|-------|------|-------|--------|
-| 1 | Rust project setup | Cargo.toml, main.rs | - |
-| 2 | DB schema (Write/Read model) | schema.sql, migrations/ | - |
-| 3 | API routes | entries.rs, tags.rs, search.rs | - |
-| 4 | Next.js client | cms-api.ts, next.config.ts | - |
-| 5 | CI/CD | github/workflows/ | - |
+| Phase | Task                         | Files                          | Status |
+| ----- | ---------------------------- | ------------------------------ | ------ |
+| 1     | Rust project setup           | Cargo.toml, main.rs            | -      |
+| 2     | DB schema (Write/Read model) | schema.sql, migrations/        | -      |
+| 3     | API routes                   | entries.rs, tags.rs, search.rs | -      |
+| 4     | Next.js client               | cms-api.ts, next.config.ts     | -      |
+| 5     | CI/CD                        | github/workflows/              | -      |
 
 **Risks:**
 1. SQLite single-file が大規模アクセス時にボトルネックになる可能性 → 必要ならPostgreSQLに移行

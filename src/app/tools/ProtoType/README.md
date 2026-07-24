@@ -5,6 +5,6 @@
 ProtoType はタイピングゲームです。
 
 ```bash
-pnpm install
-pnpm dev
+bun install
+bun dev
 ```

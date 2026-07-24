@@ -2,7 +2,7 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Replace `better-sqlite3` and `pnpm` usage with Bun-native SQLite and Bun package/runtime support, then verify existing content databases still load and save correctly.
+**Goal:** Replace `better-sqlite3` and `bun` usage with Bun-native SQLite and Bun package/runtime support, then verify existing content databases still load and save correctly.
 
 **Architecture:** Add a thin SQLite adapter around `bun:sqlite` that preserves the small `better-sqlite3` surface the CMS currently uses. Migrate call sites to the adapter instead of rewriting every SQL call. Split test execution so Bun-specific SQLite tests run under `bun test` while existing DOM tests stay on Jest.
 

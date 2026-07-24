@@ -80,10 +80,10 @@ This guide helps you diagnose and resolve common issues with the Markdown Conten
 
    ```bash
    # Check if all packages are installed
-   npm list
+   bun list
 
    # Reinstall if needed
-   npm install
+   bun install
    ```
 
 4. **Check Component Import**
@@ -776,8 +776,8 @@ When seeking help, provide:
 ```bash
 # Check system information
 node --version
-npm --version
-npm list --depth=0
+bun --version
+bun list --depth=0
 
 # Check file permissions
 ls -la public/data/content/markdown/

@@ -51,7 +51,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
 
 **CRITICAL SUCCESS CRITERIA FOR EVERY TASK:**
 
-- 100% test pass rates: `npm run test:all` must pass completely
+- 100% test pass rates: `bun run test:all` must pass completely
 - All implementations MUST follow existing design patterns from src/app/page.tsx
 - WCAG 2.1 AA compliance for all new components
 - Offline functionality for all tools
@@ -71,7 +71,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Implement inquiry type selection (technical/design) with proper routing
   - Add reCAPTCHA integration for spam protection
   - Create responsive form layout following design system patterns
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 7 - Contact and Communication_
 
@@ -81,7 +81,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Create form field focus management and keyboard navigation
   - Add form submission confirmation and success states
   - Implement form reset functionality and data persistence
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 7 - Contact and Communication, Requirement 14 - Accessibility_
 
@@ -99,7 +99,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Create search result ranking and relevance scoring
   - Implement search suggestions and autocomplete functionality
   - Add search analytics and query tracking
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 8 - Search Functionality_
 
@@ -109,7 +109,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Create search result highlighting and snippet generation
   - Implement empty state handling and no results messaging
   - Add search history and recent searches functionality
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 8 - Search Functionality_
 
@@ -131,7 +131,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Create color accessibility checking and contrast validation
   - Add color theory integration and harmony suggestions
   - Implement palette sharing and import/export features
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 6 - Tools Section_
 
@@ -141,7 +141,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Create email template library and customization options
   - Implement template preview and export functionality
   - Add template validation and professional email guidelines
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 6 - Tools Section_
 
@@ -151,7 +151,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Create expression preview and copy functionality
   - Implement parameter documentation and usage examples
   - Add expression validation and error checking
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 6 - Tools Section_
 
@@ -161,7 +161,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Create multiple game modes and difficulty levels
   - Implement score recording and progress tracking
   - Add GitHub repository integration for updates
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 6 - Tools Section_
 
@@ -183,7 +183,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Address tool interaction test failures (color palette customization)
   - Implement missing workshop search functionality
   - Fix offline handling and error management
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 11 - Testing and Quality Assurance_
 
@@ -193,7 +193,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Test contact form submission flow from frontend to backend
   - Verify tool functionality across all 10 implemented tools
   - Confirm accessibility compliance across all pages
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 11 - Testing and Quality Assurance_
 
@@ -209,7 +209,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Resolve Core Web Vitals performance issues
   - Implement proper error handling for failed resources
   - Add performance monitoring and alerting improvements
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 10 - Performance and Optimization_
 
@@ -219,7 +219,7 @@ Based on comprehensive analysis of the current codebase, this implementation pla
   - Add comprehensive screen reader support
   - Test and fix color contrast issues
   - Validate form accessibility and error messaging
-  - **Test Commands**: `npm run test:all` (PowerShell) or `npm run test:all:bash` (Bash)
+  - **Test Commands**: `bun run test:all` (PowerShell) or `bun run test:all:bash` (Bash)
   - **Quality Assurance**: 100% pass rate required on all tests before task completion
   - _Requirements: Requirement 14 - Accessibility and Internationalization_
 

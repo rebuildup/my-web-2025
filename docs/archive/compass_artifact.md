@@ -94,11 +94,11 @@ jobs:
   quality-checks:
     steps:
       - name: Type check
-        run: npm run type-check
+        run: bun run type-check
       - name: Lint
-        run: npm run lint
+        run: bun run lint
       - name: Type coverage
-        run: npx type-coverage --at-least 90
+        run: bunx type-coverage --at-least 90
 ```
 
 **Pre-commit automation** with Husky and lint-staged prevents broken code from entering the repository:
@@ -169,10 +169,10 @@ const { register, handleSubmit } = useForm<UserFormData>({
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN bun ci
 COPY . .
-RUN npm run type-check
-RUN npm run build
+RUN bun run type-check
+RUN bun run build
 ```
 
 **GitHub Actions workflows** should include comprehensive quality gates covering type checking, linting, testing, and type coverage reporting. This prevents type errors from reaching production while maintaining fast feedback cycles.
