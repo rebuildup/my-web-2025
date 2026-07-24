@@ -304,13 +304,14 @@ jobs:
             echo "Restored CMS DB from backup"
           fi
 
-          # Ensure Nginx can traverse directories and read static files.
-          chmod 755 /var
-          chmod 755 /var/www
-          chmod 755 "$APP_DIR"
-
-          find "$APP_DIR/out" -type d -exec chmod 755 {} +
-          find "$APP_DIR/out" -type f -exec chmod 644 {} +
+          # Ensure Nginx can read the static export
+          sudo chown -R "$USER:www-data" "$APP_DIR/out"
+          
+          sudo chmod 755 /var/www
+          sudo chmod 755 "$APP_DIR"
+          
+          sudo find "$APP_DIR/out" -type d -exec chmod 755 {} +
+          sudo find "$APP_DIR/out" -type f -exec chmod 644 {} +
 
           if [ ! -r "$APP_DIR/out/index.html" ]; then
             echo "Static index is not readable: $APP_DIR/out/index.html"
