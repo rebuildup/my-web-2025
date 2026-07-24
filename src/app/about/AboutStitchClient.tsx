@@ -500,12 +500,61 @@ function HeroOverlay({
 	);
 }
 
-// Lazy-loads portfolio items for the "works" section.
-function usePortfolioItems(): PortfolioContentItem[] {
+type AboutPortfolioSeed = {
+	id: string;
+	title: string;
+	description?: string;
+	thumbnail?: string;
+	tags?: string[];
+	category?: string;
+	createdAt?: string;
+	updatedAt?: string;
+	publishedAt?: string | null;
+};
+
+function mapToPortfolioContentItem(
+	item: AboutPortfolioSeed,
+): PortfolioContentItem {
+	return {
+		id: item.id,
+		type: "portfolio" as const,
+		title: item.title,
+		description: item.description || "",
+		category: item.category || "all",
+		tags: Array.isArray(item.tags) ? item.tags : [],
+		status: "published" as const,
+		priority: 0,
+		createdAt: item.createdAt || new Date().toISOString(),
+		updatedAt: item.updatedAt || new Date().toISOString(),
+		publishedAt: item.publishedAt || new Date().toISOString(),
+		thumbnail: item.thumbnail || "",
+		images: [],
+		technologies: [],
+		seo: {
+			title: item.title,
+			description: item.description || "",
+			keywords: Array.isArray(item.tags) ? item.tags : [],
+			ogImage: item.thumbnail || "",
+			twitterImage: item.thumbnail || "",
+			canonical: `https://yusuke-kim.com/portfolio/${item.id}`,
+			structuredData: {},
+		},
+	};
+}
+
+// Uses build-time seeds when available; falls back to Rust-compatible API.
+function usePortfolioItems(
+	initialItems: AboutPortfolioSeed[] = [],
+): PortfolioContentItem[] {
 	const [portfolioItems, setPortfolioItems] = useState<PortfolioContentItem[]>(
-		[],
+		() =>
+			initialItems
+				.filter((item) => item.thumbnail)
+				.slice(0, 6)
+				.map(mapToPortfolioContentItem),
 	);
 	useEffect(() => {
+		if (initialItems.length > 0) return;
 		const controller = new AbortController();
 		(async () => {
 			try {
@@ -515,48 +564,14 @@ function usePortfolioItems(): PortfolioContentItem[] {
 				if (!res.ok) return;
 				const json = (await res.json()) as {
 					success: boolean;
-					data: Array<{
-						id: string;
-						title: string;
-						description?: string;
-						thumbnail?: string;
-						tags?: string[];
-						category?: string;
-						createdAt?: string;
-						updatedAt?: string;
-						publishedAt?: string;
-					}>;
+					data: AboutPortfolioSeed[];
 				};
 				if (controller.signal.aborted) return;
 				if (!json.success || !Array.isArray(json.data)) return;
 				const items: PortfolioContentItem[] = json.data
 					.filter((item) => item.thumbnail)
 					.slice(0, 6)
-					.map((item) => ({
-						id: item.id,
-						type: "portfolio" as const,
-						title: item.title,
-						description: item.description || "",
-						category: item.category || "all",
-						tags: Array.isArray(item.tags) ? item.tags : [],
-						status: "published" as const,
-						priority: 0,
-						createdAt: item.createdAt || new Date().toISOString(),
-						updatedAt: item.updatedAt || new Date().toISOString(),
-						publishedAt: item.publishedAt || new Date().toISOString(),
-						thumbnail: item.thumbnail || "",
-						images: [],
-						technologies: [],
-						seo: {
-							title: item.title,
-							description: item.description || "",
-							keywords: Array.isArray(item.tags) ? item.tags : [],
-							ogImage: item.thumbnail || "",
-							twitterImage: item.thumbnail || "",
-							canonical: `https://yusuke-kim.com/portfolio/${item.id}`,
-							structuredData: {},
-						},
-					}));
+					.map(mapToPortfolioContentItem);
 				setPortfolioItems(items);
 			} catch (err) {
 				if ((err as Error).name === "AbortError") return;
@@ -564,7 +579,7 @@ function usePortfolioItems(): PortfolioContentItem[] {
 			}
 		})();
 		return () => controller.abort();
-	}, []);
+	}, [initialItems.length]);
 	return portfolioItems;
 }
 
@@ -661,9 +676,15 @@ function useHeroAnimation() {
 	};
 }
 
-export default function AboutStitchClient() {
+export type AboutStitchClientProps = {
+	initialPortfolio?: AboutPortfolioSeed[];
+};
+
+export default function AboutStitchClient({
+	initialPortfolio = [],
+}: AboutStitchClientProps) {
 	const [expandedGroups, setExpandedGroups] = useState<Set<number>>(new Set());
-	const portfolioItems = usePortfolioItems();
+	const portfolioItems = usePortfolioItems(initialPortfolio);
 	const { overlayRef, iconWrapperRef, homePlaceholderRef, breadcrumbRef } =
 		useHeroAnimation();
 

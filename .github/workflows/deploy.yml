@@ -369,12 +369,14 @@ jobs:
 
               client_max_body_size 50M;
 
+              # Next.js static export: never SPA-fallback missing RSC/chunk
+              # paths to index.html (that returns HTML where JSON is expected).
               location = / {
                   try_files /index.html =404;
               }
 
               location / {
-                  try_files $uri $uri.html $uri/ /index.html;
+                  try_files $uri $uri/ $uri.html =404;
               }
 
               location /_next/static/ {
@@ -459,43 +461,89 @@ jobs:
             exit 1
           fi
 
-          # Verify Nginx using the production Host header.
-          STATIC_HEALTH_OK=0
-
-          for attempt in {1..15}; do
-            HTTP_STATUS="$(
+          # Verify Nginx static pages + Rust API routes via local loopback.
+          check_local() {
+            local path="$1"
+            local expected_ctype_hint="${2:-}"
+            local status body_file
+            body_file="$(mktemp)"
+            status="$(
               curl \
                 --silent \
                 --show-error \
-                --output /tmp/nginx-response.html \
+                --output "$body_file" \
                 --write-out '%{http_code}' \
                 --connect-timeout 2 \
-                --max-time 5 \
+                --max-time 8 \
                 -H 'Host: yusuke-kim.com' \
-                http://127.0.0.1/ ||
+                "http://127.0.0.1${path}" ||
               true
             )"
+            echo "Local check ${path}: HTTP ${status}"
+            if [ "$status" != "200" ]; then
+              echo "Failed local check for ${path}"
+              head -50 "$body_file" || true
+              rm -f "$body_file"
+              return 1
+            fi
+            if [ -n "$expected_ctype_hint" ]; then
+              local ctype
+              ctype="$(
+                curl \
+                  --silent \
+                  --show-error \
+                  --head \
+                  --connect-timeout 2 \
+                  --max-time 5 \
+                  -H 'Host: yusuke-kim.com' \
+                  "http://127.0.0.1${path}" |
+                tr -d '\r' |
+                awk -F': ' 'tolower($1)=="content-type"{print tolower($2); exit}'
+              )"
+              case "$ctype" in
+                *"$expected_ctype_hint"*) ;;
+                *)
+                  echo "Unexpected content-type for ${path}: ${ctype}"
+                  rm -f "$body_file"
+                  return 1
+                  ;;
+              esac
+            fi
+            # Guard against SPA fallback serving HTML for missing assets.
+            if [[ "$path" == /_next/* ]] || [[ "$path" == /api/* ]] || [[ "$path" == /entries* ]] || [[ "$path" == /health ]]; then
+              if head -c 15 "$body_file" | grep -qi '<!doctype html'; then
+                echo "Got HTML where API/asset expected for ${path}"
+                rm -f "$body_file"
+                return 1
+              fi
+            fi
+            rm -f "$body_file"
+            return 0
+          }
 
-            echo "Nginx response: HTTP $HTTP_STATUS"
-
-            if [ "$HTTP_STATUS" = "200" ]; then
+          STATIC_HEALTH_OK=0
+          for attempt in {1..15}; do
+            if check_local "/" "text/html" \
+              && check_local "/about/" "text/html" \
+              && check_local "/portfolio/" "text/html" \
+              && check_local "/workshop/" "text/html" \
+              && check_local "/health" \
+              && check_local "/entries" \
+              && check_local "/api/content/portfolio?limit=5" "json" \
+              && check_local "/favicons/favicon-192x192.png"; then
               STATIC_HEALTH_OK=1
               break
             fi
-
+            echo "Waiting for full local verification: attempt $attempt"
             sleep 2
           done
 
           if [ "$STATIC_HEALTH_OK" -ne 1 ]; then
-            echo "Nginx static-site verification failed"
-
-            echo "=== Response body ==="
-            head -100 /tmp/nginx-response.html || true
+            echo "Nginx/static/API verification failed"
 
             echo "=== Static files ==="
             ls -la "$APP_DIR/out" || true
-            stat "$APP_DIR/out/index.html" || true
-            namei -l "$APP_DIR/out/index.html" || true
+            find "$APP_DIR/out" -maxdepth 2 -type d | sort || true
 
             echo "=== Nginx status ==="
             sudo systemctl status nginx --no-pager || true
@@ -544,34 +592,49 @@ jobs:
             PRODUCTION_URL="https://yusuke-kim.com"
           fi
 
+          # Trim trailing slash for consistent path joins
+          PRODUCTION_URL="${PRODUCTION_URL%/}"
+
           echo "Checking public site: $PRODUCTION_URL"
 
-          for attempt in {1..12}; do
-            HTTP_STATUS="$(
+          check_public() {
+            local path="$1"
+            local status
+            status="$(
               curl \
                 --silent \
                 --show-error \
-                --output /tmp/production-response.html \
+                --output /tmp/production-response.body \
                 --write-out '%{http_code}' \
                 --connect-timeout 5 \
-                --max-time 15 \
-                "$PRODUCTION_URL" ||
+                --max-time 20 \
+                --location \
+                "${PRODUCTION_URL}${path}" ||
               true
             )"
-
-            echo "Public response: HTTP $HTTP_STATUS"
-
-            case "$HTTP_STATUS" in
-              200|301|302|304)
-                echo "Public production verification succeeded"
-                exit 0
-                ;;
+            echo "Public check ${path}: HTTP ${status}"
+            case "$status" in
+              200|301|302|304) return 0 ;;
+              *) return 1 ;;
             esac
+          }
 
+          for attempt in {1..12}; do
+            if check_public "/" \
+              && check_public "/about/" \
+              && check_public "/portfolio/" \
+              && check_public "/workshop/" \
+              && check_public "/health" \
+              && check_public "/entries" \
+              && check_public "/api/content/portfolio?limit=5" \
+              && check_public "/favicons/favicon-192x192.png"; then
+              echo "Public production verification succeeded"
+              exit 0
+            fi
             sleep 5
           done
 
           echo "Public production verification failed"
           echo "Response body:"
-          head -100 /tmp/production-response.html || true
+          head -100 /tmp/production-response.body || true
           exit 1

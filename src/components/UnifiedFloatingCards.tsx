@@ -182,6 +182,11 @@ interface PortfolioContent {
 	publishedAt?: string;
 }
 
+export type UnifiedFloatingCardsProps = {
+	/** Build-time portfolio items for static export (avoids runtime /api/content/*). */
+	initialPortfolio?: PortfolioContent[];
+};
+
 // Unified card type
 type CardType =
 	| "github-repo"
@@ -241,11 +246,14 @@ function getEventIcon(type: string): React.ReactNode {
 	}
 }
 
-export default function UnifiedFloatingCards() {
+export default function UnifiedFloatingCards({
+	initialPortfolio = [],
+}: UnifiedFloatingCardsProps) {
 	const [cards, setCards] = useState<UnifiedCard[]>([]);
 	const [githubData, setGithubData] = useState<GitHubData | null>(null);
 	const [youtubeData, setYoutubeData] = useState<YouTubeData | null>(null);
-	const [portfolioData, setPortfolioData] = useState<PortfolioContent[]>([]);
+	const [portfolioData, setPortfolioData] =
+		useState<PortfolioContent[]>(initialPortfolio);
 
 	const nextIdRef = useRef(0);
 	const scrollAccumulator = useRef(0);
@@ -257,7 +265,8 @@ export default function UnifiedFloatingCards() {
 	const portfolioIndexRef = useRef(0);
 	const linkIndexRef = useRef(0);
 
-	// Fetch all data in parallel
+	// Fetch external activity APIs. Portfolio prefers build-time props; only
+	// fall back to the Rust-compatible /api/content/portfolio route when empty.
 	useEffect(() => {
 		const controller = new AbortController();
 		const fetchJson = (url: string) =>
@@ -265,27 +274,31 @@ export default function UnifiedFloatingCards() {
 				res.ok ? res.json() : null,
 			);
 		(async () => {
-			const [githubResult, youtubeResult, portfolioResult] =
-				await Promise.allSettled([
-					fetchJson("/api/github/activity"),
-					fetchJson("/api/youtube/activity"),
-					fetchJson("/api/content/portfolio?limit=50"),
-				]);
+			const requests: Promise<unknown>[] = [
+				fetchJson("/api/github/activity"),
+				fetchJson("/api/youtube/activity"),
+			];
+			const shouldFetchPortfolio = initialPortfolio.length === 0;
+			if (shouldFetchPortfolio) {
+				requests.push(fetchJson("/api/content/portfolio?limit=50"));
+			}
+
+			const results = await Promise.allSettled(requests);
 
 			if (controller.signal.aborted) return;
-			if (githubResult.status === "fulfilled" && githubResult.value) {
-				setGithubData(githubResult.value);
+			if (results[0]?.status === "fulfilled" && results[0].value) {
+				setGithubData(results[0].value as GitHubData);
 			}
-			if (youtubeResult.status === "fulfilled" && youtubeResult.value) {
-				setYoutubeData(youtubeResult.value);
+			if (results[1]?.status === "fulfilled" && results[1].value) {
+				setYoutubeData(results[1].value as YouTubeData);
 			}
-			if (portfolioResult.status === "fulfilled" && portfolioResult.value) {
-				const json = portfolioResult.value as {
+			if (shouldFetchPortfolio && results[2]?.status === "fulfilled") {
+				const json = results[2].value as {
 					success: boolean;
 					data: unknown;
-				};
-				if (json.success && json.data) {
-					setPortfolioData(json.data as never);
+				} | null;
+				if (json?.success && json.data) {
+					setPortfolioData(json.data as PortfolioContent[]);
 				}
 			}
 		})().catch((err: unknown) => {
@@ -293,7 +306,7 @@ export default function UnifiedFloatingCards() {
 		});
 
 		return () => controller.abort();
-	}, []);
+	}, [initialPortfolio.length]);
 
 	// Unified scroll handler
 	useEffect(() => {

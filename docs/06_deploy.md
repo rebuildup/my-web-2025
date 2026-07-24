@@ -308,13 +308,19 @@ server {
     
     client_max_body_size 50M;
     
-    # 静的エクスポートファイル配信とクリーンURLフォールバック
+    # Next.js static export: do NOT SPA-fallback missing files to index.html.
+    # Missing RSC/chunk paths must 404 instead of returning HTML.
+    location = / {
+        try_files /index.html =404;
+    }
+
     location / {
-        try_files $uri $uri.html $uri/ /index.html =404;
+        try_files $uri $uri/ $uri.html =404;
     }
 
     # 静的アセットキャッシュ (_next/static)
     location /_next/static/ {
+        try_files $uri =404;
         expires 1y;
         add_header Cache-Control "public, max-age=31536000, immutable";
     }

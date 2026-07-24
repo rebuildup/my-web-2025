@@ -7,7 +7,7 @@ mod db;
 mod routes;
 
 use db::create_pool;
-use routes::{entries, markdown, media, preview, search, tags};
+use routes::{content_compat, entries, markdown, media, preview, search, tags};
 
 fn cms_api_host() -> String {
     env::var("CMS_API_HOST").unwrap_or_else(|_| "127.0.0.1".to_string())
@@ -74,6 +74,9 @@ async fn main() {
         .nest("/tags", tags::router(pool.clone()))
         .nest("/search", search::router(pool.clone()))
         .nest("/preview", preview::router(pool.clone()))
+        // Next.js static export has no Node API routes; keep browser-facing
+        // `/api/content/*` working through the Rust backend.
+        .nest("/api/content", content_compat::router(pool.clone()))
         .route("/health", axum::routing::get(health))
         .route("/api/github/activity", axum::routing::get(dummy_json))
         .route("/api/youtube/activity", axum::routing::get(dummy_json))

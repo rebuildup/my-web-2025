@@ -1,3 +1,4 @@
+pub mod content_compat;
 pub mod entries;
 pub mod markdown;
 pub mod media;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import UnifiedFloatingCards from "@/components/UnifiedFloatingCards";
 import XProfileImage from "@/components/XProfileImage";
+import { getStaticPortfolioItems } from "@/lib/portfolio/static-portfolio";
 import HomeNavButton from "./_components/HomeNavButton";
 
 const navItems = [
@@ -10,10 +11,12 @@ const navItems = [
 	{ href: "/tools", label: "Tools" },
 ];
 
-export default function Home() {
+export default async function Home() {
+	const portfolioItems = await getStaticPortfolioItems(50);
+
 	return (
 		<div className="h-dvh overflow-hidden relative">
-			<UnifiedFloatingCards />
+			<UnifiedFloatingCards initialPortfolio={portfolioItems} />
 
 			<main
 				id="main-content"
