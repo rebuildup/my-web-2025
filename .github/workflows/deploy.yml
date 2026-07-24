@@ -99,7 +99,25 @@ jobs:
           export CMS_USE_RUST_API=1
           export CMS_API_DATA_DIR="$APP_DIR/data/db"
 
-          command -v pm2 >/dev/null 2>&1 || { echo "pm2 not found"; exit 1; }
+          # Load Bun if installed
+          export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
+          export PATH="$BUN_INSTALL/bin:$PATH"
+
+          # Install Bun if missing
+          if ! command -v bun >/dev/null 2>&1; then
+            curl -fsSL https://bun.sh/install | bash
+
+            export BUN_INSTALL="$HOME/.bun"
+            export PATH="$BUN_INSTALL/bin:$PATH"
+          fi
+
+          # Install PM2 if missing
+          if ! command -v pm2 >/dev/null 2>&1; then
+            bun add --global pm2
+          fi
+
+          echo "bun: $(bun --version)"
+          echo "pm2: $(pm2 --version)"
 
           # Preserve CMS SQLite Database across deployments
           rm -rf "$DB_BACKUP_DIR"
@@ -141,6 +159,7 @@ jobs:
               {
                 name: 'cms-api',
                 script: '/var/www/yusuke-kim/apps/cms-api/target/release/cms-api',
+                interpreter: "none",
                 cwd: '/var/www/yusuke-kim',
                 env: {
                   RUST_LOG: 'info',
