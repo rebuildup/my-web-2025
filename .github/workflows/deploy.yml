@@ -252,7 +252,7 @@ jobs:
           tar -xzf "$PACKAGE_PATH" -C "$STATIC_RELEASE_DIR"
 
           echo "=== Extracted static export ==="
-          find "$STATIC_RELEASE_DIR" -maxdepth 3 -type f | sort | head -100
+          find "$STATIC_RELEASE_DIR" -maxdepth 3 -type f | sort | sed -n '1,100p'
 
           if [ ! -f "$STATIC_RELEASE_DIR/index.html" ]; then
             echo "Static archive does not contain index.html at its root"
