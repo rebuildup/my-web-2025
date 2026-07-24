@@ -222,7 +222,20 @@ jobs:
           NGINX_EOF
             sudo ln -sf "$NGINX_CONF" /etc/nginx/sites-enabled/yusuke-kim
             sudo rm -f /etc/nginx/sites-enabled/default
-            sudo nginx -t && sudo systemctl reload nginx || echo "Nginx reload warning"
+            sudo nginx -t
+
+            if sudo systemctl is-active --quiet nginx; then
+              sudo systemctl reload nginx
+            else
+              sudo systemctl start nginx
+            fi
+
+            sudo systemctl is-active --quiet nginx || {
+              echo "Nginx is not running"
+              sudo systemctl status nginx --no-pager || true
+              sudo journalctl -u nginx --no-pager -n 100 || true
+              exit 1
+            }
           fi
 
           # Start PM2 processes
@@ -249,16 +262,25 @@ jobs:
 
           # Verification 2: Static Export Nginx Response Check
           STATIC_HEALTH_OK=0
-          for attempt in {1..5}; do
-            if curl -fsS http://127.0.0.1:80/ >/dev/null 2>&1 || [ -f "$APP_DIR/out/index.html" ]; then
+
+          for attempt in {1..10}; do
+            if curl -fsS \
+              --connect-timeout 2 \
+              --max-time 5 \
+              -H "Host: yusuke-kim.com" \
+              http://127.0.0.1/ >/dev/null; then
               STATIC_HEALTH_OK=1
               break
             fi
+          
             sleep 2
           done
-
+          
           if [ "$STATIC_HEALTH_OK" -ne 1 ]; then
-            echo "Static site verification failed"
+            echo "Nginx static-site verification failed"
+            sudo systemctl status nginx --no-pager || true
+            sudo journalctl -u nginx --no-pager -n 100 || true
+            sudo nginx -T || true
             exit 1
           fi
 
