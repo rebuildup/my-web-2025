@@ -2,7 +2,8 @@ name: Bun Build, Static Export and Server Deploy
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
@@ -22,13 +23,15 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: "1.3.10"
+          bun-version: "1.3.11"
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
       - name: Run verification checks
         run: |
+          set -euo pipefail
+
           bun run type-check
           bun run lint
           bun run test
@@ -41,147 +44,316 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock') }}-
 
-      - name: Build Next.js Static Export
+      - name: Build Next.js static export
         env:
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
           CMS_USE_RUST_API: "1"
-        run: bun run build
+        run: |
+          set -euo pipefail
 
-      - name: Package static export bundle
-        run: tar -czf deployment-static.tar.gz -C out .
+          bun run build
 
-      - name: Setup Rust Toolchain
+      - name: Validate and package static export
+        run: |
+          set -euo pipefail
+
+          echo "=== Static export contents ==="
+          find out -maxdepth 3 -type f | sort | head -100
+
+          if [ ! -d out ]; then
+            echo "Static export directory does not exist: out"
+            exit 1
+          fi
+
+          if [ ! -f out/index.html ]; then
+            echo "Static export entrypoint does not exist: out/index.html"
+            echo "Top-level out contents:"
+            ls -la out || true
+            exit 1
+          fi
+
+          tar -czf deployment-static.tar.gz -C out .
+
+          echo "=== Static archive contents ==="
+          tar -tzf deployment-static.tar.gz | head -100
+
+      - name: Setup Rust toolchain
         uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: stable
 
-      - name: Build Rust CMS API Backend
+      - name: Build Rust CMS API backend
         run: |
+          set -euo pipefail
+
           cd apps/cms-api
           cargo build --release --manifest-path Cargo.toml
-          tar -czf cms-api-binary.tar.gz -C target/release cms-api
 
-      - name: Setup SSH Config
+          test -x target/release/cms-api
+
+          tar -czf cms-api-binary.tar.gz \
+            -C target/release \
+            cms-api
+
+      - name: Setup SSH config
         run: |
+          set -euo pipefail
+
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          echo "${{ secrets.GCP_SSH_KEY }}" > ~/.ssh/id_rsa
+
+          printf '%s\n' "${{ secrets.GCP_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          cat > ~/.ssh/config << EOF
+
+          cat > ~/.ssh/config <<EOF
           Host deploy-server
             HostName ${{ secrets.GCP_HOST }}
             User ${{ secrets.GCP_USER }}
             IdentityFile ~/.ssh/id_rsa
+            IdentitiesOnly yes
             StrictHostKeyChecking no
+            ServerAliveInterval 30
+            ServerAliveCountMax 5
           EOF
+
           chmod 600 ~/.ssh/config
 
-      - name: Transfer deployment packages to server
+      - name: Test SSH connection
         run: |
-          scp deployment-static.tar.gz deploy-server:/home/${{ secrets.GCP_USER }}/deployment-static.tar.gz
-          scp apps/cms-api/cms-api-binary.tar.gz deploy-server:/home/${{ secrets.GCP_USER }}/cms-api-binary.tar.gz
+          set -euo pipefail
 
-      - name: Execute Server Deployment & Nginx Setup
+          ssh deploy-server '
+            echo "SSH connection successful"
+            hostname
+          '
+
+      - name: Transfer deployment packages
         run: |
-          ssh deploy-server 'bash -s' << 'REMOTE'
+          set -euo pipefail
+
+          scp \
+            deployment-static.tar.gz \
+            deploy-server:/home/${{ secrets.GCP_USER }}/deployment-static.tar.gz
+
+          scp \
+            apps/cms-api/cms-api-binary.tar.gz \
+            deploy-server:/home/${{ secrets.GCP_USER }}/cms-api-binary.tar.gz
+
+      - name: Execute server deployment
+        run: |
+          ssh deploy-server 'bash -s' <<'REMOTE'
           set -euo pipefail
 
           APP_DIR="/var/www/yusuke-kim"
+          RELEASES_DIR="$APP_DIR/releases"
+          STATIC_RELEASE_DIR="$RELEASES_DIR/static-new"
+          API_RELEASE_DIR="$RELEASES_DIR/cms-api-new"
+
           PACKAGE_PATH="$HOME/deployment-static.tar.gz"
           CMS_API_PATH="$HOME/cms-api-binary.tar.gz"
+
+          DB_DIR="$APP_DIR/data/db"
           DB_BACKUP_DIR="$HOME/cms-db-backup"
 
-          export CMS_API_HOST=127.0.0.1
-          export CMS_API_PORT=3001
-          export CMS_API_BASE_URL=http://127.0.0.1:3001
-          export CMS_USE_RUST_API=1
-          export CMS_API_DATA_DIR="$APP_DIR/data/db"
+          CMS_BINARY="$APP_DIR/apps/cms-api/target/release/cms-api"
+          NGINX_CONF="/etc/nginx/sites-available/yusuke-kim"
 
-          # Load Bun if installed
+          export CMS_API_HOST="127.0.0.1"
+          export CMS_API_PORT="3001"
+          export CMS_API_BASE_URL="http://127.0.0.1:3001"
+          export CMS_USE_RUST_API="1"
+          export CMS_API_DATA_DIR="$DB_DIR"
+
+          echo "=== Deployment environment ==="
+          echo "User: $(whoami)"
+          echo "Home: $HOME"
+          echo "App directory: $APP_DIR"
+
+          # Bun is not automatically available in non-interactive SSH shells.
           export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
           export PATH="$BUN_INSTALL/bin:$PATH"
 
-          # Install Bun if missing
+          if ! command -v curl >/dev/null 2>&1; then
+            echo "curl is required"
+            exit 1
+          fi
+
           if ! command -v bun >/dev/null 2>&1; then
+            echo "Bun not found. Installing Bun..."
             curl -fsSL https://bun.sh/install | bash
 
             export BUN_INSTALL="$HOME/.bun"
             export PATH="$BUN_INSTALL/bin:$PATH"
           fi
 
-          # Install PM2 if missing
-          if ! command -v pm2 >/dev/null 2>&1; then
-            bun add --global pm2
+          if ! command -v bun >/dev/null 2>&1; then
+            echo "Bun installation failed"
+            exit 1
           fi
 
-          echo "bun: $(bun --version)"
-          echo "pm2: $(pm2 --version)"
+          if ! command -v pm2 >/dev/null 2>&1; then
+            echo "PM2 not found. Installing PM2 with Bun..."
+            bun add --global pm2@6.0.14
+          fi
 
-          # Preserve CMS SQLite Database across deployments
+          if ! command -v pm2 >/dev/null 2>&1; then
+            echo "PM2 installation failed"
+            exit 1
+          fi
+
+          echo "Bun: $(bun --version)"
+          echo "PM2: $(pm2 --version)"
+
+          if ! sudo -n true >/dev/null 2>&1; then
+            echo "Passwordless sudo is required for deployment"
+            exit 1
+          fi
+
+          if ! command -v nginx >/dev/null 2>&1; then
+            echo "Nginx is not installed"
+            exit 1
+          fi
+
+          if [ ! -f "$PACKAGE_PATH" ]; then
+            echo "Static package does not exist: $PACKAGE_PATH"
+            exit 1
+          fi
+
+          if [ ! -f "$CMS_API_PATH" ]; then
+            echo "CMS API package does not exist: $CMS_API_PATH"
+            exit 1
+          fi
+
+          mkdir -p "$APP_DIR"
+          mkdir -p "$RELEASES_DIR"
+          mkdir -p "$APP_DIR/apps/cms-api/target/release"
+          mkdir -p "$DB_DIR"
+
+          # Preserve CMS SQLite database across deployments.
           rm -rf "$DB_BACKUP_DIR"
-          if [ -d "$APP_DIR/data/db" ] && [ -n "$(ls -A "$APP_DIR/data/db" 2>/dev/null || true)" ]; then
+
+          if [ -d "$DB_DIR" ] &&
+             [ -n "$(ls -A "$DB_DIR" 2>/dev/null || true)" ]; then
             mkdir -p "$DB_BACKUP_DIR"
-            cp -a "$APP_DIR/data/db/." "$DB_BACKUP_DIR/"
+            cp -a "$DB_DIR/." "$DB_BACKUP_DIR/"
             echo "Backed up CMS DB to $DB_BACKUP_DIR"
           fi
 
-          # Stop old PM2 processes
+          # Extract static export into a temporary release directory.
+          rm -rf "$STATIC_RELEASE_DIR"
+          mkdir -p "$STATIC_RELEASE_DIR"
+
+          tar -xzf "$PACKAGE_PATH" -C "$STATIC_RELEASE_DIR"
+
+          echo "=== Extracted static export ==="
+          find "$STATIC_RELEASE_DIR" -maxdepth 3 -type f | sort | head -100
+
+          if [ ! -f "$STATIC_RELEASE_DIR/index.html" ]; then
+            echo "Static archive does not contain index.html at its root"
+            echo "Extracted directory contents:"
+            ls -la "$STATIC_RELEASE_DIR" || true
+            exit 1
+          fi
+
+          # Extract the Rust CMS binary into a temporary release directory.
+          rm -rf "$API_RELEASE_DIR"
+          mkdir -p "$API_RELEASE_DIR"
+
+          tar -xzf "$CMS_API_PATH" -C "$API_RELEASE_DIR"
+
+          if [ ! -f "$API_RELEASE_DIR/cms-api" ]; then
+            echo "CMS API archive does not contain cms-api"
+            ls -la "$API_RELEASE_DIR" || true
+            exit 1
+          fi
+
+          chmod +x "$API_RELEASE_DIR/cms-api"
+
+          # Stop the currently running API only after both packages validate.
           pm2 delete yusuke-kim 2>/dev/null || true
           pm2 delete cms-api 2>/dev/null || true
 
-          mkdir -p "$APP_DIR/out"
-          mkdir -p "$APP_DIR/apps/cms-api/target/release"
-          mkdir -p "$APP_DIR/data/db"
+          # Atomically replace static output as much as possible.
+          rm -rf "$APP_DIR/out.previous"
 
-          # Update static export files
-          find "$APP_DIR/out" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
-          tar -xzf "$PACKAGE_PATH" -C "$APP_DIR/out"
-          tar -xzf "$CMS_API_PATH" -C "$APP_DIR/apps/cms-api/target/release/"
+          if [ -d "$APP_DIR/out" ]; then
+            mv "$APP_DIR/out" "$APP_DIR/out.previous"
+          fi
 
-          # Restore preserved CMS DB
-          if [ -d "$DB_BACKUP_DIR" ] && [ -n "$(ls -A "$DB_BACKUP_DIR" 2>/dev/null || true)" ]; then
-            cp -a "$DB_BACKUP_DIR/." "$APP_DIR/data/db/"
+          mv "$STATIC_RELEASE_DIR" "$APP_DIR/out"
+
+          # Replace Rust CMS binary.
+          install \
+            -m 755 \
+            "$API_RELEASE_DIR/cms-api" \
+            "$CMS_BINARY"
+
+          rm -rf "$API_RELEASE_DIR"
+
+          # Restore the preserved database when present.
+          if [ -d "$DB_BACKUP_DIR" ] &&
+             [ -n "$(ls -A "$DB_BACKUP_DIR" 2>/dev/null || true)" ]; then
+            mkdir -p "$DB_DIR"
+            cp -a "$DB_BACKUP_DIR/." "$DB_DIR/"
             echo "Restored CMS DB from backup"
           fi
 
-          rm -f "$PACKAGE_PATH"
-          rm -f "$CMS_API_PATH"
-          rm -rf "$DB_BACKUP_DIR"
+          # Ensure Nginx can traverse directories and read static files.
+          chmod 755 /var
+          chmod 755 /var/www
+          chmod 755 "$APP_DIR"
 
-          chmod +x "$APP_DIR/apps/cms-api/target/release/cms-api"
+          find "$APP_DIR/out" -type d -exec chmod 755 {} +
+          find "$APP_DIR/out" -type f -exec chmod 644 {} +
 
-          # Write PM2 ecosystem file for Rust CMS API
-          cat > "$APP_DIR/ecosystem.config.js" << 'ECOSYSTEM_EOF'
+          if [ ! -r "$APP_DIR/out/index.html" ]; then
+            echo "Static index is not readable: $APP_DIR/out/index.html"
+            namei -l "$APP_DIR/out/index.html" || true
+            exit 1
+          fi
+
+          echo "=== Deployed static entrypoint ==="
+          ls -la "$APP_DIR/out/index.html"
+          namei -l "$APP_DIR/out/index.html"
+
+          # Write PM2 configuration for the native Rust binary.
+          cat > "$APP_DIR/ecosystem.config.cjs" <<'ECOSYSTEM_EOF'
           module.exports = {
             apps: [
               {
-                name: 'cms-api',
-                script: '/var/www/yusuke-kim/apps/cms-api/target/release/cms-api',
+                name: "cms-api",
+                script: "/var/www/yusuke-kim/apps/cms-api/target/release/cms-api",
                 interpreter: "none",
-                cwd: '/var/www/yusuke-kim',
+                cwd: "/var/www/yusuke-kim",
                 env: {
-                  RUST_LOG: 'info',
-                  CMS_API_DATA_DIR: '/var/www/yusuke-kim/data/db',
-                  CMS_API_HOST: '127.0.0.1',
-                  CMS_API_PORT: '3001'
+                  RUST_LOG: "info",
+                  CMS_API_DATA_DIR: "/var/www/yusuke-kim/data/db",
+                  CMS_API_HOST: "127.0.0.1",
+                  CMS_API_PORT: "3001"
                 },
-                max_memory_restart: '200M',
+                autorestart: true,
+                max_memory_restart: "200M",
                 restart_delay: 5000,
                 max_restarts: 10,
-                min_uptime: '10s'
+                min_uptime: "10s"
               }
             ]
           };
           ECOSYSTEM_EOF
 
-          # Configure Nginx for Static Export + Rust CMS API Proxy if supported
-          NGINX_CONF="/etc/nginx/sites-available/yusuke-kim"
-          if [ -d "/etc/nginx/sites-available" ] && sudo -n true 2>/dev/null; then
-            sudo tee "$NGINX_CONF" > /dev/null << 'NGINX_EOF'
+          # Write Nginx configuration.
+          if [ ! -d "/etc/nginx/sites-available" ]; then
+            echo "/etc/nginx/sites-available does not exist"
+            exit 1
+          fi
+
+          sudo tee "$NGINX_CONF" >/dev/null <<'NGINX_EOF'
           server {
-              listen 80;
+              listen 80 default_server;
+              listen [::]:80 default_server;
+
               server_name yusuke-kim.com *.yusuke-kim.com _;
 
               root /var/www/yusuke-kim/out;
@@ -192,11 +364,16 @@ jobs:
 
               client_max_body_size 50M;
 
+              location = / {
+                  try_files /index.html =404;
+              }
+
               location / {
-                  try_files $uri $uri.html $uri/ /index.html =404;
+                  try_files $uri $uri.html $uri/ /index.html;
               }
 
               location /_next/static/ {
+                  try_files $uri =404;
                   expires 1y;
                   add_header Cache-Control "public, max-age=31536000, immutable";
               }
@@ -220,70 +397,176 @@ jobs:
               }
           }
           NGINX_EOF
-            sudo ln -sf "$NGINX_CONF" /etc/nginx/sites-enabled/yusuke-kim
-            sudo rm -f /etc/nginx/sites-enabled/default
-            sudo nginx -t
 
-            if sudo systemctl is-active --quiet nginx; then
-              sudo systemctl reload nginx
-            else
-              sudo systemctl start nginx
-            fi
+          sudo ln -sf \
+            "$NGINX_CONF" \
+            /etc/nginx/sites-enabled/yusuke-kim
 
-            sudo systemctl is-active --quiet nginx || {
-              echo "Nginx is not running"
-              sudo systemctl status nginx --no-pager || true
-              sudo journalctl -u nginx --no-pager -n 100 || true
-              exit 1
-            }
+          sudo rm -f /etc/nginx/sites-enabled/default
+
+          sudo nginx -t
+
+          if sudo systemctl is-active --quiet nginx; then
+            sudo systemctl reload nginx
+          else
+            sudo systemctl start nginx
           fi
 
-          # Start PM2 processes
+          sudo systemctl enable nginx >/dev/null
+
+          if ! sudo systemctl is-active --quiet nginx; then
+            echo "Nginx failed to start"
+            sudo systemctl status nginx --no-pager || true
+            sudo journalctl -u nginx --no-pager -n 100 || true
+            exit 1
+          fi
+
+          # Start Rust CMS API.
           cd "$APP_DIR"
-          pm2 start ecosystem.config.js
+
+          pm2 start ecosystem.config.cjs
           pm2 save
 
-          # Verification 1: Rust CMS API Health Check
+          # Verify Rust CMS API.
           RUST_HEALTH_OK=0
-          for attempt in {1..10}; do
-            if curl -fsS http://127.0.0.1:3001/health >/dev/null 2>&1; then
+
+          for attempt in {1..15}; do
+            if curl \
+              --fail \
+              --silent \
+              --show-error \
+              --connect-timeout 2 \
+              --max-time 5 \
+              http://127.0.0.1:3001/health \
+              >/dev/null; then
               RUST_HEALTH_OK=1
               break
             fi
+
+            echo "Waiting for Rust CMS API: attempt $attempt"
             sleep 2
           done
 
           if [ "$RUST_HEALTH_OK" -ne 1 ]; then
             echo "Health check failed for Rust CMS API"
-            pm2 status
-            pm2 logs cms-api --lines 80 --nostream
+            pm2 status || true
+            pm2 logs cms-api --lines 100 --nostream || true
             exit 1
           fi
 
-          # Verification 2: Static Export Nginx Response Check
+          # Verify Nginx using the production Host header.
           STATIC_HEALTH_OK=0
 
-          for attempt in {1..10}; do
-            if curl -fsS \
-              --connect-timeout 2 \
-              --max-time 5 \
-              -H "Host: yusuke-kim.com" \
-              http://127.0.0.1/ >/dev/null; then
+          for attempt in {1..15}; do
+            HTTP_STATUS="$(
+              curl \
+                --silent \
+                --show-error \
+                --output /tmp/nginx-response.html \
+                --write-out '%{http_code}' \
+                --connect-timeout 2 \
+                --max-time 5 \
+                -H 'Host: yusuke-kim.com' \
+                http://127.0.0.1/ ||
+              true
+            )"
+
+            echo "Nginx response: HTTP $HTTP_STATUS"
+
+            if [ "$HTTP_STATUS" = "200" ]; then
               STATIC_HEALTH_OK=1
               break
             fi
-          
+
             sleep 2
           done
-          
+
           if [ "$STATIC_HEALTH_OK" -ne 1 ]; then
             echo "Nginx static-site verification failed"
+
+            echo "=== Response body ==="
+            head -100 /tmp/nginx-response.html || true
+
+            echo "=== Static files ==="
+            ls -la "$APP_DIR/out" || true
+            stat "$APP_DIR/out/index.html" || true
+            namei -l "$APP_DIR/out/index.html" || true
+
+            echo "=== Nginx status ==="
             sudo systemctl status nginx --no-pager || true
-            sudo journalctl -u nginx --no-pager -n 100 || true
+
+            echo "=== Nginx site error log ==="
+            sudo tail -100 /var/log/nginx/yusuke-kim-error.log || true
+
+            echo "=== Nginx site access log ==="
+            sudo tail -100 /var/log/nginx/yusuke-kim-access.log || true
+
+            echo "=== Effective Nginx configuration ==="
             sudo nginx -T || true
+
+            # Restore the previous static release when available.
+            if [ -d "$APP_DIR/out.previous" ]; then
+              echo "Restoring previous static release"
+
+              rm -rf "$APP_DIR/out.failed"
+              mv "$APP_DIR/out" "$APP_DIR/out.failed"
+              mv "$APP_DIR/out.previous" "$APP_DIR/out"
+
+              sudo nginx -t
+              sudo systemctl reload nginx
+            fi
+
             exit 1
           fi
 
-          echo "Static export and Rust backend deployed successfully!"
-          exit 0
+          # Deployment succeeded, so the previous release is no longer needed.
+          rm -rf "$APP_DIR/out.previous"
+
+          rm -f "$PACKAGE_PATH"
+          rm -f "$CMS_API_PATH"
+          rm -rf "$DB_BACKUP_DIR"
+
+          echo "Static export and Rust backend deployed successfully"
           REMOTE
+
+      - name: Verify public production site
+        run: |
+          set -euo pipefail
+
+          PRODUCTION_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}"
+
+          if [ -z "$PRODUCTION_URL" ]; then
+            PRODUCTION_URL="https://yusuke-kim.com"
+          fi
+
+          echo "Checking public site: $PRODUCTION_URL"
+
+          for attempt in {1..12}; do
+            HTTP_STATUS="$(
+              curl \
+                --silent \
+                --show-error \
+                --output /tmp/production-response.html \
+                --write-out '%{http_code}' \
+                --connect-timeout 5 \
+                --max-time 15 \
+                "$PRODUCTION_URL" ||
+              true
+            )"
+
+            echo "Public response: HTTP $HTTP_STATUS"
+
+            case "$HTTP_STATUS" in
+              200|301|302|304)
+                echo "Public production verification succeeded"
+                exit 0
+                ;;
+            esac
+
+            sleep 5
+          done
+
+          echo "Public production verification failed"
+          echo "Response body:"
+          head -100 /tmp/production-response.html || true
+          exit 1
