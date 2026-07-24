@@ -6,7 +6,6 @@ const _isTurbopackDev = isDevelopment && process.env.TURBOPACK === "1";
 
 const nextConfig: NextConfig = {
 	experimental: {
-		useTypeScriptCli: true,
 		optimizePackageImports: [
 			"lucide-react",
 			"@mui/icons-material",
