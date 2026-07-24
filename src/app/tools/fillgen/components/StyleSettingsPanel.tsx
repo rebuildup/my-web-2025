@@ -1,7 +1,6 @@
 "use client";
 
 import type { Dispatch, SetStateAction } from "react";
-import type { StyleSettings } from "./types";
 import { presets } from "./presets";
 import {
 	BlankStyleSection,
@@ -10,6 +9,7 @@ import {
 	NavTabStyleSection,
 	TextSizeSection,
 } from "./StyleSections";
+import type { StyleSettings } from "./types";
 
 type Props = {
 	settings: StyleSettings;

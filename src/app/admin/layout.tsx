@@ -1,7 +1,5 @@
 import type { ReactNode } from "react";
 
-export const dynamic = "force-dynamic";
-
 const NAV_TABS = [
 	{ label: "コンテンツ一覧", href: "/admin/content" },
 	{ label: "ブロックエディタ", href: "/admin/content/page-editor" },

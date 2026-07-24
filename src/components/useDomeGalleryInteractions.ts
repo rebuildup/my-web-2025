@@ -1,5 +1,5 @@
 import { useGesture } from "@use-gesture/react";
-import { useCallback, useEffect, useRef, type RefObject } from "react";
+import { type RefObject, useCallback, useEffect, useRef } from "react";
 import {
 	clamp,
 	computeItemBaseRotation,

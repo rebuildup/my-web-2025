@@ -6,23 +6,19 @@ interface RotatedSlugProps {
 export function RotatedSlug({ slug, side }: RotatedSlugProps) {
 	if (!slug) return null;
 	const isLeft = side === "left";
+	const sideStyle = isLeft ? { left: 20 } : { right: 20 };
 	return (
 		<div
 			style={{
 				position: "absolute",
-				left: isLeft ? "20px" : undefined,
-				right: isLeft ? undefined : "20px",
-				top: "50%",
-				transform: isLeft
-					? "translate(-50%, -50%) rotate(-90deg)"
-					: "translate(50%, -50%) rotate(90deg)",
-				fontSize: "14px",
+				top: 200,
+				fontSize: 14,
 				fontWeight: 700,
 				color: "#333",
 				letterSpacing: "4px",
-				zIndex: 2,
 				textTransform: "uppercase",
 				whiteSpace: "nowrap",
+				...sideStyle,
 			}}
 		>
 			{slug}

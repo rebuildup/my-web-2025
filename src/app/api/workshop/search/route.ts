@@ -7,8 +7,7 @@ import {
 } from "@/lib/cms-api/server-data";
 import Fuse from "fuse.js";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 
 interface ArticleSearchData {
 	page: MarkdownPage;
@@ -52,11 +51,19 @@ async function prepareArticleData(pages: MarkdownPage[]): Promise<ArticleSearchD
 }
 
 export async function GET(request: NextRequest) {
-	const searchParams = request.nextUrl.searchParams;
-	const keyword = searchParams.get("q")?.trim() ?? "";
-	const tag = searchParams.get("tag")?.trim();
-	const sort = searchParams.get("sort") ?? "newest";
-	const mode = searchParams.get("mode") ?? "normal"; // "normal" or "detailed"
+	let keyword = "";
+	let tag: string | undefined;
+	let sort = "newest";
+	let mode = "normal";
+	try {
+		const url = new URL(request?.url || "http://localhost");
+		keyword = url.searchParams.get("q")?.trim() ?? "";
+		tag = url.searchParams.get("tag")?.trim() ?? undefined;
+		sort = url.searchParams.get("sort") ?? "newest";
+		mode = url.searchParams.get("mode") ?? "normal";
+	} catch {
+		// Fallback for static prerendering
+	}
 
 	try {
 		// Get all markdown pages

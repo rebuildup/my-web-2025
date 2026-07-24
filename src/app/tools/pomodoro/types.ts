@@ -63,8 +63,8 @@ export type TimerState = "idle" | "running" | "paused" | "completed";
 export type SessionType = "work" | "shortBreak" | "longBreak";
 
 // 新しいサイクルシステム: 15分→5分→30分→5分→45分→5分→60分→5分→75分→30分
-const PROGRESSIVE_WORK_DURATIONS = [15, 30, 45, 60, 75]; // in minutes
-const PROGRESSIVE_BREAK_DURATIONS = [5, 5, 5, 5, 30]; // in minutes
+const _PROGRESSIVE_WORK_DURATIONS = [15, 30, 45, 60, 75]; // in minutes
+const _PROGRESSIVE_BREAK_DURATIONS = [5, 5, 5, 5, 30]; // in minutes
 
 export interface TimerDisplay {
 	minutes: number;

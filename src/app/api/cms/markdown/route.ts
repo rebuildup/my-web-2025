@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import type { MarkdownFile, MarkdownPage } from "@/cms/types/markdown";
 import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { cmsApiFetch } from "@/lib/cms-api/server-client";

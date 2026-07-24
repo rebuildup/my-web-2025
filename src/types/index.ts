@@ -51,12 +51,10 @@ export type {
 export {
 	ENHANCED_PORTFOLIO_CATEGORIES as ENHANCED_CATEGORIES,
 	ENHANCED_PORTFOLIO_CATEGORY_LABELS as ENHANCED_CATEGORY_LABELS,
-	getEnhancedPortfolioCategoryOptions,
 	hasOtherCategory,
 	isEnhancedContentItem as isEnhancedContentItemHelper,
 	isValidEnhancedPortfolioCategory,
 	migrateCategoryToCategories,
-	shouldExcludeFromGallery,
 } from "./enhanced-content";
 // Portfolio-specific Types
 export type {
@@ -177,7 +175,7 @@ export const isContentType = (value: string): value is ContentType => {
 	].includes(value);
 };
 
-const isFormFieldType = (value: string): value is FormFieldType => {
+const _isFormFieldType = (value: string): value is FormFieldType => {
 	return [
 		"text",
 		"email",
@@ -213,7 +211,7 @@ export const validateContentItem = (item: unknown): item is ContentItem => {
 import type { MarkdownContentItem } from "./content";
 
 // Markdown content item validation
-const validateMarkdownContentItem = (
+const _validateMarkdownContentItem = (
 	item: unknown,
 ): item is MarkdownContentItem => {
 	return (
@@ -226,7 +224,7 @@ const validateMarkdownContentItem = (
 };
 
 // Type guard to check if an item has markdown support
-const isMarkdownContentItem = (
+const _isMarkdownContentItem = (
 	item: ContentItem,
 ): item is MarkdownContentItem => {
 	return "markdownPath" in item || "markdownMigrated" in item;
@@ -241,7 +239,7 @@ export const isEnhancedCategoryType = (
 	);
 };
 
-const validateEnhancedContentItem = (
+const _validateEnhancedContentItem = (
 	item: unknown,
 ): item is EnhancedContentItem => {
 	return (
@@ -274,7 +272,7 @@ export const isEnhancedContentItem = (
 };
 
 // Constants for easy reference
-const CONTENT_TYPES = [
+const _CONTENT_TYPES = [
 	"portfolio",
 	"plugin",
 	"blog",
@@ -285,7 +283,7 @@ const CONTENT_TYPES = [
 	"download",
 ] as const;
 
-const FORM_FIELD_TYPES = [
+const _FORM_FIELD_TYPES = [
 	"text",
 	"email",
 	"textarea",
@@ -296,20 +294,17 @@ const FORM_FIELD_TYPES = [
 	"calculator",
 ] as const;
 
-const CONTENT_STATUS_OPTIONS = [
+const _CONTENT_STATUS_OPTIONS = [
 	"published",
 	"draft",
 	"archived",
 	"scheduled",
 ] as const;
 
-const ENHANCED_PORTFOLIO_CATEGORIES = [
+const _ENHANCED_PORTFOLIO_CATEGORIES = [
 	"develop",
 	"video",
 	"design",
 	"video&design",
 	"other",
 ] as const;
-
-// Export ContentError class for convenience
-export { ContentError } from "./api";

@@ -2,16 +2,16 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import type { StyleSettings } from "./types";
-import { presets, defaultInput } from "./presets";
-import { parseDoc } from "./parser";
-import { generateStyle } from "./style-generator";
-import { renderHtml, renderReact } from "./renderers";
+import { CaretMenu } from "./CaretMenu";
 import { EditorPanel } from "./EditorPanel";
 import { OutputPanel } from "./OutputPanel";
-import { CaretMenu } from "./CaretMenu";
-import { useSelectionMenu } from "./useSelectionMenu";
+import { parseDoc } from "./parser";
+import { defaultInput, presets } from "./presets";
+import { renderHtml, renderReact } from "./renderers";
+import { generateStyle } from "./style-generator";
+import type { StyleSettings } from "./types";
 import { usePreviewSync } from "./useQuizSectionHandlers";
+import { useSelectionMenu } from "./useSelectionMenu";
 import { useUndoHistory } from "./useUndoHistory";
 
 const _baseStyle = generateStyle(presets.default);

@@ -1,3 +1,5 @@
+export const dynamic = "force-static";
+
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
@@ -6,6 +8,10 @@ import {
 	getFileVersions,
 	restoreFileFromBackup,
 } from "@/lib/utils/file-backup";
+
+export async function generateStaticParams() {
+	return [{ fileId: "placeholder" }];
+}
 
 // Development environment check
 function isDevelopment() {
@@ -28,75 +34,70 @@ async function getFileInfo(filePath: string) {
 	const fullPath = path.join(
 		process.cwd(),
 		"public",
-		filePath.startsWith("/") ? filePath.slice(1) : filePath,
+		"data",
+		"content",
+		filePath,
 	);
-
 	try {
 		const stats = await fs.stat(fullPath);
 		return {
 			exists: true,
 			size: stats.size,
-			createdAt: stats.birthtime,
-			modifiedAt: stats.mtime,
+			modified: stats.mtime.toISOString(),
 			fullPath,
 		};
 	} catch {
-		return { exists: false, fullPath };
+		return { exists: false, size: 0, modified: null, fullPath };
 	}
 }
 
+/**
+ * GET /api/admin/files/[fileId] - Get file info and versions
+ */
 export async function GET(
 	_request: NextRequest,
-	{ params }: { params: Promise<{ fileId: string }> },
+	{ params }: { params: { fileId: string } },
 ) {
-	// Only allow access in development environment
 	if (!isDevelopment()) {
 		return NextResponse.json(
-			{ error: "Admin API is only available in development environment" },
+			{ error: "Access denied. Admin endpoints are development-only." },
 			{ status: 403 },
 		);
 	}
 
 	try {
-		const resolvedParams = await params;
-		const fileId = resolvedParams.fileId;
-		const filePath = decodeFileId(fileId);
-
+		const filePath = decodeFileId(params.fileId);
 		if (!filePath) {
-			return NextResponse.json({ error: "Invalid file ID" }, { status: 400 });
+			return NextResponse.json(
+				{ error: "Invalid file ID format" },
+				{ status: 400 },
+			);
 		}
 
-		const fileInfo = await getFileInfo(filePath);
-
-		if (!fileInfo.exists) {
-			return NextResponse.json({ error: "File not found" }, { status: 404 });
+		const info = await getFileInfo(filePath);
+		if (!info.exists) {
+			return NextResponse.json(
+				{ error: "File not found" },
+				{ status: 404 },
+			);
 		}
 
-		// Get file versions/backups
-		const versions = await getFileVersions(fileInfo.fullPath);
+		const versions = await getFileVersions(filePath);
 
 		return NextResponse.json({
 			success: true,
-			file: {
-				id: fileId,
-				path: filePath,
-				size: fileInfo.size,
-				createdAt: fileInfo.createdAt,
-				modifiedAt: fileInfo.modifiedAt,
-				versions: versions.map((v) => ({
-					id: v.id,
-					timestamp: v.timestamp,
-					size: v.size,
-					hash: v.hash,
-					metadata: v.metadata,
-				})),
+			data: {
+				fileId: params.fileId,
+				filePath,
+				size: info.size,
+				modified: info.modified,
+				versions,
 			},
 		});
 	} catch (error) {
 		console.error("Error getting file info:", error);
 		return NextResponse.json(
 			{
-				success: false,
 				error: "Failed to get file info",
 				details: error instanceof Error ? error.message : "Unknown error",
 			},
@@ -105,190 +106,65 @@ export async function GET(
 	}
 }
 
-export async function DELETE(
-	_request: NextRequest,
-	{ params }: { params: Promise<{ fileId: string }> },
-) {
-	// Only allow access in development environment
-	if (!isDevelopment()) {
-		return NextResponse.json(
-			{ error: "Admin API is only available in development environment" },
-			{ status: 403 },
-		);
-	}
-
-	try {
-		const resolvedParams = await params;
-		const fileId = resolvedParams.fileId;
-		const filePath = decodeFileId(fileId);
-
-		if (!filePath) {
-			return NextResponse.json({ error: "Invalid file ID" }, { status: 400 });
-		}
-
-		const fileInfo = await getFileInfo(filePath);
-
-		if (!fileInfo.exists) {
-			return NextResponse.json({ error: "File not found" }, { status: 404 });
-		}
-
-		// Create backup before deletion
-		await createFileBackup(fileInfo.fullPath, {
-			action: "delete",
-			timestamp: new Date().toISOString(),
-		});
-
-		// Delete the file
-		await fs.unlink(fileInfo.fullPath);
-
-		// Try to delete related files (thumbnails, WebP versions, etc.)
-		const fileName = path.basename(filePath);
-		const baseName = path.parse(fileName).name;
-
-		// Delete thumbnail if exists
-		const thumbnailPath = path.join(
-			process.cwd(),
-			"public",
-			"images",
-			"thumbnails",
-			`${baseName}-thumb.jpg`,
-		);
-		try {
-			await fs.unlink(thumbnailPath);
-		} catch {
-			// Thumbnail might not exist
-		}
-
-		// Delete WebP version if exists
-		const webpPath = path.join(
-			path.dirname(fileInfo.fullPath),
-			`${baseName}.webp`,
-		);
-		try {
-			await fs.unlink(webpPath);
-		} catch {
-			// WebP version might not exist
-		}
-
-		return NextResponse.json({
-			success: true,
-			message: "File deleted successfully",
-		});
-	} catch (error) {
-		console.error("Error deleting file:", error);
-		return NextResponse.json(
-			{
-				success: false,
-				error: "Failed to delete file",
-				details: error instanceof Error ? error.message : "Unknown error",
-			},
-			{ status: 500 },
-		);
-	}
-}
-
-export async function PUT(
+/**
+ * POST /api/admin/files/[fileId] - Backup or restore file
+ */
+export async function POST(
 	request: NextRequest,
-	{ params }: { params: Promise<{ fileId: string }> },
+	{ params }: { params: { fileId: string } },
 ) {
-	// Only allow access in development environment
 	if (!isDevelopment()) {
 		return NextResponse.json(
-			{ error: "Admin API is only available in development environment" },
+			{ error: "Access denied. Admin endpoints are development-only." },
 			{ status: 403 },
 		);
 	}
 
 	try {
-		const resolvedParams = await params;
-		const fileId = resolvedParams.fileId;
-		const filePath = decodeFileId(fileId);
-		const body = await request.json();
-		const { action, versionId, newPath } = body;
-
+		const filePath = decodeFileId(params.fileId);
 		if (!filePath) {
-			return NextResponse.json({ error: "Invalid file ID" }, { status: 400 });
+			return NextResponse.json(
+				{ error: "Invalid file ID format" },
+				{ status: 400 },
+			);
 		}
 
-		const fileInfo = await getFileInfo(filePath);
+		const body = await request.json();
+		const { action, versionId } = body;
 
-		switch (action) {
-			case "restore":
-				if (!versionId) {
-					return NextResponse.json(
-						{ error: "Version ID required for restore" },
-						{ status: 400 },
-					);
-				}
+		if (action === "backup") {
+			const version = await createFileBackup(filePath);
+			return NextResponse.json({
+				success: true,
+				message: "Backup created successfully",
+				data: { backupPath: version.backupPath, versionId: version.id },
+			});
+		}
 
-				await restoreFileFromBackup(versionId, fileInfo.fullPath);
-
-				return NextResponse.json({
-					success: true,
-					message: "File restored successfully",
-				});
-
-			case "move": {
-				if (!newPath) {
-					return NextResponse.json(
-						{ error: "New path required for move" },
-						{ status: 400 },
-					);
-				}
-
-				const newFullPath = path.join(
-					process.cwd(),
-					"public",
-					newPath.startsWith("/") ? newPath.slice(1) : newPath,
+		if (action === "restore") {
+			if (!versionId) {
+				return NextResponse.json(
+					{ error: "Version ID is required for restore action" },
+					{ status: 400 },
 				);
-
-				// Create backup before moving
-				await createFileBackup(fileInfo.fullPath, {
-					action: "move",
-					originalPath: filePath,
-					newPath: newPath,
-					timestamp: new Date().toISOString(),
-				});
-
-				// Ensure target directory exists
-				await fs.mkdir(path.dirname(newFullPath), { recursive: true });
-
-				// Move the file
-				await fs.rename(fileInfo.fullPath, newFullPath);
-
-				return NextResponse.json({
-					success: true,
-					message: "File moved successfully",
-					newPath: newPath,
-				});
 			}
 
-			case "backup": {
-				const version = await createFileBackup(fileInfo.fullPath, {
-					action: "manual_backup",
-					timestamp: new Date().toISOString(),
-				});
-
-				return NextResponse.json({
-					success: true,
-					message: "Backup created successfully",
-					version: {
-						id: version.id,
-						timestamp: version.timestamp,
-						size: version.size,
-					},
-				});
-			}
-
-			default:
-				return NextResponse.json({ error: "Unknown action" }, { status: 400 });
+			await restoreFileFromBackup(versionId, filePath);
+			return NextResponse.json({
+				success: true,
+				message: "File restored successfully",
+			});
 		}
+
+		return NextResponse.json(
+			{ error: "Invalid action. Supported actions: backup, restore" },
+			{ status: 400 },
+		);
 	} catch (error) {
-		console.error("Error updating file:", error);
+		console.error("Error in file backup/restore:", error);
 		return NextResponse.json(
 			{
-				success: false,
-				error: "Failed to update file",
+				error: "Failed to process request",
 				details: error instanceof Error ? error.message : "Unknown error",
 			},
 			{ status: 500 },

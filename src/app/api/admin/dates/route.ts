@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Date Management API Endpoints
  * Provides CRUD operations for portfolio item manual dates

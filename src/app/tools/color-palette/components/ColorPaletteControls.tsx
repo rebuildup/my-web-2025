@@ -2,9 +2,9 @@
 
 import type { Dispatch, SetStateAction } from "react";
 import {
+	type ColorRangePresetName,
 	colorRangePresets,
 	generationAlgorithms,
-	type ColorRangePresetName,
 } from "./color-palette-constants";
 import type { ColorPaletteSettings } from "./color-palette-types";
 

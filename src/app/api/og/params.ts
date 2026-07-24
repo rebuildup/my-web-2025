@@ -11,7 +11,7 @@ export interface OgParams {
 	title: string;
 	category: string;
 	tags: string[];
-	thumbnail: string;
+	thumbnail: string | null;
 	slug: string;
 	displayTags: string[];
 	thumbnailSrc: string;

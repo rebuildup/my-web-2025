@@ -1,12 +1,12 @@
 "use client";
 
 import type { RefObject } from "react";
-import type { Doc } from "./types";
 import { paragraphToHtml } from "./parser";
+import type { Doc } from "./types";
 import {
 	checkSection,
-	showSectionAns,
 	resetSection,
+	showSectionAns,
 } from "./useQuizSectionHandlers";
 
 type Props = {

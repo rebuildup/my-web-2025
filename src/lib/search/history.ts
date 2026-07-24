@@ -109,14 +109,14 @@ export function clearSearchHistory(): void {
 /**
  * Get recent searches (last 5)
  */
-function getRecentSearches(): SearchHistoryItem[] {
+function _getRecentSearches(): SearchHistoryItem[] {
 	return getSearchHistory().slice(0, 5);
 }
 
 /**
  * Get popular searches from history
  */
-function getPopularSearches(): Array<{ query: string; count: number }> {
+function _getPopularSearches(): Array<{ query: string; count: number }> {
 	const history = getSearchHistory();
 	const queryCount = new Map<string, number>();
 
@@ -136,7 +136,7 @@ function getPopularSearches(): Array<{ query: string; count: number }> {
 /**
  * Search within history
  */
-function searchHistory(query: string): SearchHistoryItem[] {
+function _searchHistory(query: string): SearchHistoryItem[] {
 	if (!query.trim()) {
 		return [];
 	}

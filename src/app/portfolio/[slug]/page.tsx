@@ -578,3 +578,20 @@ export default async function PortfolioDetailPage({
 		);
 	}
 }
+
+export async function generateStaticParams() {
+	try {
+		const items = await portfolioDataManager.getAllItems();
+		const params = items.map((item) => ({
+			slug:
+				((item as unknown as Record<string, unknown>).slug as string) ||
+				item.id,
+		}));
+		if (params.length === 0) {
+			return [{ slug: "placeholder" }];
+		}
+		return params;
+	} catch {
+		return [{ slug: "placeholder" }];
+	}
+}

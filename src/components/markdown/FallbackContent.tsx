@@ -140,7 +140,7 @@ const FallbackContent: React.FC<FallbackContentProps> = ({
  * Inline Fallback Component
  * Smaller fallback for inline content areas
  */
-const InlineFallback: React.FC<{
+const _InlineFallback: React.FC<{
 	fallbackText?: string;
 	onRetry?: () => void;
 }> = ({ fallbackText, onRetry }) => {

@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { type NextRequest, NextResponse } from "next/server";
 import { getContentStatistics } from "@/lib/data";
 import { getStatsSummary } from "@/lib/stats";

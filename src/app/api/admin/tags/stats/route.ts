@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Tag Statistics API Endpoint
  * Provides analytics and statistics for portfolio tags

@@ -1,9 +1,13 @@
+export const dynamic = "force-static";
+
 import { type NextRequest, NextResponse } from "next/server";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import type { ContentItem, ContentType } from "@/types/content";
 import type { EnhancedContentItem } from "@/types/enhanced-content";
 
-export const runtime = "nodejs";
+export async function generateStaticParams() {
+	return [{ type: "placeholder" }];
+}
 
 export async function GET(
 	_request: NextRequest,

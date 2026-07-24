@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { type NextRequest, NextResponse } from "next/server";
 import { loadContentByType } from "@/lib/data";
 import type { ContentItem, EnhancedContentItem } from "@/types";

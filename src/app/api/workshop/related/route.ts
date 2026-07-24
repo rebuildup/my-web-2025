@@ -5,8 +5,7 @@ import {
 	fetchMarkdownPages,
 } from "@/lib/cms-api/server-data";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 
 interface RelatedArticle {
 	slug: string;
@@ -73,10 +72,17 @@ function getPageHref(page: any): string {
  * Returns articles related to the specified tags
  */
 export async function GET(request: NextRequest) {
-	const searchParams = request.nextUrl.searchParams;
-	const slug = searchParams.get("slug") || "";
-	const tagsParam = searchParams.get("tags") || "";
-	const limit = parseInt(searchParams.get("limit") || "6", 10);
+	let slug = "";
+	let tagsParam = "";
+	let limit = 6;
+	try {
+		const url = new URL(request?.url || "http://localhost");
+		slug = url.searchParams.get("slug") || "";
+		tagsParam = url.searchParams.get("tags") || "";
+		limit = parseInt(url.searchParams.get("limit") || "6", 10);
+	} catch {
+		// Fallback for static prerendering
+	}
 
 	if (!tagsParam) {
 		return NextResponse.json({ articles: [] });

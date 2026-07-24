@@ -151,6 +151,6 @@ export class ClientDateManager implements DateManagementSystem {
 export const clientDateManager = new ClientDateManager();
 
 // Export factory function for custom instances
-const createClientDateManager = (): ClientDateManager => {
+const _createClientDateManager = (): ClientDateManager => {
 	return new ClientDateManager();
 };

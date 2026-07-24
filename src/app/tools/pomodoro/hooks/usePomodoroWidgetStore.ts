@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocalStorage } from "./useLocalStorage";
 import { BASE_WIDGET_Z, STICKY_NOTE_COLORS } from "../utils/pomodoro-constants";
+import { useLocalStorage } from "./useLocalStorage";
 
 export type WidgetRecord = {
 	id: number;

@@ -38,7 +38,7 @@ export async function updateSearchIndexAfterContentChange(): Promise<boolean> {
 /**
  * Watch for content file changes and update index automatically
  */
-function watchContentChanges(): void {
+function _watchContentChanges(): void {
 	if (typeof window !== "undefined") {
 		// Don't run on client side
 		return;

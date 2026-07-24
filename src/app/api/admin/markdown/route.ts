@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * API endpoints for markdown file management
  * Handles CRUD operations for markdown files

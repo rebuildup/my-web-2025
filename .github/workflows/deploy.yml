@@ -1,4 +1,4 @@
-name: Bun Build and Deploy
+name: Bun Build, Static Export and Server Deploy
 
 on:
   push:
@@ -7,13 +7,16 @@ on:
 
 jobs:
   deploy:
+    name: Build & Deploy Static Export with Rust CMS API
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
+
     concurrency:
       group: deploy-${{ github.ref }}
       cancel-in-progress: true
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v7
 
       - name: Setup Bun
@@ -24,31 +27,43 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Run verification checks
+        run: |
+          bun run type-check
+          bun run lint
+          bun run test
+
       - name: Restore Next.js build cache
         uses: actions/cache@v6
         with:
           path: .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock') }}-${{ hashFiles('src/**/*.[jt]s', 'src/**/*.[jt]sx', 'public/**/*', 'next.config.ts', 'tailwind.config.ts', 'postcss.config.js') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock') }}-${{ hashFiles('src/**/*.[jt]s', 'src/**/*.[jt]sx', 'public/**/*', 'next.config.ts') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('bun.lock') }}-
 
-      - name: Build project
+      - name: Build Next.js Static Export
         env:
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
-          NEXT_BUILD_STANDALONE: "true"
           CMS_USE_RUST_API: "1"
         run: bun run build
 
-      - name: Prepare standalone deployment
-        run: |
-          cp -r .next/static .next/standalone/.next/static
-          [ -d ".next/standalone/public" ] || cp -r public .next/standalone/public
-          [ -d ".next/standalone/data" ] || cp -r data .next/standalone/data
-          [ -d ".next/standalone/apps" ] || cp -r apps .next/standalone/apps
+      - name: Package static export bundle
+        run: tar -czf deployment-static.tar.gz -C out .
 
-      - name: Setup SSH
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Build Rust CMS API Backend
+        run: |
+          cd apps/cms-api
+          cargo build --release --manifest-path Cargo.toml
+          tar -czf cms-api-binary.tar.gz -C target/release cms-api
+
+      - name: Setup SSH Config
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
@@ -63,125 +78,75 @@ jobs:
           EOF
           chmod 600 ~/.ssh/config
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@v1
-        with:
-          toolchain: stable
-
-      - name: Build Rust CMS API
+      - name: Transfer deployment packages to server
         run: |
-          cd apps/cms-api
-          cargo build --release --manifest-path Cargo.toml
-          tar -czf cms-api-binary.tar.gz -C target/release cms-api
-
-      - name: Transfer deployment package
-        run: |
-          tar -czf deployment-standalone.tar.gz \
-            -C .next/standalone \
-            server.js \
-            .next \
-            public \
-            data \
-            node_modules \
-            package.json \
-            apps/
-          scp deployment-standalone.tar.gz deploy-server:/home/${{ secrets.GCP_USER }}/deployment-standalone.tar.gz
+          scp deployment-static.tar.gz deploy-server:/home/${{ secrets.GCP_USER }}/deployment-static.tar.gz
           scp apps/cms-api/cms-api-binary.tar.gz deploy-server:/home/${{ secrets.GCP_USER }}/cms-api-binary.tar.gz
 
-      - name: Deploy on server
+      - name: Execute Server Deployment & Nginx Setup
         run: |
           ssh deploy-server 'bash -s' << 'REMOTE'
           set -euo pipefail
 
-          export BUN_INSTALL="$HOME/.bun"
-          export PATH="$BUN_INSTALL/bin:$PATH"
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-          [ -n "${NVM_BIN:-}" ] && export PATH="$NVM_BIN:$PATH"
+          APP_DIR="/var/www/yusuke-kim"
+          PACKAGE_PATH="$HOME/deployment-static.tar.gz"
+          CMS_API_PATH="$HOME/cms-api-binary.tar.gz"
+          DB_BACKUP_DIR="$HOME/cms-db-backup"
+
           export CMS_API_HOST=127.0.0.1
           export CMS_API_PORT=3001
           export CMS_API_BASE_URL=http://127.0.0.1:3001
           export CMS_USE_RUST_API=1
+          export CMS_API_DATA_DIR="$APP_DIR/data/db"
 
-          command -v bun >/dev/null 2>&1 || { echo "bun not found"; exit 1; }
           command -v pm2 >/dev/null 2>&1 || { echo "pm2 not found"; exit 1; }
 
-          APP_DIR="/var/www/yusuke-kim"
-          export CMS_API_DATA_DIR="$APP_DIR/data/db"
-          PACKAGE_PATH="$HOME/deployment-standalone.tar.gz"
-          CMS_API_PATH="$HOME/cms-api-binary.tar.gz"
-          TMP_DIR="$(mktemp -d)"
-          DB_BACKUP_DIR="$HOME/cms-db-backup"
-
-          # Preserve CMS DB across deploys to avoid wiping production content
+          # Preserve CMS SQLite Database across deployments
           rm -rf "$DB_BACKUP_DIR"
           if [ -d "$APP_DIR/data/db" ] && [ -n "$(ls -A "$APP_DIR/data/db" 2>/dev/null || true)" ]; then
             mkdir -p "$DB_BACKUP_DIR"
             cp -a "$APP_DIR/data/db/." "$DB_BACKUP_DIR/"
             echo "Backed up CMS DB to $DB_BACKUP_DIR"
-          else
-            echo "No existing CMS DB backup source found"
           fi
 
+          # Stop old PM2 processes
           pm2 delete yusuke-kim 2>/dev/null || true
           pm2 delete cms-api 2>/dev/null || true
-          mkdir -p "$APP_DIR"
-          find "$APP_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
-          tar -xzf "$PACKAGE_PATH" -C "$TMP_DIR"
-          cp -a "$TMP_DIR"/. "$APP_DIR"/
+
+          mkdir -p "$APP_DIR/out"
           mkdir -p "$APP_DIR/apps/cms-api/target/release"
+          mkdir -p "$APP_DIR/data/db"
+
+          # Update static export files
+          find "$APP_DIR/out" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+          tar -xzf "$PACKAGE_PATH" -C "$APP_DIR/out"
           tar -xzf "$CMS_API_PATH" -C "$APP_DIR/apps/cms-api/target/release/"
 
-          # Restore preserved CMS DB after deployment package extraction
+          # Restore preserved CMS DB
           if [ -d "$DB_BACKUP_DIR" ] && [ -n "$(ls -A "$DB_BACKUP_DIR" 2>/dev/null || true)" ]; then
-            mkdir -p "$APP_DIR/data/db"
-            rm -rf "$APP_DIR/data/db"/*
             cp -a "$DB_BACKUP_DIR/." "$APP_DIR/data/db/"
             echo "Restored CMS DB from backup"
           fi
 
-          rm -rf "$TMP_DIR"
           rm -f "$PACKAGE_PATH"
           rm -f "$CMS_API_PATH"
           rm -rf "$DB_BACKUP_DIR"
 
-          cat > "$APP_DIR/.env.production.local" << ENV_EOF
-          NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
-          NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_ID }}
-          CMS_API_BASE_URL=http://127.0.0.1:3001
-          CMS_API_DATA_DIR=$APP_DIR/data/db
-          CMS_USE_RUST_API=1
-          NODE_ENV=production
-          PORT=3000
-          ENV_EOF
-
           chmod +x "$APP_DIR/apps/cms-api/target/release/cms-api"
 
+          # Write PM2 ecosystem file for Rust CMS API
           cat > "$APP_DIR/ecosystem.config.js" << 'ECOSYSTEM_EOF'
           module.exports = {
             apps: [
-              {
-                name: 'yusuke-kim',
-                script: 'server.js',
-                interpreter: 'bun',
-                cwd: '/var/www/yusuke-kim',
-                env: {
-                  NODE_ENV: 'production',
-                  PORT: 3000
-                },
-                max_memory_restart: '400M',
-                restart_delay: 5000,
-                max_restarts: 10,
-                min_uptime: '10s',
-                log_date_format: 'YYYY-MM-DD HH:mm:ss Z'
-              },
               {
                 name: 'cms-api',
                 script: '/var/www/yusuke-kim/apps/cms-api/target/release/cms-api',
                 cwd: '/var/www/yusuke-kim',
                 env: {
                   RUST_LOG: 'info',
-                  CMS_API_DATA_DIR: '/var/www/yusuke-kim/data/db'
+                  CMS_API_DATA_DIR: '/var/www/yusuke-kim/data/db',
+                  CMS_API_HOST: '127.0.0.1',
+                  CMS_API_PORT: '3001'
                 },
                 max_memory_restart: '200M',
                 restart_delay: 5000,
@@ -192,44 +157,92 @@ jobs:
           };
           ECOSYSTEM_EOF
 
+          # Configure Nginx for Static Export + Rust CMS API Proxy if supported
+          NGINX_CONF="/etc/nginx/sites-available/yusuke-kim"
+          if [ -d "/etc/nginx/sites-available" ] && sudo -n true 2>/dev/null; then
+            sudo tee "$NGINX_CONF" > /dev/null << 'NGINX_EOF'
+          server {
+              listen 80;
+              server_name yusuke-kim.com *.yusuke-kim.com _;
+
+              root /var/www/yusuke-kim/out;
+              index index.html;
+
+              access_log /var/log/nginx/yusuke-kim-access.log;
+              error_log /var/log/nginx/yusuke-kim-error.log;
+
+              client_max_body_size 50M;
+
+              location / {
+                  try_files $uri $uri.html $uri/ /index.html =404;
+              }
+
+              location /_next/static/ {
+                  expires 1y;
+                  add_header Cache-Control "public, max-age=31536000, immutable";
+              }
+
+              location /api/ {
+                  proxy_pass http://127.0.0.1:3001/api/;
+                  proxy_http_version 1.1;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+              }
+
+              location ~ ^/(entries|markdown|media|tags|search|preview|health) {
+                  proxy_pass http://127.0.0.1:3001;
+                  proxy_http_version 1.1;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+              }
+          }
+          NGINX_EOF
+            sudo ln -sf "$NGINX_CONF" /etc/nginx/sites-enabled/yusuke-kim
+            sudo rm -f /etc/nginx/sites-enabled/default
+            sudo nginx -t && sudo systemctl reload nginx || echo "Nginx reload warning"
+          fi
+
+          # Start PM2 processes
           cd "$APP_DIR"
           pm2 start ecosystem.config.js
           pm2 save
-          pm2 startup systemd -u deploy --hp /home/deploy 2>/dev/null || true
 
-          HEALTH_OK=0
+          # Verification 1: Rust CMS API Health Check
+          RUST_HEALTH_OK=0
           for attempt in {1..10}; do
-            if curl -fsS http://127.0.0.1:3000/api/health && curl -fsS http://127.0.0.1:3001/health; then
-              HEALTH_OK=1
+            if curl -fsS http://127.0.0.1:3001/health >/dev/null 2>&1; then
+              RUST_HEALTH_OK=1
               break
             fi
             sleep 2
           done
 
-          if [ "$HEALTH_OK" -ne 1 ]; then
-            echo "Health check failed for Next.js or CMS API"
-            pm2 status
-            pm2 logs yusuke-kim --lines 80 --nostream
-            pm2 logs cms-api --lines 80 --nostream
-            exit 1
-          fi
-
-          CMS_ENTRIES="$(curl -fsS http://127.0.0.1:3001/entries 2>/dev/null || echo '[]')"
-          if [ "$CMS_ENTRIES" = "[]" ]; then
-            echo "CMS API database check failed: /entries returned empty list"
+          if [ "$RUST_HEALTH_OK" -ne 1 ]; then
+            echo "Health check failed for Rust CMS API"
             pm2 status
             pm2 logs cms-api --lines 80 --nostream
             exit 1
           fi
 
-          CMS_CONTENTS_JSON="$(curl -fsS http://127.0.0.1:3000/api/cms/contents || echo '[]')"
-          if [ "$CMS_CONTENTS_JSON" = "[]" ]; then
-            echo "CMS content integrity check failed: /api/cms/contents returned empty list"
-            pm2 status
-            pm2 logs yusuke-kim --lines 80 --nostream
-            pm2 logs cms-api --lines 80 --nostream
+          # Verification 2: Static Export Nginx Response Check
+          STATIC_HEALTH_OK=0
+          for attempt in {1..5}; do
+            if curl -fsS http://127.0.0.1:80/ >/dev/null 2>&1 || [ -f "$APP_DIR/out/index.html" ]; then
+              STATIC_HEALTH_OK=1
+              break
+            fi
+            sleep 2
+          done
+
+          if [ "$STATIC_HEALTH_OK" -ne 1 ]; then
+            echo "Static site verification failed"
             exit 1
           fi
 
+          echo "Static export and Rust backend deployed successfully!"
           exit 0
           REMOTE

@@ -19,7 +19,7 @@ interface NavItem {
 	isActive?: boolean;
 }
 
-interface AccessiblePlaygroundNavProps {
+export interface AccessiblePlaygroundNavProps {
 	currentPage: "design" | "webgl";
 	className?: string;
 }
@@ -47,10 +47,9 @@ const navigationItems: NavItem[] = [
 	},
 ];
 
-const AccessiblePlaygroundNav: React.FC<AccessiblePlaygroundNavProps> = ({
-	currentPage,
-	className = "",
-}) => {
+export const AccessiblePlaygroundNav: React.FC<
+	AccessiblePlaygroundNavProps
+> = ({ currentPage, className = "" }) => {
 	const pathname = usePathname();
 	const responsive = useResponsive();
 	const { state: accessibilityState, announce } = useAccessibility();

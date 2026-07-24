@@ -1,11 +1,12 @@
-/**
- * Dynamic API endpoints for individual markdown file operations
- * Handles read, update, and delete operations for specific markdown files
- */
+export const dynamic = "force-static";
 
 import { join } from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
 import { markdownFileManager } from "@/lib/portfolio/markdown-file-manager";
+
+export async function generateStaticParams() {
+	return [{ path: ["placeholder"] }];
+}
 
 // Development environment check
 function isDevelopment() {
@@ -39,10 +40,9 @@ export async function GET(
 	_request: NextRequest,
 	{ params }: { params: { path: string[] } },
 ) {
-	// Only allow access in development environment
 	if (!isDevelopment()) {
 		return NextResponse.json(
-			{ error: "Admin API is only available in development environment" },
+			{ error: "Access denied. Admin endpoints are development-only." },
 			{ status: 403 },
 		);
 	}
@@ -50,70 +50,27 @@ export async function GET(
 	try {
 		const filePath = getFilePathFromParams(params);
 
-		// Validate file path
-		if (!markdownFileManager.validateMarkdownPath(filePath)) {
+		// Read markdown file
+		const content = await markdownFileManager.readMarkdownFile(filePath);
+
+		if (content === null) {
 			return NextResponse.json(
-				{ error: "Invalid markdown file path" },
-				{ status: 400 },
+				{ error: "Markdown file not found" },
+				{ status: 404 },
 			);
 		}
 
-		// Read markdown file
-		const content = await markdownFileManager.readMarkdownFile(filePath);
-		const metadata =
-			await markdownFileManager.getMarkdownFileMetadata(filePath);
-
 		return NextResponse.json({
 			success: true,
-			content,
-			metadata: {
-				filePath: metadata.filePath,
-				size: metadata.size,
-				created: metadata.created,
-				modified: metadata.modified,
-				hash: metadata.hash,
+			data: {
+				path: params.path.join("/"),
+				content,
 			},
 		});
 	} catch (error) {
 		console.error("Error reading markdown file:", error);
-
-		// Handle specific error types
-		if (error && typeof error === "object" && "type" in error) {
-			const markdownError = error as { type: string; message: string };
-			switch (markdownError.type) {
-				case "file_not_found":
-					return NextResponse.json(
-						{
-							success: false,
-							error: "Markdown file not found",
-							details: markdownError.message,
-						},
-						{ status: 404 },
-					);
-				case "validation":
-					return NextResponse.json(
-						{
-							success: false,
-							error: "Invalid file path",
-							details: markdownError.message,
-						},
-						{ status: 400 },
-					);
-				default:
-					return NextResponse.json(
-						{
-							success: false,
-							error: "Failed to read markdown file",
-							details: markdownError.message,
-						},
-						{ status: 500 },
-					);
-			}
-		}
-
 		return NextResponse.json(
 			{
-				success: false,
 				error: "Failed to read markdown file",
 				details: error instanceof Error ? error.message : "Unknown error",
 			},
@@ -129,90 +86,43 @@ export async function PUT(
 	request: NextRequest,
 	{ params }: { params: { path: string[] } },
 ) {
-	// Only allow access in development environment
 	if (!isDevelopment()) {
 		return NextResponse.json(
-			{ error: "Admin API is only available in development environment" },
+			{ error: "Access denied. Admin endpoints are development-only." },
 			{ status: 403 },
 		);
 	}
 
 	try {
-		const filePath = getFilePathFromParams(params);
 		const body = await request.json();
 		const { content } = body;
 
-		// Validate required fields
 		if (typeof content !== "string") {
 			return NextResponse.json(
-				{ error: "content is required and must be a string" },
+				{ error: "Invalid content format. Content must be a string." },
 				{ status: 400 },
 			);
 		}
 
-		// Validate file path
-		if (!markdownFileManager.validateMarkdownPath(filePath)) {
-			return NextResponse.json(
-				{ error: "Invalid markdown file path" },
-				{ status: 400 },
-			);
-		}
+		const filePath = getFilePathFromParams(params);
 
-		// Update markdown file
-		await markdownFileManager.updateMarkdownFile(filePath, content);
-		const metadata =
-			await markdownFileManager.getMarkdownFileMetadata(filePath);
+		// Save markdown file
+		await markdownFileManager.updateMarkdownFile(
+			filePath,
+			content,
+		);
 
 		return NextResponse.json({
 			success: true,
-			filePath,
 			message: "Markdown file updated successfully",
-			metadata: {
-				size: metadata.size,
-				modified: metadata.modified,
-				hash: metadata.hash,
+			data: {
+				path: params.path.join("/"),
 			},
 		});
 	} catch (error) {
 		console.error("Error updating markdown file:", error);
-
-		// Handle specific error types
-		if (error && typeof error === "object" && "type" in error) {
-			const markdownError = error as { type: string; message: string };
-			switch (markdownError.type) {
-				case "file_not_found":
-					return NextResponse.json(
-						{
-							success: false,
-							error: "Markdown file not found",
-							details: markdownError.message,
-						},
-						{ status: 404 },
-					);
-				case "validation":
-					return NextResponse.json(
-						{
-							success: false,
-							error: "Invalid content or file path",
-							details: markdownError.message,
-						},
-						{ status: 400 },
-					);
-				default:
-					return NextResponse.json(
-						{
-							success: false,
-							error: "Failed to update markdown file",
-							details: markdownError.message,
-						},
-						{ status: 500 },
-					);
-			}
-		}
-
 		return NextResponse.json(
 			{
-				success: false,
 				error: "Failed to update markdown file",
 				details: error instanceof Error ? error.message : "Unknown error",
 			},
@@ -228,10 +138,9 @@ export async function DELETE(
 	_request: NextRequest,
 	{ params }: { params: { path: string[] } },
 ) {
-	// Only allow access in development environment
 	if (!isDevelopment()) {
 		return NextResponse.json(
-			{ error: "Admin API is only available in development environment" },
+			{ error: "Access denied. Admin endpoints are development-only." },
 			{ status: 403 },
 		);
 	}
@@ -239,62 +148,20 @@ export async function DELETE(
 	try {
 		const filePath = getFilePathFromParams(params);
 
-		// Validate file path
-		if (!markdownFileManager.validateMarkdownPath(filePath)) {
-			return NextResponse.json(
-				{ error: "Invalid markdown file path" },
-				{ status: 400 },
-			);
-		}
-
 		// Delete markdown file
 		await markdownFileManager.deleteMarkdownFile(filePath);
 
 		return NextResponse.json({
 			success: true,
-			filePath,
 			message: "Markdown file deleted successfully",
+			data: {
+				path: params.path.join("/"),
+			},
 		});
 	} catch (error) {
 		console.error("Error deleting markdown file:", error);
-
-		// Handle specific error types
-		if (error && typeof error === "object" && "type" in error) {
-			const markdownError = error as { type: string; message: string };
-			switch (markdownError.type) {
-				case "file_not_found":
-					return NextResponse.json(
-						{
-							success: false,
-							error: "Markdown file not found",
-							details: markdownError.message,
-						},
-						{ status: 404 },
-					);
-				case "validation":
-					return NextResponse.json(
-						{
-							success: false,
-							error: "Invalid file path",
-							details: markdownError.message,
-						},
-						{ status: 400 },
-					);
-				default:
-					return NextResponse.json(
-						{
-							success: false,
-							error: "Failed to delete markdown file",
-							details: markdownError.message,
-						},
-						{ status: 500 },
-					);
-			}
-		}
-
 		return NextResponse.json(
 			{
-				success: false,
 				error: "Failed to delete markdown file",
 				details: error instanceof Error ? error.message : "Unknown error",
 			},

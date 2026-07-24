@@ -14,7 +14,7 @@ import type {
 	PerformanceSettings,
 } from "@/types/playground";
 
-interface PerformanceSettingsUIProps {
+export interface PerformanceSettingsUIProps {
 	deviceCapabilities: DeviceCapabilities;
 	performanceSettings: PerformanceSettings;
 	performanceMetrics: PerformanceMetrics;
@@ -22,7 +22,7 @@ interface PerformanceSettingsUIProps {
 	className?: string;
 }
 
-function PerformanceSettingsUI({
+export function PerformanceSettingsUI({
 	deviceCapabilities,
 	performanceSettings,
 	performanceMetrics,

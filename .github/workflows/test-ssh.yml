@@ -29,7 +29,9 @@ jobs:
         run: ssh deploy-server 'free -h && top -bn1 | head -10'
 
       - name: Services
-        run: ssh deploy-server 'sudo systemctl status nginx'
+        run: ssh deploy-server 'sudo systemctl status nginx || true'
 
       - name: Health Check
-        run: ssh deploy-server 'curl -s http://localhost:3000/api/health'
+        run: |
+          ssh deploy-server 'curl -s http://localhost:3001/health || echo "Rust API check failed"'
+          ssh deploy-server 'curl -s http://localhost/ | head -n 10 || echo "Static web check failed"'

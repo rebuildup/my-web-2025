@@ -1,9 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocalStorage } from "./useLocalStorage";
-import { useNotifications } from "./useNotifications";
-import { useSessionStorage } from "./useSessionStorage";
 import type {
 	PomodoroSession,
 	PomodoroSessionType,
@@ -13,11 +10,14 @@ import type {
 import {
 	DEFAULT_SETTINGS,
 	DEFAULT_STATS,
+	getTotalDuration,
 	SCHEDULE,
 	type ScheduleStep,
-	getTotalDuration,
 } from "../utils/pomodoro-constants";
 import { playNotificationSound } from "../utils/soundPlayer";
+import { useLocalStorage } from "./useLocalStorage";
+import { useNotifications } from "./useNotifications";
+import { useSessionStorage } from "./useSessionStorage";
 
 export type UsePomodoroTimerResult = {
 	settings: PomodoroSettings;

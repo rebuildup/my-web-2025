@@ -1,5 +1,5 @@
-import type { MailTemplate } from "./types";
 import { CATEGORY_NAMES } from "./constants";
+import type { MailTemplate } from "./types";
 
 interface TemplateLibraryProps {
 	templates: MailTemplate[];

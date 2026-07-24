@@ -4,8 +4,7 @@ import {
 	fetchMarkdownPages,
 } from "@/lib/cms-api/server-data";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 
 interface ArticleData {
 	slug: string;
@@ -67,9 +66,15 @@ function getPageHref(page: any): string {
 }
 
 export async function GET(request: NextRequest) {
-	const searchParams = request.nextUrl.searchParams;
-	const excludeSlug = searchParams.get("exclude") || "";
-	const limit = parseInt(searchParams.get("limit") || "3", 10);
+	let excludeSlug = "";
+	let limit = 3;
+	try {
+		const url = new URL(request?.url || "http://localhost");
+		excludeSlug = url.searchParams.get("exclude") || "";
+		limit = parseInt(url.searchParams.get("limit") || "3", 10);
+	} catch {
+		// Fallback for static prerendering
+	}
 
 	try {
 		// Get all published markdown pages

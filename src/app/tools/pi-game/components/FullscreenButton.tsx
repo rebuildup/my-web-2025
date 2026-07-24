@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 interface FullscreenButtonProps {
 	isFullscreen: boolean;
 	onToggle: () => void;

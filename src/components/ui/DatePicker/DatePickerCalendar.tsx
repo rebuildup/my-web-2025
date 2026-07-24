@@ -1,17 +1,16 @@
 "use client";
 
-import type { RefObject } from "react";
 import { Button } from "../button";
 import {
-	WEEK_DAY_LABELS,
 	generateCalendarDays,
 	isCurrentMonth,
 	isSelected,
 	isToday,
+	WEEK_DAY_LABELS,
 } from "./date-utils";
 
 interface DatePickerCalendarProps {
-	calendarRef: RefObject<HTMLDivElement>;
+	calendarRef: any;
 	selectedDate: Date | null;
 	onDateSelect: (date: Date) => void;
 	onNavigateMonth: (direction: "prev" | "next") => void;

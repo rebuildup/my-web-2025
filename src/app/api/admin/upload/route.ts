@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Upload Management API Endpoints
  * Provides file upload operations

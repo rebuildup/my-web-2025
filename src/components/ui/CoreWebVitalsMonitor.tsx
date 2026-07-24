@@ -13,8 +13,6 @@ import {
 	initializePerformanceRegression,
 	type PerformanceRegressionDetector,
 } from "@/lib/utils/performance-regression";
-import { PerformanceReport } from "./core-web-vitals/PerformanceReport";
-import { useCoreWebVitals } from "./core-web-vitals/useCoreWebVitals";
 import {
 	formatMetricValue,
 	getMetricDescription,
@@ -22,7 +20,9 @@ import {
 	getRating,
 	getRatingColor,
 } from "./core-web-vitals/metric-helpers";
+import { PerformanceReport } from "./core-web-vitals/PerformanceReport";
 import type { CoreWebVitalsDisplayProps } from "./core-web-vitals/types";
+import { useCoreWebVitals } from "./core-web-vitals/useCoreWebVitals";
 
 export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
 	showDetails = false,
@@ -135,8 +135,8 @@ export const CoreWebVitalsDisplay: React.FC<CoreWebVitalsDisplayProps> = ({
 	);
 };
 
+export { PerformanceBudgetIndicator } from "./core-web-vitals/PerformanceBudgetIndicator";
+export { PerformanceDevPanel } from "./core-web-vitals/PerformanceDevPanel";
 // Re-export supporting subcomponents so existing imports from
 // "./CoreWebVitalsMonitor" continue to work.
 export { PerformanceReport } from "./core-web-vitals/PerformanceReport";
-export { PerformanceBudgetIndicator } from "./core-web-vitals/PerformanceBudgetIndicator";
-export { PerformanceDevPanel } from "./core-web-vitals/PerformanceDevPanel";

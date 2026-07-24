@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { listCmsDatabases } from "@/lib/cms-api/database-registry";

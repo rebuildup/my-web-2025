@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { type NextRequest, NextResponse } from "next/server";
 
 // テスト用の検索データ

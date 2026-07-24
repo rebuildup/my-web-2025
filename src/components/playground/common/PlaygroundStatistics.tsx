@@ -10,11 +10,13 @@ import { BarChart3, TrendingUp, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { playgroundManager } from "@/lib/playground/playground-manager";
 
-interface PlaygroundStatisticsProps {
+export interface PlaygroundStatisticsProps {
 	className?: string;
 }
 
-function PlaygroundStatistics({ className = "" }: PlaygroundStatisticsProps) {
+export function PlaygroundStatistics({
+	className = "",
+}: PlaygroundStatisticsProps) {
 	const [stats, setStats] = useState<ReturnType<
 		typeof playgroundManager.getStatistics
 	> | null>(null);

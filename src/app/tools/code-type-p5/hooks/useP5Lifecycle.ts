@@ -4,10 +4,10 @@ import JSZip from "jszip";
 import p5 from "p5";
 import type { Dispatch, SetStateAction } from "react";
 import { useCallback, useEffect, useRef } from "react";
-import type { EditorManager } from "../lib/001_Editors/001_EditorManager";
+import type { AppConfig } from "../components/types";
+import { EditorManager } from "../lib/001_Editors/001_EditorManager";
 import { setupAnimationRenderer } from "../lib/001_Editors/002_AnimationRenderer";
 import { CANVAS_CONFIG } from "../lib/config";
-import type { AppConfig } from "../components/types";
 
 declare global {
 	interface Window {

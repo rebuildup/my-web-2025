@@ -10,7 +10,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAccessibility, useFocusManagement } from "@/hooks/useAccessibility";
 import type { ExperimentItem } from "@/types/playground";
 
-interface AccessibleExperimentWrapperProps {
+export interface AccessibleExperimentWrapperProps {
 	experiment: ExperimentItem;
 	isActive: boolean;
 	children: React.ReactNode;
@@ -19,7 +19,7 @@ interface AccessibleExperimentWrapperProps {
 	className?: string;
 }
 
-const AccessibleExperimentWrapper: React.FC<
+export const AccessibleExperimentWrapper: React.FC<
 	AccessibleExperimentWrapperProps
 > = ({ experiment, isActive, children, onToggle, onReset, className = "" }) => {
 	const containerRef = useRef<HTMLDivElement>(null);

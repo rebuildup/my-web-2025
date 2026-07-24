@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import type { Content } from "@/cms/types/content";
 import type { ContentIndexItem } from "@/cms/types/content";
 import { getAllFromIndex, getFromIndex, getContentDb, deleteContentDb } from "@/cms/lib/content-db-manager";

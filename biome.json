@@ -86,6 +86,8 @@
 			"!!src/app/tools/ProtoType/prototype-src/styles/009_webglPopup.css",
 			"!!src/app/tools/ProtoType/prototype-src/styles/styles/009_webglPopup.css",
 			"!!src/app/tools/ProtoType",
+			"!!public/data",
+			"!!data",
 			"!!.claude/worktrees/**"
 		],
 		"ignoreUnknown": true

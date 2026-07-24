@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Metadata API Route
  * Fetches Open Graph and SEO metadata from URLs

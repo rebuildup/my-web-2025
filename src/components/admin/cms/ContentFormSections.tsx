@@ -4,6 +4,7 @@ import type {
 	RefObject,
 	SetStateAction,
 } from "react";
+import type { ContentFormSectionProps } from "./ContentForm.types";
 import { ContentFormEssentials } from "./ContentFormEssentials";
 import { ContentFormLinksMedia } from "./ContentFormLinksMedia";
 import { ContentFormPermissionsI18nExt } from "./ContentFormPermissionsI18nExt";
@@ -11,7 +12,6 @@ import { ContentFormRelations } from "./ContentFormRelations";
 import { ContentFormSearchSeo } from "./ContentFormSearchSeo";
 import { ContentFormStructure } from "./ContentFormStructure";
 import { ContentFormThumbnail } from "./ContentFormThumbnail";
-import type { ContentFormSectionProps } from "./ContentForm.types";
 
 interface ContentFormSectionsProps extends ContentFormSectionProps {
 	sectionIndex: number;

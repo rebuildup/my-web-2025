@@ -1,5 +1,5 @@
 import { Stack, TextField } from "@mui/material";
-import { replaceGalleryLine, type ParsedGalleryItem } from "./gallery-utils";
+import { type ParsedGalleryItem, replaceGalleryLine } from "./gallery-utils";
 
 interface GallerySelectedItemControlsProps {
 	content?: string;

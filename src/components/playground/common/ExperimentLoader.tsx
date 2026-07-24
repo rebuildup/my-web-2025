@@ -19,7 +19,7 @@ import type {
 } from "@/types/playground";
 import { PlaygroundErrorHandler } from "./PlaygroundErrorHandler";
 
-interface ExperimentLoaderProps {
+export interface ExperimentLoaderProps {
 	experimentId: string;
 	deviceCapabilities: DeviceCapabilities;
 	performanceSettings: PerformanceSettings;
@@ -28,7 +28,7 @@ interface ExperimentLoaderProps {
 	className?: string;
 }
 
-function ExperimentLoader({
+export function ExperimentLoader({
 	experimentId,
 	deviceCapabilities,
 	performanceSettings,
@@ -203,12 +203,12 @@ function ExperimentLoader({
 	);
 }
 
-interface ExperimentPreloaderProps {
+export interface ExperimentPreloaderProps {
 	experimentIds: string[];
 	onPreloadComplete?: (loadedCount: number, totalCount: number) => void;
 }
 
-function ExperimentPreloader({
+export function ExperimentPreloader({
 	experimentIds,
 	onPreloadComplete,
 }: ExperimentPreloaderProps) {

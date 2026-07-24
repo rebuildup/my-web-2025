@@ -734,7 +734,7 @@ export class PortfolioSEOMetadataGenerator {
 }
 
 // Export singleton instance
-const seoMetadataGenerator = new PortfolioSEOMetadataGenerator(
+const _seoMetadataGenerator = new PortfolioSEOMetadataGenerator(
 	// Will be injected when used
 	{} as PortfolioDataManager,
 );

@@ -280,7 +280,7 @@ export function useAnalytics(): AnalyticsContextType {
 }
 
 // Hook for page view tracking
-function usePageView(url: string, title?: string) {
+function _usePageView(url: string, title?: string) {
 	const { trackPageView } = useAnalytics();
 
 	useEffect(() => {
@@ -289,7 +289,7 @@ function usePageView(url: string, title?: string) {
 }
 
 // Hook for tool usage tracking
-function useToolTracking(toolName: string) {
+function _useToolTracking(toolName: string) {
 	const { trackToolUsage } = useAnalytics();
 
 	return {
@@ -300,7 +300,7 @@ function useToolTracking(toolName: string) {
 }
 
 // Hook for error tracking
-function useErrorTracking() {
+function _useErrorTracking() {
 	const { trackError } = useAnalytics();
 
 	useEffect(() => {

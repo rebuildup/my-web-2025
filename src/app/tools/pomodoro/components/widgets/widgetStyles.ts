@@ -1,8 +1,8 @@
 "use client";
 
 import {
-	STICKY_NOTE_SIZE,
 	getStickyColorById,
+	STICKY_NOTE_SIZE,
 } from "../../utils/pomodoro-constants";
 
 export type WidgetVisualLayout = {

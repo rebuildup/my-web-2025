@@ -1,9 +1,8 @@
+export const dynamic = "force-static";
 import { getCmsApiBaseUrl, shouldUseRustCmsApi } from "@/lib/cms-api/config";
 import { CmsApiProxyError, cmsApiFetch } from "@/lib/cms-api/server-client";
 import { requireAdminRequest } from "@/lib/server/admin-auth";
 import { getMedia } from "@/cms/lib/media-manager";
-
-export const runtime = "nodejs";
 
 const DEFAULT_MAX_MEDIA_BYTES = 5 * 1024 * 1024;
 const ALLOWED_MEDIA_TYPES = new Set([
@@ -28,7 +27,11 @@ function isValidBase64(data: string): boolean {
 
 export async function GET(req: Request) {
 	try {
-		const { searchParams } = new URL(req.url);
+		const url = req.url.startsWith("http")
+			? new URL(req.url)
+			: new URL(req.url, "http://localhost");
+		const searchParams = url.searchParams;
+
 		const contentId = searchParams.get("contentId");
 		const mediaId = searchParams.get("id");
 
@@ -164,7 +167,11 @@ export async function DELETE(req: Request) {
 	}
 
 	try {
-		const { searchParams } = new URL(req.url);
+		const url = req.url.startsWith("http")
+			? new URL(req.url)
+			: new URL(req.url, "http://localhost");
+		const searchParams = url.searchParams;
+
 		const contentId = searchParams.get("contentId");
 		const mediaId = searchParams.get("id");
 

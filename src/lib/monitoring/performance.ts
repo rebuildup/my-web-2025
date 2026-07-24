@@ -62,7 +62,7 @@ export function monitorMemoryUsage(): void {
 /**
  * WebGL Performance Monitor
  */
-class WebGLPerformanceMonitor {
+export class WebGLPerformanceMonitor {
 	private isRunning = false;
 	private frameCount = 0;
 	private lastTime = 0;

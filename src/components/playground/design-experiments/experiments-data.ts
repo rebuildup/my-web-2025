@@ -115,22 +115,22 @@ export const designExperiments: DesignExperiment[] = [
 ];
 
 // Filter experiments by category
-const getExperimentsByCategory = (category: string) => {
+const _getExperimentsByCategory = (category: string) => {
 	if (category === "all") return designExperiments;
 	return designExperiments.filter((exp) => exp.category === category);
 };
 
 // Get experiment by ID
-const getExperimentById = (id: string) => {
+const _getExperimentById = (id: string) => {
 	return designExperiments.find((exp) => exp.id === id);
 };
 
 // Get experiments by difficulty
-const getExperimentsByDifficulty = (difficulty: string) => {
+const _getExperimentsByDifficulty = (difficulty: string) => {
 	return designExperiments.filter((exp) => exp.difficulty === difficulty);
 };
 
 // Get experiments by performance level
-const getExperimentsByPerformance = (level: string) => {
+const _getExperimentsByPerformance = (level: string) => {
 	return designExperiments.filter((exp) => exp.performanceLevel === level);
 };

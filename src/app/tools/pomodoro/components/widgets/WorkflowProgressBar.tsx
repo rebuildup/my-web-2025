@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { hexToRgba, type ScheduleStep } from "../../utils/pomodoro-constants";
 
 export const WorkflowProgressBar = ({
@@ -106,9 +106,7 @@ export const WorkflowProgressBar = ({
 									<div
 										className="w-full h-full cursor-pointer"
 										onMouseEnter={() => onHover(index)}
-										onMouseLeave={() =>
-											onHover((prev) => (prev === index ? null : prev))
-										}
+										onMouseLeave={() => onHover(null)}
 									/>
 								</div>
 								<div className="absolute inset-0 flex justify-center pointer-events-none">

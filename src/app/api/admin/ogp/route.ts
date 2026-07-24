@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * OGP Image Management API Route
  * Handles OGP image upload, management, and generation

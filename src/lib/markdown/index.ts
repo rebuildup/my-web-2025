@@ -77,7 +77,7 @@ export interface MarkdownSystemConfig {
 	backupOnUpdate: boolean;
 }
 
-const DEFAULT_MARKDOWN_CONFIG: MarkdownSystemConfig = {
+const _DEFAULT_MARKDOWN_CONFIG: MarkdownSystemConfig = {
 	basePath: "public/data/content/markdown",
 	autoCreateDirectories: true,
 	validatePaths: true,
@@ -86,7 +86,7 @@ const DEFAULT_MARKDOWN_CONFIG: MarkdownSystemConfig = {
 };
 
 // Error types
-class MarkdownFileError extends Error {
+export class MarkdownFileError extends Error {
 	constructor(
 		message: string,
 		public code: string,
@@ -97,7 +97,7 @@ class MarkdownFileError extends Error {
 	}
 }
 
-class MarkdownDirectoryError extends Error {
+export class MarkdownDirectoryError extends Error {
 	constructor(
 		message: string,
 		public code: string,
@@ -108,7 +108,7 @@ class MarkdownDirectoryError extends Error {
 	}
 }
 
-class MarkdownPathError extends Error {
+export class MarkdownPathError extends Error {
 	constructor(
 		message: string,
 		public code: string,

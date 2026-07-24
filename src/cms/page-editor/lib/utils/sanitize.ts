@@ -13,6 +13,6 @@ export function sanitizeUrl(url: string): string {
 	return isSafeUrl(url) ? url : "";
 }
 
-function sanitizeHtml(html: string): string {
+function _sanitizeHtml(html: string): string {
 	return html.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "");
 }

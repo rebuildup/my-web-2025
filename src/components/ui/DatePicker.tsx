@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { DatePickerProps } from "@/types/enhanced-content";
 import { DatePickerCalendar } from "./DatePicker/DatePickerCalendar";
 import { DatePickerInput } from "./DatePicker/DatePickerInput";
@@ -200,7 +200,7 @@ export function DatePicker({
 			{/* Date Input */}
 			<div className="relative">
 				<DatePickerInput
-					inputRef={inputRef}
+					inputRef={inputRef as any}
 					inputValue={state.inputValue}
 					useManualDate={useManualDate}
 					placeholder={placeholder}
@@ -214,7 +214,7 @@ export function DatePicker({
 				{/* Calendar Dropdown */}
 				{state.isCalendarOpen && useManualDate && (
 					<DatePickerCalendar
-						calendarRef={calendarRef}
+						calendarRef={calendarRef as any}
 						selectedDate={state.selectedDate}
 						onDateSelect={handleDateSelect}
 						onNavigateMonth={navigateMonth}

@@ -95,7 +95,7 @@ export const contentCache = new ServerCache<unknown>(5 * 60 * 1000);
 export const markdownCache = new ServerCache<unknown>(5 * 60 * 1000);
 export const thumbnailsCache = new ServerCache<unknown>(10 * 60 * 1000);
 
-function clearAllCaches(): void {
+function _clearAllCaches(): void {
 	contentCache.clear();
 	markdownCache.clear();
 	thumbnailsCache.clear();

@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Markdown API Routes
  * Server-side API for markdown file operations

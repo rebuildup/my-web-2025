@@ -9,7 +9,7 @@ import type { SqliteDatabase } from "./sqlite";
 
 // ========== メディア保存 ==========
 
-function saveMedia(
+function _saveMedia(
 	contentId: string,
 	mediaData: {
 		id: string;
@@ -197,7 +197,7 @@ export function listMedia(contentId: string): MediaItem[] {
 
 // ========== メディア削除 ==========
 
-function deleteMedia(contentId: string, mediaId: string): boolean {
+function _deleteMedia(contentId: string, mediaId: string): boolean {
 	const db = getContentDb(contentId);
 
 	try {
@@ -211,7 +211,7 @@ function deleteMedia(contentId: string, mediaId: string): boolean {
 
 // ========== メディア統計 ==========
 
-function getMediaStats(contentId: string): {
+function _getMediaStats(contentId: string): {
 	totalCount: number;
 	totalSize: number;
 	byMimeType: Record<string, number>;

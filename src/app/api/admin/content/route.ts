@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Content Management API Endpoints
  * Provides CRUD operations for content items via CMS SQLite database

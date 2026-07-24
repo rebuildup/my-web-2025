@@ -1,3 +1,5 @@
+export const dynamic = "force-static";
+
 /**
  * Content by ID API Route
  * Handles requests for specific content items
@@ -5,6 +7,10 @@
 
 import { type NextRequest, NextResponse } from "next/server";
 import { loadAllContent } from "@/lib/data";
+
+export async function generateStaticParams() {
+	return [{ id: "placeholder" }];
+}
 
 export async function GET(
 	_request: NextRequest,

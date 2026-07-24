@@ -265,7 +265,7 @@ export function saveMarkdownPage(
 }
 
 // ========== Markdownページ削除 ==========
-function deleteMarkdownPage(db: SqliteDatabase, idOrSlug: string): boolean {
+function _deleteMarkdownPage(db: SqliteDatabase, idOrSlug: string): boolean {
 	const result = db
 		.prepare("DELETE FROM markdown_pages WHERE id = ? OR slug = ?")
 		.run(idOrSlug, idOrSlug);
@@ -273,7 +273,7 @@ function deleteMarkdownPage(db: SqliteDatabase, idOrSlug: string): boolean {
 }
 
 // ========== Markdownファイルからインポート ==========
-function importMarkdownFile(file: MarkdownFile): MarkdownPage {
+function _importMarkdownFile(file: MarkdownFile): MarkdownPage {
 	const { frontmatter, body } = file.parsed || parseFrontmatter(file.content);
 
 	const slug =
@@ -300,7 +300,7 @@ function importMarkdownFile(file: MarkdownFile): MarkdownPage {
 }
 
 // ========== Markdownページをファイル形式でエクスポート ==========
-function exportMarkdownFile(page: MarkdownPage): MarkdownFile {
+function _exportMarkdownFile(page: MarkdownPage): MarkdownFile {
 	const content = stringifyFrontmatter(page.frontmatter, page.body);
 
 	return {

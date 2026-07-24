@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import type { RefObject } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getCaretScreenPosition } from "./utils";
 
 type MenuPos = { top: number; left: number };

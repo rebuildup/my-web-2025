@@ -149,9 +149,9 @@ export default function ToolsPage() {
 						color: "#666",
 					}}
 				>
-					<a href="/" style={{ color: "#0066cc", textDecoration: "none" }}>
+					<Link href="/" style={{ color: "#0066cc", textDecoration: "none" }}>
 						Home
-					</a>
+					</Link>
 					<span style={{ margin: "0 8px" }}>/</span>
 					<span style={{ color: "#000" }}>Tools</span>
 				</nav>

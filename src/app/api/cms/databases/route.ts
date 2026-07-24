@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { listCmsDatabases, updateCmsDatabaseMeta } from "@/lib/cms-api/database-registry";
 import { requireAdminRequest } from "@/lib/server/admin-auth";
 

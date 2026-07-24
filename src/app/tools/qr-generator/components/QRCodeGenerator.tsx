@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import QRColorSettings from "./QRColorSettings";
 import QRCodeDisplay from "./QRCodeDisplay";
+import QRColorSettings from "./QRColorSettings";
 import QRInputSettings from "./QRInputSettings";
 import QRParametersSettings from "./QRParametersSettings";
 import type { ErrorLevel, InputType } from "./qr-code.utils";

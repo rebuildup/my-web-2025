@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { getContentDbStats } from "@/cms/lib/content-db-manager";
 import { shouldUseRustCmsApi } from "@/lib/cms-api/config";
 import { cmsApiFetch } from "@/lib/cms-api/server-client";

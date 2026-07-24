@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Analytics API Route
  * Handles analytics tracking requests

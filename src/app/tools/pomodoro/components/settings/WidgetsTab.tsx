@@ -1,7 +1,7 @@
 "use client";
 
-import { STICKY_NOTE_SIZE } from "../../utils/pomodoro-constants";
 import type { PomodoroSettings } from "../../types";
+import { STICKY_NOTE_SIZE } from "../../utils/pomodoro-constants";
 import { ElasticSlider } from "../ElasticSlider";
 
 export const WidgetsTab = ({

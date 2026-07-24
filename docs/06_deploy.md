@@ -298,35 +298,45 @@ sudo systemctl status nginx
 sudo tee /etc/nginx/sites-available/yusuke-kim > /dev/null << 'EOF'
 server {
     listen 80;
-    # メインドメインとサブドメインをすべて受け入れる
-    # 例: yusuke-kim.com, links.yusuke-kim.com, portfolio.yusuke-kim.com
     server_name yusuke-kim.com *.yusuke-kim.com _;
     
+    root /var/www/yusuke-kim/out;
+    index index.html;
+
     access_log /var/log/nginx/yusuke-kim-access.log;
     error_log /var/log/nginx/yusuke-kim-error.log;
     
     client_max_body_size 50M;
     
+    # 静的エクスポートファイル配信とクリーンURLフォールバック
     location / {
-        proxy_pass http://127.0.0.1:3000;
+        try_files $uri $uri.html $uri/ /index.html =404;
+    }
+
+    # 静的アセットキャッシュ (_next/static)
+    location /_next/static/ {
+        expires 1y;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    # Rust CMS APIバックエンドプロキシ (:3001)
+    location /api/ {
+        proxy_pass http://127.0.0.1:3001/api/;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        # ホスト名をそのまま転送（サブドメイン検出のため）
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-        
-        proxy_connect_timeout 60s;
-        proxy_send_timeout 60s;
-        proxy_read_timeout 60s;
     }
-    
-    location /api/health {
-        proxy_pass http://127.0.0.1:3000/api/health;
-        access_log off;
+
+    # 直接CMS APIエンドポイントプロキシ
+    location ~ ^/(entries|markdown|media|tags|search|preview|health) {
+        proxy_pass http://127.0.0.1:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
 EOF

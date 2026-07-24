@@ -1,7 +1,5 @@
-import type { RefObject } from "react";
-
 interface MarkdownEditorTextAreaProps {
-	textareaRef: RefObject<HTMLTextAreaElement>;
+	textareaRef: any;
 	value: string;
 	onChange: (value: string) => void;
 	onKeyDown: (e: React.KeyboardEvent) => void;

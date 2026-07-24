@@ -1,6 +1,6 @@
 "use client";
 
-import type { RefObject, Dispatch, SetStateAction } from "react";
+import type { Dispatch, RefObject, SetStateAction } from "react";
 
 type Props = {
 	pages: string[];

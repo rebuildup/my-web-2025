@@ -8,11 +8,11 @@ import { Palette, Video } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { SafeImage } from "@/components/ui/SafeImage";
+import type { GridItem } from "@/lib/portfolio/grid-layout-utils";
 import {
 	getGridItemClasses,
 	getGridItemMinHeight,
 } from "@/lib/portfolio/grid-layout-utils";
-import type { GridItem } from "@/lib/portfolio/grid-layout-utils";
 import type { EnhancedCategoryType } from "@/types/enhanced-content";
 
 export interface EnhancedGridItem extends GridItem {

@@ -123,16 +123,16 @@ export function SafeImage({
 		(currentSrc.startsWith("/api/cms/media") ||
 			currentSrc.includes("/api/cms/media"));
 
-	// width と height が undefined の場合、fill を使うか <img> にフォールバック
-	const shouldUseFill = !fill && !width && !height;
-	const shouldUseImgTag = isApiMediaSrc || shouldUseFill;
+	// fill が明示されているか、width と height が両方未指定の場合は fill モード
+	const isFillMode = Boolean(fill || (!width && !height));
+	const shouldUseImgTag = isApiMediaSrc || isFillMode;
 
 	if (shouldUseImgTag) {
 		// fillプロパティを使っている場合、画像を親要素にフィットさせる
 		const imgStyle: React.CSSProperties = {
 			...baseStyle,
 		};
-		if (fill || shouldUseFill) {
+		if (isFillMode) {
 			// fillプロパティを使っている場合、position: absoluteを優先
 			// props.styleで上書きされないように、最後に設定
 			Object.assign(imgStyle, {
@@ -148,14 +148,12 @@ export function SafeImage({
 			style?: React.CSSProperties;
 		};
 		// next/image を unoptimized で使い、ローダー(remote/localPatterns 検証)を
-		// バイパスして元URLをそのまま描画する。寸法不明時は fill、既知なら width/height.
-		const fallbackDimProps = shouldUseFill
+		// バイパスして元URLをそのまま描画する。寸法不明時またはfill指定時は fill、既知なら width/height.
+		const fallbackDimProps = isFillMode
 			? ({ fill: true } as const)
 			: { width, height };
 		return (
-			<div
-				className={`relative ${fill || shouldUseFill ? "w-full h-full" : ""}`}
-			>
+			<div className={`relative ${isFillMode ? "w-full h-full" : ""}`}>
 				<Image
 					src={currentSrc}
 					alt={alt}

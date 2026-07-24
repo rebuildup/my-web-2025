@@ -242,7 +242,7 @@ function CreativeAreasSection({
 	sectionRef,
 }: {
 	mounted: boolean;
-	sectionRef: React.RefObject<HTMLElement>;
+	sectionRef: React.RefObject<HTMLElement | null>;
 }) {
 	return (
 		<section ref={sectionRef} className="mb-24">
@@ -292,7 +292,7 @@ function CurrentFocusSection({
 	sectionRef,
 }: {
 	mounted: boolean;
-	sectionRef: React.RefObject<HTMLElement>;
+	sectionRef: React.RefObject<HTMLElement | null>;
 }) {
 	return (
 		<section ref={sectionRef} className="mb-24">
@@ -335,7 +335,7 @@ function WorkStyleSection({
 	sectionRef,
 }: {
 	mounted: boolean;
-	sectionRef: React.RefObject<HTMLElement>;
+	sectionRef: React.RefObject<HTMLElement | null>;
 }) {
 	return (
 		<section ref={sectionRef} className="mb-24">

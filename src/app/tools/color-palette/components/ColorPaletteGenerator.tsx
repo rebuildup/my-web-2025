@@ -4,17 +4,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { ColorInfo } from "@/lib/utils/color";
 import { RawDOMContainer } from "../../components/RawDOMContainer";
 import { ColorPaletteControls } from "./ColorPaletteControls";
+import {
+	type ColorRangePresetName,
+	colorRangePresets,
+	defaultSettings,
+} from "./color-palette-constants";
+import type { ColorPaletteSettings, SavedPalette } from "./color-palette-types";
+import { generatePaletteColors } from "./color-palette-utils";
 import { GeneratedPalette } from "./GeneratedPalette";
 import { PaletteActions } from "./PaletteActions";
 import { PaletteExport } from "./PaletteExport";
 import { SavedPalettes } from "./SavedPalettes";
-import {
-	colorRangePresets,
-	defaultSettings,
-	type ColorRangePresetName,
-} from "./color-palette-constants";
-import type { ColorPaletteSettings, SavedPalette } from "./color-palette-types";
-import { generatePaletteColors } from "./color-palette-utils";
 
 export default function ColorPaletteGenerator() {
 	const [settings, setSettings] =

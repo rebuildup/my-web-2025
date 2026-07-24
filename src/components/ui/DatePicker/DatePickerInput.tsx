@@ -2,7 +2,6 @@
 
 import { Calendar, Clock } from "lucide-react";
 import type React from "react";
-import type { RefObject } from "react";
 import { formatDateForDisplay } from "./date-utils";
 
 interface DatePickerInputProps {
@@ -11,7 +10,7 @@ interface DatePickerInputProps {
 	placeholder: string;
 	validationError: string | null;
 	selectedDate: Date | null;
-	inputRef: RefObject<HTMLInputElement>;
+	inputRef: any;
 	onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onInputBlur: () => void;
 	onCalendarToggle: () => void;

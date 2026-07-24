@@ -1,10 +1,10 @@
 "use client";
 
 import { Stack } from "@mui/material";
-import { BLOCK_COMPONENTS } from "./block-editor-config";
-import type { BlockEditorProps } from "./block-editor-types";
 import { BlockEditorItem } from "./BlockEditorItem";
 import { BlockEditorMenus } from "./BlockEditorMenus";
+import { BLOCK_COMPONENTS } from "./block-editor-config";
+import type { BlockEditorProps } from "./block-editor-types";
 import { UnknownBlock } from "./UnknownBlock";
 import { useBlockEditor } from "./useBlockEditor";
 

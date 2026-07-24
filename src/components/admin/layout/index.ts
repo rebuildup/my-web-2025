@@ -1,4 +1,6 @@
-export type { AdminShellProps } from "./AdminShell";
-export { AdminShell } from "./AdminShell";
-export type { BreadcrumbItem, PageHeaderProps } from "./PageHeader";
-export { PageHeader } from "./PageHeader";
+export { AdminShell, type AdminShellProps } from "./AdminShell";
+export {
+	type BreadcrumbItem,
+	PageHeader,
+	type PageHeaderProps,
+} from "./PageHeader";

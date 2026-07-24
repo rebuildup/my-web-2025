@@ -1,8 +1,8 @@
+import { useYouTubePlayer } from "./useYouTubePlayer";
+import type { YouTubePlayerProps } from "./YouTubePlayer.types";
 import { YouTubePlayerContent } from "./YouTubePlayerContent";
 import { YouTubePlayerControls } from "./YouTubePlayerControls";
 import { YouTubePlayerHeader } from "./YouTubePlayerHeader";
-import type { YouTubePlayerProps } from "./YouTubePlayer.types";
-import { useYouTubePlayer } from "./useYouTubePlayer";
 
 export default function YouTubePlayer(props: YouTubePlayerProps) {
 	const { theme } = props;

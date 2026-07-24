@@ -413,7 +413,7 @@ export function DevelopGalleryClient({
 				status,
 				featured: item.priority >= 50,
 				thumbnail,
-				hasVideo: item.videos && item.videos.length > 0,
+				hasVideo: Boolean(item.videos && item.videos.length > 0),
 				videoUrl: item.videos?.[0]?.url,
 			};
 		},

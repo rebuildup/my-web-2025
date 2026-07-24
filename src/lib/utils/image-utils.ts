@@ -32,7 +32,7 @@ export function getImageUrl(image: string | ImageItem | undefined): string {
 /**
  * Extract thumbnail URL from images array
  */
-function getThumbnailUrl(
+function _getThumbnailUrl(
 	thumbnail: string | undefined,
 	images: (string | ImageItem)[] | undefined,
 ): string {
@@ -50,7 +50,7 @@ function getThumbnailUrl(
 /**
  * Get image dimensions if available
  */
-function getImageDimensions(image: string | ImageItem): {
+function _getImageDimensions(image: string | ImageItem): {
 	width?: number;
 	height?: number;
 } {
@@ -67,7 +67,7 @@ function getImageDimensions(image: string | ImageItem): {
 /**
  * Calculate aspect ratio from image
  */
-function getImageAspectRatio(image: string | ImageItem): number | undefined {
+function _getImageAspectRatio(image: string | ImageItem): number | undefined {
 	if (typeof image === "string") {
 		return undefined;
 	}

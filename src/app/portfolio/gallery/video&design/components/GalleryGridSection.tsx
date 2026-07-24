@@ -4,8 +4,8 @@
  * Extracted from VideoDesignGallery.tsx.
  */
 
-import { GridItemComponentV2 } from "./GridItemComponentV2";
 import type { EnhancedGridItem } from "./GridItemComponentV2";
+import { GridItemComponentV2 } from "./GridItemComponentV2";
 
 interface GalleryGridSectionProps {
 	gridItems: EnhancedGridItem[];

@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Content Processing API Route
  * Handles content processing pipeline operations

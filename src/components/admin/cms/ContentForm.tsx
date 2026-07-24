@@ -1,8 +1,8 @@
 "use client";
 
+import type { ContentFormProps } from "./ContentForm.types";
 import { ContentFormLayout } from "./ContentFormLayout";
 import { ContentFormSections } from "./ContentFormSections";
-import type { ContentFormProps } from "./ContentForm.types";
 import { useContentForm } from "./useContentForm";
 
 export function ContentForm({

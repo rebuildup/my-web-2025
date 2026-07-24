@@ -6,6 +6,7 @@ import {
 	fetchCmsContentById,
 	fetchCmsContentTags,
 	fetchMarkdownPageBySlug,
+	fetchMarkdownPages,
 } from "@/lib/cms-api/server-data";
 import { contentCache } from "@/lib/server-cache";
 import type { ContentItem, MarkdownContentItem } from "@/types/content";
@@ -13,7 +14,6 @@ import { isEnhancedContentItem } from "@/types/content";
 import { ArticleSidePanel } from "../../components/ArticleSidePanel";
 import { RelatedArticles } from "../../components/RelatedArticles";
 
-export const runtime = "nodejs";
 export const revalidate = 3600;
 
 interface BlogPageProps {
@@ -286,4 +286,19 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 			</main>
 		</div>
 	);
+}
+
+export async function generateStaticParams() {
+	try {
+		const pages = await fetchMarkdownPages();
+		const params = pages.map((page) => ({
+			slug: page.slug || page.contentId || page.path,
+		}));
+		if (params.length === 0) {
+			return [{ slug: "placeholder" }];
+		}
+		return params;
+	} catch {
+		return [{ slug: "placeholder" }];
+	}
 }

@@ -9,11 +9,11 @@ echo ""
 
 echo "=== PM2 Status ==="
 pm2 status || echo "PM2 not running"
-pm2 logs yusuke-kim --lines 10 --nostream || echo "No PM2 logs"
+pm2 logs cms-api --lines 10 --nostream || echo "No PM2 logs"
 
 echo ""
 echo "=== Port Listening Check ==="
-sudo netstat -tlnp 2>/dev/null | grep -E ':(80|443|3000)' || ss -tlnp | grep -E ':(80|443|3000)' || echo "No ports found"
+sudo netstat -tlnp 2>/dev/null | grep -E ':(80|443|3001)' || ss -tlnp | grep -E ':(80|443|3001)' || echo "No listening ports found"
 
 echo ""
 echo "=== Nginx Status ==="
@@ -40,12 +40,22 @@ else
 fi
 
 echo ""
+echo "=== Static Export Files Check ==="
+if [ -d "/var/www/yusuke-kim/out" ]; then
+  echo "✅ /var/www/yusuke-kim/out directory exists"
+  ls -la /var/www/yusuke-kim/out | head -10
+else
+  echo "❌ /var/www/yusuke-kim/out directory missing"
+fi
+
+echo ""
 echo "=== Firewall Status (UFW) ==="
 sudo ufw status verbose || echo "UFW not available"
 
 echo ""
-echo "=== Application Health Check ==="
-curl -f -s http://localhost:3000/api/health && echo "✅ App is responding on port 3000" || echo "❌ App not responding on port 3000"
+echo "=== Application Health Checks ==="
+curl -f -s http://127.0.0.1:3001/health && echo "✅ Rust CMS API responding on port 3001" || echo "❌ Rust CMS API not responding on port 3001"
+curl -f -s http://127.0.0.1:80/ | head -n 5 && echo "✅ Static Export site responding on port 80" || echo "❌ Static site not responding on port 80"
 
 echo ""
 echo "=== Network Interface ==="

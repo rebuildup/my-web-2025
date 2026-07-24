@@ -3,8 +3,7 @@
  * Handles file validation, processing, and optimization using ffmpeg.wasm and sharp
  */
 
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { toBlobURL } from "@ffmpeg/util";
+import type { FFmpeg } from "@ffmpeg/ffmpeg";
 
 // File type definitions
 export interface ProcessedFile {
@@ -79,6 +78,8 @@ export async function initializeFFmpeg(): Promise<FFmpeg> {
 	}
 
 	console.log("Initializing FFmpeg...");
+	const { FFmpeg } = await import("@ffmpeg/ffmpeg");
+	const { toBlobURL } = await import("@ffmpeg/util");
 	ffmpegInstance = new FFmpeg();
 
 	// Load FFmpeg with CDN URLs
@@ -136,7 +137,7 @@ export function validateFile(
 /**
  * Generate unique filename with timestamp and random string
  */
-function generateUniqueFilename(originalName: string): string {
+function _generateUniqueFilename(originalName: string): string {
 	const timestamp = Date.now();
 	const random = Math.random().toString(36).substring(2, 8);
 	const extension = originalName.split(".").pop()?.toLowerCase() || "";
@@ -178,7 +179,7 @@ export function getImageDimensions(
 /**
  * Process image file with FFmpeg
  */
-async function processImageWithFFmpeg(
+async function _processImageWithFFmpeg(
 	file: File,
 	options: FileProcessingOptions = {},
 ): Promise<{
@@ -291,7 +292,7 @@ async function processImageWithFFmpeg(
 /**
  * Create file backup with versioning
  */
-function createFileBackup(filename: string): string {
+function _createFileBackup(filename: string): string {
 	const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
 	const extension = filename.split(".").pop();
 	const baseName = filename.split(".").slice(0, -1).join(".");
@@ -302,7 +303,7 @@ function createFileBackup(filename: string): string {
 /**
  * Organize files into appropriate directories
  */
-function getFileDirectory(type: string, category?: string): string {
+function _getFileDirectory(type: string, category?: string): string {
 	switch (type) {
 		case "thumbnail":
 			return "images/thumbnails";
@@ -324,7 +325,7 @@ function getFileDirectory(type: string, category?: string): string {
 /**
  * Calculate file hash for duplicate detection
  */
-async function calculateFileHash(file: File): Promise<string> {
+async function _calculateFileHash(file: File): Promise<string> {
 	const buffer = await file.arrayBuffer();
 	const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
 	const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -466,7 +467,7 @@ export async function extractFileMetadata(file: File): Promise<{
 /**
  * Clean up temporary files and resources
  */
-function cleanupResources(): void {
+function _cleanupResources(): void {
 	// Clean up FFmpeg instance if needed
 	if (ffmpegInstance && isFFmpegLoaded) {
 		// FFmpeg cleanup would go here if needed

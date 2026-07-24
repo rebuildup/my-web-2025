@@ -10,8 +10,8 @@ import EmailGuidelines from "./EmailGuidelines";
 import EmailValidation from "./EmailValidation";
 import GeneratedEmail from "./GeneratedEmail";
 import TemplateLibrary from "./TemplateLibrary";
-import VariablesInput from "./VariablesInput";
 import { useMailBlockState } from "./useMailBlockState";
+import VariablesInput from "./VariablesInput";
 
 export default function BusinessMailBlockTool() {
 	const state = useMailBlockState();

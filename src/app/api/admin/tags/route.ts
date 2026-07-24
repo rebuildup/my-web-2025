@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Tag Management API Endpoints
  * Provides CRUD operations for portfolio tags

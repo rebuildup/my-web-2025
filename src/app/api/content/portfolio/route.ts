@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { type NextRequest, NextResponse } from "next/server";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 

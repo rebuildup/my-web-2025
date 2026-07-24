@@ -1,4 +1,5 @@
 import {
+	type ColorInfo,
 	generateColorHarmony,
 	generateGoldenRatioColors,
 	generatePerceptuallyUniformColors,
@@ -10,7 +11,6 @@ import {
 	sortColorsByHue,
 	sortColorsByLightness,
 	sortColorsBySaturation,
-	type ColorInfo,
 } from "@/lib/utils/color";
 import type {
 	ColorPaletteSettings,

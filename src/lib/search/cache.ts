@@ -112,14 +112,14 @@ export function cacheSearchResults(
 /**
  * Clear search result cache
  */
-function clearSearchResultCache(): void {
+function _clearSearchResultCache(): void {
 	searchResultCache.clear();
 }
 
 /**
  * Get cache statistics
  */
-function getSearchCacheStats(): {
+function _getSearchCacheStats(): {
 	size: number;
 	maxSize: number;
 	hitRate: number;
@@ -150,7 +150,7 @@ function getSearchCacheStats(): {
 /**
  * Persist cache to disk (for server restarts)
  */
-async function persistSearchCache(): Promise<boolean> {
+async function _persistSearchCache(): Promise<boolean> {
 	try {
 		const cacheData = Array.from(searchResultCache.entries()).map(
 			([key, value]) => ({
@@ -172,7 +172,7 @@ async function persistSearchCache(): Promise<boolean> {
 /**
  * Load cache from disk
  */
-async function loadPersistedSearchCache(): Promise<boolean> {
+async function _loadPersistedSearchCache(): Promise<boolean> {
 	try {
 		const data = await fs.readFile(SEARCH_CACHE_PATH, "utf-8");
 		const cacheData = JSON.parse(data);
@@ -200,7 +200,7 @@ async function loadPersistedSearchCache(): Promise<boolean> {
 /**
  * Preload popular searches
  */
-async function preloadPopularSearches(): Promise<void> {
+async function _preloadPopularSearches(): Promise<void> {
 	try {
 		// Load search stats to find popular queries
 		const statsPath = path.join(

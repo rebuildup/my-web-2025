@@ -2,8 +2,6 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import AEExpressionTool from "./components/AEExpressionTool";
 
-export const dynamic = "force-dynamic";
-
 export const metadata = {
 	title: "AE Expression Tool",
 	description:

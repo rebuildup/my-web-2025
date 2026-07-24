@@ -189,7 +189,7 @@ function analyzeCharacterTypes(text: string) {
 	};
 }
 
-function getCharacterTypeBreakdown(text: string): CharacterTypeBreakdown {
+function _getCharacterTypeBreakdown(text: string): CharacterTypeBreakdown {
 	const hiragana = text.match(HIRAGANA_RANGE) || [];
 	const katakana = text.match(KATAKANA_RANGE) || [];
 	const kanji = text.match(KANJI_RANGE) || [];

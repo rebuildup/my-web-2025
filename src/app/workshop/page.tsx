@@ -14,7 +14,6 @@ import { TagBar } from "./components/TagBar";
 import type { ArticleData } from "./types";
 
 export const revalidate = 3600;
-export const runtime = "nodejs";
 
 async function _fetchContentFromCMS(id: string) {
 	const baseUrl =
@@ -659,11 +658,20 @@ interface WorkshopPageProps {
 export default async function WorkshopPage({
 	searchParams,
 }: WorkshopPageProps) {
-	const params = await searchParams;
-	const keyword = params.q ?? null;
-	const tag = params.tag ?? null;
-	const sort = params.sort ?? "newest";
-	const mode = params.mode ?? "normal";
+	let keyword: string | null = null;
+	let tag: string | null = null;
+	let sort = "newest";
+	let mode = "normal";
+
+	try {
+		const params = (await searchParams) || {};
+		keyword = params.q ?? null;
+		tag = params.tag ?? null;
+		sort = params.sort ?? "newest";
+		mode = params.mode ?? "normal";
+	} catch {
+		// Default values for static prerendering
+	}
 
 	// Fetch search results if filtering
 	let filteredSlugs: string[] | null = null;

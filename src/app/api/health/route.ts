@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Production Health Check API
  * Provides system health status for monitoring

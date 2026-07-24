@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Admin Authentication API Route
  * Handles admin authentication requests

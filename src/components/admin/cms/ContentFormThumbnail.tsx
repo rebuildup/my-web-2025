@@ -1,5 +1,5 @@
-import type { ChangeEventHandler, RefObject } from "react";
 import Image from "next/image";
+import type { ChangeEventHandler, RefObject } from "react";
 import { contentFormStyles as s } from "./ContentForm.styles";
 import type { ContentFormSectionProps } from "./ContentForm.types";
 import { toYouTubeEmbed } from "./ContentForm.utils";

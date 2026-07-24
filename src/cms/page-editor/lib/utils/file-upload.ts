@@ -4,7 +4,7 @@ const AUDIO_TYPES = ["audio/mpeg", "audio/wav", "audio/ogg"];
 
 export type MediaCategory = "image" | "video" | "audio" | "file";
 
-function detectMediaCategory(mimeType: string): MediaCategory {
+function _detectMediaCategory(mimeType: string): MediaCategory {
 	if (IMAGE_TYPES.includes(mimeType)) {
 		return "image";
 	}
@@ -17,7 +17,7 @@ function detectMediaCategory(mimeType: string): MediaCategory {
 	return "file";
 }
 
-async function readFileAsBase64(file: File): Promise<string> {
+async function _readFileAsBase64(file: File): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
 		const reader = new FileReader();
 		reader.onload = () => {

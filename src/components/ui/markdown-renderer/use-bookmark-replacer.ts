@@ -9,7 +9,7 @@
  */
 
 import type { RefObject } from "react";
-import { useEffect } from "react";
+import { createElement, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { BookmarkCard } from "../BookmarkCard";
 
@@ -180,13 +180,13 @@ export const useBookmarkCardReplacer = (
 				// Render React component
 				const root = createRoot(reactContainer);
 				root.render(
-					<BookmarkCard
-						url={data.url}
-						title={data.title}
-						description={data.description}
-						image={data.image}
-						linkText={data.linkText}
-					/>,
+					createElement(BookmarkCard, {
+						url: data.url,
+						title: data.title,
+						description: data.description,
+						image: data.image,
+						linkText: data.linkText,
+					}),
 				);
 			});
 		});

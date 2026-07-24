@@ -1,3 +1,5 @@
+export const dynamic = "force-static";
+
 import { readFile } from "node:fs/promises";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
@@ -8,8 +10,6 @@ import { RotatedSlug } from "./RotatedSlug";
 import { Thumbnail } from "./Thumbnail";
 import { parseOgParams } from "./params";
 import { theme } from "./theme";
-
-export const runtime = "nodejs";
 
 let notoSansJpFontPromise: Promise<ArrayBuffer | null> | null = null;
 
@@ -41,8 +41,7 @@ export async function GET(req: NextRequest) {
 						display: "flex",
 						flexDirection: "row",
 						backgroundColor: theme.backgroundColor,
-						fontFamily: '"Noto Sans JP", sans-serif',
-						gap: "0px",
+						fontFamily: "Noto Sans JP",
 						alignItems: "center",
 						position: "relative",
 						overflow: "hidden",
@@ -58,10 +57,9 @@ export async function GET(req: NextRequest) {
 							flexDirection: "row",
 							width: "100%",
 							height: "100%",
-							padding: "80px 80px",
-							gap: "40px",
+							padding: 80,
+							gap: 40,
 							alignItems: "center",
-							zIndex: 1,
 						}}
 					>
 						<div
@@ -70,8 +68,10 @@ export async function GET(req: NextRequest) {
 								flexDirection: "column",
 								justifyContent: "space-between",
 								height: "100%",
-								flex: 1,
-								padding: "20px 0",
+								flexGrow: 1,
+								flexShrink: 1,
+								paddingTop: 20,
+								paddingBottom: 20,
 							}}
 						>
 							<Header title={params.title} summary={params.summary} />
@@ -100,8 +100,8 @@ export async function GET(req: NextRequest) {
 			},
 		);
 	} catch (e: any) {
-		console.log(`${e.message}`);
-		return new Response(`Failed to generate the image: ${e.message}`, {
+		console.log(`${e?.message || e}`);
+		return new Response(`Failed to generate the image: ${e?.message || e}`, {
 			status: 500,
 		});
 	}

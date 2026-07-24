@@ -15,15 +15,15 @@ import {
 } from "../utils/pomodoro-constants";
 import MiniTimer from "./MiniTimer";
 import StatsWidget from "./StatsWidget";
+import { WidgetImageContent } from "./widgets/WidgetImageContent";
+import { WidgetMusicContent } from "./widgets/WidgetMusicContent";
+import { WidgetNoteContent } from "./widgets/WidgetNoteContent";
 import {
 	getContentWrapperLayout,
 	getStickyColorForWidget,
 	getWidgetBgClass,
 	getWidgetSize,
 } from "./widgets/widgetStyles";
-import { WidgetImageContent } from "./widgets/WidgetImageContent";
-import { WidgetMusicContent } from "./widgets/WidgetMusicContent";
-import { WidgetNoteContent } from "./widgets/WidgetNoteContent";
 import YouTubePlayer from "./youtube/YouTubePlayer";
 
 export type Widget = {
@@ -107,13 +107,23 @@ export function Widget({
 	);
 
 	const bgClass = useMemo(
-		() => getWidgetBgClass({ widget, theme, isImageLoaded }),
+		() =>
+			getWidgetBgClass({
+				widget,
+				theme,
+				isImageLoaded: Boolean(isImageLoaded),
+			}),
 		[widget.type, theme, isImageLoaded],
 	);
 
 	const { className: contentWrapperClass, style: contentWrapperStyle } =
 		useMemo(
-			() => getContentWrapperLayout({ widget, theme, isImageLoaded }),
+			() =>
+				getContentWrapperLayout({
+					widget,
+					theme,
+					isImageLoaded: Boolean(isImageLoaded),
+				}),
 			[widget.type, theme, isImageLoaded],
 		);
 

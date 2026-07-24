@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { type NextRequest, NextResponse } from "next/server";
 import { cmsApiFetch } from "@/lib/cms-api/server-client";
 import { detailedSearch, searchContent, simpleSearch } from "@/lib/search";

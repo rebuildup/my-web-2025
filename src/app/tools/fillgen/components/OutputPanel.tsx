@@ -1,9 +1,9 @@
 "use client";
 
-import type { Dispatch, SetStateAction, RefObject } from "react";
-import type { Doc, StyleSettings } from "./types";
+import type { Dispatch, RefObject, SetStateAction } from "react";
 import { PreviewView } from "./PreviewView";
 import { StyleSettingsPanel } from "./StyleSettingsPanel";
+import type { Doc, StyleSettings } from "./types";
 import { copyText, downloadFile, sanitizeFilename } from "./utils";
 
 type Tab = "preview" | "html" | "react";

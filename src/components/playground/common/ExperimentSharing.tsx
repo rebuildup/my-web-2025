@@ -15,7 +15,7 @@ import type {
 	PerformanceSettings,
 } from "@/types/playground";
 
-interface ExperimentSharingProps {
+export interface ExperimentSharingProps {
 	experimentId: string;
 	performanceSettings: PerformanceSettings;
 	deviceCapabilities: DeviceCapabilities;
@@ -23,7 +23,7 @@ interface ExperimentSharingProps {
 	onClose: () => void;
 }
 
-function ExperimentSharing({
+export function ExperimentSharing({
 	experimentId,
 	performanceSettings,
 	deviceCapabilities,
@@ -277,14 +277,14 @@ function ExperimentSharing({
 	);
 }
 
-interface ShareButtonProps {
+export interface ShareButtonProps {
 	experimentId: string;
 	performanceSettings: PerformanceSettings;
 	deviceCapabilities: DeviceCapabilities;
 	className?: string;
 }
 
-function ShareButton({
+export function ShareButton({
 	experimentId,
 	performanceSettings,
 	deviceCapabilities,

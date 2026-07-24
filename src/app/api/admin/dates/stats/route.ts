@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Date Statistics API Endpoint
  * Provides analytics and statistics for portfolio item dates

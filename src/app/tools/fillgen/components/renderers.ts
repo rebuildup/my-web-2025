@@ -1,6 +1,6 @@
-import type { StyleSettings, Doc } from "./types";
-import { generateStyle } from "./style-generator";
 import { paragraphToHtml } from "./parser";
+import { generateStyle } from "./style-generator";
+import type { Doc, StyleSettings } from "./types";
 
 export function renderHtml(docs: Doc[], styleSettings: StyleSettings) {
 	const style = generateStyle(styleSettings);

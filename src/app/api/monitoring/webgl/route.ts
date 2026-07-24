@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * WebGL Performance Monitoring API
  * Collects and stores WebGL performance metrics

@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-
-import { validateEmbedSyntax } from "./markdown-editor/embed-validator";
 import { resolveEmbedReferences } from "./markdown-editor/embed-resolver";
+import { validateEmbedSyntax } from "./markdown-editor/embed-validator";
 import { MarkdownEditorPreview } from "./markdown-editor/MarkdownEditorPreview";
 import { MarkdownEditorStatusBar } from "./markdown-editor/MarkdownEditorStatusBar";
 import { MarkdownEditorTextArea } from "./markdown-editor/MarkdownEditorTextArea";
@@ -150,7 +149,7 @@ export function MarkdownEditor({
 					<MarkdownEditorPreview html={previewHtml} />
 				) : (
 					<MarkdownEditorTextArea
-						textareaRef={textareaRef}
+						textareaRef={textareaRef as any}
 						value={editorContent}
 						onChange={handleContentChange}
 						onKeyDown={handleKeyDown}

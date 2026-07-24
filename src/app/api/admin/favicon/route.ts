@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Favicon Management API Route
  * Handles favicon upload, management, and backup operations

@@ -6,7 +6,7 @@ import { useP5Lifecycle } from "../hooks/useP5Lifecycle";
 import { CanvasContainer } from "./CanvasContainer";
 import { ConfigPanel } from "./ConfigPanel";
 import { Controls } from "./Controls";
-import { DEFAULT_CONFIG, type AppConfig } from "./types";
+import { type AppConfig, DEFAULT_CONFIG } from "./types";
 
 export default function CodeTypeP5App() {
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);

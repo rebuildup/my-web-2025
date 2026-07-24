@@ -75,6 +75,11 @@ async fn main() {
         .nest("/search", search::router(pool.clone()))
         .nest("/preview", preview::router(pool.clone()))
         .route("/health", axum::routing::get(health))
+        .route("/api/github/activity", axum::routing::get(dummy_json))
+        .route("/api/youtube/activity", axum::routing::get(dummy_json))
+        .route("/api/stats/*path", axum::routing::get(dummy_json).post(dummy_json))
+        .route("/api/monitoring/*path", axum::routing::get(dummy_json).post(dummy_json))
+        .route("/api/admin/*path", axum::routing::get(dummy_json).post(dummy_json))
         .layer(cors);
 
     // Start server
@@ -94,4 +99,12 @@ async fn main() {
 
 async fn health() -> &'static str {
     "OK"
+}
+
+async fn dummy_json() -> axum::Json<serde_json::Value> {
+    axum::Json(serde_json::json!({
+        "status": "ok",
+        "data": [],
+        "message": "Rust API dummy response"
+    }))
 }

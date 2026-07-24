@@ -5,8 +5,8 @@
  */
 import { useEffect, useState } from "react";
 import {
-	initialCoreWebVitalsMetrics,
 	type CoreWebVitalsMetrics,
+	initialCoreWebVitalsMetrics,
 } from "./types";
 
 export const useCoreWebVitals = (): CoreWebVitalsMetrics => {

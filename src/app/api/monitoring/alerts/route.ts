@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * API endpoint for monitoring alerts
  * Receives and stores performance alerts

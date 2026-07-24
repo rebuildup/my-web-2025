@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { calculateMarkdownStats } from "@/cms/lib/markdown-mapper";
 import type { MarkdownStats } from "@/cms/types/markdown";
 

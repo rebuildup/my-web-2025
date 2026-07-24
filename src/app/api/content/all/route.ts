@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { loadAllContent } from "@/lib/data";
 
+export const dynamic = "force-static";
+
 export async function GET() {
 	try {
 		const contentByType = await loadAllContent();

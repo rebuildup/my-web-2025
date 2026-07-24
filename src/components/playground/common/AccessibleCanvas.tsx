@@ -13,7 +13,7 @@ import type {
 	PerformanceMetrics,
 } from "@/types/playground";
 
-interface AccessibleCanvasProps {
+export interface AccessibleCanvasProps {
 	title: string;
 	description: string;
 	canvasType: "2d" | "webgl" | "webgl2";
@@ -34,7 +34,7 @@ interface AccessibleCanvasProps {
 	maintainAspectRatio?: boolean;
 }
 
-const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
+export const AccessibleCanvas: React.FC<AccessibleCanvasProps> = ({
 	title,
 	description,
 	canvasType,

@@ -16,7 +16,7 @@ export type UseWidgetDragParams = {
 };
 
 export type UseWidgetDragResult = {
-	widgetRef: React.RefObject<HTMLDivElement>;
+	widgetRef: React.RefObject<HTMLDivElement | null>;
 	isDragging: boolean;
 	isOverDeleteZone: boolean;
 	handlePointerDown: (e: PointerHandler) => void;

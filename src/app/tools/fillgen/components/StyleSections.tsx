@@ -1,6 +1,6 @@
 import type { Dispatch, ReactNode, SetStateAction } from "react";
-import type { StyleSettings } from "./types";
 import { BorderStyleSelect, ColorField, RangeField } from "./StyleFields";
+import type { StyleSettings } from "./types";
 
 type SectionProps = {
 	settings: StyleSettings;

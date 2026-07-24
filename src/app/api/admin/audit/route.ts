@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Admin Audit API Route
  * Handles audit log requests

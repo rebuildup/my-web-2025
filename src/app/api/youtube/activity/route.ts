@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { NextResponse } from "next/server";
 
 const YOUTUBE_USER = "361do_sleep";

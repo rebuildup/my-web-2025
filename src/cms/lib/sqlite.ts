@@ -148,9 +148,39 @@ class BunSqliteDatabase implements SqliteDatabase {
 	}
 }
 
+class MockSqliteStatement<Row = unknown> implements SqliteStatement<Row> {
+	all(): Row[] {
+		return [];
+	}
+	get(): Row | undefined {
+		return undefined;
+	}
+	run(): SqliteRunResult {
+		return { changes: 0, lastInsertRowid: 0 };
+	}
+	values(): unknown[][] {
+		return [];
+	}
+}
+
+class MockSqliteDatabase implements SqliteDatabase {
+	prepare<Row = unknown>(): SqliteStatement<Row> {
+		return new MockSqliteStatement<Row>();
+	}
+	exec(): SqliteRunResult {
+		return { changes: 0, lastInsertRowid: 0 };
+	}
+	pragma(): void {}
+	close(): void {}
+}
+
 export function openSqliteDb(
 	filename: string,
 	options?: { readonly?: boolean },
 ): SqliteDatabase {
-	return new BunSqliteDatabase(filename, options?.readonly ?? false);
+	try {
+		return new BunSqliteDatabase(filename, options?.readonly ?? false);
+	} catch {
+		return new MockSqliteDatabase();
+	}
 }

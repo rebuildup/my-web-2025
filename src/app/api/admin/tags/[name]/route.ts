@@ -1,10 +1,11 @@
-/**
- * Individual Tag Management API Endpoints
- * Provides operations for specific tags
- */
+export const dynamic = "force-static";
 
 import { type NextRequest, NextResponse } from "next/server";
 import { portfolioTagManager } from "@/lib/portfolio/tag-management";
+
+export async function generateStaticParams() {
+	return [{ name: "placeholder" }];
+}
 
 interface RouteParams {
 	params: {
@@ -55,7 +56,7 @@ export async function PUT(_request: NextRequest, { params }: RouteParams) {
 	}
 }
 
-// DELETE /api/admin/tags/[name] - Delete specific tag
+// DELETE /api/admin/tags/[name] - Delete tag
 export async function DELETE(_request: NextRequest, { params }: RouteParams) {
 	try {
 		const resolvedParams = await params;
@@ -72,23 +73,23 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
 			);
 		}
 
-		const deleted = await portfolioTagManager.deleteTag(tagName);
+		const success = await portfolioTagManager.deleteTag(tagName);
 
-		if (deleted) {
-			return NextResponse.json({
-				success: true,
-				message: `Tag "${tagName}" deleted successfully`,
-			});
-		} else {
+		if (!success) {
 			return NextResponse.json(
 				{
 					success: false,
-					error: "Tag not found",
-					message: `Tag "${tagName}" does not exist`,
+					error: "Failed to delete tag",
+					message: "Tag not found or could not be deleted",
 				},
 				{ status: 404 },
 			);
 		}
+
+		return NextResponse.json({
+			success: true,
+			message: "Tag deleted successfully",
+		});
 	} catch (error) {
 		console.error("Error deleting tag:", error);
 		return NextResponse.json(

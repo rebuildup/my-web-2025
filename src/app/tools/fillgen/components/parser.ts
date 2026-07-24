@@ -1,4 +1,4 @@
-import type { Section, Block, Doc } from "./types";
+import type { Block, Doc, Section } from "./types";
 
 export function parseDoc(text: string): Doc {
 	const lines = text.split(/\r?\n/);

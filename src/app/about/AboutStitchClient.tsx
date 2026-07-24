@@ -1,8 +1,8 @@
 "use client";
 
 import { animate, stagger } from "animejs";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import SamuidoIcon from "@/components/icons/SamuidoIcon";
 import { type PortfolioContentItem } from "@/types/portfolio";

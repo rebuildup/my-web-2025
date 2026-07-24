@@ -4,21 +4,13 @@ interface ThumbnailProps {
 
 export function Thumbnail({ src }: ThumbnailProps) {
 	if (!src) {
-		return (
-			<div
-				style={{
-					width: "0px",
-					height: "0px",
-					display: "none",
-				}}
-			/>
-		);
+		return null;
 	}
 	return (
 		<div
 			style={{
-				width: "500px",
-				height: "500px",
+				width: 500,
+				height: 500,
 				display: "flex",
 			}}
 		>

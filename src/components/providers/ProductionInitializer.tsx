@@ -19,31 +19,33 @@ export function ProductionInitializer({
 	children,
 }: ProductionInitializerProps) {
 	useEffect(() => {
-		// Only initialize in browser environment
 		if (typeof window === "undefined") return;
 
-		// Skip production readiness check in development
-		const isProduction = process.env.NODE_ENV === "production";
-
-		if (isProduction) {
-			// Check production readiness
-			const readiness = checkProductionReadiness();
-
-			if (!readiness.ready) {
-				console.error("Production readiness issues:", readiness.issues);
+		const start = () => {
+			try {
+				const isProduction = process.env.NODE_ENV === "production";
+				if (isProduction) {
+					const readiness = checkProductionReadiness();
+					if (!readiness.ready) {
+						console.error("Production readiness issues:", readiness.issues);
+					}
+					if (readiness.warnings.length > 0) {
+						console.warn("Production warnings:", readiness.warnings);
+					}
+				}
+				initProduction();
+			} catch (error) {
+				console.error("Failed to initialize production environment:", error);
 			}
+		};
 
-			if (readiness.warnings.length > 0) {
-				console.warn("Production warnings:", readiness.warnings);
-			}
+		if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+			const id = window.requestIdleCallback(start, { timeout: 5000 });
+			return () => window.cancelIdleCallback(id);
 		}
 
-		// Initialize production environment
-		try {
-			initProduction();
-		} catch (error) {
-			console.error("Failed to initialize production environment:", error);
-		}
+		const id = setTimeout(start, 1000);
+		return () => clearTimeout(id);
 	}, []);
 
 	return <>{children}</>;

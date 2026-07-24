@@ -474,7 +474,7 @@ export async function generateCompleteSitemap(
 /**
  * Generate sitemap index for large sites (future use)
  */
-function generateSitemapIndex(
+function _generateSitemapIndex(
 	sitemaps: Array<{ url: string; lastModified?: Date }>,
 	config: SitemapConfig = defaultConfig,
 ): string {

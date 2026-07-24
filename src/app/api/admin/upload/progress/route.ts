@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 /**
  * Upload Progress API
  * Provides real-time upload progress tracking
