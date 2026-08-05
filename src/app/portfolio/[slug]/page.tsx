@@ -591,7 +591,8 @@ export async function generateStaticParams() {
 			return [{ slug: "placeholder" }];
 		}
 		return params;
-	} catch {
+	} catch (e) {
+		console.error("[generateStaticParams] portfolio error:", e);
 		return [{ slug: "placeholder" }];
 	}
 }

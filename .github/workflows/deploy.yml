@@ -49,7 +49,6 @@ jobs:
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
-          CMS_USE_RUST_API: "1"
         run: |
           set -euo pipefail
 
