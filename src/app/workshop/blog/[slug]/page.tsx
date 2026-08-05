@@ -14,8 +14,6 @@ import { isEnhancedContentItem } from "@/types/content";
 import { ArticleSidePanel } from "../../components/ArticleSidePanel";
 import { RelatedArticles } from "../../components/RelatedArticles";
 
-export const revalidate = 3600;
-
 interface BlogPageProps {
 	params: Promise<{ slug: string }>;
 }

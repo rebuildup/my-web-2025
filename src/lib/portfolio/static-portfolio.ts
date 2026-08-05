@@ -15,15 +15,10 @@ export type StaticPortfolioItem = {
 	category: string;
 	createdAt?: string;
 	updatedAt?: string;
-	publishedAt?: string | null;
+	publishedAt?: string;
 };
 
-const PORTFOLIO_TAGS = new Set([
-	"develop",
-	"video",
-	"design",
-	"video&design",
-]);
+const PORTFOLIO_TAGS = new Set(["develop", "video", "design", "video&design"]);
 
 function pickThumbnail(entry: CmsContentIndexEntry): string | undefined {
 	if (entry.thumbnail) return entry.thumbnail;
@@ -40,8 +35,7 @@ function pickThumbnail(entry: CmsContentIndexEntry): string | undefined {
 
 function mapEntry(entry: CmsContentIndexEntry): StaticPortfolioItem {
 	const tags = Array.isArray(entry.tags) ? entry.tags : [];
-	const category =
-		tags.find((tag) => PORTFOLIO_TAGS.has(tag)) || "all";
+	const category = tags.find((tag) => PORTFOLIO_TAGS.has(tag)) || "all";
 	return {
 		id: entry.id,
 		title: entry.title,
@@ -52,7 +46,7 @@ function mapEntry(entry: CmsContentIndexEntry): StaticPortfolioItem {
 		category,
 		createdAt: entry.createdAt,
 		updatedAt: entry.updatedAt,
-		publishedAt: entry.publishedAt,
+		publishedAt: entry.publishedAt || "",
 	};
 }
 

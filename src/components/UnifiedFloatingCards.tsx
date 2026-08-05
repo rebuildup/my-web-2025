@@ -177,9 +177,9 @@ interface PortfolioContent {
 	tags?: string[];
 	technologies?: string[];
 	category?: string;
-	createdAt?: string;
-	updatedAt?: string;
-	publishedAt?: string;
+	createdAt?: string | null;
+	updatedAt?: string | null;
+	publishedAt?: string | null;
 }
 
 export type UnifiedFloatingCardsProps = {

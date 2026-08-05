@@ -3,8 +3,6 @@ import Link from "next/link";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import type { ContentItem } from "@/types";
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
 	title: "Video Projects - Portfolio | samuido 映像制作作品集",
 	description:

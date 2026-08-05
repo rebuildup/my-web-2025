@@ -8,8 +8,6 @@ import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import { DevelopGalleryClient } from "./components/DevelopGalleryClient";
 
-export const revalidate = 60;
-
 /**
  * Development Gallery Page with proper SEO and structured data
  */

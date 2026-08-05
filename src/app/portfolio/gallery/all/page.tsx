@@ -9,8 +9,6 @@ import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import { AllGalleryClient } from "./components/AllGalleryClient";
 
-export const revalidate = 60;
-
 /**
  * All Gallery Page with proper SEO and structured data
  */

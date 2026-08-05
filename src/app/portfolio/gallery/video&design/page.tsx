@@ -8,8 +8,6 @@ import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-gene
 import type { PortfolioContentItem } from "@/types/portfolio";
 import { VideoDesignGallery } from "./components/VideoDesignGallery";
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
 	title: "Video & Design Projects - Portfolio | samuido 映像×デザイン作品集",
 	description:

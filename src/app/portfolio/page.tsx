@@ -19,8 +19,6 @@ import type { PortfolioContentItem } from "@/types/portfolio";
 import { LatestWorksSection } from "./components/LatestWorksSection";
 import { StatsOverview } from "./components/StatsOverview";
 
-export const revalidate = 60;
-
 type PortfolioItemWithEnhancedFields = PortfolioContentItem & {
 	categories?: string[];
 };

@@ -13,8 +13,6 @@ import { SearchBar } from "./components/SearchBar";
 import { TagBar } from "./components/TagBar";
 import type { ArticleData } from "./types";
 
-export const revalidate = 3600;
-
 async function _fetchContentFromCMS(id: string) {
 	const baseUrl =
 		process.env.NODE_ENV === "development"
