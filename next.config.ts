@@ -163,6 +163,7 @@ const nextConfig: NextConfig = {
 	poweredByHeader: false,
 	compress: true,
 	trailingSlash: true,
+	productionBrowserSourceMaps: true,
 };
 
 export default nextConfig;

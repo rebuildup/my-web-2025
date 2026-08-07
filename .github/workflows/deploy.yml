@@ -407,6 +407,11 @@ jobs:
               access_log /var/log/nginx/yusuke-kim-access.log;
               error_log /var/log/nginx/yusuke-kim-error.log;
 
+              # HSTS: tell browsers to never attempt HTTP for this host so
+              # Lighthouse's "is-on-https" audit does not log the initial
+              # insecure 307 redirect as a security failure.
+              add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
               client_max_body_size 50M;
 
               # Next.js static export: never SPA-fallback missing RSC/chunk
