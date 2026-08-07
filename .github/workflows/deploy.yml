@@ -456,7 +456,7 @@ jobs:
               # "missing field q" for the unauthenticated page view.
               location ~ ^/(entries|markdown|media|tags|search|preview|health) {
                   root /var/www/yusuke-kim/out;
-                  try_files $uri $uri/ $uri/index.html $uri.html @cms_api;
+                  try_files $uri $uri/index.html $uri.html @cms_api;
                   expires -1;
               }
               location @cms_api {
