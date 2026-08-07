@@ -56,7 +56,6 @@
 		"templates/**/*",
 		"src/test-utils/**/*",
 		"src/app/admin/**/*",
-		"scripts/**/*",
-		"src/app/tools/ProtoType/**/*"
+		"scripts/**/*"
 	]
 }

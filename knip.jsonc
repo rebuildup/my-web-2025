@@ -12,14 +12,4 @@
     "playwright",
     "tsx",
     "isomorphic-dompurify"
-  ],
-  "ignoreBinaries": ["wslc"],
-  "treatConfigHintsAsErrors": true,
-  "rules": {
-    "files": "off",
-    "exports": "off",
-    "types": "off",
-    "nsExports": "off",
-    "nsTypes": "off"
-  }
-}
+  ]}

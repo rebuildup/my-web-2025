@@ -5,7 +5,7 @@
 ## 技術スタック (Technology Stack)
 
 - **フレームワーク**: [Next.js](https://nextjs.org) 16 (App Router)
-- **言語**: TypeScript 5.9
+- **言語**: TypeScript 7
 - **UI & スタイリング**: 
   - [Tailwind CSS](https://tailwindcss.com) v4
   - [Material UI](https://mui.com/) v7
@@ -46,7 +46,7 @@
 ### インストール (Installation)
 
 ```bash
-bun install
+bun i
 ```
 
 ### 開発サーバの起動 (Development)

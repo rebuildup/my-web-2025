@@ -32,7 +32,6 @@ function loadEnv(filename) {
 // Load env files in priority order (similar to Next.js)
 loadEnv(".env");
 loadEnv(".env.production");
-loadEnv(".env.local");
 
 if (!process.env.NEXT_PUBLIC_GA_ID) {
 	process.env.NEXT_PUBLIC_GA_ID = "G-DUMMY12345";
