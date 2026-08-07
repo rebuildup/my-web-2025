@@ -81,7 +81,19 @@ jobs:
         run: |
           set -euo pipefail
 
-          bun run build
+          # `bun --bun next build` currently segfaults at teardown under
+          # Bun 1.3.14 with Next.js 16.3.0 (SIGILL 0x13CB0, in `bun:sqlite`
+          # cleanup). The build itself completes - the route table and `out/`
+          # land on disk before the crash. Tolerate the SIGILL exit (132) iff
+          # the static export is present; otherwise propagate the failure.
+          bun run build || {
+            ec=$?
+            if [ "$ec" -eq 132 ] && [ -f out/index.html ]; then
+              echo "::warning::bun --bun next build exited 132 (SIGILL at teardown), but out/index.html exists; proceeding"
+              exit 0
+            fi
+            exit "$ec"
+          }
 
       - name: Validate and package static export
         run: |
