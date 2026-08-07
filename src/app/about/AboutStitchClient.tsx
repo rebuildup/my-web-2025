@@ -772,11 +772,11 @@ export default function AboutStitchClient({
 				{/* eslint-disable-next-line @next/next/no-img-element */}
 				<Image
 					src={`https://skillicons.dev/icons?i=${skillIconIds}&perline=12`}
-					width={520}
-					height={80}
+					width={666}
+					height={217}
 					unoptimized
 					alt="skills"
-					className="w-full max-w-[520px]"
+					className="w-full max-w-[520px] h-auto"
 					loading="lazy"
 				/>
 			</Section>

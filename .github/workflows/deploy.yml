@@ -420,8 +420,15 @@ jobs:
                   try_files /index.html =404;
               }
 
+              # Try the file directly first, then fall back to `<uri>/index.html`
+              # so that requests without a trailing slash (e.g. `/workshop`) are
+              # served from `out/workshop/index.html` without an external 301
+              # redirect. The previous `$uri/` form caused nginx to issue an
+              # extra redirect (and downgrade the URL to http://) which
+              # Lighthouse penalised in the "Avoid multiple page redirects"
+              # audit (~800 ms wasted on every page entry).
               location / {
-                  try_files $uri $uri/ $uri.html =404;
+                  try_files $uri $uri/index.html $uri.html =404;
               }
 
               location /_next/static/ {
