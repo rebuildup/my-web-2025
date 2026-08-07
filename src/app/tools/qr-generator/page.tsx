@@ -1,29 +1,20 @@
+import { generateBaseMetadata } from "@/lib/seo/metadata";
 import QRCodeGenerator from "./components/QRCodeGenerator";
 
-export const metadata = {
+export const metadata = generateBaseMetadata({
+	path: "/tools/qr-generator",
 	title: "QR Code Generator",
 	description:
 		"URL・テキストからQRコード生成・カスタマイズ・ダウンロード機能付きツール",
-	keywords: "QRコード, QR生成, URL, テキスト, ダウンロード, カスタマイズ",
-	robots: "index, follow",
-	canonical: "https://yusuke-kim.com/tools/qr-generator",
-	openGraph: {
-		title: "QR Code Generator - samuido | QRコード生成",
-		description:
-			"URL・テキストからQRコード生成・カスタマイズ・ダウンロード機能付きツール",
-		type: "website",
-		url: "https://yusuke-kim.com/tools/qr-generator",
-		siteName: "samuido",
-		locale: "ja_JP",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "QR Code Generator - samuido | QRコード生成",
-		description:
-			"URL・テキストからQRコード生成・カスタマイズ・ダウンロード機能付きツール",
-		creator: "@361do_sleep",
-	},
-};
+	keywords: [
+		"QRコード",
+		"QR生成",
+		"URL",
+		"テキスト",
+		"ダウンロード",
+		"カスタマイズ",
+	],
+});
 
 export default function QRGeneratorPage() {
 	return (

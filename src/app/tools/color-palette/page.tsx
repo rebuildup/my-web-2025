@@ -1,29 +1,20 @@
+import { generateBaseMetadata } from "@/lib/seo/metadata";
 import ColorPaletteGenerator from "./components/ColorPaletteGenerator";
 
-export const metadata = {
-	title: "Color Palette Generator",
+export const metadata = generateBaseMetadata({
+	path: "/tools/color-palette",
+	title: "Color Palette",
 	description:
 		"色域を指定してランダムにカラーパレットを生成.デザインに活用できる美しい色の組み合わせを作成.",
-	keywords: "カラーパレット, 色生成, デザイン, ランダム色, 色域設定, CSS変数",
-	robots: "index, follow",
-	canonical: "https://yusuke-kim.com/tools/color-palette",
-	openGraph: {
-		title: "Color Palette Generator - samuido | カラーパレット生成",
-		description:
-			"色域を指定してランダムにカラーパレットを生成.デザインに活用できる美しい色の組み合わせを作成.",
-		type: "website",
-		url: "https://yusuke-kim.com/tools/color-palette",
-		siteName: "samuido",
-		locale: "ja_JP",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "Color Palette Generator - samuido | カラーパレット生成",
-		description:
-			"色域を指定してランダムにカラーパレットを生成.デザインに活用できる美しい色の組み合わせを作成.",
-		creator: "@361do_sleep",
-	},
-};
+	keywords: [
+		"カラーパレット",
+		"色生成",
+		"デザイン",
+		"ランダム色",
+		"色域設定",
+		"CSS変数",
+	],
+});
 
 export default function ColorPalettePage() {
 	return <ColorPaletteGenerator />;

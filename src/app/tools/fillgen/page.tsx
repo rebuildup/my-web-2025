@@ -5,6 +5,9 @@ export const metadata = {
 	description:
 		"テキストに穴埋めを挿入して、プレビュー / HTML / React コードを即座に生成.",
 	robots: "index, follow",
+	alternates: {
+		canonical: "https://yusuke-kim.com/tools/fillgen",
+	},
 	openGraph: {
 		title: "穴埋めプリントジェネレーター - samuido",
 		description:

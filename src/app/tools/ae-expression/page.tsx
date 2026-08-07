@@ -1,32 +1,22 @@
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { generateBaseMetadata } from "@/lib/seo/metadata";
 import AEExpressionTool from "./components/AEExpressionTool";
 
-export const metadata = {
-	title: "AE Expression Tool",
+export const metadata = generateBaseMetadata({
+	path: "/tools/ae-expression",
+	title: "AE Expression",
 	description:
 		"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示.",
-	keywords:
-		"AfterEffects, エクスプレッション, アニメーション, エフェクト, Scratch, ブロックUI",
-	robots: "index, follow",
-	canonical: "https://yusuke-kim.com/tools/ae-expression",
-	openGraph: {
-		title: "AE Expression Tool - samuido | AfterEffects エクスプレッション",
-		description:
-			"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示.",
-		type: "website",
-		url: "https://yusuke-kim.com/tools/ae-expression",
-		siteName: "samuido",
-		locale: "ja_JP",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "AE Expression Tool - samuido | AfterEffects エクスプレッション",
-		description:
-			"AfterEffectsのエクスプレッションをScratch風ブロックUIで簡単に設定.アニメーション、エフェクト、変形などのエクスプレッションを一覧表示.",
-		creator: "@361do_sleep",
-	},
-};
+	keywords: [
+		"AfterEffects",
+		"エクスプレッション",
+		"アニメーション",
+		"エフェクト",
+		"Scratch",
+		"ブロックUI",
+	],
+});
 
 export default function AEExpressionPage() {
 	notFound();

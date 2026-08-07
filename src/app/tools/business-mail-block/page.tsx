@@ -1,32 +1,22 @@
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { generateBaseMetadata } from "@/lib/seo/metadata";
 import BusinessMailBlockTool from "./components/BusinessMailBlockTool";
 
-export const metadata = {
-	title: "Business Mail Block Tool",
+export const metadata = generateBaseMetadata({
+	path: "/tools/business-mail-block",
+	title: "Business Mail Block",
 	description:
 		"ビジネスメールをScratch風ブロックUIで簡単作成.挨拶、本文、締め、署名を組み合わせてプロフェッショナルなメールを作成.",
-	keywords:
-		"ビジネスメール, テンプレート, Scratch, ブロックUI, メール作成, ビジネス文書",
-	robots: "index, follow",
-	canonical: "https://yusuke-kim.com/tools/business-mail-block",
-	openGraph: {
-		title: "Business Mail Block Tool - samuido | ビジネスメール作成",
-		description:
-			"ビジネスメールをScratch風ブロックUIで簡単作成.挨拶、本文、締め、署名を組み合わせてプロフェッショナルなメールを作成.",
-		type: "website",
-		url: "https://yusuke-kim.com/tools/business-mail-block",
-		siteName: "samuido",
-		locale: "ja_JP",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "Business Mail Block Tool - samuido | ビジネスメール作成",
-		description:
-			"ビジネスメールをScratch風ブロックUIで簡単作成.挨拶、本文、締め、署名を組み合わせてプロフェッショナルなメールを作成.",
-		creator: "@361do_sleep",
-	},
-};
+	keywords: [
+		"ビジネスメール",
+		"テンプレート",
+		"Scratch",
+		"ブロックUI",
+		"メール作成",
+		"ビジネス文書",
+	],
+});
 
 export default function BusinessMailBlockPage() {
 	notFound();
