@@ -8,6 +8,7 @@
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import { ImageDebugInfo } from "@/components/debug/ImageDebugInfo";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { getImageUrl } from "@/lib/utils/image-utils";
 
 interface SafeImageProps {
@@ -49,7 +50,7 @@ export function SafeImage({
 	const handleError = useCallback(
 		(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
 			// Skip verbose logging for CMS media URLs in development
-			const isCmsMedia = currentSrc?.includes("/api/cms/media");
+			const isCmsMedia = currentSrc?.includes(`${getCmsApiBaseUrl()}/media`);
 			if (
 				process.env.NODE_ENV !== "production" &&
 				process.env.NODE_ENV !== "test" &&
@@ -117,11 +118,11 @@ export function SafeImage({
 	}
 
 	// next/image はクエリ付きローカルURLに対して localPatterns 設定が必要.
-	// ギャラリーでは /api/cms/media?… を直接表示するため、該当ケースは <img> にフォールバック.
+	// ギャラリーでは CMS API の /media?… を直接表示するため、該当ケースは <img> にフォールバック.
 	const isApiMediaSrc =
 		typeof currentSrc === "string" &&
-		(currentSrc.startsWith("/api/cms/media") ||
-			currentSrc.includes("/api/cms/media"));
+		(currentSrc.startsWith(`${getCmsApiBaseUrl()}/media`) ||
+			currentSrc.includes(`${getCmsApiBaseUrl()}/media`));
 
 	// fill が明示されているか、width と height が両方未指定の場合は fill モード
 	const isFillMode = Boolean(fill || (!width && !height));

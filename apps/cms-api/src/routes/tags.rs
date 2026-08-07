@@ -1,10 +1,9 @@
 use axum::{
     extract::State,
-    routing::{get, post},
+    routing::get,
     Json, Router,
 };
 use serde::Serialize;
-use sqlx::SqlitePool;
 use thiserror::Error;
 use uuid::Uuid;
 
@@ -14,8 +13,6 @@ use crate::db::DbPool;
 pub enum TagError {
     #[error("Database error")]
     Database,
-    #[error("Tag not found")]
-    NotFound,
     #[error("Tag already exists")]
     AlreadyExists,
 }
@@ -23,7 +20,6 @@ pub enum TagError {
 impl axum::response::IntoResponse for TagError {
     fn into_response(self) -> axum::response::Response {
         let status = match &self {
-            TagError::NotFound => axum::http::StatusCode::NOT_FOUND,
             TagError::AlreadyExists => axum::http::StatusCode::CONFLICT,
             TagError::Database => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
         };

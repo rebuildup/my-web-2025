@@ -6,7 +6,7 @@ import {
 	getFromIndex,
 } from "@/cms/lib/content-db-manager";
 import type { MarkdownPage } from "@/cms/types/markdown";
-import { shouldUseRustCmsApi } from "./config";
+import { resolveMediaUrl, shouldUseRustCmsApi } from "./config";
 import { cmsApiFetch } from "./server-client";
 
 export type CmsContentIndexEntry = {
@@ -90,30 +90,42 @@ function mapRustEntryListItem(item: RustEntryListItem): CmsContentIndexEntry {
 		updatedAt: item.updated_at,
 		publishedAt: item.published_at ?? null,
 		tags: parseTags(item.tags),
-		thumbnail: item.thumbnail ?? undefined,
-		thumbnails: item.thumbnail ? { image: { src: item.thumbnail } } : undefined,
+		thumbnail: resolveMediaUrl(item.thumbnail ?? undefined),
+		thumbnails: item.thumbnail
+			? { image: { src: resolveMediaUrl(item.thumbnail) ?? item.thumbnail } }
+			: undefined,
 	};
 }
 
 export async function fetchCmsContentIndex(): Promise<CmsContentIndexEntry[]> {
 	if (!shouldUseRustCmsApi()) {
 		const rows = getAllFromIndex();
-		return rows.map((row) => ({
-			id: row.id,
-			title: row.title,
-			summary: row.summary || undefined,
-			lang: row.lang,
-			status: row.status,
-			visibility: row.visibility,
-			createdAt: row.createdAt,
-			updatedAt: row.updatedAt,
-			publishedAt: row.publishedAt ?? null,
-			tags: row.tags ?? [],
-			thumbnail: row.thumbnails?.image
+		return rows.map((row) => {
+			const storedThumb = row.thumbnails?.image
 				? (row.thumbnails.image as { src?: string })?.src
-				: undefined,
-			thumbnails: row.thumbnails,
-		}));
+				: undefined;
+			return {
+				id: row.id,
+				title: row.title,
+				summary: row.summary || undefined,
+				lang: row.lang,
+				status: row.status,
+				visibility: row.visibility,
+				createdAt: row.createdAt,
+				updatedAt: row.updatedAt,
+				publishedAt: row.publishedAt ?? null,
+				tags: row.tags ?? [],
+				thumbnail: resolveMediaUrl(storedThumb),
+				thumbnails: row.thumbnails
+					? {
+							...row.thumbnails,
+							image: storedThumb
+								? { src: resolveMediaUrl(storedThumb) ?? storedThumb }
+								: row.thumbnails.image,
+						}
+					: undefined,
+			};
+		});
 	}
 
 	try {
@@ -134,6 +146,9 @@ export async function fetchCmsContentById(
 	if (!shouldUseRustCmsApi()) {
 		const row = getFromIndex(id);
 		if (!row) return null;
+		const storedThumb = row.thumbnails?.image
+			? (row.thumbnails.image as { src?: string })?.src
+			: undefined;
 		return {
 			id: row.id,
 			title: row.title,
@@ -145,10 +160,15 @@ export async function fetchCmsContentById(
 			updatedAt: row.updatedAt,
 			publishedAt: row.publishedAt ?? null,
 			tags: row.tags ?? [],
-			thumbnail: row.thumbnails?.image
-				? (row.thumbnails.image as { src?: string })?.src
+			thumbnail: resolveMediaUrl(storedThumb),
+			thumbnails: row.thumbnails
+				? {
+						...row.thumbnails,
+						image: storedThumb
+							? { src: resolveMediaUrl(storedThumb) ?? storedThumb }
+							: row.thumbnails.image,
+					}
 				: undefined,
-			thumbnails: row.thumbnails,
 		};
 	}
 
@@ -178,9 +198,14 @@ export async function fetchCmsContentById(
 				slug: detail.slug ?? undefined,
 			},
 			tags: indexEntry?.tags ?? [],
-			thumbnail: indexEntry?.thumbnail,
+			thumbnail: resolveMediaUrl(indexEntry?.thumbnail),
 			thumbnails: indexEntry?.thumbnail
-				? { image: { src: indexEntry.thumbnail } }
+				? {
+						image: {
+							src:
+								resolveMediaUrl(indexEntry.thumbnail) ?? indexEntry.thumbnail,
+						},
+					}
 				: undefined,
 		};
 	} catch (error) {

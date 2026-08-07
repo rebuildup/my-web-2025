@@ -11,6 +11,7 @@ import {
 	fetchCmsContentById,
 	fetchMarkdownPageBySlug,
 } from "@/lib/cms-api/server-data";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import type { MarkdownContentItem } from "@/types/content";
@@ -28,7 +29,7 @@ function isRenderableImageUrl(value: string | undefined): value is string {
 		return false;
 	}
 
-	if (value.startsWith("/api/cms/media")) {
+	if (value.startsWith(`${getCmsApiBaseUrl()}/media`)) {
 		return true;
 	}
 
@@ -150,7 +151,7 @@ export async function generateMetadata({
 						) {
 							return mediaId;
 						}
-						return `${baseUrl}/api/cms/media?contentId=${full.id}&id=${mediaId}&raw=1`;
+						return `${getCmsApiBaseUrl()}/media?contentId=${full.id}&id=${mediaId}&raw=1`;
 					};
 					item = {
 						id: full.id,

@@ -38,6 +38,7 @@ import type { Content } from "@/cms/types/content";
 import type { MediaItem } from "@/cms/types/media";
 import { MediaUploadForm } from "@/components/admin/cms";
 import { PageHeader } from "@/components/admin/layout";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { ConfirmDialog } from "@/components/admin/ui";
 import { useCmsResource } from "@/hooks/useCmsResource";
 
@@ -478,7 +479,7 @@ export default function AdminMediaManager() {
 			}
 			setMediaLoading(true);
 			const response = await fetch(
-				`/api/cms/media?contentId=${encodeURIComponent(contentId)}`,
+				`${getCmsApiBaseUrl()}/media?contentId=${encodeURIComponent(contentId)}`,
 			);
 			if (!response.ok) {
 				const errMsg = `メディアの取得に失敗しました (${response.status})`;
@@ -498,7 +499,7 @@ export default function AdminMediaManager() {
 						};
 					}
 					const detailResponse = await fetch(
-						`/api/cms/media?contentId=${encodeURIComponent(contentId)}&id=${encodeURIComponent(item.id)}`,
+						`${getCmsApiBaseUrl()}/media?contentId=${encodeURIComponent(contentId)}&id=${encodeURIComponent(item.id)}&raw=1`,
 					);
 					if (!detailResponse.ok) {
 						return item;
@@ -550,7 +551,7 @@ export default function AdminMediaManager() {
 					.filter(Boolean),
 			};
 
-			const response = await fetch("/api/cms/media", {
+			const response = await fetch(`${getCmsApiBaseUrl()}/media`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(payload),
@@ -584,7 +585,7 @@ export default function AdminMediaManager() {
 		async (media: MediaWithPreview) => {
 			if (!selectedContentId) return;
 			const response = await fetch(
-				`/api/cms/media?contentId=${encodeURIComponent(selectedContentId)}&id=${encodeURIComponent(media.id)}`,
+				`${getCmsApiBaseUrl()}/media?contentId=${encodeURIComponent(selectedContentId)}&id=${encodeURIComponent(media.id)}`,
 				{ method: "DELETE" },
 			);
 			if (!response.ok) {

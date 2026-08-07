@@ -4,7 +4,6 @@ use axum::{
     Json, Router,
 };
 use serde::Serialize;
-use sqlx::SqlitePool;
 use thiserror::Error;
 
 use crate::db::DbPool;

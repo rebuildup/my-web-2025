@@ -1,14 +1,15 @@
 import type { MediaItem, MediaUploadRequest } from "@/cms/types/media";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { apiRequest, buildUrl } from "./client";
 
 export async function fetchMediaList(contentId: string): Promise<MediaItem[]> {
-	return apiRequest<MediaItem[]>("/api/cms/media", {
+	return apiRequest<MediaItem[]>(`${getCmsApiBaseUrl()}/media`, {
 		query: { contentId },
 	});
 }
 
 async function _fetchMedia(contentId: string, id: string): Promise<MediaItem> {
-	return apiRequest<MediaItem>("/api/cms/media", {
+	return apiRequest<MediaItem>(`${getCmsApiBaseUrl()}/media`, {
 		query: { contentId, id },
 	});
 }
@@ -16,14 +17,17 @@ async function _fetchMedia(contentId: string, id: string): Promise<MediaItem> {
 export async function uploadMedia(
 	payload: MediaUploadRequest,
 ): Promise<{ ok: boolean; id: string }> {
-	return apiRequest<{ ok: boolean; id: string }>("/api/cms/media", {
-		method: "POST",
-		body: JSON.stringify(payload),
-	});
+	return apiRequest<{ ok: boolean; id: string }>(
+		`${getCmsApiBaseUrl()}/media`,
+		{
+			method: "POST",
+			body: JSON.stringify(payload),
+		},
+	);
 }
 
 export async function deleteMedia(contentId: string, id: string) {
-	return apiRequest<{ ok: boolean }>("/api/cms/media", {
+	return apiRequest<{ ok: boolean }>(`${getCmsApiBaseUrl()}/media`, {
 		method: "DELETE",
 		query: { contentId, id },
 	});
@@ -45,7 +49,7 @@ export async function uploadMediaFile(
 }
 
 export function getMediaUrl(contentId: string, id: string) {
-	return buildUrl("/api/cms/media", {
+	return buildUrl(`${getCmsApiBaseUrl()}/media`, {
 		contentId,
 		id,
 		raw: 1,

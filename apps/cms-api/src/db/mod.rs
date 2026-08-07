@@ -36,12 +36,6 @@ async fn run_migrations(pool: &DbPool) -> Result<(), sqlx::Error> {
     Ok(())
 }
 
-/// Initialize database at a specific path
-pub async fn create_pool_at(path: &std::path::Path) -> Result<DbPool, sqlx::Error> {
-    let database_url = format!("sqlite:{}?mode=rwc", path.display());
-    create_pool(&database_url).await
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;

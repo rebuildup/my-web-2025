@@ -1,5 +1,6 @@
 import { type ChangeEvent, useCallback, useRef } from "react";
 import type { Content } from "@/cms/types/content";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import type { SetContentFormData } from "./ContentForm.types";
 
 export function useContentFormMedia(
@@ -22,7 +23,7 @@ export function useContentFormMedia(
 				reader.onerror = () => reject(reader.error);
 				reader.readAsDataURL(file);
 			});
-			const res = await fetch("/api/cms/media", {
+			const res = await fetch(`${getCmsApiBaseUrl()}/media`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
@@ -34,7 +35,7 @@ export function useContentFormMedia(
 			});
 			if (!res.ok) return null;
 			const { id } = (await res.json()) as { id: string };
-			return `/api/cms/media?contentId=${formData.id}&id=${id}&raw=1`;
+			return `${getCmsApiBaseUrl()}/media?contentId=${formData.id}&id=${id}&raw=1`;
 		},
 		[formData.id],
 	);

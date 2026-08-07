@@ -7,6 +7,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { AllGalleryClient } from "./components/AllGalleryClient";
 
 /**
@@ -41,7 +42,7 @@ export default async function AllGalleryPage() {
 							return mediaId;
 						}
 						// メディアIDのみの場合はAPIルート形式に変換
-						return `/api/cms/media?contentId=${r.id}&id=${mediaId}&raw=1`;
+						return `${getCmsApiBaseUrl()}/media?contentId=${r.id}&id=${mediaId}&raw=1`;
 					};
 
 					// 優先順位: image.src > gif.src > webm.poster

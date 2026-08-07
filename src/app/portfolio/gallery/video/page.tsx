@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import type { ContentItem } from "@/types";
 
 export const metadata: Metadata = {
@@ -80,7 +81,7 @@ async function getVideoPortfolioData(): Promise<ContentItem[]> {
 							return mediaId;
 						}
 						// メディアIDのみの場合はAPIルート形式に変換
-						return `/api/cms/media?contentId=${r.id}&id=${mediaId}&raw=1`;
+						return `${getCmsApiBaseUrl()}/media?contentId=${r.id}&id=${mediaId}&raw=1`;
 					};
 
 					// 優先順位: image.src > gif.src > webm.poster

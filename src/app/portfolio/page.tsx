@@ -18,6 +18,7 @@ import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-gene
 import type { PortfolioContentItem } from "@/types/portfolio";
 import { LatestWorksSection } from "./components/LatestWorksSection";
 import { StatsOverview } from "./components/StatsOverview";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 
 type PortfolioItemWithEnhancedFields = PortfolioContentItem & {
 	categories?: string[];
@@ -322,7 +323,7 @@ export default async function PortfolioPage() {
 								return mediaId;
 							}
 							// メディアIDのみの場合はAPIルート形式に変換
-							return `/api/cms/media?contentId=${row.id}&id=${mediaId}&raw=1`;
+							return `${getCmsApiBaseUrl()}/media?contentId=${row.id}&id=${mediaId}&raw=1`;
 						};
 
 						const prioritized =

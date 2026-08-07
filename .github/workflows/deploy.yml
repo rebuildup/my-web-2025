@@ -48,6 +48,10 @@ jobs:
         env:
           NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          # Bake absolute media URLs anchored at the public site so the static
+          # export references https://yusuke-kim.com/api/cms/media?...; Nginx
+          # proxies /api/ to the Rust CMS API on 127.0.0.1:3001.
+          NEXT_PUBLIC_CMS_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
         run: |
           set -euo pipefail

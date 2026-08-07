@@ -4,6 +4,7 @@
  */
 
 import type { ContentItem, EnhancedContentItem } from "@/types";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import {
 	isValidPortfolioCategory,
 	PORTFOLIO_CATEGORIES,
@@ -721,7 +722,7 @@ export class PortfolioDataProcessor {
 		}
 
 		// Convert media ID to API route URL
-		return `/api/cms/media?contentId=${contentId}&id=${thumbnail}&raw=1`;
+		return `${getCmsApiBaseUrl()}/media?contentId=${contentId}&id=${thumbnail}&raw=1`;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 export const dynamic = "force-static";
 import { type NextRequest, NextResponse } from "next/server";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 
 export async function GET(request: NextRequest) {
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest) {
 						) {
 							return mediaId;
 						}
-						return `/api/cms/media?contentId=${r.id}&id=${mediaId}&raw=1`;
+						return `${getCmsApiBaseUrl()}/media?contentId=${r.id}&id=${mediaId}&raw=1`;
 					};
 
 					if (thumbs?.image?.src)

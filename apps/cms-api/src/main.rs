@@ -71,6 +71,9 @@ async fn main() {
         .nest("/entries", entries::router(pool.clone()))
         .nest("/markdown", markdown::router(pool.clone()))
         .nest("/media", media::router(pool.clone()))
+        // Alias for browser-facing `/api/cms/media` so static-exported pages
+        // can request media through the Rust CMS API without a Node route.
+        .nest("/api/cms/media", media::router(pool.clone()))
         .nest("/tags", tags::router(pool.clone()))
         .nest("/search", search::router(pool.clone()))
         .nest("/preview", preview::router(pool.clone()))

@@ -7,6 +7,7 @@ import {
 	getProductionConfig,
 	validateProductionConfig,
 } from "@/lib/config/production";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import {
 	initWebVitals,
 	monitorMemoryUsage,
@@ -161,7 +162,7 @@ function setupGlobalErrorHandling(): void {
 				if (
 					process.env.NODE_ENV === "development" &&
 					(resourceUrl.includes("favicon") ||
-						resourceUrl.includes("/api/cms/media") ||
+						resourceUrl.includes(`${getCmsApiBaseUrl()}/media`) ||
 						resourceUrl === "unknown")
 				) {
 					return;
