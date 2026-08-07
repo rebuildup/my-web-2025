@@ -2,10 +2,10 @@ import { Eye } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
-import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import type { PortfolioContentItem } from "@/types/portfolio";
 import { VideoDesignGallery } from "./components/VideoDesignGallery";
 

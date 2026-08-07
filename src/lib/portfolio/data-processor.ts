@@ -3,8 +3,8 @@
  * Task 1.3: 拡張データプロセッサーの実装
  */
 
-import type { ContentItem, EnhancedContentItem } from "@/types";
 import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
+import type { ContentItem, EnhancedContentItem } from "@/types";
 import {
 	isValidPortfolioCategory,
 	PORTFOLIO_CATEGORIES,

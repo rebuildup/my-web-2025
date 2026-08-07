@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
+import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import type { ContentItem } from "@/types";
 
 export const metadata: Metadata = {

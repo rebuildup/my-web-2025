@@ -7,11 +7,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import {
 	fetchCmsContentById,
 	fetchMarkdownPageBySlug,
 } from "@/lib/cms-api/server-data";
-import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import type { MarkdownContentItem } from "@/types/content";
@@ -121,11 +121,6 @@ export async function generateMetadata({
 		console.log(
 			`[Metadata] Generating for slug: ${slug}, baseSlug: ${baseSlug}`,
 		);
-
-		const baseUrl =
-			process.env.NEXT_PUBLIC_SITE_URL ||
-			process.env.NEXT_PUBLIC_BASE_URL ||
-			"https://yusuke-kim.com";
 
 		// Get portfolio item (primary: data manager; fallback: CMS API)
 		let item = await portfolioDataManager.getItemById(baseSlug);

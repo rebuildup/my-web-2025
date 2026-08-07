@@ -9,6 +9,7 @@ import Link from "next/link";
 import { PortfolioCard } from "@/app/portfolio/gallery/all/components/PortfolioCard";
 import AboutBackgroundCSS from "@/components/AboutBackgroundCSS";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import {
 	type CmsContentIndexEntry,
 	fetchCmsContentIndex,
@@ -18,7 +19,6 @@ import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-gene
 import type { PortfolioContentItem } from "@/types/portfolio";
 import { LatestWorksSection } from "./components/LatestWorksSection";
 import { StatsOverview } from "./components/StatsOverview";
-import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 
 type PortfolioItemWithEnhancedFields = PortfolioContentItem & {
 	categories?: string[];

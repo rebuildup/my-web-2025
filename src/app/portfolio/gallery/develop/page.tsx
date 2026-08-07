@@ -3,10 +3,10 @@
  */
 
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
-import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { DevelopGalleryClient } from "./components/DevelopGalleryClient";
 
 /**

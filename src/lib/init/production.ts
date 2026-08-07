@@ -3,11 +3,11 @@
  * Sets up monitoring, security, and optimization for production
  */
 
+import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import {
 	getProductionConfig,
 	validateProductionConfig,
 } from "@/lib/config/production";
-import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import {
 	initWebVitals,
 	monitorMemoryUsage,
