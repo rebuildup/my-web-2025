@@ -471,7 +471,7 @@ export default function VideoCommissionPage() {
 								items={[
 									{ label: "Home", href: "/" },
 									{ label: "About", href: "/about" },
-									{ label: "Commission", href: "/about/commission" },
+									{ label: "Commission", href: "/about" },
 									{ label: "Video", isCurrent: true },
 								]}
 								className="pt-4"

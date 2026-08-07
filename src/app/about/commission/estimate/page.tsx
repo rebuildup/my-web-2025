@@ -89,7 +89,7 @@ function PageHeader() {
 				items={[
 					{ label: "Home", href: "/" },
 					{ label: "About", href: "/about" },
-					{ label: "Commission", href: "/about/commission" },
+					{ label: "Commission", href: "/about" },
 					{ label: "Estimate", isCurrent: true },
 				]}
 				className="pt-4"

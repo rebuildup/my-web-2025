@@ -338,7 +338,7 @@ ${cardData.tagline}`;
 							items={[
 								{ label: "Home", href: "/" },
 								{ label: "About", href: "/about" },
-								{ label: "Card", href: "/about/card" },
+								{ label: "Card", href: "/about" },
 								{ label: "Handle", isCurrent: true },
 							]}
 							className="pt-4"
