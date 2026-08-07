@@ -376,7 +376,15 @@ export async function GET() {
 	} catch (error) {
 		console.error("GitHub API error:", error);
 		return NextResponse.json(
-			{ error: "Failed to fetch GitHub data", user: null, events: [] },
+			{
+				error: "Failed to fetch GitHub data",
+				user: null,
+				status: null,
+				events: [],
+				pinnedRepos: [],
+				topRepos: [],
+				contributions: { total: 0, year: new Date().getFullYear() },
+			},
 			{ status: 500 },
 		);
 	}

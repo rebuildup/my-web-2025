@@ -412,9 +412,9 @@ export default function UnifiedFloatingCards({
 
 		// Determine card type with balanced probabilities
 		const availableTypes: CardType[] = [];
-		if (githubData?.topRepos.length) availableTypes.push("github-repo");
-		if (githubData?.events.length) availableTypes.push("github-event");
-		if (youtubeData?.videos.length) availableTypes.push("youtube");
+		if (githubData?.topRepos?.length) availableTypes.push("github-repo");
+		if (githubData?.events?.length) availableTypes.push("github-event");
+		if (youtubeData?.videos?.length) availableTypes.push("youtube");
 		if (portfolioData.length) availableTypes.push("portfolio");
 		if (MAPPED_LINKS.length) availableTypes.push("link");
 
