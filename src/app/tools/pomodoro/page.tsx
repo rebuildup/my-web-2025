@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { generateBaseMetadata } from "@/lib/seo/metadata";
 import PomodoroTimer from "./components/PomodoroTimer";
 
 export default function PomodoroPage() {
@@ -11,3 +13,9 @@ export default function PomodoroPage() {
 		</>
 	);
 }
+
+export const metadata: Metadata = generateBaseMetadata({
+	path: "/tools/pomodoro",
+	title: "Pomodoro",
+	description: "シンプルなポモドーロタイマー.",
+});

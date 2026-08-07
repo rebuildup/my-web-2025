@@ -33,6 +33,10 @@ export const metadata: Metadata = {
 			"テンプレート・素材集・サンプルファイルの配布.クリエイティブ制作に役立つ素材を無料で提供.",
 		creator: "@361do_sleep",
 	},
+
+	alternates: {
+		canonical: "https://yusuke-kim.com/workshop/downloads",
+	},
 };
 
 async function getDownloads(): Promise<ContentItem[]> {

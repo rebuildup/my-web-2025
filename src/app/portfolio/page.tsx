@@ -38,6 +38,9 @@ export async function generateMetadata(): Promise<Metadata> {
 		description:
 			"作品集・開発・映像・デザイン.4つのカテゴリ別ギャラリーへの導線を提供し、作品の全体像を把握できるハブページです.",
 		robots: "index, follow",
+		alternates: {
+			canonical: "https://yusuke-kim.com/portfolio",
+		},
 	};
 }
 

@@ -33,6 +33,10 @@ export const metadata: Metadata = {
 			"円周率の桁を記憶して入力するゲーム.テンキーインターフェースで楽しく学習できます.",
 		creator: "@361do_sleep",
 	},
+
+	alternates: {
+		canonical: "https://yusuke-kim.com/tools/pi-game",
+	},
 };
 
 export default function PiGamePage() {

@@ -2,12 +2,14 @@
  * All Portfolio Gallery Page
  */
 
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
+import { generateBaseMetadata } from "@/lib/seo/metadata";
 import { AllGalleryClient } from "./components/AllGalleryClient";
 
 /**
@@ -191,3 +193,9 @@ export default async function AllGalleryPage() {
 		);
 	}
 }
+
+export const metadata: Metadata = generateBaseMetadata({
+	path: "/portfolio/gallery/all",
+	title: "All",
+	description: "全ての作品を一覧できるギャラリー.",
+});

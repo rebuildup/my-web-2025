@@ -30,6 +30,10 @@ export const metadata: Metadata = {
 			"テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供.",
 		creator: "@361do_sleep",
 	},
+
+	alternates: {
+		canonical: "https://yusuke-kim.com/tools/text-counter",
+	},
 };
 
 const _jsonLd = {

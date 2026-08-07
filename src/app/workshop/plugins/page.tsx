@@ -33,6 +33,10 @@ export const metadata: Metadata = {
 			"AfterEffects・Premiere Pro プラグインの配布.動画制作を効率化するツールを無料で提供.",
 		creator: "@361do_sleep",
 	},
+
+	alternates: {
+		canonical: "https://yusuke-kim.com/workshop/plugins",
+	},
 };
 
 async function getPlugins(): Promise<ContentItem[]> {

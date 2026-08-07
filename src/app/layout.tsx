@@ -93,13 +93,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					strategy="lazyOnload"
 					src="/scripts/adobe-fonts.js"
 				/>
-				{/* Twitter (X) Embed Widgets */}
-				<Script
-					id="twitter-widgets"
-					strategy="lazyOnload"
-					src="https://platform.twitter.com/widgets.js"
-					charSet="utf-8"
-				/>
+				{/* Twitter (X) Embed Widgets - lazy-loaded only when a tweet is rendered (see use-twitter-embeds.ts) */}
 			</body>
 		</html>
 	);

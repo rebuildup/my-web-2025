@@ -22,6 +22,10 @@ export const metadata: Metadata = {
 			"SVG画像をReactコンポーネント（TSX）に変換.TypeScript対応で最適化されたコードを生成.",
 		creator: "@361do_sleep",
 	},
+
+	alternates: {
+		canonical: "https://yusuke-kim.com/tools/svg2tsx",
+	},
 };
 
 export default function SVGToTSXPage() {

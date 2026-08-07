@@ -1,4 +1,6 @@
 /**
+import type { Metadata } from "next";
+import { generateBaseMetadata } from "@/lib/seo/metadata";
  * Enhanced Design Playground Page
  * Interactive design experiments with performance monitoring
  * Task 1.1: デザインプレイグラウンド(/portfolio/playground/design)の実装

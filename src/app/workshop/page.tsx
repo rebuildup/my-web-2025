@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import type { MarkdownPage } from "@/cms/types/markdown";
@@ -7,11 +8,19 @@ import {
 	fetchCmsContentTags,
 	fetchMarkdownPages,
 } from "@/lib/cms-api/server-data";
+import { generateBaseMetadata } from "@/lib/seo/metadata";
 import { ArticleCard } from "./components/ArticleCard";
 import { ArticleGrid } from "./components/ArticleGrid";
 import { SearchBar } from "./components/SearchBar";
 import { TagBar } from "./components/TagBar";
 import type { ArticleData } from "./types";
+
+export const metadata: Metadata = generateBaseMetadata({
+	title: "Workshop",
+	description:
+		"技術記事・プラグイン・ダウンロードのワークスペース.フロントエンド開発、クリエイティブコーディング、ツール開発に関する記事や配布物を公開.",
+	path: "/workshop",
+});
 
 async function _fetchContentFromCMS(id: string) {
 	const baseUrl =

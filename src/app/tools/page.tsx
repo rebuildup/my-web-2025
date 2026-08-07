@@ -9,7 +9,16 @@ import {
 	Timer,
 	Type,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { generateBaseMetadata } from "@/lib/seo/metadata";
+
+export const metadata: Metadata = generateBaseMetadata({
+	title: "Tools",
+	description:
+		"便利なWebツールのコレクション.QRコード生成、SVG変換、テキスト解析、タイマーなど日常で役立つツールを公開しています.",
+	path: "/tools",
+});
 
 interface Tool {
 	id: string;

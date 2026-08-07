@@ -1,4 +1,5 @@
 /**
+import { generateBaseMetadata } from "@/lib/seo/metadata";
  * Portfolio Detail Page with Dynamic SEO Metadata
  * Server-side rendered with optimized metadata generation
  */

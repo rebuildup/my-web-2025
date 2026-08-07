@@ -1,4 +1,5 @@
 /**
+import { generateBaseMetadata } from "@/lib/seo/metadata";
  * Portfolio Playground Pages with Dynamic SEO Metadata
  * Generates optimized metadata for playground experiments
  */

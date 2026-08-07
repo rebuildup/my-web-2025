@@ -6,6 +6,9 @@ export const metadata: Metadata = {
 	description:
 		"インターネット接続を確認してください.一部のツールはオフラインでも利用可能です.",
 	robots: "noindex, nofollow",
+	alternates: {
+		canonical: "https://yusuke-kim.com/offline",
+	},
 };
 
 export default function OfflinePage() {

@@ -22,6 +22,10 @@ export const metadata: Metadata = {
 			"連番PNGファイルをアニメーションとしてプレビュー.複数ファイル、フォルダ、ZIPファイルに対応.",
 		creator: "@361do_sleep",
 	},
+
+	alternates: {
+		canonical: "https://yusuke-kim.com/tools/sequential-png-preview",
+	},
 };
 
 export default function SequentialPngPreviewPage() {
