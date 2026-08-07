@@ -446,7 +446,20 @@ jobs:
                   proxy_set_header X-Forwarded-Proto $scheme;
               }
 
+              # Static-exported Next.js routes that share their path with a Rust CMS API
+              # endpoint (e.g. `/search` is both the in-site search page and the
+              # CMS search endpoint). The static page must win, so check the
+              # file system first and only proxy to the API when no static
+              # asset is present. Without this, the regex `^/search` match
+              # wins over `location /` and every request to `/search` (and
+              # `/search/`) is forwarded to the CMS API, which returns 400
+              # "missing field q" for the unauthenticated page view.
               location ~ ^/(entries|markdown|media|tags|search|preview|health) {
+                  root /var/www/yusuke-kim/out;
+                  try_files $uri $uri/ $uri/index.html $uri.html @cms_api;
+                  expires -1;
+              }
+              location @cms_api {
                   proxy_pass http://127.0.0.1:3001;
                   proxy_http_version 1.1;
                   proxy_set_header Host $host;
