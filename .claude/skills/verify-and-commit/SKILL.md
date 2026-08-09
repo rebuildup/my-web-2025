@@ -26,11 +26,20 @@ bun x knip
 # 3. unit + integration tests
 bun run test
 
-# 4. production build (the slowest gate — last)
+# 4. Rust CMS API gate (apps/cms-api/)
+cd apps/cms-api
+cargo fmt --all -- --check
+cargo clippy --all-targets -- -D warnings
+cargo test --all-targets
+cd ../..
+
+# 5. production build (the slowest gate — last)
 bun run build
 ```
 
 UI changes: also run `mcp__playwright__*` (or the project's Playwright suite) on the affected routes. Lighthouse results go under `.tmp/`, not committed.
+
+When a task only touches `apps/cms-api/` Rust code, skip the Bun gates and run only the cargo steps (they are an independent gate per `docs/adr/0005-rust-cms-api.md`). When a task only touches Next.js / TypeScript code, skip the cargo steps to keep iteration fast — the CI `rust` job gates the Rust side separately.
 
 ## Output format
 
@@ -43,6 +52,9 @@ After running all five steps, report a single table:
 | Lint              | `bun run lint`           | PASS / FAIL |
 | Dead code         | `bun x knip`             | PASS / FAIL |
 | Tests             | `bun run test`           | PASS / FAIL |
+| Rust fmt          | `cargo fmt --all -- --check` | PASS / FAIL / N/A |
+| Rust clippy       | `cargo clippy --all-targets -- -D warnings` | PASS / FAIL / N/A |
+| Rust tests        | `cargo test --all-targets` | PASS / FAIL / N/A |
 | Build             | `bun run build`          | PASS / FAIL |
 | Visual (UI only)  | Playwright / Lighthouse  | PASS / FAIL / N/A |
 

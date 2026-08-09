@@ -24,11 +24,18 @@ git fetch --prune
 # 1. Install (locked)
 bun install --frozen-lockfile
 
-# 2. Static + dynamic gates
+# 2. Static + dynamic gates (Bun side)
 bun run type-check
 bun run lint
 bun x knip
 bun run test
+
+# 3. Rust CMS API gate (apps/cms-api/)
+cd apps/cms-api
+cargo fmt --all -- --check
+cargo clippy --all-targets -- -D warnings
+cargo test --all-targets
+cd ../..
 ```
 
 UI changes additionally need Playwright smoke on the affected route (use `mcp__playwright__*` or `bun run test:e2e` if defined locally).
@@ -49,6 +56,9 @@ UI changes additionally need Playwright smoke on the affected route (use `mcp__p
 | Lint         | `bun run lint`                       | PASS / FAIL | |
 | Dead code    | `bun x knip`                         | PASS / FAIL | |
 | Tests        | `bun run test`                       | PASS / FAIL | |
+| Rust fmt     | `cargo fmt --all -- --check` (apps/cms-api/) | PASS / FAIL | |
+| Rust clippy  | `cargo clippy --all-targets -- -D warnings` (apps/cms-api/) | PASS / FAIL | |
+| Rust tests   | `cargo test --all-targets` (apps/cms-api/) | PASS / FAIL | |
 | Env note     | local Bun version                    | x.y.z  | e.g. 1.3.10 (matches `package.json`) |
 | SIGILL check | `bun run build` exit 132 tolerance  | ok / not-applicable | if reproducible, mention it in the PR |
 
