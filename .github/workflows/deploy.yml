@@ -41,6 +41,32 @@ jobs:
       - name: Unit Tests
         run: bun run test
 
+      # Rust CMS API gate. Runs after Bun checks to keep the SIGILL teardown
+      # bug in `bun --bun next build` isolated to the deploy job's runner;
+      # this job uses a fresh runner that does not run `bun test` against
+      # the cargo toolchain in the same step.
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Cache cargo registry and target
+        uses: Swatinem/rust-cache@v2
+        with:
+          working-directory: apps/cms-api
+
+      - name: cargo fmt
+        working-directory: apps/cms-api
+        run: cargo fmt --all -- --check
+
+      - name: cargo clippy
+        working-directory: apps/cms-api
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: cargo test
+        working-directory: apps/cms-api
+        run: cargo test --all-targets
+
   deploy:
     name: Build & Deploy Static Export with Rust CMS API
     runs-on: ubuntu-latest
