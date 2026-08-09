@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"C:\\\\Users\\\\rebui\\\\Desktop\\\\my-web-2025\\\\.claude\\\\skills\\\\deploy-check\\\\SKILL.md\" \"C:\\\\Users\\\\rebui\\\\Desktop\\\\my-web-2025\\\\.agents\\\\skills\\\\deploy-check\\\\SKILL.md\")",
+      "Bash(cp \"C:\\\\Users\\\\rebui\\\\Desktop\\\\my-web-2025\\\\.claude\\\\skills\\\\lighthouse-audit\\\\SKILL.md\" \"C:\\\\Users\\\\rebui\\\\Desktop\\\\my-web-2025\\\\.agents\\\\skills\\\\lighthouse-audit\\\\SKILL.md\")"
+    ]
+  }
+}

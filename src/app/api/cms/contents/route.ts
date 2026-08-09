@@ -1,7 +1,7 @@
 export const dynamic = "force-static";
 import type { Content } from "@/cms/types/content";
 import type { ContentIndexItem } from "@/cms/types/content";
-import { getAllFromIndex, getFromIndex, getContentDb, deleteContentDb } from "@/cms/lib/content-db-manager";
+import { getAllFromIndex, getContentDb } from "@/cms/lib/content-db-manager";
 import { saveFullContent } from "@/cms/lib/content-mapper";
 import { getCmsApiBaseUrl, shouldUseRustCmsApi } from "@/lib/cms-api/config";
 import { cmsApiFetch } from "@/lib/cms-api/server-client";
@@ -23,32 +23,6 @@ type RustEntryListItem = {
 	slug?: string | null;
 	thumbnail?: string | null;
 	tags?: string | null;
-};
-
-type RustEntryDetail = {
-	id: string;
-	entry_type: string;
-	status: string;
-	visibility: string;
-	title: string;
-	summary?: string | null;
-	lang: string;
-	path?: string | null;
-	depth: number;
-	order: number;
-	parent_id?: string | null;
-	published_at?: string | null;
-	created_at: string;
-	updated_at: string;
-	slug?: string | null;
-	public_url?: string | null;
-	thumbnails?: Content["thumbnails"];
-	assets?: Content["assets"];
-	links?: Content["links"];
-	searchable?: Content["searchable"];
-	seo?: Content["seo"];
-	relations?: Content["relations"];
-	ext?: Record<string, unknown> | null;
 };
 
 type RustEntryWritePayload = {
@@ -179,73 +153,12 @@ function mapRustListItemToContentIndexItem(
 	};
 }
 
-function mapRustDetailToContent(detail: RustEntryDetail): Content {
-	return {
-		id: detail.id,
-		title: detail.title,
-		summary: detail.summary ?? undefined,
-		lang: detail.lang,
-		status: detail.status as Content["status"],
-		visibility: detail.visibility as Content["visibility"],
-		path: detail.path ?? undefined,
-		depth: detail.depth,
-		order: detail.order,
-		parentId: detail.parent_id ?? undefined,
-		publishedAt: detail.published_at ?? undefined,
-		publicUrl: detail.public_url ?? undefined,
-		createdAt: detail.created_at,
-		updatedAt: detail.updated_at,
-		thumbnails:
-			detail.thumbnails ??
-			(detail.ext?.thumbnail && typeof detail.ext.thumbnail === "object"
-				? (detail.ext.thumbnail as Content["thumbnails"])
-				: undefined),
-		assets: detail.assets ?? [],
-		links: detail.links ?? [],
-		searchable: detail.searchable,
-		seo: detail.seo,
-		relations: detail.relations,
-		ext: {
-			...(detail.ext ?? {}),
-			type:
-				typeof detail.ext?.type === "string"
-					? detail.ext.type
-					: detail.entry_type,
-			slug:
-				typeof detail.ext?.slug === "string"
-					? detail.ext.slug
-					: (detail.slug ?? undefined),
-		},
-	};
-}
-
-function mapRustDetailToContentWithIndex(
-	detail: RustEntryDetail,
-	indexItem?: RustEntryListItem,
-): Content {
-	const content = mapRustDetailToContent(detail);
-	const indexThumbnail = indexItem?.thumbnail
-		? { image: { src: indexItem.thumbnail } }
-		: undefined;
-
-	return {
-		...content,
-		tags: indexItem?.tags
-			? indexItem.tags
-					.split(",")
-					.map((tag) => tag.trim())
-					.filter(Boolean)
-			: content.tags,
-		thumbnails: content.thumbnails ?? indexThumbnail,
-	};
-}
-
 export async function OPTIONS() {
 	return new Response(null, {
 		status: 200,
 		headers: {
 			"Access-Control-Allow-Origin": "http://localhost:3000",
-			"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+			"Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
 			"Access-Control-Allow-Headers": "Content-Type, Authorization",
 		},
 	});
@@ -269,53 +182,11 @@ function mapDbIndexToContentIndexItem(
 	};
 }
 
-function mapDbRowToContent(row: ReturnType<typeof getFromIndex> & {}): Content {
-	return {
-		id: row.id,
-		title: row.title,
-		summary: row.summary || undefined,
-		lang: row.lang,
-		status: row.status as Content["status"],
-		visibility: row.visibility as Content["visibility"],
-		createdAt: row.createdAt,
-		updatedAt: row.updatedAt,
-		publishedAt: row.publishedAt ?? undefined,
-		thumbnails: row.thumbnails as Content["thumbnails"],
-		assets: [],
-		links: [],
-		ext: row.seo ?? {},
-	};
-}
-
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
 	try {
-		const { searchParams } = new URL(req.url);
-		const id = searchParams.get("id");
-
 		if (!shouldUseRustCmsApi()) {
-			if (id) {
-				const row = getFromIndex(id);
-				if (!row) {
-					return Response.json({ error: "Not found" }, { status: 404 });
-				}
-				return Response.json(mapDbRowToContent(row));
-			}
-
 			const entries = getAllFromIndex();
 			return Response.json(entries.map(mapDbIndexToContentIndexItem));
-		}
-
-		if (id) {
-			const [detail, entries] = await Promise.all([
-				cmsApiFetch<RustEntryDetail>(`/entries/${encodeURIComponent(id)}`),
-				cmsApiFetch<RustEntryListItem[]>("/entries"),
-			]);
-			return Response.json(
-				mapRustDetailToContentWithIndex(
-					detail,
-					entries.find((entry) => entry.id === id),
-				),
-			);
 		}
 
 		const entries = await cmsApiFetch<RustEntryListItem[]>("/entries");
@@ -421,39 +292,6 @@ export async function PUT(req: Request) {
 		console.error("PUT /api/cms/contents error:", error);
 		return Response.json(
 			{ error: "Failed to update content" },
-			{ status: 500 },
-		);
-	}
-}
-
-export async function DELETE(req: Request) {
-	const guard = requireAdminRequest(req);
-	if (!guard.ok) return guard.response;
-
-	try {
-		const { searchParams } = new URL(req.url);
-		const id = searchParams.get("id");
-		if (!id) {
-			return Response.json({ error: "ID is required" }, { status: 400 });
-		}
-
-		if (!shouldUseRustCmsApi()) {
-			const deleted = deleteContentDb(id);
-			if (!deleted) {
-				return Response.json(
-					{ error: `Content with id ${id} not found` },
-					{ status: 404 },
-				);
-			}
-			return Response.json({ ok: true });
-		}
-
-		await deleteRustEntry(id);
-		return Response.json({ ok: true });
-	} catch (error) {
-		console.error("DELETE /api/cms/contents error:", error);
-		return Response.json(
-			{ error: "Failed to delete content" },
 			{ status: 500 },
 		);
 	}

@@ -213,74 +213,8 @@ describe("GET guard (public)", () => {
 });
 
 describe("GET detail mapping", () => {
-	test("detail response keeps tags and list thumbnail for the edit modal", async () => {
-		process.env.CMS_API_BASE_URL = "http://cms-api.test";
-		process.env.CMS_USE_RUST_API = "1";
-		const requestedUrls: string[] = [];
-		globalThis.fetch = (async (input: RequestInfo | URL) => {
-			const url = input.toString();
-			requestedUrls.push(url);
-			if (url === "http://cms-api.test/entries/LiteGlow") {
-				return Response.json({
-					id: "LiteGlow",
-					entry_type: "portfolio",
-					status: "published",
-					visibility: "public",
-					title: "LiteGlow",
-					summary: "summary",
-					lang: "ja",
-					path: null,
-					depth: 0,
-					order: 0,
-					parent_id: null,
-					published_at: null,
-					created_at: "2026-01-01T00:00:00.000Z",
-					updated_at: "2026-01-01T00:00:00.000Z",
-					slug: "LiteGlow",
-					public_url: null,
-					thumbnails: null,
-					assets: [],
-					links: [],
-					searchable: null,
-					seo: null,
-					relations: null,
-					ext: { type: "portfolio", slug: "LiteGlow" },
-				});
-			}
-			if (url === "http://cms-api.test/entries") {
-				return Response.json([
-					{
-						id: "LiteGlow",
-						entry_type: "portfolio",
-						status: "published",
-						visibility: "public",
-						title: "LiteGlow",
-						summary: "summary",
-						lang: "ja",
-						published_at: null,
-						created_at: "2026-01-01T00:00:00.000Z",
-						updated_at: "2026-01-01T00:00:00.000Z",
-						slug: "LiteGlow",
-						thumbnail: "/thumb.png",
-						tags: "plugin, ae",
-					},
-				]);
-			}
-			return Response.json({ error: "unexpected url" }, { status: 500 });
-		}) as typeof fetch;
-
-		const { GET } = await import("./route");
-		const response = await GET(
-			makeRequest("http://localhost:3000/api/cms/contents?id=LiteGlow"),
-		);
-		const body = await response.json();
-
-		expect(response.status).toBe(200);
-		expect(body.tags).toEqual(["plugin", "ae"]);
-		expect(body.thumbnails).toEqual({ image: { src: "/thumb.png" } });
-		expect(requestedUrls).toEqual([
-			"http://cms-api.test/entries/LiteGlow",
-			"http://cms-api.test/entries",
-		]);
-	});
+	// Detail GET tests have moved to ./[id]/route.test.ts because the detail
+	// endpoint now lives at /api/cms/contents/[id] (path-based) instead of
+	// /api/cms/contents?id=X. The query-string detail branch was removed since
+	// force-static + output:export drops query strings, breaking the read path.
 });

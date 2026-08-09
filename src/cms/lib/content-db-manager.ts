@@ -538,6 +538,23 @@ export function getFromIndex(contentId: string): {
 	}
 }
 
+export function getFullContentById(contentId: string): Content | null {
+	const dbPath = getContentDbPath(contentId);
+	if (!fs.existsSync(dbPath)) {
+		return null;
+	}
+	const db = openSqliteDb(dbPath, { readonly: true });
+	try {
+		ensureSchemaUpgrades(db);
+		return getFullContent(db, contentId);
+	} catch (error) {
+		console.warn(`[CMS] Failed to read full content for ${contentId}:`, error);
+		return null;
+	} finally {
+		db.close();
+	}
+}
+
 export function copyContentDb(oldId: string, newId: string): boolean {
 	const oldPath = getContentDbPath(oldId);
 	const newPath = getContentDbPath(newId);

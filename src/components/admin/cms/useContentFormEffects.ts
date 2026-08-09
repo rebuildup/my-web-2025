@@ -66,7 +66,7 @@ export function useContentFormEffects({
 			let full: any = null;
 			try {
 				const res = await fetch(
-					`/api/cms/contents?id=${encodeURIComponent(formData.id)}`,
+					`/api/cms/contents/${encodeURIComponent(formData.id)}/`,
 					{ cache: "no-store", signal: controller.signal },
 				);
 				if (!res.ok) return;
@@ -110,15 +110,6 @@ export function useContentFormEffects({
 		initialData.title,
 		initialData.summary,
 	]);
-
-	useEffect(() => {
-		if (
-			(formData.publicUrl ?? "").trim() === "" &&
-			(formData.id ?? "").trim() !== ""
-		) {
-			setFormData((prev) => ({ ...prev, publicUrl: `/content/${prev.id}` }));
-		}
-	}, [formData.id]);
 
 	useEffect(() => {
 		const controller = new AbortController();

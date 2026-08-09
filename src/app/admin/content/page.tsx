@@ -511,7 +511,7 @@ export default function AdminContentPage() {
 	}, [handleRefresh]);
 
 	const handleDelete = useCallback(async (id: string) => {
-		const res = await fetch(`/api/cms/contents?id=${encodeURIComponent(id)}`, {
+		const res = await fetch(`/api/cms/contents/${encodeURIComponent(id)}/`, {
 			method: "DELETE",
 		});
 		if (res.ok) {
@@ -522,7 +522,7 @@ export default function AdminContentPage() {
 
 	const handleEdit = useCallback(async (content: Content) => {
 		try {
-			const res = await fetch(`/api/cms/contents?id=${encodeURIComponent(content.id)}`);
+			const res = await fetch(`/api/cms/contents/${encodeURIComponent(content.id)}/`);
 			if (res.ok) {
 				setEditTarget(await res.json());
 			} else {

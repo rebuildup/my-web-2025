@@ -59,13 +59,6 @@ export function ContentFormEssentials({
 				}
 				type="date"
 			/>
-			<ContentFormInputField
-				label="公開URL"
-				value={formData.publicUrl || ""}
-				onChange={(value) =>
-					setFormData((prev) => ({ ...prev, publicUrl: value }))
-				}
-			/>
 			<div>
 				<div style={s.label}>タグ</div>
 				<div

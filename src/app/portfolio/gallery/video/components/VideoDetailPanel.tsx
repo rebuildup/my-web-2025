@@ -308,7 +308,7 @@ export default function VideoDetailPanel({
 			return;
 		}
 		const controller = new AbortController();
-		fetch(`/api/cms/contents?id=${encodeURIComponent(item.id)}`, {
+		fetch(`/api/cms/contents/${encodeURIComponent(item.id)}/`, {
 			cache: "no-store",
 			signal: controller.signal,
 		})

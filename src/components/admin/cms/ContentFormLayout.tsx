@@ -107,11 +107,8 @@ export function ContentFormLayout({
 					<div
 						style={{
 							flex: 1,
-							maxHeight: 500,
-							overflowY: "auto",
 							paddingRight: 4,
 							minWidth: 0,
-							scrollbarWidth: "thin",
 						}}
 					>
 						{feedback && (

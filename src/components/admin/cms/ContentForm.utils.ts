@@ -106,7 +106,6 @@ export function createContentFormData(
 		status: initialData.status || "draft",
 		visibility: initialData.visibility || "draft",
 		tags: initialData.tags || [],
-		publicUrl: initialData.publicUrl || "",
 		lang: initialData.lang || "ja",
 		parentId: initialData.parentId || "",
 		path: initialData.path || "",

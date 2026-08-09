@@ -10,6 +10,7 @@
 | `06_deploy.md`      | インフラ/CI/CD/PM2 手順 (2025-12)          |
 | `07_rules.md`       | コンプライアンス・運用ルール要点           |
 | `app/`              | ページ別仕様書                             |
+| `adr/`              | 意思決定記録 (Architecture Decision Records) |
 | `archive/`          | 旧ドキュメント・詳細版                     |
 
 ## フォルダ構造
@@ -32,6 +33,15 @@ documents/
 │   ├── workshop/
 │   ├── contact/
 │   └── admin/
+├── adr/               # Architecture Decision Records
+│   ├── 0000-template.md
+│   ├── 0001-bun-package-manager.md
+│   ├── 0002-biome-lint-format.md
+│   ├── 0003-knip-dependency-analysis.md
+│   ├── 0004-distributed-sqlite-cms.md
+│   ├── 0005-rust-cms-api.md
+│   ├── 0006-static-export-nginx-deploy.md
+│   └── 0007-agent-toolchain.md
 ├── archive/           # 旧ドキュメントの退避先
 ```
 

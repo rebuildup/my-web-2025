@@ -32,7 +32,7 @@ async function _fetchContentFromCMS(id: string) {
 
 	try {
 		const res = await fetch(
-			`${baseUrl}/api/cms/contents?id=${encodeURIComponent(id)}`,
+			`${baseUrl}/api/cms/contents/${encodeURIComponent(id)}/`,
 			{
 				cache: "no-store",
 			},

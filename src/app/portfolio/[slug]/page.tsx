@@ -512,7 +512,7 @@ export default async function PortfolioDetailPage({
 						? "https://www.yusuke-kim.com"
 						: "http://localhost:3010");
 				const res = await fetch(
-					`${baseUrl}/api/cms/contents?id=${encodeURIComponent(baseSlug)}`,
+					`${baseUrl}/api/cms/contents/${encodeURIComponent(baseSlug)}/`,
 					{ cache: "no-store" },
 				);
 				if (res.ok) {

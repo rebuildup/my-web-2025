@@ -38,6 +38,8 @@ next-env.d.ts
 # Environment files (keep example files if present)
 .env*
 !.env.example
+!.env.development.example
+!.env.production.example
 
 # OS files
 .DS_Store
