@@ -60,6 +60,16 @@ test-api-debug.js
 missing-images-report.json
 cache-bust-config.json
 
+# Playwright MCP transient state
+/.playwright-mcp/
+
+# OG preview debug screenshots (regenerate via scripts/lighthouse-audit.ts or
+# the CMS API /og endpoint; keep them out of the commit graph).
+/og-preview-*.png
+/og-preview-*.svg
+apps/cms-api/og-preview-*.png
+apps/cms-api/og-preview-*.svg
+
 # Data generator outputs (keep these ignored)
 data/tag-catalog.json
 
