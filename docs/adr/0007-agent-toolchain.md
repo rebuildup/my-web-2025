@@ -22,12 +22,13 @@ AI コーディングエージェント (Claude Code, Codex, 他) が複数混�
 ## 影響
 - プラス: fresh clone から同じ agent 環境が再現される. agent バージョン差分に左右されにくい.
 - マイナス: `.claude/`, `.agents/`, `.codex/` の 3 箇所を編集時に同期する責任. Skill 更新時は両方を更新.
-- トレードオフ: 現在は人手同期. 自動化する場合は `.claude/` → `.agents/skills/` への sync script (`scripts/sync-agent-skills.sh`) を後付けで追加可能.
+- トレードオフ: 2026-08 で `scripts/sync-agent-skills.sh` を導入し, `.claude/skills/<name>/SKILL.md` -> `.agents/skills/<name>/SKILL.md` および `.claude/hooks/block-binary.sh` -> `.codex/hooks/block-binary.sh` を POSIX bash で自動 mirror する. `--check` モードで CI に組み込み可能. 自動 mirror のため, `.claude/settings.local.json` の `Bash(cp ...)` 履歴は不要になり, 削除する.
 
 ## 再評価条件
 - agent 仕様が canonical ファイルを自動 discovery する仕組みを取り入れた場合.
-- 同期漏れが 3 回以上発生し、自動化がROI を持つ場合.
+- mirror script が無視している差分 (例: 画像, 音声, バイナリ Skill アセット) が出て手動同期が必要になった場合.
 - agent toolchain の大幅な変更 (例: Claude Code Skills 仕様が他 agent と完全統合される) があった場合.
 
 ## 後続 ADR
 - 0001〜0006 の各技術決定と並列. agent 横断で参照される.
+- 0008 (Bun test canonical) と 0009 (context-mode plugin pinning) がこの ADR を前提に分岐する.

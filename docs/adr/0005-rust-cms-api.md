@@ -23,6 +23,13 @@ Next.js (Node) 側の read path を N ファイル SQLite スキャンで構成�
 - マイナス: バイナリサイズ, Rust toolchain が CI / VM に必要.
 - トレードオフ: `apps/cms-api/target/` は git ignore. `Cargo.lock` は ignore (バイナリ単体リリースのため).
 
+## 検証ゲート (Rust 側)
+- canonical gate は Bun 側 (type-check / lint / knip / test / build) に加え, Rust 側でも次を CI で必須とする.
+  - `cargo fmt --manifest-path apps/cms-api/Cargo.toml -- --check`
+  - `cargo clippy --manifest-path apps/cms-api/Cargo.toml --all-targets -- -D warnings`
+  - `cargo test --manifest-path apps/cms-api/Cargo.toml`
+- ローカル mirror は `apps/cms-api/Cargo.toml` 配下で実行する. `bun run build` の SIGILL 132 とは runner を分ける.
+
 ## 再評価条件
 - Rust toolchain のセットアップが運用負担になった場合.
 - メディア配信量 / API レイテンシが Node 実装で十分になった場合.
