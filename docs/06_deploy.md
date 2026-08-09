@@ -1,7 +1,8 @@
 # デプロイ手順書
 
-> **目的**: GitHub Actionsで自動デプロイするための完全な手順書  
-> **対象**: GCP/Linux VM (Ubuntu 22.04以上) に Next.js アプリケーションをデプロイ
+> **目的**: GitHub Actionsで自動デプロイするための完全な手順書
+> **対象**: GCP/Linux VM (Ubuntu 22.04以上) に Next.js 静的エクスポート + Rust CMS API をデプロイ
+> **canonical workflow**: `.github/workflows/deploy.yml`
 
 ---
 
@@ -22,19 +23,18 @@
 ## 1. アーキテクチャ概要
 
 ### 構成要素
-- **アプリケーション**: Next.js 16 (standalone mode)
-- **ランタイム**: Bun 1.3
-- **パッケージマネージャー**: Bun
-- **プロセス管理**: PM2 (systemd自動起動)
-- **リバースプロキシ**: nginx
-- **データベース**: SQLite (`bun:sqlite`)
+- **フロントエンド**: Next.js 16 (`output: "export"` で生成された静的 HTML/JS を nginx から直接配信)
+- **CMS API**: Rust (axum + sqlx + tokio) バイナリを port 3001 で起動
+- **ランタイム**: Bun 1.3.14 (CI), 1.3.10 (ローカル packageManager)
+- **パッケージマネージャー**: Bun (`bun install --frozen-lockfile`)
+- **プロセス管理**: PM2 (systemd 自動起動, `interpreter: "none"` で Rust バイナリを直接実行)
+- **リバースプロキシ**: nginx (`/api/` と `/entries|markdown|media|tags|search|preview|health` を Rust API にプロキシ, それ以外は静的ファイルを配信)
+- **データベース**: SQLite (1 アイテム 1 DB, `data/contents/content-{id}.db`) を Rust API が読み書き
 
-### デプロイフロー
-1. GitHub Actionsでビルド・テスト
-2. `deployment-standalone.tar.gz`を生成
-3. SSH経由でVMに転送
-4. PM2でアプリケーション起動
-5. nginxでリバースプロキシ設定
+### デプロイフロー (`.github/workflows/deploy.yml`)
+1. `verification` ジョブ: `bun install --frozen-lockfile` → `bun run type-check` → `bun run lint` → `bun x knip` → `bun run test` → Rust toolchain 設定 → `cargo fmt --check` → `cargo clippy -D warnings` → `cargo test`.
+2. `deploy` ジョブ: Checkout → Bun setup → `bun install --frozen-lockfile` → `bun --bun next build` (静的エクスポート `out/` 生成) → `out/` を `deployment-static.tar.gz` に固める → Rust toolchain 設定 → `cargo build --release` → `cms-api` バイナリを `cms-api-binary.tar.gz` に固める → SSH 経由で VM に転送 → VM 上で PM2 + nginx を再起動.
+3. Bun の静的ビルドは SIGILL 132 で teardown 失敗する既知問題があるため, `out/index.html` が存在すれば exit 132 を許容する (詳細は `deploy.yml` の `Bun Build, Static Export and Server Deploy` ジョブ内).
 
 ---
 
@@ -116,40 +116,41 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 443/tcp (v6)               ALLOW       Anywhere (v6)
 ```
 
-### 2.5 Bun / Node.js / PM2 インストール
+### 2.5 Bun / Rust / PM2 インストール
 
 ```bash
 # deployユーザーで実行
-curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-source ~/.nvm/nvm.sh
-nvm install 20
-nvm alias default 20
 curl -fsSL https://bun.sh/install | bash
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 bun add -g pm2
+
+# Rust toolchain (CMS API ビルドで必要)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal
+source "$HOME/.cargo/env"
 ```
 
 **期待される出力:**
 ```
-Now using node v20.x.x (bun)
-...
 bun was installed successfully to ~/.bun/bin/bun
 ...
-Done in 2.3s
+info: default toolchain set to stable
+  stable-x86_64-unknown-linux-gnu installed
 ```
 
 **動作確認:**
 ```bash
 bun --version
-node --version
+rustc --version
+cargo --version
 pm2 --version
 ```
 
 **期待される出力:**
 ```
 bun 1.3.x
-v20.x.x
+rustc 1.x.x (...)
+cargo 1.x.x (...)
 5.x.x
 ```
 
@@ -219,14 +220,14 @@ GitHubリポジトリの Settings → Secrets and variables → Actions で以�
 ### 4.1 自動デプロイ（推奨）
 
 1. GitHubリポジトリの Actions タブを開く
-2. 「Safe Build and Deploy」ワークフローを選択
+2. 「Bun Build, Static Export and Server Deploy」ワークフローを選択
 3. 「Run workflow」をクリック
 4. ブランチを選択（通常は `master`）
 5. 「Run workflow」ボタンをクリック
 
 **成功時の表示:**
-- ✅ すべてのジョブが緑色のチェックマーク
-- 「Deploy standalone application」ステップで「✅ Application is running」が表示される
+- ✅ `verification` ジョブが緑色 (type-check, lint, knip, test, cargo fmt/clippy/test すべて PASS)
+- ✅ `deploy` ジョブが緑色. SSH 経由で VM 上で nginx + Rust CMS API が再起動し, `http://127.0.0.1:3001/health` が 200 を返すことを確認.
 
 ### 4.2 デプロイ確認
 
@@ -244,18 +245,15 @@ ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "pm2 status"
 └─────┴──────────────┴─────────┴─────────┴──────────┴─────────┘
 ```
 
-**ローカルでの動作確認:**
+**ローカルでの動作確認 (Rust CMS API の health):**
 ```bash
-ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "curl -s http://localhost:3000/api/health | jq ."
+ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "curl -s http://localhost:3001/health | jq ."
 ```
 
 **期待される出力:**
 ```json
 {
-  "status": "ok",
-  "timestamp": "2025-12-11T00:00:00.000Z",
-  "version": "2.1.1",
-  "environment": "production"
+  "status": "ok"
 }
 ```
 
@@ -297,35 +295,47 @@ sudo systemctl status nginx
 ```bash
 sudo tee /etc/nginx/sites-available/yusuke-kim > /dev/null << 'EOF'
 server {
-    listen 80;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
     server_name yusuke-kim.com *.yusuke-kim.com _;
-    
+
     root /var/www/yusuke-kim/out;
     index index.html;
 
     access_log /var/log/nginx/yusuke-kim-access.log;
     error_log /var/log/nginx/yusuke-kim-error.log;
-    
+
+    # HSTS: tell browsers to never attempt HTTP for this host so
+    # Lighthouse's "is-on-https" audit does not log the initial
+    # insecure 307 redirect as a security failure.
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
     client_max_body_size 50M;
-    
-    # Next.js static export: do NOT SPA-fallback missing files to index.html.
-    # Missing RSC/chunk paths must 404 instead of returning HTML.
+
+    # Next.js static export: never SPA-fallback missing RSC/chunk
+    # paths to index.html (that returns HTML where JSON is expected).
     location = / {
         try_files /index.html =404;
     }
 
+    # Try the file directly first, then fall back to `<uri>/index.html`
+    # so that requests without a trailing slash (e.g. `/workshop`) are
+    # served from `out/workshop/index.html` without an external 301
+    # redirect. The previous `$uri/` form caused nginx to issue an
+    # extra redirect (and downgrade the URL to http://) which
+    # Lighthouse penalised in the "Avoid multiple page redirects"
+    # audit (~800 ms wasted on every page entry).
     location / {
-        try_files $uri $uri/ $uri.html =404;
+        try_files $uri $uri/index.html $uri.html =404;
     }
 
-    # 静的アセットキャッシュ (_next/static)
     location /_next/static/ {
         try_files $uri =404;
         expires 1y;
         add_header Cache-Control "public, max-age=31536000, immutable";
     }
 
-    # Rust CMS APIバックエンドプロキシ (:3001)
     location /api/ {
         proxy_pass http://127.0.0.1:3001/api/;
         proxy_http_version 1.1;
@@ -335,8 +345,17 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # 直接CMS APIエンドポイントプロキシ
+    # Static-exported Next.js routes that share their path with a Rust CMS API
+    # endpoint (e.g. `/search` is both the in-site search page and the
+    # CMS search endpoint). The static page must win, so check the
+    # file system first and only proxy to the API when no static
+    # asset is present.
     location ~ ^/(entries|markdown|media|tags|search|preview|health) {
+        root /var/www/yusuke-kim/out;
+        try_files $uri $uri/index.html $uri.html @cms_api;
+        expires -1;
+    }
+    location @cms_api {
         proxy_pass http://127.0.0.1:3001;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
@@ -352,6 +371,8 @@ EOF
 ```
 （出力なし - 正常に完了）
 ```
+
+> 注: この nginx 設定は `deploy.yml` の SSH 経由で VM に書き込まれる内容と同一です. 手動運用時のみ直接編集し, GitHub Actions で再実行すると上書きされます.
 
 ### 5.3 設定を有効化
 
@@ -860,11 +881,11 @@ Server: nginx/1.18.0
    ```bash
    ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "pm2 status"
    ```
-   - `status` が `online` であることを確認
+   - `cms-api` が `online` であることを確認 (Rust バイナリ, interpreter `none`)
 
-2. **ローカルでの動作確認**
+2. **ローカルでの動作確認 (Rust CMS API)**
    ```bash
-   ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "curl -I http://localhost:3000/"
+   ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "curl -I http://localhost:3001/health"
    ```
    - HTTP 200が返ることを確認
 
@@ -899,7 +920,7 @@ ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "pm2 logs yusuke-kim --lines 50"
 
 **再起動:**
 ```bash
-ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "cd /var/www/yusuke-kim && pm2 restart yusuke-kim"
+ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "cd /var/www/yusuke-kim && pm2 restart cms-api"
 ```
 
 ### 9.3 nginxエラー
@@ -1053,10 +1074,11 @@ Detail: DNS problem: NXDOMAIN looking up A for 361do.yusuke-kim.com
 
 | エラー                       | 原因                              | 解決方法                   |
 | ---------------------------- | --------------------------------- | -------------------------- |
-| `502 Bad Gateway`            | PM2が起動していない               | `pm2 restart yusuke-kim`   |
+| `502 Bad Gateway`            | PM2 (cms-api) が起動していない    | `pm2 restart cms-api`      |
 | `Connection refused`         | ポートが開いていない              | ファイアウォール設定を確認 |
 | `nginx: command not found`   | nginxがインストールされていない   | セクション5.1を実行        |
 | `certbot: command not found` | certbotがインストールされていない | セクション6.2を実行        |
+| `bun --bun next build` exit 132 (SIGILL) | Bun 1.3.14 + Next 16.3.0 既知 teardown バグ | `deploy.yml` で `out/index.html` 存在を条件に許容. ローカル再現時は同じフラグで確認. |
 
 ---
 

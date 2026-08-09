@@ -4,13 +4,15 @@
 
 ## 技術スタック (Technology Stack)
 
-- **フレームワーク**: [Next.js](https://nextjs.org) 16 (App Router)
+- **フレームワーク**: [Next.js](https://nextjs.org) 16 (App Router, `output: "export"` 静的エクスポート)
 - **言語**: TypeScript 7
-- **UI & スタイリング**: 
+- **UI & スタイリング**:
   - [Tailwind CSS](https://tailwindcss.com) v4
-  - [Material UI](https://mui.com/) v7
-  - [Shadcn UI](https://ui.shadcn.com/) コンポーネント
-- **データベース**: `bun:sqlite` (CMS用ローカルSQLite)
+  - [Material UI](https://mui.com/) v9
+  - [Chakra UI](https://chakra-ui.com/) v3
+  - Radix UI ベースの共通 UI コンポーネント
+- **CMS バックエンド**: Rust (axum + sqlx) on port 3001 (`apps/cms-api/`)
+- **データベース**: SQLite (`bun:sqlite` 読み取り, Rust sqlx で読み書き, 1 アイテム 1 DB `data/contents/content-{id}.db`)
 - **グラフィックス & アニメーション**:
   - [Three.js](https://threejs.org/) / [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)
   - [GSAP](https://gsap.com/)
