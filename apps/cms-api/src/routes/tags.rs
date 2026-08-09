@@ -1,8 +1,4 @@
-use axum::{
-    extract::State,
-    routing::get,
-    Json, Router,
-};
+use axum::{extract::State, routing::get, Json, Router};
 use serde::Serialize;
 use thiserror::Error;
 use uuid::Uuid;
@@ -69,9 +65,10 @@ fn make_slug(name: &str) -> String {
 }
 
 async fn list_tags(pool: State<DbPool>) -> Result<Json<Vec<Tag>>, TagError> {
-    let tags = sqlx::query_as::<_, Tag>("SELECT id, name, slug, created_at FROM tags ORDER BY name")
-        .fetch_all(&*pool)
-        .await?;
+    let tags =
+        sqlx::query_as::<_, Tag>("SELECT id, name, slug, created_at FROM tags ORDER BY name")
+            .fetch_all(&*pool)
+            .await?;
 
     Ok(Json(tags))
 }

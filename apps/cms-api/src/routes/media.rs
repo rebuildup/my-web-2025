@@ -31,7 +31,11 @@ impl axum::response::IntoResponse for MediaError {
             MediaError::Database => StatusCode::INTERNAL_SERVER_ERROR,
         };
 
-        (status, Json(serde_json::json!({ "error": self.to_string() }))).into_response()
+        (
+            status,
+            Json(serde_json::json!({ "error": self.to_string() })),
+        )
+            .into_response()
     }
 }
 
@@ -127,7 +131,12 @@ impl MediaListItem {
 
 pub fn router(pool: DbPool) -> Router {
     Router::new()
-        .route("/", get(get_media_or_list).post(create_media).delete(delete_media))
+        .route(
+            "/",
+            get(get_media_or_list)
+                .post(create_media)
+                .delete(delete_media),
+        )
         .layer(DefaultBodyLimit::max(64 * 1024 * 1024))
         .with_state(pool)
 }
@@ -137,7 +146,9 @@ async fn get_media_or_list(
     Query(query): Query<MediaQuery>,
 ) -> Result<Response, MediaError> {
     if query.content_id.trim().is_empty() {
-        return Err(MediaError::InvalidInput("contentId is required".to_string()));
+        return Err(MediaError::InvalidInput(
+            "contentId is required".to_string(),
+        ));
     }
 
     if let Some(media_id) = query.media_id.as_ref() {
@@ -216,7 +227,9 @@ async fn create_media(
     Json(payload): Json<CreateMediaRequest>,
 ) -> Result<Json<serde_json::Value>, MediaError> {
     if payload.content_id.trim().is_empty() {
-        return Err(MediaError::InvalidInput("contentId is required".to_string()));
+        return Err(MediaError::InvalidInput(
+            "contentId is required".to_string(),
+        ));
     }
     if payload.filename.trim().is_empty() {
         return Err(MediaError::InvalidInput("filename is required".to_string()));
@@ -228,10 +241,13 @@ async fn create_media(
     let data = STANDARD
         .decode(payload.base64_data.as_bytes())
         .map_err(|_| MediaError::InvalidInput("Invalid base64 data".to_string()))?;
-    let media_id = payload
-        .id
-        .clone()
-        .unwrap_or_else(|| format!("media_{}_{}", chrono::Utc::now().timestamp_millis(), Uuid::new_v4().simple()));
+    let media_id = payload.id.clone().unwrap_or_else(|| {
+        format!(
+            "media_{}_{}",
+            chrono::Utc::now().timestamp_millis(),
+            Uuid::new_v4().simple()
+        )
+    });
     let tags_json = payload
         .tags
         .as_ref()

@@ -87,24 +87,29 @@ async fn main() {
         .route("/health", axum::routing::get(health))
         .route("/api/github/activity", axum::routing::get(dummy_json))
         .route("/api/youtube/activity", axum::routing::get(dummy_json))
-        .route("/api/stats/*path", axum::routing::get(dummy_json).post(dummy_json))
-        .route("/api/monitoring/*path", axum::routing::get(dummy_json).post(dummy_json))
-        .route("/api/admin/*path", axum::routing::get(dummy_json).post(dummy_json))
+        .route(
+            "/api/stats/*path",
+            axum::routing::get(dummy_json).post(dummy_json),
+        )
+        .route(
+            "/api/monitoring/*path",
+            axum::routing::get(dummy_json).post(dummy_json),
+        )
+        .route(
+            "/api/admin/*path",
+            axum::routing::get(dummy_json).post(dummy_json),
+        )
         .layer(cors);
 
     // Start server
-    let listener = tokio::net::TcpListener::bind(&bind_address)
-        .await
-        .unwrap();
+    let listener = tokio::net::TcpListener::bind(&bind_address).await.unwrap();
 
     info!(
         "CMS API server running on {} using {}",
         bind_address, database_url
     );
 
-    axum::serve(listener, app)
-        .await
-        .unwrap();
+    axum::serve(listener, app).await.unwrap();
 }
 
 async fn health() -> &'static str {

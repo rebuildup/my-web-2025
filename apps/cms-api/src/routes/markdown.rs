@@ -28,7 +28,11 @@ impl axum::response::IntoResponse for MarkdownError {
             MarkdownError::Database => axum::http::StatusCode::INTERNAL_SERVER_ERROR,
         };
 
-        (status, Json(serde_json::json!({ "error": self.to_string() }))).into_response()
+        (
+            status,
+            Json(serde_json::json!({ "error": self.to_string() })),
+        )
+            .into_response()
     }
 }
 
@@ -178,7 +182,9 @@ async fn list_or_get_markdown(
         .ok_or(MarkdownError::NotFound)?
         .normalize();
 
-        return Ok(Json(serde_json::to_value(page).map_err(|_| MarkdownError::Database)?));
+        return Ok(Json(
+            serde_json::to_value(page).map_err(|_| MarkdownError::Database)?,
+        ));
     }
 
     let pages = sqlx::query_as::<_, MarkdownPage>(
@@ -211,7 +217,9 @@ async fn list_or_get_markdown(
     .map(MarkdownPage::normalize)
     .collect::<Vec<_>>();
 
-    Ok(Json(serde_json::to_value(pages).map_err(|_| MarkdownError::Database)?))
+    Ok(Json(
+        serde_json::to_value(pages).map_err(|_| MarkdownError::Database)?,
+    ))
 }
 
 async fn create_markdown(
@@ -277,7 +285,9 @@ async fn upsert_markdown_record(
     payload: UpsertMarkdownRequest,
 ) -> Result<(), MarkdownError> {
     if payload.content_id.trim().is_empty() {
-        return Err(MarkdownError::InvalidInput("contentId is required".to_string()));
+        return Err(MarkdownError::InvalidInput(
+            "contentId is required".to_string(),
+        ));
     }
 
     if payload.slug.trim().is_empty() {

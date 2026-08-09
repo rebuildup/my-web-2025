@@ -266,19 +266,14 @@ async fn save_entry_metadata(
     .bind(Uuid::new_v4().to_string())
     .bind(entry_id)
     .bind(version)
-    .bind(
-        serde_json::to_string(metadata).unwrap_or_else(|_| "{}".to_string()),
-    )
+    .bind(serde_json::to_string(metadata).unwrap_or_else(|_| "{}".to_string()))
     .execute(&mut **tx)
     .await?;
 
     Ok(())
 }
 
-fn build_entry_detail_with_metadata(
-    base: EntryDetailRow,
-    metadata: EntryMetadata,
-) -> EntryDetail {
+fn build_entry_detail_with_metadata(base: EntryDetailRow, metadata: EntryMetadata) -> EntryDetail {
     EntryDetail {
         id: base.id,
         entry_type: base.entry_type,
@@ -311,7 +306,10 @@ fn build_entry_detail_with_metadata(
 pub fn router(pool: DbPool) -> Router {
     Router::new()
         .route("/", get(list_entries).post(create_entry))
-        .route("/:id", get(get_entry).patch(update_entry).delete(delete_entry))
+        .route(
+            "/:id",
+            get(get_entry).patch(update_entry).delete(delete_entry),
+        )
         .with_state(pool)
 }
 
@@ -325,33 +323,32 @@ async fn replace_tags(
         .execute(&mut **tx)
         .await?;
 
-    for tag_name in tags.iter().map(|tag| tag.trim()).filter(|tag| !tag.is_empty()) {
+    for tag_name in tags
+        .iter()
+        .map(|tag| tag.trim())
+        .filter(|tag| !tag.is_empty())
+    {
         let tag_slug = tag_name.to_lowercase();
-        let existing_tag_id = sqlx::query_scalar::<_, String>(
-            "SELECT id FROM tags WHERE slug = ? LIMIT 1",
-        )
-        .bind(&tag_slug)
-        .fetch_optional(&mut **tx)
-        .await?;
+        let existing_tag_id =
+            sqlx::query_scalar::<_, String>("SELECT id FROM tags WHERE slug = ? LIMIT 1")
+                .bind(&tag_slug)
+                .fetch_optional(&mut **tx)
+                .await?;
 
         let tag_id = existing_tag_id.unwrap_or_else(|| Uuid::new_v4().to_string());
 
-        sqlx::query(
-            "INSERT OR IGNORE INTO tags (id, name, slug) VALUES (?, ?, ?)",
-        )
-        .bind(&tag_id)
-        .bind(tag_name)
-        .bind(&tag_slug)
-        .execute(&mut **tx)
-        .await?;
+        sqlx::query("INSERT OR IGNORE INTO tags (id, name, slug) VALUES (?, ?, ?)")
+            .bind(&tag_id)
+            .bind(tag_name)
+            .bind(&tag_slug)
+            .execute(&mut **tx)
+            .await?;
 
-        sqlx::query(
-            "INSERT OR IGNORE INTO entry_tags (entry_id, tag_id) VALUES (?, ?)",
-        )
-        .bind(entry_id)
-        .bind(&tag_id)
-        .execute(&mut **tx)
-        .await?;
+        sqlx::query("INSERT OR IGNORE INTO entry_tags (entry_id, tag_id) VALUES (?, ?)")
+            .bind(entry_id)
+            .bind(&tag_id)
+            .execute(&mut **tx)
+            .await?;
     }
 
     Ok(())
@@ -403,7 +400,10 @@ async fn create_entry(
     pool: State<DbPool>,
     Json(payload): Json<CreateEntryRequest>,
 ) -> Result<Json<EntryDetail>, EntryError> {
-    let id = payload.id.clone().unwrap_or_else(|| Uuid::new_v4().to_string());
+    let id = payload
+        .id
+        .clone()
+        .unwrap_or_else(|| Uuid::new_v4().to_string());
     let parent_id = payload
         .parent_id
         .as_deref()
@@ -450,7 +450,10 @@ async fn create_entry(
     get_entry(pool, Path(id)).await
 }
 
-async fn get_entry(pool: State<DbPool>, Path(id): Path<String>) -> Result<Json<EntryDetail>, EntryError> {
+async fn get_entry(
+    pool: State<DbPool>,
+    Path(id): Path<String>,
+) -> Result<Json<EntryDetail>, EntryError> {
     let entry = sqlx::query_as::<_, EntryDetailRow>(
         r#"
         SELECT id, type, status, visibility, title, summary, lang, path, depth, "order",
@@ -603,10 +606,12 @@ async fn delete_entry(
     pool: State<DbPool>,
     Path(id): Path<String>,
 ) -> Result<Json<serde_json::Value>, EntryError> {
-    let result = sqlx::query("UPDATE entries SET deleted_at = datetime('now') WHERE id = ? AND deleted_at IS NULL")
-        .bind(&id)
-        .execute(&*pool)
-        .await?;
+    let result = sqlx::query(
+        "UPDATE entries SET deleted_at = datetime('now') WHERE id = ? AND deleted_at IS NULL",
+    )
+    .bind(&id)
+    .execute(&*pool)
+    .await?;
 
     if result.rows_affected() == 0 {
         return Err(EntryError::NotFound);
@@ -655,9 +660,12 @@ mod tests {
     #[tokio::test]
     async fn update_entry_treats_empty_parent_id_as_no_parent() {
         let pool = test_pool().await;
-        let _ = create_entry(State(pool.clone()), Json(create_payload("parent", "Parent")))
-            .await
-            .unwrap();
+        let _ = create_entry(
+            State(pool.clone()),
+            Json(create_payload("parent", "Parent")),
+        )
+        .await
+        .unwrap();
         let _ = create_entry(State(pool.clone()), Json(create_payload("child", "Child")))
             .await
             .unwrap();

@@ -243,10 +243,7 @@ async fn content_by_type_path(
     Query(query): Query<ListQuery>,
 ) -> Result<Json<Value>, (axum::http::StatusCode, Json<Value>)> {
     // Reserved paths handled by more specific routes above.
-    if matches!(
-        entry_type.as_str(),
-        "portfolio" | "search" | "by-type"
-    ) {
+    if matches!(entry_type.as_str(), "portfolio" | "search" | "by-type") {
         return Err((
             axum::http::StatusCode::NOT_FOUND,
             Json(json!({ "success": false, "error": "Not found" })),
@@ -287,10 +284,7 @@ async fn list_by_type(
                 if category != "all" {
                     let tags = parse_tags(&row.tags);
                     return tags.iter().any(|tag| tag == category)
-                        || row
-                            .slug
-                            .as_deref()
-                            .is_some_and(|slug| slug == category);
+                        || row.slug.as_deref().is_some_and(|slug| slug == category);
                 }
             }
             true

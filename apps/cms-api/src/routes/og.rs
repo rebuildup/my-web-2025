@@ -17,9 +17,7 @@ use image::{
     imageops::{self, FilterType},
     GenericImageView, ImageBuffer, Rgba, RgbaImage,
 };
-use imageproc::drawing::{
-    draw_filled_rect_mut, draw_hollow_rect_mut, draw_text_mut,
-};
+use imageproc::drawing::{draw_filled_rect_mut, draw_hollow_rect_mut, draw_text_mut};
 use serde::Deserialize;
 use sqlx::SqlitePool;
 use std::sync::OnceLock;
@@ -84,12 +82,16 @@ fn avatar_icon() -> &'static RgbaImage {
 
 fn rasterize_sns_icon() -> RgbaImage {
     let opts = resvg::usvg::Options::default();
-    let tree = resvg::usvg::Tree::from_data(SNS_ICON_SVG, &opts)
-        .expect("SNS icon SVG must be valid");
+    let tree =
+        resvg::usvg::Tree::from_data(SNS_ICON_SVG, &opts).expect("SNS icon SVG must be valid");
     let size = tree.size().to_int_size();
     let mut pixmap = resvg::tiny_skia::Pixmap::new(size.width(), size.height())
         .expect("Pixmap allocation must succeed");
-    resvg::render(&tree, resvg::tiny_skia::Transform::default(), &mut pixmap.as_mut());
+    resvg::render(
+        &tree,
+        resvg::tiny_skia::Transform::default(),
+        &mut pixmap.as_mut(),
+    );
     RgbaImage::from_raw(size.width(), size.height(), pixmap.take())
         .expect("Pixmap data must align with RgbaImage layout")
 }
@@ -98,9 +100,7 @@ async fn generate_og_image(
     State(pool): State<SqlitePool>,
     Path(id): Path<String>,
 ) -> Result<Response, StatusCode> {
-    let entry = fetch_entry(&pool, &id)
-        .await
-        .ok_or(StatusCode::NOT_FOUND)?;
+    let entry = fetch_entry(&pool, &id).await.ok_or(StatusCode::NOT_FOUND)?;
 
     let metadata = fetch_metadata(&pool, &id).await;
     let thumbnail = fetch_thumbnail(&pool, &id, metadata.as_ref()).await;
@@ -118,7 +118,7 @@ async fn generate_og_image(
         ],
         png,
     )
-    .into_response())
+        .into_response())
 }
 
 type EntryRow = (String, Option<String>, Option<String>, Option<String>);
@@ -313,10 +313,7 @@ fn render_og_image(
     let flat = flatten_against_bg(&canvas);
 
     let mut out = Vec::new();
-    flat.write_to(
-        &mut std::io::Cursor::new(&mut out),
-        image::ImageFormat::Png,
-    )?;
+    flat.write_to(&mut std::io::Cursor::new(&mut out), image::ImageFormat::Png)?;
     Ok(out)
 }
 
@@ -442,13 +439,7 @@ fn draw_main_content(canvas: &mut RgbaImage, entry: &EntryData, thumbnail: Optio
     let footer_top = content_y + content_h - footer_height(entry);
     let footer_left = content_x;
     let footer_width = left_w;
-    draw_footer(
-        canvas,
-        entry,
-        footer_left,
-        footer_top,
-        footer_width,
-    );
+    draw_footer(canvas, entry, footer_left, footer_top, footer_width);
 
     // Right column: 500x500 thumbnail (cover) or empty placeholder.
     let thumb_x = content_x + left_w + CONTENT_GAP as i64;
@@ -482,7 +473,15 @@ fn draw_title(canvas: &mut RgbaImage, title: &str, x: i64, y: i64, max_w: i64) -
 
     let mut cursor_y = y as i32;
     for line in taken.iter() {
-        draw_text_with_spacing(canvas, TEXT_COLOR, title_x as i32, cursor_y, scale, 0.0, line);
+        draw_text_with_spacing(
+            canvas,
+            TEXT_COLOR,
+            title_x as i32,
+            cursor_y,
+            scale,
+            0.0,
+            line,
+        );
         cursor_y += line_height;
     }
     (taken_len * line_height) as i64
@@ -495,7 +494,15 @@ fn draw_summary(canvas: &mut RgbaImage, summary: &str, x: i64, y: i64, max_w: i6
     let taken: Vec<&str> = lines.iter().take(2).map(|s| s.as_str()).collect();
     let mut cursor_y = y as i32;
     for line in taken.iter() {
-        draw_text_with_spacing(canvas, SECONDARY_COLOR, x as i32, cursor_y, scale, 0.0, line);
+        draw_text_with_spacing(
+            canvas,
+            SECONDARY_COLOR,
+            x as i32,
+            cursor_y,
+            scale,
+            0.0,
+            line,
+        );
         cursor_y += line_height;
     }
     (taken.len() as i32 * line_height) as i64
@@ -598,9 +605,7 @@ fn draw_thumbnail(canvas: &mut RgbaImage, img: &RgbaImage, x: i64, y: i64, size:
     let (rw, rh) = resized.dimensions();
     let ox = ((rw as i64 - size as i64) / 2).max(0) as u32;
     let oy = ((rh as i64 - size as i64) / 2).max(0) as u32;
-    let crop = resized
-        .view(ox, oy, size.min(rw), size.min(rh))
-        .to_image();
+    let crop = resized.view(ox, oy, size.min(rw), size.min(rh)).to_image();
     overlay_rgba(canvas, &crop, x, y);
 }
 
@@ -676,7 +681,15 @@ fn draw_text_with_spacing(
     for ch in text.chars() {
         let gid = f.glyph_id(ch);
         let advance = scaled.h_advance(gid);
-        draw_text_mut(canvas, color, cursor.round() as i32, y, scale, f, &ch.to_string());
+        draw_text_mut(
+            canvas,
+            color,
+            cursor.round() as i32,
+            y,
+            scale,
+            f,
+            &ch.to_string(),
+        );
         cursor += advance + letter_spacing;
     }
 }
