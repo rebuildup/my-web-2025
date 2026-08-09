@@ -421,7 +421,7 @@ async fn create_entry(
     .bind(&payload.slug)
     .bind(payload.status.as_deref().unwrap_or("draft"))
     .bind(payload.visibility.as_deref().unwrap_or("draft"))
-    .bind(&payload.title.clone().unwrap_or_default())
+    .bind(payload.title.clone().unwrap_or_default())
     .bind(&payload.summary)
     .bind(payload.lang.as_deref().unwrap_or("ja"))
     .bind(&payload.path)

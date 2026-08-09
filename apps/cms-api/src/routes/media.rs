@@ -162,7 +162,7 @@ async fn get_media_or_list(
 
         let raw = matches!(query.raw.as_deref(), Some("1" | "true"));
         if raw {
-            return Ok(Response::builder()
+            return Response::builder()
                 .status(StatusCode::OK)
                 .header(
                     header::CONTENT_TYPE,
@@ -171,7 +171,7 @@ async fn get_media_or_list(
                 )
                 .header(header::CACHE_CONTROL, "public, max-age=31536000, immutable")
                 .body(Body::from(row.data))
-                .map_err(|_| MediaError::Database)?);
+                .map_err(|_| MediaError::Database);
         }
 
         let payload = serde_json::json!({

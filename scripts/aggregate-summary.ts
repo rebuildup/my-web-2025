@@ -43,13 +43,13 @@ const desktop = JSON.parse(
 const m = summarize(mobile);
 const d = summarize(desktop);
 
-console.log("=== Mobile avg across " + m?.n + " pages ===");
+console.log(`=== Mobile avg across ${m?.n} pages ===`);
 console.log(`  Performance:     ${m?.performance.toFixed(1)}`);
 console.log(`  Accessibility:   ${m?.accessibility.toFixed(1)}`);
 console.log(`  Best Practices:  ${m?.bestPractices.toFixed(1)}`);
 console.log(`  SEO:             ${m?.seo.toFixed(1)}`);
 
-console.log("\n=== Desktop avg across " + d?.n + " pages ===");
+console.log(`\n=== Desktop avg across ${d?.n} pages ===`);
 console.log(`  Performance:     ${d?.performance.toFixed(1)}`);
 console.log(`  Accessibility:   ${d?.accessibility.toFixed(1)}`);
 console.log(`  Best Practices:  ${d?.bestPractices.toFixed(1)}`);

@@ -7,7 +7,7 @@ mod db;
 mod routes;
 
 use db::create_pool;
-use routes::{content_compat, entries, markdown, media, preview, search, tags};
+use routes::{content_compat, entries, markdown, media, og, preview, search, tags};
 
 fn cms_api_host() -> String {
     env::var("CMS_API_HOST").unwrap_or_else(|_| "127.0.0.1".to_string())
@@ -77,6 +77,10 @@ async fn main() {
         .nest("/tags", tags::router(pool.clone()))
         .nest("/search", search::router(pool.clone()))
         .nest("/preview", preview::router(pool.clone()))
+        // Dynamically rendered OG (1200x630) PNGs served by the Rust API.
+        // Mounted under both the canonical prefix and the `/api/cms/og` alias
+        // so the static-exported portfolio can link to it without a Node route.
+        .nest("/api/cms/og", og::router(pool.clone()))
         // Next.js static export has no Node API routes; keep browser-facing
         // `/api/content/*` working through the Rust backend.
         .nest("/api/content", content_compat::router(pool.clone()))
