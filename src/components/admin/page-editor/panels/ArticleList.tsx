@@ -1,19 +1,8 @@
 "use client";
 
-import {
-	Alert,
-	Box,
-	Button,
-	Divider,
-	List,
-	ListItemButton,
-	ListItemText,
-	Stack,
-	TextField,
-	Typography,
-} from "@mui/material";
 import { useMemo, useState } from "react";
 import type { MarkdownPage } from "@/cms/types/markdown";
+import { adminColor } from "@/components/admin/ui/tokens";
 
 export interface ArticleListProps {
 	articles: MarkdownPage[];
@@ -49,46 +38,95 @@ export function ArticleList({
 	}, [articles, query]);
 
 	return (
-		<Box>
-			<Stack
-				sx={{
+		<div>
+			<div
+				style={{
+					display: "flex",
 					flexDirection: "row",
 					justifyContent: "space-between",
 					alignItems: "center",
-					px: 0,
-					py: 1.5,
+					paddingTop: 12,
+					paddingBottom: 12,
 				}}
 			>
-				<Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+				<h3
+					style={{
+						margin: 0,
+						fontSize: 16,
+						fontWeight: 600,
+						color: adminColor.textPrimary,
+					}}
+				>
 					Pages
-				</Typography>
-				<Button size="small" variant="outlined" onClick={onCreate}>
+				</h3>
+				<button
+					type="button"
+					onClick={onCreate}
+					style={{
+						fontSize: 13,
+						padding: "4px 12px",
+						border: `1px solid ${adminColor.borderInput}`,
+						borderRadius: 4,
+						backgroundColor: adminColor.bgPanel,
+						color: adminColor.textPrimary,
+						cursor: "pointer",
+					}}
+				>
 					New page
-				</Button>
-			</Stack>
-			<Stack spacing={1.5} sx={{ px: 0, py: 0 }}>
-				<TextField
-					size="small"
-					variant="outlined"
+				</button>
+			</div>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					gap: 12,
+				}}
+			>
+				<input
 					placeholder="Filter by title or slug"
 					value={query}
 					onChange={(event) => setQuery(event.target.value)}
-					fullWidth
+					style={{
+						fontSize: 14,
+						padding: "8px 10px",
+						border: `1px solid ${adminColor.borderInput}`,
+						borderRadius: 4,
+						backgroundColor: adminColor.bgPanel,
+						color: adminColor.textPrimary,
+						outline: "none",
+					}}
 				/>
 				{isLoading ? (
-					<Typography variant="body2" color="text.secondary">
+					<span
+						style={{
+							fontSize: 14,
+							color: adminColor.textSecondary,
+						}}
+					>
 						Loading pages...
-					</Typography>
+					</span>
 				) : filtered.length === 0 ? (
-					<Alert severity="info">No pages found.</Alert>
+					<div
+						role="status"
+						style={{
+							padding: "8px 12px",
+							borderLeft: `4px solid ${adminColor.info}`,
+							backgroundColor: "rgba(30, 64, 175, 0.1)",
+							color: adminColor.info,
+							fontSize: 14,
+							borderRadius: 4,
+						}}
+					>
+						No pages found.
+					</div>
 				) : (
-					<List
-						disablePadding
-						dense
-						sx={{
+					<ul
+						style={{
+							listStyle: "none",
+							padding: 0,
+							margin: 0,
 							display: "flex",
 							flexDirection: "column",
-							gap: 0,
 							maxHeight: 320,
 							overflowY: "auto",
 						}}
@@ -96,61 +134,89 @@ export function ArticleList({
 						{filtered.map((page, index) => {
 							const isActive = page.id === selectedId;
 							return (
-								<Box
+								<li
 									key={page.id}
-									sx={{ bgcolor: isActive ? "action.hover" : "transparent" }}
+									style={{
+										backgroundColor: isActive
+											? adminColor.accentHover
+											: "transparent",
+										borderBottom:
+											index < filtered.length - 1
+												? `1px solid ${adminColor.border}`
+												: "none",
+									}}
 								>
-									<ListItemButton
-										sx={{ alignItems: "flex-start", gap: 1, px: 1.5, py: 1.25 }}
+									<div
+										role="button"
+										tabIndex={0}
 										onClick={() => onSelect(page)}
+										onKeyDown={(event) => {
+											if (event.key === "Enter" || event.key === " ") {
+												event.preventDefault();
+												onSelect(page);
+											}
+										}}
+										style={{
+											display: "flex",
+											alignItems: "flex-start",
+											gap: 8,
+											padding: "10px 12px",
+											cursor: "pointer",
+										}}
 									>
-										<ListItemText
-											primary={
-												<Typography
-													variant="body1"
-													component="div"
-													sx={{ fontWeight: 600, lineHeight: 1.4 }}
-												>
-													{page.frontmatter.title || "Untitled page"}
-												</Typography>
-											}
-											secondary={
-												<Box>
-													<Typography
-														variant="caption"
-														color="text.secondary"
-														component="div"
-													>
-														{page.slug}
-													</Typography>
-													<Typography
-														variant="caption"
-														color="text.disabled"
-														component="div"
-													>
-														{new Date(page.updatedAt).toLocaleString()}
-													</Typography>
-												</Box>
-											}
-										/>
-										<Button
-											size="small"
-											variant="text"
+										<div style={{ flex: 1, minWidth: 0 }}>
+											<div
+												style={{
+													fontSize: 14,
+													fontWeight: 600,
+													lineHeight: 1.4,
+													color: adminColor.textPrimary,
+												}}
+											>
+												{page.frontmatter.title || "Untitled page"}
+											</div>
+											<div
+												style={{
+													fontSize: 12,
+													color: adminColor.textSecondary,
+												}}
+											>
+												{page.slug}
+											</div>
+											<div
+												style={{
+													fontSize: 12,
+													color: adminColor.textDisabled,
+												}}
+											>
+												{new Date(page.updatedAt).toLocaleString()}
+											</div>
+										</div>
+										<button
+											type="button"
 											onClick={(event) => {
 												event.stopPropagation();
 												onEditMeta(page);
 											}}
+											style={{
+												fontSize: 13,
+												padding: "4px 8px",
+												background: "transparent",
+												color: adminColor.accent,
+												border: "none",
+												borderRadius: 4,
+												cursor: "pointer",
+											}}
 										>
 											Edit
-										</Button>
-									</ListItemButton>
-									{index < filtered.length - 1 && <Divider />}
-								</Box>
+										</button>
+									</div>
+								</li>
 							);
 						})}
-					</List>
+					</ul>
 				)}
-			</Stack>
-		</Box>
+			</div>
+		</div>
 	);
 }
