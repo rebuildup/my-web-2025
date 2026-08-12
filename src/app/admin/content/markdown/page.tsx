@@ -1,42 +1,16 @@
 "use client";
 
-import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
 import {
-	Alert,
-	AlertColor,
-	Box,
-	Button,
-	Chip,
-	Dialog,
-	DialogContent,
-	DialogTitle,
-	Divider,
-	IconButton,
-	InputAdornment,
-	MenuItem,
-	Paper,
-	Select,
-	Snackbar,
-	Stack,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	TextField,
-	Tooltip,
-	Typography,
-	CircularProgress,
-	FormControl,
-	InputLabel,
-} from "@mui/material";
+	type CSSProperties,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+	type ReactNode,
+} from "react";
 import {
 	BarChart3,
 	Edit2,
-	FileText,
-	PenSquare,
 	Plus,
 	RefreshCcw,
 	Search,
@@ -45,17 +19,23 @@ import {
 import type { MarkdownPage, MarkdownStats } from "@/cms/types/markdown";
 import { MarkdownForm } from "@/components/admin/cms";
 import { PageHeader } from "@/components/admin/layout";
-import { ConfirmDialog } from "@/components/admin/ui";
+import {
+	ConfirmDialog,
+	SimpleSelect,
+	type SimpleSelectOption,
+} from "@/components/admin/ui";
+import { adminColor } from "@/components/admin/ui/tokens";
 import { useCmsResource } from "@/hooks/useCmsResource";
 
 type StatusFilter = "all" | "draft" | "published" | "archived";
 type SortField = "updatedAt" | "createdAt";
 type SortOrder = "desc" | "asc";
+type SnackbarSeverity = "success" | "error" | "info" | "warning";
 
 interface SnackbarState {
 	open: boolean;
 	message: string;
-	severity: AlertColor;
+	severity: SnackbarSeverity;
 }
 
 interface StatsDialogState {
@@ -71,6 +51,234 @@ const STATUS_OPTIONS: StatusFilter[] = [
 	"draft",
 	"archived",
 ];
+
+const severityPalette: Record<
+	SnackbarSeverity,
+	{ bg: string; fg: string; border: string }
+> = {
+	success: { bg: adminColor.success, fg: "#ffffff", border: adminColor.success },
+	error: { bg: adminColor.error, fg: "#ffffff", border: adminColor.error },
+	info: { bg: adminColor.info, fg: "#ffffff", border: adminColor.info },
+	warning: {
+		bg: adminColor.warning,
+		fg: "#ffffff",
+		border: adminColor.warning,
+	},
+};
+
+const statusChipPalette: Record<
+	"primary" | "success" | "warning" | "default" | "outlined-warning" | "outlined-default",
+	{ bg: string; fg: string; border: string }
+> = {
+	primary: {
+		bg: "rgba(44, 123, 229, 0.12)",
+		fg: adminColor.accent,
+		border: adminColor.accent,
+	},
+	success: {
+		bg: "rgba(22, 101, 52, 0.12)",
+		fg: adminColor.success,
+		border: adminColor.success,
+	},
+	warning: {
+		bg: "rgba(180, 83, 9, 0.12)",
+		fg: adminColor.warning,
+		border: adminColor.warning,
+	},
+	default: {
+		bg: "#f3f4f6",
+		fg: adminColor.textSecondary,
+		border: adminColor.border,
+	},
+	"outlined-warning": {
+		bg: "transparent",
+		fg: adminColor.warning,
+		border: adminColor.warning,
+	},
+	"outlined-default": {
+		bg: "transparent",
+		fg: adminColor.textSecondary,
+		border: adminColor.border,
+	},
+};
+
+const outlinedButtonStyle: CSSProperties = {
+	padding: "8px 18px",
+	fontSize: 14,
+	fontWeight: 600,
+	color: adminColor.textPrimary,
+	backgroundColor: "transparent",
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 6,
+	cursor: "pointer",
+	display: "inline-flex",
+	alignItems: "center",
+	gap: 6,
+};
+
+const primaryButtonStyle: CSSProperties = {
+	...outlinedButtonStyle,
+	color: "#ffffff",
+	backgroundColor: adminColor.accent,
+	border: `1px solid ${adminColor.accent}`,
+};
+
+const panelStyle: CSSProperties = {
+	border: `1px solid ${adminColor.border}`,
+	borderRadius: 8,
+	padding: 24,
+	backgroundColor: adminColor.bgPanel,
+	display: "grid",
+	gap: 20,
+};
+
+const dialogBackdropStyle: CSSProperties = {
+	position: "fixed",
+	inset: 0,
+	backgroundColor: "rgba(0,0,0,0.5)",
+	display: "flex",
+	alignItems: "flex-start",
+	justifyContent: "center",
+	paddingTop: 64,
+	zIndex: 1400,
+};
+
+const dialogSurfaceBase: CSSProperties = {
+	backgroundColor: adminColor.bgPanel,
+	borderRadius: 8,
+	boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+	overflow: "hidden",
+	maxHeight: "calc(100vh - 96px)",
+	display: "flex",
+	flexDirection: "column",
+};
+
+const dialogHeaderStyle: CSSProperties = {
+	padding: "16px 24px",
+	borderBottom: `1px solid ${adminColor.border}`,
+	fontSize: 16,
+	fontWeight: 600,
+	color: adminColor.textPrimary,
+};
+
+const dialogBodyStyle: CSSProperties = {
+	padding: 24,
+	overflowY: "auto",
+};
+
+const searchWrapStyle: CSSProperties = {
+	flex: 1,
+	minWidth: 0,
+	display: "flex",
+	alignItems: "center",
+	gap: 8,
+	padding: "0 12px",
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 6,
+	backgroundColor: "#ffffff",
+};
+
+const tableWrapStyle: CSSProperties = {
+	border: `1px solid ${adminColor.border}`,
+	borderRadius: 8,
+	overflow: "auto",
+	maxHeight: 560,
+	backgroundColor: adminColor.bgPanel,
+};
+
+const tableStyle: CSSProperties = {
+	width: "100%",
+	borderCollapse: "separate",
+	borderSpacing: 0,
+	fontSize: 14,
+};
+
+const thStyle: CSSProperties = {
+	position: "sticky",
+	top: 0,
+	padding: "10px 12px",
+	backgroundColor: adminColor.bgPage,
+	color: adminColor.textSecondary,
+	fontSize: 12,
+	fontWeight: 600,
+	textAlign: "left",
+	borderBottom: `1px solid ${adminColor.border}`,
+	whiteSpace: "nowrap",
+};
+
+const tdStyle: CSSProperties = {
+	padding: "10px 12px",
+	borderBottom: `1px solid ${adminColor.border}`,
+	verticalAlign: "top",
+	color: adminColor.textPrimary,
+};
+
+const iconButtonStyle = (color: string): CSSProperties => ({
+	display: "inline-flex",
+	alignItems: "center",
+	justifyContent: "center",
+	padding: 6,
+	backgroundColor: "transparent",
+	color,
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 6,
+	cursor: "pointer",
+});
+
+const chipStyle = (
+	variant: keyof typeof statusChipPalette,
+): CSSProperties => {
+	const c = statusChipPalette[variant];
+	return {
+		display: "inline-flex",
+		alignItems: "center",
+		padding: "2px 10px",
+		fontSize: 12,
+		fontWeight: 500,
+		color: c.fg,
+		backgroundColor: c.bg,
+		border: `1px solid ${c.border}`,
+		borderRadius: 999,
+	};
+};
+
+const alertStyle: CSSProperties = {
+	padding: "8px 16px",
+	fontSize: 14,
+	borderRadius: 4,
+	border: `1px solid ${adminColor.error}`,
+	borderLeftWidth: 4,
+	backgroundColor: "rgba(185, 28, 28, 0.08)",
+	color: adminColor.error,
+};
+
+const snackbarStyle = (severity: SnackbarSeverity): CSSProperties => {
+	const p = severityPalette[severity];
+	return {
+		position: "fixed",
+		left: "50%",
+		bottom: 24,
+		transform: "translateX(-50%)",
+		padding: "10px 20px",
+		fontSize: 14,
+		fontWeight: 500,
+		color: p.fg,
+		backgroundColor: p.bg,
+		borderRadius: 6,
+		boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
+		zIndex: 1500,
+		display: "inline-flex",
+		alignItems: "center",
+		gap: 12,
+	};
+};
+
+const dividerStyle: CSSProperties = {
+	height: 1,
+	backgroundColor: adminColor.border,
+	border: "none",
+	margin: "8px 0",
+};
 
 function formatDate(value?: string) {
 	if (!value) return "-";
@@ -108,69 +316,80 @@ function MarkdownFilters({
 	statusFilter,
 	onStatusFilterChange,
 }: MarkdownFiltersProps) {
-	return (
-		<>
-			<Stack
-				direction={{ xs: "column", md: "row" }}
-				spacing={2}
-				alignItems={{ xs: "stretch", md: "center" }}
-			>
-				<TextField
-					placeholder="タイトル・スラッグ・IDで検索"
-					value={searchQuery}
-					onChange={(event) => onSearchChange(event.target.value)}
-					InputProps={{
-						startAdornment: (
-							<InputAdornment position="start">
-								<Search size={16} />
-							</InputAdornment>
-						),
-					}}
-					sx={{ flex: 1 }}
-				/>
-				<FormControl size="small" sx={{ minWidth: 150 }}>
-					<InputLabel id="markdown-sort-label">ソート</InputLabel>
-					<Select
-						labelId="markdown-sort-label"
-						value={sortField}
-						label="ソート"
-						onChange={(event) =>
-							onSortFieldChange(event.target.value as SortField)
-						}
-					>
-						<MenuItem value="updatedAt">更新日</MenuItem>
-						<MenuItem value="createdAt">作成日</MenuItem>
-					</Select>
-				</FormControl>
-				<FormControl size="small" sx={{ minWidth: 120 }}>
-					<InputLabel id="markdown-sort-order-label">順序</InputLabel>
-					<Select
-						labelId="markdown-sort-order-label"
-						value={sortOrder}
-						label="順序"
-						onChange={(event) =>
-							onSortOrderChange(event.target.value as SortOrder)
-						}
-					>
-						<MenuItem value="desc">降順</MenuItem>
-						<MenuItem value="asc">昇順</MenuItem>
-					</Select>
-				</FormControl>
-			</Stack>
+	const sortOptions: SimpleSelectOption[] = [
+		{ value: "updatedAt", label: "更新日" },
+		{ value: "createdAt", label: "作成日" },
+	];
+	const orderOptions: SimpleSelectOption[] = [
+		{ value: "desc", label: "降順" },
+		{ value: "asc", label: "昇順" },
+	];
 
-			<Stack direction="row" spacing={1} flexWrap="wrap">
-				{STATUS_OPTIONS.map((option) => (
-					<Chip
-						key={option}
-						label={option === "all" ? "すべて" : option.toUpperCase()}
-						variant={statusFilter === option ? "filled" : "outlined"}
-						color={statusFilter === option ? "primary" : "default"}
-						size="small"
-						onClick={() => onStatusFilterChange(option)}
+	return (
+		<div style={{ display: "grid", gap: 12 }}>
+			<div
+				style={{
+					display: "flex",
+					gap: 16,
+					flexWrap: "wrap",
+					alignItems: "center",
+				}}
+			>
+				<label style={searchWrapStyle}>
+					<Search size={16} color={adminColor.textSecondary} />
+					<input
+						placeholder="タイトル・スラッグ・IDで検索"
+						value={searchQuery}
+						onChange={(event) => onSearchChange(event.target.value)}
+						style={{
+							flex: 1,
+							padding: "8px 0",
+							fontSize: 14,
+							color: adminColor.textPrimary,
+							backgroundColor: "transparent",
+							border: "none",
+							outline: "none",
+						}}
 					/>
-				))}
-			</Stack>
-		</>
+				</label>
+				<div style={{ minWidth: 150 }}>
+					<SimpleSelect
+						size="small"
+						label="ソート"
+						value={sortField}
+						options={sortOptions}
+						onChange={(value) => onSortFieldChange(value as SortField)}
+						fullWidth
+					/>
+				</div>
+				<div style={{ minWidth: 120 }}>
+					<SimpleSelect
+						size="small"
+						label="順序"
+						value={sortOrder}
+						options={orderOptions}
+						onChange={(value) => onSortOrderChange(value as SortOrder)}
+						fullWidth
+					/>
+				</div>
+			</div>
+			<div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+				{STATUS_OPTIONS.map((option) => {
+					const active = statusFilter === option;
+					return (
+						<button
+							key={option}
+							type="button"
+							onClick={() => onStatusFilterChange(option)}
+							aria-pressed={active}
+							style={chipStyle(active ? "primary" : "default")}
+						>
+							{option === "all" ? "すべて" : option.toUpperCase()}
+						</button>
+					);
+				})}
+			</div>
+		</div>
 	);
 }
 
@@ -187,88 +406,77 @@ function MarkdownTableRow({
 	onEdit,
 	onDelete,
 }: MarkdownTableRowProps) {
+	const status = (page.status ?? "draft") as "published" | "draft" | "archived";
+	const statusVariant: keyof typeof statusChipPalette =
+		status === "published"
+			? "success"
+			: status === "archived"
+				? "default"
+				: "warning";
+
 	return (
-		<TableRow hover>
-			<TableCell>
-				<Stack spacing={0.5}>
-					<Typography variant="body2" fontWeight={600}>
+		<tr>
+			<td style={tdStyle}>
+				<div style={{ display: "grid", gap: 2 }}>
+					<span style={{ fontSize: 14, fontWeight: 600 }}>
 						{page.frontmatter?.title || page.slug}
-					</Typography>
-					<Typography variant="caption" color="text.secondary">
+					</span>
+					<span style={{ fontSize: 12, color: adminColor.textSecondary }}>
 						{page.frontmatter?.description || "説明なし"}
-					</Typography>
-				</Stack>
-			</TableCell>
-			<TableCell>
+					</span>
+				</div>
+			</td>
+			<td style={tdStyle}>
 				{page.contentId ? (
-					<Chip
-						label={page.contentId}
-						size="small"
-						variant="outlined"
-					/>
+					<span style={chipStyle("outlined-default")}>{page.contentId}</span>
 				) : (
-					<Chip
-						label="未紐付け"
-						size="small"
-						color="warning"
-						variant="outlined"
-					/>
+					<span style={chipStyle("outlined-warning")}>未紐付け</span>
 				)}
-			</TableCell>
-			<TableCell>
-				<Chip
-					label={page.status ?? "draft"}
-					size="small"
-					color={
-						page.status === "published"
-							? "success"
-							: page.status === "archived"
-								? "default"
-								: "warning"
-					}
-				/>
-			</TableCell>
-			<TableCell>{formatDate(page.updatedAt)}</TableCell>
-			<TableCell>{formatDate(page.createdAt)}</TableCell>
-			<TableCell>
-				<Typography variant="caption" color="text.secondary">
+			</td>
+			<td style={tdStyle}>
+				<span style={chipStyle(statusVariant)}>{status}</span>
+			</td>
+			<td style={tdStyle}>{formatDate(page.updatedAt)}</td>
+			<td style={tdStyle}>{formatDate(page.createdAt)}</td>
+			<td style={tdStyle}>
+				<span style={{ fontSize: 12, color: adminColor.textSecondary }}>
 					{page.slug}
-				</Typography>
-			</TableCell>
-			<TableCell align="right">
-				<Stack
-					direction="row"
-					spacing={0.5}
-					justifyContent="flex-end"
+				</span>
+			</td>
+			<td style={{ ...tdStyle, textAlign: "right" }}>
+				<div
+					style={{ display: "flex", gap: 4, justifyContent: "flex-end" }}
 				>
-					<Tooltip title="統計を見る">
-						<IconButton
-							size="small"
-							onClick={() => onShowStats(page)}
-						>
-							<BarChart3 size={16} />
-						</IconButton>
-					</Tooltip>
-					<Tooltip title="編集">
-						<IconButton
-							size="small"
-							onClick={() => onEdit(page)}
-						>
-							<Edit2 size={16} />
-						</IconButton>
-					</Tooltip>
-					<Tooltip title="削除">
-						<IconButton
-							size="small"
-							color="error"
-							onClick={() => onDelete(page)}
-						>
-							<Trash2 size={16} />
-						</IconButton>
-					</Tooltip>
-				</Stack>
-			</TableCell>
-		</TableRow>
+					<button
+						type="button"
+						onClick={() => onShowStats(page)}
+						aria-label="統計を見る"
+						title="統計を見る"
+						style={iconButtonStyle(adminColor.textPrimary)}
+					>
+						<BarChart3 size={16} />
+					</button>
+					<button
+						type="button"
+						onClick={() => onEdit(page)}
+						aria-label="編集"
+						title="編集"
+						style={iconButtonStyle(adminColor.textPrimary)}
+					>
+						<Edit2 size={16} />
+					</button>
+					<button
+						type="button"
+						onClick={() => onDelete(page)}
+						aria-label="削除"
+						title="削除"
+						style={iconButtonStyle(adminColor.error)}
+					>
+						<Trash2 size={16} />
+					</button>
+				</div>
+			</td>
+		</tr>
 	);
 }
 
@@ -288,43 +496,59 @@ function MarkdownTable({
 	onDelete,
 }: MarkdownTableProps) {
 	return (
-		<TableContainer
-			sx={{
-				borderRadius: 2,
-				border: 1,
-				borderColor: "divider",
-				maxHeight: 560,
-			}}
-		>
-			<Table stickyHeader size="small">
-				<TableHead>
-					<TableRow>
-						<TableCell>タイトル</TableCell>
-						<TableCell sx={{ width: 140 }}>コンテンツID</TableCell>
-						<TableCell sx={{ width: 110 }}>ステータス</TableCell>
-						<TableCell sx={{ width: 160 }}>更新日</TableCell>
-						<TableCell sx={{ width: 160 }}>作成日</TableCell>
-						<TableCell sx={{ width: 180 }}>スラッグ</TableCell>
-						<TableCell sx={{ width: 120 }} align="right">
+		<div style={tableWrapStyle}>
+			<table style={tableStyle}>
+				<thead>
+					<tr>
+						<th style={thStyle}>タイトル</th>
+						<th style={{ ...thStyle, width: 140 }}>コンテンツID</th>
+						<th style={{ ...thStyle, width: 110 }}>ステータス</th>
+						<th style={{ ...thStyle, width: 160 }}>更新日</th>
+						<th style={{ ...thStyle, width: 160 }}>作成日</th>
+						<th style={{ ...thStyle, width: 180 }}>スラッグ</th>
+						<th style={{ ...thStyle, width: 120, textAlign: "right" }}>
 							操作
-						</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
 					{pagesLoading ? (
-						<TableRow>
-							<TableCell colSpan={7} align="center" sx={{ py: 6 }}>
-								<CircularProgress size={28} />
-							</TableCell>
-						</TableRow>
+						<tr>
+							<td
+								colSpan={7}
+								style={{
+									...tdStyle,
+									textAlign: "center",
+									padding: "48px 12px",
+								}}
+							>
+								<div
+									aria-label="Loading"
+									style={{
+										width: 28,
+										height: 28,
+										borderRadius: "50%",
+										border: `3px solid ${adminColor.border}`,
+										borderTopColor: adminColor.accent,
+										margin: "0 auto",
+									}}
+								/>
+							</td>
+						</tr>
 					) : filteredPages.length === 0 ? (
-						<TableRow>
-							<TableCell colSpan={7} align="center" sx={{ py: 6 }}>
-								<Typography variant="body2" color="text.secondary">
-									表示するMarkdownページがありません.条件を変更するか、新規作成してください.
-								</Typography>
-							</TableCell>
-						</TableRow>
+						<tr>
+							<td
+								colSpan={7}
+								style={{
+									...tdStyle,
+									textAlign: "center",
+									padding: "48px 12px",
+									color: adminColor.textSecondary,
+								}}
+							>
+								表示するMarkdownページがありません.条件を変更するか、新規作成してください.
+							</td>
+						</tr>
 					) : (
 						filteredPages.map((page) => (
 							<MarkdownTableRow
@@ -336,9 +560,9 @@ function MarkdownTable({
 							/>
 						))
 					)}
-				</TableBody>
-			</Table>
-		</TableContainer>
+				</tbody>
+			</table>
+		</div>
 	);
 }
 
@@ -355,18 +579,30 @@ function CreateMarkdownDialog({
 	onSubmit,
 	isSubmitting,
 }: CreateMarkdownDialogProps) {
+	if (!open) return null;
 	return (
-		<Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-			<DialogTitle>新しいMarkdownページを作成</DialogTitle>
-			<DialogContent>
-				<MarkdownForm
-					mode="create"
-					onSubmit={onSubmit}
-					onCancel={onClose}
-					isLoading={isSubmitting}
-				/>
-			</DialogContent>
-		</Dialog>
+		<div
+			role="dialog"
+			aria-modal="true"
+			aria-label="新しいMarkdownページを作成"
+			style={dialogBackdropStyle}
+			onClick={onClose}
+		>
+			<div
+				style={{ ...dialogSurfaceBase, width: "min(720px, calc(100vw - 32px))" }}
+				onClick={(event) => event.stopPropagation()}
+			>
+				<header style={dialogHeaderStyle}>新しいMarkdownページを作成</header>
+				<div style={dialogBodyStyle}>
+					<MarkdownForm
+						mode="create"
+						onSubmit={onSubmit}
+						onCancel={onClose}
+						isLoading={isSubmitting}
+					/>
+				</div>
+			</div>
+		</div>
 	);
 }
 
@@ -383,11 +619,21 @@ function EditMarkdownDialog({
 	onSubmit,
 	isSubmitting,
 }: EditMarkdownDialogProps) {
+	if (!page) return null;
 	return (
-		<Dialog open={Boolean(page)} onClose={onClose} maxWidth="md" fullWidth>
-			<DialogTitle>Markdownページを編集</DialogTitle>
-			<DialogContent>
-				{page && (
+		<div
+			role="dialog"
+			aria-modal="true"
+			aria-label="Markdownページを編集"
+			style={dialogBackdropStyle}
+			onClick={onClose}
+		>
+			<div
+				style={{ ...dialogSurfaceBase, width: "min(720px, calc(100vw - 32px))" }}
+				onClick={(event) => event.stopPropagation()}
+			>
+				<header style={dialogHeaderStyle}>Markdownページを編集</header>
+				<div style={dialogBodyStyle}>
 					<MarkdownForm
 						mode="edit"
 						initialData={page}
@@ -395,9 +641,9 @@ function EditMarkdownDialog({
 						onCancel={onClose}
 						isLoading={isSubmitting}
 					/>
-				)}
-			</DialogContent>
-		</Dialog>
+				</div>
+			</div>
+		</div>
 	);
 }
 
@@ -407,79 +653,127 @@ interface MarkdownStatsDialogProps {
 }
 
 function MarkdownStatsDialog({ dialog, onClose }: MarkdownStatsDialogProps) {
+	if (!dialog.open) return null;
 	return (
-		<Dialog open={dialog.open} onClose={onClose} maxWidth="sm" fullWidth>
-			<DialogTitle>コンテンツ統計</DialogTitle>
-			<DialogContent sx={{ display: "grid", gap: 2, pt: 1 }}>
-				{dialog.page && (
-					<Box>
-						<Typography variant="subtitle2" color="text.secondary">
-							対象ページ
-						</Typography>
-						<Typography variant="body2" fontWeight={600}>
-							{dialog.page.frontmatter?.title || dialog.page.slug}
-						</Typography>
-						<Typography variant="caption" color="text.secondary">
-							ID: {dialog.page.id} / スラッグ: {dialog.page.slug}
-						</Typography>
-					</Box>
-				)}
-				<Divider />
-				{dialog.loading ? (
-					<Box sx={{ py: 3, display: "flex", justifyContent: "center" }}>
-						<CircularProgress size={28} />
-					</Box>
-				) : dialog.stats ? (
-					<Stack spacing={1.5}>
-						<StatsRow
-							label="文字数"
-							value={dialog.stats.characterCount}
-						/>
-						<StatsRow label="単語数" value={dialog.stats.wordCount} />
-						<StatsRow
-							label="見出し数"
-							value={dialog.stats.headingCount}
-						/>
-						<StatsRow label="リンク数" value={dialog.stats.linkCount} />
-						<StatsRow label="画像数" value={dialog.stats.imageCount} />
-						<StatsRow label="行数" value={dialog.stats.lineCount} />
-						<StatsRow
-							label="推定読了時間"
-							value={`${dialog.stats.readingTime.toFixed(1)} 分`}
-						/>
-					</Stack>
-				) : (
-					<Alert severity="warning">
-						統計情報の取得に失敗しました.再度お試しください.
-					</Alert>
-				)}
-			</DialogContent>
-		</Dialog>
-	);
-}
-
-interface ManagerSnackbarProps {
-	snackbar: SnackbarState;
-	onClose: () => void;
-}
-
-function ManagerSnackbar({ snackbar, onClose }: ManagerSnackbarProps) {
-	return (
-		<Snackbar
-			open={snackbar.open}
-			autoHideDuration={3200}
-			onClose={onClose}
-			anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+		<div
+			role="dialog"
+			aria-modal="true"
+			aria-label="コンテンツ統計"
+			style={dialogBackdropStyle}
+			onClick={onClose}
 		>
-			<Alert
-				onClose={onClose}
-				severity={snackbar.severity}
-				variant="filled"
+			<div
+				style={{ ...dialogSurfaceBase, width: "min(640px, calc(100vw - 32px))" }}
+				onClick={(event) => event.stopPropagation()}
 			>
-				{snackbar.message}
-			</Alert>
-		</Snackbar>
+				<header style={dialogHeaderStyle}>コンテンツ統計</header>
+				<div style={{ ...dialogBodyStyle, display: "grid", gap: 16, paddingTop: 8 }}>
+					{dialog.page && (
+						<div>
+							<p
+								style={{
+									margin: 0,
+									fontSize: 13,
+									fontWeight: 600,
+									color: adminColor.textSecondary,
+								}}
+							>
+								対象ページ
+							</p>
+							<p style={{ margin: "4px 0 0 0", fontSize: 14, fontWeight: 600 }}>
+								{dialog.page.frontmatter?.title || dialog.page.slug}
+							</p>
+							<p
+								style={{
+									margin: "4px 0 0 0",
+									fontSize: 12,
+									color: adminColor.textSecondary,
+								}}
+							>
+								ID: {dialog.page.id} / スラッグ: {dialog.page.slug}
+							</p>
+						</div>
+					)}
+					<hr style={dividerStyle} />
+					{dialog.loading ? (
+						<div
+							style={{
+								padding: "24px 0",
+								display: "flex",
+								justifyContent: "center",
+							}}
+						>
+							<div
+								aria-label="Loading"
+								style={{
+									width: 28,
+									height: 28,
+									borderRadius: "50%",
+									border: `3px solid ${adminColor.border}`,
+									borderTopColor: adminColor.accent,
+								}}
+							/>
+						</div>
+					) : dialog.stats ? (
+						<div style={{ display: "grid", gap: 12 }}>
+							<StatsRow label="文字数" value={dialog.stats.characterCount} />
+							<StatsRow label="単語数" value={dialog.stats.wordCount} />
+							<StatsRow label="見出し数" value={dialog.stats.headingCount} />
+							<StatsRow label="リンク数" value={dialog.stats.linkCount} />
+							<StatsRow label="画像数" value={dialog.stats.imageCount} />
+							<StatsRow label="行数" value={dialog.stats.lineCount} />
+							<StatsRow
+								label="推定読了時間"
+								value={`${dialog.stats.readingTime.toFixed(1)} 分`}
+							/>
+						</div>
+					) : (
+						<div role="alert" style={alertStyle}>
+							統計情報の取得に失敗しました.再度お試しください.
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
 	);
+}
+
+function StatsRow({ label, value }: { label: string; value: string | number }) {
+	return (
+		<div
+			style={{
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "space-between",
+				gap: 8,
+			}}
+		>
+			<span style={{ fontSize: 14, color: adminColor.textSecondary }}>
+				{label}
+			</span>
+			<span style={{ fontSize: 14, fontWeight: 600 }}>{value}</span>
+		</div>
+	);
+}
+
+function SnackbarAutoClose({
+	open,
+	onClose,
+	duration,
+	children,
+}: {
+	open: boolean;
+	onClose: () => void;
+	duration: number;
+	children: ReactNode;
+}) {
+	useEffect(() => {
+		if (!open) return;
+		const id = window.setTimeout(onClose, duration);
+		return () => window.clearTimeout(id);
+	}, [open, duration, onClose]);
+	if (!open) return null;
+	return <>{children}</>;
 }
 
 export default function AdminMarkdownManager() {
@@ -515,9 +809,12 @@ export default function AdminMarkdownManager() {
 		severity: "success",
 	});
 
-	const showSnackbar = useCallback((message: string, severity: AlertColor) => {
-		setSnackbar({ open: true, message, severity });
-	}, []);
+	const showSnackbar = useCallback(
+		(message: string, severity: SnackbarSeverity) => {
+			setSnackbar({ open: true, message, severity });
+		},
+		[],
+	);
 
 	const closeSnackbar = useCallback(() => {
 		setSnackbar((prev) => ({ ...prev, open: false }));
@@ -685,34 +982,33 @@ export default function AdminMarkdownManager() {
 	);
 
 	return (
-		<Box sx={{ display: "grid", gap: 4 }}>
+		<div style={{ display: "grid", gap: 32 }}>
 			<PageHeader
 				title="Markdownページ管理"
 				description="コンテンツに紐づくMarkdown本文を一覧・編集・分析します.検索とフィルタで対象ページを素早く特定し、統計情報から文章品質を確認できます."
 				actions={[
-					<Button
+					<button
 						key="refresh"
-						variant="outlined"
-						startIcon={<RefreshCcw size={16} />}
+						type="button"
 						onClick={handleRefresh}
+						style={outlinedButtonStyle}
 					>
+						<RefreshCcw size={16} />
 						更新
-					</Button>,
-					<Button
+					</button>,
+					<button
 						key="create"
-						variant="contained"
-						startIcon={<Plus size={18} />}
+						type="button"
 						onClick={() => setIsCreateDialogOpen(true)}
+						style={primaryButtonStyle}
 					>
+						<Plus size={18} />
 						新規Markdown
-					</Button>,
+					</button>,
 				]}
 			/>
 
-			<Paper
-				variant="outlined"
-				sx={{ p: 3, display: "grid", gap: 2.5, borderColor: "divider" }}
-			>
+			<section style={panelStyle}>
 				<MarkdownFilters
 					searchQuery={searchQuery}
 					onSearchChange={setSearchQuery}
@@ -725,9 +1021,9 @@ export default function AdminMarkdownManager() {
 				/>
 
 				{pagesError && (
-					<Alert severity="error">
+					<div role="alert" style={alertStyle}>
 						Markdownページの取得に失敗しました.再読み込みしてください.
-					</Alert>
+					</div>
 				)}
 
 				<MarkdownTable
@@ -737,7 +1033,7 @@ export default function AdminMarkdownManager() {
 					onEdit={setEditTarget}
 					onDelete={setDeleteTarget}
 				/>
-			</Paper>
+			</section>
 
 			<CreateMarkdownDialog
 				open={isCreateDialogOpen}
@@ -767,25 +1063,30 @@ export default function AdminMarkdownManager() {
 				onConfirm={() => deleteTarget && void handleDelete(deleteTarget.id)}
 			/>
 
-			<ManagerSnackbar snackbar={snackbar} onClose={closeSnackbar} />
-		</Box>
-	);
-}
-
-function StatsRow({ label, value }: { label: string; value: string | number }) {
-	return (
-		<Stack
-			direction="row"
-			spacing={1}
-			alignItems="center"
-			justifyContent="space-between"
-		>
-			<Typography variant="body2" color="text.secondary">
-				{label}
-			</Typography>
-			<Typography variant="body2" fontWeight={600}>
-				{value}
-			</Typography>
-		</Stack>
+			<SnackbarAutoClose
+				open={snackbar.open}
+				onClose={closeSnackbar}
+				duration={3200}
+			>
+				<div role="status" style={snackbarStyle(snackbar.severity)}>
+					<span>{snackbar.message}</span>
+					<button
+						type="button"
+						onClick={closeSnackbar}
+						aria-label="閉じる"
+						style={{
+							background: "transparent",
+							border: "none",
+							color: "inherit",
+							cursor: "pointer",
+							fontSize: 16,
+							lineHeight: 1,
+						}}
+					>
+						×
+					</button>
+				</div>
+			</SnackbarAutoClose>
+		</div>
 	);
 }
