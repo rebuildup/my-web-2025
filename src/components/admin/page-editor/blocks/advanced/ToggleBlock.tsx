@@ -1,7 +1,6 @@
 "use client";
 
-import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
 import { adminColor } from "@/components/admin/ui/tokens";
@@ -16,34 +15,70 @@ export function ToggleBlock({
 	const summary = (block.attributes.summary as string | undefined) ?? "Details";
 	const [expanded, setExpanded] = useState(true);
 
+	const toggle = () => setExpanded((v) => !v);
+
 	return (
-		<Accordion
-			expanded={expanded}
-			onChange={(_, open) => setExpanded(open)}
-			disableGutters
-			sx={{
-				borderRadius: 3,
+		<section
+			style={{
+				borderRadius: 12,
 				border: `1px solid ${adminColor.border}`,
-				bgcolor: "rgba(255,255,255,0.02)",
-				"&:before": { display: "none" },
+				backgroundColor: "rgba(255,255,255,0.02)",
+				overflow: "hidden",
 			}}
 		>
-			<AccordionSummary expandIcon={<ExpandMoreRoundedIcon />}>
-				<EditableText
-					value={summary}
-					onChange={(value) => onAttributesChange({ summary: value })}
-					readOnly={readOnly}
-					placeholder="Toggle summary"
-					sx={{
-						fontWeight: 600,
-						backgroundColor: "transparent",
-						border: "none",
-						paddingX: 0,
+			<div
+				role="button"
+				tabIndex={0}
+				aria-expanded={expanded}
+				onClick={toggle}
+				onKeyDown={(event) => {
+					if (event.key === "Enter" || event.key === " ") {
+						event.preventDefault();
+						toggle();
+					}
+				}}
+				style={{
+					display: "flex",
+					alignItems: "center",
+					gap: 8,
+					padding: "12px 16px",
+					cursor: "pointer",
+				}}
+			>
+				<ChevronDown
+					size={18}
+					style={{
+						transition: "transform 120ms ease",
+						transform: expanded ? "rotate(0deg)" : "rotate(-90deg)",
+						flexShrink: 0,
+						color: adminColor.textSecondary,
 					}}
 				/>
-			</AccordionSummary>
-			<AccordionDetails>
-				<div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+				<div style={{ flex: 1, minWidth: 0 }}>
+					<EditableText
+						value={summary}
+						onChange={(value) => onAttributesChange({ summary: value })}
+						readOnly={readOnly}
+						placeholder="Toggle summary"
+						sx={{
+							fontWeight: 600,
+							backgroundColor: "transparent",
+							border: "none",
+							paddingLeft: 0,
+							paddingRight: 0,
+						}}
+					/>
+				</div>
+			</div>
+			{expanded && (
+				<div
+					style={{
+						padding: "0 16px 16px 16px",
+						display: "flex",
+						flexDirection: "column",
+						gap: 12,
+					}}
+				>
 					<EditableText
 						value={block.content}
 						onChange={onContentChange}
@@ -60,7 +95,7 @@ export function ToggleBlock({
 						Toggle blocks collapse long explanations or FAQs.
 					</span>
 				</div>
-			</AccordionDetails>
-		</Accordion>
+			)}
+		</section>
 	);
 }
