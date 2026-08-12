@@ -1,17 +1,10 @@
 "use client";
 
-import {
-	Alert,
-	Box,
-	Button,
-	CircularProgress,
-	Stack,
-	Typography,
-} from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchContentList } from "@/cms/page-editor/lib/api/content";
 import type { ContentIndexItem } from "@/cms/types/content";
 import { SimpleSelect, type SimpleSelectOption } from "@/components/admin/ui";
+import { adminColor } from "@/components/admin/ui/tokens";
 
 export interface ContentSelectorProps {
 	selectedContentId?: string;
@@ -74,43 +67,97 @@ export function ContentSelector({
 	}, [sortedContents, selectedContentId]);
 
 	return (
-		<Box>
-			<Stack
-				sx={{
+		<div>
+			<div
+				style={{
+					display: "flex",
 					flexDirection: "row",
 					alignItems: "center",
 					justifyContent: "space-between",
-					px: 0,
-					py: 1.5,
+					paddingTop: 12,
+					paddingBottom: 12,
 				}}
 			>
-				<Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+				<h3
+					style={{
+						margin: 0,
+						fontSize: 16,
+						fontWeight: 600,
+						color: adminColor.textPrimary,
+					}}
+				>
 					Content
-				</Typography>
-				<Button
-					size="small"
-					variant="text"
-					onClick={() => void loadContents()}
+				</h3>
+				<button
+					type="button"
 					disabled={loading}
+					onClick={() => void loadContents()}
+					style={{
+						fontSize: 13,
+						padding: "4px 12px",
+						background: "transparent",
+						color: adminColor.accent,
+						border: "none",
+						borderRadius: 4,
+						cursor: loading ? "not-allowed" : "pointer",
+						opacity: loading ? 0.6 : 1,
+					}}
 				>
 					Refresh
-				</Button>
-			</Stack>
-			<Box sx={{ px: 0, py: 0 }}>
+				</button>
+			</div>
+			<div>
 				{loading && (
-					<Stack
-						spacing={1.5}
-						sx={{ flexDirection: "row", alignItems: "center" }}
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "row",
+							alignItems: "center",
+							gap: 12,
+						}}
 					>
-						<CircularProgress size={18} />
-						<Typography variant="body2" color="text.secondary">
+						<div
+							style={{
+								width: 18,
+								height: 18,
+								border: `2px solid ${adminColor.borderInput}`,
+								borderTopColor: adminColor.accent,
+								borderRadius: "50%",
+							}}
+						/>
+						<span
+							style={{
+								fontSize: 14,
+								color: adminColor.textSecondary,
+							}}
+						>
 							Loading content list...
-						</Typography>
-					</Stack>
+						</span>
+					</div>
 				)}
-				{!loading && error && <Alert severity="error">{error}</Alert>}
+				{!loading && error && (
+					<div
+						role="alert"
+						style={{
+							padding: "8px 12px",
+							borderLeft: `4px solid ${adminColor.error}`,
+							backgroundColor: "rgba(185, 28, 28, 0.1)",
+							color: adminColor.error,
+							fontSize: 14,
+							borderRadius: 4,
+						}}
+					>
+						{error}
+					</div>
+				)}
 				{!loading && !error && (
-					<Stack spacing={1}>
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "column",
+							gap: 8,
+						}}
+					>
 						<SimpleSelect
 							data-testid="content-select"
 							value={selectedContentId ?? ""}
@@ -126,13 +173,18 @@ export function ContentSelector({
 							aria-label="Content"
 						/>
 						{lastUpdatedLabel && (
-							<Typography variant="caption" color="text.secondary">
+							<span
+								style={{
+									fontSize: 12,
+									color: adminColor.textSecondary,
+								}}
+							>
 								Last updated: {lastUpdatedLabel}
-							</Typography>
+							</span>
 						)}
-					</Stack>
+					</div>
 				)}
-			</Box>
-		</Box>
+			</div>
+		</div>
 	);
 }
