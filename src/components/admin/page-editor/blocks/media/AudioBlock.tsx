@@ -123,6 +123,7 @@ export function AudioBlock({
 							<button
 								type="button"
 								disabled={!contentId || isUploading}
+								onClick={() => fileInputRef.current?.click()}
 								style={{
 									width: "100%",
 									display: "inline-flex",
@@ -140,15 +141,15 @@ export function AudioBlock({
 								}}
 							>
 								<UploadCloud size={18} />
-								<input
-									ref={fileInputRef}
-									type="file"
-									accept="audio/*"
-									style={{ display: "none" }}
-									onChange={handleFileChange}
-								/>
 								{isUploading ? "Uploading..." : "Upload audio"}
 							</button>
+							<input
+								ref={fileInputRef}
+								type="file"
+								accept="audio/*"
+								style={{ display: "none" }}
+								onChange={handleFileChange}
+							/>
 						</div>
 
 						{uploadError && (

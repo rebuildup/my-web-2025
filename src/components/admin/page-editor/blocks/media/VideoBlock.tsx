@@ -284,6 +284,7 @@ export function VideoBlock({
 							<button
 								type="button"
 								disabled={!contentId || isUploading}
+								onClick={() => fileInputRef.current?.click()}
 								style={{
 									width: "100%",
 									display: "inline-flex",
@@ -301,15 +302,15 @@ export function VideoBlock({
 								}}
 							>
 								<UploadCloud size={18} />
-								<input
-									ref={fileInputRef}
-									type="file"
-									accept="video/*"
-									style={{ display: "none" }}
-									onChange={handleFileChange}
-								/>
 								{isUploading ? "Uploading..." : "Upload video"}
 							</button>
+							<input
+								ref={fileInputRef}
+								type="file"
+								accept="video/*"
+								style={{ display: "none" }}
+								onChange={handleFileChange}
+							/>
 
 							{uploadError && (
 								<div

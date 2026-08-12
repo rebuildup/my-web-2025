@@ -183,6 +183,7 @@ export function FileBlock({
 						<button
 							type="button"
 							disabled={!contentId || isUploading}
+							onClick={() => fileInputRef.current?.click()}
 							style={{
 								width: "100%",
 								display: "inline-flex",
@@ -200,14 +201,14 @@ export function FileBlock({
 							}}
 						>
 							<UploadCloud size={18} />
-							<input
-								ref={fileInputRef}
-								type="file"
-								style={{ display: "none" }}
-								onChange={handleFileChange}
-							/>
 							{isUploading ? "Uploading..." : "Upload file"}
 						</button>
+						<input
+							ref={fileInputRef}
+							type="file"
+							style={{ display: "none" }}
+							onChange={handleFileChange}
+						/>
 
 						{uploadError && (
 							<div
