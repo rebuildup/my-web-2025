@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@mui/material";
+import { adminColor } from "@/components/admin/ui/tokens";
 import { Sidebar } from "@/components/admin/page-editor/layout/Sidebar";
 import { ArticleList } from "@/components/admin/page-editor/panels/ArticleList";
 import { ContentSelector } from "@/components/admin/page-editor/panels/ContentSelector";
@@ -58,13 +58,22 @@ export function EditorSidebar({
  onRefresh={onRefreshMedia}
  />
  {selectedPage && (
- <Button
- variant="outlined"
- color="error"
+ <button
+ type="button"
  onClick={() => onDeletePage(selectedPage)}
+ style={{
+ padding: "8px 18px",
+ fontSize: 14,
+ fontWeight: 600,
+ color: adminColor.error,
+ backgroundColor: "transparent",
+ border: `1px solid ${adminColor.borderInput}`,
+ borderRadius: 6,
+ cursor: "pointer",
+ }}
  >
  Delete page
- </Button>
+ </button>
  )}
  </Sidebar>
  );
