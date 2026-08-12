@@ -1,51 +1,55 @@
 "use client";
 
-import { alpha, Box, type SxProps, type Theme, useTheme } from "@mui/material";
 import {
+	type CSSProperties,
 	forwardRef,
 	type KeyboardEvent as ReactKeyboardEvent,
 	useEffect,
 	useRef,
 } from "react";
+import { adminColor } from "@/components/admin/ui/tokens";
 
 export interface EditableTextProps {
 	value: string;
 	onChange: (value: string) => void;
 	placeholder?: string;
-	sx?: SxProps<Theme>;
+	sx?: CSSProperties;
 	autoFocus?: boolean;
 	readOnly?: boolean;
 	onKeyDown?: (event: ReactKeyboardEvent<HTMLDivElement>) => void;
 }
 
-const baseStyles: SxProps<Theme> = (theme) => ({
+const baseStyle: CSSProperties = {
 	minHeight: "1.8em",
-	padding: theme.spacing(1, 1.5),
-	borderRadius: 2,
+	padding: "8px 12px",
+	borderRadius: 4,
 	border: "1px solid transparent",
-	backgroundColor: alpha(theme.palette.common.white, 0.04),
+	backgroundColor: "rgba(255,255,255,0.04)",
 	transition: "border-color 0.2s ease, background 0.2s ease",
 	outline: "none",
-	typography: "body1",
+	fontSize: 16,
 	lineHeight: 1.7,
-	color: theme.palette.mode === "dark" ? "#f2f2f2" : theme.palette.text.primary,
-	"&:focus": {
-		borderColor: alpha(theme.palette.primary.main, 0.5),
-		backgroundColor: alpha(theme.palette.primary.main, 0.12),
-	},
-	"&[data-placeholder]:empty::before": {
-		content: "attr(data-placeholder)",
-		color: theme.palette.text.disabled,
-	},
-	"&.is-readonly": {
-		opacity: 1,
-		pointerEvents: "none",
-		backgroundColor: "transparent",
-		border: "none",
-		padding: 0,
-		color: "#f2f2f2",
-	},
-});
+	color: adminColor.textPrimary,
+};
+
+const readonlyStyle: CSSProperties = {
+	opacity: 1,
+	pointerEvents: "none",
+	backgroundColor: "transparent",
+	border: "none",
+	padding: 0,
+	color: adminColor.textPrimary,
+};
+
+const placeholderStyle = `
+[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: ${adminColor.textDisabled};
+}
+[data-placeholder]:empty:focus::before {
+  opacity: 0.5;
+}
+`;
 
 export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
 	function EditableText(
@@ -61,11 +65,6 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
 		forwardedRef,
 	) {
 		const internalRef = useRef<HTMLDivElement | null>(null);
-		const theme = useTheme();
-		const mergedSx: SxProps<Theme> = [
-			baseStyles(theme),
-			...(Array.isArray(sx) ? sx : sx ? [sx] : []),
-		];
 
 		useEffect(() => {
 			const element =
@@ -101,21 +100,40 @@ export const EditableText = forwardRef<HTMLDivElement, EditableTextProps>(
 			}
 		};
 
+		const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
+			if (readOnly) return;
+			event.currentTarget.style.borderColor = "rgba(44, 123, 229, 0.5)";
+			event.currentTarget.style.backgroundColor = "rgba(44, 123, 229, 0.12)";
+		};
+
+		const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+			event.currentTarget.style.borderColor = "transparent";
+			event.currentTarget.style.backgroundColor = "rgba(255,255,255,0.04)";
+		};
+
+		const mergedStyle: CSSProperties = readOnly
+			? { ...baseStyle, ...readonlyStyle, ...sx }
+			: { ...baseStyle, ...sx };
+
 		return (
-			<Box
-				ref={forwardedRef ?? internalRef}
-				role="textbox"
-				component="div"
-				contentEditable={!readOnly}
-				suppressContentEditableWarning
-				tabIndex={readOnly ? -1 : 0}
-				aria-multiline="true"
-				data-placeholder={placeholder}
-				onInput={handleInput}
-				onKeyDown={handleKeyDown}
-				sx={mergedSx}
-				className={readOnly ? "is-readonly" : undefined}
-			/>
+			<>
+				<style>{placeholderStyle}</style>
+				<div
+					ref={forwardedRef ?? internalRef}
+					role="textbox"
+					contentEditable={!readOnly}
+					suppressContentEditableWarning
+					tabIndex={readOnly ? -1 : 0}
+					aria-multiline="true"
+					data-placeholder={placeholder}
+					onInput={handleInput}
+					onKeyDown={handleKeyDown}
+					onFocus={handleFocus}
+					onBlur={handleBlur}
+					style={mergedStyle}
+					className={readOnly ? "is-readonly" : undefined}
+				/>
+			</>
 		);
 	},
 );
