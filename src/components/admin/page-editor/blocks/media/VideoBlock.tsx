@@ -1,22 +1,30 @@
 "use client";
 
-import CloudUploadRoundedIcon from "@mui/icons-material/CloudUploadRounded";
-import MovieCreationRoundedIcon from "@mui/icons-material/MovieCreationRounded";
-import {
-	Alert,
-	Box,
-	Button,
-	FormControlLabel,
-	Stack,
-	Switch,
-	TextField,
-	Typography,
-} from "@mui/material";
+import { Film, UploadCloud } from "lucide-react";
 import { type ChangeEvent, useCallback, useRef, useState } from "react";
 import { getMediaUrl, uploadMediaFile } from "@/cms/page-editor/lib/api/media";
 import { formatFileSize } from "@/cms/page-editor/lib/utils/file-upload";
 import { SimpleSelect } from "@/components/admin/ui";
+import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockComponentProps } from "../types";
+
+const inputStyle: React.CSSProperties = {
+	width: "100%",
+	padding: "6px 8px",
+	fontSize: 14,
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 4,
+	backgroundColor: adminColor.bgPanel,
+	color: adminColor.textPrimary,
+	boxSizing: "border-box",
+};
+
+const labelStyle: React.CSSProperties = {
+	display: "block",
+	fontSize: 12,
+	color: adminColor.textSecondary,
+	marginBottom: 2,
+};
 
 export function VideoBlock({
 	block,
@@ -86,213 +94,289 @@ export function VideoBlock({
 	);
 
 	return (
-		<Box
-			sx={{
+		<div
+			style={{
 				position: "relative",
-				borderRadius: 2,
-				p: 0,
-				"&:hover .video-controls": { opacity: 1, pointerEvents: "auto" },
+				borderRadius: 8,
+				padding: 0,
 			}}
 		>
-			<Box sx={{ textAlign: alignToText, px: 0 }}>
+			<div style={{ textAlign: alignToText, paddingLeft: 0, paddingRight: 0 }}>
 				{src ? (
-					<Box
-						component="video"
+					<video
 						src={src}
 						poster={poster || undefined}
 						controls={controls}
 						autoPlay={autoplay}
 						muted
-						sx={{
+						style={{
 							display: "inline-block",
 							width: `${boxWidth}%`,
 							height: heightPx ? `${heightPx}px` : "auto",
 							objectFit: heightPx ? "cover" : "contain",
-							borderRadius: 1,
-							border: (theme) => `1px solid ${theme.palette.divider}`,
-							bgcolor: "rgba(255,255,255,0.02)",
+							borderRadius: 4,
+							border: `1px solid ${adminColor.border}`,
+							backgroundColor: "rgba(255,255,255,0.02)",
 						}}
 					/>
 				) : (
-					<Stack
-						sx={{
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "column",
 							alignItems: "center",
 							justifyContent: "center",
-							py: 6,
-							color: "text.secondary",
+							paddingTop: 48,
+							paddingBottom: 48,
+							gap: 8,
+							color: adminColor.textSecondary,
 						}}
-						spacing={1}
 					>
-						<MovieCreationRoundedIcon fontSize="large" color="primary" />
-						<Typography variant="body2">Paste a video URL</Typography>
-					</Stack>
+						<Film size={32} color={adminColor.accent} />
+						<span style={{ fontSize: 14 }}>Paste a video URL</span>
+					</div>
 				)}
-			</Box>
+			</div>
 
-			{/* Top: style controls */}
 			{!readOnly && (
 				<>
-					<Box
+					<div
 						className="video-controls"
-						sx={{
+						style={{
 							position: "absolute",
 							top: 8,
 							left: 8,
 							right: 8,
-							bgcolor: "rgba(0,0,0,0.35)",
-							borderRadius: 1,
-							p: 1,
+							backgroundColor: "rgba(0,0,0,0.35)",
+							borderRadius: 4,
+							padding: 8,
 							opacity: 0,
 							pointerEvents: "none",
 							transition: "opacity 120ms ease",
 						}}
 					>
-						<Stack
-							direction={{ xs: "column", sm: "row" }}
-							spacing={1.5}
-							sx={{
-								flexDirection: { xs: "column", sm: "row" },
-								alignItems: { xs: "stretch", sm: "center" },
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "row",
+								flexWrap: "wrap",
+								alignItems: "center",
+								gap: 12,
 							}}
 						>
-							<TextField
-								label="Width (%)"
-								type="number"
-								slotProps={{ htmlInput: { min: 0, max: 100 } }}
-								sx={{ width: 140 }}
-								value={boxWidth}
-								onChange={(e) =>
-									onAttributesChange({
-										widthPercent: Math.max(
-											0,
-											Math.min(100, Number(e.target.value ?? 100)),
-										),
-									})
-								}
-							/>
-							<TextField
-								label="Height (px)"
-								type="number"
-								slotProps={{ htmlInput: { min: 0, max: 4000 } }}
-								sx={{ width: 160 }}
-								value={heightPx ?? ""}
-								onChange={(e) => {
-									const v =
-										e.target.value === ""
-											? undefined
-											: Math.max(0, Math.min(4000, Number(e.target.value)));
-									onAttributesChange({ heightPx: v });
+							<div style={{ width: 140 }}>
+								<label style={labelStyle}>Width (%)</label>
+								<input
+									type="number"
+									min={0}
+									max={100}
+									value={boxWidth}
+									onChange={(e) =>
+										onAttributesChange({
+											widthPercent: Math.max(
+												0,
+												Math.min(100, Number(e.target.value ?? 100)),
+											),
+										})
+									}
+									style={inputStyle}
+								/>
+							</div>
+							<div style={{ width: 160 }}>
+								<label style={labelStyle}>Height (px)</label>
+								<input
+									type="number"
+									min={0}
+									max={4000}
+									value={heightPx ?? ""}
+									onChange={(e) => {
+										const v =
+											e.target.value === ""
+												? undefined
+												: Math.max(0, Math.min(4000, Number(e.target.value)));
+										onAttributesChange({ heightPx: v });
+									}}
+									style={inputStyle}
+								/>
+							</div>
+							<div style={{ width: 140 }}>
+								<label style={labelStyle}>Align</label>
+								<SimpleSelect
+									size="small"
+									value={align}
+									onChange={(value) => onAttributesChange({ align: value })}
+									options={[
+										{ value: "left", label: "Left" },
+										{ value: "center", label: "Center" },
+										{ value: "right", label: "Right" },
+									]}
+									minWidth={140}
+									aria-label="Align"
+								/>
+							</div>
+							<label
+								style={{
+									display: "inline-flex",
+									alignItems: "center",
+									gap: 6,
+									fontSize: 14,
+									color: adminColor.textPrimary,
+									cursor: "pointer",
 								}}
-							/>
-							<SimpleSelect
-								size="small"
-								value={align}
-								onChange={(value) => onAttributesChange({ align: value })}
-								options={[
-									{ value: "left", label: "Left" },
-									{ value: "center", label: "Center" },
-									{ value: "right", label: "Right" },
-								]}
-								minWidth={140}
-								aria-label="Align"
-							/>
-							<FormControlLabel
-								control={
-									<Switch
-										checked={autoplay}
-										onChange={(e) =>
-											onAttributesChange({ autoplay: e.target.checked })
-										}
-									/>
-								}
-								label="Autoplay"
-							/>
-							<FormControlLabel
-								control={
-									<Switch
-										checked={controls}
-										onChange={(e) =>
-											onAttributesChange({ controls: e.target.checked })
-										}
-									/>
-								}
-								label="Controls"
-							/>
-						</Stack>
-					</Box>
+							>
+								<input
+									type="checkbox"
+									role="switch"
+									checked={autoplay}
+									onChange={(e) =>
+										onAttributesChange({ autoplay: e.target.checked })
+									}
+								/>
+								Autoplay
+							</label>
+							<label
+								style={{
+									display: "inline-flex",
+									alignItems: "center",
+									gap: 6,
+									fontSize: 14,
+									color: adminColor.textPrimary,
+									cursor: "pointer",
+								}}
+							>
+								<input
+									type="checkbox"
+									role="switch"
+									checked={controls}
+									onChange={(e) =>
+										onAttributesChange({ controls: e.target.checked })
+									}
+								/>
+								Controls
+							</label>
+						</div>
+					</div>
 
-					{/* Bottom: meta + upload in 3 rows */}
-					<Box
+					<div
 						className="video-controls"
-						sx={{
+						style={{
 							position: "absolute",
 							top: 56,
 							left: 8,
 							right: 8,
-							bgcolor: "rgba(0,0,0,0.35)",
-							borderRadius: 1,
-							p: 1,
+							backgroundColor: "rgba(0,0,0,0.35)",
+							borderRadius: 4,
+							padding: 8,
 							opacity: 0,
 							pointerEvents: "none",
 							transition: "opacity 120ms ease",
 						}}
 					>
-						{/* Row 1: Upload full width */}
-						<Stack spacing={1.5} sx={{ alignItems: "center" }}>
-							<Button
-								variant="outlined"
-								fullWidth
-								startIcon={<CloudUploadRoundedIcon />}
-								component="label"
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+								gap: 12,
+							}}
+						>
+							<button
+								type="button"
 								disabled={!contentId || isUploading}
-								sx={{ whiteSpace: "nowrap" }}
+								style={{
+									width: "100%",
+									display: "inline-flex",
+									alignItems: "center",
+									justifyContent: "center",
+									gap: 8,
+									padding: "8px 16px",
+									border: `1px solid ${adminColor.borderInput}`,
+									borderRadius: 4,
+									backgroundColor: adminColor.bgPanel,
+									color: adminColor.textPrimary,
+									cursor: !contentId || isUploading ? "not-allowed" : "pointer",
+									opacity: !contentId || isUploading ? 0.6 : 1,
+									whiteSpace: "nowrap",
+								}}
 							>
+								<UploadCloud size={18} />
 								<input
 									ref={fileInputRef}
 									type="file"
 									accept="video/*"
-									hidden
+									style={{ display: "none" }}
 									onChange={handleFileChange}
 								/>
 								{isUploading ? "Uploading..." : "Upload video"}
-							</Button>
-						</Stack>
-						{uploadError && (
-							<Alert severity="error" sx={{ mt: 1 }}>
-								{uploadError}
-							</Alert>
-						)}
-						{filename && (
-							<Typography
-								variant="caption"
-								color="text.secondary"
-								sx={{ mt: 0.5 }}
-							>
-								Current file: {filename}
-								{typeof size === "number" ? ` · ${formatFileSize(size)}` : ""}
-							</Typography>
-						)}
+							</button>
 
-						{/* Row 2: URL + Poster */}
-						<Stack spacing={1.5} sx={{ alignItems: "center", mt: 1.5 }}>
-							<TextField
-								label="URL"
-								fullWidth
-								value={src}
-								onChange={(e) => onAttributesChange({ src: e.target.value })}
-								placeholder="https://.../video.mp4"
-							/>
-							<TextField
-								label="Poster"
-								fullWidth
-								value={poster}
-								onChange={(e) => onAttributesChange({ poster: e.target.value })}
-								placeholder="https://.../thumb.jpg"
-							/>
-						</Stack>
-					</Box>
+							{uploadError && (
+								<div
+									role="alert"
+									style={{
+										marginTop: 8,
+										padding: "8px 12px",
+										borderLeft: `4px solid ${adminColor.error}`,
+										backgroundColor: "rgba(185, 28, 28, 0.1)",
+										color: adminColor.error,
+										fontSize: 14,
+										borderRadius: 4,
+									}}
+								>
+									{uploadError}
+								</div>
+							)}
+
+							{filename && (
+								<p
+									style={{
+										fontSize: 12,
+										color: adminColor.textSecondary,
+										margin: "4px 0 0 0",
+									}}
+								>
+									Current file: {filename}
+									{typeof size === "number" ? ` · ${formatFileSize(size)}` : ""}
+								</p>
+							)}
+
+							<div
+								style={{
+									display: "flex",
+									flexDirection: "column",
+									alignItems: "center",
+									gap: 12,
+									marginTop: 12,
+									width: "100%",
+								}}
+							>
+								<div style={{ width: "100%" }}>
+									<label style={labelStyle}>URL</label>
+									<input
+										value={src}
+										onChange={(e) =>
+											onAttributesChange({ src: e.target.value })
+										}
+										placeholder="https://.../video.mp4"
+										style={inputStyle}
+									/>
+								</div>
+								<div style={{ width: "100%" }}>
+									<label style={labelStyle}>Poster</label>
+									<input
+										value={poster}
+										onChange={(e) =>
+											onAttributesChange({ poster: e.target.value })
+										}
+										placeholder="https://.../thumb.jpg"
+										style={inputStyle}
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
 				</>
 			)}
-		</Box>
+		</div>
 	);
 }
