@@ -1,7 +1,7 @@
 "use client";
 
-import { Box, Stack } from "@mui/material";
 import { useMemo, useState } from "react";
+import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockComponentProps } from "../types";
 import { GalleryAddControls } from "./GalleryAddControls";
 import { GallerySelectedItemControls } from "./GallerySelectedItemControls";
@@ -32,13 +32,12 @@ export function GalleryBlock({
 	);
 
 	return (
-		<Stack spacing={1.5}>
-			<Box
-				sx={{
+		<div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+			<div
+				style={{
 					position: "relative",
-					pb: 0,
+					paddingBottom: 0,
 					transition: "padding-bottom 150ms ease",
-					"&:hover": { pb: 14 },
 				}}
 			>
 				<GalleryTiles
@@ -50,9 +49,9 @@ export function GalleryBlock({
 					onSelect={setSelected}
 					onAddHoverChange={setAddHovered}
 				/>
-				<Box
+				<div
 					className="gallery-controls"
-					sx={{
+					style={{
 						position: "absolute",
 						bottom: 0,
 						left: 0,
@@ -62,15 +61,15 @@ export function GalleryBlock({
 						transition: "opacity 120ms ease",
 					}}
 				>
-					<Box
-						sx={{
-							border: (theme) => `1px solid ${theme.palette.divider}`,
-							borderRadius: 1,
-							p: 1,
-							bgcolor: "rgba(0,0,0,0.35)",
+					<div
+						style={{
+							border: `1px solid ${adminColor.border}`,
+							borderRadius: 4,
+							padding: 8,
+							backgroundColor: "rgba(0,0,0,0.35)",
 						}}
 					>
-						<Stack spacing={1.5}>
+						<div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
 							{!readOnly && addHovered && (
 								<GalleryAddControls
 									content={block.content}
@@ -95,10 +94,10 @@ export function GalleryBlock({
 									onContentChange={onContentChange}
 								/>
 							)}
-						</Stack>
-					</Box>
-				</Box>
-			</Box>
-		</Stack>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	);
 }
