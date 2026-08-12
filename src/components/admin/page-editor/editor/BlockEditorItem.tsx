@@ -1,8 +1,7 @@
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
-import { Box, Stack } from "@mui/material";
+import { GripVertical, Plus } from "lucide-react";
 import type { DragEvent, KeyboardEvent, MouseEvent } from "react";
 import type { Block } from "@/cms/types/blocks";
+import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockRenderer } from "./block-editor-config";
 import type { DropPosition } from "./block-editor-types";
 
@@ -40,6 +39,20 @@ interface BlockEditorItemProps {
 	onKeyDown: (blockId: string, event: KeyboardEvent<HTMLDivElement>) => void;
 }
 
+const buttonStyle: React.CSSProperties = {
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+	background: "transparent",
+	border: 0,
+	padding: 0,
+	lineHeight: 0,
+	width: 24,
+	height: 24,
+	borderRadius: 6,
+	cursor: "pointer",
+};
+
 export function BlockEditorItem({
 	block,
 	Component,
@@ -73,16 +86,59 @@ export function BlockEditorItem({
 		: undefined;
 	const showControls = !readOnly && (isHovered || isActive);
 
+	const wrapperStyle: React.CSSProperties = {
+		position: "relative",
+		display: "flex",
+		alignItems: "stretch",
+		gap: readOnly ? 0 : 12,
+		paddingLeft: readOnly ? 0 : 8,
+		paddingRight: readOnly ? 0 : 8,
+		paddingTop: readOnly ? 6 : 10,
+		paddingBottom: readOnly ? 6 : 10,
+		borderRadius: readOnly ? 0 : 4,
+		backgroundColor: readOnly
+			? "transparent"
+			: isActive
+				? adminColor.accentHover
+				: "transparent",
+		cursor: readOnly ? "default" : "text",
+		opacity: isDragging ? 0.4 : 1,
+		transition: readOnly
+			? "none"
+			: "background-color 0.2s ease, opacity 0.2s ease",
+		boxShadow: readOnly
+			? undefined
+			: dropIndicator === "before"
+				? "inset 0 2px 0 #2c7be5"
+				: dropIndicator === "after"
+					? "inset 0 -2px 0 #2c7be5"
+					: undefined,
+	};
+
+	const dividerStyle: React.CSSProperties = {
+		borderBottom: readOnly
+			? "1px solid rgba(242, 242, 242, 0.1)"
+			: `1px solid ${adminColor.border}`,
+	};
+
+	const activeColor = isActive
+		? adminColor.textPrimary
+		: adminColor.textSecondary;
+	const hoverStyle = (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.currentTarget.style.background = adminColor.accentHover;
+	};
+	const clearHoverStyle = (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.currentTarget.style.background = "transparent";
+	};
+
 	return (
-		<Box
+		<div
 			onClick={() => onSelect(block.id)}
 			onMouseEnter={(event) => {
-				// イベントバブリングを防ぐ
 				event.stopPropagation();
 				onMouseEnter(block.id);
 			}}
 			onMouseLeave={(event) => {
-				// イベントバブリングを防ぐ
 				event.stopPropagation();
 				onMouseLeave(event);
 			}}
@@ -90,51 +146,25 @@ export function BlockEditorItem({
 			onDragOver={(event) => onDragOver(event, block.id)}
 			onDragLeave={(event) => onDragLeave(event, block.id)}
 			onDrop={(event) => onDrop(event, block.id)}
-			sx={{
-				position: "relative",
-				display: "flex",
-				alignItems: "stretch",
-				gap: readOnly ? 0 : 1.5,
-				px: readOnly ? 0 : 1,
-				py: readOnly ? 0.75 : 1.25,
-				borderRadius: readOnly ? 0 : 1,
-				bgcolor: readOnly
-					? "transparent"
-					: isActive
-						? "rgba(44, 123, 229, 0.08)"
-						: "transparent",
-				cursor: readOnly ? "default" : "text",
-				opacity: isDragging ? 0.4 : 1,
-				transition: readOnly
-					? "none"
-					: "background-color 0.2s ease, opacity 0.2s ease",
-				boxShadow: readOnly
-					? undefined
-					: dropIndicator === "before"
-						? "inset 0 2px 0 #2c7be5"
-						: dropIndicator === "after"
-							? "inset 0 -2px 0 #2c7be5"
-							: undefined,
-				"&:not(:last-of-type)": {
-					borderBottom: readOnly
-						? "1px solid rgba(242, 242, 242, 0.1)"
-						: "1px solid rgba(0, 0, 0, 0.12)",
-				},
-			}}
+			style={wrapperStyle}
 			data-block-id={block.id}
+			className="block-editor-item"
 		>
-			{showControls && (
-				<Stack
-					spacing={0.25}
-					sx={{
+			<style>{`.block-editor-item:not(:last-of-type) { ${objectToStyleString(dividerStyle)} }`}</style>
+			{showControls ? (
+				<div
+					style={{
+						display: "flex",
 						flexShrink: 0,
 						width: 28,
-						pt: 0.5,
+						paddingTop: 2,
 						alignItems: "center",
+						flexDirection: "column",
+						gap: 2,
 					}}
 				>
-					<Box
-						component="button"
+					<button
+						type="button"
 						aria-label="Add block"
 						tabIndex={0}
 						onClick={(event) =>
@@ -143,26 +173,14 @@ export function BlockEditorItem({
 								block.id,
 							)
 						}
-						sx={{
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							background: "transparent",
-							border: 0,
-							padding: 0,
-							lineHeight: 0,
-							width: 24,
-							height: 24,
-							cursor: "pointer",
-							color: isActive ? "#1f2328" : "#6c757d",
-							borderRadius: 0.75,
-							"&:hover": { background: "rgba(44, 123, 229, 0.08)" },
-						}}
+						style={{ ...buttonStyle, color: activeColor }}
+						onMouseEnter={hoverStyle}
+						onMouseLeave={clearHoverStyle}
 					>
-						<AddRoundedIcon fontSize="small" />
-					</Box>
-					<Box
-						component="button"
+						<Plus size={16} />
+					</button>
+					<button
+						type="button"
 						aria-label="Block handle"
 						draggable
 						tabIndex={0}
@@ -174,33 +192,32 @@ export function BlockEditorItem({
 						}
 						onDragStart={(event) => onDragStart(event, block.id)}
 						onDragEnd={onDragEnd}
-						sx={{
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							background: "transparent",
-							border: 0,
-							padding: 0,
-							lineHeight: 0,
-							width: 24,
-							height: 24,
-							cursor: "grab",
-							color: isActive ? "#1f2328" : "#6c757d",
-							borderRadius: 0.75,
-							"&:active": { cursor: "grabbing" },
-							"&:hover": { background: "rgba(44, 123, 229, 0.08)" },
-						}}
+						style={{ ...buttonStyle, color: activeColor, cursor: "grab" }}
+						onMouseEnter={hoverStyle}
+						onMouseLeave={clearHoverStyle}
 					>
-						<DragIndicatorRoundedIcon fontSize="small" />
-					</Box>
-				</Stack>
+						<GripVertical size={16} />
+					</button>
+				</div>
+			) : (
+				<div style={{ flexShrink: 0, width: 28 }} />
 			)}
-			{!showControls && <Box sx={{ flexShrink: 0, width: 28 }} />}
-			<Stack
-				spacing={1}
-				sx={{ flex: 1, px: 0, py: 0, position: "relative", minWidth: 0 }}
+			<div
+				style={{
+					flex: 1,
+					padding: 0,
+					position: "relative",
+					minWidth: 0,
+				}}
 			>
-				<Box sx={{ px: 0.5, py: 0.25 }}>
+				<div
+					style={{
+						paddingLeft: 2,
+						paddingRight: 2,
+						paddingTop: 1,
+						paddingBottom: 1,
+					}}
+				>
 					<Component
 						block={block}
 						readOnly={readOnly}
@@ -212,8 +229,18 @@ export function BlockEditorItem({
 						autoFocus={autoFocus}
 						onKeyDown={handleBlockKeyDown}
 					/>
-				</Box>
-			</Stack>
-		</Box>
+				</div>
+			</div>
+		</div>
 	);
+}
+
+function objectToStyleString(obj: React.CSSProperties): string {
+	return Object.entries(obj)
+		.map(([key, value]) => `${camelToKebab(key)}: ${value};`)
+		.join(" ");
+}
+
+function camelToKebab(str: string): string {
+	return str.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
 }
