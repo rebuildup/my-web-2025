@@ -1,6 +1,5 @@
 "use client";
 
-import { Stack } from "@mui/material";
 import { BlockEditorItem } from "./BlockEditorItem";
 import { BlockEditorMenus } from "./BlockEditorMenus";
 import { BLOCK_COMPONENTS } from "./block-editor-config";
@@ -50,15 +49,17 @@ export function BlockEditor({
 	} = useBlockEditor({ blocks, applyBlocks, readOnly, onSelectBlock });
 
 	return (
-		<Stack
-			spacing={readOnly ? 0 : 2}
+		<div
 			{...(editorId && { "data-editor-id": editorId })}
-			sx={{
+			style={{
 				position: "relative",
 				maxWidth: readOnly ? "100%" : 768,
-				mx: "auto",
+				margin: "0 auto",
 				width: "100%",
-				bgcolor: "transparent",
+				backgroundColor: "transparent",
+				display: "flex",
+				flexDirection: "column",
+				gap: readOnly ? 0 : 8,
 			}}
 		>
 			{blocks.map((block) => {
@@ -109,6 +110,6 @@ export function BlockEditor({
 				onCloseMenu={handleCloseMenu}
 				onCloseAddMenu={handleCloseAddMenu}
 			/>
-		</Stack>
+		</div>
 	);
 }
