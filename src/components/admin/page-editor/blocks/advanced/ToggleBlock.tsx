@@ -1,15 +1,10 @@
 "use client";
 
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
-import {
-	Accordion,
-	AccordionDetails,
-	AccordionSummary,
-	Stack,
-	Typography,
-} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { useState } from "react";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
+import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockComponentProps } from "../types";
 
 export function ToggleBlock({
@@ -28,7 +23,7 @@ export function ToggleBlock({
 			disableGutters
 			sx={{
 				borderRadius: 3,
-				border: (theme) => `1px solid ${theme.palette.divider}`,
+				border: `1px solid ${adminColor.border}`,
 				bgcolor: "rgba(255,255,255,0.02)",
 				"&:before": { display: "none" },
 			}}
@@ -48,7 +43,7 @@ export function ToggleBlock({
 				/>
 			</AccordionSummary>
 			<AccordionDetails>
-				<Stack spacing={1.5}>
+				<div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
 					<EditableText
 						value={block.content}
 						onChange={onContentChange}
@@ -56,10 +51,15 @@ export function ToggleBlock({
 						placeholder="Toggle content"
 						sx={{ minHeight: "64px" }}
 					/>
-					<Typography variant="caption" color="text.secondary">
+					<span
+						style={{
+							fontSize: 12,
+							color: adminColor.textSecondary,
+						}}
+					>
 						Toggle blocks collapse long explanations or FAQs.
-					</Typography>
-				</Stack>
+					</span>
+				</div>
 			</AccordionDetails>
 		</Accordion>
 	);
