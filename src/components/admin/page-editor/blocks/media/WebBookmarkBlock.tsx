@@ -1,16 +1,8 @@
 "use client";
 
-import {
-	Box,
-	Card,
-	CardActionArea,
-	CardContent,
-	CardMedia,
-	TextField,
-	Typography,
-} from "@mui/material";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { sanitizeUrl } from "@/cms/page-editor/lib/utils/sanitize";
+import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockComponentProps } from "../types";
 
 export function WebBookmarkBlock({
@@ -27,7 +19,6 @@ export function WebBookmarkBlock({
 	const [hovered, setHovered] = useState(false);
 	const safeUrl = useMemo(() => sanitizeUrl(url), [url]);
 
-	// Extract hostname from URL safely
 	const urlHostname = useMemo(() => {
 		if (!safeUrl) return "";
 		try {
@@ -38,14 +29,12 @@ export function WebBookmarkBlock({
 		}
 	}, [safeUrl]);
 
-	// Determine display title
 	const displayTitle = useMemo(() => {
 		if (title) return title;
 		if (urlHostname) return urlHostname;
 		return "Bookmark";
 	}, [title, urlHostname]);
 
-	// onAttributesChangeをrefで保持して、useEffectの依存配列から除外
 	const onAttributesChangeRef = useRef(onAttributesChange);
 	useEffect(() => {
 		onAttributesChangeRef.current = onAttributesChange;
@@ -84,25 +73,21 @@ export function WebBookmarkBlock({
 				return;
 			}
 
-			// Process data outside try/catch block
 			if (!controller.signal.aborted && data) {
 				const next: Record<string, string> = {};
 
-				// Compare and set image
 				const dataImage = data.image || "";
 				const currentImage = image || "";
 				if (dataImage !== currentImage) {
 					next.image = dataImage;
 				}
 
-				// Compare and set title
 				const dataTitle = data.title || "";
 				const currentTitle = title || "";
 				if (dataTitle !== currentTitle) {
 					next.title = dataTitle;
 				}
 
-				// Compare and set description
 				const dataDescription = data.description || "";
 				const currentDescription = description || "";
 				if (dataDescription !== currentDescription) {
@@ -121,21 +106,21 @@ export function WebBookmarkBlock({
 	}, [safeUrl, image, title, description]);
 
 	return (
-		<Card
-			variant="outlined"
+		<section
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
-			sx={{
+			style={{
 				position: "relative",
-				borderRadius: 3,
-				border: (theme) => `1px solid ${theme.palette.divider}`,
-				bgcolor: "rgba(255,255,255,0.02)",
+				borderRadius: 12,
+				border: `1px solid ${adminColor.border}`,
+				backgroundColor: "rgba(255,255,255,0.02)",
+				overflow: "hidden",
 			}}
 		>
 			{!readOnly && (
-				<Box
+				<div
 					className="bookmark-url-input"
-					sx={{
+					style={{
 						position: "absolute",
 						top: 8,
 						right: 8,
@@ -143,14 +128,13 @@ export function WebBookmarkBlock({
 						opacity: hovered ? 1 : 0,
 						pointerEvents: hovered ? "auto" : "none",
 						transition: "opacity 120ms ease",
-						bgcolor: "rgba(15,23,42,0.5)",
+						backgroundColor: "rgba(15,23,42,0.5)",
 						backdropFilter: "blur(4px)",
-						borderRadius: 1,
+						borderRadius: 4,
 						maxWidth: "min(520px, 80vw)",
 					}}
 				>
-					<TextField
-						size="small"
+					<input
 						placeholder="https://example.com"
 						value={url}
 						onChange={(event) =>
@@ -158,56 +142,82 @@ export function WebBookmarkBlock({
 						}
 						onFocus={() => setHovered(true)}
 						onBlur={() => setHovered(false)}
-						sx={{
-							m: 1,
+						style={{
+							margin: 8,
 							minWidth: 260,
-							"& .MuiInputBase-root": { bgcolor: "rgba(0,0,0,0.5)" },
+							padding: "6px 10px",
+							fontSize: 14,
+							border: `1px solid ${adminColor.borderInput}`,
+							borderRadius: 4,
+							backgroundColor: "rgba(0,0,0,0.5)",
+							color: adminColor.textPrimary,
+							outline: "none",
 						}}
 					/>
-				</Box>
+				</div>
 			)}
-			<CardContent sx={{ p: 0 }}></CardContent>
-			<CardActionArea
-				component="a"
-				disabled={!url}
+			<div style={{ padding: 0 }} />
+			<a
 				href={url || undefined}
 				target="_blank"
 				rel="noreferrer"
-				sx={{
+				aria-disabled={!url}
+				style={{
 					display: "flex",
 					alignItems: "stretch",
-					borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+					borderTop: `1px solid ${adminColor.border}`,
+					color: "inherit",
+					textDecoration: "none",
+					pointerEvents: url ? "auto" : "none",
 				}}
 			>
 				{image ? (
-					<CardMedia
-						component="img"
+					<img
 						src={image}
 						alt=""
-						sx={{
+						style={{
 							width: 140,
 							objectFit: "cover",
 						}}
 					/>
 				) : (
-					<Box sx={{ width: 0 }} />
+					<div style={{ width: 0 }} />
 				)}
-				<CardContent sx={{ flex: 1 }}>
-					<Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+				<div style={{ flex: 1, padding: 16 }}>
+					<h3
+						style={{
+							margin: 0,
+							fontSize: 16,
+							fontWeight: 600,
+							color: adminColor.textPrimary,
+						}}
+					>
 						{displayTitle}
-					</Typography>
+					</h3>
 					{description && (
-						<Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+						<p
+							style={{
+								margin: "4px 0 0 0",
+								fontSize: 14,
+								color: adminColor.textSecondary,
+							}}
+						>
 							{description}
-						</Typography>
+						</p>
 					)}
 					{url && (
-						<Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+						<p
+							style={{
+								margin: "8px 0 0 0",
+								fontSize: 12,
+								color: adminColor.textSecondary,
+							}}
+						>
 							{url}
-						</Typography>
+						</p>
 					)}
-				</CardContent>
-			</CardActionArea>
-		</Card>
+				</div>
+			</a>
+		</section>
 	);
 }
