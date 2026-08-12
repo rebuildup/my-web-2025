@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getMarkdownPageCanonicalSlug } from "@/cms/lib/markdown-slug";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import {
@@ -289,9 +290,12 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 export async function generateStaticParams() {
 	try {
 		const pages = await fetchMarkdownPages();
-		const params = pages.map((page) => ({
-			slug: page.slug || page.contentId || page.path,
-		}));
+		const params = pages
+			.map((page) => ({ slug: getMarkdownPageCanonicalSlug(page) }))
+			.filter(
+				(p): p is { slug: string } =>
+					typeof p.slug === "string" && p.slug.length > 0,
+			);
 		if (params.length === 0) {
 			return [{ slug: "placeholder" }];
 		}

@@ -5,16 +5,13 @@ import {
 	Box,
 	Button,
 	CircularProgress,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
 	Stack,
 	Typography,
 } from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchContentList } from "@/cms/page-editor/lib/api/content";
 import type { ContentIndexItem } from "@/cms/types/content";
+import { SimpleSelect, type SimpleSelectOption } from "@/components/admin/ui";
 
 export interface ContentSelectorProps {
 	selectedContentId?: string;
@@ -38,23 +35,25 @@ export function ContentSelector({
 		[contents],
 	);
 
+	const options = useMemo<SimpleSelectOption[]>(
+		() =>
+			sortedContents.map((content) => ({
+				value: content.id,
+				label: content.title || content.id,
+			})),
+		[sortedContents],
+	);
+
 	const loadContents = useCallback(async () => {
 		setLoading(true);
 		setError(null);
-		let completed = false;
 		try {
-			console.log("[ContentSelector] Loading contents...");
 			const data = await fetchContentList();
-			console.log("[ContentSelector] Contents loaded:", data);
 			setContents(data);
-			completed = true;
 		} catch (err) {
 			console.error("[ContentSelector] Failed to load contents", err);
 			setError(err instanceof Error ? err.message : "Failed to load contents");
-			completed = true;
-		}
-
-		if (completed) {
+		} finally {
 			setLoading(false);
 		}
 	}, []);
@@ -112,31 +111,20 @@ export function ContentSelector({
 				{!loading && error && <Alert severity="error">{error}</Alert>}
 				{!loading && !error && (
 					<Stack spacing={1}>
-						<FormControl fullWidth size="small" variant="outlined">
-							<InputLabel id="content-selector-label">Content</InputLabel>
-							<Select
-								data-testid="content-select"
-								labelId="content-selector-label"
-								label="Content"
-								value={selectedContentId ?? ""}
-								onChange={(event) => {
-									console.log(
-										"[ContentSelector] Content selected:",
-										event.target.value,
-									);
-									onSelect(event.target.value);
-								}}
-							>
-								<MenuItem value="">
-									<em>Select content</em>
-								</MenuItem>
-								{sortedContents.map((content) => (
-									<MenuItem key={content.id} value={content.id}>
-										{content.title || content.id}
-									</MenuItem>
-								))}
-							</Select>
-						</FormControl>
+						<SimpleSelect
+							data-testid="content-select"
+							value={selectedContentId ?? ""}
+							options={options}
+							placeholder="Select content"
+							onChange={(value) => {
+								if (value) {
+									onSelect(value);
+								}
+							}}
+							fullWidth
+							size="small"
+							aria-label="Content"
+						/>
 						{lastUpdatedLabel && (
 							<Typography variant="caption" color="text.secondary">
 								Last updated: {lastUpdatedLabel}

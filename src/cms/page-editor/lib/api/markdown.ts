@@ -10,17 +10,17 @@ export interface MarkdownPagePayload
 export async function fetchMarkdownPages(
 	contentId?: string,
 ): Promise<MarkdownPage[]> {
-	return apiRequest<MarkdownPage[]>("/api/cms/markdown", {
-		query: contentId ? { contentId } : undefined,
-	});
+	const all = await apiRequest<MarkdownPage[]>("/api/cms/markdown");
+	if (!contentId) return all;
+	return all.filter((page) => page.contentId === contentId);
 }
 
 export async function fetchMarkdownPage(
 	idOrSlug: string,
 ): Promise<MarkdownPage> {
-	return apiRequest<MarkdownPage>("/api/cms/markdown", {
-		query: { id: idOrSlug },
-	});
+	return apiRequest<MarkdownPage>(
+		`/api/cms/markdown/${encodeURIComponent(idOrSlug)}`,
+	);
 }
 
 export async function createMarkdownPage(payload: MarkdownPagePayload) {
@@ -48,8 +48,8 @@ export async function updateMarkdownPage(payload: MarkdownPagePayload) {
 }
 
 export async function deleteMarkdownPage(idOrSlug: string) {
-	return apiRequest<{ ok: boolean; id?: string }>("/api/cms/markdown", {
-		method: "DELETE",
-		query: { id: idOrSlug },
-	});
+	return apiRequest<{ ok: boolean; id?: string }>(
+		`/api/cms/markdown/${encodeURIComponent(idOrSlug)}`,
+		{ method: "DELETE" },
+	);
 }

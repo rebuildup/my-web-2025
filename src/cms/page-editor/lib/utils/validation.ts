@@ -1,12 +1,13 @@
 import { z } from "zod";
 
-const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+// Uppercase letters are intentional: writers chose them, so we keep them.
+const slugRegex = /^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/;
 
 export const slugSchema = z
 	.string()
 	.min(1, "Slug is required")
 	.max(120, "Slug must be 120 characters or fewer")
-	.regex(slugRegex, "Use lowercase letters, numbers, and hyphens only");
+	.regex(slugRegex, "Use letters, numbers, and hyphens only");
 
 const _titleSchema = z
 	.string()
@@ -20,7 +21,6 @@ function _validateSlug(slug: string) {
 export function normalizeSlug(slug: string) {
 	return slug
 		.trim()
-		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/[^a-zA-Z0-9]+/g, "-")
 		.replace(/^-+|-+$/g, "");
 }

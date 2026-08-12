@@ -6,8 +6,6 @@ import {
 	Alert,
 	Box,
 	Button,
-	MenuItem,
-	Select,
 	Stack,
 	TextField,
 	Typography,
@@ -16,6 +14,7 @@ import { type ChangeEvent, useCallback, useRef, useState } from "react";
 import { getMediaUrl, uploadMediaFile } from "@/cms/page-editor/lib/api/media";
 import { formatFileSize } from "@/cms/page-editor/lib/utils/file-upload";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
+import { SimpleSelect } from "@/components/admin/ui";
 import type { BlockComponentProps } from "../types";
 
 export function ImageBlock({
@@ -193,16 +192,18 @@ export function ImageBlock({
 									onAttributesChange({ heightPx: v });
 								}}
 							/>
-							<Select
+							<SimpleSelect
 								size="small"
 								value={align}
-								onChange={(e) => onAttributesChange({ align: e.target.value })}
-								sx={{ width: 140 }}
-							>
-								<MenuItem value="left">Left</MenuItem>
-								<MenuItem value="center">Center</MenuItem>
-								<MenuItem value="right">Right</MenuItem>
-							</Select>
+								onChange={(value) => onAttributesChange({ align: value })}
+								options={[
+									{ value: "left", label: "Left" },
+									{ value: "center", label: "Center" },
+									{ value: "right", label: "Right" },
+								]}
+								minWidth={140}
+								aria-label="Align"
+							/>
 						</Stack>
 					</Box>
 

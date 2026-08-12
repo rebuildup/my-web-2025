@@ -6,6 +6,7 @@ import { generateBaseMetadata } from "@/lib/seo/metadata";
 
 import type { Metadata } from "next";
 import Image from "next/image";
+import { getContentItemCanonicalSlug } from "@/cms/lib/markdown-slug";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
@@ -580,9 +581,13 @@ export async function generateStaticParams() {
 	try {
 		const items = await portfolioDataManager.getAllItems();
 		const params = items.map((item) => ({
-			slug:
-				((item as unknown as Record<string, unknown>).slug as string) ||
-				item.id,
+			slug: getContentItemCanonicalSlug({
+				id: item.id,
+				slug: (item as unknown as Record<string, unknown>).slug as
+					| string
+					| null
+					| undefined,
+			}),
 		}));
 		if (params.length === 0) {
 			return [{ slug: "placeholder" }];

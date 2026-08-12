@@ -13,13 +13,9 @@ import {
 	Dialog,
 	DialogContent,
 	DialogTitle,
-	FormControl,
 	IconButton,
 	InputAdornment,
-	InputLabel,
-	MenuItem,
 	Paper,
-	Select,
 	Snackbar,
 	Stack,
 	TextField,
@@ -39,7 +35,11 @@ import type { MediaItem } from "@/cms/types/media";
 import { MediaUploadForm } from "@/components/admin/cms";
 import { PageHeader } from "@/components/admin/layout";
 import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
-import { ConfirmDialog } from "@/components/admin/ui";
+import {
+	ConfirmDialog,
+	SimpleSelect,
+	type SimpleSelectOption,
+} from "@/components/admin/ui";
 import { useCmsResource } from "@/hooks/useCmsResource";
 
 interface MediaWithPreview extends MediaItem {
@@ -125,28 +125,31 @@ function MediaFilters({
 	onSearch,
 	onFilterTag,
 }: MediaFiltersProps) {
+	const contentOptions: SimpleSelectOption[] = (contents ?? []).map((content) => ({
+		value: content.id,
+		label: `${content.title} (${content.id})`,
+	}));
+	const tagOptions: SimpleSelectOption[] = [
+		{ value: "all", label: "すべて" },
+		...uniqueTags.map((tag) => ({ value: tag, label: tag })),
+	];
+
 	return (
 		<Stack
 			direction={{ xs: "column", md: "row" }}
 			spacing={2}
 			alignItems={{ xs: "stretch", md: "center" }}
 		>
-			<FormControl fullWidth>
-				<InputLabel id="media-content-select-label">コンテンツ</InputLabel>
-				<Select
-					labelId="media-content-select-label"
-					value={selectedContentId}
+			<Box sx={{ flex: 1, minWidth: 0 }}>
+				<SimpleSelect
 					label="コンテンツ"
-					onChange={(event) => onSelectContent(event.target.value)}
-					disabled={contentsLoading || (contents?.length ?? 0) === 0}
-				>
-					{contents?.map((content) => (
-						<MenuItem key={content.id} value={content.id}>
-							{content.title} ({content.id})
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
+					value={selectedContentId}
+					options={contentOptions}
+					onChange={onSelectContent}
+					disabled={contentsLoading || contentOptions.length === 0}
+					fullWidth
+				/>
+			</Box>
 			<TextField
 				placeholder="ファイル名・タグ・説明で検索"
 				value={searchQuery}
@@ -160,22 +163,16 @@ function MediaFilters({
 				}}
 				sx={{ flex: 1 }}
 			/>
-			<FormControl size="small" sx={{ minWidth: 160 }}>
-				<InputLabel id="media-tag-filter-label">タグ</InputLabel>
-				<Select
-					labelId="media-tag-filter-label"
-					value={tagFilter}
+			<Box sx={{ minWidth: 160 }}>
+				<SimpleSelect
 					label="タグ"
-					onChange={(event) => onFilterTag(event.target.value)}
-				>
-					<MenuItem value="all">すべて</MenuItem>
-					{uniqueTags.map((tag) => (
-						<MenuItem key={tag} value={tag}>
-							{tag}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
+					value={tagFilter}
+					options={tagOptions}
+					onChange={onFilterTag}
+					size="small"
+					fullWidth
+				/>
+			</Box>
 		</Stack>
 	);
 }

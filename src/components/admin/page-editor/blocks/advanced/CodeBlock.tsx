@@ -4,9 +4,7 @@ import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 import {
 	Box,
 	IconButton,
-	MenuItem,
 	Paper,
-	Select,
 	ToggleButton,
 	ToggleButtonGroup,
 } from "@mui/material";
@@ -16,6 +14,7 @@ import "prismjs/components/prism-markup";
 import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
+import { SimpleSelect, type SimpleSelectOption } from "@/components/admin/ui";
 import type { BlockComponentProps } from "../types";
 
 type ViewMode = "edit" | "preview" | "split";
@@ -59,6 +58,35 @@ export function CodeBlock({
 		const preferred = input ? (aliasMap[input] ?? input) : "plaintext";
 		return preferred || "plaintext";
 	}, [language]);
+
+	const languageOptions = useMemo<SimpleSelectOption[]>(
+		() => [
+			{ value: "", label: "auto (plain)" },
+			{ value: "javascript", label: "JavaScript" },
+			{ value: "typescript", label: "TypeScript" },
+			{ value: "tsx", label: "TSX" },
+			{ value: "jsx", label: "JSX" },
+			{ value: "bash", label: "Bash" },
+			{ value: "python", label: "Python" },
+			{ value: "java", label: "Java" },
+			{ value: "cpp", label: "C++" },
+			{ value: "c", label: "C" },
+			{ value: "ruby", label: "Ruby" },
+			{ value: "php", label: "PHP" },
+			{ value: "go", label: "Go" },
+			{ value: "rust", label: "Rust" },
+			{ value: "kotlin", label: "Kotlin" },
+			{ value: "swift", label: "Swift" },
+			{ value: "sql", label: "SQL" },
+			{ value: "json", label: "JSON" },
+			{ value: "yaml", label: "YAML" },
+			{ value: "markdown", label: "Markdown" },
+			{ value: "markup", label: "HTML/XML" },
+			{ value: "css", label: "CSS" },
+			{ value: "scss", label: "SCSS" },
+		],
+		[],
+	);
 
 	const [viewMode, setViewMode] = useState<ViewMode>(() => {
 		const saved = (block.attributes.viewMode as string | undefined) ?? "split";
@@ -152,49 +180,30 @@ export function CodeBlock({
 					}}
 					className="codeblock-controls"
 				>
-					<Select
-						size="small"
-						value={language || ""}
-						onChange={(event) =>
-							onAttributesChange({ language: String(event.target.value) })
-						}
-						displayEmpty
+					<Box
 						sx={{
 							minWidth: 140,
-							bgcolor: "rgba(0,0,0,0.4)",
 							borderRadius: 1,
-							color: "#fff",
-							"& .MuiSelect-icon": { color: "#fff" },
 							boxShadow: 1,
 							zIndex: 3,
+							"& select": {
+								bgcolor: "rgba(0,0,0,0.4)",
+								color: "#fff",
+								borderColor: "rgba(255,255,255,0.3)",
+								backgroundImage:
+									"url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%23ffffff' d='M6 8.5 1.5 4h9z'/></svg>\")",
+							},
 						}}
 					>
-						<MenuItem value="">
-							<em>auto (plain)</em>
-						</MenuItem>
-						<MenuItem value="javascript">JavaScript</MenuItem>
-						<MenuItem value="typescript">TypeScript</MenuItem>
-						<MenuItem value="tsx">TSX</MenuItem>
-						<MenuItem value="jsx">JSX</MenuItem>
-						<MenuItem value="bash">Bash</MenuItem>
-						<MenuItem value="python">Python</MenuItem>
-						<MenuItem value="java">Java</MenuItem>
-						<MenuItem value="cpp">C++</MenuItem>
-						<MenuItem value="c">C</MenuItem>
-						<MenuItem value="ruby">Ruby</MenuItem>
-						<MenuItem value="php">PHP</MenuItem>
-						<MenuItem value="go">Go</MenuItem>
-						<MenuItem value="rust">Rust</MenuItem>
-						<MenuItem value="kotlin">Kotlin</MenuItem>
-						<MenuItem value="swift">Swift</MenuItem>
-						<MenuItem value="sql">SQL</MenuItem>
-						<MenuItem value="json">JSON</MenuItem>
-						<MenuItem value="yaml">YAML</MenuItem>
-						<MenuItem value="markdown">Markdown</MenuItem>
-						<MenuItem value="markup">HTML/XML</MenuItem>
-						<MenuItem value="css">CSS</MenuItem>
-						<MenuItem value="scss">SCSS</MenuItem>
-					</Select>
+						<SimpleSelect
+							size="small"
+							value={language || ""}
+							options={languageOptions}
+							onChange={(value) => onAttributesChange({ language: value })}
+							minWidth={140}
+							aria-label="Language"
+						/>
+					</Box>
 					<ToggleButtonGroup
 						size="small"
 						exclusive

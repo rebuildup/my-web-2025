@@ -20,8 +20,6 @@ interface ContentFormSectionsProps extends ContentFormSectionProps {
 	tagOptions: string[];
 	addTag: () => void;
 	removeTag: (tag: string) => void;
-	generatedOgImageUrl: string;
-	applyGeneratedOgImageUrl: () => void;
 	imageInputRef: RefObject<HTMLInputElement | null>;
 	gifInputRef: RefObject<HTMLInputElement | null>;
 	webmInputRef: RefObject<HTMLInputElement | null>;
@@ -39,8 +37,6 @@ export function ContentFormSections({
 	tagOptions,
 	addTag,
 	removeTag,
-	generatedOgImageUrl,
-	applyGeneratedOgImageUrl,
 	imageInputRef,
 	gifInputRef,
 	webmInputRef,
@@ -80,12 +76,7 @@ export function ContentFormSections({
 			);
 		case 3:
 			return (
-				<ContentFormSearchSeo
-					formData={formData}
-					setFormData={setFormData}
-					generatedOgImageUrl={generatedOgImageUrl}
-					applyGeneratedOgImageUrl={applyGeneratedOgImageUrl}
-				/>
+				<ContentFormSearchSeo formData={formData} setFormData={setFormData} />
 			);
 		case 4:
 			return (

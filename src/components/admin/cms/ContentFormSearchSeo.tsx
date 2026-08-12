@@ -1,21 +1,59 @@
-import Image from "next/image";
 import { contentFormStyles as s } from "./ContentForm.styles";
 import type { ContentFormSectionProps } from "./ContentForm.types";
+import { resolveOgImageUrl } from "./ContentForm.utils";
 import { ContentFormInputField } from "./ContentFormInputField";
-
-interface ContentFormSearchSeoProps extends ContentFormSectionProps {
-	generatedOgImageUrl: string;
-	applyGeneratedOgImageUrl: () => void;
-}
 
 export function ContentFormSearchSeo({
 	formData,
 	setFormData,
-	generatedOgImageUrl,
-	applyGeneratedOgImageUrl,
-}: ContentFormSearchSeoProps) {
+}: ContentFormSectionProps) {
+	const ogImageUrl = resolveOgImageUrl(formData);
 	return (
 		<div style={s.col2}>
+			<div>
+				<div style={s.sectionTitle}>OG 画像プレビュー</div>
+				<div style={s.label}>
+					Rust API が配信する OG 画像 (1200x630 推奨) — サムネイル / YouTube URL
+					から自動解決
+				</div>
+				{ogImageUrl ? (
+					<>
+						<div
+							style={{
+								marginTop: 6,
+								position: "relative",
+								width: "100%",
+								maxWidth: 480,
+								aspectRatio: "1200 / 630",
+								background: "#f3f4f6",
+								border: "1px solid #e5e7eb",
+								overflow: "hidden",
+							}}
+						>
+							<img
+								src={ogImageUrl}
+								alt="OG image preview"
+								style={{
+									position: "absolute",
+									inset: 0,
+									width: "100%",
+									height: "100%",
+									objectFit: "cover",
+								}}
+							/>
+						</div>
+						<div style={{ ...s.helper, wordBreak: "break-all" }}>
+							{ogImageUrl}
+						</div>
+					</>
+				) : (
+					<div style={{ ...s.helper, marginTop: 6 }}>
+						サムネイル画像 / GIF / WEBM / YouTube URL のいずれかを設定すると,
+						Rust API が OG 画像として配信します.
+					</div>
+				)}
+			</div>
+			<div style={s.divider} />
 			<ContentFormInputField
 				label="全文検索テキスト"
 				value={formData.searchable?.fullText || ""}
@@ -104,36 +142,6 @@ export function ContentFormSearchSeo({
 				multiline
 				minRows={2}
 			/>
-			<ContentFormInputField
-				label="OG 画像URL"
-				value={formData.seo?.openGraph?.image || ""}
-				onChange={(value) =>
-					setFormData((prev) => ({
-						...prev,
-						seo: {
-							...(prev.seo || {}),
-							openGraph: { ...(prev.seo?.openGraph || {}), image: value },
-						},
-					}))
-				}
-			/>
-			<div>
-				<button type="button" style={s.btn} onClick={applyGeneratedOgImageUrl}>
-					生成OG画像を適用
-				</button>
-			</div>
-			{formData.seo?.openGraph?.image && (
-				<div style={{ marginTop: 8 }}>
-					<Image
-						src={formData.seo.openGraph.image}
-						width={400}
-						height={200}
-						unoptimized
-						alt="OG"
-						style={{ maxWidth: "100%", maxHeight: 200 }}
-					/>
-				</div>
-			)}
 			<div style={s.divider} />
 			<ContentFormInputField
 				label="Canonical"
@@ -163,31 +171,23 @@ export function ContentFormSearchSeo({
 			/>
 			<ContentFormInputField
 				label="Keywords"
-				value={((formData.seo as any)?.keywords || []).join(", ")}
+				value={(formData.seo?.meta?.keywords || []).join(", ")}
 				onChange={(value) =>
 					setFormData((prev) => ({
 						...prev,
 						seo: {
 							...(prev.seo || {}),
-							keywords: value
-								.split(",")
-								.map((keyword) => keyword.trim())
-								.filter(Boolean),
-						} as any,
+							meta: {
+								...(prev.seo?.meta || {}),
+								keywords: value
+									.split(",")
+									.map((keyword) => keyword.trim())
+									.filter(Boolean),
+							},
+						},
 					}))
 				}
 			/>
-			<div style={{ marginTop: 8 }}>
-				<div style={s.label}>OG画像プレビュー</div>
-				<Image
-					src={generatedOgImageUrl}
-					width={400}
-					height={200}
-					unoptimized
-					alt="generated OG"
-					style={{ maxWidth: "100%", maxHeight: 200 }}
-				/>
-			</div>
 		</div>
 	);
 }

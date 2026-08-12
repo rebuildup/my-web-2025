@@ -1,19 +1,9 @@
 "use client";
 
-import {
-	Box,
-	Button,
-	Divider,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-	Tab,
-	Tabs,
-	TextField,
-} from "@mui/material";
+import { Box, Button, Divider, Tab, Tabs, TextField } from "@mui/material";
 import { useState } from "react";
 import type { MarkdownPage } from "@/cms/types/markdown";
+import { SimpleSelect } from "@/components/admin/ui";
 import Grid2 from "./Grid2";
 
 interface MarkdownFormProps {
@@ -248,46 +238,41 @@ export function MarkdownForm({
 
 						<Grid2 container spacing={2}>
 							<Grid2 xs={12} sm={6}>
-								<FormControl fullWidth>
-									<InputLabel>言語</InputLabel>
-									<Select
-										value={formData.lang}
-										label="言語"
-										onChange={(e) =>
-											setFormData({ ...formData, lang: e.target.value })
-										}
-										disabled={isLoading}
-									>
-										<MenuItem value="ja">日本語 (ja)</MenuItem>
-										<MenuItem value="en">English (en)</MenuItem>
-										<MenuItem value="zh">中文 (zh)</MenuItem>
-										<MenuItem value="ko">한국어 (ko)</MenuItem>
-									</Select>
-								</FormControl>
+								<SimpleSelect
+									label="言語"
+									fullWidth
+									value={formData.lang}
+									onChange={(value) =>
+										setFormData({ ...formData, lang: value })
+									}
+									disabled={isLoading}
+									options={[
+										{ value: "ja", label: "日本語 (ja)" },
+										{ value: "en", label: "English (en)" },
+										{ value: "zh", label: "中文 (zh)" },
+										{ value: "ko", label: "한국어 (ko)" },
+									]}
+								/>
 							</Grid2>
 
 							<Grid2 xs={12} sm={6}>
-								<FormControl fullWidth>
-									<InputLabel>ステータス</InputLabel>
-									<Select
-										value={formData.status}
-										label="ステータス"
-										onChange={(e) =>
-											setFormData({
-												...formData,
-												status: e.target.value as
-													| "draft"
-													| "published"
-													| "archived",
-											})
-										}
-										disabled={isLoading}
-									>
-										<MenuItem value="draft">下書き</MenuItem>
-										<MenuItem value="published">公開</MenuItem>
-										<MenuItem value="archived">アーカイブ</MenuItem>
-									</Select>
-								</FormControl>
+								<SimpleSelect
+									label="ステータス"
+									fullWidth
+									value={formData.status}
+									onChange={(value) =>
+										setFormData({
+											...formData,
+											status: value as "draft" | "published" | "archived",
+										})
+									}
+									disabled={isLoading}
+									options={[
+										{ value: "draft", label: "下書き" },
+										{ value: "published", label: "公開" },
+										{ value: "archived", label: "アーカイブ" },
+									]}
+								/>
 							</Grid2>
 						</Grid2>
 

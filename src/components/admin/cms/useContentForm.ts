@@ -1,11 +1,10 @@
-import { type FormEvent, useCallback, useMemo, useState } from "react";
+import { type FormEvent, useMemo, useState } from "react";
 import type { Content } from "@/cms/types/content";
 import type {
 	ContentFormFeedback,
 	ContentFormProps,
 } from "./ContentForm.types";
 import {
-	buildGeneratedOgImageUrl,
 	createContentFormData,
 	isContentFormDirty,
 	parseJsonSafely,
@@ -31,35 +30,9 @@ export function useContentForm({
 	const [formData, setFormData] = useState<Partial<Content>>(() =>
 		createContentFormData(initialData),
 	);
-	const generatedOgImageUrl = useMemo(
-		() => buildGeneratedOgImageUrl(formData),
-		[
-			formData.id,
-			formData.seo?.openGraph?.description,
-			formData.seo?.openGraph?.title,
-			formData.summary,
-			formData.tags,
-			formData.thumbnails?.image?.src,
-			formData.thumbnails?.webm?.poster,
-			formData.title,
-		],
-	);
-	const applyGeneratedOgImageUrl = useCallback(() => {
-		setFormData((prev) => ({
-			...prev,
-			seo: {
-				...(prev.seo || {}),
-				openGraph: {
-					...(prev.seo?.openGraph || {}),
-					image: generatedOgImageUrl,
-				},
-			},
-		}));
-	}, [generatedOgImageUrl]);
-
+	const [feedback, setFeedback] = useState<ContentFormFeedback>(null);
 	const [newTag, setNewTag] = useState("");
 	const [_jsonErrors, setJsonErrors] = useState<Record<string, string>>({});
-	const [feedback, setFeedback] = useState<ContentFormFeedback>(null);
 	const [tagOptions, setTagOptions] = useState<string[]>([]);
 	const [initialDataState, setInitialDataState] =
 		useState<Partial<Content>>(initialData);
@@ -142,10 +115,8 @@ export function useContentForm({
 		_jsonErrors,
 		_handleJsonChange,
 		addTag,
-		applyGeneratedOgImageUrl,
 		feedback,
 		formData,
-		generatedOgImageUrl,
 		handleSubmit,
 		isDirty,
 		media,

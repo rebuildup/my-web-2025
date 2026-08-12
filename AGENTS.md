@@ -5,6 +5,7 @@
 ## 1. プロジェクト境界
 
 - 公開アプリ: `src/app/`. ルートは `/`, `/about`, `/portfolio`, `/workshop`, `/tools`, `/search`, `/privacy-policy`, `/contact`, `/404`. 管理画面は `/admin/*`(本番では Nginx が `/api/` を Rust CMS API 127.0.0.1:3001 へプロキシ).
+- 開発サーバー: `bun run dev` → port 3010.
 - 分散 SQLite CMS: `src/cms/`(server / lib / types / migrations) と `data/contents/content-{id}.db`(1 アイテム 1 DB, FTS5 仮想テーブル). バイナリ DB と lockfile は hook で編集拒否.
 - Rust CMS API: `apps/cms-api/`. ビルド成果物 `apps/cms-api/target/release/cms-api`. 本番では systemd/pm2 ではなく pm2 で常駐し、nginx が `/api/` をフォワード.
 - 静的エクスポート成果物: `out/`. これがデプロイ単位. ランタイム DB / キューは持たない.
@@ -57,7 +58,7 @@ UI 変更を含む場合は Playwright (または mcp__playwright__) で実描�
 
 ## 6. Skill / Agent 発見
 
-canonical な Skill と review agent は `.claude/skills/` と `.claude/agents/` に置く. 自動 activation は description のトリガーキーワードに従う. Skill の主要一覧:
+canonical な Skill は `.agents/skills/` に置き、`.claude/skills/` と同期する. review agent は `.claude/agents/` に置く. 自動 activation は description のトリガーキーワードに従う. Skill の主要一覧:
 
 - `add-content` … `data/contents/content-{id}.db` への追加 / 編集. `/api/admin/content` 経由が唯一の正.
 - `react-doctor` … React コード変更後の health check と `/doctor` フルトリアージ.

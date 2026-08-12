@@ -99,6 +99,7 @@ export function createContentFormData(
 	initialData: Partial<Content>,
 ): Partial<Content> {
 	const nowIso = new Date().toISOString();
+	const slug = initialData.id || "";
 	const base: Partial<Content> = {
 		id: initialData.id || "",
 		title: initialData.title || "",
@@ -116,7 +117,7 @@ export function createContentFormData(
 		links: initialData.links || undefined,
 		relations: initialData.relations || undefined,
 		searchable: initialData.searchable || undefined,
-		seo: initialData.seo || undefined,
+		seo: deriveSeoDefaults(initialData, slug),
 		i18n: initialData.i18n || undefined,
 		permissions: initialData.permissions || undefined,
 		ext: initialData.ext || undefined,
@@ -129,6 +130,48 @@ export function createContentFormData(
 		deriveYouTubePreview(base);
 	} catch {}
 	return base;
+}
+
+const PORTFOLIO_BASE_URL = "https://yusuke-kim.com";
+const DEFAULT_ROBOTS = "index,follow";
+
+function deriveSeoDefaults(
+	initialData: Partial<Content>,
+	slug: string,
+): Partial<Content>["seo"] {
+	const existing = (initialData.seo ?? {}) as NonNullable<Content["seo"]>;
+	const meta = (existing.meta ?? {}) as NonNullable<
+		NonNullable<Content["seo"]>["meta"]
+	>;
+	const openGraph = (existing.openGraph ?? {}) as NonNullable<
+		NonNullable<Content["seo"]>["openGraph"]
+	>;
+	const existingKeywords = meta.keywords ?? [];
+	const title = initialData.title?.trim() ?? "";
+	const summary = initialData.summary?.trim() ?? "";
+	const tags = initialData.tags ?? [];
+	const canonicalDefault = slug
+		? `${PORTFOLIO_BASE_URL}/portfolio/${slug}`
+		: "";
+	return {
+		...existing,
+		meta: {
+			...meta,
+			title: meta.title?.trim() || title,
+			description: meta.description?.trim() || summary,
+			robots: meta.robots?.trim() || DEFAULT_ROBOTS,
+			canonical: meta.canonical?.trim() || canonicalDefault,
+			keywords:
+				existingKeywords && existingKeywords.length > 0
+					? existingKeywords
+					: tags,
+		},
+		openGraph: {
+			...openGraph,
+			title: openGraph.title?.trim() || title,
+			description: openGraph.description?.trim() || summary,
+		},
+	};
 }
 
 export function findYouTubeUrl(formData: Partial<Content>): string {
@@ -156,19 +199,15 @@ export function findYouTubeUrl(formData: Partial<Content>): string {
 	return "";
 }
 
-export function buildGeneratedOgImageUrl(formData: Partial<Content>): string {
-	const params = new URLSearchParams({
-		title: formData.seo?.openGraph?.title || formData.title || "Untitled",
-		category: formData.tags?.[0] || "Portfolio",
-		tags: (formData.tags || []).join(","),
-		thumbnail:
-			formData.thumbnails?.image?.src ||
-			formData.thumbnails?.webm?.poster ||
-			"",
-		slug: formData.id || "",
-		summary: formData.seo?.openGraph?.description || formData.summary || "",
-	});
-	return `/api/og?${params.toString()}`;
+export function resolveOgImageUrl(formData: Partial<Content>): string | null {
+	const id = (formData.id ?? "").trim();
+	if (!id) return null;
+	const base =
+		(typeof process !== "undefined" &&
+			(process.env.NEXT_PUBLIC_CMS_API_BASE_URL ||
+				process.env.CMS_API_BASE_URL)) ||
+		"http://127.0.0.1:3001";
+	return `${base.replace(/\/+$/, "")}/api/cms/og/${encodeURIComponent(id)}`;
 }
 
 function normalize(value: any): any {

@@ -16,10 +16,8 @@ export function ContentForm({
 }: ContentFormProps) {
 	const {
 		addTag,
-		applyGeneratedOgImageUrl,
 		feedback,
 		formData,
-		generatedOgImageUrl,
 		handleSubmit,
 		isDirty,
 		media,
@@ -60,8 +58,6 @@ export function ContentForm({
 				tagOptions={tagOptions}
 				addTag={addTag}
 				removeTag={removeTag}
-				generatedOgImageUrl={generatedOgImageUrl}
-				applyGeneratedOgImageUrl={applyGeneratedOgImageUrl}
 				imageInputRef={media.imageInputRef}
 				gifInputRef={media.gifInputRef}
 				webmInputRef={media.webmInputRef}

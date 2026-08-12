@@ -1,10 +1,19 @@
 export const dynamic = "force-static";
-import type { MarkdownFile, MarkdownPage } from "@/cms/types/markdown";
-import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
-import { cmsApiFetch } from "@/lib/cms-api/server-client";
-import { requireAdminRequest } from "@/lib/server/admin-auth";
-
 export const runtime = "nodejs";
+import fs from "node:fs";
+import path from "node:path";
+import { type NextRequest } from "next/server";
+import {
+	getAllMarkdownPagesFromLocal,
+	getContentDb,
+	getDataDirectory,
+} from "@/cms/lib/content-db-manager";
+import {
+	getMarkdownPage,
+	saveMarkdownPage,
+} from "@/cms/lib/markdown-mapper";
+import type { MarkdownFile, MarkdownPage } from "@/cms/types/markdown";
+import { requireAdminRequest } from "@/lib/server/admin-auth";
 
 type MarkdownStatus = "draft" | "published" | "archived";
 const MARKDOWN_STATUS_SET = new Set<MarkdownStatus>([
@@ -60,38 +69,56 @@ function convertMarkdownFile(
 	};
 }
 
+function findMarkdownPage(
+	identifier: string,
+	contentId: string | undefined,
+): { db: ReturnType<typeof getContentDb>; page: MarkdownPage } | null {
+	const contentsDir = path.join(getDataDirectory(), "contents");
+	const candidateFiles = contentId
+		? [`content-${contentId.replace(/[^a-zA-Z0-9_-]/g, "_")}.db`]
+		: fs
+				.readdirSync(contentsDir)
+				.filter((file) => file.startsWith("content-") && file.endsWith(".db"));
+
+	for (const file of candidateFiles) {
+		const derivedId = file.slice("content-".length, -".db".length);
+		const dbPath = path.join(contentsDir, file);
+		if (!fs.existsSync(dbPath)) continue;
+		const db = getContentDb(derivedId);
+		try {
+			const page = getMarkdownPage(db, identifier);
+			if (page) {
+				return { db, page };
+			}
+		} finally {
+			db.close();
+		}
+	}
+
+	return null;
+}
+
 export async function OPTIONS() {
 	return new Response(null, {
 		status: 200,
 		headers: {
 			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+			"Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
 			"Access-Control-Allow-Headers": "Content-Type, Authorization",
 		},
 	});
 }
 
-export async function GET(req: Request) {
+export async function GET(_req: NextRequest) {
 	try {
-		const { searchParams } = new URL(req.url);
-		const id = searchParams.get("id")?.trim();
-		const slug = searchParams.get("slug")?.trim();
-		const contentId = searchParams.get("contentId")?.trim();
-
-		const rustParams = new URLSearchParams();
-		if (id) rustParams.set("id", id);
-		if (slug) rustParams.set("slug", slug);
-		if (contentId) rustParams.set("contentId", contentId);
-
-		const rustResponse = await cmsApiFetch<MarkdownPage | MarkdownPage[]>(
-			`/markdown${rustParams.size > 0 ? `?${rustParams.toString()}` : ""}`,
-		);
-
-		return Response.json(rustResponse, {
+		// NOTE: force-static + output:export drops query strings, so we cannot
+		// filter at the route level. Return all pages and let the client
+		// (fetchMarkdownPages) filter by contentId / slug. This matches the
+		// pattern used by /api/cms/contents.
+		const pages = getAllMarkdownPagesFromLocal();
+		return Response.json(pages, {
 			headers: {
 				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-				"Access-Control-Allow-Headers": "Content-Type, Authorization",
 			},
 		});
 	} catch (error) {
@@ -103,7 +130,7 @@ export async function GET(req: Request) {
 	}
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
 	const guard = requireAdminRequest(req);
 	if (!guard.ok) return guard.response;
 
@@ -137,30 +164,26 @@ export async function POST(req: Request) {
 			);
 		}
 
-		const response = await fetch(`${getCmsApiBaseUrl()}/markdown`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Accept: "application/json",
-			},
-			body: JSON.stringify(page),
-		});
-
-		if (!response.ok) {
-			const errorBody = await response.text();
-			return Response.json(
-				{ error: "Failed to create markdown page", details: errorBody },
-				{ status: response.status },
-			);
+		const db = getContentDb(page.contentId);
+		try {
+			saveMarkdownPage(db, page);
+		} finally {
+			db.close();
 		}
 
-		const createdPage = await response.json();
-		return Response.json({
-			ok: true,
-			id: createdPage.id,
-			slug: createdPage.slug,
-			page: createdPage,
-		});
+		// Re-read to get the canonical row (with timestamps applied)
+		const db2 = getContentDb(page.contentId);
+		try {
+			const stored = getMarkdownPage(db2, page.slug);
+			return Response.json({
+				ok: true,
+				id: stored?.id ?? page.id,
+				slug: stored?.slug ?? page.slug,
+				page: stored,
+			});
+		} finally {
+			db2.close();
+		}
 	} catch (error) {
 		console.error("POST /api/cms/markdown error:", error);
 		return Response.json(
@@ -170,7 +193,7 @@ export async function POST(req: Request) {
 	}
 }
 
-export async function PUT(req: Request) {
+export async function PUT(req: NextRequest) {
 	const guard = requireAdminRequest(req);
 	if (!guard.ok) return guard.response;
 
@@ -187,34 +210,70 @@ export async function PUT(req: Request) {
 			);
 		}
 
-		const response = await fetch(
-			`${getCmsApiBaseUrl()}/markdown/${encodeURIComponent(identifier)}`,
-			{
-				method: "PATCH",
-				headers: {
-					"Content-Type": "application/json",
-					Accept: "application/json",
-				},
-				body: JSON.stringify({
-					...data,
-					frontmatter:
-						data.frontmatter !== undefined
-							? normalizeFrontmatter(data.frontmatter)
-							: undefined,
-				}),
-			},
-		);
+		const contentIdHint =
+			typeof data.contentId === "string" && data.contentId.trim()
+				? data.contentId.trim()
+				: undefined;
 
-		if (!response.ok) {
-			const errorBody = await response.text();
+		const found = findMarkdownPage(identifier, contentIdHint);
+		if (!found) {
 			return Response.json(
-				{ error: "Failed to update markdown page", details: errorBody },
-				{ status: response.status },
+				{ error: "Markdown page not found" },
+				{ status: 404 },
 			);
 		}
 
-		const page = await response.json();
-		return Response.json({ ok: true, id: page.id, slug: page.slug, page });
+		const existing = found.page;
+		const merged: Partial<MarkdownPage> = {
+			id: existing.id,
+			contentId: existing.contentId ?? contentIdHint,
+			slug: typeof data.slug === "string" && data.slug.trim() ? data.slug.trim() : existing.slug,
+			frontmatter:
+				data.frontmatter !== undefined
+					? normalizeFrontmatter(data.frontmatter)
+					: existing.frontmatter,
+			body: typeof data.body === "string" ? data.body : existing.body,
+			path: typeof data.path === "string" ? data.path : existing.path,
+			lang: typeof data.lang === "string" ? data.lang : existing.lang,
+			status: normalizeStatus(data.status ?? existing.status),
+			visibility: data.visibility ?? existing.visibility,
+			version:
+				typeof data.version === "number"
+					? data.version
+					: (existing.version ?? 1),
+			publishedAt:
+				typeof data.publishedAt === "string"
+					? data.publishedAt
+					: existing.publishedAt,
+			createdAt: existing.createdAt,
+			updatedAt:
+				typeof data.updatedAt === "string" ? data.updatedAt : new Date().toISOString(),
+			htmlCache:
+				typeof data.htmlCache === "string" ? data.htmlCache : existing.htmlCache,
+		};
+
+		const targetContentId = merged.contentId ?? contentIdHint;
+		if (!targetContentId) {
+			return Response.json(
+				{ error: "contentId is required" },
+				{ status: 400 },
+			);
+		}
+
+		const db = getContentDb(targetContentId);
+		try {
+			saveMarkdownPage(db, merged);
+		} finally {
+			db.close();
+		}
+
+		const db2 = getContentDb(targetContentId);
+		try {
+			const stored = getMarkdownPage(db2, merged.slug ?? identifier);
+			return Response.json({ ok: true, id: stored?.id, slug: stored?.slug, page: stored });
+		} finally {
+			db2.close();
+		}
 	} catch (error) {
 		console.error("PUT /api/cms/markdown error:", error);
 		return Response.json(
@@ -224,45 +283,10 @@ export async function PUT(req: Request) {
 	}
 }
 
-export async function DELETE(req: Request) {
-	const guard = requireAdminRequest(req);
-	if (!guard.ok) return guard.response;
-
-	try {
-		const { searchParams } = new URL(req.url);
-		const id = searchParams.get("id")?.trim();
-		const slug = searchParams.get("slug")?.trim();
-		const targetId = id || slug;
-
-		if (!targetId) {
-			return Response.json(
-				{ error: "ID or slug is required" },
-				{ status: 400 },
-			);
-		}
-
-		const response = await fetch(
-			`${getCmsApiBaseUrl()}/markdown/${encodeURIComponent(targetId)}`,
-			{
-				method: "DELETE",
-				headers: { Accept: "application/json" },
-			},
-		);
-
-		if (!response.ok) {
-			const errorBody = await response.text();
-			return Response.json(
-				{ error: "Failed to delete markdown page", details: errorBody },
-				{ status: response.status },
-			);
-		}
-
-		return Response.json({ ok: true, id: targetId });
-	} catch (error) {
-		console.error("DELETE /api/cms/markdown error:", error);
-		return Response.json(
-			{ error: "Failed to delete markdown page" },
-			{ status: 500 },
-		);
-	}
+export async function DELETE(_req: NextRequest) {
+	// DELETE is path-based: see /api/cms/markdown/[id]/route.ts
+	return Response.json(
+		{ error: "Use DELETE /api/cms/markdown/[id] instead" },
+		{ status: 405 },
+	);
 }

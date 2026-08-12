@@ -7,8 +7,6 @@ import {
 	Box,
 	Button,
 	FormControlLabel,
-	MenuItem,
-	Select,
 	Stack,
 	Switch,
 	TextField,
@@ -17,6 +15,7 @@ import {
 import { type ChangeEvent, useCallback, useRef, useState } from "react";
 import { getMediaUrl, uploadMediaFile } from "@/cms/page-editor/lib/api/media";
 import { formatFileSize } from "@/cms/page-editor/lib/utils/file-upload";
+import { SimpleSelect } from "@/components/admin/ui";
 import type { BlockComponentProps } from "../types";
 
 export function VideoBlock({
@@ -185,16 +184,18 @@ export function VideoBlock({
 									onAttributesChange({ heightPx: v });
 								}}
 							/>
-							<Select
+							<SimpleSelect
 								size="small"
 								value={align}
-								onChange={(e) => onAttributesChange({ align: e.target.value })}
-								sx={{ width: 140 }}
-							>
-								<MenuItem value="left">Left</MenuItem>
-								<MenuItem value="center">Center</MenuItem>
-								<MenuItem value="right">Right</MenuItem>
-							</Select>
+								onChange={(value) => onAttributesChange({ align: value })}
+								options={[
+									{ value: "left", label: "Left" },
+									{ value: "center", label: "Center" },
+									{ value: "right", label: "Right" },
+								]}
+								minWidth={140}
+								aria-label="Align"
+							/>
 							<FormControlLabel
 								control={
 									<Switch

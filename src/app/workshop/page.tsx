@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { getMarkdownPageCanonicalHref } from "@/cms/lib/markdown-slug";
 import type { MarkdownPage } from "@/cms/types/markdown";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import {
@@ -171,27 +172,7 @@ async function fetchContentsBatch(
 }
 
 function getPageHref(page: MarkdownPage) {
-	const fm = page.frontmatter ?? {};
-	const possible: Array<string | undefined> = [
-		fm.permalink as string | undefined,
-		fm.url as string | undefined,
-		fm.slug as string | undefined,
-		page.slug,
-	];
-	const target = possible.find(
-		(value): value is string =>
-			typeof value === "string" && value.trim().length > 0,
-	);
-	if (!target) {
-		return "#";
-	}
-	if (/^https?:\/\//i.test(target)) {
-		return target;
-	}
-	if (target.startsWith("/")) {
-		return target;
-	}
-	return `/workshop/blog/${target}`;
+	return getMarkdownPageCanonicalHref(page);
 }
 
 function getAllTags(

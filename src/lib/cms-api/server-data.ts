@@ -5,6 +5,7 @@ import {
 	getAllMarkdownPagesFromLocal,
 	getFromIndex,
 } from "@/cms/lib/content-db-manager";
+import { getMarkdownPageCanonicalSlug } from "@/cms/lib/markdown-slug";
 import type { MarkdownPage } from "@/cms/types/markdown";
 import { resolveMediaUrl, shouldUseRustCmsApi } from "./config";
 import { cmsApiFetch } from "./server-client";
@@ -259,7 +260,13 @@ export async function fetchMarkdownPageBySlug(
 		const pages = getAllMarkdownPagesFromLocal(
 			options?.contentId ? { contentId: options.contentId } : undefined,
 		);
-		return pages.find((p) => p.slug === slug) ?? null;
+		return (
+			pages.find((p) => {
+				if (p.slug === slug) return true;
+				if (p.contentId === slug) return true;
+				return getMarkdownPageCanonicalSlug(p) === slug;
+			}) ?? null
+		);
 	};
 
 	if (!shouldUseRustCmsApi()) {
