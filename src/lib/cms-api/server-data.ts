@@ -79,6 +79,41 @@ function parseTags(tags?: string | null): string[] {
 		: [];
 }
 
+// Rewrite every URL-shaped field in a `thumbnails` object so any
+// 127.0.0.1/localhost URL stored from a local CMS upload gets replaced with
+// the build-time public host before the row reaches the static export.
+// Covers `image.src`, `gif.src`, and `webm.{src,poster}` — newer CMS uploads
+// via `useContentFormMedia.ts` write to all three.
+type RawThumbnails = {
+	image?: { src?: string };
+	gif?: { src?: string };
+	webm?: { src?: string; poster?: string };
+};
+
+function rewriteThumbnails(
+	thumbnails: RawThumbnails | undefined,
+): RawThumbnails | undefined {
+	if (!thumbnails) return undefined;
+	const rewriteSrc = (value: string | undefined) =>
+		value ? (resolveMediaUrl(value) ?? value) : value;
+	return {
+		...thumbnails,
+		image: thumbnails.image
+			? { src: rewriteSrc(thumbnails.image.src) as string }
+			: thumbnails.image,
+		gif: thumbnails.gif
+			? { src: rewriteSrc(thumbnails.gif.src) as string }
+			: thumbnails.gif,
+		webm: thumbnails.webm
+			? {
+					...thumbnails.webm,
+					src: rewriteSrc(thumbnails.webm.src) as string,
+					poster: rewriteSrc(thumbnails.webm.poster) as string,
+				}
+			: thumbnails.webm,
+	};
+}
+
 function mapRustEntryListItem(item: RustEntryListItem): CmsContentIndexEntry {
 	return {
 		id: item.id,
@@ -102,9 +137,10 @@ export async function fetchCmsContentIndex(): Promise<CmsContentIndexEntry[]> {
 	if (!shouldUseRustCmsApi()) {
 		const rows = getAllFromIndex();
 		return rows.map((row) => {
-			const storedThumb = row.thumbnails?.image
-				? (row.thumbnails.image as { src?: string })?.src
-				: undefined;
+			const rewritten = rewriteThumbnails(
+				row.thumbnails as RawThumbnails | undefined,
+			);
+			const storedThumb = rewritten?.image?.src;
 			return {
 				id: row.id,
 				title: row.title,
@@ -116,15 +152,8 @@ export async function fetchCmsContentIndex(): Promise<CmsContentIndexEntry[]> {
 				updatedAt: row.updatedAt,
 				publishedAt: row.publishedAt ?? null,
 				tags: row.tags ?? [],
-				thumbnail: resolveMediaUrl(storedThumb),
-				thumbnails: row.thumbnails
-					? {
-							...row.thumbnails,
-							image: storedThumb
-								? { src: resolveMediaUrl(storedThumb) ?? storedThumb }
-								: row.thumbnails.image,
-						}
-					: undefined,
+				thumbnail: storedThumb,
+				thumbnails: rewritten,
 			};
 		});
 	}
@@ -147,9 +176,10 @@ export async function fetchCmsContentById(
 	if (!shouldUseRustCmsApi()) {
 		const row = getFromIndex(id);
 		if (!row) return null;
-		const storedThumb = row.thumbnails?.image
-			? (row.thumbnails.image as { src?: string })?.src
-			: undefined;
+		const rewritten = rewriteThumbnails(
+			row.thumbnails as RawThumbnails | undefined,
+		);
+		const storedThumb = rewritten?.image?.src;
 		return {
 			id: row.id,
 			title: row.title,
@@ -161,15 +191,8 @@ export async function fetchCmsContentById(
 			updatedAt: row.updatedAt,
 			publishedAt: row.publishedAt ?? null,
 			tags: row.tags ?? [],
-			thumbnail: resolveMediaUrl(storedThumb),
-			thumbnails: row.thumbnails
-				? {
-						...row.thumbnails,
-						image: storedThumb
-							? { src: resolveMediaUrl(storedThumb) ?? storedThumb }
-							: row.thumbnails.image,
-					}
-				: undefined,
+			thumbnail: storedThumb,
+			thumbnails: rewritten,
 		};
 	}
 
@@ -200,14 +223,7 @@ export async function fetchCmsContentById(
 			},
 			tags: indexEntry?.tags ?? [],
 			thumbnail: resolveMediaUrl(indexEntry?.thumbnail),
-			thumbnails: indexEntry?.thumbnail
-				? {
-						image: {
-							src:
-								resolveMediaUrl(indexEntry.thumbnail) ?? indexEntry.thumbnail,
-						},
-					}
-				: undefined,
+			thumbnails: indexEntry?.thumbnails ?? undefined,
 		};
 	} catch (error) {
 		console.warn(

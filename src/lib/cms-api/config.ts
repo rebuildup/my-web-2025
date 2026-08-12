@@ -12,8 +12,13 @@ export function shouldUseRustCmsApi(): boolean {
 	return process.env.CMS_USE_RUST_API === "1";
 }
 
+// Accept both the canonical `/api/cms/media…` form and the legacy `/media?…`
+// form (latter is what newer CMS uploads store via
+// `useContentFormMedia.ts`'s `${getCmsApiBaseUrl()}/media?…` builder, which
+// doesn't prepend `/api/cms/`). Both should rewrite to the build-time host
+// so dev URLs don't leak into the static export.
 const DEV_HOST_PATTERN =
-	/^https?:\/\/(?:127\.0\.0\.1|localhost|0\.0\.0\.0)(?::\d+)?(\/api\/cms\/media[^\s"'<>]*)$/;
+	/^https?:\/\/(?:127\.0\.0\.1|localhost|0\.0\.0\.0)(?::\d+)?((?:\/api\/cms)?\/media[^\s"'<>]*)$/;
 
 export function resolveMediaUrl(
 	storedUrl: string | null | undefined,

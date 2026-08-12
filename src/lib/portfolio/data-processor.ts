@@ -3,7 +3,7 @@
  * Task 1.3: 拡張データプロセッサーの実装
  */
 
-import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
+import { getCmsApiBaseUrl, resolveMediaUrl } from "@/lib/cms-api/config";
 import type { ContentItem, EnhancedContentItem } from "@/types";
 import {
 	isValidPortfolioCategory,
@@ -711,9 +711,12 @@ export class PortfolioDataProcessor {
 			return "/images/portfolio/placeholder-image.svg";
 		}
 
-		// Handle absolute URLs (YouTube thumbnails, etc.)
+		// Handle absolute URLs (YouTube thumbnails, etc.). Apply resolveMediaUrl
+		// so any stored 127.0.0.1/localhost URL from a local CMS upload gets
+		// rewritten to the build-time public host before being baked into the
+		// static export.
 		if (thumbnail.startsWith("http://") || thumbnail.startsWith("https://")) {
-			return thumbnail;
+			return resolveMediaUrl(thumbnail) ?? thumbnail;
 		}
 
 		// Handle already-processed paths (start with /)

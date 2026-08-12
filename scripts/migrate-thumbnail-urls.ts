@@ -32,9 +32,14 @@ const BASE_URL =
 	process.env.NEXT_PUBLIC_CMS_API_BASE_URL || "http://127.0.0.1:3001";
 const REPLACEMENT = `${BASE_URL}/api/cms/media`;
 
-// Match either `/api/cms/media` (absolute or relative) or a bare `/media?` form
-// produced by the previous intermediate migration.
-const URL_PATTERN = /(?:\/api\/cms\/media|\/media)\b\/?/g;
+// Match the entire `http(s)://dev-host[:port]` portion plus either
+// `/api/cms/media` or bare `/media?`. Both the dev host prefix and the
+// old path must be removed so the canonical `${REPLACEMENT}?…` URL is
+// produced in one pass. Matching only `/media` and replacing with
+// `${REPLACEMENT}` would leave the dev-host prefix glued to the start
+// (e.g. `http://127.0.0.1:3001https://yusuke-kim.com/api/cms/media?…`).
+const URL_PATTERN =
+	/https?:\/\/(?:127\.0\.0\.1|localhost|0\.0\.0\.0)(?::\d+)?(?:\/api\/cms\/media|\/media)/g;
 
 let migratedRowCount = 0;
 let scannedRowCount = 0;
