@@ -1,20 +1,29 @@
 "use client";
 
-import CloudUploadRoundedIcon from "@mui/icons-material/CloudUploadRounded";
-import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
-import {
-	Alert,
-	Box,
-	Button,
-	Link,
-	Stack,
-	TextField,
-	Typography,
-} from "@mui/material";
+import { FileText, UploadCloud } from "lucide-react";
 import { type ChangeEvent, useCallback, useRef, useState } from "react";
 import { getMediaUrl, uploadMediaFile } from "@/cms/page-editor/lib/api/media";
 import { formatFileSize } from "@/cms/page-editor/lib/utils/file-upload";
+import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockComponentProps } from "../types";
+
+const inputStyle: React.CSSProperties = {
+	width: "100%",
+	padding: "6px 8px",
+	fontSize: 14,
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 4,
+	backgroundColor: adminColor.bgPanel,
+	color: adminColor.textPrimary,
+	boxSizing: "border-box",
+};
+
+const labelStyle: React.CSSProperties = {
+	display: "block",
+	fontSize: 12,
+	color: adminColor.textSecondary,
+	marginBottom: 2,
+};
 
 export function FileBlock({
 	block,
@@ -67,136 +76,188 @@ export function FileBlock({
 	);
 
 	return (
-		<Box
-			sx={{
+		<div
+			style={{
 				position: "relative",
-				border: (theme) => `1px solid ${theme.palette.divider}`,
-				borderRadius: 2,
-				p: 1,
-				bgcolor: "rgba(255,255,255,0.02)",
-				"&:hover .file-controls": { opacity: 1, pointerEvents: "auto" },
-				"&:hover .file-preview": { mt: 14 },
+				border: `1px solid ${adminColor.border}`,
+				borderRadius: 8,
+				padding: 8,
+				backgroundColor: "rgba(255,255,255,0.02)",
 			}}
 		>
-			{/* Preview: bookmark-like card */}
-			<Box className="file-preview" sx={{ transition: "margin 120ms ease" }}>
-				<Box
-					sx={{
+			<div className="file-preview" style={{ transition: "margin 120ms ease" }}>
+				<div
+					style={{
 						display: "flex",
 						alignItems: "center",
-						gap: 1.5,
-						p: 1.25,
-						borderRadius: 1.5,
-						border: (theme) => `1px solid ${theme.palette.divider}`,
-						bgcolor: "rgba(255,255,255,0.03)",
+						gap: 12,
+						padding: 10,
+						borderRadius: 6,
+						border: `1px solid ${adminColor.border}`,
+						backgroundColor: "rgba(255,255,255,0.03)",
 					}}
 				>
-					<Box
-						sx={{
+					<div
+						style={{
 							width: 40,
 							height: 40,
-							borderRadius: 1,
+							borderRadius: 4,
 							display: "flex",
 							alignItems: "center",
 							justifyContent: "center",
-							bgcolor: "rgba(59,130,246,0.15)",
-							color: "primary.main",
+							backgroundColor: "rgba(59,130,246,0.15)",
+							color: adminColor.accent,
 							flexShrink: 0,
 						}}
 					>
-						<DescriptionRoundedIcon />
-					</Box>
-					<Box sx={{ minWidth: 0, flex: 1 }}>
+						<FileText size={20} />
+					</div>
+					<div style={{ minWidth: 0, flex: 1 }}>
 						{url ? (
-							<Link
+							<a
 								href={url}
 								target="_blank"
 								rel="noreferrer"
-								underline="hover"
-								sx={{
+								style={{
 									display: "block",
-									color: "text.primary",
+									color: adminColor.textPrimary,
 									overflow: "hidden",
 									textOverflow: "ellipsis",
 									whiteSpace: "nowrap",
+									textDecoration: "underline",
 								}}
 							>
 								{name || url}
-							</Link>
+							</a>
 						) : (
-							<Typography variant="body2" color="text.secondary">
+							<p
+								style={{
+									fontSize: 14,
+									color: adminColor.textSecondary,
+									margin: 0,
+								}}
+							>
 								Upload a file or paste a URL
-							</Typography>
+							</p>
 						)}
 						{typeof size === "number" && (
-							<Typography variant="caption" color="text.secondary">
+							<p
+								style={{
+									fontSize: 12,
+									color: adminColor.textSecondary,
+									margin: "2px 0 0 0",
+								}}
+							>
 								{formatFileSize(size)}
-							</Typography>
+							</p>
 						)}
-					</Box>
-				</Box>
-			</Box>
+					</div>
+				</div>
+			</div>
 
-			{/* Controls overlay (top) */}
 			{!readOnly && (
-				<Box
+				<div
 					className="file-controls"
-					sx={{
+					style={{
 						position: "absolute",
 						top: 8,
 						left: 8,
 						right: 8,
-						bgcolor: "rgba(0,0,0,0.35)",
-						borderRadius: 1,
-						p: 1,
+						backgroundColor: "rgba(0,0,0,0.35)",
+						borderRadius: 4,
+						padding: 8,
 						opacity: 0,
 						pointerEvents: "none",
 						transition: "opacity 120ms ease",
 					}}
 				>
-					{/* Row 1: Upload (full width) */}
-					<Stack spacing={1.5} sx={{ alignItems: "center" }}>
-						<Button
-							variant="outlined"
-							fullWidth
-							startIcon={<CloudUploadRoundedIcon />}
-							component="label"
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+							gap: 12,
+						}}
+					>
+						<button
+							type="button"
 							disabled={!contentId || isUploading}
-							sx={{ whiteSpace: "nowrap" }}
+							style={{
+								width: "100%",
+								display: "inline-flex",
+								alignItems: "center",
+								justifyContent: "center",
+								gap: 8,
+								padding: "8px 16px",
+								border: `1px solid ${adminColor.borderInput}`,
+								borderRadius: 4,
+								backgroundColor: adminColor.bgPanel,
+								color: adminColor.textPrimary,
+								cursor: !contentId || isUploading ? "not-allowed" : "pointer",
+								opacity: !contentId || isUploading ? 0.6 : 1,
+								whiteSpace: "nowrap",
+							}}
 						>
+							<UploadCloud size={18} />
 							<input
 								ref={fileInputRef}
 								type="file"
-								hidden
+								style={{ display: "none" }}
 								onChange={handleFileChange}
 							/>
 							{isUploading ? "Uploading..." : "Upload file"}
-						</Button>
-					</Stack>
-					{uploadError && (
-						<Alert severity="error" sx={{ mt: 1 }}>
-							{uploadError}
-						</Alert>
-					)}
+						</button>
 
-					{/* Row 2: Name + URL */}
-					<Stack spacing={1.5} sx={{ alignItems: "center", mt: 1.5 }}>
-						<TextField
-							label="File name"
-							fullWidth
-							value={name}
-							onChange={(e) => onAttributesChange({ filename: e.target.value })}
-						/>
-						<TextField
-							label="URL"
-							fullWidth
-							value={url}
-							onChange={(e) => onAttributesChange({ src: e.target.value })}
-							placeholder="https://example.com/file.pdf"
-						/>
-					</Stack>
-				</Box>
+						{uploadError && (
+							<div
+								role="alert"
+								style={{
+									marginTop: 8,
+									padding: "8px 12px",
+									borderLeft: `4px solid ${adminColor.error}`,
+									backgroundColor: "rgba(185, 28, 28, 0.1)",
+									color: adminColor.error,
+									fontSize: 14,
+									borderRadius: 4,
+								}}
+							>
+								{uploadError}
+							</div>
+						)}
+
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+								gap: 12,
+								marginTop: 12,
+								width: "100%",
+							}}
+						>
+							<div style={{ width: "100%" }}>
+								<label style={labelStyle}>File name</label>
+								<input
+									value={name}
+									onChange={(e) =>
+										onAttributesChange({ filename: e.target.value })
+									}
+									style={inputStyle}
+								/>
+							</div>
+							<div style={{ width: "100%" }}>
+								<label style={labelStyle}>URL</label>
+								<input
+									value={url}
+									onChange={(e) => onAttributesChange({ src: e.target.value })}
+									placeholder="https://example.com/file.pdf"
+									style={inputStyle}
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
 			)}
-		</Box>
+		</div>
 	);
 }
