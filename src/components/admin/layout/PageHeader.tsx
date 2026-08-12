@@ -1,8 +1,8 @@
 "use client";
 
-import { Box, Breadcrumbs, Chip, Stack, Typography } from "@mui/material";
 import Link from "next/link";
-import { Fragment, isValidElement } from "react";
+import { type CSSProperties, Fragment, isValidElement } from "react";
+import { adminColor } from "@/components/admin/ui/tokens";
 
 export interface BreadcrumbItem {
 	label: string;
@@ -27,6 +27,77 @@ export interface PageHeaderProps {
 	};
 }
 
+type ChipColor = NonNullable<
+	NonNullable<PageHeaderProps["statusChip"]>["color"]
+>;
+
+const chipColorMap: Record<ChipColor, { bg: string; fg: string }> = {
+	default: { bg: "#f3f4f6", fg: adminColor.textSecondary },
+	primary: { bg: "rgba(44, 123, 229, 0.12)", fg: adminColor.accent },
+	secondary: { bg: "#f3f4f6", fg: adminColor.textSecondary },
+	error: { bg: "rgba(185, 28, 28, 0.12)", fg: adminColor.error },
+	info: { bg: "rgba(30, 64, 175, 0.12)", fg: adminColor.info },
+	success: { bg: "rgba(22, 101, 52, 0.12)", fg: adminColor.success },
+	warning: { bg: "rgba(180, 83, 9, 0.12)", fg: adminColor.warning },
+};
+
+const containerStyle: CSSProperties = {
+	marginBottom: 24,
+	display: "flex",
+	flexDirection: "row",
+	flexWrap: "wrap",
+	alignItems: "center",
+	gap: 16,
+};
+
+const contentStackStyle: CSSProperties = {
+	flex: 1,
+	minWidth: 0,
+	display: "flex",
+	flexDirection: "column",
+	gap: 4,
+};
+
+const breadcrumbLinkStyle: CSSProperties = {
+	color: adminColor.textSecondary,
+	fontSize: 13,
+	textDecoration: "none",
+};
+
+const breadcrumbCurrentStyle: CSSProperties = {
+	color: adminColor.textPrimary,
+	fontSize: 13,
+};
+
+const titleRowStyle: CSSProperties = {
+	display: "flex",
+	flexDirection: "row",
+	alignItems: "center",
+	gap: 12,
+};
+
+const titleStyle: CSSProperties = {
+	fontSize: 24,
+	fontWeight: 700,
+	lineHeight: 1.2,
+	margin: 0,
+	color: adminColor.textPrimary,
+};
+
+const descriptionStyle: CSSProperties = {
+	marginTop: 4,
+	maxWidth: 720,
+	fontSize: 14,
+	color: adminColor.textSecondary,
+};
+
+const actionsStyle: CSSProperties = {
+	display: "flex",
+	flexWrap: "wrap",
+	gap: 8,
+	justifyContent: "flex-end",
+};
+
 export function PageHeader({
 	title,
 	description,
@@ -34,80 +105,86 @@ export function PageHeader({
 	actions,
 	statusChip,
 }: PageHeaderProps) {
+	const chipColor = chipColorMap[statusChip?.color ?? "default"];
+
 	return (
-		<Box
-			sx={{
-				mb: { xs: 3, md: 4 },
-				display: "flex",
-				flexDirection: { xs: "column", md: "row" },
-				alignItems: { xs: "flex-start", md: "center" },
-				gap: 2,
-			}}
-		>
-			<Box sx={{ flex: 1 }}>
+		<header style={containerStyle}>
+			<div style={contentStackStyle}>
 				{breadcrumbs && breadcrumbs.length > 0 && (
-					<Breadcrumbs
-						aria-label="breadcrumb"
-						sx={{ mb: 1, "& a": { color: "text.secondary", fontSize: 13 } }}
-					>
-						{breadcrumbs.map((crumb, index) => {
-							const isLast = index === breadcrumbs.length - 1;
-							if (crumb.href && !isLast) {
+					<nav aria-label="breadcrumb" style={{ marginBottom: 4 }}>
+						<ol
+							style={{
+								display: "flex",
+								flexWrap: "wrap",
+								gap: 4,
+								padding: 0,
+								margin: 0,
+								listStyle: "none",
+								fontSize: 13,
+							}}
+						>
+							{breadcrumbs.map((crumb, index) => {
+								const isLast = index === breadcrumbs.length - 1;
 								return (
-									<Link key={crumb.label} href={crumb.href}>
-										{crumb.label}
-									</Link>
+									<li
+										key={crumb.label}
+										style={{
+											display: "flex",
+											alignItems: "center",
+											gap: 4,
+										}}
+									>
+										{crumb.href && !isLast ? (
+											<Link href={crumb.href} style={breadcrumbLinkStyle}>
+												{crumb.label}
+											</Link>
+										) : (
+											<span
+												aria-current={isLast ? "page" : undefined}
+												style={
+													isLast ? breadcrumbCurrentStyle : breadcrumbLinkStyle
+												}
+											>
+												{crumb.label}
+											</span>
+										)}
+										{!isLast && (
+											<span
+												aria-hidden
+												style={{ color: adminColor.textSecondary }}
+											>
+												›
+											</span>
+										)}
+									</li>
 								);
-							}
-							return (
-								<Typography
-									key={crumb.label}
-									sx={{ fontSize: 13, color: "text.primary" }}
-								>
-									{crumb.label}
-								</Typography>
-							);
-						})}
-					</Breadcrumbs>
+							})}
+						</ol>
+					</nav>
 				)}
-				<Stack
-					sx={{ flexDirection: "row", alignItems: "center" }}
-					spacing={1.5}
-				>
-					<Typography
-						variant="h4"
-						component="h1"
-						sx={{ fontWeight: 700, lineHeight: 1.2 }}
-					>
-						{title}
-					</Typography>
+				<div style={titleRowStyle}>
+					<h1 style={titleStyle}>{title}</h1>
 					{statusChip && (
-						<Chip
-							size="small"
-							label={statusChip.label}
-							color={statusChip.color ?? "default"}
-						/>
+						<span
+							style={{
+								display: "inline-flex",
+								alignItems: "center",
+								padding: "2px 10px",
+								fontSize: 12,
+								fontWeight: 600,
+								borderRadius: 999,
+								backgroundColor: chipColor.bg,
+								color: chipColor.fg,
+							}}
+						>
+							{statusChip.label}
+						</span>
 					)}
-				</Stack>
-				{description && (
-					<Typography
-						variant="body2"
-						color="text.secondary"
-						sx={{ mt: 1, maxWidth: 720 }}
-					>
-						{description}
-					</Typography>
-				)}
-			</Box>
+				</div>
+				{description && <p style={descriptionStyle}>{description}</p>}
+			</div>
 			{actions && (
-				<Box
-					sx={{
-						display: "flex",
-						flexWrap: "wrap",
-						gap: 1,
-						justifyContent: { xs: "flex-start", md: "flex-end" },
-					}}
-				>
+				<div style={actionsStyle}>
 					{Array.isArray(actions)
 						? actions.map((action, index) => {
 								const actionKey =
@@ -117,8 +194,8 @@ export function PageHeader({
 								return <Fragment key={actionKey}>{action}</Fragment>;
 							})
 						: actions}
-				</Box>
+				</div>
 			)}
-		</Box>
+		</header>
 	);
 }
