@@ -1,7 +1,7 @@
 "use client";
 
-import { Stack, Typography } from "@mui/material";
 import type { ReactNode } from "react";
+import { adminColor } from "@/components/admin/ui/tokens";
 
 export interface SidebarProps {
 	children: ReactNode;
@@ -10,19 +10,34 @@ export interface SidebarProps {
 
 export function Sidebar({ children, title }: SidebarProps) {
 	return (
-		<Stack spacing={3}>
+		<div
+			style={{
+				display: "flex",
+				flexDirection: "column",
+				gap: 24,
+			}}
+		>
 			{title && (
-				<Typography
-					variant="h6"
-					component="header"
-					sx={{ letterSpacing: 0.3, fontWeight: 600 }}
+				<header
+					style={{
+						letterSpacing: 0.3,
+						fontWeight: 600,
+						fontSize: 18,
+						color: adminColor.textPrimary,
+					}}
 				>
 					{title}
-				</Typography>
+				</header>
 			)}
-			<Stack component="section" spacing={3}>
+			<section
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					gap: 24,
+				}}
+			>
 				{children}
-			</Stack>
-		</Stack>
+			</section>
+		</div>
 	);
 }
