@@ -20,8 +20,6 @@ const nextConfig: NextConfig = {
 	serverExternalPackages: ["bun:sqlite"],
 	turbopack: {},
 	// Note: turbopack does not support moduleIds/chunkIds
-	// Transpile @appletosolutions/reactbits to ensure @chakra-ui/react is resolved
-	transpilePackages: ["@appletosolutions/reactbits"],
 	// Environment variables
 	env: {
 		NEXT_BUILD_TIME: isProduction ? "true" : "false",
@@ -144,17 +142,6 @@ const nextConfig: NextConfig = {
 			net: false,
 			tls: false,
 		};
-
-		// Ensure @chakra-ui/react is resolved correctly for @appletosolutions/reactbits
-		try {
-			const chakraPath = require.resolve("@chakra-ui/react");
-			config.resolve.alias = {
-				...config.resolve.alias,
-				"@chakra-ui/react": chakraPath,
-			};
-		} catch {
-			// @chakra-ui/react not found, skip alias
-		}
 
 		return config;
 	},

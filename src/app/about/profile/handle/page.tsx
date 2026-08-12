@@ -1,17 +1,12 @@
 "use client";
 
 import { Code, Coffee, Gamepad2, Music, Palette, Video } from "lucide-react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ScrollFloat } from "@/components/ScrollFloat";
+import { ScrollVelocity } from "@/components/ScrollVelocity";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
-// react-bits componentsを動的インポート
-const ScrollVelocity = dynamic(
-	() => import("@appletosolutions/reactbits").then((mod) => mod.ScrollVelocity),
-	{ ssr: false },
-);
 // Custom typing animation component
 function TypingText({
 	text,

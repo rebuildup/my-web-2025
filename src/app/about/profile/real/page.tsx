@@ -1,10 +1,11 @@
 "use client";
 
 import { Calendar, GraduationCap, MapPin } from "lucide-react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollFloat } from "@/components/ScrollFloat";
+import { ScrollVelocity } from "@/components/ScrollVelocity";
+import { SpotlightCard } from "@/components/SpotlightCard";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 const deterministicSample = (items: string[], count: number) => {
@@ -18,15 +19,6 @@ const deterministicSample = (items: string[], count: number) => {
 	return looped.slice(0, Math.min(count, items.length));
 };
 
-// react-bits componentsを動的インポート
-const ScrollVelocity = dynamic(
-	() => import("@appletosolutions/reactbits").then((mod) => mod.ScrollVelocity),
-	{ ssr: false },
-);
-const SpotlightCard = dynamic(
-	() => import("@appletosolutions/reactbits").then((mod) => mod.SpotlightCard),
-	{ ssr: false },
-);
 // ランダム選択された性格をリスト表示するコンポーネント
 function RandomPersonalityList({ items }: { items: string[] }) {
 	const selectedItems = useMemo(() => deterministicSample(items, 3), [items]);
