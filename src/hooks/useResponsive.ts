@@ -6,8 +6,8 @@
 import { useEffect, useState } from "react";
 
 export interface ResponsiveBreakpoints {
-	xs: boolean; // < 640px
-	sm: boolean; // >= 640px
+	xs: boolean; // < 480px
+	sm: boolean; // >= 480px
 	md: boolean; // >= 768px
 	lg: boolean; // >= 1024px
 	xl: boolean; // >= 1280px
@@ -39,8 +39,8 @@ export interface ResponsiveState {
 }
 
 const getBreakpoints = (width: number): ResponsiveBreakpoints => ({
-	xs: width < 640,
-	sm: width >= 640,
+	xs: width < 480,
+	sm: width >= 480,
 	md: width >= 768,
 	lg: width >= 1024,
 	xl: width >= 1280,
