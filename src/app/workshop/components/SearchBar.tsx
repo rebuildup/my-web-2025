@@ -35,7 +35,7 @@ function SearchBarInner({ keyword, mode }: SearchBarProps) {
 
 	return (
 		<div className="flex items-center gap-4">
-			<form onSubmit={handleSubmit} className="relative w-60 h-9">
+			<form onSubmit={handleSubmit} className="relative w-full sm:w-60 h-9">
 				<div className="relative w-full h-full    rounded px-3 flex items-center gap-2">
 					<svg
 						className="w-4 h-4  shrink-0"
@@ -121,7 +121,7 @@ export function SearchBar(props: SearchBarProps) {
 
 function SearchBarFallback() {
 	return (
-		<div className="relative w-60 h-9">
+		<div className="relative w-full sm:w-60 h-9">
 			<div className="relative w-full h-full    rounded px-3 flex items-center gap-2">
 				<svg
 					className="w-4 h-4  shrink-0"

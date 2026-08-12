@@ -27,10 +27,10 @@ export default async function Home() {
 					<div className="max-w-3xl mx-auto flex flex-col items-center">
 						<div className="flex items-start w-full justify-between sm:w-max sm:min-w-[410px] sm:justify-normal">
 							<div className="flex flex-col items-start animate-fade-in-up">
-								<h1 className="text-4xl sm:text-4xl font-bold italic tracking-tight ">
+								<h1 className="text-4xl font-bold italic tracking-tight ">
 									yusuke-kim.com
 								</h1>
-								<p className="mt-3 text-xs sm:text-xs leading-relaxed animate-fade-in-up animation-delay-100">
+								<p className="mt-3 text-xs leading-relaxed animate-fade-in-up animation-delay-100">
 									高専生 木村友亮のウェブサイト
 									<br />
 									普段はsamuidoという名前で活動しています

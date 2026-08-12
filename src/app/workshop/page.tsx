@@ -208,8 +208,8 @@ function WorkshopHeader({
 	mode: string;
 }) {
 	return (
-		<header className="w-full h-14  ">
-			<div className="h-full max-w-7xl mx-auto px-4 flex items-center justify-between gap-6">
+		<header className="w-full   ">
+			<div className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-3 sm:h-14 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-0">
 				<Link
 					href="/workshop"
 					className="text-xl font-semibold  hover:underline"
@@ -269,7 +269,7 @@ function HeroSection({
 					</div>
 
 					{/* Stats */}
-					<div className="grid grid-cols-3 gap-4">
+					<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 						<div>
 							<div className="text-2xl font-bold ">{totalArticles}</div>
 							<div className="text-sm ">記事</div>
@@ -374,7 +374,7 @@ function ArticlesFilterHeader({
 	return (
 		<div className="mb-8">
 			<div className="flex flex-col gap-4">
-				<div className="flex items-center justify-between">
+				<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<h1 className="text-2xl font-bold ">
 						Articles
 						<span className="ml-2 text-sm font-normal ">
@@ -559,6 +559,53 @@ function WorkshopSidebar({
 				</div>
 			</div>
 		</aside>
+	);
+}
+
+function MobileSidebarReplacement({
+	allTags,
+	mode,
+	articlesByTag,
+	popularArticles,
+}: {
+	allTags: Array<{ tag: string; count: number }>;
+	mode: string;
+	articlesByTag: Map<string, ArticleData[]>;
+	popularArticles: ArticleData[];
+}) {
+	return (
+		<div className="space-y-6 lg:hidden">
+			<section className="space-y-3">
+				<h2 className=" font-semibold  text-lg px-1">Trending Tags</h2>
+				<div className="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-hide-scroll">
+					{allTags.slice(0, 10).map((item, index) => {
+						const tagArticles = articlesByTag.get(item.tag);
+						const firstArticle = tagArticles?.[0];
+						return (
+							<div key={item.tag} className="shrink-0 w-56 snap-start">
+								<TrendingTagItem
+									tagInfo={item}
+									index={index}
+									mode={mode}
+									firstArticle={firstArticle}
+								/>
+							</div>
+						);
+					})}
+				</div>
+			</section>
+
+			<section className="space-y-3">
+				<h2 className=" font-semibold  text-lg px-1">Popular Articles</h2>
+				<div className="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-hide-scroll">
+					{popularArticles.map((item) => (
+						<div key={item.page.slug} className="shrink-0 w-64 snap-start">
+							<PopularArticleItem article={item} />
+						</div>
+					))}
+				</div>
+			</section>
+		</div>
 	);
 }
 
@@ -829,6 +876,13 @@ export default async function WorkshopPage({
 							mode={mode}
 							articleCount={displayPagesWithCMS.length}
 							allTags={allTags}
+						/>
+
+						<MobileSidebarReplacement
+							allTags={allTags}
+							mode={mode}
+							articlesByTag={articlesByTag}
+							popularArticles={popularArticles}
 						/>
 
 						<div className="flex gap-8">
