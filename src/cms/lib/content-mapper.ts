@@ -11,6 +11,19 @@ import type {
 	ContentTagRow,
 } from "@/cms/types/database";
 
+function contentsFtsExists(db: SqliteDatabase): boolean {
+	try {
+		const row = db
+			.prepare(
+				"SELECT COUNT(*) as c FROM sqlite_master WHERE type IN ('table', 'view') AND name = 'contents_fts'",
+			)
+			.get() as { c: number } | undefined;
+		return Boolean(row && row.c > 0);
+	} catch {
+		return false;
+	}
+}
+
 // ========== データベース行型 ==========
 export interface ContentRow {
 	// コア
@@ -350,6 +363,22 @@ export function saveFullContent(
 			console.log("[content-mapper] Row data published_at:", row.published_at);
 		}
 		stmt.run(row);
+
+		// Manually refresh the FTS5 row for this entry. We can't use an
+		// AFTER UPDATE trigger because Bun SQLite's FTS5 external-content
+		// xUpdate path throws SQLITE_CORRUPT_VTAB when DELETE + INSERT happen
+		// against the same virtual table in one statement. Skip if the FTS5
+		// virtual table isn't present (e.g. tests on minimal schemas).
+		if (content.id && contentsFtsExists(db)) {
+			db.prepare(
+				`DELETE FROM contents_fts WHERE rowid = (SELECT rowid FROM contents WHERE id = ?)`,
+			).run(content.id);
+			db.prepare(
+				`INSERT INTO contents_fts(rowid, id, title, summary, search_full_text)
+				 SELECT rowid, id, title, summary, search_full_text
+				   FROM contents WHERE id = ?`,
+			).run(content.id);
+		}
 	} catch (error) {
 		console.error("Error saving content:", error);
 		console.error("Content data:", JSON.stringify(content, null, 2));

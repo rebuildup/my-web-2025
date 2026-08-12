@@ -243,16 +243,16 @@ function initializeContentDbSchema(db: SqliteDatabase): void {
       INSERT INTO contents_fts(rowid, id, title, summary, search_full_text)
       VALUES (new.rowid, new.id, new.title, new.summary, new.search_full_text);
     END;
-    
+
     CREATE TRIGGER IF NOT EXISTS contents_fts_delete AFTER DELETE ON contents BEGIN
       DELETE FROM contents_fts WHERE rowid = old.rowid;
     END;
-    
-    CREATE TRIGGER IF NOT EXISTS contents_fts_update AFTER UPDATE ON contents BEGIN
-      DELETE FROM contents_fts WHERE rowid = old.rowid;
-      INSERT INTO contents_fts(rowid, id, title, summary, search_full_text)
-      VALUES (new.rowid, new.id, new.title, new.summary, new.search_full_text);
-    END;
+
+    -- NOTE: There is intentionally NO contents_fts_update trigger.
+    -- Bun SQLite FTS5 external-content xUpdate raises SQLITE_CORRUPT_VTAB
+    -- (errno 267) when a single trigger issues both DELETE and INSERT against
+    -- the same virtual table inside one statement. The application refreshes
+    -- the FTS row from saveFullContent / saveMarkdownPage instead.
     
     CREATE TABLE IF NOT EXISTS markdown_pages (
       id TEXT PRIMARY KEY,
@@ -286,16 +286,13 @@ function initializeContentDbSchema(db: SqliteDatabase): void {
       INSERT INTO markdown_pages_fts(rowid, id, slug, body)
       VALUES (new.rowid, new.id, new.slug, new.body);
     END;
-    
+
     CREATE TRIGGER IF NOT EXISTS markdown_pages_fts_delete AFTER DELETE ON markdown_pages BEGIN
       DELETE FROM markdown_pages_fts WHERE rowid = old.rowid;
     END;
-    
-    CREATE TRIGGER IF NOT EXISTS markdown_pages_fts_update AFTER UPDATE ON markdown_pages BEGIN
-      DELETE FROM markdown_pages_fts WHERE rowid = old.rowid;
-      INSERT INTO markdown_pages_fts(rowid, id, slug, body)
-      VALUES (new.rowid, new.id, new.slug, new.body);
-    END;
+
+    -- NOTE: There is intentionally NO markdown_pages_fts_update trigger. See
+    -- the equivalent note on contents_fts_update above for rationale.
   `);
 
 	ensureManualDatesTable(db);
@@ -305,6 +302,17 @@ function initializeContentDbSchema(db: SqliteDatabase): void {
 function ensureSchemaUpgrades(db: SqliteDatabase): void {
 	ensureManualDatesTable(db);
 	ensureMediaTable(db);
+	dropBrokenFtsUpdateTriggers(db);
+}
+
+function dropBrokenFtsUpdateTriggers(db: SqliteDatabase): void {
+	// Bun SQLite raises SQLITE_CORRUPT_VTAB when an UPDATE trigger issues both
+	// DELETE and INSERT against the same FTS5 virtual table inside one statement.
+	// Older per-content DBs were created with those broken triggers; opening the
+	// DB drops them so subsequent UPSERTs and UPDATEs succeed. The application
+	// refreshes the FTS row manually after updates (see saveFullContent).
+	db.exec("DROP TRIGGER IF EXISTS contents_fts_update");
+	db.exec("DROP TRIGGER IF EXISTS markdown_pages_fts_update");
 }
 
 function ensureManualDatesTable(db: SqliteDatabase): void {
