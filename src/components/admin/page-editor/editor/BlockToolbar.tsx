@@ -1,19 +1,8 @@
 "use client";
 
-import CloudDoneRoundedIcon from "@mui/icons-material/CloudDoneRounded";
-import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
-import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
-import {
-	Box,
-	Button,
-	Chip,
-	LinearProgress,
-	Paper,
-	Stack,
-	Typography,
-} from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
 import { formatDistanceToNow } from "date-fns";
+import { AlertTriangle, CloudCheck, Loader2, Save } from "lucide-react";
+import { adminColor } from "@/components/admin/ui/tokens";
 
 export interface BlockToolbarProps {
 	onSave?: () => void;
@@ -28,70 +17,139 @@ export function BlockToolbar({
 	lastSaved,
 	hasUnsavedChanges = false,
 }: BlockToolbarProps) {
-	const statusIcon = isSaving
-		? CircularProgress
-		: hasUnsavedChanges
-			? WarningAmberRoundedIcon
-			: CloudDoneRoundedIcon;
-
-	const StatusIcon = statusIcon;
-
 	const statusLabel = isSaving
 		? "Saving..."
 		: hasUnsavedChanges
 			? "Unsaved changes"
 			: "All changes saved";
 
+	const statusColor = isSaving
+		? adminColor.textSecondary
+		: hasUnsavedChanges
+			? adminColor.warning
+			: adminColor.success;
+
 	return (
-		<Paper elevation={0} sx={{ px: 0, py: 0, bgcolor: "transparent" }}>
-			<Stack
-				direction={{ xs: "column", md: "row" }}
-				spacing={2}
-				sx={{
-					maxWidth: 768,
-					mx: "auto",
-					width: "100%",
+		<section
+			style={{
+				padding: 0,
+				backgroundColor: "transparent",
+			}}
+		>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "row",
 					justifyContent: "space-between",
-					alignItems: { xs: "flex-start", md: "center" },
+					alignItems: "center",
+					maxWidth: 768,
+					margin: "0 auto",
+					width: "100%",
+					gap: 16,
 				}}
 			>
-				<Stack spacing={2} sx={{ flexDirection: "row", alignItems: "center" }}>
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "row",
+						alignItems: "center",
+						gap: 16,
+					}}
+				>
 					{isSaving ? (
-						<CircularProgress size={20} />
+						<Loader2 size={20} color={adminColor.textSecondary} />
 					) : (
-						<StatusIcon
-							color={hasUnsavedChanges ? "warning" : "success"}
-							fontSize="small"
-						/>
+						<div style={{ color: statusColor, display: "inline-flex" }}>
+							{hasUnsavedChanges ? (
+								<AlertTriangle size={20} />
+							) : (
+								<CloudCheck size={20} />
+							)}
+						</div>
 					)}
-					<Box>
-						<Typography variant="subtitle2">{statusLabel}</Typography>
+					<div>
+						<span
+							style={{
+								display: "block",
+								fontSize: 14,
+								fontWeight: 600,
+								color: adminColor.textPrimary,
+							}}
+						>
+							{statusLabel}
+						</span>
 						{lastSaved && (
-							<Typography variant="caption" color="text.secondary">
+							<span
+								style={{
+									display: "block",
+									fontSize: 12,
+									color: adminColor.textSecondary,
+								}}
+							>
 								Saved {formatDistanceToNow(lastSaved, { addSuffix: true })}
-							</Typography>
+							</span>
 						)}
-					</Box>
+					</div>
 					{hasUnsavedChanges && !isSaving && (
-						<Chip
-							label="Draft"
-							color="warning"
-							size="small"
-							variant="outlined"
-						/>
+						<span
+							style={{
+								display: "inline-block",
+								fontSize: 12,
+								padding: "2px 8px",
+								border: `1px solid ${adminColor.warning}`,
+								color: adminColor.warning,
+								borderRadius: 12,
+							}}
+						>
+							Draft
+						</span>
 					)}
-				</Stack>
-				<Button
-					variant="contained"
-					color="primary"
-					startIcon={!isSaving ? <SaveRoundedIcon /> : undefined}
+				</div>
+				<button
+					type="button"
 					disabled={!hasUnsavedChanges || isSaving || !onSave}
 					onClick={() => onSave?.()}
+					style={{
+						display: "inline-flex",
+						alignItems: "center",
+						gap: 8,
+						padding: "8px 16px",
+						fontSize: 14,
+						backgroundColor: adminColor.accent,
+						color: "#fff",
+						border: "none",
+						borderRadius: 4,
+						cursor:
+							!hasUnsavedChanges || isSaving || !onSave
+								? "not-allowed"
+								: "pointer",
+						opacity: !hasUnsavedChanges || isSaving || !onSave ? 0.6 : 1,
+					}}
 				>
+					{!isSaving && <Save size={16} />}
 					{isSaving ? "Saving..." : "Save now"}
-				</Button>
-			</Stack>
-			{isSaving && <LinearProgress sx={{ mt: 2 }} />}
-		</Paper>
+				</button>
+			</div>
+			{isSaving && (
+				<div
+					style={{
+						marginTop: 16,
+						height: 4,
+						width: "100%",
+						backgroundColor: adminColor.accentHover,
+						borderRadius: 2,
+						overflow: "hidden",
+					}}
+				>
+					<div
+						style={{
+							height: "100%",
+							width: "40%",
+							backgroundColor: adminColor.accent,
+						}}
+					/>
+				</div>
+			)}
+		</section>
 	);
 }
