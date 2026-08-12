@@ -1,6 +1,7 @@
 "use client";
 
 import { Box, Paper, TextField, Typography } from "@mui/material";
+import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockComponentProps } from "../types";
 
 export function SpacerBlock({
@@ -9,7 +10,7 @@ export function SpacerBlock({
 	onAttributesChange,
 }: BlockComponentProps) {
 	const lines = Number(block.attributes.lines ?? 1);
-	const linePx = 24; // 1行=24px 相当でプレビュー
+	const linePx = 24;
 	const height = Math.max(0, Math.round(lines) * linePx);
 
 	return (
@@ -26,18 +27,16 @@ export function SpacerBlock({
 				},
 			}}
 		>
-			{/* 余白プレビュー優先 */}
 			<Box
 				sx={{
 					width: "100%",
 					height,
 					borderRadius: 2,
-					border: (theme) => `1px dashed ${theme.palette.divider}`,
+					border: `1px dashed ${adminColor.border}`,
 					bgcolor: "rgba(255,255,255,0.04)",
 				}}
 			/>
 
-			{/* コントロールは上にオーバーレイ */}
 			<Box
 				className="spacer-controls"
 				sx={{
