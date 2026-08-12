@@ -19,15 +19,12 @@ export function TextBlock({
 			onKeyDown={onKeyDown}
 			placeholder="Write text"
 			sx={{
-				typography: "body1",
 				backgroundColor: "transparent",
 				border: "none",
-				paddingX: 0,
-				paddingY: 0.5,
-				"&:focus": {
-					border: "none",
-					backgroundColor: "transparent",
-				},
+				paddingLeft: 0,
+				paddingRight: 0,
+				paddingTop: 0.5,
+				paddingBottom: 0.5,
 			}}
 		/>
 	);
