@@ -1,20 +1,12 @@
 "use client";
 
-import AudiotrackRoundedIcon from "@mui/icons-material/AudiotrackRounded";
-import CloudUploadRoundedIcon from "@mui/icons-material/CloudUploadRounded";
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
-import MovieCreationRoundedIcon from "@mui/icons-material/MovieCreationRounded";
 import {
-	Alert,
-	Box,
-	Button,
-	CardMedia,
-	IconButton,
-	Paper,
-	Stack,
-	Typography,
-} from "@mui/material";
+	AudioLines,
+	File as FileIcon,
+	Film,
+	Trash2,
+	UploadCloud,
+} from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import {
@@ -24,6 +16,7 @@ import {
 } from "@/cms/page-editor/lib/api/media";
 import { formatFileSize } from "@/cms/page-editor/lib/utils/file-upload";
 import type { MediaItem } from "@/cms/types/media";
+import { adminColor } from "@/components/admin/ui/tokens";
 
 export interface MediaManagerProps {
 	contentId?: string;
@@ -62,7 +55,7 @@ export function MediaManager({
 		[contentId, onRefresh],
 	);
 
-	const { getRootProps, getInputProps } = useDropzone({
+	const { getRootProps, getInputProps, isDragActive } = useDropzone({
 		onDrop,
 		disabled: !contentId || isUploading,
 	});
@@ -91,114 +84,195 @@ export function MediaManager({
 	}, [isLoading]);
 
 	return (
-		<Paper elevation={0} sx={{ bgcolor: "background.paper", borderRadius: 0 }}>
-			<Stack
-				sx={{
+		<section style={{ backgroundColor: adminColor.bgPanel, borderRadius: 0 }}>
+			<div
+				style={{
+					display: "flex",
 					flexDirection: "row",
 					justifyContent: "space-between",
 					alignItems: "center",
-					px: 0,
-					py: 1.5,
+					paddingTop: 12,
+					paddingBottom: 12,
 				}}
 			>
-				<Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+				<h3
+					style={{
+						margin: 0,
+						fontSize: 16,
+						fontWeight: 600,
+						color: adminColor.textPrimary,
+					}}
+				>
 					Media
-				</Typography>
-				<Button
-					size="small"
-					variant="outlined"
-					startIcon={<CloudUploadRoundedIcon />}
+				</h3>
+				<button
+					type="button"
 					disabled={!contentId || isUploading}
 					{...getRootProps()}
+					style={{
+						display: "inline-flex",
+						alignItems: "center",
+						gap: 8,
+						fontSize: 13,
+						padding: "4px 12px",
+						border: `1px solid ${adminColor.borderInput}`,
+						borderRadius: 4,
+						backgroundColor: adminColor.bgPanel,
+						color: adminColor.textPrimary,
+						cursor: !contentId || isUploading ? "not-allowed" : "pointer",
+						opacity: !contentId || isUploading ? 0.6 : 1,
+					}}
 				>
 					<input {...getInputProps()} />
+					<UploadCloud size={16} />
 					{isUploading ? "Uploading..." : "Add file"}
-				</Button>
-			</Stack>
-			<Stack spacing={1.5} sx={{ px: 0, py: 0 }}>
+				</button>
+			</div>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					gap: 12,
+				}}
+			>
 				{!contentId ? (
-					<Alert severity="info">
+					<div
+						role="status"
+						style={{
+							padding: "8px 12px",
+							borderLeft: `4px solid ${adminColor.info}`,
+							backgroundColor: "rgba(30, 64, 175, 0.1)",
+							color: adminColor.info,
+							fontSize: 14,
+							borderRadius: 4,
+						}}
+					>
 						Select a content item to manage media assets.
-					</Alert>
+					</div>
 				) : (
 					<>
-						<Box
+						<div
 							{...getRootProps()}
-							sx={{
-								p: 2,
+							style={{
+								padding: 16,
 								textAlign: "center",
-								color: "text.secondary",
+								color: adminColor.textSecondary,
+								border: `1px dashed ${adminColor.border}`,
+								borderRadius: 4,
 								cursor: !contentId || isUploading ? "not-allowed" : "pointer",
+								backgroundColor: isDragActive
+									? adminColor.accentHover
+									: "transparent",
 							}}
 						>
 							<input {...getInputProps()} />
-							<Typography variant="body2" sx={{ fontWeight: 500 }}>
+							<span style={{ fontSize: 14, fontWeight: 500 }}>
 								Drop files here or use the button above to upload.
-							</Typography>
-						</Box>
-						{error && <Alert severity="error">{error}</Alert>}
-						<Stack spacing={0}>
+							</span>
+						</div>
+						{error && (
+							<div
+								role="alert"
+								style={{
+									padding: "8px 12px",
+									borderLeft: `4px solid ${adminColor.error}`,
+									backgroundColor: "rgba(185, 28, 28, 0.1)",
+									color: adminColor.error,
+									fontSize: 14,
+									borderRadius: 4,
+								}}
+							>
+								{error}
+							</div>
+						)}
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								gap: 0,
+							}}
+						>
 							{media.length === 0 ? (
-								<Typography variant="body2" color="text.secondary">
+								<span
+									style={{
+										fontSize: 14,
+										color: adminColor.textSecondary,
+									}}
+								>
 									{emptyStateLabel}
-								</Typography>
+								</span>
 							) : (
 								media.map((item) => (
-									<Box
+									<div
 										key={item.id}
-										sx={{
+										style={{
 											display: "flex",
 											alignItems: "center",
-											px: 1.5,
-											py: 1,
-											gap: 1.5,
-											borderRadius: 1,
-											"&:hover": { bgcolor: "action.hover" },
+											padding: "8px 12px",
+											gap: 12,
+											borderRadius: 4,
 										}}
 									>
 										<MediaPreview
 											item={item}
 											contentId={item.contentId ?? contentId}
 										/>
-										<Box
-											sx={{
+										<div
+											style={{
 												display: "flex",
 												flexDirection: "column",
-												gap: 0.25,
+												gap: 2,
 												flex: 1,
 												minWidth: 0,
 											}}
 										>
-											<Typography
-												variant="subtitle2"
-												sx={{
+											<span
+												style={{
+													fontSize: 14,
 													fontWeight: 600,
 													whiteSpace: "nowrap",
 													overflow: "hidden",
 													textOverflow: "ellipsis",
+													color: adminColor.textPrimary,
 												}}
 											>
 												{item.filename}
-											</Typography>
-											<Typography variant="caption" color="text.secondary">
+											</span>
+											<span
+												style={{
+													fontSize: 12,
+													color: adminColor.textSecondary,
+												}}
+											>
 												{item.mimeType} · {formatFileSize(item.size)}
-											</Typography>
-										</Box>
-										<IconButton
-											color="error"
+											</span>
+										</div>
+										<button
+											type="button"
+											aria-label="Delete"
 											onClick={() => void handleDelete(item)}
-											size="small"
+											style={{
+												display: "inline-flex",
+												alignItems: "center",
+												justifyContent: "center",
+												padding: 6,
+												background: "transparent",
+												color: adminColor.error,
+												border: "none",
+												borderRadius: 4,
+												cursor: "pointer",
+											}}
 										>
-											<DeleteRoundedIcon />
-										</IconButton>
-									</Box>
+											<Trash2 size={18} />
+										</button>
+									</div>
 								))
 							)}
-						</Stack>
+						</div>
 					</>
 				)}
-			</Stack>
-		</Paper>
+			</div>
+		</section>
 	);
 }
 
@@ -215,14 +289,13 @@ function MediaPreview({
 
 	if (item.mimeType.startsWith("image/")) {
 		return (
-			<CardMedia
-				component="img"
-				sx={{
+			<img
+				style={{
 					width: 72,
 					height: 72,
-					borderRadius: 2,
+					borderRadius: 4,
 					objectFit: "cover",
-					border: (theme) => `1px solid ${theme.palette.divider}`,
+					border: `1px solid ${adminColor.border}`,
 				}}
 				src={getMediaUrl(contentId, item.id)}
 				alt={item.alt ?? ""}
@@ -230,28 +303,28 @@ function MediaPreview({
 		);
 	}
 
-	const icon = item.mimeType.startsWith("audio/")
-		? AudiotrackRoundedIcon
-		: item.mimeType.startsWith("video/")
-			? MovieCreationRoundedIcon
-			: InsertDriveFileRoundedIcon;
-
-	const Icon = icon;
+	let Icon = FileIcon;
+	if (item.mimeType.startsWith("audio/")) {
+		Icon = AudioLines;
+	} else if (item.mimeType.startsWith("video/")) {
+		Icon = Film;
+	}
 
 	return (
-		<Box
-			sx={{
+		<div
+			style={{
 				width: 72,
 				height: 72,
-				borderRadius: 2,
-				bgcolor: "rgba(255,255,255,0.08)",
+				borderRadius: 4,
+				backgroundColor: "rgba(255,255,255,0.08)",
 				display: "flex",
 				alignItems: "center",
 				justifyContent: "center",
-				border: (theme) => `1px solid ${theme.palette.divider}`,
+				border: `1px solid ${adminColor.border}`,
+				color: adminColor.accent,
 			}}
 		>
-			<Icon color="primary" />
-		</Box>
+			<Icon size={28} />
+		</div>
 	);
 }
