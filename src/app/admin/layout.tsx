@@ -10,7 +10,7 @@ const NAV_TABS = [
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
 	return (
-		<div className="fixed inset-0 w-screen h-dvh z-[9999] font-sans flex flex-col overflow-hidden">
+		<div className="fixed inset-0 w-screen h-dvh font-sans flex flex-col overflow-hidden">
 			<header
 				style={{
 					padding: "0 16px",

@@ -101,8 +101,8 @@ export function BlockEditorItem({
 				bgcolor: readOnly
 					? "transparent"
 					: isActive
-						? "action.hover"
-						: "rgba(255,255,255,0.02)",
+						? "rgba(44, 123, 229, 0.08)"
+						: "transparent",
 				cursor: readOnly ? "default" : "text",
 				opacity: isDragging ? 0.4 : 1,
 				transition: readOnly
@@ -111,85 +111,95 @@ export function BlockEditorItem({
 				boxShadow: readOnly
 					? undefined
 					: dropIndicator === "before"
-						? (theme) => `inset 0 2px 0 ${theme.palette.primary.main}`
+						? "inset 0 2px 0 #2c7be5"
 						: dropIndicator === "after"
-							? (theme) => `inset 0 -2px 0 ${theme.palette.primary.main}`
+							? "inset 0 -2px 0 #2c7be5"
 							: undefined,
 				"&:not(:last-of-type)": {
 					borderBottom: readOnly
 						? "1px solid rgba(242, 242, 242, 0.1)"
-						: (theme) => `1px solid ${theme.palette.divider}`,
+						: "1px solid rgba(0, 0, 0, 0.12)",
 				},
 			}}
 			data-block-id={block.id}
 		>
 			{showControls && (
-				<Box
-					component="button"
-					aria-label="Block handle"
-					draggable
-					tabIndex={0}
-					onClick={(event) =>
-						onOpenHandleMenu(
-							event as unknown as MouseEvent<HTMLButtonElement>,
-							block.id,
-						)
-					}
-					onDragStart={(event) => onDragStart(event, block.id)}
-					onDragEnd={onDragEnd}
+				<Stack
+					spacing={0.25}
 					sx={{
-						position: "absolute",
-						top: 8,
-						left: -36,
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-						background: "transparent",
-						border: 0,
-						padding: 0,
-						lineHeight: 0,
+						flexShrink: 0,
 						width: 28,
-						height: 28,
-						cursor: "grab",
-						color: isActive ? "text.primary" : "text.secondary",
-						"&:active": { cursor: "grabbing" },
+						pt: 0.5,
+						alignItems: "center",
 					}}
 				>
-					<DragIndicatorRoundedIcon fontSize="small" />
-				</Box>
+					<Box
+						component="button"
+						aria-label="Add block"
+						tabIndex={0}
+						onClick={(event) =>
+							onOpenAddMenu(
+								event as unknown as MouseEvent<HTMLButtonElement>,
+								block.id,
+							)
+						}
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+							background: "transparent",
+							border: 0,
+							padding: 0,
+							lineHeight: 0,
+							width: 24,
+							height: 24,
+							cursor: "pointer",
+							color: isActive ? "#1f2328" : "#6c757d",
+							borderRadius: 0.75,
+							"&:hover": { background: "rgba(44, 123, 229, 0.08)" },
+						}}
+					>
+						<AddRoundedIcon fontSize="small" />
+					</Box>
+					<Box
+						component="button"
+						aria-label="Block handle"
+						draggable
+						tabIndex={0}
+						onClick={(event) =>
+							onOpenHandleMenu(
+								event as unknown as MouseEvent<HTMLButtonElement>,
+								block.id,
+							)
+						}
+						onDragStart={(event) => onDragStart(event, block.id)}
+						onDragEnd={onDragEnd}
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+							background: "transparent",
+							border: 0,
+							padding: 0,
+							lineHeight: 0,
+							width: 24,
+							height: 24,
+							cursor: "grab",
+							color: isActive ? "#1f2328" : "#6c757d",
+							borderRadius: 0.75,
+							"&:active": { cursor: "grabbing" },
+							"&:hover": { background: "rgba(44, 123, 229, 0.08)" },
+						}}
+					>
+						<DragIndicatorRoundedIcon fontSize="small" />
+					</Box>
+				</Stack>
 			)}
-			{showControls && (
-				<Box
-					component="button"
-					aria-label="Add block"
-					tabIndex={0}
-					onClick={(event) =>
-						onOpenAddMenu(
-							event as unknown as MouseEvent<HTMLButtonElement>,
-							block.id,
-						)
-					}
-					sx={{
-						position: "absolute",
-						top: 8,
-						left: -64,
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-						background: "transparent",
-						border: 0,
-						padding: 0,
-						lineHeight: 0,
-						width: 28,
-						height: 28,
-						cursor: "pointer",
-						color: isActive ? "text.primary" : "text.secondary",
-					}}
-				>
-					<AddRoundedIcon fontSize="small" />
-				</Box>
-			)}
-			<Stack spacing={1} sx={{ flex: 1, px: 0, py: 0, position: "relative" }}>
+			{!showControls && <Box sx={{ flexShrink: 0, width: 28 }} />}
+			<Stack
+				spacing={1}
+				sx={{ flex: 1, px: 0, py: 0, position: "relative", minWidth: 0 }}
+			>
 				<Box sx={{ px: 0.5, py: 0.25 }}>
 					<Component
 						block={block}

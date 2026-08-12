@@ -23,7 +23,7 @@ export function EditorLayout({
 				gridTemplateColumns: rightPanel
 					? { xs: "1fr", lg: "300px 1fr 320px" }
 					: { xs: "1fr", lg: "300px 1fr" },
-				height: "calc(100dvh - 64px)",
+				height: "calc(100dvh - 96px)",
 				width: "100%",
 				overflow: "hidden",
 				bgcolor: "transparent",
@@ -49,7 +49,8 @@ export function EditorLayout({
 					minHeight: 0,
 					position: "relative",
 					overflow: "hidden",
-					px: { xs: 2, md: 4 },
+					pl: { xs: 10, md: 12 },
+					pr: { xs: 2, md: 4 },
 					py: { xs: 2, md: 4 },
 					gap: 3,
 				}}
@@ -74,7 +75,8 @@ export function EditorLayout({
 						sx={{
 							flex: 1,
 							overflowY: "auto",
-							px: { xs: 2, md: 3 },
+							overflowX: "hidden",
+							px: { xs: 1, md: 1.5 },
 							py: { xs: 2, md: 3.5 },
 						}}
 					>

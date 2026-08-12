@@ -1,5 +1,8 @@
-import { Menu, MenuItem } from "@mui/material";
 import type { BlockType } from "@/cms/types/blocks";
+import {
+	ContextMenu,
+	type ContextMenuItem,
+} from "@/components/admin/ui/ContextMenu";
 import { AVAILABLE_INSERT_TYPES } from "./block-editor-config";
 
 interface BlockEditorMenusProps {
@@ -33,79 +36,61 @@ export function BlockEditorMenus({
 	onCloseMenu,
 	onCloseAddMenu,
 }: BlockEditorMenusProps) {
+	const handleItems: ContextMenuItem[] = [
+		{
+			key: "duplicate",
+			label: "Duplicate block",
+			onSelect: () => menuTarget && onDuplicateBlock(menuTarget),
+		},
+		{
+			key: "delete",
+			label: "Delete block",
+			disabled: blockCount === 1,
+			onSelect: () => menuTarget && onRemoveBlock(menuTarget),
+		},
+		{
+			key: "copy",
+			label: "Copy block",
+			onSelect: () => menuTarget && onCopyBlock(menuTarget),
+		},
+		{
+			key: "convert-header",
+			label: "Convert to",
+			divider: true,
+		},
+		...AVAILABLE_INSERT_TYPES.filter((type) => type !== selectedBlockType).map(
+			(type) => ({
+				key: `convert-${type}`,
+				label: type,
+				onSelect: () => menuTarget && onConvertBlockType(menuTarget, type),
+			}),
+		),
+	];
+
+	const insertItems: ContextMenuItem[] = AVAILABLE_INSERT_TYPES.map((type) => ({
+		key: `add-${type}`,
+		label: type,
+		onSelect: () => onInsertBlockAfter(addMenuTarget, type),
+	}));
+
 	return (
 		<>
-			<Menu
-				anchorEl={menuAnchor}
+			<ContextMenu
 				open={Boolean(menuAnchor)}
+				anchorRect={menuAnchor ? menuAnchor.getBoundingClientRect() : null}
 				onClose={onCloseMenu}
-				slotProps={{
-					paper: { sx: { bgcolor: "background.paper" } },
-				}}
-			>
-				<MenuItem
-					onClick={() => {
-						if (menuTarget) onDuplicateBlock(menuTarget);
-						onCloseMenu();
-					}}
-				>
-					Duplicate block
-				</MenuItem>
-				<MenuItem
-					disabled={blockCount === 1}
-					onClick={() => {
-						if (menuTarget) onRemoveBlock(menuTarget);
-						onCloseMenu();
-					}}
-				>
-					Delete block
-				</MenuItem>
-				<MenuItem
-					onClick={() => {
-						if (menuTarget) onCopyBlock(menuTarget);
-						onCloseMenu();
-					}}
-				>
-					Copy block
-				</MenuItem>
-				<MenuItem disabled divider>
-					Convert to
-				</MenuItem>
-				{AVAILABLE_INSERT_TYPES.filter(
-					(type) => type !== selectedBlockType,
-				).map((type) => (
-					<MenuItem
-						key={`convert-${type}`}
-						onClick={() => {
-							if (menuTarget) onConvertBlockType(menuTarget, type);
-							onCloseMenu();
-						}}
-					>
-						{type}
-					</MenuItem>
-				))}
-			</Menu>
-
-			<Menu
-				anchorEl={addMenuAnchor}
+				items={handleItems}
+				ariaLabel="Block actions"
+			/>
+			<ContextMenu
 				open={Boolean(addMenuAnchor)}
+				anchorRect={
+					addMenuAnchor ? addMenuAnchor.getBoundingClientRect() : null
+				}
 				onClose={onCloseAddMenu}
-				slotProps={{
-					paper: { sx: { bgcolor: "background.paper" } },
-				}}
-			>
-				{AVAILABLE_INSERT_TYPES.map((type) => (
-					<MenuItem
-						key={`add-${type}`}
-						onClick={() => {
-							onInsertBlockAfter(addMenuTarget, type);
-							onCloseAddMenu();
-						}}
-					>
-						{type}
-					</MenuItem>
-				))}
-			</Menu>
+				items={insertItems}
+				ariaLabel="Insert block"
+			/>
 		</>
 	);
 }
