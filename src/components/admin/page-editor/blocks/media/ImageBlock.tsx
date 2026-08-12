@@ -112,7 +112,7 @@ export function ImageBlock({
 	};
 
 	return (
-		<div style={wrapperStyle}>
+		<div style={wrapperStyle} className="block-image">
 			<div style={{ textAlign: alignToText }}>
 				{src ? (
 					<img

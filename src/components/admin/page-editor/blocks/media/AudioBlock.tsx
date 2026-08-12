@@ -80,6 +80,7 @@ export function AudioBlock({
 
 	return (
 		<div
+			className="block-audio"
 			style={{
 				position: "relative",
 				border: `1px solid ${adminColor.border}`,

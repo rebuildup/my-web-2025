@@ -95,6 +95,7 @@ export function VideoBlock({
 
 	return (
 		<div
+			className="block-video"
 			style={{
 				position: "relative",
 				borderRadius: 8,

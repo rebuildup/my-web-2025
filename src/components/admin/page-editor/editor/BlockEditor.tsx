@@ -1,5 +1,6 @@
 "use client";
 
+import { BlockControlsStyles } from "../blocks/BlockControlsStyles";
 import { BlockEditorItem } from "./BlockEditorItem";
 import { BlockEditorMenus } from "./BlockEditorMenus";
 import { BLOCK_COMPONENTS } from "./block-editor-config";
@@ -62,6 +63,7 @@ export function BlockEditor({
 				gap: readOnly ? 0 : 8,
 			}}
 		>
+			<BlockControlsStyles />
 			{blocks.map((block) => {
 				const Component = BLOCK_COMPONENTS[block.type] ?? UnknownBlock;
 				return (

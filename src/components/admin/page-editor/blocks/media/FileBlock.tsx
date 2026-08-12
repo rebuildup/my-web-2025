@@ -77,6 +77,7 @@ export function FileBlock({
 
 	return (
 		<div
+			className="block-file"
 			style={{
 				position: "relative",
 				border: `1px solid ${adminColor.border}`,

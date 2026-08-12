@@ -56,7 +56,7 @@ export function SpacerBlock({
 	};
 
 	return (
-		<section style={wrapperStyle}>
+		<section style={wrapperStyle} className="block-spacer">
 			<div style={previewStyle} />
 			<div className="spacer-controls" style={controlsStyle}>
 				<span

@@ -161,6 +161,7 @@ export function CodeBlock({
 
 	return (
 		<section
+			className="block-code"
 			style={{
 				borderRadius: 12,
 				backgroundColor: "transparent",

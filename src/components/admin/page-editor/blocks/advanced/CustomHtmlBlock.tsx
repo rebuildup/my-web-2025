@@ -74,7 +74,10 @@ export function CustomHtmlBlock({
 				overflow: "hidden",
 			}}
 		>
-			<div style={{ position: "relative", padding: 0 }}>
+			<div
+				className="block-custom-html"
+				style={{ position: "relative", padding: 0 }}
+			>
 				{!readOnly && (
 					<div
 						className="custom-html-controls"

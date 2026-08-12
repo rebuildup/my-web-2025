@@ -34,6 +34,7 @@ export function GalleryBlock({
 	return (
 		<div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
 			<div
+				className="block-gallery"
 				style={{
 					position: "relative",
 					paddingBottom: 0,
