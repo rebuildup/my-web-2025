@@ -1,21 +1,29 @@
 "use client";
 
-import CloudUploadRoundedIcon from "@mui/icons-material/CloudUploadRounded";
-import GraphicEqRoundedIcon from "@mui/icons-material/GraphicEqRounded";
-import {
-	Alert,
-	Box,
-	Button,
-	FormControlLabel,
-	Stack,
-	Switch,
-	TextField,
-	Typography,
-} from "@mui/material";
+import { AudioWaveform, UploadCloud } from "lucide-react";
 import { type ChangeEvent, useCallback, useRef, useState } from "react";
 import { getMediaUrl, uploadMediaFile } from "@/cms/page-editor/lib/api/media";
 import { formatFileSize } from "@/cms/page-editor/lib/utils/file-upload";
+import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockComponentProps } from "../types";
+
+const inputStyle: React.CSSProperties = {
+	width: "100%",
+	padding: "6px 8px",
+	fontSize: 14,
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 4,
+	backgroundColor: adminColor.bgPanel,
+	color: adminColor.textPrimary,
+	boxSizing: "border-box",
+};
+
+const labelStyle: React.CSSProperties = {
+	display: "block",
+	fontSize: 12,
+	color: adminColor.textSecondary,
+	marginBottom: 2,
+};
 
 export function AudioBlock({
 	block,
@@ -71,104 +79,173 @@ export function AudioBlock({
 	);
 
 	return (
-		<Box
-			sx={{
+		<div
+			style={{
 				position: "relative",
-				border: (theme) => `1px solid ${theme.palette.divider}`,
-				borderRadius: 2,
-				p: 1,
-				bgcolor: "rgba(255,255,255,0.02)",
-				transition: "padding-top 120ms ease",
-				"&:hover .audio-controls": { opacity: 1, pointerEvents: "auto" },
-				"&:hover .audio-preview": { mt: 28 },
+				border: `1px solid ${adminColor.border}`,
+				borderRadius: 8,
+				padding: 8,
+				backgroundColor: "rgba(255,255,255,0.02)",
 			}}
 		>
-			{/* Top controls overlay (appears on hover) */}
 			{!readOnly && (
-				<Box
+				<div
 					className="audio-controls"
-					sx={{
+					style={{
 						position: "absolute",
 						top: 8,
 						left: 8,
 						right: 8,
-						bgcolor: "rgba(0,0,0,0.35)",
-						borderRadius: 1,
-						p: 1,
+						backgroundColor: "rgba(0,0,0,0.35)",
+						borderRadius: 4,
+						padding: 8,
 						opacity: 0,
 						pointerEvents: "none",
 						transition: "opacity 120ms ease",
 					}}
 				>
-					<Stack spacing={1.5}>
-						{/* Row 1: Upload full width */}
-						<Stack spacing={1.5} sx={{ alignItems: "center" }}>
-							<Button
-								variant="outlined"
-								fullWidth
-								startIcon={<CloudUploadRoundedIcon />}
-								component="label"
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "column",
+							gap: 12,
+						}}
+					>
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+								gap: 12,
+							}}
+						>
+							<button
+								type="button"
 								disabled={!contentId || isUploading}
-								sx={{ whiteSpace: "nowrap" }}
+								style={{
+									width: "100%",
+									display: "inline-flex",
+									alignItems: "center",
+									justifyContent: "center",
+									gap: 8,
+									padding: "8px 16px",
+									border: `1px solid ${adminColor.borderInput}`,
+									borderRadius: 4,
+									backgroundColor: adminColor.bgPanel,
+									color: adminColor.textPrimary,
+									cursor: !contentId || isUploading ? "not-allowed" : "pointer",
+									opacity: !contentId || isUploading ? 0.6 : 1,
+									whiteSpace: "nowrap",
+								}}
 							>
+								<UploadCloud size={18} />
 								<input
 									ref={fileInputRef}
 									type="file"
 									accept="audio/*"
-									hidden
+									style={{ display: "none" }}
 									onChange={handleFileChange}
 								/>
 								{isUploading ? "Uploading..." : "Upload audio"}
-							</Button>
-						</Stack>
-						{uploadError && <Alert severity="error">{uploadError}</Alert>}
-						{filename && (
-							<Typography variant="caption" color="text.secondary">
-								Current file: {filename}
-								{typeof size === "number" ? ` · ${formatFileSize(size)}` : ""}
-							</Typography>
+							</button>
+						</div>
+
+						{uploadError && (
+							<div
+								role="alert"
+								style={{
+									padding: "8px 12px",
+									borderLeft: `4px solid ${adminColor.error}`,
+									backgroundColor: "rgba(185, 28, 28, 0.1)",
+									color: adminColor.error,
+									fontSize: 14,
+									borderRadius: 4,
+								}}
+							>
+								{uploadError}
+							</div>
 						)}
 
-						{/* Row 2: URL */}
-						<TextField
-							label="Audio URL"
-							fullWidth
-							value={src}
-							onChange={(e) => onAttributesChange({ src: e.target.value })}
-							placeholder="https://example.com/audio.mp3"
-						/>
+						{filename && (
+							<p
+								style={{
+									fontSize: 12,
+									color: adminColor.textSecondary,
+									margin: 0,
+								}}
+							>
+								Current file: {filename}
+								{typeof size === "number" ? ` · ${formatFileSize(size)}` : ""}
+							</p>
+						)}
 
-						{/* Row 3: toggles */}
-						<Stack spacing={2} sx={{ alignItems: "center" }}>
-							<FormControlLabel
-								control={
-									<Switch
-										checked={autoplay}
-										onChange={(e) =>
-											onAttributesChange({ autoplay: e.target.checked })
-										}
-									/>
-								}
-								label="Autoplay"
+						<div>
+							<label style={labelStyle}>Audio URL</label>
+							<input
+								value={src}
+								onChange={(e) => onAttributesChange({ src: e.target.value })}
+								placeholder="https://example.com/audio.mp3"
+								style={inputStyle}
 							/>
-							<FormControlLabel
-								control={
-									<Switch
-										checked={controls}
-										onChange={(e) =>
-											onAttributesChange({ controls: e.target.checked })
-										}
-									/>
-								}
-								label="Controls"
-							/>
-						</Stack>
-					</Stack>
-				</Box>
+						</div>
+
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+								gap: 16,
+							}}
+						>
+							<label
+								style={{
+									display: "inline-flex",
+									alignItems: "center",
+									gap: 6,
+									fontSize: 14,
+									color: adminColor.textPrimary,
+									cursor: "pointer",
+								}}
+							>
+								<input
+									type="checkbox"
+									role="switch"
+									checked={autoplay}
+									onChange={(e) =>
+										onAttributesChange({ autoplay: e.target.checked })
+									}
+								/>
+								Autoplay
+							</label>
+							<label
+								style={{
+									display: "inline-flex",
+									alignItems: "center",
+									gap: 6,
+									fontSize: 14,
+									color: adminColor.textPrimary,
+									cursor: "pointer",
+								}}
+							>
+								<input
+									type="checkbox"
+									role="switch"
+									checked={controls}
+									onChange={(e) =>
+										onAttributesChange({ controls: e.target.checked })
+									}
+								/>
+								Controls
+							</label>
+						</div>
+					</div>
+				</div>
 			)}
 
-			{/* Preview area (moves down on hover to avoid overlap) */}
-			<Box className="audio-preview" sx={{ transition: "margin 120ms ease" }}>
+			<div
+				style={{ transition: "margin 120ms ease" }}
+				className="audio-preview"
+			>
 				{src ? (
 					<audio
 						src={src}
@@ -179,20 +256,23 @@ export function AudioBlock({
 						<track kind="captions" />
 					</audio>
 				) : (
-					<Stack
-						sx={{
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "column",
 							alignItems: "center",
 							justifyContent: "center",
-							py: 4,
-							color: "text.secondary",
+							paddingTop: 32,
+							paddingBottom: 32,
+							gap: 8,
+							color: adminColor.textSecondary,
 						}}
-						spacing={1}
 					>
-						<GraphicEqRoundedIcon color="primary" />
-						<Typography variant="body2">Paste an audio URL</Typography>
-					</Stack>
+						<AudioWaveform size={24} color={adminColor.accent} />
+						<span style={{ fontSize: 14 }}>Paste an audio URL</span>
+					</div>
 				)}
-			</Box>
-		</Box>
+			</div>
+		</div>
 	);
 }
