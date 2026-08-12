@@ -1,7 +1,7 @@
 "use client";
 
-import { Box, Checkbox, Stack, Typography } from "@mui/material";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
+import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockComponentProps } from "../types";
 
 export function ListBlock({
@@ -21,35 +21,61 @@ export function ListBlock({
 	const renderMarker = () => {
 		if (kind === "todo") {
 			return (
-				<Checkbox
-					size="small"
+				<input
+					type="checkbox"
 					checked={checked}
-					onChange={() => onAttributesChange?.({ checked: !checked })}
 					disabled={readOnly}
+					onChange={() => onAttributesChange?.({ checked: !checked })}
+					style={{
+						width: 18,
+						height: 18,
+						marginTop: 6,
+						accentColor: adminColor.accent,
+						cursor: readOnly ? "default" : "pointer",
+					}}
 				/>
 			);
 		}
 		if (kind === "ordered") {
 			return (
-				<Typography
-					variant="body2"
-					sx={{ width: 24, textAlign: "right", pr: 1 }}
+				<span
+					style={{
+						width: 24,
+						textAlign: "right",
+						paddingRight: 8,
+						fontSize: 14,
+						color: adminColor.textSecondary,
+					}}
 				>
 					{order}.
-				</Typography>
+				</span>
 			);
 		}
 		return (
-			<Typography variant="body2" sx={{ width: 24, textAlign: "center" }}>
+			<span
+				style={{
+					width: 24,
+					textAlign: "center",
+					fontSize: 14,
+					color: adminColor.textSecondary,
+				}}
+			>
 				•
-			</Typography>
+			</span>
 		);
 	};
 
 	return (
-		<Stack sx={{ flexDirection: "row", alignItems: "flex-start" }} spacing={1}>
+		<div
+			style={{
+				display: "flex",
+				flexDirection: "row",
+				alignItems: "flex-start",
+				gap: 8,
+			}}
+		>
 			{renderMarker()}
-			<Box sx={{ flex: 1 }}>
+			<div style={{ flex: 1 }}>
 				<EditableText
 					value={block.content}
 					onChange={(v) => onContentChange?.(v)}
@@ -59,18 +85,16 @@ export function ListBlock({
 					placeholder="List item"
 					sx={{
 						flex: 1,
-						typography: "body1",
+						fontSize: 16,
 						backgroundColor: "transparent",
 						border: "none",
-						paddingX: 0,
-						paddingY: 0.5,
-						"&:focus": {
-							border: "none",
-							backgroundColor: "transparent",
-						},
+						paddingLeft: 0,
+						paddingRight: 0,
+						paddingTop: 4,
+						paddingBottom: 4,
 					}}
 				/>
-			</Box>
-		</Stack>
+			</div>
+		</div>
 	);
 }
