@@ -4,10 +4,14 @@
 //! Reproduces the layout of the original `src/app/api/og/route.tsx` image
 //! (dark background, left content with blue-bordered title + summary + tag
 //! chips + profile, right 500x500 thumbnail, rotated slugs along the edges).
+//!
+//! Reads directly from the per-content SQLite database at
+//! `data/contents/content-{id}.db` so the rendered title/summary always
+//! reflect the latest edit, independent of the consolidated dev DB.
 
 use ab_glyph::{Font, FontRef, PxScale, ScaleFont};
 use axum::{
-    extract::{Path, State},
+    extract::{Path as AxumPath, State},
     http::{header, StatusCode},
     response::{IntoResponse, Response},
     routing::get,
@@ -18,9 +22,14 @@ use image::{
     GenericImageView, ImageBuffer, Rgba, RgbaImage,
 };
 use imageproc::drawing::{draw_filled_rect_mut, draw_hollow_rect_mut, draw_text_mut};
-use serde::Deserialize;
-use sqlx::SqlitePool;
-use std::sync::OnceLock;
+use serde_json::Value;
+use sqlx::{sqlite::SqliteConnectOptions, sqlite::SqliteJournalMode, SqlitePool};
+use std::{
+    path::{Path, PathBuf},
+    str::FromStr,
+    sync::{Arc, OnceLock},
+};
+use tracing::warn;
 
 const WIDTH: u32 = 1200;
 const HEIGHT: u32 = 630;
@@ -37,6 +46,11 @@ const SNS_ICON_SVG: &[u8] = include_bytes!("../../assets/sns-icon.svg");
 static FONT: OnceLock<FontRef<'static>> = OnceLock::new();
 static SNS_ICON: OnceLock<RgbaImage> = OnceLock::new();
 
+#[derive(Clone)]
+struct OgState {
+    content_data_dir: Arc<PathBuf>,
+}
+
 #[derive(Debug)]
 struct EntryData {
     title: String,
@@ -46,28 +60,12 @@ struct EntryData {
     category: String,
 }
 
-#[derive(Debug, Deserialize)]
-struct ThumbnailExt {
-    #[serde(default)]
-    thumbnail: Option<ThumbnailInner>,
-}
-
-#[derive(Debug, Deserialize)]
-struct ThumbnailInner {
-    #[serde(default)]
-    youtube: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
-struct EntryMetadata {
-    #[serde(default)]
-    ext: Option<ThumbnailExt>,
-}
-
-pub fn router(pool: SqlitePool) -> Router {
+pub fn router(content_data_dir: PathBuf) -> Router {
     Router::new()
         .route("/:id", get(generate_og_image))
-        .with_state(pool)
+        .with_state(OgState {
+            content_data_dir: Arc::new(content_data_dir),
+        })
 }
 
 fn font() -> &'static FontRef<'static> {
@@ -97,16 +95,25 @@ fn rasterize_sns_icon() -> RgbaImage {
 }
 
 async fn generate_og_image(
-    State(pool): State<SqlitePool>,
-    Path(id): Path<String>,
+    State(state): State<OgState>,
+    AxumPath(id): AxumPath<String>,
 ) -> Result<Response, StatusCode> {
-    let entry = fetch_entry(&pool, &id).await.ok_or(StatusCode::NOT_FOUND)?;
+    let db_path =
+        resolve_content_db_path(&state.content_data_dir, &id).ok_or(StatusCode::NOT_FOUND)?;
+    let pool = open_content_db(&db_path).await.map_err(|err| {
+        warn!(content_db = %db_path.display(), error = %err, "failed to open per-content DB");
+        StatusCode::INTERNAL_SERVER_ERROR
+    })?;
 
-    let metadata = fetch_metadata(&pool, &id).await;
-    let thumbnail = fetch_thumbnail(&pool, &id, metadata.as_ref()).await;
+    let entry = match fetch_entry(&pool, &id).await {
+        Some(entry) => entry,
+        None => return Err(StatusCode::NOT_FOUND),
+    };
+
+    let thumbnail = fetch_thumbnail(&pool).await;
 
     let png = render_og_image(&entry, thumbnail.as_ref()).map_err(|err| {
-        tracing::warn!(error = %err, "failed to render OG image");
+        warn!(error = %err, "failed to render OG image");
         StatusCode::INTERNAL_SERVER_ERROR
     })?;
 
@@ -121,20 +128,56 @@ async fn generate_og_image(
         .into_response())
 }
 
-type EntryRow = (String, Option<String>, Option<String>, Option<String>);
+fn resolve_content_db_path(dir: &Path, id: &str) -> Option<PathBuf> {
+    if id.is_empty() || id.contains(['/', '\\', '\0']) {
+        return None;
+    }
+    let path = dir.join(format!("content-{id}.db"));
+    if path.is_file() {
+        Some(path)
+    } else {
+        None
+    }
+}
+
+async fn open_content_db(path: &Path) -> Result<SqlitePool, sqlx::Error> {
+    let url = format!("sqlite://{}?mode=ro", path.display());
+    let options = SqliteConnectOptions::from_str(&url)?
+        .create_if_missing(false)
+        .journal_mode(SqliteJournalMode::Wal)
+        .read_only(true)
+        .synchronous(sqlx::sqlite::SqliteSynchronous::Normal)
+        .busy_timeout(std::time::Duration::from_secs(5));
+    let pool = SqlitePool::connect_with(options).await?;
+    sqlx::query("PRAGMA query_only = ON")
+        .execute(&pool)
+        .await
+        .ok();
+    Ok(pool)
+}
+
+type EntryRow = (
+    String,
+    Option<String>,
+    Option<String>,
+    Option<String>,
+    Option<String>,
+    Option<String>,
+);
 
 async fn fetch_entry(pool: &SqlitePool, id: &str) -> Option<EntryData> {
     let row: Option<EntryRow> = sqlx::query_as(
         r#"
-        SELECT e.title,
-               e.summary,
-               e.path,
-               (SELECT GROUP_CONCAT(t.name)
-                  FROM entry_tags et
-                  JOIN tags t ON et.tag_id = t.id
-                 WHERE et.entry_id = e.id) AS tags
-        FROM entries e
-        WHERE e.id = ? AND e.deleted_at IS NULL
+        SELECT c.title,
+               c.summary,
+               c.path,
+               c.thumbnails,
+               c.ext,
+               (SELECT GROUP_CONCAT(ct.tag, ',')
+                  FROM content_tags ct
+                 WHERE ct.content_id = c.id) AS tags
+        FROM contents c
+        WHERE c.id = ?
         "#,
     )
     .bind(id)
@@ -143,7 +186,8 @@ async fn fetch_entry(pool: &SqlitePool, id: &str) -> Option<EntryData> {
     .ok()
     .flatten();
 
-    let (title, summary, path, tags) = row?;
+    let (title, summary, path, _thumbnails_json, _ext_json, tags) = row?;
+
     let category = derive_category(path.as_deref().unwrap_or(""));
     Some(EntryData {
         title: nonempty(title),
@@ -185,63 +229,106 @@ fn clamp_summary(s: String) -> String {
     }
 }
 
-async fn fetch_metadata(pool: &SqlitePool, id: &str) -> Option<EntryMetadata> {
-    let raw: Option<String> = sqlx::query_scalar(
+async fn fetch_thumbnail(pool: &SqlitePool) -> Option<RgbaImage> {
+    if let Some(img) = fetch_media_blob(pool).await {
+        return Some(img);
+    }
+
+    let (thumbnails_json, ext_json) = fetch_thumbnail_metadata(pool).await;
+
+    if let Some(img) = fetch_url_thumbnail(&thumbnails_json).await {
+        return Some(img);
+    }
+
+    if let Some(img) = fetch_youtube_thumbnail(&ext_json).await {
+        return Some(img);
+    }
+
+    None
+}
+
+async fn table_exists(pool: &SqlitePool, name: &str) -> bool {
+    sqlx::query_scalar::<_, i64>(
+        "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = ?",
+    )
+    .bind(name)
+    .fetch_one(pool)
+    .await
+    .ok()
+    .map(|count| count > 0)
+    .unwrap_or(false)
+}
+
+async fn fetch_media_blob(pool: &SqlitePool) -> Option<RgbaImage> {
+    if !table_exists(pool, "media").await {
+        return None;
+    }
+    let row: Option<(Vec<u8>, Option<String>)> = sqlx::query_as(
         r#"
-        SELECT metadata_json
-        FROM entry_revisions
-        WHERE entry_id = ?
-        ORDER BY version DESC, created_at DESC
+        SELECT data, mime_type
+        FROM media
+        WHERE data IS NOT NULL
+        ORDER BY created_at ASC
         LIMIT 1
         "#,
     )
-    .bind(id)
     .fetch_optional(pool)
     .await
     .ok()
     .flatten();
 
-    raw.and_then(|raw| serde_json::from_str(&raw).ok())
+    let (data, mime) = row?;
+    if let Some(mime) = mime.as_deref() {
+        if !mime.starts_with("image/") {
+            return None;
+        }
+    }
+    image::load_from_memory(&data)
+        .ok()
+        .map(|img| img.to_rgba8())
 }
 
-async fn fetch_thumbnail(
-    pool: &SqlitePool,
-    id: &str,
-    metadata: Option<&EntryMetadata>,
-) -> Option<RgbaImage> {
-    if let Ok(Some(media)) = sqlx::query_as::<_, (Vec<u8>, String)>(
-        "SELECT data, mime_type FROM media WHERE entry_id = ? ORDER BY created_at ASC LIMIT 1",
-    )
-    .bind(id)
-    .fetch_optional(pool)
-    .await
-    {
-        if let Ok(img) = image::load_from_memory(&media.0) {
-            return Some(img.to_rgba8());
-        }
+async fn fetch_thumbnail_metadata(pool: &SqlitePool) -> (Option<String>, Option<String>) {
+    let row: Option<(Option<String>, Option<String>)> =
+        sqlx::query_as("SELECT thumbnails, ext FROM contents ORDER BY rowid DESC LIMIT 1")
+            .fetch_optional(pool)
+            .await
+            .ok()
+            .flatten();
+    row.unwrap_or((None, None))
+}
+
+async fn fetch_url_thumbnail(thumbnails_json: &Option<String>) -> Option<RgbaImage> {
+    let raw = thumbnails_json.as_deref()?;
+    let value: Value = serde_json::from_str(raw).ok()?;
+    let src = value
+        .get("image")
+        .and_then(|img| img.get("src"))
+        .and_then(|s| s.as_str())?;
+    load_image_from_url(src).await
+}
+
+async fn fetch_youtube_thumbnail(ext_json: &Option<String>) -> Option<RgbaImage> {
+    let raw = ext_json.as_deref()?;
+    let value: Value = serde_json::from_str(raw).ok()?;
+    let url = value
+        .get("thumbnail")
+        .and_then(|t| t.get("youtube"))
+        .and_then(|s| s.as_str())?;
+    let yt_id = extract_youtube_id(url)?;
+    let thumb_url = format!("https://img.youtube.com/vi/{yt_id}/maxresdefault.jpg");
+    load_image_from_url(&thumb_url).await
+}
+
+async fn load_image_from_url(url: &str) -> Option<RgbaImage> {
+    let resp = reqwest::get(url).await.ok()?;
+    if !resp.status().is_success() {
+        return None;
     }
-
-    let youtube_url = metadata
-        .and_then(|m| m.ext.as_ref())
-        .and_then(|ext| ext.thumbnail.as_ref())
-        .and_then(|thumb| thumb.youtube.as_ref());
-
-    if let Some(url) = youtube_url {
-        if let Some(yt_id) = extract_youtube_id(url) {
-            let thumb_url = format!("https://img.youtube.com/vi/{yt_id}/maxresdefault.jpg");
-            if let Ok(resp) = reqwest::get(&thumb_url).await {
-                if resp.status().is_success() {
-                    if let Ok(bytes) = resp.bytes().await {
-                        if let Ok(img) = image::load_from_memory(&bytes) {
-                            return Some(img.to_rgba8());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    None
+    let bytes = resp.bytes().await.ok()?;
+    image::load_from_memory(&bytes)
+        .ok()
+        .map(|img| img.to_rgba8())
 }
 
 fn extract_youtube_id(url: &str) -> Option<String> {

@@ -26,6 +26,28 @@ fn cms_api_data_dir() -> PathBuf {
         .unwrap_or_else(|_| PathBuf::from("./data/db"))
 }
 
+// Per-content SQLite databases live in `data/contents/content-{id}.db` and are
+// managed by the Bun SQLite CMS. The OG image route reads directly from them
+// so the rendered title/summary always reflects the latest edit, even if
+// `bun run sync:cms-entries` hasn't been run yet.
+fn cms_api_content_data_dir() -> PathBuf {
+    if let Ok(dir) = env::var("CMS_API_CONTENT_DATA_DIR") {
+        return PathBuf::from(dir);
+    }
+
+    let cwd = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
+    let candidates = [
+        cwd.join("data").join("contents"),
+        cwd.join("..").join("data").join("contents"),
+        PathBuf::from("./data/contents"),
+    ];
+
+    candidates
+        .into_iter()
+        .find(|p| p.is_dir())
+        .unwrap_or_else(|| PathBuf::from("./data/contents"))
+}
+
 fn cms_api_database_url() -> String {
     if let Ok(database_url) = env::var("CMS_API_DATABASE_URL") {
         return database_url;
@@ -80,7 +102,7 @@ async fn main() {
         // Dynamically rendered OG (1200x630) PNGs served by the Rust API.
         // Mounted under both the canonical prefix and the `/api/cms/og` alias
         // so the static-exported portfolio can link to it without a Node route.
-        .nest("/api/cms/og", og::router(pool.clone()))
+        .nest("/api/cms/og", og::router(cms_api_content_data_dir()))
         // Next.js static export has no Node API routes; keep browser-facing
         // `/api/content/*` working through the Rust backend.
         .nest("/api/content", content_compat::router(pool.clone()))
