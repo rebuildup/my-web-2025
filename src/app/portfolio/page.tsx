@@ -187,7 +187,7 @@ function PortfolioError() {
 				className="relative z-10 flex min-h-dvh items-center justify-center"
 				tabIndex={-1}
 			>
-				<div className="container mx-auto px-4">
+				<div className="mx-auto max-w-6xl px-4">
 					<div className="max-w-3xl mx-auto text-center">
 						<h1 className="text-4xl font-bold italic tracking-tight ">Error</h1>
 						<p className="mt-4 text-xs ">
@@ -487,69 +487,66 @@ export default async function PortfolioPage() {
 						className="relative z-10 min-h-dvh py-10"
 						tabIndex={-1}
 					>
-						<div className="container">
-							<div className="space-y-16 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-								<PortfolioHero />
+						<div className="space-y-16 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+							<PortfolioHero />
 
-								{/* Overview (combined stats + highlights) */}
-								<StatsOverview
-									total={items.length}
-									develop={categoryCounts.develop || 0}
-									video={categoryCounts.video || 0}
-									videoDesign={categoryCounts["video&design"] || 0}
-									count7d={count7d}
-									count30d={count30d}
-									count365d={count365d}
-									items={items.map((it) => ({
-										id: it.id,
-										title: it.title,
-										thumbnail: it.thumbnail,
-										publishedAt: it.publishedAt,
-										updatedAt: it.updatedAt,
-										createdAt: it.createdAt,
-									}))}
-								/>
+							{/* Overview (combined stats + highlights) */}
+							<StatsOverview
+								total={items.length}
+								develop={categoryCounts.develop || 0}
+								video={categoryCounts.video || 0}
+								videoDesign={categoryCounts["video&design"] || 0}
+								count7d={count7d}
+								count30d={count30d}
+								count365d={count365d}
+								items={items.map((it) => ({
+									id: it.id,
+									title: it.title,
+									thumbnail: it.thumbnail,
+									publishedAt: it.publishedAt,
+									updatedAt: it.updatedAt,
+									createdAt: it.createdAt,
+								}))}
+							/>
 
-								<GallerySection categories={categories} />
+							<GallerySection categories={categories} />
 
-								{/* Highlights are integrated into Overview */}
+							{/* Highlights are integrated into Overview */}
 
-								{/* Latest Works */}
-								<LatestWorksSection items={items} />
+							{/* Latest Works */}
+							<LatestWorksSection items={items} />
 
-								<TagGallerySection
-									title="Develop"
-									items={topN(
-										items.filter(
-											(it) =>
-												Array.isArray(it.tags) && it.tags.includes("develop"),
-										),
-										3,
-									)}
-								/>
+							<TagGallerySection
+								title="Develop"
+								items={topN(
+									items.filter(
+										(it) =>
+											Array.isArray(it.tags) && it.tags.includes("develop"),
+									),
+									3,
+								)}
+							/>
 
-								<TagGallerySection
-									title="Video"
-									items={topN(
-										items.filter(
-											(it) =>
-												Array.isArray(it.tags) && it.tags.includes("video"),
-										),
-										3,
-									)}
-								/>
+							<TagGallerySection
+								title="Video"
+								items={topN(
+									items.filter(
+										(it) => Array.isArray(it.tags) && it.tags.includes("video"),
+									),
+									3,
+								)}
+							/>
 
-								<TagGallerySection
-									title="Design"
-									items={topN(
-										items.filter(
-											(it) =>
-												Array.isArray(it.tags) && it.tags.includes("design"),
-										),
-										3,
-									)}
-								/>
-							</div>
+							<TagGallerySection
+								title="Design"
+								items={topN(
+									items.filter(
+										(it) =>
+											Array.isArray(it.tags) && it.tags.includes("design"),
+									),
+									3,
+								)}
+							/>
 						</div>
 					</main>
 

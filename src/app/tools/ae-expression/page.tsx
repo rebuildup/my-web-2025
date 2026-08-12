@@ -24,21 +24,19 @@ export default function AEExpressionPage() {
 		<>
 			<div className="relative min-h-screen ">
 				<main className="relative z-10 min-h-screen py-10" tabIndex={-1}>
-					<div className="container">
-						<div className="mx-auto w-full max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
-							<Breadcrumbs
-								items={[
-									{ label: "Home", href: "/" },
-									{ label: "Tools", href: "/tools" },
-									{ label: "After Effects Expression Helper", isCurrent: true },
-								]}
-								className="pt-4"
-							/>
+					<div className="mx-auto w-full max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
+						<Breadcrumbs
+							items={[
+								{ label: "Home", href: "/" },
+								{ label: "Tools", href: "/tools" },
+								{ label: "After Effects Expression Helper", isCurrent: true },
+							]}
+							className="pt-4"
+						/>
 
-							<section className="space-y-6">
-								<AEExpressionTool />
-							</section>
-						</div>
+						<section className="space-y-6">
+							<AEExpressionTool />
+						</section>
 					</div>
 				</main>
 			</div>

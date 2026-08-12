@@ -137,7 +137,7 @@ export function GeneratedQuiz({ title = "${docs[0]?.title ?? "Quiz"}" }) {
  return (
  <>
  <style dangerouslySetInnerHTML={{ __html: style }} />
- <div className="container" ref={ref}>
+ <div className="mx-auto w-full max-w-6xl" ref={ref}>
  {${docs.length > 1 ? "true" : "false"} && (
  <div className="nav-bar">
  ${docs
