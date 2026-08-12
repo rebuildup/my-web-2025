@@ -1,4 +1,4 @@
-import { Button, Stack } from "@mui/material";
+import { adminColor } from "@/components/admin/ui/tokens";
 import { appendGalleryItem, type MediaKind } from "./gallery-utils";
 
 interface GalleryAddControlsProps {
@@ -22,20 +22,36 @@ export function GalleryAddControls({
 	onSelect,
 }: GalleryAddControlsProps) {
 	return (
-		<Stack spacing={1} sx={{ alignItems: "center", justifyContent: "center" }}>
+		<div
+			style={{
+				display: "flex",
+				flexDirection: "column",
+				alignItems: "center",
+				justifyContent: "center",
+				gap: 8,
+			}}
+		>
 			{MEDIA_KINDS.map(({ kind, label }) => (
-				<Button
+				<button
 					key={kind}
-					size="small"
-					variant="outlined"
+					type="button"
 					onClick={() => {
 						onContentChange?.(appendGalleryItem(content, kind));
 						onSelect(itemCount);
 					}}
+					style={{
+						padding: "6px 12px",
+						fontSize: 14,
+						border: `1px solid ${adminColor.borderInput}`,
+						borderRadius: 4,
+						backgroundColor: adminColor.bgPanel,
+						color: adminColor.textPrimary,
+						cursor: "pointer",
+					}}
 				>
 					{label}
-				</Button>
+				</button>
 			))}
-		</Stack>
+		</div>
 	);
 }
