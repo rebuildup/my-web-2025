@@ -1,18 +1,18 @@
-import { Box } from "@mui/material";
 import type { Block } from "@/cms/types/blocks";
+import { adminColor } from "@/components/admin/ui/tokens";
 
 export function UnknownBlock({ block }: { block: Block }) {
 	return (
-		<Box
-			sx={{
-				p: 3,
-				borderRadius: 2,
-				bgcolor: "rgba(239,68,68,0.12)",
-				border: (theme) => `1px dashed ${theme.palette.error.main}`,
-				color: "error.light",
+		<div
+			style={{
+				padding: 24,
+				borderRadius: 8,
+				backgroundColor: "rgba(239,68,68,0.12)",
+				border: `1px dashed ${adminColor.error}`,
+				color: adminColor.error,
 			}}
 		>
 			Unsupported block: {block.type}
-		</Box>
+		</div>
 	);
 }
