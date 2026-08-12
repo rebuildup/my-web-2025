@@ -1,26 +1,36 @@
 "use client";
 
-import { Box } from "@mui/material";
+import { type CSSProperties } from "react";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
+import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockComponentProps } from "../types";
 
 export function QuoteBlock({
 	block,
 	readOnly,
 	onContentChange,
-	onAttributesChange: _onAttributesChange,
 	autoFocus,
 	onKeyDown,
 }: BlockComponentProps) {
+	const wrapperStyle: CSSProperties = {
+		borderLeft: `4px solid ${adminColor.border}`,
+		paddingLeft: 16,
+		paddingTop: 8,
+		paddingBottom: 8,
+		color: adminColor.textSecondary,
+	};
+	const textStyle: CSSProperties = {
+		fontSize: 16,
+		backgroundColor: "transparent",
+		border: "none",
+		padding: 0,
+		paddingTop: 4,
+		paddingBottom: 4,
+		whiteSpace: "pre-wrap",
+		outline: "none",
+	};
 	return (
-		<Box
-			sx={(theme) => ({
-				borderLeft: `4px solid ${theme.palette.divider}`,
-				pl: 2,
-				py: 1,
-				color: theme.palette.text.secondary,
-			})}
-		>
+		<div style={wrapperStyle}>
 			<EditableText
 				value={block.content}
 				onChange={onContentChange}
@@ -28,16 +38,8 @@ export function QuoteBlock({
 				autoFocus={autoFocus}
 				onKeyDown={onKeyDown}
 				placeholder="> Quote"
-				sx={{
-					typography: "body1",
-					backgroundColor: "transparent",
-					border: "none",
-					paddingX: 0,
-					paddingY: 0.5,
-					"&:focus": { border: "none", backgroundColor: "transparent" },
-					whiteSpace: "pre-wrap",
-				}}
+				sx={textStyle}
 			/>
-		</Box>
+		</div>
 	);
 }
