@@ -1,6 +1,5 @@
 "use client";
 
-import { Box, Stack } from "@mui/material";
 import type { ReactNode } from "react";
 
 export interface EditorLayoutProps {
@@ -17,90 +16,87 @@ export function EditorLayout({
 	rightPanel,
 }: EditorLayoutProps) {
 	return (
-		<Box
-			sx={{
+		<div
+			style={{
 				display: "grid",
 				gridTemplateColumns: rightPanel
-					? { xs: "1fr", lg: "300px 1fr 320px" }
-					: { xs: "1fr", lg: "300px 1fr" },
+					? "minmax(0, 1fr) minmax(0, 2fr) minmax(0, 320px)"
+					: "minmax(0, 1fr) minmax(0, 3fr)",
 				height: "calc(100dvh - 96px)",
 				width: "100%",
 				overflow: "hidden",
-				bgcolor: "transparent",
+				backgroundColor: "transparent",
 			}}
 		>
-			<Box
-				component="aside"
-				sx={{
+			<aside
+				style={{
 					minHeight: 0,
-					display: { xs: "none", lg: "block" },
-					bgcolor: "transparent",
-					// 枠線は使わず背景コントラストのみ
+					backgroundColor: "transparent",
 					overflowY: "auto",
-					px: 3,
-					py: 4,
+					paddingLeft: 24,
+					paddingRight: 24,
+					paddingTop: 32,
+					paddingBottom: 32,
 				}}
 			>
 				{sidebar}
-			</Box>
-			<Stack
-				component="main"
-				sx={{
+			</aside>
+			<main
+				style={{
 					minHeight: 0,
 					position: "relative",
 					overflow: "hidden",
-					pl: { xs: 10, md: 12 },
-					pr: { xs: 2, md: 4 },
-					py: { xs: 2, md: 4 },
-					gap: 3,
+					paddingLeft: 48,
+					paddingRight: 16,
+					paddingTop: 16,
+					paddingBottom: 16,
+					display: "flex",
+					flexDirection: "column",
+					gap: 12,
 				}}
 			>
-				{toolbar && (
-					<Box component="section" sx={{ flexShrink: 0 }}>
-						{toolbar}
-					</Box>
-				)}
-				<Box
-					sx={{
+				{toolbar && <section style={{ flexShrink: 0 }}>{toolbar}</section>}
+				<div
+					style={{
 						flex: 1,
 						display: "flex",
 						flexDirection: "column",
 						overflow: "hidden",
 						borderRadius: 0,
-						bgcolor: "transparent",
+						backgroundColor: "transparent",
 					}}
 				>
-					<Box
-						component="section"
-						sx={{
+					<section
+						style={{
 							flex: 1,
 							overflowY: "auto",
 							overflowX: "hidden",
-							px: { xs: 1, md: 1.5 },
-							py: { xs: 2, md: 3.5 },
+							paddingLeft: 12,
+							paddingRight: 12,
+							paddingTop: 16,
+							paddingBottom: 16,
 						}}
 					>
 						{editor}
-					</Box>
-				</Box>
-			</Stack>
+					</section>
+				</div>
+			</main>
 			{rightPanel && (
-				<Box
-					component="aside"
-					sx={{
+				<aside
+					style={{
 						minHeight: 0,
-						display: { xs: "none", lg: "block" },
-						bgcolor: "transparent",
-						// 枠線は使わず背景コントラストのみ
+						backgroundColor: "transparent",
 						overflow: "hidden",
 						boxSizing: "border-box",
-						px: 3,
-						py: 4,
+						paddingLeft: 24,
+						paddingRight: 24,
+						paddingTop: 32,
+						paddingBottom: 32,
 					}}
 				>
 					{rightPanel}
-				</Box>
+				</aside>
 			)}
-		</Box>
+		</div>
 	);
 }
