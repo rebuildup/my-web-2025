@@ -1,18 +1,9 @@
 "use client";
 
-import {
-	AppBar,
-	Box,
-	Tab,
-	Tabs,
-	Toolbar,
-	Typography,
-	useMediaQuery,
-} from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect } from "react";
+import { adminColor } from "@/components/admin/ui/tokens";
 
-const _DRAWER_WIDTH = 248;
 const NAV_TABS = [
 	{ label: "コンテンツ一覧", href: "/admin/content" },
 	{ label: "ブロックエディタ", href: "/admin/content/page-editor" },
@@ -26,10 +17,8 @@ export interface AdminShellProps {
 }
 
 function getTabIndex(pathname: string): number {
-	// 1) exact match first
 	const exact = NAV_TABS.findIndex((t) => pathname === t.href);
 	if (exact !== -1) return exact;
-	// 2) longest prefix match (to avoid '/admin/content/page-editor' being treated as '/admin/content')
 	let best = -1;
 	let bestLen = -1;
 	NAV_TABS.forEach((t, i) => {
@@ -42,21 +31,79 @@ function getTabIndex(pathname: string): number {
 	return best !== -1 ? best : 0;
 }
 
+const rootStyle: CSSProperties = {
+	display: "flex",
+	flexDirection: "column",
+	height: "100%",
+	minHeight: "100%",
+	backgroundColor: adminColor.bgPage,
+};
+
+const headerStyle: CSSProperties = {
+	position: "fixed",
+	top: 0,
+	left: 0,
+	right: 0,
+	zIndex: 50,
+	display: "flex",
+	alignItems: "center",
+	gap: 16,
+	padding: "0 16px",
+	minHeight: 64,
+	backgroundColor: adminColor.bgPanel,
+	borderBottom: `1px solid ${adminColor.border}`,
+	flexWrap: "wrap",
+};
+
+const titleStyle: CSSProperties = {
+	fontWeight: 600,
+	fontSize: 14,
+	paddingLeft: 8,
+	color: adminColor.textPrimary,
+	whiteSpace: "nowrap",
+};
+
+const tabsStyle: CSSProperties = {
+	display: "flex",
+	gap: 4,
+	flex: 1,
+	overflowX: "auto",
+	minHeight: 40,
+};
+
+const tabStyle = (active: boolean): CSSProperties => ({
+	padding: "8px 12px",
+	fontSize: 13,
+	fontWeight: 600,
+	color: active ? adminColor.accent : adminColor.textSecondary,
+	background: "transparent",
+	border: "none",
+	borderBottom: `2px solid ${active ? adminColor.accent : "transparent"}`,
+	cursor: "pointer",
+	whiteSpace: "nowrap",
+	transition: "color 120ms ease, border-color 120ms ease",
+});
+
+const mainStyle = (fullWidth: boolean): CSSProperties => ({
+	flexGrow: 1,
+	width: "100%",
+	paddingTop: 64,
+	paddingBottom: fullWidth ? 0 : 32,
+});
+
+const containerStyle: CSSProperties = {
+	margin: "0 auto",
+	width: "100%",
+	maxWidth: 1280,
+	padding: "0 24px",
+};
+
 export function AdminShell({ children }: AdminShellProps) {
 	const pathname = usePathname();
 	const router = useRouter();
-	const [_mobileOpen, _setMobileOpen] = useState(false);
-	// useMediaQueryはSSRとCSRで異なる値を返す可能性があるため、noSsrオプションを使用
-	const _isDesktop = useMediaQuery("(min-width:900px)", { noSsr: true });
 	const isFullWidthPage = pathname.startsWith("/admin/content/page-editor");
 	const tabIndex = getTabIndex(pathname);
 
-	const onTabChange = (_: unknown, value: number) => {
-		const target = NAV_TABS[value];
-		if (target) router.push(target.href);
-	};
-
-	// /admin 直下に来た場合はコンテンツ一覧へリダイレクト
 	useEffect(() => {
 		if (pathname === "/admin") {
 			router.replace("/admin/content");
@@ -64,84 +111,36 @@ export function AdminShell({ children }: AdminShellProps) {
 	}, [pathname, router]);
 
 	return (
-		<Box
-			sx={{
-				display: "flex",
-				height: "100%",
-				minHeight: "100%",
-				bgcolor: "background.default",
-			}}
-		>
-			<AppBar
-				position="fixed"
-				elevation={0}
-				color="default"
-				sx={{
-					borderBottom: 1,
-					borderColor: "divider",
-					bgcolor: "background.paper",
-					width: "100%",
-					ml: 0,
-				}}
-			>
-				<Toolbar
-					disableGutters
-					sx={{
-						px: 0,
-						minHeight: 64,
-						display: "flex",
-						gap: 2,
-						flexWrap: "wrap",
-					}}
-				>
-					<Typography
-						variant="subtitle1"
-						noWrap
-						sx={{ fontWeight: 600, pl: 2 }}
-					>
-						Content Management
-					</Typography>
-					<Box sx={{ flex: 1 }} />
-					<Tabs
-						value={tabIndex}
-						onChange={onTabChange}
-						variant="scrollable"
-						scrollButtons="auto"
-						sx={{ minHeight: 40 }}
-					>
-						{NAV_TABS.map((t) => (
-							<Tab key={t.href} label={t.label} sx={{ minHeight: 40 }} />
-						))}
-					</Tabs>
-				</Toolbar>
-			</AppBar>
+		<div style={rootStyle}>
+			<header style={headerStyle}>
+				<span style={titleStyle}>Content Management</span>
+				<nav aria-label="Admin sections" role="tablist" style={tabsStyle}>
+					{NAV_TABS.map((tab, i) => {
+						const active = i === tabIndex;
+						return (
+							<button
+								key={tab.href}
+								type="button"
+								role="tab"
+								aria-selected={active}
+								tabIndex={active ? 0 : -1}
+								onClick={() => router.push(tab.href)}
+								style={tabStyle(active)}
+							>
+								{tab.label}
+							</button>
+						);
+					})}
+				</nav>
+			</header>
 
-			<Box
-				component="main"
-				sx={{
-					flexGrow: 1,
-					width: "100%",
-					pt: isFullWidthPage ? 8 : { xs: 8, md: 8 },
-					pb: isFullWidthPage ? 0 : { xs: 4, md: 6 },
-					px: 0,
-				}}
-			>
-				<Toolbar sx={{ display: { xs: "block", md: "none" }, minHeight: 16 }} />
+			<main style={mainStyle(isFullWidthPage)}>
 				{isFullWidthPage ? (
 					children
 				) : (
-					<Box
-						sx={{
-							mx: "auto",
-							width: "100%",
-							maxWidth: { sm: 640, md: 768, lg: 1024, xl: 1280 },
-							px: { xs: 2, sm: 3, md: 4 },
-						}}
-					>
-						{children}
-					</Box>
+					<div style={containerStyle}>{children}</div>
 				)}
-			</Box>
-		</Box>
+			</main>
+		</div>
 	);
 }
