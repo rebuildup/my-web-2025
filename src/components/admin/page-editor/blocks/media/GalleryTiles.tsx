@@ -1,4 +1,4 @@
-import { Box, Link, Typography } from "@mui/material";
+import { adminColor } from "@/components/admin/ui/tokens";
 import {
 	getGalleryColumnSpanClass,
 	type ParsedGalleryItem,
@@ -29,49 +29,47 @@ export function GalleryTiles({
 		<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
 			{!readOnly && (
 				<div className="col-span-1 sm:col-span-1 md:col-span-1">
-					<Box
+					<div
 						onMouseEnter={() => onAddHoverChange(true)}
 						onMouseLeave={() => onAddHoverChange(false)}
-						sx={{
+						style={{
 							display: "flex",
 							alignItems: "center",
 							justifyContent: "center",
-							border: (theme) => `1px dashed ${theme.palette.primary.main}`,
-							bgcolor: "rgba(59,130,246,0.06)",
-							color: "primary.main",
-							borderRadius: 1.5,
+							border: `1px dashed ${adminColor.accent}`,
+							backgroundColor: "rgba(59,130,246,0.06)",
+							color: adminColor.accent,
+							borderRadius: 6,
 							aspectRatio: "1 / 1",
 							minHeight: 160,
 							cursor: "pointer",
 						}}
 					>
-						<Typography variant="body2">+ Add media</Typography>
-					</Box>
+						<span style={{ fontSize: 14 }}>+ Add media</span>
+					</div>
 				</div>
 			)}
 			{items.slice(0, visibleCount).map((item, idx) => (
 				<div key={`${item.kind}-${item.url}`} className={colSpanClass}>
-					<Box
+					<div
 						onClick={() => onSelect(idx)}
-						sx={{
-							border: (theme) =>
-								`1px solid ${selected === idx ? theme.palette.primary.main : theme.palette.divider}`,
+						style={{
+							border: `1px solid ${selected === idx ? adminColor.accent : adminColor.border}`,
 							boxShadow:
 								selected === idx
-									? (theme) => `0 0 0 2px ${theme.palette.primary.main}33 inset`
+									? `0 0 0 2px ${adminColor.accent}33 inset`
 									: undefined,
 							cursor: "pointer",
-							borderRadius: 1.5,
+							borderRadius: 6,
 							overflow: "hidden",
-							bgcolor: "rgba(255,255,255,0.03)",
+							backgroundColor: "rgba(255,255,255,0.03)",
 						}}
 					>
 						{item.kind === "image" && (
-							<Box
-								component="img"
+							<img
 								src={item.url}
 								alt={item.label ?? ""}
-								sx={{
+								style={{
 									display: "block",
 									width: "100%",
 									height: 140,
@@ -80,11 +78,10 @@ export function GalleryTiles({
 							/>
 						)}
 						{item.kind === "video" && (
-							<Box
-								component="video"
+							<video
 								src={item.url}
 								controls
-								sx={{
+								style={{
 									display: "block",
 									width: "100%",
 									height: 140,
@@ -93,34 +90,41 @@ export function GalleryTiles({
 							/>
 						)}
 						{item.kind === "audio" && (
-							<Box sx={{ p: 1 }}>
+							<div style={{ padding: 8 }}>
 								<audio src={item.url} controls style={{ width: "100%" }}>
 									<track kind="captions" />
 								</audio>
-							</Box>
+							</div>
 						)}
 						{item.kind === "file" && (
-							<Box sx={{ p: 1 }}>
-								<Typography variant="caption" color="text.secondary">
+							<div style={{ padding: 8 }}>
+								<p
+									style={{
+										fontSize: 12,
+										color: adminColor.textSecondary,
+										margin: 0,
+									}}
+								>
 									File
-								</Typography>
-								<Link
+								</p>
+								<a
 									href={item.url}
 									target="_blank"
 									rel="noreferrer"
-									underline="hover"
-									sx={{
+									style={{
 										display: "block",
 										overflow: "hidden",
 										textOverflow: "ellipsis",
 										whiteSpace: "nowrap",
+										color: adminColor.accent,
+										textDecoration: "underline",
 									}}
 								>
 									{item.label ?? item.url}
-								</Link>
-							</Box>
+								</a>
+							</div>
 						)}
-					</Box>
+					</div>
 				</div>
 			))}
 		</div>
