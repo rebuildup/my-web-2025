@@ -12,6 +12,22 @@
 @import "tailwindcss/theme.css";
 @import "tailwindcss/utilities.css";
 
+/* Minimal box-sizing reset (replaces preflight's `*, ::before, ::after`
+ * rule without restoring form-element resets that the project skips on
+ * purpose). Without this, padding + w-full overflows on mobile because
+ * the browser default is content-box. */
+*,
+::before,
+::after {
+	box-sizing: border-box;
+}
+
+@theme {
+	--breakpoint-sm: 480px;
+	--breakpoint-md: 768px;
+	--breakpoint-lg: 1024px;
+}
+
 /* Global font styles */
 h1,
 h2,
