@@ -1,16 +1,9 @@
 "use client";
 
-import CodeRoundedIcon from "@mui/icons-material/CodeRounded";
-import PreviewRoundedIcon from "@mui/icons-material/PreviewRounded";
-import {
-	Box,
-	Card,
-	CardContent,
-	ToggleButton,
-	ToggleButtonGroup,
-} from "@mui/material";
+import { Code, Eye } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
+import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockComponentProps } from "../types";
 
 type ViewMode = "edit" | "preview";
@@ -42,29 +35,22 @@ export function CustomHtmlBlock({
 		}
 	}, [readOnly]);
 
-	const handleModeChange = useCallback((_: unknown, next: ViewMode | null) => {
-		if (!next) {
-			return;
-		}
+	const handleModeChange = useCallback((next: ViewMode) => {
 		setMode(next);
 	}, []);
 
-	// HTMLコンテンツを更新する（コンテンツが変更された場合のみ）
 	useEffect(() => {
 		if (!previewRef.current || (mode !== "preview" && !readOnly)) {
 			return;
 		}
 
-		// コンテンツが変更されていない場合は何もしない（再読み込みを防ぐ）
 		if (lastHtmlRef.current === sanitizedHtml && sanitizedHtml !== "") {
 			return;
 		}
 
-		// HTMLコンテンツを設定
 		previewRef.current.innerHTML = sanitizedHtml;
 		lastHtmlRef.current = sanitizedHtml;
 
-		// スクリプトを再実行
 		const scripts = Array.from(
 			previewRef.current.querySelectorAll("script"),
 		) as HTMLScriptElement[];
@@ -80,104 +66,102 @@ export function CustomHtmlBlock({
 	}, [mode, readOnly, sanitizedHtml]);
 
 	return (
-		<Card
-			variant="outlined"
-			sx={{
-				borderRadius: 3,
-				border: (theme) => `1px solid ${theme.palette.divider}`,
-				bgcolor: "rgba(255,255,255,0.02)",
+		<section
+			style={{
+				borderRadius: 12,
+				border: `1px solid ${adminColor.border}`,
+				backgroundColor: "rgba(255,255,255,0.02)",
 				overflow: "hidden",
 			}}
 		>
-			<CardContent sx={{ p: 0 }}>
-				<Box
-					sx={{
-						position: "relative",
-						"&:hover .custom-html-controls, & .custom-html-controls:focus-within":
-							{
-								opacity: 1,
-								pointerEvents: "auto",
-							},
-					}}
-				>
-					{!readOnly && (
-						<Box
-							className="custom-html-controls"
-							sx={{
-								position: "absolute",
-								top: 6,
-								right: 6,
-								zIndex: 1,
-								opacity: 0,
-								pointerEvents: "none",
-								transition: "opacity 120ms ease",
-								bgcolor: "rgba(15,23,42,0.5)",
-								backdropFilter: "blur(4px)",
-								borderRadius: 1,
+			<div style={{ position: "relative", padding: 0 }}>
+				{!readOnly && (
+					<div
+						className="custom-html-controls"
+						style={{
+							position: "absolute",
+							top: 6,
+							right: 6,
+							zIndex: 1,
+							opacity: 0,
+							pointerEvents: "none",
+							transition: "opacity 120ms ease",
+							backgroundColor: "rgba(15,23,42,0.5)",
+							backdropFilter: "blur(4px)",
+							borderRadius: 4,
+						}}
+					>
+						<div
+							role="group"
+							aria-label="View mode"
+							style={{
+								display: "inline-flex",
+								gap: 2,
 							}}
 						>
-							<ToggleButtonGroup
-								size="small"
-								exclusive
-								value={mode}
-								onChange={handleModeChange}
-							>
-								<ToggleButton value="edit" aria-label="Edit HTML">
-									<CodeRoundedIcon fontSize="small" />
-								</ToggleButton>
-								<ToggleButton value="preview" aria-label="Preview HTML">
-									<PreviewRoundedIcon fontSize="small" />
-								</ToggleButton>
-							</ToggleButtonGroup>
-						</Box>
-					)}
-					{mode === "preview" || readOnly ? (
-						<Box
-							sx={{
-								borderRadius: 2,
-								border: (theme) => `1px dashed ${theme.palette.divider}`,
-								backgroundColor: "rgba(255,255,255,0.04)",
-								minHeight: 100,
-								p: 1.25,
-								overflow: "auto",
-							}}
-						>
-							{sanitizedHtml && (
-								<Box
-									ref={previewRef}
-									component="div"
-									sx={{
-										"& iframe": {
-											maxWidth: "100%",
-										},
-									}}
-									// dangerouslySetInnerHTMLは使用せず、useEffectで制御
-								/>
-							)}
-						</Box>
-					) : (
-						<EditableText
-							value={block.content}
-							onChange={onContentChange}
-							autoFocus={autoFocus}
-							readOnly={readOnly}
-							onKeyDown={onKeyDown}
-							placeholder="<div>Hello world</div>"
-							sx={{
-								typography: "body2",
-								fontFamily:
-									'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-								backgroundColor: "rgba(15,23,42,0.4)",
-								borderRadius: 2,
-								minHeight: 140,
-								border: (theme) => `1px solid ${theme.palette.divider}`,
-								whiteSpace: "pre-wrap",
-								p: 1.25,
-							}}
-						/>
-					)}
-				</Box>
-			</CardContent>
-		</Card>
+							{(["edit", "preview"] as const).map((m) => {
+								const active = mode === m;
+								return (
+									<button
+										key={m}
+										type="button"
+										aria-pressed={active}
+										aria-label={`${m} HTML`}
+										onClick={() => handleModeChange(m)}
+										style={{
+											display: "inline-flex",
+											alignItems: "center",
+											justifyContent: "center",
+											padding: 6,
+											background: active ? adminColor.accent : "transparent",
+											color: "#fff",
+											border: "none",
+											borderRadius: 2,
+											cursor: "pointer",
+										}}
+									>
+										{m === "edit" ? <Code size={16} /> : <Eye size={16} />}
+									</button>
+								);
+							})}
+						</div>
+					</div>
+				)}
+				{mode === "preview" || readOnly ? (
+					<div
+						style={{
+							borderRadius: 4,
+							border: `1px dashed ${adminColor.border}`,
+							backgroundColor: "rgba(255,255,255,0.04)",
+							minHeight: 100,
+							padding: 10,
+							overflow: "auto",
+						}}
+					>
+						{sanitizedHtml && <div ref={previewRef} />}
+					</div>
+				) : (
+					<EditableText
+						value={block.content}
+						onChange={onContentChange}
+						autoFocus={autoFocus}
+						readOnly={readOnly}
+						onKeyDown={onKeyDown}
+						placeholder="<div>Hello world</div>"
+						sx={{
+							fontSize: 14,
+							fontFamily:
+								'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+							backgroundColor: "rgba(15,23,42,0.4)",
+							borderRadius: 4,
+							minHeight: 140,
+							border: `1px solid ${adminColor.border}`,
+							whiteSpace: "pre-wrap",
+							padding: 10,
+						}}
+					/>
+				)}
+			</div>
+		</section>
 	);
 }
