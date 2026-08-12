@@ -1,28 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-	Alert,
-	AlertColor,
-	Box,
-	Button,
-	Card,
-	CardContent,
-	Chip,
-	Dialog,
-	DialogContent,
-	DialogTitle,
-	IconButton,
-	InputAdornment,
-	Paper,
-	Snackbar,
-	Stack,
-	TextField,
-	Tooltip,
-	Typography,
-	CircularProgress,
-} from "@mui/material";
+	type CSSProperties,
+	type ReactNode,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
 import {
 	Image as ImageIcon,
 	RefreshCcw,
@@ -40,17 +26,189 @@ import {
 	SimpleSelect,
 	type SimpleSelectOption,
 } from "@/components/admin/ui";
+import { adminColor } from "@/components/admin/ui/tokens";
 import { useCmsResource } from "@/hooks/useCmsResource";
 
 interface MediaWithPreview extends MediaItem {
 	preview?: string;
 }
 
+type SnackbarSeverity = "success" | "error" | "info" | "warning";
+
 interface SnackbarState {
 	open: boolean;
 	message: string;
-	severity: AlertColor;
+	severity: SnackbarSeverity;
 }
+
+const severityPalette: Record<
+	SnackbarSeverity,
+	{ bg: string; fg: string; border: string }
+> = {
+	success: {
+		bg: adminColor.success,
+		fg: "#ffffff",
+		border: adminColor.success,
+	},
+	error: { bg: adminColor.error, fg: "#ffffff", border: adminColor.error },
+	info: { bg: adminColor.info, fg: "#ffffff", border: adminColor.info },
+	warning: {
+		bg: adminColor.warning,
+		fg: "#ffffff",
+		border: adminColor.warning,
+	},
+};
+
+const primaryButtonStyle: CSSProperties = {
+	padding: "8px 18px",
+	fontSize: 14,
+	fontWeight: 600,
+	color: "#ffffff",
+	backgroundColor: adminColor.accent,
+	border: `1px solid ${adminColor.accent}`,
+	borderRadius: 6,
+	cursor: "pointer",
+	display: "inline-flex",
+	alignItems: "center",
+	gap: 6,
+};
+
+const outlinedButtonStyle: CSSProperties = {
+	padding: "8px 18px",
+	fontSize: 14,
+	fontWeight: 600,
+	color: adminColor.textPrimary,
+	backgroundColor: "transparent",
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 6,
+	cursor: "pointer",
+	display: "inline-flex",
+	alignItems: "center",
+	gap: 6,
+};
+
+const disabledPrimaryStyle: CSSProperties = {
+	...primaryButtonStyle,
+	opacity: 0.5,
+	cursor: "not-allowed",
+};
+
+const panelStyle: CSSProperties = {
+	border: `1px solid ${adminColor.border}`,
+	borderRadius: 8,
+	padding: 24,
+	backgroundColor: adminColor.bgPanel,
+	display: "grid",
+	gap: 20,
+};
+
+const cardStyle: CSSProperties = {
+	border: `1px solid ${adminColor.border}`,
+	borderRadius: 8,
+	overflow: "hidden",
+	backgroundColor: adminColor.bgPanel,
+};
+
+const searchWrapStyle: CSSProperties = {
+	flex: 1,
+	display: "flex",
+	alignItems: "center",
+	gap: 8,
+	padding: "0 12px",
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 6,
+	backgroundColor: "#ffffff",
+};
+
+const chipStyle: CSSProperties = {
+	display: "inline-flex",
+	alignItems: "center",
+	padding: "2px 10px",
+	fontSize: 12,
+	fontWeight: 500,
+	color: adminColor.textSecondary,
+	backgroundColor: "#f3f4f6",
+	border: `1px solid ${adminColor.border}`,
+	borderRadius: 999,
+};
+
+const iconButtonStyle = (color: string): CSSProperties => ({
+	display: "inline-flex",
+	alignItems: "center",
+	justifyContent: "center",
+	padding: 6,
+	backgroundColor: "transparent",
+	color,
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 6,
+	cursor: "pointer",
+});
+
+const snackbarStyle = (severity: SnackbarSeverity): CSSProperties => {
+	const p = severityPalette[severity];
+	return {
+		position: "fixed",
+		left: "50%",
+		bottom: 24,
+		transform: "translateX(-50%)",
+		padding: "10px 20px",
+		fontSize: 14,
+		fontWeight: 500,
+		color: p.fg,
+		backgroundColor: p.bg,
+		borderRadius: 6,
+		boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
+		zIndex: 1500,
+		display: "inline-flex",
+		alignItems: "center",
+		gap: 12,
+	};
+};
+
+const dialogBackdropStyle: CSSProperties = {
+	position: "fixed",
+	inset: 0,
+	backgroundColor: "rgba(0,0,0,0.5)",
+	display: "flex",
+	alignItems: "flex-start",
+	justifyContent: "center",
+	paddingTop: 64,
+	zIndex: 1400,
+};
+
+const dialogSurfaceStyle: CSSProperties = {
+	width: "min(640px, calc(100vw - 32px))",
+	backgroundColor: adminColor.bgPanel,
+	borderRadius: 8,
+	boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+	overflow: "hidden",
+	maxHeight: "calc(100vh - 96px)",
+	display: "flex",
+	flexDirection: "column",
+};
+
+const dialogHeaderStyle: CSSProperties = {
+	padding: "16px 24px",
+	borderBottom: `1px solid ${adminColor.border}`,
+	fontSize: 16,
+	fontWeight: 600,
+	color: adminColor.textPrimary,
+};
+
+const dialogBodyStyle: CSSProperties = {
+	padding: 24,
+	overflowY: "auto",
+};
+
+const alertStyle: CSSProperties = {
+	padding: "8px 16px",
+	fontSize: 14,
+	borderRadius: 4,
+	border: `1px solid ${adminColor.error}`,
+	borderLeftWidth: 4,
+	backgroundColor: "rgba(185, 28, 28, 0.08)",
+	color: adminColor.error,
+};
 
 function formatBytes(bytes: number) {
 	if (!bytes) return "0 B";
@@ -62,6 +220,32 @@ function formatBytes(bytes: number) {
 		index += 1;
 	}
 	return `${value.toFixed(value >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
+}
+
+function StatItem({
+	label,
+	value,
+}: {
+	label: string;
+	value: string | number;
+}) {
+	return (
+		<div
+			style={{
+				border: `1px solid ${adminColor.border}`,
+				borderRadius: 6,
+				padding: "4px 16px",
+				display: "grid",
+				gap: 2,
+				minWidth: 120,
+			}}
+		>
+			<span style={{ fontSize: 12, color: adminColor.textSecondary }}>
+				{label}
+			</span>
+			<span style={{ fontSize: 14, fontWeight: 600 }}>{value}</span>
+		</div>
+	);
 }
 
 interface MediaHeaderProps {
@@ -80,23 +264,25 @@ function MediaHeader({
 			title="メディアライブラリ"
 			description="コンテンツごとの画像・アセットを一元管理します.検索やタグフィルタで目的のメディアを素早く見つけ、詳細情報やプレビューを確認できます."
 			actions={[
-				<Button
+				<button
 					key="refresh"
-					variant="outlined"
-					startIcon={<RefreshCcw size={16} />}
+					type="button"
 					onClick={onRefresh}
+					style={outlinedButtonStyle}
 				>
+					<RefreshCcw size={16} />
 					更新
-				</Button>,
-				<Button
+				</button>,
+				<button
 					key="upload"
-					variant="contained"
-					startIcon={<UploadCloud size={18} />}
+					type="button"
 					onClick={onOpenUpload}
 					disabled={!selectedContentId}
+					style={selectedContentId ? primaryButtonStyle : disabledPrimaryStyle}
 				>
+					<UploadCloud size={18} />
 					メディアを追加
-				</Button>,
+				</button>,
 			]}
 		/>
 	);
@@ -135,12 +321,15 @@ function MediaFilters({
 	];
 
 	return (
-		<Stack
-			direction={{ xs: "column", md: "row" }}
-			spacing={2}
-			alignItems={{ xs: "stretch", md: "center" }}
+		<div
+			style={{
+				display: "flex",
+				gap: 16,
+				flexWrap: "wrap",
+				alignItems: "center",
+			}}
 		>
-			<Box sx={{ flex: 1, minWidth: 0 }}>
+			<div style={{ flex: 1, minWidth: 0 }}>
 				<SimpleSelect
 					label="コンテンツ"
 					value={selectedContentId}
@@ -149,21 +338,25 @@ function MediaFilters({
 					disabled={contentsLoading || contentOptions.length === 0}
 					fullWidth
 				/>
-			</Box>
-			<TextField
-				placeholder="ファイル名・タグ・説明で検索"
-				value={searchQuery}
-				onChange={(event) => onSearch(event.target.value)}
-				InputProps={{
-					startAdornment: (
-						<InputAdornment position="start">
-							<Search size={16} />
-						</InputAdornment>
-					),
-				}}
-				sx={{ flex: 1 }}
-			/>
-			<Box sx={{ minWidth: 160 }}>
+			</div>
+			<label style={searchWrapStyle}>
+				<Search size={16} color={adminColor.textSecondary} />
+				<input
+					placeholder="ファイル名・タグ・説明で検索"
+					value={searchQuery}
+					onChange={(event) => onSearch(event.target.value)}
+					style={{
+						flex: 1,
+						padding: "8px 0",
+						fontSize: 14,
+						color: adminColor.textPrimary,
+						backgroundColor: "transparent",
+						border: "none",
+						outline: "none",
+					}}
+				/>
+			</label>
+			<div style={{ minWidth: 160 }}>
 				<SimpleSelect
 					label="タグ"
 					value={tagFilter}
@@ -172,8 +365,8 @@ function MediaFilters({
 					size="small"
 					fullWidth
 				/>
-			</Box>
-		</Stack>
+			</div>
+		</div>
 	);
 }
 
@@ -189,38 +382,60 @@ function SelectedContentSummary({
 	totalSize,
 }: SelectedContentSummaryProps) {
 	return (
-		<Paper
-			variant="outlined"
-			sx={{
-				p: 2.5,
-				borderColor: "divider",
-				bgcolor: "background.default",
+		<section
+			style={{
+				padding: 20,
+				border: `1px solid ${adminColor.border}`,
+				borderRadius: 8,
+				backgroundColor: adminColor.bgPage,
 			}}
 		>
-			<Stack
-				direction={{ xs: "column", sm: "row" }}
-				spacing={2}
-				justifyContent="space-between"
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					gap: 16,
+					flexWrap: "wrap",
+				}}
 			>
-				<Box>
-					<Typography variant="subtitle2" color="text.secondary">
+				<div>
+					<p
+						style={{
+							margin: 0,
+							fontSize: 13,
+							fontWeight: 600,
+							color: adminColor.textSecondary,
+						}}
+					>
 						選択中のコンテンツ
-					</Typography>
-					<Typography variant="body1" fontWeight={600}>
+					</p>
+					<p
+						style={{
+							margin: "4px 0 0 0",
+							fontSize: 14,
+							fontWeight: 600,
+						}}
+					>
 						{selectedContent.title}
-					</Typography>
+					</p>
 					{selectedContent.summary && (
-						<Typography variant="caption" color="text.secondary">
+						<p
+							style={{
+								margin: "4px 0 0 0",
+								fontSize: 12,
+								color: adminColor.textSecondary,
+							}}
+						>
 							{selectedContent.summary}
-						</Typography>
+						</p>
 					)}
-				</Box>
-				<Stack direction="row" spacing={1.5}>
+				</div>
+				<div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
 					<StatItem label="メディア数" value={mediaCount} />
 					<StatItem label="合計サイズ" value={formatBytes(totalSize)} />
-				</Stack>
-			</Stack>
-		</Paper>
+				</div>
+			</div>
+		</section>
 	);
 }
 
@@ -233,57 +448,72 @@ interface MediaGridProps {
 function MediaGrid({ mediaLoading, filteredMedia, onDelete }: MediaGridProps) {
 	if (mediaLoading) {
 		return (
-			<Box
-				sx={{
-					py: 10,
+			<div
+				style={{
+					paddingTop: 80,
+					paddingBottom: 80,
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "center",
 				}}
 			>
-				<CircularProgress size={32} />
-			</Box>
+				<div
+					aria-label="Loading"
+					style={{
+						width: 32,
+						height: 32,
+						borderRadius: "50%",
+						border: `3px solid ${adminColor.border}`,
+						borderTopColor: adminColor.accent,
+					}}
+				/>
+			</div>
 		);
 	}
 
 	if (filteredMedia.length === 0) {
 		return (
-			<Box
-				sx={{
-					py: 10,
+			<div
+				style={{
+					paddingTop: 80,
+					paddingBottom: 80,
 					display: "flex",
 					flexDirection: "column",
 					alignItems: "center",
-					gap: 1.5,
+					gap: 12,
 					textAlign: "center",
 				}}
 			>
-				<ImageIcon size={40} color="#9ca3af" />
-				<Typography variant="body1" fontWeight={600}>
+				<ImageIcon size={40} color={adminColor.textDisabled} />
+				<p style={{ margin: 0, fontSize: 14, fontWeight: 600 }}>
 					メディアが見つかりません
-				</Typography>
-				<Typography variant="body2" color="text.secondary">
+				</p>
+				<p
+					style={{
+						margin: 0,
+						fontSize: 13,
+						color: adminColor.textSecondary,
+					}}
+				>
 					条件を変更するか、メディアをアップロードしてください.
-				</Typography>
-			</Box>
+				</p>
+			</div>
 		);
 	}
 
 	return (
-		<Box
-			sx={{
+		<div
+			style={{
 				display: "grid",
-				gridTemplateColumns: {
-					xs: "repeat(auto-fill, minmax(220px, 1fr))",
-					md: "repeat(auto-fill, minmax(260px, 1fr))",
-				},
-				gap: 3,
+				gridTemplateColumns:
+					"repeat(auto-fill, minmax(220px, 1fr))",
+				gap: 24,
 			}}
 		>
 			{filteredMedia.map((media) => (
 				<MediaCard key={media.id} media={media} onDelete={onDelete} />
 			))}
-		</Box>
+		</div>
 	);
 }
 
@@ -294,12 +524,12 @@ interface MediaCardProps {
 
 function MediaCard({ media, onDelete }: MediaCardProps) {
 	return (
-		<Card variant="outlined" sx={{ overflow: "hidden" }}>
-			<Box
-				sx={{
+		<section style={cardStyle}>
+			<div
+				style={{
 					position: "relative",
 					height: 180,
-					bgcolor: "grey.900",
+					backgroundColor: "#111827",
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "center",
@@ -314,46 +544,74 @@ function MediaCard({ media, onDelete }: MediaCardProps) {
 						style={{ objectFit: "cover" }}
 					/>
 				) : (
-					<ImageIcon size={32} color="#9ca3af" />
+					<ImageIcon size={32} color={adminColor.textDisabled} />
 				)}
-			</Box>
-			<CardContent sx={{ display: "grid", gap: 1 }}>
-				<Typography variant="subtitle2" fontWeight={600}>
+			</div>
+			<div
+				style={{
+					padding: 16,
+					display: "grid",
+					gap: 8,
+				}}
+			>
+				<p style={{ margin: 0, fontSize: 14, fontWeight: 600 }}>
 					{media.filename}
-				</Typography>
-				<Typography variant="caption" color="text.secondary">
+				</p>
+				<p
+					style={{
+						margin: 0,
+						fontSize: 12,
+						color: adminColor.textSecondary,
+					}}
+				>
 					{media.mimeType} ・ {formatBytes(media.size)}
-				</Typography>
+				</p>
 				{media.alt && (
-					<Typography variant="caption" color="text.secondary">
+					<p
+						style={{
+							margin: 0,
+							fontSize: 12,
+							color: adminColor.textSecondary,
+						}}
+					>
 						Alt: {media.alt}
-					</Typography>
+					</p>
 				)}
 				{media.description && (
-					<Typography variant="body2" color="text.secondary">
+					<p
+						style={{
+							margin: 0,
+							fontSize: 13,
+							color: adminColor.textSecondary,
+						}}
+					>
 						{media.description}
-					</Typography>
+					</p>
 				)}
 				{media.tags && media.tags.length > 0 && (
-					<Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+					<div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
 						{media.tags.map((tag) => (
-							<Chip key={tag} label={tag} size="small" variant="outlined" />
+							<span key={tag} style={chipStyle}>
+								{tag}
+							</span>
 						))}
-					</Stack>
+					</div>
 				)}
-				<Stack direction="row" spacing={0.5} justifyContent="flex-end">
-					<Tooltip title="メディアを削除">
-						<IconButton
-							size="small"
-							color="error"
-							onClick={() => onDelete(media)}
-						>
-							<Trash2 size={16} />
-						</IconButton>
-					</Tooltip>
-				</Stack>
-			</CardContent>
-		</Card>
+				<div
+					style={{ display: "flex", gap: 4, justifyContent: "flex-end" }}
+				>
+					<button
+						type="button"
+						onClick={() => onDelete(media)}
+						aria-label="メディアを削除"
+						title="メディアを削除"
+						style={iconButtonStyle(adminColor.error)}
+					>
+						<Trash2 size={16} />
+					</button>
+				</div>
+			</div>
+		</section>
 	);
 }
 
@@ -384,22 +642,30 @@ function MediaDialogs({
 }: MediaDialogsProps) {
 	return (
 		<>
-			<Dialog
-				open={isUploadDialogOpen}
-				onClose={onCloseUpload}
-				maxWidth="sm"
-				fullWidth
-			>
-				<DialogTitle>メディアをアップロード</DialogTitle>
-				<DialogContent>
-					<MediaUploadForm
-						onSubmit={onUpload}
-						onCancel={onCloseUpload}
-						isLoading={isUploading}
-						contentId={selectedContentId}
-					/>
-				</DialogContent>
-			</Dialog>
+			{isUploadDialogOpen && (
+				<div
+					role="dialog"
+					aria-modal="true"
+					aria-label="メディアをアップロード"
+					style={dialogBackdropStyle}
+					onClick={onCloseUpload}
+				>
+					<div
+						style={dialogSurfaceStyle}
+						onClick={(event) => event.stopPropagation()}
+					>
+						<header style={dialogHeaderStyle}>メディアをアップロード</header>
+						<div style={dialogBodyStyle}>
+							<MediaUploadForm
+								onSubmit={onUpload}
+								onCancel={onCloseUpload}
+								isLoading={isUploading}
+								contentId={selectedContentId}
+							/>
+						</div>
+					</div>
+				</div>
+			)}
 
 			<ConfirmDialog
 				open={Boolean(deleteTarget)}
@@ -409,23 +675,28 @@ function MediaDialogs({
 				onCancel={onCancelDelete}
 				onConfirm={onConfirmDelete}
 			/>
-
-			<Snackbar
-				open={snackbar.open}
-				autoHideDuration={3200}
-				onClose={onCloseSnackbar}
-				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-			>
-				<Alert
-					onClose={onCloseSnackbar}
-					severity={snackbar.severity}
-					variant="filled"
-				>
-					{snackbar.message}
-				</Alert>
-			</Snackbar>
 		</>
 	);
+}
+
+function SnackbarAutoClose({
+	open,
+	onClose,
+	duration,
+	children,
+}: {
+	open: boolean;
+	onClose: () => void;
+	duration: number;
+	children: ReactNode;
+}) {
+	useEffect(() => {
+		if (!open) return;
+		const id = window.setTimeout(onClose, duration);
+		return () => window.clearTimeout(id);
+	}, [open, duration, onClose]);
+	if (!open) return null;
+	return <>{children}</>;
 }
 
 export default function AdminMediaManager() {
@@ -454,9 +725,12 @@ export default function AdminMediaManager() {
 		severity: "success",
 	});
 
-	const showSnackbar = useCallback((message: string, severity: AlertColor) => {
-		setSnackbar({ open: true, message, severity });
-	}, []);
+	const showSnackbar = useCallback(
+		(message: string, severity: SnackbarSeverity) => {
+			setSnackbar({ open: true, message, severity });
+		},
+		[],
+	);
 
 	const closeSnackbar = useCallback(() => {
 		setSnackbar((prev) => ({ ...prev, open: false }));
@@ -641,19 +915,14 @@ export default function AdminMediaManager() {
 	const totalSize = mediaItems.reduce((acc, item) => acc + (item.size ?? 0), 0);
 
 	return (
-		<Box sx={{ display: "grid", gap: 4 }}>
+		<div style={{ display: "grid", gap: 32 }}>
 			<MediaHeader
 				selectedContentId={selectedContentId}
-				onRefresh={() =>
-					selectedContentId && void fetchMedia(selectedContentId)
-				}
+				onRefresh={() => selectedContentId && void fetchMedia(selectedContentId)}
 				onOpenUpload={() => setIsUploadDialogOpen(true)}
 			/>
 
-			<Paper
-				variant="outlined"
-				sx={{ p: 3, display: "grid", gap: 2.5, borderColor: "divider" }}
-			>
+			<section style={panelStyle}>
 				<MediaFilters
 					contents={contents}
 					contentsLoading={contentsLoading}
@@ -667,9 +936,9 @@ export default function AdminMediaManager() {
 				/>
 
 				{contentsError && (
-					<Alert severity="error">
+					<div role="alert" style={alertStyle}>
 						コンテンツ一覧の取得に失敗しました.再読み込みしてください.
-					</Alert>
+					</div>
 				)}
 
 				{selectedContent && (
@@ -685,7 +954,7 @@ export default function AdminMediaManager() {
 					filteredMedia={filteredMedia}
 					onDelete={setDeleteTarget}
 				/>
-			</Paper>
+			</section>
 
 			<MediaDialogs
 				isUploadDialogOpen={isUploadDialogOpen}
@@ -696,36 +965,35 @@ export default function AdminMediaManager() {
 				onCloseUpload={() => setIsUploadDialogOpen(false)}
 				onUpload={handleUpload}
 				onCancelDelete={() => setDeleteTarget(null)}
-				onConfirmDelete={() =>
-					deleteTarget && void handleDelete(deleteTarget)
-				}
+				onConfirmDelete={() => deleteTarget && void handleDelete(deleteTarget)}
 				onCloseSnackbar={closeSnackbar}
 			/>
-		</Box>
-	);
-}
 
-function StatItem({ label, value }: { label: string; value: string | number }) {
-	return (
-		<Box
-			sx={{
-				border: 1,
-				borderColor: "divider",
-				borderRadius: 1.5,
-				px: 2,
-				py: 1,
-				display: "grid",
-				gap: 0.25,
-				minWidth: 120,
-			}}
-		>
-			<Typography variant="caption" color="text.secondary">
-				{label}
-			</Typography>
-			<Typography variant="body2" fontWeight={600}>
-				{value}
-			</Typography>
-		</Box>
+			<SnackbarAutoClose
+				open={snackbar.open}
+				onClose={closeSnackbar}
+				duration={3200}
+			>
+				<div role="status" style={snackbarStyle(snackbar.severity)}>
+					<span>{snackbar.message}</span>
+					<button
+						type="button"
+						onClick={closeSnackbar}
+						aria-label="閉じる"
+						style={{
+							background: "transparent",
+							border: "none",
+							color: "inherit",
+							cursor: "pointer",
+							fontSize: 16,
+							lineHeight: 1,
+						}}
+					>
+						×
+					</button>
+				</div>
+			</SnackbarAutoClose>
+		</div>
 	);
 }
 
