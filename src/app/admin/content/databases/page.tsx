@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import {
+	type CSSProperties,
 	type ReactNode,
 	useCallback,
 	useEffect,
@@ -9,37 +9,14 @@ import {
 	useState,
 } from "react";
 import {
-	Alert,
-	AlertColor,
-	Box,
-	Button,
-	Card,
-	CardContent,
-	Chip,
-	Dialog,
-	DialogContent,
-	DialogTitle,
-	Divider,
-	Grid,
-	Paper,
-	Snackbar,
-	Stack,
-	TextField,
-	Typography,
-} from "@mui/material";
-import {
 	Database,
 	HardDrive,
 	RefreshCcw,
 	ServerCog,
-	Trash2,
-	UploadCloud,
-	FileText,
-	FolderOpen,
-	PenSquare,
 } from "lucide-react";
 import { PageHeader } from "@/components/admin/layout";
 import { ConfirmDialog } from "@/components/admin/ui";
+import { adminColor } from "@/components/admin/ui/tokens";
 import { useCmsResource } from "@/hooks/useCmsResource";
 
 interface DatabaseInfo {
@@ -59,10 +36,12 @@ interface DatabaseStats {
 	fileSize: number;
 }
 
+type SnackbarSeverity = "success" | "error" | "info" | "warning";
+
 interface SnackbarState {
 	open: boolean;
 	message: string;
-	severity: AlertColor;
+	severity: SnackbarSeverity;
 }
 
 interface DatabaseSummary {
@@ -71,20 +50,229 @@ interface DatabaseSummary {
 	totalSize: number;
 }
 
-function DatabaseHeader({ onRefresh }: { onRefresh: () => void | Promise<void> }) {
+const severityPalette: Record<
+	SnackbarSeverity,
+	{ bg: string; fg: string; border: string }
+> = {
+	success: { bg: adminColor.success, fg: "#ffffff", border: adminColor.success },
+	error: { bg: adminColor.error, fg: "#ffffff", border: adminColor.error },
+	info: { bg: adminColor.info, fg: "#ffffff", border: adminColor.info },
+	warning: { bg: adminColor.warning, fg: "#ffffff", border: adminColor.warning },
+};
+
+const outlinedButtonStyle: CSSProperties = {
+	padding: "8px 18px",
+	fontSize: 14,
+	fontWeight: 600,
+	color: adminColor.textPrimary,
+	backgroundColor: "transparent",
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 6,
+	cursor: "pointer",
+	display: "inline-flex",
+	alignItems: "center",
+	gap: 6,
+};
+
+const smallButtonStyle: CSSProperties = {
+	...outlinedButtonStyle,
+	padding: "4px 10px",
+	fontSize: 12,
+};
+
+const primaryButtonStyle = (disabled: boolean): CSSProperties => ({
+	padding: "8px 18px",
+	fontSize: 14,
+	fontWeight: 600,
+	color: "#ffffff",
+	backgroundColor: adminColor.accent,
+	border: `1px solid ${adminColor.accent}`,
+	borderRadius: 6,
+	cursor: disabled ? "not-allowed" : "pointer",
+	opacity: disabled ? 0.5 : 1,
+});
+
+const outlinedFormButtonStyle = (disabled: boolean): CSSProperties => ({
+	...outlinedButtonStyle,
+	opacity: disabled ? 0.5 : 1,
+	cursor: disabled ? "not-allowed" : "pointer",
+});
+
+const panelStyle: CSSProperties = {
+	border: `1px solid ${adminColor.border}`,
+	borderRadius: 8,
+	padding: 24,
+	backgroundColor: adminColor.bgPanel,
+	display: "grid",
+	gap: 24,
+};
+
+const cardStyle = (active: boolean): CSSProperties => ({
+	border: `1px solid ${active ? adminColor.accent : adminColor.border}`,
+	borderRadius: 8,
+	backgroundColor: active ? adminColor.accentSelected : adminColor.bgPanel,
+	padding: 16,
+	display: "grid",
+	gap: 16,
+	height: "100%",
+});
+
+const chipStyle = (active: boolean): CSSProperties => ({
+	display: "inline-flex",
+	alignItems: "center",
+	padding: "2px 10px",
+	fontSize: 12,
+	fontWeight: 500,
+	color: active ? adminColor.accent : adminColor.textSecondary,
+	backgroundColor: active ? "rgba(44, 123, 229, 0.12)" : "#f3f4f6",
+	border: `1px solid ${active ? adminColor.accent : adminColor.border}`,
+	borderRadius: 999,
+});
+
+const pillStyle: CSSProperties = {
+	display: "inline-flex",
+	alignItems: "center",
+	gap: 6,
+	border: `1px solid ${adminColor.border}`,
+	borderRadius: 999,
+	padding: "4px 12px",
+	fontSize: 12,
+};
+
+const statBadgeStyle: CSSProperties = {
+	border: `1px solid ${adminColor.border}`,
+	borderRadius: 6,
+	padding: "6px 12px",
+	minWidth: 120,
+};
+
+const labelStyle: CSSProperties = {
+	fontSize: 12,
+	fontWeight: 600,
+	color: adminColor.textPrimary,
+};
+
+const helperStyle: CSSProperties = {
+	fontSize: 12,
+	color: adminColor.textSecondary,
+};
+
+const inputStyle = (disabled: boolean): CSSProperties => ({
+	width: "100%",
+	padding: "8px 12px",
+	fontSize: 14,
+	color: adminColor.textPrimary,
+	backgroundColor: disabled ? "#f3f4f6" : "#ffffff",
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 6,
+	outline: "none",
+	cursor: disabled ? "not-allowed" : "text",
+});
+
+const dialogBackdropStyle: CSSProperties = {
+	position: "fixed",
+	inset: 0,
+	backgroundColor: "rgba(0,0,0,0.5)",
+	display: "flex",
+	alignItems: "flex-start",
+	justifyContent: "center",
+	paddingTop: 64,
+	zIndex: 1400,
+};
+
+const dialogSurfaceStyle: CSSProperties = {
+	width: "min(640px, calc(100vw - 32px))",
+	backgroundColor: adminColor.bgPanel,
+	borderRadius: 8,
+	boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+	overflow: "hidden",
+	maxHeight: "calc(100vh - 96px)",
+	display: "flex",
+	flexDirection: "column",
+};
+
+const dialogHeaderStyle: CSSProperties = {
+	padding: "16px 24px",
+	borderBottom: `1px solid ${adminColor.border}`,
+	fontSize: 16,
+	fontWeight: 600,
+	color: adminColor.textPrimary,
+};
+
+const dialogBodyStyle: CSSProperties = {
+	padding: 24,
+	overflowY: "auto",
+};
+
+const alertStyle: CSSProperties = {
+	padding: "8px 16px",
+	fontSize: 14,
+	borderRadius: 4,
+	border: `1px solid ${adminColor.error}`,
+	borderLeftWidth: 4,
+	backgroundColor: "rgba(185, 28, 28, 0.08)",
+	color: adminColor.error,
+};
+
+const snackbarStyle = (severity: SnackbarSeverity): CSSProperties => {
+	const p = severityPalette[severity];
+	return {
+		position: "fixed",
+		left: "50%",
+		bottom: 24,
+		transform: "translateX(-50%)",
+		padding: "10px 20px",
+		fontSize: 14,
+		fontWeight: 500,
+		color: p.fg,
+		backgroundColor: p.bg,
+		borderRadius: 6,
+		boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
+		zIndex: 1500,
+		display: "inline-flex",
+		alignItems: "center",
+		gap: 12,
+	};
+};
+
+const dividerStyle: CSSProperties = {
+	height: 1,
+	backgroundColor: adminColor.border,
+	border: "none",
+	margin: 0,
+};
+
+function formatBytes(bytes: number) {
+	if (!bytes) return "0 B";
+	const units = ["B", "KB", "MB", "GB"];
+	let value = bytes;
+	let index = 0;
+	while (value >= 1024 && index < units.length - 1) {
+		value /= 1024;
+		index += 1;
+	}
+	return `${value.toFixed(value >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
+}
+
+function DatabaseHeader({
+	onRefresh,
+}: {
+	onRefresh: () => void | Promise<void>;
+}) {
 	return (
 		<PageHeader
 			title="データベース管理"
 			description="現在 Rust CMS API が利用している SQLite データベースを確認します. Next.js 側では参照とメタ情報編集のみ行い、実行時の切替や削除は Rust 側で管理します."
 			actions={[
-				<Button
+				<button
 					key="refresh"
-					variant="outlined"
-					startIcon={<RefreshCcw size={16} />}
-					onClick={onRefresh}
+					type="button"
+					onClick={() => void onRefresh()}
+					style={outlinedButtonStyle}
 				>
+					<RefreshCcw size={16} />
 					更新
-				</Button>,
+				</button>,
 			]}
 		/>
 	);
@@ -100,24 +288,24 @@ function DatabaseActionPanel({
 	onEdit: (database: DatabaseInfo) => void;
 }) {
 	return (
-		<Stack direction="row" spacing={1} flexWrap="wrap">
-			<Button
-				size="small"
-				variant="outlined"
-				startIcon={<RefreshCcw size={14} />}
+		<div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+			<button
+				type="button"
 				onClick={() => void onRefreshStats(database.id)}
+				style={smallButtonStyle}
 			>
+				<RefreshCcw size={14} />
 				統計を更新
-			</Button>
-			<Button
-				size="small"
-				variant="outlined"
-				startIcon={<ServerCog size={14} />}
+			</button>
+			<button
+				type="button"
 				onClick={() => onEdit(database)}
+				style={smallButtonStyle}
 			>
+				<ServerCog size={14} />
 				情報を編集
-			</Button>
-		</Stack>
+			</button>
+		</div>
 	);
 }
 
@@ -135,82 +323,81 @@ function DatabaseCard({
 	const isActive = database.isActive;
 
 	return (
-		<Grid item xs={12} md={6} key={database.id}>
-			<Card
-				variant="outlined"
-				sx={{
-					height: "100%",
-					borderColor: isActive ? "primary.main" : "divider",
-					bgcolor: isActive ? "action.hover" : "background.paper",
+		<section style={cardStyle(isActive)}>
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					gap: 16,
+					alignItems: "flex-start",
 				}}
 			>
-				<CardContent sx={{ display: "grid", gap: 2 }}>
-					<Stack
-						direction="row"
-						spacing={2}
-						justifyContent="space-between"
-						alignItems="flex-start"
+				<div>
+					<p
+						style={{
+							margin: 0,
+							fontSize: 18,
+							fontWeight: 600,
+							color: adminColor.textPrimary,
+						}}
 					>
-						<Box>
-							<Typography variant="h6" fontWeight={600}>
-								{database.name || database.id}
-							</Typography>
-							<Typography variant="body2" color="text.secondary">
-								{database.description || "説明が設定されていません"}
-							</Typography>
-						</Box>
-						<Chip
-							label={isActive ? "アクティブ" : "バックアップ"}
-							color={isActive ? "primary" : "default"}
-							size="small"
-						/>
-					</Stack>
+						{database.name || database.id}
+					</p>
+					<p
+						style={{
+							margin: "4px 0 0 0",
+							fontSize: 13,
+							color: adminColor.textSecondary,
+						}}
+					>
+						{database.description || "説明が設定されていません"}
+					</p>
+				</div>
+				<span style={chipStyle(isActive)}>
+					{isActive ? "アクティブ" : "バックアップ"}
+				</span>
+			</div>
 
-					<Stack direction="row" spacing={1.5} flexWrap="wrap">
-						<InfoPill
-							icon={<HardDrive size={16} />}
-							label="更新日"
-							value={new Date(database.updatedAt).toLocaleString("ja-JP")}
-						/>
-						<InfoPill
-							icon={<Database size={16} />}
-							label="サイズ"
-							value={formatBytes(database.size)}
-						/>
-					</Stack>
+			<div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+				<InfoPill
+					icon={<HardDrive size={16} />}
+					label="更新日"
+					value={new Date(database.updatedAt).toLocaleString("ja-JP")}
+				/>
+				<InfoPill
+					icon={<Database size={16} />}
+					label="サイズ"
+					value={formatBytes(database.size)}
+				/>
+			</div>
 
-					<Divider />
+			<hr style={dividerStyle} />
 
-					{stats ? (
-						<Stack direction="row" spacing={1.5} flexWrap="wrap">
-							<StatBadge
-								label="コンテンツ"
-								value={stats.contentsCount}
-							/>
-							<StatBadge
-								label="Markdown"
-								value={stats.markdownPagesCount}
-							/>
-							<StatBadge label="タグ" value={stats.tagsCount} />
-							<StatBadge
-								label="合計サイズ"
-								value={formatBytes(stats.fileSize)}
-							/>
-						</Stack>
-					) : (
-						<Typography variant="caption" color="text.secondary">
-							統計情報を取得しています...
-						</Typography>
-					)}
+			{stats ? (
+				<div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+					<StatBadge label="コンテンツ" value={stats.contentsCount} />
+					<StatBadge label="Markdown" value={stats.markdownPagesCount} />
+					<StatBadge label="タグ" value={stats.tagsCount} />
+					<StatBadge label="合計サイズ" value={formatBytes(stats.fileSize)} />
+				</div>
+			) : (
+				<p
+					style={{
+						margin: 0,
+						fontSize: 12,
+						color: adminColor.textSecondary,
+					}}
+				>
+					統計情報を取得しています...
+				</p>
+			)}
 
-					<DatabaseActionPanel
-						database={database}
-						onRefreshStats={onRefreshStats}
-						onEdit={onEdit}
-					/>
-				</CardContent>
-			</Card>
-		</Grid>
+			<DatabaseActionPanel
+				database={database}
+				onRefreshStats={onRefreshStats}
+				onEdit={onEdit}
+			/>
+		</section>
 	);
 }
 
@@ -232,53 +419,84 @@ function DatabaseListSection({
 	onEdit: (database: DatabaseInfo) => void;
 }) {
 	return (
-		<Paper
-			variant="outlined"
-			sx={{ p: 3, borderColor: "divider", display: "grid", gap: 3 }}
-		>
-			<Stack
-				direction={{ xs: "column", sm: "row" }}
-				spacing={2}
-				justifyContent="space-between"
-				alignItems={{ xs: "flex-start", sm: "center" }}
+		<section style={panelStyle}>
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					gap: 16,
+					flexWrap: "wrap",
+					alignItems: "center",
+				}}
 			>
-				<Box>
-					<Typography variant="subtitle2" color="text.secondary">
+				<div>
+					<p
+						style={{
+							margin: 0,
+							fontSize: 13,
+							fontWeight: 600,
+							color: adminColor.textSecondary,
+						}}
+					>
 						アクティブデータベース
-					</Typography>
-					<Typography variant="h6" fontWeight={700}>
+					</p>
+					<p
+						style={{
+							margin: "4px 0 0 0",
+							fontSize: 18,
+							fontWeight: 700,
+						}}
+					>
 						{summary.activeName}
-					</Typography>
-					<Typography variant="caption" color="text.secondary">
+					</p>
+					<p
+						style={{
+							margin: "4px 0 0 0",
+							fontSize: 12,
+							color: adminColor.textSecondary,
+						}}
+					>
 						合計 {summary.total} 件 ・ 総容量 {formatBytes(summary.totalSize)}
-					</Typography>
-				</Box>
-			</Stack>
+					</p>
+				</div>
+			</div>
 
 			{databaseError && (
-				<Alert severity="error">
+				<div role="alert" style={alertStyle}>
 					データベース一覧の取得に失敗しました.再読み込みしてください.
-				</Alert>
+				</div>
 			)}
 
-			<Grid container spacing={2.5}>
+			<div
+				style={{
+					display: "grid",
+					gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
+					gap: 20,
+				}}
+			>
 				{(databaseList ?? []).map((database) => (
 					<DatabaseCard
+						key={database.id}
 						database={database}
 						stats={statsMap[database.id]}
 						onRefreshStats={onRefreshStats}
 						onEdit={onEdit}
-						key={database.id}
 					/>
 				))}
-			</Grid>
+			</div>
 
 			{loadingDatabases && (
-				<Typography variant="body2" color="text.secondary">
+				<p
+					style={{
+						margin: 0,
+						fontSize: 14,
+						color: adminColor.textSecondary,
+					}}
+				>
 					データベース情報を読み込んでいます...
-				</Typography>
+				</p>
 			)}
-		</Paper>
+		</section>
 	);
 }
 
@@ -295,42 +513,53 @@ function DatabaseModals({
 	onSubmit: (payload: Partial<DatabaseInfo>) => void | Promise<void>;
 	isSubmitting: boolean;
 }) {
+	if (!isEditDialogOpen) return null;
 	return (
-		<Dialog open={isEditDialogOpen} onClose={onClose} maxWidth="sm" fullWidth>
-			<DialogTitle>データベース情報を編集</DialogTitle>
-			<DialogContent>
-				{editingDatabase && (
-					<DatabaseForm
-						initialData={editingDatabase}
-						onSubmit={onSubmit}
-						onCancel={onClose}
-						isLoading={isSubmitting}
-					/>
-				)}
-			</DialogContent>
-		</Dialog>
+		<div
+			role="dialog"
+			aria-modal="true"
+			aria-label="データベース情報を編集"
+			style={dialogBackdropStyle}
+			onClick={onClose}
+		>
+			<div
+				style={dialogSurfaceStyle}
+				onClick={(event) => event.stopPropagation()}
+			>
+				<header style={dialogHeaderStyle}>データベース情報を編集</header>
+				<div style={dialogBodyStyle}>
+					{editingDatabase && (
+						<DatabaseForm
+							initialData={editingDatabase}
+							onSubmit={onSubmit}
+							onCancel={onClose}
+							isLoading={isSubmitting}
+						/>
+					)}
+				</div>
+			</div>
+		</div>
 	);
 }
 
-function DatabaseFooter({
-	snackbar,
+function SnackbarAutoClose({
+	open,
 	onClose,
+	duration,
+	children,
 }: {
-	snackbar: SnackbarState;
+	open: boolean;
 	onClose: () => void;
+	duration: number;
+	children: ReactNode;
 }) {
-	return (
-		<Snackbar
-			open={snackbar.open}
-			autoHideDuration={3200}
-			onClose={onClose}
-			anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-		>
-			<Alert onClose={onClose} severity={snackbar.severity} variant="filled">
-				{snackbar.message}
-			</Alert>
-		</Snackbar>
-	);
+	useEffect(() => {
+		if (!open) return;
+		const id = window.setTimeout(onClose, duration);
+		return () => window.clearTimeout(id);
+	}, [open, duration, onClose]);
+	if (!open) return null;
+	return <>{children}</>;
 }
 
 export default function AdminDatabaseManager() {
@@ -349,7 +578,6 @@ export default function AdminDatabaseManager() {
 		},
 	});
 	const [statsMap, setStatsMap] = useState<Record<string, DatabaseStats>>({});
-	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 	const [editingDatabase, setEditingDatabase] = useState<DatabaseInfo | null>(
 		null,
@@ -365,9 +593,12 @@ export default function AdminDatabaseManager() {
 		severity: "success",
 	});
 
-	const showSnackbar = useCallback((message: string, severity: AlertColor) => {
-		setSnackbar({ open: true, message, severity });
-	}, []);
+	const showSnackbar = useCallback(
+		(message: string, severity: SnackbarSeverity) => {
+			setSnackbar({ open: true, message, severity });
+		},
+		[],
+	);
 
 	const closeSnackbar = useCallback(() => {
 		setSnackbar((prev) => ({ ...prev, open: false }));
@@ -379,10 +610,7 @@ export default function AdminDatabaseManager() {
 				`/api/cms/databases/stats?id=${encodeURIComponent(databaseId)}`,
 			);
 			if (!response.ok) {
-				// 404エラーの場合は、データベースが存在しない可能性があるため、静かに処理
 				if (response.status === 404) {
-					// 統計情報を取得できなかったことを記録するだけ
-					// エラーをスローせず、統計情報を表示しない
 					return;
 				}
 				let errMsg = `Failed to fetch stats: ${response.status}`;
@@ -441,7 +669,6 @@ export default function AdminDatabaseManager() {
 				return;
 			}
 			showSnackbar("データベースを作成しました", "success");
-			setIsCreateDialogOpen(false);
 			const created = await response.json();
 			await reloadData();
 			if (created?.id) {
@@ -491,7 +718,8 @@ export default function AdminDatabaseManager() {
 				{ method: "DELETE" },
 			);
 			if (!response.ok) {
-				let errMsg = "データベースの削除に失敗しました（アクティブ状態を確認してください）";
+				let errMsg =
+					"データベースの削除に失敗しました（アクティブ状態を確認してください）";
 				try {
 					const err = await response.json();
 					if (err.error) {
@@ -566,7 +794,7 @@ export default function AdminDatabaseManager() {
 	}, [databaseList]);
 
 	return (
-		<Box sx={{ display: "grid", gap: 4 }}>
+		<div style={{ display: "grid", gap: 32 }}>
 			<DatabaseHeader onRefresh={reloadData} />
 			<DatabaseListSection
 				databaseList={databaseList}
@@ -584,8 +812,32 @@ export default function AdminDatabaseManager() {
 				onSubmit={handleEdit}
 				isSubmitting={isSubmitting}
 			/>
-			<DatabaseFooter snackbar={snackbar} onClose={closeSnackbar} />
-		</Box>
+
+			<SnackbarAutoClose
+				open={snackbar.open}
+				onClose={closeSnackbar}
+				duration={3200}
+			>
+				<div role="status" style={snackbarStyle(snackbar.severity)}>
+					<span>{snackbar.message}</span>
+					<button
+						type="button"
+						onClick={closeSnackbar}
+						aria-label="閉じる"
+						style={{
+							background: "transparent",
+							border: "none",
+							color: "inherit",
+							cursor: "pointer",
+							fontSize: 16,
+							lineHeight: 1,
+						}}
+					>
+						×
+					</button>
+				</div>
+			</SnackbarAutoClose>
+		</div>
 	);
 }
 
@@ -607,56 +859,92 @@ function DatabaseForm({
 	});
 
 	return (
-		<Box
-			component="form"
-			sx={{ display: "grid", gap: 2, pt: 1 }}
+		<form
 			onSubmit={(event) => {
 				event.preventDefault();
 				onSubmit(formData);
 			}}
+			style={{ display: "grid", gap: 16, paddingTop: 8 }}
 		>
 			{!initialData && (
-				<TextField
-					label="データベースID"
-					required
-					value={formData.id}
-					onChange={(event) =>
-						setFormData({ ...formData, id: event.target.value })
-					}
-					helperText="ファイル名の一部として利用されます（例: content-main）"
-					disabled={isLoading}
-				/>
+				<div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+					<label htmlFor="db-id" style={labelStyle}>
+						データベースID
+						<span style={{ color: adminColor.error, marginLeft: 4 }} aria-hidden>
+							*
+						</span>
+					</label>
+					<input
+						id="db-id"
+						required
+						value={formData.id}
+						onChange={(event) =>
+							setFormData({ ...formData, id: event.target.value })
+						}
+						disabled={isLoading}
+						style={inputStyle(isLoading)}
+					/>
+					<p style={helperStyle}>
+						ファイル名の一部として利用されます（例: content-main）
+					</p>
+				</div>
 			)}
 
-			<TextField
-				label="表示名"
-				value={formData.name}
-				onChange={(event) =>
-					setFormData({ ...formData, name: event.target.value })
-				}
-				disabled={isLoading}
-			/>
+			<div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+				<label htmlFor="db-name" style={labelStyle}>
+					表示名
+				</label>
+				<input
+					id="db-name"
+					value={formData.name}
+					onChange={(event) =>
+						setFormData({ ...formData, name: event.target.value })
+					}
+					disabled={isLoading}
+					style={inputStyle(isLoading)}
+				/>
+			</div>
 
-			<TextField
-				label="説明"
-				multiline
-				rows={3}
-				value={formData.description}
-				onChange={(event) =>
-					setFormData({ ...formData, description: event.target.value })
-				}
-				disabled={isLoading}
-			/>
+			<div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+				<label htmlFor="db-description" style={labelStyle}>
+					説明
+				</label>
+				<textarea
+					id="db-description"
+					rows={3}
+					value={formData.description}
+					onChange={(event) =>
+						setFormData({ ...formData, description: event.target.value })
+					}
+					disabled={isLoading}
+					style={{
+						...inputStyle(isLoading),
+						resize: "vertical",
+						lineHeight: 1.6,
+					}}
+				/>
+			</div>
 
-			<Stack direction="row" spacing={1} justifyContent="flex-end">
-				<Button variant="outlined" onClick={onCancel} disabled={isLoading}>
+			<div
+				style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}
+			>
+				<button
+					type="button"
+					onClick={onCancel}
+					disabled={isLoading}
+					style={outlinedFormButtonStyle(isLoading)}
+				>
 					キャンセル
-				</Button>
-				<Button type="submit" variant="contained" disabled={isLoading}>
+				</button>
+				<button
+					type="submit"
+					disabled={isLoading}
+					style={primaryButtonStyle(isLoading)}
+				>
 					保存
-				</Button>
-			</Stack>
-		</Box>
+				</button>
+			</div>
+		</form>
 	);
 }
 
@@ -670,26 +958,11 @@ function InfoPill({
 	value: string;
 }) {
 	return (
-		<Box
-			sx={{
-				display: "flex",
-				alignItems: "center",
-				gap: 1,
-				border: 1,
-				borderColor: "divider",
-				borderRadius: 999,
-				px: 1.5,
-				py: 0.5,
-			}}
-		>
+		<div style={pillStyle}>
 			{icon}
-			<Typography variant="caption" color="text.secondary">
-				{label}
-			</Typography>
-			<Typography variant="body2" fontWeight={600}>
-				{value}
-			</Typography>
-		</Box>
+			<span style={{ color: adminColor.textSecondary }}>{label}</span>
+			<span style={{ fontWeight: 600 }}>{value}</span>
+		</div>
 	);
 }
 
@@ -701,33 +974,19 @@ function StatBadge({
 	value: string | number;
 }) {
 	return (
-		<Box
-			sx={{
-				border: 1,
-				borderColor: "divider",
-				borderRadius: 1.5,
-				px: 1.5,
-				py: 0.75,
-			}}
-		>
-			<Typography variant="caption" color="text.secondary">
+		<div style={statBadgeStyle}>
+			<p
+				style={{
+					margin: 0,
+					fontSize: 12,
+					color: adminColor.textSecondary,
+				}}
+			>
 				{label}
-			</Typography>
-			<Typography variant="body2" fontWeight={600}>
+			</p>
+			<p style={{ margin: "2px 0 0 0", fontSize: 14, fontWeight: 600 }}>
 				{value}
-			</Typography>
-		</Box>
+			</p>
+		</div>
 	);
-}
-
-function formatBytes(bytes: number) {
-	if (!bytes) return "0 B";
-	const units = ["B", "KB", "MB", "GB"];
-	let value = bytes;
-	let index = 0;
-	while (value >= 1024 && index < units.length - 1) {
-		value /= 1024;
-		index += 1;
-	}
-	return `${value.toFixed(value >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
 }
