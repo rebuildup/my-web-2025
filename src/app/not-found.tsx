@@ -20,16 +20,16 @@ export default function NotFound() {
 	return (
 		<div className="min-h-dvh ">
 			<main className="min-h-dvh flex items-center justify-center py-20">
-				<div className="container-system text-center">
+				<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
 					<div className="space-y-4">
 						<header>
-							<h1 className="neue-haas-grotesk-display text-8xl leading-relaxed px-6">
+							<h1 className="neue-haas-grotesk-display text-5xl sm:text-7xl lg:text-8xl leading-relaxed px-6">
 								404
 							</h1>
 							<h2 className="zen-kaku-gothic-new text-3xl leading-loose px-4 py-3">
 								ページが見つかりません
 							</h2>
-							<p className="noto-sans-jp-light text-sm leading-loose max-w mx-auto px-6">
+							<p className="noto-sans-jp-light text-sm leading-loose max-w-prose mx-auto px-6">
 								お探しのページは存在しないか、移動または削除された可能性があります.
 								<br />
 								サイトトップページからお探しください.

@@ -95,8 +95,10 @@ function Header() {
 				className="pt-4"
 			/>
 			<header className="space-y-12">
-				<h1 className="neue-haas-grotesk-display text-6xl">開発依頼</h1>
-				<p className="noto-sans-jp-light text-sm max-w leading-loose">
+				<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl">
+					開発依頼
+				</h1>
+				<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 					Web開発・アプリケーション開発・プラグイン開発の依頼を承ります.
 					<br />
 					技術的な課題解決から新規開発まで幅広く対応いたします.
@@ -128,7 +130,7 @@ function InfoPanel() {
 				<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 					開発サービス概要
 				</h2>
-				<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 					{services.map(([Icon, title, items]) => (
 						<div className="p-4 space-y-4" key={title}>
 							<div className="flex items-center">
@@ -214,7 +216,7 @@ function PricingOptionsPanel() {
 			<section>
 				<h2 className="neue-haas-grotesk-display text-3xl mb-8">料金体系</h2>
 				<div className="p-4">
-					<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
 						{[
 							["基本料金", "プロジェクト規模に応じた基本料金"],
 							["追加料金", "機能追加、修正、サポート費用"],
@@ -231,7 +233,7 @@ function PricingOptionsPanel() {
 			</section>
 			<section>
 				<h2 className="neue-haas-grotesk-display text-3xl mb-8">技術スキル</h2>
-				<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 					{[
 						[
 							"フロントエンド",
@@ -263,7 +265,7 @@ function FormSection() {
 		<section>
 			<h2 className="neue-haas-grotesk-display text-3xl mb-8">連絡方法</h2>
 			<div className="p-4">
-				<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
 					<div>
 						<div className="flex items-center mb-3">
 							<Mail className="w-5 h-5 mr-2" />
@@ -299,7 +301,7 @@ function Footer() {
 		<>
 			<nav aria-label="Commission navigation">
 				<h3 className="sr-only">Commission機能</h3>
-				<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
 					<Link
 						href="/contact"
 						className="text-center p-4 flex items-center justify-center focus: focus:ring-offset-2 focus:ring-offset-base"
@@ -333,7 +335,7 @@ export default function DevelopCommissionPage() {
 			</script>
 			<div className="min-h-dvh">
 				<main className="flex items-center py-10">
-					<div className="container-system">
+					<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 						<div className="space-y-10">
 							<Header />
 							<InfoPanel />

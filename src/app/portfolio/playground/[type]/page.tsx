@@ -95,7 +95,7 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 
 				<div className="min-h-screen ">
 					<main id="main-content" className="flex items-center py-10">
-						<div className="container-system">
+						<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-10">
 								{/* Breadcrumbs */}
 								<Breadcrumbs
@@ -114,10 +114,10 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 								{/* Header */}
 								<header className="space-y-8">
 									<div className="space-y-4">
-										<h1 className="neue-haas-grotesk-display text-6xl ">
+										<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
 											{playgroundInfo.title}
 										</h1>
-										<p className="noto-sans-jp-light text-sm max-w leading-loose">
+										<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 											{playgroundInfo.description}
 										</p>
 										<div className="flex flex-wrap gap-2">
@@ -162,7 +162,7 @@ export default async function PlaygroundPage({ params }: PlaygroundPageProps) {
 									<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 										Features
 									</h2>
-									<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
+									<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 										{playgroundInfo.features.map((feature, index) => (
 											<div key={feature} className="  p-4 space-y-2">
 												<div className=" text-lg font-bold">

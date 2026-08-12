@@ -106,7 +106,9 @@ function PortfolioHero() {
 			/>
 			<header className="space-y-8">
 				<div className="space-y-4">
-					<h1 className="neue-haas-grotesk-display text-6xl ">Portfolio</h1>
+					<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
+						Portfolio
+					</h1>
 					<p className="noto-sans-jp-light text-sm max-w-2xl leading-loose">
 						これまでに制作した作品/プロジェクトをまとめたポートフォリオページです.
 					</p>
@@ -164,7 +166,7 @@ function TagGallerySection({
 
 function PortfolioFooter() {
 	return (
-		<footer className="fixed bottom-2 left-0 right-0 z-10 flex items-center justify-center gap-4 py-3 ">
+		<footer className="static bottom-2 left-0 right-0 z-10 flex items-center justify-center gap-4 py-3 lg:fixed">
 			<span className="text-xs ">© 2025 361do_sleep</span>
 			<Link
 				href="/privacy-policy"
@@ -187,10 +189,8 @@ function PortfolioError() {
 			>
 				<div className="container mx-auto px-4">
 					<div className="max-w-3xl mx-auto text-center">
-						<h1 className="text-4xl sm:text-4xl font-bold italic tracking-tight ">
-							Error
-						</h1>
-						<p className="mt-4 text-xs sm:text-xs ">
+						<h1 className="text-4xl font-bold italic tracking-tight ">Error</h1>
+						<p className="mt-4 text-xs ">
 							ポートフォリオデータの読み込みに失敗しました.
 						</p>
 						<div className="mt-8">
@@ -487,7 +487,7 @@ export default async function PortfolioPage() {
 						className="relative z-10 min-h-dvh py-10"
 						tabIndex={-1}
 					>
-						<div className="container-system">
+						<div className="container">
 							<div className="space-y-16 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 								<PortfolioHero />
 

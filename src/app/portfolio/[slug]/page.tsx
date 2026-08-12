@@ -541,7 +541,7 @@ export default async function PortfolioDetailPage({
 
 				<div className="min-h-dvh">
 					<main id="main-content" className="flex items-center py-6 sm:py-10">
-						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+						<div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-8 sm:space-y-10">
 								{/* Breadcrumbs */}
 								<Breadcrumbs

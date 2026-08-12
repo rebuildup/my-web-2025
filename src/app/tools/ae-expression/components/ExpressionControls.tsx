@@ -87,7 +87,7 @@ export function ExpressionControls(props: ExpressionControlsProps) {
 			{props.showAdvancedSettings && (
 				<div className="rounded-xl  shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4 space-y-4">
 					<h3 className="text-lg noto-sans-jp-regular font-medium">詳細設定</h3>
-					<div className="grid-system grid-1 md:grid-2 gap-4">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-2">
 							<label
 								htmlFor="export-format"

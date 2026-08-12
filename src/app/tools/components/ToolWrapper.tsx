@@ -105,7 +105,7 @@ export default function ToolWrapper({
 	return (
 		<div className="min-h-dvh scrollbar-auto-stable">
 			<main className="py-10" tabIndex={-1} ref={containerRef}>
-				<div className="container-system">
+				<div className="container">
 					<div className="mx-auto w-full max-w-6xl space-y-10 px-4 sm:px-6 lg:px-8">
 						{/* Header */}
 						<header className="space-y-6">

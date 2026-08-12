@@ -35,7 +35,7 @@ export default function AEExpressionTool() {
 					savedExpressions={tool.savedExpressions}
 					setSavedExpressions={tool.setSavedExpressions}
 				/>
-				<div className="grid-system grid-1 lg:grid-3 gap-8">
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 					<ExpressionList
 						expressions={tool.filteredExpressions}
 						selectedExpression={tool.selectedExpression}

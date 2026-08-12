@@ -14,7 +14,7 @@ export default function EmailValidation({
 				メールバリデーション
 			</h3>
 
-			<div className="grid-system grid-1 sm:grid-3 gap-4">
+			<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 				{/* Errors */}
 				{validationResult.errors.length > 0 && (
 					<div className="   p-3">

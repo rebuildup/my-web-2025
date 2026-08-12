@@ -449,7 +449,7 @@ function CtaSection({ titleClassName }: { titleClassName: string }) {
 		<nav aria-label="Profile navigation" className="mb-24">
 			<ScrollFloat stagger={0}>
 				<h2 className="sr-only">Profile機能</h2>
-				<div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-6">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 					<Link
 						href="/about/profile/real"
 						className="/5 text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base hover:/10 transition-colors rounded-lg"
@@ -509,7 +509,7 @@ export default function HandleProfilePage() {
 					<div className="fixed top-20 right-10 z-5 pointer-events-none hidden lg:block">
 						<ScrollVelocity
 							text="Handle Handle Handle "
-							className="/10 text-6xl"
+							className="/10 text-4xl sm:text-5xl lg:text-6xl"
 						/>
 					</div>
 				)}

@@ -89,7 +89,7 @@ export default async function DownloadsPage() {
 	return (
 		<div className="min-h-dvh ">
 			<main className="py-10">
-				<div className="container-system">
+				<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 					<div className="space-y-10">
 						{/* Breadcrumbs */}
 						<div className="mb-6">
@@ -103,7 +103,7 @@ export default async function DownloadsPage() {
 						</div>
 						<header className="space-y-6">
 							<h1 className="neue-haas-grotesk-display text-4xl ">Downloads</h1>
-							<p className="noto-sans-jp-light text-sm max-w leading-loose">
+							<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 								テンプレート・素材集・サンプルファイルを無料で配布しています.
 								<br />
 								クリエイティブ制作にお役立てください.
@@ -131,7 +131,7 @@ export default async function DownloadsPage() {
 							</h2>
 
 							{publishedDownloads.length > 0 ? (
-								<div className="grid-system grid-1 sm:grid-2 gap-6">
+								<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 									{publishedDownloads.map((download) => (
 										<Link
 											key={download.id}

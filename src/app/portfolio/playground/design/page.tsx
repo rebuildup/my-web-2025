@@ -230,7 +230,7 @@ export default function DesignPlaygroundPage() {
 	return (
 		<div className="min-h-screen scrollbar-auto-stable">
 			<main aria-label="Design playground" className="flex items-center py-10">
-				<div className="container-system">
+				<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 					<div className="space-y-10">
 						{/* Breadcrumbs */}
 						<Breadcrumbs
@@ -246,12 +246,12 @@ export default function DesignPlaygroundPage() {
 						{/* Header */}
 						<header className="space-y-12">
 							<h1
-								className="neue-haas-grotesk-display text-6xl "
+								className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl "
 								aria-level={1}
 							>
 								Design Playground
 							</h1>
-							<p className="noto-sans-jp-light text-sm max-w leading-loose">
+							<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 								インタラクティブなデザイン実験とアニメーションの実験場です.
 								<br />
 								CSS、SVG、Canvas
@@ -495,7 +495,7 @@ export default function DesignPlaygroundPage() {
 						{/* Navigation */}
 						<nav aria-label="Design playground navigation">
 							<h3 className="sr-only">Design Playground機能</h3>
-							<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
+							<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 								<Link
 									href="/portfolio/playground/WebGL"
 									className=" text-center p-4 flex items-center justify-center   transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base"

@@ -233,7 +233,7 @@ function CardActions() {
 	return (
 		<nav aria-label="Card actions">
 			<h3 className="sr-only">名刺関連アクション</h3>
-			<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
+			<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 				<Link
 					href="/about/profile/handle"
 					className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
@@ -331,7 +331,7 @@ ${cardData.tagline}`;
 	return (
 		<div className="min-h-dvh ">
 			<main className="flex items-center py-10">
-				<div className="container-system">
+				<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 					<div className="space-y-10">
 						{/* Breadcrumbs */}
 						<Breadcrumbs
@@ -346,18 +346,18 @@ ${cardData.tagline}`;
 
 						{/* ヘッダー */}
 						<header className="space-y-12">
-							<h1 className="neue-haas-grotesk-display text-6xl ">
+							<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
 								Digital Card (Handle)
 							</h1>
 
-							<p className="noto-sans-jp-light text-sm max-w leading-loose">
+							<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 								クリエイティブ活動用のカジュアル名刺.
 								<br />
 								同業者やクリエイター同士の交流に最適.
 							</p>
 						</header>
 
-						<div className="grid-system grid-1 lg:grid-2 gap-8">
+						<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 							{/* デジタル名刺 */}
 							<BusinessCard cardRef={cardRef} qrCodeUrl={qrCodeUrl} />
 

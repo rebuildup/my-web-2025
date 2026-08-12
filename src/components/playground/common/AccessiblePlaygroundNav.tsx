@@ -248,7 +248,7 @@ export const AccessiblePlaygroundNav: React.FC<
 						className={
 							responsive.isMobile
 								? "py-2"
-								: "grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-0"
+								: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0"
 						}
 					>
 						{navItems.map((item, index) => (

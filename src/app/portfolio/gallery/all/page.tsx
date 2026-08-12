@@ -110,7 +110,7 @@ export default async function AllGalleryPage() {
 				)}
 				<div className="min-h-dvh relative z-10 scrollbar-auto-stable">
 					<main className="py-4">
-						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+						<div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-10">
 								{/* Breadcrumbs */}
 								<Breadcrumbs

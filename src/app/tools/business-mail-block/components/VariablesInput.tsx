@@ -12,7 +12,7 @@ export default function VariablesInput({
 	return (
 		<div className="space-y-4">
 			<h3 className="neue-haas-grotesk-display text-lg ">変数設定</h3>
-			<div className="grid-system grid-1 sm:grid-2 lg:grid-3 gap-4">
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 				{allVariables.map((variable: string) => (
 					<div key={variable} className="space-y-1">
 						<label

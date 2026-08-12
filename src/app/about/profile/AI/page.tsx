@@ -223,7 +223,7 @@ export default function AIProfilePage() {
 					className="flex items-center py-10"
 					tabIndex={-1}
 				>
-					<div className="container-system">
+					<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 						<div className="space-y-10">
 							{/* Breadcrumbs */}
 							<Breadcrumbs
@@ -238,10 +238,10 @@ export default function AIProfilePage() {
 
 							{/* Header */}
 							<header className="space-y-12">
-								<h1 className="neue-haas-grotesk-display text-6xl ">
+								<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
 									AI Profile
 								</h1>
-								<p className="noto-sans-jp-light text-sm max-w leading-loose">
+								<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 									AIチャット対話用のプロフィール設定です.
 									<br />
 									性格特性、興味関心、対話スタイルなどの情報を掲載しています.
@@ -281,7 +281,7 @@ export default function AIProfilePage() {
 								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									Personality Traits
 								</h2>
-								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
+								<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
 									{personalityTraits.map((trait) => (
 										<div key={trait.trait} className="  p-4 space-y-4">
 											<div className="flex items-center">
@@ -313,7 +313,7 @@ export default function AIProfilePage() {
 								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									Interests & Knowledge Areas
 								</h2>
-								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
+								<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
 									{Object.entries(interests).map(([key, category]) => (
 										<div key={key} className="  p-4 space-y-4">
 											<h3 className="zen-kaku-gothic-new text-lg ">
@@ -366,7 +366,7 @@ export default function AIProfilePage() {
 								<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 									AI Capabilities
 								</h2>
-								<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
+								<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
 									{aiCapabilities.map((capability) => (
 										<div key={capability.category} className="  p-4 space-y-4">
 											<div className="flex items-center">
@@ -426,7 +426,7 @@ export default function AIProfilePage() {
 							{/* CTA */}
 							<nav aria-label="Profile navigation">
 								<h3 className="sr-only">Profile機能</h3>
-								<div className="grid-system grid-1 xs:grid-2 sm:grid-3 gap-6">
+								<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 									<Link
 										href="/about/profile/real"
 										className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"

@@ -10,7 +10,7 @@ export default function RealCardPage() {
 			<h1 className="sr-only">木村友亮のデジタル名刺 - Digital Card</h1>
 			<div className="min-h-dvh  ">
 				<main className="flex items-center justify-center py-16">
-					<div className="container-system mx-auto max-w-6xl px-6 flex items-center justify-center">
+					<div className="container mx-auto max-w-6xl px-6 flex items-center justify-center">
 						<MeishiPhiCard baseColor="#ffffff" mainColor="#000000" />
 					</div>
 				</main>

@@ -81,7 +81,7 @@ export default async function PluginsPage() {
 	return (
 		<div className="min-h-dvh ">
 			<main className="py-10">
-				<div className="container-system">
+				<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 					<div className="space-y-10">
 						{/* Breadcrumbs */}
 						<div className="mb-6">
@@ -95,7 +95,7 @@ export default async function PluginsPage() {
 						</div>
 						<header className="space-y-6">
 							<h1 className="neue-haas-grotesk-display text-4xl ">Plugins</h1>
-							<p className="noto-sans-jp-light text-sm max-w leading-loose">
+							<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 								AfterEffects・Premiere Pro プラグインを無料で配布しています.
 								<br />
 								動画制作を効率化するツールをダウンロードしてご利用ください.

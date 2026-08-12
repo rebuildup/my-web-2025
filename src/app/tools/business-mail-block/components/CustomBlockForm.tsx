@@ -22,7 +22,7 @@ export default function CustomBlockForm({
 			<h3 className="neue-haas-grotesk-display text-lg ">
 				カスタムブロック作成
 			</h3>
-			<div className="grid-system grid-1 sm:grid-2 gap-4">
+			<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 				<div className="space-y-2">
 					<label
 						htmlFor="customBlockCategory"

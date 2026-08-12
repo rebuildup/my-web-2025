@@ -69,7 +69,7 @@ export default function BusinessMailBlockTool() {
 						)}
 					</div>
 
-					<div className="grid-system grid-1 lg:grid-2 gap-8">
+					<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 						<AvailableBlocks
 							filteredBlocks={state.filteredBlocks}
 							toggleFavorite={state.toggleFavorite}

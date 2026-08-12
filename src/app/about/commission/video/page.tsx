@@ -109,8 +109,10 @@ const structuredData = {
 function VideoHeader() {
 	return (
 		<header className="space-y-12">
-			<h1 className="neue-haas-grotesk-display text-6xl ">映像依頼</h1>
-			<p className="noto-sans-jp-light text-sm max-w leading-loose">
+			<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
+				映像依頼
+			</h1>
+			<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 				MV制作・アニメーション・プロモーション映像の制作を承ります.
 				<br />
 				クリエイティブな映像表現で想いを形にします.
@@ -125,7 +127,7 @@ function ServicesOverview() {
 			<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 				映像制作サービス概要
 			</h2>
-			<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-4 gap-6">
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 				<div className="  p-4 space-y-4">
 					<div className="flex items-center">
 						<Music className="w-6 h-6  mr-3" />
@@ -248,7 +250,7 @@ function PricingSection() {
 				</p>
 			</div>
 
-			<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6 mb-8">
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 mb-8">
 				<div className="  p-4 space-y-4">
 					<h3 className="zen-kaku-gothic-new text-lg ">料金例</h3>
 					<div className="space-y-3">
@@ -312,7 +314,7 @@ function SoftwareSection() {
 			<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 				使用ソフトウェア
 			</h2>
-			<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
 				<div className="  p-4 space-y-4">
 					<h3 className="zen-kaku-gothic-new text-lg ">映像制作</h3>
 					<div className="space-y-2">
@@ -377,7 +379,7 @@ function ContactSection() {
 		<section>
 			<h2 className="neue-haas-grotesk-display text-3xl mb-8">連絡方法</h2>
 			<div className="  p-4">
-				<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
 					<div>
 						<div className="flex items-center mb-3">
 							<Mail className="w-5 h-5  mr-2" />
@@ -421,7 +423,7 @@ function CommissionCTA() {
 	return (
 		<nav aria-label="Commission navigation">
 			<h3 className="sr-only">Commission機能</h3>
-			<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
 				<Link
 					href="/contact"
 					className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
@@ -465,7 +467,7 @@ export default function VideoCommissionPage() {
 					className="flex items-center py-10"
 					tabIndex={-1}
 				>
-					<div className="container-system">
+					<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 						<div className="space-y-10">
 							<Breadcrumbs
 								items={[

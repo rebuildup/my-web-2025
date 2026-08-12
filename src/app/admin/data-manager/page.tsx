@@ -49,7 +49,7 @@ export default function DataManagerPage() {
 	return (
 		<div className="min-h-dvh ">
 			<main className="py-10">
-				<div className="container-system">
+				<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 					<div className="space-y-8">
 						{/* Header */}
 						<DataManagerHeader />

@@ -194,7 +194,7 @@ export default function WebGLPlaygroundPage() {
 	return (
 		<div className="min-h-screen scrollbar-auto-stable">
 			<main className="flex items-center py-4">
-				<div className="container-system">
+				<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 					<div className="space-y-10">
 						{/* Breadcrumbs */}
 						<Breadcrumbs
@@ -209,10 +209,10 @@ export default function WebGLPlaygroundPage() {
 
 						{/* Header */}
 						<header className="space-y-12">
-							<h1 className="neue-haas-grotesk-display text-6xl ">
+							<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
 								WebGL Playground
 							</h1>
-							<p className="noto-sans-jp-light text-sm max-w leading-loose">
+							<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 								WebGL・Three.js・WebGPU実験場です.
 								<br />
 								3D表現、シェーダー、パーティクルシステム、インタラクティブ体験を実験しています.
@@ -443,7 +443,7 @@ export default function WebGLPlaygroundPage() {
 							<h2 className="neue-haas-grotesk-display text-3xl mb-8">
 								Technical Notes
 							</h2>
-							<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-6">
+							<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
 								<div className="  p-4 space-y-4">
 									<div className="flex items-center">
 										<Zap className="w-6 h-6  mr-3" />
@@ -495,7 +495,7 @@ export default function WebGLPlaygroundPage() {
 						{/* Navigation */}
 						<nav aria-label="WebGL playground navigation">
 							<h3 className="sr-only">WebGL Playground機能</h3>
-							<div className="grid-system grid-1 xs:grid-3 sm:grid-3 gap-6">
+							<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 								<Link
 									href="/portfolio/playground/design"
 									className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"

@@ -199,7 +199,7 @@ export default async function VideoDesignProjectsPage() {
 
 				<div className="min-h-dvh relative z-10 scrollbar-auto-stable">
 					<main className="py-4">
-						<div className="container-system mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+						<div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 							<div className="space-y-10">
 								{/* Breadcrumbs */}
 								<Breadcrumbs
@@ -214,10 +214,10 @@ export default async function VideoDesignProjectsPage() {
 
 								{/* Header */}
 								<header className="space-y-4">
-									<h1 className="neue-haas-grotesk-display text-6xl ">
+									<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
 										Video & Design
 									</h1>
-									<p className="noto-sans-jp-light text-sm max-w leading-loose">
+									<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 										制作した映像作品とデザイン作品をまとめたギャラリーです
 									</p>
 								</header>
@@ -269,7 +269,7 @@ export default async function VideoDesignProjectsPage() {
 								{/* Global Functions */}
 								<nav aria-label="Video & Design gallery functions">
 									<h2 className="sr-only">Video & Design Gallery機能</h2>
-									<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
+									<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 										<Link
 											href="/portfolio/gallery/all"
 											className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
@@ -313,7 +313,7 @@ export default async function VideoDesignProjectsPage() {
 		return (
 			<div className="min-h-dvh scrollbar-auto-stable">
 				<main className="py-10">
-					<div className="container-system">
+					<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 						<div className=" p-4 rounded">
 							<p className="">
 								Error loading video & design gallery:{" "}

@@ -64,8 +64,10 @@ export function AllGalleryClient({ initialItems }: AllGalleryClientProps) {
 			{/* Header */}
 			<div>
 				<header className="space-y-4">
-					<h1 className="neue-haas-grotesk-display text-6xl ">All Projects</h1>
-					<p className="noto-sans-jp-light text-sm max-w leading-loose">
+					<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
+						All Projects
+					</h1>
+					<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 						全ての制作物をまとめたギャラリーです
 					</p>
 				</header>

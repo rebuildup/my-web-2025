@@ -56,11 +56,13 @@ function SearchPageFallback() {
 	return (
 		<div className="min-h-dvh scrollbar-auto-stable">
 			<main className="flex items-center py-10">
-				<div className="container-system">
+				<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 					<div className="space-y-10">
 						<header className="space-y-12">
-							<h1 className="neue-haas-grotesk-display text-6xl ">Search</h1>
-							<p className="noto-sans-jp-light text-sm max-w leading-loose">
+							<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
+								Search
+							</h1>
+							<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 								サイト内のコンテンツを検索できます.
 								<br />
 								ポートフォリオ、ブログ、ツールなど、必要な情報を素早く見つけることができます.

@@ -56,7 +56,7 @@ export default function PrivacyPolicy() {
 	return (
 		<div className="min-h-dvh ">
 			<main className="flex items-center py-10">
-				<div className="container-system">
+				<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 					<div className="space-y-10">
 						{/* Breadcrumbs */}
 						<div className="mb-6">
@@ -69,11 +69,11 @@ export default function PrivacyPolicy() {
 						</div>
 						{/* Page Header */}
 						<header className="space-y-12">
-							<h1 className="neue-haas-grotesk-display text-6xl ">
+							<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
 								Privacy Policy
 							</h1>
 							<div className="space-y-4">
-								<p className="noto-sans-jp-light text-sm max-w leading-loose">
+								<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 									samuidoのプライバシーポリシー.
 									<br />
 									個人情報の取り扱い、Cookieの使用、アクセス解析について説明しています.

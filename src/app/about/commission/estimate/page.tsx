@@ -96,10 +96,10 @@ function PageHeader() {
 			/>
 
 			<header className="space-y-12">
-				<h1 className="neue-haas-grotesk-display text-6xl ">
+				<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
 					映像制作見積もり計算機
 				</h1>
-				<p className="noto-sans-jp-light text-sm max-w leading-loose">
+				<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 					映像制作の見積もりを自動計算します.
 					<br />
 					料金の目安を事前に確認できます.
@@ -394,7 +394,7 @@ function ContactCTA() {
 			<p className="noto-sans-jp-light text-sm mb-4">
 				より詳細な見積もりや、ご不明な点がございましたらお気軽にお問い合わせください.
 			</p>
-			<div className="grid-system grid-1 xs:grid-2 sm:grid-2 md:grid-2 gap-3">
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-3">
 				<Link
 					href="/contact"
 					className=" text-center p-4 flex items-center justify-center   focus: focus:ring-offset-2 focus:ring-offset-base"
@@ -541,11 +541,11 @@ export default function EstimatePage() {
 	return (
 		<div className="min-h-dvh ">
 			<main className="flex items-center py-10">
-				<div className="container-system">
+				<div className="container mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 					<div className="space-y-10">
 						<PageHeader />
 
-						<div className="grid-system grid-1 lg:grid-2 gap-8">
+						<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 							<EstimateFormSection
 								form={form}
 								setForm={setForm}

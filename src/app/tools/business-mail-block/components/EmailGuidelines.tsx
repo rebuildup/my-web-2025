@@ -17,7 +17,7 @@ export default function EmailGuidelines({ onClose }: EmailGuidelinesProps) {
 				</button>
 			</div>
 
-			<div className="grid-system grid-1 sm:grid-3 gap-6">
+			<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 				<div className="space-y-3">
 					<h3 className="neue-haas-grotesk-display text-lg ">構造</h3>
 					<ul className="space-y-1">

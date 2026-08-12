@@ -62,10 +62,10 @@ function DevelopGalleryHeader() {
 	return (
 		<header className="space-y-8">
 			<div className="space-y-4">
-				<h1 className="neue-haas-grotesk-display text-6xl ">
+				<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl ">
 					Development Projects
 				</h1>
-				<p className="noto-sans-jp-light text-sm max-w leading-loose">
+				<p className="noto-sans-jp-light text-sm max-w-prose leading-loose">
 					開発系プロジェクトをまとめたギャラリーです
 				</p>
 			</div>
@@ -256,7 +256,7 @@ function DevelopNavigation() {
 	return (
 		<nav aria-label="Development gallery functions">
 			<h2 className="sr-only">Development Gallery機能</h2>
-			<div className="grid grid-cols-1 xs:grid-cols-3 sm:grid-cols-3 gap-6">
+			<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 				<Link
 					href="/portfolio/gallery/all"
 					className="/30 text-center p-4 flex items-center justify-center hover:/50 transition-colors"
