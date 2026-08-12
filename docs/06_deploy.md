@@ -294,6 +294,23 @@ sudo systemctl status nginx
 
 ```bash
 sudo tee /etc/nginx/sites-available/yusuke-kim > /dev/null << 'EOF'
+# Subdomain → path redirect map.
+# Sync target: keep this map aligned with the heredoc in
+# `.github/workflows/deploy.yml`. Legacy dev-only middleware
+# (middleware.ts) was removed 2026-08; the canonical subdomain
+# redirect lives here because Next.js `output: 'export'` does not
+# execute middleware at runtime.
+map $host $subdomain_redirect {
+    default "";
+    "links.yusuke-kim.com"     "/about/links/";
+    "portfolio.yusuke-kim.com" "/portfolio/";
+    "www.yusuke-kim.com"       "/";
+    "pomodoro.yusuke-kim.com"  "/tools/pomodoro/";
+    "prototype.yusuke-kim.com" "/tools/prototype/";
+    "samuido.yusuke-kim.com"   "/about/profile/handle/";
+    "361do.yusuke-kim.com"     "/about/profile/handle/";
+}
+
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -315,7 +332,13 @@ server {
 
     # Next.js static export: never SPA-fallback missing RSC/chunk
     # paths to index.html (that returns HTML where JSON is expected).
+    # When the request comes in on a mapped subdomain, redirect to
+    # the corresponding directory first; only fall back to the root
+    # page for unmapped subdomains / direct main-domain access.
     location = / {
+        if ($subdomain_redirect) {
+            return 301 https://$host$subdomain_redirect;
+        }
         try_files /index.html =404;
     }
 
@@ -628,18 +651,24 @@ sudo cat /etc/nginx/sites-available/yusuke-kim | grep server_name
 
 ### 7.3 アプリケーション側の設定
 
-Next.jsのミドルウェア（`middleware.ts`）でサブドメインのリダイレクト処理が実装されています.
+サブドメインのリダイレクトは **nginx の `map` ディレクティブ** で処理されます（`docs/06_deploy.md` §5.2 / `.github/workflows/deploy.yml` heredoc）.
 
-**現在のマッピング:**
-- `links.yusuke-kim.com` → `/about/links`
-- `portfolio.yusuke-kim.com` → `/portfolio`
+**なぜ middleware ではなく nginx か**: Next.js は `output: 'export'`（静的エクスポート）でビルドされているため、本番ランタイムには Node.js サーバーが存在せず `middleware.ts` は実行されません. canonical な経路判定は nginx 側で行います.
+
+**現在のマッピング**（`$host` → `Location: https://$host$subdomain_redirect`）:
+- `links.yusuke-kim.com` → `/about/links/`
+- `portfolio.yusuke-kim.com` → `/portfolio/`
 - `www.yusuke-kim.com` → `/`
-- `pomodoro.yusuke-kim.com` → `/tools/pomodoro`
-- `prototype.yusuke-kim.com` → `/tools/prototype`
-- `samuido.yusuke-kim.com` → `/about/profile/handle`
-- `361do.yusuke-kim.com` → `/about/profile/handle`
+- `pomodoro.yusuke-kim.com` → `/tools/pomodoro/`
+- `prototype.yusuke-kim.com` → `/tools/prototype/`
+- `samuido.yusuke-kim.com` → `/about/profile/handle/`
+- `361do.yusuke-kim.com` → `/about/profile/handle/`
 
-新しいサブドメインを追加する場合は、`middleware.ts`の`subdomainMap`を編集してください.
+マップされていないサブドメインやメインドメインへの `/` アクセスは、引き続きルートページ（`out/index.html`）を返します.
+
+新しいサブドメインを追加する場合は、次の **2 箇所** を同期して更新してください:
+1. `.github/workflows/deploy.yml` の heredoc 内 `map $host $subdomain_redirect { ... }`
+2. `docs/06_deploy.md` §5.2 の同定義（手動運用時の参照用）
 
 ### 7.4 HTTPS証明書の取得（サブドメイン用）
 
@@ -790,12 +819,14 @@ curl -I http://links.yusuke-kim.com/
 curl -I http://portfolio.yusuke-kim.com/
 ```
 
-**期待される出力:**
+**期待される出力（HTTP → HTTPS へ 301 リダイレクト + 対応パスへ）:**
 ```
 HTTP/1.1 301 Moved Permanently
-Location: https://links.yusuke-kim.com/about/links
+Location: https://links.yusuke-kim.com/about/links/
 ...
 ```
+
+> `Location` のパス末尾スラッシュは `next.config.ts` の `trailingSlash: true` と整合します.スラッシュ無しで観測された場合は nginx 設定の `map` 定義を再同期してください.
 
 **HTTPSでの確認:**
 ```bash
@@ -972,9 +1003,12 @@ sudo certbot --nginx -d yusuke-kim.com --force-renewal
    ```
    - `*.yusuke-kim.com`が含まれていることを確認
 
-3. **ミドルウェアの動作確認**
-   - ブラウザで`links.yusuke-kim.com`にアクセス
-   - `/about/links`にリダイレクトされることを確認
+3. **nginx `map` 定義の確認**
+   ```bash
+   sudo cat /etc/nginx/sites-available/yusuke-kim | sed -n '/map \$host \$subdomain_redirect/,/^}/p'
+   ```
+   - 期待するサブドメイン→パスの組がすべて含まれていることを確認
+   - 反映を忘れた場合は `sudo nginx -t && sudo systemctl reload nginx` を実行
 
 4. **証明書確認（HTTPSの場合）**
    ```bash

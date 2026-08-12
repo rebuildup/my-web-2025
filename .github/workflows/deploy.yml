@@ -421,6 +421,22 @@ jobs:
           fi
 
           sudo tee "$NGINX_CONF" >/dev/null <<'NGINX_EOF'
+          # Subdomain → path redirect map.
+          # Sync target: keep this map aligned with docs/06_deploy.md §7.
+          # Legacy dev-only middleware (middleware.ts) was removed 2026-08;
+          # the canonical subdomain redirect lives here because Next.js
+          # `output: 'export'` does not execute middleware at runtime.
+          map $host $subdomain_redirect {
+              default "";
+              "links.yusuke-kim.com"     "/about/links/";
+              "portfolio.yusuke-kim.com" "/portfolio/";
+              "www.yusuke-kim.com"       "/";
+              "pomodoro.yusuke-kim.com"  "/tools/pomodoro/";
+              "prototype.yusuke-kim.com" "/tools/prototype/";
+              "samuido.yusuke-kim.com"   "/about/profile/handle/";
+              "361do.yusuke-kim.com"     "/about/profile/handle/";
+          }
+
           server {
               listen 80 default_server;
               listen [::]:80 default_server;
@@ -442,7 +458,13 @@ jobs:
 
               # Next.js static export: never SPA-fallback missing RSC/chunk
               # paths to index.html (that returns HTML where JSON is expected).
+              # When the request comes in on a mapped subdomain, redirect to
+              # the corresponding directory first; only fall back to the root
+              # page for unmapped subdomains / direct main-domain access.
               location = / {
+                  if ($subdomain_redirect) {
+                      return 301 https://$host$subdomain_redirect;
+                  }
                   try_files /index.html =404;
               }
 
