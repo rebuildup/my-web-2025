@@ -10,6 +10,11 @@ peer = false
 # branches. Re-evaluate once Bun ships branch coverage or this repo moves
 # to jest@30 (see docs/adr/0008-bun-test-canonical.md).
 [test]
+# Redirect `CONTENT_DATA_DIR` to a temp dir BEFORE any CMS module loads.
+# The CMS modules resolve the data dir at module init time, so an env-var
+# assignment inside a test file is too late (ES module imports hoist).
+preload = ["./scripts/test-preload.ts"]
+
 coverage = false
 coverageReporter = ["text", "lcov"]
 coverageDir = "./coverage"

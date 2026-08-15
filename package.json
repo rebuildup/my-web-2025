@@ -13,7 +13,6 @@
 		"dev:full": "bun ./scripts/dev-with-cms.ts",
 		"sync:cms-entries": "bun ./scripts/sync-legacy-contents-to-rust.ts",
 		"sync:cms-markdown": "bun ./scripts/sync-legacy-markdown-to-rust.ts",
-		"sync:cms-media": "bun ./scripts/sync-legacy-media-to-rust.ts",
 		"build": "bun scripts/check-env.js && bun --bun next build && bun scripts/copy-content-data.js",
 		"start": "bun --bun next start -p 3010",
 		"dev:port": "bun x next dev -p $PORT",

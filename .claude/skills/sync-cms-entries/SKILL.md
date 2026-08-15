@@ -14,7 +14,7 @@ The repository ships three sync scripts under `scripts/` for moving legacy data 
 - "メディアファイルを Rust CMS へ転送"
 - Any bulk content migration from the pre-Rust layout into the current per-item DB / Rust API.
 
-## The three scripts
+## The scripts
 
 ```bash
 # 1. 構造化 JSON -> data/contents/content-{id}.db への投入
@@ -22,10 +22,9 @@ bun run sync:cms-entries        # scripts/sync-legacy-contents-to-rust.ts
 
 # 2. Markdown 本文 -> 各 content DB の markdown カラム / files
 bun run sync:cms-markdown        # scripts/sync-legacy-markdown-to-rust.ts
-
-# 3. メディアファイル -> Rust API (/api/admin/files)
-bun run sync:cms-media           # scripts/sync-legacy-media-to-rust.ts
 ```
+
+> メディア (画像 / 動画 / 音声) は 2026-08 のアーキテクチャ修正で **Rust API への直接 POST** が正. `scripts/sync-legacy-media-to-rust.ts` と `bun run sync:cms-media` は削除済み. 詳細は `docs/adr/0004-distributed-sqlite-cms.md` の 2026-08 更新を参照.
 
 ## Workflow
 
@@ -35,8 +34,7 @@ bun run sync:cms-media           # scripts/sync-legacy-media-to-rust.ts
    ```
 2. Run `sync:cms-entries` first. Watch for `mapper round-trip mismatch` warnings — they mean a row in the legacy JSON doesn't fit `src/cms/types/content.ts` and `src/cms/lib/content-mapper.ts`. Fix the mapper, do not coerce with `as any`.
 3. Run `sync:cms-markdown` next. Verify a few sample slugs via `GET /api/content/{id}` — markdown body should match the source.
-4. Run `sync:cms-media` last. Confirm the upload progress endpoint (`/api/admin/files/upload/progress`) is reporting for the largest files.
-5. Final checks:
+4. Final checks:
    - `GET /api/cms/contents` returns the new total.
    - `GET /api/search/index?q=<common-term>` returns hits (FTS5 sanity).
    - `GET /api/admin/tags/stats` reflects any new tags.
@@ -52,7 +50,6 @@ bun run sync:cms-media           # scripts/sync-legacy-media-to-rust.ts
 
 - `scripts/sync-legacy-contents-to-rust.ts` — JSON → DB
 - `scripts/sync-legacy-markdown-to-rust.ts` — Markdown → DB
-- `scripts/sync-legacy-media-to-rust.ts` — media files → Rust API
 - `src/cms/types/content.ts` — canonical `Content` schema
 - `src/cms/lib/content-mapper.ts` — row ↔ `Content`
 - `src/cms/lib/content-db-manager.ts` — schema init + FTS5 triggers

@@ -12,7 +12,16 @@ export function useContentFormMedia(
 	const webmInputRef = useRef<HTMLInputElement>(null);
 
 	const uploadMediaFile = useCallback(
-		async (file: File) => {
+		async (
+			file: File,
+			extras?: {
+				alt?: string;
+				description?: string;
+				tags?: string[];
+				width?: number;
+				height?: number;
+			},
+		) => {
 			if (!formData.id) return null;
 			const base64 = await new Promise<string>((resolve, reject) => {
 				const reader = new FileReader();
@@ -31,6 +40,11 @@ export function useContentFormMedia(
 					filename: file.name,
 					mimeType: file.type,
 					base64Data: base64,
+					alt: extras?.alt,
+					description: extras?.description,
+					tags: extras?.tags,
+					width: extras?.width,
+					height: extras?.height,
 				}),
 			});
 			if (!res.ok) return null;

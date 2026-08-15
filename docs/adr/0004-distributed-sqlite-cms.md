@@ -28,3 +28,12 @@ Accepted
 - アイテム数が 10k+ に達し、Rust API でも集計が要件を満たせなくなった場合.
 - クロステーマ query の SLA 要件が著しく厳しくなった場合.
 - スキーマ進化頻度が月 1 を超え、migration overhead が負担になった場合.
+
+## 2026-08 更新: media テーブルも per-content DB に統一
+
+`apps/cms-api/src/routes/media.rs::create_media` / `delete_media` を per-content DB 直接書き込みに切り替え. 旧 consolidated `data/db/cms-api-dev.db` の `media (entry_id, tags_json, ...)` テーブルへの書き込みは廃止. 書き込み経路と読み込み経路 (`get_media_or_list`) が同じ `data/contents/content-{id}.db` を叩くため、admin UI からのアップロードが公開サイトに即反映される.
+
+- 新規 per-content DB 作成時に Rust 側で `apps/cms-api/src/db/per_content_schema.sql` を `include_str!` でブートストラップする. SQL は `src/cms/lib/content-db-manager.ts::initializeContentDbSchema` と byte-for-byte 同一.
+- `media` テーブルの FK (`media.content_id REFERENCES contents(id) ON DELETE CASCADE`) を満たすため stub の `contents` 行を `ensure_content_row` で挿入. Bun の `saveFullContent` が後で正式 content を上書きする.
+- 旧 `scripts/sync-legacy-media-to-rust.ts` (per-content → consolidated の逆方向 sync) は削除. `package.json` の `sync:cms-media` エントリも削除.
+- consolidated `media` テーブルには seed 1 行 (deprecated) が残っているが、退役は本 ADR の範囲外 (別 ADR で consolidated DB 全体の処遇と一緒に判断).
