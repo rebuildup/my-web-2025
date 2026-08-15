@@ -92,10 +92,21 @@ async fn main() {
     let app = axum::Router::new()
         .nest("/entries", entries::router(pool.clone()))
         .nest("/markdown", markdown::router(pool.clone()))
-        .nest("/media", media::router(pool.clone()))
+        // Reads go straight to per-content DBs so the served bytes always
+        // reflect the latest edit, independent of `bun run sync:cms-media`.
+        // Writes still target the consolidated dev DB so
+        // `scripts/sync-legacy-media-to-rust.ts` keeps functioning until the
+        // consolidated DB is fully retired.
+        .nest(
+            "/media",
+            media::router(cms_api_content_data_dir(), pool.clone()),
+        )
         // Alias for browser-facing `/api/cms/media` so static-exported pages
         // can request media through the Rust CMS API without a Node route.
-        .nest("/api/cms/media", media::router(pool.clone()))
+        .nest(
+            "/api/cms/media",
+            media::router(cms_api_content_data_dir(), pool.clone()),
+        )
         .nest("/tags", tags::router(pool.clone()))
         .nest("/search", search::router(pool.clone()))
         .nest("/preview", preview::router(pool.clone()))
