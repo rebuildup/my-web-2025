@@ -6,6 +6,7 @@ const NAV_TABS = [
 	{ label: "Markdownページ", href: "/admin/content/markdown" },
 	{ label: "メディアライブラリ", href: "/admin/content/media" },
 	{ label: "データベース", href: "/admin/content/databases" },
+	{ label: "孤児メディア診断", href: "/admin/diagnostics/orphan-media" },
 ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
