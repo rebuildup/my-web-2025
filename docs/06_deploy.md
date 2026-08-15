@@ -29,11 +29,11 @@
 - **パッケージマネージャー**: Bun (`bun install --frozen-lockfile`)
 - **プロセス管理**: PM2 (systemd 自動起動, `interpreter: "none"` で Rust バイナリを直接実行)
 - **リバースプロキシ**: nginx (`/api/` と `/entries|markdown|media|tags|search|preview|health` を Rust API にプロキシ, それ以外は静的ファイルを配信)
-- **データベース**: SQLite (1 アイテム 1 DB, `data/contents/content-{id}.db`) を Rust API が読み書き
+- **データベース**: SQLite (1 アイテム 1 DB, `data/contents/content-{id}.db`) を Rust API が読み書き. per-content DB は git 管理外で `data/contents/` 配下に置かれ, `deploy.yml` の `Package per-content SQLite databases` ステップで `content-data.tar.gz` に固めて VM に転送される (サーバー側のみの追加ファイルは `tar -x` が削除しないので保持される).
 
 ### デプロイフロー (`.github/workflows/deploy.yml`)
 1. `verification` ジョブ: `bun install --frozen-lockfile` → `bun run type-check` → `bun run lint` → `bun x knip` → `bun run test` → Rust toolchain 設定 → `cargo fmt --check` → `cargo clippy -D warnings` → `cargo test`.
-2. `deploy` ジョブ: Checkout → Bun setup → `bun install --frozen-lockfile` → `bun --bun next build` (静的エクスポート `out/` 生成) → `out/` を `deployment-static.tar.gz` に固める → Rust toolchain 設定 → `cargo build --release` → `cms-api` バイナリを `cms-api-binary.tar.gz` に固める → SSH 経由で VM に転送 → VM 上で PM2 + nginx を再起動.
+2. `deploy` ジョブ: Checkout → Bun setup → `bun install --frozen-lockfile` → `bun --bun next build` (静的エクスポート `out/` 生成) → `out/` を `deployment-static.tar.gz` に固める → `data/contents/` を `content-data.tar.gz` に固める (per-content DB 同梱) → Rust toolchain 設定 → `cargo build --release` → `cms-api` バイナリを `cms-api-binary.tar.gz` に固める → SSH 経由で VM に転送 → VM 上で `out/` を差し替え + per-content DB を `$APP_DIR/data/contents/` に展開 (サーバー側追加は保持) + PM2 + nginx を再起動.
 3. Bun の静的ビルドは SIGILL 132 で teardown 失敗する既知問題があるため, `out/index.html` が存在すれば exit 132 を許容する (詳細は `deploy.yml` の `Bun Build, Static Export and Server Deploy` ジョブ内).
 
 ---

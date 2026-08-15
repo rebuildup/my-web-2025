@@ -237,8 +237,26 @@ export async function fetchCmsContentById(
 export async function fetchCmsContentTags(
 	contentId: string,
 ): Promise<string[]> {
-	const entries = await fetchCmsContentIndex();
+	const entries = await getCmsContentIndexCached();
 	return entries.find((item) => item.id === contentId)?.tags ?? [];
+}
+
+// Module-level memoization for the entries index. Without this, each call
+// re-reads every per-content SQLite DB on disk (213 files in this
+// project), which dominated the SSG build time on workshop blog pages.
+// Within one `next build` worker process the index resolves exactly once;
+// different worker processes compute their own copy, which is acceptable
+// because the index is identical and read-only during build.
+let indexPromise: Promise<CmsContentIndexEntry[]> | null = null;
+export function getCmsContentIndexCached(): Promise<CmsContentIndexEntry[]> {
+	if (!indexPromise) {
+		indexPromise = fetchCmsContentIndex().catch((err) => {
+			// Reset on failure so a later call can retry.
+			indexPromise = null;
+			throw err;
+		});
+	}
+	return indexPromise;
 }
 
 export async function fetchMarkdownPages(options?: {

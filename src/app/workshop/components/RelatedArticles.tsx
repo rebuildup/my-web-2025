@@ -2,62 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-
-interface RelatedArticle {
-	title: string;
-	href: string;
-	thumbnail: string | null;
-	tags: string[];
-}
+import type { ArticleRecommendation } from "@/lib/workshop/article-recommendations";
 
 interface RelatedArticlesProps {
-	articleSlug: string;
-	tags: string[];
+	articles: ArticleRecommendation[];
+	topTags: string[];
 }
 
-export function RelatedArticles({ articleSlug, tags }: RelatedArticlesProps) {
-	const [articles, setArticles] = useState<RelatedArticle[]>([]);
-	const [loading, setLoading] = useState(true);
-
-	// Memoize topTags to prevent infinite re-renders
-	const topTags = useMemo(() => tags.slice(0, 2), [tags]);
-	// Memoize tags string for comparison
-	const tagsString = useMemo(() => tags.join(","), [tags]);
-
-	useEffect(() => {
-		if (topTags.length === 0) {
-			setLoading(false);
-			return;
-		}
-
-		const controller = new AbortController();
-		const tagsParam = topTags.join(",");
-		(async () => {
-			try {
-				const res = await fetch(
-					`/api/workshop/related?slug=${encodeURIComponent(articleSlug)}&tags=${encodeURIComponent(tagsParam)}&limit=6`,
-					{ cache: "no-store", signal: controller.signal },
-				);
-				if (controller.signal.aborted) return;
-				if (res.ok) {
-					const data = await res.json();
-					setArticles(data.articles || []);
-				}
-			} catch (error) {
-				if ((error as Error).name === "AbortError") return;
-				console.error("Failed to fetch related articles:", error);
-			} finally {
-				if (!controller.signal.aborted) {
-					setLoading(false);
-				}
-			}
-		})();
-
-		return () => controller.abort();
-	}, [articleSlug, tagsString]);
-
-	if (loading || articles.length === 0) {
+export function RelatedArticles({ articles, topTags }: RelatedArticlesProps) {
+	if (articles.length === 0) {
 		return null;
 	}
 

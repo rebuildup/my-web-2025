@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import type { ArticleRecommendation } from "@/lib/workshop/article-recommendations";
 
 interface Heading {
 	id: string;
@@ -10,24 +11,19 @@ interface Heading {
 	level: number;
 }
 
-interface RandomArticle {
-	title: string;
-	href: string;
-	thumbnail: string | null;
-}
-
 interface ArticleSidePanelProps {
 	articleSlug?: string;
 	tags?: string[];
+	randomArticles: ArticleRecommendation[];
 }
 
 export function ArticleSidePanel({
 	articleSlug,
 	tags = [],
+	randomArticles,
 }: ArticleSidePanelProps) {
 	const [headings, setHeadings] = useState<Heading[]>([]);
 	const [activeId, setActiveId] = useState<string>("");
-	const [randomArticles, setRandomArticles] = useState<RandomArticle[]>([]);
 	const [headingsLoaded, setHeadingsLoaded] = useState(false);
 	const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -152,31 +148,6 @@ export function ArticleSidePanel({
 			observerRef.current?.disconnect();
 		};
 	}, [headings]);
-
-	// Fetch random articles for promo panel
-	useEffect(() => {
-		const controller = new AbortController();
-		(async () => {
-			try {
-				const res = await fetch(
-					`/api/workshop/random?exclude=${articleSlug || ""}`,
-					{
-						cache: "no-store",
-						signal: controller.signal,
-					},
-				);
-				if (controller.signal.aborted) return;
-				if (res.ok) {
-					const data = await res.json();
-					setRandomArticles(data.articles || []);
-				}
-			} catch (error) {
-				if ((error as Error).name === "AbortError") return;
-				console.error("Failed to fetch random articles:", error);
-			}
-		})();
-		return () => controller.abort();
-	}, [articleSlug]);
 
 	// Always show panel when we have recommendations or content
 	if (randomArticles.length === 0 && !headingsLoaded) {

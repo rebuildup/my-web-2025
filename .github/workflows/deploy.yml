@@ -167,6 +167,33 @@ jobs:
             -C target/release \
             cms-api
 
+      # Per-content SQLite databases live in `data/contents/content-{id}.db`
+      # and are read directly by the Rust CMS API. The admin CMS UI writes
+      # to them, but they're gitignored (each DB can exceed GitHub's 100 MB
+      # per-file cap once media blobs are stored) and so aren't part of the
+      # runner's checkout either. Ship them as a separate archive so the
+      # static export can reference local-only content. Tar preserves
+      # server-side additions (admin uploads done on the server) because it
+      # never deletes files not present in the archive.
+      - name: Package per-content SQLite databases
+        if: hashFiles('data/contents/*.db') != ''
+        run: |
+          set -euo pipefail
+
+          if [ ! -d data/contents ]; then
+            echo "data/contents/ missing; skipping per-content DB packaging"
+            exit 0
+          fi
+
+          tar -czf content-data.tar.gz -C data contents
+
+          echo "=== Per-content DB archive ==="
+          DB_COUNT=$(tar -tzf content-data.tar.gz | grep -c '\.db$' || true)
+          echo "DB count: $DB_COUNT"
+          echo "Archive entries (first 20):"
+          tar -tzf content-data.tar.gz | sed -n '1,20p'
+          ls -lh content-data.tar.gz
+
       - name: Setup SSH config
         run: |
           set -euo pipefail
@@ -211,6 +238,12 @@ jobs:
             apps/cms-api/cms-api-binary.tar.gz \
             deploy-server:/home/${{ secrets.GCP_USER }}/cms-api-binary.tar.gz
 
+          if [ -f content-data.tar.gz ]; then
+            scp \
+              content-data.tar.gz \
+              deploy-server:/home/${{ secrets.GCP_USER }}/content-data.tar.gz
+          fi
+
       - name: Execute server deployment
         run: |
           ssh deploy-server 'bash -s' <<'REMOTE'
@@ -223,8 +256,10 @@ jobs:
 
           PACKAGE_PATH="$HOME/deployment-static.tar.gz"
           CMS_API_PATH="$HOME/cms-api-binary.tar.gz"
+          CONTENT_DATA_PATH="$HOME/content-data.tar.gz"
 
           DB_DIR="$APP_DIR/data/db"
+          CONTENTS_DIR="$APP_DIR/data/contents"
           DB_BACKUP_DIR="$HOME/cms-db-backup"
 
           CMS_BINARY="$APP_DIR/apps/cms-api/target/release/cms-api"
@@ -370,6 +405,22 @@ jobs:
             echo "Restored CMS DB from backup"
           fi
 
+          # Extract per-content SQLite databases over the existing
+          # `$APP_DIR/data/contents/` directory. `tar -x` never deletes
+          # files missing from the archive, so admin UI uploads done on
+          # the server (and stored in DBs the runner doesn't know about)
+          # survive the deploy. The matching DBs are overwritten with
+          # whatever the local checkout has — that is the intent: the
+          # runner is the canonical source for this deploy.
+          if [ -f "$CONTENT_DATA_PATH" ]; then
+            mkdir -p "$CONTENTS_DIR"
+            tar -xzf "$CONTENT_DATA_PATH" -C "$APP_DIR/data"
+            echo "Extracted per-content DBs to $CONTENTS_DIR"
+            echo "DB count after extract: $(ls -1 "$CONTENTS_DIR"/*.db 2>/dev/null | wc -l)"
+          else
+            echo "No content-data.tar.gz; keeping existing $CONTENTS_DIR as-is"
+          fi
+
           # Ensure Nginx can read the static export
           sudo chown -R "$USER:www-data" "$APP_DIR/out"
           
@@ -383,6 +434,15 @@ jobs:
             echo "Static index is not readable: $APP_DIR/out/index.html"
             namei -l "$APP_DIR/out/index.html" || true
             exit 1
+          fi
+
+          # Ensure the per-content DB directory is readable by the CMS API
+          # user. The directory itself was created by `mkdir -p` above as
+          # $USER; the DB files land under it via the tar extract.
+          if [ -d "$CONTENTS_DIR" ]; then
+            sudo chown -R "$USER:$USER" "$CONTENTS_DIR"
+            sudo find "$CONTENTS_DIR" -type d -exec chmod 755 {} +
+            sudo find "$CONTENTS_DIR" -type f -exec chmod 644 {} +
           fi
 
           echo "=== Deployed static entrypoint ==="

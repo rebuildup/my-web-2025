@@ -9,7 +9,12 @@ import {
 	fetchMarkdownPageBySlug,
 	fetchMarkdownPages,
 } from "@/lib/cms-api/server-data";
+import { normalizeMarkdownUrls } from "@/lib/markdown/url-normalizer";
 import { contentCache } from "@/lib/server-cache";
+import {
+	getRandomArticles,
+	getRelatedArticles,
+} from "@/lib/workshop/article-recommendations";
 import type { ContentItem, MarkdownContentItem } from "@/types/content";
 import { isEnhancedContentItem } from "@/types/content";
 import { ArticleSidePanel } from "../../components/ArticleSidePanel";
@@ -73,16 +78,20 @@ async function loadBlogDataCached(slug: string) {
 	return result;
 }
 
-// Normalize URLs in markdown content
-function normalizeMarkdownUrls(content: string): string {
-	if (!content) return content;
-	return content
-		.replace(/https?:\/\/localhost:3010(\/api\/cms\/media[^\s"')]*)/g, "$1")
-		.replace(
-			/(<img[^>]*src=["'])https?:\/\/localhost:3010(\/api\/cms\/media[^"']*)(["'])/gi,
-			"$1$2$3",
-		);
-}
+// Normalize URLs in markdown content.
+//
+// Markdown bodies can contain absolute URLs that point to a local CMS API
+// (e.g. `http://127.0.0.1:3001/media?contentId=…` or
+// `http://localhost:3010/api/cms/media?contentId=…`) when the post was
+// authored with a dev server. Those hosts are unreachable from visitors'
+// browsers in production, so we rewrite every dev-host URL to a relative
+// `/api/cms/media?…` path that Nginx proxies to the Rust CMS API.
+//
+// We handle three host variations (`127.0.0.1`, `localhost`, `0.0.0.0`),
+// any port, and both the canonical `/api/cms/media` form and the legacy
+// `/media` form (the legacy form has to gain the `/api/cms` prefix;
+// Nginx only proxies `/api/` to the Rust API, so a bare `/media?…` would
+// hit the static export and 404).
 
 // Load markdown detail with caching
 async function loadMarkdownDetail(
@@ -255,6 +264,18 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 	// Get tags for this article
 	const articleTags = contentId ? await fetchCmsContentTags(contentId) : [];
 
+	// Pre-compute related + random recommendations at SSG time so the
+	// rendered HTML contains the recommendation cards directly. The legacy
+	// `/api/workshop/random` and `/api/workshop/related` routes used to be
+	// fetched by the client components at runtime, but those routes 404 in
+	// `output: 'export'` builds because no Node server is running on the
+	// static export. See `@/lib/workshop/article-recommendations`.
+	const [relatedArticles, randomArticles] = await Promise.all([
+		getRelatedArticles({ slug, tags: articleTags, limit: 6 }),
+		getRandomArticles({ excludeSlug: slug, limit: 3 }),
+	]);
+	const topTags = articleTags.slice(0, 2);
+
 	const title = content?.title || detailFromMarkdown.title || slug;
 
 	return (
@@ -275,11 +296,15 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
 						<article className="flex-1 min-w-0">
 							<ContentSection item={content} detail={detailFromMarkdown} />
 							{/* Related articles at the bottom */}
-							<RelatedArticles articleSlug={slug} tags={articleTags} />
+							<RelatedArticles articles={relatedArticles} topTags={topTags} />
 						</article>
 
 						{/* Side panel */}
-						<ArticleSidePanel articleSlug={slug} tags={articleTags} />
+						<ArticleSidePanel
+							articleSlug={slug}
+							tags={articleTags}
+							randomArticles={randomArticles}
+						/>
 					</div>
 				</div>
 			</main>
