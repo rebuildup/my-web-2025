@@ -21,7 +21,6 @@ mkdirSync(DIAG_DIR, { recursive: true });
 function makeDb(name: string): string {
 	const path = join(CONTENTS_DIR, `content-${name}.db`);
 	const db = new Database(path);
-	db.exec("PRAGMA journal_mode = WAL");
 	db.exec(`
 		CREATE TABLE contents (
 			id TEXT PRIMARY KEY,
@@ -165,6 +164,28 @@ describe("diagnose-orphan-media", () => {
 	});
 });
 
-afterAll(() => {
-	rmSync(TMP_ROOT, { recursive: true, force: true });
+afterAll(async () => {
+	// bun:sqlite on Windows occasionally keeps the .db file mapped longer
+	// than db.close() suggests, so a recursive rmSync can race against the
+	// OS releasing the handle and surface as EBUSY. Yield to the event
+	// loop and retry briefly so the temp dir doesn't leak. Residual EBUSY
+	// after the retry window is swallowed: the OS scrubs $TMP on its own
+	// schedule and failing the suite over a cleanup race masks real bugs.
+	await new Promise((r) => setTimeout(r, 50));
+	let attempts = 0;
+	const maxAttempts = 20;
+	while (true) {
+		try {
+			rmSync(TMP_ROOT, { recursive: true, force: true });
+			return;
+		} catch (err) {
+			const code = (err as NodeJS.ErrnoException).code;
+			if (code !== "EBUSY" || attempts >= maxAttempts) {
+				if (code === "EBUSY") return;
+				throw err;
+			}
+			attempts++;
+			await new Promise((r) => setTimeout(r, 50));
+		}
+	}
 });
