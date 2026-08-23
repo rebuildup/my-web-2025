@@ -35,12 +35,14 @@ export function generateStaticParams(): Array<{ id: string }> {
 	const dir = resolveContentDbDir();
 	try {
 		if (!fs.existsSync(dir)) return [];
-		return fs
-			.readdirSync(dir)
-			.filter((file) => file.startsWith("content-") && file.endsWith(".db"))
-			.map((file) => ({
-				id: file.slice("content-".length, -".db".length),
-			}));
+		const entries = fs.readdirSync(dir);
+		const params: Array<{ id: string }> = [];
+		for (const file of entries) {
+			if (file.startsWith("content-") && file.endsWith(".db")) {
+				params.push({ id: file.slice("content-".length, -".db".length) });
+			}
+		}
+		return params;
 	} catch {
 		return [];
 	}

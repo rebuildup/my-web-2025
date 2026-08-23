@@ -10,6 +10,20 @@ import { contentProcessor } from "@/lib/admin/content-processor";
 import { adminErrorHandler, adminUtils } from "@/lib/admin/utils";
 import type { ContentType } from "@/types";
 
+const VALID_CONTENT_TYPES: readonly ContentType[] = [
+	"portfolio",
+	"blog",
+	"plugin",
+	"download",
+	"tool",
+	"profile",
+	"page",
+	"asset",
+];
+const VALID_CONTENT_TYPE_SET: ReadonlySet<ContentType> = new Set(
+	VALID_CONTENT_TYPES,
+);
+
 /**
  * Process content item
  * POST /api/admin/content-processing
@@ -37,21 +51,10 @@ export async function POST(request: NextRequest): Promise<Response> {
 		}
 
 		// Validate content type
-		const validTypes: ContentType[] = [
-			"portfolio",
-			"blog",
-			"plugin",
-			"download",
-			"tool",
-			"profile",
-			"page",
-			"asset",
-		];
-
-		if (!validTypes.includes(type)) {
+		if (!VALID_CONTENT_TYPE_SET.has(type)) {
 			return adminUtils.createAdminResponse(
 				{
-					error: `Invalid content type. Valid types: ${validTypes.join(", ")}`,
+					error: `Invalid content type. Valid types: ${VALID_CONTENT_TYPES.join(", ")}`,
 				},
 				400,
 			) as Response;

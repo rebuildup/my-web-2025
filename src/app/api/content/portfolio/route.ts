@@ -3,6 +3,22 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { fetchCmsContentIndex } from "@/lib/cms-api/server-data";
 
+const PORTFOLIO_TAGS: ReadonlySet<string> = new Set([
+	"develop",
+	"video",
+	"design",
+	"video&design",
+]);
+
+function pickCategory(tags: unknown): string {
+	if (Array.isArray(tags)) {
+		for (const t of tags) {
+			if (typeof t === "string" && PORTFOLIO_TAGS.has(t)) return t;
+		}
+	}
+	return "all";
+}
+
 export async function GET(request: NextRequest) {
 	try {
 		const { searchParams } = new URL(request.url);
@@ -15,60 +31,53 @@ export async function GET(request: NextRequest) {
 		const rows = await fetchCmsContentIndex();
 		console.log("[Portfolio API] Found rows:", rows.length);
 
-		// Filter for published portfolio items
-		const filtered = rows
-			.filter((r: any) => r.status === "published")
-			.filter(
-				(r: any) =>
-					Array.isArray(r?.tags) &&
-					(r.tags.includes("develop") ||
-						r.tags.includes("video") ||
-						r.tags.includes("design") ||
-						r.tags.includes("video&design")),
+		const filtered: any[] = [];
+		for (const r of rows as any[]) {
+			if (r.status !== "published") continue;
+			if (
+				!Array.isArray(r?.tags) ||
+				!r.tags.some((t: string) => PORTFOLIO_TAGS.has(t))
 			)
-			.map((r: any) => {
-				const thumbs = r.thumbnails || {};
-				const pickThumb = () => {
-					const getMediaUrl = (mediaId?: string) => {
-						if (!mediaId) return undefined;
-						if (
-							mediaId.startsWith("http://") ||
-							mediaId.startsWith("https://") ||
-							mediaId.startsWith("/")
-						) {
-							return mediaId;
-						}
-						return `${getCmsApiBaseUrl()}/media?contentId=${r.id}&id=${mediaId}&raw=1`;
-					};
+				continue;
 
-					if (thumbs?.image?.src)
-						return getMediaUrl(thumbs.image.src as string);
-					if (thumbs?.gif?.src) return getMediaUrl(thumbs.gif.src as string);
-					if (thumbs?.webm?.poster)
-						return getMediaUrl(thumbs.webm.poster as string);
-					return undefined;
-				};
+			const thumbs = r.thumbnails || {};
+			const getMediaUrl = (mediaId?: string) => {
+				if (!mediaId) return undefined;
+				if (
+					mediaId.startsWith("http://") ||
+					mediaId.startsWith("https://") ||
+					mediaId.startsWith("/")
+				) {
+					return mediaId;
+				}
+				return `${getCmsApiBaseUrl()}/media?contentId=${r.id}&id=${mediaId}&raw=1`;
+			};
 
-				return {
-					id: r.id,
-					title: r.title,
-					description: r.summary ?? "",
-					thumbnail: pickThumb(),
-					tags: Array.isArray(r.tags) ? r.tags : [],
-					technologies: [],
-					category: r.tags?.find((t: string) =>
-						["develop", "video", "design", "video&design"].includes(t),
-					) || "all",
-					createdAt: r.createdAt,
-					updatedAt: r.updatedAt,
-					publishedAt: r.publishedAt,
-				};
-			})
-			.sort(
-				(a: any, b: any) =>
-					new Date(b.publishedAt || b.updatedAt || b.createdAt).getTime() -
-					new Date(a.publishedAt || a.updatedAt || a.createdAt).getTime(),
-			);
+			let thumbnail: string | undefined;
+			if (thumbs?.image?.src) thumbnail = getMediaUrl(thumbs.image.src as string);
+			else if (thumbs?.gif?.src) thumbnail = getMediaUrl(thumbs.gif.src as string);
+			else if (thumbs?.webm?.poster)
+				thumbnail = getMediaUrl(thumbs.webm.poster as string);
+
+			filtered.push({
+				id: r.id,
+				title: r.title,
+				description: r.summary ?? "",
+				thumbnail,
+				tags: Array.isArray(r.tags) ? r.tags : [],
+				technologies: [],
+				category: pickCategory(r.tags),
+				createdAt: r.createdAt,
+				updatedAt: r.updatedAt,
+				publishedAt: r.publishedAt,
+			});
+		}
+
+		filtered.sort(
+			(a: any, b: any) =>
+				new Date(b.publishedAt || b.updatedAt || b.createdAt).getTime() -
+				new Date(a.publishedAt || a.updatedAt || a.createdAt).getTime(),
+		);
 
 		// Handle single item request by id
 		if (id) {

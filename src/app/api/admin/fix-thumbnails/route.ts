@@ -3,17 +3,19 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { NextResponse } from "next/server";
 
+const PORTFOLIO_PATH = path.join(
+	process.cwd(),
+	"public/data/content/portfolio.json",
+);
+const PORTFOLIO_DATA: unknown = JSON.parse(
+	await fs.readFile(PORTFOLIO_PATH, "utf-8"),
+);
+
 export async function POST() {
 	try {
 		console.log("=== Thumbnail Fix API Called ===");
 
-		// Read current portfolio data
-		const portfolioPath = path.join(
-			process.cwd(),
-			"public/data/content/portfolio.json",
-		);
-		const fileContent = await fs.readFile(portfolioPath, "utf-8");
-		const portfolioData = JSON.parse(fileContent);
+		const portfolioData = PORTFOLIO_DATA;
 
 		if (!Array.isArray(portfolioData)) {
 			return NextResponse.json(
@@ -58,7 +60,7 @@ export async function POST() {
 		// Write updated data back to file
 		if (fixedCount > 0) {
 			await fs.writeFile(
-				portfolioPath,
+				PORTFOLIO_PATH,
 				JSON.stringify(updatedData, null, 2),
 				"utf-8",
 			);

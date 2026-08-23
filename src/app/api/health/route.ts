@@ -4,6 +4,8 @@ export const dynamic = "force-static";
  * Provides system health status for monitoring
  */
 
+import { promises as fs } from "node:fs";
+import path from "node:path";
 import { NextResponse } from "next/server";
 import { getProductionConfig } from "@/lib/config/production";
 import { getProductionStatus } from "@/lib/init/production";
@@ -23,6 +25,32 @@ interface HealthCheck {
 	};
 }
 
+const REQUIRED_ENV_VARS = ["NEXT_PUBLIC_SITE_URL"] as const;
+const LOGS_DIR = path.join(process.cwd(), "logs");
+const ERROR_LOGS_DIR = path.join(LOGS_DIR, "errors");
+const PERF_LOGS_DIR = path.join(LOGS_DIR, "performance");
+const PACKAGE_JSON_PATH = "package.json";
+
+async function resolveLogSize(): Promise<number> {
+	try {
+		const [errorFiles, perfFiles] = await Promise.all([
+			fs.readdir(ERROR_LOGS_DIR),
+			fs.readdir(PERF_LOGS_DIR),
+		]);
+		const errorSet = new Set(errorFiles);
+		const allPaths = [
+			...errorFiles.map((file) => path.join(ERROR_LOGS_DIR, file)),
+			...perfFiles
+				.filter((file) => !errorSet.has(file))
+				.map((file) => path.join(PERF_LOGS_DIR, file)),
+		];
+		const stats = await Promise.all(allPaths.map((filePath) => fs.stat(filePath)));
+		return stats.reduce((sum, s) => sum + s.size, 0);
+	} catch {
+		return 0;
+	}
+}
+
 export async function GET() {
 	const startTime = Date.now();
 	const config = getProductionConfig();
@@ -39,8 +67,7 @@ export async function GET() {
 
 	// Check file system access
 	try {
-		const fs = await import("node:fs/promises");
-		await fs.access("package.json");
+		await fs.access(PACKAGE_JSON_PATH);
 		healthCheck.checks.filesystem = { status: "pass" };
 	} catch {
 		healthCheck.checks.filesystem = {
@@ -52,8 +79,7 @@ export async function GET() {
 
 	// Check environment configuration
 	try {
-		const requiredEnvVars = ["NEXT_PUBLIC_SITE_URL"];
-		const missing = requiredEnvVars.filter((varName) => !process.env[varName]);
+		const missing = REQUIRED_ENV_VARS.filter((varName) => !process.env[varName]);
 
 		if (missing.length > 0) {
 			healthCheck.checks.environment = {
@@ -119,33 +145,8 @@ export async function GET() {
 
 	// Check logs directory
 	try {
-		const fs = await import("node:fs/promises");
-		const path = await import("node:path");
-
-		const logsDir = path.join(process.cwd(), "logs");
-		await fs.access(logsDir);
-
-		// Check log file sizes
-		const errorLogsDir = path.join(logsDir, "errors");
-		const perfLogsDir = path.join(logsDir, "performance");
-
-		let totalLogSize = 0;
-
-		try {
-			const errorFiles = await fs.readdir(errorLogsDir);
-			const perfFiles = await fs.readdir(perfLogsDir);
-
-			for (const file of [...errorFiles, ...perfFiles]) {
-				const filePath = errorFiles.includes(file)
-					? path.join(errorLogsDir, file)
-					: path.join(perfLogsDir, file);
-				const stats = await fs.stat(filePath);
-				totalLogSize += stats.size;
-			}
-		} catch {
-			// Ignore if directories don't exist
-		}
-
+		await fs.access(LOGS_DIR);
+		const totalLogSize = await resolveLogSize();
 		const logSizeMB = totalLogSize / 1024 / 1024;
 
 		healthCheck.checks.logs = {

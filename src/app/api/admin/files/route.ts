@@ -25,6 +25,35 @@ interface FileInfo {
 	metadata?: Record<string, unknown>;
 }
 
+const SCAN_DIRECTORIES = [
+	{ path: "images/portfolio", category: "portfolio" },
+	{ path: "images/thumbnails", category: "thumbnails" },
+	{ path: "images/og-images", category: "og-images" },
+	{ path: "images/profile", category: "profile" },
+	{ path: "videos", category: "videos" },
+	{ path: "downloads", category: "downloads" },
+] as const;
+
+const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"]);
+const VIDEO_EXTENSIONS = new Set([".mp4", ".webm", ".mov", ".avi"]);
+const PDF_EXTENSIONS = new Set([".pdf"]);
+const ARCHIVE_EXTENSIONS = new Set([".zip"]);
+const JSON_EXTENSIONS = new Set([".json"]);
+
+function mimeTypeFor(extension: string): string {
+	const ext = extension.toLowerCase();
+	if (IMAGE_EXTENSIONS.has(ext)) {
+		return `image/${ext.slice(1) === "jpg" ? "jpeg" : ext.slice(1)}`;
+	}
+	if (VIDEO_EXTENSIONS.has(ext)) {
+		return `video/${ext.slice(1)}`;
+	}
+	if (PDF_EXTENSIONS.has(ext)) return "application/pdf";
+	if (ARCHIVE_EXTENSIONS.has(ext)) return "application/zip";
+	if (JSON_EXTENSIONS.has(ext)) return "application/json";
+	return "application/octet-stream";
+}
+
 // Get all files in public directories
 async function scanDirectory(
 	dirPath: string,
@@ -35,46 +64,34 @@ async function scanDirectory(
 	try {
 		const fullPath = path.join(process.cwd(), "public", dirPath);
 		const entries = await fs.readdir(fullPath, { withFileTypes: true });
+		const fileEntries = entries.filter((entry) => entry.isFile());
 
-		for (const entry of entries) {
-			if (entry.isFile()) {
-				const filePath = path.join(fullPath, entry.name);
-				const stats = await fs.stat(filePath);
-				const publicUrl = `/${dirPath}/${entry.name}`.replace(/\\/g, "/");
+		const statsList = await Promise.all(
+			fileEntries.map((entry) =>
+				fs.stat(path.join(fullPath, entry.name)),
+			),
+		);
 
-				// Generate file ID from path and stats
-				const fileId = Buffer.from(
-					`${publicUrl}-${stats.mtime.getTime()}`,
-				).toString("base64");
+		for (let i = 0; i < fileEntries.length; i++) {
+			const entry = fileEntries[i];
+			const stats = statsList[i];
+			if (!entry || !stats) continue;
+			const publicUrl = `/${dirPath}/${entry.name}`.replace(/\\/g, "/");
 
-				// Determine file type
-				const extension = path.extname(entry.name).toLowerCase();
-				let mimeType = "application/octet-stream";
+			// Generate file ID from path and stats
+			const fileId = Buffer.from(
+				`${publicUrl}-${stats.mtime.getTime()}`,
+			).toString("base64");
 
-				if (
-					[".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"].includes(extension)
-				) {
-					mimeType = `image/${extension.slice(1) === "jpg" ? "jpeg" : extension.slice(1)}`;
-				} else if ([".mp4", ".webm", ".mov", ".avi"].includes(extension)) {
-					mimeType = `video/${extension.slice(1)}`;
-				} else if (extension === ".pdf") {
-					mimeType = "application/pdf";
-				} else if (extension === ".zip") {
-					mimeType = "application/zip";
-				} else if (extension === ".json") {
-					mimeType = "application/json";
-				}
-
-				files.push({
-					id: fileId,
-					name: entry.name,
-					type: mimeType,
-					size: stats.size,
-					url: publicUrl,
-					createdAt: stats.birthtime.toISOString(),
-					category,
-				});
-			}
+			files.push({
+				id: fileId,
+				name: entry.name,
+				type: mimeTypeFor(path.extname(entry.name)),
+				size: stats.size,
+				url: publicUrl,
+				createdAt: stats.birthtime.toISOString(),
+				category,
+			});
 		}
 	} catch (error) {
 		console.warn(`Failed to scan directory ${dirPath}:`, error);
@@ -106,16 +123,23 @@ async function findFileVersions(
 			"thumbnails",
 		);
 		const thumbnailFiles = await fs.readdir(thumbnailPath);
-
-		for (const thumbFile of thumbnailFiles) {
-			if (thumbFile.includes(baseName) && thumbFile.includes("thumb")) {
-				const stats = await fs.stat(path.join(thumbnailPath, thumbFile));
-				versions.push({
-					type: "thumbnail",
-					url: `/images/thumbnails/${thumbFile}`,
-					size: stats.size,
-				});
-			}
+		const thumbMatches = thumbnailFiles.filter(
+			(thumbFile) => thumbFile.includes(baseName) && thumbFile.includes("thumb"),
+		);
+		const thumbStats = await Promise.all(
+			thumbMatches.map((thumbFile) =>
+				fs.stat(path.join(thumbnailPath, thumbFile)),
+			),
+		);
+		for (let i = 0; i < thumbMatches.length; i++) {
+			const thumbFile = thumbMatches[i];
+			const stats = thumbStats[i];
+			if (!thumbFile || !stats) continue;
+			versions.push({
+				type: "thumbnail",
+				url: `/images/thumbnails/${thumbFile}`,
+				size: stats.size,
+			});
 		}
 	} catch {
 		// Thumbnails directory might not exist
@@ -125,20 +149,22 @@ async function findFileVersions(
 	try {
 		const categoryPath = path.join(process.cwd(), "public", "images", category);
 		const files = await fs.readdir(categoryPath);
-
-		for (const file of files) {
-			if (
-				file.includes(baseName) &&
-				file.endsWith(".webp") &&
-				file !== fileName
-			) {
-				const stats = await fs.stat(path.join(categoryPath, file));
-				versions.push({
-					type: "webp",
-					url: `/images/${category}/${file}`,
-					size: stats.size,
-				});
-			}
+		const webpMatches = files.filter(
+			(file) =>
+				file.includes(baseName) && file.endsWith(".webp") && file !== fileName,
+		);
+		const webpStats = await Promise.all(
+			webpMatches.map((file) => fs.stat(path.join(categoryPath, file))),
+		);
+		for (let i = 0; i < webpMatches.length; i++) {
+			const file = webpMatches[i];
+			const stats = webpStats[i];
+			if (!file || !stats) continue;
+			versions.push({
+				type: "webp",
+				url: `/images/${category}/${file}`,
+				size: stats.size,
+			});
 		}
 	} catch {
 		// Category directory might not exist
@@ -160,32 +186,23 @@ export async function GET(request: NextRequest) {
 		const { searchParams } = new URL(request.url);
 		const category = searchParams.get("category");
 
-		let allFiles: FileInfo[] = [];
-
-		// Define directories to scan
-		const directories = [
-			{ path: "images/portfolio", category: "portfolio" },
-			{ path: "images/thumbnails", category: "thumbnails" },
-			{ path: "images/og-images", category: "og-images" },
-			{ path: "images/profile", category: "profile" },
-			{ path: "videos", category: "videos" },
-			{ path: "downloads", category: "downloads" },
-		];
-
 		// Scan directories
-		for (const dir of directories) {
-			if (!category || dir.category === category) {
-				const files = await scanDirectory(dir.path, dir.category);
-				allFiles = allFiles.concat(files);
-			}
-		}
+		const directoriesToScan = category
+			? SCAN_DIRECTORIES.filter((dir) => dir.category === category)
+			: [...SCAN_DIRECTORIES];
+		const directoryResults = await Promise.all(
+			directoriesToScan.map((dir) => scanDirectory(dir.path, dir.category)),
+		);
+		const allFiles: FileInfo[] = directoryResults.flat();
 
 		// Find versions for each file
-		for (const file of allFiles) {
-			if (file.type.startsWith("image/") && file.category !== "thumbnails") {
-				file.versions = await findFileVersions(file.name, file.category);
-			}
-		}
+		await Promise.all(
+			allFiles.map(async (file) => {
+				if (file.type.startsWith("image/") && file.category !== "thumbnails") {
+					file.versions = await findFileVersions(file.name, file.category);
+				}
+			}),
+		);
 
 		// Get backup statistics
 		const backupStats = await getBackupStats();
@@ -196,7 +213,7 @@ export async function GET(request: NextRequest) {
 			stats: {
 				totalFiles: allFiles.length,
 				totalSize: allFiles.reduce((sum, file) => sum + file.size, 0),
-				categories: directories.map((dir) => ({
+				categories: SCAN_DIRECTORIES.map((dir) => ({
 					name: dir.category,
 					count: allFiles.filter((f) => f.category === dir.category).length,
 				})),

@@ -21,12 +21,13 @@ function mapBodyToContent(body: Record<string, unknown>): Partial<Content> {
 	const tags = (body.tags as string[]) || [];
 
 	// Derive tags: add category tags for portfolio items
-	const allTags = [...tags];
+	const tagSet = new Set<string>(tags);
 	if (type === "portfolio" && categories && categories.length > 0) {
 		for (const cat of categories) {
-			if (!allTags.includes(cat)) allTags.push(cat);
+			tagSet.add(cat);
 		}
 	}
+	const allTags = Array.from(tagSet);
 
 	return {
 		id: (body.id as string) || `${type}-${Date.now()}`,
