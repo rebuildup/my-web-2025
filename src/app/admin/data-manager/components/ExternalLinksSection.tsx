@@ -14,6 +14,13 @@ const labelStyle = "block noto-sans-jp-regular text-sm font-medium mb-1";
 const buttonStyle =
 	" px-3 py-1 text-xs hover: hover: transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base";
 
+const quickAddTemplates: { type: ExternalLink["type"]; title: string; placeholder: string }[] = [
+	{ type: "github", title: "GitHub Repository", placeholder: "https://github.com/user/repo" },
+	{ type: "demo", title: "Live Demo", placeholder: "https://demo.example.com" },
+	{ type: "booth", title: "Booth Store", placeholder: "https://booth.pm/ja/items/..." },
+	{ type: "website", title: "Website", placeholder: "https://example.com" },
+];
+
 function getLinkIcon(type: ExternalLink["type"]) {
 	switch (type) {
 		case "github":
@@ -196,8 +203,11 @@ function AddLinkForm({
 				</div>
 
 				<div>
-					<label className={labelStyle}>Title *</label>
+					<label className={labelStyle} htmlFor="new-link-title">
+						Title *
+					</label>
 					<input
+						id="new-link-title"
 						type="text"
 						value={newLink.title}
 						onChange={(e) => onChange((prev) => ({ ...prev, title: e.target.value }))}
@@ -209,8 +219,11 @@ function AddLinkForm({
 			</div>
 
 			<div>
-				<label className={labelStyle}>URL *</label>
+				<label className={labelStyle} htmlFor="new-link-url">
+					URL *
+				</label>
 				<input
+					id="new-link-url"
 					type="url"
 					value={newLink.url}
 					onChange={(e) => onChange((prev) => ({ ...prev, url: e.target.value }))}
@@ -221,8 +234,11 @@ function AddLinkForm({
 			</div>
 
 			<div>
-				<label className={labelStyle}>Description</label>
+				<label className={labelStyle} htmlFor="new-link-description">
+					Description
+				</label>
 				<textarea
+					id="new-link-description"
 					value={newLink.description || ""}
 					onChange={(e) =>
 						onChange((prev) => ({ ...prev, description: e.target.value }))
@@ -255,19 +271,13 @@ function QuickAddTemplates({
 }: {
 	onSelect: (template: { type: ExternalLink["type"]; title: string }) => void;
 }) {
-	const templates: { type: ExternalLink["type"]; title: string; placeholder: string }[] = [
-		{ type: "github", title: "GitHub Repository", placeholder: "https://github.com/user/repo" },
-		{ type: "demo", title: "Live Demo", placeholder: "https://demo.example.com" },
-		{ type: "booth", title: "Booth Store", placeholder: "https://booth.pm/ja/items/..." },
-		{ type: "website", title: "Website", placeholder: "https://example.com" },
-	];
 	return (
 		<div className="  p-4 rounded">
 			<h4 className="noto-sans-jp-regular text-sm font-medium mb-3">
 				Quick Add
 			</h4>
 			<div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-				{templates.map((template) => (
+				{quickAddTemplates.map((template) => (
 					<button
 						key={template.type}
 						type="button"

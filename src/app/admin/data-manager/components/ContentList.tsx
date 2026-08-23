@@ -11,6 +11,30 @@ interface ContentListProps {
 	isLoading: boolean;
 }
 
+function formatDate(dateString: string) {
+	return new Date(dateString).toLocaleDateString("ja-JP", {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+		timeZone: "Asia/Tokyo",
+	});
+}
+
+function getStatusColor(status: string) {
+	switch (status) {
+		case "published":
+			return "";
+		case "draft":
+			return "";
+		case "archived":
+			return "";
+		case "scheduled":
+			return "";
+		default:
+			return "";
+	}
+}
+
 export function ContentList({
 	items,
 	selectedItem,
@@ -18,29 +42,6 @@ export function ContentList({
 	onDeleteItem,
 	isLoading,
 }: ContentListProps) {
-	const formatDate = (dateString: string) => {
-		return new Date(dateString).toLocaleDateString("ja-JP", {
-			year: "numeric",
-			month: "short",
-			day: "numeric",
-		});
-	};
-
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case "published":
-				return "";
-			case "draft":
-				return "";
-			case "archived":
-				return "";
-			case "scheduled":
-				return "";
-			default:
-				return "";
-		}
-	};
-
 	if (isLoading) {
 		return (
 			<div className="space-y-2">
@@ -80,6 +81,7 @@ export function ContentList({
 			{items.map((item) => (
 				<div
 					key={item.id}
+					role="button"
 					className={` p-3 cursor-pointer transition-colors   focus: focus:ring-offset-2 focus:ring-offset-base ${
 						selectedItem?.id === item.id
 							? " bg-opacity-10"

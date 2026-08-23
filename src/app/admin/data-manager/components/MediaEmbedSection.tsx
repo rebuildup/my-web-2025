@@ -239,8 +239,11 @@ function AddMediaForm({
 				</div>
 
 				<div>
-					<label className={labelStyle}>Title</label>
+					<label className={labelStyle} htmlFor="new-video-title">
+						Title
+					</label>
 					<input
+						id="new-video-title"
 						type="text"
 						value={newVideo.title || ""}
 						onChange={(e) => onChange((prev) => ({ ...prev, title: e.target.value }))}
@@ -251,8 +254,11 @@ function AddMediaForm({
 			</div>
 
 			<div>
-				<label className={labelStyle}>URL *</label>
+				<label className={labelStyle} htmlFor="new-video-url">
+					URL *
+				</label>
 				<input
+					id="new-video-url"
 					type="url"
 					value={newVideo.url}
 					onChange={(e) => onUrlChange(e.target.value)}
@@ -262,8 +268,11 @@ function AddMediaForm({
 			</div>
 
 			<div>
-				<label className={labelStyle}>Description</label>
+				<label className={labelStyle} htmlFor="new-video-description">
+					Description
+				</label>
 				<textarea
+					id="new-video-description"
 					value={newVideo.description || ""}
 					onChange={(e) =>
 						onChange((prev) => ({ ...prev, description: e.target.value }))
@@ -277,31 +286,41 @@ function AddMediaForm({
 			{newVideo.type === "iframe" && (
 				<div className="grid grid-cols-2 gap-3">
 					<div>
-						<label className={labelStyle}>Width</label>
+						<label className={labelStyle} htmlFor="new-video-width">
+							Width
+						</label>
 						<input
+							id="new-video-width"
 							type="number"
 							value={newVideo.width || ""}
-							onChange={(e) =>
+							onChange={(e) => {
+								const raw = e.target.value;
+								const parsed = raw === "" ? undefined : Number.parseInt(raw, 10);
 								onChange((prev) => ({
 									...prev,
-									width: parseInt(e.target.value) || undefined,
-								}))
-							}
+									width: Number.isFinite(parsed) ? parsed : undefined,
+								}));
+							}}
 							className={inputStyle}
 							placeholder="560"
 						/>
 					</div>
 					<div>
-						<label className={labelStyle}>Height</label>
+						<label className={labelStyle} htmlFor="new-video-height">
+							Height
+						</label>
 						<input
+							id="new-video-height"
 							type="number"
 							value={newVideo.height || ""}
-							onChange={(e) =>
+							onChange={(e) => {
+								const raw = e.target.value;
+								const parsed = raw === "" ? undefined : Number.parseInt(raw, 10);
 								onChange((prev) => ({
 									...prev,
-									height: parseInt(e.target.value) || undefined,
-								}))
-							}
+									height: Number.isFinite(parsed) ? parsed : undefined,
+								}));
+							}}
 							className={inputStyle}
 							placeholder="315"
 						/>

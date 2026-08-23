@@ -8,6 +8,14 @@ interface DownloadInfoSectionProps {
 	onDownloadInfoChange: (downloadInfo: DownloadInfo | undefined) => void;
 }
 
+function formatFileSize(bytes: number): string {
+	if (bytes === 0) return "0 Bytes";
+	const k = 1024;
+	const sizes = ["Bytes", "KB", "MB", "GB"];
+	const i = Math.floor(Math.log(bytes) / Math.log(k));
+	return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+}
+
 export function DownloadInfoSection({
 	downloadInfo,
 	onDownloadInfoChange,
@@ -17,37 +25,37 @@ export function DownloadInfoSection({
 
 	const handleFileUpload = async (file: File) => {
 		setIsUploading(true);
-		const formData = new FormData();
-		formData.append("file", file);
-		formData.append("type", "download");
+		try {
+			const formData = new FormData();
+			formData.append("file", file);
+			formData.append("type", "download");
 
-		const response = await fetch("/api/admin/upload", {
-			method: "POST",
-			body: formData,
-		}).catch((error: unknown) => {
-			console.error("Upload error:", error);
-			return null;
-		});
+			const response = await fetch("/api/admin/upload", {
+				method: "POST",
+				body: formData,
+			}).catch((error: unknown) => {
+				console.error("Upload error:", error);
+				return null;
+			});
 
-		if (!response) {
+			if (!response) return;
+
+			if (response.ok) {
+				await response.json();
+				const newDownloadInfo: DownloadInfo = {
+					fileName: file.name,
+					fileSize: file.size,
+					fileType: file.type || "application/octet-stream",
+					downloadCount: 0,
+					version: "1.0.0",
+				};
+				onDownloadInfoChange(newDownloadInfo);
+			} else {
+				console.error("Upload failed");
+			}
+		} finally {
 			setIsUploading(false);
-			return;
 		}
-
-		if (response.ok) {
-			await response.json();
-			const newDownloadInfo: DownloadInfo = {
-				fileName: file.name,
-				fileSize: file.size,
-				fileType: file.type || "application/octet-stream",
-				downloadCount: 0,
-				version: "1.0.0",
-			};
-			onDownloadInfoChange(newDownloadInfo);
-		} else {
-			console.error("Upload failed");
-		}
-		setIsUploading(false);
 	};
 
 	const handleInputChange = (field: keyof DownloadInfo, value: unknown) => {
@@ -57,14 +65,6 @@ export function DownloadInfoSection({
 			...downloadInfo,
 			[field]: value,
 		});
-	};
-
-	const formatFileSize = (bytes: number) => {
-		if (bytes === 0) return "0 Bytes";
-		const k = 1024;
-		const sizes = ["Bytes", "KB", "MB", "GB"];
-		const i = Math.floor(Math.log(bytes) / Math.log(k));
-		return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 	};
 
 	const inputStyle =
@@ -158,8 +158,11 @@ export function DownloadInfoSection({
 					{/* Editable Fields */}
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div>
-							<label className={labelStyle}>Version</label>
+							<label className={labelStyle} htmlFor="download-version">
+								Version
+							</label>
 							<input
+								id="download-version"
 								type="text"
 								value={downloadInfo.version || ""}
 								onChange={(e) => handleInputChange("version", e.target.value)}
@@ -169,18 +172,23 @@ export function DownloadInfoSection({
 						</div>
 
 						<div>
-							<label className={labelStyle}>Price (optional)</label>
+							<label className={labelStyle} htmlFor="download-price">
+								Price (optional)
+							</label>
 							<input
+								id="download-price"
 								type="number"
 								min="0"
 								step="0.01"
 								value={downloadInfo.price || ""}
-								onChange={(e) =>
+								onChange={(e) => {
+									const raw = e.target.value;
+									const parsed = raw === "" ? undefined : Number.parseFloat(raw);
 									handleInputChange(
 										"price",
-										parseFloat(e.target.value) || undefined,
-									)
-								}
+										Number.isFinite(parsed) ? parsed : undefined,
+									);
+								}}
 								className={inputStyle}
 								placeholder="0.00"
 							/>
@@ -213,6 +221,7 @@ export function DownloadInfoSection({
 												day: "numeric",
 												hour: "2-digit",
 												minute: "2-digit",
+												timeZone: "Asia/Tokyo",
 											},
 										)}
 									</p>
@@ -260,27 +269,39 @@ export function DownloadInfoSection({
 					</h4>
 					<div className="space-y-3">
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-							<input
-								type="text"
-								placeholder="File name"
-								className={inputStyle}
-								onBlur={(e) => {
-									if (e.target.value.trim()) {
-										const manualInfo: DownloadInfo = {
-											fileName: e.target.value.trim(),
-											fileSize: 0,
-											fileType: "application/octet-stream",
-											downloadCount: 0,
-										};
-										onDownloadInfoChange(manualInfo);
-									}
-								}}
-							/>
-							<input
-								type="text"
-								placeholder="File type (e.g., application/zip)"
-								className={inputStyle}
-							/>
+							<label className="block">
+								<span className="block noto-sans-jp-regular text-sm font-medium mb-1">
+									File name
+								</span>
+								<input
+									id="manual-file-name"
+									type="text"
+									placeholder="File name"
+									className={inputStyle}
+									onBlur={(e) => {
+										if (e.target.value.trim()) {
+											const manualInfo: DownloadInfo = {
+												fileName: e.target.value.trim(),
+												fileSize: 0,
+												fileType: "application/octet-stream",
+												downloadCount: 0,
+											};
+											onDownloadInfoChange(manualInfo);
+										}
+									}}
+								/>
+							</label>
+							<label className="block">
+								<span className="block noto-sans-jp-regular text-sm font-medium mb-1">
+									File type (e.g., application/zip)
+								</span>
+								<input
+									id="manual-file-type"
+									type="text"
+									placeholder="File type (e.g., application/zip)"
+									className={inputStyle}
+								/>
+							</label>
 						</div>
 						<p className="text-xs ">
 							Enter file information manually if you don&apos;t want to upload

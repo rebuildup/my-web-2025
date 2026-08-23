@@ -232,42 +232,48 @@ export function SEOSection({
 			{/* Basic SEO */}
 			<div className="space-y-4">
 				<div>
-					<label className={labelStyle}>SEO Title</label>
-					<input
-						type="text"
-						value={seo?.title || ""}
-						onChange={(e) => handleInputChange("title", e.target.value)}
-						className={inputStyle}
-						placeholder="Custom title for search engines"
-						maxLength={60}
-					/>
+					<label className={labelStyle}>
+						SEO Title
+						<input
+							type="text"
+							value={seo?.title || ""}
+							onChange={(e) => handleInputChange("title", e.target.value)}
+							className={inputStyle}
+							placeholder="Custom title for search engines"
+							maxLength={60}
+						/>
+					</label>
 					<p className="text-xs  mt-1">
 						{(seo?.title || "").length}/60 characters (recommended)
 					</p>
 				</div>
 				<div>
-					<label className={labelStyle}>SEO Description</label>
-					<textarea
-						value={seo?.description || ""}
-						onChange={(e) => handleInputChange("description", e.target.value)}
-						className={`${inputStyle} h-20 resize-vertical`}
-						placeholder="Description for search engines and social media"
-						maxLength={160}
-						rows={3}
-					/>
+					<label className={labelStyle}>
+						SEO Description
+						<textarea
+							value={seo?.description || ""}
+							onChange={(e) => handleInputChange("description", e.target.value)}
+							className={`${inputStyle} h-20 resize-vertical`}
+							placeholder="Description for search engines and social media"
+							maxLength={160}
+							rows={3}
+						/>
+					</label>
 					<p className="text-xs  mt-1">
 						{(seo?.description || "").length}/160 characters (recommended)
 					</p>
 				</div>
 				<div>
-					<label className={labelStyle}>Keywords</label>
-					<input
-						type="text"
-						value={seo?.keywords?.join(", ") || ""}
-						onChange={(e) => handleKeywordsChange(e.target.value)}
-						className={inputStyle}
-						placeholder="keyword1, keyword2, keyword3"
-					/>
+					<label className={labelStyle}>
+						Keywords
+						<input
+							type="text"
+							value={seo?.keywords?.join(", ") || ""}
+							onChange={(e) => handleKeywordsChange(e.target.value)}
+							className={inputStyle}
+							placeholder="keyword1, keyword2, keyword3"
+						/>
+					</label>
 					<p className="text-xs  mt-1">
 						Separate keywords with commas. Focus on 3-5 relevant keywords.
 					</p>
@@ -299,14 +305,16 @@ export function SEOSection({
 					Advanced Settings
 				</h4>
 				<div>
-					<label className={labelStyle}>Canonical URL</label>
-					<input
-						type="url"
-						value={seo?.canonical || ""}
-						onChange={(e) => handleInputChange("canonical", e.target.value)}
-						className={inputStyle}
-						placeholder="https://example.com/canonical-url"
-					/>
+					<label className={labelStyle}>
+						Canonical URL
+						<input
+							type="url"
+							value={seo?.canonical || ""}
+							onChange={(e) => handleInputChange("canonical", e.target.value)}
+							className={inputStyle}
+							placeholder="https://example.com/canonical-url"
+						/>
+					</label>
 					<p className="text-xs  mt-1">
 						Specify the canonical URL to avoid duplicate content issues.
 					</p>
