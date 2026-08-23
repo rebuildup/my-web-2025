@@ -28,21 +28,28 @@ export async function GET(request: NextRequest) {
 			getDownloadStats() as Promise<Record<string, number>>,
 		]);
 
-		// Calculate workshop-specific metrics
-		const workshopIds = allWorkshopContent.map((item) => item.id);
-		const workshopViews = Object.entries(viewStats)
-			.filter(([id]) => workshopIds.includes(id))
-			.reduce((sum, [, views]) => sum + views, 0);
+		// Build set of workshop IDs once for O(1) lookups below
+		const workshopIdSet = new Set(allWorkshopContent.map((item) => item.id));
 
-		const workshopDownloads = Object.entries(downloadStats)
-			.filter(([id]) => workshopIds.includes(id))
-			.reduce((sum, [, downloads]) => sum + downloads, 0);
+		// Calculate workshop-specific metrics
+		let workshopViews = 0;
+		for (const [id, views] of Object.entries(viewStats)) {
+			if (workshopIdSet.has(id)) workshopViews += views;
+		}
+
+		let workshopDownloads = 0;
+		for (const [id, downloads] of Object.entries(downloadStats)) {
+			if (workshopIdSet.has(id)) workshopDownloads += downloads;
+		}
+
+		// Build a map of workshop content for O(1) lookup
+		const contentById = new Map(allWorkshopContent.map((item) => [item.id, item]));
 
 		// Get top performing workshop content
 		const topWorkshopContent = Object.entries(viewStats)
-			.filter(([id]) => workshopIds.includes(id))
+			.filter(([id]) => workshopIdSet.has(id))
 			.map(([id, views]) => {
-				const content = allWorkshopContent.find((item) => item.id === id);
+				const content = contentById.get(id);
 				return {
 					id,
 					title: content?.title || "Unknown",

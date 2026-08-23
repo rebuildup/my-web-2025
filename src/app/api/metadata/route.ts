@@ -113,14 +113,47 @@ export async function GET(request: NextRequest): Promise<Response> {
 		const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
 		try {
-			const response = await fetch(url, {
+			const initialResponse = await fetch(url, {
 				signal: controller.signal,
 				headers: {
 					"User-Agent":
 						"Mozilla/5.0 (compatible; MetadataBot/1.0; +https://yusuke-kim.com)",
 				},
-				redirect: "follow",
+				redirect: "manual",
 			});
+
+			// Manually follow redirects once to validate Location header
+			let response = initialResponse;
+			if (
+				initialResponse.status >= 300 &&
+				initialResponse.status < 400 &&
+				initialResponse.status !== 304
+			) {
+				const location = initialResponse.headers.get("location");
+				if (!location) {
+					clearTimeout(timeoutId);
+					return Response.json(
+						{ error: "Redirect without Location header" },
+						{ status: 502 },
+					);
+				}
+				const nextUrl = new URL(location, url).toString();
+				if (!URL.canParse(nextUrl)) {
+					clearTimeout(timeoutId);
+					return Response.json(
+						{ error: "Invalid redirect target" },
+						{ status: 502 },
+					);
+				}
+				response = await fetch(nextUrl, {
+					signal: controller.signal,
+					headers: {
+						"User-Agent":
+							"Mozilla/5.0 (compatible; MetadataBot/1.0; +https://yusuke-kim.com)",
+					},
+					redirect: "manual",
+				});
+			}
 
 			clearTimeout(timeoutId);
 

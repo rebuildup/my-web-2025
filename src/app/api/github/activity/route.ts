@@ -220,33 +220,29 @@ async function fetchGitHubData() {
 		return cached;
 	}
 
-	// Fetch user data
-	const userRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`, {
-		next: { revalidate: CACHE_DURATION },
-	});
+	// Fetch user data, status, events, pinned repos and contributions in parallel
+	const [userRes, status, eventsRes, pinnedRepos, contributions] =
+		await Promise.all([
+			fetch(`https://api.github.com/users/${GITHUB_USERNAME}`, {
+				next: { revalidate: CACHE_DURATION },
+			}),
+			fetchUserStatus(),
+			fetch(
+				`https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=15`,
+				{ next: { revalidate: CACHE_DURATION } },
+			),
+			fetchPinnedRepos(),
+			fetchContributions(),
+		]);
 	if (!userRes.ok) {
 		throw new Error("Failed to fetch GitHub user");
 	}
 	const user: GitHubUser = await userRes.json();
 
-	// Fetch user status
-	const status = await fetchUserStatus();
-
-	// Fetch recent events
-	const eventsRes = await fetch(
-		`https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=15`,
-		{ next: { revalidate: CACHE_DURATION } },
-	);
 	if (!eventsRes.ok) {
 		throw new Error("Failed to fetch GitHub events");
 	}
 	const events: GitHubEvent[] = await eventsRes.json();
-
-	// Fetch pinned/repos
-	const pinnedRepos = await fetchPinnedRepos();
-
-	// Fetch contributions
-	const contributions = await fetchContributions();
 
 	const data: CachedData = {
 		user,
