@@ -350,7 +350,7 @@ function VideoPreview({
 							</div>
 							<div className="relative">
 								{isVideoVisible(index) ? renderVideoEmbed(video, index) : (
-									<div className="aspect-video    rounded overflow-hidden relative group cursor-pointer" onClick={() => onToggleVideo(index)}>
+									<button type="button" className="aspect-video w-full text-left    rounded overflow-hidden relative group cursor-pointer" onClick={() => onToggleVideo(index)} aria-label={`${video.title || `Video ${index + 1}`} の埋め込みを表示`}>
 										{thumbnail ? (
 											<div className="relative w-full h-full">
 												<Image src={thumbnail} width={200} height={200} unoptimized alt={video.title || "Video thumbnail"} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />

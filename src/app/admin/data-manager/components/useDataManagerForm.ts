@@ -1,7 +1,7 @@
 import { clientMarkdownService } from "@/lib/markdown/client-service";
 import type { EnhancedCategoryType, EnhancedContentItem, EnhancedFileUploadOptions } from "@/types";
 import { isEnhancedContentItem } from "@/types";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ActiveTab, EnhancedInputChangeHandler, FormData, InputChangeHandler } from "./data-manager-form.types";
 import { prepareDataToSave, validateFormData } from "./data-manager-form.utils";
 
@@ -15,30 +15,66 @@ export function useDataManagerForm(item: FormData, enhanced: boolean, onSave: (i
 	const [uploadOptions, setUploadOptions] = useState(defaultUploadOptions);
 	const [markdownFilePath, setMarkdownFilePath] = useState<string | undefined>(enhanced ? (item as EnhancedContentItem).markdownPath : undefined);
 	const [markdownContent, setMarkdownContent] = useState(formData.content || "");
-	const [needsMarkdownMigration, setNeedsMarkdownMigration] = useState(enhanced && !!(formData.content && !markdownFilePath));
 	const [isLoadingMarkdown, setIsLoadingMarkdown] = useState(false);
 	const [markdownLoadError, setMarkdownLoadError] = useState<string | null>(null);
 	const [, setCategoryChangeImpact] = useState<{ show: boolean; oldCategories: EnhancedCategoryType[]; newCategories: EnhancedCategoryType[]; impacts: string[] }>({ show: false, oldCategories: [], newCategories: [], impacts: [] });
 
+	const needsMarkdownMigration = useMemo(
+		() => enhanced && !!(formData.content && !markdownFilePath),
+		[enhanced, formData.content, markdownFilePath],
+	);
+
+	// Kept for API compatibility with consumers. needsMarkdownMigration is now derived
+	// from formData.content && !markdownFilePath, so dismissing the prompt just clears content.
+	const setNeedsMarkdownMigration = useCallback((value: boolean) => {
+		if (!value) {
+			setFormData((prev) => ({ ...prev, content: "" }));
+		}
+	}, []);
+
+	const lastItemIdRef = useRef<string | null>((item as { id?: string }).id ?? null);
+
 	useEffect(() => {
-		setIsClient(true); setFormData(item);
+		setIsClient(true);
+		const currentItemId = (item as { id?: string }).id ?? null;
+		if (lastItemIdRef.current !== currentItemId) {
+			lastItemIdRef.current = currentItemId;
+			setFormData(item);
+			const path = enhanced ? (item as EnhancedContentItem).markdownPath : undefined;
+			setMarkdownFilePath(path);
+			setMarkdownLoadError(null);
+			if (enhanced && isEnhancedContentItem(item)) {
+				const use = item.useManualDate || false;
+				setUseManualDate(use);
+				console.log("Date management state updated:", { useManualDate: use, manualDate: item.manualDate, itemId: item.id });
+			} else {
+				setUseManualDate(false);
+			}
+		}
 		const path = enhanced ? (item as EnhancedContentItem).markdownPath : undefined;
-		setMarkdownFilePath(path); setNeedsMarkdownMigration(enhanced && !!(item.content && !path)); setMarkdownLoadError(null);
-		if (enhanced && isEnhancedContentItem(item)) { const use = item.useManualDate || false; setUseManualDate(use); console.log("Date management state updated:", { useManualDate: use, manualDate: item.manualDate, itemId: item.id }); } else setUseManualDate(false);
+		let cancelled = false;
 		const controller = new AbortController();
 		const load = async () => {
-			if (!enhanced || !path) { console.log("Markdownパスなし、item.contentを使用:", item.content?.length || 0, "文字"); setMarkdownContent(item.content || ""); return; }
-			setIsLoadingMarkdown(true); console.log("=== Markdownファイル読み込み開始 ==="); console.log("読み込み対象パス:", path);
+			if (!enhanced || !path) { console.log("Markdownパスなし、item.contentを使用:", item.content?.length || 0, "文字"); if (!cancelled) setMarkdownContent(item.content || ""); return; }
+			if (!cancelled) {
+				setIsLoadingMarkdown(true);
+				console.log("=== Markdownファイル読み込み開始 ===");
+				console.log("読み込み対象パス:", path);
+			}
 			const existsResponse = await fetch(`/api/markdown?action=fileExists&filePath=${encodeURIComponent(path)}`, { signal: controller.signal }).catch((error) => { if ((error as Error).name !== "AbortError") console.warn("ファイル存在確認でエラーが発生しました:", error); return null; });
-			if (controller.signal.aborted) return;
-			if (existsResponse?.ok) { const data = await existsResponse.json().catch(() => null); console.log("ファイル存在確認結果:", data); if (!data || data.exists === false) { console.warn(`Markdownファイルが存在しません: ${path}`); setMarkdownFilePath(undefined); setMarkdownContent(item.content || ""); setMarkdownLoadError(null); setIsLoadingMarkdown(false); return; } } else console.warn("ファイル存在確認に失敗しましたが、読み込みを続行します");
+			if (cancelled || controller.signal.aborted) return;
+			if (existsResponse?.ok) { const data = await existsResponse.json().catch(() => null); console.log("ファイル存在確認結果:", data); if (!data || data.exists === false) { console.warn(`Markdownファイルが存在しません: ${path}`); if (!cancelled) { setMarkdownFilePath(undefined); setMarkdownContent(item.content || ""); setMarkdownLoadError(null); setIsLoadingMarkdown(false); } return; } } else console.warn("ファイル存在確認に失敗しましたが、読み込みを続行します");
 			const response = await fetch(`/api/markdown?action=getMarkdownContent&filePath=${encodeURIComponent(path)}`, { signal: controller.signal }).catch((error) => { if ((error as Error).name !== "AbortError") console.error("Markdownコンテンツ取得でエラー:", error); return null; });
-			if (controller.signal.aborted) return;
-			if (response?.ok) { const data = await response.json().catch(() => null); if (data?.content !== undefined) { console.log("Markdownコンテンツ取得成功:", data.content?.length || 0, "文字"); setMarkdownContent(data.content); setMarkdownLoadError(null); setIsLoadingMarkdown(false); return; } console.warn("APIレスポンスにコンテンツが含まれていません"); }
+			if (cancelled || controller.signal.aborted) return;
+			if (response?.ok) { const data = await response.json().catch(() => null); if (data?.content !== undefined) { console.log("Markdownコンテンツ取得成功:", data.content?.length || 0, "文字"); if (!cancelled) { setMarkdownContent(data.content); setMarkdownLoadError(null); setIsLoadingMarkdown(false); } return; } console.warn("APIレスポンスにコンテンツが含まれていません"); }
 			else if (response) { const data = await response.json().catch(() => ({})); console.error(`Markdown API エラー: ${response.status} - ${data.error || "不明なエラー"}`); }
-			if (!controller.signal.aborted) { setMarkdownLoadError("Markdownファイルの読み込みに失敗しました"); console.log("Markdownファイル読み込み失敗、item.contentを使用:", item.content?.length || 0, "文字"); setMarkdownContent(item.content || ""); setIsLoadingMarkdown(false); }
+			if (!cancelled && !controller.signal.aborted) { setMarkdownLoadError("Markdownファイルの読み込みに失敗しました"); console.log("Markdownファイル読み込み失敗、item.contentを使用:", item.content?.length || 0, "文字"); setMarkdownContent(item.content || ""); setIsLoadingMarkdown(false); }
 		};
-		load(); return () => controller.abort();
+		load();
+		return () => {
+			cancelled = true;
+			controller.abort();
+		};
 	}, [item, enhanced]);
 
 	const handleInputChange: InputChangeHandler = (field, value) => setFormData((prev) => ({ ...prev, [field]: value, updatedAt: new Date().toISOString() }));

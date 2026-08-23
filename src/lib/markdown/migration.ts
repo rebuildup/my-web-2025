@@ -65,23 +65,26 @@ export class ContentMigrationService {
 			// Get all content files
 			const contentFiles = await this.getContentFiles();
 
-			for (const contentFile of contentFiles) {
-				try {
-					const fileSummary = await this.migrateContentFile(contentFile, {
+			const fileSummaries = await Promise.all(
+				contentFiles.map((contentFile) =>
+					this.migrateContentFile(contentFile, {
 						...options,
 						dryRun,
-					});
+					}).catch((error) => {
+						const errorMsg = `Failed to migrate ${contentFile}: ${error}`;
+						console.error(errorMsg);
+						return null;
+					}),
+				),
+			);
 
-					summary.totalItems += fileSummary.totalItems;
-					summary.successCount += fileSummary.successCount;
-					summary.failureCount += fileSummary.failureCount;
-					summary.results.push(...fileSummary.results);
-					summary.errors.push(...fileSummary.errors);
-				} catch (error) {
-					const errorMsg = `Failed to migrate ${contentFile}: ${error}`;
-					summary.errors.push(errorMsg);
-					console.error(errorMsg);
-				}
+			for (const fileSummary of fileSummaries) {
+				if (!fileSummary) continue;
+				summary.totalItems += fileSummary.totalItems;
+				summary.successCount += fileSummary.successCount;
+				summary.failureCount += fileSummary.failureCount;
+				summary.results.push(...fileSummary.results);
+				summary.errors.push(...fileSummary.errors);
 			}
 
 			console.log(
@@ -126,12 +129,19 @@ export class ContentMigrationService {
 			for (let i = 0; i < items.length; i += batchSize) {
 				const batch = items.slice(i, i + batchSize);
 
-				for (const item of batch) {
-					const result = await this.migrateContentItem(item, {
-						dryRun,
-						overwriteExisting,
-					});
+				const results = await Promise.all(
+					batch.map((item) =>
+						this.migrateContentItem(item, {
+							dryRun,
+							overwriteExisting,
+						}),
+					),
+				);
 
+				for (let j = 0; j < results.length; j++) {
+					const result = results[j];
+					const item = batch[j];
+					if (!result || !item) continue;
 					summary.results.push(result);
 					if (result.success) {
 						summary.successCount++;
@@ -253,23 +263,26 @@ export class ContentMigrationService {
 		results: MigrationResult[],
 	): Promise<void> {
 		try {
-			const successfulMigrations = new Map(
-				results
-					.filter((r) => r.success && r.filePath)
-					.map((r) => [r.itemId, r.filePath!]),
-			);
+			const successfulMigrations = new Map<string, string>();
+			for (const r of results) {
+				if (r.success && r.filePath) {
+					successfulMigrations.set(r.itemId, r.filePath);
+				}
+			}
 
-			const updatedItems = items.map((item) => {
+			const updatedItems: ContentItem[] = [];
+			for (const item of items) {
 				const markdownPath = successfulMigrations.get(item.id);
 				if (markdownPath) {
 					const updatedItem = { ...item } as MarkdownContentItem;
 					updatedItem.markdownPath = markdownPath;
 					updatedItem.markdownMigrated = true;
 					// Keep original content for backward compatibility
-					return updatedItem;
+					updatedItems.push(updatedItem);
+				} else {
+					updatedItems.push(item);
 				}
-				return item;
-			});
+			}
 
 			const filePath = path.join(this.dataPath, fileName);
 			await fs.writeFile(
