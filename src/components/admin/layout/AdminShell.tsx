@@ -1,7 +1,7 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
-import { type CSSProperties, useEffect } from "react";
+import { redirect, usePathname, useRouter } from "next/navigation";
+import { type CSSProperties } from "react";
 import { adminColor } from "@/components/admin/ui/tokens";
 
 const NAV_TABS = [
@@ -104,11 +104,9 @@ export function AdminShell({ children }: AdminShellProps) {
 	const isFullWidthPage = pathname.startsWith("/admin/content/page-editor");
 	const tabIndex = getTabIndex(pathname);
 
-	useEffect(() => {
-		if (pathname === "/admin") {
-			router.replace("/admin/content");
-		}
-	}, [pathname, router]);
+	if (pathname === "/admin") {
+		redirect("/admin/content");
+	}
 
 	return (
 		<div style={rootStyle}>

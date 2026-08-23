@@ -57,38 +57,40 @@ export function useDataManagerActions(): UseDataManagerActions {
 	const loadContentItems = useCallback(
 		async (type: ContentType, forceRefresh = false) => {
 			setIsLoading(true);
-			const timestamp = nextSeed();
-			const response = await fetch(
-				`/api/content/by-type/${type}?limit=100&_t=${timestamp}&status=all${forceRefresh ? "&refresh=true" : ""}`,
-				{
-					cache: "no-store",
-					headers: {
-						"Cache-Control": "no-cache",
-						Pragma: "no-cache",
+			try {
+				const timestamp = nextSeed();
+				const response = await fetch(
+					`/api/content/by-type/${type}?limit=100&_t=${timestamp}&status=all${forceRefresh ? "&refresh=true" : ""}`,
+					{
+						cache: "no-store",
+						headers: {
+							"Cache-Control": "no-cache",
+							Pragma: "no-cache",
+						},
 					},
-				},
-			).catch((error) => {
-				console.error("Error loading content items:", error);
-				return null;
-			});
-			if (!response) {
-				setContentItems([]);
-				setIsLoading(false);
-				return;
-			}
-			console.log(`Response status: ${response.status}`);
+				).catch((error) => {
+					console.error("Error loading content items:", error);
+					return null;
+				});
+				if (!response) {
+					setContentItems([]);
+					return;
+				}
+				console.log(`Response status: ${response.status}`);
 
-			if (response.ok) {
-				const result = await response.json();
-				console.log(`Loaded content:`, result);
-				const items = result.data || [];
-				console.log(`Setting ${items.length} items`);
-				setContentItems(items);
-			} else {
-				console.error("Failed to load content items", response.status);
-				setContentItems([]);
+				if (response.ok) {
+					const result = await response.json();
+					console.log(`Loaded content:`, result);
+					const items = result.data || [];
+					console.log(`Setting ${items.length} items`);
+					setContentItems(items);
+				} else {
+					console.error("Failed to load content items", response.status);
+					setContentItems([]);
+				}
+			} finally {
+				setIsLoading(false);
 			}
-			setIsLoading(false);
 		},
 		[nextSeed],
 	);
@@ -149,79 +151,79 @@ export function useDataManagerActions(): UseDataManagerActions {
 	const handleSaveItem = async (item: ManagedContentItem) => {
 		setIsLoading(true);
 		setSaveStatus("saving");
+		try {
+			console.log("=== Saving item ===");
+			console.log("Item data:", JSON.stringify(item, null, 2));
 
-		console.log("=== Saving item ===");
-		console.log("Item data:", JSON.stringify(item, null, 2));
+			const response = await fetch(`/api/admin/content`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(item),
+			}).catch((error) => {
+				console.error("Error saving item:", error);
+				setSaveStatus("error");
+				alert(
+					`Error saving item: ${error instanceof Error ? error.message : "Unknown error"}`,
+				);
+				setTimeout(() => setSaveStatus("idle"), 3000);
+				return null;
+			});
+			if (!response) return;
 
-		const response = await fetch(`/api/admin/content`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(item),
-		}).catch((error) => {
-			console.error("Error saving item:", error);
-			setSaveStatus("error");
-			alert(
-				`Error saving item: ${error instanceof Error ? error.message : "Unknown error"}`,
+			console.log("Response status:", response.status);
+			console.log(
+				"Response headers:",
+				Object.fromEntries(response.headers.entries()),
 			);
-			setTimeout(() => setSaveStatus("idle"), 3000);
-			setIsLoading(false);
-			return null;
-		});
-		if (!response) return;
 
-		console.log("Response status:", response.status);
-		console.log(
-			"Response headers:",
-			Object.fromEntries(response.headers.entries()),
-		);
+			const result = await response.json();
+			console.log("Save response:", JSON.stringify(result, null, 2));
 
-		const result = await response.json();
-		console.log("Save response:", JSON.stringify(result, null, 2));
+			if (!response.ok) {
+				console.error("Failed to save item:", result);
+				setSaveStatus("error");
+				alert(
+					`Failed to save item: ${result.error || "Unknown error"}\nDetails: ${result.details || "No details"}`,
+				);
+				setTimeout(() => setSaveStatus("idle"), 3000);
+				return;
+			}
 
-		if (!response.ok) {
-			console.error("Failed to save item:", result);
-			setSaveStatus("error");
-			alert(
-				`Failed to save item: ${result.error || "Unknown error"}\nDetails: ${result.details || "No details"}`,
-			);
-			setTimeout(() => setSaveStatus("idle"), 3000);
-			setIsLoading(false);
-			return;
-		}
+			setSaveStatus("success");
 
-		setSaveStatus("success");
-
-		if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
-			console.log("Updating tag usage for tags:", item.tags);
-			await Promise.all(
-				item.tags.map(async (tag) => {
-					if (typeof tag === "string" && tag.trim()) {
-						const tagResponse = await fetch(
-							`/api/admin/tags/${encodeURIComponent(tag)}`,
-							{ method: "PUT" },
-						).catch(() => null);
-						if (!tagResponse || !tagResponse.ok) {
-							console.warn(`Failed to update usage for tag: ${tag}`);
+			if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
+				console.log("Updating tag usage for tags:", item.tags);
+				await Promise.all(
+					item.tags.map(async (tag) => {
+						if (typeof tag === "string" && tag.trim()) {
+							const tagResponse = await fetch(
+								`/api/admin/tags/${encodeURIComponent(tag)}`,
+								{ method: "PUT" },
+							).catch(() => null);
+							if (!tagResponse || !tagResponse.ok) {
+								console.warn(`Failed to update usage for tag: ${tag}`);
+							}
 						}
-					}
-				}),
-			);
+					}),
+				);
+			}
+
+			const savedItem = result.data || item;
+			setSelectedItem(savedItem);
+			console.log("Reloading content items...");
+			await loadContentItems(selectedContentType, true);
+			setSelectedItem(savedItem);
+
+			if (selectedContentType === "portfolio") {
+				console.log("Portfolio item saved - gallery cache should be invalidated");
+			}
+
+			setTimeout(() => setSaveStatus("idle"), 3000);
+		} finally {
+			setIsLoading(false);
 		}
-
-		const savedItem = result.data || item;
-		setSelectedItem(savedItem);
-		console.log("Reloading content items...");
-		await loadContentItems(selectedContentType, true);
-		setSelectedItem(savedItem);
-
-		if (selectedContentType === "portfolio") {
-			console.log("Portfolio item saved - gallery cache should be invalidated");
-		}
-
-		setTimeout(() => setSaveStatus("idle"), 3000);
-		setIsLoading(false);
 	};
 
 	const handleDeleteItem = async (id: string) => {

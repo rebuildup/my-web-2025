@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useEffect } from "react";
 import { ContentTypeTabs } from "./ContentTypeTabs";
 import { DataManagerContentPanel } from "./DataManagerContentPanel";
@@ -9,7 +9,6 @@ import { DataManagerHeader } from "./DataManagerHeader";
 import { useDataManagerActions } from "./useDataManagerActions";
 
 export default function DataManagerPage() {
-	const router = useRouter();
 	const {
 		isClient,
 		setIsClient,
@@ -30,16 +29,15 @@ export default function DataManagerPage() {
 		handleCancel,
 	} = useDataManagerActions();
 
-	// Check development environment on client side
+	const nodeEnv = process.env.NODE_ENV;
+
 	useEffect(() => {
 		setIsClient(true);
-		if (
-			process.env.NODE_ENV !== "development" &&
-			process.env.NODE_ENV !== "test"
-		) {
-			router.push("/");
-		}
-	}, [router, setIsClient]);
+	}, [setIsClient]);
+
+	if (nodeEnv !== "development" && nodeEnv !== "test") {
+		redirect("/");
+	}
 
 	// Load content items for selected type
 	useEffect(() => {
