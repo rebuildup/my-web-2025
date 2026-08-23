@@ -10,6 +10,14 @@ interface MiniTimerProps {
 
 type TimerMode = "timer" | "stopwatch";
 
+function formatTime(ms: number) {
+	const totalSeconds = Math.floor(ms / 1000);
+	const m = Math.floor(totalSeconds / 60);
+	const s = totalSeconds % 60;
+	const centiseconds = Math.floor((ms % 1000) / 10);
+	return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}.${centiseconds.toString().padStart(2, "0")}`;
+}
+
 export default function MiniTimer({ id, theme }: MiniTimerProps) {
 	// --- Persistent State ---
 	const [mode, setMode] = useLocalStorage<TimerMode>(
@@ -35,7 +43,7 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 	);
 	const [lastTick, setLastTick] = useLocalStorage(
 		`mini-timer-last-tick-${id}`,
-		Date.now(),
+		0,
 	);
 
 	// --- Local State for High Frequency Rendering ---
@@ -44,14 +52,16 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 		mode === "timer" ? savedTimeLeft : savedElapsed,
 	);
 
-	const lastSaveRef = useRef<number>(Date.now());
+	const lastSaveRef = useRef<number>(0);
 
 	// On component mount, if the timer was active before the tab was closed, sync the last tick to now so that elapsed time continues correctly.
 	useEffect(() => {
+		const now = Date.now();
+		lastSaveRef.current = now;
 		if (isActive) {
-			setLastTick(Date.now());
+			setLastTick(now);
 		}
-	}, []);
+	}, [isActive, setLastTick]);
 
 	// --- Animation Loop ---
 	// Use a ref to hold the running time to avoid closure staleness in the loop
@@ -141,8 +151,9 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 	const toggleTimer = () => {
 		if (!isActive) {
 			// Starting
-			setLastTick(Date.now());
-			lastSaveRef.current = Date.now();
+			const now = Date.now();
+			setLastTick(now);
+			lastSaveRef.current = now;
 		}
 		setIsActive(!isActive);
 	};
@@ -180,14 +191,6 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 		setSavedTimeLeft(newDuration);
 		setDisplayTime(newDuration);
 		setIsActive(false);
-	};
-
-	const formatTime = (ms: number) => {
-		const totalSeconds = Math.floor(ms / 1000);
-		const m = Math.floor(totalSeconds / 60);
-		const s = totalSeconds % 60;
-		const centiseconds = Math.floor((ms % 1000) / 10); // 0-99
-		return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}.${centiseconds.toString().padStart(2, "0")}`;
 	};
 
 	return (
@@ -239,7 +242,7 @@ export default function MiniTimer({ id, theme }: MiniTimerProps) {
 				{/* Settings (Timer Mode Only) */}
 				<div className="h-8 flex items-center justify-center w-full">
 					{mode === "timer" && !isActive && (
-						<div className="flex items-center justify-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
+						<div className="flex items-center justify-center gap-2 motion-safe:animate-[fadeIn_0.3s_ease-in]">
 							<div className="flex items-center gap-1">
 								<input
 									type="number"
