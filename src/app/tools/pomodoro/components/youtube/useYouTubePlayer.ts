@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
 	DEFAULT_YOUTUBE_SETTINGS,
 	type YouTubePlaybackState,
@@ -37,6 +37,11 @@ export function useYouTubePlayer({
 	const [playbackState, setPlaybackState] =
 		useState<YouTubePlaybackState>("idle");
 	const [player, setPlayer] = useState<any>(null);
+	// Tracks the active YT.Player instance for unmount cleanup so we can
+	// destroy it even if the component unmounts outside a deps change of
+	// the Initialize effect (e.g. when settings.loop or source drives
+	// re-creation through the effect below).
+	const playerRef = useRef<any>(null);
 	const [isApiReady, setIsApiReady] = useState(false);
 	const [inputUrl, setInputUrl] = useState(url);
 	const [error, setError] = useState<string | null>(null);
@@ -90,7 +95,24 @@ export function useYouTubePlayer({
 					},
 				}),
 			);
+			playerRef.current = newPlayer;
 			setPlayer(newPlayer);
+
+			// Cleanup: destroy the player when this effect's lifetime ends
+			// (component unmount or deps change before the next re-init).
+			// Without this, the YT.Player instance plus its iframe and
+			// listeners are leaked on unmount.
+			return () => {
+				try {
+					newPlayer.destroy();
+				} catch {
+					// Player may already be destroyed or in an invalid state
+					// (e.g. partial init if component unmounted mid-construction).
+				}
+				if (playerRef.current === newPlayer) {
+					playerRef.current = null;
+				}
+			};
 		}
 	}, [isApiReady, source, player, uniqueId, volume]);
 
@@ -101,7 +123,12 @@ export function useYouTubePlayer({
 			onUrlChange(inputUrl);
 			setError(null);
 			if (player) {
-				player.destroy();
+				try {
+					player.destroy();
+				} catch {
+					// Player may already be destroyed
+				}
+				playerRef.current = null;
 				setPlayer(null); // Will trigger re-initialization
 			}
 		} else {
@@ -112,10 +139,33 @@ export function useYouTubePlayer({
 	// Recreate player when loop setting changes to apply IFrame params
 	useEffect(() => {
 		if (player) {
-			player.destroy();
+			try {
+				player.destroy();
+			} catch {
+				// Player may already be destroyed
+			}
+			playerRef.current = null;
 			setPlayer(null);
 		}
 	}, [settings.loop, source]);
+
+	// Unmount-only cleanup: guarantees the active YT.Player is destroyed
+	// even if the component unmounts in a state where the Initialize
+	// effect's cleanup did not run (e.g. player state set but deps did
+	// not change since the last run). Uses playerRef as the source of
+	// truth so it always observes the latest instance.
+	useEffect(() => {
+		return () => {
+			if (playerRef.current) {
+				try {
+					playerRef.current.destroy();
+				} catch {
+					// Player may already be destroyed or in an invalid state
+				}
+				playerRef.current = null;
+			}
+		};
+	}, []);
 
 	// Pomodoro Integration
 	useEffect(() => {
