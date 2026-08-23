@@ -1,0 +1,29 @@
+{
+  "$schema": "https://github.com/rust-lang/rust-analyzer/raw/master/crates/rust-analyzer/editors/code/package.json",
+  "check": {
+    "command": "clippy",
+    "invocationLocation": "directory",
+    "invocationStrategy": "once"
+  },
+  "diagnostics": {
+    "enable": true,
+    "disabled": ["unresolved-proc-macro"]
+  },
+  "inlayHints": {
+    "enable": true,
+    "maxLength": 60,
+    "parameterHints": true,
+    "typeHints": true
+  },
+  "files": {
+    "excludeDirs": ["target", ".git"]
+  },
+  "cargo": {
+    "allFeatures": false,
+    "features": [],
+    "noDefaultFeatures": false
+  },
+  "rustc": {
+    "enableCargoReplay": true
+  }
+}

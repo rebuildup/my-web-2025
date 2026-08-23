@@ -1,0 +1,9 @@
+[toolchain]
+channel = "stable"
+components = ["rustfmt", "clippy", "rust-analyzer"]
+profile = "minimal"
+
+# Mirrors the toolchain GitHub Actions resolves via dtolnay/rust-toolchain@v1
+# in .github/workflows/ci.yml and deploy.yml. Adding rust-analyzer to
+# components ensures `rustup` provisions the LSP server alongside cargo
+# without an extra install step. Edit in lockstep with CI bumps.
