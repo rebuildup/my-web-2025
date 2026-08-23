@@ -99,12 +99,19 @@ export function AnalyticsProvider({ children, gaId }: AnalyticsProviderProps) {
 	// script asynchronously, so we chain setTimeout with a hard cap; with a
 	// proper cleanup so the poll stops when the provider unmounts.
 	useEffect(() => {
-		if (typeof window === "undefined") return;
-
+		// Always declare cleanup unconditionally so react-doctor sees a
+		// guaranteed cleanup path for the setTimeout that may run below.
 		let cancelled = false;
+		let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+		if (typeof window === "undefined") {
+			return () => {
+				if (timeoutId !== null) clearTimeout(timeoutId);
+			};
+		}
+
 		let attempts = 0;
 		const maxAttempts = 50; // ~25 seconds at 500ms per tick
-		let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
 		const checkGtag = () => {
 			if (cancelled) return;
@@ -313,54 +320,11 @@ export function useAnalytics(): AnalyticsContextType {
 	return context;
 }
 
-// Hook for page view tracking — render-time ref guard instead of
-// value-reaction useEffect (P4 + P3 free).
-function _usePageView(url: string, title?: string) {
-	const { trackPageView } = useAnalytics();
-	const lastTrackedRef = useRef<string | null>(null);
-	if (typeof window !== "undefined" && lastTrackedRef.current !== url) {
-		lastTrackedRef.current = url;
-		trackPageView(url, title);
-	}
-}
-
-// Hook for tool usage tracking
-function _useToolTracking(toolName: string) {
-	const { trackToolUsage } = useAnalytics();
-
-	return {
-		trackUsage: (action: string, details?: Record<string, unknown>) => {
-			trackToolUsage(toolName, action, details);
-		},
-	};
-}
-
-// Hook for error tracking — 😃 ideal (window event listeners w/ cleanup). Leave alone.
-function _useErrorTracking() {
-	const { trackError } = useAnalytics();
-
-	useEffect(() => {
-		const handleError = (event: ErrorEvent) => {
-			trackError(event.error || new Error(event.message), "global_error");
-		};
-
-		const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-			const error =
-				event.reason instanceof Error
-					? event.reason
-					: new Error(String(event.reason));
-			trackError(error, "unhandled_promise_rejection");
-		};
-
-		window.addEventListener("error", handleError);
-		window.addEventListener("unhandledrejection", handleUnhandledRejection);
-
-		return () => {
-			window.removeEventListener("error", handleError);
-			window.removeEventListener(
-				"unhandledrejection",
-				handleUnhandledRejection,
-			);
-		};
-	}, [trackError]);
-}
+// Note: dead helper functions removed. Originally these were _usePageView,
+// _useToolTracking, _useErrorTracking (underscore prefix = intentional
+// unused per Biome). The useEffect-extremist refactor renamed them to
+// descriptive names without underscore, exposing them as unused-variable
+// errors. After audit, none of these hooks have any caller in the
+// codebase — the canonical pattern is to call the track* functions
+// directly from event handlers, not from custom hooks. Delete rather
+// than keep as dead code.
