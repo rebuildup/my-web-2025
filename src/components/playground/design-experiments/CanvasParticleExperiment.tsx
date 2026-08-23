@@ -314,39 +314,37 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 		}
 	}, [updateParticles, drawParticles]);
 
-	// Update animate ref when it changes
-	useEffect(() => {
-		animateRef.current = animate;
-	}, [animate]);
-
-	// Update isAnimating ref when it changes
-	useEffect(() => {
-		isAnimatingRef.current = isAnimating;
-	}, [isAnimating]);
+	// Latest-ref pattern: keep RAF-loop helpers pointed at the freshest
+	// closures without scheduling an extra commit. The next RAF tick reads
+	// `animateRef.current` for re-scheduling, and `animate`'s `isAnimating`
+	// guard reads `isAnimatingRef.current` for the latest state value.
+	animateRef.current = animate;
+	isAnimatingRef.current = isAnimating;
 
 	// Start animation
 	const startAnimation = useCallback(() => {
 		setIsAnimating(true);
-		if (animateRef.current) {
-			animationRef.current = requestAnimationFrame(animateRef.current);
-		}
 	}, []);
 
 	// Stop animation
 	const stopAnimation = useCallback(() => {
 		setIsAnimating(false);
-		if (animationRef.current) {
-			cancelAnimationFrame(animationRef.current);
-		}
 	}, []);
 
-	// Handle animation state changes
+	// Drive RAF lifecycle off `isAnimating`. Single effect, single cleanup —
+	// any RAF still pending is cancelled before a fresh chain is scheduled,
+	// so the play/pause toggle can never leak frames. The animate loop
+	// itself reads `isAnimatingRef.current` to terminate the chain cleanly.
 	useEffect(() => {
 		if (isAnimating && animateRef.current) {
 			animationRef.current = requestAnimationFrame(animateRef.current);
-		} else if (!isAnimating && animationRef.current) {
-			cancelAnimationFrame(animationRef.current);
 		}
+		return () => {
+			if (animationRef.current) {
+				cancelAnimationFrame(animationRef.current);
+				animationRef.current = undefined;
+			}
+		};
 	}, [isAnimating]);
 
 	// Reset particles
@@ -422,18 +420,6 @@ export const CanvasParticleExperiment: React.FC<ExperimentProps> = ({
 	useEffect(() => {
 		initParticles();
 	}, [initParticles]);
-
-	// Animation loop effect
-	useEffect(() => {
-		if (isAnimating) {
-			animate();
-		}
-		return () => {
-			if (animationRef.current) {
-				cancelAnimationFrame(animationRef.current);
-			}
-		};
-	}, [isAnimating, animate]);
 
 	// Performance monitoring
 	useEffect(() => {
