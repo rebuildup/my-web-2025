@@ -40,7 +40,8 @@ function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
 		toolName,
 		enablePerformanceMonitoring = true,
 		enableOfflineNotifications = true,
-		autoSaveSettings = true,
+		// autoSaveSettings is accepted on the options surface for future auto-save wiring;
+		// the per-tool caller owns the actual persistence trigger.
 		processingChunkSize = 100,
 	} = options;
 
@@ -311,14 +312,6 @@ function useOfflinePerformance(options: UseOfflinePerformanceOptions) {
 		},
 		[],
 	);
-
-	// Auto-save settings when they change
-	useEffect(() => {
-		if (autoSaveSettings) {
-			// This would be called by the tool component when settings change
-			// The actual implementation depends on the specific tool
-		}
-	}, [autoSaveSettings]);
 
 	// Cleanup on unmount
 	useEffect(() => {
