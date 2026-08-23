@@ -90,56 +90,101 @@ export function usePomodoroTimer(): UsePomodoroTimerResult {
 	const [isFinished, setIsFinished] = useState(false);
 
 	const startTimeRef = useRef<number | null>(null);
-	const savedTimeRef = useRef(0);
 	const requestRef = useRef<number | null>(null);
 	const { requestPermission, showNotification } = useNotifications();
 
-	const currentStep = customSchedule[currentStepIndex];
-	const totalDuration = getTotalDuration(customSchedule);
-	const currentStepRef = useRef(currentStep);
-	const settingsRef = useRef(settings);
-	const showNotificationRef = useRef(showNotification);
+	// Mutable holder for non-stable callbacks (setStats / setSessions are
+	// recreated each render by useLocalStorage). We update the ref via
+	// assignment on every render — this is *not* a useEffect, so it does not
+	// violate the "react to value changes" anti-pattern. The RAF tick reads
+	// from these refs to avoid recreating the animation loop when the
+	// setters' identities change.
 	const setSessionsRef = useRef(setSessions);
 	const setStatsRef = useRef(setStats);
-	const autoStartNextRef = useRef(false);
-	const hasQueuedAutoAdvanceRef = useRef(false);
+	setSessionsRef.current = setSessions;
+	setStatsRef.current = setStats;
 
-	useEffect(() => {
-		currentStepRef.current = currentStep;
-		settingsRef.current = settings;
-		showNotificationRef.current = showNotification;
-		setSessionsRef.current = setSessions;
-		setStatsRef.current = setStats;
-	}, [currentStep, settings, showNotification, setSessions, setStats]);
+	// Latest timeLeft mirror, updated synchronously from the setter (not via
+	// an effect) so non-React readers (the RAF cleanup branch, the
+	// persistence interval) always observe the freshest value without
+	// subscribing to per-frame re-renders.
+	const timeLeftRef = useRef(timeLeft);
+	const updateTimeLeft = useCallback(
+		(value: number | ((prev: number) => number)) => {
+			setTimeLeft((prev) => {
+				const next =
+					typeof value === "function"
+						? (value as (prev: number) => number)(prev)
+						: value;
+				timeLeftRef.current = next;
+				return next;
+			});
+		},
+		[],
+	);
 
+	const currentStep = customSchedule[currentStepIndex];
+	const totalDuration = getTotalDuration(customSchedule);
+
+	// Canonical step-transition handler. Resets all per-step derived state
+	// (timeLeft, startTimeRef, isFinished, pending RAF) and optionally
+	// auto-starts the new step. All step changes (manual navigation, reset,
+	// auto-advance on completion) flow through this helper, so no
+	// value-reaction useEffect is needed.
+	const transitionTo = useCallback(
+		(index: number, options?: { autoStart?: boolean }) => {
+			const length = customSchedule.length;
+			const safeIndex = length === 0 ? 0 : ((index % length) + length) % length;
+			const target = customSchedule[safeIndex] ?? SCHEDULE[0];
+			const newDuration = target.duration * 60 * 1000;
+			const shouldAutoStart = options?.autoStart ?? false;
+
+			setCurrentStepIndex(safeIndex);
+			updateTimeLeft(newDuration);
+			startTimeRef.current = null;
+			setIsFinished(false);
+			setSavedTime(newDuration);
+
+			if (requestRef.current) {
+				cancelAnimationFrame(requestRef.current);
+				requestRef.current = null;
+			}
+
+			setIsActive(shouldAutoStart);
+		},
+		[customSchedule, setCurrentStepIndex, setSavedTime, updateTimeLeft],
+	);
+
+	// RAF tick: starts/re-covers the animation frame loop while the timer is
+	// active, and cleans up on pause / unmount. Cleanup branch restores the
+	// world to its pre-mount state (cancelled RAF, null startTime, saved
+	// elapsed time). Re-runs when currentStep / settings / showNotification
+	// change so the tick closure always reads fresh values without needing
+	// a value-reaction mirror effect.
 	useEffect(() => {
 		if (isActive) {
 			const tick = (time: number) => {
 				if (!startTimeRef.current) startTimeRef.current = time;
 				const elapsed = time - startTimeRef.current;
-				const step = currentStepRef.current;
-				const newTimeLeft = Math.max(
-					step.duration * 60 * 1000 - savedTimeRef.current - elapsed,
-					0,
-				);
+				const step = currentStep;
+				const newTimeLeft = Math.max(step.duration * 60 * 1000 - elapsed, 0);
 
-				setTimeLeft(newTimeLeft);
+				updateTimeLeft(newTimeLeft);
 
 				if (newTimeLeft <= 0) {
 					setIsFinished(true);
 					setIsActive(false);
 					startTimeRef.current = null;
-					savedTimeRef.current = 0;
 
-					if (settingsRef.current.notificationSound) {
+					if (settings.notificationSound) {
 						const normalizedVolume = Math.min(
 							1,
-							Math.max(0, settingsRef.current.notificationVolume / 100),
+							Math.max(0, settings.notificationVolume / 100),
 						);
 						playNotificationSound(normalizedVolume);
 					}
 
-					if (settingsRef.current.vibration && navigator.vibrate) {
+					if (settings.vibration && navigator.vibrate) {
 						navigator.vibrate([200, 100, 200]);
 					}
 
@@ -174,7 +219,7 @@ export function usePomodoroTimer(): UsePomodoroTimerResult {
 						];
 					});
 
-					showNotificationRef.current({
+					showNotification({
 						title:
 							step.type === "focus" ? "Work Session Complete!" : "Break Over!",
 						body:
@@ -191,31 +236,30 @@ export function usePomodoroTimer(): UsePomodoroTimerResult {
 		} else {
 			if (requestRef.current) {
 				cancelAnimationFrame(requestRef.current);
+				requestRef.current = null;
 			}
 			startTimeRef.current = null;
 			if (!isFinished) {
-				savedTimeRef.current = currentStep.duration * 60 * 1000 - timeLeft;
+				timeLeftRef.current =
+					currentStep.duration * 60 * 1000 - timeLeftRef.current;
+				setSavedTime(timeLeftRef.current);
 			}
 		}
 		return () => {
 			if (requestRef.current) {
 				cancelAnimationFrame(requestRef.current);
+				requestRef.current = null;
 			}
 		};
-	}, [isActive, currentStep.duration, isFinished]);
+	}, [isActive, currentStep, settings, showNotification, isFinished]);
 
-	const timeLeftRef = useRef(timeLeft);
-	const prevStepIndexRef = useRef(currentStepIndex);
-
-	useEffect(() => {
-		timeLeftRef.current = timeLeft;
-	}, [timeLeft]);
-
+	// Persist current timeLeft to sessionStorage so the timer can be
+	// restored on reload. While inactive, write once on pause; while active,
+	// poll once a second. Reads from timeLeftRef (synchronously updated by
+	// updateTimeLeft) so it never re-subscribes per frame.
 	useEffect(() => {
 		if (!isActive) {
-			setSavedTime(
-				typeof timeLeft === "number" ? timeLeft : timeLeftRef.current,
-			);
+			setSavedTime(timeLeftRef.current);
 			return;
 		}
 
@@ -224,75 +268,29 @@ export function usePomodoroTimer(): UsePomodoroTimerResult {
 		}, 1000);
 
 		return () => clearInterval(interval);
-	}, [isActive, setSavedTime, timeLeft]);
+	}, [isActive, setSavedTime]);
 
-	useEffect(() => {
-		if (prevStepIndexRef.current !== currentStepIndex) {
-			const newDuration = customSchedule[currentStepIndex].duration * 60 * 1000;
-			const shouldAutoStart = autoStartNextRef.current;
-			autoStartNextRef.current = false;
-
-			setTimeLeft(newDuration);
-			savedTimeRef.current = 0;
-			startTimeRef.current = null;
-			setIsFinished(false);
-
-			setSavedTime(newDuration);
-
-			if (requestRef.current) {
-				cancelAnimationFrame(requestRef.current);
-				requestRef.current = null;
-			}
-
-			setIsActive(shouldAutoStart);
-			prevStepIndexRef.current = currentStepIndex;
-		}
-	}, [currentStepIndex, customSchedule, setSavedTime]);
-
+	// Auto-advance: when a step completes, schedule a transition to the
+	// next step (with autoStart). Routed through transitionTo so all
+	// per-step reset work happens in one place.
+	const hasQueuedAutoAdvanceRef = useRef(false);
 	useEffect(() => {
 		if (!isFinished || customSchedule.length === 0) {
 			hasQueuedAutoAdvanceRef.current = false;
 			return;
 		}
-
-		if (hasQueuedAutoAdvanceRef.current) {
-			return;
-		}
+		if (hasQueuedAutoAdvanceRef.current) return;
 		hasQueuedAutoAdvanceRef.current = true;
 
 		const nextIndex =
 			currentStepIndex < customSchedule.length - 1 ? currentStepIndex + 1 : 0;
 
-		autoStartNextRef.current = true;
-
 		const timeoutId = window.setTimeout(() => {
-			setCurrentStepIndex(nextIndex);
+			transitionTo(nextIndex, { autoStart: true });
 		}, 0);
 
 		return () => clearTimeout(timeoutId);
-	}, [
-		isFinished,
-		currentStepIndex,
-		customSchedule.length,
-		setCurrentStepIndex,
-	]);
-
-	useEffect(() => {
-		if (!isActive && currentStepIndex < customSchedule.length) {
-			const newDuration = customSchedule[currentStepIndex].duration * 60 * 1000;
-			setTimeLeft(newDuration);
-			savedTimeRef.current = 0;
-		}
-		if (currentStepIndex >= customSchedule.length) {
-			setCurrentStepIndex(0);
-		}
-	}, [
-		customSchedule,
-		currentStepIndex,
-		isActive,
-		setCurrentStepIndex,
-		setTimeLeft,
-	]);
+	}, [isFinished, currentStepIndex, customSchedule.length, transitionTo]);
 
 	const start = useCallback(() => {
 		requestPermission();
@@ -306,21 +304,14 @@ export function usePomodoroTimer(): UsePomodoroTimerResult {
 	const reset = useCallback(() => {
 		setIsActive(false);
 		setIsFinished(false);
-		setCurrentStepIndex(0);
-		setTimeLeft(customSchedule[0].duration * 60 * 1000);
-		savedTimeRef.current = 0;
-		startTimeRef.current = null;
-		if (requestRef.current) {
-			cancelAnimationFrame(requestRef.current);
-			requestRef.current = null;
-		}
-	}, [customSchedule, setCurrentStepIndex, setTimeLeft]);
+		if (customSchedule.length === 0) return;
+		transitionTo(0);
+	}, [customSchedule.length, transitionTo]);
 
 	const goToNext = useCallback(() => {
-		setCurrentStepIndex((prev) =>
-			prev < customSchedule.length - 1 ? prev + 1 : 0,
-		);
-	}, [customSchedule.length, setCurrentStepIndex]);
+		if (customSchedule.length === 0) return;
+		transitionTo(currentStepIndex + 1);
+	}, [currentStepIndex, customSchedule.length, transitionTo]);
 
 	const skipToNext = useCallback(() => {
 		setIsActive(false);
@@ -336,28 +327,32 @@ export function usePomodoroTimer(): UsePomodoroTimerResult {
 				return newSchedule;
 			});
 		},
-		[setCustomSchedule],
+		[],
 	);
 
-	const addStep = useCallback(
-		(id: number) => {
-			const newStep: ScheduleStep = {
-				id,
-				type: "focus",
-				duration: 25,
-				label: "New Step",
-				desc: "",
-			};
-			setCustomSchedule((prev) => [...prev, newStep]);
-		},
-		[setCustomSchedule],
-	);
+	const addStep = useCallback((id: number) => {
+		const newStep: ScheduleStep = {
+			id,
+			type: "focus",
+			duration: 25,
+			label: "New Step",
+			desc: "",
+		};
+		setCustomSchedule((prev) => [...prev, newStep]);
+	}, []);
 
 	const removeStep = useCallback(
 		(index: number) => {
 			setCustomSchedule((prev) => prev.filter((_, i) => i !== index));
+			setCurrentStepIndex((prev) => {
+				if (customSchedule.length <= 1) return 0;
+				let next = prev;
+				if (index === prev) next = 0;
+				else if (index < prev) next = prev - 1;
+				return Math.max(0, Math.min(customSchedule.length - 2, next));
+			});
 		},
-		[setCustomSchedule],
+		[customSchedule.length, setCurrentStepIndex],
 	);
 
 	return {
@@ -372,7 +367,7 @@ export function usePomodoroTimer(): UsePomodoroTimerResult {
 		customSchedule,
 		setCustomSchedule,
 		timeLeft,
-		setTimeLeft,
+		setTimeLeft: updateTimeLeft,
 		isActive,
 		setIsActive,
 		isFinished,
