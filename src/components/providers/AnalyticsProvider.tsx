@@ -7,7 +7,14 @@
 
 import { usePathname } from "next/navigation";
 import type React from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+	createContext,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+	useSyncExternalStore,
+} from "react";
 // Import error tracking
 import { errorTracker } from "@/lib/analytics/error-tracking";
 
@@ -42,27 +49,66 @@ const AnalyticsContext = createContext<AnalyticsContextType | undefined>(
 	undefined,
 );
 
+// Opt-out model: consent defaults to true when no preference is stored.
+const DEFAULT_CONSENT = true;
+const CONSENT_STORAGE_KEY = "analytics-consent";
+const CONSENT_CHANGED_EVENT = "analytics-consent-changed";
+
+function readConsentFromStorage(): boolean {
+	if (typeof window === "undefined") return DEFAULT_CONSENT;
+	try {
+		const saved = window.localStorage.getItem(CONSENT_STORAGE_KEY);
+		if (saved === "true") return true;
+		if (saved === "false") return false;
+		return DEFAULT_CONSENT;
+	} catch {
+		return DEFAULT_CONSENT;
+	}
+}
+
+// useSyncExternalStore subscribe — react to cross-tab "storage" events AND
+// the in-tab synthetic event we dispatch from setConsent.
+function subscribeToConsent(callback: () => void): () => void {
+	if (typeof window === "undefined") return () => {};
+	window.addEventListener("storage", callback);
+	window.addEventListener(CONSENT_CHANGED_EVENT, callback);
+	return () => {
+		window.removeEventListener("storage", callback);
+		window.removeEventListener(CONSENT_CHANGED_EVENT, callback);
+	};
+}
+
 interface AnalyticsProviderProps {
 	children: React.ReactNode;
 	gaId?: string;
 }
 
 export function AnalyticsProvider({ children, gaId }: AnalyticsProviderProps) {
-	// Initialize with true to enabled tracking by default (Opt-out model)
-	// This ensures analytics works for users who haven't explicitly interacted with the consent banner yet
-	const [consentGiven, setConsentGiven] = useState(true);
+	// Read consent reactively from localStorage without an effect.
+	const consentGiven = useSyncExternalStore(
+		subscribeToConsent,
+		readConsentFromStorage,
+		() => DEFAULT_CONSENT,
+	);
+
 	const [isInitialized, setIsInitialized] = useState(false);
 	const [gaLoaded, setGaLoaded] = useState(false);
 	const pathname = usePathname();
 
-	// Check status of GA loading (loaded by GoogleAnalytics component)
+	// Wait for window.gtag to become available. GoogleAnalytics loads the
+	// script asynchronously, so we chain setTimeout with a hard cap; with a
+	// proper cleanup so the poll stops when the provider unmounts.
 	useEffect(() => {
 		if (typeof window === "undefined") return;
 
+		let cancelled = false;
 		let attempts = 0;
-		const maxAttempts = 50; // Try for ~25 seconds
+		const maxAttempts = 50; // ~25 seconds at 500ms per tick
+		let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
 		const checkGtag = () => {
+			if (cancelled) return;
+
 			if (window.gtag) {
 				console.log(
 					"AnalyticsProvider: Google Analytics detected and initialized.",
@@ -74,67 +120,55 @@ export function AnalyticsProvider({ children, gaId }: AnalyticsProviderProps) {
 
 			attempts++;
 			if (attempts < maxAttempts) {
-				setTimeout(checkGtag, 500);
+				timeoutId = setTimeout(checkGtag, 500);
 			} else {
 				console.warn(
 					"AnalyticsProvider: Google Analytics failed to load within timeout.",
 				);
-				// Even if failed, we mark initialized to not block other things, but tracking won't work
+				// Mark initialized so callers stop blocking; tracking will no-op.
 				setIsInitialized(true);
 			}
 		};
 
 		checkGtag();
+
+		return () => {
+			cancelled = true;
+			if (timeoutId !== null) clearTimeout(timeoutId);
+		};
 	}, []);
 
-	// Check for existing consent
-	useEffect(() => {
-		try {
-			const savedConsent = localStorage.getItem("analytics-consent");
+	// Page view tracking is performed during render with a ref guard rather
+	// than inside a useEffect — per "You Might Not Need an Effect", this avoids
+	// a value-reaction effect (P4) and the no-cleanup hazard (P3). The guard
+	// makes the side effect idempotent across React Strict-Mode double invokes.
+	const lastTrackedPathRef = useRef<string | null>(null);
+	const search = typeof window !== "undefined" ? window.location.search : "";
+	const url = pathname + search;
+	const gtagFn = typeof window !== "undefined" ? window.gtag : undefined;
+	const canTrack =
+		isInitialized &&
+		consentGiven &&
+		gaLoaded &&
+		Boolean(gaId) &&
+		Boolean(gtagFn);
 
-			if (savedConsent === "true") {
-				setConsentGiven(true);
-			} else if (savedConsent === "false") {
-				setConsentGiven(false);
-			} else {
-				// Default to true if no preference is saved (Opt-out model)
-				setConsentGiven(true);
-			}
-		} catch (error) {
-			// Handle localStorage errors gracefully
-			console.warn(
-				"Failed to read analytics consent from localStorage:",
-				error,
-			);
-		}
-	}, []);
-
-	// Track page views automatically when pathname changes
-	useEffect(() => {
-		if (!isInitialized || !consentGiven || !gaLoaded) return;
-
-		if (!gaId || !window.gtag) return;
-
-		// Use window.location.search instead of useSearchParams to avoid Suspense requirement
-		const searchParams =
-			typeof window !== "undefined" ? window.location.search : "";
-		const url = pathname + searchParams;
-
+	if (canTrack && lastTrackedPathRef.current !== url) {
+		lastTrackedPathRef.current = url;
 		console.log(`Tracking PageView: ${url}`);
-
-		window.gtag("config", gaId, {
+		gtagFn!("config", gaId as string, {
 			page_path: url,
 			page_title: document.title,
 		});
-	}, [pathname, isInitialized, consentGiven, gaLoaded, gaId]);
+	}
 
 	const handleSetConsent = (consent: boolean) => {
-		setConsentGiven(consent);
 		try {
-			localStorage.setItem("analytics-consent", consent.toString());
-
-			// If consent is revoked, we might want to reload or clear cookies,
-			// but simply stopping future events is the MVP approach.
+			window.localStorage.setItem(CONSENT_STORAGE_KEY, consent.toString());
+			// useSyncExternalStore only re-reads on subscribe events; the native
+			// "storage" event only fires cross-tab, so we dispatch a synthetic
+			// event to refresh in the current tab.
+			window.dispatchEvent(new Event(CONSENT_CHANGED_EVENT));
 			console.log(`Analytics consent set to: ${consent}`);
 		} catch (error) {
 			// Handle localStorage errors gracefully
@@ -279,13 +313,15 @@ export function useAnalytics(): AnalyticsContextType {
 	return context;
 }
 
-// Hook for page view tracking
+// Hook for page view tracking — render-time ref guard instead of
+// value-reaction useEffect (P4 + P3 free).
 function _usePageView(url: string, title?: string) {
 	const { trackPageView } = useAnalytics();
-
-	useEffect(() => {
+	const lastTrackedRef = useRef<string | null>(null);
+	if (typeof window !== "undefined" && lastTrackedRef.current !== url) {
+		lastTrackedRef.current = url;
 		trackPageView(url, title);
-	}, [url, title, trackPageView]);
+	}
 }
 
 // Hook for tool usage tracking
@@ -299,7 +335,7 @@ function _useToolTracking(toolName: string) {
 	};
 }
 
-// Hook for error tracking
+// Hook for error tracking — 😃 ideal (window event listeners w/ cleanup). Leave alone.
 function _useErrorTracking() {
 	const { trackError } = useAnalytics();
 
