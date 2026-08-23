@@ -16,7 +16,6 @@ interface PhysicsControls {
 	friction: number;
 	objectCount: number;
 	objectSize: number;
-	resetSimulation: boolean;
 }
 
 interface PhysicsObject {
@@ -58,7 +57,6 @@ export function PhysicsSimulationExperiment({
 					? 30
 					: 20,
 		objectSize: 1.0,
-		resetSimulation: false,
 	});
 
 	const [isInitialized, setIsInitialized] = useState(false);
@@ -263,62 +261,61 @@ export function PhysicsSimulationExperiment({
 	}, [performanceSettings.qualityLevel]);
 
 	// Create physics objects
-	const createPhysicsObjects = useCallback(() => {
-		if (!sceneRef.current) return;
+	const createPhysicsObjects = useCallback(
+		(objectCount: number, objectSize: number) => {
+			if (!sceneRef.current) return;
 
-		// Clear existing objects
-		physicsObjectsRef.current.forEach((obj) => {
-			sceneRef.current?.remove(obj.mesh);
-			obj.mesh.geometry.dispose();
-			if (Array.isArray(obj.mesh.material)) {
-				obj.mesh.material.forEach((mat) => mat.dispose());
-			} else {
-				obj.mesh.material.dispose();
-			}
-		});
-		physicsObjectsRef.current = [];
-
-		// Create new objects
-		for (let i = 0; i < controls.objectCount; i++) {
-			const radius = controls.objectSize * (0.5 + Math.random() * 0.5);
-			const geometry = new THREE.SphereGeometry(radius, 16, 16);
-
-			const material = new THREE.MeshLambertMaterial({
-				color: new THREE.Color().setHSL(Math.random(), 0.8, 0.6),
+			// Clear existing objects
+			physicsObjectsRef.current.forEach((obj) => {
+				sceneRef.current?.remove(obj.mesh);
+				obj.mesh.geometry.dispose();
+				if (Array.isArray(obj.mesh.material)) {
+					obj.mesh.material.forEach((mat) => mat.dispose());
+				} else {
+					obj.mesh.material.dispose();
+				}
 			});
+			physicsObjectsRef.current = [];
 
-			const mesh = new THREE.Mesh(geometry, material);
+			// Create new objects
+			for (let i = 0; i < objectCount; i++) {
+				const radius = objectSize * (0.5 + Math.random() * 0.5);
+				const geometry = new THREE.SphereGeometry(radius, 16, 16);
 
-			// Random position
-			mesh.position.set(
-				(Math.random() - 0.5) * 30,
-				Math.random() * 20 + 10,
-				(Math.random() - 0.5) * 30,
-			);
+				const material = new THREE.MeshLambertMaterial({
+					color: new THREE.Color().setHSL(Math.random(), 0.8, 0.6),
+				});
 
-			mesh.castShadow = performanceSettings.qualityLevel !== "low";
-			mesh.receiveShadow = performanceSettings.qualityLevel !== "low";
+				const mesh = new THREE.Mesh(geometry, material);
 
-			sceneRef.current.add(mesh);
+				// Random position
+				mesh.position.set(
+					(Math.random() - 0.5) * 30,
+					Math.random() * 20 + 10,
+					(Math.random() - 0.5) * 30,
+				);
 
-			const physicsObject: PhysicsObject = {
-				mesh,
-				velocity: new THREE.Vector3(
-					(Math.random() - 0.5) * 10,
-					0,
-					(Math.random() - 0.5) * 10,
-				),
-				mass: radius * radius * radius, // Volume-based mass
-				radius,
-			};
+				mesh.castShadow = performanceSettings.qualityLevel !== "low";
+				mesh.receiveShadow = performanceSettings.qualityLevel !== "low";
 
-			physicsObjectsRef.current.push(physicsObject);
-		}
-	}, [
-		controls.objectCount,
-		controls.objectSize,
-		performanceSettings.qualityLevel,
-	]);
+				sceneRef.current.add(mesh);
+
+				const physicsObject: PhysicsObject = {
+					mesh,
+					velocity: new THREE.Vector3(
+						(Math.random() - 0.5) * 10,
+						0,
+						(Math.random() - 0.5) * 10,
+					),
+					mass: radius * radius * radius, // Volume-based mass
+					radius,
+				};
+
+				physicsObjectsRef.current.push(physicsObject);
+			}
+		},
+		[performanceSettings.qualityLevel],
+	);
 
 	// Physics update
 	const updatePhysics = useCallback(
@@ -460,15 +457,10 @@ export function PhysicsSimulationExperiment({
 		}
 	}, [updatePhysics, onPerformanceUpdate]);
 
-	// Update animate ref when it changes
-	useEffect(() => {
-		animateRef.current = animate;
-	}, [animate]);
-
-	// Update isActive ref when it changes
-	useEffect(() => {
-		isActiveRef.current = isActive;
-	}, [isActive]);
+	// Sync the latest `animate` closure into `animateRef` for self-recursion.
+	// Direct render-time assignment is the documented React pattern for
+	// tracking the latest value of a re-created function (see useRef docs).
+	animateRef.current = animate;
 
 	// Handle window resize
 	const handleResize = useCallback(() => {
@@ -484,25 +476,30 @@ export function PhysicsSimulationExperiment({
 
 	// Reset simulation
 	const resetSimulation = useCallback(() => {
-		createPhysicsObjects();
-		setControls((prev) => ({ ...prev, resetSimulation: false }));
-	}, [createPhysicsObjects]);
+		createPhysicsObjects(controls.objectCount, controls.objectSize);
+	}, [createPhysicsObjects, controls.objectCount, controls.objectSize]);
 
-	// Initialize scene when component becomes active
+	// Initialize scene when component becomes active; also drives the
+	// animation loop based on `isActive` (start on activation, cancel on
+	// teardown). `isActiveRef` is mirrored here so the RAF tick reads the
+	// latest activation flag without an additional effect.
 	useEffect(() => {
-		if (isActive && !isInitialized) {
-			const success = initializeScene();
-			if (success) {
-				// Create boundaries and physics objects after scene initialization
-				createBoundaries();
-				createPhysicsObjects();
-				if (animateRef.current) {
-					animationRef.current = requestAnimationFrame(animateRef.current);
+		isActiveRef.current = isActive;
+		if (isActive) {
+			if (!isInitialized) {
+				const success = initializeScene();
+				if (success) {
+					// Create boundaries and physics objects after scene initialization
+					createBoundaries();
+					createPhysicsObjects(controls.objectCount, controls.objectSize);
 				}
 			}
+			if (animateRef.current) {
+				animationRef.current = requestAnimationFrame(animateRef.current);
+			}
 		}
-
 		return () => {
+			isActiveRef.current = false;
 			if (animationRef.current) {
 				cancelAnimationFrame(animationRef.current);
 				animationRef.current = null;
@@ -514,37 +511,8 @@ export function PhysicsSimulationExperiment({
 		initializeScene,
 		createBoundaries,
 		createPhysicsObjects,
-	]);
-
-	// Handle animation state changes
-	useEffect(() => {
-		if (isActive && animateRef.current) {
-			animationRef.current = requestAnimationFrame(animateRef.current);
-		} else if (!isActive && animationRef.current) {
-			if (animationRef.current) {
-				cancelAnimationFrame(animationRef.current);
-				animationRef.current = null;
-			}
-		}
-	}, [isActive]);
-
-	// Update objects when controls change
-	useEffect(() => {
-		if (
-			isInitialized &&
-			(controls.resetSimulation ||
-				controls.objectCount !== physicsObjectsRef.current.length)
-		) {
-			createPhysicsObjects();
-			if (controls.resetSimulation) {
-				setControls((prev) => ({ ...prev, resetSimulation: false }));
-			}
-		}
-	}, [
 		controls.objectCount,
-		controls.resetSimulation,
-		isInitialized,
-		createPhysicsObjects,
+		controls.objectSize,
 	]);
 
 	// Handle resize
@@ -691,12 +659,14 @@ export function PhysicsSimulationExperiment({
 						max={deviceCapabilities?.performanceLevel === "high" ? "100" : "50"}
 						step="5"
 						value={controls.objectCount}
-						onChange={(e) =>
+						onChange={(e) => {
+							const newCount = parseInt(e.target.value, 10);
 							setControls((prev) => ({
 								...prev,
-								objectCount: parseInt(e.target.value, 10),
-							}))
-						}
+								objectCount: newCount,
+							}));
+							createPhysicsObjects(newCount, controls.objectSize);
+						}}
 						className="w-full"
 					/>
 				</div>
@@ -712,12 +682,14 @@ export function PhysicsSimulationExperiment({
 						max="3"
 						step="0.1"
 						value={controls.objectSize}
-						onChange={(e) =>
+						onChange={(e) => {
+							const newSize = parseFloat(e.target.value);
 							setControls((prev) => ({
 								...prev,
-								objectSize: parseFloat(e.target.value),
-							}))
-						}
+								objectSize: newSize,
+							}));
+							createPhysicsObjects(controls.objectCount, newSize);
+						}}
 						className="w-full"
 					/>
 				</div>
