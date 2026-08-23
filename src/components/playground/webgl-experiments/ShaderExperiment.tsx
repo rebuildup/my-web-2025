@@ -47,24 +47,24 @@ float random(vec2 st) {
 float noise(vec2 st) {
  vec2 i = floor(st);
  vec2 f = fract(st);
- 
+
  float a = random(i);
  float b = random(i + vec2(1.0, 0.0));
  float c = random(i + vec2(0.0, 1.0));
  float d = random(i + vec2(1.0, 1.0));
- 
+
  vec2 u = f * f * (3.0 - 2.0 * f);
- 
+
  return mix(a, b, u.x) + (c - a)* u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
 }
 
 void main() {
  vec2 uv = gl_FragCoord.xy / resolution.xy;
  vec2 pos = uv * 8.0 + time * 0.5;
- 
+
  float n = noise(pos);
  vec3 color = vec3(n);
- 
+
  gl_FragColor = vec4(color, 1.0);
 }`,
 	waves: `
@@ -76,10 +76,10 @@ uniform vec2 mouse;
 void main() {
  vec2 uv = gl_FragCoord.xy / resolution.xy;
  vec2 center = vec2(0.5, 0.5);
- 
+
  float dist = distance(uv, center);
  float wave = sin(dist * 20.0 - time * 3.0) * 0.5 + 0.5;
- 
+
  vec3 color = vec3(wave * 0.2, wave * 0.8, wave);
  gl_FragColor = vec4(color, 1.0);
 }`,
@@ -97,20 +97,20 @@ void main() {
  vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / min(resolution.x, resolution.y);
  uv *= 2.0;
  uv += vec2(-0.5, 0.0);
- 
+
  vec2 z = vec2(0.0);
  vec2 c = uv + mouse * 0.5;
- 
+
  int iterations = 0;
  for(int i = 0; i < 100; i++) {
  if(length(z) > 2.0) break;
  z = complexMul(z, z) + c;
  iterations++;
  }
- 
+
  float color = float(iterations) / 100.0;
  vec3 rgb = vec3(color * 2.0, color * 0.5, 1.0 - color);
- 
+
  gl_FragColor = vec4(rgb, 1.0);
 }`,
 };
@@ -242,101 +242,111 @@ export function ShaderExperiment({
 		}
 	}, [deviceCapabilities, performanceSettings, onError]);
 
-	// Create shader material
-	const createShaderMaterial = useCallback(() => {
-		if (!sceneRef.current) return;
+	// Create shader material. Optional overrides let event handlers apply the
+	// newest value (e.g. when switching preset) without waiting for the next
+	// render to pick up the updated closure state.
+	const createShaderMaterial = useCallback(
+		(overrides?: {
+			presetShader?: ShaderControls["presetShader"];
+			customCode?: string;
+			resolution?: [number, number];
+		}) => {
+			if (!sceneRef.current) return;
 
-		// Remove existing mesh
-		if (meshRef.current) {
-			sceneRef.current.remove(meshRef.current);
-			meshRef.current.geometry.dispose();
-			if (materialRef.current) {
-				materialRef.current.dispose();
+			const targetPreset = overrides?.presetShader ?? controls.presetShader;
+			const targetCustomCode = overrides?.customCode ?? controls.customCode;
+			const targetResolution = overrides?.resolution ?? controls.resolution;
+
+			// Remove existing mesh
+			if (meshRef.current) {
+				sceneRef.current.remove(meshRef.current);
+				meshRef.current.geometry.dispose();
+				if (materialRef.current) {
+					materialRef.current.dispose();
+				}
 			}
-		}
 
-		try {
-			// Create optimized geometry using memory manager
-			const geometry = webglMemoryManager.createOptimizedGeometry(
-				new Float32Array([
-					-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0,
-				]),
-				undefined,
-				"fullscreen-quad",
-			);
+			try {
+				// Create optimized geometry using memory manager
+				const geometry = webglMemoryManager.createOptimizedGeometry(
+					new Float32Array([
+						-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0,
+					]),
+					undefined,
+					"fullscreen-quad",
+				);
 
-			// Vertex shader (simple passthrough)
-			const vertexShader = `
+				// Vertex shader (simple passthrough)
+				const vertexShader = `
  attribute vec3 position;
  void main() {
  gl_Position = vec4(position, 1.0);
  }
  `;
 
-			// Get fragment shader code
-			let fragmentShader: string;
-			if (controls.presetShader === "custom") {
-				fragmentShader = controls.customCode;
-			} else {
-				fragmentShader = PRESET_SHADERS[controls.presetShader];
+				// Get fragment shader code
+				let fragmentShader: string;
+				if (targetPreset === "custom") {
+					fragmentShader = targetCustomCode;
+				} else {
+					fragmentShader = PRESET_SHADERS[targetPreset];
+				}
+
+				// Create optimized shader material
+				const uniforms = {
+					time: { value: 0 },
+					resolution: {
+						value: new THREE.Vector2(targetResolution[0], targetResolution[1]),
+					},
+					mouse: { value: new THREE.Vector2(0, 0) },
+				};
+
+				let minifyCode = false;
+				if (performanceSettings.qualityLevel === "low") {
+					minifyCode = true;
+				}
+
+				const material = shaderOptimizer.createOptimizedMaterial(
+					vertexShader,
+					fragmentShader,
+					uniforms,
+					deviceCapabilities,
+					{
+						precision: "mediump",
+						enableOptimizations: true,
+						stripComments: true,
+						minifyCode,
+						cacheShaders: true,
+					},
+				);
+
+				materialRef.current = material;
+
+				// Create mesh
+				const mesh = new THREE.Mesh(geometry, material);
+				meshRef.current = mesh;
+				sceneRef.current.add(mesh);
+
+				setShaderError(null);
+			} catch (err) {
+				let errorMessage = "Shader compilation error";
+				if (err instanceof Error) {
+					errorMessage = err.message;
+				}
+				setShaderError(errorMessage);
+				console.error("Shader error:", err);
 			}
+		},
+		[
+			controls.presetShader,
+			controls.customCode,
+			controls.resolution,
+			deviceCapabilities,
+			performanceSettings.qualityLevel,
+		],
+	);
 
-			// Create optimized shader material
-			const uniforms = {
-				time: { value: 0 },
-				resolution: {
-					value: new THREE.Vector2(
-						controls.resolution[0],
-						controls.resolution[1],
-					),
-				},
-				mouse: { value: new THREE.Vector2(0, 0) },
-			};
-
-			let minifyCode = false;
-			if (performanceSettings.qualityLevel === "low") {
-				minifyCode = true;
-			}
-
-			const material = shaderOptimizer.createOptimizedMaterial(
-				vertexShader,
-				fragmentShader,
-				uniforms,
-				deviceCapabilities,
-				{
-					precision: "mediump",
-					enableOptimizations: true,
-					stripComments: true,
-					minifyCode,
-					cacheShaders: true,
-				},
-			);
-
-			materialRef.current = material;
-
-			// Create mesh
-			const mesh = new THREE.Mesh(geometry, material);
-			meshRef.current = mesh;
-			sceneRef.current.add(mesh);
-
-			setShaderError(null);
-		} catch (err) {
-			let errorMessage = "Shader compilation error";
-			if (err instanceof Error) {
-				errorMessage = err.message;
-			}
-			setShaderError(errorMessage);
-			console.error("Shader error:", err);
-		}
-	}, [
-		controls.presetShader,
-		controls.customCode,
-		controls.resolution,
-		deviceCapabilities,
-		performanceSettings.qualityLevel,
-	]);
-
-	// Compile custom shader
+	// Compile custom shader (called from the "Compile" button)
 	const compileCustomShader = useCallback(() => {
 		if (controls.presetShader === "custom") {
 			createShaderMaterial();
@@ -400,15 +410,14 @@ export function ShaderExperiment({
 		}
 	}, [onPerformanceUpdate]);
 
-	// Update animate ref when it changes
-	useEffect(() => {
-		animateRef.current = animate;
-	}, [animate]);
-
-	// Update isActive ref when it changes
-	useEffect(() => {
-		isActiveRef.current = isActive;
-	}, [isActive]);
+	// Latest-ref pattern: keep RAF-loop helpers pointed at the freshest closures
+	// without scheduling an extra commit. The next RAF tick reads
+	// `animateRef.current` for re-scheduling, and `animate`'s isActive guard
+	// reads `isActiveRef.current` for the latest prop value. (Direct
+	// render-time assignment is the documented React pattern for tracking the
+	// latest value of a re-created function — see useRef docs.)
+	animateRef.current = animate;
+	isActiveRef.current = isActive;
 
 	// Update elapsed time for display
 	useEffect(() => {
@@ -445,17 +454,24 @@ export function ShaderExperiment({
 		}
 	}, []);
 
-	// Initialize scene when component becomes active
+	// Initialize the scene on first activation, then own the RAF lifecycle
+	// for the lifetime of the component. The cleanup `cancelAnimationFrame`
+	// returns us to a no-RAF state both on unmount and before each re-run, so
+	// a single effect can safely drive both "init once" and "toggle loop on/off".
 	useEffect(() => {
 		if (isActive && !isInitialized) {
 			const success = initializeScene();
 			if (success) {
-				// Create shader material after scene initialization
 				createShaderMaterial();
 				if (animateRef.current) {
 					animationRef.current = requestAnimationFrame(animateRef.current);
 				}
 			}
+			return;
+		}
+
+		if (isActive && isInitialized && animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
 		}
 
 		return () => {
@@ -465,35 +481,6 @@ export function ShaderExperiment({
 			}
 		};
 	}, [isActive, isInitialized, initializeScene, createShaderMaterial]);
-
-	// Handle animation state changes
-	useEffect(() => {
-		if (isActive && animateRef.current) {
-			animationRef.current = requestAnimationFrame(animateRef.current);
-		} else if (!isActive && animationRef.current) {
-			if (animationRef.current) {
-				cancelAnimationFrame(animationRef.current);
-				animationRef.current = null;
-			}
-		}
-	}, [isActive]);
-
-	// Update shader when preset changes
-	useEffect(() => {
-		if (isInitialized) {
-			if (controls.presetShader !== "custom") {
-				const shaderCode =
-					PRESET_SHADERS[controls.presetShader as keyof typeof PRESET_SHADERS];
-				if (shaderCode) {
-					setControls((prev) => ({
-						...prev,
-						customCode: shaderCode,
-					}));
-				}
-			}
-			createShaderMaterial();
-		}
-	}, [controls.presetShader, isInitialized, createShaderMaterial]);
 
 	// Handle resize
 	useEffect(() => {
@@ -568,13 +555,27 @@ export function ShaderExperiment({
 						<label className="noto-sans-jp-light text-sm ">Preset Shader</label>
 						<select
 							value={controls.presetShader}
-							onChange={(e) =>
+							onChange={(e) => {
+								const value = e.target.value as ShaderControls["presetShader"];
+								// Presets other than "custom" carry their own GLSL source.
+								// Update state AND rebuild the shader material in the same
+								// event handler — no value-reaction effect needed.
+								const newCustomCode =
+									value !== "custom"
+										? PRESET_SHADERS[value]
+										: controls.customCode;
 								setControls((prev) => ({
 									...prev,
-									presetShader: e.target
-										.value as ShaderControls["presetShader"],
-								}))
-							}
+									presetShader: value,
+									customCode: newCustomCode,
+								}));
+								if (isInitialized) {
+									createShaderMaterial({
+										presetShader: value,
+										customCode: newCustomCode,
+									});
+								}
+							}}
 							className="w-full p-2 text-sm"
 						>
 							<option value="rainbow">Rainbow</option>
