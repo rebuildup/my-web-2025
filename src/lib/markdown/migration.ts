@@ -375,10 +375,18 @@ export class ContentMigrationService {
 			const contentFiles = await this.getContentFiles();
 			status.totalFiles = contentFiles.length;
 
-			for (const fileName of contentFiles) {
-				const filePath = path.join(this.dataPath, fileName);
-				const content = await fs.readFile(filePath, "utf8");
-				const items: MarkdownContentItem[] = JSON.parse(content);
+			const fileContents = await Promise.all(
+				contentFiles.map((fileName) =>
+					fs
+						.readFile(path.join(this.dataPath, fileName), "utf8")
+						.then((content) => ({ fileName, content }))
+						.catch(() => null),
+				),
+			);
+
+			for (const entry of fileContents) {
+				if (!entry) continue;
+				const items: MarkdownContentItem[] = JSON.parse(entry.content);
 
 				const migratedCount = items.filter(
 					(item) => item.markdownMigrated,
@@ -390,7 +398,7 @@ export class ContentMigrationService {
 				status.pendingItems += pendingCount;
 
 				status.fileStatus.push({
-					fileName,
+					fileName: entry.fileName,
 					totalItems: items.length,
 					migratedItems: migratedCount,
 					pendingItems: pendingCount,
