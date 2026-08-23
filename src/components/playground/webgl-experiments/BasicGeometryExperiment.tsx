@@ -53,72 +53,86 @@ export function BasicGeometryExperiment({
 		fps: 0,
 	});
 
-	// Create geometry based on current settings
-	const createGeometry = useCallback(() => {
-		if (!sceneRef.current) return;
+	// Create geometry based on current settings. Each parameter is
+	// optional so the originating <select> / <input> handler can pass only
+	// the value it just changed and let the rest fall back to the latest
+	// `controls` state.
+	const createGeometry = useCallback(
+		(
+			geometryType?: GeometryControls["geometryType"],
+			materialType?: GeometryControls["materialType"],
+			wireframe?: boolean,
+		) => {
+			if (!sceneRef.current) return;
 
-		// Remove existing mesh
-		if (meshRef.current) {
-			sceneRef.current.remove(meshRef.current);
-			meshRef.current.geometry.dispose();
-			if (Array.isArray(meshRef.current.material)) {
-				meshRef.current.material.forEach((mat) => mat.dispose());
-			} else {
-				meshRef.current.material.dispose();
+			const gt = geometryType ?? controls.geometryType;
+			const mt = materialType ?? controls.materialType;
+			const wf = wireframe ?? controls.wireframe;
+
+			// Remove existing mesh
+			if (meshRef.current) {
+				sceneRef.current.remove(meshRef.current);
+				meshRef.current.geometry.dispose();
+				if (Array.isArray(meshRef.current.material)) {
+					meshRef.current.material.forEach((mat) => mat.dispose());
+				} else {
+					meshRef.current.material.dispose();
+				}
 			}
-		}
 
-		// Create geometry
-		let geometry: THREE.BufferGeometry;
-		switch (controls.geometryType) {
-			case "sphere":
-				geometry = new THREE.SphereGeometry(1, 32, 32);
-				break;
-			case "torus":
-				geometry = new THREE.TorusGeometry(1, 0.4, 16, 100);
-				break;
-			case "cone":
-				geometry = new THREE.ConeGeometry(1, 2, 32);
-				break;
-			default:
-				geometry = new THREE.BoxGeometry(2, 2, 2);
-		}
+			// Create geometry
+			let geometry: THREE.BufferGeometry;
+			switch (gt) {
+				case "sphere":
+					geometry = new THREE.SphereGeometry(1, 32, 32);
+					break;
+				case "torus":
+					geometry = new THREE.TorusGeometry(1, 0.4, 16, 100);
+					break;
+				case "cone":
+					geometry = new THREE.ConeGeometry(1, 2, 32);
+					break;
+				default:
+					geometry = new THREE.BoxGeometry(2, 2, 2);
+			}
 
-		// Create material
-		let material: THREE.Material;
-		const materialOptions = {
-			wireframe: controls.wireframe,
-			color: 0x00ff88,
-		};
+			// Create material
+			let material: THREE.Material;
+			const materialOptions = {
+				wireframe: wf,
+				color: 0x00ff88,
+			};
 
-		switch (controls.materialType) {
-			case "basic":
-				material = new THREE.MeshBasicMaterial(materialOptions);
-				break;
-			case "lambert":
-				material = new THREE.MeshLambertMaterial(materialOptions);
-				break;
-			case "phong":
-				material = new THREE.MeshPhongMaterial({
-					...materialOptions,
-					shininess: 100,
-				});
-				break;
-			default:
-				material = new THREE.MeshStandardMaterial({
-					...materialOptions,
-					metalness: 0.3,
-					roughness: 0.4,
-				});
-		}
+			switch (mt) {
+				case "basic":
+					material = new THREE.MeshBasicMaterial(materialOptions);
+					break;
+				case "lambert":
+					material = new THREE.MeshLambertMaterial(materialOptions);
+					break;
+				case "phong":
+					material = new THREE.MeshPhongMaterial({
+						...materialOptions,
+						shininess: 100,
+					});
+					break;
+				default:
+					material = new THREE.MeshStandardMaterial({
+						...materialOptions,
+						metalness: 0.3,
+						roughness: 0.4,
+					});
+			}
 
-		// Create mesh
-		const mesh = new THREE.Mesh(geometry, material);
-		mesh.castShadow = performanceSettings.qualityLevel !== "low";
-		mesh.receiveShadow = performanceSettings.qualityLevel !== "low";
-		meshRef.current = mesh;
-		sceneRef.current.add(mesh);
-	}, [controls, performanceSettings.qualityLevel]);
+			// Create mesh
+			const mesh = new THREE.Mesh(geometry, material);
+			mesh.castShadow = performanceSettings.qualityLevel !== "low";
+			mesh.receiveShadow = performanceSettings.qualityLevel !== "low";
+			meshRef.current = mesh;
+			sceneRef.current.add(mesh);
+		},
+		[controls, performanceSettings.qualityLevel],
+	);
 
 	// Initialize Three.js scene
 	const initializeScene = useCallback(() => {
@@ -274,15 +288,12 @@ export function BasicGeometryExperiment({
 		}
 	}, [controls.rotationSpeed, onPerformanceUpdate]);
 
-	// Update animate ref when it changes
-	useEffect(() => {
-		animateRef.current = animate;
-	}, [animate]);
-
-	// Update isActive ref when it changes
-	useEffect(() => {
-		isActiveRef.current = isActive;
-	}, [isActive]);
+	// Latest-ref pattern: keep RAF-loop helpers pointed at the freshest
+	// closures without scheduling an extra commit. The next RAF tick reads
+	// `animateRef.current` for re-scheduling, and `animate`'s isActive
+	// guard reads `isActiveRef.current` for the latest prop value.
+	animateRef.current = animate;
+	isActiveRef.current = isActive;
 
 	// Handle window resize
 	const handleResize = useCallback(() => {
@@ -296,13 +307,22 @@ export function BasicGeometryExperiment({
 		rendererRef.current.setSize(width, height);
 	}, []);
 
-	// Initialize scene when component becomes active
+	// Initialize the scene on first activation, then own the RAF
+	// lifecycle for the lifetime of the component. The cleanup
+	// cancelAnimationFrame returns us to a no-RAF state both on unmount
+	// and before each re-run, so a single effect can safely drive both
+	// "init once" and "toggle loop on/off".
 	useEffect(() => {
 		if (isActive && !isInitialized) {
 			const success = initializeScene();
-			if (success && animateRef.current) {
-				animationRef.current = requestAnimationFrame(animateRef.current);
-			}
+			if (!success) return;
+			// initializeScene() flips isInitialized; the next effect run will
+			// pick up the new state and start the animation loop.
+			return;
+		}
+
+		if (isActive && isInitialized && animateRef.current) {
+			animationRef.current = requestAnimationFrame(animateRef.current);
 		}
 
 		return () => {
@@ -312,25 +332,6 @@ export function BasicGeometryExperiment({
 			}
 		};
 	}, [isActive, isInitialized, initializeScene]);
-
-	// Handle animation state changes
-	useEffect(() => {
-		if (isActive && animateRef.current) {
-			animationRef.current = requestAnimationFrame(animateRef.current);
-		} else if (!isActive && animationRef.current) {
-			if (animationRef.current) {
-				cancelAnimationFrame(animationRef.current);
-				animationRef.current = null;
-			}
-		}
-	}, [isActive]);
-
-	// Update geometry when controls change
-	useEffect(() => {
-		if (isInitialized) {
-			createGeometry();
-		}
-	}, [isInitialized, createGeometry]);
 
 	// Handle resize
 	useEffect(() => {
@@ -391,13 +392,11 @@ export function BasicGeometryExperiment({
 					<label className="noto-sans-jp-light text-sm ">Geometry Type</label>
 					<select
 						value={controls.geometryType}
-						onChange={(e) =>
-							setControls((prev) => ({
-								...prev,
-								geometryType: e.target
-									.value as GeometryControls["geometryType"],
-							}))
-						}
+						onChange={(e) => {
+							const value = e.target.value as GeometryControls["geometryType"];
+							setControls((prev) => ({ ...prev, geometryType: value }));
+							createGeometry(value);
+						}}
 						className="w-full p-2 text-sm"
 					>
 						<option value="box">Box</option>
@@ -412,13 +411,11 @@ export function BasicGeometryExperiment({
 					<label className="noto-sans-jp-light text-sm ">Material Type</label>
 					<select
 						value={controls.materialType}
-						onChange={(e) =>
-							setControls((prev) => ({
-								...prev,
-								materialType: e.target
-									.value as GeometryControls["materialType"],
-							}))
-						}
+						onChange={(e) => {
+							const value = e.target.value as GeometryControls["materialType"];
+							setControls((prev) => ({ ...prev, materialType: value }));
+							createGeometry(undefined, value);
+						}}
 						className="w-full p-2 text-sm"
 					>
 						<option value="basic">Basic</option>
@@ -477,12 +474,11 @@ export function BasicGeometryExperiment({
 					type="checkbox"
 					id="wireframe"
 					checked={controls.wireframe}
-					onChange={(e) =>
-						setControls((prev) => ({
-							...prev,
-							wireframe: e.target.checked,
-						}))
-					}
+					onChange={(e) => {
+						const checked = e.target.checked;
+						setControls((prev) => ({ ...prev, wireframe: checked }));
+						createGeometry(undefined, undefined, checked);
+					}}
 					className="w-4 h-4"
 				/>
 				<label htmlFor="wireframe" className="noto-sans-jp-light text-sm ">
