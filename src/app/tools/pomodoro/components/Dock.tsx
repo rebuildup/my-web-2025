@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { hexToRgba } from "../utils/pomodoro-constants";
 
 export const Dock = ({
@@ -36,9 +36,9 @@ export const Dock = ({
 
 	return (
 		<div
-			className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-60 px-4 h-16 rounded-2xl border   flex items-end gap-2 transition-all duration-300 no-timer-click
- ${theme === "dark" ? "bg-[#111]/80 " : " "}
- `}
+			className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-60 px-4 h-16 rounded-2xl border   flex items-end gap-2 transition-[background-color,border-color] duration-300 no-timer-click
+  ${theme === "dark" ? "bg-[#111]/80 " : " "}
+  `}
 			onMouseMove={handleMouseMove}
 			onMouseLeave={handleMouseLeave}
 			onTouchMove={handleTouchMove}
@@ -59,7 +59,7 @@ export const Dock = ({
 	);
 };
 
-export const DockItem = ({
+const DockItem = ({
 	mouseX,
 	children,
 	theme,
@@ -69,27 +69,23 @@ export const DockItem = ({
 	theme: string;
 }) => {
 	const ref = useRef<HTMLDivElement>(null);
-	const [width, setWidth] = useState(40);
+	const [isAnimating, setIsAnimating] = useState(false);
 
-	useEffect(() => {
-		if (mouseX !== null && ref.current) {
-			const iconCenterX = ref.current.offsetLeft + ref.current.offsetWidth / 2;
-			const distance = Math.abs(mouseX - iconCenterX);
-
-			const scale = Math.max(1, 2 - distance / 100);
-			const newWidth = Math.min(64, Math.max(40, 40 * scale));
-
-			setWidth(newWidth);
-		} else {
-			setWidth(40);
-		}
+	const width = useMemo(() => {
+		if (mouseX === null || !ref.current) return 40;
+		const iconCenterX = ref.current.offsetLeft + ref.current.offsetWidth / 2;
+		const distance = Math.abs(mouseX - iconCenterX);
+		const scale = Math.max(1, 2 - distance / 100);
+		return Math.min(64, Math.max(40, 40 * scale));
 	}, [mouseX]);
 
 	return (
 		<div
 			ref={ref}
 			style={{ width: `${width}px`, height: `${width}px` }}
-			className="relative flex items-center justify-center mb-2 transition-[width,height] duration-100 ease-out will-change-[width,height] rounded-full overflow-hidden"
+			className={`relative flex items-center justify-center mb-2 transition-[width,height] duration-100 ease-out ${isAnimating ? "will-change-[width,height]" : ""} rounded-full overflow-hidden`}
+			onMouseEnter={() => setIsAnimating(true)}
+			onAnimationEnd={() => setIsAnimating(false)}
 		>
 			{React.cloneElement(children as any, {
 				size: width * 0.5,
