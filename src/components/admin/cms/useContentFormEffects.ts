@@ -24,49 +24,104 @@ export function useContentFormEffects({
 	controlledVisibility,
 	setTagOptions,
 }: UseContentFormEffectsOptions) {
-	const prevIdRef = useRef<string | undefined>(formData.id);
+	// Render-time setState pattern (canonical React 19 fix for "adjusting state
+	// when a prop changes"): track the previous prop via useRef, and call
+	// setState directly during render when the value differs. This eliminates
+	// the P4 (value-reaction) and P3 (no-cleanup) 😡 findings without using
+	// useEffect for value-mirroring.
 
-	useEffect(() => {
-		if (prevIdRef.current === formData.id) return;
-		prevIdRef.current = formData.id;
-		let current = "";
-		if (formData.ext) {
-			const extAny = formData.ext as any;
-			if (extAny.thumbnail?.youtube) current = extAny.thumbnail.youtube;
-		}
-		if (current) return;
-		const found = findYouTubeUrl(formData);
-		if (found) {
-			setFormData((prev) => ({
-				...prev,
-				ext: {
-					...((prev.ext as any) || {}),
-					thumbnail: {
-						...((prev.ext as any)?.thumbnail || {}),
-						youtube: found,
-					},
-				} as any,
-			}));
-		}
-	}, [formData.id]);
+	// Mirror controlledStatus into formData when the parent's select changes.
+	const prevStatusRef = useRef<Content["status"] | undefined>(controlledStatus);
+	if (
+		controlledStatus !== undefined &&
+		prevStatusRef.current !== controlledStatus
+	) {
+		prevStatusRef.current = controlledStatus;
+		setFormData((prev) =>
+			prev.status === controlledStatus
+				? prev
+				: { ...prev, status: controlledStatus },
+		);
+	}
 
+	// Mirror controlledVisibility into formData when the parent's select changes.
+	const prevVisibilityRef = useRef<Content["visibility"] | undefined>(
+		controlledVisibility,
+	);
+	if (
+		controlledVisibility !== undefined &&
+		prevVisibilityRef.current !== controlledVisibility
+	) {
+		prevVisibilityRef.current = controlledVisibility;
+		setFormData((prev) =>
+			prev.visibility === controlledVisibility
+				? prev
+				: { ...prev, visibility: controlledVisibility },
+		);
+	}
+
+	// Reset formData when initialData.id changes (different content selected for edit).
+	// Tracking only id (instead of id/publishedAt/title/summary) avoids spurious
+	// resets while the user edits the form fields.
+	const prevInitialDataIdRef = useRef<string | undefined>(initialData.id);
+	if (
+		mode === "edit" &&
+		initialData.id &&
+		prevInitialDataIdRef.current !== initialData.id
+	) {
+		prevInitialDataIdRef.current = initialData.id;
+		setFormData(createContentFormData(initialData));
+		setInitialDataState(initialData);
+	}
+
+	// Auto-fill YouTube URL preview when the form's id changes.
+	const prevFormIdRef = useRef<string | undefined>(formData.id);
+	if (prevFormIdRef.current !== formData.id) {
+		prevFormIdRef.current = formData.id;
+		const extAny = formData.ext as any;
+		const hasThumbYouTube = Boolean(extAny?.thumbnail?.youtube);
+		if (!hasThumbYouTube) {
+			const found = findYouTubeUrl(formData);
+			if (found) {
+				setFormData((prev) => ({
+					...prev,
+					ext: {
+						...((prev.ext as any) || {}),
+						thumbnail: {
+							...((prev.ext as any)?.thumbnail || {}),
+							youtube: found,
+						},
+					} as any,
+				}));
+			}
+		}
+	}
+
+	// Fetch the full content metadata when editing and key detail fields are missing.
+	// Data fetching inside useEffect is 🙃 (acceptable transitional pattern) per the
+	// useeffect-extremist skill — kept because it has a matching AbortController cleanup.
 	useEffect(() => {
 		const controller = new AbortController();
+		const targetId = formData.id;
+		if (mode !== "edit" || !targetId) {
+			return () => controller.abort();
+		}
+		const hasDetailMetadata = Boolean(
+			formData.assets ||
+				formData.links ||
+				formData.relations ||
+				formData.seo ||
+				formData.searchable ||
+				formData.ext,
+		);
+		if (hasDetailMetadata) {
+			return () => controller.abort();
+		}
 		(async () => {
-			if (mode !== "edit" || !formData.id) return;
-			const hasDetailMetadata = Boolean(
-				formData.assets ||
-					formData.links ||
-					formData.relations ||
-					formData.seo ||
-					formData.searchable ||
-					formData.ext,
-			);
-			if (hasDetailMetadata) return;
 			let full: any = null;
 			try {
 				const res = await fetch(
-					`/api/cms/contents/${encodeURIComponent(formData.id)}/`,
+					`/api/cms/contents/${encodeURIComponent(targetId)}/`,
 					{ cache: "no-store", signal: controller.signal },
 				);
 				if (!res.ok) return;
@@ -98,19 +153,7 @@ export function useContentFormEffects({
 		};
 	}, [mode, formData.id]);
 
-	useEffect(() => {
-		if (mode === "edit" && initialData.id) {
-			setFormData(createContentFormData(initialData));
-			setInitialDataState(initialData);
-		}
-	}, [
-		mode,
-		initialData.id,
-		initialData.publishedAt,
-		initialData.title,
-		initialData.summary,
-	]);
-
+	// Fetch existing tags once on mount for the tag autocomplete suggestions.
 	useEffect(() => {
 		const controller = new AbortController();
 		(async () => {
@@ -141,14 +184,4 @@ export function useContentFormEffects({
 		})();
 		return () => controller.abort();
 	}, []);
-
-	useEffect(() => {
-		if (controlledStatus)
-			setFormData((prev) => ({ ...prev, status: controlledStatus }));
-	}, [controlledStatus]);
-
-	useEffect(() => {
-		if (controlledVisibility)
-			setFormData((prev) => ({ ...prev, visibility: controlledVisibility }));
-	}, [controlledVisibility]);
 }
