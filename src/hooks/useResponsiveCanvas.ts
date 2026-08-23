@@ -257,34 +257,6 @@ export const useResponsiveCanvas = (
 	};
 };
 
-// Hook for managing canvas resize events
-const _useCanvasResize = (
-	canvasRef: React.RefObject<HTMLCanvasElement>,
-	onResize?: (dimensions: CanvasDimensions) => void,
-) => {
-	const containerRef = useRef<HTMLDivElement>(null);
-	const { dimensions, setupCanvas, setupWebGLCanvas } =
-		useResponsiveCanvas(containerRef);
-
-	useEffect(() => {
-		if (canvasRef.current) {
-			const canvas = canvasRef.current;
-			const isWebGL = canvas.getContext("webgl2") || canvas.getContext("webgl");
-
-			const newDimensions = isWebGL
-				? setupWebGLCanvas(canvas)
-				: setupCanvas(canvas);
-
-			onResize?.(newDimensions);
-		}
-	}, [canvasRef, setupCanvas, setupWebGLCanvas, onResize]);
-
-	return {
-		containerRef,
-		dimensions,
-	};
-};
-
 // Utility for responsive text sizing
 const _getResponsiveTextSize = (
 	baseSize: number,
