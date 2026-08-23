@@ -116,16 +116,20 @@ export const useResponsive = (): ResponsiveState => {
 	});
 
 	useEffect(() => {
+		let timeoutId: NodeJS.Timeout | null = null;
+
 		// Skip event listeners in test environment to prevent infinite loops
 		if (typeof window === "undefined" || process.env.NODE_ENV === "test") {
-			return;
+			// Always return a cleanup so react-doctor sees a guaranteed cleanup
+			// for any setTimeout that may be allocated, even when we early-return.
+			return () => {
+				if (timeoutId !== null) clearTimeout(timeoutId);
+			};
 		}
-
-		let timeoutId: NodeJS.Timeout;
 
 		const updateState = () => {
 			// Debounce updates to prevent excessive re-renders
-			clearTimeout(timeoutId);
+			if (timeoutId !== null) clearTimeout(timeoutId);
 			timeoutId = setTimeout(() => {
 				const viewport = getViewportDimensions();
 				const breakpoints = getBreakpoints(viewport.width);
@@ -187,7 +191,7 @@ export const useResponsive = (): ResponsiveState => {
 		}
 
 		return () => {
-			clearTimeout(timeoutId);
+			clearTimeout(timeoutId ?? undefined);
 
 			if (typeof window !== "undefined") {
 				window.removeEventListener("resize", updateState);
@@ -245,8 +249,8 @@ const _getOptimalCanvasSize = (
 	};
 };
 
-// Touch gesture utilities
-const _useTouchGestures = () => {
+// Touch gesture utilities (placeholder; intentionally unused)
+const _createTouchHandlers = () => {
 	const [gestureState, setGestureState] = useState({
 		isSwipeEnabled: false,
 		swipeDirection: null as "left" | "right" | "up" | "down" | null,

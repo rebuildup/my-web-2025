@@ -93,10 +93,8 @@ export const useAccessibility = () => {
 
 	// Update accessibility state when media queries change
 	useEffect(() => {
-		const mediaQueries = [
-			window.matchMedia("(prefers-reduced-motion: reduce)"),
-			window.matchMedia("(prefers-contrast: high)"),
-		];
+		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+		const highContrast = window.matchMedia("(prefers-contrast: high)");
 
 		const updateState = () => {
 			setState((prev) => ({
@@ -105,18 +103,12 @@ export const useAccessibility = () => {
 			}));
 		};
 
-		mediaQueries.forEach((mq) => {
-			if (mq && typeof mq.addEventListener === "function") {
-				mq.addEventListener("change", updateState);
-			}
-		});
+		reducedMotion.addEventListener("change", updateState);
+		highContrast.addEventListener("change", updateState);
 
 		return () => {
-			mediaQueries.forEach((mq) => {
-				if (mq && typeof mq.removeEventListener === "function") {
-					mq.removeEventListener("change", updateState);
-				}
-			});
+			reducedMotion.removeEventListener("change", updateState);
+			highContrast.removeEventListener("change", updateState);
 		};
 	}, []);
 
@@ -430,8 +422,8 @@ export const useFocusManagement = (
 	};
 };
 
-// Skip link functionality
-const _useSkipLinks = () => {
+// Skip link functionality (placeholder; intentionally unused)
+const _createSkipLinks = () => {
 	const skipToContent = useCallback((targetId: string) => {
 		const target = document.getElementById(targetId);
 		if (target) {
