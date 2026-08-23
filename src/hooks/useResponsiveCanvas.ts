@@ -3,7 +3,7 @@
  * Task 2.1: プレイグラウンドのレスポンシブ対応 - 画面サイズに応じたキャンバスサイズ調整
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useResponsive } from "./useResponsive";
 
 export interface CanvasDimensions {
@@ -45,20 +45,14 @@ export const useResponsiveCanvas = (
 	const defaultRef = useRef<HTMLElement | null>(null);
 	const activeRef = containerRef || defaultRef;
 
-	// Track container size in state to avoid React Compiler issues with ref.current access
+	// Container size is held in state only because the ResizeObserver
+	// callback needs to trigger a re-render when the box changes. It is
+	// derived, not a source of truth — `dimensions` is recomputed inline
+	// from this plus the latest responsive snapshot.
 	const [containerSize, setContainerSize] = useState<{
 		width: number;
 		height: number;
 	} | null>(null);
-
-	const [dimensions, setDimensions] = useState<CanvasDimensions>({
-		width: 800,
-		height: 600,
-		aspectRatio: 4 / 3,
-		pixelRatio: 1,
-		displayWidth: 800,
-		displayHeight: 600,
-	});
 
 	const calculateDimensions = useCallback(
 		(containerSize?: { width: number; height: number }): CanvasDimensions => {
@@ -156,67 +150,31 @@ export const useResponsiveCanvas = (
 		],
 	);
 
-	// Update container size and dimensions when responsive state changes
+	// Derive `dimensions` inline from the latest `containerSize` and the
+	// latest `calculateDimensions` closure. Recomputed whenever either
+	// changes (viewport resize re-creates `calculateDimensions`, observer
+	// updates `containerSize`). Replaces the previous "update dimensions"
+	// effect (P4 value-reaction) with a pure derivation.
+	const dimensions = useMemo<CanvasDimensions>(
+		() => calculateDimensions(containerSize ?? undefined),
+		[calculateDimensions, containerSize],
+	);
+
+	// Single source of `containerSize` updates: the ResizeObserver
+	// subscription below. Cleanup disconnects the observer. When the API
+	// or the ref is unavailable, there is nothing to clean up — the
+	// dimensions fall back to viewport-based sizing.
 	useEffect(() => {
-		// Update container size inline to avoid React Compiler issues with ref.current
-		// access in useCallback dependencies
-		const currentRef = activeRef?.current;
-		if (!currentRef) {
-			setContainerSize(null);
-			return;
-		}
-
-		// Extract conditional logic outside try/catch to satisfy React Compiler
-		let rect: DOMRect | null = null;
-		try {
-			rect = currentRef.getBoundingClientRect();
-		} catch (error) {
-			// Fallback to null if getBoundingClientRect fails
-			console.warn("Failed to get container dimensions:", error);
-			setContainerSize(null);
-			return;
-		}
-
-		// Conditional logic outside try/catch block
-		const hasValidDimensions = rect.width > 0 && rect.height > 0;
-		if (hasValidDimensions) {
-			setContainerSize({ width: rect.width, height: rect.height });
-		} else {
-			setContainerSize(null);
-		}
-		// activeRef is stable, so we can safely include it in dependencies
-		// React Compiler handles ref.current access within useEffect correctly
-	}, [activeRef, calculateDimensions]);
-
-	// Update dimensions when container size or responsive state changes
-	useEffect(() => {
-		const newDimensions = calculateDimensions(containerSize ?? undefined);
-		setDimensions((prevDimensions) => {
-			// Only update if dimensions actually changed
-			if (
-				prevDimensions.width === newDimensions.width &&
-				prevDimensions.height === newDimensions.height &&
-				prevDimensions.pixelRatio === newDimensions.pixelRatio
-			) {
-				return prevDimensions;
-			}
-			return newDimensions;
-		});
-	}, [calculateDimensions, containerSize]);
-
-	// Observe container size changes with ResizeObserver
-	useEffect(() => {
-		const currentRef = activeRef?.current;
-		if (!currentRef || typeof ResizeObserver === "undefined") {
+		const el = activeRef?.current;
+		if (!el || typeof ResizeObserver === "undefined") {
 			return;
 		}
 
 		const resizeObserver = new ResizeObserver(() => {
-			// Update container size inline to avoid React Compiler issues
 			// Extract conditional logic outside try/catch to satisfy React Compiler
 			let rect: DOMRect | null = null;
 			try {
-				rect = currentRef.getBoundingClientRect();
+				rect = el.getBoundingClientRect();
 			} catch (error) {
 				// Fallback to null if getBoundingClientRect fails
 				console.warn("Failed to get container dimensions:", error);
@@ -233,13 +191,11 @@ export const useResponsiveCanvas = (
 			}
 		});
 
-		resizeObserver.observe(currentRef);
+		resizeObserver.observe(el);
 
 		return () => {
 			resizeObserver.disconnect();
 		};
-		// activeRef is stable, so we can safely include it in dependencies
-		// React Compiler handles ref.current access within useEffect correctly
 	}, [activeRef]);
 
 	// Setup canvas with proper dimensions and pixel ratio
