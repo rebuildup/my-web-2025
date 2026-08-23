@@ -238,27 +238,29 @@ export function useDataManagerActions(): UseDataManagerActions {
 		}
 
 		setIsLoading(true);
-		const response = await fetch(
-			`/api/admin/content?id=${id}&type=${selectedContentType}`,
-			{
-				method: "DELETE",
-			},
-		).catch((error) => {
-			console.error("Error deleting item:", error);
-			setIsLoading(false);
-			return null;
-		});
-		if (!response) return;
+		try {
+			const response = await fetch(
+				`/api/admin/content?id=${id}&type=${selectedContentType}`,
+				{
+					method: "DELETE",
+				},
+			).catch((error) => {
+				console.error("Error deleting item:", error);
+				return null;
+			});
+			if (!response) return;
 
-		if (response.ok) {
-			await loadContentItems(selectedContentType);
-			if (selectedItem?.id === id) {
-				setSelectedItem(null);
+			if (response.ok) {
+				await loadContentItems(selectedContentType);
+				if (selectedItem?.id === id) {
+					setSelectedItem(null);
+				}
+			} else {
+				console.error("Failed to delete item");
 			}
-		} else {
-			console.error("Failed to delete item");
+		} finally {
+			setIsLoading(false);
 		}
-		setIsLoading(false);
 	};
 
 	const handleCancel = () => {
@@ -278,43 +280,45 @@ export function useDataManagerActions(): UseDataManagerActions {
 		}
 
 		setIsLoading(true);
-		console.log("Fixing thumbnails...");
-		const response = await fetch("/api/admin/fix-thumbnails", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		}).catch((error) => {
-			console.error("Error fixing thumbnails:", error);
-			alert(
-				isClient
-					? `エラーが発生しました: ${error instanceof Error ? error.message : "Unknown error"}`
-					: `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
-			);
+		try {
+			console.log("Fixing thumbnails...");
+			const response = await fetch("/api/admin/fix-thumbnails", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}).catch((error) => {
+				console.error("Error fixing thumbnails:", error);
+				alert(
+					isClient
+						? `エラーが発生しました: ${error instanceof Error ? error.message : "Unknown error"}`
+						: `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
+				);
+				return null;
+			});
+			if (!response) return;
+
+			const result = await response.json();
+			console.log("Fix thumbnails result:", result);
+
+			if (response.ok) {
+				alert(
+					isClient
+						? `✓ ${result.fixedItems?.length || 0}個のアイテムのサムネイルを修復しました`
+						: `✓ Fixed thumbnails for ${result.fixedItems?.length || 0} items`,
+				);
+				await loadContentItems(selectedContentType, true);
+			} else {
+				console.error("Failed to fix thumbnails:", result);
+				alert(
+					isClient
+						? `サムネイル修復に失敗しました: ${result.error}`
+						: `Failed to fix thumbnails: ${result.error}`,
+				);
+			}
+		} finally {
 			setIsLoading(false);
-			return null;
-		});
-		if (!response) return;
-
-		const result = await response.json();
-		console.log("Fix thumbnails result:", result);
-
-		if (response.ok) {
-			alert(
-				isClient
-					? `✓ ${result.fixedItems?.length || 0}個のアイテムのサムネイルを修復しました`
-					: `✓ Fixed thumbnails for ${result.fixedItems?.length || 0} items`,
-			);
-			await loadContentItems(selectedContentType, true);
-		} else {
-			console.error("Failed to fix thumbnails:", result);
-			alert(
-				isClient
-					? `サムネイル修復に失敗しました: ${result.error}`
-					: `Failed to fix thumbnails: ${result.error}`,
-			);
 		}
-		setIsLoading(false);
 	};
 
 	return {
