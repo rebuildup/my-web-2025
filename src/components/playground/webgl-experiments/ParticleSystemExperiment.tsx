@@ -34,10 +34,8 @@ export function ParticleSystemExperiment({
 	const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 	const particlesRef = useRef<THREE.Points | null>(null);
 	const animationRef = useRef<number | null>(null);
-	const animateRef = useRef<(() => void) | undefined>(undefined);
 	const clockRef = useRef<THREE.Clock>(new THREE.Clock());
 	const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
-	const isActiveRef = useRef(false);
 
 	const [controls, setControls] = useState<ParticleControls>({
 		particleCount:
@@ -215,7 +213,13 @@ export function ParticleSystemExperiment({
 		const particles = new THREE.Points(geometry, material);
 		particlesRef.current = particles;
 		sceneRef.current.add(particles);
-	}, [controls, createParticleTexture, getParticleColor]);
+	}, [
+		controls.particleCount,
+		controls.colorMode,
+		controls.size,
+		createParticleTexture,
+		getParticleColor,
+	]);
 
 	// Initialize Three.js scene
 	const initializeScene = useCallback(() => {
@@ -397,12 +401,7 @@ export function ParticleSystemExperiment({
 
 	// Animation loop
 	const animate = useCallback(() => {
-		if (
-			!isActiveRef.current ||
-			!rendererRef.current ||
-			!sceneRef.current ||
-			!cameraRef.current
-		) {
+		if (!rendererRef.current || !sceneRef.current || !cameraRef.current) {
 			return;
 		}
 
@@ -451,20 +450,8 @@ export function ParticleSystemExperiment({
 			performanceRef.current.lastTime = currentTime;
 		}
 
-		if (animateRef.current) {
-			animationRef.current = requestAnimationFrame(animateRef.current);
-		}
+		animationRef.current = requestAnimationFrame(animate);
 	}, [updateParticles, onPerformanceUpdate]);
-
-	// Update animate ref when it changes
-	useEffect(() => {
-		animateRef.current = animate;
-	}, [animate]);
-
-	// Update isActive ref when it changes
-	useEffect(() => {
-		isActiveRef.current = isActive;
-	}, [isActive]);
 
 	// Handle window resize
 	const handleResize = useCallback(() => {
@@ -478,13 +465,18 @@ export function ParticleSystemExperiment({
 		rendererRef.current.setSize(width, height);
 	}, []);
 
-	// Initialize scene when component becomes active
+	// Initialize scene when component becomes active, and start/stop the RAF chain
+	// on isActive transitions. Single effect, single cleanup — replaces the previous
+	// two-effect split (init + RAF toggle) so the RAF is always cancelled before
+	// a fresh chain is scheduled.
 	useEffect(() => {
 		if (isActive && !isInitialized) {
 			const success = initializeScene();
-			if (success && animateRef.current) {
-				animationRef.current = requestAnimationFrame(animateRef.current);
+			if (success) {
+				animationRef.current = requestAnimationFrame(animate);
 			}
+		} else if (isActive && isInitialized) {
+			animationRef.current = requestAnimationFrame(animate);
 		}
 
 		return () => {
@@ -493,19 +485,7 @@ export function ParticleSystemExperiment({
 				animationRef.current = null;
 			}
 		};
-	}, [isActive, isInitialized, initializeScene]);
-
-	// Handle animation state changes
-	useEffect(() => {
-		if (isActive && animateRef.current) {
-			animationRef.current = requestAnimationFrame(animateRef.current);
-		} else if (!isActive && animationRef.current) {
-			if (animationRef.current) {
-				cancelAnimationFrame(animationRef.current);
-				animationRef.current = null;
-			}
-		}
-	}, [isActive]);
+	}, [isActive, isInitialized, initializeScene, animate]);
 
 	// Update particle system when controls change
 	useEffect(() => {
