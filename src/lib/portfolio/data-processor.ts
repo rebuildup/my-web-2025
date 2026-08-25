@@ -620,26 +620,25 @@ export class PortfolioDataProcessor {
 			category: item.category,
 			searchableContent,
 		};
-	} /**
-   *
- Find related portfolio items based on tags and category
-   */
+	}
+
+	/**
+	 * Find related portfolio items based on tags and category
+	 */
 	protected async findRelatedItems(
 		item: PortfolioContentItem,
 		allItems: PortfolioContentItem[],
 	): Promise<string[]> {
-		const related = allItems
-			.filter((other) => other.id !== item.id)
-			.map((other) => ({
-				id: other.id,
-				score: this.calculateSimilarityScore(item, other),
-			}))
-			.filter(({ score }) => score > 0.3) // Minimum similarity threshold
-			.sort((a, b) => b.score - a.score)
-			.slice(0, 3) // Top 3 related items
-			.map(({ id }) => id);
-
-		return related;
+		const scored: Array<{ id: string; score: number }> = [];
+		for (const other of allItems) {
+			if (other.id === item.id) continue;
+			const score = this.calculateSimilarityScore(item, other);
+			if (score > 0.3) {
+				scored.push({ id: other.id, score });
+			}
+		}
+		scored.sort((a, b) => b.score - a.score);
+		return scored.slice(0, 3).map(({ id }) => id);
 	}
 
 	/**
@@ -1011,20 +1010,21 @@ export class EnhancedPortfolioDataProcessor extends PortfolioDataProcessor {
 
 		// Auto-fix fixable issues
 		const autoFixableIssues = issues.filter((issue) => issue.autoFixable);
-		for (const issue of autoFixableIssues) {
-			try {
-				await this.autoFixIssue(items, issue);
-				fixedIssues.push(issue);
-			} catch (error) {
-				testLogger.warn(
-					`Failed to auto-fix issue for ${issue.itemId}: ${error}`,
-				);
-			}
-		}
-
-		const remainingIssues = issues.filter(
-			(issue) => !fixedIssues.includes(issue),
+		await Promise.all(
+			autoFixableIssues.map(async (issue) => {
+				try {
+					await this.autoFixIssue(items, issue);
+					fixedIssues.push(issue);
+				} catch (error) {
+					testLogger.warn(
+						`Failed to auto-fix issue for ${issue.itemId}: ${error}`,
+					);
+				}
+			}),
 		);
+
+		const fixedIssueSet = new Set(fixedIssues);
+		const remainingIssues = issues.filter((issue) => !fixedIssueSet.has(issue));
 
 		return {
 			isValid:
@@ -1062,31 +1062,35 @@ export class EnhancedPortfolioDataProcessor extends PortfolioDataProcessor {
 	private async normalizeDataEnhanced(
 		data: EnhancedContentItem[],
 	): Promise<PortfolioContentItem[]> {
-		const normalized: PortfolioContentItem[] = [];
+		const normalized = await Promise.all(
+			data.map(async (item) => {
+				try {
+					return await this.normalizeEnhancedItem(item);
+				} catch (error) {
+					testLogger.error(`Failed to normalize item ${item.id}:`, error);
 
-		for (const item of data) {
-			try {
-				const normalizedItem = await this.normalizeEnhancedItem(item);
-				normalized.push(normalizedItem);
-			} catch (error) {
-				testLogger.error(`Failed to normalize item ${item.id}:`, error);
-
-				if (this.config.enableFallbackMode) {
-					try {
-						const fallbackItem = await this.fallbackNormalizeItem(item);
-						normalized.push(fallbackItem);
-						testLogger.log(`Fallback normalization successful for ${item.id}`);
-					} catch (fallbackError) {
-						testLogger.error(
-							`Fallback normalization also failed for ${item.id}:`,
-							fallbackError,
-						);
+					if (this.config.enableFallbackMode) {
+						try {
+							const fallbackItem = await this.fallbackNormalizeItem(item);
+							testLogger.log(
+								`Fallback normalization successful for ${item.id}`,
+							);
+							return fallbackItem;
+						} catch (fallbackError) {
+							testLogger.error(
+								`Fallback normalization also failed for ${item.id}:`,
+								fallbackError,
+							);
+							return null;
+						}
 					}
+					return null;
 				}
-			}
-		}
-
-		return normalized;
+			}),
+		);
+		return normalized.filter(
+			(item): item is PortfolioContentItem => item !== null,
+		);
 	}
 
 	/**
@@ -1402,9 +1406,10 @@ export class EnhancedPortfolioDataProcessor extends PortfolioDataProcessor {
 	): PortfolioContentItem[] {
 		testLogger.log("Creating minimal valid items as last resort...");
 
-		return rawData
-			.filter((item) => item.id && item.title) // Only items with basic required fields
-			.map((item) => ({
+		const minimalItems: PortfolioContentItem[] = [];
+		for (const item of rawData) {
+			if (!(item.id && item.title)) continue;
+			minimalItems.push({
 				...item,
 				category: "develop",
 				description: item.description || `${item.title}の作品詳細`,
@@ -1435,7 +1440,9 @@ export class EnhancedPortfolioDataProcessor extends PortfolioDataProcessor {
 						`${item.title} ${item.description || ""}`.toLowerCase(),
 				},
 				relatedItems: [],
-			})) as PortfolioContentItem[];
+			});
+		}
+		return minimalItems;
 	}
 
 	/**

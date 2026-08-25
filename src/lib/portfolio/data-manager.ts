@@ -428,9 +428,12 @@ export class PortfolioDataManager {
 		}
 
 		const data = await this.getPortfolioData();
-		const relatedItems = item.relatedItems
-			.map((id: string) => data.find((item) => item.id === id))
-			.filter(Boolean) as PortfolioContentItem[];
+		const itemById = new Map(data.map((d) => [d.id, d]));
+		const relatedItems: PortfolioContentItem[] = [];
+		for (const id of item.relatedItems) {
+			const related = itemById.get(id);
+			if (related) relatedItems.push(related);
+		}
 
 		return relatedItems.slice(0, limit);
 	}

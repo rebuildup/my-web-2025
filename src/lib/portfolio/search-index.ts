@@ -168,6 +168,9 @@ export class PortfolioSearchIndexGenerator {
 
 		const queryTerms = query.toLowerCase().split(/\s+/).filter(Boolean);
 		const results: SearchResult[] = [];
+		const priorityById = new Map(
+			searchIndex.map((item) => [item.id, item.priority] as const),
+		);
 
 		for (const item of searchIndex) {
 			const score = this.calculateSearchScore(queryTerms, item, includeContent);
@@ -190,9 +193,9 @@ export class PortfolioSearchIndexGenerator {
 		// Sort by score (descending) and then by priority
 		return results.sort((a, b) => {
 			if (Math.abs(a.score - b.score) < 0.01) {
-				const itemA = searchIndex.find((item) => item.id === a.id);
-				const itemB = searchIndex.find((item) => item.id === b.id);
-				return (itemB?.priority || 0) - (itemA?.priority || 0);
+				const priorityA = priorityById.get(a.id) ?? 0;
+				const priorityB = priorityById.get(b.id) ?? 0;
+				return priorityB - priorityA;
 			}
 			return b.score - a.score;
 		});
@@ -208,44 +211,54 @@ export class PortfolioSearchIndexGenerator {
 	): number {
 		let score = 0;
 
+		// Precompute lowercase versions once per item to avoid repeated work per term
+		const lowerTitle = item.title.toLowerCase();
+		const lowerCategory = item.category.toLowerCase();
+		const lowerDescription = item.description.toLowerCase();
+		const lowerContent = item.content.toLowerCase();
+		const lowerTechs = item.technologies.map((tech) => tech.toLowerCase());
+		const lowerTags = item.tags.map((tag) => tag.toLowerCase());
+		const techSet = new Set(lowerTechs);
+		const tagSet = new Set(lowerTags);
+
 		for (const term of queryTerms) {
 			// Title match (highest weight)
-			if (item.title.toLowerCase().includes(term)) {
+			if (lowerTitle.includes(term)) {
 				score += 3.0;
 			}
 
 			// Technology exact match (high weight)
-			if (item.technologies.some((tech) => tech.toLowerCase() === term)) {
+			if (techSet.has(term)) {
 				score += 2.5;
 			}
 
 			// Tag exact match (high weight)
-			if (item.tags.some((tag) => tag.toLowerCase() === term)) {
+			if (tagSet.has(term)) {
 				score += 2.0;
 			}
 
 			// Category match
-			if (item.category.toLowerCase().includes(term)) {
+			if (lowerCategory.includes(term)) {
 				score += 1.5;
 			}
 
 			// Description match
-			if (item.description.toLowerCase().includes(term)) {
+			if (lowerDescription.includes(term)) {
 				score += 1.0;
 			}
 
 			// Technology partial match
-			if (item.technologies.some((tech) => tech.toLowerCase().includes(term))) {
+			if (lowerTechs.some((tech) => tech.includes(term))) {
 				score += 0.8;
 			}
 
 			// Tag partial match
-			if (item.tags.some((tag) => tag.toLowerCase().includes(term))) {
+			if (lowerTags.some((tag) => tag.includes(term))) {
 				score += 0.6;
 			}
 
 			// Content match (if enabled)
-			if (includeContent && item.content.toLowerCase().includes(term)) {
+			if (includeContent && lowerContent.includes(term)) {
 				score += 0.4;
 			}
 
@@ -316,7 +329,8 @@ export class PortfolioSearchIndexGenerator {
 	 * Highlight search term in text
 	 */
 	private highlightTerm(text: string, term: string): string {
-		const regex = new RegExp(`(${term})`, "gi");
+		const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		const regex = new RegExp(`(${escaped})`, "gi");
 		return text.replace(regex, "<mark>$1</mark>");
 	}
 
