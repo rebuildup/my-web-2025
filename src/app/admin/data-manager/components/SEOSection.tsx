@@ -52,14 +52,16 @@ function SEOHeader() {
 function OGFields({ seo, inputStyle, labelStyle, onChange }: OGFieldsProps) {
 	return (
 		<div>
-			<label className={labelStyle}>Open Graph Image</label>
-			<input
-				type="url"
-				value={seo?.ogImage || ""}
-				onChange={(e) => onChange("ogImage", e.target.value)}
-				className={inputStyle}
-				placeholder="https://example.com/og-image.png"
-			/>
+			<label className={labelStyle}>
+				Open Graph Image
+				<input
+					type="url"
+					value={seo?.ogImage || ""}
+					onChange={(e) => onChange("ogImage", e.target.value)}
+					className={inputStyle}
+					placeholder="https://example.com/og-image.png"
+				/>
+			</label>
 			<p className="text-xs  mt-1">
 				Recommended size: 1200x630px. Used for Facebook, LinkedIn, etc.
 			</p>
@@ -75,14 +77,16 @@ function TwitterFields({
 }: TwitterFieldsProps) {
 	return (
 		<div>
-			<label className={labelStyle}>Twitter Image</label>
-			<input
-				type="url"
-				value={seo?.twitterImage || ""}
-				onChange={(e) => onChange("twitterImage", e.target.value)}
-				className={inputStyle}
-				placeholder="https://example.com/twitter-image.jpg"
-			/>
+			<label className={labelStyle}>
+				Twitter Image
+				<input
+					type="url"
+					value={seo?.twitterImage || ""}
+					onChange={(e) => onChange("twitterImage", e.target.value)}
+					className={inputStyle}
+					placeholder="https://example.com/twitter-image.jpg"
+				/>
+			</label>
 			<p className="text-xs  mt-1">
 				Recommended size: 1200x600px. Used for Twitter cards.
 			</p>
