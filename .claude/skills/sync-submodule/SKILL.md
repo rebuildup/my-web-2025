@@ -32,13 +32,17 @@ git -C external/<name> checkout master
 ### Add a new submodule
 
 ```
-git submodule add git@github.com:rebuildup/<repo>.git external/<name>
+git submodule add https://github.com/rebuildup/<repo>.git external/<name>
 ```
+
+> Note: HTTPS is the repo convention (matches `.gitmodules`). SSH is no longer used since the rebuildup GitHub login has no SSH key configured. Use HTTPS for all new submodule URLs.
 
 Then:
 1. Add the bridge file `src/app/tools/<name>/page.tsx` (see tool-bridge-auditor for the pattern).
 2. If the new submodule has its own `package.json`, ensure `transpilePackages` in `next.config.ts` covers its `src/`.
 3. Run `bun --bun scripts/install-tools.ts` to install its deps.
+
+> Canonical reference: the existing `external/ui` submodule uses HTTPS — see `.gitmodules`.
 
 ## Constraints
 
