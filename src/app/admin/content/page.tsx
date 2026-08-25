@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Edit2, Plus, RefreshCcw, Trash2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import type { Content } from "@/cms/types/content";
 import { ContentForm } from "@/components/admin/cms";
 import { useCmsResource } from "@/hooks/useCmsResource";
@@ -36,6 +37,14 @@ function formatDate(value?: string | null) {
 	const date = new Date(value);
 	if (Number.isNaN(date.getTime())) return value;
 	return dateFormatter.format(date);
+}
+
+function useFormattedDate(value?: string | null): string {
+	const [formatted, setFormatted] = useState<string>(() => formatDate(value));
+	useEffect(() => {
+		setFormatted(formatDate(value));
+	}, [value]);
+	return formatted;
 }
 
 function formatBytes(bytes: number) {
@@ -113,7 +122,7 @@ function ContentPageHeader({
 	return (
 		<>
 			<nav style={s.breadcrumb}>
-				<a href="/admin" style={{ color: "#0066cc", textDecoration: "none" }}>Admin</a>
+				<Link href="/admin" style={{ color: "#0066cc", textDecoration: "none" }}>Admin</Link>
 				<span style={{ margin: "0 6px" }}>/</span>
 				<span style={{ color: "#000" }}>コンテンツ管理</span>
 			</nav>
@@ -196,6 +205,7 @@ function ContentTableRow({
 	onDelete: (content: Content) => void;
 }) {
 	const thumb = getThumbnailUrl(content);
+	const updatedAtLabel = useFormattedDate(content.updatedAt);
 	return (
 		<tr>
 			<td style={s.td}>🌐</td>
@@ -215,7 +225,7 @@ function ContentTableRow({
 			<td style={s.td}>
 				<span style={s.chip}>{content.status ?? "draft"}</span>
 			</td>
-			<td style={{ ...s.td, fontSize: "0.8rem", color: "#666" }}>{formatDate(content.updatedAt as string)}</td>
+			<td style={{ ...s.td, fontSize: "0.8rem", color: "#666" }}>{updatedAtLabel}</td>
 			<td style={s.td}><span style={s.idText}>{content.id}</span></td>
 			<td style={{ ...s.td, textAlign: "right" }}>
 				<button
@@ -484,29 +494,35 @@ export default function AdminContentPage() {
 
 	const handleCreate = useCallback(async (payload: Partial<Content>) => {
 		setSubmitting(true);
-		const res = await fetch("/api/cms/contents", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(payload),
-		});
-		setSubmitting(false);
-		if (res.ok) {
-			setIsCreateOpen(false);
-			await handleRefresh();
+		try {
+			const res = await fetch("/api/cms/contents", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+			if (res.ok) {
+				setIsCreateOpen(false);
+				await handleRefresh();
+			}
+		} finally {
+			setSubmitting(false);
 		}
 	}, [handleRefresh]);
 
 	const handleUpdate = useCallback(async (payload: Partial<Content>) => {
 		setSubmitting(true);
-		const res = await fetch("/api/cms/contents", {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(payload),
-		});
-		setSubmitting(false);
-		if (res.ok) {
-			setEditTarget(null);
-			await handleRefresh();
+		try {
+			const res = await fetch("/api/cms/contents", {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+			if (res.ok) {
+				setEditTarget(null);
+				await handleRefresh();
+			}
+		} finally {
+			setSubmitting(false);
 		}
 	}, [handleRefresh]);
 

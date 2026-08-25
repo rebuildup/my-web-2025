@@ -5,6 +5,7 @@ import {
 	useCallback,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 	type ReactNode,
 } from "react";
@@ -50,6 +51,16 @@ const STATUS_OPTIONS: StatusFilter[] = [
 	"published",
 	"draft",
 	"archived",
+];
+
+const SORT_OPTIONS: SimpleSelectOption[] = [
+	{ value: "updatedAt", label: "更新日" },
+	{ value: "createdAt", label: "作成日" },
+];
+
+const ORDER_OPTIONS: SimpleSelectOption[] = [
+	{ value: "desc", label: "降順" },
+	{ value: "asc", label: "昇順" },
 ];
 
 const severityPalette: Record<
@@ -295,6 +306,14 @@ function formatDate(value?: string) {
 	}
 }
 
+function useFormattedDate(value?: string): string {
+	const [formatted, setFormatted] = useState<string>(() => formatDate(value));
+	useEffect(() => {
+		setFormatted(formatDate(value));
+	}, [value]);
+	return formatted;
+}
+
 interface MarkdownFiltersProps {
 	searchQuery: string;
 	onSearchChange: (value: string) => void;
@@ -316,15 +335,6 @@ function MarkdownFilters({
 	statusFilter,
 	onStatusFilterChange,
 }: MarkdownFiltersProps) {
-	const sortOptions: SimpleSelectOption[] = [
-		{ value: "updatedAt", label: "更新日" },
-		{ value: "createdAt", label: "作成日" },
-	];
-	const orderOptions: SimpleSelectOption[] = [
-		{ value: "desc", label: "降順" },
-		{ value: "asc", label: "昇順" },
-	];
-
 	return (
 		<div style={{ display: "grid", gap: 12 }}>
 			<div
@@ -357,7 +367,7 @@ function MarkdownFilters({
 						size="small"
 						label="ソート"
 						value={sortField}
-						options={sortOptions}
+						options={SORT_OPTIONS}
 						onChange={(value) => onSortFieldChange(value as SortField)}
 						fullWidth
 					/>
@@ -367,7 +377,7 @@ function MarkdownFilters({
 						size="small"
 						label="順序"
 						value={sortOrder}
-						options={orderOptions}
+						options={ORDER_OPTIONS}
 						onChange={(value) => onSortOrderChange(value as SortOrder)}
 						fullWidth
 					/>
@@ -413,6 +423,8 @@ function MarkdownTableRow({
 			: status === "archived"
 				? "default"
 				: "warning";
+	const updatedAtLabel = useFormattedDate(page.updatedAt);
+	const createdAtLabel = useFormattedDate(page.createdAt);
 
 	return (
 		<tr>
@@ -436,8 +448,8 @@ function MarkdownTableRow({
 			<td style={tdStyle}>
 				<span style={chipStyle(statusVariant)}>{status}</span>
 			</td>
-			<td style={tdStyle}>{formatDate(page.updatedAt)}</td>
-			<td style={tdStyle}>{formatDate(page.createdAt)}</td>
+			<td style={tdStyle}>{updatedAtLabel}</td>
+			<td style={tdStyle}>{createdAtLabel}</td>
 			<td style={tdStyle}>
 				<span style={{ fontSize: 12, color: adminColor.textSecondary }}>
 					{page.slug}
@@ -579,19 +591,24 @@ function CreateMarkdownDialog({
 	onSubmit,
 	isSubmitting,
 }: CreateMarkdownDialogProps) {
-	if (!open) return null;
+	const dialogRef = useRef<HTMLDialogElement>(null);
+	useEffect(() => {
+		const dialog = dialogRef.current;
+		if (!dialog) return;
+		if (open && !dialog.open) {
+			dialog.showModal();
+		} else if (!open && dialog.open) {
+			dialog.close();
+		}
+	}, [open]);
 	return (
-		<div
-			role="dialog"
-			aria-modal="true"
+		<dialog
+			ref={dialogRef}
 			aria-label="新しいMarkdownページを作成"
 			style={dialogBackdropStyle}
-			onClick={onClose}
+			onClose={onClose}
 		>
-			<div
-				style={{ ...dialogSurfaceBase, width: "min(720px, calc(100vw - 32px))" }}
-				onClick={(event) => event.stopPropagation()}
-			>
+			<div style={{ ...dialogSurfaceBase, width: "min(720px, calc(100vw - 32px))" }}>
 				<header style={dialogHeaderStyle}>新しいMarkdownページを作成</header>
 				<div style={dialogBodyStyle}>
 					<MarkdownForm
@@ -602,7 +619,7 @@ function CreateMarkdownDialog({
 					/>
 				</div>
 			</div>
-		</div>
+		</dialog>
 	);
 }
 
@@ -619,31 +636,39 @@ function EditMarkdownDialog({
 	onSubmit,
 	isSubmitting,
 }: EditMarkdownDialogProps) {
-	if (!page) return null;
+	const dialogRef = useRef<HTMLDialogElement>(null);
+	useEffect(() => {
+		const dialog = dialogRef.current;
+		if (!dialog) return;
+		const shouldOpen = page !== null;
+		if (shouldOpen && !dialog.open) {
+			dialog.showModal();
+		} else if (!shouldOpen && dialog.open) {
+			dialog.close();
+		}
+	}, [page]);
 	return (
-		<div
-			role="dialog"
-			aria-modal="true"
+		<dialog
+			ref={dialogRef}
 			aria-label="Markdownページを編集"
 			style={dialogBackdropStyle}
-			onClick={onClose}
+			onClose={onClose}
 		>
-			<div
-				style={{ ...dialogSurfaceBase, width: "min(720px, calc(100vw - 32px))" }}
-				onClick={(event) => event.stopPropagation()}
-			>
+			<div style={{ ...dialogSurfaceBase, width: "min(720px, calc(100vw - 32px))" }}>
 				<header style={dialogHeaderStyle}>Markdownページを編集</header>
 				<div style={dialogBodyStyle}>
-					<MarkdownForm
-						mode="edit"
-						initialData={page}
-						onSubmit={onSubmit}
-						onCancel={onClose}
-						isLoading={isSubmitting}
-					/>
+					{page && (
+						<MarkdownForm
+							mode="edit"
+							initialData={page}
+							onSubmit={onSubmit}
+							onCancel={onClose}
+							isLoading={isSubmitting}
+						/>
+					)}
 				</div>
 			</div>
-		</div>
+		</dialog>
 	);
 }
 
@@ -653,19 +678,24 @@ interface MarkdownStatsDialogProps {
 }
 
 function MarkdownStatsDialog({ dialog, onClose }: MarkdownStatsDialogProps) {
-	if (!dialog.open) return null;
+	const dialogRef = useRef<HTMLDialogElement>(null);
+	useEffect(() => {
+		const dlg = dialogRef.current;
+		if (!dlg) return;
+		if (dialog.open && !dlg.open) {
+			dlg.showModal();
+		} else if (!dialog.open && dlg.open) {
+			dlg.close();
+		}
+	}, [dialog.open]);
 	return (
-		<div
-			role="dialog"
-			aria-modal="true"
+		<dialog
+			ref={dialogRef}
 			aria-label="コンテンツ統計"
 			style={dialogBackdropStyle}
-			onClick={onClose}
+			onClose={onClose}
 		>
-			<div
-				style={{ ...dialogSurfaceBase, width: "min(640px, calc(100vw - 32px))" }}
-				onClick={(event) => event.stopPropagation()}
-			>
+			<div style={{ ...dialogSurfaceBase, width: "min(640px, calc(100vw - 32px))" }}>
 				<header style={dialogHeaderStyle}>コンテンツ統計</header>
 				<div style={{ ...dialogBodyStyle, display: "grid", gap: 16, paddingTop: 8 }}>
 					{dialog.page && (
@@ -734,7 +764,7 @@ function MarkdownStatsDialog({ dialog, onClose }: MarkdownStatsDialogProps) {
 					)}
 				</div>
 			</div>
-		</div>
+		</dialog>
 	);
 }
 
@@ -856,33 +886,34 @@ export default function AdminMarkdownManager() {
 	const handleCreate = useCallback(
 		async (payload: Partial<MarkdownPage>) => {
 			setIsSubmitting(true);
-			const response = await fetch("/api/cms/markdown", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(payload),
-			}).catch((networkError: unknown) => {
-				console.error("[Markdown] create failed", networkError);
-				return null;
-			});
-			if (!response) {
-				showSnackbar("Markdownページの作成に失敗しました", "error");
+			try {
+				const response = await fetch("/api/cms/markdown", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
+				}).catch((networkError: unknown) => {
+					console.error("[Markdown] create failed", networkError);
+					return null;
+				});
+				if (!response) {
+					showSnackbar("Markdownページの作成に失敗しました", "error");
+					return;
+				}
+				if (!response.ok) {
+					const errorData = await response.json().catch(() => ({}));
+					const errorMessage =
+						(errorData as { error?: string }).error ||
+						"Markdownページの作成に失敗しました";
+					console.error("[Markdown] create failed", errorMessage);
+					showSnackbar(errorMessage, "error");
+					return;
+				}
+				showSnackbar("Markdownページを作成しました", "success");
+				setIsCreateDialogOpen(false);
+				await refreshPages();
+			} finally {
 				setIsSubmitting(false);
-				return;
 			}
-			if (!response.ok) {
-				const errorData = await response.json().catch(() => ({}));
-				const errorMessage =
-					(errorData as { error?: string }).error ||
-					"Markdownページの作成に失敗しました";
-				console.error("[Markdown] create failed", errorMessage);
-				showSnackbar(errorMessage, "error");
-				setIsSubmitting(false);
-				return;
-			}
-			showSnackbar("Markdownページを作成しました", "success");
-			setIsCreateDialogOpen(false);
-			await refreshPages();
-			setIsSubmitting(false);
 		},
 		[refreshPages, showSnackbar],
 	);
@@ -890,33 +921,34 @@ export default function AdminMarkdownManager() {
 	const handleUpdate = useCallback(
 		async (payload: Partial<MarkdownPage>) => {
 			setIsSubmitting(true);
-			const response = await fetch("/api/cms/markdown", {
-				method: "PUT",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(payload),
-			}).catch((networkError: unknown) => {
-				console.error("[Markdown] update failed", networkError);
-				return null;
-			});
-			if (!response) {
-				showSnackbar("Markdownページの更新に失敗しました", "error");
+			try {
+				const response = await fetch("/api/cms/markdown", {
+					method: "PUT",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
+				}).catch((networkError: unknown) => {
+					console.error("[Markdown] update failed", networkError);
+					return null;
+				});
+				if (!response) {
+					showSnackbar("Markdownページの更新に失敗しました", "error");
+					return;
+				}
+				if (!response.ok) {
+					const errorData = await response.json().catch(() => ({}));
+					const errorMessage =
+						(errorData as { error?: string }).error ||
+						"Markdownページの更新に失敗しました";
+					console.error("[Markdown] update failed", errorMessage);
+					showSnackbar(errorMessage, "error");
+					return;
+				}
+				showSnackbar("Markdownページを更新しました", "success");
+				setEditTarget(null);
+				await refreshPages();
+			} finally {
 				setIsSubmitting(false);
-				return;
 			}
-			if (!response.ok) {
-				const errorData = await response.json().catch(() => ({}));
-				const errorMessage =
-					(errorData as { error?: string }).error ||
-					"Markdownページの更新に失敗しました";
-				console.error("[Markdown] update failed", errorMessage);
-				showSnackbar(errorMessage, "error");
-				setIsSubmitting(false);
-				return;
-			}
-			showSnackbar("Markdownページを更新しました", "success");
-			setEditTarget(null);
-			await refreshPages();
-			setIsSubmitting(false);
 		},
 		[refreshPages, showSnackbar],
 	);

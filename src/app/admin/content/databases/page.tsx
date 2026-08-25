@@ -6,6 +6,7 @@ import {
 	useCallback,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 } from "react";
 import {
@@ -321,6 +322,12 @@ function DatabaseCard({
 	onEdit: (database: DatabaseInfo) => void;
 }) {
 	const isActive = database.isActive;
+	const [updatedAtLabel, setUpdatedAtLabel] = useState<string>(
+		database.updatedAt,
+	);
+	useEffect(() => {
+		setUpdatedAtLabel(new Date(database.updatedAt).toLocaleString("ja-JP"));
+	}, [database.updatedAt]);
 
 	return (
 		<section style={cardStyle(isActive)}>
@@ -362,7 +369,7 @@ function DatabaseCard({
 				<InfoPill
 					icon={<HardDrive size={16} />}
 					label="更新日"
-					value={new Date(database.updatedAt).toLocaleString("ja-JP")}
+					value={updatedAtLabel}
 				/>
 				<InfoPill
 					icon={<Database size={16} />}
@@ -513,19 +520,24 @@ function DatabaseModals({
 	onSubmit: (payload: Partial<DatabaseInfo>) => void | Promise<void>;
 	isSubmitting: boolean;
 }) {
-	if (!isEditDialogOpen) return null;
+	const dialogRef = useRef<HTMLDialogElement>(null);
+	useEffect(() => {
+		const dialog = dialogRef.current;
+		if (!dialog) return;
+		if (isEditDialogOpen && !dialog.open) {
+			dialog.showModal();
+		} else if (!isEditDialogOpen && dialog.open) {
+			dialog.close();
+		}
+	}, [isEditDialogOpen]);
 	return (
-		<div
-			role="dialog"
-			aria-modal="true"
+		<dialog
+			ref={dialogRef}
 			aria-label="データベース情報を編集"
 			style={dialogBackdropStyle}
-			onClick={onClose}
+			onClose={onClose}
 		>
-			<div
-				style={dialogSurfaceStyle}
-				onClick={(event) => event.stopPropagation()}
-			>
+			<div style={dialogSurfaceStyle}>
 				<header style={dialogHeaderStyle}>データベース情報を編集</header>
 				<div style={dialogBodyStyle}>
 					{editingDatabase && (
@@ -538,7 +550,7 @@ function DatabaseModals({
 					)}
 				</div>
 			</div>
-		</div>
+		</dialog>
 	);
 }
 
@@ -648,33 +660,35 @@ export default function AdminDatabaseManager() {
 	const handleCreate = useCallback(
 		async (payload: Partial<DatabaseInfo>) => {
 			setIsSubmitting(true);
-			const response = await fetch("/api/cms/databases", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ action: "create", ...payload }),
-			});
-			if (!response.ok) {
-				let errMsg = "データベースの作成に失敗しました";
-				try {
-					const err = await response.json();
-					if (err.error) {
-						errMsg = err.error;
+			try {
+				const response = await fetch("/api/cms/databases", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ action: "create", ...payload }),
+				});
+				if (!response.ok) {
+					let errMsg = "データベースの作成に失敗しました";
+					try {
+						const err = await response.json();
+						if (err.error) {
+							errMsg = err.error;
+						}
+					} catch {
+						// ignore parse errors
 					}
-				} catch {
-					// ignore parse errors
+					console.error("[Database] create failed", errMsg);
+					showSnackbar(errMsg, "error");
+					return;
 				}
-				console.error("[Database] create failed", errMsg);
-				showSnackbar(errMsg, "error");
+				showSnackbar("データベースを作成しました", "success");
+				const created = await response.json();
+				await reloadData();
+				if (created?.id) {
+					await fetchStats(created.id);
+				}
+			} finally {
 				setIsSubmitting(false);
-				return;
 			}
-			showSnackbar("データベースを作成しました", "success");
-			const created = await response.json();
-			await reloadData();
-			if (created?.id) {
-				await fetchStats(created.id);
-			}
-			setIsSubmitting(false);
 		},
 		[fetchStats, reloadData, showSnackbar],
 	);
@@ -682,31 +696,33 @@ export default function AdminDatabaseManager() {
 	const handleEdit = useCallback(
 		async (payload: Partial<DatabaseInfo>) => {
 			setIsSubmitting(true);
-			const response = await fetch("/api/cms/databases", {
-				method: "PUT",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(payload),
-			});
-			if (!response.ok) {
-				let errMsg = "データベースの更新に失敗しました";
-				try {
-					const err = await response.json();
-					if (err.error) {
-						errMsg = err.error;
+			try {
+				const response = await fetch("/api/cms/databases", {
+					method: "PUT",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
+				});
+				if (!response.ok) {
+					let errMsg = "データベースの更新に失敗しました";
+					try {
+						const err = await response.json();
+						if (err.error) {
+							errMsg = err.error;
+						}
+					} catch {
+						// ignore parse errors
 					}
-				} catch {
-					// ignore parse errors
+					console.error("[Database] update failed", errMsg);
+					showSnackbar(errMsg, "error");
+					return;
 				}
-				console.error("[Database] update failed", errMsg);
-				showSnackbar(errMsg, "error");
+				showSnackbar("データベース情報を更新しました", "success");
+				setEditingDatabase(null);
+				setIsEditDialogOpen(false);
+				await reloadData();
+			} finally {
 				setIsSubmitting(false);
-				return;
 			}
-			showSnackbar("データベース情報を更新しました", "success");
-			setEditingDatabase(null);
-			setIsEditDialogOpen(false);
-			await reloadData();
-			setIsSubmitting(false);
 		},
 		[reloadData, showSnackbar],
 	);

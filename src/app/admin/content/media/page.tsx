@@ -7,6 +7,7 @@ import {
 	useCallback,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 } from "react";
 import {
@@ -640,32 +641,36 @@ function MediaDialogs({
 	onConfirmDelete,
 	onCloseSnackbar,
 }: MediaDialogsProps) {
+	const dialogRef = useRef<HTMLDialogElement>(null);
+	useEffect(() => {
+		const dialog = dialogRef.current;
+		if (!dialog) return;
+		if (isUploadDialogOpen && !dialog.open) {
+			dialog.showModal();
+		} else if (!isUploadDialogOpen && dialog.open) {
+			dialog.close();
+		}
+	}, [isUploadDialogOpen]);
 	return (
 		<>
-			{isUploadDialogOpen && (
-				<div
-					role="dialog"
-					aria-modal="true"
-					aria-label="メディアをアップロード"
-					style={dialogBackdropStyle}
-					onClick={onCloseUpload}
-				>
-					<div
-						style={dialogSurfaceStyle}
-						onClick={(event) => event.stopPropagation()}
-					>
-						<header style={dialogHeaderStyle}>メディアをアップロード</header>
-						<div style={dialogBodyStyle}>
-							<MediaUploadForm
-								onSubmit={onUpload}
-								onCancel={onCloseUpload}
-								isLoading={isUploading}
-								contentId={selectedContentId}
-							/>
-						</div>
+			<dialog
+				ref={dialogRef}
+				aria-label="メディアをアップロード"
+				style={dialogBackdropStyle}
+				onClose={onCloseUpload}
+			>
+				<div style={dialogSurfaceStyle}>
+					<header style={dialogHeaderStyle}>メディアをアップロード</header>
+					<div style={dialogBodyStyle}>
+						<MediaUploadForm
+							onSubmit={onUpload}
+							onCancel={onCloseUpload}
+							isLoading={isUploading}
+							contentId={selectedContentId}
+						/>
 					</div>
 				</div>
-			)}
+			</dialog>
 
 			<ConfirmDialog
 				open={Boolean(deleteTarget)}
@@ -736,11 +741,10 @@ export default function AdminMediaManager() {
 		setSnackbar((prev) => ({ ...prev, open: false }));
 	}, []);
 
-	useEffect(() => {
-		if (!selectedContentId && contents && contents.length > 0) {
-			setSelectedContentId(contents[0].id);
-		}
-	}, [contents, selectedContentId]);
+	const effectiveSelectedContentId = useMemo(
+		() => selectedContentId || (contents?.[0]?.id ?? ""),
+		[selectedContentId, contents],
+	);
 
 	const fetchMedia = useCallback(
 		async (contentId: string) => {
@@ -749,53 +753,55 @@ export default function AdminMediaManager() {
 				return;
 			}
 			setMediaLoading(true);
-			const response = await fetch(
-				`${getCmsApiBaseUrl()}/media?contentId=${encodeURIComponent(contentId)}`,
-			);
-			if (!response.ok) {
-				const errMsg = `メディアの取得に失敗しました (${response.status})`;
-				console.error("[Media] fetch failed", errMsg);
-				showSnackbar(errMsg, "error");
-				setMediaItems([]);
-				setMediaLoading(false);
-				return;
-			}
-			const data = (await response.json()) as MediaItem[];
-			const itemsWithPreview = await Promise.all(
-				data.map(async (item) => {
-					if (item.base64) {
-						return {
-							...item,
-							preview: `data:${item.mimeType};base64,${item.base64}`,
-						};
-					}
-					const detailResponse = await fetch(
-						`${getCmsApiBaseUrl()}/media?contentId=${encodeURIComponent(contentId)}&id=${encodeURIComponent(item.id)}&raw=1`,
-					);
-					if (!detailResponse.ok) {
+			try {
+				const response = await fetch(
+					`${getCmsApiBaseUrl()}/media?contentId=${encodeURIComponent(contentId)}`,
+				);
+				if (!response.ok) {
+					const errMsg = `メディアの取得に失敗しました (${response.status})`;
+					console.error("[Media] fetch failed", errMsg);
+					showSnackbar(errMsg, "error");
+					setMediaItems([]);
+					return;
+				}
+				const data = (await response.json()) as MediaItem[];
+				const itemsWithPreview = await Promise.all(
+					data.map(async (item) => {
+						if (item.base64) {
+							return {
+								...item,
+								preview: `data:${item.mimeType};base64,${item.base64}`,
+							};
+						}
+						const detailResponse = await fetch(
+							`${getCmsApiBaseUrl()}/media?contentId=${encodeURIComponent(contentId)}&id=${encodeURIComponent(item.id)}&raw=1`,
+						);
+						if (!detailResponse.ok) {
+							return item;
+						}
+						const detail = await detailResponse.json();
+						if (detail.base64) {
+							return {
+								...item,
+								preview: `data:${detail.mimeType};base64,${detail.base64}`,
+							};
+						}
 						return item;
-					}
-					const detail = await detailResponse.json();
-					if (detail.base64) {
-						return {
-							...item,
-							preview: `data:${detail.mimeType};base64,${detail.base64}`,
-						};
-					}
-					return item;
-				}),
-			);
-			setMediaItems(itemsWithPreview);
-			setMediaLoading(false);
+					}),
+				);
+				setMediaItems(itemsWithPreview);
+			} finally {
+				setMediaLoading(false);
+			}
 		},
 		[showSnackbar],
 	);
 
 	useEffect(() => {
-		if (selectedContentId) {
-			void fetchMedia(selectedContentId);
+		if (effectiveSelectedContentId) {
+			void fetchMedia(effectiveSelectedContentId);
 		}
-	}, [fetchMedia, selectedContentId]);
+	}, [fetchMedia, effectiveSelectedContentId]);
 
 	const handleUpload = useCallback(
 		async (formData: FormData) => {
@@ -806,57 +812,59 @@ export default function AdminMediaManager() {
 				return;
 			}
 			setIsUploading(true);
-			const base64Data = await readFileAsBase64(file);
-			const payload = {
-				contentId,
-				filename: file.name,
-				mimeType: file.type,
-				base64Data,
-				alt: formData.get("alt") || undefined,
-				description: formData.get("description") || undefined,
-				tags: formData
-					.get("tags")
-					?.toString()
-					.split(",")
-					.map((tag) => tag.trim())
-					.filter(Boolean),
-			};
+			try {
+				const base64Data = await readFileAsBase64(file);
+				const payload = {
+					contentId,
+					filename: file.name,
+					mimeType: file.type,
+					base64Data,
+					alt: formData.get("alt") || undefined,
+					description: formData.get("description") || undefined,
+					tags: formData
+						.get("tags")
+						?.toString()
+						.split(",")
+						.map((tag) => tag.trim())
+						.filter(Boolean),
+				};
 
-			const response = await fetch(`${getCmsApiBaseUrl()}/media`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(payload),
-			});
-			if (!response.ok) {
-				let errMsg = "メディアのアップロードに失敗しました";
-				try {
-					const err = await response.json();
-					if (err.error) {
-						errMsg = err.error;
+				const response = await fetch(`${getCmsApiBaseUrl()}/media`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
+				});
+				if (!response.ok) {
+					let errMsg = "メディアのアップロードに失敗しました";
+					try {
+						const err = await response.json();
+						if (err.error) {
+							errMsg = err.error;
+						}
+					} catch {
+						// ignore parse errors
 					}
-				} catch {
-					// ignore parse errors
+					console.error("[Media] upload failed", errMsg);
+					showSnackbar(errMsg, "error");
+					return;
 				}
-				console.error("[Media] upload failed", errMsg);
-				showSnackbar(errMsg, "error");
+				showSnackbar("メディアをアップロードしました", "success");
+				setIsUploadDialogOpen(false);
+				if (contentId === effectiveSelectedContentId) {
+					await fetchMedia(contentId);
+				}
+			} finally {
 				setIsUploading(false);
-				return;
 			}
-			showSnackbar("メディアをアップロードしました", "success");
-			setIsUploadDialogOpen(false);
-			if (contentId === selectedContentId) {
-				await fetchMedia(contentId);
-			}
-			setIsUploading(false);
 		},
-		[fetchMedia, selectedContentId, showSnackbar],
+		[fetchMedia, effectiveSelectedContentId, showSnackbar],
 	);
 
 	const handleDelete = useCallback(
 		async (media: MediaWithPreview) => {
-			if (!selectedContentId) return;
+			if (!effectiveSelectedContentId) return;
 			const response = await fetch(
-				`${getCmsApiBaseUrl()}/media?contentId=${encodeURIComponent(selectedContentId)}&id=${encodeURIComponent(media.id)}`,
+				`${getCmsApiBaseUrl()}/media?contentId=${encodeURIComponent(effectiveSelectedContentId)}&id=${encodeURIComponent(media.id)}`,
 				{ method: "DELETE" },
 			);
 			if (!response.ok) {
@@ -875,9 +883,9 @@ export default function AdminMediaManager() {
 			}
 			showSnackbar("メディアを削除しました", "success");
 			setDeleteTarget(null);
-			await fetchMedia(selectedContentId);
+			await fetchMedia(effectiveSelectedContentId);
 		},
-		[fetchMedia, selectedContentId, showSnackbar],
+		[fetchMedia, effectiveSelectedContentId, showSnackbar],
 	);
 
 	const filteredMedia = useMemo(() => {
@@ -909,7 +917,7 @@ export default function AdminMediaManager() {
 	}, [mediaItems]);
 
 	const selectedContent = contents?.find(
-		(item) => item.id === selectedContentId,
+		(item) => item.id === effectiveSelectedContentId,
 	);
 
 	const totalSize = mediaItems.reduce((acc, item) => acc + (item.size ?? 0), 0);
@@ -917,8 +925,11 @@ export default function AdminMediaManager() {
 	return (
 		<div style={{ display: "grid", gap: 32 }}>
 			<MediaHeader
-				selectedContentId={selectedContentId}
-				onRefresh={() => selectedContentId && void fetchMedia(selectedContentId)}
+				selectedContentId={effectiveSelectedContentId}
+				onRefresh={() =>
+					effectiveSelectedContentId &&
+					void fetchMedia(effectiveSelectedContentId)
+				}
 				onOpenUpload={() => setIsUploadDialogOpen(true)}
 			/>
 
@@ -926,7 +937,7 @@ export default function AdminMediaManager() {
 				<MediaFilters
 					contents={contents}
 					contentsLoading={contentsLoading}
-					selectedContentId={selectedContentId}
+					selectedContentId={effectiveSelectedContentId}
 					searchQuery={searchQuery}
 					tagFilter={tagFilter}
 					uniqueTags={uniqueTags}
@@ -959,7 +970,7 @@ export default function AdminMediaManager() {
 			<MediaDialogs
 				isUploadDialogOpen={isUploadDialogOpen}
 				isUploading={isUploading}
-				selectedContentId={selectedContentId}
+				selectedContentId={effectiveSelectedContentId}
 				deleteTarget={deleteTarget}
 				snackbar={snackbar}
 				onCloseUpload={() => setIsUploadDialogOpen(false)}
