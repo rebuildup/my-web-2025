@@ -6,7 +6,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ImageDebugInfo } from "@/components/debug/ImageDebugInfo";
 import { getCmsApiBaseUrl } from "@/lib/cms-api/config";
 import { getImageUrl } from "@/lib/utils/image-utils";
@@ -44,12 +44,11 @@ export function SafeImage({
 	onLoad,
 	...props
 }: SafeImageProps) {
-	const [hasError, setHasError] = useState(false);
+	const hasErrorRef = useRef(false);
 	const [currentSrc, setCurrentSrc] = useState(() => getImageUrl(src));
 
 	const handleError = useCallback(
 		(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-			// Skip verbose logging for CMS media URLs in development
 			const isCmsMedia = currentSrc?.includes(`${getCmsApiBaseUrl()}/media`);
 			if (
 				process.env.NODE_ENV !== "production" &&
@@ -59,15 +58,15 @@ export function SafeImage({
 				console.warn("SafeImage: Image failed to load:", currentSrc);
 			}
 
-			if (!hasError) {
-				setHasError(true);
+			if (!hasErrorRef.current) {
+				hasErrorRef.current = true;
 				const fallback = fallbackSrc || "/images/placeholder.svg";
 				setCurrentSrc(fallback);
 			}
 
 			onError?.(e);
 		},
-		[currentSrc, hasError, fallbackSrc, onError],
+		[currentSrc, fallbackSrc, onError],
 	);
 
 	const handleLoad = useCallback(

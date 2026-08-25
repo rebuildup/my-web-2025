@@ -28,6 +28,7 @@ export function BookmarkCard({
 
 	useEffect(() => {
 		let cancelled = false;
+		const controller = new AbortController();
 
 		const fetchMetadata = async () => {
 			if (!url) {
@@ -37,14 +38,17 @@ export function BookmarkCard({
 			try {
 				const response = await fetch(
 					`/api/metadata?url=${encodeURIComponent(url)}`,
+					{ signal: controller.signal },
 				);
-				if (!cancelled) {
-					if (response.ok) {
-						const data = (await response.json()) as Metadata;
+				if (cancelled) return;
+				if (response.ok) {
+					const data = (await response.json()) as Metadata;
+					if (!cancelled) {
 						setMetadata(data);
 					}
 				}
 			} catch (error) {
+				if ((error as Error).name === "AbortError") return;
 				console.warn("Failed to fetch metadata:", error);
 			}
 		};
@@ -53,6 +57,7 @@ export function BookmarkCard({
 
 		return () => {
 			cancelled = true;
+			controller.abort();
 		};
 	}, [url]);
 

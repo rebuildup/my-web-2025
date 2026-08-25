@@ -18,6 +18,24 @@ interface SelectProps {
 	"aria-label": string;
 }
 
+const BASE_STYLES =
+	"   focus: focus:ring-offset-2 focus:ring-offset-base  cursor-pointer appearance-none bg-no-repeat bg-right transition-colors";
+
+const SIZE_STYLES = {
+	sm: "px-2 py-1 text-xs pr-6 bg-[length:10px]",
+	md: "px-3 py-2 text-sm pr-8 bg-[length:12px]",
+	lg: "px-4 py-3 pr-10 bg-[length:14px]",
+};
+
+const VARIANT_STYLES = {
+	default:
+		'  bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
+	admin:
+		' hover: bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23ffffff" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
+};
+
+const DISABLED_STYLES = " cursor-not-allowed";
+
 export function Select({
 	value,
 	onChange,
@@ -29,32 +47,14 @@ export function Select({
 	variant = "default",
 	"aria-label": ariaLabel,
 }: SelectProps) {
-	const baseStyles =
-		"   focus: focus:ring-offset-2 focus:ring-offset-base  cursor-pointer appearance-none bg-no-repeat bg-right transition-colors";
-
-	const sizeStyles = {
-		sm: "px-2 py-1 text-xs pr-6 bg-[length:10px]",
-		md: "px-3 py-2 text-sm pr-8 bg-[length:12px]",
-		lg: "px-4 py-3 pr-10 bg-[length:14px]",
-	};
-
-	const variantStyles = {
-		default:
-			'  bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
-		admin:
-			' hover: bg-[url(\'data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23ffffff" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>\')]',
-	};
-
-	const disabledStyles = " cursor-not-allowed";
-
 	const selectClassName = `
- w-full
- ${baseStyles}
- ${sizeStyles[size]}
- ${variantStyles[variant]}
- ${disabled ? disabledStyles : ""}
- ${className}
- `
+	 w-full
+	 ${BASE_STYLES}
+	 ${SIZE_STYLES[size]}
+	 ${VARIANT_STYLES[variant]}
+	 ${disabled ? DISABLED_STYLES : ""}
+	 ${className}
+	 `
 		.trim()
 		.replace(/\s+/g, " ");
 

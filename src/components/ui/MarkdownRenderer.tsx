@@ -13,6 +13,7 @@ import { MarkdownError } from "@/lib/markdown/client";
 import { createContentParser } from "../../lib/markdown/content-parser";
 import type { MediaData } from "../../types/content";
 import { MarkdownErrorBoundary } from "../markdown/FallbackContent";
+import { MarkdownRendererErrorClass } from "./markdown-renderer/error";
 import { fetchMarkdownContent } from "./markdown-renderer/fetch-content";
 import { processMarkdownContent } from "./markdown-renderer/process-content";
 import { useBookmarkCardReplacer } from "./markdown-renderer/use-bookmark-replacer";
@@ -25,14 +26,26 @@ interface MarkdownRendererProps {
 	mediaData: MediaData;
 	className?: string;
 	fallbackContent?: string;
-	enableSanitization?: boolean;
 	customRenderer?: (content: string) => string;
+	contentId?: string;
+	behavior?: MarkdownRendererBehavior;
+}
+
+export interface MarkdownRendererBehavior {
+	enableSanitization?: boolean;
 	enableValidation?: boolean;
 	enableIntegrityCheck?: boolean;
 	showRetryButton?: boolean;
-	contentId?: string;
 	showEmptyState?: boolean;
 }
+
+const DEFAULT_BEHAVIOR: Required<MarkdownRendererBehavior> = {
+	enableSanitization: true,
+	enableValidation: true,
+	enableIntegrityCheck: false,
+	showRetryButton: true,
+	showEmptyState: true,
+};
 
 // Component state interface
 interface MarkdownRendererState {
@@ -51,19 +64,6 @@ interface MarkdownRendererState {
 	};
 }
 
-// Error types for better error handling
-export class MarkdownFileError extends Error {
-	constructor(
-		message: string,
-		public readonly code: "FILE_NOT_FOUND" | "FETCH_ERROR" | "PARSE_ERROR",
-		public readonly filePath: string,
-	) {
-		super(message);
-		this.name = "MarkdownFileError";
-	}
-}
-
-// Configure marked options for security and performance
 const configureMarked = () => {
 	marked.setOptions({
 		breaks: true,
@@ -71,7 +71,6 @@ const configureMarked = () => {
 	});
 };
 
-// Initialize marked configuration
 configureMarked();
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
@@ -80,14 +79,19 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 	mediaData,
 	className = "",
 	fallbackContent = "Content not available",
-	enableSanitization = true,
 	customRenderer,
-	enableValidation = true,
-	enableIntegrityCheck = false,
-	showRetryButton = true,
 	contentId,
-	showEmptyState = true,
+	behavior,
 }) => {
+	const resolvedBehavior = { ...DEFAULT_BEHAVIOR, ...(behavior ?? {}) };
+	const {
+		enableSanitization,
+		enableValidation,
+		enableIntegrityCheck,
+		showRetryButton,
+		showEmptyState,
+	} = resolvedBehavior;
+
 	const [state, setState] = useState<MarkdownRendererState>({
 		content: "",
 		isLoading: true,
@@ -99,14 +103,9 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
 	const [contentParser] = useState(() => createContentParser());
 
-	// Load and process markdown content
 	const loadContent = useCallback(async () => {
-		console.log(
-			`[MarkdownRenderer] loadContent called with filePath: ${filePath}`,
-		);
-
 		if (!filePath && typeof content !== "string") {
-			const error = new MarkdownFileError(
+			const error = new MarkdownRendererErrorClass(
 				"No content source provided",
 				"FILE_NOT_FOUND",
 				"",
@@ -118,8 +117,6 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 				parsedContent: "",
 				content: "",
 			}));
-
-			console.warn("Failed to load markdown content:", error);
 			return;
 		}
 
@@ -129,14 +126,10 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 			let rawContent: string;
 			if (typeof content === "string") {
 				rawContent = content;
-				console.log("[MarkdownRenderer] Using provided markdown content");
 			} else if (filePath) {
-				console.log(
-					`[MarkdownRenderer] Starting to fetch content for: ${filePath}`,
-				);
 				rawContent = await fetchMarkdownContent(filePath, enableIntegrityCheck);
 			} else {
-				const noContentError = new MarkdownFileError(
+				const noContentError = new MarkdownRendererErrorClass(
 					"No markdown content available",
 					"FILE_NOT_FOUND",
 					"",
@@ -144,19 +137,16 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 				return Promise.reject(noContentError);
 			}
 
-			// Handle empty content gracefully
 			if (!rawContent || rawContent.trim().length === 0) {
-				console.log(`[MarkdownRenderer] Content is empty, setting empty state`);
 				setState({
 					content: "",
 					isLoading: false,
 					error: null,
-					parsedContent: "", // Empty parsed content for empty files
+					parsedContent: "",
 				});
 				return;
 			}
 
-			console.log(`[MarkdownRenderer] Processing markdown content...`);
 			const processed = await processMarkdownContent(rawContent, mediaData, {
 				contentParser,
 				customRenderer,
@@ -165,12 +155,6 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 				filePath,
 			});
 
-			console.log(
-				`[MarkdownRenderer] Content processed successfully, setting state`,
-			);
-			console.log(
-				`[MarkdownRenderer] Processed content preview: ${processed.html.substring(0, 200)}...`,
-			);
 			setState({
 				content: rawContent,
 				isLoading: false,
@@ -179,17 +163,16 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 				validationResult: processed.validation,
 			});
 		} catch (error) {
-			console.error(`[MarkdownRenderer] Error in loadContent:`, error);
 			const markdownError =
-				error instanceof MarkdownFileError
+				error instanceof MarkdownRendererErrorClass
 					? error
 					: error instanceof MarkdownError
-						? new MarkdownFileError(
+						? new MarkdownRendererErrorClass(
 								error.message,
 								"PARSE_ERROR",
 								filePath || "",
 							)
-						: new MarkdownFileError(
+						: new MarkdownRendererErrorClass(
 								`Unexpected error: ${error instanceof Error ? error.message : "Unknown error"}`,
 								"PARSE_ERROR",
 								filePath || "",
@@ -202,8 +185,6 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 				parsedContent: "",
 				content: "",
 			}));
-
-			console.warn("Failed to load markdown content:", markdownError);
 		}
 	}, [
 		filePath,
@@ -222,7 +203,6 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	// Wire up post-render enhancements: Twitter widgets and bookmark card hydration
 	useTwitterEmbeds(containerRef, state.parsedContent);
 	useBookmarkCardReplacer(containerRef, state.parsedContent);
 

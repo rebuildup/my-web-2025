@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "../button";
 import {
 	generateCalendarDays,
@@ -17,6 +18,12 @@ interface DatePickerCalendarProps {
 	onClose: () => void;
 }
 
+function formatMonthLabel(date: Date): string {
+	const year = date.getFullYear();
+	const month = date.getMonth() + 1;
+	return `${year}年${month}月`;
+}
+
 export function DatePickerCalendar({
 	calendarRef,
 	selectedDate,
@@ -29,13 +36,17 @@ export function DatePickerCalendar({
 	const calendarMonth = currentDate.getMonth();
 	const calendarDays = generateCalendarDays(calendarYear, calendarMonth);
 
+	const [isClient, setIsClient] = useState(false);
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
+
 	return (
 		<div
 			ref={calendarRef}
 			className="absolute z-[9999] mt-1 border rounded-lg  p-4 w-80"
 			style={{ backgroundColor: "#181818", zIndex: 9999 }}
 		>
-			{/* Calendar Header */}
 			<div className="flex items-center justify-between mb-4">
 				<Button
 					type="button"
@@ -45,11 +56,10 @@ export function DatePickerCalendar({
 				>
 					←
 				</Button>
-				<h3 className="text-lg font-semibold ">
-					{currentDate.toLocaleDateString("ja-JP", {
-						year: "numeric",
-						month: "long",
-					})}
+				<h3 className="text-lg font-semibold " suppressHydrationWarning>
+					{isClient
+						? formatMonthLabel(currentDate)
+						: `${calendarYear}/${calendarMonth + 1}`}
 				</h3>
 				<Button
 					type="button"
@@ -61,7 +71,6 @@ export function DatePickerCalendar({
 				</Button>
 			</div>
 
-			{/* Calendar Grid */}
 			<div className="grid grid-cols-7 gap-1 mb-2">
 				{WEEK_DAY_LABELS.map((day) => (
 					<div key={day} className="text-center text-sm font-medium  py-2">
@@ -86,7 +95,6 @@ export function DatePickerCalendar({
 				})}
 			</div>
 
-			{/* Quick Actions */}
 			<div className="flex gap-2 mt-4 pt-4  ">
 				<Button
 					type="button"

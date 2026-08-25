@@ -511,7 +511,8 @@ export default function UnifiedFloatingCards({
 	// Render card based on type
 	const renderCard = (card: UnifiedCard) => {
 		const { displayY } = card;
-		const screenHeight = window.innerHeight;
+		const screenHeight =
+			typeof window === "undefined" ? 800 : window.innerHeight;
 		const opacity =
 			displayY > 0 && displayY < screenHeight
 				? 1
@@ -554,7 +555,7 @@ function GitHubRepoCard({
 			className="absolute"
 			style={{ left: `${card.x}px`, top: `${card.displayY}px`, opacity }}
 		>
-			<div className="pointer-events-auto block p-4 rounded-lg max-w-[340px]">
+			<div className="pointer-events-auto p-4 rounded-lg max-w-[340px]">
 				{/* Title with language and icon */}
 				<div className="flex items-center gap-2 mb-2">
 					<GitBranch className="w-4 h-4 shrink-0" />
@@ -624,7 +625,7 @@ function GitHubEventCard({
 			className="absolute"
 			style={{ left: `${card.x}px`, top: `${card.displayY}px`, opacity }}
 		>
-			<div className="pointer-events-auto block p-4 rounded-lg max-w-[320px]">
+			<div className="pointer-events-auto p-4 rounded-lg max-w-[320px]">
 				<div className="flex items-start gap-3">
 					<div className="/60 mt-0.5">{getEventIcon(event.type)}</div>
 					<div className="flex-1 min-w-0">
@@ -710,7 +711,7 @@ function PortfolioCard({
 			className="absolute"
 			style={{ left: `${card.x}px`, top: `${card.displayY}px`, opacity }}
 		>
-			<div className="pointer-events-auto block p-4 rounded-lg max-w-[280px]">
+			<div className="pointer-events-auto p-4 rounded-lg max-w-[280px]">
 				<div className="aspect-video overflow-hidden relative rounded-md mb-3">
 					{content.thumbnail ? (
 						<Image

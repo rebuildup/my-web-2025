@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChangeEvent } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { DatePickerProps } from "@/types/enhanced-content";
 import { DatePickerCalendar } from "./DatePicker/DatePickerCalendar";
 import { DatePickerInput } from "./DatePicker/DatePickerInput";
@@ -15,6 +15,50 @@ interface DatePickerState {
 	selectedDate: Date | null;
 }
 
+function deriveInitialState(
+	value: string | undefined,
+	useManualDate: boolean,
+): DatePickerState {
+	if (value) {
+		const date = new Date(value);
+		if (!Number.isNaN(date.getTime())) {
+			return {
+				inputValue: formatDateForInput(date),
+				isCalendarOpen: false,
+				validationError: null,
+				selectedDate: date,
+			};
+		}
+	}
+	if (useManualDate) {
+		return {
+			inputValue: "",
+			isCalendarOpen: false,
+			validationError: null,
+			selectedDate: null,
+		};
+	}
+	const now = new Date();
+	return {
+		inputValue: formatDateForInput(now),
+		isCalendarOpen: false,
+		validationError: null,
+		selectedDate: now,
+	};
+}
+
+function deriveStateOnPropChange(
+	value: string | undefined,
+	useManualDate: boolean,
+	prevValue: string | undefined,
+	prevUseManualDate: boolean,
+): DatePickerState | null {
+	const valueChanged = value !== prevValue;
+	const useManualChanged = useManualDate !== prevUseManualDate;
+	if (!valueChanged && !useManualChanged) return null;
+	return deriveInitialState(value, useManualDate);
+}
+
 export function DatePicker({
 	value,
 	onChange,
@@ -22,44 +66,37 @@ export function DatePicker({
 	onToggleManualDate,
 	placeholder = "Select date...",
 }: DatePickerProps) {
-	const [state, setState] = useState<DatePickerState>({
-		inputValue: "",
-		isCalendarOpen: false,
-		validationError: null,
-		selectedDate: null,
-	});
+	const [state, setState] = useState<DatePickerState>(() =>
+		deriveInitialState(value, useManualDate),
+	);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const calendarRef = useRef<HTMLDivElement>(null);
 
-	// Initialize input value from props
-	useEffect(() => {
-		if (value) {
-			const date = new Date(value);
-			if (!Number.isNaN(date.getTime())) {
-				setState((prev) => ({
-					...prev,
-					inputValue: formatDateForInput(date),
-					selectedDate: date,
-					validationError: null,
-				}));
-			}
-		} else if (useManualDate) {
-			setState((prev) => ({
-				...prev,
-				inputValue: "",
-				selectedDate: null,
-			}));
-		} else {
-			// Auto mode - use current date
-			const now = new Date();
-			setState((prev) => ({
-				...prev,
-				inputValue: formatDateForInput(now),
-				selectedDate: now,
-			}));
+	const prevValueRef = useRef<string | undefined>(value);
+	const prevUseManualDateRef = useRef<boolean>(useManualDate);
+
+	const nextState = useMemo(
+		() =>
+			deriveStateOnPropChange(
+				value,
+				useManualDate,
+				prevValueRef.current,
+				prevUseManualDateRef.current,
+			),
+		[value, useManualDate],
+	);
+	if (nextState) {
+		prevValueRef.current = value;
+		prevUseManualDateRef.current = useManualDate;
+		if (
+			nextState.inputValue !== state.inputValue ||
+			nextState.selectedDate !== state.selectedDate ||
+			nextState.validationError !== state.validationError
+		) {
+			setState(nextState);
 		}
-	}, [value, useManualDate]);
+	}
 
 	// Close calendar when clicking outside
 	useEffect(() => {
@@ -125,7 +162,6 @@ export function DatePicker({
 				validationError: null,
 				selectedDate: parsedDate,
 			}));
-			// onChangeを呼び出して親コンポーネントに変更を通知
 			onChange(parsedDate.toISOString());
 		}
 	}, [useManualDate, state.inputValue, onChange]);
@@ -154,7 +190,6 @@ export function DatePicker({
 		onToggleManualDate(newUseManualDate);
 
 		if (!newUseManualDate) {
-			// Switching to auto mode - use current date
 			const now = new Date();
 			setState((prev) => ({
 				...prev,
@@ -186,18 +221,20 @@ export function DatePicker({
 
 	return (
 		<div className="space-y-3">
-			{/* Manual/Auto Toggle */}
 			<div className="flex items-center justify-between">
-				<label className="noto-sans-jp-regular text-sm font-medium ">
+				<label
+					htmlFor="date-setting-toggle"
+					className="noto-sans-jp-regular text-sm font-medium "
+				>
 					Date Setting
 				</label>
 				<DatePickerToggle
+					id="date-setting-toggle"
 					useManualDate={useManualDate}
 					onToggle={handleToggleManualDate}
 				/>
 			</div>
 
-			{/* Date Input */}
 			<div className="relative">
 				<DatePickerInput
 					inputRef={inputRef as any}
@@ -211,7 +248,6 @@ export function DatePicker({
 					onCalendarToggle={handleCalendarToggle}
 				/>
 
-				{/* Calendar Dropdown */}
 				{state.isCalendarOpen && useManualDate && (
 					<DatePickerCalendar
 						calendarRef={calendarRef as any}
