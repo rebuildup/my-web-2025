@@ -12,6 +12,29 @@ interface FileUploaderProps {
 	onFilesLoaded: (frames: FrameData[]) => void;
 }
 
+const UPLOAD_METHODS: UploadMethod[] = [
+	{
+		type: "files",
+		label: "複数ファイル選択",
+		description: "複数のPNGファイルを選択",
+		accept: "image/png",
+		multiple: true,
+	},
+	{
+		type: "folder",
+		label: "フォルダ選択",
+		description: "フォルダ内のPNGを一括選択",
+		accept: "image/png",
+		webkitdirectory: true,
+	},
+	{
+		type: "zip",
+		label: "ZIPファイル",
+		description: "ZIP内のPNGを展開",
+		accept: ".zip,application/zip",
+	},
+];
+
 export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [isProcessing, setIsProcessing] = useState(false);
@@ -22,29 +45,6 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const folderInputRef = useRef<HTMLInputElement>(null);
 	const zipInputRef = useRef<HTMLInputElement>(null);
-
-	const uploadMethods: UploadMethod[] = [
-		{
-			type: "files",
-			label: "複数ファイル選択",
-			description: "複数のPNGファイルを選択",
-			accept: "image/png",
-			multiple: true,
-		},
-		{
-			type: "folder",
-			label: "フォルダ選択",
-			description: "フォルダ内のPNGを一括選択",
-			accept: "image/png",
-			webkitdirectory: true,
-		},
-		{
-			type: "zip",
-			label: "ZIPファイル",
-			description: "ZIP内のPNGを展開",
-			accept: ".zip,application/zip",
-		},
-	];
 
 	const handleDragOver = useCallback((e: React.DragEvent) => {
 		e.preventDefault();
@@ -66,27 +66,33 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 			try {
 				const items = Array.from(e.dataTransfer.items);
 				const files: File[] = [];
+				const zipFiles: File[] = [];
 
 				for (const item of items) {
-					if (item.kind === "file") {
-						const file = item.getAsFile();
-						if (file) {
-							if (
-								file.type === "image/png" ||
-								file.name.toLowerCase().endsWith(".png")
-							) {
-								files.push(file);
-							} else if (
-								file.type === "application/zip" ||
-								file.name.toLowerCase().endsWith(".zip")
-							) {
-								const zipFrames = await processZipFile(file);
-								const sortedFrames = sortFramesByName(zipFrames);
-								onFilesLoaded(sortedFrames);
-								return;
-							}
-						}
+					if (item.kind !== "file") continue;
+					const file = item.getAsFile();
+					if (!file) continue;
+					if (
+						file.type === "application/zip" ||
+						file.name.toLowerCase().endsWith(".zip")
+					) {
+						zipFiles.push(file);
+					} else if (
+						file.type === "image/png" ||
+						file.name.toLowerCase().endsWith(".png")
+					) {
+						files.push(file);
 					}
+				}
+
+				if (zipFiles.length > 0) {
+					const frameLists = await Promise.all(
+						zipFiles.map((zip) => processZipFile(zip)),
+					);
+					const merged = frameLists.flat();
+					const sortedFrames = sortFramesByName(merged);
+					onFilesLoaded(sortedFrames);
+					return;
 				}
 
 				if (files.length > 0) {
@@ -177,7 +183,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 					gap: "8px",
 				}}
 			>
-				{uploadMethods.map((method) => (
+				{UPLOAD_METHODS.map((method) => (
 					<button
 						type="button"
 						key={method.type}
@@ -203,17 +209,28 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 				))}
 			</div>
 
-			<div
+			<button
+				type="button"
 				onDragOver={handleDragOver}
 				onDragLeave={handleDragLeave}
 				onDrop={handleDrop}
 				onClick={triggerFileSelect}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault();
+						triggerFileSelect();
+					}
+				}}
+				aria-label="ファイルをアップロード"
 				style={{
 					border: isDragging ? "2px dashed #000" : "2px dashed #ccc",
 					padding: "40px",
 					textAlign: "center",
 					cursor: "pointer",
 					background: isDragging ? "#f5f5f5" : "transparent",
+					width: "100%",
+					font: "inherit",
+					color: "inherit",
 				}}
 			>
 				<p style={{ marginBottom: "8px" }}>
@@ -227,7 +244,7 @@ export default function FileUploader({ onFilesLoaded }: FileUploaderProps) {
 						"フォルダ内のPNGファイルを自動検出します"}
 					{selectedMethod === "zip" && "ZIP内のPNGファイルを展開します"}
 				</p>
-			</div>
+			</button>
 
 			<input
 				ref={fileInputRef}

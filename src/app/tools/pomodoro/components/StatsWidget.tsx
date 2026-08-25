@@ -101,19 +101,31 @@ export default function StatsWidget({
 	const [metric, setMetric] =
 		useState<(typeof metrics)[number]>("id:todayFocus");
 
-	const now = new Date();
-	const todayStr = now.toISOString().slice(0, 10);
-	const startOfWeek = new Date(now);
-	startOfWeek.setDate(now.getDate() - ((now.getDay() + 6) % 7)); // Monday start
-	const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+	const dateInfo = useMemo(() => {
+		const now = new Date();
+		const startOfWeek = new Date(now);
+		startOfWeek.setDate(now.getDate() - ((now.getDay() + 6) % 7)); // Monday start
+		return {
+			now: new Date(now),
+			todayStr: now.toISOString().slice(0, 10),
+			startOfWeek,
+			startOfMonth: new Date(now.getFullYear(), now.getMonth(), 1),
+		};
+	}, []);
+	const { now, todayStr, startOfWeek, startOfMonth } = dateInfo;
 
-	const sessionsDone = sessions.filter((s) => s.completed && s.endTime);
+	const sessionsDone = useMemo(
+		() => sessions.filter((s) => s.completed && s.endTime),
+		[sessions],
+	);
 
 	const minutesToday = useMemo(
 		() =>
 			sessionsDone
-				.filter((s) => s.endTime && s.endTime.startsWith(todayStr))
-				.filter((s) => s.type === "focus")
+				.filter(
+					(s) =>
+						s.endTime && s.endTime.startsWith(todayStr) && s.type === "focus",
+				)
 				.reduce((acc, s) => acc + s.duration, 0),
 		[sessionsDone, todayStr],
 	);
@@ -127,11 +139,11 @@ export default function StatsWidget({
 
 	const minutesWeek = useMemo(
 		() => minutesInRange(startOfWeek),
-		[sessionsDone],
+		[sessionsDone, startOfWeek],
 	);
 	const minutesMonth = useMemo(
 		() => minutesInRange(startOfMonth),
-		[sessionsDone],
+		[sessionsDone, startOfMonth],
 	);
 
 	const avgSession = useMemo(() => {
@@ -165,8 +177,9 @@ export default function StatsWidget({
 			d.setDate(now.getDate() - i);
 			const key = d.toISOString().slice(0, 10);
 			const minutes = sessionsDone
-				.filter((s) => s.endTime && s.endTime.startsWith(key))
-				.filter((s) => s.type === "focus")
+				.filter(
+					(s) => s.endTime && s.endTime.startsWith(key) && s.type === "focus",
+				)
 				.reduce((acc, s) => acc + s.duration, 0);
 			days.push({
 				label: `${d.getMonth() + 1}/${d.getDate()}`,

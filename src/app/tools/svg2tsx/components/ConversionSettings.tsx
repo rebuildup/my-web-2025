@@ -42,6 +42,7 @@ export function ConversionSettingsPanel({
 					>
 						<div>
 							<label
+								htmlFor="svg2tsx-component-name"
 								style={{
 									display: "block",
 									fontSize: "12px",
@@ -51,6 +52,7 @@ export function ConversionSettingsPanel({
 								コンポーネント名
 							</label>
 							<input
+								id="svg2tsx-component-name"
 								type="text"
 								value={settings.componentName}
 								onChange={(e) => updateSetting("componentName", e.target.value)}
@@ -61,10 +63,12 @@ export function ConversionSettingsPanel({
 									boxSizing: "border-box",
 								}}
 								placeholder="MyIcon"
+								aria-label="コンポーネント名"
 							/>
 						</div>
 						<div>
 							<label
+								htmlFor="svg2tsx-props-type"
 								style={{
 									display: "block",
 									fontSize: "12px",
@@ -74,6 +78,7 @@ export function ConversionSettingsPanel({
 								Props型名
 							</label>
 							<input
+								id="svg2tsx-props-type"
 								type="text"
 								value={settings.propsType}
 								onChange={(e) => updateSetting("propsType", e.target.value)}
@@ -84,11 +89,13 @@ export function ConversionSettingsPanel({
 									boxSizing: "border-box",
 								}}
 								placeholder="IconProps"
+								aria-label="Props型名"
 							/>
 						</div>
 					</div>
 					<div style={{ marginTop: "8px" }}>
 						<label
+							htmlFor="svg2tsx-include-comments"
 							style={{
 								display: "flex",
 								alignItems: "center",
@@ -98,6 +105,7 @@ export function ConversionSettingsPanel({
 							}}
 						>
 							<input
+								id="svg2tsx-include-comments"
 								type="checkbox"
 								checked={settings.includeComments}
 								onChange={(e) =>
@@ -130,13 +138,27 @@ export function ConversionSettingsPanel({
 							{
 								key: "removeUnnecessaryAttributes" as const,
 								label: "不要属性を削除",
+								id: "svg2tsx-remove-unnecessary-attributes",
 							},
-							{ key: "optimizePaths" as const, label: "パスを最適化" },
-							{ key: "variableizeColors" as const, label: "色を変数化" },
-							{ key: "variableizeSizes" as const, label: "サイズを変数化" },
-						].map(({ key, label }) => (
+							{
+								key: "optimizePaths" as const,
+								label: "パスを最適化",
+								id: "svg2tsx-optimize-paths",
+							},
+							{
+								key: "variableizeColors" as const,
+								label: "色を変数化",
+								id: "svg2tsx-variableize-colors",
+							},
+							{
+								key: "variableizeSizes" as const,
+								label: "サイズを変数化",
+								id: "svg2tsx-variableize-sizes",
+							},
+						].map(({ key, label, id }) => (
 							<label
 								key={key}
+								htmlFor={id}
 								style={{
 									display: "flex",
 									alignItems: "center",
@@ -146,6 +168,7 @@ export function ConversionSettingsPanel({
 								}}
 							>
 								<input
+									id={id}
 									type="checkbox"
 									checked={settings[key]}
 									onChange={(e) => updateSetting(key, e.target.checked)}
@@ -175,6 +198,7 @@ export function ConversionSettingsPanel({
 					>
 						<div>
 							<label
+								htmlFor="svg2tsx-indent-size"
 								style={{
 									display: "block",
 									fontSize: "12px",
@@ -184,6 +208,7 @@ export function ConversionSettingsPanel({
 								インデント
 							</label>
 							<select
+								id="svg2tsx-indent-size"
 								value={settings.indentSize}
 								onChange={(e) =>
 									updateSetting("indentSize", parseInt(e.target.value, 10))
@@ -194,7 +219,6 @@ export function ConversionSettingsPanel({
 									fontSize: "13px",
 									boxSizing: "border-box",
 								}}
-								aria-label="インデント"
 							>
 								<option value={2}>2スペース</option>
 								<option value={4}>4スペース</option>
@@ -203,6 +227,7 @@ export function ConversionSettingsPanel({
 						</div>
 						<div>
 							<label
+								htmlFor="svg2tsx-line-breaks"
 								style={{
 									display: "block",
 									fontSize: "12px",
@@ -212,6 +237,7 @@ export function ConversionSettingsPanel({
 								改行設定
 							</label>
 							<select
+								id="svg2tsx-line-breaks"
 								value={settings.lineBreaks}
 								onChange={(e) =>
 									updateSetting("lineBreaks", e.target.value as "lf" | "crlf")
@@ -222,7 +248,6 @@ export function ConversionSettingsPanel({
 									fontSize: "13px",
 									boxSizing: "border-box",
 								}}
-								aria-label="改行設定"
 							>
 								<option value="lf">LF (Unix)</option>
 								<option value="crlf">CRLF (Windows)</option>
@@ -230,6 +255,7 @@ export function ConversionSettingsPanel({
 						</div>
 						<div>
 							<label
+								htmlFor="svg2tsx-export-type"
 								style={{
 									display: "block",
 									fontSize: "12px",
@@ -239,6 +265,7 @@ export function ConversionSettingsPanel({
 								エクスポート形式
 							</label>
 							<select
+								id="svg2tsx-export-type"
 								value={settings.exportType}
 								onChange={(e) =>
 									updateSetting(
@@ -252,7 +279,6 @@ export function ConversionSettingsPanel({
 									fontSize: "13px",
 									boxSizing: "border-box",
 								}}
-								aria-label="エクスポート形式"
 							>
 								<option value="default">デフォルトエクスポート</option>
 								<option value="named">名前付きエクスポート</option>
@@ -260,6 +286,7 @@ export function ConversionSettingsPanel({
 						</div>
 						<div>
 							<label
+								htmlFor="svg2tsx-file-extension"
 								style={{
 									display: "block",
 									fontSize: "12px",
@@ -269,6 +296,7 @@ export function ConversionSettingsPanel({
 								ファイル拡張子
 							</label>
 							<select
+								id="svg2tsx-file-extension"
 								value={settings.fileExtension}
 								onChange={(e) =>
 									updateSetting(
@@ -282,7 +310,6 @@ export function ConversionSettingsPanel({
 									fontSize: "13px",
 									boxSizing: "border-box",
 								}}
-								aria-label="ファイル拡張子"
 							>
 								<option value=".tsx">.tsx (TypeScript JSX)</option>
 								<option value=".ts">.ts (TypeScript)</option>

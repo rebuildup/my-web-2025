@@ -1,11 +1,7 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-	DEFAULT_YOUTUBE_SETTINGS,
-	type YouTubePlaybackState,
-	type YouTubeSettings,
-} from "./types";
+import React, { useEffect, useId, useMemo, useRef, useState } from "react";
+import { DEFAULT_YOUTUBE_SETTINGS, type YouTubePlaybackState } from "./types";
 import { parseYouTubeUrl } from "./utils";
 import type { YouTubePlayerProps } from "./YouTubePlayer.types";
 import {
@@ -24,14 +20,9 @@ export function useYouTubePlayer({
 	defaultVolume,
 	loopEnabled,
 }: YouTubePlayerProps) {
-	const [settings, setSettings] = useState<YouTubeSettings>(
-		DEFAULT_YOUTUBE_SETTINGS,
+	const [isMinimized, setIsMinimizedState] = useState(
+		DEFAULT_YOUTUBE_SETTINGS.isMinimized,
 	);
-	// Note: `settings.loop` is NOT mirrored from the `loopEnabled` prop.
-	// Per uhyo 過激派 P4, mirroring props to state in a useEffect is
-	// disallowed. We use `loopEnabled` directly when needed (see
-	// createYouTubePlayerOptions and the onStateChange handler), and
-	// `settings` only carries genuinely local UI state (isMinimized).
 
 	const source = useMemo(() => parseYouTubeUrl(url), [url]);
 
@@ -40,38 +31,18 @@ export function useYouTubePlayer({
 	const [player, setPlayer] = useState<any>(null);
 	// Tracks the active YT.Player instance for unmount cleanup so we can
 	// destroy it even if the component unmounts outside a deps change of
-	// the Initialize effect (e.g. when settings.loop or source drives
+	// the Initialize effect (e.g. when loopEnabled or source drives
 	// re-creation through the effect below).
 	const playerRef = useRef<any>(null);
 	const [isApiReady, setIsApiReady] = useState(false);
 	const [inputUrl, setInputUrl] = useState(url);
 	const [error, setError] = useState<string | null>(null);
-	const [volume, setVolume] = useState(defaultVolume);
+	const [volume, setVolume] = useState(() => defaultVolume);
 	const [isMuted, setIsMuted] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
 
-	// Stable id per mount — replaces a mount-only useEffect that called
-	// setUniqueId once. useMemo with empty deps runs once at mount.
-	// Math.random here is fine: we only need uniqueness across
-	// simultaneous YT.Player instances on the page.
-	const stableUniqueId = useMemo(
-		() => `youtube-player-${Math.random().toString(36).slice(2, 11)}`,
-		[],
-	);
-
-	// Sync defaultVolume into the live player when the prop changes.
-	// Per uhyo 過激派 P4, we do NOT mirror defaultVolume into local
-	// `volume` state (that would be a value-reaction effect). Instead we
-	// track a ref and apply via the imperative YT.Player API. `volume`
-	// state remains the user-controlled value (set by handleVolumeChange).
-	const defaultVolumeRef = useRef(defaultVolume);
-	defaultVolumeRef.current = defaultVolume;
-
-	useEffect(() => {
-		if (player?.setVolume) {
-			player.setVolume(defaultVolumeRef.current);
-		}
-	}, [defaultVolume, player]);
+	const reactId = useId();
+	const uniqueId = `youtube-player-${reactId.replace(/[^a-zA-Z0-9]/g, "")}`;
 
 	// Load IFrame API
 	useEffect(() => {
@@ -82,7 +53,7 @@ export function useYouTubePlayer({
 	useEffect(() => {
 		if (isApiReady && source && !player) {
 			const newPlayer = new (window as any).YT.Player(
-				stableUniqueId,
+				uniqueId,
 				createYouTubePlayerOptions({
 					source,
 					loop: loopEnabled,
@@ -124,7 +95,7 @@ export function useYouTubePlayer({
 				}
 			};
 		}
-	}, [isApiReady, source, player, stableUniqueId, volume]);
+	}, [isApiReady, source, player, uniqueId, volume, loopEnabled]);
 
 	// Handle Source Change
 	const handleSaveUrl = () => {
@@ -157,7 +128,7 @@ export function useYouTubePlayer({
 			playerRef.current = null;
 			setPlayer(null);
 		}
-	}, [loopEnabled, source]);
+	}, [loopEnabled, source, player]);
 
 	// Unmount-only cleanup: guarantees the active YT.Player is destroyed
 	// even if the component unmounts in a state where the Initialize
@@ -199,13 +170,13 @@ export function useYouTubePlayer({
 		pomodoroState.sessionType,
 		autoPlayOnFocusSession,
 		pauseOnBreak,
+		player,
 	]);
 
 	// Volume Control
 	const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const newVol = parseInt(e.target.value);
 		setVolume(newVol);
-		// setSettings({ ...settings, defaultVolume: newVol }); // Removed local setting update
 		if (player && player.setVolume) {
 			player.setVolume(newVol);
 		}
@@ -247,8 +218,8 @@ export function useYouTubePlayer({
 	};
 
 	const toggleMinimize = () => {
-		const newState = !settings.isMinimized;
-		setSettings({ ...settings, isMinimized: newState });
+		const newState = !isMinimized;
+		setIsMinimizedState(newState);
 		onToggleMinimize?.(newState);
 	};
 
@@ -261,7 +232,7 @@ export function useYouTubePlayer({
 		handleSaveUrl,
 		handleVolumeChange,
 		inputUrl,
-		isMinimized: settings.isMinimized,
+		isMinimized,
 		isMuted,
 		isPlaylist: source?.type === "playlist" || source?.type === "mixed",
 		playbackState,
@@ -273,7 +244,7 @@ export function useYouTubePlayer({
 		toggleMute,
 		togglePlay,
 		toggleSettings,
-		uniqueId: stableUniqueId,
+		uniqueId,
 		volume,
 	};
 }

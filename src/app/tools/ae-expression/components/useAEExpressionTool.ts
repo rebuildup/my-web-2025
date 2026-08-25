@@ -27,7 +27,7 @@ export function useAEExpressionTool() {
 	const [generatedCode, setGeneratedCode] = useState("");
 	const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
 	const [previewTime, setPreviewTime] = useState(0);
-	const [validationResult, setValidationResult] = useState(
+	const [validationResult, setValidationResult] = useState(() =>
 		validateExpression(""),
 	);
 	const [savedExpressions, setSavedExpressions] = useState<SavedExpression[]>(
@@ -63,7 +63,7 @@ export function useAEExpressionTool() {
 	}, [selectedExpression, parameterValues]);
 
 	useEffect(() => {
-		const saved = localStorage.getItem("ae-expressions-saved");
+		const saved = localStorage.getItem("ae-expressions-saved:v1");
 		if (saved) {
 			try {
 				setSavedExpressions(JSON.parse(saved));
@@ -116,7 +116,7 @@ export function useAEExpressionTool() {
 		};
 		const updated = [...savedExpressions, savedExpression];
 		setSavedExpressions(updated);
-		localStorage.setItem("ae-expressions-saved", JSON.stringify(updated));
+		localStorage.setItem("ae-expressions-saved:v1", JSON.stringify(updated));
 	}, [selectedExpression, generatedCode, parameterValues, savedExpressions]);
 
 	const copyToClipboard = useCallback(async () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { type DropResult } from "@hello-pangea/dnd";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { BUILT_IN_TEMPLATES, MAIL_BLOCKS } from "./constants";
 import type {
 	ComposedBlock,
@@ -69,7 +69,6 @@ export function useMailBlockState(): UseMailBlockState {
 	const [selectedCategory, setSelectedCategory] = useState<string>("all");
 	const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 	const [variables, setVariables] = useState<Record<string, string>>({});
-	const [generatedEmail, setGeneratedEmail] = useState("");
 
 	// New state for enhanced features
 	const [templates, setTemplates] =
@@ -172,8 +171,8 @@ export function useMailBlockState(): UseMailBlockState {
 		setVariables((prev) => ({ ...prev, [key]: value }));
 	}, []);
 
-	// Generate email from composed blocks
-	const generateEmail = useCallback(() => {
+	// Generate email from composed blocks (derived directly from inputs).
+	const generatedEmail = useMemo(() => {
 		const emailParts = composedBlocks.map((block) => {
 			let content = block.customContent || block.content;
 
@@ -191,8 +190,7 @@ export function useMailBlockState(): UseMailBlockState {
 			return content;
 		});
 
-		const email = emailParts.join("\n\n");
-		setGeneratedEmail(email);
+		return emailParts.join("\n\n");
 	}, [composedBlocks, variables]);
 
 	// Copy to clipboard
@@ -320,11 +318,6 @@ export function useMailBlockState(): UseMailBlockState {
 		},
 		[templates],
 	);
-
-	// Generate email when composed blocks or variables change
-	useEffect(() => {
-		generateEmail();
-	}, [generateEmail]);
 
 	// Validate email when composition changes
 	useEffect(() => {

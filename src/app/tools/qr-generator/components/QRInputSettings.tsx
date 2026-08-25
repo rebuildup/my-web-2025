@@ -50,8 +50,14 @@ export default function QRInputSettings({
 					<option value="wifi">WiFi</option>
 				</select>
 
-				<label style={{ alignSelf: "center" }}>Mode:</label>
-				<div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+				<span style={{ alignSelf: "center" }} id="qr-input-mode-label">
+					Mode:
+				</span>
+				<div
+					role="radiogroup"
+					aria-labelledby="qr-input-mode-label"
+					style={{ display: "flex", alignItems: "center", gap: "15px" }}
+				>
 					<label
 						style={{
 							display: "flex",
@@ -62,6 +68,7 @@ export default function QRInputSettings({
 					>
 						<input
 							type="radio"
+							name="qr-input-mode"
 							checked={!isBulkMode}
 							onChange={() => onBulkModeChange(false)}
 						/>
@@ -77,6 +84,7 @@ export default function QRInputSettings({
 					>
 						<input
 							type="radio"
+							name="qr-input-mode"
 							checked={isBulkMode}
 							onChange={() => onBulkModeChange(true)}
 						/>

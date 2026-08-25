@@ -3,6 +3,13 @@
 import { X } from "lucide-react";
 import type { SettingsTab } from "./types";
 
+const TABS: ReadonlyArray<{ key: SettingsTab; label: string }> = [
+	{ key: "workflow", label: "ワークフロー" },
+	{ key: "dock", label: "ドック" },
+	{ key: "widgets", label: "ウィジェット" },
+	{ key: "youtube", label: "YouTube" },
+];
+
 export const SettingsSidebar = ({
 	theme,
 	settingsTab,
@@ -14,13 +21,6 @@ export const SettingsSidebar = ({
 	onTabChange: (tab: SettingsTab) => void;
 	onClose: () => void;
 }) => {
-	const tabs: Array<{ key: SettingsTab; label: string }> = [
-		{ key: "workflow", label: "ワークフロー" },
-		{ key: "dock", label: "ドック" },
-		{ key: "widgets", label: "ウィジェット" },
-		{ key: "youtube", label: "YouTube" },
-	];
-
 	return (
 		<div
 			className={`md:w-64    flex flex-row md:flex-col shrink-0 ${
@@ -44,7 +44,7 @@ export const SettingsSidebar = ({
 				</button>
 			</div>
 			<div className="flex flex-row md:flex-col flex-1 overflow-x-auto md:overflow-y-auto p-2 min-h-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-track]:">
-				{tabs.map((tab) => (
+				{TABS.map((tab) => (
 					<button
 						key={tab.key}
 						onClick={() => onTabChange(tab.key)}

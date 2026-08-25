@@ -108,7 +108,10 @@ export default function QRCodeDisplay({
 		if (inputType === "url") {
 			processedTexts.forEach((text, index) => {
 				if (validateInput(text, "url")) {
-					setTimeout(() => window.open(text, "_blank"), index * 200);
+					setTimeout(
+						() => window.open(text, "_blank", "noopener,noreferrer"),
+						index * 200,
+					);
 				}
 			});
 		}

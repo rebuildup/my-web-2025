@@ -201,79 +201,86 @@ export const getMailBlockById = (id: string): MailBlock => {
 	);
 };
 
-// Built-in email templates
-export const BUILT_IN_TEMPLATES: MailTemplate[] = [
-	{
-		id: "template-business-inquiry",
-		name: "ビジネス問い合わせ",
-		description: "新規取引先への問い合わせメール",
-		category: "inquiry",
-		isBuiltIn: true,
-		createdAt: new Date().toISOString(),
-		blocks: [
-			{ ...getMailBlockById("greeting-first"), id: "greeting-first-1" },
-			{ ...getMailBlockById("body-request"), id: "body-request-1" },
-			{ ...getMailBlockById("closing-reply"), id: "closing-reply-1" },
-			{ ...getMailBlockById("signature-basic"), id: "signature-basic-1" },
-		],
-		variables: {
-			company: "株式会社サンプル",
-			name: "田中太郎",
-			content: "貴社サービスについて",
-			department: "営業部",
-			phone: "03-1234-5678",
-			email: "tanaka@sample.co.jp",
-		},
-	},
-	{
-		id: "template-follow-up",
-		name: "フォローアップ",
-		description: "会議後のフォローアップメール",
-		category: "follow-up",
-		isBuiltIn: true,
-		createdAt: new Date().toISOString(),
-		blocks: [
-			{ ...getMailBlockById("greeting-regular"), id: "greeting-regular-1" },
-			{ ...getMailBlockById("body-thanks"), id: "body-thanks-1" },
-			{ ...getMailBlockById("body-confirm"), id: "body-confirm-1" },
-			{ ...getMailBlockById("closing-contact"), id: "closing-contact-1" },
-			{ ...getMailBlockById("signature-basic"), id: "signature-basic-1" },
-		],
-		variables: {
-			company: "株式会社サンプル",
-			name: "田中太郎",
-			content: "本日の会議の件",
-			department: "営業部",
-			phone: "03-1234-5678",
-			email: "tanaka@sample.co.jp",
-		},
-	},
-	{
-		id: "template-apology",
-		name: "謝罪メール",
-		description: "ミスやトラブルに対する謝罪メール",
-		category: "apology",
-		isBuiltIn: true,
-		createdAt: new Date().toISOString(),
-		blocks: [
-			{ ...getMailBlockById("greeting-urgent"), id: "greeting-urgent-1" },
-			{ ...getMailBlockById("body-apology"), id: "body-apology-1" },
-			{
-				...getMailBlockById("closing-cooperation"),
-				id: "closing-cooperation-1",
+// Built-in email templates. Wrapped in a factory so the Date.now() call
+// happens lazily (when the consumer actually needs them) instead of at
+// module-evaluation time.
+export const BUILT_IN_TEMPLATES: MailTemplate[] = createBuiltInTemplates();
+
+function createBuiltInTemplates(): MailTemplate[] {
+	const createdAt = new Date().toISOString();
+	return [
+		{
+			id: "template-business-inquiry",
+			name: "ビジネス問い合わせ",
+			description: "新規取引先への問い合わせメール",
+			category: "inquiry",
+			isBuiltIn: true,
+			createdAt,
+			blocks: [
+				{ ...getMailBlockById("greeting-first"), id: "greeting-first-1" },
+				{ ...getMailBlockById("body-request"), id: "body-request-1" },
+				{ ...getMailBlockById("closing-reply"), id: "closing-reply-1" },
+				{ ...getMailBlockById("signature-basic"), id: "signature-basic-1" },
+			],
+			variables: {
+				company: "株式会社サンプル",
+				name: "田中太郎",
+				content: "貴社サービスについて",
+				department: "営業部",
+				phone: "03-1234-5678",
+				email: "tanaka@sample.co.jp",
 			},
-			{ ...getMailBlockById("signature-basic"), id: "signature-basic-1" },
-		],
-		variables: {
-			company: "株式会社サンプル",
-			name: "田中太郎",
-			content: "この度のご迷惑",
-			department: "営業部",
-			phone: "03-1234-5678",
-			email: "tanaka@sample.co.jp",
 		},
-	},
-];
+		{
+			id: "template-follow-up",
+			name: "フォローアップ",
+			description: "会議後のフォローアップメール",
+			category: "follow-up",
+			isBuiltIn: true,
+			createdAt,
+			blocks: [
+				{ ...getMailBlockById("greeting-regular"), id: "greeting-regular-1" },
+				{ ...getMailBlockById("body-thanks"), id: "body-thanks-1" },
+				{ ...getMailBlockById("body-confirm"), id: "body-confirm-1" },
+				{ ...getMailBlockById("closing-contact"), id: "closing-contact-1" },
+				{ ...getMailBlockById("signature-basic"), id: "signature-basic-1" },
+			],
+			variables: {
+				company: "株式会社サンプル",
+				name: "田中太郎",
+				content: "本日の会議の件",
+				department: "営業部",
+				phone: "03-1234-5678",
+				email: "tanaka@sample.co.jp",
+			},
+		},
+		{
+			id: "template-apology",
+			name: "謝罪メール",
+			description: "ミスやトラブルに対する謝罪メール",
+			category: "apology",
+			isBuiltIn: true,
+			createdAt,
+			blocks: [
+				{ ...getMailBlockById("greeting-urgent"), id: "greeting-urgent-1" },
+				{ ...getMailBlockById("body-apology"), id: "body-apology-1" },
+				{
+					...getMailBlockById("closing-cooperation"),
+					id: "closing-cooperation-1",
+				},
+				{ ...getMailBlockById("signature-basic"), id: "signature-basic-1" },
+			],
+			variables: {
+				company: "株式会社サンプル",
+				name: "田中太郎",
+				content: "この度のご迷惑",
+				department: "営業部",
+				phone: "03-1234-5678",
+				email: "tanaka@sample.co.jp",
+			},
+		},
+	];
+}
 
 export const CATEGORY_COLORS = {
 	greeting: "  ",

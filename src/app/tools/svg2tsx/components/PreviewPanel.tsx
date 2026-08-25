@@ -1,5 +1,6 @@
 "use client";
 
+import DOMPurify from "dompurify";
 import { useState } from "react";
 import type { ConversionResult, SVGInputData } from "../types";
 
@@ -60,7 +61,11 @@ export function PreviewPanel({
 							}}
 						>
 							<div
-								dangerouslySetInnerHTML={{ __html: svgInput.content }}
+								dangerouslySetInnerHTML={{
+									__html: DOMPurify.sanitize(svgInput.content, {
+										USE_PROFILES: { svg: true, svgFilters: true },
+									}),
+								}}
 								style={{ maxWidth: "100%", maxHeight: "400px" }}
 							/>
 						</div>

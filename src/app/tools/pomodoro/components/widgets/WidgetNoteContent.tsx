@@ -16,29 +16,42 @@ export function WidgetNoteContent({
 	id,
 	updateWidget,
 }: WidgetNoteContentProps) {
-	const [isEditing, setIsEditing] = useState(!content);
+	const [manuallyEditing, setManuallyEditing] = useState(false);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+	const isEditing = manuallyEditing || !content;
 
 	if (isEditing) {
 		return (
-			<textarea
-				ref={textareaRef}
-				className={`w-full h-full resize-none font-mono text-sm select-text ${theme === "dark" ? "" : ""} [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-track]:`}
-				placeholder="# Title&#10;- List item&#10;**Bold text**"
-				value={content || ""}
-				onChange={(e) => updateWidget(id, { content: e.target.value })}
-				onBlur={() => setIsEditing(false)}
-				autoFocus
-			/>
+			<label className="block w-full h-full">
+				<span className="sr-only">ノート本文</span>
+				<textarea
+					ref={textareaRef}
+					className={`w-full h-full resize-none font-mono text-sm select-text ${theme === "dark" ? "" : ""} [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-thumb]: [&::-webkit-scrollbar-track]:`}
+					aria-label="ノート本文"
+					value={content || ""}
+					onChange={(e) => updateWidget(id, { content: e.target.value })}
+					onBlur={() => setManuallyEditing(false)}
+					autoFocus={!content}
+				/>
+			</label>
 		);
 	}
 
 	return (
-		<div
-			className="h-full cursor-text select-text"
-			onClick={() => setIsEditing(true)}
+		<button
+			type="button"
+			className="h-full w-full cursor-text select-text text-left bg-transparent border-0 p-0"
+			onClick={() => setManuallyEditing(true)}
+			onKeyDown={(e) => {
+				if (e.key === "Enter" || e.key === " ") {
+					e.preventDefault();
+					setManuallyEditing(true);
+				}
+			}}
+			aria-label="ノートを編集"
 		>
 			<MarkdownViewer content={content} theme={theme} />
-		</div>
+		</button>
 	);
 }

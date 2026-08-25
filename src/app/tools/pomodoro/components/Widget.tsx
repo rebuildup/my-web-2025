@@ -96,14 +96,11 @@ export function Widget({
 		}
 	}, [isSticky, updateWidget, widget.color, widget.id]);
 
-	const stickyColor = useMemo(
-		() => getStickyColorForWidget(widget),
-		[widget.color, widget.id],
-	);
+	const stickyColor = useMemo(() => getStickyColorForWidget(widget), [widget]);
 
 	const { computedWidth, computedHeight, tapeWidth, tapeOffset } = useMemo(
 		() => getWidgetSize(widget),
-		[widget.w, widget.h, widget.type],
+		[widget],
 	);
 
 	const bgClass = useMemo(
@@ -113,7 +110,7 @@ export function Widget({
 				theme,
 				isImageLoaded: Boolean(isImageLoaded),
 			}),
-		[widget.type, theme, isImageLoaded],
+		[widget, theme, isImageLoaded],
 	);
 
 	const { className: contentWrapperClass, style: contentWrapperStyle } =
@@ -124,7 +121,7 @@ export function Widget({
 					theme,
 					isImageLoaded: Boolean(isImageLoaded),
 				}),
-			[widget.type, theme, isImageLoaded],
+			[widget, theme, isImageLoaded],
 		);
 
 	const textClass = isSticky ? "" : theme === "dark" ? "" : "";
@@ -135,7 +132,15 @@ export function Widget({
 	return (
 		<div
 			ref={widgetRef}
+			role="group"
+			tabIndex={0}
 			onMouseDown={handleFocus}
+			onKeyDown={(e) => {
+				if (e.key === "Enter" || e.key === " ") {
+					e.preventDefault();
+					handleFocus();
+				}
+			}}
 			style={{
 				left: widget.x,
 				top: widget.y,

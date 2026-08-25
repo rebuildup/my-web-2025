@@ -3,6 +3,14 @@
 import { useState } from "react";
 import type { AnimationSettings, ExportSettings, FrameData } from "../types";
 
+function formatFileSize(bytes: number): string {
+	if (bytes === 0) return "0 Bytes";
+	const k = 1024;
+	const sizes = ["Bytes", "KB", "MB", "GB"];
+	const i = Math.floor(Math.log(bytes) / Math.log(k));
+	return `${parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
+}
+
 interface ExportPanelProps {
 	frames: FrameData[];
 	settings: AnimationSettings;
@@ -60,14 +68,6 @@ export default function ExportPanel({
 		}
 	};
 
-	const formatFileSize = (bytes: number): string => {
-		if (bytes === 0) return "0 Bytes";
-		const k = 1024;
-		const sizes = ["Bytes", "KB", "MB", "GB"];
-		const i = Math.floor(Math.log(bytes) / Math.log(k));
-		return `${parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
-	};
-
 	const estimatedFileSize = () => {
 		const avgFrameSize =
 			frames.reduce((total, frame) => total + frame.size, 0) / frames.length;
@@ -87,11 +87,12 @@ export default function ExportPanel({
 
 			<div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
 				<div>
-					<label
+					<span
+						id="export-format-label"
 						style={{ display: "block", fontSize: "12px", marginBottom: "5px" }}
 					>
 						エクスポート形式
-					</label>
+					</span>
 					<div
 						style={{
 							display: "grid",
@@ -141,6 +142,7 @@ export default function ExportPanel({
 				{exportSettings.format !== "frames" && (
 					<div>
 						<label
+							htmlFor="export-panel-quality"
 							style={{
 								display: "block",
 								fontSize: "12px",
@@ -150,6 +152,7 @@ export default function ExportPanel({
 							品質: {exportSettings.quality}%
 						</label>
 						<input
+							id="export-panel-quality"
 							type="range"
 							min="10"
 							max="100"
@@ -162,7 +165,6 @@ export default function ExportPanel({
 								}))
 							}
 							style={{ width: "100%" }}
-							aria-label="品質"
 						/>
 					</div>
 				)}
@@ -177,6 +179,7 @@ export default function ExportPanel({
 					>
 						<div>
 							<label
+								htmlFor="export-panel-width"
 								style={{
 									display: "block",
 									fontSize: "12px",
@@ -186,6 +189,7 @@ export default function ExportPanel({
 								幅 (px)
 							</label>
 							<input
+								id="export-panel-width"
 								type="number"
 								min="100"
 								max="4000"
@@ -202,11 +206,11 @@ export default function ExportPanel({
 									fontSize: "13px",
 									boxSizing: "border-box",
 								}}
-								aria-label="幅 (px)"
 							/>
 						</div>
 						<div>
 							<label
+								htmlFor="export-panel-height"
 								style={{
 									display: "block",
 									fontSize: "12px",
@@ -216,6 +220,7 @@ export default function ExportPanel({
 								高さ (px)
 							</label>
 							<input
+								id="export-panel-height"
 								type="number"
 								min="100"
 								max="4000"
@@ -226,7 +231,6 @@ export default function ExportPanel({
 										height: parseInt(e.target.value, 10) || 600,
 									}))
 								}
-								aria-label="高さ (px)"
 								style={{
 									width: "100%",
 									padding: "4px 8px",

@@ -25,7 +25,7 @@ export function ExpressionControls(props: ExpressionControlsProps) {
 	const deleteSaved = (id: string) => {
 		const updated = props.savedExpressions.filter((saved) => saved.id !== id);
 		props.setSavedExpressions(updated);
-		localStorage.setItem("ae-expressions-saved", JSON.stringify(updated));
+		localStorage.setItem("ae-expressions-saved:v1", JSON.stringify(updated));
 	};
 
 	return (

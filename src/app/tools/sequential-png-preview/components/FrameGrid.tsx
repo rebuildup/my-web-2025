@@ -11,6 +11,14 @@ interface FrameGridProps {
 	onFrameSelect: (frameIndex: number) => void;
 }
 
+const GRID_COLS = {
+	small: "repeat(8, 1fr)",
+	medium: "repeat(6, 1fr)",
+	large: "repeat(4, 1fr)",
+} as const;
+
+const THUMB_HEIGHT = { small: "64px", medium: "96px", large: "128px" } as const;
+
 export default function FrameGrid({
 	frames,
 	currentFrame,
@@ -20,13 +28,6 @@ export default function FrameGrid({
 		"medium",
 	);
 	const [showInfo, setShowInfo] = useState(true);
-
-	const gridCols = {
-		small: "repeat(8, 1fr)",
-		medium: "repeat(6, 1fr)",
-		large: "repeat(4, 1fr)",
-	};
-	const thumbHeight = { small: "64px", medium: "96px", large: "128px" };
 
 	if (frames.length === 0) {
 		return (
@@ -50,8 +51,11 @@ export default function FrameGrid({
 				</h3>
 				<div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
 					<div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-						<label style={{ fontSize: "12px" }}>表示サイズ:</label>
+						<label htmlFor="frame-grid-size" style={{ fontSize: "12px" }}>
+							表示サイズ:
+						</label>
 						<select
+							id="frame-grid-size"
 							value={gridSize}
 							onChange={(e) =>
 								setGridSize(e.target.value as "small" | "medium" | "large")
@@ -61,7 +65,6 @@ export default function FrameGrid({
 								padding: "2px 4px",
 								fontSize: "12px",
 							}}
-							aria-label="表示サイズ"
 						>
 							<option value="small">小</option>
 							<option value="medium">中</option>
@@ -69,6 +72,7 @@ export default function FrameGrid({
 						</select>
 					</div>
 					<label
+						htmlFor="frame-grid-show-info"
 						style={{
 							display: "flex",
 							alignItems: "center",
@@ -78,6 +82,7 @@ export default function FrameGrid({
 						}}
 					>
 						<input
+							id="frame-grid-show-info"
 							type="checkbox"
 							checked={showInfo}
 							onChange={(e) => setShowInfo(e.target.checked)}
@@ -91,26 +96,39 @@ export default function FrameGrid({
 			<div
 				style={{
 					display: "grid",
-					gridTemplateColumns: gridCols[gridSize],
+					gridTemplateColumns: GRID_COLS[gridSize],
 					gap: "8px",
 				}}
 			>
 				{frames.map((frame, index) => (
-					<div
+					<button
+						type="button"
 						key={frame.dataUrl}
 						onClick={() => onFrameSelect(index)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" || e.key === " ") {
+								e.preventDefault();
+								onFrameSelect(index);
+							}
+						}}
+						aria-label={`フレーム ${index + 1} を選択`}
+						aria-pressed={index === currentFrame}
 						style={{
 							cursor: "pointer",
 							border:
 								index === currentFrame ? "2px solid #000" : "1px solid #ddd",
 							overflow: "hidden",
 							background: index === currentFrame ? "#f0f0f0" : "#fff",
+							padding: 0,
+							textAlign: "left",
+							color: "inherit",
+							font: "inherit",
 						}}
 					>
 						<div
 							style={{
 								position: "relative",
-								height: thumbHeight[gridSize],
+								height: THUMB_HEIGHT[gridSize],
 								background: "#fafafa",
 							}}
 						>
@@ -163,7 +181,7 @@ export default function FrameGrid({
 								</div>
 							</div>
 						)}
-					</div>
+					</button>
 				))}
 			</div>
 
