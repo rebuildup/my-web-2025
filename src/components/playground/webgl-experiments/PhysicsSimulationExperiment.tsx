@@ -38,9 +38,9 @@ export function PhysicsSimulationExperiment({
 	const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 	const animationRef = useRef<number | null>(null);
 	const animateRef = useRef<(() => void) | undefined>(undefined);
-	const clockRef = useRef<THREE.Clock>(new THREE.Clock());
-	const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
-	const raycasterRef = useRef<THREE.Raycaster>(new THREE.Raycaster());
+	const clockRef = useRef<THREE.Clock | null>(null);
+	const mouseRef = useRef<THREE.Vector2 | null>(null);
+	const raycasterRef = useRef<THREE.Raycaster | null>(null);
 	const isActiveRef = useRef(false);
 
 	const physicsObjectsRef = useRef<PhysicsObject[]>([]);
@@ -81,6 +81,10 @@ export function PhysicsSimulationExperiment({
 			const scene = new THREE.Scene();
 			scene.background = new THREE.Color(0x111111);
 			sceneRef.current = scene;
+
+			if (!clockRef.current) {
+				clockRef.current = new THREE.Clock();
+			}
 
 			// Camera
 			const camera = new THREE.PerspectiveCamera(
@@ -152,6 +156,9 @@ export function PhysicsSimulationExperiment({
 			const handleMouseMove = (event: MouseEvent) => {
 				if (mountRef.current) {
 					const rect = mountRef.current.getBoundingClientRect();
+					if (!mouseRef.current) {
+						mouseRef.current = new THREE.Vector2();
+					}
 					mouseRef.current.x =
 						((event.clientX - rect.left) / rect.width) * 2 - 1;
 					mouseRef.current.y =
@@ -160,8 +167,12 @@ export function PhysicsSimulationExperiment({
 			};
 
 			const handleClick = () => {
-				if (!cameraRef.current || !sceneRef.current) return;
+				if (!cameraRef.current || !sceneRef.current || !mouseRef.current)
+					return;
 
+				if (!raycasterRef.current) {
+					raycasterRef.current = new THREE.Raycaster();
+				}
 				raycasterRef.current.setFromCamera(mouseRef.current, cameraRef.current);
 
 				// Add impulse to clicked objects
@@ -417,7 +428,7 @@ export function PhysicsSimulationExperiment({
 		}
 
 		const currentTime = performance.now();
-		const deltaTime = clockRef.current.getDelta();
+		const deltaTime = clockRef.current ? clockRef.current.getDelta() : 0;
 
 		// Update physics
 		updatePhysics(deltaTime);

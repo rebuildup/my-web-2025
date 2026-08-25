@@ -34,8 +34,8 @@ export function ParticleSystemExperiment({
 	const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 	const particlesRef = useRef<THREE.Points | null>(null);
 	const animationRef = useRef<number | null>(null);
-	const clockRef = useRef<THREE.Clock>(new THREE.Clock());
-	const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
+	const clockRef = useRef<THREE.Clock | null>(null);
+	const mouseRef = useRef<THREE.Vector2 | null>(null);
 
 	const [controls, setControls] = useState<ParticleControls>({
 		particleCount:
@@ -236,6 +236,10 @@ export function ParticleSystemExperiment({
 				enableProfiling: true,
 			});
 
+			if (!clockRef.current) {
+				clockRef.current = new THREE.Clock();
+			}
+
 			// Set memory limit based on device capabilities
 			let memoryLimit = 64;
 			if (deviceCapabilities.performanceLevel === "high") {
@@ -294,6 +298,9 @@ export function ParticleSystemExperiment({
 			const handleMouseMove = (event: MouseEvent) => {
 				if (mountRef.current) {
 					const rect = mountRef.current.getBoundingClientRect();
+					if (!mouseRef.current) {
+						mouseRef.current = new THREE.Vector2();
+					}
 					mouseRef.current.x =
 						((event.clientX - rect.left) / rect.width) * 2 - 1;
 					mouseRef.current.y =
@@ -329,8 +336,8 @@ export function ParticleSystemExperiment({
 
 			// Mouse attractor position
 			const mousePos = new THREE.Vector3(
-				mouseRef.current.x * 50,
-				mouseRef.current.y * 50,
+				(mouseRef.current?.x ?? 0) * 50,
+				(mouseRef.current?.y ?? 0) * 50,
 				0,
 			);
 
@@ -359,7 +366,7 @@ export function ParticleSystemExperiment({
 				}
 
 				// Noise force
-				const time = clockRef.current.getElapsedTime();
+				const time = clockRef.current?.getElapsedTime() ?? 0;
 				const noiseX =
 					Math.sin(time + i * 0.01) * controls.noiseStrength * deltaTime;
 				const noiseY =
@@ -406,7 +413,7 @@ export function ParticleSystemExperiment({
 		}
 
 		const currentTime = performance.now();
-		const deltaTime = clockRef.current.getDelta();
+		const deltaTime = clockRef.current ? clockRef.current.getDelta() : 0;
 
 		// Update particles
 		updateParticles(deltaTime);
@@ -414,7 +421,8 @@ export function ParticleSystemExperiment({
 		// Update shader uniforms
 		if (
 			particlesRef.current &&
-			particlesRef.current.material instanceof THREE.ShaderMaterial
+			particlesRef.current.material instanceof THREE.ShaderMaterial &&
+			clockRef.current
 		) {
 			particlesRef.current.material.uniforms.time.value =
 				clockRef.current.getElapsedTime();

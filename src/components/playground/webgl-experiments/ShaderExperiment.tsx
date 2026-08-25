@@ -130,8 +130,8 @@ export function ShaderExperiment({
 	const materialRef = useRef<THREE.ShaderMaterial | null>(null);
 	const animationRef = useRef<number | null>(null);
 	const animateRef = useRef<(() => void) | undefined>(undefined);
-	const clockRef = useRef<THREE.Clock>(new THREE.Clock());
-	const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
+	const clockRef = useRef<THREE.Clock | null>(null);
+	const mouseRef = useRef<THREE.Vector2 | null>(null);
 	const isActiveRef = useRef(false);
 
 	const [controls, setControls] = useState<ShaderControls>({
@@ -174,6 +174,10 @@ export function ShaderExperiment({
 			// Scene
 			const scene = new THREE.Scene();
 			sceneRef.current = scene;
+
+			if (!clockRef.current) {
+				clockRef.current = new THREE.Clock();
+			}
 
 			// Camera (orthographic for fullscreen quad)
 			const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
@@ -221,7 +225,11 @@ export function ShaderExperiment({
 				if (rect) {
 					const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
 					const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-					mouseRef.current.set(x, y);
+					if (!mouseRef.current) {
+						mouseRef.current = new THREE.Vector2(x, y);
+					} else {
+						mouseRef.current.set(x, y);
+					}
 					setControls((prev) => ({
 						...prev,
 						mouse: [x, y],
@@ -365,7 +373,9 @@ export function ShaderExperiment({
 		}
 
 		const currentTime = performance.now();
-		const elapsedTime = clockRef.current.getElapsedTime();
+		const elapsedTime = clockRef.current
+			? clockRef.current.getElapsedTime()
+			: 0;
 
 		// Update shader uniforms
 		if (materialRef.current) {

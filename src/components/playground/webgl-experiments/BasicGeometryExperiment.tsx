@@ -32,7 +32,7 @@ export function BasicGeometryExperiment({
 	const meshRef = useRef<THREE.Mesh | null>(null);
 	const animationRef = useRef<number | null>(null);
 	const animateRef = useRef<(() => void) | undefined>(undefined);
-	const clockRef = useRef<THREE.Clock>(new THREE.Clock());
+	const clockRef = useRef<THREE.Clock | null>(null);
 	const isActiveRef = useRef(false);
 
 	const [controls, setControls] = useState<GeometryControls>({
@@ -147,6 +147,10 @@ export function BasicGeometryExperiment({
 			scene.background = new THREE.Color(0x181818);
 			sceneRef.current = scene;
 
+			if (!clockRef.current) {
+				clockRef.current = new THREE.Clock();
+			}
+
 			// Camera
 			const camera = new THREE.PerspectiveCamera(
 				75,
@@ -244,7 +248,7 @@ export function BasicGeometryExperiment({
 		}
 
 		const currentTime = performance.now();
-		const deltaTime = clockRef.current.getDelta();
+		const deltaTime = clockRef.current ? clockRef.current.getDelta() : 0;
 
 		// Rotate mesh
 		if (meshRef.current) {
