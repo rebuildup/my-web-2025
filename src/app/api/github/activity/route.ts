@@ -92,8 +92,6 @@ interface CachedData {
 	timestamp: number;
 }
 
-const cache = new Map<string, CachedData>();
-
 async function fetchUserStatus(): Promise<GitHubUserStatus | null> {
 	try {
 		const res = await fetch(
@@ -214,12 +212,6 @@ async function fetchContributions(): Promise<{
 }
 
 async function fetchGitHubData() {
-	// Check cache
-	const cached = cache.get("default");
-	if (cached && Date.now() - cached.timestamp < CACHE_DURATION * 1000) {
-		return cached;
-	}
-
 	// Fetch user data, status, events, pinned repos and contributions in parallel
 	const [userRes, status, eventsRes, pinnedRepos, contributions] =
 		await Promise.all([
@@ -254,7 +246,6 @@ async function fetchGitHubData() {
 		timestamp: Date.now(),
 	};
 
-	cache.set("default", data);
 	return data;
 }
 

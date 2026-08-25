@@ -20,15 +20,7 @@ interface CachedData {
 	timestamp: number;
 }
 
-const cache = new Map<string, CachedData>();
-
 async function fetchYouTubeRSS(): Promise<CachedData> {
-	// Check cache
-	const cached = cache.get("default");
-	if (cached && Date.now() - cached.timestamp < CACHE_DURATION * 1000) {
-		return cached;
-	}
-
 	// Try multiple RSS feed URLs
 	const rssUrls = [
 		`https://www.youtube.com/feeds/videos.xml?user=${YOUTUBE_USER}`,
@@ -64,14 +56,11 @@ async function fetchYouTubeRSS(): Promise<CachedData> {
 		throw lastError;
 	}
 
-	const data: CachedData = {
+	return {
 		videos,
 		channelTitle,
 		timestamp: Date.now(),
 	};
-
-	cache.set("default", data);
-	return data;
 }
 
 function parseYouTubeRSS(xmlText: string): {

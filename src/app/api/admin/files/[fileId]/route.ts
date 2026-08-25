@@ -56,7 +56,7 @@ async function getFileInfo(filePath: string) {
  */
 export async function GET(
 	_request: NextRequest,
-	{ params }: { params: { fileId: string } },
+	{ params }: { params: Promise<{ fileId: string }> },
 ) {
 	if (!isDevelopment()) {
 		return NextResponse.json(
@@ -66,7 +66,8 @@ export async function GET(
 	}
 
 	try {
-		const filePath = decodeFileId(params.fileId);
+		const { fileId } = await params;
+		const filePath = decodeFileId(fileId);
 		if (!filePath) {
 			return NextResponse.json(
 				{ error: "Invalid file ID format" },
@@ -87,7 +88,7 @@ export async function GET(
 		return NextResponse.json({
 			success: true,
 			data: {
-				fileId: params.fileId,
+				fileId,
 				filePath,
 				size: info.size,
 				modified: info.modified,
@@ -111,7 +112,7 @@ export async function GET(
  */
 export async function POST(
 	request: NextRequest,
-	{ params }: { params: { fileId: string } },
+	{ params }: { params: Promise<{ fileId: string }> },
 ) {
 	if (!isDevelopment()) {
 		return NextResponse.json(
@@ -121,7 +122,8 @@ export async function POST(
 	}
 
 	try {
-		const filePath = decodeFileId(params.fileId);
+		const { fileId } = await params;
+		const filePath = decodeFileId(fileId);
 		if (!filePath) {
 			return NextResponse.json(
 				{ error: "Invalid file ID format" },

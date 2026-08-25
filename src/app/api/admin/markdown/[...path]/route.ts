@@ -14,7 +14,7 @@ function isDevelopment() {
 }
 
 // Extract file path from URL parameters
-function getFilePathFromParams(params: { path: string[] }): string {
+function getFilePathFromParams(path: string[]): string {
 	const baseDir = join(
 		process.cwd(),
 		"public",
@@ -23,7 +23,7 @@ function getFilePathFromParams(params: { path: string[] }): string {
 		"markdown",
 		"portfolio",
 	);
-	const relativePath = params.path.join("/");
+	const relativePath = path.join("/");
 
 	// Ensure .md extension
 	const filePath = relativePath.endsWith(".md")
@@ -38,7 +38,7 @@ function getFilePathFromParams(params: { path: string[] }): string {
  */
 export async function GET(
 	_request: NextRequest,
-	{ params }: { params: { path: string[] } },
+	{ params }: { params: Promise<{ path: string[] }> },
 ) {
 	if (!isDevelopment()) {
 		return NextResponse.json(
@@ -48,7 +48,8 @@ export async function GET(
 	}
 
 	try {
-		const filePath = getFilePathFromParams(params);
+		const { path } = await params;
+		const filePath = getFilePathFromParams(path);
 
 		// Read markdown file
 		const content = await markdownFileManager.readMarkdownFile(filePath);
@@ -63,7 +64,7 @@ export async function GET(
 		return NextResponse.json({
 			success: true,
 			data: {
-				path: params.path.join("/"),
+				path: path.join("/"),
 				content,
 			},
 		});
@@ -84,7 +85,7 @@ export async function GET(
  */
 export async function PUT(
 	request: NextRequest,
-	{ params }: { params: { path: string[] } },
+	{ params }: { params: Promise<{ path: string[] }> },
 ) {
 	if (!isDevelopment()) {
 		return NextResponse.json(
@@ -94,6 +95,7 @@ export async function PUT(
 	}
 
 	try {
+		const { path } = await params;
 		const body = await request.json();
 		const { content } = body;
 
@@ -104,7 +106,7 @@ export async function PUT(
 			);
 		}
 
-		const filePath = getFilePathFromParams(params);
+		const filePath = getFilePathFromParams(path);
 
 		// Save markdown file
 		await markdownFileManager.updateMarkdownFile(
@@ -116,7 +118,7 @@ export async function PUT(
 			success: true,
 			message: "Markdown file updated successfully",
 			data: {
-				path: params.path.join("/"),
+				path: path.join("/"),
 			},
 		});
 	} catch (error) {
@@ -136,7 +138,7 @@ export async function PUT(
  */
 export async function DELETE(
 	_request: NextRequest,
-	{ params }: { params: { path: string[] } },
+	{ params }: { params: Promise<{ path: string[] }> },
 ) {
 	if (!isDevelopment()) {
 		return NextResponse.json(
@@ -146,7 +148,8 @@ export async function DELETE(
 	}
 
 	try {
-		const filePath = getFilePathFromParams(params);
+		const { path } = await params;
+		const filePath = getFilePathFromParams(path);
 
 		// Delete markdown file
 		await markdownFileManager.deleteMarkdownFile(filePath);
@@ -155,7 +158,7 @@ export async function DELETE(
 			success: true,
 			message: "Markdown file deleted successfully",
 			data: {
-				path: params.path.join("/"),
+				path: path.join("/"),
 			},
 		});
 	} catch (error) {
