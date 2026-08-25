@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          submodules: recursive
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -28,6 +30,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Install submodule deps
+        run: bun --bun scripts/install-tools.ts
 
       - name: Type check
         run: bun run type-check
@@ -80,6 +85,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          submodules: recursive
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -88,6 +95,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Install submodule deps
+        run: bun --bun scripts/install-tools.ts
 
       # NB: no .next/cache restore - the cache key only hashes bun.lock and
       # source files, not the Bun runtime version. A cache written by an
