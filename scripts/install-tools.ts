@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+import { spawnSync } from "node:child_process";
 /**
  * Install each submodule under external/.
  *
@@ -13,7 +14,6 @@
  * Exit code 1 = at least one install failed.
  */
 import { existsSync } from "node:fs";
-import { spawnSync } from "node:child_process";
 import { join } from "node:path";
 
 const EXTERNAL_DIR = join(process.cwd(), "external");
