@@ -52,30 +52,21 @@ function TypingText({
 	useEffect(() => {
 		setDisplayedText("");
 		indexRef.current = 0;
-		let timeoutId: NodeJS.Timeout | null = null;
-		let intervalId: NodeJS.Timeout | null = null;
 
-		const startTyping = () => {
-			intervalId = setInterval(() => {
-				const nextIndex = indexRef.current + 1;
-				if (nextIndex <= text.length) {
-					indexRef.current = nextIndex;
-					setDisplayedText(text.slice(0, nextIndex));
-				} else {
-					if (intervalId) clearInterval(intervalId);
-				}
-			}, speed);
-		};
-
-		if (delay > 0) {
-			timeoutId = setTimeout(startTyping, delay);
-		} else {
-			startTyping();
-		}
+		const startedAt = performance.now() + delay;
+		const intervalId = setInterval(() => {
+			if (performance.now() < startedAt) return;
+			const nextIndex = indexRef.current + 1;
+			if (nextIndex <= text.length) {
+				indexRef.current = nextIndex;
+				setDisplayedText(text.slice(0, nextIndex));
+			} else {
+				clearInterval(intervalId);
+			}
+		}, speed);
 
 		return () => {
-			if (timeoutId) clearTimeout(timeoutId);
-			if (intervalId) clearInterval(intervalId);
+			clearInterval(intervalId);
 		};
 	}, [text, speed, delay]);
 

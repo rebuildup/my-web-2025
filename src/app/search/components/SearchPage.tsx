@@ -434,7 +434,7 @@ function SearchStructuredData() {
 export default function SearchPage() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
-	const [query, setQuery] = useState(searchParams.get("q") || "");
+	const [query, setQuery] = useState(() => searchParams.get("q") || "");
 	const [results, setResults] = useState<SearchResult[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [searchMode, setSearchMode] = useState<"simple" | "detailed">("simple");
@@ -443,7 +443,9 @@ export default function SearchPage() {
 	const [showFilters, setShowFilters] = useState(false);
 	const [suggestions, setSuggestions] = useState<string[]>([]);
 	const [showSuggestions, setShowSuggestions] = useState(false);
-	const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
+	const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>(() =>
+		typeof window === "undefined" ? [] : getSearchHistory(),
+	);
 	const [showHistory, setShowHistory] = useState(false);
 	// Style variables matching root page
 	const CardStyle =
@@ -648,7 +650,7 @@ export default function SearchPage() {
 		setSelectedCategory("");
 		performSearch(query);
 	};
-	// Load search history on mount
+	// Load search history on mount (covers tab-switch restores and updates)
 	useEffect(() => {
 		setSearchHistory(getSearchHistory());
 	}, []);

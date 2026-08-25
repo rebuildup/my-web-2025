@@ -123,7 +123,7 @@ export function ArticleSidePanel({
 	useEffect(() => {
 		if (headings.length === 0) return;
 
-		observerRef.current = new IntersectionObserver(
+		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
@@ -136,16 +136,18 @@ export function ArticleSidePanel({
 				threshold: 0,
 			},
 		);
+		observerRef.current = observer;
 
-		headings.forEach((heading) => {
+		for (const heading of headings) {
 			const element = document.getElementById(heading.id);
 			if (element) {
-				observerRef.current?.observe(element);
+				observer.observe(element);
 			}
-		});
+		}
 
 		return () => {
-			observerRef.current?.disconnect();
+			observer.disconnect();
+			observerRef.current = null;
 		};
 	}, [headings]);
 

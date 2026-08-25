@@ -195,10 +195,12 @@ function ContentSection({
 						}}
 						className="markdown-content-detail"
 						fallbackContent={fallbackContent}
-						enableSanitization={true}
-						enableValidation={true}
-						showRetryButton={false}
-						showEmptyState={true}
+						behavior={{
+							enableSanitization: true,
+							enableValidation: true,
+							showRetryButton: false,
+							showEmptyState: true,
+						}}
 						contentId={item?.id}
 					/>
 				</div>
@@ -216,10 +218,12 @@ function ContentSection({
 								}}
 								className="markdown-content-detail"
 								fallbackContent={fallbackContent}
-								enableSanitization={true}
-								enableValidation={true}
-								showRetryButton={false}
-								showEmptyState={true}
+								behavior={{
+									enableSanitization: true,
+									enableValidation: true,
+									showRetryButton: false,
+									showEmptyState: true,
+								}}
 							/>
 						);
 					})()}

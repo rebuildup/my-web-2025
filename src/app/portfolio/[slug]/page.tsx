@@ -277,10 +277,12 @@ function ContentSection({
 						}}
 						className="markdown-content-detail"
 						fallbackContent={fallbackContent}
-						enableSanitization={true}
-						enableValidation={true}
-						showRetryButton={false}
-						showEmptyState={true}
+						behavior={{
+							enableSanitization: true,
+							enableValidation: true,
+							showRetryButton: false,
+							showEmptyState: true,
+						}}
 						contentId={item.id}
 					/>
 				</div>
@@ -298,10 +300,13 @@ function ContentSection({
 								}}
 								className="markdown-content-detail"
 								fallbackContent={fallbackContent}
-								enableSanitization={true}
-								enableValidation={true}
-								showRetryButton={false} // Disable retry button in production
-								showEmptyState={true}
+								behavior={{
+									enableSanitization: true,
+									enableValidation: true,
+									// Disable retry button in production
+									showRetryButton: false,
+									showEmptyState: true,
+								}}
 							/>
 						);
 					})()}
@@ -317,10 +322,12 @@ function ContentSection({
 						}}
 						className="markdown-content-detail"
 						fallbackContent={fallbackContent}
-						enableSanitization={true}
-						enableValidation={true}
-						showRetryButton={false}
-						showEmptyState={true}
+						behavior={{
+							enableSanitization: true,
+							enableValidation: true,
+							showRetryButton: false,
+							showEmptyState: true,
+						}}
 						contentId={item.id}
 					/>
 				</div>

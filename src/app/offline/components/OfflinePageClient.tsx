@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function OfflinePageClient() {
+	const [redirectPending, setRedirectPending] = useState(false);
+
 	useEffect(() => {
 		function updateConnectionStatus() {
 			const status = document.getElementById("connection-status");
@@ -16,12 +18,9 @@ export default function OfflinePageClient() {
 		window.addEventListener("online", updateConnectionStatus);
 		window.addEventListener("offline", updateConnectionStatus);
 
-		// Auto-retry when connection is restored
-		const handleOnline = () => {
-			setTimeout(() => {
-				window.location.href = "/";
-			}, 1000);
-		};
+		function handleOnline() {
+			setRedirectPending(true);
+		}
 
 		window.addEventListener("online", handleOnline);
 
@@ -31,6 +30,16 @@ export default function OfflinePageClient() {
 			window.removeEventListener("online", handleOnline);
 		};
 	}, []);
+
+	useEffect(() => {
+		if (!redirectPending) return;
+		const timeoutId = setTimeout(() => {
+			window.location.href = "/";
+		}, 1000);
+		return () => {
+			clearTimeout(timeoutId);
+		};
+	}, [redirectPending]);
 
 	return (
 		<div className="min-h-dvh flex items-center justify-center">
