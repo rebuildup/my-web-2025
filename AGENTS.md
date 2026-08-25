@@ -48,7 +48,7 @@ UI 変更を含む場合は Playwright (または mcp__playwright__) で実描�
 - `src/types/` ドメイン型 (`content.ts`, `enhanced-content.ts`, `portfolio.ts`, `playground.ts`).
 - `apps/cms-api/` Rust 製 CMS API. `Cargo.toml` / `target/`. CMS_USE_RUST_API=1 で Next 側が proxy として `/api/cms/*` を叩く.
 - `docs/` 仕様 / 設計 / ページ仕様. `docs/app/` はルート別 spec. `docs/archive/` は旧版(参照用). `docs/adr/` に意思決定を残す(本 init で整備).
-- `scripts/` ビルド補助 (`copy-content-data.js`, `check-env.js`, `filter-warnings.js`, 各種 TS ツール, `sync-subtree.sh`, `merge-deps.mjs`).
+- `scripts/` ビルド補助 (`copy-content-data.js`, `check-env.js`, `filter-warnings.js`, 各種 TS ツール).
 - `data/contents/*.db` は git 管理外(`.gitignore` で除外). バイナリ. 直接編集禁止.
 - `public/` 画像 / favicons / 静的 HTML / Typekit loader. 触る前に影響範囲を確認.
 
