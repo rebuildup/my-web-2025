@@ -1,0 +1,3 @@
+[submodule "external/ui"]
+	path = external/ui
+	url = https://github.com/rebuildup/my-web-tools-ui.git
