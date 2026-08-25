@@ -16,6 +16,32 @@ const CALLOUT_STYLES: Record<
 	IMPORTANT: { border: "#ef4444", bg: "rgba(239,68,68,0.1)", text: "#ffcccc" },
 };
 
+const textStyle: CSSProperties = {
+	fontSize: 16,
+	backgroundColor: "transparent",
+	border: "none",
+	padding: 0,
+	paddingTop: 4,
+	paddingBottom: 4,
+	whiteSpace: "pre-wrap",
+	outline: "none",
+};
+
+function buildWrapperStyle(tone: {
+	border: string;
+	bg: string;
+	text: string;
+}): CSSProperties {
+	return {
+		borderLeft: `4px solid ${tone.border}`,
+		paddingLeft: 16,
+		paddingTop: 10,
+		paddingBottom: 10,
+		backgroundColor: tone.bg,
+		color: tone.text,
+	};
+}
+
 export function CalloutBlock({
 	block,
 	readOnly,
@@ -29,25 +55,7 @@ export function CalloutBlock({
 	);
 	const kind = match ? match[1].toUpperCase() : "NOTE";
 	const tone = CALLOUT_STYLES[kind] ?? CALLOUT_STYLES.NOTE;
-
-	const wrapperStyle: CSSProperties = {
-		borderLeft: `4px solid ${tone.border}`,
-		paddingLeft: 16,
-		paddingTop: 10,
-		paddingBottom: 10,
-		backgroundColor: tone.bg,
-		color: tone.text,
-	};
-	const textStyle: CSSProperties = {
-		fontSize: 16,
-		backgroundColor: "transparent",
-		border: "none",
-		padding: 0,
-		paddingTop: 4,
-		paddingBottom: 4,
-		whiteSpace: "pre-wrap",
-		outline: "none",
-	};
+	const wrapperStyle = buildWrapperStyle(tone);
 
 	return (
 		<div style={wrapperStyle}>

@@ -26,6 +26,75 @@ const labelStyle: React.CSSProperties = {
 	marginBottom: 2,
 };
 
+const blockWrapperStyle: React.CSSProperties = {
+	position: "relative",
+	borderRadius: 8,
+	padding: 0,
+};
+
+function getControlsBarStyle(position: "top" | "below"): React.CSSProperties {
+	return {
+		position: "absolute",
+		top: position === "top" ? 8 : 56,
+		left: 8,
+		right: 8,
+		backgroundColor: "rgba(0,0,0,0.35)",
+		borderRadius: 4,
+		padding: 8,
+		opacity: 0,
+		pointerEvents: "none",
+		transition: "opacity 120ms ease",
+	};
+}
+
+function getVideoStyle(
+	boxWidth: number,
+	heightPx: number | undefined,
+): React.CSSProperties {
+	return {
+		display: "inline-block",
+		width: `${boxWidth}%`,
+		height: heightPx ? `${heightPx}px` : "auto",
+		objectFit: heightPx ? "cover" : "contain",
+		borderRadius: 4,
+		border: `1px solid ${adminColor.border}`,
+		backgroundColor: "rgba(255,255,255,0.02)",
+	};
+}
+
+function getUploadButtonStyle(disabled: boolean): React.CSSProperties {
+	return {
+		width: "100%",
+		display: "inline-flex",
+		alignItems: "center",
+		justifyContent: "center",
+		gap: 8,
+		padding: "8px 16px",
+		border: `1px solid ${adminColor.borderInput}`,
+		borderRadius: 4,
+		backgroundColor: adminColor.bgPanel,
+		color: adminColor.textPrimary,
+		cursor: disabled ? "not-allowed" : "pointer",
+		opacity: disabled ? 0.6 : 1,
+		whiteSpace: "nowrap",
+	};
+}
+
+const alignOptions = [
+	{ value: "left", label: "Left" },
+	{ value: "center", label: "Center" },
+	{ value: "right", label: "Right" },
+];
+
+const switchLabelStyle: React.CSSProperties = {
+	display: "inline-flex",
+	alignItems: "center",
+	gap: 6,
+	fontSize: 14,
+	color: adminColor.textPrimary,
+	cursor: "pointer",
+};
+
 export function VideoBlock({
 	block,
 	readOnly,
@@ -92,16 +161,11 @@ export function VideoBlock({
 		0,
 		Math.min(100, Number.isNaN(widthPercent) ? 100 : widthPercent),
 	);
+	const uploadDisabled = !contentId || isUploading;
+	const videoStyle = getVideoStyle(boxWidth, heightPx);
 
 	return (
-		<div
-			className="block-video"
-			style={{
-				position: "relative",
-				borderRadius: 8,
-				padding: 0,
-			}}
-		>
+		<div className="block-video" style={blockWrapperStyle}>
 			<div style={{ textAlign: alignToText, paddingLeft: 0, paddingRight: 0 }}>
 				{src ? (
 					<video
@@ -110,15 +174,7 @@ export function VideoBlock({
 						controls={controls}
 						autoPlay={autoplay}
 						muted
-						style={{
-							display: "inline-block",
-							width: `${boxWidth}%`,
-							height: heightPx ? `${heightPx}px` : "auto",
-							objectFit: heightPx ? "cover" : "contain",
-							borderRadius: 4,
-							border: `1px solid ${adminColor.border}`,
-							backgroundColor: "rgba(255,255,255,0.02)",
-						}}
+						style={videoStyle}
 					/>
 				) : (
 					<div
@@ -141,21 +197,7 @@ export function VideoBlock({
 
 			{!readOnly && (
 				<>
-					<div
-						className="video-controls"
-						style={{
-							position: "absolute",
-							top: 8,
-							left: 8,
-							right: 8,
-							backgroundColor: "rgba(0,0,0,0.35)",
-							borderRadius: 4,
-							padding: 8,
-							opacity: 0,
-							pointerEvents: "none",
-							transition: "opacity 120ms ease",
-						}}
-					>
+					<div className="video-controls" style={getControlsBarStyle("top")}>
 						<div
 							style={{
 								display: "flex",
@@ -166,12 +208,16 @@ export function VideoBlock({
 							}}
 						>
 							<div style={{ width: 140 }}>
-								<label style={labelStyle}>Width (%)</label>
+								<label style={labelStyle} htmlFor="video-width-input">
+									Width (%)
+								</label>
 								<input
+									id="video-width-input"
 									type="number"
 									min={0}
 									max={100}
 									value={boxWidth}
+									aria-label="Width percentage"
 									onChange={(e) =>
 										onAttributesChange({
 											widthPercent: Math.max(
@@ -184,12 +230,16 @@ export function VideoBlock({
 								/>
 							</div>
 							<div style={{ width: 160 }}>
-								<label style={labelStyle}>Height (px)</label>
+								<label style={labelStyle} htmlFor="video-height-input">
+									Height (px)
+								</label>
 								<input
+									id="video-height-input"
 									type="number"
 									min={0}
 									max={4000}
 									value={heightPx ?? ""}
+									aria-label="Height in pixels"
 									onChange={(e) => {
 										const v =
 											e.target.value === ""
@@ -201,54 +251,37 @@ export function VideoBlock({
 								/>
 							</div>
 							<div style={{ width: 140 }}>
-								<label style={labelStyle}>Align</label>
+								<label style={labelStyle} htmlFor="video-align-select">
+									Align
+								</label>
 								<SimpleSelect
+									id="video-align-select"
 									size="small"
 									value={align}
 									onChange={(value) => onAttributesChange({ align: value })}
-									options={[
-										{ value: "left", label: "Left" },
-										{ value: "center", label: "Center" },
-										{ value: "right", label: "Right" },
-									]}
+									options={alignOptions}
 									minWidth={140}
 									aria-label="Align"
 								/>
 							</div>
-							<label
-								style={{
-									display: "inline-flex",
-									alignItems: "center",
-									gap: 6,
-									fontSize: 14,
-									color: adminColor.textPrimary,
-									cursor: "pointer",
-								}}
-							>
+							<label style={switchLabelStyle}>
 								<input
 									type="checkbox"
 									role="switch"
 									checked={autoplay}
+									aria-label="Autoplay"
 									onChange={(e) =>
 										onAttributesChange({ autoplay: e.target.checked })
 									}
 								/>
 								Autoplay
 							</label>
-							<label
-								style={{
-									display: "inline-flex",
-									alignItems: "center",
-									gap: 6,
-									fontSize: 14,
-									color: adminColor.textPrimary,
-									cursor: "pointer",
-								}}
-							>
+							<label style={switchLabelStyle}>
 								<input
 									type="checkbox"
 									role="switch"
 									checked={controls}
+									aria-label="Show controls"
 									onChange={(e) =>
 										onAttributesChange({ controls: e.target.checked })
 									}
@@ -258,21 +291,7 @@ export function VideoBlock({
 						</div>
 					</div>
 
-					<div
-						className="video-controls"
-						style={{
-							position: "absolute",
-							top: 56,
-							left: 8,
-							right: 8,
-							backgroundColor: "rgba(0,0,0,0.35)",
-							borderRadius: 4,
-							padding: 8,
-							opacity: 0,
-							pointerEvents: "none",
-							transition: "opacity 120ms ease",
-						}}
-					>
+					<div className="video-controls" style={getControlsBarStyle("below")}>
 						<div
 							style={{
 								display: "flex",
@@ -283,23 +302,9 @@ export function VideoBlock({
 						>
 							<button
 								type="button"
-								disabled={!contentId || isUploading}
+								disabled={uploadDisabled}
 								onClick={() => fileInputRef.current?.click()}
-								style={{
-									width: "100%",
-									display: "inline-flex",
-									alignItems: "center",
-									justifyContent: "center",
-									gap: 8,
-									padding: "8px 16px",
-									border: `1px solid ${adminColor.borderInput}`,
-									borderRadius: 4,
-									backgroundColor: adminColor.bgPanel,
-									color: adminColor.textPrimary,
-									cursor: !contentId || isUploading ? "not-allowed" : "pointer",
-									opacity: !contentId || isUploading ? 0.6 : 1,
-									whiteSpace: "nowrap",
-								}}
+								style={getUploadButtonStyle(uploadDisabled)}
 							>
 								<UploadCloud size={18} />
 								{isUploading ? "Uploading..." : "Upload video"}
@@ -353,8 +358,11 @@ export function VideoBlock({
 								}}
 							>
 								<div style={{ width: "100%" }}>
-									<label style={labelStyle}>URL</label>
+									<label style={labelStyle} htmlFor="video-url-input">
+										URL
+									</label>
 									<input
+										id="video-url-input"
 										value={src}
 										onChange={(e) =>
 											onAttributesChange({ src: e.target.value })
@@ -364,8 +372,11 @@ export function VideoBlock({
 									/>
 								</div>
 								<div style={{ width: "100%" }}>
-									<label style={labelStyle}>Poster</label>
+									<label style={labelStyle} htmlFor="video-poster-input">
+										Poster
+									</label>
 									<input
+										id="video-poster-input"
 										value={poster}
 										onChange={(e) =>
 											onAttributesChange({ poster: e.target.value })

@@ -11,51 +11,112 @@ export interface BlockToolbarProps {
 	hasUnsavedChanges?: boolean;
 }
 
+const sectionStyle: React.CSSProperties = {
+	padding: 0,
+	backgroundColor: "transparent",
+};
+
+const rowStyle: React.CSSProperties = {
+	display: "flex",
+	flexDirection: "row",
+	justifyContent: "space-between",
+	alignItems: "center",
+	maxWidth: 768,
+	margin: "0 auto",
+	width: "100%",
+	gap: 16,
+};
+
+const statusRowStyle: React.CSSProperties = {
+	display: "flex",
+	flexDirection: "row",
+	alignItems: "center",
+	gap: 16,
+};
+
+const statusLabelStyle: React.CSSProperties = {
+	display: "block",
+	fontSize: 14,
+	fontWeight: 600,
+	color: adminColor.textPrimary,
+};
+
+const savedLabelStyle: React.CSSProperties = {
+	display: "block",
+	fontSize: 12,
+	color: adminColor.textSecondary,
+};
+
+const draftBadgeStyle: React.CSSProperties = {
+	display: "inline-block",
+	fontSize: 12,
+	padding: "2px 8px",
+	border: `1px solid ${adminColor.warning}`,
+	color: adminColor.warning,
+	borderRadius: 12,
+};
+
+const saveButtonStyle: React.CSSProperties = {
+	display: "inline-flex",
+	alignItems: "center",
+	gap: 8,
+	padding: "8px 16px",
+	fontSize: 14,
+	backgroundColor: adminColor.accent,
+	color: "#fff",
+	border: "none",
+	borderRadius: 4,
+};
+
+function getSaveButtonStyle(disabled: boolean): React.CSSProperties {
+	return {
+		...saveButtonStyle,
+		cursor: disabled ? "not-allowed" : "pointer",
+		opacity: disabled ? 0.6 : 1,
+	};
+}
+
+const progressTrackStyle: React.CSSProperties = {
+	marginTop: 16,
+	height: 4,
+	width: "100%",
+	backgroundColor: adminColor.accentHover,
+	borderRadius: 2,
+	overflow: "hidden",
+};
+
+const progressBarStyle: React.CSSProperties = {
+	height: "100%",
+	width: "40%",
+	backgroundColor: adminColor.accent,
+};
+
+function getStatusColor(isSaving: boolean, hasUnsavedChanges: boolean): string {
+	if (isSaving) return adminColor.textSecondary;
+	if (hasUnsavedChanges) return adminColor.warning;
+	return adminColor.success;
+}
+
+function getStatusLabel(isSaving: boolean, hasUnsavedChanges: boolean): string {
+	if (isSaving) return "Saving...";
+	if (hasUnsavedChanges) return "Unsaved changes";
+	return "All changes saved";
+}
+
 export function BlockToolbar({
 	onSave,
 	isSaving = false,
 	lastSaved,
 	hasUnsavedChanges = false,
 }: BlockToolbarProps) {
-	const statusLabel = isSaving
-		? "Saving..."
-		: hasUnsavedChanges
-			? "Unsaved changes"
-			: "All changes saved";
-
-	const statusColor = isSaving
-		? adminColor.textSecondary
-		: hasUnsavedChanges
-			? adminColor.warning
-			: adminColor.success;
+	const statusLabel = getStatusLabel(isSaving, hasUnsavedChanges);
+	const statusColor = getStatusColor(isSaving, hasUnsavedChanges);
+	const saveDisabled = !hasUnsavedChanges || isSaving || !onSave;
 
 	return (
-		<section
-			style={{
-				padding: 0,
-				backgroundColor: "transparent",
-			}}
-		>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "row",
-					justifyContent: "space-between",
-					alignItems: "center",
-					maxWidth: 768,
-					margin: "0 auto",
-					width: "100%",
-					gap: 16,
-				}}
-			>
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "row",
-						alignItems: "center",
-						gap: 16,
-					}}
-				>
+		<section style={sectionStyle}>
+			<div style={rowStyle}>
+				<div style={statusRowStyle}>
 					{isSaving ? (
 						<Loader2 size={20} color={adminColor.textSecondary} />
 					) : (
@@ -68,86 +129,30 @@ export function BlockToolbar({
 						</div>
 					)}
 					<div>
-						<span
-							style={{
-								display: "block",
-								fontSize: 14,
-								fontWeight: 600,
-								color: adminColor.textPrimary,
-							}}
-						>
-							{statusLabel}
-						</span>
+						<span style={statusLabelStyle}>{statusLabel}</span>
 						{lastSaved && (
-							<span
-								style={{
-									display: "block",
-									fontSize: 12,
-									color: adminColor.textSecondary,
-								}}
-							>
+							<span style={savedLabelStyle}>
 								Saved {formatDistanceToNow(lastSaved, { addSuffix: true })}
 							</span>
 						)}
 					</div>
 					{hasUnsavedChanges && !isSaving && (
-						<span
-							style={{
-								display: "inline-block",
-								fontSize: 12,
-								padding: "2px 8px",
-								border: `1px solid ${adminColor.warning}`,
-								color: adminColor.warning,
-								borderRadius: 12,
-							}}
-						>
-							Draft
-						</span>
+						<span style={draftBadgeStyle}>Draft</span>
 					)}
 				</div>
 				<button
 					type="button"
-					disabled={!hasUnsavedChanges || isSaving || !onSave}
+					disabled={saveDisabled}
 					onClick={() => onSave?.()}
-					style={{
-						display: "inline-flex",
-						alignItems: "center",
-						gap: 8,
-						padding: "8px 16px",
-						fontSize: 14,
-						backgroundColor: adminColor.accent,
-						color: "#fff",
-						border: "none",
-						borderRadius: 4,
-						cursor:
-							!hasUnsavedChanges || isSaving || !onSave
-								? "not-allowed"
-								: "pointer",
-						opacity: !hasUnsavedChanges || isSaving || !onSave ? 0.6 : 1,
-					}}
+					style={getSaveButtonStyle(saveDisabled)}
 				>
 					{!isSaving && <Save size={16} />}
 					{isSaving ? "Saving..." : "Save now"}
 				</button>
 			</div>
 			{isSaving && (
-				<div
-					style={{
-						marginTop: 16,
-						height: 4,
-						width: "100%",
-						backgroundColor: adminColor.accentHover,
-						borderRadius: 2,
-						overflow: "hidden",
-					}}
-				>
-					<div
-						style={{
-							height: "100%",
-							width: "40%",
-							backgroundColor: adminColor.accent,
-						}}
-					/>
+				<div style={progressTrackStyle}>
+					<div style={progressBarStyle} />
 				</div>
 			)}
 		</section>

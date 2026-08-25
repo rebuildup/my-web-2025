@@ -6,6 +6,26 @@ import { useEffect, useMemo, useState } from "react";
 import "prismjs/components/prism-markup";
 import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-tsx";
+import "prismjs/components/prism-bash";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-java";
+import "prismjs/components/prism-c";
+import "prismjs/components/prism-cpp";
+import "prismjs/components/prism-ruby";
+import "prismjs/components/prism-php";
+import "prismjs/components/prism-go";
+import "prismjs/components/prism-rust";
+import "prismjs/components/prism-kotlin";
+import "prismjs/components/prism-swift";
+import "prismjs/components/prism-sql";
+import "prismjs/components/prism-json";
+import "prismjs/components/prism-yaml";
+import "prismjs/components/prism-markdown";
+import "prismjs/components/prism-css";
+import "prismjs/components/prism-scss";
 import { EditableText } from "@/components/admin/page-editor/editor/EditableText";
 import { SimpleSelect, type SimpleSelectOption } from "@/components/admin/ui";
 import { adminColor } from "@/components/admin/ui/tokens";
@@ -13,13 +33,170 @@ import type { BlockComponentProps } from "../types";
 
 type ViewMode = "edit" | "preview" | "split";
 
-async function loadPrismLanguage(name: string): Promise<boolean> {
+const ALIAS_MAP: Record<string, string> = {
+	js: "javascript",
+	jsx: "jsx",
+	ts: "typescript",
+	tsx: "tsx",
+	sh: "bash",
+	zsh: "bash",
+	shell: "bash",
+	py: "python",
+	yml: "yaml",
+	md: "markdown",
+	html: "markup",
+	xml: "markup",
+	txt: "plaintext",
+};
+
+const LANGUAGE_OPTIONS: SimpleSelectOption[] = [
+	{ value: "", label: "auto (plain)" },
+	{ value: "javascript", label: "JavaScript" },
+	{ value: "typescript", label: "TypeScript" },
+	{ value: "tsx", label: "TSX" },
+	{ value: "jsx", label: "JSX" },
+	{ value: "bash", label: "Bash" },
+	{ value: "python", label: "Python" },
+	{ value: "java", label: "Java" },
+	{ value: "cpp", label: "C++" },
+	{ value: "c", label: "C" },
+	{ value: "ruby", label: "Ruby" },
+	{ value: "php", label: "PHP" },
+	{ value: "go", label: "Go" },
+	{ value: "rust", label: "Rust" },
+	{ value: "kotlin", label: "Kotlin" },
+	{ value: "swift", label: "Swift" },
+	{ value: "sql", label: "SQL" },
+	{ value: "json", label: "JSON" },
+	{ value: "yaml", label: "YAML" },
+	{ value: "markdown", label: "Markdown" },
+	{ value: "markup", label: "HTML/XML" },
+	{ value: "css", label: "CSS" },
+	{ value: "scss", label: "SCSS" },
+];
+
+const editorStyle: React.CSSProperties = {
+	fontFamily:
+		'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+	fontSize: 13.5,
+	lineHeight: 1.6,
+	color: "#e5e7eb",
+	backgroundColor: "transparent",
+	borderRadius: 4,
+	border: `1px solid ${adminColor.border}`,
+	padding: 12,
+	minHeight: 140,
+	whiteSpace: "pre",
+	overflowX: "auto",
+};
+
+const previewStyle: React.CSSProperties = {
+	margin: 0,
+	background: "transparent",
+	borderRadius: 8,
+	border: "1px solid rgba(255,255,255,0.12)",
+	padding: 12,
+};
+
+const containerStyle: React.CSSProperties = {
+	borderRadius: 12,
+	backgroundColor: "transparent",
+	border: `1px solid ${adminColor.border}`,
+	padding: 0,
+	position: "relative",
+};
+
+const controlsBarStyle: React.CSSProperties = {
+	position: "absolute",
+	top: 8,
+	right: 8,
+	display: "flex",
+	alignItems: "center",
+	gap: 8,
+	opacity: 0,
+	pointerEvents: "none",
+	transition: "opacity 120ms ease",
+	zIndex: 3,
+};
+
+const viewModeGroupStyle: React.CSSProperties = {
+	display: "inline-flex",
+	gap: 2,
+	backgroundColor: "rgba(0,0,0,0.4)",
+	borderRadius: 4,
+	marginLeft: 8,
+	color: "#fff",
+};
+
+const viewModeButtonStyle: React.CSSProperties = {
+	padding: "4px 8px",
+	fontSize: 13,
+	background: "transparent",
+	color: "#fff",
+	border: "none",
+	borderRadius: 2,
+	cursor: "pointer",
+};
+
+const viewModeButtonActiveStyle: React.CSSProperties = {
+	...viewModeButtonStyle,
+	background: adminColor.accent,
+};
+
+const copyButtonStyle: React.CSSProperties = {
+	display: "inline-flex",
+	alignItems: "center",
+	justifyContent: "center",
+	padding: 6,
+	backgroundColor: "rgba(0,0,0,0.4)",
+	border: "none",
+	borderRadius: 4,
+	color: "#fff",
+	cursor: "pointer",
+};
+
+const previewWrapperStyle: React.CSSProperties = {
+	position: "relative",
+	padding: 16,
+};
+
+const splitLayoutStyle: React.CSSProperties = {
+	display: "flex",
+	gap: 16,
+	alignItems: "stretch",
+};
+
+const splitColumnStyle: React.CSSProperties = {
+	flex: 1,
+	minWidth: 0,
+};
+
+function highlightCode(code: string, normalizedLang: string): string {
+	const grammar =
+		Prism.languages[normalizedLang] ||
+		Prism.languages.markup ||
+		(Prism.languages as unknown as Record<string, unknown>).plaintext;
 	try {
-		await import(`prismjs/components/prism-${name}.js` as unknown as string);
-		return true;
+		return Prism.highlight(code, grammar as unknown, normalizedLang);
 	} catch {
-		return false;
+		return code
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;");
 	}
+}
+
+function normalizeLanguage(language: string): string {
+	const input = (language || "").trim().toLowerCase();
+	const preferred = input ? (ALIAS_MAP[input] ?? input) : "plaintext";
+	return preferred || "plaintext";
+}
+
+function runPrismHighlightAll(root: HTMLElement | undefined | null) {
+	if (typeof window === "undefined") return;
+	window.requestAnimationFrame(() => {
+		Prism.highlightAllUnder?.(root ?? document.body);
+	});
 }
 
 export function CodeBlock({
@@ -29,56 +206,19 @@ export function CodeBlock({
 	onAttributesChange,
 }: BlockComponentProps) {
 	const language = (block.attributes.language as string | undefined) ?? "";
-	const aliasMap: Record<string, string> = {
-		js: "javascript",
-		jsx: "jsx",
-		ts: "typescript",
-		tsx: "tsx",
-		sh: "bash",
-		zsh: "bash",
-		shell: "bash",
-		py: "python",
-		yml: "yaml",
-		md: "markdown",
-		html: "markup",
-		xml: "markup",
-		txt: "plaintext",
-	};
 
-	const normalizedLang = useMemo(() => {
-		const input = (language || "").trim().toLowerCase();
-		const preferred = input ? (aliasMap[input] ?? input) : "plaintext";
-		return preferred || "plaintext";
-	}, [language]);
+	const normalizedLang = useMemo(() => normalizeLanguage(language), [language]);
 
-	const languageOptions = useMemo<SimpleSelectOption[]>(
-		() => [
-			{ value: "", label: "auto (plain)" },
-			{ value: "javascript", label: "JavaScript" },
-			{ value: "typescript", label: "TypeScript" },
-			{ value: "tsx", label: "TSX" },
-			{ value: "jsx", label: "JSX" },
-			{ value: "bash", label: "Bash" },
-			{ value: "python", label: "Python" },
-			{ value: "java", label: "Java" },
-			{ value: "cpp", label: "C++" },
-			{ value: "c", label: "C" },
-			{ value: "ruby", label: "Ruby" },
-			{ value: "php", label: "PHP" },
-			{ value: "go", label: "Go" },
-			{ value: "rust", label: "Rust" },
-			{ value: "kotlin", label: "Kotlin" },
-			{ value: "swift", label: "Swift" },
-			{ value: "sql", label: "SQL" },
-			{ value: "json", label: "JSON" },
-			{ value: "yaml", label: "YAML" },
-			{ value: "markdown", label: "Markdown" },
-			{ value: "markup", label: "HTML/XML" },
-			{ value: "css", label: "CSS" },
-			{ value: "scss", label: "SCSS" },
-		],
-		[],
+	const highlightedHtml = useMemo(
+		() => highlightCode(block.content || "", normalizedLang),
+		[block.content, normalizedLang],
 	);
+
+	useEffect(() => {
+		if (normalizedLang !== "plaintext") {
+			runPrismHighlightAll(null);
+		}
+	}, [normalizedLang]);
 
 	const [viewMode, setViewMode] = useState<ViewMode>(() => {
 		const saved = (block.attributes.viewMode as string | undefined) ?? "split";
@@ -91,123 +231,27 @@ export function CodeBlock({
 		onAttributesChange({ viewMode: next });
 	};
 
-	useEffect(() => {
-		let mounted = true;
-		const name = normalizedLang.replace(/[^a-z0-9-]/g, "");
-		if (!name || name === "plaintext") return;
-		const load = async () => {
-			const completed = await loadPrismLanguage(name);
-
-			if (completed && mounted) {
-				requestAnimationFrame(() => {
-					Prism.highlightAllUnder?.(document.body);
-				});
-			}
-		};
-		void load();
-		return () => {
-			mounted = false;
-		};
-	}, [normalizedLang]);
-
-	const highlightedHtml = useMemo(() => {
-		const code = block.content || "";
-		const grammar =
-			Prism.languages[normalizedLang] ||
-			Prism.languages.markup ||
-			(Prism.languages as unknown as Record<string, unknown>).plaintext;
-		try {
-			return Prism.highlight(code, grammar as unknown, normalizedLang);
-		} catch {
-			return code
-				.replace(/&/g, "&amp;")
-				.replace(/</g, "&lt;")
-				.replace(/>/g, "&gt;");
-		}
-	}, [block.content, normalizedLang]);
-
 	const handleCopy = async () => {
-		let textToCopy = "";
-		if (block.content) {
-			textToCopy = block.content;
-		}
-
 		try {
-			await navigator.clipboard.writeText(textToCopy);
+			await navigator.clipboard.writeText(block.content || "");
 		} catch {}
 	};
 
-	const editorStyle: React.CSSProperties = {
-		fontFamily:
-			'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-		fontSize: 13.5,
-		lineHeight: 1.6,
-		color: "#e5e7eb",
-		backgroundColor: "transparent",
-		borderRadius: 4,
-		border: `1px solid ${adminColor.border}`,
-		padding: 12,
-		minHeight: 140,
-		whiteSpace: "pre",
-		overflowX: "auto",
-	};
-	const previewStyle: React.CSSProperties = {
-		margin: 0,
-		background: "transparent",
-		borderRadius: 8,
-		border: "1px solid rgba(255,255,255,0.12)",
-		padding: 12,
-	};
-
 	return (
-		<section
-			className="block-code"
-			style={{
-				borderRadius: 12,
-				backgroundColor: "transparent",
-				border: `1px solid ${adminColor.border}`,
-				padding: 0,
-				position: "relative",
-			}}
-		>
+		<section className="block-code" style={containerStyle}>
 			{!readOnly && (
-				<div
-					style={{
-						position: "absolute",
-						top: 8,
-						right: 8,
-						display: "flex",
-						alignItems: "center",
-						gap: 8,
-						opacity: 0,
-						pointerEvents: "none",
-						transition: "opacity 120ms ease",
-						zIndex: 3,
-					}}
-					className="codeblock-controls"
-				>
+				<div style={controlsBarStyle} className="codeblock-controls">
 					<div style={{ minWidth: 140, zIndex: 3 }}>
 						<SimpleSelect
 							size="small"
 							value={language || ""}
-							options={languageOptions}
+							options={LANGUAGE_OPTIONS}
 							onChange={(value) => onAttributesChange({ language: value })}
 							minWidth={140}
 							aria-label="Language"
 						/>
 					</div>
-					<div
-						role="group"
-						aria-label="View mode"
-						style={{
-							display: "inline-flex",
-							gap: 2,
-							backgroundColor: "rgba(0,0,0,0.4)",
-							borderRadius: 4,
-							marginLeft: 8,
-							color: "#fff",
-						}}
-					>
+					<div role="group" aria-label="View mode" style={viewModeGroupStyle}>
 						{(["edit", "split", "preview"] as const).map((mode) => {
 							const label =
 								mode === "edit" ? "E" : mode === "split" ? "S" : "P";
@@ -219,15 +263,9 @@ export function CodeBlock({
 									aria-pressed={active}
 									aria-label={mode}
 									onClick={() => handleChangeView(mode)}
-									style={{
-										padding: "4px 8px",
-										fontSize: 13,
-										background: active ? adminColor.accent : "transparent",
-										color: "#fff",
-										border: "none",
-										borderRadius: 2,
-										cursor: "pointer",
-									}}
+									style={
+										active ? viewModeButtonActiveStyle : viewModeButtonStyle
+									}
 								>
 									{label}
 								</button>
@@ -238,23 +276,13 @@ export function CodeBlock({
 						type="button"
 						onClick={() => void handleCopy()}
 						aria-label="Copy code"
-						style={{
-							display: "inline-flex",
-							alignItems: "center",
-							justifyContent: "center",
-							padding: 6,
-							backgroundColor: "rgba(0,0,0,0.4)",
-							border: "none",
-							borderRadius: 4,
-							color: "#fff",
-							cursor: "pointer",
-						}}
+						style={copyButtonStyle}
 					>
 						<Copy size={16} />
 					</button>
 				</div>
 			)}
-			<div style={{ position: "relative", padding: 16 }}>
+			<div style={previewWrapperStyle}>
 				{readOnly || viewMode === "preview" ? (
 					<pre className={`language-${normalizedLang}`} style={previewStyle}>
 						<code
@@ -273,8 +301,8 @@ export function CodeBlock({
 						sx={editorStyle}
 					/>
 				) : (
-					<div style={{ display: "flex", gap: 16, alignItems: "stretch" }}>
-						<div style={{ flex: 1, minWidth: 0 }}>
+					<div style={splitLayoutStyle}>
+						<div style={splitColumnStyle}>
 							<EditableText
 								value={block.content}
 								onChange={onContentChange}
@@ -283,7 +311,7 @@ export function CodeBlock({
 								sx={editorStyle}
 							/>
 						</div>
-						<div style={{ flex: 1, minWidth: 0 }}>
+						<div style={splitColumnStyle}>
 							<pre
 								className={`language-${normalizedLang}`}
 								style={previewStyle}

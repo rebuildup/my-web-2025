@@ -5,6 +5,61 @@ import { sanitizeUrl } from "@/cms/page-editor/lib/utils/sanitize";
 import { adminColor } from "@/components/admin/ui/tokens";
 import type { BlockComponentProps } from "../types";
 
+const sectionStyle: React.CSSProperties = {
+	position: "relative",
+	borderRadius: 12,
+	border: `1px solid ${adminColor.border}`,
+	backgroundColor: "rgba(255,255,255,0.02)",
+	overflow: "hidden",
+};
+
+const urlInputWrapperStyle: React.CSSProperties = {
+	position: "absolute",
+	top: 8,
+	right: 8,
+	zIndex: 2,
+	backgroundColor: "rgba(15,23,42,0.5)",
+	backdropFilter: "blur(4px)",
+	borderRadius: 4,
+	maxWidth: "min(520px, 80vw)",
+	transition: "opacity 120ms ease",
+};
+
+const urlInputStyle: React.CSSProperties = {
+	margin: 8,
+	minWidth: 260,
+	padding: "6px 10px",
+	fontSize: 14,
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 4,
+	backgroundColor: "rgba(0,0,0,0.5)",
+	color: adminColor.textPrimary,
+	outline: "none",
+};
+
+const linkRowStyle: React.CSSProperties = {
+	display: "flex",
+	alignItems: "stretch",
+	borderTop: `1px solid ${adminColor.border}`,
+	color: "inherit",
+	textDecoration: "none",
+};
+
+function getUrlWrapperOpacity(hovered: boolean): React.CSSProperties {
+	return {
+		...urlInputWrapperStyle,
+		opacity: hovered ? 1 : 0,
+		pointerEvents: hovered ? ("auto" as const) : ("none" as const),
+	};
+}
+
+function getLinkStyle(url: string): React.CSSProperties {
+	return {
+		...linkRowStyle,
+		pointerEvents: url ? ("auto" as const) : ("none" as const),
+	};
+}
+
 export function WebBookmarkBlock({
 	block,
 	readOnly,
@@ -60,6 +115,9 @@ export function WebBookmarkBlock({
 					`/api/metadata?url=${encodeURIComponent(safeUrl)}`,
 					{ signal: controller.signal },
 				);
+				if (!res.ok) {
+					return;
+				}
 				data = (await res.json()) as {
 					image?: string;
 					title?: string;
@@ -109,32 +167,27 @@ export function WebBookmarkBlock({
 		<section
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
-			style={{
-				position: "relative",
-				borderRadius: 12,
-				border: `1px solid ${adminColor.border}`,
-				backgroundColor: "rgba(255,255,255,0.02)",
-				overflow: "hidden",
-			}}
+			style={sectionStyle}
 		>
 			{!readOnly && (
 				<div
 					className="bookmark-url-input"
-					style={{
-						position: "absolute",
-						top: 8,
-						right: 8,
-						zIndex: 2,
-						opacity: hovered ? 1 : 0,
-						pointerEvents: hovered ? "auto" : "none",
-						transition: "opacity 120ms ease",
-						backgroundColor: "rgba(15,23,42,0.5)",
-						backdropFilter: "blur(4px)",
-						borderRadius: 4,
-						maxWidth: "min(520px, 80vw)",
-					}}
+					style={getUrlWrapperOpacity(hovered)}
 				>
+					<label
+						htmlFor="web-bookmark-url-input"
+						style={{
+							position: "absolute",
+							width: 1,
+							height: 1,
+							overflow: "hidden",
+							clip: "rect(0 0 0 0)",
+						}}
+					>
+						Bookmark URL
+					</label>
 					<input
+						id="web-bookmark-url-input"
 						placeholder="https://example.com"
 						value={url}
 						onChange={(event) =>
@@ -142,17 +195,7 @@ export function WebBookmarkBlock({
 						}
 						onFocus={() => setHovered(true)}
 						onBlur={() => setHovered(false)}
-						style={{
-							margin: 8,
-							minWidth: 260,
-							padding: "6px 10px",
-							fontSize: 14,
-							border: `1px solid ${adminColor.borderInput}`,
-							borderRadius: 4,
-							backgroundColor: "rgba(0,0,0,0.5)",
-							color: adminColor.textPrimary,
-							outline: "none",
-						}}
+						style={urlInputStyle}
 					/>
 				</div>
 			)}
@@ -162,14 +205,7 @@ export function WebBookmarkBlock({
 				target="_blank"
 				rel="noreferrer"
 				aria-disabled={!url}
-				style={{
-					display: "flex",
-					alignItems: "stretch",
-					borderTop: `1px solid ${adminColor.border}`,
-					color: "inherit",
-					textDecoration: "none",
-					pointerEvents: url ? "auto" : "none",
-				}}
+				style={getLinkStyle(url)}
 			>
 				{image ? (
 					<img

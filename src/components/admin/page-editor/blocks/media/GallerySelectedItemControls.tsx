@@ -26,6 +26,19 @@ const labelStyle: React.CSSProperties = {
 	marginBottom: 2,
 };
 
+const rowStyle: React.CSSProperties = {
+	display: "flex",
+	flexDirection: "row",
+	flexWrap: "wrap",
+	alignItems: "center",
+	gap: 12,
+};
+
+const columnStyle: React.CSSProperties = {
+	flex: 1,
+	minWidth: 200,
+};
+
 export function GallerySelectedItemControls({
 	content,
 	item,
@@ -36,29 +49,29 @@ export function GallerySelectedItemControls({
 		onContentChange?.(replaceGalleryLine(content, selected, line));
 	};
 
+	const itemId = `gallery-item-${selected}-${item.kind}`;
+
 	return (
-		<div
-			style={{
-				display: "flex",
-				flexDirection: "row",
-				flexWrap: "wrap",
-				alignItems: "center",
-				gap: 12,
-			}}
-		>
+		<div style={rowStyle}>
 			{item.kind === "image" && (
 				<>
-					<div style={{ flex: 1, minWidth: 200 }}>
-						<label style={labelStyle}>URL</label>
+					<div style={columnStyle}>
+						<label style={labelStyle} htmlFor={`${itemId}-url`}>
+							URL
+						</label>
 						<input
+							id={`${itemId}-url`}
 							defaultValue={item.url}
 							onBlur={(event) => updateLine(`[image] ${event.target.value}`)}
 							style={inputStyle}
 						/>
 					</div>
-					<div style={{ flex: 1, minWidth: 200 }}>
-						<label style={labelStyle}>Alt (label)</label>
+					<div style={columnStyle}>
+						<label style={labelStyle} htmlFor={`${itemId}-alt`}>
+							Alt (label)
+						</label>
 						<input
+							id={`${itemId}-alt`}
 							defaultValue={item.label ?? ""}
 							onBlur={(event) =>
 								updateLine(
@@ -71,9 +84,12 @@ export function GallerySelectedItemControls({
 				</>
 			)}
 			{item.kind === "video" && (
-				<div style={{ flex: 1, minWidth: 200 }}>
-					<label style={labelStyle}>URL</label>
+				<div style={columnStyle}>
+					<label style={labelStyle} htmlFor={`${itemId}-url`}>
+						URL
+					</label>
 					<input
+						id={`${itemId}-url`}
 						defaultValue={item.url}
 						onBlur={(event) => updateLine(`[video] ${event.target.value}`)}
 						style={inputStyle}
@@ -81,9 +97,12 @@ export function GallerySelectedItemControls({
 				</div>
 			)}
 			{item.kind === "audio" && (
-				<div style={{ flex: 1, minWidth: 200 }}>
-					<label style={labelStyle}>URL</label>
+				<div style={columnStyle}>
+					<label style={labelStyle} htmlFor={`${itemId}-url`}>
+						URL
+					</label>
 					<input
+						id={`${itemId}-url`}
 						defaultValue={item.url}
 						onBlur={(event) => updateLine(`[audio] ${event.target.value}`)}
 						style={inputStyle}
@@ -92,9 +111,12 @@ export function GallerySelectedItemControls({
 			)}
 			{item.kind === "file" && (
 				<>
-					<div style={{ flex: 1, minWidth: 200 }}>
-						<label style={labelStyle}>Name</label>
+					<div style={columnStyle}>
+						<label style={labelStyle} htmlFor={`${itemId}-name`}>
+							Name
+						</label>
 						<input
+							id={`${itemId}-name`}
 							defaultValue={item.label ?? ""}
 							onBlur={(event) =>
 								updateLine(
@@ -104,9 +126,12 @@ export function GallerySelectedItemControls({
 							style={inputStyle}
 						/>
 					</div>
-					<div style={{ flex: 1, minWidth: 200 }}>
-						<label style={labelStyle}>URL</label>
+					<div style={columnStyle}>
+						<label style={labelStyle} htmlFor={`${itemId}-url`}>
+							URL
+						</label>
 						<input
+							id={`${itemId}-url`}
 							defaultValue={item.url}
 							onBlur={(event) =>
 								updateLine(

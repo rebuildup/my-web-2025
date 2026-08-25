@@ -11,6 +11,65 @@ export interface ContentSelectorProps {
 	onSelect: (contentId: string) => void;
 }
 
+function formatDateTime(iso: string): string {
+	const date = new Date(iso);
+	if (Number.isNaN(date.getTime())) return "";
+	const pad = (n: number) => n.toString().padStart(2, "0");
+	return `${date.getFullYear()}/${pad(date.getMonth() + 1)}/${pad(
+		date.getDate(),
+	)} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+const headerStyle: React.CSSProperties = {
+	display: "flex",
+	flexDirection: "row",
+	alignItems: "center",
+	justifyContent: "space-between",
+	paddingTop: 12,
+	paddingBottom: 12,
+};
+
+const headerTitleStyle: React.CSSProperties = {
+	margin: 0,
+	fontSize: 16,
+	fontWeight: 600,
+	color: adminColor.textPrimary,
+};
+
+const refreshButtonStyle: React.CSSProperties = {
+	fontSize: 13,
+	padding: "4px 12px",
+	background: "transparent",
+	color: adminColor.accent,
+	border: "none",
+	borderRadius: 4,
+};
+
+function getRefreshButtonStyle(disabled: boolean): React.CSSProperties {
+	return {
+		...refreshButtonStyle,
+		cursor: disabled ? "not-allowed" : "pointer",
+		opacity: disabled ? 0.6 : 1,
+	};
+}
+
+const spinnerStyle: React.CSSProperties = {
+	width: 18,
+	height: 18,
+	border: `2px solid ${adminColor.borderInput}`,
+	borderTopColor: adminColor.accent,
+	borderRadius: "50%",
+};
+
+const errorAlertStyle: React.CSSProperties = {
+	padding: "8px 12px",
+	borderLeft: `4px solid ${adminColor.error}`,
+	backgroundColor: "rgba(185, 28, 28, 0.1)",
+	color: adminColor.error,
+	fontSize: 14,
+	borderRadius: 4,
+};
+
 export function ContentSelector({
 	selectedContentId,
 	onSelect,
@@ -18,6 +77,11 @@ export function ContentSelector({
 	const [contents, setContents] = useState<ContentIndexItem[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
 
 	const sortedContents = useMemo(
 		() =>
@@ -56,52 +120,25 @@ export function ContentSelector({
 	}, [loadContents]);
 
 	const lastUpdatedLabel = useMemo(() => {
-		if (!selectedContentId) {
+		if (!selectedContentId || !isClient) {
 			return null;
 		}
 		const target = sortedContents.find((item) => item.id === selectedContentId);
 		if (!target) {
 			return null;
 		}
-		return new Date(target.updatedAt).toLocaleString();
-	}, [sortedContents, selectedContentId]);
+		return formatDateTime(target.updatedAt);
+	}, [sortedContents, selectedContentId, isClient]);
 
 	return (
 		<div>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "row",
-					alignItems: "center",
-					justifyContent: "space-between",
-					paddingTop: 12,
-					paddingBottom: 12,
-				}}
-			>
-				<h3
-					style={{
-						margin: 0,
-						fontSize: 16,
-						fontWeight: 600,
-						color: adminColor.textPrimary,
-					}}
-				>
-					Content
-				</h3>
+			<div style={headerStyle}>
+				<h3 style={headerTitleStyle}>Content</h3>
 				<button
 					type="button"
 					disabled={loading}
 					onClick={() => void loadContents()}
-					style={{
-						fontSize: 13,
-						padding: "4px 12px",
-						background: "transparent",
-						color: adminColor.accent,
-						border: "none",
-						borderRadius: 4,
-						cursor: loading ? "not-allowed" : "pointer",
-						opacity: loading ? 0.6 : 1,
-					}}
+					style={getRefreshButtonStyle(loading)}
 				>
 					Refresh
 				</button>
@@ -116,48 +153,19 @@ export function ContentSelector({
 							gap: 12,
 						}}
 					>
-						<div
-							style={{
-								width: 18,
-								height: 18,
-								border: `2px solid ${adminColor.borderInput}`,
-								borderTopColor: adminColor.accent,
-								borderRadius: "50%",
-							}}
-						/>
-						<span
-							style={{
-								fontSize: 14,
-								color: adminColor.textSecondary,
-							}}
-						>
+						<div style={spinnerStyle} />
+						<span style={{ fontSize: 14, color: adminColor.textSecondary }}>
 							Loading content list...
 						</span>
 					</div>
 				)}
 				{!loading && error && (
-					<div
-						role="alert"
-						style={{
-							padding: "8px 12px",
-							borderLeft: `4px solid ${adminColor.error}`,
-							backgroundColor: "rgba(185, 28, 28, 0.1)",
-							color: adminColor.error,
-							fontSize: 14,
-							borderRadius: 4,
-						}}
-					>
+					<div role="alert" style={errorAlertStyle}>
 						{error}
 					</div>
 				)}
 				{!loading && !error && (
-					<div
-						style={{
-							display: "flex",
-							flexDirection: "column",
-							gap: 8,
-						}}
-					>
+					<div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
 						<SimpleSelect
 							data-testid="content-select"
 							value={selectedContentId ?? ""}
@@ -174,10 +182,8 @@ export function ContentSelector({
 						/>
 						{lastUpdatedLabel && (
 							<span
-								style={{
-									fontSize: 12,
-									color: adminColor.textSecondary,
-								}}
+								style={{ fontSize: 12, color: adminColor.textSecondary }}
+								suppressHydrationWarning
 							>
 								Last updated: {lastUpdatedLabel}
 							</span>

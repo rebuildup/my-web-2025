@@ -7,6 +7,7 @@ import {
 	Trash2,
 	UploadCloud,
 } from "lucide-react";
+import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import {
@@ -24,6 +25,152 @@ export interface MediaManagerProps {
 	isLoading?: boolean;
 	onRefresh?: () => void;
 }
+
+const panelStyle: React.CSSProperties = {
+	backgroundColor: adminColor.bgPanel,
+	borderRadius: 0,
+};
+
+const headerStyle: React.CSSProperties = {
+	display: "flex",
+	flexDirection: "row",
+	justifyContent: "space-between",
+	alignItems: "center",
+	paddingTop: 12,
+	paddingBottom: 12,
+};
+
+const headerTitleStyle: React.CSSProperties = {
+	margin: 0,
+	fontSize: 16,
+	fontWeight: 600,
+	color: adminColor.textPrimary,
+};
+
+const infoAlertStyle: React.CSSProperties = {
+	padding: "8px 12px",
+	borderLeft: `4px solid ${adminColor.info}`,
+	backgroundColor: "rgba(30, 64, 175, 0.1)",
+	color: adminColor.info,
+	fontSize: 14,
+	borderRadius: 4,
+};
+
+const errorAlertStyle: React.CSSProperties = {
+	padding: "8px 12px",
+	borderLeft: `4px solid ${adminColor.error}`,
+	backgroundColor: "rgba(185, 28, 28, 0.1)",
+	color: adminColor.error,
+	fontSize: 14,
+	borderRadius: 4,
+};
+
+const mediaListStyle: React.CSSProperties = {
+	display: "flex",
+	flexDirection: "column",
+	gap: 0,
+};
+
+const mediaRowStyle: React.CSSProperties = {
+	display: "flex",
+	alignItems: "center",
+	padding: "8px 12px",
+	gap: 12,
+	borderRadius: 4,
+};
+
+const metaColumnStyle: React.CSSProperties = {
+	display: "flex",
+	flexDirection: "column",
+	gap: 2,
+	flex: 1,
+	minWidth: 0,
+};
+
+const filenameStyle: React.CSSProperties = {
+	fontSize: 14,
+	fontWeight: 600,
+	whiteSpace: "nowrap",
+	overflow: "hidden",
+	textOverflow: "ellipsis",
+	color: adminColor.textPrimary,
+};
+
+const metaStyle: React.CSSProperties = {
+	fontSize: 12,
+	color: adminColor.textSecondary,
+};
+
+const deleteButtonStyle: React.CSSProperties = {
+	display: "inline-flex",
+	alignItems: "center",
+	justifyContent: "center",
+	padding: 6,
+	background: "transparent",
+	color: adminColor.error,
+	border: "none",
+	borderRadius: 4,
+	cursor: "pointer",
+};
+
+const dropzoneWrapperStyle: React.CSSProperties = {
+	padding: 16,
+	textAlign: "center",
+	color: adminColor.textSecondary,
+	border: `1px dashed ${adminColor.border}`,
+	borderRadius: 4,
+};
+
+function getDropzoneStyle(
+	isDragActive: boolean,
+	disabled: boolean,
+): React.CSSProperties {
+	return {
+		...dropzoneWrapperStyle,
+		cursor: disabled ? "not-allowed" : "pointer",
+		backgroundColor: isDragActive ? adminColor.accentHover : "transparent",
+	};
+}
+
+const addFileButtonStyle: React.CSSProperties = {
+	display: "inline-flex",
+	alignItems: "center",
+	gap: 8,
+	fontSize: 13,
+	padding: "4px 12px",
+	border: `1px solid ${adminColor.borderInput}`,
+	borderRadius: 4,
+	backgroundColor: adminColor.bgPanel,
+	color: adminColor.textPrimary,
+};
+
+function getAddFileButtonStyle(disabled: boolean): React.CSSProperties {
+	return {
+		...addFileButtonStyle,
+		cursor: disabled ? "not-allowed" : "pointer",
+		opacity: disabled ? 0.6 : 1,
+	};
+}
+
+const previewBoxStyle: React.CSSProperties = {
+	width: 72,
+	height: 72,
+	borderRadius: 4,
+	backgroundColor: "rgba(255,255,255,0.08)",
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+	border: `1px solid ${adminColor.border}`,
+	color: adminColor.accent,
+};
+
+const imagePreviewStyle: React.CSSProperties = {
+	width: 72,
+	height: 72,
+	borderRadius: 4,
+	objectFit: "cover",
+	border: `1px solid ${adminColor.border}`,
+};
 
 export function MediaManager({
 	contentId,
@@ -83,87 +230,33 @@ export function MediaManager({
 		return "No media files yet.";
 	}, [isLoading]);
 
+	const uploadDisabled = !contentId || isUploading;
+
 	return (
-		<section style={{ backgroundColor: adminColor.bgPanel, borderRadius: 0 }}>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "row",
-					justifyContent: "space-between",
-					alignItems: "center",
-					paddingTop: 12,
-					paddingBottom: 12,
-				}}
-			>
-				<h3
-					style={{
-						margin: 0,
-						fontSize: 16,
-						fontWeight: 600,
-						color: adminColor.textPrimary,
-					}}
-				>
-					Media
-				</h3>
+		<section style={panelStyle}>
+			<div style={headerStyle}>
+				<h3 style={headerTitleStyle}>Media</h3>
 				<button
 					type="button"
-					disabled={!contentId || isUploading}
+					disabled={uploadDisabled}
 					{...getRootProps()}
-					style={{
-						display: "inline-flex",
-						alignItems: "center",
-						gap: 8,
-						fontSize: 13,
-						padding: "4px 12px",
-						border: `1px solid ${adminColor.borderInput}`,
-						borderRadius: 4,
-						backgroundColor: adminColor.bgPanel,
-						color: adminColor.textPrimary,
-						cursor: !contentId || isUploading ? "not-allowed" : "pointer",
-						opacity: !contentId || isUploading ? 0.6 : 1,
-					}}
+					style={getAddFileButtonStyle(uploadDisabled)}
 				>
 					<input {...getInputProps()} />
 					<UploadCloud size={16} />
 					{isUploading ? "Uploading..." : "Add file"}
 				</button>
 			</div>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "column",
-					gap: 12,
-				}}
-			>
+			<div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
 				{!contentId ? (
-					<div
-						role="status"
-						style={{
-							padding: "8px 12px",
-							borderLeft: `4px solid ${adminColor.info}`,
-							backgroundColor: "rgba(30, 64, 175, 0.1)",
-							color: adminColor.info,
-							fontSize: 14,
-							borderRadius: 4,
-						}}
-					>
+					<div role="status" style={infoAlertStyle}>
 						Select a content item to manage media assets.
 					</div>
 				) : (
 					<>
 						<div
 							{...getRootProps()}
-							style={{
-								padding: 16,
-								textAlign: "center",
-								color: adminColor.textSecondary,
-								border: `1px dashed ${adminColor.border}`,
-								borderRadius: 4,
-								cursor: !contentId || isUploading ? "not-allowed" : "pointer",
-								backgroundColor: isDragActive
-									? adminColor.accentHover
-									: "transparent",
-							}}
+							style={getDropzoneStyle(isDragActive, uploadDisabled)}
 						>
 							<input {...getInputProps()} />
 							<span style={{ fontSize: 14, fontWeight: 500 }}>
@@ -171,97 +264,31 @@ export function MediaManager({
 							</span>
 						</div>
 						{error && (
-							<div
-								role="alert"
-								style={{
-									padding: "8px 12px",
-									borderLeft: `4px solid ${adminColor.error}`,
-									backgroundColor: "rgba(185, 28, 28, 0.1)",
-									color: adminColor.error,
-									fontSize: 14,
-									borderRadius: 4,
-								}}
-							>
+							<div role="alert" style={errorAlertStyle}>
 								{error}
 							</div>
 						)}
-						<div
-							style={{
-								display: "flex",
-								flexDirection: "column",
-								gap: 0,
-							}}
-						>
+						<div style={mediaListStyle}>
 							{media.length === 0 ? (
-								<span
-									style={{
-										fontSize: 14,
-										color: adminColor.textSecondary,
-									}}
-								>
-									{emptyStateLabel}
-								</span>
+								<span style={metaStyle}>{emptyStateLabel}</span>
 							) : (
 								media.map((item) => (
-									<div
-										key={item.id}
-										style={{
-											display: "flex",
-											alignItems: "center",
-											padding: "8px 12px",
-											gap: 12,
-											borderRadius: 4,
-										}}
-									>
+									<div key={item.id} style={mediaRowStyle}>
 										<MediaPreview
 											item={item}
 											contentId={item.contentId ?? contentId}
 										/>
-										<div
-											style={{
-												display: "flex",
-												flexDirection: "column",
-												gap: 2,
-												flex: 1,
-												minWidth: 0,
-											}}
-										>
-											<span
-												style={{
-													fontSize: 14,
-													fontWeight: 600,
-													whiteSpace: "nowrap",
-													overflow: "hidden",
-													textOverflow: "ellipsis",
-													color: adminColor.textPrimary,
-												}}
-											>
-												{item.filename}
-											</span>
-											<span
-												style={{
-													fontSize: 12,
-													color: adminColor.textSecondary,
-												}}
-											>
+										<div style={metaColumnStyle}>
+											<span style={filenameStyle}>{item.filename}</span>
+											<span style={metaStyle}>
 												{item.mimeType} · {formatFileSize(item.size)}
 											</span>
 										</div>
 										<button
 											type="button"
-											aria-label="Delete"
+											aria-label={`Delete ${item.filename}`}
 											onClick={() => void handleDelete(item)}
-											style={{
-												display: "inline-flex",
-												alignItems: "center",
-												justifyContent: "center",
-												padding: 6,
-												background: "transparent",
-												color: adminColor.error,
-												border: "none",
-												borderRadius: 4,
-												cursor: "pointer",
-											}}
+											style={deleteButtonStyle}
 										>
 											<Trash2 size={18} />
 										</button>
@@ -289,16 +316,13 @@ function MediaPreview({
 
 	if (item.mimeType.startsWith("image/")) {
 		return (
-			<img
-				style={{
-					width: 72,
-					height: 72,
-					borderRadius: 4,
-					objectFit: "cover",
-					border: `1px solid ${adminColor.border}`,
-				}}
+			<Image
+				style={imagePreviewStyle}
 				src={getMediaUrl(contentId, item.id)}
 				alt={item.alt ?? ""}
+				unoptimized
+				width={72}
+				height={72}
 			/>
 		);
 	}
@@ -311,19 +335,7 @@ function MediaPreview({
 	}
 
 	return (
-		<div
-			style={{
-				width: 72,
-				height: 72,
-				borderRadius: 4,
-				backgroundColor: "rgba(255,255,255,0.08)",
-				display: "flex",
-				alignItems: "center",
-				justifyContent: "center",
-				border: `1px solid ${adminColor.border}`,
-				color: adminColor.accent,
-			}}
-		>
+		<div style={previewBoxStyle}>
 			<Icon size={28} />
 		</div>
 	);
